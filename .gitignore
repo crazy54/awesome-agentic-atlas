@@ -1,0 +1,26 @@
+# Build cache: 64 MB, ~4,800 files. Verbatim copies of 1,293 other people's READMEs and 3,462
+# screenshots of their projects, fetched so the pipeline can classify and illustrate without
+# hammering the API on every run. Rebuildable by scripts/02_fetch.py, 11_fetch_all.py and the
+# 05/06/15 shot scripts, and not ours to redistribute.
+cache/
+
+# Excel's own print-to-PDF renders of a few sheets, for eyeballing layout during a build.
+preview/
+
+# The original orchestrators-only workbooks this collection grew out of, kept locally as the
+# before-picture. The published edition supersedes them.
+backup/
+
+# Build log, rewritten on every run.
+.log
+
+# Excel leaves this sidecar next to an open workbook and it is a write lock, not a document.
+~$*.xlsx
+
+__pycache__/
+*.py[cod]
+
+# The workbooks are release assets, not repo content: ~81 MB a pair, rebuilt every run, and
+# git would keep every version for ever. `releases/latest/download/<name>` always serves the newest.
+Awesome-Agentic-Atlas-*.xlsx
+Awesome-Agent-Orchestrators-*.xlsx
