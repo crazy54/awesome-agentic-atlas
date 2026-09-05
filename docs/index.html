@@ -10,15 +10,21 @@
 <meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
 <style>
+/* Lagoon Gold: cyan primary, gold secondary, cool near-black surfaces. Dark is the designed mode --
+   its eight neutrals and two accents are the theme's own values. Light is stepped from the same two
+   hues rather than flipped, because the accents at their dark-mode lightness fail on white (the cyan
+   measures 2.53:1 there), and its neutrals are cooled to match so toggling does not change brand.
+   --onbar exists because a filled cyan or gold accent carries DARK ink, not white: white on #08b0cc
+   is 2.3:1, while the theme's own #0c1013 on it is 7.36:1. */
 :root{
-  --surface:#1a1a19; --plane:#0d0d0d; --band:#212120; --ink:#fff; --ink2:#c3c2b7;
-  --muted:#898781; --grid:#2c2c2a; --link:#86b6ef; --bar:#3987e5;
-  --good:#2eb82e; --warn:#fab219; --off:#6e6d68;
+  --surface:#101416; --plane:#181f21; --band:#232d30; --ink:#d0d7d8; --ink2:#a8b0b2;
+  --muted:#8c9496; --grid:#2c383d; --link:#08b0cc; --bar:#08b0cc;
+  --good:#2eb82e; --warn:#feb932; --off:#8c9496; --onbar:#0c1013;
 }
 html[data-theme=light]{
-  --surface:#fcfcfb; --plane:#f1f0ec; --band:#f6f5f1; --ink:#0b0b0b; --ink2:#52514e;
-  --muted:#898781; --grid:#e1e0d9; --link:#1c5cab; --bar:#2a78d6;
-  --good:#0a7c0a; --warn:#8a5a00; --off:#898781;
+  --surface:#fbfcfc; --plane:#eef1f2; --band:#f4f6f6; --ink:#101416; --ink2:#4a5254;
+  --muted:#5f6769; --grid:#dbe0e1; --link:#096373; --bar:#0a6f80;
+  --good:#0a7c0a; --warn:#8a5a00; --off:#5f6769; --onbar:#fff;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);
@@ -48,7 +54,7 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .chip{background:var(--band);color:var(--ink2);border:1px solid var(--grid);
   border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap}
 .chip:hover{border-color:var(--bar);color:var(--ink)}
-.chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:#fff;font-weight:600}
+.chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar);font-weight:600}
 .count{color:var(--muted);font-size:13px;margin-left:auto;white-space:nowrap}
 .count b{color:var(--ink)}
 main{padding:0 20px 64px}
