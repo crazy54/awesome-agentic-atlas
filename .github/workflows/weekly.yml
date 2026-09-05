@@ -1,0 +1,158 @@
+# Weekly: everything the daily job skips. Screenshots, the two workbooks, and a dated release.
+#
+# The split exists because the pipeline has one expensive stage and fifteen cheap ones. Capturing 3,462
+# thumbnails with headless Chromium is the expensive one, and it is also the one that almost never needs
+# redoing -- a repo's README banner is the same banner it had last Sunday. So the daily job leaves the
+# shot cache alone and lets new arrivals show their Open Graph card, and this job, once a week, goes and
+# gets the real image and rebuilds the workbooks on top of it.
+#
+# Unlike the daily job this one is not gated on the source lists having moved. Stars move every day even
+# when no list does, and the workbook is a download with a date on it -- a week-old one that claims to be
+# current is worse than no release.
+name: Weekly — screenshots & workbooks
+
+on:
+  schedule:
+    # Sundays, 12:40 UTC -- an hour and a half after the daily run, so the two are not queued behind each
+    # other on the shared concurrency group even on a day when the daily build has a lot to do.
+    - cron: "40 12 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Shared with daily.yml. Both write `cache/` and push to the same branch; running both at once would race
+# on the first-seen ledger and then lose one of the two pushes.
+concurrency:
+  group: atlas-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # A cold shot cache is the worst case and it is genuinely long. 350 rather than the 360 ceiling, so the
+    # job's own timeout fires and the log says what it was doing instead of the runner being cut off.
+    timeout-minutes: 350
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CF_BEACON_TOKEN: ${{ secrets.CF_BEACON_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: python -m pip install --upgrade pip openpyxl pillow playwright
+
+      # `chrome.py` looks for a Playwright cache before it looks on PATH, so installing it this way is all
+      # the two capture stages need -- neither imports playwright, they shell out to the binary. --with-deps
+      # pulls the shared libraries a headless Chromium needs that the runner image does not ship.
+      - name: Install headless Chromium
+        run: playwright install --with-deps chromium
+
+      - name: Show which browser was found
+        run: python scripts/chrome.py
+
+      # Same rolling cache as the daily job, same prefix, so the two hand the shot cache back and forth.
+      - name: Restore build cache
+        uses: actions/cache@v4
+        with:
+          path: cache
+          key: atlas-cache-${{ github.run_id }}
+          restore-keys: atlas-cache-
+
+      - name: Fetch and classify
+        run: |
+          set -euo pipefail
+          mkdir -p cache
+          python scripts/01_parse.py
+          python scripts/02_fetch.py --force
+          python scripts/03_releases.py
+          python scripts/03b_actions.py
+          python scripts/04_classify.py
+          python scripts/10_parse_sources.py
+          python scripts/11_fetch_all.py
+          python scripts/13_signals_all.py
+          python scripts/14_classify_all.py
+
+      # The four stages the daily job never runs. Each one skips what it already has, so a warm cache makes
+      # this minutes rather than hours -- the work is proportional to new arrivals, not to the atlas.
+      - name: Capture screenshots
+        run: |
+          set -euo pipefail
+          python scripts/05_shots.py
+          python scripts/06_web_shots.py
+          python scripts/15_shots_all.py
+          python scripts/15b_shots_sources.py
+
+      - name: Build the workbooks
+        run: python scripts/16_build_all.py
+
+      - name: Rebuild the Markdown edition and the site
+        run: |
+          set -euo pipefail
+          python scripts/17_markdown.py
+          python scripts/19_pages.py
+
+      - name: Record the source commits as built
+        run: python scripts/watch_sources.py --update
+
+      # The workbooks are release assets, not repository files -- .gitignore already excludes them. Only
+      # the three generated surfaces get committed, and that commit is what redeploys Pages.
+      - name: Commit and push the site and Markdown
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs mega-list state
+          if git diff --cached --quiet; then
+            echo "Nothing changed in docs/, mega-list/ or state/."
+          else
+            git commit -m "Weekly rebuild $(date -u +%Y-%m-%d)"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      # A dated tag, and `--latest` on every one of them, because the README links to
+      # `releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx` -- a permanent URL that resolves to
+      # whatever is newest. `--clobber` on the fallback path so re-running this workflow the same day
+      # replaces the assets instead of failing on a tag that already exists.
+      #
+      # Size note: the DARK workbook is around 16 MB and LIGHT will come out near 48 MB from here. The
+      # smaller LIGHT that was published by hand got that way through an Excel COM round-trip, which
+      # re-deduplicates the embedded media and cannot run on a Linux runner. Both are well inside the 2 GB
+      # asset limit; LIGHT is just a bigger download than it strictly has to be.
+      - name: Publish the workbooks as a release
+        run: |
+          set -euo pipefail
+          tag="v$(date -u +%Y.%m.%d)"
+          summary="$(python - <<'PY'
+          import json, pathlib
+          d = json.loads(pathlib.Path("docs/data.json").read_text(encoding="utf-8"))
+          print(f"{len(d['rows']):,} projects across {len(d['cats'])} topics · snapshot {d['snapshot']}")
+          PY
+          )"
+          notes="${summary}
+
+          Two workbooks, same data, different theme. Pick one:
+
+          - \`Awesome-Agentic-Atlas-DARK.xlsx\`
+          - \`Awesome-Agentic-Atlas-LIGHT.xlsx\`
+
+          Also published: the [site](https://crazy54.github.io/awesome-agentic-atlas/) and the Markdown
+          edition in \`mega-list/\`, both rebuilt from this same snapshot.
+
+          Built by \`.github/workflows/weekly.yml\` (run ${{ github.run_id }})."
+
+          files=(Awesome-Agentic-Atlas-DARK.xlsx Awesome-Agentic-Atlas-LIGHT.xlsx)
+          ls -lh "${files[@]}"
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" "${files[@]}" --clobber
+            gh release edit "$tag" --latest --notes "$notes"
+          else
+            gh release create "$tag" "${files[@]}" \
+              --title "Awesome Agentic Atlas $tag" --notes "$notes" --latest
+          fi

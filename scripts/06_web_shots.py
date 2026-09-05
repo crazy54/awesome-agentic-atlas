@@ -6,6 +6,7 @@ Pass 2: fall back to GitHub's Open Graph repo card, so every row shows something
 import json
 import re
 import subprocess
+import sys
 import tempfile
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -14,13 +15,13 @@ from pathlib import Path
 
 from PIL import Image
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import chrome  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 SHOTS = CACHE / "shots"
-CHROME = Path(
-    r"C:\Users\jerem\AppData\Local\ms-playwright\chromium_headless_shell-1223"
-    r"\chrome-headless-shell-win64\chrome-headless-shell.exe"
-)
+CHROME = chrome.PATH
 
 BOX = (300, 150)
 LIGHT_BG = (255, 255, 255)
@@ -43,7 +44,8 @@ def save_pair(im: Image.Image, safe: str, tag: str) -> tuple[str, str]:
 
 def capture_site(rec: dict) -> dict | None:
     url = (rec.get("homepage") or "").strip()
-    if not url or SKIP_HOST.search(url):
+    # No browser on this machine means pass 1 has nothing to do; pass 2's Open Graph card still runs.
+    if not CHROME or not url or SKIP_HOST.search(url):
         return None
     if not url.startswith("http"):
         url = "https://" + url

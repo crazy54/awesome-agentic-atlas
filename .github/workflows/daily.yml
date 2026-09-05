@@ -1,0 +1,152 @@
+# Daily: notice what the eleven source lists added, and republish the site and the Markdown edition.
+#
+# What this job does NOT do is capture screenshots or build the workbooks. Screenshots are the only
+# genuinely expensive stage -- 3,462 headless renders on a cold cache -- and both the site and the
+# Markdown fall back to GitHub's Open Graph card for any repo without one, which two thirds of rows
+# already use. So a brand-new project shows its card here within a day and gets a real screenshot when
+# `weekly.yml` next runs. Metadata is not deferred that way: stars and last-push are refetched in full
+# every run, because a snapshot date that advanced while the numbers underneath it stood still would be
+# a lie told daily.
+#
+# Pages needs no deploy step. This repository serves Pages from the branch's `docs/` folder, so the
+# commit at the end of this job *is* the deployment -- GitHub's own pages-build-deployment run picks it
+# up. Nothing here has to be told the site's URL.
+name: Daily — site & Markdown
+
+on:
+  schedule:
+    # 11:12 UTC. Actions cron is UTC only and never shifts for daylight saving, so this is 07:12 in New
+    # York in summer and 06:12 in winter. Twelve past the hour rather than on it: the top of every hour
+    # is when every cron on GitHub fires at once and scheduled runs get queued behind it.
+    - cron: "12 11 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Rebuild even if no source list has moved
+        type: boolean
+        default: false
+
+# The build commits docs/, mega-list/ and state/ back to this branch. That push is what redeploys Pages.
+permissions:
+  contents: write
+
+# One atlas build at a time. The weekly workbook job shares this group on purpose: both write `cache/`
+# and both push to the same branch, so two at once would race on the first-seen ledger and then one of
+# them would fail to push. `cancel-in-progress: false` because a half-finished build that gets killed
+# has already recorded nothing -- letting it finish is cheaper than the retry.
+concurrency:
+  group: atlas-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      # Every fetch stage shells out to `gh`, which reads this. The Actions token is enough -- the pipeline
+      # only ever reads public repositories -- and the limit it grants, 1,000 requests per hour per repo,
+      # is comfortable because the two metadata stages batch twenty repos per GraphQL query. Refetching all
+      # 1,294 costs about seventy requests; the per-repo release and Actions probes are the bulk of the
+      # rest, and a full run lands in the low hundreds.
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Optional. Unset in a fork, and `beacon()` then emits nothing rather than reporting to this repo.
+      CF_BEACON_TOKEN: ${{ secrets.CF_BEACON_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: python -m pip install --upgrade pip openpyxl pillow
+
+      # Rolling cache: a key nothing will ever hit, so every run saves a fresh entry, plus a restore-key
+      # prefix so every run starts from the most recent one. The point is `cache/shots/` -- keeping it
+      # warm is the difference between a five-minute job and one that would not finish inside the limit.
+      - name: Restore build cache
+        uses: actions/cache@v4
+        with:
+          path: cache
+          key: atlas-cache-${{ github.run_id }}
+          restore-keys: atlas-cache-
+
+      - name: Has any source list moved?
+        id: watch
+        run: python scripts/watch_sources.py
+
+      - name: Decide whether to rebuild
+        id: gate
+        run: |
+          # A cold cache is not a slow build here, it is a worse one. 686 of the 1,294 rows link to an image
+          # this job never captures, and rebuilding without the shot cache would silently swap all of them
+          # for the generic repo card. So the absence of the cache is a stop, not a warning to ride past --
+          # and not something `force` overrides, because forcing a rebuild is not the same as consenting to
+          # a worse one. Dispatch the weekly workflow once; it captures the shots and fills the cache.
+          if [ ! -f cache/shots_all.json ]; then
+            echo "go=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=No screenshot cache::Skipped the rebuild: cache/shots_all.json was not restored, so this build would have replaced every real screenshot with a generic repo card. Run the weekly workflow once to prime the cache."
+            exit 0
+          fi
+          if [ "${{ steps.watch.outputs.changed }}" = "true" ] || [ "${{ inputs.force }}" = "true" ]; then
+            echo "go=true" >> "$GITHUB_OUTPUT"
+            echo "Rebuilding."
+          else
+            echo "go=false" >> "$GITHUB_OUTPUT"
+            echo "No source list moved; a rebuild would produce the same bytes. Stopping."
+          fi
+
+      # Numeric order is the pipeline order. Absent here, deliberately: 05/06 and 15/15b (screenshots,
+      # left to the weekly job), 07/08/09 and 16/18 (workbooks, and two stages that drive Excel through
+      # COM and so cannot run on a Linux runner at all).
+      - name: Fetch and classify
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p cache
+          # --force empties cache/meta.json, which is the store 11_fetch_all also fills and the reason a
+          # warm cache would otherwise never refresh a star count. Everything downstream re-derives.
+          python scripts/01_parse.py
+          python scripts/02_fetch.py --force
+          python scripts/03_releases.py
+          python scripts/03b_actions.py
+          python scripts/04_classify.py
+          python scripts/10_parse_sources.py
+          python scripts/11_fetch_all.py
+          python scripts/13_signals_all.py
+          python scripts/14_classify_all.py
+
+      - name: Build the Markdown edition and the site
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          set -euo pipefail
+          python scripts/17_markdown.py
+          python scripts/19_pages.py
+
+      # Only now, and only because everything above succeeded. Recording the SHAs earlier would mean a
+      # build that failed halfway was never retried: the next run would compare against the commit it
+      # died on, conclude there was nothing to do, and the new entries would be lost for good.
+      - name: Record the source commits as built
+        if: steps.gate.outputs.go == 'true'
+        run: python scripts/watch_sources.py --update
+
+      - name: Commit and push
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs mega-list state
+          if git diff --cached --quiet; then
+            echo "The lists moved but nothing they changed reaches these three surfaces. Nothing to commit."
+            exit 0
+          fi
+          summary="$(python scripts/newness.py | sed -n '2p')"
+          git commit -m "Daily refresh $(date -u +%Y-%m-%d)" -m "${summary}"
+          # Rebase rather than force-push: a commit someone pushed by hand while this ran should survive.
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: What is new
+        if: steps.gate.outputs.go == 'true'
+        run: python scripts/newness.py

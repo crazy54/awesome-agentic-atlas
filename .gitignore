@@ -14,6 +14,9 @@ backup/
 # Build log, rewritten on every run.
 .log
 
+# Where the Playwright MCP browser drops screenshots taken while checking the site by hand.
+.playwright-mcp/
+
 # Excel leaves this sidecar next to an open workbook and it is a write lock, not a document.
 ~$*.xlsx
 

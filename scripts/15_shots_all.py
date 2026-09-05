@@ -26,6 +26,9 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import chrome  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 SHOTS = CACHE / "shots"
@@ -46,8 +49,7 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3
                     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36",
       "Accept": "text/html,image/*,*/*;q=0.8"}
 
-CHROME = Path(r"C:\Users\jerem\AppData\Local\ms-playwright\chromium_headless_shell-1223"
-              r"\chrome-headless-shell-win64\chrome-headless-shell.exe")
+CHROME = chrome.PATH
 
 # Social and chat links never render anything useful headless.
 SKIP_HOST = ("discord.gg", "discord.com", "x.com", "twitter.com", "t.me", "linkedin.com",
@@ -212,7 +214,9 @@ def og_image(url: str) -> str:
 
 
 def browser_shot(url: str) -> bytes | None:
-    if not CHROME.exists():
+    # None rather than an exception: tier 3 is optional, and tier 4 always produces something. A runner
+    # with no browser installed drops to Open Graph cards instead of failing the build.
+    if not CHROME:
         return None
     with tempfile.TemporaryDirectory() as td:
         out = Path(td) / "s.png"

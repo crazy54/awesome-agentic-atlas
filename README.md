@@ -199,6 +199,44 @@ Aggregating other people's lists introduces failure modes worth naming:
 - **Not every project is good.** This is a merged index, not an endorsement. Sort by last-push before
   you install anything.
 
+## Staying current
+
+Two GitHub Actions workflows keep the three surfaces from going stale, and neither needs a hand on it.
+
+**Daily** ([`daily.yml`](.github/workflows/daily.yml), 11:12 UTC) asks each of the eleven source lists for
+its newest commit. If none of them has moved, the job stops there — a rebuild would produce byte-identical
+files. If any has, it refetches every repo's metadata, rebuilds the site and the Markdown edition, and
+commits them, which is what republishes the site.
+
+**Weekly** ([`weekly.yml`](.github/workflows/weekly.yml), Sundays) does all of that and then the expensive
+part the daily run skips: capturing a screenshot for each new project, rebuilding both workbooks, and
+publishing them as a dated release. That's why the [download links][dark] never rot — they point at
+`releases/latest`, and each Sunday's release becomes the latest.
+
+The split is about cost, not caution. Metadata for 1,294 repos is about seventy GraphQL queries.
+Screenshots are 3,462 headless-browser renders. So a project added on Tuesday shows GitHub's own repo card
+until Sunday, then gets its real image.
+
+### The New filter
+
+A project's arrival date is the one thing the API can't tell you — a repo created in 2023 can be new *to
+this atlas* today. So the pipeline keeps its own ledger,
+[`state/first-seen.json`](state/first-seen.json): the date each repo was first seen in any source list.
+Everything already present when the ledger was created is stamped as founding stock, so day one marked
+nothing.
+
+Anything that arrives after that is marked for **fourteen days**:
+
+- On the site, a **New** chip appears beside the sort control with a count on it, and clicking it narrows
+  the table to exactly those projects. Their titles read `✨ ProjectName - New on 09/14/26`. The filter
+  lives in the URL, so it's a link: [`#new=1`][new].
+- In the Markdown edition, each topic and target page opens with a line saying how many arrived, and every
+  marked row carries a ✨ and its date.
+
+The fourteen days are counted in your browser against your own clock rather than fixed at build time, so a
+mark expires on time whether or not anything was rebuilt that day. A `#new=1` link that has outlived its
+window shows the whole atlas rather than an empty page.
+
 ## How it's built
 
 A nineteen-stage Python pipeline: parse each source list's Markdown, resolve and fetch every repo
@@ -210,6 +248,9 @@ disagree. The topic and target assignments come from one taxonomy module all thr
 
 The build cache (~4,800 files: fetched READMEs and screenshots) is deliberately **not** committed. It
 is other people's content, it is 64 MB, and it is reproducible from the fetch scripts.
+
+`state/first-seen.json` is the opposite case and is committed for the same reason: it is the only thing
+here that a rebuild cannot recreate. Delete it and every project looks as old as every other one.
 
 ## Contributing
 
@@ -247,5 +288,6 @@ If you think something here should be attributed differently, open an issue and 
 </div>
 
 [site]: https://crazy54.github.io/awesome-agentic-atlas/
+[new]: https://crazy54.github.io/awesome-agentic-atlas/#new=1
 [dark]: https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx
 [light]: https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx
