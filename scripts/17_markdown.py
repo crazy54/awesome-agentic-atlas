@@ -36,6 +36,7 @@ spec.loader.exec_module(b16)
 # records in this module have been through `prepare`, so only the classifiers are wanted.
 sys.path.insert(0, str(Path(__file__).parent))
 import taxonomy as tax  # noqa: E402
+import newness  # noqa: E402
 
 SHEETS, PLATFORMS, DASH = b16.SHEETS, b16.PLATFORMS, b16.DASH
 
@@ -80,6 +81,19 @@ ORCH_BLURB = ("The original list this workbook grew from: tools that run several
 
 
 # ------------------------------------------------------------------ formatting
+def cached(name: str, default=dict):
+    """A cache file, or an empty one. Used only for the screenshot maps.
+
+    Every other file this stage reads is a hard dependency -- without records there is nothing to write.
+    Screenshots are different: `image()` already falls back to GitHub's Open Graph card for the two
+    thirds of rows that have no captured shot, so an absent map degrades to "every row uses its card"
+    rather than to a crash. That is what lets the daily job rebuild the site and the Markdown without
+    running the four-hour capture stage, and lets a fresh clone render both with nothing fetched.
+    """
+    path = CACHE / name
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default()
+
+
 def slug(text: str) -> str:
     """GitHub's own heading-anchor rule: lowercase, drop punctuation, spaces to hyphens.
 
@@ -452,6 +466,14 @@ def facet_page(title, blurb, rows, shots, hub, other, live) -> list[str]:
              f"[← every {hub[0]}]({hub[1]}) · [← back to the mega list](../README.md) · "
              f"[**filter this live →**]({live})",
              ""]
+    # Named up front as well as marked in the table, because a reader arriving at a 278-row page has no
+    # way to know whether it is worth looking for the mark. This page is a snapshot; the site's chip is
+    # the version that expires on its own.
+    arrived = [r for r in rows if newness.mark(r["nwo"])]
+    if arrived:
+        lines += [f"✨ **{len(arrived)} new in the last {newness.WINDOW} days** — "
+                  f"marked below, and [filterable on the site]({live}{'&' if '#' in live else '#'}new=1).",
+                  ""]
     lines += gallery(ranked or thin, shots)
     if ranked:
         lines += [f"## Ranked by stars ({len(ranked):,})", "",
@@ -460,7 +482,7 @@ def facet_page(title, blurb, rows, shots, hub, other, live) -> list[str]:
                   "|--:|---|--:|--:|---|---|---|---|"]
         for i, r in enumerate(ranked, start=1):
             lines.append(
-                f"| {i} | **[{prose(r['name'], table=True)}]({r['url']})**"
+                f"| {i} | **[{prose(r['name'], table=True)}]({r['url']})**{newness.mark(r['nwo'])}"
                 f"<br><sub>{prose(r['nwo'], table=True)}</sub> "
                 f"| {stars(r)} | {r['list_count']} "
                 f"| <sub>{prose(other[1](r) or DASH, table=True)}</sub> "
@@ -471,7 +493,7 @@ def facet_page(title, blurb, rows, shots, hub, other, live) -> list[str]:
     if thin:
         lines += [f"## Also here, unranked ({len(thin):,})", "", UNRANKED_NOTE, ""]
         for r in thin:
-            lines.append(f"- **[{prose(r['name'])}]({r['url']})** — "
+            lines.append(f"- **[{prose(r['name'])}]({r['url']})**{newness.mark(r['nwo'])} — "
                          f"{prose(r.get('blurb') or '', 200)}")
         lines.append("")
     return lines + footer(1)
@@ -657,10 +679,8 @@ def main() -> None:
     records = b16.prepare(
         json.loads((CACHE / "records_all.json").read_text(encoding="utf-8")), None)
     meta = json.loads((CACHE / "meta.json").read_text(encoding="utf-8"))
-    raw_shots = json.loads((CACHE / "shots_all.json").read_text(encoding="utf-8"))
     orch = json.loads((CACHE / "records.json").read_text(encoding="utf-8"))
-    orch_shots = json.loads((CACHE / "shots.json").read_text(encoding="utf-8"))
-    shots = b16.merged_shots(raw_shots, orch_shots)
+    shots = b16.merged_shots(cached("shots_all.json"), cached("shots.json"))
 
     # the original list has no `section`/`bucket`; its category is the same idea under another name
     for r in orch:
@@ -704,6 +724,10 @@ def main() -> None:
         r["rank"] = bool(r["stars"])
     by_topic = {c: [r for r in facets if r["category"] == c] for c in tax.CATEGORIES}
     by_target = {t: [r for r in facets if t in r["targets"]] for t, _p in tax.TARGETS}
+
+    # Fills newness.SEEN, which `mark` reads. The same pool 19_pages resolves, so both surfaces mark the
+    # same repos on the same dates -- the whole reason the ledger is one file and not one per stage.
+    newness.resolve([r["nwo"] for r in facets])
 
     # GitHub reports one canonical owner spelling; the hand-typed source table does not always
     # match it, and a list whose own repo was never fetched has an unknown count, not zero.

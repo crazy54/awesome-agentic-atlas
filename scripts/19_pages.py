@@ -19,6 +19,8 @@ Markdown pages can only approximate by existing in two directories.
 """
 import importlib.util
 import json
+import os
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -31,6 +33,8 @@ spec = importlib.util.spec_from_file_location("b17", Path(__file__).parent / "17
 b17 = importlib.util.module_from_spec(spec)
 sys.modules["b17"] = b17
 spec.loader.exec_module(b17)
+
+newness = b17.newness
 
 b16 = b17.b16
 tax = b17.tax
@@ -47,7 +51,7 @@ OS_LABELS = ["Windows", "WSL2", "macOS", "Linux", "Docker"]
 # otherwise be repeated 1,294 times, which is 380 KB of the word "category". The page maps them back
 # into objects once, on load.
 COLS = ["name", "nwo", "cat", "targets", "stars", "lists", "listed_by", "os",
-        "blurb", "install", "lang", "license", "pushed", "url", "img"]
+        "blurb", "install", "lang", "license", "pushed", "url", "img", "first_seen"]
 
 
 def og(nwo: str) -> str:
@@ -75,6 +79,10 @@ def row_for(r, shots, cat_ix, tgt_ix) -> list:
         # thirds of these rows, so spelling it out would be 55 bytes x 1,294 of a string the page can
         # rebuild from `nwo`.
         "" if img == og(r["nwo"]) else img,
+        # The raw arrival date, not a new/old flag, and for every arrival rather than only the recent
+        # ones -- the page needs the date to print it and to expire the mark itself, and once it has to
+        # travel anyway there is no reason to throw the older ones away.
+        newness.SEEN.get(r["nwo"], ""),
     ]
 
 
@@ -88,6 +96,10 @@ def build_data(facets, shots) -> dict:
         "snapshot": date.today().isoformat(),
         "repo": REPO,
         "cols": COLS,
+        # The page applies the window, so it has to be told what it is. Here rather than hardcoded in the
+        # JavaScript so that changing it is one edit in `newness.py` and not two files that disagree.
+        "window_days": newness.WINDOW,
+        "baseline": newness.load()["baseline"],
         # Slugs travel in the URL hash, and they are the same slugs that name the Markdown pages, so a
         # link into this page and a link into `mega-list/topics/` say the same word.
         "cats": [{"name": c, "slug": b17.fileslug(c),
@@ -97,6 +109,55 @@ def build_data(facets, shots) -> dict:
         "os": OS_LABELS,
         "rows": [row_for(r, shots, cat_ix, tgt_ix) for r in rows],
     }
+
+
+# Cloudflare Web Analytics: one script, no cookies, no consent banner, nothing to install, and it works
+# on Pages without the domain being on Cloudflare -- the beacon reports from the reader's browser, so the
+# "JS beacon" mode needs no DNS change.
+#
+# The token is committed rather than injected from a secret, because it is not one. Pages serves `docs/`
+# verbatim and has no build step of its own, so the token has to be *in* the generated page, and that page
+# is in the repo; every visitor reads it in view-source anyway. Hardcoding it also means a rebuild by
+# anyone cannot quietly ship a page that measures nothing, which is the failure an env-var-only design
+# invites. `CF_BEACON_TOKEN` still overrides it, and setting that to "" or "off" drops the script -- which
+# is what a fork wants, and what a local `python -m http.server` run wants.
+#
+# `type=module` is Cloudflare's own current form and is deferred implicitly, so it cannot block the parse.
+# The token lands in a JSON attribute inside HTML, so it is validated rather than trusted: one stray quote
+# would close the attribute and let the rest be read as markup. Cloudflare issues 32 hex characters, and
+# anything else is a typo worth stopping the build for instead of shipping a silent no-op.
+CF_TOKEN = "1fe3cbfd55ef4fccab981c064489e656"
+TOKEN_RE = re.compile(r"\A[0-9a-f]{32}\Z")
+
+
+def beacon(token: str | None = None) -> str:
+    """The analytics script tag, or "" when the token is disabled."""
+    if token is None:
+        token = os.environ.get("CF_BEACON_TOKEN", CF_TOKEN)
+    token = token.strip()
+    if not token or token.lower() in {"off", "none", "0"}:
+        return ""
+    if not TOKEN_RE.match(token):
+        raise SystemExit(
+            f"CF_BEACON_TOKEN is not a Cloudflare beacon token (expected 32 hex chars, got {token!r}).")
+    return ("<!-- Cloudflare Web Analytics --><script type=\"module\" "
+            'src="https://static.cloudflareinsights.com/beacon.min.js" '
+            f"data-cf-beacon='{{\"token\": \"{token}\"}}'></script>"
+            "<!-- End Cloudflare Web Analytics -->\n")
+
+
+def substitute(page: str, data: dict, repo: str, site: str) -> str:
+    """Fill the template's placeholders. Both this stage and `19b_refresh.py` render the same shell, and
+    when the two chains drifted the refreshed page quietly lost whichever one had been added since."""
+    return (page
+            .replace("__COUNT__", f"{len(data['rows']):,}")
+            .replace("__TOPICS__", str(len(data["cats"])))
+            .replace("__STARS__", f"{sum(r[4] for r in data['rows']):,}")
+            .replace("__SNAPSHOT__", data["snapshot"])
+            .replace("__WINDOW__", str(newness.WINDOW))
+            .replace("__SITE__", site)
+            .replace("__REPO__", repo)
+            .replace("__ANALYTICS__", beacon()))
 
 
 PAGE = r"""<!doctype html>
@@ -111,15 +172,21 @@ PAGE = r"""<!doctype html>
 <meta property="og:image" content="https://opengraph.githubassets.com/1/__REPO__">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
 <style>
+/* Lagoon Gold: cyan primary, gold secondary, cool near-black surfaces. Dark is the designed mode --
+   its eight neutrals and two accents are the theme's own values. Light is stepped from the same two
+   hues rather than flipped, because the accents at their dark-mode lightness fail on white (the cyan
+   measures 2.53:1 there), and its neutrals are cooled to match so toggling does not change brand.
+   --onbar exists because a filled cyan or gold accent carries DARK ink, not white: white on #08b0cc
+   is 2.3:1, while the theme's own #0c1013 on it is 7.36:1. */
 :root{
-  --surface:#1a1a19; --plane:#0d0d0d; --band:#212120; --ink:#fff; --ink2:#c3c2b7;
-  --muted:#898781; --grid:#2c2c2a; --link:#86b6ef; --bar:#3987e5;
-  --good:#2eb82e; --warn:#fab219; --off:#6e6d68;
+  --surface:#101416; --plane:#181f21; --band:#232d30; --ink:#d0d7d8; --ink2:#a8b0b2;
+  --muted:#8c9496; --grid:#2c383d; --link:#08b0cc; --bar:#08b0cc;
+  --good:#2eb82e; --warn:#feb932; --off:#8c9496; --onbar:#0c1013;
 }
 html[data-theme=light]{
-  --surface:#fcfcfb; --plane:#f1f0ec; --band:#f6f5f1; --ink:#0b0b0b; --ink2:#52514e;
-  --muted:#898781; --grid:#e1e0d9; --link:#1c5cab; --bar:#2a78d6;
-  --good:#0a7c0a; --warn:#8a5a00; --off:#898781;
+  --surface:#fbfcfc; --plane:#eef1f2; --band:#f4f6f6; --ink:#101416; --ink2:#4a5254;
+  --muted:#5f6769; --grid:#dbe0e1; --link:#096373; --bar:#0a6f80;
+  --good:#0a7c0a; --warn:#8a5a00; --off:#5f6769; --onbar:#fff;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);
@@ -149,7 +216,22 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .chip{background:var(--band);color:var(--ink2);border:1px solid var(--grid);
   border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap}
 .chip:hover{border-color:var(--bar);color:var(--ink)}
-.chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:#fff;font-weight:600}
+.chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar);
+  font-weight:600}
+/* The new-arrivals chip wears the gold accent rather than the cyan every other chip uses, because it
+   is the only filter that answers a question about time rather than about the data. It is also the only
+   chip that can be absent: with nothing inside the window there is nothing to filter to, and a control
+   that selects zero rows is worse than no control. */
+.newchip{display:none;align-items:center;gap:.4em}
+.newchip.on{display:inline-flex}
+.newchip[aria-pressed=true]{background:var(--warn);border-color:var(--warn);color:var(--onbar)}
+.newchip:hover{border-color:var(--warn)}
+.ni{width:1em;height:1em;flex:none;vertical-align:-.12em}
+.ni>.a{fill:var(--warn)}
+.ni>.b{fill:var(--bar)}
+.newchip[aria-pressed=true] .ni>.a,.newchip[aria-pressed=true] .ni>.b{fill:var(--onbar)}
+.nm .ni{margin-right:.34em}
+.newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
 .count{color:var(--muted);font-size:13px;margin-left:auto;white-space:nowrap}
 .count b{color:var(--ink)}
 main{padding:0 20px 64px}
@@ -197,6 +279,22 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 </style>
 </head>
 <body>
+<!-- Drawn here rather than borrowed so there is no third-party licence attached to a 300-byte glyph: a
+     four-point star with concave arms, plus a smaller one trailing it. Two tones, gold and cyan, which
+     is the theme's own pair -- the mark for "new" is the mark for this site, not a generic sparkle.
+
+     Two symbols on one shared viewBox rather than one symbol with two classed paths, because a CSS rule
+     cannot reach inside the shadow tree a <use> builds: `.ni .a{fill:...}` matches nothing, and the
+     paths fall back to black, which on this surface is an invisible icon. `fill` *is* inherited, though,
+     so colouring the two <use> elements -- which are in the ordinary document -- reaches the clones.
+     Both symbols share `viewBox="0 0 16 16"`, so the two halves land in one 16x16 space and overlap
+     exactly as drawn. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star-a" viewBox="0 0 16 16">
+    <path d="M6.4.8Q7.63 5.17 12 6.4Q7.63 7.63 6.4 12Q5.17 7.63.8 6.4Q5.17 5.17 6.4.8Z"/></symbol>
+  <symbol id="star-b" viewBox="0 0 16 16">
+    <path d="M12.6 9.6Q13.26 11.94 15.6 12.6Q13.26 13.26 12.6 15.6Q11.94 13.26 9.6 12.6Q11.94 11.94 12.6 9.6Z"/></symbol>
+</svg>
 <header><div class="wrap"><div class="top">
   <div>
     <h1>Awesome Agentic Atlas <span>· eleven awesome-lists, merged</span></h1>
@@ -223,6 +321,10 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
       <option value="pushed">Pushed most recently</option>
       <option value="name">Name (A&ndash;Z)</option>
     </select>
+    <button class="chip newchip" id="new" aria-pressed="false"
+            title="Projects the source lists added in the last __WINDOW__ days">
+      <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
+      <span id="newlabel">New</span></button>
     <span class="count" id="count"></span>
   </div>
   <div class="line"><label>Topic</label><span id="cats"></span></div>
@@ -249,8 +351,18 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 
 <script>
 const PAGE_SIZE = 120;
-const state = {q: "", cat: "", tgt: "", os: [], strict: false, sort: "stars", shown: PAGE_SIZE};
-let D = null, ROWS = [];
+const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false,
+               sort: "stars", shown: PAGE_SIZE};
+let D = null, ROWS = [], NEW = 0;
+
+// The window is applied here, in the browser, against the reader's own clock -- `data.json` carries the
+// raw first-seen date and nothing else. That is what makes the mark expire without a rebuild: a repo
+// stamped the 14th stops being new on the 29th in every open tab, on a day the cron may not have run.
+// Both sides of the subtraction are ISO dates, which Date.parse reads as UTC midnight, so the result is
+// a whole number of days and never 13.958 because of a timezone.
+const TODAY = new Date().toISOString().slice(0, 10);
+const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
+const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 
 fetch("data.json").then(r => r.json()).then(d => {
   D = d;
@@ -260,7 +372,10 @@ fetch("data.json").then(r => r.json()).then(d => {
   ROWS.forEach(r => {
     r.hay = (r.name + " " + r.nwo + " " + r.blurb + " " + r.lang + " " + r.listed_by).toLowerCase();
     r.img = r.img || ("https://opengraph.githubassets.com/1/" + r.nwo);
+    const age = r.first_seen ? daysAgo(r.first_seen) : Infinity;
+    r.isnew = age >= 0 && age <= (d.window_days || 14);
   });
+  NEW = ROWS.filter(r => r.isnew).length;
   buildChips();
   readHash();
   render();
@@ -303,8 +418,17 @@ function buildChips() {
   document.getElementById("q").oninput = e => set({q: e.target.value}, true);
   document.getElementById("sort").onchange = e => set({sort: e.target.value});
   document.getElementById("strict").onclick = () => set({strict: !state.strict});
+  // Shown only when it would select something. The label carries the count because the whole question
+  // this chip answers is "is there anything new", and a reader should be able to see the answer without
+  // clicking and then having to click back.
+  const nb = document.getElementById("new");
+  if (NEW) {
+    nb.classList.add("on");
+    document.getElementById("newlabel").textContent = "New · " + NEW.toLocaleString();
+    nb.onclick = () => set({fresh: !state.fresh});
+  }
   document.getElementById("reset").onclick =
-    () => set({q: "", cat: "", tgt: "", os: [], strict: false});
+    () => set({q: "", cat: "", tgt: "", os: [], strict: false, fresh: false});
   document.getElementById("theme").onclick = e => {
     const light = document.documentElement.dataset.theme !== "light";
     document.documentElement.dataset.theme = light ? "light" : "dark";
@@ -330,6 +454,7 @@ function writeHash() {
   if (state.tgt) p.set("target", state.tgt);
   if (state.os.length) p.set("os", state.os.map(i => D.os[i].toLowerCase()).join(","));
   if (state.strict) p.set("confirmed", "1");
+  if (state.fresh) p.set("new", "1");
   if (state.sort !== "stars") p.set("sort", state.sort);
   const s = p.toString();
   history.replaceState(null, "", s ? "#" + s : location.pathname);
@@ -344,6 +469,9 @@ function readHash() {
   const names = D.os.map(o => o.toLowerCase());
   state.os = (p.get("os") || "").split(",").map(s => names.indexOf(s.trim())).filter(i => i >= 0);
   state.strict = p.get("confirmed") === "1";
+  // A `#new=1` link outlives the fortnight it was written in. Honouring it once the window has emptied
+  // would greet the reader with "nothing matches"; dropping it shows them the atlas instead.
+  state.fresh = p.get("new") === "1" && NEW > 0;
   state.sort = ["stars", "lists", "pushed", "name"].includes(p.get("sort")) ? p.get("sort") : "stars";
   document.getElementById("q").value = state.q;
   document.getElementById("sort").value = state.sort;
@@ -357,6 +485,7 @@ function readHash() {
 const OS_ANY = {0: [[0, "YL"], [1, "Y"]]};
 
 function match(r) {
+  if (state.fresh && !r.isnew) return false;
   if (state.cat && D.cats[r.cat].slug !== state.cat) return false;
   if (state.tgt) {
     const want = D.targets.findIndex(t => t.slug === state.tgt);
@@ -390,6 +519,7 @@ function render() {
   press("tgts", i => i === 0 ? !state.tgt : D.targets[i - 1].slug === state.tgt);
   press("oses", i => state.os.includes(i));
   document.getElementById("strict").setAttribute("aria-pressed", state.strict ? "true" : "false");
+  document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
 
   const hits = ROWS.filter(match).sort(SORTS[state.sort]);
   const ranked = hits.filter(r => r.stars).length;
@@ -417,11 +547,18 @@ function render() {
     // esc on the URLs too: these are other people's hand-typed table cells, and one stray quote in a
     // source list would otherwise close the attribute and let the rest of it be read as markup.
     const url = esc(r.url), img = esc(r.img);
+    // A new row's title is the star, the name, and the day it arrived. The date is outside the anchor so
+    // hovering the title does not underline it, and it is the fact that makes the mark self-explaining:
+    // "New" alone leaves the reader wondering new to what, and how long ago.
+    const star = r.isnew
+      ? '<svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>'
+      : "";
+    const on = r.isnew ? ' <span class="newon">- New on ' + mmddyy(r.first_seen) + "</span>" : "";
     return "<tr>" +
       '<td class="n rk">' + (i + 1) + "</td>" +
       '<td class="shot"><a href="' + url + '"><img loading="lazy" alt="" src="' + img +
         '"></a></td>' +
-      '<td><a class="nm" href="' + url + '">' + esc(r.name) + "</a>" +
+      '<td><a class="nm" href="' + url + '">' + star + esc(r.name) + "</a>" + on +
         '<span class="nwo">' + esc(r.nwo) + "</span>" +
         '<div class="meta">' + os + "</div></td>" +
       '<td class="n"><span class="st' + (r.stars ? "" : " none") + '">' +
@@ -454,7 +591,7 @@ function esc(s) {
     c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 }
 </script>
-</body>
+__ANALYTICS__</body>
 </html>
 """
 
@@ -463,10 +600,10 @@ def main() -> None:
     records = b16.prepare(
         json.loads((CACHE / "records_all.json").read_text(encoding="utf-8")), None)
     meta = json.loads((CACHE / "meta.json").read_text(encoding="utf-8"))
-    raw_shots = json.loads((CACHE / "shots_all.json").read_text(encoding="utf-8"))
     orch = json.loads((CACHE / "records.json").read_text(encoding="utf-8"))
-    orch_shots = json.loads((CACHE / "shots.json").read_text(encoding="utf-8"))
-    shots = b16.merged_shots(raw_shots, orch_shots)
+    # Optional, unlike everything above: no shot map means every row shows its Open Graph card, which is
+    # what the daily job relies on to skip the capture stage entirely. See `b17.cached`.
+    shots = b16.merged_shots(b17.cached("shots_all.json"), b17.cached("shots.json"))
 
     for r in orch:
         r.setdefault("section", r["category"])
@@ -488,6 +625,10 @@ def main() -> None:
         r["category"], r["targets"] = a["category"], a["targets"]
         r["stars"] = tax.STARS.get(r["nwo"], 0)
 
+    # Before build_data, which reads the map it fills. Idempotent, so 17_markdown having already run in
+    # this pipeline is fine -- it stamped the same repos with the same date and this call agrees.
+    fresh = newness.resolve([r["nwo"] for r in facets])
+
     data = build_data(facets, shots)
     OUT.mkdir(exist_ok=True)
     (OUT / "data.json").write_text(
@@ -495,19 +636,16 @@ def main() -> None:
     # Pages runs Jekyll by default, which would try to interpret this directory as a site and skip
     # anything it decided looked like a draft. There is no Jekyll here.
     (OUT / ".nojekyll").write_text("", encoding="utf-8")
-    page = (PAGE
-            .replace("__COUNT__", f"{len(data['rows']):,}")
-            .replace("__TOPICS__", str(len(data["cats"])))
-            .replace("__STARS__", f"{sum(r[4] for r in data['rows']):,}")
-            .replace("__SNAPSHOT__", data["snapshot"])
-            .replace("__SITE__", b17.SITE)
-            .replace("__REPO__", REPO))
+    page = substitute(PAGE, data, REPO, b17.SITE)
     (OUT / "index.html").write_text(page, encoding="utf-8")
 
     for f in ("index.html", "data.json"):
         print(f"{f:12s} {(OUT / f).stat().st_size / 1024:8.1f} KB")
     print(f"{len(data['rows']):,} repos · {len(data['cats'])} topics · "
           f"{len(data['targets'])} targets · {sum(r[4] for r in data['rows']):,} stars")
+    live = sum(1 for d in fresh.values() if newness.within(d))
+    print(f"{len(fresh):,} arrived since {data['baseline']} · {live:,} inside the "
+          f"{newness.WINDOW}-day window")
 
 
 if __name__ == "__main__":

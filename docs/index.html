@@ -54,7 +54,22 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .chip{background:var(--band);color:var(--ink2);border:1px solid var(--grid);
   border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap}
 .chip:hover{border-color:var(--bar);color:var(--ink)}
-.chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar);font-weight:600}
+.chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar);
+  font-weight:600}
+/* The new-arrivals chip wears the gold accent rather than the cyan every other chip uses, because it
+   is the only filter that answers a question about time rather than about the data. It is also the only
+   chip that can be absent: with nothing inside the window there is nothing to filter to, and a control
+   that selects zero rows is worse than no control. */
+.newchip{display:none;align-items:center;gap:.4em}
+.newchip.on{display:inline-flex}
+.newchip[aria-pressed=true]{background:var(--warn);border-color:var(--warn);color:var(--onbar)}
+.newchip:hover{border-color:var(--warn)}
+.ni{width:1em;height:1em;flex:none;vertical-align:-.12em}
+.ni>.a{fill:var(--warn)}
+.ni>.b{fill:var(--bar)}
+.newchip[aria-pressed=true] .ni>.a,.newchip[aria-pressed=true] .ni>.b{fill:var(--onbar)}
+.nm .ni{margin-right:.34em}
+.newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
 .count{color:var(--muted);font-size:13px;margin-left:auto;white-space:nowrap}
 .count b{color:var(--ink)}
 main{padding:0 20px 64px}
@@ -102,6 +117,22 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 </style>
 </head>
 <body>
+<!-- Drawn here rather than borrowed so there is no third-party licence attached to a 300-byte glyph: a
+     four-point star with concave arms, plus a smaller one trailing it. Two tones, gold and cyan, which
+     is the theme's own pair -- the mark for "new" is the mark for this site, not a generic sparkle.
+
+     Two symbols on one shared viewBox rather than one symbol with two classed paths, because a CSS rule
+     cannot reach inside the shadow tree a <use> builds: `.ni .a{fill:...}` matches nothing, and the
+     paths fall back to black, which on this surface is an invisible icon. `fill` *is* inherited, though,
+     so colouring the two <use> elements -- which are in the ordinary document -- reaches the clones.
+     Both symbols share `viewBox="0 0 16 16"`, so the two halves land in one 16x16 space and overlap
+     exactly as drawn. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star-a" viewBox="0 0 16 16">
+    <path d="M6.4.8Q7.63 5.17 12 6.4Q7.63 7.63 6.4 12Q5.17 7.63.8 6.4Q5.17 5.17 6.4.8Z"/></symbol>
+  <symbol id="star-b" viewBox="0 0 16 16">
+    <path d="M12.6 9.6Q13.26 11.94 15.6 12.6Q13.26 13.26 12.6 15.6Q11.94 13.26 9.6 12.6Q11.94 11.94 12.6 9.6Z"/></symbol>
+</svg>
 <header><div class="wrap"><div class="top">
   <div>
     <h1>Awesome Agentic Atlas <span>· eleven awesome-lists, merged</span></h1>
@@ -128,6 +159,10 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
       <option value="pushed">Pushed most recently</option>
       <option value="name">Name (A&ndash;Z)</option>
     </select>
+    <button class="chip newchip" id="new" aria-pressed="false"
+            title="Projects the source lists added in the last 14 days">
+      <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
+      <span id="newlabel">New</span></button>
     <span class="count" id="count"></span>
   </div>
   <div class="line"><label>Topic</label><span id="cats"></span></div>
@@ -154,8 +189,18 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 
 <script>
 const PAGE_SIZE = 120;
-const state = {q: "", cat: "", tgt: "", os: [], strict: false, sort: "stars", shown: PAGE_SIZE};
-let D = null, ROWS = [];
+const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false,
+               sort: "stars", shown: PAGE_SIZE};
+let D = null, ROWS = [], NEW = 0;
+
+// The window is applied here, in the browser, against the reader's own clock -- `data.json` carries the
+// raw first-seen date and nothing else. That is what makes the mark expire without a rebuild: a repo
+// stamped the 14th stops being new on the 29th in every open tab, on a day the cron may not have run.
+// Both sides of the subtraction are ISO dates, which Date.parse reads as UTC midnight, so the result is
+// a whole number of days and never 13.958 because of a timezone.
+const TODAY = new Date().toISOString().slice(0, 10);
+const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
+const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 
 fetch("data.json").then(r => r.json()).then(d => {
   D = d;
@@ -165,7 +210,10 @@ fetch("data.json").then(r => r.json()).then(d => {
   ROWS.forEach(r => {
     r.hay = (r.name + " " + r.nwo + " " + r.blurb + " " + r.lang + " " + r.listed_by).toLowerCase();
     r.img = r.img || ("https://opengraph.githubassets.com/1/" + r.nwo);
+    const age = r.first_seen ? daysAgo(r.first_seen) : Infinity;
+    r.isnew = age >= 0 && age <= (d.window_days || 14);
   });
+  NEW = ROWS.filter(r => r.isnew).length;
   buildChips();
   readHash();
   render();
@@ -208,8 +256,17 @@ function buildChips() {
   document.getElementById("q").oninput = e => set({q: e.target.value}, true);
   document.getElementById("sort").onchange = e => set({sort: e.target.value});
   document.getElementById("strict").onclick = () => set({strict: !state.strict});
+  // Shown only when it would select something. The label carries the count because the whole question
+  // this chip answers is "is there anything new", and a reader should be able to see the answer without
+  // clicking and then having to click back.
+  const nb = document.getElementById("new");
+  if (NEW) {
+    nb.classList.add("on");
+    document.getElementById("newlabel").textContent = "New · " + NEW.toLocaleString();
+    nb.onclick = () => set({fresh: !state.fresh});
+  }
   document.getElementById("reset").onclick =
-    () => set({q: "", cat: "", tgt: "", os: [], strict: false});
+    () => set({q: "", cat: "", tgt: "", os: [], strict: false, fresh: false});
   document.getElementById("theme").onclick = e => {
     const light = document.documentElement.dataset.theme !== "light";
     document.documentElement.dataset.theme = light ? "light" : "dark";
@@ -235,6 +292,7 @@ function writeHash() {
   if (state.tgt) p.set("target", state.tgt);
   if (state.os.length) p.set("os", state.os.map(i => D.os[i].toLowerCase()).join(","));
   if (state.strict) p.set("confirmed", "1");
+  if (state.fresh) p.set("new", "1");
   if (state.sort !== "stars") p.set("sort", state.sort);
   const s = p.toString();
   history.replaceState(null, "", s ? "#" + s : location.pathname);
@@ -249,6 +307,9 @@ function readHash() {
   const names = D.os.map(o => o.toLowerCase());
   state.os = (p.get("os") || "").split(",").map(s => names.indexOf(s.trim())).filter(i => i >= 0);
   state.strict = p.get("confirmed") === "1";
+  // A `#new=1` link outlives the fortnight it was written in. Honouring it once the window has emptied
+  // would greet the reader with "nothing matches"; dropping it shows them the atlas instead.
+  state.fresh = p.get("new") === "1" && NEW > 0;
   state.sort = ["stars", "lists", "pushed", "name"].includes(p.get("sort")) ? p.get("sort") : "stars";
   document.getElementById("q").value = state.q;
   document.getElementById("sort").value = state.sort;
@@ -262,6 +323,7 @@ function readHash() {
 const OS_ANY = {0: [[0, "YL"], [1, "Y"]]};
 
 function match(r) {
+  if (state.fresh && !r.isnew) return false;
   if (state.cat && D.cats[r.cat].slug !== state.cat) return false;
   if (state.tgt) {
     const want = D.targets.findIndex(t => t.slug === state.tgt);
@@ -295,6 +357,7 @@ function render() {
   press("tgts", i => i === 0 ? !state.tgt : D.targets[i - 1].slug === state.tgt);
   press("oses", i => state.os.includes(i));
   document.getElementById("strict").setAttribute("aria-pressed", state.strict ? "true" : "false");
+  document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
 
   const hits = ROWS.filter(match).sort(SORTS[state.sort]);
   const ranked = hits.filter(r => r.stars).length;
@@ -322,11 +385,18 @@ function render() {
     // esc on the URLs too: these are other people's hand-typed table cells, and one stray quote in a
     // source list would otherwise close the attribute and let the rest of it be read as markup.
     const url = esc(r.url), img = esc(r.img);
+    // A new row's title is the star, the name, and the day it arrived. The date is outside the anchor so
+    // hovering the title does not underline it, and it is the fact that makes the mark self-explaining:
+    // "New" alone leaves the reader wondering new to what, and how long ago.
+    const star = r.isnew
+      ? '<svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>'
+      : "";
+    const on = r.isnew ? ' <span class="newon">- New on ' + mmddyy(r.first_seen) + "</span>" : "";
     return "<tr>" +
       '<td class="n rk">' + (i + 1) + "</td>" +
       '<td class="shot"><a href="' + url + '"><img loading="lazy" alt="" src="' + img +
         '"></a></td>' +
-      '<td><a class="nm" href="' + url + '">' + esc(r.name) + "</a>" +
+      '<td><a class="nm" href="' + url + '">' + star + esc(r.name) + "</a>" + on +
         '<span class="nwo">' + esc(r.nwo) + "</span>" +
         '<div class="meta">' + os + "</div></td>" +
       '<td class="n"><span class="st' + (r.stars ? "" : " none") + '">' +
@@ -359,5 +429,6 @@ function esc(s) {
     c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 }
 </script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
