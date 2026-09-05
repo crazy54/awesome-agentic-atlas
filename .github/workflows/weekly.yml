@@ -35,7 +35,6 @@ jobs:
     timeout-minutes: 350
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      CF_BEACON_TOKEN: ${{ secrets.CF_BEACON_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
@@ -45,6 +44,19 @@ jobs:
           python-version: "3.12"
 
       - run: python -m pip install --upgrade pip openpyxl pillow playwright
+
+      # See daily.yml: declaring this in `env:` would set it to "" whenever the secret is absent, and an
+      # empty CF_BEACON_TOKEN is how you turn the beacon off.
+      - name: Honour a CF_BEACON_TOKEN override if one is set
+        env:
+          OVERRIDE: ${{ vars.CF_BEACON_TOKEN || secrets.CF_BEACON_TOKEN }}
+        run: |
+          if [ -n "$OVERRIDE" ]; then
+            echo "CF_BEACON_TOKEN=$OVERRIDE" >> "$GITHUB_ENV"
+            echo "Using the CF_BEACON_TOKEN override."
+          else
+            echo "No override set; using the token committed in scripts/19_pages.py."
+          fi
 
       # `chrome.py` looks for a Playwright cache before it looks on PATH, so installing it this way is all
       # the two capture stages need -- neither imports playwright, they shell out to the binary. --with-deps

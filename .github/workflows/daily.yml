@@ -49,8 +49,6 @@ jobs:
       # 1,294 costs about seventy requests; the per-repo release and Actions probes are the bulk of the
       # rest, and a full run lands in the low hundreds.
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # Optional. Unset in a fork, and `beacon()` then emits nothing rather than reporting to this repo.
-      CF_BEACON_TOKEN: ${{ secrets.CF_BEACON_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
@@ -60,6 +58,22 @@ jobs:
           python-version: "3.12"
 
       - run: python -m pip install --upgrade pip openpyxl pillow
+
+      # `19_pages.py` reads CF_BEACON_TOKEN and treats an empty value as "no analytics", which is right for
+      # a fork and for a local `python -m http.server` -- and wrong here. Declaring it in `env:` would set
+      # it to "" on every run where the secret does not exist, so the job that publishes the real site would
+      # be the one build guaranteed to ship a page that measures nothing. Written through $GITHUB_ENV only
+      # when there is something to write, so "no override" and "override to off" stay different answers.
+      - name: Honour a CF_BEACON_TOKEN override if one is set
+        env:
+          OVERRIDE: ${{ vars.CF_BEACON_TOKEN || secrets.CF_BEACON_TOKEN }}
+        run: |
+          if [ -n "$OVERRIDE" ]; then
+            echo "CF_BEACON_TOKEN=$OVERRIDE" >> "$GITHUB_ENV"
+            echo "Using the CF_BEACON_TOKEN override."
+          else
+            echo "No override set; using the token committed in scripts/19_pages.py."
+          fi
 
       # Rolling cache: a key nothing will ever hit, so every run saves a fresh entry, plus a restore-key
       # prefix so every run starts from the most recent one. The point is `cache/shots/` -- keeping it
