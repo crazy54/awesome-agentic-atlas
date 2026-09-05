@@ -41,6 +41,18 @@ there is now [one link — twenty tools, ranked][q1].
 | 📄 **Markdown edition** | Reading in the browser, linking to, quoting. Same data, same ordering, split so no page hits GitHub's rendering limit. | [mega-list/](mega-list/README.md) |
 | 🏆 **Leaderboard** | The most-starred projects across every list at once, with how many lists name each one — a rough consensus score. | [leaderboard](mega-list/leaderboard.md) |
 
+### Running the site locally
+
+The site is one static page plus one JSON file, so a clone serves it with nothing installed but Python:
+
+```bash
+python -m http.server -d docs 8000
+```
+
+Then open <http://localhost:8000>. It does have to be *served* — a `file://` page is not allowed to
+`fetch` a sibling file, so double-clicking `docs/index.html` gives you the layout and none of the 1,294
+rows. Nothing here is built or bundled: edit `docs/index.html` and reload.
+
 ## Top of the leaderboard
 
 | ★ | Project | Named by |
