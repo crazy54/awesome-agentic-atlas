@@ -44,12 +44,15 @@
 # not compress, will see 86 KB and 652 KB instead and conclude the budget is absurdly tight. It is not:
 # the units here are the units the assertion sees.
 #
-# CLS is enforced at 0.7 against a measured 0.5494, which is a lot of layout shift and the budget does not
-# pretend otherwise. The shell paints an empty container, then 1,294 rows arrive and shove everything below
-# them down the page; the fix is to reserve the rows' height or to server-render the first screen of them,
-# and it belongs in its own commit rather than in a threshold chosen to make a red light green. What this
-# assertion does today is hold the line: the page may not become *less* stable than it already is. Google
-# considers anything above 0.1 poor, and that is the number to aim at when someone gets to it.
+# CLS is enforced at 0.7 against a measured 0.5140 -- the runner figure in the next block, because that is
+# the number the assertion actually sees. The 0.5494 in the table above is the laptop reading the threshold
+# was originally chosen against, and it is kept for that provenance and for nothing else; quoting it as the
+# current value is the mistake this sentence used to make. Either way it is a lot of layout shift and the
+# budget does not pretend otherwise. The shell paints an empty container, then 1,294 rows arrive and shove
+# everything below them down the page; the fix is to reserve the rows' height or to server-render the first
+# screen of them, and it belongs in its own commit rather than a threshold chosen to make a red light green.
+# What this assertion does today is hold the line: the page may not become *less* stable than it already
+# is. Google considers anything above 0.1 poor, and that is the number to aim at when someone gets to it.
 #
 # That used to say "an empty table". It is a grid now: 685ae2a made cards the default view, so the first
 # paint reserves a grid rather than a table and the rows arriving reflow it the same way. The mechanism did
@@ -71,6 +74,19 @@
 #   LCP        2,158-2,503 ms
 #   TBT            0-660 ms      the spread this file's header predicts, on identical bytes
 #   perf score    0.59-0.77
+#
+# Those single figures are the *representative* run's, not an average of the three, and that is deliberate:
+# `aggregationMethod: median-run` asserts against one run's values, so the only numbers worth recording next
+# to a threshold are the ones the assertion compared. `reports/manifest.json` marks which run that was with
+# `isRepresentativeRun: true`. It matters because the arithmetic looks wrong otherwise -- the three runs came
+# in at 1,357,448 / 1,357,372 / 1,357,365 B and the line above says 1,357,365, which is neither their mean
+# nor their median but is exactly what `assertion-results.json` records as the actual value it failed on.
+#
+# The other thing to know before opening an artifact: `network-requests` and `resource-summary` are both
+# `group: hidden` in the performance category, so the HTML report renders neither and looks like it holds
+# nothing useful. The per-request breakdown that produced the image figure above lives in
+# `audits["network-requests"].details.items` of the raw `lhr-<ts>.json`, which is the reason the step below
+# keeps the whole `.lighthouseci` directory rather than `reports/`.
 #
 # CLS is settled: 0.5140 on the runner, and the 0.7179 measured locally after the cards default does not
 # reproduce. The threshold was never raised to fit that reading, and it turns out it should not have been --
@@ -259,6 +275,36 @@ jobs:
       # none of them must not be able to pass. It can add a second red X to a job whose measurement
       # already failed before writing anything, which is noise, but it is truthful noise and the job
       # was red anyway.
+      #
+      # Precisely where the skip happens, since "treats a dotted path as hidden" leaves open whether a
+      # named root is exempt: @actions/glob applies `path.basename(item.path).match(/^\./)` to every item
+      # the walk reaches, the search root included, so the walk never descended at all.
+      #
+      # WHAT JFH-219 SAID THE CAUSE WAS, AND WHY IT IS NOT
+      #
+      # The ticket diagnosed this as `lhci autorun` aborting at the first failing phase, leaving the
+      # `upload` phase -- which is where the config puts the reports -- unreached whenever an assertion
+      # failed. Its acceptance criteria propose splitting collect/assert/upload into three steps to fix
+      # that. They are not applied, because the premise is false and the split would have changed nothing:
+      # the files were always written and always thrown away afterwards.
+      #
+      # Two runs settle it from opposite directions. 34062202538 failed `total:size` and still logged
+      # "Dumping 3 reports to disk ... Done writing reports to disk" before exiting 1 -- so a failed
+      # assert does not prevent the upload phase. 34056743124 passed every assertion, completed all three
+      # phases, and uploaded nothing either -- zero artifacts on a green run, which nothing about assert
+      # can explain. `src/autorun/autorun.js` in 0.15.1 agrees structurally: a *collect* failure is
+      # `process.exit(collectStatus)` on the spot, but an assert failure is only recorded as
+      # `hasFailure`, upload runs regardless, and `process.exit(1)` comes after it. Splitting the phases
+      # would also have cost the soft-failure handling autorun deliberately gives a broken upload.
+      #
+      # The job still fails on a crossed budget, and `always()` here does not soften that: the exit code
+      # comes from the step above, which is not `continue-on-error`. `always()` only stops a red step
+      # above from skipping this one.
+      #
+      # The whole directory rather than `reports/` alone, because the parent holds two things the reports
+      # do not: collect's raw `lhr-<ts>.json` and `lhr-<ts>.html` for all three runs, and the
+      # `assertion-results.json` that `assert.js` writes, which names exactly which assertion failed in
+      # JSON instead of in 200 lines of console output.
       - name: Keep the reports
         if: always()
         uses: actions/upload-artifact@v4
