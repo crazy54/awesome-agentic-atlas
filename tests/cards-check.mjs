@@ -148,8 +148,8 @@ await shot("view-cards-cold-1440");
 
 // The table is the opt-in view now, so it is reached by its own link rather than by arriving. Everything
 // below still measures the switch *from* the table *to* cards, which is the expensive direction and the one
-// worth timing -- and the timing loop's parity depends on the page being in the table when it starts. That
-// is what this navigation is for as much as the three assertions on it; see the note after the loop.
+// worth measuring -- and the measurement's parity depends on the page being in the table when it starts.
+// That is what this navigation is for as much as the three assertions on it; see the note after it.
 await goto(ORIGIN + "#view=table");
 const tbl = await evalIn(geom);
 ok("a #view=table link opens in the table",
@@ -159,32 +159,70 @@ ok("one row per line in the table", tbl.across === 1, JSON.stringify(tbl));
 ok("the table shows its headings", tbl.theadShown);
 await shot("view-table-1440");
 
-// The toggle against the thing it exists to avoid. Both numbers include a forced synchronous layout,
-// because a table and a grid of 120 cards are different enough that the browser starts over either way and
-// that relayout is the bulk of both; what the toggle skips is rebuilding 120 rows of innerHTML on top of it.
-// So the assertion is the comparison, not a number picked out of the air.
+// The toggle against the thing it exists to avoid -- counted, not timed.
 //
-// Warmed and medianed, and neither of those is ceremony. Measured cold and once, the toggle came out
-// *slower* -- 51ms against 43ms -- because the first switch pays for a layout mode the document has never
-// been in, and the re-render that follows it lands in a grid the browser has just finished sizing. Nine
-// samples each after four warm-up switches, taken alternately so any drift hits both: 38ms against 48ms.
-// A one-shot A-then-B measurement of two things that warm each other is not a measurement.
-const timing = await evalIn(`(() => {
-  const force = () => document.documentElement.getBoundingClientRect().height;
-  const time = fn => { const t = performance.now(); fn(); force(); return performance.now() - t; };
-  const med = a => a.slice().sort((x, y) => x - y)[Math.floor(a.length / 2)];
-  for (let i = 0; i < 4; i++) { document.getElementById('view').click(); force(); }
-  const tog = [], ren = [];
-  for (let i = 0; i < 9; i++) {
-    tog.push(time(() => document.getElementById('view').click()));
-    ren.push(time(() => render()));
-  }
-  return {toggle: med(tog), rerender: med(ren)};
+// This used to race two wall clocks: nine medianed samples of a switch against nine of a `render()`,
+// passing if the switch came out the smaller number. On an unchanged tree and an idle machine it measured
+// 44.1ms against 43.0ms and went red on one run in three (JFH-223). A 2.5% margin between two timings is
+// not a margin, and this was the one assertion in the suite that could not be made deterministic by
+// construction while every other one compares bytes, counts, geometry or text. Widening the margin is the
+// obvious repair and the wrong one: it keeps the race and only lengthens the odds, and an assertion that
+// reddens at random teaches whoever is on the other end of CI to re-run until green -- which is the habit
+// the assertion floors in `run.mjs` exist to prevent. A flaky guard is worse than no guard, because it
+// also spends attention.
+//
+// The claim being made is "switching views avoids a re-render", and that is a statement about work
+// performed rather than about elapsed time -- so the work is what is measured. A `MutationObserver`
+// drained with `takeRecords()` reports it exactly: rows constructed, rows still on screen afterwards, and
+// how many records landed under `#out`. Exact on any machine at any load, no warm-up, no median, no
+// number picked out of the air, and it says the invariant out loud: JFH-182's toggle must stay a CSS
+// switch and must not become "throw the list away and rebuild it".
+//
+// The layout the switch provokes is deliberately not measured. A table and a grid of 120 cards relayout
+// either way, so that cost is common to both sides and was always the bulk of both timings -- the part
+// the toggle actually skips is rebuilding 120 rows of innerHTML on top of it, and that is countable.
+//
+// Watched over the whole document rather than over `#out`, so a "switch" that rebuilt the list somewhere
+// else and swapped it in would still be caught constructing 120 rows.
+const work = await evalIn(`(() => {
+  const out = document.getElementById('out');
+  const rowsIn = n => (n.nodeName === 'TR' ? 1 : 0) +
+    (n.querySelectorAll ? n.querySelectorAll('tbody tr').length : 0);
+  const count = fn => {
+    const had = [...out.querySelectorAll('tbody tr')];
+    const obs = new MutationObserver(() => {});
+    obs.observe(document.documentElement,
+                {childList: true, subtree: true, attributes: true, characterData: true});
+    fn();
+    // Drained synchronously in the same turn as the call. The observer's own callback is a microtask, and
+    // waiting for one would put the scheduler back inside a measurement whose entire point is that it
+    // does not depend on the scheduler.
+    const recs = obs.takeRecords();
+    obs.disconnect();
+    let rows = 0, inOut = 0;
+    for (const r of recs) {
+      for (const n of r.addedNodes) rows += rowsIn(n);
+      if (out.contains(r.target)) inOut++;
+    }
+    return {rowsBuilt: rows, outRecords: inOut, had: had.length,
+            survived: had.filter(t => t.isConnected).length};
+  };
+  // The re-render first and the switch second, so the page ends on the switch: the rows every assertion
+  // below reads are then the ones the switch kept, rather than ones a \`render()\` had just rebuilt
+  // underneath them.
+  const rerender = count(() => render());
+  const toggle = count(() => document.getElementById('view').click());
+  return {rerender, toggle};
 })()`);
-// Four warm-up switches put the page back where it started and nine samples then leave it in cards, which
-// is what every assertion below reads. Asserted rather than counted on, because getting the parity wrong
-// would quietly measure the table's geometry and report it as the gallery's.
-ok("the timing loop left the page in cards",
+// Printed as well as asserted, the way the other harnesses print the figures they reason from: the whole
+// point of counting instead of timing is that these are exact numbers somebody can read off a CI log.
+console.log(`  a switch built ${work.toggle.rowsBuilt} row(s) and kept ${work.toggle.survived} of ` +
+            `${work.toggle.had} on screen; the re-render it avoids built ${work.rerender.rowsBuilt} ` +
+            `and kept ${work.rerender.survived} of ${work.rerender.had}`);
+// One switch out of the table is the measurement's last act, and that is what leaves the page in cards for
+// every assertion below. Asserted rather than counted on, because getting the parity wrong would quietly
+// measure the table's geometry and report it as the gallery's.
+ok("the toggle measurement left the page in cards",
    await evalIn("document.documentElement.dataset.view") === "cards",
    await evalIn("document.documentElement.dataset.view"));
 const c1440 = await evalIn(geom);
@@ -202,9 +240,16 @@ ok("the rank carries a # now the column heading has gone", /#/.test(c1440.rankPr
 ok("nothing overflows sideways", c1440.hscroll <= 0, String(c1440.hscroll));
 ok("no row was rebuilt, so the same count is on screen", c1440.rows === tbl.rows,
    c1440.rows + " vs " + tbl.rows);
-ok("switching costs less than the re-render it avoids",
-   timing.toggle < timing.rerender,
-   "toggle " + timing.toggle.toFixed(1) + "ms vs re-render " + timing.rerender.toFixed(1) + "ms");
+// The three counts, each with its non-emptiness conjunct: a measurement taken over an empty list would
+// report zero rows built and zero rows lost and satisfy the switch's half of every one of these.
+ok("switching views constructs no rows, where the re-render it avoids constructs every one",
+   work.toggle.rowsBuilt === 0 && work.rerender.had > 0 &&
+   work.rerender.rowsBuilt === work.rerender.had, JSON.stringify(work));
+ok("...and the rows on screen after the switch are the same elements, not rebuilt ones",
+   work.toggle.had > 0 && work.toggle.survived === work.toggle.had && work.rerender.survived === 0,
+   JSON.stringify(work));
+ok("...having touched nothing whatever under #out, which is where a re-render does its work",
+   work.toggle.outRecords === 0 && work.rerender.outRecords > 0, JSON.stringify(work));
 // Cards need no hash now that they are the default, so the thing to assert here is the opposite of what it
 // used to be: a reader who has arrived at the default view has a clean URL to share. The opt-in direction --
 // that switching to the table does write itself into the hash -- is asserted in the reload section below,
