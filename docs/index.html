@@ -7,7 +7,13 @@
 <meta name="description" content="1,294 agentic AI projects from eleven awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
 <meta property="og:title" content="Awesome Agentic Atlas">
 <meta property="og:description" content="1,294 projects from eleven awesome-lists, one filterable index.">
-<meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<meta property="og:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/root.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Awesome Agentic Atlas: how many projects it indexes, how many source lists and topics they came from, and its three most starred projects.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/root.png">
 <link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/">
 <link rel="alternate" type="application/atom+xml" title="Awesome Agentic Atlas — new arrivals"
       href="feed.xml">
@@ -94,6 +100,12 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .newchip[aria-pressed=true] .ni>.a,.newchip[aria-pressed=true] .ni>.b{fill:var(--onbar)}
 .nm .ni{margin-right:.34em}
 .newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
+.risechip{display:none}
+.risechip.on{display:inline-block}
+.risechip[aria-pressed=true]{background:var(--good);border-color:var(--good);color:var(--onbar)}
+.risechip:hover{border-color:var(--good)}
+.rise{color:var(--good);font-weight:600;font-variant-numeric:tabular-nums}
+.rise.down{color:var(--muted);font-weight:400}
 .count{color:var(--muted);font-size:13px;margin-left:auto;white-space:nowrap}
 .count b{color:var(--ink)}
 main{padding:0 20px 64px}
@@ -294,7 +306,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <p class="blurb" id="ctx"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><span class="k"><span class="lw">Last </span>deployed</span>
-      <span class="v"><time datetime="2026-09-06T20:14:00Z">2026-09-06 20:14 UTC</time></span></a>
+      <span class="v"><time datetime="2026-09-06T20:46:00Z">2026-09-06 20:46 UTC</time></span></a>
   </div>
   <nav>
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
@@ -313,6 +325,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <select id="sort" aria-label="Sort by">
       <option value="relevance">Best match</option>
       <option value="stars">Most stars</option>
+      <option value="rising">Rising</option>
       <option value="lists">Named by most lists</option>
       <option value="pushed">Pushed most recently</option>
       <option value="name">Name (A&ndash;Z)</option>
@@ -322,6 +335,9 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
             title="Projects the source lists added in the last 14 days">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
       <span id="newlabel">New</span></button>
+    <button class="chip risechip" id="rise" aria-pressed="false"
+            title="Projects gaining stars fastest for their size">
+      <span id="riselabel">Rising</span></button>
     <button class="chip" id="palhint"></button>
     <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
@@ -367,16 +383,16 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 
 <script>
 const PAGE_SIZE = 120;
-const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false,
+const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
                sort: "relevance", shown: PAGE_SIZE, view: "cards"};
-let D = null, ROWS = [], NEW = 0;
+let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
 let typing = 0;
 
 const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-06T20:14:00Z";
+const BUILT = "2026-09-06T20:46:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -410,6 +426,15 @@ function since(iso) {
     : '<span title="' + iso + '">' + t + "</span>";
 }
 
+function gained(r) {
+  if (!RISE || r.gain === null) return "";
+  const sign = r.gain < 0 ? "−" : r.gain > 0 ? "+" : "";
+  const n = sign + Math.abs(r.gain).toLocaleString();
+  return ' <span class="rise' + (r.gain > 0 ? "" : " down") + '" title="' +
+    esc(n + " stars in the " + RISE.span + " days from " + RISE.from +
+        " to " + D.velocity.to) + '">' + n + "</span>";
+}
+
 fetch("data.json").then(r => {
   deployStamp(r.headers.get("Last-Modified"));
   return r.json();
@@ -426,6 +451,16 @@ fetch("data.json").then(r => {
     r.isnew = age >= 0 && age <= (d.window_days || 14);
   });
   NEW = ROWS.filter(r => r.isnew).length;
+  RISE = (d.velocity && d.velocity.rise && d.velocity.rise.col)
+    ? Object.assign({}, d.velocity.rise, d.velocity[d.velocity.rise.col]) : null;
+  ROWS.forEach(r => {
+    const g = RISE ? r[RISE.col] : "";
+    r.gain = (g === "" || g === undefined || g === null) ? null : g;
+    r.gkey = r.gain === null ? -1e9 : r.gain;
+    r.rise = r.gain !== null &&
+      r.gain >= Math.max(RISE.min_abs, RISE.min_pct / 100 * (r.stars || 0));
+  });
+  RISING = ROWS.filter(r => r.rise).length;
   buildChips();
   readHash();
   render();
@@ -487,6 +522,18 @@ function buildChips() {
     document.getElementById("newlabel").textContent = "New · " + NEW.toLocaleString();
     nb.onclick = () => set({fresh: !state.fresh});
   }
+  const rb = document.getElementById("rise"), sel = document.getElementById("sort"),
+        ropt = [...sel.options].find(o => o.value === "rising");
+  if (RISE && RISING) {
+    rb.classList.add("on");
+    rb.title = "Gained at least " + RISE.min_abs.toLocaleString() + " stars, and at least " +
+      RISE.min_pct + "% of its own count, in the " + RISE.span + " days from " + RISE.from + " to " +
+      D.velocity.to;
+    document.getElementById("riselabel").textContent = "Rising · " + RISING.toLocaleString();
+    rb.onclick = () => set({rising: !state.rising});
+  } else if (ropt) {
+    ropt.remove();
+  }
   document.getElementById("reset").onclick = () => set(CLEAR);
   window.addEventListener("hashchange", () => { readHash(); render(); });
   palWire();
@@ -533,7 +580,7 @@ function palWire() {
   dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
 }
 
-const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false};
+const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false};
 
 let PAL = [], PALI = 0;
 
@@ -556,6 +603,7 @@ function palItems(query) {
       set({sort: o.value});
     });
   if (NEW) add("Filter", "New arrivals", state.fresh, () => set({fresh: !state.fresh}));
+  if (RISE && RISING) add("Filter", "Rising", state.rising, () => set({rising: !state.rising}));
   add("Filter", "Confirmed platform support only", state.strict, () => set({strict: !state.strict}));
   add("Filter", "Clear all filters", false, () => set(CLEAR));
   add("Page", (document.documentElement.dataset.theme === "light" ? "Dark" : "Light") + " theme", false,
@@ -771,6 +819,7 @@ function writeHash() {
   if (state.os.length) p.set("os", state.os.map(i => D.os[i].toLowerCase()).join(","));
   if (state.strict) p.set("confirmed", "1");
   if (state.fresh) p.set("new", "1");
+  if (state.rising) p.set("rising", "1");
   if (state.sort !== "relevance") p.set("sort", state.sort);
   if (state.view !== "cards") p.set("view", state.view);
   const s = p.toString();
@@ -787,7 +836,9 @@ function readHash() {
   state.os = (p.get("os") || "").split(",").map(s => names.indexOf(s.trim())).filter(i => i >= 0);
   state.strict = p.get("confirmed") === "1";
   state.fresh = p.get("new") === "1" && NEW > 0;
-  state.sort = SORT_KEYS.includes(p.get("sort")) ? p.get("sort") : "relevance";
+  state.rising = p.get("rising") === "1" && RISE !== null && RISING > 0;
+  const want = p.get("sort");
+  state.sort = SORT_KEYS.includes(want) && (want !== "rising" || RISE) ? want : "relevance";
   state.view = p.get("view") === "table" ? "table" : "cards";
   document.getElementById("q").value = state.q;
   document.getElementById("sort").value = state.sort;
@@ -797,6 +848,7 @@ const OS_ANY = {0: [[0, "YL"], [1, "Y"]]};
 
 function match(r) {
   if (state.fresh && !r.isnew) return false;
+  if (state.rising && !r.rise) return false;
   if (state.cat && D.cats[r.cat].slug !== state.cat) return false;
   if (state.tgt) {
     const want = D.targets.findIndex(t => t.slug === state.tgt);
@@ -837,6 +889,7 @@ function rescue() {
   state.os.forEach(i => opts.push(["Drop " + D.os[i], {os: state.os.filter(x => x !== i)}]));
   if (state.strict) opts.push(["Allow inferred support", {strict: false}]);
   if (state.fresh) opts.push(["Drop the new-arrivals filter", {fresh: false}]);
+  if (state.rising) opts.push(["Drop the rising filter", {rising: false}]);
   return opts.map(o => ({label: o[0], patch: o[1], n: countWith(o[1])}))
     .filter(o => o.n > 0)
     .sort((a, b) => b.n - a.n)
@@ -890,6 +943,7 @@ function relevance(r, words) {
 const SORTS = {
   relevance: (a, b) => b.rel - a.rel || b.stars - a.stars || a.name.localeCompare(b.name),
   stars: (a, b) => b.stars - a.stars || a.name.localeCompare(b.name),
+  rising: (a, b) => b.gkey - a.gkey || SORTS.stars(a, b),
   lists: (a, b) => b.lists - a.lists || b.stars - a.stars,
   pushed: (a, b) => (b.pushed || "").localeCompare(a.pushed || "") || b.stars - a.stars,
   name: (a, b) => a.name.localeCompare(b.name),
@@ -909,6 +963,7 @@ function render() {
   press("oses", i => state.os.includes(i));
   document.getElementById("strict").setAttribute("aria-pressed", state.strict ? "true" : "false");
   document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
+  document.getElementById("rise").setAttribute("aria-pressed", state.rising ? "true" : "false");
   applyView();
 
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
@@ -981,7 +1036,8 @@ function render() {
         '<div class="meta os">' + os + "</div></td>" +
       '<td class="n st-c"><span class="st' + (r.stars ? "" : " none") + '">' +
         (r.stars ? r.stars.toLocaleString() : "—") + "</span>" +
-        '<div class="meta">' + r.lists + (r.lists === 1 ? " list" : " lists") + "</div></td>" +
+        '<div class="meta">' + r.lists + (r.lists === 1 ? " list" : " lists") + gained(r) +
+          "</div></td>" +
       '<td class="hide tg">' + tags + "</td>" +
       '<td class="ds"><div class="desc">' + esc(r.blurb) + "</div>" + cmd + "</td>" +
       '<td class="c hide lc"><div class="meta"><span>' + esc(r.lang || "—") + "</span><br>" +

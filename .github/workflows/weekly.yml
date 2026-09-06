@@ -118,6 +118,20 @@ jobs:
           touch "$RUNNER_TEMP/build-start"
           python scripts/17_markdown.py
           python scripts/19_pages.py
+          # Straight after 19_pages, which rewrote data.json, and before every stage below that reads it
+          # -- the position its own docstring asks for. It appends two columns, `d7` and `d30`, plus a
+          # `velocity` block, and it is the one stage here that appends to a file instead of regenerating
+          # it: `state/star-history.json` is a permanent roster and one sample per week, for ever.
+          #
+          # Appending to `cols` rather than inserting is what makes this safe to put ahead of the four
+          # readers below. Every one of them resolves by name -- 20_landing and 22_detail through
+          # `dict(zip(data["cols"], r))`, 21_feeds through `cols.index(...)`, and 22_detail's own
+          # client-side script through `d.cols.indexOf(...)` -- so a column arriving at the end is a key
+          # they never ask for. 24_pwa does not read data.json at all and does not precache it.
+          #
+          # Also in daily.yml, and see there for why that is not a duplicate: `record()` enforces the
+          # seven-day grid itself, so the daily run re-derives the columns without adding a sample.
+          python scripts/25_velocity.py
           # 20 and 21 must both follow 19_pages and never precede it: that stage is what stamps the
           # ledger and rewrites data.json, and both of these read data.json and nothing else. Run first,
           # the feeds would publish yesterday's arrivals and the landing pages would prerender

@@ -145,6 +145,21 @@ jobs:
           touch "$RUNNER_TEMP/build-start"
           python scripts/17_markdown.py
           python scripts/19_pages.py
+          # Also after 19_pages and never before, and for a blunter reason than the feeds below: that
+          # stage rewrites data.json from scratch, and this one patches two columns and a `velocity`
+          # block into the file it just wrote. Run first and its work is simply overwritten.
+          #
+          # Here as well as in weekly.yml even though the ledger it appends to is on a seven-day grid,
+          # because `record()` is what enforces that grid -- it refuses a sample landing closer than
+          # PERIOD_DAYS to the last one. So a daily invocation records about once a week and re-derives
+          # the two deltas every day, which is what we want: the columns are rebuilt against the star
+          # counts this run fetched rather than being left a week stale by the stage that wrote them.
+          # Putting it only in weekly.yml would mean six days out of seven where 19_pages drops the
+          # columns and nothing puts them back, and the Rising chip would vanish and reappear weekly.
+          #
+          # Nothing downstream reads `d7`, `d30` or `velocity`, so a failure here costs the Rising chip
+          # and the gain figures and nothing else on the page.
+          python scripts/25_velocity.py
           # After 19_pages and never before: that stage is what stamps the ledger and rewrites data.json,
           # and the feeds are a read of both. Run first, it would publish yesterday's arrivals.
           python scripts/21_feeds.py

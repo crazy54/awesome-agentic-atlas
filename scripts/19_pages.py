@@ -64,6 +64,58 @@ def og(nwo: str) -> str:
     return f"https://opengraph.githubassets.com/1/{nwo}"
 
 
+# Where `23_og.py` writes the cards, relative to `docs/`, and the name it gives the one for the root
+# view. Spelled here as well as there because no import runs between the two stages that could carry
+# it -- the same seam `20_landing.OG` sits on.
+OG_DIR = "og"
+OG_ROOT = "root.png"
+
+
+def image_tags(site: str, repo: str) -> str:
+    """The root page's Open Graph image block, with the repository card as the fallback.
+
+    `20_landing.image_tags()` does this for the 156 facet pages; this is the same contract for the one
+    page that stage does not write. Not imported from it because the import runs the other way -- that
+    module loads this one for `SITE` and `beacon()` -- and a cycle to fetch eight lines would cost more
+    than the eight lines.
+
+    Absolute, unlike every other URL this page emits. A relative `og:image` is resolved against
+    whatever the scraper decides the document's base is, and several of them decide wrong. Built by the
+    same concatenation `20_landing.py` uses, so `SITE`'s trailing slash is load-bearing in one place
+    rather than in two that could drift.
+
+    The disk check is what makes the fallback mean something, and it is worth being exact about what it
+    can and cannot do. It resolves at build time, so the published document carries one `og:image` and
+    only one: there is no runtime fallback here, and a scraper handed a URL whose file is missing shows
+    a bare link rather than trying the next tag. What the check buys is the state where `23_og.py` has
+    never produced `root.png` -- no Chromium on the runner, or a clone where that stage has not run --
+    and there, pointing at the generic repository card beats pointing at a 404.
+    """
+    if not (OUT / OG_DIR / OG_ROOT).exists():
+        return "\n".join([
+            f'<meta property="og:image" content="{og(repo)}">',
+            '<meta property="og:image:alt" content="The Awesome Agentic Atlas repository on GitHub.">',
+            '<meta name="twitter:card" content="summary_large_image">',
+            f'<meta name="twitter:image" content="{og(repo)}">',
+        ])
+    # 1200x630 is asserted against the render in `23_og.dimensions()` before the file is written, so
+    # these two are a promise the writing stage refuses to break rather than a number typed twice.
+    url = f"{site}{OG_DIR}/{OG_ROOT}"
+    return "\n".join([
+        f'<meta property="og:image" content="{url}">',
+        '<meta property="og:image:type" content="image/png">',
+        '<meta property="og:image:width" content="1200">',
+        '<meta property="og:image:height" content="630">',
+        '<meta property="og:image:alt" content="The Awesome Agentic Atlas: how many projects it '
+        'indexes, how many source lists and topics they came from, and its three most starred '
+        'projects.">',
+        # Not optional and not implied by the rest: without it X renders a small square thumbnail
+        # beside the text whatever the image is, which is the one shape a 1.91:1 card cannot survive.
+        '<meta name="twitter:card" content="summary_large_image">',
+        f'<meta name="twitter:image" content="{url}">',
+    ])
+
+
 def row_for(r, shots, cat_ix, tgt_ix) -> list:
     img = b17.image(r, shots)
     return [
@@ -217,6 +269,7 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             .replace("__WINDOW__", str(newness.WINDOW))
             .replace("__SITE__", site)
             .replace("__REPO__", repo)
+            .replace("__OGIMAGE__", image_tags(site, repo))
             .replace("__ANALYTICS__", beacon()))
 
 
@@ -234,7 +287,7 @@ PAGE = r"""<!doctype html>
 <meta name="description" content="__COUNT__ agentic AI projects from eleven awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
 <meta property="og:title" content="Awesome Agentic Atlas">
 <meta property="og:description" content="__COUNT__ projects from eleven awesome-lists, one filterable index.">
-<meta property="og:image" content="https://opengraph.githubassets.com/1/__REPO__">
+__OGIMAGE__
 <link rel="canonical" href="__SITE__">
 <!-- Autodiscovery for the arrivals feed. Relative, like the `fetch("data.json")` this page already does,
      so it resolves on Pages and from a local `python -m http.server` alike. GitHub Pages serves .xml as
@@ -400,6 +453,24 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .newchip[aria-pressed=true] .ni>.a,.newchip[aria-pressed=true] .ni>.b{fill:var(--onbar)}
 .nm .ni{margin-right:.34em}
 .newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
+/* Rising wears green, where the new-arrivals chip wears gold and every other chip wears cyan. Three
+   questions get three colours because a reader asks all three of a row at once -- is it alive, did it just
+   arrive, is anyone arriving now -- and two of them sharing an accent would make the pair read as one
+   control. `--good` is not overloaded by this: its only other use is a stated platform verdict, which
+   lives in its own column and reads as a tick rather than as a number.
+   Like the new-arrivals chip this one can be absent, and for a stronger reason: until the ledger
+   `25_velocity.py` writes holds a sample a week old there is no such thing as a rising row, so the chip
+   would select zero of 1,294 and the sort would rank a column that is empty everywhere. */
+.risechip{display:none}
+.risechip.on{display:inline-block}
+.risechip[aria-pressed=true]{background:var(--good);border-color:var(--good);color:var(--onbar)}
+.risechip:hover{border-color:var(--good)}
+/* Tabular figures because this sits directly under a star count that already has them, and a proportional
+   "+1,182" under a tabular "388,645" makes one column look like two. A fall is drawn in the muted grey and
+   not in a red: stars do go down, it is far more often a recount or a transfer than an exodus, and this
+   project does not have the evidence to call it a verdict. */
+.rise{color:var(--good);font-weight:600;font-variant-numeric:tabular-nums}
+.rise.down{color:var(--muted);font-weight:400}
 .count{color:var(--muted);font-size:13px;margin-left:auto;white-space:nowrap}
 .count b{color:var(--ink)}
 main{padding:0 20px 64px}
@@ -804,6 +875,10 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
            nothing to rank and falls through to Most stars, which is what this page has always opened on. -->
       <option value="relevance">Best match</option>
       <option value="stars">Most stars</option>
+      <!-- Removed from this menu rather than left in it on any build whose `data.json` carries no
+           velocity -- see `buildChips`. The palette reads these options live, so it loses the entry at the
+           same moment and cannot offer a sort the data is unable to answer. -->
+      <option value="rising">Rising</option>
       <option value="lists">Named by most lists</option>
       <option value="pushed">Pushed most recently</option>
       <option value="name">Name (A&ndash;Z)</option>
@@ -822,6 +897,9 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
             title="Projects the source lists added in the last __WINDOW__ days">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
       <span id="newlabel">New</span></button>
+    <button class="chip risechip" id="rise" aria-pressed="false"
+            title="Projects gaining stars fastest for their size">
+      <span id="riselabel">Rising</span></button>
     <button class="chip" id="palhint"></button>
     <!-- role=status makes this a polite live region, so pressing a chip or typing a search announces the
          new result count instead of silently rewriting a number the reader cannot see. aria-atomic so it
@@ -893,9 +971,9 @@ const PAGE_SIZE = 120;
 // Kept in step with `data-view` on the <html> tag, which is what the reader looks at until `data.json`
 // lands. The two have to agree: disagreeing would show the table's column headings over an empty body for
 // the length of a 561 KB fetch and then replace them with cards.
-const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false,
+const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
                sort: "relevance", shown: PAGE_SIZE, view: "cards"};
-let D = null, ROWS = [], NEW = 0;
+let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
 // The pending debounced search, if any. Declared out here rather than beside the handler because `set()`
 // has to cancel it, and `set()` is not inside the fetch callback where the handlers are wired.
 let typing = 0;
@@ -963,6 +1041,26 @@ function since(iso) {
     : '<span title="' + iso + '">' + t + "</span>";
 }
 
+// The gain figure for one row, or "" where the ledger cannot support one. Absent and not "+0": empty means
+// "we were not watching this repo that long ago" and zero means "it gained nothing", and 25_velocity.py
+// goes to some trouble to keep the two apart -- collapsing them here would put a fabricated number back on
+// every row it kept out. The title carries the measured span rather than the nominal window, because a
+// missed weekly build makes them differ and a figure labelled with a window it does not cover is worthless.
+function gained(r) {
+  if (!RISE || r.gain === null) return "";
+  // A zero is dressed as a fall, not as a rise. `--good` at weight 600 is the page saying "this is going
+  // up", and a project that gained nothing is not going up -- on a seven-day window most of the long tail
+  // of small projects genuinely gains nothing, so this is the common case and not a rare one. It still
+  // draws a figure rather than nothing, because nothing already means something else here: that the ledger
+  // does not reach back far enough to say. A measured zero and an unknown must not look alike. Unsigned,
+  // because "+0" asserts a direction that the number itself denies.
+  const sign = r.gain < 0 ? "−" : r.gain > 0 ? "+" : "";
+  const n = sign + Math.abs(r.gain).toLocaleString();
+  return ' <span class="rise' + (r.gain > 0 ? "" : " down") + '" title="' +
+    esc(n + " stars in the " + RISE.span + " days from " + RISE.from +
+        " to " + D.velocity.to) + '">' + n + "</span>";
+}
+
 fetch("data.json").then(r => {
   // The only place the real deployment time is available, and it arrives on a request the page was going
   // to make anyway. See `deployStamp`. Before `r.json()`, because that consumes the body and there is no
@@ -987,6 +1085,30 @@ fetch("data.json").then(r => {
     r.isnew = age >= 0 && age <= (d.window_days || 14);
   });
   NEW = ROWS.filter(r => r.isnew).length;
+  // Velocity. `25_velocity.py` writes the two columns and the `velocity` block; this page only reads them
+  // and owns none of the arithmetic. `rise.col` names the window the ledger could actually answer -- `d30`
+  // once a month of history exists, `d7` for the three weeks before that, and "" on the day the ledger
+  // started -- so this one test is also "is the feature switched on at all", and a `data.json` written
+  // before that stage existed lands on the same branch as one whose ledger is still empty.
+  RISE = (d.velocity && d.velocity.rise && d.velocity.rise.col)
+    ? Object.assign({}, d.velocity.rise, d.velocity[d.velocity.rise.col]) : null;
+  ROWS.forEach(r => {
+    // `=== ""` and not a falsy test. Empty means "not watching yet" and 0 means "gained nothing"; a falsy
+    // test would throw the second away with the first, which is the fabricated zero the whole ledger
+    // design exists to avoid.
+    const g = RISE ? r[RISE.col] : "";
+    r.gain = (g === "" || g === undefined || g === null) ? null : g;
+    // A finite sort key always, so the comparator can never be handed NaN. Rows with no history sort below
+    // every row that has any, including below a genuine fall -- "unknown" is not "worst".
+    r.gkey = r.gain === null ? -1e9 : r.gain;
+    // Both floors, not either. The absolute one is what stops a 4-star repo qualifying on +1 and the
+    // relative one is what stops a 200,000-star repo qualifying merely for being large. Both arrive in
+    // `data.json` already scaled to the window in use, so this page applies them and does not own them --
+    // the same arrangement `window_days` has, and for the same reason.
+    r.rise = r.gain !== null &&
+      r.gain >= Math.max(RISE.min_abs, RISE.min_pct / 100 * (r.stars || 0));
+  });
+  RISING = ROWS.filter(r => r.rise).length;
   buildChips();
   readHash();
   render();
@@ -1065,6 +1187,23 @@ function buildChips() {
     document.getElementById("newlabel").textContent = "New · " + NEW.toLocaleString();
     nb.onclick = () => set({fresh: !state.fresh});
   }
+  // Same shape as the chip above and the same reason for it: a control that selects zero of 1,294 rows is
+  // worse than no control, and on the day the ledger starts that is exactly what this one would be. The
+  // sort option leaves with it, because "Rising" ranking a column that is empty on every row is a menu
+  // entry that silently does nothing -- and removing it takes it out of the palette too, which reads these
+  // options live rather than keeping a second list.
+  const rb = document.getElementById("rise"), sel = document.getElementById("sort"),
+        ropt = [...sel.options].find(o => o.value === "rising");
+  if (RISE && RISING) {
+    rb.classList.add("on");
+    rb.title = "Gained at least " + RISE.min_abs.toLocaleString() + " stars, and at least " +
+      RISE.min_pct + "% of its own count, in the " + RISE.span + " days from " + RISE.from + " to " +
+      D.velocity.to;
+    document.getElementById("riselabel").textContent = "Rising · " + RISING.toLocaleString();
+    rb.onclick = () => set({rising: !state.rising});
+  } else if (ropt) {
+    ropt.remove();
+  }
   document.getElementById("reset").onclick = () => set(CLEAR);
   window.addEventListener("hashchange", () => { readHash(); render(); });
   palWire();
@@ -1123,7 +1262,7 @@ function palWire() {
   dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
 }
 
-const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false};
+const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false};
 
 // ---- Command palette -------------------------------------------------------------------------------
 //
@@ -1165,6 +1304,8 @@ function palItems(query) {
     });
   // Same condition the chip itself uses: with nothing inside the window this filter selects zero rows.
   if (NEW) add("Filter", "New arrivals", state.fresh, () => set({fresh: !state.fresh}));
+  // Same condition the chip itself uses, for the same reason.
+  if (RISE && RISING) add("Filter", "Rising", state.rising, () => set({rising: !state.rising}));
   add("Filter", "Confirmed platform support only", state.strict, () => set({strict: !state.strict}));
   add("Filter", "Clear all filters", false, () => set(CLEAR));
   // Delegated to the real button rather than duplicating its body, so the label, the title and the
@@ -1482,6 +1623,7 @@ function writeHash() {
   if (state.os.length) p.set("os", state.os.map(i => D.os[i].toLowerCase()).join(","));
   if (state.strict) p.set("confirmed", "1");
   if (state.fresh) p.set("new", "1");
+  if (state.rising) p.set("rising", "1");
   if (state.sort !== "relevance") p.set("sort", state.sort);
   // In the hash and nowhere else. localStorage is the obvious second home for it -- the theme is kept
   // there -- and it would be a bug: a reader who opens a `#view=cards` link they were sent, then a bare
@@ -1505,9 +1647,17 @@ function readHash() {
   // A `#new=1` link outlives the fortnight it was written in. Honouring it once the window has emptied
   // would greet the reader with "nothing matches"; dropping it shows them the atlas instead.
   state.fresh = p.get("new") === "1" && NEW > 0;
+  // A `#rising=1` link can outlive its data as easily as `#new=1` outlives its fortnight: a build where
+  // the ledger was reset has no rising rows, and honouring the flag would greet the reader with "nothing
+  // matches" instead of the atlas. Same guard as the line above, for the same reason.
+  state.rising = p.get("rising") === "1" && RISE !== null && RISING > 0;
   // Every `#sort=stars` link written before Best match existed still says exactly what it said then,
   // because the name is unchanged and only the *default* moved.
-  state.sort = SORT_KEYS.includes(p.get("sort")) ? p.get("sort") : "relevance";
+  // `rising` is the one sort key that can be unavailable, so it is checked against the data and not only
+  // against the map. Without that, a `#sort=rising` link into a build with no velocity would select an
+  // <option> that `buildChips` has removed, and the menu would render blank.
+  const want = p.get("sort");
+  state.sort = SORT_KEYS.includes(want) && (want !== "rising" || RISE) ? want : "relevance";
   // Both words are read explicitly rather than one being tested and the rest falling through, so that
   // `#view=cards` still selects cards now that they are the default -- every such link written while they
   // were opt-in keeps working, and so does the `#view=table` this page writes today. Anything else --
@@ -1527,6 +1677,7 @@ const OS_ANY = {0: [[0, "YL"], [1, "Y"]]};
 
 function match(r) {
   if (state.fresh && !r.isnew) return false;
+  if (state.rising && !r.rise) return false;
   if (state.cat && D.cats[r.cat].slug !== state.cat) return false;
   if (state.tgt) {
     const want = D.targets.findIndex(t => t.slug === state.tgt);
@@ -1573,6 +1724,7 @@ function rescue() {
   state.os.forEach(i => opts.push(["Drop " + D.os[i], {os: state.os.filter(x => x !== i)}]));
   if (state.strict) opts.push(["Allow inferred support", {strict: false}]);
   if (state.fresh) opts.push(["Drop the new-arrivals filter", {fresh: false}]);
+  if (state.rising) opts.push(["Drop the rising filter", {rising: false}]);
   return opts.map(o => ({label: o[0], patch: o[1], n: countWith(o[1])}))
     .filter(o => o.n > 0)
     .sort((a, b) => b.n - a.n)
@@ -1659,6 +1811,11 @@ const SORTS = {
   // score each row the O(log n) times the sort happens to compare it.
   relevance: (a, b) => b.rel - a.rel || b.stars - a.stars || a.name.localeCompare(b.name),
   stars: (a, b) => b.stars - a.stars || a.name.localeCompare(b.name),
+  // `gkey` is written onto the row once per load rather than computed here, for the reason `rel` is: a
+  // comparator runs O(n log n) times. Ties fall through to the star sort and not to the name, so the rows
+  // with no history -- which all share the one sentinel -- come out in the order the page opens on instead
+  // of alphabetically, which would read as a second and wrong ranking.
+  rising: (a, b) => b.gkey - a.gkey || SORTS.stars(a, b),
   lists: (a, b) => b.lists - a.lists || b.stars - a.stars,
   pushed: (a, b) => (b.pushed || "").localeCompare(a.pushed || "") || b.stars - a.stars,
   name: (a, b) => a.name.localeCompare(b.name),
@@ -1682,6 +1839,7 @@ function render() {
   press("oses", i => state.os.includes(i));
   document.getElementById("strict").setAttribute("aria-pressed", state.strict ? "true" : "false");
   document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
+  document.getElementById("rise").setAttribute("aria-pressed", state.rising ? "true" : "false");
   // Here as well as on the toggle, for the same reason the chips above are reflected here rather than only
   // where they are clicked: this is the one function every path that changes state already ends at, so a
   // `#view=cards` link, a hashchange and the browser's back button all arrive at the right layout without
@@ -1794,7 +1952,11 @@ function render() {
         '<div class="meta os">' + os + "</div></td>" +
       '<td class="n st-c"><span class="st' + (r.stars ? "" : " none") + '">' +
         (r.stars ? r.stars.toLocaleString() : "—") + "</span>" +
-        '<div class="meta">' + r.lists + (r.lists === 1 ? " list" : " lists") + "</div></td>" +
+        // The gain sits under the star count because the two are the same quantity measured twice, and a
+        // reader comparing two rows compares both at once. `gained` draws nothing where the ledger has no
+        // history for the row, which is what "degrade quietly rather than showing zero" means here.
+        '<div class="meta">' + r.lists + (r.lists === 1 ? " list" : " lists") + gained(r) +
+          "</div></td>" +
       '<td class="hide tg">' + tags + "</td>" +
       '<td class="ds"><div class="desc">' + esc(r.blurb) + "</div>" + cmd + "</td>" +
       // Each fact in its own span, not bare text between <br>s. The card layout lays this out as a flex

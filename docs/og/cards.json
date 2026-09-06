@@ -5,6 +5,20 @@
   630
  ],
  "cards": {
+  "root.png": {
+   "title": "Every agentic AI tool, one index",
+   "count": "1,290+",
+   "scope": "11 source lists · 14 topics",
+   "blurb": "Merged, deduplicated, and filterable by topic, harness and operating system.",
+   "names": [
+    "everything-claude-code",
+    "openclaw",
+    "Superpowers"
+   ],
+   "note": " · snapshot 2026-09-03",
+   "sig": "80b859703f089362",
+   "bytes": 26008
+  },
   "topic-orchestrators-multi-agent.png": {
    "title": "Orchestrators & Multi-Agent",
    "count": "120+",

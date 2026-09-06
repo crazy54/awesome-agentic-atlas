@@ -6,15 +6,35 @@ contains no template literals at all -- all 258 backticks in it turned out to be
 comments -- and no block comments. So the paths most likely to be wrong are the ones with no coverage from
 the thing the module was written for. Hence this file.
 
-Run: python build-tmp/pagemin_test.py
+Run: python tests/pagemin_test.py
 """
 from __future__ import annotations
 
+import importlib.util
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
+sys.path.insert(0, str(SCRIPTS))
 import pagemin  # noqa: E402
+
+
+def template() -> str:
+    """`19_pages.PAGE` as it stands right now, loaded rather than read from a fixture.
+
+    It used to be a `page-raw.html` dropped in a scratch directory, and that was wrong twice over. The
+    file moved when this test moved and the checks below went from asserting to *skipping* -- silently,
+    which is the one thing a test may never do. And a snapshot of the template is not the template: the
+    interesting question is whether the stripper is safe against the page as it is today, not against
+    whatever it looked like when somebody last refreshed a fixture.
+
+    `importlib` because the module's name starts with a digit, so it cannot be imported by name.
+    """
+    spec = importlib.util.spec_from_file_location("b19_for_test", SCRIPTS / "19_pages.py")
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["b19_for_test"] = mod
+    spec.loader.exec_module(mod)
+    return mod.PAGE
 
 ok = bad = 0
 
@@ -140,31 +160,35 @@ eq("type=module is scanned",
    '<script type="module">a;\n</script>')
 
 # ---- the invariants strip_page asserts, checked from outside as well
-PAGE = (Path(__file__).resolve().parent / "page-raw.html")
-if PAGE.exists():
-    page = PAGE.read_text(encoding="utf-8")
-    out = pagemin.strip_page(page)
-    eq("the real template is idempotent under stripping", pagemin.strip_page(out), out)
-    ok += 1 if len(out) < len(page) else 0
-    if len(out) >= len(page):
-        bad += 1
-        print("FAIL the real template did not get smaller")
-    # The nine URLs are the whole point: these are the `//` the stripper must not mistake for a comment.
-    for u in ('https://opengraph.githubassets.com', "http://www.w3.org/2000/svg",
-              '"https://opengraph.githubassets.com/1/"', "file://"):
-        if u in out:
-            ok += 1
-        else:
-            bad += 1
-            print(f"FAIL the URL {u!r} was eaten")
-    n = out.count("//")
-    if n == 9:
+page = template()
+out = pagemin.strip_page(page)
+eq("the real template is idempotent under stripping", pagemin.strip_page(out), out)
+ok += 1 if len(out) < len(page) else 0
+if len(out) >= len(page):
+    bad += 1
+    print("FAIL the real template did not get smaller")
+# The URLs are the whole point: these are the `//` the stripper must not mistake for a comment.
+for u in ("https://opengraph.githubassets.com", "http://www.w3.org/2000/svg", "file://"):
+    if u in out:
         ok += 1
     else:
         bad += 1
-        print(f"FAIL expected 9 surviving '//' in the template, found {n}")
+        print(f"FAIL the URL {u!r} was eaten")
+
+# Every `//` that survives is a URL scheme separator, which is the actual property -- and it is asserted
+# that way rather than as a count. This used to read `n == 9`, and a magic number here is a bad tripwire in
+# both directions: it fails on a commit that adds an honest link, which trains people to bump it without
+# reading, and it passes a commit that eats one URL while adding another. `:` before the pair is what
+# distinguishes `https://x` from a comment, so that is what gets checked, on all of them, by position.
+stray = [out[max(0, i - 48):i + 24] for i in range(len(out) - 1)
+         if out[i:i + 2] == "//" and (i == 0 or out[i - 1] != ":")]
+if not stray:
+    ok += 1
 else:
-    print("note: build-tmp/page-raw.html absent, skipped the checks against the real template")
+    bad += 1
+    print(f"FAIL {len(stray)} surviving '//' not preceded by ':', so not a URL scheme:")
+    for s in stray:
+        print(f"  ...{s!r}")
 
 print(f"\n{ok} passed, {bad} failed")
 sys.exit(1 if bad else 0)
