@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/target-langchain-langgraph.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Tools for LangChain / LangGraph","description":"41 agentic AI projects that plug into LangChain / LangGraph, ranked by GitHub stars. Built on LangChain, LangGraph or LangSmith.","url":"https://crazy54.github.io/awesome-agentic-atlas/target/langchain-langgraph/","numberOfItems":41,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"LangChain","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/langchain-ai/langchain/"},{"@type":"ListItem","position":2,"name":"awesome-llm-apps","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/shubhamsaboo/awesome-llm-apps/"},{"@type":"ListItem","position":3,"name":"DeerFlow","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/bytedance/deer-flow/"},{"@type":"ListItem","position":4,"name":"headroom","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/headroomlabs-ai/headroom/"},{"@type":"ListItem","position":5,"name":"LiteLLM","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/berriai/litellm/"},{"@type":"ListItem","position":6,"name":"LibreChat","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/danny-avila/librechat/"},{"@type":"ListItem","position":7,"name":"LangGraph","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/langchain-ai/langgraph/"},{"@type":"ListItem","position":8,"name":"Langfuse","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/langfuse/langfuse/"},{"@type":"ListItem","position":9,"name":"OpenAI Agents SDK","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/openai/openai-agents-python/"},{"@type":"ListItem","position":10,"name":"langchain-ai/deepagents","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/langchain-ai/deepagents/"},{"@type":"ListItem","position":11,"name":"NemoClaw","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nvidia/nemoclaw/"},{"@type":"ListItem","position":12,"name":"Hindsight","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/vectorize-io/hindsight/"},{"@type":"ListItem","position":13,"name":"Opik","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/comet-ml/opik/"},{"@type":"ListItem","position":14,"name":"OpenWiki","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/langchain-ai/openwiki/"},{"@type":"ListItem","position":15,"name":"open-swe","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/langchain-ai/open-swe/"},{"@type":"ListItem","position":16,"name":"Swarms Framework","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/kyegomez/swarms/"},{"@type":"ListItem","position":17,"name":"Microsoft Agent Governance Toolkit","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/microsoft/agent-governance-toolkit/"},{"@type":"ListItem","position":18,"name":"Helicone","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/helicone/helicone/"},{"@type":"ListItem","position":19,"name":"AgentOps","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/agentops-ai/agentops/"},{"@type":"ListItem","position":20,"name":"OpenAgent","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/the-open-agent/openagent/"},{"@type":"ListItem","position":21,"name":"Agentic Context Engine","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/kayba-ai/agentic-context-engine/"},{"@type":"ListItem","position":22,"name":"RasaGPT","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/paulpierre/rasagpt/"},{"@type":"ListItem","position":23,"name":"DemoGPT","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/melih-unsal/demogpt/"},{"@type":"ListItem","position":24,"name":"row-bot","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/siddsachar/row-bot/"},{"@type":"ListItem","position":25,"name":"CodeFuse-ChatBot","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/codefuse-ai/codefuse-chatbot/"},{"@type":"ListItem","position":26,"name":"LLM Agents","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mpaepper/llm_agents/"},{"@type":"ListItem","position":27,"name":"RepoAgent","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/openbmb/repoagent/"},{"@type":"ListItem","position":28,"name":"AgentScope Runtime","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/agentscope-ai/agentscope-runtime/"},{"@type":"ListItem","position":29,"name":"SkyAGI","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/litanlitudan/skyagi/"},{"@type":"ListItem","position":30,"name":"SwarmClaw","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/swarmclawai/swarmclaw/"},{"@type":"ListItem","position":31,"name":"Eidolon","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/eidolon-ai/eidolon/"},{"@type":"ListItem","position":32,"name":"Multi-Modal LangChain agents in Production","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/steamship-core/langchain-production-starter/"},{"@type":"ListItem","position":33,"name":"Autonomous HR Chatbot","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/stepanogil/autonomous-hr-chatbot/"},{"@type":"ListItem","position":34,"name":"AgentPrism","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/evilmartians/agent-prism/"},{"@type":"ListItem","position":35,"name":"GPT Runner","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nicepkg/gpt-runner/"},{"@type":"ListItem","position":36,"name":"Aegis","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/justin0504/aegis/"},{"@type":"ListItem","position":37,"name":"Instrukt","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/blob42/instrukt/"},{"@type":"ListItem","position":38,"name":"Second Brain AI Agent","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/flepied/second-brain-agent/"},{"@type":"ListItem","position":39,"name":"PromethAI","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/topoteretes/promethai-backend/"},{"@type":"ListItem","position":40,"name":"raphaelchristi/harness-evolver","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/raphaelchristi/harness-evolver/"},{"@type":"ListItem","position":41,"name":"NERV","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/juanmanueldaza/n3rv/"}]}</script>
 </head>
@@ -101,12 +115,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

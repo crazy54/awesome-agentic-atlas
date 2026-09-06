@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-observability-evals.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Observability & Evals tools for Claude Code","description":"38 Observability & Evals projects that plug into Claude Code, ranked by GitHub stars. Traces, benchmarks, graders, linting and CI feedback: how you find out…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/observability-evals/target/claude-code/","numberOfItems":38,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"ccusage","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ccusage/ccusage/"},{"@type":"ListItem","position":2,"name":"Latitude","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/latitude-dev/latitude-llm/"},{"@type":"ListItem","position":3,"name":"claude-devtools","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/matt1398/claude-devtools/"},{"@type":"ListItem","position":4,"name":"Inspect AI","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ukgovernmentbeis/inspect_ai/"},{"@type":"ListItem","position":5,"name":"Better Harness","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/qoderai/better-harness/"},{"@type":"ListItem","position":6,"name":"Multi-Agent Observability","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/disler/claude-code-hooks-multi-agent-observability/"},{"@type":"ListItem","position":7,"name":"ClaudeBar","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/tddworks/claudebar/"},{"@type":"ListItem","position":8,"name":"mindwalk","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/cosmtrek/mindwalk/"},{"@type":"ListItem","position":9,"name":"Claude Code Agent Monitor","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/hoangsonww/claude-code-agent-monitor/"},{"@type":"ListItem","position":10,"name":"agentacct","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mikehasa/agentacct/"},{"@type":"ListItem","position":11,"name":"claude-status-bar","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/m1ckc3s/claude-status-bar/"},{"@type":"ListItem","position":12,"name":"agents-observe","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/simple10/agents-observe/"},{"@type":"ListItem","position":13,"name":"Claude Code Observability Stack","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/colemurray/claude-code-otel/"},{"@type":"ListItem","position":14,"name":"Entroly","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/juyterman1000/entroly/"},{"@type":"ListItem","position":15,"name":"ClawMetry","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/vivekchand/clawmetry/"},{"@type":"ListItem","position":16,"name":"agnix","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/agent-sh/agnix/"},{"@type":"ListItem","position":17,"name":"toktrack","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mag123c/toktrack/"},{"@type":"ListItem","position":18,"name":"cctop","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/stefanprodan/cctop/"},{"@type":"ListItem","position":19,"name":"claude-control","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/sverrirsig/claude-control/"},{"@type":"ListItem","position":20,"name":"c9watch","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/minchenlee/c9watch/"},{"@type":"ListItem","position":21,"name":"CCDash","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/zihenghe04/ccdash/"},{"@type":"ListItem","position":22,"name":"Claude Status","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/gmr/claude-status/"},{"@type":"ListItem","position":23,"name":"CC Harness","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/lookfree/cc-harness/"},{"@type":"ListItem","position":24,"name":"seedeep","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/duqaxxx/seedeep/"},{"@type":"ListItem","position":25,"name":"goccc","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/backstabslash/goccc/"},{"@type":"ListItem","position":26,"name":"BlockWatch","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mennanov/blockwatch/"},{"@type":"ListItem","position":27,"name":"cc-costline","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ventuss-ovo/cc-costline/"},{"@type":"ListItem","position":28,"name":"claude-code-status-bar","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/briansmith80/claude-code-status-bar/"},{"@type":"ListItem","position":29,"name":"so-agentbar","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/sotthang/so-agentbar/"},{"@type":"ListItem","position":30,"name":"Claumon","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/fabioconcina/claumon/"},{"@type":"ListItem","position":31,"name":"Schliff","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/zandereins/schliff/"},{"@type":"ListItem","position":32,"name":"agents-md-cookbook","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/taiizor/agents-md-cookbook/"},{"@type":"ListItem","position":33,"name":"AgentWatch","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mishanefedov/agentwatch/"},{"@type":"ListItem","position":34,"name":"Upkeep","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/wei18/upkeep/"},{"@type":"ListItem","position":35,"name":"cc-probeline","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/labzink/cc-probeline/"},{"@type":"ListItem","position":36,"name":"Ctxlint","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ctxlint/ctxlint/"},{"@type":"ListItem","position":37,"name":"ccvitals","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/educlopez/ccvitals/"},{"@type":"ListItem","position":38,"name":"Pacer","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ericandrechek/pacer/"}]}</script>
 </head>
@@ -98,12 +112,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

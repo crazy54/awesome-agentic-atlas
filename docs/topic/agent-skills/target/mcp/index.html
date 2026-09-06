@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-agent-skills.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Agent Skills tools for MCP","description":"52 Agent Skills projects that plug into MCP, ranked by GitHub stars. Capability bundles an agent loads on demand — SKILL.md packages, subagents, slash…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/agent-skills/target/mcp/","numberOfItems":52,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"Superpowers","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/obra/superpowers/"},{"@type":"ListItem","position":2,"name":"Ponytail","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/dietrichgebert/ponytail/"},{"@type":"ListItem","position":3,"name":"addyosmani/agent-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/addyosmani/agent-skills/"},{"@type":"ListItem","position":4,"name":"Antigravity Awesome Skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/sickn33/agentic-awesome-skills/"},{"@type":"ListItem","position":5,"name":"wshobson/agents","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/wshobson/agents/"},{"@type":"ListItem","position":6,"name":"Composio","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/composiohq/composio/"},{"@type":"ListItem","position":7,"name":"SkillOpt","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/microsoft/skillopt/"},{"@type":"ListItem","position":8,"name":"Claude Code Guide","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/zebbern/claude-code-guide/"},{"@type":"ListItem","position":9,"name":"nowork-studio/NotFair","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nowork-studio/notfair-plugin/"},{"@type":"ListItem","position":10,"name":"Microsoft Skills Framework","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/microsoft/skills/"},{"@type":"ListItem","position":11,"name":"Comet","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/rpamis/comet/"},{"@type":"ListItem","position":12,"name":"Qwen-MM-Plugins","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/qwenlm/qwen-mm-plugins/"},{"@type":"ListItem","position":13,"name":"Agent Toolkit for AWS","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/aws/agent-toolkit-for-aws/"},{"@type":"ListItem","position":14,"name":"apify/agent-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/apify/agent-skills/"},{"@type":"ListItem","position":15,"name":"agentic-stack","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/codejunkie99/agentic-stack/"},{"@type":"ListItem","position":16,"name":"agent-qa","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/vostride/agent-qa/"},{"@type":"ListItem","position":17,"name":"vibeforge1111/vibeship-spawner-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/vibeforge1111/vibeship-spawner-skills/"},{"@type":"ListItem","position":18,"name":"mgechev/skillgrade","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mgechev/skillgrade/"},{"@type":"ListItem","position":19,"name":"SkillNet & SkillsBench: Infrastructure for AI Agent Skills at Scale","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/skillmatic-ai/awesome-agent-skills/"},{"@type":"ListItem","position":20,"name":"SuperSEO Skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/inhouseseo/superseo-skills/"},{"@type":"ListItem","position":21,"name":"scarletkc/vexor","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/scarletkc/vexor/"},{"@type":"ListItem","position":22,"name":"taisly/agent","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/taisly/agent/"},{"@type":"ListItem","position":23,"name":"Xquik-dev/x-twitter-scraper","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/xquik-dev/x-twitter-scraper/"},{"@type":"ListItem","position":24,"name":"wrsmith108/linear-claude-skill","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/wrsmith108/linear-claude-skill/"},{"@type":"ListItem","position":25,"name":"sandbaseai/cli","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/sandbaseai/cli/"},{"@type":"ListItem","position":26,"name":"longbridge/skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/longbridge/skills/"},{"@type":"ListItem","position":27,"name":"rafsilva85/credit-optimizer-v5","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/rafsilva85/credit-optimizer-v5/"},{"@type":"ListItem","position":28,"name":"adelaidasofia/ai-brain-starter","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mycelium-hq/ai-brain-starter/"},{"@type":"ListItem","position":29,"name":"talivia-group/agent","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/talivia-group/agent/"},{"@type":"ListItem","position":30,"name":"webzler/agentMemory","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/webzler/agentmemory/"},{"@type":"ListItem","position":31,"name":"anthony-chaudhary/dos-kernel","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/anthony-chaudhary/dos-kernel/"},{"@type":"ListItem","position":32,"name":"uizze/uizze","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/uizze/uizze/"},{"@type":"ListItem","position":33,"name":"ejentum/ejentum-mcp","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ejentum/ejentum-mcp/"},{"@type":"ListItem","position":34,"name":"PSPDFKit-labs/nutrient-agent-skill","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/pspdfkit-labs/nutrient-agent-skill/"},{"@type":"ListItem","position":35,"name":"agent-cards/skill","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/tiny-agent-company/agent-card-skill/"},{"@type":"ListItem","position":36,"name":"jackjin1997/ClawForge","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/jackjin1997/clawforge/"},{"@type":"ListItem","position":37,"name":"BuyWhere/buywhere-mcp","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/buywhere/buywhere-mcp/"},{"@type":"ListItem","position":38,"name":"scopeblind/scopeblind-gateway","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/scopeblind/scopeblind-gateway/"},{"@type":"ListItem","position":39,"name":"connerkward/mcp-apple-notes","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/connerkward/mcp-apple-notes/"},{"@type":"ListItem","position":40,"name":"maxbaluev/accreted-intelligence","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/maxbaluev/accreted-intelligence/"},{"@type":"ListItem","position":41,"name":"happy520ai/unified-ai-system","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/happy520ai/unified-ai-system/"},{"@type":"ListItem","position":42,"name":"commitshow/production-audit","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/commitshow/production-audit/"},{"@type":"ListItem","position":43,"name":"Wolfe-Jam/faf-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/wolfe-jam/faf-skills/"},{"@type":"ListItem","position":44,"name":"demo112/yunqu-ai-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/demo112/yunqu-ai-skills/"},{"@type":"ListItem","position":45,"name":"bekservice/Famulor-Skill","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/bekservice/famulor-skill/"},{"@type":"ListItem","position":46,"name":"supernovae-st/nika-agents","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/supernovae-st/nika-plugins/"},{"@type":"ListItem","position":47,"name":"0xsarwagya/ontoly","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/0xsarwagya/ontoly/"},{"@type":"ListItem","position":48,"name":"agentbody/skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/agentbody/skills/"},{"@type":"ListItem","position":49,"name":"xwmxcz/papers-skill","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/xwmxcz/papers-skill/"},{"@type":"ListItem","position":50,"name":"connerlambden/helium-mcp","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/connerlambden/helium-mcp/"},{"@type":"ListItem","position":51,"name":"pumanitro/global-chat","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/pumanitro/global-chat/"},{"@type":"ListItem","position":52,"name":"Sketchjar/stipple-agent-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/sketchjar/stipple-agent-skills/"}]}</script>
 </head>
@@ -112,12 +126,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

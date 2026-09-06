@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-plugins-themes-clients.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Plugins, Themes & Clients tools for Claude Code","description":"43 Plugins, Themes & Clients projects that plug into Claude Code, ranked by GitHub stars. Attaches to an agent you already run — plugins, themes, status…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/plugins-themes-clients/target/claude-code/","numberOfItems":43,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"CLI Proxy API","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/router-for-me/cliproxyapi/"},{"@type":"ListItem","position":2,"name":"Diagram Design","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/cathrynlavery/diagram-design/"},{"@type":"ListItem","position":3,"name":"Beads","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/gastownhall/beads/"},{"@type":"ListItem","position":4,"name":"CloudCLI (Claude Code UI)","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/siteboon/claudecodeui/"},{"@type":"ListItem","position":5,"name":"visual-explainer","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nicobailon/visual-explainer/"},{"@type":"ListItem","position":6,"name":"Plannotator","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/backnotprop/plannotator/"},{"@type":"ListItem","position":7,"name":"Dev Browser","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/sawyerhood/dev-browser/"},{"@type":"ListItem","position":8,"name":"Tokscale","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/junhoyeo/tokscale/"},{"@type":"ListItem","position":9,"name":"Ralph Wiggum","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/th0rgal/open-ralph-wiggum/"},{"@type":"ListItem","position":10,"name":"Vibeyard","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/elirantutia/vibeyard/"},{"@type":"ListItem","position":11,"name":"SwarmVault","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/swarmclawai/swarmvault/"},{"@type":"ListItem","position":12,"name":"Background Agents","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/kdcokenny/opencode-background-agents/"},{"@type":"ListItem","position":13,"name":"claude-statusbar","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/leeguooooo/claude-code-usage-bar/"},{"@type":"ListItem","position":14,"name":"Snip","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/rixinhahaha/snip/"},{"@type":"ListItem","position":15,"name":"GolemBot","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/0xranx/golembot/"},{"@type":"ListItem","position":16,"name":"UI Craft","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/educlopez/ui-craft/"},{"@type":"ListItem","position":17,"name":"Cupcake","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/eqtylab/cupcake/"},{"@type":"ListItem","position":18,"name":"CodeWalk","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/verseles/codewalk/"},{"@type":"ListItem","position":19,"name":"Lockpaw","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/sorkila/lockpaw/"},{"@type":"ListItem","position":20,"name":"opencode-plugin-otel","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/devtheops/opencode-plugin-otel/"},{"@type":"ListItem","position":21,"name":"bx","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/holtwick/bx-mac/"},{"@type":"ListItem","position":22,"name":"open-plan-annotator","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ndom91/open-plan-annotator/"},{"@type":"ListItem","position":23,"name":"Claude Overlay","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/shengyanlin/claude-overlay/"},{"@type":"ListItem","position":24,"name":"OpenTab","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/hamidi-dev/opentab/"},{"@type":"ListItem","position":25,"name":"Sidekick for Max","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/cesarandreslopez/sidekick-agent-hub/"},{"@type":"ListItem","position":26,"name":"WhatsApp Channel Plugin","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/rich627/whatsapp-claude-plugin/"},{"@type":"ListItem","position":27,"name":"OpenCode Claude Memory","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/kuitos/opencode-claude-memory/"},{"@type":"ListItem","position":28,"name":"Claude Threads","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/anneschuth/claude-threads/"},{"@type":"ListItem","position":29,"name":"Telegram-Claude (tg-claude)","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/imolatte/claude-cli-telegram/"},{"@type":"ListItem","position":30,"name":"claude-code-personalities","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/kumamaki/claude-code-personalities/"},{"@type":"ListItem","position":31,"name":"FlyCrys","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/sergkam/flycrys/"},{"@type":"ListItem","position":32,"name":"claudinho","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/arturogarrido/claudinho/"},{"@type":"ListItem","position":33,"name":"ai-agent-notifier","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/devinosolutions/anotifier-for-claude-codex-cursor/"},{"@type":"ListItem","position":34,"name":"dictate","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/vimalk78/dictate/"},{"@type":"ListItem","position":35,"name":"TermaGITchi","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/tevvvb/termagitchi/"},{"@type":"ListItem","position":36,"name":"supamem","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/dzmitrys-dev/supamem/"},{"@type":"ListItem","position":37,"name":"agent-dotfiles","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/saqibameen/agent-dotfiles/"},{"@type":"ListItem","position":38,"name":"Claude Code Switch (CCS) OpenCode Sync","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/jasonlandbridge/opencode-ccs-sync/"},{"@type":"ListItem","position":39,"name":"Vibe Coding Slack Notifier","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/wangmerlyn/coding-agent-notifier/"},{"@type":"ListItem","position":40,"name":"agent-harness","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ar27111994/agent-harness/"},{"@type":"ListItem","position":41,"name":"Dodo Payments","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/dodopayments/dodo-agent-plugin/"},{"@type":"ListItem","position":42,"name":"Opencode Hooks Plugin","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/romain325/opencode-hooks-plugin/"},{"@type":"ListItem","position":43,"name":"tmux-claude-status-tabs","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/livenl/tmux-claude-status-tabs/"}]}</script>
 </head>
@@ -103,12 +117,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

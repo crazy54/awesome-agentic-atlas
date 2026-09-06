@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-agent-skills.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Agent Skills tools for opencode","description":"16 Agent Skills projects that plug into opencode, ranked by GitHub stars. Capability bundles an agent loads on demand — SKILL.md packages, subagents, slash…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/agent-skills/target/opencode/","numberOfItems":16,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"wshobson/agents","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/wshobson/agents/"},{"@type":"ListItem","position":2,"name":"Qwen-MM-Plugins","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/qwenlm/qwen-mm-plugins/"},{"@type":"ListItem","position":3,"name":"agentic-stack","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/codejunkie99/agentic-stack/"},{"@type":"ListItem","position":4,"name":"amElnagdy/delegate-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/amelnagdy/delegate-skills/"},{"@type":"ListItem","position":5,"name":"mgechev/skillgrade","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mgechev/skillgrade/"},{"@type":"ListItem","position":6,"name":"Xquik-dev/x-twitter-scraper","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/xquik-dev/x-twitter-scraper/"},{"@type":"ListItem","position":7,"name":"luoyuctl/agenttrace","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/luoyuctl/agenttrace/"},{"@type":"ListItem","position":8,"name":"Suraj1235/open-dynamic-workflows","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/suraj1235/open-dynamic-workflows/"},{"@type":"ListItem","position":9,"name":"mbenhard/unship","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mbenhard/unship/"},{"@type":"ListItem","position":10,"name":"ejentum/ejentum-mcp","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ejentum/ejentum-mcp/"},{"@type":"ListItem","position":11,"name":"heyneuron/flowhunt-skill","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/heyneuron/flowhunt-skill/"},{"@type":"ListItem","position":12,"name":"flyingsquirrel0419/squirrel-skill","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/flyingsquirrel0419/squirrel-skill/"},{"@type":"ListItem","position":13,"name":"JularDepick/user-thoughts.SKILL","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/julardepick/user-thoughts.skill/"},{"@type":"ListItem","position":14,"name":"mskadu/opencode-agent-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mskadu/opencode-agent-skills/"},{"@type":"ListItem","position":15,"name":"OJPalenzuela/agents-generator","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ojpalenzuela/agents-generator/"},{"@type":"ListItem","position":16,"name":"Antheurus/sshepherd","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/antheurus/sshepherd/"}]}</script>
 </head>
@@ -76,12 +90,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

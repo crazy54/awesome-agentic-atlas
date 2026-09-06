@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-plugins-themes-clients.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Plugins, Themes & Clients tools for Codex / OpenAI","description":"28 Plugins, Themes & Clients projects that plug into Codex / OpenAI, ranked by GitHub stars. Attaches to an agent you already run — plugins, themes, status…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/plugins-themes-clients/target/codex-openai/","numberOfItems":28,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"Oh My Opencode","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/code-yeongyu/oh-my-openagent/"},{"@type":"ListItem","position":2,"name":"CLI Proxy API","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/router-for-me/cliproxyapi/"},{"@type":"ListItem","position":3,"name":"Diagram Design","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/cathrynlavery/diagram-design/"},{"@type":"ListItem","position":4,"name":"CloudCLI (Claude Code UI)","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/siteboon/claudecodeui/"},{"@type":"ListItem","position":5,"name":"Plannotator","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/backnotprop/plannotator/"},{"@type":"ListItem","position":6,"name":"Tokscale","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/junhoyeo/tokscale/"},{"@type":"ListItem","position":7,"name":"OpenAI Codex Auth","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/numman-ali/opencode-openai-codex-auth/"},{"@type":"ListItem","position":8,"name":"Ralph Wiggum","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/th0rgal/open-ralph-wiggum/"},{"@type":"ListItem","position":9,"name":"SwarmVault","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/swarmclawai/swarmvault/"},{"@type":"ListItem","position":10,"name":"Universal LLM API Proxy","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mirrowel/llm-api-key-proxy/"},{"@type":"ListItem","position":11,"name":"GolemBot","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/0xranx/golembot/"},{"@type":"ListItem","position":12,"name":"UI Craft","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/educlopez/ui-craft/"},{"@type":"ListItem","position":13,"name":"opencode-mystatus","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/vbgate/opencode-mystatus/"},{"@type":"ListItem","position":14,"name":"Qwen Code OAI Proxy","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/aptdnfapt/qwen-code-oai-proxy/"},{"@type":"ListItem","position":15,"name":"Opencode Models Discovery","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/yuhp/opencode-models-discovery/"},{"@type":"ListItem","position":16,"name":"OpenTab","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/hamidi-dev/opentab/"},{"@type":"ListItem","position":17,"name":"Sidekick for Max","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/cesarandreslopez/sidekick-agent-hub/"},{"@type":"ListItem","position":18,"name":"GPT Imagegen","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/yuji-hatakeyama/opencode-gpt-imagegen/"},{"@type":"ListItem","position":19,"name":"Smart Voice Notify","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/masurii/opencode-smart-voice-notify/"},{"@type":"ListItem","position":20,"name":"Opencode LiteLLM","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/yuseferi/opencode-litellm/"},{"@type":"ListItem","position":21,"name":"OpenHax Codex","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/open-hax/codex/"},{"@type":"ListItem","position":22,"name":"Codex Proxy Server","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/unluckyjori/codex-proxy-server/"},{"@type":"ListItem","position":23,"name":"ai-agent-notifier","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/devinosolutions/anotifier-for-claude-codex-cursor/"},{"@type":"ListItem","position":24,"name":"TermaGITchi","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/tevvvb/termagitchi/"},{"@type":"ListItem","position":25,"name":"agent-dotfiles","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/saqibameen/agent-dotfiles/"},{"@type":"ListItem","position":26,"name":"Opencode Usage Monitor","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mark1708/opencode-usage-monitor/"},{"@type":"ListItem","position":27,"name":"Vibe Coding Slack Notifier","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/wangmerlyn/coding-agent-notifier/"},{"@type":"ListItem","position":28,"name":"Dodo Payments","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/dodopayments/dodo-agent-plugin/"}]}</script>
 </head>
@@ -88,12 +102,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

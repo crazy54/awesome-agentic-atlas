@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/target-github-copilot.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Tools for GitHub Copilot","description":"49 agentic AI projects that plug into GitHub Copilot, ranked by GitHub stars. Targets Copilot: its coding agent, its CLI, or its extension surface.","url":"https://crazy54.github.io/awesome-agentic-atlas/target/github-copilot/","numberOfItems":49,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"Superpowers","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/obra/superpowers/"},{"@type":"ListItem","position":2,"name":"OmniRoute: Multi-Provider LLM Gateway","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/diegosouzapw/omniroute/"},{"@type":"ListItem","position":3,"name":"wshobson/agents","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/wshobson/agents/"},{"@type":"ListItem","position":4,"name":"agentmemory","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/rohitg00/agentmemory/"},{"@type":"ListItem","position":5,"name":"context-mode","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mksglu/context-mode/"},{"@type":"ListItem","position":6,"name":"Paseo","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/getpaseo/paseo/"},{"@type":"ListItem","position":7,"name":"UFO","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/microsoft/ufo/"},{"@type":"ListItem","position":8,"name":"Microsoft Agent Governance Toolkit","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/microsoft/agent-governance-toolkit/"},{"@type":"ListItem","position":9,"name":"microsoft/TaskWeaver","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/microsoft/taskweaver/"},{"@type":"ListItem","position":10,"name":"lobsterai","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/netease-youdao/lobsterai/"},{"@type":"ListItem","position":11,"name":"Ouroboros (Agent OS)","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/q00/ouroboros/"},{"@type":"ListItem","position":12,"name":"gh-aw","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/github/gh-aw/"},{"@type":"ListItem","position":13,"name":"claude_codex_bridge","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/seemseam/claude_codex_bridge/"},{"@type":"ListItem","position":14,"name":"agent-of-empires","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/agent-of-empires/agent-of-empires/"},{"@type":"ListItem","position":15,"name":"Squad","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/bradygaster/squad/"},{"@type":"ListItem","position":16,"name":"Microsoft Skills Framework","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/microsoft/skills/"},{"@type":"ListItem","position":17,"name":"Better Harness","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/qoderai/better-harness/"},{"@type":"ListItem","position":18,"name":"Agent Teams","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/777genius/agent-teams-ai/"},{"@type":"ListItem","position":19,"name":"Ralph Wiggum","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/th0rgal/open-ralph-wiggum/"},{"@type":"ListItem","position":20,"name":"Claude Code Safety Net","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/kenryu42/cc-safety-net/"},{"@type":"ListItem","position":21,"name":"ClaudeBar","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/tddworks/claudebar/"},{"@type":"ListItem","position":22,"name":"cc-thinking-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/tjboudreaux/cc-thinking-skills/"},{"@type":"ListItem","position":23,"name":"Opencode Quota","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/slkiser/opencode-quota/"},{"@type":"ListItem","position":24,"name":"deja-vu","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/vshulcz/deja-vu/"},{"@type":"ListItem","position":25,"name":"AgentPilot","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/jbexta/agentpilot/"},{"@type":"ListItem","position":26,"name":"omg.dev","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/bennykok/omg.dev/"},{"@type":"ListItem","position":27,"name":"Conductor","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/microsoft/conductor/"},{"@type":"ListItem","position":28,"name":"ClawMetry","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/vivekchand/clawmetry/"},{"@type":"ListItem","position":29,"name":"ivy-tendril","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ivy-interactive/ivy-tendril/"},{"@type":"ListItem","position":30,"name":"MohamedAbdallah-14/unslop","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mohamedabdallah-14/unslop/"},{"@type":"ListItem","position":31,"name":"Sidekick for Max","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/cesarandreslopez/sidekick-agent-hub/"},{"@type":"ListItem","position":32,"name":"llm-router","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ypollak2/llm-router/"},{"@type":"ListItem","position":33,"name":"GraphCode","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/scgopi/graphcode/"},{"@type":"ListItem","position":34,"name":"Taskuary","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ldbumble/taskuary/"},{"@type":"ListItem","position":35,"name":"Crewplane","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/crewplaneai/crewplane/"},{"@type":"ListItem","position":36,"name":"agents-md-cookbook","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/taiizor/agents-md-cookbook/"},{"@type":"ListItem","position":37,"name":"nedcodes-ok/rule-porter","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nedcodes-ok/rule-porter/"},{"@type":"ListItem","position":38,"name":"whatiskadudoing/fp-ts-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/whatiskadudoing/fp-ts-skills/"},{"@type":"ListItem","position":39,"name":"capy","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/serpro69/capy/"},{"@type":"ListItem","position":40,"name":"agent-dotfiles","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/saqibameen/agent-dotfiles/"},{"@type":"ListItem","position":41,"name":"agent-harness","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ar27111994/agent-harness/"},{"@type":"ListItem","position":42,"name":"flyingsquirrel0419/squirrel-skill","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/flyingsquirrel0419/squirrel-skill/"},{"@type":"ListItem","position":43,"name":"lewiswigmore/agent-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/lewiswigmore/agent-skills/"},{"@type":"ListItem","position":44,"name":"Wolfe-Jam/faf-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/wolfe-jam/faf-skills/"},{"@type":"ListItem","position":45,"name":"agent-frontier/wgm","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/agent-frontier/wgm/"},{"@type":"ListItem","position":46,"name":"chaunsin/agent-skills","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/chaunsin/agent-skills/"},{"@type":"ListItem","position":47,"name":"kimtth/agent-pptify-kit","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/kimtth/agent-pptify-kit/"},{"@type":"ListItem","position":48,"name":"OJPalenzuela/agents-generator","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ojpalenzuela/agents-generator/"},{"@type":"ListItem","position":49,"name":"kotobuki09/instructree","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/kotobuki09/instructree/"}]}</script>
 </head>
@@ -109,12 +123,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

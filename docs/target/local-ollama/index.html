@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/target-local-ollama.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Tools for Local / Ollama","description":"23 agentic AI projects that plug into Local / Ollama, ranked by GitHub stars. Runs against a named local runtime: Ollama, llama.cpp, vLLM, LM Studio…","url":"https://crazy54.github.io/awesome-agentic-atlas/target/local-ollama/","numberOfItems":23,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"Ollama","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ollama/ollama/"},{"@type":"ListItem","position":2,"name":"Open WebUI","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/open-webui/open-webui/"},{"@type":"ListItem","position":3,"name":"llama.cpp","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ggml-org/llama.cpp/"},{"@type":"ListItem","position":4,"name":"vLLM","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/vllm-project/vllm/"},{"@type":"ListItem","position":5,"name":"GPT4All","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nomic-ai/gpt4all/"},{"@type":"ListItem","position":6,"name":"LiteLLM","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/berriai/litellm/"},{"@type":"ListItem","position":7,"name":"Llamafile","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mozilla-ai/llamafile/"},{"@type":"ListItem","position":8,"name":"Local GPT","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/promtengineer/localgpt/"},{"@type":"ListItem","position":9,"name":"OpenWorker","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/andrewyng/openworker/"},{"@type":"ListItem","position":10,"name":"PR-Agent","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/the-pr-agent/pr-agent/"},{"@type":"ListItem","position":11,"name":"Strands Agents SDK","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/strands-agents/harness-sdk/"},{"@type":"ListItem","position":12,"name":"Codel","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/semanser/codel/"},{"@type":"ListItem","position":13,"name":"Atomic Agent","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/atomicbot-ai/atomic-agent/"},{"@type":"ListItem","position":14,"name":"Nanocoder","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nano-collective/nanocoder/"},{"@type":"ListItem","position":15,"name":"row-bot","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/siddsachar/row-bot/"},{"@type":"ListItem","position":16,"name":"SwarmClaw","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/swarmclawai/swarmclaw/"},{"@type":"ListItem","position":17,"name":"Snip","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/rixinhahaha/snip/"},{"@type":"ListItem","position":18,"name":"iva","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/smixs/iva-agent/"},{"@type":"ListItem","position":19,"name":"Opencode Models Discovery","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/yuhp/opencode-models-discovery/"},{"@type":"ListItem","position":20,"name":"KinBot","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/marlburrow/kinbot/"},{"@type":"ListItem","position":21,"name":"Suraj1235/open-dynamic-workflows","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/suraj1235/open-dynamic-workflows/"},{"@type":"ListItem","position":22,"name":"toryo","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/jesserweigel/toryo/"},{"@type":"ListItem","position":23,"name":"lucinate","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/lucinate-ai/lucinate/"}]}</script>
 </head>
@@ -83,12 +97,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

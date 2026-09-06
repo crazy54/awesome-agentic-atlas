@@ -5,16 +5,49 @@
 "use strict";
 
 /* Not a data fetch and not a framework: the light half of the theme is in detail.css and without a
-   switch nothing on these pages can ever reach it. Same default as the site (dark) and the same
-   unpersisted, one-tab scope, so the two surfaces behave alike. */
+   switch nothing on these pages can ever reach it.
+
+   Three pieces, ported from `wire()` in 19_pages.py, because the toggle used to change nothing beyond
+   this tab's current document: the write on click, so the choice survives the next link; the agreement
+   with the head script on load; and the listener, so a reader who has expressed no choice follows their
+   OS the way the index does. The *read* is not here -- it is inline in every page's <head>, because by
+   the time this file has been fetched and run the wrong theme has already been painted.
+
+   label() is folded into every path that changes the theme, which is the index's arrangement and for its
+   reasons: the button's markup says "Light theme" and aria-pressed="false", which is wrong for every
+   reader the head script just resolved to light, and --plane is read off the stylesheet rather than
+   restated here so the browser chrome cannot drift from the page. There is a computed value to read by
+   now -- detail.css is a render-blocking link in the head, so it is parsed before this runs. The meta is
+   looked up defensively: this file is one shared request, and a page that ever ships without the head
+   block should lose the chrome colour, not the copy button and the two figures below. */
 var toggle = document.getElementById("theme");
 if (toggle) {
-  toggle.onclick = function (e) {
+  var label = function () {
+    var light = document.documentElement.dataset.theme === "light";
+    toggle.textContent = light ? "Dark theme" : "Light theme";
+    toggle.setAttribute("aria-pressed", light ? "true" : "false");
+    var tc = document.getElementById("tc");
+    var plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+    if (tc && plane) tc.content = plane;
+  };
+  toggle.onclick = function () {
     var light = document.documentElement.dataset.theme !== "light";
     document.documentElement.dataset.theme = light ? "light" : "dark";
-    e.target.textContent = light ? "Dark theme" : "Light theme";
-    e.target.setAttribute("aria-pressed", light ? "true" : "false");
+    /* The choice is the point: it used to last until the next navigation, so a reader who needs light
+       re-picked it on every one of these 1,295 pages and again on every trip back to the atlas. */
+    try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+    label();
   };
+  label();
+  /* Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a
+     theme they explicitly chose because the sun went down is worse than not following at all. */
+  try {
+    matchMedia("(prefers-color-scheme: light)").addEventListener("change", function (ev) {
+      if (localStorage.getItem("theme")) return;
+      document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+      label();
+    });
+  } catch (e) {}
 }
 
 /* Feature-detected rather than assumed, and the button stays hidden when the answer is no -- a button
