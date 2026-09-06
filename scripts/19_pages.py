@@ -608,6 +608,9 @@ const PAGE_SIZE = 120;
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false,
                sort: "stars", shown: PAGE_SIZE};
 let D = null, ROWS = [], NEW = 0;
+// The pending debounced search, if any. Declared out here rather than beside the handler because `set()`
+// has to cancel it, and `set()` is not inside the fetch callback where the handlers are wired.
+let typing = 0;
 
 // The window is applied here, in the browser, against the reader's own clock -- `data.json` carries the
 // raw first-seen date and nothing else. That is what makes the mark expire without a rebuild: a repo
@@ -724,7 +727,6 @@ function buildChips() {
   // visibly trailed the keyboard. Only ~20ms of that is row-count dependent; the rest is the innerHTML
   // rebuild and layout, so this is a defect at the current size and not only a future one. 150ms is short
   // enough to still read as live and collapses those seven renders into one.
-  let typing = 0;
   document.getElementById("q").oninput = e => {
     const v = e.target.value;
     clearTimeout(typing);
@@ -837,6 +839,11 @@ function stamp() {
 }
 
 function set(patch, keepFocus) {
+  // Any other interaction outranks a search the reader has stopped waiting for. Without this, tapping
+  // Clear all inside the 150ms window let the queued timer land afterwards and re-apply the term that was
+  // just cleared: empty box, filtered table, `#q=` back in the URL. The debounce made every filter control
+  // racy against the search box, so the cancel belongs here, on the shared path, not on each handler.
+  clearTimeout(typing);
   Object.assign(state, patch, {shown: PAGE_SIZE});
   writeHash();
   render();
