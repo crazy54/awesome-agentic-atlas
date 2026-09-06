@@ -58,6 +58,31 @@ jobs:
             echo "No override set; using the token committed in scripts/19_pages.py."
           fi
 
+      # See daily.yml for the argument, which is the same one: for both of these "" is not "unset", so
+      # neither can be declared in `env:`. This workflow is the one that matters for INDEXNOW_KEY, because
+      # `20_landing.py` -- which writes the key file the endpoint fetches -- runs only here. An override set
+      # here and not in daily.yml would publish one key and submit another.
+      #
+      # No `if:` on this step or on the IndexNow step at the foot of this file. This workflow has no gate,
+      # so `steps.gate.outputs.go` would evaluate to '' and every gated step would be skipped for ever.
+      - name: Honour the search-engine token overrides if they are set
+        env:
+          VERIFY: ${{ vars.GOOGLE_SITE_VERIFICATION || secrets.GOOGLE_SITE_VERIFICATION }}
+          INDEXNOW: ${{ vars.INDEXNOW_KEY || secrets.INDEXNOW_KEY }}
+        run: |
+          if [ -n "$VERIFY" ]; then
+            echo "GOOGLE_SITE_VERIFICATION=$VERIFY" >> "$GITHUB_ENV"
+            echo "Using the GOOGLE_SITE_VERIFICATION override; index.html will carry the meta tag."
+          else
+            echo "No GOOGLE_SITE_VERIFICATION set. The Search Console tag is omitted and the property is unverified -- see JFH-206."
+          fi
+          if [ -n "$INDEXNOW" ]; then
+            echo "INDEXNOW_KEY=$INDEXNOW" >> "$GITHUB_ENV"
+            echo "Using the INDEXNOW_KEY override. It must match daily.yml's, which submits against the key file this job writes."
+          else
+            echo "No override set; using the IndexNow key committed in scripts/19_pages.py."
+          fi
+
       # `chrome.py` looks for a Playwright cache before it looks on PATH, so installing it this way is all
       # the two capture stages need -- neither imports playwright, they shell out to the binary. --with-deps
       # pulls the shared libraries a headless Chromium needs that the runner image does not ship.
@@ -213,10 +238,22 @@ jobs:
           if git diff --cached --quiet; then
             echo "Nothing changed in docs/, mega-list/ or state/."
           else
+            # Before the commit, which is the only moment `--cached` is the delta about to be published.
+            # See daily.yml for the reasoning and for why `--no-renames`. This is the list that matters:
+            # this job is the one that rewrites the 156 facet pages and the 1,294 detail pages, so a week's
+            # worth of new and changed URLs is submitted from here and a day's from there.
+            git diff --cached --name-status --no-renames -- docs > "$RUNNER_TEMP/changed-docs.txt"
             git commit -m "Weekly rebuild $(date -u +%Y-%m-%d)"
             git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
+
+      # After the push, so the URLs are live before an engine is told to fetch them, and before the release
+      # step so a failure publishing the workbooks cannot silently cost the submission. Deliberately no
+      # `if:` -- see the note on the token step above. A non-2xx here is a warning and exit 0; the file is
+      # absent when nothing was committed, which the script reads as "nothing changed".
+      - name: Tell IndexNow which URLs changed
+        run: python scripts/26_indexnow.py --changed "$RUNNER_TEMP/changed-docs.txt"
 
       # A dated tag, and `--latest` on every one of them, because the README links to
       # `releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx` -- a permanent URL that resolves to

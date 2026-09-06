@@ -77,6 +77,35 @@ jobs:
             echo "No override set; using the token committed in scripts/19_pages.py."
           fi
 
+      # The same mechanism for the same reason, for the two search-engine tokens. Written through
+      # $GITHUB_ENV only when there is something to write, because for both of them "" is not "unset":
+      # `verification()` reads "" as "the site is not verified and emit no tag", and `indexnow_key()`
+      # refuses "" outright. Declaring these in `env:` would set both to "" on every run where the
+      # variable does not exist, which would turn the IndexNow submission into a hard failure on a fork.
+      #
+      # GOOGLE_SITE_VERIFICATION is unset today and the site is unverified until a human sets it -- only
+      # the account owner can mint the token. Setting it here is the entire code change needed: the next
+      # rebuild emits the meta tag in docs/index.html. INDEXNOW_KEY has a working committed default, and
+      # an override only makes sense for a fork; it must be set in *both* workflows or the key in the
+      # payload and the key file 20_landing.py published will disagree, which is a 403 from the endpoint.
+      - name: Honour the search-engine token overrides if they are set
+        env:
+          VERIFY: ${{ vars.GOOGLE_SITE_VERIFICATION || secrets.GOOGLE_SITE_VERIFICATION }}
+          INDEXNOW: ${{ vars.INDEXNOW_KEY || secrets.INDEXNOW_KEY }}
+        run: |
+          if [ -n "$VERIFY" ]; then
+            echo "GOOGLE_SITE_VERIFICATION=$VERIFY" >> "$GITHUB_ENV"
+            echo "Using the GOOGLE_SITE_VERIFICATION override; index.html will carry the meta tag."
+          else
+            echo "No GOOGLE_SITE_VERIFICATION set. The Search Console tag is omitted and the property is unverified -- see JFH-206."
+          fi
+          if [ -n "$INDEXNOW" ]; then
+            echo "INDEXNOW_KEY=$INDEXNOW" >> "$GITHUB_ENV"
+            echo "Using the INDEXNOW_KEY override. It must match weekly.yml's, which writes the key file."
+          else
+            echo "No override set; using the IndexNow key committed in scripts/19_pages.py."
+          fi
+
       # Rolling cache: a key nothing will ever hit, so every run saves a fresh entry, plus a restore-key
       # prefix so every run starts from the most recent one. The point is `cache/shots/` -- keeping it
       # warm is the difference between a five-minute job and one that would not finish inside the limit.
@@ -240,7 +269,7 @@ jobs:
       # docs/sitemap.xml, 21_feeds has docs/feed.xml. A future stage whose entire output is facet pages
       # would warn where it should fail. Give any such stage one fixed-path file to write.
       #
-      # The third arm is what the weekly-only stages cost: `20_landing.py`'s five output paths, plus
+      # The third arm is what the weekly-only stages cost: `20_landing.py`'s six output paths, plus
       # `docs/repo/**` and `docs/sitemap-repos.xml` from `22_detail.py` and `docs/og/**` from
       # `23_og.py`, are not written by this job, so they are skipped rather than reported. That is the
       # whole price of the history decision above -- any of those generators dropped from `weekly.yml`
@@ -260,7 +289,10 @@ jobs:
           : > "$RUNNER_TEMP/skipped"
           git ls-files docs mega-list | while IFS= read -r f; do
             case "$f" in
-              docs/topic/*|docs/target/*|docs/pages.css|docs/sitemap.xml|docs/robots.txt|docs/og/*|docs/repo/*|docs/sitemap-repos.xml)
+              # `docs/*.txt` rather than `docs/robots.txt`: 20_landing.py also writes the IndexNow key
+              # file, whose *name* is the key, so naming it here would break the moment INDEXNOW_KEY was
+              # rotated. Those two are the only .txt files under docs/ and both belong to that stage.
+              docs/topic/*|docs/target/*|docs/pages.css|docs/sitemap.xml|docs/*.txt|docs/og/*|docs/repo/*|docs/sitemap-repos.xml)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/skipped"; continue ;;
             esac
             if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
@@ -306,11 +338,35 @@ jobs:
             echo "The lists moved but nothing they changed reaches these three surfaces. Nothing to commit."
             exit 0
           fi
+          # The one moment in the whole job that knows exactly which pages changed, and it is this narrow:
+          # the index differs from HEAD, so `--cached` is the delta about to be published, and after the
+          # commit below it is empty. Recorded to a file rather than an output because the weekly run's
+          # version of this list is ~1,450 lines, which is past what a step output should carry.
+          #
+          # `--no-renames` on purpose: a rename is two facts an engine wants -- the old URL is gone and the
+          # new one exists -- and a rename record would hide the first. Reaching this line at all means
+          # something is being committed, which is why the IndexNow step treats a missing file as "nothing
+          # changed" rather than as an error: that is the `exit 0` above, and it is not a failure.
+          git diff --cached --name-status --no-renames -- docs > "$RUNNER_TEMP/changed-docs.txt"
           summary="$(python scripts/newness.py | sed -n '2p')"
           git commit -m "Daily refresh $(date -u +%Y-%m-%d)" -m "${summary}"
           # Rebase rather than force-push: a commit someone pushed by hand while this ran should survive.
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      # After the push, and that ordering is the whole design. IndexNow tells an engine to come and fetch a
+      # URL, so the URL has to be live first -- submitting before the push would point Bing at the previous
+      # deployment. It cannot fail the job either: the site is published by the time this runs, and a search
+      # engine being down, rate-limiting, or not yet having fetched the key file is not a build error.
+      # `26_indexnow.py` turns any non-2xx into a workflow warning and exits 0; it exits non-zero only for a
+      # fault on this side, which is a malformed key or a URL that is not on this site.
+      #
+      # Gated like every step above it. Without the `if:` this would run on a skipped build, where nothing
+      # was committed and `changed-docs.txt` does not exist -- harmless today, because the script treats an
+      # absent file as "nothing changed", but a step that only works by accident is not gated.
+      - name: Tell IndexNow which URLs changed
+        if: steps.gate.outputs.go == 'true'
+        run: python scripts/26_indexnow.py --changed "$RUNNER_TEMP/changed-docs.txt"
 
       - name: What is new
         if: steps.gate.outputs.go == 'true'

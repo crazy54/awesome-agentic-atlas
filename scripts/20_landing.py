@@ -17,6 +17,7 @@ only form a crawler counts.
   docs/pages.css                                   the shared shell
   docs/sitemap.xml                                 every page above, plus the root
   docs/robots.txt                                  allow everything, point at the sitemap
+  docs/<indexnow-key>.txt                          the IndexNow credential `26_indexnow.py` posts against
 
   python scripts/20_landing.py
 
@@ -689,6 +690,52 @@ def robots() -> str:
             f"Sitemap: {SITE}sitemap-repos.xml\n")
 
 
+# ------------------------------------------------------------------ the IndexNow key file
+# IndexNow's whole credential: a file at the site root named `<key>.txt` whose entire content is that key.
+# Written here rather than committed by hand, and that is not a style preference -- `docs/` is regenerated
+# output and `daily.yml` fails the build for any tracked file under it that no generator wrote, so a
+# hand-placed key file would either break the build or be deleted by whichever pass tidied up next. This
+# stage owns it because this stage owns `robots.txt`: same kind of file, same root, same reason.
+#
+# The key itself and its format assertion live in `19_pages.py` beside the beacon token, so the value that
+# goes in this file and the value `26_indexnow.py` puts in every payload are one string. See there.
+#
+# Where this file sits is load-bearing and it is the same trap `robots()` documents. IndexNow scopes a key
+# to the *directory* the key file is in: a key at the host root can submit any URL on the host, and a key
+# in a subdirectory can only submit URLs beneath it. This is a project Pages site under
+# `/awesome-agentic-atlas/`, so the host root is not ours to write to -- `crazy54.github.io/<key>.txt`
+# would be somebody else's 404. Hosting it here instead is not a workaround, it is the supported form:
+# `26_indexnow.py` sends `keyLocation` pointing at this file, and every URL it submits is under this
+# directory by construction. Unlike robots.txt, therefore, this one is not inert on the current
+# deployment -- it works today, with no custom domain.
+def key_text(key: str) -> str:
+    """The key, and nothing else. No trailing newline: the spec says the file contains the key, and while
+    every validator seen in the wild trims whitespace, "contains the key" is the only promise worth
+    making to something that answers 403 without saying why."""
+    return key
+
+
+def prune_keys(current: str) -> list[Path]:
+    """Delete key files from an earlier `INDEXNOW_KEY` this run did not write.
+
+    Rotating the key changes the *filename*, so without this a rotation leaves the old file tracked,
+    served and never rewritten -- which `weekly.yml`'s "every tracked page was rewritten" assertion reads,
+    correctly, as a generator having gone missing, and fails the build over a file nothing wants any more.
+
+    Deliberately narrow. Only names in `docs/` whose stem is itself a valid IndexNow key are candidates,
+    and `robots.txt` is excluded by name as well -- the 8-character minimum already excludes it, but a
+    stage that deletes files should not lean on arithmetic to spare the one other `.txt` file here.
+    """
+    gone = []
+    for path in sorted(OUT.glob("*.txt")):
+        if path.name == "robots.txt" or path.name == current:
+            continue
+        if b19.INDEXNOW_RE.match(path.stem):
+            path.unlink()
+            gone.append(path)
+    return gone
+
+
 # ------------------------------------------------------------------ writing
 def prune(keep: set[Path]) -> list[Path]:
     """Delete landing pages this run did not write, then the directories they emptied.
@@ -739,16 +786,23 @@ def main() -> None:
     (OUT / "pages.css").write_text(CSS, encoding="utf-8")
     (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"]), encoding="utf-8")
     (OUT / "robots.txt").write_text(robots(), encoding="utf-8")
+    keyfile = b19.indexnow_key_file()
+    (OUT / keyfile).write_text(key_text(b19.indexnow_key()), encoding="utf-8")
+    stale_keys = prune_keys(keyfile)
 
     gone = prune({p.path.resolve() for p in pages})
 
-    shells = sum((OUT / f).stat().st_size for f in ("pages.css", "sitemap.xml", "robots.txt"))
+    shells = sum((OUT / f).stat().st_size
+                 for f in ("pages.css", "sitemap.xml", "robots.txt", keyfile))
     tops = sum(1 for p in pages if p.cat and not p.tgt)
     tgt_n = sum(1 for p in pages if p.tgt and not p.cat)
     print(f"{tops} topic · {tgt_n} target · {written - tops - tgt_n} crossing "
           f"= {written} pages · {kb(total)}")
-    print(f"pages.css + sitemap.xml + robots.txt · {kb(shells)} · "
+    print(f"pages.css + sitemap.xml + robots.txt + {keyfile} · {kb(shells)} · "
           f"{len(pages) + 1} URLs, lastmod {data['snapshot']}")
+    print(f"IndexNow key hosted at {SITE}{keyfile}"
+          + (f" · {len(stale_keys)} stale key file(s) removed: "
+             + ", ".join(p.name for p in stale_keys) if stale_keys else ""))
     print(f"{sum(min(len(p.rows), CAP) for p in pages):,} rows rendered, "
           f"capped at {CAP} per page · {kb(total + shells)} added to docs/")
     carded = sum(1 for p in pages if p.card in cards)
