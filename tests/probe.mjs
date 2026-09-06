@@ -324,6 +324,94 @@ ok("gibberish reaches the empty state", /class="empty"/.test(A.OUT), A.OUT.slice
 ok("empty state has no dead did-you-mean button", !/data-q=/.test(A.OUT));
 ok("empty state offers clearing everything", /data-all="1"/.test(A.OUT));
 
+// --- the zero-result search link ---
+// Cloudflare's beacon blanks the hash before it reports a URL, so `#q=<term>` never leaves the browser and
+// no plan upgrade recovers it -- a search that found nothing is the one thing about this page that cannot be
+// measured, so the empty branch asks instead. What is worth asserting is the *encoding* of the href it
+// composes, and that is precisely what this harness can see and a screenshot cannot.
+const missAttr = () => (A.OUT.match(/<a class="miss" href="([^"]*)"/) || [])[1] ?? null;
+// `esc()` emits four entities and only one of them can reach this attribute: the term's own `<`, `>` and `"`
+// are percent-encoded by `encodeURIComponent` long before `esc()` sees them, so the only thing left needing
+// an entity is the pair of bare `&` query separators. That is asserted below rather than assumed, which is
+// why reversing just `&amp;` here is safe.
+const missHref = () => { const a = missAttr(); return a === null ? null : a.replace(/&amp;/g, "&"); };
+const missURL = () => { try { return new URL(missHref()); } catch { return null; } };
+
+q("zzzqqqxxvvwwyy");
+ok("a zero-result search offers to report the gap", missAttr() !== null, A.OUT.slice(0, 240));
+ok("the link has a style of its own, quieter than the rescue buttons above it",
+   html.includes(".empty .miss{"), "no .empty .miss rule in the stylesheet");
+q("langgraph");
+ok("a search that found something is not asked to report a gap", missAttr() === null, missAttr());
+
+// An empty table with an empty search box has no term to report, so it must not be invited to file
+// anything. 38 of the 168 topic x harness pairs select nothing, so one is found rather than named: a
+// hardcoded pair would go red the day the data moved and would tell you nothing about the link.
+let barren = null;
+for (const c of A.D.cats) {
+  for (const t of A.D.targets) {
+    A.state.q = ""; A.state.cat = c.slug; A.state.tgt = t.slug; A.state.os = [];
+    A.state.strict = false; A.state.fresh = false; A.state.rising = false;
+    if (A.ROWS.filter(A.match).length === 0) { barren = c.slug + " x " + t.slug; break; }
+  }
+  if (barren) break;
+}
+A.state.shown = 600; A.render();
+ok("an over-filtered reader with an empty search box is not asked to file anything",
+   barren !== null && /class="empty"/.test(A.OUT) && missAttr() === null,
+   barren === null ? "no filter pair selects zero rows, so the no-term case went untested"
+                   : barren + " -> " + missAttr());
+A.state.cat = ""; A.state.tgt = "";
+
+// Spaces, an ampersand, a fragment marker, a quote, an angle bracket, a plus and two non-Latin scripts, in
+// one term, because the href is built by concatenation and each of those breaks a different layer: the query
+// string, the HTML attribute, or the form decoder that reads it back. `zzqqxx` is only there to guarantee the
+// empty branch; the rest of the term is the test.
+const tricky = 'kubernetes & rancher #k3s "café" <b> a+b 日本語 zzqqxx';
+globalThis.location.hash = "#topic=agents&confirmed=1";
+q(tricky);
+const u = missURL();
+ok("a term full of URL metacharacters still yields a well-formed absolute URL", u !== null,
+   String(missAttr()).slice(0, 200));
+ok("it opens a prefilled issue on this repository, labelled for triage",
+   u !== null && u.origin === "https://github.com" && u.pathname.endsWith("/issues/new") &&
+   u.pathname.split("/").length === 5 && u.searchParams.get("labels") === "coverage",
+   u && u.origin + u.pathname + " labels=" + (u && u.searchParams.get("labels")));
+ok("the term round-trips through the encoding character for character",
+   u !== null && (u.searchParams.get("title") || "").includes(tricky),
+   u && JSON.stringify(u.searchParams.get("title")));
+// The filters and the snapshot are what turn "someone searched for X" into a report somebody can act on:
+// "kubernetes, confirmed-only, Windows" and "kubernetes" are different findings and only one is a gap.
+ok("the body carries the term, the active filters and the snapshot",
+   u !== null && (u.searchParams.get("body") || "").includes("Searched for: " + tricky) &&
+   (u.searchParams.get("body") || "").includes("Filters: topic=agents&confirmed=1") &&
+   (u.searchParams.get("body") || "").includes("Snapshot: " + data.snapshot),
+   u && JSON.stringify(u.searchParams.get("body")));
+ok("the two query separators are escaped for the attribute, and nothing else had to be",
+   missAttr() !== null && missAttr().includes("&amp;title=") && missAttr().includes("&amp;body=") &&
+   !/&(?!amp;)/.test(missAttr()), missAttr());
+ok("every space, fragment marker and non-ASCII character is percent-encoded, not passed through",
+   missAttr() !== null && /^[!-~]+$/.test(missAttr()) && !missHref().includes("#"), missAttr());
+
+// A term long enough to be cut, with an astral character sitting exactly on the cut. `.slice(0, 80)` counts
+// UTF-16 units, so it would split the surrogate pair and leave a lone surrogate -- and `encodeURIComponent`
+// throws URIError on one, which would come out of the `innerHTML` expression in render() and blank the empty
+// state rather than show it. The cut has to fall between code points; these three assertions say so.
+const octopus = String.fromCodePoint(0x1f419);
+const boundary = "zzqqxx " + "qxzvbnm ".repeat(9) + octopus + " wqxz";
+let threw = null;
+try { q(boundary); } catch (e) { threw = e; }
+ok("a term truncated across a surrogate pair does not throw out of render()", threw === null,
+   threw && String(threw));
+const ub = threw ? null : missURL();
+ok("the astral character sitting on the 80-code-point boundary survives whole",
+   ub !== null && (ub.searchParams.get("title") || "").includes(octopus),
+   ub && JSON.stringify(ub.searchParams.get("title")));
+ok("and the cut really happened -- nothing past the boundary reaches the issue title",
+   ub !== null && !(ub.searchParams.get("title") || "").includes("wqxz"),
+   ub && JSON.stringify(ub.searchParams.get("title")));
+globalThis.location.hash = "";
+
 // --- the fallback must relax only the search box ---
 const catSlug = A.D.cats[0].slug;
 A.state.q = "langraph"; A.state.cat = catSlug; A.state.sort = "relevance"; A.state.shown = 600;

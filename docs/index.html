@@ -184,6 +184,8 @@ kbd{background:var(--band);border:1px solid var(--grid);border-bottom-width:2px;
 .fix:hover{border-color:var(--bar)}
 .fix .n{color:var(--muted);font-variant-numeric:tabular-nums}
 .fix:hover .n{color:var(--ink2)}
+.empty .miss{color:var(--muted);font-size:13px;text-decoration:underline}
+.empty .miss:hover{color:var(--ink)}
 .more{display:block;margin:26px auto 0;background:var(--band);color:var(--ink);
   border:1px solid var(--grid);border-radius:8px;padding:11px 22px;font-weight:600}
 .more:hover{border-color:var(--bar)}
@@ -306,7 +308,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <p class="blurb" id="ctx"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><span class="k"><span class="lw">Last </span>deployed</span>
-      <span class="v"><time datetime="2026-09-06T20:46:00Z">2026-09-06 20:46 UTC</time></span></a>
+      <span class="v"><time datetime="2026-09-06T21:09:00Z">2026-09-06 21:09 UTC</time></span></a>
   </div>
   <nav>
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
@@ -392,7 +394,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-06T20:46:00Z";
+const BUILT = "2026-09-06T21:09:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -896,6 +898,20 @@ function rescue() {
     .slice(0, 4);
 }
 
+const REPO = "crazy54/awesome-agentic-atlas";
+
+function missLink() {
+  const typed = state.q.replace(/[\u0000-\u001f]+/g, " ").trim();
+  const q = [...typed].slice(0, 80).join("").trim();
+  if (!q) return "";
+  const body = "Searched for: " + q + "\n\nFilters: " + (location.hash.slice(1) || "none") +
+    "\nSnapshot: " + SNAPSHOT + "\n\nWhat were you hoping to find? A repository URL is ideal.\n";
+  const href = "https://github.com/" + REPO + "/issues/new?labels=coverage&title=" +
+    encodeURIComponent("Nothing found for “" + q + "”") + "&body=" + encodeURIComponent(body);
+  return '<p><a class="miss" href="' + esc(href) + '" target="_blank" rel="noopener">' +
+    "Searched for something that isn’t here? Tell us what’s missing</a></p>";
+}
+
 function grams(s) {
   const p = " " + s.toLowerCase().replace(/\s+/g, " ").trim() + " ", out = new Set();
   for (let i = 0; i + 3 <= p.length; i++) out.add(p.slice(i, i + 3));
@@ -1005,6 +1021,7 @@ function render() {
             ' <span class="n">' + o.n.toLocaleString() + "</span></button>").join("") + "</div>"
         : "") +
       '<p style="margin-top:16px"><button class="fix" data-all="1">Clear all filters</button></p>' +
+      missLink() +
       "</div>";
     return;
   }

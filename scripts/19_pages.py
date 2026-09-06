@@ -602,6 +602,13 @@ kbd{background:var(--band);border:1px solid var(--grid);border-bottom-width:2px;
 .fix:hover{border-color:var(--bar)}
 .fix .n{color:var(--muted);font-variant-numeric:tabular-nums}
 .fix:hover .n{color:var(--ink2)}
+/* Quieter than the rescue buttons above it, deliberately. Loosening a filter fixes most empty result sets,
+   and a link that shouted would be pressed by readers who only mistyped -- who are already served by the
+   near-match rows `near()` renders before this branch can be reached. The underline is explicit because
+   `a{text-decoration:none}` above strips it from every anchor on the page and only `a:hover` puts it back,
+   and a link that looks like body text until you touch it is not an affordance. */
+.empty .miss{color:var(--muted);font-size:13px;text-decoration:underline}
+.empty .miss:hover{color:var(--ink)}
 .more{display:block;margin:26px auto 0;background:var(--band);color:var(--ink);
   border:1px solid var(--grid);border-radius:8px;padding:11px 22px;font-weight:600}
 .more:hover{border-color:var(--bar)}
@@ -1731,6 +1738,64 @@ function rescue() {
     .slice(0, 4);
 }
 
+// The repository, in script as well as in markup, for the one href on this page that has to be composed at
+// runtime. `substitute()` replaces __REPO__ across the whole page string and does not care that this
+// occurrence is inside a <script>, so it is the same placeholder the footer's links already use. Declared
+// here beside its only consumer rather than up with SNAPSHOT and BUILT: unlike those two it is not a fact
+// about the build that the rest of the page reads, it is a detail of the link below.
+const REPO = "__REPO__";
+
+// The one thing about this page that analytics cannot learn, and the one worth learning.
+//
+// Cloudflare Web Analytics has no custom-event API at any plan level, and its beacon runs every URL it
+// reports through a helper that blanks the hash and the query before sending -- read out of
+// beacon.min.js 2026.9.1 -- so `#q=kubernetes` never leaves the browser and no dashboard filter, GraphQL
+// dimension or plan upgrade can recover it. Which topic and harness a reader crossed *is* already collected,
+// but by paths and not by events: `20_landing.py` and `22_detail.py` prerender 1,451 pages besides this one,
+// and each is an ordinary page view of an ordinary `Path`. A search that found nothing has no path to be,
+// and it is the more useful of the two facts -- it names either a tool this atlas is missing or a word its
+// taxonomy does not use.
+//
+// So the reader is asked instead of measured. A prefilled issue link costs no script, no request and no
+// cookie, and collects nothing whatever from anyone who does not press it; what does arrive lands in the
+// tracker where taxonomy work already happens, already written up by someone who knows what they wanted.
+// The trade is worth stating plainly: this yields a handful of good reports rather than a rate, and a reader
+// who sends one identifies themselves through their own GitHub account -- which is their decision to make,
+// on a form they can read first, and exactly why this is an anchor and not a fetch().
+//
+// Only ever reached from the empty branch of render(), which is the gate that makes it worth having twice
+// over. `near()` has already offered every trigram-near correction as real, clickable rows before that
+// branch can be reached, so a term that gets this far is not a misspelling of anything here. And the
+// 1,294-row rendering loop never calls this, so the hot path pays nothing for it.
+function missLink() {
+  // The reader's own free text, on its way into a URL. Control characters go because a pasted newline would
+  // split the issue title, and the length is capped because a pasted paragraph makes an issue nobody
+  // triages -- the terms worth acting on are two or three words.
+  const typed = state.q.replace(/[\u0000-\u001f]+/g, " ").trim();
+  // Cut by code point and not by UTF-16 unit. `.slice(0, 80)` can land in the middle of a surrogate pair,
+  // `encodeURIComponent` throws URIError on the lone surrogate that leaves behind, and the throw would come
+  // out of the `innerHTML` expression in render() below -- so a reader who pasted an emoji at exactly the
+  // wrong offset would get a blank result area instead of "Nothing matches all of that". Spread iteration
+  // yields whole code points, so there is no offset for that to happen at.
+  const q = [...typed].slice(0, 80).join("").trim();
+  if (!q) return "";
+  // The filters travel with the term, because "kubernetes, confirmed-only, Windows" and "kubernetes" are
+  // different findings and only one of them is a coverage gap. The hash is already the canonical
+  // description of the view and `set()` rewrote it immediately before calling render(), so it is what gets
+  // quoted -- percent-encoded exactly as the reader would paste it back.
+  const body = "Searched for: " + q + "\n\nFilters: " + (location.hash.slice(1) || "none") +
+    "\nSnapshot: " + SNAPSHOT + "\n\nWhat were you hoping to find? A repository URL is ideal.\n";
+  const href = "https://github.com/" + REPO + "/issues/new?labels=coverage&title=" +
+    encodeURIComponent("Nothing found for “" + q + "”") + "&body=" + encodeURIComponent(body);
+  // esc() on the href like every other URL this file writes into an attribute. What needs it here is the
+  // pair of query separators: a bare ampersand in an attribute value is exactly what `&amp;` is for, and
+  // `&body=` sits close enough to a named character reference to be worth not finding out about.
+  // target=_blank because the whole point of keeping state in the hash is that the view survives, and a
+  // same-tab navigation to GitHub would throw away the filters the reader spent six clicks building.
+  return '<p><a class="miss" href="' + esc(href) + '" target="_blank" rel="noopener">' +
+    "Searched for something that isn’t here? Tell us what’s missing</a></p>";
+}
+
 // Trigram overlap, not Levenshtein: "langraph" vs "LangGraph" is one deletion but "claude cdoe" vs
 // "Claude Code" is a transposition inside a two-word name, and trigrams handle both without a matrix.
 // Padding with spaces makes the first and last characters count, which is where typos cluster.
@@ -1893,6 +1958,13 @@ function render() {
             ' <span class="n">' + o.n.toLocaleString() + "</span></button>").join("") + "</div>"
         : "") +
       '<p style="margin-top:16px"><button class="fix" data-all="1">Clear all filters</button></p>' +
+      // Last, and below Clear all, because loosening a filter is what most empty result sets actually need
+      // and reporting a gap is the rarer thing. Returns "" unless there is a search term, so a reader who
+      // has only over-filtered is never invited to file an issue about it. No change is needed in `wire()`:
+      // the delegated `#out` listener tests `closest(".fix")` and `closest(".copy")`, so a click on this
+      // anchor matches neither and falls through to the browser's own handling of the href -- which is the
+      // whole reason it is an anchor.
+      missLink() +
       "</div>";
     return;
   }
