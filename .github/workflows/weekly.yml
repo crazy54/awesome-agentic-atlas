@@ -131,6 +131,10 @@ jobs:
           # the files they point at, and the two are one change. A run that emitted the tags without the
           # cards would publish 156 pages referencing images that are not there.
           python scripts/23_og.py
+          # Last, because the service worker's version is a hash of the files it precaches -- `index.html`
+          # from 19_pages and `pages.css` from 20_landing -- so it has to see both in their final state.
+          # It does not have to trust the ordering: the stage exits with a message if either is missing.
+          python scripts/24_pwa.py
 
       # The same assertion daily.yml carries -- see there for why it is mtime against a marker rather than
       # a manifest, and why an unwritten facet page is a warning while an unwritten fixed path is an error.

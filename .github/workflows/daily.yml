@@ -148,6 +148,12 @@ jobs:
           # After 19_pages and never before: that stage is what stamps the ledger and rewrites data.json,
           # and the feeds are a read of both. Run first, it would publish yesterday's arrivals.
           python scripts/21_feeds.py
+          # The service worker precaches `docs/index.html` and hashes what it precached into its own
+          # version string, so this has to follow 19_pages: run first, it would ship a worker whose
+          # version says "unchanged" while holding a shell that changed. `pages.css` is the other
+          # precached file and 20_landing writes it -- absent from this job, so this run precaches the
+          # copy already committed, which is correct because nothing here can have changed it.
+          python scripts/24_pwa.py
 
       # `20_landing.py` is deliberately absent, and it is the one stage whose absence here is a decision
       # rather than an oversight. It rewrites 156 prerendered pages, 143 of which change on any run where

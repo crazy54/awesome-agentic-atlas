@@ -228,6 +228,21 @@ PAGE = r"""<!doctype html>
 <link rel="alternate" type="application/feed+json" title="Awesome Agentic Atlas — new arrivals"
       href="feed.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<!-- Installability, and the offline shell. Every href relative, so the /awesome-agentic-atlas/ path
+     prefix Pages adds takes care of itself. Both files are written by `scripts/24_pwa.py`; if that stage
+     has not run, the manifest link 404s and the registration at the foot of this page rejects into an
+     empty catch, which is the whole failure. -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- One `theme-color`, managed by script, rather than the two `media` variants that would be the obvious
+     way to write this. The HTML spec picks the *first* such element whose media matches, so a pair keyed
+     on `prefers-color-scheme` cannot be overridden by anything appended later -- and this page lets a
+     reader choose a theme against their OS preference and remembers it, so the pair would paint the
+     browser chrome the opposite colour to the page for exactly those readers. The value here is `--plane`
+     in dark, because `--plane` is the header's background and the header is what sits under the chrome;
+     it is a literal because the stylesheet below has not parsed yet when the next script runs. With
+     JavaScript off it stays this value, which agrees with the `data-theme="dark"` floor on <html>. -->
+<meta name="theme-color" id="tc" content="#181f21">
 <!-- Ahead of the stylesheet deliberately, and inline rather than in a file: this has to settle the theme
      before first paint. A reader who chose light, or whose OS asks for light, otherwise gets a frame of
      near-black before the toggle catches up, and an external script is one more round trip during which
@@ -242,6 +257,11 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks below. After paint `wire()` re-derives this from the
+  // computed value so the stylesheet stays the single source of truth; here there is no computed value to
+  // read yet, and a chrome one shade out for one frame is the cost of not blocking the paint on a
+  // stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
 } catch (e) {}
 </script>
 <style>
@@ -1136,6 +1156,11 @@ function wire() {
     const light = document.documentElement.dataset.theme === "light";
     btn.textContent = light ? "Dark theme" : "Light theme";
     btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
+    // Read off the stylesheet rather than restated here, so --plane and the browser chrome cannot drift.
+    // Folded into label() because label() is the one function every path that changes the theme already
+    // calls -- the toggle, the OS-preference listener, and the initial agreement with the head script.
+    const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+    if (plane) document.getElementById("tc").content = plane;
   };
   btn.onclick = () => {
     const light = document.documentElement.dataset.theme !== "light";
@@ -1643,6 +1668,28 @@ function render() {
 function esc(s) {
   return String(s == null ? "" : s).replace(/[&<>"]/g,
     c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+}
+</script>
+<!-- The offline shell. Last thing on the page and inside a `load` listener, because a service worker is
+     the least urgent thing here: registering it earlier competes with the fetch that puts rows on screen.
+     `sw.js` is written by `scripts/24_pwa.py` and caches the shell, this page's navigation and data.json;
+     everything cross-origin it leaves alone.
+
+     `updateViaCache: "none"` because Pages serves with `max-age=600`, and the one file that must never be
+     read from the HTTP cache is the worker that decides what the HTTP cache is for. The explicit
+     `reg.update()` is not belt-and-braces: per spec, `register()` with an unchanged script URL resolves
+     against the existing registration without queueing an update job, so without this line a reader who
+     keeps the tab open gets a new worker only when the browser's own soft-update timer decides.
+
+     Guarded on the protocol as well as on support: from `file://` the registration throws a
+     SecurityError, and a contributor opening the page off disk should not see it. -->
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js", {updateViaCache: "none"})
+      .then(reg => { if (reg.active) reg.update().catch(() => {}); })
+      .catch(() => {});
+  });
 }
 </script>
 __ANALYTICS__</body>
