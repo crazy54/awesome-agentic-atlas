@@ -1,10 +1,14 @@
-"""Build the combined workbook: eleven awesome-lists, one file, two themes.
+"""Build the combined workbook: every awesome-list in the atlas, one file, two themes.
 
 Sheet plan
   Start Here     cover, totals, how to filter, how the verdicts were reached
   Sources        every list this workbook was built from, credited
   Orchestrators  the original list, with its full OS/install treatment
-  <one per list> grouped by section, most stars first, screenshot per row
+  <one per list> the ten lists worth reading one at a time (SHEETS), grouped by
+                 section, most stars first, screenshot per row. The other
+                 twenty-six reach the reader through the cross-list sheets --
+                 every row of every list is on By Category -- and are credited
+                 on Sources, List Stats and the cover's directory all the same.
   Leaderboard    the highest-starred projects across every list at once
   Windows / macOS / Linux / Docker
                  one tab per platform, drawn from every list at once and
@@ -19,6 +23,14 @@ Colour rule: each sheet gets at most eight category hues from the validated
 palette, in fixed slot order. Lists with more sections than that fold into <= 8
 colour groups (see buckets.py) and print their own section name in its own
 column, so hue narrows the field and text identifies the row.
+
+The source lists themselves take no palette hue at all. There are several times
+more of them than the palette has slots, so a hue per list would have to either
+repeat or be invented, and both are forbidden -- so the three sheets that list
+them one per row (Sources, List Stats, the cover's directory) name each one in
+text and fill its chip from the theme's neutrals. `slot()` raises rather than
+cycle, so the next thing that outgrows eight says so instead of quietly reusing
+a colour.
 """
 import importlib.util
 import json
@@ -53,6 +65,10 @@ spec = importlib.util.spec_from_file_location("b07", Path(__file__).parent / "07
 b7 = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(b7)
 
+spec = importlib.util.spec_from_file_location("b10", Path(__file__).parent / "10_parse_sources.py")
+b10 = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(b10)
+
 THEMES = b7.THEMES
 fill, side, paint, mix, best_ink = b7.fill, b7.side, b7.paint, b7.mix, b7.best_ink
 SHOT_W, SHOT_H = b7.SHOT_W, b7.SHOT_H
@@ -64,7 +80,31 @@ SLOTS = [
     ("#4a3aa7", "#9085e9"), ("#e34948", "#e66767"),
 ]
 
-# sheet order and titles for the ten added lists
+
+def slot(i: int, n: int, what: str) -> tuple[str, str]:
+    """Palette slot `i` of `n` things that have to be told apart, or a loud failure.
+
+    Deliberately not `SLOTS[i % len(SLOTS)]`, because that is how this fails quietly: at nine
+    things the ninth silently takes the first one's hue, two rows of one legend become one colour,
+    and nothing raises -- the workbook merely misleads, which is worse than not building. Every
+    caller therefore has to say how many things it is colouring, and asking for more than the
+    palette holds stops the build. `buckets.check` and `10_parse_sources.unmapped` already refuse
+    above eight upstream; this is the same rule at the point where the slot is actually handed out,
+    so it also catches the maps that grew a ninth entry after those two last ran.
+    """
+    if n > len(SLOTS):
+        raise SystemExit(
+            f"{what}: {n} things want a hue each and the palette has {len(SLOTS)} -- fold them "
+            f"into <= {len(SLOTS)} groups (see buckets.py) or let the text carry the identity")
+    return SLOTS[i]
+
+
+# Which lists get a sheet of their own, in tab order. Ten of the thirty-six, and deliberately so:
+# a sheet per list would be thirty-six tabs and thirty-six screenshot sets, and the sheets that cut
+# across every list -- By Category, Leaderboard, the four platform tabs -- already carry every row
+# from every source. So this list answers "which lists are worth reading one at a time", which is a
+# curation question, and it is not the same question as "which lists is the atlas built from".
+# Anything that means the second one must read SOURCES; see LIST_TITLE.
 SHEETS = [
     ("agents", "Agents (kyrolabs)", "kyrolabs/awesome-agents",
      "Frameworks, dev tools and agent products, as curated by kyrolabs."),
@@ -88,6 +128,16 @@ SHEETS = [
      "Runnable example apps. Each row is a folder inside the one repo."),
 ]
 SHEET_TITLE = {k: t for k, t, *_ in SHEETS}
+
+# Every source's display name, which is not the same set as SHEETS. `listed_by` on the leaderboard,
+# the category sheet and the four platform sheets is built from this: those sheets hold rows from all
+# thirty-six lists, so a map covering only the ten that have a sheet left twenty-six of them printing
+# a raw internal key -- a reader saw "Listed by: cc_toolkit_rohitg00" where the other rows said
+# "Claude Code". SHEETS wins where it has an entry, so the ten already-shipped names do not move, and
+# `orchestrators` keeps the short label the workbook has always used for it rather than its SOURCES
+# title. Everything else takes the title its SOURCES entry already declares.
+LIST_TITLE = {**{s["key"]: s["title"] for s in b10.SOURCES},
+              "orchestrators": "Orchestrators", **SHEET_TITLE}
 
 # The project name, in one place because three things have to agree on it: the two filenames, the
 # cover's hyperlink to its sibling theme, and 17_markdown's links out to the workbooks. Deliberately
@@ -131,11 +181,44 @@ def chip_style(T, hue: str) -> dict:
     return dict(hue=hue, chip_bg=bg, chip_ink=ink, ratio=ratio)
 
 
-def group_styles(T, source: str) -> dict:
-    """bucket name -> chip colours, assigned to palette slots in fixed order."""
+def list_chip(T) -> dict:
+    """Chip colours for a row that stands for one source list: theme neutrals, never a palette hue.
+
+    Three sheets list the sources one per row -- Sources, List Stats and the cover's directory --
+    and each of them used to fill that row's chip from `SLOTS[i % 8]`, `i` being the list's place in
+    the order. At eight lists that read as a key: one list, one hue, the same hue on all three. Then
+    the ninth list silently took the first one's blue on all three at once, and nothing said so --
+    and `10_parse_sources.SOURCES` now names several times the eight hues there are to go round.
+    Neither way out is open: the palette is validated at eight, so inventing hues to reach the true
+    count is exactly what the method forbids, and folding the lists into eight colour groups the way
+    buckets.py folds sections would mean inventing a grouping of other people's lists that no sheet
+    ever asks the reader to compare on. So hue drops out and the chip keeps only its shape. Every one
+    of those rows already prints the sheet name inside the chip itself, with the list's own name, its
+    repo and its counts beside it -- the same conclusion the "By Category" rail reached for fourteen
+    topics and `plain_bar` reached for the per-list bars.
+    """
+    bg = T["plane"]
+    ink, ratio = best_ink(bg, [T["ink"], T["ink2"]])
+    return dict(hue=T["bar"], chip_bg=bg, chip_ink=ink, ratio=ratio)
+
+
+def group_styles(T, source: str, rows: list) -> dict:
+    """bucket name -> chip colours, assigned to palette slots in fixed order.
+
+    The curated order in buckets.py takes the slots first. A section that map has no entry for keeps
+    its own name as its bucket, so it is a ninth group on the sheet and has to be counted as one:
+    left out, those sections all fell through to a single fallback hue and collided with the first
+    bucket, on the one sheet where the chip *is* the key. `14_classify_all` prints exactly which
+    sections are in that state, and the two lists that carry no map at all -- Schwoebel's eight
+    sections, wong2's five -- are entirely made of them.
+    """
+    names = list(bucket_order(source))
+    for r in rows:
+        if r["bucket"] not in names:
+            names.append(r["bucket"])
     out = {}
-    for i, name in enumerate(bucket_order(source)):
-        light, dark = SLOTS[i % len(SLOTS)]
+    for i, name in enumerate(names):
+        light, dark = slot(i, len(names), f"{source} sheet colour groups")
         out[name] = chip_style(T, dark if T is THEMES["dark"] else light)
     return out
 
@@ -194,7 +277,7 @@ def build_list_sheet(wb, key: str, rows: list, T, shots, theme: str):
     title = SHEET_TITLE[key]
     nwo = next(n for k, _t, n, _b in SHEETS if k == key)
     blurb = next(b for k, _t, _n, b in SHEETS if k == key)
-    gs = group_styles(T, key)
+    gs = group_styles(T, key, rows)
 
     has_sections = any(r["bucket"] != r["section"] for r in rows)
     has_stars = any(r["stars"] > 0 for r in rows)
@@ -255,7 +338,10 @@ def build_list_sheet(wb, key: str, rows: list, T, shots, theme: str):
     for i, r in enumerate(rows):
         row = 3 + i
         ws.row_dimensions[row].height = SHOT_H * 0.75
-        cs = gs.get(r["bucket"]) or chip_style(T, SLOTS[0][1 if T is THEMES["dark"] else 0])
+        # Indexed, not `.get`-with-a-fallback: `group_styles` was handed these same rows, so it
+        # holds a slot for every bucket in them. The fallback it replaces was slot 0 for anything
+        # missing, which handed the first bucket's blue to every unmapped section at once.
+        cs = gs[r["bucket"]]
         band = T["band"] if i % 2 else T["surface"]
         for c in range(1, ncols + 1):
             cell = ws.cell(row=row, column=c)
@@ -393,10 +479,12 @@ def build_sources(wb, per_source, meta, T, shots, theme: str):
     hair = side(T["grid"])
     ctr = Alignment(horizontal="center", vertical="center")
     mid = Alignment(vertical="center", wrap_text=True, indent=1)
+    # One chip for every row, because there is no eight-value question here for hue to answer: the
+    # list's name is column 2 and the sheet it feeds is written inside the chip in column 9.
+    cs = list_chip(T)
     for i, r in enumerate(rows):
         row = 4 + i
         ws.row_dimensions[row].height = SHOT_H * 0.75
-        cs = chip_style(T, SLOTS[i % len(SLOTS)][1 if T is THEMES["dark"] else 0])
         band = T["band"] if i % 2 else T["surface"]
         for c in range(1, ncols + 1):
             cell = ws.cell(row=row, column=c)
@@ -426,7 +514,7 @@ def build_sources(wb, per_source, meta, T, shots, theme: str):
         d = ws.cell(row=row, column=8, value=r["blurb"])
         d.font = Font(name="Segoe UI", size=10, color=T["ink"])
         d.alignment = Alignment(vertical="top", wrap_text=True)
-        sh = ws.cell(row=row, column=9, value=r["sheet"])
+        sh = ws.cell(row=row, column=9, value=r["tab"])
         sh.font = Font(name="Segoe UI", size=10, bold=True, color=cs["chip_ink"])
         sh.fill = fill(cs["chip_bg"])
         sh.alignment = mid
@@ -958,8 +1046,8 @@ def category_rows(records, orch, label, meta):
 def plain_bar(T, title: str, data: Reference, cats: Reference, vmax: float) -> BarChart:
     """Magnitude, not identity -- so one sequential hue for every bar.
 
-    Eleven lists is past the eight categorical slots, and the bars are already
-    named on the axis, so hue has no work to do here.
+    There are more source lists than the eight categorical slots, and the bars
+    are already named on the axis, so hue has no work to do here.
     """
     ch = BarChart()
     ch.type = "bar"
@@ -1011,7 +1099,11 @@ def build_list_stats(wb, per_source, T):
     ws = wb.create_sheet("List Stats")
     ws.sheet_properties.tabColor = T["surface"]
     ws.sheet_view.showGridLines = False
-    paint(ws, 1, 48, 1, 15, fill(T["surface"]))
+    # Deep enough for the table *and* the two charts anchored two rows under it, which float over
+    # cells rather than occupying them -- so the background has to be painted where they will land or
+    # the dark theme shows a white slab behind them. A flat 48 covered that at eleven lists and stops
+    # covering it around twenty-five.
+    paint(ws, 1, max(48, len(per_source) + 24), 1, 15, fill(T["surface"]))
     for i, w in enumerate([3, 30, 11, 11, 11, 13, 13, 13, 11, 11, 11, 11, 11, 11], start=1):
         ws.column_dimensions[get_column_letter(i)].width = w
 
@@ -1033,8 +1125,11 @@ def build_list_stats(wb, per_source, T):
     ws.row_dimensions[4].height = 26
 
     row = 5
-    for i, r in enumerate(per_source):
-        cs = chip_style(T, SLOTS[i % len(SLOTS)][1 if T is THEMES["dark"] else 0])
+    # Column B is both the chip and the category axis of the two charts below it, so every list is
+    # named twice over on this sheet; `plain_bar` already refuses to colour the bars for the same
+    # reason, and a per-list hue on the chip would be the only unlabelled colour on the sheet.
+    cs = list_chip(T)
+    for r in per_source:
         chip = ws.cell(row=row, column=2, value=r["sheet"])
         chip.fill = fill(cs["chip_bg"])
         chip.font = Font(name="Segoe UI", size=9, bold=True, color=cs["chip_ink"])
@@ -1068,7 +1163,9 @@ def build_cover(wb, T, stats, per_source):
     ws = wb.create_sheet("Start Here", 0)
     ws.sheet_properties.tabColor = T["bar"]
     ws.sheet_view.showGridLines = False
-    paint(ws, 1, 110, 1, 14, fill(T["surface"]))
+    # Scales with the directory, which is one row per source list. The fixed 110 this replaces was
+    # measured against a cover that listed eleven of them.
+    paint(ws, 1, 100 + len(per_source), 1, 14, fill(T["surface"]))
 
     TILE_W = 32
     widths = [3, 22, 10, 17, 15, 17, 15, 16, 16, 16, 16, 16, 16, 6]
@@ -1167,15 +1264,15 @@ def build_cover(wb, T, stats, per_source):
     row += 2
     put(row, 2, "WHAT'S IN THIS WORKBOOK", size=10, bold=True, color=T["muted"])
     row += 1
-    for hdr, col, span in (("Sheet", 2, 1), ("Items", 3, 1), ("Stars", 4, 1),
+    for hdr, col, span in (("List", 2, 1), ("Items", 3, 1), ("Stars", 4, 1),
                            ("Source list", 5, 2), ("What's on it", 7, 7)):
         h = put(row, col, hdr, size=9, bold=True, color="FFFFFF", span=span)
         h.fill = fill(T["header"])
         for k in range(col, col + span):
             ws.cell(row=row, column=k).fill = fill(T["header"])
     row += 1
-    for i, r in enumerate(per_source):
-        cs = chip_style(T, SLOTS[i % len(SLOTS)][1 if T is THEMES["dark"] else 0])
+    cs = list_chip(T)
+    for r in per_source:
         chip = put(row, 2, r["sheet"], size=9, bold=True, color=cs["chip_ink"])
         chip.fill = fill(cs["chip_bg"])
         chip.border = Border(left=side(cs["hue"], "thick"), bottom=side(T["grid"]))
@@ -1192,8 +1289,8 @@ def build_cover(wb, T, stats, per_source):
     # ---- the sheets that cut across every list rather than presenting one
     cross = [
         ("Leaderboard", 250, "every list",
-         "The most-starred projects across all eleven lists, deduplicated, with how many lists "
-         "name each one."),
+         f"The most-starred projects across all {len(per_source)} lists, deduplicated, with how many "
+         f"lists name each one."),
         ("By Category", stats["repos"], "every list",
          f"Every repo filed under one of {len(tax.CATEGORIES)} topics, ranked inside its topic. Filter "
          f"Category for one topic's leaderboard; add Plugs Into to cross the two axes."),
@@ -1205,8 +1302,13 @@ def build_cover(wb, T, stats, per_source):
         ("List Stats", 0, "every list",
          "Items and stars contributed by each source list, and its platform totals."),
     ]
+    # One fixed slot for the whole block -- a constant, not a counted index, so there is nothing for
+    # `slot` to guard -- and now the only hue in this column, because the per-list rows above it went
+    # neutral. It reads as the one distinction it actually is: this sheet belongs to no single list.
+    # Beside per-list chips drawn from the same eight slots it used to collide with the eighth list,
+    # and with every eighth list after it.
+    cs = chip_style(T, SLOTS[-1][1 if T is THEMES["dark"] else 0])
     for name, count, scope, what in cross:
-        cs = chip_style(T, SLOTS[7][1 if T is THEMES["dark"] else 0])
         chip = put(row, 2, name, size=9, bold=True, color=cs["chip_ink"])
         chip.fill = fill(cs["chip_bg"])
         chip.border = Border(left=side(cs["hue"], "thick"), bottom=side(T["grid"]))
@@ -1223,7 +1325,9 @@ def build_cover(wb, T, stats, per_source):
     put(row, 2, "HOW TO USE IT", size=10, bold=True, color=T["muted"])
     row += 1
     for line in [
-        'Every list has its own sheet. Rows are grouped by section, most stars first inside each group.',
+        f'{len(SHEETS) + 1} lists have a sheet of their own, where rows are grouped by section, most stars '
+        f'first inside each group. The rest reach you through the cross-list sheets below — every row of '
+        f'every list is on "By Category", and "Sources" says which lists have their own sheet and which do not.',
         'Click any dropdown arrow in a header row to filter. Screenshots hide and reappear with their rows.',
         'On your own platform, start on the "Windows", "macOS", "Linux" or "Docker" sheet: every list at once, '
         'one row per repo, the ones with hard evidence at the top. Each carries all five platform columns, so '
@@ -1302,7 +1406,7 @@ def canonicalise_nwo(records, orch, meta) -> int:
 
       Case. GitHub treats owner/repo case-insensitively, and the source tables were typed by hand, so
         three repos arrive as both `e2b-dev/E2B` and `e2b-dev/e2b`.
-      Renames. A repo that moved keeps serving its old URL as a redirect, so eleven lists written at
+      Renames. A repo that moved keeps serving its old URL as a redirect, so lists written at
         different times name it differently and every one of them still works. Twenty repos are in here
         under a stale name -- `OpenDevin/OpenDevin`, `All-Hands-AI/OpenHands` and `OpenHands/OpenHands`
         are one project under three -- and `affaan-m/everything-claude-code` was on the leaderboard
@@ -1401,7 +1505,11 @@ def main() -> None:
     orch_shots = json.loads((CACHE / "shots.json").read_text(encoding="utf-8"))
     canonicalise_nwo(records, orch, meta)
 
-    by_source = {k: [r for r in records if r["source"] == k] for k, *_ in SHEETS}
+    # Keyed on every source, not just the ten with a sheet, because the Sources sheet, List Stats
+    # and the cover's directory each have to account for all of them. `build_list_sheet` still only
+    # reads the SHEETS keys.
+    by_source = {s["key"]: [r for r in records if r["source"] == s["key"]] for s in b10.SOURCES
+                 if s["key"] != "orchestrators"}
     for k, rows in by_source.items():
         order_rows(rows, k)
 
@@ -1423,12 +1531,21 @@ def main() -> None:
     meta_ci = {k.lower(): v for k, v in meta.items()}
 
     # ---- per-source summary, original list first
-    def summarise(nwo, sheet, blurb, rows, sections):
+    def summarise(nwo, sheet, blurb, rows, sections, tab=None):
         m = meta.get(nwo) or meta_ci.get(nwo.lower()) or {}
         st = sorted((r["stars"] for r in rows if r["stars"] > 0), reverse=True)
         return dict(
             nwo=nwo, url=f"https://github.com/{nwo}", name=nwo.split("/")[-1],
-            owner=nwo.split("/")[0], sheet=sheet, blurb=blurb, kind="repo",
+            # `sheet` is the row's name -- it is the chip on three sheets and the category axis of
+            # List Stats' two charts, so it has to be unique per list. `tab` is the different and
+            # narrower question the Sources sheet's ninth column asks, which most lists answer with
+            # a dash. Collapsing the two would have printed the same label on twenty-six rows and
+            # given the charts twenty-six identical categories.
+            owner=nwo.split("/")[0], sheet=sheet, tab=tab or sheet, kind="repo",
+            # A hand-written blurb where there is one, else the list's own GitHub description. The
+            # maintainer's one-liner is what the column asks for and it beats inventing prose for
+            # twenty-six lists or leaving the cell empty.
+            blurb=blurb or (m.get("description") or "").strip(),
             shot_key=nwo.replace("/", "__"),
             # None, not 0: a list whose own repo was never fetched has an unknown star count, and
             # zero is a claim. `build_sources` renders it as a dash.
@@ -1455,6 +1572,18 @@ def main() -> None:
         orch, len(b7.CAT_ORDER))]
     for key, title, nwo, blurb in SHEETS:
         per_source.append(summarise(nwo, title, blurb, by_source[key], len(bucket_order(key))))
+    # Then every remaining list, largest contribution first. The sheet's own title bar says "every
+    # list this workbook was built from" and `stats["lists"]` is drawn from this, so stopping at the
+    # ten with sheets made both of those false the moment the atlas grew past them -- it credited ten
+    # maintainers for the work of thirty-six. These rows have no tab of their own to point at, which
+    # the ninth column now says with a dash rather than by omitting the list.
+    for s in sorted(b10.SOURCES, key=lambda s: -len(by_source.get(s["key"], ()))):
+        if s["key"] == "orchestrators" or s["key"] in SHEET_TITLE:
+            continue
+        rows = by_source[s["key"]]
+        per_source.append(summarise(s["nwo"], s["title"], None, rows,
+                                    len(bucket_order(s["key"])) or len({r["bucket"] for r in rows}),
+                                    tab=DASH))
 
     # ---- leaderboard: one row per repo across every list
     agg: dict[str, dict] = {}
@@ -1469,7 +1598,7 @@ def main() -> None:
         a["sources"].add(r["source"])
         if len(r.get("blurb") or r.get("description") or "") > len(a.get("blurb") or ""):
             a["blurb"] = r.get("blurb") or r.get("description") or ""
-    label = {"orchestrators": "Orchestrators", **{k: t for k, t, *_ in SHEETS}}
+    label = LIST_TITLE
     board = []
     for nwo, a in agg.items():
         a["list_count"] = len(a["sources"])
