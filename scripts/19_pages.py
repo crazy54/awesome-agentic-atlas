@@ -221,7 +221,12 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
 
 
 PAGE = r"""<!doctype html>
-<html lang="en" data-theme="dark">
+<!-- `data-view` here as well as in `state`, because the reader looks at this page for the length of a
+     561 KB fetch before any script has an opinion about it. Without it the table's column headings sit
+     over an empty body until `data.json` lands and then vanish; with it the default view is the one that
+     was there all along. A `#view=table` link still lands on the table -- `readHash` cannot run before
+     the data either way, so this attribute governs the wait and nothing more. Keep the two in step. -->
+<html lang="en" data-theme="dark" data-view="cards">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -318,10 +323,12 @@ h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 .sub{color:var(--ink2);font-size:14px;margin:0}
 .sub b{color:var(--ink)}
-/* The snapshot's age, not just its date. Green while the daily build is keeping up, amber once it has
-   not -- at which point the star counts on the page are drifting and the reader deserves to know that
-   from the header rather than from the footer's fine print. */
-.fresh{color:var(--good)}
+/* The snapshot's age, shown only when it is bad news. A green "3 days ago" beside the date was telling
+   the reader twice over that the site is current, because the "last deployed" badge below says it in the
+   same header -- so the healthy case is now just the date, and this is what is left of the pair: amber,
+   once the daily build has stopped keeping up and the star counts on the page are measurably drifting.
+   The two dates are not the same fact -- this one is when the data was captured, the badge is when the
+   copy was published -- but "is this current" is one question, and it only needs one answer. */
 .stale{color:var(--warn);font-weight:600}
 /* The "last deployed" badge, drawn to match the shields.io badges in the README rather than fetched from
    shields.io. Fetching one is not an option here: the value is a timestamp, so the URL would have to be
@@ -810,7 +817,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
          means the opposite. Hidden until `buildChips` runs, like the New chip and the palette hint. That
          function only runs once `data.json` has arrived, and until it has -- or if it never does, which is
          what the error path below is for -- there is no table to lay out either way. -->
-    <button class="chip" id="view" hidden>Card view</button>
+    <button class="chip" id="view" hidden>Table view</button>
     <button class="chip newchip" id="new" aria-pressed="false"
             title="Projects the source lists added in the last __WINDOW__ days">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
@@ -877,8 +884,17 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 
 <script>
 const PAGE_SIZE = 120;
+// Cards, not the table, because the screenshot is the reason to open this page rather than read
+// `mega-list/`: a card carries the project's own banner and a table row has nowhere to put one. The table
+// is still the better view for scanning 120 rows against each other, so it keeps its button and gets a
+// shareable `#view=table` -- and `readHash` reads both words explicitly, so every `#view=cards` link
+// written while cards were opt-in still means exactly what it said.
+//
+// Kept in step with `data-view` on the <html> tag, which is what the reader looks at until `data.json`
+// lands. The two have to agree: disagreeing would show the table's column headings over an empty body for
+// the length of a 561 KB fetch and then replace them with cards.
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false,
-               sort: "relevance", shown: PAGE_SIZE, view: "table"};
+               sort: "relevance", shown: PAGE_SIZE, view: "cards"};
 let D = null, ROWS = [], NEW = 0;
 // The pending debounced search, if any. Declared out here rather than beside the handler because `set()`
 // has to cancel it, and `set()` is not inside the fetch callback where the handlers are wired.
@@ -1026,7 +1042,7 @@ function buildChips() {
   };
   document.getElementById("sort").onchange = e => set({sort: e.target.value});
   // Unhidden here rather than in the markup -- see the button for why it starts hidden. The announcement is
-  // on this path only: `applyView` also runs from `render()`, and "table view" on arrival is not news. It is
+  // on this path only: `applyView` also runs from `render()`, and the view the page opened in is not news. It is
   // needed at all because nothing in the DOM changes, so a screen reader has no mutation to report and the
   // button's own new label is not read back after a click.
   const vb = document.getElementById("view");
@@ -1350,15 +1366,19 @@ function copy(b) {
   });
 }
 
-// An ISO date answers "when" and not "is this current", which is the question. Amber past a fortnight
-// because that is the point at which the star counts on the page have measurably drifted from GitHub's.
+// An ISO date answers "when" and not "is this current", which is the question -- but the "last deployed"
+// badge in this same header now answers it, so spelling out "3 days ago" here as well was two answers to
+// one question and the header's third date in a row. Amber past a fortnight because that is the point at
+// which the star counts on the page have measurably drifted from GitHub's, and the only point at which
+// the age says something the date and the badge together do not.
 function stamp() {
   const el = document.getElementById("snap");
   if (!el) return;
   const d = daysAgo(SNAPSHOT);
-  const age = d <= 0 ? "today" : d === 1 ? "yesterday" : d + " days ago";
-  el.innerHTML = "snapshot " + SNAPSHOT + " · <span class=\"" + (d > 14 ? "stale" : "fresh") +
-    '">' + age + "</span>";
+  // Just the date while the build is keeping up. The relative age is appended only past the fortnight,
+  // where it stops being a restatement of "current" and becomes the one thing the reader needs to know.
+  el.innerHTML = "snapshot " + SNAPSHOT +
+    (d > 14 ? ' · <span class="stale">' + d + " days old</span>" : "");
   el.title = d > 14
     ? "The daily rebuild has not run in " + d + " days, so stars and push dates here have drifted."
     : "Rebuilt daily from the GitHub API.";
@@ -1468,7 +1488,7 @@ function writeHash() {
   // link to the same page, has said nothing about which view they prefer in general, and answering that
   // question for them means two stores that can disagree about one value. The hash already survives a
   // reload, because `replaceState` leaves it in the URL, which is the whole of what this has to do.
-  if (state.view !== "table") p.set("view", state.view);
+  if (state.view !== "cards") p.set("view", state.view);
   const s = p.toString();
   history.replaceState(null, "", s ? "#" + s : location.pathname);
 }
@@ -1488,9 +1508,12 @@ function readHash() {
   // Every `#sort=stars` link written before Best match existed still says exactly what it said then,
   // because the name is unchanged and only the *default* moved.
   state.sort = SORT_KEYS.includes(p.get("sort")) ? p.get("sort") : "relevance";
-  // Anything that is not the one word is the default, so a hand-edited `#view=grid` lands on the table
-  // rather than on a stylesheet branch that does not exist.
-  state.view = p.get("view") === "cards" ? "cards" : "table";
+  // Both words are read explicitly rather than one being tested and the rest falling through, so that
+  // `#view=cards` still selects cards now that they are the default -- every such link written while they
+  // were opt-in keeps working, and so does the `#view=table` this page writes today. Anything else --
+  // absent, or a hand-edited `#view=grid` -- is the default rather than a stylesheet branch that does
+  // not exist.
+  state.view = p.get("view") === "table" ? "table" : "cards";
   document.getElementById("q").value = state.q;
   document.getElementById("sort").value = state.sort;
 }

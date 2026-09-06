@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-view="cards">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -54,7 +54,6 @@ h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 .sub{color:var(--ink2);font-size:14px;margin:0}
 .sub b{color:var(--ink)}
-.fresh{color:var(--good)}
 .stale{color:var(--warn);font-weight:600}
 .stamp{display:inline-flex;height:28px;margin:10px 0 0;text-decoration:none;
   font-family:Verdana,Geneva,DejaVu Sans,sans-serif;font-size:10px;line-height:28px;
@@ -295,7 +294,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <p class="blurb" id="ctx"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><span class="k"><span class="lw">Last </span>deployed</span>
-      <span class="v"><time datetime="2026-09-06T20:00:00Z">2026-09-06 20:00 UTC</time></span></a>
+      <span class="v"><time datetime="2026-09-06T20:14:00Z">2026-09-06 20:14 UTC</time></span></a>
   </div>
   <nav>
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
@@ -318,7 +317,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
       <option value="pushed">Pushed most recently</option>
       <option value="name">Name (A&ndash;Z)</option>
     </select>
-    <button class="chip" id="view" hidden>Card view</button>
+    <button class="chip" id="view" hidden>Table view</button>
     <button class="chip newchip" id="new" aria-pressed="false"
             title="Projects the source lists added in the last 14 days">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
@@ -369,7 +368,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 <script>
 const PAGE_SIZE = 120;
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false,
-               sort: "relevance", shown: PAGE_SIZE, view: "table"};
+               sort: "relevance", shown: PAGE_SIZE, view: "cards"};
 let D = null, ROWS = [], NEW = 0;
 let typing = 0;
 
@@ -377,7 +376,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-06T20:00:00Z";
+const BUILT = "2026-09-06T20:14:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -712,9 +711,8 @@ function stamp() {
   const el = document.getElementById("snap");
   if (!el) return;
   const d = daysAgo(SNAPSHOT);
-  const age = d <= 0 ? "today" : d === 1 ? "yesterday" : d + " days ago";
-  el.innerHTML = "snapshot " + SNAPSHOT + " · <span class=\"" + (d > 14 ? "stale" : "fresh") +
-    '">' + age + "</span>";
+  el.innerHTML = "snapshot " + SNAPSHOT +
+    (d > 14 ? ' · <span class="stale">' + d + " days old</span>" : "");
   el.title = d > 14
     ? "The daily rebuild has not run in " + d + " days, so stars and push dates here have drifted."
     : "Rebuilt daily from the GitHub API.";
@@ -774,7 +772,7 @@ function writeHash() {
   if (state.strict) p.set("confirmed", "1");
   if (state.fresh) p.set("new", "1");
   if (state.sort !== "relevance") p.set("sort", state.sort);
-  if (state.view !== "table") p.set("view", state.view);
+  if (state.view !== "cards") p.set("view", state.view);
   const s = p.toString();
   history.replaceState(null, "", s ? "#" + s : location.pathname);
 }
@@ -790,7 +788,7 @@ function readHash() {
   state.strict = p.get("confirmed") === "1";
   state.fresh = p.get("new") === "1" && NEW > 0;
   state.sort = SORT_KEYS.includes(p.get("sort")) ? p.get("sort") : "relevance";
-  state.view = p.get("view") === "cards" ? "cards" : "table";
+  state.view = p.get("view") === "table" ? "table" : "cards";
   document.getElementById("q").value = state.q;
   document.getElementById("sort").value = state.sort;
 }
