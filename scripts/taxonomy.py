@@ -61,7 +61,12 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("agents", "Software Development"): "Coding Agents",
     ("agents", "Conversational / General Agents"): "Assistants & Domain Agents",
     ("agents", "Automation"): "Assistants & Domain Agents",
+    # Renamed upstream to `Memory - Knowledge Management` (2026-09). The old spelling is kept rather than
+    # replaced: `check()` below is a one-way set difference, so a key no source produces any more costs
+    # nothing and is never reported, while dropping it would break a re-parse of any cache fetched before
+    # the rename. Both spellings fold into the same bucket in `buckets.py`.
     ("agents", "Knowledge Management"): "Context, Memory & RAG",
+    ("agents", "Memory - Knowledge Management"): "Context, Memory & RAG",
     ("agents", "Research"): "Research & Data Agents",
     ("agents", "Testing and Evaluation"): "Observability & Evals",
     ("agents", "Game / Simulation"): "Creative, Voice & Media",
