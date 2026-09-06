@@ -1,0 +1,15 @@
+{
+ "version": "https://jsonfeed.org/version/1.1",
+ "title": "Awesome Agentic Atlas — new arrivals",
+ "home_page_url": "https://crazy54.github.io/awesome-agentic-atlas/",
+ "feed_url": "https://crazy54.github.io/awesome-agentic-atlas/feed.json",
+ "description": "Repos added to the atlas since it started keeping a ledger, newest first. One entry per project, with its topic, the harnesses it targets and its star count.",
+ "language": "en",
+ "authors": [
+  {
+   "name": "Awesome Agentic Atlas",
+   "url": "https://crazy54.github.io/awesome-agentic-atlas/"
+  }
+ ],
+ "items": []
+}

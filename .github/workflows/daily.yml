@@ -134,8 +134,89 @@ jobs:
         if: steps.gate.outputs.go == 'true'
         run: |
           set -euo pipefail
+          # Dropped before the first generator writes anything, so the assertion below has something
+          # earlier than the build to compare every tracked file against.
+          touch "$RUNNER_TEMP/build-start"
           python scripts/17_markdown.py
           python scripts/19_pages.py
+          # After 19_pages and never before: that stage is what stamps the ledger and rewrites data.json,
+          # and the feeds are a read of both. Run first, it would publish yesterday's arrivals.
+          python scripts/21_feeds.py
+
+      # `20_landing.py` is deliberately absent, and it is the one stage whose absence here is a decision
+      # rather than an oversight. It rewrites 156 prerendered pages, 143 of which change on any run where
+      # a star count moved -- about 600 KB of compressed delta. Every byte is committed, because Pages
+      # serves this branch's `docs/` folder, so daily would add ~224 MB of history a year against a
+      # repository whose entire packed history is 111 MB today. Weekly is ~32 MB. The pages exist for
+      # crawlers, which recrawl on a multi-day cadence and will not notice the difference, and
+      # `<lastmod>` stays honest either way because it is stamped from the snapshot the pages were built
+      # from. So: bounded 7-day staleness on a crawler surface, in exchange for not doubling the clone
+      # size every year. The permanent fix is Pages `build_type: workflow`, which stops versioning
+      # generated output at all -- a separate change, not this one.
+
+      # Every file this checks is one a generator above rewrites from scratch on every run, so any that
+      # the build did not touch is a file the site will serve unchanged for ever. The commit step stages
+      # `docs` and `mega-list` wholesale and git stages only differences, so an unwritten file produces
+      # no diff, no churn, and no signal anywhere -- which is exactly how a page freezes without anyone
+      # noticing. mtime against the marker is enough because a fresh checkout stamps every file with the
+      # checkout time, which is earlier than the marker, so an untouched file cannot pass by accident,
+      # and because all four generators write unconditionally -- none of them has a write-if-different
+      # path that would make an unchanged file look skipped.
+      #
+      # Two outcomes, not one, because "nothing wrote this" has two causes with opposite remedies. A
+      # stage missing from this workflow is a pipeline bug: fix the workflow. A page whose facet stopped
+      # existing is the build working correctly: delete the page. Both look identical to mtime, so they
+      # are told apart by path. The four `mega-list/` prefixes below are the only ones this job writes
+      # whose file *set* is derived from the data -- one page per topic, per target, per source list, per
+      # platform, and 17_markdown emits `<platform>-inferred.md` only `if maybe:`, so even that set
+      # moves. Everything else it writes is a constant list. Pruning is left to a human on purpose: these URLs are indexed, so removing one is
+      # a decision someone takes in the commit that changed the taxonomy, not a side effect of a build.
+      #
+      # This holds only while every generator still writes at least one file outside those prefixes --
+      # 17_markdown has mega-list/README.md, 19_pages has docs/index.html, 20_landing has
+      # docs/sitemap.xml, 21_feeds has docs/feed.xml. A future stage whose entire output is facet pages
+      # would warn where it should fail. Give any such stage one fixed-path file to write.
+      #
+      # The third arm is what `20_landing.py` running weekly-only costs: its five output paths are not
+      # written by this job, so they are skipped rather than reported. That is the whole price of the
+      # history decision above -- a landing generator dropped from `weekly.yml` goes unnoticed here and
+      # is caught there instead, within seven days rather than one. weekly.yml has no such arm.
+      - name: Every tracked page was rewritten
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          set -euo pipefail
+          : > "$RUNNER_TEMP/frozen"
+          : > "$RUNNER_TEMP/prunable"
+          : > "$RUNNER_TEMP/skipped"
+          git ls-files docs mega-list | while IFS= read -r f; do
+            case "$f" in
+              docs/topic/*|docs/target/*|docs/pages.css|docs/sitemap.xml|docs/robots.txt)
+                printf '%s\n' "$f" >> "$RUNNER_TEMP/skipped"; continue ;;
+            esac
+            if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
+            case "$f" in
+              mega-list/topics/*|mega-list/targets/*|mega-list/lists/*|mega-list/platforms/*)
+                printf '%s\n' "$f" >> "$RUNNER_TEMP/prunable" ;;
+              *)
+                printf '%s\n' "$f" >> "$RUNNER_TEMP/frozen" ;;
+            esac
+          done
+          np="$(wc -l < "$RUNNER_TEMP/prunable" | tr -d ' ')"
+          nf="$(wc -l < "$RUNNER_TEMP/frozen" | tr -d ' ')"
+          if [ "$np" -gt 0 ]; then
+            echo "Facet pages that are tracked but no longer emitted:"
+            sed 's/^/  /' "$RUNNER_TEMP/prunable"
+            echo "::warning title=Orphaned facet page::${np} tracked facet page(s) were not written by this build. If a topic, target, source list or platform was dropped or renamed, this is correct and the fix is to \`git rm\` them in the commit that changed the taxonomy -- they are stale from now on, and their URLs are indexed. If no facet was dropped or renamed, this is not a prune: a generator is missing from this workflow and the build is wrong."
+          fi
+          if [ "$nf" -gt 0 ]; then
+            echo "Tracked files that no generator wrote:"
+            sed 's/^/  /' "$RUNNER_TEMP/frozen"
+            echo "::error title=Generator missing from the build::${nf} tracked file(s) under docs/ or mega-list/ are committed but were not written. These have fixed paths, so no taxonomy change can explain them: the stage that writes them is missing from this workflow, and the published copy can never change again until it is put back."
+            exit 1
+          fi
+          ns="$(wc -l < "$RUNNER_TEMP/skipped" | tr -d ' ')"
+          nt="$(git ls-files docs mega-list | wc -l | tr -d ' ')"
+          echo "Rewrote all $((nt - ns)) of the tracked files this job is responsible for; skipped ${ns} left to weekly.yml."
 
       # Only now, and only because everything above succeeded. Recording the SHAs earlier would mean a
       # build that failed halfway was never retried: the next run would compare against the commit it

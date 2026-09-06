@@ -1,0 +1,117 @@
+/* Written by scripts/20_landing.py. Shared by every page under docs/topic/ and docs/target/.
+
+   The two blocks below are `19_pages.py`'s, character for character. Lagoon Gold: cyan primary, gold
+   secondary, cool near-black surfaces. Dark is the designed mode -- its eight neutrals and two accents
+   are the theme's own values. Light is stepped from the same two hues rather than flipped, because the
+   accents at their dark-mode lightness fail on white (the cyan measures 2.53:1 there), and its
+   neutrals are cooled to match so toggling does not change brand. --onbar exists because a filled cyan
+   or gold accent carries DARK ink, not white: white on #08b0cc is 2.3:1, while the theme's own #0c1013
+   on it is 7.36:1. */
+:root{
+  --surface:#101416; --plane:#181f21; --band:#232d30; --ink:#d0d7d8; --ink2:#a8b0b2;
+  --muted:#8c9496; --grid:#2c383d; --link:#08b0cc; --bar:#08b0cc;
+  --good:#2eb82e; --warn:#feb932; --off:#8c9496; --onbar:#0c1013;
+}
+html[data-theme=light]{
+  --surface:#fbfcfc; --plane:#eef1f2; --band:#f4f6f6; --ink:#101416; --ink2:#4a5254;
+  --muted:#5f6769; --grid:#dbe0e1; --link:#096373; --bar:#0a6f80;
+  --good:#0a7c0a; --warn:#8a5a00; --off:#5f6769; --onbar:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);
+  font:15px/1.5 "Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+header{background:var(--plane);border-bottom:1px solid var(--grid);padding:22px 20px 16px}
+.wrap{max-width:1500px;margin:0 auto}
+h1{margin:0 0 6px;font-size:26px;letter-spacing:-.02em}
+h2{margin:34px 0 8px;font-size:16px;letter-spacing:-.01em}
+.sub{color:var(--ink2);font-size:14px;margin:0}
+.sub b{color:var(--ink)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.top nav{font-size:13px;color:var(--muted);text-align:right;line-height:1.9}
+.blurb{color:var(--muted);font-size:13px;margin:6px 0 0;max-width:70ch}
+button{font:inherit;cursor:pointer}
+.chip{display:inline-block;background:var(--band);color:var(--ink2);border:1px solid var(--grid);
+  border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap;margin:0 5px 5px 0}
+.chip:hover{border-color:var(--bar);color:var(--ink);text-decoration:none}
+/* The row count inside a navigation chip. Dimmed rather than smaller, so the chips stay one height. */
+.ct{opacity:.65}
+/* The one link on the page that has to be found, because it is the thing the page is a preview of:
+   this is a snapshot of one crossing, and that is the live version of it with both axes still live.
+   Filled with the accent, which is why it needs --onbar for its ink. */
+.cta{display:inline-block;background:var(--bar);color:var(--onbar);font-weight:600;
+  border-radius:8px;padding:9px 16px;margin:14px 0 0}
+.cta:hover{text-decoration:none;filter:brightness(1.08)}
+main{padding:0 20px 64px}
+table{width:100%;border-collapse:collapse;margin-top:14px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  padding:8px 10px;border-bottom:1px solid var(--grid);background:var(--surface)}
+th.n,td.n{text-align:right}
+th.c,td.c{text-align:center}
+td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
+/* Guarded, because a touch device reports a hover that then latches: tapping a row anywhere -- to
+   follow its link, or just while scrolling -- left it tinted until something else was tapped. */
+@media(hover:hover){tr:hover td{background:var(--band)}}
+.rk{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.shot{width:200px}
+.shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:6px;
+  background:var(--band);border:1px solid var(--grid);display:block}
+/* These two set the table's width. Auto table layout takes the widest unbreakable run in the column
+   across every row on the page, and neither a slash nor a comma is a break opportunity in Chrome or
+   Safari, so a repo name and a blurb naming six agents between them demand more than the content box
+   has -- which the document then has to scroll sideways to satisfy. */
+.nm{font-weight:600;font-size:15px;overflow-wrap:anywhere}
+.nwo{display:block;color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
+.st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.st.none{font-size:13px;font-weight:400;color:var(--muted)}
+.meta{color:var(--muted);font-size:12px;margin-top:5px}
+.desc{color:var(--ink2);font-size:13.5px;max-width:44em;overflow-wrap:anywhere}
+.cmd{display:block;margin-top:7px;font:12px/1.5 Consolas,ui-monospace,monospace;
+  color:var(--ink2);background:var(--band);border:1px solid var(--grid);border-radius:5px;
+  padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
+.tag{display:inline-block;background:var(--band);border:1px solid var(--grid);border-radius:5px;
+  padding:2px 7px;font-size:11.5px;color:var(--ink2);margin:0 4px 4px 0;white-space:nowrap}
+.tag.cat{border-color:var(--bar);color:var(--ink)}
+.os{font-size:11.5px;letter-spacing:.02em;white-space:nowrap}
+/* Prefixed because the verdict characters are the class names and one of them is "-", which is not a
+   valid CSS identifier on its own -- ".-" invalidates the whole selector list it appears in, so the
+   unprefixed version silently dropped the colour from every No, n/a and dash on the page. */
+.vY{color:var(--good);font-weight:700}
+.vL{color:var(--warn)}
+.vN,.va,.v-{color:var(--off)}
+.rest{margin:22px 0 0;color:var(--ink2);font-size:13.5px}
+.rel{margin-top:34px;border-top:1px solid var(--grid);padding-top:18px}
+.rel h2{margin-top:0}
+.rel p{margin:0 0 12px;color:var(--muted);font-size:13px}
+footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
+  color:var(--muted);font-size:13px}
+footer .wrap{max-width:1500px}
+/* Two queries, because the page fails in two places: at 900px the screenshot and the two detail
+   columns stop paying for their width, and below 640px four columns stop fitting in what is left. */
+@media(max-width:900px){
+  .shot,.hide{display:none}
+  td,th{padding:9px 6px}
+}
+@media(max-width:640px){
+  header{padding:16px 14px 12px}
+  main{padding:0 14px 48px}
+  footer{padding:18px 14px}
+  h1{font-size:21px}
+  .top nav{text-align:left;line-height:2.1}
+  /* A row stops being a row. Four columns cannot share 335px -- the blurb on its own wants more than
+     that -- so each row becomes a card, and the headings, no longer above anything, go away. */
+  thead{display:none}
+  table,tbody,tr,td{display:block}
+  table{margin-top:12px}
+  tr{display:grid;grid-template-columns:1fr auto;gap:1px 12px;align-items:start;
+    border:1px solid var(--grid);border-radius:10px;padding:11px 13px;margin:0 0 9px}
+  td{border-bottom:0;padding:0}
+  td.rk{grid-column:1;grid-row:1;text-align:left}
+  td.st-c{grid-column:2;grid-row:1}
+  td.pj{grid-column:1/-1;grid-row:2}
+  td.ds{grid-column:1/-1;grid-row:3;margin-top:6px}
+  .st{font-size:15px}
+  .desc{font-size:13px}
+  .cta{display:block;text-align:center}
+}

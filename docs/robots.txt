@@ -1,0 +1,6 @@
+# Everything here is a static index of public repositories. Nothing to hide from a
+# crawler, and the hash-filtered views are all prerendered under /topic/ and /target/.
+User-agent: *
+Allow: /
+
+Sitemap: https://crazy54.github.io/awesome-agentic-atlas/sitemap.xml

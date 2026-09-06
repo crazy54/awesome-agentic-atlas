@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Context, Memory &amp; RAG tools for LangChain / LangGraph — Awesome Agentic Atlas</title>
+<meta name="description" content="4 Context, Memory &amp; RAG projects that plug into LangChain / LangGraph, ranked by GitHub stars. Everything that decides what the model actually sees…">
+<link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/topic/context-memory-rag/target/langchain-langgraph/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Context, Memory &amp; RAG tools for LangChain / LangGraph">
+<meta property="og:description" content="4 Context, Memory &amp; RAG projects that plug into LangChain / LangGraph, ranked by GitHub stars. Everything that decides what the model actually sees…">
+<meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/topic/context-memory-rag/target/langchain-langgraph/">
+<meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<link rel="stylesheet" href="../../../../pages.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Context, Memory & RAG tools for LangChain / LangGraph","description":"4 Context, Memory & RAG projects that plug into LangChain / LangGraph, ranked by GitHub stars. Everything that decides what the model actually sees…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/context-memory-rag/target/langchain-langgraph/","numberOfItems":4,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"headroom","url":"https://github.com/headroomlabs-ai/headroom"},{"@type":"ListItem","position":2,"name":"Hindsight","url":"https://github.com/vectorize-io/hindsight"},{"@type":"ListItem","position":3,"name":"OpenWiki","url":"https://github.com/langchain-ai/openwiki"},{"@type":"ListItem","position":4,"name":"Second Brain AI Agent","url":"https://github.com/flepied/second-brain-agent"}]}</script>
+</head>
+<body>
+<header><div class="wrap"><div class="top">
+  <div>
+    <h1>Context, Memory &amp; RAG tools for LangChain / LangGraph</h1>
+    <p class="sub"><b>4</b> projects · <b>4</b> with stars to rank by ·
+      <b>107,386</b> combined stars · snapshot 2026-09-03</p>
+    <p class="blurb">Everything that decides what the model actually sees: retrieval, memory stores, compaction, and the chat-with-your-data apps built on them.</p><p class="blurb">Built on LangChain, LangGraph or LangSmith.</p>
+    <a class="cta" href="../../../../#topic=context-memory-rag&amp;target=langchain-langgraph">Filter this live on the atlas &rarr;</a>
+  </div>
+  <nav>
+    <a href="../../../../">Every project</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown edition</a><br>
+    <button class="chip" id="theme" aria-pressed="false">Light theme</button>
+  </nav>
+</div></div></header>
+
+<main><div class="wrap">
+<table>
+<thead><tr><th class="n">#</th><th class="shot">Shot</th><th class="pj">Project</th>
+<th class="n st-c">Stars</th><th class="hide">Plugs into</th>
+<th class="ds">What it does</th><th class="c hide">Lang / licence / push</th></tr></thead>
+<tbody>
+<tr><td class="n rk">1</td><td class="shot"><a href="https://github.com/headroomlabs-ai/headroom"><img loading="lazy" alt="" src="https://raw.githubusercontent.com/chopratejas/headroom/main/HeadroomDemo-Fast.gif"></a></td><td class="pj"><a class="nm" href="https://github.com/headroomlabs-ai/headroom">headroom</a><span class="nwo">headroomlabs-ai/headroom</span><div class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vY">Doc</span></div></td><td class="n st-c"><span class="st">68,768</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude / Anthropic</span><span class="tag">MCP</span><span class="tag">LangChain / LangGraph</span></td><td class="ds"><div class="desc">Compresses tool outputs, logs, files, and RAG chunks before they enter the context window, cutting active tokens by 60–95% without changing answers. Ships as a library, proxy, and MCP server — the right drop-in layer for any harness where bulky tool returns are the primary context pressure source</div><code class="cmd">uv tool install --python 3.13 &quot;headroom-ai[all]&quot; # CLI in a self-contained env</code></td><td class="c hide"><div class="meta">Python<br>Apache-2.0<br>2026-09-03</div></td></tr>
+<tr><td class="n rk">2</td><td class="shot"><a href="https://github.com/vectorize-io/hindsight"><img loading="lazy" alt="" src="https://raw.githubusercontent.com/vectorize-io/hindsight/main/hindsight-docs/static/img/hindsight-benchmarks.png"></a></td><td class="pj"><a class="nm" href="https://github.com/vectorize-io/hindsight">Hindsight</a><span class="nwo">vectorize-io/hindsight</span><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vY">Doc</span></div></td><td class="n st-c"><span class="st">22,249</span><div class="meta">2 lists</div></td><td class="hide"><span class="tag">MCP</span><span class="tag">LangChain / LangGraph</span></td><td class="ds"><div class="desc">Agent memory system organized around three explicit operations—retain, recall, and reflect—with semantic, keyword, graph, and temporal retrieval plus an MCP server. The June 2026 release and production usage make it a concrete reference for turning cross-session persistence from passive storage into an active learning layer inside the harness</div><code class="cmd">npx @vectorize-io/hindsight-coding-agents install all # every detected agent, wired natively</code></td><td class="c hide"><div class="meta">Python<br>MIT<br>2026-09-03</div></td></tr>
+<tr><td class="n rk">3</td><td class="shot"><a href="https://github.com/langchain-ai/openwiki"><img loading="lazy" alt="" src="https://raw.githubusercontent.com/langchain-ai/openwiki/main/static/openwiki-codex.gif"></a></td><td class="pj"><a class="nm" href="https://github.com/langchain-ai/openwiki">OpenWiki</a><span class="nwo">langchain-ai/openwiki</span><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">16,056</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Gemini / Google</span><span class="tag">LangChain / LangGraph</span></td><td class="ds"><div class="desc">LangChain&#x27;s CLI that writes and maintains agent-readable wikis for codebases or purpose memory, turning documentation drift into a versioned, automatable harness artifact. Emits Google Open Knowledge Format bundles so curated context stays portable across agents and can be kept fresh via CI</div><code class="cmd">npm install -g openwiki</code></td><td class="c hide"><div class="meta">TypeScript<br>MIT<br>2026-09-03</div></td></tr>
+<tr><td class="n rk">4</td><td class="shot"><a href="https://github.com/flepied/second-brain-agent"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/flepied/second-brain-agent"></a></td><td class="pj"><a class="nm" href="https://github.com/flepied/second-brain-agent">Second Brain AI Agent</a><span class="nwo">flepied/second-brain-agent</span><div class="meta os"><span class="vN">Win</span> <span class="vY">WSL</span> <span class="vN">mac</span> <span class="vY">Lin</span> <span class="vY">Doc</span></div></td><td class="n st-c"><span class="st">313</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Codex / OpenAI</span><span class="tag">LangChain / LangGraph</span></td><td class="ds"><div class="desc">A streamlit app to dialog with your second brain notes using OpenAI and ChromaDB locally</div><code class="cmd">git clone https://github.com/flepied/second-brain-agent.git</code></td><td class="c hide"><div class="meta">Python<br>GPL-3.0<br>2026-04-05</div></td></tr>
+</tbody></table>
+
+<nav class="rel"><h2>This topic, other harnesses</h2><p>Context, Memory &amp; RAG filtered to what plugs into each of the others.</p><a class="chip" href="../../../../topic/context-memory-rag/target/claude-code/">Claude Code <span class="ct">23</span></a><a class="chip" href="../../../../topic/context-memory-rag/target/claude-anthropic/">Claude / Anthropic <span class="ct">28</span></a><a class="chip" href="../../../../topic/context-memory-rag/target/opencode/">opencode <span class="ct">4</span></a><a class="chip" href="../../../../topic/context-memory-rag/target/mcp/">MCP <span class="ct">29</span></a><a class="chip" href="../../../../topic/context-memory-rag/target/codex-openai/">Codex / OpenAI <span class="ct">17</span></a><a class="chip" href="../../../../topic/context-memory-rag/target/gemini-google/">Gemini / Google <span class="ct">5</span></a><a class="chip" href="../../../../topic/context-memory-rag/target/github-copilot/">GitHub Copilot <span class="ct">4</span></a><a class="chip" href="../../../../topic/context-memory-rag/target/cursor/">Cursor <span class="ct">8</span></a><a class="chip" href="../../../../topic/context-memory-rag/target/local-ollama/">Local / Ollama <span class="ct">1</span></a><h2>Or drop a filter</h2><a class="chip" href="../../../../topic/context-memory-rag/">All Context, Memory &amp; RAG</a><a class="chip" href="../../../../target/langchain-langgraph/">Everything for LangChain / LangGraph</a></nav>
+</div></main>
+
+<footer><div class="wrap">
+  This is a static slice of the <a href="../../../../">Awesome Agentic Atlas</a>, which merges eleven
+  awesome-lists into one index; all eleven are credited in the
+  <a href="https://github.com/crazy54/awesome-agentic-atlas#the-eleven-lists">repository</a>. Stars, language, licence
+  and last-push come from the GitHub API on 2026-09-03 and drift daily. Platform verdicts
+  are derived from each project's own README, install route, CI config and release assets &mdash;
+  <span class="vY">green</span> is stated evidence, <span class="vL">amber</span> is inferred from the
+  language. A dash in the star column means the row is a folder inside someone else's repo, or a dead
+  link, and has no count of its own.
+</div></footer>
+<script>
+document.getElementById("theme").onclick = e => {
+  const light = document.documentElement.dataset.theme !== "light";
+  document.documentElement.dataset.theme = light ? "light" : "dark";
+  e.target.textContent = light ? "Dark theme" : "Light theme";
+  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+};
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

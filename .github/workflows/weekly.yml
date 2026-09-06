@@ -105,8 +105,52 @@ jobs:
       - name: Rebuild the Markdown edition and the site
         run: |
           set -euo pipefail
+          # See daily.yml: the marker is what the assertion below compares every tracked file against.
+          touch "$RUNNER_TEMP/build-start"
           python scripts/17_markdown.py
           python scripts/19_pages.py
+          # 20 and 21 must both follow 19_pages and never precede it: that stage is what stamps the
+          # ledger and rewrites data.json, and both of these read data.json and nothing else. Run first,
+          # the feeds would publish yesterday's arrivals and the landing pages would prerender
+          # yesterday's rows.
+          python scripts/20_landing.py
+          python scripts/21_feeds.py
+
+      # The same assertion daily.yml carries -- see there for why it is mtime against a marker rather than
+      # a manifest, and why an unwritten facet page is a warning while an unwritten fixed path is an error.
+      #
+      # Deliberately with no `if:` -- this workflow has no gate, every step runs, and copying daily.yml's
+      # `if: steps.gate.outputs.go == 'true'` here would reference a step that does not exist in this
+      # file. That expression would evaluate to false on every run and silently skip the check for ever,
+      # which is a worse failure than the one being guarded against: a green tick that checked nothing.
+      - name: Every tracked page was rewritten
+        run: |
+          set -euo pipefail
+          : > "$RUNNER_TEMP/frozen"
+          : > "$RUNNER_TEMP/prunable"
+          git ls-files docs mega-list | while IFS= read -r f; do
+            if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
+            case "$f" in
+              mega-list/topics/*|mega-list/targets/*|mega-list/lists/*|mega-list/platforms/*|docs/topic/*|docs/target/*)
+                printf '%s\n' "$f" >> "$RUNNER_TEMP/prunable" ;;
+              *)
+                printf '%s\n' "$f" >> "$RUNNER_TEMP/frozen" ;;
+            esac
+          done
+          np="$(wc -l < "$RUNNER_TEMP/prunable" | tr -d ' ')"
+          nf="$(wc -l < "$RUNNER_TEMP/frozen" | tr -d ' ')"
+          if [ "$np" -gt 0 ]; then
+            echo "Facet pages that are tracked but no longer emitted:"
+            sed 's/^/  /' "$RUNNER_TEMP/prunable"
+            echo "::warning title=Orphaned facet page::${np} tracked facet page(s) were not written by this build. If a topic, target, source list or platform was dropped or renamed, this is correct and the fix is to \`git rm\` them in the commit that changed the taxonomy -- they are stale from now on, and their URLs are indexed. If no facet was dropped or renamed, this is not a prune: a generator is missing from this workflow and the build is wrong."
+          fi
+          if [ "$nf" -gt 0 ]; then
+            echo "Tracked files that no generator wrote:"
+            sed 's/^/  /' "$RUNNER_TEMP/frozen"
+            echo "::error title=Generator missing from the build::${nf} tracked file(s) under docs/ or mega-list/ are committed but were not written. These have fixed paths, so no taxonomy change can explain them: the stage that writes them is missing from this workflow, and the published copy can never change again until it is put back."
+            exit 1
+          fi
+          echo "All $(git ls-files docs mega-list | wc -l | tr -d ' ') tracked files under docs/ and mega-list/ were rewritten by this build."
 
       - name: Record the source commits as built
         run: python scripts/watch_sources.py --update
