@@ -133,9 +133,20 @@ def row_for(r, shots, cat_ix, tgt_ix) -> list:
         r.get("license") or "",
         r.get("pushed_at") or "",
         r["url"],
-        # Empty means "derive it": the social card exists for every repo and is the fallback for two
-        # thirds of these rows, so spelling it out would be 55 bytes x 1,294 of a string the page can
-        # rebuild from `nwo`.
+        # Empty means "derive it": the social card exists for every repo and is what 608 of these 1,294
+        # rows would name anyway, so spelling it out would be 55 bytes x 608 of a string the page can
+        # rebuild from `nwo`. ("Two thirds" stood here and was wrong in the wrong direction -- it is 47.0%,
+        # and the 686 rows that *do* carry a URL are the majority.)
+        #
+        # Still written, and deliberately, even though as of JFH-218 neither the index cards nor the facet
+        # pages render it: both now show the derived card unconditionally, because nothing bounds what these
+        # 686 URLs serve. This column stays because it is the only record of *which* repos published artwork
+        # of their own, `22_detail.py` still shows it one page at a time where one image is nobody's budget
+        # problem, and that page's caption can only say "the project's own screenshot" while the datum
+        # distinguishing them exists. Shedding it was measured and is not worth it: emptying every value
+        # saves 14,483 B gzipped and removing the column as well saves 232 B more, so the deletion earns
+        # 1.6% of the saving and costs a documented `schema_version` break. If `data.json`'s weight has to
+        # come down, JFH-213 owns that trade with these numbers in hand.
         "" if img == og(r["nwo"]) else img,
         # The raw arrival date, not a new/old flag, and for every arrival rather than only the recent
         # ones -- the page needs the date to print it and to expire the mark itself, and once it has to
@@ -670,6 +681,11 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
 @media(hover:hover){tr:hover td{background:var(--band)}}
 .rk{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .shot{width:200px}
+/* `aspect-ratio` is load-bearing and not decoration. These pictures have no `src` until a reader gives an
+   input event -- see `cardArt()` -- and this is what makes an unsourced one occupy exactly the space the
+   loaded one will, so nothing moves when it arrives. Remove it and every card image becomes a layout shift
+   that arrives on someone else's schedule. Verified: with every image blocked, CLS was 0.5140; with them
+   all loading, 0.5140 (JFH-216). */
 .shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:6px;
   background:var(--band);border:1px solid var(--grid);display:block}
 /* These two set the table's width. Auto table layout takes the widest unbreakable run in the column
@@ -1424,7 +1440,28 @@ fetch("data.json").then(r => {
     r.lname = r.name.toLowerCase();
     r.lnwo = r.nwo.toLowerCase();
     r.lblurb = (r.blurb || "").toLowerCase();
-    r.img = r.img || ("https://opengraph.githubassets.com/1/" + r.nwo);
+    // GitHub's social card for the repository, derived from `nwo`, for every row -- not `r.img || ...`,
+    // which is what stood here and which let 686 of the 1,294 rows override it with whatever URL their
+    // upstream README used for its own banner.
+    //
+    // The override is ignored here (JFH-218) because nothing bounds what those URLs serve. Measured across
+    // the 686: median 447,380 B, mean 1,425,377 B, largest 10,946,713 B -- one picture 35x this page's
+    // entire 307,200 B budget. The cards view lays out 120 at a time, so the page's weight was a function
+    // of what 686 strangers committed to their own repositories: a runner measured 1,357,365 B of images one
+    // half-hour and 1,827,508 B the next on a byte-identical tree, and a single animated GIF in one README
+    // (`ecc-plan-canvas-demo.gif`, 716,235 B) was 53% of the image total on its own. A social card is a
+    // fixed ~100 KB at 1200x600, which still oversupplies the ~1,000x500 device pixels the widest card slot
+    // asks for on Lighthouse's mobile profile -- so this bounds the worst case and loses no resolution at
+    // any viewport.
+    //
+    // What it does lose, and this is a decision rather than an oversight: 149 of the 686 are animated GIFs
+    // -- 21.7% of the pictures, 11.5% of all rows -- and a social card is a static PNG, so those demos no
+    // longer move here. At a 447 KB median and a 10.9 MB maximum that is the trade. The artwork is still
+    // reachable in the two places where one image is nobody's budget: the repo's own detail page, which
+    // still renders `img`, and the outward `nwo` link under every title.
+    //
+    // `data.json` keeps the column. Only the render path changed -- see the note beside the writer.
+    r.img = "https://opengraph.githubassets.com/1/" + r.nwo;
     const age = r.first_seen ? daysAgo(r.first_seen) : Infinity;
     r.isnew = age >= 0 && age <= (d.window_days || 14);
   });
@@ -2485,6 +2522,60 @@ function saveBtn(r) {
 function saveWord(on) { return on ? "Saved" : "Save"; }
 function saveLabel(name, on) { return saveWord(on) + " " + name; }
 
+// A card's picture is fetched for the cards a reader is actually browsing, and not before. `loading="lazy"`
+// was supposed to be this and demonstrably is not: measured at Lighthouse's 412x823 mobile viewport, the
+// first paint still fetched three of them, 921,532 B, because Chrome's lazy threshold is a scroll distance
+// and the whole first screen sits inside it. On a GitHub runner, on a slower simulated network with a
+// longer network-quiet wait, it reached further down and fetched 1,357,388 B one half-hour and 1,827,508 B
+// the next -- against a 307,200 B budget, on a byte-identical tree.
+//
+// So the `src` is withheld: the tag ships `data-src` and nothing is requested until the reader gives an
+// input event that means they are looking at the list. Those four are the human ways of beginning a
+// scroll -- a wheel or trackpad gesture, a touch, a key (arrows, space, Page Down, Tab), or a pointer
+// going down on the scrollbar or on a card. Plain `scroll` is deliberately not among them, because it also
+// fires for programmatic scrolling, including the viewport manipulation Lighthouse performs for its
+// full-page screenshot once the trace is over; a budget a measuring tool can trip by looking at the page
+// is a budget measuring the tool.
+//
+// This is only safe because the box is already reserved. `.shot img` carries `aspect-ratio:2/1` and the
+// cards view inherits it, so a picture with no `src` occupies exactly the space the loaded one will and
+// hydrating it shifts nothing. That is not a hope: blocking every image on the page moved layout shift
+// from 0.5140 to 0.5140, in three runs each (JFH-216).
+let ART = false, ARTIO = null;
+
+function artLoad(i) { i.src = i.dataset.src; i.removeAttribute("data-src"); }
+
+function cardArt() {
+  if (!ART) return;
+  if (!("IntersectionObserver" in window)) {
+    document.querySelectorAll("#out img[data-src]").forEach(artLoad);
+    return;
+  }
+  // 200px of margin, so a picture has usually arrived by the time its card has, without reaching so far
+  // down the list that one flick of a thumb pays for screenfuls nobody stopped at.
+  if (!ARTIO) {
+    ARTIO = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      ARTIO.unobserve(e.target);
+      artLoad(e.target);
+    }), {rootMargin: "200px 0px"});
+  }
+  document.querySelectorAll("#out img[data-src]").forEach(i => ARTIO.observe(i));
+}
+
+// `once` on each listener and the flag as well: four of them racing to be first would otherwise each walk
+// the DOM. `render()` calls `cardArt()` again on every rebuild, which is what covers a filter, a search or
+// a "show more" pressed by a reader who engaged with the page long ago.
+//
+// `window.addEventListener` and not the bare global, which resolves to the same function in a browser and
+// does not exist in `tests/probe.mjs`. That harness executes this script against a stub DOM to assert on
+// the HTML it renders, and it stubs `window` rather than the global scope -- so the bare form threw a
+// ReferenceError at load and took all 276 of its assertions with it, which is exactly the failure it is
+// there to catch. This is the only listener registered at the top level rather than inside init.
+["wheel", "touchstart", "keydown", "pointerdown"].forEach(t =>
+  window.addEventListener(t, () => { if (!ART) { ART = true; cardArt(); } },
+                          {once: true, passive: true}));
+
 function render() {
   // Reflect state onto the chips. Cheaper than rebuilding them and it keeps focus where it was.
   const press = (id, on) => [...document.getElementById(id).children]
@@ -2609,8 +2700,11 @@ function render() {
       // that away on the one click they were most likely to make. The shot stays the redundant adjacent
       // link to the title, aria-hidden and untabbable, which is only true while it goes where the title
       // goes.
+      // `data-src` rather than `src`, and `cardArt()` below decides when it becomes one. `loading="lazy"`
+      // stays on the tag: once the src is set it is still the right hint for a picture that has since been
+      // scrolled away from, and it costs nothing to leave the browser's own heuristic in play behind ours.
       '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
-        '<img loading="lazy" alt="" src="' + img + '"></a></td>' +
+        '<img loading="lazy" decoding="async" alt="" data-src="' + img + '"></a></td>' +
       '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on +
         // The way out. owner/name was already sitting under every title reading like a GitHub path, so
         // making it the outward link costs no new text and needs no new label -- "openclaw/openclaw" is a
@@ -2661,6 +2755,9 @@ function render() {
     "<th class='hide tg'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
     "<th class='c hide lc'>Lang / licence / push</th></tr></thead><tbody>" + rows +
     "</tbody></table>";
+  // After the subtree exists and before the "show more" button is appended, because the pictures it has to
+  // find are in the subtree. A no-op until the reader has given an input event, which is the whole point.
+  cardArt();
   if (hits.length > page.length) {
     const b = document.createElement("button");
     b.className = "more";

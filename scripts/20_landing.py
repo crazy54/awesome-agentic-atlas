@@ -415,9 +415,18 @@ def row_html(page: Page, r: dict, i: int, os_labels: list[str]) -> str:
     # tells the reader nothing they did not get from the heading.
     tags = "" if page.cat else f'<span class="tag cat">{esc(r["cat_name"])}</span>'
     tags += "".join(f'<span class="tag">{esc(t)}</span>' for t in r["target_names"])
-    # The social card is the fallback for two thirds of these rows and `data.json` stores "" for it
-    # rather than 55 bytes x 1,294 of a string it can rebuild. Rebuild it.
-    img = esc(r["img"] or f"https://opengraph.githubassets.com/1/{r['nwo']}")
+    # GitHub's social card for the repository, derived from the `nwo`, for every row. This used to prefer
+    # the `img` column -- whatever URL the upstream README used for its own banner -- with the card as the
+    # fallback. The column is still in `data.json`; it is simply not rendered here any more (JFH-218),
+    # because nothing bounds what those 686 URLs serve: median 447,380 B, largest 10,946,713 B, one animated
+    # GIF at 716,235 B. A page like this one lays out 100 rows, so preferring the column meant a static file
+    # that could ask a reader for tens of megabytes from 46 hosts, and there is no client-side rescue on a
+    # prerendered page. A social card is a fixed ~100 KB at 1200x600, which still oversupplies the slot.
+    #
+    # The same one-line change is in the index's row normaliser, for the same reason. `22_detail.py` is
+    # deliberately *not* in step: one image on a page nobody's budget notices is exactly where a project's
+    # own screenshot belongs, and it is the surface that keeps the column honest.
+    img = esc(f"https://opengraph.githubassets.com/1/{r['nwo']}")
     url = esc(r["url"])
     # The name goes to this site's own page for the project and the `nwo` underneath it goes to GitHub,
     # which is the split the index table uses too. It matters more here than there: these 156 pages are

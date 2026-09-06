@@ -359,7 +359,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <p class="blurb" id="ctx"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><span class="k"><span class="lw">Last </span>deployed</span>
-      <span class="v"><time datetime="2026-09-06T22:01:00Z">2026-09-06 22:01 UTC</time></span></a>
+      <span class="v"><time datetime="2026-09-06T23:09:00Z">2026-09-06 23:09 UTC</time></span></a>
   </div>
   <nav>
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
@@ -477,7 +477,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-06T22:01:00Z";
+const BUILT = "2026-09-06T23:09:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -532,7 +532,7 @@ fetch("data.json").then(r => {
     r.lname = r.name.toLowerCase();
     r.lnwo = r.nwo.toLowerCase();
     r.lblurb = (r.blurb || "").toLowerCase();
-    r.img = r.img || ("https://opengraph.githubassets.com/1/" + r.nwo);
+    r.img = "https://opengraph.githubassets.com/1/" + r.nwo;
     const age = r.first_seen ? daysAgo(r.first_seen) : Infinity;
     r.isnew = age >= 0 && age <= (d.window_days || 14);
   });
@@ -1153,6 +1153,30 @@ function saveBtn(r) {
 function saveWord(on) { return on ? "Saved" : "Save"; }
 function saveLabel(name, on) { return saveWord(on) + " " + name; }
 
+let ART = false, ARTIO = null;
+
+function artLoad(i) { i.src = i.dataset.src; i.removeAttribute("data-src"); }
+
+function cardArt() {
+  if (!ART) return;
+  if (!("IntersectionObserver" in window)) {
+    document.querySelectorAll("#out img[data-src]").forEach(artLoad);
+    return;
+  }
+  if (!ARTIO) {
+    ARTIO = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      ARTIO.unobserve(e.target);
+      artLoad(e.target);
+    }), {rootMargin: "200px 0px"});
+  }
+  document.querySelectorAll("#out img[data-src]").forEach(i => ARTIO.observe(i));
+}
+
+["wheel", "touchstart", "keydown", "pointerdown"].forEach(t =>
+  window.addEventListener(t, () => { if (!ART) { ART = true; cardArt(); } },
+                          {once: true, passive: true}));
+
 function render() {
   const press = (id, on) => [...document.getElementById(id).children]
     .forEach((b, i) => b.setAttribute("aria-pressed", on(i) ? "true" : "false"));
@@ -1232,7 +1256,7 @@ function render() {
     return "<tr>" +
       '<td class="n rk">' + (i + 1) + "</td>" +
       '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
-        '<img loading="lazy" alt="" src="' + img + '"></a></td>' +
+        '<img loading="lazy" decoding="async" alt="" data-src="' + img + '"></a></td>' +
       '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on +
         '<a class="nwo" href="' + url + '">' + esc(r.nwo) + "</a>" +
         saveBtn(r) +
@@ -1259,6 +1283,7 @@ function render() {
     "<th class='hide tg'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
     "<th class='c hide lc'>Lang / licence / push</th></tr></thead><tbody>" + rows +
     "</tbody></table>";
+  cardArt();
   if (hits.length > page.length) {
     const b = document.createElement("button");
     b.className = "more";
