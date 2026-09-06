@@ -82,6 +82,7 @@ jobs:
       # `verification()` reads "" as "the site is not verified and emit no tag", and `indexnow_key()`
       # refuses "" outright. Declaring these in `env:` would set both to "" on every run where the
       # variable does not exist, which would turn the IndexNow submission into a hard failure on a fork.
+      # Since JFH-215 the key file is written by this job too, so the two workflows have to agree.
       #
       # GOOGLE_SITE_VERIFICATION is unset today and the site is unverified until a human sets it -- only
       # the account owner can mint the token. Setting it here is the entire code change needed: the next
@@ -101,7 +102,7 @@ jobs:
           fi
           if [ -n "$INDEXNOW" ]; then
             echo "INDEXNOW_KEY=$INDEXNOW" >> "$GITHUB_ENV"
-            echo "Using the INDEXNOW_KEY override. It must match weekly.yml's, which writes the key file."
+            echo "Using the INDEXNOW_KEY override. It must match weekly.yml's: both jobs run 20_landing.py, which writes the key file."
           else
             echo "No override set; using the IndexNow key committed in scripts/19_pages.py."
           fi
@@ -214,25 +215,48 @@ jobs:
           # Nothing downstream reads `d7`, `d30` or `velocity`, so a failure here costs the Rising chip
           # and the gain figures and nothing else on the page.
           python scripts/25_velocity.py
+          # Here as of JFH-215, in the same position weekly.yml already runs it in: after 19_pages and
+          # 25_velocity, because it reads `docs/data.json` and nothing else, and before 24_pwa, because
+          # it writes `docs/pages.css`, which that stage precaches and hashes. The note above 24_pwa is
+          # what that second constraint costs if it is got wrong.
+          #
+          # 23_og stays weekly and this stage is safe without it. The og:image tag is emitted only for a
+          # page whose card is already present in `docs/og/`, checked by filename, so a topic or crossing
+          # that first appears today ships with no card rather than with a tag pointing at a file that is
+          # not there, and picks one up on the next weekly run.
+          python scripts/20_landing.py
           # After 19_pages and never before: that stage is what stamps the ledger and rewrites data.json,
           # and the feeds are a read of both. Run first, it would publish yesterday's arrivals.
           python scripts/21_feeds.py
-          # The service worker precaches `docs/index.html` and hashes what it precached into its own
-          # version string, so this has to follow 19_pages: run first, it would ship a worker whose
-          # version says "unchanged" while holding a shell that changed. `pages.css` is the other
-          # precached file and 20_landing writes it -- absent from this job, so this run precaches the
-          # copy already committed, which is correct because nothing here can have changed it.
+          # Last, and its ordering against 20_landing above is the one in this job that would break
+          # production without leaving a mark. The worker precaches `docs/index.html` and `docs/pages.css`
+          # and hashes both into its own `VERSION`, so it has to see both in their final state. Run it
+          # ahead of 20_landing on a day that changed the stylesheet and `sw.js` comes out byte-identical.
+          #
+          # Measured rather than reasoned, by perturbing one line of 20_landing's `CSS` constant and
+          # running the pair both ways round against the committed `docs/`: pages.css moves from sha256
+          # f3c7b93e to fc8d23b4 (7,474 -> 7,521 B) in both orders, while `VERSION` stays e1dbf6450dc9 --
+          # the value committed today -- with 24_pwa first, and becomes 00d57d43d52c with it second. A
+          # byte-identical `sw.js` is not a small mistake: the trigger for a worker update is a byte
+          # change to `sw.js`, which is the one file that would not have changed, so there is no
+          # self-healing path and every reader with the worker installed keeps the old shell
+          # indefinitely (JFH-190/208).
+          #
+          # The stage does not take the ordering entirely on trust -- it exits with a message naming the
+          # missing generator if either file is absent -- but "present" is not "current", and only the
+          # order here makes it current.
           python scripts/24_pwa.py
 
-      # `20_landing.py` is deliberately absent, and it is the one stage whose absence here is a decision
-      # rather than an oversight. It rewrites 156 prerendered pages, and every byte is committed, because
-      # Pages serves this branch's `docs/` folder.
+      # `20_landing.py` runs in this job as of JFH-215, and the history it costs is the whole argument, so
+      # the measurement stays here where the decision is. It rewrites 156 prerendered pages and every byte
+      # is committed, because Pages serves this branch's `docs/` folder.
       #
       # This comment used to price that at ~600 KB of delta per run, ~224 MB of history a year daily
-      # against ~32 MB weekly. Those numbers were wrong, all three from the same mistake: they multiply
-      # the *whole* compressed page set by the number of runs, and git does not store each run's pages
-      # independently -- it deltas them against the previous run's, so the cost tracks changed bytes and
-      # not total bytes. 309 of the 312 facet blobs already in this repository are stored as deltas.
+      # against ~32 MB weekly, and kept the stage out on that basis. Those numbers were wrong, all three
+      # from the same mistake: they multiply the *whole* compressed page set by the number of runs, and
+      # git does not store each run's pages independently -- it deltas them against the previous run's, so
+      # the cost tracks changed bytes and not total bytes. 309 of the 312 facet blobs already in this
+      # repository are stored as deltas.
       #
       # Measured, by committing 13 successive generations of the real 156 pages into a scratch repository
       # with 60% of the exact star counts perturbed each time, `git gc --aggressive --prune=now` after
@@ -241,8 +265,8 @@ jobs:
       #
       #   all 156 pages, first commit    595,458 B packed   (6.01 MB of HTML, so a ratio of 0.094)
       #   one regeneration                55,502 B packed   = 54.2 KB, not ~600 KB
-      #   x365 (daily)                      19.3 MB a year  , not ~224 MB
-      #   x52  (weekly, what we do)          2.8 MB a year  , not ~32 MB
+      #   x365 (daily, what we now do)      19.3 MB a year  , not ~224 MB
+      #   x52  (weekly, what we did)         2.8 MB a year  , not ~32 MB
       #
       # One figure looks like it contradicts this and does not: the two facet generations actually in this
       # repository's history cost 0.625 MB each, which would annualise to ~228 MB. Those two commits
@@ -250,15 +274,19 @@ jobs:
       # change costs ~0.6 MB; a day of star drift costs ~54 KB. Conflating them is the original error one
       # level down.
       #
-      # So the cost argument for keeping this stage weekly no longer holds -- 16 MB a year is not what
-      # bounded staleness on 156 indexed pages is worth, and the honest reason it is still weekly is that
-      # nobody has moved it yet. Tracked as JFH-215; the ordering constraint when it moves is that
-      # `20_landing.py` writes `docs/pages.css`, which the worker precaches, so it has to land before
-      # `24_pwa.py` and the note at the top of this step stops being true. What remains correct here is
-      # only the consequence: `<lastmod>` stays honest either way because it is stamped from the snapshot
-      # the pages were built from, so today the site ships up to 7-day-old facet pages that do not lie
-      # about their age. The permanent fix is still Pages `build_type: workflow` (JFH-205), which stops
-      # versioning generated output at all -- a separate change, not this one.
+      # So the cost argument for keeping this stage weekly did not hold: the trade is ~16 MB of history a
+      # year against up to seven days of staleness on 156 pages that exist specifically for crawlers, and
+      # that is worth paying. `<lastmod>` was honest either way -- it is stamped from the snapshot the
+      # pages were built from, so the week-old pages never lied about their age -- but "does not lie about
+      # being a week old" is a weaker property than "is not a week old". The permanent fix is still Pages
+      # `build_type: workflow` (JFH-205), which stops versioning generated output at all and takes this
+      # cost to zero; that is a separate change and this one did not wait for it.
+      #
+      # Two stages are still absent, and they are now the only ones: 22_detail and 23_og, weekly for a
+      # stronger reason than 20_landing ever had. Both are built to be byte-stable against a day's star
+      # drift -- 22_detail keeps every volatile number out of its HTML and fetches them client-side, and
+      # 23_og floors its counts and skips any card whose content signature is unchanged -- so a daily run
+      # of either would cost history and change nothing.
 
       # Every file this checks is one a generator above rewrites from scratch on every run, so any that
       # the build did not touch is a file the site will serve unchanged for ever. The commit step stages
@@ -266,34 +294,46 @@ jobs:
       # no diff, no churn, and no signal anywhere -- which is exactly how a page freezes without anyone
       # noticing. mtime against the marker is enough because a fresh checkout stamps every file with the
       # checkout time, which is earlier than the marker, so an untouched file cannot pass by accident,
-      # and because all four generators write unconditionally -- none of them has a write-if-different
+      # and because all five generators write unconditionally -- none of them has a write-if-different
       # path that would make an unchanged file look skipped.
       #
-      # Two outcomes, not one, because "nothing wrote this" has two causes with opposite remedies. A
-      # stage missing from this workflow is a pipeline bug: fix the workflow. A page whose facet stopped
-      # existing is the build working correctly: delete the page. Both look identical to mtime, so they
-      # are told apart by path. The four `mega-list/` prefixes below are the only ones this job writes
-      # whose file *set* is derived from the data -- one page per topic, per target, per source list, per
-      # platform, and 17_markdown emits `<platform>-inferred.md` only `if maybe:`, so even that set
-      # moves. Everything else it writes is a constant list. Pruning is left to a human on purpose: these URLs are indexed, so removing one is
-      # a decision someone takes in the commit that changed the taxonomy, not a side effect of a build.
+      # Three outcomes and not one, because "nothing wrote this" has three causes with different remedies.
+      # A stage missing from this workflow is a pipeline bug: fix the workflow. A page whose facet stopped
+      # existing but is still on disk is the build working correctly and needs a human to `git rm` it. A
+      # path a generator deleted outright needs nobody, because the commit step stages the removal. The
+      # third is told apart by existence, before anything looks at a name or an mtime; the first two look
+      # identical to mtime and are told apart by path.
+      #
+      # The prunable arm lists every prefix this job writes whose file *set* is
+      # derived from the data: the four under `mega-list/` -- one page per topic, per target, per source
+      # list, per platform, and 17_markdown emits `<platform>-inferred.md` only `if maybe:`, so even that
+      # set moves -- and, since JFH-215 brought 20_landing into this job, `docs/topic/**` and
+      # `docs/target/**`, which are one page per topic, per target and per crossing that has rows.
+      # Everything else this job writes is a constant list. Pruning is left to a human on purpose: these
+      # URLs are indexed, so removing one is a decision someone takes in the commit that changed the
+      # taxonomy, not a side effect of a build.
       #
       # This holds only while every generator still writes at least one file outside those prefixes --
       # 17_markdown has mega-list/README.md, 19_pages has docs/index.html, 20_landing has
       # docs/sitemap.xml, 21_feeds has docs/feed.xml. A future stage whose entire output is facet pages
       # would warn where it should fail. Give any such stage one fixed-path file to write.
       #
-      # The third arm is what the weekly-only stages cost: `20_landing.py`'s six output paths, plus
-      # `docs/repo/**` and `docs/sitemap-repos.xml` from `22_detail.py` and `docs/og/**` from
-      # `23_og.py`, are not written by this job, so they are skipped rather than reported. That is the
-      # whole price of the history decision above -- any of those generators dropped from `weekly.yml`
-      # goes unnoticed here and is caught there instead, within seven days rather than one. weekly.yml
-      # has no such arm.
+      # The skipped arm is what the two remaining weekly-only stages cost: `docs/repo/**` and
+      # `docs/sitemap-repos.xml` from `22_detail.py`, and `docs/og/**` from `23_og.py`, are not written by
+      # this job, so they are skipped rather than reported. Either of those dropped from `weekly.yml` goes
+      # unnoticed here and is caught there instead, within seven days rather than one. weekly.yml has no
+      # such arm.
       #
-      # 22_detail and 23_og are weekly-only for a stronger reason than 20_landing: both are built to be
-      # byte-stable against a day's star drift -- 22_detail keeps every volatile number out of its HTML
-      # and fetches them client-side, and 23_og floors its counts and skips any card whose content
-      # signature is unchanged -- so a daily run of either would cost history and change nothing.
+      # `20_landing.py`'s five output prefixes used to be in that arm and are deliberately no longer:
+      # the stage runs here now, so listing them as skipped would hide a genuine freeze in the one part
+      # of the site that exists for crawlers. `docs/pages.css`, `docs/sitemap.xml`, `docs/robots.txt` and
+      # the IndexNow key file now reach the strict arm, and the 156 facet pages the prunable one, which is
+      # exactly how weekly.yml has always classified them -- the two jobs no longer disagree about what
+      # any path under `docs/` means.
+      #
+      # `docs/repo/*` and not `docs/repo/*/*`, unlike weekly.yml: `docs/repo/index.html`, `detail.css` and
+      # `detail.js` are fixed paths there because 22_detail writes them, and none of the three is written
+      # here, so the broad glob is right in this file and wrong in that one.
       - name: Every tracked page was rewritten
         if: steps.gate.outputs.go == 'true'
         run: |
@@ -301,17 +341,29 @@ jobs:
           : > "$RUNNER_TEMP/frozen"
           : > "$RUNNER_TEMP/prunable"
           : > "$RUNNER_TEMP/skipped"
+          : > "$RUNNER_TEMP/deleted"
           git ls-files docs mega-list | while IFS= read -r f; do
             case "$f" in
-              # `docs/*.txt` rather than `docs/robots.txt`: 20_landing.py also writes the IndexNow key
-              # file, whose *name* is the key, so naming it here would break the moment INDEXNOW_KEY was
-              # rotated. Those two are the only .txt files under docs/ and both belong to that stage.
-              docs/topic/*|docs/target/*|docs/pages.css|docs/sitemap.xml|docs/*.txt|docs/og/*|docs/repo/*|docs/sitemap-repos.xml)
+              docs/og/*|docs/repo/*|docs/sitemap-repos.xml)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/skipped"; continue ;;
             esac
+            # Existence before mtime, and the arm is here for the same reason weekly.yml grew it in
+            # 6d2216b -- see the long note there. `git ls-files` reads the *index*, so a file a generator
+            # deliberately deleted from the working tree is still listed, and `-nt` against a path that
+            # does not exist is false, so it would fall through the mtime skip and be sorted by name like
+            # a file that is merely stale. No name pattern can tell those two apart.
+            #
+            # That arm was weekly-only until now because this job skipped `docs/*.txt`, which is the one
+            # path a prune here can reach. Bringing 20_landing into this job removed that skip, so the
+            # same rotation that used to cost weekly.yml its entire deploy would now cost this one its
+            # daily deploy -- `20_landing.prune_keys` unlinks the key file from a rotated `INDEXNOW_KEY`,
+            # and `20_landing.prune` unlinks facet pages whose facet stopped existing. Both are intended,
+            # `git add docs mega-list` below stages the removal, and the repository self-heals in the same
+            # run. Reported rather than warned about: on a rotation this fires exactly once.
+            if [ ! -e "$f" ]; then printf '%s\n' "$f" >> "$RUNNER_TEMP/deleted"; continue; fi
             if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
             case "$f" in
-              mega-list/topics/*|mega-list/targets/*|mega-list/lists/*|mega-list/platforms/*)
+              mega-list/topics/*|mega-list/targets/*|mega-list/lists/*|mega-list/platforms/*|docs/topic/*|docs/target/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/prunable" ;;
               *)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/frozen" ;;
@@ -319,6 +371,11 @@ jobs:
           done
           np="$(wc -l < "$RUNNER_TEMP/prunable" | tr -d ' ')"
           nf="$(wc -l < "$RUNNER_TEMP/frozen" | tr -d ' ')"
+          nd="$(wc -l < "$RUNNER_TEMP/deleted" | tr -d ' ')"
+          if [ "$nd" -gt 0 ]; then
+            echo "Tracked files this build deleted, whose removal the commit below carries:"
+            sed 's/^/  /' "$RUNNER_TEMP/deleted"
+          fi
           if [ "$np" -gt 0 ]; then
             echo "Facet pages that are tracked but no longer emitted:"
             sed 's/^/  /' "$RUNNER_TEMP/prunable"
@@ -332,7 +389,7 @@ jobs:
           fi
           ns="$(wc -l < "$RUNNER_TEMP/skipped" | tr -d ' ')"
           nt="$(git ls-files docs mega-list | wc -l | tr -d ' ')"
-          echo "Rewrote all $((nt - ns)) of the tracked files this job is responsible for; skipped ${ns} left to weekly.yml."
+          echo "Rewrote all $((nt - ns - nd)) of the tracked files this job is responsible for, deleted ${nd}; skipped ${ns} left to weekly.yml."
 
       # Only now, and only because everything above succeeded. Recording the SHAs earlier would mean a
       # build that failed halfway was never retried: the next run would compare against the commit it
@@ -378,6 +435,14 @@ jobs:
       # Gated like every step above it. Without the `if:` this would run on a skipped build, where nothing
       # was committed and `changed-docs.txt` does not exist -- harmless today, because the script treats an
       # absent file as "nothing changed", but a step that only works by accident is not gated.
+      #
+      # JFH-215 raised what this submits from one URL a day to up to 157, and that is the point of the
+      # change rather than a side effect of it: the 156 facet pages are the ones that exist for crawlers,
+      # and until now they were told about weekly. The ceiling is not close. `url_for()` maps only
+      # `index.html` paths to URLs, so the stylesheet, the sitemaps, the feeds, the key file and the icons
+      # this job also rewrites map to nothing, which bounds a daily submission at the root plus 156 facet
+      # pages; `26_indexnow.py`'s `BATCH` is 10,000, so that is one request using 1.6% of the batch. The
+      # weekly run's list is the larger one at ~1,452 with the detail pages, and that is also one batch.
       - name: Tell IndexNow which URLs changed
         if: steps.gate.outputs.go == 'true'
         run: python scripts/26_indexnow.py --changed "$RUNNER_TEMP/changed-docs.txt"
