@@ -537,12 +537,19 @@ def version(paths: list[Path]) -> str:
     version even if that file happens to be a copy of one already there. Twelve characters of SHA-256 is
     about 2^48 of room -- this is a cache name, not a signature, and the only thing it has to do is
     differ whenever the contents do.
+
+    Newlines are normalised because the version has to describe the bytes Pages *serves*, not the bytes
+    this checkout happens to hold. `core.autocrlf` is true and there is no `.gitattributes`, so on Windows
+    the working copy is CRLF while the committed and served file is LF -- and hashing the working copy made
+    the version a function of the operating system. A hand regeneration on Windows and the next Linux cron
+    run then disagree about identical content and flip the version back and forth forever, and every flip
+    discards every returning reader's cache. Production shipped the CRLF hash this way in `ad237c4`.
     """
     h = hashlib.sha256()
     for p in sorted(paths):
         h.update(p.name.encode("utf-8"))
         h.update(b"\0")
-        h.update(p.read_bytes())
+        h.update(p.read_bytes().replace(b"\r\n", b"\n"))
         h.update(b"\0")
     return h.hexdigest()[:12]
 
