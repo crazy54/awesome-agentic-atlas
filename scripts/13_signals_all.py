@@ -5,8 +5,11 @@ that is two full sets of round trips for data that fits in one query. Same
 output files, so 04_classify.py reads them unchanged.
 
 Which repos get queried is scripts/signals.py's rule, shared with those two
-stages: anything unseen, anything written before the push stamp existed, and
-anything pushed since its entry was written.
+stages: anything unseen, anything written before either stamp existed, anything
+pushed since its entry was written, anything whose release entry was written
+inside the window where its release CI could still have been uploading, and
+anything not looked at in a month. The run log names which of those queued
+each repo, so a term that stops firing is visible without a rebuild.
 """
 import json
 import subprocess
@@ -61,12 +64,23 @@ def main() -> None:
     # this is the current value for every repo and the comparison below is against what we saw
     # when the entry was written. Both signals are fetched by one query, so either one being
     # stale queues the repo and both get rewritten.
+    now = sig.utcnow()
     pushed = {r["nwo"]: sig.meta_push(meta, r["nwo"]) for r in repos}
-    todo = [r for r in repos
-            if force
-            or sig.stale(rel, r["nwo"], pushed[r["nwo"]])
-            or sig.stale(act, r["nwo"], pushed[r["nwo"]])]
-    print(f"{len(repos)} repos with metadata, {len(todo)} needing signals", flush=True)
+
+    def queued(nwo: str) -> str:
+        """Whichever cache wants this repo first, so the printed counts sum to the queue.
+
+        Releases asked first because it is the file with every term in play: the actions cache
+        can only ever answer with a moved push, a legacy entry or the age ceiling, since an
+        `action.yml` cannot arrive without a push and so has no CI-race gap to sit in.
+        """
+        code = sig.reason(rel, nwo, pushed[nwo], now)
+        return code if code != sig.FRESH else sig.reason(act, nwo, pushed[nwo], now)
+
+    why = {r["nwo"]: queued(r["nwo"]) for r in repos}
+    todo = [r for r in repos if force or why[r["nwo"]] != sig.FRESH]
+    print(f"{len(repos)} repos with metadata, {len(todo)} needing signals"
+          f"{sig.breakdown([why[r['nwo']] for r in todo])}", flush=True)
 
     for start in range(0, len(todo), BATCH):
         batch = todo[start:start + BATCH]
@@ -90,9 +104,10 @@ def main() -> None:
                 tags.append(node.get("tagName") or "")
                 assets += [a.get("name") or "" for a in
                            ((node.get("releaseAssets") or {}).get("nodes") or [])]
-            rel[e["nwo"]] = {"tags": tags, "assets": assets, sig.STAMP: pushed[e["nwo"]]}
+            rel[e["nwo"]] = {"tags": tags, "assets": assets,
+                             **sig.observed(pushed[e["nwo"]], now)}
             act[e["nwo"]] = sig.action_entry(bool(n.get("yml") or n.get("yaml")),
-                                             pushed[e["nwo"]])
+                                             pushed[e["nwo"]], now)
 
         done = min(start + BATCH, len(todo))
         if start % (BATCH * 8) == 0 or done == len(todo):

@@ -43,10 +43,15 @@ def main() -> None:
     rel = json.loads(out_path.read_text(encoding="utf-8")) if out_path.exists() else {}
 
     # See scripts/signals.py: presence alone froze these entries for ever, so the queue also
-    # asks whether the repo has been pushed since the entry was written.
+    # asks whether the repo has been pushed since the entry was written, whether we looked so
+    # soon after that push that the release CI cannot have finished uploading yet, and how long
+    # ago we looked at all. One clock for the whole run, so every entry it writes agrees.
+    now = sig.utcnow()
     pushed = {e["nwo"]: sig.meta_push(meta, e["nwo"]) for e in entries}
-    todo = [e for e in entries if force or sig.stale(rel, e["nwo"], pushed[e["nwo"]])]
-    print(f"{len(todo)} of {len(entries)} repos to check for release assets")
+    why = {e["nwo"]: sig.reason(rel, e["nwo"], pushed[e["nwo"]], now) for e in entries}
+    todo = [e for e in entries if force or why[e["nwo"]] != sig.FRESH]
+    print(f"{len(todo)} of {len(entries)} repos to check for release assets"
+          f"{sig.breakdown([why[e['nwo']] for e in todo])}")
 
     for start in range(0, len(todo), BATCH):
         batch = todo[start : start + BATCH]
@@ -75,7 +80,7 @@ def main() -> None:
                 tags.append(r.get("tagName") or "")
                 assets += [a["name"] for a in ((r.get("releaseAssets") or {}).get("nodes") or [])]
             rel[e["nwo"]] = {"tags": tags, "assets": sorted(set(assets)),
-                             sig.STAMP: pushed[e["nwo"]]}
+                             **sig.observed(pushed[e["nwo"]], now)}
         print(f"  {min(start + BATCH, len(todo))}/{len(todo)}")
         out_path.write_text(json.dumps(rel, indent=1), encoding="utf-8")
 

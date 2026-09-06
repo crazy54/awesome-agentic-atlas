@@ -2,13 +2,16 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the six harnesses in turn, and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the seven harnesses in turn, and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY SIX HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY SEVEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
+//   signals_test.py   the cache-staleness policy in scripts/signals.py, on fabricated entries. Pure and
+//                     instant, and the only test of it that can exist offline -- the three stages it
+//                     serves all shell out to `gh api graphql`, so nothing here sees a real crawl.
 //   probe.mjs         runs the page's own JavaScript against a stub DOM, and reads the stylesheet and the
 //                     page text. Sees every branch of the ranking, the hash and the palette. Cannot see
 //                     computed layout -- there is none in Node.
@@ -43,7 +46,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// six files own their own plumbing. It is 200 lines of plumbing.
+// seven files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -63,6 +66,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // broken rather than passing -- see the note at the top, and set generously below the real count so that
 // only a harness that has lost assertions trips it.
 const HARNESSES = [
+  {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
   {file: "media_test.py", label: "one embedded part per screenshot, and the entry ceiling", python: true, floor: 40},
@@ -80,7 +84,7 @@ if (!existsSync(join(ROOT, "docs", "index.html"))) {
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and two of the six harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and two of the seven harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -93,13 +97,14 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Three of the six are Python -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Four of the seven are Python -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
-// entries it holds -- and between them they are 99 of the assertions below.
+// entries it holds, one decides which repos a crawl would ask about -- and between them they are 309 of the
+// assertions below, which is nearly half.
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and three of the six harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and four of the seven harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +
