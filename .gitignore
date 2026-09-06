@@ -17,6 +17,11 @@ backup/
 # Where the Playwright MCP browser drops screenshots taken while checking the site by hand.
 .playwright-mcp/
 
+# Per-issue clones land here, one directory per Linear issue. They are whole git repositories, so an
+# absent-minded `git add -A` would commit one as a gitlink -- a broken submodule pointing at a commit
+# no clone of this repo can resolve.
+awesome-agentic-atlas/
+
 # Excel leaves this sidecar next to an open workbook and it is a write lock, not a document.
 ~$*.xlsx
 
