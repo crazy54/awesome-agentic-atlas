@@ -260,10 +260,11 @@ jobs:
       # whatever is newest. `--clobber` on the fallback path so re-running this workflow the same day
       # replaces the assets instead of failing on a tag that already exists.
       #
-      # Size note: the DARK workbook is around 16 MB and LIGHT will come out near 48 MB from here. The
-      # smaller LIGHT that was published by hand got that way through an Excel COM round-trip, which
-      # re-deduplicates the embedded media and cannot run on a Linux runner. Both are well inside the 2 GB
-      # asset limit; LIGHT is just a bigger download than it strictly has to be.
+      # Size note: LIGHT used to come out near 48 MB from here against about 16 MB for DARK, and the
+      # difference was never the theme -- the smaller LIGHT that had been published by hand went through
+      # an Excel COM round-trip, which re-deduplicates embedded media and cannot run on a Linux runner.
+      # `scripts/media.py` does that deduplication in the build now, so both files should land in the
+      # same size range; the build's own log line prints the placement and entry counts if they do not.
       - name: Publish the workbooks as a release
         run: |
           set -euo pipefail

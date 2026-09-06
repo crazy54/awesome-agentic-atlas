@@ -28,7 +28,6 @@ from pathlib import Path
 
 from openpyxl import Workbook
 from openpyxl.chart import BarChart, Reference
-from openpyxl.drawing.image import Image as XLImage
 from openpyxl.drawing.spreadsheet_drawing import AnchorMarker, TwoCellAnchor
 from openpyxl.formatting.rule import DataBarRule
 from openpyxl.styles import Alignment, Border, Font, PatternFill
@@ -39,6 +38,7 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 CATEGORY_TABLE = "ByCategory"
 
 sys.path.insert(0, str(Path(__file__).parent))
+import media  # noqa: E402
 from buckets import BUCKETS, bucket_order  # noqa: E402
 # Safe to import at module scope: taxonomy only reaches back into this module inside `load()`, which
 # nothing here calls, so there is no cycle.
@@ -149,20 +149,24 @@ def img_for(rec, shots, theme: str):
     return p if p.exists() else None
 
 
-def place_shots(ws, rows, shots, theme: str, T, col: int, first_row: int):
-    """twoCell anchoring is what makes a picture hide when its row is filtered."""
+def place_shots(ws, rows, shots, theme: str, pool, col: int, first_row: int):
+    """twoCell anchoring is what makes a picture hide when its row is filtered.
+
+    The pool is what keeps a repo's screenshot to one embedded part however many of the twenty-one
+    sheets show it -- the same picture is on its list's sheet, the Leaderboard, By Category and up to
+    four platform sheets, and openpyxl embeds a placement, not an image. See `media.py`; the pool also
+    means `pad_shot` runs once per screenshot rather than once per cell.
+    """
     for i, r in enumerate(rows):
         p = img_for(r, shots, theme)
         if not p:
             continue
-        img = XLImage(b7.pad_shot(p, T["shot_bg"]))
         row = first_row + i
-        img.anchor = TwoCellAnchor(
+        pool.place(ws, p, TwoCellAnchor(
             editAs="twoCell",
             _from=AnchorMarker(col=col - 1, colOff=0, row=row - 1, rowOff=0),
             to=AnchorMarker(col=col, colOff=0, row=row, rowOff=0),
-        )
-        ws.add_image(img)
+        ))
 
 
 def header_row(ws, row: int, cols, T, accent=None):
@@ -190,7 +194,7 @@ def title_band(ws, row: int, ncols: int, T, title: str, meta: str, size: int = 1
 
 
 # ------------------------------------------------------------------ list sheets
-def build_list_sheet(wb, key: str, rows: list, T, shots, theme: str):
+def build_list_sheet(wb, key: str, rows: list, T, shots, theme: str, pool):
     title = SHEET_TITLE[key]
     nwo = next(n for k, _t, n, _b in SHEETS if k == key)
     blurb = next(b for k, _t, _n, b in SHEETS if k == key)
@@ -347,7 +351,7 @@ def build_list_sheet(wb, key: str, rows: list, T, shots, theme: str):
         lk.alignment = Alignment(vertical="center", indent=1)
         lk.hyperlink = r["url"]
 
-    place_shots(ws, rows, shots, theme, T, shot_col, 3)
+    place_shots(ws, rows, shots, theme, pool, shot_col, 3)
     if has_stars:
         letter = get_column_letter(6 if has_sections else 5)
         ws.conditional_formatting.add(
@@ -358,7 +362,7 @@ def build_list_sheet(wb, key: str, rows: list, T, shots, theme: str):
 
 
 # ------------------------------------------------------------------ sources sheet
-def build_sources(wb, per_source, meta, T, shots, theme: str):
+def build_sources(wb, per_source, meta, T, shots, theme: str, pool):
     ws = wb.create_sheet("Sources")
     ws.sheet_properties.tabColor = T["bar"]
     ws.sheet_view.showGridLines = False
@@ -439,7 +443,7 @@ def build_sources(wb, per_source, meta, T, shots, theme: str):
         lk.alignment = Alignment(vertical="center", indent=1)
         lk.hyperlink = r["url"]
 
-    place_shots(ws, rows, shots, theme, T, 3, 4)
+    place_shots(ws, rows, shots, theme, pool, 3, 4)
     ws.conditional_formatting.add(
         f"D4:D{last}",
         DataBarRule(start_type="num", start_value=0, end_type="percentile", end_value=90,
@@ -448,7 +452,7 @@ def build_sources(wb, per_source, meta, T, shots, theme: str):
 
 
 # ------------------------------------------------------------------ leaderboard
-def build_leaderboard(wb, rows, T, shots, theme: str):
+def build_leaderboard(wb, rows, T, shots, theme: str, pool):
     cols = [("#", 5.0, "center"), ("Project", 28.0, "left"),
             ("Screenshot", 42.14, "center"), ("★ Stars", 12.0, "right"),
             ("Lists", 7.0, "center"), ("Listed By", 40.0, "left"),
@@ -529,7 +533,7 @@ def build_leaderboard(wb, rows, T, shots, theme: str):
         lk.alignment = Alignment(vertical="center", indent=1)
         lk.hyperlink = r["url"]
 
-    place_shots(ws, rows, shots, theme, T, 3, 4)
+    place_shots(ws, rows, shots, theme, pool, 3, 4)
     ws.conditional_formatting.add(
         f"D4:D{last}",
         DataBarRule(start_type="num", start_value=0, end_type="percentile", end_value=90,
@@ -637,7 +641,7 @@ def platform_install(r, platform: str) -> str:
 
 
 def build_platform_sheet(wb, platform: str, field: str, headline: str, note: str,
-                         rows, total: int, T, shots, theme: str):
+                         rows, total: int, T, shots, theme: str, pool):
     cols = [("#", 5.0), ("Project", 26.0), ("Screenshot", 42.14), ("★ Stars", 11.0),
             ("Lists", 7.0), ("Listed By", 30.0),
             ("Win\nNative", 9.0), ("Win\nWSL2", 9.0), ("macOS", 9.0), ("Linux", 9.0),
@@ -763,7 +767,7 @@ def build_platform_sheet(wb, platform: str, field: str, headline: str, note: str
         lk.alignment = Alignment(vertical="center", indent=1)
         lk.hyperlink = r["url"]
 
-    place_shots(ws, rows, shots, theme, T, 3, 4)
+    place_shots(ws, rows, shots, theme, pool, 3, 4)
     ws.conditional_formatting.add(
         f"D4:D{last}",
         DataBarRule(start_type="num", start_value=0, end_type="percentile", end_value=90,
@@ -784,7 +788,7 @@ CATEGORY_NOTE = (
     "the row has no stars of its own to rank by — a folder inside someone else's repo, or a dead link.")
 
 
-def build_category_sheet(wb, rows, T, shots, theme: str):
+def build_category_sheet(wb, rows, T, shots, theme: str, pool):
     """The cross-list topic sheet, and the one sheet built as a real Excel Table.
 
     A Table rather than a bare autofilter for two reasons. Structured references make `Category` a
@@ -920,7 +924,7 @@ def build_category_sheet(wb, rows, T, shots, theme: str):
         lk.alignment = Alignment(vertical="center", indent=1)
         lk.hyperlink = r["url"]
 
-    place_shots(ws, rows, shots, theme, T, 3, 4)
+    place_shots(ws, rows, shots, theme, pool, 3, 4)
     ws.conditional_formatting.add(
         f"F4:F{last}",
         DataBarRule(start_type="num", start_value=0, end_type="percentile", end_value=90,
@@ -1510,28 +1514,43 @@ def main() -> None:
         cat_style, _rep = b7.cat_styles(T)
         orch_stats = b7.make_stats(orch, orch_shots)
 
-        build_sources(wb, per_source, meta, T, shots, theme)
-        b7.build_main(wb, orch, T, cat_style, orch_shots)
+        # One pool per workbook, because `pad_shot` bakes the theme's background into the padding, so
+        # DARK and LIGHT share no bytes. Every sheet places through it, which is what stops a repo
+        # shown on seven sheets becoming seven copies of the same JPEG -- see `media.py`.
+        # `bg` bound as a default rather than closed over, so the renderer cannot be caught holding the
+        # next theme's colour if anything ever calls it after the loop moves on.
+        img_pool = media.Pool(lambda src, bg=T["shot_bg"]: b7.pad_shot(src, bg))
+
+        build_sources(wb, per_source, meta, T, shots, theme, img_pool)
+        b7.build_main(wb, orch, T, cat_style, orch_shots, img_pool)
         for key, *_ in SHEETS:
-            build_list_sheet(wb, key, by_source[key], T, shots, theme)
-        build_leaderboard(wb, board, T, shots, theme)
+            build_list_sheet(wb, key, by_source[key], T, shots, theme, img_pool)
+        build_leaderboard(wb, board, T, shots, theme, img_pool)
         # Directly after the leaderboard because it answers the question the leaderboard provokes:
         # the global ranking is one column of Category away from being fourteen rankings.
-        build_category_sheet(wb, by_cat, T, all_shots, theme)
+        build_category_sheet(wb, by_cat, T, all_shots, theme, img_pool)
         # the cross-list platform sheets replace 07_build's orchestrators-only "Windows Picks":
         # every row that sheet held is in this Windows sheet, alongside the other ten lists.
         for name, field, headline, note in PLATFORMS:
             build_platform_sheet(wb, name, field, headline, note,
-                                 by_platform[name], len(pool), T, all_shots, theme)
+                                 by_platform[name], len(pool), T, all_shots, theme, img_pool)
         b7.build_stats(wb, orch, T, cat_style, orch_stats)
         build_list_stats(wb, per_source, T)
         build_cover(wb, T, stats, per_source)
         wb.active = 0
 
         path = OUT / f"{WORKBOOK}-{theme.upper()}.xlsx"
-        wb.save(path)
+        # Not `wb.save`: that one writes a media part per placement, and past 65,535 entries it would
+        # not fail but silently write a ZIP64 package instead, which no version of Excel here has been
+        # tested against. At eleven lists the workbook holds 7,388 images, and the growing part of that
+        # is the cross-list sheets -- By Category plus 2.7 of the four platform sheets per repo -- so it
+        # rises about 3.7 entries per distinct repo and reaches the ceiling near 16,800 repos. Sharing
+        # the pictures makes it roughly one entry per repo instead; the printed report is what keeps
+        # that honest in CI's log, since no local run has the cache to build this. tests/media_test.py
+        # has the whole projection.
+        report = media.save(wb, path, img_pool)
         print(f"{theme.upper():5s} -> {path.name}  {path.stat().st_size / 1e6:.1f} MB  "
-              f"{len(wb.sheetnames)} sheets", flush=True)
+              f"{len(wb.sheetnames)} sheets  ·  {report}", flush=True)
 
     print(f"\nitems {stats['items']:,} · repos {stats['repos']:,} · "
           f"stars {stats['stars']:,} · multi-listed {stats['multi']}")

@@ -2,12 +2,12 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the five harnesses in turn, and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the six harnesses in turn, and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY FIVE HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY SIX HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
 //   probe.mjs         runs the page's own JavaScript against a stub DOM, and reads the stylesheet and the
 //                     page text. Sees every branch of the ranking, the hash and the palette. Cannot see
@@ -19,6 +19,8 @@
 //   detail-churn.mjs  regenerates 1,294 detail pages and compares hashes. Nothing to do with a browser.
 //   pagemin_test.py   the comment stripper against the cases the real page does not contain -- template
 //                     literals, regex literals, unterminated blocks. Python, because the stripper is.
+//   media_test.py     the workbook writer: one embedded part per screenshot however many rows point at it,
+//                     and the 65,535-entry ZIP ceiling that dedup exists to stay under.
 //
 // A HARNESS THAT SKIPS MUST NOT BE ABLE TO PASS, which is why there is no branch anywhere below that quietly
 // carries on. A missing browser or a missing interpreter exits 2 before anything runs; a harness that prints
@@ -41,7 +43,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// five files own their own plumbing. It is 200 lines of plumbing.
+// six files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -63,6 +65,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const HARNESSES = [
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
+  {file: "media_test.py", label: "one embedded part per screenshot, and the entry ceiling", python: true, floor: 40},
   {file: "detail-churn.mjs", label: "1,294 detail pages, regenerated and hashed", floor: 7},
   {file: "cards-check.mjs", label: "real layout at 1440/900/375 in both themes", needs: "browser", floor: 40},
   {file: "pwa-check.mjs", label: "manifest, worker, precache, offline, freshness, 404", needs: "browser", floor: 25},
@@ -77,7 +80,7 @@ if (!existsSync(join(ROOT, "docs", "index.html"))) {
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and two of the five harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and two of the six harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -90,13 +93,13 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Two of the five are Python -- one runs
-// `22_detail.py` 1,294 pages at a time, one tests `pagemin.py` -- and between them they are 55 of the
-// assertions below.
+// prerequisite that goes missing must stop the run, not reduce it. Three of the six are Python -- one runs
+// `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
+// entries it holds -- and between them they are 99 of the assertions below.
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and two of the five harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and three of the six harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

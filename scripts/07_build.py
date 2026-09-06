@@ -184,7 +184,7 @@ def paint(ws, r1, r2, c1, c2, style):
 
 
 # ----------------------------------------------------------------- main sheet
-def build_main(wb, recs, T, cat_style, shots):
+def build_main(wb, recs, T, cat_style, shots, pool=None):
     ws = wb.create_sheet("Orchestrators")
     ws.sheet_properties.tabColor = T["surface"]
     ws.sheet_view.showGridLines = False
@@ -345,13 +345,21 @@ def build_main(wb, recs, T, cat_style, shots):
         src = shots.get(r["nwo"], {}).get(f"shot_{'dark' if T is THEMES['dark'] else 'light'}")
         if not src or not Path(src).exists():
             continue
-        img = XLImage(pad_shot(Path(src), T["shot_bg"]))
-        img.anchor = TwoCellAnchor(
+        anchor = TwoCellAnchor(
             editAs="twoCell",
             _from=AnchorMarker(col=3, colOff=0, row=row - 1, rowOff=0),
             to=AnchorMarker(col=4, colOff=0, row=row, rowOff=0),
         )
-        ws.add_image(img)
+        # In the merged Atlas these same repos also appear on the Leaderboard, By Category and the
+        # platform sheets, so `16_build_all` hands in a pool and the picture is embedded once for all
+        # of them (see `media.py`). Standalone -- this script's own `build()` -- there is no other sheet
+        # to share with, so the plain per-placement embed is exactly right and stays the default.
+        if pool is not None:
+            pool.place(ws, Path(src), anchor)
+        else:
+            img = XLImage(pad_shot(Path(src), T["shot_bg"]))
+            img.anchor = anchor
+            ws.add_image(img)
 
     # ---- data bar for stars (magnitude -> the sequential blue, not category hue)
     ws.conditional_formatting.add(
