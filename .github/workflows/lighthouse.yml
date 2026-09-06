@@ -28,9 +28,9 @@
 #                                explain it landed after the baseline was taken, so the document line has
 #                                17% headroom rather than the 21% measured. Still headroom; recorded here
 #                                because a budget whose stated margin is wrong is a budget nobody trusts.
-#                                37,569 B after the cards view (JFH-182), which is 8% headroom, and the
-#                                figure below about 25-45% is no longer true of this line -- see the note
-#                                at the end of this block, which is where the 8% is being spent.
+#                                37,569 B after the cards view (JFH-182), which was 8% headroom, and then
+#                                15,147 B once the comments stopped being served (JFH-204). 63% headroom,
+#                                which is the widest this line has ever been -- see the note below.
 #   script          10,339 B     the Cloudflare beacon and nothing else -- there is no bundle
 #   total          210,044 B     7 requests, of which data.json is 159,291 B (561,162 B of JSON, gzipped)
 #   CLS              0.5494      identical in all three runs, and identical on the previous build too
@@ -60,19 +60,25 @@
 # that conversation instead of letting the page get quietly slower for years. Raising a number here is a
 # decision, and it should have a commit message explaining itself.
 #
-# THE DOCUMENT LINE, AND WHY THE ANSWER IS NOT TO RAISE IT
+# THE DOCUMENT LINE, AND WHY THE ANSWER WAS NOT TO RAISE IT
 #
-# It is down to 8% and the next feature will cross it, so this is where the budget starts doing its job. The
-# honest accounting, measured on the shipped bytes: of 37,569 B gzipped, the comments are 22,381 B. 46 CSS
-# blocks, 299 JavaScript lines and 18 HTML blocks -- 55 KB of prose uncompressed, and stripping all of it
-# takes the document to 15,056 B. That is a 60% reduction on every load, for text whose readers are looking
-# at `scripts/19_pages.py` instead, where it is organised and where git can attribute it.
+# This is the one place the budget has already done its job, so the episode is worth keeping. After the
+# cards view the line was at 8% of headroom and the next feature was going to cross it. The honest
+# accounting, measured on the shipped bytes rather than estimated: of 37,569 B gzipped, 22,381 B were
+# comments -- 46 CSS blocks, 299 JavaScript lines and 18 HTML blocks, about 55 KB of prose uncompressed.
 #
-# So the fix is not a bigger number here. Nothing about the page a reader interacts with has to shrink: the
-# stage can strip its own comments on the way out and the source can keep every one of them, which is a
-# generator change with its own verification -- a naive strip breaks on `//` inside a URL and on `/*` inside
-# a regex, and it must not touch the `__PLACEHOLDER__` substitutions. Filed rather than done here, and
-# filed as the thing to do before the next feature rather than as a someday.
+# Raising the number here would have been the easy answer and the wrong one, because nothing a reader
+# interacts with had to shrink. The comments are written for whoever is editing `scripts/19_pages.py`, and
+# that is where they are read, in order, with `git blame` attached; they did not need to be downloaded by
+# people looking at a table. So the stage strips its own output on the way out and the template keeps every
+# one of them. `scripts/pagemin.py` does it, and it is a scanner rather than a regex because the page is
+# three languages in one file and the naive version breaks on `//` inside a URL and `/*` inside a regex.
+# Measured after: 105,254 -> 48,980 B raw, 37,569 -> 15,147 B gzipped. 63% headroom.
+#
+# The number below is deliberately NOT being lowered to match. 40,960 B was chosen as "a framework or a
+# second copy of the dataset trips this, a paragraph of markup does not", and that reasoning has not
+# changed -- tightening it to hug 15 KB would convert a budget into a ratchet and make the next honest
+# feature argue with a threshold instead of with a person. The headroom is the point of having won it.
 #
 # WHEN IT RUNS
 #
@@ -100,6 +106,9 @@ on:
       - docs/manifest.webmanifest
       - scripts/19_pages.py
       - scripts/19b_refresh.py
+      # Not a stage: the comment stripper both render paths run through. A bug in it is a change to every
+      # byte of the document line above, so it belongs in this list more obviously than most things here.
+      - scripts/pagemin.py
       - scripts/20_landing.py
       - scripts/24_pwa.py
       - .github/workflows/lighthouse.yml

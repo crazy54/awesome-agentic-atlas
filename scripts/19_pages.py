@@ -35,6 +35,11 @@ b17 = importlib.util.module_from_spec(spec)
 sys.modules["b17"] = b17
 spec.loader.exec_module(b17)
 
+# `17_markdown` puts `scripts/` on the path for its own plain-named siblings, but relying on that as a side
+# effect of somebody else's import is how this breaks the day the import order changes. Stated here.
+sys.path.insert(0, str(Path(__file__).parent))
+import pagemin  # noqa: E402
+
 newness = b17.newness
 
 b16 = b17.b16
@@ -191,9 +196,16 @@ def built() -> tuple[str, str]:
 
 def substitute(page: str, data: dict, repo: str, site: str) -> str:
     """Fill the template's placeholders. Both this stage and `19b_refresh.py` render the same shell, and
-    when the two chains drifted the refreshed page quietly lost whichever one had been added since."""
+    when the two chains drifted the refreshed page quietly lost whichever one had been added since.
+
+    The comments come out here, which is why the strip is inside this function and not at either call site:
+    it is the one place both chains already share, and the docstring above is the record of what happens
+    when they stop sharing one. It runs before substitution rather than after, so its input is a constant
+    and its output is a pure function of the template -- see `pagemin` for that argument and for why the
+    beacon's own marker comments survive it. 36,753 B gzipped becomes 14,448.
+    """
     stamp_iso, stamp_utc = built()
-    return (page
+    return (pagemin.strip_page(page)
             .replace("__BUILT__", stamp_iso)
             .replace("__BUILT_UTC__", stamp_utc)
             .replace("__TOPICLINKS__", facet_links(data["cats"], "topic"))
