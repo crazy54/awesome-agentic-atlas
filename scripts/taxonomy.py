@@ -15,11 +15,17 @@ Two axes, because the section names conflate two questions:
 
 Every one of the 140 keys is spelled out below rather than matched by keyword. A regex over section
 names would silently re-file a section the day a curator renames it, and re-filing is exactly the thing
-this module exists to make deliberate. `check()` fails if a section appears in the data that is not
-listed here, which is how a rename gets noticed.
+this module exists to make deliberate.
+
+A rename therefore has to be noticed. It is `category_of()` that notices -- it raises on a section this
+module does not name, and its message says what to do about it. `check()` asks the same question over a
+whole record set and reads better, but be clear about its standing: nothing calls it. It runs when
+somebody types `python scripts/taxonomy.py`, so it is a thing to reach for while curating, not a guard.
+The guard is the raise.
 """
 from __future__ import annotations
 
+import difflib
 import json
 import re
 from collections import Counter, defaultdict
@@ -308,11 +314,31 @@ def _is_mcp_server(rec: dict) -> bool:
 
 
 def category_of(rec: dict) -> str:
-    """The category for one *listing*. A repo listed twice has two of these; see `by_repo`."""
+    """The category for one *listing*. A repo listed twice has two of these; see `by_repo`.
+
+    Unmapped sections raise, deliberately: a section this module does not name must not be guessed at,
+    for the reason in the module docstring. The subscript below already did that on its own -- the point
+    of the handler is the message. What it used to produce was
+    `KeyError ('agents', 'Memory - Knowledge Management')`, which named neither the file to edit nor the
+    second file that also has to change and fails quietly. This is the failure a rename actually reaches,
+    so this is where the instructions belong.
+    """
     key = (source_of(rec), rec.get("section") or rec.get("category") or "")
     if key in SPLIT_BY_EVIDENCE and _is_mcp_server(rec):
         return "MCP Servers"
-    return SECTIONS[key]
+    try:
+        return SECTIONS[key]
+    except KeyError:
+        near = difflib.get_close_matches(key[1], [s for (m, s) in SECTIONS if m == key[0]], n=3, cutoff=0.4)
+        raise KeyError(
+            f"{key[0]} / {key[1]!r} is not named in SECTIONS -- a curator renamed or added a section "
+            f"upstream. "
+            f"Closest already mapped: {near or 'nothing similar'}. Two files need it, and the second one "
+            f"fails quietly: add the key to SECTIONS in scripts/taxonomy.py, then fold the new spelling "
+            f"into that source's existing bucket in scripts/buckets.py. Skipping the second step leaves "
+            f"the section unmapped there, and an unmapped section keeps its own name as its bucket -- "
+            f"which asks the eight-hue palette for a ninth colour without buckets.check() objecting."
+        ) from None
 
 
 def targets_of(rec: dict) -> list[str]:
