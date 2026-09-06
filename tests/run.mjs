@@ -97,7 +97,7 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Four of the seven are Python -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Four of the seven need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about -- and between them they are 309 of the
 // assertions below, which is nearly half.
