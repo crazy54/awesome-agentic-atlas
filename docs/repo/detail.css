@@ -48,7 +48,7 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
    the separator never ends up orphaned at the start of a line. */
 .facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 18px;font-size:13px;color:var(--muted)}
 .facts span{white-space:nowrap}
-/* The live pair starts hidden and detail.js reveals it once data.json has answered. Hidden rather than
+/* The live pair starts hidden and detail.js reveals it once live.json has answered. Hidden rather than
    showing a placeholder, because "Stars —" that never fills in reads as a broken page, whereas a fact
    that simply is not there reads as a fact that is not there. */
 .facts .live{display:none}

@@ -67,25 +67,37 @@ if (copy && navigator.clipboard && navigator.clipboard.writeText && window.isSec
 
 /* The star count and the last push.
 
-   These are the only two facts on the page that change daily, and they are read from docs/data.json
-   here instead of being written into the HTML by the generator. docs/ is committed verbatim on this
+   These are the only two facts on the page that change daily, and they are read from a file here
+   instead of being written into the HTML by the generator. docs/ is committed verbatim on this
    deployment, so a star count in the markup means all 1,294 pages are rewritten in git every time the
-   cron runs; reading them from a file that already changes every run costs the repository nothing.
+   cron runs.
 
-   Failure is silent by design. The two spans are hidden until this succeeds, so a 404, an offline
+   The file is docs/live.json, written by scripts/19c_live.py:
+
+     {"snapshot": "<date>", "repos": {"<owner>/<name>": [stars, "<pushed>"]}}
+
+   which is these three values for every repository and nothing else -- 21.8 KB gzipped. Until JFH-222
+   this fetched docs/data.json, all eighteen columns of all 1,294 rows at 162.5 KB gzipped, and then
+   scanned it for one row. Same two numbers, 7.5x fewer bytes, and an object lookup instead of a linear
+   search through 1,294 arrays.
+
+   Failure is silent by design. The three spans are hidden until this succeeds, so a 404, an offline
    reader or a parse error leaves a page that is missing two figures rather than a page with a broken
    promise on it -- and every other fact on it was in the initial response. */
 var root = document.documentElement.dataset.root || "";
 var nwo = document.documentElement.dataset.nwo;
 if (nwo && window.fetch) {
-  fetch(root + "data.json").then(function (r) {
+  fetch(root + "live.json").then(function (r) {
     return r.ok ? r.json() : Promise.reject(r.status);
   }).then(function (d) {
-    var i = d.cols.indexOf("nwo"), s = d.cols.indexOf("stars"), p = d.cols.indexOf("pushed");
-    var row = d.rows.find(function (x) { return x[i] === nwo; });
-    if (!row) return;
-    show("stars", row[s] ? "<b>" + row[s].toLocaleString() + "</b> stars" : "No stars recorded");
-    if (row[p]) show("pushed", "last push <b>" + row[p] + "</b>");
+    /* Array.isArray rather than a truth test. Every nwo contains a slash, so none of them can name an
+       inherited property of Object.prototype and a plain lookup is in fact safe -- but a check that is
+       exact rather than merely sufficient costs nothing, and this one also declines a sidecar whose
+       shape has changed underneath the page instead of rendering "undefined stars". */
+    var row = d.repos && d.repos[nwo];
+    if (!Array.isArray(row)) return;
+    show("stars", row[0] ? "<b>" + row[0].toLocaleString() + "</b> stars" : "No stars recorded");
+    if (row[1]) show("pushed", "last push <b>" + row[1] + "</b>");
     /* The snapshot the two figures above belong to. It is the single most volatile string in the
        dataset -- it changes on every run without exception -- so one copy of it per page would be
        1,294 rewritten files for one date, and it is also the qualifier without which the two numbers

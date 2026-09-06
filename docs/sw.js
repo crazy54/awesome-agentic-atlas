@@ -18,6 +18,12 @@ const PAGES_MAX = 30;
 // from <date>". The name is `CACHED_HEADER` in `19_pages.py`, which owns the page that reads it, and is
 // substituted in here rather than written twice.
 const CACHED = "x-atlas-cached";
+// Every file `data()` below is responsible for, matched against `url.pathname`. Named as a list because
+// this worker routes by filename and has no default policy: a data file missing from here is fetched from
+// the network, never cached, and silently absent offline, with nothing anywhere to say so. `data.json` is
+// the index's rows; `live.json` is the sidecar the 1,294 detail pages read (JFH-222). Kept in
+// `24_pwa.DATA_FILES` rather than written out here, so the list has one definition.
+const DATA_FILES = ["/data.json", "/live.json"];
 
 // Relative to this script, so the scope is the project's Pages prefix on the published site, the fork's
 // prefix on a fork, and "/" under a local `python -m http.server`. A literal "/awesome-agentic-atlas/"
@@ -112,7 +118,7 @@ self.addEventListener("fetch", (event) => {
 
   if (req.mode === "navigate") {
     event.respondWith(navigation(event));
-  } else if (url.pathname.endsWith("/data.json")) {
+  } else if (DATA_FILES.some((name) => url.pathname.endsWith(name))) {
     event.respondWith(data(req));
   } else if (PRECACHED.has(key(url.href))) {
     event.respondWith(asset(req));

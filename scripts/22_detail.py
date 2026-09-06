@@ -36,15 +36,30 @@ a page whose bytes are a pure function of the parts of `data.json` that only cha
 changes, so a rebuild on a day when nothing was re-curated writes 1,294 byte-identical files and git
 records nothing at all.
 
-The two numbers a reader actually wants -- stars and last push -- are fetched from `docs/data.json`
-after paint by `detail.js` and injected. That file is already committed, already changes on every run,
-and is already the site's single source of truth for both figures, so reusing it costs the repository
-exactly zero additional bytes and removes any chance of this stage disagreeing with the index about how
-many stars something has. A dedicated sidecar keyed by `nwo` would be 57 KB (22 KB gzipped) instead of
-`data.json`'s 561 KB (162 KB gzipped) and would be kinder to a reader who arrives cold from a search
-result; it would also add 22 KB of unavoidable churn per rebuild and a second derivation of a number
-this project already derives once. If reader bandwidth ever outweighs history size, that is the trade to
-make, and it is one small function.
+The two numbers a reader actually wants -- stars and last push -- are fetched after paint by `detail.js`
+and injected, so neither is in the bytes this stage commits. They come from `docs/live.json`, the sidecar
+`19c_live.py` derives from `data.json`: 57,418 B raw and 21,791 B gzipped, against `data.json`'s 569,096 B
+and 162,473 B. Until JFH-222 that fetch was `data.json` itself -- every one of these 1,294 pages downloaded
+all eighteen columns of all 1,294 rows to read three values out of one of them -- so this is 7.5x fewer
+bytes on the wire for the surface that is 1,294 of the site's ~1,500 URLs and the one a search result lands
+somebody on cold. Quote the gzipped pair and not the raw one: Pages serves both with
+`Content-Encoding: gzip`, so the gzipped figure is the one a reader is charged.
+
+What it costs is what an earlier version of this comment declined to pay: 57 KB of committed churn per
+rebuild, for ever, against the zero additional bytes that reusing an already-committed file cost. The two
+mitigations are that `live.json`'s keys are sorted by `nwo` rather than left in `data.json`'s
+star-descending row order, so a day of moving stars changes values in place instead of permuting 57 KB and
+git's delta stays proportional to the numbers that actually moved -- and that it is one file rather than
+1,294.
+
+It is *not* written by this stage, and that is a decision rather than an oversight. JFH-222 asked for it to
+be emitted from here, out of the same in-memory rows as the pages, so that two derivations of one number
+could not drift. The conclusion is right and the remedy is backwards for this pipeline: this stage runs
+weekly and `data.json` is rebuilt daily. Hanging the sidecar off it would peg the star counts on 1,294
+detail pages to the weekly run while the index and the 156 facet pages moved nightly, and publish a page
+claiming 4,010 stars beside a facet page claiming 4,193 for the same repository for up to six days at a
+time. `19c_live.py` runs in both workflows immediately after `19_pages.py` instead, which is the only stage
+that writes `data.json`; see its docstring for what holds that ordering up.
 
 The cost of this choice is that the star count is not in the first paint, which the ticket's acceptance
 criteria could be read as forbidding. It is worth being precise about what is and is not in the initial
@@ -736,7 +751,7 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
    the separator never ends up orphaned at the start of a line. */
 .facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 18px;font-size:13px;color:var(--muted)}
 .facts span{white-space:nowrap}
-/* The live pair starts hidden and detail.js reveals it once data.json has answered. Hidden rather than
+/* The live pair starts hidden and detail.js reveals it once live.json has answered. Hidden rather than
    showing a placeholder, because "Stars —" that never fills in reads as a broken page, whereas a fact
    that simply is not there reads as a fact that is not there. */
 .facts .live{display:none}
@@ -938,25 +953,37 @@ if (copy && navigator.clipboard && navigator.clipboard.writeText && window.isSec
 
 /* The star count and the last push.
 
-   These are the only two facts on the page that change daily, and they are read from docs/data.json
-   here instead of being written into the HTML by the generator. docs/ is committed verbatim on this
+   These are the only two facts on the page that change daily, and they are read from a file here
+   instead of being written into the HTML by the generator. docs/ is committed verbatim on this
    deployment, so a star count in the markup means all 1,294 pages are rewritten in git every time the
-   cron runs; reading them from a file that already changes every run costs the repository nothing.
+   cron runs.
 
-   Failure is silent by design. The two spans are hidden until this succeeds, so a 404, an offline
+   The file is docs/live.json, written by scripts/19c_live.py:
+
+     {"snapshot": "<date>", "repos": {"<owner>/<name>": [stars, "<pushed>"]}}
+
+   which is these three values for every repository and nothing else -- 21.8 KB gzipped. Until JFH-222
+   this fetched docs/data.json, all eighteen columns of all 1,294 rows at 162.5 KB gzipped, and then
+   scanned it for one row. Same two numbers, 7.5x fewer bytes, and an object lookup instead of a linear
+   search through 1,294 arrays.
+
+   Failure is silent by design. The three spans are hidden until this succeeds, so a 404, an offline
    reader or a parse error leaves a page that is missing two figures rather than a page with a broken
    promise on it -- and every other fact on it was in the initial response. */
 var root = document.documentElement.dataset.root || "";
 var nwo = document.documentElement.dataset.nwo;
 if (nwo && window.fetch) {
-  fetch(root + "data.json").then(function (r) {
+  fetch(root + "live.json").then(function (r) {
     return r.ok ? r.json() : Promise.reject(r.status);
   }).then(function (d) {
-    var i = d.cols.indexOf("nwo"), s = d.cols.indexOf("stars"), p = d.cols.indexOf("pushed");
-    var row = d.rows.find(function (x) { return x[i] === nwo; });
-    if (!row) return;
-    show("stars", row[s] ? "<b>" + row[s].toLocaleString() + "</b> stars" : "No stars recorded");
-    if (row[p]) show("pushed", "last push <b>" + row[p] + "</b>");
+    /* Array.isArray rather than a truth test. Every nwo contains a slash, so none of them can name an
+       inherited property of Object.prototype and a plain lookup is in fact safe -- but a check that is
+       exact rather than merely sufficient costs nothing, and this one also declines a sidecar whose
+       shape has changed underneath the page instead of rendering "undefined stars". */
+    var row = d.repos && d.repos[nwo];
+    if (!Array.isArray(row)) return;
+    show("stars", row[0] ? "<b>" + row[0].toLocaleString() + "</b> stars" : "No stars recorded");
+    if (row[1]) show("pushed", "last push <b>" + row[1] + "</b>");
     /* The snapshot the two figures above belong to. It is the single most volatile string in the
        dataset -- it changes on every run without exception -- so one copy of it per page would be
        1,294 rewritten files for one date, and it is also the qualifier without which the two numbers

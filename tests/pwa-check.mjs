@@ -371,6 +371,93 @@ const backOnline = await evalIn("document.getElementById('snap').textContent.rep
 ok("back online, the stamp is the network's data and says nothing about the cache",
    /^snapshot \d{4}-\d{2}-\d{2}/.test(backOnline) && !backOnline.includes("2025-01"), backOnline);
 
+// -------- docs/live.json, on a real detail page (JFH-222)
+//
+// The worker used to route the data path by one exact filename, `/data.json`. The 1,294 detail pages now
+// fetch `live.json` instead -- three columns of the same dataset, 21.8 KB gzipped against 162.5 KB -- and
+// a filename this worker does not recognise gets no branch at all: no `atlas-data` entry, no
+// `x-atlas-cached` marking, and a detail page that silently loses its star count the moment a reader is
+// offline. Nothing above this line would notice, because every assertion above is about the index page and
+// the index page does not fetch this file.
+//
+// The page is taken from `sitemap-repos.xml` rather than hardcoded, because a hardcoded `nwo` is a repo
+// that will one day leave the source lists and turn this section into a 404 that passes.
+const repoLocs = [...(await (await fetch(ORIGIN + "sitemap-repos.xml")).text())
+  .matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => new URL(m[1]).pathname.split("/").filter(Boolean));
+const detailPath = repoLocs.filter(p => p.length === 4 && p[1] === "repo")
+  .map(p => p.slice(1).join("/") + "/")[0];
+ok("the repo sitemap names a detail page to visit", !!detailPath, JSON.stringify(repoLocs[0]));
+const detailUrl = ORIGIN + detailPath;
+
+// The three spans start hidden and `show()` sets `class="live on"`, so waiting for the class is waiting
+// for the fetch rather than for the document -- which is the whole point of the file being fetched.
+const liveSpans = () => evalIn(`JSON.stringify(["stars", "pushed", "snap"].map(id => {
+  const el = document.getElementById(id);
+  return el ? el.className + "|" + el.textContent.trim() : "missing";
+}))`);
+const waitLive = async () => {
+  for (let i = 0; i < 60; i++) {
+    const s = JSON.parse(await liveSpans());
+    if (s[0].startsWith("live on")) return s;
+    await sleep(100);
+  }
+  return JSON.parse(await liveSpans());
+};
+await goto(detailUrl);
+const onlineSpans = await waitLive();
+ok("a detail page fills in its star count from live.json after paint",
+   /^live on\|(\d[\d,]*\s+stars|No stars recorded)$/.test(onlineSpans[0]), JSON.stringify(onlineSpans));
+ok("and the snapshot that qualifies it, so the two figures are not presented as live",
+   /^live on\|snapshot \d{4}-\d{2}-\d{2}$/.test(onlineSpans[2]), JSON.stringify(onlineSpans));
+const dataKeys = async () => evalIn(`caches.has('atlas-data').then(h => h
+  ? caches.open('atlas-data').then(c => c.keys()).then(ks => ks.map(r => new URL(r.url).pathname)) : [])`);
+for (let i = 0; i < 40; i++) {
+  if ((await dataKeys()).some(u => u.endsWith("/live.json"))) break;
+  await sleep(200);
+}
+const keysOnline = await dataKeys();
+ok("live.json is in atlas-data after the page fetched it", keysOnline.some(u => u.endsWith("/live.json")),
+   JSON.stringify(keysOnline));
+// Both, and in the one cache. The two files are one list in `24_pwa.py` precisely so that they cannot get
+// different policies by accident, and `atlas-data` is unversioned and never swept, so this is the pair a
+// reader keeps.
+ok("and so is data.json, so the two are one policy and not two",
+   keysOnline.some(u => u.endsWith("/data.json")), JSON.stringify(keysOnline));
+
+// Offline, and the assertion is about the file rather than about the rendered page -- which is not a
+// hedge, it is the honest boundary, and finding it was worth more than the assertion.
+//
+// WHAT THIS SECTION CANNOT SEE, and nor can any assertion, because it is not true: that a detail page
+// works offline. It does not, and it did not before JFH-222 either. `docs/repo/detail.js` and
+// `docs/repo/detail.css` are neither precached by `install` nor matched by `PRECACHED` in the fetch
+// listener, so the worker declines them and the browser fetches them from the network. Measured here,
+// with the network off and the document served from `atlas-pages`: `typeof show` is `"undefined"`, so the
+// script never arrived, and the three spans keep their initial `class="live"`. Nothing the sidecar does
+// can change that -- the reader is missing the code that reads it, not the data. On the published site
+// Pages' `max-age=600` papers over the first ten minutes and no longer.
+//
+// So what is asserted is the routing this ticket actually changed, which is a fact about the worker and is
+// checkable: the file is in the cache the reader keeps, the cache answers with the network off, and the
+// response is marked. Caching `detail.css` and `detail.js` is a separate change to `24_pwa.py` -- and not
+// obviously the right one, since precaching them would charge every index-page reader for two files only
+// detail pages use.
+await net(true);
+await goto(detailUrl);
+const scriptOffline = await evalIn("typeof show");
+// The marking, not just the body. A cached `data.json` is told apart from a fresh one by this header, and
+// the index page's freshness stamp is built on it; a sidecar served from cache with no header would be a
+// cached body that nothing can tell is cached. `dataset.root` rather than a hand-counted `../../`, because
+// that attribute is what `detail.js` itself resolves against and a detail page is three levels deep.
+const marked = await evalIn(`fetch(new URL((document.documentElement.dataset.root || '') + 'live.json', location.href).href)
+  .then(r => r.headers.get('x-atlas-cached') + '/' + r.status).catch(e => 'threw: ' + e.message)`);
+ok("offline, live.json is answered from atlas-data and marked x-atlas-cached", marked === "1/200",
+   `${marked} -- and for the record typeof show was ${scriptOffline}, so detail.js itself is uncached`);
+const keysOffline = await dataKeys();
+ok("and both data files are still in that cache, which activate never sweeps",
+   ["/data.json", "/live.json"].every(n => keysOffline.some(u => u.endsWith(n))),
+   JSON.stringify(keysOffline));
+await net(false);
+
 // -------- a 404 must never be pinned in the cache
 await goto(ORIGIN + "topic/does-not-exist/");
 const pageKeys = await evalIn(`caches.has('atlas-pages').then(h => h

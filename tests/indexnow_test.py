@@ -177,7 +177,8 @@ eq("and neither is a directory called index.html/something",
    b26.url_for("docs/index.html/inner.html"), None)
 
 # ---- everything that must map to None. Every one of these is a real committed path or a real shape.
-for path in ("docs/data.json", "docs/sw.js", "docs/pages.css", "docs/detail.css", "docs/detail.js",
+for path in ("docs/data.json", "docs/live.json", "docs/sw.js", "docs/pages.css",
+             "docs/detail.css", "docs/detail.js",
              "docs/robots.txt", "docs/sitemap.xml", "docs/sitemap-repos.xml",
              "docs/manifest.webmanifest", "docs/og/agents.png", "docs/og/cards.json",
              "docs/feed.xml", "docs/feed.json", "docs/icon-192.png",

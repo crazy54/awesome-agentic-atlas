@@ -255,6 +255,36 @@ jobs:
           # Nothing downstream reads `d7`, `d30` or `velocity`, so a failure here costs the Rising chip
           # and the gain figures and nothing else on the page.
           python scripts/25_velocity.py
+          # After every stage that writes data.json -- 19_pages, which rewrites it, and 25_velocity, which
+          # patches it -- because `docs/live.json` is a projection of three of its columns and has to be a
+          # projection of the copy that ships, not of an earlier one. See weekly.yml for the ordering
+          # argument at length; the short form is that `set -euo pipefail` makes it an invariant, because
+          # this stage exits if the dataset is not there rather than writing an empty sidecar.
+          #
+          # Here *and* in weekly.yml, and this is the copy that matters. `22_detail.py`'s 1,294 pages fetch
+          # this file for the star count, the last-push date and the snapshot they qualify, and that stage
+          # is weekly-only (see the long note below) precisely because it emits no volatile byte. This file
+          # is the volatile bytes, so it is rebuilt on the same cadence as `data.json` itself. Dropped from
+          # this workflow, the detail pages would show star counts up to six days behind the index page's,
+          # for the same repository, with nothing failing -- so the daily arm of that pairing is asserted
+          # in tests/live_test.py rather than left to this comment.
+          #
+          # It costs history, which the note below spends fifty lines being careful about, so it is measured
+          # here rather than asserted: 13 generations of the real 57,418-byte file with 60% of the star
+          # counts perturbed each time, `git gc --aggressive --prune=now` after every commit, cost taken as
+          # the slope across all 13 -- the same method, because a single delta jitters as repacking re-bases
+          # the chains.
+          #
+          #   first commit                    22,528 B packed
+          #   one regeneration                 5,221 B  (individual deltas 5,120..6,144 B)
+          #   x365 (daily, what this is)        1.82 MB a year
+          #
+          # Sorting the keys by `nwo` instead of leaving them in data.json's star-descending row order is
+          # half of that: the same 13 generations in rank order cost 10,499 B each and 3.65 MB a year, 2.0x
+          # more, because two repositories swapping rank moves their entries rather than their numbers.
+          # Sorted, a day of churn rewrites values in place. Worth knowing that the naive figure is 2x and
+          # not 11x -- zlib deltas a permuted JSON object far better than the 57 KB the file weighs.
+          python scripts/19c_live.py
           # Here as of JFH-215, in the same position weekly.yml already runs it in: after 19_pages and
           # 25_velocity, because it reads `docs/data.json` and nothing else, and before 24_pwa, because
           # it writes `docs/pages.css`, which that stage precaches and hashes. The note above 24_pwa is

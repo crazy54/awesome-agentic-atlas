@@ -60,10 +60,30 @@ Not precached, deliberately:
     and a snapshot line of their own, so a stale copy has the same freshness problem the data has. They
     are cached as they are visited instead, capped, and served from cache only when the network fails.
 
-  * `data.json`, 552 KB. Not because it should not be available offline -- it must be, or "works
-    offline" is a lie -- but because the page downloads it on the first visit anyway. Precaching it at
-    install would download it a second time in the same visit for nothing. The worker stores the page's
-    own response instead, so the offline copy costs zero extra bytes.
+  * `data.json`, 556 KB, and `live.json`, 56 KB. Not because they should not be available offline --
+    they must be, or "works offline" is a lie -- but because the page that needs each one downloads it
+    anyway. Precaching `data.json` at install would download it a second time in the same visit for
+    nothing, and precaching `live.json` would spend 22 KB on every reader of the root shell to serve a
+    file only the 1,294 detail pages under `docs/repo/` ever ask for -- pages that are not in the
+    precache and not in the shell. The worker stores each page's own response instead, so the offline
+    copy of both costs zero extra bytes.
+
+    Both are routed by `DATA_FILES` below, and that list is the fix for a hazard rather than a
+    convenience. The worker's fetch handler routes by exact filename, so a new data file that is not
+    named there gets no offline caching at all, no `x-atlas-cached` marking, and no symptom of either --
+    which is what `live.json` would have had when JFH-222 introduced it.
+
+    One thing that caching `live.json` does *not* buy, so that nobody reads more into it than is there: a
+    detail page still does not render its star count offline. `docs/repo/detail.js` and `detail.css` are
+    neither precached here nor matched by `PRECACHED` in the fetch listener, so the worker declines them
+    and the browser goes to the network for them. Measured in `pwa-check.mjs`, with the document served
+    from `atlas-pages` and the network off: `typeof show` is `"undefined"`, so the reader is missing the
+    script that reads the sidecar rather than the sidecar. That predates JFH-222 -- the same page fetching
+    `data.json` had the same hole -- and it is not fixed here, because the obvious fix, precaching two
+    more files, charges every reader of the root shell for two files only the 1,294 detail pages use.
+    Caching them on first visit alongside the page, the way the facet pages are handled, is the shape that
+    would work. Nothing about it is urgent: every other fact on a detail page is in the initial response,
+    which is the property `22_detail.py` was built around.
 
   * The 1,294 screenshots. They are Open Graph cards on `opengraph.githubassets.com`, cross-origin and
     fetched no-cors, so a response is opaque: status 0, no readable headers. A worker cannot tell a real
@@ -168,6 +188,17 @@ PAGES_MAX = 30
 # navigation makes is for the directory -- a cache keyed by `index.html` is a cache that never answers
 # the only request that matters.
 PRECACHE = ["./", "manifest.webmanifest", "pages.css"]
+
+# The files a page fetches after paint, each handled network-first, cached under `atlas-data` and marked
+# with `CACHED_HEADER` when the answer came out of that cache. `data.json` is the index's rows; `live.json`
+# is the star/push sidecar every one of the 1,294 detail pages reads, added by JFH-222.
+#
+# A list, in Python, rather than two literals in the worker, because the fetch handler routes by filename
+# and there is no default: a data file absent from here is served straight from the network, is never
+# cached, and is silently unavailable offline while every assertion about `data.json` still passes. That is
+# how `live.json` shipped uncached in the first draft of JFH-222. Leading slashes because the worker
+# compares against `url.pathname`, and matching a bare `data.json` would also match `notdata.json`.
+DATA_FILES = ["data.json", "live.json"]
 
 ICONS = [
     # (filename, pixels, maskable, opaque)
@@ -356,6 +387,12 @@ const PAGES_MAX = __PAGES_MAX__;
 // from <date>". The name is `CACHED_HEADER` in `19_pages.py`, which owns the page that reads it, and is
 // substituted in here rather than written twice.
 const CACHED = "__CACHEHDR__";
+// Every file `data()` below is responsible for, matched against `url.pathname`. Named as a list because
+// this worker routes by filename and has no default policy: a data file missing from here is fetched from
+// the network, never cached, and silently absent offline, with nothing anywhere to say so. `data.json` is
+// the index's rows; `live.json` is the sidecar the 1,294 detail pages read (JFH-222). Kept in
+// `24_pwa.DATA_FILES` rather than written out here, so the list has one definition.
+const DATA_FILES = __DATAFILES__;
 
 // Relative to this script, so the scope is the project's Pages prefix on the published site, the fork's
 // prefix on a fork, and "/" under a local `python -m http.server`. A literal "/awesome-agentic-atlas/"
@@ -450,7 +487,7 @@ self.addEventListener("fetch", (event) => {
 
   if (req.mode === "navigate") {
     event.respondWith(navigation(event));
-  } else if (url.pathname.endsWith("/data.json")) {
+  } else if (DATA_FILES.some((name) => url.pathname.endsWith(name))) {
     event.respondWith(data(req));
   } else if (PRECACHED.has(key(url.href))) {
     event.respondWith(asset(req));
@@ -645,7 +682,10 @@ def main() -> None:
           .replace("__PREFIX__", CACHE_PREFIX)
           .replace("__PAGES_MAX__", str(PAGES_MAX))
           .replace("__CACHEHDR__", b19.CACHED_HEADER)
-          .replace("__PRECACHE__", json.dumps(PRECACHE)))
+          .replace("__PRECACHE__", json.dumps(PRECACHE))
+          # Leading slashes added here rather than carried in `DATA_FILES`, because the Python side of the
+          # list is a list of filenames under `docs/` and the worker's side is a list of path suffixes.
+          .replace("__DATAFILES__", json.dumps(["/" + f for f in DATA_FILES])))
     (OUT / "sw.js").write_text(sw, encoding="utf-8")
 
     total = sum((OUT / p if p != "./" else shell).stat().st_size for p in PRECACHE)
@@ -653,9 +693,12 @@ def main() -> None:
         print(f"{f:24s} {(OUT / f).stat().st_size / 1024:7.1f} KB")
     print(f"precache {len(PRECACHE)} files · {total / 1024:.0f} KB · version "
           f"{version(files)} · scope {prefix}")
-    print(f"data.json ({(OUT / 'data.json').stat().st_size / 1024:.0f} KB) is cached from the page's "
-          "own fetch, not precached; the 156 facet pages are cached as they are visited, "
-          f"{PAGES_MAX} at a time.")
+    # Reported from `DATA_FILES` rather than named, so a file added to that list and then not routed --
+    # or routed and then not written by any stage -- is visible in the build log of every run.
+    sizes = ", ".join(f"{f} ({(OUT / f).stat().st_size / 1024:.0f} KB)" if (OUT / f).exists()
+                      else f"{f} (MISSING)" for f in DATA_FILES)
+    print(f"{sizes} {'is' if len(DATA_FILES) == 1 else 'are'} cached from the page's own fetch, not "
+          f"precached; the 156 facet pages are cached as they are visited, {PAGES_MAX} at a time.")
 
 
 if __name__ == "__main__":
