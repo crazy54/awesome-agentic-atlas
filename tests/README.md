@@ -5,7 +5,7 @@ node tests/run.mjs
 ```
 
 That is the whole thing. It finds a Chromium the machine already has, serves `docs/` on a port the OS picks,
-runs eight harnesses in turn, prints what each one asserted, and exits non-zero if anything failed. About 35
+runs nine harnesses in turn, prints what each one asserted, and exits non-zero if anything failed. About 35
 seconds, of which 22 are the detail-page regeneration. No install step, no arguments, no configuration.
 
 It asserts on `docs/` as committed, not on the generator's intentions. `docs/` is served verbatim by GitHub
@@ -21,6 +21,7 @@ python tests/indexnow_test.py
 node tests/probe.mjs
 python tests/pagemin_test.py
 python tests/media_test.py
+python tests/refresh_test.py
 node tests/detail-churn.mjs
 node tests/cards-check.mjs <chrome-binary> <origin>
 node tests/pwa-check.mjs   <chrome-binary> <origin>
@@ -28,7 +29,7 @@ node tests/pwa-check.mjs   <chrome-binary> <origin>
 
 ## What each one covers, and what it deliberately does not
 
-There are eight files rather than one because they are eight instruments, and the overlap between them is the
+There are nine files rather than one because they are nine instruments, and the overlap between them is the
 reason to keep them apart rather than the reason to merge them. Each file's header says at length what it
 cannot see; this is the summary.
 
@@ -43,7 +44,9 @@ cannot see; this is the summary.
 | `media_test.py` | `scripts/media.py` against a synthetic workbook of the real one's shape: that a plain `wb.save` writes one media part per *placement*, that the pool collapses those to one part per distinct picture, that nothing else in the package changes, and that every drawing relationship still resolves to a part that is present — asserted against the archive itself rather than against a reading of openpyxl. Then the entry-count projection against the 65,535-entry ZIP ceiling, written down as arithmetic that can be re-run instead of re-argued. 44 assertions. | Whether Excel draws the shared part in every cell it is anchored to: it reads the package with `zipfile` and `openpyxl`, and no spreadsheet application opens it. Nor the real workbook — stages 14+ need a crawl that is not committed, so the shape is a miniature. |
 | `signals_test.py` | `scripts/signals.py`, the rule deciding when a cached release-asset or `action.yml` answer needs re-querying: every term of it at its boundaries, every timestamp spelling that reaches those files, every earlier schema still loading and reading as stale, and a textual tripwire that the three fetch stages still consult it and still stamp what they write. 210 assertions, no I/O, instant. | Whether GitHub answers the queries. The three stages shell out to `gh api graphql`, so the crawl itself is untested here and untestable offline — this harness only asserts which repos would be asked about. |
 
-Between them, roughly 800 assertions. The number only matters in one direction — see the floors below.
+| `refresh_test.py` | The staleness guard in `scripts/19b_refresh.py` — the only render path that works without the crawl cache, and the one that renders a live template over committed rows. Constructs the disagreement the guard exists for: the `listed_by` reader on every shape it comes in, a fabricated `SOURCES` one list too long and one too short, what the refusal says, `main()` three times against a scratch `docs/` with `reversion()` stubbed so a broken guard cannot reach the deployable tree, and the hazard itself — drop a row from the committed data and the rendered count and star total both move while the word "eleven" beside them does not. 74 assertions, ~1 s. | Whether a real crawl would produce the labels it counts. Stages 14+ need a crawl that is not committed, so the source count is inferred from the committed rows — it measures "lists that produced at least one row", not "lists configured". |
+
+Between them, roughly 875 assertions. The number only matters in one direction — see the floors below.
 
 ## No dependencies, and why that is a constraint rather than an oversight
 
@@ -61,11 +64,11 @@ would be the first `package.json` in the repository, would need a lockfile, woul
 turn "can I run the tests" into a question with a network answer. The cost is that these files own their own
 plumbing — about 200 lines of it, in `lib/`. That is the trade, and it is deliberate.
 
-The four Python harnesses are Python because the things they test are. `python` here means whatever
-`lib/python.mjs` finds. Node's side needs no packages, and neither do `pagemin_test.py`, `signals_test.py`
-and `indexnow_test.py` — standard library only, except that `indexnow_test.py` also needs `git` on `PATH`,
-because it asserts against the *tracked* paths under `docs/` rather than a walk of the working tree, so that
-a local build's leftovers cannot change what it thinks the site contains. `media_test.py` needs `openpyxl`
+The five Python harnesses are Python because the things they test are. `python` here means whatever
+`lib/python.mjs` finds. Node's side needs no packages, and neither do `pagemin_test.py`, `signals_test.py`,
+`indexnow_test.py` and `refresh_test.py` — standard library only, except that `indexnow_test.py` also needs
+`git` on `PATH`, because it asserts against the *tracked* paths under `docs/` rather than a walk of the working
+tree, so that a local build's leftovers cannot change what it thinks the site contains. `media_test.py` needs `openpyxl`
 and `pillow`, which are the generator's dependencies rather than the suite's — both workflows install them,
 so a checkout that can build the workbook can already test it. Missing them is an `ImportError` with no
 tally, which `run.mjs` counts as a failure and not as a skip.
@@ -131,7 +134,7 @@ finish. Worth knowing so that the message is recognised rather than investigated
 
 ## Watching it fail
 
-A test suite nobody has watched fail is not known to work. Two cheap ways to check this one still bites:
+A test suite nobody has watched fail is not known to work. Four cheap ways to check this one still bites:
 
 - Give a template a timestamp. Add `datetime.now()` to anything `scripts/22_detail.py` renders and
   `detail-churn.mjs` reports `two runs over identical data write identical bytes -- 1,295 file(s)`, then
@@ -143,5 +146,8 @@ A test suite nobody has watched fail is not known to work. Two cheap ways to che
   `_raced_ci` call out of `reason()`, and `signals_test.py` names the boundary that moved. Delete
   `scripts/__pycache__/` first: `= 30` and `= 45` are the same number of bytes, so an edit inside one mtime
   tick reuses the old bytecode and the suite reports the result of code you have already changed.
+- Neuter the guard. Change `if implied == live:` to `if True:` in `scripts/19b_refresh.py` and
+  `refresh_test.py` reports 19 failures naming the refusal that never came, then restore it. Delete
+  `scripts/__pycache__/` first, for the reason above.
 
 None needs the repository dirtied for long, and the second needs nothing tracked touched at all.
