@@ -182,15 +182,40 @@ jobs:
           python scripts/24_pwa.py
 
       # `20_landing.py` is deliberately absent, and it is the one stage whose absence here is a decision
-      # rather than an oversight. It rewrites 156 prerendered pages, 143 of which change on any run where
-      # a star count moved -- about 600 KB of compressed delta. Every byte is committed, because Pages
-      # serves this branch's `docs/` folder, so daily would add ~224 MB of history a year against a
-      # repository whose entire packed history is 111 MB today. Weekly is ~32 MB. The pages exist for
-      # crawlers, which recrawl on a multi-day cadence and will not notice the difference, and
-      # `<lastmod>` stays honest either way because it is stamped from the snapshot the pages were built
-      # from. So: bounded 7-day staleness on a crawler surface, in exchange for not doubling the clone
-      # size every year. The permanent fix is Pages `build_type: workflow`, which stops versioning
-      # generated output at all -- a separate change, not this one.
+      # rather than an oversight. It rewrites 156 prerendered pages, and every byte is committed, because
+      # Pages serves this branch's `docs/` folder.
+      #
+      # This comment used to price that at ~600 KB of delta per run, ~224 MB of history a year daily
+      # against ~32 MB weekly. Those numbers were wrong, all three from the same mistake: they multiply
+      # the *whole* compressed page set by the number of runs, and git does not store each run's pages
+      # independently -- it deltas them against the previous run's, so the cost tracks changed bytes and
+      # not total bytes. 309 of the 312 facet blobs already in this repository are stored as deltas.
+      #
+      # Measured, by committing 13 successive generations of the real 156 pages into a scratch repository
+      # with 60% of the exact star counts perturbed each time, `git gc --aggressive --prune=now` after
+      # every commit, and the per-generation cost taken as the slope across all 13 rather than any single
+      # delta -- individual generations jitter from 11.7 KB to 85.8 KB as repacking re-bases the chains:
+      #
+      #   all 156 pages, first commit    595,458 B packed   (6.01 MB of HTML, so a ratio of 0.094)
+      #   one regeneration                55,502 B packed   = 54.2 KB, not ~600 KB
+      #   x365 (daily)                      19.3 MB a year  , not ~224 MB
+      #   x52  (weekly, what we do)          2.8 MB a year  , not ~32 MB
+      #
+      # One figure looks like it contradicts this and does not: the two facet generations actually in this
+      # repository's history cost 0.625 MB each, which would annualise to ~228 MB. Those two commits
+      # straddle 7c54ab1, the JFH-180/181 template rewrite, where every page changed wholesale. A template
+      # change costs ~0.6 MB; a day of star drift costs ~54 KB. Conflating them is the original error one
+      # level down.
+      #
+      # So the cost argument for keeping this stage weekly no longer holds -- 16 MB a year is not what
+      # bounded staleness on 156 indexed pages is worth, and the honest reason it is still weekly is that
+      # nobody has moved it yet. Tracked as JFH-215; the ordering constraint when it moves is that
+      # `20_landing.py` writes `docs/pages.css`, which the worker precaches, so it has to land before
+      # `24_pwa.py` and the note at the top of this step stops being true. What remains correct here is
+      # only the consequence: `<lastmod>` stays honest either way because it is stamped from the snapshot
+      # the pages were built from, so today the site ships up to 7-day-old facet pages that do not lie
+      # about their age. The permanent fix is still Pages `build_type: workflow` (JFH-205), which stops
+      # versioning generated output at all -- a separate change, not this one.
 
       # Every file this checks is one a generator above rewrites from scratch on every run, so any that
       # the build did not touch is a file the site will serve unchanged for ever. The commit step stages

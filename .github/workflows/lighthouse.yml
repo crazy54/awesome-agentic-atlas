@@ -45,11 +45,30 @@
 # the units here are the units the assertion sees.
 #
 # CLS is enforced at 0.7 against a measured 0.5494, which is a lot of layout shift and the budget does not
-# pretend otherwise. The shell paints an empty table, then 1,294 rows arrive and shove everything below
+# pretend otherwise. The shell paints an empty container, then 1,294 rows arrive and shove everything below
 # them down the page; the fix is to reserve the rows' height or to server-render the first screen of them,
 # and it belongs in its own commit rather than in a threshold chosen to make a red light green. What this
 # assertion does today is hold the line: the page may not become *less* stable than it already is. Google
 # considers anything above 0.1 poor, and that is the number to aim at when someone gets to it.
+#
+# That used to say "an empty table". It is a grid now: 685ae2a made cards the default view, so the first
+# paint reserves a grid rather than a table and the rows arriving reflow it the same way. The mechanism did
+# not change; the noun did.
+#
+# UNRESOLVED (JFH-216), AND THE REASON NOT TO TRUST 0.5494 UNTIL SOMEONE LOOKS
+#
+# 0.5494 was taken at 911c6c6, which predates the cards default. Re-measured locally after it, CLS came out
+# at 0.7179 -- above the 0.7 enforced here, which should be a red X. It is not: the weekly canary and the
+# JFH-202 pull-request run are both green, so the runner disagrees with that laptop about the same page.
+# Cards load 12 first-screen images from four third-party hosts, and whether those land before or after
+# first paint plausibly decides the number, which would make it depend on the network rather than on the
+# page. That is a worse property for a budget than the number being high.
+#
+# The threshold is deliberately left where it is. Raising it to fit a local reading nobody has explained
+# would be picking a number to make a light green, which is the thing this file's own comments argue
+# against. What is needed is one re-measurement on a runner with the recorded baseline refreshed to a
+# post-cards commit -- until then the 0.5494 above is a historical figure, not the current one, and this
+# note is here so the next person to see a surprising CLS knows it was already surprising.
 #
 # The byte budgets have 25-45% of headroom, deliberately on both sides. It is enough that a paragraph of
 # markup or a new column never trips them, and little enough that a framework, a web font or a second copy
