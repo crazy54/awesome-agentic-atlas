@@ -213,8 +213,10 @@ def inject(src: Path, sheet_name: str, table_name: str, layout: list[dict], styl
     """Add one slicer per entry in `layout` to `sheet_name`, bound to `table_name`.
 
     Rewrites the whole package: a zip entry cannot be replaced in place, and every part that is not
-    touched is copied across byte-for-byte. On the real workbook that is 7,388 images, which is the
-    slow part and the reason this is a separate stage rather than something the build does inline.
+    touched is copied across byte-for-byte. On the real workbook that is one entry per distinct
+    screenshot -- roughly 2,000, where it was 7,388 before the build began sharing a picture between the
+    sheets that show it (`media.py`) -- still the slow part, and the reason this is a separate stage
+    rather than something the build does inline.
     """
     zin = zipfile.ZipFile(src)
     part = {n: zin.read(n) for n in zin.namelist() if not n.startswith("xl/media/")}

@@ -1,8 +1,24 @@
-"""Detect GitHub Actions definitively: an action.yml/action.yaml at the repo root."""
+"""Detect GitHub Actions definitively: an action.yml/action.yaml at the repo root.
+
+Incremental, on the rule in scripts/signals.py: an `action.yml` can only appear or
+disappear through a push, so a repo whose `pushedAt` has not moved since its cached
+entry was written cannot have changed its answer. That makes push-gating this stage
+exactly right rather than merely cheap -- unlike release assets, there is no way to
+gain one without a push, so this file has no blind spot.
+
+It also stops the write being destructive. This stage used to rebuild `actions.json`
+from scratch over the primary list's ~194 repos, which deleted the ~7,700 entries
+13_signals_all.py had written for the other thirty-eight of the 39 source lists -- so
+every daily run threw away most of the file and 13_signals_all re-crawled it, which
+was the bulk of the pipeline's daily GraphQL spend.
+"""
 import importlib.util
 import json
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+import signals as sig  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
@@ -26,42 +42,60 @@ def main() -> None:
     meta = json.loads((CACHE / "meta.json").read_text(encoding="utf-8"))
     entries = [e for e in entries if "error" not in meta.get(e["nwo"], {})]
 
-    out = {}
+    out_path = CACHE / "actions.json"
+    force = "--force" in sys.argv
+    out = json.loads(out_path.read_text(encoding="utf-8")) if out_path.exists() else {}
+
+    pushed = {e["nwo"]: sig.meta_push(meta, e["nwo"]) for e in entries}
+    todo = [e for e in entries if force or sig.stale(out, e["nwo"], pushed[e["nwo"]])]
+    print(f"{len(todo)} of {len(entries)} repos to check for an action.yml")
+
     failed = 0
-    for start in range(0, len(entries), BATCH):
-        batch = entries[start : start + BATCH]
+    for start in range(0, len(todo), BATCH):
+        batch = todo[start : start + BATCH]
         try:
             data = f2.graphql_batch(batch, FIELDS)
         except RuntimeError as exc:
             # `False` for a repo we never got an answer about reads exactly like a repo that has no
-            # action.yml, so a failed batch records nothing and the run is written off below.
+            # action.yml, so a failed batch records nothing and the run is written off below. Since
+            # this stage merges into the file it reads rather than rebuilding it, "records nothing"
+            # now leaves the previous answer and its old stamp in place, which scripts/signals.py
+            # reads as stale against the push we can already see -- so these repos come back in
+            # `todo` next run, exactly as 03_releases.py's and 13_signals_all.py's do.
             failed += 1
-            print(f"  batch {start} failed: {str(exc)[:120]}")
+            print(f"  batch {start} failed, left for the next run: {str(exc)[:120]}")
             continue
         for i, e in enumerate(batch):
             n = data.get(f"r{i}")
-            if n is None:
-                continue  # deleted since 02_fetch ran; next run's meta.json filters it out
-            out[e["nwo"]] = bool(n.get("yml") or n.get("yaml"))
-        print(f"  {min(start + BATCH, len(entries))}/{len(entries)}")
+            # See 03_releases.py: a null node is GitHub answering NOT_FOUND for this one alias --
+            # deleted, renamed or gone private since 02_fetch ran -- which taught us nothing about
+            # its action.yml. Keep whatever is cached and stay queued rather than stamping a guess
+            # as though it were an observation; next run's meta.json filters the repo out for good.
+            if not n:
+                continue
+            out[e["nwo"]] = sig.action_entry(bool(n.get("yml") or n.get("yaml")),
+                                             pushed[e["nwo"]])
+        print(f"  {min(start + BATCH, len(todo))}/{len(todo)}")
+        out_path.write_text(json.dumps(out, indent=1), encoding="utf-8")
 
-    # No write at all when something failed, which is where this stage differs from 03_releases.py and
-    # 13_signals_all.py. Those two merge into a file they also read, so a batch they skip stays missing
-    # and comes back in `todo`; this one rebuilds actions.json from nothing every run and writes it
-    # whole, so a short version written here would delete answers an earlier run got right -- and
-    # 13_signals_all.py, which extends this same file, would then have to refetch them. Leaving the
-    # file alone loses nothing, and since this stage never resumes -- it always redoes all of
-    # entries.json -- "retry the failed batch" and "run it again" were already the same thing.
-    if failed:
-        print(f"\n{failed} batch(es) of {BATCH} failed; actions.json left as it was. "
-              f"04_classify would have read the gap as {failed * BATCH} projects that ship no action.yml.")
-        sys.exit(1)
-
-    (CACHE / "actions.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
-    hits = sorted(k for k, v in out.items() if v)
-    print(f"\n{len(hits)} repos ship an action.yml:")
+    out_path.write_text(json.dumps(out, indent=1), encoding="utf-8")
+    # Counted over the whole file, which now spans every list rather than just this stage's, and
+    # named only for the repos this run actually looked at -- listing all of them would be a
+    # hundred lines of log saying nothing changed.
+    hits = sorted(e["nwo"] for e in todo if sig.is_action(out.get(e["nwo"])))
+    print(f"\n{sum(1 for v in out.values() if sig.is_action(v))} of {len(out)} cached repos "
+          f"ship an action.yml; {len(hits)} of them among the {len(todo)} checked here:")
     for h in hits:
         print(f"  {h}")
+
+    if failed:
+        # The write above is no longer all-or-nothing, so this is not about actions.json being short:
+        # every batch that came back is on disk and the ones that did not are queued for next run.
+        # It is about 04_classify, which reads this file to decide whether a project is a GitHub
+        # Action, and must not publish a gap as a verdict on a page that looks freshly built.
+        print(f"\n{failed} batch(es) of {BATCH} failed and wrote nothing; up to {failed * BATCH} "
+              f"repos still need an action.yml answer and will be retried on the next run.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

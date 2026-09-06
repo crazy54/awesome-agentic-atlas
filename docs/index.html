@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-view="cards">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,15 +7,32 @@
 <meta name="description" content="1,294 agentic AI projects from eleven awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
 <meta property="og:title" content="Awesome Agentic Atlas">
 <meta property="og:description" content="1,294 projects from eleven awesome-lists, one filterable index.">
-<meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<meta property="og:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/root.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Awesome Agentic Atlas: how many projects it indexes, how many source lists and topics they came from, and its three most starred projects.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/root.png">
+<link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/">
+<link rel="alternate" type="application/atom+xml" title="Awesome Agentic Atlas — new arrivals"
+      href="feed.xml">
+<link rel="alternate" type="application/feed+json" title="Awesome Agentic Atlas — new arrivals"
+      href="feed.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <style>
-/* Lagoon Gold: cyan primary, gold secondary, cool near-black surfaces. Dark is the designed mode --
-   its eight neutrals and two accents are the theme's own values. Light is stepped from the same two
-   hues rather than flipped, because the accents at their dark-mode lightness fail on white (the cyan
-   measures 2.53:1 there), and its neutrals are cooled to match so toggling does not change brand.
-   --onbar exists because a filled cyan or gold accent carries DARK ink, not white: white on #08b0cc
-   is 2.3:1, while the theme's own #0c1013 on it is 7.36:1. */
 :root{
   --surface:#101416; --plane:#181f21; --band:#232d30; --ink:#d0d7d8; --ink2:#a8b0b2;
   --muted:#8c9496; --grid:#2c383d; --link:#08b0cc; --bar:#08b0cc;
@@ -31,12 +48,29 @@ body{margin:0;background:var(--surface);color:var(--ink);
   font:15px/1.5 "Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--bar);outline-offset:2px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;border:0}
+.skip{position:absolute;left:-999px;top:0;z-index:40;background:var(--bar);color:var(--onbar);
+  padding:10px 16px;border-radius:0 0 8px 0;font-weight:600}
+.skip:focus{left:0}
 header{background:var(--plane);border-bottom:1px solid var(--grid);padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 .sub{color:var(--ink2);font-size:14px;margin:0}
 .sub b{color:var(--ink)}
+.stale{color:var(--warn);font-weight:600}
+.stamp{display:inline-flex;height:28px;margin:10px 0 0;text-decoration:none;
+  font-family:Verdana,Geneva,DejaVu Sans,sans-serif;font-size:10px;line-height:28px;
+  letter-spacing:1.28px;text-transform:uppercase;white-space:nowrap}
+.stamp>span{padding:0 10.72px 0 12px;color:#fff}
+.stamp .k{background:#555}
+.stamp .v{background:#1a7f37;font-weight:700}
+.stamp.late .v{background:#9a6700}
+.stamp:hover,.stamp:focus-visible{box-shadow:0 0 0 2px var(--bar)}
+.stamp:focus-visible{outline:none}
+@media (max-width:360px){.stamp .lw{display:none}}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 .top nav{font-size:13px;color:var(--muted);text-align:right;line-height:1.9}
 button{font:inherit;cursor:pointer}
@@ -56,10 +90,6 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .chip:hover{border-color:var(--bar);color:var(--ink)}
 .chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar);
   font-weight:600}
-/* The new-arrivals chip wears the gold accent rather than the cyan every other chip uses, because it
-   is the only filter that answers a question about time rather than about the data. It is also the only
-   chip that can be absent: with nothing inside the window there is nothing to filter to, and a control
-   that selects zero rows is worse than no control. */
 .newchip{display:none;align-items:center;gap:.4em}
 .newchip.on{display:inline-flex}
 .newchip[aria-pressed=true]{background:var(--warn);border-color:var(--warn);color:var(--onbar)}
@@ -70,8 +100,24 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .newchip[aria-pressed=true] .ni>.a,.newchip[aria-pressed=true] .ni>.b{fill:var(--onbar)}
 .nm .ni{margin-right:.34em}
 .newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
+.risechip{display:none}
+.risechip.on{display:inline-block}
+.risechip[aria-pressed=true]{background:var(--good);border-color:var(--good);color:var(--onbar)}
+.risechip:hover{border-color:var(--good)}
+.rise{color:var(--good);font-weight:600;font-variant-numeric:tabular-nums}
+.rise.down{color:var(--muted);font-weight:400}
 .count{color:var(--muted);font-size:13px;margin-left:auto;white-space:nowrap}
 .count b{color:var(--ink)}
+#sheet{display:flex;flex-direction:column;gap:inherit}
+#fbt{display:none;align-items:center;gap:.5em}
+#fbn{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;padding:0 .3em;
+  border-radius:999px;background:var(--bar);color:var(--onbar);font-size:12px;font-weight:700;
+  line-height:1.4;font-variant-numeric:tabular-nums}
+#fbt:not(.act) #fbn{display:none}
+#fbt.act{background:var(--bar);border-color:var(--bar);color:var(--onbar);font-weight:600}
+#fbt.act #fbn{background:var(--onbar);color:var(--bar)}
+.shead{display:none}
+#fbb{display:none}
 main{padding:0 20px 64px}
 table{width:100%;border-collapse:collapse;margin-top:14px}
 th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
@@ -79,20 +125,14 @@ th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;
 th.n,td.n{text-align:right}
 th.c,td.c{text-align:center}
 td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
-/* Guarded, because a touch device reports a hover that then latches: tapping a row anywhere -- to
-   follow its link, or just while scrolling -- left it tinted until something else was tapped. */
 @media(hover:hover){tr:hover td{background:var(--band)}}
 .rk{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .shot{width:200px}
 .shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:6px;
   background:var(--band);border:1px solid var(--grid);display:block}
-/* These two set the table's width. Auto table layout takes the widest unbreakable run in the column
-   across every row on the page, and neither a slash nor a comma is a break opportunity in Chrome or
-   Safari -- so `muratcankoylan/Agent-` and a blurb naming
-   `.cursorrules/CLAUDE.md/Copilot/Windsurf/Cline/Aider` were between them demanding ~530px of a 335px
-   content box, which the document then had to scroll sideways to satisfy. */
 .nm{font-weight:600;font-size:15px;overflow-wrap:anywhere}
 .nwo{display:block;color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
+a.nwo:hover{color:var(--ink)}
 .st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
@@ -100,72 +140,123 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
 .cmd{display:block;margin-top:7px;font:12px/1.5 Consolas,ui-monospace,monospace;
   color:var(--ink2);background:var(--band);border:1px solid var(--grid);border-radius:5px;
   padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
+.cmdrow{display:flex;align-items:stretch;gap:6px;max-width:44em;margin-top:7px}
+.cmdrow .cmd{margin-top:0;flex:1 1 auto;min-width:0}
+.copy{flex:none;background:var(--band);color:var(--ink2);border:1px solid var(--grid);
+  border-radius:5px;padding:0 10px;font-size:11.5px;letter-spacing:.03em;white-space:nowrap}
+.copy:hover{border-color:var(--bar);color:var(--ink)}
+.copy.ok{border-color:var(--good);color:var(--good)}
 .tag{display:inline-block;background:var(--band);border:1px solid var(--grid);border-radius:5px;
   padding:2px 7px;font-size:11.5px;color:var(--ink2);margin:0 4px 4px 0;white-space:nowrap}
 .tag.cat{border-color:var(--bar);color:var(--ink)}
-.os{font-size:11.5px;letter-spacing:.02em;white-space:nowrap}
-/* Prefixed because the verdict characters are the class names and one of them is "-", which is not a
-   valid CSS identifier on its own -- ".-" invalidates the whole selector list it appears in, so the
-   unprefixed version silently dropped the colour from every No, n/a and dash on the page. */
+.os{font-size:11.5px;letter-spacing:.02em}
+.os>span{white-space:nowrap}
 .vY{color:var(--good);font-weight:700}
 .vL{color:var(--warn)}
 .vN,.va,.v-{color:var(--off)}
-.empty{padding:80px 0;text-align:center;color:var(--muted)}
+.os .v-,.os .va{opacity:.75}
+.old{text-decoration:underline dotted;text-decoration-color:var(--muted);text-underline-offset:2px}
+.approx{margin:0 0 14px;padding:10px 14px;border-left:3px solid var(--warn);background:var(--band);
+  border-radius:0 6px 6px 0;color:var(--ink2);font-size:14px}
+.approx b{color:var(--ink)}
+dialog#pal{border:1px solid var(--grid);background:var(--plane);color:var(--ink);border-radius:12px;
+  padding:0;width:min(620px,calc(100vw - 24px));margin:8vh auto auto;overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.45)}
+dialog#pal::backdrop{background:rgba(0,0,0,.55)}
+#palq{width:100%;background:var(--surface);color:var(--ink);border:0;font-family:inherit;font-size:16px;
+  border-bottom:1px solid var(--grid);padding:14px 16px}
+#palq:focus{outline:none}
+#palist{list-style:none;margin:0;padding:6px;overflow-y:auto;max-height:min(52vh,420px)}
+#palist .grp{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em;
+  padding:10px 10px 4px}
+#palist li.it{display:flex;align-items:baseline;gap:9px;padding:8px 10px;border-radius:7px;cursor:pointer}
+#palist li.it[aria-selected=true]{background:var(--bar);color:var(--onbar)}
+#palist li.it .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#palist li.it .k,#palist li.it .s{flex-shrink:0;font-size:12px}
+#palist li.it .k{color:var(--muted)}
+#palist li.it .s{color:var(--warn)}
+#palist li.it[aria-selected=true] .k,#palist li.it[aria-selected=true] .s{color:inherit;opacity:.72}
+#palist li.it:hover:not([aria-selected=true]){background:var(--band)}
+.palnone{padding:26px 12px;color:var(--muted);text-align:center}
+.palfoot{display:flex;gap:14px;background:var(--surface);border-top:1px solid var(--grid);
+  padding:7px 14px;color:var(--muted);font-size:12px}
+kbd{background:var(--band);border:1px solid var(--grid);border-bottom-width:2px;border-radius:4px;
+  padding:1px 5px;color:var(--ink2);font:11px/1.6 ui-monospace,Consolas,monospace}
+#palhint{display:none;align-items:center;gap:5px}
+#palhint.on{display:inline-flex}
+@media (max-width:760px){#palhint.on{display:none}}
+.empty{padding:64px 0 80px;text-align:center;color:var(--muted)}
+.empty .big{color:var(--ink);font-size:17px;font-weight:600;margin:0 0 6px}
+.empty p{margin:0 0 12px}
+.fixes{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.fix{background:var(--band);color:var(--ink);border:1px solid var(--grid);border-radius:999px;
+  padding:7px 15px;font-size:13.5px}
+.fix:hover{border-color:var(--bar)}
+.fix .n{color:var(--muted);font-variant-numeric:tabular-nums}
+.fix:hover .n{color:var(--ink2)}
+.empty .miss{color:var(--muted);font-size:13px;text-decoration:underline}
+.empty .miss:hover{color:var(--ink)}
 .more{display:block;margin:26px auto 0;background:var(--band);color:var(--ink);
   border:1px solid var(--grid);border-radius:8px;padding:11px 22px;font-weight:600}
 .more:hover{border-color:var(--bar)}
 footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
   color:var(--muted);font-size:13px}
 .blurb{color:var(--muted);font-size:13px;margin:2px 0 0}
-/* One query used to do all the responsive work here and all it did was hide two columns, so a 375px
-   phone got the same layout as an 899px tablet. There are three now, because the page fails in three
-   different ways: at 900px the screenshot and the detail columns stop paying for their width; below
-   640px four columns stop fitting in what is left at all; and the filter bar fails on *height*, which
-   is a separate axis and needs its own query -- see below. */
+.facets{margin-top:14px;padding-top:12px;border-top:1px solid var(--grid);font-size:12.5px;
+  line-height:1.9}
+.facets p{margin:0 0 4px}
+.facets b{color:var(--ink2);font-weight:600}
 @media(max-width:900px){
   .shot,.hide{display:none}
   td,th{padding:9px 6px}
 }
 
-/* The filter bar competes for vertical space, so it is capped on vertical space -- either axis can
-   trigger it. Width alone was not enough: a landscape phone is 844x390, wide enough to clear a 640px
-   breakpoint entirely and short enough that the wrapped bar measured 360px of a 390px window. That is
-   92% of the screen, which is the reported bug with the phone turned on its side.
-
-   The failure being fixed: a `position:sticky` box taller than its scrollport pins its top edge and
-   then covers the screen for the whole of the rest of the document, and the part of it that overflows
-   the bottom can never be scrolled into view -- which is what put the Runs-on chips, Confirmed only
-   and Clear all permanently out of reach. At 390x844 the bar measured 753px, 89% of the screen, and on
-   a 375x667 phone it was taller than the viewport. The 27 topic and target chips are what grew it:
-   they were wrapping to sixteen lines between them, so each facet becomes one scrollable rail. */
 @media(max-width:640px),(max-height:560px){
-  /* iOS Safari zooms the viewport whenever a focused control's text is under 16px, and because the
-     viewport tag sets initial-scale=1 with no maximum-scale it never zooms back out again on blur. So
-     one tap on the search box left the reader at ~350px of effective width, scrolling sideways, for
-     the rest of the visit -- a second, self-inflicted cause of the horizontal scrolling. */
   #q,select{font-size:16px}
   .facet{flex-wrap:nowrap;gap:6px}
   .facet>label{flex:none;min-width:0;font-size:10px}
   .facet>.chip{flex:none}
-  /* `flex:1 1 0` with `min-width:0` is what lets a rail sit beside its label and take the width that
-     is left. Without the zero basis the rail asks for its full max-content width -- 2,400px of topic
-     chips -- and gets bumped onto a line of its own, which is two rows per facet again. */
   #cats,#tgts,#oses{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;
     flex:1 1 0;min-width:0;
     scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
   #cats::-webkit-scrollbar,#tgts::-webkit-scrollbar,#oses::-webkit-scrollbar{display:none}
   .bar .wrap{gap:5px}
   .chip{padding:4px 11px}
-  /* And a cap on top of the rails, because rails alone still leave four to six control rows. On a tall
-     screen the cap sits above the bar's natural height and nothing happens; on a short one the bar
-     scrolls inside itself instead of over the page. A fraction rather than a pixel count so that it
-     only ever binds where it is needed. `vh` first: a browser that does not understand `dvh` must
-     still get a cap rather than none. */
   .bar{max-height:44vh;max-height:44dvh;overflow-y:auto}
+
+  html[data-fb] #fbt{display:inline-flex;flex:none;min-height:44px;padding:0 14px}
+  html[data-fb] #q{flex:1 1 0;min-width:9em;min-height:44px}
+  html[data-fb] .bar .chip,html[data-fb] select{min-height:44px}
+  html[data-fb] .bar .chip{padding:0 13px}
+  header button{min-height:44px;padding:0 14px}
+  .fix{min-height:44px}
+
+  html[data-fb] #sheet{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:30;
+    background:var(--plane);border-top:1px solid var(--grid);border-radius:14px 14px 0 0;
+    box-shadow:0 -14px 44px rgba(0,0,0,.45);padding:0 14px 16px;gap:14px;
+    max-height:80vh;max-height:80dvh;overflow-y:auto;overscroll-behavior:contain;
+    transform:translateY(101%);visibility:hidden;transition:transform .18s ease,visibility .18s}
+  html[data-fb][data-sheet=open] #sheet{transform:none;visibility:visible;
+    transition:transform .18s ease}
+  html[data-fb] #sheet:focus{outline:none}
+  html[data-fb] #fbb{display:block;position:fixed;inset:0;z-index:29;background:rgba(0,0,0,.5);
+    opacity:0;visibility:hidden;touch-action:none;transition:opacity .18s,visibility .18s}
+  html[data-fb][data-sheet=open] #fbb{opacity:1;visibility:visible}
+  html[data-fb] .shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:1;background:var(--plane);
+    padding:14px 0 10px;border-bottom:1px solid var(--grid)}
+  html[data-fb] .shead .sh{flex:1 1 auto;font-size:15px;font-weight:600}
+  html[data-fb] #scount{flex:1 1 100%;color:var(--muted);font-size:12.5px}
+  html[data-fb] #scount b{color:var(--ink)}
+  html[data-fb] #fbx{flex:none;min-height:44px;padding:0 16px}
+  html[data-fb] #sheet .facet{display:block}
+  html[data-fb] #sheet .facet>label{display:block;min-width:0;margin:0 0 7px;font-size:11px}
+  html[data-fb] #sheet #cats,html[data-fb] #sheet #tgts,html[data-fb] #sheet #oses{
+    display:flex;flex-wrap:wrap;gap:8px;overflow:visible;flex:none;min-width:0}
+  html[data-fb] #sheet .facet>.chip{margin-top:8px}
 }
 
 @media(max-width:640px){
-  /* 20px gutters on all four sections cost 40px, 11% of a 375px screen, and the old query left them. */
   header{padding:16px 14px 12px}
   .bar{padding:8px 14px}
   main{padding:0 14px 48px}
@@ -178,15 +269,9 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   #q{flex:1 1 100%;min-width:0}
   .line>label[for=q]{display:none}
   .count{margin-left:0;font-size:12px}
-  /* Runs-on is the one facet that also carries Confirmed only and Clear all, and at 390px those two
-     left its rail about 110px -- one OS chip at a time. That line alone wraps, so the rail keeps most
-     of the row and the two buttons drop underneath it. Narrow-only: in landscape there is width enough
-     for all four to share the row, and wrapping there would cost a row the bar cannot spare. */
   .facet:has(>.chip){flex-wrap:wrap}
   .facet:has(>.chip)>#oses{flex:1 1 auto;min-width:62%}
 
-  /* A row stops being a row. Four columns cannot share 335px -- the blurb on its own wants more than
-     that -- so each row becomes a card, and the headings, no longer above anything, go away. */
   thead{display:none}
   table,tbody,tr,td{display:block}
   table{margin-top:12px}
@@ -197,23 +282,58 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   td.st-c{grid-column:2;grid-row:1}
   td.pj{grid-column:1/-1;grid-row:2}
   td.ds{grid-column:1/-1;grid-row:3;margin-top:6px}
+  td.hide{display:block}
+  td.tg{grid-column:1/-1;grid-row:4;margin-top:8px}
+  td.lc{grid-column:1/-1;grid-row:5;margin-top:2px;text-align:left}
+  td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
+  td.lc .meta br{display:none}
   .st{font-size:15px}
   .desc{font-size:13px}
   .more{width:100%}
+  .cmdrow{max-width:none}
 }
+
+html[data-view=cards] thead{display:none}
+html[data-view=cards] table{display:block;margin-top:14px}
+html[data-view=cards] tbody{display:grid;gap:14px;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+html[data-view=cards] tr{display:grid;grid-template-columns:1fr auto;align-items:start;align-content:start;
+  gap:0 10px;margin:0;padding:0 0 12px;background:var(--surface);
+  border:1px solid var(--grid);border-radius:10px;overflow:hidden}
+html[data-view=cards] td{display:block;border-bottom:0;padding:0 13px;min-width:0}
+html[data-view=cards] td.shot{grid-column:1/-1;grid-row:1;width:auto;padding:0}
+html[data-view=cards] td.shot img{width:100%;border:0;border-radius:0;
+  border-bottom:1px solid var(--grid)}
+html[data-view=cards] td.rk{grid-column:1;grid-row:2;padding-top:10px;text-align:left}
+html[data-view=cards] td.rk::before{content:"#"}
+html[data-view=cards] td.st-c{grid-column:2;grid-row:2;padding-top:10px;text-align:right}
+html[data-view=cards] td.pj{grid-column:1/-1;grid-row:3;margin-top:4px}
+html[data-view=cards] td.ds{grid-column:1/-1;grid-row:4;margin-top:7px}
+html[data-view=cards] td.hide{display:block}
+html[data-view=cards] td.tg{grid-column:1/-1;grid-row:5;margin-top:9px}
+html[data-view=cards] td.lc{grid-column:1/-1;grid-row:6;margin-top:3px;text-align:left}
+html[data-view=cards] td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
+html[data-view=cards] td.lc .meta br{display:none}
+html[data-view=cards] .desc,html[data-view=cards] .cmdrow,html[data-view=cards] .cmd{max-width:none}
+html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
+  -webkit-line-clamp:4;line-clamp:4;overflow:hidden}
+@media(hover:hover){
+  html[data-view=cards] tr:hover td{background:transparent}
+  html[data-view=cards] tr:hover{border-color:var(--bar)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+
+#out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
+#out tr{scroll-margin-top:160px}
 </style>
 </head>
 <body>
-<!-- Drawn here rather than borrowed so there is no third-party licence attached to a 300-byte glyph: a
-     four-point star with concave arms, plus a smaller one trailing it. Two tones, gold and cyan, which
-     is the theme's own pair -- the mark for "new" is the mark for this site, not a generic sparkle.
-
-     Two symbols on one shared viewBox rather than one symbol with two classed paths, because a CSS rule
-     cannot reach inside the shadow tree a <use> builds: `.ni .a{fill:...}` matches nothing, and the
-     paths fall back to black, which on this surface is an invisible icon. `fill` *is* inherited, though,
-     so colouring the two <use> elements -- which are in the ordinary document -- reaches the clones.
-     Both symbols share `viewBox="0 0 16 16"`, so the two halves land in one 16x16 space and overlap
-     exactly as drawn. -->
+<a class="skip" href="#out">Skip to results</a>
+<span class="sr" id="live" role="status" aria-live="polite"></span>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="star-a" viewBox="0 0 16 16">
     <path d="M6.4.8Q7.63 5.17 12 6.4Q7.63 7.63 6.4 12Q5.17 7.63.8 6.4Q5.17 5.17 6.4.8Z"/></symbol>
@@ -224,90 +344,182 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   <div>
     <h1>Awesome Agentic Atlas <span>· eleven awesome-lists, merged</span></h1>
     <p class="sub"><b>1,294</b> projects · <b>14</b> topics · <b>12,494,028</b> combined
-      stars · snapshot 2026-09-03</p>
+      stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
+      2026-09-03</span></p>
     <p class="blurb" id="ctx"></p>
+    <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
+       title="When this copy of the site was published."><span class="k"><span class="lw">Last </span>deployed</span>
+      <span class="v"><time datetime="2026-09-06T21:42:00Z">2026-09-06 21:42 UTC</time></span></a>
   </div>
   <nav>
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown edition</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/releases/latest">Workbook</a><br>
-    <button class="chip" id="theme" aria-pressed="false">Light theme</button>
+    <button class="chip" id="theme">Light theme</button>
   </nav>
 </div></div></header>
 
 <div class="bar"><div class="wrap">
   <div class="line">
     <label for="q">Search</label>
-    <input id="q" type="search" placeholder="name, repo, description, language&hellip;"
+    <input id="q" type="search" aria-label="Search projects"
+           placeholder="name, repo, description, language&hellip;"
            autocomplete="off" spellcheck="false">
+    <button class="chip" id="fbt" aria-expanded="false" aria-controls="sheet"
+            aria-label="Filters">Filters<span id="fbn"></span></button>
     <select id="sort" aria-label="Sort by">
+      <option value="relevance">Best match</option>
       <option value="stars">Most stars</option>
+      <option value="rising">Rising</option>
       <option value="lists">Named by most lists</option>
       <option value="pushed">Pushed most recently</option>
       <option value="name">Name (A&ndash;Z)</option>
     </select>
+    <button class="chip" id="view" hidden>Table view</button>
     <button class="chip newchip" id="new" aria-pressed="false"
             title="Projects the source lists added in the last 14 days">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
       <span id="newlabel">New</span></button>
-    <span class="count" id="count"></span>
+    <button class="chip risechip" id="rise" aria-pressed="false"
+            title="Projects gaining stars fastest for their size">
+      <span id="riselabel">Rising</span></button>
+    <button class="chip" id="palhint"></button>
+    <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
-  <div class="line facet"><label>Topic</label><span id="cats"></span></div>
-  <div class="line facet"><label>Plugs into</label><span id="tgts"></span></div>
-  <div class="line facet"><label>Runs on</label><span id="oses"></span>
-    <button class="chip" id="strict" aria-pressed="false"
-            title="Drop rows where support is inferred from the language rather than stated">Confirmed
-      only</button>
-    <button class="chip" id="reset">Clear all</button>
+  <div id="fbb"></div>
+  <div id="sheet" role="group" aria-label="Filters" tabindex="-1">
+    <div class="shead"><span class="sh" id="shtitle">Filters</span>
+      <button class="chip" id="fbx">Done</button>
+      <span id="scount"></span>
+    </div>
+    <div class="line facet"><label>Topic</label><span id="cats"></span></div>
+    <div class="line facet"><label>Plugs into</label><span id="tgts"></span></div>
+    <div class="line facet"><label>Runs on</label><span id="oses"></span>
+      <button class="chip" id="strict" aria-pressed="false"
+              title="Drop rows where support is inferred from the language rather than stated">Confirmed
+        only</button>
+      <button class="chip" id="reset">Clear all</button>
+    </div>
   </div>
 </div></div>
 
 <main><div class="wrap"><div id="out"></div></div></main>
+
+<dialog id="pal" aria-label="Jump to a topic, platform, sort or project">
+  <input id="palq" type="text" role="combobox" aria-expanded="true" aria-controls="palist"
+         aria-autocomplete="list" autocomplete="off" spellcheck="false"
+         placeholder="Jump to a topic, a platform, a sort, or a project&hellip;">
+  <ul id="palist" role="listbox" aria-label="Matches"></ul>
+  <div class="palfoot"><span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> move</span>
+    <span><kbd>Enter</kbd> select</span> <span><kbd>Esc</kbd> close</span></div>
+</dialog>
 
 <footer><div class="wrap">
   Every entry came from someone else's curation work; all eleven source lists are credited in the
   <a href="https://github.com/crazy54/awesome-agentic-atlas#the-eleven-lists">repository</a>. Stars, language, licence and
   last-push come from the GitHub API on 2026-09-03 and drift daily. Platform verdicts are derived
   from each project's own README, install route, CI config and release assets &mdash;
-  <span class="vY">green</span> is stated evidence, <span class="vL">amber</span> is inferred from the
-  language. A dash in the star column means the row is a folder inside someone else's repo, or a dead
+  <span class="vY">green&#8201;&#10003;</span> is stated evidence,
+  <span class="vL">amber&#8201;?</span> is inferred from the language, and
+  <span class="vN">grey&#8201;&#10007;</span> is neither. The glyph says the same thing the colour does,
+  so the column still reads in greyscale, in print, and with a colour-vision deficiency. A push date
+  <span class="old">underlined like this</span> means nothing has landed in that repo for over a year.
+  A dash in the star column means the row is a folder inside someone else's repo, or a dead
   link, and has no count of its own.
+  <nav class="facets" aria-label="Browse by topic or by what a project plugs into">
+    <p><b>Every topic:</b> <a href="topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a> · <a href="topic/coding-agents/">Coding Agents</a> · <a href="topic/agent-skills/">Agent Skills</a> · <a href="topic/mcp-servers/">MCP Servers</a> · <a href="topic/frameworks-sdks/">Frameworks &amp; SDKs</a> · <a href="topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> · <a href="topic/context-memory-rag/">Context, Memory &amp; RAG</a> · <a href="topic/sandbox-security-governance/">Sandbox, Security &amp; Governance</a> · <a href="topic/observability-evals/">Observability &amp; Evals</a> · <a href="topic/plugins-themes-clients/">Plugins, Themes &amp; Clients</a> · <a href="topic/research-data-agents/">Research &amp; Data Agents</a> · <a href="topic/creative-voice-media/">Creative, Voice &amp; Media</a> · <a href="topic/assistants-domain-agents/">Assistants &amp; Domain Agents</a> · <a href="topic/docs-learning-lists/">Docs, Learning &amp; Lists</a></p>
+    <p><b>Every integration:</b> <a href="target/claude-code/">Claude Code</a> · <a href="target/claude-anthropic/">Claude / Anthropic</a> · <a href="target/opencode/">opencode</a> · <a href="target/mcp/">MCP</a> · <a href="target/codex-openai/">Codex / OpenAI</a> · <a href="target/gemini-google/">Gemini / Google</a> · <a href="target/github-copilot/">GitHub Copilot</a> · <a href="target/cursor/">Cursor</a> · <a href="target/cline-roo/">Cline / Roo</a> · <a href="target/aider/">Aider</a> · <a href="target/langchain-langgraph/">LangChain / LangGraph</a> · <a href="target/local-ollama/">Local / Ollama</a></p>
+    <p><b>Every project:</b> <a href="repo/">all 1,294 projects, one page each, grouped by topic</a></p>
+  </nav>
 </div></footer>
 
 <script>
 const PAGE_SIZE = 120;
-const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false,
-               sort: "stars", shown: PAGE_SIZE};
-let D = null, ROWS = [], NEW = 0;
+const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
+               sort: "relevance", shown: PAGE_SIZE, view: "cards"};
+let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
+let FROM_CACHE = false;
+let typing = 0;
 
-// The window is applied here, in the browser, against the reader's own clock -- `data.json` carries the
-// raw first-seen date and nothing else. That is what makes the mark expire without a rebuild: a repo
-// stamped the 14th stops being new on the 29th in every open tab, on a day the cron may not have run.
-// Both sides of the subtraction are ISO dates, which Date.parse reads as UTC midnight, so the result is
-// a whole number of days and never 13.958 because of a timezone.
 const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
+const SNAPSHOT = "2026-09-03";
+const BUILT = "2026-09-06T21:42:00Z";
 
-fetch("data.json").then(r => r.json()).then(d => {
+const VERDICT = {
+  Y: ["✓", "stated support"],
+  L: ["?", "inferred from the language"],
+  N: ["✗", "no evidence of support"],
+  a: ["–", "not applicable"],
+  "-": ["–", "not established"],
+};
+
+const CAN_COPY = !!(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext);
+
+const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/")
+  .map(s => s.startsWith(".") ? "dot-" + s.slice(1) : s).join("/") + "/";
+
+let RESCUE = [];
+
+function say(msg) {
+  const el = document.getElementById("live");
+  el.textContent = "";
+  setTimeout(() => { el.textContent = msg; }, 30);
+}
+
+function since(iso) {
+  if (!iso) return "—";
+  const d = daysAgo(iso);
+  const t = d <= 0 ? "today" : d === 1 ? "yesterday" : d < 30 ? d + "d ago"
+    : d < 365 ? Math.round(d / 30) + "mo ago"
+    : d < 730 ? (d / 365).toFixed(1) + "y ago" : Math.floor(d / 365) + "y ago";
+  return d >= 365
+    ? '<span class="old" title="' + iso + ' — no push in over a year">' + t + "</span>"
+    : '<span title="' + iso + '">' + t + "</span>";
+}
+
+function gained(r) {
+  if (!RISE || r.gain === null) return "";
+  const sign = r.gain < 0 ? "−" : r.gain > 0 ? "+" : "";
+  const n = sign + Math.abs(r.gain).toLocaleString();
+  return ' <span class="rise' + (r.gain > 0 ? "" : " down") + '" title="' +
+    esc(n + " stars in the " + RISE.span + " days from " + RISE.from +
+        " to " + D.velocity.to) + '">' + n + "</span>";
+}
+
+fetch("data.json").then(r => {
+  deployStamp(r.headers.get("Last-Modified"));
+  FROM_CACHE = !!r.headers.get("x-atlas-cached");
+  return r.json();
+}).then(d => {
   D = d;
-  // Column-oriented on the wire, objects in here. One pass, 1,294 times, so the rest of the page can
-  // read `r.stars` instead of `r[4]`.
   ROWS = d.rows.map(a => Object.fromEntries(d.cols.map((c, i) => [c, a[i]])));
   ROWS.forEach(r => {
     r.hay = (r.name + " " + r.nwo + " " + r.blurb + " " + r.lang + " " + r.listed_by).toLowerCase();
+    r.lname = r.name.toLowerCase();
+    r.lnwo = r.nwo.toLowerCase();
+    r.lblurb = (r.blurb || "").toLowerCase();
     r.img = r.img || ("https://opengraph.githubassets.com/1/" + r.nwo);
     const age = r.first_seen ? daysAgo(r.first_seen) : Infinity;
     r.isnew = age >= 0 && age <= (d.window_days || 14);
   });
   NEW = ROWS.filter(r => r.isnew).length;
+  RISE = (d.velocity && d.velocity.rise && d.velocity.rise.col)
+    ? Object.assign({}, d.velocity.rise, d.velocity[d.velocity.rise.col]) : null;
+  ROWS.forEach(r => {
+    const g = RISE ? r[RISE.col] : "";
+    r.gain = (g === "" || g === undefined || g === null) ? null : g;
+    r.gkey = r.gain === null ? -1e9 : r.gain;
+    r.rise = r.gain !== null &&
+      r.gain >= Math.max(RISE.min_abs, RISE.min_pct / 100 * (r.stars || 0));
+  });
+  RISING = ROWS.filter(r => r.rise).length;
+  stamp();
   buildChips();
   readHash();
   render();
 }).catch(err => {
-  // A browser will not let a file:// page fetch a sibling file, so double-clicking index.html out of a
-  // clone loads the chrome and then nothing at all, with the reason only in the console. Anyone doing
-  // that is a contributor, so the message is the two commands that fix it rather than an apology.
   document.getElementById("count").innerHTML =
     "Could not load <code>data.json</code> — " + String(err);
   document.getElementById("out").innerHTML =
@@ -317,6 +529,8 @@ fetch("data.json").then(r => r.json()).then(d => {
     '<code>localhost:8000</code>. The published copy is at ' +
     '<a href="https://crazy54.github.io/awesome-agentic-atlas/">https://crazy54.github.io/awesome-agentic-atlas/</a>.</p>';
 });
+
+wire();
 
 function chip(parent, label, pressed, onclick, title) {
   const b = document.createElement("button");
@@ -340,38 +554,365 @@ function buildChips() {
     const os = state.os.includes(i) ? state.os.filter(x => x !== i) : state.os.concat(i);
     set({os});
   }));
-  document.getElementById("q").oninput = e => set({q: e.target.value}, true);
+  document.getElementById("q").oninput = e => {
+    const v = e.target.value;
+    clearTimeout(typing);
+    typing = setTimeout(() => set({q: v}, true), 150);
+  };
   document.getElementById("sort").onchange = e => set({sort: e.target.value});
+  const vb = document.getElementById("view");
+  vb.hidden = false;
+  vb.onclick = () => {
+    state.view = state.view === "cards" ? "table" : "cards";
+    writeHash();
+    applyView();
+    say(state.view === "cards"
+      ? "Card view. Each project is a card with its screenshot."
+      : "Table view.");
+  };
   document.getElementById("strict").onclick = () => set({strict: !state.strict});
-  // Shown only when it would select something. The label carries the count because the whole question
-  // this chip answers is "is there anything new", and a reader should be able to see the answer without
-  // clicking and then having to click back.
   const nb = document.getElementById("new");
   if (NEW) {
     nb.classList.add("on");
     document.getElementById("newlabel").textContent = "New · " + NEW.toLocaleString();
     nb.onclick = () => set({fresh: !state.fresh});
   }
-  document.getElementById("reset").onclick =
-    () => set({q: "", cat: "", tgt: "", os: [], strict: false, fresh: false});
-  document.getElementById("theme").onclick = e => {
+  const rb = document.getElementById("rise"), sel = document.getElementById("sort"),
+        ropt = [...sel.options].find(o => o.value === "rising");
+  if (RISE && RISING) {
+    rb.classList.add("on");
+    rb.title = "Gained at least " + RISE.min_abs.toLocaleString() + " stars, and at least " +
+      RISE.min_pct + "% of its own count, in the " + RISE.span + " days from " + RISE.from + " to " +
+      D.velocity.to;
+    document.getElementById("riselabel").textContent = "Rising · " + RISING.toLocaleString();
+    rb.onclick = () => set({rising: !state.rising});
+  } else if (ropt) {
+    ropt.remove();
+  }
+  document.getElementById("reset").onclick = () => set(CLEAR);
+  sheetWire();
+  window.addEventListener("hashchange", () => { readHash(); render(); });
+  palWire();
+}
+
+function sheetWire() {
+  const fbt = document.getElementById("fbt"), sheet = document.getElementById("sheet");
+  const root = document.documentElement;
+  const shut = () => root.dataset.sheet !== "open";
+  const show = on => {
+    root.dataset.sheet = on ? "open" : "shut";
+    fbt.setAttribute("aria-expanded", on ? "true" : "false");
+    if (on) { void sheet.offsetHeight; sheet.focus(); } else fbt.focus();
+  };
+  root.dataset.fb = "1";
+  root.dataset.sheet = "shut";
+  fbt.onclick = () => show(shut());
+  document.getElementById("fbx").onclick = () => show(false);
+  document.getElementById("fbb").onclick = () => show(false);
+  document.addEventListener("keydown", ev => {
+    const pal = document.getElementById("pal");
+    if (ev.key === "Escape" && !shut() && !(pal && pal.open)) show(false);
+  });
+}
+
+function sheetFilters() {
+  const on = [];
+  const name = (list, slug) => (list.find(x => x.slug === slug) || {}).name;
+  if (state.cat) on.push(name(D.cats, state.cat));
+  if (state.tgt) on.push(name(D.targets, state.tgt));
+  state.os.forEach(i => on.push(D.os[i]));
+  if (state.strict) on.push("Confirmed only");
+  return on.filter(Boolean);
+}
+
+function paintSheet(countHTML) {
+  const on = sheetFilters(), n = on.length;
+  const fbt = document.getElementById("fbt");
+  document.getElementById("fbn").textContent = n ? String(n) : "";
+  fbt.classList.toggle("act", n > 0);
+  fbt.setAttribute("aria-label", n
+    ? "Filters — " + n + " selected: " + on.join(", ")
+    : "Filters — none selected");
+  document.getElementById("shtitle").textContent = n ? "Filters · " + n : "Filters";
+  document.getElementById("scount").innerHTML = countHTML;
+}
+
+function palWire() {
+  const dlg = document.getElementById("pal"), q = document.getElementById("palq"),
+        list = document.getElementById("palist"), hint = document.getElementById("palhint");
+  if (!dlg || !dlg.showModal) return;
+
+  hint.classList.add("on");
+  hint.innerHTML = "<kbd>" + esc(PALMOD) + "</kbd><kbd>K</kbd><span>Jump to&hellip;</span>";
+  hint.title = "Jump to any topic, platform, sort or project (" + PALMOD + " K)";
+  hint.onclick = palOpen;
+
+  document.addEventListener("keydown", ev => {
+    if ((ev.ctrlKey || ev.metaKey) && !ev.altKey && (ev.key === "k" || ev.key === "K")) {
+      ev.preventDefault();
+      if (dlg.open) dlg.close(); else palOpen();
+      return;
+    }
+    const t = ev.target && ev.target.tagName || "";
+    if (ev.key === "/" && !dlg.open && !/^(INPUT|TEXTAREA|SELECT)$/.test(t) &&
+        !(ev.target && ev.target.isContentEditable)) {
+      ev.preventDefault();
+      palOpen();
+    }
+  });
+
+  q.oninput = () => { PALI = 0; palRender(); };
+  q.onkeydown = ev => {
+    const jump = {ArrowDown: 1, ArrowUp: -1}[ev.key];
+    if (jump) { ev.preventDefault(); palMove(jump); return; }
+    if (ev.key === "Enter") { ev.preventDefault(); palPick(); return; }
+    if (ev.key === "Home") { ev.preventDefault(); PALI = 0; palRender(); return; }
+    if (ev.key === "End") { ev.preventDefault(); PALI = PAL.length - 1; palRender(); }
+  };
+  list.addEventListener("click", ev => {
+    const li = ev.target.closest("li.it");
+    if (!li) return;
+    PALI = [...list.querySelectorAll("li.it")].indexOf(li);
+    palPick();
+  });
+  dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
+}
+
+const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false};
+
+let PAL = [], PALI = 0;
+
+const PALMOD = /mac|iphone|ipad/i.test((navigator.platform || "") + (navigator.userAgent || ""))
+  ? "⌘" : "Ctrl";
+
+function palItems(query) {
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const acts = [];
+  const add = (group, label, active, run) => acts.push({group, label, active, run});
+
+  D.cats.forEach(c => add("Topic", c.name, state.cat === c.slug, () => set({cat: c.slug})));
+  D.targets.forEach(t => add("Plugs into", t.name, state.tgt === t.slug, () => set({tgt: t.slug})));
+  D.os.forEach((o, i) => add("Runs on", o, state.os.includes(i), () => set({
+    os: state.os.includes(i) ? state.os.filter(x => x !== i) : state.os.concat(i),
+  })));
+  for (const o of document.getElementById("sort").options)
+    add("Sort", o.text, state.sort === o.value, () => {
+      document.getElementById("sort").value = o.value;
+      set({sort: o.value});
+    });
+  if (NEW) add("Filter", "New arrivals", state.fresh, () => set({fresh: !state.fresh}));
+  if (RISE && RISING) add("Filter", "Rising", state.rising, () => set({rising: !state.rising}));
+  add("Filter", "Confirmed platform support only", state.strict, () => set({strict: !state.strict}));
+  add("Filter", "Clear all filters", false, () => set(CLEAR));
+  add("Page", (document.documentElement.dataset.theme === "light" ? "Dark" : "Light") + " theme", false,
+    () => document.getElementById("theme").click());
+  add("Page", state.view === "cards" ? "Table view" : "Card view", false,
+    () => document.getElementById("view").click());
+
+  const score = a => {
+    const l = a.label.toLowerCase();
+    let s = 0;
+    for (const w of words) {
+      const i = l.indexOf(w);
+      if (i < 0) return -1;
+      s += i === 0 ? 2 : 1;
+    }
+    return s;
+  };
+  const gorder = [...new Set(acts.map(a => a.group))];
+  const ranked = words.length ? (() => {
+    const hits = acts.map(a => ({a, s: score(a)})).filter(x => x.s >= 0);
+    const best = new Map();
+    for (const x of hits) if (!(best.get(x.a.group) >= x.s)) best.set(x.a.group, x.s);
+    return hits.sort((p, r) => best.get(r.a.group) - best.get(p.a.group) ||
+      gorder.indexOf(p.a.group) - gorder.indexOf(r.a.group) || r.s - p.s).map(x => x.a);
+  })() : acts;
+
+  let proj = [];
+  if (words.length) {
+    proj = ROWS.filter(r => words.every(w => r.hay.includes(w)));
+    for (const r of proj) r.rel = relevance(r, words);
+    proj = proj.sort(SORTS.relevance).slice(0, 8).map(r => ({
+      group: "Projects", label: r.name, hint: r.nwo, stars: r.stars,
+      run: () => { location.href = r.url; },
+    }));
+  }
+  return ranked.slice(0, words.length ? 8 : 40).concat(proj);
+}
+
+function palRender() {
+  const box = document.getElementById("palist"), q = document.getElementById("palq");
+  PAL = palItems(q.value);
+  if (PALI >= PAL.length) PALI = Math.max(0, PAL.length - 1);
+  if (!PAL.length) {
+    box.innerHTML = '<li class="palnone" role="presentation">Nothing here matches that.</li>';
+    q.removeAttribute("aria-activedescendant");
+    return;
+  }
+  let html = "", last = "";
+  PAL.forEach((a, i) => {
+    if (a.group !== last) {
+      html += '<li class="grp" role="presentation">' + esc(a.group) + "</li>";
+      last = a.group;
+    }
+    html += '<li class="it" role="option" id="pal-' + i + '" aria-selected="' + (i === PALI) + '">' +
+      '<span class="t">' + esc(a.label) + "</span>" +
+      (a.stars ? '<span class="s">' + a.stars.toLocaleString() + "★</span>" : "") +
+      (a.active ? '<span class="k">on</span>' : a.hint ? '<span class="k">' + esc(a.hint) + "</span>" : "") +
+      "</li>";
+  });
+  box.innerHTML = html;
+  q.setAttribute("aria-activedescendant", "pal-" + PALI);
+  const sel = box.querySelector("[aria-selected=true]");
+  if (sel && sel.scrollIntoView) sel.scrollIntoView({block: "nearest"});
+}
+
+function palMove(d) {
+  if (!PAL.length) return;
+  PALI = (PALI + d + PAL.length) % PAL.length;
+  palRender();
+}
+
+function palPick() {
+  const a = PAL[PALI];
+  if (!a) return;
+  document.getElementById("pal").close();
+  a.run();
+}
+
+function palOpen() {
+  const dlg = document.getElementById("pal");
+  if (!dlg || !dlg.showModal || dlg.open || !D) return;
+  document.getElementById("palq").value = "";
+  PALI = 0;
+  dlg.showModal();
+  palRender();
+  document.getElementById("palq").focus();
+}
+
+function wire() {
+  const btn = document.getElementById("theme");
+  const label = () => {
+    const light = document.documentElement.dataset.theme === "light";
+    btn.textContent = light ? "Dark theme" : "Light theme";
+    btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
+    const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+    if (plane) document.getElementById("tc").content = plane;
+  };
+  btn.onclick = () => {
     const light = document.documentElement.dataset.theme !== "light";
     document.documentElement.dataset.theme = light ? "light" : "dark";
-    e.target.textContent = light ? "Dark theme" : "Light theme";
-    e.target.setAttribute("aria-pressed", light ? "true" : "false");
+    try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+    label();
   };
-  window.addEventListener("hashchange", () => { readHash(); render(); });
+  label();
+  try {
+    matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+      if (localStorage.getItem("theme")) return;
+      document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+      label();
+    });
+  } catch (e) {}
+
+  document.getElementById("out").addEventListener("click", ev => {
+    const fix = ev.target.closest(".fix");
+    if (fix) {
+      if (fix.dataset.all) return set(CLEAR);
+      const o = RESCUE[+fix.dataset.i];
+      if (o) set(o.patch);
+      return;
+    }
+    const b = ev.target.closest(".copy");
+    if (b) copy(b);
+  });
+  stamp();
+  deployStamp();
+}
+
+function copy(b) {
+  const cmd = b.dataset.cmd;
+  const flash = (text, ok) => {
+    b.textContent = text;
+    b.classList.toggle("ok", !!ok);
+    setTimeout(() => { b.textContent = "Copy"; b.classList.remove("ok"); }, 1800);
+  };
+  navigator.clipboard.writeText(cmd).then(() => {
+    flash("Copied", true);
+    say("Copied " + cmd);
+  }, () => {
+    const code = b.parentNode.querySelector(".cmd");
+    if (code) {
+      const r = document.createRange();
+      r.selectNodeContents(code);
+      const s = getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+    }
+    flash("Ctrl+C");
+    say("The clipboard was refused. The command is selected — press Control C to copy it.");
+  });
+}
+
+function stamp() {
+  const el = document.getElementById("snap");
+  if (!el) return;
+  const own = String((D && (D.generated || D.snapshot)) || "").slice(0, 10);
+  const day = /^\d{4}-\d{2}-\d{2}$/.test(own) ? own : SNAPSHOT;
+  const d = daysAgo(day);
+  el.innerHTML = (FROM_CACHE ? "offline, showing data from " : "snapshot ") + day +
+    (d > 14 ? ' · <span class="stale">' + d + " days old</span>" : "");
+  el.title = (FROM_CACHE
+      ? "The network did not answer, so these rows came from your browser's cache. " : "") +
+    (d > 14
+      ? "The daily rebuild has not run in " + d + " days, so stars and push dates here have drifted."
+      : "Rebuilt daily from the GitHub API.");
+}
+
+function deployStamp(lastModified) {
+  try {
+    const el = document.getElementById("deployed");
+    if (!el) return;
+    const live = Date.parse(lastModified || "");
+    const ms = Number.isNaN(live) ? Date.parse(BUILT) : live;
+    if (Number.isNaN(ms)) return;
+    const iso = new Date(ms).toISOString();
+    const shown = iso.slice(0, 10) + " " + iso.slice(11, 16) + " UTC";
+    const t = el.querySelector("time");
+    t.dateTime = iso;
+    t.textContent = shown;
+    const days = (Date.now() - ms) / 86400000;
+    el.classList.toggle("late", days > 14);
+    const age = days < 1 ? "Today." : days < 2 ? "Yesterday." : Math.round(days) + " days ago.";
+    el.title = (Number.isNaN(live)
+      ? "Built " + shown + ". This copy is not served by Pages, so its deployment time is unknown. "
+      : "Published to GitHub Pages " + shown + ". ") + age
+      + (days > 14 ? " Neither scheduled rebuild has run since, so the data here has drifted." : "");
+  } catch (e) {}
+}
+
+function applyView() {
+  document.documentElement.dataset.view = state.view;
+  const btn = document.getElementById("view");
+  if (!btn) return;
+  const cards = state.view === "cards";
+  btn.textContent = cards ? "Table view" : "Card view";
+  btn.title = cards
+    ? "Back to the table, which fits far more rows on a screen"
+    : "Show each project as a card, with its screenshot";
 }
 
 function set(patch, keepFocus) {
+  clearTimeout(typing);
   Object.assign(state, patch, {shown: PAGE_SIZE});
   writeHash();
   render();
-  if (!keepFocus) document.getElementById("q").blur();
+  if (!keepFocus) {
+    const q = document.getElementById("q");
+    if (q.value !== state.q) q.value = state.q;
+    q.blur();
+  }
 }
 
-// Every filter lives in the hash, so any view is a link. This is the whole point of the page: a
-// Markdown file can be one topic or one target, never the crossing of the two.
 function writeHash() {
   const p = new URLSearchParams();
   if (state.q) p.set("q", state.q);
@@ -380,7 +921,9 @@ function writeHash() {
   if (state.os.length) p.set("os", state.os.map(i => D.os[i].toLowerCase()).join(","));
   if (state.strict) p.set("confirmed", "1");
   if (state.fresh) p.set("new", "1");
-  if (state.sort !== "stars") p.set("sort", state.sort);
+  if (state.rising) p.set("rising", "1");
+  if (state.sort !== "relevance") p.set("sort", state.sort);
+  if (state.view !== "cards") p.set("view", state.view);
   const s = p.toString();
   history.replaceState(null, "", s ? "#" + s : location.pathname);
 }
@@ -394,23 +937,20 @@ function readHash() {
   const names = D.os.map(o => o.toLowerCase());
   state.os = (p.get("os") || "").split(",").map(s => names.indexOf(s.trim())).filter(i => i >= 0);
   state.strict = p.get("confirmed") === "1";
-  // A `#new=1` link outlives the fortnight it was written in. Honouring it once the window has emptied
-  // would greet the reader with "nothing matches"; dropping it shows them the atlas instead.
   state.fresh = p.get("new") === "1" && NEW > 0;
-  state.sort = ["stars", "lists", "pushed", "name"].includes(p.get("sort")) ? p.get("sort") : "stars";
+  state.rising = p.get("rising") === "1" && RISE !== null && RISING > 0;
+  const want = p.get("sort");
+  state.sort = SORT_KEYS.includes(want) && (want !== "rising" || RISE) ? want : "relevance";
+  state.view = p.get("view") === "table" ? "table" : "cards";
   document.getElementById("q").value = state.q;
   document.getElementById("sort").value = state.sort;
 }
 
-// "Does this run on my Windows machine" has two answers -- a native build, or reachable through WSL2 --
-// and the workbook's Windows sheet counts both, which is where the 1,105 in the README comes from. They
-// stay two columns, because a reader without WSL2 needs to see which is which, but the chip has to mean
-// the same thing the same word means everywhere else in this project. WSL2 only ever counts as Yes:
-// "probably works under WSL2" is not a claim anything here makes.
 const OS_ANY = {0: [[0, "YL"], [1, "Y"]]};
 
 function match(r) {
   if (state.fresh && !r.isnew) return false;
+  if (state.rising && !r.rise) return false;
   if (state.cat && D.cats[r.cat].slug !== state.cat) return false;
   if (state.tgt) {
     const want = D.targets.findIndex(t => t.slug === state.tgt);
@@ -429,15 +969,109 @@ function match(r) {
   return true;
 }
 
+function countWith(patch) {
+  const saved = Object.assign({}, state);
+  Object.assign(state, patch);
+  const n = ROWS.filter(match).length;
+  Object.assign(state, saved);
+  return n;
+}
+
+function rescue() {
+  const opts = [];
+  if (state.q) opts.push(["Drop the search “" + state.q + "”", {q: ""}]);
+  if (state.cat) {
+    const c = D.cats.find(x => x.slug === state.cat);
+    if (c) opts.push(["Drop topic " + c.name, {cat: ""}]);
+  }
+  if (state.tgt) {
+    const t = D.targets.find(x => x.slug === state.tgt);
+    if (t) opts.push(["Stop requiring " + t.name, {tgt: ""}]);
+  }
+  state.os.forEach(i => opts.push(["Drop " + D.os[i], {os: state.os.filter(x => x !== i)}]));
+  if (state.strict) opts.push(["Allow inferred support", {strict: false}]);
+  if (state.fresh) opts.push(["Drop the new-arrivals filter", {fresh: false}]);
+  if (state.rising) opts.push(["Drop the rising filter", {rising: false}]);
+  return opts.map(o => ({label: o[0], patch: o[1], n: countWith(o[1])}))
+    .filter(o => o.n > 0)
+    .sort((a, b) => b.n - a.n)
+    .slice(0, 4);
+}
+
+const REPO = "crazy54/awesome-agentic-atlas";
+
+function missLink() {
+  const typed = state.q.replace(/[\u0000-\u001f]+/g, " ").trim();
+  const q = [...typed].slice(0, 80).join("").trim();
+  if (!q) return "";
+  const body = "Searched for: " + q + "\n\nFilters: " + (location.hash.slice(1) || "none") +
+    "\nSnapshot: " + SNAPSHOT + "\n\nWhat were you hoping to find? A repository URL is ideal.\n";
+  const href = "https://github.com/" + REPO + "/issues/new?labels=coverage&title=" +
+    encodeURIComponent("Nothing found for “" + q + "”") + "&body=" + encodeURIComponent(body);
+  return '<p><a class="miss" href="' + esc(href) + '" target="_blank" rel="noopener">' +
+    "Searched for something that isn’t here? Tell us what’s missing</a></p>";
+}
+
+function grams(s) {
+  const p = " " + s.toLowerCase().replace(/\s+/g, " ").trim() + " ", out = new Set();
+  for (let i = 0; i + 3 <= p.length; i++) out.add(p.slice(i, i + 3));
+  return out;
+}
+
+function near(q) {
+  const want = grams(q);
+  if (want.size < 3) return [];
+  const saved = state.q;
+  state.q = "";
+  const pool = ROWS.filter(match);
+  state.q = saved;
+  const out = [];
+  for (const r of pool) {
+    if (!r.g) r.g = grams(r.name);
+    let hit = 0;
+    want.forEach(g => { if (r.g.has(g)) hit++; });
+    const score = hit / Math.max(want.size, r.g.size);
+    if (score >= 0.3) { r.rel = score; out.push(r); }
+  }
+  return out.sort(SORTS.relevance).slice(0, 12);
+}
+
+function hitScore(r, w) {
+  if (r.lname === w) return 120;
+  if (r.lname.startsWith(w)) return 90;
+  const n = r.lname.indexOf(w);
+  if (n > 0) return /[a-z0-9]/.test(r.lname[n - 1]) ? 45 : 70;
+  if (r.lnwo.includes(w)) return 30;
+  if ((r.lang || "").toLowerCase() === w) return 20;
+  const b = r.lblurb.indexOf(w);
+  if (b === 0) return 12;
+  if (b > 0) return /[a-z0-9]/.test(r.lblurb[b - 1]) ? 6 : 12;
+  if ((r.listed_by || "").toLowerCase().includes(w)) return 2;
+  return 0;
+}
+
+function relevance(r, words) {
+  let total = 0;
+  for (const w of words) total += hitScore(r, w);
+  return total + Math.log10((r.stars || 0) + 1);
+}
+
 const SORTS = {
+  relevance: (a, b) => b.rel - a.rel || b.stars - a.stars || a.name.localeCompare(b.name),
   stars: (a, b) => b.stars - a.stars || a.name.localeCompare(b.name),
+  rising: (a, b) => b.gkey - a.gkey || SORTS.stars(a, b),
   lists: (a, b) => b.lists - a.lists || b.stars - a.stars,
   pushed: (a, b) => (b.pushed || "").localeCompare(a.pushed || "") || b.stars - a.stars,
   name: (a, b) => a.name.localeCompare(b.name),
 };
 
+const SORT_KEYS = Object.keys(SORTS);
+
+function effSort() {
+  return state.sort === "relevance" && !state.q ? "stars" : state.sort;
+}
+
 function render() {
-  // Reflect state onto the chips. Cheaper than rebuilding them and it keeps focus where it was.
   const press = (id, on) => [...document.getElementById(id).children]
     .forEach((b, i) => b.setAttribute("aria-pressed", on(i) ? "true" : "false"));
   press("cats", i => i === 0 ? !state.cat : D.cats[i - 1].slug === state.cat);
@@ -445,12 +1079,31 @@ function render() {
   press("oses", i => state.os.includes(i));
   document.getElementById("strict").setAttribute("aria-pressed", state.strict ? "true" : "false");
   document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
+  document.getElementById("rise").setAttribute("aria-pressed", state.rising ? "true" : "false");
+  applyView();
 
-  const hits = ROWS.filter(match).sort(SORTS[state.sort]);
+  const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+  let hits = ROWS.filter(match);
+
+  let approx = false;
+  if (!hits.length && words.length) {
+    const alt = near(state.q);
+    if (alt.length) { hits = alt; approx = true; }
+  }
+  if (!approx) {
+    const sort = effSort();
+    if (sort === "relevance") for (const r of hits) r.rel = relevance(r, words);
+    hits.sort(SORTS[sort]);
+  }
+
   const ranked = hits.filter(r => r.stars).length;
-  document.getElementById("count").innerHTML =
-    "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() +
-    " · " + ranked.toLocaleString() + " with stars";
+  const countHTML = approx
+    ? "<b>" + hits.length.toLocaleString() + "</b> near " +
+      (hits.length === 1 ? "match" : "matches") + " · nothing matches “" + esc(state.q) + "” exactly"
+    : "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() +
+      " · " + ranked.toLocaleString() + " with stars";
+  document.getElementById("count").innerHTML = countHTML;
+  paintSheet(countHTML);
 
   const cat = state.cat && D.cats.find(c => c.slug === state.cat);
   const tgt = state.tgt && D.targets.find(t => t.slug === state.tgt);
@@ -460,58 +1113,83 @@ function render() {
 
   const out = document.getElementById("out");
   if (!hits.length) {
-    out.innerHTML = '<p class="empty">Nothing matches. Try clearing a filter.</p>';
+    RESCUE = rescue();
+    out.innerHTML = '<div class="empty">' +
+      '<p class="big">Nothing matches all of that.</p>' +
+      (RESCUE.length
+        ? "<p>" + (RESCUE.length === 1 ? "Loosening this would help:" : "Loosen one of these:") +
+          '</p><div class="fixes">' + RESCUE.map((o, i) =>
+            '<button class="fix" data-i="' + i + '">' + esc(o.label) +
+            ' <span class="n">' + o.n.toLocaleString() + "</span></button>").join("") + "</div>"
+        : "") +
+      '<p style="margin-top:16px"><button class="fix" data-all="1">Clear all filters</button></p>' +
+      missLink() +
+      "</div>";
     return;
   }
   const page = hits.slice(0, state.shown);
   const rows = page.map((r, i) => {
-    const os = D.os.map((o, k) => '<span class="v' + r.os[k] + '">' + o.slice(0, 3) + "</span>")
-      .join(" ");
+    const os = D.os.map((o, k) => {
+      const v = VERDICT[r.os[k]] || ["", "not established"];
+      return '<span class="v' + r.os[k] + '" title="' + esc(o + ": " + v[1]) + '">' +
+        o.slice(0, 3) + " " + v[0] + "</span>";
+    }).join(" ");
     const tags = '<span class="tag cat">' + esc(D.cats[r.cat].name) + "</span>" +
       r.targets.map(t => '<span class="tag">' + esc(D.targets[t].name) + "</span>").join("");
-    // esc on the URLs too: these are other people's hand-typed table cells, and one stray quote in a
-    // source list would otherwise close the attribute and let the rest of it be read as markup.
-    const url = esc(r.url), img = esc(r.img);
-    // A new row's title is the star, the name, and the day it arrived. The date is outside the anchor so
-    // hovering the title does not underline it, and it is the fact that makes the mark self-explaining:
-    // "New" alone leaves the reader wondering new to what, and how long ago.
+    const url = esc(r.url), img = esc(r.img), page = detailURL(r.nwo);
     const star = r.isnew
       ? '<svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>'
       : "";
     const on = r.isnew ? ' <span class="newon">- New on ' + mmddyy(r.first_seen) + "</span>" : "";
+    const cmd = r.install
+      ? '<div class="cmdrow"><code class="cmd">' + esc(r.install) + "</code>" +
+        (CAN_COPY ? '<button class="copy" data-cmd="' + esc(r.install) +
+          '" aria-label="Copy install command for ' + esc(r.name) + '">Copy</button>' : "") + "</div>"
+      : "";
     return "<tr>" +
       '<td class="n rk">' + (i + 1) + "</td>" +
-      '<td class="shot"><a href="' + url + '"><img loading="lazy" alt="" src="' + img +
-        '"></a></td>' +
-      '<td class="pj"><a class="nm" href="' + url + '">' + star + esc(r.name) + "</a>" + on +
-        '<span class="nwo">' + esc(r.nwo) + "</span>" +
-        '<div class="meta">' + os + "</div></td>" +
+      '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
+        '<img loading="lazy" alt="" src="' + img + '"></a></td>' +
+      '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on +
+        '<a class="nwo" href="' + url + '">' + esc(r.nwo) + "</a>" +
+        '<div class="meta os">' + os + "</div></td>" +
       '<td class="n st-c"><span class="st' + (r.stars ? "" : " none") + '">' +
         (r.stars ? r.stars.toLocaleString() : "—") + "</span>" +
-        '<div class="meta">' + r.lists + (r.lists === 1 ? " list" : " lists") + "</div></td>" +
-      '<td class="hide">' + tags + "</td>" +
-      '<td class="ds"><div class="desc">' + esc(r.blurb) + "</div>" +
-        (r.install ? '<code class="cmd">' + esc(r.install) + "</code>" : "") + "</td>" +
-      '<td class="c hide"><div class="meta">' + esc(r.lang || "—") + "<br>" +
-        esc(r.license || "—") + "<br>" + esc(r.pushed || "—") + "</div></td>" +
+        '<div class="meta">' + r.lists + (r.lists === 1 ? " list" : " lists") + gained(r) +
+          "</div></td>" +
+      '<td class="hide tg">' + tags + "</td>" +
+      '<td class="ds"><div class="desc">' + esc(r.blurb) + "</div>" + cmd + "</td>" +
+      '<td class="c hide lc"><div class="meta"><span>' + esc(r.lang || "—") + "</span><br>" +
+        "<span>" + esc(r.license || "—") + "</span><br><span>" + since(r.pushed) +
+        "</span></div></td>" +
       "</tr>";
   }).join("");
-  // Every th carries the same class as the td beneath it. The Shot heading used not to, and since the
-  // narrow-viewport rule hides `.shot` it hid only the body cell -- leaving five headings over four
-  // columns, so "Shot" sat above the project names, "Project" above the stars, "Stars" above the
-  // blurbs, and auto layout invented a fifth column to hang the surplus heading on.
-  out.innerHTML =
+  const note = approx
+    ? '<p class="approx">Nothing matches <b>' + esc(state.q) + "</b> exactly. Closest by name" +
+      (state.cat || state.tgt || state.os.length || state.strict || state.fresh
+        ? ", within your other filters" : "") + ":</p>"
+    : "";
+  out.innerHTML = note +
     "<table><thead><tr><th class='n'>#</th><th class='shot'>Shot</th><th class='pj'>Project</th>" +
     "<th class='n st-c'>Stars</th>" +
-    "<th class='hide'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
-    "<th class='c hide'>Lang / licence / push</th></tr></thead><tbody>" + rows +
+    "<th class='hide tg'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
+    "<th class='c hide lc'>Lang / licence / push</th></tr></thead><tbody>" + rows +
     "</tbody></table>";
   if (hits.length > page.length) {
     const b = document.createElement("button");
     b.className = "more";
     b.textContent = "Show " + Math.min(PAGE_SIZE * 4, hits.length - page.length).toLocaleString() +
       " more of " + hits.length.toLocaleString();
-    b.onclick = () => { state.shown += PAGE_SIZE * 4; render(); };
+    b.onclick = () => {
+      const first = state.shown;
+      state.shown += PAGE_SIZE * 4;
+      render();
+      const rows = document.querySelectorAll("#out tbody tr");
+      const t = rows[first] || document.querySelector("#out .more");
+      if (t) { t.tabIndex = -1; t.focus({preventScroll: true}); }
+      say(Math.min(state.shown, hits.length).toLocaleString() + " of " +
+          hits.length.toLocaleString() + " shown.");
+    };
     out.appendChild(b);
   }
 }
@@ -519,6 +1197,15 @@ function render() {
 function esc(s) {
   return String(s == null ? "" : s).replace(/[&<>"]/g,
     c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+}
+</script>
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js", {updateViaCache: "none"})
+      .then(reg => { if (reg.active) reg.update().catch(() => {}); })
+      .catch(() => {});
+  });
 }
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->

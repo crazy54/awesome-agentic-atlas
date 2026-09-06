@@ -19,7 +19,11 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
         ("Software Development", ["Software Development"]),
         ("Conversational Agents", ["Conversational / General Agents"]),
         ("Automation", ["Automation"]),
-        ("Knowledge Management", ["Memory - Knowledge Management"]),
+        # Two spellings of one section: renamed upstream to `Memory - Knowledge Management` (2026-09).
+        # Both are folded here on purpose. A section absent from this map keeps its own name as its
+        # bucket, so listing only the new spelling would give this eight-bucket sheet a ninth that the
+        # palette has no hue for -- the docstring's rule breaking quietly rather than loudly.
+        ("Knowledge Management", ["Knowledge Management", "Memory - Knowledge Management"]),
         ("Research", ["Research"]),
         ("Testing & Evaluation", ["Testing and Evaluation"]),
         ("Game & Simulation", ["Game / Simulation"]),

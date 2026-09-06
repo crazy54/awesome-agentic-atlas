@@ -63,6 +63,11 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
    has -- which the document then has to scroll sideways to satisfy. */
 .nm{font-weight:600;font-size:15px;overflow-wrap:anywhere}
 .nwo{display:block;color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
+/* The `nwo` is a link out to GitHub and the name above it is a link into this site, so the two need to
+   be told apart without colour doing it -- muted is the right weight for the secondary line and the
+   link colour would make it shout. Hover promotes it to full ink, which with the underline `a:hover`
+   already adds is enough to say "this is a link" at the moment somebody asks. */
+a.nwo:hover{color:var(--ink)}
 .st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}

@@ -1,0 +1,232 @@
+# Lighthouse: a weight and layout budget for the one page nothing else measures.
+#
+# `docs/index.html` is a hand-written shell over a `data.json` that grows every day, and until this file
+# existed its performance was an accident: nothing recorded what it was, so nothing could notice it
+# getting worse. This job records it and fails when it does.
+#
+# WHAT IS ENFORCED AND WHAT IS ONLY REPORTED, WHICH IS THE ONLY DECISION HERE WORTH ARGUING ABOUT
+#
+# Three byte budgets and layout shift are errors. Every timing is a warning. That split is not timidity,
+# it is what a measurement taken on a shared runner can support. Across three runs on one idle laptop the
+# transfer sizes moved by one byte and layout shift did not move at all, while first paint moved by 70%
+# and largest paint by 52% -- on identical bytes, in the same minute, on the same machine. A GitHub runner
+# is slower than that laptop and shares a host with whatever else is scheduled on it, so a timing
+# threshold tight enough to catch a real regression is also tight enough to fail on a noisy Tuesday, and a
+# workflow that cries wolf is a workflow somebody switches off. The timings are still asserted and still
+# printed on every run, against Google's own "good" thresholds, so the debt below stays visible without
+# holding a pull request hostage to the runner's mood.
+#
+# THE BASELINE THE THRESHOLDS COME FROM
+#
+# Lighthouse 12.6.1, its default mobile profile (moto g power, 4x CPU throttling, simulated Slow 4G),
+# three runs, benchmarkIndex 3200-3800, measured on a laptop rather than a runner, against `docs/` as it
+# stands at commit 911c6c6 with the manifest link and the service-worker registration already in the page
+# so their bytes are counted:
+#
+#   document        32,383 B     identical in all three runs (86,719 B of HTML, gzipped)
+#                                33,878 B as shipped -- the theme-color handling and the comments that
+#                                explain it landed after the baseline was taken, so the document line has
+#                                17% headroom rather than the 21% measured. Still headroom; recorded here
+#                                because a budget whose stated margin is wrong is a budget nobody trusts.
+#                                37,569 B after the cards view (JFH-182), which was 8% headroom, and then
+#                                15,147 B once the comments stopped being served (JFH-204). 63% headroom,
+#                                which is the widest this line has ever been -- see the note below.
+#   script          10,339 B     the Cloudflare beacon and nothing else -- there is no bundle
+#   total          210,044 B     7 requests, of which data.json is 159,291 B (561,162 B of JSON, gzipped)
+#   CLS              0.5494      identical in all three runs, and identical on the previous build too
+#   FCP        919-1,566 ms
+#   LCP      1,705-2,595 ms
+#   TBT           78-125 ms
+#   perf score    0.74-0.77
+#
+# Those are transfer sizes over gzip, because lhci's static server compresses and so does GitHub Pages, so
+# they are what a reader actually downloads. Anyone re-measuring with `python -m http.server`, which does
+# not compress, will see 86 KB and 652 KB instead and conclude the budget is absurdly tight. It is not:
+# the units here are the units the assertion sees.
+#
+# CLS is enforced at 0.7 against a measured 0.5494, which is a lot of layout shift and the budget does not
+# pretend otherwise. The shell paints an empty container, then 1,294 rows arrive and shove everything below
+# them down the page; the fix is to reserve the rows' height or to server-render the first screen of them,
+# and it belongs in its own commit rather than in a threshold chosen to make a red light green. What this
+# assertion does today is hold the line: the page may not become *less* stable than it already is. Google
+# considers anything above 0.1 poor, and that is the number to aim at when someone gets to it.
+#
+# That used to say "an empty table". It is a grid now: 685ae2a made cards the default view, so the first
+# paint reserves a grid rather than a table and the rows arriving reflow it the same way. The mechanism did
+# not change; the noun did.
+#
+# UNRESOLVED (JFH-216), AND THE REASON NOT TO TRUST 0.5494 UNTIL SOMEONE LOOKS
+#
+# 0.5494 was taken at 911c6c6, which predates the cards default. Re-measured locally after it, CLS came out
+# at 0.7179 -- above the 0.7 enforced here, which should be a red X. It is not: the weekly canary and the
+# JFH-202 pull-request run are both green, so the runner disagrees with that laptop about the same page.
+# Cards load 12 first-screen images from four third-party hosts, and whether those land before or after
+# first paint plausibly decides the number, which would make it depend on the network rather than on the
+# page. That is a worse property for a budget than the number being high.
+#
+# The threshold is deliberately left where it is. Raising it to fit a local reading nobody has explained
+# would be picking a number to make a light green, which is the thing this file's own comments argue
+# against. What is needed is one re-measurement on a runner with the recorded baseline refreshed to a
+# post-cards commit -- until then the 0.5494 above is a historical figure, not the current one, and this
+# note is here so the next person to see a surprising CLS knows it was already surprising.
+#
+# The byte budgets have 25-45% of headroom, deliberately on both sides. It is enough that a paragraph of
+# markup or a new column never trips them, and little enough that a framework, a web font or a second copy
+# of the dataset does: 25,600 B of script is two and a half times the beacon and still less than React
+# gzipped. `total` will one day fail on its own, because `data.json` is 159 KB of the 210 KB and the atlas
+# only grows -- roughly 800 more repos exhausts the headroom. That failure is the feature. At that size
+# the answer is to stop shipping the entire dataset before first paint, and this budget is what forces
+# that conversation instead of letting the page get quietly slower for years. Raising a number here is a
+# decision, and it should have a commit message explaining itself.
+#
+# THE DOCUMENT LINE, AND WHY THE ANSWER WAS NOT TO RAISE IT
+#
+# This is the one place the budget has already done its job, so the episode is worth keeping. After the
+# cards view the line was at 8% of headroom and the next feature was going to cross it. The honest
+# accounting, measured on the shipped bytes rather than estimated: of 37,569 B gzipped, 22,381 B were
+# comments -- 46 CSS blocks, 299 JavaScript lines and 18 HTML blocks, about 55 KB of prose uncompressed.
+#
+# Raising the number here would have been the easy answer and the wrong one, because nothing a reader
+# interacts with had to shrink. The comments are written for whoever is editing `scripts/19_pages.py`, and
+# that is where they are read, in order, with `git blame` attached; they did not need to be downloaded by
+# people looking at a table. So the stage strips its own output on the way out and the template keeps every
+# one of them. `scripts/pagemin.py` does it, and it is a scanner rather than a regex because the page is
+# three languages in one file and the naive version breaks on `//` inside a URL and `/*` inside a regex.
+# Measured after: 105,254 -> 48,980 B raw, 37,569 -> 15,147 B gzipped. 63% headroom.
+#
+# The number below is deliberately NOT being lowered to match. 40,960 B was chosen as "a framework or a
+# second copy of the dataset trips this, a paragraph of markup does not", and that reasoning has not
+# changed -- tightening it to hug 15 KB would convert a budget into a ratchet and make the next honest
+# feature argue with a threshold instead of with a person. The headroom is the point of having won it.
+#
+# WHEN IT RUNS
+#
+# On pull requests that touch the page, the data, the stylesheet or the stages that write any of them;
+# weekly; and by hand. Not on push, because the branch this site deploys from takes an automated commit
+# every day from `daily.yml` -- measuring each of those would spend about six runner-minutes a day to
+# discover that a star count changed, and would report any budget failure to a bot that cannot fix it. The
+# weekly run is the net under that: this repository is also worked on by committing straight to
+# `latest_branch`, where there is no pull request for a check to attach to, and a canary that goes red
+# within seven days is worth four runs a month.
+#
+# Node and `@lhci/cli` are a CI-only dependency and stay one. The site has no build step and no runtime
+# dependency on npm; nothing installed here is ever served to a reader. `@lhci/cli` is pinned to the patch
+# because an unpinned Lighthouse would move the numbers under the thresholds above and turn "the page got
+# worse" and "the tool changed its mind" into the same red X.
+name: Lighthouse — performance budget
+
+on:
+  pull_request:
+    paths:
+      - docs/index.html
+      - docs/data.json
+      - docs/pages.css
+      - docs/sw.js
+      - docs/manifest.webmanifest
+      - scripts/19_pages.py
+      - scripts/19b_refresh.py
+      # Not a stage: the comment stripper both render paths run through. A bug in it is a change to every
+      # byte of the document line above, so it belongs in this list more obviously than most things here.
+      - scripts/pagemin.py
+      - scripts/20_landing.py
+      - scripts/24_pwa.py
+      - .github/workflows/lighthouse.yml
+  schedule:
+    # 13:40 UTC on Mondays. `weekly.yml` starts at 12:40 UTC on Sundays, so this is a day and an hour
+    # later, not an hour -- and the day is the point. That job has a 350-minute timeout because a cold
+    # screenshot cache genuinely takes hours, so "an hour after it starts" is no guarantee it has
+    # finished. A day later it always has, and the canary measures the build that is published rather
+    # than one it is halfway through replacing.
+    - cron: "40 13 * * 1"
+  workflow_dispatch:
+
+# It reads the tree and reports through the check itself. Nothing here needs write access.
+permissions:
+  contents: read
+
+# Per ref, and cancelled on a force-push: the only interesting answer is the one for the newest commit,
+# and three Lighthouse runs against a commit somebody has already replaced is six minutes for nothing.
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  budget:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - run: npm install -g @lhci/cli@0.15.1
+
+      # The config lives in `$RUNNER_TEMP` rather than in a committed `lighthouserc.json`. The budget only
+      # means anything alongside the trigger and the baseline that justify it, and both of those are in
+      # this file; a config at the repository root would be a second home for the numbers and the first
+      # place someone edits one without reading why it is what it is.
+      #
+      # `url` is given explicitly, and that is not a detail. Left to itself, `staticDistDir` discovers
+      # every HTML file beneath the directory and measures all of them: `docs/` already tracks 157 facet
+      # pages, and a tree with the per-repo detail pages generated holds over 1,400. Three runs each would
+      # take hours to report on pages that are prerendered, static, and not where a reader arrives. One
+      # page is measured because one page is the one with a fetch in it.
+      - name: Write the budget
+        run: |
+          cat > "$RUNNER_TEMP/lighthouserc.json" <<'JSON'
+          {
+            "ci": {
+              "collect": {
+                "staticDistDir": "./docs",
+                "url": ["http://localhost/index.html"],
+                "numberOfRuns": 3,
+                "settings": {
+                  "onlyCategories": ["performance"],
+                  "chromeFlags": "--no-sandbox --disable-dev-shm-usage"
+                }
+              },
+              "assert": {
+                "aggregationMethod": "median-run",
+                "assertions": {
+                  "resource-summary:document:size": ["error", { "maxNumericValue": 40960 }],
+                  "resource-summary:script:size": ["error", { "maxNumericValue": 25600 }],
+                  "resource-summary:total:size": ["error", { "maxNumericValue": 307200 }],
+                  "cumulative-layout-shift": ["error", { "maxNumericValue": 0.7 }],
+                  "first-contentful-paint": ["warn", { "maxNumericValue": 2000 }],
+                  "largest-contentful-paint": ["warn", { "maxNumericValue": 2500 }],
+                  "total-blocking-time": ["warn", { "maxNumericValue": 300 }],
+                  "categories:performance": ["warn", { "minScore": 0.9 }]
+                }
+              },
+              "upload": {
+                "target": "filesystem",
+                "outputDir": ".lighthouseci/reports"
+              }
+            }
+          }
+          JSON
+          cat "$RUNNER_TEMP/lighthouserc.json"
+
+      # Three runs and the median of them, because a single run of a page whose largest paint waits on a
+      # 159 KB fetch is a coin toss: the spread on identical bytes was nearly a second on a quiet laptop.
+      #
+      # No browser is installed on purpose. `ubuntu-latest` ships Google Chrome stable and chrome-launcher
+      # finds it; if a future runner image drops it this step fails with "no Chrome installations found",
+      # which is a clear message and a one-line fix, and is better than carrying a third-party
+      # browser-install action in a workflow that runs four times a month.
+      - name: Measure the page against the budget
+        run: lhci autorun --config="$RUNNER_TEMP/lighthouserc.json"
+
+      # Uploaded even when the assertions failed -- especially then. The step's own output says which
+      # threshold was crossed and by how much; the report says which request or which element did it.
+      - name: Keep the reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci
+          retention-days: 14
+          if-no-files-found: warn
