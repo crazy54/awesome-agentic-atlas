@@ -373,6 +373,19 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
             "Analytics & Tracking", "Authentication & Payments", "Error Tracking & Monitoring"]),
         ("Cursor Resources", ["Cursor Rules", "Learning", "Directories", "Tools"]),
     ],
+    "prompteng_promptslab": [
+        ("Coding Agents", ["Vibe Coding and AI Coding Assistants"]),
+        ("Frameworks & Optimizers", ["Agent Frameworks", "Prompt Optimization Tools"]),
+        ("MCP", ["MCP (Model Context Protocol)"]),
+        ("Autonomous Loops & Ports", [
+            "General-Purpose Descendants", "Platform Ports & Hardware Forks"]),
+        ("Research Agents", ["Research-Agent Systems"]),
+        ("Domain Adaptations", ["Domain-Specific Adaptations"]),
+        ("Prompt Evals & Security", [
+            "Prompt Management and Testing", "LLM Evaluation Tools", "Evaluation & Benchmarks",
+            "Red Teaming and Prompt Security"]),
+        ("Guides & Collections", ["Other Notable Repositories", "Related Resources"]),
+    ],
 }
 
 

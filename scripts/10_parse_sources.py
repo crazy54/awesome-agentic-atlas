@@ -251,6 +251,29 @@ SOURCES = [
          mode={"bullet"}, cat_at=2,
          drop={"about the concept", "communities & job boards", "contents", "contribute",
                "news and social media"}),
+    dict(key="agentsec_recon", nwo="ProjectRecon/awesome-ai-agents-security",
+         title="AI Agent Security Tooling", short="Agent Sec",
+         file="ProjectRecon_awesome-ai-agents-security.md",
+         mode={"bullet"}, cat_at=2,
+         drop={"contributing", "table of contents"}),
+    dict(key="prompteng_promptslab", nwo="promptslab/Awesome-Prompt-Engineering",
+         title="Prompt Engineering (promptslab)", short="Prompt Eng",
+         file="promptslab_Awesome-Prompt-Engineering.md",
+         mode={"bullet", "table"}, cat_at=3,
+         drop={"agentic prompting and multi-agent systems", "applications of prompt engineering",
+               "community and independent guides", "discord servers", "forums and platforms",
+               "foundational papers (pre-2024)", "free and research detectors",
+               "free platform courses", "free short courses", "github organizations",
+               "how to contribute", "in-context learning", "leaderboards and meta-benchmarks",
+               "leading commercial detectors", "learn prompting courses",
+               "major benchmarks (2024–2026)", "major surveys", "multimodal prompting",
+               "official provider guides", "other notable providers",
+               "prompt and instruction datasets", "prompt compression",
+               "prompt injection and security", "prompt optimization and automatic prompting",
+               "reasoning advances", "red teaming and adversarial datasets", "reddit",
+               "start here", "structured output and format control", "table of contents",
+               "text-to-image generation", "text-to-music/audio generation",
+               "university and platform courses", "videos", "watermarking approaches"}),
 ]
 
 MD_H = re.compile(r"^(#{2,4})\s+(?P<txt>.+?)\s*#*$")
@@ -284,8 +307,8 @@ def source_paths(src: dict) -> list[Path]:
     """Every file this source's content lives in, primary first.
 
     Most lists are one README. A few keep their items in sub-documents behind a hub README --
-    github/awesome-copilot has five rows in its README and ~415 items in four files under docs/ --
-    and `paths` names those. They land beside the primary file so one source stays one group on
+    github/awesome-copilot has 3 rows in its README and 948 across six files under docs/ -- and
+    `paths` names those. They land beside the primary file so one source stays one group on
     disk, and pull_sources.py pulls exactly this set: where an extra file goes is decided once,
     here, rather than by two functions free to disagree about it.
     """

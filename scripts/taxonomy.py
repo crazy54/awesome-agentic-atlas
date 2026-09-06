@@ -709,6 +709,38 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("vibecoding", "Mobile Apps"): "Coding Agents",
     ("vibecoding", "Plugins and Extensions"): "Coding Agents",
     ("vibecoding", "Documentation for AI Coding"): "Docs, Learning & Lists",
+
+    # ProjectRecon/awesome-ai-agents-security
+    # Single-subject list: six of its seven shelves are kinds of agent security, so they all map to
+    # Sandbox, Security & Governance and stay distinguishable by sub_category. Only 'Benchmarks &
+    # Datasets' leaves that category.
+    ("agentsec_recon", "Agent Firewalls & Gateways (Runtime Protection)"):
+        "Sandbox, Security & Governance",
+    ("agentsec_recon", "Guardrails & Compliance"): "Sandbox, Security & Governance",
+    ("agentsec_recon", "Identity & Authentication"): "Sandbox, Security & Governance",
+    ("agentsec_recon", "Red Teaming & Vulnerability Scanners"): "Sandbox, Security & Governance",
+    ("agentsec_recon", "Sandboxing & Isolation Environments"): "Sandbox, Security & Governance",
+    ("agentsec_recon", "Static Analysis & Linters"): "Sandbox, Security & Governance",
+    ("agentsec_recon", "Benchmarks & Datasets"): "Observability & Evals",
+
+    # promptslab/Awesome-Prompt-Engineering
+    # Mixed list, taken for its two tooling blocks. The Papers, Courses, Tutorials, Videos,
+    # Communities, Guides, AI-content-detector, Benchmark and Dataset shelves are dropped as front
+    # matter: 181 rows between them, zero repos the atlas does not already hold.
+    ("prompteng_promptslab", "General-Purpose Descendants"): "Orchestrators & Multi-Agent",
+    ("prompteng_promptslab", "Platform Ports & Hardware Forks"): "Orchestrators & Multi-Agent",
+    ("prompteng_promptslab", "Vibe Coding and AI Coding Assistants"): "Coding Agents",
+    ("prompteng_promptslab", "MCP (Model Context Protocol)"): "MCP Servers",
+    ("prompteng_promptslab", "Agent Frameworks"): "Frameworks & SDKs",
+    ("prompteng_promptslab", "Prompt Optimization Tools"): "Frameworks & SDKs",
+    ("prompteng_promptslab", "Red Teaming and Prompt Security"): "Sandbox, Security & Governance",
+    ("prompteng_promptslab", "Evaluation & Benchmarks"): "Observability & Evals",
+    ("prompteng_promptslab", "LLM Evaluation Tools"): "Observability & Evals",
+    ("prompteng_promptslab", "Prompt Management and Testing"): "Observability & Evals",
+    ("prompteng_promptslab", "Research-Agent Systems"): "Research & Data Agents",
+    ("prompteng_promptslab", "Domain-Specific Adaptations"): "Assistants & Domain Agents",
+    ("prompteng_promptslab", "Other Notable Repositories"): "Docs, Learning & Lists",
+    ("prompteng_promptslab", "Related Resources"): "Docs, Learning & Lists",
 }
 
 # The second axis: what a thing plugs into. Matched on text because no curator has a column for it --
