@@ -598,6 +598,40 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .rise.down{color:var(--muted);font-weight:400}
 .count{color:var(--muted);font-size:13px;margin-left:auto;white-space:nowrap}
 .count b{color:var(--ink)}
+/* ---- The filter sheet --------------------------------------------------------------------------------
+   The bar carries four control rows and 27 chips. That is right on a 1500px desktop and it is the whole of
+   the mobile complaint: on a 375px phone the four rows measured 296px, 36% of the screen, and the two long
+   facets were horizontal rails scrolled one chip at a time. So below the table breakpoint the three facet
+   rows become a sheet the reader opens, and the handle on it carries the number of filters behind it --
+   which is the one thing that must stay legible while it is shut, or shutting the sheet hides the state as
+   well as the controls.
+
+   Everything below is inert until `buildChips` puts `data-fb` on <html>, and inert on a wide screen either
+   way: there the sheet is a plain block in the bar, exactly what the three rows already were, and the
+   handle is not rendered at all. That is load-bearing rather than tidy. `buildChips` only runs once
+   `data.json` has arrived, and a handle whose click has not been wired must never become the only way to
+   reach the filters -- so the failure mode of the fetch never being answered is today's bar and not a
+   sheet nothing can open. */
+#sheet{display:flex;flex-direction:column;gap:inherit}
+/* `inherit` and not `8px`. The bar's own `gap` is 8px, and 5px once the compact query below applies; this
+   wrapper has just been inserted between it and the three rows that used to be its direct flex children,
+   so restating either number here is exactly how the two would come to disagree. */
+#fbt{display:none;align-items:center;gap:.5em}
+/* The count as a filled badge rather than "Filters (3)", because a shut sheet is glanced at and not read.
+   Hidden when it is empty: `min-width` would otherwise leave a small filled dot meaning zero. */
+#fbn{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;padding:0 .3em;
+  border-radius:999px;background:var(--bar);color:var(--onbar);font-size:12px;font-weight:700;
+  line-height:1.4;font-variant-numeric:tabular-nums}
+#fbt:not(.act) #fbn{display:none}
+/* With something selected the handle takes the accent a pressed chip takes, because at that point it is
+   one. The badge inverts so it stays readable on the fill -- `--onbar` is dark ink in dark mode and white
+   in light, so the pair swaps correctly in both without a second value. */
+#fbt.act{background:var(--bar);border-color:var(--bar);color:var(--onbar);font-weight:600}
+#fbt.act #fbn{background:var(--onbar);color:var(--bar)}
+/* The sheet's own header and the backdrop behind it exist only in the sheet's narrow form. On a desktop
+   there is nothing to head and nothing to dim. */
+.shead{display:none}
+#fbb{display:none}
 main{padding:0 20px 64px}
 table{width:100%;border-collapse:collapse;margin-top:14px}
 th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
@@ -789,6 +823,75 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
      only ever binds where it is needed. `vh` first: a browser that does not understand `dvh` must
      still get a cap rather than none. */
   .bar{max-height:44vh;max-height:44dvh;overflow-y:auto}
+
+  /* ---- and the sheet, which is what the rails and the cap above are the fallback for -----------------
+     The handle, at the 44px WCAG 2.5.5 asks for, sharing the one row the bar is now reduced to with the
+     search box. Everything in that row grows to 44 with it: the 30px chips above are what you do when six
+     control rows have to fit on a phone, and are not what you do once they no longer have to. */
+  html[data-fb] #fbt{display:inline-flex;flex:none;min-height:44px;padding:0 14px}
+  html[data-fb] #q{flex:1 1 0;min-width:9em;min-height:44px}
+  html[data-fb] .bar .chip,html[data-fb] select{min-height:44px}
+  /* No `display` in this rule, deliberately. It outranks `.newchip{display:none}`, so setting one here
+     would put the New and Rising chips on screen on every build whose window is empty -- which is the one
+     thing those two classes exist to prevent. A <button> centres its own content vertically, so the
+     min-height above needs no help. */
+  html[data-fb] .bar .chip{padding:0 13px}
+  header button{min-height:44px;padding:0 14px}
+  .fix{min-height:44px}
+
+  /* Anchored to the bottom edge, not dropped open under its own handle. The handle is in a bar stuck to
+     the top of the screen, and the top third of a 375x812 phone is exactly where a thumb held one-handed
+     cannot reach -- so expanding it in place would move all 27 chips *away* from the hand that opened
+     them. `translateY` off the bottom rather than `display:none` so it slides, and `visibility:hidden`
+     beside it because a transform alone leaves the chips focusable, tabbable and in the accessibility
+     tree while they are off screen. */
+  html[data-fb] #sheet{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:30;
+    background:var(--plane);border-top:1px solid var(--grid);border-radius:14px 14px 0 0;
+    box-shadow:0 -14px 44px rgba(0,0,0,.45);padding:0 14px 16px;gap:14px;
+    max-height:80vh;max-height:80dvh;overflow-y:auto;overscroll-behavior:contain;
+    transform:translateY(101%);visibility:hidden;transition:transform .18s ease,visibility .18s}
+  /* `visibility` is transitioned on the way out and not on the way in, which is the whole reason the open
+     state restates `transition` at all. CSS interpolates visibility as a step that reads `visible` for the
+     whole duration -- except at progress exactly 0, where it is still the old value. So a transitioned
+     open leaves the sheet computed as hidden for the instant `show()` runs in, a hidden element cannot take
+     focus, and the focus call in that function silently did nothing. Measured: `document.activeElement`
+     stayed on the handle. Dropping visibility from the list here makes the change immediate; keeping it in
+     the shut state above is what lets the panel stay on screen for the 180ms it takes to slide back out,
+     instead of vanishing and leaving an empty animation behind. */
+  html[data-fb][data-sheet=open] #sheet{transform:none;visibility:visible;
+    transition:transform .18s ease}
+  /* Focused on open so a keyboard reader lands inside it, which is a programmatic focus and not a click --
+     so it gets no ring. `:focus-visible` would already have withheld one; this also covers the engines
+     where that is still `:focus`. */
+  html[data-fb] #sheet:focus{outline:none}
+  /* Tap off the sheet to shut it, which is the gesture a sheet trains, over a dimmed page so the two read
+     as one thing. `touch-action:none` so a drag that lands on the backdrop does not scroll the document
+     underneath the panel that is covering it. */
+  html[data-fb] #fbb{display:block;position:fixed;inset:0;z-index:29;background:rgba(0,0,0,.5);
+    opacity:0;visibility:hidden;touch-action:none;transition:opacity .18s,visibility .18s}
+  html[data-fb][data-sheet=open] #fbb{opacity:1;visibility:visible}
+  /* Sticky inside the sheet, so the count and the way out stay on screen while the reader scrolls past
+     thirteen topics. The result count is repeated here for one reason: the bar's own copy is behind the
+     sheet while the sheet is open, and tapping chips with no number moving anywhere is the state in which
+     a reader cannot tell whether the tap landed. */
+  html[data-fb] .shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:1;background:var(--plane);
+    padding:14px 0 10px;border-bottom:1px solid var(--grid)}
+  html[data-fb] .shead .sh{flex:1 1 auto;font-size:15px;font-weight:600}
+  html[data-fb] #scount{flex:1 1 100%;color:var(--muted);font-size:12.5px}
+  html[data-fb] #scount b{color:var(--ink)}
+  html[data-fb] #fbx{flex:none;min-height:44px;padding:0 16px}
+  /* A rail is the wrong shape once there is height to spend. The rails above exist because the bar has one
+     row per facet and 27 chips to get into it; the sheet has the height of a phone, so the chips wrap, all
+     thirteen topics are in view at once, and the label goes above them instead of taking width from them.
+     That horizontal scroll-one-chip-at-a-time is the "hard to work with on a phone" half of the ticket. */
+  html[data-fb] #sheet .facet{display:block}
+  html[data-fb] #sheet .facet>label{display:block;min-width:0;margin:0 0 7px;font-size:11px}
+  html[data-fb] #sheet #cats,html[data-fb] #sheet #tgts,html[data-fb] #sheet #oses{
+    display:flex;flex-wrap:wrap;gap:8px;overflow:visible;flex:none;min-width:0}
+  /* Confirmed only and Clear all, which ride on the Runs-on row. With that row a block rather than a flex
+     line they follow the OS chips as ordinary inline content and need the gap put back by hand. */
+  html[data-fb] #sheet .facet>.chip{margin-top:8px}
 }
 
 @media(max-width:640px){
@@ -1000,6 +1103,17 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <input id="q" type="search" aria-label="Search projects"
            placeholder="name, repo, description, language&hellip;"
            autocomplete="off" spellcheck="false">
+    <!-- The handle on the filter sheet. Next to the search box because on a phone those two are the whole
+         of the bar, and the pair reads as "what to look for, and what to look in".
+
+         `aria-expanded` and `aria-controls` rather than `aria-pressed`: this opens something, it does not
+         turn something on, and the two announce quite differently. `hidden` is not used here and would be
+         wrong -- the stylesheet already keeps this out of the layout on every viewport that has room for
+         the rows themselves, and JavaScript that never runs must leave those rows on screen rather than
+         behind a button. `paintSheet` gives it its accessible name, which always begins with the visible
+         word so that a voice-control user can say it (WCAG 2.5.3). -->
+    <button class="chip" id="fbt" aria-expanded="false" aria-controls="sheet"
+            aria-label="Filters">Filters<span id="fbn"></span></button>
     <select id="sort" aria-label="Sort by">
       <!-- Best match is the default, and it is deliberately not a hidden mode. Ranking search results
            without saying so would silently override a sort the reader had chosen; as an option they can
@@ -1038,13 +1152,33 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
          is read as one sentence rather than as whichever digits changed. -->
     <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
-  <div class="line facet"><label>Topic</label><span id="cats"></span></div>
-  <div class="line facet"><label>Plugs into</label><span id="tgts"></span></div>
-  <div class="line facet"><label>Runs on</label><span id="oses"></span>
-    <button class="chip" id="strict" aria-pressed="false"
-            title="Drop rows where support is inferred from the language rather than stated">Confirmed
-      only</button>
-    <button class="chip" id="reset">Clear all</button>
+  <!-- Inside the bar rather than after it, because on a desktop these three rows are part of the sticky
+       bar and have been since the page was written; the sheet is a narrow-viewport reading of the same
+       markup, which is the trick the cards view plays on the table and it is here for the same reason.
+       `position:fixed` is not clipped by the bar's `overflow-y:auto` -- a fixed box's containing block is
+       the viewport, and the bar has no transform or `contain` to make itself one instead -- and the bar's
+       own `z-index:20` stacking context is what puts the sheet above the results rather than beneath them.
+
+       The backdrop is a sibling and not a `::before` on the sheet: it has to cover the page the sheet is
+       over, and a pseudo-element of the sheet is inside it. -->
+  <div id="fbb"></div>
+  <div id="sheet" role="group" aria-label="Filters" tabindex="-1">
+    <!-- Only ever on screen in the sheet's narrow form; `.shead{display:none}` above is the desktop, where
+         the rows are simply part of the bar and there is no panel to title or to dismiss. -->
+    <div class="shead"><span class="sh" id="shtitle">Filters</span>
+      <button class="chip" id="fbx">Done</button>
+      <!-- No `role=status` on this one, though it is a live number: `#count` in the bar already has one and
+           carries the same sentence, and two polite regions saying the same thing announce it twice. -->
+      <span id="scount"></span>
+    </div>
+    <div class="line facet"><label>Topic</label><span id="cats"></span></div>
+    <div class="line facet"><label>Plugs into</label><span id="tgts"></span></div>
+    <div class="line facet"><label>Runs on</label><span id="oses"></span>
+      <button class="chip" id="strict" aria-pressed="false"
+              title="Drop rows where support is inferred from the language rather than stated">Confirmed
+        only</button>
+      <button class="chip" id="reset">Clear all</button>
+    </div>
   </div>
 </div></div>
 
@@ -1349,8 +1483,88 @@ function buildChips() {
     ropt.remove();
   }
   document.getElementById("reset").onclick = () => set(CLEAR);
+  sheetWire();
   window.addEventListener("hashchange", () => { readHash(); render(); });
   palWire();
+}
+
+// The handle, the backdrop and the Done button. Wired from `buildChips` rather than from `wire()`, and this
+// is the same argument `palWire` makes one function down, with more riding on it: `wire()` also runs on the
+// data.json error page, and there the three facet rows have no chips in them yet. Putting `data-fb` on
+// <html> is what switches the stylesheet's sheet form on at all, so doing it here means the sheet can only
+// close over the filters once there are filters and a click handler to open it again with. If the fetch
+// never resolves, the reader gets the bar the page had before this existed -- four rows, capped, scrollable
+// -- instead of a button that does nothing in front of everything.
+function sheetWire() {
+  const fbt = document.getElementById("fbt"), sheet = document.getElementById("sheet");
+  const root = document.documentElement;
+  const shut = () => root.dataset.sheet !== "open";
+  const show = on => {
+    root.dataset.sheet = on ? "open" : "shut";
+    fbt.setAttribute("aria-expanded", on ? "true" : "false");
+    // Focus follows the sheet both ways. Without this a keyboard reader opens it and is still outside it,
+    // then shuts it and lands on <body> -- which is the top of the document, above every control there is.
+    //
+    // The reflow is not superstition and it is not a `requestAnimationFrame` because it must not be async:
+    // the sheet is `visibility:hidden` while shut, a hidden element cannot take focus, and the line above
+    // has only changed an attribute -- the computed style behind it is still the old one until something
+    // asks for layout. Measured: without this read `document.activeElement` stays on the handle. Reading
+    // `offsetHeight` is the cheapest question that forces the recalculation, and it stays inside this one
+    // event rather than deferring focus into a later frame the reader may already have typed into.
+    if (on) { void sheet.offsetHeight; sheet.focus(); } else fbt.focus();
+  };
+  root.dataset.fb = "1";
+  root.dataset.sheet = "shut";
+  fbt.onclick = () => show(shut());
+  document.getElementById("fbx").onclick = () => show(false);
+  document.getElementById("fbb").onclick = () => show(false);
+  // Esc, like everything else dismissible here. Deliberately not a focus trap and deliberately no
+  // preventDefault: this is a disclosure rather than a modal, so Tab is allowed to walk out of it, and the
+  // palette is a real <dialog> whose own Esc handling is the browser's -- so when that is open this stands
+  // aside rather than closing two things on one key.
+  document.addEventListener("keydown", ev => {
+    const pal = document.getElementById("pal");
+    if (ev.key === "Escape" && !shut() && !(pal && pal.open)) show(false);
+  });
+}
+
+// Which filters live behind the handle, in the order the sheet lists them, as their own labels.
+//
+// Three of the seven are not here, and the omissions are the point rather than an oversight. `q` is the
+// search box, which stays in the bar with the reader's own words still in it. New and Rising also stay in
+// the bar, wearing the filled accent every pressed chip wears. All three are therefore already visible
+// while the sheet is shut, and counting them would make the badge over-report what opening it would show:
+// a reader who sees "1" and finds nothing selected has been told the wrong thing about the only control
+// the number is attached to. So the badge answers exactly one question -- how many of the things behind
+// this handle are on -- which is the question a shut sheet cannot otherwise answer.
+function sheetFilters() {
+  const on = [];
+  // `find` rather than an index: `readHash` validates both slugs against the data before they reach state,
+  // but a label is not worth a throw if that ever stops being true.
+  const name = (list, slug) => (list.find(x => x.slug === slug) || {}).name;
+  if (state.cat) on.push(name(D.cats, state.cat));
+  if (state.tgt) on.push(name(D.targets, state.tgt));
+  state.os.forEach(i => on.push(D.os[i]));
+  if (state.strict) on.push("Confirmed only");
+  return on.filter(Boolean);
+}
+
+// Called from `render()` and nowhere else, for the reason the chip reflection there gives: that is the one
+// function every path which changes state already ends at, so a chip, a hashchange, the back button and a
+// shared link all repaint this without each of them remembering to.
+function paintSheet(countHTML) {
+  const on = sheetFilters(), n = on.length;
+  const fbt = document.getElementById("fbt");
+  document.getElementById("fbn").textContent = n ? String(n) : "";
+  fbt.classList.toggle("act", n > 0);
+  // "Filters" first and always, so the accessible name still contains the visible label -- WCAG 2.5.3, and
+  // the word a voice-control user has to be able to say to press it. The names follow the count because
+  // "3 selected" is the glanceable part and the list is the confirmation.
+  fbt.setAttribute("aria-label", n
+    ? "Filters — " + n + " selected: " + on.join(", ")
+    : "Filters — none selected");
+  document.getElementById("shtitle").textContent = n ? "Filters · " + n : "Filters";
+  document.getElementById("scount").innerHTML = countHTML;
 }
 
 // Wired from `buildChips` rather than from `wire()`, because `wire()` also runs on the data.json error
@@ -2094,11 +2308,16 @@ function render() {
   }
 
   const ranked = hits.filter(r => r.stars).length;
-  document.getElementById("count").innerHTML = approx
+  const countHTML = approx
     ? "<b>" + hits.length.toLocaleString() + "</b> near " +
       (hits.length === 1 ? "match" : "matches") + " · nothing matches “" + esc(state.q) + "” exactly"
     : "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() +
       " · " + ranked.toLocaleString() + " with stars";
+  document.getElementById("count").innerHTML = countHTML;
+  // The same sentence into the sheet's own header, along with the handle's badge. One string, two places:
+  // the bar's copy is behind the sheet while the sheet is open, and a reader tapping chips has to see the
+  // number move or they cannot tell that the tap landed.
+  paintSheet(countHTML);
 
   const cat = state.cat && D.cats.find(c => c.slug === state.cat);
   const tgt = state.tgt && D.targets.find(t => t.slug === state.tgt);

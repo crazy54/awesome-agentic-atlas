@@ -144,6 +144,7 @@ const shim = [
   // `RISE` is settable, not just readable, because the published `data.json` can only ever exercise one
   // side of the velocity feature at a time -- and the side it cannot reach is the side that renders.
   "  gained, get RISE(){return RISE}, set RISE(v){RISE=v},",
+  "  sheetFilters, paintSheet,",
   "  palItems, palRender, palMove, palPick, palOpen, palWire, PALMOD,",
   "  get PAL(){return PAL}, get PALI(){return PALI}, set PALI(v){PALI=v},",
   '  get OUT(){return document.getElementById("out").innerHTML},',
@@ -881,6 +882,205 @@ ok("...and the unprefixed spelling for engines that have moved on",
 // No separate "and it is scoped to cards" assertion here: the blanket check above already requires every
 // selector in this block to carry the prefix, and a second one that tried to say it for this rule alone
 // matched its own scoped selector and reported it as unscoped.
+
+// -------------------------------------------------------------------------- the filter sheet, JFH-184
+// The three facet rows used to sit in the sticky bar at every width, four rows of chip rails that ate 36%
+// of a 375x812 viewport and could only be worked with two thumbs. Below the table breakpoint they are now
+// a bottom sheet behind a "Filters" handle, and the handle carries a count of what is active so a reader
+// who never opens it can still see that a filter is on.
+//
+// Two properties here are worth more than the rest and neither is visible in a screenshot:
+//
+// 1. Every sheet rule is gated on `html[data-fb]`, an attribute only `sheetWire()` sets. If `data.json`
+//    never arrives -- the offline case, the file:// case, a 500 from Pages -- `buildChips` never runs, the
+//    gate is never set, and the reader gets today's bar rather than a sheet with no chips in it that
+//    nothing can open. The gate is the whole fallback, so it is asserted from both sides: the default-off
+//    base rules, and that nothing which reveals or positions the sheet is missing the prefix.
+// 2. `html[data-fb] .bar .chip{...}` deliberately sets no `display`. It outranks `.newchip{display:none}`,
+//    so a `display:inline-flex` added to it for tidiness would reveal the New and Rising chips on every
+//    build whose velocity window is empty -- which is the build this site ships most days. That is a
+//    one-word regression with no visible cause, so it gets its own assertion.
+const NARROW = "@media(max-width:640px),(max-height:560px)";
+const sheetSel = /#sheet|#fbt|#fbn|#fbb|#fbx|#scount|\.shead/;
+const sheetRules = cssRules(styles).filter(r => sheetSel.test(r.sel));
+const ruleFor = (sel) => sheetRules.find(r => r.sel === sel);
+const gated = sheetRules.filter(r => r.at === NARROW);
+
+ok("the sheet was emitted at all", sheetRules.length > 15, String(sheetRules.length));
+ok("nothing in it needed !important", sheetRules.every(r => !/!important/.test(r.body)));
+// The default-off half of the gate. Each of these three is what a reader with no data.json sees.
+ok("the handle is display:none until the gate is set",
+   /^display:none/.test((ruleFor("#fbt") || {body: ""}).body), (ruleFor("#fbt") || {}).body);
+ok("...as is the backdrop", (ruleFor("#fbb") || {}).body === "display:none");
+ok("...as is the sheet's own header, the sheet being a plain flex column until then",
+   (ruleFor(".shead") || {}).body === "display:none" &&
+   /display:flex/.test((ruleFor("#sheet") || {body: ""}).body));
+// The reveal half. Anything that positions the sheet over the page or shows its furniture has to carry
+// both the gate and the narrow media query, or it would fire on a desktop or with no data loaded.
+const reveal = sheetRules.filter(r => /position:fixed|display:(?!none)/.test(r.body) && r.at);
+ok("every rule that reveals or positions the sheet is behind the gate", reveal.length >= 4 &&
+   reveal.every(r => r.at === NARROW && r.sel.split(",").every(p => p.trim().startsWith("html[data-fb]"))),
+   reveal.filter(r => r.at !== NARROW || r.sel.split(",").some(p => !p.trim().startsWith("html[data-fb]")))
+     .map(r => r.at + " / " + r.sel).join(" | ") || String(reveal.length));
+ok("...and the sheet itself is fixed to the bottom of the viewport, not the scrolling bar",
+   /position:fixed/.test((ruleFor("html[data-fb] #sheet") || {body: ""}).body) &&
+   /bottom:0/.test((ruleFor("html[data-fb] #sheet") || {body: ""}).body));
+// `.bar` caps itself at 44dvh and scrolls inside, so a sheet positioned within it would be clipped to that
+// cap. `position:fixed` takes the viewport as its containing block instead, which is what makes 80dvh
+// reachable from inside an ancestor 44dvh tall.
+ok("...at 80dvh with a vh fallback for engines without dvh",
+   /max-height:80vh;max-height:80dvh/.test((ruleFor("html[data-fb] #sheet") || {body: ""}).body));
+ok("...and it scrolls inside itself without chaining to the page behind it",
+   /overflow-y:auto/.test((ruleFor("html[data-fb] #sheet") || {body: ""}).body) &&
+   /overscroll-behavior:contain/.test((ruleFor("html[data-fb] #sheet") || {body: ""}).body));
+// Opening restates `transition` without `visibility`. With it in the list the sheet computes `hidden` at
+// progress exactly 0 -- the instant `show()` runs -- and a hidden element cannot take focus, so
+// `sheet.focus()` was a silent no-op and the sheet opened with focus left on the handle. Shutting keeps
+// `visibility` in the list, which is what holds the sheet visible through the 180ms slide-out.
+const openRule = (ruleFor("html[data-fb][data-sheet=open] #sheet") || {body: ""}).body;
+ok("the open state drops visibility from the transition, or the sheet cannot take focus",
+   /transition:transform \.18s ease$/.test(openRule.trim()) && !/visibility/.test(
+     openRule.split("transition:")[1] || ""), openRule);
+ok("...while the shut state keeps it, so the slide-out is seen at all",
+   /transition:transform \.18s ease,visibility \.18s/.test(
+     (ruleFor("html[data-fb] #sheet") || {body: ""}).body));
+// The JFH-200 landscape fix. Keyed on either axis, so an 844x390 phone on its side compacts on height
+// even though it is wider than 640px. A media query narrowed back to `max-width` alone would put four
+// rows of chip rails into 390px of height, which is the bug that shipped once.
+ok("compaction is keyed on either axis, so landscape phones compact too",
+   gated.length > 10 && styles.includes(NARROW), NARROW + " -> " + gated.length + " sheet rules");
+ok("...and the bar's own cap is inside the same query", cssRules(styles).some(
+   r => r.at === NARROW && r.sel === ".bar" && /max-height:44vh;max-height:44dvh/.test(r.body)));
+// WCAG 2.5.5. Measured in cards-check at real widths; asserted here as text because a floor that is only
+// ever measured on the three viewports someone thought of is a floor with holes in it.
+for (const sel of ["html[data-fb] #fbt", "html[data-fb] #q", "html[data-fb] #fbx",
+                   "html[data-fb] .bar .chip,html[data-fb] select", "header button", ".fix"])
+  ok("44px tap target: " + sel, /min-height:44px/.test((ruleFor(sel) ||
+     cssRules(styles).find(r => r.sel === sel && r.at === NARROW) || {body: ""}).body),
+     (cssRules(styles).find(r => r.sel === sel && r.at === NARROW) || {}).body);
+// The one-word regression described at the top of this block.
+ok("the chip sizing rule sets no display, which would unhide the New and Rising chips",
+   !/display/.test((cssRules(styles).find(
+     r => r.sel === "html[data-fb] .bar .chip" && r.at === NARROW) || {body: ""}).body),
+   (cssRules(styles).find(r => r.sel === "html[data-fb] .bar .chip") || {}).body);
+
+// --- the markup: a disclosure, and one that actually contains the filters ---
+const fbtTag = (html.match(/<button[^>]*id="fbt"[^>]*>/) || [""])[0].replace(/\s+/g, " ");
+ok("the handle is a disclosure, not a toggle: aria-expanded and aria-controls",
+   /aria-expanded="false"/.test(fbtTag) && /aria-controls="sheet"/.test(fbtTag), fbtTag);
+// WCAG 2.5.3 Label in Name: the accessible name has to start with the visible word, or voice control
+// cannot address it. `paintSheet` appends the count to it and never replaces it.
+ok("...and its accessible name starts with the word on it", /aria-label="Filters/.test(fbtTag), fbtTag);
+// Brace-matched in the HTML sense: walked to the `</div>` that actually closes the sheet, not to the next
+// landmark. A slice that stopped at `<main>` would read a stray `</div>` -- one that closed the sheet early
+// and left the Runs-on rail back in the always-visible bar -- as still being inside it, which is the one
+// way this markup can go wrong without looking wrong. No `<div/>` exists in HTML, so open-minus-close is
+// the whole of the arithmetic.
+const divEnd = (start) => {
+  const tag = /<(\/?)div\b[^>]*>/g;
+  tag.lastIndex = start;
+  let depth = 0, m;
+  while ((m = tag.exec(html))) {
+    depth += m[1] ? -1 : 1;
+    if (depth === 0) return m.index;
+  }
+  return -1;
+};
+const sheetAt = html.indexOf('<div id="sheet"');
+const sheetShut = divEnd(sheetAt);
+ok("the sheet opens and closes", sheetAt > 0 && sheetShut > sheetAt &&
+   sheetShut < html.indexOf("<main"), sheetAt + " -> " + sheetShut);
+const sheetMarkup = html.slice(sheetAt, sheetShut);
+// The stub DOM invents an element for any id asked of it, so every behavioural assertion above passes just
+// as happily against a page that lost one of these -- writing the count into a phantom. The markup is the
+// only place that is caught.
+for (const id of ["fbt", "fbn", "sheet", "fbb", "fbx", "shtitle", "scount"])
+  ok("the markup carries #" + id, new RegExp('id="' + id + '"').test(html));
+ok("...and the badge is inside the handle, so the count travels with it",
+   /id="fbt"[\s\S]*?>Filters<span id="fbn"><\/span><\/button>/.test(html));
+ok("the sheet is a labelled group", /role="group"/.test(sheetMarkup) &&
+   /aria-label="Filters"/.test(sheetMarkup) && /tabindex="-1"/.test(sheetMarkup));
+ok("...and it wraps all three facet rails and both mode chips, not a subset",
+   ["cats", "tgts", "oses", "strict", "reset", "scount", "shtitle", "fbx"]
+     .every(id => sheetMarkup.includes('id="' + id + '"')),
+   ["cats", "tgts", "oses", "strict", "reset", "scount", "shtitle", "fbx"]
+     .filter(id => !sheetMarkup.includes('id="' + id + '"')).join(", "));
+// Search, sort and the two velocity chips stay in the always-visible row on purpose: the box shows its own
+// text and the chips wear the accent when pressed, so every active filter is visible while the sheet is
+// shut without the badge over-reporting what opening it would show.
+ok("the search box stays out of the sheet, its text being its own indicator",
+   !sheetMarkup.includes('id="q"') && !sheetMarkup.includes('id="new"') &&
+   !sheetMarkup.includes('id="rise"'));
+
+// --- the count, at 0, 1 and several ---
+const G = (id) => document.getElementById(id);
+ok("the CSS gate is set by JS, and by nothing else", document.documentElement.dataset.fb === "1");
+// The shut state's `aria-expanded="false"` comes from the markup, asserted above -- `show()` is the only
+// thing that ever writes the attribute, so there is nothing to read here at boot. This half is the
+// `data-sheet` the CSS keys the slide on.
+ok("...and the sheet boots shut", document.documentElement.dataset.sheet === "shut",
+   String(document.documentElement.dataset.sheet));
+
+const CLR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false};
+const paint = (over) => { Object.assign(A.state, CLR, over); A.render(); };
+paint({});
+ok("no filters: the badge is empty and the handle is unfilled",
+   G("fbn").textContent === "" && !G("fbt").classList.contains("act"),
+   JSON.stringify(G("fbn").textContent));
+ok("...and the handle says so out loud",
+   G("fbt").getAttribute("aria-label") === "Filters — none selected",
+   G("fbt").getAttribute("aria-label"));
+ok("...and the sheet's title is unadorned", G("shtitle").textContent === "Filters");
+
+const cat0 = A.D.cats[0], tgt0 = A.D.targets[0];
+paint({cat: cat0.slug});
+ok("one filter: the badge reads 1 and the handle fills",
+   G("fbn").textContent === "1" && G("fbt").classList.contains("act"), G("fbn").textContent);
+ok("...and the label names the filter rather than its slug",
+   G("fbt").getAttribute("aria-label") === "Filters — 1 selected: " + cat0.name,
+   G("fbt").getAttribute("aria-label"));
+
+ok("there are at least two operating systems to select", A.D.os.length >= 2, String(A.D.os.length));
+paint({cat: cat0.slug, tgt: tgt0.slug, os: [0, 1], strict: true});
+const want = [cat0.name, tgt0.name, A.D.os[0], A.D.os[1], "Confirmed only"];
+ok("five filters: the badge reads 5", G("fbn").textContent === "5", G("fbn").textContent);
+ok("...and each is named, in the order the rails are read",
+   JSON.stringify(A.sheetFilters()) === JSON.stringify(want), JSON.stringify(A.sheetFilters()));
+ok("...and the label lists all five",
+   G("fbt").getAttribute("aria-label") === "Filters — 5 selected: " + want.join(", "),
+   G("fbt").getAttribute("aria-label"));
+ok("...and the shut sheet's title carries the count",
+   G("shtitle").textContent === "Filters · 5", G("shtitle").textContent);
+// The result count is repeated inside the sheet, because a reader changing filters with the sheet open
+// cannot see the bar's copy behind it -- and it is painted before render()'s empty-state early return, or
+// it would go stale exactly when it matters most.
+ok("the sheet repeats the result count", G("scount").innerHTML === A.COUNT && A.COUNT.length > 0,
+   JSON.stringify(G("scount").innerHTML));
+paint({q: "zzzzqqqqxxxx-no-such-thing", cat: cat0.slug, tgt: tgt0.slug, os: [0, 1], strict: true});
+ok("...even on a render that finds nothing and returns early",
+   G("scount").innerHTML === A.COUNT && A.COUNT.length > 0, JSON.stringify(G("scount").innerHTML));
+ok("...and the badge is repainted on that path too", G("fbn").textContent === "5", G("fbn").textContent);
+// Only what is behind the handle counts. `fresh` and `rising` are chips in the visible row, and counting
+// them would send a reader into a sheet that shows nothing selected.
+paint({fresh: true, rising: true});
+ok("the badge counts what the sheet holds and not the chips beside it",
+   G("fbn").textContent === "" && A.sheetFilters().length === 0, JSON.stringify(A.sheetFilters()));
+
+// --- opening and closing ---
+const shutNow = () => document.documentElement.dataset.sheet === "shut" &&
+  G("fbt").getAttribute("aria-expanded") === "false";
+const openNow = () => document.documentElement.dataset.sheet === "open" &&
+  G("fbt").getAttribute("aria-expanded") === "true";
+G("fbt").click();
+ok("the handle opens the sheet, and says it is open", openNow(),
+   document.documentElement.dataset.sheet + " / " + G("fbt").getAttribute("aria-expanded"));
+G("fbt").click();
+ok("...and the same handle closes it", shutNow());
+G("fbt").click(); G("fbx").click();
+ok("Done closes it", shutNow());
+G("fbt").click(); G("fbb").click();
+ok("a tap on the backdrop closes it", shutNow());
+paint({});
 
 // ------------------------------------------------------- the page as shipped: no comments, no placeholders
 // The JFH-204 acceptance checks. `scripts/19_pages.py` keeps every comment it has ever had and

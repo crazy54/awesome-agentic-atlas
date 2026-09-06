@@ -108,6 +108,16 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .rise.down{color:var(--muted);font-weight:400}
 .count{color:var(--muted);font-size:13px;margin-left:auto;white-space:nowrap}
 .count b{color:var(--ink)}
+#sheet{display:flex;flex-direction:column;gap:inherit}
+#fbt{display:none;align-items:center;gap:.5em}
+#fbn{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;padding:0 .3em;
+  border-radius:999px;background:var(--bar);color:var(--onbar);font-size:12px;font-weight:700;
+  line-height:1.4;font-variant-numeric:tabular-nums}
+#fbt:not(.act) #fbn{display:none}
+#fbt.act{background:var(--bar);border-color:var(--bar);color:var(--onbar);font-weight:600}
+#fbt.act #fbn{background:var(--onbar);color:var(--bar)}
+.shead{display:none}
+#fbb{display:none}
 main{padding:0 20px 64px}
 table{width:100%;border-collapse:collapse;margin-top:14px}
 th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
@@ -213,6 +223,37 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   .bar .wrap{gap:5px}
   .chip{padding:4px 11px}
   .bar{max-height:44vh;max-height:44dvh;overflow-y:auto}
+
+  html[data-fb] #fbt{display:inline-flex;flex:none;min-height:44px;padding:0 14px}
+  html[data-fb] #q{flex:1 1 0;min-width:9em;min-height:44px}
+  html[data-fb] .bar .chip,html[data-fb] select{min-height:44px}
+  html[data-fb] .bar .chip{padding:0 13px}
+  header button{min-height:44px;padding:0 14px}
+  .fix{min-height:44px}
+
+  html[data-fb] #sheet{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:30;
+    background:var(--plane);border-top:1px solid var(--grid);border-radius:14px 14px 0 0;
+    box-shadow:0 -14px 44px rgba(0,0,0,.45);padding:0 14px 16px;gap:14px;
+    max-height:80vh;max-height:80dvh;overflow-y:auto;overscroll-behavior:contain;
+    transform:translateY(101%);visibility:hidden;transition:transform .18s ease,visibility .18s}
+  html[data-fb][data-sheet=open] #sheet{transform:none;visibility:visible;
+    transition:transform .18s ease}
+  html[data-fb] #sheet:focus{outline:none}
+  html[data-fb] #fbb{display:block;position:fixed;inset:0;z-index:29;background:rgba(0,0,0,.5);
+    opacity:0;visibility:hidden;touch-action:none;transition:opacity .18s,visibility .18s}
+  html[data-fb][data-sheet=open] #fbb{opacity:1;visibility:visible}
+  html[data-fb] .shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:1;background:var(--plane);
+    padding:14px 0 10px;border-bottom:1px solid var(--grid)}
+  html[data-fb] .shead .sh{flex:1 1 auto;font-size:15px;font-weight:600}
+  html[data-fb] #scount{flex:1 1 100%;color:var(--muted);font-size:12.5px}
+  html[data-fb] #scount b{color:var(--ink)}
+  html[data-fb] #fbx{flex:none;min-height:44px;padding:0 16px}
+  html[data-fb] #sheet .facet{display:block}
+  html[data-fb] #sheet .facet>label{display:block;min-width:0;margin:0 0 7px;font-size:11px}
+  html[data-fb] #sheet #cats,html[data-fb] #sheet #tgts,html[data-fb] #sheet #oses{
+    display:flex;flex-wrap:wrap;gap:8px;overflow:visible;flex:none;min-width:0}
+  html[data-fb] #sheet .facet>.chip{margin-top:8px}
 }
 
 @media(max-width:640px){
@@ -308,7 +349,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <p class="blurb" id="ctx"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><span class="k"><span class="lw">Last </span>deployed</span>
-      <span class="v"><time datetime="2026-09-06T21:27:00Z">2026-09-06 21:27 UTC</time></span></a>
+      <span class="v"><time datetime="2026-09-06T21:42:00Z">2026-09-06 21:42 UTC</time></span></a>
   </div>
   <nav>
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
@@ -324,6 +365,8 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <input id="q" type="search" aria-label="Search projects"
            placeholder="name, repo, description, language&hellip;"
            autocomplete="off" spellcheck="false">
+    <button class="chip" id="fbt" aria-expanded="false" aria-controls="sheet"
+            aria-label="Filters">Filters<span id="fbn"></span></button>
     <select id="sort" aria-label="Sort by">
       <option value="relevance">Best match</option>
       <option value="stars">Most stars</option>
@@ -343,13 +386,20 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <button class="chip" id="palhint"></button>
     <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
-  <div class="line facet"><label>Topic</label><span id="cats"></span></div>
-  <div class="line facet"><label>Plugs into</label><span id="tgts"></span></div>
-  <div class="line facet"><label>Runs on</label><span id="oses"></span>
-    <button class="chip" id="strict" aria-pressed="false"
-            title="Drop rows where support is inferred from the language rather than stated">Confirmed
-      only</button>
-    <button class="chip" id="reset">Clear all</button>
+  <div id="fbb"></div>
+  <div id="sheet" role="group" aria-label="Filters" tabindex="-1">
+    <div class="shead"><span class="sh" id="shtitle">Filters</span>
+      <button class="chip" id="fbx">Done</button>
+      <span id="scount"></span>
+    </div>
+    <div class="line facet"><label>Topic</label><span id="cats"></span></div>
+    <div class="line facet"><label>Plugs into</label><span id="tgts"></span></div>
+    <div class="line facet"><label>Runs on</label><span id="oses"></span>
+      <button class="chip" id="strict" aria-pressed="false"
+              title="Drop rows where support is inferred from the language rather than stated">Confirmed
+        only</button>
+      <button class="chip" id="reset">Clear all</button>
+    </div>
   </div>
 </div></div>
 
@@ -395,7 +445,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-06T21:27:00Z";
+const BUILT = "2026-09-06T21:42:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -540,8 +590,51 @@ function buildChips() {
     ropt.remove();
   }
   document.getElementById("reset").onclick = () => set(CLEAR);
+  sheetWire();
   window.addEventListener("hashchange", () => { readHash(); render(); });
   palWire();
+}
+
+function sheetWire() {
+  const fbt = document.getElementById("fbt"), sheet = document.getElementById("sheet");
+  const root = document.documentElement;
+  const shut = () => root.dataset.sheet !== "open";
+  const show = on => {
+    root.dataset.sheet = on ? "open" : "shut";
+    fbt.setAttribute("aria-expanded", on ? "true" : "false");
+    if (on) { void sheet.offsetHeight; sheet.focus(); } else fbt.focus();
+  };
+  root.dataset.fb = "1";
+  root.dataset.sheet = "shut";
+  fbt.onclick = () => show(shut());
+  document.getElementById("fbx").onclick = () => show(false);
+  document.getElementById("fbb").onclick = () => show(false);
+  document.addEventListener("keydown", ev => {
+    const pal = document.getElementById("pal");
+    if (ev.key === "Escape" && !shut() && !(pal && pal.open)) show(false);
+  });
+}
+
+function sheetFilters() {
+  const on = [];
+  const name = (list, slug) => (list.find(x => x.slug === slug) || {}).name;
+  if (state.cat) on.push(name(D.cats, state.cat));
+  if (state.tgt) on.push(name(D.targets, state.tgt));
+  state.os.forEach(i => on.push(D.os[i]));
+  if (state.strict) on.push("Confirmed only");
+  return on.filter(Boolean);
+}
+
+function paintSheet(countHTML) {
+  const on = sheetFilters(), n = on.length;
+  const fbt = document.getElementById("fbt");
+  document.getElementById("fbn").textContent = n ? String(n) : "";
+  fbt.classList.toggle("act", n > 0);
+  fbt.setAttribute("aria-label", n
+    ? "Filters — " + n + " selected: " + on.join(", ")
+    : "Filters — none selected");
+  document.getElementById("shtitle").textContent = n ? "Filters · " + n : "Filters";
+  document.getElementById("scount").innerHTML = countHTML;
 }
 
 function palWire() {
@@ -1004,11 +1097,13 @@ function render() {
   }
 
   const ranked = hits.filter(r => r.stars).length;
-  document.getElementById("count").innerHTML = approx
+  const countHTML = approx
     ? "<b>" + hits.length.toLocaleString() + "</b> near " +
       (hits.length === 1 ? "match" : "matches") + " · nothing matches “" + esc(state.q) + "” exactly"
     : "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() +
       " · " + ranked.toLocaleString() + " with stars";
+  document.getElementById("count").innerHTML = countHTML;
+  paintSheet(countHTML);
 
   const cat = state.cat && D.cats.find(c => c.slug === state.cat);
   const tgt = state.tgt && D.targets.find(t => t.slug === state.tgt);
