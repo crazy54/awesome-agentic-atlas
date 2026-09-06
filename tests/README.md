@@ -5,7 +5,7 @@ node tests/run.mjs
 ```
 
 That is the whole thing. It finds a Chromium the machine already has, serves `docs/` on a port the OS picks,
-runs seven harnesses in turn, prints what each one asserted, and exits non-zero if anything failed. About 35
+runs eight harnesses in turn, prints what each one asserted, and exits non-zero if anything failed. About 35
 seconds, of which 22 are the detail-page regeneration. No install step, no arguments, no configuration.
 
 It asserts on `docs/` as committed, not on the generator's intentions. `docs/` is served verbatim by GitHub
@@ -17,6 +17,7 @@ site is, because `run.mjs` owns both:
 
 ```
 python tests/signals_test.py
+python tests/indexnow_test.py
 node tests/probe.mjs
 python tests/pagemin_test.py
 python tests/media_test.py
@@ -27,7 +28,7 @@ node tests/pwa-check.mjs   <chrome-binary> <origin>
 
 ## What each one covers, and what it deliberately does not
 
-There are seven files rather than one because they are seven instruments, and the overlap between them is the
+There are eight files rather than one because they are eight instruments, and the overlap between them is the
 reason to keep them apart rather than the reason to merge them. Each file's header says at length what it
 cannot see; this is the summary.
 
@@ -38,10 +39,11 @@ cannot see; this is the summary.
 | `pwa-check.mjs` | Manifest, service worker registration and scope, the precached shell, the worker's `VERSION` recomputed from the bytes actually being served, `data.json` caching, offline rendering with *both* the page and the worker taken offline, the freshness stamp reading the cached data's own date rather than the document's, and a 404 navigation that must not be cached. 30 assertions. | The paths this browser does not take: it supports navigation preload, so the worker's fallback for browsers that do not is never exercised. Nor the 156 prerendered facet pages, whose own snapshot lines have no data fetch to read a date out of. |
 | `detail-churn.mjs` | Regenerates all 1,294 detail pages four times into scratch directories and compares SHA-256 trees: determinism, that a day of moving star counts and push dates rewrites nothing, that editing one curated blurb does move its page, and that committed `docs/repo` matches a fresh regeneration. 7 assertions over 1,298 files. | Whether the pages are any good. It never opens one. It also cannot see churn from any other stage — `20_landing.py` rewrites 156 facet pages on every run by design, and that is not what this measures. |
 | `pagemin_test.py` | `scripts/pagemin.py` against the cases the real page does not contain: template literals, `${}` substitutions, regex literals, unterminated blocks, strings that look like comments, and the whole template loaded live out of `19_pages.py`. 48 assertions. Written and owned by the JFH-204 author. | Everything about the page that is not comment stripping. |
+| `indexnow_test.py` | `scripts/26_indexnow.py` and `20_landing.py`'s key-file prune. That `url_for`'s mapped set is exactly the `<loc>` set of the two sitemaps — 1,452 URLs, asserted both directions and by content rather than by count, so a page that stops being submitted and a page submitted without ever reaching a sitemap are both red. That the prune deletes a rotated `INDEXNOW_KEY` file and leaves `robots.txt`, `security.txt` and anything else whose name and content disagree. And that `IncompleteRead`/`BadStatusLine` out of the opener is a workflow warning and exit 0 rather than a traceback, including the class hierarchy that turns on. 139 assertions. | Anything on the wire. `socket.connect` is replaced with a counter that raises and the count is asserted to be zero, so the endpoint is always a stub — no key is ever validated and no real submission is ever made. Nor whether Bing does anything with what it is sent. |
 | `media_test.py` | `scripts/media.py` against a synthetic workbook of the real one's shape: that a plain `wb.save` writes one media part per *placement*, that the pool collapses those to one part per distinct picture, that nothing else in the package changes, and that every drawing relationship still resolves to a part that is present — asserted against the archive itself rather than against a reading of openpyxl. Then the entry-count projection against the 65,535-entry ZIP ceiling, written down as arithmetic that can be re-run instead of re-argued. 44 assertions. | Whether Excel draws the shared part in every cell it is anchored to: it reads the package with `zipfile` and `openpyxl`, and no spreadsheet application opens it. Nor the real workbook — stages 14+ need a crawl that is not committed, so the shape is a miniature. |
 | `signals_test.py` | `scripts/signals.py`, the rule deciding when a cached release-asset or `action.yml` answer needs re-querying: every term of it at its boundaries, every timestamp spelling that reaches those files, every earlier schema still loading and reading as stale, and a textual tripwire that the three fetch stages still consult it and still stamp what they write. 210 assertions, no I/O, instant. | Whether GitHub answers the queries. The three stages shell out to `gh api graphql`, so the crawl itself is untested here and untestable offline — this harness only asserts which repos would be asked about. |
 
-Between them, roughly 660 assertions. The number only matters in one direction — see the floors below.
+Between them, roughly 800 assertions. The number only matters in one direction — see the floors below.
 
 ## No dependencies, and why that is a constraint rather than an oversight
 
@@ -59,12 +61,14 @@ would be the first `package.json` in the repository, would need a lockfile, woul
 turn "can I run the tests" into a question with a network answer. The cost is that these files own their own
 plumbing — about 200 lines of it, in `lib/`. That is the trade, and it is deliberate.
 
-The three Python harnesses are Python because the things they test are. `python` here means whatever
-`lib/python.mjs` finds. Node's side needs no packages, and so do `pagemin_test.py` and `signals_test.py` —
-standard library only. `media_test.py` needs `openpyxl` and `pillow`, which are the generator's dependencies
-rather than the suite's — both workflows install them, so a checkout that can build the workbook can already
-test it. Missing them is an `ImportError` with no tally, which `run.mjs` counts as a failure and not as a
-skip.
+The four Python harnesses are Python because the things they test are. `python` here means whatever
+`lib/python.mjs` finds. Node's side needs no packages, and neither do `pagemin_test.py`, `signals_test.py`
+and `indexnow_test.py` — standard library only, except that `indexnow_test.py` also needs `git` on `PATH`,
+because it asserts against the *tracked* paths under `docs/` rather than a walk of the working tree, so that
+a local build's leftovers cannot change what it thinks the site contains. `media_test.py` needs `openpyxl`
+and `pillow`, which are the generator's dependencies rather than the suite's — both workflows install them,
+so a checkout that can build the workbook can already test it. Missing them is an `ImportError` with no
+tally, which `run.mjs` counts as a failure and not as a skip.
 
 ## A harness that skips must not be able to pass
 

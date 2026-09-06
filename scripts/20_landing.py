@@ -715,24 +715,51 @@ def key_text(key: str) -> str:
     return key
 
 
-def prune_keys(current: str) -> list[Path]:
-    """Delete key files from an earlier `INDEXNOW_KEY` this run did not write.
+def is_key_file(path: Path) -> bool:
+    """Whether `path` is an IndexNow key file, judged by what is *in* it and not by what it is called.
+
+    A key file is the one file on this site whose name and content are the same string: `key_text` writes
+    the key and nothing else into `<key>.txt`. So `content == stem` is not a heuristic, it is the file
+    format, and it is the only test here that cannot be satisfied by accident.
+
+    The name shape is checked too, but only as a cheap precondition -- on its own it is not enough, and
+    that is the whole reason this function exists rather than a regex at the call site. `[A-Za-z0-9-]{8,128}`
+    matches the stem of `security.txt`, which is eight in-alphabet characters and a plausible thing for
+    somebody to add to a site root; deleting it on sight would be this stage silently removing a file it
+    has no business knowing about. Its *content* is a security policy, not the word "security", so the
+    content test spares it while still catching every real rotated key.
+    """
+    if not b19.INDEXNOW_RE.match(path.stem):
+        return False
+    try:
+        return path.read_text(encoding="utf-8").strip() == path.stem
+    except (OSError, UnicodeDecodeError):
+        # Unreadable or not text, so not something this stage wrote. Left alone rather than guessed at.
+        return False
+
+
+def prune_keys(keep: set[Path]) -> list[Path]:
+    """Delete key files from an earlier `INDEXNOW_KEY` that are not in `keep`.
 
     Rotating the key changes the *filename*, so without this a rotation leaves the old file tracked,
     served and never rewritten -- which `weekly.yml`'s "every tracked page was rewritten" assertion reads,
     correctly, as a generator having gone missing, and fails the build over a file nothing wants any more.
+    Deleting it is only half of that fix: a tracked file that is *gone* from the working tree used to land
+    in the same assertion's error arm, because `git ls-files` reads the index and `-nt` against a missing
+    file is false. `weekly.yml` now sorts on existence first, so a file this function removes is reported
+    as a deletion the commit will carry rather than as a generator that went missing.
 
-    Deliberately narrow. Only names in `docs/` whose stem is itself a valid IndexNow key are candidates,
-    and `robots.txt` is excluded by name as well -- the 8-character minimum already excludes it, but a
-    stage that deletes files should not lean on arithmetic to spare the one other `.txt` file here.
+    `keep` is resolved paths, and is the same contract as `prune` below: the delete set is derived from
+    what this run actually wrote rather than from what a name looks like. That ordering matters -- the
+    current key file is in `keep` because `main` wrote it, so it cannot be deleted by a mistake in the
+    name test, and `robots.txt` is in `keep` for the same reason instead of being spelled out here.
     """
     gone = []
     for path in sorted(OUT.glob("*.txt")):
-        if path.name == "robots.txt" or path.name == current:
+        if path.resolve() in keep or not is_key_file(path):
             continue
-        if b19.INDEXNOW_RE.match(path.stem):
-            path.unlink()
-            gone.append(path)
+        path.unlink()
+        gone.append(path)
     return gone
 
 
@@ -788,7 +815,9 @@ def main() -> None:
     (OUT / "robots.txt").write_text(robots(), encoding="utf-8")
     keyfile = b19.indexnow_key_file()
     (OUT / keyfile).write_text(key_text(b19.indexnow_key()), encoding="utf-8")
-    stale_keys = prune_keys(keyfile)
+    # The `keep` set is every `.txt` at the root this run wrote, taken after writing them, so it is a
+    # record of what happened rather than a second list to keep in step with the writes above.
+    stale_keys = prune_keys({(OUT / f).resolve() for f in ("robots.txt", keyfile)})
 
     gone = prune({p.path.resolve() for p in pages})
 

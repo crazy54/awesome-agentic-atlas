@@ -10,10 +10,17 @@ under `/awesome-agentic-atlas/`, so the only robots.txt a crawler looks for is `
     which needs a human with the account. `19_pages.verification()` is the build's half of that.
   * IndexNow takes the *delta*, on every build, and needs nothing but a key you invent yourself. This file.
 
-The second is the one that scales, and it is the one a build can do unattended. A daily run changes one or
-two URLs and submits one or two; the weekly run that rewrites all 1,294 detail pages submits those. Nothing
-here reasons about what changed -- `daily.yml` and `weekly.yml` stage `docs/` and then hand over the staged
-diff, which is the only place in the system that knows the answer exactly.
+The second is the one that scales, and it is the one a build can do unattended. Nothing here reasons about
+what changed -- `daily.yml` and `weekly.yml` stage `docs/` and then hand over the staged diff, which is the
+only place in the system that knows the answer exactly.
+
+And it is a *content* delta, not a rewrite list, which is the thing to be clear about before reading a
+batch size into it. Both workflows produce the listing with `git diff --cached --name-status` after
+`git add`, so it compares index blob OIDs against the HEAD tree: a file that was rewritten byte-for-byte
+identically has the same OID and produces no record at all. The weekly run rewrites all 1,294 detail pages
+and all 156 facet pages, and submits only the ones whose bytes actually moved -- which on a quiet week is a
+small fraction of either. That is the right behaviour and it is free: `detail-churn.mjs` exists to assert
+that a day of drifting star counts rewrites nothing, and this is where that determinism is spent.
 
   python scripts/26_indexnow.py --changed <file>            # a `git diff --name-status` listing
   python scripts/26_indexnow.py --changed <file> --dry-run   # print the payload, post nothing
@@ -47,6 +54,7 @@ cannot be fixed by retrying and would submit a credential or a URL that is wrong
 from __future__ import annotations
 
 import argparse
+import http.client
 import importlib.util
 import json
 import sys
@@ -77,9 +85,14 @@ SITE = b19.b17.SITE
 # is ever the thing that is broken.
 ENDPOINT = "https://api.indexnow.org/indexnow"
 
-# The protocol's own ceiling. Reached only by a weekly run, which rewrites 1,294 detail pages plus 156
-# facet pages; a daily run submits one or two URLs. Chunked anyway, because the run that will exceed it is
-# the run nobody is watching.
+# The protocol's own ceiling, and nothing this site publishes today can reach it: the two sitemaps list
+# 1,452 URLs between them, so even a run that changed every page at once would be one batch. It is not
+# dead code, though, and the reason is worth writing down because it is not the obvious one. What arrives
+# here is a content delta (see the docstring) rather than a rewrite list, so the size of a submission is
+# bounded by how much actually moved and not by how much was regenerated -- which means the run that
+# exceeds 10,000 is not a weekly rebuild, it is a taxonomy change or an ingest that moves the whole atlas
+# at once. That is the run nobody is watching, and a 422 for an oversized batch would take every good URL
+# in it down too. So: chunked, unconditionally, at a cost of one `range` on a list of 1,452.
 BATCH = 10_000
 
 # What the documented status codes mean, so a log line says something a reader can act on. Anything not
@@ -102,7 +115,10 @@ def url_for(path: str) -> str | None:
 
     Only `index.html` files map to a URL, and that is the whole rule. It is not a shortcut: every
     crawlable HTML document this site publishes is a directory index -- the root, 14 topic pages, 130
-    crossings, 12 target pages, 1,294 detail pages -- and that set is exactly what the two sitemaps list.
+    crossings, 12 target pages, and 1,294 detail pages plus the index that lists them -- and that set is
+    exactly what the two sitemaps list, all 1,452 of it. `indexnow_test.py` asserts that equality both
+    ways round rather than by count, so a page that stops being submitted, or gets submitted without ever
+    reaching a sitemap, is a failure here and not a thing somebody notices in Bing six months later.
     Everything else `docs/` holds is either an asset (`data.json`, `sw.js`, `pages.css`, `og/*.png`, the
     icons), a feed, or a protocol file (`robots.txt`, the sitemaps, the key file itself). Submitting any of
     those would spend a build's IndexNow budget telling Bing about a stylesheet.
@@ -192,7 +208,16 @@ def post(endpoint: str, body: dict, timeout: float) -> tuple[int | None, str]:
             return r.status, (r.read(2048).decode("utf-8", "replace").strip() or "(empty body)")
     except urllib.error.HTTPError as e:
         return e.code, (e.read(2048).decode("utf-8", "replace").strip() or "(empty body)")
-    except (urllib.error.URLError, TimeoutError, OSError) as e:
+    # `HTTPException` is in this tuple and it is not redundant: it descends from `Exception`, *not* from
+    # `OSError`, and `urllib` does not wrap it. `AbstractHTTPHandler.do_open` translates an `OSError` out of
+    # `h.request()` into a `URLError`, but `h.getresponse()` is called outside that translation and its
+    # `except:` merely closes the connection and re-raises -- so `IncompleteRead`, `BadStatusLine` and
+    # `LineTooLong` come out of `urlopen` unwrapped, as does an `IncompleteRead` from `r.read()` above.
+    # A truncated or garbled response is exactly the "search engine having a bad day" the module docstring
+    # promises is a warning, and without this line it was instead an uncaught traceback and a non-zero
+    # exit. `RemoteDisconnected` was already covered by `OSError` -- it subclasses `ConnectionResetError`
+    # as well as `BadStatusLine` -- which is why the gap only showed for the truncation cases.
+    except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError) as e:
         return None, f"{type(e).__name__}: {e}"
 
 
