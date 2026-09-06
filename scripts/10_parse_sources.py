@@ -12,6 +12,7 @@ fetch stage dedupes on nwo so each repo is still only hit once.
 """
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -119,6 +120,30 @@ GH_RESERVED = {"features", "topics", "collections", "sponsors", "orgs", "about",
                "readme", "login", "join", "security", "customer-stories", "enterprise"}
 
 
+def source_path(src: dict) -> Path:
+    """Where this source's pulled Markdown lives.
+
+    The orchestrators list is the collection's own origin and is parsed by 01_parse.py, which has
+    always read it from cache/README.md; every other list is a file under cache/sources/. Both are
+    written by pull_sources.py, so this is the one answer both stages ask rather than two that could
+    drift apart.
+    """
+    return CACHE / "README.md" if not src.get("file") else SRC / src["file"]
+
+
+def read_source(src: dict) -> str:
+    return source_path(src).read_text(encoding="utf-8")
+
+
+def url_key(url: str) -> str:
+    """The identity of a listed entry. Two links to the same target are one entry.
+
+    Used to dedupe within a source here, and by pull_sources.py to decide which entries a source
+    added or changed between two commits -- so both must agree on what "the same entry" means.
+    """
+    return url.strip().lower().rstrip("/")
+
+
 def clean(s: str) -> str:
     s = IMG.sub("", s or "")
     s = LINK.sub(lambda m: m.group("txt"), s)
@@ -170,13 +195,13 @@ def strip_emoji(s: str) -> str:
     return re.sub(r"\s+", " ", EMOJI.sub("", s or "")).strip(" -–—:")
 
 
-def parse_html_details(src: dict) -> list[dict]:
+def parse_html_details(src: dict, text: str | None = None) -> list[dict]:
     """Entries encoded as nested <details> accordions rather than list items.
 
     <summary><strong>X</strong> marks a category; <summary><b>owner/repo</b>
     marks an entry, whose URL is the github.com href in the block that follows.
     """
-    text = (SRC / src["file"]).read_text(encoding="utf-8")
+    text = read_source(src) if text is None else text
     marks = list(SUM_ANY.finditer(text))
     rows: list[dict] = []
     category = ""
@@ -203,8 +228,10 @@ def parse_html_details(src: dict) -> list[dict]:
     return rows
 
 
-def parse(src: dict) -> list[dict]:
-    text = (SRC / src["file"]).read_text(encoding="utf-8")
+def parse(src: dict, text: str | None = None) -> list[dict]:
+    """Entries for one source. `text` overrides the cached file, which is how pull_sources.py
+    parses a source's previous *and* current commit through this same parser to diff them."""
+    text = read_source(src) if text is None else text
     mode = src.get("mode", {"bullet"})
     cat_at = src.get("cat_at", 2)
     drop = {d.lower() for d in src.get("drop", ())}
@@ -300,7 +327,7 @@ def parse(src: dict) -> list[dict]:
                          "_cat": category, "_sub": sub})
 
     if "html_details" in mode:
-        rows += parse_html_details(src)
+        rows += parse_html_details(src, text)
     return finalise(src, rows)
 
 
@@ -338,7 +365,7 @@ def finalise(src: dict, rows: list[dict]) -> list[dict]:
             website = url
             subpath = ""
 
-        key = url.lower().rstrip("/")
+        key = url_key(url)
         if key in seen:
             continue
         seen.add(key)
@@ -371,6 +398,16 @@ def finalise(src: dict, rows: list[dict]) -> list[dict]:
 
 
 def main() -> None:
+    # This stage reads the lists, it does not fetch them. Missing content used to surface as a bare
+    # FileNotFoundError on whichever source happened to be first, which says nothing about the cause:
+    # cache/ is not committed, so a cold clone or an Actions cache that did not restore has none of it.
+    absent = [src for src in SOURCES if src.get("file") and not source_path(src).exists()]
+    if absent:
+        names = ", ".join(s["key"] for s in absent)
+        sys.exit(f"no cached content for {len(absent)}/{len(SOURCES)} sources ({names}).\n"
+                 f"Run `python scripts/pull_sources.py` first -- it pulls each list at its head "
+                 f"commit into {SRC.relative_to(ROOT).as_posix()}/.")
+
     all_rows: list[dict] = []
     print(f"{'source':14s} {'rows':>5s} {'repo':>5s} {'sub':>5s} {'site':>5s}  categories")
     for src in SOURCES:

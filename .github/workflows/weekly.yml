@@ -79,6 +79,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p cache
+          # Unlike the daily job this one is not gated on the lists having moved, so it is also the run
+          # that repairs a cache that came back partially restored: pull_sources re-pulls any list whose
+          # cached content has gone missing even when its commit id still matches.
+          python scripts/pull_sources.py
           python scripts/01_parse.py
           python scripts/02_fetch.py --force
           python scripts/03_releases.py
@@ -91,6 +95,11 @@ jobs:
 
       # The four stages the daily job never runs. Each one skips what it already has, so a warm cache makes
       # this minutes rather than hours -- the work is proportional to new arrivals, not to the atlas.
+      #
+      # 15_shots_all also drains `cache/collect-queue.json` here. That queue is how a *changed* listing
+      # gets a fresh image at all: a key already in shots_all.json is otherwise never rebuilt, which is
+      # the right rule for a banner that has not moved and the wrong one for an entry the list rewrote.
+      # The daily job fills the queue and never captures, so this is the only run that empties it.
       - name: Capture screenshots
         run: |
           set -euo pipefail

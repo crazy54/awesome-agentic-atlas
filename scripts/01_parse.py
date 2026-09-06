@@ -1,6 +1,7 @@
 """Parse awesome-agent-orchestrators README into structured entries."""
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -23,8 +24,9 @@ REPO_RE = re.compile(r"^https?://github\.com/(?P<owner>[^/]+)/(?P<repo>[^/#?]+)"
 RESTING_NOTE_RE = re.compile(r"_\((?P<note>[^)]*)\)_\s*$")
 
 
-def main() -> None:
-    text = SRC.read_text(encoding="utf-8")
+def parse_text(text: str) -> list[dict]:
+    """Entries in README order. Takes the text rather than reading SRC so pull_sources.py can run
+    this same parser over the previous commit's copy and diff the two."""
     entries, category, order = [], None, 0
 
     for line in text.splitlines():
@@ -65,15 +67,28 @@ def main() -> None:
             }
         )
 
-    # Deduplicate on owner/repo, keeping the first listing.
+    return entries
+
+
+def dedupe(entries: list[dict], report: bool = True) -> list[dict]:
+    """One row per owner/repo, keeping the first listing."""
     seen, unique = set(), []
     for e in entries:
         key = e["nwo"].lower()
         if key in seen:
-            print(f"  ! duplicate skipped: {e['nwo']} ({e['category']})")
+            if report:
+                print(f"  ! duplicate skipped: {e['nwo']} ({e['category']})")
             continue
         seen.add(key)
         unique.append(e)
+    return unique
+
+
+def main() -> None:
+    if not SRC.exists():
+        sys.exit(f"{SRC.relative_to(ROOT).as_posix()} is not there. Run "
+                 f"`python scripts/pull_sources.py` first -- cache/ is not committed.")
+    unique = dedupe(parse_text(SRC.read_text(encoding="utf-8")))
 
     out = ROOT / "cache" / "entries.json"
     out.write_text(json.dumps(unique, indent=2, ensure_ascii=False), encoding="utf-8")
