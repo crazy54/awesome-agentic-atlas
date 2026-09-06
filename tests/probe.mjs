@@ -119,7 +119,18 @@ globalThis.getComputedStyle = (elt) => ({
 });
 globalThis.matchMedia = () => ({matches: false, addEventListener() {}});
 globalThis.window = {isSecureContext: true, addEventListener() {}, matchMedia: globalThis.matchMedia};
-globalThis.localStorage = {getItem: () => null, setItem() {}, removeItem() {}};
+// A real store, not the three no-ops this used to be. The theme bootstrap only ever reads this, so a stub
+// that returned null and swallowed writes was enough for it -- but the saved set is *round-tripped* through
+// here, and against a no-op store every persistence assertion would pass for the wrong reason: nothing was
+// written, nothing came back, and "the set is empty after a reload" is also what a working implementation
+// looks like when the reader saved nothing. `STORE` is exposed so the tests can read what the page believes
+// it wrote, and seed a session as if a previous one had saved something.
+const STORE = new Map();
+globalThis.localStorage = {
+  getItem: k => (STORE.has(k) ? STORE.get(k) : null),
+  setItem(k, v) { STORE.set(k, String(v)); },
+  removeItem(k) { STORE.delete(k); },
+};
 globalThis.location = {hash: "", pathname: "/awesome-agentic-atlas/", href: ""};
 globalThis.history = {replaceState() {}, pushState() {}};
 globalThis.getSelection = () => ({removeAllRanges() {}, addRange() {}});
@@ -145,6 +156,11 @@ const shim = [
   // side of the velocity feature at a time -- and the side it cannot reach is the side that renders.
   "  gained, get RISE(){return RISE}, set RISE(v){RISE=v},",
   "  sheetFilters, paintSheet,",
+  // `SAVED` is readable but not settable, on purpose: the tests drive it the way a reader does, through
+  // `toggleSave` and `clearsave`, so what they exercise is the persistence and the repaint rather than a
+  // Set they assigned themselves. `loadSaved` is exposed because reading the store back is how a *new
+  // session* is modelled -- there is no way to re-import the module against the same globals.
+  "  get SAVED(){return SAVED}, loadSaved, storeSaved, toggleSave, paintSaved, saveBtn, saveLabel, rescue,",
   "  palItems, palRender, palMove, palPick, palOpen, palWire, PALMOD,",
   "  get PAL(){return PAL}, get PALI(){return PALI}, set PALI(v){PALI=v},",
   '  get OUT(){return document.getElementById("out").innerHTML},',
@@ -1081,6 +1097,151 @@ ok("Done closes it", shutNow());
 G("fbt").click(); G("fbb").click();
 ok("a tap on the backdrop closes it", shutNow());
 paint({});
+
+// ------------------------------------------------------------------------ saved projects, JFH-187
+// The reader's own set, which is the first thing on this page that is neither in the data nor in the URL.
+// That makes the interesting assertions the ones about the seams: what a link means on a machine that has no
+// saved set, what happens to the filter when the set it filters by is emptied, and whether a control called
+// "Clear all filters" can lose somebody's collection.
+//
+// Driven through `toggleSave` and the chip handlers rather than by assigning to `SAVED`, because the bugs
+// worth catching here are in the repaint and the persistence, not in the Set.
+const btn = (nwo, name) => {
+  const attrs = {};
+  return {
+    dataset: {nwo, name}, textContent: "",
+    setAttribute(k, v) { attrs[k] = String(v); }, getAttribute(k) { return attrs[k] ?? null; },
+  };
+};
+const first = A.ROWS[0], second = A.ROWS[1];
+const G2 = id => document.getElementById(id);
+
+// --- the markup one row carries ---
+A.state.saved = false;
+STORE.clear(); A.loadSaved(); A.render();
+ok("an unsaved row offers Save", /class="save"[^>]*>Save</.test(A.saveBtn(first)), A.saveBtn(first));
+ok("the button carries the nwo, not a row index",
+   A.saveBtn(first).includes('data-nwo="' + first.nwo + '"'), A.saveBtn(first));
+// WCAG 2.5.3: someone driving the page by voice says the word they can see, so the accessible name has to
+// contain it. Checked in both states because the two words differ and only one of them is the default.
+for (const on of [false, true])
+  ok("the accessible name contains the visible word when " + (on ? "saved" : "unsaved"),
+     A.saveLabel(first.name, on).startsWith(on ? "Saved" : "Save"), A.saveLabel(first.name, on));
+
+// --- a save round-trips through storage, which is what "survives a reload" means ---
+const b1 = btn(first.nwo, first.name);
+A.toggleSave(b1);
+ok("pressing Save adds the project", A.SAVED.has(first.nwo));
+ok("the button repaints in place, without a re-render", b1.textContent === "Saved" &&
+   b1.getAttribute("aria-pressed") === "true", b1.textContent + " / " + b1.getAttribute("aria-pressed"));
+ok("the set reaches localStorage", JSON.parse(STORE.get("saved") || "[]").includes(first.nwo),
+   STORE.get("saved"));
+// A new session, modelled the only way it can be here: the store is untouched and the set is re-read from it.
+A.SAVED.clear();
+A.loadSaved();
+ok("a later session reads the set back", A.SAVED.has(first.nwo), [...A.SAVED].join(","));
+
+// --- the chip appears only once there is something to filter to ---
+A.render();
+ok("the Saved chip is shown with one saved", G2("saved").classList.contains("on"));
+ok("the chip carries the count", /Saved . 1$/.test(G2("savedlabel").textContent),
+   G2("savedlabel").textContent);
+ok("Remove all is hidden while the filter is off", !G2("clearsave").classList.contains("on"));
+
+// --- the filter narrows to exactly the saved set, and composes with the rest ---
+A.state.q = ""; A.state.cat = ""; A.state.tgt = ""; A.state.os = []; A.state.strict = false;
+A.state.fresh = false; A.state.rising = false; A.state.shown = 600;
+A.state.saved = true; A.render();
+ok("the saved filter shows exactly the saved rows", order().length === 1 && order()[0] === first.nwo,
+   order().join(","));
+ok("Remove all appears once the reader is looking at the set", G2("clearsave").classList.contains("on"));
+A.toggleSave(btn(second.nwo, second.name));
+A.state.shown = 600; A.render();
+ok("a second save joins the filtered view", order().length === 2 && order().includes(second.nwo),
+   order().join(","));
+
+// --- saving must not throw the reader back to the top of a long list ---
+A.state.saved = false; A.state.q = "agent"; A.state.shown = 600; A.render();
+const deep = A.ROWS.find(r => r.nwo !== first.nwo && r.nwo !== second.nwo);
+A.toggleSave(btn(deep.nwo, deep.name));
+ok("saving does not reset the page size", A.state.shown === 600, String(A.state.shown));
+A.toggleSave(btn(deep.nwo, deep.name));
+ok("pressing it again un-saves", !A.SAVED.has(deep.nwo));
+
+// --- a link that travels: #saved=1 on a machine with nothing saved ---
+A.state.q = "";
+STORE.clear(); A.SAVED.clear();
+globalThis.location.hash = "#saved=1";
+A.readHash();
+ok("#saved=1 is ignored where the reader has saved nothing", A.state.saved === false);
+A.render();
+ok("and the chip stays away", !G2("saved").classList.contains("on"));
+A.toggleSave(btn(first.nwo, first.name));
+A.readHash();
+ok("#saved=1 is honoured once there is a set to honour it against", A.state.saved === true);
+A.writeHash();
+globalThis.location.hash = "";
+
+// --- emptying the set must not strand the reader behind a filter with no control ---
+A.state.saved = true; A.render();
+A.toggleSave(btn(first.nwo, first.name));
+ok("un-saving the last row turns the filter off", A.state.saved === false);
+ok("and takes the chip with it", !G2("saved").classList.contains("on"));
+A.render();
+ok("the table is the whole atlas again, not an empty set", order().length > 1, String(order().length));
+
+// --- the one destructive control is the only destructive control ---
+A.toggleSave(btn(first.nwo, first.name));
+A.toggleSave(btn(second.nwo, second.name));
+A.state.saved = true; A.render();
+A.state.q = "kubernetes";
+A.render();
+A.state.q = "";
+ok("Clear all filters drops the saved filter", (() => {
+  A.state.saved = true; G2("reset").click(); return A.state.saved === false;
+})());
+ok("Clear all filters does NOT empty the set", A.SAVED.size === 2, String(A.SAVED.size));
+ok("nor does it clear the store", JSON.parse(STORE.get("saved") || "[]").length === 2, STORE.get("saved"));
+A.state.saved = true; A.render();
+G2("clearsave").click();
+ok("Remove all empties the set", A.SAVED.size === 0, String(A.SAVED.size));
+ok("Remove all empties the store too", JSON.parse(STORE.get("saved") || "[]").length === 0,
+   STORE.get("saved"));
+ok("Remove all leaves the filter off", A.state.saved === false);
+
+// --- rescue offers the filter and never the set ---
+A.toggleSave(btn(first.nwo, first.name));
+A.state.saved = true; A.state.cat = A.D.cats[0].slug;
+A.state.shown = 600; A.render();
+const rs = A.rescue();
+if (order().length === 0) {
+  ok("an empty saved-and-topic view offers a way out",
+     rs.some(o => /saved/.test(o.label)), rs.map(o => o.label).join(" | "));
+  ok("that way out patches the filter and not the set",
+     rs.every(o => !("SAVED" in o.patch)) && A.SAVED.size === 1);
+} else {
+  // The real dataset may well have a saved row inside the first topic, in which case there is nothing to
+  // rescue from. Counted rather than skipped, because a harness that quietly tallies nothing is a harness
+  // that passes when the feature is gone.
+  ok("the saved row survives being crossed with a topic", order().length >= 1, String(order().length));
+  ok("and the set is untouched by rendering", A.SAVED.size === 1, String(A.SAVED.size));
+}
+
+// --- storage this page did not write: it survives every deploy and is editable by hand ---
+for (const junk of ['{"a":1}', "[1,2,3]", "not json at all", "null", '["ok/one", 7, "", "ok/two"]']) {
+  STORE.set("saved", junk);
+  let threw = false;
+  try { A.loadSaved(); } catch (e) { threw = true; }
+  ok("a corrupt saved key does not throw: " + junk.slice(0, 18), !threw);
+  ok("and yields only strings: " + junk.slice(0, 18),
+     [...A.SAVED].every(s => typeof s === "string" && s), [...A.SAVED].join(","));
+}
+STORE.set("saved", '["ok/one", 7, "", "ok/two"]');
+A.loadSaved();
+ok("the salvageable entries of a part-corrupt key are kept", A.SAVED.size === 2, [...A.SAVED].join(","));
+
+STORE.clear(); A.loadSaved();
+A.state.saved = false; A.state.cat = ""; A.state.q = ""; A.state.shown = 600; A.render();
 
 // ------------------------------------------------------- the page as shipped: no comments, no placeholders
 // The JFH-204 acceptance checks. `scripts/19_pages.py` keeps every comment it has ever had and

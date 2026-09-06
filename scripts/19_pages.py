@@ -590,6 +590,32 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .risechip.on{display:inline-block}
 .risechip[aria-pressed=true]{background:var(--good);border-color:var(--good);color:var(--onbar)}
 .risechip:hover{border-color:var(--good)}
+/* Saved wears the cyan every ordinary chip wears, and that is the decision rather than an omission. Gold
+   and green above are properties *of a repo* -- it arrived recently, it is gaining stars -- and they are
+   held to three colours for three questions. Saved is a fact about the reader, true of nothing on the
+   server, so giving it a fourth accent would say "here is a fourth thing about this project" about a
+   thing that is not about the project at all.
+   Absent while it would select nothing, like the two above, but revealed from `render()` rather than from
+   `buildChips` -- the counts those two show are fixed when the page is built, and this one changes the
+   moment a reader presses Save. */
+.savechip{display:none}
+.savechip.on{display:inline-block}
+.savechip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
+/* Shown only while the saved filter is on, so "remove everything" is reachable exactly where a reader is
+   looking at everything they saved, and nowhere near the rest of the time. Wears no accent: it is
+   destructive and the accents on this bar all mean "selected". */
+.clearsave{display:none}
+.clearsave.on{display:inline-block}
+/* The per-row control. A word rather than a glyph, deliberately: the obvious glyph is a star, and this
+   button sits two cells from a column of GitHub star counts -- a filled star beside "4,300" would be
+   asking which of the two it meant. It also needs no sprite entry and no accessible name of its own,
+   because the word *is* the name. `aria-pressed` carries the state; the label says which project, since a
+   screen reader arrives at this button 120 times a page. */
+.save{background:var(--band);color:var(--ink2);border:1px solid var(--grid);border-radius:999px;
+  padding:1px 9px;font-family:inherit;font-size:11px;font-weight:600;line-height:1.7;
+  white-space:nowrap;cursor:pointer;margin-left:8px;vertical-align:1px}
+.save:hover{border-color:var(--bar);color:var(--ink)}
+.save[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
 /* Tabular figures because this sits directly under a star count that already has them, and a proportional
    "+1,182" under a tabular "388,645" makes one column look like two. A fall is drawn in the muted grey and
    not in a red: stars do go down, it is far more often a recount or a transfer than an exodus, and this
@@ -1146,6 +1172,12 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <button class="chip risechip" id="rise" aria-pressed="false"
             title="Projects gaining stars fastest for their size">
       <span id="riselabel">Rising</span></button>
+    <!-- Both start hidden and both are revealed by `render()`, not by `buildChips`: what they count is the
+         reader's own saved set, which changes while the page is open. The New and Rising chips beside them
+         count something the build decided, so those are settled once and never move. -->
+    <button class="chip savechip" id="saved" aria-pressed="false"
+            title="Only the projects you have saved on this device"><span id="savedlabel">Saved</span></button>
+    <button class="chip clearsave" id="clearsave">Remove all saved</button>
     <button class="chip" id="palhint"></button>
     <!-- role=status makes this a polite live region, so pressing a chip or typing a search announces the
          new result count instead of silently rewriting a number the reader cannot see. aria-atomic so it
@@ -1238,8 +1270,46 @@ const PAGE_SIZE = 120;
 // lands. The two have to agree: disagreeing would show the table's column headings over an empty body for
 // the length of a 561 KB fetch and then replace them with cards.
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
-               sort: "relevance", shown: PAGE_SIZE, view: "cards"};
+               saved: false, sort: "relevance", shown: PAGE_SIZE, view: "cards"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
+
+// The reader's saved projects, as a Set of `owner/name`. Two things it deliberately is not:
+//
+// It is not in `state`. Everything in `state` is a *view* -- it goes in the hash, it is what a link
+// reproduces, and `set()` resets the page size whenever any of it changes. The saved set is none of those:
+// it survives navigation, it is not what the URL describes, and saving a project should not scroll the
+// reader back to row 60. `state.saved` is the filter over this set, which *is* a view; the set itself
+// lives out here with the other things `render()` reads and does not own.
+//
+// It is not the nwo strings' only home either -- rows carry their own -- so this holds the key rather than
+// the row, and a saved project that leaves the source lists simply stops matching anything. That is the
+// right failure: the alternative is caching a copy of a row and showing a reader stale stars forever.
+let SAVED = new Set();
+const SAVE_KEY = "saved";
+
+// Both halves swallow their exceptions, and neither is being lazy about it. `localStorage` throws on
+// access -- not on read, on *access* -- in Safari's private mode and wherever third-party storage is
+// blocked, which is the same reason the theme bootstrap at the top of this page is wrapped. A reader in
+// that mode gets a page whose Save buttons work for the session and forget afterwards, which is strictly
+// better than a page whose script died before it drew a table.
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    // Filtered rather than trusted. This value is editable by hand and survives every deploy, so it is the
+    // one input to this page that a future build has no control over: a non-array parses fine and would
+    // make `new Set` throw, and a nested object would put `[object Object]` in a `data-nwo` attribute.
+    SAVED = new Set(Array.isArray(list) ? list.filter(s => typeof s === "string" && s) : []);
+  } catch (e) {
+    SAVED = new Set();
+  }
+}
+
+function storeSaved() {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify([...SAVED]));
+  } catch (e) {}
+}
 // Whether the rows on screen came out of the browser's cache instead of off the network. Set from the one
 // header the service worker adds, read only by `stamp()`, and false on the error path -- where there are no
 // rows to describe.
@@ -1482,6 +1552,23 @@ function buildChips() {
   } else if (ropt) {
     ropt.remove();
   }
+  // Wired unconditionally, unlike the two chips above, because whether this one is *shown* is not a fact the
+  // build knows: `paintSaved()` decides it on every render from the reader's own set. A handler on a hidden
+  // button costs nothing; a hidden button that becomes visible with no handler is a dead control.
+  document.getElementById("saved").onclick = () => set({saved: !state.saved});
+  document.getElementById("clearsave").onclick = () => {
+    const n = SAVED.size;
+    SAVED.clear();
+    storeSaved();
+    // No confirm(). The button is only reachable while the saved filter is on, it says what it does, and the
+    // announcement says what it did -- and a modal here would be the only one on the page. What makes that
+    // defensible is that this is the *only* destructive control: Clear all drops the filter and leaves the
+    // set alone, so nothing else a reader might mis-click can lose the collection.
+    say(n ? "Removed all " + n + " saved projects." : "Nothing was saved.");
+    // Through `set()` rather than `render()`, because `paintSaved()` is about to turn `state.saved` off under
+    // an empty set and the hash has to lose `#saved=1` with it. `set()` is the path that writes the hash.
+    set({saved: false});
+  };
   document.getElementById("reset").onclick = () => set(CLEAR);
   sheetWire();
   window.addEventListener("hashchange", () => { readHash(); render(); });
@@ -1620,7 +1707,11 @@ function palWire() {
   dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
 }
 
-const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false};
+// `saved` is in here, so Clear all drops the saved *filter* along with every other one. It does not empty
+// the saved set: Clear all is next to the search box and means "show me everything again", and a control
+// that also deleted a reader's collection would be the worst button on the page. Removing the collection is
+// `#clearsave`, which only exists while the reader is looking at it.
+const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false, saved: false};
 
 // ---- Command palette -------------------------------------------------------------------------------
 //
@@ -1665,6 +1756,11 @@ function palItems(query) {
   // Same condition the chip itself uses, for the same reason.
   if (RISE && RISING) add("Filter", "Rising", state.rising, () => set({rising: !state.rising}));
   add("Filter", "Confirmed platform support only", state.strict, () => set({strict: !state.strict}));
+  // Guarded on the set being non-empty for the same reason "New arrivals" is guarded on `NEW` -- an entry
+  // that selects nothing is an entry that makes the palette look broken. The difference is that this one is
+  // decided per keystroke rather than per build, which costs nothing: `palRender` already rebuilds the list
+  // on every keystroke, so it reads the current size for free.
+  if (SAVED.size) add("Filter", "Saved (" + SAVED.size + ")", state.saved, () => set({saved: !state.saved}));
   add("Filter", "Clear all filters", false, () => set(CLEAR));
   // Delegated to the real button rather than duplicating its body, so the label, the title and the
   // localStorage write stay in exactly one place.
@@ -1785,6 +1881,12 @@ function palOpen() {
 // arrived. When the fetch fails -- a contributor opening the file off disk, which the catch block above
 // exists for -- the toggle used to be dead too, so the error page could not be read in light mode.
 function wire() {
+  // First thing, and the ordering is load-bearing rather than tidy. `readHash()` decides whether to honour a
+  // `#saved=1` link by asking whether the set is empty, and it runs after this -- so reading the set later
+  // would make a reader's own bookmark of their saved view open unfiltered on the first visit of every
+  // session, and work on the second. This is also the only synchronous storage read on the boot path besides
+  // the theme, and it is one small key: the rows are waiting on a 556 KB fetch either way.
+  loadSaved();
   const btn = document.getElementById("theme");
   const label = () => {
     const light = document.documentElement.dataset.theme === "light";
@@ -1827,6 +1929,8 @@ function wire() {
       if (o) set(o.patch);
       return;
     }
+    const sv = ev.target.closest(".save");
+    if (sv) return toggleSave(sv);
     const b = ev.target.closest(".copy");
     if (b) copy(b);
   });
@@ -1836,6 +1940,34 @@ function wire() {
   // here rather than only there because `wire()` also runs on the error page, where the fetch never
   // resolves and a badge frozen at its rendered-in markup would have no age on it at all.
   deployStamp();
+}
+
+// Save or un-save one project.
+//
+// Deliberately not routed through `set()`, which every other control on this page uses. `set()` resets
+// `state.shown` to the first page, and it should: changing a filter changes what the table is *of*, so
+// starting again at row 1 is right. Saving a project changes nothing about what the table is of -- a reader
+// forty rows into a topic who saves one would be thrown back to row 1 by the very control that was supposed
+// to help them keep it. So this writes the set, then does the smallest repaint that is still correct.
+//
+// Which repaint that is depends on the filter. With `state.saved` on, the row this button lives in has just
+// stopped or started matching, so the table genuinely has to be rebuilt and a full `render()` is the honest
+// answer -- the reader is looking at a list defined by this button, and it has to change under them. With the
+// filter off, nothing about which rows match has changed, so rebuilding 120 rows to repaint one button would
+// also discard the button the reader just pressed and drop focus to <body>. Hence the in-place update, which
+// is the same reason `copy()` above flashes its own label instead of re-rendering.
+function toggleSave(b) {
+  const nwo = b.dataset.nwo, name = b.dataset.name;
+  const on = !SAVED.has(nwo);
+  if (on) SAVED.add(nwo); else SAVED.delete(nwo);
+  storeSaved();
+  say(on ? "Saved " + name + ". " + SAVED.size + " saved."
+         : "Removed " + name + " from saved. " + SAVED.size + " saved.");
+  if (state.saved) return render();
+  b.setAttribute("aria-pressed", on ? "true" : "false");
+  b.setAttribute("aria-label", saveLabel(name, on));
+  b.textContent = saveWord(on);
+  paintSaved();
 }
 
 // writeText rejects rather than throws -- denied permission, a document that is not focused, an
@@ -2009,6 +2141,10 @@ function writeHash() {
   if (state.strict) p.set("confirmed", "1");
   if (state.fresh) p.set("new", "1");
   if (state.rising) p.set("rising", "1");
+  // The flag only, never the set. `#saved=1` says "the saved filter is on", and on somebody else's machine
+  // that means *their* saved projects -- which is the honest reading of a filter and the reason this is one
+  // parameter rather than a list of repositories in the URL.
+  if (state.saved) p.set("saved", "1");
   if (state.sort !== "relevance") p.set("sort", state.sort);
   // In the hash and nowhere else. localStorage is the obvious second home for it -- the theme is kept
   // there -- and it would be a bug: a reader who opens a `#view=cards` link they were sent, then a bare
@@ -2036,6 +2172,13 @@ function readHash() {
   // the ledger was reset has no rising rows, and honouring the flag would greet the reader with "nothing
   // matches" instead of the atlas. Same guard as the line above, for the same reason.
   state.rising = p.get("rising") === "1" && RISE !== null && RISING > 0;
+  // Guarded on the set being non-empty, which is the same guard `#new=1` and `#rising=1` get one line up and
+  // the same reason: a link outliving the thing it selected. This one is stronger, though, because the link
+  // can also *travel*. A reader who posts their filtered view to a colleague posts `#saved=1` with it, and
+  // on that colleague's machine the set is empty -- so honouring the flag would greet them with "nothing
+  // matches" as their first impression of the atlas. `loadSaved()` runs in `wire()`, before this, so the
+  // size is known by the time it is read.
+  state.saved = p.get("saved") === "1" && SAVED.size > 0;
   // Every `#sort=stars` link written before Best match existed still says exactly what it said then,
   // because the name is unchanged and only the *default* moved.
   // `rising` is the one sort key that can be unavailable, so it is checked against the data and not only
@@ -2061,6 +2204,10 @@ function readHash() {
 const OS_ANY = {0: [[0, "YL"], [1, "Y"]]};
 
 function match(r) {
+  // First, because it is the most selective clause this function has -- a saved set is single digits
+  // against 1,294 rows -- and because a Set lookup is the cheapest test here. `match` runs 1,294 times per
+  // keystroke, so the order of these lines is not cosmetic.
+  if (state.saved && !SAVED.has(r.nwo)) return false;
   if (state.fresh && !r.isnew) return false;
   if (state.rising && !r.rise) return false;
   if (state.cat && D.cats[r.cat].slug !== state.cat) return false;
@@ -2110,6 +2257,11 @@ function rescue() {
   if (state.strict) opts.push(["Allow inferred support", {strict: false}]);
   if (state.fresh) opts.push(["Drop the new-arrivals filter", {fresh: false}]);
   if (state.rising) opts.push(["Drop the rising filter", {rising: false}]);
+  // Offered like any other filter, and it is the one most likely to be the culprit: a saved set is single
+  // digits, so crossing it with a topic or a platform empties the table far more easily than crossing two
+  // build-wide filters does. The button drops the filter and never the set -- `countWith` only ever patches
+  // `state`, so there is no path from an empty table to losing a collection.
+  if (state.saved) opts.push(["Look beyond your " + SAVED.size + " saved", {saved: false}]);
   return opts.map(o => ({label: o[0], patch: o[1], n: countWith(o[1])}))
     .filter(o => o.n > 0)
     .sort((a, b) => b.n - a.n)
@@ -2273,6 +2425,66 @@ function effSort() {
   return state.sort === "relevance" && !state.q ? "stars" : state.sort;
 }
 
+// The Saved chip, its count, and the Remove-all button beside it. Called from `render()` and nowhere else,
+// which is the same argument the chip reflection above it makes: `render()` is the one function every path
+// that changes anything already ends at, so a press, a hashchange and the back button all arrive here
+// without each of them remembering to.
+//
+// The chip is absent at zero rather than disabled. That is the pattern the New and Rising chips set -- a
+// control that selects nothing is worse than no control -- but the reason it has to be re-decided on every
+// render, instead of once in `buildChips` like those two, is that this count is the only one on the bar the
+// reader can change. It goes from absent to present on the first press of a Save button.
+//
+// The filter is dropped here too, and this is the subtle half. Un-saving the last row while the saved filter
+// is on would otherwise leave `state.saved` true over an empty set: the chip vanishes, the table empties, and
+// the control that would have turned the filter back off has gone with it. So emptying the set turns the
+// filter off in the same pass. `writeHash` is called because `state` changed and the URL still said
+// `#saved=1`; `render()` is not, because this runs inside it.
+function paintSaved() {
+  const n = SAVED.size;
+  if (!n && state.saved) { state.saved = false; writeHash(); }
+  const chip = document.getElementById("saved");
+  chip.classList.toggle("on", n > 0);
+  chip.setAttribute("aria-pressed", state.saved ? "true" : "false");
+  document.getElementById("savedlabel").textContent = n ? "Saved · " + n.toLocaleString() : "Saved";
+  // Only while the reader is looking at the set it would empty. Shown on the strength of the filter being on
+  // rather than of the set being non-empty, so "remove everything" is never one stray click away from
+  // somebody who is browsing the atlas and has not asked to see their own collection.
+  document.getElementById("clearsave").classList.toggle("on", state.saved && n > 0);
+}
+
+// One row's Save button. A function declaration so it hoists above `render()`, which is the only caller.
+//
+// The accessible name says which project, because a screen-reader user reaches this button once per row and
+// "Save" 120 times in a column is not a name. The visible word stays short, since it sits inline after an
+// `owner/name` that is already long, and the two do not have to match: `aria-label` replaces the text for
+// assistive technology rather than adding to it.
+//
+// `data-nwo` and not a row index. `render()` re-sorts and re-filters on every keystroke, so an index is only
+// valid until the next one -- and the click handler is delegated, which means it reads this attribute from a
+// DOM node that may have been rewritten between the press and the read.
+function saveBtn(r) {
+  const on = SAVED.has(r.nwo);
+  return '<button class="save" data-nwo="' + esc(r.nwo) + '" data-name="' + esc(r.name) +
+    '" aria-pressed="' + (on ? "true" : "false") + '" aria-label="' + esc(saveLabel(r.name, on)) + '">' +
+    saveWord(on) + "</button>";
+}
+
+// The visible word and the accessible name, from one place, because `toggleSave` rewrites both in the DOM
+// while `saveBtn` writes them as markup -- two call sites that would otherwise each carry their own copy of
+// the same string and drift the first time one of them was reworded.
+//
+// The visible word is the first word of the label on purpose. WCAG 2.5.3 asks that a control's accessible
+// name contain its visible text, so that someone driving the page by voice can say what they can see; a
+// button reading "Saved" whose name was "Save LangGraph" would fail that in exactly one of its two states,
+// which is the kind of bug that only shows up in the state nobody screenshots.
+// Declarations rather than `const` arrows, so they hoist with `saveBtn` above them. Both are called from
+// inside functions that run long after this script has evaluated, so a `const` would work today -- and would
+// fail with a temporal-dead-zone error the first time somebody called either of them from a path that runs
+// during evaluation, which is a trap worth simply not laying.
+function saveWord(on) { return on ? "Saved" : "Save"; }
+function saveLabel(name, on) { return saveWord(on) + " " + name; }
+
 function render() {
   // Reflect state onto the chips. Cheaper than rebuilding them and it keeps focus where it was.
   const press = (id, on) => [...document.getElementById(id).children]
@@ -2283,6 +2495,7 @@ function render() {
   document.getElementById("strict").setAttribute("aria-pressed", state.strict ? "true" : "false");
   document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
   document.getElementById("rise").setAttribute("aria-pressed", state.rising ? "true" : "false");
+  paintSaved();
   // Here as well as on the toggle, for the same reason the chips above are reflected here rather than only
   // where they are clicked: this is the one function every path that changes state already ends at, so a
   // `#view=cards` link, a hashchange and the browser's back button all arrive at the right layout without
@@ -2404,6 +2617,13 @@ function render() {
         // better accessible name than "GitHub" repeated 120 times. It does add one tab stop per row,
         // which is the price of the title no longer being the way out.
         '<a class="nwo" href="' + url + '">' + esc(r.nwo) + "</a>" +
+        // In the project cell rather than in a cell of its own, which is not a layout preference: the
+        // headings and the body cells of this table have to stay the same length, and a mismatch here has
+        // already once produced five headings over four columns with an invented fifth column to hang the
+        // surplus on. A control that needs no heading has no business creating that risk. The cards view
+        // gets it for free too -- `td.pj` is the full-width row 3 there, so the button lands under the
+        // title in both layouts without a second rule.
+        saveBtn(r) +
         '<div class="meta os">' + os + "</div></td>" +
       '<td class="n st-c"><span class="st' + (r.stars ? "" : " none") + '">' +
         (r.stars ? r.stars.toLocaleString() : "—") + "</span>" +
