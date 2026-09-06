@@ -22,7 +22,7 @@ import json
 import os
 import re
 import sys
-from datetime import date
+from datetime import date, datetime, timezone
 from html import escape
 from pathlib import Path
 
@@ -167,10 +167,35 @@ def facet_links(items: list[dict], prefix: str) -> str:
         f'<a href="{prefix}/{i["slug"]}/">{escape(i["name"])}</a>' for i in items)
 
 
+def built() -> tuple[str, str]:
+    """When this page was rendered, as (machine-readable UTC, the form the badge prints).
+
+    The header carries a "last deployed" badge, and this is the half of its value that can be known here.
+    The other half cannot: Pages serves this branch's `docs/` folder, so the commit that carries this very
+    file is what triggers its own deployment, and that deployment finishes a minute or two after this
+    function runs. A page therefore cannot be told its own publish time at build time -- it can only be
+    told when it was built, and then look the real answer up at load. See `deployStamp` in the page, which
+    reads it off the `Last-Modified` header of the `data.json` request the page already makes.
+
+    So this value is what the badge shows before that fetch resolves, in the copy committed to the
+    repository, and in a local `python -m http.server` where there is no deployment to describe at all.
+
+    Whole minutes because that is what the badge prints, and a `datetime` attribute claiming a precision
+    the visible text does not have is a small lie to a machine. It costs nothing in churn either way:
+    `__SNAPSHOT__` already puts today's date in this file, so `index.html` differs on every day a build
+    runs regardless of what this returns.
+    """
+    now = datetime.now(timezone.utc).replace(second=0, microsecond=0)
+    return now.strftime("%Y-%m-%dT%H:%M:%SZ"), now.strftime("%Y-%m-%d %H:%M UTC")
+
+
 def substitute(page: str, data: dict, repo: str, site: str) -> str:
     """Fill the template's placeholders. Both this stage and `19b_refresh.py` render the same shell, and
     when the two chains drifted the refreshed page quietly lost whichever one had been added since."""
+    stamp_iso, stamp_utc = built()
     return (page
+            .replace("__BUILT__", stamp_iso)
+            .replace("__BUILT_UTC__", stamp_utc)
             .replace("__TOPICLINKS__", facet_links(data["cats"], "topic"))
             .replace("__TARGETLINKS__", facet_links(data["targets"], "target"))
             .replace("__COUNT__", f"{len(data['rows']):,}")
@@ -266,6 +291,43 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
    from the header rather than from the footer's fine print. */
 .fresh{color:var(--good)}
 .stale{color:var(--warn);font-weight:600}
+/* The "last deployed" badge, drawn to match the shields.io badges in the README rather than fetched from
+   shields.io. Fetching one is not an option here: the value is a timestamp, so the URL would have to be
+   regenerated on every build, the badge would still be a third-party request on the critical path of every
+   page view, and it could never be corrected at load by `deployStamp` -- an <img> cannot be re-rendered
+   from a response header.
+   Every number below is read off the SVG shields actually serves for `?style=for-the-badge`, not guessed:
+   28px tall, 10px Verdana, 12px gutters, square corners, label in normal weight on #555 and value in bold
+   on the colour. The tracking is the one thing shields does not express as a property -- it forces each run
+   of text to a computed width with `textLength` and lets the renderer distribute the slack -- so it is set
+   here directly, at the value that lands both segments on shields' own rect widths for this badge (122.25
+   and 176.0, measured, not guessed). That stays true for every date this will ever print: the value is
+   always exactly 20 characters and Verdana's digits are tabular, so the string's width never moves. The
+   right gutter gives the tracking back, because CSS letter-spacing applies after the final character too
+   and would otherwise push the text half a pixel off-centre inside its own box.
+   Fixed hexes rather than theme variables, and #1a7f37 is the README's own green: those badges are images
+   and look identical in GitHub's light and dark themes, so a stamp that repainted itself with this site's
+   theme would be the one thing in the family that did not match. Both fills clear 4.5:1 against white. */
+.stamp{display:inline-flex;height:28px;margin:10px 0 0;text-decoration:none;
+  font-family:Verdana,Geneva,DejaVu Sans,sans-serif;font-size:10px;line-height:28px;
+  letter-spacing:1.28px;text-transform:uppercase;white-space:nowrap}
+.stamp>span{padding:0 10.72px 0 12px;color:#fff}
+.stamp .k{background:#555}
+.stamp .v{background:#1a7f37;font-weight:700}
+/* Amber on the same fortnight the snapshot text uses, so the header has one staleness threshold and not
+   two. Recoloured rather than relabelled, and the badge's own tooltip says what the colour means. */
+.stamp.late .v{background:#9a6700}
+/* A ring rather than a lighter fill on hover: every lighter step of these two greens and ambers drops
+   the white text below 4.5:1, and a badge that becomes unreadable when pointed at is a poor trade for an
+   affordance a ring gives just as clearly. */
+.stamp:hover,.stamp:focus-visible{box-shadow:0 0 0 2px var(--bar)}
+.stamp:focus-visible{outline:none}
+/* At its full width the badge is 298px, which needs 338px of viewport once the header's own gutters are
+   paid, so on a 320px phone it was the one element on the page wide enough to give the whole document a
+   horizontal scrollbar -- measured: 305px of content became 312px. What gives way is the label, never the
+   value: the timestamp is the thing the badge exists to say, and "DEPLOYED 2026-09-06 18:07 UTC" loses no
+   meaning at all. 360px rather than 338px so the rule lands on a phone width rather than mid-band. */
+@media (max-width:360px){.stamp .lw{display:none}}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 .top nav{font-size:13px;color:var(--muted);text-align:right;line-height:1.9}
 button{font:inherit;cursor:pointer}
@@ -363,6 +425,12 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
    verdict column two cells away, and reusing it here would make one hue mean two things on one row. The
    dotted underline is the marker and the hint that there is a title worth hovering. */
 .old{text-decoration:underline dotted;text-decoration-color:var(--muted);text-underline-offset:2px}
+/* The approximate-match banner. Left-aligned and directly above the table it explains, because a centred
+   notice reads as page furniture and gets skipped -- and this one has to be read, or the reader concludes
+   the search ignored them. Amber like the other "this is not quite what you asked for" signals. */
+.approx{margin:0 0 14px;padding:10px 14px;border-left:3px solid var(--warn);background:var(--band);
+  border-radius:0 6px 6px 0;color:var(--ink2);font-size:14px}
+.approx b{color:var(--ink)}
 .empty{padding:64px 0 80px;text-align:center;color:var(--muted)}
 /* "Nothing matches. Try clearing a filter." named neither the filter nor what clearing it would return,
    so the reader had to guess which of six controls was the tight one -- and it is usually not the one
@@ -530,6 +598,16 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
       stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
       __SNAPSHOT__</span></p>
     <p class="blurb" id="ctx"></p>
+    <!-- The DOM text is sentence case and the uppercase is `text-transform`, so the accessible name reads
+         "Last deployed 2026-09-06 18:07 UTC" rather than being spelled out, and no aria-label is needed to
+         paper over the styling. `<time>` because this is a timestamp and something will want to read it.
+         The href goes to the deployment history, which is where the badge's own claim can be checked.
+         The line break between the two spans is load-bearing: without a text node between them the
+         accessible name comes out as "Last deployed2026-09-06 18:07 UTC", run together. A flex container
+         drops whitespace-only children, so it costs nothing in layout. -->
+    <a class="stamp" id="deployed" href="https://github.com/__REPO__/deployments"
+       title="When this copy of the site was published."><span class="k"><span class="lw">Last </span>deployed</span>
+      <span class="v"><time datetime="__BUILT__">__BUILT_UTC__</time></span></a>
   </div>
   <nav>
     <a href="https://github.com/__REPO__">Repository</a> ·
@@ -554,6 +632,11 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
            placeholder="name, repo, description, language&hellip;"
            autocomplete="off" spellcheck="false">
     <select id="sort" aria-label="Sort by">
+      <!-- Best match is the default, and it is deliberately not a hidden mode. Ranking search results
+           without saying so would silently override a sort the reader had chosen; as an option they can
+           see selected, and move away from, the behaviour explains itself. With an empty box it has
+           nothing to rank and falls through to Most stars, which is what this page has always opened on. -->
+      <option value="relevance">Best match</option>
       <option value="stars">Most stars</option>
       <option value="lists">Named by most lists</option>
       <option value="pushed">Pushed most recently</option>
@@ -606,7 +689,7 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 <script>
 const PAGE_SIZE = 120;
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false,
-               sort: "stars", shown: PAGE_SIZE};
+               sort: "relevance", shown: PAGE_SIZE};
 let D = null, ROWS = [], NEW = 0;
 // The pending debounced search, if any. Declared out here rather than beside the handler because `set()`
 // has to cancel it, and `set()` is not inside the fetch callback where the handlers are wired.
@@ -621,6 +704,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "__SNAPSHOT__";
+const BUILT = "__BUILT__";
 
 // Colour was the only thing distinguishing a stated Yes from an inferred Maybe from a No, which is a
 // WCAG 1.4.1 failure and, more plainly, unreadable for anyone with a red/green deficiency. Each verdict
@@ -667,13 +751,25 @@ function since(iso) {
     : '<span title="' + iso + '">' + t + "</span>";
 }
 
-fetch("data.json").then(r => r.json()).then(d => {
+fetch("data.json").then(r => {
+  // The only place the real deployment time is available, and it arrives on a request the page was going
+  // to make anyway. See `deployStamp`. Before `r.json()`, because that consumes the body and there is no
+  // reason to wait for 561 KB to parse before correcting a badge that is already on screen.
+  deployStamp(r.headers.get("Last-Modified"));
+  return r.json();
+}).then(d => {
   D = d;
   // Column-oriented on the wire, objects in here. One pass, 1,294 times, so the rest of the page can
   // read `r.stars` instead of `r[4]`.
   ROWS = d.rows.map(a => Object.fromEntries(d.cols.map((c, i) => [c, a[i]])));
   ROWS.forEach(r => {
     r.hay = (r.name + " " + r.nwo + " " + r.blurb + " " + r.lang + " " + r.listed_by).toLowerCase();
+    // `hay` answers "does this row match" and cannot answer "where did it match", which is the only
+    // question ranking cares about. Lowercasing the three fields separately here rather than inside the
+    // scorer keeps 1,294 * 5 `toLowerCase` calls out of every keystroke.
+    r.lname = r.name.toLowerCase();
+    r.lnwo = r.nwo.toLowerCase();
+    r.lblurb = (r.blurb || "").toLowerCase();
     r.img = r.img || ("https://opengraph.githubassets.com/1/" + r.nwo);
     const age = r.first_seen ? daysAgo(r.first_seen) : Infinity;
     r.isnew = age >= 0 && age <= (d.window_days || 14);
@@ -786,7 +882,6 @@ function wire() {
     const fix = ev.target.closest(".fix");
     if (fix) {
       if (fix.dataset.all) return set(CLEAR);
-      if (fix.dataset.q !== undefined) return set({q: fix.dataset.q});
       const o = RESCUE[+fix.dataset.i];
       if (o) set(o.patch);
       return;
@@ -795,6 +890,11 @@ function wire() {
     if (b) copy(b);
   });
   stamp();
+  // With no argument, so the badge shows `BUILT` and gets its relative age and tooltip immediately. The
+  // fetch calls it again with the header when it lands, which is the only time the value changes. Wired
+  // here rather than only there because `wire()` also runs on the error page, where the fetch never
+  // resolves and a badge frozen at its rendered-in markup would have no age on it at all.
+  deployStamp();
 }
 
 // writeText rejects rather than throws -- denied permission, a document that is not focused, an
@@ -838,6 +938,49 @@ function stamp() {
     : "Rebuilt daily from the GitHub API.";
 }
 
+// The badge under the masthead. Two sources for one value, in order of authority.
+//
+// `Last-Modified` on the `data.json` response is the real answer. Pages stamps every file it serves with
+// the moment the deployment carrying it was published -- `index.html` and `data.json` come back with the
+// same second, which is what proves it is the deployment's clock and not any file's own mtime -- so this
+// is the publish time of the exact bytes on screen, and it is free, because the page fetches that file
+// regardless. It is also the only value that *can* be right: the commit carrying this page is what
+// triggers the deployment that publishes it, so nothing known at build time could have said it.
+//
+// `BUILT` is the fallback, and the reason the badge is never blank or wrong-looking: it is what the copy
+// in the repository shows, what a local `python -m http.server` shows, where there is no deployment to
+// describe, and what is on screen for the few hundred milliseconds before the fetch resolves. It runs a
+// minute or two ahead of the deployment it precedes, which is inside the minute the badge prints.
+//
+// Nothing in here may throw. The caller is the first link of the `data.json` promise chain, and an
+// exception raised here would land in the `.catch` at the end of it and be reported to the reader as
+// "could not load data.json" -- a badge failing would blank the atlas and misattribute why.
+function deployStamp(lastModified) {
+  try {
+    const el = document.getElementById("deployed");
+    if (!el) return;
+    const live = Date.parse(lastModified || "");
+    const ms = Number.isNaN(live) ? Date.parse(BUILT) : live;
+    if (Number.isNaN(ms)) return;
+    const iso = new Date(ms).toISOString();
+    const shown = iso.slice(0, 10) + " " + iso.slice(11, 16) + " UTC";
+    const t = el.querySelector("time");
+    t.dateTime = iso;
+    t.textContent = shown;
+    // The same fortnight `stamp()` uses, deliberately -- one staleness threshold in the header rather than
+    // two to learn. It is the right number for this clock too: the daily build is gated on a source list
+    // having moved, so a quiet week is healthy and a tighter bound would cry wolf, but the weekly rebuild
+    // publishes unconditionally, so past 14 days both crons have stopped and the page is on its own.
+    const days = (Date.now() - ms) / 86400000;
+    el.classList.toggle("late", days > 14);
+    const age = days < 1 ? "Today." : days < 2 ? "Yesterday." : Math.round(days) + " days ago.";
+    el.title = (Number.isNaN(live)
+      ? "Built " + shown + ". This copy is not served by Pages, so its deployment time is unknown. "
+      : "Published to GitHub Pages " + shown + ". ") + age
+      + (days > 14 ? " Neither scheduled rebuild has run since, so the data here has drifted." : "");
+  } catch (e) {}
+}
+
 function set(patch, keepFocus) {
   // Any other interaction outranks a search the reader has stopped waiting for. Without this, tapping
   // Clear all inside the 150ms window let the queued timer land afterwards and re-apply the term that was
@@ -866,7 +1009,7 @@ function writeHash() {
   if (state.os.length) p.set("os", state.os.map(i => D.os[i].toLowerCase()).join(","));
   if (state.strict) p.set("confirmed", "1");
   if (state.fresh) p.set("new", "1");
-  if (state.sort !== "stars") p.set("sort", state.sort);
+  if (state.sort !== "relevance") p.set("sort", state.sort);
   const s = p.toString();
   history.replaceState(null, "", s ? "#" + s : location.pathname);
 }
@@ -883,7 +1026,9 @@ function readHash() {
   // A `#new=1` link outlives the fortnight it was written in. Honouring it once the window has emptied
   // would greet the reader with "nothing matches"; dropping it shows them the atlas instead.
   state.fresh = p.get("new") === "1" && NEW > 0;
-  state.sort = ["stars", "lists", "pushed", "name"].includes(p.get("sort")) ? p.get("sort") : "stars";
+  // Every `#sort=stars` link written before Best match existed still says exactly what it said then,
+  // because the name is unchanged and only the *default* moved.
+  state.sort = SORT_KEYS.includes(p.get("sort")) ? p.get("sort") : "relevance";
   document.getElementById("q").value = state.q;
   document.getElementById("sort").value = state.sort;
 }
@@ -960,30 +1105,88 @@ function grams(s) {
   return out;
 }
 
-function nearest(q) {
+// Rows matching every filter *except* the search box, ranked by how close their name is to what was
+// typed. Only ever called when the exact pass returned nothing, which is what makes it safe: a query that
+// does match is never diluted with approximate results, and the cost is paid on the one render where the
+// reader would otherwise be staring at an empty table.
+//
+// It relaxes the search box and nothing else. A reader who has picked a topic and an OS has told us
+// something they meant; the typo is in the word they were still typing, so the other filters stand.
+function near(q) {
   const want = grams(q);
-  // Under three trigrams is a five-character fragment, which is a prefix someone is still typing rather
-  // than a misspelling of anything.
-  if (want.size < 3) return null;
-  let best = null, top = 0;
-  for (const r of ROWS) {
+  // Under three trigrams is a five-character fragment -- a prefix someone is mid-way through typing
+  // rather than a misspelling of anything, and matching it loosely would be noise.
+  if (want.size < 3) return [];
+  const saved = state.q;
+  state.q = "";
+  const pool = ROWS.filter(match);
+  state.q = saved;
+  const out = [];
+  for (const r of pool) {
     if (!r.g) r.g = grams(r.name);
     let hit = 0;
     want.forEach(g => { if (r.g.has(g)) hit++; });
     // Divided by the larger of the two so a long name cannot win by containing a short query, which is
     // what an unnormalised count does -- every three-letter search matched the longest title on the page.
     const score = hit / Math.max(want.size, r.g.size);
-    if (score > top) { top = score; best = r; }
+    if (score >= 0.3) { r.rel = score; out.push(r); }
   }
-  return top >= 0.34 ? best : null;
+  // Capped, because past the first handful these stop being plausible corrections and start being a
+  // second way to say "nothing matched".
+  return out.sort(SORTS.relevance).slice(0, 12);
+}
+
+// Where a query word landed, in descending order of what that tells us. A word in the project's own name
+// is the strongest signal available; a word in the list of source lists that named it is the weakest,
+// because every row from that list shares it. A prefix outranks a mid-word hit because that is how people
+// type -- "lang" is someone reaching for LangGraph, not for the word "multi-language" in a blurb.
+//
+// The numbers are ordinal, not measured. What matters is the gaps: a name hit must be unreachable by any
+// number of blurb hits, or a project merely *described* as an orchestrator outranks the one called it.
+function hitScore(r, w) {
+  if (r.lname === w) return 120;
+  if (r.lname.startsWith(w)) return 90;
+  const n = r.lname.indexOf(w);
+  // A word boundary is anything that is not alphanumeric, so "code" scores as a word in "Claude Code"
+  // and "Claude-Code" alike, but not inside "Decoder".
+  if (n > 0) return /[a-z0-9]/.test(r.lname[n - 1]) ? 45 : 70;
+  if (r.lnwo.includes(w)) return 30;
+  if ((r.lang || "").toLowerCase() === w) return 20;
+  const b = r.lblurb.indexOf(w);
+  if (b === 0) return 12;
+  if (b > 0) return /[a-z0-9]/.test(r.lblurb[b - 1]) ? 6 : 12;
+  if ((r.listed_by || "").toLowerCase().includes(w)) return 2;
+  return 0;
+}
+
+// Summed over the query's words, so two name hits beat one. The star bonus is logarithmic and deliberately
+// small: it settles ties between rows that matched the same way, and log10 tops out near 5.5 even for a
+// 300,000-star project, so it can never lift a blurb hit above a name hit. Linear stars would have made
+// this a star sort wearing a relevance label.
+function relevance(r, words) {
+  let total = 0;
+  for (const w of words) total += hitScore(r, w);
+  return total + Math.log10((r.stars || 0) + 1);
 }
 
 const SORTS = {
+  // `rel` is written onto the row once per render rather than computed inside the comparator, which would
+  // score each row the O(log n) times the sort happens to compare it.
+  relevance: (a, b) => b.rel - a.rel || b.stars - a.stars || a.name.localeCompare(b.name),
   stars: (a, b) => b.stars - a.stars || a.name.localeCompare(b.name),
   lists: (a, b) => b.lists - a.lists || b.stars - a.stars,
   pushed: (a, b) => (b.pushed || "").localeCompare(a.pushed || "") || b.stars - a.stars,
   name: (a, b) => a.name.localeCompare(b.name),
 };
+
+const SORT_KEYS = Object.keys(SORTS);
+
+// Best match with an empty search box has nothing to rank, so it means Most stars until there is a query.
+// Resolved here rather than by rewriting `state.sort`, so that clearing the box and typing again returns
+// the reader to ranking instead of silently stranding them on a star sort they never chose.
+function effSort() {
+  return state.sort === "relevance" && !state.q ? "stars" : state.sort;
+}
 
 function render() {
   // Reflect state onto the chips. Cheaper than rebuilding them and it keeps focus where it was.
@@ -995,11 +1198,30 @@ function render() {
   document.getElementById("strict").setAttribute("aria-pressed", state.strict ? "true" : "false");
   document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
 
-  const hits = ROWS.filter(match).sort(SORTS[state.sort]);
+  const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+  let hits = ROWS.filter(match);
+
+  // A single mistyped letter used to produce an empty page even when the answer was one letter away. The
+  // fallback runs only after the exact pass has failed, so a search that works is never diluted by it.
+  // Near matches keep their similarity order rather than the reader's chosen sort: this is a list of
+  // corrections, and "closest first" is the only ordering that makes it one.
+  let approx = false;
+  if (!hits.length && words.length) {
+    const alt = near(state.q);
+    if (alt.length) { hits = alt; approx = true; }
+  }
+  if (!approx) {
+    const sort = effSort();
+    if (sort === "relevance") for (const r of hits) r.rel = relevance(r, words);
+    hits.sort(SORTS[sort]);
+  }
+
   const ranked = hits.filter(r => r.stars).length;
-  document.getElementById("count").innerHTML =
-    "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() +
-    " · " + ranked.toLocaleString() + " with stars";
+  document.getElementById("count").innerHTML = approx
+    ? "<b>" + hits.length.toLocaleString() + "</b> near " +
+      (hits.length === 1 ? "match" : "matches") + " · nothing matches “" + esc(state.q) + "” exactly"
+    : "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() +
+      " · " + ranked.toLocaleString() + " with stars";
 
   const cat = state.cat && D.cats.find(c => c.slug === state.cat);
   const tgt = state.tgt && D.targets.find(t => t.slug === state.tgt);
@@ -1010,16 +1232,12 @@ function render() {
   const out = document.getElementById("out");
   if (!hits.length) {
     RESCUE = rescue();
-    // The spelling suggestion is offered only when the search is the *only* active filter. With a topic
-    // or an OS also set, the likelier explanation is the crossing rather than the typing, and two
-    // competing theories on one dead end is worse than one good one.
-    const alone = state.q && !state.cat && !state.tgt && !state.os.length && !state.strict &&
-                  !state.fresh;
-    const near = alone ? nearest(state.q) : null;
+    // No spelling suggestion here any more. `near()` above already offered every plausible correction as
+    // real, clickable rows before this branch could be reached, so reaching it means the trigram pass also
+    // came up empty -- and a "did you mean" that has nothing to name is worse than none. What is left is
+    // genuinely a filter problem, which is what the rescue buttons address.
     out.innerHTML = '<div class="empty">' +
       '<p class="big">Nothing matches all of that.</p>' +
-      (near ? "<p>Did you mean <button class=\"fix\" data-q=\"" + esc(near.name) + '">' +
-        esc(near.name) + "</button>?</p>" : "") +
       (RESCUE.length
         ? "<p>" + (RESCUE.length === 1 ? "Loosening this would help:" : "Loosen one of these:") +
           '</p><div class="fixes">' + RESCUE.map((o, i) =>
@@ -1092,7 +1310,15 @@ function render() {
   // narrow-viewport rule hides `.shot` it hid only the body cell -- leaving five headings over four
   // columns, so "Shot" sat above the project names, "Project" above the stars, "Stars" above the
   // blurbs, and auto layout invented a fifth column to hang the surplus heading on.
-  out.innerHTML =
+  // Said above the table as well as in the live region, because a sighted reader who mistyped needs to
+  // know *why* they are looking at LangGraph when they asked for "langraph" -- otherwise the correction
+  // looks like the search quietly ignoring them.
+  const note = approx
+    ? '<p class="approx">Nothing matches <b>' + esc(state.q) + "</b> exactly. Closest by name" +
+      (state.cat || state.tgt || state.os.length || state.strict || state.fresh
+        ? ", within your other filters" : "") + ":</p>"
+    : "";
+  out.innerHTML = note +
     "<table><thead><tr><th class='n'>#</th><th class='shot'>Shot</th><th class='pj'>Project</th>" +
     "<th class='n st-c'>Stars</th>" +
     "<th class='hide tg'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
