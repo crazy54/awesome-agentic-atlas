@@ -8,7 +8,32 @@
 <meta property="og:title" content="Awesome Agentic Atlas">
 <meta property="og:description" content="1,294 projects from eleven awesome-lists, one filterable index.">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/">
+<!-- Autodiscovery for the arrivals feed. Relative, like the `fetch("data.json")` this page already does,
+     so it resolves on Pages and from a local `python -m http.server` alike. GitHub Pages serves .xml as
+     text/xml and cannot be told otherwise, so the `type` here is what actually declares the format --
+     readers sniff the root element regardless, but the link tag is where a browser looks first. -->
+<link rel="alternate" type="application/atom+xml" title="Awesome Agentic Atlas — new arrivals"
+      href="feed.xml">
+<link rel="alternate" type="application/feed+json" title="Awesome Agentic Atlas — new arrivals"
+      href="feed.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<!-- Ahead of the stylesheet deliberately, and inline rather than in a file: this has to settle the theme
+     before first paint. A reader who chose light, or whose OS asks for light, otherwise gets a frame of
+     near-black before the toggle catches up, and an external script is one more round trip during which
+     the wrong theme is on screen.
+
+     Precedence is explicit choice, then the operating system, then dark. Dark stays the fallback because
+     it is the designed mode -- the one whose accent contrast ratios were actually measured. The markup's
+     data-theme="dark" is the floor if this throws, which localStorage does in some private modes. -->
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+} catch (e) {}
+</script>
 <style>
 /* Lagoon Gold: cyan primary, gold secondary, cool near-black surfaces. Dark is the designed mode --
    its eight neutrals and two accents are the theme's own values. Light is stepped from the same two
@@ -31,12 +56,31 @@ body{margin:0;background:var(--surface);color:var(--ink);
   font:15px/1.5 "Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
+/* Only #q had a focus ring, so every chip, the sort menu and both nav buttons were invisible to anyone
+   driving this page from the keyboard. :focus-visible rather than :focus so a mouse click does not leave
+   a ring behind on the chip that was pressed. */
+:focus-visible{outline:2px solid var(--bar);outline-offset:2px;border-radius:4px}
+/* Off screen rather than display:none or visibility:hidden -- both of those take the text out of the
+   accessibility tree as well as off the screen, which defeats the point. */
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;border:0}
+/* Six control rows sit between the top of the document and the first result, and a screen-reader or
+   keyboard reader had to walk all of them on every visit. Hidden until focused, which is the only
+   state in which it is useful. */
+.skip{position:absolute;left:-999px;top:0;z-index:40;background:var(--bar);color:var(--onbar);
+  padding:10px 16px;border-radius:0 0 8px 0;font-weight:600}
+.skip:focus{left:0}
 header{background:var(--plane);border-bottom:1px solid var(--grid);padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 .sub{color:var(--ink2);font-size:14px;margin:0}
 .sub b{color:var(--ink)}
+/* The snapshot's age, not just its date. Green while the daily build is keeping up, amber once it has
+   not -- at which point the star counts on the page are drifting and the reader deserves to know that
+   from the header rather than from the footer's fine print. */
+.fresh{color:var(--good)}
+.stale{color:var(--warn);font-weight:600}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 .top nav{font-size:13px;color:var(--muted);text-align:right;line-height:1.9}
 button{font:inherit;cursor:pointer}
@@ -100,23 +144,62 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
 .cmd{display:block;margin-top:7px;font:12px/1.5 Consolas,ui-monospace,monospace;
   color:var(--ink2);background:var(--band);border:1px solid var(--grid);border-radius:5px;
   padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
+/* The install line is the one thing on a row a reader wants to take with them, and taking it meant
+   selecting monospace text that wraps mid-flag without catching the surrounding cell. `align-items:
+   stretch` so the button matches whatever height the command wrapped to, and `min-width:0` on the code
+   so a long one shrinks rather than pushing the button out of the row. */
+.cmdrow{display:flex;align-items:stretch;gap:6px;max-width:44em;margin-top:7px}
+.cmdrow .cmd{margin-top:0;flex:1 1 auto;min-width:0}
+.copy{flex:none;background:var(--band);color:var(--ink2);border:1px solid var(--grid);
+  border-radius:5px;padding:0 10px;font-size:11.5px;letter-spacing:.03em;white-space:nowrap}
+.copy:hover{border-color:var(--bar);color:var(--ink)}
+.copy.ok{border-color:var(--good);color:var(--good)}
 .tag{display:inline-block;background:var(--band);border:1px solid var(--grid);border-radius:5px;
   padding:2px 7px;font-size:11.5px;color:var(--ink2);margin:0 4px 4px 0;white-space:nowrap}
 .tag.cat{border-color:var(--bar);color:var(--ink)}
-.os{font-size:11.5px;letter-spacing:.02em;white-space:nowrap}
+/* This rule was dead: the class was defined here but never put on an element, so the verdict row was
+   rendering as plain `.meta` the whole time. The nowrap is now on each verdict rather than on the group,
+   which is what it was for -- keeping "Win ✓" together, not forcing all five onto one line, which on a
+   375px card is 260px of unbreakable text. */
+.os{font-size:11.5px;letter-spacing:.02em}
+.os>span{white-space:nowrap}
 /* Prefixed because the verdict characters are the class names and one of them is "-", which is not a
    valid CSS identifier on its own -- ".-" invalidates the whole selector list it appears in, so the
    unprefixed version silently dropped the colour from every No, n/a and dash on the page. */
 .vY{color:var(--good);font-weight:700}
 .vL{color:var(--warn)}
 .vN,.va,.v-{color:var(--off)}
-.empty{padding:80px 0;text-align:center;color:var(--muted)}
+/* Each verdict also carries a glyph -- see VERDICT in the script. Colour on its own was the only channel
+   here, which is WCAG 1.4.1 and fails for a red/green deficiency, a greyscale print-out and a projector
+   with the saturation turned down. The glyph is part of the text rather than a pseudo-element so it is
+   copied with the row and announced by a screen reader ("check mark", "question mark"). */
+.os .v-,.os .va{opacity:.75}
+/* A repo with no push in over a year. Deliberately not a colour: amber already means "inferred" in the
+   verdict column two cells away, and reusing it here would make one hue mean two things on one row. The
+   dotted underline is the marker and the hint that there is a title worth hovering. */
+.old{text-decoration:underline dotted;text-decoration-color:var(--muted);text-underline-offset:2px}
+.empty{padding:64px 0 80px;text-align:center;color:var(--muted)}
+/* "Nothing matches. Try clearing a filter." named neither the filter nor what clearing it would return,
+   so the reader had to guess which of six controls was the tight one -- and it is usually not the one
+   they touched last. Each button here is a filter to drop with the count it would restore. */
+.empty .big{color:var(--ink);font-size:17px;font-weight:600;margin:0 0 6px}
+.empty p{margin:0 0 12px}
+.fixes{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.fix{background:var(--band);color:var(--ink);border:1px solid var(--grid);border-radius:999px;
+  padding:7px 15px;font-size:13.5px}
+.fix:hover{border-color:var(--bar)}
+.fix .n{color:var(--muted);font-variant-numeric:tabular-nums}
+.fix:hover .n{color:var(--ink2)}
 .more{display:block;margin:26px auto 0;background:var(--band);color:var(--ink);
   border:1px solid var(--grid);border-radius:8px;padding:11px 22px;font-weight:600}
 .more:hover{border-color:var(--bar)}
 footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
   color:var(--muted);font-size:13px}
 .blurb{color:var(--muted);font-size:13px;margin:2px 0 0}
+.facets{margin-top:14px;padding-top:12px;border-top:1px solid var(--grid);font-size:12.5px;
+  line-height:1.9}
+.facets p{margin:0 0 4px}
+.facets b{color:var(--ink2);font-weight:600}
 /* One query used to do all the responsive work here and all it did was hide two columns, so a 375px
    phone got the same layout as an 899px tablet. There are three now, because the page fails in three
    different ways: at 900px the screenshot and the detail columns stop paying for their width; below
@@ -197,13 +280,48 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   td.st-c{grid-column:2;grid-row:1}
   td.pj{grid-column:1/-1;grid-row:2}
   td.ds{grid-column:1/-1;grid-row:3;margin-top:6px}
+  /* The two `.hide` columns are dropped at 900px and, until now, never came back -- so a phone reader
+     silently lost the topic and target tags and the language, licence and push date. That was a width
+     decision inherited from the table, and a card is not competing for column width: it has a whole row
+     to spend. `td.hide` outranks the `.hide` that hid them, so this wins without touching that rule and
+     without affecting the 641-900px range, where the layout really is still a table.
+     A higher specificity than `.hide`, not a later position, is what makes that true. */
+  td.hide{display:block}
+  td.tg{grid-column:1/-1;grid-row:4;margin-top:8px}
+  td.lc{grid-column:1/-1;grid-row:5;margin-top:2px;text-align:left}
+  /* Three stacked lines is right in a centred 90px column and wrong on a card, where the same three
+     facts fit on one line. The <br>s are the table's formatting, so they go away here rather than
+     being conditionally emitted -- the markup stays one shape and the layout decides how to read it. */
+  td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
+  td.lc .meta br{display:none}
   .st{font-size:15px}
   .desc{font-size:13px}
   .more{width:100%}
+  .cmdrow{max-width:none}
 }
+
+/* Nothing here animates on a timer, but the chip hovers transition and the chip rails scroll smoothly,
+   and both are motion a reader can have asked their operating system not to show them. A blanket rule is
+   safe because no state on this page is communicated *by* an animation -- removing every one of them
+   changes nothing but the easing. */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+
+/* Focus lands on a row after "Show more", so the row needs somewhere to put a ring and needs to clear
+   the sticky filter bar if anything ever does scroll it into view. */
+#out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
+#out tr{scroll-margin-top:160px}
 </style>
 </head>
 <body>
+<a class="skip" href="#out">Skip to results</a>
+<!-- One shared region for anything the page needs to say that is not already text on the screen: a copy
+     succeeding, a clipboard being refused, how many rows "Show more" just added. The result count has its
+     own role=status on #count, because that one *is* visible text and should be announced from where it
+     is rather than duplicated here. -->
+<span class="sr" id="live" role="status" aria-live="polite"></span>
 <!-- Drawn here rather than borrowed so there is no third-party licence attached to a 300-byte glyph: a
      four-point star with concave arms, plus a smaller one trailing it. Two tones, gold and cyan, which
      is the theme's own pair -- the mark for "new" is the mark for this site, not a generic sparkle.
@@ -224,21 +342,31 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   <div>
     <h1>Awesome Agentic Atlas <span>· eleven awesome-lists, merged</span></h1>
     <p class="sub"><b>1,294</b> projects · <b>14</b> topics · <b>12,494,028</b> combined
-      stars · snapshot 2026-09-03</p>
+      stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
+      2026-09-03</span></p>
     <p class="blurb" id="ctx"></p>
   </div>
   <nav>
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown edition</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/releases/latest">Workbook</a><br>
-    <button class="chip" id="theme" aria-pressed="false">Light theme</button>
+    <!-- No aria-pressed. The label names the action and changes with the state, and "Dark theme" plus
+         pressed=true announces as "dark theme is on" -- which is the opposite of what it means. A toggle
+         gets a static label and a pressed state, or a changing label and no pressed state; this is the
+         second. It also stops the button rendering as a filled accent pill purely because the reader is
+         in light mode, which made it look like an active filter. -->
+    <button class="chip" id="theme">Light theme</button>
   </nav>
 </div></div></header>
 
 <div class="bar"><div class="wrap">
   <div class="line">
     <label for="q">Search</label>
-    <input id="q" type="search" placeholder="name, repo, description, language&hellip;"
+    <!-- aria-label as well as the <label>, because the narrow-viewport rule sets `display:none` on
+         `label[for=q]` and that removes it from the accessibility tree as well as from the screen -- so
+         on a phone the search box had no accessible name at all. -->
+    <input id="q" type="search" aria-label="Search projects"
+           placeholder="name, repo, description, language&hellip;"
            autocomplete="off" spellcheck="false">
     <select id="sort" aria-label="Sort by">
       <option value="stars">Most stars</option>
@@ -250,7 +378,10 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
             title="Projects the source lists added in the last 14 days">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
       <span id="newlabel">New</span></button>
-    <span class="count" id="count"></span>
+    <!-- role=status makes this a polite live region, so pressing a chip or typing a search announces the
+         new result count instead of silently rewriting a number the reader cannot see. aria-atomic so it
+         is read as one sentence rather than as whichever digits changed. -->
+    <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
   <div class="line facet"><label>Topic</label><span id="cats"></span></div>
   <div class="line facet"><label>Plugs into</label><span id="tgts"></span></div>
@@ -269,9 +400,22 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   <a href="https://github.com/crazy54/awesome-agentic-atlas#the-eleven-lists">repository</a>. Stars, language, licence and
   last-push come from the GitHub API on 2026-09-03 and drift daily. Platform verdicts are derived
   from each project's own README, install route, CI config and release assets &mdash;
-  <span class="vY">green</span> is stated evidence, <span class="vL">amber</span> is inferred from the
-  language. A dash in the star column means the row is a folder inside someone else's repo, or a dead
+  <span class="vY">green&#8201;&#10003;</span> is stated evidence,
+  <span class="vL">amber&#8201;?</span> is inferred from the language, and
+  <span class="vN">grey&#8201;&#10007;</span> is neither. The glyph says the same thing the colour does,
+  so the column still reads in greyscale, in print, and with a colour-vision deficiency. A push date
+  <span class="old">underlined like this</span> means nothing has landed in that repo for over a year.
+  A dash in the star column means the row is a folder inside someone else's repo, or a dead
   link, and has no count of its own.
+  <!-- Every filtered view of this page lives in the hash, which a crawler will not execute -- so the 156
+       prerendered pages under topic/ and target/ were reachable only from sitemap.xml, and a sitemap is a
+       hint rather than a path. These 26 links put each one click from the root and each crossing two.
+       Built in `substitute()` from the same `cats`/`targets` the page itself uses, so a new topic appears
+       here without anyone remembering to add it. -->
+  <nav class="facets" aria-label="Browse by topic or by what a project plugs into">
+    <p><b>Every topic:</b> <a href="topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a> · <a href="topic/coding-agents/">Coding Agents</a> · <a href="topic/agent-skills/">Agent Skills</a> · <a href="topic/mcp-servers/">MCP Servers</a> · <a href="topic/frameworks-sdks/">Frameworks &amp; SDKs</a> · <a href="topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> · <a href="topic/context-memory-rag/">Context, Memory &amp; RAG</a> · <a href="topic/sandbox-security-governance/">Sandbox, Security &amp; Governance</a> · <a href="topic/observability-evals/">Observability &amp; Evals</a> · <a href="topic/plugins-themes-clients/">Plugins, Themes &amp; Clients</a> · <a href="topic/research-data-agents/">Research &amp; Data Agents</a> · <a href="topic/creative-voice-media/">Creative, Voice &amp; Media</a> · <a href="topic/assistants-domain-agents/">Assistants &amp; Domain Agents</a> · <a href="topic/docs-learning-lists/">Docs, Learning &amp; Lists</a></p>
+    <p><b>Every integration:</b> <a href="target/claude-code/">Claude Code</a> · <a href="target/claude-anthropic/">Claude / Anthropic</a> · <a href="target/opencode/">opencode</a> · <a href="target/mcp/">MCP</a> · <a href="target/codex-openai/">Codex / OpenAI</a> · <a href="target/gemini-google/">Gemini / Google</a> · <a href="target/github-copilot/">GitHub Copilot</a> · <a href="target/cursor/">Cursor</a> · <a href="target/cline-roo/">Cline / Roo</a> · <a href="target/aider/">Aider</a> · <a href="target/langchain-langgraph/">LangChain / LangGraph</a> · <a href="target/local-ollama/">Local / Ollama</a></p>
+  </nav>
 </div></footer>
 
 <script>
@@ -288,6 +432,52 @@ let D = null, ROWS = [], NEW = 0;
 const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
+const SNAPSHOT = "2026-09-03";
+
+// Colour was the only thing distinguishing a stated Yes from an inferred Maybe from a No, which is a
+// WCAG 1.4.1 failure and, more plainly, unreadable for anyone with a red/green deficiency. Each verdict
+// now carries a glyph as well, chosen so that its screen-reader pronunciation is also the meaning:
+// "check mark", "question mark", "ballot x". A tilde would have read as "tilde".
+const VERDICT = {
+  Y: ["✓", "stated support"],
+  L: ["?", "inferred from the language"],
+  N: ["✗", "no evidence of support"],
+  a: ["–", "not applicable"],
+  "-": ["–", "not established"],
+};
+
+// Feature-detected rather than assumed, and the button is simply not rendered when the answer is no --
+// 120 buttons that fail on click are worse than none. `isSecureContext` is part of the test because the
+// API exists but always rejects on plain http, which is how a contributor serving docs/ locally sees it.
+const CAN_COPY = !!(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext);
+
+// The rescue buttons drawn on an empty table, in the order render() drew them. Kept out of the markup
+// because a filter patch is an object -- serialising it into a data- attribute and parsing it back would
+// be two more chances to get the OS index array wrong.
+let RESCUE = [];
+
+// A live region only fires on a *change*, so setting the same string twice announces once -- which is
+// exactly the case here, since copying two install lines in a row produces the same sentence. The clear
+// and the tick force a second announcement.
+function say(msg) {
+  const el = document.getElementById("live");
+  el.textContent = "";
+  setTimeout(() => { el.textContent = msg; }, 30);
+}
+
+// Relative, because the question a reader is asking of this column is "is this thing alive", and nobody
+// does date arithmetic in their head. Rounding is safe: the exact date stays in the title. Past a year
+// it gets the dotted marker -- quietly, because a dormant repo is a fact about the repo, not a verdict.
+function since(iso) {
+  if (!iso) return "—";
+  const d = daysAgo(iso);
+  const t = d <= 0 ? "today" : d === 1 ? "yesterday" : d < 30 ? d + "d ago"
+    : d < 365 ? Math.round(d / 30) + "mo ago"
+    : d < 730 ? (d / 365).toFixed(1) + "y ago" : Math.floor(d / 365) + "y ago";
+  return d >= 365
+    ? '<span class="old" title="' + iso + ' — no push in over a year">' + t + "</span>"
+    : '<span title="' + iso + '">' + t + "</span>";
+}
 
 fetch("data.json").then(r => r.json()).then(d => {
   D = d;
@@ -318,6 +508,10 @@ fetch("data.json").then(r => r.json()).then(d => {
     '<a href="https://crazy54.github.io/awesome-agentic-atlas/">https://crazy54.github.io/awesome-agentic-atlas/</a>.</p>';
 });
 
+// Before the fetch resolves, deliberately: none of this needs the data, and the theme toggle in
+// particular should work on the error page as well as on the atlas.
+wire();
+
 function chip(parent, label, pressed, onclick, title) {
   const b = document.createElement("button");
   b.className = "chip";
@@ -340,7 +534,17 @@ function buildChips() {
     const os = state.os.includes(i) ? state.os.filter(x => x !== i) : state.os.concat(i);
     set({os});
   }));
-  document.getElementById("q").oninput = e => set({q: e.target.value}, true);
+  // Debounced, because `render()` costs ~58ms at today's 1,294 rows on a throttled mobile CPU and used to
+  // run once per keystroke -- so typing "agentic" rebuilt a 120-row table seven times and the input
+  // visibly trailed the keyboard. Only ~20ms of that is row-count dependent; the rest is the innerHTML
+  // rebuild and layout, so this is a defect at the current size and not only a future one. 150ms is short
+  // enough to still read as live and collapses those seven renders into one.
+  let typing = 0;
+  document.getElementById("q").oninput = e => {
+    const v = e.target.value;
+    clearTimeout(typing);
+    typing = setTimeout(() => set({q: v}, true), 150);
+  };
   document.getElementById("sort").onchange = e => set({sort: e.target.value});
   document.getElementById("strict").onclick = () => set({strict: !state.strict});
   // Shown only when it would select something. The label carries the count because the whole question
@@ -352,22 +556,112 @@ function buildChips() {
     document.getElementById("newlabel").textContent = "New · " + NEW.toLocaleString();
     nb.onclick = () => set({fresh: !state.fresh});
   }
-  document.getElementById("reset").onclick =
-    () => set({q: "", cat: "", tgt: "", os: [], strict: false, fresh: false});
-  document.getElementById("theme").onclick = e => {
+  document.getElementById("reset").onclick = () => set(CLEAR);
+  window.addEventListener("hashchange", () => { readHash(); render(); });
+}
+
+const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false};
+
+// Theme and clipboard are wired outside buildChips because buildChips only runs once `data.json` has
+// arrived. When the fetch fails -- a contributor opening the file off disk, which the catch block above
+// exists for -- the toggle used to be dead too, so the error page could not be read in light mode.
+function wire() {
+  const btn = document.getElementById("theme");
+  const label = () => {
+    const light = document.documentElement.dataset.theme === "light";
+    btn.textContent = light ? "Dark theme" : "Light theme";
+    btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
+  };
+  btn.onclick = () => {
     const light = document.documentElement.dataset.theme !== "light";
     document.documentElement.dataset.theme = light ? "light" : "dark";
-    e.target.textContent = light ? "Dark theme" : "Light theme";
-    e.target.setAttribute("aria-pressed", light ? "true" : "false");
+    // The choice is the point: it used to last until the next navigation, so a reader who needs light
+    // re-picked it on every page load and every shared filter link.
+    try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+    label();
   };
-  window.addEventListener("hashchange", () => { readHash(); render(); });
+  // The head script already resolved the theme; this only has to agree with it, since the markup's
+  // hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+  label();
+  // Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a
+  // theme they explicitly chose because the sun went down is worse than not following at all.
+  try {
+    matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+      if (localStorage.getItem("theme")) return;
+      document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+      label();
+    });
+  } catch (e) {}
+
+  // One delegated listener rather than one per button: `render()` replaces the whole subtree on every
+  // keystroke, so per-row handlers would be 120 attachments discarded 120 times a second of typing.
+  document.getElementById("out").addEventListener("click", ev => {
+    const fix = ev.target.closest(".fix");
+    if (fix) {
+      if (fix.dataset.all) return set(CLEAR);
+      if (fix.dataset.q !== undefined) return set({q: fix.dataset.q});
+      const o = RESCUE[+fix.dataset.i];
+      if (o) set(o.patch);
+      return;
+    }
+    const b = ev.target.closest(".copy");
+    if (b) copy(b);
+  });
+  stamp();
+}
+
+// writeText rejects rather than throws -- denied permission, a document that is not focused, an
+// http origin -- so the failure path has to be real. Selecting the command is the fallback that leaves
+// the reader one keystroke from the same result, which is better than a button that shrugs.
+function copy(b) {
+  const cmd = b.dataset.cmd;
+  const flash = (text, ok) => {
+    b.textContent = text;
+    b.classList.toggle("ok", !!ok);
+    setTimeout(() => { b.textContent = "Copy"; b.classList.remove("ok"); }, 1800);
+  };
+  navigator.clipboard.writeText(cmd).then(() => {
+    flash("Copied", true);
+    say("Copied " + cmd);
+  }, () => {
+    const code = b.parentNode.querySelector(".cmd");
+    if (code) {
+      const r = document.createRange();
+      r.selectNodeContents(code);
+      const s = getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+    }
+    flash("Ctrl+C");
+    say("The clipboard was refused. The command is selected — press Control C to copy it.");
+  });
+}
+
+// An ISO date answers "when" and not "is this current", which is the question. Amber past a fortnight
+// because that is the point at which the star counts on the page have measurably drifted from GitHub's.
+function stamp() {
+  const el = document.getElementById("snap");
+  if (!el) return;
+  const d = daysAgo(SNAPSHOT);
+  const age = d <= 0 ? "today" : d === 1 ? "yesterday" : d + " days ago";
+  el.innerHTML = "snapshot " + SNAPSHOT + " · <span class=\"" + (d > 14 ? "stale" : "fresh") +
+    '">' + age + "</span>";
+  el.title = d > 14
+    ? "The daily rebuild has not run in " + d + " days, so stars and push dates here have drifted."
+    : "Rebuilt daily from the GitHub API.";
 }
 
 function set(patch, keepFocus) {
   Object.assign(state, patch, {shown: PAGE_SIZE});
   writeHash();
   render();
-  if (!keepFocus) document.getElementById("q").blur();
+  // A rescue button or Clear all can change the search term, and the box has to say so. Skipped while
+  // typing, where the box is the source of the change and rewriting its value moves the caret to the end.
+  if (!keepFocus) {
+    const q = document.getElementById("q");
+    if (q.value !== state.q) q.value = state.q;
+    q.blur();
+  }
 }
 
 // Every filter lives in the hash, so any view is a link. This is the whole point of the page: a
@@ -429,6 +723,69 @@ function match(r) {
   return true;
 }
 
+// What the table would hold with one filter relaxed. Mutate-count-restore rather than threading a state
+// argument through `match`, because `match` is called 1,294 times per keystroke and an extra parameter on
+// the hot path to serve a case that only fires on an empty table is the wrong trade. The patches only ever
+// replace `state.os` wholesale, never mutate it, so restoring the reference restores the value.
+function countWith(patch) {
+  const saved = Object.assign({}, state);
+  Object.assign(state, patch);
+  const n = ROWS.filter(match).length;
+  Object.assign(state, saved);
+  return n;
+}
+
+// Ranked by what each one would return, so the first button is the most productive thing to click. A
+// filter whose removal still leaves nothing is dropped -- offering it would be a second dead end.
+function rescue() {
+  const opts = [];
+  if (state.q) opts.push(["Drop the search “" + state.q + "”", {q: ""}]);
+  if (state.cat) {
+    const c = D.cats.find(x => x.slug === state.cat);
+    if (c) opts.push(["Drop topic " + c.name, {cat: ""}]);
+  }
+  if (state.tgt) {
+    const t = D.targets.find(x => x.slug === state.tgt);
+    if (t) opts.push(["Stop requiring " + t.name, {tgt: ""}]);
+  }
+  state.os.forEach(i => opts.push(["Drop " + D.os[i], {os: state.os.filter(x => x !== i)}]));
+  if (state.strict) opts.push(["Allow inferred support", {strict: false}]);
+  if (state.fresh) opts.push(["Drop the new-arrivals filter", {fresh: false}]);
+  return opts.map(o => ({label: o[0], patch: o[1], n: countWith(o[1])}))
+    .filter(o => o.n > 0)
+    .sort((a, b) => b.n - a.n)
+    .slice(0, 4);
+}
+
+// Trigram overlap, not Levenshtein: "langraph" vs "LangGraph" is one deletion but "claude cdoe" vs
+// "Claude Code" is a transposition inside a two-word name, and trigrams handle both without a matrix.
+// Padding with spaces makes the first and last characters count, which is where typos cluster.
+// Only ever runs on an empty table, so 1,294 set builds is a few milliseconds nobody waits for -- and it
+// is memoised on the row anyway, because a reader who mistypes once usually mistypes twice.
+function grams(s) {
+  const p = " " + s.toLowerCase().replace(/\s+/g, " ").trim() + " ", out = new Set();
+  for (let i = 0; i + 3 <= p.length; i++) out.add(p.slice(i, i + 3));
+  return out;
+}
+
+function nearest(q) {
+  const want = grams(q);
+  // Under three trigrams is a five-character fragment, which is a prefix someone is still typing rather
+  // than a misspelling of anything.
+  if (want.size < 3) return null;
+  let best = null, top = 0;
+  for (const r of ROWS) {
+    if (!r.g) r.g = grams(r.name);
+    let hit = 0;
+    want.forEach(g => { if (r.g.has(g)) hit++; });
+    // Divided by the larger of the two so a long name cannot win by containing a short query, which is
+    // what an unnormalised count does -- every three-letter search matched the longest title on the page.
+    const score = hit / Math.max(want.size, r.g.size);
+    if (score > top) { top = score; best = r; }
+  }
+  return top >= 0.34 ? best : null;
+}
+
 const SORTS = {
   stars: (a, b) => b.stars - a.stars || a.name.localeCompare(b.name),
   lists: (a, b) => b.lists - a.lists || b.stars - a.stars,
@@ -460,13 +817,38 @@ function render() {
 
   const out = document.getElementById("out");
   if (!hits.length) {
-    out.innerHTML = '<p class="empty">Nothing matches. Try clearing a filter.</p>';
+    RESCUE = rescue();
+    // The spelling suggestion is offered only when the search is the *only* active filter. With a topic
+    // or an OS also set, the likelier explanation is the crossing rather than the typing, and two
+    // competing theories on one dead end is worse than one good one.
+    const alone = state.q && !state.cat && !state.tgt && !state.os.length && !state.strict &&
+                  !state.fresh;
+    const near = alone ? nearest(state.q) : null;
+    out.innerHTML = '<div class="empty">' +
+      '<p class="big">Nothing matches all of that.</p>' +
+      (near ? "<p>Did you mean <button class=\"fix\" data-q=\"" + esc(near.name) + '">' +
+        esc(near.name) + "</button>?</p>" : "") +
+      (RESCUE.length
+        ? "<p>" + (RESCUE.length === 1 ? "Loosening this would help:" : "Loosen one of these:") +
+          '</p><div class="fixes">' + RESCUE.map((o, i) =>
+            '<button class="fix" data-i="' + i + '">' + esc(o.label) +
+            ' <span class="n">' + o.n.toLocaleString() + "</span></button>").join("") + "</div>"
+        : "") +
+      '<p style="margin-top:16px"><button class="fix" data-all="1">Clear all filters</button></p>' +
+      "</div>";
     return;
   }
   const page = hits.slice(0, state.shown);
   const rows = page.map((r, i) => {
-    const os = D.os.map((o, k) => '<span class="v' + r.os[k] + '">' + o.slice(0, 3) + "</span>")
-      .join(" ");
+    // A U+2009 thin space, not a full one, between an OS label and its verdict glyph, so that the label
+    // ignore-this-line "Win✓" break across lines
+    // and its glyph read as one unit beside its four neighbours rather than as ten separate words. The
+    // title carries the sentence, because a glyph narrows "amber" to "uncertain" without saying of what.
+    const os = D.os.map((o, k) => {
+      const v = VERDICT[r.os[k]] || ["", "not established"];
+      return '<span class="v' + r.os[k] + '" title="' + esc(o + ": " + v[1]) + '">' +
+        o.slice(0, 3) + " " + v[0] + "</span>";
+    }).join(" ");
     const tags = '<span class="tag cat">' + esc(D.cats[r.cat].name) + "</span>" +
       r.targets.map(t => '<span class="tag">' + esc(D.targets[t].name) + "</span>").join("");
     // esc on the URLs too: these are other people's hand-typed table cells, and one stray quote in a
@@ -479,21 +861,39 @@ function render() {
       ? '<svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>'
       : "";
     const on = r.isnew ? ' <span class="newon">- New on ' + mmddyy(r.first_seen) + "</span>" : "";
+    // The install line, with a button when the clipboard is reachable. The command is the one thing on a
+    // row a reader wants to take away, and taking it meant selecting wrapped monospace text without
+    // catching the blurb above it. The name is in the label because a screen-reader user arrives at
+    // "Copy" 120 times a page and needs to know which project this one belongs to.
+    const cmd = r.install
+      ? '<div class="cmdrow"><code class="cmd">' + esc(r.install) + "</code>" +
+        (CAN_COPY ? '<button class="copy" data-cmd="' + esc(r.install) +
+          '" aria-label="Copy install command for ' + esc(r.name) + '">Copy</button>' : "") + "</div>"
+      : "";
     return "<tr>" +
       '<td class="n rk">' + (i + 1) + "</td>" +
-      '<td class="shot"><a href="' + url + '"><img loading="lazy" alt="" src="' + img +
-        '"></a></td>' +
+      // The screenshot is a second link to the same URL as the title next to it, so it was a duplicate
+      // tab stop with no accessible name at all -- 120 unlabelled links per page, which is both a 2.4.4
+      // failure and a keyboard reader pressing Tab twice for every row. aria-hidden plus tabindex="-1"
+      // is the pattern for a redundant adjacent link: it stays clickable by mouse and disappears from the
+      // accessibility tree, where the title already says everything it could have said.
+      '<td class="shot"><a href="' + url + '" tabindex="-1" aria-hidden="true">' +
+        '<img loading="lazy" alt="" src="' + img + '"></a></td>' +
       '<td class="pj"><a class="nm" href="' + url + '">' + star + esc(r.name) + "</a>" + on +
         '<span class="nwo">' + esc(r.nwo) + "</span>" +
-        '<div class="meta">' + os + "</div></td>" +
+        '<div class="meta os">' + os + "</div></td>" +
       '<td class="n st-c"><span class="st' + (r.stars ? "" : " none") + '">' +
         (r.stars ? r.stars.toLocaleString() : "—") + "</span>" +
         '<div class="meta">' + r.lists + (r.lists === 1 ? " list" : " lists") + "</div></td>" +
-      '<td class="hide">' + tags + "</td>" +
-      '<td class="ds"><div class="desc">' + esc(r.blurb) + "</div>" +
-        (r.install ? '<code class="cmd">' + esc(r.install) + "</code>" : "") + "</td>" +
-      '<td class="c hide"><div class="meta">' + esc(r.lang || "—") + "<br>" +
-        esc(r.license || "—") + "<br>" + esc(r.pushed || "—") + "</div></td>" +
+      '<td class="hide tg">' + tags + "</td>" +
+      '<td class="ds"><div class="desc">' + esc(r.blurb) + "</div>" + cmd + "</td>" +
+      // Each fact in its own span, not bare text between <br>s. The card layout lays this out as a flex
+      // row, and flex builds an anonymous item per *contiguous run of text* -- so with the <br>s hidden
+      // the three text nodes became one item and rendered as "ShellMIT 6d ago". Real elements are real
+      // flex items, and they cost nothing in the table view.
+      '<td class="c hide lc"><div class="meta"><span>' + esc(r.lang || "—") + "</span><br>" +
+        "<span>" + esc(r.license || "—") + "</span><br><span>" + since(r.pushed) +
+        "</span></div></td>" +
       "</tr>";
   }).join("");
   // Every th carries the same class as the td beneath it. The Shot heading used not to, and since the
@@ -503,15 +903,29 @@ function render() {
   out.innerHTML =
     "<table><thead><tr><th class='n'>#</th><th class='shot'>Shot</th><th class='pj'>Project</th>" +
     "<th class='n st-c'>Stars</th>" +
-    "<th class='hide'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
-    "<th class='c hide'>Lang / licence / push</th></tr></thead><tbody>" + rows +
+    "<th class='hide tg'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
+    "<th class='c hide lc'>Lang / licence / push</th></tr></thead><tbody>" + rows +
     "</tbody></table>";
   if (hits.length > page.length) {
     const b = document.createElement("button");
     b.className = "more";
     b.textContent = "Show " + Math.min(PAGE_SIZE * 4, hits.length - page.length).toLocaleString() +
       " more of " + hits.length.toLocaleString();
-    b.onclick = () => { state.shown += PAGE_SIZE * 4; render(); };
+    b.onclick = () => {
+      const first = state.shown;
+      state.shown += PAGE_SIZE * 4;
+      render();
+      // render() replaced the whole subtree, so the button that was just clicked no longer exists and
+      // focus fell to <body> -- which returns a keyboard reader to the top of the document, above six
+      // rows of filters, every time they ask for more. Put it on the first newly revealed row instead,
+      // which is where a mouse reader is already looking. preventScroll so the viewport does not jump
+      // for anyone: the new rows appear below the fold, exactly where the button was.
+      const rows = document.querySelectorAll("#out tbody tr");
+      const t = rows[first] || document.querySelector("#out .more");
+      if (t) { t.tabIndex = -1; t.focus({preventScroll: true}); }
+      say(Math.min(state.shown, hits.length).toLocaleString() + " of " +
+          hits.length.toLocaleString() + " shown.");
+    };
     out.appendChild(b);
   }
 }

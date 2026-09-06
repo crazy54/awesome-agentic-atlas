@@ -57,6 +57,11 @@ def refresh_data(data: dict, ledger: dict) -> tuple[dict, int]:
     data["cols"] = cols
     data["window_days"] = newness.WINDOW
     data["baseline"] = baseline
+    # Backfilled rather than left absent. This stage round-trips a `data.json` that may predate the key,
+    # and "absent means 1" is only a documented fallback -- a consumer reading the published file should
+    # find the number rather than have to know the rule. `setdefault`, so a future version 2 written by
+    # `19_pages.py` survives a refresh instead of being reset to 1 by the stage that only re-renders.
+    data.setdefault("schema_version", b19.SCHEMA_VERSION)
     live = sum(1 for r in data["rows"] if newness.within(r[seen_at]))
     return data, live
 
