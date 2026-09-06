@@ -55,20 +55,44 @@
 # paint reserves a grid rather than a table and the rows arriving reflow it the same way. The mechanism did
 # not change; the noun did.
 #
-# UNRESOLVED (JFH-216), AND THE REASON NOT TO TRUST 0.5494 UNTIL SOMEONE LOOKS
+# THE RUNNER BASELINE, WHICH IS THE ONE TO QUOTE (JFH-216, resolved)
 #
-# 0.5494 was taken at 911c6c6, which predates the cards default. Re-measured locally after it, CLS came out
-# at 0.7179 -- above the 0.7 enforced here, which should be a red X. It is not: the weekly canary and the
-# JFH-202 pull-request run are both green, so the runner disagrees with that laptop about the same page.
-# Cards load 12 first-screen images from four third-party hosts, and whether those land before or after
-# first paint plausibly decides the number, which would make it depend on the network rather than on the
-# page. That is a worse property for a budget than the number being high.
+# The block above was measured on a laptop and every figure in it is historical. This one was taken on the
+# runner this workflow actually uses, from the report of run 34064079203 at commit b1e6250 -- three runs,
+# Lighthouse 12.6.1, benchmarkIndex 2405.5, which is well below the 3200-3800 the laptop scored and is the
+# arithmetic reason the timings below are slower rather than a regression:
 #
-# The threshold is deliberately left where it is. Raising it to fit a local reading nobody has explained
-# would be picking a number to make a light green, which is the thing this file's own comments argue
-# against. What is needed is one re-measurement on a runner with the recorded baseline refreshed to a
-# post-cards commit -- until then the 0.5494 above is a historical figure, not the current one, and this
-# note is here so the next person to see a surprising CLS knows it was already surprising.
+#   document        19,329 B     53% under the 40,960 B budget
+#   script          10,338 B     60% under the 25,600 B budget -- still just the beacon
+#   image        1,159,365 B     6 requests, and 85% of the page. Not a budget line of its own; see below
+#   total        1,357,365 B     13 requests. 4.4x over the 307,200 B budget, and red because of it
+#   CLS              0.5140      identical in all three runs, to four places
+#   FCP        1,518-1,657 ms
+#   LCP        2,158-2,503 ms
+#   TBT            0-660 ms      the spread this file's header predicts, on identical bytes
+#   perf score    0.59-0.77
+#
+# CLS is settled: 0.5140 on the runner, and the 0.7179 measured locally after the cards default does not
+# reproduce. The threshold was never raised to fit that reading, and it turns out it should not have been --
+# picking a number to make a light green would have moved a budget to accommodate a measurement error.
+#
+# WHAT IS RED, AND WHY IT IS NOT THE GROWTH THIS FILE PREDICTED (JFH-218)
+#
+# `total` is failing, but not for the reason predicted above. `data.json` is 160,344 B of it and the site's
+# own bytes come to 187,662 B across four requests -- comfortably inside the budget. The overage is entirely
+# other people's images: 1,159,365 B across six requests, 85% of the page, fetched from three third-party
+# hosts. `data.json` growing was going to trip this budget eventually and honestly. It has been tripped
+# early by something else.
+#
+# One request is 716,227 B -- `ecc-plan-canvas-demo.gif`, an animated GIF in one upstream README, 53% of the
+# whole page on its own. That is the shape of the defect: `data.json`'s `img` column points at 46 hosts and
+# nothing bounds what they serve, so the page's weight is set by 686 third parties rather than by this
+# repository. A maintainer committing a 5 MB banner moves this figure by 5 MB with no change here.
+#
+# And the figure is unstable, which is worse than it being high. Run 34062202538 recorded 1,827,508 B where
+# this one recorded 1,357,365 B, on a page whose own bytes differ by about a kilobyte -- the assertion counts
+# whichever images arrived before the trace ended, so it reports how fast a stranger's CDN answered. One
+# green run therefore does not demonstrate a fix here; a bounded worst case does. JFH-218 holds the options.
 #
 # The byte budgets have 25-45% of headroom, deliberately on both sides. It is enough that a paragraph of
 # markup or a new column never trips them, and little enough that a framework, a web font or a second copy
