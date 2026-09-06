@@ -241,17 +241,24 @@ th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;
 th.n,td.n{text-align:right}
 th.c,td.c{text-align:center}
 td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
-tr:hover td{background:var(--band)}
+/* Guarded, because a touch device reports a hover that then latches: tapping a row anywhere -- to
+   follow its link, or just while scrolling -- left it tinted until something else was tapped. */
+@media(hover:hover){tr:hover td{background:var(--band)}}
 .rk{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .shot{width:200px}
 .shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:6px;
   background:var(--band);border:1px solid var(--grid);display:block}
-.nm{font-weight:600;font-size:15px}
+/* These two set the table's width. Auto table layout takes the widest unbreakable run in the column
+   across every row on the page, and neither a slash nor a comma is a break opportunity in Chrome or
+   Safari -- so `muratcankoylan/Agent-` and a blurb naming
+   `.cursorrules/CLAUDE.md/Copilot/Windsurf/Cline/Aider` were between them demanding ~530px of a 335px
+   content box, which the document then had to scroll sideways to satisfy. */
+.nm{font-weight:600;font-size:15px;overflow-wrap:anywhere}
 .nwo{display:block;color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
 .st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
-.desc{color:var(--ink2);font-size:13.5px;max-width:44em}
+.desc{color:var(--ink2);font-size:13.5px;max-width:44em;overflow-wrap:anywhere}
 .cmd{display:block;margin-top:7px;font:12px/1.5 Consolas,ui-monospace,monospace;
   color:var(--ink2);background:var(--band);border:1px solid var(--grid);border-radius:5px;
   padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
@@ -272,9 +279,89 @@ tr:hover td{background:var(--band)}
 footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
   color:var(--muted);font-size:13px}
 .blurb{color:var(--muted);font-size:13px;margin:2px 0 0}
+/* One query used to do all the responsive work here and all it did was hide two columns, so a 375px
+   phone got the same layout as an 899px tablet. There are three now, because the page fails in three
+   different ways: at 900px the screenshot and the detail columns stop paying for their width; below
+   640px four columns stop fitting in what is left at all; and the filter bar fails on *height*, which
+   is a separate axis and needs its own query -- see below. */
 @media(max-width:900px){
   .shot,.hide{display:none}
   td,th{padding:9px 6px}
+}
+
+/* The filter bar competes for vertical space, so it is capped on vertical space -- either axis can
+   trigger it. Width alone was not enough: a landscape phone is 844x390, wide enough to clear a 640px
+   breakpoint entirely and short enough that the wrapped bar measured 360px of a 390px window. That is
+   92% of the screen, which is the reported bug with the phone turned on its side.
+
+   The failure being fixed: a `position:sticky` box taller than its scrollport pins its top edge and
+   then covers the screen for the whole of the rest of the document, and the part of it that overflows
+   the bottom can never be scrolled into view -- which is what put the Runs-on chips, Confirmed only
+   and Clear all permanently out of reach. At 390x844 the bar measured 753px, 89% of the screen, and on
+   a 375x667 phone it was taller than the viewport. The 27 topic and target chips are what grew it:
+   they were wrapping to sixteen lines between them, so each facet becomes one scrollable rail. */
+@media(max-width:640px),(max-height:560px){
+  /* iOS Safari zooms the viewport whenever a focused control's text is under 16px, and because the
+     viewport tag sets initial-scale=1 with no maximum-scale it never zooms back out again on blur. So
+     one tap on the search box left the reader at ~350px of effective width, scrolling sideways, for
+     the rest of the visit -- a second, self-inflicted cause of the horizontal scrolling. */
+  #q,select{font-size:16px}
+  .facet{flex-wrap:nowrap;gap:6px}
+  .facet>label{flex:none;min-width:0;font-size:10px}
+  .facet>.chip{flex:none}
+  /* `flex:1 1 0` with `min-width:0` is what lets a rail sit beside its label and take the width that
+     is left. Without the zero basis the rail asks for its full max-content width -- 2,400px of topic
+     chips -- and gets bumped onto a line of its own, which is two rows per facet again. */
+  #cats,#tgts,#oses{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;
+    flex:1 1 0;min-width:0;
+    scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+  #cats::-webkit-scrollbar,#tgts::-webkit-scrollbar,#oses::-webkit-scrollbar{display:none}
+  .bar .wrap{gap:5px}
+  .chip{padding:4px 11px}
+  /* And a cap on top of the rails, because rails alone still leave four to six control rows. On a tall
+     screen the cap sits above the bar's natural height and nothing happens; on a short one the bar
+     scrolls inside itself instead of over the page. A fraction rather than a pixel count so that it
+     only ever binds where it is needed. `vh` first: a browser that does not understand `dvh` must
+     still get a cap rather than none. */
+  .bar{max-height:44vh;max-height:44dvh;overflow-y:auto}
+}
+
+@media(max-width:640px){
+  /* 20px gutters on all four sections cost 40px, 11% of a 375px screen, and the old query left them. */
+  header{padding:16px 14px 12px}
+  .bar{padding:8px 14px}
+  main{padding:0 14px 48px}
+  footer{padding:18px 14px}
+  h1{font-size:21px}
+  h1 span{display:block;font-size:13px}
+  .top{gap:10px}
+  .top nav{text-align:left;line-height:2.1}
+
+  #q{flex:1 1 100%;min-width:0}
+  .line>label[for=q]{display:none}
+  .count{margin-left:0;font-size:12px}
+  /* Runs-on is the one facet that also carries Confirmed only and Clear all, and at 390px those two
+     left its rail about 110px -- one OS chip at a time. That line alone wraps, so the rail keeps most
+     of the row and the two buttons drop underneath it. Narrow-only: in landscape there is width enough
+     for all four to share the row, and wrapping there would cost a row the bar cannot spare. */
+  .facet:has(>.chip){flex-wrap:wrap}
+  .facet:has(>.chip)>#oses{flex:1 1 auto;min-width:62%}
+
+  /* A row stops being a row. Four columns cannot share 335px -- the blurb on its own wants more than
+     that -- so each row becomes a card, and the headings, no longer above anything, go away. */
+  thead{display:none}
+  table,tbody,tr,td{display:block}
+  table{margin-top:12px}
+  tr{display:grid;grid-template-columns:1fr auto;gap:1px 12px;align-items:start;
+    border:1px solid var(--grid);border-radius:10px;padding:11px 13px;margin:0 0 9px}
+  td{border-bottom:0;padding:0}
+  td.rk{grid-column:1;grid-row:1;text-align:left}
+  td.st-c{grid-column:2;grid-row:1}
+  td.pj{grid-column:1/-1;grid-row:2}
+  td.ds{grid-column:1/-1;grid-row:3;margin-top:6px}
+  .st{font-size:15px}
+  .desc{font-size:13px}
+  .more{width:100%}
 }
 </style>
 </head>
@@ -327,9 +414,9 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
       <span id="newlabel">New</span></button>
     <span class="count" id="count"></span>
   </div>
-  <div class="line"><label>Topic</label><span id="cats"></span></div>
-  <div class="line"><label>Plugs into</label><span id="tgts"></span></div>
-  <div class="line"><label>Runs on</label><span id="oses"></span>
+  <div class="line facet"><label>Topic</label><span id="cats"></span></div>
+  <div class="line facet"><label>Plugs into</label><span id="tgts"></span></div>
+  <div class="line facet"><label>Runs on</label><span id="oses"></span>
     <button class="chip" id="strict" aria-pressed="false"
             title="Drop rows where support is inferred from the language rather than stated">Confirmed
       only</button>
@@ -558,22 +645,27 @@ function render() {
       '<td class="n rk">' + (i + 1) + "</td>" +
       '<td class="shot"><a href="' + url + '"><img loading="lazy" alt="" src="' + img +
         '"></a></td>' +
-      '<td><a class="nm" href="' + url + '">' + star + esc(r.name) + "</a>" + on +
+      '<td class="pj"><a class="nm" href="' + url + '">' + star + esc(r.name) + "</a>" + on +
         '<span class="nwo">' + esc(r.nwo) + "</span>" +
         '<div class="meta">' + os + "</div></td>" +
-      '<td class="n"><span class="st' + (r.stars ? "" : " none") + '">' +
+      '<td class="n st-c"><span class="st' + (r.stars ? "" : " none") + '">' +
         (r.stars ? r.stars.toLocaleString() : "—") + "</span>" +
         '<div class="meta">' + r.lists + (r.lists === 1 ? " list" : " lists") + "</div></td>" +
       '<td class="hide">' + tags + "</td>" +
-      '<td><div class="desc">' + esc(r.blurb) + "</div>" +
+      '<td class="ds"><div class="desc">' + esc(r.blurb) + "</div>" +
         (r.install ? '<code class="cmd">' + esc(r.install) + "</code>" : "") + "</td>" +
       '<td class="c hide"><div class="meta">' + esc(r.lang || "—") + "<br>" +
         esc(r.license || "—") + "<br>" + esc(r.pushed || "—") + "</div></td>" +
       "</tr>";
   }).join("");
+  // Every th carries the same class as the td beneath it. The Shot heading used not to, and since the
+  // narrow-viewport rule hides `.shot` it hid only the body cell -- leaving five headings over four
+  // columns, so "Shot" sat above the project names, "Project" above the stars, "Stars" above the
+  // blurbs, and auto layout invented a fifth column to hang the surplus heading on.
   out.innerHTML =
-    "<table><thead><tr><th class='n'>#</th><th>Shot</th><th>Project</th><th class='n'>Stars</th>" +
-    "<th class='hide'>Topic &amp; targets</th><th>What it does</th>" +
+    "<table><thead><tr><th class='n'>#</th><th class='shot'>Shot</th><th class='pj'>Project</th>" +
+    "<th class='n st-c'>Stars</th>" +
+    "<th class='hide'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
     "<th class='c hide'>Lang / licence / push</th></tr></thead><tbody>" + rows +
     "</tbody></table>";
   if (hits.length > page.length) {
