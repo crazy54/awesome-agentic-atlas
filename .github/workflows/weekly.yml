@@ -85,6 +85,10 @@ jobs:
           python scripts/pull_sources.py
           python scripts/01_parse.py
           python scripts/02_fetch.py --force
+          # Deliberately no --force on the three signal stages -- see daily.yml. This job is the
+          # natural home for a weekly full re-crawl of them and it is the one place that must not
+          # acquire one: they refresh on `pushedAt` now, so a --force here would re-query all 1,294
+          # repos to confirm answers the six daily runs before it already refreshed.
           python scripts/03_releases.py
           python scripts/03b_actions.py
           python scripts/04_classify.py

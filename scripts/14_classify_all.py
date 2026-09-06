@@ -17,6 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from buckets import bucket_map, bucket_order  # noqa: E402
+import signals as sig  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
@@ -86,7 +87,9 @@ def main() -> None:
             entry = {"name": r["name"], "url": r["url"], "owner": r["owner"],
                      "repo": r["repo"], "nwo": nwo, "category": r["category"],
                      "description": r["description"], "status_note": ""}
-            rec.update(c4.classify(entry, m, rel.get(nwo, {}), md, acts.get(nwo, False)))
+            # sig.is_action, not the raw value: actions.json entries are dicts now (they carry the
+            # push time the answer was observed at), and bool() of any dict is True.
+            rec.update(c4.classify(entry, m, rel.get(nwo, {}), md, sig.is_action(acts.get(nwo))))
             rec["shots"] = c4.shot_candidates(md, entry, rec["branch"])
             rec["stars_kind"] = "own"
 

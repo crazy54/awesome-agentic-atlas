@@ -46,8 +46,10 @@ jobs:
       # Every fetch stage shells out to `gh`, which reads this. The Actions token is enough -- the pipeline
       # only ever reads public repositories -- and the limit it grants, 1,000 requests per hour per repo,
       # is comfortable because the two metadata stages batch twenty repos per GraphQL query. Refetching all
-      # 1,294 costs about seventy requests; the per-repo release and Actions probes are the bulk of the
-      # rest, and a full run lands in the low hundreds.
+      # 1,294 costs about seventy requests; the release and Actions probes add about twenty-seven more,
+      # because they only query the repos pushed since they last looked, and a full run lands well inside
+      # the low hundreds. The first run after a cold cache, or after the push stamps were introduced, is
+      # the exception: those probes re-crawl all 1,294 once, for about a hundred requests more.
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
@@ -128,6 +130,15 @@ jobs:
           # warm cache would otherwise never refresh a star count. Everything downstream re-derives.
           python scripts/01_parse.py
           python scripts/02_fetch.py --force
+          # No --force on the three signal stages, and that is now a decision rather than the
+          # oversight it used to be. All three queue on scripts/signals.py's rule -- re-query a repo
+          # when its `pushedAt` has moved since its cache entry was written -- so they refresh
+          # themselves against the ~319 repos pushed on an average day (~163 GraphQL points) instead
+          # of freezing on first write. Adding a standing weekly --force would buy a full 1,294-repo
+          # re-crawl (~660 points, 108 requests) to learn what these runs already know daily, and it
+          # would leave the other six days stale. The single thing the rule cannot see is a binary
+          # attached to an *existing* release with no push behind it; that heals on the project's
+          # next release, and a hand-dispatched --force is the lever for the rest.
           python scripts/03_releases.py
           python scripts/03b_actions.py
           python scripts/04_classify.py

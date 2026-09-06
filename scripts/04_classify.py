@@ -10,8 +10,12 @@ Every verdict carries the evidence that produced it so the spreadsheet is audita
 """
 import json
 import re
+import sys
 from pathlib import Path
 from urllib.parse import quote, urljoin
+
+sys.path.insert(0, str(Path(__file__).parent))
+import signals as sig  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
@@ -397,7 +401,9 @@ def main() -> None:
             records.append(rec)
             continue
 
-        c = classify(e, m, rel.get(e["nwo"], {}), md, acts.get(e["nwo"], False))
+        # sig.is_action rather than the raw value: actions.json entries carry a push stamp now,
+        # so they are dicts, and every dict is truthy.
+        c = classify(e, m, rel.get(e["nwo"], {}), md, sig.is_action(acts.get(e["nwo"])))
         rec.update(c)
         rec.update(
             stars=m.get("stargazerCount") or 0,
