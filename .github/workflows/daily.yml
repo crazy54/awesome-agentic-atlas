@@ -160,14 +160,28 @@ jobs:
           python scripts/01_parse.py
           python scripts/02_fetch.py --force
           # No --force on the three signal stages, and that is now a decision rather than the
-          # oversight it used to be. All three queue on scripts/signals.py's rule -- re-query a repo
-          # when its `pushedAt` has moved since its cache entry was written -- so they refresh
-          # themselves against the ~319 repos pushed on an average day (~163 GraphQL points) instead
-          # of freezing on first write. Adding a standing weekly --force would buy a full 1,294-repo
-          # re-crawl (~660 points, 108 requests) to learn what these runs already know daily, and it
-          # would leave the other six days stale. The single thing the rule cannot see is a binary
-          # attached to an *existing* release with no push behind it; that heals on the project's
-          # next release, and a hand-dispatched --force is the lever for the rest.
+          # oversight it used to be. All three queue on scripts/signals.py's rules -- re-query a
+          # repo when its `pushedAt` has moved since its cache entry was written, when we looked so
+          # soon after that push that its release CI could still have been uploading, and when we
+          # have not looked at all in a month -- so they refresh themselves against the ~319 repos
+          # pushed on an average day plus ~99 more from those two time terms, about 35 requests and
+          # 35 GraphQL points, instead of freezing on first write. Adding a standing weekly --force
+          # would buy a full 1,294-repo re-crawl (108 requests, 108 points) to learn what these runs
+          # already know daily, and it would leave the other six days stale.
+          #
+          # Those point figures are connection counts, not node counts, and this comment had them
+          # wrong by ~6x until JFH-211: GitHub scores a call by the requests needed to fulfil each
+          # connection in it, then divides by 100 with a minimum of one. Two connections per repo --
+          # `releases(last: 4)` is one, the `releaseAssets(first: 40)` under each of those four is
+          # four -- so a repo costs 5, a 12-repo batch costs 60, and 60/100 floored at 1 means every
+          # batch any of these stages issues costs exactly one point. The request counts here were
+          # always right; only the points were derived from nodes returned. Nothing has yet read a
+          # `rateLimit { cost }` back from GitHub, which is the one-line way to replace this
+          # derivation with a measurement.
+          #
+          # What the rules still cannot see is a binary attached to an *existing* release by hand,
+          # more than six hours after any push. The 30-day ceiling bounds how long that can persist,
+          # and a hand-dispatched --force is the lever for the rest.
           python scripts/03_releases.py
           python scripts/03b_actions.py
           python scripts/04_classify.py
