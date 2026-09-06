@@ -130,9 +130,25 @@ ok("the root is cached as the directory, which is what a navigation asks for",
 // Sorting by name rather than by path is the same order only because all three files sit in `docs/`; the
 // generator sorts paths, and a precached file in a subdirectory would need this to follow suit.
 //
-// Fetched over HTTP rather than read off disk, so what is hashed is what a reader is served. That also
-// makes this the one assertion here that would catch a *deployed* worker having gone stale, not just a
-// working tree.
+// Fetched over HTTP rather than read off disk, so this is the one assertion here that would also catch a
+// *deployed* worker having gone stale rather than only a working tree.
+//
+// Newlines are normalised, for the same reason the generator normalises them and not as a convenience.
+// `core.autocrlf` is true with no `.gitattributes`, so a Windows checkout holds CRLF while the committed
+// blob -- and therefore what Pages serves -- is LF. Hashing what this server hands over would make the
+// assertion pass on Linux and fail on Windows for byte-identical content, which is the same
+// hash-depends-on-the-OS bug the generator was just fixed for. Normalising is what makes the local run
+// compute the production answer; it is worth being clear that the bytes on this machine are genuinely not
+// the bytes a reader gets, and that this line is what bridges the two.
+const lf = (buf) => {
+  const out = Buffer.allocUnsafe(buf.length);
+  let n = 0;
+  for (let i = 0; i < buf.length; i++) {
+    if (buf[i] === 0x0d && buf[i + 1] === 0x0a) continue;
+    out[n++] = buf[i];
+  }
+  return out.subarray(0, n);
+};
 const PRECACHED = [["index.html", ""], ["manifest.webmanifest", "manifest.webmanifest"],
                    ["pages.css", "pages.css"]];
 const digest = createHash("sha256");
@@ -140,7 +156,7 @@ for (const [name, path] of [...PRECACHED].sort(([a], [b]) => a < b ? -1 : a > b 
   const r = await fetch(ORIGIN + path);
   if (!r.ok) throw new Error(`precached file ${name} answered ${r.status}, so VERSION cannot be checked`);
   digest.update(name, "utf8"); digest.update(Buffer.from([0]));
-  digest.update(Buffer.from(await r.arrayBuffer())); digest.update(Buffer.from([0]));
+  digest.update(lf(Buffer.from(await r.arrayBuffer()))); digest.update(Buffer.from([0]));
 }
 const wantVersion = digest.digest("hex").slice(0, 12);
 const swSrc = await (await fetch(ORIGIN + "sw.js")).text();
