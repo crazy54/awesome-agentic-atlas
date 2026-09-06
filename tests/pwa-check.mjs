@@ -18,8 +18,10 @@
 // `lib/browser.mjs`, which also gives every run a profile of its own. That is not housekeeping here: the
 // first four assertions below are about a *cold* visit, with no worker registered and no caches, so a
 // reused profile would make the second run of this file assert something different from the first.
+import {execFileSync} from "node:child_process";
 import {createHash} from "node:crypto";
 import {tmpdir} from "node:os";
+import {fileURLToPath} from "node:url";
 import {launch} from "./lib/browser.mjs";
 
 const BIN = process.argv[2], ORIGIN = process.argv[3];
@@ -70,7 +72,15 @@ const goto = async (url) => {
 };
 
 let pass = 0, fail = 0;
-const ok = (n, c, extra = "") => { c ? pass++ : (fail++, console.log("FAIL " + n + (extra ? " -- " + extra : ""))); };
+// `extra` may be a function, which is called only when the assertion has already failed. Most callers pass
+// a string they had anyway; one needs to run a subprocess to explain itself, and should not run it 20 times
+// per green run. It cannot change the verdict either way -- `c` is evaluated by the caller, before this.
+const ok = (n, c, extra = "") => {
+  if (c) { pass++; return; }
+  fail++;
+  const d = typeof extra === "function" ? extra() : extra;
+  console.log("FAIL " + n + (d ? " -- " + d : ""));
+};
 
 // -------- cold visit
 await goto(ORIGIN);
@@ -162,10 +172,48 @@ const wantVersion = digest.digest("hex").slice(0, 12);
 const swSrc = await (await fetch(ORIGIN + "sw.js")).text();
 const gotVersion = (swSrc.match(/const VERSION = "([0-9a-f]+)"/) || [])[1];
 ok("the served worker declares a version at all", !!gotVersion, swSrc.slice(0, 120));
+
+// A mismatch has two causes that want opposite responses, and the hash alone cannot tell them apart:
+//
+//   * a committed worker that describes an earlier build -- the production bug, fix and commit it
+//   * a working tree mid-edit, where `index.html` has been rewritten and `24_pwa.py` not yet run --
+//     expected, and cleared by finishing the build
+//
+// So the failure message names which one it is. This adds context to a failure and cannot suppress one:
+// the assertion is the plain hash comparison above it, evaluated before `why()` is ever called. A harness
+// that can decline to assert is how `pagemin_test.py` silently skipped 7 of 49 checks while exiting 0.
+//
+// Consulted lazily, so a passing run never shells out to git. And scoped honestly: git is asked about
+// *this repository's* `docs/`, while the assertion is about whatever `ORIGIN` serves. Those are the same
+// tree under `run.mjs` and deliberately not the same under a scratch fixture, which is why the wording
+// below attributes the answer to git rather than stating it as fact about the served bytes.
+const why = () => {
+  const files = ["docs/index.html", "docs/pages.css", "docs/manifest.webmanifest", "docs/sw.js"];
+  let out;
+  try {
+    out = execFileSync("git", ["status", "--porcelain", "--", ...files],
+                       {cwd: fileURLToPath(new URL("..", import.meta.url)), encoding: "utf8"});
+  } catch (e) {
+    return `git could not be consulted about the tree (${e.message.split("\n")[0]})`;
+  }
+  const dirty = out.split("\n").filter(Boolean).map(l => l.slice(3).trim().replace(/^"|"$/g, ""));
+  const shell = dirty.filter(f => f !== "docs/sw.js");
+  if (!dirty.length) {
+    return "git reports every precached file and docs/sw.js committed and clean, so this is a stale " +
+           "worker in the repository rather than an unfinished edit -- readers with it installed are " +
+           "pinned to the old shell";
+  }
+  if (shell.length && !dirty.includes("docs/sw.js")) {
+    return `git reports ${shell.join(", ")} modified and docs/sw.js not, so the page was rewritten and ` +
+           `24_pwa.py has not run since -- expected mid-edit, and a bug the moment it is committed`;
+  }
+  return `git reports ${dirty.join(", ")} modified, so a build may be in flight; a run taken during ` +
+         `one is not evidence either way -- finish it and re-run`;
+};
 ok("the worker's VERSION is a hash of the bytes it precaches, not of an earlier build",
    gotVersion === wantVersion,
-   `sw.js says ${gotVersion}, the three precached files hash to ${wantVersion} ` +
-   `-- run: python scripts/24_pwa.py`);
+   () => `sw.js says ${gotVersion}, the three precached files hash to ${wantVersion} ` +
+         `-- run: python scripts/24_pwa.py\n         ${why()}`);
 // Ties the recomputation to what the browser did with it. The two could disagree only if the worker built
 // its cache name from something other than VERSION, which is the other half of the same coupling.
 ok("and the cache the browser actually opened is keyed by that same version",
