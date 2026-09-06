@@ -222,6 +222,19 @@ jobs:
 
       # Uploaded even when the assertions failed -- especially then. The step's own output says which
       # threshold was crossed and by how much; the report says which request or which element did it.
+      #
+      # `include-hidden-files` is the whole reason this step used to keep nothing, and it is worth the
+      # comment because the failure was completely silent. `.lighthouseci` begins with a dot, and
+      # upload-artifact v4 treats a dotted path as hidden and skips it unless told otherwise. Paired
+      # with `if-no-files-found: warn` the step then found no files, warned, and exited *green*, so
+      # every run looked like it had kept its reports and none of them had. The one time that mattered
+      # was the one time somebody wanted a report: `total:size` failed at 1,827,508 B and the only way
+      # to learn which requests made up that number was to re-measure by hand, because the artifact
+      # the run claims to hold did not exist. `warn` is now `error` for the same reason the test suite
+      # refuses to let a harness skip quietly -- a step that promises to keep the reports and keeps
+      # none of them must not be able to pass. It can add a second red X to a job whose measurement
+      # already failed before writing anything, which is noise, but it is truthful noise and the job
+      # was red anyway.
       - name: Keep the reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -229,4 +242,5 @@ jobs:
           name: lighthouse-reports
           path: .lighthouseci
           retention-days: 14
-          if-no-files-found: warn
+          include-hidden-files: true
+          if-no-files-found: error
