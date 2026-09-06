@@ -431,6 +431,49 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
 .approx{margin:0 0 14px;padding:10px 14px;border-left:3px solid var(--warn);background:var(--band);
   border-radius:0 6px 6px 0;color:var(--ink2);font-size:14px}
 .approx b{color:var(--ink)}
+/* The command palette. Pinned near the top rather than centred, because the list grows downward and a
+   centred dialog would slide the input up the screen every time the result count changed -- so the box
+   you are typing into would move while you type. */
+dialog#pal{border:1px solid var(--grid);background:var(--plane);color:var(--ink);border-radius:12px;
+  padding:0;width:min(620px,calc(100vw - 24px));margin:8vh auto auto;overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.45)}
+dialog#pal::backdrop{background:rgba(0,0,0,.55)}
+/* 16px is not a taste choice: iOS Safari zooms the whole page when a focused input's text is under 16px,
+   and a modal that zooms on open cannot be read. */
+#palq{width:100%;background:var(--surface);color:var(--ink);border:0;font-family:inherit;font-size:16px;
+  border-bottom:1px solid var(--grid);padding:14px 16px}
+#palq:focus{outline:none}
+#palist{list-style:none;margin:0;padding:6px;overflow-y:auto;max-height:min(52vh,420px)}
+#palist .grp{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em;
+  padding:10px 10px 4px}
+#palist li.it{display:flex;align-items:baseline;gap:9px;padding:8px 10px;border-radius:7px;cursor:pointer}
+/* The filled accent, the same treatment a pressed chip gets, rather than `--band`. `--band` is the obvious
+   choice and it is wrong in both themes: it is *lighter* than `--plane` in light mode, so the selected row
+   came out as a barely-there strip of #f4f6f6 on #eef1f2 -- measured 1.05:1 against its own background.
+   The highlight is the one thing the palette cannot afford to be subtle about, since it is the only
+   indication of what Enter will do. `--onbar` because a filled accent carries dark ink in dark mode and
+   white in light, and the muted greys below would vanish against either. */
+#palist li.it[aria-selected=true]{background:var(--bar);color:var(--onbar)}
+#palist li.it .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#palist li.it .k,#palist li.it .s{flex-shrink:0;font-size:12px}
+#palist li.it .k{color:var(--muted)}
+#palist li.it .s{color:var(--warn)}
+/* Inherit, not a fixed colour: on the accent fill the secondary text has to shift with `--onbar`, and
+   opacity keeps it secondary without needing a second value that passes contrast on cyan and on teal. */
+#palist li.it[aria-selected=true] .k,#palist li.it[aria-selected=true] .s{color:inherit;opacity:.72}
+#palist li.it:hover:not([aria-selected=true]){background:var(--band)}
+.palnone{padding:26px 12px;color:var(--muted);text-align:center}
+.palfoot{display:flex;gap:14px;background:var(--surface);border-top:1px solid var(--grid);
+  padding:7px 14px;color:var(--muted);font-size:12px}
+kbd{background:var(--band);border:1px solid var(--grid);border-bottom-width:2px;border-radius:4px;
+  padding:1px 5px;color:var(--ink2);font:11px/1.6 ui-monospace,Consolas,monospace}
+/* A shortcut nobody is told about is a shortcut nobody uses, and this hint is the only affordance for it.
+   Hidden until `buildChips` confirms the browser has `showModal`, like the New chip: a control that opens
+   nothing is worse than no control. Hidden again on narrow screens, where there is no keyboard to press
+   it with and the search row needs every pixel of the width. */
+#palhint{display:none;align-items:center;gap:5px}
+#palhint.on{display:inline-flex}
+@media (max-width:760px){#palhint.on{display:none}}
 .empty{padding:64px 0 80px;text-align:center;color:var(--muted)}
 /* "Nothing matches. Try clearing a filter." named neither the filter nor what clearing it would return,
    so the reader had to guess which of six controls was the tight one -- and it is usually not the one
@@ -646,6 +689,7 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
             title="Projects the source lists added in the last __WINDOW__ days">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
       <span id="newlabel">New</span></button>
+    <button class="chip" id="palhint"></button>
     <!-- role=status makes this a polite live region, so pressing a chip or typing a search announces the
          new result count instead of silently rewriting a number the reader cannot see. aria-atomic so it
          is read as one sentence rather than as whichever digits changed. -->
@@ -662,6 +706,20 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 </div></div>
 
 <main><div class="wrap"><div id="out"></div></div></main>
+
+<!-- Outside the filter bar on purpose. A <dialog> nested inside a flex row that the narrow-viewport rules
+     hide would be unopenable on a phone, and a modal is not part of the row it is launched from anyway.
+     The combobox attributes are on the input rather than on a wrapper because the input is what holds
+     focus the whole time -- aria-activedescendant points at the highlighted option, so a screen reader
+     announces each row as you arrow through them without focus ever leaving the box you are typing in. -->
+<dialog id="pal" aria-label="Jump to a topic, platform, sort or project">
+  <input id="palq" type="text" role="combobox" aria-expanded="true" aria-controls="palist"
+         aria-autocomplete="list" autocomplete="off" spellcheck="false"
+         placeholder="Jump to a topic, a platform, a sort, or a project&hellip;">
+  <ul id="palist" role="listbox" aria-label="Matches"></ul>
+  <div class="palfoot"><span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> move</span>
+    <span><kbd>Enter</kbd> select</span> <span><kbd>Esc</kbd> close</span></div>
+</dialog>
 
 <footer><div class="wrap">
   Every entry came from someone else's curation work; all eleven source lists are credited in the
@@ -841,9 +899,215 @@ function buildChips() {
   }
   document.getElementById("reset").onclick = () => set(CLEAR);
   window.addEventListener("hashchange", () => { readHash(); render(); });
+  palWire();
+}
+
+// Wired from `buildChips` rather than from `wire()`, because `wire()` also runs on the data.json error
+// page: there the palette would have no topics or platforms to offer, so the shortcut and its hint stay
+// absent instead of opening an empty box.
+function palWire() {
+  const dlg = document.getElementById("pal"), q = document.getElementById("palq"),
+        list = document.getElementById("palist"), hint = document.getElementById("palhint");
+  if (!dlg || !dlg.showModal) return;
+
+  hint.classList.add("on");
+  hint.innerHTML = "<kbd>" + esc(PALMOD) + "</kbd><kbd>K</kbd><span>Jump to&hellip;</span>";
+  hint.title = "Jump to any topic, platform, sort or project (" + PALMOD + " K)";
+  hint.onclick = palOpen;
+
+  document.addEventListener("keydown", ev => {
+    // Either modifier, so the shortcut works on a Mac keyboard plugged into anything and on a browser
+    // whose platform string lies. Not with Alt held, which is a different chord on several layouts.
+    if ((ev.ctrlKey || ev.metaKey) && !ev.altKey && (ev.key === "k" || ev.key === "K")) {
+      ev.preventDefault();
+      if (dlg.open) dlg.close(); else palOpen();
+      return;
+    }
+    // `/` is the other convention for this, but only where it would not otherwise be a literal slash --
+    // stealing the key while someone is typing a path into the search box would be a bug, not a shortcut.
+    const t = ev.target && ev.target.tagName || "";
+    if (ev.key === "/" && !dlg.open && !/^(INPUT|TEXTAREA|SELECT)$/.test(t) &&
+        !(ev.target && ev.target.isContentEditable)) {
+      ev.preventDefault();
+      palOpen();
+    }
+  });
+
+  q.oninput = () => { PALI = 0; palRender(); };
+  q.onkeydown = ev => {
+    const jump = {ArrowDown: 1, ArrowUp: -1}[ev.key];
+    if (jump) { ev.preventDefault(); palMove(jump); return; }
+    if (ev.key === "Enter") { ev.preventDefault(); palPick(); return; }
+    if (ev.key === "Home") { ev.preventDefault(); PALI = 0; palRender(); return; }
+    if (ev.key === "End") { ev.preventDefault(); PALI = PAL.length - 1; palRender(); }
+  };
+  // Delegated: `palRender` replaces the whole list on every keystroke, so per-row handlers would be
+  // forty attachments discarded on each one.
+  list.addEventListener("click", ev => {
+    const li = ev.target.closest("li.it");
+    if (!li) return;
+    PALI = [...list.querySelectorAll("li.it")].indexOf(li);
+    palPick();
+  });
+  // Clicking the backdrop is the other way people dismiss a modal, and <dialog> fires no event for it --
+  // the click lands on the dialog element itself, because the padding is zero and every child is inside
+  // one of the three panels.
+  dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
 }
 
 const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false};
+
+// ---- Command palette -------------------------------------------------------------------------------
+//
+// Every filter on this page is a pill in one of four rows, and the two facet rows are the long ones:
+// thirteen topics and twelve integrations. Reaching "Sandbox & security" means reading thirteen pills to
+// find it, and the sort menu is a fifth control in a fifth place. The palette collapses all of that into
+// one thing to learn -- type three letters, press Enter -- which is the difference between a page you
+// operate and a page you skim.
+//
+// `<dialog>` and `showModal()`, not a hand-rolled overlay: the focus trap, the Esc handler, the backdrop,
+// the inertness of the page behind it and the return of focus to whatever opened it are all native, and
+// all of them are things a hand-rolled overlay gets wrong. Where `showModal` is missing the shortcut is
+// never wired at all and the hint stays hidden -- an accelerator that half-opens is worse than an absent
+// one, and nothing on this page is reachable *only* through the palette.
+let PAL = [], PALI = 0;
+
+// `navigator.platform` is deprecated and still the only thing that answers this question in every engine.
+// Getting it wrong prints the wrong glyph in a hint; it does not break the shortcut, which listens for
+// either modifier regardless.
+const PALMOD = /mac|iphone|ipad/i.test((navigator.platform || "") + (navigator.userAgent || ""))
+  ? "⌘" : "Ctrl";
+
+function palItems(query) {
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const acts = [];
+  const add = (group, label, active, run) => acts.push({group, label, active, run});
+
+  D.cats.forEach(c => add("Topic", c.name, state.cat === c.slug, () => set({cat: c.slug})));
+  D.targets.forEach(t => add("Plugs into", t.name, state.tgt === t.slug, () => set({tgt: t.slug})));
+  D.os.forEach((o, i) => add("Runs on", o, state.os.includes(i), () => set({
+    os: state.os.includes(i) ? state.os.filter(x => x !== i) : state.os.concat(i),
+  })));
+  // Read straight off the <select>, so a sort mode added there shows up here without a second list to
+  // remember to update -- and the palette can never offer a sort `SORTS` does not implement.
+  for (const o of document.getElementById("sort").options)
+    add("Sort", o.text, state.sort === o.value, () => {
+      document.getElementById("sort").value = o.value;
+      set({sort: o.value});
+    });
+  // Same condition the chip itself uses: with nothing inside the window this filter selects zero rows.
+  if (NEW) add("Filter", "New arrivals", state.fresh, () => set({fresh: !state.fresh}));
+  add("Filter", "Confirmed platform support only", state.strict, () => set({strict: !state.strict}));
+  add("Filter", "Clear all filters", false, () => set(CLEAR));
+  // Delegated to the real button rather than duplicating its body, so the label, the title and the
+  // localStorage write stay in exactly one place.
+  add("Page", (document.documentElement.dataset.theme === "light" ? "Dark" : "Light") + " theme", false,
+    () => document.getElementById("theme").click());
+
+  // Substring, not the trigram scorer the search box falls back on. These are forty-odd labels the reader
+  // can see in full, so "sand" finding "Sandbox & security" is the entire requirement; near-misses here
+  // would only push the exact thing they typed further down the list. Earlier match wins, so "new" ranks
+  // "New arrivals" above a topic that merely contains the word.
+  const score = a => {
+    const l = a.label.toLowerCase();
+    let s = 0;
+    for (const w of words) {
+      const i = l.indexOf(w);
+      if (i < 0) return -1;
+      s += i === 0 ? 2 : 1;
+    }
+    return s;
+  };
+  // Grouped, then ordered by each group's best member -- not a flat sort by score. A flat sort interleaves
+  // groups, so "a" produced Topic, Plugs into, then Topic again, and a heading printed twice reads as a
+  // rendering fault rather than as a ranking. This keeps every heading unique *and* keeps the globally best
+  // match first, because the best item's own group necessarily sorts first. Ties fall back to the order the
+  // controls appear in the filter bar, which is the order the reader already knows.
+  const gorder = [...new Set(acts.map(a => a.group))];
+  const ranked = words.length ? (() => {
+    const hits = acts.map(a => ({a, s: score(a)})).filter(x => x.s >= 0);
+    const best = new Map();
+    for (const x of hits) if (!(best.get(x.a.group) >= x.s)) best.set(x.a.group, x.s);
+    return hits.sort((p, r) => best.get(r.a.group) - best.get(p.a.group) ||
+      gorder.indexOf(p.a.group) - gorder.indexOf(r.a.group) || r.s - p.s).map(x => x.a);
+  })() : acts;
+
+  // Projects appear only once there is something to look for. With an empty box the palette is a menu of
+  // the page's own controls, which is what it is for; listing 1,294 repositories there would bury them.
+  // The same relevance scorer the results table uses, so the palette cannot disagree with the page about
+  // what the best match for a word is.
+  let proj = [];
+  if (words.length) {
+    proj = ROWS.filter(r => words.every(w => r.hay.includes(w)));
+    for (const r of proj) r.rel = relevance(r, words);
+    proj = proj.sort(SORTS.relevance).slice(0, 8).map(r => ({
+      group: "Projects", label: r.name, hint: r.nwo, stars: r.stars,
+      // Same-tab, like the name links in the table. A palette that opened tabs when the table does not
+      // would be the one control on the page that behaves differently from its neighbours.
+      run: () => { location.href = r.url; },
+    }));
+  }
+  return ranked.slice(0, words.length ? 8 : 40).concat(proj);
+}
+
+function palRender() {
+  const box = document.getElementById("palist"), q = document.getElementById("palq");
+  PAL = palItems(q.value);
+  if (PALI >= PAL.length) PALI = Math.max(0, PAL.length - 1);
+  if (!PAL.length) {
+    box.innerHTML = '<li class="palnone" role="presentation">Nothing here matches that.</li>';
+    q.removeAttribute("aria-activedescendant");
+    return;
+  }
+  let html = "", last = "";
+  PAL.forEach((a, i) => {
+    if (a.group !== last) {
+      html += '<li class="grp" role="presentation">' + esc(a.group) + "</li>";
+      last = a.group;
+    }
+    html += '<li class="it" role="option" id="pal-' + i + '" aria-selected="' + (i === PALI) + '">' +
+      '<span class="t">' + esc(a.label) + "</span>" +
+      (a.stars ? '<span class="s">' + a.stars.toLocaleString() + "★</span>" : "") +
+      // "on" rather than a tick, because this is read aloud as part of the option's name: "Windows, on".
+      (a.active ? '<span class="k">on</span>' : a.hint ? '<span class="k">' + esc(a.hint) + "</span>" : "") +
+      "</li>";
+  });
+  box.innerHTML = html;
+  q.setAttribute("aria-activedescendant", "pal-" + PALI);
+  // `nearest`, so arrowing down inside the visible list does not scroll at all and only the row that
+  // just left the viewport pulls it.
+  const sel = box.querySelector("[aria-selected=true]");
+  if (sel && sel.scrollIntoView) sel.scrollIntoView({block: "nearest"});
+}
+
+// Wrapping, because a list this long is faster to reach from the bottom for the last few entries and
+// there is no submit-on-last-item semantics to protect.
+function palMove(d) {
+  if (!PAL.length) return;
+  PALI = (PALI + d + PAL.length) % PAL.length;
+  palRender();
+}
+
+function palPick() {
+  const a = PAL[PALI];
+  if (!a) return;
+  // Close before running. `set()` re-renders the table underneath, and a modal still on screen over a
+  // table that has already changed reads as if the keystroke did nothing.
+  document.getElementById("pal").close();
+  a.run();
+}
+
+function palOpen() {
+  const dlg = document.getElementById("pal");
+  // `D` guards the error page: the palette's topic and platform lists come out of the data, so before it
+  // lands there is nothing to jump to.
+  if (!dlg || !dlg.showModal || dlg.open || !D) return;
+  document.getElementById("palq").value = "";
+  PALI = 0;
+  dlg.showModal();
+  palRender();
+  document.getElementById("palq").focus();
+}
 
 // Theme and clipboard are wired outside buildChips because buildChips only runs once `data.json` has
 // arrived. When the fetch fails -- a contributor opening the file off disk, which the catch block above
