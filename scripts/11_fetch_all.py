@@ -1,8 +1,8 @@
 """Fetch metadata + README for every repo across all source lists.
 
-Reuses 02_fetch.py's batching wholesale -- the only new job is collapsing 2,209
-listed rows down to the distinct repos behind them, so a project listed by six
-lists is still fetched once.
+Reuses 02_fetch.py's batching wholesale -- the only new job is collapsing every
+row the parser emitted down to the distinct repos behind them, so a project
+listed by six lists is still fetched once.
 """
 import importlib.util
 import json

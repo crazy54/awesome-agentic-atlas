@@ -1,7 +1,8 @@
-"""One shared vocabulary across eleven lists that share none.
+"""One shared vocabulary across 39 lists that share none.
 
-The eleven curators wrote 140 distinct section names between them and agreed on almost nothing: 132
-`(source, section)` pairs plus the orchestrator list's 8 categories, and 131 distinct section strings.
+The curators of those 39 lists filed 13,640 listings of nearly 8,000 repos under one section name each
+-- `len(SECTIONS)` of them, one key per `(source, section)` pair plus the orchestrator list's 8
+categories -- and agreed on almost nothing.
 `Frameworks`, `Agent Frameworks` and `Build-your-own` are the same shelf under three names; `Coding`,
 `Software Development`, `Coding Agents` and `Parallel Coding Agents -- Terminal (TUI/CLI)` are the same
 shelf under four. Nothing can be ranked "best in category" until the categories are one set, so this
@@ -13,7 +14,7 @@ Two axes, because the section names conflate two questions:
   TARGETS  -- what it *plugs into*. Zero or more, because a plugin can serve Claude Code and opencode
               both, and "best Claude Code thing" is a question about this axis, not the other one.
 
-Every one of the 140 keys is spelled out below rather than matched by keyword. A regex over section
+Every one of those keys is spelled out below rather than matched by keyword. A regex over section
 names would silently re-file a section the day a curator renames it, and re-filing is exactly the thing
 this module exists to make deliberate. `check()` fails if a section appears in the data that is not
 listed here, which is how a rename gets noticed.
@@ -445,7 +446,7 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("cc_subagents_voltagent", "10. Research & Analysis"): "Agent Skills",
 
     # rohitg00/awesome-claude-code-toolkit
-    # One repo, itemised: 344 of its 699 rows are markdown/JSON artefacts inside the toolkit itself.
+    # One repo, itemised: 346 of its 699 rows are markdown/JSON artefacts inside the toolkit itself.
     # Its ten Agents shelves, eight Commands shelves, Rules and Contexts all describe what one
     # uniform artefact is *for*, not what it is, so they take one shelf and the section column
     # carries the domain -- the same reading as ('skills', *) and ('skills_aas', *). Carved out for
@@ -741,12 +742,24 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("prompteng_promptslab", "Domain-Specific Adaptations"): "Assistants & Domain Agents",
     ("prompteng_promptslab", "Other Notable Repositories"): "Docs, Learning & Lists",
     ("prompteng_promptslab", "Related Resources"): "Docs, Learning & Lists",
+
+    # LLMSecurity/awesome-agent-skills-security -- 74 rows over the four tool-bearing shelves its
+    # allowlist keeps. `Tools & Frameworks` is 32 rows of installable scanners and guardrails
+    # (llm-guard, NeMo-Guardrails, garak, promptfoo, rebuff), which is the ('agentsec_recon', *) reading
+    # verbatim. `Agent Skill Specifications` names the skill spec rather than a protocol, so it goes
+    # where ('agents2026', 'Protocols and Standards') went and not to MCP Servers.
+    ("skills_security", "Agent Skill Specifications"): "Frameworks & SDKs",
+    ("skills_security", "Tools & Frameworks"): "Sandbox, Security & Governance",
+    ("skills_security", "Benchmarks & Datasets"): "Observability & Evals",
+    ("skills_security", "Related Awesome Lists"): "Docs, Learning & Lists",
 }
 
 # The second axis: what a thing plugs into. Matched on text because no curator has a column for it --
-# `("skills", "GitHub Copilot")` is the only section in 140 that names a harness. Order is display
-# order. Each pattern is deliberately narrow: a false positive here puts a repo on a leaderboard it has
-# no business being on, which is worse than missing one.
+# only 8 of the mapped sections name a harness at all (`GitHub Copilot`, `Claude and Anthropic`,
+# `Cursor-Native`, `Non-Gemini CLI` and four more), so the section string is one more field in the
+# haystack rather than a lookup of its own. Order is display order. Each pattern is deliberately narrow:
+# a false positive here puts a repo on a leaderboard it has no business being on, which is worse than
+# missing one.
 TARGETS: list[tuple[str, str]] = [
     ("Claude Code", r"claude[\s_.-]?code|\bclaude-?code\b|\bcchooks?\b"),
     # "agent skills" and "skills.md" used to belong here: when the only skills lists in the collection
@@ -759,7 +772,20 @@ TARGETS: list[tuple[str, str]] = [
     ("opencode", r"\bopencode\b"),
     ("MCP", r"\bmcps?\b|model[\s-]context[\s-]protocol"),
     ("Codex / OpenAI", r"\bcodex\b|\bopenai\b|\bchatgpt\b|\bgpt-[45]\b|\bo[13]-(mini|pro)\b"),
-    ("Gemini / Google", r"\bgemini\b|\bgoogle\b|\bvertex ai\b"),
+    # A bare `google` used to be in here, and it inverted the axis this column asks about. Of the 676
+    # rows it matched, 211 never said `gemini` at all: Google Drive, Sheets, Keep, BigQuery and Cloud Run
+    # servers -- 86 from punkpeye's MCP list alone, which is mostly servers that reach some third-party
+    # API -- badged as needing Google's harness when they run under any MCP client at all, Claude Code
+    # and opencode included. A service you call is a dependency, not a harness, so the harnesses are
+    # named instead: Gemini itself, Vertex AI as a place a model runs, and Google's own agent tooling.
+    # `adk` is matched bare because the acronym is Google's in all 15 listings that use it, and the only
+    # other `-adk` in the collection is `modu-ai/moai-adk`, which the hyphen guard excludes. `google ai`
+    # excludes Mode, Overviews and Search, which are the search product rather than the model, and keeps
+    # `google gemin` for the description upstream truncated mid-word.
+    ("Gemini / Google",
+     r"\bgemini\b|\bvertex ai\b|\bantigravity\b|\bjules\b|\bfirebase studio\b|(?<![\w-])adk\b"
+     r"|google[\s._/-]?(?:gemin|ai\b(?![\s-]*(?:mode|overview|search))"
+     r"|gen(?:erative[\s._/-]?)?ai|code assist)"),
     ("GitHub Copilot", r"\bcopilot\b"),
     ("Cursor", r"\bcursor(?:\s(?:ide|rules|agent|composer))?\b(?!\s*position)"),
     ("Cline / Roo", r"\bcline\b|roo[\s-]?code"),
@@ -797,9 +823,10 @@ SOURCE_TARGETS = {
 
 RANK = {c: i for i, c in enumerate(CATEGORIES)}
 
-# One key in 140 is both shelves at once and too big to file wholesale on either: `harness / Skills & MCP`
-# is 41 entries holding the MCP specification, `modelcontextprotocol/servers`, MCP Inspector and the
-# transport write-ups right next to `superpowers`, `addyosmani/agent-skills` and the skill benchmarks.
+# One key in `SECTIONS` is both shelves at once and too big to file wholesale on either:
+# `harness / Skills & MCP` is 41 entries holding the MCP specification, `modelcontextprotocol/servers`,
+# MCP Inspector and the transport write-ups right next to `superpowers`, `addyosmani/agent-skills` and
+# the skill benchmarks.
 # Its curator named both shelves in the heading, so this is the one place a listing is read rather than
 # looked up. Everywhere else a rename must be noticed, not absorbed -- adding keys here defeats that, so
 # there is exactly one.
@@ -819,8 +846,8 @@ def _is_mcp_server(rec: dict) -> bool:
 
     A skill is frequently *delivered* over MCP, so naming MCP is not evidence of being a server; naming a
     skill is evidence of being a skill. So the protocol only wins unopposed. Of the 41 listings this
-    decides, 19 name a protocol alone and become servers; the other 22 -- 14 that name a skill, 3 that
-    name both like "Dataverse Skills", and 5 that name neither -- stay on the section's first shelf.
+    decides, 19 name a protocol alone and become servers; the other 22 -- 13 that name a skill, 3 that
+    name both like "Dataverse Skills", and 6 that name neither -- stay on the section's first shelf.
 
     Deliberately excludes the section text from what it reads: "Skills & MCP" matches both patterns, so
     including it would veto every listing in the section.

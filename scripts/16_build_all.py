@@ -6,7 +6,7 @@ Sheet plan
   Orchestrators  the original list, with its full OS/install treatment
   <one per list> the ten lists worth reading one at a time (SHEETS), grouped by
                  section, most stars first, screenshot per row. The other
-                 twenty-six reach the reader through the cross-list sheets --
+                 twenty-eight reach the reader through the cross-list sheets --
                  every row of every list is on By Category -- and are credited
                  on Sources, List Stats and the cover's directory all the same.
   Leaderboard    the highest-starred projects across every list at once
@@ -99,8 +99,8 @@ def slot(i: int, n: int, what: str) -> tuple[str, str]:
     return SLOTS[i]
 
 
-# Which lists get a sheet of their own, in tab order. Ten of the thirty-six, and deliberately so:
-# a sheet per list would be thirty-six tabs and thirty-six screenshot sets, and the sheets that cut
+# Which lists get a sheet of their own, in tab order. Ten of the thirty-nine, and deliberately so:
+# a sheet per list would be thirty-nine tabs and thirty-nine screenshot sets, and the sheets that cut
 # across every list -- By Category, Leaderboard, the four platform tabs -- already carry every row
 # from every source. So this list answers "which lists are worth reading one at a time", which is a
 # curation question, and it is not the same question as "which lists is the atlas built from".
@@ -130,8 +130,8 @@ SHEETS = [
 SHEET_TITLE = {k: t for k, t, *_ in SHEETS}
 
 # Every source's display name, which is not the same set as SHEETS. `listed_by` on the leaderboard,
-# the category sheet and the four platform sheets is built from this: those sheets hold rows from all
-# thirty-six lists, so a map covering only the ten that have a sheet left twenty-six of them printing
+# the category sheet and the four platform sheets is built from this: those sheets hold rows from every
+# list in `SOURCES`, so a map covering only the ten that have a sheet left every other list printing
 # a raw internal key -- a reader saw "Listed by: cc_toolkit_rohitg00" where the other rows said
 # "Claude Code". SHEETS wins where it has an entry, so the ten already-shipped names do not move, and
 # `orchestrators` keeps the short label the workbook has always used for it rather than its SOURCES
@@ -141,8 +141,9 @@ LIST_TITLE = {**{s["key"]: s["title"] for s in b10.SOURCES},
 
 # The project name, in one place because three things have to agree on it: the two filenames, the
 # cover's hyperlink to its sibling theme, and 17_markdown's links out to the workbooks. Deliberately
-# no longer "Orchestrators" -- 2,200 of the 2,394 entries are not orchestrators, and the original
-# orchestrators-only build in 07_build.py keeps that name because there it is accurate.
+# no longer "Orchestrators" -- that list is now a couple of hundred rows out of more than thirteen
+# thousand, and the original orchestrators-only build in 07_build.py keeps that name because there it
+# is accurate.
 WORKBOOK = "Awesome-Agentic-Atlas"
 TITLE = "AWESOME AGENTIC ATLAS"
 
@@ -1539,12 +1540,12 @@ def main() -> None:
             # `sheet` is the row's name -- it is the chip on three sheets and the category axis of
             # List Stats' two charts, so it has to be unique per list. `tab` is the different and
             # narrower question the Sources sheet's ninth column asks, which most lists answer with
-            # a dash. Collapsing the two would have printed the same label on twenty-six rows and
-            # given the charts twenty-six identical categories.
+            # a dash. Collapsing the two would have printed the same label on twenty-eight rows and
+            # given the charts twenty-eight identical categories.
             owner=nwo.split("/")[0], sheet=sheet, tab=tab or sheet, kind="repo",
             # A hand-written blurb where there is one, else the list's own GitHub description. The
             # maintainer's one-liner is what the column asks for and it beats inventing prose for
-            # twenty-six lists or leaving the cell empty.
+            # twenty-eight lists or leaving the cell empty.
             blurb=blurb or (m.get("description") or "").strip(),
             shot_key=nwo.replace("/", "__"),
             # None, not 0: a list whose own repo was never fetched has an unknown star count, and
@@ -1575,7 +1576,7 @@ def main() -> None:
     # Then every remaining list, largest contribution first. The sheet's own title bar says "every
     # list this workbook was built from" and `stats["lists"]` is drawn from this, so stopping at the
     # ten with sheets made both of those false the moment the atlas grew past them -- it credited ten
-    # maintainers for the work of thirty-six. These rows have no tab of their own to point at, which
+    # maintainers for the work of thirty-nine. These rows have no tab of their own to point at, which
     # the ninth column now says with a dash rather than by omitting the list.
     for s in sorted(b10.SOURCES, key=lambda s: -len(by_source.get(s["key"], ()))):
         if s["key"] == "orchestrators" or s["key"] in SHEET_TITLE:

@@ -1,10 +1,11 @@
 """Parse every awesome-list source into one entry table.
 
-Eleven lists, eleven shapes: plain bullets, markdown tables, HTML tables under
-`<h3>` headings, one-heading-per-tool, and `<details>` accordions. Rather than
-eleven bespoke parsers this is one walker with a small per-source strategy:
-which heading level names the category, which line shapes hold entries, and
-which headings are front matter to ignore.
+Every list in `SOURCES` has its own shape: plain bullets, markdown tables, HTML
+tables under `<h3>` headings, one-heading-per-tool, and `<details>` accordions.
+Rather than a bespoke parser per list this is one walker with a small per-source
+strategy: which heading level names the category, which line shapes hold
+entries, and which headings are front matter to ignore. That is what has let the
+list of sources grow without the parser growing with it.
 
 Output is cache/entries_all.json -- one row per listed item per source. A repo
 listed by two sources stays two rows (that overlap is itself a finding); the
@@ -23,6 +24,13 @@ SRC = CACHE / "sources"
 # mode:     which line shapes carry entries -- bullet / table / heading
 # cat_at:   heading depth that names the category (2 = "## ", 3 = "### ")
 # drop:     headings whose whole section is front matter, meta or non-tool
+# keep:     the inverse, for a list that is mostly not tools -- name the sections to take and every
+#           other heading is dropped. Only one of the two per source; `keep` wins if both are given.
+#           A denylist has to be complete to be correct, so it is the wrong shape for a list whose
+#           upstream adds sections faster than we notice: a heading nobody has classified yet becomes
+#           a live section, and an unmapped section is a taxonomy KeyError, which is a red build for a
+#           change made in somebody else's repository. With `keep`, an unrecognised new heading is
+#           simply not taken, which is the safe default and needs no maintenance.
 # item_rel: relative links are real items (the list indexes folders in its own repo)
 SOURCES = [
     dict(key="orchestrators", nwo="andyrewlee/awesome-agent-orchestrators",
@@ -274,6 +282,25 @@ SOURCES = [
                "start here", "structured output and format control", "table of contents",
                "text-to-image generation", "text-to-music/audio generation",
                "university and platform courses", "videos", "watermarking approaches"}),
+    # The one source in the atlas taken by allowlist. Four fifths of this list is reading, not tools:
+    # 387 of its 535 links are arxiv papers, and the sixteen research sections plus the industry
+    # write-ups contribute zero repos between them -- the full 22-section parse and this four-section
+    # one both yield 43 distinct repos, so the 180 rows left behind are 180 arxiv pages that would
+    # each cost a web screenshot and rank nowhere. What is here is worth having: `Tools & Frameworks`
+    # is real installable tooling (llm-guard, NeMo-Guardrails, garak, promptfoo, rebuff) and it is the
+    # best single source the atlas has for Sandbox, Security & Governance.
+    #
+    # `keep` rather than `drop` because of how this list is maintained: its papers carry 2026 arxiv
+    # IDs and new h3 subsections appear under Attack Research and Defense Research weekly. Enumerated
+    # as a denylist, every one of those would arrive as an unmapped section and break the build until
+    # someone added it -- a red daily build caused by somebody else editing their own README. Named
+    # the other way round, the four shelves we want are the four we get, for ever.
+    dict(key="skills_security", nwo="LLMSecurity/awesome-agent-skills-security",
+         title="Agent Skill Security", short="Skill Sec",
+         file="LLMSecurity_awesome-agent-skills-security.md",
+         mode={"bullet", "table"}, cat_at=3,
+         keep={"tools & frameworks", "benchmarks & datasets",
+               "agent skill specifications", "related awesome lists"}),
 ]
 
 MD_H = re.compile(r"^(#{2,4})\s+(?P<txt>.+?)\s*#*$")
@@ -344,6 +371,17 @@ def clean(s: str) -> str:
     s = LINK.sub(lambda m: m.group("txt"), s)
     s = HTML_TAG.sub("", s)
     s = s.replace("**", "").replace("`", "")
+    # `\|` is a backslash escape, and CommonMark renders it as a bare pipe wherever it appears. It
+    # reaches us because `entry_links` splits table rows on unescaped pipes only -- correct, and it
+    # deliberately leaves the escape in the cell -- but past that split the cell is no longer a table
+    # row and the backslash is not syntax any more, it is a character in a description. Two rows of
+    # rohitg00/awesome-claude-code-toolkit carry one: an install line reading
+    # `curl ... \| bash`, and a description of shell operators reading `(&&, \|\|, ;, \|, $())`.
+    # 17_markdown re-escapes on the way into its own tables, so the round trip is unchanged; what
+    # this fixes is those two strings printing a literal backslash on a bullet line and in
+    # docs/data.json, and `check_markdown.py`'s "escaped pipe outside a table" failing the build now
+    # that both workflows run it.
+    s = s.replace("\\|", "|")
     return re.sub(r"\s+", " ", s).strip(" \t*-–—:;.")
 
 
@@ -381,10 +419,15 @@ def entry_links(body: str, mode: set[str], kind: str) -> list[tuple[str, str, st
         # is the file it points at. Preferring the link text there named 225 rows "commit.md" and
         # "fullstack-engineer.md"; the table already says Commands and Core Development beside them.
         name = clean(cells[0]) if i and clean(cells[0]) else clean(m.group("txt"))
-        # Longest of the remaining cells, not the first non-empty one. A table with a Language or
-        # Stars column between the name and the prose used to describe LangChain as "Py/JS" and a
-        # 5,300-star plugin as "5,300+"; the description is the cell with the sentence in it.
-        rest = [clean(c) for c in cells[i + 1:]]
+        # Every cell that is neither the name nor the link is a description candidate, on both sides
+        # of the link. Reading only the cells after it assumed the link comes before the prose, and
+        # `| Name | Description | Link |` puts it last: 133 of promptslab/Awesome-Prompt-Engineering's
+        # 218 rows arrived with no description at all, their prose sitting one column to the left of
+        # where the rule looked. Longest of the candidates, not the first non-empty one -- a table
+        # with a Language or Stars column between the name and the prose used to describe LangChain
+        # as "Py/JS" and a 5,300-star plugin as "5,300+"; the description is the cell with the
+        # sentence in it, and that argument never depended on which side of the link it sat.
+        rest = [clean(c) for j, c in enumerate(cells) if j != i and not (j == 0 and i)]
         return [(name, m.group("url"), max(rest, key=len) if any(rest) else "")]
 
     # bullet: first link is the entry, the rest of the line is its description
@@ -467,6 +510,13 @@ def parse(src: dict, text: str | None = None) -> list[dict]:
     mode = src.get("mode", {"bullet"})
     cat_at = src.get("cat_at", 2)
     drop = {d.lower() for d in src.get("drop", ())}
+    keep = {k.lower() for k in src.get("keep", ())}
+
+    def is_dropped(txt: str) -> bool:
+        """Whether this heading's section is skipped. Emoji stripped because headings carry them
+        and both key sets are written plain."""
+        plain = strip_emoji(txt).lower()
+        return plain not in keep if keep else plain in drop
 
     rows: list[dict] = []
     heads: dict[int, str] = {}
@@ -493,7 +543,7 @@ def parse(src: dict, text: str | None = None) -> list[dict]:
             if "heading" in mode and lvl == cat_at and LINK.search(mh.group("txt") if mh else line):
                 m = LINK.search(mh.group("txt") if mh else line)
                 heads[lvl] = clean(m.group("txt"))
-                dropped = strip_emoji(clean(m.group("txt"))).lower() in drop
+                dropped = is_dropped(clean(m.group("txt")))
                 if not dropped:
                     rows.append({"_name": clean(m.group("txt")), "_url": m.group("url"),
                                  "_desc": "", "_cat": "", "_sub": ""})
@@ -504,8 +554,7 @@ def parse(src: dict, text: str | None = None) -> list[dict]:
             for deeper in [k for k in heads if k > lvl]:
                 heads.pop(deeper)
             if lvl <= cat_at:
-                # headings carry emoji prefixes; drop keys are written plain
-                dropped = strip_emoji(txt).lower() in drop
+                dropped = is_dropped(txt)
             category = heads.get(cat_at, "") or txt
             sub = heads.get(cat_at + 1, "")
             if "heading" in mode and txt.lower() == src.get("heading_cat_from", "").lower():

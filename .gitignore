@@ -1,7 +1,7 @@
-# Build cache: 64 MB, ~4,800 files. Verbatim copies of 1,293 other people's READMEs and 3,462
-# screenshots of their projects, fetched so the pipeline can classify and illustrate without
-# hammering the API on every run. Rebuildable by scripts/02_fetch.py, 11_fetch_all.py and the
-# 05/06/15 shot scripts, and not ours to redistribute.
+# Build cache: a verbatim copy of every listed repo's README and a screenshot of each project, fetched
+# so the pipeline can classify and illustrate without hammering the API on every run. It grows with the
+# source lists, so it is thousands of files by now, none of it is ours to redistribute, and all of it is
+# rebuildable by scripts/02_fetch.py, 11_fetch_all.py and the 05/06/15 shot scripts.
 cache/
 
 # Excel's own print-to-PDF renders of a few sheets, for eyeballing layout during a build.

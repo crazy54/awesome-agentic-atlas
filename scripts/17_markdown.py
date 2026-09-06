@@ -12,8 +12,9 @@ Layout, under mega-list/:
 
 Two things are deliberately different from the workbook. Images are hotlinked rather than embedded
 -- a README banner where the pipeline found one, GitHub's own social card otherwise, which exists
-for every repo and costs this directory no bytes. And each page is split so no file approaches the
-size at which GitHub stops rendering Markdown: the mega list is one list, not one file.
+for every repo and costs this directory no bytes. And every long page is packed to a byte budget and
+continued onto `-2.md`, `-3.md` as far as it takes, because GitHub stops rendering a Markdown file
+past 512 KB: the mega list is one list, not one file. See `paginate` and the check `main` ends with.
 """
 import importlib.util
 import json
@@ -39,6 +40,12 @@ import taxonomy as tax  # noqa: E402
 import newness  # noqa: E402
 
 SHEETS, PLATFORMS, DASH = b16.SHEETS, b16.PLATFORMS, b16.DASH
+
+# Reached through b16 rather than loaded a second time: b16 has already executed 10_parse_sources, and
+# a second copy of SOURCES is the exact drift the docstring above promises this module will not create.
+# SHEETS is the ten lists the workbook gives a tab of its own; SOURCES is every list the atlas parses,
+# and on this surface those are not the same question -- a Markdown file per list costs nothing.
+SOURCES, SHEET_TITLE, LIST_TITLE = b16.b10.SOURCES, b16.SHEET_TITLE, b16.LIST_TITLE
 
 
 REPO = "crazy54/awesome-agentic-atlas"
@@ -202,8 +209,164 @@ def write(rel: str, lines: list[str]) -> Path:
     return path
 
 
+# ------------------------------------------------------------------ page size
+# GitHub renders a Markdown file up to 512 KB and replaces anything larger with a truncation notice:
+# no table, no rows, and nothing in the build that produced it says so. The only structural defence
+# used to be one split -- confirmed rows here, inferred rows on a sibling page -- sized by hand for
+# 1,294 listed repos, and the limit was *printed* at the end of a run and never checked. At 13,323
+# listed rows that left eleven pages unrenderable, `platforms/macos-inferred.md` at 1.86 MB, with
+# "GitHub renders Markdown up to 512 KB" logged underneath as though it were reassurance. And that
+# was a daily job, so it would have republished all eleven every morning. So every long page is now
+# packed to a byte budget and continued onto numbered siblings, and the build fails rather than
+# publish a page that is anywhere near the cliff.
+PAGE_LIMIT = 512 * 1024
+
+# What one part is packed to. Roughly the largest page this collection has ever published (294 KB),
+# so a split page reads like the pages readers already know rather than like a new kind of thing, and
+# so a part can grow by a quarter between two daily builds without anyone touching this file -- which
+# it can, because names, blurbs and install lines come from other people's repositories and change
+# when they edit them.
+PAGE_BUDGET = 320 * 1024
+
+# What the build refuses to publish. Well below PAGE_LIMIT rather than just under it, because the gap
+# is an alarm band and not spare capacity: a part that lands in it still renders, so the reader keeps
+# a working page while the build says loudly that the packer's accounting has drifted. The margin
+# also settles an ambiguity -- 512 KB is written in decimal in some of GitHub's own docs and in binary
+# in others, and a ceiling within a rounding error of either reading would be a coin toss.
+PAGE_CEILING = 400 * 1024
+
+# Allowed for before packing, so the two pager strips a part carries can never be the thing that
+# pushes it over. Generous on purpose: a strip is one line naming every part, so this covers a
+# fifty-part page twice over.
+PAGER_COST = 4 * 1024
+
+
+def block(title: str = "", intro=(), header=(), rows=(), nav: str = "", unit: str = "rows") -> dict:
+    """One `## ` section of a page, split into the part that repeats and the part that gets divided.
+
+    `rows` is the only field `paginate` cuts. An entry that renders as three lines -- a bullet, its
+    facts, its install command -- is *one* string with newlines in it rather than three list items,
+    so that a cut can never land between a project and its own install line.
+
+    `header` is a GFM table header, re-emitted at the top of every part the section spills into,
+    because a table whose header row is on the previous file is not a table. `nav` is the section's
+    line in its page's Contents list, generated per part so a part never links `#anchor` at a heading
+    that is in a different file. `title` may be empty, for the one page whose body has no heading.
+    """
+    return dict(title=title, intro=list(intro), header=list(header), rows=list(rows),
+                nav=nav, unit=unit)
+
+
+def cost(lines) -> int:
+    """Bytes these lines add to a file. `write` joins on newline, so one separator each."""
+    return sum(len(x.encode("utf-8")) + 1 for x in lines)
+
+
+def pager(name: str, i: int, n: int) -> list[str]:
+    """The strip that makes every part of a split page reachable from every other part.
+
+    Every part, not only the neighbours. Prev/next alone means a reader on part 1 of six has no way
+    to know part 6 exists, and the whole reason for splitting rather than truncating is that no row
+    stops being reachable. Part 1 keeps the unsuffixed filename, so every link written before a page
+    grew -- the hub's platform table, both facet hubs, the confirmed/inferred cross-links -- still
+    lands on the page it always did.
+
+    Linked by bare filename, never by the path `name` carries: every part of a page is a sibling of
+    every other, and `platforms/linux-2.md` resolved from inside `platforms/` is a dead link.
+    """
+    if n < 2:
+        return []
+    stem = name.rsplit("/", 1)[-1]
+
+    def where(k: int) -> str:
+        return f"{stem}.md" if k == 1 else f"{stem}-{k}.md"
+
+    marks = " · ".join(f"**{k}**" if k == i else f"[{k}]({where(k)})" for k in range(1, n + 1))
+    more = f" — [continue on page {i + 1} →]({where(i + 1)})" if i < n else "."
+    return [f"Page **{i}** of {n}, because this list is longer than the {PAGE_LIMIT // 1024} KB "
+            f"GitHub will render in one file. In order: {marks}{more}", ""]
+
+
+def part_of(b: dict, first: int, last: int) -> list[str]:
+    """One block, or the slice of it that fits on this part."""
+    out = [f"## {b['title']}", ""] if b["title"] else []
+    if b["intro"]:
+        out += b["intro"] + [""]
+    if first or last < len(b["rows"]):
+        out += [f"<sub>{b['unit'].capitalize()} {first + 1:,}–{last:,} of {len(b['rows']):,}. The "
+                f"rest are on this page's other parts, linked above and below.</sub>", ""]
+    body = b["header"] + b["rows"][first:last]
+    # A prose-only block closes itself -- `intro` already ended with a blank. Adding another put a
+    # second blank line into pages nowhere near the size limit, so a change that should have been
+    # invisible on most of this directory turned up in the diff for all of it.
+    return (out + body + [""]) if body else out
+
+
+def paginate(rel: str, head: list[str], blocks: list[dict], foot: list[str],
+             lede=()) -> list[tuple[str, list[str]]]:
+    """One page, as however many files it takes for each of them to render on GitHub.
+
+    Packed by measured bytes rather than by a row count, because rows here are not the same size: a
+    bullet on a list page is ~130 bytes and a platform table row with an evidence sentence in it is
+    ~700, so any fixed `[:N]` either wastes most of a page or overshoots it, and the one thing this
+    must never do is silently drop a repo. Greedy first-fit, splitting inside a section only when the
+    section on its own does not fit -- so a page with sections that fit lands one section per part,
+    which is the split a reader would have chosen anyway.
+
+    `head` repeats on every part and `lede` is part-1-only, which is where the picture gallery goes:
+    the same six images at the top of six files would be six times the bytes for none of the point.
+
+    A page that fits gets exactly one file, named `rel`, with no pager strip -- so this is a no-op for
+    the majority of these pages, which have never been near the limit and should not start looking
+    like they were.
+    """
+    name = rel[: -len(".md")]
+    room = PAGE_BUDGET - cost(head) - cost(foot) - PAGER_COST
+    parts: list[list[tuple[dict, int, int]]] = [[]]
+    used = cost(lede)
+    for b in blocks:
+        fixed = cost(part_of(b, 0, 0))
+        first = 0
+        while True:
+            if parts[-1] and used + fixed > room:
+                parts.append([])
+                used = 0
+            used += fixed
+            last = first
+            while last < len(b["rows"]) and used + cost([b["rows"][last]]) <= room:
+                used += cost([b["rows"][last]])
+                last += 1
+            # One row always goes somewhere, even a row that is on its own larger than a whole
+            # budget. Without this a single oversized row would open empty parts for ever, and the
+            # assertion at the end of `main` is what catches the page it lands on.
+            last = max(last, min(first + 1, len(b["rows"])))
+            parts[-1].append((b, first, last))
+            if last >= len(b["rows"]):
+                break
+            first = last
+            parts.append([])
+            used = 0
+
+    n = len(parts)
+    pages = []
+    for i, part in enumerate(parts, start=1):
+        strip = pager(name, i, n)
+        lines = list(head) + (list(lede) if i == 1 else []) + strip
+        nav = [b["nav"] for b, _f, _l in part if b["nav"]]
+        if nav:
+            lines += ["## Contents", ""] + nav + [""]
+        for b, first, last in part:
+            lines += part_of(b, first, last)
+        # The strip repeats at the foot without its trailing blank, because the block above it ended
+        # with one and `footer` opens with one. A page that fits gets `strip == []` and so keeps the
+        # shape it has always had.
+        pages.append((f"{name}.md" if i == 1 else f"{name}-{i}.md",
+                      lines + strip[:-1] + list(foot)))
+    return pages
+
+
 # ------------------------------------------------------------------ per-list pages
-def list_page(title: str, nwo: str, blurb: str, rows, shots) -> list[str]:
+def list_page(rel: str, title: str, nwo: str, blurb: str, rows, shots):
     """One source list, grouped by the section wording that list publishes.
 
     Sections keep their original names rather than the workbook's eight colour buckets: on a page
@@ -214,29 +377,24 @@ def list_page(title: str, nwo: str, blurb: str, rows, shots) -> list[str]:
         order.setdefault(r["section"], (i, r["section"]))
     sections = [name for name, _k in sorted(order.items(), key=lambda kv: kv[1])]
 
-    lines = [f"# {title}",
-             "",
-             f"{blurb}",
-             "",
-             f"Curated by **[{nwo}](https://github.com/{nwo})** — all credit for the selection "
-             f"belongs there. This page adds stars, platform evidence, an install line and a "
-             f"screenshot to each entry.",
-             "",
-             f"{len(rows):,} entries · "
-             f"{len({r['nwo'] for r in rows if r.get('nwo')}):,} distinct repos · "
-             f"{len(sections)} sections",
-             "",
-             "[← back to the mega list](../README.md)",
-             ""]
-    lines += gallery(rows, shots)
-    lines += ["## Contents", ""]
-    for name in sections:
-        n = sum(1 for r in rows if r["section"] == name)
-        lines.append(f"- [{prose(name)}](#{slug(name)}) ({n})")
-    lines.append("")
+    # Conditional, not `f"{blurb}"`: the eleven curated lists have a hand-written blurb, the rest borrow
+    # their repo's GitHub description, and a handful of repos publish none. An unguarded line printed
+    # "None" on those pages; skipping the paragraph reads as if it was never meant to be there.
+    head = [f"# {title}", ""] + ([blurb, ""] if blurb else []) + [
+            f"Curated by **[{nwo}](https://github.com/{nwo})** — all credit for the selection "
+            f"belongs there. This page adds stars, platform evidence, an install line and a "
+            f"screenshot to each entry.",
+            "",
+            f"{len(rows):,} entries · "
+            f"{len({r['nwo'] for r in rows if r.get('nwo')}):,} distinct repos · "
+            f"{len(sections)} sections",
+            "",
+            "[← back to the mega list](../README.md)",
+            ""]
 
+    blocks = []
     for name in sections:
-        lines += [f"## {prose(name)}", ""]
+        entries = []
         for r in sorted([x for x in rows if x["section"] == name],
                         key=lambda x: (-(x.get("stars") or 0), x.get("src_order", 0))):
             facts = [f"★ {stars(r)}"] if stars(r) != DASH else []
@@ -247,13 +405,15 @@ def list_page(title: str, nwo: str, blurb: str, rows, shots) -> list[str]:
                 facts.append(f"pushed {r['pushed_at']}")
             if support(r) != DASH:
                 facts.append(support(r))
-            lines.append(f"- **[{prose(r['name'])}]({r['url']})** — {prose(r.get('blurb') or '')}")
+            entry = [f"- **[{prose(r['name'])}]({r['url']})** — {prose(r.get('blurb') or '')}"]
             if facts:
-                lines.append(f"  <sub>{' · '.join(facts)}</sub>")
+                entry.append(f"  <sub>{' · '.join(facts)}</sub>")
             if r.get("install_cmd"):
-                lines.append(f"  <sub>{code(r['install_cmd'])}</sub>")
-        lines.append("")
-    return lines + footer(1)
+                entry.append(f"  <sub>{code(r['install_cmd'])}</sub>")
+            entries.append("\n".join(entry))
+        blocks.append(block(title=prose(name), rows=entries, unit="entries",
+                            nav=f"- [{prose(name)}](#{slug(name)}) ({len(entries)})"))
+    return paginate(rel, head, blocks, footer(1), gallery(rows, shots))
 
 
 # ------------------------------------------------------------------ platform pages
@@ -270,9 +430,14 @@ def confirmed(rec, field: str) -> bool:
     return rec[field] == "Yes"
 
 
+PLATFORM_COLS = ["| # | Project | ★ | Lists | Support | Language | Install / Run | What it does "
+                 "| Why |",
+                 "|--:|---|--:|--:|---|---|---|---|---|"]
+
+
 def platform_table(rows, name: str, start: int = 1) -> list[str]:
-    out = ["| # | Project | ★ | Lists | Support | Language | Install / Run | What it does | Why |",
-           "|--:|---|--:|--:|---|---|---|---|---|"]
+    """The rows only. `PLATFORM_COLS` is separate because a split section re-emits the header."""
+    out = []
     for i, r in enumerate(rows, start=start):
         out.append(
             f"| {i} | **[{prose(r['name'], table=True)}]({r['url']})**"
@@ -285,45 +450,47 @@ def platform_table(rows, name: str, start: int = 1) -> list[str]:
     return out
 
 
-def platform_pages(name: str, field: str, headline: str, note: str, rows, total: int,
-                   shots) -> list[tuple[str, list[str]]]:
+def platform_pages(name: str, field: str, headline: str, note: str, rows, total: int, shots,
+                   lists: int) -> list[tuple[str, list[str]]]:
     """The platform's own page holds the confirmed rows; the inferred ones get a sibling.
 
-    Not a taste call. Three of these tables in one file each would land within a few percent of the
-    512 KB at which GitHub stops rendering Markdown, and the split that keeps them clear of it is
-    the one a reader wants anyway: proof first, inference one click behind it.
+    Not a taste call, and not a size measure either -- it used to claim to be one. Proof first,
+    inference one click behind it, is the order a reader wants; what it is *not* is a guarantee about
+    bytes. At 1,294 listed repos one of these tables happened to fit in a file and the docstring here
+    read that coincidence back as a design; at 13,323 every one of the seven pages this function
+    writes was over the 512 KB cliff, three of them past 1.7 MB. Fitting a file is `paginate`'s job,
+    and every block below is handed to it whole.
     """
     sure = [r for r in rows if confirmed(r, field)]
     maybe = [r for r in rows if not confirmed(r, field)]
     key, extra = slug(name), f"{slug(name)}-inferred.md"
 
-    lines = [f"# {name}",
-             "",
-             f"Every project across all eleven lists that {headline} — **{len(rows):,}** of "
-             f"{total:,} distinct repos, deduplicated to one row per repo.",
-             "",
-             note,
-             "",
-             "[← back to the mega list](../README.md)",
-             ""]
-    lines += gallery(sure or rows, shots)
-    lines += ["## Legend", "", LEGEND, ""]
-    lines += [f"## Confirmed ({len(sure):,})",
-              "",
-              "A release asset for this platform, or the README saying so outright.",
-              ""]
-    lines += platform_table(sure, name)
+    head = [f"# {name}",
+            "",
+            f"Every project across all {lists} lists that {headline} — **{len(rows):,}** of "
+            f"{total:,} distinct repos, deduplicated to one row per repo.",
+            "",
+            note,
+            "",
+            "[← back to the mega list](../README.md)"
+            # In the head, so it repeats on every part. The `Inferred` block below it is the last
+            # thing on the page, which on a split page means the last part, and a reader who never
+            # gets there would otherwise never learn the sibling page exists.
+            + (f" · [{len(maybe):,} inferred →]({extra})" if maybe else ""),
+            ""]
+    blocks = [block(title="Legend", intro=[LEGEND]),
+              block(title=f"Confirmed ({len(sure):,})",
+                    intro=["A release asset for this platform, or the README saying so outright."],
+                    header=PLATFORM_COLS, rows=platform_table(sure, name), unit="projects")]
     if maybe:
-        lines += ["",
-                  f"## Inferred ({len(maybe):,})",
-                  "",
-                  f"No direct statement, but the install route or the language runtime implies it. "
-                  f"On its own page so this one stays scannable: "
-                  f"**[all {len(maybe):,} inferred {name} projects →]({extra})**",
-                  ""]
-    pages = [(f"platforms/{key}.md", lines + footer(1))]
+        blocks.append(block(
+            title=f"Inferred ({len(maybe):,})",
+            intro=[f"No direct statement, but the install route or the language runtime implies it. "
+                   f"On its own page so this one stays scannable: "
+                   f"**[all {len(maybe):,} inferred {name} projects →]({extra})**"]))
+    pages = paginate(f"platforms/{key}.md", head, blocks, footer(1), gallery(sure or rows, shots))
     if maybe:
-        pages.append((f"platforms/{extra}", [
+        pages += paginate(f"platforms/{extra}", [
             f"# {name} — inferred",
             "",
             f"The **{len(maybe):,}** projects that probably run on {name} but do not say so. Each "
@@ -335,35 +502,38 @@ def platform_pages(name: str, field: str, headline: str, note: str, rows, total:
             "",
             f"[← {name}]({key}.md) · [← back to the mega list](../README.md)",
             "",
-            "## Legend", "", LEGEND, "",
-            f"## The list ({len(maybe):,})", "",
-            *platform_table(maybe, name),
-        ] + footer(1)))
+        ], [block(title="Legend", intro=[LEGEND]),
+            block(title=f"The list ({len(maybe):,})", header=PLATFORM_COLS,
+                  rows=platform_table(maybe, name), unit="projects")], footer(1))
     return pages
 
 
 # ------------------------------------------------------------------ leaderboard
-def leaderboard_page(board, shots) -> list[str]:
-    lines = ["# Leaderboard",
-             "",
-             f"The {len(board):,} most-starred projects across all eleven lists, deduplicated. "
-             "`Lists` is how many of the eleven name the project — a rough consensus score, and "
-             "the column worth sorting on.",
-             "",
-             "[← back to the mega list](README.md)",
-             ""]
-    lines += gallery(board, shots)
-    lines += ["| # | Project | ★ | Lists | Listed by | Language | Install / Run | What it does |",
-              "|--:|---|--:|--:|---|---|---|---|"]
+def leaderboard_page(board, shots, lists: int) -> list[tuple[str, list[str]]]:
+    head = ["# Leaderboard",
+            "",
+            f"The {len(board):,} most-starred projects across all {lists} lists, deduplicated. "
+            f"`Lists` is how many of the {lists} name the project — a rough consensus score, and "
+            "the column worth sorting on.",
+            "",
+            "[← back to the mega list](README.md)",
+            ""]
+    rows = []
     for i, r in enumerate(board, start=1):
-        lines.append(
+        rows.append(
             f"| {i} | **[{prose(r['name'], table=True)}]({r['url']})**"
             f"<br><sub>{prose(r['nwo'], table=True)}</sub> "
             f"| {stars(r)} | {r['list_count']} | <sub>{prose(r['listed_by'], table=True)}</sub> "
             f"| {prose(r.get('language') or DASH, table=True)} "
             f"| {code(r.get('install_cmd') or '', table=True)} "
             f"| {prose(r.get('blurb') or '', 200, table=True)} |")
-    return lines + footer()
+    # Through `paginate` like everything else even though `main` caps the board at 250 rows and this
+    # page has never come close: the cap lives at the call site, and a page that grows the day someone
+    # raises it should split rather than truncate.
+    return paginate("leaderboard.md", head, [block(
+        header=["| # | Project | ★ | Lists | Listed by | Language | Install / Run | What it does |",
+                "|--:|---|--:|--:|---|---|---|---|"],
+        rows=rows, unit="projects")], footer(), gallery(board, shots))
 
 
 # ------------------------------------------------------------------ topic & target pages
@@ -445,7 +615,7 @@ UNRANKED_NOTE = ("No stars of their own to rank by — a folder inside someone e
                  "count.")
 
 
-def facet_page(title, blurb, rows, shots, hub, other, live) -> list[str]:
+def facet_page(rel, title, blurb, rows, shots, hub, other, live) -> list[tuple[str, list[str]]]:
     """One topic or one target: a ranked board, then the entries that nothing can rank.
 
     `other` is the cross-axis column — a topic page shows what each project plugs into, a target page
@@ -454,34 +624,31 @@ def facet_page(title, blurb, rows, shots, hub, other, live) -> list[str]:
 
     `live` is the same page on the site, already filtered. It exists because a Markdown table can
     *show* the second axis but cannot *filter* on it — the reader can see which of these plug into
-    Claude Code, and then has to read 208 rows to find them. One click does it there.
+    Claude Code, and then has to scan every row on the page to find them. One click does it there.
     """
     ranked = sorted([r for r in rows if r["rank"]], key=lambda r: (-r["stars"], r["name"].lower()))
     thin = sorted([r for r in rows if not r["rank"]], key=lambda r: r["name"].lower())
-    lines = [f"# {prose(title)}", "",
-             blurb, "",
-             f"**{len(rows):,} projects** · {len(ranked):,} with stars to rank by · "
-             f"{sum(r['stars'] for r in ranked):,} combined stars",
-             "",
-             f"[← every {hub[0]}]({hub[1]}) · [← back to the mega list](../README.md) · "
-             f"[**filter this live →**]({live})",
-             ""]
-    # Named up front as well as marked in the table, because a reader arriving at a 278-row page has no
-    # way to know whether it is worth looking for the mark. This page is a snapshot; the site's chip is
-    # the version that expires on its own.
+    head = [f"# {prose(title)}", "",
+            blurb, "",
+            f"**{len(rows):,} projects** · {len(ranked):,} with stars to rank by · "
+            f"{sum(r['stars'] for r in ranked):,} combined stars",
+            "",
+            f"[← every {hub[0]}]({hub[1]}) · [← back to the mega list](../README.md) · "
+            f"[**filter this live →**]({live})",
+            ""]
+    # Named up front as well as marked in the table, because a reader arriving at a page of hundreds
+    # of rows has no way to know whether it is worth looking for the mark. This page is a snapshot;
+    # the site's chip is the version that expires on its own.
     arrived = [r for r in rows if newness.mark(r["nwo"])]
     if arrived:
-        lines += [f"✨ **{len(arrived)} new in the last {newness.WINDOW} days** — "
-                  f"marked below, and [filterable on the site]({live}{'&' if '#' in live else '#'}new=1).",
-                  ""]
-    lines += gallery(ranked or thin, shots)
+        head += [f"✨ **{len(arrived)} new in the last {newness.WINDOW} days** — "
+                 f"marked below, and [filterable on the site]({live}{'&' if '#' in live else '#'}new=1).",
+                 ""]
+    blocks = []
     if ranked:
-        lines += [f"## Ranked by stars ({len(ranked):,})", "",
-                  f"| # | Project | ★ | Lists | {other[0]} | Runs on | Install / Run "
-                  f"| What it does |",
-                  "|--:|---|--:|--:|---|---|---|---|"]
+        board = []
         for i, r in enumerate(ranked, start=1):
-            lines.append(
+            board.append(
                 f"| {i} | **[{prose(r['name'], table=True)}]({r['url']})**{newness.mark(r['nwo'])}"
                 f"<br><sub>{prose(r['nwo'], table=True)}</sub> "
                 f"| {stars(r)} | {r['list_count']} "
@@ -489,14 +656,18 @@ def facet_page(title, blurb, rows, shots, hub, other, live) -> list[str]:
                 f"| <sub>{support(r)}</sub> "
                 f"| {code(r.get('install_cmd') or '', table=True)} "
                 f"| {prose(r.get('blurb') or '', 180, table=True)} |")
-        lines.append("")
+        blocks.append(block(
+            title=f"Ranked by stars ({len(ranked):,})",
+            header=[f"| # | Project | ★ | Lists | {other[0]} | Runs on | Install / Run "
+                    f"| What it does |",
+                    "|--:|---|--:|--:|---|---|---|---|"],
+            rows=board, unit="projects"))
     if thin:
-        lines += [f"## Also here, unranked ({len(thin):,})", "", UNRANKED_NOTE, ""]
-        for r in thin:
-            lines.append(f"- **[{prose(r['name'])}]({r['url']})**{newness.mark(r['nwo'])} — "
-                         f"{prose(r.get('blurb') or '', 200)}")
-        lines.append("")
-    return lines + footer(1)
+        blocks.append(block(
+            title=f"Also here, unranked ({len(thin):,})", intro=[UNRANKED_NOTE], unit="projects",
+            rows=[f"- **[{prose(r['name'])}]({r['url']})**{newness.mark(r['nwo'])} — "
+                  f"{prose(r.get('blurb') or '', 200)}" for r in thin]))
+    return paginate(rel, head, blocks, footer(1), gallery(ranked or thin, shots))
 
 
 def facet_summary(groups: dict, folder: str) -> list[str]:
@@ -566,16 +737,16 @@ def readme_page(stats, per_source, board, shots, files, by_topic, by_target) -> 
               "reasoning that put it there."]
     lines += ["",
               f"Those four are drawn from the {stats['pool']:,} distinct repos that entries across "
-              f"the eleven lists resolve to. A hosted product with no public repo and a folder "
-              f"inside a larger repo have no platform support of their own to report, so neither "
-              f"appears on a platform page — both are on their list's page instead.",
+              f"the {stats['lists']} lists resolve to. A hosted product with no public repo and a "
+              f"folder inside a larger repo have no platform support of their own to report, so "
+              f"neither appears on a platform page — both are on their list's page instead.",
               "",
               "## Pick your topic",
               "",
-              f"Eleven curators used {len(tax.SECTIONS)} different section names and agreed on almost "
-              f"none of them — `Frameworks`, `Agent Frameworks` and `Build-your-own` are one shelf "
-              f"under three names. These {len(tax.CATEGORIES)} are one vocabulary over all of it, so "
-              f"that \"the best X\" becomes a question with an answer.",
+              f"{stats['lists']} curators used {len(tax.SECTIONS)} different section names and agreed "
+              f"on almost none of them — `Frameworks`, `Agent Frameworks` and `Build-your-own` are "
+              f"one shelf under three names. These {len(tax.CATEGORIES)} are one vocabulary over all "
+              f"of it, so that \"the best X\" becomes a question with an answer.",
               "",
               "| Topic | Projects | Ranked | ★ combined | Most-starred |",
               "|---|--:|--:|--:|---|"]
@@ -586,8 +757,8 @@ def readme_page(stats, per_source, board, shots, files, by_topic, by_target) -> 
               "## Pick your harness",
               "",
               "The second axis: what a project plugs into, rather than what it is. Cross the two and "
-              "you get the question none of the eleven lists could answer on its own — the best "
-              "Claude Code observability tool, the best opencode plugin, the best local-runtime "
+              f"you get the question none of the {stats['lists']} lists could answer on its own — the "
+              "best Claude Code observability tool, the best opencode plugin, the best local-runtime "
               "orchestrator.",
               "",
               "| Runs with | Projects | Ranked | ★ combined | Most-starred |",
@@ -695,12 +866,17 @@ def main() -> None:
     # After the shot_key assignments above, which must keep the spelling the files on disk use.
     b16.canonicalise_nwo(records, orch, meta)
 
-    by_source = {k: [r for r in records if r["source"] == k] for k, *_ in SHEETS}
+    by_source = {s["key"]: [r for r in records if r["source"] == s["key"]] for s in SOURCES
+                 if s["key"] != "orchestrators"}
     for k, rows in by_source.items():
         b16.order_rows(rows, k)
     orch.sort(key=lambda r: (r.get("order", 0), -(r.get("stars") or 0)))
 
-    label = {"orchestrators": "Orchestrators", **{k: t for k, t, *_ in SHEETS}}
+    # Every source's display name, not just the ten with a workbook tab. `listed_by` on the leaderboard,
+    # the platform pages and both facet axes reads this, and those pages hold rows from all thirty-nine
+    # lists: a map covering ten of them printed a raw internal key for the rest, so one row said
+    # "Listed by: cc_toolkit_rohitg00" where its neighbour said "Claude Code".
+    label = LIST_TITLE
     pool = b16.platform_pool(records, orch, label)
     by_platform = {name: b16.platform_rows(pool, field) for name, field, *_ in PLATFORMS}
 
@@ -727,7 +903,9 @@ def main() -> None:
 
     # Fills newness.SEEN, which `mark` reads. The same pool 19_pages resolves, so both surfaces mark the
     # same repos on the same dates -- the whole reason the ledger is one file and not one per stage.
-    newness.resolve([r["nwo"] for r in facets])
+    # `sources` lets the ledger tell a list being read for the first time from a day's arrivals; 19_pages
+    # passes the same set, and this stage runs first in both workflows, so the two cannot disagree.
+    newness.resolve([r["nwo"] for r in facets], sources=[s["nwo"] for s in SOURCES])
 
     # GitHub reports one canonical owner spelling; the hand-typed source table does not always
     # match it, and a list whose own repo was never fetched has an unknown count, not zero.
@@ -738,9 +916,24 @@ def main() -> None:
         return dict(nwo=nwo, sheet=sheet, blurb=blurb, stars=m.get("stargazerCount"),
                     items=len(rows), repos=len({r["nwo"] for r in rows if r.get("nwo")}))
 
-    per_source = [summarise(ORCH_NWO, "Orchestrators", ORCH_BLURB, orch)]
-    for key, title, nwo, blurb in SHEETS:
-        per_source.append(summarise(nwo, title, blurb, by_source[key]))
+    def described(nwo: str) -> str:
+        m = meta.get(nwo) or meta_ci.get(nwo.lower()) or {}
+        return (m.get("description") or "").strip()
+
+    # (title, repo, blurb, rows) for every list, in the order the hub credits them and the order their
+    # pages are written -- one list, so those two can never disagree about which lists exist. The eleven
+    # with a hand-written blurb keep their curated order; the rest follow, largest contribution first,
+    # each described by its own repo's GitHub description. Building this from SHEETS credited eleven
+    # maintainers for the work of thirty-nine, and `stats["lists"]` printed 11 on a hub whose
+    # leaderboard was already drawn from all of them.
+    listing = ([("Orchestrators", ORCH_NWO, ORCH_BLURB, orch)]
+               + [(t, n, b, by_source[k]) for k, t, n, b in SHEETS]
+               + [(s["title"], s["nwo"], described(s["nwo"]), by_source[s["key"]])
+                  for s in sorted((s for s in SOURCES if s["key"] != "orchestrators"
+                                   and s["key"] not in SHEET_TITLE),
+                                  key=lambda s: -len(by_source[s["key"]]))])
+
+    per_source = [summarise(nwo, title, blurb, rows) for title, nwo, blurb, rows in listing]
 
     stats = dict(
         lists=len(per_source),
@@ -761,36 +954,43 @@ def main() -> None:
                 for name, field, *_ in PLATFORMS},
     )
 
-    written = []
-    files = {}
-    for sheet, nwo, blurb, rows in (
-        [("Orchestrators", ORCH_NWO, ORCH_BLURB, orch)]
-        + [(t, n, b, by_source[k]) for k, t, n, b in SHEETS]
-    ):
+    written: list[Path] = []
+    files: dict[str, str] = {}
+
+    def emit(pages) -> None:
+        """Every generator below returns a list of files, because any of them may have split."""
+        written.extend(write(rel, lines) for rel, lines in pages)
+
+    for sheet, nwo, blurb, rows in listing:
         rel = f"lists/{slug(sheet)}.md"
+        # The unsuffixed name, always: `paginate` gives part 1 that filename, so the hub's link is
+        # right whether this list needed one file or nine.
         files[sheet] = rel
-        written.append(write(rel, list_page(sheet, nwo, blurb, rows, shots)))
+        emit(list_page(rel, sheet, nwo, blurb, rows, shots))
 
     for name, field, headline, note in PLATFORMS:
-        for rel, lines in platform_pages(name, field, headline, note, by_platform[name],
-                                         len(pool), shots):
-            written.append(write(rel, lines))
+        emit(platform_pages(name, field, headline, note, by_platform[name], len(pool), shots,
+                            stats["lists"]))
 
     TOPIC_HUB, TARGET_HUB = ("topic", "README.md"), ("target", "README.md")
     for c in tax.CATEGORIES:
-        written.append(write(f"topics/{fileslug(c)}.md", facet_page(
-            c, TOPIC_BLURB[c], by_topic[c], shots, TOPIC_HUB,
-            ("Plugs into", lambda r: ", ".join(r["targets"])),
-            site(topic=fileslug(c)))))
+        emit(facet_page(f"topics/{fileslug(c)}.md",
+                        c, TOPIC_BLURB[c], by_topic[c], shots, TOPIC_HUB,
+                        ("Plugs into", lambda r: ", ".join(r["targets"])),
+                        site(topic=fileslug(c))))
     for t, _p in tax.TARGETS:
-        written.append(write(f"targets/{fileslug(t)}.md", facet_page(
-            t, TARGET_BLURB[t], by_target[t], shots, TARGET_HUB,
-            ("Category", lambda r: r["category"]),
-            site(target=fileslug(t)))))
+        emit(facet_page(f"targets/{fileslug(t)}.md",
+                        t, TARGET_BLURB[t], by_target[t], shots, TARGET_HUB,
+                        ("Category", lambda r: r["category"]),
+                        site(target=fileslug(t))))
+    # The three hub pages are one row per facet, per source list or per platform, so they grow with the
+    # *number* of lists rather than with the number of repos and are two orders of magnitude off the
+    # limit. They stay single files, and the check at the end of this function is what would notice if
+    # that ever stopped being true.
     written.append(write("topics/README.md", facet_hub(
         "Browse by topic", "Topic",
         f"Every one of the {stats['repos']:,} projects, filed under exactly one of "
-        f"{len(tax.CATEGORIES)} topics. The eleven source lists published "
+        f"{len(tax.CATEGORIES)} topics. The {stats['lists']} source lists published "
         f"{len(tax.SECTIONS)} section names between them and agreed on almost none, so these are one "
         "shared vocabulary over all of them rather than any single curator's shelf.",
         [(c, TOPIC_BLURB[c], by_topic[c]) for c in tax.CATEGORIES],
@@ -804,18 +1004,34 @@ def main() -> None:
         [(t, TARGET_BLURB[t], by_target[t]) for t, _p in tax.TARGETS],
         lambda t: f"{fileslug(t)}.md", ("by topic →", "../topics/README.md"))))
 
-    written.append(write("leaderboard.md", leaderboard_page(board, shots)))
+    emit(leaderboard_page(board, shots, stats["lists"]))
     written.append(write("README.md", readme_page(stats, per_source, board, shots, files,
                                                   by_topic, by_target)))
 
-    total = sum(p.stat().st_size for p in written)
-    for p in sorted(written, key=lambda x: -x.stat().st_size):
-        print(f"  {p.stat().st_size / 1024:7.1f} KB  {p.relative_to(OUT).as_posix()}")
+    sizes = sorted(((p.stat().st_size, p) for p in written), reverse=True)
+    total = sum(n for n, _p in sizes)
+    for n, p in sizes:
+        print(f"  {n / 1024:7.1f} KB  {p.relative_to(OUT).as_posix()}")
     print(f"\n{len(written)} files · {total / 1024:.0f} KB total · "
-          f"largest {max(p.stat().st_size for p in written) / 1024:.0f} KB "
-          f"(GitHub renders Markdown up to 512 KB)")
+          f"largest {sizes[0][0] / 1024:.0f} KB · budget {PAGE_BUDGET / 1024:.0f} KB per part, "
+          f"ceiling {PAGE_CEILING / 1024:.0f} KB, GitHub renders up to {PAGE_LIMIT / 1024:.0f} KB")
     print(f"entries {stats['items']:,} · repos {stats['repos']:,} · "
           f"platform rows " + " ".join(f"{k} {v:,}" for k, v in stats["platforms"].items()))
+
+    # The line above used to be the whole defence: print the limit, publish whatever was written. A
+    # page over it renders on GitHub as a truncation notice with no table under it, which looks like
+    # a page that exists, so nothing downstream -- not the site build, not the link linter, not a
+    # reader glancing at the diff -- can tell it apart from a page that works. The run that motivated
+    # this wrote eleven of them and said "48 files, largest 1856 KB" as though that were fine. So it
+    # is an error now, raised after the listing above so the log still says which page and how big.
+    over = [(n, p) for n, p in sizes if n > PAGE_CEILING]
+    if over:
+        raise SystemExit(
+            f"{len(over)} page(s) over the {PAGE_CEILING / 1024:.0f} KB ceiling "
+            f"(GitHub stops rendering Markdown at {PAGE_LIMIT / 1024:.0f} KB):\n"
+            + "\n".join(f"  {n:>9,} bytes  {p.relative_to(OUT).as_posix()}" for n, p in over)
+            + "\n\nEvery long page is packed to PAGE_BUDGET by `paginate`, so a page here means "
+              "either a block whose fixed header alone is enormous or a generator that bypassed it.")
 
 
 if __name__ == "__main__":

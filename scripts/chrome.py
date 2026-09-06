@@ -5,7 +5,8 @@ binding, which is the right call -- it is one subprocess per shot, no event loop
 browser that hangs. The cost is that they need the binary's path, and that path used to be a string
 literal pointing into one developer's home directory. On any other machine, and on every CI runner, it
 did not exist; and because both stages treat a missing browser as "no screenshot available" rather than
-an error, the failure was silent -- the build simply produced 1,294 Open Graph cards and said nothing.
+an error, the failure was silent -- the build simply produced an Open Graph card for every row in the
+atlas and said nothing.
 
 So the path is resolved instead of assumed, in the order a person would look:
 

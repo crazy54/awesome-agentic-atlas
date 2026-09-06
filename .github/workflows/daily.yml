@@ -1,7 +1,8 @@
-# Daily: notice what the eleven source lists added, and republish the site and the Markdown edition.
+# Daily: notice what the 39 source lists added, and republish the site and the Markdown edition.
 #
 # What this job does NOT do is capture screenshots or build the workbooks. Screenshots are the only
-# genuinely expensive stage -- 3,462 headless renders on a cold cache -- and both the site and the
+# genuinely expensive stage -- 3,462 headless renders on a cold cache when the atlas was 1,294 repos,
+# so upward of 20,000 at the 7,980 it holds now -- and both the site and the
 # Markdown fall back to GitHub's Open Graph card for any repo without one, which two thirds of rows
 # already use. So a brand-new project shows its card here within a day and gets a real screenshot when
 # `weekly.yml` next runs. Metadata is not deferred that way: stars and last-push are refetched in full
@@ -41,13 +42,34 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    # 90 was set when the atlas was 1,294 repos and it no longer fits. The network stages alone measure out
+    # at around eighty minutes at the 7,870 distinct repos the source lists now resolve to -- see the token
+    # note below for the breakdown -- before pip, the cache restore, the generators and the push. A run cut
+    # off at the timeout is the quietest possible failure: it commits nothing and records nothing, so the
+    # published site simply stops moving and there is no diff anywhere that says why. 180 is about twice the
+    # projection, which is the room the atlas needs to double again before this number is what breaks, and
+    # still half of weekly.yml's.
+    timeout-minutes: 180
     env:
       # Every fetch stage shells out to `gh`, which reads this. The Actions token is enough -- the pipeline
-      # only ever reads public repositories -- and the limit it grants, 1,000 requests per hour per repo,
-      # is comfortable because the two metadata stages batch twenty repos per GraphQL query. Refetching all
-      # 1,294 costs about seventy requests; the per-repo release and Actions probes are the bulk of the
-      # rest, and a full run lands in the low hundreds.
+      # only ever reads public repositories -- but the limit it grants, 1,000 requests per hour per repo, is
+      # a fifth of what a personal token gets, so what a run spends is worth knowing. Nothing here probes
+      # repos one at a time: all five metadata and signal stages batch theirs into a single GraphQL query,
+      # twelve to twenty-five at a time, and a batch costs one point however many repos are in it. So the
+      # 7,870 come to about 395 points for stars and READMEs and about 660 for the release and Actions
+      # signals, plus 32 for the 199 curated entries: call it 1,100 batches, which is the figure the retry
+      # ceiling in `02_fetch.py` is sized against -- at one attempt each, a per-batch failure rate as low as
+      # a tenth of a percent makes a red build more likely than not. REST is the expensive road and it is
+      # taken for two things only: a repo whose README is not
+      # literally `README.md` at HEAD, which is 2.8% of them at two requests each, and a repo GitHub cannot
+      # resolve at all, which is 3.6% at one 404 each. Call a full cold run 1,200 GraphQL points and 800
+      # REST requests.
+      #
+      # That REST figure is load-bearing, and it is new. `gh api graphql` exits 1 when a single repo in a
+      # batch of twenty has been deleted, and `scripts/02_fetch.py` used to take it at its word and refetch
+      # the nineteen survivors one at a time. At a 3.6% death rate that ruins two batches in five, which put
+      # a full run at roughly 7,600 REST requests -- seven hours of this token's allowance for one build.
+      # 02_fetch now reads the response body rather than the exit code. Undoing that puts these numbers back.
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
@@ -92,8 +114,9 @@ jobs:
       - name: Decide whether to rebuild
         id: gate
         run: |
-          # A cold cache is not a slow build here, it is a worse one. 686 of the 1,294 rows link to an image
-          # this job never captures, and rebuilding without the shot cache would silently swap all of them
+          # A cold cache is not a slow build here, it is a worse one. A large fraction of rows link to an
+          # image this job never captures -- 686 of 1,294 when that was last measured, and the atlas has
+          # sextupled since -- and rebuilding without the shot cache would silently swap all of them
           # for the generic repo card. So the absence of the cache is a stop, not a warning to ride past --
           # and not something `force` overrides, because forcing a rebuild is not the same as consenting to
           # a worse one. Dispatch the weekly workflow once; it captures the shots and fills the cache.
@@ -120,7 +143,7 @@ jobs:
           mkdir -p cache
           # The lists themselves, first: 01_parse and 10_parse_sources read them off disk and neither
           # fetches. This pulls only the ones whose head commit differs from the one already cached, so
-          # on a day when one list moved it re-reads one list and not eleven. It also prints which
+          # on a day when one list moved it re-reads one list and not all thirty-nine. It also prints which
           # entries each list added or changed, and queues the changed ones for the weekly screenshot
           # job -- the step that probes SHAs above cannot, because it deliberately does not download.
           python scripts/pull_sources.py
@@ -144,6 +167,15 @@ jobs:
           # earlier than the build to compare every tracked file against.
           touch "$RUNNER_TEMP/build-start"
           python scripts/17_markdown.py
+          # Immediately after the generator that writes mega-list/, and before the two stages that do not
+          # read it, so a broken page costs one step rather than a published commit. Every fault it looks
+          # for renders on GitHub without an error and is wrong anyway -- a description containing a `|`
+          # that split its row into three columns, a link to a page a taxonomy change deleted, a file over
+          # the 512 KB at which GitHub serves a truncation notice in place of the table. None of those
+          # would fail the build otherwise, and `git add mega-list` would commit every one of them. It was
+          # written as part of the 38-list ingest and then wired into nothing, which is the same as not
+          # having it: the pagination it backstops is exactly what the new lists' size made necessary.
+          python scripts/check_markdown.py
           python scripts/19_pages.py
           # After 19_pages and never before: that stage is what stamps the ledger and rewrites data.json,
           # and the feeds are a read of both. Run first, it would publish yesterday's arrivals.

@@ -142,24 +142,42 @@ def headings(text: str) -> None:
 
 
 # --- reporting a parse ----------------------------------------------------------------------
-def atlas_repos() -> set[str]:
+def atlas_repos() -> tuple[set[str], str]:
     """Lower-cased nwo of every repo already in the atlas, for the marginal-new count.
 
-    From `docs/data.json` rather than `cache/`, because that file is committed: the number means
-    "new to the published atlas", which is the number JFH-202 ranks its candidates by.
+    The local parse output first, and `docs/data.json` only when there is none. This used to read the
+    committed `data.json` alone, on the reasoning that "new to the *published* atlas" is the honest
+    number -- and that is true right up until the moment you start ingesting, at which point the
+    published file is the atlas as it was several lists ago and every candidate scores against a
+    baseline that no longer exists. That is not a small effect: during JFH-202 `data.json` stood at
+    1,294 repos while the branch had already parsed 7,845, so a candidate whose entries were mostly
+    repos the atlas had *just* taken on still reported them all as new. Ranking candidates by that
+    number is how a set of lists holding 6,532 genuinely new repos got projected at 7,540 -- the
+    per-list gains were counted as though they never overlapped each other, because against a stale
+    baseline they never appeared to.
+
+    Returns what it used along with the set, because a marginal count is meaningless without knowing
+    which atlas it is marginal to.
     """
+    live = [p for p in (CACHE / "entries_all.json", CACHE / "entries.json") if p.exists()]
+    if live:
+        have: set[str] = set()
+        for p in live:
+            have |= {(e.get("nwo") or "").lower() for e in
+                     json.loads(p.read_text(encoding="utf-8")) if e.get("nwo")}
+        return have, " + ".join(f"cache/{p.name}" for p in live)
     p = ROOT / "docs" / "data.json"
     if not p.exists():
-        return set()
+        return set(), "nothing (no parse output and no published data.json)"
     d = json.loads(p.read_text(encoding="utf-8"))
     i = d["cols"].index("nwo")
-    return {(r[i] or "").lower() for r in d["rows"] if r[i]}
+    return {(r[i] or "").lower() for r in d["rows"] if r[i]}, "docs/data.json, the published atlas"
 
 
 def report(src: dict, rows: list[dict], show_sections: bool) -> None:
     kinds = Counter(r["kind"] for r in rows)
     cats = Counter(r["category"] for r in rows)
-    have = atlas_repos()
+    have, baseline = atlas_repos()
     mine = {r["nwo"].lower() for r in rows if r["nwo"]}
     new = mine - have
 
@@ -167,6 +185,7 @@ def report(src: dict, rows: list[dict], show_sections: bool) -> None:
           f"{kinds['site']} site  ·  {len(cats)} sections")
     print(f"{len(mine)} distinct repos, {len(new)} new to the atlas "
           f"({len(mine) - len(new)} already in it)")
+    print(f"  measured against {len(have):,} repos from {baseline}")
 
     blank = sum(1 for r in rows if not r["description"])
     uncat = cats.get("Uncategorised", 0)

@@ -13,8 +13,8 @@ Two rules make it safe to run on a clone that has never had it:
   * A repo already in the ledger is never re-stamped. The date is when it *arrived*, not when it was
     last built, so a repo that drops off a list and comes back is not new -- it returned.
   * Everything present at the baseline is stamped with the baseline itself, and "new" means
-    `first_seen > baseline`. Without that, the first run of the ledger would mark all 1,294 repos as
-    new on the same day and the filter would mean nothing for a fortnight.
+    `first_seen > baseline`. Without that, the first run of the ledger would mark every repo in the
+    atlas as new on the same day and the filter would mean nothing for a fortnight.
 
 The fourteen-day window is *not* applied here. `data.json` carries the raw first-seen date and the page
 does the arithmetic, so a tag expires on its own fifteenth day in every open browser without anything
@@ -66,7 +66,7 @@ def save(state: dict) -> None:
     PATH.write_text(json.dumps(state, indent=1, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def resolve(nwos, day: str | None = None) -> dict[str, str]:
+def resolve(nwos, day: str | None = None, sources=None) -> dict[str, str]:
     """Stamp unseen repos, persist, and return the post-baseline arrivals as `{nwo: first_seen}`.
 
     Idempotent, which is what lets both 17_markdown and 19_pages call it in the same build: whichever
@@ -74,15 +74,36 @@ def resolve(nwos, day: str | None = None) -> dict[str, str]:
 
     With no ledger on disk this bootstraps instead of stamping -- baseline is today and every repo is
     dated to it, so a fresh clone reports nothing new rather than everything.
+
+    `sources` is the nwo of every source list this build read, and it buys a third case that the two
+    rules above do not cover: the registry itself growing. Both rules assume the set of lists is
+    fixed, so the only way a repo can appear is that somebody added it to a list -- true every day
+    except the day the atlas starts reading twenty-eight lists it has never read before. Then several
+    thousand repos are seen for the first time, none of them arrived anywhere, and stamping them
+    `day` marks 85% of the atlas "New" and makes the badge mean "we ingested a list" for a fortnight.
+    That is the bootstrap problem again, one list at a time instead of all at once, and it gets the
+    bootstrap's answer: stamp at the baseline, which is this ledger's word for "was already here".
+
+    `state["sources"]` is the right thing to compare against because `watch_sources.py --update`
+    writes it only after a build succeeds, so a list missing from it is a list no build has read yet.
+    A build that both adds a list and picks up genuine arrivals from the older ones baselines both,
+    losing the badge on a handful of repos for one build. That is the deliberate trade: attributing
+    each repo to the list that brought it is what `16_build_all.repo_pool` already computes, and a
+    second copy of that here would be free to disagree with it.
     """
     day = day or today()
     bootstrap = not PATH.exists()
     state = load()
     repos = state["repos"]
-    stamp = state["baseline"] if bootstrap else day
+    ingested = [] if bootstrap else sorted(set(sources or ()) - set(state["sources"]))
+    stamp = state["baseline"] if (bootstrap or ingested) else day
     added = [n for n in dict.fromkeys(nwos) if n and n not in repos]
     for n in added:
         repos[n] = stamp
+    if added and ingested:
+        print(f"{len(ingested)} source list(s) read for the first time, so the {len(added):,} repos "
+              f"they bring are stamped at the baseline {state['baseline']} rather than {day} -- "
+              f"they are new to the atlas, not new in the world.", flush=True)
     if added or bootstrap:
         save(state)
     SEEN.clear()
@@ -123,9 +144,10 @@ def mark(nwo: str, day: str | None = None) -> str:
 def seed_from_site() -> dict:
     """Build the ledger from the committed `docs/data.json`.
 
-    Used once, to start the ledger on a repo that already had 1,294 repos and no memory of when any of
-    them arrived. The site snapshot date is the honest baseline: it is the day the build that produced
-    those rows ran, and it is the last day on which "everything here is founding stock" was true.
+    Used once, to start the ledger on an atlas that was already thousands of repos deep with no memory
+    of when any of them arrived. The site snapshot date is the honest baseline: it is the day the build
+    that produced those rows ran, and it is the last day on which "everything here is founding stock"
+    was true.
     """
     data = json.loads(SITE_DATA.read_text(encoding="utf-8"))
     ix = data["cols"].index("nwo")

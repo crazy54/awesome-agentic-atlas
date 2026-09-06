@@ -1,13 +1,20 @@
 """Fetch release asset filenames -- the strongest available signal for which
 platforms a project actually ships prebuilt binaries for."""
+import importlib.util
 import json
-import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 BATCH = 15
+
+# See 13_signals_all.py: 02_fetch.py owns the single answer to what a non-zero exit from
+# `gh api graphql` means, and a batched query that does not go through it will sooner or later throw
+# away nineteen good repos because the twentieth was deleted.
+spec = importlib.util.spec_from_file_location("fetch02", Path(__file__).parent / "02_fetch.py")
+f2 = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(f2)
 
 FIELDS = """
     releases(last: 4) {
@@ -17,13 +24,6 @@ FIELDS = """
       }
     }
 """
-
-
-def gh(args: list[str]) -> str:
-    p = subprocess.run(["gh", *args], capture_output=True, text=True, encoding="utf-8", errors="replace")
-    if p.returncode != 0:
-        raise RuntimeError(f"gh failed: {p.stderr[:400]}")
-    return p.stdout
 
 
 def main() -> None:
@@ -37,20 +37,24 @@ def main() -> None:
     todo = [e for e in entries if e["nwo"] not in rel]
     print(f"{len(todo)} repos to check for release assets")
 
+    failed = 0
     for start in range(0, len(todo), BATCH):
         batch = todo[start : start + BATCH]
-        parts = [
-            f'  r{i}: repository(owner: "{e["owner"]}", name: "{e["repo"]}") {{{FIELDS}}}'
-            for i, e in enumerate(batch)
-        ]
-        query = "query {\n" + "\n".join(parts) + "\n}"
         try:
-            data = json.loads(gh(["api", "graphql", "-f", f"query={query}"])).get("data") or {}
+            data = f2.graphql_batch(batch, FIELDS)
         except RuntimeError as exc:
-            print(f"  batch {start} failed: {exc}")
-            data = {}
+            # Same rule as 13_signals_all.py, which walks the whole atlas the way this walks the
+            # curated list: an empty release record is indistinguishable from a project that has never
+            # tagged anything, so a batch that failed writes nothing at all and its repos stay out of
+            # releases.json. `todo` above is built from the keys already in that file, so they come
+            # back round on the next run instead of being written off as binary-less for good.
+            failed += 1
+            print(f"  batch {start} failed, left for the next run: {str(exc)[:120]}")
+            continue
         for i, e in enumerate(batch):
-            node = (data or {}).get(f"r{i}") or {}
+            node = data.get(f"r{i}")
+            if node is None:
+                continue  # deleted since 02_fetch ran; next run's meta.json filters it out
             assets, tags = [], []
             for r in ((node.get("releases") or {}).get("nodes") or []):
                 tags.append(r.get("tagName") or "")
@@ -62,6 +66,12 @@ def main() -> None:
     out_path.write_text(json.dumps(rel, indent=1), encoding="utf-8")
     with_assets = sum(1 for v in rel.values() if v["assets"])
     print(f"\ndone: {len(rel)} repos, {with_assets} publish release assets")
+    if failed:
+        # 04_classify reads this file to decide which platforms a project ships binaries for, so a run
+        # that lost part of it must not let the build continue and publish the shortfall as fact.
+        print(f"\n{failed} batch(es) of {BATCH} failed and wrote nothing; up to {failed * BATCH} "
+              f"repos still need release data and will be retried on the next run.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

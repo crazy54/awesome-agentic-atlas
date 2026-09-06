@@ -1,18 +1,24 @@
 """Detect GitHub Actions definitively: an action.yml/action.yaml at the repo root."""
+import importlib.util
 import json
-import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 BATCH = 25
 
+# See 13_signals_all.py: 02_fetch.py owns the single answer to what a non-zero exit from
+# `gh api graphql` means, and a batched query that does not go through it will sooner or later throw
+# away twenty-four good repos because the twenty-fifth was deleted.
+spec = importlib.util.spec_from_file_location("fetch02", Path(__file__).parent / "02_fetch.py")
+f2 = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(f2)
 
-def gh(args: list[str]) -> str:
-    p = subprocess.run(["gh", *args], capture_output=True, text=True, encoding="utf-8", errors="replace")
-    if p.returncode != 0:
-        raise RuntimeError(p.stderr[:300])
-    return p.stdout
+FIELDS = """
+    yml: object(expression: "HEAD:action.yml") { __typename }
+    yaml: object(expression: "HEAD:action.yaml") { __typename }
+"""
 
 
 def main() -> None:
@@ -21,23 +27,35 @@ def main() -> None:
     entries = [e for e in entries if "error" not in meta.get(e["nwo"], {})]
 
     out = {}
+    failed = 0
     for start in range(0, len(entries), BATCH):
         batch = entries[start : start + BATCH]
-        parts = [
-            f'  r{i}: repository(owner: "{e["owner"]}", name: "{e["repo"]}") {{'
-            f' yml: object(expression: "HEAD:action.yml") {{ __typename }}'
-            f' yaml: object(expression: "HEAD:action.yaml") {{ __typename }} }}'
-            for i, e in enumerate(batch)
-        ]
         try:
-            data = json.loads(gh(["api", "graphql", "-f", "query=query {\n" + "\n".join(parts) + "\n}"])).get("data") or {}
+            data = f2.graphql_batch(batch, FIELDS)
         except RuntimeError as exc:
-            print(f"  batch {start} failed: {exc}")
-            data = {}
+            # `False` for a repo we never got an answer about reads exactly like a repo that has no
+            # action.yml, so a failed batch records nothing and the run is written off below.
+            failed += 1
+            print(f"  batch {start} failed: {str(exc)[:120]}")
+            continue
         for i, e in enumerate(batch):
-            n = (data or {}).get(f"r{i}") or {}
+            n = data.get(f"r{i}")
+            if n is None:
+                continue  # deleted since 02_fetch ran; next run's meta.json filters it out
             out[e["nwo"]] = bool(n.get("yml") or n.get("yaml"))
         print(f"  {min(start + BATCH, len(entries))}/{len(entries)}")
+
+    # No write at all when something failed, which is where this stage differs from 03_releases.py and
+    # 13_signals_all.py. Those two merge into a file they also read, so a batch they skip stays missing
+    # and comes back in `todo`; this one rebuilds actions.json from nothing every run and writes it
+    # whole, so a short version written here would delete answers an earlier run got right -- and
+    # 13_signals_all.py, which extends this same file, would then have to refetch them. Leaving the
+    # file alone loses nothing, and since this stage never resumes -- it always redoes all of
+    # entries.json -- "retry the failed batch" and "run it again" were already the same thing.
+    if failed:
+        print(f"\n{failed} batch(es) of {BATCH} failed; actions.json left as it was. "
+              f"04_classify would have read the gap as {failed * BATCH} projects that ship no action.yml.")
+        sys.exit(1)
 
     (CACHE / "actions.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
     hits = sorted(k for k, v in out.items() if v)

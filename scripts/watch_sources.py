@@ -1,7 +1,8 @@
-"""Has any of the eleven source lists moved? One commit SHA each, compared against the ledger.
+"""Has any source list moved? One commit SHA each, compared against the ledger.
 
 The point of the cron is to notice new entries, and the cheapest possible test for "is there anything
-to notice" is the head commit of each source repo: eleven API calls, no clone, no Markdown parse. If
+to notice" is the head commit of each source repo: one API call per list in `SOURCES` below, no clone,
+no Markdown parse -- which stays cheap as lists are added, where reparsing them would not. If
 none of them moved, nothing the pipeline reads has changed and a rebuild would produce a byte-identical
 site -- so the daily job stops here and commits nothing.
 

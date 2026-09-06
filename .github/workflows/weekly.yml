@@ -1,10 +1,10 @@
 # Weekly: everything the daily job skips. Screenshots, the two workbooks, and a dated release.
 #
-# The split exists because the pipeline has one expensive stage and fifteen cheap ones. Capturing 3,462
-# thumbnails with headless Chromium is the expensive one, and it is also the one that almost never needs
-# redoing -- a repo's README banner is the same banner it had last Sunday. So the daily job leaves the
-# shot cache alone and lets new arrivals show their Open Graph card, and this job, once a week, goes and
-# gets the real image and rebuilds the workbooks on top of it.
+# The split exists because the pipeline has one expensive stage and fifteen cheap ones. Capturing a
+# thumbnail per repo with headless Chromium is the expensive one, and it is also the one that almost
+# never needs redoing -- a repo's README banner is the same banner it had last Sunday. So the daily job
+# leaves the shot cache alone and lets new arrivals show their Open Graph card, and this job, once a
+# week, goes and gets the real image and rebuilds the workbooks on top of it.
 #
 # Unlike the daily job this one is not gated on the source lists having moved. Stars move every day even
 # when no list does, and the workbook is a download with a date on it -- a week-old one that claims to be
@@ -117,6 +117,10 @@ jobs:
           # See daily.yml: the marker is what the assertion below compares every tracked file against.
           touch "$RUNNER_TEMP/build-start"
           python scripts/17_markdown.py
+          # See daily.yml for what this catches and why none of it would fail the build on its own. Both
+          # workflows write mega-list/ and both commit it, so a check in only one of them leaves the other
+          # free to publish exactly what it rejects.
+          python scripts/check_markdown.py
           python scripts/19_pages.py
           # 20 and 21 must both follow 19_pages and never precede it: that stage is what stamps the
           # ledger and rewrites data.json, and both of these read data.json and nothing else. Run first,
