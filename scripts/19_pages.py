@@ -622,6 +622,84 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   .cmdrow{max-width:none}
 }
 
+/* ---- Cards view --------------------------------------------------------------------------------------
+   The same table, read as a gallery. `render()` emits one <table> and nothing else; this block decides how
+   it is laid out, which is exactly the trick the 640px query above plays and it is here for the same
+   reason. Two things fall out of one markup shape. The toggle costs nothing -- no refetch, no re-render,
+   not one row rebuilt, so switching is a repaint whether 120 rows are on screen or 1,294. And the two
+   views cannot disagree about what a row says, because there is only one row.
+
+   Every selector is prefixed `html[data-view=cards]`, which outranks the two rules it has to beat --
+   `.shot,.hide{display:none}` at 900px, and the whole card block directly above -- on specificity rather
+   than on source order. So this works at every width without !important and without either of those
+   moving, which matters because both of them are load-bearing in the view this one is not.
+
+   What it costs: a <table> whose cells are `display:block` stops being a table to a screen reader, the
+   implicit role going with the display type. The 640px block already accepts that, and both get away with
+   it for the same reason -- with the headings gone every cell still names itself, the star count carrying
+   "N lists" and the topic and targets being pills. It is a real trade, and it is why the table stays the
+   default rather than this. */
+html[data-view=cards] thead{display:none}
+html[data-view=cards] table{display:block;margin-top:14px}
+/* `auto-fill` against a floor rather than a column count, so one rule is four cards on a desktop, two on a
+   tablet and one on a phone with nothing to switch between and no second breakpoint to keep in step. The
+   floor is what the widest thing a card must hold needs before it would scroll sideways: the install line,
+   which is monospace, plus the two 13px gutters. */
+html[data-view=cards] tbody{display:grid;gap:14px;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+/* A grid inside the grid, two columns wide, for one reason: the rank and the star count share a line and
+   everything else spans both. Placed by an explicit `grid-row` per cell, like the 640px block, because the
+   cells arrive in the table's order, a card wants them in another one, and `order` -- which is the cheaper
+   tool -- cannot put two of them side by side. `margin:0` is not tidiness: the block above gives every row
+   a 9px bottom margin, which this view has a 14px grid gap for, and margins do not collapse in a grid. */
+html[data-view=cards] tr{display:grid;grid-template-columns:1fr auto;align-items:start;align-content:start;
+  gap:0 10px;margin:0;padding:0 0 12px;background:var(--surface);
+  border:1px solid var(--grid);border-radius:10px;overflow:hidden}
+html[data-view=cards] td{display:block;border-bottom:0;padding:0 13px;min-width:0}
+/* The screenshot is the whole argument for this view, so it comes back at the widths where the table drops
+   it as not paying for its column, and it goes edge to edge. That is what the gutters being on the cells
+   rather than on the card buys: this one cell opts out of them by zeroing its own padding. `aspect-ratio`
+   is inherited from `.shot img` above, so a card reserves the image's height before it loads and a lazy
+   one does not shove the rest of the grid down when it arrives. */
+html[data-view=cards] td.shot{grid-column:1/-1;grid-row:1;width:auto;padding:0}
+html[data-view=cards] td.shot img{width:100%;border:0;border-radius:0;
+  border-bottom:1px solid var(--grid)}
+html[data-view=cards] td.rk{grid-column:1;grid-row:2;padding-top:10px;text-align:left}
+/* The "#" is the stylesheet's business here because in the table it is the column heading's, and this view
+   has no headings -- a bare "37" at the top of a card is a number with nothing attached to it. */
+html[data-view=cards] td.rk::before{content:"#"}
+html[data-view=cards] td.st-c{grid-column:2;grid-row:2;padding-top:10px;text-align:right}
+html[data-view=cards] td.pj{grid-column:1/-1;grid-row:3;margin-top:4px}
+html[data-view=cards] td.ds{grid-column:1/-1;grid-row:4;margin-top:7px}
+/* Both `.hide` columns come back, for the reason the 640px block gives: they were dropped at 900px because
+   they stopped paying for their column *width*, and a card is not competing for column width. */
+html[data-view=cards] td.hide{display:block}
+html[data-view=cards] td.tg{grid-column:1/-1;grid-row:5;margin-top:9px}
+html[data-view=cards] td.lc{grid-column:1/-1;grid-row:6;margin-top:3px;text-align:left}
+html[data-view=cards] td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
+html[data-view=cards] td.lc .meta br{display:none}
+/* 44em is a measure for a line of prose in a wide table cell. Inside a 290px card it is not a constraint
+   at all, and leaving it there only means the three of them disagree about what the card's width is. */
+html[data-view=cards] .desc,html[data-view=cards] .cmdrow,html[data-view=cards] .cmd{max-width:none}
+/* Four lines, and this is the one place the cards view shows less than the table rather than differently.
+   Cards in a row stretch to the tallest of them, and these blurbs are other people's one-line table cells:
+   they run from six words to sixty, so one project with a paragraph set the height of the three beside it
+   and left them two thirds empty. Unclamped, the grid stopped being scannable, which is the only thing this
+   view is for. The full text is one click away on the project's own page, and it is right here in the table
+   -- which is the default, and is where a reader who wants to read rather than browse already is.
+   `-webkit-line-clamp` is the prefixed property every engine including Firefox implements; unprefixed
+   `line-clamp` is newer, so both are set and the browser takes whichever it knows. */
+html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
+  -webkit-line-clamp:4;line-clamp:4;overflow:hidden}
+/* The table tints the row the pointer is over; a card is a box, so it takes the accent on its edge. The
+   cell rule has to be undone explicitly or the tint lands as six full-width strips inside the card with
+   the gaps between them showing through. Inside `hover:hover` like the rule it overrides, so a touch
+   device -- which latches a hover it can never clear -- is not made to carry either of them. */
+@media(hover:hover){
+  html[data-view=cards] tr:hover td{background:transparent}
+  html[data-view=cards] tr:hover{border-color:var(--bar)}
+}
+
 /* Nothing here animates on a timer, but the chip hovers transition and the chip rails scroll smoothly,
    and both are motion a reader can have asked their operating system not to show them. A blanket rule is
    safe because no state on this page is communicated *by* an animation -- removing every one of them
@@ -711,6 +789,16 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
       <option value="pushed">Pushed most recently</option>
       <option value="name">Name (A&ndash;Z)</option>
     </select>
+    <!-- Beside the sort menu because it answers the same kind of question -- how the results are presented,
+         not which ones they are -- and away from the four filter rows below, which all carry aria-pressed
+         and mean something else.
+
+         No aria-pressed here, for the reason the theme toggle spells out: the label names the action and
+         changes with the state, and "Card view" plus pressed=true announces as "card view is on" when it
+         means the opposite. Hidden until `buildChips` runs, like the New chip and the palette hint. That
+         function only runs once `data.json` has arrived, and until it has -- or if it never does, which is
+         what the error path below is for -- there is no table to lay out either way. -->
+    <button class="chip" id="view" hidden>Card view</button>
     <button class="chip newchip" id="new" aria-pressed="false"
             title="Projects the source lists added in the last __WINDOW__ days">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
@@ -778,7 +866,7 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 <script>
 const PAGE_SIZE = 120;
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false,
-               sort: "relevance", shown: PAGE_SIZE};
+               sort: "relevance", shown: PAGE_SIZE, view: "table"};
 let D = null, ROWS = [], NEW = 0;
 // The pending debounced search, if any. Declared out here rather than beside the handler because `set()`
 // has to cancel it, and `set()` is not inside the fetch callback where the handlers are wired.
@@ -925,6 +1013,20 @@ function buildChips() {
     typing = setTimeout(() => set({q: v}, true), 150);
   };
   document.getElementById("sort").onchange = e => set({sort: e.target.value});
+  // Unhidden here rather than in the markup -- see the button for why it starts hidden. The announcement is
+  // on this path only: `applyView` also runs from `render()`, and "table view" on arrival is not news. It is
+  // needed at all because nothing in the DOM changes, so a screen reader has no mutation to report and the
+  // button's own new label is not read back after a click.
+  const vb = document.getElementById("view");
+  vb.hidden = false;
+  vb.onclick = () => {
+    state.view = state.view === "cards" ? "table" : "cards";
+    writeHash();
+    applyView();
+    say(state.view === "cards"
+      ? "Card view. Each project is a card with its screenshot."
+      : "Table view.");
+  };
   document.getElementById("strict").onclick = () => set({strict: !state.strict});
   // Shown only when it would select something. The label carries the count because the whole question
   // this chip answers is "is there anything new", and a reader should be able to see the answer without
@@ -1041,6 +1143,11 @@ function palItems(query) {
   // localStorage write stay in exactly one place.
   add("Page", (document.documentElement.dataset.theme === "light" ? "Dark" : "Light") + " theme", false,
     () => document.getElementById("theme").click());
+  // Same delegation, same reason: the label, the title, the hash write and the announcement stay in the one
+  // place that owns them. The label is the action, matching the button, so the palette never offers "Card
+  // view" to someone already in it.
+  add("Page", state.view === "cards" ? "Table view" : "Card view", false,
+    () => document.getElementById("view").click());
 
   // Substring, not the trigram scorer the search box falls back on. These are forty-odd labels the reader
   // can see in full, so "sand" finding "Sandbox & security" is the entire requirement; near-misses here
@@ -1288,6 +1395,33 @@ function deployStamp(lastModified) {
   } catch (e) {}
 }
 
+// The view is the one thing in `state` that no row depends on: both views are the same table, so changing
+// it changes no cell, no order, no count and no row's place in it. Two consequences, and they are the
+// design.
+//
+// It deliberately does not go through `set()`. That function resets `shown` to the first page, which is
+// right for a filter -- a new result set has no page 5 -- and wrong here, where a reader who asked for 600
+// rows and then wants to see their screenshots should not silently lose 480 of them.
+//
+// And it does not render. The attribute lands on <html>, the stylesheet reads it, and that is the whole
+// switch: no fetch, no re-sort, no innerHTML, not one row object touched. What that is worth, measured
+// rather than assumed, at 120 cards on a desktop with both layout modes already warm: the switch is 38ms
+// against 48ms for the same change made by re-rendering. Both are dominated by one unavoidable relayout --
+// a table and a grid of cards are different enough that the browser starts over either way -- so the saving
+// is the innerHTML rebuild and the parse of it, and it is 20% rather than an order of magnitude. The reason
+// to do it this way is the part that is not a number: the DOM survives, so the reader keeps their scroll
+// position and their focus, and `shown` below keeps the rows they asked for.
+function applyView() {
+  document.documentElement.dataset.view = state.view;
+  const btn = document.getElementById("view");
+  if (!btn) return;
+  const cards = state.view === "cards";
+  btn.textContent = cards ? "Table view" : "Card view";
+  btn.title = cards
+    ? "Back to the table, which fits far more rows on a screen"
+    : "Show each project as a card, with its screenshot";
+}
+
 function set(patch, keepFocus) {
   // Any other interaction outranks a search the reader has stopped waiting for. Without this, tapping
   // Clear all inside the 150ms window let the queued timer land afterwards and re-apply the term that was
@@ -1317,6 +1451,12 @@ function writeHash() {
   if (state.strict) p.set("confirmed", "1");
   if (state.fresh) p.set("new", "1");
   if (state.sort !== "relevance") p.set("sort", state.sort);
+  // In the hash and nowhere else. localStorage is the obvious second home for it -- the theme is kept
+  // there -- and it would be a bug: a reader who opens a `#view=cards` link they were sent, then a bare
+  // link to the same page, has said nothing about which view they prefer in general, and answering that
+  // question for them means two stores that can disagree about one value. The hash already survives a
+  // reload, because `replaceState` leaves it in the URL, which is the whole of what this has to do.
+  if (state.view !== "table") p.set("view", state.view);
   const s = p.toString();
   history.replaceState(null, "", s ? "#" + s : location.pathname);
 }
@@ -1336,6 +1476,9 @@ function readHash() {
   // Every `#sort=stars` link written before Best match existed still says exactly what it said then,
   // because the name is unchanged and only the *default* moved.
   state.sort = SORT_KEYS.includes(p.get("sort")) ? p.get("sort") : "relevance";
+  // Anything that is not the one word is the default, so a hand-edited `#view=grid` lands on the table
+  // rather than on a stylesheet branch that does not exist.
+  state.view = p.get("view") === "cards" ? "cards" : "table";
   document.getElementById("q").value = state.q;
   document.getElementById("sort").value = state.sort;
 }
@@ -1504,6 +1647,11 @@ function render() {
   press("oses", i => state.os.includes(i));
   document.getElementById("strict").setAttribute("aria-pressed", state.strict ? "true" : "false");
   document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
+  // Here as well as on the toggle, for the same reason the chips above are reflected here rather than only
+  // where they are clicked: this is the one function every path that changes state already ends at, so a
+  // `#view=cards` link, a hashchange and the browser's back button all arrive at the right layout without
+  // each of them remembering to.
+  applyView();
 
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
   let hits = ROWS.filter(match);

@@ -28,6 +28,9 @@
 #                                explain it landed after the baseline was taken, so the document line has
 #                                17% headroom rather than the 21% measured. Still headroom; recorded here
 #                                because a budget whose stated margin is wrong is a budget nobody trusts.
+#                                37,569 B after the cards view (JFH-182), which is 8% headroom, and the
+#                                figure below about 25-45% is no longer true of this line -- see the note
+#                                at the end of this block, which is where the 8% is being spent.
 #   script          10,339 B     the Cloudflare beacon and nothing else -- there is no bundle
 #   total          210,044 B     7 requests, of which data.json is 159,291 B (561,162 B of JSON, gzipped)
 #   CLS              0.5494      identical in all three runs, and identical on the previous build too
@@ -56,6 +59,20 @@
 # the answer is to stop shipping the entire dataset before first paint, and this budget is what forces
 # that conversation instead of letting the page get quietly slower for years. Raising a number here is a
 # decision, and it should have a commit message explaining itself.
+#
+# THE DOCUMENT LINE, AND WHY THE ANSWER IS NOT TO RAISE IT
+#
+# It is down to 8% and the next feature will cross it, so this is where the budget starts doing its job. The
+# honest accounting, measured on the shipped bytes: of 37,569 B gzipped, the comments are 22,381 B. 46 CSS
+# blocks, 299 JavaScript lines and 18 HTML blocks -- 55 KB of prose uncompressed, and stripping all of it
+# takes the document to 15,056 B. That is a 60% reduction on every load, for text whose readers are looking
+# at `scripts/19_pages.py` instead, where it is organised and where git can attribute it.
+#
+# So the fix is not a bigger number here. Nothing about the page a reader interacts with has to shrink: the
+# stage can strip its own comments on the way out and the source can keep every one of them, which is a
+# generator change with its own verification -- a naive strip breaks on `//` inside a URL and on `/*` inside
+# a regex, and it must not touch the `__PLACEHOLDER__` substitutions. Filed rather than done here, and
+# filed as the thing to do before the next feature rather than as a someday.
 #
 # WHEN IT RUNS
 #
