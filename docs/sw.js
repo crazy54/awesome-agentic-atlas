@@ -2,8 +2,8 @@
 // version stops describing the bytes: the next build overwrites whatever was changed here, and until it
 // does, readers hold a cache whose name no longer matches its contents. Change the generator.
 //
-// Version a313c381a313 -- a hash of the precached files, so it moves when they do and not otherwise.
-const VERSION = "a313c381a313";
+// Version ab3b9003c02b -- a hash of the precached files, so it moves when they do and not otherwise.
+const VERSION = "ab3b9003c02b";
 const SHELL = "atlas-shell-" + VERSION;
 // Unversioned, and never deleted on activate, which is the difference between an offline reader and a
 // broken one. A version-keyed data cache would be emptied by the very update that proves the reader is
@@ -12,6 +12,12 @@ const SHELL = "atlas-shell-" + VERSION;
 const DATA = "atlas-data";
 const PAGES = "atlas-pages";
 const PAGES_MAX = 30;
+// The one thing this worker tells the page in words: set on a `data.json` response that came out of DATA
+// because the network did not answer. The page cannot work it out for itself -- what comes back out of that
+// cache is byte-for-byte what went in -- and it is what turns "snapshot <date>" into "offline, showing data
+// from <date>". The name is `CACHED_HEADER` in `19_pages.py`, which owns the page that reads it, and is
+// substituted in here rather than written twice.
+const CACHED = "x-atlas-cached";
 
 // Relative to this script, so the scope is the project's Pages prefix on the published site, the fork's
 // prefix on a fork, and "/" under a local `python -m http.server`. A literal "/awesome-agentic-atlas/"
@@ -150,20 +156,33 @@ async function data(req) {
       return res;
     }
     // A 4xx or 5xx is returned as it stands, and the cached body is deliberately not used to paper over
-    // it. The page has a visible failure path for a data request that does not arrive, and it is
-    // honest; quietly serving a body from another day under today's snapshot stamp is not. A 404 here
-    // also means the file moved, and the last thing that should happen then is a reader being kept on
-    // the old one for as long as their cache survives.
+    // it. An HTTP error is a fact about the site rather than about the reader's network, and the page has
+    // a visible failure path for a data request that does not arrive. A 404 here also means the file
+    // moved, and the last thing that should happen then is a reader being kept on the old one for as
+    // long as their cache survives.
     return res;
   } catch (err) {
     // The network is gone, so the shell above was almost certainly answered from cache too, and this is
-    // the pair the reader is meant to have offline. See the module docstring for the case where it is
-    // not: a visit whose navigation succeeded and whose data request did not leaves a shell newer than
-    // this body, and the snapshot line then reads a day or two young.
+    // the pair the reader is meant to have offline. Marked, so the page can say which day these rows are
+    // from rather than repeating a date its own bytes were stamped with -- see `cached` below.
     const hit = await caches.match(k);
-    if (hit) return hit;
+    if (hit) return cached(hit);
     throw err;
   }
+}
+
+// A cached body, saying so. Two things make this a rewrap rather than a header set: a Response handed back
+// by the Cache API has immutable headers, and there is nothing else about it for the page to notice --
+// what comes out of that cache is exactly what went in, down to `Last-Modified`. The body is passed
+// through as a stream rather than read, so this costs no copy of 552 KB and nothing before the page can
+// begin parsing.
+//
+// Only the data path uses it. A navigation answered from the shell cache is equally a cached response, but
+// a document cannot read the headers of its own navigation, so there would be nobody to tell.
+function cached(hit) {
+  const headers = new Headers(hit.headers);
+  headers.set(CACHED, "1");
+  return new Response(hit.body, {status: hit.status, statusText: hit.statusText, headers});
 }
 
 async function asset(req) {

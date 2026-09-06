@@ -308,7 +308,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <p class="blurb" id="ctx"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><span class="k"><span class="lw">Last </span>deployed</span>
-      <span class="v"><time datetime="2026-09-06T21:09:00Z">2026-09-06 21:09 UTC</time></span></a>
+      <span class="v"><time datetime="2026-09-06T21:27:00Z">2026-09-06 21:27 UTC</time></span></a>
   </div>
   <nav>
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
@@ -388,13 +388,14 @@ const PAGE_SIZE = 120;
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
                sort: "relevance", shown: PAGE_SIZE, view: "cards"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
+let FROM_CACHE = false;
 let typing = 0;
 
 const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-06T21:09:00Z";
+const BUILT = "2026-09-06T21:27:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -439,6 +440,7 @@ function gained(r) {
 
 fetch("data.json").then(r => {
   deployStamp(r.headers.get("Last-Modified"));
+  FROM_CACHE = !!r.headers.get("x-atlas-cached");
   return r.json();
 }).then(d => {
   D = d;
@@ -463,6 +465,7 @@ fetch("data.json").then(r => {
       r.gain >= Math.max(RISE.min_abs, RISE.min_pct / 100 * (r.stars || 0));
   });
   RISING = ROWS.filter(r => r.rise).length;
+  stamp();
   buildChips();
   readHash();
   render();
@@ -760,12 +763,16 @@ function copy(b) {
 function stamp() {
   const el = document.getElementById("snap");
   if (!el) return;
-  const d = daysAgo(SNAPSHOT);
-  el.innerHTML = "snapshot " + SNAPSHOT +
+  const own = String((D && (D.generated || D.snapshot)) || "").slice(0, 10);
+  const day = /^\d{4}-\d{2}-\d{2}$/.test(own) ? own : SNAPSHOT;
+  const d = daysAgo(day);
+  el.innerHTML = (FROM_CACHE ? "offline, showing data from " : "snapshot ") + day +
     (d > 14 ? ' · <span class="stale">' + d + " days old</span>" : "");
-  el.title = d > 14
-    ? "The daily rebuild has not run in " + d + " days, so stars and push dates here have drifted."
-    : "Rebuilt daily from the GitHub API.";
+  el.title = (FROM_CACHE
+      ? "The network did not answer, so these rows came from your browser's cache. " : "") +
+    (d > 14
+      ? "The daily rebuild has not run in " + d + " days, so stars and push dates here have drifted."
+      : "Rebuilt daily from the GitHub API.");
 }
 
 function deployStamp(lastModified) {

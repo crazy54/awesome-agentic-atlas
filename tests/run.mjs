@@ -65,7 +65,7 @@ const HARNESSES = [
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
   {file: "detail-churn.mjs", label: "1,294 detail pages, regenerated and hashed", floor: 7},
   {file: "cards-check.mjs", label: "real layout at 1440/900/375 in both themes", needs: "browser", floor: 40},
-  {file: "pwa-check.mjs", label: "manifest, worker, precache, offline, 404", needs: "browser", floor: 15},
+  {file: "pwa-check.mjs", label: "manifest, worker, precache, offline, freshness, 404", needs: "browser", floor: 25},
 ];
 
 if (!existsSync(join(ROOT, "docs", "index.html"))) {

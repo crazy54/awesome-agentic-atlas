@@ -63,6 +63,11 @@ def refresh_data(data: dict, ledger: dict) -> tuple[dict, int]:
     # find the number rather than have to know the rule. `setdefault`, so a future version 2 written by
     # `19_pages.py` survives a refresh instead of being reset to 1 by the stage that only re-renders.
     data.setdefault("schema_version", b19.SCHEMA_VERSION)
+    # `generated` is deliberately *not* backfilled, unlike the key above. It is the instant these rows were
+    # captured, this stage does not capture any, and the only values available here -- now, or the file's own
+    # mtime -- would both be later than the truth and would therefore overstate how fresh the data is, which
+    # is the failure JFH-207 exists to fix. A file that predates the key keeps none, and `stamp()` in the
+    # page falls to `snapshot`, which is the same fact to the day and has always been in this file.
     live = sum(1 for r in data["rows"] if newness.within(r[seen_at]))
     return data, live
 

@@ -243,16 +243,133 @@ ok("no console errors from the page or the worker while online", online.length =
    online.map(e => e.params.entry.text).join(" | "));
 
 // -------- offline
-await S("Network.emulateNetworkConditions",
-  {offline: true, latency: 0, downloadThroughput: 0, uploadThroughput: 0});
+//
+// On both sessions, and that is the whole of it. `Network.emulateNetworkConditions` applies to the target it
+// is sent to, and the target that fetches `data.json` is not the page -- it is the service worker, which is
+// a target of its own with a network context of its own. Sent only to the page, as it was until this line
+// was written, the page's own direct requests fail while the worker carries on fetching from the live
+// server, re-caching what it gets and answering every request as if nothing had happened: the atlas renders
+// offline, the rows are real, and the cache-fallback branch in `data()` has never once run. Both assertions
+// below passed in that state, and so did the freshness section after them until it was made to disagree
+// with itself on purpose and would not.
+//
+// Re-applied before each offline navigation rather than set once, because Chrome terminates an idle worker
+// after about thirty seconds and the replacement starts with no emulation on it.
+let swSession = null;
+const net = async (offline) => {
+  const p = {offline, latency: 0, downloadThroughput: offline ? 0 : -1, uploadThroughput: offline ? 0 : -1};
+  await S("Network.emulateNetworkConditions", p);
+  for (const t of (await send("Target.getTargets")).targetInfos) {
+    if (t.type !== "service_worker") continue;
+    const {sessionId: sid} = await send("Target.attachToTarget", {targetId: t.targetId, flatten: true});
+    swSession = sid;
+    await send("Network.enable", {}, sid);
+    await send("Network.emulateNetworkConditions", p, sid);
+  }
+};
+await net(true);
+ok("the worker is a target of its own, and was taken offline as well as the page", !!swSession,
+   "no service_worker target to attach to -- an offline test that only stops the page is not one");
 await goto(ORIGIN);
 const offlineRows = await evalIn("document.querySelectorAll('#out tbody tr').length");
 ok("the atlas still renders with the network off", offlineRows > 100, String(offlineRows));
 ok("and it is the real data, not an error page",
    !/could not load/i.test(await evalIn("document.getElementById('count').textContent")),
    await evalIn("document.getElementById('count').textContent"));
-await S("Network.emulateNetworkConditions",
-  {offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1});
+
+// -------- the freshness stamp must describe the rows on screen, not the shell they arrived in (JFH-207)
+//
+// The two halves of this page live in two caches. `atlas-shell-<version>` holds the document, `atlas-data`
+// holds `data.json`, and they are filled by different requests that can succeed on different days -- so
+// the pair a reader gets offline is not necessarily a pair that was ever deployed together. Every
+// assertion above this line is satisfied by the *wrong* pairing: the atlas renders, the rows are real, and
+// the header says the data is from today because the header's date was baked into the document.
+//
+// Which makes this the one thing in the file that cannot be observed by looking: nothing distinguishes a
+// correct stamp from a stale one unless the two caches are made to disagree on purpose. So they are. The
+// cached body is rewritten with dates that are unmistakably not the document's, still offline so that
+// network-first cannot overwrite it on the way back in, and the header is then read for whose date it
+// chose. `generated` and `snapshot` are given *different* old dates rather than one old date, because
+// otherwise an implementation that read either one would pass and only the ladder's order is in question.
+//
+// The document's own stamp is taken from the served HTML rather than from a page variable: Node's `fetch`
+// is not subject to the browser's emulated offline, and the bytes Pages would serve are the honest source
+// for "what the page claims on its own".
+const docStamp = (await (await fetch(ORIGIN)).text())
+  .match(/id="snap"[^>]*>snapshot\s+(\d{4}-\d{2}-\d{2})/)?.[1];
+ok("the served page has a snapshot date baked into it to be wrong with", !!docStamp, String(docStamp));
+
+// Doctors the cached `data.json` in place. Returns "ok", or a reason, so a cache that was not there to
+// doctor reports itself instead of quietly making the assertions below vacuous.
+const recache = (patch) => evalIn(`(async () => {
+  const url = new URL('data.json', location.href).href;
+  const c = await caches.open('atlas-data');
+  const hit = await c.match(url);
+  if (!hit) return 'nothing cached under ' + url;
+  const body = await hit.json();
+  ${patch}
+  await c.put(url, new Response(JSON.stringify(body),
+    {headers: {'content-type': 'application/json'}}));
+  return 'ok';
+})()`);
+
+// `goto` waits for readyState, which does not wait for the page's own `fetch("data.json")`, and the stamp
+// is rendered twice -- once from the document before the data lands and once from the data. Polling for
+// the rows is polling for the second one; reading too early would read the value this is meant to catch
+// and pass for the wrong reason.
+const stampAfterData = async () => {
+  await net(true);
+  await goto(ORIGIN);
+  for (let i = 0; i < 60; i++) {
+    if (await evalIn("document.querySelectorAll('#out tbody tr').length") > 100) break;
+    await sleep(100);
+  }
+  return evalIn("document.getElementById('snap').textContent.replace(/\\s+/g, ' ').trim()");
+};
+
+const doctored = await recache("body.generated = '2025-01-15T04:05:00Z'; body.snapshot = '2025-01-16';");
+ok("the cached data.json could be given a known old stamp", doctored === "ok", String(doctored));
+const staleStamp = await stampAfterData();
+ok("offline, the stamp is the cached data's own date and not the document's",
+   staleStamp.includes("2025-01-15") && !staleStamp.includes(docStamp), staleStamp);
+ok("and it prefers `generated` over `snapshot` when both are there",
+   !staleStamp.includes("2025-01-16"), staleStamp);
+ok("and it says where the rows came from, in the wording the reader needs",
+   /offline, showing data from 2025-01-15/.test(staleStamp), staleStamp);
+// The fortnight marker is the display policy and is not what this ticket changed; it has to still fire,
+// and now off the data's date rather than the document's. 2025 is a long way past fourteen days.
+ok("and the fortnight marker still fires, now off the data's date",
+   /days old/.test(staleStamp), staleStamp);
+
+// Degrading, rung by rung. A `data.json` cached before `generated` existed still carries `snapshot`, which
+// is the same fact at a day's resolution, so the ladder's second rung is what makes this fix work for
+// bodies that are already in readers' caches rather than only for ones built after it.
+ok("a body with no `generated` falls back to its own `snapshot`",
+   await recache("delete body.generated; body.snapshot = '2025-01-17';") === "ok" &&
+   (await stampAfterData()).includes("2025-01-17"));
+// And the last rung. With nothing in the body to read, the document's constant is all there is -- and the
+// failure to avoid is not a wrong date but "undefined", "NaN days old" or an Invalid Date.
+const noStamp = await recache("delete body.generated; delete body.snapshot;") === "ok" &&
+  await stampAfterData();
+ok("a body with neither falls back to the document, not to undefined",
+   noStamp.includes(docStamp) && !/undefined|NaN|Invalid/.test(noStamp), noStamp);
+
+await net(false);
+// And back. The header the wording hangs on means "the network did not answer", not "there is a copy in the
+// cache" -- the worker fills that cache on every successful fetch, so a header set on the way *in* would
+// have every online reader told they were offline. The doctored body is still in the cache here and is
+// replaced by the fetch that succeeds, so this also checks the network still wins when it answers.
+await goto(ORIGIN);
+for (let i = 0; i < 60; i++) {
+  if (await evalIn("document.querySelectorAll('#out tbody tr').length") > 100) break;
+  await sleep(100);
+}
+const backOnline = await evalIn("document.getElementById('snap').textContent.replace(/\\s+/g, ' ').trim()");
+// Not compared against `docStamp` outright: past a fortnight the age is appended, and a checkout that has
+// been sitting for three weeks is a stale copy of the site rather than a broken one. The shape, the absence
+// of the offline wording and the absence of the doctored date are the three things being claimed.
+ok("back online, the stamp is the network's data and says nothing about the cache",
+   /^snapshot \d{4}-\d{2}-\d{2}/.test(backOnline) && !backOnline.includes("2025-01"), backOnline);
 
 // -------- a 404 must never be pinned in the cache
 await goto(ORIGIN + "topic/does-not-exist/");

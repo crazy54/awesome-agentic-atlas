@@ -146,6 +146,17 @@ def row_for(r, shots, cat_ix, tgt_ix) -> list:
 
 SCHEMA_VERSION = 1
 
+# The one thing the service worker tells the page in words. It sets this header on the `data.json`
+# response it answers out of `atlas-data` when the network did not answer at all, because that is the only
+# way the page can know: a body served from the cache the worker filled is byte-for-byte the body that
+# filled it. `stamp()` reads it and says "offline, showing data from <date>" instead of "snapshot <date>".
+#
+# Defined here and asked for by `24_pwa.py`, which writes the worker, rather than spelled out in both --
+# the same reason `24_pwa.py` asks `17_markdown` for the site URL instead of keeping a copy. Two files
+# agreeing on a string is fine until they stop, and the symptom of stopping is a banner that simply never
+# mentions the cache, which nothing would notice.
+CACHED_HEADER = "x-atlas-cached"
+
 
 def build_data(facets, shots) -> dict:
     cats = list(tax.CATEGORIES)
@@ -162,6 +173,22 @@ def build_data(facets, shots) -> dict:
         # Absent means 1: the snapshot published before this key existed is otherwise identical.
         "schema_version": SCHEMA_VERSION,
         "snapshot": date.today().isoformat(),
+        # The same fact as an instant, written here beside the rows it describes rather than only baked
+        # into the page as `__SNAPSHOT__`. Offline the two halves of this site arrive from two caches --
+        # the shell from `atlas-shell-<version>`, this file from `atlas-data` -- and nothing fills them at
+        # the same moment, so a stamp that lives in the document describes the document and not the rows
+        # underneath it. This is the copy that travels with the rows and is therefore right however old
+        # the body a reader is holding turns out to be. `stamp()` in the page reads it. (JFH-207)
+        #
+        # Whole minutes, like `built()`, because the banner prints the date and no surface prints the
+        # second: a finer figure would claim a precision nothing here gives a reader.
+        #
+        # UTC, while `snapshot` above is the builder's local date. On the machine that publishes this --
+        # Actions, which is UTC -- they are the same day by construction. On a checkout whose local date is
+        # not UTC's they can name different days, and the banner prefers this one, as the one that names an
+        # instant rather than a day on somebody's clock.
+        "generated": (datetime.now(timezone.utc).replace(second=0, microsecond=0)
+                      .strftime("%Y-%m-%dT%H:%M:%SZ")),
         "repo": REPO,
         "cols": COLS,
         # The page applies the window, so it has to be told what it is. Here rather than hardcoded in the
@@ -266,6 +293,7 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             .replace("__TOPICS__", str(len(data["cats"])))
             .replace("__STARS__", f"{sum(r[4] for r in data['rows']):,}")
             .replace("__SNAPSHOT__", data["snapshot"])
+            .replace("__CACHEHDR__", CACHED_HEADER)
             .replace("__WINDOW__", str(newness.WINDOW))
             .replace("__SITE__", site)
             .replace("__REPO__", repo)
@@ -981,6 +1009,10 @@ const PAGE_SIZE = 120;
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
                sort: "relevance", shown: PAGE_SIZE, view: "cards"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
+// Whether the rows on screen came out of the browser's cache instead of off the network. Set from the one
+// header the service worker adds, read only by `stamp()`, and false on the error path -- where there are no
+// rows to describe.
+let FROM_CACHE = false;
 // The pending debounced search, if any. Declared out here rather than beside the handler because `set()`
 // has to cancel it, and `set()` is not inside the fetch callback where the handlers are wired.
 let typing = 0;
@@ -1073,6 +1105,10 @@ fetch("data.json").then(r => {
   // to make anyway. See `deployStamp`. Before `r.json()`, because that consumes the body and there is no
   // reason to wait for 561 KB to parse before correcting a badge that is already on screen.
   deployStamp(r.headers.get("Last-Modified"));
+  // Set by `data()` in `docs/sw.js` on the one path where the network did not answer and it fell back to
+  // `atlas-data`. Absent on every other path, including a response the worker had just put in that cache,
+  // so this is "the network is gone" and not "there is a cached copy".
+  FROM_CACHE = !!r.headers.get("__CACHEHDR__");
   return r.json();
 }).then(d => {
   D = d;
@@ -1116,6 +1152,10 @@ fetch("data.json").then(r => {
       r.gain >= Math.max(RISE.min_abs, RISE.min_pct / 100 * (r.stars || 0));
   });
   RISING = ROWS.filter(r => r.rise).length;
+  // Again, now that the rows are here. `wire()` already called it off the document's own constant, which is
+  // the best that can be said before this fetch resolves; this is the call that replaces that with the
+  // stamp the rows brought with them, and the only one whose answer is about what is on screen.
+  stamp();
   buildChips();
   readHash();
   render();
@@ -1519,17 +1559,44 @@ function copy(b) {
 // one question and the header's third date in a row. Amber past a fortnight because that is the point at
 // which the star counts on the page have measurably drifted from GitHub's, and the only point at which
 // the age says something the date and the badge together do not.
+//
+// The date comes out of the data and not out of this document, which is the whole of JFH-207. Offline the
+// two halves of the page arrive from two caches -- the shell from `atlas-shell-<version>`, `data.json` from
+// `atlas-data` -- and nothing reconciles them, so a stamp baked into the document describes the document
+// and not the rows a reader is looking at. Three rungs, in order of how well each one knows the answer:
+//
+//   D.generated  the instant the rows were captured, written beside them by `build_data`. Travels with the
+//                body, so it is right however old the body in the cache turns out to be.
+//   D.snapshot   the same fact to the day, and it is in every `data.json` this site has ever published --
+//                which is what makes this correct for the bodies already sitting in readers' caches and
+//                not only for ones built after this shipped.
+//   SNAPSHOT     the document's own copy: all there is before the fetch resolves, and all there is if it
+//                never does. Deliberately not `BUILT`, which the "last deployed" badge owns: that is when
+//                this copy was *published*, a different fact and always the later one -- the committed page
+//                routinely carries a `BUILT` several days after its own `SNAPSHOT` -- so falling back to it
+//                would overstate how fresh the data is by however far the two have drifted, which is the
+//                failure this function is being fixed for rather than a fallback from it.
 function stamp() {
   const el = document.getElementById("snap");
   if (!el) return;
-  const d = daysAgo(SNAPSHOT);
+  // Tested rather than trusted. A missing key would `slice` the string "undefined" and print it under a
+  // "NaN days old", so anything that is not an ISO date drops to the next rung instead of being rendered.
+  const own = String((D && (D.generated || D.snapshot)) || "").slice(0, 10);
+  const day = /^\d{4}-\d{2}-\d{2}$/.test(own) ? own : SNAPSHOT;
+  const d = daysAgo(day);
   // Just the date while the build is keeping up. The relative age is appended only past the fortnight,
   // where it stops being a restatement of "current" and becomes the one thing the reader needs to know.
-  el.innerHTML = "snapshot " + SNAPSHOT +
+  //
+  // "offline, showing data from" rather than a warning, when these rows came from the cache: the reader
+  // asked for a page with no network and got the whole atlas, which is the feature working. What they are
+  // owed is the date it is true as of, and no alarm.
+  el.innerHTML = (FROM_CACHE ? "offline, showing data from " : "snapshot ") + day +
     (d > 14 ? ' · <span class="stale">' + d + " days old</span>" : "");
-  el.title = d > 14
-    ? "The daily rebuild has not run in " + d + " days, so stars and push dates here have drifted."
-    : "Rebuilt daily from the GitHub API.";
+  el.title = (FROM_CACHE
+      ? "The network did not answer, so these rows came from your browser's cache. " : "") +
+    (d > 14
+      ? "The daily rebuild has not run in " + d + " days, so stars and push dates here have drifted."
+      : "Rebuilt daily from the GitHub API.");
 }
 
 // The badge under the masthead. Two sources for one value, in order of authority.

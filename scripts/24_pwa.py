@@ -27,13 +27,18 @@ stamp -- not "slightly stale data", but a freshness claim that is false, which i
 load and much worse than an honest failure. So the data is network-first: the network wins whenever it
 answers, and the cache is a fallback for when it does not answer at all.
 
-The one property that makes this safe is an ordering that cannot be reversed. Within any visit the
-navigation is fetched before the page's own `fetch("data.json")`, so a cached shell is never newer than
-the cached data it is paired with, and the stamp a reader sees offline either matches the data or
-under-states how fresh it is. It can never over-state it. The remaining hole is stated in the report and
-in `data()` below: a visit where the navigation succeeds and the data request fails leaves a shell newer
-than the cached body, and the next offline visit shows that pair. It needs the network to die between
-two requests one after the other, and the fortnight marker still catches it eventually.
+This used to lean on an ordering argument: within any visit the navigation is fetched before the page's own
+`fetch("data.json")`, so a cached shell is never newer than the cached data it is paired with. The hole in
+it was stated here and then filed as JFH-207 -- a visit whose navigation succeeded and whose data request
+did not leaves a shell newer than the cached body, and the two caches are separately evictable besides, so
+the pair a reader gets offline is not necessarily a pair that was ever deployed together. The stamp then
+described the document rather than the rows underneath it, and said nothing about it.
+
+The ordering is no longer what makes it safe. `data.json` carries its own `generated` timestamp and the
+banner reads that, so the stamp travels with the rows it describes and no pairing of the two caches can
+make it wrong. `data()` below also marks a response it answered out of the cache, with the header the page
+renders as "offline, showing data from <date>" -- so a reader is told which day they are looking at, and
+why, instead of being shown a date that came from somewhere else.
 
 WHAT IS AND IS NOT PRECACHED
 
@@ -124,6 +129,15 @@ sys.modules["b17"] = b17
 spec.loader.exec_module(b17)
 
 SITE = b17.SITE
+
+# And 19_pages owns the page, so the one string the worker and the page have to agree on -- the header that
+# says a response came out of the cache -- is asked for here rather than spelled out again below. A copy
+# would be silent when it drifted: the banner would simply stop mentioning the cache, which reads as the
+# network having been up. This import is free, in that `19_pages` reads nothing at import time and its own
+# `17_markdown` is the module already loaded above.
+spec = importlib.util.spec_from_file_location("b19", HERE / "19_pages.py")
+b19 = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(b19)
 
 NAME = "Awesome Agentic Atlas"
 # Twelve characters, because a home-screen label is truncated past about that and Android shows
@@ -333,6 +347,12 @@ const SHELL = "__PREFIX__" + VERSION;
 const DATA = "atlas-data";
 const PAGES = "atlas-pages";
 const PAGES_MAX = __PAGES_MAX__;
+// The one thing this worker tells the page in words: set on a `data.json` response that came out of DATA
+// because the network did not answer. The page cannot work it out for itself -- what comes back out of that
+// cache is byte-for-byte what went in -- and it is what turns "snapshot <date>" into "offline, showing data
+// from <date>". The name is `CACHED_HEADER` in `19_pages.py`, which owns the page that reads it, and is
+// substituted in here rather than written twice.
+const CACHED = "__CACHEHDR__";
 
 // Relative to this script, so the scope is the project's Pages prefix on the published site, the fork's
 // prefix on a fork, and "/" under a local `python -m http.server`. A literal "/awesome-agentic-atlas/"
@@ -471,20 +491,33 @@ async function data(req) {
       return res;
     }
     // A 4xx or 5xx is returned as it stands, and the cached body is deliberately not used to paper over
-    // it. The page has a visible failure path for a data request that does not arrive, and it is
-    // honest; quietly serving a body from another day under today's snapshot stamp is not. A 404 here
-    // also means the file moved, and the last thing that should happen then is a reader being kept on
-    // the old one for as long as their cache survives.
+    // it. An HTTP error is a fact about the site rather than about the reader's network, and the page has
+    // a visible failure path for a data request that does not arrive. A 404 here also means the file
+    // moved, and the last thing that should happen then is a reader being kept on the old one for as
+    // long as their cache survives.
     return res;
   } catch (err) {
     // The network is gone, so the shell above was almost certainly answered from cache too, and this is
-    // the pair the reader is meant to have offline. See the module docstring for the case where it is
-    // not: a visit whose navigation succeeded and whose data request did not leaves a shell newer than
-    // this body, and the snapshot line then reads a day or two young.
+    // the pair the reader is meant to have offline. Marked, so the page can say which day these rows are
+    // from rather than repeating a date its own bytes were stamped with -- see `cached` below.
     const hit = await caches.match(k);
-    if (hit) return hit;
+    if (hit) return cached(hit);
     throw err;
   }
+}
+
+// A cached body, saying so. Two things make this a rewrap rather than a header set: a Response handed back
+// by the Cache API has immutable headers, and there is nothing else about it for the page to notice --
+// what comes out of that cache is exactly what went in, down to `Last-Modified`. The body is passed
+// through as a stream rather than read, so this costs no copy of 552 KB and nothing before the page can
+// begin parsing.
+//
+// Only the data path uses it. A navigation answered from the shell cache is equally a cached response, but
+// a document cannot read the headers of its own navigation, so there would be nobody to tell.
+function cached(hit) {
+  const headers = new Headers(hit.headers);
+  headers.set(CACHED, "1");
+  return new Response(hit.body, {status: hit.status, statusText: hit.statusText, headers});
 }
 
 async function asset(req) {
@@ -608,6 +641,7 @@ def main() -> None:
           .replace("__VERSION__", version(files))
           .replace("__PREFIX__", CACHE_PREFIX)
           .replace("__PAGES_MAX__", str(PAGES_MAX))
+          .replace("__CACHEHDR__", b19.CACHED_HEADER)
           .replace("__PRECACHE__", json.dumps(PRECACHE)))
     (OUT / "sw.js").write_text(sw, encoding="utf-8")
 
