@@ -13,6 +13,7 @@ one cell without distortion, and so filtered rows collapse cleanly.
 """
 import concurrent.futures as cf
 import hashlib
+import importlib.util
 import json
 import re
 import subprocess
@@ -308,6 +309,61 @@ def work(rec: dict) -> dict:
     return {"key": key, **pair, "tier": tier, "shot_url": url}
 
 
+QUEUE = CACHE / "collect-queue.json"
+
+# The queue is keyed by 10_parse_sources' notion of "the same entry", and matching it here by eye
+# would be a second definition of that, free to drift from the one the puller wrote the keys with.
+_spec = importlib.util.spec_from_file_location(
+    "b10", Path(__file__).resolve().parent / "10_parse_sources.py")
+b10 = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(b10)
+
+
+def stale_keys(jobs: dict[str, dict]) -> tuple[set[str], int]:
+    """Keys `pull_sources.py` says to collect again, and how many of its entries were already new.
+
+    A key already in `shots_all.json` is never rebuilt, which is right for the case it was written
+    for -- a repo's README banner is the same banner it had last Sunday -- and wrong for an entry
+    whose listing has since changed. The queue is the only thing that can tell the two apart.
+
+    Only `changed` invalidates. An `added` entry has no key here yet, so it is already in `todo`;
+    re-listing it would at best be redundant and at worst re-render an image for a repo that a second
+    list merely started mentioning.
+    """
+    if not QUEUE.exists():
+        return set(), 0
+    try:
+        pending = json.loads(QUEUE.read_text(encoding="utf-8")).get("pending") or {}
+    except (json.JSONDecodeError, OSError):
+        return set(), 0
+    want = {b10.url_key(v["url"]) for v in pending.values()
+            if v.get("reason") == "changed"}
+    keys = {k for k, r in jobs.items() if b10.url_key(r["url"]) in want}
+    return keys, len(pending) - len(want)
+
+
+def drain_queue(jobs: dict[str, dict], built: dict) -> int:
+    """Forget the queued entries whose image is now on disk; keep the ones that errored.
+
+    Written only after the captures, for the reason `watch_sources.py --update` runs last: a queue
+    emptied up front would lose every entry in a run that then died halfway.
+    """
+    if not QUEUE.exists():
+        return 0
+    try:
+        q = json.loads(QUEUE.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return 0
+    ok = {k for k, v in built.items()
+          if v.get("light") and not str(v.get("tier", "")).startswith("error")}
+    done = {b10.url_key(r["url"]) for k, r in jobs.items() if k in ok}
+    pending = q.get("pending") or {}
+    kept = {k: v for k, v in pending.items() if b10.url_key(v["url"]) not in done}
+    q["pending"] = kept
+    QUEUE.write_text(json.dumps(q, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    return len(pending) - len(kept)
+
+
 def main() -> None:
     recs = json.loads((CACHE / "records_all.json").read_text(encoding="utf-8"))
     only = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else ""
@@ -322,6 +378,18 @@ def main() -> None:
 
     out_path = CACHE / "shots_all.json"
     have = json.loads(out_path.read_text(encoding="utf-8")) if out_path.exists() else {}
+
+    # Re-collect what the pull stage flagged: drop the record *and* the images, because work()
+    # short-circuits on the light JPEG existing and would otherwise report "cached" and change nothing.
+    stale, already_new = stale_keys(jobs)
+    for k in stale:
+        have.pop(k, None)
+        for suffix in ("light", "dark"):
+            (SHOTS / f"{k}__{suffix}.jpg").unlink(missing_ok=True)
+    if stale or already_new:
+        print(f"queue: {len(stale)} listings changed, re-collecting; "
+              f"{already_new} new entries need no invalidation", flush=True)
+
     todo = [r for k, r in jobs.items() if k not in have]
     print(f"{len(have)} already done, {len(todo)} to build", flush=True)
 
@@ -342,6 +410,7 @@ def main() -> None:
                 print(f"  {done}/{len(todo)}", flush=True)
 
     out_path.write_text(json.dumps(have, indent=1), encoding="utf-8")
+    drained = drain_queue(jobs, have)
     tiers: dict[str, int] = {}
     for v in have.values():
         tiers[v["tier"]] = tiers.get(v["tier"], 0) + 1
@@ -350,6 +419,8 @@ def main() -> None:
         print(f"  {n:5d}  {t}")
     missing = sum(1 for r in recs if not have.get(key_for(r), {}).get("light"))
     print(f"\nrows with an image: {len(recs) - missing}/{len(recs)}")
+    if drained:
+        print(f"{drained} entries collected and cleared from {QUEUE.name}")
 
 
 if __name__ == "__main__":

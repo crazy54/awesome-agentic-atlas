@@ -218,6 +218,30 @@ The split is about cost, not caution. Metadata for 1,294 repos is about seventy 
 Screenshots are 3,462 headless-browser renders. So a project added on Tuesday shows GitHub's own repo card
 until Sunday, then gets its real image.
 
+### The pull cache
+
+[`scripts/pull_sources.py`](scripts/pull_sources.py) is what actually downloads the lists, and it keeps a
+commit id per list in `cache/sources/index.json` so it can decline to. Ask a list for its head commit, and
+if it matches the one already cached — and the cached bytes are still on disk — there is nothing to read
+and the pull is skipped. On a day when one list moved, one list is re-read, not eleven.
+
+When a list has moved, the new copy and the cached one are both run through the same parser the build uses
+and the resulting entries are compared. That is the difference between a diff over lines and a diff over
+meaning: a reworded heading or a new badge changes the file without changing a single row, and is correctly
+silent, while an entry whose name, category or description moved is reported and queued.
+
+The queue matters because of an asymmetry in the screenshot stage. A brand-new entry has no image on file,
+so it gets one on the next weekly run without being told to. An entry that is still listed under the same
+URL but has been *rewritten* looks identical to a cached one, and before this it kept its old image for
+ever. `cache/collect-queue.json` carries those across from the daily job, which finds them, to the weekly
+job, which captures them and drains the queue.
+
+Two smaller things it fixes. Lists are pulled from `raw.githubusercontent.com`, because above roughly a
+megabyte `gh api repos/{nwo}/readme` returns a payload whose content field is *empty* rather than an error
+— the 1.4 MB list that reads as zero entries. And a pull that comes back at a fraction of the size of the
+copy it replaces is refused rather than written, because a truncated transfer and an author deleting most
+of their list look the same from here, and only one of them should silently remove rows from the atlas.
+
 ### The New filter
 
 A project's arrival date is the one thing the API can't tell you — a repo created in 2023 can be new *to
@@ -411,7 +435,7 @@ column, a topic or four hundred repos.
 
 ## How it's built
 
-A nineteen-stage Python pipeline: parse each source list's Markdown, resolve and fetch every repo
+A nineteen-stage Python pipeline: pull each source list that has moved, parse its Markdown, resolve and fetch every repo
 through the GitHub API, pull release and Actions metadata, classify OS support from README and CI
 evidence, capture a screenshot per project, then render the workbooks with `openpyxl`, the Markdown
 edition, and the site's dataset from the same in-memory records — so the three surfaces cannot
@@ -421,8 +445,19 @@ disagree. The topic and target assignments come from one taxonomy module all thr
 The build cache (~4,800 files: fetched READMEs and screenshots) is deliberately **not** committed. It
 is other people's content, it is 64 MB, and it is reproducible from the fetch scripts.
 
+That is also why the pull cache's commit ids live in `cache/sources/index.json` rather than alongside the
+ledger in `state/`. An id recorded in a committed file would still be there on a clone that has none of the
+content it describes, and the puller would compare it, find it equal, skip every download and then have
+nothing to parse. Keeping the id next to the bytes makes "unchanged" mean "we still have it".
+
 `state/first-seen.json` is the opposite case and is committed for the same reason: it is the only thing
-here that a rebuild cannot recreate. Delete it and every project looks as old as every other one.
+here that a rebuild cannot recreate. Delete it and every project looks as old as every other one. The SHA
+it also stores per list is a different fact from the puller's — that one means "this commit has been
+*built*", and it is recorded only after a build succeeds, so a build that dies halfway is retried instead
+of being written off as done.
+
+A clone with an empty `cache/` starts with `python scripts/pull_sources.py`; the stages that read the
+lists now say so by name instead of failing on a missing file.
 
 ## Contributing
 

@@ -118,6 +118,12 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p cache
+          # The lists themselves, first: 01_parse and 10_parse_sources read them off disk and neither
+          # fetches. This pulls only the ones whose head commit differs from the one already cached, so
+          # on a day when one list moved it re-reads one list and not eleven. It also prints which
+          # entries each list added or changed, and queues the changed ones for the weekly screenshot
+          # job -- the step that probes SHAs above cannot, because it deliberately does not download.
+          python scripts/pull_sources.py
           # --force empties cache/meta.json, which is the store 11_fetch_all also fills and the reason a
           # warm cache would otherwise never refresh a star count. Everything downstream re-derives.
           python scripts/01_parse.py
