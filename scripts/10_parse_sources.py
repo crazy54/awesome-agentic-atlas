@@ -131,8 +131,31 @@ def source_path(src: dict) -> Path:
     return CACHE / "README.md" if not src.get("file") else SRC / src["file"]
 
 
+def source_paths(src: dict) -> list[Path]:
+    """Every file this source's content lives in, primary first.
+
+    Most lists are one README. A few keep their items in sub-documents behind a hub README --
+    github/awesome-copilot has five rows in its README and ~415 items in four files under docs/ --
+    and `paths` names those. They land beside the primary file so one source stays one group on
+    disk, and pull_sources.py pulls exactly this set: where an extra file goes is decided once,
+    here, rather than by two functions free to disagree about it.
+    """
+    primary = source_path(src)
+    out = [primary]
+    for p in src.get("paths") or []:
+        flat = p.strip("/").replace("/", "__")
+        out.append(primary.with_name(f"{primary.stem}__{flat}{primary.suffix}"))
+    return out
+
+
 def read_source(src: dict) -> str:
-    return source_path(src).read_text(encoding="utf-8")
+    """One source is one text, however many files it arrived in.
+
+    Concatenating rather than parsing each file separately is what keeps a hub list's sections in
+    one namespace: `paths` files continue the heading structure the README started, and a section
+    is `(source key, section name)` no matter which file the heading was written in.
+    """
+    return "\n\n".join(p.read_text(encoding="utf-8") for p in source_paths(src) if p.exists())
 
 
 def url_key(url: str) -> str:
@@ -401,7 +424,10 @@ def main() -> None:
     # This stage reads the lists, it does not fetch them. Missing content used to surface as a bare
     # FileNotFoundError on whichever source happened to be first, which says nothing about the cause:
     # cache/ is not committed, so a cold clone or an Actions cache that did not restore has none of it.
-    absent = [src for src in SOURCES if src.get("file") and not source_path(src).exists()]
+    # Every file, not just the primary: read_source concatenates whatever is present, so a source
+    # whose sub-documents did not restore would otherwise parse quietly as a much shorter list.
+    absent = [src for src in SOURCES
+              if src.get("file") and not all(p.exists() for p in source_paths(src))]
     if absent:
         names = ", ".join(s["key"] for s in absent)
         sys.exit(f"no cached content for {len(absent)}/{len(SOURCES)} sources ({names}).\n"

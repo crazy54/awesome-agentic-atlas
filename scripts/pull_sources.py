@@ -169,16 +169,14 @@ def files_to_pull(src: dict) -> list[tuple[str, Path]]:
     """(repo path, destination) for everything this source's content lives in.
 
     A list is usually one README. Not always: `github/awesome-copilot` keeps its ~415 items in four
-    files under `docs/` behind a five-row hub table. `paths` on a source dict names those extras,
-    which land beside the primary file so one source stays one group of files on disk. The README is
-    always pulled regardless, because it is what the parsers read.
+    files under `docs/` behind a five-row hub table. `paths` on a source dict names those extras.
+    Where each one lands is `10_parse_sources.source_paths`' decision, not this function's -- the
+    parser has to find the same files this writes, and two functions naming them separately is a
+    silent short parse waiting to happen. The README is always pulled regardless, because it is what
+    the parsers read first.
     """
-    dest = b10.source_path(src)
-    out = [(readme_path(src["nwo"]), dest)]
-    for p in src.get("paths") or []:
-        flat = p.strip("/").replace("/", "__")
-        out.append((p, dest.with_name(f"{dest.stem}__{flat}{dest.suffix}")))
-    return out
+    dests = b10.source_paths(src)
+    return list(zip([readme_path(src["nwo"])] + list(src.get("paths") or []), dests))
 
 
 # --- the diff --------------------------------------------------------------------------------
@@ -270,9 +268,10 @@ def pull_one(src: dict, state: dict, force: bool) -> dict:
         line["status"] = "unchanged"
         return line
 
-    # Read the cached copy before overwriting it: it is the only "before" picture there is.
-    dest = b10.source_path(src)
-    old_text = dest.read_text(encoding="utf-8") if dest.exists() else ""
+    # Read the cached copy before overwriting it: it is the only "before" picture there is. Whole
+    # text, not just the README, or a hub list diffs its static five-row table against itself and
+    # reports "no change" however much the sub-documents holding its actual entries churned.
+    old_text = b10.read_source(src)
     # Right id, missing bytes. Pull to restore what the cache lost; expect the diff to be empty.
     preset = "refill" if sha == have and not intact else ""
 
@@ -300,7 +299,7 @@ def pull_one(src: dict, state: dict, force: bool) -> dict:
         target.write_bytes(data)
     line["files"] = [rel(t) for t, _ in pulled]
 
-    new_text = dest.read_text(encoding="utf-8")
+    new_text = b10.read_source(src)
     try:
         old = entries_of(src, old_text) if old_text else {}
         new = entries_of(src, new_text)
