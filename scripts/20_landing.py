@@ -22,10 +22,12 @@ only form a crawler counts.
 
 Five decisions worth stating.
 
-It reads `docs/data.json` and nothing else. `19_pages.py` needs the 64 MB build cache and this does
-not, for the same reason `19b_refresh.py` does not: the crossing is a pure function of the committed
-dataset, so a clone with nothing fetched can rebuild all 156 pages. It follows that this stage can
-never invent a star count or a verdict that the site disagrees with, because it has none of its own.
+It reads `docs/data.json`, and a listing of `docs/og/` to see which Open Graph cards exist.
+`19_pages.py` needs the 64 MB build cache and this does not, for the same reason `19b_refresh.py`
+does not: the crossing is a pure function of the committed dataset, so a clone with nothing fetched
+can rebuild all 156 pages. It follows that this stage can never invent a star count or a verdict that
+the site disagrees with, because it has none of its own. The card listing does not weaken that -- the
+cards are committed too, and their absence only ever costs a page the better of two `og:image`s.
 
 Only the topic-first nesting exists. `target/<t>/topic/<c>/` would be the same 130 pages at 130 second
 URLs, which is duplicate content that splits its own ranking signal; every page carries a
@@ -67,6 +69,22 @@ spec.loader.exec_module(b19)
 SITE = b19.b17.SITE
 REPO = b19.REPO
 
+# And `22_detail.py`, for one function: `segment()`, the rule that turns an `nwo` into a path. These
+# pages link to the detail pages that stage writes, so the two files have to agree on the URL of every
+# one of them, and a slug rule spelled twice is a slug rule that will differ once. Imported rather than
+# copied even though it is two lines, because the two lines encode a decision -- a leading dot becomes
+# `dot-`, so `zircote/.claude` does not land in a directory the whole toolchain treats as hidden -- and
+# a copy would not carry the reason. Safe to import: the module does its work under `if __name__`, so
+# loading it here runs no build.
+dspec = importlib.util.spec_from_file_location("b22", HERE / "22_detail.py")
+b22 = importlib.util.module_from_spec(dspec)
+sys.modules["b22"] = b22
+dspec.loader.exec_module(b22)
+
+# Where `23_og.py` puts the cards, relative to `docs/`. Named here rather than spelled twice, because
+# the two stages have to agree on it and there is no import between them that could carry it.
+OG = "og"
+
 # The cap. A crawler stops reading a document long before the 479th row, and the rows past the first
 # hundred on the two big target pages are the ones with no stars to rank by -- so the page that gets
 # indexed is the page that is worth indexing, and the rest are one click away in the view that can
@@ -92,6 +110,20 @@ def clip(text: str, limit: int) -> str:
     if len(text) <= limit:
         return text
     return text[: limit - 1].rsplit(" ", 1)[0].rstrip(" ,;:.—-") + "…"
+
+
+def repo_path(nwo: str) -> str:
+    """Where `22_detail.py` puts one project's page, relative to `docs/`. Trailing slash.
+
+    Constructed rather than looked up on disk, and that is deliberate: both stages derive their page set
+    from the same `data.json` -- that one emits a page per row unconditionally and raises if two rows
+    ever slug alike -- so a row on a landing page always has a detail page, and a disk check would only
+    add a way to be wrong. It would also be wrong in one specific way: `weekly.yml` runs this stage
+    *before* `22_detail.py`, so a project added this week has no page on disk at the moment this runs and
+    would be handed a fallback link that then outlived the commit by a week.
+    """
+    owner, name = nwo.split("/", 1)
+    return f"repo/{b22.segment(owner.lower())}/{b22.segment(name.lower())}/"
 
 
 # ------------------------------------------------------------------ the shared shell
@@ -165,6 +197,11 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
    has -- which the document then has to scroll sideways to satisfy. */
 .nm{font-weight:600;font-size:15px;overflow-wrap:anywhere}
 .nwo{display:block;color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
+/* The `nwo` is a link out to GitHub and the name above it is a link into this site, so the two need to
+   be told apart without colour doing it -- muted is the right weight for the secondary line and the
+   link colour would make it shout. Hover promotes it to full ink, which with the underline `a:hover`
+   already adds is enough to say "this is a link" at the moment somebody asks. */
+a.nwo:hover{color:var(--ink)}
 .st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
@@ -258,6 +295,10 @@ class Page:
         served from a `python -m http.server` in `docs/` and from the Pages subpath unchanged."""
         return "../" * self.depth + tail
 
+    def repo(self, nwo: str) -> str:
+        """The `22_detail.py` page for one row, from here."""
+        return self.rel(repo_path(nwo))
+
     @property
     def live(self) -> str:
         """The same view on the site, both filters already applied -- the page's reason to exist.
@@ -286,6 +327,28 @@ class Page:
         if self.cat:
             return f"{self.cat['name']}: {n} agentic AI tools — Awesome Agentic Atlas"
         return f"Tools for {self.tgt['name']}: {n} projects — Awesome Agentic Atlas"
+
+    @property
+    def card(self) -> str:
+        """The filename of this view's Open Graph card, under `docs/og/`.
+
+        A crossing takes its topic's card rather than one of its own: 26 images instead of 156. The
+        card carries the facet's name, its project count and its three most starred projects, and it
+        says "every harness" out loud so that a topic card beside a crossing page's own title and
+        description cannot be read as a claim about that one cell. `23_og.py` argues the cost.
+        """
+        return f"topic-{self.cat['slug']}.png" if self.cat else f"target-{self.tgt['slug']}.png"
+
+    @property
+    def card_label(self) -> str:
+        """What that card has printed across it, which on a crossing is not this page's heading.
+
+        `heading` would give "Coding Agents tools for Claude Code" for a card that says "Coding
+        Agents" and nothing about Claude Code -- and `og:image:alt` is read out to somebody who cannot
+        see the image, so it is the one string here that must describe the picture rather than the
+        page. Identical to `heading` on the 26 pages that have a card of their own.
+        """
+        return self.cat["name"] if self.cat else f"Tools for {self.tgt['name']}"
 
     @property
     def summary(self) -> str:
@@ -355,13 +418,22 @@ def row_html(page: Page, r: dict, i: int, os_labels: list[str]) -> str:
     # rather than 55 bytes x 1,294 of a string it can rebuild. Rebuild it.
     img = esc(r["img"] or f"https://opengraph.githubassets.com/1/{r['nwo']}")
     url = esc(r["url"])
+    # The name goes to this site's own page for the project and the `nwo` underneath it goes to GitHub,
+    # which is the split the index table uses too. It matters more here than there: these 156 pages are
+    # the only *crawlable* path into the atlas -- `docs/index.html` builds its table in JavaScript, so a
+    # crawler that lands on the root finds no links to the 1,294 detail pages at all -- and a row whose
+    # only link left the site meant every one of those pages was reachable from the sitemap and from
+    # nowhere else. The picture points at the same page as the name and is hidden from the accessibility
+    # tree, because a screen reader announcing an empty link before the name it duplicates is noise.
+    page_url = esc(page.repo(r["nwo"]))
     stars = f"{r['stars']:,}" if r["stars"] else "&mdash;"
     return (
         "<tr>"
         f'<td class="n rk">{i}</td>'
-        f'<td class="shot"><a href="{url}"><img loading="lazy" alt="" src="{img}"></a></td>'
-        f'<td class="pj"><a class="nm" href="{url}">{esc(r["name"])}</a>'
-        f'<span class="nwo">{esc(r["nwo"])}</span>'
+        f'<td class="shot"><a href="{page_url}" tabindex="-1" aria-hidden="true">'
+        f'<img loading="lazy" alt="" src="{img}"></a></td>'
+        f'<td class="pj"><a class="nm" href="{page_url}">{esc(r["name"])}</a>'
+        f'<a class="nwo" href="{url}">{esc(r["nwo"])}</a>'
         f'<div class="meta os">{os}</div></td>'
         f'<td class="n st-c"><span class="st{"" if r["stars"] else " none"}">{stars}</span>'
         f'<div class="meta">{r["lists"]} {"list" if r["lists"] == 1 else "lists"}</div></td>'
@@ -393,7 +465,13 @@ def itemlist(page: Page, shown: list[dict]) -> str:
         "url": page.url,
         "numberOfItems": len(shown),
         "itemListOrder": "https://schema.org/ItemListOrderDescending",
-        "itemListElement": [{"@type": "ListItem", "position": i, "name": r["name"], "url": r["url"]}
+        # Each item's `url` is this site's page for the project rather than its GitHub URL, which is
+        # what the row's own name link now points at -- structured data that named a different
+        # destination than the markup beside it would be describing a page that does not exist. It is
+        # also the form the vocabulary is for: a `ListItem` in an `ItemList` on a page identifies a
+        # position in *this* list, and every one of those positions is now a real URL here.
+        "itemListElement": [{"@type": "ListItem", "position": i, "name": r["name"],
+                             "url": SITE + repo_path(r["nwo"])}
                             for i, r in enumerate(shown, 1)],
     }
     return json.dumps(doc, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
@@ -446,7 +524,48 @@ def related(page: Page, pages: list[Page]) -> str:
     return "".join(out)
 
 
-def render(page: Page, pages: list[Page], data: dict) -> str:
+def image_tags(page: Page, cards: set[str]) -> str:
+    """The Open Graph image block, and the fallback for a page whose card has not been rendered.
+
+    Absolute, unlike every other URL these pages emit. A relative `og:image` is resolved against
+    whatever the scraper decides the document's base is and several of them decide wrong, so this is
+    the one place where being unambiguous is worth more than being portable between a local
+    `python -m http.server` and the Pages subpath.
+
+    Checked against a listing of `docs/og/` rather than assumed, even though `page.card` is a pure
+    function of the facet: `23_og.py` needs a headless Chromium and, without one, deliberately
+    degrades to leaving the committed cards alone -- so a facet added in the same run that had no
+    browser has a name here and no file. Falling back to the repository card costs that page the
+    specific preview; pointing at a 404 costs it the image altogether, because Slack and Discord show
+    a bare link rather than substituting anything.
+
+    `twitter:card` is not optional and is not implied by the rest. Without it X renders a small square
+    thumbnail beside the text no matter what the image is, which is the one shape a 1.91:1 card cannot
+    survive. `twitter:image` is a belt-and-braces duplicate -- X falls back to `og:image` -- and it is
+    two lines rather than an argument.
+    """
+    if page.card in cards:
+        return "\n".join([
+            f'<meta property="og:image" content="{esc(SITE + OG + "/" + page.card)}">',
+            '<meta property="og:image:type" content="image/png">',
+            '<meta property="og:image:width" content="1200">',
+            '<meta property="og:image:height" content="630">',
+            f'<meta property="og:image:alt" content="{esc(page.card_label)} on the Awesome Agentic '
+            'Atlas: the project count and the three most starred projects.">',
+            '<meta name="twitter:card" content="summary_large_image">',
+            f'<meta name="twitter:image" content="{esc(SITE + OG + "/" + page.card)}">',
+        ])
+    # No dimensions claimed for this one: it is 1200x600 today and it is not ours to promise.
+    fallback = f"https://opengraph.githubassets.com/1/{esc(REPO)}"
+    return "\n".join([
+        f'<meta property="og:image" content="{fallback}">',
+        '<meta property="og:image:alt" content="The Awesome Agentic Atlas repository on GitHub.">',
+        '<meta name="twitter:card" content="summary_large_image">',
+        f'<meta name="twitter:image" content="{fallback}">',
+    ])
+
+
+def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
     shown = page.rows[:CAP]
     ranked = sum(1 for r in page.rows if r["stars"])
     stars = sum(r["stars"] or 0 for r in page.rows)
@@ -470,7 +589,7 @@ def render(page: Page, pages: list[Page], data: dict) -> str:
 <meta property="og:title" content="{esc(page.heading)}">
 <meta property="og:description" content="{esc(page.summary)}">
 <meta property="og:url" content="{esc(page.url)}">
-<meta property="og:image" content="https://opengraph.githubassets.com/1/{esc(REPO)}">
+{image_tags(page, cards)}
 <link rel="icon" href="{ICON}">
 <link rel="stylesheet" href="{page.rel('pages.css')}">
 <script type="application/ld+json">{itemlist(page, shown)}</script>
@@ -546,12 +665,28 @@ def robots() -> str:
     disallow rule could only ever hide something the site exists to publish. The absolute URL is
     required by the standard and is also the useful part: this file is the only place a crawler is
     guaranteed to look for it.
+
+    Both sitemaps are listed, `22_detail.py`'s as well as this stage's, and the comment in the file says
+    out loud that none of it currently has any effect. That is not defeatism, it is the one fact a reader
+    of this file needs: robots.txt is only ever read at a *host* root, and this is a project Pages site
+    served under `/awesome-agentic-atlas/`, so a crawler looks for it at `crazy54.github.io/robots.txt`
+    -- which 404s, because no user-repo Pages site exists there. Checked rather than assumed. Written
+    anyway because it costs nothing and becomes correct the day a custom domain appears; until then both
+    sitemaps have to be submitted in Search Console to be discovered at all.
     """
     return ("# Everything here is a static index of public repositories. Nothing to hide from a\n"
-            "# crawler, and the hash-filtered views are all prerendered under /topic/ and /target/.\n"
+            "# crawler, and the hash-filtered views are all prerendered under /topic/, /target/\n"
+            "# and /repo/.\n"
             "User-agent: *\n"
             "Allow: /\n\n"
-            f"Sitemap: {SITE}sitemap.xml\n")
+            "# Both sitemaps are listed for correctness, not for effect. This file is inert on the\n"
+            "# current deployment: robots.txt is only read at a host root, and this is a *project*\n"
+            "# Pages site served under /awesome-agentic-atlas/, so crawlers look for it at\n"
+            "# crazy54.github.io/robots.txt -- which is a 404, because no user-repo Pages site exists.\n"
+            "# Verified, not assumed. Until a custom domain appears, both sitemaps have to be submitted\n"
+            "# in Search Console to be discovered at all.\n"
+            f"Sitemap: {SITE}sitemap.xml\n"
+            f"Sitemap: {SITE}sitemap-repos.xml\n")
 
 
 # ------------------------------------------------------------------ writing
@@ -589,11 +724,14 @@ def kb(n: int) -> str:
 def main() -> None:
     data = json.loads((OUT / "data.json").read_text(encoding="utf-8"))
     pages = plan(data)
+    # One listing, not 156 `exists()` calls -- and taken before the loop so every page in a run is
+    # judged against the same set of cards.
+    cards = {p.name for p in (OUT / OG).glob("*.png")}
 
     written, total = 0, 0
     for p in pages:
         p.path.parent.mkdir(parents=True, exist_ok=True)
-        text = render(p, pages, data)
+        text = render(p, pages, data, cards)
         p.path.write_text(text, encoding="utf-8")
         written += 1
         total += p.path.stat().st_size
@@ -613,6 +751,10 @@ def main() -> None:
           f"{len(pages) + 1} URLs, lastmod {data['snapshot']}")
     print(f"{sum(min(len(p.rows), CAP) for p in pages):,} rows rendered, "
           f"capped at {CAP} per page · {kb(total + shells)} added to docs/")
+    carded = sum(1 for p in pages if p.card in cards)
+    print(f"og:image · {carded}/{len(pages)} pages on one of {len(cards)} card(s) in docs/{OG}/"
+          + ("" if carded == len(pages) else
+             f" · {len(pages) - carded} on the repository card, run scripts/23_og.py"))
     if gone:
         print(f"{len(gone)} stale page(s) removed: "
               + ", ".join(str(p.relative_to(OUT)) for p in gone[:5]))

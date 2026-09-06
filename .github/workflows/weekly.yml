@@ -124,6 +124,13 @@ jobs:
           # yesterday's rows.
           python scripts/20_landing.py
           python scripts/21_feeds.py
+          # Both of these are weekly-only for the same reason 20_landing is -- see daily.yml. 22_detail
+          # reads data.json and nothing else, so its only ordering constraint is to follow 19_pages.
+          python scripts/22_detail.py
+          # After 20_landing, and not merely near it: that stage writes the og:image tags, this one writes
+          # the files they point at, and the two are one change. A run that emitted the tags without the
+          # cards would publish 156 pages referencing images that are not there.
+          python scripts/23_og.py
 
       # The same assertion daily.yml carries -- see there for why it is mtime against a marker rather than
       # a manifest, and why an unwritten facet page is a warning while an unwritten fixed path is an error.
@@ -140,7 +147,16 @@ jobs:
           git ls-files docs mega-list | while IFS= read -r f; do
             if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
             case "$f" in
-              mega-list/topics/*|mega-list/targets/*|mega-list/lists/*|mega-list/platforms/*|docs/topic/*|docs/target/*)
+              # `docs/og/*.png` and not `docs/og/*`: a card whose content did not change is deliberately
+              # not rewritten -- that skip is the whole reason the cards cost ~84 KB a week instead of
+              # 527 -- so an unwritten PNG is expected. `cards.json` is written unconditionally, so it
+              # stays under the strict arm below and still proves the stage ran at all.
+              #
+              # `docs/repo/*/*` and not `docs/repo/*`: the per-repo pages are data-derived and prunable,
+              # but `docs/repo/index.html`, `detail.css` and `detail.js` are fixed paths. `*` matches `/`
+              # in a case pattern, so the broader glob would have swallowed all three and left that stage
+              # with nothing under the strict arm -- exactly the hole the comment in daily.yml warns about.
+              mega-list/topics/*|mega-list/targets/*|mega-list/lists/*|mega-list/platforms/*|docs/topic/*|docs/target/*|docs/og/*.png|docs/repo/*/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/prunable" ;;
               *)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/frozen" ;;

@@ -1,0 +1,137 @@
+/* Written by scripts/22_detail.py. Shared by every page under docs/repo/.
+
+   Deliberately not docs/pages.css, which scripts/20_landing.py writes: two stages writing one file
+   means the later run silently deletes the earlier one's rules.
+
+   The two blocks below are 19_pages.py's, character for character. Lagoon Gold: cyan primary, gold
+   secondary, cool near-black surfaces. Dark is the designed mode -- its eight neutrals and two accents
+   are the theme's own values. Light is stepped from the same two hues rather than flipped, because the
+   accents at their dark-mode lightness fail on white (the cyan measures 2.53:1 there), and its
+   neutrals are cooled to match so toggling does not change brand. --onbar exists because a filled cyan
+   or gold accent carries DARK ink, not white: white on #08b0cc is 2.3:1, while the theme's own #0c1013
+   on it is 7.36:1. */
+:root{
+  --surface:#101416; --plane:#181f21; --band:#232d30; --ink:#d0d7d8; --ink2:#a8b0b2;
+  --muted:#8c9496; --grid:#2c383d; --link:#08b0cc; --bar:#08b0cc;
+  --good:#2eb82e; --warn:#feb932; --off:#8c9496; --onbar:#0c1013;
+}
+html[data-theme=light]{
+  --surface:#fbfcfc; --plane:#eef1f2; --band:#f4f6f6; --ink:#101416; --ink2:#4a5254;
+  --muted:#5f6769; --grid:#dbe0e1; --link:#096373; --bar:#0a6f80;
+  --good:#0a7c0a; --warn:#8a5a00; --off:#5f6769; --onbar:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);
+  font:15px/1.6 "Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font:inherit;cursor:pointer}
+header{background:var(--plane);border-bottom:1px solid var(--grid);padding:18px 20px 22px}
+/* Narrower than the 1500px the table surfaces use. This one is prose, and a 44-character-per-line
+   measure is what a blurb and a licence sentence want; 1500px would set the lead paragraph 180
+   characters wide, which is unreadable for the one thing on the page a reader has to read. */
+.wrap{max-width:1000px;margin:0 auto}
+main{padding:0 20px 64px}
+footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
+  color:var(--muted);font-size:13px}
+h1{margin:0 0 4px;font-size:30px;letter-spacing:-.02em;overflow-wrap:anywhere}
+h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:14px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+.top>div{min-width:0}
+/* word-break rather than overflow-wrap, because an owner/name pair breaks nowhere: a slash is not a
+   break opportunity in Chrome or Safari, so a 52-character nwo would otherwise widen the document. */
+.nwo{margin:0 0 12px;color:var(--muted);font-size:13px;word-break:break-all}
+.lead{margin:0 0 14px;color:var(--ink2);font-size:16px;max-width:68ch}
+.lead.none,.none{color:var(--muted);font-style:italic}
+/* Each fact its own element rather than text separated by dots, so that when the row wraps on a phone
+   the separator never ends up orphaned at the start of a line. */
+.facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 18px;font-size:13px;color:var(--muted)}
+.facts span{white-space:nowrap}
+/* The live pair starts hidden and detail.js reveals it once data.json has answered. Hidden rather than
+   showing a placeholder, because "Stars —" that never fills in reads as a broken page, whereas a fact
+   that simply is not there reads as a fact that is not there. */
+.facts .live{display:none}
+.facts .live.on{display:inline;color:var(--ink2)}
+.facts .live b{color:var(--ink);font-variant-numeric:tabular-nums}
+.acts{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:0}
+/* The one link that has to be found. Filled with the accent, which is why it needs --onbar for ink. */
+.cta{display:inline-block;background:var(--bar);color:var(--onbar);font-weight:600;
+  border-radius:8px;padding:10px 18px}
+.cta:hover{text-decoration:none;filter:brightness(1.08)}
+.alt{font-size:14px}
+.chip{display:inline-block;background:var(--band);color:var(--ink2);border:1px solid var(--grid);
+  border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap;margin:0 5px 5px 0}
+.chip:hover{border-color:var(--bar);color:var(--ink);text-decoration:none}
+.chip.cat{border-color:var(--bar);color:var(--ink)}
+.chips{margin-top:2px}
+.util{flex-shrink:0}
+section{margin:34px 0 0;border-top:1px solid var(--grid);padding-top:22px}
+/* The install command, and the button that takes it away. Selecting wrapped monospace text without
+   catching the paragraph above it is the thing this replaces. */
+.cmdrow{display:flex;gap:10px;align-items:flex-start}
+.cmd{flex:1;min-width:0;font:13.5px/1.6 Consolas,ui-monospace,monospace;color:var(--ink);
+  background:var(--band);border:1px solid var(--grid);border-radius:6px;padding:10px 12px;
+  overflow-wrap:anywhere;display:block}
+.copy{background:var(--band);color:var(--ink2);border:1px solid var(--grid);border-radius:6px;
+  padding:10px 14px;font-size:13px;white-space:nowrap}
+.copy:hover{border-color:var(--bar);color:var(--ink)}
+figure.shot{margin:0}
+/* A fixed 2:1 box with the image contained inside it. The src is somebody else's CDN and its
+   dimensions are unknown at build time, so height cannot be declared on the img -- and without a box
+   the whole page below would jump when it finally arrives. `contain` rather than `cover` because these
+   are arbitrary images: cropping a social card to fill a frame cuts the repository name off it. */
+.shot img{width:100%;aspect-ratio:2/1;object-fit:contain;border-radius:10px;background:var(--band);
+  border:1px solid var(--grid);display:block}
+figcaption{color:var(--muted);font-size:12.5px;margin-top:8px;max-width:70ch}
+table.os{width:100%;border-collapse:collapse;font-size:14px}
+table.os caption{text-align:left;color:var(--muted);font-size:12.5px;margin-bottom:10px;
+  max-width:70ch}
+table.os th[scope=col]{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--grid);font-weight:600}
+table.os th[scope=row]{text-align:left;padding:10px;border-bottom:1px solid var(--grid);
+  font-weight:600;white-space:nowrap}
+table.os td{padding:10px;border-bottom:1px solid var(--grid);vertical-align:top}
+table.os .why{color:var(--ink2);font-size:13px}
+/* Prefixed, on the same reasoning as 20_landing.py's .vY: a class name has to be a valid CSS
+   identifier, and these are tone names rather than the verdict characters for exactly that reason. */
+.vgood{color:var(--good);font-weight:700;white-space:nowrap}
+.vwarn{color:var(--warn);white-space:nowrap}
+.voff{color:var(--off);white-space:nowrap}
+ul.lists{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
+ul.lists li{background:var(--band);border:1px solid var(--grid);border-radius:6px;padding:6px 12px;
+  font-size:13.5px}
+/* Two columns of cards on a desktop, one on a phone, without a media query: auto-fill collapses to a
+   single track as soon as 320px stops fitting twice. */
+ul.kinlist{list-style:none;padding:0;margin:0;display:grid;gap:10px;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+ul.kinlist li{border:1px solid var(--grid);border-radius:10px;padding:12px 14px;background:var(--plane)}
+ul.kinlist a{font-weight:600;overflow-wrap:anywhere}
+ul.kinlist .nwo{display:block;margin:2px 0 0;font-size:12px}
+ul.kinlist .desc{display:block;color:var(--ink2);font-size:13px;margin-top:6px}
+/* The directory page. Three or four columns of names, which is the only layout in which 1,294 links
+   are scannable rather than a mile of scrolling. */
+ul.dir{list-style:none;padding:0;margin:0;columns:4 220px;column-gap:26px;font-size:13.5px}
+ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
+.ct{color:var(--muted);font-weight:400}
+.jump{font-size:13px;color:var(--muted);line-height:2;margin:14px 0 0}
+.more{margin:14px 0 0;font-size:13.5px}
+@media(max-width:640px){
+  header{padding:14px 14px 18px}
+  main{padding:0 14px 48px}
+  footer{padding:18px 14px}
+  h1{font-size:23px}
+  .lead{font-size:15px}
+  section{margin-top:26px;padding-top:18px}
+  /* The button under the command rather than beside it. At 335px a flex row leaves the code element
+     about 210px, which wraps a 145-character npm line into nine lines. */
+  .cmdrow{flex-direction:column}
+  .copy{align-self:flex-start}
+  .cta{flex:1;text-align:center}
+  /* Four columns of names in 307px is 77px a column. One column, and let it scroll. */
+  ul.dir{columns:1}
+  /* The evidence sentence is the first thing to go: three columns do not fit, and the verdict word
+     without its reason is still the answer to "does this run on my machine". The reason stays in the
+     document for a reader who asks for the desktop site, and it is never the only place a fact is. */
+  table.os .why,table.os th[scope=col]:last-child{display:none}
+}

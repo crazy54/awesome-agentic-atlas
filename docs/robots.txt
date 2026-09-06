@@ -1,6 +1,14 @@
 # Everything here is a static index of public repositories. Nothing to hide from a
-# crawler, and the hash-filtered views are all prerendered under /topic/ and /target/.
+# crawler, and the hash-filtered views are all prerendered under /topic/, /target/
+# and /repo/.
 User-agent: *
 Allow: /
 
+# Both sitemaps are listed for correctness, not for effect. This file is inert on the
+# current deployment: robots.txt is only read at a host root, and this is a *project*
+# Pages site served under /awesome-agentic-atlas/, so crawlers look for it at
+# crazy54.github.io/robots.txt -- which is a 404, because no user-repo Pages site exists.
+# Verified, not assumed. Until a custom domain appears, both sitemaps have to be submitted
+# in Search Console to be discovered at all.
 Sitemap: https://crazy54.github.io/awesome-agentic-atlas/sitemap.xml
+Sitemap: https://crazy54.github.io/awesome-agentic-atlas/sitemap-repos.xml

@@ -383,7 +383,13 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
    `.cursorrules/CLAUDE.md/Copilot/Windsurf/Cline/Aider` were between them demanding ~530px of a 335px
    content box, which the document then had to scroll sideways to satisfy. */
 .nm{font-weight:600;font-size:15px;overflow-wrap:anywhere}
+/* owner/name is now the link out to GitHub, the title having been given to the local detail page. It stays
+   muted rather than picking up `--link`, because it is the secondary of the two links in the cell and a
+   second accent-coloured line under every title would fight the title for attention. The class selector
+   already outranks `a{color:var(--link)}` on specificity, so this needed no !important -- only the hover,
+   which is what tells a reader it is clickable at all now that the colour does not. */
 .nwo{display:block;color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
+a.nwo:hover{color:var(--ink)}
 .st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
@@ -741,6 +747,11 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   <nav class="facets" aria-label="Browse by topic or by what a project plugs into">
     <p><b>Every topic:</b> __TOPICLINKS__</p>
     <p><b>Every integration:</b> __TARGETLINKS__</p>
+    <!-- The 1,294 pages under repo/ have the same discovery problem the 26 links above solve, and one
+         worse: the rows that link to them are drawn by the script below, so a crawler receives this page
+         with an empty table and never sees one of them. This link and the directory it points at put
+         every project page two clicks from the root. -->
+    <p><b>Every project:</b> <a href="repo/">all __COUNT__ projects, one page each, grouped by topic</a></p>
   </nav>
 </div></footer>
 
@@ -780,6 +791,13 @@ const VERDICT = {
 // 120 buttons that fail on click are worse than none. `isSecureContext` is part of the test because the
 // API exists but always rejects on plain http, which is how a contributor serving docs/ locally sees it.
 const CAN_COPY = !!(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext);
+
+// Where 22_detail.py put this project's own page. The rule has to match `segment()` in that stage exactly
+// or every row links to a 404: lowercased, because 442 of the 1,294 nwo values carry capitals and Pages
+// resolves paths case-sensitively, and a leading dot rewritten because whether a dot-directory is served
+// at all is the one thing about this tree a local server cannot answer.
+const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/")
+  .map(s => s.startsWith(".") ? "dot-" + s.slice(1) : s).join("/") + "/";
 
 // The rescue buttons drawn on an empty table, in the order render() drew them. Kept out of the markup
 // because a filter patch is an object -- serialising it into a data- attribute and parsing it back would
@@ -1527,7 +1545,7 @@ function render() {
       r.targets.map(t => '<span class="tag">' + esc(D.targets[t].name) + "</span>").join("");
     // esc on the URLs too: these are other people's hand-typed table cells, and one stray quote in a
     // source list would otherwise close the attribute and let the rest of it be read as markup.
-    const url = esc(r.url), img = esc(r.img);
+    const url = esc(r.url), img = esc(r.img), page = detailURL(r.nwo);
     // A new row's title is the star, the name, and the day it arrived. The date is outside the anchor so
     // hovering the title does not underline it, and it is the fact that makes the mark self-explaining:
     // "New" alone leaves the reader wondering new to what, and how long ago.
@@ -1551,10 +1569,20 @@ function render() {
       // failure and a keyboard reader pressing Tab twice for every row. aria-hidden plus tabindex="-1"
       // is the pattern for a redundant adjacent link: it stays clickable by mouse and disappears from the
       // accessibility tree, where the title already says everything it could have said.
-      '<td class="shot"><a href="' + url + '" tabindex="-1" aria-hidden="true">' +
+      // Both of these now point inward, at the page 22_detail.py wrote for this project. The atlas knows
+      // the install command, the five platform verdicts *with the evidence sentence behind each one*, and
+      // which of the eleven lists named it -- sending the reader straight to github.com was giving all of
+      // that away on the one click they were most likely to make. The shot stays the redundant adjacent
+      // link to the title, aria-hidden and untabbable, which is only true while it goes where the title
+      // goes.
+      '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
         '<img loading="lazy" alt="" src="' + img + '"></a></td>' +
-      '<td class="pj"><a class="nm" href="' + url + '">' + star + esc(r.name) + "</a>" + on +
-        '<span class="nwo">' + esc(r.nwo) + "</span>" +
+      '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on +
+        // The way out. owner/name was already sitting under every title reading like a GitHub path, so
+        // making it the outward link costs no new text and needs no new label -- "openclaw/openclaw" is a
+        // better accessible name than "GitHub" repeated 120 times. It does add one tab stop per row,
+        // which is the price of the title no longer being the way out.
+        '<a class="nwo" href="' + url + '">' + esc(r.nwo) + "</a>" +
         '<div class="meta os">' + os + "</div></td>" +
       '<td class="n st-c"><span class="st' + (r.stars ? "" : " none") + '">' +
         (r.stars ? r.stars.toLocaleString() : "—") + "</span>" +

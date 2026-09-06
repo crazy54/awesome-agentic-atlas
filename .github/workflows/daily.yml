@@ -183,10 +183,17 @@ jobs:
       # docs/sitemap.xml, 21_feeds has docs/feed.xml. A future stage whose entire output is facet pages
       # would warn where it should fail. Give any such stage one fixed-path file to write.
       #
-      # The third arm is what `20_landing.py` running weekly-only costs: its five output paths are not
-      # written by this job, so they are skipped rather than reported. That is the whole price of the
-      # history decision above -- a landing generator dropped from `weekly.yml` goes unnoticed here and
-      # is caught there instead, within seven days rather than one. weekly.yml has no such arm.
+      # The third arm is what the weekly-only stages cost: `20_landing.py`'s five output paths, plus
+      # `docs/repo/**` and `docs/sitemap-repos.xml` from `22_detail.py` and `docs/og/**` from
+      # `23_og.py`, are not written by this job, so they are skipped rather than reported. That is the
+      # whole price of the history decision above -- any of those generators dropped from `weekly.yml`
+      # goes unnoticed here and is caught there instead, within seven days rather than one. weekly.yml
+      # has no such arm.
+      #
+      # 22_detail and 23_og are weekly-only for a stronger reason than 20_landing: both are built to be
+      # byte-stable against a day's star drift -- 22_detail keeps every volatile number out of its HTML
+      # and fetches them client-side, and 23_og floors its counts and skips any card whose content
+      # signature is unchanged -- so a daily run of either would cost history and change nothing.
       - name: Every tracked page was rewritten
         if: steps.gate.outputs.go == 'true'
         run: |
@@ -196,7 +203,7 @@ jobs:
           : > "$RUNNER_TEMP/skipped"
           git ls-files docs mega-list | while IFS= read -r f; do
             case "$f" in
-              docs/topic/*|docs/target/*|docs/pages.css|docs/sitemap.xml|docs/robots.txt)
+              docs/topic/*|docs/target/*|docs/pages.css|docs/sitemap.xml|docs/robots.txt|docs/og/*|docs/repo/*|docs/sitemap-repos.xml)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/skipped"; continue ;;
             esac
             if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
