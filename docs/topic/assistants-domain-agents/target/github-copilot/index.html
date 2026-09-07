@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-assistants-domain-agents.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Assistants & Domain Agents tools for GitHub Copilot","description":"2 Assistants & Domain Agents projects that plug into GitHub Copilot, ranked by GitHub stars. One agent doing one job in one domain: support, sales, finance…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/assistants-domain-agents/target/github-copilot/","numberOfItems":2,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"lobsterai","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/netease-youdao/lobsterai/"},{"@type":"ListItem","position":2,"name":"AgentPilot","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/jbexta/agentpilot/"}]}</script>
 </head>
@@ -44,8 +58,8 @@
 <th class="n st-c">Stars</th><th class="hide">Plugs into</th>
 <th class="ds">What it does</th><th class="c hide">Lang / licence / push</th></tr></thead>
 <tbody>
-<tr><td class="n rk">1</td><td class="shot"><a href="../../../../repo/netease-youdao/lobsterai/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://raw.githubusercontent.com/netease-youdao/LobsterAI/main/docs/res/mainpage_en.png"></a></td><td class="pj"><a class="nm" href="../../../../repo/netease-youdao/lobsterai/">lobsterai</a><a class="nwo" href="https://github.com/netease-youdao/LobsterAI">netease-youdao/LobsterAI</a><div class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">5,976</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">GitHub Copilot</span></td><td class="ds"><div class="desc">Desktop-grade agent for data analysis, slides, docs, and web research.</div><code class="cmd">git clone https://github.com/netease-youdao/LobsterAI.git</code></td><td class="c hide"><div class="meta">TypeScript<br>MIT<br>2026-09-02</div></td></tr>
-<tr><td class="n rk">2</td><td class="shot"><a href="../../../../repo/jbexta/agentpilot/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://raw.githubusercontent.com/jbexta/AgentPilot/master/docs/demo.png"></a></td><td class="pj"><a class="nm" href="../../../../repo/jbexta/agentpilot/">AgentPilot</a><a class="nwo" href="https://github.com/jbexta/AgentPilot">jbexta/AgentPilot</a><div class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vN">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">566</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">GitHub Copilot</span></td><td class="ds"><div class="desc">A versatile workflow automation platform to create, organize, and execute AI workflows, from a single LLM to complex AI-driven workflows.</div><code class="cmd">git clone https://github.com/jbexta/AgentPilot.git</code></td><td class="c hide"><div class="meta">Python<br>AGPL-3.0<br>2026-04-14</div></td></tr>
+<tr><td class="n rk">1</td><td class="shot"><a href="../../../../repo/netease-youdao/lobsterai/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/netease-youdao/LobsterAI"></a></td><td class="pj"><a class="nm" href="../../../../repo/netease-youdao/lobsterai/">lobsterai</a><a class="nwo" href="https://github.com/netease-youdao/LobsterAI">netease-youdao/LobsterAI</a><div class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">5,976</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">GitHub Copilot</span></td><td class="ds"><div class="desc">Desktop-grade agent for data analysis, slides, docs, and web research.</div><code class="cmd">git clone https://github.com/netease-youdao/LobsterAI.git</code></td><td class="c hide"><div class="meta">TypeScript<br>MIT<br>2026-09-02</div></td></tr>
+<tr><td class="n rk">2</td><td class="shot"><a href="../../../../repo/jbexta/agentpilot/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/jbexta/AgentPilot"></a></td><td class="pj"><a class="nm" href="../../../../repo/jbexta/agentpilot/">AgentPilot</a><a class="nwo" href="https://github.com/jbexta/AgentPilot">jbexta/AgentPilot</a><div class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vN">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">566</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">GitHub Copilot</span></td><td class="ds"><div class="desc">A versatile workflow automation platform to create, organize, and execute AI workflows, from a single LLM to complex AI-driven workflows.</div><code class="cmd">git clone https://github.com/jbexta/AgentPilot.git</code></td><td class="c hide"><div class="meta">Python<br>AGPL-3.0<br>2026-04-14</div></td></tr>
 </tbody></table>
 
 <nav class="rel"><h2>This topic, other harnesses</h2><p>Assistants &amp; Domain Agents filtered to what plugs into each of the others.</p><a class="chip" href="../../../../topic/assistants-domain-agents/target/claude-code/">Claude Code <span class="ct">4</span></a><a class="chip" href="../../../../topic/assistants-domain-agents/target/claude-anthropic/">Claude / Anthropic <span class="ct">8</span></a><a class="chip" href="../../../../topic/assistants-domain-agents/target/mcp/">MCP <span class="ct">7</span></a><a class="chip" href="../../../../topic/assistants-domain-agents/target/codex-openai/">Codex / OpenAI <span class="ct">20</span></a><a class="chip" href="../../../../topic/assistants-domain-agents/target/gemini-google/">Gemini / Google <span class="ct">3</span></a><a class="chip" href="../../../../topic/assistants-domain-agents/target/langchain-langgraph/">LangChain / LangGraph <span class="ct">7</span></a><a class="chip" href="../../../../topic/assistants-domain-agents/target/local-ollama/">Local / Ollama <span class="ct">4</span></a><h2>Or drop a filter</h2><a class="chip" href="../../../../topic/assistants-domain-agents/">All Assistants &amp; Domain Agents</a><a class="chip" href="../../../../target/github-copilot/">Everything for GitHub Copilot</a></nav>
@@ -62,12 +76,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

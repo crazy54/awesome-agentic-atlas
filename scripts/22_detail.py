@@ -408,7 +408,7 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
 <meta property="og:url" content="{esc(repo.url)}">
 <meta property="og:image" content="{esc(repo.shot)}">
 <link rel="icon" href="{ICON}">
-<link rel="stylesheet" href="../../detail.css">
+{HEAD_THEME}<link rel="stylesheet" href="../../detail.css">
 <script type="application/ld+json">{breadcrumb(repo)}</script>
 </head>
 <body>
@@ -546,7 +546,7 @@ def directory(repos: list[Repo], data: dict) -> str:
 <meta property="og:url" content="{esc(url)}">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/{esc(REPO)}">
 <link rel="icon" href="{ICON}">
-<link rel="stylesheet" href="detail.css">
+{HEAD_THEME}<link rel="stylesheet" href="detail.css">
 </head>
 <body>
 <header><div class="wrap">
@@ -825,6 +825,48 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
 }
 """
 
+# The browser chrome, and the half of the theme that has to be settled before the first pixel.
+#
+# This one *is* inlined into all 1,295 pages, against the argument the stylesheet and the script above
+# make, and the exception is the whole reason it exists: it has to have finished before first paint, and
+# `detail.js` is a separate request that by definition has not. A reader who chose light would otherwise
+# get a frame of near-black on every page they open -- the flash the inline form prevents. It is ~700
+# bytes x 1,295, and unlike the star count it is a constant, so it is committed once and never rewritten
+# by a rebuild; the churn argument in the module docstring is about volatile *values*, not about size.
+#
+# Copied out of `19_pages.py`'s head rather than shared with it, on the same argument the two palette
+# blocks in `CSS` above are copied: that template is one 25 KB string and there is no seam to import.
+#
+# One `theme-color`, written by script, rather than the two `media` variants that would be the obvious way
+# to do it: the HTML spec picks the *first* such element whose media matches, so a pair keyed on
+# `prefers-color-scheme` cannot be overridden by anything appended later -- and these pages now honour a
+# choice made *against* the OS preference, so the pair would paint the chrome the opposite colour to the
+# page for exactly the readers who made one. The value is `--plane` in dark, because `--plane` is the
+# header's background and the header is what sits under the chrome. It is a literal because `detail.css`
+# has not been fetched, let alone parsed, at the moment the script below runs; with JavaScript off it
+# stays this value, which agrees with the `data-theme="dark"` floor on <html>.
+#
+# Precedence is explicit choice, then the operating system, then dark. Dark stays the fallback because it
+# is the designed mode -- the one whose accent contrast ratios were actually measured. The markup's
+# `data-theme="dark"` is the floor if this throws, which `localStorage` does in some private modes. The
+# key is `theme`, the same string the index writes, so a choice made on the index is honoured here
+# immediately and there is nothing to migrate.
+HEAD_THEME = """<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of detail.css. Once detail.js has run it
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
+"""
+
 # One script for 1,295 pages, for the same reason as the stylesheet: ~1 KB inlined 1,295 times is 1.3 MB
 # of repository that gets rewritten whenever a line of it changes.
 JS = """/* Written by scripts/22_detail.py. Shared by every page under docs/repo/.
@@ -834,16 +876,49 @@ JS = """/* Written by scripts/22_detail.py. Shared by every page under docs/repo
 "use strict";
 
 /* Not a data fetch and not a framework: the light half of the theme is in detail.css and without a
-   switch nothing on these pages can ever reach it. Same default as the site (dark) and the same
-   unpersisted, one-tab scope, so the two surfaces behave alike. */
+   switch nothing on these pages can ever reach it.
+
+   Three pieces, ported from `wire()` in 19_pages.py, because the toggle used to change nothing beyond
+   this tab's current document: the write on click, so the choice survives the next link; the agreement
+   with the head script on load; and the listener, so a reader who has expressed no choice follows their
+   OS the way the index does. The *read* is not here -- it is inline in every page's <head>, because by
+   the time this file has been fetched and run the wrong theme has already been painted.
+
+   label() is folded into every path that changes the theme, which is the index's arrangement and for its
+   reasons: the button's markup says "Light theme" and aria-pressed="false", which is wrong for every
+   reader the head script just resolved to light, and --plane is read off the stylesheet rather than
+   restated here so the browser chrome cannot drift from the page. There is a computed value to read by
+   now -- detail.css is a render-blocking link in the head, so it is parsed before this runs. The meta is
+   looked up defensively: this file is one shared request, and a page that ever ships without the head
+   block should lose the chrome colour, not the copy button and the two figures below. */
 var toggle = document.getElementById("theme");
 if (toggle) {
-  toggle.onclick = function (e) {
+  var label = function () {
+    var light = document.documentElement.dataset.theme === "light";
+    toggle.textContent = light ? "Dark theme" : "Light theme";
+    toggle.setAttribute("aria-pressed", light ? "true" : "false");
+    var tc = document.getElementById("tc");
+    var plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+    if (tc && plane) tc.content = plane;
+  };
+  toggle.onclick = function () {
     var light = document.documentElement.dataset.theme !== "light";
     document.documentElement.dataset.theme = light ? "light" : "dark";
-    e.target.textContent = light ? "Dark theme" : "Light theme";
-    e.target.setAttribute("aria-pressed", light ? "true" : "false");
+    /* The choice is the point: it used to last until the next navigation, so a reader who needs light
+       re-picked it on every one of these 1,295 pages and again on every trip back to the atlas. */
+    try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+    label();
   };
+  label();
+  /* Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a
+     theme they explicitly chose because the sun went down is worse than not following at all. */
+  try {
+    matchMedia("(prefers-color-scheme: light)").addEventListener("change", function (ev) {
+      if (localStorage.getItem("theme")) return;
+      document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+      label();
+    });
+  } catch (e) {}
 }
 
 /* Feature-detected rather than assumed, and the button stays hidden when the answer is no -- a button

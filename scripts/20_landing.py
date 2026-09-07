@@ -261,17 +261,89 @@ footer .wrap{max-width:1500px}
 }
 """
 
+# The browser chrome, and the half of the theme that has to be settled before the first pixel.
+#
+# Copied out of `19_pages.py`'s head rather than shared with it, on the same argument the two palette
+# blocks above are copied: that template is one 25 KB string and there is no seam. It could not become a
+# shared external script even if there were one, and that is the point rather than an excuse -- an
+# external file is a second round trip, and this has to have *finished* before first paint. Without it a
+# reader who chose light gets a frame of near-black on every one of these 156 pages, which is the flash
+# the inline form exists to prevent.
+#
+# One `theme-color`, written by script, rather than the two `media` variants that would be the obvious
+# way to do it: the HTML spec picks the *first* such element whose media matches, so a pair keyed on
+# `prefers-color-scheme` cannot be overridden by anything appended later -- and these pages now honour a
+# choice made *against* the OS preference, so the pair would paint the chrome the opposite colour to the
+# page for exactly the readers who made one. The value is `--plane` in dark, because `--plane` is the
+# header's background and the header is what sits under the chrome. It is a literal because `pages.css`
+# has not been fetched, let alone parsed, at the moment the script below runs; with JavaScript off it
+# stays this value, which agrees with the `data-theme="dark"` floor on <html>.
+#
+# Precedence is explicit choice, then the operating system, then dark. Dark stays the fallback because it
+# is the designed mode -- the one whose accent contrast ratios were actually measured. The markup's
+# `data-theme="dark"` is the floor if this throws, which `localStorage` does in some private modes. The
+# key is `theme`, the same string the index writes, so a choice made on the index is honoured here
+# immediately and there is nothing to migrate.
+HEAD_THEME = """<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
+"""
+
 # Not a data fetch and not a framework: the light half of the theme is copied in above, and without a
-# switch nothing on these pages can ever reach it. Same default as the site (dark) and the same
-# unpersisted, one-tab scope, so the two surfaces behave alike. Inlined rather than a second file
-# because it is 250 bytes and a request costs more than that.
+# switch nothing on these pages can ever reach it. Inlined rather than a second file because it is under
+# a kilobyte and a request costs more than that.
+#
+# Three pieces, all ported from `wire()` in `19_pages.py`, because the toggle used to change nothing but
+# this tab's current document: the write on click, so the choice survives the next link; the agreement
+# with the head script on load; and the listener, so a reader who has expressed no choice follows their
+# OS the way the index does. The read half is `HEAD_THEME` above -- it cannot be here, because by the
+# time the foot of the body runs the wrong theme has already been painted.
+#
+# `label()` is the index's, and it is folded into every path that changes the theme for the same reason:
+# the button's markup says "Light theme" and `aria-pressed="false"`, which is wrong for every reader the
+# head script just resolved to light, and `--plane` is read off the stylesheet rather than restated here
+# so the chrome cannot drift from the page. There is a computed value to read by now -- `pages.css` is a
+# render-blocking link in the head, so it is parsed before the body's scripts run.
 THEME_JS = """<script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 """
 
@@ -419,9 +491,18 @@ def row_html(page: Page, r: dict, i: int, os_labels: list[str]) -> str:
     # tells the reader nothing they did not get from the heading.
     tags = "" if page.cat else f'<span class="tag cat">{esc(r["cat_name"])}</span>'
     tags += "".join(f'<span class="tag">{esc(t)}</span>' for t in r["target_names"])
-    # The social card is the fallback for two thirds of these rows and `data.json` stores "" for it
-    # rather than 55 bytes a row of a string it can rebuild. Rebuild it.
-    img = esc(r["img"] or f"https://opengraph.githubassets.com/1/{r['nwo']}")
+    # GitHub's social card for the repository, derived from the `nwo`, for every row. This used to prefer
+    # the `img` column -- whatever URL the upstream README used for its own banner -- with the card as the
+    # fallback. The column is still in `data.json`; it is simply not rendered here any more (JFH-218),
+    # because nothing bounds what those 686 URLs serve: median 447,380 B, largest 10,946,713 B, one animated
+    # GIF at 716,235 B. A page like this one lays out 100 rows, so preferring the column meant a static file
+    # that could ask a reader for tens of megabytes from 46 hosts, and there is no client-side rescue on a
+    # prerendered page. A social card is a fixed ~100 KB at 1200x600, which still oversupplies the slot.
+    #
+    # The same one-line change is in the index's row normaliser, for the same reason. `22_detail.py` is
+    # deliberately *not* in step: one image on a page nobody's budget notices is exactly where a project's
+    # own screenshot belongs, and it is the surface that keeps the column honest.
+    img = esc(f"https://opengraph.githubassets.com/1/{r['nwo']}")
     url = esc(r["url"])
     # The name goes to this site's own page for the project and the `nwo` underneath it goes to GitHub,
     # which is the split the index table uses too. It matters more here than there: these 156 pages are
@@ -596,7 +677,7 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
 <meta property="og:url" content="{esc(page.url)}">
 {image_tags(page, cards)}
 <link rel="icon" href="{ICON}">
-<link rel="stylesheet" href="{page.rel('pages.css')}">
+{HEAD_THEME}<link rel="stylesheet" href="{page.rel('pages.css')}">
 <script type="application/ld+json">{itemlist(page, shown)}</script>
 </head>
 <body>
@@ -719,24 +800,51 @@ def key_text(key: str) -> str:
     return key
 
 
-def prune_keys(current: str) -> list[Path]:
-    """Delete key files from an earlier `INDEXNOW_KEY` this run did not write.
+def is_key_file(path: Path) -> bool:
+    """Whether `path` is an IndexNow key file, judged by what is *in* it and not by what it is called.
+
+    A key file is the one file on this site whose name and content are the same string: `key_text` writes
+    the key and nothing else into `<key>.txt`. So `content == stem` is not a heuristic, it is the file
+    format, and it is the only test here that cannot be satisfied by accident.
+
+    The name shape is checked too, but only as a cheap precondition -- on its own it is not enough, and
+    that is the whole reason this function exists rather than a regex at the call site. `[A-Za-z0-9-]{8,128}`
+    matches the stem of `security.txt`, which is eight in-alphabet characters and a plausible thing for
+    somebody to add to a site root; deleting it on sight would be this stage silently removing a file it
+    has no business knowing about. Its *content* is a security policy, not the word "security", so the
+    content test spares it while still catching every real rotated key.
+    """
+    if not b19.INDEXNOW_RE.match(path.stem):
+        return False
+    try:
+        return path.read_text(encoding="utf-8").strip() == path.stem
+    except (OSError, UnicodeDecodeError):
+        # Unreadable or not text, so not something this stage wrote. Left alone rather than guessed at.
+        return False
+
+
+def prune_keys(keep: set[Path]) -> list[Path]:
+    """Delete key files from an earlier `INDEXNOW_KEY` that are not in `keep`.
 
     Rotating the key changes the *filename*, so without this a rotation leaves the old file tracked,
     served and never rewritten -- which `weekly.yml`'s "every tracked page was rewritten" assertion reads,
     correctly, as a generator having gone missing, and fails the build over a file nothing wants any more.
+    Deleting it is only half of that fix: a tracked file that is *gone* from the working tree used to land
+    in the same assertion's error arm, because `git ls-files` reads the index and `-nt` against a missing
+    file is false. `weekly.yml` now sorts on existence first, so a file this function removes is reported
+    as a deletion the commit will carry rather than as a generator that went missing.
 
-    Deliberately narrow. Only names in `docs/` whose stem is itself a valid IndexNow key are candidates,
-    and `robots.txt` is excluded by name as well -- the 8-character minimum already excludes it, but a
-    stage that deletes files should not lean on arithmetic to spare the one other `.txt` file here.
+    `keep` is resolved paths, and is the same contract as `prune` below: the delete set is derived from
+    what this run actually wrote rather than from what a name looks like. That ordering matters -- the
+    current key file is in `keep` because `main` wrote it, so it cannot be deleted by a mistake in the
+    name test, and `robots.txt` is in `keep` for the same reason instead of being spelled out here.
     """
     gone = []
     for path in sorted(OUT.glob("*.txt")):
-        if path.name == "robots.txt" or path.name == current:
+        if path.resolve() in keep or not is_key_file(path):
             continue
-        if b19.INDEXNOW_RE.match(path.stem):
-            path.unlink()
-            gone.append(path)
+        path.unlink()
+        gone.append(path)
     return gone
 
 
@@ -792,7 +900,9 @@ def main() -> None:
     (OUT / "robots.txt").write_text(robots(), encoding="utf-8")
     keyfile = b19.indexnow_key_file()
     (OUT / keyfile).write_text(key_text(b19.indexnow_key()), encoding="utf-8")
-    stale_keys = prune_keys(keyfile)
+    # The `keep` set is every `.txt` at the root this run wrote, taken after writing them, so it is a
+    # record of what happened rather than a second list to keep in step with the writes above.
+    stale_keys = prune_keys({(OUT / f).resolve() for f in ("robots.txt", keyfile)})
 
     gone = prune({p.path.resolve() for p in pages})
 

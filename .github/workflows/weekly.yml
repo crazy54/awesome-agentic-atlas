@@ -60,8 +60,17 @@ jobs:
 
       # See daily.yml for the argument, which is the same one: for both of these "" is not "unset", so
       # neither can be declared in `env:`. This workflow is the one that matters for INDEXNOW_KEY, because
-      # `20_landing.py` -- which writes the key file the endpoint fetches -- runs only here. An override set
-      # here and not in daily.yml would publish one key and submit another.
+      # `20_landing.py` -- which writes the key file the endpoint fetches -- runs only here.
+      #
+      # The two workflows cannot disagree about the *value*: both read the same repository-scoped
+      # `${{ vars.INDEXNOW_KEY || secrets.INDEXNOW_KEY }}`, so there is one setting and no way to set it in
+      # one file and not the other. The hazard is temporal instead, and it is the reason this note is here
+      # rather than there. This workflow is the only writer of the key file and it runs weekly, so from the
+      # moment somebody sets or rotates the variable until the next weekly run, every daily submission
+      # posts a key whose file is not yet published -- a 403 with the documented meaning, on every daily
+      # run, for up to a week. Nothing breaks and nothing needs undoing: the next weekly run publishes the
+      # file and the URLs are resubmitted by the next build that changes them. Rotate right before a
+      # weekly run, or dispatch this workflow by hand afterwards, and the window closes immediately.
       #
       # No `if:` on this step or on the IndexNow step at the foot of this file. This workflow has no gate,
       # so `steps.gate.outputs.go` would evaluate to '' and every gated step would be skipped for ever.
@@ -195,7 +204,24 @@ jobs:
           set -euo pipefail
           : > "$RUNNER_TEMP/frozen"
           : > "$RUNNER_TEMP/prunable"
+          : > "$RUNNER_TEMP/deleted"
           git ls-files docs mega-list | while IFS= read -r f; do
+            # Existence before mtime, and that order is the whole of this arm. `git ls-files` reads the
+            # *index*, so a file a generator deliberately deleted from the working tree is still listed
+            # here -- and `-nt` against a path that does not exist is false, so it would fall through the
+            # mtime skip and be sorted by name like a file that is merely stale. Nothing about a name can
+            # tell those two apart, which is why this is not another `case` pattern: a deleted file and an
+            # unwritten one are opposite findings that happen to look identical from `ls-files`.
+            #
+            # A deletion here is intended by construction. `20_landing.prune` removes facet pages whose
+            # facet stopped existing and `20_landing.prune_keys` removes the key file from a rotated
+            # `INDEXNOW_KEY`; both are prunes, and the `git add docs mega-list` in the commit step stages
+            # the removal, so the repository self-heals in this same run with no `git rm` from anybody.
+            # That is the difference from the prunable arm below, where the file is still present, still
+            # served and still needs a human. Reported, not warned about: on a key rotation this fires
+            # exactly once and is the correct outcome, and a warning that is right every time it appears
+            # is a warning people learn to scroll past.
+            if [ ! -e "$f" ]; then printf '%s\n' "$f" >> "$RUNNER_TEMP/deleted"; continue; fi
             if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
             case "$f" in
               # `docs/og/*.png` and not `docs/og/*`: a card whose content did not change is deliberately
@@ -215,6 +241,11 @@ jobs:
           done
           np="$(wc -l < "$RUNNER_TEMP/prunable" | tr -d ' ')"
           nf="$(wc -l < "$RUNNER_TEMP/frozen" | tr -d ' ')"
+          nd="$(wc -l < "$RUNNER_TEMP/deleted" | tr -d ' ')"
+          if [ "$nd" -gt 0 ]; then
+            echo "Tracked files this build deleted, whose removal the commit below carries:"
+            sed 's/^/  /' "$RUNNER_TEMP/deleted"
+          fi
           if [ "$np" -gt 0 ]; then
             echo "Facet pages that are tracked but no longer emitted:"
             sed 's/^/  /' "$RUNNER_TEMP/prunable"
@@ -226,7 +257,7 @@ jobs:
             echo "::error title=Generator missing from the build::${nf} tracked file(s) under docs/ or mega-list/ are committed but were not written. These have fixed paths, so no taxonomy change can explain them: the stage that writes them is missing from this workflow, and the published copy can never change again until it is put back."
             exit 1
           fi
-          echo "All $(git ls-files docs mega-list | wc -l | tr -d ' ') tracked files under docs/ and mega-list/ were rewritten by this build."
+          echo "All $(git ls-files docs mega-list | wc -l | tr -d ' ') tracked files under docs/ and mega-list/ were rewritten by this build, or deleted by it ($nd)."
 
       - name: Record the source commits as built
         run: python scripts/watch_sources.py --update
@@ -256,7 +287,17 @@ jobs:
       # step so a failure publishing the workbooks cannot silently cost the submission. Deliberately no
       # `if:` -- see the note on the token step above. A non-2xx here is a warning and exit 0; the file is
       # absent when nothing was committed, which the script reads as "nothing changed".
+      #
+      # `continue-on-error` because the ordering that protects the submission from the release also coupled
+      # the release to the submission, and that direction is the expensive one. Every step carries an
+      # implicit `success()`, so any non-zero exit from the line below -- an unhandled exception in a
+      # module whose whole contract is that a bad response is a warning -- would skip the release step and
+      # cost a week's workbooks over a ping to Bing. Kept here rather than moved after the release because
+      # the argument above is still true and both couplings are now cut: this step cannot fail the job,
+      # and nothing after it depends on it. The step still goes red in the run summary, so a fault here is
+      # visible; it just is not fatal to a build whose actual job already succeeded.
       - name: Tell IndexNow which URLs changed
+        continue-on-error: true
         run: python scripts/26_indexnow.py --changed "$RUNNER_TEMP/changed-docs.txt"
 
       # A dated tag, and `--latest` on every one of them, because the README links to

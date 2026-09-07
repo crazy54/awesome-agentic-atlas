@@ -67,15 +67,18 @@ true while the index grows, but a week of *net removals* below 1,290 would leave
 the next weekly run. Drop `"note"` from the root record in `cards()` to take the date back off and get
 the facet cards' churn profile; nothing else depends on it.
 
-A card is re-rendered only when what it says changes. `docs/og/cards.json` holds the exact strings
-that went onto each card plus a signature over them and `TEMPLATE`, so an unchanged facet costs no
-browser launch and, more to the point, no bytes. That is what stops a Chromium update on the runner
-from rewriting the entire set: `weekly.yml` does `pip install --upgrade playwright` and then
-`playwright install chromium`, so the rasterizer moves every few weeks, and text rendered a pixel
-differently is 27 new objects. Committed rather than left in `cache/`, which is gitignored and
-restored best-effort -- a cache miss there would be indistinguishable from 27 changed cards and would
-cost the history ~540 KB to find that out. Bump `TEMPLATE` to force the set through after a design
-change -- and only after one, because a bump that changes no pixels still costs that ~540 KB. The
+A card is re-rendered only when what it says or how it looks changes. `docs/og/cards.json` holds the
+exact strings that went onto each card plus a signature over them, over `PALETTE` and over `TEMPLATE`,
+so an unchanged facet costs no browser launch and, more to the point, no bytes. That is what stops a
+Chromium update on the runner from rewriting the entire set: `weekly.yml` does `pip install --upgrade
+playwright` and then `playwright install chromium`, so the rasterizer moves every few weeks, and text
+rendered a pixel differently is 27 new objects. Committed rather than left in `cache/`, which is
+gitignored and restored best-effort -- a cache miss there would be indistinguishable from 27 changed
+cards and would cost the history ~540 KB to find that out. `PALETTE` is in the signature rather than
+trusted to a human because the colours are the half of "how it looks" that a re-theme actually touches,
+and a cache key that does not cover its own input ships a stale artefact and reports success -- see
+`signature()`. `TEMPLATE` stays for the half the hash cannot see: bump it to force the set through after
+a layout change, and only after one, because a bump that changes no pixels still costs that ~540 KB. The
 optional `"note"` key is there for exactly that reason: a facet record does not carry it, so a facet
 signature did not move when the root card was added, so this stage rendered one file rather than 27.
 
@@ -147,7 +150,46 @@ NAME_CAP = 26      # characters, before the CSS has to ellipsize -- see `card_ht
 # it is a deliberate act: any edit to `card_html` that changes the pixels of an *existing* card needs
 # it, and nothing else does. Adding the root card did not: a facet record grew no keys, so its signature
 # did not move, so its committed pixels were never questioned.
+#
+# Colour is the one class of pixel change this no longer has to remember, because `PALETTE` below is
+# hashed beside it. What is left for `TEMPLATE` is what the hash cannot see: a layout, size or type edit
+# in the stylesheet, a font Chromium resolves differently, a rasterizer worth forcing through.
 TEMPLATE = 2
+
+# Every colour on a card, hoisted out of `card_html`'s stylesheet so that the signature can cover it.
+#
+# It could not before. `signature()` hashed `TEMPLATE` and the record -- the record being what a card
+# *says* -- while each colour was a literal in the CSS below, which put the card's appearance outside
+# the cache key that decides whether to re-render it. So a re-theme moved no signature, `main()` skipped
+# all 27, the stage reported success, and the committed PNGs went on serving the previous palette while
+# every other surface on the site moved. Nothing in a browser would show it: the pages re-theme from
+# their own CSS, and the only symptom is a link pasted into Slack, Discord, iMessage or X. `TEMPLATE`
+# was the answer to this and it was a manual one -- forget the bump and nothing fails.
+#
+# This repository has already paid for one cache key that did not cover its own input. `docs/sw.js`'s
+# `VERSION` hashes the files the worker precaches, so rewriting `docs/index.html` without re-running
+# `24_pwa.py` left the worker byte-identical and returning readers pinned to the old shell with no
+# self-healing path, because the file that would have triggered the update was the one that had not
+# changed (fixed in `87250a1`). Same shape here, with a slower fuse and a wider blast radius, because
+# this artefact is what a stranger sees first.
+#
+# Roles and values are `19_pages.py`'s dark custom properties character for character (`:470-472`),
+# which is the point of copying them: a card is the first thing anyone sees of this site and it has to
+# be the same cyan and the same near-black as the page behind it. `head` is the one addition -- a card
+# lifts its heading to pure white where the page leaves `h1` at `--ink`, because a card is read at
+# thumbnail size. Six-digit hex, except where the CSS was already three: `shoot()` reads `surface` back
+# out as the bare RRGGBBAA its Chromium flag wants.
+PALETTE = {
+    "surface": "#101416",   # the card, and the backdrop Chromium paints under it -- see `shoot()`
+    "band":    "#232d30",   # chip fill
+    "ink":     "#d0d7d8",   # body text, and the chips'
+    "ink2":    "#a8b0b2",   # the count line
+    "muted":   "#8c9496",   # blurb, label, host line
+    "grid":    "#2c383d",   # chip border
+    "bar":     "#08b0cc",   # the accent: the frame's top border, and the kicker
+    "warn":    "#feb932",   # the count itself
+    "head":    "#fff",      # the heading -- the only colour here that is not a page variable
+}
 
 # The root card's file name, and the one string `19_pages.py` has to agree with -- it is what the root
 # page's `og:image` points at. Spelled here rather than there because this is the stage that writes it;
@@ -178,6 +220,31 @@ def clip_name(name: str) -> str:
     37 characters, and three of those on one row is more than the card is wide.
     """
     return name if len(name) <= NAME_CAP else name[:NAME_CAP - 1].rstrip(" ,:;-/") + "…"
+
+
+def signature(rec: dict) -> str:
+    """Everything that decides a card's pixels except the rasterizer, in sixteen hex characters.
+
+    The record is what the card says, `PALETTE` is what it looks like, and `TEMPLATE` is the manual bump
+    for the rest. `main()` re-renders a card when this moves and skips it when it does not, so anything
+    left out of here is something that can change while the committed PNG does not follow it -- which is
+    exactly what the palette used to be. A cache key has to cover its own input.
+
+    `sort_keys` is what makes the hashed thing `PALETTE`'s role-to-colour mapping rather than its
+    declaration order: reorder the block and no card re-renders, change which colour `bar` means and all
+    27 do. Renaming a role does re-render, and that is the right way round -- a rename is cheap to avoid
+    and a missed re-theme is not.
+
+    Nothing here is read off disk, deliberately. This repository is `core.autocrlf=true` with no
+    `.gitattributes`, so the working tree is CRLF on Windows and LF on the runner: any hash taken over
+    file bytes -- `card_html`'s source text, say, which would catch layout too -- would come out
+    different on the two platforms, and they would re-render each other's cards for ever. Hashing
+    the palette as data is platform-independent by construction. That trap has fired here once already,
+    on `24_pwa.py`'s service-worker `VERSION` (`87250a1`).
+    """
+    return hashlib.sha1(
+        json.dumps([TEMPLATE, PALETTE, rec], sort_keys=True, ensure_ascii=False).encode()
+    ).hexdigest()[:16]
 
 
 def cards(pages: list, data: dict) -> list[dict]:
@@ -255,14 +322,12 @@ def cards(pages: list, data: dict) -> list[dict]:
             "names": [clip_name(r["name"]) for r in
                       sorted(p.rows[:TOP], key=lambda r: r["name"].lower())],
         })
-    # Signed in one pass at the end rather than inside the loop, so that the root record is hashed by
-    # the same three lines as the other 26. Each record is hashed before it has a `"sig"` key, which is
-    # what it was before and is what keeps the 26 facet signatures -- and so their committed pixels --
-    # untouched by this function growing a 27th entry.
+    # Signed in one pass at the end rather than inside the loop, so the root record is hashed by the
+    # same call as the other 26. Each record is hashed before it has a `"sig"` key, which is what it was
+    # before and is what keeps the 26 facet signatures -- and so their committed pixels -- untouched by
+    # this function growing a 27th entry.
     for rec in out:
-        rec["sig"] = hashlib.sha1(
-            json.dumps([TEMPLATE, rec], sort_keys=True, ensure_ascii=False).encode()
-        ).hexdigest()[:16]
+        rec["sig"] = signature(rec)
     return out
 
 
@@ -280,7 +345,9 @@ def card_html(rec: dict, host: str) -> str:
 
     The colours are `19_pages.py`'s dark palette, character for character, on the same argument
     `20_landing.py` makes for copying the two custom-property blocks: a card is the first thing anyone
-    sees of this site and it has to be the same cyan and the same near-black as the page behind it.
+    sees of this site and it has to be the same cyan and the same near-black as the page behind it. They
+    live in `PALETTE` rather than in the stylesheet below so that `signature()` can hash them, which is
+    what makes a re-theme re-render the cards instead of silently leaving them on the old palette.
 
     One record shape, 27 cards. The only slot whose *content* differs between the root card and a facet
     card is the host line's suffix, and it is optional rather than required of every record for a reason
@@ -290,6 +357,11 @@ def card_html(rec: dict, host: str) -> str:
     the same pixels.
     """
     esc = b20.esc
+    # Unpacked into locals so that the stylesheet below still reads as a stylesheet rather than as nine
+    # dictionary lookups. Named for the `19_pages.py` custom property each one came from.
+    surface, band, grid = PALETTE["surface"], PALETTE["band"], PALETTE["grid"]
+    ink, ink2, muted = PALETTE["ink"], PALETTE["ink2"], PALETTE["muted"]
+    bar, warn, head = PALETTE["bar"], PALETTE["warn"], PALETTE["head"]
     chips = "".join(f'<span class=chip>{esc(n)}</span>' for n in rec["names"])
     # `"note" in rec` rather than `rec.get("note", "")`, and the difference is not style: a facet record
     # that carried the key with an empty value would hash differently and re-render all 26 committed
@@ -301,13 +373,13 @@ def card_html(rec: dict, host: str) -> str:
    --screenshot captures the window, so content that overflowed would not be cropped by the card, it
    would push the layout and silently shift everything above it. */
 html,body{{margin:0;padding:0;width:{W}px;height:{H}px;overflow:hidden}}
-body{{background:#101416;color:#d0d7d8;
+body{{background:{surface};color:{ink};
   font:400 16px/1.4 "Segoe UI","DejaVu Sans",system-ui,-apple-system,Helvetica,Arial,sans-serif}}
 /* The accent is a border on the frame rather than a positioned bar, so `box-sizing` keeps the total
    at exactly {H}px however thick it gets. */
 .card{{box-sizing:border-box;width:{W}px;height:{H}px;padding:54px 72px 44px;
-  border-top:14px solid #08b0cc;display:flex;flex-direction:column}}
-.kick{{font-size:25px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#08b0cc}}
+  border-top:14px solid {bar};display:flex;flex-direction:column}}
+.kick{{font-size:25px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:{bar}}}
 /* Two lines, then ellipsis. Three would collide with the count line, and the longest facet name here
    ("Sandbox, Security & Governance") is already two at this size in a wide font.
 
@@ -316,26 +388,26 @@ body{{background:#101416;color:#d0d7d8;
    UI and in the runner's DejaVu Sans, and the one variable left -- one heading line or two -- is
    absorbed by the `margin-top:auto` below. Measured through --dump-dom, the two-line worst case
    comes to 597 of the {H}px available, so the tightest card still has 33px of air in it. */
-h1{{margin:24px 0 0;font-size:76px;line-height:1.05;letter-spacing:-.02em;font-weight:700;color:#fff;
+h1{{margin:24px 0 0;font-size:76px;line-height:1.05;letter-spacing:-.02em;font-weight:700;color:{head};
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}
-.count{{margin-top:18px;font-size:33px;color:#a8b0b2}}
-.count b{{color:#feb932;font-weight:700}}
+.count{{margin-top:18px;font-size:33px;color:{ink2}}}
+.count b{{color:{warn};font-weight:700}}
 /* One line, never two. Wrapping is what would make the card's height depend on glyph widths, so the
    blurb is clipped to 90 characters in Python for sense and ellipsized here for width -- whichever
    runs out first, the line count is one. */
-.blurb{{margin-top:14px;font-size:26px;color:#8c9496;white-space:nowrap;overflow:hidden;
+.blurb{{margin-top:14px;font-size:26px;color:{muted};white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}}
 /* Pushed to the floor, so a one-line heading and a two-line heading both leave the names where the
    eye already found them on the last card it saw. */
 .names{{margin-top:auto}}
-.lbl{{font-size:20px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#8c9496}}
+.lbl{{font-size:20px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:{muted}}}
 .row{{display:flex;gap:14px;margin-top:14px}}
 /* `min-width:0` is what makes the ellipsis reachable -- a flex item's floor is its content width
    otherwise, so the three chips would overflow the row instead of shrinking inside it. */
-.chip{{flex:0 1 auto;min-width:0;background:#232d30;border:1px solid #2c383d;border-radius:999px;
-  padding:11px 21px;font-size:25px;color:#d0d7d8;white-space:nowrap;overflow:hidden;
+.chip{{flex:0 1 auto;min-width:0;background:{band};border:1px solid {grid};border-radius:999px;
+  padding:11px 21px;font-size:25px;color:{ink};white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}}
-.host{{margin-top:20px;font-size:22px;color:#8c9496}}
+.host{{margin-top:20px;font-size:22px;color:{muted}}}
 </style></head><body><div class=card>
 <div class=kick>Awesome Agentic Atlas</div>
 <h1>{esc(rec["title"])}</h1>
@@ -368,6 +440,12 @@ def shoot(rec: dict, host: str) -> bytes | None:
     it has, and --font-render-hinting=none takes the hinter out of the picture, which is the one
     rendering variable that changes with the runner's freetype rather than with our content -- and a
     render that changed is 24 KB of history whether or not anything on the card did.
+
+    --default-background-color is the one colour that is not in the document, so it is taken from
+    `PALETTE` rather than spelled again: it is what Chromium paints before the page's own background
+    lands, and a re-theme that changed the surface everywhere except in this argument would leave the
+    card's own backdrop behind -- outside the stylesheet, where nobody rereading the CSS would find it.
+    The flag wants bare RRGGBBAA, hence the `#` coming off and the opaque `ff` going on.
     """
     if not CHROME:
         return None
@@ -378,7 +456,8 @@ def shoot(rec: dict, host: str) -> bytes | None:
         cmd = [str(CHROME), "--headless", "--disable-gpu", "--hide-scrollbars", "--no-sandbox",
                "--disable-dev-shm-usage", f"--screenshot={out}", f"--window-size={W},{H}",
                "--force-device-scale-factor=1", "--font-render-hinting=none",
-               "--default-background-color=101416ff", "--virtual-time-budget=1500",
+               f"--default-background-color={PALETTE['surface'].lstrip('#')}ff",
+               "--virtual-time-budget=1500",
                page.as_uri()]
         try:
             subprocess.run(cmd, capture_output=True, timeout=60)
@@ -598,8 +677,14 @@ def main(out: Path = OUT) -> None:
         built.append(name)
         entries[name] = {**said, "bytes": len(png)}
 
-    ledger.write_text(json.dumps({"template": TEMPLATE, "size": [W, H], "cards": entries},
-                                 indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    # `palette` is recorded beside `template` for the same reason the strings are recorded beside the
+    # signature: so that "are these cards on the current palette?" is answered by reading the committed
+    # ledger against `PALETTE` rather than by launching a browser and comparing 27 PNGs. It is the
+    # other half of the input the signature is taken over, and a hash alone would say two sets differ
+    # without saying which colour moved.
+    ledger.write_text(json.dumps({"template": TEMPLATE, "palette": PALETTE, "size": [W, H],
+                                  "cards": entries}, indent=1, ensure_ascii=False) + "\n",
+                      encoding="utf-8")
     # Keyed on the views that exist, not on the entries written: a card whose render failed keeps
     # its file, and a file with no entry is a card from an older run that this one could not vouch
     # for. Neither is stale, and deleting either would take the page's `og:image` down with it.

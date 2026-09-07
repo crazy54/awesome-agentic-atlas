@@ -46,9 +46,15 @@ def main() -> None:
     force = "--force" in sys.argv
     out = json.loads(out_path.read_text(encoding="utf-8")) if out_path.exists() else {}
 
+    now = sig.utcnow()
     pushed = {e["nwo"]: sig.meta_push(meta, e["nwo"]) for e in entries}
-    todo = [e for e in entries if force or sig.stale(out, e["nwo"], pushed[e["nwo"]])]
-    print(f"{len(todo)} of {len(entries)} repos to check for an action.yml")
+    # The CI-race term in signals.py deliberately does not apply to this file -- see `_raced_ci`
+    # and the docstring above -- so the only terms that can queue a repo here are a moved push, a
+    # legacy entry, and the age ceiling.
+    why = {e["nwo"]: sig.reason(out, e["nwo"], pushed[e["nwo"]], now) for e in entries}
+    todo = [e for e in entries if force or why[e["nwo"]] != sig.FRESH]
+    print(f"{len(todo)} of {len(entries)} repos to check for an action.yml"
+          f"{sig.breakdown([why[e['nwo']] for e in todo])}")
 
     failed = 0
     for start in range(0, len(todo), BATCH):
@@ -74,7 +80,7 @@ def main() -> None:
             if not n:
                 continue
             out[e["nwo"]] = sig.action_entry(bool(n.get("yml") or n.get("yaml")),
-                                             pushed[e["nwo"]])
+                                             pushed[e["nwo"]], now)
         print(f"  {min(start + BATCH, len(todo))}/{len(todo)}")
         out_path.write_text(json.dumps(out, indent=1), encoding="utf-8")
 

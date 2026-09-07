@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-agent-skills.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Agent Skills tools for Cline / Roo","description":"6 Agent Skills projects that plug into Cline / Roo, ranked by GitHub stars. Capability bundles an agent loads on demand — SKILL.md packages, subagents…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/agent-skills/target/cline-roo/","numberOfItems":6,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"zhaoxuya520/reverse-skill","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/zhaoxuya520/reverse-skill/"},{"@type":"ListItem","position":2,"name":"MohamedAbdallah-14/unslop","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mohamedabdallah-14/unslop/"},{"@type":"ListItem","position":3,"name":"webzler/agentMemory","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/webzler/agentmemory/"},{"@type":"ListItem","position":4,"name":"flyingsquirrel0419/squirrel-skill","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/flyingsquirrel0419/squirrel-skill/"},{"@type":"ListItem","position":5,"name":"Wittlesus/cursorrules-pro","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/wittlesus/cursorrules-pro/"},{"@type":"ListItem","position":6,"name":"nickdesi/ZipAI","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nickdesi/zipai/"}]}</script>
 </head>
@@ -45,7 +59,7 @@
 <th class="ds">What it does</th><th class="c hide">Lang / licence / push</th></tr></thead>
 <tbody>
 <tr><td class="n rk">1</td><td class="shot"><a href="../../../../repo/zhaoxuya520/reverse-skill/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/zhaoxuya520/reverse-skill"></a></td><td class="pj"><a class="nm" href="../../../../repo/zhaoxuya520/reverse-skill/">zhaoxuya520/reverse-skill</a><a class="nwo" href="https://github.com/zhaoxuya520/reverse-skill">zhaoxuya520/reverse-skill</a><div class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">34,314</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">Cursor</span><span class="tag">Cline / Roo</span></td><td class="ds"><div class="desc">Source for 43 security skills covering reverse engineering, binary analysis, offensive assessment orchestration, and threat-intelligence workflows, adapted with English metadata and upstream safety gates (MIT)</div><code class="cmd">git clone https://github.com/zhaoxuya520/reverse-skill.git</code></td><td class="c hide"><div class="meta">PowerShell<br>MIT<br>2026-09-03</div></td></tr>
-<tr><td class="n rk">2</td><td class="shot"><a href="../../../../repo/mohamedabdallah-14/unslop/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://raw.githubusercontent.com/MohamedAbdallah-14/unslop/main/assets/new/hero.png"></a></td><td class="pj"><a class="nm" href="../../../../repo/mohamedabdallah-14/unslop/">MohamedAbdallah-14/unslop</a><a class="nwo" href="https://github.com/MohamedAbdallah-14/unslop">MohamedAbdallah-14/unslop</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">126</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">Codex / OpenAI</span><span class="tag">Gemini / Google</span><span class="tag">GitHub Copilot</span><span class="tag">Cursor</span><span class="tag">Cline / Roo</span></td><td class="ds"><div class="desc">Source for the unslop skill - deterministic and LLM-assisted cleanup for AI-generated prose across CLI and agent tool workflows</div><code class="cmd">pipx install unslop</code></td><td class="c hide"><div class="meta">Python<br>MIT<br>2026-08-31</div></td></tr>
+<tr><td class="n rk">2</td><td class="shot"><a href="../../../../repo/mohamedabdallah-14/unslop/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/MohamedAbdallah-14/unslop"></a></td><td class="pj"><a class="nm" href="../../../../repo/mohamedabdallah-14/unslop/">MohamedAbdallah-14/unslop</a><a class="nwo" href="https://github.com/MohamedAbdallah-14/unslop">MohamedAbdallah-14/unslop</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">126</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">Codex / OpenAI</span><span class="tag">Gemini / Google</span><span class="tag">GitHub Copilot</span><span class="tag">Cursor</span><span class="tag">Cline / Roo</span></td><td class="ds"><div class="desc">Source for the unslop skill - deterministic and LLM-assisted cleanup for AI-generated prose across CLI and agent tool workflows</div><code class="cmd">pipx install unslop</code></td><td class="c hide"><div class="meta">Python<br>MIT<br>2026-08-31</div></td></tr>
 <tr><td class="n rk">3</td><td class="shot"><a href="../../../../repo/webzler/agentmemory/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/webzler/agentMemory"></a></td><td class="pj"><a class="nm" href="../../../../repo/webzler/agentmemory/">webzler/agentMemory</a><a class="nwo" href="https://github.com/webzler/agentMemory">webzler/agentMemory</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">33</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude / Anthropic</span><span class="tag">MCP</span><span class="tag">Cline / Roo</span></td><td class="ds"><div class="desc">Source for the agent-memory-mcp skill</div><code class="cmd">git clone https://github.com/yourusername/agentMemory</code></td><td class="c hide"><div class="meta">TypeScript<br>MIT<br>2026-01-21</div></td></tr>
 <tr><td class="n rk">4</td><td class="shot"><a href="../../../../repo/flyingsquirrel0419/squirrel-skill/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/flyingsquirrel0419/squirrel-skill"></a></td><td class="pj"><a class="nm" href="../../../../repo/flyingsquirrel0419/squirrel-skill/">flyingsquirrel0419/squirrel-skill</a><a class="nwo" href="https://github.com/flyingsquirrel0419/squirrel-skill">flyingsquirrel0419/squirrel-skill</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">5</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">opencode</span><span class="tag">Codex / OpenAI</span><span class="tag">GitHub Copilot</span><span class="tag">Cursor</span><span class="tag">Cline / Roo</span><span class="tag">Aider</span></td><td class="ds"><div class="desc">Full-cycle software development skill — plans, builds, tests, lints, fixes bugs, and writes production-grade docs. Auto-detects project state and adapts its 8-phase pipeline. Works on 9 AI coding agent platforms (Apache 2.0)</div><code class="cmd">npx skills add flyingsquirrel0419/squirrel-skill</code></td><td class="c hide"><div class="meta">Shell<br>Apache-2.0<br>2026-04-29</div></td></tr>
 <tr><td class="n rk">5</td><td class="shot"><a href="../../../../repo/wittlesus/cursorrules-pro/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/Wittlesus/cursorrules-pro"></a></td><td class="pj"><a class="nm" href="../../../../repo/wittlesus/cursorrules-pro/">Wittlesus/cursorrules-pro</a><a class="nwo" href="https://github.com/Wittlesus/cursorrules-pro">Wittlesus/cursorrules-pro</a><div class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">3</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">Cursor</span><span class="tag">Cline / Roo</span></td><td class="ds"><div class="desc">Professional .cursorrules configurations for 8 frameworks - Next.js, React, Python, Go, Rust, and more. Works with Cursor, Claude Code, and Windsurf</div><code class="cmd">git clone https://github.com/Wittlesus/cursorrules-pro.git</code></td><td class="c hide"><div class="meta">Shell<br>—<br>2026-02-21</div></td></tr>
@@ -66,12 +80,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

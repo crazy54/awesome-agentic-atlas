@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-sandbox-security-governance.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Sandbox, Security & Governance tools for Gemini / Google","description":"3 Sandbox, Security & Governance projects that plug into Gemini / Google, ranked by GitHub stars. Isolation, permissions, approval gates, guardrails…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/sandbox-security-governance/target/gemini-google/","numberOfItems":3,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"Claude Code Safety Net","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/kenryu42/cc-safety-net/"},{"@type":"ListItem","position":2,"name":"compass","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/dshakes/compass/"},{"@type":"ListItem","position":3,"name":"agent-shell-tools","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/google/agent-shell-tools/"}]}</script>
 </head>
@@ -45,7 +59,7 @@
 <th class="ds">What it does</th><th class="c hide">Lang / licence / push</th></tr></thead>
 <tbody>
 <tr><td class="n rk">1</td><td class="shot"><a href="../../../../repo/kenryu42/cc-safety-net/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/kenryu42/cc-safety-net"></a></td><td class="pj"><a class="nm" href="../../../../repo/kenryu42/cc-safety-net/">Claude Code Safety Net</a><a class="nwo" href="https://github.com/kenryu42/cc-safety-net">kenryu42/cc-safety-net</a><div class="meta os"><span class="vY">Win</span> <span class="vY">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">1,522</span><div class="meta">2 lists</div></td><td class="hide"><span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">opencode</span><span class="tag">Codex / OpenAI</span><span class="tag">Gemini / Google</span><span class="tag">GitHub Copilot</span><span class="tag">Cursor</span></td><td class="ds"><div class="desc">by kenryu42 - A coding agent CLI hook that acts as a safety net, catching destructive git and filesystem commands before they execute. Supports Codex, Claude Code, OpenCode, Gemini CLI, Copilot CLI, Kimi Code and Pi</div><code class="cmd">npm install -g cc-safety-net</code></td><td class="c hide"><div class="meta">TypeScript<br>MIT<br>2026-09-03</div></td></tr>
-<tr><td class="n rk">2</td><td class="shot"><a href="../../../../repo/dshakes/compass/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://raw.githubusercontent.com/dshakes/compass/main/demo/preview.gif"></a></td><td class="pj"><a class="nm" href="../../../../repo/dshakes/compass/">compass</a><a class="nwo" href="https://github.com/dshakes/compass">dshakes/compass</a><div class="meta os"><span class="vN">Win</span> <span class="vN">WSL</span> <span class="vY">mac</span> <span class="vN">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">19</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">MCP</span><span class="tag">Codex / OpenAI</span><span class="tag">Gemini / Google</span></td><td class="ds"><div class="desc">by dshakes - Developer-grade Claude Code + Codex configuration: cost-tiered subagents, workflow commands, guardrail hooks, MCP parity, and an installable plugin/marketplace</div><code class="cmd">brew install dshakes/tap/compass # latest release · --HEAD to track main</code></td><td class="c hide"><div class="meta">Shell<br>MIT<br>2026-08-31</div></td></tr>
+<tr><td class="n rk">2</td><td class="shot"><a href="../../../../repo/dshakes/compass/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/dshakes/compass"></a></td><td class="pj"><a class="nm" href="../../../../repo/dshakes/compass/">compass</a><a class="nwo" href="https://github.com/dshakes/compass">dshakes/compass</a><div class="meta os"><span class="vN">Win</span> <span class="vN">WSL</span> <span class="vY">mac</span> <span class="vN">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">19</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">MCP</span><span class="tag">Codex / OpenAI</span><span class="tag">Gemini / Google</span></td><td class="ds"><div class="desc">by dshakes - Developer-grade Claude Code + Codex configuration: cost-tiered subagents, workflow commands, guardrail hooks, MCP parity, and an installable plugin/marketplace</div><code class="cmd">brew install dshakes/tap/compass # latest release · --HEAD to track main</code></td><td class="c hide"><div class="meta">Shell<br>MIT<br>2026-08-31</div></td></tr>
 <tr><td class="n rk">3</td><td class="shot"><a href="../../../../repo/google/agent-shell-tools/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/google/agent-shell-tools"></a></td><td class="pj"><a class="nm" href="../../../../repo/google/agent-shell-tools/">agent-shell-tools</a><a class="nwo" href="https://github.com/google/agent-shell-tools">google/agent-shell-tools</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">14</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Gemini / Google</span></td><td class="ds"><div class="desc">Google&#x27;s open-source toolkit for giving coding agents controlled shell access with opinionated defaults: an nsjail-based sandbox, a command-filter rule language, and a gRPC execution proxy so agents can stream commands into isolation without exposing host credentials or filesystems. A concrete reference for separating the agent&#x27;s shell surface from the host boundary rather than relying on prompt-l</div><code class="cmd">git clone https://github.com/google/agent-shell-tools.git</code></td><td class="c hide"><div class="meta">Go<br>Apache-2.0<br>2026-06-08</div></td></tr>
 </tbody></table>
 
@@ -63,12 +77,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

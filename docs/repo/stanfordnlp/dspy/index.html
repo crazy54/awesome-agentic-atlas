@@ -12,6 +12,20 @@
 <meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/repo/stanfordnlp/dspy/">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/stanfordnlp/dspy">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of detail.css. Once detail.js has run it
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../detail.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://crazy54.github.io/awesome-agentic-atlas/"},{"@type":"ListItem","position":2,"name":"Coding Agents","item":"https://crazy54.github.io/awesome-agentic-atlas/topic/coding-agents/"},{"@type":"ListItem","position":3,"name":"DSPy","item":"https://crazy54.github.io/awesome-agentic-atlas/repo/stanfordnlp/dspy/"}]}</script>
 </head>

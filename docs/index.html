@@ -104,6 +104,16 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .risechip.on{display:inline-block}
 .risechip[aria-pressed=true]{background:var(--good);border-color:var(--good);color:var(--onbar)}
 .risechip:hover{border-color:var(--good)}
+.savechip{display:none}
+.savechip.on{display:inline-block}
+.savechip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
+.clearsave{display:none}
+.clearsave.on{display:inline-block}
+.save{background:var(--band);color:var(--ink2);border:1px solid var(--grid);border-radius:999px;
+  padding:1px 9px;font-family:inherit;font-size:11px;font-weight:600;line-height:1.7;
+  white-space:nowrap;cursor:pointer;margin-left:8px;vertical-align:1px}
+.save:hover{border-color:var(--bar);color:var(--ink)}
+.save[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
 .rise{color:var(--good);font-weight:600;font-variant-numeric:tabular-nums}
 .rise.down{color:var(--muted);font-weight:400}
 .count{color:var(--muted);font-size:13px;margin-left:auto;white-space:nowrap}
@@ -349,7 +359,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <p class="blurb" id="ctx"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><span class="k"><span class="lw">Last </span>deployed</span>
-      <span class="v"><time datetime="2026-09-06T21:42:00Z">2026-09-06 21:42 UTC</time></span></a>
+      <span class="v"><time datetime="2026-09-06T23:09:00Z">2026-09-06 23:09 UTC</time></span></a>
   </div>
   <nav>
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
@@ -383,6 +393,9 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <button class="chip risechip" id="rise" aria-pressed="false"
             title="Projects gaining stars fastest for their size">
       <span id="riselabel">Rising</span></button>
+    <button class="chip savechip" id="saved" aria-pressed="false"
+            title="Only the projects you have saved on this device"><span id="savedlabel">Saved</span></button>
+    <button class="chip clearsave" id="clearsave">Remove all saved</button>
     <button class="chip" id="palhint"></button>
     <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
@@ -436,8 +449,27 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 <script>
 const PAGE_SIZE = 120;
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
-               sort: "relevance", shown: PAGE_SIZE, view: "cards"};
+               saved: false, sort: "relevance", shown: PAGE_SIZE, view: "cards"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
+
+let SAVED = new Set();
+const SAVE_KEY = "saved";
+
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    SAVED = new Set(Array.isArray(list) ? list.filter(s => typeof s === "string" && s) : []);
+  } catch (e) {
+    SAVED = new Set();
+  }
+}
+
+function storeSaved() {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify([...SAVED]));
+  } catch (e) {}
+}
 let FROM_CACHE = false;
 let typing = 0;
 
@@ -445,7 +477,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-06T21:42:00Z";
+const BUILT = "2026-09-06T23:09:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -500,7 +532,7 @@ fetch("data.json").then(r => {
     r.lname = r.name.toLowerCase();
     r.lnwo = r.nwo.toLowerCase();
     r.lblurb = (r.blurb || "").toLowerCase();
-    r.img = r.img || ("https://opengraph.githubassets.com/1/" + r.nwo);
+    r.img = "https://opengraph.githubassets.com/1/" + r.nwo;
     const age = r.first_seen ? daysAgo(r.first_seen) : Infinity;
     r.isnew = age >= 0 && age <= (d.window_days || 14);
   });
@@ -589,6 +621,14 @@ function buildChips() {
   } else if (ropt) {
     ropt.remove();
   }
+  document.getElementById("saved").onclick = () => set({saved: !state.saved});
+  document.getElementById("clearsave").onclick = () => {
+    const n = SAVED.size;
+    SAVED.clear();
+    storeSaved();
+    say(n ? "Removed all " + n + " saved projects." : "Nothing was saved.");
+    set({saved: false});
+  };
   document.getElementById("reset").onclick = () => set(CLEAR);
   sheetWire();
   window.addEventListener("hashchange", () => { readHash(); render(); });
@@ -678,7 +718,7 @@ function palWire() {
   dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
 }
 
-const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false};
+const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false, saved: false};
 
 let PAL = [], PALI = 0;
 
@@ -703,6 +743,7 @@ function palItems(query) {
   if (NEW) add("Filter", "New arrivals", state.fresh, () => set({fresh: !state.fresh}));
   if (RISE && RISING) add("Filter", "Rising", state.rising, () => set({rising: !state.rising}));
   add("Filter", "Confirmed platform support only", state.strict, () => set({strict: !state.strict}));
+  if (SAVED.size) add("Filter", "Saved (" + SAVED.size + ")", state.saved, () => set({saved: !state.saved}));
   add("Filter", "Clear all filters", false, () => set(CLEAR));
   add("Page", (document.documentElement.dataset.theme === "light" ? "Dark" : "Light") + " theme", false,
     () => document.getElementById("theme").click());
@@ -791,6 +832,7 @@ function palOpen() {
 }
 
 function wire() {
+  loadSaved();
   const btn = document.getElementById("theme");
   const label = () => {
     const light = document.documentElement.dataset.theme === "light";
@@ -822,11 +864,27 @@ function wire() {
       if (o) set(o.patch);
       return;
     }
+    const sv = ev.target.closest(".save");
+    if (sv) return toggleSave(sv);
     const b = ev.target.closest(".copy");
     if (b) copy(b);
   });
   stamp();
   deployStamp();
+}
+
+function toggleSave(b) {
+  const nwo = b.dataset.nwo, name = b.dataset.name;
+  const on = !SAVED.has(nwo);
+  if (on) SAVED.add(nwo); else SAVED.delete(nwo);
+  storeSaved();
+  say(on ? "Saved " + name + ". " + SAVED.size + " saved."
+         : "Removed " + name + " from saved. " + SAVED.size + " saved.");
+  if (state.saved) return render();
+  b.setAttribute("aria-pressed", on ? "true" : "false");
+  b.setAttribute("aria-label", saveLabel(name, on));
+  b.textContent = saveWord(on);
+  paintSaved();
 }
 
 function copy(b) {
@@ -922,6 +980,7 @@ function writeHash() {
   if (state.strict) p.set("confirmed", "1");
   if (state.fresh) p.set("new", "1");
   if (state.rising) p.set("rising", "1");
+  if (state.saved) p.set("saved", "1");
   if (state.sort !== "relevance") p.set("sort", state.sort);
   if (state.view !== "cards") p.set("view", state.view);
   const s = p.toString();
@@ -939,6 +998,7 @@ function readHash() {
   state.strict = p.get("confirmed") === "1";
   state.fresh = p.get("new") === "1" && NEW > 0;
   state.rising = p.get("rising") === "1" && RISE !== null && RISING > 0;
+  state.saved = p.get("saved") === "1" && SAVED.size > 0;
   const want = p.get("sort");
   state.sort = SORT_KEYS.includes(want) && (want !== "rising" || RISE) ? want : "relevance";
   state.view = p.get("view") === "table" ? "table" : "cards";
@@ -949,6 +1009,7 @@ function readHash() {
 const OS_ANY = {0: [[0, "YL"], [1, "Y"]]};
 
 function match(r) {
+  if (state.saved && !SAVED.has(r.nwo)) return false;
   if (state.fresh && !r.isnew) return false;
   if (state.rising && !r.rise) return false;
   if (state.cat && D.cats[r.cat].slug !== state.cat) return false;
@@ -992,6 +1053,7 @@ function rescue() {
   if (state.strict) opts.push(["Allow inferred support", {strict: false}]);
   if (state.fresh) opts.push(["Drop the new-arrivals filter", {fresh: false}]);
   if (state.rising) opts.push(["Drop the rising filter", {rising: false}]);
+  if (state.saved) opts.push(["Look beyond your " + SAVED.size + " saved", {saved: false}]);
   return opts.map(o => ({label: o[0], patch: o[1], n: countWith(o[1])}))
     .filter(o => o.n > 0)
     .sort((a, b) => b.n - a.n)
@@ -1071,6 +1133,50 @@ function effSort() {
   return state.sort === "relevance" && !state.q ? "stars" : state.sort;
 }
 
+function paintSaved() {
+  const n = SAVED.size;
+  if (!n && state.saved) { state.saved = false; writeHash(); }
+  const chip = document.getElementById("saved");
+  chip.classList.toggle("on", n > 0);
+  chip.setAttribute("aria-pressed", state.saved ? "true" : "false");
+  document.getElementById("savedlabel").textContent = n ? "Saved · " + n.toLocaleString() : "Saved";
+  document.getElementById("clearsave").classList.toggle("on", state.saved && n > 0);
+}
+
+function saveBtn(r) {
+  const on = SAVED.has(r.nwo);
+  return '<button class="save" data-nwo="' + esc(r.nwo) + '" data-name="' + esc(r.name) +
+    '" aria-pressed="' + (on ? "true" : "false") + '" aria-label="' + esc(saveLabel(r.name, on)) + '">' +
+    saveWord(on) + "</button>";
+}
+
+function saveWord(on) { return on ? "Saved" : "Save"; }
+function saveLabel(name, on) { return saveWord(on) + " " + name; }
+
+let ART = false, ARTIO = null;
+
+function artLoad(i) { i.src = i.dataset.src; i.removeAttribute("data-src"); }
+
+function cardArt() {
+  if (!ART) return;
+  if (!("IntersectionObserver" in window)) {
+    document.querySelectorAll("#out img[data-src]").forEach(artLoad);
+    return;
+  }
+  if (!ARTIO) {
+    ARTIO = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      ARTIO.unobserve(e.target);
+      artLoad(e.target);
+    }), {rootMargin: "200px 0px"});
+  }
+  document.querySelectorAll("#out img[data-src]").forEach(i => ARTIO.observe(i));
+}
+
+["wheel", "touchstart", "keydown", "pointerdown"].forEach(t =>
+  window.addEventListener(t, () => { if (!ART) { ART = true; cardArt(); } },
+                          {once: true, passive: true}));
+
 function render() {
   const press = (id, on) => [...document.getElementById(id).children]
     .forEach((b, i) => b.setAttribute("aria-pressed", on(i) ? "true" : "false"));
@@ -1080,6 +1186,7 @@ function render() {
   document.getElementById("strict").setAttribute("aria-pressed", state.strict ? "true" : "false");
   document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
   document.getElementById("rise").setAttribute("aria-pressed", state.rising ? "true" : "false");
+  paintSaved();
   applyView();
 
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
@@ -1149,9 +1256,10 @@ function render() {
     return "<tr>" +
       '<td class="n rk">' + (i + 1) + "</td>" +
       '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
-        '<img loading="lazy" alt="" src="' + img + '"></a></td>' +
+        '<img loading="lazy" decoding="async" alt="" data-src="' + img + '"></a></td>' +
       '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on +
         '<a class="nwo" href="' + url + '">' + esc(r.nwo) + "</a>" +
+        saveBtn(r) +
         '<div class="meta os">' + os + "</div></td>" +
       '<td class="n st-c"><span class="st' + (r.stars ? "" : " none") + '">' +
         (r.stars ? r.stars.toLocaleString() : "—") + "</span>" +
@@ -1175,6 +1283,7 @@ function render() {
     "<th class='hide tg'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
     "<th class='c hide lc'>Lang / licence / push</th></tr></thead><tbody>" + rows +
     "</tbody></table>";
+  cardArt();
   if (hits.length > page.length) {
     const b = document.createElement("button");
     b.className = "more";

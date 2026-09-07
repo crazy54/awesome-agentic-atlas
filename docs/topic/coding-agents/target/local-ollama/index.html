@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-coding-agents.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Coding Agents tools for Local / Ollama","description":"4 Coding Agents projects that plug into Local / Ollama, ranked by GitHub stars. The agent you point at a repository. Terminal, desktop and web, plus the…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/coding-agents/target/local-ollama/","numberOfItems":4,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"PR-Agent","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/the-pr-agent/pr-agent/"},{"@type":"ListItem","position":2,"name":"Codel","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/semanser/codel/"},{"@type":"ListItem","position":3,"name":"Atomic Agent","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/atomicbot-ai/atomic-agent/"},{"@type":"ListItem","position":4,"name":"Nanocoder","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nano-collective/nanocoder/"}]}</script>
 </head>
@@ -44,9 +58,9 @@
 <th class="n st-c">Stars</th><th class="hide">Plugs into</th>
 <th class="ds">What it does</th><th class="c hide">Lang / licence / push</th></tr></thead>
 <tbody>
-<tr><td class="n rk">1</td><td class="shot"><a href="../../../../repo/the-pr-agent/pr-agent/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://www.codium.ai/images/pr_agent/describe_new_short_main.png"></a></td><td class="pj"><a class="nm" href="../../../../repo/the-pr-agent/pr-agent/">PR-Agent</a><a class="nwo" href="https://github.com/The-PR-Agent/pr-agent">The-PR-Agent/pr-agent</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vY">Doc</span></div></td><td class="n st-c"><span class="st">12,840</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude / Anthropic</span><span class="tag">Codex / OpenAI</span><span class="tag">Local / Ollama</span></td><td class="ds"><div class="desc">OSS AI PR reviewer. Auto-describe, review, improve</div><code class="cmd">pip install pr-agent</code></td><td class="c hide"><div class="meta">Python<br>MIT<br>2026-09-03</div></td></tr>
+<tr><td class="n rk">1</td><td class="shot"><a href="../../../../repo/the-pr-agent/pr-agent/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/The-PR-Agent/pr-agent"></a></td><td class="pj"><a class="nm" href="../../../../repo/the-pr-agent/pr-agent/">PR-Agent</a><a class="nwo" href="https://github.com/The-PR-Agent/pr-agent">The-PR-Agent/pr-agent</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vY">Doc</span></div></td><td class="n st-c"><span class="st">12,840</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude / Anthropic</span><span class="tag">Codex / OpenAI</span><span class="tag">Local / Ollama</span></td><td class="ds"><div class="desc">OSS AI PR reviewer. Auto-describe, review, improve</div><code class="cmd">pip install pr-agent</code></td><td class="c hide"><div class="meta">Python<br>MIT<br>2026-09-03</div></td></tr>
 <tr><td class="n rk">2</td><td class="shot"><a href="../../../../repo/semanser/codel/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/semanser/codel"></a></td><td class="pj"><a class="nm" href="../../../../repo/semanser/codel/">Codel</a><a class="nwo" href="https://github.com/semanser/codel">semanser/codel</a><div class="meta os"><span class="vN">Win</span> <span class="vY">WSL</span> <span class="vN">mac</span> <span class="vY">Lin</span> <span class="vY">Doc</span></div></td><td class="n st-c"><span class="st">2,476</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Codex / OpenAI</span><span class="tag">Local / Ollama</span></td><td class="ds"><div class="desc">✨ Fully autonomous AI Agent that can perform complicated tasks and projects using terminal, browser, and editor</div><code class="cmd">git clone https://github.com/semanser/codel.git</code></td><td class="c hide"><div class="meta">TypeScript<br>AGPL-3.0<br>2024-04-29</div></td></tr>
-<tr><td class="n rk">3</td><td class="shot"><a href="../../../../repo/atomicbot-ai/atomic-agent/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://raw.githubusercontent.com/AtomicBot-ai/atomic-agent/main/assets/demo.gif"></a></td><td class="pj"><a class="nm" href="../../../../repo/atomicbot-ai/atomic-agent/">Atomic Agent</a><a class="nwo" href="https://github.com/AtomicBot-ai/atomic-agent">AtomicBot-ai/atomic-agent</a><div class="meta os"><span class="vN">Win</span> <span class="vN">WSL</span> <span class="vY">mac</span> <span class="vN">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">2,460</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">MCP</span><span class="tag">Local / Ollama</span></td><td class="ds"><div class="desc">Local-first CLI and TUI coding agent that runs open-weight models entirely on your machine via a llama.cpp fork. No account or API key required, with 56 tools (browser, filesystem, git, memory, vision), MCP support, and 5-layer local memory. macOS, Linux, and Windows</div><code class="cmd">irm https://atomicagent.io/install.ps1 | iex</code></td><td class="c hide"><div class="meta">TypeScript<br>MIT<br>2026-09-03</div></td></tr>
+<tr><td class="n rk">3</td><td class="shot"><a href="../../../../repo/atomicbot-ai/atomic-agent/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/AtomicBot-ai/atomic-agent"></a></td><td class="pj"><a class="nm" href="../../../../repo/atomicbot-ai/atomic-agent/">Atomic Agent</a><a class="nwo" href="https://github.com/AtomicBot-ai/atomic-agent">AtomicBot-ai/atomic-agent</a><div class="meta os"><span class="vN">Win</span> <span class="vN">WSL</span> <span class="vY">mac</span> <span class="vN">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">2,460</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">MCP</span><span class="tag">Local / Ollama</span></td><td class="ds"><div class="desc">Local-first CLI and TUI coding agent that runs open-weight models entirely on your machine via a llama.cpp fork. No account or API key required, with 56 tools (browser, filesystem, git, memory, vision), MCP support, and 5-layer local memory. macOS, Linux, and Windows</div><code class="cmd">irm https://atomicagent.io/install.ps1 | iex</code></td><td class="c hide"><div class="meta">TypeScript<br>MIT<br>2026-09-03</div></td></tr>
 <tr><td class="n rk">4</td><td class="shot"><a href="../../../../repo/nano-collective/nanocoder/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/Nano-Collective/nanocoder"></a></td><td class="pj"><a class="nm" href="../../../../repo/nano-collective/nanocoder/">Nanocoder</a><a class="nwo" href="https://github.com/Nano-Collective/nanocoder">Nano-Collective/nanocoder</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">2,445</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Codex / OpenAI</span><span class="tag">Local / Ollama</span></td><td class="ds"><div class="desc">Local-first CLI coding agent built with React and Ink</div><code class="cmd">npm install -g @nanocollective/nanocoder</code></td><td class="c hide"><div class="meta">TypeScript<br>—<br>2026-09-03</div></td></tr>
 </tbody></table>
 
@@ -64,12 +78,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

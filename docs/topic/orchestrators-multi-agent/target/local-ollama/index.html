@@ -18,6 +18,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-orchestrators-multi-agent.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<meta name="theme-color" id="tc" content="#181f21">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+} catch (e) {}
+</script>
 <link rel="stylesheet" href="../../../../pages.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Orchestrators & Multi-Agent tools for Local / Ollama","description":"2 Orchestrators & Multi-Agent projects that plug into Local / Ollama, ranked by GitHub stars. Running several agents at once, or one agent for a long time…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/orchestrators-multi-agent/target/local-ollama/","numberOfItems":2,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"LiteLLM","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/berriai/litellm/"},{"@type":"ListItem","position":2,"name":"toryo","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/jesserweigel/toryo/"}]}</script>
 </head>
@@ -44,8 +58,8 @@
 <th class="n st-c">Stars</th><th class="hide">Plugs into</th>
 <th class="ds">What it does</th><th class="c hide">Lang / licence / push</th></tr></thead>
 <tbody>
-<tr><td class="n rk">1</td><td class="shot"><a href="../../../../repo/berriai/litellm/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://github.com/user-attachments/assets/c5ee0412-6fb5-4fb6-ab5b-bafae4209ca6"></a></td><td class="pj"><a class="nm" href="../../../../repo/berriai/litellm/">LiteLLM</a><a class="nwo" href="https://github.com/BerriAI/litellm">BerriAI/litellm</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vY">Doc</span></div></td><td class="n st-c"><span class="st">57,938</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude / Anthropic</span><span class="tag">Codex / OpenAI</span><span class="tag">LangChain / LangGraph</span><span class="tag">Local / Ollama</span></td><td class="ds"><div class="desc">Unified proxy and SDK that routes to 100+ LLM providers behind a single OpenAI-compatible interface, with a Router handling retry/fallback across deployments, per-project cost and rate-limit tracking, and OTEL callback integrations. The right infrastructure layer when your harness needs provider resilience (automatic failover on 429/500 errors), budget guardrails, or the ability to swap models wit</div><code class="cmd">uv tool install &#x27;litellm[proxy]&#x27;</code></td><td class="c hide"><div class="meta">Python<br>—<br>2026-09-03</div></td></tr>
-<tr><td class="n rk">2</td><td class="shot"><a href="../../../../repo/jesserweigel/toryo/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://raw.githubusercontent.com/JesseRWeigel/toryo/main/docs/images/toryo-run.png"></a></td><td class="pj"><a class="nm" href="../../../../repo/jesserweigel/toryo/">toryo</a><a class="nwo" href="https://github.com/JesseRWeigel/toryo">JesseRWeigel/toryo</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">12</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">Gemini / Google</span><span class="tag">Aider</span><span class="tag">Local / Ollama</span></td><td class="ds"><div class="desc">Trust-based delegation with quality ratcheting that commits improvements and reverts regressions. Chains Claude Code, Aider, Gemini CLI, Ollama.</div><code class="cmd">npx @jweigel/toryo init # scaffold config + task specs</code></td><td class="c hide"><div class="meta">TypeScript<br>MIT<br>2026-05-23</div></td></tr>
+<tr><td class="n rk">1</td><td class="shot"><a href="../../../../repo/berriai/litellm/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/BerriAI/litellm"></a></td><td class="pj"><a class="nm" href="../../../../repo/berriai/litellm/">LiteLLM</a><a class="nwo" href="https://github.com/BerriAI/litellm">BerriAI/litellm</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vY">Doc</span></div></td><td class="n st-c"><span class="st">57,938</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude / Anthropic</span><span class="tag">Codex / OpenAI</span><span class="tag">LangChain / LangGraph</span><span class="tag">Local / Ollama</span></td><td class="ds"><div class="desc">Unified proxy and SDK that routes to 100+ LLM providers behind a single OpenAI-compatible interface, with a Router handling retry/fallback across deployments, per-project cost and rate-limit tracking, and OTEL callback integrations. The right infrastructure layer when your harness needs provider resilience (automatic failover on 429/500 errors), budget guardrails, or the ability to swap models wit</div><code class="cmd">uv tool install &#x27;litellm[proxy]&#x27;</code></td><td class="c hide"><div class="meta">Python<br>—<br>2026-09-03</div></td></tr>
+<tr><td class="n rk">2</td><td class="shot"><a href="../../../../repo/jesserweigel/toryo/" tabindex="-1" aria-hidden="true"><img loading="lazy" alt="" src="https://opengraph.githubassets.com/1/JesseRWeigel/toryo"></a></td><td class="pj"><a class="nm" href="../../../../repo/jesserweigel/toryo/">toryo</a><a class="nwo" href="https://github.com/JesseRWeigel/toryo">JesseRWeigel/toryo</a><div class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></div></td><td class="n st-c"><span class="st">12</span><div class="meta">1 list</div></td><td class="hide"><span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">Gemini / Google</span><span class="tag">Aider</span><span class="tag">Local / Ollama</span></td><td class="ds"><div class="desc">Trust-based delegation with quality ratcheting that commits improvements and reverts regressions. Chains Claude Code, Aider, Gemini CLI, Ollama.</div><code class="cmd">npx @jweigel/toryo init # scaffold config + task specs</code></td><td class="c hide"><div class="meta">TypeScript<br>MIT<br>2026-05-23</div></td></tr>
 </tbody></table>
 
 <nav class="rel"><h2>This topic, other harnesses</h2><p>Orchestrators &amp; Multi-Agent filtered to what plugs into each of the others.</p><a class="chip" href="../../../../topic/orchestrators-multi-agent/target/claude-code/">Claude Code <span class="ct">57</span></a><a class="chip" href="../../../../topic/orchestrators-multi-agent/target/claude-anthropic/">Claude / Anthropic <span class="ct">66</span></a><a class="chip" href="../../../../topic/orchestrators-multi-agent/target/opencode/">opencode <span class="ct">15</span></a><a class="chip" href="../../../../topic/orchestrators-multi-agent/target/mcp/">MCP <span class="ct">14</span></a><a class="chip" href="../../../../topic/orchestrators-multi-agent/target/codex-openai/">Codex / OpenAI <span class="ct">48</span></a><a class="chip" href="../../../../topic/orchestrators-multi-agent/target/gemini-google/">Gemini / Google <span class="ct">19</span></a><a class="chip" href="../../../../topic/orchestrators-multi-agent/target/github-copilot/">GitHub Copilot <span class="ct">8</span></a><a class="chip" href="../../../../topic/orchestrators-multi-agent/target/cursor/">Cursor <span class="ct">15</span></a><a class="chip" href="../../../../topic/orchestrators-multi-agent/target/cline-roo/">Cline / Roo <span class="ct">2</span></a><a class="chip" href="../../../../topic/orchestrators-multi-agent/target/aider/">Aider <span class="ct">3</span></a><a class="chip" href="../../../../topic/orchestrators-multi-agent/target/langchain-langgraph/">LangChain / LangGraph <span class="ct">5</span></a><h2>Or drop a filter</h2><a class="chip" href="../../../../topic/orchestrators-multi-agent/">All Orchestrators &amp; Multi-Agent</a><a class="chip" href="../../../../target/local-ollama/">Everything for Local / Ollama</a></nav>
@@ -62,12 +76,34 @@
   link, and has no count of its own.
 </div></footer>
 <script>
-document.getElementById("theme").onclick = e => {
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  e.target.textContent = light ? "Dark theme" : "Light theme";
-  e.target.setAttribute("aria-pressed", light ? "true" : "false");
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
 };
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
 </script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
