@@ -5,7 +5,7 @@ node tests/run.mjs
 ```
 
 That is the whole thing. It finds a Chromium the machine already has, serves `docs/` on a port the OS picks,
-runs ten harnesses in turn, prints what each one asserted, and exits non-zero if anything failed. About 37
+runs eleven harnesses in turn, prints what each one asserted, and exits non-zero if anything failed. About 37
 seconds, of which 22 are the detail-page regeneration. No install step, no arguments, no configuration.
 
 It asserts on `docs/` as committed, not on the generator's intentions. `docs/` is served verbatim by GitHub
@@ -16,6 +16,7 @@ Individual harnesses can be run alone. The two that drive a browser need to be g
 site is, because `run.mjs` owns both:
 
 ```
+python tests/theme_test.py
 python tests/signals_test.py
 python tests/indexnow_test.py
 node tests/probe.mjs
@@ -30,12 +31,13 @@ node tests/pwa-check.mjs   <chrome-binary> <origin>
 
 ## What each one covers, and what it deliberately does not
 
-There are ten files rather than one because they are ten instruments, and the overlap between them is the
+There are eleven files rather than one because they are eleven instruments, and the overlap between them is the
 reason to keep them apart rather than the reason to merge them. Each file's header says at length what it
 cannot see; this is the summary.
 
 | harness | what it covers | what it cannot see |
 | --- | --- | --- |
+| `theme_test.py` | The palette: WCAG contrast on the custom properties in both modes, consistency across generated surfaces, and the colours used by social cards and app icons. | Whether the result looks good; browser layout checks cover the rendered page. |
 | `probe.mjs` | Runs the page's own script from `docs/index.html` under a stub DOM against the real `docs/data.json`, then asserts on the HTML it renders: ranking, the search fallback, the hash round-trip, the palette, the theme colour, the cards stylesheet, the saved set and the link that carries it, and the page as shipped text. ~276 assertions. | Computed layout. There is none in Node, so it can tell you a clamp rule is spelled correctly and not that anything clamps. |
 | `cards-check.mjs` | Real layout in a real browser over HTTP at 1440, 900 and 375 px in both themes: how many cards are across, the screenshot's aspect ratio, horizontal overflow, scroll and focus survival across a view switch, the DOM work a switch does counted against the re-render it avoids, and the clamp's behaviour. Writes screenshots to `build-tmp/`. 49 assertions. | Any prefixed spelling this browser has an unprefixed implementation of. `-webkit-line-clamp` is the case that bit: this Chrome does the standard `line-clamp`, so a rule missing `display:-webkit-box` clamps perfectly here and is inert in Firefox. That half lives in `probe.mjs`. |
 | `pwa-check.mjs` | Manifest, service worker registration and scope, the precached shell, the worker's `VERSION` recomputed from the bytes actually being served, the caching of every file in `DATA_FILES` — `data.json` and `live.json` both, by the route rather than by an exact filename — offline rendering with *both* the page and the worker taken offline, the freshness stamp reading the cached data's own date rather than the document's, and a 404 navigation that must not be cached. 37 assertions. | The paths this browser does not take: it supports navigation preload, so the worker's fallback for browsers that do not is never exercised. Nor the 156 prerendered facet pages, whose own snapshot lines have no data fetch to read a date out of. |

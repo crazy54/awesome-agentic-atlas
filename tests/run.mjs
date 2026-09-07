@@ -2,13 +2,14 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the ten harnesses in turn, and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the eleven harnesses in turn, and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY TEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY ELEVEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
+//   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces.
 //   signals_test.py   the cache-staleness policy in scripts/signals.py, on fabricated entries. Pure and
 //                     instant, and the only test of it that can exist offline -- the three stages it
 //                     serves all shell out to `gh api graphql`, so nothing here sees a real crawl.
@@ -57,7 +58,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// ten files own their own plumbing. It is 200 lines of plumbing.
+// eleven files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -77,6 +78,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // broken rather than passing -- see the note at the top, and set generously below the real count so that
 // only a harness that has lost assertions trips it.
 const HARNESSES = [
+  {file: "theme_test.py", label: "both themes' contrast, and the four copies of the palette", python: true, floor: 120},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
@@ -98,7 +100,7 @@ if (!existsSync(join(ROOT, "docs", "index.html"))) {
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and two of the ten harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and two of the eleven harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -111,7 +113,7 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Seven of the ten need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Eight of the eleven need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives the IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar
@@ -119,7 +121,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and seven of the ten harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and eight of the eleven harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

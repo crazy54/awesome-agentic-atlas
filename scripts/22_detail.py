@@ -706,22 +706,23 @@ CSS = """/* Written by scripts/22_detail.py. Shared by every page under docs/rep
    Deliberately not docs/pages.css, which scripts/20_landing.py writes: two stages writing one file
    means the later run silently deletes the earlier one's rules.
 
-   The two blocks below are 19_pages.py's, character for character. Lagoon Gold: cyan primary, gold
-   secondary, cool near-black surfaces. Dark is the designed mode -- its eight neutrals and two accents
-   are the theme's own values. Light is stepped from the same two hues rather than flipped, because the
-   accents at their dark-mode lightness fail on white (the cyan measures 2.53:1 there), and its
-   neutrals are cooled to match so toggling does not change brand. --onbar exists because a filled cyan
-   or gold accent carries DARK ink, not white: white on #08b0cc is 2.3:1, while the theme's own #0c1013
-   on it is 7.36:1. */
+   The two blocks below are `19_pages.py`'s, character for character, and that is an invariant rather
+   than a coincidence: a reader who follows a link from the index to one of these pages must not see the
+   palette change under them. `tests/theme_test.py` asserts the three copies are byte-identical, which
+   is the only reason it is safe to keep them as copies instead of a shared file.
+
+   The reasoning behind the values -- which accents are lifted and why --onbar inverts between the two
+   modes -- is written out once, beside the blocks in `19_pages.py`. It is deliberately not repeated
+   here; three copies of a rationale is three things to go stale, and the previous palette's did. */
 :root{
-  --surface:#101416; --plane:#181f21; --band:#232d30; --ink:#d0d7d8; --ink2:#a8b0b2;
-  --muted:#8c9496; --grid:#2c383d; --link:#08b0cc; --bar:#08b0cc;
-  --good:#2eb82e; --warn:#feb932; --off:#8c9496; --onbar:#0c1013;
+  --surface:#000000; --plane:#0B0B10; --band:#14141B; --ink:#FFFFFF; --ink2:#C7C9D2;
+  --muted:#9598A4; --grid:#262630; --link:#438BB1; --bar:#CE54AF;
+  --good:#438BB1; --warn:#9871C9; --off:#9598A4; --onbar:#000000;
 }
 html[data-theme=light]{
-  --surface:#fbfcfc; --plane:#eef1f2; --band:#f4f6f6; --ink:#101416; --ink2:#4a5254;
-  --muted:#5f6769; --grid:#dbe0e1; --link:#096373; --bar:#0a6f80;
-  --good:#0a7c0a; --warn:#8a5a00; --off:#5f6769; --onbar:#fff;
+  --surface:#F1F0F3; --plane:#FCFCFD; --band:#EAE9EF; --ink:#000000; --ink2:#2C2C36;
+  --muted:#52525E; --grid:#D4D3DA; --link:#1C449C; --bar:#AD328E;
+  --good:#346B89; --warn:#6B3EA3; --off:#52525E; --onbar:#FFFFFF;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);

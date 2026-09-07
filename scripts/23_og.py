@@ -173,21 +173,17 @@ TEMPLATE = 2
 # changed (fixed in `87250a1`). Same shape here, with a slower fuse and a wider blast radius, because
 # this artefact is what a stranger sees first.
 #
-# Roles and values are `19_pages.py`'s dark custom properties character for character (`:470-472`),
-# which is the point of copying them: a card is the first thing anyone sees of this site and it has to
-# be the same cyan and the same near-black as the page behind it. `head` is the one addition -- a card
-# lifts its heading to pure white where the page leaves `h1` at `--ink`, because a card is read at
-# thumbnail size. Six-digit hex, except where the CSS was already three: `shoot()` reads `surface` back
-# out as the bare RRGGBBAA its Chromium flag wants.
+# Roles and values come from `19_pages.py`'s dark custom properties. The body and chips use the page's
+# secondary ink while the heading and count lift to its white primary ink at thumbnail size.
 PALETTE = {
-    "surface": "#101416",   # the card, and the backdrop Chromium paints under it -- see `shoot()`
-    "band":    "#232d30",   # chip fill
-    "ink":     "#d0d7d8",   # body text, and the chips'
-    "ink2":    "#a8b0b2",   # the count line
-    "muted":   "#8c9496",   # blurb, label, host line
-    "grid":    "#2c383d",   # chip border
-    "bar":     "#08b0cc",   # the accent: the frame's top border, and the kicker
-    "warn":    "#feb932",   # the count itself
+    "surface": "#000000",   # the card, and the backdrop Chromium paints under it -- see `shoot()`
+    "band":    "#14141b",   # chip fill
+    "ink":     "#c7c9d2",   # body text, and the chips'
+    "ink2":    "#9598a4",   # the count line
+    "muted":   "#9598a4",   # blurb, label, host line
+    "grid":    "#262630",   # chip border
+    "bar":     "#ce54af",   # the accent: the frame's top border, and the kicker
+    "warn":    "#fff",      # the count itself
     "head":    "#fff",      # the heading -- the only colour here that is not a page variable
 }
 

@@ -174,9 +174,27 @@ DESCRIPTION = (f"Every agentic AI project from {b19.LISTS} awesome-lists, merged
 # dark value because dark is what the markup ships with and what a reader who has never touched the
 # toggle sees. A reader who chose light gets one frame of the dark surface at launch, which is the same
 # frame they already get on the web.
-SURFACE = (0x10, 0x14, 0x16)
-CYAN = (0x08, 0xB0, 0xCC)
-GOLD = (0xFE, 0xB9, 0x32)
+#
+# `PLANE` rather than `SURFACE` for those two fields, and that is a fix rather than a preference. The page
+# ships `<meta name="theme-color" content="#0b0b10">`, which is `--plane`; the manifest used to declare
+# `--surface`, so an installed window's chrome was one colour at launch and a different one the moment the
+# document parsed. They are now the same value and there is nothing to see.
+#
+# `SURFACE` stays the plate the icon is drawn on -- there, the darkest value is the right one, because the
+# mark reads against a launcher's own wallpaper rather than against the page.
+SURFACE = (0x00, 0x00, 0x00)
+PLANE = (0x0B, 0x0B, 0x10)
+# `--bar`, the brand accent, at the value `19_pages.py` declares it.
+BAR = (0xCE, 0x54, 0xAF)
+# The orbit ring is `--ink`, not the second accent, and that is the one place this file departs from
+# copying the palette straight across. The old icon was cyan on gold, a pair separated by 1.51:1 of
+# luminance as well as by hue. This palette's three accents were each fitted to clear 4.5:1 on black
+# without going lighter than they had to, so they converged: `--bar`, `--warn` and `--link` measure
+# 1.01:1, 1.01:1 and 1.00:1 against each other. Any two of them make a globe and a ring that differ by
+# hue alone -- indistinguishable in a monochrome icon slot, and to a reader whose colour vision does not
+# separate those hues, while looking perfectly fine to everyone else. White against `--bar` is 3.81:1, so
+# the two shapes stay two shapes however the icon is rendered.
+RING = (0xFF, 0xFF, 0xFF)
 
 CACHE_PREFIX = "atlas-shell-"
 
@@ -256,7 +274,7 @@ def _over(dst: list[float], rgb: tuple[int, int, int], a: float) -> None:
 
 
 def icon(size: int, maskable: bool, opaque: bool) -> bytes:
-    """The mark: a cyan globe inside a gold orbit, on the theme's near-black plate.
+    """The mark: a `--bar` globe inside a white orbit, on the theme's black plate.
 
     A globe because the favicon is already one -- `19_pages.py` ships U+1F310 as an SVG data URI -- and an
     installed icon that does not match the tab is a different app as far as a reader is concerned. It is
@@ -264,9 +282,10 @@ def icon(size: int, maskable: bool, opaque: bool) -> bytes:
     which font is on the build machine is not something a static-site pipeline should depend on: the same
     emoji is a flat blue disc on one platform and a shaded three-dimensional ball on another.
 
-    Cyan and gold are the theme's two accents and the plate is its darkest surface, so the icon is
-    recognisably the same object as the page. All geometry is a fraction of the icon's edge, so the four
-    sizes are the same drawing rather than four drawings that drifted.
+    The globe is the theme's brand accent and the plate is its darkest surface, so the icon is
+    recognisably the same object as the page; the ring is `--ink`, for the reason recorded beside `RING`.
+    All geometry is a fraction of the icon's edge, so the four sizes are the same drawing rather than four
+    drawings that drifted.
     """
     scale = 0.72 if maskable else 1.0
     r_globe = 0.30 * scale
@@ -299,10 +318,10 @@ def icon(size: int, maskable: bool, opaque: bool) -> bytes:
             _over(acc, SURFACE, _cover(d_plate * size))
 
             r = (x * x + y * y) ** 0.5
-            _over(acc, GOLD, _cover((abs(r - r_orbit) - w_orbit / 2) * size))
+            _over(acc, RING, _cover((abs(r - r_orbit) - w_orbit / 2) * size))
 
             globe = _cover((r - r_globe) * size)
-            _over(acc, CYAN, globe)
+            _over(acc, BAR, globe)
 
             # The grid is painted in the plate's colour and clipped to the globe's coverage, so a
             # latitude stops at the limb instead of ruling a line across the orbit outside it.
@@ -354,8 +373,8 @@ def manifest() -> dict:
         "orientation": "any",
         "lang": "en",
         "dir": "ltr",
-        "background_color": "#%02x%02x%02x" % SURFACE,
-        "theme_color": "#%02x%02x%02x" % SURFACE,
+        "background_color": "#%02x%02x%02x" % PLANE,
+        "theme_color": "#%02x%02x%02x" % PLANE,
         "categories": ["developer", "productivity", "utilities"],
         "icons": [
             {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},

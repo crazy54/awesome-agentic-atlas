@@ -457,7 +457,7 @@ __VERIFY__
      in dark, because `--plane` is the header's background and the header is what sits under the chrome;
      it is a literal because the stylesheet below has not parsed yet when the next script runs. With
      JavaScript off it stays this value, which agrees with the `data-theme="dark"` floor on <html>. -->
-<meta name="theme-color" id="tc" content="#181f21">
+<meta name="theme-color" id="tc" content="#0B0B10">
 <!-- Ahead of the stylesheet deliberately, and inline rather than in a file: this has to settle the theme
      before first paint. A reader who chose light, or whose OS asks for light, otherwise gets a frame of
      near-black before the toggle catches up, and an external script is one more round trip during which
@@ -476,25 +476,54 @@ try {
   // computed value so the stylesheet stays the single source of truth; here there is no computed value to
   // read yet, and a chrome one shade out for one frame is the cost of not blocking the paint on a
   // stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+  document.getElementById("tc").content = t === "light" ? "#FCFCFD" : "#0B0B10";
 } catch (e) {}
 </script>
 <style>
-/* Lagoon Gold: cyan primary, gold secondary, cool near-black surfaces. Dark is the designed mode --
-   its eight neutrals and two accents are the theme's own values. Light is stepped from the same two
-   hues rather than flipped, because the accents at their dark-mode lightness fail on white (the cyan
-   measures 2.53:1 there), and its neutrals are cooled to match so toggling does not change brand.
-   --onbar exists because a filled cyan or gold accent carries DARK ink, not white: white on #08b0cc
-   is 2.3:1, while the theme's own #0c1013 on it is 7.36:1. */
+/* Five brand values, supplied as hex rather than sampled off a mockup: Black #000000, Raspberry Plum
+   #BE379C, Rebecca Purple #6B3EA3, French Blue #1C449C, Air Force Blue #438BB1. Dark is black-backed
+   with white ink because that is the brief. Light is the palette's native mode -- four of the five
+   clear 4.5:1 on white and only Air Force Blue does not, at 3.77:1.
+
+   On #000000 only Air Force Blue is legible as text, at 5.57:1. Plum is 4.22:1, Purple 2.84:1 and
+   French Blue 2.36:1, so using any of those three as a link on black would ship a WCAG failure that
+   looks perfectly fine to anyone who can already read it. The dark accents are therefore lifted at
+   fixed hue and saturation until they clear 4.8:1 on the lightest of the three near-black backdrops:
+   Plum to #CE54AF and Purple to #9871C9, while Air Force Blue needs no lift and is used as given.
+
+   --onbar is black in dark mode and white in light, and that split is forced by arithmetic rather than
+   chosen. --warn and --good are each used BOTH as text on the page and as a chip fill carrying --onbar,
+   so one value has to do both jobs. It cannot: a colour legible as text on black needs a relative
+   luminance of at least 0.175, and at 0.175 white on it is already down to 4.67:1 and falling. The two
+   requirements cross at exactly 4.5 and diverge from there. So in dark mode the accents are the light
+   half of the pair and the ink on them is black -- which is also why lifting Plum was necessary and not
+   merely nice, since #BE379C carries black ink at only 4.22:1. Light mode has the mirror problem and
+   the mirror answer: its accents are the dark half, and --onbar is white.
+
+   Light steps its neutrals off Black rather than flipping the dark ones, and refits the two accents
+   that are too light on near-white -- Plum to #AD328E and Air Force Blue to #346B89, both at fixed hue.
+   French Blue and Purple are used at their own values, at 8.69:1 and 7.20:1 on --plane.
+
+   --link and --good are the same Air Force Blue in dark mode, deliberately. Giving --link its own hue
+   meant lifting French Blue, which lands on #5480E0 -- and that measures 1.00:1 against Air Force Blue,
+   identical luminance, so the two would be one colour to a reader with reduced colour vision while
+   looking distinct to everyone else. The previous theme shared its cyan between --link and --bar for
+   the same kind of reason. The three chip fills do stay distinct (#CE54AF, #9871C9, #438BB1), and they
+   are distinct by hue at near-equal luminance, which is only acceptable because every chip also carries
+   its own text label -- the same rule `buckets.py` states for the categorical palette.
+
+   None of the above is a claim: `tests/theme_test.py` parses the two blocks below out of this file,
+   works out from the CSS which tokens are text and which are fills, and asserts every pair. Editing a
+   value here fails the suite rather than quietly failing a reader. */
 :root{
-  --surface:#101416; --plane:#181f21; --band:#232d30; --ink:#d0d7d8; --ink2:#a8b0b2;
-  --muted:#8c9496; --grid:#2c383d; --link:#08b0cc; --bar:#08b0cc;
-  --good:#2eb82e; --warn:#feb932; --off:#8c9496; --onbar:#0c1013;
+  --surface:#000000; --plane:#0B0B10; --band:#14141B; --ink:#FFFFFF; --ink2:#C7C9D2;
+  --muted:#9598A4; --grid:#262630; --link:#438BB1; --bar:#CE54AF;
+  --good:#438BB1; --warn:#9871C9; --off:#9598A4; --onbar:#000000;
 }
 html[data-theme=light]{
-  --surface:#fbfcfc; --plane:#eef1f2; --band:#f4f6f6; --ink:#101416; --ink2:#4a5254;
-  --muted:#5f6769; --grid:#dbe0e1; --link:#096373; --bar:#0a6f80;
-  --good:#0a7c0a; --warn:#8a5a00; --off:#5f6769; --onbar:#fff;
+  --surface:#F1F0F3; --plane:#FCFCFD; --band:#EAE9EF; --ink:#000000; --ink2:#2C2C36;
+  --muted:#52525E; --grid:#D4D3DA; --link:#1C449C; --bar:#AD328E;
+  --good:#346B89; --warn:#6B3EA3; --off:#52525E; --onbar:#FFFFFF;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);
@@ -584,7 +613,7 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .chip:hover{border-color:var(--bar);color:var(--ink)}
 .chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar);
   font-weight:600}
-/* The new-arrivals chip wears the gold accent rather than the cyan every other chip uses, because it
+/* The new-arrivals chip wears `--warn` rather than the `--bar` every other chip uses, because it
    is the only filter that answers a question about time rather than about the data. It is also the only
    chip that can be absent: with nothing inside the window there is nothing to filter to, and a control
    that selects zero rows is worse than no control. */
@@ -598,8 +627,8 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .newchip[aria-pressed=true] .ni>.a,.newchip[aria-pressed=true] .ni>.b{fill:var(--onbar)}
 .nm .ni{margin-right:.34em}
 .newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
-/* Rising wears green, where the new-arrivals chip wears gold and every other chip wears cyan. Three
-   questions get three colours because a reader asks all three of a row at once -- is it alive, did it just
+/* Rising wears `--good`, where the new-arrivals chip wears `--warn` and every other chip wears `--bar`.
+   Three questions get three colours because a reader asks all three of a row at once -- is it alive, did it just
    arrive, is anyone arriving now -- and two of them sharing an accent would make the pair read as one
    control. `--good` is not overloaded by this: its only other use is a stated platform verdict, which
    lives in its own column and reads as a tick rather than as a number.
@@ -610,9 +639,9 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .risechip.on{display:inline-block}
 .risechip[aria-pressed=true]{background:var(--good);border-color:var(--good);color:var(--onbar)}
 .risechip:hover{border-color:var(--good)}
-/* Saved wears the cyan every ordinary chip wears, and that is the decision rather than an omission. Gold
-   and green above are properties *of a repo* -- it arrived recently, it is gaining stars -- and they are
-   held to three colours for three questions. Saved is a fact about the reader, true of nothing on the
+/* Saved wears the `--bar` every ordinary chip wears, and that is the decision rather than an omission.
+   `--warn` and `--good` above are properties *of a repo* -- it arrived recently, it is gaining stars --
+   and they are held to three colours for three questions. Saved is a fact about the reader, true of nothing on the
    server, so giving it a fourth accent would say "here is a fourth thing about this project" about a
    thing that is not about the project at all.
    Absent while it would select nothing, like the two above, but revealed from `render()` rather than from
@@ -774,18 +803,21 @@ dialog#pal::backdrop{background:rgba(0,0,0,.55)}
   padding:10px 10px 4px}
 #palist li.it{display:flex;align-items:baseline;gap:9px;padding:8px 10px;border-radius:7px;cursor:pointer}
 /* The filled accent, the same treatment a pressed chip gets, rather than `--band`. `--band` is the obvious
-   choice and it is wrong in both themes: it is *lighter* than `--plane` in light mode, so the selected row
-   came out as a barely-there strip of #f4f6f6 on #eef1f2 -- measured 1.05:1 against its own background.
-   The highlight is the one thing the palette cannot afford to be subtle about, since it is the only
-   indication of what Enter will do. `--onbar` because a filled accent carries dark ink in dark mode and
-   white in light, and the muted greys below would vanish against either. */
+   choice and it is wrong in both themes, because it is only ever one step off `--plane` by design: under
+   the previous palette the selected row came out as a barely-there strip of #f4f6f6 on #eef1f2, measured
+   at 1.05:1 against its own background, and this palette is no better -- #EAE9EF on #FCFCFD is 1.10:1.
+   A row stripe is supposed to be almost invisible; a selection is not. The highlight is the one thing
+   here that cannot afford to be subtle, since it is the only indication of what Enter will do. `--onbar`
+   rather than a fixed colour because it is defined as the ink a filled accent carries -- white in both
+   themes under this palette, but the indirection is the point, and the muted greys below would vanish
+   against the fill either way. */
 #palist li.it[aria-selected=true]{background:var(--bar);color:var(--onbar)}
 #palist li.it .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #palist li.it .k,#palist li.it .s{flex-shrink:0;font-size:12px}
 #palist li.it .k{color:var(--muted)}
 #palist li.it .s{color:var(--warn)}
 /* Inherit, not a fixed colour: on the accent fill the secondary text has to shift with `--onbar`, and
-   opacity keeps it secondary without needing a second value that passes contrast on cyan and on teal. */
+   opacity keeps it secondary without needing a second value that passes contrast on `--bar` in both themes. */
 #palist li.it[aria-selected=true] .k,#palist li.it[aria-selected=true] .s{color:inherit;opacity:.72}
 #palist li.it:hover:not([aria-selected=true]){background:var(--band)}
 .palnone{padding:26px 12px;color:var(--muted);text-align:center}
@@ -1099,8 +1131,8 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
      is rather than duplicated here. -->
 <span class="sr" id="live" role="status" aria-live="polite"></span>
 <!-- Drawn here rather than borrowed so there is no third-party licence attached to a 300-byte glyph: a
-     four-point star with concave arms, plus a smaller one trailing it. Two tones, gold and cyan, which
-     is the theme's own pair -- the mark for "new" is the mark for this site, not a generic sparkle.
+     four-point star with concave arms, plus a smaller one trailing it. Two tones, `--warn` and `--bar`,
+     which is the theme's own pair -- the mark for "new" is the mark for this site, not a generic sparkle.
 
      Two symbols on one shared viewBox rather than one symbol with two classed paths, because a CSS rule
      cannot reach inside the shadow tree a <use> builds: `.ni .a{fill:...}` matches nothing, and the

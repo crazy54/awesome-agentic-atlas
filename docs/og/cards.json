@@ -1,5 +1,5 @@
 {
- "template": 2,
+ "template": 3,
  "size": [
   1200,
   630
@@ -16,8 +16,8 @@
     "Superpowers"
    ],
    "note": " · snapshot 2026-09-03",
-   "sig": "80b859703f089362",
-   "bytes": 26008
+   "sig": "1697394aa6395825",
+   "bytes": 26401
   },
   "topic-orchestrators-multi-agent.png": {
    "title": "Orchestrators & Multi-Agent",
@@ -29,8 +29,8 @@
     "Langflow",
     "n8n"
    ],
-   "sig": "b7fb90c50cf8beb1",
-   "bytes": 22621
+   "sig": "c627caf61f7b30ec",
+   "bytes": 23025
   },
   "topic-coding-agents.png": {
    "title": "Coding Agents",
@@ -42,8 +42,8 @@
     "Gemini CLI",
     "OpenCode"
    ],
-   "sig": "8e6569d64f1cf890",
-   "bytes": 20670
+   "sig": "b16d4e0ae5cbb7e6",
+   "bytes": 21023
   },
   "topic-agent-skills.png": {
    "title": "Agent Skills",
@@ -55,8 +55,8 @@
     "mattpocock/skills",
     "Superpowers"
    ],
-   "sig": "9c9b14dde4e19788",
-   "bytes": 20654
+   "sig": "29e3feb8b1ce7076",
+   "bytes": 21015
   },
   "topic-mcp-servers.png": {
    "title": "MCP Servers",
@@ -68,8 +68,8 @@
     "microsoft/playwright-mcp",
     "modelcontextprotocol/serv…"
    ],
-   "sig": "431884331ad814d4",
-   "bytes": 22244
+   "sig": "870be3a4f1aae207",
+   "bytes": 22596
   },
   "topic-frameworks-sdks.png": {
    "title": "Frameworks & SDKs",
@@ -81,8 +81,8 @@
     "hermes-agent",
     "openclaw"
    ],
-   "sig": "aee953ed9ce50131",
-   "bytes": 21652
+   "sig": "bf8530f183f3ae64",
+   "bytes": 22051
   },
   "topic-harnesses-runtime-infra.png": {
    "title": "Harnesses & Runtime Infra",
@@ -94,8 +94,8 @@
     "Ollama",
     "Open WebUI"
    ],
-   "sig": "998fac2d27678fc7",
-   "bytes": 21806
+   "sig": "619a5990c29d7785",
+   "bytes": 22212
   },
   "topic-context-memory-rag.png": {
    "title": "Context, Memory & RAG",
@@ -107,8 +107,8 @@
     "headroom",
     "mem0"
    ],
-   "sig": "b05c329d817c5cb9",
-   "bytes": 22375
+   "sig": "e7c8925cd423e6be",
+   "bytes": 22692
   },
   "topic-sandbox-security-governance.png": {
    "title": "Sandbox, Security & Governance",
@@ -120,8 +120,8 @@
     "PentestGPT",
     "SkillSpector"
    ],
-   "sig": "f6eeae9b7504705d",
-   "bytes": 25181
+   "sig": "b53f6dc3e4614e8a",
+   "bytes": 25612
   },
   "topic-observability-evals.png": {
    "title": "Observability & Evals",
@@ -133,8 +133,8 @@
     "Opik",
     "promptfoo"
    ],
-   "sig": "15539dc375d57fa6",
-   "bytes": 21672
+   "sig": "0ac20a818d1e3753",
+   "bytes": 22055
   },
   "topic-plugins-themes-clients.png": {
    "title": "Plugins, Themes & Clients",
@@ -146,8 +146,8 @@
     "Oh My Opencode",
     "OpenSpec"
    ],
-   "sig": "820f0bb79646149f",
-   "bytes": 22167
+   "sig": "fa7157375b347da0",
+   "bytes": 22565
   },
   "topic-research-data-agents.png": {
    "title": "Research & Data Agents",
@@ -159,8 +159,8 @@
     "Pathway",
     "RAGFlow"
    ],
-   "sig": "d3d4d1235e93726b",
-   "bytes": 22729
+   "sig": "55a621ce8920a227",
+   "bytes": 23183
   },
   "topic-creative-voice-media.png": {
    "title": "Creative, Voice & Media",
@@ -172,8 +172,8 @@
     "Rasa",
     "Wan 2.1"
    ],
-   "sig": "3fefa007effd0092",
-   "bytes": 22713
+   "sig": "afdd19e760baee39",
+   "bytes": 23121
   },
   "topic-assistants-domain-agents.png": {
    "title": "Assistants & Domain Agents",
@@ -185,8 +185,8 @@
     "awesome-llm-apps",
     "Colossal-AI"
    ],
-   "sig": "ddff9cd58fbaf78c",
-   "bytes": 23661
+   "sig": "7b6623b8a4ba420b",
+   "bytes": 24132
   },
   "topic-docs-learning-lists.png": {
    "title": "Docs, Learning & Lists",
@@ -198,8 +198,8 @@
     "claude-howto",
     "Learn Claude Code"
    ],
-   "sig": "1f2c58f4e9b5a4c9",
-   "bytes": 22423
+   "sig": "d9af534dd1c400a3",
+   "bytes": 22848
   },
   "target-claude-code.png": {
    "title": "Tools for Claude Code",
@@ -211,8 +211,8 @@
     "hermes-agent",
     "Superpowers"
    ],
-   "sig": "ceececeec4b0d7fd",
-   "bytes": 22766
+   "sig": "d3157f34a4fb2ee5",
+   "bytes": 23207
   },
   "target-claude-anthropic.png": {
    "title": "Tools for Claude / Anthropic",
@@ -224,8 +224,8 @@
     "mattpocock/skills",
     "Superpowers"
    ],
-   "sig": "fb4c347685f30f4a",
-   "bytes": 23452
+   "sig": "f48f913978bbb80c",
+   "bytes": 23955
   },
   "target-opencode.png": {
    "title": "Tools for opencode",
@@ -237,8 +237,8 @@
     "Oh My Opencode",
     "OpenCode"
    ],
-   "sig": "0a15d0ddadbeffda",
-   "bytes": 21281
+   "sig": "f8b58a0b432f0def",
+   "bytes": 21821
   },
   "target-mcp.png": {
    "title": "Tools for MCP",
@@ -250,8 +250,8 @@
     "openclaw",
     "Superpowers"
    ],
-   "sig": "770f72f1e7846ee2",
-   "bytes": 21002
+   "sig": "8dd90ed37758142c",
+   "bytes": 21339
   },
   "target-codex-openai.png": {
    "title": "Tools for Codex / OpenAI",
@@ -263,8 +263,8 @@
     "hermes-agent",
     "Superpowers"
    ],
-   "sig": "4d7ee0e8682a9286",
-   "bytes": 22622
+   "sig": "e13a4bb147f65d52",
+   "bytes": 23123
   },
   "target-gemini-google.png": {
    "title": "Tools for Gemini / Google",
@@ -276,8 +276,8 @@
     "LangChain",
     "Superpowers"
    ],
-   "sig": "ef15efd665a2f36f",
-   "bytes": 22278
+   "sig": "c1571b4c8902f17b",
+   "bytes": 22585
   },
   "target-github-copilot.png": {
    "title": "Tools for GitHub Copilot",
@@ -289,8 +289,8 @@
     "Superpowers",
     "wshobson/agents"
    ],
-   "sig": "20da5780e84966c2",
-   "bytes": 21992
+   "sig": "c61bcf630408decb",
+   "bytes": 22445
   },
   "target-cursor.png": {
    "title": "Tools for Cursor",
@@ -302,8 +302,8 @@
     "Ponytail",
     "Superpowers"
    ],
-   "sig": "823f92a5f959b59b",
-   "bytes": 20178
+   "sig": "e864b24b320e9f06",
+   "bytes": 20669
   },
   "target-cline-roo.png": {
    "title": "Tools for Cline / Roo",
@@ -315,8 +315,8 @@
     "OmniRoute: Multi-Provider…",
     "zhaoxuya520/reverse-skill"
    ],
-   "sig": "48af628020c56667",
-   "bytes": 19743
+   "sig": "2888c3a3686d8b99",
+   "bytes": 20026
   },
   "target-aider.png": {
    "title": "Tools for Aider",
@@ -328,8 +328,8 @@
     "Aider",
     "bradAGI/awesome-cli-codin…"
    ],
-   "sig": "92c2fe6752a55140",
-   "bytes": 17701
+   "sig": "3b1fbe7fb43454fd",
+   "bytes": 17949
   },
   "target-langchain-langgraph.png": {
    "title": "Tools for LangChain / LangGraph",
@@ -341,8 +341,8 @@
     "DeerFlow",
     "LangChain"
    ],
-   "sig": "5a6d42c15da80b38",
-   "bytes": 22417
+   "sig": "d48d2aaa1f5d683a",
+   "bytes": 22774
   },
   "target-local-ollama.png": {
    "title": "Tools for Local / Ollama",
@@ -354,8 +354,8 @@
     "Ollama",
     "Open WebUI"
    ],
-   "sig": "90bb61264b0f5299",
-   "bytes": 21578
+   "sig": "76335a77b46b20a5",
+   "bytes": 21950
   }
  }
 }
