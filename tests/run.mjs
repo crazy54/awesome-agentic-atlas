@@ -2,12 +2,12 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the nine harnesses in turn, and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the ten harnesses in turn, and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY NINE HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY TEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
 //   signals_test.py   the cache-staleness policy in scripts/signals.py, on fabricated entries. Pure and
 //                     instant, and the only test of it that can exist offline -- the three stages it
@@ -31,6 +31,10 @@
 //   refresh_test.py   the staleness guard in scripts/19b_refresh.py: that the only cache-free render path
 //                     refuses when the checkout's source lists and the committed rows disagree about how
 //                     many there are, on a disagreement this file constructs rather than waits for.
+//   live_test.py      the star/push sidecar the 1,294 detail pages read in place of data.json: that its keys
+//                     and the pages are the same set in both directions, that it resolves its three columns
+//                     by name rather than by position -- a later stage appends columns -- and that its
+//                     serialisation is byte-stable, which is what lets it be committed at all.
 //
 // A HARNESS THAT SKIPS MUST NOT BE ABLE TO PASS, which is why there is no branch anywhere below that quietly
 // carries on. A missing browser or a missing interpreter exits 2 before anything runs; a harness that prints
@@ -53,7 +57,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// nine files own their own plumbing. It is 200 lines of plumbing.
+// ten files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -79,6 +83,7 @@ const HARNESSES = [
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
   {file: "media_test.py", label: "one embedded part per screenshot, and the entry ceiling", python: true, floor: 40},
   {file: "refresh_test.py", label: "the cache-free render, refused when the source count moved", python: true, floor: 60},
+  {file: "live_test.py", label: "the star/push sidecar the 1,294 detail pages read", python: true, floor: 90},
   {file: "detail-churn.mjs", label: "1,294 detail pages, regenerated and hashed", floor: 7},
   {file: "cards-check.mjs", label: "real layout at 1440/900/375 in both themes", needs: "browser", floor: 40},
   {file: "pwa-check.mjs", label: "manifest, worker, precache, offline, freshness, 404", needs: "browser", floor: 25},
@@ -93,7 +98,7 @@ if (!existsSync(join(ROOT, "docs", "index.html"))) {
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and two of the nine harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and two of the ten harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -106,15 +111,15 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Six of the nine need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Seven of the ten need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives the IndexNow client and
-// `20_landing.py`'s key-file prune, one guards the cache-free render path -- and between them they are 522
-// of the assertions below, comfortably over half.
+// `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar
+// -- and between them they are 623 of the assertions below, comfortably over half.
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and six of the nine harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and seven of the ten harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

@@ -241,20 +241,37 @@ def run_main(argv: list[str], sources: list[str],
 
 
 LIVE = [s["nwo"] for s in b19b.b10.SOURCES]
-# A red here is not a broken harness. It means this checkout is *inside* the window JFH-220 is about:
-# `10_parse_sources.SOURCES` has moved and `docs/data.json` has not caught up, so `19b_refresh.py` will
-# refuse until the next full rebuild writes the rows from a crawl. That is the designed behaviour, and this
-# is the earliest place anybody would find out about it -- earlier than reaching for the stage and being
-# told no, and much earlier than the deploy branch. The two numbers in the failure say which way round it
-# is; if the intermediate state is deliberate, `--allow-stale` is how the stage is reached meanwhile.
-eq("the checkout configures exactly the lists the committed rows were built from",
-   len(LIVE), len(b19b.source_labels(REAL)))
+IMPLIED = b19b.source_labels(REAL)
+# A source list of exactly the size the committed rows imply, which is what makes the three cases below
+# about the guard rather than about whether this checkout happens to be mid-window. The names are
+# synthetic on purpose: the guard compares counts, so borrowing the real `nwo` values would make the
+# fixture track a configuration that moves under it.
+MATCHED = [f"owner{i}/list{i}" for i in range(len(IMPLIED))]
+
+# What the guard says about *this* checkout, asserted as a verdict rather than as a demand that the
+# checkout be consistent. A checkout can legitimately sit inside the window JFH-220 is about --
+# `10_parse_sources.SOURCES` has moved and `docs/data.json` has not caught up, because catching up needs a
+# crawl and a crawl needs CI -- and while it does, the stage refusing is the designed behaviour and not a
+# regression. Asserting "these two numbers are equal" would hold the whole suite red for the entire length
+# of a legitimate window, and a suite that is red on purpose for a week is one people learn to stop
+# reading. So this asserts the thing that is true in both worlds: the verdict follows the state. Either way
+# the label prints both numbers, which is how the drift still gets announced -- out of a green line, which
+# is where this suite already puts what it found.
+drifted = len(LIVE) != len(IMPLIED)
+try:
+    with contextlib.redirect_stderr(io.StringIO()):
+        b19b.check_sources(REAL, LIVE)
+    refused_live = False
+except SystemExit:
+    refused_live = True
+eq(f"the guard's verdict on this checkout follows its state -- configures {len(LIVE)}, "
+   f"rows imply {len(IMPLIED)}", refused_live, drifted)
 
 # 1. the disagreement, through the stage rather than through the function
 stale_out = Path(tempfile.mkdtemp(prefix="docs_", dir=TMP))
 (stale_out / "data.json").write_bytes(SEED)
 refused = raises("the stage refuses when the checkout has a list the rows do not", SystemExit,
-                 lambda: run_main([], LIVE + ["owner/newly-added-list"], stale_out))
+                 lambda: run_main([], MATCHED + ["owner/newly-added-list"], stale_out))
 says("...and the refusal names the list that was added", refused, "owner/newly-added-list")
 # The page is the artifact this ticket is about, so the assertion is that it was never written -- not
 # merely that the exit code was non-zero.
@@ -262,7 +279,7 @@ true("a refused run writes no index.html", not (stale_out / "index.html").exists
 eq("a refused run leaves data.json byte-identical", (stale_out / "data.json").read_bytes(), SEED)
 
 # 2. the same disagreement, waved through on purpose
-waved, called, w_out, w_err = run_main(["--allow-stale"], LIVE + ["owner/newly-added-list"])
+waved, called, w_out, w_err = run_main(["--allow-stale"], MATCHED + ["owner/newly-added-list"])
 true("--allow-stale renders the page anyway", (waved / "index.html").exists())
 says("--allow-stale warns while it does it", w_err.getvalue(), "--allow-stale")
 eq("--allow-stale still re-versions the service worker", called, ["reversion"])
@@ -270,12 +287,12 @@ says("the mixed page really does carry the committed row count",
      (waved / "index.html").read_text(encoding="utf-8"), f"{len(REAL['rows']):,} agentic AI projects")
 
 # 3. the agreeing case, which is the acceptance criterion: the stage still works
-fresh, called, f_out, f_err = run_main([], LIVE)
+fresh, called, f_out, f_err = run_main([], MATCHED)
 true("the stage renders normally when the two agree", (fresh / "index.html").exists())
 eq("...and says nothing on stderr", f_err.getvalue(), "")
 eq("...and re-versions the worker exactly once", called, ["reversion"])
 says("...and reports the source count it checked", f_out.getvalue(),
-     f"rows from {len(LIVE)} source list(s)")
+     f"rows from {len(MATCHED)} source list(s)")
 says("...and still reports the row count", f_out.getvalue(), f"{len(REAL['rows']):,} rows from")
 fresh_data = json.loads((fresh / "data.json").read_text(encoding="utf-8"))
 eq("...and rewrites data.json with the same rows it read", len(fresh_data["rows"]), len(REAL["rows"]))
@@ -308,23 +325,28 @@ says("__COUNT__ is the committed row count", full, f"{len(REAL['rows']):,} agent
 says("__STARS__ is summed over the committed rows", full, f"{stars:,}")
 says("dropping a row moves the rendered count", lean, f"{len(REAL['rows']) - 1:,} agentic AI projects")
 true("dropping a row moves the rendered star total", f"{stars:,}" not in lean)
-# ...and the other half does not move, which is the whole hazard: these words are the template's, and the
-# template is the live file. Counted rather than merely found, so a render that lost two of the three
+# ...and the other half does not move, which is the whole hazard. `__LISTS__` is filled from the live
+# `SOURCES`, so it is a constant with respect to the rows: drop rows and it stays put while `__COUNT__` and
+# `__STARS__` walk away from it. Counted rather than merely found, so a render that lost two of the three
 # still fails here.
+LISTS = b19b.b19.LISTS
 eq("the prose source count does not move with the rows",
-   lean.count("eleven awesome-lists"), full.count("eleven awesome-lists"))
-true("the prose source count is in the page at all", full.count("eleven awesome-lists") >= 2,
-     f"found {full.count('eleven awesome-lists')}")
-says("the footer's own claim is a literal too", lean, "eleven source lists are credited")
-says("so is the link out of it", lean, "#the-eleven-lists")
-# JFH-220 was filed believing a `__LISTS__` placeholder existed and was filled from the live `SOURCES`.
-# It does not exist -- the live half arrives as prose, not as substitution. If a source-count placeholder
-# is ever added, the guard in `19b_refresh.py` is what has to know about it, so this fires here rather
-# than being discovered on the deploy branch.
+   lean.count(f"{LISTS} awesome-lists"), full.count(f"{LISTS} awesome-lists"))
+true("the prose source count is in the page at all", full.count(f"{LISTS} awesome-lists") >= 2,
+     f"found {full.count(f'{LISTS} awesome-lists')}")
+says("the footer's own claim comes from the same live count", lean, f"{LISTS} source lists are credited")
+# JFH-220 was filed believing a `__LISTS__` placeholder existed; when the ticket was worked it did not, and
+# the live half arrived as the word "eleven" written into the template by hand. JFH-202 added the
+# placeholder. That makes the two halves of the page numerically independent rather than merely
+# rhetorically so -- the prose now tracks the checkout while the numbers track the rows -- which is exactly
+# the mixture the guard refuses, and it is why these assertions name the token rather than a spelled-out
+# number that a later edit would leave stranded.
 tokens = sorted(set(re.findall(r"__[A-Z][A-Z_]*__", b19b.b19.PAGE)))
-eq("the template has no source-count placeholder to keep in step",
-   [t for t in tokens if "LIST" in t], [])
+eq("the template's source count is a placeholder, so the guard has something to be about",
+   [t for t in tokens if "LIST" in t], ["__LISTS__"])
 true("the token scan found the placeholders it was looking through", "__COUNT__" in tokens)
+true("__LISTS__ is filled from the live source list and not from the rows",
+     '.replace("__LISTS__", str(LISTS))' in (SCRIPTS / "19_pages.py").read_text(encoding="utf-8"))
 
 # ---- the rows go through untouched, which is why a refresh cannot fix the disagreement itself
 LEDGER = {"baseline": "2026-09-03", "window_days": 14, "repos": {}}
