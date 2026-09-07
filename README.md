@@ -2,14 +2,14 @@
 
 # Awesome Agentic Atlas
 
-**Eleven of the best agentic awesome-lists, merged into one searchable atlas.**
+**Thirty-nine of the best agentic awesome-lists, merged into one searchable atlas.**
 
-2,394 tools · 1,294 repos · 12.5M combined stars · one spreadsheet · zero tab-hopping
+13,640 entries · nearly 8,000 repos · 12.5M combined stars · one spreadsheet · zero tab-hopping
 
-[![tools](https://img.shields.io/badge/tools-2%2C394-6f42c1?style=for-the-badge)](mega-list/README.md)
-[![repos](https://img.shields.io/badge/repos-1%2C294-0969da?style=for-the-badge)](mega-list/leaderboard.md)
+[![entries](https://img.shields.io/badge/entries-13%2C640-6f42c1?style=for-the-badge)](mega-list/README.md)
+[![repos](https://img.shields.io/badge/repos-~8%2C000-0969da?style=for-the-badge)](mega-list/leaderboard.md)
 [![stars](https://img.shields.io/badge/combined%20stars-12.5M-f9c513?style=for-the-badge)](mega-list/leaderboard.md)
-[![lists merged](https://img.shields.io/badge/lists%20merged-11-1a7f37?style=for-the-badge)](#the-eleven-lists)
+[![lists merged](https://img.shields.io/badge/lists%20merged-39-1a7f37?style=for-the-badge)](#the-source-lists)
 [![license](https://img.shields.io/badge/license-MIT-24292f?style=for-the-badge)](LICENSE)
 
 ### [🔎 Browse it in your browser][site] · [⬇ Download the workbook — dark][dark] · [⬇ light][light]
@@ -20,15 +20,15 @@
 
 ## The problem this solves
 
-There are a dozen excellent awesome-lists for AI agents. Between them they name the same projects
+There are dozens of excellent awesome-lists for AI agents. Between them they name the same projects
 under different headings, in different orders, with different opinions, and none of them tells you
 whether the thing runs on Windows or how to install it. Finding "the best Claude Code observability
-tool that runs on Windows" means opening eleven tabs and reading all of them.
+tool that runs on Windows" means opening dozens of tabs and reading all of them.
 
-So all eleven are in here once, deduplicated, with the columns those lists don't have: **star count,
-language, licence, last push, install command, and a per-OS verdict for Windows, macOS, Linux and
-Docker.** Plus a screenshot of every project, so you can see it before you click it. That question up
-there is now [one link — twenty tools, ranked][q1].
+So all thirty-nine are in here once, deduplicated, with the columns those lists don't have: **star
+count, language, licence, last push, install command, and a per-OS verdict for Windows, macOS, Linux
+and Docker.** Plus a screenshot of every project, so you can see it before you click it. That question
+up there is now [one link — twenty tools, ranked][q1].
 
 [q1]: https://crazy54.github.io/awesome-agentic-atlas/#topic=observability-evals&target=claude-code&os=windows&confirmed=1
 
@@ -51,8 +51,8 @@ python -m http.server -d docs 8000
 ```
 
 Then open <http://localhost:8000>. It does have to be *served* — a `file://` page is not allowed to
-`fetch` a sibling file, so double-clicking `docs/index.html` gives you the layout and none of the 1,294
-rows. Nothing here is built or bundled: edit `docs/index.html` and reload.
+`fetch` a sibling file, so double-clicking `docs/index.html` gives you the layout and none of the
+nearly 8,000 rows. Nothing here is built or bundled: edit `docs/index.html` and reload.
 
 ## Top of the leaderboard
 
@@ -75,8 +75,8 @@ rows. Nothing here is built or bundled: edit `docs/index.html` and reload.
 
 One leaderboard tells you the most-starred agentic project overall. It does not tell you the best
 *skill*, or the best *observability tool*. So every project is also filed under exactly one of **14
-topics**, ranked inside it — the eleven source lists published 140 section names between them and
-agreed on almost none, so this is one shared vocabulary laid over all of them.
+topics**, ranked inside it — the thirty-nine source lists published hundreds of section names between
+them and agreed on almost none, so this is one shared vocabulary laid over all of them.
 
 | Topic | Projects | Top of the topic |
 |---|---:|---|
@@ -140,10 +140,11 @@ whose language and packaging make them near-certain to work but where nobody sai
 Python package with no OS-specific dependency runs on Windows; that is an inference, not a promise, and
 it is filed as one. The Docker page has no inferred half: either there's a Dockerfile or there isn't.
 
-## The eleven lists
+## The source lists
 
-Every entry here came from someone else's curation work. All eleven are credited on the workbook's
-**Sources** sheet with their own star count and a screenshot, and each has its own page below:
+Every entry here came from someone else's curation work. All thirty-nine are credited on the workbook's
+**Sources** sheet with their own star count and a screenshot, and each has its own page in the
+[Markdown edition](mega-list/README.md). The eleven that also get a workbook sheet of their own:
 
 | List | Curator | Entries | Page |
 |---|---|---:|---|
@@ -163,13 +164,14 @@ If you maintain one of these: thank you, and please tell me if anything here mis
 
 ## What's in the workbook that isn't in the lists
 
-Twenty-one sheets. The eleven source lists each get one, keeping the section headings their curator
-published, so you can still read it the way they wrote it. Then:
+Twenty-one sheets. Eleven of the source lists get one each, keeping the section headings their curator
+published, so you can still read it the way they wrote it; every row of the other twenty-eight is on
+the cross-list sheets. Then:
 
-- **Sources** — all eleven lists side by side: entries, distinct repos, total and median stars, how
+- **Sources** — all thirty-nine lists side by side: entries, distinct repos, total and median stars, how
   many entries are Windows-capable, screenshot coverage.
-- **Leaderboard** — one row per repo across all eleven, ranked, with a consensus count.
-- **By Category** — the same 1,294 repos grouped into the 14 topics and ranked *inside* each one, as a
+- **Leaderboard** — one row per repo across all thirty-nine, ranked, with a consensus count.
+- **By Category** — the same repos grouped into the 14 topics and ranked *inside* each one, as a
   real Excel table. Filter Category to one topic and the filter *is* that topic's leaderboard; add
   Plugs Into and you're asking both questions at once.
 - **Windows / macOS / Linux / Docker** — the platform pools, ordered by evidence strength.
@@ -186,8 +188,8 @@ Aggregating other people's lists introduces failure modes worth naming:
 
 - **Stars and dates drift.** They come from the GitHub API on the build date printed on every page.
   Treat them as a snapshot, not a live feed.
-- **The same repo arrives under several names.** GitHub redirects renamed repos for ever, so eleven
-  lists written at different times link to the same project under different owners and every link
+- **The same repo arrives under several names.** GitHub redirects renamed repos for ever, so lists
+  written at different times link to the same project under different owners and every link
   works. `OpenDevin/OpenDevin`, `All-Hands-AI/OpenHands` and `OpenHands/OpenHands` are one project.
   Twenty-four repos were in here more than once that way. Every name is now resolved to the one the
   API reports, which took **1,102,114 double-counted stars off the total** — 258,781 from three repos
@@ -204,8 +206,8 @@ Aggregating other people's lists introduces failure modes worth naming:
 
 Two GitHub Actions workflows keep the three surfaces from going stale, and neither needs a hand on it.
 
-**Daily** ([`daily.yml`](.github/workflows/daily.yml), 11:12 UTC) asks each of the eleven source lists for
-its newest commit. If none of them has moved, the job stops there — a rebuild would produce byte-identical
+**Daily** ([`daily.yml`](.github/workflows/daily.yml), 11:12 UTC) asks each of the thirty-nine source lists
+for its newest commit. If none of them has moved, the job stops there — a rebuild would produce byte-identical
 files. If any has, it refetches every repo's metadata, rebuilds the site and the Markdown edition, and
 commits them, which is what republishes the site.
 
@@ -214,16 +216,16 @@ part the daily run skips: capturing a screenshot for each new project, rebuildin
 publishing them as a dated release. That's why the [download links][dark] never rot — they point at
 `releases/latest`, and each Sunday's release becomes the latest.
 
-The split is about cost, not caution. Metadata for 1,294 repos is about seventy GraphQL queries.
-Screenshots are 3,462 headless-browser renders. So a project added on Tuesday shows GitHub's own repo card
-until Sunday, then gets its real image.
+The split is about cost, not caution. Metadata for the whole atlas is a few hundred GraphQL queries,
+twenty repos to a query. Screenshots are a headless-browser render per project. So a project added on
+Tuesday shows GitHub's own repo card until Sunday, then gets its real image.
 
 ### The pull cache
 
 [`scripts/pull_sources.py`](scripts/pull_sources.py) is what actually downloads the lists, and it keeps a
 commit id per list in `cache/sources/index.json` so it can decline to. Ask a list for its head commit, and
 if it matches the one already cached — and the cached bytes are still on disk — there is nothing to read
-and the pull is skipped. On a day when one list moved, one list is re-read, not eleven.
+and the pull is skipped. On a day when one list moved, one list is re-read, not thirty-nine.
 
 When a list has moved, the new copy and the cached one are both run through the same parser the build uses
 and the resulting entries are compared. That is the difference between a diff over lines and a diff over
@@ -442,8 +444,8 @@ edition, and the site's dataset from the same in-memory records — so the three
 disagree. The topic and target assignments come from one taxonomy module all three read, which is why
 `topics/agent-skills.md`, `#topic=agent-skills` and `Category = Agent Skills` are the same 278 rows.
 
-The build cache (~4,800 files: fetched READMEs and screenshots) is deliberately **not** committed. It
-is other people's content, it is 64 MB, and it is reproducible from the fetch scripts.
+The build cache (a fetched README and a screenshot per project) is deliberately **not** committed. It
+is other people's content, it grows with every list added, and it is reproducible from the fetch scripts.
 
 That is also why the pull cache's commit ids live in `cache/sources/index.json` rather than alongside the
 ledger in `state/`. An id recorded in a committed file would still be there on a clone that has none of the
@@ -478,7 +480,7 @@ directory and a build pipeline, not a library with patent surface, and MIT's fiv
 friction for anyone who wants to fork the data or reuse the scripts.
 
 That covers **this project's own work**: the pipeline, the platform classifications, the merge, the
-compilation. It does not relicense the eleven source lists — the descriptive text is the work of the
+compilation. It does not relicense the thirty-nine source lists — the descriptive text is the work of the
 curators named above, each of whom retains their own licence, and every entry links back to both the
 project and the list that found it. Star counts, languages and licences are facts from the GitHub API.
 

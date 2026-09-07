@@ -1,10 +1,11 @@
 """Parse every awesome-list source into one entry table.
 
-Eleven lists, eleven shapes: plain bullets, markdown tables, HTML tables under
-`<h3>` headings, one-heading-per-tool, and `<details>` accordions. Rather than
-eleven bespoke parsers this is one walker with a small per-source strategy:
-which heading level names the category, which line shapes hold entries, and
-which headings are front matter to ignore.
+Every list in `SOURCES` has its own shape: plain bullets, markdown tables, HTML
+tables under `<h3>` headings, one-heading-per-tool, and `<details>` accordions.
+Rather than a bespoke parser per list this is one walker with a small per-source
+strategy: which heading level names the category, which line shapes hold
+entries, and which headings are front matter to ignore. That is what has let the
+list of sources grow without the parser growing with it.
 
 Output is cache/entries_all.json -- one row per listed item per source. A repo
 listed by two sources stays two rows (that overlap is itself a finding); the
@@ -23,6 +24,13 @@ SRC = CACHE / "sources"
 # mode:     which line shapes carry entries -- bullet / table / heading
 # cat_at:   heading depth that names the category (2 = "## ", 3 = "### ")
 # drop:     headings whose whole section is front matter, meta or non-tool
+# keep:     the inverse, for a list that is mostly not tools -- name the sections to take and every
+#           other heading is dropped. Only one of the two per source; `keep` wins if both are given.
+#           A denylist has to be complete to be correct, so it is the wrong shape for a list whose
+#           upstream adds sections faster than we notice: a heading nobody has classified yet becomes
+#           a live section, and an unmapped section is a taxonomy KeyError, which is a red build for a
+#           change made in somebody else's repository. With `keep`, an unrecognised new heading is
+#           simply not taken, which is the safe default and needs no maintenance.
 # item_rel: relative links are real items (the list indexes folders in its own repo)
 SOURCES = [
     dict(key="orchestrators", nwo="andyrewlee/awesome-agent-orchestrators",
@@ -102,6 +110,197 @@ SOURCES = [
          drop={"what counts as a pattern?", "explore the website",
                "quick tour of categories", "for ai assistants (llms.txt)",
                "contributing in 3 steps", "inspiration", "license"}),
+    dict(key="aiagents_schwoebel", nwo="jim-schwoebel/awesome_ai_agents",
+         title="AI Agents (Schwoebel)", short="Schwoebel",
+         file="jim-schwoebel_awesome_ai_agents.md",
+         mode={"bullet"}, cat_at=3,
+         drop={"agents connect: the all-demo conference", "applications", "contributing",
+               "contributors", "courses", "datasets", "ethics", "license", "linkedin",
+               "newsletter", "prompt engineering", "spread the word", "star the repo",
+               "table of contents", "twitter", "upcoming event: agents connect conference",
+               "workflows"}),
+    dict(key="llmops_tensorchord", nwo="tensorchord/Awesome-LLMOps",
+         title="LLMOps (tensorchord)", short="LLMOps",
+         file="tensorchord_Awesome-LLMOps.md",
+         mode={"table"}, cat_at=3,
+         drop={"contents", "license", "table of contents"}),
+    dict(key="mcp_devops_rohitg00", nwo="rohitg00/awesome-devops-mcp-servers",
+         title="DevOps MCP Servers", short="DevOps MCP",
+         file="rohitg00_awesome-devops-mcp-servers.md",
+         mode={"bullet"}, cat_at=3,
+         drop={"contributing", "legend", "license", "what is mcp?"}),
+    dict(key="mcp_punkpeye", nwo="punkpeye/awesome-mcp-servers",
+         title="MCP Servers (punkpeye)", short="MCP Servers",
+         file="punkpeye_awesome-mcp-servers.md",
+         mode={"bullet"}, cat_at=3,
+         drop={"clients", "community", "legend", "server implementations", "star history",
+               "tips and tricks", "tutorials", "what is mcp?"}),
+    dict(key="mcp_wong2", nwo="wong2/awesome-mcp-servers",
+         title="MCP Servers (wong2)", short="MCP wong2",
+         file="wong2_awesome-mcp-servers.md",
+         mode={"bullet"}, cat_at=2,
+         drop={"sponsors"}),
+    dict(key="agentic_commerce", nwo="Merit-Systems/awesome-agentic-commerce",
+         title="Agentic Commerce (x402)", short="Agentic Comm",
+         file="Merit-Systems_awesome-agentic-commerce.md",
+         mode={"bullet"}, cat_at=3,
+         drop={"benchmarks & analysis", "community", "contributing", "license",
+               "podcasts & media", "quick links", "videos", "what is x402?"}),
+    dict(key="aiagents_jenqyang", nwo="Jenqyang/Awesome-AI-Agents",
+         title="AI Agents (Jenqyang)", short="Jenqyang",
+         file="Jenqyang_Awesome-AI-Agents.md",
+         mode={"bullet"}, cat_at=3,
+         drop={"contents", "license", "table of contents"}),
+    dict(key="cc_plugins", nwo="ccplugins/awesome-claude-code-plugins",
+         title="Claude Code Plugins", short="CC Plugins",
+         file="ccplugins_awesome-claude-code-plugins.md",
+         mode={"bullet", "table"}, cat_at=3, item_rel=True,
+         drop={"contributing", "tutorials", "use cases", "what is claude code plugin?"}),
+    dict(key="cc_subagents_voltagent", nwo="VoltAgent/awesome-claude-code-subagents",
+         title="Claude Code Subagents", short="CC Subagents",
+         file="VoltAgent_awesome-claude-code-subagents.md",
+         mode={"bullet"}, cat_at=3, item_rel=True,
+         drop={"contributing", "contributor thanks", "installation", "license", "sponsors"}),
+    dict(key="cc_toolkit_rohitg00", nwo="rohitg00/awesome-claude-code-toolkit",
+         title="Claude Code Toolkit", short="CC Toolkit",
+         file="rohitg00_awesome-claude-code-toolkit.md",
+         mode={"bullet", "table"}, cat_at=3, item_rel=True,
+         drop={"contributing", "license", "project structure", "quick install", "setup",
+               "table of contents", "xvary stock research"}),
+    dict(key="claudecode_jq", nwo="jqueryscript/awesome-claude-code",
+         title="Claude Code (jqueryscript)", short="CC (jq)",
+         file="jqueryscript_awesome-claude-code.md",
+         mode={"bullet"}, cat_at=2,
+         drop={"alternatives to claude code", "changelog", "contribution guidelines",
+               "table of contents"}),
+    dict(key="claws", nwo="machinae/awesome-claws",
+         title="OpenClaw Assistants", short="Claws",
+         file="machinae_awesome-claws.md",
+         mode={"bullet"}, cat_at=2,
+         drop={"contributing"}),
+    dict(key="codexcli", nwo="RoggeOhta/awesome-codex-cli",
+         title="Codex CLI Ecosystem", short="Codex CLI",
+         file="RoggeOhta_awesome-codex-cli.md",
+         mode={"bullet", "table"}, cat_at=2,
+         drop={"contents", "contributing"}),
+    dict(key="codingtools_a4d", nwo="ai-for-developers/awesome-ai-coding-tools",
+         title="AI Coding Tools (a4d)", short="Coding Tools",
+         file="ai-for-developers_awesome-ai-coding-tools.md",
+         mode={"bullet"}, cat_at=2,
+         drop={"table of contents"}),
+    dict(key="copilot_github", nwo="github/awesome-copilot",
+         title="GitHub Copilot Customizations", short="Copilot",
+         file="github_awesome-copilot.md",
+         mode={"bullet", "table"}, cat_at=3, item_rel=True,
+         paths=["docs/README.agents.md", "docs/README.instructions.md", "docs/README.skills.md", "docs/README.plugins.md", "docs/README.hooks.md", "docs/README.workflows.md"],
+         drop={"contributing", "contributors", "how to contribute", "install a plugin",
+               "learning hub", "what's in this repo", "™ trademarks"}),
+    dict(key="cursorrules", nwo="PatrickJS/awesome-cursorrules",
+         title="Cursor Rules", short="Cursor Rules",
+         file="PatrickJS_awesome-cursorrules.md",
+         mode={"bullet"}, cat_at=3,
+         drop={"coderabbit.ai - cut code review time & bugs in half. instantly", "contents",
+               "contributing", "footnotes", "how to use", "project rules", "sponsorships",
+               "unblocked mcp- supercharge cursor with your team’s knowledge",
+               "warp - built for coding with multiple ai agents", "why cursor rules"}),
+    dict(key="devtools_murdza", nwo="jamesmurdza/awesome-ai-devtools",
+         title="AI Dev Tools (murdza)", short="AI DevTools",
+         file="jamesmurdza_awesome-ai-devtools.md",
+         mode={"bullet"}, cat_at=3,
+         drop={"categories"}),
+    dict(key="geminicli", nwo="Piebald-AI/awesome-gemini-cli",
+         title="Gemini CLI Ecosystem", short="Gemini CLI",
+         file="Piebald-AI_awesome-gemini-cli.md",
+         mode={"bullet", "table"}, cat_at=2,
+         drop={"contents", "contributing", "tada: new"}),
+    dict(key="llmagents_kaushikb11", nwo="kaushikb11/awesome-llm-agents",
+         title="LLM Agents (kaushikb11)", short="LLM Agents",
+         file="kaushikb11_awesome-llm-agents.md",
+         mode={"table"}, cat_at=2,
+         drop={"contents", "license", "table of contents"}),
+    dict(key="llmops_inftyai", nwo="InftyAI/Awesome-LLMOps",
+         title="LLMOps (InftyAI)", short="LLMOps Infty",
+         file="InftyAI_Awesome-LLMOps.md",
+         mode={"bullet"}, cat_at=3,
+         drop={"contents", "license", "table of contents"}),
+    dict(key="skills_cursor_spencerpauly", nwo="spencerpauly/awesome-cursor-skills",
+         title="Cursor Skills", short="Cursor Skill",
+         file="spencerpauly_awesome-cursor-skills.md",
+         mode={"bullet"}, cat_at=3, item_rel=True,
+         drop={"contents", "contributing"}),
+    dict(key="skills_jackyst0", nwo="JackyST0/awesome-agent-skills",
+         title="Agent Skills (JackyST0)", short="JackySkills",
+         file="JackyST0_awesome-agent-skills.md",
+         mode={"bullet"}, cat_at=2,
+         drop={"contents", "contributing", "create your own skill", "footnotes", "manual install",
+               "one-click install (recommended)", "quick start", "star history", "support",
+               "what are agent skills"}),
+    dict(key="skills_libukai", nwo="libukai/awesome-agent-skills",
+         title="Agent Skills (libukai)", short="Skills (CN)",
+         file="libukai_awesome-agent-skills.md",
+         mode={"bullet"}, cat_at=3,
+         drop={"优质教程", "创建技能", "在 app 中安装", "在 cli 中安装", "安全审查", "安装技能", "快速入门", "支持状况", "标准结构",
+               "特别致谢", "脚本与资源", "设计原则", "通用目录约定", "项目历史"}),
+    dict(key="skills_voltagent", nwo="VoltAgent/awesome-agent-skills",
+         title="Agent Skills (VoltAgent)", short="VoltSkills",
+         file="VoltAgent_awesome-agent-skills.md",
+         mode={"bullet"}, cat_at=3,
+         drop={"contributing", "contributor thanks", "core skills", "cuda-q", "cuopt", "dali",
+               "deepstream", "java skills", "license", "megatron-bridge", "megatron-core",
+               "model-optimizer", "nemo-evaluator", "nemo-evaluator-launcher", "nemo-gym",
+               "nemo-rl", "nemoclaw", "nemotron-voice-agent", "net skills", "official skills by",
+               "python skills", "quality criteria", "rag", "rust skills", "security notice",
+               "skill quality standards", "skills paths for other ai coding assistants",
+               "sponsors", "table of contents", "tensorrt-llm", "tilegym", "typescript skills",
+               "video-search-and-summarization"}),
+    dict(key="vibecoding", nwo="filipecalegario/awesome-vibe-coding",
+         title="Vibe Coding", short="Vibe Coding",
+         file="filipecalegario_awesome-vibe-coding.md",
+         mode={"bullet"}, cat_at=2,
+         drop={"about the concept", "communities & job boards", "contents", "contribute",
+               "news and social media"}),
+    dict(key="agentsec_recon", nwo="ProjectRecon/awesome-ai-agents-security",
+         title="AI Agent Security Tooling", short="Agent Sec",
+         file="ProjectRecon_awesome-ai-agents-security.md",
+         mode={"bullet"}, cat_at=2,
+         drop={"contributing", "table of contents"}),
+    dict(key="prompteng_promptslab", nwo="promptslab/Awesome-Prompt-Engineering",
+         title="Prompt Engineering (promptslab)", short="Prompt Eng",
+         file="promptslab_Awesome-Prompt-Engineering.md",
+         mode={"bullet", "table"}, cat_at=3,
+         drop={"agentic prompting and multi-agent systems", "applications of prompt engineering",
+               "community and independent guides", "discord servers", "forums and platforms",
+               "foundational papers (pre-2024)", "free and research detectors",
+               "free platform courses", "free short courses", "github organizations",
+               "how to contribute", "in-context learning", "leaderboards and meta-benchmarks",
+               "leading commercial detectors", "learn prompting courses",
+               "major benchmarks (2024–2026)", "major surveys", "multimodal prompting",
+               "official provider guides", "other notable providers",
+               "prompt and instruction datasets", "prompt compression",
+               "prompt injection and security", "prompt optimization and automatic prompting",
+               "reasoning advances", "red teaming and adversarial datasets", "reddit",
+               "start here", "structured output and format control", "table of contents",
+               "text-to-image generation", "text-to-music/audio generation",
+               "university and platform courses", "videos", "watermarking approaches"}),
+    # The one source in the atlas taken by allowlist. Four fifths of this list is reading, not tools:
+    # 387 of its 535 links are arxiv papers, and the sixteen research sections plus the industry
+    # write-ups contribute zero repos between them -- the full 22-section parse and this four-section
+    # one both yield 43 distinct repos, so the 180 rows left behind are 180 arxiv pages that would
+    # each cost a web screenshot and rank nowhere. What is here is worth having: `Tools & Frameworks`
+    # is real installable tooling (llm-guard, NeMo-Guardrails, garak, promptfoo, rebuff) and it is the
+    # best single source the atlas has for Sandbox, Security & Governance.
+    #
+    # `keep` rather than `drop` because of how this list is maintained: its papers carry 2026 arxiv
+    # IDs and new h3 subsections appear under Attack Research and Defense Research weekly. Enumerated
+    # as a denylist, every one of those would arrive as an unmapped section and break the build until
+    # someone added it -- a red daily build caused by somebody else editing their own README. Named
+    # the other way round, the four shelves we want are the four we get, for ever.
+    dict(key="skills_security", nwo="LLMSecurity/awesome-agent-skills-security",
+         title="Agent Skill Security", short="Skill Sec",
+         file="LLMSecurity_awesome-agent-skills-security.md",
+         mode={"bullet", "table"}, cat_at=3,
+         keep={"tools & frameworks", "benchmarks & datasets",
+               "agent skill specifications", "related awesome lists"}),
 ]
 
 MD_H = re.compile(r"^(#{2,4})\s+(?P<txt>.+?)\s*#*$")
@@ -131,8 +330,31 @@ def source_path(src: dict) -> Path:
     return CACHE / "README.md" if not src.get("file") else SRC / src["file"]
 
 
+def source_paths(src: dict) -> list[Path]:
+    """Every file this source's content lives in, primary first.
+
+    Most lists are one README. A few keep their items in sub-documents behind a hub README --
+    github/awesome-copilot has 3 rows in its README and 948 across six files under docs/ -- and
+    `paths` names those. They land beside the primary file so one source stays one group on
+    disk, and pull_sources.py pulls exactly this set: where an extra file goes is decided once,
+    here, rather than by two functions free to disagree about it.
+    """
+    primary = source_path(src)
+    out = [primary]
+    for p in src.get("paths") or []:
+        flat = p.strip("/").replace("/", "__")
+        out.append(primary.with_name(f"{primary.stem}__{flat}{primary.suffix}"))
+    return out
+
+
 def read_source(src: dict) -> str:
-    return source_path(src).read_text(encoding="utf-8")
+    """One source is one text, however many files it arrived in.
+
+    Concatenating rather than parsing each file separately is what keeps a hub list's sections in
+    one namespace: `paths` files continue the heading structure the README started, and a section
+    is `(source key, section name)` no matter which file the heading was written in.
+    """
+    return "\n\n".join(p.read_text(encoding="utf-8") for p in source_paths(src) if p.exists())
 
 
 def url_key(url: str) -> str:
@@ -149,6 +371,17 @@ def clean(s: str) -> str:
     s = LINK.sub(lambda m: m.group("txt"), s)
     s = HTML_TAG.sub("", s)
     s = s.replace("**", "").replace("`", "")
+    # `\|` is a backslash escape, and CommonMark renders it as a bare pipe wherever it appears. It
+    # reaches us because `entry_links` splits table rows on unescaped pipes only -- correct, and it
+    # deliberately leaves the escape in the cell -- but past that split the cell is no longer a table
+    # row and the backslash is not syntax any more, it is a character in a description. Two rows of
+    # rohitg00/awesome-claude-code-toolkit carry one: an install line reading
+    # `curl ... \| bash`, and a description of shell operators reading `(&&, \|\|, ;, \|, $())`.
+    # 17_markdown re-escapes on the way into its own tables, so the round trip is unchanged; what
+    # this fixes is those two strings printing a literal backslash on a bullet line and in
+    # docs/data.json, and `check_markdown.py`'s "escaped pipe outside a table" failing the build now
+    # that both workflows run it.
+    s = s.replace("\\|", "|")
     return re.sub(r"\s+", " ", s).strip(" \t*-–—:;.")
 
 
@@ -167,12 +400,35 @@ def repo_of(url: str) -> tuple[str, str, str] | None:
 def entry_links(body: str, mode: set[str], kind: str) -> list[tuple[str, str, str]]:
     """(name, url, description) for each entry on one line."""
     if kind == "table":
-        cells = [c.strip() for c in body.split("|")]
-        if len(cells) < 2 or not LINK.search(cells[0]):
+        # Not a plain split: an escaped `\|` inside a cell is content, and tearing the cell in two
+        # there hands the description the tail of a regex. One row in a thousand, but the row reads
+        # as gibberish when it happens.
+        cells = [c.strip() for c in re.split(r"(?<!\\)\|", body)]
+        if len(cells) < 2:
             return []
-        m = LINK.search(cells[0])
-        desc = next((clean(c) for c in cells[1:] if clean(c)), "")
-        return [(clean(m.group("txt")), m.group("url"), desc)]
+        # The linked cell is the entry wherever the curator put it. Requiring column 0 silently
+        # dropped every row of a `| Human Name | [file.md](path) | Purpose |` table -- six such
+        # tables in rohitg00/awesome-claude-code-toolkit, 225 rows -- because the readable name and
+        # the link are in different columns. Purely additive for the tables that do lead with a
+        # link: the first linked cell of those is still column 0.
+        i = next((j for j, c in enumerate(cells) if LINK.search(c)), None)
+        if i is None:
+            return []
+        m = LINK.search(cells[i])
+        # When the link sits in a later column, column 0 is the name a person wrote and the link text
+        # is the file it points at. Preferring the link text there named 225 rows "commit.md" and
+        # "fullstack-engineer.md"; the table already says Commands and Core Development beside them.
+        name = clean(cells[0]) if i and clean(cells[0]) else clean(m.group("txt"))
+        # Every cell that is neither the name nor the link is a description candidate, on both sides
+        # of the link. Reading only the cells after it assumed the link comes before the prose, and
+        # `| Name | Description | Link |` puts it last: 133 of promptslab/Awesome-Prompt-Engineering's
+        # 218 rows arrived with no description at all, their prose sitting one column to the left of
+        # where the rule looked. Longest of the candidates, not the first non-empty one -- a table
+        # with a Language or Stars column between the name and the prose used to describe LangChain
+        # as "Py/JS" and a 5,300-star plugin as "5,300+"; the description is the cell with the
+        # sentence in it, and that argument never depended on which side of the link it sat.
+        rest = [clean(c) for j, c in enumerate(cells) if j != i and not (j == 0 and i)]
+        return [(name, m.group("url"), max(rest, key=len) if any(rest) else "")]
 
     # bullet: first link is the entry, the rest of the line is its description
     m = LINK.search(body)
@@ -193,6 +449,25 @@ EMOJI = re.compile(
 
 def strip_emoji(s: str) -> str:
     return re.sub(r"\s+", " ", EMOJI.sub("", s or "")).strip(" -–—:")
+
+
+# A legend, not prose. Several lists encode facts in emoji immediately after the entry's link --
+# punkpeye writes "📇 ☁️ 🏠 🍎 🪟 🐧 - Contract validation..." for language, scope and OS -- and since
+# the description is everything after the link, the whole run lands at the front of it. Those glyphs
+# only mean anything beside that one list's key, so in a column that shows all the lists together
+# they are noise ahead of the sentence the reader wants. Leading only: an emoji mid-sentence is the
+# author writing, and `strip_emoji` is not used here for that reason.
+DESC_LEAD = re.compile(r"^(?:" + EMOJI.pattern + r"|[\s\-–—:|])+")
+
+# "Language Experts (25 agents)" is the same shelf as "Language Experts (26 agents)", but a section
+# name is a taxonomy.SECTIONS key and that lookup is deliberately exact, so the day upstream adds one
+# agent the build dies on a heading nobody renamed. rohitg00/awesome-claude-code-toolkit writes the
+# count into 18 of its 34 headings and two of them are already wrong -- "(15 agents)" over 16 rows --
+# so this is drift in progress, not a hypothetical. Normalising the lookup's input is not the keyword
+# matching taxonomy.py refuses: a real rename still raises, only the tally stops counting as one.
+# Three digits at most, because four is a year and a year is curation: kaushikb11 separates
+# "Autonomous Agents (2023 wave)" from the current crop on purpose, and no shelf holds 2,023 items.
+COUNT_IN_HEAD = re.compile(r"\s*\(\d{1,3}\s+\w+\)$")
 
 
 def parse_html_details(src: dict, text: str | None = None) -> list[dict]:
@@ -235,6 +510,13 @@ def parse(src: dict, text: str | None = None) -> list[dict]:
     mode = src.get("mode", {"bullet"})
     cat_at = src.get("cat_at", 2)
     drop = {d.lower() for d in src.get("drop", ())}
+    keep = {k.lower() for k in src.get("keep", ())}
+
+    def is_dropped(txt: str) -> bool:
+        """Whether this heading's section is skipped. Emoji stripped because headings carry them
+        and both key sets are written plain."""
+        plain = strip_emoji(txt).lower()
+        return plain not in keep if keep else plain in drop
 
     rows: list[dict] = []
     heads: dict[int, str] = {}
@@ -261,7 +543,7 @@ def parse(src: dict, text: str | None = None) -> list[dict]:
             if "heading" in mode and lvl == cat_at and LINK.search(mh.group("txt") if mh else line):
                 m = LINK.search(mh.group("txt") if mh else line)
                 heads[lvl] = clean(m.group("txt"))
-                dropped = strip_emoji(clean(m.group("txt"))).lower() in drop
+                dropped = is_dropped(clean(m.group("txt")))
                 if not dropped:
                     rows.append({"_name": clean(m.group("txt")), "_url": m.group("url"),
                                  "_desc": "", "_cat": "", "_sub": ""})
@@ -272,8 +554,7 @@ def parse(src: dict, text: str | None = None) -> list[dict]:
             for deeper in [k for k in heads if k > lvl]:
                 heads.pop(deeper)
             if lvl <= cat_at:
-                # headings carry emoji prefixes; drop keys are written plain
-                dropped = strip_emoji(txt).lower() in drop
+                dropped = is_dropped(txt)
             category = heads.get(cat_at, "") or txt
             sub = heads.get(cat_at + 1, "")
             if "heading" in mode and txt.lower() == src.get("heading_cat_from", "").lower():
@@ -370,7 +651,7 @@ def finalise(src: dict, rows: list[dict]) -> list[dict]:
             continue
         seen.add(key)
 
-        cat = strip_emoji(r["_cat"]) or "Uncategorised"
+        cat = COUNT_IN_HEAD.sub("", strip_emoji(r["_cat"])) or "Uncategorised"
         if src.get("cat_first_label"):
             # e2b tags each tool with a free-text comma list ("Coding, GitHub,
             # Multi-agent"). Left-most tag is the primary one; taking it whole
@@ -392,7 +673,7 @@ def finalise(src: dict, rows: list[dict]) -> list[dict]:
             "website": website or r.get("_site", ""),
             "category": cat,
             "sub_category": strip_emoji(r["_sub"]),
-            "description": r["_desc"][:400],
+            "description": DESC_LEAD.sub("", r["_desc"])[:400],
         })
     return out
 
@@ -401,7 +682,10 @@ def main() -> None:
     # This stage reads the lists, it does not fetch them. Missing content used to surface as a bare
     # FileNotFoundError on whichever source happened to be first, which says nothing about the cause:
     # cache/ is not committed, so a cold clone or an Actions cache that did not restore has none of it.
-    absent = [src for src in SOURCES if src.get("file") and not source_path(src).exists()]
+    # Every file, not just the primary: read_source concatenates whatever is present, so a source
+    # whose sub-documents did not restore would otherwise parse quietly as a much shorter list.
+    absent = [src for src in SOURCES
+              if src.get("file") and not all(p.exists() for p in source_paths(src))]
     if absent:
         names = ", ".join(s["key"] for s in absent)
         sys.exit(f"no cached content for {len(absent)}/{len(SOURCES)} sources ({names}).\n"
@@ -431,6 +715,49 @@ def main() -> None:
     repos = {r["nwo"] for r in all_rows if r["nwo"]}
     print(f"\n{len(all_rows)} rows -> {out}")
     print(f"{len(repos)} distinct GitHub repos to fetch")
+    unmapped(all_rows)
+
+
+def unmapped(rows: list[dict]) -> None:
+    """Fail here, on the section names, rather than thousands of repo fetches later.
+
+    Two things every later stage assumes and neither checks while checking is still cheap.
+    `taxonomy.category_of` is a hard `SECTIONS[...]` lookup, so one heading a curator renamed
+    upstream is a KeyError raised after the fetch stage has spent an hour; `buckets.check` only
+    counts the map it was handed, so a source with nine sections and no map at all passes it and
+    then asks an eight-hue palette for nine hues. Both are decisions a person has to make by hand,
+    so the useful thing to print is exactly which ones are outstanding.
+    """
+    sys.path.insert(0, str(Path(__file__).parent))
+    import buckets as buck  # noqa: E402
+    import taxonomy as tax  # noqa: E402
+
+    pairs = {(r["source"], r["category"]) for r in rows}
+    missing = sorted(f"({k!r}, {sec!r})" for k, sec in pairs - set(tax.SECTIONS))
+
+    over = []
+    for src in SOURCES:
+        secs = {sec for k, sec in pairs if k == src["key"]}
+        if not secs:
+            continue
+        fold = buck.bucket_map(src["key"])
+        slots = {fold.get(s, s) for s in secs}
+        if len(slots) > 8:
+            over.append(f"{src['key']}: {len(secs)} sections fold to {len(slots)} buckets")
+
+    if missing:
+        print(f"\n{len(missing)} sections no category is named for -- add each to "
+              f"taxonomy.SECTIONS:", file=sys.stderr)
+        for m in missing:
+            print(f"  {m}: ...", file=sys.stderr)
+    if over:
+        print(f"\n{len(over)} sources want more than the eight palette hues -- give each a "
+              f"buckets.BUCKETS map:", file=sys.stderr)
+        for o in over:
+            print(f"  {o}", file=sys.stderr)
+    if missing or over:
+        sys.exit(1)
+    print("every section is named by taxonomy.SECTIONS and folds into <= 8 buckets")
 
 
 if __name__ == "__main__":

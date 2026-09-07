@@ -24,8 +24,8 @@ table binding produces a file Excel offers to repair.
 
 Which is why `--probe` exists. None of this can be validated from here: no schema check proves Excel
 will open a file, and the failure mode is a repair prompt that silently drops parts it does not
-understand -- on this workbook that would mean 1,290 embedded screenshots. So the geometry and the XML
-are exercised first on a 9-row workbook that takes a second to build and a second to open.
+understand -- on this workbook that would mean every embedded screenshot in it. So the geometry and the
+XML are exercised first on a 9-row workbook that takes a second to build and a second to open.
 
     python scripts/18_slicers.py --probe          # writes slicer-probe.xlsx, open it by hand
     python scripts/18_slicers.py                  # inject into both real workbooks, in place
@@ -300,7 +300,7 @@ def inject(src: Path, sheet_name: str, table_name: str, layout: list[dict], styl
 
     drx = part[dr_part].decode("utf-8")
     # Shape ids only have to be unique within the drawing. The screenshots number from 1, so start
-    # well past them rather than counting: 1,290 of them today and a different number tomorrow.
+    # well past them rather than counting: there are thousands today and a different number tomorrow.
     base_id = 900000
     drx = _before_close(drx, "wsDr", "".join(
         anchor_xml(s, base_id + i) for i, s in enumerate(specs)))
@@ -347,8 +347,9 @@ def layout_for(strip_rows: tuple[int, int], cols) -> list[dict]:
 
 
 # The strip of rows `16_build_all.build_category_sheet` leaves empty above its header, and the columns
-# each slicer sits over. Both slicers stay inside the frozen top pane, so they remain on screen for the
-# whole 1,294 rows -- a filter control you have to scroll back up to reach is a filter nobody uses.
+# each slicer sits over. Both slicers stay inside the frozen top pane, so they remain on screen however
+# far down the sheet you are -- a filter control you have to scroll back up to reach is a filter nobody
+# uses.
 SLICER_STRIP = (2, 6)
 SLICER_COLS = [
     #  table column,  caption,      first col, last col, columns of buttons

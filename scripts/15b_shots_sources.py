@@ -1,9 +1,16 @@
-"""Images for the eleven source lists themselves, for the Sources sheet.
+"""Images for the source lists themselves, for the Sources sheet.
 
 The listed items get whatever their README offers, but a curated list is best
 represented by GitHub's own repo card: name, owner, description and star count in
-one uniform tile. Eleven identical-format cards read as a credits page; eleven
-scraped banners would not.
+one uniform tile. Identical-format cards read as a credits page; the same number
+of scraped banners would not.
+
+One card per entry in `10_parse_sources.SOURCES`, read from there rather than
+listed here. This file used to name eleven repos by hand, which was the same
+eleven the workbook gave a sheet of its own -- so when the Sources sheet grew to
+credit every list the atlas is built from, twenty-five of its rows had no card
+and no stage said so. A list this stage forgets is a blank cell on a credits
+page, which is the one place the omission is least visible and worst.
 """
 import importlib.util
 import json
@@ -16,14 +23,13 @@ spec = importlib.util.spec_from_file_location("s15", Path(__file__).parent / "15
 s15 = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(s15)
 
-NWOS = [
-    "andyrewlee/awesome-agent-orchestrators", "kyrolabs/awesome-agents",
-    "e2b-dev/awesome-ai-agents", "caramaschiHG/awesome-ai-agents-2026",
-    "hesreallyhim/awesome-claude-code", "awesome-opencode/awesome-opencode",
-    "ai-boost/awesome-harness-engineering", "nibzard/awesome-agentic-patterns",
-    "heilcheng/awesome-agent-skills", "sickn33/agentic-awesome-skills",
-    "shubhamsaboo/awesome-llm-apps",
-]
+spec = importlib.util.spec_from_file_location("b10", Path(__file__).parent / "10_parse_sources.py")
+b10 = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(b10)
+
+# dict.fromkeys, not a set: the Sources sheet is in this order and a credits page should not reshuffle
+# itself between runs. Two sources could in principle name one repo, hence the dedupe.
+NWOS = list(dict.fromkeys(s["nwo"] for s in b10.SOURCES))
 
 
 def main() -> None:

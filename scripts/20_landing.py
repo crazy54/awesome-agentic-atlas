@@ -3,9 +3,9 @@
 `19_pages.py` puts every filter in the URL hash, which is what makes "the best Claude Code
 observability tool" a link a human can send. A crawler is not a human: the fragment is never sent to
 the server and never survives into the index, so Google sees one page called "browse every agentic
-tool" and 1,294 rows it never receives -- the site's whole reason for existing is unindexable. The
-Markdown edition under `mega-list/` is indexable and picks one axis at a time, which is the other half
-of the same gap: it cannot cross them.
+tool" and nearly 8,000 rows it never receives -- the site's whole reason for existing is unindexable.
+The Markdown edition under `mega-list/` is indexable and picks one axis at a time, which is the other
+half of the same gap: it cannot cross them.
 
 This stage writes the crossing out as static HTML. Same data, same ordering, same verdicts as the
 other three surfaces, and no data fetch on load -- the rows are in the initial response, which is the
@@ -69,6 +69,10 @@ spec.loader.exec_module(b19)
 
 SITE = b19.b17.SITE
 REPO = b19.REPO
+# Taken from `19_pages.py` rather than counted again here, for the same reason the analytics token is:
+# the footer these pages carry is the site's footer almost word for word, and two copies of "how many
+# lists were merged" free to disagree is how one surface went on saying eleven after the other stopped.
+LISTS = b19.LISTS
 
 # And `22_detail.py`, for one function: `segment()`, the rule that turns an `nwo` into a path. These
 # pages link to the detail pages that stage writes, so the two files have to agree on the URL of every
@@ -97,11 +101,11 @@ CAP = 100
 def esc(text) -> str:
     """Every interpolated value goes through this.
 
-    These strings are other people's hand-written list entries -- 1,294 names, blurbs and install
-    commands typed into eleven different READMEs. One stray `<` becomes a tag and one stray `"` closes
-    the attribute it is sitting in and lets the rest of the row be read as markup. The template in
-    `19_pages.py` does this in JavaScript with its own `esc()`; this is the same guarantee on the
-    server side, with `quote=True` because roughly half of these land in attributes.
+    These strings are other people's hand-written list entries -- thousands of names, blurbs and install
+    commands typed by hand into every source README the atlas reads. One stray `<` becomes a tag and one
+    stray `"` closes the attribute it is sitting in and lets the rest of the row be read as markup. The
+    template in `19_pages.py` does this in JavaScript with its own `esc()`; this is the same guarantee
+    on the server side, with `quote=True` because roughly half of these land in attributes.
     """
     return html.escape("" if text is None else str(text), quote=True)
 
@@ -439,7 +443,7 @@ class Page:
 
 
 def plan(data: dict) -> list[Page]:
-    """Group the dataset three ways. One pass over 1,294 rows, three indexes out of it."""
+    """Group the dataset three ways. One pass over the rows, three indexes out of it."""
     cats, tgts = data["cats"], data["targets"]
     # Column-oriented on disk, objects in here -- the same one pass the page's own JavaScript makes, so
     # everything downstream can read `r["stars"]` instead of `r[4]`. The two facet columns are indexes
@@ -706,9 +710,9 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
 </div></main>
 
 <footer><div class="wrap">
-  This is a static slice of the <a href="{page.rel()}">Awesome Agentic Atlas</a>, which merges eleven
-  awesome-lists into one index; all eleven are credited in the
-  <a href="https://github.com/{esc(REPO)}#the-eleven-lists">repository</a>. Stars, language, licence
+  This is a static slice of the <a href="{page.rel()}">Awesome Agentic Atlas</a>, which merges {LISTS}
+  awesome-lists into one index; all {LISTS} are credited in the
+  <a href="https://github.com/{esc(REPO)}#the-source-lists">repository</a>. Stars, language, licence
   and last-push come from the GitHub API on {esc(data['snapshot'])} and drift daily. Platform verdicts
   are derived from each project's own README, install route, CI config and release assets &mdash;
   <span class="vY">green</span> is stated evidence, <span class="vL">amber</span> is inferred from the

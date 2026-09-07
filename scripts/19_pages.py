@@ -13,8 +13,8 @@ Same data, same ordering, same verdicts as the other two: it imports `17_markdow
   docs/.nojekyll    stops Pages running Jekyll over a directory that has no Jekyll in it.
 
 Two decisions worth stating. The data is a separate file rather than inlined, so the page is 30 KB and
-cached separately from the 1,294 rows that change on every rebuild. And every filter is mirrored into
-the URL hash, which is what makes "the best Claude Code observability tool" a link -- the thing the
+cached separately from the nearly 8,000 rows that change on every rebuild. And every filter is mirrored
+into the URL hash, which is what makes "the best Claude Code observability tool" a link -- the thing the
 Markdown pages can only approximate by existing in two directories.
 """
 import importlib.util
@@ -47,15 +47,23 @@ tax = b17.tax
 DASH = b16.DASH
 REPO = b17.REPO
 
-# Verdicts compress to one character each because they are printed 6,470 times and there are five of
-# them. The page expands them back for display; the JSON is what travels over the wire.
+# How many curated lists the atlas is built from, read off the parser's own table rather than written
+# down here. The page states it four times -- the heading, both social descriptions and the footer --
+# and all four said "eleven" for a while after the atlas had stopped being eleven lists. `SOURCES` is
+# the same authority `16_build_all.LIST_TITLE` and `watch_sources.py` read, so the site cannot
+# disagree with the workbook about how many lists were merged.
+LISTS = len(b16.b10.SOURCES)
+
+# Verdicts compress to one character each because there are only five of them and every row prints all
+# five -- some forty thousand characters across the dataset. The page expands them back for display;
+# the JSON is what travels over the wire.
 VERDICT = {"Yes": "Y", "Likely": "L", "No": "N", "n/a": "a", DASH: "-", "": "-"}
 OS_FIELDS = ["win_native", "win_wsl2", "macos", "linux", "docker"]
 OS_LABELS = ["Windows", "WSL2", "macOS", "Linux", "Docker"]
 
 # The columns of `data.json`, in order. Column-oriented rather than one object per repo: the keys would
-# otherwise be repeated 1,294 times, which is 380 KB of the word "category". The page maps them back
-# into objects once, on load.
+# otherwise be repeated once per row across nearly 8,000 of them, which is megabytes of the word
+# "category". The page maps them back into objects once, on load.
 COLS = ["name", "nwo", "cat", "targets", "stars", "lists", "listed_by", "os",
         "blurb", "install", "lang", "license", "pushed", "url", "img", "first_seen"]
 
@@ -389,6 +397,7 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             .replace("__TARGETLINKS__", facet_links(data["targets"], "target"))
             .replace("__COUNT__", f"{len(data['rows']):,}")
             .replace("__TOPICS__", str(len(data["cats"])))
+            .replace("__LISTS__", str(LISTS))
             .replace("__STARS__", f"{sum(r[4] for r in data['rows']):,}")
             .replace("__SNAPSHOT__", data["snapshot"])
             .replace("__CACHEHDR__", CACHED_HEADER)
@@ -414,9 +423,9 @@ PAGE = r"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awesome Agentic Atlas — browse every agentic tool</title>
-<meta name="description" content="__COUNT__ agentic AI projects from eleven awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
+<meta name="description" content="__COUNT__ agentic AI projects from __LISTS__ awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
 <meta property="og:title" content="Awesome Agentic Atlas">
-<meta property="og:description" content="__COUNT__ projects from eleven awesome-lists, one filterable index.">
+<meta property="og:description" content="__COUNT__ projects from __LISTS__ awesome-lists, one filterable index.">
 __OGIMAGE__
 <link rel="canonical" href="__SITE__">
 <!-- Google Search Console's HTML-tag verification, and nothing else: this whole line is absent until a
@@ -1107,7 +1116,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 </svg>
 <header><div class="wrap"><div class="top">
   <div>
-    <h1>Awesome Agentic Atlas <span>· eleven awesome-lists, merged</span></h1>
+    <h1>Awesome Agentic Atlas <span>· __LISTS__ awesome-lists, merged</span></h1>
     <p class="sub"><b>__COUNT__</b> projects · <b>__TOPICS__</b> topics · <b>__STARS__</b> combined
       stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
       __SNAPSHOT__</span></p>
@@ -1247,8 +1256,8 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 </dialog>
 
 <footer><div class="wrap">
-  Every entry came from someone else's curation work; all eleven source lists are credited in the
-  <a href="https://github.com/__REPO__#the-eleven-lists">repository</a>. Stars, language, licence and
+  Every entry came from someone else's curation work; all __LISTS__ source lists are credited in the
+  <a href="https://github.com/__REPO__#the-source-lists">repository</a>. Stars, language, licence and
   last-push come from the GitHub API on __SNAPSHOT__ and drift daily. Platform verdicts are derived
   from each project's own README, install route, CI config and release assets &mdash;
   <span class="vY">green&#8201;&#10003;</span> is stated evidence,
@@ -1429,7 +1438,7 @@ fetch("data.json").then(r => {
   return r.json();
 }).then(d => {
   D = d;
-  // Column-oriented on the wire, objects in here. One pass, 1,294 times, so the rest of the page can
+  // Column-oriented on the wire, objects in here. One pass over every row, so the rest of the page can
   // read `r.stars` instead of `r[4]`.
   ROWS = d.rows.map(a => Object.fromEntries(d.cols.map((c, i) => [c, a[i]])));
   ROWS.forEach(r => {
@@ -2833,7 +2842,16 @@ def main() -> None:
             r["license"] = ""
     b16.canonicalise_nwo(records, orch, meta)
 
-    label = {"orchestrators": "Orchestrators", **{k: t for k, t, *_ in b16.SHEETS}}
+    # b16.LIST_TITLE, not a second map built from SHEETS: this is the same defect the workbook and the
+    # Markdown edition each carried, and the site was the last surface still holding it. SHEETS is the
+    # ten lists with a sheet of their own; `listed_by` here describes rows drawn from all thirty-nine,
+    # so 27 of them printed their raw internal key -- 8,158 cells across 89% of rows, reading
+    # "agentsec_recon, aiagents_jenqyang" where a neighbour read "Claude Code". No visible column shows
+    # it, which is why it survived, but `row_for` folds it into the client-side search haystack: a
+    # reader searching "Gemini CLI Ecosystem" matched nothing while "mcp_punkpeye" matched 3,457 rows.
+    # LIST_TITLE already layers SHEET_TITLE over the SOURCES titles and already carries the
+    # orchestrators override, so every name this used to produce is unchanged.
+    label = b16.LIST_TITLE
     tax.STARS.clear()
     tax.STARS.update(b16.star_map(records, orch, meta))
     agg = tax.by_repo(records + [dict(x, source="orchestrators") for x in orch])
@@ -2844,8 +2862,11 @@ def main() -> None:
         r["stars"] = tax.STARS.get(r["nwo"], 0)
 
     # Before build_data, which reads the map it fills. Idempotent, so 17_markdown having already run in
-    # this pipeline is fine -- it stamped the same repos with the same date and this call agrees.
-    fresh = newness.resolve([r["nwo"] for r in facets])
+    # this pipeline is fine -- it stamped the same repos with the same date and this call agrees. Passing
+    # `sources` is part of agreeing: whichever stage stamps a repo first decides its date, so a call that
+    # omitted it would date the same repos differently depending on which stage got there first.
+    fresh = newness.resolve([r["nwo"] for r in facets],
+                            sources=[s["nwo"] for s in b16.b10.SOURCES])
 
     data = build_data(facets, shots)
     OUT.mkdir(exist_ok=True)

@@ -143,7 +143,10 @@ NAME = "Awesome Agentic Atlas"
 # Twelve characters, because a home-screen label is truncated past about that and Android shows
 # `short_name` under the icon. "Awesome Agentic Atlas" arrives there as "Awesome Age…".
 SHORT_NAME = "Atlas"
-DESCRIPTION = ("Every agentic AI project from eleven awesome-lists, merged, deduplicated and "
+# The list count is read off `b19.LISTS` -- i.e. off `SOURCES` -- rather than spelled out, because this
+# string is shipped bytes in the installed app's manifest, and a manifest that still says "eleven" after
+# the atlas has stopped being eleven lists is wrong on a reader's home screen until they reinstall.
+DESCRIPTION = (f"Every agentic AI project from {b19.LISTS} awesome-lists, merged, deduplicated and "
                "filterable by topic, harness and operating system.")
 
 # The theme's own dark surface. `background_color` is what a browser paints during the cold start of an

@@ -1,8 +1,10 @@
 """Release assets and action.yml presence for every repo, in one pass.
 
-03_releases.py and 03b_actions.py each walk the whole repo set; at 1,153 repos
-that is two full sets of round trips for data that fits in one query. Same
-output files, so 04_classify.py reads them unchanged.
+03_releases.py and 03b_actions.py each walk the whole repo set; at the 7,870
+repos the source lists now resolve to that is two full sets of round trips for
+data that fits in one query, and the saving grew with every list ingested --
+it was 1,153 repos when this stage was written to replace them. Same output
+files, so 04_classify.py reads them unchanged.
 
 Which repos get queried is scripts/signals.py's rule, shared with those two
 stages: anything unseen, anything written before either stamp existed, anything
@@ -11,8 +13,8 @@ inside the window where its release CI could still have been uploading, and
 anything not looked at in a month. The run log names which of those queued
 each repo, so a term that stops firing is visible without a rebuild.
 """
+import importlib.util
 import json
-import subprocess
 import sys
 from pathlib import Path
 
@@ -23,19 +25,19 @@ ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 BATCH = 12
 
+# Borrowed the way 11_fetch_all.py borrows it, and for the same reason: 02_fetch.py holds the only
+# copy of what a non-zero exit from `gh api graphql` actually means. It is the one place that knows a
+# NOT_FOUND for a single alias still leaves eleven good repos on stdout, and equally the one place
+# that knows Bad credentials must not be mistaken for that. A second opinion kept here would drift.
+spec = importlib.util.spec_from_file_location("fetch02", Path(__file__).parent / "02_fetch.py")
+f2 = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(f2)
+
 FIELDS = """
     releases(last: 4) { nodes { tagName releaseAssets(first: 40) { nodes { name } } } }
     yml: object(expression: "HEAD:action.yml") { __typename }
     yaml: object(expression: "HEAD:action.yaml") { __typename }
 """
-
-
-def gh(args: list[str]) -> str:
-    p = subprocess.run(["gh", *args], capture_output=True, text=True,
-                       encoding="utf-8", errors="replace")
-    if p.returncode != 0:
-        raise RuntimeError(f"gh failed: {p.stderr[:300]}")
-    return p.stdout
 
 
 def main() -> None:
@@ -82,21 +84,37 @@ def main() -> None:
     print(f"{len(repos)} repos with metadata, {len(todo)} needing signals"
           f"{sig.breakdown([why[r['nwo']] for r in todo])}", flush=True)
 
+    failed = 0
     for start in range(0, len(todo), BATCH):
         batch = todo[start:start + BATCH]
-        parts = [f'  r{i}: repository(owner: "{e["owner"]}", name: "{e["repo"]}") {{{FIELDS}}}'
-                 for i, e in enumerate(batch)]
         try:
-            data = json.loads(gh(["api", "graphql", "-f",
-                                  "query=query {\n" + "\n".join(parts) + "\n}"])).get("data") or {}
-        except RuntimeError:
-            data = {}
+            data = f2.graphql_batch(batch, FIELDS)
+        except RuntimeError as exc:
+            # Nothing is written for a batch that failed, and that is the whole repair. This stage used
+            # to answer a failed query with `{"tags": [], "assets": []}` and `False` for all twelve
+            # repos, which is byte-for-byte what a project that has genuinely never cut a release looks
+            # like -- so 04_classify would read twelve projects as shipping no prebuilt binaries and
+            # nothing anywhere would ever say otherwise. Writing nothing instead is what puts those
+            # repos back in `todo` on the next run: scripts/signals.py calls an entry stale when it is
+            # absent *or* when its recorded push predates the one meta.json can already see, and a
+            # batch that wrote nothing leaves every repo in it in one of those two states. So the retry
+            # costs one batch and not a rebuild. Note that absent and empty are the same to 04_classify,
+            # which reads these with `.get(nwo, {})` -- the difference this makes is entirely in what
+            # gets re-queried and in the exit code below, not in how a record already on disk is
+            # interpreted.
+            failed += 1
+            print(f"  batch {start} failed, left for the next run: {str(exc)[:120]}", flush=True)
+            continue
         for i, e in enumerate(batch):
-            n = (data or {}).get(f"r{i}")
-            # See 03_releases.py: a null node means the whole batch errored or GitHub had nothing
-            # for this repo, so nothing was learned. Leave the cache as it is and stay queued --
-            # stamping an empty answer would freeze twelve false negatives per failed batch until
-            # each of those repos next gets pushed.
+            n = data.get(f"r{i}")
+            # GitHub answered, and its answer about this one repo is that it no longer exists -- a
+            # failed batch cannot land here, because f2.graphql_batch raises and the handler above
+            # catches it. The meta.json error filter normally keeps dead repos out entirely, so an
+            # alias coming back null means the repo died in the minutes between 11_fetch_all.py and
+            # here. Nothing was learned either way, so leave the cache as it is and stay queued:
+            # stamping an empty answer would freeze a false negative until that repo's next push.
+            # Skipping costs one slot in the next run's batches, by which time meta.json carries its
+            # error record and it drops out of `repos` for good.
             if not n:
                 continue
             assets, tags = [], []
@@ -120,6 +138,18 @@ def main() -> None:
     with_assets = sum(1 for v in rel.values() if v.get("assets"))
     print(f"\ndone: {len(rel)} repos, {with_assets} publish release assets, "
           f"{sum(1 for v in act.values() if sig.is_action(v))} are GitHub Actions", flush=True)
+
+    # Every batch that did come back is already on disk above, so the next run picks up precisely the
+    # repos this one missed and nothing else. The non-zero exit is not about this stage, it is about the
+    # four after it: 04_classify turns these two files into the per-platform verdicts the site and both
+    # workbooks publish, and a run that quietly lost the signals for part of the atlas would demote
+    # those projects on a page that looks freshly built. Better the build stops and the lists get
+    # re-read tomorrow -- nothing is committed and nothing is recorded as built until every stage
+    # passes, which is what makes stopping here safe rather than lossy.
+    if failed:
+        print(f"\n{failed} batch(es) of {BATCH} failed and wrote nothing; up to {failed * BATCH} "
+              f"repos still need signals and will be retried on the next run.", flush=True)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

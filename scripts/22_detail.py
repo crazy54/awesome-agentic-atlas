@@ -332,7 +332,7 @@ def provenance(repo: Repo, lists: dict[str, str]) -> str:
         items.append(f'<li><a href="https://github.com/{esc(nwo)}">{esc(n)}</a></li>' if nwo
                      else f"<li>{esc(n)}</li>")
     n = repo.row["lists"]
-    return (f'<p class="lead">Named by <b>{n}</b> of the eleven lists the atlas merges'
+    return (f'<p class="lead">Named by <b>{n}</b> of the {b19.LISTS} lists the atlas merges'
             + ("." if n == 1 else ", independently of each other.")
             + f'</p><ul class="lists">{"".join(items)}</ul>')
 
@@ -482,9 +482,9 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
 </div></main>
 
 <footer><div class="wrap">
-  One project from the <a href="{repo.rel()}">Awesome Agentic Atlas</a>, which merges eleven
-  awesome-lists into a single index; all eleven are credited in the
-  <a href="https://github.com/{esc(REPO)}#the-eleven-lists">repository</a>. The description, install
+  One project from the <a href="{repo.rel()}">Awesome Agentic Atlas</a>, which merges {b19.LISTS}
+  awesome-lists into a single index; all {b19.LISTS} are credited in the
+  <a href="https://github.com/{esc(REPO)}#the-source-lists">repository</a>. The description, install
   command and platform verdicts are derived from this project's own README, install route, CI
   configuration and release assets. Star count and last push are read from the atlas dataset, which is
   a dated snapshot rather than a live figure — <a href="{esc(row["url"])}">GitHub</a> is authoritative
@@ -538,7 +538,7 @@ def directory(repos: list[Repo], data: dict) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Every project in the atlas, A–Z by topic — Awesome Agentic Atlas</title>
-<meta name="description" content="{len(repos):,} agentic AI projects from eleven awesome-lists, each with a page of its own: install command, platform support and provenance.">
+<meta name="description" content="{len(repos):,} agentic AI projects from {b19.LISTS} awesome-lists, each with a page of its own: install command, platform support and provenance.">
 <link rel="canonical" href="{esc(url)}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Every project in the Awesome Agentic Atlas">
@@ -555,7 +555,7 @@ def directory(repos: list[Repo], data: dict) -> str:
     <div>
       <h1>Every project, by topic</h1>
       <p class="lead">All <b>{len(repos):,}</b> projects the atlas merges, each with a page carrying its
-        install command, its five platform verdicts and which of the eleven lists named it. Grouped by
+        install command, its five platform verdicts and which of the {b19.LISTS} lists named it. Grouped by
         topic and alphabetical inside it — the star rankings are on the
         <a href="../">interactive index</a> and the {len(cats)} topic pages.</p>
       <p class="jump">{jump}</p>
@@ -568,8 +568,8 @@ def directory(repos: list[Repo], data: dict) -> str:
 <main><div class="wrap">{"".join(blocks)}</div></main>
 <footer><div class="wrap">
   A directory of the <a href="../">Awesome Agentic Atlas</a>. Every name here links to a page about one
-  project; all eleven source lists are credited in the
-  <a href="https://github.com/{esc(REPO)}#the-eleven-lists">repository</a>.
+  project; all {b19.LISTS} source lists are credited in the
+  <a href="https://github.com/{esc(REPO)}#the-source-lists">repository</a>.
 </div></footer>
 <script src="detail.js"></script>
 {b19.beacon()}</body>
