@@ -68,8 +68,17 @@ jobs:
           python-version: "3.12"
 
       # `pillow` because `23_og.py` re-encodes each PNG to an indexed palette, and the comparison step
-      # below reads pixels. No `openpyxl`: that is the workbook stage's dependency, not this one's.
-      - run: python -m pip install --upgrade pip pillow playwright
+      # below reads pixels.
+      #
+      # `openpyxl` looks like the workbook stage's dependency and is not: run 34151702414 of this workflow
+      # died without it, and the traceback is the reason to keep it here. `23_og.py` dynamically loads
+      # `20_landing.py`, which loads `19_pages.py`, which loads `17_markdown.py`, which loads
+      # `16_build_all.py`, whose line 41 is `from openpyxl import Workbook` -- executed at import time, so
+      # the whole chain is a hard dependency of drawing a social card. `weekly.yml` installs openpyxl for
+      # the workbooks it actually builds, which is why this coupling has never been visible: no workflow
+      # has ever imported that chain without it. Do not trim this list by reasoning about what the stage
+      # appears to need.
+      - run: python -m pip install --upgrade pip pillow playwright openpyxl
 
       # `--with-deps` for the shared libraries the headless binary links against. `23_og.py` does not
       # import playwright -- it shells out to the binary that `scripts/chrome.py` finds -- so the pip
@@ -90,8 +99,14 @@ jobs:
             printf '%-12s -> %s\n' "$f" "$(fc-match "$f" family 2>/dev/null || echo '(fc-match unavailable)')"
           done
 
+      # `pipefail` is not decoration here. Without it the pipeline's status is `tee`'s, so in run
+      # 34151702414 the script died on an uncaught ImportError, `tee` exited 0, and this step went green
+      # having rendered nothing -- the count gate below is what actually failed the run. A crash in the
+      # thing being measured should fail at the point of the crash, and the gate should be the second line
+      # of defence rather than the first.
       - name: Render the cards into a temporary directory
         run: |
+          set -euo pipefail
           python scripts/23_og.py --out "$RUNNER_TEMP/og-ci" | tee "$RUNNER_TEMP/render.log"
 
       # The gate the script's own contract cannot provide. Three things, each of which has a distinct
