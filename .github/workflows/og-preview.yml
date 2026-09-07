@@ -1,0 +1,225 @@
+# Renders `docs/og/`'s social cards on a runner, compares them against the committed PNGs, and uploads
+# both sets. It writes nothing to `docs/`, commits nothing, pushes nothing and submits nothing.
+#
+# WHY THIS EXISTS (JFH-224)
+#
+# Every committed card was rendered on Windows -- `git log -- 'docs/og/*.png'` returns two commits, both
+# from a local checkout. `23_og.py`'s font stack is
+#
+#   font:400 16px/1.4 "Segoe UI","DejaVu Sans",system-ui,-apple-system,Helvetica,Arial,sans-serif
+#
+# and Windows resolves that to Segoe UI while `ubuntu-latest` has no Segoe UI and no font-installation
+# step, so it resolves to the second entry. Different family, different metrics, so different text widths
+# and line breaks. The divergence is latent and lands whole on the first CI re-render for any reason, and
+# 813d894 folded the palette into the re-render signature, which invalidated all 27 signatures -- so the
+# next weekly run is when it lands.
+#
+# The ticket's own instruction is to measure before fixing, because the DejaVu fallback is deliberate and
+# legible and the answer may well be "acceptable, adopt it". That is a different decision from
+# "unacceptable, pin the font", and looking at the artifact settles it in one run.
+#
+# WHY THIS CAN RUN WITHOUT THE WEEKLY, WHICH IS THE WHOLE REASON IT IS A SEPARATE WORKFLOW
+#
+# `23_og.py` reads exactly one input, `docs/data.json` (its `DATA`), and never touches `cache/`. So the
+# cold-start gate that no-ops `daily.yml` -- a missing `cache/shots_all.json`, which only the weekly can
+# fill (JFH-225) -- does not reach this stage. This job needs the committed tree and a browser, nothing
+# else, which is what makes measuring JFH-224 possible before the sequencing decision on JFH-225.
+#
+# `--out` is what keeps it harmless, and it is load-bearing in a second way: the skip-ledger is
+# `out / "cards.json"`, derived from the output directory rather than fixed at `docs/og/`. An empty
+# temporary directory therefore has no ledger, so `old` is `{}` and all 27 cards render unconditionally.
+# No signature has to be invalidated by hand to force a full render, and `docs/og/` is never opened for
+# writing.
+#
+# WHY EVERY STEP BELOW ASSERTS INSTEAD OF TRUSTING THE EXIT CODE
+#
+# `23_og.py` treats a missing browser as a non-error on purpose -- `chrome.find()` returns None, `shoot()`
+# degrades, the committed PNG is left alone, and `main()` still exits 0. That contract is right for the
+# weekly, where a browserless run must not take the site down, and it is exactly wrong for a measurement:
+# a misconfigured job would render zero cards, report success, and upload an empty directory that looks
+# like "no difference found". With `--out` pointed at an empty directory there is no committed PNG to fall
+# back to either, so the failure is silent in both directions. Hence the explicit count-and-dimension gate.
+name: OG preview — render the cards on a runner, commit nothing
+
+on:
+  workflow_dispatch:
+
+# Read-only. This job has no reason to hold a write token, and JFH-224's entire premise is that nothing it
+# produces reaches `docs/og/` until a human has looked at it.
+permissions:
+  contents: read
+
+concurrency:
+  group: og-preview
+  cancel-in-progress: true
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    # 27 cards, one Chromium subprocess each. The weekly's 350 is sized for a 1,294-repo crawl; this is a
+    # couple of minutes of work and a hang is worth failing on rather than sitting through.
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # `pillow` because `23_og.py` re-encodes each PNG to an indexed palette, and the comparison step
+      # below reads pixels. No `openpyxl`: that is the workbook stage's dependency, not this one's.
+      - run: python -m pip install --upgrade pip pillow playwright
+
+      # `--with-deps` for the shared libraries the headless binary links against. `23_og.py` does not
+      # import playwright -- it shells out to the binary that `scripts/chrome.py` finds -- so the pip
+      # package is here only to provide the installer.
+      - name: Install headless Chromium
+        run: playwright install --with-deps chromium
+
+      # The two facts that decide the measurement, recorded before anything renders so the artifact can be
+      # read months from now: which binary drew the cards, and which family the runner actually resolves
+      # each entry in the stack to. `fc-match` is the direct evidence for the DejaVu inference in JFH-224 --
+      # it reports what fontconfig would hand Chromium, so a "Segoe UI -> DejaVu Sans" line is the ticket's
+      # premise confirmed rather than assumed.
+      - name: Name the browser and the fonts this measurement turns on
+        run: |
+          python -c "import sys; sys.path.insert(0, 'scripts'); import chrome; print('chrome:', chrome.describe())"
+          echo "--- what fontconfig resolves each entry of 23_og.py's stack to ---"
+          for f in "Segoe UI" "DejaVu Sans" "system-ui" "Helvetica" "Arial" "sans-serif"; do
+            printf '%-12s -> %s\n' "$f" "$(fc-match "$f" family 2>/dev/null || echo '(fc-match unavailable)')"
+          done
+
+      - name: Render the cards into a temporary directory
+        run: |
+          python scripts/23_og.py --out "$RUNNER_TEMP/og-ci" | tee "$RUNNER_TEMP/render.log"
+
+      # The gate the script's own contract cannot provide. Three things, each of which has a distinct
+      # cause: the browser was never found; a render produced nothing or the wrong canvas; or the ledger
+      # was somehow present and cards were skipped, which would mean `--out` had not isolated the run.
+      - name: Refuse a green run that rendered nothing
+        run: |
+          set -euo pipefail
+          # `nullglob` rather than `ls | wc -l`: under `pipefail` a glob that matches nothing makes `ls`
+          # fail, which fails the pipeline, which fails the assignment, which under `set -e` exits the step
+          # before any of the diagnostics below can print. Rendering nothing is the single most likely
+          # failure here, so the count must not be the thing that crashes on it.
+          shopt -s nullglob
+          have=(docs/og/*.png)
+          got=("$RUNNER_TEMP/og-ci"/*.png)
+          expected=${#have[@]}
+          actual=${#got[@]}
+          echo "committed cards: ${expected}   rendered here: ${actual}"
+
+          if grep -q "none found" "$RUNNER_TEMP/render.log"; then
+            echo "::error::No browser was found, so nothing was rendered. chrome.py looks in \$CHROME_PATH, ~/.cache/ms-playwright and \$PATH; the install step above did not put a binary in any of them."
+            exit 1
+          fi
+          if [ "$actual" -ne "$expected" ]; then
+            echo "::error::Rendered ${actual} cards but ${expected} are committed. An empty or short artifact reads as 'no difference found', which is the one wrong conclusion this job must never support."
+            exit 1
+          fi
+          if grep -qE "^0 rendered" "$RUNNER_TEMP/render.log"; then
+            echo "::error::Rendered 0 and skipped the rest, so --out did not isolate this run from a ledger."
+            exit 1
+          fi
+          if grep -q "owed a render this run could not do" "$RUNNER_TEMP/render.log"; then
+            echo "::error::Some cards were owed a render that did not happen; see the 'not rendered' line above."
+            exit 1
+          fi
+
+          # The canvas is read from the ledger this run just wrote rather than hardcoded, so the assertion
+          # cannot drift from `23_og.py`'s own `W`/`H`. Checking a render against the script's stated canvas
+          # is deliberately the circular direction: what it catches is a browser that produced a
+          # wrong-sized image, which is the documented failure this stage exists to refuse, and every
+          # scraper crops a canvas that is not 1.91:1 differently.
+          python - <<'PY'
+          import json, os, pathlib, sys
+          from PIL import Image
+          out = pathlib.Path(os.environ["RUNNER_TEMP"]) / "og-ci"
+          want = tuple(json.loads((out / "cards.json").read_text(encoding="utf-8"))["size"])
+          print(f"asserting every card is {want[0]}x{want[1]}, per the ledger this run wrote")
+          bad = []
+          for p in sorted(out.glob("*.png")):
+              with Image.open(p) as im:
+                  if im.size != want:
+                      bad.append((p.name, im.size))
+          for name, size in bad:
+              print(f"::error::{name} is {size[0]}x{size[1]}, not {want[0]}x{want[1]}")
+          sys.exit(1 if bad else 0)
+          PY
+
+      # The measurement itself. Per card: identical or not, both file sizes, the count and bounding box of
+      # differing pixels, and the largest single channel delta. Written as a report a human reads rather
+      # than as a pass/fail, because JFH-224's outcome is a judgement about legibility -- "acceptable,
+      # adopt it" and "unacceptable, pin the font" are both correct answers to a large diff, and neither is
+      # a build failure.
+      #
+      # A side-by-side is emitted for every card that differs, committed above and runner below with a
+      # one-pixel rule between them, so the two can be compared in one glance at one file. The difference
+      # map beside it is amplified 8x and inverted, because a font substitution shows up as thin grey
+      # fringing on glyph edges that is invisible at true scale.
+      - name: Compare the runner's cards against the committed ones
+        run: |
+          python - <<'PY'
+          import os, pathlib
+          from PIL import Image, ImageChops
+
+          tmp = pathlib.Path(os.environ["RUNNER_TEMP"])
+          ci, committed = tmp / "og-ci", pathlib.Path("docs/og")
+          diffs = tmp / "og-diff"
+          diffs.mkdir(exist_ok=True)
+
+          rows, identical, changed = [], 0, 0
+          for c in sorted(committed.glob("*.png")):
+              mine = ci / c.name
+              if not mine.exists():
+                  rows.append((c.name, "MISSING", c.stat().st_size, 0, "", ""))
+                  continue
+              a = Image.open(c).convert("RGB")
+              b = Image.open(mine).convert("RGB")
+              d = ImageChops.difference(a, b)
+              box = d.getbbox()
+              if box is None:
+                  identical += 1
+                  rows.append((c.name, "identical", c.stat().st_size, mine.stat().st_size, "-", "-"))
+                  continue
+              changed += 1
+              npx = sum(1 for p in d.convert("L").getdata() if p)
+              worst = max(d.convert("L").getdata())
+              rows.append((c.name, "DIFFERS", c.stat().st_size, mine.stat().st_size,
+                           f"{npx:,} px ({100 * npx / (a.width * a.height):.2f}%)", f"bbox {box}, max delta {worst}"))
+
+              pair = Image.new("RGB", (a.width, a.height * 2 + 1), (255, 0, 0))
+              pair.paste(a, (0, 0))
+              pair.paste(b, (0, a.height + 1))
+              pair.save(diffs / f"{c.stem}-committed-above-runner-below.png")
+              amp = Image.eval(d.convert("L"), lambda v: 255 - min(255, v * 8))
+              amp.save(diffs / f"{c.stem}-difference-map.png")
+
+          hdr = f"# OG cards: runner vs committed\n\n{identical} identical, {changed} differing, of {len(rows)} cards.\n\n"
+          hdr += "`committed` was rendered on Windows (Segoe UI); `runner` is this job (see the fc-match output in the log).\n\n"
+          hdr += "| card | verdict | committed B | runner B | differing pixels | detail |\n|---|---|--:|--:|---|---|\n"
+          for r in rows:
+              hdr += f"| `{r[0]}` | {r[1]} | {r[2]:,} | {r[3]:,} | {r[4]} | {r[5]} |\n"
+          (tmp / "REPORT.md").write_text(hdr, encoding="utf-8")
+          print(hdr)
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as fh:
+              fh.write(hdr)
+          PY
+
+      # Both sets plus the diffs, so the comparison is reproducible from the artifact alone rather than
+      # only from this run's log. No dotted paths here, so `include-hidden-files` is not needed -- it would
+      # be, for anything under a `.`-prefixed directory, because @actions/glob applies its leading-dot test
+      # to the search root as well as to the entries beneath it.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: og-cards-runner-vs-committed
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/og-ci
+            ${{ runner.temp }}/og-diff
+            ${{ runner.temp }}/REPORT.md
+            ${{ runner.temp }}/render.log
+            docs/og
