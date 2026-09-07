@@ -65,7 +65,7 @@ Not precached, deliberately:
     install would download it a second time in the same visit for nothing. The worker stores the page's
     own response instead, so the offline copy costs zero extra bytes.
 
-  * The 1,294 screenshots. They are Open Graph cards on `opengraph.githubassets.com`, cross-origin and
+  * The 7,980 screenshots. They are Open Graph cards on `opengraph.githubassets.com`, cross-origin and
     fetched no-cors, so a response is opaque: status 0, no readable headers. A worker cannot tell a real
     card from GitHub's grey placeholder or from a 404, so it would cache failures indistinguishably from
     successes and keep them; browsers also pad opaque entries when charging them against the origin's

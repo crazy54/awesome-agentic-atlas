@@ -28,7 +28,7 @@ committed alongside `docs/`, so every version of this file is a version git keep
 repository whose entire packed history is ~110 MB today. A ledger is the one artefact in this pipeline
 that is *supposed* to grow without bound, so the growth rate is the design.
 
-Measured, not estimated, on today's 1,294 rows:
+Measured, not estimated, on the 1,294 rows the atlas held when this was written:
 
   one sample, `{"owner/name": 388645, ...}`      ~39,000 bytes
   one sample, JSON array of ints                   5,293 bytes
@@ -36,8 +36,9 @@ Measured, not estimated, on today's 1,294 rows:
 
 The three differ only in what they spend per repo: 30 bytes of key text, 4 bytes of decimal digits, or
 2.2 bytes of packed integer. So the roster of names is stored **once**, as an append-only array whose
-index is the repo's slot for ever, and a sample is one string of 1,294 varints positionally aligned to
-it. That is the whole encoding, and it is what makes the per-sample cost 2.2 bytes rather than 30.
+index is the repo's slot for ever, and a sample is one string of one varint per repo, positionally
+aligned to it. That is the whole encoding, and it is what makes the per-sample cost 2.2 bytes rather
+than 30.
 
 Be warned that the second of those two decisions matters much less than it looks -- see the measurement
 below, where the varint turns out to buy 11% of the history and the roster buys the rest.
@@ -125,9 +126,9 @@ the ledger genuinely does not know that those two names are one project.
 
 Every sample is a list of numbers whose meaning is "the Nth entry of `repos`". Sort that array, or delete
 an entry from the middle of it, and every historical sample silently starts describing the wrong
-projects -- no error, no missing key, just 1,294 wrong numbers. The file is committed and therefore
-editable by hand, so each sample carries the slot count and a 4-byte digest of the roster prefix it was
-written against:
+projects -- no error, no missing key, just one wrong number for every repo. The file is committed and
+therefore editable by hand, so each sample carries the slot count and a 4-byte digest of the roster
+prefix it was written against:
 
   "<slots>:<digest>:<payload>"
 
@@ -204,10 +205,10 @@ RISE_MIN_ABS = 25
 RISE_MIN_PCT = 1.0
 
 # Little-endian base-32 varint with a continuation flag in the sixth bit, so every value is 1-4 characters
-# for anything under a million stars and the string is self-delimiting -- no separators to pay for at
-# 1,294 values a sample. Every character is JSON-safe and needs no escaping, which a raw base-256 packing
-# would not be. Values 0-31 take one character, 0-1023 two, 0-32767 three, 0-1048575 four; today's
-# distribution lands at 330 / 436 / 425 / 103 of the 1,294.
+# for anything under a million stars and the string is self-delimiting -- no separators to pay for at a
+# value per repo a sample. Every character is JSON-safe and needs no escaping, which a raw base-256
+# packing would not be. Values 0-31 take one character, 0-1023 two, 0-32767 three, 0-1048575 four; the
+# distribution when this was measured landed at 330 / 436 / 425 / 103 across 1,294 repos.
 ALPHA = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"
 INDEX = {c: i for i, c in enumerate(ALPHA)}
 
@@ -336,7 +337,7 @@ def read_samples(state: dict) -> tuple[dict[str, list[int]], list[str]]:
 
     A sample whose digest no longer matches the roster is dropped rather than used. It is the only failure
     mode of a positional file that produces plausible-looking wrong answers instead of an error, so it is
-    checked on every read; the cost of being wrong here is 1,294 fabricated numbers.
+    checked on every read; the cost of being wrong here is a fabricated number for every repo.
     """
     roster = state["repos"]
     good, bad = {}, []

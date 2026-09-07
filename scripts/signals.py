@@ -22,8 +22,9 @@ that has not been pushed since we last looked cannot have grown an
 release through CI, because the tag push comes first. So a repo whose last
 push has not moved is not worth a query, and a repo whose push has moved is
 exactly the one that is. That makes the daily cost proportional to the day's
-activity rather than to the size of the atlas: about 300 of 1,294 repos are
-pushed on a given day.
+activity rather than to the size of the atlas: about a quarter of it is pushed
+on a given day -- 300 of 1,294 when that was measured, and it is the proportion
+rather than the count that the design rests on.
 
 The push time we saw is recorded inside each cache entry, which means entries
 written before this module existed carry no stamp. Those are treated as stale
@@ -67,11 +68,14 @@ minimum of one point. These queries ask for two connections per repo:
 `releases(last: 4)`, which is one, and a `releaseAssets(first: 40)` under each
 of those four releases, which is four. So a repo costs 5, a 12-repo batch costs
 60, and 60/100 with a floor of 1 means every batch any of these three stages
-issues costs exactly one point. A full 1,294-repo crawl is 108 requests and
-108 points; the ~319 repos pushed on an average day are 27 requests; the two
-terms above add about 99 repos a day, which is 8 requests more. Against the
-1,000 points an hour a `GITHUB_TOKEN` gets, none of that is near a constraint,
-which is why these figures are written down rather than optimised.
+issues costs exactly one point. A full crawl is therefore one request per 12
+repos: 108 requests and 108 points at the 1,294 repos this was measured on, 656
+at the 7,870 that `cache/entries_all.json` now resolves to. The repos pushed on
+an average day are a quarter of that -- 27 requests then, ~164 now -- and the two
+terms above add roughly a twelfth more. Against the 1,000 points an hour a
+`GITHUB_TOKEN` gets the daily path is still nowhere near a constraint, but a
+full crawl has gone from a tenth of one hour's budget to two thirds of it, and
+that is the figure to watch as further lists arrive rather than the daily one.
 
 Untested, and cheap to settle: no run has yet read a `rateLimit { cost }` back
 out of GitHub. Adding that field to any one of the three queries and printing
@@ -156,7 +160,7 @@ def parse_stamp(value: object) -> datetime | None:
     -- absent, null, a number, a hand-edited mess.
 
     None is a verdict, not an error. A single malformed entry re-queries one
-    repo; an exception here would stop a crawl of 1,294.
+    repo; an exception here would stop a crawl of 7,870.
     """
     if not isinstance(value, str) or not value.strip():
         return None

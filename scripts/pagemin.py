@@ -6,7 +6,7 @@ document is 40,960 B and was down to 8% of headroom, so the next feature would h
 
 Raising the budget was the wrong answer. Nothing a reader interacts with has to shrink: the comments are
 written for whoever is editing `scripts/19_pages.py`, and that is where they can be read, in order, with
-`git blame` attached. They do not need to be downloaded 1,294 times by people looking at a table. So the
+`git blame` attached. They do not need to be downloaded by every reader who looks at a table. So the
 stage strips its own output on the way out and the template keeps everything.
 
 WHAT IT WILL AND WILL NOT DO, WHICH IS THE ONE PROPERTY THIS MODULE IS BUILT AROUND

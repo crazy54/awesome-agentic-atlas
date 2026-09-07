@@ -97,10 +97,10 @@ def check_sources(data: dict, configured: list[str], allow_stale: bool = False) 
     of source lists that produced at least one surviving row. That is not the same claim as the number of
     lists configured. A source that parsed to nothing -- every entry a non-GitHub link, a cached README
     that arrived empty -- is configured, contributes no label, and would be reported here as a
-    disagreement that is not one. It has not happened: all eleven currently place rows, and
-    `10_parse_sources.py` exits rather than parse a source whose cached file is missing, so the way to
-    contribute zero rows is to be a list of things this project does not index. If it does happen, the
-    message below prints the labels it found, and `--allow-stale` is the way past it.
+    disagreement that is not one. It has not happened: every list configured when a build ran placed rows
+    in it, and `10_parse_sources.py` exits rather than parse a source whose cached file is missing, so
+    the way to contribute zero rows is to be a list of things this project does not index. If it does
+    happen, the message below prints the labels it found, and `--allow-stale` is the way past it.
 
     The exact version is not available from here. Having the build write its own source count into
     `data.json` would make this an assertion instead of an inference, and writing a new field means
