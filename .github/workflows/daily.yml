@@ -2,12 +2,12 @@
 #
 # What this job does NOT do is capture screenshots or build the workbooks. Screenshots are the only
 # genuinely expensive stage -- 3,462 headless renders on a cold cache when the atlas was 1,294 repos,
-# so upward of 20,000 at the 7,980 it holds now -- and both the site and the
-# Markdown fall back to GitHub's Open Graph card for any repo without one, which two thirds of rows
-# already use. So a brand-new project shows its card here within a day and gets a real screenshot when
-# `weekly.yml` next runs. Metadata is not deferred that way: stars and last-push are refetched in full
-# every run, because a snapshot date that advanced while the numbers underneath it stood still would be
-# a lie told daily.
+# so upward of 20,000 at the 7,980 it holds now -- and both the site and the Markdown fall back to
+# GitHub's Open Graph card for any repo without one, which 608 of the 1,294 rows already did when that
+# was measured, and a larger share until `weekly.yml` has caught up with the lists added since. So a
+# brand-new project shows its card here within a day and gets a real screenshot when `weekly.yml` next
+# runs. Metadata is not deferred that way: stars and last-push are refetched in full every run, because
+# a snapshot date that advanced while the numbers underneath it stood still would be a lie told daily.
 #
 # Pages needs no deploy step. This repository serves Pages from the branch's `docs/` folder, so the
 # commit at the end of this job *is* the deployment -- GitHub's own pages-build-deployment run picks it
@@ -112,13 +112,17 @@ jobs:
       # `verification()` reads "" as "the site is not verified and emit no tag", and `indexnow_key()`
       # refuses "" outright. Declaring these in `env:` would set both to "" on every run where the
       # variable does not exist, which would turn the IndexNow submission into a hard failure on a fork.
-      # Since JFH-215 the key file is written by this job too, so the two workflows have to agree.
+      # Since JFH-215 the key file is written by this job too, so both workflows publish it.
       #
       # GOOGLE_SITE_VERIFICATION is unset today and the site is unverified until a human sets it -- only
       # the account owner can mint the token. Setting it here is the entire code change needed: the next
       # rebuild emits the meta tag in docs/index.html. INDEXNOW_KEY has a working committed default, and
-      # an override only makes sense for a fork; it must be set in *both* workflows or the key in the
-      # payload and the key file 20_landing.py published will disagree, which is a 403 from the endpoint.
+      # an override only makes sense for a fork. It cannot be set in one workflow and not the other --
+      # both read the same repository-scoped `vars.INDEXNOW_KEY || secrets.INDEXNOW_KEY`, so there is one
+      # setting and no way to disagree about its value. The hazard was temporal instead: the key file
+      # used to be published weekly while submissions went out daily, so a rotation left up to six days
+      # of 403s. JFH-215 closed that by running 20_landing.py here as well, which publishes the key file
+      # in the same run that posts against it.
       - name: Honour the search-engine token overrides if they are set
         env:
           VERIFY: ${{ vars.GOOGLE_SITE_VERIFICATION || secrets.GOOGLE_SITE_VERIFICATION }}
@@ -195,11 +199,12 @@ jobs:
           # oversight it used to be. All three queue on scripts/signals.py's rules -- re-query a
           # repo when its `pushedAt` has moved since its cache entry was written, when we looked so
           # soon after that push that its release CI could still have been uploading, and when we
-          # have not looked at all in a month -- so they refresh themselves against the ~319 repos
-          # pushed on an average day plus ~99 more from those two time terms, about 35 requests and
-          # 35 GraphQL points, instead of freezing on first write. Adding a standing weekly --force
-          # would buy a full 1,294-repo re-crawl (108 requests, 108 points) to learn what these runs
-          # already know daily, and it would leave the other six days stale.
+          # have not looked at all in a month -- so they refresh themselves against the day's pushes
+          # instead of freezing on first write: ~319 repos plus ~99 more from those two time terms,
+          # about 35 requests and 35 GraphQL points, at the 1,294 repos where that was measured. Adding
+          # a standing weekly --force would buy a full re-crawl -- 108 requests and points then, 656 at
+          # the 7,870 these stages walk now -- to learn what these runs already know daily, and it
+          # would leave the other six days stale.
           #
           # Those point figures are connection counts, not node counts, and this comment had them
           # wrong by ~6x until JFH-211: GitHub scores a call by the requests needed to fulfil each
@@ -512,7 +517,9 @@ jobs:
       # `index.html` paths to URLs, so the stylesheet, the sitemaps, the feeds, the key file and the icons
       # this job also rewrites map to nothing, which bounds a daily submission at the root plus 156 facet
       # pages; `26_indexnow.py`'s `BATCH` is 10,000, so that is one request using 1.6% of the batch. The
-      # weekly run's list is the larger one at ~1,452 with the detail pages, and that is also one batch.
+      # weekly run's list is the larger one, because it carries a detail page per repo: ~1,452 when this
+      # was written, on the order of 8,000 at the atlas's size now. Still one batch, but no longer with
+      # much room -- this is the figure that decides whether `BATCH` ever has to mean something.
       - name: Tell IndexNow which URLs changed
         if: steps.gate.outputs.go == 'true'
         run: python scripts/26_indexnow.py --changed "$RUNNER_TEMP/changed-docs.txt"

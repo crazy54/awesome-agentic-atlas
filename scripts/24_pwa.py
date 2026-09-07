@@ -85,7 +85,7 @@ Not precached, deliberately:
     would work. Nothing about it is urgent: every other fact on a detail page is in the initial response,
     which is the property `22_detail.py` was built around.
 
-  * The 1,294 screenshots. They are Open Graph cards on `opengraph.githubassets.com`, cross-origin and
+  * The 7,980 screenshots. They are Open Graph cards on `opengraph.githubassets.com`, cross-origin and
     fetched no-cors, so a response is opaque: status 0, no readable headers. A worker cannot tell a real
     card from GitHub's grey placeholder or from a 404, so it would cache failures indistinguishably from
     successes and keep them; browsers also pad opaque entries when charging them against the origin's
