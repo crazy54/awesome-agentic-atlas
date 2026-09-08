@@ -168,7 +168,18 @@ DATA = ROOT / "docs" / "data.json"
 W, H = 1200, 630
 
 TOP = 3            # names on the card, per the ticket
-NAME_CAP = 26      # characters, before the CSS has to ellipsize -- see `card_html`
+# Characters, chosen so the CSS does *not* have to ellipsize -- which is what 26 claimed and, at DejaVu's
+# widths, was not. Run 34260744534 probed every card's DOM and found all three chips on the MCP card over
+# their boxes, by 19px, 21px and 24px: `Chrome DevTools MCP` was drawn as `Chrome DevTools …` on the card
+# whose subject is MCP. The row has 1056px inside the card's padding and spends 28px on two gaps, so each
+# chip gets 342px and, less 36px of padding and 2px of border, has 304px for text. The widest advance in
+# that measurement was 14.58px at font-size 25 -- `Chrome DevTools MCP`, caps and spaces -- or 0.583 per
+# character per pixel of type, so 24 characters of the worst case at the 21px set in `card_html` comes to
+# 294px and fits with 11px to spare. Two dials, and they pull the same way: the smaller type is what buys
+# the extra characters, since 26 of them never fitted at 25px. A cap is still not a width in any font --
+# `WWWWWWWW` would beat this arithmetic -- but the clamp is now the outlier's backstop rather than the
+# common case, and the probe in og-preview.yml fails the run if that stops being true.
+NAME_CAP = 24
 
 # Bumping this re-renders all 27 cards. It no longer necessarily costs ~540 KB of history to do so --
 # `main()` writes a card only when the new bytes differ from the committed ones -- but it does cost 27
@@ -302,6 +313,11 @@ def clip_name(name: str) -> str:
     a variable, not the proportionality of the glyphs. This cap is for the outliers that would otherwise
     squeeze the other two chips to nothing: "OmniRoute: Multi-Provider LLM Gateway" is 37 characters, and
     three of those on one row is more than the card is wide.
+
+    The division of labour is the point, and it was wrong until JFH-283: this cap should be what actually
+    truncates, because the ellipsis it writes is chosen -- punctuation stripped, then "…" -- while the
+    CSS's is a cut at whatever pixel the box ends on. `NAME_CAP` carries the measurement that makes the
+    common case land here instead of there.
     """
     return name if len(name) <= NAME_CAP else name[:NAME_CAP - 1].rstrip(" ,:;-/") + "…"
 
@@ -437,9 +453,11 @@ def card_html(rec: dict, host: str) -> str:
     on the heading and `flex-shrink` with `text-overflow` on the chips mean a facet name that takes two
     lines where a narrower face took one still fits inside the frame rather than hanging out of it. That
     guarantee is why pinning `FONT` was safe to do without re-measuring the layout, and it is not the
-    same as the text staying *legible*: what the clamp costs at DejaVu's widths is a chip's last word,
-    which is JFH-283's fourth criterion and is measured on the runner rather than assumed here. Nothing
-    is written to `docs/`; the document is scaffolding in a temporary directory and the PNG is the output.
+    same as the text staying *legible*: what the clamp cost at DejaVu's widths was a chip's last word, on
+    the one card of 27 whose three names are all long. That is JFH-283's fourth criterion, it was measured
+    on the runner rather than argued about here, and the chip type and `NAME_CAP` below are what the
+    measurement changed. Nothing is written to `docs/`; the document is scaffolding in a temporary
+    directory and the PNG is the output.
 
     The colours are `19_pages.py`'s dark palette, character for character, on the same argument
     `20_landing.py` makes for copying the two custom-property blocks: a card is the first thing anyone
@@ -502,9 +520,13 @@ h1{{margin:24px 0 0;font-size:76px;line-height:1.05;letter-spacing:-.02em;font-w
 .lbl{{font-size:20px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:{muted}}}
 .row{{display:flex;gap:14px;margin-top:14px}}
 /* `min-width:0` is what makes the ellipsis reachable -- a flex item's floor is its content width
-   otherwise, so the three chips would overflow the row instead of shrinking inside it. */
+   otherwise, so the three chips would overflow the row instead of shrinking inside it.
+
+   The type is 21px rather than the 25px it was because at 25px three chips did not fit and the clamp
+   was eating the word that identifies the project -- see `NAME_CAP` for the measurement and the
+   arithmetic. Smaller type here shows *more* of the name, not less. */
 .chip{{flex:0 1 auto;min-width:0;background:{band};border:1px solid {grid};border-radius:999px;
-  padding:11px 21px;font-size:25px;color:{ink};white-space:nowrap;overflow:hidden;
+  padding:10px 18px;font-size:21px;color:{ink};white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}}
 .host{{margin-top:20px;font-size:22px;color:{muted}}}
 </style></head><body><div class=card>
