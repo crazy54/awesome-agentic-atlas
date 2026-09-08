@@ -1,18 +1,27 @@
 <div align="center">
 
+<a href="https://crazy54.github.io/awesome-agentic-atlas/">
+  <img src="docs/favicon.svg" width="64" height="64" alt="Awesome Agentic Atlas logo: a gold globe in pixel sunglasses">
+</a>
+<a href="https://crazy54.github.io/awesome-agentic-atlas/">
+  <img src="docs/assets/atlas-byte.png" width="132" alt="Atlas Byte, the Awesome Agentic Atlas robot mascot, wearing pixel sunglasses and holding a globe">
+</a>
+
 # Awesome Agentic Atlas
 
 **Thirty-nine of the best agentic awesome-lists, merged into one searchable atlas.**
 
 13,640 entries · nearly 8,000 repos · 12.5M combined stars · one spreadsheet · zero tab-hopping
 
-[![entries](https://img.shields.io/badge/entries-13%2C640-6f42c1?style=for-the-badge)](mega-list/README.md)
-[![repos](https://img.shields.io/badge/repos-~8%2C000-0969da?style=for-the-badge)](mega-list/leaderboard.md)
-[![stars](https://img.shields.io/badge/combined%20stars-12.5M-f9c513?style=for-the-badge)](mega-list/leaderboard.md)
-[![lists merged](https://img.shields.io/badge/lists%20merged-39-1a7f37?style=for-the-badge)](#the-source-lists)
-[![license](https://img.shields.io/badge/license-MIT-24292f?style=for-the-badge)](LICENSE)
+[![entries](https://shieldcn.dev/badge/entries-13%2C640-6557C8.svg?logo=ri%3ALuDatabase&size=sm&font=geist&split=true)](mega-list/README.md)
+[![repos](https://shieldcn.dev/badge/repos-%7E8%2C000-1D5E9E.svg?logo=ri%3ALuGithub&size=sm&font=geist&split=true)](mega-list/leaderboard.md)
+[![stars](https://shieldcn.dev/badge/combined_stars-12.5M-875A19.svg?logo=ri%3AGoStarFill&size=sm&font=geist&split=true)](mega-list/leaderboard.md)
+[![lists merged](https://shieldcn.dev/badge/lists_merged-39-187557.svg?logo=ri%3ALuListChecks&size=sm&font=geist&split=true)](#the-source-lists)
+[![license](https://shieldcn.dev/badge/license-MIT-596574.svg?logo=ri%3ALuScale&size=sm&font=geist&split=true)](LICENSE)
 
 ### [🔎 Browse it in your browser][site] · [⬇ Download the workbook — dark][dark] · [⬇ light][light]
+
+[![Atlas Leaderboard](https://shieldcn.dev/badge/Atlas-Leaderboard-875A19.svg?logo=ri%3ALuTrophy&size=sm&font=geist&split=true)](mega-list/leaderboard.md)
 
 </div>
 
@@ -40,6 +49,7 @@ up there is now [one link — twenty tools, ranked][q1].
 | 📊 **Excel workbook** | Filtering, sorting, "show me every Rust tool with >1k stars that runs native on Windows". 21 sheets, a screenshot embedded on every row, autofilter on every column. Two themes. | [dark][dark] · [light][light] |
 | 📄 **Markdown edition** | Reading in the browser, linking to, quoting. Same data, same ordering, split so no page hits GitHub's rendering limit. | [mega-list/](mega-list/README.md) |
 | 🏆 **Leaderboard** | The most-starred projects across every list at once, with how many lists name each one — a rough consensus score. | [leaderboard](mega-list/leaderboard.md) |
+| 🧰 **Curated collections** | Five recommended sets rather than a ranking — a first setup, a Windows-native one, a Claude Code kit, a local-only one. Each pick says what job it does and why it, and carries its own evidence. | [collections](mega-list/collections/README.md) |
 | 🧩 **The JSON dataset** | Building something on top of it. Every repo, verdict, topic and install command in one 548 KB file, documented and versioned. | [`data.json`][data] · [schema](#the-data-as-an-api) |
 
 ### Running the site locally

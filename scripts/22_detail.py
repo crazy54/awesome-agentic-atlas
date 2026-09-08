@@ -107,6 +107,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 HERE = Path(__file__).resolve().parent
 
+# The five platform marks. `osicons` is a legal identifier, so it needs none of the
+# `spec_from_file_location` ceremony below -- only `scripts/` on the path, which a plain
+# `python scripts/22_detail.py` already provides and a test that loads this module by file path does not.
+sys.path.insert(0, str(HERE))
+import osicons  # noqa: E402
+
 # The same dynamic load `19b_refresh.py` and `20_landing.py` use, and for the same reason: the module is
 # named `19_pages`, which is not an identifier, so `import` cannot reach it. Three things are wanted --
 # `beacon()`, so the analytics token lives in one file; `b17.SITE`, so the absolute URL in every
@@ -320,11 +326,19 @@ def platforms(repo: Repo, os_labels: list[str]) -> str:
     A table rather than the index's row of glyphs, because the reason behind a verdict is the part a
     reader cannot get anywhere else -- "amber" on the index narrows to "uncertain" without saying of
     what, and this is the surface with room to finish the sentence.
+
+    The mark goes *beside* the platform word here and does not replace it, which is the opposite of what
+    the compact surfaces do. This is the one explanatory place in the site: a three-column table whose
+    whole job is to finish "does this run on my machine, and on what evidence", and the row header is the
+    accessible name every cell in the row is read against. A reader who cannot tell Tux from a whale at
+    17px would be left with a table of pictures and colours. `.oiw` keeps the pair on one line, because a
+    mark orphaned at the end of a line from the word it belongs to is worse than no mark.
     """
     body = []
     for i, label in enumerate(os_labels):
         word, tone, why = VERDICT[repo.row["os"][i:i + 1] or "-"]
-        body.append(f'<tr><th scope="row">{esc(label)}</th>'
+        body.append(f'<tr><th scope="row"><span class="oiw" title="{esc(osicons.title(i))}">'
+                    f'{osicons.use(i)} {esc(label)}</span></th>'
                     f'<td class="v{tone}">{esc(word)}</td>'
                     f'<td class="why">{esc(why)}</td></tr>')
     return ('<table class="os"><caption>Derived from the project\'s own README, install route, CI '
@@ -469,6 +483,12 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
   {platforms(repo, data["os"])}
 </section>''' if APP_FLAGS["detail.platform_support"] else ""
 
+    # The platform table is the only thing on a detail page that draws a mark, so the ~1.4 KB of symbol
+    # definitions rides on the same flag. Emitted unconditionally it would be 1.8 MB of committed path
+    # data across 1,294 pages that nothing on any of them references -- and this stage's whole argument
+    # is about bytes git keeps for ever.
+    sprite = osicons.SPRITE + "\n" if platform_section else ""
+
     provenance_section = f'''<section>
   <h2>Where it came from</h2>
   {provenance(repo, lists)}
@@ -502,12 +522,12 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
 <meta property="og:description" content="{esc(repo.summary)}">
 <meta property="og:url" content="{esc(repo.url)}">
 <meta property="og:image" content="{esc(repo.shot)}">
-<link rel="icon" href="{ICON}">
+<link rel="icon" href="{repo.rel(ICON)}" type="image/svg+xml">
 {HEAD_THEME}<link rel="stylesheet" href="../../detail.css">
 <script type="application/ld+json">{breadcrumb(repo)}</script>
 </head>
 <body>
-<header><div class="wrap">
+{sprite}<header><div class="wrap">
   <nav class="crumb"><a href="{repo.rel()}">Atlas</a> ›
     <a href="{repo.rel("topic/" + row["cat_slug"])}/">{esc(row["cat_name"])}</a> ›
     <a href="{repo.rel("repo/")}">All projects</a></nav>
@@ -528,6 +548,10 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
         <a class="alt" href="{esc(live)}">Find it in the atlas</a></p>
     </div>
     <nav class="util">
+      <a href="{repo.rel('collections/')}">Collections</a> ·
+      <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+      <a href="{repo.rel('repo/')}">All projects</a> ·
+      <a href="{repo.rel()}#browse">Topics &amp; harnesses</a><br>
       <button class="chip" id="theme" aria-pressed="false">Light theme</button>
     </nav>
   </div>
@@ -613,7 +637,7 @@ def directory(repos: list[Repo], data: dict) -> str:
 <meta property="og:description" content="{len(repos):,} projects, one page each.">
 <meta property="og:url" content="{esc(url)}">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/{esc(REPO)}">
-<link rel="icon" href="{ICON}">
+<link rel="icon" href="../{ICON}" type="image/svg+xml">
 {HEAD_THEME}<link rel="stylesheet" href="detail.css">
 </head>
 <body>
@@ -629,6 +653,9 @@ def directory(repos: list[Repo], data: dict) -> str:
       <p class="jump">{jump}</p>
     </div>
     <nav class="util">
+      <a href="../collections/">Collections</a> ·
+      <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+      <a href="../#browse">Topics &amp; harnesses</a><br>
       <button class="chip" id="theme" aria-pressed="false">Light theme</button>
     </nav>
   </div>
@@ -708,6 +735,11 @@ def main() -> None:
     out = Path(args.out).resolve()
     src = Path(args.data).resolve() if args.data else out / "data.json"
     data = json.loads(src.read_text(encoding="utf-8"))
+    # Once, before the first page is written. `platforms()` pairs a mark with a verdict by position and
+    # nothing else, so a reordered `os` column would put a Docker whale beside the Windows answer on 1,294
+    # pages -- a page stating a falsehood about the one thing a reader came here to check. Better a build
+    # that stops than a tree that publishes it.
+    osicons.check(data["os"])
 
     repos, by_cat = plan(data, out)
     lists = source_links()
@@ -768,14 +800,18 @@ CSS = """/* Written by scripts/22_detail.py. Shared by every page under docs/rep
    modes -- is written out once, beside the blocks in `19_pages.py`. It is deliberately not repeated
    here; three copies of a rationale is three things to go stale, and the previous palette's did. */
 :root{
-  --surface:#000000; --plane:#0B0B10; --band:#14141B; --ink:#FFFFFF; --ink2:#C7C9D2;
-  --muted:#9598A4; --grid:#262630; --link:#438BB1; --bar:#CE54AF;
-  --good:#438BB1; --warn:#9871C9; --off:#9598A4; --onbar:#000000;
+  --surface:#090A0D; --plane:#101217; --band:#20242D; --ink:#F7F8FA; --ink2:#D0D5DD;
+  --muted:#9BA5B3; --grid:#3A414D; --link:#78B7F4; --bar:#D6A034;
+  --good:#5BD5AA; --warn:#EF7D86; --off:#9BA5B3; --onbar:#090A0D;
+  --accent-sky:#78B7F4; --accent-mint:#5BD5AA; --accent-gold:#E7B64D;
+  --accent-coral:#EF7D86; --accent-violet:#A99AF7;
 }
 html[data-theme=light]{
-  --surface:#F1F0F3; --plane:#FCFCFD; --band:#EAE9EF; --ink:#000000; --ink2:#2C2C36;
-  --muted:#52525E; --grid:#D4D3DA; --link:#1C449C; --bar:#AD328E;
-  --good:#346B89; --warn:#6B3EA3; --off:#52525E; --onbar:#FFFFFF;
+  --surface:#F2F4F7; --plane:#FAFBFC; --band:#E7EAF0; --ink:#14171C; --ink2:#353C47;
+  --muted:#596574; --grid:#CAD1DB; --link:#1D5E9E; --bar:#6557C8;
+  --good:#187557; --warn:#875A19; --off:#596574; --onbar:#FFFFFF;
+  --accent-sky:#1D5E9E; --accent-mint:#187557; --accent-gold:#9A6718;
+  --accent-coral:#B6465E; --accent-violet:#6557C8;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);
@@ -826,22 +862,19 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
 section{margin:34px 0 0;border-top:1px solid var(--grid);padding-top:22px}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0,0,0,0);white-space:nowrap;border:0}
-/* The repository reader is deliberately its own small colour system. It reads like a document laid
-   over the atlas rather than another metadata panel, while the cool blue and violet still belong to
-   the parent palette. These tokens are scoped so the byte-identical site palette above stays the one
-   source of truth for every element outside the reader. */
+/* The reader is a document surface inside the Atlas, not a separately themed application. Its aliases
+   point directly at the shared product tokens so a theme change cannot leave the Markdown behind. */
 .reader{
-  --read-bg:#0c111d;--read-panel:#111827;--read-raised:#182235;--read-ink:#e8eef8;
-  --read-muted:#9aa9bf;--read-line:#293753;--read-link:#78c7ff;--read-violet:#c4a7ff;
-  --read-gold:#f5c76f;--read-code:#080c14;--read-good:#72ddb5;--read-quote:#17243a;
+  --read-bg:var(--surface);--read-panel:var(--plane);--read-raised:var(--band);--read-ink:var(--ink);
+  --read-muted:var(--muted);--read-line:var(--grid);--read-link:var(--link);--read-accent:var(--bar);
+  --read-warn:var(--warn);--read-code:var(--surface);--read-good:var(--good);--read-quote:var(--band);
   overflow:hidden;border:1px solid var(--read-line);border-radius:14px;background:var(--read-panel);
-  color:var(--read-ink);box-shadow:0 20px 55px rgba(0,0,0,.28),0 0 0 1px rgba(120,199,255,.04)}
+  color:var(--read-ink);box-shadow:0 20px 55px rgba(0,0,0,.3),0 0 0 1px color-mix(in srgb,var(--bar) 5%,transparent)}
 .reader [hidden]{display:none!important}
 html[data-theme=light] .reader{
-  --read-bg:#f7f4ee;--read-panel:#fffdf8;--read-raised:#eee9df;--read-ink:#202938;
-  --read-muted:#647084;--read-line:#d8d1c4;--read-link:#075985;--read-violet:#6d28d9;
-  --read-gold:#9a5b00;--read-code:#f1ede5;--read-good:#08775a;--read-quote:#f2eee5;
-  box-shadow:0 18px 46px rgba(62,48,27,.12),0 0 0 1px rgba(7,89,133,.03)}
+  --read-panel:var(--band);--read-raised:var(--plane);
+  --read-code:color-mix(in srgb,var(--band) 82%,var(--grid));--read-quote:var(--surface);
+  box-shadow:0 18px 46px rgba(25,35,50,.11),0 0 0 1px color-mix(in srgb,var(--bar) 4%,transparent)}
 .preview-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:14px}
 .preview-intro h2{margin-bottom:6px;color:var(--ink);font-size:19px;text-transform:none;letter-spacing:-.01em}
 .preview-intro .lead{margin:0;font-size:14.5px}
@@ -854,8 +887,8 @@ html[data-theme=light] .reader{
 .reader-chrome{min-height:55px;display:flex;align-items:center;gap:12px;padding:9px 12px;
   background:var(--read-bg);border-bottom:1px solid var(--read-line)}
 .window-dots{display:flex;gap:6px;flex:0 0 auto}
-.window-dots i{width:9px;height:9px;border-radius:50%;background:#ff6b6b}
-.window-dots i:nth-child(2){background:var(--read-gold)}
+.window-dots i{width:9px;height:9px;border-radius:50%;background:var(--read-muted)}
+.window-dots i:nth-child(2){background:var(--read-warn)}
 .window-dots i:nth-child(3){background:var(--read-good)}
 .file-picker{min-width:0;flex:1;position:relative}
 .file-picker:after{content:"⌄";position:absolute;right:11px;top:50%;transform:translateY(-55%);
@@ -892,33 +925,33 @@ html[data-theme=light] .reader{
   font-weight:720;letter-spacing:-.025em;text-transform:none}
 .markdown-body h1{font-size:2em;padding-bottom:.42em;border-bottom:1px solid var(--read-line)}
 .markdown-body h2{font-size:1.52em;padding-bottom:.35em;border-bottom:1px solid var(--read-line)}
-.markdown-body h3{font-size:1.23em;color:var(--read-violet)}
-.markdown-body h4{font-size:1.05em;color:var(--read-gold)}
+.markdown-body h3{font-size:1.23em;color:var(--read-accent)}
+.markdown-body h4{font-size:1.05em;color:var(--read-warn)}
 .markdown-body p,.markdown-body ul,.markdown-body ol{margin:0 0 1em}
 .markdown-body li+li{margin-top:.28em}
-.markdown-body li::marker{color:var(--read-violet);font-weight:700}
+.markdown-body li::marker{color:var(--read-accent);font-weight:700}
 .markdown-body a{color:var(--read-link);text-decoration:underline;text-decoration-thickness:.07em;
   text-underline-offset:.17em}
-.markdown-body a:hover{color:var(--read-violet)}
+.markdown-body a:hover{color:var(--read-accent)}
 .markdown-body strong{color:var(--read-ink);font-weight:750}
-.markdown-body blockquote{margin:1.2em 0;padding:.7em 1.05em;border-left:4px solid var(--read-violet);
+.markdown-body blockquote{margin:1.2em 0;padding:.7em 1.05em;border-left:4px solid var(--read-accent);
   border-radius:0 8px 8px 0;background:var(--read-quote);color:var(--read-muted)}
 .markdown-body blockquote>:last-child{margin-bottom:0}
 .markdown-body code,.markdown-body kbd{font:13px/1.55 "Cascadia Code","SFMono-Regular",Consolas,
   "Liberation Mono",monospace}
 .markdown-body :not(pre)>code{padding:.16em .38em;border:1px solid var(--read-line);border-radius:5px;
-  background:var(--read-code);color:var(--read-gold);font-size:.84em}
+  background:var(--read-code);color:var(--read-warn);font-size:.84em}
 .markdown-body pre{overflow:auto;margin:1.15em 0;padding:16px 18px;border:1px solid var(--read-line);
   border-radius:9px;background:var(--read-code);color:var(--read-ink);line-height:1.55;
-  box-shadow:inset 3px 0 0 var(--read-violet)}
+  box-shadow:inset 3px 0 0 var(--read-accent)}
 .markdown-body pre code{display:block;min-width:max-content;color:inherit;background:transparent}
 /* GitHub's renderer emits Primer-compatible `pl-*` spans for highlighted fenced blocks. The source
    owns the tokenisation; this small palette supplies the colour without importing all of Primer. */
 .markdown-body .pl-c,.markdown-body .pl-c1{color:var(--read-muted)}
-.markdown-body .pl-k,.markdown-body .pl-ent,.markdown-body .pl-pds{color:var(--read-violet)}
+.markdown-body .pl-k,.markdown-body .pl-ent,.markdown-body .pl-pds{color:var(--read-accent)}
 .markdown-body .pl-s,.markdown-body .pl-s1,.markdown-body .pl-smi{color:var(--read-good)}
 .markdown-body .pl-en,.markdown-body .pl-v,.markdown-body .pl-e{color:var(--read-link)}
-.markdown-body .pl-c1,.markdown-body .pl-mh,.markdown-body .pl-mi{color:var(--read-gold)}
+.markdown-body .pl-c1,.markdown-body .pl-mh,.markdown-body .pl-mi{color:var(--read-warn)}
 .markdown-body hr{height:1px;margin:2em 0;border:0;background:var(--read-line)}
 .markdown-body img{max-width:100%;height:auto;border-radius:7px;background:var(--read-bg)}
 .markdown-body table{display:block;width:max-content;max-width:100%;overflow:auto;margin:1.2em 0;
@@ -962,6 +995,12 @@ table.os th[scope=row]{text-align:left;padding:10px;border-bottom:1px solid var(
   font-weight:600;white-space:nowrap}
 table.os td{padding:10px;border-bottom:1px solid var(--grid);vertical-align:top}
 table.os .why{color:var(--ink2);font-size:13px}
+""" + osicons.CSS + """
+/* Bigger than the shared 1.15em, because this is the one surface where the mark stands beside its own
+   word rather than in place of one: at the table's 14px that is ~17px, which matches the cap height of
+   the word next to it instead of sitting under it. The margin is on top of the literal space in the
+   markup -- a space alone is 4px at this size, which reads as one word with a picture stuck to it. */
+table.os th[scope=row] .oi{width:1.2em;height:1.2em;margin-right:.2em}
 /* Prefixed, on the same reasoning as 20_landing.py's .vY: a class name has to be a valid CSS
    identifier, and these are tone names rather than the verdict characters for exactly that reason. */
 .vgood{color:var(--good);font-weight:700;white-space:nowrap}
@@ -1010,6 +1049,12 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
   .source-code{max-height:680px;padding:20px 17px 32px;font-size:12px}
   /* Four columns of names in 307px is 77px a column. One column, and let it scroll. */
   ul.dir{columns:1}
+  /* `.util{flex-shrink:0}` is right on a desktop, where the nav must not be squeezed by a long owner/name
+     pair beside it, and wrong here: it pins the nav at max-content, which is 390px once there are four
+     links in it. A flex item that cannot shrink does not wrap either, so the whole document grew a 44px
+     sideways scroll -- on the narrowest surface, where sideways scroll is worst. Shrinking is safe because
+     the automatic minimum size still floors it at the longest word. */
+  .util{flex-shrink:1}
   /* The evidence sentence is the first thing to go: three columns do not fit, and the verdict word
      without its reason is still the answer to "does this run on my machine". The reason stays in the
      document for a reader who asks for the desktop site, and it is never the only place a fact is. */
@@ -1044,7 +1089,7 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
 # `data-theme="dark"` is the floor if this throws, which `localStorage` does in some private modes. The
 # key is `theme`, the same string the index writes, so a choice made on the index is honoured here
 # immediately and there is nothing to migrate.
-HEAD_THEME = """<meta name="theme-color" id="tc" content="#0B0B10">
+HEAD_THEME = """<meta name="theme-color" id="tc" content="#101217">
 <script>
 try {
   var t = localStorage.getItem("theme");
@@ -1055,7 +1100,7 @@ try {
   // re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FCFCFD" : "#0B0B10";
+  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
 } catch (e) {}
 </script>
 """
@@ -1535,8 +1580,7 @@ function show(id, html) {
 """
 
 # Copied from the template so a detail page in a bookmark bar looks like the site.
-ICON = ("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'>"
-        "<text y='13' font-size='14'>&#127760;</text></svg>")
+ICON = "favicon.svg"
 
 
 if __name__ == "__main__":

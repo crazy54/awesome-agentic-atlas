@@ -167,7 +167,10 @@ const initial = await evalIn(`(() => {
     image: image?.src || '', guide: rendered.querySelector('a')?.href || '',
     bodyFont: getComputedStyle(rendered).fontFamily,
     codeFont: getComputedStyle(rendered.querySelector('code')).fontFamily,
-    colour: getComputedStyle(reader).getPropertyValue('--read-violet').trim(),
+    accent: getComputedStyle(reader).getPropertyValue('--read-accent').trim(),
+    siteAccent: getComputedStyle(document.documentElement).getPropertyValue('--bar').trim(),
+    panel: getComputedStyle(reader).getPropertyValue('--read-panel').trim(),
+    sitePanel: getComputedStyle(document.documentElement).getPropertyValue('--plane').trim(),
     content: rendered.innerText,
     hscroll: document.documentElement.scrollWidth - document.documentElement.clientWidth,
   };
@@ -184,7 +187,9 @@ ok("non-Markdown and over-limit files stay out of the picker",
 ok("the rendered document carries readable body and monospace code fonts",
    /Charter|Sitka Text|Cambria/.test(initial.bodyFont) && /Cascadia Code|Consolas/.test(initial.codeFont),
    initial.bodyFont + " / " + initial.codeFont);
-ok("the dark reader has its own violet accent", initial.colour === "#c4a7ff", initial.colour);
+ok("the dark reader inherits the site's panel and accent colours",
+   initial.accent === initial.siteAccent && initial.panel === initial.sitePanel,
+   initial.accent + " / " + initial.siteAccent + " / " + initial.panel + " / " + initial.sitePanel);
 ok("repository-relative document links and images point back to source",
    initial.guide.includes("github.com/anthropics/skills/blob/HEAD/docs/guide.md") &&
    initial.image.includes("raw.githubusercontent.com/anthropics/skills/HEAD/docs/diagram.png"),
@@ -221,11 +226,16 @@ await evalIn("document.getElementById('theme').click(); document.getElementById(
 await waitFor("!document.getElementById('rendered-view').hidden", "light rendered view");
 const light = await evalIn(`({
   theme: document.documentElement.dataset.theme,
-  colour: getComputedStyle(document.querySelector('.reader')).getPropertyValue('--read-violet').trim(),
+  accent: getComputedStyle(document.querySelector('.reader')).getPropertyValue('--read-accent').trim(),
+  siteAccent: getComputedStyle(document.documentElement).getPropertyValue('--bar').trim(),
+  panel: getComputedStyle(document.querySelector('.reader')).getPropertyValue('--read-panel').trim(),
+  sitePanel: getComputedStyle(document.documentElement).getPropertyValue('--plane').trim(),
+  siteBand: getComputedStyle(document.documentElement).getPropertyValue('--band').trim(),
   bg: getComputedStyle(document.querySelector('.reader')).backgroundColor
 })`);
-ok("the light theme gives the reader a distinct accessible palette",
-   light.theme === "light" && light.colour === "#6d28d9" && light.bg !== "rgb(17, 24, 39)",
+ok("the light reader uses the site's darker grey band instead of its near-white panel",
+   light.theme === "light" && light.accent === light.siteAccent && light.panel === light.siteBand &&
+   light.panel !== light.sitePanel && light.bg === "rgb(231, 234, 240)",
    JSON.stringify(light));
 await evalIn("document.getElementById('source-preview').scrollIntoView({block: 'start'})");
 await shot("detail-reader-light");

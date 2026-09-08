@@ -107,16 +107,105 @@ const geom = `(() => {
     tagsShown: getComputedStyle(rows[0].querySelector('td.tg')).display !== 'none',
     langShown: getComputedStyle(rows[0].querySelector('td.lc')).display !== 'none',
     rankPrefix: getComputedStyle(rows[0].querySelector('td.rk'), '::before').content,
+    rowBg: getComputedStyle(rows[0]).backgroundColor,
+    bodyBg: getComputedStyle(document.body).backgroundColor,
+    stripeA: getComputedStyle(rows[0].querySelector('td')).backgroundColor,
+    stripeB: getComputedStyle(rows[1].querySelector('td')).backgroundColor,
     hscroll: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     rows: rows.length,
   };
 })()`;
+const hoverFirstRow = async () => {
+  const point = await evalIn(`(() => {
+    const r = document.querySelector('#out tbody tr').getBoundingClientRect();
+    return {x: Math.round(r.left + Math.min(20, r.width / 2)), y: Math.round(r.top + Math.min(20, r.height / 2))};
+  })()`);
+  await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: point.x, y: point.y});
+  // Let the 140ms hover transition reach its final computed value before
+  // checking the exact 2px outline width.
+  await sleep(200);
+  return evalIn(`(() => {
+    const row = document.querySelector('#out tbody tr');
+    return {row: getComputedStyle(row).boxShadow, cell: getComputedStyle(row.querySelector('td')).boxShadow,
+            animation: getComputedStyle(row).animationName};
+  })()`);
+};
 
 // ---- 1440px: the view exists for this width
 await resize(1440, 900);
 await goto(ORIGIN);
 const coldView = await evalIn("document.documentElement.dataset.view");
 ok("cards are what a cold visit gets", coldView === "cards", coldView);
+// No synthetic input before this check: the original loader waited for a human gesture.
+await sleep(500);
+const initialArt = await evalIn(`(() => {
+  const imgs = [...document.querySelectorAll('#out .shot img')];
+  const visible = imgs.filter(i => i.getBoundingClientRect().top < innerHeight);
+  return {visible: visible.length, started: visible.every(i => !!i.getAttribute('src')),
+          deferred: imgs.some(i => i.hasAttribute('data-src'))};
+})()`);
+ok("visible screenshots start loading before any interaction", initialArt.visible > 0 && initialArt.started,
+   JSON.stringify(initialArt));
+ok("distant screenshots remain deferred", initialArt.deferred);
+ok("the mascot has a visible name tag", await evalIn("document.querySelector('.atlas-name')?.textContent === 'Atlas Byte'"));
+const accents = await evalIn(`new Set([...document.querySelectorAll('#out tr[data-project]')]
+  .slice(0,20).map(r => getComputedStyle(r).getPropertyValue('--card-accent'))).size`);
+ok("cards have varied curated accents", accents > 1, accents);
+
+// Atlas Byte only repeats facts already in the row. The browser check exercises the delayed hover path,
+// the reader-controlled quiet switch, and the hidden click sequence rather than merely looking for the
+// markup those behaviours need.
+const firstProjectPoint = await evalIn(`(() => {
+  const r = document.querySelector('#out tr[data-project]').getBoundingClientRect();
+  return {x: Math.round(r.left + 18), y: Math.round(r.top + Math.min(240, r.height - 18))};
+})()`);
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...firstProjectPoint});
+await sleep(450);
+ok("Atlas Byte introduces a hovered project from its Atlas record", await evalIn(`(() => {
+  const speech = document.getElementById('byte-speech');
+  return speech && !speech.hidden && speech.textContent.length > 20;
+})()`));
+await evalIn("document.getElementById('byte-quiet').click()");
+ok("Atlas Byte commentary has a local quiet switch", await evalIn(`(() => {
+  const quiet = document.getElementById('byte-quiet'), speech = document.getElementById('byte-speech');
+  return quiet?.getAttribute('aria-pressed') === 'true' && speech?.hidden;
+})()`));
+await evalIn("document.getElementById('byte-quiet').click()");
+await evalIn("for(let i=0;i<5;i++) document.getElementById('byte-name').click()");
+ok("five quick name-tag clicks reveal Atlas Orbit", await evalIn("document.querySelectorAll('#atlas-orbit .orbit-star').length === 12"));
+
+// The mascot is part of the masthead rather than a decorative background: it needs to arrive as a real
+// image, occupy the top-right without covering the navigation, and stop moving when the reader asks the
+// operating system for reduced motion. Measuring the served page catches a missing asset, a broken relative
+// URL and a layout rule that merely mentions the mascot without putting it where anyone can see it.
+const mascot = await evalIn(`(() => {
+  const img = document.querySelector('header img.atlas-byte');
+  const nav = document.querySelector('header nav');
+  if (!img) return null;
+  const r = img.getBoundingClientRect(), n = nav.getBoundingClientRect(), cs = getComputedStyle(img);
+  return {naturalWidth: img.naturalWidth, left: r.left, right: r.right, top: r.top, width: r.width,
+          navRight: n.right, animation: cs.animationName};
+})()`);
+ok("Atlas Byte loads in the masthead", mascot && mascot.naturalWidth > 0, JSON.stringify(mascot));
+ok("Atlas Byte sits at the upper right without covering navigation",
+   mascot && mascot.right > 1440 * .88 && mascot.top < 150 && mascot.left >= mascot.navRight - 1 &&
+   mascot.width >= 92 && mascot.width <= 170, JSON.stringify(mascot));
+ok("Atlas Byte has an idle animation", mascot && mascot.animation !== "none", JSON.stringify(mascot));
+await S("Emulation.setEmulatedMedia", {
+  media: "screen", features: [{name: "prefers-reduced-motion", value: "reduce"}],
+});
+const reducedMascot = await evalIn(`(() => {
+  const img = document.querySelector('header img.atlas-byte');
+  return img ? getComputedStyle(img).animationName : "missing";
+})()`);
+ok("the mascot becomes still for reduced-motion readers", reducedMascot === "none", reducedMascot);
+await S("Emulation.setEmulatedMedia", {media: "screen", features: []});
+
+const faviconHref = await evalIn("document.querySelector('link[rel=icon]')?.getAttribute('href') || ''");
+const faviconResponse = await fetch(new URL("favicon.svg", ORIGIN));
+ok("the globe emoji favicon is replaced by a local Atlas Byte SVG",
+   faviconHref === "favicon.svg" && faviconResponse.ok,
+   faviconHref + " / HTTP " + faviconResponse.status);
 
 // The default view is written twice in the generator and rendered once here, and nothing compared the three
 // until now. `data-view` on the <html> tag is what the reader looks at for the length of a 561 KB fetch,
@@ -151,12 +240,30 @@ await shot("view-cards-cold-1440");
 // worth measuring -- and the measurement's parity depends on the page being in the table when it starts.
 // That is what this navigation is for as much as the three assertions on it; see the note after it.
 await goto(ORIGIN + "#view=table");
+const densityHeights = [];
+for (const density of ["compact", "normal", "expanded"]) {
+  densityHeights.push(await evalIn(`(() => {
+    const s = document.getElementById('density'); if (!s) return 0;
+    s.value = '${density}'; s.dispatchEvent(new Event('change', {bubbles:true}));
+    return document.querySelector('#out tbody tr').getBoundingClientRect().height;
+  })()`));
+}
+ok("table density changes actual row height", densityHeights[0] > 0 &&
+   densityHeights[0] < densityHeights[1] && densityHeights[1] < densityHeights[2], densityHeights.join(','));
+await hardGoto(ORIGIN + "#view=table");
+ok("table density survives reload", await evalIn("document.getElementById('density')?.value === 'expanded'"));
+await evalIn("document.getElementById('density') && (document.getElementById('density').value='normal',document.getElementById('density').dispatchEvent(new Event('change')))");
 const tbl = await evalIn(geom);
 ok("a #view=table link opens in the table",
    await evalIn("document.documentElement.dataset.view") === "table",
    await evalIn("document.documentElement.dataset.view"));
 ok("one row per line in the table", tbl.across === 1, JSON.stringify(tbl));
 ok("the table shows its headings", tbl.theadShown);
+ok("adjacent table rows use different grey surfaces", tbl.stripeA !== tbl.stripeB,
+   tbl.stripeA + " vs " + tbl.stripeB);
+const tableHover = await hoverFirstRow();
+ok("a table-row hover draws a thicker 2px accent line",
+   /0px -2px 0px/.test(tableHover.cell), JSON.stringify(tableHover));
 await shot("view-table-1440");
 
 // The toggle against the thing it exists to avoid -- counted, not timed.
@@ -238,6 +345,12 @@ ok("the topic and target tags are on the card", c1440.tagsShown);
 ok("so are the language, licence and push date", c1440.langShown);
 ok("the rank carries a # now the column heading has gone", /#/.test(c1440.rankPrefix), c1440.rankPrefix);
 ok("nothing overflows sideways", c1440.hscroll <= 0, String(c1440.hscroll));
+ok("dark cards sit on a visible charcoal surface rather than merging into the page",
+   c1440.rowBg !== c1440.bodyBg, c1440.rowBg + " vs " + c1440.bodyBg);
+const cardHover = await hoverFirstRow();
+ok("a card hover draws a thicker 2px accent outline",
+   /0px 0px 0px 2px/.test(cardHover.row), JSON.stringify(cardHover));
+ok("a card hover gently pulses its own accent glow", cardHover.animation === "card-glow", JSON.stringify(cardHover));
 ok("no row was rebuilt, so the same count is on screen", c1440.rows === tbl.rows,
    c1440.rows + " vs " + tbl.rows);
 // The three counts, each with its non-emptiness conjunct: a measurement taken over an empty list would

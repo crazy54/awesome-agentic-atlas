@@ -9,14 +9,14 @@
    modes -- is written out once, beside the blocks in `19_pages.py`. It is deliberately not repeated
    here; three copies of a rationale is three things to go stale, and the previous palette's did. */
 :root{
-  --surface:#000000; --plane:#0B0B10; --band:#14141B; --ink:#FFFFFF; --ink2:#C7C9D2;
-  --muted:#9598A4; --grid:#262630; --link:#438BB1; --bar:#CE54AF;
-  --good:#438BB1; --warn:#9871C9; --off:#9598A4; --onbar:#000000;
+  --surface:#090A0D; --plane:#101217; --band:#20242D; --ink:#F7F8FA; --ink2:#D0D5DD;
+  --muted:#9BA5B3; --grid:#3A414D; --link:#78B7F4; --bar:#D6A034;
+  --good:#5BD5AA; --warn:#EF7D86; --off:#9BA5B3; --onbar:#090A0D;
 }
 html[data-theme=light]{
-  --surface:#F1F0F3; --plane:#FCFCFD; --band:#EAE9EF; --ink:#000000; --ink2:#2C2C36;
-  --muted:#52525E; --grid:#D4D3DA; --link:#1C449C; --bar:#AD328E;
-  --good:#346B89; --warn:#6B3EA3; --off:#52525E; --onbar:#FFFFFF;
+  --surface:#F2F4F7; --plane:#FAFBFC; --band:#E7EAF0; --ink:#14171C; --ink2:#353C47;
+  --muted:#596574; --grid:#CAD1DB; --link:#1D5E9E; --bar:#6557C8;
+  --good:#187557; --warn:#875A19; --off:#596574; --onbar:#FFFFFF;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);
@@ -90,6 +90,61 @@ a.nwo:hover{color:var(--ink)}
 .rel{margin-top:34px;border-top:1px solid var(--grid);padding-top:18px}
 .rel h2{margin-top:0}
 .rel p{margin:0 0 12px;color:var(--muted);font-size:13px}
+
+/* ---- the curated collections, docs/collections/, written by scripts/25_collections.py ----
+   Here rather than in a second stylesheet because these pages share this shell exactly: the same
+   masthead, nav, footer, chips, `.cmd`, `.tag` and the five `.v*` verdict colours. A separate file
+   would duplicate all of that to add the ten rules below, and cost a second blocking request on the
+   page most likely to be somebody's first. `22_detail.py` does ship its own -- a detail page is a
+   different layout -- and that is the line: same shell, same sheet. */
+.kick{margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--bar)}
+.intro{color:var(--ink2);font-size:14px;margin:10px 0 0;max-width:74ch}
+.take{max-width:52ch}
+/* The numbers are ours, in `.slot`, so the marker has to go. A collection is read as slots, and an
+   `<ol>` is still the honest element for it -- the order carries meaning and a screen reader should
+   say "7 items" -- but the browser's marker sits outside the card border and cannot be styled to sit
+   inside it. */
+.picks{list-style:none;margin:20px 0 0;padding:0}
+/* Prose left, evidence right, and the split is the point of the page: the `why` is a judgement and
+   everything in the second column is what it was made from, so a reader can weigh one against the
+   other without scrolling between them. 300px is what the five verdicts plus a licence name need on
+   one line each; `minmax(0,1fr)` rather than `1fr` because a `code.cmd` with no break opportunity in
+   it will otherwise push a grid track wider than its share and take the card with it. */
+.pick{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:4px 26px;align-items:start;
+  background:var(--plane);border:1px solid var(--grid);border-radius:10px;
+  padding:16px 18px;margin:0 0 12px}
+.pick>*{grid-column:1;min-width:0}
+.pick .ev,.pick .os,.pick .tp{grid-column:2}
+.pick .ev{grid-row:2;margin-top:0}
+.pick .os{grid-row:3}
+.pick .tp{grid-row:4}
+.pick h2{margin:2px 0 0;font-size:20px;letter-spacing:-.02em}
+.role{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+/* Tabular, because seven of these stack in a column and a proportional "1" would step the labels
+   beside them in and out. */
+.slot{display:inline-block;min-width:20px;margin-right:6px;padding:1px 0;text-align:center;
+  border-radius:5px;background:var(--band);color:var(--ink);font-variant-numeric:tabular-nums}
+.why{color:var(--ink);font-size:14.5px;margin:9px 0 0;max-width:66ch}
+.pick .desc{margin:7px 0 0;font-size:13px;color:var(--muted)}
+.ev b{color:var(--ink)}
+.allin{margin-top:34px;border-top:1px solid var(--grid);padding-top:18px}
+.allin p{margin:0 0 12px;color:var(--ink2);font-size:13.5px;max-width:74ch}
+/* `.cmd` is one line elsewhere; here it holds seven. `pre` brings its own margin and font, both of
+   which have to go for it to match the single-line version above it. */
+pre.cmd{margin:0;white-space:pre-wrap;max-width:none;padding:12px 14px;font-size:12.5px}
+/* `.cmd` is `display:block` because everywhere else it is an install command on its own line. Inside a
+   sentence -- "the atlas reads `#list=` in a URL" -- that block broke the sentence into three lines with
+   a full-width bar through the middle of it. Named narrowly so the install commands, which are `.cmd`
+   directly inside a `.pick`, keep the block treatment they want. */
+p code.cmd{display:inline;margin:0;padding:2px 6px}
+/* 340px is the width at which a kicker, a two-line title and the roles below it stop wrapping into
+   something unreadable; auto-fit rather than a fixed count so five cards reflow to 3+2 and then 2+2+1
+   without a query for each step. */
+.colls{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:14px;
+  grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.coll{background:var(--plane);border:1px solid var(--grid);border-radius:10px;padding:16px 18px}
+.coll h2{margin:2px 0 0;font-size:18px;letter-spacing:-.02em}
+.coll .intro{font-size:13.5px;margin-top:8px}
 footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
   color:var(--muted);font-size:13px}
 footer .wrap{max-width:1500px}
@@ -98,6 +153,12 @@ footer .wrap{max-width:1500px}
 @media(max-width:900px){
   .shot,.hide{display:none}
   td,th{padding:9px 6px}
+  /* The second column is a fixed 300px against a `1fr`, so it stops being a third of the card and
+     starts being most of it. Below this the evidence goes back under the prose it is evidence for,
+     which is also the order it should be read in when there is only one column to read. */
+  .pick{grid-template-columns:minmax(0,1fr)}
+  .pick .ev,.pick .os,.pick .tp{grid-column:1;grid-row:auto}
+  .pick .ev{margin-top:12px}
 }
 @media(max-width:640px){
   header{padding:16px 14px 12px}

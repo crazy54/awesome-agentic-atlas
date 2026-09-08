@@ -39,6 +39,7 @@ spec.loader.exec_module(b17)
 # effect of somebody else's import is how this breaks the day the import order changes. Stated here.
 sys.path.insert(0, str(Path(__file__).parent))
 import app_flags  # noqa: E402
+import osicons  # noqa: E402
 import pagemin  # noqa: E402
 
 newness = b17.newness
@@ -62,6 +63,8 @@ LISTS = len(b16.b10.SOURCES)
 VERDICT = {"Yes": "Y", "Likely": "L", "No": "N", "n/a": "a", DASH: "-", "": "-"}
 OS_FIELDS = ["win_native", "win_wsl2", "macos", "linux", "docker"]
 OS_LABELS = ["Windows", "WSL2", "macOS", "Linux", "Docker"]
+# Checked, not assumed: the marks are paired to these by position, so a reorder would mark the wrong verdict.
+osicons.check(OS_LABELS)
 
 # The columns of `data.json`, in order. Column-oriented rather than one object per repo: the keys would
 # otherwise be repeated once per row across nearly 8,000 of them, which is megabytes of the word
@@ -381,6 +384,11 @@ def built() -> tuple[str, str]:
     return now.strftime("%Y-%m-%dT%H:%M:%SZ"), now.strftime("%Y-%m-%d %H:%M UTC")
 
 
+def shield_text(text: str) -> str:
+    """Encode free text for shieldcn's static-badge path grammar."""
+    return text.replace("_", "__").replace("-", "--").replace(" ", "_")
+
+
 def substitute(page: str, data: dict, repo: str, site: str) -> str:
     """Fill the template's placeholders. Both this stage and `19b_refresh.py` render the same shell, and
     when the two chains drifted the refreshed page quietly lost whichever one had been added since.
@@ -395,12 +403,24 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
     default_view = "cards" if APP_FLAGS["index.card_view"] else "table"
     deployment_badge = DEPLOYMENT_BADGE if APP_FLAGS["index.deployment_badge"] else ""
     return (pagemin.strip_page(page)
+            # The four platform-mark placeholders. `osicons` is the only copy of the geometry, the ids, the
+            # hover text and the shared rule, so all four arrive here rather than being written into the
+            # template -- which is what stops this page and the other three surfaces drawing Docker two ways.
+            # The stylesheet fragment goes through `strip_css` on the way in: substitution runs *after*
+            # `strip_page`, so a constant injected here would otherwise carry its own comments into the
+            # published bytes, which is the one thing this function's comment strip exists to prevent. Its
+            # input is still a constant, so the output is still a pure function of the source.
+            .replace("__OSSPRITE__", osicons.SPRITE)
+            .replace("__OSCSS__", pagemin.strip_css(osicons.CSS))
+            .replace("__OSIDS__", osicons.JS_IDS)
+            .replace("__OSTITLES__", osicons.JS_TITLES)
             .replace("__DEFAULT_VIEW__", default_view)
             .replace("__INDEX_SCREENSHOTS__", "on" if APP_FLAGS["index.project_screenshots"] else "off")
             .replace("__APP_FLAGS__", app_flags.browser_json(APP_FLAGS))
             .replace("__DEPLOYMENT_BADGE__", deployment_badge)
             .replace("__BUILT__", stamp_iso)
             .replace("__BUILT_UTC__", stamp_utc)
+            .replace("__BUILT_BADGE__", shield_text(stamp_utc))
             .replace("__TOPICLINKS__", facet_links(data["cats"], "topic"))
             .replace("__TARGETLINKS__", facet_links(data["targets"], "target"))
             .replace("__COUNT__", f"{len(data['rows']):,}")
@@ -421,11 +441,9 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
 
 
 DEPLOYMENT_BADGE = r'''<a class="stamp" id="deployed" href="https://github.com/__REPO__/deployments"
-       title="When this copy of the site was published."><span class="k"><svg class="deploy-icon"
-        viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.25"
-        fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.4v4l2.7 1.7"
-        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Last deployed</span>
-      <span class="v"><time datetime="__BUILT__">__BUILT_UTC__</time></span></a>'''
+       title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
+        src="https://shieldcn.dev/badge/last_deployed-__BUILT_BADGE__-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="__BUILT__">Last deployed __BUILT_UTC__</time></a>'''
 
 
 PAGE = r"""<!doctype html>
@@ -458,7 +476,7 @@ __VERIFY__
       href="feed.xml">
 <link rel="alternate" type="application/feed+json" title="Awesome Agentic Atlas — new arrivals"
       href="feed.json">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <!-- Installability, and the offline shell. Every href relative, so the /awesome-agentic-atlas/ path
      prefix Pages adds takes care of itself. Both files are written by `scripts/24_pwa.py`; if that stage
      has not run, the manifest link 404s and the registration at the foot of this page rejects into an
@@ -473,7 +491,7 @@ __VERIFY__
      in dark, because `--plane` is the header's background and the header is what sits under the chrome;
      it is a literal because the stylesheet below has not parsed yet when the next script runs. With
      JavaScript off it stays this value, which agrees with the `data-theme="dark"` floor on <html>. -->
-<meta name="theme-color" id="tc" content="#0B0B10">
+<meta name="theme-color" id="tc" content="#101217">
 <!-- Ahead of the stylesheet deliberately, and inline rather than in a file: this has to settle the theme
      before first paint. A reader who chose light, or whose OS asks for light, otherwise gets a frame of
      near-black before the toggle catches up, and an external script is one more round trip during which
@@ -492,54 +510,31 @@ try {
   // computed value so the stylesheet stays the single source of truth; here there is no computed value to
   // read yet, and a chrome one shade out for one frame is the cost of not blocking the paint on a
   // stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FCFCFD" : "#0B0B10";
+  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
 } catch (e) {}
 </script>
 <style>
-/* Five brand values, supplied as hex rather than sampled off a mockup: Black #000000, Raspberry Plum
-   #BE379C, Rebecca Purple #6B3EA3, French Blue #1C449C, Air Force Blue #438BB1. Dark is black-backed
-   with white ink because that is the brief. Light is the palette's native mode -- four of the five
-   clear 4.5:1 on white and only Air Force Blue does not, at 3.77:1.
+/* A restrained product palette: graphite layers in dark mode and soft cool-grey layers in light. Dark
+   uses amber-gold for actions while light keeps the deeper indigo that reads cleanly on pale surfaces.
+   Blue is reserved for links, while green and coral/amber carry status.
+   The foregrounds are softened off pure white/black so long tables and Markdown remain comfortable.
 
-   On #000000 only Air Force Blue is legible as text, at 5.57:1. Plum is 4.22:1, Purple 2.84:1 and
-   French Blue 2.36:1, so using any of those three as a link on black would ship a WCAG failure that
-   looks perfectly fine to anyone who can already read it. The dark accents are therefore lifted at
-   fixed hue and saturation until they clear 4.8:1 on the lightest of the three near-black backdrops:
-   Plum to #CE54AF and Purple to #9871C9, while Air Force Blue needs no lift and is used as given.
-
-   --onbar is black in dark mode and white in light, and that split is forced by arithmetic rather than
-   chosen. --warn and --good are each used BOTH as text on the page and as a chip fill carrying --onbar,
-   so one value has to do both jobs. It cannot: a colour legible as text on black needs a relative
-   luminance of at least 0.175, and at 0.175 white on it is already down to 4.67:1 and falling. The two
-   requirements cross at exactly 4.5 and diverge from there. So in dark mode the accents are the light
-   half of the pair and the ink on them is black -- which is also why lifting Plum was necessary and not
-   merely nice, since #BE379C carries black ink at only 4.22:1. Light mode has the mirror problem and
-   the mirror answer: its accents are the dark half, and --onbar is white.
-
-   Light steps its neutrals off Black rather than flipping the dark ones, and refits the two accents
-   that are too light on near-white -- Plum to #AD328E and Air Force Blue to #346B89, both at fixed hue.
-   French Blue and Purple are used at their own values, at 8.69:1 and 7.20:1 on --plane.
-
-   --link and --good are the same Air Force Blue in dark mode, deliberately. Giving --link its own hue
-   meant lifting French Blue, which lands on #5480E0 -- and that measures 1.00:1 against Air Force Blue,
-   identical luminance, so the two would be one colour to a reader with reduced colour vision while
-   looking distinct to everyone else. The previous theme shared its cyan between --link and --bar for
-   the same kind of reason. The three chip fills do stay distinct (#CE54AF, #9871C9, #438BB1), and they
-   are distinct by hue at near-equal luminance, which is only acceptable because every chip also carries
-   its own text label -- the same rule `buckets.py` states for the categorical palette.
-
-   None of the above is a claim: `tests/theme_test.py` parses the two blocks below out of this file,
-   works out from the CSS which tokens are text and which are fills, and asserts every pair. Editing a
-   value here fails the suite rather than quietly failing a reader. */
+   --onbar flips between the modes because --bar, --good and --warn are used both as text and as filled
+   controls. `tests/theme_test.py` derives those roles from the stylesheet and verifies every text,
+   control and focus-ring pairing rather than trusting this description. */
 :root{
-  --surface:#000000; --plane:#0B0B10; --band:#14141B; --ink:#FFFFFF; --ink2:#C7C9D2;
-  --muted:#9598A4; --grid:#262630; --link:#438BB1; --bar:#CE54AF;
-  --good:#438BB1; --warn:#9871C9; --off:#9598A4; --onbar:#000000;
+  --surface:#090A0D; --plane:#101217; --band:#20242D; --ink:#F7F8FA; --ink2:#D0D5DD;
+  --muted:#9BA5B3; --grid:#3A414D; --link:#78B7F4; --bar:#D6A034;
+  --good:#5BD5AA; --warn:#EF7D86; --off:#9BA5B3; --onbar:#090A0D;
+  --accent-sky:#78B7F4; --accent-mint:#5BD5AA; --accent-gold:#E7B64D;
+  --accent-coral:#EF7D86; --accent-violet:#A99AF7;
 }
 html[data-theme=light]{
-  --surface:#F1F0F3; --plane:#FCFCFD; --band:#EAE9EF; --ink:#000000; --ink2:#2C2C36;
-  --muted:#52525E; --grid:#D4D3DA; --link:#1C449C; --bar:#AD328E;
-  --good:#346B89; --warn:#6B3EA3; --off:#52525E; --onbar:#FFFFFF;
+  --surface:#F2F4F7; --plane:#FAFBFC; --band:#E7EAF0; --ink:#14171C; --ink2:#353C47;
+  --muted:#596574; --grid:#CAD1DB; --link:#1D5E9E; --bar:#6557C8;
+  --good:#187557; --warn:#875A19; --off:#596574; --onbar:#FFFFFF;
+  --accent-sky:#1D5E9E; --accent-mint:#187557; --accent-gold:#9A6718;
+  --accent-coral:#B6465E; --accent-violet:#6557C8;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);
@@ -560,7 +555,9 @@ a:hover{text-decoration:underline}
 .skip{position:absolute;left:-999px;top:0;z-index:40;background:var(--bar);color:var(--onbar);
   padding:10px 16px;border-radius:0 0 8px 0;font-weight:600}
 .skip:focus{left:0}
-header{background:var(--plane);border-bottom:1px solid var(--grid);padding:22px 20px 16px}
+/* Keep Atlas Byte and the primary navigation in reach while readers compare long card and table lists. */
+header{position:sticky;top:0;z-index:30;background:var(--plane);border-bottom:1px solid var(--grid);
+  padding:22px 20px 16px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
@@ -573,33 +570,53 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
    The two dates are not the same fact -- this one is when the data was captured, the badge is when the
    copy was published -- but "is this current" is one question, and it only needs one answer. */
 .stale{color:var(--warn);font-weight:600}
-/* The last-deployment badge is local markup rather than a shields.io image: `deployStamp` can correct
-   its value from the response header, there is no third-party request on first paint, and the clock icon
-   remains crisp at every pixel density. It borrows the README badges' two-segment shape and fixed colours
-   while deliberately sitting one size below them -- 23px rather than 28px, 9px type rather than 10px,
-   and tighter gutters. The exact UTC minute remains readable, but this status no longer competes with the
-   project count above it. Fixed hexes are intentional: README badges do not repaint between GitHub's light
-   and dark themes, and both fills clear 4.5:1 against white. */
-.stamp{display:inline-flex;height:23px;margin:8px 0 0;border-radius:5px;overflow:hidden;
-  text-decoration:none;font-family:Verdana,Geneva,DejaVu Sans,sans-serif;font-size:9px;
-  line-height:23px;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;
-  box-shadow:0 0 0 1px rgba(255,255,255,.08)}
-.stamp>span{padding:0 7.4px 0 8px;color:#fff}
-.stamp .k{display:flex;align-items:center;gap:5px;background:#555}
-.stamp .v{background:#1a7f37;font-weight:700}
-.deploy-icon{width:11px;height:11px;flex:0 0 11px}
-/* Amber on the same fortnight the snapshot text uses, so the header has one staleness threshold and not
-   two. Recoloured rather than relabelled, and the badge's own tooltip says what the colour means. */
-.stamp.late .v{background:#9a6700}
-/* A ring rather than a lighter fill on hover: every lighter step of these two greens and ambers drops
-   the white text below 4.5:1, and a badge that becomes unreadable when pointed at is a poor trade for an
-   affordance a ring gives just as clearly. */
+/* Shieldcn supplies the badge's SVG, typography and clock. The semantic time remains local so the link
+   keeps an accessible name, works with the live Last-Modified correction, and still says something if
+   the third-party image is unavailable. */
+.stamp{display:inline-block;height:22px;margin:8px 0 0;border-radius:6px;text-decoration:none;
+  vertical-align:top;box-shadow:0 0 0 1px color-mix(in srgb,var(--grid) 70%,transparent)}
+.deploy-badge{display:block;width:auto;height:22px;border:0;border-radius:6px}
 .stamp:hover,.stamp:focus-visible{box-shadow:0 0 0 2px var(--bar)}
 .stamp:focus-visible{outline:none}
 /* The tighter badge fits a 320px phone with both words intact, so its accessible and visible labels stay
    the same at every width. */
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.headside{display:flex;align-items:flex-start;justify-content:flex-end;gap:18px}
 .top nav{font-size:13px;color:var(--muted);text-align:right;line-height:1.9}
+.atlas-byte-wrap{position:relative;flex:0 0 auto;width:128px;isolation:isolate;
+  transition:transform .18s ease}
+.atlas-byte-wrap:before{content:"";position:absolute;inset:14% 2% 10%;z-index:-1;border-radius:50%;
+  background:radial-gradient(circle,color-mix(in srgb,var(--bar) 17%,transparent),transparent 68%);
+  filter:blur(7px)}
+.atlas-byte{display:block;width:128px;height:auto;filter:drop-shadow(0 12px 18px rgba(0,0,0,.3));
+  animation:atlas-byte-float 4.2s ease-in-out infinite;transform-origin:50% 72%}
+.atlas-byte-wrap:hover{transform:rotate(2deg) scale(1.035)}
+#byte-tip{display:block;padding:0;border:0;background:transparent;border-radius:50%;color:inherit}
+.atlas-name{display:block;margin:-11px auto 0;position:relative;z-index:2;padding:2px 8px;
+  border:1px solid var(--grid);border-radius:999px;background:var(--plane);color:var(--ink);
+  font-size:11px;font-weight:700;letter-spacing:.04em;line-height:1.45}
+.atlas-name:hover{border-color:var(--bar);color:var(--ink)}
+.byte-quiet{display:block;margin:5px auto 0;padding:0;border:0;background:transparent;color:var(--muted);
+  font-size:10px;text-decoration:underline;text-underline-offset:2px}
+.byte-quiet:hover{color:var(--ink)}
+#byte-speech{position:absolute;right:calc(100% + 12px);top:8px;width:min(270px,calc(100vw - 174px));
+  padding:9px 11px;border:1px solid var(--grid);border-left:3px solid var(--bar);border-radius:9px;
+  background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;box-shadow:0 12px 28px rgba(0,0,0,.2)}
+#byte-speech::after{content:"";position:absolute;right:-7px;top:19px;width:11px;height:11px;
+  background:var(--band);border-top:1px solid var(--grid);border-right:1px solid var(--grid);transform:rotate(45deg)}
+#atlas-orbit{position:absolute;inset:-18px -24px;pointer-events:none;z-index:3}
+.orbit-star{position:absolute;left:50%;top:50%;width:5px;height:5px;background:var(--bar);box-shadow:0 0 10px var(--bar);
+  transform:rotate(var(--orbit-angle)) translateY(-58px) rotate(45deg);animation:atlas-orbit 1.45s ease-out both}
+.orbit-star:nth-child(odd){background:var(--accent-sky);box-shadow:0 0 10px var(--accent-sky)}
+@keyframes atlas-orbit{0%{opacity:0;transform:rotate(var(--orbit-angle)) translateY(-16px) rotate(45deg) scale(.4)}20%{opacity:1}100%{opacity:0;transform:rotate(var(--orbit-angle)) translateY(-78px) rotate(45deg) scale(1)}}
+@keyframes atlas-byte-float{
+  0%,100%{transform:translateY(0) rotate(-.6deg)}
+  50%{transform:translateY(-5px) rotate(.8deg)}
+}
+@media(prefers-reduced-motion:reduce){
+  .atlas-byte,.atlas-byte-wrap{animation:none;transition:none}
+  .orbit-star{animation:none;opacity:1;transform:rotate(var(--orbit-angle)) translateY(-58px) rotate(45deg)}
+}
 button{font:inherit;cursor:pointer}
 .bar{position:sticky;top:0;z-index:20;background:var(--plane);
   border-bottom:1px solid var(--grid);padding:10px 20px}
@@ -659,6 +676,13 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
    destructive and the accents on this bar all mean "selected". */
 .clearsave{display:none}
 .clearsave.on{display:inline-block}
+/* The way off this page, and the only control on the row that selects nothing: it opens a dialog. So it
+   carries `aria-haspopup` rather than `aria-pressed` -- the distinction the Filters handle makes against the
+   chips beside it -- and it never takes the filled accent, which everywhere else on this bar means
+   "selected". Hidden until `expWire()` has both the flag and a `<dialog>` that opens modally, for the reason
+   the palette hint is: a control that opens nothing is worse than no control. */
+.takechip{display:none}
+.takechip.on{display:inline-flex;align-items:center;gap:.4em}
 /* The per-row control. A word rather than a glyph, deliberately: the obvious glyph is a star, and this
    button sits two cells from a column of GitHub star counts -- a filled star beside "4,300" would be
    asking which of the two it meant. It also needs no sprite entry and no accessible name of its own,
@@ -718,9 +742,34 @@ th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;
 th.n,td.n{text-align:right}
 th.c,td.c{text-align:center}
 td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
+/* Alternating surfaces make long ranked tables trackable without turning every row into a box. Scoped to
+   table view so these cell fills cannot stripe the stacked card layout. */
+html[data-view=table] tbody tr:nth-child(odd) td{background:var(--plane)}
+html[data-view=table] tbody tr:nth-child(even) td{background:var(--band)}
 /* Guarded, because a touch device reports a hover that then latches: tapping a row anywhere -- to
    follow its link, or just while scrolling -- left it tinted until something else was tapped. */
-@media(hover:hover){tr:hover td{background:var(--band)}}
+@media(hover:hover){
+  html[data-view=table] tbody tr:hover td{
+    background:color-mix(in srgb,var(--bar) 10%,var(--band));box-shadow:inset 0 -2px 0 var(--bar)}
+}
+/* One table, three reading distances. Compact leaves the identifying facts visible for a fast scan;
+   Normal keeps the useful preview; Expanded deliberately gives the evidence and install detail more air.
+   The choice belongs to this browser, rather than the URL: it is a reading preference, not a claim about
+   a shared filtered view. */
+html[data-view=table][data-density=compact] td{padding:6px 8px}
+html[data-view=table][data-density=compact] .shot,
+html[data-view=table][data-density=compact] .tg,
+html[data-view=table][data-density=compact] .lc{display:none}
+html[data-view=table][data-density=compact] .desc{display:-webkit-box;-webkit-box-orient:vertical;
+  -webkit-line-clamp:1;line-clamp:1;overflow:hidden;font-size:12px;max-width:34em}
+html[data-view=table][data-density=compact] .cmdrow{display:none}
+html[data-view=table][data-density=compact] .nm{font-size:14px}
+html[data-view=table][data-density=compact] .meta{margin-top:2px}
+html[data-view=table][data-density=expanded] td{padding:16px 12px}
+html[data-view=table][data-density=expanded] .shot{width:280px}
+html[data-view=table][data-density=expanded] .shot img{width:280px;border-radius:8px}
+html[data-view=table][data-density=expanded] .desc,
+html[data-view=table][data-density=expanded] .cmdrow{max-width:56em}
 .rk{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .shot{width:200px}
 /* `aspect-ratio` is load-bearing and not decoration. These pictures have no `src` until a reader gives an
@@ -730,6 +779,8 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
    all loading, 0.5140 (JFH-216). */
 .shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:6px;
   background:var(--band);border:1px solid var(--grid);display:block}
+.shot-fallback{display:grid;place-items:center;min-height:100px;padding:12px;background:var(--band);
+  border:1px solid var(--grid);border-radius:6px;color:var(--muted);font-size:12px;text-align:center}
 /* These two set the table's width. Auto table layout takes the widest unbreakable run in the column
    across every row on the page, and neither a slash nor a comma is a break opportunity in Chrome or
    Safari -- so `muratcankoylan/Agent-` and a blurb naming
@@ -765,8 +816,8 @@ a.nwo:hover{color:var(--ink)}
 .tag.cat{border-color:var(--bar);color:var(--ink)}
 /* This rule was dead: the class was defined here but never put on an element, so the verdict row was
    rendering as plain `.meta` the whole time. The nowrap is now on each verdict rather than on the group,
-   which is what it was for -- keeping "Win ✓" together, not forcing all five onto one line, which on a
-   375px card is 260px of unbreakable text. */
+   which is what it was for -- keeping a platform's mark and its ✓ together, not forcing all five onto one
+   line, which on a 375px card is 260px of unbreakable text. */
 .os{font-size:11.5px;letter-spacing:.02em}
 .os>span{white-space:nowrap}
 /* Prefixed because the verdict characters are the class names and one of them is "-", which is not a
@@ -780,6 +831,18 @@ a.nwo:hover{color:var(--ink)}
    with the saturation turned down. The glyph is part of the text rather than a pseudo-element so it is
    copied with the row and announced by a screen reader ("check mark", "question mark"). */
 .os .v-,.os .va{opacity:.75}
+/* The base rule for the five platform marks comes from `scripts/osicons.py`, which is also where the shapes
+   and the ids come from, so the three stylesheets that draw them cannot drift. Sizing is per-surface and
+   stays here, because a chip and a verdict want different answers. */
+__OSCSS__
+/* Inside a filter chip the mark *is* the label -- there is no word beside it to be in proportion to -- so it
+   takes about the height a word would have taken. Deliberately over 1em: a chip is 13px, and a mark matched
+   to that reads as punctuation on the button rather than as the thing being chosen. */
+.chip .oi{width:1.25em;height:1.25em}
+/* In the row of five verdicts, a fixed 14px rather than the base `em`. The surrounding text is 11.5px, and
+   1.15em of that is 13.2px -- close enough to the ✓ beside it that the pair reads as one smudge instead of
+   as a platform and an answer. Two and a half pixels is the whole difference between a mark and a speck. */
+.os .oi{width:14px;height:14px}
 /* A repo with no push in over a year. Deliberately not a colour: amber already means "inferred" in the
    verdict column two cells away, and reusing it here would make one hue mean two things on one row. The
    dotted underline is the marker and the hint that there is a title worth hovering. */
@@ -809,7 +872,7 @@ dialog#pal::backdrop{background:rgba(0,0,0,.55)}
 /* The filled accent, the same treatment a pressed chip gets, rather than `--band`. `--band` is the obvious
    choice and it is wrong in both themes, because it is only ever one step off `--plane` by design: under
    the previous palette the selected row came out as a barely-there strip of #f4f6f6 on #eef1f2, measured
-   at 1.05:1 against its own background, and this palette is no better -- #EAE9EF on #FCFCFD is 1.10:1.
+   at 1.05:1 against its own background; the explicit text is what carries the state here as well.
    A row stripe is supposed to be almost invisible; a selection is not. The highlight is the one thing
    here that cannot afford to be subtle, since it is the only indication of what Enter will do. `--onbar`
    rather than a fixed colour because it is defined as the ink a filled accent carries -- white in both
@@ -836,6 +899,60 @@ kbd{background:var(--band);border:1px solid var(--grid);border-bottom-width:2px;
 #palhint{display:none;align-items:center;gap:5px}
 #palhint.on{display:inline-flex}
 @media (max-width:760px){#palhint.on{display:none}}
+/* ---- Take it with you --------------------------------------------------------------------------------
+   The export dialog. Centred rather than pinned near the top like the palette, because nothing in it grows
+   while the reader reads it -- there is no result list to slide the box up the screen. Otherwise the same
+   treatment for the same reasons: a real `<dialog>` opened with `showModal()`, so the focus trap, the Esc
+   key, the backdrop, the inertness of the page behind it and the return of focus to the chip that opened it
+   are all the browser's rather than five things to hand-roll and get wrong. */
+dialog#exp{border:1px solid var(--grid);background:var(--plane);color:var(--ink);border-radius:12px;
+  padding:0;width:min(560px,calc(100vw - 24px));overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.45)}
+dialog#exp::backdrop{background:rgba(0,0,0,.55)}
+#exp h2{margin:0;padding:14px 16px 3px;font-size:16px}
+.expsub{margin:0;padding:0 16px 12px;color:var(--muted);font-size:13px}
+.expsub b{color:var(--ink2)}
+/* One full-width row per destination rather than a row of pills. These are four different documents, not
+   four states of one control, so each needs a sentence saying where it goes -- and a pill has nowhere to put
+   one. Stacked, so the sentences read as a list of choices instead of wrapping into each other. */
+.expacts{display:flex;flex-direction:column;gap:8px;padding:0 16px 12px}
+.expacts button{display:flex;align-items:baseline;gap:9px;text-align:left;background:var(--band);
+  color:var(--ink);border:1px solid var(--grid);border-radius:9px;padding:9px 12px;font:inherit;
+  font-size:14px}
+.expacts button:hover{border-color:var(--bar)}
+/* Nothing to write a file from. Disabled rather than hidden, because the reader pressed Export *expecting*
+   these three and a dialog that silently has one row in it reads as a rendering fault. */
+.expacts button:disabled{opacity:.45}
+.expacts button:disabled:hover{border-color:var(--grid)}
+.expacts .t{font-weight:600;white-space:nowrap}
+.expacts .k{color:var(--muted);font-size:12px}
+.expurl{display:flex;gap:8px;padding:0 16px 12px}
+/* The link is on screen and selectable before anything is pressed, rather than living behind a Copy button
+   that either works or shrugs. `navigator.clipboard` rejects on an insecure origin, in a document that is
+   not focused, and wherever the permission is refused -- and of the four exports this is the one whose whole
+   payload a reader may have to lift by hand. Read-only rather than disabled: a disabled input cannot take
+   focus, so it cannot be selected either, which is exactly the fallback this is for. */
+#expurl{flex:1;min-width:0;background:var(--surface);color:var(--ink2);border:1px solid var(--grid);
+  border-radius:7px;padding:8px 10px;font:12px/1.5 ui-monospace,Consolas,monospace}
+#expurl:focus{outline:2px solid var(--bar);outline-offset:-1px}
+.expnote{margin:0;padding:0 16px 12px;color:var(--muted);font-size:12px;line-height:1.5}
+.expfoot{display:flex;justify-content:flex-end;background:var(--surface);
+  border-top:1px solid var(--grid);padding:9px 14px}
+/* The strip a shared list arrives under, between the filter bar and the results. That is where it belongs
+   because of what it describes: not a filter the reader chose and not a property of any row, but what this
+   page is *of* at the moment -- somebody else's collection. Amber like the approximate-match banner and for
+   the same reason: both say "this is not the atlas you asked for, and here is why".
+
+   Absent rather than empty until there is a list, like the Saved chip and for the same reason -- and by the
+   same mechanism, a class rather than the `hidden` attribute, because `[hidden]` comes from the user-agent
+   sheet and the author `display:flex` below would outrank it. */
+.shared{display:none}
+.shared.on{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0 0;padding:10px 14px;
+  border-left:3px solid var(--warn);background:var(--band);border-radius:0 6px 6px 0;
+  color:var(--ink2);font-size:14px}
+.shared b{color:var(--ink)}
+/* `margin-left:auto` on the pair, so the two buttons sit at the far end on a wide screen and fall under the
+   sentence on a phone rather than squeezing it to one word per line. */
+.shared .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
 .empty{padding:64px 0 80px;text-align:center;color:var(--muted)}
 /* "Nothing matches. Try clearing a filter." named neither the filter nor what clearing it would return,
    so the reader had to guess which of six controls was the tight one -- and it is usually not the one
@@ -861,6 +978,9 @@ kbd{background:var(--band);border:1px solid var(--grid);border-bottom-width:2px;
 footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
   color:var(--muted);font-size:13px}
 .blurb{color:var(--muted);font-size:13px;margin:2px 0 0}
+/* Screen readers and screens both have the address bar; only paper does not. The `@media print` block at the
+   end of this stylesheet is the one place this is ever visible. */
+#printurl{display:none}
 .facets{margin-top:14px;padding-top:12px;border-top:1px solid var(--grid);font-size:12.5px;
   line-height:1.9}
 .facets p{margin:0 0 4px}
@@ -897,7 +1017,11 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   .facet>.chip{flex:none}
   /* `flex:1 1 0` with `min-width:0` is what lets a rail sit beside its label and take the width that
      is left. Without the zero basis the rail asks for its full max-content width -- 2,400px of topic
-     chips -- and gets bumped onto a line of its own, which is two rows per facet again. */
+     chips -- and gets bumped onto a line of its own, which is two rows per facet again.
+     `#oses` is in here for the shape rather than for the scrolling: five marks are ~224px against the
+     ~330px the five words needed, so its rail no longer overflows any phone this query catches. It keeps
+     the nowrap because a chip that wrapped inside a `overflow-x:auto` box would be a rail with two rows
+     in it, which is the layout the whole query exists to undo. */
   #cats,#tgts,#oses{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;
     flex:1 1 0;min-width:0;
     scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
@@ -990,7 +1114,9 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   h1{font-size:21px}
   h1 span{display:block;font-size:13px}
   .top{gap:10px}
+  .headside{width:100%;align-items:center;justify-content:space-between;gap:12px}
   .top nav{text-align:left;line-height:2.1}
+  .atlas-byte-wrap,.atlas-byte{width:82px}
 
   #q{flex:1 1 100%;min-width:0}
   .line>label[for=q]{display:none}
@@ -998,7 +1124,13 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   /* Runs-on is the one facet that also carries Confirmed only and Clear all, and at 390px those two
      left its rail about 110px -- one OS chip at a time. That line alone wraps, so the rail keeps most
      of the row and the two buttons drop underneath it. Narrow-only: in landscape there is width enough
-     for all four to share the row, and wrapping there would cost a row the bar cannot spare. */
+     for all four to share the row, and wrapping there would cost a row the bar cannot spare.
+     The wrap is still needed with marks on those chips and the floor is still the right number, though
+     both now hold for a different reason. The five marks measure ~224px where the five words measured
+     ~330px, so 62% of 390px is no longer "most of one chip" -- it is the whole rail, and nothing scrolls.
+     What did not change is the line: label plus rail plus those two buttons is ~470px however narrow the
+     chips get, so a single row would still overflow. Not lowered, because there is no width to reclaim
+     -- with the line wrapped the rail's own `flex:1 1 auto` already takes what is left of it. */
   .facet:has(>.chip){flex-wrap:wrap}
   .facet:has(>.chip)>#oses{flex:1 1 auto;min-width:62%}
 
@@ -1065,8 +1197,9 @@ html[data-view=cards] tbody{display:grid;gap:14px;
    tool -- cannot put two of them side by side. `margin:0` is not tidiness: the block above gives every row
    a 9px bottom margin, which this view has a 14px grid gap for, and margins do not collapse in a grid. */
 html[data-view=cards] tr{display:grid;grid-template-columns:1fr auto;align-items:start;align-content:start;
-  gap:0 10px;margin:0;padding:0 0 12px;background:var(--surface);
-  border:1px solid var(--grid);border-radius:10px;overflow:hidden}
+  gap:0 10px;margin:0;padding:0 0 12px;background:var(--band);
+  border:1px solid color-mix(in srgb,var(--card-accent) 35%,var(--grid));border-radius:12px;overflow:hidden;
+  transition:border-color .14s ease,box-shadow .14s ease,transform .14s ease}
 html[data-view=cards] td{display:block;border-bottom:0;padding:0 13px;min-width:0}
 /* The screenshot is the whole argument for this view, so it comes back at the widths where the table drops
    it as not paying for its column, and it goes edge to edge. That is what the gutters being on the cells
@@ -1090,6 +1223,11 @@ html[data-view=cards] td.tg{grid-column:1/-1;grid-row:5;margin-top:9px}
 html[data-view=cards] td.lc{grid-column:1/-1;grid-row:6;margin-top:3px;text-align:left}
 html[data-view=cards] td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
 html[data-view=cards] td.lc .meta br{display:none}
+html[data-view=cards] .project-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+html[data-view=cards] .project-actions a{border:1px solid color-mix(in srgb,var(--card-accent) 55%,var(--grid));
+  border-radius:999px;padding:4px 9px;color:var(--ink2);font-size:12px;font-weight:600}
+html[data-view=cards] .project-actions a:first-child{background:color-mix(in srgb,var(--card-accent) 18%,var(--band));color:var(--ink)}
+html[data-view=cards] .project-actions a:hover{border-color:var(--card-accent);text-decoration:none}
 /* Close the banner slot when the screenshot kill switch omits the cell. */
 html[data-view=cards][data-index-screenshots=off] td.rk{grid-row:1;padding-top:10px}
 html[data-view=cards][data-index-screenshots=off] td.st-c{grid-row:1;padding-top:10px}
@@ -1116,8 +1254,13 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
    device -- which latches a hover it can never clear -- is not made to carry either of them. */
 @media(hover:hover){
   html[data-view=cards] tr:hover td{background:transparent}
-  html[data-view=cards] tr:hover{border-color:var(--bar)}
+  html[data-view=cards] tr:hover{border-color:var(--card-accent);
+    box-shadow:0 0 0 2px var(--card-accent),0 0 20px color-mix(in srgb,var(--card-accent) 44%,transparent),0 14px 32px rgba(0,0,0,.24);
+    transform:translateY(-1px);animation:card-glow 1.5s ease-in-out infinite alternate}
 }
+html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
+  box-shadow:0 0 0 2px var(--card-accent),0 0 20px color-mix(in srgb,var(--card-accent) 40%,transparent)}
+@keyframes card-glow{from{box-shadow:0 0 0 2px var(--card-accent),0 0 12px color-mix(in srgb,var(--card-accent) 30%,transparent),0 12px 28px rgba(0,0,0,.2)}to{box-shadow:0 0 0 2px var(--card-accent),0 0 28px color-mix(in srgb,var(--card-accent) 58%,transparent),0 16px 36px rgba(0,0,0,.28)}}
 
 /* Nothing here animates on a timer, but the chip hovers transition and the chip rails scroll smoothly,
    and both are motion a reader can have asked their operating system not to show them. A blanket rule is
@@ -1132,9 +1275,100 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
    the sticky filter bar if anything ever does scroll it into view. */
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
 #out tr{scroll-margin-top:160px}
+
+/* ---- Paper -------------------------------------------------------------------------------------------
+   "Save as PDF" is a print dialog in every browser there is, so the PDF export and the print sheet are one
+   feature and this block is both of them. What a sheet of it holds: the masthead, the sentence saying what
+   the table is of, the address it came from, and the table. What it does not hold is anything a reader could
+   have pressed -- the filter bar, 120 Save buttons, the palette, the theme toggle, the two dialogs -- because
+   a control on paper is ink spent on a promise the medium cannot keep.
+
+   The colour half of this is deliberately not here. It is `printOn()`, which puts the document in the light
+   theme for the duration of the print, and the reason is that a stylesheet cannot do it without a second copy
+   of the thirteen palette tokens -- and `tests/theme_test.py` exists because copies of this palette drift.
+   That matters more than it sounds: browsers print backgrounds off by default, so a dark-theme page prints
+   near-white text onto white paper and hands the reader a blank sheet.
+
+   `@page` rather than a margin on <body>, so the margin belongs to the sheet and repeats on every one of
+   them rather than being applied once to a very long box. */
+@page{margin:14mm}
+@media print{
+  /* `.skip` included: a skip link is a keyboard affordance, and it is the first thing on the page. */
+  .bar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,.shared .sp{display:none}
+  /* Where the sheet came from, which the screen keeps in the address bar and paper has nowhere to put.
+     Written by `printOn()`; `#printurl{display:none}` above keeps it off the screen. */
+  #printurl{display:block;color:var(--muted);font-size:8.5pt;word-break:break-all;margin:6px 0 0}
+  /* The stripes are the browser's to drop and it drops them, but a reader who has turned "Background
+     graphics" on should still get a table rather than a barcode. Both selectors restated at the specificity
+     of the rules they undo, later in the file -- so this wins on source order and there is still no
+     `!important` anywhere on this page outside the reduced-motion block. */
+  html[data-view=table] tbody tr:nth-child(odd) td,
+  html[data-view=table] tbody tr:nth-child(even) td{background:transparent}
+  /* Both `.hide` columns come back. They were dropped at 900px because they stopped paying for their width
+     and a sheet of A4 measures about 794 CSS pixels -- but paper has no filter bar above the table and no
+     second screenful below it, so the width they cost is width there is. The screenshot column stays gone:
+     it is the one thing on this page a printer bills for by the millilitre. */
+  td.hide,th.hide{display:table-cell}
+  td,th{padding:5px 6px;font-size:11px}
+  /* The one number on the sheet still set in screen type. `.st` carries its own 16px, so the 11px above
+     never reaches it, and at 16px bold a seven-digit count is wider than the 9% column below: 281,176
+     printed as "281,17" with the 6 on the next line. Twelve keeps it emphasised against 11px body text
+     and fits the column with room left over. */
+  .st{font-size:12px}
+  .st.none{font-size:11px}
+  /* Fixed, with the six columns proportioned for the sheet rather than inherited from the screen. This is
+     the difference between a document and a curiosity, and it was measured: the auto layout gave a 794px
+     sheet the proportions of a 900px browser window, which put the description into a 130px column and made
+     one row 500px tall -- 278 projects over ninety pages, at two and a bit rows a sheet. The description is
+     most of what a printed row is *for*, so it gets the widest column and the rest are cut to what their
+     content actually needs. */
+  #out table{table-layout:fixed}
+  th.n:first-child{width:4%}
+  th.pj{width:20%}
+  th.st-c{width:9%}
+  th.tg{width:20%}
+  th.ds{width:36%}
+  th.lc{width:11%}
+  /* Anything that will not wrap is broken rather than allowed to widen its column past the width above --
+     a repository slug, a licence, an install line with a URL in it. */
+  td{overflow-wrap:break-word}
+  /* The chips become the text they always were. Eight pills at 20% of the width stack eight lines deep and
+     the borders are the only thing making them pills; as a comma-separated list the same eight fit two. The
+     topic keeps its weight, because it is the one classification here that is ours rather than the
+     project's, and flattening the pills is what took away the colour that used to say so. */
+  td.tg .tag{display:inline;border:0;border-radius:0;background:none;padding:0;
+    color:var(--ink2);font-size:10px}
+  /* The separator trails the word it follows rather than leading the word it precedes. Same characters
+     either way on one line, but the only break opportunity in ", " is the space inside it -- so as a
+     `::before` on the next chip the line broke ahead of the comma and every wrapped line in a narrow
+     column started with one: "Agent Skills" then ", Claude Code , MCP".
+     `white-space:normal` on the pseudo-element only, and it is load-bearing: `.tag` is `nowrap` so a
+     pill never splits mid-name, generated content inherits that, and a nowrap space is not a break
+     opportunity -- with the comma moved to `::after` and nothing else changed the whole cell became one
+     unbreakable line that ran through the description column and gave the table a scrollbar. Normal here
+     makes the one space between two names breakable while the names themselves stay whole. */
+  td.tg .tag:not(:last-child)::after{content:", ";white-space:normal}
+  td.tg .tag.cat{color:var(--ink);font-weight:600}
+  /* Kept, unlike the button beside it, which is already hidden with the rest of the controls. A command
+     cannot be copied off paper but it can be read off it, and it is four words. */
+  .cmdrow{margin:4px 0 0}
+  code.cmd{display:block;border:0;background:none;padding:0;color:var(--ink2);font-size:9.5px}
+  /* A row broken across a page break is a row you read twice, and a heading that appears once is a heading
+     that is on the wrong sheet from page two onward. Both are one line each and both are what makes this a
+     document rather than a screenshot of a document. */
+  tr,td{break-inside:avoid}
+  thead{display:table-header-group}
+}
 </style>
 </head>
 <body>
+<!-- The five platform marks, defined once for the whole document. The geometry lives in
+     `scripts/osicons.py` and nowhere else, so this page, the 156 facet pages, the 1,294 detail pages and the
+     collections cannot end up drawing the same platform two ways -- the failure `tests/theme_test.py` exists
+     to catch for the palette. First thing in the body because every `<use>` that points at it is written by
+     the script at the bottom, and because `display:none` keeps it out of the layout and out of the skip
+     link's focus order either way. A `<symbol>` is never painted where it is defined. -->
+__OSSPRITE__
 <a class="skip" href="#out">Skip to results</a>
 <!-- One shared region for anything the page needs to say that is not already text on the screen: a copy
      succeeding, a clipboard being refused, how many rows "Show more" just added. The result count has its
@@ -1164,6 +1398,10 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
       stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
       __SNAPSHOT__</span></p>
     <p class="blurb" id="ctx"></p>
+    <!-- Empty on screen, always. `printOn()` writes the link to the current view into it so that a printed
+         sheet or a saved PDF says where it came from -- the one thing a screen has in its address bar and
+         paper has nowhere to put. -->
+    <p id="printurl"></p>
     <!-- The DOM text is sentence case and the uppercase is `text-transform`, so the accessible name reads
          "Last deployed 2026-09-06 18:07 UTC" rather than being spelled out. The clock is decorative and
          hidden from that name; `<time>` carries the timestamp for machines. The href goes to deployment
@@ -1172,9 +1410,16 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
          container drops whitespace-only children, so it costs nothing in layout. -->
     __DEPLOYMENT_BADGE__
   </div>
+  <div class="headside">
   <nav>
+    <!-- First, because it is the only link here that answers "which of these should I install" and the
+         four beside it all answer "what is there". A reader who already knows what they want has the
+         filter bar; a reader who does not has 1,294 rows and no way in. -->
+    <a href="collections/">Collections</a> ·
+    <a href="https://github.com/__REPO__/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+    <a href="repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/__REPO__">Repository</a> ·
-    <a href="https://github.com/__REPO__/tree/main/mega-list">Markdown edition</a> ·
+    <a href="https://github.com/__REPO__/tree/main/mega-list">Markdown</a> ·
     <a href="https://github.com/__REPO__/releases/latest">Workbook</a><br>
     <!-- No aria-pressed. The label names the action and changes with the state, and "Dark theme" plus
          pressed=true announces as "dark theme is on" -- which is the opposite of what it means. A toggle
@@ -1183,6 +1428,16 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
          in light mode, which made it look like an active filter. -->
     <button class="chip" id="theme">Light theme</button>
   </nav>
+  <div class="atlas-byte-wrap">
+    <button type="button" id="byte-tip" aria-label="Ask Atlas Byte for a browsing tip">
+    <img class="atlas-byte" src="assets/atlas-byte.png" width="512" height="532"
+         alt="Atlas Byte, the Atlas mascot, wearing pixel sunglasses">
+    </button>
+    <button type="button" class="atlas-name" id="byte-name">Atlas Byte</button>
+    <button type="button" class="byte-quiet" id="byte-quiet" aria-pressed="false">Quiet mode</button>
+    <div id="byte-speech" role="status" aria-live="polite" hidden></div>
+  </div>
+  </div>
 </div></div></header>
 
 <div class="bar"><div class="wrap">
@@ -1230,6 +1485,12 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
          function only runs once `data.json` has arrived, and until it has -- or if it never does, which is
          what the error path below is for -- there is no table to lay out either way. -->
     <button class="chip" id="view" hidden>Table view</button>
+    <label id="density-control" hidden>Row size
+      <select id="density" aria-label="Table row size">
+        <option value="compact">Compact</option><option value="normal" selected>Normal</option>
+        <option value="expanded">Expanded</option>
+      </select>
+    </label>
     <button class="chip newchip" id="new" aria-pressed="false"
             title="Projects the source lists added in the last __WINDOW__ days">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
@@ -1243,6 +1504,13 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <button class="chip savechip" id="saved" aria-pressed="false"
             title="Only the projects you have saved on this device"><span id="savedlabel">Saved</span></button>
     <button class="chip clearsave" id="clearsave">Remove all saved</button>
+    <!-- The way off this page. Not a filter, so no `aria-pressed`: it selects nothing and opens a dialog,
+         which is what `aria-haspopup` says instead -- the same distinction the Filters handle makes against
+         the chips beside it. Hidden until `expWire()` has both the flag and a `<dialog>` it can open
+         modally, for the reason the palette hint is hidden until then: a control that opens nothing is
+         worse than no control. -->
+    <button class="chip takechip" id="take" aria-haspopup="dialog"
+            title="Take this view away as a link, a Markdown table, an HTML page or a PDF">Export</button>
     <button class="chip" id="palhint"></button>
     <!-- role=status makes this a polite live region, so pressing a chip or typing a search announces the
          new result count instead of silently rewriting a number the reader cannot see. aria-atomic so it
@@ -1279,7 +1547,22 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
   </div>
 </div></div>
 
-<main><div class="wrap"><div id="out"></div></div></main>
+<main><div class="wrap">
+  <!-- Empty and hidden on every ordinary visit; `paintShared()` fills it only when the hash carried a
+       `list=`. Static markup rather than something the script creates, for the reason the Saved chip is
+       static: what decides whether it belongs on screen is the reader's own URL, and a strip that has to be
+       built before it can be shown is a strip that is missing from the first paint of a shared link.
+
+       Above the results and below the bar, which is where it belongs because of what it describes -- not a
+       filter the reader chose and not a fact about any row, but what this page is *of* at the moment, which
+       is somebody else's collection. -->
+  <div class="shared" id="shared">
+    <span id="sharedtext"></span>
+    <span class="sp"><button class="chip" id="sharedadd"></button>
+      <button class="chip" id="sharedall">Show the whole atlas</button></span>
+  </div>
+  <div id="out"></div>
+</div></main>
 
 <!-- Outside the filter bar on purpose. A <dialog> nested inside a flex row that the narrow-viewport rules
      hide would be unopenable on a phone, and a modal is not part of the row it is launched from anyway.
@@ -1293,6 +1576,38 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
   <ul id="palist" role="listbox" aria-label="Matches"></ul>
   <div class="palfoot"><span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> move</span>
     <span><kbd>Enter</kbd> select</span> <span><kbd>Esc</kbd> close</span></div>
+</dialog>
+
+<!-- Outside the filter bar for the same reason the palette is: a <dialog> nested in a flex row that the
+     narrow-viewport rules hide cannot be opened on a phone.
+
+     `aria-labelledby` rather than `aria-label`, because this one has a real heading on screen -- so the
+     accessible name and the visible title are the same string by construction and cannot drift. -->
+<dialog id="exp" aria-labelledby="exph">
+  <h2 id="exph">Take this view with you</h2>
+  <p class="expsub" id="expwhat"></p>
+  <div class="expurl">
+    <!-- The link is on screen and selectable before anything is pressed. `readonly` and not `disabled`: a
+         disabled input cannot take focus, so it cannot be selected either, and selecting it by hand is
+         exactly the fallback for a clipboard write that was refused. -->
+    <input id="expurl" type="text" readonly aria-label="Link to this view">
+    <!-- Removed rather than disabled where the clipboard is unreachable, which is the rule the 120 row-level
+         Copy buttons already follow: a button that fails on click is worse than none, and the input beside
+         it is the whole fallback. -->
+    <button class="chip" id="expcopy">Copy link</button>
+  </div>
+  <div class="expacts">
+    <button id="expmd"><span class="t">Markdown table</span>
+      <span class="k">for a GitHub issue, a README or a wiki</span></button>
+    <button id="exphtml"><span class="t">HTML page</span>
+      <span class="k">one self-contained file, nothing to fetch</span></button>
+    <button id="expprint"><span class="t">Print, or save as PDF</span>
+      <span class="k">your browser&rsquo;s print dialog, on the table layout</span></button>
+  </div>
+  <p class="expnote">Built here, in this tab, out of the rows already on the page. Nothing is uploaded and
+    no request leaves your browser &mdash; which is also why a link to your own saved projects carries the
+    projects themselves rather than pointing at a list on a server.</p>
+  <div class="expfoot"><button class="chip" id="expdone">Done</button></div>
 </dialog>
 
 <footer><div class="wrap">
@@ -1312,7 +1627,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
        hint rather than a path. These 26 links put each one click from the root and each crossing two.
        Built in `substitute()` from the same `cats`/`targets` the page itself uses, so a new topic appears
        here without anyone remembering to add it. -->
-  <nav class="facets" aria-label="Browse by topic or by what a project plugs into">
+  <nav class="facets" id="browse" aria-label="Browse by topic or by what a project plugs into">
     <p><b>Every topic:</b> __TOPICLINKS__</p>
     <p><b>Every integration:</b> __TARGETLINKS__</p>
     <!-- The 1,294 pages under repo/ have the same discovery problem the 26 links above solve, and one
@@ -1335,8 +1650,14 @@ const FLAGS = __APP_FLAGS__;
 // Kept in step with `data-view` on the <html> tag, which is what the reader looks at until `data.json`
 // lands. The two have to agree: disagreeing would show the table's column headings over an empty body for
 // the length of a 561 KB fetch and then replace them with cards.
+//
+// `list` is the odd one and it earns its place here: it is a set of `owner/name`, it filters the table, and
+// unlike `SAVED` below it *is* a view -- it arrives in the hash, a link reproduces it exactly, and it is
+// somebody else's collection rather than the reader's own store. So it goes in `state` and not beside the
+// saved set, and `state.saved` is a flag over a store while `state.list` is the rows themselves.
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
-               saved: false, sort: "relevance", shown: PAGE_SIZE, view: "__DEFAULT_VIEW__"};
+               saved: false, list: new Set(), sort: "relevance", shown: PAGE_SIZE,
+               view: "__DEFAULT_VIEW__"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
 
 // The reader's saved projects, as a Set of `owner/name`. Two things it deliberately is not:
@@ -1406,6 +1727,22 @@ const VERDICT = {
   a: ["–", "not applicable"],
   "-": ["–", "not established"],
 };
+
+// The other half of a verdict: which platform it is about. The five words became marks, and these two arrays
+// are the whole of what the browser needs to draw them -- the `<symbol>` ids in the sprite at the top of the
+// body, and the hover text for the five filter chips. Both are written out by `scripts/osicons.py`, in the
+// order `OS_LABELS` is checked against, rather than retyped here: index k of either one describes character
+// k of a row's `os` string, and a page whose ids drifted from its sprite draws five invisible boxes per row.
+// `OST` is longer than `OSI`'s labels on purpose for WSL2, which is the one mark nobody can be expected to
+// recognise on sight.
+const OSI = __OSIDS__;
+const OST = __OSTITLES__;
+
+// `aria-hidden`, always. Every caller puts the platform's word beside this -- in a `title`, in a `.sr` span,
+// or both -- because a picture is a shorthand for people who can see it and nothing at all to anyone else.
+function osIcon(k) {
+  return '<svg class="oi" aria-hidden="true" focusable="false"><use href="#' + OSI[k] + '"></use></svg>';
+}
 
 // Feature-detected rather than assumed, and the button is simply not rendered when the answer is no --
 // 120 buttons that fail on click are worse than none. `isSecureContext` is part of the test because the
@@ -1479,6 +1816,16 @@ fetch("data.json").then(r => {
   return r.json();
 }).then(d => {
   D = d;
+  // The build-time half of the platform marks against the runtime half. `OSI` was written by
+  // `scripts/osicons.py` when this page was generated and `d.os` arrives with the data, so a `data.json`
+  // from a build that knew about a sixth platform -- or a cached page that predates a fifth -- would draw
+  // marks for the columns it had and an empty box for the rest, silently, on every row. There is no honest
+  // fallback: a mark beside the wrong verdict is a page stating a falsehood about the one thing a reader came
+  // here to check. Thrown rather than reported, because the `catch` below is the page's existing answer to
+  // "the data is not what this page can read" and it puts the reason on screen.
+  if (d.os.length !== OSI.length)
+    throw new Error("data.json names " + d.os.length + " platforms and this page was built with " +
+      OSI.length + " marks — see scripts/osicons.py");
   // Column-oriented on the wire, objects in here. One pass over every row, so the rest of the page can
   // read `r.stars` instead of `r[4]`.
   ROWS = d.rows.map(a => Object.fromEntries(d.cols.map((c, i) => [c, a[i]])));
@@ -1565,10 +1912,16 @@ fetch("data.json").then(r => {
 // particular should work on the error page as well as on the atlas.
 wire();
 
-function chip(parent, label, pressed, onclick, title) {
+// `icon` is the only optional part, and only the five Runs-on chips pass it: a topic and a harness have no
+// mark, and both are names a reader has to be able to read anyway. Where it is passed, the mark replaces the
+// word on screen and the word goes into a `.sr` span behind it -- because the label is the whole of a
+// button's accessible name, and a chip that read "Windows" to a screen reader before it had a picture on it
+// has to read "Windows" after. `aria-pressed` is untouched by either branch and still carries the state.
+function chip(parent, label, pressed, onclick, title, icon) {
   const b = document.createElement("button");
   b.className = "chip";
-  b.textContent = label;
+  if (icon) b.innerHTML = icon + '<span class="sr">' + esc(label) + "</span>";
+  else b.textContent = label;
   b.setAttribute("aria-pressed", pressed ? "true" : "false");
   if (title) b.title = title;
   b.onclick = onclick;
@@ -1583,10 +1936,13 @@ function buildChips() {
   D.cats.forEach(c => chip(cats, c.name, false, () => set({cat: c.slug}), c.blurb));
   chip(tgts, "All", true, () => set({tgt: ""}));
   D.targets.forEach(t => chip(tgts, t.name, false, () => set({tgt: t.slug}), t.blurb));
+  // The one chip group that shows a mark instead of its word. `OST` rather than the label for the hover,
+  // because WSL2 is the entry whose mark and whose name are both opaque -- "WSL2" on a tooltip would only
+  // repeat the abbreviation, so the module spells it out. The other four titles are just the platform.
   D.os.forEach((o, i) => chip(oses, o, false, () => {
     const os = state.os.includes(i) ? state.os.filter(x => x !== i) : state.os.concat(i);
     set({os});
-  }));
+  }, OST[i], osIcon(i)));
   // Debounced, because `render()` costs ~58ms at today's 1,294 rows on a throttled mobile CPU and used to
   // run once per keystroke -- so typing "agentic" rebuilt a 120-row table seven times and the input
   // visibly trailed the keyboard. Only ~20ms of that is row-count dependent; the rest is the innerHTML
@@ -1604,6 +1960,7 @@ function buildChips() {
   // button's own new label is not read back after a click.
   const vb = document.getElementById("view");
   vb.hidden = false;
+  initDiscovery();
   vb.onclick = () => {
     state.view = state.view === "cards" ? "table" : "cards";
     writeHash();
@@ -1660,6 +2017,9 @@ function buildChips() {
   sheetWire();
   window.addEventListener("hashchange", () => { readHash(); render(); });
   palWire();
+  // Last, and here rather than in `wire()`, which is the argument `palWire` and `sheetWire` above it both make:
+  // `wire()` also runs on the data.json error path, and every document this one offers is built out of rows.
+  expWire();
 }
 
 // The handle, the backdrop and the Done button. Wired from `buildChips` rather than from `wire()`, and this
@@ -1798,7 +2158,19 @@ function palWire() {
 // the saved set: Clear all is next to the search box and means "show me everything again", and a control
 // that also deleted a reader's collection would be the worst button on the page. Removing the collection is
 // `#clearsave`, which only exists while the reader is looking at it.
-const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false, saved: false};
+//
+// `list` is in here too, and that one is a real trade rather than an obvious inclusion. A shared list cannot
+// be reconstructed by clicking a chip the way every other filter here can, and `replaceState` leaves no
+// history entry to go back to -- so Clear all genuinely loses it. It is in anyway, because the alternative is
+// worse: a reader on a shared link who presses "Clear all filters" and still sees twelve of 1,294 rows has
+// been told something untrue by a button, and that is the failure that makes a page feel broken. What makes
+// it survivable is the strip above the results, whose *first* control saves the list to the reader's own
+// projects -- the durable copy is one press away, and it is the press the strip leads with.
+//
+// The two collection values are shared references, like `os` above them, and safe for the same reason: every
+// patch on this page replaces them wholesale and nothing mutates one in place.
+const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false, saved: false,
+               list: new Set()};
 
 // ---- Command palette -------------------------------------------------------------------------------
 //
@@ -1858,6 +2230,11 @@ function palItems(query) {
   // view" to someone already in it.
   add("Page", state.view === "cards" ? "Table view" : "Card view", false,
     () => document.getElementById("view").click());
+  // Same delegation again, and gated on the chip actually being on the bar rather than on the flag alone: the
+  // chip is hidden where `<dialog>` cannot be opened modally, and an entry that opens nothing is the one thing
+  // that makes a palette look broken.
+  if (FLAGS["index.export"] && document.getElementById("take").classList.contains("on"))
+    add("Page", "Export this view", false, () => document.getElementById("take").click());
 
   // Substring, not the trigram scorer the search box falls back on. These are forty-odd labels the reader
   // can see in full, so "sand" finding "Sandbox & security" is the entire requirement; near-misses here
@@ -1984,6 +2361,7 @@ function wire() {
     // calls -- the toggle, the OS-preference listener, and the initial agreement with the head script.
     const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
     if (plane) document.getElementById("tc").content = plane;
+    paintDeployBadge();
   };
   btn.onclick = () => {
     const light = document.documentElement.dataset.theme !== "light";
@@ -2157,18 +2535,35 @@ function deployStamp(lastModified) {
     const shown = iso.slice(0, 10) + " " + iso.slice(11, 16) + " UTC";
     const t = el.querySelector("time");
     t.dateTime = iso;
-    t.textContent = shown;
+    t.textContent = "Last deployed " + shown;
     // The same fortnight `stamp()` uses, deliberately -- one staleness threshold in the header rather than
     // two to learn. It is the right number for this clock too: the daily build is gated on a source list
     // having moved, so a quiet week is healthy and a tighter bound would cry wolf, but the weekly rebuild
     // publishes unconditionally, so past 14 days both crons have stopped and the page is on its own.
     const days = (Date.now() - ms) / 86400000;
     el.classList.toggle("late", days > 14);
+    paintDeployBadge();
     const age = days < 1 ? "Today." : days < 2 ? "Yesterday." : Math.round(days) + " days ago.";
     el.title = (Number.isNaN(live)
       ? "Built " + shown + ". This copy is not served by Pages, so its deployment time is unknown. "
       : "Published to GitHub Pages " + shown + ". ") + age
       + (days > 14 ? " Neither scheduled rebuild has run since, so the data here has drifted." : "");
+  } catch (e) {}
+}
+
+function paintDeployBadge() {
+  try {
+    const el = document.getElementById("deployed");
+    if (!el) return;
+    const img = el.querySelector("img");
+    const t = el.querySelector("time");
+    if (!img || !t) return;
+    const shown = t.textContent.replace(/^Last deployed\s+/, "");
+    const message = shown.replace(/_/g, "__").replace(/-/g, "--").replace(/ /g, "_");
+    const mode = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+    const colour = el.classList.contains("late") ? (mode === "light" ? "875A19" : "EF7D86") : "187557";
+    img.src = "https://shieldcn.dev/badge/last_deployed-" + message + "-" + colour
+      + ".svg?logo=ri%3ALuClock3&size=xs&font=geist&split=true&mode=" + mode;
   } catch (e) {}
 }
 
@@ -2190,6 +2585,8 @@ function deployStamp(lastModified) {
 // position and their focus, and `shown` below keeps the rows they asked for.
 function applyView() {
   document.documentElement.dataset.view = state.view;
+  const dc = document.getElementById("density-control");
+  if (dc) dc.hidden = state.view === "cards";
   const btn = document.getElementById("view");
   if (!btn) return;
   const cards = state.view === "cards";
@@ -2197,6 +2594,121 @@ function applyView() {
   btn.title = cards
     ? "Back to the table, which fits far more rows on a screen"
     : "Show each project as a card, with its screenshot";
+}
+
+// A stable small palette gives each card its own edge without turning the atlas into a lottery on every
+// render. The repository name is already the durable identifier used by Save and shared lists, so hashing
+// it makes the colour survive a sort, search, reload, and a future data refresh.
+function projectAccent(nwo) {
+  let h = 2166136261;
+  for (let i = 0; i < nwo.length; i++) h = Math.imul(h ^ nwo.charCodeAt(i), 16777619);
+  return ["sky", "mint", "gold", "coral", "violet"][(h >>> 0) % 5];
+}
+
+// View and row density are intentionally separate preferences. A shared URL says which projects someone
+// meant to show; forcing its recipient to inherit the sender's amount of surrounding prose is not useful.
+const DENSITY_KEY = "atlas-table-density";
+const DENSITIES = new Set(["compact", "normal", "expanded"]);
+
+function applyDensity(value) {
+  const density = DENSITIES.has(value) ? value : "normal";
+  document.documentElement.dataset.density = density;
+  const select = document.getElementById("density");
+  if (select) select.value = density;
+  return density;
+}
+
+function initDiscovery() {
+  const density = document.getElementById("density");
+  let stored = "normal";
+  try { stored = localStorage.getItem(DENSITY_KEY) || "normal"; } catch (e) {}
+  applyDensity(stored);
+  if (density) density.onchange = () => {
+    const next = applyDensity(density.value);
+    try { localStorage.setItem(DENSITY_KEY, next); } catch (e) {}
+    say(next[0].toUpperCase() + next.slice(1) + " table rows.");
+  };
+
+  // Commentary is an optional layer, not a prerequisite for the mascot. With its release flag off, Atlas
+  // Byte remains a named bit of the masthead and no hover, speech, stored preference, or Easter egg code
+  // runs. That keeps a one-key rollback genuinely quiet.
+  const enabled = !!FLAGS["index.mascot_commentary"];
+  const tip = document.getElementById("byte-tip"), name = document.getElementById("byte-name"),
+        quiet = document.getElementById("byte-quiet"), speech = document.getElementById("byte-speech"),
+        wrap = document.querySelector(".atlas-byte-wrap"), out = document.getElementById("out");
+  if (!enabled) {
+    if (quiet) quiet.hidden = true;
+    if (speech) speech.hidden = true;
+    return;
+  }
+  let muted = false, timer = 0, last = null, clicks = [];
+  try { muted = localStorage.getItem("atlas-byte-quiet") === "1"; } catch (e) {}
+  const setQuiet = on => {
+    muted = on;
+    if (quiet) {
+      quiet.setAttribute("aria-pressed", on ? "true" : "false");
+      quiet.textContent = on ? "Commentary off" : "Quiet mode";
+    }
+    if (on && speech) speech.hidden = true;
+    try { localStorage.setItem("atlas-byte-quiet", on ? "1" : "0"); } catch (e) {}
+  };
+  const wordsFor = r => {
+    const category = (D.cats[r.cat] || {}).name || "the atlas";
+    const targets = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
+    const intro = [
+      r.name + " is listed under " + category + ".",
+      r.name + " comes from " + r.nwo + ".",
+      r.name + " has " + r.lists + (r.lists === 1 ? " source list" : " source lists") + " behind it."
+    ][projectAccent(r.nwo).length % 3];
+    const tagged = targets.length ? " Tagged for " + targets.slice(0, 2).join(" and ") + "." : "";
+    return intro + tagged + " " + r.blurb;
+  };
+  const speak = r => {
+    if (muted || !speech || !r) return;
+    last = r;
+    speech.textContent = wordsFor(r);
+    speech.hidden = false;
+  };
+  const schedule = el => {
+    const nwo = el && el.dataset.project;
+    const row = nwo && ROWS.find(r => r.nwo === nwo);
+    if (!row) return;
+    clearTimeout(timer);
+    timer = setTimeout(() => speak(row), 320);
+  };
+  if (out) {
+    out.addEventListener("mouseover", ev => schedule(ev.target.closest("tr[data-project]")));
+    out.addEventListener("focusin", ev => schedule(ev.target.closest("tr[data-project]")));
+  }
+  if (quiet) quiet.onclick = () => setQuiet(!muted);
+  setQuiet(muted);
+  if (tip) tip.onclick = () => {
+    if (muted) { setQuiet(false); }
+    if (last) speak(last);
+    else if (speech) {
+      speech.textContent = "Hover or focus a project and I’ll introduce it using its Atlas record.";
+      speech.hidden = false;
+    }
+  };
+  if (name && wrap) name.onclick = () => {
+    const now = Date.now();
+    clicks = clicks.filter(t => now - t < 1400);
+    clicks.push(now);
+    if (clicks.length < 5) return;
+    clicks = [];
+    document.getElementById("atlas-orbit")?.remove();
+    const orbit = document.createElement("span");
+    orbit.id = "atlas-orbit";
+    orbit.setAttribute("aria-hidden", "true");
+    for (let i = 0; i < 12; i++) {
+      const star = document.createElement("i");
+      star.className = "orbit-star";
+      star.style.setProperty("--orbit-angle", (i * 30) + "deg");
+      orbit.appendChild(star);
+    }
+    wrap.appendChild(orbit);
+    setTimeout(() => orbit.remove(), 1600);
+  };
 }
 
 function set(patch, keepFocus) {
@@ -2240,7 +2752,16 @@ function writeHash() {
   // reload, because `replaceState` leaves it in the URL, which is the whole of what this has to do.
   if (state.view !== "cards") p.set("view", state.view);
   const s = p.toString();
-  history.replaceState(null, "", s ? "#" + s : location.pathname);
+  // Appended by hand rather than set on the URLSearchParams above, and this is the only parameter on the page
+  // that is. `URLSearchParams` percent-encodes both characters an `owner/name` list is made of -- `/` becomes
+  // %2F and the separator %2C -- so a twelve-project link that reads
+  // `list=openclaw/openclaw,browser-use/browser-use` would go out as sixty characters of escapes instead.
+  // Both are legal unescaped in a fragment (RFC 3986: a fragment admits pchar, "/" and "?", and pchar admits
+  // the sub-delims, which include ","), so the encoding buys nothing and costs the one property a link
+  // somebody is about to paste into a message has to have -- being readable enough to trust before clicking.
+  const list = state.list.size ? "list=" + [...state.list].join(",") : "";
+  const all = [s, list].filter(Boolean).join("&");
+  history.replaceState(null, "", all ? "#" + all : location.pathname);
 }
 
 function readHash() {
@@ -2266,6 +2787,18 @@ function readHash() {
   // matches" as their first impression of the atlas. `loadSaved()` runs in `wire()`, before this, so the
   // size is known by the time it is read.
   state.saved = p.get("saved") === "1" && SAVED.size > 0;
+  // Somebody else's collection, and the counterpart to the line above rather than a duplicate of it. `saved=1`
+  // is a flag over a store that only exists on one machine; `list=` carries the rows, so it means the same
+  // twelve projects everywhere and is what a reader sends when they want a colleague to see what they see.
+  // Nothing is written to storage on the way in -- the strip above the results is where the reader decides
+  // whether this becomes theirs.
+  //
+  // Capped, because a hash is an untrusted input that anyone can hand-edit: this is the only place on the page
+  // where the length of a string decides how much work `match` does per keystroke, and 200 is far past any
+  // list a person assembles by pressing Save.
+  state.list = FLAGS["index.export"]
+    ? new Set((p.get("list") || "").split(",").map(s => s.trim()).filter(Boolean).slice(0, 200))
+    : new Set();
   // Every `#sort=stars` link written before Best match existed still says exactly what it said then,
   // because the name is unchanged and only the *default* moved.
   // `rising` is the one sort key that can be unavailable, so it is checked against the data and not only
@@ -2291,9 +2824,10 @@ function readHash() {
 const OS_ANY = {0: [[0, "YL"], [1, "Y"]]};
 
 function match(r) {
-  // First, because it is the most selective clause this function has -- a saved set is single digits
-  // against 1,294 rows -- and because a Set lookup is the cheapest test here. `match` runs 1,294 times per
-  // keystroke, so the order of these lines is not cosmetic.
+  // These two first, because they are the most selective clauses this function has -- a saved set or a shared
+  // list is single digits against 1,294 rows -- and because a Set lookup is the cheapest test here. `match`
+  // runs 1,294 times per keystroke, so the order of these lines is not cosmetic.
+  if (state.list.size && !state.list.has(r.nwo)) return false;
   if (state.saved && !SAVED.has(r.nwo)) return false;
   if (state.fresh && !r.isnew) return false;
   if (state.rising && !r.rise) return false;
@@ -2318,7 +2852,8 @@ function match(r) {
 // What the table would hold with one filter relaxed. Mutate-count-restore rather than threading a state
 // argument through `match`, because `match` is called 1,294 times per keystroke and an extra parameter on
 // the hot path to serve a case that only fires on an empty table is the wrong trade. The patches only ever
-// replace `state.os` wholesale, never mutate it, so restoring the reference restores the value.
+// replace `state.os` and `state.list` wholesale, never mutate either, so restoring the reference restores the
+// value -- which is what makes a shallow copy sufficient for a state object holding an array and a Set.
 function countWith(patch) {
   const saved = Object.assign({}, state);
   Object.assign(state, patch);
@@ -2349,6 +2884,10 @@ function rescue() {
   // build-wide filters does. The button drops the filter and never the set -- `countWith` only ever patches
   // `state`, so there is no path from an empty table to losing a collection.
   if (state.saved) opts.push(["Look beyond your " + SAVED.size + " saved", {saved: false}]);
+  // Offered like any other filter, and with more reason than most: a shared list crossed with a topic empties
+  // the table as easily as a saved set does, and the reader who followed the link did not choose the crossing.
+  if (state.list.size)
+    opts.push(["Look beyond the shared list of " + state.list.size, {list: new Set()}]);
   return opts.map(o => ({label: o[0], patch: o[1], n: countWith(o[1])}))
     .filter(o => o.n > 0)
     .sort((a, b) => b.n - a.n)
@@ -2572,31 +3111,342 @@ function saveBtn(r) {
 function saveWord(on) { return on ? "Saved" : "Save"; }
 function saveLabel(name, on) { return saveWord(on) + " " + name; }
 
-// A card's picture is fetched for the cards a reader is actually browsing, and not before. `loading="lazy"`
-// was supposed to be this and demonstrably is not: measured at Lighthouse's 412x823 mobile viewport, the
-// first paint still fetched three of them, 921,532 B, because Chrome's lazy threshold is a scroll distance
-// and the whole first screen sits inside it. On a GitHub runner, on a slower simulated network with a
-// longer network-quiet wait, it reached further down and fetched 1,357,388 B one half-hour and 1,827,508 B
-// the next -- against a 307,200 B budget, on a byte-identical tree.
+// ---- Take it with you ------------------------------------------------------------------------------
 //
-// So the `src` is withheld: the tag ships `data-src` and nothing is requested until the reader gives an
-// input event that means they are looking at the list. Those four are the human ways of beginning a
-// scroll -- a wheel or trackpad gesture, a touch, a key (arrows, space, Page Down, Tab), or a pointer
-// going down on the scrollbar or on a card. Plain `scroll` is deliberately not among them, because it also
-// fires for programmatic scrolling, including the viewport manipulation Lighthouse performs for its
-// full-page screenshot once the trace is over; a budget a measuring tool can trip by looking at the page
-// is a budget measuring the tool.
+// Everything on this page is a view: a crossing of thirteen topics, twelve integrations, five platforms, a
+// search term and a sort, which is precisely the thing `mega-list/` cannot be -- a Markdown file is one topic
+// or one target, never the crossing. And until now the only way to keep a view was to keep the URL. That is
+// enough to come back to and no use at all for what people actually do with a shortlist: paste it into an
+// issue, hand it to a colleague, print it for a meeting. A link cannot be pasted into a document, and the
+// atlas behind it is 1,294 rows that move daily.
 //
-// This is only safe because the box is already reserved. `.shot img` carries `aspect-ratio:2/1` and the
-// cards view inherits it, so a picture with no `src` occupies exactly the space the loaded one will and
-// hydrating it shifts nothing. That is not a hope: blocking every image on the page moved layout shift
-// from 0.5140 to 0.5140, in three runs each (JFH-216).
-let ART = false, ARTIO = null;
+// So: the same view, as four documents. A link, for the reader who wants the live page. A Markdown table, for
+// the issue and the README. A standalone HTML file, for the wiki and the email. And print, which is also how
+// every browser makes a PDF -- there is no jsPDF here and there will not be, because this page ships zero
+// third-party bytes, is cached whole by a service worker, and a 300 KB library to paginate a table the
+// browser already paginates is not a trade worth making.
+//
+// All four are built from `HITS`, which is what `render()` last put on screen -- not from `ROWS.filter(match)`
+// recomputed here. The two agree today, and the first time they did not -- a near-match pass, a sort applied
+// after filtering, a cap -- the export would quietly disagree with the table the reader was looking at when
+// they pressed the button, which is the one failure an export must not have.
+let HITS = [];
 
-function artLoad(i) { i.src = i.dataset.src; i.removeAttribute("data-src"); }
+// The current view as a sentence, and every one of the four documents is titled with it. This is not
+// decoration: a file called `atlas.md` on somebody's desktop in a fortnight has to say what it is of, and
+// "1,294 projects" does not. Assembled from `state` rather than from the chips' labels so that it cannot
+// describe a filter that is no longer on.
+function viewTitle() {
+  const w = [];
+  if (state.q) w.push("matching “" + state.q + "”");
+  const c = state.cat && D.cats.find(x => x.slug === state.cat);
+  if (c) w.push("in " + c.name);
+  const t = state.tgt && D.targets.find(x => x.slug === state.tgt);
+  if (t) w.push("that plug into " + t.name);
+  if (state.os.length) w.push("running on " + state.os.map(i => D.os[i]).join(" and "));
+  if (state.strict) w.push("with confirmed support");
+  if (state.fresh) w.push("added in the last " + (D.window_days || 14) + " days");
+  if (state.rising) w.push("gaining stars fastest for their size");
+  if (state.saved) w.push("saved on this device");
+  if (state.list.size) w.push("from a shared list");
+  return w.length ? "Projects " + w.join(", ") : "Every project in the atlas";
+}
+
+// The link that reproduces this view somewhere else, which is not always the URL in the address bar. There is
+// exactly one case where the two differ and it is the case that matters most: `#saved=1` means "the saved
+// filter is on", and on the recipient's machine that selects *their* set, which is almost always empty -- so
+// the reader's most personal view is the one whose URL travels worst. A view built on the reader's own
+// collection is therefore shared as the collection itself, `#list=owner/name,...`, which is the same rows on
+// any machine and is what `readHash` reads back at the other end.
+//
+// The rows come from `HITS` and not from `SAVED`, so a saved set crossed with a topic shares the crossing --
+// twelve saved projects filtered to four shares four. Everything else is already a link that means the same
+// thing anywhere, and stays the one the reader can see in their address bar.
+function shareURL() {
+  if (!state.saved || !HITS.length) return location.href;
+  const p = new URLSearchParams(location.hash.slice(1));
+  p.delete("saved");
+  p.delete("list");
+  const rest = p.toString();
+  return location.href.split("#")[0] + "#" +
+    ["list=" + HITS.map(r => r.nwo).join(","), rest].filter(Boolean).join("&");
+}
+
+// A Markdown table cell ends at the next `|` and at the next newline, and both turn up in real descriptions --
+// "runs foo | bar" and the occasional wrapped blurb. Escaped and flattened rather than dropped, so the text
+// survives whole and the table does not lose a column halfway down.
+function mdCell(s) {
+  return String(s == null ? "" : s).replace(/\s+/g, " ").replace(/\|/g, "\\|").trim();
+}
+
+// The five platform verdicts as text. The glyph and not the colour, which is the same decision the table makes
+// and for a reason that applies twice as hard here: an exported document has no stylesheet of ours, so colour
+// is the one channel it definitely loses.
+function osText(r) {
+  return D.os.map((o, k) => o + " " + (VERDICT[r.os[k]] || ["–"])[0]).join(" · ");
+}
+
+// Whether the install column is worth having. Both halves matter: the flag can be off, and on a view where no
+// row has a detected command the column would be nothing but a header and N dashes.
+function hasCmds() {
+  return !!FLAGS["index.install_commands"] && HITS.some(r => r.install);
+}
+
+// One GitHub-flavoured Markdown table, which is the dialect of every place a reader would paste this -- an
+// issue, a PR body, a README, a wiki, Obsidian, a pasted snippet.
+//
+// The three header lines are provenance, not preamble. A table of star counts with no date on it is a table
+// that will be wrong within the week, and the two dates are different facts: the snapshot is when the GitHub
+// API was asked, the export date is when this file was made. The link back is what makes the document a view
+// *of* something rather than a fork of it.
+function listMarkdown() {
+  const cmds = hasCmds();
+  const row = c => "| " + c.join(" | ") + " |";
+  const head = ["#", "Project", "Stars", "Lists", "Topic", "Plugs into", "Runs on"]
+    .concat(cmds ? ["Install"] : []).concat(["What it does"]);
+  const rule = ["--:", "---", "--:", "--:", "---", "---", "---"]
+    .concat(cmds ? ["---"] : []).concat(["---"]);
+  const body = HITS.map((r, i) => row([
+    i + 1,
+    "[" + mdCell(r.name) + "](" + r.url + ")",
+    r.stars ? r.stars.toLocaleString() : "—",
+    r.lists,
+    mdCell(D.cats[r.cat].name),
+    r.targets.map(t => mdCell(D.targets[t].name)).join(", ") || "—",
+    osText(r),
+  ].concat(cmds ? [r.install ? "`" + mdCell(r.install) + "`" : "—"] : [])
+   .concat([mdCell(r.blurb) || "—"])));
+  return ["# " + viewTitle(), "",
+    HITS.length.toLocaleString() + " of " + ROWS.length.toLocaleString() +
+      " projects in the [Awesome Agentic Atlas](" + shareURL() + "). Stars, language and licence come from " +
+      "the GitHub API on " + SNAPSHOT + " and drift daily. Platform verdicts read ✓ stated, ? inferred from " +
+      "the language, ✗ no evidence, – not applicable. Exported " + TODAY + ".", "",
+    row(head), row(rule), body.join("\n"), ""].join("\n");
+}
+
+// One standalone HTML document: no stylesheet to fetch, no script, no font, nothing cross-origin, everything
+// inline. That is the requirement and not a preference. This file is going to land in a wiki, an email or a
+// folder on a laptop, and the failure mode of a "portable" export that pulls its stylesheet off this origin is
+// that it looks right on the machine that made it and broken everywhere else -- including offline, which is
+// where a saved page most often gets opened. Dark ink on white for the same reason: there is no `data-theme` at
+// the other end and no toggle for the reader to reach for.
+function listHTML() {
+  const cmds = hasCmds();
+  const cell = (c, v) => "<td" + (c ? ' class="' + c + '"' : "") + ">" + v + "</td>";
+  const rows = HITS.map((r, i) =>
+    "<tr>" + cell("n", i + 1) +
+    cell("", '<a href="' + esc(r.url) + '">' + esc(r.name) + "</a><br><code>" + esc(r.nwo) + "</code>") +
+    cell("n", r.stars ? r.stars.toLocaleString() : "—") +
+    cell("n", r.lists) +
+    cell("", esc(D.cats[r.cat].name)) +
+    cell("", r.targets.map(t => esc(D.targets[t].name)).join(", ") || "—") +
+    cell("", esc(osText(r))) +
+    (cmds ? cell("", r.install ? "<code>" + esc(r.install) + "</code>" : "—") : "") +
+    cell("", esc(r.blurb)) + "</tr>").join("");
+  const head = ["#", "Project", "Stars", "Lists", "Topic", "Plugs into", "Runs on"]
+    .concat(cmds ? ["Install"] : []).concat(["What it does"])
+    .map(h => "<th>" + esc(h) + "</th>").join("");
+  return '<!doctype html>\n<html lang="en"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    "<title>" + esc(viewTitle()) + " — Awesome Agentic Atlas</title><style>" +
+    "body{margin:0 auto;padding:28px 20px;max-width:1100px;background:#fff;color:#14171c;" +
+    "font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}" +
+    "h1{font-size:21px;margin:0 0 6px}p{color:#596574;font-size:13px;margin:0 0 4px}" +
+    "a{color:#1d5e9e}code{font:12px/1.5 ui-monospace,Consolas,monospace;color:#353c47}" +
+    "table{border-collapse:collapse;width:100%;margin-top:18px;font-size:13px}" +
+    "th{text-align:left;border-bottom:2px solid #cad1db;padding:7px 8px;white-space:nowrap}" +
+    "td{border-bottom:1px solid #e7eaf0;padding:7px 8px;vertical-align:top}" +
+    ".n{text-align:right;white-space:nowrap}tr{break-inside:avoid}" +
+    "</style></head><body>\n<h1>" + esc(viewTitle()) + "</h1>\n" +
+    "<p>" + HITS.length.toLocaleString() + " of " + ROWS.length.toLocaleString() +
+    ' projects in the <a href="' + esc(shareURL()) + '">Awesome Agentic Atlas</a>. Stars, language and ' +
+    "licence come from the GitHub API on " + esc(SNAPSHOT) + " and drift daily.</p>\n" +
+    "<p>Platform verdicts read ✓ stated, ? inferred from the language, ✗ no evidence, – not applicable. " +
+    "Exported " + esc(TODAY) + ".</p>\n<table><thead><tr>" + head + "</tr></thead><tbody>" + rows +
+    "</tbody></table>\n</body></html>\n";
+}
+
+// The filename is the view, slugified, so a folder holding three of these says which is which. Capped at 60
+// characters because a search term goes into it and a filename is not the place to discover what the operating
+// system's limit is.
+function fileName(ext) {
+  const slug = viewTitle().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+  return "atlas-" + (slug || "export") + "-" + TODAY + "." + ext;
+}
+
+// A Blob and an object URL rather than a `data:` URI, which is the same three lines and silently fails at the
+// size that matters: Chrome caps a navigated data: URL and Safari refuses one from a synthetic click, and a
+// 1,294-row export is comfortably past both. Revoked on the next turn of the event loop rather than on the
+// line after the click, because the browser has not necessarily finished reading the blob when this returns.
+function download(name, mime, text) {
+  const url = URL.createObjectURL(new Blob([text], {type: mime + ";charset=utf-8"}));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  // Appended before the click and removed after it. A detached <a> is clickable in every current engine and
+  // was not in older ones, and the two lines cost nothing next to finding that out from a bug report.
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+// The printed sheet is the table, whichever view is on screen, and the light theme whichever one the reader
+// chose. Neither is a preference imposed for tidiness. A card is a box with a screenshot in it, so eight fill a
+// page where the table fits twenty-five -- and the screenshots are the one thing here a printer bills for by
+// the millilitre. The theme is starker still: browsers print background graphics off by default, so a
+// dark-theme page prints near-white text onto white paper and hands the reader a blank sheet.
+//
+// `shown` is the third swap and the only one that costs anything. The page draws 120 rows and a "Show more"
+// button; paper has no button, so printing the view as it stands would truncate it at 120 while the dialog that
+// offered the print says how many there are. Expanded and re-rendered, then put back -- ~600ms for the full
+// 1,294 on a throttled CPU, spent once, inside a gesture the reader has already accepted a print dialog for.
+//
+// Hung on `beforeprint` rather than done inside the Print button's handler, so that Ctrl+P, File > Print and
+// the button all produce the same sheet -- the button does nothing but call `window.print()`. Safari implements
+// neither event and gets the page as it stands, which is exactly the behaviour it has today.
+let PRINT = null;
+
+function printOn() {
+  if (PRINT || !D) return;
+  const root = document.documentElement;
+  PRINT = {view: state.view, theme: root.dataset.theme, shown: state.shown};
+  root.dataset.theme = "light";
+  const u = document.getElementById("printurl");
+  if (u) u.textContent = shareURL();
+  state.view = "table";
+  state.shown = Math.max(state.shown, HITS.length);
+  render();
+}
+
+function printOff() {
+  if (!PRINT) return;
+  document.documentElement.dataset.theme = PRINT.theme;
+  state.view = PRINT.view;
+  state.shown = PRINT.shown;
+  PRINT = null;
+  // `render()` and not `applyView()` alone, because `shown` is being put back too and the rows the print
+  // expanded have to come back off the page. It also restores the "Show more" button the expansion removed.
+  render();
+}
+
+// The strip a shared list arrives under, and the two ways out of it. Called from `render()` like
+// `paintSaved()` and for the same reason: `render()` is the one function every path that changes state already
+// ends at, so a hashchange, the back button and a rescue button all arrive here without each of them
+// remembering to.
+//
+// The first control is the one that makes the list durable, and it is first deliberately -- see `CLEAR` for why
+// that placement is load-bearing rather than aesthetic. It is disabled rather than hidden once there is nothing
+// left to add, so the row does not reflow under the reader's cursor between two presses.
+function paintShared() {
+  const strip = document.getElementById("shared");
+  if (!strip) return;
+  const n = state.list.size;
+  strip.classList.toggle("on", n > 0);
+  if (!n) return;
+  const have = [...state.list].filter(k => SAVED.has(k)).length;
+  document.getElementById("sharedtext").innerHTML =
+    "You are looking at a shared list of <b>" + n.toLocaleString() +
+    (n === 1 ? " project" : " projects") + "</b> rather than the whole atlas." +
+    (have === n ? " Every one of them is already in your saved projects." : "");
+  const add = document.getElementById("sharedadd");
+  add.disabled = have === n;
+  add.textContent = have === n ? "All saved" : "Save " + (n - have).toLocaleString() + " to my projects";
+}
+
+// What the dialog says before anything is downloaded. Rebuilt on every open rather than kept in step, because
+// every fact in it -- the count, the sentence, the link -- is a function of a view the reader has been changing
+// since the last time they opened it.
+function expOpen() {
+  const n = HITS.length;
+  document.getElementById("expwhat").innerHTML =
+    "<b>" + n.toLocaleString() + (n === 1 ? " project" : " projects") + "</b> · " + esc(viewTitle());
+  document.getElementById("expurl").value = shareURL();
+  // Disabled on an empty table, where all three would write a document with a header and no rows. The link
+  // stays live: a link to an empty view is still a link to a view, and it is how a reader shows a colleague
+  // that a crossing they both expected to be full is not.
+  const none = n === 0;
+  document.getElementById("expmd").disabled = none;
+  document.getElementById("exphtml").disabled = none;
+  document.getElementById("expprint").disabled = none;
+  document.getElementById("exp").showModal();
+}
+
+function expWire() {
+  if (!FLAGS["index.export"]) return;
+  // Both of these come before the dialog guard below and stay outside it. What makes Ctrl+P produce a legible
+  // sheet has nothing to do with whether this browser can open a modal, and neither does the shared-list strip
+  // -- a reader who followed a `#list=` link into a browser without `<dialog>` still needs the way out of it.
+  window.addEventListener("beforeprint", printOn);
+  window.addEventListener("afterprint", printOff);
+  document.getElementById("sharedadd").onclick = () => {
+    let added = 0;
+    for (const k of state.list) if (!SAVED.has(k)) { SAVED.add(k); added++; }
+    storeSaved();
+    say(added ? "Saved " + added.toLocaleString() + " projects to this device." : "Nothing new to save.");
+    // `render()` and not `set()`: nothing about the *view* changed, so the hash is still correct and the page
+    // size should not be reset under a reader who has already pressed "Show more".
+    render();
+  };
+  document.getElementById("sharedall").onclick = () => set({list: new Set()});
+
+  const dlg = document.getElementById("exp"), chip = document.getElementById("take");
+  if (!dlg || !dlg.showModal) return;
+  chip.classList.add("on");
+  chip.onclick = expOpen;
+  document.getElementById("expmd").onclick = () => {
+    download(fileName("md"), "text/markdown", listMarkdown());
+    say("Markdown table downloaded — " + HITS.length.toLocaleString() + " projects.");
+  };
+  document.getElementById("exphtml").onclick = () => {
+    download(fileName("html"), "text/html", listHTML());
+    say("HTML page downloaded — " + HITS.length.toLocaleString() + " projects.");
+  };
+  // Closed first. A modal <dialog> makes the page behind it inert, and several engines refuse to open a print
+  // preview of an inert document -- so printing from an open dialog prints the dialog or prints nothing.
+  document.getElementById("expprint").onclick = () => { dlg.close(); window.print(); };
+  const copy = document.getElementById("expcopy");
+  if (CAN_COPY) {
+    copy.onclick = () => navigator.clipboard.writeText(shareURL())
+      .then(() => say("Link copied."))
+      .catch(() => {
+        // The write can be refused at the moment of the click even where the API exists -- an unfocused
+        // document, a denied permission -- so the failure path selects the text and says which two keys
+        // finish the job, rather than reporting that something went wrong and leaving the reader there.
+        const u = document.getElementById("expurl");
+        u.focus();
+        u.select();
+        say("Could not copy. The link is selected — press " + PALMOD + " C.");
+      });
+  } else {
+    copy.remove();
+  }
+  document.getElementById("expdone").onclick = () => dlg.close();
+  // Clicking the backdrop, which <dialog> fires no event for: the click lands on the dialog element itself,
+  // because its padding is zero and every child is inside one of the panels. Same line as the palette's.
+  dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
+}
+
+// Screenshot URLs remain deferred until a card is close to the viewport, but they begin immediately when
+// it is rendered. The old interaction gate made a first-load card grid look broken until a reader happened
+// to nudge a wheel. `aspect-ratio:2/1` reserves the slot while the request is in flight, so this does not
+// exchange the blank-image defect for layout shift.
+let ARTIO = null;
+
+function artLoad(i) {
+  i.onerror = () => {
+    i.hidden = true;
+    const fallback = document.createElement("span");
+    fallback.className = "shot-fallback";
+    fallback.textContent = "Preview unavailable · Explore project";
+    i.parentElement.appendChild(fallback);
+    i.onerror = null;
+  };
+  i.src = i.dataset.src;
+  i.removeAttribute("data-src");
+}
 
 function cardArt() {
-  if (!ART) return;
   if (!("IntersectionObserver" in window)) {
     document.querySelectorAll("#out img[data-src]").forEach(artLoad);
     return;
@@ -2610,21 +3460,9 @@ function cardArt() {
       artLoad(e.target);
     }), {rootMargin: "200px 0px"});
   }
+  ARTIO.disconnect();
   document.querySelectorAll("#out img[data-src]").forEach(i => ARTIO.observe(i));
 }
-
-// `once` on each listener and the flag as well: four of them racing to be first would otherwise each walk
-// the DOM. `render()` calls `cardArt()` again on every rebuild, which is what covers a filter, a search or
-// a "show more" pressed by a reader who engaged with the page long ago.
-//
-// `window.addEventListener` and not the bare global, which resolves to the same function in a browser and
-// does not exist in `tests/probe.mjs`. That harness executes this script against a stub DOM to assert on
-// the HTML it renders, and it stubs `window` rather than the global scope -- so the bare form threw a
-// ReferenceError at load and took all 276 of its assertions with it, which is exactly the failure it is
-// there to catch. This is the only listener registered at the top level rather than inside init.
-["wheel", "touchstart", "keydown", "pointerdown"].forEach(t =>
-  window.addEventListener(t, () => { if (!ART) { ART = true; cardArt(); } },
-                          {once: true, passive: true}));
 
 function render() {
   // Reflect state onto the chips. Cheaper than rebuilding them and it keeps focus where it was.
@@ -2637,6 +3475,7 @@ function render() {
   document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
   document.getElementById("rise").setAttribute("aria-pressed", state.rising ? "true" : "false");
   paintSaved();
+  paintShared();
   // Here as well as on the toggle, for the same reason the chips above are reflected here rather than only
   // where they are clicked: this is the one function every path that changes state already ends at, so a
   // `#view=cards` link, a hashchange and the browser's back button all arrive at the right layout without
@@ -2660,6 +3499,11 @@ function render() {
     if (sort === "relevance") for (const r of hits) r.rel = relevance(r, words);
     hits.sort(SORTS[sort]);
   }
+  // After the sort and before the paging, which is exactly what the four exports need: the rows that matched, in
+  // the order the reader chose, all of them rather than the 120 on screen. Assigned on every path including the
+  // empty one, so a reader who presses Export on "Nothing matches all of that" gets a dialog that says zero
+  // rather than the contents of the last search that worked.
+  HITS = hits;
 
   const ranked = hits.filter(r => r.stars).length;
   const countHTML = approx
@@ -2707,14 +3551,16 @@ function render() {
   }
   const page = hits.slice(0, state.shown);
   const rows = page.map((r, i) => {
-    // A U+2009 thin space, not a full one, between an OS label and its verdict glyph, so that the label
-    // ignore-this-line "Win✓" break across lines
-    // and its glyph read as one unit beside its four neighbours rather than as ten separate words. The
-    // title carries the sentence, because a glyph narrows "amber" to "uncertain" without saying of what.
+    // A U+2009 thin space, not a full one, between a platform's mark and its verdict glyph, so that the two
+    // read as one unit beside their four neighbours rather than as ten separate things. The mark replaced the
+    // truncated word that used to stand here, and two things put the word back rather than one: the `title`,
+    // which was already carrying the platform and the whole verdict sentence for a hover, and a `.sr` span,
+    // which is now the only text in the span and therefore the only accessible name it has. A glyph narrows
+    // "amber" to "uncertain" without saying of what, and a mark says nothing at all to a screen reader.
     const os = D.os.map((o, k) => {
       const v = VERDICT[r.os[k]] || ["", "not established"];
       return '<span class="v' + r.os[k] + '" title="' + esc(o + ": " + v[1]) + '">' +
-        o.slice(0, 3) + " " + v[0] + "</span>";
+        '<span class="sr">' + esc(o) + ' </span>' + osIcon(k) + " " + v[0] + "</span>";
     }).join(" ");
     const tags = '<span class="tag cat">' + esc(D.cats[r.cat].name) + "</span>" +
       r.targets.map(t => '<span class="tag">' + esc(D.targets[t].name) + "</span>").join("");
@@ -2741,7 +3587,7 @@ function render() {
       ? '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
         '<img loading="lazy" decoding="async" alt="" data-src="' + img + '"></a></td>'
       : "";
-    return "<tr>" +
+    return '<tr data-project="' + esc(r.nwo) + '" style="--card-accent:var(--accent-' + projectAccent(r.nwo) + ')">' +
       '<td class="n rk">' + (i + 1) + "</td>" +
       // The screenshot is a second link to the same URL as the title next to it, so it was a duplicate
       // tab stop with no accessible name at all -- 120 unlabelled links per page, which is both a 2.4.4
@@ -2787,7 +3633,8 @@ function render() {
       // flex items, and they cost nothing in the table view.
       '<td class="c hide lc"><div class="meta"><span>' + esc(r.lang || "—") + "</span><br>" +
         "<span>" + esc(r.license || "—") + "</span><br><span>" + since(r.pushed) +
-        "</span></div></td>" +
+        '</span></div><div class="project-actions"><a href="' + page + '" aria-label="Explore ' + esc(r.name) + '">Explore project <span aria-hidden="true">↗</span></a>' +
+        '<a href="' + url + '" aria-label="' + esc(r.nwo) + ' on GitHub">GitHub</a></div></td>' +
       "</tr>";
   }).join("");
   // Every th carries the same class as the td beneath it. The Shot heading used not to, and since the
@@ -2810,8 +3657,8 @@ function render() {
     "<th class='hide tg'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
     "<th class='c hide lc'>Lang / licence / push</th></tr></thead><tbody>" + rows +
     "</tbody></table>";
-  // After the subtree exists and before the "show more" button is appended, because the pictures it has to
-  // find are in the subtree. A no-op until the reader has given an input event, which is the whole point.
+  // After the subtree exists and before the "show more" button is appended, so visible images begin loading
+  // on a cold visit and further images remain viewport-lazy after every filter or page expansion.
   cardArt();
   if (hits.length > page.length) {
     const b = document.createElement("button");

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Runs on Windows, and says so — Awesome Agentic Atlas</title>
+<meta name="description" content="7 picked projects: Most agentic tooling is written on a Mac and tested on Linux, and &quot;it&#x27;s Python, it&#x27;ll be fine&quot; is how a Windows afternoon disappears. The…">
+<link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/collections/windows-first/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Runs on Windows, and says so — Awesome Agentic Atlas">
+<meta property="og:description" content="7 picked projects: Most agentic tooling is written on a Mac and tested on Linux, and &quot;it&#x27;s Python, it&#x27;ll be fine&quot; is how a Windows afternoon disappears. The…">
+<meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/collections/windows-first/">
+<meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<meta property="og:image:alt" content="The Awesome Agentic Atlas repository on GitHub.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<meta name="theme-color" id="tc" content="#101217">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+} catch (e) {}
+</script>
+<link rel="stylesheet" href="../../pages.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Runs on Windows, and says so","description":"Most agentic tooling is written on a Mac and tested on Linux, and \"it's Python, it'll be fine\" is how a Windows afternoon disappears. The atlas records a per-platform verdict for every project, and it distinguishes stated support from support merely inferred from the language. Every project below…","url":"https://crazy54.github.io/awesome-agentic-atlas/collections/windows-first/","numberOfItems":7,"itemListOrder":"https://schema.org/ItemListUnordered","itemListElement":[{"@type":"ListItem","position":1,"name":"openclaw","description":"The framework","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/openclaw/openclaw/"},{"@type":"ListItem","position":2,"name":"Pi","description":"The harness","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/earendil-works/pi/"},{"@type":"ListItem","position":3,"name":"Continue","description":"The coding agent","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/continuedev/continue/"},{"@type":"ListItem","position":4,"name":"Ollama","description":"The model runner","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ollama/ollama/"},{"@type":"ListItem","position":5,"name":"llama.cpp","description":"The inference engine","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ggml-org/llama.cpp/"},{"@type":"ListItem","position":6,"name":"headroom","description":"The context budget","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/headroomlabs-ai/headroom/"},{"@type":"ListItem","position":7,"name":"ironclaw","description":"The sandbox","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nearai/ironclaw/"}]}</script>
+</head>
+<body>
+<header><div class="wrap"><div class="top">
+  <div>
+    <p class="kick">Collection · Stated support, not inferred</p>
+    <h1>Runs on Windows, and says so</h1>
+    <p class="sub"><b>7</b> picks · <b>5</b> of the atlas's
+      14 topics · <b>914,087</b> combined stars ·
+      snapshot 2026-09-03</p>
+    <p class="intro">Most agentic tooling is written on a Mac and tested on Linux, and &quot;it&#x27;s Python, it&#x27;ll be fine&quot; is how a Windows afternoon disappears. The atlas records a per-platform verdict for every project, and it distinguishes stated support from support merely inferred from the language. Every project below has documented Windows support -- the build refuses to publish this page if one of them stops.</p>
+    <a class="cta" href="../../#list=openclaw/openclaw,earendil-works/pi,continuedev/continue,ollama/ollama,ggml-org/llama.cpp,headroomlabs-ai/headroom,nearai/ironclaw">Open all 7 in the atlas &rarr;</a>
+    <p class="meta take">From there: save them to your own projects, or export the set as Markdown,
+      a standalone HTML page, or a PDF.</p>
+  </div>
+  <nav>
+    <a href="../../collections/">Collections</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+    <a href="../../repo/">All projects</a> ·
+    <a href="../../#browse">Topics &amp; harnesses</a><br>
+    <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown</a><br>
+    <button class="chip" id="theme" aria-pressed="false">Light theme</button>
+  </nav>
+</div></div></header>
+
+<main><div class="wrap">
+<ol class="picks">
+<li class="pick">
+  <p class="role"><span class="slot">1</span> The framework</p>
+  <h2><a href="../../repo/openclaw/openclaw/">openclaw</a></h2>
+  <a class="nwo" href="https://github.com/openclaw/openclaw">openclaw/openclaw</a>
+  <p class="why">The most-starred project in the atlas, and it puts Windows in the same sentence as macOS and Linux rather than in a footnote. Three source lists carry it.</p>
+  <p class="desc">Open-source AI agent framework that turns LLMs into persistent, proactive personal AI agents with multi-channel messaging (Signal, Telegram, Discord, WhatsApp), cron scheduling, memory systems, MCP integration, skill plugins, sub-agent spawning, and browser automation</p>
+  <code class="cmd">npm install -g openclaw@latest --allow-scripts=openclaw</code>
+  <p class="meta ev"><b>388,645</b> stars · 3 of 11 lists · TypeScript · no licence stated · pushed 2026-09-02</p>
+  <p class="meta os"><span class="vY">Win</span> <span class="vY">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/frameworks-sdks/">Frameworks &amp; SDKs</a> <span class="tag">MCP</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">2</span> The harness</p>
+  <h2><a href="../../repo/earendil-works/pi/">Pi</a></h2>
+  <a class="nwo" href="https://github.com/earendil-works/pi">earendil-works/pi</a>
+  <p class="why">A deliberately small terminal harness built around skills loaded on demand. Small is what makes it portable: there is less of it to be Unix-shaped.</p>
+  <p class="desc">Minimal terminal coding harness built around &quot;lazy skills&quot;: each capability keeps only a one-line description in active context, loading full instructions and tool schemas only when invoked. Keeps the system prompt under 1,000 tokens versus 7,000–10,000 for typical agents, making it a concrete reference for context-minimal harness design</p>
+  <code class="cmd">git clone https://github.com/earendil-works/pi.git</code>
+  <p class="meta ev"><b>101,379</b> stars · 1 list · TypeScript · MIT · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> </p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">3</span> The coding agent</p>
+  <h2><a href="../../repo/continuedev/continue/">Continue</a></h2>
+  <a class="nwo" href="https://github.com/continuedev/continue">continuedev/continue</a>
+  <p class="why">Ships as an editor extension, which is why it works on Windows without a WSL detour -- the editor has already solved that problem.</p>
+  <p class="desc">open-source coding agent</p>
+  <code class="cmd">git clone https://github.com/continuedev/continue.git</code>
+  <p class="meta ev"><b>35,740</b> stars · 1 list · TypeScript · Apache-2.0 · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/coding-agents/">Coding Agents</a> </p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">4</span> The model runner</p>
+  <h2><a href="../../repo/ollama/ollama/">Ollama</a></h2>
+  <a class="nwo" href="https://github.com/ollama/ollama">ollama/ollama</a>
+  <p class="why">A native Windows build, a one-line pull, and no Python environment to get wrong. If you want a local model on Windows this is the shortest path to one.</p>
+  <p class="desc">Run LLMs locally. 162k+ stars. Dead simple CLI</p>
+  <code class="cmd">irm https://ollama.com/install.ps1 | iex</code>
+  <p class="meta ev"><b>180,046</b> stars · 1 list · Go · MIT · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> <span class="tag">Local / Ollama</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">5</span> The inference engine</p>
+  <h2><a href="../../repo/ggml-org/llama.cpp/">llama.cpp</a></h2>
+  <a class="nwo" href="https://github.com/ggml-org/llama.cpp">ggml-org/llama.cpp</a>
+  <p class="why">The C++ layer under most of local AI, with first-class Windows builds and no runtime to install. Worth knowing directly once the layer above it surprises you.</p>
+  <p class="desc">C/C++ inference. CPU, GPU, Apple Silicon. Foundation of local AI</p>
+  <code class="cmd">git clone https://github.com/ggml-org/llama.cpp.git</code>
+  <p class="meta ev"><b>126,906</b> stars · 1 list · C++ · MIT · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vY">Win</span> <span class="vN">WSL</span> <span class="vY">mac</span> <span class="vN">Lin</span> <span class="vN">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> <span class="tag">Local / Ollama</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">6</span> The context budget</p>
+  <h2><a href="../../repo/headroomlabs-ai/headroom/">headroom</a></h2>
+  <a class="nwo" href="https://github.com/headroomlabs-ai/headroom">headroomlabs-ai/headroom</a>
+  <p class="why">Compresses tool output, logs and files before they reach the window. Windows and Docker support are both stated, and it sits in front of whatever agent you chose.</p>
+  <p class="desc">Compresses tool outputs, logs, files, and RAG chunks before they enter the context window, cutting active tokens by 60–95% without changing answers. Ships as a library, proxy, and MCP server — the right drop-in layer for any harness where bulky tool returns are the primary context pressure source</p>
+  <code class="cmd">uv tool install --python 3.13 &quot;headroom-ai[all]&quot; # CLI in a self-contained env</code>
+  <p class="meta ev"><b>68,768</b> stars · 1 list · Python · Apache-2.0 · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vY">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/context-memory-rag/">Context, Memory &amp; RAG</a> <span class="tag">Claude / Anthropic</span><span class="tag">MCP</span><span class="tag">LangChain / LangGraph</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">7</span> The sandbox</p>
+  <h2><a href="../../repo/nearai/ironclaw/">ironclaw</a></h2>
+  <a class="nwo" href="https://github.com/nearai/ironclaw">nearai/ironclaw</a>
+  <p class="why">Treats agent execution as a privacy and isolation problem rather than a convenience one. Two source lists agree, and Windows support is documented rather than assumed.</p>
+  <p class="desc">NEAR AI&#x27;s open-source agent OS that treats agent execution as a privacy-first harness problem: untrusted tools run in WASM sandboxes with capability-based permissions, credentials are injected at the host boundary with leak detection, and prompt-injection filtering plus endpoint allowlisting constrain agent behavior. The combination of local encrypted storage, hybrid-search memory, MCP server supp</p>
+  <code class="cmd">irm &quot;https://github.com/nearai/ironclaw/releases/download/$IronClawReleaseTag/ironclaw-installer.ps1&quot; | iex</code>
+  <p class="meta ev"><b>12,603</b> stars · 2 of 11 lists · Rust · Apache-2.0 · pushed 2026-09-02</p>
+  <p class="meta os"><span class="vY">Win</span> <span class="vY">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/sandbox-security-governance/">Sandbox, Security &amp; Governance</a> <span class="tag">MCP</span></p>
+</li>
+</ol>
+
+<section class="allin">
+  <h2>The whole set, in one paste</h2>
+  <p>Every install command above, in the order they are listed. Read them before you run them &mdash; they are other people's one-liners, and 2 of them pipe a download straight into a shell.</p>
+  <pre class="cmd">npm install -g openclaw@latest --allow-scripts=openclaw
+git clone https://github.com/earendil-works/pi.git
+git clone https://github.com/continuedev/continue.git
+irm https://ollama.com/install.ps1 | iex
+git clone https://github.com/ggml-org/llama.cpp.git
+uv tool install --python 3.13 &quot;headroom-ai[all]&quot; # CLI in a self-contained env
+irm &quot;https://github.com/nearai/ironclaw/releases/download/$IronClawReleaseTag/ironclaw-installer.ps1&quot; | iex</pre>
+</section>
+
+<nav class="rel">
+  <h2>The other collections</h2>
+  <p>Same idea, different question. Each one fills every slot once.</p>
+  <a class="chip" href="../../collections/first-setup/">A first agentic setup <span class="ct">7</span></a><a class="chip" href="../../collections/claude-code-kit/">The Claude Code power kit <span class="ct">7</span></a><a class="chip" href="../../collections/local-only/">Nothing leaves the laptop <span class="ct">7</span></a><a class="chip" href="../../collections/keep-it-honest/">Find out what the agent actually did <span class="ct">7</span></a>
+  <h2>Or browse the whole atlas</h2>
+  <p>1,294 projects, no opinions, every filter in the URL.</p>
+  <a class="chip" href="../../">The interactive index</a>
+  <a class="chip" href="../../collections/">All collections</a>
+</nav>
+</div></main>
+
+<footer><div class="wrap">
+  These are editorial picks, and the only editorial pages on the
+  <a href="../../">Awesome Agentic Atlas</a> &mdash; every other page is what 11
+  awesome-lists agreed on, ranked by a number GitHub maintains. Here somebody chose, the reasoning is
+  printed beside each pick, and the curation is a
+  <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json">reviewable file</a> you can
+  open an issue against. Stars, language, licence and last-push come from the GitHub API on
+  2026-09-03 and drift daily. Platform verdicts are derived from each project's own README, install
+  route, CI config and release assets &mdash; <span class="vY">green</span> is stated evidence,
+  <span class="vL">amber</span> is inferred from the language. A build here fails rather than publish a
+  pick whose evidence has stopped supporting the claim above it.
+</div></footer>
+<script>
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
+  const light = document.documentElement.dataset.theme !== "light";
+  document.documentElement.dataset.theme = light ? "light" : "dark";
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
+};
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

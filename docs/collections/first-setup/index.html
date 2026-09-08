@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A first agentic setup — Awesome Agentic Atlas</title>
+<meta name="description" content="7 picked projects: The atlas has 1,294 projects in it, which is the wrong number to start from. This is one working setup instead: an agent, the things it…">
+<link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/collections/first-setup/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="A first agentic setup — Awesome Agentic Atlas">
+<meta property="og:description" content="7 picked projects: The atlas has 1,294 projects in it, which is the wrong number to start from. This is one working setup instead: an agent, the things it…">
+<meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/collections/first-setup/">
+<meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<meta property="og:image:alt" content="The Awesome Agentic Atlas repository on GitHub.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<meta name="theme-color" id="tc" content="#101217">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+} catch (e) {}
+</script>
+<link rel="stylesheet" href="../../pages.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"A first agentic setup","description":"The atlas has 1,294 projects in it, which is the wrong number to start from. This is one working setup instead: an agent, the things it loads, the place it runs, and the two tools that tell you afterwards whether it did what you asked. Every slot is filled once. Swap any of them later -- the point…","url":"https://crazy54.github.io/awesome-agentic-atlas/collections/first-setup/","numberOfItems":7,"itemListOrder":"https://schema.org/ItemListUnordered","itemListElement":[{"@type":"ListItem","position":1,"name":"OpenCode","description":"The agent","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/anomalyco/opencode/"},{"@type":"ListItem","position":2,"name":"Superpowers","description":"What it knows how to do","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/obra/superpowers/"},{"@type":"ListItem","position":3,"name":"mem0","description":"What it remembers","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mem0ai/mem0/"},{"@type":"ListItem","position":4,"name":"modelcontextprotocol/servers","description":"How it reaches your tools","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/modelcontextprotocol/servers/"},{"@type":"ListItem","position":5,"name":"Daytona","description":"Where it runs","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/daytonaio/daytona/"},{"@type":"ListItem","position":6,"name":"Langfuse","description":"What it actually did","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/langfuse/langfuse/"},{"@type":"ListItem","position":7,"name":"Learn Claude Code","description":"What to read while it runs","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/shareai-lab/learn-claude-code/"}]}</script>
+</head>
+<body>
+<header><div class="wrap"><div class="top">
+  <div>
+    <p class="kick">Collection · Seven decisions, one afternoon</p>
+    <h1>A first agentic setup</h1>
+    <p class="sub"><b>7</b> picks · <b>7</b> of the atlas's
+      14 topics · <b>821,311</b> combined stars ·
+      snapshot 2026-09-03</p>
+    <p class="intro">The atlas has 1,294 projects in it, which is the wrong number to start from. This is one working setup instead: an agent, the things it loads, the place it runs, and the two tools that tell you afterwards whether it did what you asked. Every slot is filled once. Swap any of them later -- the point of the set is that you can start today and still know what each piece is for.</p>
+    <a class="cta" href="../../#list=anomalyco/opencode,obra/superpowers,mem0ai/mem0,modelcontextprotocol/servers,daytonaio/daytona,langfuse/langfuse,shareAI-lab/learn-claude-code">Open all 7 in the atlas &rarr;</a>
+    <p class="meta take">From there: save them to your own projects, or export the set as Markdown,
+      a standalone HTML page, or a PDF.</p>
+  </div>
+  <nav>
+    <a href="../../collections/">Collections</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+    <a href="../../repo/">All projects</a> ·
+    <a href="../../#browse">Topics &amp; harnesses</a><br>
+    <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown</a><br>
+    <button class="chip" id="theme" aria-pressed="false">Light theme</button>
+  </nav>
+</div></div></header>
+
+<main><div class="wrap">
+<ol class="picks">
+<li class="pick">
+  <p class="role"><span class="slot">1</span> The agent</p>
+  <h2><a href="../../repo/anomalyco/opencode/">OpenCode</a></h2>
+  <a class="nwo" href="https://github.com/anomalyco/opencode">anomalyco/opencode</a>
+  <p class="why">Terminal-native, MIT, and the one coding agent here that three separate source lists picked independently. It runs against whichever model you already pay for rather than tying the setup to one vendor.</p>
+  <p class="desc">Open-source terminal-native AI coding agent with 131K+ stars and 2.5M+ monthly active developers. Provider-agnostic architecture supports 75+ LLM providers plus native LSP auto-configuration, multi-session parallel agents, and MCP extensibility. The build/plan agent split and client/server architecture make it the most complete open-source reference for a terminal-first coding harness</p>
+  <code class="cmd">scoop install opencode # Windows</code>
+  <p class="meta ev"><b>203,467</b> stars · 3 of 11 lists · TypeScript · MIT · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vN">Win</span> <span class="vN">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vN">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/coding-agents/">Coding Agents</a> <span class="tag">opencode</span><span class="tag">MCP</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">2</span> What it knows how to do</p>
+  <h2><a href="../../repo/obra/superpowers/">Superpowers</a></h2>
+  <a class="nwo" href="https://github.com/obra/superpowers">obra/superpowers</a>
+  <p class="why">The most-starred skills bundle in the atlas and, unusually, one that spans seven different harnesses -- so the competencies survive changing your mind about the agent above.</p>
+  <p class="desc">by Jesse Vincent - A strong bundle of core competencies for software engineering, with good coverage of a large portion of the SDLC - from planning, reviewing, testing, debugging... Well written, well organized, and adaptable. The author refers to them as &quot;superpowers&quot;, but many of them are just consolidating engineering best practices - which sometimes does feel like a superpower when working wit</p>
+  <code class="cmd">git clone https://github.com/obra/superpowers.git</code>
+  <p class="meta ev"><b>281,176</b> stars · 3 of 11 lists · Shell · MIT · pushed 2026-08-31</p>
+  <p class="meta os"><span class="vN">Win</span> <span class="vN">WSL</span> <span class="vN">mac</span> <span class="vN">Lin</span> <span class="vN">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/agent-skills/">Agent Skills</a> <span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">MCP</span><span class="tag">Codex / OpenAI</span><span class="tag">Gemini / Google</span><span class="tag">GitHub Copilot</span><span class="tag">Cursor</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">3</span> What it remembers</p>
+  <h2><a href="../../repo/mem0ai/mem0/">mem0</a></h2>
+  <a class="nwo" href="https://github.com/mem0ai/mem0">mem0ai/mem0</a>
+  <p class="why">A memory layer you drop in rather than a database you design. Apache-2.0, and it states support on Windows and in Docker, which most of this category does not.</p>
+  <p class="desc">Drop-in universal memory layer (YC-backed, AWS Agent SDK&#x27;s exclusive memory provider) that handles cross-session retention without custom harness-level state management code. Lowest integration cost for production-grade persistent memory</p>
+  <code class="cmd">npm install -g @mem0/cli # or: pip install mem0-cli</code>
+  <p class="meta ev"><b>64,649</b> stars · 2 of 11 lists · Python · Apache-2.0 · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vY">Win</span> <span class="vL">WSL</span> <span class="vY">mac</span> <span class="vY">Lin</span> <span class="vY">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/context-memory-rag/">Context, Memory &amp; RAG</a> <span class="tag">Codex / OpenAI</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">4</span> How it reaches your tools</p>
+  <h2><a href="../../repo/modelcontextprotocol/servers/">modelcontextprotocol/servers</a></h2>
+  <a class="nwo" href="https://github.com/modelcontextprotocol/servers">modelcontextprotocol/servers</a>
+  <p class="why">The reference MCP servers, from the people who wrote the protocol. Start here and you learn the shape every third-party server in the atlas is copying.</p>
+  <p class="desc">Anthropic&#x27;s official reference MCP server implementations (GitHub, Slack, Postgres, Puppeteer, etc.). The authoritative source for understanding correct MCP server structure before building your own</p>
+  <code class="cmd">npx -y @modelcontextprotocol/server-memory</code>
+  <p class="meta ev"><b>90,050</b> stars · 2 of 11 lists · TypeScript · no licence stated · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/mcp-servers/">MCP Servers</a> <span class="tag">Claude / Anthropic</span><span class="tag">MCP</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">5</span> Where it runs</p>
+  <h2><a href="../../repo/daytonaio/daytona/">Daytona</a></h2>
+  <a class="nwo" href="https://github.com/daytonaio/daytona">daytonaio/daytona</a>
+  <p class="why">Container sandboxes that start in under a tenth of a second, which is the difference between isolating every run and isolating the runs you remember to. An agent with shell access and no sandbox is a decision, not a default.</p>
+  <p class="desc">OCI-container sandboxes with sub-90ms startup, built-in Git operations, LSP support, and indefinite state persistence. Complements E2B for harnesses that need long-lived working directories across multiple agent sessions rather than ephemeral code execution</p>
+  <code class="cmd">pip install daytona</code>
+  <p class="meta ev"><b>71,828</b> stars · 1 list · no licence stated · pushed 2026-07-24</p>
+  <p class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/sandbox-security-governance/">Sandbox, Security &amp; Governance</a> </p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">6</span> What it actually did</p>
+  <h2><a href="../../repo/langfuse/langfuse/">Langfuse</a></h2>
+  <a class="nwo" href="https://github.com/langfuse/langfuse">langfuse/langfuse</a>
+  <p class="why">Self-hostable tracing, so the record of what the agent sent and got back stays on your own machine. Two source lists agree on it and it is the most widely adopted of the open options.</p>
+  <p class="desc">The most widely adopted self-hostable LLM observability platform: traces every agent step, manages prompt versions, and runs evals in one tool. Preferred over cloud-only alternatives when data residency or cost control is a constraint</p>
+  <code class="cmd">pip install langfuse openai</code>
+  <p class="meta ev"><b>34,156</b> stars · 2 of 11 lists · TypeScript · no licence stated · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vY">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/observability-evals/">Observability &amp; Evals</a> <span class="tag">Codex / OpenAI</span><span class="tag">LangChain / LangGraph</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">7</span> What to read while it runs</p>
+  <h2><a href="../../repo/shareai-lab/learn-claude-code/">Learn Claude Code</a></h2>
+  <a class="nwo" href="https://github.com/shareAI-lab/learn-claude-code">shareAI-lab/learn-claude-code</a>
+  <p class="why">A read-through of how a real coding agent is built rather than a tutorial for using one. It is the fastest way to stop being surprised by the six choices above.</p>
+  <p class="desc">by shareAI-lab - A really interesting analysis of how coding agents like Claude Code are designed. It attempts to break an agent down into its fundamental parts and reconstruct it with minimal code. Great learning resource. Final product is a rudimentary agent with skills, sub-agents, and a todo-list in roughly a few hundred lines of Python</p>
+  <code class="cmd">npm i -g @shareai-lab/kode</code>
+  <p class="meta ev"><b>75,985</b> stars · 2 of 11 lists · Python · MIT · pushed 2026-08-26</p>
+  <p class="meta os"><span class="vL">Win</span> <span class="vL">WSL</span> <span class="vL">mac</span> <span class="vL">Lin</span> <span class="vN">Doc</span></p>
+  <p class="meta tp"><a href="../../topic/docs-learning-lists/">Docs, Learning &amp; Lists</a> <span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span></p>
+</li>
+</ol>
+
+<section class="allin">
+  <h2>The whole set, in one paste</h2>
+  <p>Every install command above, in the order they are listed. Read them before you run them &mdash; they are other people's one-liners, and none of this set pipes a download into a shell.</p>
+  <pre class="cmd">scoop install opencode # Windows
+git clone https://github.com/obra/superpowers.git
+npm install -g @mem0/cli # or: pip install mem0-cli
+npx -y @modelcontextprotocol/server-memory
+pip install daytona
+pip install langfuse openai
+npm i -g @shareai-lab/kode</pre>
+</section>
+
+<nav class="rel">
+  <h2>The other collections</h2>
+  <p>Same idea, different question. Each one fills every slot once.</p>
+  <a class="chip" href="../../collections/windows-first/">Runs on Windows, and says so <span class="ct">7</span></a><a class="chip" href="../../collections/claude-code-kit/">The Claude Code power kit <span class="ct">7</span></a><a class="chip" href="../../collections/local-only/">Nothing leaves the laptop <span class="ct">7</span></a><a class="chip" href="../../collections/keep-it-honest/">Find out what the agent actually did <span class="ct">7</span></a>
+  <h2>Or browse the whole atlas</h2>
+  <p>1,294 projects, no opinions, every filter in the URL.</p>
+  <a class="chip" href="../../">The interactive index</a>
+  <a class="chip" href="../../collections/">All collections</a>
+</nav>
+</div></main>
+
+<footer><div class="wrap">
+  These are editorial picks, and the only editorial pages on the
+  <a href="../../">Awesome Agentic Atlas</a> &mdash; every other page is what 11
+  awesome-lists agreed on, ranked by a number GitHub maintains. Here somebody chose, the reasoning is
+  printed beside each pick, and the curation is a
+  <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json">reviewable file</a> you can
+  open an issue against. Stars, language, licence and last-push come from the GitHub API on
+  2026-09-03 and drift daily. Platform verdicts are derived from each project's own README, install
+  route, CI config and release assets &mdash; <span class="vY">green</span> is stated evidence,
+  <span class="vL">amber</span> is inferred from the language. A build here fails rather than publish a
+  pick whose evidence has stopped supporting the claim above it.
+</div></footer>
+<script>
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
+  const light = document.documentElement.dataset.theme !== "light";
+  document.documentElement.dataset.theme = light ? "light" : "dark";
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
+};
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

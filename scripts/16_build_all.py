@@ -34,12 +34,16 @@ a colour.
 """
 import importlib.util
 import json
+import re
+import shutil
 import sys
+import zipfile
 from datetime import date
 from pathlib import Path
 
 from openpyxl import Workbook
 from openpyxl.chart import BarChart, Reference
+from openpyxl.drawing.image import Image as XLImage
 from openpyxl.drawing.spreadsheet_drawing import AnchorMarker, TwoCellAnchor
 from openpyxl.formatting.rule import DataBarRule
 from openpyxl.styles import Alignment, Border, Font, PatternFill
@@ -60,6 +64,17 @@ ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 SHOTS = CACHE / "shots"
 OUT = ROOT
+
+# The website and the workbooks share one identity.  Keep the small globe mark and Atlas Byte as
+# ordinary source assets rather than drawing them from cells: this preserves the transparent edges and
+# lets the two themed covers use the exact same recognisable artwork without introducing a third palette.
+BRAND_MARK = ROOT / "docs" / "icon-192.png"
+BRAND_MASCOT = ROOT / "docs" / "assets" / "atlas-byte.png"
+PACKAGE_REL = "http://schemas.openxmlformats.org/package/2006/relationships"
+OFFICE_REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+REL_DRAWING = f"{OFFICE_REL}/drawing"
+REL_IMAGE = f"{OFFICE_REL}/image"
+EMU_PER_PX = 9525
 
 spec = importlib.util.spec_from_file_location("b07", Path(__file__).parent / "07_build.py")
 b7 = importlib.util.module_from_spec(spec)
@@ -1195,6 +1210,19 @@ def build_cover(wb, T, stats, per_source):
         lines = max(1, -(-len(text) // int(per_line)))
         return lines * (13 if size <= 9 else 15) + 3
 
+    def cover_image(asset: Path, anchor: str, width: int, height: int) -> None:
+        """Place a bounded brand asset without disturbing cover cells or merged ranges."""
+        if not asset.is_file():
+            raise FileNotFoundError(
+                f"Cover branding asset is missing: {asset.relative_to(ROOT)}. "
+                "Restore the shared web asset before building the workbooks."
+            )
+        image = XLImage(asset)
+        image.width = width
+        image.height = height
+        image.anchor = anchor
+        ws.add_image(image)
+
     paint(ws, 1, 4, 1, 14, fill(T["plane"]))
     ws.row_dimensions[2].height = 40
     ws.row_dimensions[3].height = 32
@@ -1206,6 +1234,13 @@ def build_cover(wb, T, stats, per_source):
         size=10, color=T["ink2"], span=11, wrap=True)
     put(4, 2, f"Snapshot {date.today().isoformat()}  ·  every source list is credited on the "
               f"Sources sheet", size=9, color=T["muted"], span=9)
+
+    # Upper-right is deliberately spare on the cover. The mark sits beside the title, while the
+    # mascot stays above the theme-switch link; each is bounded to its own cell area so neither
+    # conceals the title, snapshot, or live controls in either theme.
+    cover_image(BRAND_MARK, "L1", 32, 32)
+    cover_image(BRAND_MASCOT, "M1", 86, 90)
+    put(5, 13, "ATLAS BYTE", size=8, bold=True, color=T["bar"], span=2, align="center")
 
     row = 6
     put(row, 2, "AT A GLANCE", size=10, bold=True, color=T["muted"])
@@ -1381,6 +1416,200 @@ def build_cover(wb, T, stats, per_source):
                 f"repaint a sheet without macros, so the two themes are two files with identical content.)",
         size=9, italic=True, color=T["muted"], span=BODY)
     return ws
+
+
+# ------------------------------------------------------------------ release-brand fallback
+def _rel_target(xml: str, type_: str, base: str) -> str:
+    """Resolve one relationship target without depending on attribute order in a `.rels` part."""
+    m = re.search(rf'<Relationship [^>]*Type="{re.escape(type_)}"[^>]*Target="([^"]+)"', xml)
+    if not m:
+        raise ValueError(f"No {type_!r} relationship in {base}")
+    target = m.group(1)
+    if target.startswith("/"):
+        return target.lstrip("/")
+    resolved = (Path(base).parent / target).as_posix()
+    while "/../" in resolved:
+        resolved = re.sub(r"[^/]+/\.\./", "", resolved, count=1)
+    return resolved
+
+
+def _next_rid(rels: str) -> str:
+    used = [int(n) for n in re.findall(r'Id="rId(\d+)"', rels)]
+    return f"rId{max(used, default=0) + 1}"
+
+
+def _insert_before_close(xml: str, tag: str, fragment: str) -> str:
+    closing = f"</{tag}>"
+    at = xml.rindex(closing)
+    return xml[:at] + fragment + xml[at:]
+
+
+def _insert_drawing_ref(sheet_xml: str, rid: str) -> str:
+    """Append the drawing at the worksheet-schema position, before elements that must follow it."""
+    fragment = f'<drawing xmlns:r="{OFFICE_REL}" r:id="{rid}"/>'
+    following = ("drawing", "legacyDrawing", "legacyDrawingHF", "picture", "oleObjects", "controls",
+                 "webPublishItems", "tableParts", "extLst")
+    positions = [sheet_xml.index(f"<{tag}") for tag in following if f"<{tag}" in sheet_xml]
+    if positions:
+        at = min(positions)
+        return sheet_xml[:at] + fragment + sheet_xml[at:]
+    return _insert_before_close(sheet_xml, "worksheet", fragment)
+
+
+def _cover_picture_xml(col: int, width: int, height: int, rid: str, shape_id: int,
+                       name: str, description: str) -> str:
+    """A one-cell picture anchor in the exact shape emitted by openpyxl for the canonical cover."""
+    cx, cy = width * EMU_PER_PX, height * EMU_PER_PX
+    return (
+        "<oneCellAnchor>"
+        f"<from><col>{col}</col><colOff>0</colOff><row>0</row><rowOff>0</rowOff></from>"
+        f'<ext cx="{cx}" cy="{cy}"/>'
+        "<pic><nvPicPr>"
+        f'<cNvPr id="{shape_id}" name="{name}" descr="{description}"/>'
+        "<cNvPicPr/></nvPicPr>"
+        f'<blipFill><a:blip cstate="print" r:embed="{rid}"/>'
+        "<a:stretch><a:fillRect/></a:stretch></blipFill>"
+        '<spPr><a:prstGeom prst="rect"/></spPr></pic><clientData/></oneCellAnchor>'
+    )
+
+
+def inject_existing_cover_brand(path: Path) -> None:
+    """Add the two brand pictures to an already-built release workbook without reserialising it.
+
+    This is an intentionally narrow recovery path for a checkout without the crawler cache. Loading a
+    release workbook through openpyxl to add two images would re-write every screenshot placement and
+    can discard unsupported package parts. Instead, retain every existing package-part payload without
+    model/XML reserialization and add the same drawing XML that openpyxl emits in a fresh canonical build. Normal weekly builds use
+    ``build_cover`` above; this function only makes a local release asset reflect that same cover when
+    the inputs needed to rebuild all 2,000+ media parts are unavailable.
+    """
+    for asset in (BRAND_MARK, BRAND_MASCOT):
+        if not asset.is_file():
+            raise FileNotFoundError(f"Cover branding asset is missing: {asset.relative_to(ROOT)}")
+
+    with zipfile.ZipFile(path) as zin:
+        names = set(zin.namelist())
+        media_names = ("xl/media/atlas-cover-mark.png", "xl/media/atlas-cover-byte.png")
+        if any(name in names for name in media_names):
+            raise ValueError(f"{path.name} already has the Atlas cover branding; refusing to duplicate it")
+
+        workbook_xml = zin.read("xl/workbook.xml").decode("utf-8")
+        workbook_rels = zin.read("xl/_rels/workbook.xml.rels").decode("utf-8")
+        sheet_match = re.search(r'<sheet name="Start Here"[^>]*r:id="(rId\d+)"', workbook_xml)
+        if not sheet_match:
+            raise ValueError(f"{path.name} has no Start Here cover")
+        sheet_rid = sheet_match.group(1)
+        sheet_target = re.search(rf'<Relationship [^>]*Target="([^"]+)" Id="{sheet_rid}"', workbook_rels) or \
+            re.search(rf'<Relationship [^>]*Id="{sheet_rid}"[^>]*Target="([^"]+)"', workbook_rels)
+        if not sheet_target:
+            raise ValueError(f"{path.name} cannot resolve its Start Here cover")
+        sheet_part = _rel_target(
+            f'<Relationships><Relationship Type="{REL_DRAWING}" Target="{sheet_target.group(1)}"/></Relationships>',
+            REL_DRAWING, "xl/workbook.xml")
+        sheet_rels_part = f"{Path(sheet_part).parent.as_posix()}/_rels/{Path(sheet_part).name}.rels"
+        sheet_xml = zin.read(sheet_part).decode("utf-8")
+        sheet_rels = (zin.read(sheet_rels_part).decode("utf-8") if sheet_rels_part in names else
+                      f'<Relationships xmlns="{PACKAGE_REL}"></Relationships>')
+        if REL_DRAWING in sheet_rels:
+            raise ValueError(f"{path.name} cover already has a drawing relationship; refusing to replace it")
+
+        drawing_numbers = [int(m.group(1)) for name in names
+                           if (m := re.fullmatch(r"xl/drawings/drawing(\d+)\.xml", name))]
+        drawing_part = f"xl/drawings/drawing{max(drawing_numbers, default=0) + 1}.xml"
+        drawing_rels_part = (f"{Path(drawing_part).parent.as_posix()}/_rels/"
+                             f"{Path(drawing_part).name}.rels")
+        drawing_rid = _next_rid(sheet_rels)
+        sheet_rels = sheet_rels.replace(
+            "</Relationships>",
+            f'<Relationship Type="{REL_DRAWING}" Target="/{drawing_part}" Id="{drawing_rid}"/>'
+            "</Relationships>",
+        )
+        sheet_xml = _insert_drawing_ref(sheet_xml, drawing_rid)
+
+        drawing_xml = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            f'<wsDr xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
+            f'xmlns:r="{OFFICE_REL}" '
+            'xmlns="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing">'
+            + _cover_picture_xml(11, 32, 32, "rId1", 1, "Atlas mark", "Atlas globe mark")
+            + _cover_picture_xml(12, 86, 90, "rId2", 2, "Atlas Byte", "Atlas Byte mascot")
+            + "</wsDr>"
+        ).encode("utf-8")
+        drawing_rels = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            f'<Relationships xmlns="{PACKAGE_REL}">'
+            f'<Relationship Type="{REL_IMAGE}" Target="/{media_names[0]}" Id="rId1"/>'
+            f'<Relationship Type="{REL_IMAGE}" Target="/{media_names[1]}" Id="rId2"/>'
+            "</Relationships>"
+        ).encode("utf-8")
+
+        content_types = zin.read("[Content_Types].xml").decode("utf-8")
+        if 'Extension="png"' not in content_types:
+            content_types = content_types.replace(
+                "</Types>", '<Default Extension="png" ContentType="image/png"/></Types>')
+        content_types = content_types.replace(
+            "</Types>",
+            f'<Override PartName="/{drawing_part}" '
+            'ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/></Types>',
+        )
+
+        changed = {
+            sheet_part: sheet_xml.encode("utf-8"),
+            sheet_rels_part: sheet_rels.encode("utf-8"),
+            "[Content_Types].xml": content_types.encode("utf-8"),
+        }
+        tmp = path.with_name(path.name + ".brand.tmp")
+        try:
+            with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED, allowZip64=False) as zout:
+                for info in zin.infolist():
+                    zout.writestr(info, changed.pop(info.filename, zin.read(info.filename)))
+                for name, data in changed.items():
+                    zout.writestr(name, data)
+                zout.writestr(drawing_part, drawing_xml)
+                zout.writestr(drawing_rels_part, drawing_rels)
+                zout.writestr(media_names[0], BRAND_MARK.read_bytes())
+                zout.writestr(media_names[1], BRAND_MASCOT.read_bytes())
+            shutil.move(str(tmp), str(path))
+        finally:
+            tmp.unlink(missing_ok=True)
+
+
+def verify_existing_cover_brand(path: Path) -> None:
+    """Check the package-level facts that Excel needs to resolve both cover images."""
+    with zipfile.ZipFile(path) as archive:
+        names = set(archive.namelist())
+        for name, asset in (("xl/media/atlas-cover-mark.png", BRAND_MARK),
+                            ("xl/media/atlas-cover-byte.png", BRAND_MASCOT)):
+            if name not in names or archive.read(name) != asset.read_bytes():
+                raise ValueError(f"{path.name} is missing or changed cover image {name}")
+        workbook_xml = archive.read("xl/workbook.xml").decode("utf-8")
+        workbook_rels = archive.read("xl/_rels/workbook.xml.rels").decode("utf-8")
+        sheet_rid = re.search(r'<sheet name="Start Here"[^>]*r:id="(rId\d+)"', workbook_xml).group(1)
+        sheet_target = re.search(rf'<Relationship [^>]*Target="([^"]+)" Id="{sheet_rid}"', workbook_rels) or \
+            re.search(rf'<Relationship [^>]*Id="{sheet_rid}"[^>]*Target="([^"]+)"', workbook_rels)
+        sheet_part = _rel_target(
+            f'<Relationships><Relationship Type="{REL_DRAWING}" Target="{sheet_target.group(1)}"/></Relationships>',
+            REL_DRAWING, "xl/workbook.xml")
+        sheet_rels_part = f"{Path(sheet_part).parent.as_posix()}/_rels/{Path(sheet_part).name}.rels"
+        sheet_rels = archive.read(sheet_rels_part).decode("utf-8")
+        drawing_part = _rel_target(sheet_rels, REL_DRAWING, sheet_part)
+        drawing_rels_part = f"{Path(drawing_part).parent.as_posix()}/_rels/{Path(drawing_part).name}.rels"
+        drawing = archive.read(drawing_part).decode("utf-8")
+        drawing_rels = archive.read(drawing_rels_part).decode("utf-8")
+        if ("Atlas mark" not in drawing or "Atlas Byte" not in drawing or
+                "atlas-cover-mark.png" not in drawing_rels or "atlas-cover-byte.png" not in drawing_rels):
+            raise ValueError(f"{path.name} has incomplete cover drawing relationships")
+
+
+def brand_existing_workbooks() -> None:
+    """Recovery command for local release assets when the full crawler cache is unavailable."""
+    for theme in ("dark", "light"):
+        path = OUT / f"{WORKBOOK}-{theme.upper()}.xlsx"
+        if not path.is_file():
+            raise FileNotFoundError(f"Release workbook not found: {path.name}")
+        inject_existing_cover_brand(path)
+        verify_existing_cover_brand(path)
+        print(f"{theme.upper():5s} -> added and verified Atlas cover branding in {path.name}")
 
 
 # ------------------------------------------------------------------ data prep
@@ -1688,4 +1917,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    if "--brand-existing" in sys.argv:
+        brand_existing_workbooks()
+    else:
+        main()

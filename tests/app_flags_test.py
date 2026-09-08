@@ -123,6 +123,14 @@ ok("deployment-badge OFF removes the badge", 'id="deployed"' not in root_page)
 ok("the generated page carries its exact flag values", 'const FLAGS = {"index.card_view":0' in root_page)
 ok("root screenshot rendering has a runtime kill-switch branch", 'FLAGS["index.project_screenshots"]' in root_page)
 ok("root install rendering has a runtime kill-switch branch", 'FLAGS["index.install_commands"]' in root_page)
+# The export switches at runtime rather than at build time, like the two above it and unlike the deployment
+# badge: the chip and its dialog still ship, hidden by `.takechip{display:none}` with nothing wired to them,
+# and `readHash` ignores a `#list=` fragment. Asserted on the branch and on the value, because the markup
+# being present is exactly why the branch is the only thing keeping the feature off.
+ok("root export rendering has a runtime kill-switch branch", 'FLAGS["index.export"]' in root_page)
+ok("export OFF reaches the page as a zero", '"index.export":0' in root_page)
+ok("export OFF leaves the chip in the markup but hidden and unwired",
+   'id="take"' in root_page and ".takechip{display:none}" in root_page)
 
 print(f"\n{passed} passed, {failed} failed")
 raise SystemExit(1 if failed else 0)

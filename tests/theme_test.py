@@ -23,7 +23,9 @@ Run: python tests/theme_test.py
 from __future__ import annotations
 
 import re
+import struct
 import sys
+import zlib
 from pathlib import Path
 
 PAGE = Path(__file__).resolve().parent.parent / "scripts" / "19_pages.py"
@@ -189,11 +191,17 @@ for mode, T in (("dark", DARK), ("light", LIGHT)):
         atleast(f"{mode}: --grid is visible on --{b}", ratio(T["grid"], T[b]), 1.15)
     atleast(f"{mode}: --plane is distinguishable from --surface", ratio(T["plane"], T["surface"]), 1.03)
 
-    # The brief for this palette: dark is black-backed with white ink, light inverts that.
-    want = "#000000" if mode == "dark" else "#F1F0F3"
-    check(f"{mode}: --surface is the intended base", T["surface"], want)
-    check(f"{mode}: --ink is {'white' if mode == 'dark' else 'black'}",
-          T["ink"], "#FFFFFF" if mode == "dark" else "#000000")
+    # The visual brief is graphite rather than absolute black and soft grey rather than absolute white.
+    # Pinning the two endpoints catches the real regression this pass is for: a reader that receives the
+    # old stark base while all the intermediate colours still happen to clear contrast.
+    want_surface = "#090A0D" if mode == "dark" else "#F2F4F7"
+    want_ink = "#F7F8FA" if mode == "dark" else "#14171C"
+    check(f"{mode}: --surface is the intended graphite/soft-grey base", T["surface"], want_surface)
+    check(f"{mode}: --ink is the intended softened foreground", T["ink"], want_ink)
+    check(f"{mode}: --bar is the approved action colour", T["bar"],
+          "#D6A034" if mode == "dark" else "#6557C8")
+    check(f"{mode}: --warn stays distinct from the action colour", T["warn"],
+          "#EF7D86" if mode == "dark" else "#875A19")
 
 # ---------------------------------------------------------------- the two literals that duplicate --plane
 # The pre-paint script sets `theme-color` before the stylesheet is parsed, so it cannot read the
@@ -264,7 +272,8 @@ for h in sorted(og_hex):
 # And that it is the *dark* palette, not the light one it would also parse against. Light `--ink` is
 # black, so a card that had picked up the light block would still be "all palette values" while rendering
 # black text on a black plate.
-true("the OG card is drawn in the dark palette", norm("#000000") in og_hex and DARK["surface"] == "#000000")
+true("the OG card is drawn in the dark palette",
+     DARK["surface"] in og_hex and DARK["surface"] == "#090A0D")
 
 # `24_pwa.py` draws the installed-app icon and writes the manifest, and its colours are Python tuples
 # rather than CSS, so no amount of grepping for hex finds them. Asserted by name against the tokens they
@@ -285,17 +294,40 @@ for const, token in (("SURFACE", "surface"), ("PLANE", "plane"), ("BAR", "bar"),
 true("the manifest's two colours are PLANE, so they match the page's theme-color",
      PWA.count('"#%02x%02x%02x" % PLANE') == 2)
 
-# The icon's two shapes have to be two shapes. Not a WCAG rule -- a launcher icon is not text -- but the
-# reason the ring is `--ink` rather than the second accent, and the assertion is what stops a later edit
-# from "restoring" the accent without knowing why it went. Every accent in this palette was fitted to
-# clear 4.5:1 on black without going lighter than it had to, so they converged to within 1.01:1 of each
-# other: a globe and a ring picked from them differ by hue alone, which is nothing in a monochrome icon
-# slot. 3:1 is the non-text floor and the pair measures 3.81:1.
-atleast("the icon's ring and globe are separable without colour", ratio(tup("RING"), tup("BAR")), LARGE)
-for pair in (("bar", "warn"), ("bar", "link"), ("warn", "link")):
-    a, b = pair
-    check(f"sanity: --{a} and --{b} are within 1.05:1, which is why the ring is not an accent",
-          ratio(DARK[a], DARK[b]) < 1.05, True)
+# The orbit sits outside the globe with a visible gap, so the boundary each shape actually shares is with
+# the plate, not with the other colour. Requiring ring-vs-globe contrast would reject a brighter accent for
+# a boundary the renderer never draws while failing to test the two boundaries it does draw.
+atleast("the icon's ring is visible on its plate", ratio(tup("RING"), tup("SURFACE")), LARGE)
+atleast("the icon's globe is visible on its plate", ratio(tup("BAR"), tup("SURFACE")), LARGE)
+
+
+def png_pixel(path: Path, x: int, y: int) -> str:
+    """Read one pixel from the generator's deliberately simple filter-0 RGBA PNG."""
+    data = path.read_bytes()
+    width, height = struct.unpack(">II", data[16:24])
+    pos, compressed = 8, bytearray()
+    while pos < len(data):
+        length = struct.unpack(">I", data[pos:pos + 4])[0]
+        kind = data[pos + 4:pos + 8]
+        body = data[pos + 8:pos + 8 + length]
+        if kind == b"IDAT":
+            compressed.extend(body)
+        pos += length + 12
+    raw = zlib.decompress(compressed)
+    stride = width * 4 + 1
+    assert width == height == 192 and raw[y * stride] == 0
+    start = y * stride + 1 + x * 4
+    return "#" + bytes(raw[start:start + 3]).hex().upper()
+
+
+# The old app icon was only a globe. These two pixels sit inside that globe but away from every grid line:
+# together they prove that Atlas Byte's black pixel shades and white checker glint made it into the actual
+# generated PNG a launcher installs, not merely into a source comment or the browser-tab SVG.
+ICON_192 = PAGE.parent.parent / "docs" / "icon-192.png"
+check("the installed icon wears Atlas Byte's dark pixel shades",
+      png_pixel(ICON_192, 115, 84), DARK["surface"])
+check("the installed icon carries the shades' white checker glint",
+      png_pixel(ICON_192, 58, 77), DARK["ink"])
 
 print(f"\n{ok} passed, {bad} failed")
 sys.exit(1 if bad else 0)

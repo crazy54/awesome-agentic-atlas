@@ -143,10 +143,15 @@ ok("the generated page contains no copied README body",
 ok("the shared reader asks GitHub for rendered Markdown and discovers nested files",
    detailJS.includes("application/vnd.github.html+json") &&
    detailJS.includes("/git/trees/HEAD?recursive=1") && detailJS.includes("/^skill\\.md$/i"));
-ok("the reader ships distinct prose, heading, and code typography with both colour modes",
+ok("the reader ships distinct prose, heading, and code typography on the site's shared palette",
    detailCSS.includes('Charter,"Bitstream Charter","Sitka Text"') &&
    detailCSS.includes('"Cascadia Code","SFMono-Regular"') &&
-   detailCSS.includes("html[data-theme=light] .reader") && detailCSS.includes("--read-violet"));
+   detailCSS.includes("--read-panel:var(--plane)") &&
+   detailCSS.includes("--read-accent:var(--bar)") &&
+   !detailCSS.includes("--read-violet"));
+ok("detail pages promote the existing leaderboard and project directory",
+   samplePage.includes("/blob/main/mega-list/leaderboard.md") &&
+   samplePage.includes('href="../../../"') && samplePage.includes('href="../../../repo/"'));
 
 // ---- run B: the same data again. Determinism, full stop.
 //
