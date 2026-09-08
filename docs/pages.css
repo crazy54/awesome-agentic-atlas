@@ -12,11 +12,15 @@
   --surface:#090A0D; --plane:#101217; --band:#20242D; --ink:#F7F8FA; --ink2:#D0D5DD;
   --muted:#9BA5B3; --grid:#3A414D; --link:#78B7F4; --bar:#D6A034;
   --good:#5BD5AA; --warn:#EF7D86; --off:#9BA5B3; --onbar:#090A0D;
+  --accent-sky:#78B7F4; --accent-mint:#5BD5AA; --accent-gold:#E7B64D;
+  --accent-coral:#EF7D86; --accent-violet:#A99AF7;
 }
 html[data-theme=light]{
   --surface:#F2F4F7; --plane:#FAFBFC; --band:#E7EAF0; --ink:#14171C; --ink2:#353C47;
   --muted:#596574; --grid:#CAD1DB; --link:#1D5E9E; --bar:#6557C8;
   --good:#187557; --warn:#875A19; --off:#596574; --onbar:#FFFFFF;
+  --accent-sky:#1D5E9E; --accent-mint:#187557; --accent-gold:#9A6718;
+  --accent-coral:#B6465E; --accent-violet:#6557C8;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);
@@ -86,6 +90,32 @@ a.nwo:hover{color:var(--ink)}
 .vY{color:var(--good);font-weight:700}
 .vL{color:var(--warn)}
 .vN,.va,.v-{color:var(--off)}
+/* The five platform marks -- scripts/osicons.py owns the geometry; these are the only rules that
+   apply to all of them. `fill:currentColor` is the whole reason they can sit inside a coloured verdict:
+   a green Y and a grey dash get a green and a grey mark without either being named here. */
+.oi{width:1.15em;height:1.15em;fill:currentColor;vertical-align:-.19em;flex:none}
+/* A mark and its word, when both are shown, should not be separable by a line break. */
+.oiw{white-space:nowrap}
+/* The legend -- see `legend()` for why a `title` is not enough. Sized and coloured like the caption it is,
+   and it wraps, because five pairs do not fit on one line at 335px. */
+.oikey{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 12px;font-size:12.5px;color:var(--muted)}
+/* 14px rather than the shared 1.15em, which at this column's 11.5px would be 13.2px. A mark the same
+   size as the text beside it does not read as a mark, it reads as a smudge in the line -- and unlike the
+   detail page's table there is no word next to these to be measured against, so the mark has to carry
+   the whole of "which platform" on its own. Fixed rather than relative for the same reason: the five sit
+   in a row and their size is the row's rhythm, not the text's. `.os` is `white-space:nowrap`, so the
+   five and the spaces between them cannot break across a line. */
+.os .oi{width:14px;height:14px}
+/* Off screen rather than display:none or visibility:hidden -- both of those take the text out of the
+   accessibility tree as well as off the screen, which defeats the point. Verbatim from `19_pages.py`,
+   which declares it for the index; `.sr` and not `.sr-only`, because that is the name the index uses and
+   the one `25_collections.py` emits.
+   Nothing this stage writes uses it -- the facet rows name their five marks once on the container instead,
+   which is cheaper at 505 marks a page. It is here because the collections pages load this sheet and
+   *do* emit it, and the failure of a missing rule is the worst kind: a platform word printed visibly
+   beside every mark on the page that was meant to be the tidy one. */
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;border:0}
 .rest{margin:22px 0 0;color:var(--ink2);font-size:13.5px}
 .rel{margin-top:34px;border-top:1px solid var(--grid);padding-top:18px}
 .rel h2{margin-top:0}

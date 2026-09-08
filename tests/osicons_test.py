@@ -282,29 +282,35 @@ SYM = re.compile(r'<symbol id="(oi-[a-z0-9-]+)"')
 pages = sorted(DOCS.rglob("index.html"))
 true("there are pages to check", len(pages) > 1400, f"{len(pages)} index.html under docs/")
 
-dangling, spriteless, marked, sprites, doubled = [], [], 0, 0, []
+dangling, spriteless, marked, doubled, unused = [], [], 0, [], []
 for p in pages:
     text = p.read_text(encoding="utf-8", errors="replace")
     uses, syms = set(USE.findall(text)), SYM.findall(text)
-    if syms:
-        sprites += 1
     if len(syms) != len(set(syms)):
-        doubled.append(str(p.relative_to(ROOT)))
+        doubled.append(p.relative_to(ROOT).as_posix())
     if uses:
         marked += 1
         missing = uses - set(syms)
         if missing:
-            dangling.append((str(p.relative_to(ROOT)), sorted(missing)))
+            dangling.append((p.relative_to(ROOT).as_posix(), sorted(missing)))
         if not syms:
-            spriteless.append(str(p.relative_to(ROOT)))
+            spriteless.append(p.relative_to(ROOT).as_posix())
+    elif syms:
+        unused.append(p.relative_to(ROOT).as_posix())
 
 true("marks were published at all", marked > 1400, f"{marked} of {len(pages)} pages draw a mark")
 # The assertion this file exists for.
 eq("every mark on every page resolves to a symbol in that same page", dangling[:6], [])
 eq("...so no page draws a mark it has no sprite for", spriteless[:6], [])
 eq("no page defines the same symbol twice", doubled[:6], [])
-true("a page that draws no mark carries no sprite either",
-     sprites <= marked + 2, f"{sprites} pages define symbols, {marked} draw one")
+# And the other direction, which is 1.4 KB of dead weight per page rather than a wrong answer -- but named
+# exactly rather than tolerated as a count, because the one legitimate case is a specific page for a
+# specific reason. `docs/index.html` builds its rows and chips in the browser, so its sprite is referenced
+# only after the script runs. Every other page either draws a mark or must not carry the sprite: the
+# collections hub does not (it lists collections, not projects) and a detail page with the platform table
+# switched off does not, which is 1.8 MB of path data the flag is there to avoid committing.
+eq("the only page carrying a sprite it does not statically draw from is the client-rendered index",
+   unused, ["docs/index.html"])
 
 # Every id the pages reference is one this module actually declares -- the reverse direction, which
 # catches a hand-typed `#oi-mac` where `#oi-macos` was meant on a page that happens to define both.
@@ -425,6 +431,28 @@ for what, p in FAMILY.items():
     eq(f"{what}: every mark has a platform name within {REACH} elements of it", unnamed[:6], [])
     eq(f"{what}: no mark sits inside a name for a different platform", mispaired[:6], [])
 
+# The index, on its own terms. It ships the sprite and a function that references it, and the marks
+# themselves do not exist until the script runs -- so what can be asserted here is that the pieces are
+# present and that the words came with them. `tests/probe.mjs` runs the script and reads the chips it
+# built; this only has to be sure the script cannot have been left half-wired.
+index = INDEX.read_text(encoding="utf-8", errors="replace")
+eq("the index carries the sprite its script will reference", len(SYM.findall(index)), 5)
+eq("...and draws no mark in the document itself, because it has no rows until it fetches them",
+   USE.findall(index), [])
+# `OSI` is `osicons.JS_IDS` and the ids are lowercase and hyphenated, so nothing about the marks puts the
+# platform words into this document. `OST` is the only thing that does -- which is the whole reason the
+# module exports it, and is why losing it would be a silent, total loss of the five names on the one page
+# most readers see. The words are also what a reader types into the command palette to find a platform.
+for k, lab in enumerate(osicons.LABELS):
+    says(f"the index carries the word {lab} for its script to label a chip with", index, lab)
+says("the index's five chips are built from the shared ids", index, osicons.JS_IDS)
+says("...and named from the shared titles", index, osicons.JS_TITLES)
+# A chip whose whole label is a picture is the one place on the site where dropping the word would take
+# the control's accessible name with it, rather than merely a hover.
+true("...and a chip's label is a mark plus the word, not a mark alone",
+     re.search(r"osIcon\([^)]*\)\s*\+\s*'<span class=\"sr\">'", index),
+     "an OS chip built from osIcon() alone would announce as an unlabelled button")
+
 # --------------------------------------------------------------------------- the surfaces
 
 print("\n── the surfaces " + "─" * 81)
@@ -459,7 +487,7 @@ true("there is Markdown to check", len(md) > 10, f"{len(md)} files")
 # out. What GitHub actually strips is the element and the fragment reference, so those are what is looked
 # for -- an inline sprite, a use of one, or a symbol id in a link.
 STRIPPED = re.compile(r"<svg\b|<use\b|<symbol\b|#oi-")
-offenders = [str(p.relative_to(ROOT)) for p in md
+offenders = [p.relative_to(ROOT).as_posix() for p in md
              if STRIPPED.search(p.read_text(encoding="utf-8", errors="replace"))]
 eq("no Markdown file references a symbol GitHub will strip", offenders, [])
 
