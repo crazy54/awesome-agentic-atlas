@@ -35,10 +35,17 @@
 # token, so **not one of those thirty commits a month triggers anything below**. That is a saving rather
 # than a problem -- thirty runs to discover a star count moved is not worth having -- but it does mean the
 # daily's output is unverified, and the daily is what rewrites `data.json`, `index.html`, `sw.js` and 156
-# facet pages, all four of which this suite asserts on. The canary closes it within seven days. Committing
-# the suite into `daily.yml` itself, before its commit step, would close it within one and is the obvious
-# next move; it is not done here because it would make a failing assertion block the deploy, and that is a
-# policy decision about the site rather than a decision about a test runner.
+# facet pages, all four of which this suite asserts on. The canary closed it within seven days.
+#
+# JFH-284 closed it within one: `daily.yml` now runs this same suite itself, after its generators and before
+# its commit step, so the pages that job publishes are verified on the way out. The policy question that had
+# kept it out of there -- whether a red assertion should stop the site updating -- is answered by one
+# `VERIFY_GATES_DEPLOY` flag at the top of that file rather than by where a step sits, and it ships not
+# gating: the site always ships and a red suite reddens the run. Two consequences for this file. It is no
+# longer the only place a failing assertion can be seen before a reader sees the bug, and the Monday run
+# below is now a backstop rather than the net. And the suite has a second caller whose working tree is not a
+# clean checkout, which is why nothing here may start writing into `docs/` -- `daily.yml` photographs that
+# directory either side of the run and refuses to publish if a harness touched it.
 #
 # 07:40 UTC on Mondays, which is a time and not a round number. `weekly.yml` starts Sundays at 12:40 UTC
 # with a 350-minute timeout for a cold screenshot cache, so it can still be running at 18:30; this is
