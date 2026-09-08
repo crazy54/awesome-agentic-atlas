@@ -155,6 +155,13 @@ export async function launch(bin, tmp = tmpdir(), tag = "chrome") {
   // again. Fifteen seconds was one warm laptop written down as though it were a property of Chrome, which is
   // the same defect class JFH-223 removed from `cards-check.mjs`: a wall-clock budget with no margin.
   //
+  // The reason for 60 is variance and not a floor, which matters if you are ever tempted to shave it. That
+  // same first launch, on the same runner image, three consecutive runs: 15.6 s (failed against the old
+  // budget), 48.2 s, 16.8 s. A cost that swings threefold between identical machines has no number you can
+  // sit just above, so this one sits well clear of the worst seen -- and a run that starts in 300 ms is not
+  // charged for it, because a timeout is not a sleep. Someone reading a 16.8 s log will be tempted to call
+  // 60 excessive; the 48.2 s log is the answer.
+  //
   // Elapsed time rather than an iteration count, so that the number in the code is the number in the error
   // and the wait is reported either way. "Never wrote it" and "took longer than this was willing to wait"
   // are different diagnoses and should not have to be told apart by arithmetic on a duration in a log.

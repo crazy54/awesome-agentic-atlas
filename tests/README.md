@@ -148,6 +148,28 @@ set to pin it: the value of running this anywhere is that it is not the laptop t
 choosing the closest available browser to that laptop would buy agreement by construction. The one setting CI
 does need is `AAA_CHROME_FLAGS: --no-sandbox --disable-dev-shm-usage`, for the reason in the table below.
 
+### What the first CI run found, which is the argument for having one
+
+This suite was green on every machine that had ever run it, and red on `ubuntu-latest` the first time a
+runner tried. Two defects, both in `tests/` rather than in the site, and neither findable from one platform:
+
+- `lib/browser.mjs` waited 15 seconds for Chrome to write `DevToolsActivePort`. The first browser launch of
+  a CI run took 15.6, so the first browser harness died having asserted nothing. The budget is 60 now, and
+  the reason is variance rather than a floor: the same launch on the same image took 15.6 s, then 48.2 s,
+  then 16.8 s. There is no number to sit just above, and a timeout is not a sleep — a browser ready in
+  300 ms is not charged for the ceiling.
+- `pwa-check.mjs`'s offline helper called `Target.attachToTarget` on every invocation, and that opens a
+  *new* session rather than returning the existing one. Seven calls left seven sessions on the service
+  worker with conflicting network conditions, so whether the worker came back online depended on how a
+  particular Chrome merges them. `chrome-headless-shell` 1223 takes the last write and passed; Chromium 152
+  does not, and six assertions failed — the first genuinely, the other five as consequences of a worker that
+  was never let back online. One session per target now, and the harness went from 18.5 s red to 2.9 s green.
+
+Both are the shape this suite already warns about, one level up: not an assertion that stopped biting, but an
+assertion that could not run. Three green local runs proved nothing about either, because the thing that was
+wrong was the same on all three machines. If you add a harness, the question this section exists to prompt is
+which of its numbers are properties of the code and which are properties of the laptop you wrote it on.
+
 ## Environment
 
 Nothing is required. All of these are escape hatches.
