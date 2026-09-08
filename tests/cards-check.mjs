@@ -58,31 +58,32 @@ const {sessionId} = await send("Target.attachToTarget", {targetId, flatten: true
 const S = (m, p) => send(m, p, sessionId);
 await S("Page.enable"); await S("Runtime.enable");
 // `DOM` and `CSS` are enabled for one reason: `CSS.forcePseudoState`, which is how DevTools' "force element
-// state" checkbox works and the only way to ask this browser whether a `:hover` rule applies without going
-// through a synthetic mouse and the hit testing behind it. `hoverFirstRow` reports both.
+// state" checkbox works and the only way to put a row in `:hover` without depending on a synthetic mouse and
+// the hit testing behind it. See `hoverFirstRow`.
 await S("DOM.enable"); await S("CSS.enable");
 
-// The pointing device, declared rather than inherited. Three assertions below measure effects that exist
-// only inside `@media(hover:hover)`: the table row's 2px accent line and the card's outline and `card-glow`
-// pulse. That guard is deliberate (a touch device reports a hover and then latches it, so tapping a row left
-// it tinted), which means those effects are real for a reader with a mouse and absent for everyone else --
-// and whether a *headless* browser calls itself hover-capable is a property of the binary and of
-// `setDeviceMetricsOverride`, not of this page. A harness that measures a guarded rule should state the
-// guard's precondition rather than inherit whatever the runner happens to report. Emulated once here so
-// every width sees the same capability, including the 375px pass where `resize()` sets `mobile: true`:
-// nothing in this file asserts that a touch device is denied the hover, so there is no case this hides.
+// WHETHER THIS BROWSER HAS A POINTING DEVICE IS NOT THIS SUITE'S TO DECIDE, and three assertions below have
+// to be built around that. They measure effects that exist only inside `@media(hover:hover)`: the table row's
+// 2px accent line, and the card's outline and `card-glow` pulse. The guard is deliberate -- a touch device
+// reports a hover and then latches it, so tapping a row used to leave it tinted -- so those effects are real
+// for a reader with a mouse and correctly absent for everyone else, including a headless browser with no
+// mouse at all.
 //
-// It is NOT the reason those three assertions used to fail on CI and pass locally, and it is left here
-// having been measured rather than left here having been assumed. That was the first hypothesis -- CI's
-// Chromium 152 returned `none` for the row shadow, the cell shadow and the animation name at once, the local
-// shell passed all three -- and this emulation was added to settle it. The failure did not move: same three
-// assertions, same three `none`s, on a run that had it. `hoverFirstRow` then reported the query alongside
-// the measurement and `hoverMQ` was true on both runners, so the media query had never been the difference;
-// the pseudo-class was, and the fix is down there. Kept anyway, because a suite that inherits its media
-// state from whichever binary CI installed is the failure this file has now been bitten by twice, and one
-// line that makes the inherited thing explicit is cheaper than a third round trip to rule it out again.
-const POINTING = [{name: "hover", value: "hover"}, {name: "pointer", value: "fine"}];
-await S("Emulation.setEmulatedMedia", {media: "screen", features: POINTING});
+// `(hover: hover)` is false on CI's Chromium 152 and true on the local headless shell, which is why those
+// three passed here and failed there, and it cannot be emulated away. Measured, not assumed, in three steps
+// and in this order: the query was reported beside the failure (`hoverMQ: false` on CI, `true` locally, with
+// `hovered: true` on both -- so the mouse was landing and the pseudo-class was matching all along); then
+// `Emulation.setEmulatedMedia` was asked for `hover: hover` and changed nothing; then it was asked for
+// `hover: none` on a runner reporting `true`, and changed nothing there either. It accepts the call, returns
+// no error, and ignores the feature: `hover` and `pointer` are not in the set CDP can override, unlike
+// `prefers-reduced-motion` and `prefers-color-scheme`, which this file emulates below and which do work.
+//
+// So there is no browser state to fix and nothing to force. What is left is a fact this suite can still
+// assert everywhere -- that the stylesheet declares the accent under that guard -- and a stronger one it can
+// only assert where the guard is met, that the browser then computes it. `hoverFirstRow` returns both and
+// each assertion takes the strongest instrument the runner supports, naming which one it used. Neither arm
+// can pass vacuously: the declared arm fails if the rule or its guard goes missing, the computed arm fails
+// if anything overrides it in the cascade.
 
 const evalIn = async (expr) => {
   const r = await S("Runtime.evaluate", {expression: expr, awaitPromise: true, returnByValue: true});
@@ -173,32 +174,47 @@ const hoverFirstRow = async () => {
             view: document.documentElement.dataset.view};
   })()`;
   const pointed = await evalIn(measure);
-  // And now the same three properties with `:hover` forced on the row rather than pointed at -- DevTools'
-  // "force element state", over CDP. THESE are the ones the three assertions below read, and the pointed
-  // measurement is kept only as context in their failure message. The reason is the same one that took the
-  // wall clock out of the view-switch assertion further down: what these three want to know is whether the
-  // stylesheet draws a 2px accent on hover, and pointing a synthetic mouse at a row makes that answer depend
-  // on the browser's input plumbing as well.
-  //
-  // That dependency is not hypothetical. All three failed on CI and passed locally, twice, and the numbers
-  // say why: `hoverMQ` is true on both runners and the forced pass produces the exact accent on both, while
-  // `hovered` after an `Input.dispatchMouseEvent` is true on the local headless shell and false on CI's
-  // Chromium 152. So the rule was never in doubt and the mouse was never landing -- and whether a headless
-  // browser turns a dispatched `mouseMoved` into a hover state is a property of that binary, which is not
-  // this project's to assert. Nothing is lost by not pointing: real synthetic input is still exercised by
-  // the mascot's own hover check above, which passes on both runners, and it is the only assertion here that
-  // is actually about input.
+  // The same properties again with `:hover` forced on the row rather than pointed at. The mouse turns out to
+  // land on both runners, so this is not a workaround for one of them -- it is the deterministic way to hold
+  // a row hovered while several properties are read, and it removes hit testing from the list of things a
+  // `none` could have meant. Released afterwards, because the forced state outlives the measurement and the
+  // next thing this file does is screenshot a layout that must not be hovered.
   const {root} = await S("DOM.getDocument", {depth: 0});
   const {nodeId} = await S("DOM.querySelector", {nodeId: root.nodeId, selector: "#out tbody tr"});
   await S("CSS.forcePseudoState", {nodeId, forcedPseudoClasses: ["hover"]});
   await sleep(200);
   const forced = await evalIn(measure);
-  // Released, because the node keeps the forced state for the life of the document and the next thing this
-  // file measures is a layout that must not be hovered.
   await S("CSS.forcePseudoState", {nodeId, forcedPseudoClasses: []});
-  return {...forced, pointed: {hovered: pointed.hovered, row: pointed.row, cell: pointed.cell,
-                               animation: pointed.animation}};
+  // The hover-guarded rules as this browser parsed them, which is the one reading of them available on a
+  // runner where the guard is unmet. CSSOM rather than a regex over the served text on purpose: a rule the
+  // browser failed to parse is absent here and present there, and "the stylesheet says so" is only worth
+  // asserting about the stylesheet the browser actually built.
+  const declared = await evalIn(`(() => {
+    const out = [];
+    for (const sheet of document.styleSheets) {
+      let rules; try { rules = sheet.cssRules; } catch { continue; }
+      for (const rule of rules) {
+        const guard = rule.media ? (rule.conditionText || rule.media.mediaText) : "";
+        if (!/hover/.test(guard)) continue;
+        for (const inner of rule.cssRules || [])
+          if (/:hover/.test(inner.selectorText || "")) out.push({guard, css: inner.cssText});
+      }
+    }
+    return out;
+  })()`);
+  return {...forced, declared,
+          how: forced.hoverMQ ? "computed" : "declared -- this browser reports no pointing device",
+          pointed: {hovered: pointed.hovered, row: pointed.row, cell: pointed.cell,
+                    animation: pointed.animation}};
 };
+
+// The strongest instrument the runner supports, for one hover effect. `computed` is a predicate over the
+// forced-hover computed style; `selector` and `value` locate the declaration to fall back to. Both arms are
+// real assertions -- see the note at the top of the file for why there are two and what each one catches --
+// and the one that ran is named in the assertion's own label so a green log says which it was.
+const drawn = (h, computed, selector, value) => h.hoverMQ
+  ? computed(h)
+  : h.declared.some((r) => selector.test(r.css) && value.test(r.css));
 
 // ---- 1440px: the view exists for this width
 await resize(1440, 900);
@@ -260,18 +276,15 @@ ok("Atlas Byte sits at the upper right without covering navigation",
    mascot && mascot.right > 1440 * .88 && mascot.top < 150 && mascot.left >= mascot.navRight - 1 &&
    mascot.width >= 92 && mascot.width <= 170, JSON.stringify(mascot));
 ok("Atlas Byte has an idle animation", mascot && mascot.animation !== "none", JSON.stringify(mascot));
-// `setEmulatedMedia` replaces the whole feature list rather than merging into it, so the pointing device
-// has to be restated here and on the reset below. Dropping it would turn the hover assertions after this
-// point into a test of whatever the runner reports, which is the thing being fixed.
 await S("Emulation.setEmulatedMedia", {
-  media: "screen", features: [...POINTING, {name: "prefers-reduced-motion", value: "reduce"}],
+  media: "screen", features: [{name: "prefers-reduced-motion", value: "reduce"}],
 });
 const reducedMascot = await evalIn(`(() => {
   const img = document.querySelector('header img.atlas-byte');
   return img ? getComputedStyle(img).animationName : "missing";
 })()`);
 ok("the mascot becomes still for reduced-motion readers", reducedMascot === "none", reducedMascot);
-await S("Emulation.setEmulatedMedia", {media: "screen", features: POINTING});
+await S("Emulation.setEmulatedMedia", {media: "screen", features: []});
 
 const faviconHref = await evalIn("document.querySelector('link[rel=icon]')?.getAttribute('href') || ''");
 const faviconResponse = await fetch(new URL("favicon.svg", ORIGIN));
@@ -334,8 +347,16 @@ ok("the table shows its headings", tbl.theadShown);
 ok("adjacent table rows use different grey surfaces", tbl.stripeA !== tbl.stripeB,
    tbl.stripeA + " vs " + tbl.stripeB);
 const tableHover = await hoverFirstRow();
-ok("a table-row hover draws a thicker 2px accent line",
-   /0px -2px 0px/.test(tableHover.cell), JSON.stringify(tableHover));
+// Asserted to have been found before anything is read out of it, for the same reason the default-view check
+// below asserts both halves matched: on this runner the computed arm answers and an empty `declared` would
+// never be looked at, while on CI it is the only arm there is. An empty list there would fail the three
+// assertions with no hint that the search, rather than the stylesheet, was what came up short.
+ok("the hover-guarded rules are in the stylesheet this browser parsed",
+   tableHover.declared.length >= 2, JSON.stringify(tableHover.declared.map((r) => r.guard)));
+ok(`a table-row hover draws a thicker 2px accent line (${tableHover.how})`,
+   drawn(tableHover, (h) => /0px -2px 0px/.test(h.cell),
+         /tbody tr:hover td/, /box-shadow:\s*inset 0 -2px 0/),
+   JSON.stringify(tableHover));
 await shot("view-table-1440");
 
 // The toggle against the thing it exists to avoid -- counted, not timed.
@@ -420,9 +441,18 @@ ok("nothing overflows sideways", c1440.hscroll <= 0, String(c1440.hscroll));
 ok("dark cards sit on a visible charcoal surface rather than merging into the page",
    c1440.rowBg !== c1440.bodyBg, c1440.rowBg + " vs " + c1440.bodyBg);
 const cardHover = await hoverFirstRow();
-ok("a card hover draws a thicker 2px accent outline",
-   /0px 0px 0px 2px/.test(cardHover.row), JSON.stringify(cardHover));
-ok("a card hover gently pulses its own accent glow", cardHover.animation === "card-glow", JSON.stringify(cardHover));
+// Again, and not redundantly: this is a different document from the table pass above -- `hardGoto` reloaded
+// in between -- so it is a different stylesheet object and a different search of it.
+ok("the hover-guarded rules survived the reload into cards",
+   cardHover.declared.length >= 2, JSON.stringify(cardHover.declared.map((r) => r.guard)));
+ok(`a card hover draws a thicker 2px accent outline (${cardHover.how})`,
+   drawn(cardHover, (h) => /0px 0px 0px 2px/.test(h.row),
+         /\[data-view="cards"\] tr:hover\s*{/, /box-shadow:\s*0 0 0 2px/),
+   JSON.stringify(cardHover));
+ok(`a card hover gently pulses its own accent glow (${cardHover.how})`,
+   drawn(cardHover, (h) => h.animation === "card-glow",
+         /\[data-view="cards"\] tr:hover\s*{/, /animation:[^;]*card-glow/),
+   JSON.stringify(cardHover));
 ok("no row was rebuilt, so the same count is on screen", c1440.rows === tbl.rows,
    c1440.rows + " vs " + tbl.rows);
 // The three counts, each with its non-emptiness conjunct: a measurement taken over an empty list would
