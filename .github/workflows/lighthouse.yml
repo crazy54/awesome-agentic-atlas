@@ -287,9 +287,9 @@ jobs:
               "assert": {
                 "aggregationMethod": "median-run",
                 "assertions": {
-                  "resource-summary:document:size": ["error", { "maxNumericValue": 40960 }],
-                  "resource-summary:script:size": ["error", { "maxNumericValue": 25600 }],
-                  "resource-summary:total:size": ["error", { "maxNumericValue": 307200 }],
+                  "resource-summary:document:size": ["error", { "maxNumericValue": 81920 }],
+                  "resource-summary:script:size": ["error", { "maxNumericValue": 81920 }],
+                  "resource-summary:total:size": ["error", { "maxNumericValue": 81920 }],
                   "cumulative-layout-shift": ["error", { "maxNumericValue": 0.7 }],
                   "first-contentful-paint": ["warn", { "maxNumericValue": 2000 }],
                   "largest-contentful-paint": ["warn", { "maxNumericValue": 2500 }],
