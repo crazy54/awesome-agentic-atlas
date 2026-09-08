@@ -1,4 +1,4 @@
-# The verification suite, in CI. Runs `node tests/run.mjs` -- all thirteen harnesses, 1,193 assertions --
+# The verification suite, in CI. Runs `node tests/run.mjs` -- all thirteen harnesses, 1,199 assertions --
 # and fails the job when anything is red. It writes nothing, commits nothing and deploys nothing.
 #
 # WHY THIS EXISTS (JFH-208)

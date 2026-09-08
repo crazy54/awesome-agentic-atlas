@@ -73,17 +73,24 @@ Not precached, deliberately:
     named there gets no offline caching at all, no `x-atlas-cached` marking, and no symptom of either --
     which is what `live.json` would have had when JFH-222 introduced it.
 
-    One thing that caching `live.json` does *not* buy, so that nobody reads more into it than is there: a
-    detail page still does not render its star count offline. `docs/repo/detail.js` and `detail.css` are
-    neither precached here nor matched by `PRECACHED` in the fetch listener, so the worker declines them
-    and the browser goes to the network for them. Measured in `pwa-check.mjs`, with the document served
-    from `atlas-pages` and the network off: `typeof show` is `"undefined"`, so the reader is missing the
-    script that reads the sidecar rather than the sidecar. That predates JFH-222 -- the same page fetching
-    `data.json` had the same hole -- and it is not fixed here, because the obvious fix, precaching two
-    more files, charges every reader of the root shell for two files only the 1,294 detail pages use.
-    Caching them on first visit alongside the page, the way the facet pages are handled, is the shape that
-    would work. Nothing about it is urgent: every other fact on a detail page is in the initial response,
-    which is the property `22_detail.py` was built around.
+  * `repo/detail.css` and `repo/detail.js`, 18 KB and 21 KB, routed by `PAGE_ASSETS` below (JFH-282).
+    Same reasoning as the two data files and the same conclusion by a different route: only the 1,294
+    pages under `docs/repo/` request them, so precaching them would charge 39 KB to every reader of the
+    root shell for two files most readers never ask for -- and the precache is paid at install, before
+    anyone has expressed an interest in a detail page.
+
+    Until JFH-282 they were routed by nothing at all, which is the hazard `DATA_FILES` exists to prevent
+    showing up one list along. The worker declined them, the browser went to the network, and offline that
+    failed: `typeof show` was `"undefined"`, so a detail page kept every prerendered fact and silently lost
+    the two figures `detail.js` renders -- the star count and the last push -- while `live.json` sat
+    correctly cached in `atlas-data` with nothing to read it. The reader was missing the code, not the
+    data, which is why caching the sidecar in JFH-222 could not have fixed it.
+
+    They are cached on first visit, the way the facet pages are, rather than at install. `atlas-assets`
+    holds them: network-first, so an updated `detail.js` reaches an online reader on the next request, and
+    answered from cache only when the network does not answer. No cap, and unlike `atlas-pages` it does not
+    need one -- `PAGE_ASSETS` is a two-element list fixed at build time, so the cache is bounded by
+    construction at two entries rather than by a number somebody has to maintain.
 
   * The 7,980 screenshots. They are Open Graph cards on `opengraph.githubassets.com`, cross-origin and
     fetched no-cors, so a response is opaque: status 0, no readable headers. A worker cannot tell a real
@@ -217,6 +224,20 @@ PRECACHE = ["./", "manifest.webmanifest", "pages.css"]
 # how `live.json` shipped uncached in the first draft of JFH-222. Leading slashes because the worker
 # compares against `url.pathname`, and matching a bare `data.json` would also match `notdata.json`.
 DATA_FILES = ["data.json", "live.json"]
+
+# The sub-resources of the 1,294 detail pages, handled network-first and cached under `atlas-assets` on
+# first visit (JFH-282). Same shape as `DATA_FILES` and deliberately a separate list, because the two
+# differ in one way that matters: a response served from `atlas-data` is marked with `CACHED_HEADER`
+# because the index page reads it and turns it into "offline, showing data from <date>". Nothing reads a
+# marker on a stylesheet or a script, so these are not marked, and a list per policy is how that stays
+# true without a flag at the call site.
+#
+# Not precached, and not in `atlas-pages` either. Precaching charges every reader of the root shell 39 KB
+# for two files only detail pages request. Putting them in `atlas-pages` would spend 2 of `PAGES_MAX`'s 30
+# slots on them and -- because `trim()` evicts by insertion order rather than by use -- would evict them
+# before the pages that need them, then re-insert them on the next online visit and push a page out. Their
+# own cache is bounded by the length of this list instead.
+PAGE_ASSETS = ["repo/detail.css", "repo/detail.js"]
 
 ICONS = [
     # (filename, pixels, maskable, opaque)
@@ -399,6 +420,10 @@ const SHELL = "__PREFIX__" + VERSION;
 // would have a shell and no rows.
 const DATA = "atlas-data";
 const PAGES = "atlas-pages";
+// Unversioned and uncapped, for the same reason as DATA and one better: the list it holds is fixed at
+// build time and two entries long, so it is bounded by construction rather than by a number. A cap here
+// would be a `trim()` that can never fire.
+const ASSETS = "atlas-assets";
 const PAGES_MAX = __PAGES_MAX__;
 // The one thing this worker tells the page in words: set on a `data.json` response that came out of DATA
 // because the network did not answer. The page cannot work it out for itself -- what comes back out of that
@@ -406,12 +431,18 @@ const PAGES_MAX = __PAGES_MAX__;
 // from <date>". The name is `CACHED_HEADER` in `19_pages.py`, which owns the page that reads it, and is
 // substituted in here rather than written twice.
 const CACHED = "__CACHEHDR__";
-// Every file `data()` below is responsible for, matched against `url.pathname`. Named as a list because
+// Every file the data policy is responsible for, matched against `url.pathname`. Named as a list because
 // this worker routes by filename and has no default policy: a data file missing from here is fetched from
 // the network, never cached, and silently absent offline, with nothing anywhere to say so. `data.json` is
 // the index's rows; `live.json` is the sidecar the 1,294 detail pages read (JFH-222). Kept in
 // `24_pwa.DATA_FILES` rather than written out here, so the list has one definition.
 const DATA_FILES = __DATAFILES__;
+// The detail pages' stylesheet and script, cached on first visit under ASSETS (JFH-282). Two lists rather
+// than one because the marking differs and nothing else does: a `data.json` answered from cache has to say
+// so, since the index page turns that header into its freshness stamp, and a stylesheet answered from cache
+// has nobody to tell. Being absent from here is what used to make a detail page lose its star count offline
+// while the sidecar it reads was cached correctly -- routing by filename with no default cuts both ways.
+const PAGE_ASSETS = __PAGEASSETS__;
 
 // Relative to this script, so the scope is the project's Pages prefix on the published site, the fork's
 // prefix on a fork, and "/" under a local `python -m http.server`. A literal "/awesome-agentic-atlas/"
@@ -507,7 +538,9 @@ self.addEventListener("fetch", (event) => {
   if (req.mode === "navigate") {
     event.respondWith(navigation(event));
   } else if (DATA_FILES.some((name) => url.pathname.endsWith(name))) {
-    event.respondWith(data(req));
+    event.respondWith(networkFirst(req, DATA, true));
+  } else if (PAGE_ASSETS.some((name) => url.pathname.endsWith(name))) {
+    event.respondWith(networkFirst(req, ASSETS, false));
   } else if (PRECACHED.has(key(url.href))) {
     event.respondWith(asset(req));
   }
@@ -540,12 +573,19 @@ async function navigation(event) {
   }
 }
 
-async function data(req) {
+// Network-first into `name`, falling back to whatever the reader already has. One function for both the
+// data files and the detail pages' assets, because it is one policy: fetch, keep a 200, hand an HTTP error
+// straight through, and answer from the cache only when the network did not answer at all. `mark` is the
+// single difference and it is the caller's to decide -- see `cached` below for why only one caller wants it.
+//
+// Two lists routed to one implementation rather than two implementations, so that the next file added to
+// either list cannot quietly get a policy that differs from the one this comment describes.
+async function networkFirst(req, name, mark) {
   const k = key(req.url);
   try {
     const res = await fetch(req);
     if (res.status === 200) {
-      const cache = await caches.open(DATA);
+      const cache = await caches.open(name);
       await cache.put(k, res.clone());
       return res;
     }
@@ -557,10 +597,12 @@ async function data(req) {
     return res;
   } catch (err) {
     // The network is gone, so the shell above was almost certainly answered from cache too, and this is
-    // the pair the reader is meant to have offline. Marked, so the page can say which day these rows are
-    // from rather than repeating a date its own bytes were stamped with -- see `cached` below.
+    // the set the reader is meant to have offline. A data hit is marked, so the page can say which day
+    // these rows are from rather than repeating a date its own bytes were stamped with -- see `cached`
+    // below. An asset hit is returned as it stands: it is a stylesheet or a script, and there is nothing
+    // in a detail page that would read a header off its own <script src>.
     const hit = await caches.match(k);
-    if (hit) return cached(hit);
+    if (hit) return mark ? cached(hit) : hit;
     throw err;
   }
 }
@@ -571,8 +613,10 @@ async function data(req) {
 // through as a stream rather than read, so this costs no copy of 552 KB and nothing before the page can
 // begin parsing.
 //
-// Only the data path uses it. A navigation answered from the shell cache is equally a cached response, but
-// a document cannot read the headers of its own navigation, so there would be nobody to tell.
+// Only the data path passes `mark`. A navigation answered from the shell cache is equally a cached
+// response, but a document cannot read the headers of its own navigation, so there would be nobody to tell;
+// the same is true of a stylesheet and a script, which is why `PAGE_ASSETS` is routed with `mark` false
+// rather than marked for symmetry.
 function cached(hit) {
   const headers = new Headers(hit.headers);
   headers.set(CACHED, "1");
@@ -704,7 +748,8 @@ def main() -> None:
           .replace("__PRECACHE__", json.dumps(PRECACHE))
           # Leading slashes added here rather than carried in `DATA_FILES`, because the Python side of the
           # list is a list of filenames under `docs/` and the worker's side is a list of path suffixes.
-          .replace("__DATAFILES__", json.dumps(["/" + f for f in DATA_FILES])))
+          .replace("__DATAFILES__", json.dumps(["/" + f for f in DATA_FILES]))
+          .replace("__PAGEASSETS__", json.dumps(["/" + f for f in PAGE_ASSETS])))
     (OUT / "sw.js").write_text(sw, encoding="utf-8")
 
     total = sum((OUT / p if p != "./" else shell).stat().st_size for p in PRECACHE)
@@ -718,6 +763,14 @@ def main() -> None:
                       else f"{f} (MISSING)" for f in DATA_FILES)
     print(f"{sizes} {'is' if len(DATA_FILES) == 1 else 'are'} cached from the page's own fetch, not "
           f"precached; the 156 facet pages are cached as they are visited, {PAGES_MAX} at a time.")
+    # Reported for `PAGE_ASSETS` on the same terms and for the same reason: JFH-282 was two files that no
+    # branch of the fetch handler matched, and the only way that was visible anywhere was an assertion in
+    # `pwa-check.mjs` saying so in a comment. A file listed here but never written by `22_detail.py` now
+    # prints MISSING on every run instead.
+    assets = ", ".join(f"{f} ({(OUT / f).stat().st_size / 1024:.0f} KB)" if (OUT / f).exists()
+                       else f"{f} (MISSING)" for f in PAGE_ASSETS)
+    print(f"{assets} {'is' if len(PAGE_ASSETS) == 1 else 'are'} cached under atlas-assets on the first "
+          f"visit to any of the detail pages, and cost a reader who opens none of them nothing.")
 
 
 if __name__ == "__main__":
