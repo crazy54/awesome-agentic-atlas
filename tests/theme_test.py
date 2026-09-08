@@ -244,13 +244,12 @@ for follower in ("20_landing.py", "22_detail.py"):
     check(f"{follower} declares the palette byte for byte as 19_pages.py does",
           palette_text(follower), CANON)
 
-# `23_og.py` renders a social card as a standalone document with no stylesheet to inherit from, so it
-# cannot use `var(--x)` and writes literals instead. Which token each literal plays is its own business --
-# the card is a different layout from the page -- but a literal that is not in the palette at all is the
-# drift this checks for. That is the whole failure mode: the card ships as 27 committed PNGs, so a colour
-# missed here is not a wrong pixel until somebody shares a link, and then it is wrong for ever.
+# `23_og.py` renders a social card as a standalone document with no stylesheet to inherit from. Its CSS
+# is formatted with the module's `PALETTE`, which is also included in the card cache signature; read that
+# source-of-truth object rather than looking for literals in the template that now contains placeholders.
+# A value outside the page palette is still the drift this checks for.
 OG = (SCRIPTS / "23_og.py").read_text(encoding="utf-8")
-og_css = OG[OG.index("<!doctype html>"):OG.index("</style>", OG.index("<!doctype html>"))]
+palette_source = OG[OG.index("PALETTE = {"):OG.index("}\n", OG.index("PALETTE = {")) + 2]
 
 
 def norm(h: str) -> str:
@@ -258,8 +257,8 @@ def norm(h: str) -> str:
     return "#" + ("".join(c * 2 for c in h) if len(h) == 3 else h)
 
 
-og_hex = {norm(h) for h in re.findall(r"#[0-9a-fA-F]{3,6}", og_css)}
-true("the OG card's stylesheet was found", len(og_hex) >= 5)
+og_hex = {norm(h) for h in re.findall(r'"(#[0-9a-fA-F]{3,6})"', palette_source)}
+true("the OG card's palette object was found", len(og_hex) >= 5)
 for h in sorted(og_hex):
     true(f"the OG card's {h} is a dark-palette value", h in set(DARK.values()))
 # And that it is the *dark* palette, not the light one it would also parse against. Light `--ink` is

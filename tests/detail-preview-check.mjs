@@ -53,6 +53,12 @@ const S = (method, params = {}) => send(method, params, sessionId);
 await S("Page.enable");
 await S("Runtime.enable");
 await S("Fetch.enable", {patterns: [{urlPattern: "https://api.github.com/repos/*"}]});
+// Detail pages now honour a persisted theme and, with no choice, the operating system. Pin the fixture
+// before any page script runs so the dark-then-toggle-to-light assertions mean the same thing on every
+// developer machine and CI image.
+await S("Page.addScriptToEvaluateOnNewDocument", {
+  source: "try { localStorage.setItem('theme', 'dark'); } catch (e) {}",
+});
 
 const renderedReadme = `<div class="markdown-heading"><h1 id="user-content-reader-demo">Reader demo</h1></div>
 <p>Rendered <strong>Markdown</strong> arrives before source. Read the <a href="docs/guide.md">guide</a>.</p>
