@@ -285,12 +285,17 @@ jobs:
           host = og.SITE.split("//", 1)[-1].rstrip("/")
           print(f"probing {len(recs)} cards at FONT={og.FONT!r}, chromium major {og.chromium_major()}")
 
+          # The overflow is reported in pixels, not just as a boolean, because "this chip is too wide" does
+          # not tell you what to change it to. The row has the card's width minus 144px of padding minus the
+          # flex gaps to spend, so the widest overflow *is* the size of the reduction that would fit, and one run
+          # sizes the fix instead of starting a guess-and-dispatch loop.
           PROBE = """<script>
           const out = [];
           for (const el of document.querySelectorAll("h1, .blurb, .chip")) {
-            const w = el.scrollWidth > el.clientWidth + 1;
-            const h = el.scrollHeight > el.clientHeight + 1;
-            if (w || h) out.push({what: el.className || el.tagName, text: el.textContent, wide: w, tall: h});
+            const w = el.scrollWidth - el.clientWidth, h = el.scrollHeight - el.clientHeight;
+            if (w > 1 || h > 1) out.push({what: el.className || el.tagName, text: el.textContent,
+                                          wide: w > 1, tall: h > 1, by: Math.max(w, h),
+                                          box: el.clientWidth + "x" + el.clientHeight});
           }
           const d = document.createElement("div");
           d.id = "probe";
@@ -316,34 +321,41 @@ jobs:
                   # a conclusion drawn from a measurement that did not happen -- the exact failure this
                   # workflow's header argues about empty artifacts.
                   print(f"::error::{rec['file']}: the probe did not run, so nothing was measured")
-                  bad.append((rec["file"], "probe did not run"))
+                  bad.append((rec["file"], 0, "probe did not run"))
                   continue
               clipped = json.loads(html.unescape(m.group(1)) or "[]")
               for c in clipped:
                   what = "chip" if c["what"] == "chip" else c["what"].lower()
                   how = "width" if c["wide"] else "height"
-                  rows.append((rec["file"], what, how, c["text"]))
+                  rows.append((rec["file"], what, how, c["by"], c["box"], c["text"]))
                   if what == "chip":
-                      bad.append((rec["file"], c["text"]))
+                      bad.append((rec["file"], c["by"], c["text"]))
 
-          print(f"\n{len(rows)} clipped element(s) across {len(recs)} cards\n")
+          # A heading over by a pixel or three is the line box rounding, not a lost line: h1 is
+          # `-webkit-line-clamp:2` at 76px/1.05, so its clamped height and its content height round
+          # separately and disagree by a hair on almost every card. Sorting the report by overflow puts
+          # anything that actually lost text at the top and leaves the rounding at the bottom, which is the
+          # difference between a table you read and a table you scroll past.
+          rows.sort(key=lambda r: -r[3])
+          head = "| card | element | over by | box | text as the record holds it |"
+          rule = "|---|---|---:|---|---|"
+          body = [f"| `{r[0]}` | {r[1]} | {r[3]}px | {r[4]} | `{r[5]}` |" for r in rows]
+
+          print(f"\n{len(rows)} clipped element(s) across {len(recs)} cards, "
+                f"{len(bad)} of them chips\n")
           if rows:
-              print("| card | element | clipped by | text as the record holds it |")
-              print("|---|---|---|---|")
-              for r in rows:
-                  print(f"| `{r[0]}` | {r[1]} | {r[2]} | `{r[3]}` |")
+              print("\n".join([head, rule, *body]))
 
           summary = [f"## JFH-283 AC4: chip legibility at `{og.FONT}`\n",
                      f"{len(recs)} cards probed, {len(rows)} clipped element(s), "
-                     f"{len([b for b in bad])} chip failure(s).\n"]
+                     f"{len(bad)} chip failure(s).\n"]
           if rows:
-              summary.append("\n| card | element | clipped by | text |\n|---|---|---|---|\n")
-              summary += [f"| `{r[0]}` | {r[1]} | {r[2]} | `{r[3]}` |\n" for r in rows]
+              summary.append("\n" + "\n".join([head, rule, *body]) + "\n")
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as fh:
               fh.write("".join(summary))
 
-          for name, text in bad:
-              print(f"::error::{name}: a chip loses its tail to the clamp -- {text!r}")
+          for name, by, text in bad:
+              print(f"::error::{name}: a chip loses its tail to the clamp, {by}px over -- {text!r}")
           if bad:
               print("::error::JFH-283 AC4 is not met: widen the chip row or reduce the chip type until no "
                     "chip clips, or state on the ticket that this truncation is accepted.")
