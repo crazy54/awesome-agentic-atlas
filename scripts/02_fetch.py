@@ -14,6 +14,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 READMES = CACHE / "readmes"
+# Created here rather than assumed, because on a cold cache this stage is the first thing in either
+# pipeline to touch the directory and `write_text` does not make parents. `cache/` is untracked and
+# nothing in the repo ships it, so every checkout starts cold: run 34153712009 of weekly.yml died on
+# exactly this line, at stage two of twenty, after spending the GraphQL budget that produced the text
+# it was trying to save. The same two lines were already in 11_fetch_all.py, which runs *after* this
+# one and so never got the chance to help. `parents=True` also makes `cache/` itself, which is what
+# this stage's own `meta.json` write needs and what every later stage assumes somebody made.
+READMES.mkdir(parents=True, exist_ok=True)
 BATCH = 20
 MAX_README = 240_000
 

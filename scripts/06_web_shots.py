@@ -21,6 +21,9 @@ import chrome  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 SHOTS = CACHE / "shots"
+# 05_shots.py runs first and creates this, but only writes when a README actually yielded an image --
+# a run where none did leaves the directory absent, and this stage is then the first to write into it.
+SHOTS.mkdir(parents=True, exist_ok=True)
 CHROME = chrome.PATH
 
 BOX = (300, 150)
