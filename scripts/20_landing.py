@@ -58,6 +58,12 @@ ROOT = Path(__file__).resolve().parent.parent
 HERE = Path(__file__).resolve().parent
 OUT = ROOT / "docs"
 
+# The five platform marks. `osicons` is a legal identifier, so it needs none of the
+# `spec_from_file_location` ceremony below -- only `scripts/` on the path, which `python
+# scripts/20_landing.py` already provides and a test that loads this module by file path does not.
+sys.path.insert(0, str(HERE))
+import osicons  # noqa: E402
+
 # The same dynamic load `19b_refresh.py` uses, and for the same reason: the module is named `19_pages`,
 # which is not an identifier, so `import` cannot reach it. Two things are wanted from it -- `beacon()`,
 # so the analytics token lives in exactly one file, and `b17.SITE`, so the absolute URL that goes in
@@ -148,14 +154,18 @@ CSS = """/* Written by scripts/20_landing.py. Shared by every page under docs/to
    modes -- is written out once, beside the blocks in `19_pages.py`. It is deliberately not repeated
    here; three copies of a rationale is three things to go stale, and the previous palette's did. */
 :root{
-  --surface:#000000; --plane:#0B0B10; --band:#14141B; --ink:#FFFFFF; --ink2:#C7C9D2;
-  --muted:#9598A4; --grid:#262630; --link:#438BB1; --bar:#CE54AF;
-  --good:#438BB1; --warn:#9871C9; --off:#9598A4; --onbar:#000000;
+  --surface:#090A0D; --plane:#101217; --band:#20242D; --ink:#F7F8FA; --ink2:#D0D5DD;
+  --muted:#9BA5B3; --grid:#3A414D; --link:#78B7F4; --bar:#D6A034;
+  --good:#5BD5AA; --warn:#EF7D86; --off:#9BA5B3; --onbar:#090A0D;
+  --accent-sky:#78B7F4; --accent-mint:#5BD5AA; --accent-gold:#E7B64D;
+  --accent-coral:#EF7D86; --accent-violet:#A99AF7;
 }
 html[data-theme=light]{
-  --surface:#F1F0F3; --plane:#FCFCFD; --band:#EAE9EF; --ink:#000000; --ink2:#2C2C36;
-  --muted:#52525E; --grid:#D4D3DA; --link:#1C449C; --bar:#AD328E;
-  --good:#346B89; --warn:#6B3EA3; --off:#52525E; --onbar:#FFFFFF;
+  --surface:#F2F4F7; --plane:#FAFBFC; --band:#E7EAF0; --ink:#14171C; --ink2:#353C47;
+  --muted:#596574; --grid:#CAD1DB; --link:#1D5E9E; --bar:#6557C8;
+  --good:#187557; --warn:#875A19; --off:#596574; --onbar:#FFFFFF;
+  --accent-sky:#1D5E9E; --accent-mint:#187557; --accent-gold:#9A6718;
+  --accent-coral:#B6465E; --accent-violet:#6557C8;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);
@@ -225,10 +235,83 @@ a.nwo:hover{color:var(--ink)}
 .vY{color:var(--good);font-weight:700}
 .vL{color:var(--warn)}
 .vN,.va,.v-{color:var(--off)}
+""" + osicons.CSS + """
+/* 14px rather than the shared 1.15em, which at this column's 11.5px would be 13.2px. A mark the same
+   size as the text beside it does not read as a mark, it reads as a smudge in the line -- and unlike the
+   detail page's table there is no word next to these to be measured against, so the mark has to carry
+   the whole of "which platform" on its own. Fixed rather than relative for the same reason: the five sit
+   in a row and their size is the row's rhythm, not the text's. `.os` is `white-space:nowrap`, so the
+   five and the spaces between them cannot break across a line. */
+.os .oi{width:14px;height:14px}
+/* Off screen rather than display:none or visibility:hidden -- both of those take the text out of the
+   accessibility tree as well as off the screen, which defeats the point. Verbatim from `19_pages.py`,
+   which declares it for the index; `.sr` and not `.sr-only`, because that is the name the index uses and
+   the one `25_collections.py` emits.
+   Nothing this stage writes uses it -- the facet rows name their five marks once on the container instead,
+   which is cheaper at 505 marks a page. It is here because the collections pages load this sheet and
+   *do* emit it, and the failure of a missing rule is the worst kind: a platform word printed visibly
+   beside every mark on the page that was meant to be the tidy one. */
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;border:0}
 .rest{margin:22px 0 0;color:var(--ink2);font-size:13.5px}
 .rel{margin-top:34px;border-top:1px solid var(--grid);padding-top:18px}
 .rel h2{margin-top:0}
 .rel p{margin:0 0 12px;color:var(--muted);font-size:13px}
+
+/* ---- the curated collections, docs/collections/, written by scripts/25_collections.py ----
+   Here rather than in a second stylesheet because these pages share this shell exactly: the same
+   masthead, nav, footer, chips, `.cmd`, `.tag` and the five `.v*` verdict colours. A separate file
+   would duplicate all of that to add the ten rules below, and cost a second blocking request on the
+   page most likely to be somebody's first. `22_detail.py` does ship its own -- a detail page is a
+   different layout -- and that is the line: same shell, same sheet. */
+.kick{margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--bar)}
+.intro{color:var(--ink2);font-size:14px;margin:10px 0 0;max-width:74ch}
+.take{max-width:52ch}
+/* The numbers are ours, in `.slot`, so the marker has to go. A collection is read as slots, and an
+   `<ol>` is still the honest element for it -- the order carries meaning and a screen reader should
+   say "7 items" -- but the browser's marker sits outside the card border and cannot be styled to sit
+   inside it. */
+.picks{list-style:none;margin:20px 0 0;padding:0}
+/* Prose left, evidence right, and the split is the point of the page: the `why` is a judgement and
+   everything in the second column is what it was made from, so a reader can weigh one against the
+   other without scrolling between them. 300px is what the five verdicts plus a licence name need on
+   one line each; `minmax(0,1fr)` rather than `1fr` because a `code.cmd` with no break opportunity in
+   it will otherwise push a grid track wider than its share and take the card with it. */
+.pick{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:4px 26px;align-items:start;
+  background:var(--plane);border:1px solid var(--grid);border-radius:10px;
+  padding:16px 18px;margin:0 0 12px}
+.pick>*{grid-column:1;min-width:0}
+.pick .ev,.pick .os,.pick .tp{grid-column:2}
+.pick .ev{grid-row:2;margin-top:0}
+.pick .os{grid-row:3}
+.pick .tp{grid-row:4}
+.pick h2{margin:2px 0 0;font-size:20px;letter-spacing:-.02em}
+.role{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+/* Tabular, because seven of these stack in a column and a proportional "1" would step the labels
+   beside them in and out. */
+.slot{display:inline-block;min-width:20px;margin-right:6px;padding:1px 0;text-align:center;
+  border-radius:5px;background:var(--band);color:var(--ink);font-variant-numeric:tabular-nums}
+.why{color:var(--ink);font-size:14.5px;margin:9px 0 0;max-width:66ch}
+.pick .desc{margin:7px 0 0;font-size:13px;color:var(--muted)}
+.ev b{color:var(--ink)}
+.allin{margin-top:34px;border-top:1px solid var(--grid);padding-top:18px}
+.allin p{margin:0 0 12px;color:var(--ink2);font-size:13.5px;max-width:74ch}
+/* `.cmd` is one line elsewhere; here it holds seven. `pre` brings its own margin and font, both of
+   which have to go for it to match the single-line version above it. */
+pre.cmd{margin:0;white-space:pre-wrap;max-width:none;padding:12px 14px;font-size:12.5px}
+/* `.cmd` is `display:block` because everywhere else it is an install command on its own line. Inside a
+   sentence -- "the atlas reads `#list=` in a URL" -- that block broke the sentence into three lines with
+   a full-width bar through the middle of it. Named narrowly so the install commands, which are `.cmd`
+   directly inside a `.pick`, keep the block treatment they want. */
+p code.cmd{display:inline;margin:0;padding:2px 6px}
+/* 340px is the width at which a kicker, a two-line title and the roles below it stop wrapping into
+   something unreadable; auto-fit rather than a fixed count so five cards reflow to 3+2 and then 2+2+1
+   without a query for each step. */
+.colls{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:14px;
+  grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.coll{background:var(--plane);border:1px solid var(--grid);border-radius:10px;padding:16px 18px}
+.coll h2{margin:2px 0 0;font-size:18px;letter-spacing:-.02em}
+.coll .intro{font-size:13.5px;margin-top:8px}
 footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
   color:var(--muted);font-size:13px}
 footer .wrap{max-width:1500px}
@@ -237,6 +320,12 @@ footer .wrap{max-width:1500px}
 @media(max-width:900px){
   .shot,.hide{display:none}
   td,th{padding:9px 6px}
+  /* The second column is a fixed 300px against a `1fr`, so it stops being a third of the card and
+     starts being most of it. Below this the evidence goes back under the prose it is evidence for,
+     which is also the order it should be read in when there is only one column to read. */
+  .pick{grid-template-columns:minmax(0,1fr)}
+  .pick .ev,.pick .os,.pick .tp{grid-column:1;grid-row:auto}
+  .pick .ev{margin-top:12px}
 }
 @media(max-width:640px){
   header{padding:16px 14px 12px}
@@ -285,7 +374,7 @@ footer .wrap{max-width:1500px}
 # `data-theme="dark"` is the floor if this throws, which `localStorage` does in some private modes. The
 # key is `theme`, the same string the index writes, so a choice made on the index is honoured here
 # immediately and there is nothing to migrate.
-HEAD_THEME = """<meta name="theme-color" id="tc" content="#181f21">
+HEAD_THEME = """<meta name="theme-color" id="tc" content="#101217">
 <script>
 try {
   var t = localStorage.getItem("theme");
@@ -296,7 +385,7 @@ try {
   // re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
 } catch (e) {}
 </script>
 """
@@ -349,8 +438,7 @@ try {
 """
 
 # Copied from the template so a landing page in a bookmark bar looks like the site.
-ICON = ("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'>"
-        "<text y='13' font-size='14'>&#127760;</text></svg>")
+ICON = "favicon.svg"
 
 
 # ------------------------------------------------------------------ the page set
@@ -485,8 +573,36 @@ def plan(data: dict) -> list[Page]:
 def row_html(page: Page, r: dict, i: int, os_labels: list[str]) -> str:
     """One table row. Same seven columns and the same class names as the template's `render()`, so the
     stylesheet copied out of it fits without a second set of rules to keep in step."""
-    os = " ".join(f'<span class="v{esc(r["os"][k:k + 1] or "-")}">{esc(o[:3])}</span>'
-                  for k, o in enumerate(os_labels))
+    # The mark replaces the three-letter label here rather than sitting beside it the way it does in
+    # `22_detail.py`'s table, and that is the line between the two surfaces: this column is scanned, not
+    # read. Everything below is about the multiplier. 505 verdicts ride on one facet page and 19,305 on
+    # the 156 of them, so every byte spent per verdict is 19 KB of committed HTML -- which is the argument
+    # `22_detail.py`'s docstring is built around, applied to the surface that has twenty times its rows.
+    #
+    # So: no `title` per verdict, no visually-hidden word per verdict, no wrapper element. The verdict
+    # class goes on the `<svg>` itself, which works because `.oi` fills with `currentColor` and `.vY` sets
+    # `color`; and the accessible name is one string for the group, on the container. That is not the
+    # cheap option standing in for the right one -- five names read out as five fragments interleaved with
+    # nothing is worse aloud than one sentence about the row, and there was no `title` on this column
+    # before today either. What a reader gains is the legend above the table, in text, on every page.
+    #
+    # `role="img"` is what makes the name land: `aria-label` on a bare `<div>` is a generic element with
+    # naming prohibited, so browsers drop it. With the role the five marks become presentational children
+    # and the label speaks for them. Pairing mark `k` with verdict character `k` is only safe because
+    # `main()` has already put the label order past `osicons.check()`.
+    marks, spoken = [], []
+    for k, o in enumerate(os_labels):
+        v = r["os"][k:k + 1] or "-"
+        # `22_detail.py`'s map, imported rather than restated, so a project's row and its own page answer
+        # in the same words. The one substitution is "-": its canonical word is an em dash, which is a
+        # character to look at rather than anything to say out loud, so the group name takes the first
+        # clause of the same entry's sentence -- "Not established", which is also the phrase the index's
+        # own verdict map uses for that character.
+        word, _tone, why = b22.VERDICT[v]
+        spoken.append(f"{o} {why.split('.', 1)[0] if v == '-' else word}")
+        marks.append(osicons.use_terse(k, cls=f"oi v{esc(v)}"))
+    os = " ".join(marks)
+    os_name = esc(", ".join(spoken))
     # The cross-axis column, on the Markdown edition's rule: a topic page prints what each project
     # plugs into, a target page prints what each project is. Printing the page's own topic 100 times
     # tells the reader nothing they did not get from the heading.
@@ -521,7 +637,7 @@ def row_html(page: Page, r: dict, i: int, os_labels: list[str]) -> str:
         f'<img loading="lazy" alt="" src="{img}"></a></td>'
         f'<td class="pj"><a class="nm" href="{page_url}">{esc(r["name"])}</a>'
         f'<a class="nwo" href="{url}">{esc(r["nwo"])}</a>'
-        f'<div class="meta os">{os}</div></td>'
+        f'<div class="meta os" role="img" aria-label="{os_name}">{os}</div></td>'
         f'<td class="n st-c"><span class="st{"" if r["stars"] else " none"}">{stars}</span>'
         f'<div class="meta">{r["lists"]} {"list" if r["lists"] == 1 else "lists"}</div></td>'
         f'<td class="hide">{tags}</td>'
@@ -664,6 +780,17 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
                 "view</a>, "
                 "which can also sort by list count or last push, search the blurbs, and filter on "
                 "operating system.</p>")
+    # The mark-to-word key, once per page, immediately above the table it explains. The rows print a mark
+    # and nothing else -- no word, and deliberately no `title`, because 19,305 of them across these pages
+    # is not what a tooltip is worth -- so without this the five verdicts under every project name are a
+    # private notation to anyone reading with their eyes. `legend()` owns the pairing and the argument for
+    # it, and it is the only place on the page where a mark and a platform name appear together. The name
+    # a screen reader gets is on each row's container instead, which is a sentence rather than a key; both
+    # exist because they answer different questions. The index needs neither, because
+    # its five "Runs on" filter buttons are a legend that also does something. Beside the word rather than
+    # instead of it, which is the same treatment `22_detail.py` gives its table's row headers: this is an
+    # explanatory line, and the compact-surface trade does not apply to the one place doing the explaining.
+    oskey = osicons.legend()
     return f"""<!doctype html>
 <html lang="en" data-theme="dark">
 <head>
@@ -677,11 +804,12 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
 <meta property="og:description" content="{esc(page.summary)}">
 <meta property="og:url" content="{esc(page.url)}">
 {image_tags(page, cards)}
-<link rel="icon" href="{ICON}">
+<link rel="icon" href="{page.rel(ICON)}" type="image/svg+xml">
 {HEAD_THEME}<link rel="stylesheet" href="{page.rel('pages.css')}">
 <script type="application/ld+json">{itemlist(page, shown)}</script>
 </head>
 <body>
+{osicons.SPRITE}
 <header><div class="wrap"><div class="top">
   <div>
     <h1>{esc(page.heading)}</h1>
@@ -691,14 +819,18 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
     <a class="cta" href="{esc(page.live)}">Filter this live on the atlas &rarr;</a>
   </div>
   <nav>
-    <a href="{page.rel()}">Every project</a> ·
+    <a href="{page.rel('collections/')}">Collections</a> ·
+    <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+    <a href="{page.rel('repo/')}">All projects</a> ·
+    <a href="{page.rel()}#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/{esc(REPO)}">Repository</a> ·
-    <a href="https://github.com/{esc(REPO)}/tree/main/mega-list">Markdown edition</a><br>
+    <a href="https://github.com/{esc(REPO)}/tree/main/mega-list">Markdown</a><br>
     <button class="chip" id="theme" aria-pressed="false">Light theme</button>
   </nav>
 </div></div></header>
 
 <main><div class="wrap">
+{oskey}
 <table>
 <thead><tr><th class="n">#</th><th class="shot">Shot</th><th class="pj">Project</th>
 <th class="n st-c">Stars</th><th class="hide">{"Plugs into" if page.cat else "Topic &amp; targets"}</th>
@@ -726,7 +858,32 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
 
 
 # ------------------------------------------------------------------ sitemap & robots
-def sitemap(pages: list[Page], snapshot: str) -> str:
+def collection_urls(data: dict) -> list[str]:
+    """The URLs `25_collections.py` publishes, asked of that stage rather than worked out here.
+
+    This stage owns `docs/sitemap.xml`, and the curated collections are the one page family that is
+    neither in `pages` below nor in `22_detail.py`'s `sitemap-repos.xml`. Something has to list them:
+    `tests/indexnow_test.py` asserts, in both directions, that the set of `docs/**/index.html` files
+    equals the set of URLs across both sitemaps, so a family in neither is a red build -- correctly,
+    because a page that no sitemap mentions is a page nothing will discover.
+
+    The alternative was a third sitemap, following the `sitemap-repos.xml` precedent. Rejected: on this
+    deployment robots.txt is inert (see `robots()`), so every sitemap has to be submitted by hand in
+    Search Console, and a third file to submit to publish five pages is a worse trade than one import.
+
+    Imported here rather than at module scope because that stage imports this one, for `esc`, `clip`,
+    `repo_path` and the two theme scripts. Registering this module under the alias it looks for first
+    means the import finds the copy already running instead of executing this file a second time.
+    """
+    sys.modules.setdefault("b20", sys.modules[__name__])
+    cspec = importlib.util.spec_from_file_location("b25", HERE / "25_collections.py")
+    b25 = importlib.util.module_from_spec(cspec)
+    sys.modules["b25"] = b25
+    cspec.loader.exec_module(b25)
+    return b25.urls(data)
+
+
+def sitemap(pages: list[Page], snapshot: str, extra: list[str] = ()) -> str:
     """Sitemap 0.9, the root first.
 
     `lastmod` is `data.json`'s snapshot date rather than today: it is the day the data these pages show
@@ -737,7 +894,7 @@ def sitemap(pages: list[Page], snapshot: str) -> str:
     No `changefreq` and no `priority`. Google ignores both, and a number invented for every page is
     noise in a file whose whole value is that everything in it is checkable.
     """
-    locs = [SITE] + [p.url for p in pages]
+    locs = [SITE] + [p.url for p in pages] + list(extra)
     body = "\n".join(f"  <url><loc>{esc(u)}</loc><lastmod>{esc(snapshot)}</lastmod></url>"
                      for u in locs)
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -883,6 +1040,11 @@ def kb(n: int) -> str:
 
 def main() -> None:
     data = json.loads((OUT / "data.json").read_text(encoding="utf-8"))
+    # Once, before the first of the 156 pages is written. `row_html()` pairs a mark with a verdict by
+    # position and nothing else, so a reordered `os` column would put a Docker whale beside the Windows
+    # answer on every row of every page -- and "does it run on my machine" is the question these pages are
+    # read for. A build that stops is cheaper than a tree that publishes the wrong answer confidently.
+    osicons.check(data["os"])
     pages = plan(data)
     # One listing, not 156 `exists()` calls -- and taken before the loop so every page in a run is
     # judged against the same set of cards.
@@ -897,7 +1059,8 @@ def main() -> None:
         total += p.path.stat().st_size
 
     (OUT / "pages.css").write_text(CSS, encoding="utf-8")
-    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"]), encoding="utf-8")
+    colls = collection_urls(data)
+    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls), encoding="utf-8")
     (OUT / "robots.txt").write_text(robots(), encoding="utf-8")
     keyfile = b19.indexnow_key_file()
     (OUT / keyfile).write_text(key_text(b19.indexnow_key()), encoding="utf-8")
@@ -914,7 +1077,8 @@ def main() -> None:
     print(f"{tops} topic · {tgt_n} target · {written - tops - tgt_n} crossing "
           f"= {written} pages · {kb(total)}")
     print(f"pages.css + sitemap.xml + robots.txt + {keyfile} · {kb(shells)} · "
-          f"{len(pages) + 1} URLs, lastmod {data['snapshot']}")
+          f"{len(pages) + 1 + len(colls)} URLs, lastmod {data['snapshot']} "
+          f"({len(colls)} of them curated collections, from scripts/25_collections.py)")
     print(f"IndexNow key hosted at {SITE}{keyfile}"
           + (f" · {len(stale_keys)} stale key file(s) removed: "
              + ", ".join(p.name for p in stale_keys) if stale_keys else ""))

@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "note": "Hand-curated sets, checked against docs/data.json at build time. See config/README.md.",
+  "collections": [
+    {
+      "slug": "first-setup",
+      "title": "A first agentic setup",
+      "kicker": "Seven decisions, one afternoon",
+      "intro": "The atlas has 1,294 projects in it, which is the wrong number to start from. This is one working setup instead: an agent, the things it loads, the place it runs, and the two tools that tell you afterwards whether it did what you asked. Every slot is filled once. Swap any of them later -- the point of the set is that you can start today and still know what each piece is for.",
+      "picks": [
+        {
+          "nwo": "anomalyco/opencode",
+          "role": "The agent",
+          "why": "Terminal-native, MIT, and the one coding agent here that three separate source lists picked independently. It runs against whichever model you already pay for rather than tying the setup to one vendor."
+        },
+        {
+          "nwo": "obra/superpowers",
+          "role": "What it knows how to do",
+          "why": "The most-starred skills bundle in the atlas and, unusually, one that spans seven different harnesses -- so the competencies survive changing your mind about the agent above."
+        },
+        {
+          "nwo": "mem0ai/mem0",
+          "role": "What it remembers",
+          "why": "A memory layer you drop in rather than a database you design. Apache-2.0, and it states support on Windows and in Docker, which most of this category does not."
+        },
+        {
+          "nwo": "modelcontextprotocol/servers",
+          "role": "How it reaches your tools",
+          "why": "The reference MCP servers, from the people who wrote the protocol. Start here and you learn the shape every third-party server in the atlas is copying."
+        },
+        {
+          "nwo": "daytonaio/daytona",
+          "role": "Where it runs",
+          "why": "Container sandboxes that start in under a tenth of a second, which is the difference between isolating every run and isolating the runs you remember to. An agent with shell access and no sandbox is a decision, not a default."
+        },
+        {
+          "nwo": "langfuse/langfuse",
+          "role": "What it actually did",
+          "why": "Self-hostable tracing, so the record of what the agent sent and got back stays on your own machine. Two source lists agree on it and it is the most widely adopted of the open options."
+        },
+        {
+          "nwo": "shareAI-lab/learn-claude-code",
+          "role": "What to read while it runs",
+          "why": "A read-through of how a real coding agent is built rather than a tutorial for using one. It is the fastest way to stop being surprised by the six choices above."
+        }
+      ]
+    },
+    {
+      "slug": "windows-first",
+      "title": "Runs on Windows, and says so",
+      "kicker": "Stated support, not inferred",
+      "intro": "Most agentic tooling is written on a Mac and tested on Linux, and \"it's Python, it'll be fine\" is how a Windows afternoon disappears. The atlas records a per-platform verdict for every project, and it distinguishes stated support from support merely inferred from the language. Every project below has documented Windows support -- the build refuses to publish this page if one of them stops.",
+      "requires": {"os": "Windows"},
+      "picks": [
+        {
+          "nwo": "openclaw/openclaw",
+          "role": "The framework",
+          "why": "The most-starred project in the atlas, and it puts Windows in the same sentence as macOS and Linux rather than in a footnote. Three source lists carry it."
+        },
+        {
+          "nwo": "earendil-works/pi",
+          "role": "The harness",
+          "why": "A deliberately small terminal harness built around skills loaded on demand. Small is what makes it portable: there is less of it to be Unix-shaped."
+        },
+        {
+          "nwo": "continuedev/continue",
+          "role": "The coding agent",
+          "why": "Ships as an editor extension, which is why it works on Windows without a WSL detour -- the editor has already solved that problem."
+        },
+        {
+          "nwo": "ollama/ollama",
+          "role": "The model runner",
+          "why": "A native Windows build, a one-line pull, and no Python environment to get wrong. If you want a local model on Windows this is the shortest path to one."
+        },
+        {
+          "nwo": "ggml-org/llama.cpp",
+          "role": "The inference engine",
+          "why": "The C++ layer under most of local AI, with first-class Windows builds and no runtime to install. Worth knowing directly once the layer above it surprises you."
+        },
+        {
+          "nwo": "headroomlabs-ai/headroom",
+          "role": "The context budget",
+          "why": "Compresses tool output, logs and files before they reach the window. Windows and Docker support are both stated, and it sits in front of whatever agent you chose."
+        },
+        {
+          "nwo": "nearai/ironclaw",
+          "role": "The sandbox",
+          "why": "Treats agent execution as a privacy and isolation problem rather than a convenience one. Two source lists agree, and Windows support is documented rather than assumed."
+        }
+      ]
+    },
+    {
+      "slug": "claude-code-kit",
+      "title": "The Claude Code power kit",
+      "kicker": "What to install after the agent",
+      "intro": "Claude Code is the harness the largest single share of this atlas is built for. Installing it is ten seconds; the next hour is the part nobody writes down. These seven cover the format skills come in, three bundles worth reading before writing your own, the two things that make long sessions cheaper, and where to look when you want more. Every project here targets Claude Code, and the build checks that too.",
+      "requires": {"target": "claude-code"},
+      "picks": [
+        {
+          "nwo": "anthropics/skills",
+          "role": "The format",
+          "why": "Anthropic's own repository for Agent Skills: the SKILL.md format, a template and worked examples. Read this first and every other skills bundle in the atlas becomes legible."
+        },
+        {
+          "nwo": "obra/superpowers",
+          "role": "The bundle",
+          "why": "Core software-engineering competencies covering most of the SDLC, well organised and adaptable. It is the most-starred skills project here and the one most often forked as a starting point."
+        },
+        {
+          "nwo": "multica-ai/andrej-karpathy-skills",
+          "role": "The instructions file",
+          "why": "A drop-in CLAUDE.md distilling four behavioural guidelines, derived from Andrej Karpathy's public notes on LLM coding pitfalls. One file, and the cheapest improvement on this page."
+        },
+        {
+          "nwo": "addyosmani/agent-skills",
+          "role": "The engineering set",
+          "why": "Production-grade engineering skills, and portable: it also targets MCP, Codex and Cursor, so what you learn here is not stranded if you change harnesses."
+        },
+        {
+          "nwo": "JuliusBrussee/caveman",
+          "role": "The token diet",
+          "why": "Conserves tokens by shortening what the agent says back to you. It reads like a joke and is not one -- long sessions are mostly the model narrating, and Windows support is stated."
+        },
+        {
+          "nwo": "ccusage/ccusage",
+          "role": "The bill",
+          "why": "One npx command reports what your Claude Code sessions have actually cost. Zero install, no account, and the first honest number most people see."
+        },
+        {
+          "nwo": "hesreallyhim/awesome-claude-code",
+          "role": "Where to look next",
+          "why": "The specialist list for this harness. When the kit above stops being enough, this is the catalogue to read rather than a search box to guess into."
+        }
+      ]
+    },
+    {
+      "slug": "local-only",
+      "title": "Nothing leaves the laptop",
+      "kicker": "A local stack, top to bottom",
+      "intro": "Sometimes the requirement is not cost or latency but that the code, the documents and the prompts stay on hardware you own. That rules out most of the atlas. What is left is a genuine stack: an engine, a runner in front of it, a chat surface, a serving layer for when one machine is not enough, and retrieval over your own files. Every project below names a local runtime as a target, and the build checks it.",
+      "requires": {"target": "local-ollama"},
+      "picks": [
+        {
+          "nwo": "ollama/ollama",
+          "role": "The runner",
+          "why": "Pull a model, run it, done. It is the layer that made local models an afternoon rather than a weekend, and it stays out of the way afterwards."
+        },
+        {
+          "nwo": "ggml-org/llama.cpp",
+          "role": "The engine",
+          "why": "CPU, GPU and Apple Silicon inference in C++, and the foundation most of the rest of this page is standing on. Quantisation happens here, which is where the speed comes from."
+        },
+        {
+          "nwo": "mozilla-ai/llamafile",
+          "role": "The zero-setup option",
+          "why": "A model and its runtime as one executable file. Nothing to install and nothing to uninstall, which makes it the right thing to hand to somebody else."
+        },
+        {
+          "nwo": "open-webui/open-webui",
+          "role": "The chat surface",
+          "why": "A self-hosted interface with access control and extensions, so the local stack has a front door other people can be given a key to."
+        },
+        {
+          "nwo": "nomic-ai/gpt4all",
+          "role": "The consumer-hardware path",
+          "why": "Built for the machine you already have rather than the one you would need. Worth trying first if the honest answer about your GPU is that there isn't one."
+        },
+        {
+          "nwo": "PromtEngineer/localGPT",
+          "role": "Your own documents",
+          "why": "Retrieval over local files with a local model doing the reading, which is the whole point: the documents never become somebody else's training data. Two source lists carry it."
+        },
+        {
+          "nwo": "vllm-project/vllm",
+          "role": "When one machine is not enough",
+          "why": "High-throughput serving with paged attention. This is the step after a laptop -- still your hardware, but now several people can use it at once."
+        }
+      ]
+    },
+    {
+      "slug": "keep-it-honest",
+      "title": "Find out what the agent actually did",
+      "kicker": "Traces, tests, scans and the bill",
+      "intro": "An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put in front of a customer. Traces first, then tests, then the two things people leave until after the incident.",
+      "picks": [
+        {
+          "nwo": "langfuse/langfuse",
+          "role": "The trace",
+          "why": "Self-hostable, which matters here more than anywhere: the traces contain your prompts and your customers' data. The most widely adopted of the open options, and two source lists agree."
+        },
+        {
+          "nwo": "Arize-ai/phoenix",
+          "role": "The second opinion",
+          "why": "Three source lists carry it -- the strongest agreement in this category -- and it pairs a trace UI with an eval runtime, so you can grade the runs you are looking at."
+        },
+        {
+          "nwo": "promptfoo/promptfoo",
+          "role": "The test suite",
+          "why": "Tests as YAML, with assertions and LLM-as-judge. It is the lowest-ceremony way to turn \"it seemed better\" into something a pull request can fail on."
+        },
+        {
+          "nwo": "confident-ai/deepeval",
+          "role": "The metrics",
+          "why": "Twenty-plus built-in metrics for LLM and agent evaluation. Use it when you have stopped arguing about whether output is good and started arguing about which axis."
+        },
+        {
+          "nwo": "traceloop/openllmetry",
+          "role": "The standard",
+          "why": "OpenTelemetry instrumentation for LLM calls and agent steps. The one pick here that does not lock you in: the traces go wherever your existing observability already goes."
+        },
+        {
+          "nwo": "NVIDIA/SkillSpector",
+          "role": "The thing you install",
+          "why": "Scans agent skills for vulnerabilities. Every other page on this site encourages you to install other people's instructions; this is the tool that reads them first."
+        },
+        {
+          "nwo": "mnfst/manifest",
+          "role": "The bill",
+          "why": "Real-time cost observability per agent. Cost is a correctness signal in disguise -- a run that suddenly costs four times as much has usually started doing something else."
+        }
+      ]
+    }
+  ]
+}

@@ -35,6 +35,20 @@
       "off_effect": "Install commands and their copy buttons are omitted from index results."
     },
     {
+      "key": "index.mascot_commentary",
+      "group": "Index page",
+      "name": "Atlas Byte commentary",
+      "description": "Lets Atlas Byte show short, factual project tips when a reader hovers or focuses a project.",
+      "off_effect": "Atlas Byte stays visible but does not show project commentary or the Atlas Orbit easter egg."
+    },
+    {
+      "key": "index.export",
+      "group": "Index page",
+      "name": "Export and share a view",
+      "description": "Offers the current view as a shareable link, a Markdown table, a standalone HTML page or print/PDF, and lets a shared #list= link be opened and saved to the reader's own projects. Everything is assembled in the reader's browser; nothing is uploaded.",
+      "off_effect": "The Export chip stays hidden and its dialog unreachable, a shared #list= link is ignored rather than filtering the page, and printing is left to the stylesheet rather than being switched to the table layout and light theme first."
+    },
+    {
       "key": "detail.install_command",
       "group": "Project detail pages",
       "name": "Install section",

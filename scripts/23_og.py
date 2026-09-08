@@ -231,15 +231,15 @@ FONT = "DejaVu Sans"
 # Roles and values come from `19_pages.py`'s dark custom properties. The body and chips use the page's
 # secondary ink while the heading and count lift to its white primary ink at thumbnail size.
 PALETTE = {
-    "surface": "#000000",   # the card, and the backdrop Chromium paints under it -- see `shoot()`
-    "band":    "#14141b",   # chip fill
-    "ink":     "#c7c9d2",   # body text, and the chips'
-    "ink2":    "#9598a4",   # the count line
-    "muted":   "#9598a4",   # blurb, label, host line
-    "grid":    "#262630",   # chip border
-    "bar":     "#ce54af",   # the accent: the frame's top border, and the kicker
-    "warn":    "#fff",      # the count itself
-    "head":    "#fff",      # the heading -- the only colour here that is not a page variable
+    "surface": "#090a0d",   # the card, and the backdrop Chromium paints under it -- see `shoot()`
+    "band":    "#20242d",   # chip fill
+    "ink":     "#d0d5dd",   # body text, and the chips'
+    "ink2":    "#9ba5b3",   # the count line
+    "muted":   "#9ba5b3",   # blurb, label, host line
+    "grid":    "#3a414d",   # chip border
+    "bar":     "#d6a034",   # the accent: the frame's top border, and the kicker
+    "warn":    "#f7f8fa",   # the count itself
+    "head":    "#f7f8fa",   # the heading -- the only colour here that is not a page variable
 }
 
 # The root card's file name, and the one string `19_pages.py` has to agree with -- it is what the root

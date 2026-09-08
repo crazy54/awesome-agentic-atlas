@@ -168,7 +168,7 @@ if len(out) >= len(page):
     bad += 1
     print("FAIL the real template did not get smaller")
 # The URLs are the whole point: these are the `//` the stripper must not mistake for a comment.
-for u in ("https://opengraph.githubassets.com", "http://www.w3.org/2000/svg", "file://"):
+for u in ("https://opengraph.githubassets.com", "file://"):
     if u in out:
         ok += 1
     else:

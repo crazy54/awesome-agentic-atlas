@@ -57,6 +57,33 @@ const {targetId} = await send("Target.createTarget", {url: "about:blank"});
 const {sessionId} = await send("Target.attachToTarget", {targetId, flatten: true});
 const S = (m, p) => send(m, p, sessionId);
 await S("Page.enable"); await S("Runtime.enable");
+// `DOM` and `CSS` are enabled for one reason: `CSS.forcePseudoState`, which is how DevTools' "force element
+// state" checkbox works and the only way to put a row in `:hover` without depending on a synthetic mouse and
+// the hit testing behind it. See `hoverFirstRow`.
+await S("DOM.enable"); await S("CSS.enable");
+
+// WHETHER THIS BROWSER HAS A POINTING DEVICE IS NOT THIS SUITE'S TO DECIDE, and three assertions below have
+// to be built around that. They measure effects that exist only inside `@media(hover:hover)`: the table row's
+// 2px accent line, and the card's outline and `card-glow` pulse. The guard is deliberate -- a touch device
+// reports a hover and then latches it, so tapping a row used to leave it tinted -- so those effects are real
+// for a reader with a mouse and correctly absent for everyone else, including a headless browser with no
+// mouse at all.
+//
+// `(hover: hover)` is false on CI's Chromium 152 and true on the local headless shell, which is why those
+// three passed here and failed there, and it cannot be emulated away. Measured, not assumed, in three steps
+// and in this order: the query was reported beside the failure (`hoverMQ: false` on CI, `true` locally, with
+// `hovered: true` on both -- so the mouse was landing and the pseudo-class was matching all along); then
+// `Emulation.setEmulatedMedia` was asked for `hover: hover` and changed nothing; then it was asked for
+// `hover: none` on a runner reporting `true`, and changed nothing there either. It accepts the call, returns
+// no error, and ignores the feature: `hover` and `pointer` are not in the set CDP can override, unlike
+// `prefers-reduced-motion` and `prefers-color-scheme`, which this file emulates below and which do work.
+//
+// So there is no browser state to fix and nothing to force. What is left is a fact this suite can still
+// assert everywhere -- that the stylesheet declares the accent under that guard -- and a stronger one it can
+// only assert where the guard is met, that the browser then computes it. `hoverFirstRow` returns both and
+// each assertion takes the strongest instrument the runner supports, naming which one it used. Neither arm
+// can pass vacuously: the declared arm fails if the rule or its guard goes missing, the computed arm fails
+// if anything overrides it in the cascade.
 
 const evalIn = async (expr) => {
   const r = await S("Runtime.evaluate", {expression: expr, awaitPromise: true, returnByValue: true});
@@ -107,16 +134,163 @@ const geom = `(() => {
     tagsShown: getComputedStyle(rows[0].querySelector('td.tg')).display !== 'none',
     langShown: getComputedStyle(rows[0].querySelector('td.lc')).display !== 'none',
     rankPrefix: getComputedStyle(rows[0].querySelector('td.rk'), '::before').content,
+    rowBg: getComputedStyle(rows[0]).backgroundColor,
+    bodyBg: getComputedStyle(document.body).backgroundColor,
+    stripeA: getComputedStyle(rows[0].querySelector('td')).backgroundColor,
+    stripeB: getComputedStyle(rows[1].querySelector('td')).backgroundColor,
     hscroll: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     rows: rows.length,
   };
 })()`;
+const hoverFirstRow = async () => {
+  const point = await evalIn(`(() => {
+    const r = document.querySelector('#out tbody tr').getBoundingClientRect();
+    return {x: Math.round(r.left + Math.min(20, r.width / 2)), y: Math.round(r.top + Math.min(20, r.height / 2))};
+  })()`);
+  // Away first, then onto the row. A `mouseMoved` to where the pointer already is is not a move, and the
+  // pointer is wherever the last dispatch in this file left it -- the mascot check parks it inside the first
+  // card and never takes it off. Two events make the arrival a transition from somewhere else whatever ran
+  // before.
+  await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 0, y: 0, buttons: 0});
+  await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: point.x, y: point.y, buttons: 0});
+  // Let the 140ms hover transition reach its final computed value before
+  // checking the exact 2px outline width.
+  await sleep(200);
+  // Every precondition the measurement needs, beside the measurement, because a hover effect reads as absent
+  // for four unrelated reasons and a computed `box-shadow:none` distinguishes none of them: the pointing
+  // device may be wrong (both rules sit inside `@media(hover:hover)`), the pseudo-class may never have
+  // matched, the point may have landed on something stacked over the row, or the view may not be the one the
+  // selector names. All four were live suspects on a failure that reproduced only on a runner nobody could
+  // attach to, so each is a key in the message rather than a thing to redeploy the suite to find out.
+  const measure = `(() => {
+    const row = document.querySelector('#out tbody tr'), cell = row.querySelector('td');
+    const at = document.elementFromPoint(${point.x}, ${point.y});
+    return {row: getComputedStyle(row).boxShadow, cell: getComputedStyle(cell).boxShadow,
+            animation: getComputedStyle(row).animationName,
+            hoverMQ: matchMedia('(hover: hover)').matches,
+            pointerMQ: matchMedia('(pointer: fine)').matches,
+            hovered: row.matches(':hover'), cellHovered: cell.matches(':hover'),
+            at: at ? [at.tagName.toLowerCase(), ...at.classList].join('.') : null,
+            view: document.documentElement.dataset.view};
+  })()`;
+  const pointed = await evalIn(measure);
+  // The same properties again with `:hover` forced on the row rather than pointed at. The mouse turns out to
+  // land on both runners, so this is not a workaround for one of them -- it is the deterministic way to hold
+  // a row hovered while several properties are read, and it removes hit testing from the list of things a
+  // `none` could have meant. Released afterwards, because the forced state outlives the measurement and the
+  // next thing this file does is screenshot a layout that must not be hovered.
+  const {root} = await S("DOM.getDocument", {depth: 0});
+  const {nodeId} = await S("DOM.querySelector", {nodeId: root.nodeId, selector: "#out tbody tr"});
+  await S("CSS.forcePseudoState", {nodeId, forcedPseudoClasses: ["hover"]});
+  await sleep(200);
+  const forced = await evalIn(measure);
+  await S("CSS.forcePseudoState", {nodeId, forcedPseudoClasses: []});
+  // The hover-guarded rules as this browser parsed them, which is the one reading of them available on a
+  // runner where the guard is unmet. CSSOM rather than a regex over the served text on purpose: a rule the
+  // browser failed to parse is absent here and present there, and "the stylesheet says so" is only worth
+  // asserting about the stylesheet the browser actually built.
+  const declared = await evalIn(`(() => {
+    const out = [];
+    for (const sheet of document.styleSheets) {
+      let rules; try { rules = sheet.cssRules; } catch { continue; }
+      for (const rule of rules) {
+        const guard = rule.media ? (rule.conditionText || rule.media.mediaText) : "";
+        if (!/hover/.test(guard)) continue;
+        for (const inner of rule.cssRules || [])
+          if (/:hover/.test(inner.selectorText || "")) out.push({guard, css: inner.cssText});
+      }
+    }
+    return out;
+  })()`);
+  return {...forced, declared,
+          how: forced.hoverMQ ? "computed" : "declared -- this browser reports no pointing device",
+          pointed: {hovered: pointed.hovered, row: pointed.row, cell: pointed.cell,
+                    animation: pointed.animation}};
+};
+
+// The strongest instrument the runner supports, for one hover effect. `computed` is a predicate over the
+// forced-hover computed style; `selector` and `value` locate the declaration to fall back to. Both arms are
+// real assertions -- see the note at the top of the file for why there are two and what each one catches --
+// and the one that ran is named in the assertion's own label so a green log says which it was.
+const drawn = (h, computed, selector, value) => h.hoverMQ
+  ? computed(h)
+  : h.declared.some((r) => selector.test(r.css) && value.test(r.css));
 
 // ---- 1440px: the view exists for this width
 await resize(1440, 900);
 await goto(ORIGIN);
 const coldView = await evalIn("document.documentElement.dataset.view");
 ok("cards are what a cold visit gets", coldView === "cards", coldView);
+// No synthetic input before this check: the original loader waited for a human gesture.
+await sleep(500);
+const initialArt = await evalIn(`(() => {
+  const imgs = [...document.querySelectorAll('#out .shot img')];
+  const visible = imgs.filter(i => i.getBoundingClientRect().top < innerHeight);
+  return {visible: visible.length, started: visible.every(i => !!i.getAttribute('src')),
+          deferred: imgs.some(i => i.hasAttribute('data-src'))};
+})()`);
+ok("visible screenshots start loading before any interaction", initialArt.visible > 0 && initialArt.started,
+   JSON.stringify(initialArt));
+ok("distant screenshots remain deferred", initialArt.deferred);
+ok("the mascot has a visible name tag", await evalIn("document.querySelector('.atlas-name')?.textContent === 'Atlas Byte'"));
+const accents = await evalIn(`new Set([...document.querySelectorAll('#out tr[data-project]')]
+  .slice(0,20).map(r => getComputedStyle(r).getPropertyValue('--card-accent'))).size`);
+ok("cards have varied curated accents", accents > 1, accents);
+
+// Atlas Byte only repeats facts already in the row. The browser check exercises the delayed hover path,
+// the reader-controlled quiet switch, and the hidden click sequence rather than merely looking for the
+// markup those behaviours need.
+const firstProjectPoint = await evalIn(`(() => {
+  const r = document.querySelector('#out tr[data-project]').getBoundingClientRect();
+  return {x: Math.round(r.left + 18), y: Math.round(r.top + Math.min(240, r.height - 18))};
+})()`);
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...firstProjectPoint});
+await sleep(450);
+ok("Atlas Byte introduces a hovered project from its Atlas record", await evalIn(`(() => {
+  const speech = document.getElementById('byte-speech');
+  return speech && !speech.hidden && speech.textContent.length > 20;
+})()`));
+await evalIn("document.getElementById('byte-quiet').click()");
+ok("Atlas Byte commentary has a local quiet switch", await evalIn(`(() => {
+  const quiet = document.getElementById('byte-quiet'), speech = document.getElementById('byte-speech');
+  return quiet?.getAttribute('aria-pressed') === 'true' && speech?.hidden;
+})()`));
+await evalIn("document.getElementById('byte-quiet').click()");
+await evalIn("for(let i=0;i<5;i++) document.getElementById('byte-name').click()");
+ok("five quick name-tag clicks reveal Atlas Orbit", await evalIn("document.querySelectorAll('#atlas-orbit .orbit-star').length === 12"));
+
+// The mascot is part of the masthead rather than a decorative background: it needs to arrive as a real
+// image, occupy the top-right without covering the navigation, and stop moving when the reader asks the
+// operating system for reduced motion. Measuring the served page catches a missing asset, a broken relative
+// URL and a layout rule that merely mentions the mascot without putting it where anyone can see it.
+const mascot = await evalIn(`(() => {
+  const img = document.querySelector('header img.atlas-byte');
+  const nav = document.querySelector('header nav');
+  if (!img) return null;
+  const r = img.getBoundingClientRect(), n = nav.getBoundingClientRect(), cs = getComputedStyle(img);
+  return {naturalWidth: img.naturalWidth, left: r.left, right: r.right, top: r.top, width: r.width,
+          navRight: n.right, animation: cs.animationName};
+})()`);
+ok("Atlas Byte loads in the masthead", mascot && mascot.naturalWidth > 0, JSON.stringify(mascot));
+ok("Atlas Byte sits at the upper right without covering navigation",
+   mascot && mascot.right > 1440 * .88 && mascot.top < 150 && mascot.left >= mascot.navRight - 1 &&
+   mascot.width >= 92 && mascot.width <= 170, JSON.stringify(mascot));
+ok("Atlas Byte has an idle animation", mascot && mascot.animation !== "none", JSON.stringify(mascot));
+await S("Emulation.setEmulatedMedia", {
+  media: "screen", features: [{name: "prefers-reduced-motion", value: "reduce"}],
+});
+const reducedMascot = await evalIn(`(() => {
+  const img = document.querySelector('header img.atlas-byte');
+  return img ? getComputedStyle(img).animationName : "missing";
+})()`);
+ok("the mascot becomes still for reduced-motion readers", reducedMascot === "none", reducedMascot);
+await S("Emulation.setEmulatedMedia", {media: "screen", features: []});
+
+const faviconHref = await evalIn("document.querySelector('link[rel=icon]')?.getAttribute('href') || ''");
+const faviconResponse = await fetch(new URL("favicon.svg", ORIGIN));
+ok("the globe emoji favicon is replaced by a local Atlas Byte SVG",
+   faviconHref === "favicon.svg" && faviconResponse.ok,
+   faviconHref + " / HTTP " + faviconResponse.status);
 
 // The default view is written twice in the generator and rendered once here, and nothing compared the three
 // until now. `data-view` on the <html> tag is what the reader looks at for the length of a 561 KB fetch,
@@ -151,12 +325,38 @@ await shot("view-cards-cold-1440");
 // worth measuring -- and the measurement's parity depends on the page being in the table when it starts.
 // That is what this navigation is for as much as the three assertions on it; see the note after it.
 await goto(ORIGIN + "#view=table");
+const densityHeights = [];
+for (const density of ["compact", "normal", "expanded"]) {
+  densityHeights.push(await evalIn(`(() => {
+    const s = document.getElementById('density'); if (!s) return 0;
+    s.value = '${density}'; s.dispatchEvent(new Event('change', {bubbles:true}));
+    return document.querySelector('#out tbody tr').getBoundingClientRect().height;
+  })()`));
+}
+ok("table density changes actual row height", densityHeights[0] > 0 &&
+   densityHeights[0] < densityHeights[1] && densityHeights[1] < densityHeights[2], densityHeights.join(','));
+await hardGoto(ORIGIN + "#view=table");
+ok("table density survives reload", await evalIn("document.getElementById('density')?.value === 'expanded'"));
+await evalIn("document.getElementById('density') && (document.getElementById('density').value='normal',document.getElementById('density').dispatchEvent(new Event('change')))");
 const tbl = await evalIn(geom);
 ok("a #view=table link opens in the table",
    await evalIn("document.documentElement.dataset.view") === "table",
    await evalIn("document.documentElement.dataset.view"));
 ok("one row per line in the table", tbl.across === 1, JSON.stringify(tbl));
 ok("the table shows its headings", tbl.theadShown);
+ok("adjacent table rows use different grey surfaces", tbl.stripeA !== tbl.stripeB,
+   tbl.stripeA + " vs " + tbl.stripeB);
+const tableHover = await hoverFirstRow();
+// Asserted to have been found before anything is read out of it, for the same reason the default-view check
+// below asserts both halves matched: on this runner the computed arm answers and an empty `declared` would
+// never be looked at, while on CI it is the only arm there is. An empty list there would fail the three
+// assertions with no hint that the search, rather than the stylesheet, was what came up short.
+ok("the hover-guarded rules are in the stylesheet this browser parsed",
+   tableHover.declared.length >= 2, JSON.stringify(tableHover.declared.map((r) => r.guard)));
+ok(`a table-row hover draws a thicker 2px accent line (${tableHover.how})`,
+   drawn(tableHover, (h) => /0px -2px 0px/.test(h.cell),
+         /tbody tr:hover td/, /box-shadow:\s*inset 0 -2px 0/),
+   JSON.stringify(tableHover));
 await shot("view-table-1440");
 
 // The toggle against the thing it exists to avoid -- counted, not timed.
@@ -238,6 +438,21 @@ ok("the topic and target tags are on the card", c1440.tagsShown);
 ok("so are the language, licence and push date", c1440.langShown);
 ok("the rank carries a # now the column heading has gone", /#/.test(c1440.rankPrefix), c1440.rankPrefix);
 ok("nothing overflows sideways", c1440.hscroll <= 0, String(c1440.hscroll));
+ok("dark cards sit on a visible charcoal surface rather than merging into the page",
+   c1440.rowBg !== c1440.bodyBg, c1440.rowBg + " vs " + c1440.bodyBg);
+const cardHover = await hoverFirstRow();
+// Again, and not redundantly: this is a different document from the table pass above -- `hardGoto` reloaded
+// in between -- so it is a different stylesheet object and a different search of it.
+ok("the hover-guarded rules survived the reload into cards",
+   cardHover.declared.length >= 2, JSON.stringify(cardHover.declared.map((r) => r.guard)));
+ok(`a card hover draws a thicker 2px accent outline (${cardHover.how})`,
+   drawn(cardHover, (h) => /0px 0px 0px 2px/.test(h.row),
+         /\[data-view="cards"\] tr:hover\s*{/, /box-shadow:\s*0 0 0 2px/),
+   JSON.stringify(cardHover));
+ok(`a card hover gently pulses its own accent glow (${cardHover.how})`,
+   drawn(cardHover, (h) => h.animation === "card-glow",
+         /\[data-view="cards"\] tr:hover\s*{/, /animation:[^;]*card-glow/),
+   JSON.stringify(cardHover));
 ok("no row was rebuilt, so the same count is on screen", c1440.rows === tbl.rows,
    c1440.rows + " vs " + tbl.rows);
 // The three counts, each with its non-emptiness conjunct: a measurement taken over an empty list would

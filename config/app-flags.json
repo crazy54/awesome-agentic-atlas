@@ -3,6 +3,8 @@
   "index.deployment_badge": 1,
   "index.project_screenshots": 1,
   "index.install_commands": 1,
+  "index.mascot_commentary": 1,
+  "index.export": 1,
   "detail.install_command": 1,
   "detail.repository_reader": 1,
   "detail.screenshot": 1,

@@ -19,29 +19,33 @@
       href="feed.xml">
 <link rel="alternate" type="application/feed+json" title="Awesome Agentic Atlas — new arrivals"
       href="feed.json">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" id="tc" content="#0B0B10">
+<meta name="theme-color" id="tc" content="#101217">
 <script>
 try {
   var t = localStorage.getItem("theme");
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  document.getElementById("tc").content = t === "light" ? "#FCFCFD" : "#0B0B10";
+  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
 } catch (e) {}
 </script>
 <style>
 :root{
-  --surface:#000000; --plane:#0B0B10; --band:#14141B; --ink:#FFFFFF; --ink2:#C7C9D2;
-  --muted:#9598A4; --grid:#262630; --link:#438BB1; --bar:#CE54AF;
-  --good:#438BB1; --warn:#9871C9; --off:#9598A4; --onbar:#000000;
+  --surface:#090A0D; --plane:#101217; --band:#20242D; --ink:#F7F8FA; --ink2:#D0D5DD;
+  --muted:#9BA5B3; --grid:#3A414D; --link:#78B7F4; --bar:#D6A034;
+  --good:#5BD5AA; --warn:#EF7D86; --off:#9BA5B3; --onbar:#090A0D;
+  --accent-sky:#78B7F4; --accent-mint:#5BD5AA; --accent-gold:#E7B64D;
+  --accent-coral:#EF7D86; --accent-violet:#A99AF7;
 }
 html[data-theme=light]{
-  --surface:#F1F0F3; --plane:#FCFCFD; --band:#EAE9EF; --ink:#000000; --ink2:#2C2C36;
-  --muted:#52525E; --grid:#D4D3DA; --link:#1C449C; --bar:#AD328E;
-  --good:#346B89; --warn:#6B3EA3; --off:#52525E; --onbar:#FFFFFF;
+  --surface:#F2F4F7; --plane:#FAFBFC; --band:#E7EAF0; --ink:#14171C; --ink2:#353C47;
+  --muted:#596574; --grid:#CAD1DB; --link:#1D5E9E; --bar:#6557C8;
+  --good:#187557; --warn:#875A19; --off:#596574; --onbar:#FFFFFF;
+  --accent-sky:#1D5E9E; --accent-mint:#187557; --accent-gold:#9A6718;
+  --accent-coral:#B6465E; --accent-violet:#6557C8;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);
@@ -54,26 +58,56 @@ a:hover{text-decoration:underline}
 .skip{position:absolute;left:-999px;top:0;z-index:40;background:var(--bar);color:var(--onbar);
   padding:10px 16px;border-radius:0 0 8px 0;font-weight:600}
 .skip:focus{left:0}
-header{background:var(--plane);border-bottom:1px solid var(--grid);padding:22px 20px 16px}
+header{position:sticky;top:0;z-index:30;background:var(--plane);border-bottom:1px solid var(--grid);
+  padding:22px 20px 16px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 .sub{color:var(--ink2);font-size:14px;margin:0}
 .sub b{color:var(--ink)}
 .stale{color:var(--warn);font-weight:600}
-.stamp{display:inline-flex;height:23px;margin:8px 0 0;border-radius:5px;overflow:hidden;
-  text-decoration:none;font-family:Verdana,Geneva,DejaVu Sans,sans-serif;font-size:9px;
-  line-height:23px;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;
-  box-shadow:0 0 0 1px rgba(255,255,255,.08)}
-.stamp>span{padding:0 7.4px 0 8px;color:#fff}
-.stamp .k{display:flex;align-items:center;gap:5px;background:#555}
-.stamp .v{background:#1a7f37;font-weight:700}
-.deploy-icon{width:11px;height:11px;flex:0 0 11px}
-.stamp.late .v{background:#9a6700}
+.stamp{display:inline-block;height:22px;margin:8px 0 0;border-radius:6px;text-decoration:none;
+  vertical-align:top;box-shadow:0 0 0 1px color-mix(in srgb,var(--grid) 70%,transparent)}
+.deploy-badge{display:block;width:auto;height:22px;border:0;border-radius:6px}
 .stamp:hover,.stamp:focus-visible{box-shadow:0 0 0 2px var(--bar)}
 .stamp:focus-visible{outline:none}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.headside{display:flex;align-items:flex-start;justify-content:flex-end;gap:18px}
 .top nav{font-size:13px;color:var(--muted);text-align:right;line-height:1.9}
+.atlas-byte-wrap{position:relative;flex:0 0 auto;width:128px;isolation:isolate;
+  transition:transform .18s ease}
+.atlas-byte-wrap:before{content:"";position:absolute;inset:14% 2% 10%;z-index:-1;border-radius:50%;
+  background:radial-gradient(circle,color-mix(in srgb,var(--bar) 17%,transparent),transparent 68%);
+  filter:blur(7px)}
+.atlas-byte{display:block;width:128px;height:auto;filter:drop-shadow(0 12px 18px rgba(0,0,0,.3));
+  animation:atlas-byte-float 4.2s ease-in-out infinite;transform-origin:50% 72%}
+.atlas-byte-wrap:hover{transform:rotate(2deg) scale(1.035)}
+#byte-tip{display:block;padding:0;border:0;background:transparent;border-radius:50%;color:inherit}
+.atlas-name{display:block;margin:-11px auto 0;position:relative;z-index:2;padding:2px 8px;
+  border:1px solid var(--grid);border-radius:999px;background:var(--plane);color:var(--ink);
+  font-size:11px;font-weight:700;letter-spacing:.04em;line-height:1.45}
+.atlas-name:hover{border-color:var(--bar);color:var(--ink)}
+.byte-quiet{display:block;margin:5px auto 0;padding:0;border:0;background:transparent;color:var(--muted);
+  font-size:10px;text-decoration:underline;text-underline-offset:2px}
+.byte-quiet:hover{color:var(--ink)}
+#byte-speech{position:absolute;right:calc(100% + 12px);top:8px;width:min(270px,calc(100vw - 174px));
+  padding:9px 11px;border:1px solid var(--grid);border-left:3px solid var(--bar);border-radius:9px;
+  background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;box-shadow:0 12px 28px rgba(0,0,0,.2)}
+#byte-speech::after{content:"";position:absolute;right:-7px;top:19px;width:11px;height:11px;
+  background:var(--band);border-top:1px solid var(--grid);border-right:1px solid var(--grid);transform:rotate(45deg)}
+#atlas-orbit{position:absolute;inset:-18px -24px;pointer-events:none;z-index:3}
+.orbit-star{position:absolute;left:50%;top:50%;width:5px;height:5px;background:var(--bar);box-shadow:0 0 10px var(--bar);
+  transform:rotate(var(--orbit-angle)) translateY(-58px) rotate(45deg);animation:atlas-orbit 1.45s ease-out both}
+.orbit-star:nth-child(odd){background:var(--accent-sky);box-shadow:0 0 10px var(--accent-sky)}
+@keyframes atlas-orbit{0%{opacity:0;transform:rotate(var(--orbit-angle)) translateY(-16px) rotate(45deg) scale(.4)}20%{opacity:1}100%{opacity:0;transform:rotate(var(--orbit-angle)) translateY(-78px) rotate(45deg) scale(1)}}
+@keyframes atlas-byte-float{
+  0%,100%{transform:translateY(0) rotate(-.6deg)}
+  50%{transform:translateY(-5px) rotate(.8deg)}
+}
+@media(prefers-reduced-motion:reduce){
+  .atlas-byte,.atlas-byte-wrap{animation:none;transition:none}
+  .orbit-star{animation:none;opacity:1;transform:rotate(var(--orbit-angle)) translateY(-58px) rotate(45deg)}
+}
 button{font:inherit;cursor:pointer}
 .bar{position:sticky;top:0;z-index:20;background:var(--plane);
   border-bottom:1px solid var(--grid);padding:10px 20px}
@@ -110,6 +144,8 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .savechip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
 .clearsave{display:none}
 .clearsave.on{display:inline-block}
+.takechip{display:none}
+.takechip.on{display:inline-flex;align-items:center;gap:.4em}
 .save{background:var(--band);color:var(--ink2);border:1px solid var(--grid);border-radius:999px;
   padding:1px 9px;font-family:inherit;font-size:11px;font-weight:600;line-height:1.7;
   white-space:nowrap;cursor:pointer;margin-left:8px;vertical-align:1px}
@@ -136,11 +172,32 @@ th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;
 th.n,td.n{text-align:right}
 th.c,td.c{text-align:center}
 td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
-@media(hover:hover){tr:hover td{background:var(--band)}}
+html[data-view=table] tbody tr:nth-child(odd) td{background:var(--plane)}
+html[data-view=table] tbody tr:nth-child(even) td{background:var(--band)}
+@media(hover:hover){
+  html[data-view=table] tbody tr:hover td{
+    background:color-mix(in srgb,var(--bar) 10%,var(--band));box-shadow:inset 0 -2px 0 var(--bar)}
+}
+html[data-view=table][data-density=compact] td{padding:6px 8px}
+html[data-view=table][data-density=compact] .shot,
+html[data-view=table][data-density=compact] .tg,
+html[data-view=table][data-density=compact] .lc{display:none}
+html[data-view=table][data-density=compact] .desc{display:-webkit-box;-webkit-box-orient:vertical;
+  -webkit-line-clamp:1;line-clamp:1;overflow:hidden;font-size:12px;max-width:34em}
+html[data-view=table][data-density=compact] .cmdrow{display:none}
+html[data-view=table][data-density=compact] .nm{font-size:14px}
+html[data-view=table][data-density=compact] .meta{margin-top:2px}
+html[data-view=table][data-density=expanded] td{padding:16px 12px}
+html[data-view=table][data-density=expanded] .shot{width:280px}
+html[data-view=table][data-density=expanded] .shot img{width:280px;border-radius:8px}
+html[data-view=table][data-density=expanded] .desc,
+html[data-view=table][data-density=expanded] .cmdrow{max-width:56em}
 .rk{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .shot{width:200px}
 .shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:6px;
   background:var(--band);border:1px solid var(--grid);display:block}
+.shot-fallback{display:grid;place-items:center;min-height:100px;padding:12px;background:var(--band);
+  border:1px solid var(--grid);border-radius:6px;color:var(--muted);font-size:12px;text-align:center}
 .nm{font-weight:600;font-size:15px;overflow-wrap:anywhere}
 .nwo{display:block;color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
 a.nwo:hover{color:var(--ink)}
@@ -166,6 +223,11 @@ a.nwo:hover{color:var(--ink)}
 .vL{color:var(--warn)}
 .vN,.va,.v-{color:var(--off)}
 .os .v-,.os .va{opacity:.75}
+.oi{width:1.15em;height:1.15em;fill:currentColor;vertical-align:-.19em;flex:none}
+.oiw{white-space:nowrap}
+.oikey{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 12px;font-size:12.5px;color:var(--muted)}
+.chip .oi{width:1.25em;height:1.25em}
+.os .oi{width:14px;height:14px}
 .old{text-decoration:underline dotted;text-decoration-color:var(--muted);text-underline-offset:2px}
 .approx{margin:0 0 14px;padding:10px 14px;border-left:3px solid var(--warn);background:var(--band);
   border-radius:0 6px 6px 0;color:var(--ink2);font-size:14px}
@@ -196,6 +258,34 @@ kbd{background:var(--band);border:1px solid var(--grid);border-bottom-width:2px;
 #palhint{display:none;align-items:center;gap:5px}
 #palhint.on{display:inline-flex}
 @media (max-width:760px){#palhint.on{display:none}}
+dialog#exp{border:1px solid var(--grid);background:var(--plane);color:var(--ink);border-radius:12px;
+  padding:0;width:min(560px,calc(100vw - 24px));overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.45)}
+dialog#exp::backdrop{background:rgba(0,0,0,.55)}
+#exp h2{margin:0;padding:14px 16px 3px;font-size:16px}
+.expsub{margin:0;padding:0 16px 12px;color:var(--muted);font-size:13px}
+.expsub b{color:var(--ink2)}
+.expacts{display:flex;flex-direction:column;gap:8px;padding:0 16px 12px}
+.expacts button{display:flex;align-items:baseline;gap:9px;text-align:left;background:var(--band);
+  color:var(--ink);border:1px solid var(--grid);border-radius:9px;padding:9px 12px;font:inherit;
+  font-size:14px}
+.expacts button:hover{border-color:var(--bar)}
+.expacts button:disabled{opacity:.45}
+.expacts button:disabled:hover{border-color:var(--grid)}
+.expacts .t{font-weight:600;white-space:nowrap}
+.expacts .k{color:var(--muted);font-size:12px}
+.expurl{display:flex;gap:8px;padding:0 16px 12px}
+#expurl{flex:1;min-width:0;background:var(--surface);color:var(--ink2);border:1px solid var(--grid);
+  border-radius:7px;padding:8px 10px;font:12px/1.5 ui-monospace,Consolas,monospace}
+#expurl:focus{outline:2px solid var(--bar);outline-offset:-1px}
+.expnote{margin:0;padding:0 16px 12px;color:var(--muted);font-size:12px;line-height:1.5}
+.expfoot{display:flex;justify-content:flex-end;background:var(--surface);
+  border-top:1px solid var(--grid);padding:9px 14px}
+.shared{display:none}
+.shared.on{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0 0;padding:10px 14px;
+  border-left:3px solid var(--warn);background:var(--band);border-radius:0 6px 6px 0;
+  color:var(--ink2);font-size:14px}
+.shared b{color:var(--ink)}
+.shared .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
 .empty{padding:64px 0 80px;text-align:center;color:var(--muted)}
 .empty .big{color:var(--ink);font-size:17px;font-weight:600;margin:0 0 6px}
 .empty p{margin:0 0 12px}
@@ -213,6 +303,7 @@ kbd{background:var(--band);border:1px solid var(--grid);border-bottom-width:2px;
 footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
   color:var(--muted);font-size:13px}
 .blurb{color:var(--muted);font-size:13px;margin:2px 0 0}
+#printurl{display:none}
 .facets{margin-top:14px;padding-top:12px;border-top:1px solid var(--grid);font-size:12.5px;
   line-height:1.9}
 .facets p{margin:0 0 4px}
@@ -275,7 +366,9 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   h1{font-size:21px}
   h1 span{display:block;font-size:13px}
   .top{gap:10px}
+  .headside{width:100%;align-items:center;justify-content:space-between;gap:12px}
   .top nav{text-align:left;line-height:2.1}
+  .atlas-byte-wrap,.atlas-byte{width:82px}
 
   #q{flex:1 1 100%;min-width:0}
   .line>label[for=q]{display:none}
@@ -309,8 +402,9 @@ html[data-view=cards] table{display:block;margin-top:14px}
 html[data-view=cards] tbody{display:grid;gap:14px;
   grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
 html[data-view=cards] tr{display:grid;grid-template-columns:1fr auto;align-items:start;align-content:start;
-  gap:0 10px;margin:0;padding:0 0 12px;background:var(--surface);
-  border:1px solid var(--grid);border-radius:10px;overflow:hidden}
+  gap:0 10px;margin:0;padding:0 0 12px;background:var(--band);
+  border:1px solid color-mix(in srgb,var(--card-accent) 35%,var(--grid));border-radius:12px;overflow:hidden;
+  transition:border-color .14s ease,box-shadow .14s ease,transform .14s ease}
 html[data-view=cards] td{display:block;border-bottom:0;padding:0 13px;min-width:0}
 html[data-view=cards] td.shot{grid-column:1/-1;grid-row:1;width:auto;padding:0}
 html[data-view=cards] td.shot img{width:100%;border:0;border-radius:0;
@@ -325,6 +419,11 @@ html[data-view=cards] td.tg{grid-column:1/-1;grid-row:5;margin-top:9px}
 html[data-view=cards] td.lc{grid-column:1/-1;grid-row:6;margin-top:3px;text-align:left}
 html[data-view=cards] td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
 html[data-view=cards] td.lc .meta br{display:none}
+html[data-view=cards] .project-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+html[data-view=cards] .project-actions a{border:1px solid color-mix(in srgb,var(--card-accent) 55%,var(--grid));
+  border-radius:999px;padding:4px 9px;color:var(--ink2);font-size:12px;font-weight:600}
+html[data-view=cards] .project-actions a:first-child{background:color-mix(in srgb,var(--card-accent) 18%,var(--band));color:var(--ink)}
+html[data-view=cards] .project-actions a:hover{border-color:var(--card-accent);text-decoration:none}
 html[data-view=cards][data-index-screenshots=off] td.rk{grid-row:1;padding-top:10px}
 html[data-view=cards][data-index-screenshots=off] td.st-c{grid-row:1;padding-top:10px}
 html[data-view=cards][data-index-screenshots=off] td.pj{grid-row:2}
@@ -336,8 +435,13 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
   -webkit-line-clamp:4;line-clamp:4;overflow:hidden}
 @media(hover:hover){
   html[data-view=cards] tr:hover td{background:transparent}
-  html[data-view=cards] tr:hover{border-color:var(--bar)}
+  html[data-view=cards] tr:hover{border-color:var(--card-accent);
+    box-shadow:0 0 0 2px var(--card-accent),0 0 20px color-mix(in srgb,var(--card-accent) 44%,transparent),0 14px 32px rgba(0,0,0,.24);
+    transform:translateY(-1px);animation:card-glow 1.5s ease-in-out infinite alternate}
 }
+html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
+  box-shadow:0 0 0 2px var(--card-accent),0 0 20px color-mix(in srgb,var(--card-accent) 40%,transparent)}
+@keyframes card-glow{from{box-shadow:0 0 0 2px var(--card-accent),0 0 12px color-mix(in srgb,var(--card-accent) 30%,transparent),0 12px 28px rgba(0,0,0,.2)}to{box-shadow:0 0 0 2px var(--card-accent),0 0 28px color-mix(in srgb,var(--card-accent) 58%,transparent),0 16px 36px rgba(0,0,0,.28)}}
 
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
@@ -346,9 +450,38 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
 #out tr{scroll-margin-top:160px}
+
+@page{margin:14mm}
+@media print{
+  .bar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,.shared .sp{display:none}
+  #printurl{display:block;color:var(--muted);font-size:8.5pt;word-break:break-all;margin:6px 0 0}
+  html[data-view=table] tbody tr:nth-child(odd) td,
+  html[data-view=table] tbody tr:nth-child(even) td{background:transparent}
+  td.hide,th.hide{display:table-cell}
+  td,th{padding:5px 6px;font-size:11px}
+  .st{font-size:12px}
+  .st.none{font-size:11px}
+  #out table{table-layout:fixed}
+  th.n:first-child{width:4%}
+  th.pj{width:20%}
+  th.st-c{width:9%}
+  th.tg{width:20%}
+  th.ds{width:36%}
+  th.lc{width:11%}
+  td{overflow-wrap:break-word}
+  td.tg .tag{display:inline;border:0;border-radius:0;background:none;padding:0;
+    color:var(--ink2);font-size:10px}
+  td.tg .tag:not(:last-child)::after{content:", ";white-space:normal}
+  td.tg .tag.cat{color:var(--ink);font-weight:600}
+  .cmdrow{margin:4px 0 0}
+  code.cmd{display:block;border:0;background:none;padding:0;color:var(--ink2);font-size:9.5px}
+  tr,td{break-inside:avoid}
+  thead{display:table-header-group}
+}
 </style>
 </head>
 <body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
 <a class="skip" href="#out">Skip to results</a>
 <span class="sr" id="live" role="status" aria-live="polite"></span>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -364,19 +497,32 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
       stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
       2026-09-03</span></p>
     <p class="blurb" id="ctx"></p>
+    <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
-       title="When this copy of the site was published."><span class="k"><svg class="deploy-icon"
-        viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.25"
-        fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.4v4l2.7 1.7"
-        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Last deployed</span>
-      <span class="v"><time datetime="2026-09-08T15:38:00Z">2026-09-08 15:38 UTC</time></span></a>
+       title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
+        src="https://shieldcn.dev/badge/last_deployed-2026--09--08_19:21_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-09-08T19:21:00Z">Last deployed 2026-09-08 19:21 UTC</time></a>
   </div>
+  <div class="headside">
   <nav>
+    <a href="collections/">Collections</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+    <a href="repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
-    <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown edition</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/releases/latest">Workbook</a><br>
     <button class="chip" id="theme">Light theme</button>
   </nav>
+  <div class="atlas-byte-wrap">
+    <button type="button" id="byte-tip" aria-label="Ask Atlas Byte for a browsing tip">
+    <img class="atlas-byte" src="assets/atlas-byte.png" width="512" height="532"
+         alt="Atlas Byte, the Atlas mascot, wearing pixel sunglasses">
+    </button>
+    <button type="button" class="atlas-name" id="byte-name">Atlas Byte</button>
+    <button type="button" class="byte-quiet" id="byte-quiet" aria-pressed="false">Quiet mode</button>
+    <div id="byte-speech" role="status" aria-live="polite" hidden></div>
+  </div>
+  </div>
 </div></div></header>
 
 <div class="bar"><div class="wrap">
@@ -396,6 +542,12 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
       <option value="name">Name (A&ndash;Z)</option>
     </select>
     <button class="chip" id="view" hidden>Table view</button>
+    <label id="density-control" hidden>Row size
+      <select id="density" aria-label="Table row size">
+        <option value="compact">Compact</option><option value="normal" selected>Normal</option>
+        <option value="expanded">Expanded</option>
+      </select>
+    </label>
     <button class="chip newchip" id="new" aria-pressed="false"
             title="Projects the source lists added in the last 14 days">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
@@ -406,6 +558,8 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
     <button class="chip savechip" id="saved" aria-pressed="false"
             title="Only the projects you have saved on this device"><span id="savedlabel">Saved</span></button>
     <button class="chip clearsave" id="clearsave">Remove all saved</button>
+    <button class="chip takechip" id="take" aria-haspopup="dialog"
+            title="Take this view away as a link, a Markdown table, an HTML page or a PDF">Export</button>
     <button class="chip" id="palhint"></button>
     <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
@@ -426,7 +580,14 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
   </div>
 </div></div>
 
-<main><div class="wrap"><div id="out"></div></div></main>
+<main><div class="wrap">
+  <div class="shared" id="shared">
+    <span id="sharedtext"></span>
+    <span class="sp"><button class="chip" id="sharedadd"></button>
+      <button class="chip" id="sharedall">Show the whole atlas</button></span>
+  </div>
+  <div id="out"></div>
+</div></main>
 
 <dialog id="pal" aria-label="Jump to a topic, platform, sort or project">
   <input id="palq" type="text" role="combobox" aria-expanded="true" aria-controls="palist"
@@ -435,6 +596,27 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
   <ul id="palist" role="listbox" aria-label="Matches"></ul>
   <div class="palfoot"><span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> move</span>
     <span><kbd>Enter</kbd> select</span> <span><kbd>Esc</kbd> close</span></div>
+</dialog>
+
+<dialog id="exp" aria-labelledby="exph">
+  <h2 id="exph">Take this view with you</h2>
+  <p class="expsub" id="expwhat"></p>
+  <div class="expurl">
+    <input id="expurl" type="text" readonly aria-label="Link to this view">
+    <button class="chip" id="expcopy">Copy link</button>
+  </div>
+  <div class="expacts">
+    <button id="expmd"><span class="t">Markdown table</span>
+      <span class="k">for a GitHub issue, a README or a wiki</span></button>
+    <button id="exphtml"><span class="t">HTML page</span>
+      <span class="k">one self-contained file, nothing to fetch</span></button>
+    <button id="expprint"><span class="t">Print, or save as PDF</span>
+      <span class="k">your browser&rsquo;s print dialog, on the table layout</span></button>
+  </div>
+  <p class="expnote">Built here, in this tab, out of the rows already on the page. Nothing is uploaded and
+    no request leaves your browser &mdash; which is also why a link to your own saved projects carries the
+    projects themselves rather than pointing at a list on a server.</p>
+  <div class="expfoot"><button class="chip" id="expdone">Done</button></div>
 </dialog>
 
 <footer><div class="wrap">
@@ -449,7 +631,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
   <span class="old">underlined like this</span> means nothing has landed in that repo for over a year.
   A dash in the star column means the row is a folder inside someone else's repo, or a dead
   link, and has no count of its own.
-  <nav class="facets" aria-label="Browse by topic or by what a project plugs into">
+  <nav class="facets" id="browse" aria-label="Browse by topic or by what a project plugs into">
     <p><b>Every topic:</b> <a href="topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a> · <a href="topic/coding-agents/">Coding Agents</a> · <a href="topic/agent-skills/">Agent Skills</a> · <a href="topic/mcp-servers/">MCP Servers</a> · <a href="topic/frameworks-sdks/">Frameworks &amp; SDKs</a> · <a href="topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> · <a href="topic/context-memory-rag/">Context, Memory &amp; RAG</a> · <a href="topic/sandbox-security-governance/">Sandbox, Security &amp; Governance</a> · <a href="topic/observability-evals/">Observability &amp; Evals</a> · <a href="topic/plugins-themes-clients/">Plugins, Themes &amp; Clients</a> · <a href="topic/research-data-agents/">Research &amp; Data Agents</a> · <a href="topic/creative-voice-media/">Creative, Voice &amp; Media</a> · <a href="topic/assistants-domain-agents/">Assistants &amp; Domain Agents</a> · <a href="topic/docs-learning-lists/">Docs, Learning &amp; Lists</a></p>
     <p><b>Every integration:</b> <a href="target/claude-code/">Claude Code</a> · <a href="target/claude-anthropic/">Claude / Anthropic</a> · <a href="target/opencode/">opencode</a> · <a href="target/mcp/">MCP</a> · <a href="target/codex-openai/">Codex / OpenAI</a> · <a href="target/gemini-google/">Gemini / Google</a> · <a href="target/github-copilot/">GitHub Copilot</a> · <a href="target/cursor/">Cursor</a> · <a href="target/cline-roo/">Cline / Roo</a> · <a href="target/aider/">Aider</a> · <a href="target/langchain-langgraph/">LangChain / LangGraph</a> · <a href="target/local-ollama/">Local / Ollama</a></p>
     <p><b>Every project:</b> <a href="repo/">all 1,294 projects, one page each, grouped by topic</a></p>
@@ -458,9 +640,10 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 
 <script>
 const PAGE_SIZE = 120;
-const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1};
+const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"index.mascot_commentary":1,"index.export":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1};
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
-               saved: false, sort: "relevance", shown: PAGE_SIZE, view: "cards"};
+               saved: false, list: new Set(), sort: "relevance", shown: PAGE_SIZE,
+               view: "cards"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
 
 let SAVED = new Set();
@@ -488,7 +671,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-08T15:38:00Z";
+const BUILT = "2026-09-08T19:21:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -497,6 +680,13 @@ const VERDICT = {
   a: ["–", "not applicable"],
   "-": ["–", "not established"],
 };
+
+const OSI = ["oi-windows","oi-wsl2","oi-macos","oi-linux","oi-docker"];
+const OST = ["Windows","WSL2 — Windows Subsystem for Linux 2","macOS","Linux","Docker"];
+
+function osIcon(k) {
+  return '<svg class="oi" aria-hidden="true" focusable="false"><use href="#' + OSI[k] + '"></use></svg>';
+}
 
 const CAN_COPY = !!(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext);
 
@@ -537,6 +727,9 @@ fetch("data.json").then(r => {
   return r.json();
 }).then(d => {
   D = d;
+  if (d.os.length !== OSI.length)
+    throw new Error("data.json names " + d.os.length + " platforms and this page was built with " +
+      OSI.length + " marks — see scripts/osicons.py");
   ROWS = d.rows.map(a => Object.fromEntries(d.cols.map((c, i) => [c, a[i]])));
   ROWS.forEach(r => {
     r.hay = (r.name + " " + r.nwo + " " + r.blurb + " " + r.lang + " " + r.listed_by).toLowerCase();
@@ -575,10 +768,11 @@ fetch("data.json").then(r => {
 
 wire();
 
-function chip(parent, label, pressed, onclick, title) {
+function chip(parent, label, pressed, onclick, title, icon) {
   const b = document.createElement("button");
   b.className = "chip";
-  b.textContent = label;
+  if (icon) b.innerHTML = icon + '<span class="sr">' + esc(label) + "</span>";
+  else b.textContent = label;
   b.setAttribute("aria-pressed", pressed ? "true" : "false");
   if (title) b.title = title;
   b.onclick = onclick;
@@ -596,7 +790,7 @@ function buildChips() {
   D.os.forEach((o, i) => chip(oses, o, false, () => {
     const os = state.os.includes(i) ? state.os.filter(x => x !== i) : state.os.concat(i);
     set({os});
-  }));
+  }, OST[i], osIcon(i)));
   document.getElementById("q").oninput = e => {
     const v = e.target.value;
     clearTimeout(typing);
@@ -605,6 +799,7 @@ function buildChips() {
   document.getElementById("sort").onchange = e => set({sort: e.target.value});
   const vb = document.getElementById("view");
   vb.hidden = false;
+  initDiscovery();
   vb.onclick = () => {
     state.view = state.view === "cards" ? "table" : "cards";
     writeHash();
@@ -644,6 +839,7 @@ function buildChips() {
   sheetWire();
   window.addEventListener("hashchange", () => { readHash(); render(); });
   palWire();
+  expWire();
 }
 
 function sheetWire() {
@@ -729,7 +925,8 @@ function palWire() {
   dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
 }
 
-const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false, saved: false};
+const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false, saved: false,
+               list: new Set()};
 
 let PAL = [], PALI = 0;
 
@@ -760,6 +957,8 @@ function palItems(query) {
     () => document.getElementById("theme").click());
   add("Page", state.view === "cards" ? "Table view" : "Card view", false,
     () => document.getElementById("view").click());
+  if (FLAGS["index.export"] && document.getElementById("take").classList.contains("on"))
+    add("Page", "Export this view", false, () => document.getElementById("take").click());
 
   const score = a => {
     const l = a.label.toLowerCase();
@@ -851,6 +1050,7 @@ function wire() {
     btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
     const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
     if (plane) document.getElementById("tc").content = plane;
+    paintDeployBadge();
   };
   btn.onclick = () => {
     const light = document.documentElement.dataset.theme !== "light";
@@ -948,9 +1148,10 @@ function deployStamp(lastModified) {
     const shown = iso.slice(0, 10) + " " + iso.slice(11, 16) + " UTC";
     const t = el.querySelector("time");
     t.dateTime = iso;
-    t.textContent = shown;
+    t.textContent = "Last deployed " + shown;
     const days = (Date.now() - ms) / 86400000;
     el.classList.toggle("late", days > 14);
+    paintDeployBadge();
     const age = days < 1 ? "Today." : days < 2 ? "Yesterday." : Math.round(days) + " days ago.";
     el.title = (Number.isNaN(live)
       ? "Built " + shown + ". This copy is not served by Pages, so its deployment time is unknown. "
@@ -959,8 +1160,26 @@ function deployStamp(lastModified) {
   } catch (e) {}
 }
 
+function paintDeployBadge() {
+  try {
+    const el = document.getElementById("deployed");
+    if (!el) return;
+    const img = el.querySelector("img");
+    const t = el.querySelector("time");
+    if (!img || !t) return;
+    const shown = t.textContent.replace(/^Last deployed\s+/, "");
+    const message = shown.replace(/_/g, "__").replace(/-/g, "--").replace(/ /g, "_");
+    const mode = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+    const colour = el.classList.contains("late") ? (mode === "light" ? "875A19" : "EF7D86") : "187557";
+    img.src = "https://shieldcn.dev/badge/last_deployed-" + message + "-" + colour
+      + ".svg?logo=ri%3ALuClock3&size=xs&font=geist&split=true&mode=" + mode;
+  } catch (e) {}
+}
+
 function applyView() {
   document.documentElement.dataset.view = state.view;
+  const dc = document.getElementById("density-control");
+  if (dc) dc.hidden = state.view === "cards";
   const btn = document.getElementById("view");
   if (!btn) return;
   const cards = state.view === "cards";
@@ -968,6 +1187,113 @@ function applyView() {
   btn.title = cards
     ? "Back to the table, which fits far more rows on a screen"
     : "Show each project as a card, with its screenshot";
+}
+
+function projectAccent(nwo) {
+  let h = 2166136261;
+  for (let i = 0; i < nwo.length; i++) h = Math.imul(h ^ nwo.charCodeAt(i), 16777619);
+  return ["sky", "mint", "gold", "coral", "violet"][(h >>> 0) % 5];
+}
+
+const DENSITY_KEY = "atlas-table-density";
+const DENSITIES = new Set(["compact", "normal", "expanded"]);
+
+function applyDensity(value) {
+  const density = DENSITIES.has(value) ? value : "normal";
+  document.documentElement.dataset.density = density;
+  const select = document.getElementById("density");
+  if (select) select.value = density;
+  return density;
+}
+
+function initDiscovery() {
+  const density = document.getElementById("density");
+  let stored = "normal";
+  try { stored = localStorage.getItem(DENSITY_KEY) || "normal"; } catch (e) {}
+  applyDensity(stored);
+  if (density) density.onchange = () => {
+    const next = applyDensity(density.value);
+    try { localStorage.setItem(DENSITY_KEY, next); } catch (e) {}
+    say(next[0].toUpperCase() + next.slice(1) + " table rows.");
+  };
+
+  const enabled = !!FLAGS["index.mascot_commentary"];
+  const tip = document.getElementById("byte-tip"), name = document.getElementById("byte-name"),
+        quiet = document.getElementById("byte-quiet"), speech = document.getElementById("byte-speech"),
+        wrap = document.querySelector(".atlas-byte-wrap"), out = document.getElementById("out");
+  if (!enabled) {
+    if (quiet) quiet.hidden = true;
+    if (speech) speech.hidden = true;
+    return;
+  }
+  let muted = false, timer = 0, last = null, clicks = [];
+  try { muted = localStorage.getItem("atlas-byte-quiet") === "1"; } catch (e) {}
+  const setQuiet = on => {
+    muted = on;
+    if (quiet) {
+      quiet.setAttribute("aria-pressed", on ? "true" : "false");
+      quiet.textContent = on ? "Commentary off" : "Quiet mode";
+    }
+    if (on && speech) speech.hidden = true;
+    try { localStorage.setItem("atlas-byte-quiet", on ? "1" : "0"); } catch (e) {}
+  };
+  const wordsFor = r => {
+    const category = (D.cats[r.cat] || {}).name || "the atlas";
+    const targets = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
+    const intro = [
+      r.name + " is listed under " + category + ".",
+      r.name + " comes from " + r.nwo + ".",
+      r.name + " has " + r.lists + (r.lists === 1 ? " source list" : " source lists") + " behind it."
+    ][projectAccent(r.nwo).length % 3];
+    const tagged = targets.length ? " Tagged for " + targets.slice(0, 2).join(" and ") + "." : "";
+    return intro + tagged + " " + r.blurb;
+  };
+  const speak = r => {
+    if (muted || !speech || !r) return;
+    last = r;
+    speech.textContent = wordsFor(r);
+    speech.hidden = false;
+  };
+  const schedule = el => {
+    const nwo = el && el.dataset.project;
+    const row = nwo && ROWS.find(r => r.nwo === nwo);
+    if (!row) return;
+    clearTimeout(timer);
+    timer = setTimeout(() => speak(row), 320);
+  };
+  if (out) {
+    out.addEventListener("mouseover", ev => schedule(ev.target.closest("tr[data-project]")));
+    out.addEventListener("focusin", ev => schedule(ev.target.closest("tr[data-project]")));
+  }
+  if (quiet) quiet.onclick = () => setQuiet(!muted);
+  setQuiet(muted);
+  if (tip) tip.onclick = () => {
+    if (muted) { setQuiet(false); }
+    if (last) speak(last);
+    else if (speech) {
+      speech.textContent = "Hover or focus a project and I’ll introduce it using its Atlas record.";
+      speech.hidden = false;
+    }
+  };
+  if (name && wrap) name.onclick = () => {
+    const now = Date.now();
+    clicks = clicks.filter(t => now - t < 1400);
+    clicks.push(now);
+    if (clicks.length < 5) return;
+    clicks = [];
+    document.getElementById("atlas-orbit")?.remove();
+    const orbit = document.createElement("span");
+    orbit.id = "atlas-orbit";
+    orbit.setAttribute("aria-hidden", "true");
+    for (let i = 0; i < 12; i++) {
+      const star = document.createElement("i");
+      star.className = "orbit-star";
+      star.style.setProperty("--orbit-angle", (i * 30) + "deg");
+      orbit.appendChild(star);
+    }
+    wrap.appendChild(orbit);
+    setTimeout(() => orbit.remove(), 1600);
+  };
 }
 
 function set(patch, keepFocus) {
@@ -995,7 +1321,9 @@ function writeHash() {
   if (state.sort !== "relevance") p.set("sort", state.sort);
   if (state.view !== "cards") p.set("view", state.view);
   const s = p.toString();
-  history.replaceState(null, "", s ? "#" + s : location.pathname);
+  const list = state.list.size ? "list=" + [...state.list].join(",") : "";
+  const all = [s, list].filter(Boolean).join("&");
+  history.replaceState(null, "", all ? "#" + all : location.pathname);
 }
 
 function readHash() {
@@ -1010,6 +1338,9 @@ function readHash() {
   state.fresh = p.get("new") === "1" && NEW > 0;
   state.rising = p.get("rising") === "1" && RISE !== null && RISING > 0;
   state.saved = p.get("saved") === "1" && SAVED.size > 0;
+  state.list = FLAGS["index.export"]
+    ? new Set((p.get("list") || "").split(",").map(s => s.trim()).filter(Boolean).slice(0, 200))
+    : new Set();
   const want = p.get("sort");
   state.sort = SORT_KEYS.includes(want) && (want !== "rising" || RISE) ? want : "relevance";
   state.view = p.get("view") === "table" ? "table" : "cards";
@@ -1020,6 +1351,7 @@ function readHash() {
 const OS_ANY = {0: [[0, "YL"], [1, "Y"]]};
 
 function match(r) {
+  if (state.list.size && !state.list.has(r.nwo)) return false;
   if (state.saved && !SAVED.has(r.nwo)) return false;
   if (state.fresh && !r.isnew) return false;
   if (state.rising && !r.rise) return false;
@@ -1065,6 +1397,8 @@ function rescue() {
   if (state.fresh) opts.push(["Drop the new-arrivals filter", {fresh: false}]);
   if (state.rising) opts.push(["Drop the rising filter", {rising: false}]);
   if (state.saved) opts.push(["Look beyond your " + SAVED.size + " saved", {saved: false}]);
+  if (state.list.size)
+    opts.push(["Look beyond the shared list of " + state.list.size, {list: new Set()}]);
   return opts.map(o => ({label: o[0], patch: o[1], n: countWith(o[1])}))
     .filter(o => o.n > 0)
     .sort((a, b) => b.n - a.n)
@@ -1164,12 +1498,233 @@ function saveBtn(r) {
 function saveWord(on) { return on ? "Saved" : "Save"; }
 function saveLabel(name, on) { return saveWord(on) + " " + name; }
 
-let ART = false, ARTIO = null;
+let HITS = [];
 
-function artLoad(i) { i.src = i.dataset.src; i.removeAttribute("data-src"); }
+function viewTitle() {
+  const w = [];
+  if (state.q) w.push("matching “" + state.q + "”");
+  const c = state.cat && D.cats.find(x => x.slug === state.cat);
+  if (c) w.push("in " + c.name);
+  const t = state.tgt && D.targets.find(x => x.slug === state.tgt);
+  if (t) w.push("that plug into " + t.name);
+  if (state.os.length) w.push("running on " + state.os.map(i => D.os[i]).join(" and "));
+  if (state.strict) w.push("with confirmed support");
+  if (state.fresh) w.push("added in the last " + (D.window_days || 14) + " days");
+  if (state.rising) w.push("gaining stars fastest for their size");
+  if (state.saved) w.push("saved on this device");
+  if (state.list.size) w.push("from a shared list");
+  return w.length ? "Projects " + w.join(", ") : "Every project in the atlas";
+}
+
+function shareURL() {
+  if (!state.saved || !HITS.length) return location.href;
+  const p = new URLSearchParams(location.hash.slice(1));
+  p.delete("saved");
+  p.delete("list");
+  const rest = p.toString();
+  return location.href.split("#")[0] + "#" +
+    ["list=" + HITS.map(r => r.nwo).join(","), rest].filter(Boolean).join("&");
+}
+
+function mdCell(s) {
+  return String(s == null ? "" : s).replace(/\s+/g, " ").replace(/\|/g, "\\|").trim();
+}
+
+function osText(r) {
+  return D.os.map((o, k) => o + " " + (VERDICT[r.os[k]] || ["–"])[0]).join(" · ");
+}
+
+function hasCmds() {
+  return !!FLAGS["index.install_commands"] && HITS.some(r => r.install);
+}
+
+function listMarkdown() {
+  const cmds = hasCmds();
+  const row = c => "| " + c.join(" | ") + " |";
+  const head = ["#", "Project", "Stars", "Lists", "Topic", "Plugs into", "Runs on"]
+    .concat(cmds ? ["Install"] : []).concat(["What it does"]);
+  const rule = ["--:", "---", "--:", "--:", "---", "---", "---"]
+    .concat(cmds ? ["---"] : []).concat(["---"]);
+  const body = HITS.map((r, i) => row([
+    i + 1,
+    "[" + mdCell(r.name) + "](" + r.url + ")",
+    r.stars ? r.stars.toLocaleString() : "—",
+    r.lists,
+    mdCell(D.cats[r.cat].name),
+    r.targets.map(t => mdCell(D.targets[t].name)).join(", ") || "—",
+    osText(r),
+  ].concat(cmds ? [r.install ? "`" + mdCell(r.install) + "`" : "—"] : [])
+   .concat([mdCell(r.blurb) || "—"])));
+  return ["# " + viewTitle(), "",
+    HITS.length.toLocaleString() + " of " + ROWS.length.toLocaleString() +
+      " projects in the [Awesome Agentic Atlas](" + shareURL() + "). Stars, language and licence come from " +
+      "the GitHub API on " + SNAPSHOT + " and drift daily. Platform verdicts read ✓ stated, ? inferred from " +
+      "the language, ✗ no evidence, – not applicable. Exported " + TODAY + ".", "",
+    row(head), row(rule), body.join("\n"), ""].join("\n");
+}
+
+function listHTML() {
+  const cmds = hasCmds();
+  const cell = (c, v) => "<td" + (c ? ' class="' + c + '"' : "") + ">" + v + "</td>";
+  const rows = HITS.map((r, i) =>
+    "<tr>" + cell("n", i + 1) +
+    cell("", '<a href="' + esc(r.url) + '">' + esc(r.name) + "</a><br><code>" + esc(r.nwo) + "</code>") +
+    cell("n", r.stars ? r.stars.toLocaleString() : "—") +
+    cell("n", r.lists) +
+    cell("", esc(D.cats[r.cat].name)) +
+    cell("", r.targets.map(t => esc(D.targets[t].name)).join(", ") || "—") +
+    cell("", esc(osText(r))) +
+    (cmds ? cell("", r.install ? "<code>" + esc(r.install) + "</code>" : "—") : "") +
+    cell("", esc(r.blurb)) + "</tr>").join("");
+  const head = ["#", "Project", "Stars", "Lists", "Topic", "Plugs into", "Runs on"]
+    .concat(cmds ? ["Install"] : []).concat(["What it does"])
+    .map(h => "<th>" + esc(h) + "</th>").join("");
+  return '<!doctype html>\n<html lang="en"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    "<title>" + esc(viewTitle()) + " — Awesome Agentic Atlas</title><style>" +
+    "body{margin:0 auto;padding:28px 20px;max-width:1100px;background:#fff;color:#14171c;" +
+    "font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}" +
+    "h1{font-size:21px;margin:0 0 6px}p{color:#596574;font-size:13px;margin:0 0 4px}" +
+    "a{color:#1d5e9e}code{font:12px/1.5 ui-monospace,Consolas,monospace;color:#353c47}" +
+    "table{border-collapse:collapse;width:100%;margin-top:18px;font-size:13px}" +
+    "th{text-align:left;border-bottom:2px solid #cad1db;padding:7px 8px;white-space:nowrap}" +
+    "td{border-bottom:1px solid #e7eaf0;padding:7px 8px;vertical-align:top}" +
+    ".n{text-align:right;white-space:nowrap}tr{break-inside:avoid}" +
+    "</style></head><body>\n<h1>" + esc(viewTitle()) + "</h1>\n" +
+    "<p>" + HITS.length.toLocaleString() + " of " + ROWS.length.toLocaleString() +
+    ' projects in the <a href="' + esc(shareURL()) + '">Awesome Agentic Atlas</a>. Stars, language and ' +
+    "licence come from the GitHub API on " + esc(SNAPSHOT) + " and drift daily.</p>\n" +
+    "<p>Platform verdicts read ✓ stated, ? inferred from the language, ✗ no evidence, – not applicable. " +
+    "Exported " + esc(TODAY) + ".</p>\n<table><thead><tr>" + head + "</tr></thead><tbody>" + rows +
+    "</tbody></table>\n</body></html>\n";
+}
+
+function fileName(ext) {
+  const slug = viewTitle().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+  return "atlas-" + (slug || "export") + "-" + TODAY + "." + ext;
+}
+
+function download(name, mime, text) {
+  const url = URL.createObjectURL(new Blob([text], {type: mime + ";charset=utf-8"}));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+let PRINT = null;
+
+function printOn() {
+  if (PRINT || !D) return;
+  const root = document.documentElement;
+  PRINT = {view: state.view, theme: root.dataset.theme, shown: state.shown};
+  root.dataset.theme = "light";
+  const u = document.getElementById("printurl");
+  if (u) u.textContent = shareURL();
+  state.view = "table";
+  state.shown = Math.max(state.shown, HITS.length);
+  render();
+}
+
+function printOff() {
+  if (!PRINT) return;
+  document.documentElement.dataset.theme = PRINT.theme;
+  state.view = PRINT.view;
+  state.shown = PRINT.shown;
+  PRINT = null;
+  render();
+}
+
+function paintShared() {
+  const strip = document.getElementById("shared");
+  if (!strip) return;
+  const n = state.list.size;
+  strip.classList.toggle("on", n > 0);
+  if (!n) return;
+  const have = [...state.list].filter(k => SAVED.has(k)).length;
+  document.getElementById("sharedtext").innerHTML =
+    "You are looking at a shared list of <b>" + n.toLocaleString() +
+    (n === 1 ? " project" : " projects") + "</b> rather than the whole atlas." +
+    (have === n ? " Every one of them is already in your saved projects." : "");
+  const add = document.getElementById("sharedadd");
+  add.disabled = have === n;
+  add.textContent = have === n ? "All saved" : "Save " + (n - have).toLocaleString() + " to my projects";
+}
+
+function expOpen() {
+  const n = HITS.length;
+  document.getElementById("expwhat").innerHTML =
+    "<b>" + n.toLocaleString() + (n === 1 ? " project" : " projects") + "</b> · " + esc(viewTitle());
+  document.getElementById("expurl").value = shareURL();
+  const none = n === 0;
+  document.getElementById("expmd").disabled = none;
+  document.getElementById("exphtml").disabled = none;
+  document.getElementById("expprint").disabled = none;
+  document.getElementById("exp").showModal();
+}
+
+function expWire() {
+  if (!FLAGS["index.export"]) return;
+  window.addEventListener("beforeprint", printOn);
+  window.addEventListener("afterprint", printOff);
+  document.getElementById("sharedadd").onclick = () => {
+    let added = 0;
+    for (const k of state.list) if (!SAVED.has(k)) { SAVED.add(k); added++; }
+    storeSaved();
+    say(added ? "Saved " + added.toLocaleString() + " projects to this device." : "Nothing new to save.");
+    render();
+  };
+  document.getElementById("sharedall").onclick = () => set({list: new Set()});
+
+  const dlg = document.getElementById("exp"), chip = document.getElementById("take");
+  if (!dlg || !dlg.showModal) return;
+  chip.classList.add("on");
+  chip.onclick = expOpen;
+  document.getElementById("expmd").onclick = () => {
+    download(fileName("md"), "text/markdown", listMarkdown());
+    say("Markdown table downloaded — " + HITS.length.toLocaleString() + " projects.");
+  };
+  document.getElementById("exphtml").onclick = () => {
+    download(fileName("html"), "text/html", listHTML());
+    say("HTML page downloaded — " + HITS.length.toLocaleString() + " projects.");
+  };
+  document.getElementById("expprint").onclick = () => { dlg.close(); window.print(); };
+  const copy = document.getElementById("expcopy");
+  if (CAN_COPY) {
+    copy.onclick = () => navigator.clipboard.writeText(shareURL())
+      .then(() => say("Link copied."))
+      .catch(() => {
+        const u = document.getElementById("expurl");
+        u.focus();
+        u.select();
+        say("Could not copy. The link is selected — press " + PALMOD + " C.");
+      });
+  } else {
+    copy.remove();
+  }
+  document.getElementById("expdone").onclick = () => dlg.close();
+  dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
+}
+
+let ARTIO = null;
+
+function artLoad(i) {
+  i.onerror = () => {
+    i.hidden = true;
+    const fallback = document.createElement("span");
+    fallback.className = "shot-fallback";
+    fallback.textContent = "Preview unavailable · Explore project";
+    i.parentElement.appendChild(fallback);
+    i.onerror = null;
+  };
+  i.src = i.dataset.src;
+  i.removeAttribute("data-src");
+}
 
 function cardArt() {
-  if (!ART) return;
   if (!("IntersectionObserver" in window)) {
     document.querySelectorAll("#out img[data-src]").forEach(artLoad);
     return;
@@ -1181,12 +1736,9 @@ function cardArt() {
       artLoad(e.target);
     }), {rootMargin: "200px 0px"});
   }
+  ARTIO.disconnect();
   document.querySelectorAll("#out img[data-src]").forEach(i => ARTIO.observe(i));
 }
-
-["wheel", "touchstart", "keydown", "pointerdown"].forEach(t =>
-  window.addEventListener(t, () => { if (!ART) { ART = true; cardArt(); } },
-                          {once: true, passive: true}));
 
 function render() {
   const press = (id, on) => [...document.getElementById(id).children]
@@ -1198,6 +1750,7 @@ function render() {
   document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
   document.getElementById("rise").setAttribute("aria-pressed", state.rising ? "true" : "false");
   paintSaved();
+  paintShared();
   applyView();
 
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
@@ -1213,6 +1766,7 @@ function render() {
     if (sort === "relevance") for (const r of hits) r.rel = relevance(r, words);
     hits.sort(SORTS[sort]);
   }
+  HITS = hits;
 
   const ranked = hits.filter(r => r.stars).length;
   const countHTML = approx
@@ -1250,7 +1804,7 @@ function render() {
     const os = D.os.map((o, k) => {
       const v = VERDICT[r.os[k]] || ["", "not established"];
       return '<span class="v' + r.os[k] + '" title="' + esc(o + ": " + v[1]) + '">' +
-        o.slice(0, 3) + " " + v[0] + "</span>";
+        '<span class="sr">' + esc(o) + ' </span>' + osIcon(k) + " " + v[0] + "</span>";
     }).join(" ");
     const tags = '<span class="tag cat">' + esc(D.cats[r.cat].name) + "</span>" +
       r.targets.map(t => '<span class="tag">' + esc(D.targets[t].name) + "</span>").join("");
@@ -1268,7 +1822,7 @@ function render() {
       ? '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
         '<img loading="lazy" decoding="async" alt="" data-src="' + img + '"></a></td>'
       : "";
-    return "<tr>" +
+    return '<tr data-project="' + esc(r.nwo) + '" style="--card-accent:var(--accent-' + projectAccent(r.nwo) + ')">' +
       '<td class="n rk">' + (i + 1) + "</td>" +
       shot +
       '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on +
@@ -1283,7 +1837,8 @@ function render() {
       '<td class="ds"><div class="desc">' + esc(r.blurb) + "</div>" + cmd + "</td>" +
       '<td class="c hide lc"><div class="meta"><span>' + esc(r.lang || "—") + "</span><br>" +
         "<span>" + esc(r.license || "—") + "</span><br><span>" + since(r.pushed) +
-        "</span></div></td>" +
+        '</span></div><div class="project-actions"><a href="' + page + '" aria-label="Explore ' + esc(r.name) + '">Explore project <span aria-hidden="true">↗</span></a>' +
+        '<a href="' + url + '" aria-label="' + esc(r.nwo) + ' on GitHub">GitHub</a></div></td>' +
       "</tr>";
   }).join("");
   const note = approx

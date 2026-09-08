@@ -189,19 +189,14 @@ DESCRIPTION = (f"Every agentic AI project from {b19.LISTS} awesome-lists, merged
 #
 # `SURFACE` stays the plate the icon is drawn on -- there, the darkest value is the right one, because the
 # mark reads against a launcher's own wallpaper rather than against the page.
-SURFACE = (0x00, 0x00, 0x00)
-PLANE = (0x0B, 0x0B, 0x10)
+SURFACE = (0x09, 0x0A, 0x0D)
+PLANE = (0x10, 0x12, 0x17)
 # `--bar`, the brand accent, at the value `19_pages.py` declares it.
-BAR = (0xCE, 0x54, 0xAF)
-# The orbit ring is `--ink`, not the second accent, and that is the one place this file departs from
-# copying the palette straight across. The old icon was cyan on gold, a pair separated by 1.51:1 of
-# luminance as well as by hue. This palette's three accents were each fitted to clear 4.5:1 on black
-# without going lighter than they had to, so they converged: `--bar`, `--warn` and `--link` measure
-# 1.01:1, 1.01:1 and 1.00:1 against each other. Any two of them make a globe and a ring that differ by
-# hue alone -- indistinguishable in a monochrome icon slot, and to a reader whose colour vision does not
-# separate those hues, while looking perfectly fine to everyone else. White against `--bar` is 3.81:1, so
-# the two shapes stay two shapes however the icon is rendered.
-RING = (0xFF, 0xFF, 0xFF)
+BAR = (0xD6, 0xA0, 0x34)
+# The orbit ring is `--ink`, not a second accent. It sits outside the globe with a visible plate-coloured
+# gap, so each shape needs contrast against `SURFACE`; they do not share a boundary with one another.
+# `tests/theme_test.py` measures those two rendered boundaries independently.
+RING = (0xF7, 0xF8, 0xFA)
 
 CACHE_PREFIX = "atlas-shell-"
 
@@ -295,13 +290,11 @@ def _over(dst: list[float], rgb: tuple[int, int, int], a: float) -> None:
 
 
 def icon(size: int, maskable: bool, opaque: bool) -> bytes:
-    """The mark: a `--bar` globe inside a white orbit, on the theme's black plate.
+    """The mark: Atlas Byte's shaded globe face inside a white orbit, on the black plate.
 
-    A globe because the favicon is already one -- `19_pages.py` ships U+1F310 as an SVG data URI -- and an
-    installed icon that does not match the tab is a different app as far as a reader is concerned. It is
-    drawn from primitives rather than by rasterising that emoji because rendering text needs a font, and
-    which font is on the build machine is not something a static-site pipeline should depend on: the same
-    emoji is a flat blue disc on one platform and a shaded three-dimensional ball on another.
+    The globe keeps the original Atlas mark; the blocky shades make the installed icon the same character
+    as the masthead mascot and the browser-tab SVG. Everything is drawn from primitives rather than by
+    rasterising the illustration, so the output is deterministic and still reads at launcher sizes.
 
     The globe is the theme's brand accent and the plate is its darkest surface, so the icon is
     recognisably the same object as the page; the ring is `--ink`, for the reason recorded beside `RING`.
@@ -358,6 +351,30 @@ def icon(size: int, maskable: bool, opaque: bool) -> bytes:
                             * a_meridian - w_grid / 2) * size),
                 )
                 _over(acc, SURFACE, min(grid, globe))
+
+                # Atlas Byte's shades. Two rectangular lens crowns step inward along their bottom edge;
+                # the small centre bridge and checker glints make the joke readable at 16px without
+                # turning the globe into a detailed illustration. Scaled with the globe so Android's
+                # maskable version remains the same face inside its safe circle.
+                s = scale
+                lens = (
+                    ((-0.28 * s <= x <= -0.03 * s or 0.03 * s <= x <= 0.28 * s)
+                     and -0.15 * s <= y <= 0.02 * s)
+                    or ((-0.23 * s <= x <= -0.08 * s or 0.08 * s <= x <= 0.23 * s)
+                        and 0.02 * s < y <= 0.065 * s)
+                )
+                bridge = abs(x) <= 0.055 * s and -0.085 * s <= y <= -0.035 * s
+                if lens or bridge:
+                    _over(acc, SURFACE, globe)
+
+                glint = (
+                    (-0.225 * s <= x <= -0.185 * s and -0.12 * s <= y <= -0.08 * s)
+                    or (-0.185 * s < x <= -0.145 * s and -0.08 * s < y <= -0.04 * s)
+                    or (0.145 * s <= x <= 0.185 * s and -0.12 * s <= y <= -0.08 * s)
+                    or (0.185 * s < x <= 0.225 * s and -0.08 * s < y <= -0.04 * s)
+                )
+                if glint:
+                    _over(acc, RING, globe)
 
             a = 1.0 if opaque else acc[3]
             row += bytes((int(acc[0] + 0.5), int(acc[1] + 0.5), int(acc[2] + 0.5),

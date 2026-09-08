@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nothing leaves the laptop — Awesome Agentic Atlas</title>
+<meta name="description" content="7 picked projects: Sometimes the requirement is not cost or latency but that the code, the documents and the prompts stay on hardware you own. That rules…">
+<link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/collections/local-only/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nothing leaves the laptop — Awesome Agentic Atlas">
+<meta property="og:description" content="7 picked projects: Sometimes the requirement is not cost or latency but that the code, the documents and the prompts stay on hardware you own. That rules…">
+<meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/collections/local-only/">
+<meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<meta property="og:image:alt" content="The Awesome Agentic Atlas repository on GitHub.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<meta name="theme-color" id="tc" content="#101217">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+} catch (e) {}
+</script>
+<link rel="stylesheet" href="../../pages.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Nothing leaves the laptop","description":"Sometimes the requirement is not cost or latency but that the code, the documents and the prompts stay on hardware you own. That rules out most of the atlas. What is left is a genuine stack: an engine, a runner in front of it, a chat surface, a serving layer for when one machine is not enough, and…","url":"https://crazy54.github.io/awesome-agentic-atlas/collections/local-only/","numberOfItems":7,"itemListOrder":"https://schema.org/ItemListUnordered","itemListElement":[{"@type":"ListItem","position":1,"name":"Ollama","description":"The runner","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ollama/ollama/"},{"@type":"ListItem","position":2,"name":"llama.cpp","description":"The engine","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/ggml-org/llama.cpp/"},{"@type":"ListItem","position":3,"name":"Llamafile","description":"The zero-setup option","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/mozilla-ai/llamafile/"},{"@type":"ListItem","position":4,"name":"Open WebUI","description":"The chat surface","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/open-webui/open-webui/"},{"@type":"ListItem","position":5,"name":"GPT4All","description":"The consumer-hardware path","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nomic-ai/gpt4all/"},{"@type":"ListItem","position":6,"name":"Local GPT","description":"Your own documents","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/promtengineer/localgpt/"},{"@type":"ListItem","position":7,"name":"vLLM","description":"When one machine is not enough","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/vllm-project/vllm/"}]}</script>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
+<header><div class="wrap"><div class="top">
+  <div>
+    <p class="kick">Collection · A local stack, top to bottom</p>
+    <h1>Nothing leaves the laptop</h1>
+    <p class="sub"><b>7</b> picks · <b>2</b> of the atlas's
+      14 topics · <b>674,104</b> combined stars ·
+      snapshot 2026-09-03</p>
+    <p class="intro">Sometimes the requirement is not cost or latency but that the code, the documents and the prompts stay on hardware you own. That rules out most of the atlas. What is left is a genuine stack: an engine, a runner in front of it, a chat surface, a serving layer for when one machine is not enough, and retrieval over your own files. Every project below names a local runtime as a target, and the build checks it.</p>
+    <a class="cta" href="../../#list=ollama/ollama,ggml-org/llama.cpp,mozilla-ai/llamafile,open-webui/open-webui,nomic-ai/gpt4all,PromtEngineer/localGPT,vllm-project/vllm">Open all 7 in the atlas &rarr;</a>
+    <p class="meta take">From there: save them to your own projects, or export the set as Markdown,
+      a standalone HTML page, or a PDF.</p>
+  </div>
+  <nav>
+    <a href="../../collections/">Collections</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+    <a href="../../repo/">All projects</a> ·
+    <a href="../../#browse">Topics &amp; harnesses</a><br>
+    <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown</a><br>
+    <button class="chip" id="theme" aria-pressed="false">Light theme</button>
+  </nav>
+</div></div></header>
+
+<main><div class="wrap">
+<p class="oikey">Runs on: <span class="oiw"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span> <span class="oiw"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span> <span class="oiw"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span> <span class="oiw"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span> <span class="oiw"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></p>
+<ol class="picks">
+<li class="pick">
+  <p class="role"><span class="slot">1</span> The runner</p>
+  <h2><a href="../../repo/ollama/ollama/">Ollama</a></h2>
+  <a class="nwo" href="https://github.com/ollama/ollama">ollama/ollama</a>
+  <p class="why">Pull a model, run it, done. It is the layer that made local models an afternoon rather than a weekend, and it stays out of the way afterwards.</p>
+  <p class="desc">Run LLMs locally. 162k+ stars. Dead simple CLI</p>
+  <code class="cmd">irm https://ollama.com/install.ps1 | iex</code>
+  <p class="meta ev"><b>180,046</b> stars · 1 list · Go · MIT · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vY" title="Windows: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vY" title="macOS: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vY" title="Linux: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vN" title="Docker: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
+  <p class="meta tp"><a href="../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> <span class="tag">Local / Ollama</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">2</span> The engine</p>
+  <h2><a href="../../repo/ggml-org/llama.cpp/">llama.cpp</a></h2>
+  <a class="nwo" href="https://github.com/ggml-org/llama.cpp">ggml-org/llama.cpp</a>
+  <p class="why">CPU, GPU and Apple Silicon inference in C++, and the foundation most of the rest of this page is standing on. Quantisation happens here, which is where the speed comes from.</p>
+  <p class="desc">C/C++ inference. CPU, GPU, Apple Silicon. Foundation of local AI</p>
+  <code class="cmd">git clone https://github.com/ggml-org/llama.cpp.git</code>
+  <p class="meta ev"><b>126,906</b> stars · 1 list · C++ · MIT · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vY" title="Windows: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vN" title="WSL2 — Windows Subsystem for Linux 2: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vY" title="macOS: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vN" title="Linux: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vN" title="Docker: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
+  <p class="meta tp"><a href="../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> <span class="tag">Local / Ollama</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">3</span> The zero-setup option</p>
+  <h2><a href="../../repo/mozilla-ai/llamafile/">Llamafile</a></h2>
+  <a class="nwo" href="https://github.com/mozilla-ai/llamafile">mozilla-ai/llamafile</a>
+  <p class="why">A model and its runtime as one executable file. Nothing to install and nothing to uninstall, which makes it the right thing to hand to somebody else.</p>
+  <p class="desc">LLMs as single files. Zero setup. Mozilla</p>
+  <code class="cmd">git clone https://github.com/Mozilla-Ocho/llamafile.git</code>
+  <p class="meta ev"><b>25,866</b> stars · 1 list · C++ · no licence stated · pushed 2026-08-26</p>
+  <p class="meta os"><span class="vY" title="Windows: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vY" title="macOS: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vY" title="Linux: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vN" title="Docker: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
+  <p class="meta tp"><a href="../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> <span class="tag">Local / Ollama</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">4</span> The chat surface</p>
+  <h2><a href="../../repo/open-webui/open-webui/">Open WebUI</a></h2>
+  <a class="nwo" href="https://github.com/open-webui/open-webui">open-webui/open-webui</a>
+  <p class="why">A self-hosted interface with access control and extensions, so the local stack has a front door other people can be given a key to.</p>
+  <p class="desc">Self-hosted ChatGPT UI. Access control. Extensions</p>
+  <code class="cmd">pip install open-webui</code>
+  <p class="meta ev"><b>150,810</b> stars · 1 list · Python · no licence stated · pushed 2026-09-02</p>
+  <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vY" title="WSL2 — Windows Subsystem for Linux 2: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vY" title="Docker: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
+  <p class="meta tp"><a href="../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> <span class="tag">MCP</span><span class="tag">Codex / OpenAI</span><span class="tag">Local / Ollama</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">5</span> The consumer-hardware path</p>
+  <h2><a href="../../repo/nomic-ai/gpt4all/">GPT4All</a></h2>
+  <a class="nwo" href="https://github.com/nomic-ai/gpt4all">nomic-ai/gpt4all</a>
+  <p class="why">Built for the machine you already have rather than the one you would need. Worth trying first if the honest answer about your GPU is that there isn&#x27;t one.</p>
+  <p class="desc">OSS local chat. Consumer hardware</p>
+  <code class="cmd">pip install gpt4all</code>
+  <p class="meta ev"><b>77,386</b> stars · 1 list · C++ · MIT · pushed 2025-05-27</p>
+  <p class="meta os"><span class="vY" title="Windows: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vY" title="macOS: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vY" title="Linux: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vN" title="Docker: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
+  <p class="meta tp"><a href="../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> <span class="tag">Local / Ollama</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">6</span> Your own documents</p>
+  <h2><a href="../../repo/promtengineer/localgpt/">Local GPT</a></h2>
+  <a class="nwo" href="https://github.com/PromtEngineer/localGPT">PromtEngineer/localGPT</a>
+  <p class="why">Retrieval over local files with a local model doing the reading, which is the whole point: the documents never become somebody else&#x27;s training data. Two source lists carry it.</p>
+  <p class="desc">Inspired on Private GPT with the GPT4ALL model replaced with the Vicuna-7B model and using the InstructorEmbeddings instead of LlamaEmbeddings</p>
+  <code class="cmd">git clone https://github.com/PromtEngineer/localGPT.git</code>
+  <p class="meta ev"><b>22,206</b> stars · 2 of 11 lists · Python · MIT · pushed 2026-08-26</p>
+  <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vY" title="WSL2 — Windows Subsystem for Linux 2: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vY" title="Linux: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vY" title="Docker: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
+  <p class="meta tp"><a href="../../topic/context-memory-rag/">Context, Memory &amp; RAG</a> <span class="tag">Local / Ollama</span></p>
+</li>
+<li class="pick">
+  <p class="role"><span class="slot">7</span> When one machine is not enough</p>
+  <h2><a href="../../repo/vllm-project/vllm/">vLLM</a></h2>
+  <a class="nwo" href="https://github.com/vllm-project/vllm">vllm-project/vllm</a>
+  <p class="why">High-throughput serving with paged attention. This is the step after a laptop -- still your hardware, but now several people can use it at once.</p>
+  <p class="desc">High-throughput serving. PagedAttention. Production-grade</p>
+  <code class="cmd">git clone https://github.com/vllm-project/vllm.git</code>
+  <p class="meta ev"><b>90,884</b> stars · 1 list · Python · Apache-2.0 · pushed 2026-09-03</p>
+  <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vN" title="Docker: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
+  <p class="meta tp"><a href="../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> <span class="tag">Local / Ollama</span></p>
+</li>
+</ol>
+
+<section class="allin">
+  <h2>The whole set, in one paste</h2>
+  <p>Every install command above, in the order they are listed. Read them before you run them &mdash; they are other people's one-liners, and 1 of them pipes a download straight into a shell.</p>
+  <pre class="cmd">irm https://ollama.com/install.ps1 | iex
+git clone https://github.com/ggml-org/llama.cpp.git
+git clone https://github.com/Mozilla-Ocho/llamafile.git
+pip install open-webui
+pip install gpt4all
+git clone https://github.com/PromtEngineer/localGPT.git
+git clone https://github.com/vllm-project/vllm.git</pre>
+</section>
+
+<nav class="rel">
+  <h2>The other collections</h2>
+  <p>Same idea, different question. Each one fills every slot once.</p>
+  <a class="chip" href="../../collections/first-setup/">A first agentic setup <span class="ct">7</span></a><a class="chip" href="../../collections/windows-first/">Runs on Windows, and says so <span class="ct">7</span></a><a class="chip" href="../../collections/claude-code-kit/">The Claude Code power kit <span class="ct">7</span></a><a class="chip" href="../../collections/keep-it-honest/">Find out what the agent actually did <span class="ct">7</span></a>
+  <h2>Or browse the whole atlas</h2>
+  <p>1,294 projects, no opinions, every filter in the URL.</p>
+  <a class="chip" href="../../">The interactive index</a>
+  <a class="chip" href="../../collections/">All collections</a>
+</nav>
+</div></main>
+
+<footer><div class="wrap">
+  These are editorial picks, and the only editorial pages on the
+  <a href="../../">Awesome Agentic Atlas</a> &mdash; every other page is what 11
+  awesome-lists agreed on, ranked by a number GitHub maintains. Here somebody chose, the reasoning is
+  printed beside each pick, and the curation is a
+  <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json">reviewable file</a> you can
+  open an issue against. Stars, language, licence and last-push come from the GitHub API on
+  2026-09-03 and drift daily. Platform verdicts are derived from each project's own README, install
+  route, CI config and release assets &mdash; <span class="vY">green</span> is stated evidence,
+  <span class="vL">amber</span> is inferred from the language. A build here fails rather than publish a
+  pick whose evidence has stopped supporting the claim above it.
+</div></footer>
+<script>
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
+  const light = document.documentElement.dataset.theme !== "light";
+  document.documentElement.dataset.theme = light ? "light" : "dark";
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
+};
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
