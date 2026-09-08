@@ -14,8 +14,9 @@ each page ships exactly one `og:image`, chosen by whether the file this stage wr
   docs/og/target-<slug>.png    12, one per target
   docs/og/cards.json           what each card says, and the signature that decides re-rendering
 
-  python scripts/23_og.py
+  python scripts/23_og.py                   in GitHub Actions, which is the only place this publishes
   python scripts/23_og.py --out build/og    render somewhere other than what Pages serves
+  python scripts/23_og.py --local           publish from this machine anyway, knowingly
 
 After `20_landing.py`, and it reads the dataset through that stage's own `plan()` rather than
 regrouping 1,294 rows a second time: a card and the page it belongs to cannot then disagree about a
@@ -67,20 +68,41 @@ true while the index grows, but a week of *net removals* below 1,290 would leave
 the next weekly run. Drop `"note"` from the root record in `cards()` to take the date back off and get
 the facet cards' churn profile; nothing else depends on it.
 
-A card is re-rendered only when what it says or how it looks changes. `docs/og/cards.json` holds the
-exact strings that went onto each card plus a signature over them, over `PALETTE` and over `TEMPLATE`,
-so an unchanged facet costs no browser launch and, more to the point, no bytes. That is what stops a
-Chromium update on the runner from rewriting the entire set: `weekly.yml` does `pip install --upgrade
-playwright` and then `playwright install chromium`, so the rasterizer moves every few weeks, and text
-rendered a pixel differently is 27 new objects. Committed rather than left in `cache/`, which is
-gitignored and restored best-effort -- a cache miss there would be indistinguishable from 27 changed
-cards and would cost the history ~540 KB to find that out. `PALETTE` is in the signature rather than
-trusted to a human because the colours are the half of "how it looks" that a re-theme actually touches,
-and a cache key that does not cover its own input ships a stale artefact and reports success -- see
-`signature()`. `TEMPLATE` stays for the half the hash cannot see: bump it to force the set through after
-a layout change, and only after one, because a bump that changes no pixels still costs that ~540 KB. The
-optional `"note"` key is there for exactly that reason: a facet record does not carry it, so a facet
-signature did not move when the root card was added, so this stage rendered one file rather than 27.
+A card is re-rendered only when what it says or how it looks changes, and "how it looks" now includes
+the thing that draws it. `docs/og/cards.json` holds the exact strings that went onto each card plus a
+signature over them, over `PALETTE`, over `FONT`, over the renderer's major version and over
+`TEMPLATE`. `PALETTE` is in there rather than trusted to a human because the colours are the half of
+"how it looks" that a re-theme actually touches, and a cache key that does not cover its own input
+ships a stale artefact and reports success -- see `signature()`. `FONT` and the Chromium major are in
+there for the same reason and were added later, on JFH-283, because they were the remaining half:
+`weekly.yml` does `pip install --upgrade playwright` and then `playwright install chromium`, so the
+rasterizer moves every few weeks, and the stack this stage used to name resolved to Segoe UI on Windows
+and DejaVu Sans on the runner. `TEMPLATE` stays for what the hash still cannot see: bump it to force the
+set through after a layout change, and only after one. The optional `"note"` key is there for exactly
+that reason -- a facet record does not carry it, so a facet signature did not move when the root card
+was added, so this stage rendered one file rather than 27.
+
+Which raises the objection this file used to answer by leaving the renderer out of the key: a Chromium
+update would then rewrite all 27 cards, and text rendered a pixel differently is 27 new objects at
+~540 KB a set, thirteen majors a year. That is answered instead by `main()` reading the committed PNG
+and writing only when the new bytes differ. A renderer bump therefore costs 27 browser launches and,
+when the pixels come out the same, nothing at all in the history -- so the byte-thrift the old design
+bought by not noticing the rasterizer is now bought by noticing it and then checking. What the old
+design could not do at any price is the case that made this a bug: one facet's text changes, that single
+card re-renders on the current Chromium, and the set is left as 26 cards from one rasterizer and one
+from another, with every signature matching and the ledger reporting success.
+
+Committed rather than left in `cache/`, which is gitignored and restored best-effort -- a cache miss
+there would be indistinguishable from 27 changed cards and would cost the history ~540 KB to find that
+out.
+
+CI is the only thing that renders into `docs/og/`. Every committed card was drawn on Windows, where the
+font stack this stage used to carry resolved to Segoe UI; `ubuntu-latest` has no Segoe UI and no
+font-installation step, so it drew DejaVu Sans instead -- different metrics, different line breaks, and
+JFH-224 measured the result at 0 of 27 identical, 7.67%-12.96% of pixels moved. Naming one family kills
+the fallback chain that made the choice machine-dependent, and `main()` refusing to write into
+`docs/og/` outside Actions kills the machine that was making the other choice. `--out` and `--local` are
+both still there for looking at a design change locally; neither publishes.
 
 A missing browser is not an error. Same contract as `15_shots_all.py` and `06_web_shots.py`: one
 subprocess per image, `chrome.find()` may return None, and None degrades. It degrades better here
@@ -112,6 +134,8 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import os
+import re
 import struct
 import subprocess
 import sys
@@ -146,15 +170,35 @@ W, H = 1200, 630
 TOP = 3            # names on the card, per the ticket
 NAME_CAP = 26      # characters, before the CSS has to ellipsize -- see `card_html`
 
-# Bumping this changes every signature and so re-renders all 27 cards. That is ~540 KB of history, so
-# it is a deliberate act: any edit to `card_html` that changes the pixels of an *existing* card needs
-# it, and nothing else does. Adding the root card did not: a facet record grew no keys, so its signature
-# did not move, so its committed pixels were never questioned.
+# Bumping this re-renders all 27 cards. It no longer necessarily costs ~540 KB of history to do so --
+# `main()` writes a card only when the new bytes differ from the committed ones -- but it does cost 27
+# browser launches, and a bump that changes no pixels is still a bump nobody needed. Any edit to
+# `card_html` that changes the pixels of an *existing* card needs it, and nothing else does. Adding the
+# root card did not: a facet record grew no keys, so its signature did not move.
 #
-# Colour is the one class of pixel change this no longer has to remember, because `PALETTE` below is
-# hashed beside it. What is left for `TEMPLATE` is what the hash cannot see: a layout, size or type edit
-# in the stylesheet, a font Chromium resolves differently, a rasterizer worth forcing through.
+# Two classes of pixel change this no longer has to remember, because both are hashed beside it now:
+# colour, via `PALETTE` below, and the renderer, via `FONT` and `chromium_major()`. What is left for
+# `TEMPLATE` is what the hash still cannot see -- a layout, size or spacing edit in the stylesheet.
 TEMPLATE = 2
+
+# The one family the card is drawn in, named rather than chosen. It is hashed into `signature()`, so
+# editing this line re-renders the set instead of silently leaving 27 committed PNGs in a face nothing
+# on this machine draws any more.
+#
+# It replaces a seven-entry stack -- `"Segoe UI","DejaVu Sans",system-ui,-apple-system,Helvetica,Arial,
+# sans-serif` -- and the entries were not alternatives, they were a machine-dependent choice. Windows
+# resolved it to Segoe UI, `ubuntu-latest` has no Segoe UI and no font-installation step and resolved it
+# to the second entry, and JFH-224 measured that difference on run 34151931449 of `og-preview.yml`: 0 of
+# 27 cards identical, 7.67%-12.96% of pixels moved, every card larger. `fc-match` on the runner resolves
+# `Segoe UI`, `system-ui` and `sans-serif` all to DejaVu Sans, so naming DejaVu Sans changes nothing
+# about what the sole renderer draws -- it removes the branch where anything else could draw it.
+#
+# This pins the family, not the file. The runner's DejaVu can still be updated by the image, and
+# Chromium keeps a last-resort face for a family it cannot find at all, so this is not yet byte-
+# reproducibility -- that needs a woff2 committed next to this stage and `@font-face`d, which is
+# JFH-283's route 2 and is deliberately not taken here (see the acceptance note in that ticket). What it
+# buys is that the *identity* of the face is now a stated input rather than a property of the host.
+FONT = "DejaVu Sans"
 
 # Every colour on a card, hoisted out of `card_html`'s stylesheet so that the signature can cover it.
 #
@@ -194,6 +238,49 @@ ROOT_CARD = "root.png"
 
 CHROME = chrome.PATH
 
+# Matches the tail of both spellings this binary answers with: "Chromium 141.0.7390.54" from a distro
+# package and "Google Chrome for Testing 148.0.7778.96" from the build Playwright installs.
+VERSION_LINE = re.compile(r"(\d+)\.\d+\.\d+\.\d+")
+
+_MAJOR: str | None = None
+
+
+def chromium_major() -> str:
+    """The rasterizer's major version, as a string, or `"none"` when there is no browser.
+
+    Obtained by *running* the binary and reading one line of its stdout, which is the whole reason this
+    is a subprocess and not a path lookup. `signature()`'s contract is that nothing it hashes is read
+    off disk: this repository is `core.autocrlf=true` with no `.gitattributes`, so any hash taken over
+    file bytes comes out different on Windows and on the runner and the two platforms re-render each
+    other's cards for ever. A version string has no line endings in it. The binary's *path* would have
+    been the cheap answer and is the wrong one -- it carries a Playwright build number on the runner and
+    an absolute home directory on a laptop, so it would differ between two machines running the same
+    Chromium and match between two different Chromiums installed at the same path.
+
+    Major only, deliberately. Chromium's patch component moves most weeks and its effect on a page of
+    flat fills and text is nothing; the major is the granularity at which text layout actually changes,
+    and it is what JFH-283 asked for. A patch bump therefore skips all 27 cards, which is the right
+    trade -- see the module docstring on what a re-render does and does not now cost.
+
+    Memoized because `cards()` signs 27 records and this is a process launch. `"none"` when the browser
+    is missing rather than a crash or an empty string: a browserless run cannot render anyway, so every
+    signature failing to match is the honest report -- those cards were drawn by something this run
+    cannot name. `main()` keeps the committed PNG and the committed ledger entry in that case, so
+    nothing is lost and nothing is falsely vouched for.
+    """
+    global _MAJOR
+    if _MAJOR is None:
+        _MAJOR = "none"
+        if CHROME:
+            try:
+                out = subprocess.run([str(CHROME), "--version"], capture_output=True, text=True,
+                                     timeout=30)
+                if m := VERSION_LINE.search((out.stdout or "") + (out.stderr or "")):
+                    _MAJOR = m.group(1)
+            except Exception:
+                pass          # same contract as `shoot()`: a browser that will not answer is not fatal
+    return _MAJOR
+
 
 # ------------------------------------------------------------------ what each card says
 def about(n: int) -> str:
@@ -210,36 +297,49 @@ def about(n: int) -> str:
 def clip_name(name: str) -> str:
     """Hard-cap a project name.
 
-    The CSS ellipsizes as well, and it has to -- glyph widths differ between this machine's Segoe UI
-    and the runner's DejaVu Sans, so no character count is a width. This cap is for the outliers that
-    would otherwise squeeze the other two chips to nothing: "OmniRoute: Multi-Provider LLM Gateway" is
-    37 characters, and three of those on one row is more than the card is wide.
+    The CSS ellipsizes as well, and it has to -- a character count is not a width in any font, and this
+    process cannot measure the one the renderer is about to use. Pinning `FONT` removed the *machine* as
+    a variable, not the proportionality of the glyphs. This cap is for the outliers that would otherwise
+    squeeze the other two chips to nothing: "OmniRoute: Multi-Provider LLM Gateway" is 37 characters, and
+    three of those on one row is more than the card is wide.
     """
     return name if len(name) <= NAME_CAP else name[:NAME_CAP - 1].rstrip(" ,:;-/") + "…"
 
 
 def signature(rec: dict) -> str:
-    """Everything that decides a card's pixels except the rasterizer, in sixteen hex characters.
+    """Everything that decides a card's pixels, including the rasterizer, in sixteen hex characters.
 
-    The record is what the card says, `PALETTE` is what it looks like, and `TEMPLATE` is the manual bump
-    for the rest. `main()` re-renders a card when this moves and skips it when it does not, so anything
-    left out of here is something that can change while the committed PNG does not follow it -- which is
-    exactly what the palette used to be. A cache key has to cover its own input.
+    The record is what the card says, `PALETTE` is what it looks like, `FONT` and `chromium_major()` are
+    what draws it, and `TEMPLATE` is the manual bump for the rest. `main()` re-renders a card when this
+    moves and skips it when it does not, so anything left out of here is something that can change while
+    the committed PNG does not follow it -- which is exactly what the palette used to be, and then what
+    the renderer was. A cache key has to cover its own input.
+
+    The rasterizer was excluded on purpose until JFH-283, and the reason it was excluded is worth keeping
+    because it is still true: including it means a Chromium major bump re-renders the whole set. What
+    changed is not the judgement but what a re-render costs -- `main()` now writes only when the bytes
+    move, so the case this used to protect against costs 27 launches and no history. What it could not
+    protect against, and what made this a bug rather than a trade, is a *single* card re-rendering on a
+    newer Chromium than the other 26 while every signature matches: a set silently drawn by two
+    rasterizers, which no amount of byte-thrift makes correct.
 
     `sort_keys` is what makes the hashed thing `PALETTE`'s role-to-colour mapping rather than its
     declaration order: reorder the block and no card re-renders, change which colour `bar` means and all
     27 do. Renaming a role does re-render, and that is the right way round -- a rename is cheap to avoid
     and a missed re-theme is not.
 
-    Nothing here is read off disk, deliberately. This repository is `core.autocrlf=true` with no
-    `.gitattributes`, so the working tree is CRLF on Windows and LF on the runner: any hash taken over
-    file bytes -- `card_html`'s source text, say, which would catch layout too -- would come out
-    different on the two platforms, and they would re-render each other's cards for ever. Hashing
-    the palette as data is platform-independent by construction. That trap has fired here once already,
-    on `24_pwa.py`'s service-worker `VERSION` (`87250a1`).
+    Nothing here is read off disk, deliberately, and the two new inputs hold that line. This repository
+    is `core.autocrlf=true` with no `.gitattributes`, so the working tree is CRLF on Windows and LF on
+    the runner: any hash taken over file bytes -- `card_html`'s source text, say, which would catch
+    layout too, or the woff2 that route 2 would commit -- would come out different on the two platforms,
+    and they would re-render each other's cards for ever. `FONT` is a family name written in this file
+    and `chromium_major()` is one integer out of the binary's own `--version`; both are data, neither is
+    a byte off disk. That trap has fired here once already, on `24_pwa.py`'s service-worker `VERSION`
+    (`87250a1`).
     """
     return hashlib.sha1(
-        json.dumps([TEMPLATE, PALETTE, rec], sort_keys=True, ensure_ascii=False).encode()
+        json.dumps([TEMPLATE, FONT, chromium_major(), PALETTE, rec],
+                   sort_keys=True, ensure_ascii=False).encode()
     ).hexdigest()[:16]
 
 
@@ -334,10 +434,12 @@ def card_html(rec: dict, host: str) -> str:
     HTML rather than SVG, and it is the layout that decides it: an `<svg>` has no line breaking and no
     ellipsis, so every string on the card would need to be measured in Python against a font this
     process cannot see. CSS measures it in the renderer that is about to draw it -- `-webkit-line-clamp`
-    on the heading and `flex-shrink` with `text-overflow` on the chips mean a facet name that takes
-    two lines in DejaVu Sans where it took one in Segoe UI still fits inside the frame rather than
-    hanging out of it. Nothing here is written to `docs/`; the document is scaffolding in a temporary
-    directory and the PNG is the output.
+    on the heading and `flex-shrink` with `text-overflow` on the chips mean a facet name that takes two
+    lines where a narrower face took one still fits inside the frame rather than hanging out of it. That
+    guarantee is why pinning `FONT` was safe to do without re-measuring the layout, and it is not the
+    same as the text staying *legible*: what the clamp costs at DejaVu's widths is a chip's last word,
+    which is JFH-283's fourth criterion and is measured on the runner rather than assumed here. Nothing
+    is written to `docs/`; the document is scaffolding in a temporary directory and the PNG is the output.
 
     The colours are `19_pages.py`'s dark palette, character for character, on the same argument
     `20_landing.py` makes for copying the two custom-property blocks: a card is the first thing anyone
@@ -369,8 +471,9 @@ def card_html(rec: dict, host: str) -> str:
    --screenshot captures the window, so content that overflowed would not be cropped by the card, it
    would push the layout and silently shift everything above it. */
 html,body{{margin:0;padding:0;width:{W}px;height:{H}px;overflow:hidden}}
-body{{background:{surface};color:{ink};
-  font:400 16px/1.4 "Segoe UI","DejaVu Sans",system-ui,-apple-system,Helvetica,Arial,sans-serif}}
+/* One family, no fallback chain -- see `FONT`. A stack here was a choice made by whichever machine ran
+   the stage, and it is hashed into the signature now, so changing this line re-renders the set. */
+body{{background:{surface};color:{ink};font:400 16px/1.4 "{FONT}"}}
 /* The accent is a border on the frame rather than a positioned bar, so `box-sizing` keeps the total
    at exactly {H}px however thick it gets. */
 .card{{box-sizing:border-box;width:{W}px;height:{H}px;padding:54px 72px 44px;
@@ -380,10 +483,10 @@ body{{background:{surface};color:{ink};
    ("Sandbox, Security & Governance") is already two at this size in a wide font.
 
    This is the only element on the card whose height is not fixed, which is deliberate: every line
-   height here is set in CSS rather than left to the font, so the frame's total is the same in Segoe
-   UI and in the runner's DejaVu Sans, and the one variable left -- one heading line or two -- is
-   absorbed by the `margin-top:auto` below. Measured through --dump-dom, the two-line worst case
-   comes to 597 of the {H}px available, so the tightest card still has 33px of air in it. */
+   height here is set in CSS rather than left to the font, so the frame's total does not move when the
+   face does, and the one variable left -- one heading line or two -- is absorbed by the
+   `margin-top:auto` below. Measured through --dump-dom, the two-line worst case comes to 597 of the
+   {H}px available, so the tightest card still has 33px of air in it. */
 h1{{margin:24px 0 0;font-size:76px;line-height:1.05;letter-spacing:-.02em;font-weight:700;color:{head};
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}
 .count{{margin-top:18px;font-size:33px;color:{ink2}}}
@@ -623,14 +726,30 @@ def prune(keep: set[str], out: Path) -> list[str]:
     return gone
 
 
-def main(out: Path = OUT) -> None:
+def main(out: Path = OUT, local: bool = False) -> None:
     """Render into `out`, which is `docs/og/` unless `--out` said otherwise.
 
     The override exists because the default is a directory GitHub Pages serves verbatim out of this
     branch, so "let me see what this design change looks like" and "publish 27 new PNGs and rewrite the
     ledger" were the same command. Seed the temporary directory with a copy of `docs/og/` and only the
     card being worked on re-renders; leave it empty and all 27 do.
+
+    Writing into `docs/og/` needs Actions, or `--local` said so out loud. That is JFH-283's route 1 and
+    it is the cheap half of the fix: the defect measured on JFH-224 was not that Chromium drifts but that
+    two *machines* drew the published set, and this is the machine half. Every committed card came from a
+    local Windows checkout -- `git log -- 'docs/og/*.png'` returns two commits, both local -- so the
+    published pixels were Segoe UI's while every CI render was DejaVu Sans's, and whichever ran last won.
+    `weekly.yml` is the renderer now and nothing else is, unless a person types the flag that says they
+    mean it. `--out` is unaffected and is still the way to look at a change.
     """
+    if out == OUT and not local and not os.environ.get("GITHUB_ACTIONS"):
+        sys.exit(
+            f"{Path(__file__).name}: refusing to render into {OUT.relative_to(ROOT).as_posix()} outside "
+            "GitHub Actions.\n"
+            "  This directory is served verbatim by Pages and CI is its only renderer (JFH-283): a local\n"
+            "  render resolves a different font and republishes all 27 cards in it.\n"
+            f"  To look at a change:  python {Path(__file__).name} --out build/og\n"
+            f"  To publish from here anyway, knowingly:  python {Path(__file__).name} --local")
     data = json.loads(DATA.read_text(encoding="utf-8"))
     recs = cards(b20.plan(data), data)
     host = SITE.split("//", 1)[-1].rstrip("/")
@@ -644,7 +763,7 @@ def main(out: Path = OUT) -> None:
         except json.JSONDecodeError:
             old = {}          # a truncated ledger re-renders everything, which is only ever expensive
 
-    kept, built, failed = [], [], []
+    kept, built, same, failed = [], [], [], []
     entries: dict[str, dict] = {}
     for rec in recs:
         name, path, was = rec["file"], out / rec["file"], old.get(rec["file"], {})
@@ -669,17 +788,40 @@ def main(out: Path = OUT) -> None:
                 entries[name] = was
             continue
         png = indexed(png)
-        path.write_bytes(png)
-        built.append(name)
+        # Rendered, then compared, and written only if the pixels moved. This is what makes it affordable
+        # for `signature()` to cover the rasterizer at all: a Chromium major bump invalidates all 27
+        # signatures, so without this line it would rewrite ~540 KB of PNG thirteen times a year to
+        # produce, most of the time, the same picture. Every generated byte here is committed and served,
+        # and a PNG whose bytes moved is a whole new object in the pack for ever -- there is no such thing
+        # as a small edit to one.
+        #
+        # The ledger entry is updated either way, and that is the point rather than an oversight: the card
+        # has now been vouched for against the current renderer, so the next run skips it instead of
+        # launching a browser for it again. `indexed()` is deterministic for identical input -- its
+        # palette is ordered by frequency and then by value precisely so that this comparison means
+        # something -- so identical pixels really do give identical bytes.
+        if path.exists() and path.read_bytes() == png:
+            same.append(name)
+        else:
+            path.write_bytes(png)
+            built.append(name)
         entries[name] = {**said, "bytes": len(png)}
 
-    # `palette` is recorded beside `template` for the same reason the strings are recorded beside the
-    # signature: so that "are these cards on the current palette?" is answered by reading the committed
-    # ledger against `PALETTE` rather than by launching a browser and comparing 27 PNGs. It is the
-    # other half of the input the signature is taken over, and a hash alone would say two sets differ
-    # without saying which colour moved.
-    ledger.write_text(json.dumps({"template": TEMPLATE, "palette": PALETTE, "size": [W, H],
-                                  "cards": entries}, indent=1, ensure_ascii=False) + "\n",
+    # `palette`, `font` and `chromium` are recorded beside `template` for the same reason the strings are
+    # recorded beside the signature: so that "are these cards on the current palette, in the current face,
+    # from the current rasterizer?" is answered by reading the committed ledger rather than by launching a
+    # browser and comparing 27 PNGs. They are the other half of the input the signature is taken over, and
+    # a hash alone would say two sets differ without saying which colour, which font or which Chromium
+    # moved. `chromium` is the one line here that can change while no PNG does -- a major bump whose
+    # pixels come out identical rewrites this file and nothing else -- and that is the record being
+    # accurate rather than churn: these bytes are now vouched for against that renderer.
+    #
+    # The committed ledger at the time JFH-283 was written had `"template": 3` and no `palette` key at
+    # all, against a source that has only ever said 2. It was written by a working tree that did not match
+    # its own commit, which is worth knowing before reading it as authoritative history.
+    ledger.write_text(json.dumps({"template": TEMPLATE, "palette": PALETTE, "font": FONT,
+                                  "chromium": chromium_major(), "size": [W, H], "cards": entries},
+                                 indent=1, ensure_ascii=False) + "\n",
                       encoding="utf-8")
     # Keyed on the views that exist, not on the entries written: a card whose render failed keeps
     # its file, and a file with no entry is a card from an older run that this one could not vouch
@@ -692,6 +834,10 @@ def main(out: Path = OUT) -> None:
           f"{sum(1 for r in recs if r['file'].startswith('topic-'))} topic · "
           f"{sum(1 for r in recs if r['file'].startswith('target-'))} target · {W}x{H} · {kb(total)}")
     print(f"{len(built)} rendered, {len(kept)} unchanged and left alone"
+          # Reported separately from both, because it is neither: the browser did run, and the file did
+          # not change. Collapsing it into `built` would claim 27 rewrites that are not in the diff, and
+          # collapsing it into `kept` would hide 27 browser launches that a bump had just paid for.
+          + (f", {len(same)} re-rendered to identical bytes and left alone" if same else "")
           + (f", {len(failed)} owed a render this run could not do" if failed else ""))
     if built:
         print("  built: " + ", ".join(built[:6]) + (" …" if len(built) > 6 else ""))
@@ -700,8 +846,11 @@ def main(out: Path = OUT) -> None:
     if gone:
         print(f"  {len(gone)} stale card(s) removed: {', '.join(gone[:6])}")
     # Reported from what this run actually used rather than from `chrome.describe()`, so the line can
-    # never claim a browser the stage did not have.
-    print(f"chrome: {CHROME if CHROME else 'none found -- cards left exactly as committed'}")
+    # never claim a browser the stage did not have. The major and the face are printed beside it because
+    # they are signature inputs now: a set that re-rendered for no visible reason is explained by this
+    # line moving, and it is the one place a log reader can see which renderer vouched for these bytes.
+    print(f"chrome: {CHROME if CHROME else 'none found -- cards left exactly as committed'}"
+          f" · major {chromium_major()} · {FONT}")
     if out != OUT:
         print(f"wrote to {out} -- docs/og/ untouched")
 
@@ -716,5 +865,11 @@ if __name__ == "__main__":
         main()
     elif len(argv) == 2 and argv[0] == "--out":
         main(Path(argv[1]).resolve())
+    # Publishing from a machine that is not Actions, said out loud. It exists so that the guard in
+    # `main()` is a speed bump rather than a wall -- there is a legitimate emergency where the cards have
+    # to go out and CI cannot do it -- and it takes no argument on purpose: `--local --out DIR` would be
+    # two ways of saying where, and `--out` already answers that without needing permission for it.
+    elif argv == ["--local"]:
+        main(local=True)
     else:
-        sys.exit(f"usage: {Path(__file__).name} [--out DIR]")
+        sys.exit(f"usage: {Path(__file__).name} [--out DIR | --local]")

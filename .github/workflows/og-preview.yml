@@ -4,19 +4,30 @@
 # WHY THIS EXISTS (JFH-224)
 #
 # Every committed card was rendered on Windows -- `git log -- 'docs/og/*.png'` returns two commits, both
-# from a local checkout. `23_og.py`'s font stack is
+# from a local checkout. `23_og.py`'s font stack used to be
 #
 #   font:400 16px/1.4 "Segoe UI","DejaVu Sans",system-ui,-apple-system,Helvetica,Arial,sans-serif
 #
-# and Windows resolves that to Segoe UI while `ubuntu-latest` has no Segoe UI and no font-installation
-# step, so it resolves to the second entry. Different family, different metrics, so different text widths
-# and line breaks. The divergence is latent and lands whole on the first CI re-render for any reason, and
+# and Windows resolved that to Segoe UI while `ubuntu-latest` has no Segoe UI and no font-installation
+# step, so it resolved to the second entry. Different family, different metrics, so different text widths
+# and line breaks. The divergence was latent and lands whole on the first CI re-render for any reason, and
 # 813d894 folded the palette into the re-render signature, which invalidated all 27 signatures -- so the
 # next weekly run is when it lands.
 #
 # The ticket's own instruction is to measure before fixing, because the DejaVu fallback is deliberate and
 # legible and the answer may well be "acceptable, adopt it". That is a different decision from
 # "unacceptable, pin the font", and looking at the artifact settles it in one run.
+#
+# WHAT THIS JOB IS FOR NOW (JFH-283)
+#
+# That measurement happened, on run 34151931449: 0 of 27 identical, 7.67%-12.96% of pixels moved. The
+# answer taken was "adopt DejaVu, and stop letting the machine choose" -- `23_og.py` now names one family
+# in `FONT`, hashes it and the Chromium major into the re-render signature, and refuses to write into
+# `docs/og/` outside Actions. So this job's question has changed rather than been answered: it is no longer
+# "which font will CI pick", it is "what does the pinned font cost", and the two steps that answer it are
+# the pixel comparison and the clip probe below. The comparison against the committed PNGs stays
+# interesting for exactly as long as those PNGs are the Windows ones -- once a weekly run has republished
+# them, "0 identical" becomes "27 identical" and that is the signal that the pin has landed.
 #
 # WHY THIS CAN RUN WITHOUT THE WEEKLY, WHICH IS THE WHOLE REASON IT IS A SEPARATE WORKFLOW
 #
@@ -91,13 +102,30 @@ jobs:
       # each entry in the stack to. `fc-match` is the direct evidence for the DejaVu inference in JFH-224 --
       # it reports what fontconfig would hand Chromium, so a "Segoe UI -> DejaVu Sans" line is the ticket's
       # premise confirmed rather than assumed.
+      #
+      # JFH-283 replaced that stack with a single pinned family, so the loop reads it out of the script
+      # rather than repeating it: a copy here would go stale the first time `FONT` is edited, and the whole
+      # point of the constant is that one place says which face the cards are drawn in. The old entries stay
+      # in the loop as the evidence for what changed -- a `Segoe UI -> DejaVu Sans` line is both JFH-224's
+      # premise and the reason naming one family changed nothing about what this runner draws.
       - name: Name the browser and the fonts this measurement turns on
         run: |
           python -c "import sys; sys.path.insert(0, 'scripts'); import chrome; print('chrome:', chrome.describe())"
-          echo "--- what fontconfig resolves each entry of 23_og.py's stack to ---"
-          for f in "Segoe UI" "DejaVu Sans" "system-ui" "Helvetica" "Arial" "sans-serif"; do
+          pinned="$(python -c "
+          import importlib.util, sys
+          spec = importlib.util.spec_from_file_location('og', 'scripts/23_og.py')
+          m = importlib.util.module_from_spec(spec); sys.modules['og'] = m; spec.loader.exec_module(m)
+          print(m.FONT)")"
+          echo "--- 23_og.py pins FONT='$pinned'; what fontconfig resolves it, and the old stack, to ---"
+          for f in "$pinned" "Segoe UI" "DejaVu Sans" "system-ui" "Helvetica" "Arial" "sans-serif"; do
             printf '%-12s -> %s\n' "$f" "$(fc-match "$f" family 2>/dev/null || echo '(fc-match unavailable)')"
           done
+          # A pinned family the host does not have is the one condition that makes every number below a
+          # measurement of something else: Chromium falls back to a last-resort face silently, and nothing
+          # in the render or the comparison would say so.
+          if [ "$(fc-match "$pinned" family 2>/dev/null)" != "$pinned" ]; then
+            echo "::warning::fontconfig does not resolve '$pinned' to itself, so this runner does not have that family and Chromium drew a last-resort face. Every measurement below is about that face instead."
+          fi
 
       # `pipefail` is not decoration here. Without it the pipeline's status is `tee`'s, so in run
       # 34151702414 the script died on an uncaught ImportError, `tee` exited 0, and this step went green
@@ -221,6 +249,105 @@ jobs:
           print(hdr)
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as fh:
               fh.write(hdr)
+          PY
+
+      # JFH-283's fourth criterion, measured in the renderer instead of eyeballed off the PNGs. The ticket
+      # found that at DejaVu's widths the chip row stops fitting and the CSS ellipsis takes the tail off:
+      # `Chrome DevTools MCP` became `Chrome DevTools …` on the card whose subject is MCP, and
+      # `microsoft/playwright-mcp` became `microsoft/playwright-…`, which stops identifying which
+      # `microsoft/playwright-*` repository it is. The chips are the identifying payload of a social card,
+      # so that is content loss rather than ugliness, and it is the one thing about pinning the font that a
+      # pixel diff cannot tell you -- a 10% pixel delta says nothing about whether a word survived.
+      #
+      # Asked of the DOM rather than of the image because the DOM knows the answer exactly: `scrollWidth >
+      # clientWidth` *is* the ellipsis, with no OCR and no judgement. The probe is appended to the card's
+      # own document so what gets measured is the stylesheet `shoot()` rasterizes, not a copy of it that
+      # could drift. One pixel of tolerance, because a fractional layout rounds.
+      #
+      # Chips fail the step; the heading and the blurb are reported and do not. That asymmetry is the
+      # design's own: `card_html` gives the blurb one line and ellipsizes it on purpose, and clamps the
+      # heading to two, so both are *expected* to clip on a long string and neither carries an identifier.
+      # A chip that clips is the failure JFH-283 names.
+      - name: Measure whether the clamp costs any card its last word
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import html, importlib.util, json, os, pathlib, re, subprocess, sys, tempfile
+
+          sys.path.insert(0, "scripts")
+          spec = importlib.util.spec_from_file_location("og", "scripts/23_og.py")
+          og = importlib.util.module_from_spec(spec)
+          sys.modules["og"] = og
+          spec.loader.exec_module(og)
+
+          data = json.loads(og.DATA.read_text(encoding="utf-8"))
+          recs = og.cards(og.b20.plan(data), data)
+          host = og.SITE.split("//", 1)[-1].rstrip("/")
+          print(f"probing {len(recs)} cards at FONT={og.FONT!r}, chromium major {og.chromium_major()}")
+
+          PROBE = """<script>
+          const out = [];
+          for (const el of document.querySelectorAll("h1, .blurb, .chip")) {
+            const w = el.scrollWidth > el.clientWidth + 1;
+            const h = el.scrollHeight > el.clientHeight + 1;
+            if (w || h) out.push({what: el.className || el.tagName, text: el.textContent, wide: w, tall: h});
+          }
+          const d = document.createElement("div");
+          d.id = "probe";
+          d.textContent = JSON.stringify(out);
+          document.body.appendChild(d);
+          </script>"""
+          MARK = re.compile(r'<div id="probe">(.*?)</div>', re.S)
+
+          rows, bad = [], []
+          for rec in recs:
+              with tempfile.TemporaryDirectory() as td:
+                  page = pathlib.Path(td) / "card.html"
+                  page.write_text(og.card_html(rec, host).replace("</body>", PROBE + "</body>"),
+                                  encoding="utf-8")
+                  cmd = [str(og.CHROME), "--headless", "--disable-gpu", "--hide-scrollbars", "--no-sandbox",
+                         "--disable-dev-shm-usage", "--force-device-scale-factor=1",
+                         "--font-render-hinting=none", f"--window-size={og.W},{og.H}",
+                         "--virtual-time-budget=1500", "--dump-dom", page.as_uri()]
+                  got = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+              m = MARK.search(got.stdout or "")
+              if not m:
+                  # No probe in the DOM means the page never ran the script, so "nothing clipped" would be
+                  # a conclusion drawn from a measurement that did not happen -- the exact failure this
+                  # workflow's header argues about empty artifacts.
+                  print(f"::error::{rec['file']}: the probe did not run, so nothing was measured")
+                  bad.append((rec["file"], "probe did not run"))
+                  continue
+              clipped = json.loads(html.unescape(m.group(1)) or "[]")
+              for c in clipped:
+                  what = "chip" if c["what"] == "chip" else c["what"].lower()
+                  how = "width" if c["wide"] else "height"
+                  rows.append((rec["file"], what, how, c["text"]))
+                  if what == "chip":
+                      bad.append((rec["file"], c["text"]))
+
+          print(f"\n{len(rows)} clipped element(s) across {len(recs)} cards\n")
+          if rows:
+              print("| card | element | clipped by | text as the record holds it |")
+              print("|---|---|---|---|")
+              for r in rows:
+                  print(f"| `{r[0]}` | {r[1]} | {r[2]} | `{r[3]}` |")
+
+          summary = [f"## JFH-283 AC4: chip legibility at `{og.FONT}`\n",
+                     f"{len(recs)} cards probed, {len(rows)} clipped element(s), "
+                     f"{len([b for b in bad])} chip failure(s).\n"]
+          if rows:
+              summary.append("\n| card | element | clipped by | text |\n|---|---|---|---|\n")
+              summary += [f"| `{r[0]}` | {r[1]} | {r[2]} | `{r[3]}` |\n" for r in rows]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as fh:
+              fh.write("".join(summary))
+
+          for name, text in bad:
+              print(f"::error::{name}: a chip loses its tail to the clamp -- {text!r}")
+          if bad:
+              print("::error::JFH-283 AC4 is not met: widen the chip row or reduce the chip type until no "
+                    "chip clips, or state on the ticket that this truncation is accepted.")
+          sys.exit(1 if bad else 0)
           PY
 
       # Both sets plus the diffs, so the comparison is reproducible from the artifact alone rather than
