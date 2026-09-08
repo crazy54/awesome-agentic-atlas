@@ -122,6 +122,32 @@ ok("...and the shared shell and the sitemap beside them",
    ["repo/detail.css", "repo/detail.js", "sitemap-repos.xml"].every(f => fpA.has(f)),
    [...fpA.keys()].filter(k => !k.endsWith("index.html")).join(", "));
 
+// The reader belongs on every project's detail page, but third-party prose does not belong in the
+// generated tree. Its empty article is filled after paint from GitHub, rendered mode is the declared
+// default, and the shared shell owns both the file discovery and the presentation.
+const samplePagePath = [...fpA.keys()].find(k => k.startsWith("repo/") &&
+  k.endsWith("/index.html") && k !== "repo/index.html");
+const samplePage = readFileSync(join(A, samplePagePath), "utf8");
+const detailJS = readFileSync(join(A, "repo", "detail.js"), "utf8");
+const detailCSS = readFileSync(join(A, "repo", "detail.css"), "utf8");
+ok("every detail page carries the repository reader in its reading flow",
+   samplePage.includes('id="source-preview"') && samplePage.includes('id="source-file"'),
+   samplePagePath);
+ok("rendered Markdown is the reader's default and source remains secondary",
+   samplePage.includes('id="rendered-tab" aria-pressed="true"') &&
+   samplePage.includes('id="source-tab" aria-pressed="false"') &&
+   samplePage.includes('id="rendered-view" aria-label="Rendered Markdown preview" hidden'),
+   samplePagePath);
+ok("the generated page contains no copied README body",
+   /<article class="markdown-body"[^>]*hidden><\/article>/.test(samplePage), samplePagePath);
+ok("the shared reader asks GitHub for rendered Markdown and discovers nested files",
+   detailJS.includes("application/vnd.github.html+json") &&
+   detailJS.includes("/git/trees/HEAD?recursive=1") && detailJS.includes("/^skill\\.md$/i"));
+ok("the reader ships distinct prose, heading, and code typography with both colour modes",
+   detailCSS.includes('Charter,"Bitstream Charter","Sitka Text"') &&
+   detailCSS.includes('"Cascadia Code","SFMono-Regular"') &&
+   detailCSS.includes("html[data-theme=light] .reader") && detailCSS.includes("--read-violet"));
+
 // ---- run B: the same data again. Determinism, full stop.
 //
 // This is the one that catches a timestamp, a `set` iteration order, a `dict` whose keys arrive in hash

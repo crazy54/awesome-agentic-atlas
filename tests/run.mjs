@@ -2,12 +2,12 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the eleven harnesses in turn, and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirteen harnesses in turn, and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY ELEVEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY THIRTEEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
 //   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces.
 //   signals_test.py   the cache-staleness policy in scripts/signals.py, on fabricated entries. Pure and
@@ -21,6 +21,9 @@
 //   pwa-check.mjs     manifest, service worker, precache, offline, and a 404 that must not be cached.
 //                     Needs an origin, so it cannot be done from a file:// page at all.
 //   detail-churn.mjs  regenerates 1,294 detail pages and compares hashes. Nothing to do with a browser.
+//   detail-preview-check.mjs
+//                     opens one detail page against deterministic GitHub API fixtures and verifies the
+//                     rendered/source switch, file discovery, sanitising, fonts, colours and phone layout.
 //   pagemin_test.py   the comment stripper against the cases the real page does not contain -- template
 //                     literals, regex literals, unterminated blocks. Python, because the stripper is.
 //   media_test.py     the workbook writer: one embedded part per screenshot however many rows point at it,
@@ -58,7 +61,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// eleven files own their own plumbing. It is 200 lines of plumbing.
+// thirteen files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -78,6 +81,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // broken rather than passing -- see the note at the top, and set generously below the real count so that
 // only a harness that has lost assertions trips it.
 const HARNESSES = [
+  {file: "app_flags_test.py", label: "the 0/1 schema, atomic editor writes, and every kill switch", python: true, floor: 28},
   {file: "theme_test.py", label: "both themes' contrast, and the four copies of the palette", python: true, floor: 120},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
@@ -87,6 +91,7 @@ const HARNESSES = [
   {file: "refresh_test.py", label: "the cache-free render, refused when the source count moved", python: true, floor: 60},
   {file: "live_test.py", label: "the star/push sidecar the 1,294 detail pages read", python: true, floor: 90},
   {file: "detail-churn.mjs", label: "1,294 detail pages, regenerated and hashed", floor: 7},
+  {file: "detail-preview-check.mjs", label: "rendered repository reader, source and phone layout", needs: "browser", floor: 12},
   {file: "cards-check.mjs", label: "real layout at 1440/900/375 in both themes", needs: "browser", floor: 40},
   {file: "pwa-check.mjs", label: "manifest, worker, precache, offline, freshness, 404", needs: "browser", floor: 25},
 ];
@@ -100,7 +105,7 @@ if (!existsSync(join(ROOT, "docs", "index.html"))) {
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and two of the eleven harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and three of the thirteen harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -113,7 +118,7 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Eight of the eleven need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Nine of the thirteen need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives the IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar
@@ -121,7 +126,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and eight of the eleven harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and nine of the thirteen harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-view="cards">
+<html lang="en" data-theme="dark" data-view="cards" data-index-screenshots="on">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awesome Agentic Atlas — browse every agentic tool</title>
-<meta name="description" content="1,294 agentic AI projects from eleven awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
+<meta name="description" content="1,294 agentic AI projects from 11 awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
 <meta property="og:title" content="Awesome Agentic Atlas">
-<meta property="og:description" content="1,294 projects from eleven awesome-lists, one filterable index.">
+<meta property="og:description" content="1,294 projects from 11 awesome-lists, one filterable index.">
 <meta property="og:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/root.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -22,26 +22,26 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" id="tc" content="#181f21">
+<meta name="theme-color" id="tc" content="#0B0B10">
 <script>
 try {
   var t = localStorage.getItem("theme");
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+  document.getElementById("tc").content = t === "light" ? "#FCFCFD" : "#0B0B10";
 } catch (e) {}
 </script>
 <style>
 :root{
-  --surface:#101416; --plane:#181f21; --band:#232d30; --ink:#d0d7d8; --ink2:#a8b0b2;
-  --muted:#8c9496; --grid:#2c383d; --link:#08b0cc; --bar:#08b0cc;
-  --good:#2eb82e; --warn:#feb932; --off:#8c9496; --onbar:#0c1013;
+  --surface:#000000; --plane:#0B0B10; --band:#14141B; --ink:#FFFFFF; --ink2:#C7C9D2;
+  --muted:#9598A4; --grid:#262630; --link:#438BB1; --bar:#CE54AF;
+  --good:#438BB1; --warn:#9871C9; --off:#9598A4; --onbar:#000000;
 }
 html[data-theme=light]{
-  --surface:#fbfcfc; --plane:#eef1f2; --band:#f4f6f6; --ink:#101416; --ink2:#4a5254;
-  --muted:#5f6769; --grid:#dbe0e1; --link:#096373; --bar:#0a6f80;
-  --good:#0a7c0a; --warn:#8a5a00; --off:#5f6769; --onbar:#fff;
+  --surface:#F1F0F3; --plane:#FCFCFD; --band:#EAE9EF; --ink:#000000; --ink2:#2C2C36;
+  --muted:#52525E; --grid:#D4D3DA; --link:#1C449C; --bar:#AD328E;
+  --good:#346B89; --warn:#6B3EA3; --off:#52525E; --onbar:#FFFFFF;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);
@@ -61,16 +61,17 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 .sub{color:var(--ink2);font-size:14px;margin:0}
 .sub b{color:var(--ink)}
 .stale{color:var(--warn);font-weight:600}
-.stamp{display:inline-flex;height:28px;margin:10px 0 0;text-decoration:none;
-  font-family:Verdana,Geneva,DejaVu Sans,sans-serif;font-size:10px;line-height:28px;
-  letter-spacing:1.28px;text-transform:uppercase;white-space:nowrap}
-.stamp>span{padding:0 10.72px 0 12px;color:#fff}
-.stamp .k{background:#555}
+.stamp{display:inline-flex;height:23px;margin:8px 0 0;border-radius:5px;overflow:hidden;
+  text-decoration:none;font-family:Verdana,Geneva,DejaVu Sans,sans-serif;font-size:9px;
+  line-height:23px;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+.stamp>span{padding:0 7.4px 0 8px;color:#fff}
+.stamp .k{display:flex;align-items:center;gap:5px;background:#555}
 .stamp .v{background:#1a7f37;font-weight:700}
+.deploy-icon{width:11px;height:11px;flex:0 0 11px}
 .stamp.late .v{background:#9a6700}
 .stamp:hover,.stamp:focus-visible{box-shadow:0 0 0 2px var(--bar)}
 .stamp:focus-visible{outline:none}
-@media (max-width:360px){.stamp .lw{display:none}}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 .top nav{font-size:13px;color:var(--muted);text-align:right;line-height:1.9}
 button{font:inherit;cursor:pointer}
@@ -324,6 +325,12 @@ html[data-view=cards] td.tg{grid-column:1/-1;grid-row:5;margin-top:9px}
 html[data-view=cards] td.lc{grid-column:1/-1;grid-row:6;margin-top:3px;text-align:left}
 html[data-view=cards] td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
 html[data-view=cards] td.lc .meta br{display:none}
+html[data-view=cards][data-index-screenshots=off] td.rk{grid-row:1;padding-top:10px}
+html[data-view=cards][data-index-screenshots=off] td.st-c{grid-row:1;padding-top:10px}
+html[data-view=cards][data-index-screenshots=off] td.pj{grid-row:2}
+html[data-view=cards][data-index-screenshots=off] td.ds{grid-row:3}
+html[data-view=cards][data-index-screenshots=off] td.tg{grid-row:4}
+html[data-view=cards][data-index-screenshots=off] td.lc{grid-row:5}
 html[data-view=cards] .desc,html[data-view=cards] .cmdrow,html[data-view=cards] .cmd{max-width:none}
 html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
   -webkit-line-clamp:4;line-clamp:4;overflow:hidden}
@@ -352,14 +359,17 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 </svg>
 <header><div class="wrap"><div class="top">
   <div>
-    <h1>Awesome Agentic Atlas <span>· eleven awesome-lists, merged</span></h1>
+    <h1>Awesome Agentic Atlas <span>· 11 awesome-lists, merged</span></h1>
     <p class="sub"><b>1,294</b> projects · <b>14</b> topics · <b>12,494,028</b> combined
       stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
       2026-09-03</span></p>
     <p class="blurb" id="ctx"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
-       title="When this copy of the site was published."><span class="k"><span class="lw">Last </span>deployed</span>
-      <span class="v"><time datetime="2026-09-06T23:09:00Z">2026-09-06 23:09 UTC</time></span></a>
+       title="When this copy of the site was published."><span class="k"><svg class="deploy-icon"
+        viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.25"
+        fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.4v4l2.7 1.7"
+        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Last deployed</span>
+      <span class="v"><time datetime="2026-09-08T15:38:00Z">2026-09-08 15:38 UTC</time></span></a>
   </div>
   <nav>
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
@@ -428,8 +438,8 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 </dialog>
 
 <footer><div class="wrap">
-  Every entry came from someone else's curation work; all eleven source lists are credited in the
-  <a href="https://github.com/crazy54/awesome-agentic-atlas#the-eleven-lists">repository</a>. Stars, language, licence and
+  Every entry came from someone else's curation work; all 11 source lists are credited in the
+  <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. Stars, language, licence and
   last-push come from the GitHub API on 2026-09-03 and drift daily. Platform verdicts are derived
   from each project's own README, install route, CI config and release assets &mdash;
   <span class="vY">green&#8201;&#10003;</span> is stated evidence,
@@ -448,6 +458,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 
 <script>
 const PAGE_SIZE = 120;
+const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1};
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
                saved: false, sort: "relevance", shown: PAGE_SIZE, view: "cards"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
@@ -477,7 +488,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-06T23:09:00Z";
+const BUILT = "2026-09-08T15:38:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -1248,15 +1259,18 @@ function render() {
       ? '<svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>'
       : "";
     const on = r.isnew ? ' <span class="newon">- New on ' + mmddyy(r.first_seen) + "</span>" : "";
-    const cmd = r.install
+    const cmd = FLAGS["index.install_commands"] && r.install
       ? '<div class="cmdrow"><code class="cmd">' + esc(r.install) + "</code>" +
         (CAN_COPY ? '<button class="copy" data-cmd="' + esc(r.install) +
           '" aria-label="Copy install command for ' + esc(r.name) + '">Copy</button>' : "") + "</div>"
       : "";
+    const shot = FLAGS["index.project_screenshots"]
+      ? '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
+        '<img loading="lazy" decoding="async" alt="" data-src="' + img + '"></a></td>'
+      : "";
     return "<tr>" +
       '<td class="n rk">' + (i + 1) + "</td>" +
-      '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
-        '<img loading="lazy" decoding="async" alt="" data-src="' + img + '"></a></td>' +
+      shot +
       '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on +
         '<a class="nwo" href="' + url + '">' + esc(r.nwo) + "</a>" +
         saveBtn(r) +
@@ -1278,7 +1292,9 @@ function render() {
         ? ", within your other filters" : "") + ":</p>"
     : "";
   out.innerHTML = note +
-    "<table><thead><tr><th class='n'>#</th><th class='shot'>Shot</th><th class='pj'>Project</th>" +
+    "<table><thead><tr><th class='n'>#</th>" +
+    (FLAGS["index.project_screenshots"] ? "<th class='shot'>Shot</th>" : "") +
+    "<th class='pj'>Project</th>" +
     "<th class='n st-c'>Stars</th>" +
     "<th class='hide tg'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
     "<th class='c hide lc'>Lang / licence / push</th></tr></thead><tbody>" + rows +

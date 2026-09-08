@@ -1,8 +1,11 @@
 /* Written by scripts/22_detail.py. Shared by every page under docs/repo/.
 
-   Three jobs, none of which the page needs in order to be complete: the theme toggle, the copy button,
-   and the two figures that are deliberately not in the HTML. */
+   Four jobs, none of which the page needs in order to be complete: the theme toggle, the copy button,
+   the repository reader, and the two figures that are deliberately not in the HTML. */
 "use strict";
+
+var root = document.documentElement.dataset.root || "";
+var nwo = document.documentElement.dataset.nwo;
 
 /* Not a data fetch and not a framework: the light half of the theme is in detail.css and without a
    switch nothing on these pages can ever reach it.
@@ -65,6 +68,359 @@ if (copy && navigator.clipboard && navigator.clipboard.writeText && window.isSec
   };
 }
 
+/* The repository reader.
+
+   Nothing fetched here is committed to the atlas. GitHub's Contents endpoint renders the preferred
+   README and any selected Markdown file with the same markup engine GitHub uses on a repository page;
+   its Trees endpoint supplies one file list so SKILL.md and nested documentation are discoverable. Two
+   requests open the reader, subsequent requests happen only when the reader picks another file, and
+   both rendered and source bodies are cached for the rest of this page visit.
+
+   The returned HTML is already sanitised by GitHub. `safeFragment` still strips active document
+   elements and event attributes before it enters this page, because a boundary is worth enforcing at
+   the boundary. It also resolves repository-relative links and images, which otherwise point back into
+   the atlas's /repo/ tree when this page is served from GitHub Pages. */
+var reader = document.querySelector(".reader");
+if (reader && nwo && window.fetch) {
+  var fileSelect = document.getElementById("source-file");
+  var renderedTab = document.getElementById("rendered-tab");
+  var sourceTab = document.getElementById("source-tab");
+  var renderedView = document.getElementById("rendered-view");
+  var sourceView = document.getElementById("source-view");
+  var readerStatus = document.getElementById("reader-status");
+  var readerNote = document.getElementById("reader-note");
+  var openSource = document.getElementById("open-source");
+  var apiBase = "https://api.github.com/repos/" + nwo;
+  var repoBase = "https://github.com/" + nwo;
+  var renderedCache = Object.create(null);
+  var sourceCache = Object.create(null);
+  var currentPath = "__readme";
+  var currentMode = "rendered";
+  var requestNumber = 0;
+  var markdownLimit = 200;
+  var maxMarkdownBytes = 1000000;
+
+  renderedTab.onclick = function () { setReaderMode("rendered"); };
+  sourceTab.onclick = function () { setReaderMode("source"); };
+  fileSelect.onchange = function () {
+    currentPath = fileSelect.value;
+    currentMode = "rendered";
+    paintTabs();
+    updateSourceLink();
+    loadRendered(currentPath);
+  };
+
+  loadPreferredReadme();
+  loadMarkdownFiles();
+
+  function github(path, accept) {
+    return fetch(apiBase + path, {headers: {Accept: accept}}).then(function (response) {
+      if (response.ok) return response;
+      var error = new Error("GitHub returned " + response.status);
+      error.status = response.status;
+      throw error;
+    });
+  }
+
+  function encodedPath(path) {
+    return path.split("/").map(encodeURIComponent).join("/");
+  }
+
+  function contentEndpoint(path) {
+    return path === "__readme" ? "/readme" : "/contents/" + encodedPath(path);
+  }
+
+  function loadPreferredReadme() {
+    var ticket = ++requestNumber;
+    setReaderStatus("Loading the project’s README…");
+    github("/readme", "application/vnd.github.html+json")
+      .then(function (response) { return response.text(); })
+      .then(function (markup) {
+        renderedCache.__readme = markup;
+        if (currentPath !== "__readme") renderedCache[currentPath] = markup;
+        if (ticket !== requestNumber || currentMode !== "rendered") return;
+        showRendered(markup, currentPath);
+      })
+      .catch(function (error) {
+        if (ticket === requestNumber) showReaderError(error);
+      });
+  }
+
+  function loadMarkdownFiles() {
+    github("/git/trees/HEAD?recursive=1", "application/vnd.github+json")
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        var all = (data.tree || []).filter(function (entry) {
+          return entry.type === "blob" && /\.md$/i.test(entry.path) &&
+            (!entry.size || entry.size <= maxMarkdownBytes);
+        }).map(function (entry) { return entry.path; });
+        all.sort(function (a, b) {
+          return fileRank(a) - fileRank(b) || pathDepth(a) - pathDepth(b) ||
+            a.localeCompare(b, undefined, {sensitivity: "base"});
+        });
+
+        var readme = all.find(function (path) { return /^readme(?:\.[^.]+)?\.md$/i.test(path); }) ||
+          all.find(function (path) { return /(^|\/)readme(?:\.[^.]+)?\.md$/i.test(path); });
+        if (readme && currentPath === "__readme") {
+          currentPath = readme;
+          if (renderedCache.__readme) renderedCache[readme] = renderedCache.__readme;
+        }
+
+        var shown = all.slice(0, markdownLimit);
+        fileSelect.replaceChildren();
+        if (!shown.length) {
+          addFileOption(fileSelect, "__readme", "README (preferred)");
+          currentPath = "__readme";
+        } else {
+          var groups = ["Start here", "Skills & agent instructions", "Documentation", "Other Markdown"];
+          groups.forEach(function (label) {
+            var paths = shown.filter(function (path) { return fileGroup(path) === label; });
+            if (label === "Start here" && !readme) paths.unshift("__readme");
+            if (!paths.length) return;
+            var group = document.createElement("optgroup");
+            group.label = label;
+            paths.forEach(function (path) {
+              addFileOption(group, path, path === "__readme" ? "README (preferred)" : path);
+            });
+            fileSelect.appendChild(group);
+          });
+        }
+        fileSelect.value = currentPath;
+        fileSelect.disabled = false;
+        updateSourceLink();
+        var note = all.length + " Markdown file" + (all.length === 1 ? "" : "s") + " found";
+        if (all.length > shown.length) note += "; showing the first " + shown.length;
+        if (data.truncated) note += ". GitHub truncated this unusually large repository tree";
+        readerNote.textContent = note + ". Files are loaded on demand and are not copied into the atlas.";
+      })
+      .catch(function () {
+        fileSelect.replaceChildren();
+        addFileOption(fileSelect, "__readme", "README (preferred)");
+        fileSelect.disabled = true;
+        readerNote.textContent = "The README can still be read here, but GitHub did not provide this " +
+          "repository’s Markdown file list.";
+      });
+  }
+
+  function addFileOption(parent, value, label) {
+    var option = document.createElement("option");
+    option.value = value;
+    option.textContent = label;
+    parent.appendChild(option);
+  }
+
+  function pathDepth(path) {
+    return (path.match(/\//g) || []).length;
+  }
+
+  function fileRank(path) {
+    var base = path.split("/").pop();
+    if (/^readme(?:\.[^.]+)?\.md$/i.test(base)) return 0;
+    if (/^skill\.md$/i.test(base)) return 1;
+    if (/^(agents?|claude)\.md$/i.test(base)) return 2;
+    if (/(^|\/)(skills?|agents?)(\/|$)/i.test(path)) return 3;
+    if (/(^|\/)(docs?|documentation)(\/|$)/i.test(path)) return 4;
+    return 5;
+  }
+
+  function fileGroup(path) {
+    var rank = fileRank(path);
+    if (rank === 0) return "Start here";
+    if (rank <= 3) return "Skills & agent instructions";
+    if (rank === 4) return "Documentation";
+    return "Other Markdown";
+  }
+
+  function loadRendered(path) {
+    if (renderedCache[path]) return showRendered(renderedCache[path], path);
+    var ticket = ++requestNumber;
+    setReaderStatus("Rendering " + displayPath(path) + "…");
+    github(contentEndpoint(path), "application/vnd.github.html+json")
+      .then(function (response) { return response.text(); })
+      .then(function (markup) {
+        renderedCache[path] = markup;
+        if (ticket === requestNumber && currentMode === "rendered" && currentPath === path)
+          showRendered(markup, path);
+      })
+      .catch(function (error) {
+        if (ticket === requestNumber) showReaderError(error);
+      });
+  }
+
+  function loadSource(path) {
+    if (sourceCache[path] !== undefined) return showSource(sourceCache[path]);
+    var ticket = ++requestNumber;
+    setReaderStatus("Loading the source for " + displayPath(path) + "…");
+    github(contentEndpoint(path), "application/vnd.github.raw+json")
+      .then(function (response) { return response.text(); })
+      .then(function (source) {
+        sourceCache[path] = source;
+        if (ticket === requestNumber && currentMode === "source" && currentPath === path)
+          showSource(source);
+      })
+      .catch(function (error) {
+        if (ticket === requestNumber) showReaderError(error);
+      });
+  }
+
+  function setReaderMode(mode) {
+    if (mode === currentMode && !readerStatus.hidden) return;
+    currentMode = mode;
+    paintTabs();
+    if (mode === "source") loadSource(currentPath);
+    else loadRendered(currentPath);
+  }
+
+  function paintTabs() {
+    var rendered = currentMode === "rendered";
+    renderedTab.classList.toggle("on", rendered);
+    sourceTab.classList.toggle("on", !rendered);
+    renderedTab.setAttribute("aria-pressed", rendered ? "true" : "false");
+    sourceTab.setAttribute("aria-pressed", rendered ? "false" : "true");
+  }
+
+  function setReaderStatus(message) {
+    reader.dataset.state = "loading";
+    renderedView.hidden = true;
+    sourceView.hidden = true;
+    readerStatus.hidden = false;
+    readerStatus.replaceChildren();
+    var spinner = document.createElement("span");
+    spinner.className = "loader";
+    spinner.setAttribute("aria-hidden", "true");
+    var text = document.createElement("span");
+    text.textContent = message;
+    readerStatus.append(spinner, text);
+  }
+
+  function showRendered(markup, path) {
+    reader.dataset.state = "ready";
+    readerStatus.hidden = true;
+    sourceView.hidden = true;
+    renderedView.replaceChildren(safeFragment(markup, path));
+    renderedView.hidden = false;
+    renderedView.scrollTop = 0;
+  }
+
+  function showSource(source) {
+    reader.dataset.state = "ready";
+    readerStatus.hidden = true;
+    renderedView.hidden = true;
+    sourceView.querySelector("code").textContent = source;
+    sourceView.hidden = false;
+    sourceView.scrollTop = 0;
+    sourceView.scrollLeft = 0;
+  }
+
+  function showReaderError(error) {
+    reader.dataset.state = "error";
+    renderedView.hidden = true;
+    sourceView.hidden = true;
+    readerStatus.hidden = false;
+    readerStatus.replaceChildren();
+    var title = document.createElement("strong");
+    title.textContent = error && error.status === 403 ? "GitHub’s preview limit was reached" :
+      "This file could not be previewed";
+    var explanation = document.createElement("span");
+    explanation.textContent = error && error.status === 403 ?
+      "GitHub limits anonymous file requests. The repository itself is still available." :
+      "It may have moved, be too large, or no longer be public.";
+    var link = document.createElement("a");
+    link.href = openSource.href;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.textContent = "Open it on GitHub →";
+    readerStatus.append(title, explanation, link);
+  }
+
+  function displayPath(path) {
+    return path === "__readme" ? "README" : path;
+  }
+
+  function updateSourceLink() {
+    openSource.href = currentPath === "__readme" ? repoBase :
+      repoBase + "/blob/HEAD/" + encodedPath(currentPath);
+  }
+
+  function safeFragment(markup, path) {
+    var template = document.createElement("template");
+    template.innerHTML = markup;
+    var content = template.content;
+
+    content.querySelectorAll("script,style,link,meta,base,iframe,object,embed,form,button,textarea,select," +
+      "svg,math,video,audio")
+      .forEach(function (element) { element.remove(); });
+    content.querySelectorAll("*").forEach(function (element) {
+      Array.from(element.attributes).forEach(function (attribute) {
+        if (/^on/i.test(attribute.name) ||
+            /^(style|srcdoc|srcset|poster|action|formaction|form|autofocus|name|xlink:href)$/i.test(attribute.name))
+          element.removeAttribute(attribute.name);
+      });
+    });
+    content.querySelectorAll("input").forEach(function (input) {
+      if ((input.getAttribute("type") || "").toLowerCase() !== "checkbox") return input.remove();
+      input.disabled = true;
+    });
+
+    var ids = Object.create(null);
+    content.querySelectorAll("[id]").forEach(function (element, index) {
+      var old = element.id;
+      var clean = old.toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/^-|-$/g, "") || "part";
+      var next = "source-" + clean + "-" + index;
+      ids[old] = next;
+      element.id = next;
+    });
+
+    content.querySelectorAll("a[href]").forEach(function (link) {
+      var href = link.getAttribute("href") || "";
+      if (href.charAt(0) === "#") {
+        var target = href.slice(1);
+        try { target = decodeURIComponent(target); } catch (_) {}
+        link.setAttribute("href", ids[target] ? "#" + ids[target] : "#source-preview");
+      } else {
+        href = resolveRepositoryUrl(href, path, false);
+        if (!href) return link.removeAttribute("href");
+        link.href = href;
+        link.target = "_blank";
+        link.rel = "nofollow noopener noreferrer";
+      }
+    });
+
+    content.querySelectorAll("img[src]").forEach(function (image) {
+      var src = resolveRepositoryUrl(image.getAttribute("src") || "", path, true);
+      if (!src) return image.remove();
+      image.src = src;
+      image.loading = "lazy";
+      image.decoding = "async";
+    });
+    return content;
+  }
+
+  function resolveRepositoryUrl(value, path, media) {
+    value = value.trim();
+    if (!value || /^(javascript|vbscript|data):/i.test(value)) return "";
+    if (/^(https?:|mailto:)/i.test(value)) return value;
+    if (value.charAt(0) === "#") return value;
+
+    var hash = "";
+    var query = "";
+    var hashAt = value.indexOf("#");
+    if (hashAt >= 0) { hash = value.slice(hashAt); value = value.slice(0, hashAt); }
+    var queryAt = value.indexOf("?");
+    if (queryAt >= 0) { query = value.slice(queryAt); value = value.slice(0, queryAt); }
+    var parts = value.charAt(0) === "/" || path === "__readme" ? [] : path.split("/").slice(0, -1);
+    value.split("/").forEach(function (part) {
+      if (!part || part === ".") return;
+      if (part === "..") parts.pop();
+      else parts.push(part);
+    });
+    var resolved = parts.map(encodeURIComponent).join("/");
+    var base = media ? "https://raw.githubusercontent.com/" + nwo + "/HEAD/" :
+      repoBase + "/blob/HEAD/";
+    return base + resolved + query + hash;
+  }
+}
+
 /* The star count and the last push.
 
    These are the only two facts on the page that change daily, and they are read from a file here
@@ -84,8 +440,6 @@ if (copy && navigator.clipboard && navigator.clipboard.writeText && window.isSec
    Failure is silent by design. The three spans are hidden until this succeeds, so a 404, an offline
    reader or a parse error leaves a page that is missing two figures rather than a page with a broken
    promise on it -- and every other fact on it was in the initial response. */
-var root = document.documentElement.dataset.root || "";
-var nwo = document.documentElement.dataset.nwo;
 if (nwo && window.fetch) {
   fetch(root + "live.json").then(function (r) {
     return r.ok ? r.json() : Promise.reject(r.status);

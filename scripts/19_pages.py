@@ -38,6 +38,7 @@ spec.loader.exec_module(b17)
 # `17_markdown` puts `scripts/` on the path for its own plain-named siblings, but relying on that as a side
 # effect of somebody else's import is how this breaks the day the import order changes. Stated here.
 sys.path.insert(0, str(Path(__file__).parent))
+import app_flags  # noqa: E402
 import pagemin  # noqa: E402
 
 newness = b17.newness
@@ -46,6 +47,7 @@ b16 = b17.b16
 tax = b17.tax
 DASH = b16.DASH
 REPO = b17.REPO
+APP_FLAGS = app_flags.FLAGS
 
 # How many curated lists the atlas is built from, read off the parser's own table rather than written
 # down here. The page states it four times -- the heading, both social descriptions and the footer --
@@ -390,7 +392,13 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
     beacon's own marker comments survive it. 36,753 B gzipped becomes 14,448.
     """
     stamp_iso, stamp_utc = built()
+    default_view = "cards" if APP_FLAGS["index.card_view"] else "table"
+    deployment_badge = DEPLOYMENT_BADGE if APP_FLAGS["index.deployment_badge"] else ""
     return (pagemin.strip_page(page)
+            .replace("__DEFAULT_VIEW__", default_view)
+            .replace("__INDEX_SCREENSHOTS__", "on" if APP_FLAGS["index.project_screenshots"] else "off")
+            .replace("__APP_FLAGS__", app_flags.browser_json(APP_FLAGS))
+            .replace("__DEPLOYMENT_BADGE__", deployment_badge)
             .replace("__BUILT__", stamp_iso)
             .replace("__BUILT_UTC__", stamp_utc)
             .replace("__TOPICLINKS__", facet_links(data["cats"], "topic"))
@@ -412,13 +420,21 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             .replace("__ANALYTICS__", beacon()))
 
 
+DEPLOYMENT_BADGE = r'''<a class="stamp" id="deployed" href="https://github.com/__REPO__/deployments"
+       title="When this copy of the site was published."><span class="k"><svg class="deploy-icon"
+        viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.25"
+        fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.4v4l2.7 1.7"
+        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Last deployed</span>
+      <span class="v"><time datetime="__BUILT__">__BUILT_UTC__</time></span></a>'''
+
+
 PAGE = r"""<!doctype html>
 <!-- `data-view` here as well as in `state`, because the reader looks at this page for the length of a
      561 KB fetch before any script has an opinion about it. Without it the table's column headings sit
      over an empty body until `data.json` lands and then vanish; with it the default view is the one that
      was there all along. A `#view=table` link still lands on the table -- `readHash` cannot run before
      the data either way, so this attribute governs the wait and nothing more. Keep the two in step. -->
-<html lang="en" data-theme="dark" data-view="cards">
+<html lang="en" data-theme="dark" data-view="__DEFAULT_VIEW__" data-index-screenshots="__INDEX_SCREENSHOTS__">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -557,29 +573,21 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
    The two dates are not the same fact -- this one is when the data was captured, the badge is when the
    copy was published -- but "is this current" is one question, and it only needs one answer. */
 .stale{color:var(--warn);font-weight:600}
-/* The "last deployed" badge, drawn to match the shields.io badges in the README rather than fetched from
-   shields.io. Fetching one is not an option here: the value is a timestamp, so the URL would have to be
-   regenerated on every build, the badge would still be a third-party request on the critical path of every
-   page view, and it could never be corrected at load by `deployStamp` -- an <img> cannot be re-rendered
-   from a response header.
-   Every number below is read off the SVG shields actually serves for `?style=for-the-badge`, not guessed:
-   28px tall, 10px Verdana, 12px gutters, square corners, label in normal weight on #555 and value in bold
-   on the colour. The tracking is the one thing shields does not express as a property -- it forces each run
-   of text to a computed width with `textLength` and lets the renderer distribute the slack -- so it is set
-   here directly, at the value that lands both segments on shields' own rect widths for this badge (122.25
-   and 176.0, measured, not guessed). That stays true for every date this will ever print: the value is
-   always exactly 20 characters and Verdana's digits are tabular, so the string's width never moves. The
-   right gutter gives the tracking back, because CSS letter-spacing applies after the final character too
-   and would otherwise push the text half a pixel off-centre inside its own box.
-   Fixed hexes rather than theme variables, and #1a7f37 is the README's own green: those badges are images
-   and look identical in GitHub's light and dark themes, so a stamp that repainted itself with this site's
-   theme would be the one thing in the family that did not match. Both fills clear 4.5:1 against white. */
-.stamp{display:inline-flex;height:28px;margin:10px 0 0;text-decoration:none;
-  font-family:Verdana,Geneva,DejaVu Sans,sans-serif;font-size:10px;line-height:28px;
-  letter-spacing:1.28px;text-transform:uppercase;white-space:nowrap}
-.stamp>span{padding:0 10.72px 0 12px;color:#fff}
-.stamp .k{background:#555}
+/* The last-deployment badge is local markup rather than a shields.io image: `deployStamp` can correct
+   its value from the response header, there is no third-party request on first paint, and the clock icon
+   remains crisp at every pixel density. It borrows the README badges' two-segment shape and fixed colours
+   while deliberately sitting one size below them -- 23px rather than 28px, 9px type rather than 10px,
+   and tighter gutters. The exact UTC minute remains readable, but this status no longer competes with the
+   project count above it. Fixed hexes are intentional: README badges do not repaint between GitHub's light
+   and dark themes, and both fills clear 4.5:1 against white. */
+.stamp{display:inline-flex;height:23px;margin:8px 0 0;border-radius:5px;overflow:hidden;
+  text-decoration:none;font-family:Verdana,Geneva,DejaVu Sans,sans-serif;font-size:9px;
+  line-height:23px;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+.stamp>span{padding:0 7.4px 0 8px;color:#fff}
+.stamp .k{display:flex;align-items:center;gap:5px;background:#555}
 .stamp .v{background:#1a7f37;font-weight:700}
+.deploy-icon{width:11px;height:11px;flex:0 0 11px}
 /* Amber on the same fortnight the snapshot text uses, so the header has one staleness threshold and not
    two. Recoloured rather than relabelled, and the badge's own tooltip says what the colour means. */
 .stamp.late .v{background:#9a6700}
@@ -588,12 +596,8 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
    affordance a ring gives just as clearly. */
 .stamp:hover,.stamp:focus-visible{box-shadow:0 0 0 2px var(--bar)}
 .stamp:focus-visible{outline:none}
-/* At its full width the badge is 298px, which needs 338px of viewport once the header's own gutters are
-   paid, so on a 320px phone it was the one element on the page wide enough to give the whole document a
-   horizontal scrollbar -- measured: 305px of content became 312px. What gives way is the label, never the
-   value: the timestamp is the thing the badge exists to say, and "DEPLOYED 2026-09-06 18:07 UTC" loses no
-   meaning at all. 360px rather than 338px so the rule lands on a phone width rather than mid-band. */
-@media (max-width:360px){.stamp .lw{display:none}}
+/* The tighter badge fits a 320px phone with both words intact, so its accessible and visible labels stay
+   the same at every width. */
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 .top nav{font-size:13px;color:var(--muted);text-align:right;line-height:1.9}
 button{font:inherit;cursor:pointer}
@@ -1086,6 +1090,13 @@ html[data-view=cards] td.tg{grid-column:1/-1;grid-row:5;margin-top:9px}
 html[data-view=cards] td.lc{grid-column:1/-1;grid-row:6;margin-top:3px;text-align:left}
 html[data-view=cards] td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
 html[data-view=cards] td.lc .meta br{display:none}
+/* Close the banner slot when the screenshot kill switch omits the cell. */
+html[data-view=cards][data-index-screenshots=off] td.rk{grid-row:1;padding-top:10px}
+html[data-view=cards][data-index-screenshots=off] td.st-c{grid-row:1;padding-top:10px}
+html[data-view=cards][data-index-screenshots=off] td.pj{grid-row:2}
+html[data-view=cards][data-index-screenshots=off] td.ds{grid-row:3}
+html[data-view=cards][data-index-screenshots=off] td.tg{grid-row:4}
+html[data-view=cards][data-index-screenshots=off] td.lc{grid-row:5}
 /* 44em is a measure for a line of prose in a wide table cell. Inside a 290px card it is not a constraint
    at all, and leaving it there only means the three of them disagree about what the card's width is. */
 html[data-view=cards] .desc,html[data-view=cards] .cmdrow,html[data-view=cards] .cmd{max-width:none}
@@ -1154,15 +1165,12 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
       __SNAPSHOT__</span></p>
     <p class="blurb" id="ctx"></p>
     <!-- The DOM text is sentence case and the uppercase is `text-transform`, so the accessible name reads
-         "Last deployed 2026-09-06 18:07 UTC" rather than being spelled out, and no aria-label is needed to
-         paper over the styling. `<time>` because this is a timestamp and something will want to read it.
-         The href goes to the deployment history, which is where the badge's own claim can be checked.
-         The line break between the two spans is load-bearing: without a text node between them the
-         accessible name comes out as "Last deployed2026-09-06 18:07 UTC", run together. A flex container
-         drops whitespace-only children, so it costs nothing in layout. -->
-    <a class="stamp" id="deployed" href="https://github.com/__REPO__/deployments"
-       title="When this copy of the site was published."><span class="k"><span class="lw">Last </span>deployed</span>
-      <span class="v"><time datetime="__BUILT__">__BUILT_UTC__</time></span></a>
+         "Last deployed 2026-09-06 18:07 UTC" rather than being spelled out. The clock is decorative and
+         hidden from that name; `<time>` carries the timestamp for machines. The href goes to deployment
+         history, where the badge's claim can be checked. The line break between the two spans is
+         load-bearing: without its text node the accessible name runs "deployed2026" together. A flex
+         container drops whitespace-only children, so it costs nothing in layout. -->
+    __DEPLOYMENT_BADGE__
   </div>
   <nav>
     <a href="https://github.com/__REPO__">Repository</a> ·
@@ -1317,6 +1325,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 
 <script>
 const PAGE_SIZE = 120;
+const FLAGS = __APP_FLAGS__;
 // Cards, not the table, because the screenshot is the reason to open this page rather than read
 // `mega-list/`: a card carries the project's own banner and a table row has nowhere to put one. The table
 // is still the better view for scanning 120 rows against each other, so it keeps its button and gets a
@@ -1327,7 +1336,7 @@ const PAGE_SIZE = 120;
 // lands. The two have to agree: disagreeing would show the table's column headings over an empty body for
 // the length of a 561 KB fetch and then replace them with cards.
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
-               saved: false, sort: "relevance", shown: PAGE_SIZE, view: "cards"};
+               saved: false, sort: "relevance", shown: PAGE_SIZE, view: "__DEFAULT_VIEW__"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
 
 // The reader's saved projects, as a Set of `owner/name`. Two things it deliberately is not:
@@ -2723,10 +2732,14 @@ function render() {
     // row a reader wants to take away, and taking it meant selecting wrapped monospace text without
     // catching the blurb above it. The name is in the label because a screen-reader user arrives at
     // "Copy" 120 times a page and needs to know which project this one belongs to.
-    const cmd = r.install
+    const cmd = FLAGS["index.install_commands"] && r.install
       ? '<div class="cmdrow"><code class="cmd">' + esc(r.install) + "</code>" +
         (CAN_COPY ? '<button class="copy" data-cmd="' + esc(r.install) +
           '" aria-label="Copy install command for ' + esc(r.name) + '">Copy</button>' : "") + "</div>"
+      : "";
+    const shot = FLAGS["index.project_screenshots"]
+      ? '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
+        '<img loading="lazy" decoding="async" alt="" data-src="' + img + '"></a></td>'
       : "";
     return "<tr>" +
       '<td class="n rk">' + (i + 1) + "</td>" +
@@ -2744,8 +2757,7 @@ function render() {
       // `data-src` rather than `src`, and `cardArt()` below decides when it becomes one. `loading="lazy"`
       // stays on the tag: once the src is set it is still the right hint for a picture that has since been
       // scrolled away from, and it costs nothing to leave the browser's own heuristic in play behind ours.
-      '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
-        '<img loading="lazy" decoding="async" alt="" data-src="' + img + '"></a></td>' +
+      shot +
       '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on +
         // The way out. owner/name was already sitting under every title reading like a GitHub path, so
         // making it the outward link costs no new text and needs no new label -- "openclaw/openclaw" is a
@@ -2791,7 +2803,9 @@ function render() {
         ? ", within your other filters" : "") + ":</p>"
     : "";
   out.innerHTML = note +
-    "<table><thead><tr><th class='n'>#</th><th class='shot'>Shot</th><th class='pj'>Project</th>" +
+    "<table><thead><tr><th class='n'>#</th>" +
+    (FLAGS["index.project_screenshots"] ? "<th class='shot'>Shot</th>" : "") +
+    "<th class='pj'>Project</th>" +
     "<th class='n st-c'>Stars</th>" +
     "<th class='hide tg'>Topic &amp; targets</th><th class='ds'>What it does</th>" +
     "<th class='c hide lc'>Lang / licence / push</th></tr></thead><tbody>" + rows +

@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/repo/shengranhu/adas/">
 <meta property="og:image" content="https://raw.githubusercontent.com/ShengranHu/ADAS/main/misc/algo.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#127760;</text></svg>">
-<meta name="theme-color" id="tc" content="#181f21">
+<meta name="theme-color" id="tc" content="#0B0B10">
 <script>
 try {
   var t = localStorage.getItem("theme");
@@ -23,7 +23,7 @@ try {
   // re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+  document.getElementById("tc").content = t === "light" ? "#FCFCFD" : "#0B0B10";
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -61,6 +61,43 @@ try {
   <div class="cmdrow"><code class="cmd" id="cmd">git clone https://github.com/ShengranHu/ADAS.git</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for ADAS">Copy</button></div>
 </section>
 
+<section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
+  <div class="preview-intro">
+    <div>
+      <p class="eyebrow">Repository reader</p>
+      <h2 id="source-preview-title">Explore before you clone</h2>
+      <p class="lead">Read the project’s README, skills and supporting Markdown here. Rendered view is
+        shown first; source is one click away when you need the exact text.</p>
+    </div>
+    <span class="source-live"><i aria-hidden="true"></i>Fetched from GitHub</span>
+  </div>
+  <div class="reader" data-state="loading">
+    <div class="reader-chrome" aria-label="Repository file preview controls">
+      <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <label class="file-picker">
+        <span class="sr-only">Markdown file</span>
+        <select id="source-file" disabled aria-label="Markdown file">
+          <option>Finding Markdown files…</option>
+        </select>
+      </label>
+      <div class="reader-tabs" aria-label="Preview mode">
+        <button type="button" class="viewtab on" id="rendered-tab" aria-pressed="true">Rendered</button>
+        <button type="button" class="viewtab" id="source-tab" aria-pressed="false">Source</button>
+      </div>
+      <a class="open-source" id="open-source" href="https://github.com/ShengranHu/ADAS" target="_blank"
+         rel="noopener">Open on GitHub <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="reader-status" id="reader-status" role="status" aria-live="polite">
+      <span class="loader" aria-hidden="true"></span>
+      <span>Loading the project’s README…</span>
+    </div>
+    <article class="markdown-body" id="rendered-view" aria-label="Rendered Markdown preview" hidden></article>
+    <pre class="source-code" id="source-view" aria-label="Markdown source" tabindex="0" hidden><code></code></pre>
+  </div>
+  <p class="reader-note" id="reader-note">Public files are loaded on demand from the repository. The
+    atlas does not copy or modify them.</p>
+</section>
+
 <section>
   <h2>Screenshot</h2>
   <figure class="shot">
@@ -78,7 +115,7 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the eleven lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/kyrolabs/awesome-agents">Agents (kyrolabs)</a></li></ul>
+  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/kyrolabs/awesome-agents">Agents (kyrolabs)</a></li></ul>
 </section>
 
 <section>
@@ -98,9 +135,9 @@ try {
 </div></main>
 
 <footer><div class="wrap">
-  One project from the <a href="../../../">Awesome Agentic Atlas</a>, which merges eleven
-  awesome-lists into a single index; all eleven are credited in the
-  <a href="https://github.com/crazy54/awesome-agentic-atlas#the-eleven-lists">repository</a>. The description, install
+  One project from the <a href="../../../">Awesome Agentic Atlas</a>, which merges 39
+  awesome-lists into a single index; all 39 are credited in the
+  <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. The description, install
   command and platform verdicts are derived from this project's own README, install route, CI
   configuration and release assets. Star count and last push are read from the atlas dataset, which is
   a dated snapshot rather than a live figure — <a href="https://github.com/ShengranHu/ADAS">GitHub</a> is authoritative

@@ -1,0 +1,13 @@
+{
+  "index.card_view": 1,
+  "index.deployment_badge": 1,
+  "index.project_screenshots": 1,
+  "index.install_commands": 1,
+  "detail.install_command": 1,
+  "detail.repository_reader": 1,
+  "detail.screenshot": 1,
+  "detail.platform_support": 1,
+  "detail.provenance": 1,
+  "detail.classification": 1,
+  "detail.related_projects": 1
+}

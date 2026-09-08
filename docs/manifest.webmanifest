@@ -1,7 +1,7 @@
 {
   "name": "Awesome Agentic Atlas",
   "short_name": "Atlas",
-  "description": "Every agentic AI project from eleven awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.",
+  "description": "Every agentic AI project from 39 awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.",
   "start_url": ".",
   "scope": "./",
   "display": "standalone",

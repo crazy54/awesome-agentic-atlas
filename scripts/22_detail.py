@@ -71,13 +71,14 @@ a link to where they are authoritative anyway.
 
   -- Three more decisions --
 
-No README excerpt, which the ticket asks for. The cached READMEs live in `cache/readmes/`, and `cache/`
+No README bytes are copied into these pages. The cached READMEs live in `cache/readmes/`, and `cache/`
 is gitignored precisely because it is "verbatim copies of 1,293 other people's READMEs ... not ours to
 redistribute". Reading it would make these pages depend on a 64 MB artefact a fresh clone does not have,
-so the same clone would rebuild 1,294 *different* pages -- the exact failure `20_landing.py` avoids by
-reading `data.json` and nothing else. It would also republish third-party prose the repository has
-deliberately decided not to republish, and add roughly half a kilobyte of churning text per page. The
-curated blurb, which is this project's own writing and is already in `data.json`, does the job.
+so the same clone would rebuild 1,294 *different* pages. Instead `detail.js` asks GitHub for the preferred
+README and repository tree after paint. GitHub renders the Markdown at its authoritative source; the
+reader can then switch among README, SKILL.md and other Markdown files without the atlas storing any of
+their prose. A failed or rate-limited request leaves the complete curated detail page and a direct link
+to the repository, while a successful one adds the pre-clone reading surface without build churn.
 
 The screenshot is the remote URL the rest of the site already uses. There are no images under `docs/`
 at all: `cache/shots/` is gitignored, and the site points at each project's own asset or falls back to
@@ -118,6 +119,7 @@ spec.loader.exec_module(b19)
 
 SITE = b19.b17.SITE
 REPO = b19.REPO
+APP_FLAGS = b19.APP_FLAGS
 
 # How many related projects a page offers. Eight is where the section still reads as a recommendation
 # rather than a second index: the two biggest topics have over 300 members each, and a page that listed
@@ -396,7 +398,7 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
     # filter still live. Quoted because 293 of these names contain a slash and three an ampersand, both
     # of which are structural inside a query string.
     live = repo.rel() + "#q=" + urllib.parse.quote(repo.name, safe="")
-    peers = kin(repo, by_cat)
+    peers = kin(repo, by_cat) if APP_FLAGS["detail.related_projects"] else []
     install = (f'<div class="cmdrow"><code class="cmd" id="cmd">{esc(row["install"])}</code>'
                '<button class="copy" hidden data-for="cmd" '
                f'aria-label="Copy install command for {esc(repo.name)}">Copy</button></div>'
@@ -408,6 +410,84 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
         f'<span class="nwo">{esc(p.row["nwo"])}</span>'
         + (f'<span class="desc">{esc(clip(p.row["blurb"], 150))}</span>' if p.row["blurb"] else "")
         + "</li>" for p in peers)
+
+    install_section = f'''<section>
+  <h2>Install</h2>
+  {install}
+</section>''' if APP_FLAGS["detail.install_command"] else ""
+
+    reader_section = f'''<section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
+  <div class="preview-intro">
+    <div>
+      <p class="eyebrow">Repository reader</p>
+      <h2 id="source-preview-title">Explore before you clone</h2>
+      <p class="lead">Read the project’s README, skills and supporting Markdown here. Rendered view is
+        shown first; source is one click away when you need the exact text.</p>
+    </div>
+    <span class="source-live"><i aria-hidden="true"></i>Fetched from GitHub</span>
+  </div>
+  <div class="reader" data-state="loading">
+    <div class="reader-chrome" aria-label="Repository file preview controls">
+      <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <label class="file-picker">
+        <span class="sr-only">Markdown file</span>
+        <select id="source-file" disabled aria-label="Markdown file">
+          <option>Finding Markdown files…</option>
+        </select>
+      </label>
+      <div class="reader-tabs" aria-label="Preview mode">
+        <button type="button" class="viewtab on" id="rendered-tab" aria-pressed="true">Rendered</button>
+        <button type="button" class="viewtab" id="source-tab" aria-pressed="false">Source</button>
+      </div>
+      <a class="open-source" id="open-source" href="{esc(row["url"])}" target="_blank"
+         rel="noopener">Open on GitHub <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="reader-status" id="reader-status" role="status" aria-live="polite">
+      <span class="loader" aria-hidden="true"></span>
+      <span>Loading the project’s README…</span>
+    </div>
+    <article class="markdown-body" id="rendered-view" aria-label="Rendered Markdown preview" hidden></article>
+    <pre class="source-code" id="source-view" aria-label="Markdown source" tabindex="0" hidden><code></code></pre>
+  </div>
+  <p class="reader-note" id="reader-note">Public files are loaded on demand from the repository. The
+    atlas does not copy or modify them.</p>
+</section>''' if APP_FLAGS["detail.repository_reader"] else ""
+
+    screenshot_section = f'''<section>
+  <h2>Screenshot</h2>
+  <figure class="shot">
+    <img loading="lazy" decoding="async" src="{esc(repo.shot)}"
+         alt="Screenshot or social card for {esc(repo.name)}">
+    <figcaption>{"The project's own screenshot" if row["img"] else
+                 "GitHub's social card — no screenshot was found for this project"}, fetched from
+      source rather than copied into this repository.</figcaption>
+  </figure>
+</section>''' if APP_FLAGS["detail.screenshot"] else ""
+
+    platform_section = f'''<section>
+  <h2>Platform support</h2>
+  {platforms(repo, data["os"])}
+</section>''' if APP_FLAGS["detail.platform_support"] else ""
+
+    provenance_section = f'''<section>
+  <h2>Where it came from</h2>
+  {provenance(repo, lists)}
+</section>''' if APP_FLAGS["detail.provenance"] else ""
+
+    classification_section = f'''<section>
+  <h2>How it is classified</h2>
+  <p class="lead">One topic, {len(row["target_names"]) or "no"}
+    {"harness" if len(row["target_names"]) == 1 else "harnesses"}. Each link is a prerendered page of
+    everything else in that slice.</p>
+  <div class="chips">{facets(repo)}</div>
+</section>''' if APP_FLAGS["detail.classification"] else ""
+
+    related_section = f'''<section class="kin">
+  <h2>Related in {esc(row["cat_name"])}</h2>
+  <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
+    lists agreed on.</p>
+  <ul class="kinlist">{peer_html}</ul>
+</section>''' if peers else ""
 
     return f"""<!doctype html>
 <html lang="en" data-theme="dark" data-nwo="{esc(row["nwo"])}" data-root="{repo.rel()}">
@@ -454,46 +534,19 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
 </div></header>
 
 <main><div class="wrap">
-<section>
-  <h2>Install</h2>
-  {install}
-</section>
+{install_section}
 
-<section>
-  <h2>Screenshot</h2>
-  <figure class="shot">
-    <img loading="lazy" decoding="async" src="{esc(repo.shot)}"
-         alt="Screenshot or social card for {esc(repo.name)}">
-    <figcaption>{"The project's own screenshot" if row["img"] else
-                 "GitHub's social card — no screenshot was found for this project"}, fetched from
-      source rather than copied into this repository.</figcaption>
-  </figure>
-</section>
+{reader_section}
 
-<section>
-  <h2>Platform support</h2>
-  {platforms(repo, data["os"])}
-</section>
+{screenshot_section}
 
-<section>
-  <h2>Where it came from</h2>
-  {provenance(repo, lists)}
-</section>
+{platform_section}
 
-<section>
-  <h2>How it is classified</h2>
-  <p class="lead">One topic, {len(row["target_names"]) or "no"}
-    {"harness" if len(row["target_names"]) == 1 else "harnesses"}. Each link is a prerendered page of
-    everything else in that slice.</p>
-  <div class="chips">{facets(repo)}</div>
-</section>
+{provenance_section}
 
-{f'''<section class="kin">
-  <h2>Related in {esc(row["cat_name"])}</h2>
-  <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
-    lists agreed on.</p>
-  <ul class="kinlist">{peer_html}</ul>
-</section>''' if peers else ""}
+{classification_section}
+
+{related_section}
 </div></main>
 
 <footer><div class="wrap">
@@ -771,6 +824,118 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
 .chips{margin-top:2px}
 .util{flex-shrink:0}
 section{margin:34px 0 0;border-top:1px solid var(--grid);padding-top:22px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* The repository reader is deliberately its own small colour system. It reads like a document laid
+   over the atlas rather than another metadata panel, while the cool blue and violet still belong to
+   the parent palette. These tokens are scoped so the byte-identical site palette above stays the one
+   source of truth for every element outside the reader. */
+.reader{
+  --read-bg:#0c111d;--read-panel:#111827;--read-raised:#182235;--read-ink:#e8eef8;
+  --read-muted:#9aa9bf;--read-line:#293753;--read-link:#78c7ff;--read-violet:#c4a7ff;
+  --read-gold:#f5c76f;--read-code:#080c14;--read-good:#72ddb5;--read-quote:#17243a;
+  overflow:hidden;border:1px solid var(--read-line);border-radius:14px;background:var(--read-panel);
+  color:var(--read-ink);box-shadow:0 20px 55px rgba(0,0,0,.28),0 0 0 1px rgba(120,199,255,.04)}
+.reader [hidden]{display:none!important}
+html[data-theme=light] .reader{
+  --read-bg:#f7f4ee;--read-panel:#fffdf8;--read-raised:#eee9df;--read-ink:#202938;
+  --read-muted:#647084;--read-line:#d8d1c4;--read-link:#075985;--read-violet:#6d28d9;
+  --read-gold:#9a5b00;--read-code:#f1ede5;--read-good:#08775a;--read-quote:#f2eee5;
+  box-shadow:0 18px 46px rgba(62,48,27,.12),0 0 0 1px rgba(7,89,133,.03)}
+.preview-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:14px}
+.preview-intro h2{margin-bottom:6px;color:var(--ink);font-size:19px;text-transform:none;letter-spacing:-.01em}
+.preview-intro .lead{margin:0;font-size:14.5px}
+.eyebrow{margin:0 0 3px;color:var(--bar);font-size:11px;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase}
+.source-live{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;
+  white-space:nowrap;margin-bottom:3px}
+.source-live i{width:7px;height:7px;border-radius:50%;background:var(--good);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 14%,transparent)}
+.reader-chrome{min-height:55px;display:flex;align-items:center;gap:12px;padding:9px 12px;
+  background:var(--read-bg);border-bottom:1px solid var(--read-line)}
+.window-dots{display:flex;gap:6px;flex:0 0 auto}
+.window-dots i{width:9px;height:9px;border-radius:50%;background:#ff6b6b}
+.window-dots i:nth-child(2){background:var(--read-gold)}
+.window-dots i:nth-child(3){background:var(--read-good)}
+.file-picker{min-width:0;flex:1;position:relative}
+.file-picker:after{content:"⌄";position:absolute;right:11px;top:50%;transform:translateY(-55%);
+  color:var(--read-muted);pointer-events:none;font-size:15px}
+.file-picker select{width:100%;height:35px;appearance:none;border:1px solid var(--read-line);
+  border-radius:7px;background:var(--read-raised);color:var(--read-ink);padding:0 32px 0 11px;
+  font:12.5px/1 "Cascadia Code","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  text-overflow:ellipsis;cursor:pointer}
+.file-picker select:focus,.viewtab:focus-visible,.open-source:focus-visible{
+  outline:2px solid var(--read-link);outline-offset:2px}
+.file-picker select:disabled{cursor:wait;color:var(--read-muted)}
+.reader-tabs{display:flex;padding:3px;border-radius:8px;background:var(--read-raised);flex:0 0 auto}
+.viewtab{border:0;border-radius:6px;padding:6px 10px;background:transparent;color:var(--read-muted);
+  font-size:12px;line-height:1.2}
+.viewtab:hover{color:var(--read-ink)}
+.viewtab.on{background:var(--read-panel);color:var(--read-ink);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.open-source{color:var(--read-link);font-size:12px;white-space:nowrap}
+.reader-status{min-height:240px;display:flex;align-items:center;justify-content:center;gap:11px;
+  padding:34px;text-align:center;color:var(--read-muted);font-size:14px}
+.reader[data-state=error] .reader-status{min-height:190px;flex-direction:column}
+.reader-status a{color:var(--read-link);font-weight:600}
+.loader{width:18px;height:18px;border:2px solid var(--read-line);border-top-color:var(--read-link);
+  border-radius:50%;animation:reader-spin .8s linear infinite}
+@keyframes reader-spin{to{transform:rotate(360deg)}}
+.markdown-body{max-height:760px;overflow:auto;padding:30px clamp(18px,4vw,42px) 46px;
+  background:var(--read-panel);color:var(--read-ink);
+  font:16px/1.72 Charter,"Bitstream Charter","Sitka Text",Cambria,Georgia,serif;
+  scrollbar-color:var(--read-line) var(--read-bg)}
+.markdown-body>*:first-child{margin-top:0!important}
+.markdown-body>*:last-child{margin-bottom:0!important}
+.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,
+.markdown-body h5,.markdown-body h6{color:var(--read-ink);line-height:1.22;margin:1.55em 0 .65em;
+  font-family:"Aptos Display","Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;
+  font-weight:720;letter-spacing:-.025em;text-transform:none}
+.markdown-body h1{font-size:2em;padding-bottom:.42em;border-bottom:1px solid var(--read-line)}
+.markdown-body h2{font-size:1.52em;padding-bottom:.35em;border-bottom:1px solid var(--read-line)}
+.markdown-body h3{font-size:1.23em;color:var(--read-violet)}
+.markdown-body h4{font-size:1.05em;color:var(--read-gold)}
+.markdown-body p,.markdown-body ul,.markdown-body ol{margin:0 0 1em}
+.markdown-body li+li{margin-top:.28em}
+.markdown-body li::marker{color:var(--read-violet);font-weight:700}
+.markdown-body a{color:var(--read-link);text-decoration:underline;text-decoration-thickness:.07em;
+  text-underline-offset:.17em}
+.markdown-body a:hover{color:var(--read-violet)}
+.markdown-body strong{color:var(--read-ink);font-weight:750}
+.markdown-body blockquote{margin:1.2em 0;padding:.7em 1.05em;border-left:4px solid var(--read-violet);
+  border-radius:0 8px 8px 0;background:var(--read-quote);color:var(--read-muted)}
+.markdown-body blockquote>:last-child{margin-bottom:0}
+.markdown-body code,.markdown-body kbd{font:13px/1.55 "Cascadia Code","SFMono-Regular",Consolas,
+  "Liberation Mono",monospace}
+.markdown-body :not(pre)>code{padding:.16em .38em;border:1px solid var(--read-line);border-radius:5px;
+  background:var(--read-code);color:var(--read-gold);font-size:.84em}
+.markdown-body pre{overflow:auto;margin:1.15em 0;padding:16px 18px;border:1px solid var(--read-line);
+  border-radius:9px;background:var(--read-code);color:var(--read-ink);line-height:1.55;
+  box-shadow:inset 3px 0 0 var(--read-violet)}
+.markdown-body pre code{display:block;min-width:max-content;color:inherit;background:transparent}
+/* GitHub's renderer emits Primer-compatible `pl-*` spans for highlighted fenced blocks. The source
+   owns the tokenisation; this small palette supplies the colour without importing all of Primer. */
+.markdown-body .pl-c,.markdown-body .pl-c1{color:var(--read-muted)}
+.markdown-body .pl-k,.markdown-body .pl-ent,.markdown-body .pl-pds{color:var(--read-violet)}
+.markdown-body .pl-s,.markdown-body .pl-s1,.markdown-body .pl-smi{color:var(--read-good)}
+.markdown-body .pl-en,.markdown-body .pl-v,.markdown-body .pl-e{color:var(--read-link)}
+.markdown-body .pl-c1,.markdown-body .pl-mh,.markdown-body .pl-mi{color:var(--read-gold)}
+.markdown-body hr{height:1px;margin:2em 0;border:0;background:var(--read-line)}
+.markdown-body img{max-width:100%;height:auto;border-radius:7px;background:var(--read-bg)}
+.markdown-body table{display:block;width:max-content;max-width:100%;overflow:auto;margin:1.2em 0;
+  border-collapse:collapse;font:13.5px/1.5 "Aptos","Segoe UI",system-ui,sans-serif}
+.markdown-body th,.markdown-body td{padding:8px 11px;border:1px solid var(--read-line);text-align:left}
+.markdown-body th{background:var(--read-raised);color:var(--read-ink)}
+.markdown-body tr:nth-child(even) td{background:color-mix(in srgb,var(--read-raised) 42%,transparent)}
+.markdown-body details{margin:1em 0;padding:10px 13px;border:1px solid var(--read-line);
+  border-radius:8px;background:var(--read-bg)}
+.markdown-body summary{cursor:pointer;color:var(--read-link);font:600 14px/1.4 "Aptos","Segoe UI",sans-serif}
+.markdown-body kbd{display:inline-block;padding:1px 5px;border:1px solid var(--read-line);
+  border-bottom-width:2px;border-radius:4px;background:var(--read-raised);font-size:.75em}
+.source-code{max-height:760px;min-height:280px;overflow:auto;margin:0;padding:25px 28px 40px;
+  border:0;background:var(--read-code);color:var(--read-ink);tab-size:2;white-space:pre;
+  font:13px/1.65 "Cascadia Code","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  scrollbar-color:var(--read-line) var(--read-bg)}
+.reader-note{margin:9px 2px 0;color:var(--muted);font-size:12px}
 /* The install command, and the button that takes it away. Selecting wrapped monospace text without
    catching the paragraph above it is the thing this replaces. */
 .cmdrow{display:flex;gap:10px;align-items:flex-start}
@@ -832,6 +997,17 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
   .cmdrow{flex-direction:column}
   .copy{align-self:flex-start}
   .cta{flex:1;text-align:center}
+  .preview-intro{align-items:flex-start;flex-direction:column;gap:5px}
+  .source-live{margin:0}
+  .reader-chrome{align-items:stretch;flex-wrap:wrap;padding:10px}
+  .window-dots{align-items:center}
+  .file-picker{order:2;flex-basis:100%}
+  .reader-tabs{margin-left:auto}
+  .open-source{align-self:center}
+  .markdown-body{max-height:680px;padding:22px 17px 34px;font-size:15px}
+  .markdown-body h1{font-size:1.65em}
+  .markdown-body h2{font-size:1.35em}
+  .source-code{max-height:680px;padding:20px 17px 32px;font-size:12px}
   /* Four columns of names in 307px is 77px a column. One column, and let it scroll. */
   ul.dir{columns:1}
   /* The evidence sentence is the first thing to go: three columns do not fit, and the verdict word
@@ -839,6 +1015,7 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
      document for a reader who asks for the desktop site, and it is never the only place a fact is. */
   table.os .why,table.os th[scope=col]:last-child{display:none}
 }
+@media(prefers-reduced-motion:reduce){.loader{animation:none}}
 """
 
 # The browser chrome, and the half of the theme that has to be settled before the first pixel.
@@ -867,7 +1044,7 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
 # `data-theme="dark"` is the floor if this throws, which `localStorage` does in some private modes. The
 # key is `theme`, the same string the index writes, so a choice made on the index is honoured here
 # immediately and there is nothing to migrate.
-HEAD_THEME = """<meta name="theme-color" id="tc" content="#181f21">
+HEAD_THEME = """<meta name="theme-color" id="tc" content="#0B0B10">
 <script>
 try {
   var t = localStorage.getItem("theme");
@@ -878,18 +1055,23 @@ try {
   // re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#eef1f2" : "#181f21";
+  document.getElementById("tc").content = t === "light" ? "#FCFCFD" : "#0B0B10";
 } catch (e) {}
 </script>
 """
 
-# One script for 1,295 pages, for the same reason as the stylesheet: ~1 KB inlined 1,295 times is 1.3 MB
-# of repository that gets rewritten whenever a line of it changes.
-JS = """/* Written by scripts/22_detail.py. Shared by every page under docs/repo/.
+# One script for 1,295 pages, for the same reason as the stylesheet: inlining it would multiply every
+# reader improvement across the whole repository. The Markdown preview is intentionally runtime-only:
+# GitHub remains the source of the files and their rendered HTML, while these deterministic pages keep
+# only the controls and presentation.
+JS = r"""/* Written by scripts/22_detail.py. Shared by every page under docs/repo/.
 
-   Three jobs, none of which the page needs in order to be complete: the theme toggle, the copy button,
-   and the two figures that are deliberately not in the HTML. */
+   Four jobs, none of which the page needs in order to be complete: the theme toggle, the copy button,
+   the repository reader, and the two figures that are deliberately not in the HTML. */
 "use strict";
+
+var root = document.documentElement.dataset.root || "";
+var nwo = document.documentElement.dataset.nwo;
 
 /* Not a data fetch and not a framework: the light half of the theme is in detail.css and without a
    switch nothing on these pages can ever reach it.
@@ -952,6 +1134,359 @@ if (copy && navigator.clipboard && navigator.clipboard.writeText && window.isSec
   };
 }
 
+/* The repository reader.
+
+   Nothing fetched here is committed to the atlas. GitHub's Contents endpoint renders the preferred
+   README and any selected Markdown file with the same markup engine GitHub uses on a repository page;
+   its Trees endpoint supplies one file list so SKILL.md and nested documentation are discoverable. Two
+   requests open the reader, subsequent requests happen only when the reader picks another file, and
+   both rendered and source bodies are cached for the rest of this page visit.
+
+   The returned HTML is already sanitised by GitHub. `safeFragment` still strips active document
+   elements and event attributes before it enters this page, because a boundary is worth enforcing at
+   the boundary. It also resolves repository-relative links and images, which otherwise point back into
+   the atlas's /repo/ tree when this page is served from GitHub Pages. */
+var reader = document.querySelector(".reader");
+if (reader && nwo && window.fetch) {
+  var fileSelect = document.getElementById("source-file");
+  var renderedTab = document.getElementById("rendered-tab");
+  var sourceTab = document.getElementById("source-tab");
+  var renderedView = document.getElementById("rendered-view");
+  var sourceView = document.getElementById("source-view");
+  var readerStatus = document.getElementById("reader-status");
+  var readerNote = document.getElementById("reader-note");
+  var openSource = document.getElementById("open-source");
+  var apiBase = "https://api.github.com/repos/" + nwo;
+  var repoBase = "https://github.com/" + nwo;
+  var renderedCache = Object.create(null);
+  var sourceCache = Object.create(null);
+  var currentPath = "__readme";
+  var currentMode = "rendered";
+  var requestNumber = 0;
+  var markdownLimit = 200;
+  var maxMarkdownBytes = 1000000;
+
+  renderedTab.onclick = function () { setReaderMode("rendered"); };
+  sourceTab.onclick = function () { setReaderMode("source"); };
+  fileSelect.onchange = function () {
+    currentPath = fileSelect.value;
+    currentMode = "rendered";
+    paintTabs();
+    updateSourceLink();
+    loadRendered(currentPath);
+  };
+
+  loadPreferredReadme();
+  loadMarkdownFiles();
+
+  function github(path, accept) {
+    return fetch(apiBase + path, {headers: {Accept: accept}}).then(function (response) {
+      if (response.ok) return response;
+      var error = new Error("GitHub returned " + response.status);
+      error.status = response.status;
+      throw error;
+    });
+  }
+
+  function encodedPath(path) {
+    return path.split("/").map(encodeURIComponent).join("/");
+  }
+
+  function contentEndpoint(path) {
+    return path === "__readme" ? "/readme" : "/contents/" + encodedPath(path);
+  }
+
+  function loadPreferredReadme() {
+    var ticket = ++requestNumber;
+    setReaderStatus("Loading the project’s README…");
+    github("/readme", "application/vnd.github.html+json")
+      .then(function (response) { return response.text(); })
+      .then(function (markup) {
+        renderedCache.__readme = markup;
+        if (currentPath !== "__readme") renderedCache[currentPath] = markup;
+        if (ticket !== requestNumber || currentMode !== "rendered") return;
+        showRendered(markup, currentPath);
+      })
+      .catch(function (error) {
+        if (ticket === requestNumber) showReaderError(error);
+      });
+  }
+
+  function loadMarkdownFiles() {
+    github("/git/trees/HEAD?recursive=1", "application/vnd.github+json")
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        var all = (data.tree || []).filter(function (entry) {
+          return entry.type === "blob" && /\.md$/i.test(entry.path) &&
+            (!entry.size || entry.size <= maxMarkdownBytes);
+        }).map(function (entry) { return entry.path; });
+        all.sort(function (a, b) {
+          return fileRank(a) - fileRank(b) || pathDepth(a) - pathDepth(b) ||
+            a.localeCompare(b, undefined, {sensitivity: "base"});
+        });
+
+        var readme = all.find(function (path) { return /^readme(?:\.[^.]+)?\.md$/i.test(path); }) ||
+          all.find(function (path) { return /(^|\/)readme(?:\.[^.]+)?\.md$/i.test(path); });
+        if (readme && currentPath === "__readme") {
+          currentPath = readme;
+          if (renderedCache.__readme) renderedCache[readme] = renderedCache.__readme;
+        }
+
+        var shown = all.slice(0, markdownLimit);
+        fileSelect.replaceChildren();
+        if (!shown.length) {
+          addFileOption(fileSelect, "__readme", "README (preferred)");
+          currentPath = "__readme";
+        } else {
+          var groups = ["Start here", "Skills & agent instructions", "Documentation", "Other Markdown"];
+          groups.forEach(function (label) {
+            var paths = shown.filter(function (path) { return fileGroup(path) === label; });
+            if (label === "Start here" && !readme) paths.unshift("__readme");
+            if (!paths.length) return;
+            var group = document.createElement("optgroup");
+            group.label = label;
+            paths.forEach(function (path) {
+              addFileOption(group, path, path === "__readme" ? "README (preferred)" : path);
+            });
+            fileSelect.appendChild(group);
+          });
+        }
+        fileSelect.value = currentPath;
+        fileSelect.disabled = false;
+        updateSourceLink();
+        var note = all.length + " Markdown file" + (all.length === 1 ? "" : "s") + " found";
+        if (all.length > shown.length) note += "; showing the first " + shown.length;
+        if (data.truncated) note += ". GitHub truncated this unusually large repository tree";
+        readerNote.textContent = note + ". Files are loaded on demand and are not copied into the atlas.";
+      })
+      .catch(function () {
+        fileSelect.replaceChildren();
+        addFileOption(fileSelect, "__readme", "README (preferred)");
+        fileSelect.disabled = true;
+        readerNote.textContent = "The README can still be read here, but GitHub did not provide this " +
+          "repository’s Markdown file list.";
+      });
+  }
+
+  function addFileOption(parent, value, label) {
+    var option = document.createElement("option");
+    option.value = value;
+    option.textContent = label;
+    parent.appendChild(option);
+  }
+
+  function pathDepth(path) {
+    return (path.match(/\//g) || []).length;
+  }
+
+  function fileRank(path) {
+    var base = path.split("/").pop();
+    if (/^readme(?:\.[^.]+)?\.md$/i.test(base)) return 0;
+    if (/^skill\.md$/i.test(base)) return 1;
+    if (/^(agents?|claude)\.md$/i.test(base)) return 2;
+    if (/(^|\/)(skills?|agents?)(\/|$)/i.test(path)) return 3;
+    if (/(^|\/)(docs?|documentation)(\/|$)/i.test(path)) return 4;
+    return 5;
+  }
+
+  function fileGroup(path) {
+    var rank = fileRank(path);
+    if (rank === 0) return "Start here";
+    if (rank <= 3) return "Skills & agent instructions";
+    if (rank === 4) return "Documentation";
+    return "Other Markdown";
+  }
+
+  function loadRendered(path) {
+    if (renderedCache[path]) return showRendered(renderedCache[path], path);
+    var ticket = ++requestNumber;
+    setReaderStatus("Rendering " + displayPath(path) + "…");
+    github(contentEndpoint(path), "application/vnd.github.html+json")
+      .then(function (response) { return response.text(); })
+      .then(function (markup) {
+        renderedCache[path] = markup;
+        if (ticket === requestNumber && currentMode === "rendered" && currentPath === path)
+          showRendered(markup, path);
+      })
+      .catch(function (error) {
+        if (ticket === requestNumber) showReaderError(error);
+      });
+  }
+
+  function loadSource(path) {
+    if (sourceCache[path] !== undefined) return showSource(sourceCache[path]);
+    var ticket = ++requestNumber;
+    setReaderStatus("Loading the source for " + displayPath(path) + "…");
+    github(contentEndpoint(path), "application/vnd.github.raw+json")
+      .then(function (response) { return response.text(); })
+      .then(function (source) {
+        sourceCache[path] = source;
+        if (ticket === requestNumber && currentMode === "source" && currentPath === path)
+          showSource(source);
+      })
+      .catch(function (error) {
+        if (ticket === requestNumber) showReaderError(error);
+      });
+  }
+
+  function setReaderMode(mode) {
+    if (mode === currentMode && !readerStatus.hidden) return;
+    currentMode = mode;
+    paintTabs();
+    if (mode === "source") loadSource(currentPath);
+    else loadRendered(currentPath);
+  }
+
+  function paintTabs() {
+    var rendered = currentMode === "rendered";
+    renderedTab.classList.toggle("on", rendered);
+    sourceTab.classList.toggle("on", !rendered);
+    renderedTab.setAttribute("aria-pressed", rendered ? "true" : "false");
+    sourceTab.setAttribute("aria-pressed", rendered ? "false" : "true");
+  }
+
+  function setReaderStatus(message) {
+    reader.dataset.state = "loading";
+    renderedView.hidden = true;
+    sourceView.hidden = true;
+    readerStatus.hidden = false;
+    readerStatus.replaceChildren();
+    var spinner = document.createElement("span");
+    spinner.className = "loader";
+    spinner.setAttribute("aria-hidden", "true");
+    var text = document.createElement("span");
+    text.textContent = message;
+    readerStatus.append(spinner, text);
+  }
+
+  function showRendered(markup, path) {
+    reader.dataset.state = "ready";
+    readerStatus.hidden = true;
+    sourceView.hidden = true;
+    renderedView.replaceChildren(safeFragment(markup, path));
+    renderedView.hidden = false;
+    renderedView.scrollTop = 0;
+  }
+
+  function showSource(source) {
+    reader.dataset.state = "ready";
+    readerStatus.hidden = true;
+    renderedView.hidden = true;
+    sourceView.querySelector("code").textContent = source;
+    sourceView.hidden = false;
+    sourceView.scrollTop = 0;
+    sourceView.scrollLeft = 0;
+  }
+
+  function showReaderError(error) {
+    reader.dataset.state = "error";
+    renderedView.hidden = true;
+    sourceView.hidden = true;
+    readerStatus.hidden = false;
+    readerStatus.replaceChildren();
+    var title = document.createElement("strong");
+    title.textContent = error && error.status === 403 ? "GitHub’s preview limit was reached" :
+      "This file could not be previewed";
+    var explanation = document.createElement("span");
+    explanation.textContent = error && error.status === 403 ?
+      "GitHub limits anonymous file requests. The repository itself is still available." :
+      "It may have moved, be too large, or no longer be public.";
+    var link = document.createElement("a");
+    link.href = openSource.href;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.textContent = "Open it on GitHub →";
+    readerStatus.append(title, explanation, link);
+  }
+
+  function displayPath(path) {
+    return path === "__readme" ? "README" : path;
+  }
+
+  function updateSourceLink() {
+    openSource.href = currentPath === "__readme" ? repoBase :
+      repoBase + "/blob/HEAD/" + encodedPath(currentPath);
+  }
+
+  function safeFragment(markup, path) {
+    var template = document.createElement("template");
+    template.innerHTML = markup;
+    var content = template.content;
+
+    content.querySelectorAll("script,style,link,meta,base,iframe,object,embed,form,button,textarea,select," +
+      "svg,math,video,audio")
+      .forEach(function (element) { element.remove(); });
+    content.querySelectorAll("*").forEach(function (element) {
+      Array.from(element.attributes).forEach(function (attribute) {
+        if (/^on/i.test(attribute.name) ||
+            /^(style|srcdoc|srcset|poster|action|formaction|form|autofocus|name|xlink:href)$/i.test(attribute.name))
+          element.removeAttribute(attribute.name);
+      });
+    });
+    content.querySelectorAll("input").forEach(function (input) {
+      if ((input.getAttribute("type") || "").toLowerCase() !== "checkbox") return input.remove();
+      input.disabled = true;
+    });
+
+    var ids = Object.create(null);
+    content.querySelectorAll("[id]").forEach(function (element, index) {
+      var old = element.id;
+      var clean = old.toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/^-|-$/g, "") || "part";
+      var next = "source-" + clean + "-" + index;
+      ids[old] = next;
+      element.id = next;
+    });
+
+    content.querySelectorAll("a[href]").forEach(function (link) {
+      var href = link.getAttribute("href") || "";
+      if (href.charAt(0) === "#") {
+        var target = href.slice(1);
+        try { target = decodeURIComponent(target); } catch (_) {}
+        link.setAttribute("href", ids[target] ? "#" + ids[target] : "#source-preview");
+      } else {
+        href = resolveRepositoryUrl(href, path, false);
+        if (!href) return link.removeAttribute("href");
+        link.href = href;
+        link.target = "_blank";
+        link.rel = "nofollow noopener noreferrer";
+      }
+    });
+
+    content.querySelectorAll("img[src]").forEach(function (image) {
+      var src = resolveRepositoryUrl(image.getAttribute("src") || "", path, true);
+      if (!src) return image.remove();
+      image.src = src;
+      image.loading = "lazy";
+      image.decoding = "async";
+    });
+    return content;
+  }
+
+  function resolveRepositoryUrl(value, path, media) {
+    value = value.trim();
+    if (!value || /^(javascript|vbscript|data):/i.test(value)) return "";
+    if (/^(https?:|mailto:)/i.test(value)) return value;
+    if (value.charAt(0) === "#") return value;
+
+    var hash = "";
+    var query = "";
+    var hashAt = value.indexOf("#");
+    if (hashAt >= 0) { hash = value.slice(hashAt); value = value.slice(0, hashAt); }
+    var queryAt = value.indexOf("?");
+    if (queryAt >= 0) { query = value.slice(queryAt); value = value.slice(0, queryAt); }
+    var parts = value.charAt(0) === "/" || path === "__readme" ? [] : path.split("/").slice(0, -1);
+    value.split("/").forEach(function (part) {
+      if (!part || part === ".") return;
+      if (part === "..") parts.pop();
+      else parts.push(part);
+    });
+    var resolved = parts.map(encodeURIComponent).join("/");
+    var base = media ? "https://raw.githubusercontent.com/" + nwo + "/HEAD/" :
+      repoBase + "/blob/HEAD/";
+    return base + resolved + query + hash;
+  }
+}
+
 /* The star count and the last push.
 
    These are the only two facts on the page that change daily, and they are read from a file here
@@ -971,8 +1506,6 @@ if (copy && navigator.clipboard && navigator.clipboard.writeText && window.isSec
    Failure is silent by design. The three spans are hidden until this succeeds, so a 404, an offline
    reader or a parse error leaves a page that is missing two figures rather than a page with a broken
    promise on it -- and every other fact on it was in the initial response. */
-var root = document.documentElement.dataset.root || "";
-var nwo = document.documentElement.dataset.nwo;
 if (nwo && window.fetch) {
   fetch(root + "live.json").then(function (r) {
     return r.ok ? r.json() : Promise.reject(r.status);

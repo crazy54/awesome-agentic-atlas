@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "application": {
+    "id": "awesome-agentic-atlas",
+    "name": "Awesome Agentic Atlas",
+    "description": "The static atlas index and its generated project detail pages."
+  },
+  "flags": [
+    {
+      "key": "index.card_view",
+      "group": "Index page",
+      "name": "Card view by default",
+      "description": "Starts the main atlas in its visual card layout. Turn it off to start in the compact table; readers can still switch views.",
+      "off_effect": "The index starts in table view."
+    },
+    {
+      "key": "index.deployment_badge",
+      "group": "Index page",
+      "name": "Last-deployed badge",
+      "description": "Shows the compact clock badge with the exact UTC deployment time in the index header.",
+      "off_effect": "The deployment badge is omitted from the page."
+    },
+    {
+      "key": "index.project_screenshots",
+      "group": "Index page",
+      "name": "Project screenshots",
+      "description": "Shows each project's screenshot or GitHub social card in card and table results.",
+      "off_effect": "Screenshot cells and image requests are omitted; the card grid closes the gap."
+    },
+    {
+      "key": "index.install_commands",
+      "group": "Index page",
+      "name": "Install commands",
+      "description": "Shows detected one-line install commands and copy buttons in index results.",
+      "off_effect": "Install commands and their copy buttons are omitted from index results."
+    },
+    {
+      "key": "detail.install_command",
+      "group": "Project detail pages",
+      "name": "Install section",
+      "description": "Shows the detected install command, or the explanation when a project has no one-line command.",
+      "off_effect": "The entire Install section is omitted."
+    },
+    {
+      "key": "detail.repository_reader",
+      "group": "Project detail pages",
+      "name": "Repository Markdown reader",
+      "description": "Fetches and renders README, SKILL.md and other Markdown from GitHub so a reader can inspect a project before cloning.",
+      "off_effect": "The reader UI is omitted and no GitHub Markdown API requests are made."
+    },
+    {
+      "key": "detail.screenshot",
+      "group": "Project detail pages",
+      "name": "Large screenshot",
+      "description": "Shows the project's screenshot or GitHub social card below the repository reader.",
+      "off_effect": "The screenshot section and remote image request are omitted."
+    },
+    {
+      "key": "detail.platform_support",
+      "group": "Project detail pages",
+      "name": "Platform support",
+      "description": "Shows Windows, WSL2, macOS, Linux and Docker verdicts with their evidence notes.",
+      "off_effect": "The platform-support section is omitted."
+    },
+    {
+      "key": "detail.provenance",
+      "group": "Project detail pages",
+      "name": "Source-list provenance",
+      "description": "Shows which curated awesome-lists included the project and links back to those sources.",
+      "off_effect": "The provenance section is omitted."
+    },
+    {
+      "key": "detail.classification",
+      "group": "Project detail pages",
+      "name": "Classification links",
+      "description": "Shows the project's topic and harness/integration links into the atlas taxonomy.",
+      "off_effect": "The classification section is omitted."
+    },
+    {
+      "key": "detail.related_projects",
+      "group": "Project detail pages",
+      "name": "Related projects",
+      "description": "Shows up to eight nearby projects based on shared topic, harnesses and source-list agreement.",
+      "off_effect": "The related-projects section is omitted."
+    }
+  ]
+}

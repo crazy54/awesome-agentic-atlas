@@ -68,6 +68,118 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
 .chips{margin-top:2px}
 .util{flex-shrink:0}
 section{margin:34px 0 0;border-top:1px solid var(--grid);padding-top:22px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* The repository reader is deliberately its own small colour system. It reads like a document laid
+   over the atlas rather than another metadata panel, while the cool blue and violet still belong to
+   the parent palette. These tokens are scoped so the byte-identical site palette above stays the one
+   source of truth for every element outside the reader. */
+.reader{
+  --read-bg:#0c111d;--read-panel:#111827;--read-raised:#182235;--read-ink:#e8eef8;
+  --read-muted:#9aa9bf;--read-line:#293753;--read-link:#78c7ff;--read-violet:#c4a7ff;
+  --read-gold:#f5c76f;--read-code:#080c14;--read-good:#72ddb5;--read-quote:#17243a;
+  overflow:hidden;border:1px solid var(--read-line);border-radius:14px;background:var(--read-panel);
+  color:var(--read-ink);box-shadow:0 20px 55px rgba(0,0,0,.28),0 0 0 1px rgba(120,199,255,.04)}
+.reader [hidden]{display:none!important}
+html[data-theme=light] .reader{
+  --read-bg:#f7f4ee;--read-panel:#fffdf8;--read-raised:#eee9df;--read-ink:#202938;
+  --read-muted:#647084;--read-line:#d8d1c4;--read-link:#075985;--read-violet:#6d28d9;
+  --read-gold:#9a5b00;--read-code:#f1ede5;--read-good:#08775a;--read-quote:#f2eee5;
+  box-shadow:0 18px 46px rgba(62,48,27,.12),0 0 0 1px rgba(7,89,133,.03)}
+.preview-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:14px}
+.preview-intro h2{margin-bottom:6px;color:var(--ink);font-size:19px;text-transform:none;letter-spacing:-.01em}
+.preview-intro .lead{margin:0;font-size:14.5px}
+.eyebrow{margin:0 0 3px;color:var(--bar);font-size:11px;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase}
+.source-live{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;
+  white-space:nowrap;margin-bottom:3px}
+.source-live i{width:7px;height:7px;border-radius:50%;background:var(--good);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 14%,transparent)}
+.reader-chrome{min-height:55px;display:flex;align-items:center;gap:12px;padding:9px 12px;
+  background:var(--read-bg);border-bottom:1px solid var(--read-line)}
+.window-dots{display:flex;gap:6px;flex:0 0 auto}
+.window-dots i{width:9px;height:9px;border-radius:50%;background:#ff6b6b}
+.window-dots i:nth-child(2){background:var(--read-gold)}
+.window-dots i:nth-child(3){background:var(--read-good)}
+.file-picker{min-width:0;flex:1;position:relative}
+.file-picker:after{content:"⌄";position:absolute;right:11px;top:50%;transform:translateY(-55%);
+  color:var(--read-muted);pointer-events:none;font-size:15px}
+.file-picker select{width:100%;height:35px;appearance:none;border:1px solid var(--read-line);
+  border-radius:7px;background:var(--read-raised);color:var(--read-ink);padding:0 32px 0 11px;
+  font:12.5px/1 "Cascadia Code","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  text-overflow:ellipsis;cursor:pointer}
+.file-picker select:focus,.viewtab:focus-visible,.open-source:focus-visible{
+  outline:2px solid var(--read-link);outline-offset:2px}
+.file-picker select:disabled{cursor:wait;color:var(--read-muted)}
+.reader-tabs{display:flex;padding:3px;border-radius:8px;background:var(--read-raised);flex:0 0 auto}
+.viewtab{border:0;border-radius:6px;padding:6px 10px;background:transparent;color:var(--read-muted);
+  font-size:12px;line-height:1.2}
+.viewtab:hover{color:var(--read-ink)}
+.viewtab.on{background:var(--read-panel);color:var(--read-ink);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.open-source{color:var(--read-link);font-size:12px;white-space:nowrap}
+.reader-status{min-height:240px;display:flex;align-items:center;justify-content:center;gap:11px;
+  padding:34px;text-align:center;color:var(--read-muted);font-size:14px}
+.reader[data-state=error] .reader-status{min-height:190px;flex-direction:column}
+.reader-status a{color:var(--read-link);font-weight:600}
+.loader{width:18px;height:18px;border:2px solid var(--read-line);border-top-color:var(--read-link);
+  border-radius:50%;animation:reader-spin .8s linear infinite}
+@keyframes reader-spin{to{transform:rotate(360deg)}}
+.markdown-body{max-height:760px;overflow:auto;padding:30px clamp(18px,4vw,42px) 46px;
+  background:var(--read-panel);color:var(--read-ink);
+  font:16px/1.72 Charter,"Bitstream Charter","Sitka Text",Cambria,Georgia,serif;
+  scrollbar-color:var(--read-line) var(--read-bg)}
+.markdown-body>*:first-child{margin-top:0!important}
+.markdown-body>*:last-child{margin-bottom:0!important}
+.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,
+.markdown-body h5,.markdown-body h6{color:var(--read-ink);line-height:1.22;margin:1.55em 0 .65em;
+  font-family:"Aptos Display","Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;
+  font-weight:720;letter-spacing:-.025em;text-transform:none}
+.markdown-body h1{font-size:2em;padding-bottom:.42em;border-bottom:1px solid var(--read-line)}
+.markdown-body h2{font-size:1.52em;padding-bottom:.35em;border-bottom:1px solid var(--read-line)}
+.markdown-body h3{font-size:1.23em;color:var(--read-violet)}
+.markdown-body h4{font-size:1.05em;color:var(--read-gold)}
+.markdown-body p,.markdown-body ul,.markdown-body ol{margin:0 0 1em}
+.markdown-body li+li{margin-top:.28em}
+.markdown-body li::marker{color:var(--read-violet);font-weight:700}
+.markdown-body a{color:var(--read-link);text-decoration:underline;text-decoration-thickness:.07em;
+  text-underline-offset:.17em}
+.markdown-body a:hover{color:var(--read-violet)}
+.markdown-body strong{color:var(--read-ink);font-weight:750}
+.markdown-body blockquote{margin:1.2em 0;padding:.7em 1.05em;border-left:4px solid var(--read-violet);
+  border-radius:0 8px 8px 0;background:var(--read-quote);color:var(--read-muted)}
+.markdown-body blockquote>:last-child{margin-bottom:0}
+.markdown-body code,.markdown-body kbd{font:13px/1.55 "Cascadia Code","SFMono-Regular",Consolas,
+  "Liberation Mono",monospace}
+.markdown-body :not(pre)>code{padding:.16em .38em;border:1px solid var(--read-line);border-radius:5px;
+  background:var(--read-code);color:var(--read-gold);font-size:.84em}
+.markdown-body pre{overflow:auto;margin:1.15em 0;padding:16px 18px;border:1px solid var(--read-line);
+  border-radius:9px;background:var(--read-code);color:var(--read-ink);line-height:1.55;
+  box-shadow:inset 3px 0 0 var(--read-violet)}
+.markdown-body pre code{display:block;min-width:max-content;color:inherit;background:transparent}
+/* GitHub's renderer emits Primer-compatible `pl-*` spans for highlighted fenced blocks. The source
+   owns the tokenisation; this small palette supplies the colour without importing all of Primer. */
+.markdown-body .pl-c,.markdown-body .pl-c1{color:var(--read-muted)}
+.markdown-body .pl-k,.markdown-body .pl-ent,.markdown-body .pl-pds{color:var(--read-violet)}
+.markdown-body .pl-s,.markdown-body .pl-s1,.markdown-body .pl-smi{color:var(--read-good)}
+.markdown-body .pl-en,.markdown-body .pl-v,.markdown-body .pl-e{color:var(--read-link)}
+.markdown-body .pl-c1,.markdown-body .pl-mh,.markdown-body .pl-mi{color:var(--read-gold)}
+.markdown-body hr{height:1px;margin:2em 0;border:0;background:var(--read-line)}
+.markdown-body img{max-width:100%;height:auto;border-radius:7px;background:var(--read-bg)}
+.markdown-body table{display:block;width:max-content;max-width:100%;overflow:auto;margin:1.2em 0;
+  border-collapse:collapse;font:13.5px/1.5 "Aptos","Segoe UI",system-ui,sans-serif}
+.markdown-body th,.markdown-body td{padding:8px 11px;border:1px solid var(--read-line);text-align:left}
+.markdown-body th{background:var(--read-raised);color:var(--read-ink)}
+.markdown-body tr:nth-child(even) td{background:color-mix(in srgb,var(--read-raised) 42%,transparent)}
+.markdown-body details{margin:1em 0;padding:10px 13px;border:1px solid var(--read-line);
+  border-radius:8px;background:var(--read-bg)}
+.markdown-body summary{cursor:pointer;color:var(--read-link);font:600 14px/1.4 "Aptos","Segoe UI",sans-serif}
+.markdown-body kbd{display:inline-block;padding:1px 5px;border:1px solid var(--read-line);
+  border-bottom-width:2px;border-radius:4px;background:var(--read-raised);font-size:.75em}
+.source-code{max-height:760px;min-height:280px;overflow:auto;margin:0;padding:25px 28px 40px;
+  border:0;background:var(--read-code);color:var(--read-ink);tab-size:2;white-space:pre;
+  font:13px/1.65 "Cascadia Code","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  scrollbar-color:var(--read-line) var(--read-bg)}
+.reader-note{margin:9px 2px 0;color:var(--muted);font-size:12px}
 /* The install command, and the button that takes it away. Selecting wrapped monospace text without
    catching the paragraph above it is the thing this replaces. */
 .cmdrow{display:flex;gap:10px;align-items:flex-start}
@@ -129,6 +241,17 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
   .cmdrow{flex-direction:column}
   .copy{align-self:flex-start}
   .cta{flex:1;text-align:center}
+  .preview-intro{align-items:flex-start;flex-direction:column;gap:5px}
+  .source-live{margin:0}
+  .reader-chrome{align-items:stretch;flex-wrap:wrap;padding:10px}
+  .window-dots{align-items:center}
+  .file-picker{order:2;flex-basis:100%}
+  .reader-tabs{margin-left:auto}
+  .open-source{align-self:center}
+  .markdown-body{max-height:680px;padding:22px 17px 34px;font-size:15px}
+  .markdown-body h1{font-size:1.65em}
+  .markdown-body h2{font-size:1.35em}
+  .source-code{max-height:680px;padding:20px 17px 32px;font-size:12px}
   /* Four columns of names in 307px is 77px a column. One column, and let it scroll. */
   ul.dir{columns:1}
   /* The evidence sentence is the first thing to go: three columns do not fit, and the verdict word
@@ -136,3 +259,4 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
      document for a reader who asks for the desktop site, and it is never the only place a fact is. */
   table.os .why,table.os th[scope=col]:last-child{display:none}
 }
+@media(prefers-reduced-motion:reduce){.loader{animation:none}}

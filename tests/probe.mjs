@@ -201,6 +201,16 @@ const q = (s, sort = "relevance") => {
 };
 
 ok("rows loaded", A.ROWS.length === data.rows.length, A.ROWS.length + " vs " + data.rows.length);
+// The deployment time is a small status, not a second masthead. Its icon is inline and hidden from the
+// accessible name (which already says what it means), and the dimensions stay below the 28px badge it
+// replaced. Static here because the stub has no layout; cards-check covers the real header at phone width.
+const deployed = html.match(/<a class="stamp" id="deployed"[\s\S]*?<\/a>/)?.[0] || "";
+const stampRule = html.match(/\.stamp\{([^}]*)\}/)?.[1] || "";
+ok("the last-deployed badge includes a non-redundant clock icon",
+   deployed.includes('class="deploy-icon"') && deployed.includes('aria-hidden="true"') &&
+   deployed.includes("Last deployed") && deployed.includes("<time datetime="), deployed.slice(0, 240));
+ok("the deployment badge is smaller than the old 28px treatment",
+   /height:23px/.test(stampRule) && /font-size:9px/.test(stampRule), stampRule);
 // Was `length === 5`, which went red the moment "Rising" was added and told you a number rather than a
 // property. What actually matters is that the keys and the menu agree: a key with no <option> is a sort
 // nobody can reach, and an <option> whose value is not a key silently falls back to relevance, which looks
