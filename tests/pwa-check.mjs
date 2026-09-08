@@ -255,18 +255,47 @@ ok("no console errors from the page or the worker while online", online.length =
 //
 // Re-applied before each offline navigation rather than set once, because Chrome terminates an idle worker
 // after about thirty seconds and the replacement starts with no emulation on it.
+//
+// ONE SESSION PER TARGET, and the map is the whole reason this works on a browser other than the one it was
+// written against. `Target.attachToTarget` does not return an existing session for an already-attached
+// target: it opens a new one, every time, with its own network state. This helper is called seven times, so
+// the version of it that attached on each call left seven live sessions on the worker, six of them still
+// saying `offline: true` after the seventh said false. Whether that matters is then a question about how the
+// browser merges the sessions' conditions, which is a question no test should be asking: `chrome-headless-shell`
+// 1223 takes the last write and passed, and Chromium 152 on `ubuntu-latest` does not and failed six
+// assertions -- the first being "back online, the stamp is the network's data", with the five after it
+// downstream of a worker that was never let back online.
+//
+// So the session is created once per target id and reused, which makes going back online the exact inverse
+// of going offline instead of an eighth opinion about it. Entries for targets that have since been recycled
+// are dropped rather than written to, because a dead session is a CDP error and not a no-op.
 let swSession = null;
+const swSessions = new Map();
 const net = async (offline) => {
   const p = {offline, latency: 0, downloadThroughput: offline ? 0 : -1, uploadThroughput: offline ? 0 : -1};
   await S("Network.emulateNetworkConditions", p);
+  const live = new Set();
   for (const t of (await send("Target.getTargets")).targetInfos) {
     if (t.type !== "service_worker") continue;
-    const {sessionId: sid} = await send("Target.attachToTarget", {targetId: t.targetId, flatten: true});
+    live.add(t.targetId);
+    let sid = swSessions.get(t.targetId);
+    if (!sid) {
+      ({sessionId: sid} = await send("Target.attachToTarget", {targetId: t.targetId, flatten: true}));
+      swSessions.set(t.targetId, sid);
+      await send("Network.enable", {}, sid);
+    }
     swSession = sid;
-    await send("Network.enable", {}, sid);
     await send("Network.emulateNetworkConditions", p, sid);
   }
+  for (const id of [...swSessions.keys()]) if (!live.has(id)) swSessions.delete(id);
 };
+// Whether the worker is reachable at all, asked of the page rather than of the emulation settings. Used to
+// qualify the assertion below: "the stamp still says offline" and "the network is still off" are different
+// failures, and the second one is this file's fault rather than the site's.
+const reachesNetwork = async () => evalIn(
+  `fetch(new URL('data.json?net-probe=' + Date.now(), location.href).href)
+     .then(r => 'HTTP ' + r.status + (r.headers.get('x-atlas-cached') ? ' from the cache' : ' from the network'))
+     .catch(e => 'unreachable: ' + e.message)`);
 await net(true);
 ok("the worker is a target of its own, and was taken offline as well as the page", !!swSession,
    "no service_worker target to attach to -- an offline test that only stops the page is not one");
@@ -368,8 +397,17 @@ const backOnline = await evalIn("document.getElementById('snap').textContent.rep
 // Not compared against `docStamp` outright: past a fortnight the age is appended, and a checkout that has
 // been sitting for three weeks is a stale copy of the site rather than a broken one. The shape, the absence
 // of the offline wording and the absence of the doctored date are the three things being claimed.
-ok("back online, the stamp is the network's data and says nothing about the cache",
-   /^snapshot \d{4}-\d{2}-\d{2}/.test(backOnline) && !backOnline.includes("2025-01"), backOnline);
+//
+// The reachability probe is in the failure message and not in an assertion of its own, because it is a fact
+// about this harness rather than about the site. When this went red on `ubuntu-latest` the stamp read
+// "offline, showing data from <the document's own date>" -- which is what the page renders when the body it
+// got has had both dates deleted, i.e. the doctored copy out of the cache, i.e. a worker that never came
+// back online. Six failures, one cause, and half an hour to work out which. Saying so in the message costs
+// one CDP round trip on the failing path only.
+const backOnlineOk = /^snapshot \d{4}-\d{2}-\d{2}/.test(backOnline) && !backOnline.includes("2025-01");
+ok("back online, the stamp is the network's data and says nothing about the cache", backOnlineOk,
+   backOnlineOk ? backOnline
+                : `${backOnline} -- and the page's own fetch right now says ${await reachesNetwork()}`);
 
 // -------- docs/live.json, on a real detail page (JFH-222)
 //
