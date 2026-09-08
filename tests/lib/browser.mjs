@@ -145,9 +145,24 @@ export async function launch(bin, tmp = tmpdir(), tag = "chrome") {
 
   // First line is the port, second is the browser's websocket path. Read after a non-empty read, because
   // the file exists before it is written and an empty read gives NaN.
+  //
+  // Sixty seconds, and it was fifteen until a CI runner spent all of it. This is a readiness wait and not a
+  // measurement: a browser that is ready in 300 ms leaves this loop in 300 ms whatever the ceiling is, so a
+  // generous budget costs a fast machine nothing and the only thing a tight one buys is a failure on a slow
+  // one. The failure it bought: `detail-preview-check.mjs` was the first browser launch of a CI run, took
+  // 15.6 s, and died here. Nothing was broken -- `/usr/bin/chromium` on `ubuntu-latest` is a snap shim, and
+  // its first exec pays a squashfs mount and a seed that the two later launches in the same run did not pay
+  // again. Fifteen seconds was one warm laptop written down as though it were a property of Chrome, which is
+  // the same defect class JFH-223 removed from `cards-check.mjs`: a wall-clock budget with no margin.
+  //
+  // Elapsed time rather than an iteration count, so that the number in the code is the number in the error
+  // and the wait is reported either way. "Never wrote it" and "took longer than this was willing to wait"
+  // are different diagnoses and should not have to be told apart by arithmetic on a duration in a log.
   const portFile = join(profile, "DevToolsActivePort");
+  const PORT_FILE_BUDGET_MS = 60_000;
+  const waitedFrom = Date.now();
   let raw = "";
-  for (let i = 0; i < 120 && !raw.includes("\n"); i++) {
+  while (!raw.includes("\n") && Date.now() - waitedFrom < PORT_FILE_BUDGET_MS) {
     if (child.exitCode !== null)
       throw new Error(`${bin} exited with ${child.exitCode} before it opened a debugging port` +
                       (err ? `:\n${err.trim()}` : ""));
@@ -155,18 +170,25 @@ export async function launch(bin, tmp = tmpdir(), tag = "chrome") {
     if (!raw.includes("\n")) await sleep(125);
   }
   if (!raw.includes("\n"))
-    throw new Error(`${bin} never wrote ${portFile} -- no debugging port to connect to` +
-                    (err ? `:\n${err.trim()}` : ""));
+    throw new Error(`${bin} never wrote ${portFile} in ` +
+                    `${((Date.now() - waitedFrom) / 1000).toFixed(1)}s of a ` +
+                    `${PORT_FILE_BUDGET_MS / 1000}s budget -- no debugging port to connect to. It had not ` +
+                    "exited, so it was still starting rather than refusing to: a cold binary on a slow " +
+                    "machine is the usual reason, and CHROME_PATH will point this at a warmer one." +
+                    (err ? `\n${err.trim()}` : ""));
   const [portLine, wsPath] = raw.split("\n");
   const port = Number(portLine.trim());
   // Asked for anyway, rather than trusting the file: it is also the readiness probe. The port is open the
-  // moment the file is written, but the browser target list is not necessarily answering yet.
+  // moment the file is written, but the browser target list is not necessarily answering yet. Same reasoning
+  // as the budget above, and the same history -- 15 s here too, on a machine where it took 0.1.
   let info;
-  for (let i = 0; i < 60 && !info; i++) {
+  const answeredFrom = Date.now();
+  while (!info && Date.now() - answeredFrom < 60_000) {
     try { info = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json(); }
     catch { await sleep(250); }
   }
-  if (!info) throw new Error(`chrome wrote port ${port} but never answered /json/version`);
+  if (!info) throw new Error(`chrome wrote port ${port} but never answered /json/version in ` +
+                             `${((Date.now() - answeredFrom) / 1000).toFixed(1)}s`);
 
   return {
     port, profile,

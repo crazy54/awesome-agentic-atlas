@@ -139,12 +139,14 @@ Three things about it are worth knowing before you read a green tick as a fact a
   outcome this suite exists to prevent: a check that quietly did not run, which from outside is
   indistinguishable from a check that passed.
 
-No browser is installed there. `ubuntu-latest` carries Google Chrome on `PATH`, `lib/browser.mjs` looks for
-`google-chrome` and `google-chrome-stable` among its `ON_PATH` names, and `launch()` passes `--headless=new`
-unconditionally — so the runner's own Chrome needs no flag from the workflow, and installing one would be a
-~130 MB download on every run. The browser is found, never installed, which is the policy `lighthouse.yml`
-already states. The one setting CI does need is `AAA_CHROME_FLAGS: --no-sandbox --disable-dev-shm-usage`, for
-the reason in the table below.
+No browser is installed there. `ubuntu-latest` carries two on `PATH` — `/usr/bin/chromium` and
+`/usr/bin/google-chrome` — and `launch()` passes `--headless=new` unconditionally, so either needs no flag
+from the workflow; installing one would be a ~130 MB download on every run. The browser is found, never
+installed, which is the policy `lighthouse.yml` already states. `ON_PATH` order means the one actually used
+is **chromium**, which on that image is a snap shim rather than Chrome, and `CHROME_PATH` is deliberately not
+set to pin it: the value of running this anywhere is that it is not the laptop the suite went green on, and
+choosing the closest available browser to that laptop would buy agreement by construction. The one setting CI
+does need is `AAA_CHROME_FLAGS: --no-sandbox --disable-dev-shm-usage`, for the reason in the table below.
 
 ## Environment
 

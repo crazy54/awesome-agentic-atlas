@@ -45,16 +45,28 @@
 # thirteen hours after that worst case, and six hours before `lighthouse.yml`'s Monday canary. The suite
 # regenerates 1,294 detail pages four times, so it should not be racing the job that writes them.
 #
-# WHY NO BROWSER IS INSTALLED
+# WHY NO BROWSER IS INSTALLED, AND WHICH ONE ACTUALLY GETS USED
 #
 # Three of the thirteen harnesses drive Chromium over CDP, and none of them installs one. `ubuntu-latest`
-# ships Google Chrome stable on `PATH`, `tests/lib/browser.mjs`'s `ON_PATH` list includes `google-chrome`
-# and `google-chrome-stable`, and `launch()` passes `--headless=new` unconditionally -- so the runner's own
-# Chrome is headless-capable without a flag from here. That saves a ~130 MB Playwright download on every
-# run and it matches the policy `lighthouse.yml` already states next door: the browser is found, never
-# installed. If a future runner image drops Chrome, `run.mjs` exits 2 and prints the three env vars, the
-# three cache directories and `$PATH` that it searched, which is a clearer failure than a broken installer
-# step would give.
+# carries two on `PATH` -- `/usr/bin/chromium` and `/usr/bin/google-chrome` -- and `launch()` passes
+# `--headless=new` unconditionally, so either is headless-capable without a flag from here. That saves a
+# ~130 MB Playwright download on every run and matches the policy `lighthouse.yml` already states next
+# door: the browser is found, never installed. If a future image drops both, `run.mjs` exits 2 and prints
+# the three env vars, the three cache directories and the `$PATH` it searched, which is a better failure
+# than a broken installer step would give.
+#
+# The one that gets used is `/usr/bin/chromium`, not Chrome, and that is worth writing down because it is
+# not what the names suggest: `browser.mjs`'s `ON_PATH` order is `chrome-headless-shell`, `chromium`,
+# `chromium-browser`, `google-chrome`, ... -- `chromium` wins, and it is a snap shim. `CHROME_PATH` is
+# deliberately not set to Chrome here. The point of this job is to run the suite somewhere that is not a
+# developer's laptop, and pinning the browser to the one the laptop is closest to would buy agreement by
+# construction. It already earned that: cold-starting the snap took longer than `launch()`'s original
+# fifteen-second wait for `DevToolsActivePort`, which failed the first browser harness of the first run and
+# is fixed in `browser.mjs` rather than papered over here.
+#
+# The `dbus/bus.cc:405 Failed to connect to the bus` lines on that binary's stderr are noise: a container
+# has no session bus, Chrome says so three times and carries on. They are surfaced rather than filtered,
+# because a launch that fails for a real reason prints its reason in the same place.
 #
 # `og-preview.yml` does install one, and that is not an inconsistency: it renders social cards for
 # publication, so it wants the same `chromium_headless_shell` build every time rather than whatever Chrome
@@ -126,17 +138,30 @@ jobs:
       - run: python -m pip install --upgrade pip openpyxl pillow
 
       # Recorded before anything runs, so a failure months from now can be read off the log without
-      # guessing what the environment was. The Chrome line is the one that matters: it is the assumption
-      # this file makes instead of installing a browser, so it should be visible on every green run and not
-      # only discovered on the red one where it stopped being true.
+      # guessing what the environment was. The browser lines are the ones that matter: not installing one is
+      # the assumption this file makes, so it should be visible on every green run rather than discovered on
+      # the red one where it stopped being true.
+      #
+      # Both candidates are printed in `ON_PATH` order rather than only the one this happens to pick, because
+      # the interesting failure is the day the order picks something else: `run.mjs` prints the binary it
+      # chose, and these two lines are what make that choice readable instead of merely stated.
       - name: Name the tools this run will use
         run: |
           set -euo pipefail
           node --version
           python --version
           git --version
-          echo "chrome on PATH: $(command -v google-chrome || command -v google-chrome-stable || echo 'NONE -- run.mjs will exit 2 and say where it looked')"
-          google-chrome --version || true
+          found=0
+          for b in chrome-headless-shell chromium chromium-browser google-chrome google-chrome-stable chrome; do
+            p="$(command -v "$b" || true)"
+            if [ -n "$p" ]; then
+              found=$((found + 1))
+              echo "$b -> $p  ($("$p" --version 2>/dev/null || echo 'would not report a version'))"
+            fi
+          done
+          if [ "$found" -eq 0 ]; then
+            echo "no browser on PATH under any name browser.mjs looks for -- run.mjs will exit 2 and say where it looked"
+          fi
 
       # The whole suite in one command, which is what `tests/run.mjs` exists to be.
       #
