@@ -508,18 +508,63 @@ jobs:
         with:
           node-version: "22"
 
-      # Hashed before the suite runs, so the step after it can prove the suite did not write into what is
-      # about to be committed. The suite is built not to -- every harness writes into a `mkdtemp` or into
+      # Staged before the suite runs rather than only at the commit step, because one harness reads the
+      # *index* and would otherwise be handed two different days at once. `indexnow_test.py:124` is the only
+      # harness in `tests/` that runs git at all: `tracked()` calls `git ls-files docs`, and the assertions
+      # at `:150` compare the URLs that yields through `26_indexnow.url_for` against the `<loc>` entries it
+      # reads off `docs/sitemap.xml` and `docs/sitemap-repos.xml` *on disk*. In a clean checkout those two
+      # describe the same site, which is why the harness is green everywhere else. Here the generators have
+      # already run: the sitemap on disk is today's and the index is yesterday's.
+      #
+      # That is not a tolerance, it is an exact equality, and it was measured rather than assumed -- 1,498
+      # tracked files under `docs/`, 1,452 sitemap URLs, 1,452 mapped, and the symmetric difference is
+      # **zero in both directions**. All 156 facet pages are inside it. So a single facet page added or
+      # pruned by this build makes one of those two differences non-empty and the assertion fails, on a
+      # build that is entirely correct. Both directions are reachable from this job and the step above
+      # already documents them: `20_landing.prune` unlinks facet pages whose facet stopped existing, and
+      # `20_landing.prune_keys` unlinks the key file on an `INDEXNOW_KEY` rotation. 20_landing writes
+      # `docs/sitemap.xml` and has run in this job since JFH-215, so the sitemap moves in the same build.
+      #
+      # `git add` fixes it exactly, because staging is the definition of "the file set this run publishes":
+      # it drops a pruned path's index entry and adds a new page's, so `git ls-files docs` becomes the list
+      # the sitemap on disk was generated from. Verified against git rather than argued from the manual --
+      # before staging, `ls-files` still names the pruned file and still omits the new one; after, neither.
+      # Which gives the property this whole block is after, exactly: staged, the answer the suite gives here
+      # is the answer `tests.yml` would give on the commit this run is about to make.
+      #
+      # After the step above and not before it, deliberately: that step reads `git ls-files` to find files a
+      # generator deleted from the working tree, so staging first would empty its `deleted` arm and hide the
+      # prune report it exists to print. And this changes nothing about what gets committed -- `git add docs
+      # mega-list state` at the commit step is idempotent, and `git diff --cached --quiet` still answers
+      # correctly, including on the legitimate day when the lists moved but nothing reaches these surfaces.
+      - name: Stage the publish set, so the suite asserts on what is about to ship
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          set -euo pipefail
+          git add docs mega-list state
+          echo "staged $(git diff --cached --name-only -- docs mega-list state | wc -l | tr -d ' ') path(s):"
+          git diff --cached --name-status --no-renames -- docs mega-list state \
+            | cut -f1 | sort | uniq -c | tr -s ' ' | sed 's/^ /  /'
+
+      # Photographed before the suite runs, so the step after it can prove the suite did not write into what
+      # is about to be committed. The suite is built not to -- every harness writes into a `mkdtemp` or into
       # gitignored `build-tmp/`, and `live_test.py:298` carries an assertion whose stated purpose is that
       # `--out` never points at the real `docs/` -- but "built not to" and "did not" are different claims,
       # and only one of them is checked. It matters more here than anywhere else the suite runs: `git add
       # docs mega-list state` below would stage a harness's scratch output and publish it, and the suite
       # regenerates 1,294 detail pages four times.
+      #
       # The listing itself rather than a hash of it, for two reasons. It is the diagnostic -- the step below
       # can print the difference instead of reporting that two checksums disagree -- and it cannot fail
       # open. `git status | sha256sum` masks git's exit code through the pipe, and GitHub's default shell is
       # `bash -e` without `pipefail`, so a broken git would have written the hash of no output here, the hash
       # of no output there, and the comparison would have passed by agreeing about nothing.
+      #
+      # Taken after the staging step, which sharpens it as well as ordering it. Unstaged, a file this build
+      # legitimately rewrote and a file a harness then overwrote both read ` M`, so the two photographs
+      # agreed and the guard was blind to exactly the case it is here for. Staged, the build's version is
+      # pinned in the index and a later write flips the second column to `MM`, so it shows up as a changed
+      # line. A harness's brand-new file still arrives as a `??` line either way.
       - name: Photograph the publish set before the suite touches anything
         if: steps.gate.outputs.go == 'true'
         run: |
