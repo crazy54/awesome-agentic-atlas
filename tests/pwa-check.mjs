@@ -255,18 +255,47 @@ ok("no console errors from the page or the worker while online", online.length =
 //
 // Re-applied before each offline navigation rather than set once, because Chrome terminates an idle worker
 // after about thirty seconds and the replacement starts with no emulation on it.
+//
+// ONE SESSION PER TARGET, and the map is the whole reason this works on a browser other than the one it was
+// written against. `Target.attachToTarget` does not return an existing session for an already-attached
+// target: it opens a new one, every time, with its own network state. This helper is called seven times, so
+// the version of it that attached on each call left seven live sessions on the worker, six of them still
+// saying `offline: true` after the seventh said false. Whether that matters is then a question about how the
+// browser merges the sessions' conditions, which is a question no test should be asking: `chrome-headless-shell`
+// 1223 takes the last write and passed, and Chromium 152 on `ubuntu-latest` does not and failed six
+// assertions -- the first being "back online, the stamp is the network's data", with the five after it
+// downstream of a worker that was never let back online.
+//
+// So the session is created once per target id and reused, which makes going back online the exact inverse
+// of going offline instead of an eighth opinion about it. Entries for targets that have since been recycled
+// are dropped rather than written to, because a dead session is a CDP error and not a no-op.
 let swSession = null;
+const swSessions = new Map();
 const net = async (offline) => {
   const p = {offline, latency: 0, downloadThroughput: offline ? 0 : -1, uploadThroughput: offline ? 0 : -1};
   await S("Network.emulateNetworkConditions", p);
+  const live = new Set();
   for (const t of (await send("Target.getTargets")).targetInfos) {
     if (t.type !== "service_worker") continue;
-    const {sessionId: sid} = await send("Target.attachToTarget", {targetId: t.targetId, flatten: true});
+    live.add(t.targetId);
+    let sid = swSessions.get(t.targetId);
+    if (!sid) {
+      ({sessionId: sid} = await send("Target.attachToTarget", {targetId: t.targetId, flatten: true}));
+      swSessions.set(t.targetId, sid);
+      await send("Network.enable", {}, sid);
+    }
     swSession = sid;
-    await send("Network.enable", {}, sid);
     await send("Network.emulateNetworkConditions", p, sid);
   }
+  for (const id of [...swSessions.keys()]) if (!live.has(id)) swSessions.delete(id);
 };
+// Whether the worker is reachable at all, asked of the page rather than of the emulation settings. Used to
+// qualify the assertion below: "the stamp still says offline" and "the network is still off" are different
+// failures, and the second one is this file's fault rather than the site's.
+const reachesNetwork = async () => evalIn(
+  `fetch(new URL('data.json?net-probe=' + Date.now(), location.href).href)
+     .then(r => 'HTTP ' + r.status + (r.headers.get('x-atlas-cached') ? ' from the cache' : ' from the network'))
+     .catch(e => 'unreachable: ' + e.message)`);
 await net(true);
 ok("the worker is a target of its own, and was taken offline as well as the page", !!swSession,
    "no service_worker target to attach to -- an offline test that only stops the page is not one");
@@ -368,8 +397,17 @@ const backOnline = await evalIn("document.getElementById('snap').textContent.rep
 // Not compared against `docStamp` outright: past a fortnight the age is appended, and a checkout that has
 // been sitting for three weeks is a stale copy of the site rather than a broken one. The shape, the absence
 // of the offline wording and the absence of the doctored date are the three things being claimed.
-ok("back online, the stamp is the network's data and says nothing about the cache",
-   /^snapshot \d{4}-\d{2}-\d{2}/.test(backOnline) && !backOnline.includes("2025-01"), backOnline);
+//
+// The reachability probe is in the failure message and not in an assertion of its own, because it is a fact
+// about this harness rather than about the site. When this went red on `ubuntu-latest` the stamp read
+// "offline, showing data from <the document's own date>" -- which is what the page renders when the body it
+// got has had both dates deleted, i.e. the doctored copy out of the cache, i.e. a worker that never came
+// back online. Six failures, one cause, and half an hour to work out which. Saying so in the message costs
+// one CDP round trip on the failing path only.
+const backOnlineOk = /^snapshot \d{4}-\d{2}-\d{2}/.test(backOnline) && !backOnline.includes("2025-01");
+ok("back online, the stamp is the network's data and says nothing about the cache", backOnlineOk,
+   backOnlineOk ? backOnline
+                : `${backOnline} -- and the page's own fetch right now says ${await reachesNetwork()}`);
 
 // -------- docs/live.json, on a real detail page (JFH-222)
 //
@@ -384,9 +422,21 @@ ok("back online, the stamp is the network's data and says nothing about the cach
 // that will one day leave the source lists and turn this section into a 404 that passes.
 const repoLocs = [...(await (await fetch(ORIGIN + "sitemap-repos.xml")).text())
   .matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => new URL(m[1]).pathname.split("/").filter(Boolean));
-const detailPath = repoLocs.filter(p => p.length === 4 && p[1] === "repo")
-  .map(p => p.slice(1).join("/") + "/")[0];
-ok("the repo sitemap names a detail page to visit", !!detailPath, JSON.stringify(repoLocs[0]));
+// Both figures have to exist on whichever page is chosen, or the offline assertions below cannot tell a
+// rendered figure from an absent one and would pass on a page that shows neither. `detail.js` guards the
+// push date with `if (row[1])`, and 24 of the 1,294 rows in `live.json` have an empty one -- a 1.9% chance
+// of a silently vacuous assertion if the first page in the sitemap were taken unconditionally. Still chosen
+// from the sitemap rather than hardcoded, for the original reason: a named repository is one that will
+// eventually leave the source lists and turn this section into a 404 that passes.
+const liveRows = (await (await fetch(ORIGIN + "live.json")).json()).repos || {};
+const repoPaths = repoLocs.filter(p => p.length === 4 && p[1] === "repo");
+const withBoth = repoPaths.filter(p => {
+  const row = liveRows[`${p[2]}/${p[3]}`];
+  return Array.isArray(row) && row[0] && row[1];
+});
+const detailPath = (withBoth[0] || repoPaths[0] || []).slice(1).join("/") + "/";
+ok("the repo sitemap names a detail page whose star count and push date both exist", !!withBoth.length,
+   `${repoPaths.length} detail pages in the sitemap, ${withBoth.length} with both figures in live.json`);
 const detailUrl = ORIGIN + detailPath;
 
 // The three spans start hidden and `show()` sets `class="live on"`, so waiting for the class is waiting
@@ -403,10 +453,21 @@ const waitLive = async () => {
   }
   return JSON.parse(await liveSpans());
 };
+// Before the first detail page is opened, and this is JFH-282's third acceptance criterion rather than a
+// spare check: the fix must cost a reader who only ever reads the index exactly nothing. Every assertion
+// above this line was about the index, so `atlas-assets` not existing yet is the whole claim -- the two
+// files are cached by the page that needs them, at the moment it needs them, and not at install.
+const cacheNames = () => evalIn("caches.keys().then(ks => JSON.stringify(ks.sort()))");
+const beforeDetail = JSON.parse(await cacheNames());
+ok("a reader who has opened no detail page has no atlas-assets cache",
+   !beforeDetail.includes("atlas-assets"), JSON.stringify(beforeDetail));
+
 await goto(detailUrl);
 const onlineSpans = await waitLive();
 ok("a detail page fills in its star count from live.json after paint",
    /^live on\|(\d[\d,]*\s+stars|No stars recorded)$/.test(onlineSpans[0]), JSON.stringify(onlineSpans));
+ok("and the last push, which is the other figure the generator leaves out of the HTML",
+   /^live on\|last push \d{4}-\d{2}-\d{2}$/.test(onlineSpans[1]), JSON.stringify(onlineSpans));
 ok("and the snapshot that qualifies it, so the two figures are not presented as live",
    /^live on\|snapshot \d{4}-\d{2}-\d{2}$/.test(onlineSpans[2]), JSON.stringify(onlineSpans));
 const dataKeys = async () => evalIn(`caches.has('atlas-data').then(h => h
@@ -424,25 +485,42 @@ ok("live.json is in atlas-data after the page fetched it", keysOnline.some(u => 
 ok("and so is data.json, so the two are one policy and not two",
    keysOnline.some(u => u.endsWith("/data.json")), JSON.stringify(keysOnline));
 
-// Offline, and the assertion is about the file rather than about the rendered page -- which is not a
-// hedge, it is the honest boundary, and finding it was worth more than the assertion.
+// Offline, and now about the rendered page rather than only about the files -- which is the change JFH-282
+// made and the reason this comment is shorter than the one it replaces.
 //
-// WHAT THIS SECTION CANNOT SEE, and nor can any assertion, because it is not true: that a detail page
-// works offline. It does not, and it did not before JFH-222 either. `docs/repo/detail.js` and
-// `docs/repo/detail.css` are neither precached by `install` nor matched by `PRECACHED` in the fetch
-// listener, so the worker declines them and the browser fetches them from the network. Measured here,
-// with the network off and the document served from `atlas-pages`: `typeof show` is `"undefined"`, so the
-// script never arrived, and the three spans keep their initial `class="live"`. Nothing the sidecar does
-// can change that -- the reader is missing the code that reads it, not the data. On the published site
-// Pages' `max-age=600` papers over the first ten minutes and no longer.
+// What used to be here was a paragraph explaining that a detail page does not work offline and that no
+// assertion could claim otherwise. It did not, from the day detail pages existed: `docs/repo/detail.js` and
+// `docs/repo/detail.css` were matched by no branch of the fetch listener, so the worker declined them and
+// the browser went to the network. With the network off that failed, `typeof show` was `"undefined"`, and
+// the three spans kept their initial `class="live"` -- an offline reader got every prerendered fact on the
+// page and lost the two that are deliberately not in the HTML. `live.json` was cached correctly the whole
+// time, which is why JFH-222 could not have fixed this: the reader was missing the code, not the data.
 //
-// So what is asserted is the routing this ticket actually changed, which is a fact about the worker and is
-// checkable: the file is in the cache the reader keeps, the cache answers with the network off, and the
-// response is marked. Caching `detail.css` and `detail.js` is a separate change to `24_pwa.py` -- and not
-// obviously the right one, since precaching them would charge every index-page reader for two files only
-// detail pages use.
+// So the assertion is the one the old comment said was unavailable, and it is deliberately the *same*
+// assertion as the online one twenty lines up rather than a weaker proxy like `typeof show === "function"`.
+// A script that arrived and then failed to render is a bug this would have to catch, and "the figures are
+// on the page" is the claim a reader cares about; "the script is defined" is a claim about plumbing.
 await net(true);
 await goto(detailUrl);
+const offlineSpans = await waitLive();
+ok("offline, a revisited detail page still renders its star count",
+   offlineSpans[0] === onlineSpans[0], `${JSON.stringify(offlineSpans)} vs online ${JSON.stringify(onlineSpans)}`);
+ok("offline, it still renders the last push, so both figures survive and not just the script",
+   offlineSpans[1] === onlineSpans[1], `${JSON.stringify(offlineSpans)} vs online ${JSON.stringify(onlineSpans)}`);
+// The routing as well as the result. The two assertions above would also pass if the browser's HTTP cache
+// had answered for `detail.js` behind the worker's back -- `net(true)` emulates a dead network rather than
+// clearing that cache -- so this names the cache the fix actually fills. Both files, because the stylesheet
+// is what stops the offline page rendering unstyled and it is in the same list for that reason.
+const assetKeys = async () => evalIn(`caches.has('atlas-assets').then(h => h
+  ? caches.open('atlas-assets').then(c => c.keys()).then(ks => ks.map(r => new URL(r.url).pathname)) : [])`);
+const assetsOffline = await assetKeys();
+ok("and both detail sub-resources are in atlas-assets, which is where they came from",
+   ["/repo/detail.css", "/repo/detail.js"].every(n => assetsOffline.some(u => u.endsWith(n))),
+   JSON.stringify(assetsOffline));
+// Bounded by the length of `PAGE_ASSETS` rather than by a cap, which is the claim `24_pwa.py` makes about
+// this cache. A third entry here means something is being routed into it that the generator does not list.
+ok("and nothing else, so the cache is bounded by the list and needs no trim()", assetsOffline.length === 2,
+   JSON.stringify(assetsOffline));
 const scriptOffline = await evalIn("typeof show");
 // The marking, not just the body. A cached `data.json` is told apart from a fresh one by this header, and
 // the index page's freshness stamp is built on it; a sidecar served from cache with no header would be a
@@ -451,7 +529,8 @@ const scriptOffline = await evalIn("typeof show");
 const marked = await evalIn(`fetch(new URL((document.documentElement.dataset.root || '') + 'live.json', location.href).href)
   .then(r => r.headers.get('x-atlas-cached') + '/' + r.status).catch(e => 'threw: ' + e.message)`);
 ok("offline, live.json is answered from atlas-data and marked x-atlas-cached", marked === "1/200",
-   `${marked} -- and for the record typeof show was ${scriptOffline}, so detail.js itself is uncached`);
+   `${marked} -- and typeof show was ${scriptOffline}, so if that is "undefined" the sidecar is not the ` +
+   "problem: detail.js did not arrive and atlas-assets is the cache to look in");
 const keysOffline = await dataKeys();
 ok("and both data files are still in that cache, which activate never sweeps",
    ["/data.json", "/live.json"].every(n => keysOffline.some(u => u.endsWith(n))),

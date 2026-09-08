@@ -17,6 +17,9 @@ from PIL import Image, ImageOps
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 SHOTS = CACHE / "shots"
+# Same reason as 02_fetch.py's: on a cold cache this is the first stage to write into cache/shots,
+# PIL's `save` will not make the parent, and 15_shots_all.py's identical mkdir runs two stages later.
+SHOTS.mkdir(parents=True, exist_ok=True)
 
 BOX = (300, 150)          # thumbnail bounding box in px
 MAX_BYTES = 14_000_000

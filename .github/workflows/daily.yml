@@ -12,6 +12,12 @@
 # Pages needs no deploy step. This repository serves Pages from the branch's `docs/` folder, so the
 # commit at the end of this job *is* the deployment -- GitHub's own pages-build-deployment run picks it
 # up. Nothing here has to be told the site's URL.
+#
+# Which is also why the thirteen-harness suite runs here, between the generators and that commit, rather
+# than only in `tests.yml`: this job pushes with `secrets.GITHUB_TOKEN`, GitHub starts no workflow runs for
+# such a push, and so none of this job's ~30 commits a month has ever triggered a check. See the
+# verification block before the commit step, and `VERIFY_GATES_DEPLOY` in `env:` for whether a red suite
+# stops the deploy or merely reddens the run.
 name: Daily — site & Markdown
 
 on:
@@ -81,6 +87,22 @@ jobs:
       # a full run at roughly 7,600 REST requests -- seven hours of this token's allowance for one build.
       # 02_fetch now reads the response body rather than the exit code. Undoing that puts these numbers back.
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Does a red assertion stop the site updating? JFH-284 is that question and it is a policy decision
+      # about the site rather than one about a test runner, so it is one word here rather than a shape
+      # spread through the steps below. Either way the suite runs before the commit and either way a red
+      # suite reddens the run -- what this changes is only whether the deploy happens first.
+      #
+      #   "false"  the site always ships and a red suite is a notification. Exposure to a regression is
+      #            bounded at one day instead of the seven the Monday canary gives, which is the whole
+      #            point of the ticket, and nothing about it can ever stop the site updating.
+      #   "true"   nothing red publishes, at the cost of a site that stands still whenever an assertion
+      #            fails for a reason unrelated to that day's data.
+      #
+      # It ships as "false" because that is the option that cannot make anything worse than the state
+      # before it: today not one of this job's ~30 commits a month runs the suite at all. Turning it up
+      # is this one word, and the two steps that read it are named for what they do in each mode.
+      VERIFY_GATES_DEPLOY: "false"
 
     steps:
       - uses: actions/checkout@v4
@@ -466,6 +488,156 @@ jobs:
           nt="$(git ls-files docs mega-list | wc -l | tr -d ' ')"
           echo "Rewrote all $((nt - ns - nd)) of the tracked files this job is responsible for, deleted ${nd}; skipped ${ns} left to weekly.yml."
 
+      # ---------------------------------------------------------------- verification, before publication
+      #
+      # The suite runs here, against the tree this job just built and is about to publish, and that
+      # placement is the entire content of JFH-284. `tests.yml` next door runs the same thirteen harnesses
+      # on pull requests, on pushes to `latest_branch`, and as a Monday canary -- but this job pushes with
+      # `secrets.GITHUB_TOKEN` through `actions/checkout`'s persisted credentials, and GitHub deliberately
+      # starts no workflow runs for pushes made with that token. So not one of this job's ~30 commits a
+      # month has ever triggered it, and those commits rewrite `data.json`, `index.html`, `sw.js` and 156
+      # facet pages -- all four of which the suite asserts on. Pages serves `latest_branch` verbatim, so
+      # landing is publishing, and the canary was catching a regression up to seven days after readers did.
+      #
+      # Node is set up here rather than at the top of the job because nothing above needs it and a skipped
+      # build should not pay for it. Version 22, matching `tests.yml` exactly: the point of running the
+      # suite here is that green there and green here mean the same thing, and a different major would make
+      # that an assumption rather than a fact.
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.go == 'true'
+        with:
+          node-version: "22"
+
+      # Staged before the suite runs rather than only at the commit step, because one harness reads the
+      # *index* and would otherwise be handed two different days at once. `indexnow_test.py:124` is the only
+      # harness in `tests/` that runs git at all: `tracked()` calls `git ls-files docs`, and the assertions
+      # at `:150` compare the URLs that yields through `26_indexnow.url_for` against the `<loc>` entries it
+      # reads off `docs/sitemap.xml` and `docs/sitemap-repos.xml` *on disk*. In a clean checkout those two
+      # describe the same site, which is why the harness is green everywhere else. Here the generators have
+      # already run: the sitemap on disk is today's and the index is yesterday's.
+      #
+      # That is not a tolerance, it is an exact equality, and it was measured rather than assumed -- 1,498
+      # tracked files under `docs/`, 1,452 sitemap URLs, 1,452 mapped, and the symmetric difference is
+      # **zero in both directions**. All 156 facet pages are inside it. So a single facet page added or
+      # pruned by this build makes one of those two differences non-empty and the assertion fails, on a
+      # build that is entirely correct. Both directions are reachable from this job and the step above
+      # already documents them: `20_landing.prune` unlinks facet pages whose facet stopped existing, and
+      # `20_landing.prune_keys` unlinks the key file on an `INDEXNOW_KEY` rotation. 20_landing writes
+      # `docs/sitemap.xml` and has run in this job since JFH-215, so the sitemap moves in the same build.
+      #
+      # `git add` fixes it exactly, because staging is the definition of "the file set this run publishes":
+      # it drops a pruned path's index entry and adds a new page's, so `git ls-files docs` becomes the list
+      # the sitemap on disk was generated from. Verified against git rather than argued from the manual --
+      # before staging, `ls-files` still names the pruned file and still omits the new one; after, neither.
+      # Which gives the property this whole block is after, exactly: staged, the answer the suite gives here
+      # is the answer `tests.yml` would give on the commit this run is about to make.
+      #
+      # After the step above and not before it, deliberately: that step reads `git ls-files` to find files a
+      # generator deleted from the working tree, so staging first would empty its `deleted` arm and hide the
+      # prune report it exists to print. And this changes nothing about what gets committed -- `git add docs
+      # mega-list state` at the commit step is idempotent, and `git diff --cached --quiet` still answers
+      # correctly, including on the legitimate day when the lists moved but nothing reaches these surfaces.
+      - name: Stage the publish set, so the suite asserts on what is about to ship
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          set -euo pipefail
+          git add docs mega-list state
+          echo "staged $(git diff --cached --name-only -- docs mega-list state | wc -l | tr -d ' ') path(s):"
+          git diff --cached --name-status --no-renames -- docs mega-list state \
+            | cut -f1 | sort | uniq -c | tr -s ' ' | sed 's/^ /  /'
+
+      # Photographed before the suite runs, so the step after it can prove the suite did not write into what
+      # is about to be committed. The suite is built not to -- every harness writes into a `mkdtemp` or into
+      # gitignored `build-tmp/`, and `live_test.py:298` carries an assertion whose stated purpose is that
+      # `--out` never points at the real `docs/` -- but "built not to" and "did not" are different claims,
+      # and only one of them is checked. It matters more here than anywhere else the suite runs: `git add
+      # docs mega-list state` below would stage a harness's scratch output and publish it, and the suite
+      # regenerates 1,294 detail pages four times.
+      #
+      # The listing itself rather than a hash of it, for two reasons. It is the diagnostic -- the step below
+      # can print the difference instead of reporting that two checksums disagree -- and it cannot fail
+      # open. `git status | sha256sum` masks git's exit code through the pipe, and GitHub's default shell is
+      # `bash -e` without `pipefail`, so a broken git would have written the hash of no output here, the hash
+      # of no output there, and the comparison would have passed by agreeing about nothing.
+      #
+      # Taken after the staging step, which sharpens it as well as ordering it. Unstaged, a file this build
+      # legitimately rewrote and a file a harness then overwrote both read ` M`, so the two photographs
+      # agreed and the guard was blind to exactly the case it is here for. Staged, the build's version is
+      # pinned in the index and a later write flips the second column to `MM`, so it shows up as a changed
+      # line. A harness's brand-new file still arrives as a `??` line either way.
+      - name: Photograph the publish set before the suite touches anything
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          set -euo pipefail
+          git status --porcelain -- docs mega-list state > "$RUNNER_TEMP/publish-set-before"
+          echo "$(wc -l < "$RUNNER_TEMP/publish-set-before" | tr -d ' ') path(s) under docs/, mega-list/ and state/ stand changed by this build"
+
+      # `continue-on-error` so that the *decision* about a red suite lives in one place -- the step below,
+      # reading VERIFY_GATES_DEPLOY -- rather than being implied by where this one happens to sit. This
+      # step's job is to produce an answer and record it, not to act on it.
+      #
+      # The exit code is captured and interpreted for the same reason `tests.yml` does it: `run.mjs` exits
+      # 1 for an assertion failure or a harness that went quiet, and 2 when it cannot find Chromium or
+      # Python and refused to start. The second is a fact about the runner rather than about the site being
+      # published, and conflating them would send somebody to read a data diff over a missing browser.
+      - name: Verify the site this build is about to publish
+        id: verify
+        if: steps.gate.outputs.go == 'true'
+        continue-on-error: true
+        env:
+          # The two flags `tests.yml` and `lighthouse.yml` both pass, for the reason both state: a container
+          # has no user namespace to sandbox into and a 64 MB `/dev/shm`, and Chrome crashes on both rather
+          # than degrading. `lib/browser.mjs` appends these to every launch.
+          AAA_CHROME_FLAGS: "--no-sandbox --disable-dev-shm-usage"
+        run: |
+          set -uo pipefail
+          status=0
+          node tests/run.mjs || status=$?
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+          case "$status" in
+            0) echo "the suite is green against the tree this run is about to publish" ;;
+            1) echo "::error title=The suite is red on today's build::An assertion failed, or a harness went quiet -- printed no tally, asserted nothing, or made fewer assertions than its floor in run.mjs's HARNESSES table. The per-harness summary above says which. This is a statement about the pages this run generated, not about the runner." ;;
+            2) echo "::error title=The suite could not run::run.mjs exits 2 when it cannot find Chromium or Python 3, before any harness starts, and prints the env vars, cache directories and PATH it searched. Nothing about today's build failed here -- the runner image or the setup steps above have stopped providing something the suite needs." ;;
+            *) echo "::error::run.mjs exited ${status}, which it has no documented meaning for. Read its output above." ;;
+          esac
+          exit 0
+
+      # Hard-failing whatever VERIFY_GATES_DEPLOY says, because this is not the policy question. A harness
+      # that wrote into `docs/`, `mega-list/` or `state/` has put its scratch output in the way of the
+      # commit below, and publishing it is not a trade anyone chose.
+      # Its own step rather than the tail of the one above, because the photograph has to be taken by
+      # something that fails when it cannot take it. The step above is `continue-on-error` by design, so a
+      # git failure inside it would have been swallowed and read here as "nothing changed" -- and an empty
+      # listing is a legitimate answer (the commit step below has an `exit 0` for the day the lists moved
+      # but nothing they changed reaches these surfaces), so emptiness cannot be the signal for trouble.
+      # `diff` decides instead, and a missing before-photograph makes it fail rather than pass.
+      - name: Refuse to publish anything the suite itself wrote
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          set -euo pipefail
+          git status --porcelain -- docs mega-list state > "$RUNNER_TEMP/publish-set-after"
+          if ! diff -u "$RUNNER_TEMP/publish-set-before" "$RUNNER_TEMP/publish-set-after"; then
+            echo "::error title=The suite wrote into the publish set::A harness modified docs/, mega-list/ or state/ while running, and the difference is printed above. Every harness is supposed to write only into a mkdtemp or into gitignored build-tmp/ -- live_test.py carries an assertion whose stated purpose is that --out never points at the real docs/ -- so one of them has grown an output path that reaches the repository. The commit step below would stage it and Pages would serve it."
+            exit 1
+          fi
+          echo "the suite wrote nothing into docs/, mega-list/ or state/"
+
+      # The policy question, in the one place it is asked. On "true" this is the gate and nothing red gets
+      # as far as the commit; on "false" it is a no-op here and the same red result fails the job at the
+      # very end instead, after the site has shipped.
+      - name: Decide whether a red suite stops this deploy
+        if: steps.gate.outputs.go == 'true'
+        env:
+          STATUS: ${{ steps.verify.outputs.status }}
+        run: |
+          set -euo pipefail
+          if [ "${STATUS}" = "0" ]; then exit 0; fi
+          if [ "${VERIFY_GATES_DEPLOY}" = "true" ]; then
+            echo "::error title=Deploy blocked by a red suite::VERIFY_GATES_DEPLOY is true, so nothing is recorded, committed or published. The site keeps serving yesterday's build, which is stale rather than wrong. Nothing about the source lists was lost: the SHAs are recorded in the step after this one, so tomorrow's run rebuilds today's entries too."
+            exit 1
+          fi
+          echo "::warning title=Publishing over a red suite::VERIFY_GATES_DEPLOY is false, so today's build ships and this run will end red to say so. The regression is live from now; it is bounded at one day rather than the seven the Monday canary gives."
+
       # Only now, and only because everything above succeeded. Recording the SHAs earlier would mean a
       # build that failed halfway was never retried: the next run would compare against the commit it
       # died on, conclude there was nothing to do, and the new entries would be lost for good.
@@ -527,3 +699,18 @@ jobs:
       - name: What is new
         if: steps.gate.outputs.go == 'true'
         run: python scripts/newness.py
+
+      # Last, and only reachable in the non-gating mode -- on "true" the decision step above already failed
+      # the job and nothing after it ran. This is what makes "report without blocking" a report rather than
+      # a shrug: the deploy is done, and the run still ends red, so it appears red in the Actions list and
+      # GitHub emails the repository owner. Without this step a red suite would be a `continue-on-error`
+      # annotation on a green run, which is the failure mode `tests.yml`'s header keeps returning to -- a
+      # check that quietly did not stop anything looks exactly like a check that passed.
+      #
+      # `always()` so that this is still asked when a later step failed for its own reasons. The IndexNow
+      # step cannot fail the job by design, but it should not be able to hide this either.
+      - name: End red if the suite was red
+        if: always() && steps.gate.outputs.go == 'true' && steps.verify.outputs.status != '0'
+        run: |
+          echo "::error title=Published, and red::The site was published and the verification suite was not green on it (run.mjs exited ${{ steps.verify.outputs.status }}). Read the suite's own step above for which harness and which assertion. To stop a red suite publishing at all, set VERIFY_GATES_DEPLOY to \"true\" at the top of this file."
+          exit 1

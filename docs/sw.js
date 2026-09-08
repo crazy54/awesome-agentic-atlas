@@ -11,6 +11,10 @@ const SHELL = "atlas-shell-" + VERSION;
 // would have a shell and no rows.
 const DATA = "atlas-data";
 const PAGES = "atlas-pages";
+// Unversioned and uncapped, for the same reason as DATA and one better: the list it holds is fixed at
+// build time and two entries long, so it is bounded by construction rather than by a number. A cap here
+// would be a `trim()` that can never fire.
+const ASSETS = "atlas-assets";
 const PAGES_MAX = 30;
 // The one thing this worker tells the page in words: set on a `data.json` response that came out of DATA
 // because the network did not answer. The page cannot work it out for itself -- what comes back out of that
@@ -18,12 +22,18 @@ const PAGES_MAX = 30;
 // from <date>". The name is `CACHED_HEADER` in `19_pages.py`, which owns the page that reads it, and is
 // substituted in here rather than written twice.
 const CACHED = "x-atlas-cached";
-// Every file `data()` below is responsible for, matched against `url.pathname`. Named as a list because
+// Every file the data policy is responsible for, matched against `url.pathname`. Named as a list because
 // this worker routes by filename and has no default policy: a data file missing from here is fetched from
 // the network, never cached, and silently absent offline, with nothing anywhere to say so. `data.json` is
 // the index's rows; `live.json` is the sidecar the 1,294 detail pages read (JFH-222). Kept in
 // `24_pwa.DATA_FILES` rather than written out here, so the list has one definition.
 const DATA_FILES = ["/data.json", "/live.json"];
+// The detail pages' stylesheet and script, cached on first visit under ASSETS (JFH-282). Two lists rather
+// than one because the marking differs and nothing else does: a `data.json` answered from cache has to say
+// so, since the index page turns that header into its freshness stamp, and a stylesheet answered from cache
+// has nobody to tell. Being absent from here is what used to make a detail page lose its star count offline
+// while the sidecar it reads was cached correctly -- routing by filename with no default cuts both ways.
+const PAGE_ASSETS = ["/repo/detail.css", "/repo/detail.js"];
 
 // Relative to this script, so the scope is the project's Pages prefix on the published site, the fork's
 // prefix on a fork, and "/" under a local `python -m http.server`. A literal "/awesome-agentic-atlas/"
@@ -119,7 +129,9 @@ self.addEventListener("fetch", (event) => {
   if (req.mode === "navigate") {
     event.respondWith(navigation(event));
   } else if (DATA_FILES.some((name) => url.pathname.endsWith(name))) {
-    event.respondWith(data(req));
+    event.respondWith(networkFirst(req, DATA, true));
+  } else if (PAGE_ASSETS.some((name) => url.pathname.endsWith(name))) {
+    event.respondWith(networkFirst(req, ASSETS, false));
   } else if (PRECACHED.has(key(url.href))) {
     event.respondWith(asset(req));
   }
@@ -152,12 +164,19 @@ async function navigation(event) {
   }
 }
 
-async function data(req) {
+// Network-first into `name`, falling back to whatever the reader already has. One function for both the
+// data files and the detail pages' assets, because it is one policy: fetch, keep a 200, hand an HTTP error
+// straight through, and answer from the cache only when the network did not answer at all. `mark` is the
+// single difference and it is the caller's to decide -- see `cached` below for why only one caller wants it.
+//
+// Two lists routed to one implementation rather than two implementations, so that the next file added to
+// either list cannot quietly get a policy that differs from the one this comment describes.
+async function networkFirst(req, name, mark) {
   const k = key(req.url);
   try {
     const res = await fetch(req);
     if (res.status === 200) {
-      const cache = await caches.open(DATA);
+      const cache = await caches.open(name);
       await cache.put(k, res.clone());
       return res;
     }
@@ -169,10 +188,12 @@ async function data(req) {
     return res;
   } catch (err) {
     // The network is gone, so the shell above was almost certainly answered from cache too, and this is
-    // the pair the reader is meant to have offline. Marked, so the page can say which day these rows are
-    // from rather than repeating a date its own bytes were stamped with -- see `cached` below.
+    // the set the reader is meant to have offline. A data hit is marked, so the page can say which day
+    // these rows are from rather than repeating a date its own bytes were stamped with -- see `cached`
+    // below. An asset hit is returned as it stands: it is a stylesheet or a script, and there is nothing
+    // in a detail page that would read a header off its own <script src>.
     const hit = await caches.match(k);
-    if (hit) return cached(hit);
+    if (hit) return mark ? cached(hit) : hit;
     throw err;
   }
 }
@@ -183,8 +204,10 @@ async function data(req) {
 // through as a stream rather than read, so this costs no copy of 552 KB and nothing before the page can
 // begin parsing.
 //
-// Only the data path uses it. A navigation answered from the shell cache is equally a cached response, but
-// a document cannot read the headers of its own navigation, so there would be nobody to tell.
+// Only the data path passes `mark`. A navigation answered from the shell cache is equally a cached
+// response, but a document cannot read the headers of its own navigation, so there would be nobody to tell;
+// the same is true of a stylesheet and a script, which is why `PAGE_ASSETS` is routed with `mark` false
+// rather than marked for symmetry.
 function cached(hit) {
   const headers = new Headers(hit.headers);
   headers.set(CACHED, "1");

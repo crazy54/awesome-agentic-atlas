@@ -45,7 +45,7 @@ cannot see; this is the summary.
 | `app_flags_test.py` | The standard application-flag schema, its strict integer `1`/`0` vocabulary, human descriptions, atomic conflict-safe writes from the control panel, and real all-OFF renders through both site generators. | A deployed build workflow or another application's schema. The controller's multi-app registry is deliberately independent of Atlas. |
 | `probe.mjs` | Runs the page's own script from `docs/index.html` under a stub DOM against the real `docs/data.json`, then asserts on the HTML it renders: ranking, the search fallback, the hash round-trip, the palette, the theme colour, the cards stylesheet, the saved set and the link that carries it, and the page as shipped text. ~276 assertions. | Computed layout. There is none in Node, so it can tell you a clamp rule is spelled correctly and not that anything clamps. |
 | `cards-check.mjs` | Real layout in a real browser over HTTP at 1440, 900 and 375 px in both themes: how many cards are across, the screenshot's aspect ratio, horizontal overflow, scroll and focus survival across a view switch, the DOM work a switch does counted against the re-render it avoids, and the clamp's behaviour. Writes screenshots to `build-tmp/`. 49 assertions. | Any prefixed spelling this browser has an unprefixed implementation of. `-webkit-line-clamp` is the case that bit: this Chrome does the standard `line-clamp`, so a rule missing `display:-webkit-box` clamps perfectly here and is inert in Firefox. That half lives in `probe.mjs`. |
-| `pwa-check.mjs` | Manifest, service worker registration and scope, the precached shell, the worker's `VERSION` recomputed from the bytes actually being served, the caching of every file in `DATA_FILES` — `data.json` and `live.json` both, by the route rather than by an exact filename — offline rendering with *both* the page and the worker taken offline, the freshness stamp reading the cached data's own date rather than the document's, and a 404 navigation that must not be cached. 37 assertions. | The paths this browser does not take: it supports navigation preload, so the worker's fallback for browsers that do not is never exercised. Nor the 156 prerendered facet pages, whose own snapshot lines have no data fetch to read a date out of. |
+| `pwa-check.mjs` | Manifest, service worker registration and scope, the precached shell, the worker's `VERSION` recomputed from the bytes actually being served, the caching of every file in `DATA_FILES` — `data.json` and `live.json` both, by the route rather than by an exact filename — offline rendering with *both* the page and the worker taken offline, the freshness stamp reading the cached data's own date rather than the document's, and a 404 navigation that must not be cached. Then a real detail page, offline: that it renders the same star count and last push it rendered online, which is the claim JFH-282 made true and the one this file used to carry a paragraph explaining it could not make — the page under test is chosen for a repository whose `live.json` row has both figures, because 24 of the 1,294 rows have an empty push date and a missing figure would otherwise pass. That both sub-resources are in `atlas-assets` and that nothing else is, so the cache is bounded by `PAGE_ASSETS` rather than by a cap. And that a reader who has opened no detail page has no such cache at all. 43 assertions. | The paths this browser does not take: it supports navigation preload, so the worker's fallback for browsers that do not is never exercised. Nor the 156 prerendered facet pages, whose own snapshot lines have no data fetch to read a date out of. Nor `PAGES_MAX` eviction: the cap is asserted nowhere, and a detail page is cached by the same navigation route as a facet page, so the two share it. |
 | `detail-churn.mjs` | Regenerates all 1,294 detail pages four times into scratch directories and compares SHA-256 trees: determinism, that a day of moving star counts and push dates rewrites nothing, that editing one curated blurb does move its page, and that committed `docs/repo` matches a fresh regeneration. 7 assertions over 1,298 files. | Whether the pages are any good. It never opens one. It also cannot see churn from any other stage — `20_landing.py` rewrites 156 facet pages on every run by design, and that is not what this measures. |
 | `detail-preview-check.mjs` | Opens a real detail page in Chromium while fulfilling the GitHub API at the browser boundary with a deterministic README, SKILL.md and repository tree. Verifies rendered Markdown is the default, raw source is secondary, nested Markdown discovery and prioritisation, active-markup stripping, repository-relative URLs, typography, dark/light colour tokens and phone layout. | GitHub's live availability and anonymous rate limit. The fixture uses the same media types and response shapes, but deliberately spends no network quota and cannot prove an upstream repository still exists. |
 | `pagemin_test.py` | `scripts/pagemin.py` against the cases the real page does not contain: template literals, `${}` substitutions, regex literals, unterminated blocks, strings that look like comments, and the whole template loaded live out of `19_pages.py`. 48 assertions. Written and owned by the JFH-204 author. | Everything about the page that is not comment stripping. |
@@ -56,7 +56,8 @@ cannot see; this is the summary.
 | `refresh_test.py` | The staleness guard in `scripts/19b_refresh.py` — the only render path that works without the crawl cache, and the one that renders a live template over committed rows. Constructs the disagreement the guard exists for: the `listed_by` reader on every shape it comes in, a fabricated `SOURCES` one list too long and one too short, what the refusal says, `main()` three times against a scratch `docs/` with `reversion()` stubbed so a broken guard cannot reach the deployable tree, and the hazard itself — drop a row from the committed data and the rendered count and star total both move while `__LISTS__` beside them, filled from the live `SOURCES` rather than from the rows, does not. 74 assertions, ~1 s. | Whether a real crawl would produce the labels it counts. Stages 14+ need a crawl that is not committed, so the source count is inferred from the committed rows — it measures "lists that produced at least one row", not "lists configured". |
 | `live_test.py` | `scripts/19c_live.py`, the star/push sidecar the 1,294 detail pages fetch in place of `data.json` — 21,791 B gzipped against 162,473, which is the largest measured saving in the site. That its key set and the set of detail pages are identical in *both* directions, so a page with no stars and a key with no page are both red rather than silent. That it resolves its three columns by name and hard-stops on a missing one, because `25_velocity.py` appends columns after `19_pages.py` writes the file and a positional read would quietly shift. That the serialisation is byte-stable — sorted keys, no line endings — since a file that reshuffles itself would show up as churn in a commit rather than as a failure here. And the three hard stops: a missing `snapshot`, a duplicate `nwo`, an absent column. 100 assertions, ~2 s. | Whether the numbers are true. They are copied from `docs/data.json`, so a stale crawl is faithfully reproduced — this asserts the sidecar and the index agree, not that either is current. Nor the fetch itself: `detail.js` reading it is `pwa-check.mjs`'s and `probe.mjs`'s half. |
 
-Between them, roughly 985 assertions. The number only matters in one direction — see the floors below.
+Between them, 1,199 assertions, from a real run rather than by adding up the figures above. The number only
+matters in one direction — see the floors below.
 
 Every one of them compares bytes, counts, geometry or text. None of them measures a duration, and that is
 deliberate: `cards-check.mjs` asserted the view switch was cheaper than the re-render it avoids by racing two
@@ -81,14 +82,15 @@ would be the first `package.json` in the repository, would need a lockfile, woul
 turn "can I run the tests" into a question with a network answer. The cost is that these files own their own
 plumbing — about 200 lines of it, in `lib/`. That is the trade, and it is deliberate.
 
-The six Python harnesses are Python because the things they test are. `python` here means whatever
-`lib/python.mjs` finds. Node's side needs no packages, and neither do `pagemin_test.py`, `signals_test.py`,
-`indexnow_test.py`, `refresh_test.py` and `live_test.py` — standard library only, except that `indexnow_test.py` also needs
-`git` on `PATH`, because it asserts against the *tracked* paths under `docs/` rather than a walk of the working
-tree, so that a local build's leftovers cannot change what it thinks the site contains. `media_test.py` needs `openpyxl`
-and `pillow`, which are the generator's dependencies rather than the suite's — both workflows install them,
-so a checkout that can build the workbook can already test it. Missing them is an `ImportError` with no
-tally, which `run.mjs` counts as a failure and not as a skip.
+The eight Python harnesses are Python because the things they test are. `python` here means whatever
+`lib/python.mjs` finds. Node's side needs no packages, and neither do `app_flags_test.py`, `theme_test.py`,
+`pagemin_test.py`, `signals_test.py`, `indexnow_test.py`, `refresh_test.py` and `live_test.py` — standard
+library only, except that `indexnow_test.py` also needs `git` on `PATH`, because it asserts against the
+*tracked* paths under `docs/` rather than a walk of the working tree, so that a local build's leftovers cannot
+change what it thinks the site contains. `media_test.py` needs `openpyxl` and `pillow`, which are the
+generator's dependencies rather than the suite's — every workflow that needs them installs them, `tests.yml`
+included, so a checkout that can build the workbook can already test it. Missing them is an `ImportError` with no tally,
+which `run.mjs` counts as a failure and not as a skip.
 
 ## A harness that skips must not be able to pass
 
@@ -112,6 +114,63 @@ The same shape is worth watching for inside the harnesses. `[].every(...)` is `t
 form "every result satisfies X" passes when there are no results, which is usually the exact failure it was
 written to catch. Four in `probe.mjs` had that shape and now carry an explicit non-emptiness conjunct; if you
 add another, add the conjunct.
+
+## Where this runs
+
+`.github/workflows/tests.yml` runs `node tests/run.mjs` on pull requests, on pushes to `latest_branch`, on
+Mondays at 07:40 UTC, and on demand. Until that file existed the suite was only ever run by hand, so every
+harness here was a test of the moment it was written rather than a test of the repository. Its own header
+comment carries the long version of what follows.
+
+Three things about it are worth knowing before you read a green tick as a fact about the site:
+
+- **The daily build's commits do not trigger it.** `daily.yml` pushes with `secrets.GITHUB_TOKEN`, and GitHub
+  starts no workflow runs for pushes made with that token. So the thirty commits a month that rewrite
+  `data.json`, `index.html`, `sw.js` and 156 facet pages — all four of which this suite asserts on — are
+  unverified when they land, and since Pages serves `latest_branch` verbatim, landing is publishing. The
+  Monday run closes that within seven days rather than within one. Running the suite inside `daily.yml`
+  before its commit step would close it properly, at the cost of letting a failed assertion block the deploy;
+  that is a decision about the site rather than about a test runner, so it is not made here.
+- **Exit 2 means the suite never ran.** The workflow annotates 1 and 2 differently on purpose. 1 is this
+  suite doing its job — an assertion failed, or a harness went quiet. 2 is `run.mjs` refusing to start
+  because it found no Chromium or no Python 3, which is a fact about the runner and not about the code, and
+  sending somebody to read a diff over it wastes the trip.
+- **There is no `paths` filter.** `lighthouse.yml` next door can name the files that change the page it
+  measures; this suite asserts on `docs/`, on `scripts/` and on the relationship between them, so a filter
+  would be a hand-maintained list of nearly the whole repository. Getting one wrong produces the single
+  outcome this suite exists to prevent: a check that quietly did not run, which from outside is
+  indistinguishable from a check that passed.
+
+No browser is installed there. `ubuntu-latest` carries two on `PATH` — `/usr/bin/chromium` and
+`/usr/bin/google-chrome` — and `launch()` passes `--headless=new` unconditionally, so either needs no flag
+from the workflow; installing one would be a ~130 MB download on every run. The browser is found, never
+installed, which is the policy `lighthouse.yml` already states. `ON_PATH` order means the one actually used
+is **chromium**, which on that image is a snap shim rather than Chrome, and `CHROME_PATH` is deliberately not
+set to pin it: the value of running this anywhere is that it is not the laptop the suite went green on, and
+choosing the closest available browser to that laptop would buy agreement by construction. The one setting CI
+does need is `AAA_CHROME_FLAGS: --no-sandbox --disable-dev-shm-usage`, for the reason in the table below.
+
+### What the first CI run found, which is the argument for having one
+
+This suite was green on every machine that had ever run it, and red on `ubuntu-latest` the first time a
+runner tried. Two defects, both in `tests/` rather than in the site, and neither findable from one platform:
+
+- `lib/browser.mjs` waited 15 seconds for Chrome to write `DevToolsActivePort`. The first browser launch of
+  a CI run took 15.6, so the first browser harness died having asserted nothing. The budget is 60 now, and
+  the reason is variance rather than a floor: the same launch on the same image took 15.6 s, then 48.2 s,
+  then 16.8 s. There is no number to sit just above, and a timeout is not a sleep — a browser ready in
+  300 ms is not charged for the ceiling.
+- `pwa-check.mjs`'s offline helper called `Target.attachToTarget` on every invocation, and that opens a
+  *new* session rather than returning the existing one. Seven calls left seven sessions on the service
+  worker with conflicting network conditions, so whether the worker came back online depended on how a
+  particular Chrome merges them. `chrome-headless-shell` 1223 takes the last write and passed; Chromium 152
+  does not, and six assertions failed — the first genuinely, the other five as consequences of a worker that
+  was never let back online. One session per target now, and the harness went from 18.5 s red to 2.9 s green.
+
+Both are the shape this suite already warns about, one level up: not an assertion that stopped biting, but an
+assertion that could not run. Three green local runs proved nothing about either, because the thing that was
+wrong was the same on all three machines. If you add a harness, the question this section exists to prompt is
+which of its numbers are properties of the code and which are properties of the laptop you wrote it on.
 
 ## Environment
 
