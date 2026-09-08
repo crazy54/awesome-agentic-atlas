@@ -447,11 +447,27 @@ for k, lab in enumerate(osicons.LABELS):
     says(f"the index carries the word {lab} for its script to label a chip with", index, lab)
 says("the index's five chips are built from the shared ids", index, osicons.JS_IDS)
 says("...and named from the shared titles", index, osicons.JS_TITLES)
-# A chip whose whole label is a picture is the one place on the site where dropping the word would take
-# the control's accessible name with it, rather than merely a hover.
-true("...and a chip's label is a mark plus the word, not a mark alone",
-     re.search(r"osIcon\([^)]*\)\s*\+\s*'<span class=\"sr\">'", index),
-     "an OS chip built from osIcon() alone would announce as an unlabelled button")
+# The `href` is assembled at runtime, so the ids in the sprite and the ids the script asks for are the
+# same thing only while the script reads them from `OSI` instead of spelling them a second time.
+true("the marks are built from that array rather than a second copy of the ids",
+     re.search(r'href="#\'\s*\+\s*OSI\[', index),
+     "osIcon() spells an id itself, so the sprite and the reference can drift inside one document")
+# Two things on this page are drawn as a mark, and each needs its word for a different reason. A filter
+# chip's whole label is the picture, so without the word it is not a worse label -- it is an unlabelled
+# button. A verdict in the table has a glyph beside it, so the word is what says which platform the glyph
+# is answering for. Both are checked by locating the statement that builds the markup and requiring the
+# hidden word inside it, rather than by matching the expression: the property is that the two are
+# assembled together, and an assertion pinned to `a + b + c` goes red the day someone writes a template
+# literal that does exactly the same thing. This one already did, which is why it reads this way now.
+CHIP = re.search(r"if \(icon\)[^;]*;", index)
+ROW = re.search(r"'<span class=\"sr\">'[^;]*;", index)
+for what, m in (("a filter chip", CHIP), ("a verdict in the table", ROW)):
+    if not m:
+        bad += 1
+        print(f"FAIL the index still builds {what} from a mark -- the statement that did is gone")
+        continue
+    says(f"{what} is a mark plus a visually-hidden word, not a mark alone", m.group(0), 'class="sr"')
+    says(f"...and that word is the platform's own, escaped ({what})", m.group(0), "esc(")
 
 # --------------------------------------------------------------------------- the surfaces
 

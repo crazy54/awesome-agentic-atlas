@@ -58,6 +58,24 @@ const {sessionId} = await send("Target.attachToTarget", {targetId, flatten: true
 const S = (m, p) => send(m, p, sessionId);
 await S("Page.enable"); await S("Runtime.enable");
 
+// The pointing device, declared rather than inherited -- and this is a correctness fix, not a preference.
+// Three assertions below measure effects that exist only inside `@media(hover:hover)`: the table row's
+// 2px accent line and the card's outline and `card-glow` pulse. That guard is deliberate (a touch device
+// reports a hover and then latches it, so tapping a row left it tinted), which means those effects are
+// real for a reader with a mouse and absent for everyone else -- and whether a *headless* browser calls
+// itself hover-capable is a property of the binary and of `setDeviceMetricsOverride`, not of this page.
+// It diverged: CI's Chromium 152 returned `none` for the row shadow, the cell shadow and the animation
+// name at once, while the local headless shell reported a hover and passed all three. The mouse was
+// landing either way -- the mascot's own hover assertion above uses the same `Input.dispatchMouseEvent`
+// on the same row and passed on both -- so what differed was the media query, not the input.
+//
+// A harness that measures a guarded rule has to state the guard's precondition itself, or it is testing
+// the runner it happens to be on. Emulated once here so every width sees the same capability, including
+// the 375px pass where `resize()` sets `mobile: true`: nothing in this file asserts that a touch device
+// is denied the hover, so there is no case this hides.
+const POINTING = [{name: "hover", value: "hover"}, {name: "pointer", value: "fine"}];
+await S("Emulation.setEmulatedMedia", {media: "screen", features: POINTING});
+
 const evalIn = async (expr) => {
   const r = await S("Runtime.evaluate", {expression: expr, awaitPromise: true, returnByValue: true});
   if (r.exceptionDetails) throw new Error(expr.slice(0, 70) + " threw: " +
@@ -191,15 +209,18 @@ ok("Atlas Byte sits at the upper right without covering navigation",
    mascot && mascot.right > 1440 * .88 && mascot.top < 150 && mascot.left >= mascot.navRight - 1 &&
    mascot.width >= 92 && mascot.width <= 170, JSON.stringify(mascot));
 ok("Atlas Byte has an idle animation", mascot && mascot.animation !== "none", JSON.stringify(mascot));
+// `setEmulatedMedia` replaces the whole feature list rather than merging into it, so the pointing device
+// has to be restated here and on the reset below. Dropping it would turn the hover assertions after this
+// point into a test of whatever the runner reports, which is the thing being fixed.
 await S("Emulation.setEmulatedMedia", {
-  media: "screen", features: [{name: "prefers-reduced-motion", value: "reduce"}],
+  media: "screen", features: [...POINTING, {name: "prefers-reduced-motion", value: "reduce"}],
 });
 const reducedMascot = await evalIn(`(() => {
   const img = document.querySelector('header img.atlas-byte');
   return img ? getComputedStyle(img).animationName : "missing";
 })()`);
 ok("the mascot becomes still for reduced-motion readers", reducedMascot === "none", reducedMascot);
-await S("Emulation.setEmulatedMedia", {media: "screen", features: []});
+await S("Emulation.setEmulatedMedia", {media: "screen", features: POINTING});
 
 const faviconHref = await evalIn("document.querySelector('link[rel=icon]')?.getAttribute('href') || ''");
 const faviconResponse = await fetch(new URL("favicon.svg", ORIGIN));
