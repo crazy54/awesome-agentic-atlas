@@ -231,7 +231,14 @@ jobs:
       #   FCP              1,537 ms    restored 2,000
       #   LCP              2,161 ms    restored 2,500
       #   TBT                  0 ms    restored 300
-      #   perf score       0.770       0.75 / 0.77 / 0.77 across the three runs -- not restored, see below
+      #   perf score       0.770       per-run 0.64-0.78 on this tree, median 0.77 -- not restored, see below
+      #
+      # Re-measured on the tree that lands this, four runs of three: `document` 19,964 B, `script` 10,338 B,
+      # `total` 198,553 B with `image` 0 B on first paint, CLS 0.521 on all twelve samples. Every byte line
+      # and CLS -- the four `error` assertions, the only ones that can fail the job -- passed on every
+      # sample rather than only on the median. CLS has drifted from the 0.514 the ticket recorded, which is
+      # worth knowing and is not a threat to the 0.7 line; it is still the 1,294-row page, and JFH-225's
+      # first real crawl is what will move it.
       #
       # `categories:performance` is the seventh line fdf1fa4 touched and the only one here that is not a
       # restoration. Its old value was 0.9 and it does not go back: 0.770 against 0.9 is a real miss rather
@@ -239,13 +246,25 @@ jobs:
       # so restoring 0.9 would add a permanently red line and teach the next reader to ignore it.
       #
       # fdf1fa4's 0.75 is not the alternative either, and this is the one threshold in the file that is
-      # chosen rather than measured. 0.75 sits *on* the low run of the three above. `median-run` hides that
-      # only for as long as two of the three stay high, so at 0.75 the line is one slow runner away from
-      # reporting a regression that did not happen -- and it is the assertion closest to its limit, which
-      # makes it the worst one in the file to teach people to discount. 0.7 clears the whole observed spread,
-      # so a report from this line means the page got worse rather than that the runner was busy. It is a
-      # `warn` at any of these numbers and fails nothing either way, which is the reason it has to be a
-      # number worth reading rather than a number that is merely quiet.
+      # chosen rather than measured. It sits *on* the low sample: the three runs behind 34146728455 scored
+      # 0.75, 0.77, 0.77, so 0.75 was the floor of the reading it was set from. Twelve further samples, four
+      # runs of three on this tree (34255116550, 34255676141, 34255800983, 34255846194), put the real range
+      # at 0.64-0.78 -- which makes the case against 0.75 stronger than the ticket's figures did, and makes
+      # the case for 0.7 a different one than it looks like. **0.7 does not clear the whole spread, and does
+      # not need to.** Anyone checking that arithmetic against a 0.64 in a report deserves the reason here
+      # rather than an argument that does not survive contact with the log.
+      #
+      # The low sample is warmup, not noise, and that is the whole argument. In all four runs the sub-0.70
+      # sample was the *first* of its three, and runs two and three came in at 0.77-0.78 without exception.
+      # `median-run` is what the assertions compare, and a sample that is reliably the minimum of its batch
+      # can never be the median of it: a median under 0.7 needs two cold runs in one batch, which has not
+      # happened in twelve samples. The median was 0.77 in all four, with no drift at all. That is a
+      # structural reason to expect this line to hold rather than a probabilistic one, and it is the reason
+      # 0.7 is safe while 0.75 -- three hundredths above a sample that occurs once per run by construction
+      # -- is not.
+      #
+      # It is a `warn` at any of these numbers and fails nothing either way, which is exactly why it has to
+      # be a number worth reading rather than a number that is merely quiet.
       #
       # `total` landing inside the budget is a reading rather than the growth story resolving itself. Run
       # 34064079203 had this line 4.4x over on a page whose own bytes were about the same size, and the
