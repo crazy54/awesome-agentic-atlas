@@ -1,0 +1,190 @@
+# The verification suite, in CI. Runs `node tests/run.mjs` -- all thirteen harnesses, 1,193 assertions --
+# and fails the job when anything is red. It writes nothing, commits nothing and deploys nothing.
+#
+# WHY THIS EXISTS (JFH-208)
+#
+# The suite already existed and nothing ever ran it. Thirteen harnesses, ~1,200 assertions, a README
+# explaining each one, four `lib/` modules of plumbing written specifically so it needs no npm install --
+# and the only thing standing between a broken assertion and `latest_branch` was somebody remembering to
+# type the command on a laptop. Every harness in `tests/` was therefore a test of the moment it was written
+# and not of the repository, which is the state this file ends.
+#
+# It matters more here than the usual argument for CI, because of what this repository deploys. Pages is a
+# `build_type: legacy` deployment from `latest_branch`, so *the push is the deploy*: there is no staging
+# step, no review environment and no gate between a commit and the live site. `docs/` is committed verbatim
+# and served verbatim. A check that runs after the merge runs after publication, so the pull-request trigger
+# below is the only place a failing assertion can be seen before a reader sees the bug.
+#
+# WHEN IT RUNS, AND THE GAP THE SCHEDULE COVERS
+#
+# On pull requests, on pushes to `latest_branch`, weekly, and by hand. No `paths` filter, deliberately, and
+# that is a departure from `lighthouse.yml` next door: that job measures one page and can name the handful of
+# files that change it, whereas this suite asserts on `docs/`, on `scripts/`, on `tests/` and on the
+# relationship between them -- `indexnow_test.py` alone asserts over every tracked path under `docs/`. A
+# filter would be a list of almost the whole repository maintained by hand, and the failure mode of getting
+# it wrong is the one thing this suite is built to prevent: a check that quietly did not run looks exactly
+# like a check that passed.
+#
+# `push` is here and is not redundant with `pull_request`, because this repository is mostly worked on by
+# committing straight to `latest_branch` -- PR #3 is the only pull request in its history. A suite that ran
+# only on pull requests would almost never run.
+#
+# The weekly run is not ceremony either, and the reason is a genuine hole. `daily.yml` rebuilds the site and
+# commits to this same branch every day, authenticated with `secrets.GITHUB_TOKEN` through
+# `actions/checkout`'s persisted credentials. GitHub does not start workflow runs for pushes made with that
+# token, so **not one of those thirty commits a month triggers anything below**. That is a saving rather
+# than a problem -- thirty runs to discover a star count moved is not worth having -- but it does mean the
+# daily's output is unverified, and the daily is what rewrites `data.json`, `index.html`, `sw.js` and 156
+# facet pages, all four of which this suite asserts on. The canary closes it within seven days. Committing
+# the suite into `daily.yml` itself, before its commit step, would close it within one and is the obvious
+# next move; it is not done here because it would make a failing assertion block the deploy, and that is a
+# policy decision about the site rather than a decision about a test runner.
+#
+# 07:40 UTC on Mondays, which is a time and not a round number. `weekly.yml` starts Sundays at 12:40 UTC
+# with a 350-minute timeout for a cold screenshot cache, so it can still be running at 18:30; this is
+# thirteen hours after that worst case, and six hours before `lighthouse.yml`'s Monday canary. The suite
+# regenerates 1,294 detail pages four times, so it should not be racing the job that writes them.
+#
+# WHY NO BROWSER IS INSTALLED
+#
+# Three of the thirteen harnesses drive Chromium over CDP, and none of them installs one. `ubuntu-latest`
+# ships Google Chrome stable on `PATH`, `tests/lib/browser.mjs`'s `ON_PATH` list includes `google-chrome`
+# and `google-chrome-stable`, and `launch()` passes `--headless=new` unconditionally -- so the runner's own
+# Chrome is headless-capable without a flag from here. That saves a ~130 MB Playwright download on every
+# run and it matches the policy `lighthouse.yml` already states next door: the browser is found, never
+# installed. If a future runner image drops Chrome, `run.mjs` exits 2 and prints the three env vars, the
+# three cache directories and `$PATH` that it searched, which is a clearer failure than a broken installer
+# step would give.
+#
+# `og-preview.yml` does install one, and that is not an inconsistency: it renders social cards for
+# publication, so it wants the same `chromium_headless_shell` build every time rather than whatever Chrome
+# the image happens to carry. Here the browser is an instrument, not an input to a published artifact.
+#
+# WHY openpyxl AND pillow
+#
+# `media_test.py` imports both directly, at module scope -- `from openpyxl.drawing.image import Image as
+# XLImage` and `from PIL import Image as PILImage` -- because the thing it tests is the workbook writer's
+# media pool. They are the generator's dependencies rather than the suite's, which is why `tests/README.md`
+# describes the other Python harnesses as standard-library-only, and both build workflows install them
+# already. Nothing else here needs a package: `app_flags_test.py`, `theme_test.py`, `signals_test.py`,
+# `indexnow_test.py`, `pagemin_test.py`, `refresh_test.py` and `live_test.py` are standard library, and the
+# Node side has no `package.json` at all by design.
+#
+# Do not trim this list by reasoning about what a test appears to need. Run 34151702414 of `og-preview.yml`
+# died on a missing `openpyxl` that had been left out on exactly that reasoning: drawing a social card
+# imports `20_landing` imports `19_pages` imports `17_markdown` imports `16_build_all`, whose line 41 is
+# `from openpyxl import Workbook` at import time. The same chain is reachable from here, because
+# `detail-churn.mjs` and `refresh_test.py` both drive stages that sit on it.
+name: Tests — the thirteen-harness verification suite
+
+on:
+  pull_request:
+  push:
+    branches:
+      - latest_branch
+  schedule:
+    - cron: "40 7 * * 1"
+  workflow_dispatch:
+
+# It reads the tree and reports through the check. Nothing here writes to the repository, and the suite is
+# built to need nothing: it serves `docs/` on a port the OS picks and writes only into `$RUNNER_TEMP` and
+# `build-tmp/`.
+permissions:
+  contents: read
+
+# Per ref, cancelled on a force-push. The only interesting answer is the newest commit's, and the suite
+# regenerating 1,294 detail pages four times against a commit somebody has already replaced is minutes
+# spent on a question nobody is still asking.
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    # The whole suite is about two minutes on a laptop, of which `detail-churn.mjs` is 20 seconds and the
+    # three browser harnesses are 20 more. Twenty minutes is roughly eight times the expected worst case,
+    # which leaves room for a slow runner and still fails rather than hanging: `run.mjs` streams each
+    # harness's output as it goes, so a job killed here shows exactly which harness stopped producing.
+    timeout-minutes: 20
+
+    steps:
+      # `indexnow_test.py` asserts against the *tracked* paths under `docs/` rather than a walk of the
+      # working tree, so that a local build's leftovers cannot change what it thinks the site contains.
+      # That needs `git` and the index, both of which a default depth-1 checkout provides -- it runs
+      # `git ls-files`, not history.
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: python -m pip install --upgrade pip openpyxl pillow
+
+      # Recorded before anything runs, so a failure months from now can be read off the log without
+      # guessing what the environment was. The Chrome line is the one that matters: it is the assumption
+      # this file makes instead of installing a browser, so it should be visible on every green run and not
+      # only discovered on the red one where it stopped being true.
+      - name: Name the tools this run will use
+        run: |
+          set -euo pipefail
+          node --version
+          python --version
+          git --version
+          echo "chrome on PATH: $(command -v google-chrome || command -v google-chrome-stable || echo 'NONE -- run.mjs will exit 2 and say where it looked')"
+          google-chrome --version || true
+
+      # The whole suite in one command, which is what `tests/run.mjs` exists to be.
+      #
+      # The exit code is read rather than just propagated, because `run.mjs` distinguishes two failures that
+      # want different reactions and GitHub would render both as a red X. 1 is the suite doing its job: an
+      # assertion failed, or a harness went quiet -- printed no tally, asserted nothing, or made fewer
+      # assertions than its floor. 2 is the suite refusing to run at all because Chromium or Python 3 was
+      # not found, which is not a fact about the code under test but a fact about this file being wrong.
+      # Conflating them would send somebody to read a diff when the actual problem is a runner image, so
+      # each gets its own annotation. Anything else is passed through unlabelled rather than guessed at.
+      #
+      # `set -e` is deliberately NOT used here: it would exit on the `node` line and skip the `case` that
+      # explains what happened, which is the whole point of the step. The status is captured explicitly and
+      # the step ends with `exit "$status"`, so nothing is softened -- a red suite is still a red job.
+      - name: Run the suite
+        env:
+          # `lib/browser.mjs` appends these to every launch. The same two flags `lighthouse.yml` passes as
+          # `chromeFlags`, for the same reason: a container has no user namespace to sandbox into and a
+          # 64 MB `/dev/shm`, and Chrome crashes on both rather than degrading.
+          AAA_CHROME_FLAGS: "--no-sandbox --disable-dev-shm-usage"
+        run: |
+          set -uo pipefail
+          status=0
+          node tests/run.mjs || status=$?
+          case "$status" in
+            0) echo "the suite is green" ;;
+            1) echo "::error::The suite is red. Either an assertion failed or a harness went quiet -- printed no tally, asserted nothing, or made fewer assertions than the floor in run.mjs's HARNESSES table. The per-harness summary above says which, and a quiet harness is reported in the total block with the reason in brackets." ;;
+            2) echo "::error::The suite refused to run: run.mjs exits 2 when it cannot find Chromium or Python 3, before any harness starts. It printed the env vars, cache directories and PATH it searched. Nothing about the code under test failed here -- this workflow's assumption that ubuntu-latest carries Google Chrome on PATH, or that setup-python put an interpreter there, has stopped holding. See the browser note in this file's header." ;;
+            *) echo "::error::run.mjs exited ${status}, which it has no documented meaning for. Read its output above." ;;
+          esac
+          exit "$status"
+
+      # Only on a failure, and only the screenshots. `cards-check.mjs` writes ~1.5 MB of PNG per run into
+      # `build-tmp/` (via `$AAA_ARTIFACTS`, which `run.mjs` sets), and on a green run nobody opens them --
+      # keeping them on every run would be a few hundred megabytes a month to record that the layout was
+      # fine. On a red run they are the difference between "cards overflowed at 375 px" and seeing it.
+      #
+      # `if-no-files-found: warn` rather than `error`, and the contrast with `lighthouse.yml` is deliberate
+      # rather than an oversight. There, the artifact *was* the step's entire purpose, so finding no files
+      # meant the step had silently done nothing and `warn` hid it for weeks. Here the suite's exit code is
+      # the authority and these PNGs are a diagnostic extra; an exit-2 failure legitimately produces none,
+      # because it happens before any browser starts, and turning that into a second red X would point at
+      # an empty artifact instead of at the missing browser the step above already named.
+      - name: Keep the screenshots from a failed run
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-screenshots
+          path: build-tmp
+          retention-days: 14
+          if-no-files-found: warn

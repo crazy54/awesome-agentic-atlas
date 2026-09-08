@@ -54,7 +54,8 @@ cannot see; this is the summary.
 | `refresh_test.py` | The staleness guard in `scripts/19b_refresh.py` — the only render path that works without the crawl cache, and the one that renders a live template over committed rows. Constructs the disagreement the guard exists for: the `listed_by` reader on every shape it comes in, a fabricated `SOURCES` one list too long and one too short, what the refusal says, `main()` three times against a scratch `docs/` with `reversion()` stubbed so a broken guard cannot reach the deployable tree, and the hazard itself — drop a row from the committed data and the rendered count and star total both move while `__LISTS__` beside them, filled from the live `SOURCES` rather than from the rows, does not. 74 assertions, ~1 s. | Whether a real crawl would produce the labels it counts. Stages 14+ need a crawl that is not committed, so the source count is inferred from the committed rows — it measures "lists that produced at least one row", not "lists configured". |
 | `live_test.py` | `scripts/19c_live.py`, the star/push sidecar the 1,294 detail pages fetch in place of `data.json` — 21,791 B gzipped against 162,473, which is the largest measured saving in the site. That its key set and the set of detail pages are identical in *both* directions, so a page with no stars and a key with no page are both red rather than silent. That it resolves its three columns by name and hard-stops on a missing one, because `25_velocity.py` appends columns after `19_pages.py` writes the file and a positional read would quietly shift. That the serialisation is byte-stable — sorted keys, no line endings — since a file that reshuffles itself would show up as churn in a commit rather than as a failure here. And the three hard stops: a missing `snapshot`, a duplicate `nwo`, an absent column. 100 assertions, ~2 s. | Whether the numbers are true. They are copied from `docs/data.json`, so a stale crawl is faithfully reproduced — this asserts the sidecar and the index agree, not that either is current. Nor the fetch itself: `detail.js` reading it is `pwa-check.mjs`'s and `probe.mjs`'s half. |
 
-Between them, roughly 985 assertions. The number only matters in one direction — see the floors below.
+Between them, 1,193 assertions, from a real run rather than by adding up the figures above. The number only
+matters in one direction — see the floors below.
 
 Every one of them compares bytes, counts, geometry or text. None of them measures a duration, and that is
 deliberate: `cards-check.mjs` asserted the view switch was cheaper than the re-render it avoids by racing two
@@ -79,14 +80,15 @@ would be the first `package.json` in the repository, would need a lockfile, woul
 turn "can I run the tests" into a question with a network answer. The cost is that these files own their own
 plumbing — about 200 lines of it, in `lib/`. That is the trade, and it is deliberate.
 
-The six Python harnesses are Python because the things they test are. `python` here means whatever
-`lib/python.mjs` finds. Node's side needs no packages, and neither do `pagemin_test.py`, `signals_test.py`,
-`indexnow_test.py`, `refresh_test.py` and `live_test.py` — standard library only, except that `indexnow_test.py` also needs
-`git` on `PATH`, because it asserts against the *tracked* paths under `docs/` rather than a walk of the working
-tree, so that a local build's leftovers cannot change what it thinks the site contains. `media_test.py` needs `openpyxl`
-and `pillow`, which are the generator's dependencies rather than the suite's — both workflows install them,
-so a checkout that can build the workbook can already test it. Missing them is an `ImportError` with no
-tally, which `run.mjs` counts as a failure and not as a skip.
+The eight Python harnesses are Python because the things they test are. `python` here means whatever
+`lib/python.mjs` finds. Node's side needs no packages, and neither do `app_flags_test.py`, `theme_test.py`,
+`pagemin_test.py`, `signals_test.py`, `indexnow_test.py`, `refresh_test.py` and `live_test.py` — standard
+library only, except that `indexnow_test.py` also needs `git` on `PATH`, because it asserts against the
+*tracked* paths under `docs/` rather than a walk of the working tree, so that a local build's leftovers cannot
+change what it thinks the site contains. `media_test.py` needs `openpyxl` and `pillow`, which are the
+generator's dependencies rather than the suite's — every workflow that needs them installs them, `tests.yml`
+included, so a checkout that can build the workbook can already test it. Missing them is an `ImportError` with no tally,
+which `run.mjs` counts as a failure and not as a skip.
 
 ## A harness that skips must not be able to pass
 
@@ -110,6 +112,39 @@ The same shape is worth watching for inside the harnesses. `[].every(...)` is `t
 form "every result satisfies X" passes when there are no results, which is usually the exact failure it was
 written to catch. Four in `probe.mjs` had that shape and now carry an explicit non-emptiness conjunct; if you
 add another, add the conjunct.
+
+## Where this runs
+
+`.github/workflows/tests.yml` runs `node tests/run.mjs` on pull requests, on pushes to `latest_branch`, on
+Mondays at 07:40 UTC, and on demand. Until that file existed the suite was only ever run by hand, so every
+harness here was a test of the moment it was written rather than a test of the repository. Its own header
+comment carries the long version of what follows.
+
+Three things about it are worth knowing before you read a green tick as a fact about the site:
+
+- **The daily build's commits do not trigger it.** `daily.yml` pushes with `secrets.GITHUB_TOKEN`, and GitHub
+  starts no workflow runs for pushes made with that token. So the thirty commits a month that rewrite
+  `data.json`, `index.html`, `sw.js` and 156 facet pages — all four of which this suite asserts on — are
+  unverified when they land, and since Pages serves `latest_branch` verbatim, landing is publishing. The
+  Monday run closes that within seven days rather than within one. Running the suite inside `daily.yml`
+  before its commit step would close it properly, at the cost of letting a failed assertion block the deploy;
+  that is a decision about the site rather than about a test runner, so it is not made here.
+- **Exit 2 means the suite never ran.** The workflow annotates 1 and 2 differently on purpose. 1 is this
+  suite doing its job — an assertion failed, or a harness went quiet. 2 is `run.mjs` refusing to start
+  because it found no Chromium or no Python 3, which is a fact about the runner and not about the code, and
+  sending somebody to read a diff over it wastes the trip.
+- **There is no `paths` filter.** `lighthouse.yml` next door can name the files that change the page it
+  measures; this suite asserts on `docs/`, on `scripts/` and on the relationship between them, so a filter
+  would be a hand-maintained list of nearly the whole repository. Getting one wrong produces the single
+  outcome this suite exists to prevent: a check that quietly did not run, which from outside is
+  indistinguishable from a check that passed.
+
+No browser is installed there. `ubuntu-latest` carries Google Chrome on `PATH`, `lib/browser.mjs` looks for
+`google-chrome` and `google-chrome-stable` among its `ON_PATH` names, and `launch()` passes `--headless=new`
+unconditionally — so the runner's own Chrome needs no flag from the workflow, and installing one would be a
+~130 MB download on every run. The browser is found, never installed, which is the policy `lighthouse.yml`
+already states. The one setting CI does need is `AAA_CHROME_FLAGS: --no-sandbox --disable-dev-shm-usage`, for
+the reason in the table below.
 
 ## Environment
 
