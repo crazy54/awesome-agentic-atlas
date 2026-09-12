@@ -329,6 +329,87 @@ check("the installed icon wears Atlas Byte's dark pixel shades",
 check("the installed icon carries the shades' white checker glint",
       png_pixel(ICON_192, 58, 77), DARK["ink"])
 
+# THE OTHER CHANNEL
+#
+# Everything above is about colour. The five platform verdicts also carry a mark -- `✓ ? ✗ – ·` -- and that
+# mark is the channel that survives a red/green deficiency, a greyscale print and a pasted export. It is the
+# same kind of claim as the ratios above and checkable the same way: by arithmetic on the source rather than
+# by reading the comment beside it, which is this file's whole reason for existing.
+#
+# It is here rather than in `probe.mjs` because of what the subject is. `probe.mjs` asserts on
+# `docs/index.html`, which is the *last published* page -- on a clean checkout it can be older than the
+# generator beside it, so a legend added to `19_pages.py` today is absent from it until a daily rebuild
+# commits one, and asserting the new shape there reddens CI for the lifetime of that gap. The subject of a
+# drift check is the generator, so the generator is what it reads.
+#
+# Three places say what the marks mean and no generator keeps them in step, which is exactly the drift
+# `osicons.py` exists to prevent for the platform icons: the `VERDICT` map, the `.vkey` legend in the body,
+# and the prose in `listMarkdown()` and `listHTML()`. A mark added to one and not the others ships a legend
+# that explains four of five.
+VERDICT_BLOCK = re.search(r"const VERDICT = \{(.*?)\n\};", SRC, re.S)
+true("the VERDICT map is where this file expects it", bool(VERDICT_BLOCK))
+VERDICT = re.findall(r'^\s*"?([A-Za-z-])"?\s*:\s*\["(.)",\s*"([^"]+)"\]',
+                     VERDICT_BLOCK.group(1) if VERDICT_BLOCK else "", re.M)
+# Pinned to five rather than "at least one", because the regex above is the only thing standing between
+# this section and passing vacuously: a map it cannot parse yields no marks, no marks collide, and every
+# assertion below is trivially true. A sixth verdict is meant to fail here and be added on purpose.
+check("all five verdicts parse out of it", len(VERDICT), 5)
+
+# The one that had a real defect. `a` and `-` both drew `–`, in the same `--off` colour at the same `.75`
+# opacity, so "the platform question does not apply to this project" and "we could not tell either way" were
+# the same cell in every channel a reader has. Not a 1.4.1 colour failure -- 1.4.1 is about colour being the
+# *only* channel, and here there was none at all. 220 of 6,470 cells, and no row carries both, so it is a
+# defect met only when comparing two projects, which is how it survived this long.
+MARKS = [glyph for _, glyph, _ in VERDICT]
+check("each verdict has a mark of its own", sorted(MARKS), sorted(set(MARKS)))
+# A mark can only be the channel if it is there without the stylesheet, which a pasted export is.
+true("no verdict mark is blank", all(glyph.strip() for glyph in MARKS))
+
+# The `<dt>`s are `aria-hidden` and the words beside them are the accessible text, so a screen reader reads
+# five verdicts rather than five symbol names. Read as pairs rather than by position: a legend listing the
+# right five marks against the wrong five sentences is the failure worth catching, and position cannot see it.
+KEY = re.search(r'<details class="vkey">(.*?)</details>', SRC, re.S)
+true("the page body carries a verdict legend", bool(KEY))
+# Keyed on the class rather than on the mark, and that is the load-bearing choice. `class="vY"` is what
+# colours the entry, and it is the same class the cells carry, so reading the legend through its class is what
+# proves the swatch a reader is shown is the colour they will meet in the table. Matching on the mark alone
+# passed a legend whose `·` was labelled `class="vz"` -- no such rule, so it would have rendered unstyled
+# beside four coloured siblings while this file called it correct. Found by mutating the legend and watching
+# nothing fail, which is the only way to learn that about an assertion.
+LEGEND = {key: (glyph, re.sub(r"\s+", " ", words).strip().lower()) for key, glyph, words in
+          re.findall(r'<dt aria-hidden="true" class="v(.)">(.)</dt><dd><b>([^<]+)</b>',
+                     KEY.group(1) if KEY else "")}
+check("the legend has an entry per verdict, keyed by the same class the cells use",
+      sorted(LEGEND), sorted(key for key, _, _ in VERDICT))
+# `aria-hidden` on every one of them, because the words beside the mark are the accessible text. A `<dt>`
+# that lost it makes a screen reader read the symbol and then the sentence explaining the symbol.
+check("every legend mark is hidden from the accessibility tree",
+      len(re.findall(r"<dt ", KEY.group(1) if KEY else "")), len(LEGEND))
+for key, glyph, words in VERDICT:
+    got_glyph, got_words = LEGEND.get(key, ("", ""))
+    check("the legend draws " + key + " with the mark VERDICT gives it", got_glyph, glyph)
+    # `VERDICT` holds a fragment ("stated support"); the legend holds a sentence ("Stated support."). Prefix
+    # rather than equality, so the legend may say more than the fragment can while still starting from it.
+    true("the legend describes " + glyph + " in the words VERDICT uses (" + words + ")",
+         got_words.startswith(words.lower()))
+
+# The exports are the third place, and were the only one for a long time: the gloss lived in these two
+# functions and nowhere a reader on the page could see it. They also carried the substantive error the legend
+# was written to fix -- they glossed `–` as "not applicable" and omitted "not established", which is 180 of
+# the 220 dash cells, so the meaning documented was the rarer of the two.
+for fn in ("listMarkdown", "listHTML"):
+    body = SRC[SRC.index("function " + fn + "("):]
+    body = body[:body.index("\n}")]
+    check(fn + "()'s legend names all five marks",
+          [glyph for glyph in MARKS if glyph not in body], [])
+    # The marks are compared and the words are not, which is the deliberate half. The export gloss is one
+    # line inside a document about something else, so it abbreviates -- "stated" for "stated support",
+    # "no evidence" for "no evidence of support" -- and requiring `VERDICT`'s exact fragments here would
+    # force that line to grow every time a fragment did. What must not drift is the pair the marks cannot
+    # distinguish on their own, because that is where this legend was actually wrong: it glossed the dash
+    # as "not applicable" and left "not established" unsaid, and 180 of the 220 dash cells are the latter.
+    for phrase in ("not established", "not applicable"):
+        true(fn + "() distinguishes the two quiet verdicts: " + phrase, phrase in body)
 
 # ---------------------------------------------------------------------------------------------------
 # ABOVE THE FOLD

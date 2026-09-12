@@ -831,6 +831,31 @@ a.nwo:hover{color:var(--ink)}
    with the saturation turned down. The glyph is part of the text rather than a pseudo-element so it is
    copied with the row and announced by a screen reader ("check mark", "question mark"). */
 .os .v-,.os .va{opacity:.75}
+/* The legend for those five marks -- see the `.vkey` comment in the body for why it is a `<details>` above
+   the results rather than a strip or a `<thead>` row. Closed it costs one line, which is the concession it
+   makes to keeping cards above the fold; `display:inline-block` is what keeps it one line rather than a
+   full-width band with a rule across the page.
+
+   `list-style:none` plus the `::marker` reset because Safari draws the disclosure triangle through a
+   pseudo-element the other engines do not use, and a legend that shows two triangles on one browser and one
+   on the rest reads as a rendering bug. The caret is drawn here instead, so all three agree. */
+.vkey{display:inline-block;margin:0 0 10px;font-size:12px;color:var(--dim)}
+.vkey>summary{cursor:pointer;list-style:none;padding:3px 0;border-bottom:1px dotted var(--grid)}
+.vkey>summary::-webkit-details-marker{display:none}
+.vkey>summary::marker{content:""}
+/* The disclosure triangle is drawn from borders rather than set as a character. A `content:"..."` glyph is
+   read aloud by some screen readers, and `<summary>` already announces its own collapsed/expanded state, so
+   the glyph would be pure noise on top of a correct announcement -- and it would depend on a font having it. */
+.vkey>summary::after{content:"";display:inline-block;margin-left:7px;border:4px solid transparent;border-top-color:currentColor;transform:translateY(2px);transition:transform .12s}
+.vkey[open]>summary::after{transform:translateY(-2px) rotate(180deg)}
+.vkey>summary .vY,.vkey>summary .vL,.vkey>summary .vN,.vkey>summary .v-,.vkey>summary .va{font-weight:700}
+/* A two-column grid rather than the default `<dl>` indent: the glyph column is sized to the widest mark so
+   the five words start at one edge, which is what makes it scannable as a key instead of as prose. */
+.vkey>dl{display:grid;grid-template-columns:1.4em 1fr;gap:4px 8px;margin:8px 0 0;max-width:52ch}
+.vkey>dl>dt{text-align:center;font-weight:700}
+.vkey>dl>dd{margin:0}
+/* At phone width the key is the only thing on its line and wants the whole of it. */
+@media (max-width:560px){.vkey{display:block}.vkey>dl{max-width:none}}
 /* The base rule for the five platform marks comes from `scripts/osicons.py`, which is also where the shapes
    and the ids come from, so the three stylesheets that draw them cannot drift. Sizing is per-surface and
    stays here, because a chip and a verdict want different answers. */
@@ -1614,6 +1639,37 @@ __OSSPRITE__
     <span class="sp"><button class="chip" id="sharedadd"></button>
       <button class="chip" id="sharedall">Show the whole atlas</button></span>
   </div>
+  <!-- The verdict legend, and the only place on screen that says what the five marks mean. It used to be
+       said in `listMarkdown()` and `listHTML()` and nowhere else -- that is, in the exports, and not on the
+       page the exports are made from. On screen the sole explainer was each cell's `title`, which needs a
+       pointer, so on a phone the marks were undecodable: `?` alone is 3,018 of 6,470 cells, 46.6%, the most
+       common verdict on the page.
+
+       `<details>` rather than a permanent strip, because this is a question a reader asks once. Closed it is
+       one line whose `<summary>` is real text a reader can see and tap, which is the whole difference from a
+       `title`; open it is a `<dl>` naming all five. Not in `<thead>`, which was the obvious home and is the
+       wrong one: `html[data-view=cards] thead{display:none}` and cards is the default view, so a legend there
+       is invisible to most readers. Above `#out` it is in both views and on the printed sheet.
+
+       The `<dt>` glyphs are `aria-hidden` and the word beside them is the accessible text, so a screen reader
+       reads five verdicts rather than five symbol names. Same trade the row builder makes, and the reason
+       `VERDICT` was free to move `a` off the dash it shared with `-`. -->
+  <details class="vkey">
+    <summary>What the <span aria-hidden="true" class="vY">✓</span>
+      <span aria-hidden="true" class="vL">?</span> <span aria-hidden="true" class="vN">✗</span>
+      <span aria-hidden="true" class="v-">–</span> <span aria-hidden="true" class="va">·</span>
+      marks mean</summary>
+    <dl>
+      <dt aria-hidden="true" class="vY">✓</dt><dd><b>Stated support.</b> The project says so itself.</dd>
+      <dt aria-hidden="true" class="vL">?</dt><dd><b>Inferred from the language,</b> not stated. Written in
+        something that runs here, with no claim made either way. <b>Confirmed only</b> hides these.</dd>
+      <dt aria-hidden="true" class="vN">✗</dt><dd><b>No evidence of support.</b></dd>
+      <dt aria-hidden="true" class="v-">–</dt><dd><b>Not established.</b> Too little to tell either
+        way.</dd>
+      <dt aria-hidden="true" class="va">·</dt><dd><b>Not applicable.</b> The platform question does not
+        apply to this project.</dd>
+    </dl>
+  </details>
   <div id="out"></div>
 </div></main>
 
@@ -1773,11 +1829,27 @@ const BUILT = "__BUILT__";
 // WCAG 1.4.1 failure and, more plainly, unreadable for anyone with a red/green deficiency. Each verdict
 // now carries a glyph as well, chosen so that its screen-reader pronunciation is also the meaning:
 // "check mark", "question mark", "ballot x". A tilde would have read as "tilde".
+//
+// That pronunciation argument no longer has to hold, and `a` is why. It and `-` both drew `–`, in the same
+// `--off` colour at the same opacity, so "the platform question does not apply to this project" and "we
+// could not tell either way" were indistinguishable in every channel a reader has -- not colour-only, which
+// is 1.4.1, but absent. 220 of 6,470 cells, and never both in one row, so it is a defect a reader meets
+// only when comparing two projects. Splitting them needed a second glyph, and every character with a good
+// spoken name was taken. So the word moved instead: the row builder now puts "platform: verdict" in the
+// `.sr` span and marks the glyph `aria-hidden`, which means a screen reader reads the verdict rather than
+// pronouncing a symbol, and the glyph is free to be chosen for the eye alone. Hence `·` -- a dot against a
+// dash is a shape difference at 11.5px, where two dashes were nothing.
+//
+// Keep this map, the `.vkey` legend in the body, and the gloss in `listMarkdown()` and `listHTML()` in step.
+// Three sources for one fact, which is the drift `osicons.py` exists to prevent for the platform icons by
+// generating every end from one place. There is no generator here, so `theme_test.py` reads all three out
+// of this file and asserts they agree -- not `probe.mjs`, which reads the last page that was *built* and so
+// cannot be asked about a legend added to the generator today.
 const VERDICT = {
   Y: ["✓", "stated support"],
   L: ["?", "inferred from the language"],
   N: ["✗", "no evidence of support"],
-  a: ["–", "not applicable"],
+  a: ["·", "not applicable"],
   "-": ["–", "not established"],
 };
 
@@ -3273,7 +3345,7 @@ function listMarkdown() {
     HITS.length.toLocaleString() + " of " + ROWS.length.toLocaleString() +
       " projects in the [Awesome Agentic Atlas](" + shareURL() + "). Stars, language and licence come from " +
       "the GitHub API on " + SNAPSHOT + " and drift daily. Platform verdicts read ✓ stated, ? inferred from " +
-      "the language, ✗ no evidence, – not applicable. Exported " + TODAY + ".", "",
+      "the language, ✗ no evidence, – not established, · not applicable. Exported " + TODAY + ".", "",
     row(head), row(rule), body.join("\n"), ""].join("\n");
 }
 
@@ -3314,7 +3386,8 @@ function listHTML() {
     "<p>" + HITS.length.toLocaleString() + " of " + ROWS.length.toLocaleString() +
     ' projects in the <a href="' + esc(shareURL()) + '">Awesome Agentic Atlas</a>. Stars, language and ' +
     "licence come from the GitHub API on " + esc(SNAPSHOT) + " and drift daily.</p>\n" +
-    "<p>Platform verdicts read ✓ stated, ? inferred from the language, ✗ no evidence, – not applicable. " +
+    "<p>Platform verdicts read ✓ stated, ? inferred from the language, ✗ no evidence, " +
+    "– not established, · not applicable. " +
     "Exported " + esc(TODAY) + ".</p>\n<table><thead><tr>" + head + "</tr></thead><tbody>" + rows +
     "</tbody></table>\n</body></html>\n";
 }
@@ -3607,13 +3680,20 @@ function render() {
     // A U+2009 thin space, not a full one, between a platform's mark and its verdict glyph, so that the two
     // read as one unit beside their four neighbours rather than as ten separate things. The mark replaced the
     // truncated word that used to stand here, and two things put the word back rather than one: the `title`,
-    // which was already carrying the platform and the whole verdict sentence for a hover, and a `.sr` span,
-    // which is now the only text in the span and therefore the only accessible name it has. A glyph narrows
-    // "amber" to "uncertain" without saying of what, and a mark says nothing at all to a screen reader.
+    // which was already carrying the platform and the whole verdict sentence for a hover, and a `.sr` span.
+    //
+    // The `.sr` span now carries the verdict as well as the platform, and the glyph is `aria-hidden`. It used
+    // to name the platform only, which left the glyph as the sole spoken carrier of the answer. That worked
+    // for three of the five -- the comment on `VERDICT` explains why the marks were chosen to be pronounced
+    // -- and left the other two announcing a platform and then nothing. `title` held the sentence, and
+    // `title` reaches a mouse and nobody else. So a screen reader now hears "Windows: stated support" rather
+    // than "Windows check mark", the two silent verdicts stop being silent, and the glyphs are released from
+    // having to be pronounceable, which is what made splitting `a` from `-` possible at all.
     const os = D.os.map((o, k) => {
       const v = VERDICT[r.os[k]] || ["", "not established"];
       return '<span class="v' + r.os[k] + '" title="' + esc(o + ": " + v[1]) + '">' +
-        '<span class="sr">' + esc(o) + ' </span>' + osIcon(k) + " " + v[0] + "</span>";
+        '<span class="sr">' + esc(o + ": " + v[1]) + "</span>" + osIcon(k) +
+        '<span aria-hidden="true"> ' + v[0] + "</span></span>";
     }).join(" ");
     const tags = '<span class="tag cat">' + esc(D.cats[r.cat].name) + "</span>" +
       r.targets.map(t => '<span class="tag">' + esc(D.targets[t].name) + "</span>").join("");
