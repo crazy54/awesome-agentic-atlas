@@ -102,8 +102,15 @@ jobs:
         run: python scripts/chrome.py
 
       # Same rolling cache as the daily job, same prefix, so the two hand the shot cache back and forth.
+      #
+      # Deliberately restore/save as two steps rather than one `actions/cache`. That action saves in a post
+      # step that runs *only when the job succeeded*, which for a six-hour job is the wrong rule: it means a
+      # run that captures 6,000 screenshots and then dies on the 6,001st throws all six thousand away, and
+      # the next attempt starts cold and dies in the same place. Every stage past the parser skips what it
+      # already has, so a partial cache is worth strictly more than no cache. The save below is
+      # `if: always()`, so a failed *or* timed-out run banks its progress and the retry resumes.
       - name: Restore build cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: cache
           key: atlas-cache-${{ github.run_id }}
@@ -278,6 +285,40 @@ jobs:
 
       - name: Record the source commits as built
         run: python scripts/watch_sources.py --update
+
+      # Runs on success, on failure and on the 350-minute timeout, because the whole point is to bank
+      # progress a broken run made. It is the last word on `cache/`, so it sits after every stage that
+      # writes there.
+      #
+      # The sweep first: every checkpointed file is written non-atomically, so a process killed mid-write
+      # leaves truncated JSON, and caching that would hand the *next* run a file that exists and cannot be
+      # parsed -- turning one failed run into every future run failing earlier. Deleting an unparseable
+      # file costs only the work it recorded; every reader already treats an absent cache file as empty.
+      #
+      # continue-on-error because banking the cache must never be what fails a build that otherwise
+      # worked -- notably on a re-run, where the run_id key already exists and the upload is rejected.
+      - name: Bank the build cache, even if this run failed
+        if: always()
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          for p in sorted(pathlib.Path("cache").glob("*.json")):
+              try:
+                  json.loads(p.read_text(encoding="utf-8"))
+              except Exception as exc:
+                  print(f"::warning title=Dropped a truncated cache file::{p} did not parse "
+                        f"({type(exc).__name__}), so it is not being cached: {str(exc)[:120]}")
+                  p.unlink()
+          PY
+
+      - name: Save build cache
+        if: always()
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: cache
+          key: atlas-cache-${{ github.run_id }}
 
       # The workbooks are release assets, not repository files -- .gitignore already excludes them. Only
       # the three generated surfaces get committed, and that commit is what redeploys Pages.

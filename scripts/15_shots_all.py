@@ -22,6 +22,7 @@ import tempfile
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import datetime, timezone
 from io import BytesIO
 from pathlib import Path
 
@@ -379,6 +380,14 @@ def main() -> None:
     out_path = CACHE / "shots_all.json"
     have = json.loads(out_path.read_text(encoding="utf-8")) if out_path.exists() else {}
 
+    # The daily job publishes only when this marker says a capture ran to completion. `shots_all.json`
+    # itself cannot answer that: it is checkpointed every 50 images so a run that dies two thirds of the
+    # way through leaves a file that exists, parses, and is missing thousands of cards. Clearing it here
+    # and rewriting it at the end is what makes the resumable partial cache safe to keep -- see the save
+    # step in weekly.yml, which now uploads `cache/` even when the job fails.
+    done_path = CACHE / "shots_all.done.json"
+    done_path.unlink(missing_ok=True)
+
     # Re-collect what the pull stage flagged: drop the record *and* the images, because work()
     # short-circuits on the light JPEG existing and would otherwise report "cached" and change nothing.
     stale, already_new = stale_keys(jobs)
@@ -421,6 +430,17 @@ def main() -> None:
     print(f"\nrows with an image: {len(recs) - missing}/{len(recs)}")
     if drained:
         print(f"{drained} entries collected and cleared from {QUEUE.name}")
+
+    # Only a whole-atlas capture earns the marker. Called with a source filter this stage is a repair
+    # tool over one list, and the coverage it reports is about that list, not about what a rebuild
+    # would publish.
+    if not only:
+        done_path.write_text(json.dumps({
+            "rows": len(recs),
+            "with_image": len(recs) - missing,
+            "images": len(jobs),
+            "captured_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        }, indent=1) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":
