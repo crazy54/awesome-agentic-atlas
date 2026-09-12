@@ -683,6 +683,20 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
    the palette hint is: a control that opens nothing is worse than no control. */
 .takechip{display:none}
 .takechip.on{display:inline-flex;align-items:center;gap:.4em}
+/* The collapsed comparison, and the reason there is no strip pinned to the bottom of the viewport. The tray
+   this is standing in for wanted to be `position:fixed;bottom:0`, and that has one defect no styling fixes:
+   a fixed strip is read last in the DOM and seen first on the screen, or read first and seen last, and either
+   way the reader driving the page from the keyboard reaches it in a place that does not match where it is.
+   The bar is already sticky. A chip on it is visible at every scroll position for free, in the reading order
+   it occupies, next to the other count on the row.
+
+   `aria-expanded` and not `aria-pressed`, which is the same distinction `.takechip` draws: every chip above
+   these two selects rows, and neither of these does. This one discloses `#cmp`, which is what `aria-controls`
+   names; that one opens a dialog. Absent at zero like the Saved chip, and revealed from `render()` for the
+   same reason -- what it counts is something the reader changes while the page is open. */
+.cmpchip{display:none}
+.cmpchip.on{display:inline-block}
+.cmpchip[aria-expanded=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
 /* The per-row control. A word rather than a glyph, deliberately: the obvious glyph is a star, and this
    button sits two cells from a column of GitHub star counts -- a filled star beside "4,300" would be
    asking which of the two it meant. It also needs no sprite entry and no accessible name of its own,
@@ -693,6 +707,25 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
   white-space:nowrap;cursor:pointer;margin-left:8px;vertical-align:1px}
 .save:hover{border-color:var(--bar);color:var(--ink)}
 .save[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
+/* The comparison pin, beside Save. Same pill and the same pressed pair, which is a decision and not laziness:
+   `--bar`/`--onbar` is one of the pairs `theme_test.py` already holds to a contrast ratio in both palettes,
+   and inventing a fifth accent for this would mean either a fourth "thing about the project" -- see the
+   `.savechip` note above for why that is wrong -- or a colour nothing checks. The two buttons are told apart
+   by their words, which is also the only channel that survives the print sheet and a screen reader.
+
+   A word and not a glyph, for the reason `.save` gives: the obvious glyph is a checkbox, this cell already
+   holds a pill that toggles, and a second silent square beside it would be asking which of the two selects. */
+.pin{background:var(--band);color:var(--ink2);border:1px solid var(--grid);border-radius:999px;
+  padding:1px 9px;font-family:inherit;font-size:11px;font-weight:600;line-height:1.7;
+  white-space:nowrap;cursor:pointer;margin-left:6px;vertical-align:1px}
+.pin:hover:not(:disabled){border-color:var(--bar);color:var(--ink)}
+.pin[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
+/* Disabled at the cap rather than hidden, which is the opposite of what the chips on the bar do and is right
+   for the opposite reason. A chip that selects nothing is noise on a control strip a reader scans once. This
+   is 1,290 buttons in the results, and removing them the instant the fourth pin lands would reflow every card
+   under the reader's finger and give no reason for it. Disabled costs one attribute, keeps the layout still,
+   and `pinLabel` puts the reason in the accessible name where a reader who cannot see the dimming gets it. */
+.pin:disabled{opacity:.45;cursor:not-allowed}
 /* Tabular figures because this sits directly under a star count that already has them, and a proportional
    "+1,182" under a tabular "388,645" makes one column look like two. A fall is drawn in the muted grey and
    not in a red: stars do go down, it is far more often a recount or a transfer than an exodus, and this
@@ -1301,6 +1334,87 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
 #out tr{scroll-margin-top:160px}
 
+/* ---- The comparison panel ----------------------------------------------------------------------------
+   Above the results, in the slot `.shared` uses, and for the same reason: it is not a filter the reader chose
+   and not a fact about any row, it is what they have asked this page to answer. `display:none` until something
+   is pinned, by a class and not `[hidden]`, because the author `display:block` here would outrank the
+   user-agent sheet's rule -- the note above `.shared` spells that out.
+
+   WHY THIS IS HERE AND NOT UP BESIDE `.shared`, WHICH IS WHERE IT BELONGS, and why every selector below
+   is an id rather than the class every other component on this page is styled by.
+
+   This panel holds the page's second <table>. The sentence at the top of the cards block above -- "`render()`
+   emits one <table> and nothing else" -- was true when it was written, and the two view blocks were written
+   against it: the 640px card query selects bare `thead`, `table`, `tbody`, `tr` and `td`, and the cards block
+   selects them under `html[data-view=cards]`, which is the *default* view. Both reach in here. Measured at
+   375px with four projects pinned, before this block existed: the thead had zero height, the cells were laid
+   out by `grid-template-columns:1fr auto` in alternating 249/71px pairs, `min-width:0` had collapsed every
+   column, and the horizontal scroller had nothing left to scroll -- the panel's whole phone story.
+
+   An id, so the fix does not depend on where it sits. The strongest thing either block reaches for is
+   `html[data-view=cards] tr:hover td`; one id outranks all of it, so nothing here can be undone by a rule
+   added up there later, and the panel does not need re-verifying every time the cards view is touched.
+
+   The fix this really wants is scoping those two blocks to `#out`, since the results table is what they were
+   always about -- `#out tr:focus` directly above is that pattern already. Not done here: it is thirty-odd
+   selectors on the layout every reader sees, and `tests.yml` serves the *committed* docs/, so
+   `cards-check.mjs` would measure the old stylesheet and pass whatever the change did to the new one. JFH-291
+   holds it, to land on its own with a build behind it. The narrow fix is the one that can be verified first.
+
+   `overflow-x:auto` on an inner box rather than on the panel, so the header and its buttons stay put while
+   the columns are swiped, and so the rounded corners are not cut off by the scroller.
+
+   The row labels are `position:sticky;left:0`, which is the whole of what makes four columns usable on a
+   375px phone: the reader swipes the projects past a column of names that stays where it is. A sticky cell
+   needs an opaque background or the cells sliding under it show through, and it needs `min-width` or the
+   longest label ("Plugs into") decides the width of the column the reader is trying to see. */
+#cmp{display:none}
+#cmp.on{display:block;margin:14px 0 0;border:1px solid var(--grid);border-radius:8px;background:var(--band)}
+#cmp .ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 14px;
+  border-bottom:1px solid var(--grid);color:var(--ink2);font-size:13px}
+#cmp .ch b{color:var(--ink)}
+#cmp .ch .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+#cmp .scroll{overflow-x:auto;border-radius:0 0 8px 8px}
+/* The display types are restated, not inherited: this is what the two view blocks above took away. Written
+   out in full rather than as `display:revert`, which reverts to the *user-agent* sheet and would be correct
+   here by luck -- these are the UA values -- but says nothing about why they are being set. */
+#cmp table{display:table;border-collapse:collapse;width:100%;margin-top:0;font-size:13px}
+#cmp thead{display:table-header-group}
+#cmp tbody{display:table-row-group}
+/* `border` and `background` because the 640px query gives every row a card's outline and the cards block
+   gives it a fill; both paint on a `table-row` and neither belongs on a matrix. */
+#cmp tr{display:table-row;border:0;background:transparent}
+#cmp th,#cmp td{display:table-cell;padding:7px 12px;text-align:left;vertical-align:top;
+  border-top:1px solid var(--grid)}
+#cmp thead th{border-top:0;vertical-align:bottom;color:var(--ink)}
+#cmp thead th a{font-weight:600}
+/* `display:block` because `.meta` carries a `margin-top`, which a span ignores -- the row builder only ever
+   uses that class on a <div>, and this is the first place it lands on an inline element. */
+#cmp thead th .meta{display:block;margin-top:2px;font-weight:400}
+#cmp tbody th{position:sticky;left:0;background:var(--band);color:var(--ink2);font-weight:600;
+  white-space:nowrap;min-width:104px}
+/* 148px is the floor that makes the scroller a scroller. Four columns of it plus the 104px label rail is
+   696px, so on a 375px phone there is real width to swipe through rather than four columns squeezed to fit
+   and nothing legible in any of them. The cards block sets `min-width:0` on every cell, which is right for a
+   card that must not push its grid track wider and is exactly wrong here. */
+#cmp td{color:var(--ink);min-width:148px}
+/* Table view stripes alternate rows and tints the row under the pointer; the cards view puts a glow on the
+   row that holds focus. All three are about a list of projects being scanned. This is a matrix being read,
+   and a comparison whose cells change colour as the mouse crosses them is harder to read, not easier. */
+#cmp tbody td{background:transparent}
+#cmp tr:hover,#cmp tr:focus-within{box-shadow:none;transform:none;animation:none;border:0}
+#cmp .unpin{margin:5px 0 0;display:block}
+/* The marked rows are the only reason to build this panel: four projects agree about most things, and the
+   handful they disagree about is the decision. Two channels, never one -- a 3px bar on the label cell and a
+   `≠` beside the label, because a difference carried by colour alone is invisible to the readers most likely
+   to be comparing four things at once rather than remembering them (WCAG 1.4.1). `--warn` is the same
+   colour the shared-list strip uses and means the same thing here: look at this before you decide.
+
+   Deliberately *not* a green on the rows that agree. "These four all run on Linux" is not a finding and does
+   not want a colour; drawing one would put twelve marks on screen to say nothing. */
+#cmp tr.differs th{border-left:3px solid var(--warn);padding-left:9px}
+#cmp .dx{color:var(--warn);font-weight:400;margin-left:4px}
+
 /* ---- Paper -------------------------------------------------------------------------------------------
    "Save as PDF" is a print dialog in every browser there is, so the PDF export and the print sheet are one
    feature and this block is both of them. What a sheet of it holds: the masthead, the sentence saying what
@@ -1319,7 +1433,32 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
 @page{margin:14mm}
 @media print{
   /* `.skip` included: a skip link is a keyboard affordance, and it is the first thing on the page. */
-  .bar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,.shared .sp{display:none}
+  .bar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,.shared .sp,
+  .pin,#cmp .ch .sp,#cmp .unpin{display:none}
+  /* The comparison itself stays, and this is the one thing on the sheet that is more use on paper than on
+     screen: four projects in columns is what somebody carries into the meeting where the choice is made.
+     Only its controls go -- an Unpin button under a printed column heading is a button nobody can press.
+
+     The rest of this is what makes it fit, and it is all one observation: paper has no horizontal scroll, so
+     every affordance built for swiping is not useless here, it is destructive. A sheet of A4 less the 14mm
+     margins is 182mm, about 673 CSS px. Measured at that width with four projects pinned and only
+     `overflow-x` released: the table asked for 971px and its last column ended 992px from the left -- 319px
+     past the edge of the sheet, with nothing to clip it and nothing to say so. `overflow-x:hidden` would not
+     have rescued those columns either; it would have cut them at 631px instead.
+
+     Releasing the 148px cell floor is necessary and, measured, not sufficient -- with `min-width:0` the table
+     still wanted 971px, because an auto layout sizes columns to their content and a project column holds a
+     name, a topic, a licence and possibly an install line. `table-layout:fixed` is what actually bounds it,
+     which is the same tool and the same reason as the results table below. Percentages rather than pixels so
+     that pinning two projects gives each of them half the sheet instead of a quarter of it and three columns
+     of white space, and `overflow-wrap` because a fixed column that a monospace install command does not fit
+     spills out of the cell rather than wrapping inside it. The sticky rail is unstuck last, for the first
+     reason again: there is nothing left for it to stay in front of. */
+  #cmp .scroll{overflow-x:visible}
+  #cmp table{table-layout:fixed}
+  #cmp thead th:first-child{width:13%}
+  #cmp td{min-width:0;overflow-wrap:anywhere}
+  #cmp tbody th{position:static}
   /* Where the sheet came from, which the screen keeps in the address bar and paper has nowhere to put.
      Written by `printOn()`; `#printurl{display:none}` above keeps it off the screen. */
   #printurl{display:block;color:var(--muted);font-size:8.5pt;word-break:break-all;margin:6px 0 0}
@@ -1529,6 +1668,14 @@ __OSSPRITE__
     <button class="chip savechip" id="saved" aria-pressed="false"
             title="Only the projects you have saved on this device"><span id="savedlabel">Saved</span></button>
     <button class="chip clearsave" id="clearsave">Remove all saved</button>
+    <!-- The comparison, collapsed: this chip *is* the tray. It carries the count while the panel is shut, and
+         it sits on the bar rather than in a strip fixed to the bottom of the viewport because the bar is
+         already sticky, so a chip here is visible at every scroll position without the one defect a fixed
+         strip cannot style away -- being seen at the bottom of the screen and read at the top or the bottom
+         of the DOM, so that a keyboard reader arrives at it somewhere other than where it is.
+         Painted by `paintCompare()`, from `render()`, like the two chips above. -->
+    <button class="chip cmpchip" id="cmpchip" aria-expanded="false" aria-controls="cmp"
+            title="Put the projects you have pinned side by side"><span id="cmplabel">Compare</span></button>
     <!-- The way off this page. Not a filter, so no `aria-pressed`: it selects nothing and opens a dialog,
          which is what `aria-haspopup` says instead -- the same distinction the Filters handle makes against
          the chips beside it. Hidden until `expWire()` has both the flag and a `<dialog>` it can open
@@ -1585,6 +1732,22 @@ __OSSPRITE__
     <span id="sharedtext"></span>
     <span class="sp"><button class="chip" id="sharedadd"></button>
       <button class="chip" id="sharedall">Show the whole atlas</button></span>
+  </div>
+  <!-- The comparison, expanded. Empty and hidden until something is pinned, and static markup for the reason
+       the strip above it is: what decides whether it belongs on screen is the reader's own URL, and a `#cmp=`
+       link has to arrive with somewhere to put its answer rather than waiting for a script to build the box.
+
+       Here rather than beside the results because of what it is: not a filter, and not a row. It is the
+       question the eleven source lists cannot answer -- "which of these three" -- so it goes above the answer
+       to "what are the options", in the slot the shared-list strip already established for a sentence about
+       what this page is currently of.
+
+       `role=region` with a name, so a screen reader can be told a landmark appeared and jump to it; without
+       the name it would be an unlabelled region, which is worse than no landmark. -->
+  <div id="cmp" role="region" aria-label="Side-by-side comparison">
+    <div class="ch"><span id="cmpwhat"></span>
+      <span class="sp"><button class="chip" id="cmpclear">Clear the comparison</button></span></div>
+    <div class="scroll" id="cmptable"></div>
   </div>
   <!-- The verdict legend, and the only place on screen that says what the five marks mean. It used to be
        said in `listMarkdown()` and `listHTML()` and nowhere else -- that is, in the exports, and not on the
@@ -1711,10 +1874,50 @@ const FLAGS = __APP_FLAGS__;
 // unlike `SAVED` below it *is* a view -- it arrives in the hash, a link reproduces it exactly, and it is
 // somebody else's collection rather than the reader's own store. So it goes in `state` and not beside the
 // saved set, and `state.saved` is a flag over a store while `state.list` is the rows themselves.
+//
+// `cmp` is the odder one and it splits the rule this block states. It belongs in `state` on every count that
+// matters: it is a set of `owner/name`, it goes in the hash, and a link reproduces it exactly -- a comparison
+// of four projects means the same four on anybody's machine, which is the whole reason it is a URL and not a
+// second `localStorage` key beside `SAVED`. But it is the one thing in here that `set()` must never be used to
+// change, because `set()` resets `shown` to the first page and pinning the fourth project is precisely what a
+// reader forty rows into a topic does. `togglePin` therefore writes the set, writes the hash and repaints, and
+// the note above it says why in full. Nothing else in `state` may be mutated that way.
+//
+// It is also not a filter, and three places downstream depend on that: `match` does not read it, so pinning
+// never changes which rows are on screen and a pinned project survives every filter the reader then applies;
+// `rescue()` does not offer to drop it, because it cannot be the reason a table is empty; and `viewTitle()`
+// does not name it, because an export is of a view and this is not one.
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
-               saved: false, list: new Set(), sort: "relevance", shown: PAGE_SIZE,
+               saved: false, list: new Set(), cmp: new Set(), sort: "relevance", shown: PAGE_SIZE,
                view: "__DEFAULT_VIEW__"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
+
+// `owner/name` to the row object, built once when `ROWS` is. The comparison needs it and nothing else does:
+// every other consumer on this page walks `ROWS` because it is answering a question about all of them, and
+// this one is answering a question about four keys that arrived in a URL. Four linear scans of 1,294 rows on
+// a hashchange is not the reason for the map -- it is that the pinned set has to keep resolving to rows after
+// the reader has filtered the table down to nine, so the lookup cannot go through `HITS`.
+let BY_NWO = new Map();
+
+// How many projects a comparison holds. Four and not five, which the ticket left open: five columns plus the
+// row labels is six, and the panel is a scroller whose columns have a 148px floor -- so at five the reader on
+// a 375px phone is swiping through more than two screens of table to see one row of it, and on a 1440px
+// desktop the fifth column is the one that falls off the end of the box. Four is also the number a person can
+// hold a decision between; past that the panel is a way of postponing one.
+//
+// Enforced in three places on purpose, because the set has three doors: `togglePin` refuses to add past it,
+// `readHash` truncates a hand-edited `#cmp=` to it, and `pinBtn` disables the buttons that would exceed it.
+// The middle one is the one that matters -- a hash is an untrusted input, and this is the same argument the
+// 200-key cap on `#list=` makes one function along.
+const CMP_MAX = 4;
+
+// Whether the panel is open. Not in `state`: it is not in the hash, a link does not reproduce it, and it is
+// not what the page is *of* -- it is what the reader is currently looking at, which is the same category as
+// which `<details>` they have expanded. It starts true so that the panel appears on the first pin rather than
+// behind a second press, and so that a `#cmp=` link opens showing the comparison it was sent to show. The
+// chip closes it, and closing it keeps the pins: those are two different things and conflating them would
+// make "put this away for a moment" destroy the selection.
+let CMP_OPEN = true;
 
 // The reader's saved projects, as a Set of `owner/name`. Two things it deliberately is not:
 //
@@ -1845,12 +2048,23 @@ function say(msg) {
 // Relative, because the question a reader is asking of this column is "is this thing alive", and nobody
 // does date arithmetic in their head. Rounding is safe: the exact date stays in the title. Past a year
 // it gets the dotted marker -- quietly, because a dormant repo is a fact about the repo, not a verdict.
-function since(iso) {
+// Split from the markup below it for one caller: the comparison panel marks a row when the projects in it
+// disagree, and what it has to compare is the string the reader is looking at rather than the underlying date.
+// Two projects pushed nine and eleven days apart both read "1mo ago", and flagging that as a difference would
+// put a `≠` beside two cells a reader can see are identical -- which is worse than missing a difference,
+// because it teaches them the marks are noise. So the text is a function and the wrapper is a wrapper.
+function sinceText(iso) {
   if (!iso) return "—";
   const d = daysAgo(iso);
-  const t = d <= 0 ? "today" : d === 1 ? "yesterday" : d < 30 ? d + "d ago"
+  return d <= 0 ? "today" : d === 1 ? "yesterday" : d < 30 ? d + "d ago"
     : d < 365 ? Math.round(d / 30) + "mo ago"
     : d < 730 ? (d / 365).toFixed(1) + "y ago" : Math.floor(d / 365) + "y ago";
+}
+
+function since(iso) {
+  const t = sinceText(iso);
+  if (!iso) return t;
+  const d = daysAgo(iso);
   return d >= 365
     ? '<span class="old" title="' + iso + ' — no push in over a year">' + t + "</span>"
     : '<span title="' + iso + '">' + t + "</span>";
@@ -1959,6 +2173,10 @@ fetch("data.json").then(r => {
       r.gain >= Math.max(RISE.min_abs, RISE.min_pct / 100 * (r.stars || 0));
   });
   RISING = ROWS.filter(r => r.rise).length;
+  // After the two `forEach` passes above, so the rows in here are the finished ones -- the map holds the same
+  // objects, not copies, but building it earlier would be a claim about ordering that the next stage to add a
+  // derived column would quietly break.
+  BY_NWO = new Map(ROWS.map(r => [r.nwo, r]));
   // Again, now that the rows are here. `wire()` already called it off the document's own constant, which is
   // the best that can be said before this fetch resolves; this is the call that replaces that with the
   // stamp the rows brought with them, and the only one whose answer is about what is on screen.
@@ -2468,8 +2686,38 @@ function wire() {
     }
     const sv = ev.target.closest(".save");
     if (sv) return toggleSave(sv);
+    const pn = ev.target.closest(".pin");
+    if (pn) return togglePin(pn);
     const b = ev.target.closest(".copy");
     if (b) copy(b);
+  });
+  // The comparison's own two controls, wired here beside the results' delegated listener rather than in
+  // `expWire()`, because unlike the export these are not behind a `<dialog>` the browser may not have. Both are
+  // static markup, so one listener each and no delegation: the panel's *contents* are rebuilt on every render,
+  // but this header is not.
+  //
+  // The chip only ever toggles the panel. It does not clear the pins and it does not pin anything, which is
+  // what `aria-expanded` on it promises -- a disclosure that also destroyed a selection would be a control that
+  // lied about itself. `render()` and not `set()`, for the reason `togglePin` gives at length: nothing about the
+  // *view* changed, so the hash is still right and the reader should not be sent back to row 1.
+  document.getElementById("cmpchip").onclick = () => { CMP_OPEN = !CMP_OPEN; render(); };
+  document.getElementById("cmpclear").onclick = () => {
+    const n = state.cmp.size;
+    state.cmp = new Set();
+    writeHash();
+    say(n ? "Comparison cleared." : "Nothing was pinned.");
+    render();
+  };
+  // Delegated, because these live in the header row the panel rebuilds on every keystroke -- the same argument
+  // the results listener above makes, for the same reason. The listener is on `#cmptable`, which is static.
+  document.getElementById("cmptable").addEventListener("click", ev => {
+    const u = ev.target.closest(".unpin");
+    if (!u) return;
+    const r = BY_NWO.get(u.dataset.nwo);
+    state.cmp.delete(u.dataset.nwo);
+    writeHash();
+    say("Took " + (r ? r.name : u.dataset.nwo) + " out of the comparison. " + state.cmp.size + " pinned.");
+    render();
   });
   stamp();
   // With no argument, so the badge shows `BUILT` and gets its relative age and tooltip immediately. The
@@ -2505,6 +2753,46 @@ function toggleSave(b) {
   b.setAttribute("aria-label", saveLabel(name, on));
   b.textContent = saveWord(on);
   paintSaved();
+}
+
+// Pin or unpin one project for the comparison.
+//
+// Not routed through `set()`, and the argument is `toggleSave`'s word for word: `set()` resets `state.shown`,
+// which is right when a filter changes and wrong here. Pinning the fourth project is exactly what a reader
+// forty rows into a topic does, and being thrown back to row 1 by the control meant to help them keep their
+// place is the defect. So this writes the set, writes the hash -- which `toggleSave` does not have to do,
+// because `SAVED` is not in the URL and this is -- and repaints.
+//
+// The repaint is a full `render()`, where `toggleSave` goes out of its way to avoid one. The difference is real:
+// crossing the cap changes the `disabled` state of the ~1,290 buttons that are *not* pinned, and there is no
+// honest way to update one button and leave the others lying about whether they will work. `toggleSave`'s
+// in-place path exists because saving row 40 changes nothing about row 41.
+//
+// Which leaves the cost `toggleSave` was avoiding -- `render()` replaces the subtree, so the button the reader
+// just pressed is gone and focus falls to <body>. That is unacceptable for a control whose whole job is to be
+// pressed three or four times in a row, so the equivalent button is found in the new subtree and refocused.
+// Matched on `dataset.nwo` rather than through a CSS selector, because an `owner/name` is not a valid selector
+// fragment and `CSS.escape` is one more thing to be wrong about a string that came out of somebody's README.
+function togglePin(b) {
+  const nwo = b.dataset.nwo, name = b.dataset.name;
+  const on = !state.cmp.has(nwo);
+  // Reached only by a hand-driven click on a button this page drew as disabled -- a `disabled` attribute is
+  // enforced by the browser -- so this is the guard for the DOM being edited underneath us rather than a path
+  // the UI can take. It says the cap out loud anyway: a silent no-op on a press is the worst of the three.
+  if (on && state.cmp.size >= CMP_MAX) {
+    say("The comparison already holds " + CMP_MAX + " projects. Take one out to add " + name + ".");
+    return;
+  }
+  if (on) state.cmp.add(nwo); else state.cmp.delete(nwo);
+  // Re-opened on a pin and never on an unpin. A reader who shut the panel and then pinned a fifth thing has
+  // asked to see the comparison; one who is taking projects out of it has not asked for it to reappear.
+  if (on) CMP_OPEN = true;
+  writeHash();
+  say(on ? "Comparing " + name + ". " + state.cmp.size + " of " + CMP_MAX + " pinned."
+         : "Took " + name + " out of the comparison. " + state.cmp.size + " pinned.");
+  render();
+  const again = [...document.querySelectorAll("#out .pin")].find(x => x.dataset.nwo === nwo);
+  if (again) again.focus();
 }
 
 // writeText rejects rather than throws -- denied permission, a document that is not focused, an
@@ -2832,7 +3120,15 @@ function writeHash() {
   // the sub-delims, which include ","), so the encoding buys nothing and costs the one property a link
   // somebody is about to paste into a message has to have -- being readable enough to trust before clicking.
   const list = state.list.size ? "list=" + [...state.list].join(",") : "";
-  const all = [s, list].filter(Boolean).join("&");
+  // Appended by hand for exactly the reason `list=` is, and the reason applies harder here: this is the one
+  // parameter on the page whose entire purpose is to be pasted into a message. `cmp=langchain-ai/langgraph,
+  // openclaw/openclaw` is a comparison somebody can read before they click; the percent-encoded form is
+  // forty characters of escapes that could be anything.
+  //
+  // Written last, after `list=`, so the readable pair sit together at the end of the fragment rather than
+  // having the encoded filters between them.
+  const cmp = state.cmp.size ? "cmp=" + [...state.cmp].join(",") : "";
+  const all = [s, list, cmp].filter(Boolean).join("&");
   history.replaceState(null, "", all ? "#" + all : location.pathname);
 }
 
@@ -2870,6 +3166,25 @@ function readHash() {
   // list a person assembles by pressing Save.
   state.list = FLAGS["index.export"]
     ? new Set((p.get("list") || "").split(",").map(s => s.trim()).filter(Boolean).slice(0, 200))
+    : new Set();
+  // The pinned comparison. Three guards, and each one is a different failure:
+  //
+  // `BY_NWO.has` -- resolved against the rows rather than kept as typed, which `#list=` deliberately does not
+  // do. A `list=` key that matches nothing simply filters nothing out and the reader sees a shorter table; an
+  // unresolvable `cmp=` key would be a column of dashes with a name at the top and no way to tell whether the
+  // project left the atlas or the link was mistyped. Dropping it shows the comparison that can be made. This
+  // is the same call `SAVED` makes -- hold the key, not a copy of the row, and let a departed project stop
+  // matching -- reached from the opposite direction, because here the row is what the panel is made of.
+  //
+  // `slice` -- a hash is hand-editable, so the cap is enforced here and not only where the buttons are. `#cmp=`
+  // with forty repositories in it would build a forty-column table that no amount of scrolling makes readable.
+  // Sliced after the resolve, so four *valid* keys survive a link that also carried two dead ones.
+  //
+  // The flag -- so turning the feature off makes a `#cmp=` link inert rather than half-working: no buttons to
+  // unpin with is a worse state than no comparison at all.
+  state.cmp = FLAGS["index.compare"]
+    ? new Set((p.get("cmp") || "").split(",").map(s => s.trim())
+        .filter(k => k && BY_NWO.has(k)).slice(0, CMP_MAX))
     : new Set();
   // Every `#sort=stars` link written before Best match existed still says exactly what it said then,
   // because the name is unchanged and only the *default* moved.
@@ -3151,6 +3466,146 @@ function paintSaved() {
   document.getElementById("clearsave").classList.toggle("on", state.saved && n > 0);
 }
 
+// ---- The comparison --------------------------------------------------------------------------------------
+//
+// The question this page could not answer. It is good at "what are the options" -- a crossing of thirteen
+// topics, twelve integrations, five platforms and a search term, which is precisely what `mega-list/` cannot
+// be -- and it was no use at all for "which of these three should I pick". Answering that meant scrolling
+// between rows and holding the differences in your head, and the differences are the whole of the decision.
+//
+// So: up to four projects in columns, every fact the atlas holds about them in rows, and a mark on every row
+// they disagree on. The mark is the feature. Four projects agree about most things -- they are in the same
+// topic, that is why they are being compared -- and the panel's job is to put the handful of rows that are
+// actually a choice in front of the reader rather than making them find them.
+//
+// The selection is in the hash and nowhere else, which makes a comparison a link somebody can send. That is
+// deliberately unlike `SAVED`, which is a store on one machine: a shortlist is personal, a comparison is an
+// argument, and an argument that cannot be sent is half of one.
+
+// The chip's count, the panel's visibility, and the panel. Called from `render()` like `paintSaved()` and
+// `paintShared()`, and for the same reason those two are: `render()` is the one function every path that
+// changes anything already ends at, so a pin, a hashchange and the back button all arrive here without each
+// of them remembering to.
+function paintCompare() {
+  const chip = document.getElementById("cmpchip"), panel = document.getElementById("cmp");
+  // Both absent means the page was built with the flag off, in which case there is nothing to paint and
+  // nothing has put anything in `state.cmp` either -- `readHash` reads the same flag.
+  if (!chip || !panel) return;
+  // `filter(Boolean)` is belt and braces rather than a live case: `readHash` is the only door into this set and
+  // it resolves every key against `BY_NWO` on the way in. It stays because the alternative -- a `null` reaching
+  // the field accessors below -- is a TypeError in the middle of a paint, which takes the whole table with it.
+  const picks = [...state.cmp].map(k => BY_NWO.get(k)).filter(Boolean);
+  const n = picks.length;
+  chip.classList.toggle("on", n > 0);
+  document.getElementById("cmplabel").textContent = n ? "Compare · " + n : "Compare";
+  const open = n > 0 && CMP_OPEN;
+  chip.setAttribute("aria-expanded", open ? "true" : "false");
+  panel.classList.toggle("on", open);
+  // Nothing is built for a closed panel. It is up to thirteen rows of markup that no one is looking at, and
+  // rebuilt on every keystroke by the `render()` that calls this.
+  if (!open) return;
+  const built = cmpTable(picks);
+  document.getElementById("cmptable").innerHTML = built.html;
+  // The count of differing rows, said in words, because it is the one thing about the panel a reader wants
+  // before they start reading it -- and because on a phone the marks are down the sticky left column and the
+  // reader may be three swipes to the right of them. "Nothing here differs" is a real answer and worth saying
+  // plainly: it means the choice is not in this table, which is itself useful.
+  document.getElementById("cmpwhat").innerHTML = n === 1
+    ? "Pin up to " + (CMP_MAX - 1) + " more to compare <b>" + esc(picks[0].name) + "</b> against them."
+    : "<b>" + n + " projects</b> · " + (built.differs
+        ? built.differs + " of " + built.total + (built.differs === 1 ? " row differs" : " rows differ")
+        : "every row agrees");
+}
+
+// One row per fact, as `[label, accessor]`, where the accessor returns the cell's markup *and* the plain string
+// the difference test compares. The two are separate on purpose and it is the subtle part of this panel: the
+// test has to run on what the reader can see, not on what the data holds underneath it. Two projects pushed
+// nine and eleven days apart are both "1mo ago", and a `≠` beside two visibly identical cells does not read as
+// a precise mark -- it reads as a mark that means nothing, and then none of the others are believed either.
+// So `pushed` compares its rendered text (see `sinceText`), and the verdicts compare their word rather than
+// their letter, because `-` and `a` used to draw the same dash and one of them was the more common.
+//
+// Built per call rather than once, because `D.os` and `D.cats` only exist after `data.json` lands and the list
+// depends on both -- and because `hasCmds()` is a fact about the current view.
+function cmpFields(picks) {
+  const plain = s => ({html: esc(s), key: s});
+  const f = [
+    ["Stars", r => plain(r.stars ? r.stars.toLocaleString() : "—")],
+    ["Named by", r => plain(r.lists + (r.lists === 1 ? " list" : " lists"))],
+    ["Topic", r => plain(D.cats[r.cat].name)],
+    ["Plugs into", r => plain(r.targets.length ? r.targets.map(t => D.targets[t].name).join(", ") : "—")],
+  ];
+  // Five rows and not one, because "which platforms does this run on" is five separate questions and the
+  // reader comparing four projects is usually only asking one of them. One row of five glyphs per project
+  // would put the answer they want inside a string they have to parse, and would mark the row as differing
+  // when the difference is on a platform they do not use.
+  //
+  // The glyph is drawn *and* the word is written out, which the table view does not do -- there the word is in
+  // a `title` and in an `.sr` span, because five words per row across 120 rows is a column nobody can scan.
+  // Here there are four columns and thirteen rows and the reader is reading rather than scanning, so the word
+  // is the cell and the glyph is the mark beside it. `osIcon` is left out for the same reason: the platform is
+  // named once in the row label, and repeating its icon in all four cells is four pictures saying what the
+  // label already said.
+  D.os.forEach((o, k) => f.push([o, r => {
+    const v = VERDICT[r.os[k]] || ["–", "not established"];
+    return {html: '<span class="v' + esc(r.os[k]) + '" aria-hidden="true">' + v[0] + "</span> " + esc(v[1]),
+            key: v[1]};
+  }]));
+  f.push(["Language", r => plain(r.lang || "—")]);
+  f.push(["Licence", r => plain(r.license || "—")]);
+  f.push(["Last push", r => ({html: since(r.pushed), key: sinceText(r.pushed)})]);
+  // Both halves of the condition matter, which is the same test `hasCmds()` makes for the export: the flag can
+  // be off, and on a comparison where no pinned project has a detected command the row would be a label and
+  // four dashes. `hasCmds()` itself is not reusable here -- it asks about `HITS`, and a pinned project need not
+  // be on screen at all, which is the point of pinning it.
+  if (FLAGS["index.install_commands"] && picks.some(r => r.install))
+    f.push(["Install", r => r.install
+      ? {html: "<code>" + esc(r.install) + "</code>", key: r.install}
+      : plain("—")]);
+  return f;
+}
+
+// The panel's table, and the count of rows that differ.
+//
+// A one-project comparison has no differences by construction, and the guard is not just an optimisation: with
+// `picks.length === 1` every `Set` of one value has size 1, so the arithmetic already gives zero -- but saying
+// it out loud is what stops a future edit that compares against a default from marking all thirteen rows on a
+// panel holding a single project.
+function cmpTable(picks) {
+  const head = picks.map(r =>
+    '<th scope="col"><a href="' + detailURL(r.nwo) + '">' + esc(r.name) + "</a>" +
+    '<span class="meta">' + esc(r.nwo) + "</span>" +
+    // In the heading rather than only on the row's own Compare button, because the reader is looking at this
+    // panel and the row it came from may be nine screens away or filtered off the page entirely. The name says
+    // which project, since "Unpin" four times across a header row is not four different buttons to anyone
+    // reading them one at a time.
+    '<button class="chip unpin" data-nwo="' + esc(r.nwo) + '" aria-label="Take ' + esc(r.name) +
+    ' out of the comparison">Unpin</button></th>').join("");
+  let differs = 0;
+  const fields = cmpFields(picks);
+  const body = fields.map(([label, get]) => {
+    const cells = picks.map(get);
+    const d = picks.length > 1 && new Set(cells.map(c => c.key)).size > 1;
+    if (d) differs++;
+    // Two channels for the mark, never one. The 3px bar on the label cell is colour and the `≠` is not, which
+    // is WCAG 1.4.1 and is also just true of the readers most likely to be using this panel: somebody
+    // comparing four things at once is doing it because holding them in their head is not working, and a cue
+    // they cannot perceive is not a cue. The glyph is `aria-hidden` and the words beside it are the accessible
+    // text, so a screen reader hears "Stars, these differ" rather than "Stars, not equal to".
+    return "<tr" + (d ? ' class="differs"' : "") + '><th scope="row">' + esc(label) +
+      (d ? '<span class="dx" aria-hidden="true">≠</span><span class="sr">, these differ</span>' : "") +
+      "</th>" + cells.map(c => "<td>" + c.html + "</td>").join("") + "</tr>";
+  }).join("");
+  // The corner cell is empty on screen and named for a screen reader, which is the standard shape for a matrix
+  // like this: leaving it bare makes the first column a set of row headers with no column header at all.
+  return {
+    html: '<table><thead><tr><th scope="col"><span class="sr">What is being compared</span></th>' + head +
+          "</tr></thead><tbody>" + body + "</tbody></table>",
+    differs: differs,
+    total: fields.length,
+  };
+}
+
 // One row's Save button. A function declaration so it hoists above `render()`, which is the only caller.
 //
 // The accessible name says which project, because a screen-reader user reaches this button once per row and
@@ -3182,6 +3637,42 @@ function saveBtn(r) {
 // during evaluation, which is a trap worth simply not laying.
 function saveWord(on) { return on ? "Saved" : "Save"; }
 function saveLabel(name, on) { return saveWord(on) + " " + name; }
+
+// One row's Compare button, beside its Save button, and returning "" when the flag is off -- the caller
+// concatenates it either way, which is what keeps the kill switch to one line here instead of a branch in the
+// middle of the row builder.
+//
+// `data-nwo` and `data-name` for the reason `saveBtn` gives: the handler is delegated, `render()` rewrites the
+// subtree on every keystroke, and a row index is only valid until it does.
+//
+// The disabled state is computed per row rather than set once on the container, because "is this button
+// unusable" is not a fact about the cap alone -- the four pinned rows keep working buttons at the cap, since
+// theirs unpin. `full` is therefore `size >= CMP_MAX && !on`, and getting that wrong would lock the reader out
+// of the only control that could unlock the rest.
+function pinBtn(r) {
+  if (!FLAGS["index.compare"]) return "";
+  const on = state.cmp.has(r.nwo);
+  const full = !on && state.cmp.size >= CMP_MAX;
+  return '<button class="pin" data-nwo="' + esc(r.nwo) + '" data-name="' + esc(r.name) + '"' +
+    (full ? " disabled" : "") + ' aria-pressed="' + (on ? "true" : "false") +
+    '" aria-label="' + esc(pinLabel(r.name, on, full)) + '">' + pinWord(on) + "</button>";
+}
+
+// Both states' words and both states' names, from one place, for the reason `saveWord`/`saveLabel` are: the
+// markup builder above and the in-place update in `togglePin` are two call sites that would otherwise each
+// hold their own copy of the same string.
+//
+// Every branch of the name begins with the visible word, which is WCAG 2.5.3 and not a style preference: a
+// reader driving this page by voice says what they can see, so a button showing "Compare" whose name was "Add
+// LangGraph to the comparison" is a control they cannot address. The cap's explanation is appended to the name
+// rather than replacing it, so the disabled button still says which project it is about -- a screen-reader user
+// tabbing past 120 of them otherwise hears the same sentence 120 times with no way to tell them apart.
+function pinWord(on) { return on ? "Comparing" : "Compare"; }
+function pinLabel(name, on, full) {
+  if (on) return "Comparing " + name + ", press to take it out of the comparison";
+  return full ? "Compare " + name + ", unavailable: the comparison already holds " + CMP_MAX + " projects"
+              : "Compare " + name;
+}
 
 // ---- Take it with you ------------------------------------------------------------------------------
 //
@@ -3549,6 +4040,11 @@ function render() {
   document.getElementById("rise").setAttribute("aria-pressed", state.rising ? "true" : "false");
   paintSaved();
   paintShared();
+  // Third of the three, and the only one that does not depend on the rows below it: the pinned set resolves
+  // through `BY_NWO`, not through `HITS`, which is what lets a pinned project stay in the comparison after the
+  // reader has filtered it off the page. The pin buttons *in* the rows are drawn further down, out of the same
+  // `state.cmp` this reads.
+  paintCompare();
   // Here as well as on the toggle, for the same reason the chips above are reflected here rather than only
   // where they are clicked: this is the one function every path that changes state already ends at, so a
   // `#view=cards` link, a hashchange and the browser's back button all arrive at the right layout without
@@ -3697,6 +4193,14 @@ function render() {
         // gets it for free too -- `td.pj` is the full-width row 3 there, so the button lands under the
         // title in both layouts without a second rule.
         saveBtn(r) +
+        // Beside Save, in the same cell, for the reason the note above gives about Save: the headings and the
+        // body cells of this table have to stay the same length, and a control that needs no heading has no
+        // business risking a mismatch. It also lands under the title in the cards view for free, `td.pj` being
+        // the full-width row there -- and it lands on the same *line* as Save at 375px, which was measured
+        // rather than assumed. That matters more than it sounds: `td.pj` is the cell whose height decides
+        // whether a phone reader sees a project's name above the fold at all (JFH-289), and it has 14px of
+        // slack. A second line here would spend all of it.
+        pinBtn(r) +
         '<div class="meta os">' + os + "</div></td>" +
       '<td class="n st-c"><span class="st' + (r.stars ? "" : " none") + '">' +
         (r.stars ? r.stars.toLocaleString() : "—") + "</span>" +
