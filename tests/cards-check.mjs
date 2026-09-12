@@ -314,6 +314,10 @@ const widest = await evalIn(`(() => {
     if (n > worst) { worst = n; worstText = t; }
   }
   speech.textContent = before;
+  // Left on the page for the walk below, which checks real bubble text against this set rather than
+  // rebuilding it a second time. A handoff between two Runtime.evaluate calls in one document, not
+  // something the site sets or reads.
+  window.__saidByHarness = said;
   return {said: said.size, worstLines: worst, worstText, tall, live: before, matchesLive: said.has(before)};
 })()`);
 ok("no project in the atlas can push Archie past two lines",
@@ -325,6 +329,74 @@ ok("no project in the atlas can push Archie past two lines",
 // trusted to be measuring the shipped text.
 ok("the restated templates still match what the page says", widest.matchesLive,
    JSON.stringify({live: widest.live, said: widest.said}));
+
+// ONE ROW IS NOT A TIE, AND A ROW'S DATA DOES NOT PICK ITS SENTENCE. The assertion above holds the restated
+// corpus to the one string the page produced for whichever project sorts first, which exercises a single arm
+// of the generator. The obvious repair -- choose rows whose data takes the other arms, one with a single
+// source list, one named after its own owner, one with no tags -- does not work, and was tried here first:
+// the generator picks WHICH of a row's two or three facts to say by hashing its `nwo`, so a row with one
+// source list usually says something else about itself. That version passed while the page's singular wording
+// was deliberately changed underneath it, because the row it picked never said the singular sentence at all.
+//
+// What follows therefore selects nothing. It walks the rendered rows in order, focuses each one, waits past
+// the 320ms hover delay, reads what the bubble really says, and classifies THAT -- so the arms are arms of
+// the observed output, not of a rule this file believes the generator follows. It stops as soon as every arm
+// has been seen, which was measured at 29 rows and about 12 seconds; a run where an arm is unreachable walks
+// all 120 and fails, which is the right way round.
+//
+// Three things are then asserted, and the third is the one the row-picking version faked:
+//   - every live string it saw rendered in at most two lines. Real measurements of real output, so they hold
+//     even if the corpus sweep above ever drifts.
+//   - every live string it saw is in the restated set. That is the tie, now over 29 strings covering every
+//     wording the generator has rather than over one.
+//   - all six wordings were actually observed. Without this the tie could stay green while five of the six
+//     went unexercised, which is exactly how the first attempt passed a control it should have failed. Under
+//     that control this arm names the missing wording and the tie names 24 strings the templates cannot say.
+const walk = await evalIn(`(async () => {
+  window.scrollTo(0, 0);
+  const speech = document.getElementById('byte-speech'), cs = getComputedStyle(speech);
+  const chrome = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+                 + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+  const lh = parseFloat(cs.lineHeight);
+  // The wordings, named by what a reader would see. Membership is read off the live string; nothing here
+  // decides what any row will say.
+  const arms = {
+    "filed under a category": t => t.includes(" is listed under "),
+    "on one source list": t => t.includes(" source list."),
+    "on several source lists": t => t.includes(" source lists."),
+    "published by an owner": t => t.includes(" comes from "),
+    "tagged for a runtime": t => t.includes(" Tagged for "),
+    "a name clipped to fit": t => t.includes("…")
+  };
+  const names = Object.keys(arms), seen = {}, said = [];
+  for (const row of [...document.querySelectorAll('#out tr[data-project]')]) {
+    if (names.every(n => seen[n])) break;
+    // Focus has to leave first: refocusing the element that already holds focus fires no focusin, so the
+    // handler never runs and this would read the previous row's sentence out of a stale bubble.
+    if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+    (row.querySelector('a') || row).focus({preventScroll: true});
+    await new Promise(r => setTimeout(r, 400));
+    if (speech.hidden) return {broke: 'the bubble stayed hidden for ' + row.dataset.project};
+    const text = speech.textContent;
+    const lines = Math.round((speech.getBoundingClientRect().height - chrome) / lh);
+    said.push({nwo: row.dataset.project, text, len: text.length, lines,
+               inSet: window.__saidByHarness.has(text)});
+    for (const n of names) if (arms[n](text)) seen[n] = seen[n] || row.dataset.project;
+  }
+  return {visited: said.length, seen, missing: names.filter(n => !seen[n]),
+          tall: said.filter(s => s.lines > 2 || s.lines < 1),
+          empty: said.filter(s => !s.len),
+          adrift: said.filter(s => !s.inSet).map(s => s.nwo + ': ' + s.text)};
+})()`);
+ok("walking the rendered rows reaches every wording Archie has",
+   !walk.broke && walk.missing.length === 0 && walk.visited >= 6,
+   JSON.stringify({broke: walk.broke, missing: walk.missing, visited: walk.visited, seen: walk.seen}));
+ok("every sentence Archie was caught saying fits in two lines",
+   !walk.broke && walk.tall.length === 0 && walk.empty.length === 0 && walk.visited >= 6,
+   JSON.stringify({tall: walk.tall, empty: walk.empty}));
+ok("every sentence Archie was caught saying is one the restated templates can produce",
+   !walk.broke && walk.adrift.length === 0 && walk.visited >= 6,
+   JSON.stringify({adrift: walk.adrift, visited: walk.visited}));
 
 // THE BUBBLE MUST NOT LAND ON ANYTHING THE READER CAME FOR, and "the navigation" turned out to be too narrow
 // a way to say that. It was anchored `right:calc(100% + 12px); top:8px`, immediately left of the mascot at the
