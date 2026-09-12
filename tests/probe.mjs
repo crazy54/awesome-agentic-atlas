@@ -1448,10 +1448,13 @@ ok("...and a wrapped blurb is flattened rather than dropped", A.mdCell("a\n b \t
 ok("...and a missing value is empty rather than \"null\"", A.mdCell(null) === "" &&
    A.mdCell(undefined) === "", JSON.stringify(A.mdCell(null)));
 // The glyph and not the colour, because an exported document is the one place with none of our stylesheet.
+// The class lists `·` as well, which the published page may not carry yet: `a` drew the same `–` as `-`
+// until `19_pages.py` split them, and this file reads the last page that was built, not the generator
+// beside it. Either mark satisfies this, and `theme_test.py` is where the two are held to agreeing.
 ok("the platform column is legible without colour",
-   A.D.os.every(o => A.osText(A.HITS[0]).includes(o)) && /[✓?✗–]/.test(A.osText(A.HITS[0])),
+   A.D.os.every(o => A.osText(A.HITS[0]).includes(o)) &&
+     /[✓?✗–·]/.test(A.osText(A.HITS[0])),
    A.osText(A.HITS[0]));
-
 const doc = A.listHTML();
 ok("the HTML export is a whole document", doc.startsWith("<!doctype html>") &&
    doc.includes('<html lang="en">') && doc.trimEnd().endsWith("</html>"), doc.slice(0, 60));
@@ -1616,6 +1619,21 @@ ok("...and there are enough of them for that to have been worth checking",
    selectors.length >= 150, String(selectors.length));
 ok("...and its braces balance", (styles.match(/\{/g) || []).length === (styles.match(/\}/g) || []).length,
    (styles.match(/\{/g) || []).length + " open, " + (styles.match(/\}/g) || []).length + " close");
+// A control character in the page, which is a Python escape that got away. This page is written by a
+// generator whose CSS and HTML live in ordinary (non-raw, non-f) Python string literals, so `content:"\25be"`
+// -- the obvious way to write a disclosure triangle -- is read by Python as octal `\25`, U+0015, followed by
+// the letters `be`. That is exactly what this generator emitted while the legend below was being written, and
+// nothing objected: the CSS parsed, the braces balanced, the selector scan above was happy, and all 2,220
+// assertions in this suite were green while the summary on the page read "marks mean ▭be". It never shipped
+// only because someone looked at a screenshot, which is not a method. Any C0 control other than tab, newline and carriage return is the tell, and the
+// class is wider than that one bug -- `\1`..`\7` are all legal octal and all appear in plausible CSS escapes.
+const ctrl = [...html.matchAll(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g)];
+ok("no control character survives from a Python escape the generator did not mean to write",
+   ctrl.length === 0,
+   ctrl.length + " found, first U+" +
+     (ctrl[0]?.[0].codePointAt(0).toString(16).padStart(4, "0").toUpperCase() ?? "") +
+     " at " + around(ctrl[0]?.index ?? 0));
+
 // The three controls that are absent until the page has something to put in them. Named individually
 // because each is one rule, in the selector position, and losing it shows the reader a control that does
 // nothing -- the failure above, which shipped.
