@@ -9,7 +9,9 @@
 //
 // WHY SIXTEEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
-//   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces.
+//   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces, and
+//                     the one channel on the page that is not colour: the five platform verdict marks,
+//                     which three places in 19_pages.py describe with no generator keeping them in step.
 //   signals_test.py   the cache-staleness policy in scripts/signals.py, on fabricated entries. Pure and
 //                     instant, and the only test of it that can exist offline -- the three stages it
 //                     serves all shell out to `gh api graphql`, so nothing here sees a real crawl.
@@ -94,7 +96,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // only a harness that has lost assertions trips it.
 const HARNESSES = [
   {file: "app_flags_test.py", label: "the 0/1 schema, atomic editor writes, and every kill switch", python: true, floor: 28},
-  {file: "theme_test.py", label: "both themes' contrast, and the four copies of the palette", python: true, floor: 120},
+  {file: "theme_test.py", label: "both themes' contrast, the four copies of the palette, and the verdict marks", python: true, floor: 120},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
