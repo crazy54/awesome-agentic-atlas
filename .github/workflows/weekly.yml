@@ -43,7 +43,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - run: python -m pip install --upgrade pip openpyxl pillow playwright
+      # See daily.yml for why numpy is here: one stage, one build-time linear algebra pass.
+      - run: python -m pip install --upgrade pip openpyxl pillow playwright numpy
 
       # See daily.yml: declaring this in `env:` would set it to "" whenever the secret is absent, and an
       # empty CF_BEACON_TOKEN is how you turn the beacon off.
@@ -215,6 +216,16 @@ jobs:
           # from 19_pages and `pages.css` from 20_landing -- so it has to see both in their final state.
           # It does not have to trust the ordering: the stage exits with a message if either is missing.
           python scripts/24_pwa.py
+          # The semantic index (JFH-198). See daily.yml for the whole argument about this position -- in
+          # short, it has to follow the two stages that write `docs/data.json` because it fingerprints
+          # that file, nothing reads what it writes, and it is the only stage here that needs the network,
+          # so it goes where a failure leaves the site consistent rather than half-stamped.
+          #
+          # In this job for the same reason 19_pages is: this workflow rewrites `docs/data.json` too, and
+          # an index built against a different row set does not degrade, it reads each project's
+          # neighbour. The fingerprint means a reader gets no answer instead of the wrong one, but "no
+          # answer" is still the feature gone -- so it is rebuilt wherever the corpus is.
+          python scripts/27_semantic.py
 
       # The same assertion daily.yml carries -- see there for why it is mtime against a marker rather than
       # a manifest, and why an unwritten facet page is a warning while an unwritten fixed path is an error.
