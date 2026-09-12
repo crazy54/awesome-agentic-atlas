@@ -1787,8 +1787,11 @@ const BUILT = "__BUILT__";
 // pronouncing a symbol, and the glyph is free to be chosen for the eye alone. Hence `·` -- a dot against a
 // dash is a shape difference at 11.5px, where two dashes were nothing.
 //
-// Keep this map and the `.vkey` legend in the body in step. They are two sources for one fact, which is the
-// drift `osicons.py` exists to prevent elsewhere; here `probe.mjs` asserts the two agree instead.
+// Keep this map, the `.vkey` legend in the body, and the gloss in `listMarkdown()` and `listHTML()` in step.
+// Three sources for one fact, which is the drift `osicons.py` exists to prevent for the platform icons by
+// generating every end from one place. There is no generator here, so `theme_test.py` reads all three out
+// of this file and asserts they agree -- not `probe.mjs`, which reads the last page that was *built* and so
+// cannot be asked about a legend added to the generator today.
 const VERDICT = {
   Y: ["✓", "stated support"],
   L: ["?", "inferred from the language"],
