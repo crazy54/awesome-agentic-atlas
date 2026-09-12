@@ -102,11 +102,22 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("claudecode", "From Anthropic"): "Frameworks & SDKs",
     ("claudecode", "Agent Orchestration"): "Orchestrators & Multi-Agent",
     ("claudecode", "Skills"): "Agent Skills",
+    # Both of these are bundles rather than a kind of thing, and every entry in them is a collection of
+    # skills, commands and subagents: Multi-Purpose holds ECC, CodePro and a 65-skill plugin, and Open
+    # Source Software holds two skill marketplaces aimed at contributors. Filed by what a reader
+    # installs, which is skills, rather than by the upstream heading's subject matter -- "Multi-Purpose"
+    # names no shelf in this taxonomy and "Open Source Software" describes almost every row in the atlas.
+    ("claudecode", "Multi-Purpose"): "Agent Skills",
+    ("claudecode", "Open Source Software"): "Agent Skills",
     ("claudecode", "Memory & Context Persistence"): "Context, Memory & RAG",
     ("claudecode", "Observability & Monitoring"): "Observability & Evals",
     # Hook-driven checks on what the agent just wrote, so they belong with the other verification
     # tooling rather than with the coding agents they wrap.
     ("claudecode", "Linting"): "Observability & Evals",
+    # Same shelf as Linting, and for the same reason: TDD Guard blocks a write that violates the
+    # cycle and the auditor subagents run QA over what was just produced. Both check the work rather
+    # than do it, which is what separates this category from the coding agents upstream of it.
+    ("claudecode", "Testing"): "Observability & Evals",
     ("claudecode", "Security"): "Sandbox, Security & Governance",
     ("claudecode", "Providers, Runtime & Integration Infrastructure"): "Harnesses & Runtime Infra",
     ("claudecode", "Infrastructure & DevOps"): "Harnesses & Runtime Infra",
@@ -114,6 +125,11 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("claudecode", "Remote Control, Notifications & Voice I/O"): "Plugins, Themes & Clients",
     ("claudecode", "Design & UI/UX"): "Plugins, Themes & Clients",
     ("claudecode", "Status Lines"): "Plugins, Themes & Clients",
+    # What the section actually holds is installation-shaping tools -- tweakcc rewrites themes, spinners
+    # and the input box, Rulesync generates the config files, and the system-prompt appendices retune the
+    # client's voice. That is the same shelf Status Lines and Design & UI/UX are on: changing how the
+    # client behaves for you, not adding a capability to it.
+    ("claudecode", "Configuration"): "Plugins, Themes & Clients",
     ("claudecode", "Creative Media"): "Creative, Voice & Media",
     ("claudecode", "Writing & Prose Quality"): "Creative, Voice & Media",
     ("claudecode", "Research & Scientific Inquiry"): "Research & Data Agents",
@@ -356,6 +372,7 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("mcp_punkpeye", "Gaming"): "MCP Servers",
     ("mcp_punkpeye", "Health & Wellness"): "MCP Servers",
     ("mcp_punkpeye", "Home Automation"): "MCP Servers",
+    ("mcp_punkpeye", "Identity"): "MCP Servers",
     ("mcp_punkpeye", "Industrial & IoT"): "MCP Servers",
     ("mcp_punkpeye", "Knowledge & Memory"): "MCP Servers",
     ("mcp_punkpeye", "Legal"): "MCP Servers",
