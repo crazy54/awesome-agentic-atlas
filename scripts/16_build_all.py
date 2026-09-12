@@ -1211,7 +1211,16 @@ def build_cover(wb, T, stats, per_source):
         return lines * (13 if size <= 9 else 15) + 3
 
     def cover_image(asset: Path, anchor: str, width: int, height: int) -> None:
-        """Place a bounded brand asset without disturbing cover cells or merged ranges."""
+        """Place a bounded brand asset without disturbing cover cells or merged ranges.
+
+        A plain `XLImage`, and deliberately not `media.Pool.place`, which is what everything else that
+        embeds a picture in this workbook uses. The pool renders through `pad_shot`, which pads a
+        *screenshot* onto a canvas in the theme's background colour, and it sizes each placement from
+        the bytes it measured -- while the whole point here is the caller's `width`/`height`. There is
+        also nothing to deduplicate against: two assets, one cover, one placement each. `media.save`'s
+        postcondition counts unpooled parts separately for exactly this (JFH-292); before it did, these
+        two images read as a dedup failure and no weekly could publish.
+        """
         if not asset.is_file():
             raise FileNotFoundError(
                 f"Cover branding asset is missing: {asset.relative_to(ROOT)}. "

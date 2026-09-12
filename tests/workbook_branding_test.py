@@ -7,6 +7,7 @@ to the generator rather than requiring a release-sized workbook.
 from __future__ import annotations
 
 import importlib.util
+import sys
 import tempfile
 import zipfile
 from pathlib import Path
@@ -15,6 +16,9 @@ from openpyxl import Workbook, load_workbook
 
 ROOT = Path(__file__).resolve().parent.parent
 SCRIPT = ROOT / "scripts" / "16_build_all.py"
+
+sys.path.insert(0, str(ROOT / "scripts"))
+import media  # noqa: E402  -- after the path insert, which is what makes it importable
 
 spec = importlib.util.spec_from_file_location("b16_branding", SCRIPT)
 b16 = importlib.util.module_from_spec(spec)
@@ -67,9 +71,30 @@ with tempfile.TemporaryDirectory(prefix="atlas-workbook-branding-") as tmp:
            f"{theme} cover retains the sibling-theme control")
         with zipfile.ZipFile(path) as archive:
             drawings = [name for name in archive.namelist() if name.startswith("xl/drawings/drawing")]
-            media = [name for name in archive.namelist() if name.startswith("xl/media/")]
+            embedded = [name for name in archive.namelist() if name.startswith("xl/media/")]
         ok(len(drawings) == 1, f"{theme} cover has one drawing part")
-        ok(len(media) == 2, f"{theme} cover embeds two brand images")
+        ok(len(embedded) == 2, f"{theme} cover embeds two brand images")
+
+        # The release build does not save with plain openpyxl; it saves through `media.save`, whose
+        # postcondition compares the screenshot pool against the package. That is the half of JFH-292
+        # this file owns, and until it the two had never been in one process -- `media_test.py` builds
+        # workbooks with no cover, and everything above here saves with `wb.save`. So save a cover the
+        # way a weekly does, and let them meet in two seconds here rather than 74 minutes into a run.
+        through_pool = tmp / f"{theme}-pooled.xlsx"
+        pooled_wb = Workbook()
+        pooled_wb.remove(pooled_wb.active)
+        pooled_cover = b16.build_cover(pooled_wb, b16.THEMES[theme], STATS, SOURCES)
+        # Empty, and its renderer is never called, because the cover's artwork is deliberately not
+        # pooled: `Pool` renders through `pad_shot`, which pads a *screenshot* onto a theme-coloured
+        # canvas, and it sizes each placement from the bytes -- while `cover_image` bounds the mark to
+        # 32px and the mascot to 86x90 explicitly. There is also nothing to share them with: two
+        # placements, one cover, one each.
+        pool = media.Pool(lambda src: (_ for _ in ()).throw(AssertionError("cover must not be pooled")))
+        ok(not any(isinstance(image, media.SharedImage) for image in pooled_cover._images),
+           f"{theme} cover artwork is placed outside the pool, which is what lets it be bounded")
+        report = media.save(pooled_wb, through_pool, pool)
+        ok(report.parts == 2 and report.placements == 2,
+           f"{theme} cover survives the pooling writer instead of reading as failed deduplication")
 
         # The fallback operates on release assets when a local checkout lacks the crawler cache.
         # Start with a bare cover so this also proves the package surgery adds a drawing relationship
