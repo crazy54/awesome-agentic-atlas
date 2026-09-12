@@ -2326,7 +2326,7 @@ function buildChips() {
     clearTimeout(typing);
     typing = setTimeout(() => set({q: v}, true), 150);
   };
-  // The download starts on the intent to search rather than on the search: 785 KB has to race the reader's
+  // The download starts on the intent to search rather than on the search: 758 KB has to race the reader's
   // first few keystrokes, and starting it when the query is complete would mean the first answer is the one
   // without meaning in it. `once` because there is nothing to do on the second focus.
   qbox.addEventListener("focus", loadSemantic, {once: true});
@@ -3447,7 +3447,9 @@ function missLink() {
 // there is no attention to run and pooling is the whole of the forward pass. Encoding a query is:
 // segment it into WordPiece tokens, look each one up, add the vectors, normalise. That is the entire
 // model on this side, it is the four lines of `semVector` below, and it runs in well under a
-// millisecond. 785 KB, fetched once, on the first interaction with the search box.
+// millisecond. 758 KB across four files -- 504 KB gzipped -- fetched once, on the first
+// interaction with the search box. Not the 784 KB `docs/search/` weighs: `near.bin` and
+// `xy.bin` sit in that directory and nothing fetches them yet.
 //
 // WHY IT IS FETCHED ON INTERACTION rather than at load or in the precache. A reader who came for the
 // table and never types is charged nothing, and the download races the reader's first keystrokes rather
