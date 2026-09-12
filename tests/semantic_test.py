@@ -16,7 +16,7 @@ drift: `meta.json` ships the stage's own segmentation of eight texts as `probe`,
 its transcription reproduces them token id for token id. `tests/probe.mjs` asserts the same fixtures
 against the page's `semTokens()`, which is the copy whose drift a reader would actually feel.
 
-Eight groups:
+Nine groups:
 
   the shape       -- every file's length agrees with `meta.json`. int8 matrices carry no dimensions of
                      their own, so a wrong `dims` is undetectable from the bytes and catastrophic in
@@ -38,6 +38,13 @@ Eight groups:
                      segmentation rather than left out of the vocabulary -- which is what the build used
                      to do, and which re-spelled them as rare, heavily weighted fragments instead. Nine
                      such questions each returned twelve confident, unrelated projects before this.
+  the map         -- `xy.bin` is a picture of the corpus and not a random scatter. Asserted against
+                     `cat`, the curated label the layout never saw: of the eight rows nearest a project
+                     on screen, the share sharing its category has to beat what two rows drawn at random
+                     would share. A ratio, never an absolute, for the same reason the retrieval group
+                     asserts on rank -- 14 categories at these very uneven sizes put chance at 11.7%
+                     today and somewhere else after the ingest. A layout that silently collapsed, or one
+                     seeded off the clock, scores 1x here while every shape assertion above still passes.
   the retrieval   -- the queries this feature exists for. Each names a project that ought to surface,
                      and the assertion is on its *rank*, never on a similarity: this corpus is about to
                      go from 1,294 rows to some 8,293, and any absolute threshold true today would be
@@ -60,6 +67,7 @@ import array
 import hashlib
 import json
 import math
+import random
 import re
 import sys
 from pathlib import Path
@@ -187,6 +195,8 @@ def main() -> int:
     table.frombytes((SEARCH / "vocab.bin").read_bytes())
     near = array.array("H")
     near.frombytes((SEARCH / "near.bin").read_bytes())
+    xy = array.array("h")
+    xy.frombytes((SEARCH / "xy.bin").read_bytes())
 
     print("the shape")
     h.check("docs.bin is rows x dims", len(docs) == rows * dims,
@@ -197,6 +207,7 @@ def main() -> int:
             f"{len(tokens)} tokens, meta says {meta['vocab']}")
     h.check("near.bin is rows x near", len(near) == rows * meta["near"],
             f"{len(near)} entries, expected {rows * meta['near']}")
+    h.check("xy.bin is rows x 2", len(xy) == rows * 2, f"{len(xy)} entries, expected {rows * 2}")
     h.check("every neighbour is a real row", all(0 <= n < rows for n in near), "index out of range")
     h.check("no row is its own neighbour",
             all(near[i * meta["near"] + k] != i for i in range(rows) for k in range(meta["near"])),
@@ -264,6 +275,69 @@ def main() -> int:
             out.append((sum(docs[base + d] * doc_scale * vec[d] for d in range(dims)), i))
         out.sort(reverse=True)
         return out
+
+    print("the map")
+    # `xy_scale` is validated the way the other two scales are, and for the same reason: it is a divisor
+    # the page applies to every coordinate, so a zero or a NaN here does not fail, it draws every project
+    # on top of the origin or nowhere at all.
+    xy_scale = meta.get("xy_scale")
+    h.check("meta.json ships a usable xy_scale",
+            isinstance(xy_scale, (int, float)) and xy_scale == xy_scale and xy_scale > 0,
+            f"xy_scale is {xy_scale!r}")
+    at = [(xy[i * 2], xy[i * 2 + 1]) for i in range(rows)]
+    h.check("no two projects share a position", len(set(at)) >= rows * 0.99,
+            f"only {len(set(at))} distinct positions across {rows} rows")
+    span_x = max(x for x, _ in at) - min(x for x, _ in at) if rows else 0
+    span_y = max(y for _, y in at) - min(y for _, y in at) if rows else 0
+    # Both axes, because a layout that collapsed onto a line keeps a full extent on one of them.
+    h.check("the map has extent on both axes", min(span_x, span_y) > 32767,
+            f"spans {span_x} x {span_y} of a possible 65,534")
+
+    # Purity: the assertion that the picture means something. Sampled rather than exhaustive -- 1,294 rows
+    # is 1.67M distances in pure Python and this harness runs in under a second -- and sampled with a fixed
+    # seed so a failure is reproducible rather than a coin toss somebody re-runs until it passes.
+    cat_at = ix.get("cat")
+    if cat_at is None:
+        h.check("docs/data.json carries a cat column", False, "no `cat` column to score the map against")
+    else:
+        cat = [r[cat_at] for r in data["rows"]]
+        counts: dict = {}
+        for c in cat:
+            counts[c] = counts.get(c, 0) + 1
+        chance = sum((n / rows) * ((n - 1) / max(rows - 1, 1)) for n in counts.values()) if rows else 0.0
+        sample = random.Random(20260912).sample(range(rows), min(200, rows))
+        same = 0
+        for i in sample:
+            xi, yi = at[i]
+            far = sorted(((xi - at[j][0]) ** 2 + (yi - at[j][1]) ** 2, j)
+                         for j in range(rows) if j != i)[:8]
+            same += sum(1 for _, j in far if cat[j] == cat[i])
+        pure = same / float(len(sample) * 8) if sample else 0.0
+        # 2.5x. Measured at 5.2x on the committed index -- 60% against 11.7% -- and a random scatter
+        # measures 1.0x, so this floor sits well clear of both the real answer and the failure it is for.
+        h.check(f"the map groups like with like ({pure:.0%} of neighbours share a category, "
+                f"{chance:.0%} by chance)", pure >= chance * 2.5,
+                f"{pure:.1%} against {chance:.1%} by chance is {pure / chance:.1f}x, "
+                f"which is close enough to arbitrary that the map is not worth drawing")
+        # The other direction, and the cheaper one: the rows `near.bin` calls neighbours have to be closer
+        # together on the map than two rows picked at random. Purity could in principle be satisfied by a
+        # layout that grouped categories while ignoring the graph it was built from.
+        rng = random.Random(20260913)
+        edge_d = 0.0
+        for i in range(rows):
+            for k in range(meta["near"]):
+                j = near[i * meta["near"] + k]
+                edge_d += ((at[i][0] - at[j][0]) ** 2 + (at[i][1] - at[j][1]) ** 2) ** 0.5
+        edge_d /= max(rows * meta["near"], 1)
+        rand_d = 0.0
+        for _ in range(4000):
+            i, j = rng.randrange(rows), rng.randrange(rows)
+            rand_d += ((at[i][0] - at[j][0]) ** 2 + (at[i][1] - at[j][1]) ** 2) ** 0.5
+        rand_d /= 4000
+        h.check(f"neighbours land closer than strangers ({edge_d:,.0f} vs {rand_d:,.0f})",
+                edge_d < rand_d * 0.5,
+                f"a neighbour averages {edge_d:,.0f} away and a random row {rand_d:,.0f}, so the layout "
+                f"is not honouring near.bin")
 
     print("the retrieval")
     where = {str(r[ix["nwo"]]).lower(): i for i, r in enumerate(data["rows"])}

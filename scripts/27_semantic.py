@@ -20,6 +20,7 @@ stage builds the index that fixes it.
   docs/search/vocab.bin    int8, one vector per token -- the query encoder's lookup table
   docs/search/docs.bin     int8, one vector per row of docs/data.json, in that exact order
   docs/search/near.bin     uint16, the NEAR nearest neighbours of every row, precomputed
+  docs/search/xy.bin       int16, two per row: where that project sits on the map
 
 ONE TOKENISER, WRITTEN HERE, BECAUSE THE CLIENT ONLY GETS PART OF THE VOCABULARY. The obvious build is
 to segment with the model's own tokeniser and ship a pruned table, and it is quietly broken: this stage
@@ -138,6 +139,66 @@ NEAR = 8
 # README text is truncated hard. The first couple of thousand characters are the pitch, the badges and
 # the install; past that is API reference and changelog, which describe every project the same way.
 README_CHARS = 2_000
+
+# ---------------------------------------------------------------------------- the map's coordinates
+#
+# `xy.bin` is two int16 per row: where that project sits on a plane, so the page can draw the corpus as a
+# picture instead of as a list. Solved here rather than in the browser for the reason the whole file
+# exists -- this end has numpy and no deadline, and the reader has a paint budget.
+#
+# It is a force layout on the neighbour graph, not a projection of the vectors, and that difference is the
+# difference between a map and an inkblot. Three figures per candidate, all printed on every build and all
+# measured on the quantised bytes a reader actually gets:
+#
+#   purity  of the 8 rows nearest a project on screen, how many share its curated category
+#   keep    of its 8 *semantic* neighbours, how many are among those 8 nearest on screen
+#   fill    how much of a 48x48 grid over the bounding box has anything in it
+#
+# Purity is the figure that says whether the picture is honest, because it is scored against a label the
+# layout never saw -- `cat`, chosen by a human -- and it has a chance baseline to beat: two rows drawn at
+# random from this corpus share a category 11.7% of the time. Measured on the committed 1,294-row index:
+#
+#   random scatter                  purity 11.6%   keep 0.05/8   fill 27.2%
+#   plain 2-component projection    purity 31.4%   keep 0.30/8   fill 31.6%
+#   this layout                     purity 60.7%   keep 2.07/8   fill 38.5%
+#
+# The scatter landing on the baseline is what makes the other two readable rather than merely large. The
+# projection is not a *bad* picture -- 31.4% is real structure -- it is that the leading directions of this
+# corpus are "is about agents" and "is a list of things", which every row scores highly on, so the topical
+# arrangement sits buried under two axes nobody wants to look at.
+#
+# `keep` is deliberately the weakest of the three and it is not what the epochs were chosen for. The page
+# draws each row's true neighbours as edges out of `near.bin`, so a reader is *told* who a project's
+# neighbours are; they do not have to be the nearest dots on screen for that to read correctly.
+#
+# Three things were tried and rejected, each by measurement:
+#
+#   * Fruchterman-Reingold, which this file had first: keep 0.49/8 at fill 37.4%. Its ideal edge length is
+#     sqrt(area/n), and holding a graph open at that length needs repulsion between all pairs -- exactly
+#     the term that cannot survive the corpus growing.
+#   * A denser layout graph. This end can compute any k, and every increase made it worse: k=16 gives
+#     keep 1.39, k=24 gives 1.13, k=32 gives 0.98. The extra links are the weak ones, and averaging a
+#     strong neighbour with a weak one blurs the neighbourhood the strong one defined.
+#   * More repulsion. 30 negative samples scores keep 2.31 -- better than what ships -- and collapses fill
+#     to 1.5%, with the extent blowing out to 354 units: a dense knot with a handful of rows flung far
+#     enough to hold the bounding box open. That failure is invisible to `keep` and to every shape
+#     assertion in the suite, and it is the whole reason `fill` is measured at all.
+LAYOUT_EPOCHS = 500
+# Negative samples per edge per epoch. 1,294 rows is 837k pairs and computing all of them is affordable;
+# 8,293 rows is 34M pairs per epoch and is not. Sampling makes the cost grow with the number of edges
+# rather than with the square of the number of rows, which is the only reason this stage still finishes
+# after the 39-list ingest.
+LAYOUT_NEG = 15
+# 1,500 epochs at 25 samples measures better on keep -- 2.34/8 -- and identically on purity, for rather
+# more than five times the arithmetic. The reader cannot perceive the difference and the corpus is about to
+# sextuple, so the cheap setting ships. This is the number to raise if the map ever needs to be tighter,
+# and keep is the number to raise it against.
+LAYOUT_SPREAD = 4.0
+LAYOUT_CLIP = 4.0
+# Fixed, and load-bearing rather than tidy. `docs/search/` is committed, so a layout seeded off the clock
+# would rewrite 5 KB of binary on every build whose input had not changed, and would move every project on
+# the map for no reason a reader could see. Verified by building twice and comparing bytes.
+LAYOUT_SEED = 20260912
 
 # Words dropped before WordPiece ever sees them, on both sides of the wire. Where they are dropped is the
 # entire subtlety, and getting it wrong is measurable.
@@ -336,6 +397,162 @@ def doc_text(row: list, ix: dict, cats: list) -> tuple[str, bool]:
     return f"{head} {get('blurb')}", False
 
 
+def edges(near: np.ndarray, n: int) -> tuple[np.ndarray, np.ndarray]:
+    """`near.bin` as an undirected edge list, each pair once.
+
+    The table is directed k-nearest: row i names the eight rows most like it, and being in i's eight does
+    not put i in yours. A hub -- some widely-applicable agent framework -- is named by hundreds of rows and
+    names only eight, and leaving that directed makes the layout treat those hundreds of pulls as
+    one-sided. Deduplicating on the unordered pair is also what stops a mutual neighbour being pulled
+    twice as hard as a one-way one, which would make popularity look like similarity.
+    """
+    src = np.repeat(np.arange(n, dtype=np.int64), near.shape[1])
+    dst = near.ravel().astype(np.int64)
+    keep = src != dst
+    src, dst = src[keep], dst[keep]
+    lo, hi = np.minimum(src, dst), np.maximum(src, dst)
+    # One integer per unordered pair, so `unique` does the deduplication. int64 is checked rather than
+    # assumed: at 8,293 rows the largest key is ~69M, and the day this file is handed a corpus where
+    # n*n overflows is the day the map silently folds unrelated projects onto each other.
+    assert n * n < np.iinfo(np.int64).max, "row count too large for the pair key"
+    _, first = np.unique(lo * n + hi, return_index=True)
+    return lo[first], hi[first]
+
+
+def layout(unit: np.ndarray, near: np.ndarray) -> np.ndarray:
+    """2D coordinates for every row: the force law UMAP optimises, over `near.bin` read as undirected.
+
+    Attraction pulls each edge together with a gradient that saturates -- 2/(1+d^2) -- so a pair already
+    close stops pulling and a pair far apart does not pull arbitrarily hard. Repulsion pushes a row away
+    from LAYOUT_NEG rows drawn at random, with 1/((0.001+d^2)(1+d^2)), which is strong at short range and
+    negligible at long. Both are clipped, and the whole displacement is scaled by a rate decaying to zero,
+    which is what turns a simulation that oscillates for ever into one that comes to rest.
+
+    Seeded from the two leading principal directions rather than from noise. A random start on this graph
+    settles somewhere different every run and needs several times the epochs to stop looking knotted; the
+    projection is a poor picture on its own and a good *guess*, because the broad topical split is already
+    in it and the forces only have to open it out.
+
+    Centring the seed is safe here in a way it explicitly is not for the ranking basis. The note in
+    `main()` explains why subtracting the corpus mean destroys retrieval: a query is a three-word vector
+    and the mean is a whole-document vector, so the shift dominates whatever the reader typed. Nothing
+    projects a query into this space. It is a picture, and for a picture centring is where the origin goes.
+    """
+    n = unit.shape[0]
+    if n < 3:
+        return np.zeros((n, 2), dtype=np.float32)
+
+    centred = unit - unit.mean(0)
+    _, _, vt = np.linalg.svd(centred, full_matrices=False)
+    pos = (centred @ vt[:2].T).astype(np.float32)
+    pos /= float(np.abs(pos).max()) or 1.0
+    pos *= LAYOUT_SPREAD
+
+    ea, eb = edges(near, n)
+    rng = np.random.default_rng(LAYOUT_SEED)
+    for epoch in range(LAYOUT_EPOCHS):
+        rate = 1.0 - epoch / LAYOUT_EPOCHS
+
+        d = pos[ea] - pos[eb]
+        pull = np.clip(d * (-2.0 / (1.0 + (d * d).sum(1, keepdims=True))), -LAYOUT_CLIP, LAYOUT_CLIP)
+
+        # One head per edge, LAYOUT_NEG partners each, drawn uniformly. Uniform rather than
+        # degree-weighted on purpose: the hubs are the rows that hundreds of others name, and weighting
+        # the draw by degree would push them out to the rim, which is the opposite of where they belong.
+        ha = np.repeat(ea, LAYOUT_NEG)
+        hb = rng.integers(0, n, len(ea) * LAYOUT_NEG)
+        apart = ha != hb
+        ha, hb = ha[apart], hb[apart]
+        rd = pos[ha] - pos[hb]
+        rd2 = (rd * rd).sum(1, keepdims=True)
+        push = np.clip(rd * (2.0 / ((0.001 + rd2) * (1.0 + rd2))), -LAYOUT_CLIP, LAYOUT_CLIP)
+
+        disp = np.zeros_like(pos)
+        for axis in (0, 1):
+            # bincount rather than `np.add.at`, which is unbuffered and measures ~20x slower here. Same
+            # arithmetic: every force landing on a row, summed, once per axis.
+            disp[:, axis] = (
+                np.bincount(ea, weights=pull[:, axis], minlength=n)
+                - np.bincount(eb, weights=pull[:, axis], minlength=n)
+                + np.bincount(ha, weights=push[:, axis], minlength=n)
+            )
+        pos += rate * disp
+
+    return pos - pos.mean(0)
+
+
+def retention(pos: np.ndarray, near: np.ndarray) -> float:
+    """Of each row's `NEAR` semantic neighbours, how many are among its `NEAR` nearest on screen.
+
+    The one number that says whether the map is telling the truth. A layout can look beautifully spread
+    and still be arbitrary, and nothing else in this stage would notice: `xy.bin` would be the right
+    length, every coordinate would be in range, and the picture would be a random scatter of 1,294 dots
+    that a reader would try to read meaning into.
+    """
+    n = pos.shape[0]
+    if n <= NEAR:
+        return 0.0
+    kept = 0
+    step = 512
+    for start in range(0, n, step):
+        block = pos[start:start + step]
+        d2 = ((block[:, None, :] - pos[None, :, :]) ** 2).sum(2)
+        for r in range(block.shape[0]):
+            d2[r, start + r] = np.inf
+        close = np.argpartition(d2, NEAR, axis=1)[:, :NEAR]
+        for r in range(block.shape[0]):
+            kept += len(set(close[r].tolist()) & set(near[start + r].tolist()))
+    return kept / n
+
+
+def purity(pos: np.ndarray, label: np.ndarray, k: int = NEAR) -> tuple[float, float]:
+    """Of the `k` rows nearest each row on screen, what share carry the same label -- and by chance.
+
+    The only measurement here scored against something the layout never saw. `retention` asks whether the
+    picture agrees with the vectors it was built from, which a layout can satisfy while still being
+    unreadable; this asks whether it agrees with `cat`, the one label a human chose, and that is the
+    question a visitor is really asking when they look for a neighbourhood on a map.
+
+    The chance figure is returned alongside rather than left to the reader, because the raw share means
+    nothing on its own: with 14 categories at this corpus's very uneven sizes, two rows drawn at random
+    already share one 11.7% of the time, and a number that beats nothing needs to be seen next to what it
+    beat. A random scatter measures 11.6% against that 11.7%, which is the control that makes the figure
+    for a real layout worth quoting.
+    """
+    n = pos.shape[0]
+    if n <= k or not len(label):
+        return 0.0, 0.0
+    _, counts = np.unique(label, return_counts=True)
+    total = counts.sum()
+    chance = float(((counts / total) * ((counts - 1) / max(total - 1, 1))).sum())
+    same = 0
+    step = 512
+    for start in range(0, n, step):
+        block = pos[start:start + step]
+        d2 = ((block[:, None, :] - pos[None, :, :]) ** 2).sum(2)
+        for r in range(block.shape[0]):
+            d2[r, start + r] = np.inf
+        close = np.argpartition(d2, k, axis=1)[:, :k]
+        same += int((label[close] == label[start:start + block.shape[0], None]).sum())
+    return same / float(n * k), chance
+
+
+def spread(pos: np.ndarray, cells: int = 48) -> float:
+    """The fraction of the bounding box the rows actually occupy, on a `cells` x `cells` grid.
+
+    Distinguishes the two failure modes a single retention figure cannot: a dense blob with four outliers
+    holding the box open scores well on neighbours and is unusable, because every row a reader wants to
+    click is inside one percent of the pixels.
+    """
+    n = pos.shape[0]
+    if not n:
+        return 0.0
+    lo, hi = pos.min(0), pos.max(0)
+    size = np.maximum(hi - lo, 1e-9)
+    grid = np.clip(((pos - lo) / size * cells).astype(np.int32), 0, cells - 1)
+    return len(set(map(tuple, grid.tolist()))) / float(cells * cells)
+
+
 def main() -> None:
     if not DATA.exists():
         sys.exit(f"{DATA} is missing; run 19_pages.py or 19b_refresh.py first.")
@@ -457,6 +674,7 @@ def main() -> None:
     # Neighbours off the quantised vectors, not the float ones, so "more like this" agrees with what
     # the reader's browser will compute from the same bytes.
     near = np.zeros((n_docs, NEAR), dtype=np.uint16)
+    unit = np.zeros((n_docs, DIMS), dtype=np.float32)
     if n_docs:
         unit = docs_q.astype(np.float32)
         unit /= np.maximum(np.linalg.norm(unit, axis=1, keepdims=True), 1e-6)
@@ -467,6 +685,30 @@ def main() -> None:
                 sim[r, start + r] = -2.0
             order = np.argsort(-sim, axis=1)[:, :NEAR]
             near[start:start + step] = order.astype(np.uint16)
+
+    # Where each row sits on the map. Quantised to int16 over the larger half-extent of the two axes, so
+    # the aspect ratio the layout produced survives the trip -- scaling each axis to its own range would
+    # stretch the picture to fill a square and pull apart rows the layout had placed together.
+    xy = layout(unit, near)
+    xy_scale = float(np.abs(xy).max(initial=0.0)) or 1.0
+    xy_q = np.clip(np.rint(xy / xy_scale * 32767), -32767, 32767).astype(np.int16)
+    # Measured on the quantised coordinates, which is what a reader gets, and against the plain projection
+    # as a control -- a figure with nothing to compare it against does not say whether the solver earned
+    # its epochs. Both are printed at the end of the run.
+    seen = xy_q.astype(np.float32)
+    cat_of = np.array([r[ix["cat"]] for r in rows])
+    keep_map, fill_map = retention(seen, near), spread(seen)
+    pure_map, chance = purity(seen, cat_of)
+    # The control, and it has to be built here rather than quoted from the comment above: a figure with
+    # nothing beside it does not say whether the solver earned its epochs, and a figure hard-coded in a
+    # comment stops being true the first time the corpus changes.
+    if n_docs:
+        middled = unit - unit.mean(0)
+        flat = middled @ np.linalg.svd(middled, full_matrices=False)[2][:2].T
+    else:
+        flat = np.zeros((0, 2), np.float32)
+    keep_flat, fill_flat = retention(flat, near), spread(flat)
+    pure_flat, _ = purity(flat, cat_of)
 
     # The fingerprint the page checks before it trusts any of this. Row count catches a rebuild that
     # changed length; the digest catches one that only reordered, which is the case that would rank
@@ -479,6 +721,7 @@ def main() -> None:
     (OUT / "docs.bin").write_bytes(docs_q.tobytes())
     (OUT / "vocab.bin").write_bytes(table_q.tobytes())
     (OUT / "near.bin").write_bytes(near.tobytes())
+    (OUT / "xy.bin").write_bytes(xy_q.tobytes())
     # LF and sorted keys: both files are committed, and the alternative is a diff every time the OS
     # that ran the build changes. Token strings are the tokeniser's own, so the client's WordPiece pass
     # matches this stage's by construction rather than by a second copy of the vocabulary.
@@ -495,6 +738,9 @@ def main() -> None:
             "rows": n_docs,
             "vocab": len(ranked),
             "near": NEAR,
+            # The map's quantisation scale. Not the ranking's -- these are pixels, not similarities, and
+            # a reader who conflated them would be dividing a coordinate by a cosine.
+            "xy_scale": xy_scale,
             "fingerprint": fingerprint,
             "indexed_from_readme": from_readme,
             "probe": probe,
@@ -508,7 +754,7 @@ def main() -> None:
         }, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
 
     total = 0
-    for name in ("meta.json", "vocab.json", "vocab.bin", "docs.bin", "near.bin"):
+    for name in ("meta.json", "vocab.json", "vocab.bin", "docs.bin", "near.bin", "xy.bin"):
         size = (OUT / name).stat().st_size
         total += size
         print(f"docs/search/{name:12s} {size / 1024:9.1f} KB")
@@ -519,6 +765,14 @@ def main() -> None:
     print(f"{n_docs:,} rows · {DIMS} dims · {len(ranked):,} tokens shipped "
           f"({used:,} the corpus uses, {len(ranked) - used:,} kept so every word stays segmentable) · "
           f"fingerprint {fingerprint}")
+    print(f"map: {pure_map:.0%} of each row's {NEAR} on-screen neighbours share its category "
+          f"({chance:.0%} by chance), {keep_map:.1f}/{NEAR} semantic neighbours stay adjacent, "
+          f"{fill_map:.0%} of the box occupied")
+    print(f"     the plain 2-component projection this replaced scores {pure_flat:.0%} / "
+          f"{keep_flat:.1f} / {fill_flat:.0%} on the same three")
+    if pure_map <= chance * 2:
+        print(f"     WARNING: purity is within 2x of chance, so the map is close to arbitrary. Something "
+              f"is wrong with the layout or with the vectors it was built from.")
     if from_readme == n_docs:
         print(f"indexed from READMEs for all {n_docs:,} rows")
     else:

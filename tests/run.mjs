@@ -56,7 +56,7 @@
 //                     mark would have been -- so a page that lost its sprite publishes five invisible
 //                     verdicts per row and reads as a slightly airy layout. Nothing else in this suite
 //                     can see that, and a sample cannot either: the failure is per-document.
-//   semantic_test.py  the semantic index in docs/search/, scored using only the five files a reader downloads:
+//   semantic_test.py  the semantic index in docs/search/, scored using only the six files a reader downloads:
 //                     no numpy, no model, no build stage imported. Reimplements the browser's half in the
 //                     standard library, so what it asserts on is the code a visitor actually runs. Carries the
 //                     staleness guard -- vectors are addressed by row ordinal, so an index built against a
@@ -70,6 +70,13 @@
 //                     times, once per language, and there is nothing to import. The build stage writes its
 //                     own segmentation of eight strings into meta.json, this file checks its transcription
 //                     against them, and probe.mjs checks the page's -- which is the copy a reader runs.
+//                     The newest group is the map: xy.bin holds two int16 per row, the coordinates the
+//                     constellation is drawn from, and every check on its shape can pass over a random
+//                     scatter. So it is scored against the one label the layout never saw -- of the eight
+//                     rows nearest a project on screen, how many share its curated cat -- and required to
+//                     beat what two rows drawn at random would share. 60% against 11.7% today; a random
+//                     layout scores 1x, and the floor is a multiple of chance rather than a number,
+//                     because chance itself moves when the corpus does.
 //                     Drift there is the one failure in this feature with no symptom at all: nothing throws,
 //                     a full page comes back, and it is ranked by noise.
 //   live_test.py      the star/push sidecar the 1,294 detail pages read in place of data.json: that its keys
