@@ -329,5 +329,79 @@ check("the installed icon wears Atlas Byte's dark pixel shades",
 check("the installed icon carries the shades' white checker glint",
       png_pixel(ICON_192, 58, 77), DARK["ink"])
 
+
+# ---------------------------------------------------------------------------------------------------
+# ABOVE THE FOLD
+#
+# At 375x760 the first result's *name* used to sit at y=740 with one pixel of it showing: a masthead of
+# 335 and a filter bar of 165, then 226px of screenshot and star-count inside the card before the name
+# it belongs to. Two changes bought it 82px and put the name, its repo link, Save and all five platform
+# verdicts on screen. The measurements and the reasoning are in the comments beside both.
+#
+# This is asserted here, off the generator's source, and not in `cards-check.mjs` -- which measures real
+# layout at 375 and is the obvious home for it. `tests/run.mjs` serves `cards-check.mjs` the *committed*
+# `docs/`, so a layout assertion about a rule added today fails until a build lands, which is the trap
+# `probe.mjs` fell into over the verdict legend. Source is the only subject available on a cold checkout.
+#
+# Both changes fail silently if undone, which is why they are worth the assertions:
+#
+#   * the art and the column it sits in are sized by two rules on purpose. Re-merged into the one rule
+#     they used to share, the column shrinks with the art and the "Atlas Byte" name tag wraps to two
+#     lines -- and gets *taller*, giving back the pixels the change was for.
+#   * the card-order rules repeat the cards block's selectors exactly, so they win on source order and
+#     nothing else. Moved up beside the masthead rules -- where they look like they belong -- they lose
+#     to the block they are meant to outrank, the order reverts, and no rule anywhere looks wrong.
+
+def media_block(src: str, opener: str, nth: int = 0) -> str:
+    """The text inside the nth occurrence of `opener`, brace-matched rather than regexed."""
+    at = -1
+    for _ in range(nth + 1):
+        at = src.index(opener, at + 1)
+    depth, start, i = 1, at + len(opener), at + len(opener)
+    while depth and i < len(src):
+        if src[i] == "{":
+            depth += 1
+        elif src[i] == "}":
+            depth -= 1
+        i += 1
+    return src[start:i - 1]
+
+
+# The exact string, which cannot collide with `@media(max-width:640px),(max-height:560px)` -- the filter
+# sheet's query, a different block with a different job.
+PHONE = "@media(max-width:640px){"
+check("the phone query is emitted exactly twice: the masthead, then the card order", SRC.count(PHONE), 2)
+MASTHEAD = media_block(SRC, PHONE, 0)
+CARD = media_block(SRC, PHONE, 1)
+
+COLUMN = re.search(r"\.atlas-byte-wrap\{width:(\d+)px\}", MASTHEAD)
+ART = re.search(r"\.atlas-byte\{width:(\d+)px", MASTHEAD)
+true("the phone masthead sizes the mascot's column", bool(COLUMN))
+true("...and sizes its art by a separate rule", bool(ART))
+true("the art is smaller than its column, or the name tag wraps and costs more than the art saved",
+     bool(COLUMN and ART) and int(ART.group(1)) < int(COLUMN.group(1)))
+# The floor the whole masthead budget is measured against: two of these stacked under the art are 88 of
+# the column's 149px, and they are a tap target before they are a layout problem. Matched with the padding
+# it is declared with, because the shorter string also occurs in prose -- the first version of this line
+# passed off a copy of the rule inside the comment that explains it, and went on passing when the rule
+# itself was deleted. A source-reading test can be satisfied by the source's own description of itself.
+true("the mascot's buttons keep a 44px tap target on a phone",
+     "header button{min-height:44px;padding:0 14px}" in SRC)
+
+for cell, row in (("pj", "2"), ("rk", "3"), ("st-c", "3")):
+    found = re.search(r"html\[data-view=cards\] td\." + re.escape(cell) + r"\{grid-row:(\d)", CARD)
+    check("the phone card puts td." + cell + " on grid row " + row, found and found.group(1), row)
+
+DESKTOP_PJ = SRC.index("html[data-view=cards] td.pj{grid-column")
+true("the phone card order is emitted after the cards block whose selectors it repeats",
+     SRC.index(PHONE, DESKTOP_PJ + 1) > DESKTOP_PJ)
+
+# Untouched on purpose. These carry two attributes and outrank the phone rules at every width, so a reader
+# who turned the screenshots off keeps the order that was designed for not having them -- rank, then name.
+check("the screenshots-off card order is left as it was",
+      [re.search(r"html\[data-view=cards\]\[data-index-screenshots=off\] td\." + c + r"\{grid-row:(\d)",
+                 SRC).group(1) for c in ("rk", "st-c", "pj")],
+      ["1", "1", "2"])
+
 print(f"\n{ok} passed, {bad} failed")
 sys.exit(1 if bad else 0)
