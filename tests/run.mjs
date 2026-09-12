@@ -2,12 +2,12 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the sixteen harnesses in turn, and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the seventeen harnesses in turn, and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY SIXTEEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY SEVENTEEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
 //   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces, and
 //                     the one channel on the page that is not colour: the five platform verdict marks,
@@ -56,6 +56,22 @@
 //                     mark would have been -- so a page that lost its sprite publishes five invisible
 //                     verdicts per row and reads as a slightly airy layout. Nothing else in this suite
 //                     can see that, and a sample cannot either: the failure is per-document.
+//   semantic_test.py  the semantic index in docs/search/, scored using only the five files a reader downloads:
+//                     no numpy, no model, no build stage imported. Reimplements the browser's half in the
+//                     standard library, so what it asserts on is the code a visitor actually runs. Carries the
+//                     staleness guard -- vectors are addressed by row ordinal, so an index built against a
+//                     different data.json returns each project's neighbour with no error anywhere -- and the
+//                     retrieval cases themselves, scored on rank rather than on any similarity threshold,
+//                     because this corpus is expected to grow several times over and a number true at 1,294
+//                     rows would be false at 8,000. It also asserts that a question with no topic in it --
+//                     "please help me choose" -- produces no tokens and therefore no answer, and that
+//                     chatter wrapped around a real topic still keeps the topic.
+//                     Tokeniser parity is split across two harnesses on purpose: the algorithm exists three
+//                     times, once per language, and there is nothing to import. The build stage writes its
+//                     own segmentation of eight strings into meta.json, this file checks its transcription
+//                     against them, and probe.mjs checks the page's -- which is the copy a reader runs.
+//                     Drift there is the one failure in this feature with no symptom at all: nothing throws,
+//                     a full page comes back, and it is ranked by noise.
 //   live_test.py      the star/push sidecar the 1,294 detail pages read in place of data.json: that its keys
 //                     and the pages are the same set in both directions, that it resolves its three columns
 //                     by name rather than by position -- a later stage appends columns -- and that its
@@ -82,7 +98,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// sixteen files own their own plumbing. It is 200 lines of plumbing.
+// seventeen files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -112,6 +128,7 @@ const HARNESSES = [
   {file: "workbook_branding_test.py", label: "the Atlas mark and mascot on both workbook covers, saved as a weekly saves them", python: true, floor: 24},
   {file: "refresh_test.py", label: "the cache-free render, refused when the source count moved", python: true, floor: 60},
   {file: "live_test.py", label: "the star/push sidecar the 1,294 detail pages read", python: true, floor: 90},
+  {file: "semantic_test.py", label: "the semantic index, scored from the bytes a reader downloads", python: true, floor: 30},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
   {file: "detail-churn.mjs", label: "1,294 detail pages, regenerated and hashed", floor: 7},
@@ -129,7 +146,7 @@ if (!existsSync(join(ROOT, "docs", "index.html"))) {
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and three of the sixteen harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and three of the seventeen harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -142,16 +159,17 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Twelve of the sixteen need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Thirteen of the seventeen need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives the IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar,
-// one reads every built page looking for a platform mark that resolves to nothing -- and between them they
-// are most of the assertions below, comfortably over half.
+// one reads every built page looking for a platform mark that resolves to nothing, one re-derives the
+// semantic index's arithmetic from the committed bytes -- and between them they are most of the assertions
+// below, comfortably over half.
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and twelve of the sixteen harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and thirteen of the seventeen harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +
