@@ -1677,7 +1677,7 @@ ok("...and it is either the rendered card or the documented GitHub fallback",
    /content="https:\/\/opengraph\.githubassets\.com\//.test(html));
 ok("...and in the JS string that builds the same URL per row",
    /"https:\/\/opengraph\.githubassets\.com\/1\/"/.test(html));
-ok("the favicon points to the local Atlas Byte SVG",
+ok("the favicon points to the local Archie SVG",
    /<link rel="icon" href="favicon\.svg" type="image\/svg\+xml">/.test(html));
 ok("the file:// message survives inside a JS string with markup in it",
    /<code>file:\/\/<\/code>/.test(html));

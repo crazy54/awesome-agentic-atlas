@@ -45,7 +45,7 @@ SOURCES = [{
 }]
 
 ok(b16.BRAND_MARK.is_file(), "the square Atlas logo source asset exists")
-ok(b16.BRAND_MASCOT.is_file(), "the Atlas Byte source asset exists")
+ok(b16.BRAND_MASCOT.is_file(), "the Archie source asset exists")
 
 with tempfile.TemporaryDirectory(prefix="atlas-workbook-branding-") as tmp:
     tmp = Path(tmp)
@@ -66,7 +66,7 @@ with tempfile.TemporaryDirectory(prefix="atlas-workbook-branding-") as tmp:
         ok(dims == [(32, 32), (86, 90)], f"{theme} cover keeps compact artwork bounds")
         anchors = sorted((image.anchor._from.col, image.anchor._from.row) for image in cover._images)
         ok(anchors == [(11, 0), (12, 0)], f"{theme} cover keeps artwork in the upper-right margin")
-        ok(cover["M5"].value == "ATLAS BYTE", f"{theme} cover labels the mascot")
+        ok(cover["M5"].value == "ARCHIE 'ATLAS' ALGORITHM", f"{theme} cover labels the mascot")
         ok(cover["K6"].value and "Switch to the" in cover["K6"].value,
            f"{theme} cover retains the sibling-theme control")
         with zipfile.ZipFile(path) as archive:

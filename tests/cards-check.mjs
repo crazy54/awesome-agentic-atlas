@@ -232,12 +232,13 @@ const initialArt = await evalIn(`(() => {
 ok("visible screenshots start loading before any interaction", initialArt.visible > 0 && initialArt.started,
    JSON.stringify(initialArt));
 ok("distant screenshots remain deferred", initialArt.deferred);
-ok("the mascot has a visible name tag", await evalIn("document.querySelector('.atlas-name')?.textContent === 'Atlas Byte'"));
+ok("the mascot has a visible name tag",
+   await evalIn(`document.querySelector('.atlas-name')?.textContent === "Archie 'Atlas' Algorithm"`));
 const accents = await evalIn(`new Set([...document.querySelectorAll('#out tr[data-project]')]
   .slice(0,20).map(r => getComputedStyle(r).getPropertyValue('--card-accent'))).size`);
 ok("cards have varied curated accents", accents > 1, accents);
 
-// Atlas Byte only repeats facts already in the row. The browser check exercises the delayed hover path,
+// Archie only repeats facts already in the row. The browser check exercises the delayed hover path,
 // the reader-controlled quiet switch, and the hidden click sequence rather than merely looking for the
 // markup those behaviours need.
 const firstProjectPoint = await evalIn(`(() => {
@@ -246,12 +247,164 @@ const firstProjectPoint = await evalIn(`(() => {
 })()`);
 await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...firstProjectPoint});
 await sleep(450);
-ok("Atlas Byte introduces a hovered project from its Atlas record", await evalIn(`(() => {
+ok("Archie introduces a hovered project from its Atlas record", await evalIn(`(() => {
   const speech = document.getElementById('byte-speech');
   return speech && !speech.hidden && speech.textContent.length > 20;
 })()`));
+
+// TWO LINES, NOT A PARAGRAPH. The bubble used to end with `r.blurb` verbatim -- the upstream repository
+// description -- so its length was set by an unrelated project's GitHub "about" field and the box grew until
+// it covered the masthead.
+//
+// The character cap is asserted, but the LINE COUNT is the assertion that matters and the reason this reads
+// geometry rather than string length: a cap does not buy a line count when a project name is an unbreakable
+// 67-character run, and a 72-character cap was measured reaching three lines for exactly that reason. The
+// generator's budgets were picked by rendering all 3,835 strings its templates can produce into this box; the
+// worst of them is checked below, so this one asserts the row the reader is actually on.
+//
+// Blurb exclusion is separate because the cap alone would pass on a row whose blurb happens to be short.
+// `maxBlurb` is reported so a future reader can see what the cap is holding back rather than trusting that
+// it is holding anything.
+const bubble = await evalIn(`(() => {
+  const speech = document.getElementById('byte-speech');
+  const row = ROWS.find(r => r.nwo === document.querySelector('#out tr[data-project]').dataset.project);
+  const box = speech.getBoundingClientRect(), cs = getComputedStyle(speech);
+  const lines = Math.round((box.height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)
+                            - parseFloat(cs.borderTopWidth) - parseFloat(cs.borderBottomWidth))
+                           / parseFloat(cs.lineHeight));
+  return {text: speech.textContent, len: speech.textContent.length, lines,
+          blurb: row ? row.blurb : "", carriesBlurb: !!(row && row.blurb && row.blurb.length > 24 &&
+            speech.textContent.includes(row.blurb.slice(0, 24))),
+          maxBlurb: Math.max(...ROWS.map(r => (r.blurb || "").length))};
+})()`);
+ok("Archie says at most two short lines", bubble.len > 0 && bubble.len <= 74,
+   JSON.stringify({len: bubble.len, text: bubble.text}));
+ok("Archie's bubble is at most two lines tall as rendered", bubble.lines >= 1 && bubble.lines <= 2,
+   JSON.stringify({lines: bubble.lines, text: bubble.text}));
+ok("Archie no longer reads the repository blurb aloud", !bubble.carriesBlurb,
+   JSON.stringify({maxBlurb: bubble.maxBlurb, text: bubble.text}));
+
+// THE WORST ROW IN THE ATLAS, NOT THE FIRST ONE. Everything above measures whichever project happens to sort
+// first, and the defect was never about that project -- it was about the longest name in the corpus meeting
+// the longest category name. This rebuilds every string the generator can say for all committed rows, renders
+// each into the real bubble, and reports the tallest. It is the only assertion here that would have failed
+// the 140-character cap this ticket started with, which reached four lines.
+const widest = await evalIn(`(() => {
+  const speech = document.getElementById('byte-speech'), cs = getComputedStyle(speech);
+  const chrome = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+                 + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+  const lh = parseFloat(cs.lineHeight), before = speech.textContent;
+  const clip = (t, n) => t.length <= n ? t : t.slice(0, n - 1).replace(/\\s+\\S*$/, "") + "\\u2026";
+  const said = new Set();
+  for (const r of ROWS) {
+    const cat = (D.cats[r.cat] || {}).name || "the atlas";
+    const tg = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
+    const name = clip(r.name, 26), owner = r.nwo.split("/")[0];
+    const facts = [name + " is listed under " + cat + ".",
+                   name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")];
+    if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
+    const tail = tg.length ? " Tagged for " + tg[0] + "." : "";
+    for (const f of facts) said.add(clip(f + ((f + tail).length <= 62 ? tail : ""), 74));
+  }
+  let worst = 0, worstText = "", tall = 0;
+  for (const t of said) {
+    speech.textContent = t;
+    const n = Math.round((speech.getBoundingClientRect().height - chrome) / lh);
+    if (n > 2) tall++;
+    if (n > worst) { worst = n; worstText = t; }
+  }
+  speech.textContent = before;
+  return {said: said.size, worstLines: worst, worstText, tall, live: before, matchesLive: said.has(before)};
+})()`);
+ok("no project in the atlas can push Archie past two lines",
+   widest.said > 1000 && widest.worstLines <= 2 && widest.tall === 0, JSON.stringify(widest));
+// The block above restates the generator's sentence templates, so on its own it would keep passing against
+// rules the generator no longer has. This is the tie: the string the page really produced for the hovered row
+// has to be one of the strings those restated templates can produce. Edit the generator's wording or its
+// budgets without editing this file and this fails, which is the only reason the measurement above can be
+// trusted to be measuring the shipped text.
+ok("the restated templates still match what the page says", widest.matchesLive,
+   JSON.stringify({live: widest.live, said: widest.said}));
+
+// THE BUBBLE MUST NOT LAND ON ANYTHING THE READER CAME FOR, and "the navigation" turned out to be too narrow
+// a way to say that. It was anchored `right:calc(100% + 12px); top:8px`, immediately left of the mascot at the
+// nav's own height, so it covered the nav at every text length. Re-anchoring it under the mascot cleared the
+// nav and was then measured landing on the filter bar's Ctrl/K hint at 1440 and over the search field at 375 --
+// so this checks the bar as well, and it is checked at every width this file visits rather than once, because
+// the masthead reflows: the band the bubble uses is only there while the nav sits beside the mascot instead of
+// above it.
+//
+// `.bar` is `position:sticky`, so its rect depends on scroll and this has to run unscrolled to mean anything.
+// Focus is taken with `preventScroll` for that reason -- a plain `focus()` scrolls the row into view, which
+// moved the bar under the measurement and invented overlaps that were not real.
+const clearance = async (label, expectShown) => {
+  const m = await evalIn(`(() => {
+    window.scrollTo(0, 0);
+    const speech = document.getElementById('byte-speech');
+    const shown = !!speech && !speech.hidden && getComputedStyle(speech).display !== "none";
+    if (!shown) return {shown, display: speech ? getComputedStyle(speech).display : null};
+    const s = speech.getBoundingClientRect();
+    const box = e => { const r = e.getBoundingClientRect();
+      return [r.left, r.top, r.right, r.bottom].map(Math.round); };
+    const hitting = [];
+    for (const sel of ["header nav", ".bar"]) {
+      const e = document.querySelector(sel);
+      if (!e || getComputedStyle(e).display === "none") continue;
+      const n = e.getBoundingClientRect();
+      if (!(s.right <= n.left || s.left >= n.right || s.bottom <= n.top || s.top >= n.bottom))
+        hitting.push(sel + " " + JSON.stringify(box(e)));
+    }
+    return {shown, hitting, speech: box(speech), vw: document.documentElement.clientWidth,
+            offscreen: s.left < 0 || s.right > document.documentElement.clientWidth};
+  })()`);
+  if (!expectShown) {
+    ok(label, m.shown === false, JSON.stringify(m));
+    return;
+  }
+  ok(label, m.shown && m.hitting.length === 0 && !m.offscreen, JSON.stringify(m));
+};
+await clearance("Archie's speech bubble clears the navigation and the filter bar at 1440px", true);
+
+// LEAVING THE ROW TAKES THE BUBBLE WITH IT. This is the defect the rename shipped alongside: `speak()` set
+// `hidden = false` and nothing on the hover path ever set it back, so the first hover of a visit pinned a
+// fact over the masthead until the reader found the quiet switch. Moving the pointer off the row is the
+// reader's own gesture, so it is dispatched rather than simulated in JS.
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 2, y: 2, buttons: 0});
+await sleep(120);
+ok("Archie stops speaking when the pointer leaves the row",
+   await evalIn("document.getElementById('byte-speech').hidden === true"));
+
+// A FACT THAT WAS NEVER OWED. Brushing across a row on the way to the filter bar used to arm the 320ms timer
+// and let it land afterwards, about a row the pointer was no longer near. Leaving inside the delay has to
+// cancel it, so this waits well past 320ms and expects silence.
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...firstProjectPoint});
+await sleep(80);
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 2, y: 2, buttons: 0});
+await sleep(500);
+ok("a row brushed past within the delay never speaks",
+   await evalIn("document.getElementById('byte-speech').hidden === true"));
+
+// Escape reaches the reader who tabbed to the row and has no pointer to move away.
+await evalIn("document.querySelector('#out tr[data-project] a')?.focus({preventScroll: true})");
+await sleep(450);
+const escaped = await evalIn(`(() => {
+  const speech = document.getElementById('byte-speech');
+  const spoke = !speech.hidden;
+  document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+  return {spoke, hiddenAfter: speech.hidden};
+})()`);
+ok("focusing a row speaks and Escape dismisses it", escaped.spoke && escaped.hiddenAfter,
+   JSON.stringify(escaped));
+
+// Back onto the row, so the quiet switch below is measured from a bubble that is actually showing rather
+// than passing vacuously against one this block left hidden.
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 0, y: 0, buttons: 0});
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...firstProjectPoint});
+await sleep(450);
+ok("Archie speaks again on a fresh hover",
+   await evalIn("document.getElementById('byte-speech').hidden === false"));
 await evalIn("document.getElementById('byte-quiet').click()");
-ok("Atlas Byte commentary has a local quiet switch", await evalIn(`(() => {
+ok("Archie commentary has a local quiet switch", await evalIn(`(() => {
   const quiet = document.getElementById('byte-quiet'), speech = document.getElementById('byte-speech');
   return quiet?.getAttribute('aria-pressed') === 'true' && speech?.hidden;
 })()`));
@@ -271,11 +424,11 @@ const mascot = await evalIn(`(() => {
   return {naturalWidth: img.naturalWidth, left: r.left, right: r.right, top: r.top, width: r.width,
           navRight: n.right, animation: cs.animationName};
 })()`);
-ok("Atlas Byte loads in the masthead", mascot && mascot.naturalWidth > 0, JSON.stringify(mascot));
-ok("Atlas Byte sits at the upper right without covering navigation",
+ok("Archie loads in the masthead", mascot && mascot.naturalWidth > 0, JSON.stringify(mascot));
+ok("Archie sits at the upper right without covering navigation",
    mascot && mascot.right > 1440 * .88 && mascot.top < 150 && mascot.left >= mascot.navRight - 1 &&
    mascot.width >= 92 && mascot.width <= 170, JSON.stringify(mascot));
-ok("Atlas Byte has an idle animation", mascot && mascot.animation !== "none", JSON.stringify(mascot));
+ok("Archie has an idle animation", mascot && mascot.animation !== "none", JSON.stringify(mascot));
 await S("Emulation.setEmulatedMedia", {
   media: "screen", features: [{name: "prefers-reduced-motion", value: "reduce"}],
 });
@@ -288,7 +441,7 @@ await S("Emulation.setEmulatedMedia", {media: "screen", features: []});
 
 const faviconHref = await evalIn("document.querySelector('link[rel=icon]')?.getAttribute('href') || ''");
 const faviconResponse = await fetch(new URL("favicon.svg", ORIGIN));
-ok("the globe emoji favicon is replaced by a local Atlas Byte SVG",
+ok("the globe emoji favicon is replaced by a local Archie SVG",
    faviconHref === "favicon.svg" && faviconResponse.ok,
    faviconHref + " / HTTP " + faviconResponse.status);
 
@@ -519,6 +672,13 @@ ok("cards are two or three across at 900px", c900.across >= 2, JSON.stringify(c9
 ok("the screenshot survives the width at which the table drops it", c900.imgShown);
 ok("and so do the two columns the table drops with it", c900.tagsShown && c900.langShown);
 ok("nothing overflows sideways at 900px", c900.hscroll <= 0, String(c900.hscroll));
+// 900 is the width the masthead reflows at, and reflow is what decides whether the band the bubble sits in
+// exists at all -- so the clearance is re-measured here rather than assumed from 1440. Focus rather than the
+// mouse, because this only needs the bubble on screen, and `preventScroll` keeps the sticky bar where the
+// reader would see it.
+await evalIn("document.querySelector('#out tr[data-project] a')?.focus({preventScroll: true})");
+await sleep(450);
+await clearance("Archie's speech bubble clears the navigation and the filter bar at 900px", true);
 await shot("view-cards-900");
 
 // ---- 375px: the 290px floor has to give exactly one column, not a sideways scroll
@@ -532,6 +692,15 @@ ok("one card per line on a phone", c375.across === 1, JSON.stringify(c375));
 ok("the card fits the screen", c375.cardW <= 375 - 28 + 2, String(c375.cardW));
 ok("nothing overflows sideways on a phone", c375.hscroll <= 0, String(c375.hscroll));
 ok("the screenshot is there, which the phone table deliberately does not show", c375.imgShown);
+// AND ON A PHONE IT IS NOT THERE AT ALL, which is a decision rather than an omission. Below 640px `.headside`
+// is full width, so the nav sits immediately left of the mascot and the search field immediately below it:
+// there is no band left to put a 270px bubble in, and it was measured covering the search field outright.
+// A reader at this width most likely has no pointer to hover with either, and the fact is already on the card
+// they are touching. Asserted so that a later change to the anchoring cannot quietly put it back over the
+// search field -- and so that the reason is on the record rather than looking like the rule was forgotten.
+await evalIn("document.querySelector('#out tr[data-project] a')?.focus({preventScroll: true})");
+await sleep(450);
+await clearance("Archie says nothing on a phone, where there is nowhere to say it", false);
 await shot("view-cards-375");
 
 // The table's own narrow layout, which this must not have disturbed -- it is a click away on a phone rather

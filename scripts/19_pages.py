@@ -555,7 +555,7 @@ a:hover{text-decoration:underline}
 .skip{position:absolute;left:-999px;top:0;z-index:40;background:var(--bar);color:var(--onbar);
   padding:10px 16px;border-radius:0 0 8px 0;font-weight:600}
 .skip:focus{left:0}
-/* Keep Atlas Byte and the primary navigation in reach while readers compare long card and table lists. */
+/* Keep Archie and the primary navigation in reach while readers compare long card and table lists. */
 header{position:sticky;top:0;z-index:30;background:var(--plane);border-bottom:1px solid var(--grid);
   padding:22px 20px 16px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
 .wrap{max-width:1500px;margin:0 auto}
@@ -592,17 +592,35 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
   animation:atlas-byte-float 4.2s ease-in-out infinite;transform-origin:50% 72%}
 .atlas-byte-wrap:hover{transform:rotate(2deg) scale(1.035)}
 #byte-tip{display:block;padding:0;border:0;background:transparent;border-radius:50%;color:inherit}
-.atlas-name{display:block;margin:-11px auto 0;position:relative;z-index:2;padding:2px 8px;
-  border:1px solid var(--grid);border-radius:999px;background:var(--plane);color:var(--ink);
-  font-size:11px;font-weight:700;letter-spacing:.04em;line-height:1.45}
+/* Two lines by design. "Archie 'Atlas' Algorithm" is 24 characters where "Atlas Byte" was 10, and the
+   mascot's column is 128px, so a single-line pill would have overflowed the column and run into the nav
+   beside it. Wrapping inside the column keeps the name in the mascot's own width at every breakpoint;
+   the radius drops from a 999px stadium, which reads as a lozenge once there are two lines, to a rounded
+   rectangle that stays a name tag. */
+.atlas-name{display:block;margin:-11px auto 0;position:relative;z-index:2;padding:3px 9px;
+  border:1px solid var(--grid);border-radius:12px;background:var(--plane);color:var(--ink);
+  font-size:10px;font-weight:700;letter-spacing:.03em;line-height:1.35;text-align:center;
+  text-wrap:balance}
 .atlas-name:hover{border-color:var(--bar);color:var(--ink)}
 .byte-quiet{display:block;margin:5px auto 0;padding:0;border:0;background:transparent;color:var(--muted);
   font-size:10px;text-decoration:underline;text-underline-offset:2px}
 .byte-quiet:hover{color:var(--ink)}
-#byte-speech{position:absolute;right:calc(100% + 12px);top:8px;width:min(270px,calc(100vw - 174px));
+/* THE MASTHEAD HAS EXACTLY ONE HOLE THIS FITS IN, and both of the obvious anchors miss it. The original
+   `right:calc(100% + 12px); top:8px` put the bubble immediately left of the mascot at the nav's own height,
+   and the only thing there is `.top nav` -- so it covered the navigation at every text length, not merely
+   when the text was long. Hanging it under the mascot instead (`top:calc(100% + 10px)`) clears the nav and
+   was measured landing on the filter bar's Ctrl/K hint at 1440 and over the search field itself at 375,
+   which is the same defect with a different victim.
+   What is actually free is the band left of the mascot and BELOW the nav: the nav is three short lines and
+   the mascot column is taller than they are, so bottom-aligning to the wrap puts the bubble in that gap.
+   Measured clear of both `.top nav` and `.bar` from 1500px down to 641.
+   `z-index:4` clears `#atlas-orbit` (3) and `.atlas-name` (2) inside the wrap's isolated stacking context;
+   the header's own `z-index:30` already carries it over the sticky filter bar. */
+#byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:min(270px,calc(100vw - 200px));
   padding:9px 11px;border:1px solid var(--grid);border-left:3px solid var(--bar);border-radius:9px;
-  background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;box-shadow:0 12px 28px rgba(0,0,0,.2)}
-#byte-speech::after{content:"";position:absolute;right:-7px;top:19px;width:11px;height:11px;
+  background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;z-index:4;
+  box-shadow:0 12px 28px rgba(0,0,0,.2)}
+#byte-speech::after{content:"";position:absolute;right:-6px;bottom:12px;width:11px;height:11px;
   background:var(--band);border-top:1px solid var(--grid);border-right:1px solid var(--grid);transform:rotate(45deg)}
 #atlas-orbit{position:absolute;inset:-18px -24px;pointer-events:none;z-index:3}
 .orbit-star{position:absolute;left:50%;top:50%;width:5px;height:5px;background:var(--bar);box-shadow:0 0 10px var(--bar);
@@ -1205,6 +1223,14 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
      looks the same. The rest of the 82px comes out of the card, below the cards block. */
   .atlas-byte-wrap{width:82px}
   .atlas-byte{width:64px;margin-left:auto;margin-right:auto}
+  /* No bubble at all below this width, because there is nowhere for it to go. `.headside` is full-width here
+     and puts the nav immediately left of the mascot column, so the band the bubble uses on a desktop is the
+     navigation, and anything hanging underneath is the search field -- both measured. This is also the width
+     at which a reader most likely has no pointer to hover with, and the commentary is a hover affordance:
+     the fact is already in the card being touched. The name, the tip button and Quiet mode all stay.
+     The column is the wrap's 82px and not the art's 64: JFH-289 shrank the art inside a wrap it deliberately
+     held, so the width the nav is measured against did not move when the picture did. */
+  #byte-speech{display:none}
 
   #q{flex:1 1 100%;min-width:0}
   .line>label[for=q]{display:none}
@@ -1654,11 +1680,11 @@ __OSSPRITE__
     <button class="chip" id="theme">Light theme</button>
   </nav>
   <div class="atlas-byte-wrap">
-    <button type="button" id="byte-tip" aria-label="Ask Atlas Byte for a browsing tip">
+    <button type="button" id="byte-tip" aria-label="Ask Archie 'Atlas' Algorithm for a browsing tip">
     <img class="atlas-byte" src="assets/atlas-byte.png" width="512" height="532"
-         alt="Atlas Byte, the Atlas mascot, wearing pixel sunglasses">
+         alt="Archie 'Atlas' Algorithm, the Atlas mascot, wearing pixel sunglasses">
     </button>
-    <button type="button" class="atlas-name" id="byte-name">Atlas Byte</button>
+    <button type="button" class="atlas-name" id="byte-name">Archie 'Atlas' Algorithm</button>
     <button type="button" class="byte-quiet" id="byte-quiet" aria-pressed="false">Quiet mode</button>
     <div id="byte-speech" role="status" aria-live="polite" hidden></div>
   </div>
@@ -3082,8 +3108,8 @@ function initDiscovery() {
     say(next[0].toUpperCase() + next.slice(1) + " table rows.");
   };
 
-  // Commentary is an optional layer, not a prerequisite for the mascot. With its release flag off, Atlas
-  // Byte remains a named bit of the masthead and no hover, speech, stored preference, or Easter egg code
+  // Commentary is an optional layer, not a prerequisite for the mascot. With its release flag off, Archie
+  // remains a named bit of the masthead and no hover, speech, stored preference, or Easter egg code
   // runs. That keeps a one-key rollback genuinely quiet.
   const enabled = !!FLAGS["index.mascot_commentary"];
   const tip = document.getElementById("byte-tip"), name = document.getElementById("byte-name"),
@@ -3105,22 +3131,55 @@ function initDiscovery() {
     if (on && speech) speech.hidden = true;
     try { localStorage.setItem("atlas-byte-quiet", on ? "1" : "0"); } catch (e) {}
   };
+  // TWO LINES, MEASURED -- NOT A PARAGRAPH. `r.blurb` used to be appended here, and it is the upstream
+  // repository description passed straight through, so the height of the bubble was set by whatever an
+  // unrelated project wrote in its GitHub "about" field.
+  //
+  // A character cap alone does not buy a line count, which is the thing that actually covered the masthead:
+  // the box is 270px at 12px/1.38, so it fits about 42 characters a line, but a project name is one
+  // unbreakable run of up to 67 characters and a category like "Orchestrators & Multi-Agent" is another 27.
+  // Every one of the 3,835 strings these templates can produce for the 1,294 committed rows was rendered
+  // into this box and its line count read back; a 140-character cap reached four lines and even 72 reached
+  // three. These three numbers are the largest that held two lines for all 3,835. NAME_MAX is the one that
+  // does the work -- it truncates 10.8% of names (median length is 12) and without it no total cap is
+  // enough, because a single long name fills both lines on its own.
+  //
+  // The cap is enforced here and not with `line-clamp` because clamping would hide the tail of a fact while
+  // reporting a bubble that fits, so the text a reader cannot see would still be the text the page chose to
+  // say. Clipping on a word boundary keeps what is shown and what is said the same thing.
+  const NAME_MAX = 26, TAG_MAX = 62, BUBBLE_MAX = 74;
+  const clipWords = (text, limit) => text.length <= limit
+    ? text
+    : text.slice(0, limit - 1).replace(/\s+\S*$/, "") + "…";
   const wordsFor = r => {
     const category = (D.cats[r.cat] || {}).name || "the atlas";
     const targets = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
-    const intro = [
-      r.name + " is listed under " + category + ".",
-      r.name + " comes from " + r.nwo + ".",
-      r.name + " has " + r.lists + (r.lists === 1 ? " source list" : " source lists") + " behind it."
-    ][projectAccent(r.nwo).length % 3];
-    const tagged = targets.length ? " Tagged for " + targets.slice(0, 2).join(" and ") + "." : "";
-    return intro + tagged + " " + r.blurb;
+    const name = clipWords(r.name, NAME_MAX);
+    const owner = r.nwo.split("/")[0];
+    // `r.name` is the full `owner/name` for 267 of the committed rows, which made the old "comes from"
+    // sentence name the same string twice. The owner alone is the fact that sentence was reaching for, and
+    // it is dropped rather than repeated when the project is named after whoever publishes it.
+    const facts = [
+      name + " is listed under " + category + ".",
+      name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")
+    ];
+    if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
+    const fact = facts[projectAccent(r.nwo).length % facts.length];
+    const tagged = targets.length ? " Tagged for " + targets[0] + "." : "";
+    return clipWords(fact + ((fact + tagged).length <= TAG_MAX ? tagged : ""), BUBBLE_MAX);
   };
   const speak = r => {
     if (muted || !speech || !r) return;
     last = r;
     speech.textContent = wordsFor(r);
     speech.hidden = false;
+  };
+  // Leaving takes the bubble with it, and cancels a fact that has not been spoken yet. Both halves matter:
+  // without the `clearTimeout` a reader who brushes across a row on the way to the filter bar still gets a
+  // bubble 320ms later, about a row they are no longer anywhere near.
+  const hide = () => {
+    clearTimeout(timer);
+    if (speech) speech.hidden = true;
   };
   const schedule = el => {
     const nwo = el && el.dataset.project;
@@ -3132,7 +3191,25 @@ function initDiscovery() {
   if (out) {
     out.addEventListener("mouseover", ev => schedule(ev.target.closest("tr[data-project]")));
     out.addEventListener("focusin", ev => schedule(ev.target.closest("tr[data-project]")));
+    // `mouseout` and `focusout` bubble from every cell, so they fire while the pointer is still inside the
+    // same row -- moving from the title to the tags is a leave-then-enter of two `td`s. Hiding on those
+    // would flicker the bubble across a row the reader never left, so the row the pointer moved *to* is
+    // compared against the row it left and only a genuine exit hides. Crossing straight into another row
+    // still hides, and the `mouseover` that follows re-arms the timer, so a fact is replaced rather than
+    // left standing.
+    const leaving = ev => {
+      const row = ev.target.closest("tr[data-project]");
+      if (!row) return;
+      const to = ev.relatedTarget;
+      if (to && row.contains(to)) return;
+      hide();
+    };
+    out.addEventListener("mouseout", leaving);
+    out.addEventListener("focusout", leaving);
   }
+  // A keyboard reader who has tabbed past the row still has the bubble on screen, and reaching for the
+  // mouse to dismiss it is the one thing they are not doing.
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape") hide(); });
   if (quiet) quiet.onclick = () => setQuiet(!muted);
   setQuiet(muted);
   if (tip) tip.onclick = () => {
