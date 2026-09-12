@@ -1,6 +1,13 @@
 # Atlas discovery redesign — handoff log
 
-Updated: 2026-09-08. User approved implementation. **Local review only; do not commit or push yet.**
+Updated: 2026-09-12. **Everything in this log has shipped.** Read it as history, not as a plan.
+
+This line carried "Local review only; do not commit or push yet." from 2026-09-08 until today. That was
+true for about a day. It has been false ever since the redesign was committed -- the mascot, the card
+treatment and the three densities are all serving from `latest_branch` now -- and a sentence in bold at
+the top of the file reads as a live constraint to any session that opens it. Quoted rather than deleted
+so that it is not re-added as news. The unchecked-looking "no commit/push" in the checklist below is the
+same artefact: it describes what was true when that box was ticked.
 
 ## Scope and decisions
 
