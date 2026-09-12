@@ -95,7 +95,7 @@ const resize = (width, height) => S("Emulation.setDeviceMetricsOverride",
   {width, height, deviceScaleFactor: 1, mobile: width < 500});
 const settle = async () => {
   for (let i = 0; i < 100; i++) {
-    if (await evalIn("document.readyState === 'complete' && !!document.querySelector('#out tbody tr')"))
+    if (await evalIn("document.readyState === 'complete' && !!document.querySelector('#out tr[data-project]')"))
       break;
     await sleep(150);
   }
@@ -360,9 +360,10 @@ const widest = await evalIn(`(() => {
   }
   speech.textContent = before;
   // Left on the page for the walk below, which checks real bubble text against this set rather than
-  // rebuilding it a second time. A handoff between two Runtime.evaluate calls in one document, not
-  // something the site sets or reads.
+  // rebuilding it a second time, and needs the same clipper to tell a clipped NAME from a clipped SENTENCE.
+  // A handoff between two Runtime.evaluate calls in one document, not something the site sets or reads.
   window.__saidByHarness = said;
+  window.__clipByHarness = clip;
   return {said: said.size, worstLines: worst, worstText, tall, worstBox, disagreed,
           live: before, matchesLive: said.has(before)};
 })()`);
@@ -407,15 +408,31 @@ const walk = await evalIn(`(async () => {
   const chrome = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
                  + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
   const lh = parseFloat(cs.lineHeight);
+  if (!window.__saidByHarness || !window.__clipByHarness)
+    return {broke: 'the corpus sweep above did not leave its handoff on the page, so there is nothing to '
+                 + 'check the live strings against -- read that block\\'s failure first, not this one'};
+  const clip = window.__clipByHarness;
+  const nameOf = new Map(ROWS.map(r => [r.nwo, r.name]));
   // The wordings, named by what a reader would see. Membership is read off the live string; nothing here
   // decides what any row will say.
+  //
+  // The clipped arm does not just look for an ellipsis, and that mattered: there are two clippers -- NAME_MAX 26 on the
+  // name and BUBBLE_MAX 74 on the finished sentence -- and an ellipsis on its own cannot say which one fired.
+  // Setting NAME_MAX to 999 while leaving BUBBLE_MAX alone left this arm reporting itself seen, because long
+  // unclipped names pushed whole sentences past 74 and the total clipper supplied the ellipsis. The drift was
+  // still caught, but by the restated-set tie alone; this label was lying. It now asks the only question worth
+  // asking -- is the name in this sentence this row's name, shortened -- so it can only be satisfied by the
+  // clipper it is named after.
   const arms = {
     "filed under a category": t => t.includes(" is listed under "),
     "on one source list": t => t.includes(" source list."),
     "on several source lists": t => t.includes(" source lists."),
     "published by an owner": t => t.includes(" comes from "),
     "tagged for a runtime": t => t.includes(" Tagged for "),
-    "a name clipped to fit": t => t.includes("…")
+    "a name clipped to fit": (t, nwo) => {
+      const full = nameOf.get(nwo) || "", short = clip(full, 26);
+      return short !== full && t.startsWith(short);
+    }
   };
   const boxes = () => {
     const rg = document.createRange(); rg.selectNodeContents(speech);
@@ -424,9 +441,18 @@ const walk = await evalIn(`(async () => {
       if (rect.width > 0 && rect.height > 0) tops.add(Math.round(rect.top * 2) / 2);
     return tops.size;
   };
-  const names = Object.keys(arms), seen = {}, said = [];
+  // WHAT THE RENDERED PAGE OWES, AND WHAT IT CANNOT BE ASKED FOR. Five of the six wordings depend only on a
+  // row's category, list count, owner and tags, and the first 120 rows carry all five many times over. The
+  // sixth depends on a name being longer than 26 characters, and only 6 of the 120 rendered rows qualify --
+  // 5.0%, against 10.8% corpus-wide, because popular repositories have short names. PAGE_SIZE redraws that
+  // window from whatever the corpus becomes, and the next ingest takes it from 1,294 rows to roughly 8,293: a
+  // new top 120 with no long name would turn this red with nobody having changed a line. So the clipped arm is
+  // recorded here if it happens to appear and is REQUIRED of the probe below, which goes and finds the longest
+  // name in the whole corpus instead of hoping it sorted into the first page.
+  const names = Object.keys(arms), fromRows = names.filter(n => n !== "a name clipped to fit");
+  const seen = {}, said = [];
   for (const row of [...document.querySelectorAll('#out tr[data-project]')]) {
-    if (names.every(n => seen[n])) break;
+    if (fromRows.every(n => seen[n])) break;
     // Focus has to leave first: refocusing the element that already holds focus fires no focusin, so the
     // handler never runs and this would read the previous row's sentence out of a stale bubble. Blanking it
     // closes the same hole the other way -- with the bubble emptied and hidden, there is no previous sentence
@@ -447,23 +473,86 @@ const walk = await evalIn(`(async () => {
     const lines = Math.round((speech.getBoundingClientRect().height - chrome) / lh), box = boxes();
     said.push({nwo: row.dataset.project, text, len: text.length, lines, box,
                inSet: window.__saidByHarness.has(text)});
-    for (const n of names) if (arms[n](text)) seen[n] = seen[n] || row.dataset.project;
+    for (const n of names) if (arms[n](text, row.dataset.project)) seen[n] = seen[n] || row.dataset.project;
   }
-  return {visited: said.length, seen, missing: names.filter(n => !seen[n]),
+
+  // THE PROBE: the longest name in the atlas, fetched through the reader's own search box rather than waited
+  // for. This is the same measurement as the walk -- type, focus, read what the bubble really says -- but on a
+  // row chosen for the property under test, so the clipped arm no longer rests on six rows out of a hundred and
+  // twenty. Every one of the generator's facts begins with the name, so whichever fact the hash picks for this
+  // row, a clipped name has to be at the front of it; that is why the probe does not care which arm it gets.
+  //
+  // The filter is put back before returning, because everything after this file's walk measures the unfiltered
+  // table and a leaked query would quietly change what those assertions are looking at.
+  const longest = ROWS.reduce((a, r) => Array.from(r.name).length > Array.from(a.name).length ? r : a, ROWS[0]);
+  const clippable = Array.from(longest.name).length > 26;
+  const qbox = document.getElementById('q'), rowsNow = () => document.querySelectorAll('#out tr[data-project]').length;
+  const wasRows = rowsNow();
+  let probe = null;
+  if (clippable) {
+    qbox.value = longest.name;
+    qbox.dispatchEvent(new Event('input'));
+    let target = null;
+    for (let waited = 0; waited < 3000 && !target; waited += 25) {
+      await new Promise(r => setTimeout(r, 25));
+      target = document.querySelector('#out tr[data-project="' + longest.nwo + '"]');
+    }
+    if (!target) probe = {broke: 'searching for the longest name (' + longest.nwo + ') never rendered its row'};
+    else {
+      if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+      speech.hidden = true;
+      speech.textContent = "";
+      (target.querySelector('a') || target).focus({preventScroll: true});
+      for (let waited = 0; waited < 2500 && (speech.hidden || !speech.textContent); waited += 25)
+        await new Promise(r => setTimeout(r, 25));
+      const text = speech.textContent;
+      probe = {nwo: longest.nwo, full: longest.name, points: Array.from(longest.name).length,
+               short: clip(longest.name, 26), text, spoke: !speech.hidden && !!text,
+               clipped: !!text && arms["a name clipped to fit"](text, longest.nwo),
+               inSet: window.__saidByHarness.has(text),
+               lines: Math.round((speech.getBoundingClientRect().height - chrome) / lh), box: boxes()};
+      if (probe.clipped) seen["a name clipped to fit"] = seen["a name clipped to fit"] || longest.nwo;
+    }
+    qbox.value = "";
+    qbox.dispatchEvent(new Event('input'));
+    for (let waited = 0; waited < 3000 && rowsNow() !== wasRows; waited += 25)
+      await new Promise(r => setTimeout(r, 25));
+  }
+
+  return {visited: said.length, seen, missing: fromRows.filter(n => !seen[n]),
+          clippable, longestPoints: Array.from(longest.name).length, probe,
+          qRestored: rowsNow() === wasRows, qbox: qbox.value,
+          clippableRendered: [...document.querySelectorAll('#out tr[data-project]')]
+            .filter(r => Array.from(nameOf.get(r.dataset.project) || "").length > 26).length,
           tall: said.filter(s => s.lines > 2 || s.lines < 1 || s.box > 2 || s.box < 1),
           disagreed: said.filter(s => s.lines !== s.box),
           empty: said.filter(s => !s.len),
           adrift: said.filter(s => !s.inSet).map(s => s.nwo + ': ' + s.text)};
 })()`);
+// FOUR ROWS, NOT SIX. The floor here is a guard against the loop not running at all, and it was the number of
+// arms, which is the wrong quantity: a row says exactly one fact, and the four fact wordings are mutually
+// exclusive per row, so four rows is the arithmetic minimum that can cover them -- one row can satisfy the tag
+// clause and the clipped name on top of its own fact. Today's ordering needs 29, but a corpus where the first
+// four rows happened to cover everything would have failed all three of these with nothing wrong.
+const FLOOR = 4;
 ok("walking the rendered rows reaches every wording Archie has",
-   !walk.broke && walk.missing.length === 0 && walk.visited >= 6,
-   JSON.stringify({broke: walk.broke, missing: walk.missing, visited: walk.visited, seen: walk.seen}));
+   !walk.broke && walk.missing.length === 0 && walk.visited >= FLOOR,
+   JSON.stringify({broke: walk.broke, missing: walk.missing, visited: walk.visited, seen: walk.seen,
+                   clippableRendered: walk.clippableRendered}));
 ok("every sentence Archie was caught saying fits in two lines, by both counts",
    !walk.broke && walk.tall.length === 0 && walk.empty.length === 0 && walk.disagreed.length === 0
-   && walk.visited >= 6, JSON.stringify({tall: walk.tall, empty: walk.empty, disagreed: walk.disagreed}));
+   && walk.visited >= FLOOR, JSON.stringify({tall: walk.tall, empty: walk.empty, disagreed: walk.disagreed}));
 ok("every sentence Archie was caught saying is one the restated templates can produce",
-   !walk.broke && walk.adrift.length === 0 && walk.visited >= 6,
+   !walk.broke && walk.adrift.length === 0 && walk.visited >= FLOOR,
    JSON.stringify({adrift: walk.adrift, visited: walk.visited}));
+// The clipped name, asked of the row that must have one rather than of whichever rows the corpus put on page
+// one. `clippable` false would mean no name in the atlas exceeds 26 characters, which is a real answer and not
+// a pass -- 140 of 1,294 do today -- so it is reported rather than skipped over.
+ok("the longest name in the atlas is clipped in what Archie says about it, and still fits two lines",
+   !walk.broke && walk.clippable && walk.probe && !walk.probe.broke && walk.probe.spoke
+   && walk.probe.clipped && walk.probe.inSet && walk.probe.lines <= 2 && walk.probe.box <= 2
+   && walk.qRestored, JSON.stringify({clippable: walk.clippable, longestPoints: walk.longestPoints,
+                                      probe: walk.probe, qRestored: walk.qRestored, q: walk.qbox}));
 
 // THE BUBBLE MUST NOT LAND ON ANYTHING THE READER CAME FOR, and "the navigation" turned out to be too narrow
 // a way to say that. It was anchored `right:calc(100% + 12px); top:8px`, immediately left of the mascot at the
@@ -476,12 +565,51 @@ ok("every sentence Archie was caught saying is one the restated templates can pr
 // `.bar` is `position:sticky`, so its rect depends on scroll and this has to run unscrolled to mean anything.
 // Focus is taken with `preventScroll` for that reason -- a plain `focus()` scrolls the row into view, which
 // moved the bar under the measurement and invented overlaps that were not real.
-const clearance = async (label, expectShown) => {
-  const m = await evalIn(`(() => {
+//
+// `pin` decides what is in the bubble while it is measured, and without it this measured whatever the last
+// thing to speak happened to leave there -- after the walk above, the row it stopped on. That is a real
+// difference and not a tidiness point: 45 of the 120 rendered rows say something that fits on one line, and a
+// one-line bubble sits 16.56px lower than a two-line one, so the gap being measured was decided by where an
+// unrelated loop broke. Pinned to the tallest string the corpus can produce, the measurement is both
+// deterministic and the worst case.
+//
+// The pin does not force the bubble open, and must not: `shown` is half of what is being asserted, so a bubble
+// this file unhid itself would prove nothing about the page. A row is focused and the sentence waited for, the
+// page's own handler does the showing, and only then is the text replaced. That also stopped depending on the
+// walk leaving something focused -- the probe's search reset destroys the row it focused, which correctly hides
+// the bubble, and this read `shown:false` the moment that landed.
+const clearance = async (label, expectShown, pin) => {
+  const m = await evalIn(`(async () => {
     window.scrollTo(0, 0);
     const speech = document.getElementById('byte-speech');
+    const pin = ${JSON.stringify(pin ?? null)};
+    if (pin !== null && speech) {
+      if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+      speech.hidden = true;
+      speech.textContent = "";
+      // The anchor, not the row: a comma in querySelector picks the first match in DOCUMENT ORDER rather than
+      // the first selector that matches, so this asked for the row element -- which carries no tabindex, took no focus,
+      // and left activeElement on BODY.
+      const first = document.querySelector('#out tr[data-project]');
+      (first?.querySelector('a') || first)?.focus({preventScroll: true});
+      for (let waited = 0; waited < 2500 && (speech.hidden || !speech.textContent); waited += 25)
+        await new Promise(r => setTimeout(r, 25));
+      window.scrollTo(0, 0);
+      if (!speech.hidden && speech.textContent) speech.textContent = pin;
+    }
     const shown = !!speech && !speech.hidden && getComputedStyle(speech).display !== "none";
-    if (!shown) return {shown, display: speech ? getComputedStyle(speech).display : null};
+    // A silent bubble is reported with enough to tell the three reasons apart -- no mascot in the layout at
+    // this width, no row to focus, or a row focused that the handler ignored -- because "shown:false" on its
+    // own sent one debugging session looking at the wrong one of the three.
+    if (!shown) {
+      const wrap = document.querySelector('.atlas-byte-wrap');
+      return {shown, display: speech ? getComputedStyle(speech).display : null,
+              wrapDisplay: wrap ? getComputedStyle(wrap).display : null,
+              rows: document.querySelectorAll('#out tr[data-project]').length,
+              active: document.activeElement ? document.activeElement.tagName + '.' +
+                      document.activeElement.className : null,
+              vw: document.documentElement.clientWidth, said: speech ? speech.textContent.length : null};
+    }
     const s = speech.getBoundingClientRect();
     const box = e => { const r = e.getBoundingClientRect();
       return [r.left, r.top, r.right, r.bottom].map(Math.round); };
@@ -502,7 +630,8 @@ const clearance = async (label, expectShown) => {
   }
   ok(label, m.shown && m.hitting.length === 0 && !m.offscreen, JSON.stringify(m));
 };
-await clearance("Archie's speech bubble clears the navigation and the filter bar at 1440px", true);
+await clearance("Archie's speech bubble clears the navigation and the filter bar at 1440px", true,
+                widest.worstText);
 
 // AND WHEN THE READER MAKES THE NAV BIGGER. The clearance above is 38px at rest, which is about one and a half
 // nav lines, and a reader who raises Chrome's minimum font size spends it: forcing the nav's type to 20px
@@ -871,7 +1000,8 @@ ok("nothing overflows sideways at 900px", c900.hscroll <= 0, String(c900.hscroll
 // reader would see it.
 await evalIn("document.querySelector('#out tr[data-project] a')?.focus({preventScroll: true})");
 await sleep(450);
-await clearance("Archie's speech bubble clears the navigation and the filter bar at 900px", true);
+await clearance("Archie's speech bubble clears the navigation and the filter bar at 900px", true,
+                widest.worstText);
 await shot("view-cards-900");
 
 // ---- 375px: the 290px floor has to give exactly one column, not a sideways scroll

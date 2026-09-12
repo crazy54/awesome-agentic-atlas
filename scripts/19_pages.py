@@ -3178,14 +3178,24 @@ function initDiscovery() {
   // alternative for a slug is to drop the whole thing, but it is not a word boundary and should not be sold
   // as one.
   //
-  // Two things the naive version got wrong, both about what a name may contain. It sliced UTF-16 code units,
-  // so a cut inside a surrogate pair emitted a lone half: `"Agents" + 12 robot emoji + "End"` clipped to a
-  // trailing `\ud83e`, which is mojibake, not a character. Nothing in today's 1,294 rows reaches it -- the
-  // single name with an astral character has spaces, so the strip saves it -- but the corpus is rebuilt weekly
-  // from whatever GitHub returns, and one emoji on the boundary is enough. Slicing code points cannot split a
-  // pair. And stripping the partial word could strip almost everything: a name beginning with a space and one
-  // long token clipped to a bare `"…"`, saying nothing at all. The hard cut is kept when the word-boundary
-  // version would throw away more than half the budget.
+  // Two things the naive version got wrong, both about what a name may contain, and the two lines that fix
+  // them are independent -- do not read either as backup for the other.
+  //
+  // It measured and sliced UTF-16 code units. `"Agents" + 12 robot emoji + "End"` is 21 characters and
+  // measures 33, so it was clipped when it did not need clipping at all, and the cut landed inside a surrogate
+  // pair: `"Agents🤖🤖🤖🤖🤖🤖🤖🤖🤖\ud83e…"`, ending in mojibake rather than a character. Counting and slicing
+  // code points fixes both halves of that, and it is the ONLY thing that fixes the split pair.
+  //
+  // Whitespace saves such a string rather than endangering it, which is the opposite of the intuition: the
+  // strip is `/\s+\S*$/`, so with no whitespace in the first 25 characters it cannot fire and the raw cut
+  // ships. That is why nothing in today's 1,294 rows reaches the bug -- the single name with an astral
+  // character has spaces -- and why a weekly rebuild that returns one space-free emoji name would.
+  //
+  // Separately, stripping the partial word could strip almost everything: a name beginning with a space and
+  // one long token clipped to a bare `"…"`, saying nothing at all. The half-budget fallback keeps the hard cut
+  // when the word-boundary version would throw away more than half the budget. That fallback is what fixes the
+  // bare ellipsis and it does NOT fix the surrogate; deleting it as redundant would bring the empty bubble
+  // back on its own.
   const NAME_MAX = 26, TAG_MAX = 62, BUBBLE_MAX = 74;
   const clipWords = (text, limit) => {
     const points = Array.from(text);
