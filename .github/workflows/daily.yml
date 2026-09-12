@@ -186,11 +186,31 @@ jobs:
           # for the generic repo card. So the absence of the cache is a stop, not a warning to ride past --
           # and not something `force` overrides, because forcing a rebuild is not the same as consenting to
           # a worse one. Dispatch the weekly workflow once; it captures the shots and fills the cache.
-          if [ ! -f cache/shots_all.json ]; then
+          #
+          # The marker, not `shots_all.json` itself, is what answers "is there a usable shot cache?".
+          # 15_shots_all.py checkpoints that file every 50 images and only writes the marker once it has
+          # captured the whole atlas, so a weekly that died two thirds of the way through leaves a
+          # shots_all.json that exists, parses, and is missing thousands of cards. Since weekly.yml now
+          # banks its cache on failure -- deliberately, so a broken run's screenshots are not thrown away --
+          # existence stopped being evidence of completeness. The cache is for resuming; the marker is for
+          # publishing.
+          if [ ! -f cache/shots_all.done.json ]; then
             echo "go=false" >> "$GITHUB_OUTPUT"
-            echo "::warning title=No screenshot cache::Skipped the rebuild: cache/shots_all.json was not restored, so this build would have replaced every real screenshot with a generic repo card. Run the weekly workflow once to prime the cache."
+            if [ -f cache/shots_all.json ]; then
+              echo "::warning title=Screenshot cache is partial::Skipped the rebuild: cache/shots_all.json was restored but cache/shots_all.done.json was not, so the last weekly run did not finish capturing and an unknown number of rows would fall back to the generic repo card. Re-run the weekly workflow; it resumes from the banked cache."
+            else
+              echo "::warning title=No screenshot cache::Skipped the rebuild: cache/shots_all.json was not restored, so this build would have replaced every real screenshot with a generic repo card. Run the weekly workflow once to prime the cache."
+            fi
             exit 0
           fi
+          # Reporting only, and tolerant of a marker this workflow does not recognise: the gate has already
+          # decided by this point, and a KeyError here would fail the whole daily run over a log line.
+          python - <<'PY' || true
+          import json, pathlib
+          d = json.loads(pathlib.Path("cache/shots_all.done.json").read_text(encoding="utf-8"))
+          print(f"Shot cache: {d.get('with_image', '?')}/{d.get('rows', '?')} rows have an image "
+                f"({d.get('images', '?')} distinct), captured {d.get('captured_at', 'unknown')}.")
+          PY
           if [ "${{ steps.watch.outputs.changed }}" = "true" ] || [ "${{ inputs.force }}" = "true" ]; then
             echo "go=true" >> "$GITHUB_OUTPUT"
             echo "Rebuilding."

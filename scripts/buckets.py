@@ -42,20 +42,34 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
             "Content creation", "Design", "Web design", "Sales", "HR",
             "Blockchain", "Uncategorised"]),
     ],
+    # Four sections arrived upstream after this map was written -- Configuration, Testing, Multi-Purpose and
+    # Open Source Software -- and because an unmapped section keeps its own name as its bucket, they took
+    # this sheet from eight buckets to twelve and stopped the run in `10_parse_sources.py`. They are folded
+    # into the existing eight rather than given hues of their own: the palette has exactly eight, and the
+    # rule in the docstring is to group rather than to cycle.
     "claudecode": [
         ("Official & Start Here", ["Start Here", "From Anthropic"]),
-        ("Observability & Monitoring", ["Observability & Monitoring"]),
+        # Testing joins observability rather than the workflow bucket that already holds Linting. Both
+        # readings are defensible; this one keeps the hue meaning "checks the work rather than does it",
+        # which is what TDD Guard and the QA auditors have in common. The row still prints "Testing".
+        ("Observability & Monitoring", ["Observability & Monitoring", "Testing"]),
+        # The two bundle sections land here because a bundle is what they are -- curated collections, which
+        # is already what this bucket groups. Neither names a technique any other bucket carries.
         ("Docs, Knowledge & Research", [
-            "Documentation, Knowledge & Learning", "Research & Scientific Inquiry"]),
+            "Documentation, Knowledge & Learning", "Research & Scientific Inquiry",
+            "Multi-Purpose", "Open Source Software"]),
         ("Security", ["Security"]),
         ("Orchestration", ["Agent Orchestration"]),
         ("Memory & Context", ["Memory & Context Persistence"]),
         ("Clients & Infrastructure", [
             "Alternative Clients", "Providers, Runtime & Integration Infrastructure",
             "Infrastructure & DevOps"]),
+        # Configuration sits with Status Lines and Design & UI/UX: this is already the bucket for reshaping
+        # the client you have, which is what tweakcc's themes and Rulesync's generated configs do.
         ("Workflow, UI & Media", [
             "Remote Control, Notifications & Voice I/O", "Design & UI/UX", "Linting",
-            "Status Lines", "Skills", "Creative Media", "Writing & Prose Quality"]),
+            "Status Lines", "Skills", "Creative Media", "Writing & Prose Quality",
+            "Configuration"]),
     ],
     "harness": [
         ("Foundations & Tutorials", ["Foundations", "Tutorials & Educational"]),
@@ -198,8 +212,10 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
             "Knowledge & Memory", "File Systems", "Research", "Education"]),
         ("Finance & Commerce", [
             "Finance & Fintech", "E-Commerce", "Legal", "Delivery", "Real Estate", "Cryptography"]),
+        # `Identity` is new upstream and was the ninth bucket this sheet grew, which is one more hue than the
+        # palette has. It joins Security, which is the shelf an identity or auth server shares in practice.
         ("Cloud, Security & Monitoring", [
-            "Security", "Aggregators", "Cloud Platforms", "Monitoring", "Embedded System",
+            "Security", "Identity", "Aggregators", "Cloud Platforms", "Monitoring", "Embedded System",
             "Home Automation", "Industrial & IoT"]),
         ("Communication & Marketing", [
             "Communication", "Marketing", "Social Media", "Customer Data Platforms",
