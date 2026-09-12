@@ -486,15 +486,17 @@ const walk = await evalIn(`(async () => {
   // table and a leaked query would quietly change what those assertions are looking at.
   //
   // THE ROW IS FOUND BY IDENTITY, AND NOTHING HERE MAY COUNT ROWS OR TAKE THE FIRST ONE. This is the first
-  // harness to type into the reader's own search box, and what comes back is not this file's to predict: on
-  // JFH-198's branch a query returning fewer than twelve substring hits has up to twelve semantically related
-  // rows APPENDED to it, so searching one exact project name -- the thinnest query there is -- renders one row
-  // today and up to thirteen after that merges. Worse, the augmentation is conditional on the semantic index
-  // having loaded, so the count differs between a runner where that fetch succeeds and one where it does not:
+  // harness to type into the reader's own search box, and what comes back is not this file's to predict: a
+  // query returning fewer than SEM_THIN (12) substring hits has up to SEM_MAX (12) semantically related rows
+  // APPENDED to it, and one exact project name is the thinnest query there is. MEASURED, not predicted: this
+  // probe's search renders 13 rows -- its one substring hit plus twelve neighbours -- so anything here that
+  // counted would already be wrong rather than about to be. Worse, the augmentation is conditional on the
+  // semantic index having loaded, so the count differs between a runner where that fetch succeeds and one where
+  // it does not:
   // any assertion on how many rows came back would be green on one machine and red on another for reasons that
   // have nothing to do with Archie. Selecting on the data-project attribute is immune to all of it, and was measured so --
   // re-run with a four-character query that fills the page, the probe still finds its row, clips its name and
-  // restores the filter, with 120 rows rendered instead of 1.
+  // restores the filter, with 120 rows rendered instead of 13.
   //
   // The filtered count is recorded for that reason rather than checked. When this number changes, the change is
   // somebody else's feature working as intended, and the next person should be able to see it here instead of
