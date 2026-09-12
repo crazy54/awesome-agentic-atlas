@@ -611,12 +611,22 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
    when the text was long. Hanging it under the mascot instead (`top:calc(100% + 10px)`) clears the nav and
    was measured landing on the filter bar's Ctrl/K hint at 1440 and over the search field itself at 375,
    which is the same defect with a different victim.
-   What is actually free is the band left of the mascot and BELOW the nav: the nav is three short lines and
-   the mascot column is taller than they are, so bottom-aligning to the wrap puts the bubble in that gap.
-   Measured clear of both `.top nav` and `.bar` from 1500px down to 641.
+   What is actually free is the band left of the mascot and BELOW the nav: the nav is four short lines
+   (338x86 at 1440, counted as line boxes rather than by eye) and the mascot column is taller than they are,
+   so bottom-aligning to the wrap puts the bubble in that gap. Measured clear of both `.top nav` and `.bar`
+   from 1500px down to 641, and the gap is 38px there -- about one and a half nav lines, not a generous margin.
+   THAT GAP IS SPENDABLE, AND A READER CAN SPEND IT. Forcing the nav's type up the way Chrome's minimum font
+   size setting does: 26px of clearance at 16px, 7px at 20px, and at 24px -- that setting's maximum -- the
+   rectangles overlap by 13px. What does NOT happen then is the thing this ticket is about. The header's own
+   `z-index:30` beats this bubble's 4, so the nav paints over it: `elementFromPoint` at the centre of all seven
+   nav links returns the link, at every size from 16px to 32px. The reader loses the tail of a fact, which is
+   an optional flourish, and keeps the navigation, which is not. Asserted in cards-check at 24px.
    `z-index:4` clears `#atlas-orbit` (3) and `.atlas-name` (2) inside the wrap's isolated stacking context;
-   the header's own `z-index:30` already carries it over the sticky filter bar. */
-#byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:min(270px,calc(100vw - 200px));
+   the header's own `z-index:30` already carries it over the sticky filter bar.
+   The width was `min(270px,calc(100vw - 200px))` and the second arm was inert: the bubble is hidden at 640
+   and below, and at 641 that arm is 441px, so 270 always won. A clamp that cannot clamp is worse than no
+   clamp, because it reads as protection that is not there. */
+#byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:270px;
   padding:9px 11px;border:1px solid var(--grid);border-left:3px solid var(--bar);border-radius:9px;
   background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;z-index:4;
   box-shadow:0 12px 28px rgba(0,0,0,.2)}
@@ -1223,8 +1233,20 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
      looks the same. The rest of the 82px comes out of the card, below the cards block. */
   .atlas-byte-wrap{width:82px}
   .atlas-byte{width:64px;margin-left:auto;margin-right:auto}
-  /* No bubble at all below this width, because there is nowhere for it to go. `.headside` is full-width here
-     and puts the nav immediately left of the mascot column, so the band the bubble uses on a desktop is the
+  /* THREE LINES HERE, WHICH IS WHAT "two lines by design" DID NOT SURVIVE. The rule above narrows the
+     mascot's column from 128px to 82px and said nothing about the name, so the pill kept its 10px text in a
+     column 46px narrower and wrapped to three lines: 82x49 at 640, 600, 500, 414, 375, 360, 320 and 280,
+     against 128x35 from 641 up. The masthead grew for it at exactly the widths with the least room to spare,
+     and it grew silently because the harness compared the pill's text and never its line count.
+     9px brings it back to two lines (82x44, masthead 340 -> 335 at 375). Measured alternatives, all of which
+     also reach two lines: 8px, which costs legibility for nothing; a 112px wrap and a 108px overhanging pill,
+     both of which un-narrow the column this breakpoint exists to narrow. A smaller type size is the change
+     that stays inside the mascot's own width, which is the rule the desktop pill follows too.
+     JFH-289's art shrink does not interact with this: the pill is sized by the wrap, which that ticket
+     held at 82px precisely so nothing around it reflowed, so the column measured here did not move. */
+  .atlas-name{font-size:9px}
+  /* No bubble at all at this width or below, because there is nowhere for it to go. `.headside` is full-width
+     here and puts the nav immediately left of the mascot column, so the band the bubble uses on a desktop is the
      navigation, and anything hanging underneath is the search field -- both measured. This is also the width
      at which a reader most likely has no pointer to hover with, and the commentary is a hover affordance:
      the fact is already in the card being touched. The name, the tip button and Quiet mode all stay.
@@ -3146,11 +3168,32 @@ function initDiscovery() {
   //
   // The cap is enforced here and not with `line-clamp` because clamping would hide the tail of a fact while
   // reporting a bubble that fits, so the text a reader cannot see would still be the text the page chose to
-  // say. Clipping on a word boundary keeps what is shown and what is said the same thing.
+  // say. Clipping keeps what is shown and what is said the same thing.
+  //
+  // IT CUTS MID-WORD MOST OF THE TIME, and an earlier version of this comment claimed otherwise. The word
+  // boundary is a preference, not a guarantee: the strip only fires when the cut lands after some whitespace,
+  // and the names long enough to need cutting are overwhelmingly slugs -- 119 of the 140 names over 26
+  // characters have no whitespace in their first 25, so 85% of real truncations are mid-word
+  // (`modelcontextprotocol/serv…`, `anthropics/claude-cookboo…`). That is the right behaviour, because the
+  // alternative for a slug is to drop the whole thing, but it is not a word boundary and should not be sold
+  // as one.
+  //
+  // Two things the naive version got wrong, both about what a name may contain. It sliced UTF-16 code units,
+  // so a cut inside a surrogate pair emitted a lone half: `"Agents" + 12 robot emoji + "End"` clipped to a
+  // trailing `\ud83e`, which is mojibake, not a character. Nothing in today's 1,294 rows reaches it -- the
+  // single name with an astral character has spaces, so the strip saves it -- but the corpus is rebuilt weekly
+  // from whatever GitHub returns, and one emoji on the boundary is enough. Slicing code points cannot split a
+  // pair. And stripping the partial word could strip almost everything: a name beginning with a space and one
+  // long token clipped to a bare `"…"`, saying nothing at all. The hard cut is kept when the word-boundary
+  // version would throw away more than half the budget.
   const NAME_MAX = 26, TAG_MAX = 62, BUBBLE_MAX = 74;
-  const clipWords = (text, limit) => text.length <= limit
-    ? text
-    : text.slice(0, limit - 1).replace(/\s+\S*$/, "") + "…";
+  const clipWords = (text, limit) => {
+    const points = Array.from(text);
+    if (points.length <= limit) return text;
+    const hard = points.slice(0, limit - 1).join("");
+    const word = hard.replace(/\s+\S*$/, "");
+    return (Array.from(word).length >= limit / 2 ? word : hard) + "…";
+  };
   const wordsFor = r => {
     const category = (D.cats[r.cat] || {}).name || "the atlas";
     const targets = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
@@ -3164,7 +3207,15 @@ function initDiscovery() {
       name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")
     ];
     if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
-    const fact = facts[projectAccent(r.nwo).length % facts.length];
+    // WHICH FACT A PROJECT SAYS USED TO DEPEND ON THE LENGTH OF A COLOUR NAME. It was
+    // `projectAccent(r.nwo).length % facts.length` -- the accent palette's names are 3, 4, 4, 5 and 6
+    // characters, so renaming a swatch would have silently re-assigned the sentence for every project in that
+    // accent class, and nothing anywhere would have noticed. Two unrelated things do not belong on one hook.
+    // This hash is only a spreader: it wants to be stable for a given project and unrelated to everything
+    // else, which a 31-multiplier over the `nwo` is.
+    let spread = 0;
+    for (let i = 0; i < r.nwo.length; i++) spread = (spread * 31 + r.nwo.charCodeAt(i)) | 0;
+    const fact = facts[Math.abs(spread) % facts.length];
     const tagged = targets.length ? " Tagged for " + targets[0] + "." : "";
     return clipWords(fact + ((fact + tagged).length <= TAG_MAX ? tagged : ""), BUBBLE_MAX);
   };

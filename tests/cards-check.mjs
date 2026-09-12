@@ -234,6 +234,30 @@ ok("visible screenshots start loading before any interaction", initialArt.visibl
 ok("distant screenshots remain deferred", initialArt.deferred);
 ok("the mascot has a visible name tag",
    await evalIn(`document.querySelector('.atlas-name')?.textContent === "Archie 'Atlas' Algorithm"`));
+
+// THE NAME TAG'S LINE COUNT, WHICH IS THE RENAME'S OWN CLAIM. "Archie 'Atlas' Algorithm" is 24 characters
+// where "Atlas Byte" was 10, and the stylesheet's answer is that it wraps to two lines inside the mascot's
+// own column. That was asserted by comparing the pill's text, which cannot see a line, and the claim was
+// consequently false at every width below 641: the mobile rule narrows the column from 128px to 82px without
+// touching the 10px type, so the pill went to three lines (82x49) and the masthead grew for it exactly where
+// vertical space is scarcest. Counting line boxes with a Range is the instrument, because a height comparison
+// would have to assume a line height the stylesheet is free to change.
+const nametag = async (label, width) => {
+  const m = await evalIn(`(() => {
+    const el = document.querySelector('.atlas-name');
+    if (!el) return {missing: true};
+    const rg = document.createRange(); rg.selectNodeContents(el);
+    const tops = new Set();
+    for (const r of rg.getClientRects()) if (r.width > 0 && r.height > 0) tops.add(Math.round(r.top * 2) / 2);
+    const r = el.getBoundingClientRect(), wrap = document.querySelector('.atlas-byte-wrap').getBoundingClientRect();
+    return {lines: tops.size, w: Math.round(r.width), h: Math.round(r.height),
+            wrapW: Math.round(wrap.width), font: getComputedStyle(el).fontSize,
+            escapes: Math.round(r.width) > Math.round(wrap.width) + 1, offscreen: r.left < 0};
+  })()`);
+  ok(label, !m.missing && m.lines === 2 && !m.escapes && !m.offscreen,
+     JSON.stringify({width, ...m}));
+};
+await nametag("Archie's name tag is two lines at 1440px", 1440);
 const accents = await evalIn(`new Set([...document.querySelectorAll('#out tr[data-project]')]
   .slice(0,20).map(r => getComputedStyle(r).getPropertyValue('--card-accent'))).size`);
 ok("cards have varied curated accents", accents > 1, accents);
@@ -294,7 +318,12 @@ const widest = await evalIn(`(() => {
   const chrome = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
                  + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
   const lh = parseFloat(cs.lineHeight), before = speech.textContent;
-  const clip = (t, n) => t.length <= n ? t : t.slice(0, n - 1).replace(/\\s+\\S*$/, "") + "\\u2026";
+  const clip = (t, n) => {
+    const p = Array.from(t);
+    if (p.length <= n) return t;
+    const hard = p.slice(0, n - 1).join(""), word = hard.replace(/\\s+\\S*$/, "");
+    return (Array.from(word).length >= n / 2 ? word : hard) + "\\u2026";
+  };
   const said = new Set();
   for (const r of ROWS) {
     const cat = (D.cats[r.cat] || {}).name || "the atlas";
@@ -306,11 +335,27 @@ const widest = await evalIn(`(() => {
     const tail = tg.length ? " Tagged for " + tg[0] + "." : "";
     for (const f of facts) said.add(clip(f + ((f + tail).length <= 62 ? tail : ""), 74));
   }
-  let worst = 0, worstText = "", tall = 0;
+  // TWO INSTRUMENTS, AND THEY HAVE TO AGREE. Dividing the box height by lineHeight infers a line count from
+  // arithmetic, and it is only as good as the assumption that every line occupies exactly one lineHeight --
+  // an inline image, a taller fallback font for one glyph, or a lineHeight the stylesheet later expresses as
+  // a unitless number would all break it silently. A Range over the contents returns one client rect per line
+  // box, which counts what the layout engine actually produced. Both are computed for every string and any
+  // disagreement is a failure, so neither can be quietly wrong: measured 0 disagreements across all 3,835,
+  // both maxing at 2, for 2.0s vs 2.2s.
+  const boxes = () => {
+    const rg = document.createRange(); rg.selectNodeContents(speech);
+    const tops = new Set();
+    for (const rect of rg.getClientRects())
+      if (rect.width > 0 && rect.height > 0) tops.add(Math.round(rect.top * 2) / 2);
+    return tops.size;
+  };
+  let worst = 0, worstText = "", tall = 0, worstBox = 0, disagreed = [];
   for (const t of said) {
     speech.textContent = t;
-    const n = Math.round((speech.getBoundingClientRect().height - chrome) / lh);
-    if (n > 2) tall++;
+    const n = Math.round((speech.getBoundingClientRect().height - chrome) / lh), b = boxes();
+    if (n !== b && disagreed.length < 5) disagreed.push({text: t, byHeight: n, byBox: b});
+    if (n > 2 || b > 2) tall++;
+    if (b > worstBox) worstBox = b;
     if (n > worst) { worst = n; worstText = t; }
   }
   speech.textContent = before;
@@ -318,10 +363,14 @@ const widest = await evalIn(`(() => {
   // rebuilding it a second time. A handoff between two Runtime.evaluate calls in one document, not
   // something the site sets or reads.
   window.__saidByHarness = said;
-  return {said: said.size, worstLines: worst, worstText, tall, live: before, matchesLive: said.has(before)};
+  return {said: said.size, worstLines: worst, worstText, tall, worstBox, disagreed,
+          live: before, matchesLive: said.has(before)};
 })()`);
 ok("no project in the atlas can push Archie past two lines",
-   widest.said > 1000 && widest.worstLines <= 2 && widest.tall === 0, JSON.stringify(widest));
+   widest.said > 1000 && widest.worstLines <= 2 && widest.worstBox <= 2 && widest.worstBox >= 1
+   && widest.tall === 0, JSON.stringify(widest));
+ok("the two ways of counting the bubble's lines agree on every string it can say",
+   widest.disagreed.length === 0, JSON.stringify(widest.disagreed));
 // The block above restates the generator's sentence templates, so on its own it would keep passing against
 // rules the generator no longer has. This is the tie: the string the page really produced for the hovered row
 // has to be one of the strings those restated templates can produce. Edit the generator's wording or its
@@ -368,32 +417,50 @@ const walk = await evalIn(`(async () => {
     "tagged for a runtime": t => t.includes(" Tagged for "),
     "a name clipped to fit": t => t.includes("…")
   };
+  const boxes = () => {
+    const rg = document.createRange(); rg.selectNodeContents(speech);
+    const tops = new Set();
+    for (const rect of rg.getClientRects())
+      if (rect.width > 0 && rect.height > 0) tops.add(Math.round(rect.top * 2) / 2);
+    return tops.size;
+  };
   const names = Object.keys(arms), seen = {}, said = [];
   for (const row of [...document.querySelectorAll('#out tr[data-project]')]) {
     if (names.every(n => seen[n])) break;
     // Focus has to leave first: refocusing the element that already holds focus fires no focusin, so the
-    // handler never runs and this would read the previous row's sentence out of a stale bubble.
+    // handler never runs and this would read the previous row's sentence out of a stale bubble. Blanking it
+    // closes the same hole the other way -- with the bubble emptied and hidden, there is no previous sentence
+    // left to mistake for this row's, so a sentence read here was necessarily spoken for this row.
     if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+    speech.hidden = true;
+    speech.textContent = "";
     (row.querySelector('a') || row).focus({preventScroll: true});
-    await new Promise(r => setTimeout(r, 400));
-    if (speech.hidden) return {broke: 'the bubble stayed hidden for ' + row.dataset.project};
+    // WAIT FOR THE EVENT, DO NOT BUDGET FOR IT. This was a flat 400ms against the generator's 320ms delay,
+    // which is 80ms of slack -- fine on this machine and an invitation to a flake on a loaded CI runner, where
+    // losing the race would have been reported as the bubble refusing to appear. Polling is both safer and
+    // faster: it returns as soon as the timer fires rather than always paying 400ms.
+    for (let waited = 0; waited < 2500 && (speech.hidden || !speech.textContent); waited += 25)
+      await new Promise(r => setTimeout(r, 25));
+    if (speech.hidden || !speech.textContent)
+      return {broke: 'no sentence within 2.5s for ' + row.dataset.project};
     const text = speech.textContent;
-    const lines = Math.round((speech.getBoundingClientRect().height - chrome) / lh);
-    said.push({nwo: row.dataset.project, text, len: text.length, lines,
+    const lines = Math.round((speech.getBoundingClientRect().height - chrome) / lh), box = boxes();
+    said.push({nwo: row.dataset.project, text, len: text.length, lines, box,
                inSet: window.__saidByHarness.has(text)});
     for (const n of names) if (arms[n](text)) seen[n] = seen[n] || row.dataset.project;
   }
   return {visited: said.length, seen, missing: names.filter(n => !seen[n]),
-          tall: said.filter(s => s.lines > 2 || s.lines < 1),
+          tall: said.filter(s => s.lines > 2 || s.lines < 1 || s.box > 2 || s.box < 1),
+          disagreed: said.filter(s => s.lines !== s.box),
           empty: said.filter(s => !s.len),
           adrift: said.filter(s => !s.inSet).map(s => s.nwo + ': ' + s.text)};
 })()`);
 ok("walking the rendered rows reaches every wording Archie has",
    !walk.broke && walk.missing.length === 0 && walk.visited >= 6,
    JSON.stringify({broke: walk.broke, missing: walk.missing, visited: walk.visited, seen: walk.seen}));
-ok("every sentence Archie was caught saying fits in two lines",
-   !walk.broke && walk.tall.length === 0 && walk.empty.length === 0 && walk.visited >= 6,
-   JSON.stringify({tall: walk.tall, empty: walk.empty}));
+ok("every sentence Archie was caught saying fits in two lines, by both counts",
+   !walk.broke && walk.tall.length === 0 && walk.empty.length === 0 && walk.disagreed.length === 0
+   && walk.visited >= 6, JSON.stringify({tall: walk.tall, empty: walk.empty, disagreed: walk.disagreed}));
 ok("every sentence Archie was caught saying is one the restated templates can produce",
    !walk.broke && walk.adrift.length === 0 && walk.visited >= 6,
    JSON.stringify({adrift: walk.adrift, visited: walk.visited}));
@@ -437,6 +504,48 @@ const clearance = async (label, expectShown) => {
 };
 await clearance("Archie's speech bubble clears the navigation and the filter bar at 1440px", true);
 
+// AND WHEN THE READER MAKES THE NAV BIGGER. The clearance above is 38px at rest, which is about one and a half
+// nav lines, and a reader who raises Chrome's minimum font size spends it: forcing the nav's type to 20px
+// leaves 7px, and 24px -- that setting's maximum -- overlaps the bubble's rectangle by 13px. Rect overlap is
+// not the complaint this ticket exists for, though, and the two are worth separating. The complaint was that
+// the mascot covered navigation. The header's `z-index:30` beats the bubble's 4, so what actually happens is
+// the nav paints over the bubble: the reader loses the tail of an optional fact and keeps every link. That is
+// the assertion -- `elementFromPoint` at the centre of every nav link, at a font size no stylesheet here
+// chooses, must return the link and never the bubble. A future change that raised the bubble above the header
+// would satisfy a rectangle test and fail this one.
+//
+// Injected as a stylesheet because a minimum font size is a browser preference CDP does not expose, the same
+// way `(hover:hover)` is not emulable; forcing the declaration is the closest honest instrument.
+const navOverBubble = await evalIn(`(async () => {
+  const st = document.createElement('style');
+  st.textContent = ".top nav{font-size:24px}";
+  document.head.appendChild(st);
+  window.scrollTo(0, 0);
+  const speech = document.getElementById('byte-speech'), nav = document.querySelector('header nav');
+  const a = document.querySelector('#out tr[data-project] a');
+  if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+  speech.hidden = true; speech.textContent = "";
+  a.focus({preventScroll: true});
+  for (let waited = 0; waited < 2500 && (speech.hidden || !speech.textContent); waited += 25)
+    await new Promise(r => setTimeout(r, 25));
+  const spoke = !speech.hidden && !!speech.textContent;
+  const s = speech.getBoundingClientRect(), n = nav.getBoundingClientRect();
+  const links = [...nav.querySelectorAll('a')].map(el => {
+    const r = el.getBoundingClientRect();
+    const hit = document.elementFromPoint(Math.round(r.left + r.width / 2), Math.round(r.top + r.height / 2));
+    return {text: el.textContent.trim().slice(0, 12),
+            covered: !!(hit && (hit.id === "byte-speech" || hit.closest("#byte-speech"))),
+            hit: hit ? (hit.id || hit.tagName.toLowerCase()) : null};
+  });
+  st.remove();
+  return {spoke, links: links.length, covered: links.filter(l => l.covered),
+          rectsOverlap: !(s.right <= n.left || s.left >= n.right || s.bottom <= n.top || s.top >= n.bottom),
+          gap: Math.round(s.top - n.bottom)};
+})()`);
+ok("a reader who enlarges the navigation keeps every link, even where the bubble reaches it",
+   navOverBubble.spoke && navOverBubble.links >= 5 && navOverBubble.covered.length === 0,
+   JSON.stringify(navOverBubble));
+
 // LEAVING THE ROW TAKES THE BUBBLE WITH IT. This is the defect the rename shipped alongside: `speak()` set
 // `hidden = false` and nothing on the hover path ever set it back, so the first hover of a visit pinned a
 // fact over the masthead until the reader found the quiet switch. Moving the pointer off the row is the
@@ -457,8 +566,20 @@ ok("a row brushed past within the delay never speaks",
    await evalIn("document.getElementById('byte-speech').hidden === true"));
 
 // Escape reaches the reader who tabbed to the row and has no pointer to move away.
-await evalIn("document.querySelector('#out tr[data-project] a')?.focus({preventScroll: true})");
-await sleep(450);
+//
+// The blur is not decoration. `focus()` on the element that already holds focus fires no `focusin`, so the
+// speak handler never runs and this reads a bubble that was never asked to appear -- it passed only because
+// nothing earlier in the file happened to leave focus on that link, and it failed the moment something did.
+// Waiting for the sentence rather than budgeting 450ms for it is the same fix as in the walk above: the
+// generator's delay is 320ms and a loaded CI runner can lose that race.
+await evalIn(`(async () => {
+  const speech = document.getElementById('byte-speech');
+  if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+  speech.hidden = true; speech.textContent = "";
+  document.querySelector('#out tr[data-project] a')?.focus({preventScroll: true});
+  for (let waited = 0; waited < 2500 && (speech.hidden || !speech.textContent); waited += 25)
+    await new Promise(r => setTimeout(r, 25));
+})()`);
 const escaped = await evalIn(`(() => {
   const speech = document.getElementById('byte-speech');
   const spoke = !speech.hidden;
@@ -773,6 +894,9 @@ ok("the screenshot is there, which the phone table deliberately does not show", 
 await evalIn("document.querySelector('#out tr[data-project] a')?.focus({preventScroll: true})");
 await sleep(450);
 await clearance("Archie says nothing on a phone, where there is nowhere to say it", false);
+// The width the two-line claim was actually false at. The bubble is gone here, but the name tag is not, and
+// the rule that shrinks his column to 82px is the one that pushed the pill to three lines.
+await nametag("Archie's name tag is still two lines on a phone", 375);
 await shot("view-cards-375");
 
 // The table's own narrow layout, which this must not have disturbed -- it is a click away on a phone rather
@@ -785,6 +909,15 @@ ok("the table's own narrow layout is still one column",
    JSON.stringify(t375));
 ok("and still hides the screenshot, as it always has", !t375.imgShown, JSON.stringify(t375));
 await shot("view-table-375");
+
+// ---- 640px exactly: the boundary the name tag broke on, and it is `max-width`, so the rule applies AT 640
+// and not merely below it. 375 and 1440 alone would pass a rule that started one pixel off.
+await resize(640, 900);
+await goto(ORIGIN);
+await nametag("Archie's name tag is two lines at the 640px boundary itself", 640);
+await resize(641, 900);
+await goto(ORIGIN);
+await nametag("and two lines on the desktop side of that boundary", 641);
 
 // ---- both themes, because the card's background and border are both theme variables
 //
