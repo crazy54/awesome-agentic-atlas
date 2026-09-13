@@ -180,8 +180,8 @@
     {
       "slug": "keep-it-honest",
       "title": "Find out what the agent actually did",
-      "kicker": "Traces, tests, scans and the bill",
-      "intro": "An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put in front of a customer. Traces first, then tests, then the two things people leave until after the incident.",
+      "kicker": "Traces, tests and scans",
+      "intro": "An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put in front of a customer. Traces first, then tests, then the thing people leave until after the incident.",
       "picks": [
         {
           "nwo": "langfuse/langfuse",
