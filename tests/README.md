@@ -84,12 +84,14 @@ would be the first `package.json` in the repository, would need a lockfile, woul
 turn "can I run the tests" into a question with a network answer. The cost is that these files own their own
 plumbing — about 200 lines of it, in `lib/`. That is the trade, and it is deliberate.
 
-The eight Python harnesses are Python because the things they test are. `python` here means whatever
+The twelve Python harnesses are Python because the things they test are. `python` here means whatever
 `lib/python.mjs` finds. Node's side needs no packages, and neither do `app_flags_test.py`, `theme_test.py`,
-`pagemin_test.py`, `signals_test.py`, `indexnow_test.py`, `refresh_test.py`, `live_test.py` and `semantic_test.py` — standard
+`pagemin_test.py`, `signals_test.py`, `indexnow_test.py`, `refresh_test.py`, `live_test.py`,
+`collections_test.py`, `osicons_test.py` and `semantic_test.py` — standard
 library only, except that `indexnow_test.py` also needs `git` on `PATH`, because it asserts against the
 *tracked* paths under `docs/` rather than a walk of the working tree, so that a local build's leftovers cannot
-change what it thinks the site contains. `media_test.py` needs `openpyxl` and `pillow`, which are the
+change what it thinks the site contains. `media_test.py` and `workbook_branding_test.py` — the two that
+build a real `.xlsx` — need `openpyxl` and `pillow`, which are the
 generator's dependencies rather than the suite's — every workflow that needs them installs them, `tests.yml`
 included, so a checkout that can build the workbook can already test it. Missing them is an `ImportError` with no tally,
 which `run.mjs` counts as a failure and not as a skip.
