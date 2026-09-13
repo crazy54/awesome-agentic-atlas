@@ -12,10 +12,11 @@
 //   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces, and
 //                     the one channel on the page that is not colour: the five platform verdict marks,
 //                     which three places in 19_pages.py describe with no generator keeping them in step.
-//                     It also holds the comparison panel's layout, which belongs in cards-check.mjs and
-//                     cannot go there yet -- see the note in that section. Both halves are here for the
-//                     same reason: a rule added to the generator today is absent from the docs/ the
-//                     browser harnesses are served, so the subject of a drift check is the generator.
+//                     It also holds the phone's above-the-fold budget and the comparison panel's layout,
+//                     both of which belong in cards-check.mjs and cannot go there yet -- see the note in
+//                     each of those sections. All three are here for the same reason: a rule added to the
+//                     generator today is absent from the docs/ the browser harnesses are served, so the
+//                     subject of a drift check is the generator.
 //   signals_test.py   the cache-staleness policy in scripts/signals.py, on fabricated entries. Pure and
 //                     instant, and the only test of it that can exist offline -- the three stages it
 //                     serves all shell out to `gh api graphql`, so nothing here sees a real crawl.
@@ -33,7 +34,9 @@
 //   pagemin_test.py   the comment stripper against the cases the real page does not contain -- template
 //                     literals, regex literals, unterminated blocks. Python, because the stripper is.
 //   media_test.py     the workbook writer: one embedded part per screenshot however many rows point at it,
-//                     and the 65,535-entry ZIP ceiling that dedup exists to stay under.
+//                     and the 65,535-entry ZIP ceiling that dedup exists to stay under. Also that an
+//                     image the pool never saw is allowed rather than a fault -- the cover branding is
+//                     two of them -- which this file asserted the opposite of until a weekly died on it.
 //   indexnow_test.py  which of the ~1,500 files under docs/ get submitted to a search engine, that the
 //                     key-file prune deletes a rotated key and nothing else, and that a truncated HTTP
 //                     response is a warning rather than a traceback. Touches no network, by a guard it
@@ -100,13 +103,13 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // only a harness that has lost assertions trips it.
 const HARNESSES = [
   {file: "app_flags_test.py", label: "the 0/1 schema, atomic editor writes, and every kill switch", python: true, floor: 28},
-  {file: "theme_test.py", label: "both themes' contrast, the palette's four copies, the verdict marks, the comparison panel", python: true, floor: 200},
+  {file: "theme_test.py", label: "the palette's four copies, the verdict marks, the phone's fold, the compare panel", python: true, floor: 220},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
-  {file: "media_test.py", label: "one embedded part per screenshot, and the entry ceiling", python: true, floor: 40},
-  {file: "workbook_branding_test.py", label: "the Atlas mark and mascot on both workbook covers", python: true, floor: 20},
+  {file: "media_test.py", label: "one embedded part per screenshot, the entry ceiling, and the unpooled cover", python: true, floor: 45},
+  {file: "workbook_branding_test.py", label: "the Atlas mark and mascot on both workbook covers, saved as a weekly saves them", python: true, floor: 24},
   {file: "refresh_test.py", label: "the cache-free render, refused when the source count moved", python: true, floor: 60},
   {file: "live_test.py", label: "the star/push sidecar the 1,294 detail pages read", python: true, floor: 90},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},

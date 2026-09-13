@@ -24,6 +24,7 @@ import os
 import re
 import sys
 import tempfile
+import warnings
 import zipfile
 from pathlib import Path
 
@@ -248,19 +249,69 @@ finally:
 
 # The postcondition. `save` compares the pool against the archive because the deduplication rides on
 # openpyxl internals (`ExcelWriter._images`, `Image._data`) and CI installs openpyxl unpinned -- an
-# upstream rename would put the per-placement writer back with nothing to announce it. A plain
-# `XLImage` alongside the pooled ones stands in for that: one more part in the file than in the pool.
-p_extra = TMP / "extra.xlsx"
+# upstream rename would put the per-placement writer back with nothing to announce it.
+#
+# Asserted by causing that, rather than by causing something that resembles it. Until JFH-292 this
+# section added a stray plain `XLImage` beside the pooled ones and called the resulting failure a
+# stand-in -- "one more part in the file than in the pool" -- and the stand-in was false: an unpooled
+# image is what `16_build_all.cover_image` does twice in every release workbook, so the test was
+# pinning a bug as a requirement, and the first weekly to build a branded cover died on it having
+# deduplicated 9,319 screenshots correctly. Restoring the base class's method over the override is the
+# thing itself, and it needs no resemblance argument.
+p_bypassed = TMP / "bypassed.xlsx"
 pool4 = media.Pool(render)
 wb4 = fresh()
-ws = wb4.create_sheet("S")
-pool4.place(ws, SRC[0], anchor(2))
-stray = XLImage(render(SRC[1]))
-stray.anchor = anchor(3)
-ws.add_image(stray)
-msg = raises("a part the pool does not know about is caught", lambda: media.save(wb4, p_extra, pool4))
+for s in range(SHEETS):
+    ws = wb4.create_sheet(f"S{s}")
+    for i, src in enumerate(SRC):
+        pool4.place(ws, src, anchor(2 + i))
+override = media._DedupingWriter._write_images
+try:
+    # Exactly what an upstream rename of `_images` or `_data` would leave in charge: openpyxl's own
+    # per-placement writer, with `media_parts`/`pooled_parts` never assigned. Warnings are suppressed
+    # only because that writer puts every pooled placement under the name its siblings already used and
+    # `zipfile` says so once per duplicate -- which is a symptom of the thing being tested, not noise
+    # worth reading sixteen times.
+    media._DedupingWriter._write_images = media.ExcelWriter._write_images
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        msg = raises("the override being bypassed is caught",
+                     lambda: media.save(wb4, p_bypassed, pool4))
+finally:
+    media._DedupingWriter._write_images = override
 true("...and says deduplication is not happening", "not happening" in msg, msg)
-true("...without leaving the workbook", not p_extra.exists())
+true("...naming the pool's count, which is the number that did not survive",
+     f"{PICTURES:,} distinct images" in msg, msg)
+true("...without leaving the workbook", not p_bypassed.exists())
+
+# And the case that is not a fault, which is the other half of JFH-292. A workbook is entitled to hold
+# images the pool never saw: the cover's brand mark and mascot go in as plain `XLImage`s at a size the
+# caller sets, and there is nothing to deduplicate them against. `save` must accept that, and must
+# still be checking the pooled parts while it does.
+p_mixed = TMP / "mixed.xlsx"
+pool_mixed = media.Pool(render)
+wb_mixed = fresh()
+for s in range(SHEETS):
+    ws = wb_mixed.create_sheet(f"S{s}")
+    for i, src in enumerate(SRC):
+        pool_mixed.place(ws, src, anchor(2 + i))
+cover = wb_mixed["S0"]
+BRANDING = 2
+for b in range(BRANDING):
+    brand = XLImage(render(SRC[b]))
+    brand.width, brand.height = 32, 32          # bounded by the caller, not by the bytes
+    brand.anchor = anchor(20 + b)
+    cover.add_image(brand)
+mixed = media.save(wb_mixed, p_mixed, pool_mixed)
+eq("an unpooled image beside the pooled ones is not a dedup failure",
+   mixed.parts, PICTURES + BRANDING)
+eq("...and the pooled pictures are still shared, not one per placement",
+   mixed.placements, PLACEMENTS + BRANDING)
+eq("...with the pool's own part names untouched",
+   sorted(n for n in names(p_mixed) if media.PART_STEM in n),
+   sorted(f"xl/media/{media.PART_STEM}{i + 1}.jpeg" for i in range(PICTURES)))
+eq("...and the unpooled ones keeping openpyxl's stem, so no name can collide",
+   len([n for n in names(p_mixed) if n.startswith("xl/media/image")]), BRANDING)
 
 # Without a pool `save` is still `wb.save` plus the ceiling check, which is what `07_build` standing on
 # its own wants: one sheet, no other sheet to share with, no postcondition to check.
