@@ -4,7 +4,7 @@
   <img src="docs/favicon.svg" width="64" height="64" alt="Awesome Agentic Atlas logo: a gold globe in pixel sunglasses">
 </a>
 <a href="https://crazy54.github.io/awesome-agentic-atlas/">
-  <img src="docs/assets/atlas-byte.png" width="132" alt="Atlas Byte, the Awesome Agentic Atlas robot mascot, wearing pixel sunglasses and holding a globe">
+  <img src="docs/assets/atlas-byte.png" width="132" alt="Archie 'Atlas' Algorithm, the Awesome Agentic Atlas robot mascot, wearing pixel sunglasses and holding a globe">
 </a>
 
 # Awesome Agentic Atlas

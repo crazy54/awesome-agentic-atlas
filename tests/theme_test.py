@@ -321,10 +321,10 @@ def png_pixel(path: Path, x: int, y: int) -> str:
 
 
 # The old app icon was only a globe. These two pixels sit inside that globe but away from every grid line:
-# together they prove that Atlas Byte's black pixel shades and white checker glint made it into the actual
+# together they prove that Archie's black pixel shades and white checker glint made it into the actual
 # generated PNG a launcher installs, not merely into a source comment or the browser-tab SVG.
 ICON_192 = PAGE.parent.parent / "docs" / "icon-192.png"
-check("the installed icon wears Atlas Byte's dark pixel shades",
+check("the installed icon wears Archie's dark pixel shades",
       png_pixel(ICON_192, 115, 84), DARK["surface"])
 check("the installed icon carries the shades' white checker glint",
       png_pixel(ICON_192, 58, 77), DARK["ink"])

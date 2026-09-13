@@ -1,5 +1,11 @@
-# The verification suite, in CI. Runs `node tests/run.mjs` -- all seventeen harnesses, 2,374 assertions --
+# The verification suite, in CI. Runs `node tests/run.mjs` -- all seventeen harnesses, 2,403 assertions --
 # and fails the job when anything is red. It writes nothing, commits nothing and deploys nothing.
+#
+# That count and the one in `tests/README.md` are the same claim written twice, and they drifted apart the
+# moment one branch added assertions: this line said 2,276 while the README said 2,291. Anything that changes
+# the total has to change both, and the number to write in them is the one `node tests/run.mjs` actually
+# prints on the tree being landed -- not the old total plus however many the branch added, which is wrong for
+# whichever of two branches merges second.
 #
 # WHY THIS EXISTS (JFH-208)
 #
