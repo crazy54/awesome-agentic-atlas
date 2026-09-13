@@ -22,7 +22,10 @@ Four decisions worth stating.
 
 The build fails rather than publishes a stale recommendation. A pick names a repository by `nwo`, and a
 repository can be renamed, removed from every source list, or -- the interesting case -- keep existing
-while the claim about it stops being true. "Runs on Windows, and says so" is a page whose entire value is
+while the claim about it stops being true. Only the first of those is survivable, and only because a
+renamed repository is still the project that was picked: `aka` on a pick lists its other spellings, so the
+same curation resolves against the committed dataset and against a fresh ingest that has canonicalised the
+name. The other two are a red build by design. "Runs on Windows, and says so" is a page whose entire value is
 that the verdict is `Y` and not `L`; if one of its seven drops to inferred, the honest outcome is a red
 build and a curator's decision, not a page that quietly means something weaker. `requires` in the JSON is
 how a collection declares the claim its prose is making, and `check()` below enforces it.
@@ -222,14 +225,28 @@ def plan(data: dict, curation: dict | None = None) -> list[dict]:
         seen.add(slug)
         picks = []
         for p in coll["picks"]:
-            row = rows.get(p["nwo"])
+            # `aka` is every other spelling this one project has been listed under, newest first in `nwo`.
+            # It exists because `16_build_all.canonicalise()` rewrites a renamed repo's row to whatever the
+            # API calls it now, and a hand-written pick cannot follow: on 2026-09-13 `mnfst/manifest`
+            # became `mnfst/llm-gateway` and this stage killed the weekly after thirty-six minutes of
+            # ingest, having already banked the fetch. The two spellings are one project, so the pick that
+            # names both is not a stale recommendation -- which is why this is an explicit list a curator
+            # writes and a reviewer reads in the diff, and not a redirect this code follows on its own.
+            # A build off the committed `data.json` resolves the old name and a build off a fresh ingest
+            # resolves the new one, so the swap needs no flag day.
+            row = next((rows[n] for n in [p["nwo"], *(p.get("aka") or [])] if n in rows), None)
             if row is None:
-                # The common case, and the reason this is fatal: a repository that was renamed or dropped
-                # from every source list is no longer in `data.json`, and a page recommending it would link
-                # to a detail page that this build also did not write.
+                # Now unambiguous: every name this project has ever answered to is absent, so it was
+                # dropped from every source list rather than moved. A page recommending it would link to a
+                # detail page that this build also did not write, so the honest outcome is a red build and
+                # a curator's decision.
+                names = " / ".join([p["nwo"], *(p.get("aka") or [])])
                 raise CurationError(
-                    f"{slug}: {p['nwo']} is not in the atlas -- renamed, or no longer on any source list")
-            picks.append(dict(p, row=row))
+                    f"{slug}: {names} is not in the atlas -- no longer on any source list, or renamed "
+                    f"again (add the new spelling to this pick's \"aka\")")
+            # Normalised to the spelling the dataset actually uses, so the share link, the detail-page path
+            # and every assertion that compares a pick to its row all speak of the same repository.
+            picks.append(dict(p, nwo=row["nwo"], row=row))
         check(coll, picks, data)
         out.append(dict(coll, picks=picks, path=["collections", slug]))
     return out

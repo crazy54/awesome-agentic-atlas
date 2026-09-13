@@ -214,7 +214,8 @@
           "why": "Scans agent skills for vulnerabilities. Every other page on this site encourages you to install other people's instructions; this is the tool that reads them first."
         },
         {
-          "nwo": "mnfst/manifest",
+          "nwo": "mnfst/llm-gateway",
+          "aka": ["mnfst/manifest"],
           "role": "The bill",
           "why": "Real-time cost observability per agent. Cost is a correctness signal in disguise -- a run that suddenly costs four times as much has usually started doing something else."
         }
