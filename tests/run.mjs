@@ -31,7 +31,9 @@
 //   pagemin_test.py   the comment stripper against the cases the real page does not contain -- template
 //                     literals, regex literals, unterminated blocks. Python, because the stripper is.
 //   media_test.py     the workbook writer: one embedded part per screenshot however many rows point at it,
-//                     and the 65,535-entry ZIP ceiling that dedup exists to stay under.
+//                     and the 65,535-entry ZIP ceiling that dedup exists to stay under. Also that an
+//                     image the pool never saw is allowed rather than a fault -- the cover branding is
+//                     two of them -- which this file asserted the opposite of until a weekly died on it.
 //   indexnow_test.py  which of the ~1,500 files under docs/ get submitted to a search engine, that the
 //                     key-file prune deletes a rotated key and nothing else, and that a truncated HTTP
 //                     response is a warning rather than a traceback. Touches no network, by a guard it
@@ -103,8 +105,8 @@ const HARNESSES = [
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
-  {file: "media_test.py", label: "one embedded part per screenshot, and the entry ceiling", python: true, floor: 40},
-  {file: "workbook_branding_test.py", label: "the Atlas mark and mascot on both workbook covers", python: true, floor: 20},
+  {file: "media_test.py", label: "one embedded part per screenshot, the entry ceiling, and the unpooled cover", python: true, floor: 45},
+  {file: "workbook_branding_test.py", label: "the Atlas mark and mascot on both workbook covers, saved as a weekly saves them", python: true, floor: 24},
   {file: "refresh_test.py", label: "the cache-free render, refused when the source count moved", python: true, floor: 60},
   {file: "live_test.py", label: "the star/push sidecar the 1,294 detail pages read", python: true, floor: 90},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},

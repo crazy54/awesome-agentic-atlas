@@ -61,8 +61,9 @@ ENTRY_LIMIT = 65_535
 
 # Media parts are named for the pool slot rather than for the writer's placement counter, so the name
 # is stable however the sheets are ordered. A distinct stem also means a plain `XLImage` added
-# alongside these -- `07_build` does that when it is run on its own -- keeps `image{N}` and cannot
-# collide.
+# alongside these keeps `image{N}` and cannot collide. Two of those are in every release workbook --
+# `16_build_all.cover_image` places the brand mark and the mascot -- so an unpooled image is the normal
+# case and not a leak; the postcondition in `save` counts them separately for that reason.
 PART_STEM = "shot"
 
 
@@ -161,7 +162,11 @@ class Report:
 class _DedupingWriter(ExcelWriter):
     """`ExcelWriter`, writing each media part once rather than once per placement."""
 
-    media_parts = media_placements = 0
+    # Zero rather than None, and never assigned anywhere but in `_write_images`, because that is what
+    # makes the postcondition in `save` able to see its own override having been bypassed: if an
+    # upstream rename means the method below is not the one the writer calls, these keep their class
+    # defaults and `pooled_parts` is 0 against a pool holding thousands.
+    media_parts = media_placements = pooled_parts = 0
 
     def _write_images(self) -> None:
         # The base class is `for img in self._images: writestr(img.path[1:], img._data())`. Pooled
@@ -170,13 +175,21 @@ class _DedupingWriter(ExcelWriter):
         # resolving to one part is ordinary OPC -- it is what a picture reused on one sheet has always
         # produced.
         written: set[str] = set()
+        pooled = 0
         for img in self._images:
             name = img.path[1:]
             if name in written:
                 continue
             written.add(name)
+            # Counted apart from the rest, because a workbook is entitled to hold images the pool
+            # never saw and `16_build_all` holds two: the cover's brand mark and mascot go in as plain
+            # `XLImage`s, at a size the caller sets rather than the size their bytes measure, and there
+            # is nothing to share them with. Only the pooled count says anything about deduplication,
+            # so only the pooled count is what `save` compares against the pool -- see the note there.
+            pooled += isinstance(img, SharedImage)
             self._archive.writestr(name, img._data())
         self.media_parts, self.media_placements = len(written), len(self._images)
+        self.pooled_parts = pooled
 
 
 def _abandon(archive: zipfile.ZipFile, path: Path) -> None:
@@ -206,7 +219,7 @@ def save(wb, path: Path, pool: Pool | None = None) -> Report:
     writer = _DedupingWriter(wb, archive)
     writer.write_data()
     entries = len(archive.namelist())
-    parts, placements = writer.media_parts, writer.media_placements
+    parts, placements, pooled = writer.media_parts, writer.media_placements, writer.pooled_parts
     if entries > ENTRY_LIMIT:
         _abandon(archive, path)
         raise SystemExit(
@@ -218,11 +231,21 @@ def save(wb, path: Path, pool: Pool | None = None) -> Report:
     # and `Image._data` -- and CI installs openpyxl unpinned, so a rename upstream would quietly put
     # the base class's per-placement `_write_images` back in charge with nothing to say so. The
     # archive is the one witness that cannot be fooled.
-    if pool is not None and pool.parts != parts:
+    #
+    # Against `pooled` and not against `parts`, which is the whole of JFH-292. `parts` is every
+    # distinct media part in the package, and a workbook may hold images the pool never saw -- the two
+    # cover brand assets do, deliberately, and one part per placement is correct for them. Comparing
+    # the pool's count against the package's total therefore compared a subset with the whole, and the
+    # first real weekly to build a branded cover failed here having deduplicated 9,319 screenshots
+    # perfectly. Nothing is given up by narrowing it: the failure this guard is for leaves `pooled_parts`
+    # at its class default, so it is caught more loudly than before, not less.
+    if pool is not None and pool.parts != pooled:
         _abandon(archive, path)
         raise SystemExit(
             f"{path.name}: the pool holds {pool.parts:,} distinct images but the package has "
-            f"{parts:,} media parts, so media deduplication is not happening. Check openpyxl's "
+            f"{pooled:,} pooled media parts, so media deduplication is not happening. "
+            f"({parts:,} media parts in all; the other {parts - pooled:,} were added outside the "
+            f"pool, which is what the cover branding does and is not a fault.) Check openpyxl's "
             f"ExcelWriter._write_images against scripts/media.py.")
     archive.close()
     return Report(path, entries, parts, placements)
