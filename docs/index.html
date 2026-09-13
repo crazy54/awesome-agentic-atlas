@@ -83,17 +83,22 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
   animation:atlas-byte-float 4.2s ease-in-out infinite;transform-origin:50% 72%}
 .atlas-byte-wrap:hover{transform:rotate(2deg) scale(1.035)}
 #byte-tip{display:block;padding:0;border:0;background:transparent;border-radius:50%;color:inherit}
-.atlas-name{display:block;margin:-11px auto 0;position:relative;z-index:2;padding:2px 8px;
-  border:1px solid var(--grid);border-radius:999px;background:var(--plane);color:var(--ink);
-  font-size:11px;font-weight:700;letter-spacing:.04em;line-height:1.45}
+.atlas-name{display:block;margin:-11px auto 0;position:relative;z-index:2;padding:3px 9px;
+  border:1px solid var(--grid);border-radius:12px;background:var(--plane);color:var(--ink);
+  font-size:10px;font-weight:700;letter-spacing:.03em;line-height:1.35;text-align:center;
+  text-wrap:balance}
+.atlas-name-short{display:none}
 .atlas-name:hover{border-color:var(--bar);color:var(--ink)}
 .byte-quiet{display:block;margin:5px auto 0;padding:0;border:0;background:transparent;color:var(--muted);
   font-size:10px;text-decoration:underline;text-underline-offset:2px}
 .byte-quiet:hover{color:var(--ink)}
-#byte-speech{position:absolute;right:calc(100% + 12px);top:8px;width:min(270px,calc(100vw - 174px));
+#byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:220px;
   padding:9px 11px;border:1px solid var(--grid);border-left:3px solid var(--bar);border-radius:9px;
-  background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;box-shadow:0 12px 28px rgba(0,0,0,.2)}
-#byte-speech::after{content:"";position:absolute;right:-7px;top:19px;width:11px;height:11px;
+  background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;z-index:4;
+  box-shadow:0 12px 28px rgba(0,0,0,.2);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+#byte-speech[hidden]{display:none}
+#byte-speech::after{content:"";position:absolute;right:-6px;bottom:12px;width:11px;height:11px;
   background:var(--band);border-top:1px solid var(--grid);border-right:1px solid var(--grid);transform:rotate(45deg)}
 #atlas-orbit{position:absolute;inset:-18px -24px;pointer-events:none;z-index:3}
 .orbit-star{position:absolute;left:50%;top:50%;width:5px;height:5px;background:var(--bar);box-shadow:0 0 10px var(--bar);
@@ -148,11 +153,20 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .clearsave.on{display:inline-block}
 .takechip{display:none}
 .takechip.on{display:inline-flex;align-items:center;gap:.4em}
+.cmpchip{display:none}
+.cmpchip.on{display:inline-block}
+.cmpchip[aria-expanded=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
 .save{background:var(--band);color:var(--ink2);border:1px solid var(--grid);border-radius:999px;
   padding:1px 9px;font-family:inherit;font-size:11px;font-weight:600;line-height:1.7;
   white-space:nowrap;cursor:pointer;margin-left:8px;vertical-align:1px}
 .save:hover{border-color:var(--bar);color:var(--ink)}
 .save[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
+.pin{background:var(--band);color:var(--ink2);border:1px solid var(--grid);border-radius:999px;
+  padding:1px 9px;font-family:inherit;font-size:11px;font-weight:600;line-height:1.7;
+  white-space:nowrap;cursor:pointer;margin-left:6px;vertical-align:1px}
+.pin:hover:not(:disabled){border-color:var(--bar);color:var(--ink)}
+.pin[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
+.pin:disabled{opacity:.45;cursor:not-allowed}
 .rise{color:var(--good);font-weight:600;font-variant-numeric:tabular-nums}
 .rise.down{color:var(--muted);font-weight:400}
 .count{color:var(--muted);font-size:13px;margin-left:auto;white-space:nowrap}
@@ -225,6 +239,17 @@ a.nwo:hover{color:var(--ink)}
 .vL{color:var(--warn)}
 .vN,.va,.v-{color:var(--off)}
 .os .v-,.os .va{opacity:.75}
+.vkey{display:inline-block;margin:0 0 10px;font-size:12px;color:var(--dim)}
+.vkey>summary{cursor:pointer;list-style:none;padding:3px 0;border-bottom:1px dotted var(--grid)}
+.vkey>summary::-webkit-details-marker{display:none}
+.vkey>summary::marker{content:""}
+.vkey>summary::after{content:"";display:inline-block;margin-left:7px;border:4px solid transparent;border-top-color:currentColor;transform:translateY(2px);transition:transform .12s}
+.vkey[open]>summary::after{transform:translateY(-2px) rotate(180deg)}
+.vkey>summary .vY,.vkey>summary .vL,.vkey>summary .vN,.vkey>summary .v-,.vkey>summary .va{font-weight:700}
+.vkey>dl{display:grid;grid-template-columns:1.4em 1fr;gap:4px 8px;margin:8px 0 0;max-width:52ch}
+.vkey>dl>dt{text-align:center;font-weight:700}
+.vkey>dl>dd{margin:0}
+@media (max-width:560px){.vkey{display:block}.vkey>dl{max-width:none}}
 .oi{width:1.15em;height:1.15em;fill:currentColor;vertical-align:-.19em;flex:none}
 .oiw{white-space:nowrap}
 .oikey{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 12px;font-size:12.5px;color:var(--muted)}
@@ -361,16 +386,21 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 }
 
 @media(max-width:640px){
-  header{padding:16px 14px 12px}
+  header{padding:12px 14px 10px}
   .bar{padding:8px 14px}
   main{padding:0 14px 48px}
   footer{padding:18px 14px}
   h1{font-size:21px}
   h1 span{display:block;font-size:13px}
-  .top{gap:10px}
+  .top{gap:8px}
   .headside{width:100%;align-items:center;justify-content:space-between;gap:12px}
   .top nav{text-align:left;line-height:2.1}
-  .atlas-byte-wrap,.atlas-byte{width:82px}
+  .atlas-byte-wrap{width:82px}
+  .atlas-byte{width:64px;margin-left:auto;margin-right:auto}
+  .atlas-name{font-size:9px}
+  .atlas-name-full{display:none}
+  .atlas-name-short{display:inline}
+  #byte-speech{display:none}
 
   #q{flex:1 1 100%;min-width:0}
   .line>label[for=q]{display:none}
@@ -432,6 +462,12 @@ html[data-view=cards][data-index-screenshots=off] td.pj{grid-row:2}
 html[data-view=cards][data-index-screenshots=off] td.ds{grid-row:3}
 html[data-view=cards][data-index-screenshots=off] td.tg{grid-row:4}
 html[data-view=cards][data-index-screenshots=off] td.lc{grid-row:5}
+
+@media(max-width:640px){
+  html[data-view=cards] td.pj{grid-row:2}
+  html[data-view=cards] td.rk{grid-row:3}
+  html[data-view=cards] td.st-c{grid-row:3}
+}
 html[data-view=cards] .desc,html[data-view=cards] .cmdrow,html[data-view=cards] .cmd{max-width:none}
 html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
   -webkit-line-clamp:4;line-clamp:4;overflow:hidden}
@@ -453,9 +489,40 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
 #out tr{scroll-margin-top:160px}
 
+#cmp{display:none}
+#cmp.on{display:block;margin:14px 0 0;border:1px solid var(--grid);border-radius:8px;background:var(--band)}
+#cmp .ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 14px;
+  border-bottom:1px solid var(--grid);color:var(--ink2);font-size:13px}
+#cmp .ch b{color:var(--ink)}
+#cmp .ch .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+#cmp .scroll{overflow-x:auto;border-radius:0 0 8px 8px}
+#cmp table{display:table;border-collapse:collapse;width:100%;margin-top:0;font-size:13px}
+#cmp thead{display:table-header-group}
+#cmp tbody{display:table-row-group}
+#cmp tr{display:table-row;border:0;background:transparent}
+#cmp th,#cmp td{display:table-cell;padding:7px 12px;text-align:left;vertical-align:top;
+  border-top:1px solid var(--grid)}
+#cmp thead th{border-top:0;vertical-align:bottom;color:var(--ink)}
+#cmp thead th a{font-weight:600}
+#cmp thead th .meta{display:block;margin-top:2px;font-weight:400}
+#cmp tbody th{position:sticky;left:0;background:var(--band);color:var(--ink2);font-weight:600;
+  white-space:nowrap;min-width:104px}
+#cmp td{color:var(--ink);min-width:148px}
+#cmp tbody td{background:transparent}
+#cmp tr:hover,#cmp tr:focus-within{box-shadow:none;transform:none;animation:none;border:0}
+#cmp .unpin{margin:5px 0 0;display:block}
+#cmp tr.differs th{border-left:3px solid var(--warn);padding-left:9px}
+#cmp .dx{color:var(--warn);font-weight:400;margin-left:4px}
+
 @page{margin:14mm}
 @media print{
-  .bar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,.shared .sp{display:none}
+  .bar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,.shared .sp,
+  .pin,#cmp .ch .sp,#cmp .unpin{display:none}
+  #cmp .scroll{overflow-x:visible}
+  #cmp table{table-layout:fixed}
+  #cmp thead th:first-child{width:13%}
+  #cmp td{min-width:0;overflow-wrap:anywhere}
+  #cmp tbody th{position:static}
   #printurl{display:block;color:var(--muted);font-size:8.5pt;word-break:break-all;margin:6px 0 0}
   html[data-view=table] tbody tr:nth-child(odd) td,
   html[data-view=table] tbody tr:nth-child(even) td{background:transparent}
@@ -502,8 +569,8 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--09--12_18:13_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-09-12T18:13:00Z">Last deployed 2026-09-12 18:13 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--09--13_18:17_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-09-13T18:17:00Z">Last deployed 2026-09-13 18:17 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
@@ -516,11 +583,12 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
     <button class="chip" id="theme">Light theme</button>
   </nav>
   <div class="atlas-byte-wrap">
-    <button type="button" id="byte-tip" aria-label="Ask Atlas Byte for a browsing tip">
+    <button type="button" id="byte-tip" aria-label="Ask Archie 'Atlas' Algorithm for a browsing tip">
     <img class="atlas-byte" src="assets/atlas-byte.png" width="512" height="532"
-         alt="Atlas Byte, the Atlas mascot, wearing pixel sunglasses">
+         alt="Archie 'Atlas' Algorithm, the Atlas mascot, wearing pixel sunglasses">
     </button>
-    <button type="button" class="atlas-name" id="byte-name">Atlas Byte</button>
+    <button type="button" class="atlas-name" id="byte-name" aria-label="Archie 'Atlas' Algorithm"
+            ><span class="atlas-name-full">Archie 'Atlas' Algorithm</span><span class="atlas-name-short">Archie</span></button>
     <button type="button" class="byte-quiet" id="byte-quiet" aria-pressed="false">Quiet mode</button>
     <div id="byte-speech" role="status" aria-live="polite" hidden></div>
   </div>
@@ -560,6 +628,8 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
     <button class="chip savechip" id="saved" aria-pressed="false"
             title="Only the projects you have saved on this device"><span id="savedlabel">Saved</span></button>
     <button class="chip clearsave" id="clearsave">Remove all saved</button>
+    <button class="chip cmpchip" id="cmpchip" aria-expanded="false" aria-controls="cmp"
+            title="Put the projects you have pinned side by side"><span id="cmplabel">Compare</span></button>
     <button class="chip takechip" id="take" aria-haspopup="dialog"
             title="Take this view away as a link, a Markdown table, an HTML page or a PDF">Export</button>
     <button class="chip" id="palhint"></button>
@@ -588,6 +658,27 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
     <span class="sp"><button class="chip" id="sharedadd"></button>
       <button class="chip" id="sharedall">Show the whole atlas</button></span>
   </div>
+  <div id="cmp" role="region" aria-label="Side-by-side comparison">
+    <div class="ch"><span id="cmpwhat"></span>
+      <span class="sp"><button class="chip" id="cmpclear">Clear the comparison</button></span></div>
+    <div class="scroll" id="cmptable"></div>
+  </div>
+  <details class="vkey">
+    <summary>What the <span aria-hidden="true" class="vY">✓</span>
+      <span aria-hidden="true" class="vL">?</span> <span aria-hidden="true" class="vN">✗</span>
+      <span aria-hidden="true" class="v-">–</span> <span aria-hidden="true" class="va">·</span>
+      marks mean</summary>
+    <dl>
+      <dt aria-hidden="true" class="vY">✓</dt><dd><b>Stated support.</b> The project says so itself.</dd>
+      <dt aria-hidden="true" class="vL">?</dt><dd><b>Inferred from the language,</b> not stated. Written in
+        something that runs here, with no claim made either way. <b>Confirmed only</b> hides these.</dd>
+      <dt aria-hidden="true" class="vN">✗</dt><dd><b>No evidence of support.</b></dd>
+      <dt aria-hidden="true" class="v-">–</dt><dd><b>Not established.</b> Too little to tell either
+        way.</dd>
+      <dt aria-hidden="true" class="va">·</dt><dd><b>Not applicable.</b> The platform question does not
+        apply to this project.</dd>
+    </dl>
+  </details>
   <div id="out"></div>
 </div></main>
 
@@ -642,11 +733,17 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
 
 <script>
 const PAGE_SIZE = 120;
-const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"index.mascot_commentary":1,"index.export":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1};
+const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"index.mascot_commentary":1,"index.export":1,"index.compare":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1};
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
-               saved: false, list: new Set(), sort: "relevance", shown: PAGE_SIZE,
+               saved: false, list: new Set(), cmp: new Set(), sort: "relevance", shown: PAGE_SIZE,
                view: "cards"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
+
+let BY_NWO = new Map();
+
+const CMP_MAX = 4;
+
+let CMP_OPEN = true;
 
 let SAVED = new Set();
 const SAVE_KEY = "saved";
@@ -673,13 +770,13 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-12T18:13:00Z";
+const BUILT = "2026-09-13T18:17:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
   L: ["?", "inferred from the language"],
   N: ["✗", "no evidence of support"],
-  a: ["–", "not applicable"],
+  a: ["·", "not applicable"],
   "-": ["–", "not established"],
 };
 
@@ -703,12 +800,18 @@ function say(msg) {
   setTimeout(() => { el.textContent = msg; }, 30);
 }
 
-function since(iso) {
+function sinceText(iso) {
   if (!iso) return "—";
   const d = daysAgo(iso);
-  const t = d <= 0 ? "today" : d === 1 ? "yesterday" : d < 30 ? d + "d ago"
+  return d <= 0 ? "today" : d === 1 ? "yesterday" : d < 30 ? d + "d ago"
     : d < 365 ? Math.round(d / 30) + "mo ago"
     : d < 730 ? (d / 365).toFixed(1) + "y ago" : Math.floor(d / 365) + "y ago";
+}
+
+function since(iso) {
+  const t = sinceText(iso);
+  if (!iso) return t;
+  const d = daysAgo(iso);
   return d >= 365
     ? '<span class="old" title="' + iso + ' — no push in over a year">' + t + "</span>"
     : '<span title="' + iso + '">' + t + "</span>";
@@ -754,6 +857,7 @@ fetch("data.json").then(r => {
       r.gain >= Math.max(RISE.min_abs, RISE.min_pct / 100 * (r.stars || 0));
   });
   RISING = ROWS.filter(r => r.rise).length;
+  BY_NWO = new Map(ROWS.map(r => [r.nwo, r]));
   stamp();
   buildChips();
   readHash();
@@ -1084,8 +1188,27 @@ function wire() {
     }
     const sv = ev.target.closest(".save");
     if (sv) return toggleSave(sv);
+    const pn = ev.target.closest(".pin");
+    if (pn) return togglePin(pn);
     const b = ev.target.closest(".copy");
     if (b) copy(b);
+  });
+  document.getElementById("cmpchip").onclick = () => { CMP_OPEN = !CMP_OPEN; render(); };
+  document.getElementById("cmpclear").onclick = () => {
+    const n = state.cmp.size;
+    state.cmp = new Set();
+    writeHash();
+    say(n ? "Comparison cleared." : "Nothing was pinned.");
+    render();
+  };
+  document.getElementById("cmptable").addEventListener("click", ev => {
+    const u = ev.target.closest(".unpin");
+    if (!u) return;
+    const r = BY_NWO.get(u.dataset.nwo);
+    state.cmp.delete(u.dataset.nwo);
+    writeHash();
+    say("Took " + (r ? r.name : u.dataset.nwo) + " out of the comparison. " + state.cmp.size + " pinned.");
+    render();
   });
   stamp();
   deployStamp();
@@ -1103,6 +1226,23 @@ function toggleSave(b) {
   b.setAttribute("aria-label", saveLabel(name, on));
   b.textContent = saveWord(on);
   paintSaved();
+}
+
+function togglePin(b) {
+  const nwo = b.dataset.nwo, name = b.dataset.name;
+  const on = !state.cmp.has(nwo);
+  if (on && state.cmp.size >= CMP_MAX) {
+    say("The comparison already holds " + CMP_MAX + " projects. Take one out to add " + name + ".");
+    return;
+  }
+  if (on) state.cmp.add(nwo); else state.cmp.delete(nwo);
+  if (on) CMP_OPEN = true;
+  writeHash();
+  say(on ? "Comparing " + name + ". " + state.cmp.size + " of " + CMP_MAX + " pinned."
+         : "Took " + name + " out of the comparison. " + state.cmp.size + " pinned.");
+  render();
+  const again = [...document.querySelectorAll("#out .pin")].find(x => x.dataset.nwo === nwo);
+  if (again) again.focus();
 }
 
 function copy(b) {
@@ -1244,22 +1384,39 @@ function initDiscovery() {
     if (on && speech) speech.hidden = true;
     try { localStorage.setItem("atlas-byte-quiet", on ? "1" : "0"); } catch (e) {}
   };
+  const NAME_MAX = 22, SAY_MAX = 53;
+  const clipWords = (text, limit) => {
+    const points = Array.from(text);
+    if (points.length <= limit) return text;
+    const hard = points.slice(0, limit - 1).join("");
+    const word = hard.replace(/\s+\S*$/, "");
+    return (Array.from(word).length >= limit / 2 ? word : hard) + "…";
+  };
   const wordsFor = r => {
     const category = (D.cats[r.cat] || {}).name || "the atlas";
     const targets = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
-    const intro = [
-      r.name + " is listed under " + category + ".",
-      r.name + " comes from " + r.nwo + ".",
-      r.name + " has " + r.lists + (r.lists === 1 ? " source list" : " source lists") + " behind it."
-    ][projectAccent(r.nwo).length % 3];
-    const tagged = targets.length ? " Tagged for " + targets.slice(0, 2).join(" and ") + "." : "";
-    return intro + tagged + " " + r.blurb;
+    const name = clipWords(r.name, NAME_MAX);
+    const owner = r.nwo.split("/")[0];
+    const facts = [
+      name + " is listed under " + category + ".",
+      name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")
+    ];
+    if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
+    let spread = 0;
+    for (let i = 0; i < r.nwo.length; i++) spread = (spread * 31 + r.nwo.charCodeAt(i)) | 0;
+    const fact = facts[Math.abs(spread) % facts.length];
+    const tagged = targets.length ? " Tagged for " + targets[0] + "." : "";
+    return clipWords(fact + (Array.from(fact + tagged).length <= SAY_MAX ? tagged : ""), SAY_MAX);
   };
   const speak = r => {
     if (muted || !speech || !r) return;
     last = r;
     speech.textContent = wordsFor(r);
     speech.hidden = false;
+  };
+  const hide = () => {
+    clearTimeout(timer);
+    if (speech) speech.hidden = true;
   };
   const schedule = el => {
     const nwo = el && el.dataset.project;
@@ -1271,7 +1428,17 @@ function initDiscovery() {
   if (out) {
     out.addEventListener("mouseover", ev => schedule(ev.target.closest("tr[data-project]")));
     out.addEventListener("focusin", ev => schedule(ev.target.closest("tr[data-project]")));
+    const leaving = ev => {
+      const row = ev.target.closest("tr[data-project]");
+      if (!row) return;
+      const to = ev.relatedTarget;
+      if (to && row.contains(to)) return;
+      hide();
+    };
+    out.addEventListener("mouseout", leaving);
+    out.addEventListener("focusout", leaving);
   }
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape") hide(); });
   if (quiet) quiet.onclick = () => setQuiet(!muted);
   setQuiet(muted);
   if (tip) tip.onclick = () => {
@@ -1329,7 +1496,8 @@ function writeHash() {
   if (state.view !== "cards") p.set("view", state.view);
   const s = p.toString();
   const list = state.list.size ? "list=" + [...state.list].join(",") : "";
-  const all = [s, list].filter(Boolean).join("&");
+  const cmp = state.cmp.size ? "cmp=" + [...state.cmp].join(",") : "";
+  const all = [s, list, cmp].filter(Boolean).join("&");
   history.replaceState(null, "", all ? "#" + all : location.pathname);
 }
 
@@ -1347,6 +1515,10 @@ function readHash() {
   state.saved = p.get("saved") === "1" && SAVED.size > 0;
   state.list = FLAGS["index.export"]
     ? new Set((p.get("list") || "").split(",").map(s => s.trim()).filter(Boolean).slice(0, 200))
+    : new Set();
+  state.cmp = FLAGS["index.compare"]
+    ? new Set((p.get("cmp") || "").split(",").map(s => s.trim())
+        .filter(k => k && BY_NWO.has(k)).slice(0, CMP_MAX))
     : new Set();
   const want = p.get("sort");
   state.sort = SORT_KEYS.includes(want) && (want !== "rising" || RISE) ? want : "relevance";
@@ -1622,6 +1794,74 @@ function paintSaved() {
   document.getElementById("clearsave").classList.toggle("on", state.saved && n > 0);
 }
 
+
+function paintCompare() {
+  const chip = document.getElementById("cmpchip"), panel = document.getElementById("cmp");
+  if (!chip || !panel) return;
+  const picks = [...state.cmp].map(k => BY_NWO.get(k)).filter(Boolean);
+  const n = picks.length;
+  chip.classList.toggle("on", n > 0);
+  document.getElementById("cmplabel").textContent = n ? "Compare · " + n : "Compare";
+  const open = n > 0 && CMP_OPEN;
+  chip.setAttribute("aria-expanded", open ? "true" : "false");
+  panel.classList.toggle("on", open);
+  if (!open) return;
+  const built = cmpTable(picks);
+  document.getElementById("cmptable").innerHTML = built.html;
+  document.getElementById("cmpwhat").innerHTML = n === 1
+    ? "Pin up to " + (CMP_MAX - 1) + " more to compare <b>" + esc(picks[0].name) + "</b> against them."
+    : "<b>" + n + " projects</b> · " + (built.differs
+        ? built.differs + " of " + built.total + (built.differs === 1 ? " row differs" : " rows differ")
+        : "every row agrees");
+}
+
+function cmpFields(picks) {
+  const plain = s => ({html: esc(s), key: s});
+  const f = [
+    ["Stars", r => plain(r.stars ? r.stars.toLocaleString() : "—")],
+    ["Named by", r => plain(r.lists + (r.lists === 1 ? " list" : " lists"))],
+    ["Topic", r => plain(D.cats[r.cat].name)],
+    ["Plugs into", r => plain(r.targets.length ? r.targets.map(t => D.targets[t].name).join(", ") : "—")],
+  ];
+  D.os.forEach((o, k) => f.push([o, r => {
+    const v = VERDICT[r.os[k]] || ["–", "not established"];
+    return {html: '<span class="v' + esc(r.os[k]) + '" aria-hidden="true">' + v[0] + "</span> " + esc(v[1]),
+            key: v[1]};
+  }]));
+  f.push(["Language", r => plain(r.lang || "—")]);
+  f.push(["Licence", r => plain(r.license || "—")]);
+  f.push(["Last push", r => ({html: since(r.pushed), key: sinceText(r.pushed)})]);
+  if (FLAGS["index.install_commands"] && picks.some(r => r.install))
+    f.push(["Install", r => r.install
+      ? {html: "<code>" + esc(r.install) + "</code>", key: r.install}
+      : plain("—")]);
+  return f;
+}
+
+function cmpTable(picks) {
+  const head = picks.map(r =>
+    '<th scope="col"><a href="' + detailURL(r.nwo) + '">' + esc(r.name) + "</a>" +
+    '<span class="meta">' + esc(r.nwo) + "</span>" +
+    '<button class="chip unpin" data-nwo="' + esc(r.nwo) + '" aria-label="Take ' + esc(r.name) +
+    ' out of the comparison">Unpin</button></th>').join("");
+  let differs = 0;
+  const fields = cmpFields(picks);
+  const body = fields.map(([label, get]) => {
+    const cells = picks.map(get);
+    const d = picks.length > 1 && new Set(cells.map(c => c.key)).size > 1;
+    if (d) differs++;
+    return "<tr" + (d ? ' class="differs"' : "") + '><th scope="row">' + esc(label) +
+      (d ? '<span class="dx" aria-hidden="true">≠</span><span class="sr">, these differ</span>' : "") +
+      "</th>" + cells.map(c => "<td>" + c.html + "</td>").join("") + "</tr>";
+  }).join("");
+  return {
+    html: '<table><thead><tr><th scope="col"><span class="sr">What is being compared</span></th>' + head +
+          "</tr></thead><tbody>" + body + "</tbody></table>",
+    differs: differs,
+    total: fields.length,
+  };
+}
+
 function saveBtn(r) {
   const on = SAVED.has(r.nwo);
   return '<button class="save" data-nwo="' + esc(r.nwo) + '" data-name="' + esc(r.name) +
@@ -1631,6 +1871,22 @@ function saveBtn(r) {
 
 function saveWord(on) { return on ? "Saved" : "Save"; }
 function saveLabel(name, on) { return saveWord(on) + " " + name; }
+
+function pinBtn(r) {
+  if (!FLAGS["index.compare"]) return "";
+  const on = state.cmp.has(r.nwo);
+  const full = !on && state.cmp.size >= CMP_MAX;
+  return '<button class="pin" data-nwo="' + esc(r.nwo) + '" data-name="' + esc(r.name) + '"' +
+    (full ? " disabled" : "") + ' aria-pressed="' + (on ? "true" : "false") +
+    '" aria-label="' + esc(pinLabel(r.name, on, full)) + '">' + pinWord(on) + "</button>";
+}
+
+function pinWord(on) { return on ? "Comparing" : "Compare"; }
+function pinLabel(name, on, full) {
+  if (on) return "Comparing " + name + ", press to take it out of the comparison";
+  return full ? "Compare " + name + ", unavailable: the comparison already holds " + CMP_MAX + " projects"
+              : "Compare " + name;
+}
 
 let HITS = [];
 
@@ -1693,7 +1949,7 @@ function listMarkdown() {
     HITS.length.toLocaleString() + " of " + ROWS.length.toLocaleString() +
       " projects in the [Awesome Agentic Atlas](" + shareURL() + "). Stars, language and licence come from " +
       "the GitHub API on " + SNAPSHOT + " and drift daily. Platform verdicts read ✓ stated, ? inferred from " +
-      "the language, ✗ no evidence, – not applicable. Exported " + TODAY + ".", "",
+      "the language, ✗ no evidence, – not established, · not applicable. Exported " + TODAY + ".", "",
     row(head), row(rule), body.join("\n"), ""].join("\n");
 }
 
@@ -1728,7 +1984,8 @@ function listHTML() {
     "<p>" + HITS.length.toLocaleString() + " of " + ROWS.length.toLocaleString() +
     ' projects in the <a href="' + esc(shareURL()) + '">Awesome Agentic Atlas</a>. Stars, language and ' +
     "licence come from the GitHub API on " + esc(SNAPSHOT) + " and drift daily.</p>\n" +
-    "<p>Platform verdicts read ✓ stated, ? inferred from the language, ✗ no evidence, – not applicable. " +
+    "<p>Platform verdicts read ✓ stated, ? inferred from the language, ✗ no evidence, " +
+    "– not established, · not applicable. " +
     "Exported " + esc(TODAY) + ".</p>\n<table><thead><tr>" + head + "</tr></thead><tbody>" + rows +
     "</tbody></table>\n</body></html>\n";
 }
@@ -1885,6 +2142,7 @@ function render() {
   document.getElementById("rise").setAttribute("aria-pressed", state.rising ? "true" : "false");
   paintSaved();
   paintShared();
+  paintCompare();
   applyView();
 
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
@@ -1959,7 +2217,8 @@ function render() {
     const os = D.os.map((o, k) => {
       const v = VERDICT[r.os[k]] || ["", "not established"];
       return '<span class="v' + r.os[k] + '" title="' + esc(o + ": " + v[1]) + '">' +
-        '<span class="sr">' + esc(o) + ' </span>' + osIcon(k) + " " + v[0] + "</span>";
+        '<span class="sr">' + esc(o + ": " + v[1]) + "</span>" + osIcon(k) +
+        '<span aria-hidden="true"> ' + v[0] + "</span></span>";
     }).join(" ");
     const tags = '<span class="tag cat">' + esc(D.cats[r.cat].name) + "</span>" +
       r.targets.map(t => '<span class="tag">' + esc(D.targets[t].name) + "</span>").join("");
@@ -1987,6 +2246,7 @@ function render() {
       '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on + sensechip +
         '<a class="nwo" href="' + url + '">' + esc(r.nwo) + "</a>" +
         saveBtn(r) +
+        pinBtn(r) +
         '<div class="meta os">' + os + "</div></td>" +
       '<td class="n st-c"><span class="st' + (r.stars ? "" : " none") + '">' +
         (r.stars ? r.stars.toLocaleString() : "—") + "</span>" +

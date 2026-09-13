@@ -316,7 +316,7 @@ def _over(dst: list[float], rgb: tuple[int, int, int], a: float) -> None:
 
 
 def icon(size: int, maskable: bool, opaque: bool) -> bytes:
-    """The mark: Atlas Byte's shaded globe face inside a white orbit, on the black plate.
+    """The mark: Archie's shaded globe face inside a white orbit, on the black plate.
 
     The globe keeps the original Atlas mark; the blocky shades make the installed icon the same character
     as the masthead mascot and the browser-tab SVG. Everything is drawn from primitives rather than by
@@ -378,7 +378,7 @@ def icon(size: int, maskable: bool, opaque: bool) -> bytes:
                 )
                 _over(acc, SURFACE, min(grid, globe))
 
-                # Atlas Byte's shades. Two rectangular lens crowns step inward along their bottom edge;
+                # Archie's shades. Two rectangular lens crowns step inward along their bottom edge;
                 # the small centre bridge and checker glints make the joke readable at 16px without
                 # turning the globe into a detailed illustration. Scaled with the globe so Android's
                 # maskable version remains the same face inside its safe circle.

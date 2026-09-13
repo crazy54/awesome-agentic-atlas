@@ -555,7 +555,7 @@ a:hover{text-decoration:underline}
 .skip{position:absolute;left:-999px;top:0;z-index:40;background:var(--bar);color:var(--onbar);
   padding:10px 16px;border-radius:0 0 8px 0;font-weight:600}
 .skip:focus{left:0}
-/* Keep Atlas Byte and the primary navigation in reach while readers compare long card and table lists. */
+/* Keep Archie and the primary navigation in reach while readers compare long card and table lists. */
 header{position:sticky;top:0;z-index:30;background:var(--plane);border-bottom:1px solid var(--grid);
   padding:22px 20px 16px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
 .wrap{max-width:1500px;margin:0 auto}
@@ -592,17 +592,80 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
   animation:atlas-byte-float 4.2s ease-in-out infinite;transform-origin:50% 72%}
 .atlas-byte-wrap:hover{transform:rotate(2deg) scale(1.035)}
 #byte-tip{display:block;padding:0;border:0;background:transparent;border-radius:50%;color:inherit}
-.atlas-name{display:block;margin:-11px auto 0;position:relative;z-index:2;padding:2px 8px;
-  border:1px solid var(--grid);border-radius:999px;background:var(--plane);color:var(--ink);
-  font-size:11px;font-weight:700;letter-spacing:.04em;line-height:1.45}
+/* Two lines by design. "Archie 'Atlas' Algorithm" is 24 characters where "Atlas Byte" was 10, and the
+   mascot's column is 128px, so a single-line pill would have overflowed the column and run into the nav
+   beside it. Wrapping inside the column keeps the name in the mascot's own width; below 641px the column is
+   82px and no two-line arrangement of the full name survives a font change, so the pill shows one word there
+   instead -- see the narrow-width rule at the bottom of this stylesheet. The radius drops from a 999px
+   stadium, which reads as a lozenge once there are two lines, to a rounded rectangle that stays a name tag. */
+.atlas-name{display:block;margin:-11px auto 0;position:relative;z-index:2;padding:3px 9px;
+  border:1px solid var(--grid);border-radius:12px;background:var(--plane);color:var(--ink);
+  font-size:10px;font-weight:700;letter-spacing:.03em;line-height:1.35;text-align:center;
+  text-wrap:balance}
+/* Full name here, one word at the narrow breakpoint; the swap is at the bottom of this stylesheet. Both are in
+   the markup rather than one being written by script, so the pill is right in the first painted frame and
+   right with JavaScript off. There is 25% of slack for the two-line arrangement at this width -- 108px of
+   content against 81px for the worst face measured -- so this one is not font-dependent. */
+.atlas-name-short{display:none}
 .atlas-name:hover{border-color:var(--bar);color:var(--ink)}
 .byte-quiet{display:block;margin:5px auto 0;padding:0;border:0;background:transparent;color:var(--muted);
   font-size:10px;text-decoration:underline;text-underline-offset:2px}
 .byte-quiet:hover{color:var(--ink)}
-#byte-speech{position:absolute;right:calc(100% + 12px);top:8px;width:min(270px,calc(100vw - 174px));
+/* THE MASTHEAD HAS EXACTLY ONE HOLE THIS FITS IN, and both of the obvious anchors miss it. The original
+   `right:calc(100% + 12px); top:8px` put the bubble immediately left of the mascot at the nav's own height,
+   and the only thing there is `.top nav` -- so it covered the navigation at every text length, not merely
+   when the text was long. Hanging it under the mascot instead (`top:calc(100% + 10px)`) clears the nav and
+   was measured landing on the filter bar's Ctrl/K hint at 1440 and over the search field itself at 375,
+   which is the same defect with a different victim.
+   What is actually free is the band left of the mascot and BELOW the nav: the nav is four short lines
+   (338x86 at 1440, counted as line boxes rather than by eye) and the mascot column is taller than they are,
+   so bottom-aligning to the wrap puts the bubble in that gap. Measured clear of both `.top nav` and `.bar`
+   from 1500px down to 641, and the gap is 38px there -- about one and a half nav lines, not a generous margin.
+   THAT GAP IS SPENDABLE, AND A READER CAN SPEND IT. Forcing the nav's type up the way Chrome's minimum font
+   size setting does: 26px of clearance at 16px, 7px at 20px, and at 24px -- that setting's maximum -- the
+   rectangles overlap by 13px. What does NOT happen then is the thing this ticket is about. The header's own
+   `z-index:30` beats this bubble's 4, so the nav paints over it: `elementFromPoint` at the centre of all seven
+   nav links returns the link, at every size from 16px to 32px. The reader loses the tail of a fact, which is
+   an optional flourish, and keeps the navigation, which is not. Asserted in cards-check at 24px.
+   `z-index:4` clears `#atlas-orbit` (3) and `.atlas-name` (2) inside the wrap's isolated stacking context;
+   the header's own `z-index:30` already carries it over the sticky filter bar.
+   The width was `min(270px,calc(100vw - 200px))` and the second arm was inert: the bubble is hidden at 640
+   and below, and at 641 that arm is 441px, so 270 always won. A clamp that cannot clamp is worse than no
+   clamp, because it reads as protection that is not there.
+   220 AND NOT 270, WHICH IS A SEPARATE CUT FROM THE LINE COUNT AND WAS ASKED FOR SEPARATELY. Bottom-aligning
+   and capping at two lines already stopped the box covering anything -- what a reader saw before was 270x219
+   at its worst, twelve lines of somebody else's GitHub "about" field, and it sat on a nav link, the facet
+   line and the filter bar (sampled down its left edge with `elementFromPoint`, against the same points with
+   the bubble hidden). Two lines is 53px, and 53px cannot leave the masthead, which is opaque and paints at
+   `z-index:30`. So the remaining width was not covering results. It was still a 270px rectangle over the
+   navigation, and narrower is better as long as narrower is honest -- see `SAY_MAX` below, which is what
+   pays for this. 220x53 is 11,660px2 against the 59,130 a reader gets today: 80% less box. */
+/* TWO LINES GEOMETRICALLY, BECAUSE `SAY_MAX` BUYS TWO LINES ONLY IN THE FONT IT WAS MEASURED IN. The cap was
+   derived by rendering every string into this box on a Windows stack that resolves to Segoe UI. CI renders it
+   on ubuntu-latest, whose Chromium resolves the same stack to a wider face, and there the worst string --
+   "OpenCode comes from anomalyco. Tagged for opencode." -- takes three lines and the box grows to 70px. A
+   character cap cannot fix that in general: wrapping is set by where the spaces fall, not by how many
+   characters there are, so a 50-character string can need three lines where an artificial 53-character one
+   needs two. The clamp makes the bound geometric instead of typographic, so it holds in any face: measured
+   h=53 with the box two lines tall in Segoe UI, forced monospace and forced Verdana alike, where the
+   unclamped rule gives 70 in the latter two. On the shipped stack nothing is clipped, so a reader sees no
+   change at all; on a wider face the tail of the longest sentence is cut rather than the masthead growing,
+   which is the trade this ticket asked for.
+   Rejected: `max-height:calc(2 * 1.38em)`. It bounds the CONTENT box to two lines and the element to one --
+   measured h=33, one line -- because the em length knows nothing about the 9px padding and 1px border.
+   `#byte-speech[hidden]` IS NOT DECORATION, and leaving it out is how this rule ships a permanently visible
+   bubble. `hidden` works through the UA stylesheet's `[hidden]{display:none}`, which any author `display`
+   declaration outranks -- and this rule now has one. Measured: with the clamp and without this line, a bubble
+   whose `hidden` attribute is set computes `display:flow-root` and takes a 20px box. Every assertion in
+   cards-check that checks Archie has stopped speaking reads the ATTRIBUTE, which is still true, so all seven
+   of them stay green while the bubble sits on the masthead forever. There is now one that reads the box. */
+#byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:220px;
   padding:9px 11px;border:1px solid var(--grid);border-left:3px solid var(--bar);border-radius:9px;
-  background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;box-shadow:0 12px 28px rgba(0,0,0,.2)}
-#byte-speech::after{content:"";position:absolute;right:-7px;top:19px;width:11px;height:11px;
+  background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;z-index:4;
+  box-shadow:0 12px 28px rgba(0,0,0,.2);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+#byte-speech[hidden]{display:none}
+#byte-speech::after{content:"";position:absolute;right:-6px;bottom:12px;width:11px;height:11px;
   background:var(--band);border-top:1px solid var(--grid);border-right:1px solid var(--grid);transform:rotate(45deg)}
 #atlas-orbit{position:absolute;inset:-18px -24px;pointer-events:none;z-index:3}
 .orbit-star{position:absolute;left:50%;top:50%;width:5px;height:5px;background:var(--bar);box-shadow:0 0 10px var(--bar);
@@ -1205,6 +1268,45 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
      looks the same. The rest of the 82px comes out of the card, below the cards block. */
   .atlas-byte-wrap{width:82px}
   .atlas-byte{width:64px;margin-left:auto;margin-right:auto}
+  /* ONE WORD HERE, BECAUSE TWO DID NOT FIT IN ANY FONT BUT THIS MACHINE'S. The rule above narrows the mascot's
+     column from 128px to 82px and said nothing about the name, so the pill kept its 10px text in a column 46px
+     narrower and wrapped to three lines at 640, 600, 500, 414, 375, 360, 320 and 280, against two from 641 up.
+     The masthead grew for it at exactly the widths with the least room to spare, and it grew silently because
+     the harness compared the pill's text and never its line count.
+     9px was the first fix and it was not a fix, it was this machine's font passing a test. `header button`
+     gives every button in the masthead the 44px WCAG 2.5.5 floor, so the pill's BOX IS 82x44 whatever the text
+     does -- two lines of 9px type is 32px inside a 44px box, and one word is also 44. Quoting 82x44 as the
+     evidence for two lines was therefore quoting a number that cannot see a line, which is the same mistake as
+     comparing the text: CI reports 82x44 and three lines together. What a third line does is overflow the tap
+     target rather than grow it -- 3 x 12.15 + 8 = 44.45 against a 42px content box -- so the text crosses its
+     own rounded border. The real margin was 2.41px of 62px, 4%, on "Archie 'Atlas'" in Segoe UI; forced
+     monospace, Verdana and Tahoma each take three lines here.
+     One word cannot wrap to three lines in any face, so the fix is not font-dependent instead of being retuned
+     against one runner. Widest measured "Archie" is 54px (Verdana) in a 62px box, against 82px needed for
+     "Archie 'Atlas'" in monospace. The full name stays on `aria-label`, and stays visible from 641 up.
+     Rejected: 8px type, which costs legibility and still leaves a two-line arrangement one face away from
+     breaking; a 112px wrap and a 108px overhanging pill, both of which un-narrow the column this breakpoint
+     exists to narrow; raising the 44px floor to fit three lines, which spends masthead height on a phone to
+     show a middle name -- JFH-289 fought for 18px of that height.
+     A NOTE ON HOW THE FACES ABOVE WERE PICKED, because it is a trap: you cannot probe a font you do not have.
+     Forcing "DejaVu Sans", "Liberation Sans" and a deliberately misspelled family name all measured the same
+     105.38px here, because all three fell back to the same default, and `document.fonts.check()` returns true
+     for the misspelled one too. Identical metrics across unrelated families is the tell. Only monospace,
+     Verdana and Tahoma are real instruments on a Windows machine, and monospace is the upper bound of the
+     three, so it is the one a fix has to survive.
+     JFH-289's art shrink does not interact with this: the pill is sized by the wrap, which that ticket
+     held at 82px precisely so nothing around it reflowed, so the column measured here did not move. */
+  .atlas-name{font-size:9px}
+  .atlas-name-full{display:none}
+  .atlas-name-short{display:inline}
+  /* No bubble at all at this width or below, because there is nowhere for it to go. `.headside` is full-width
+     here and puts the nav immediately left of the mascot column, so the band the bubble uses on a desktop is the
+     navigation, and anything hanging underneath is the search field -- both measured. This is also the width
+     at which a reader most likely has no pointer to hover with, and the commentary is a hover affordance:
+     the fact is already in the card being touched. The name, the tip button and Quiet mode all stay.
+     The column is the wrap's 82px and not the art's 64: JFH-289 shrank the art inside a wrap it deliberately
+     held, so the width the nav is measured against did not move when the picture did. */
+  #byte-speech{display:none}
 
   #q{flex:1 1 100%;min-width:0}
   .line>label[for=q]{display:none}
@@ -1654,11 +1756,15 @@ __OSSPRITE__
     <button class="chip" id="theme">Light theme</button>
   </nav>
   <div class="atlas-byte-wrap">
-    <button type="button" id="byte-tip" aria-label="Ask Atlas Byte for a browsing tip">
+    <button type="button" id="byte-tip" aria-label="Ask Archie 'Atlas' Algorithm for a browsing tip">
     <img class="atlas-byte" src="assets/atlas-byte.png" width="512" height="532"
-         alt="Atlas Byte, the Atlas mascot, wearing pixel sunglasses">
+         alt="Archie 'Atlas' Algorithm, the Atlas mascot, wearing pixel sunglasses">
     </button>
-    <button type="button" class="atlas-name" id="byte-name">Atlas Byte</button>
+    <!-- The accessible name is on `aria-label` so it stays the full name at every width, including the ones
+         where only "Archie" is painted. WCAG 2.5.3 wants the visible label contained in the accessible name,
+         and "Archie" is. -->
+    <button type="button" class="atlas-name" id="byte-name" aria-label="Archie 'Atlas' Algorithm"
+            ><span class="atlas-name-full">Archie 'Atlas' Algorithm</span><span class="atlas-name-short">Archie</span></button>
     <button type="button" class="byte-quiet" id="byte-quiet" aria-pressed="false">Quiet mode</button>
     <div id="byte-speech" role="status" aria-live="polite" hidden></div>
   </div>
@@ -3082,8 +3188,8 @@ function initDiscovery() {
     say(next[0].toUpperCase() + next.slice(1) + " table rows.");
   };
 
-  // Commentary is an optional layer, not a prerequisite for the mascot. With its release flag off, Atlas
-  // Byte remains a named bit of the masthead and no hover, speech, stored preference, or Easter egg code
+  // Commentary is an optional layer, not a prerequisite for the mascot. With its release flag off, Archie
+  // remains a named bit of the masthead and no hover, speech, stored preference, or Easter egg code
   // runs. That keeps a one-key rollback genuinely quiet.
   const enabled = !!FLAGS["index.mascot_commentary"];
   const tip = document.getElementById("byte-tip"), name = document.getElementById("byte-name"),
@@ -3105,22 +3211,140 @@ function initDiscovery() {
     if (on && speech) speech.hidden = true;
     try { localStorage.setItem("atlas-byte-quiet", on ? "1" : "0"); } catch (e) {}
   };
+  // TWO LINES, MEASURED -- NOT A PARAGRAPH. `r.blurb` used to be appended here, and it is the upstream
+  // repository description passed straight through, so the height of the bubble was set by whatever an
+  // unrelated project wrote in its GitHub "about" field.
+  //
+  // A character cap alone does not buy a line count, which is the thing that actually covered the masthead:
+  // the box is 220px at 12px/1.38, so it fits about 34 characters a line, but a project name is one
+  // unbreakable run of up to 67 characters and a category like "Orchestrators & Multi-Agent" is another 27.
+  // Every one of the 3,837 strings these templates can produce for the 1,294 committed rows was rendered
+  // into this box and its line count read back; a 140-character cap reached four lines and even 72 reached
+  // three.
+  //
+  // THERE IS ONE CAP AND NOT TWO, AND THE PAIR THIS REPLACES WAS A TRAP RATHER THAN A BELT AND BRACES. It
+  // was `TAG_MAX = 62, BUBBLE_MAX = 74`: add the tag only if the sentence plus tag fits 62, then clip the
+  // result to 74. Read as written, 74 is the guarantee and 62 is a nicety. It is the other way round. 74 was
+  // only reachable *because* 62 suppressed every string between 63 and 74 that had a tag on it, so the
+  // longest thing the page could actually say was well under its own stated cap, and the number a reader of
+  // this code would check the layout against was not the number holding it up.
+  //
+  // 74 never bound anything, and it missed by exactly one character rather than by a comfortable margin,
+  // which is the part worth writing down: the worst tagged sentence the old pair could construct was a
+  // 26-character clipped name, plus the 17 characters of " is listed under ", plus the longest of the 14
+  // category names -- "Sandbox, Security & Governance", 30 -- plus a full stop. 26+17+30+1 = 74, equal to the
+  // cap and therefore passing it. So the guard was live and merely never fired, and renaming one category to
+  // 31 characters would have started it clipping, silently, with no test anywhere measuring the string it
+  // clipped. Do not read the old pair as a cap that was redundant by design. Raising TAG_MAX to meet
+  // BUBBLE_MAX -- which looks like a pure win, more tags kept, same stated bound -- takes the bubble to
+  // three lines immediately. Measured: at 220px, `24,65,65` is three lines where `24,53,65` is two.
+  //
+  // So `SAY_MAX` is both tests at once: the tag goes on only if the whole sentence still fits it, and the
+  // sentence is clipped to it. The longest string this page can produce is then exactly SAY_MAX code points,
+  // which is a bound that can be checked by reading one number. At 220px, 53 is the largest SAY_MAX that
+  // held two lines for all 3,837, on two independent instruments that agreed on every one of them (one
+  // client rect per line box from a Range, and box height over lineHeight).
+  //
+  // WHAT THE NARROWER BOX COSTS, because it is not free and the cost is in the copy rather than the layout.
+  // At 74 the tag survived on 41.2% of the rows that have one; at 53 it survives on 15.7%, and 10% of
+  // sentences now end in an ellipsis rather than a full stop where none did before. That is the trade the
+  // width buys and it is a real regression in what Archie manages to say -- 240px/57 would keep 27.5%, and
+  // 200px/49 would drop to 5.6% and effectively delete the tag. A reader still always gets a complete
+  // subject and verb: it is the category or the owner that gets cut, never the project's own name.
+  //
+  // NAME_MAX IS NO LONGER THE BINDING CONSTRAINT, which is the other thing collapsing the pair changed. It
+  // used to be the number doing the work, because with a total cap that could not really bound the string a
+  // single long name filled both lines on its own. Now SAY_MAX bounds the sentence whatever the name did, so
+  // NAME_MAX only decides *which end* gets sacrificed: 53 was the answer at 220px for NAME_MAX 20, 22, 24,
+  // 26 and 28 alike. Lowering it clips more names and saves more sentence tails, and 22 is the knee -- it
+  // truncates 18.5% of names (median length is 12) against 10.0% of sentences losing their full stop, where
+  // 24 costs 148 more broken sentences to spare 52 names.
+  //
+  // The cap is enforced here and not with `line-clamp` because clamping would hide the tail of a fact while
+  // reporting a bubble that fits, so the text a reader cannot see would still be the text the page chose to
+  // say. Clipping keeps what is shown and what is said the same thing.
+  //
+  // IT CUTS MID-WORD MOST OF THE TIME, and an earlier version of this comment claimed otherwise. The word
+  // boundary is a preference, not a guarantee: the strip only fires when the cut lands after some whitespace,
+  // and the names long enough to need cutting are overwhelmingly slugs -- 119 of the 140 names over 26
+  // characters have no whitespace in their first 25, so 85% of real truncations are mid-word
+  // (`modelcontextprotocol/serv…`, `anthropics/claude-cookboo…`). That is the right behaviour, because the
+  // alternative for a slug is to drop the whole thing, but it is not a word boundary and should not be sold
+  // as one.
+  //
+  // Two things the naive version got wrong, both about what a name may contain, and the two lines that fix
+  // them are independent -- do not read either as backup for the other.
+  //
+  // It measured and sliced UTF-16 code units. `"Agents" + 12 robot emoji + "End"` is 21 characters and
+  // measures 33, so it was clipped when it did not need clipping at all, and the cut landed inside a surrogate
+  // pair: `"Agents🤖🤖🤖🤖🤖🤖🤖🤖🤖\ud83e…"`, ending in mojibake rather than a character. Counting and slicing
+  // code points fixes both halves of that, and it is the ONLY thing that fixes the split pair.
+  //
+  // Whitespace saves such a string rather than endangering it, which is the opposite of the intuition: the
+  // strip is `/\s+\S*$/`, so with no whitespace in the first 25 characters it cannot fire and the raw cut
+  // ships. That is why nothing in today's 1,294 rows reaches the bug -- the single name with an astral
+  // character has spaces -- and why a weekly rebuild that returns one space-free emoji name would.
+  //
+  // Separately, stripping the partial word could strip almost everything: a name beginning with a space and
+  // one long token clipped to a bare `"…"`, saying nothing at all. The half-budget fallback keeps the hard cut
+  // when the word-boundary version would throw away more than half the budget. That fallback is what fixes the
+  // bare ellipsis and it does NOT fix the surrogate; deleting it as redundant would bring the empty bubble
+  // back on its own.
+  const NAME_MAX = 22, SAY_MAX = 53;
+  const clipWords = (text, limit) => {
+    const points = Array.from(text);
+    if (points.length <= limit) return text;
+    const hard = points.slice(0, limit - 1).join("");
+    const word = hard.replace(/\s+\S*$/, "");
+    return (Array.from(word).length >= limit / 2 ? word : hard) + "…";
+  };
   const wordsFor = r => {
     const category = (D.cats[r.cat] || {}).name || "the atlas";
     const targets = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
-    const intro = [
-      r.name + " is listed under " + category + ".",
-      r.name + " comes from " + r.nwo + ".",
-      r.name + " has " + r.lists + (r.lists === 1 ? " source list" : " source lists") + " behind it."
-    ][projectAccent(r.nwo).length % 3];
-    const tagged = targets.length ? " Tagged for " + targets.slice(0, 2).join(" and ") + "." : "";
-    return intro + tagged + " " + r.blurb;
+    const name = clipWords(r.name, NAME_MAX);
+    const owner = r.nwo.split("/")[0];
+    // `r.name` is the full `owner/name` for 267 of the committed rows, which made the old "comes from"
+    // sentence name the same string twice. The owner alone is the fact that sentence was reaching for, and
+    // it is dropped rather than repeated when the project is named after whoever publishes it.
+    const facts = [
+      name + " is listed under " + category + ".",
+      name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")
+    ];
+    if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
+    // WHICH FACT A PROJECT SAYS USED TO DEPEND ON THE LENGTH OF A COLOUR NAME. It was
+    // `projectAccent(r.nwo).length % facts.length` -- the accent palette's names are 3, 4, 4, 5 and 6
+    // characters, so renaming a swatch would have silently re-assigned the sentence for every project in that
+    // accent class, and nothing anywhere would have noticed. Two unrelated things do not belong on one hook.
+    // This hash is only a spreader: it wants to be stable for a given project and unrelated to everything
+    // else, which a 31-multiplier over the `nwo` is.
+    let spread = 0;
+    for (let i = 0; i < r.nwo.length; i++) spread = (spread * 31 + r.nwo.charCodeAt(i)) | 0;
+    const fact = facts[Math.abs(spread) % facts.length];
+    const tagged = targets.length ? " Tagged for " + targets[0] + "." : "";
+    // Code points here for the same reason `clipWords` counts them, and it is a different symptom of the
+    // same mistake rather than a second guard on the same one. `clipWords` counting units split a surrogate
+    // pair; this test counting units mismeasures a name that contains one, and the failure is silent in the
+    // other direction -- the tag is dropped from a sentence that would have fitted. `"Agents"` plus twelve
+    // robot emoji plus `"End"` is 21 characters and measures 33, so it loses its tag with 12 characters of
+    // room to spare. Nothing in today's rows reaches it; a rebuild that returns one emoji name would, and
+    // the narrower the box gets the more rows sit close enough to the cap for the 2x overcount to decide.
+    // SAY_MAX twice on purpose -- see the note above on why this used to be two numbers and must not be
+    // again. The tag goes on only if the finished sentence still fits the one bound, so nothing below ever
+    // clips a tag it has just added, and the longest string is SAY_MAX rather than something under it.
+    return clipWords(fact + (Array.from(fact + tagged).length <= SAY_MAX ? tagged : ""), SAY_MAX);
   };
   const speak = r => {
     if (muted || !speech || !r) return;
     last = r;
     speech.textContent = wordsFor(r);
     speech.hidden = false;
+  };
+  // Leaving takes the bubble with it, and cancels a fact that has not been spoken yet. Both halves matter:
+  // without the `clearTimeout` a reader who brushes across a row on the way to the filter bar still gets a
+  // bubble 320ms later, about a row they are no longer anywhere near.
+  const hide = () => {
+    clearTimeout(timer);
+    if (speech) speech.hidden = true;
   };
   const schedule = el => {
     const nwo = el && el.dataset.project;
@@ -3132,7 +3356,25 @@ function initDiscovery() {
   if (out) {
     out.addEventListener("mouseover", ev => schedule(ev.target.closest("tr[data-project]")));
     out.addEventListener("focusin", ev => schedule(ev.target.closest("tr[data-project]")));
+    // `mouseout` and `focusout` bubble from every cell, so they fire while the pointer is still inside the
+    // same row -- moving from the title to the tags is a leave-then-enter of two `td`s. Hiding on those
+    // would flicker the bubble across a row the reader never left, so the row the pointer moved *to* is
+    // compared against the row it left and only a genuine exit hides. Crossing straight into another row
+    // still hides, and the `mouseover` that follows re-arms the timer, so a fact is replaced rather than
+    // left standing.
+    const leaving = ev => {
+      const row = ev.target.closest("tr[data-project]");
+      if (!row) return;
+      const to = ev.relatedTarget;
+      if (to && row.contains(to)) return;
+      hide();
+    };
+    out.addEventListener("mouseout", leaving);
+    out.addEventListener("focusout", leaving);
   }
+  // A keyboard reader who has tabbed past the row still has the bubble on screen, and reaching for the
+  // mouse to dismiss it is the one thing they are not doing.
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape") hide(); });
   if (quiet) quiet.onclick = () => setQuiet(!muted);
   setQuiet(muted);
   if (tip) tip.onclick = () => {

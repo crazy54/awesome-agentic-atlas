@@ -939,6 +939,30 @@ ok("...and the unprefixed spelling for engines that have moved on",
 // selector in this block to carry the prefix, and a second one that tried to say it for this rule alone
 // matched its own scoped selector and reported it as unscoped.
 
+// ---- and Archie's bubble, clamped for a different reason and checked here for the same one (JFH-287).
+// The blurb above is clamped because four cards in a row are as tall as the wordiest of them. The bubble is
+// clamped because its two lines were bought with a CHARACTER CAP measured on this machine's fonts, and a cap
+// cannot buy a line count on a runner whose fonts nobody here can enumerate: CI resolves the page's stack to
+// a wider face and took the worst sentence to three lines, growing the box to 70px. The clamp makes the bound
+// geometric, so it holds in any face.
+//
+// The rule is picked by its width rather than by being the first `#byte-speech` in the file, because there are
+// two -- the narrow-width rule is `display:none` and would satisfy an `overflow`/`display` check for entirely
+// the wrong reason.
+const bubbleRule = (html.match(/#byte-speech\{[^}]*\}/g) || []).find(r => /width:\s*220px/.test(r)) || "";
+ok("Archie's bubble is clamped to two lines, not merely capped at a character count",
+   /-webkit-line-clamp:\s*2/.test(bubbleRule) && /[^-]line-clamp:\s*2/.test(bubbleRule), bubbleRule);
+ok("...with both halves the prefixed form needs, and the overflow that does the cutting",
+   /display:-webkit-box/.test(bubbleRule) && /-webkit-box-orient:\s*vertical/.test(bubbleRule)
+   && /overflow:\s*hidden/.test(bubbleRule), bubbleRule);
+// THE CLAMP'S `display` BREAKS `hidden`, AND THIS IS THE ONLY PLACE THAT CAN SAY SO CHEAPLY. `hidden` hides
+// through the UA stylesheet's `[hidden]{display:none}`, which any author `display` outranks -- so the rule
+// above, on its own, leaves a bubble whose attribute is set computing `display:flow-root` with a 20px box,
+// parked on the masthead for the rest of the visit. Every assertion in cards-check.mjs that checks Archie has
+// stopped speaking reads the ATTRIBUTE, and the attribute is still true, so all seven of them stay green.
+ok("...and the hidden attribute is given back the `display:none` that clamp just outranked",
+   /#byte-speech\[hidden\]\{display:none\}/.test(html), bubbleRule);
+
 // -------------------------------------------------------------------------- the filter sheet, JFH-184
 // The three facet rows used to sit in the sticky bar at every width, four rows of chip rails that ate 36%
 // of a 375x812 viewport and could only be worked with two thumbs. Below the table breakpoint they are now
@@ -1677,7 +1701,7 @@ ok("...and it is either the rendered card or the documented GitHub fallback",
    /content="https:\/\/opengraph\.githubassets\.com\//.test(html));
 ok("...and in the JS string that builds the same URL per row",
    /"https:\/\/opengraph\.githubassets\.com\/1\/"/.test(html));
-ok("the favicon points to the local Atlas Byte SVG",
+ok("the favicon points to the local Archie SVG",
    /<link rel="icon" href="favicon\.svg" type="image\/svg\+xml">/.test(html));
 ok("the file:// message survives inside a JS string with markup in it",
    /<code>file:\/\/<\/code>/.test(html));

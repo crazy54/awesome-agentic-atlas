@@ -37,9 +37,9 @@
     {
       "key": "index.mascot_commentary",
       "group": "Index page",
-      "name": "Atlas Byte commentary",
-      "description": "Lets Atlas Byte show short, factual project tips when a reader hovers or focuses a project.",
-      "off_effect": "Atlas Byte stays visible but does not show project commentary or the Atlas Orbit easter egg."
+      "name": "Archie 'Atlas' Algorithm commentary",
+      "description": "Lets Archie 'Atlas' Algorithm show one short, factual project tip when a reader hovers or focuses a project.",
+      "off_effect": "Archie 'Atlas' Algorithm stays visible but does not show project commentary or the Atlas Orbit easter egg."
     },
     {
       "key": "index.export",

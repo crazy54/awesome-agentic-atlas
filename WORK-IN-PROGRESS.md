@@ -16,7 +16,7 @@ same artefact: it describes what was true when that box was ticked.
 - Keep screenshots; cards prioritize name, description, category/targets, evidence and clear details/GitHub links.
 - Table sizes: Compact, Normal, Expanded, remembered locally.
 - Stable pseudo-random theme-matched card accents; pulsing hover/focus glow, reduced-motion and quiet-mode support.
-- Atlas Byte mascot: name tag, delayed factual project commentary on hover/focus, mobile tap tip, quiet toggle and application flag.
+- Archie mascot: name tag, delayed factual project commentary on hover/focus, mobile tap tip, quiet toggle and application flag.
 - Use new logo/mascot across web headers, README and both workbook covers.
 
 ## Checklist
@@ -47,13 +47,13 @@ same artefact: it describes what was true when that box was ticked.
 - Began patching `scripts/19_pages.py`: mascot markup now contains a button wrapper, name tag, quiet-mode button and speech container; table markup has a row-size select; `cardArt()` now starts immediately and has a failed-image fallback; project rows now expect `projectAccent()` and include project action links.
 - **Important:** the latest `19_pages.py` edit is deliberately incomplete after model interruption. `initDiscovery()` and `projectAccent()` are referenced but not defined, and matching CSS/behavior has not yet been added. Do not regenerate `docs/index.html` or claim a passing build until these are completed.
 - Current red test command used: `node tests/cards-check.mjs <chromium> http://127.0.0.1:65281/`; it reported 59 pass / 5 expected failures against the pre-regeneration page.
-- Easter egg decision: "Atlas Orbit" — five quick clicks/taps on the Atlas Byte name tag trigger a brief pixel-star burst; reduced-motion shows a still constellation. Not implemented yet.
+- Easter egg decision: "Atlas Orbit" — five quick clicks/taps on the Archie name tag trigger a brief pixel-star burst; reduced-motion shows a still constellation. Not implemented yet.
 
 ### Workbook branding — completed generator work; release build input unavailable
 
 - `scripts/16_build_all.py` now uses the shared web assets `docs/icon-192.png` and
   `docs/assets/atlas-byte.png` on each `Start Here` cover. The 32 × 32 globe mark is anchored at
-  `L1`; the 86 × 90 Atlas Byte mascot is anchored at `M1`, with an `ATLAS BYTE` name tag at `M5:N5`.
+  `L1`; the 86 × 90 Archie mascot is anchored at `M1`, with an `ARCHIE 'ATLAS' ALGORITHM` name tag at `M5:N5`.
   The placement is intentionally above the existing theme-switch control at row 6 and does not alter
   workbook sheets, formulas, tables, screenshot pooling, or source data.
 - Added `tests/workbook_branding_test.py` and registered it in `tests/run.mjs`. It builds disposable
@@ -73,7 +73,7 @@ same artefact: it describes what was true when that box was ticked.
   the drawing/media relationships. Final check for each output: ZIP integrity passed; 2,143 entries
   (four new parts), 2,045 media parts, 42 drawing parts, and exactly two `Start Here` images anchored at
   L1 and M1. This is a narrow local-release fallback, not a replacement for the normal cached build.
-- Added compact, accessible README branding: the repo-local favicon/logo and Atlas Byte mascot sit above the title and both link to the live Atlas. Paths are GitHub-safe relative paths (`docs/favicon.svg` and `docs/assets/atlas-byte.png`); both files exist locally and the PNG was visually checked. No README claims or data were changed.
+- Added compact, accessible README branding: the repo-local favicon/logo and Archie mascot sit above the title and both link to the live Atlas. Paths are GitHub-safe relative paths (`docs/favicon.svg` and `docs/assets/atlas-byte.png`); both files exist locally and the PNG was visually checked. No README claims or data were changed.
 - Added the `index.mascot_commentary` flag (ON) and its schema entry; the index implementation honors it.
 
 ### Final index implementation and verification
@@ -83,7 +83,7 @@ same artefact: it describes what was true when that box was ticked.
 - Cards have deterministic project accents from a curated palette, a motion-safe hover/focus glow, truthful
   descriptions, evidence/context, and separate Details/GitHub paths. The table remembers Compact, Normal,
   or Expanded density in local storage.
-- Atlas Byte now has a name tag, factual project tips on hover/focus, a local Quiet mode, and a five-click
+- Archie now has a name tag, factual project tips on hover/focus, a local Quiet mode, and a five-click
   `Atlas Orbit` easter egg. Reduced-motion readers receive static effects. Both commentary and Orbit honor
   `index.mascot_commentary`.
 - Regenerated `docs/index.html`. Scoped source/regression checks passed: `python -m py_compile` for edited

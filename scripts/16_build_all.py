@@ -65,7 +65,7 @@ CACHE = ROOT / "cache"
 SHOTS = CACHE / "shots"
 OUT = ROOT
 
-# The website and the workbooks share one identity.  Keep the small globe mark and Atlas Byte as
+# The website and the workbooks share one identity.  Keep the small globe mark and Archie as
 # ordinary source assets rather than drawing them from cells: this preserves the transparent edges and
 # lets the two themed covers use the exact same recognisable artwork without introducing a third palette.
 BRAND_MARK = ROOT / "docs" / "icon-192.png"
@@ -1249,7 +1249,7 @@ def build_cover(wb, T, stats, per_source):
     # conceals the title, snapshot, or live controls in either theme.
     cover_image(BRAND_MARK, "L1", 32, 32)
     cover_image(BRAND_MASCOT, "M1", 86, 90)
-    put(5, 13, "ATLAS BYTE", size=8, bold=True, color=T["bar"], span=2, align="center")
+    put(5, 13, "ARCHIE 'ATLAS' ALGORITHM", size=8, bold=True, color=T["bar"], span=2, align="center")
 
     row = 6
     put(row, 2, "AT A GLANCE", size=10, bold=True, color=T["muted"])
@@ -1541,7 +1541,8 @@ def inject_existing_cover_brand(path: Path) -> None:
             f'xmlns:r="{OFFICE_REL}" '
             'xmlns="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing">'
             + _cover_picture_xml(11, 32, 32, "rId1", 1, "Atlas mark", "Atlas globe mark")
-            + _cover_picture_xml(12, 86, 90, "rId2", 2, "Atlas Byte", "Atlas Byte mascot")
+            + _cover_picture_xml(12, 86, 90, "rId2", 2, "Archie 'Atlas' Algorithm",
+                                 "Archie 'Atlas' Algorithm mascot")
             + "</wsDr>"
         ).encode("utf-8")
         drawing_rels = (
@@ -1605,7 +1606,7 @@ def verify_existing_cover_brand(path: Path) -> None:
         drawing_rels_part = f"{Path(drawing_part).parent.as_posix()}/_rels/{Path(drawing_part).name}.rels"
         drawing = archive.read(drawing_part).decode("utf-8")
         drawing_rels = archive.read(drawing_rels_part).decode("utf-8")
-        if ("Atlas mark" not in drawing or "Atlas Byte" not in drawing or
+        if ("Atlas mark" not in drawing or "Archie 'Atlas' Algorithm" not in drawing or
                 "atlas-cover-mark.png" not in drawing_rels or "atlas-cover-byte.png" not in drawing_rels):
             raise ValueError(f"{path.name} has incomplete cover drawing relationships")
 

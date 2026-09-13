@@ -95,7 +95,7 @@ const resize = (width, height) => S("Emulation.setDeviceMetricsOverride",
   {width, height, deviceScaleFactor: 1, mobile: width < 500});
 const settle = async () => {
   for (let i = 0; i < 100; i++) {
-    if (await evalIn("document.readyState === 'complete' && !!document.querySelector('#out tbody tr')"))
+    if (await evalIn("document.readyState === 'complete' && !!document.querySelector('#out tr[data-project]')"))
       break;
     await sleep(150);
   }
@@ -232,12 +232,66 @@ const initialArt = await evalIn(`(() => {
 ok("visible screenshots start loading before any interaction", initialArt.visible > 0 && initialArt.started,
    JSON.stringify(initialArt));
 ok("distant screenshots remain deferred", initialArt.deferred);
-ok("the mascot has a visible name tag", await evalIn("document.querySelector('.atlas-name')?.textContent === 'Atlas Byte'"));
+// The pill holds both spellings and the stylesheet paints one, so `textContent` is now "Archie 'Atlas'
+// AlgorithmArchie" at every width and asserting it would be asserting nothing about what a reader sees. What
+// is checked is the painted text, and separately that the accessible name is the full one wherever it is.
+const tagText = await evalIn(`(() => {
+  const el = document.querySelector('.atlas-name');
+  if (!el) return {missing: true};
+  const shown = [...el.querySelectorAll('span')].filter(s => getComputedStyle(s).display !== 'none');
+  return {painted: shown.map(s => s.textContent).join(""), spans: shown.length,
+          label: el.getAttribute('aria-label')};
+})()`);
+ok("the mascot has a visible name tag, and one spelling of it at a time",
+   tagText.painted === "Archie 'Atlas' Algorithm" && tagText.spans === 1, JSON.stringify(tagText));
+ok("the name tag's accessible name is the full name whatever is painted",
+   tagText.label === "Archie 'Atlas' Algorithm", JSON.stringify(tagText));
+
+// THE NAME TAG'S LINE COUNT, WHICH IS THE RENAME'S OWN CLAIM. "Archie 'Atlas' Algorithm" is 24 characters
+// where "Atlas Byte" was 10, and the stylesheet's answer is that it wraps to two lines inside the mascot's
+// own column. That was asserted by comparing the pill's text, which cannot see a line, and the claim was
+// consequently false at every width below 641: the mobile rule narrows the column from 128px to 82px without
+// touching the 10px type, so the pill went to three lines and the masthead grew for it exactly where vertical
+// space is scarcest.
+//
+// THE PILL'S BOX CANNOT COUNT ITS OWN LINES, so do not be tempted to simplify this into a height comparison.
+// `header button` gives the pill the 44px WCAG 2.5.5 tap floor, so at the narrow widths it measures 82x44 with
+// one word in it, with two lines, and with three: 82x44 is exactly what CI reported alongside three lines, and
+// what this machine reports alongside two. Counting line boxes with a Range is the instrument that sees the
+// difference. `overflows` is the consequence a reader would actually see, and it is not the same test: a third
+// 9px line is 44.45px against a 42px content box, so the text crosses the pill's own border instead of the
+// box growing to admit it.
+//
+// The expected count is per width because the stylesheet's answer differs by width, and the reason it differs
+// is a font: the two-line arrangement of the full name had 2.41px of slack in 62px at 375, and forced
+// monospace, Verdana and Tahoma each took three lines. One word cannot wrap to three in any face, so below 641
+// the pill paints "Archie" and this asserts one line -- a bound that holds on a runner whose fonts nobody
+// here can enumerate, rather than a number retuned until this machine agreed.
+const nametag = async (label, width, lines) => {
+  const m = await evalIn(`(() => {
+    const el = document.querySelector('.atlas-name');
+    if (!el) return {missing: true};
+    const rg = document.createRange(); rg.selectNodeContents(el);
+    const tops = new Set();
+    for (const r of rg.getClientRects()) if (r.width > 0 && r.height > 0) tops.add(Math.round(r.top * 2) / 2);
+    const r = el.getBoundingClientRect(), wrap = document.querySelector('.atlas-byte-wrap').getBoundingClientRect();
+    const shown = [...el.querySelectorAll('span')].filter(s => getComputedStyle(s).display !== 'none');
+    return {lines: tops.size, w: Math.round(r.width), h: Math.round(r.height),
+            wrapW: Math.round(wrap.width), font: getComputedStyle(el).fontSize,
+            painted: shown.map(s => s.textContent).join(""), label: el.getAttribute('aria-label'),
+            overflows: el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth,
+            escapes: Math.round(r.width) > Math.round(wrap.width) + 1, offscreen: r.left < 0};
+  })()`);
+  ok(label, !m.missing && m.lines === lines && !m.overflows && !m.escapes && !m.offscreen
+     && m.label === "Archie 'Atlas' Algorithm",
+     JSON.stringify({width, want: lines, ...m}));
+};
+await nametag("Archie's name tag is two lines at 1440px", 1440, 2);
 const accents = await evalIn(`new Set([...document.querySelectorAll('#out tr[data-project]')]
   .slice(0,20).map(r => getComputedStyle(r).getPropertyValue('--card-accent'))).size`);
 ok("cards have varied curated accents", accents > 1, accents);
 
-// Atlas Byte only repeats facts already in the row. The browser check exercises the delayed hover path,
+// Archie only repeats facts already in the row. The browser check exercises the delayed hover path,
 // the reader-controlled quiet switch, and the hidden click sequence rather than merely looking for the
 // markup those behaviours need.
 const firstProjectPoint = await evalIn(`(() => {
@@ -246,12 +300,559 @@ const firstProjectPoint = await evalIn(`(() => {
 })()`);
 await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...firstProjectPoint});
 await sleep(450);
-ok("Atlas Byte introduces a hovered project from its Atlas record", await evalIn(`(() => {
+ok("Archie introduces a hovered project from its Atlas record", await evalIn(`(() => {
   const speech = document.getElementById('byte-speech');
   return speech && !speech.hidden && speech.textContent.length > 20;
 })()`));
+
+// TWO LINES, NOT A PARAGRAPH. The bubble used to end with `r.blurb` verbatim -- the upstream repository
+// description -- so its length was set by an unrelated project's GitHub "about" field and the box grew until
+// it covered the masthead.
+//
+// The character cap is asserted, but the LINE COUNT is the assertion that matters and the reason this reads
+// geometry rather than string length: a cap does not buy a line count when a project name is an unbreakable
+// 67-character run, and a 72-character cap was measured reaching three lines for exactly that reason. The
+// generator's budgets were picked by rendering all 3,837 strings its templates can produce into this box; the
+// worst of them is checked below, so this one asserts the row the reader is actually on.
+//
+// Blurb exclusion is separate because the cap alone would pass on a row whose blurb happens to be short.
+// `maxBlurb` is reported so a future reader can see what the cap is holding back rather than trusting that
+// it is holding anything.
+//
+// THE CAPS ARE READ OUT OF THE PAGE RATHER THAN COPIED INTO THIS FILE, and that is not tidiness. They were
+// written here nine times -- the name cap in four places, the sentence cap in two, the rest in prose -- and
+// the generator owns them. Cut a cap in `19_pages.py` and miss one of the nine and this harness goes wrong in
+// both directions at once: it asserts the old, larger bound, so a bubble that is now too big still passes,
+// AND it rebuilds the exhaustive string set under the old caps, so it measures sentences the page can no
+// longer say while never measuring the ones it now can. Both failures are silent and they hide each other.
+//
+// Parsed rather than exported because there is nothing to export from: the page's script is an IIFE and these
+// are `const`s inside it, invisible to `evalIn`. Matching the source text is the memory-hole risk this file
+// has hit before -- a substring check that matched the comment quoting a rule and stayed green after the rule
+// was deleted -- so this requires EXACTLY ONE match of a declaration-shaped pattern. `pagemin.py` strips the
+// page's comments before it ships, so a comment cannot supply the match, and the count assertion catches it
+// if that ever stops being true.
+const capsSource = await (await fetch(ORIGIN)).text();
+const capsFound = [...capsSource.matchAll(/const NAME_MAX = (\d+), SAY_MAX = (\d+)/g)];
+ok("the page declares Archie's two caps, exactly once, where this harness can read them",
+   capsFound.length === 1, JSON.stringify({matches: capsFound.length}));
+const NAME_MAX = Number(capsFound[0][1]), SAY_MAX = Number(capsFound[0][2]);
+const bubble = await evalIn(`(() => {
+  const speech = document.getElementById('byte-speech');
+  const row = ROWS.find(r => r.nwo === document.querySelector('#out tr[data-project]').dataset.project);
+  const box = speech.getBoundingClientRect(), cs = getComputedStyle(speech);
+  const lines = Math.round((box.height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)
+                            - parseFloat(cs.borderTopWidth) - parseFloat(cs.borderBottomWidth))
+                           / parseFloat(cs.lineHeight));
+  return {text: speech.textContent, len: speech.textContent.length, lines,
+          blurb: row ? row.blurb : "", carriesBlurb: !!(row && row.blurb && row.blurb.length > 24 &&
+            speech.textContent.includes(row.blurb.slice(0, 24))),
+          maxBlurb: Math.max(...ROWS.map(r => (r.blurb || "").length))};
+})()`);
+ok("Archie says at most two short lines", bubble.len > 0 && bubble.len <= SAY_MAX,
+   JSON.stringify({len: bubble.len, cap: SAY_MAX, text: bubble.text}));
+ok("Archie's bubble is at most two lines tall as rendered", bubble.lines >= 1 && bubble.lines <= 2,
+   JSON.stringify({lines: bubble.lines, text: bubble.text}));
+ok("Archie no longer reads the repository blurb aloud", !bubble.carriesBlurb,
+   JSON.stringify({maxBlurb: bubble.maxBlurb, text: bubble.text}));
+
+// THE WORST ROW IN THE ATLAS, NOT THE FIRST ONE. Everything above measures whichever project happens to sort
+// first, and the defect was never about that project -- it was about the longest name in the corpus meeting
+// the longest category name. This rebuilds every string the generator can say for all committed rows, renders
+// each into the real bubble, and reports the tallest. It is the only assertion here that would have failed
+// the 140-character cap this ticket started with, which reached four lines.
+const widest = await evalIn(`(() => {
+  const speech = document.getElementById('byte-speech'), cs = getComputedStyle(speech);
+  const chrome = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+                 + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+  const lh = parseFloat(cs.lineHeight), before = speech.textContent;
+  const clip = (t, n) => {
+    const p = Array.from(t);
+    if (p.length <= n) return t;
+    const hard = p.slice(0, n - 1).join(""), word = hard.replace(/\\s+\\S*$/, "");
+    return (Array.from(word).length >= n / 2 ? word : hard) + "\\u2026";
+  };
+  const said = new Set();
+  for (const r of ROWS) {
+    const cat = (D.cats[r.cat] || {}).name || "the atlas";
+    const tg = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
+    const name = clip(r.name, ${NAME_MAX}), owner = r.nwo.split("/")[0];
+    const facts = [name + " is listed under " + cat + ".",
+                   name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")];
+    if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
+    const tail = tg.length ? " Tagged for " + tg[0] + "." : "";
+    // One cap for both, and code points for the fit test, mirroring the generator. Two separate numbers here
+    // is what let the page's own pair drift into looking like a bound it was not; see the note in 19_pages.py.
+    for (const f of facts) said.add(clip(f + (Array.from(f + tail).length <= ${SAY_MAX} ? tail : ""), ${SAY_MAX}));
+  }
+  // TWO INSTRUMENTS, AND THE CLAMP DECIDES WHEN THEY MAY DISAGREE. Dividing the box height by lineHeight infers
+  // a line count from arithmetic, and it is only as good as the assumption that every line occupies exactly one
+  // lineHeight -- an inline image, a taller fallback font for one glyph, or a lineHeight the stylesheet later
+  // expresses as a unitless number would all break it silently. A Range over the contents returns one client
+  // rect per line box, which counts what the layout engine actually produced.
+  //
+  // These used to be required to agree on every string, and that was right until the box was clamped. A
+  // line-clamped element still reports every line box the text WANTED -- measured 3 rects with the box two
+  // lines tall -- because the third one is laid out and then clipped. So the honest invariant is no longer
+  // equality: it is that the box never exceeds two lines, and that the Range may exceed the box only where the
+  // clamp is visibly hiding text. Whether text is really cut is the third instrument that makes that check
+  // mean something, because without it "they disagree, so something must be clipped" would be an assumption
+  // rather than a reading. On this machine's stack: 0 of 3,837 clipped, both instruments maxing at 2. On a
+  // wider face the clipped count rises and the box height does not, which is the entire point of the clamp.
+  // (No backticks in any comment in this block. It is a template literal, and one would end it.)
+  const boxes = () => {
+    const rg = document.createRange(); rg.selectNodeContents(speech);
+    const tops = new Set();
+    for (const rect of rg.getClientRects())
+      if (rect.width > 0 && rect.height > 0) tops.add(Math.round(rect.top * 2) / 2);
+    return tops.size;
+  };
+  let worst = 0, worstText = "", tall = 0, worstBox = 0, disagreed = [];
+  let clippedCount = 0, clippedSample = "";
+  for (const t of said) {
+    speech.textContent = t;
+    const n = Math.round((speech.getBoundingClientRect().height - chrome) / lh), b = boxes();
+    const cut = speech.scrollHeight > speech.clientHeight + 1;
+    if (cut) { clippedCount++; if (!clippedSample) clippedSample = t; }
+    // A disagreement is licensed only in the direction the clamp can cause, and only when text is really cut.
+    if (n !== b && !(b > n && cut) && disagreed.length < 5)
+      disagreed.push({text: t, byHeight: n, byBox: b, clipped: cut});
+    if (n > 2) tall++;
+    if (b > worstBox) worstBox = b;
+    if (n > worst) { worst = n; worstText = t; }
+  }
+  speech.textContent = before;
+  // Left on the page for the walk below, which checks real bubble text against this set rather than
+  // rebuilding it a second time, and needs the same clipper to tell a clipped NAME from a clipped SENTENCE.
+  // A handoff between two Runtime.evaluate calls in one document, not something the site sets or reads.
+  window.__saidByHarness = said;
+  window.__clipByHarness = clip;
+  return {said: said.size, worstLines: worst, worstText, tall, worstBox, disagreed,
+          clippedCount, clippedSample, live: before, matchesLive: said.has(before)};
+})()`);
+// The box, which is what could cover something, and the only one of the three numbers below that is a promise
+// to a reader. `worstBox` is deliberately NOT bounded here: it is what the text wanted, the clamp is free to
+// exceed two, and asserting it was what made this fail on CI while the box it was standing in for was correct.
+ok("no project in the atlas can push Archie's bubble past two lines",
+   widest.said > 1000 && widest.worstLines <= 2 && widest.worstLines >= 1 && widest.tall === 0,
+   JSON.stringify(widest));
+ok("the bubble's two line counts differ only where the clamp is cutting text",
+   widest.disagreed.length === 0, JSON.stringify(widest.disagreed));
+// And what the clamp costs, on this runner, in the copy rather than the layout. Not bounded by a number tuned
+// until CI agreed: on the face `SAY_MAX` was derived against this is 0, and on a wider one it is the count of
+// sentences that lose a tail. Reported rather than asserted at a threshold, because the threshold would be a
+// property of whatever fonts a runner happens to have installed, which no assertion here can enumerate --
+// forcing three uninstalled Linux families gave identical metrics, and `document.fonts.check()` said true for
+// a misspelt name. What IS asserted is that clipping never reaches the majority of what Archie can say, which
+// would mean the cap and the box had drifted apart rather than the runner having odd fonts.
+ok("clipping is the exception rather than how the bubble normally renders",
+   widest.clippedCount * 2 < widest.said,
+   JSON.stringify({clipped: widest.clippedCount, of: widest.said, sample: widest.clippedSample}));
+
+// THE PRICE THE CLAMP CHARGES FOR ITS `display`, which every other assertion in this file is blind to.
+// (The clamp's own spelling is asserted in probe.mjs, beside the card blurb's, for the reason written there:
+// this Chromium implements the standard `line-clamp` and ignores the prefixed one, so a rule missing the half
+// Firefox needs would pass every browser check in this file.)
+// `hidden` works through the UA stylesheet's `[hidden]{display:none}`, and any author `display` outranks it --
+// so adding the clamp made `hidden` stop hiding: measured `display:flow-root` and a 20px box on a bubble whose
+// attribute was set. Seven assertions in this file check that Archie has stopped speaking and all seven read
+// the ATTRIBUTE, which is still perfectly true, so all seven stay green with the bubble parked on the masthead
+// for the rest of the visit. This one reads the box.
+const hiddenBox = await evalIn(`(() => {
+  const speech = document.getElementById('byte-speech');
+  const wasHidden = speech.hidden, wasText = speech.textContent;
+  speech.textContent = "A sentence long enough to give the box a height if anything renders it at all.";
+  speech.hidden = true;
+  const cs = getComputedStyle(speech), r = speech.getBoundingClientRect();
+  const got = {display: cs.display, h: Math.round(r.height), w: Math.round(r.width),
+               visible: !!(r.width || r.height)};
+  speech.hidden = wasHidden; speech.textContent = wasText;
+  return got;
+})()`);
+ok("setting the hidden attribute still removes the bubble's box, clamp or no clamp",
+   hiddenBox.display === "none" && !hiddenBox.visible, JSON.stringify(hiddenBox));
+// The block above restates the generator's sentence templates, so on its own it would keep passing against
+// rules the generator no longer has. This is the tie: the string the page really produced for the hovered row
+// has to be one of the strings those restated templates can produce. Edit the generator's wording or its
+// budgets without editing this file and this fails, which is the only reason the measurement above can be
+// trusted to be measuring the shipped text.
+ok("the restated templates still match what the page says", widest.matchesLive,
+   JSON.stringify({live: widest.live, said: widest.said}));
+
+// ONE ROW IS NOT A TIE, AND A ROW'S DATA DOES NOT PICK ITS SENTENCE. The assertion above holds the restated
+// corpus to the one string the page produced for whichever project sorts first, which exercises a single arm
+// of the generator. The obvious repair -- choose rows whose data takes the other arms, one with a single
+// source list, one named after its own owner, one with no tags -- does not work, and was tried here first:
+// the generator picks WHICH of a row's two or three facts to say by hashing its `nwo`, so a row with one
+// source list usually says something else about itself. That version passed while the page's singular wording
+// was deliberately changed underneath it, because the row it picked never said the singular sentence at all.
+//
+// What follows therefore selects nothing. It walks the rendered rows in order, focuses each one, waits past
+// the 320ms hover delay, reads what the bubble really says, and classifies THAT -- so the arms are arms of
+// the observed output, not of a rule this file believes the generator follows. It stops as soon as every arm
+// has been seen, which was measured at 29 rows and about 12 seconds; a run where an arm is unreachable walks
+// all 120 and fails, which is the right way round.
+//
+// Three things are then asserted, and the third is the one the row-picking version faked:
+//   - every live string it saw rendered in at most two lines. Real measurements of real output, so they hold
+//     even if the corpus sweep above ever drifts.
+//   - every live string it saw is in the restated set. That is the tie, now over 29 strings covering every
+//     wording the generator has rather than over one.
+//   - all six wordings were actually observed. Without this the tie could stay green while five of the six
+//     went unexercised, which is exactly how the first attempt passed a control it should have failed. Under
+//     that control this arm names the missing wording and the tie names 24 strings the templates cannot say.
+const walk = await evalIn(`(async () => {
+  window.scrollTo(0, 0);
+  const speech = document.getElementById('byte-speech'), cs = getComputedStyle(speech);
+  const chrome = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+                 + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+  const lh = parseFloat(cs.lineHeight);
+  if (!window.__saidByHarness || !window.__clipByHarness)
+    return {broke: 'the corpus sweep above did not leave its handoff on the page, so there is nothing to '
+                 + 'check the live strings against -- read that block\\'s failure first, not this one'};
+  const clip = window.__clipByHarness;
+  const nameOf = new Map(ROWS.map(r => [r.nwo, r.name]));
+  // The wordings, named by what a reader would see. Membership is read off the live string; nothing here
+  // decides what any row will say.
+  //
+  // The clipped arm does not just look for an ellipsis, and that mattered: there are two clippers -- NAME_MAX on the
+  // name and SAY_MAX on the finished sentence -- and an ellipsis on its own cannot say which one fired.
+  // Setting NAME_MAX to 999 while leaving SAY_MAX alone left this arm reporting itself seen, because long
+  // unclipped names pushed whole sentences past SAY_MAX and the total clipper supplied the ellipsis. The drift was
+  // still caught, but by the restated-set tie alone; this label was lying. It now asks the only question worth
+  // asking -- is the name in this sentence this row's name, shortened -- so it can only be satisfied by the
+  // clipper it is named after.
+  const arms = {
+    "filed under a category": t => t.includes(" is listed under "),
+    "on one source list": t => t.includes(" source list."),
+    "on several source lists": t => t.includes(" source lists."),
+    "published by an owner": t => t.includes(" comes from "),
+    "tagged for a runtime": t => t.includes(" Tagged for "),
+    "a name clipped to fit": (t, nwo) => {
+      const full = nameOf.get(nwo) || "", short = clip(full, ${NAME_MAX});
+      return short !== full && t.startsWith(short);
+    }
+  };
+  const boxes = () => {
+    const rg = document.createRange(); rg.selectNodeContents(speech);
+    const tops = new Set();
+    for (const rect of rg.getClientRects())
+      if (rect.width > 0 && rect.height > 0) tops.add(Math.round(rect.top * 2) / 2);
+    return tops.size;
+  };
+  // WHAT THE RENDERED PAGE OWES, AND WHAT IT CANNOT BE ASKED FOR. Five of the six wordings depend only on a
+  // row's category, list count, owner and tags, and the first 120 rows carry all five many times over. The
+  // sixth depends on a name being longer than NAME_MAX, and only a handful of the 120 rendered rows qualify --
+  // 6 at the old cap of 26, more at 22, but "more" is not "guaranteed" and the count is read back rather than
+  // assumed, because popular repositories have short names. Corpus-wide it is 18.5% at 22 and was 10.8% at 26.
+  // Cutting the cap makes this arm likelier to appear and no less fragile. PAGE_SIZE redraws that
+  // window from whatever the corpus becomes, and the next ingest takes it from 1,294 rows to roughly 8,293: a
+  // new top 120 with no long name would turn this red with nobody having changed a line. So the clipped arm is
+  // recorded here if it happens to appear and is REQUIRED of the probe below, which goes and finds the longest
+  // name in the whole corpus instead of hoping it sorted into the first page.
+  const names = Object.keys(arms), fromRows = names.filter(n => n !== "a name clipped to fit");
+  const seen = {}, said = [];
+  for (const row of [...document.querySelectorAll('#out tr[data-project]')]) {
+    if (fromRows.every(n => seen[n])) break;
+    // Focus has to leave first: refocusing the element that already holds focus fires no focusin, so the
+    // handler never runs and this would read the previous row's sentence out of a stale bubble. Blanking it
+    // closes the same hole the other way -- with the bubble emptied and hidden, there is no previous sentence
+    // left to mistake for this row's, so a sentence read here was necessarily spoken for this row.
+    if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+    speech.hidden = true;
+    speech.textContent = "";
+    (row.querySelector('a') || row).focus({preventScroll: true});
+    // WAIT FOR THE EVENT, DO NOT BUDGET FOR IT. This was a flat 400ms against the generator's 320ms delay,
+    // which is 80ms of slack -- fine on this machine and an invitation to a flake on a loaded CI runner, where
+    // losing the race would have been reported as the bubble refusing to appear. Polling is both safer and
+    // faster: it returns as soon as the timer fires rather than always paying 400ms.
+    for (let waited = 0; waited < 2500 && (speech.hidden || !speech.textContent); waited += 25)
+      await new Promise(r => setTimeout(r, 25));
+    if (speech.hidden || !speech.textContent)
+      return {broke: 'no sentence within 2.5s for ' + row.dataset.project};
+    const text = speech.textContent;
+    const lines = Math.round((speech.getBoundingClientRect().height - chrome) / lh), box = boxes();
+    said.push({nwo: row.dataset.project, text, len: text.length, lines, box,
+               cut: speech.scrollHeight > speech.clientHeight + 1,
+               inSet: window.__saidByHarness.has(text)});
+    for (const n of names) if (arms[n](text, row.dataset.project)) seen[n] = seen[n] || row.dataset.project;
+  }
+
+  // THE PROBE: the longest name in the atlas, fetched through the reader's own search box rather than waited
+  // for. This is the same measurement as the walk -- type, focus, read what the bubble really says -- but on a
+  // row chosen for the property under test, so the clipped arm no longer rests on six rows out of a hundred and
+  // twenty. Every one of the generator's facts begins with the name, so whichever fact the hash picks for this
+  // row, a clipped name has to be at the front of it; that is why the probe does not care which arm it gets.
+  //
+  // The filter is put back before returning, because everything after this file's walk measures the unfiltered
+  // table and a leaked query would quietly change what those assertions are looking at.
+  //
+  // THE ROW IS FOUND BY IDENTITY, AND NOTHING HERE MAY COUNT ROWS OR TAKE THE FIRST ONE. This is the first
+  // harness to type into the reader's own search box, and what comes back is not this file's to predict.
+  // On a tree with plain substring search an exact project name returns its one hit. On a tree carrying the
+  // semantic search (JFH-293), a query returning fewer than SEM_THIN substring hits has up to SEM_MAX
+  // semantically related rows APPENDED to it, and one exact project name is the thinnest query there is, so
+  // the same probe was measured returning 13. This file is merged across both and must be right on both,
+  // which is the whole argument: a count written here is a count that goes stale on somebody else's feature
+  // landing, with nothing in this file changed and no conflict to warn anyone.
+  // Worse, the augmentation is conditional on the semantic index having loaded, so once it exists the count
+  // differs between a runner where that fetch succeeds and one where it does not: any assertion on how many
+  // rows came back would be green on one machine and red on another for reasons that have nothing to do with
+  // Archie. Selecting on the data-project attribute is immune to all of it, and was measured so -- re-run with
+  // a four-character query that fills the page to 120 rows, the probe still finds its row, still clips its
+  // name and still restores the filter.
+  //
+  // The filtered count is recorded for that reason rather than checked. When this number changes, the change is
+  // somebody else's feature working as intended, and the next person should be able to see it here instead of
+  // rediscovering it.
+  const longest = ROWS.reduce((a, r) => Array.from(r.name).length > Array.from(a.name).length ? r : a, ROWS[0]);
+  const clippable = Array.from(longest.name).length > ${NAME_MAX};
+  const qbox = document.getElementById('q'), rowsNow = () => document.querySelectorAll('#out tr[data-project]').length;
+  const wasRows = rowsNow();
+  let probe = null;
+  if (clippable) {
+    qbox.value = longest.name;
+    qbox.dispatchEvent(new Event('input'));
+    let target = null;
+    for (let waited = 0; waited < 3000 && !target; waited += 25) {
+      await new Promise(r => setTimeout(r, 25));
+      target = document.querySelector('#out tr[data-project="' + longest.nwo + '"]');
+    }
+    if (!target) probe = {broke: 'searching for the longest name (' + longest.nwo + ') never rendered its row'};
+    else {
+      if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+      speech.hidden = true;
+      speech.textContent = "";
+      (target.querySelector('a') || target).focus({preventScroll: true});
+      for (let waited = 0; waited < 2500 && (speech.hidden || !speech.textContent); waited += 25)
+        await new Promise(r => setTimeout(r, 25));
+      const text = speech.textContent;
+      probe = {filtered: rowsNow(), nwo: longest.nwo, full: longest.name, points: Array.from(longest.name).length,
+               short: clip(longest.name, ${NAME_MAX}), text, spoke: !speech.hidden && !!text,
+               clipped: !!text && arms["a name clipped to fit"](text, longest.nwo),
+               inSet: window.__saidByHarness.has(text),
+               lines: Math.round((speech.getBoundingClientRect().height - chrome) / lh), box: boxes(),
+               cut: speech.scrollHeight > speech.clientHeight + 1};
+      if (probe.clipped) seen["a name clipped to fit"] = seen["a name clipped to fit"] || longest.nwo;
+    }
+    qbox.value = "";
+    qbox.dispatchEvent(new Event('input'));
+    for (let waited = 0; waited < 3000 && rowsNow() !== wasRows; waited += 25)
+      await new Promise(r => setTimeout(r, 25));
+  }
+
+  return {visited: said.length, seen, missing: fromRows.filter(n => !seen[n]),
+          clippable, longestPoints: Array.from(longest.name).length, probe,
+          qRestored: rowsNow() === wasRows, qbox: qbox.value,
+          clippableRendered: [...document.querySelectorAll('#out tr[data-project]')]
+            .filter(r => Array.from(nameOf.get(r.dataset.project) || "").length > ${NAME_MAX}).length,
+          // The box is the promise; the Range is allowed to run past it exactly where the clamp is cutting.
+          // See the note on the two instruments above the corpus sweep -- a clamped element still reports every
+          // line box the text wanted, so bounding the Range here would report the runner's fonts, not a defect.
+          tall: said.filter(s => s.lines > 2 || s.lines < 1 || s.box < 1),
+          disagreed: said.filter(s => s.lines !== s.box && !(s.box > s.lines && s.cut)),
+          empty: said.filter(s => !s.len),
+          adrift: said.filter(s => !s.inSet).map(s => s.nwo + ': ' + s.text)};
+})()`);
+// FOUR ROWS, NOT SIX. The floor here is a guard against the loop not running at all, and it was the number of
+// arms, which is the wrong quantity: a row says exactly one fact, and the four fact wordings are mutually
+// exclusive per row, so four rows is the arithmetic minimum that can cover them -- one row can satisfy the tag
+// clause and the clipped name on top of its own fact. Today's ordering needs 29, but a corpus where the first
+// four rows happened to cover everything would have failed all three of these with nothing wrong.
+const FLOOR = 4;
+ok("walking the rendered rows reaches every wording Archie has",
+   !walk.broke && walk.missing.length === 0 && walk.visited >= FLOOR,
+   JSON.stringify({broke: walk.broke, missing: walk.missing, visited: walk.visited, seen: walk.seen,
+                   clippableRendered: walk.clippableRendered}));
+ok("every sentence Archie was caught saying fits in two lines, by both counts",
+   !walk.broke && walk.tall.length === 0 && walk.empty.length === 0 && walk.disagreed.length === 0
+   && walk.visited >= FLOOR, JSON.stringify({tall: walk.tall, empty: walk.empty, disagreed: walk.disagreed}));
+ok("every sentence Archie was caught saying is one the restated templates can produce",
+   !walk.broke && walk.adrift.length === 0 && walk.visited >= FLOOR,
+   JSON.stringify({adrift: walk.adrift, visited: walk.visited}));
+// The clipped name, asked of the row that must have one rather than of whichever rows the corpus put on page
+// one. `clippable` false would mean no name in the atlas exceeds NAME_MAX, which is a real answer and not
+// a pass -- 239 of 1,294 do at 22, and 140 did at 26 -- so it is reported rather than skipped over.
+ok("the longest name in the atlas is clipped in what Archie says about it, and still fits two lines",
+   !walk.broke && walk.clippable && walk.probe && !walk.probe.broke && walk.probe.spoke
+   && walk.probe.clipped && walk.probe.inSet && walk.probe.lines <= 2
+   && (walk.probe.box <= 2 || walk.probe.cut)
+   && walk.qRestored, JSON.stringify({clippable: walk.clippable, longestPoints: walk.longestPoints,
+                                      probe: walk.probe, qRestored: walk.qRestored, q: walk.qbox}));
+
+// THE BUBBLE MUST NOT LAND ON ANYTHING THE READER CAME FOR, and "the navigation" turned out to be too narrow
+// a way to say that. It was anchored `right:calc(100% + 12px); top:8px`, immediately left of the mascot at the
+// nav's own height, so it covered the nav at every text length. Re-anchoring it under the mascot cleared the
+// nav and was then measured landing on the filter bar's Ctrl/K hint at 1440 and over the search field at 375 --
+// so this checks the bar as well, and it is checked at every width this file visits rather than once, because
+// the masthead reflows: the band the bubble uses is only there while the nav sits beside the mascot instead of
+// above it.
+//
+// `.bar` is `position:sticky`, so its rect depends on scroll and this has to run unscrolled to mean anything.
+// Focus is taken with `preventScroll` for that reason -- a plain `focus()` scrolls the row into view, which
+// moved the bar under the measurement and invented overlaps that were not real.
+//
+// `pin` decides what is in the bubble while it is measured, and without it this measured whatever the last
+// thing to speak happened to leave there -- after the walk above, the row it stopped on. That is a real
+// difference and not a tidiness point: 45 of the 120 rendered rows say something that fits on one line, and a
+// one-line bubble sits 16.56px lower than a two-line one, so the gap being measured was decided by where an
+// unrelated loop broke. Pinned to the tallest string the corpus can produce, the measurement is both
+// deterministic and the worst case.
+//
+// The pin does not force the bubble open, and must not: `shown` is half of what is being asserted, so a bubble
+// this file unhid itself would prove nothing about the page. A row is focused and the sentence waited for, the
+// page's own handler does the showing, and only then is the text replaced. That also stopped depending on the
+// walk leaving something focused -- the probe's search reset destroys the row it focused, which correctly hides
+// the bubble, and this read `shown:false` the moment that landed.
+const clearance = async (label, expectShown, pin) => {
+  const m = await evalIn(`(async () => {
+    window.scrollTo(0, 0);
+    const speech = document.getElementById('byte-speech');
+    const pin = ${JSON.stringify(pin ?? null)};
+    if (pin !== null && speech) {
+      if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+      speech.hidden = true;
+      speech.textContent = "";
+      // The anchor, not the row: a comma in querySelector picks the first match in DOCUMENT ORDER rather than
+      // the first selector that matches, so this asked for the row element -- which carries no tabindex, took no focus,
+      // and left activeElement on BODY.
+      const first = document.querySelector('#out tr[data-project]');
+      (first?.querySelector('a') || first)?.focus({preventScroll: true});
+      for (let waited = 0; waited < 2500 && (speech.hidden || !speech.textContent); waited += 25)
+        await new Promise(r => setTimeout(r, 25));
+      window.scrollTo(0, 0);
+      if (!speech.hidden && speech.textContent) speech.textContent = pin;
+    }
+    const shown = !!speech && !speech.hidden && getComputedStyle(speech).display !== "none";
+    // A silent bubble is reported with enough to tell the three reasons apart -- no mascot in the layout at
+    // this width, no row to focus, or a row focused that the handler ignored -- because "shown:false" on its
+    // own sent one debugging session looking at the wrong one of the three.
+    if (!shown) {
+      const wrap = document.querySelector('.atlas-byte-wrap');
+      return {shown, display: speech ? getComputedStyle(speech).display : null,
+              wrapDisplay: wrap ? getComputedStyle(wrap).display : null,
+              rows: document.querySelectorAll('#out tr[data-project]').length,
+              active: document.activeElement ? document.activeElement.tagName + '.' +
+                      document.activeElement.className : null,
+              vw: document.documentElement.clientWidth, said: speech ? speech.textContent.length : null};
+    }
+    const s = speech.getBoundingClientRect();
+    const box = e => { const r = e.getBoundingClientRect();
+      return [r.left, r.top, r.right, r.bottom].map(Math.round); };
+    const hitting = [];
+    for (const sel of ["header nav", ".bar"]) {
+      const e = document.querySelector(sel);
+      if (!e || getComputedStyle(e).display === "none") continue;
+      const n = e.getBoundingClientRect();
+      if (!(s.right <= n.left || s.left >= n.right || s.bottom <= n.top || s.top >= n.bottom))
+        hitting.push(sel + " " + JSON.stringify(box(e)));
+    }
+    return {shown, hitting, speech: box(speech), vw: document.documentElement.clientWidth,
+            offscreen: s.left < 0 || s.right > document.documentElement.clientWidth};
+  })()`);
+  if (!expectShown) {
+    ok(label, m.shown === false, JSON.stringify(m));
+    return;
+  }
+  ok(label, m.shown && m.hitting.length === 0 && !m.offscreen, JSON.stringify(m));
+};
+await clearance("Archie's speech bubble clears the navigation and the filter bar at 1440px", true,
+                widest.worstText);
+
+// AND WHEN THE READER MAKES THE NAV BIGGER. The clearance above is 38px at rest, which is about one and a half
+// nav lines, and a reader who raises Chrome's minimum font size spends it: forcing the nav's type to 20px
+// leaves 7px, and 24px -- that setting's maximum -- overlaps the bubble's rectangle by 13px. Rect overlap is
+// not the complaint this ticket exists for, though, and the two are worth separating. The complaint was that
+// the mascot covered navigation. The header's `z-index:30` beats the bubble's 4, so what actually happens is
+// the nav paints over the bubble: the reader loses the tail of an optional fact and keeps every link. That is
+// the assertion -- `elementFromPoint` at the centre of every nav link, at a font size no stylesheet here
+// chooses, must return the link and never the bubble. A future change that raised the bubble above the header
+// would satisfy a rectangle test and fail this one.
+//
+// Injected as a stylesheet because a minimum font size is a browser preference CDP does not expose, the same
+// way `(hover:hover)` is not emulable; forcing the declaration is the closest honest instrument.
+const navOverBubble = await evalIn(`(async () => {
+  const st = document.createElement('style');
+  st.textContent = ".top nav{font-size:24px}";
+  document.head.appendChild(st);
+  window.scrollTo(0, 0);
+  const speech = document.getElementById('byte-speech'), nav = document.querySelector('header nav');
+  const a = document.querySelector('#out tr[data-project] a');
+  if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+  speech.hidden = true; speech.textContent = "";
+  a.focus({preventScroll: true});
+  for (let waited = 0; waited < 2500 && (speech.hidden || !speech.textContent); waited += 25)
+    await new Promise(r => setTimeout(r, 25));
+  const spoke = !speech.hidden && !!speech.textContent;
+  const s = speech.getBoundingClientRect(), n = nav.getBoundingClientRect();
+  const links = [...nav.querySelectorAll('a')].map(el => {
+    const r = el.getBoundingClientRect();
+    const hit = document.elementFromPoint(Math.round(r.left + r.width / 2), Math.round(r.top + r.height / 2));
+    return {text: el.textContent.trim().slice(0, 12),
+            covered: !!(hit && (hit.id === "byte-speech" || hit.closest("#byte-speech"))),
+            hit: hit ? (hit.id || hit.tagName.toLowerCase()) : null};
+  });
+  st.remove();
+  return {spoke, links: links.length, covered: links.filter(l => l.covered),
+          rectsOverlap: !(s.right <= n.left || s.left >= n.right || s.bottom <= n.top || s.top >= n.bottom),
+          gap: Math.round(s.top - n.bottom)};
+})()`);
+ok("a reader who enlarges the navigation keeps every link, even where the bubble reaches it",
+   navOverBubble.spoke && navOverBubble.links >= 5 && navOverBubble.covered.length === 0,
+   JSON.stringify(navOverBubble));
+
+// LEAVING THE ROW TAKES THE BUBBLE WITH IT. This is the defect the rename shipped alongside: `speak()` set
+// `hidden = false` and nothing on the hover path ever set it back, so the first hover of a visit pinned a
+// fact over the masthead until the reader found the quiet switch. Moving the pointer off the row is the
+// reader's own gesture, so it is dispatched rather than simulated in JS.
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 2, y: 2, buttons: 0});
+await sleep(120);
+ok("Archie stops speaking when the pointer leaves the row",
+   await evalIn("document.getElementById('byte-speech').hidden === true"));
+
+// A FACT THAT WAS NEVER OWED. Brushing across a row on the way to the filter bar used to arm the 320ms timer
+// and let it land afterwards, about a row the pointer was no longer near. Leaving inside the delay has to
+// cancel it, so this waits well past 320ms and expects silence.
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...firstProjectPoint});
+await sleep(80);
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 2, y: 2, buttons: 0});
+await sleep(500);
+ok("a row brushed past within the delay never speaks",
+   await evalIn("document.getElementById('byte-speech').hidden === true"));
+
+// Escape reaches the reader who tabbed to the row and has no pointer to move away.
+//
+// The blur is not decoration. `focus()` on the element that already holds focus fires no `focusin`, so the
+// speak handler never runs and this reads a bubble that was never asked to appear -- it passed only because
+// nothing earlier in the file happened to leave focus on that link, and it failed the moment something did.
+// Waiting for the sentence rather than budgeting 450ms for it is the same fix as in the walk above: the
+// generator's delay is 320ms and a loaded CI runner can lose that race.
+await evalIn(`(async () => {
+  const speech = document.getElementById('byte-speech');
+  if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+  speech.hidden = true; speech.textContent = "";
+  document.querySelector('#out tr[data-project] a')?.focus({preventScroll: true});
+  for (let waited = 0; waited < 2500 && (speech.hidden || !speech.textContent); waited += 25)
+    await new Promise(r => setTimeout(r, 25));
+})()`);
+const escaped = await evalIn(`(() => {
+  const speech = document.getElementById('byte-speech');
+  const spoke = !speech.hidden;
+  document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+  return {spoke, hiddenAfter: speech.hidden};
+})()`);
+ok("focusing a row speaks and Escape dismisses it", escaped.spoke && escaped.hiddenAfter,
+   JSON.stringify(escaped));
+
+// Back onto the row, so the quiet switch below is measured from a bubble that is actually showing rather
+// than passing vacuously against one this block left hidden.
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 0, y: 0, buttons: 0});
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...firstProjectPoint});
+await sleep(450);
+ok("Archie speaks again on a fresh hover",
+   await evalIn("document.getElementById('byte-speech').hidden === false"));
 await evalIn("document.getElementById('byte-quiet').click()");
-ok("Atlas Byte commentary has a local quiet switch", await evalIn(`(() => {
+ok("Archie commentary has a local quiet switch", await evalIn(`(() => {
   const quiet = document.getElementById('byte-quiet'), speech = document.getElementById('byte-speech');
   return quiet?.getAttribute('aria-pressed') === 'true' && speech?.hidden;
 })()`));
@@ -271,11 +872,11 @@ const mascot = await evalIn(`(() => {
   return {naturalWidth: img.naturalWidth, left: r.left, right: r.right, top: r.top, width: r.width,
           navRight: n.right, animation: cs.animationName};
 })()`);
-ok("Atlas Byte loads in the masthead", mascot && mascot.naturalWidth > 0, JSON.stringify(mascot));
-ok("Atlas Byte sits at the upper right without covering navigation",
+ok("Archie loads in the masthead", mascot && mascot.naturalWidth > 0, JSON.stringify(mascot));
+ok("Archie sits at the upper right without covering navigation",
    mascot && mascot.right > 1440 * .88 && mascot.top < 150 && mascot.left >= mascot.navRight - 1 &&
    mascot.width >= 92 && mascot.width <= 170, JSON.stringify(mascot));
-ok("Atlas Byte has an idle animation", mascot && mascot.animation !== "none", JSON.stringify(mascot));
+ok("Archie has an idle animation", mascot && mascot.animation !== "none", JSON.stringify(mascot));
 await S("Emulation.setEmulatedMedia", {
   media: "screen", features: [{name: "prefers-reduced-motion", value: "reduce"}],
 });
@@ -288,7 +889,7 @@ await S("Emulation.setEmulatedMedia", {media: "screen", features: []});
 
 const faviconHref = await evalIn("document.querySelector('link[rel=icon]')?.getAttribute('href') || ''");
 const faviconResponse = await fetch(new URL("favicon.svg", ORIGIN));
-ok("the globe emoji favicon is replaced by a local Atlas Byte SVG",
+ok("the globe emoji favicon is replaced by a local Archie SVG",
    faviconHref === "favicon.svg" && faviconResponse.ok,
    faviconHref + " / HTTP " + faviconResponse.status);
 
@@ -519,6 +1120,14 @@ ok("cards are two or three across at 900px", c900.across >= 2, JSON.stringify(c9
 ok("the screenshot survives the width at which the table drops it", c900.imgShown);
 ok("and so do the two columns the table drops with it", c900.tagsShown && c900.langShown);
 ok("nothing overflows sideways at 900px", c900.hscroll <= 0, String(c900.hscroll));
+// 900 is the width the masthead reflows at, and reflow is what decides whether the band the bubble sits in
+// exists at all -- so the clearance is re-measured here rather than assumed from 1440. Focus rather than the
+// mouse, because this only needs the bubble on screen, and `preventScroll` keeps the sticky bar where the
+// reader would see it.
+await evalIn("document.querySelector('#out tr[data-project] a')?.focus({preventScroll: true})");
+await sleep(450);
+await clearance("Archie's speech bubble clears the navigation and the filter bar at 900px", true,
+                widest.worstText);
 await shot("view-cards-900");
 
 // ---- 375px: the 290px floor has to give exactly one column, not a sideways scroll
@@ -532,6 +1141,19 @@ ok("one card per line on a phone", c375.across === 1, JSON.stringify(c375));
 ok("the card fits the screen", c375.cardW <= 375 - 28 + 2, String(c375.cardW));
 ok("nothing overflows sideways on a phone", c375.hscroll <= 0, String(c375.hscroll));
 ok("the screenshot is there, which the phone table deliberately does not show", c375.imgShown);
+// AND ON A PHONE IT IS NOT THERE AT ALL, which is a decision rather than an omission. Below 640px `.headside`
+// is full width, so the nav sits immediately left of the mascot and the search field immediately below it:
+// there is no band left to put a 270px bubble in, and it was measured covering the search field outright.
+// A reader at this width most likely has no pointer to hover with either, and the fact is already on the card
+// they are touching. Asserted so that a later change to the anchoring cannot quietly put it back over the
+// search field -- and so that the reason is on the record rather than looking like the rule was forgotten.
+await evalIn("document.querySelector('#out tr[data-project] a')?.focus({preventScroll: true})");
+await sleep(450);
+await clearance("Archie says nothing on a phone, where there is nowhere to say it", false);
+// The width the two-line claim was actually false at. The bubble is gone here, but the name tag is not, and
+// the rule that shrinks his column to 82px is the one that pushed the pill to three lines. One word now, so
+// this is the width where the count being asserted is the one no font can change.
+await nametag("Archie's name tag is one unwrappable word on a phone", 375, 1);
 await shot("view-cards-375");
 
 // The table's own narrow layout, which this must not have disturbed -- it is a click away on a phone rather
@@ -544,6 +1166,18 @@ ok("the table's own narrow layout is still one column",
    JSON.stringify(t375));
 ok("and still hides the screenshot, as it always has", !t375.imgShown, JSON.stringify(t375));
 await shot("view-table-375");
+
+// ---- 640px exactly: the boundary the name tag broke on, and it is `max-width`, so the rule applies AT 640
+// and not merely below it. 375 and 1440 alone would pass a rule that started one pixel off.
+await resize(640, 900);
+await goto(ORIGIN);
+await nametag("Archie's name tag is one word at the 640px boundary itself", 640, 1);
+await resize(641, 900);
+await goto(ORIGIN);
+// And the full name comes back one pixel later, in two lines, in a 128px column with 25% of slack rather than
+// 4% -- 108px of content against the 81px the widest face measured needs for "Archie 'Atlas'". This is the
+// assertion that would catch the swap being written as `max-width:641px` or applied at every width.
+await nametag("and the full name, two lines, on the desktop side of that boundary", 641, 2);
 
 // ---- both themes, because the card's background and border are both theme variables
 //
