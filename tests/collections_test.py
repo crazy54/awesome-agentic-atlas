@@ -162,6 +162,47 @@ msg = raises("a pick that has left the atlas is refused", lambda: b25.plan(DATA,
 says("...and the message names the project", msg, "nobody/not-a-real-repo")
 says("...and says what to suspect", msg, "no longer on any source list")
 
+# ---------------------------------------------------------------- renames, which are not departures
+# A renamed repository is still the project that was picked, and `16_build_all.canonicalise()` rewrites its
+# row to whatever the API calls it now -- so the spelling in the curation and the spelling in the dataset
+# disagree for exactly as long as it takes a weekly to land. `aka` spans that, and these assertions are
+# what stop the spanning from turning into "any pick resolves to anything".
+print("\n── renamed picks " + "─" * 80)
+def planned(c: dict, slug: str, role: str) -> dict:
+    """One resolved pick, found by slug and slot rather than by position."""
+    return next(p for p in coll({"collections": b25.plan(DATA, c)}, slug)["picks"] if p["role"] == role)
+
+
+# Deliberately a project this collection does not already recommend: `check()` refuses the same repository
+# in two slots, and that refusal would otherwise be what these assertions measured.
+real = next(n for n in rows if n not in {p["nwo"] for p in coll(fresh(), "first-setup")["picks"]})
+c = fresh()
+target = coll(c, "first-setup")["picks"][0]
+target["nwo"], target["aka"] = "gone/renamed-away", [real]
+got = planned(c, "first-setup", target["role"])
+eq("a pick whose nwo has been renamed resolves through aka", got["nwo"], real)
+eq("...and carries that project's row, not the stale name", got["row"]["nwo"], real)
+
+c = fresh()
+target = coll(c, "first-setup")["picks"][0]
+kept, target["aka"] = target["nwo"], [real]
+got = planned(c, "first-setup", target["role"])
+eq("nwo wins when both spellings are in the atlas", got["nwo"], kept)
+
+c = fresh()
+target = coll(c, "first-setup")["picks"][0]
+target["nwo"], target["aka"] = "gone/renamed-away", ["gone/also-not-here"]
+msg = raises("a pick refused when no spelling it knows is in the atlas",
+             lambda: b25.plan(DATA, c))
+says("...and the message names every spelling tried", msg, "gone/renamed-away")
+says("...including the aka", msg, "gone/also-not-here")
+says("...and says what a curator should do about it", msg, "aka")
+
+true("every pick that declares an aka resolves to one of the spellings it declares",
+     all(p["nwo"] in {p_src["nwo"], *(p_src.get("aka") or [])}
+         for c_p, c_src in zip(b25.plan(DATA), CURATION["collections"])
+         for p, p_src in zip(c_p["picks"], c_src["picks"])))
+
 first_os = next((x for x in CURATION["collections"] if (x.get("requires") or {}).get("os")), None)
 true("some collection makes a platform claim, so the branch below is reachable", first_os is not None)
 if first_os:
