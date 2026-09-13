@@ -754,6 +754,10 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
    the palette hint is: a control that opens nothing is worse than no control. */
 .takechip{display:none}
 .takechip.on{display:inline-flex;align-items:center;gap:.4em}
+/* The other control on this row that selects nothing, hidden by the same mechanism and for the same two
+   reasons -- see the constellation block further down for what it opens. */
+.mapchip{display:none}
+.mapchip.on{display:inline-flex;align-items:center;gap:.4em}
 /* The collapsed comparison, and the reason there is no strip pinned to the bottom of the viewport. The tray
    this is standing in for wanted to be `position:fixed;bottom:0`, and that has one defect no styling fixes:
    a fixed strip is read last in the DOM and seen first on the screen, or read first and seen last, and either
@@ -1066,6 +1070,82 @@ dialog#exp::backdrop{background:rgba(0,0,0,.55)}
 .expnote{margin:0;padding:0 16px 12px;color:var(--muted);font-size:12px;line-height:1.5}
 .expfoot{display:flex;justify-content:flex-end;background:var(--surface);
   border-top:1px solid var(--grid);padding:9px 14px}
+/* ---- The constellation -------------------------------------------------------------------------------
+   Almost nothing, because almost all of this feature is one `<canvas>` and the stylesheet cannot help with
+   what is drawn inside it. What is here is the frame: a `<dialog>` like the other two, a stage for the
+   canvas to fill, a readout that follows the pointer, a topic key and a foot.
+
+   Bigger than the export sheet and taller than it is wide is not: the layout in `xy.bin` is roughly square
+   and quantised against one shared scale for both axes precisely so that its aspect ratio survives, so a
+   letterbox would waste the width and a portrait box would waste the height. `min(1180px, 100vw - 20px)`
+   against `min(820px, 100vh - 20px)` is as close to that square as a browser window generally allows, and
+   the renderer fits the layout inside whatever it actually gets.
+
+   The canvas is sized in CSS and *resized* in JS, which is the one thing about a canvas that is not
+   optional: `width`/`height` are the bitmap and the CSS box is the display size, so a canvas left at its
+   300x150 default and stretched to 1,100px is a 300px picture scaled up. `mapFit()` sets both, off
+   `devicePixelRatio`, on open and on every resize.
+
+   `touch-action:none` so a drag pans the map instead of scrolling the dialog, and `overscroll-behavior`
+   on the stage so a wheel that reaches the end of the zoom range does not start scrolling the page
+   behind an inert modal. */
+dialog#mapdlg{border:1px solid var(--grid);background:var(--plane);color:var(--ink);border-radius:12px;
+  padding:0;width:min(1180px,calc(100vw - 20px));height:min(820px,calc(100vh - 20px));overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.45);display:flex;flex-direction:column}
+/* Darker than the other two backdrops. The whole point of what is behind this one is that it is a field of
+   faint dots, and a 55% scrim leaves enough of the table showing to compete with them. */
+dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
+.maphead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 14px;
+  border-bottom:1px solid var(--grid)}
+.maphead h2{margin:0;font-size:16px;white-space:nowrap}
+#mapwhat{margin:0;flex:1;min-width:120px;color:var(--muted);font-size:13px}
+#mapwhat b{color:var(--ink2)}
+.mapstage{position:relative;flex:1;min-height:0;background:var(--surface);overscroll-behavior:contain}
+#mapc{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair}
+#mapc.drag{cursor:grabbing}
+/* Follows the pointer, so it can never be under it: `pointer-events:none` means a dot at the edge of the
+   readout is still hoverable, and `mapMove()` flips the box to the other side of the cursor rather than
+   letting it run off the stage. */
+#maptip{position:absolute;left:0;top:0;pointer-events:none;width:max-content;max-width:300px;
+  background:var(--plane);border:1px solid var(--grid);border-radius:9px;padding:7px 10px;
+  font-size:12px;line-height:1.5;box-shadow:0 10px 26px rgba(0,0,0,.45);z-index:2}
+#maptip .tn{display:block;font-weight:600;font-size:13px;color:var(--ink)}
+#maptip .tk{color:var(--muted)}
+#maptip .tb{display:block;margin-top:3px;color:var(--ink2)}
+/* The one thing the reader is told when the index and the data disagree, and the reason it is a sentence in
+   the dialog rather than a hidden chip: the chip is only hidden when the *flag* is off, which is a decision
+   somebody made. A guard that fired is a fact about this build, and a reader who pressed Map deserves to be
+   told which. */
+#mapnope{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;margin:0;
+  padding:0 32px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}
+/* `[hidden]` is a user-agent rule and the author `display` above outranks it, which is the trap the
+   shared-list strip further down records. Both boxes here declare a display, so both restate the hiding. */
+#mapnope[hidden],.mapkey[hidden]{display:none}
+.mapkey{display:flex;flex-wrap:wrap;gap:3px 8px;padding:8px 14px;border-top:1px solid var(--grid);
+  background:var(--surface);max-height:22vh;overflow-y:auto}
+/* Real buttons, and this is the accessibility answer as much as a convenience. The dots cannot be reached
+   by keyboard -- there are 1,294 of them and they are pixels -- but every *territory* can, and pressing one
+   is the same `state.cat` the topic chips on the bar set. So the map's structure is operable without a
+   pointer, and the projects themselves stay where they have always been readable: the table. */
+.mapkey button{display:inline-flex;align-items:center;gap:5px;background:none;border:1px solid transparent;
+  border-radius:20px;padding:2px 9px 2px 5px;color:var(--ink2);font:inherit;font-size:12px}
+.mapkey button:hover{border-color:var(--grid);color:var(--ink)}
+.mapkey button[aria-pressed=true]{border-color:var(--bar);background:var(--band);color:var(--ink)}
+/* `--sw` is set inline per button from the same hue the canvas draws that topic with, so the key cannot
+   disagree with the picture -- there is one source for the colour and it is `mapHue()`. */
+.mapkey i{flex:0 0 auto;width:9px;height:9px;border-radius:50%;background:var(--sw);
+  box-shadow:0 0 7px var(--sw)}
+.mapkey .kn{color:var(--muted);font-variant-numeric:tabular-nums}
+.mapfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface);
+  border-top:1px solid var(--grid);padding:9px 14px}
+#maphint{flex:1;min-width:0;color:var(--muted);font-size:12px}
+@media (max-width:640px){
+  /* Full-bleed, because at 375px a 10px inset is a border rather than breathing room -- and the key is the
+     first thing to go: fourteen pills are four rows of it, which is a third of the height that should be
+     showing the map. The territories stay reachable from the topic chips on the bar underneath. */
+  dialog#mapdlg{width:100vw;height:100vh;max-width:none;border:0;border-radius:0}
+  .mapkey{display:none}
+}
 /* The strip a shared list arrives under, between the filter bar and the results. That is where it belongs
    because of what it describes: not a filter the reader chose and not a property of any row, but what this
    page is *of* at the moment -- somebody else's collection. Amber like the approximate-match banner and for
@@ -1855,6 +1935,16 @@ __OSSPRITE__
          worse than no control. -->
     <button class="chip takechip" id="take" aria-haspopup="dialog"
             title="Take this view away as a link, a Markdown table, an HTML page or a PDF">Export</button>
+    <!-- Beside Export because it is the same kind of control -- neither one selects rows, both open a dialog,
+         so `aria-haspopup` rather than `aria-pressed` for both. Hidden until `mapWire()` has the flag and a
+         `<dialog>` it can open modally, exactly like Export: this chip's whole content is a canvas, and a
+         browser without `showModal` is not one to hand-roll an overlay for.
+
+         Not the sixth filter. What the map draws is whatever the table is already drawing, so it adds no
+         state and takes none away -- which is also why it is not `#view=map`: the two views are two layouts
+         of the same rows, and this is one picture of all of them at once. -->
+    <button class="chip mapchip" id="mapbtn" aria-haspopup="dialog"
+            title="See all __COUNT__ projects at once, laid out by what they do">Map</button>
     <button class="chip" id="palhint"></button>
     <!-- role=status makes this a polite live region, so pressing a chip or typing a search announces the
          new result count instead of silently rewriting a number the reader cannot see. aria-atomic so it
@@ -1999,6 +2089,36 @@ __OSSPRITE__
     no request leaves your browser &mdash; which is also why a link to your own saved projects carries the
     projects themselves rather than pointing at a list on a server.</p>
   <div class="expfoot"><button class="chip" id="expdone">Done</button></div>
+</dialog>
+
+<!-- The map. Outside the filter bar for the third time and for the third time for the same reason: a
+     `<dialog>` nested in a flex row the narrow-viewport rules hide cannot be opened on a phone.
+
+     `role="img"` with an `aria-label` that `mapPaint()` rewrites, which is an honest description of what a
+     canvas is and the only one available. There is no accessible tree inside a bitmap, and the alternative
+     -- 1,294 focusable nodes standing in for dots -- would be a worse experience than the sentence, because
+     every fact those nodes could carry is already in the table this dialog is drawn over, in a form that has
+     been navigable since the page was written. What the sentence says is therefore what a reader who cannot
+     see the picture actually needs: how many projects are lit, out of how many, by which view. The
+     *structure* stays operable -- the topic key below is fourteen real buttons, and each one is the same
+     filter as the topic chip of that name on the bar. -->
+<dialog id="mapdlg" aria-labelledby="maph">
+  <div class="maphead"><h2 id="maph">The atlas, as a map</h2>
+    <p id="mapwhat"></p>
+    <button class="chip" id="mapreset">Reset the view</button>
+    <button class="chip" id="mapdone">Done</button></div>
+  <div class="mapstage" id="mapstage">
+    <canvas id="mapc" role="img" aria-label="A map of every project in the atlas"></canvas>
+    <!-- Both start hidden and only one of them is ever shown at a time: the readout when a dot is under the
+         pointer, the sentence when there is no map to put a pointer on. -->
+    <div id="maptip" hidden></div>
+    <p id="mapnope" hidden></p>
+  </div>
+  <div class="mapkey" id="mapkey" role="group" aria-label="Topics"></div>
+  <div class="mapfoot"><span id="maphint"></span>
+    <!-- Written by `mapPin()` because its label names a project and a number, and hidden the rest of the
+         time: a button that says "show these in the table" with nothing pinned has no "these". -->
+    <button class="chip" id="mapnear" hidden></button></div>
 </dialog>
 
 <footer><div class="wrap">
@@ -2366,7 +2486,7 @@ fetch("data.json").then(r => {
   // so neither of the two listeners in `buildChips` will fire. `render()` first and this second: the rows
   // the words match go up immediately and the ones meaning finds are added when the bytes land, which is
   // the same order a reader who types gets them in.
-  if (state.q) loadSemantic();
+  if (state.q) semanticReady();
 }).catch(err => {
   // A browser will not let a file:// page fetch a sibling file, so double-clicking index.html out of a
   // clone loads the chrome and then nothing at all, with the reason only in the console. Anyone doing
@@ -2426,16 +2546,16 @@ function buildChips() {
     const v = e.target.value;
     // Kicked off from here as well as from `focus`, because a reader who pasted a query or arrived on a
     // `#q=` link never focused anything, and one whose first keystroke was into an already-focused box
-    // gets it from the other listener. `loadSemantic` returns immediately after the first call, so both
-    // paths firing costs one comparison.
-    loadSemantic();
+    // gets it from the other listener. `semanticReady` hands back the same promise after the first call,
+    // so both paths firing costs one comparison.
+    semanticReady();
     clearTimeout(typing);
     typing = setTimeout(() => set({q: v}, true), 150);
   };
   // The download starts on the intent to search rather than on the search: 758 KB has to race the reader's
   // first few keystrokes, and starting it when the query is complete would mean the first answer is the one
   // without meaning in it. `once` because there is nothing to do on the second focus.
-  qbox.addEventListener("focus", loadSemantic, {once: true});
+  qbox.addEventListener("focus", semanticReady, {once: true});
   document.getElementById("sort").onchange = e => set({sort: e.target.value});
   // Unhidden here rather than in the markup -- see the button for why it starts hidden. The announcement is
   // on this path only: `applyView` also runs from `render()`, and the view the page opened in is not news. It is
@@ -2503,6 +2623,9 @@ function buildChips() {
   // Last, and here rather than in `wire()`, which is the argument `palWire` and `sheetWire` above it both make:
   // `wire()` also runs on the data.json error path, and every document this one offers is built out of rows.
   expWire();
+  // After `expWire`, because the map's own neighbourhood button is behind the export flag -- see `mapPin` --
+  // and before the first `render()`, so `mapRepaint` has a key to paint the moment anything is filtered.
+  mapWire();
 }
 
 // The handle, the backdrop and the Done button. Wired from `buildChips` rather than from `wire()`, and this
@@ -3690,8 +3813,9 @@ function missLink() {
 // segment it into WordPiece tokens, look each one up, add the vectors, normalise. That is the entire
 // model on this side, it is the four lines of `semVector` below, and it runs in well under a
 // millisecond. 758 KB across four files -- 504 KB gzipped -- fetched once, on the first
-// interaction with the search box. Not the 784 KB `docs/search/` weighs: `near.bin` and
-// `xy.bin` sit in that directory and nothing fetches them yet.
+// interaction with the search box. Not the 784 KB `docs/search/` weighs: the other 25 KB is
+// `xy.bin` and `near.bin`, which the map below fetches on its own trigger and this does not
+// need.
 //
 // WHY IT IS FETCHED ON INTERACTION rather than at load or in the precache. A reader who came for the
 // table and never types is charged nothing, and the download races the reader's first keystrokes rather
@@ -3900,6 +4024,12 @@ async function loadSemantic() {
       // document component to 0 or +/-1 and collapsed 1,294 rows onto a handful of distinct vectors.
       ds: meta.doc_scale / 127,
       vs: meta.vocab_scale / 127,
+      // Kept for the map, which is the other reader of this directory and validates nothing of its own.
+      // `rows` and `near` are the two lengths `xy.bin` and `near.bin` have to have; `xy_scale` is the one
+      // number that turns their int16s back into positions. Stashed here rather than re-fetched there
+      // because `meta.json` is where the fingerprint lives, and a second fetch is a second chance for the
+      // two readers to be looking at different metadata.
+      rows: meta.rows, near: meta.near | 0, xys: meta.xy_scale,
     };
     SEM_STATE = "live";
     // Only if there is something on screen this changes. A reader who focused the box and typed nothing
@@ -3911,6 +4041,735 @@ async function loadSemantic() {
     // is unharmed, and a console line is what tells a contributor why their rebuilt index does nothing.
     console.warn("search by meaning is off:", err.message);
   }
+}
+
+// The same fetch, awaitable. `loadSemantic` is already idempotent -- `SEM_STATE` sees to that -- but
+// idempotent is not the same as *joinable*: a second caller returns instantly from the guard while the
+// first is still mid-`Promise.all`, which is fine for a keystroke that only wants the bytes eventually and
+// useless for the map, which has to know when they arrived. Holding the promise makes the second caller
+// wait for the first fetch instead of starting another or missing it.
+let SEM_LOAD = null;
+function semanticReady() { return SEM_LOAD || (SEM_LOAD = loadSemantic()); }
+
+// ─────────────────────────────────────────────────────────────────────────────────────────────────────
+// THE ATLAS AS A MAP -- JFH-298.
+//
+// The other half of JFH-293. That ticket was "search the catalog by meaning, *and draw it as a map*"; the
+// search shipped and the map did not. The sentence at the top of the section above used to read "near.bin
+// and xy.bin sit in that directory and nothing fetches them yet"; this is what replaced it, and the same
+// sentence came out of `24_pwa.py` beside its first-visit cache list.
+//
+// WHAT IS BEING DRAWN, and it is not a chart. `27_semantic.py` runs a force-directed layout over the same
+// 96-dimensional vectors `senseHits` scores against and ships the result as one int16 pair per row: 5,176
+// bytes that put every project beside the projects that do what it does. Nothing in that layout was told
+// what a topic is. It produces territory anyway, and the territory agrees with the fourteen curated topics
+// -- security west, plugins and clients east, observability northeast, research north, orchestrators and
+// assistants south. That claim is asserted rather than admired: `semantic_test.py` requires that of the
+// eight rows nearest a project, the share sharing its curated category beats two rows drawn at random by
+// 2.5x, and that the neighbour edges are shorter than random pairs.
+//
+// WHY A MAP AND NOT A THIRD VIEW. The table answers "which of these", one row at a time, 120 to a page. It
+// cannot answer "what *is* this field", "what sits next to the thing I already use", or "is the gap I think
+// I see real" -- those are questions about the shape of 1,294 projects rather than about any one of them,
+// and a list has no shape. So this is not `#view=map` beside table and cards. Those two are layouts of the
+// rows that matched; this is one picture of all of them, with the ones that matched lit up.
+//
+// WHICH MEANS IT HAS NO FILTERS OF ITS OWN, and that is the design rather than a shortcut. `mapPaint` lights
+// `HITS` -- the rows `render()` last put on screen, before paging -- so the search box, every chip on the
+// bar, a shared `#list=` link and the reader's saved set all reach the map for free and none of them can
+// disagree with it. `render()` calls `mapRepaint()` on its way out; the key in the map calls `set()` when a
+// topic is pressed. There is one state and the map is a second drawing of it.
+//
+// WHAT A LIT SEARCH ACTUALLY SHOWS, measured rather than asserted, because the temptation here is to promise
+// that a sentence lights one neighbourhood and it does not always. Twelve rows drawn at random sit a median
+// 0.30 of the layout's width from their own centroid, and the tightest 5% of random draws still sit at 0.22.
+// Against that null: "run untrusted agent code in a sandbox" lights a set at 0.12 and "turn my design mockup
+// into working code" one at 0.19 -- both tighter than 95% of chance, both visibly one region. But "watch what
+// my agent did and replay it" comes out at 0.27 and "keep an eye on what my agents are costing me" at 0.33,
+// which is chance: those twelve dots are scattered over the whole cloud.
+//
+// The split is not noise and it is the most useful thing on the map. A query about what a tool *is* names a
+// region, because that is what the layout is made of. A query about a concern that cuts across every kind of
+// tool -- cost, replay, audit -- has no region to name, and the map says so by scattering. A reader who sees
+// their search land in one place has found a field; a reader who sees it spray has learned that they are
+// asking for a property rather than a category, which is the point at which the topic chips are the better
+// instrument. Neither picture is a failure, so neither is dressed up as the other: `mapFly` frames whatever
+// came back, tight or scattered, and `#mapwhat` counts it without adjectives.
+//
+// THE NEIGHBOUR LINES ARE NOT THE NEAREST DOTS. `near.bin` names each row's eight nearest neighbours in the
+// full 96 dimensions, and this layout is a projection of those dimensions into two -- a projection loses
+// things. So a hovered project's edges sometimes reach clear across the map, and that is the honest
+// drawing: the reader is being *told* who its neighbours are, which is a stronger statement than "these
+// pixels are near each other". The list is also directed -- row i naming j does not put i in j's eight -- so
+// the out-edges are drawn solid and the in-edges faint, and a hub named by two hundred rows looks like one.
+//
+// THE GUARD IS THE SEMANTIC ONE AND NOT A SECOND COPY. Both files are addressed by row ordinal exactly as
+// `docs.bin` is, so an index built against a different `data.json` draws a map that is confidently and
+// entirely wrong -- every dot in the wrong place, every neighbour the wrong project, nothing thrown
+// anywhere. So `loadMap` waits on `semanticReady()` and refuses unless it came back "live". The row count
+// and the SHA-256 of the `nwo` column have then been checked once, in one place, for all three binaries.
+//
+// COST. 25,880 bytes on top of a fetch that already moves 758 KB, and only for a reader who opens the map.
+const MAP_NEAR_MAX = 32;       // sanity bound on meta.near before it is used as a stride
+const MAP_ZOOM_OUT = 0.75;     // multiples of the fit-to-stage scale a reader may reach, either way
+const MAP_ZOOM_IN = 26;
+const MAP_PICK = 13;           // px within which the pointer is taken to be on a dot
+const MAP_LABELS = 12;         // most projects the map will name at once
+const MAP_PAD = 40;            // px of stage kept clear of dots, so a label at the edge has somewhere to go
+const MAP_FLY = 520;           // ms of the swing onto a search's answer, and the only animation here
+// A canvas has two sizes -- the bitmap and the CSS box -- and a device pixel ratio of 3 means nine times the
+// fill for dots that are already 3 px across. Capped, which costs nothing visible and is the difference
+// between a smooth pan and a slideshow on a phone.
+const MAP_DPR_MAX = 2;
+let MAP = null, MAP_STATE = "cold";   // cold | loading | live | off
+// The camera, as `px = x * k + ox` and `py = oy - y * k`. One object rather than three globals because
+// `mapFly` interpolates between two of them and a reset is an assignment. `MAP_FIT` is the scale that frames
+// the whole layout in the stage, kept because both zoom limits and the reset are multiples of it.
+let MAP_CAM = null, MAP_FIT = 1, MAP_FLIGHT = 0;
+// Which dot the pointer is over and which one a click pinned, as row ordinals: two rather than one because
+// they answer different questions -- the readout follows the pointer, the neighbourhood button belongs to
+// the pin -- and -1 rather than null so either can be compared without a branch.
+let MAP_HOT = -1, MAP_PIN = -1;
+
+// Fetched on the reader's first press of the Map chip, never before. Everything fails closed exactly as
+// `loadSemantic` does, and for one extra reason: this is the second reader of `docs/search/`, so a mistake
+// here must not be able to take the search down with it.
+async function loadMap() {
+  if (MAP_STATE !== "cold") return MAP_STATE;
+  MAP_STATE = "loading";
+  try {
+    // The whole guard, borrowed rather than repeated. "live" is the only state in which the row count and the
+    // fingerprint have both been checked, and it is the only state these two files may be decoded in.
+    await semanticReady();
+    if (SEM_STATE !== "live") throw new Error("the semantic index is " + SEM_STATE);
+    const grab = async name => {
+      const res = await fetch("search/" + name);
+      if (!res.ok) throw new Error("search/" + name + " -> " + res.status);
+      return res.arrayBuffer();
+    };
+    const [xyb, nearb] = await Promise.all([grab("xy.bin"), grab("near.bin")]);
+    const rows = SEM.rows, n = SEM.near;
+    if (!(n > 0 && n <= MAP_NEAR_MAX)) throw new Error("meta.near is " + SEM.near);
+    if (!(typeof SEM.xys === "number" && isFinite(SEM.xys) && SEM.xys > 0))
+      throw new Error("meta.xy_scale is " + SEM.xys);
+    if (xyb.byteLength !== rows * 4) throw new Error("xy.bin is " + xyb.byteLength + " B");
+    if (nearb.byteLength !== rows * n * 2) throw new Error("near.bin is " + nearb.byteLength + " B");
+    // `DataView` with an explicit `true`, not `new Int16Array(buffer)`. A typed-array view over a raw buffer
+    // reads it in the *platform's* byte order, and the stage writes little-endian; every machine anyone will
+    // read this on agrees with that today, which is exactly the kind of assumption that is invisible until it
+    // is wrong. `docs.bin` gets away with a bare `Int8Array` because a single byte has no order. These do not,
+    // so the order is stated. 2,588 + 10,352 `get` calls, once, on a fetch that took milliseconds.
+    const dv = new DataView(xyb), s = SEM.xys / 32767;
+    const x = new Float32Array(rows), y = new Float32Array(rows);
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (let i = 0; i < rows; i++) {
+      // One scale for both axes, which is the stage's decision and the reason this does not normalise each
+      // axis to the stage separately: a layout squeezed to fit its box is no longer the layout, and the
+      // distances a reader is being invited to read off it would be lies in one direction.
+      const a = dv.getInt16(i * 4, true) * s, b = dv.getInt16(i * 4 + 2, true) * s;
+      x[i] = a; y[i] = b;
+      if (a < x0) x0 = a;
+      if (a > x1) x1 = a;
+      if (b < y0) y0 = b;
+      if (b > y1) y1 = b;
+    }
+    if (!(x1 > x0 && y1 > y0)) throw new Error("xy.bin has no extent");
+    const nv = new DataView(nearb), near = new Uint16Array(rows * n);
+    // In-degree in the same pass, because it is the number that makes the picture mean something: eight out
+    // is every row's number and says nothing, and "named by 214" is what a hub is. Also the bounds check --
+    // an ordinal past the end of the corpus would index `x` as undefined and draw a line to NaN, which
+    // canvas discards silently, so a corrupt neighbour list would simply lose edges rather than complain.
+    const deg = new Uint16Array(rows);
+    for (let i = 0; i < near.length; i++) {
+      const v = nv.getUint16(i * 2, true);
+      if (v >= rows) throw new Error("near.bin names row " + v + " of " + rows);
+      near[i] = v;
+      deg[v]++;
+    }
+    MAP = {x, y, near, deg, n, x0, y0, x1, y1};
+    MAP_STATE = "live";
+  } catch (err) {
+    MAP_STATE = "off";
+    // Reported, not thrown, for the reason the search says: a missing map is a degradation and the page
+    // around it is unharmed. Unlike the search, a reader has *asked* for this one -- so `mapOpen` also puts
+    // a sentence in the dialog rather than showing an empty box.
+    console.warn("the map is off:", err.message);
+  }
+  return MAP_STATE;
+}
+
+// One hue per topic, off the golden angle rather than out of a table of fourteen colours. `D.cats` comes from
+// the data, so a table would either repeat itself or run out the week a fifteenth topic is added, silently
+// and in the one place a reader is being asked to tell colours apart. 137.508 degrees is the angle that keeps
+// consecutive indices maximally far apart for every count, which is the property a hand-picked list has to be
+// re-picked to keep.
+function mapHue(cat) { return ((cat | 0) * 137.508) % 360; }
+
+// The canvas cannot read a custom property, so the four the map needs are read out of the document once per
+// paint. Which also means the map follows the theme toggle for free: the same rule that repaints it on every
+// render repaints it with whatever `--ink` currently is.
+function mapPalette() {
+  const cs = getComputedStyle(document.documentElement);
+  const pick = (name, fallback) => cs.getPropertyValue(name).trim() || fallback;
+  const light = document.documentElement.dataset.theme === "light";
+  return {
+    light,
+    back: pick("--surface", light ? "#fff" : "#090A0D"),
+    ink: pick("--ink", light ? "#111" : "#EDEFF3"),
+    sub: pick("--muted", "#8A8F98"),
+    grid: pick("--grid", light ? "#DDE1E6" : "#22262E"),
+    plane: pick("--plane", light ? "#F6F7F9" : "#101217"),
+    // Lit dots are lighter than the page on a dark theme and darker than it on a light one, which is the
+    // only way one hue set can carry both. The dim ones are the same hue at a lightness that reads as
+    // "present but not the answer" rather than as a second colour.
+    lit: light ? 40 : 63,
+    dim: light ? 78 : 26,
+  };
+}
+
+// Layout units to CSS px. Two functions rather than one because the hit test needs the inverse and doing it
+// by hand at each call site is how a pan ends up half a pixel out of step with what is drawn.
+function mapX(x) { return x * MAP_CAM.k + MAP_CAM.ox; }
+// Subtracted, so the layout's positive y is up. Canvas y grows downward and the layout has no inherent up,
+// so this is a free choice -- and the one that makes a screenshot of this agree with a plot of the same
+// numbers in anything else.
+function mapY(y) { return MAP_CAM.oy - y * MAP_CAM.k; }
+
+// The bitmap, the CSS box and the camera, in that order, because the camera is a function of the box. Called
+// on open and on every resize; returns false when there is nothing to draw on, which is what makes every
+// caller safe under a stub DOM.
+function mapSize() {
+  const c = document.getElementById("mapc"), st = document.getElementById("mapstage");
+  if (!c || typeof c.getContext !== "function" || !MAP) return false;
+  const w = st.clientWidth || 0, h = st.clientHeight || 0;
+  if (!(w > 0 && h > 0)) return false;
+  const dpr = Math.min(window.devicePixelRatio || 1, MAP_DPR_MAX);
+  c.width = Math.round(w * dpr);
+  c.height = Math.round(h * dpr);
+  c.dataset.w = w;
+  c.dataset.h = h;
+  MAP_FIT = Math.min((w - MAP_PAD * 2) / (MAP.x1 - MAP.x0), (h - MAP_PAD * 2) / (MAP.y1 - MAP.y0));
+  return true;
+}
+
+// The camera that frames a box of layout units in the stage, which is one function for two jobs: the reset
+// frames the whole layout, and a search frames the rows it found. `zoom` is capped at the fit scale for the
+// second job -- twelve projects in one neighbourhood would otherwise fill the stage at 40x and lose every
+// piece of context that made the answer legible.
+function mapFrameOn(x0, y0, x1, y1, maxScale) {
+  const c = document.getElementById("mapc");
+  const w = +c.dataset.w, h = +c.dataset.h;
+  const k = Math.min(maxScale, (w - MAP_PAD * 2) / Math.max(x1 - x0, 1e-6),
+                     (h - MAP_PAD * 2) / Math.max(y1 - y0, 1e-6));
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  return {k, ox: w / 2 - cx * k, oy: h / 2 + cy * k};
+}
+
+// The bounding box of a set of rows, padded by a tenth of its own size so the outermost dot is not on the
+// frame. Null for an empty set, which is the render where nothing matched: there is no answer to frame, so
+// the camera stays where it is and the whole sky stays dim.
+function mapBoxOf(rows) {
+  if (!rows.length) return null;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const r of rows) {
+    const x = MAP.x[r.ord], y = MAP.y[r.ord];
+    if (x < x0) x0 = x;
+    if (x > x1) x1 = x;
+    if (y < y0) y0 = y;
+    if (y > y1) y1 = y;
+  }
+  const m = Math.max((x1 - x0) * 0.1, (y1 - y0) * 0.1, 0.4);
+  return [x0 - m, y0 - m, x1 + m, y1 + m];
+}
+
+// The swing onto a search's answer, and the only animation in this module. Gated on the reader's own
+// preference in JavaScript, because the blanket `prefers-reduced-motion` rule in the stylesheet collapses
+// CSS durations and has no reach into a `requestAnimationFrame` loop -- and gated on `requestAnimationFrame`
+// existing at all, which under `tests/probe.mjs` it does not.
+function mapFly(to) {
+  const from = MAP_CAM, id = ++MAP_FLIGHT;
+  const still = typeof requestAnimationFrame !== "function" ||
+    (typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion:reduce)").matches);
+  if (still) { MAP_CAM = to; mapPaint(); return; }
+  const t0 = Date.now();
+  const step = () => {
+    // A second flight started while this one was in the air -- a reader who typed again, or pressed a topic.
+    // The newer camera is the right one, so this frame is simply dropped rather than fighting it.
+    if (id !== MAP_FLIGHT) return;
+    const t = Math.min(1, (Date.now() - t0) / MAP_FLY);
+    // Cubic ease-out. The interesting frames of a zoom are the ones at the end.
+    const e = 1 - Math.pow(1 - t, 3);
+    MAP_CAM = {k: from.k + (to.k - from.k) * e, ox: from.ox + (to.ox - from.ox) * e,
+               oy: from.oy + (to.oy - from.oy) * e};
+    mapPaint();
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+// Everything on screen, in one pass, from `HITS` and the camera. No caching and no dirty rectangles: the
+// whole picture is 1,294 dots and about 10,000 hairlines, which is one `beginPath` and two `stroke` calls,
+// and the first draft that cached the edge layer to an offscreen canvas was slower than not caching it
+// because the invalidation ran on every zoom.
+function mapPaint() {
+  const c = document.getElementById("mapc");
+  if (!MAP || !c || typeof c.getContext !== "function" || !MAP_CAM) return;
+  const ctx = c.getContext("2d");
+  if (!ctx) return;
+  const w = +c.dataset.w, h = +c.dataset.h;
+  const dpr = c.width / (w || 1), p = mapPalette();
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = p.back;
+  ctx.fillRect(0, 0, w, h);
+  // Lit by ordinal rather than by a Set of names: `match` has already run 1,294 times this render and this
+  // is 1,294 more array writes against 1,294 hash lookups per dot drawn.
+  const lit = new Uint8Array(ROWS.length);
+  for (const r of HITS) lit[r.ord] = 1;
+  const n = MAP.n, rows = ROWS.length;
+
+  // ── the sky ──
+  // Every edge in `near.bin`, at an alpha low enough that no single one is visible and all 10,352 together
+  // are. This is the layer that turns a scatter plot into something worth looking at, and it costs one path.
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = p.grid;
+  ctx.globalAlpha = p.light ? 0.5 : 0.34;
+  ctx.beginPath();
+  for (let i = 0; i < rows; i++) {
+    const ax = mapX(MAP.x[i]), ay = mapY(MAP.y[i]);
+    for (let k = 0; k < n; k++) {
+      const j = MAP.near[i * n + k];
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(mapX(MAP.x[j]), mapY(MAP.y[j]));
+    }
+  }
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // ── the dots ──
+  // Unlit first, so a lit dot is never painted under one that is not part of the answer. Radius grows with
+  // the log of the star count, floored at 1.6 px: the atlas spans 8 stars to 388,645, and a linear radius
+  // would make one dot the size of the stage and the rest invisible.
+  const rad = i => {
+    const s = ROWS[i].stars || 0;
+    return 1.6 + Math.min(4.4, Math.log10(s + 1) * 0.85);
+  };
+  for (let pass = 0; pass < 2; pass++) {
+    for (let i = 0; i < rows; i++) {
+      if (!!lit[i] !== !!pass) continue;
+      const px = mapX(MAP.x[i]), py = mapY(MAP.y[i]);
+      if (px < -8 || py < -8 || px > w + 8 || py > h + 8) continue;
+      ctx.beginPath();
+      ctx.arc(px, py, pass ? rad(i) : 1.5, 0, 6.283185307179586);
+      ctx.fillStyle = "hsl(" + mapHue(ROWS[i].cat) + "," + (pass ? "72%," : "18%,") +
+        (pass ? p.lit : p.dim) + "%)";
+      ctx.fill();
+    }
+  }
+
+  // ── the one project the reader is asking about ──
+  const focus = MAP_HOT >= 0 ? MAP_HOT : MAP_PIN;
+  if (focus >= 0) {
+    const fx = mapX(MAP.x[focus]), fy = mapY(MAP.y[focus]);
+    const hue = mapHue(ROWS[focus].cat);
+    // In-edges first and faint: every row that named this one. Drawn underneath the eight it names, so a hub
+    // reads as a bright star of eight inside a haze of everything pointing at it.
+    //
+    // Dashed as well as faint, which is the second channel and not decoration. Direction is the whole claim
+    // these two passes make -- "names" and "is named by" are different facts -- and encoding it in alpha
+    // alone puts it in the one channel a dim screen, a bright room or a colour-vision difference takes away
+    // first. The comparison panel's `≠` makes the same argument against colour-only marks and this repository
+    // already tests for it. Set once and cleared after the solid pass, because `setLineDash` is context state
+    // and a leaked dash would turn every ring below into a dotted circle.
+    ctx.strokeStyle = "hsl(" + hue + ",70%," + (p.light ? 46 : 58) + "%)";
+    ctx.globalAlpha = 0.22;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath();
+    for (let i = 0; i < rows; i++)
+      for (let k = 0; k < n; k++)
+        if (MAP.near[i * n + k] === focus) {
+          ctx.moveTo(fx, fy);
+          ctx.lineTo(mapX(MAP.x[i]), mapY(MAP.y[i]));
+        }
+    ctx.stroke();
+    // The eight it names, solid, with each one ringed. These are the projects the atlas is claiming are the
+    // nearest to this one -- not the nearest dots, which is the whole reason they are drawn rather than left
+    // for the eye to guess.
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    for (let k = 0; k < n; k++) {
+      const j = MAP.near[focus * n + k];
+      ctx.moveTo(fx, fy);
+      ctx.lineTo(mapX(MAP.x[j]), mapY(MAP.y[j]));
+    }
+    ctx.stroke();
+    // Each of the eight is then *emptied* -- filled with the stage's own colour and ringed -- rather than
+    // merely circled. Taken from the way a graph view draws a local neighbourhood: the hub is solid and its
+    // neighbours are hollow, so which node the picture is about is answered by shape before colour. A ring
+    // around a dot that still looks like all 1,294 other dots is a mark the eye has to hunt for; a hollow
+    // dot in a field of filled ones is the only thing of its kind on screen.
+    for (let k = 0; k < n; k++) {
+      const j = MAP.near[focus * n + k];
+      const jx = mapX(MAP.x[j]), jy = mapY(MAP.y[j]), jr = rad(j) + 2.6;
+      ctx.beginPath();
+      ctx.arc(jx, jy, jr, 0, 6.283185307179586);
+      ctx.fillStyle = p.plane;
+      ctx.fill();
+      ctx.stroke();
+    }
+    // And the hub carries a glow, which is the one place on this canvas a shadow is worth its cost: it is
+    // drawn once, on a single arc, and it is what makes the focused project findable after the reader's eye
+    // has followed an edge to the far side of the map. Reset immediately -- `shadowBlur` is context state and
+    // the label plates below would each acquire a halo.
+    ctx.beginPath();
+    ctx.arc(fx, fy, rad(focus) + 4.5, 0, 6.283185307179586);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = p.ink;
+    ctx.shadowColor = "hsl(" + hue + ",70%,50%)";
+    ctx.shadowBlur = 12;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.lineWidth = 1;
+    // What is deliberately *not* borrowed: the twinkle, the bobbing neighbours and the marching-ants edges
+    // that make a five-node graph-view illustration feel alive. All three are `requestAnimationFrame` for as
+    // long as the map is open, on a canvas holding 1,294 dots and 10,352 edges rather than five and five --
+    // and a reader who opened this to find something would be reading a moving target. The camera flight is
+    // the only animation here, it is half a second long, it ends, and it asks `prefers-reduced-motion` first.
+  }
+
+  // ── the names ──
+  // Twelve at most, and the labels are for orientation rather than for reading every row: this is a picture
+  // of 1,294 projects and 1,294 names is a grey rectangle. The biggest lit projects, because those are the
+  // ones a reader recognises and therefore the ones that tell them where they are. Placed with a rectangle
+  // overlap test rather than a layout pass -- a label that would collide is dropped, which is the only
+  // behaviour that keeps every label legible at every zoom.
+  ctx.font = "600 11px system-ui,-apple-system,Segoe UI,sans-serif";
+  ctx.textBaseline = "middle";
+  const named = HITS.filter(r => {
+    const px = mapX(MAP.x[r.ord]), py = mapY(MAP.y[r.ord]);
+    return px > 0 && py > 0 && px < w && py < h;
+  }).sort((a, b) => (b.stars || 0) - (a.stars || 0));
+  const taken = [];
+  if (focus >= 0) named.unshift(ROWS[focus]);
+  // Twelve is the cap for a desktop stage and too many for a phone: the same twelve plates over a third of
+  // the width cover the dots they are naming, which is the one thing a label must not do. So the cap is per
+  // unit of stage rather than per map -- about one name per 40,000 CSS pixels, which is twelve at 1,178x632
+  // and six at 375x588 -- with a floor, because a map that names nothing is a map a reader cannot orient on.
+  // The collision test alone does not solve this: it keeps labels off each other, not off the picture.
+  const cap = Math.max(4, Math.min(MAP_LABELS, Math.round(w * h / 40000))) + (focus >= 0 ? 1 : 0);
+  let drawn = 0;
+  for (const r of named) {
+    if (drawn >= cap) break;
+    const px = mapX(MAP.x[r.ord]), py = mapY(MAP.y[r.ord]);
+    const tw = ctx.measureText(r.name).width;
+    // Right of the dot, unless that would run off the canvas -- then left of it, and if neither side fits the
+    // label is dropped like a colliding one. A canvas clips rather than wraps, so the version of this without
+    // the flip put "Oh My Open" and "B" against the right edge on a phone: not a truncation a reader can see
+    // is a truncation, because there is no ellipsis and no box, just a word that stops.
+    let box = [px + rad(r.ord) + 5, py - 8, tw + 6, 16];
+    if (box[0] + box[2] > w) box = [px - rad(r.ord) - 5 - (tw + 6), box[1], box[2], box[3]];
+    if (box[0] < 0 || box[0] + box[2] > w) continue;
+    if (taken.some(t => box[0] < t[0] + t[2] && t[0] < box[0] + box[2] &&
+                        box[1] < t[1] + t[3] && t[1] < box[1] + box[3])) continue;
+    taken.push(box);
+    drawn++;
+    // A plate under the text, not a stroke around it. An outlined glyph over ten crossing hairlines is still
+    // unreadable, and the plate is the same colour as the dialog's own surfaces so it reads as part of the
+    // page rather than as a sticker on the picture.
+    ctx.globalAlpha = 0.82;
+    ctx.fillStyle = p.plane;
+    ctx.fillRect(box[0] - 3, box[1], box[2], box[3]);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = r.ord === focus ? p.ink : p.sub;
+    ctx.fillText(r.name, box[0], py);
+  }
+
+  // The sentence, rewritten with the picture. `role="img"` and this label are the whole accessible reading of
+  // a canvas, and what it says is what a reader who cannot see it actually needs: how many of how many, and
+  // by which view. Every project behind it is in the table this dialog is drawn over.
+  c.setAttribute("aria-label", HITS.length.toLocaleString() + " of " + rows.toLocaleString() +
+    " projects lit on a map of the atlas. " + viewTitle() + ".");
+}
+
+// The row under the pointer, or -1. A linear scan of 1,294, which is not worth an index: a quadtree would be
+// rebuilt on every zoom and this is two multiplies and a compare per row, on an event that fires at most once
+// a frame. Nearest wins rather than first, so two overlapping dots resolve to the one being pointed at.
+function mapPickAt(px, py) {
+  let best = -1, bd = MAP_PICK * MAP_PICK;
+  for (let i = 0; i < ROWS.length; i++) {
+    const dx = mapX(MAP.x[i]) - px, dy = mapY(MAP.y[i]) - py, d = dx * dx + dy * dy;
+    if (d < bd) { bd = d; best = i; }
+  }
+  return best;
+}
+
+// The readout. Positioned rather than styled: it follows the pointer, flips to the other side when it would
+// leave the stage, and carries the two facts about a project that only this picture can tell you -- how many
+// rows it names and how many name it.
+function mapTip(i, px, py) {
+  const tip = document.getElementById("maptip");
+  if (!tip) return;
+  if (i < 0) { tip.hidden = true; return; }
+  const r = ROWS[i], cat = D.cats[r.cat];
+  tip.innerHTML = '<span class="tn">' + esc(r.name) + "</span>" +
+    '<span class="tk">' + esc(cat ? cat.name : "") +
+    (r.stars ? " · " + r.stars.toLocaleString() + "★" : "") + "</span>" +
+    '<span class="tb">Names ' + MAP.n + " nearest · named by " + MAP.deg[i].toLocaleString() +
+    "</span>";
+  tip.hidden = false;
+  const c = document.getElementById("mapc"), w = +c.dataset.w, h = +c.dataset.h;
+  const bw = tip.offsetWidth || 200, bh = tip.offsetHeight || 60;
+  // Placed in the quadrant that hides the least of what it is describing. Down-and-right unconditionally is
+  // the obvious version and it is self-defeating here: the readout says "names 8 nearest" and the eight are
+  // being drawn from this dot at that moment, so a plate 14px down-right of the pointer lands on top of
+  // whichever of them go that way -- the reader is told about eight lines and shown five. So each of the four
+  // corners is scored by how many of the eight it would cover, and the winner is the emptiest. Ties break
+  // toward down-right, which keeps the common case where a dot has no neighbours nearby exactly as it was.
+  //
+  // Measured over 37 hovers -- every 40th row, at the opening fit and at 4x -- all four corners get used:
+  // 18 down-right, 12 down-left, 4 up-right, 3 up-left. 18 of the 37 move off the naive placement and 26
+  // neighbour dots that down-right would have hidden stay visible. Worth 32 comparisons on a pointermove.
+  const dirs = [[1, 1], [-1, 1], [1, -1], [-1, -1]];
+  let bestAt = null, bestHit = Infinity;
+  for (const [sx, sy] of dirs) {
+    const lx = Math.max(4, Math.min(w - bw - 4, sx > 0 ? px + 14 : px - 14 - bw));
+    const ly = Math.max(4, Math.min(h - bh - 4, sy > 0 ? py + 14 : py - 14 - bh));
+    let hit = 0;
+    for (let k = 0; k < MAP.n; k++) {
+      const j = MAP.near[i * MAP.n + k], jx = mapX(MAP.x[j]), jy = mapY(MAP.y[j]);
+      if (jx >= lx && jx <= lx + bw && jy >= ly && jy <= ly + bh) hit++;
+    }
+    if (hit < bestHit) { bestHit = hit; bestAt = [lx, ly]; }
+    if (bestHit === 0) break;
+  }
+  tip.style.left = bestAt[0] + "px";
+  tip.style.top = bestAt[1] + "px";
+}
+
+// A pinned dot, and the button that hands its neighbourhood back to the table. `state.list` is the mechanism
+// a shared `#list=` link already uses, so a neighbourhood found on the map becomes a filtered view of the
+// table -- and a filtered view of the table is a link. That is the whole round trip: search by meaning, see
+// where the answer lives, take the neighbourhood away as a URL.
+function mapPin(i) {
+  MAP_PIN = i;
+  const b = document.getElementById("mapnear");
+  if (!b) return;
+  // Behind the export flag, not because the button needs the dialog but because `state.list` is only carried
+  // in the hash when that flag is on -- see `readHash`. A filter that vanishes from the URL it put itself in
+  // is worse than no button.
+  if (i < 0 || !FLAGS["index.export"]) { b.hidden = true; return; }
+  b.hidden = false;
+  b.textContent = "Show " + ROWS[i].name + " and its " + MAP.n + " nearest in the table";
+  b.onclick = () => {
+    const keep = new Set([ROWS[i].nwo]);
+    for (let k = 0; k < MAP.n; k++) keep.add(ROWS[MAP.near[i * MAP.n + k]].nwo);
+    // Every other filter cleared, which is the only honest reading of this button: a neighbourhood crossed
+    // with a search the reader typed ten seconds ago is neither of the two things they asked for.
+    set({list: keep, q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
+         saved: false});
+    document.getElementById("mapdlg").close();
+    say(keep.size.toLocaleString() + " projects shown — " + ROWS[i].name + " and its nearest neighbours.");
+  };
+}
+
+// The key, built once from `D.cats` and repainted by `render()` like everything else. Each pill is the same
+// filter as the topic chip of that name on the bar, which is what makes the map's structure reachable without
+// a pointer: the dots cannot be tabbed to and the territories can.
+function mapKey() {
+  const box = document.getElementById("mapkey");
+  if (!box || !D) return;
+  const count = new Uint16Array(D.cats.length);
+  for (const r of HITS) count[r.cat]++;
+  if (!box.children.length) {
+    box.innerHTML = D.cats.map((c, i) =>
+      '<button type="button" data-cat="' + esc(c.slug) + '" aria-pressed="false" style="--sw:hsl(' +
+      mapHue(i).toFixed(1) + ',72%,58%)"><i aria-hidden="true"></i><span>' + esc(c.name) +
+      '</span> <span class="kn"></span></button>').join("");
+    for (const b of box.querySelectorAll("button"))
+      b.onclick = () => set({cat: b.dataset.cat === state.cat ? "" : b.dataset.cat});
+  }
+  const btns = box.querySelectorAll("button");
+  for (let i = 0; i < btns.length; i++) {
+    btns[i].setAttribute("aria-pressed", D.cats[i].slug === state.cat ? "true" : "false");
+    const n = btns[i].querySelector(".kn");
+    if (n) n.textContent = count[i] ? count[i].toLocaleString() : "";
+  }
+}
+
+// Called from `render()` on the way out. Only when the dialog is open: a closed dialog is a canvas nobody is
+// looking at, and `mapOpen` paints before it shows.
+function mapRepaint() {
+  const dlg = document.getElementById("mapdlg");
+  if (MAP_STATE !== "live" || !dlg || !dlg.open) return;
+  const what = document.getElementById("mapwhat");
+  if (what)
+    what.innerHTML = "<b>" + HITS.length.toLocaleString() + "</b> of <b>" +
+      ROWS.length.toLocaleString() + "</b> lit · " + esc(viewTitle());
+  mapKey();
+  // The camera follows the answer, which is the point of pressing Map with a search in the box -- and it
+  // follows the answer *back*, which is less obvious and was a real bug. Clearing a search after flying into
+  // a nine-row neighbourhood used to repaint 1,294 lit dots through a camera still framed on nine of them:
+  // the reader had asked to see everything and was shown one dense green corner, which does not read as
+  // "zoomed in", it reads as "this is the atlas". So both directions fly, and the whole-layout fit is where
+  // "everything is lit" and "nothing is lit" both land. Not called on a pan or a zoom -- only `render()`
+  // reaches here, so the reader's own camera is never taken off them mid-gesture.
+  const box = HITS.length && HITS.length < ROWS.length ? mapBoxOf(HITS) : null;
+  mapFly(box ? mapFrameOn(box[0], box[1], box[2], box[3], MAP_FIT * 7)
+             : mapFrameOn(MAP.x0, MAP.y0, MAP.x1, MAP.y1, MAP_FIT));
+}
+
+function mapOpen() {
+  const dlg = document.getElementById("mapdlg"), nope = document.getElementById("mapnope");
+  dlg.showModal();
+  document.getElementById("maphint").textContent =
+    "Hover a project to see the eight it is nearest. Drag to pan, scroll to zoom, click to pin.";
+  loadMap().then(st => {
+    if (!dlg.open) return;
+    if (st !== "live" || !mapSize()) {
+      // The one thing a reader who pressed this deserves: which of the two reasons it is empty. A flag that
+      // is off never shows the chip at all, so the only way to be here is a guard that fired.
+      nope.hidden = false;
+      nope.textContent = "The map is drawn from the same index as search by meaning, and that index does " +
+        "not match the projects on this page — so every dot would be in the wrong place. The console says " +
+        "which check failed. Everything the map would show is in the table behind this.";
+      document.getElementById("mapkey").hidden = true;
+      document.getElementById("maphint").textContent = "";
+      return;
+    }
+    nope.hidden = true;
+    MAP_HOT = -1;
+    mapPin(-1);
+    MAP_CAM = mapFrameOn(MAP.x0, MAP.y0, MAP.x1, MAP.y1, MAP_FIT);
+    // Straight to the fit before anything else, so the first frame is the whole atlas -- then `mapRepaint`
+    // flies from there onto whatever the table is currently showing. Opening on the answer with no
+    // establishing shot is a picture a reader cannot place.
+    mapPaint();
+    mapRepaint();
+  });
+}
+
+function mapWire() {
+  if (!FLAGS["index.constellation"]) return;
+  const dlg = document.getElementById("mapdlg"), chip = document.getElementById("mapbtn");
+  const c = document.getElementById("mapc");
+  // The capability, never the element: `getElementById` returns something for every id under the stub DOM in
+  // `tests/probe.mjs`, so a null test proves nothing and `getContext` is the question actually being asked.
+  if (!dlg || !dlg.showModal || !c || typeof c.getContext !== "function") return;
+  chip.classList.add("on");
+  chip.onclick = mapOpen;
+  document.getElementById("mapdone").onclick = () => dlg.close();
+  document.getElementById("mapreset").onclick = () => {
+    if (MAP_STATE !== "live") return;
+    MAP_HOT = -1;
+    mapPin(-1);
+    mapTip(-1);
+    mapFly(mapFrameOn(MAP.x0, MAP.y0, MAP.x1, MAP.y1, MAP_FIT));
+  };
+  // Nothing pinned when the dialog shuts, so reopening it is the atlas rather than the last thing somebody
+  // clicked a session ago.
+  dlg.addEventListener("close", () => { MAP_HOT = -1; mapPin(-1); mapTip(-1); });
+
+  let drag = null;
+  const at = e => {
+    const b = c.getBoundingClientRect();
+    return [e.clientX - b.left, e.clientY - b.top];
+  };
+  c.addEventListener("pointerdown", e => {
+    if (MAP_STATE !== "live") return;
+    const [px, py] = at(e);
+    // Where the pointer went down, and whether it has moved since. A click is a pointerup that never became
+    // a drag, which is the only way to have both a pin and a pan on the same button.
+    drag = {px, py, ox: MAP_CAM.ox, oy: MAP_CAM.oy, moved: false};
+    c.setPointerCapture(e.pointerId);
+  });
+  c.addEventListener("pointermove", e => {
+    if (MAP_STATE !== "live" || !MAP_CAM) return;
+    const [px, py] = at(e);
+    if (drag) {
+      if (Math.abs(px - drag.px) + Math.abs(py - drag.py) > 3) {
+        drag.moved = true;
+        c.classList.add("drag");
+      }
+      if (drag.moved) {
+        MAP_CAM = {k: MAP_CAM.k, ox: drag.ox + (px - drag.px), oy: drag.oy + (py - drag.py)};
+        mapTip(-1);
+        mapPaint();
+        return;
+      }
+    }
+    const i = mapPickAt(px, py);
+    // Repainted only when the answer changed. A pointermove that stays on the same dot is the common case and
+    // redrawing 10,000 edges for it would make the map feel heavy for no visible difference.
+    if (i !== MAP_HOT) { MAP_HOT = i; mapPaint(); }
+    mapTip(i, px, py);
+  });
+  c.addEventListener("pointerup", e => {
+    if (!drag) return;
+    const moved = drag.moved;
+    drag = null;
+    c.classList.remove("drag");
+    if (moved || MAP_STATE !== "live") return;
+    const [px, py] = at(e);
+    const i = mapPickAt(px, py);
+    // A click on empty sky unpins, which is the gesture a reader tries first and the only one that does not
+    // need a button.
+    mapPin(i === MAP_PIN ? -1 : i);
+    mapPaint();
+  });
+  c.addEventListener("pointerleave", () => { MAP_HOT = -1; mapTip(-1); mapPaint(); });
+  c.addEventListener("wheel", e => {
+    if (MAP_STATE !== "live" || !MAP_CAM) return;
+    // Not passive, and preventDefault, because a wheel over the map means zoom -- and without this the same
+    // gesture scrolls the dialog's own key strip out from under the picture.
+    e.preventDefault();
+    const [px, py] = at(e);
+    // deltaMode 1 is lines rather than pixels, which is Firefox on most configurations: a raw deltaY of 3
+    // there and 100 in Chromium is a 30x difference in zoom speed for one turn of the same wheel.
+    const step = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+    mapZoomBy(Math.exp(-step / 420), px, py);
+  }, {passive: false});
+  // The keyboard, on the canvas's own container rather than the document, so the arrows still move a caret
+  // in anything the dialog might grow later. Everything the pointer can do except pick a dot, which is the
+  // one gesture with no keyboard equivalent -- and the reason the key below is buttons and the table is
+  // behind it.
+  dlg.addEventListener("keydown", e => {
+    if (MAP_STATE !== "live" || !MAP_CAM) return;
+    const w = +c.dataset.w, h = +c.dataset.h;
+    const pan = (dx, dy) => { MAP_CAM = {k: MAP_CAM.k, ox: MAP_CAM.ox + dx, oy: MAP_CAM.oy + dy};
+                              mapPaint(); };
+    const step = e.shiftKey ? 160 : 60;
+    if (e.key === "ArrowLeft") pan(step, 0);
+    else if (e.key === "ArrowRight") pan(-step, 0);
+    else if (e.key === "ArrowUp") pan(0, step);
+    else if (e.key === "ArrowDown") pan(0, -step);
+    else if (e.key === "+" || e.key === "=") mapZoomBy(1.35, w / 2, h / 2);
+    else if (e.key === "-" || e.key === "_") mapZoomBy(1 / 1.35, w / 2, h / 2);
+    else return;
+    e.preventDefault();
+  });
+  // A resize while the map is open, which on a phone is every rotation and on a desktop is a dragged window
+  // corner. `ResizeObserver` where there is one because the stage can change size without the window doing
+  // so -- the key strip wraps to a second row and takes 22 px off the picture -- and the window event
+  // where there is not.
+  const refit = () => {
+    if (!dlg.open || MAP_STATE !== "live" || !mapSize()) return;
+    // The camera is kept, not reset: a reader who has zoomed into observability and then widened the window
+    // has not asked to be sent back to the whole atlas.
+    mapPaint();
+  };
+  if ("ResizeObserver" in window) new ResizeObserver(refit).observe(document.getElementById("mapstage"));
+  else window.addEventListener("resize", refit);
+}
+
+// Zoom about a point, so the thing under the pointer stays under it. Clamped in multiples of the fit scale
+// rather than in absolute units, because what "too far out" means is a function of the stage size.
+function mapZoomBy(f, px, py) {
+  const k = Math.max(MAP_FIT * MAP_ZOOM_OUT, Math.min(MAP_FIT * MAP_ZOOM_IN, MAP_CAM.k * f));
+  const r = k / MAP_CAM.k;
+  MAP_CAM = {k, ox: px - (px - MAP_CAM.ox) * r, oy: py - (py - MAP_CAM.oy) * r};
+  mapPaint();
 }
 
 // Trigram overlap, not Levenshtein: "langraph" vs "LangGraph" is one deletion but "claude cdoe" vs
@@ -4915,6 +5774,9 @@ function render() {
     };
     out.appendChild(b);
   }
+  // Last, and outside every branch above: the map draws what this function decided, so it is repainted from
+  // the one place that always knows. A no-op unless the dialog is open.
+  mapRepaint();
 }
 
 function esc(s) {

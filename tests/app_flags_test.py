@@ -131,6 +131,13 @@ ok("root export rendering has a runtime kill-switch branch", 'FLAGS["index.expor
 ok("export OFF reaches the page as a zero", '"index.export":0' in root_page)
 ok("export OFF leaves the chip in the markup but hidden and unwired",
    'id="take"' in root_page and ".takechip{display:none}" in root_page)
+# The constellation is off on the same terms as the export, and for a reason the export does not have: the
+# gate is what stops `search/xy.bin` and `search/near.bin` being fetched at all. `mapWire()` returns before
+# it looks at the dialog, so the markup ships inert and the two binaries stay unrequested.
+ok("root map wiring has a runtime kill-switch branch", 'FLAGS["index.constellation"]' in root_page)
+ok("constellation OFF reaches the page as a zero", '"index.constellation":0' in root_page)
+ok("constellation OFF leaves the chip in the markup but hidden and unwired",
+   'id="mapbtn"' in root_page and ".mapchip{display:none}" in root_page)
 
 print(f"\n{passed} passed, {failed} failed")
 raise SystemExit(1 if failed else 0)
