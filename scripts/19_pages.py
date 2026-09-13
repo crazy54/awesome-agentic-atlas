@@ -594,13 +594,19 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 #byte-tip{display:block;padding:0;border:0;background:transparent;border-radius:50%;color:inherit}
 /* Two lines by design. "Archie 'Atlas' Algorithm" is 24 characters where "Atlas Byte" was 10, and the
    mascot's column is 128px, so a single-line pill would have overflowed the column and run into the nav
-   beside it. Wrapping inside the column keeps the name in the mascot's own width at every breakpoint;
-   the radius drops from a 999px stadium, which reads as a lozenge once there are two lines, to a rounded
-   rectangle that stays a name tag. */
+   beside it. Wrapping inside the column keeps the name in the mascot's own width; below 641px the column is
+   82px and no two-line arrangement of the full name survives a font change, so the pill shows one word there
+   instead -- see the narrow-width rule at the bottom of this stylesheet. The radius drops from a 999px
+   stadium, which reads as a lozenge once there are two lines, to a rounded rectangle that stays a name tag. */
 .atlas-name{display:block;margin:-11px auto 0;position:relative;z-index:2;padding:3px 9px;
   border:1px solid var(--grid);border-radius:12px;background:var(--plane);color:var(--ink);
   font-size:10px;font-weight:700;letter-spacing:.03em;line-height:1.35;text-align:center;
   text-wrap:balance}
+/* Full name here, one word at the narrow breakpoint; the swap is at the bottom of this stylesheet. Both are in
+   the markup rather than one being written by script, so the pill is right in the first painted frame and
+   right with JavaScript off. There is 25% of slack for the two-line arrangement at this width -- 108px of
+   content against 81px for the worst face measured -- so this one is not font-dependent. */
+.atlas-name-short{display:none}
 .atlas-name:hover{border-color:var(--bar);color:var(--ink)}
 .byte-quiet{display:block;margin:5px auto 0;padding:0;border:0;background:transparent;color:var(--muted);
   font-size:10px;text-decoration:underline;text-underline-offset:2px}
@@ -634,10 +640,31 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
    `z-index:30`. So the remaining width was not covering results. It was still a 270px rectangle over the
    navigation, and narrower is better as long as narrower is honest -- see `SAY_MAX` below, which is what
    pays for this. 220x53 is 11,660px2 against the 59,130 a reader gets today: 80% less box. */
+/* TWO LINES GEOMETRICALLY, BECAUSE `SAY_MAX` BUYS TWO LINES ONLY IN THE FONT IT WAS MEASURED IN. The cap was
+   derived by rendering every string into this box on a Windows stack that resolves to Segoe UI. CI renders it
+   on ubuntu-latest, whose Chromium resolves the same stack to a wider face, and there the worst string --
+   "OpenCode comes from anomalyco. Tagged for opencode." -- takes three lines and the box grows to 70px. A
+   character cap cannot fix that in general: wrapping is set by where the spaces fall, not by how many
+   characters there are, so a 50-character string can need three lines where an artificial 53-character one
+   needs two. The clamp makes the bound geometric instead of typographic, so it holds in any face: measured
+   h=53 with the box two lines tall in Segoe UI, forced monospace and forced Verdana alike, where the
+   unclamped rule gives 70 in the latter two. On the shipped stack nothing is clipped, so a reader sees no
+   change at all; on a wider face the tail of the longest sentence is cut rather than the masthead growing,
+   which is the trade this ticket asked for.
+   Rejected: `max-height:calc(2 * 1.38em)`. It bounds the CONTENT box to two lines and the element to one --
+   measured h=33, one line -- because the em length knows nothing about the 9px padding and 1px border.
+   `#byte-speech[hidden]` IS NOT DECORATION, and leaving it out is how this rule ships a permanently visible
+   bubble. `hidden` works through the UA stylesheet's `[hidden]{display:none}`, which any author `display`
+   declaration outranks -- and this rule now has one. Measured: with the clamp and without this line, a bubble
+   whose `hidden` attribute is set computes `display:flow-root` and takes a 20px box. Every assertion in
+   cards-check that checks Archie has stopped speaking reads the ATTRIBUTE, which is still true, so all seven
+   of them stay green while the bubble sits on the masthead forever. There is now one that reads the box. */
 #byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:220px;
   padding:9px 11px;border:1px solid var(--grid);border-left:3px solid var(--bar);border-radius:9px;
   background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;z-index:4;
-  box-shadow:0 12px 28px rgba(0,0,0,.2)}
+  box-shadow:0 12px 28px rgba(0,0,0,.2);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+#byte-speech[hidden]{display:none}
 #byte-speech::after{content:"";position:absolute;right:-6px;bottom:12px;width:11px;height:11px;
   background:var(--band);border-top:1px solid var(--grid);border-right:1px solid var(--grid);transform:rotate(45deg)}
 #atlas-orbit{position:absolute;inset:-18px -24px;pointer-events:none;z-index:3}
@@ -1241,18 +1268,37 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
      looks the same. The rest of the 82px comes out of the card, below the cards block. */
   .atlas-byte-wrap{width:82px}
   .atlas-byte{width:64px;margin-left:auto;margin-right:auto}
-  /* THREE LINES HERE, WHICH IS WHAT "two lines by design" DID NOT SURVIVE. The rule above narrows the
-     mascot's column from 128px to 82px and said nothing about the name, so the pill kept its 10px text in a
-     column 46px narrower and wrapped to three lines: 82x49 at 640, 600, 500, 414, 375, 360, 320 and 280,
-     against 128x35 from 641 up. The masthead grew for it at exactly the widths with the least room to spare,
-     and it grew silently because the harness compared the pill's text and never its line count.
-     9px brings it back to two lines (82x44, masthead 340 -> 335 at 375). Measured alternatives, all of which
-     also reach two lines: 8px, which costs legibility for nothing; a 112px wrap and a 108px overhanging pill,
-     both of which un-narrow the column this breakpoint exists to narrow. A smaller type size is the change
-     that stays inside the mascot's own width, which is the rule the desktop pill follows too.
+  /* ONE WORD HERE, BECAUSE TWO DID NOT FIT IN ANY FONT BUT THIS MACHINE'S. The rule above narrows the mascot's
+     column from 128px to 82px and said nothing about the name, so the pill kept its 10px text in a column 46px
+     narrower and wrapped to three lines at 640, 600, 500, 414, 375, 360, 320 and 280, against two from 641 up.
+     The masthead grew for it at exactly the widths with the least room to spare, and it grew silently because
+     the harness compared the pill's text and never its line count.
+     9px was the first fix and it was not a fix, it was this machine's font passing a test. `header button`
+     gives every button in the masthead the 44px WCAG 2.5.5 floor, so the pill's BOX IS 82x44 whatever the text
+     does -- two lines of 9px type is 32px inside a 44px box, and one word is also 44. Quoting 82x44 as the
+     evidence for two lines was therefore quoting a number that cannot see a line, which is the same mistake as
+     comparing the text: CI reports 82x44 and three lines together. What a third line does is overflow the tap
+     target rather than grow it -- 3 x 12.15 + 8 = 44.45 against a 42px content box -- so the text crosses its
+     own rounded border. The real margin was 2.41px of 62px, 4%, on "Archie 'Atlas'" in Segoe UI; forced
+     monospace, Verdana and Tahoma each take three lines here.
+     One word cannot wrap to three lines in any face, so the fix is not font-dependent instead of being retuned
+     against one runner. Widest measured "Archie" is 54px (Verdana) in a 62px box, against 82px needed for
+     "Archie 'Atlas'" in monospace. The full name stays on `aria-label`, and stays visible from 641 up.
+     Rejected: 8px type, which costs legibility and still leaves a two-line arrangement one face away from
+     breaking; a 112px wrap and a 108px overhanging pill, both of which un-narrow the column this breakpoint
+     exists to narrow; raising the 44px floor to fit three lines, which spends masthead height on a phone to
+     show a middle name -- JFH-289 fought for 18px of that height.
+     A NOTE ON HOW THE FACES ABOVE WERE PICKED, because it is a trap: you cannot probe a font you do not have.
+     Forcing "DejaVu Sans", "Liberation Sans" and a deliberately misspelled family name all measured the same
+     105.38px here, because all three fell back to the same default, and `document.fonts.check()` returns true
+     for the misspelled one too. Identical metrics across unrelated families is the tell. Only monospace,
+     Verdana and Tahoma are real instruments on a Windows machine, and monospace is the upper bound of the
+     three, so it is the one a fix has to survive.
      JFH-289's art shrink does not interact with this: the pill is sized by the wrap, which that ticket
      held at 82px precisely so nothing around it reflowed, so the column measured here did not move. */
   .atlas-name{font-size:9px}
+  .atlas-name-full{display:none}
+  .atlas-name-short{display:inline}
   /* No bubble at all at this width or below, because there is nowhere for it to go. `.headside` is full-width
      here and puts the nav immediately left of the mascot column, so the band the bubble uses on a desktop is the
      navigation, and anything hanging underneath is the search field -- both measured. This is also the width
@@ -1714,7 +1760,11 @@ __OSSPRITE__
     <img class="atlas-byte" src="assets/atlas-byte.png" width="512" height="532"
          alt="Archie 'Atlas' Algorithm, the Atlas mascot, wearing pixel sunglasses">
     </button>
-    <button type="button" class="atlas-name" id="byte-name">Archie 'Atlas' Algorithm</button>
+    <!-- The accessible name is on `aria-label` so it stays the full name at every width, including the ones
+         where only "Archie" is painted. WCAG 2.5.3 wants the visible label contained in the accessible name,
+         and "Archie" is. -->
+    <button type="button" class="atlas-name" id="byte-name" aria-label="Archie 'Atlas' Algorithm"
+            ><span class="atlas-name-full">Archie 'Atlas' Algorithm</span><span class="atlas-name-short">Archie</span></button>
     <button type="button" class="byte-quiet" id="byte-quiet" aria-pressed="false">Quiet mode</button>
     <div id="byte-speech" role="status" aria-live="polite" hidden></div>
   </div>

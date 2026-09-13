@@ -87,6 +87,7 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
   border:1px solid var(--grid);border-radius:12px;background:var(--plane);color:var(--ink);
   font-size:10px;font-weight:700;letter-spacing:.03em;line-height:1.35;text-align:center;
   text-wrap:balance}
+.atlas-name-short{display:none}
 .atlas-name:hover{border-color:var(--bar);color:var(--ink)}
 .byte-quiet{display:block;margin:5px auto 0;padding:0;border:0;background:transparent;color:var(--muted);
   font-size:10px;text-decoration:underline;text-underline-offset:2px}
@@ -94,7 +95,9 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 #byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:220px;
   padding:9px 11px;border:1px solid var(--grid);border-left:3px solid var(--bar);border-radius:9px;
   background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;z-index:4;
-  box-shadow:0 12px 28px rgba(0,0,0,.2)}
+  box-shadow:0 12px 28px rgba(0,0,0,.2);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+#byte-speech[hidden]{display:none}
 #byte-speech::after{content:"";position:absolute;right:-6px;bottom:12px;width:11px;height:11px;
   background:var(--band);border-top:1px solid var(--grid);border-right:1px solid var(--grid);transform:rotate(45deg)}
 #atlas-orbit{position:absolute;inset:-18px -24px;pointer-events:none;z-index:3}
@@ -395,6 +398,8 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   .atlas-byte-wrap{width:82px}
   .atlas-byte{width:64px;margin-left:auto;margin-right:auto}
   .atlas-name{font-size:9px}
+  .atlas-name-full{display:none}
+  .atlas-name-short{display:inline}
   #byte-speech{display:none}
 
   #q{flex:1 1 100%;min-width:0}
@@ -564,8 +569,8 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--09--13_17:13_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-09-13T17:13:00Z">Last deployed 2026-09-13 17:13 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--09--13_18:17_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-09-13T18:17:00Z">Last deployed 2026-09-13 18:17 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
@@ -582,7 +587,8 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
     <img class="atlas-byte" src="assets/atlas-byte.png" width="512" height="532"
          alt="Archie 'Atlas' Algorithm, the Atlas mascot, wearing pixel sunglasses">
     </button>
-    <button type="button" class="atlas-name" id="byte-name">Archie 'Atlas' Algorithm</button>
+    <button type="button" class="atlas-name" id="byte-name" aria-label="Archie 'Atlas' Algorithm"
+            ><span class="atlas-name-full">Archie 'Atlas' Algorithm</span><span class="atlas-name-short">Archie</span></button>
     <button type="button" class="byte-quiet" id="byte-quiet" aria-pressed="false">Quiet mode</button>
     <div id="byte-speech" role="status" aria-live="polite" hidden></div>
   </div>
@@ -764,7 +770,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-13T17:13:00Z";
+const BUILT = "2026-09-13T18:17:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],

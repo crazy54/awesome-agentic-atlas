@@ -232,17 +232,42 @@ const initialArt = await evalIn(`(() => {
 ok("visible screenshots start loading before any interaction", initialArt.visible > 0 && initialArt.started,
    JSON.stringify(initialArt));
 ok("distant screenshots remain deferred", initialArt.deferred);
-ok("the mascot has a visible name tag",
-   await evalIn(`document.querySelector('.atlas-name')?.textContent === "Archie 'Atlas' Algorithm"`));
+// The pill holds both spellings and the stylesheet paints one, so `textContent` is now "Archie 'Atlas'
+// AlgorithmArchie" at every width and asserting it would be asserting nothing about what a reader sees. What
+// is checked is the painted text, and separately that the accessible name is the full one wherever it is.
+const tagText = await evalIn(`(() => {
+  const el = document.querySelector('.atlas-name');
+  if (!el) return {missing: true};
+  const shown = [...el.querySelectorAll('span')].filter(s => getComputedStyle(s).display !== 'none');
+  return {painted: shown.map(s => s.textContent).join(""), spans: shown.length,
+          label: el.getAttribute('aria-label')};
+})()`);
+ok("the mascot has a visible name tag, and one spelling of it at a time",
+   tagText.painted === "Archie 'Atlas' Algorithm" && tagText.spans === 1, JSON.stringify(tagText));
+ok("the name tag's accessible name is the full name whatever is painted",
+   tagText.label === "Archie 'Atlas' Algorithm", JSON.stringify(tagText));
 
 // THE NAME TAG'S LINE COUNT, WHICH IS THE RENAME'S OWN CLAIM. "Archie 'Atlas' Algorithm" is 24 characters
 // where "Atlas Byte" was 10, and the stylesheet's answer is that it wraps to two lines inside the mascot's
 // own column. That was asserted by comparing the pill's text, which cannot see a line, and the claim was
 // consequently false at every width below 641: the mobile rule narrows the column from 128px to 82px without
-// touching the 10px type, so the pill went to three lines (82x49) and the masthead grew for it exactly where
-// vertical space is scarcest. Counting line boxes with a Range is the instrument, because a height comparison
-// would have to assume a line height the stylesheet is free to change.
-const nametag = async (label, width) => {
+// touching the 10px type, so the pill went to three lines and the masthead grew for it exactly where vertical
+// space is scarcest.
+//
+// THE PILL'S BOX CANNOT COUNT ITS OWN LINES, so do not be tempted to simplify this into a height comparison.
+// `header button` gives the pill the 44px WCAG 2.5.5 tap floor, so at the narrow widths it measures 82x44 with
+// one word in it, with two lines, and with three: 82x44 is exactly what CI reported alongside three lines, and
+// what this machine reports alongside two. Counting line boxes with a Range is the instrument that sees the
+// difference. `overflows` is the consequence a reader would actually see, and it is not the same test: a third
+// 9px line is 44.45px against a 42px content box, so the text crosses the pill's own border instead of the
+// box growing to admit it.
+//
+// The expected count is per width because the stylesheet's answer differs by width, and the reason it differs
+// is a font: the two-line arrangement of the full name had 2.41px of slack in 62px at 375, and forced
+// monospace, Verdana and Tahoma each took three lines. One word cannot wrap to three in any face, so below 641
+// the pill paints "Archie" and this asserts one line -- a bound that holds on a runner whose fonts nobody
+// here can enumerate, rather than a number retuned until this machine agreed.
+const nametag = async (label, width, lines) => {
   const m = await evalIn(`(() => {
     const el = document.querySelector('.atlas-name');
     if (!el) return {missing: true};
@@ -250,14 +275,18 @@ const nametag = async (label, width) => {
     const tops = new Set();
     for (const r of rg.getClientRects()) if (r.width > 0 && r.height > 0) tops.add(Math.round(r.top * 2) / 2);
     const r = el.getBoundingClientRect(), wrap = document.querySelector('.atlas-byte-wrap').getBoundingClientRect();
+    const shown = [...el.querySelectorAll('span')].filter(s => getComputedStyle(s).display !== 'none');
     return {lines: tops.size, w: Math.round(r.width), h: Math.round(r.height),
             wrapW: Math.round(wrap.width), font: getComputedStyle(el).fontSize,
+            painted: shown.map(s => s.textContent).join(""), label: el.getAttribute('aria-label'),
+            overflows: el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth,
             escapes: Math.round(r.width) > Math.round(wrap.width) + 1, offscreen: r.left < 0};
   })()`);
-  ok(label, !m.missing && m.lines === 2 && !m.escapes && !m.offscreen,
-     JSON.stringify({width, ...m}));
+  ok(label, !m.missing && m.lines === lines && !m.overflows && !m.escapes && !m.offscreen
+     && m.label === "Archie 'Atlas' Algorithm",
+     JSON.stringify({width, want: lines, ...m}));
 };
-await nametag("Archie's name tag is two lines at 1440px", 1440);
+await nametag("Archie's name tag is two lines at 1440px", 1440, 2);
 const accents = await evalIn(`new Set([...document.querySelectorAll('#out tr[data-project]')]
   .slice(0,20).map(r => getComputedStyle(r).getPropertyValue('--card-accent'))).size`);
 ok("cards have varied curated accents", accents > 1, accents);
@@ -356,14 +385,21 @@ const widest = await evalIn(`(() => {
     // is what let the page's own pair drift into looking like a bound it was not; see the note in 19_pages.py.
     for (const f of facts) said.add(clip(f + (Array.from(f + tail).length <= ${SAY_MAX} ? tail : ""), ${SAY_MAX}));
   }
-  // TWO INSTRUMENTS, AND THEY HAVE TO AGREE. Dividing the box height by lineHeight infers a line count from
-  // arithmetic, and it is only as good as the assumption that every line occupies exactly one lineHeight --
-  // an inline image, a taller fallback font for one glyph, or a lineHeight the stylesheet later expresses as
-  // a unitless number would all break it silently. A Range over the contents returns one client rect per line
-  // box, which counts what the layout engine actually produced. Both are computed for every string and any
-  // disagreement is a failure, so neither can be quietly wrong: measured 0 disagreements across all 3,837,
-  // both maxing at 2, for 2.0s vs 2.2s. Re-measured at 220px with the single cap: still 0 of 3,837, still
-  // maxing at 2, on the histogram 1,028 one-line and 2,809 two-line.
+  // TWO INSTRUMENTS, AND THE CLAMP DECIDES WHEN THEY MAY DISAGREE. Dividing the box height by lineHeight infers
+  // a line count from arithmetic, and it is only as good as the assumption that every line occupies exactly one
+  // lineHeight -- an inline image, a taller fallback font for one glyph, or a lineHeight the stylesheet later
+  // expresses as a unitless number would all break it silently. A Range over the contents returns one client
+  // rect per line box, which counts what the layout engine actually produced.
+  //
+  // These used to be required to agree on every string, and that was right until the box was clamped. A
+  // line-clamped element still reports every line box the text WANTED -- measured 3 rects with the box two
+  // lines tall -- because the third one is laid out and then clipped. So the honest invariant is no longer
+  // equality: it is that the box never exceeds two lines, and that the Range may exceed the box only where the
+  // clamp is visibly hiding text. Whether text is really cut is the third instrument that makes that check
+  // mean something, because without it "they disagree, so something must be clipped" would be an assumption
+  // rather than a reading. On this machine's stack: 0 of 3,837 clipped, both instruments maxing at 2. On a
+  // wider face the clipped count rises and the box height does not, which is the entire point of the clamp.
+  // (No backticks in any comment in this block. It is a template literal, and one would end it.)
   const boxes = () => {
     const rg = document.createRange(); rg.selectNodeContents(speech);
     const tops = new Set();
@@ -372,11 +408,16 @@ const widest = await evalIn(`(() => {
     return tops.size;
   };
   let worst = 0, worstText = "", tall = 0, worstBox = 0, disagreed = [];
+  let clippedCount = 0, clippedSample = "";
   for (const t of said) {
     speech.textContent = t;
     const n = Math.round((speech.getBoundingClientRect().height - chrome) / lh), b = boxes();
-    if (n !== b && disagreed.length < 5) disagreed.push({text: t, byHeight: n, byBox: b});
-    if (n > 2 || b > 2) tall++;
+    const cut = speech.scrollHeight > speech.clientHeight + 1;
+    if (cut) { clippedCount++; if (!clippedSample) clippedSample = t; }
+    // A disagreement is licensed only in the direction the clamp can cause, and only when text is really cut.
+    if (n !== b && !(b > n && cut) && disagreed.length < 5)
+      disagreed.push({text: t, byHeight: n, byBox: b, clipped: cut});
+    if (n > 2) tall++;
     if (b > worstBox) worstBox = b;
     if (n > worst) { worst = n; worstText = t; }
   }
@@ -387,13 +428,49 @@ const widest = await evalIn(`(() => {
   window.__saidByHarness = said;
   window.__clipByHarness = clip;
   return {said: said.size, worstLines: worst, worstText, tall, worstBox, disagreed,
-          live: before, matchesLive: said.has(before)};
+          clippedCount, clippedSample, live: before, matchesLive: said.has(before)};
 })()`);
-ok("no project in the atlas can push Archie past two lines",
-   widest.said > 1000 && widest.worstLines <= 2 && widest.worstBox <= 2 && widest.worstBox >= 1
-   && widest.tall === 0, JSON.stringify(widest));
-ok("the two ways of counting the bubble's lines agree on every string it can say",
+// The box, which is what could cover something, and the only one of the three numbers below that is a promise
+// to a reader. `worstBox` is deliberately NOT bounded here: it is what the text wanted, the clamp is free to
+// exceed two, and asserting it was what made this fail on CI while the box it was standing in for was correct.
+ok("no project in the atlas can push Archie's bubble past two lines",
+   widest.said > 1000 && widest.worstLines <= 2 && widest.worstLines >= 1 && widest.tall === 0,
+   JSON.stringify(widest));
+ok("the bubble's two line counts differ only where the clamp is cutting text",
    widest.disagreed.length === 0, JSON.stringify(widest.disagreed));
+// And what the clamp costs, on this runner, in the copy rather than the layout. Not bounded by a number tuned
+// until CI agreed: on the face `SAY_MAX` was derived against this is 0, and on a wider one it is the count of
+// sentences that lose a tail. Reported rather than asserted at a threshold, because the threshold would be a
+// property of whatever fonts a runner happens to have installed, which no assertion here can enumerate --
+// forcing three uninstalled Linux families gave identical metrics, and `document.fonts.check()` said true for
+// a misspelt name. What IS asserted is that clipping never reaches the majority of what Archie can say, which
+// would mean the cap and the box had drifted apart rather than the runner having odd fonts.
+ok("clipping is the exception rather than how the bubble normally renders",
+   widest.clippedCount * 2 < widest.said,
+   JSON.stringify({clipped: widest.clippedCount, of: widest.said, sample: widest.clippedSample}));
+
+// THE PRICE THE CLAMP CHARGES FOR ITS `display`, which every other assertion in this file is blind to.
+// (The clamp's own spelling is asserted in probe.mjs, beside the card blurb's, for the reason written there:
+// this Chromium implements the standard `line-clamp` and ignores the prefixed one, so a rule missing the half
+// Firefox needs would pass every browser check in this file.)
+// `hidden` works through the UA stylesheet's `[hidden]{display:none}`, and any author `display` outranks it --
+// so adding the clamp made `hidden` stop hiding: measured `display:flow-root` and a 20px box on a bubble whose
+// attribute was set. Seven assertions in this file check that Archie has stopped speaking and all seven read
+// the ATTRIBUTE, which is still perfectly true, so all seven stay green with the bubble parked on the masthead
+// for the rest of the visit. This one reads the box.
+const hiddenBox = await evalIn(`(() => {
+  const speech = document.getElementById('byte-speech');
+  const wasHidden = speech.hidden, wasText = speech.textContent;
+  speech.textContent = "A sentence long enough to give the box a height if anything renders it at all.";
+  speech.hidden = true;
+  const cs = getComputedStyle(speech), r = speech.getBoundingClientRect();
+  const got = {display: cs.display, h: Math.round(r.height), w: Math.round(r.width),
+               visible: !!(r.width || r.height)};
+  speech.hidden = wasHidden; speech.textContent = wasText;
+  return got;
+})()`);
+ok("setting the hidden attribute still removes the bubble's box, clamp or no clamp",
+   hiddenBox.display === "none" && !hiddenBox.visible, JSON.stringify(hiddenBox));
 // The block above restates the generator's sentence templates, so on its own it would keep passing against
 // rules the generator no longer has. This is the tie: the string the page really produced for the hovered row
 // has to be one of the strings those restated templates can produce. Edit the generator's wording or its
@@ -496,6 +573,7 @@ const walk = await evalIn(`(async () => {
     const text = speech.textContent;
     const lines = Math.round((speech.getBoundingClientRect().height - chrome) / lh), box = boxes();
     said.push({nwo: row.dataset.project, text, len: text.length, lines, box,
+               cut: speech.scrollHeight > speech.clientHeight + 1,
                inSet: window.__saidByHarness.has(text)});
     for (const n of names) if (arms[n](text, row.dataset.project)) seen[n] = seen[n] || row.dataset.project;
   }
@@ -553,7 +631,8 @@ const walk = await evalIn(`(async () => {
                short: clip(longest.name, ${NAME_MAX}), text, spoke: !speech.hidden && !!text,
                clipped: !!text && arms["a name clipped to fit"](text, longest.nwo),
                inSet: window.__saidByHarness.has(text),
-               lines: Math.round((speech.getBoundingClientRect().height - chrome) / lh), box: boxes()};
+               lines: Math.round((speech.getBoundingClientRect().height - chrome) / lh), box: boxes(),
+               cut: speech.scrollHeight > speech.clientHeight + 1};
       if (probe.clipped) seen["a name clipped to fit"] = seen["a name clipped to fit"] || longest.nwo;
     }
     qbox.value = "";
@@ -567,8 +646,11 @@ const walk = await evalIn(`(async () => {
           qRestored: rowsNow() === wasRows, qbox: qbox.value,
           clippableRendered: [...document.querySelectorAll('#out tr[data-project]')]
             .filter(r => Array.from(nameOf.get(r.dataset.project) || "").length > ${NAME_MAX}).length,
-          tall: said.filter(s => s.lines > 2 || s.lines < 1 || s.box > 2 || s.box < 1),
-          disagreed: said.filter(s => s.lines !== s.box),
+          // The box is the promise; the Range is allowed to run past it exactly where the clamp is cutting.
+          // See the note on the two instruments above the corpus sweep -- a clamped element still reports every
+          // line box the text wanted, so bounding the Range here would report the runner's fonts, not a defect.
+          tall: said.filter(s => s.lines > 2 || s.lines < 1 || s.box < 1),
+          disagreed: said.filter(s => s.lines !== s.box && !(s.box > s.lines && s.cut)),
           empty: said.filter(s => !s.len),
           adrift: said.filter(s => !s.inSet).map(s => s.nwo + ': ' + s.text)};
 })()`);
@@ -593,7 +675,8 @@ ok("every sentence Archie was caught saying is one the restated templates can pr
 // a pass -- 239 of 1,294 do at 22, and 140 did at 26 -- so it is reported rather than skipped over.
 ok("the longest name in the atlas is clipped in what Archie says about it, and still fits two lines",
    !walk.broke && walk.clippable && walk.probe && !walk.probe.broke && walk.probe.spoke
-   && walk.probe.clipped && walk.probe.inSet && walk.probe.lines <= 2 && walk.probe.box <= 2
+   && walk.probe.clipped && walk.probe.inSet && walk.probe.lines <= 2
+   && (walk.probe.box <= 2 || walk.probe.cut)
    && walk.qRestored, JSON.stringify({clippable: walk.clippable, longestPoints: walk.longestPoints,
                                       probe: walk.probe, qRestored: walk.qRestored, q: walk.qbox}));
 
@@ -1068,8 +1151,9 @@ await evalIn("document.querySelector('#out tr[data-project] a')?.focus({preventS
 await sleep(450);
 await clearance("Archie says nothing on a phone, where there is nowhere to say it", false);
 // The width the two-line claim was actually false at. The bubble is gone here, but the name tag is not, and
-// the rule that shrinks his column to 82px is the one that pushed the pill to three lines.
-await nametag("Archie's name tag is still two lines on a phone", 375);
+// the rule that shrinks his column to 82px is the one that pushed the pill to three lines. One word now, so
+// this is the width where the count being asserted is the one no font can change.
+await nametag("Archie's name tag is one unwrappable word on a phone", 375, 1);
 await shot("view-cards-375");
 
 // The table's own narrow layout, which this must not have disturbed -- it is a click away on a phone rather
@@ -1087,10 +1171,13 @@ await shot("view-table-375");
 // and not merely below it. 375 and 1440 alone would pass a rule that started one pixel off.
 await resize(640, 900);
 await goto(ORIGIN);
-await nametag("Archie's name tag is two lines at the 640px boundary itself", 640);
+await nametag("Archie's name tag is one word at the 640px boundary itself", 640, 1);
 await resize(641, 900);
 await goto(ORIGIN);
-await nametag("and two lines on the desktop side of that boundary", 641);
+// And the full name comes back one pixel later, in two lines, in a 128px column with 25% of slack rather than
+// 4% -- 108px of content against the 81px the widest face measured needs for "Archie 'Atlas'". This is the
+// assertion that would catch the swap being written as `max-width:641px` or applied at every width.
+await nametag("and the full name, two lines, on the desktop side of that boundary", 641, 2);
 
 // ---- both themes, because the card's background and border are both theme variables
 //
