@@ -3177,7 +3177,15 @@ function initDiscovery() {
   // result to 74. Read as written, 74 is the guarantee and 62 is a nicety. It is the other way round. 74 was
   // only reachable *because* 62 suppressed every string between 63 and 74 that had a tag on it, so the
   // longest thing the page could actually say was well under its own stated cap, and the number a reader of
-  // this code would check the layout against was not the number holding it up. Raising TAG_MAX to meet
+  // this code would check the layout against was not the number holding it up.
+  //
+  // 74 never bound anything, and it missed by exactly one character rather than by a comfortable margin,
+  // which is the part worth writing down: the worst tagged sentence the old pair could construct was a
+  // 26-character clipped name, plus the 17 characters of " is listed under ", plus the longest of the 14
+  // category names -- "Sandbox, Security & Governance", 30 -- plus a full stop. 26+17+30+1 = 74, equal to the
+  // cap and therefore passing it. So the guard was live and merely never fired, and renaming one category to
+  // 31 characters would have started it clipping, silently, with no test anywhere measuring the string it
+  // clipped. Do not read the old pair as a cap that was redundant by design. Raising TAG_MAX to meet
   // BUBBLE_MAX -- which looks like a pure win, more tags kept, same stated bound -- takes the bubble to
   // three lines immediately. Measured: at 220px, `24,65,65` is three lines where `24,53,65` is two.
   //
