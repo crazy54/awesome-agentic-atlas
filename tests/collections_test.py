@@ -154,6 +154,81 @@ true("the sets are mostly distinct projects", len(set(picked)) >= len(picked) * 
 true("...and between them cover several topics",
      len({p["row"]["cat_slug"] for c in plan for p in c["picks"]}) >= 5)
 
+# ---------------------------------------------------------------- the roster, pinned
+# Every assertion above this line is written against whatever `config/collections.json` happens to say, which
+# is what a schema check should be and is not enough on its own: a pick can arrive or vanish and all of them
+# stay green, because each one is derived from the set rather than compared to it. That is not hypothetical.
+# #13 re-pointed `mnfst/manifest` to `mnfst/llm-gateway` and kept its reason; #14 deleted the pick outright,
+# having measured that the reason -- per-agent cost accounting -- was no longer what the project does. #13
+# merged first, #14's merge of `latest_branch` resolved the collision by keeping the pick, and the branch
+# shipped a seven-pick set beside #14's rewritten kicker and intro, which count six. Seventeen harnesses and
+# 2,455 assertions were green on it, because not one of them knew how many picks there are supposed to be.
+#
+# So the roster is stated here, in file order, slot by slot. Editing the curation now means editing this list
+# too, which is the point: a pick is an editorial claim, and the diff that adds or removes one should be a
+# diff a human is looking at rather than a hunk a merge resolved. The reasons are deliberately not pinned --
+# rewording a `why` is copy-editing, and the assertions above already hold it to being prose about a project
+# that exists. What is pinned is the answer to "which projects does this page recommend, and in which slots".
+ROSTER = {
+    "first-setup": [
+        ("The agent", "anomalyco/opencode"),
+        ("What it knows how to do", "obra/superpowers"),
+        ("What it remembers", "mem0ai/mem0"),
+        ("How it reaches your tools", "modelcontextprotocol/servers"),
+        ("Where it runs", "daytonaio/daytona"),
+        ("What it actually did", "langfuse/langfuse"),
+        ("What to read while it runs", "shareAI-lab/learn-claude-code"),
+    ],
+    "windows-first": [
+        ("The framework", "openclaw/openclaw"),
+        ("The harness", "earendil-works/pi"),
+        ("The coding agent", "continuedev/continue"),
+        ("The model runner", "ollama/ollama"),
+        ("The inference engine", "ggml-org/llama.cpp"),
+        ("The context budget", "headroomlabs-ai/headroom"),
+        ("The sandbox", "nearai/ironclaw"),
+    ],
+    "claude-code-kit": [
+        ("The format", "anthropics/skills"),
+        ("The bundle", "obra/superpowers"),
+        ("The instructions file", "multica-ai/andrej-karpathy-skills"),
+        ("The engineering set", "addyosmani/agent-skills"),
+        ("The token diet", "JuliusBrussee/caveman"),
+        ("The bill", "ccusage/ccusage"),
+        ("Where to look next", "hesreallyhim/awesome-claude-code"),
+    ],
+    "local-only": [
+        ("The runner", "ollama/ollama"),
+        ("The engine", "ggml-org/llama.cpp"),
+        ("The zero-setup option", "mozilla-ai/llamafile"),
+        ("The chat surface", "open-webui/open-webui"),
+        ("The consumer-hardware path", "nomic-ai/gpt4all"),
+        ("Your own documents", "PromtEngineer/localGPT"),
+        ("When one machine is not enough", "vllm-project/vllm"),
+    ],
+    # Six, not seven. "The bill" was dropped in #14 and belongs to nothing until a project that genuinely does
+    # per-agent cost accounting is chosen, which is an editorial decision and not a build fix.
+    "keep-it-honest": [
+        ("The trace", "langfuse/langfuse"),
+        ("The second opinion", "Arize-ai/phoenix"),
+        ("The test suite", "promptfoo/promptfoo"),
+        ("The metrics", "confident-ai/deepeval"),
+        ("The standard", "traceloop/openllmetry"),
+        ("The thing you install", "NVIDIA/SkillSpector"),
+    ],
+}
+eq("the file holds exactly the collections pinned here", sorted(ROSTER), sorted(c["slug"] for c in plan))
+for c in plan:
+    eq(f"{c['slug']}: recommends exactly the projects pinned here, in order",
+       [(p["role"], p["nwo"]) for p in c["picks"]], ROSTER.get(c["slug"], []))
+
+# The count on its own, stated separately from the roster above, because it is the half of that failure a
+# reader of the collection page would have noticed: prose that says six over a list of seven.
+eq("keep-it-honest recommends six projects, which is what its kicker and intro describe",
+   len(coll({"collections": plan}, "keep-it-honest")["picks"]), 6)
+true("...and no pick claims per-agent cost accounting, which no project in the set does",
+     not any("per agent" in p["why"] for c in plan for p in c["picks"]))
+
 # ---------------------------------------------------------------- the guard
 print("\n── the refusals, on a mutated copy " + "─" * 62)
 c = fresh()
@@ -202,6 +277,13 @@ true("every pick that declares an aka resolves to one of the spellings it declar
      all(p["nwo"] in {p_src["nwo"], *(p_src.get("aka") or [])}
          for c_p, c_src in zip(b25.plan(DATA), CURATION["collections"])
          for p, p_src in zip(c_p["picks"], c_src["picks"])))
+# Said out loud, because the sweep above is where it would otherwise hide: no committed pick declares an `aka`
+# now that `mnfst` is gone, so for the alias half of that assertion the `all()` is over an empty set and only
+# the four synthesised cases above cover the mechanism. If this number ever leaves zero, the sweep starts
+# earning its name -- and if someone deletes the mechanism while it is zero, this is the assertion that says
+# the sweep proved nothing about it.
+eq("committed picks declaring an aka -- zero, so the sweep above is vacuous for aliases and says so",
+   sum(1 for c in CURATION["collections"] for p in c["picks"] if p.get("aka")), 0)
 
 first_os = next((x for x in CURATION["collections"] if (x.get("requires") or {}).get("os")), None)
 true("some collection makes a platform claim, so the branch below is reachable", first_os is not None)

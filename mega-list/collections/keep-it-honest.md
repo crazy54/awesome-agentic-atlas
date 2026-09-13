@@ -1,12 +1,12 @@
 # Find out what the agent actually did
 
-*Traces, tests, scans and the bill*
+*Traces, tests and scans*
 
-An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put in front of a customer. Traces first, then tests, then the two things people leave until after the incident.
+An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put in front of a customer. Traces first, then tests, then the thing people leave until after the incident.
 
-7 picks · 119,072 combined stars · snapshot 2026-09-03
+6 picks · 111,570 combined stars · snapshot 2026-09-03
 
-[Open all 7 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector,mnfst/manifest) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
+[Open all 6 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
 ---
 
@@ -127,26 +127,6 @@ uv tool install git+https://github.com/NVIDIA/skillspector.git
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
 Topic: Sandbox, Security & Governance · Targets: Claude Code, Claude / Anthropic, MCP, Codex / OpenAI
-
----
-
-## 7. The bill — [Manifest](https://github.com/mnfst/manifest)
-
-`mnfst/manifest` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/mnfst/manifest/)
-
-Real-time cost observability per agent. Cost is a correctness signal in disguise -- a run that suddenly costs four times as much has usually started doing something else.
-
-> Open-source, real-time cost observability platform for AI agents. Track tokens, costs, messages, and model usage with a local-first dashboard. Supports 28+ LLM models, OTLP ingestion, self-hosted
-
-```sh
-git clone https://github.com/mnfst/manifest.git
-```
-
-**7,502** stars · 1 list · TypeScript · MIT · pushed 2026-09-03
-
-Platforms: Win N WSL Y mac N Lin Y Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
-
-Topic: Observability & Evals
 
 ---
 
