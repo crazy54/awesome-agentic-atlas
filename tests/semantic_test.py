@@ -1,4 +1,4 @@
-"""The semantic index, scored using nothing but the bytes a reader downloads -- JFH-198.
+"""The semantic index, scored using nothing but the bytes a reader downloads -- JFH-293.
 
 `scripts/27_semantic.py` builds `docs/search/` with numpy, a 30 MB model and a corpus of READMEs. The
 browser has none of those. It has five files and about forty lines of JavaScript, and the entire premise

@@ -366,7 +366,7 @@ jobs:
           # missing generator if either file is absent -- but "present" is not "current", and only the
           # order here makes it current.
           python scripts/24_pwa.py
-          # The semantic index (JFH-198). Last of all, and deliberately after 24_pwa rather than before
+          # The semantic index (JFH-293). Last of all, and deliberately after 24_pwa rather than before
           # it, which is not what its data dependency alone would ask for.
           #
           # What it needs from the order is only that it follow every stage that writes `docs/data.json`

@@ -216,7 +216,7 @@ jobs:
           # from 19_pages and `pages.css` from 20_landing -- so it has to see both in their final state.
           # It does not have to trust the ordering: the stage exits with a message if either is missing.
           python scripts/24_pwa.py
-          # The semantic index (JFH-198). See daily.yml for the whole argument about this position -- in
+          # The semantic index (JFH-293). See daily.yml for the whole argument about this position -- in
           # short, it has to follow the two stages that write `docs/data.json` because it fingerprints
           # that file, nothing reads what it writes, and it is the only stage here that needs the network,
           # so it goes where a failure leaves the site consistent rather than half-stamped.

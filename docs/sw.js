@@ -29,7 +29,7 @@ const CACHED = "x-atlas-cached";
 // `24_pwa.DATA_FILES` rather than written out here, so the list has one definition.
 const DATA_FILES = ["/data.json", "/live.json"];
 // The sub-resources some page fetches after paint -- the detail pages' stylesheet and script (JFH-282),
-// and the semantic index the search box loads on first use (JFH-198) -- cached on first visit under
+// and the semantic index the search box loads on first use (JFH-293) -- cached on first visit under
 // ASSETS rather than precached at install. This one is routed by policy and not by caller. Two lists rather
 // than one because the marking differs and nothing else does: a `data.json` answered from cache has to say
 // so, since the index page turns that header into its freshness stamp, and a stylesheet answered from cache

@@ -93,7 +93,7 @@ Not precached, deliberately:
     at as many entries as it names rather than by a number somebody has to maintain.
 
   * The four files of the semantic index under `docs/search/`, 758 KB, routed by `PAGE_ASSETS` as well
-    (JFH-198). The list is the policy and not the caller: these are fetched by `index.html` and not by a
+    (JFH-293). The list is the policy and not the caller: these are fetched by `index.html` and not by a
     detail page, and they belong on the same route because they want the same three things -- not
     precached, cached on first use, not marked. 758 KB is by a wide margin the largest thing this site
     could put in an install step, and `index.html` fetches it only when a reader touches the search box, so
@@ -244,7 +244,7 @@ DATA_FILES = ["data.json", "live.json"]
 # own cache is bounded by the length of this list instead.
 PAGE_ASSETS = [
     "repo/detail.css", "repo/detail.js",
-    # The semantic index (JFH-198), 758 KB across four files, on the same policy and for the same reasons.
+    # The semantic index (JFH-293), 758 KB across four files, on the same policy and for the same reasons.
     # It is fetched by `index.html` rather than by a detail page, so the list is no longer "the detail
     # pages' sub-resources" -- it is "what some page fetches after paint, cached on first use, unmarked",
     # which is what the policy was all along.
@@ -481,7 +481,7 @@ const CACHED = "__CACHEHDR__";
 // `24_pwa.DATA_FILES` rather than written out here, so the list has one definition.
 const DATA_FILES = __DATAFILES__;
 // The sub-resources some page fetches after paint -- the detail pages' stylesheet and script (JFH-282),
-// and the semantic index the search box loads on first use (JFH-198) -- cached on first visit under
+// and the semantic index the search box loads on first use (JFH-293) -- cached on first visit under
 // ASSETS rather than precached at install. This one is routed by policy and not by caller. Two lists rather
 // than one because the marking differs and nothing else does: a `data.json` answered from cache has to say
 // so, since the index page turns that header into its freshness stamp, and a stylesheet answered from cache
