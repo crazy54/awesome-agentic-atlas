@@ -1131,17 +1131,39 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 }
 
 @media(max-width:640px){
-  /* 20px gutters on all four sections cost 40px, 11% of a 375px screen, and the old query left them. */
-  header{padding:16px 14px 12px}
+  /* 20px gutters on all four sections cost 40px, 11% of a 375px screen, and the old query left them.
+     The header's vertical padding comes down with them, and `.top`'s gap by 2px, for the reason set out
+     above the mascot below: every pixel here is one the first result does not get. */
+  header{padding:12px 14px 10px}
   .bar{padding:8px 14px}
   main{padding:0 14px 48px}
   footer{padding:18px 14px}
   h1{font-size:21px}
   h1 span{display:block;font-size:13px}
-  .top{gap:10px}
+  .top{gap:8px}
   .headside{width:100%;align-items:center;justify-content:space-between;gap:12px}
   .top nav{text-align:left;line-height:2.1}
-  .atlas-byte-wrap,.atlas-byte{width:82px}
+  /* Measured at 375x760: the masthead was 335px and the bar 165, so the first result began at y=514 and
+     its *name* -- the one thing a reader is looking for -- sat at 740, a single pixel of it above the fold.
+     A guest arriving on a phone saw a picture and a star count and had to scroll to learn what either was
+     attached to.
+
+     The masthead's height is set by this mascot column and not by the nav beside it: 86px of art plus the
+     two stacked tap targets under it (the 44px floor every header button gets above -- WCAG 2.5.5, and not
+     something to give back) comes to 167, where the nav is 126. So trimming the nav saves nothing at all
+     until the column is under 126, and the column cannot get there while both its buttons keep a real
+     target. Shrinking the art is the only lever on it that costs nothing: 64px takes the column to 149.
+
+     `.atlas-byte-wrap` keeps its 82px rather than shrinking with the art, because the name tag is sized by
+     the wrap and at 64 it wrapped to "Atlas / Byte". Holding the wrap also holds the nav's width, so
+     nothing in the nav reflows -- it stays the same three lines it was.
+
+     Rejected: laying the two buttons side by side instead of stacked. It takes 38px off the column rather
+     than 18, but the wider column squeezes the nav to 185px, which costs the nav a fourth line and splits
+     "All projects" across the break. A net 35px for a worse-looking masthead, against 26px for one that
+     looks the same. The rest of the 82px comes out of the card, below the cards block. */
+  .atlas-byte-wrap{width:82px}
+  .atlas-byte{width:64px;margin-left:auto;margin-right:auto}
 
   #q{flex:1 1 100%;min-width:0}
   .line>label[for=q]{display:none}
@@ -1260,6 +1282,37 @@ html[data-view=cards][data-index-screenshots=off] td.pj{grid-row:2}
 html[data-view=cards][data-index-screenshots=off] td.ds{grid-row:3}
 html[data-view=cards][data-index-screenshots=off] td.tg{grid-row:4}
 html[data-view=cards][data-index-screenshots=off] td.lc{grid-row:5}
+
+/* The other half of the above-the-fold budget the mascot rules opened, and the larger half. A card puts
+   226px above its own name on a phone: 165 of screenshot, then the rank and star band under it, which
+   `td.rk` and `td.st-c` share at 56. With the masthead trimmed the first card starts at 488, so the name
+   still landed at 714-802 and was still cut. Moving it up one row lands it at 658-746, and with it the
+   repo link, Save, and all five platform verdicts -- 14px of slack, on a card whose `td.pj` measured
+   exactly 88px on all 60 rows in the first page, so there is no content variance to eat it.
+
+   The order is a number here rather than a shape in the markup, which is what makes this a three-line
+   change: the screenshots-off rules directly above renumber the same grid for the same reason.
+
+   It costs nothing anywhere else. `td.rk` and `td.st-c` hold no focusable content -- checked, they are
+   plain text -- so the only cells that can take focus are still in the order the DOM has them, and the
+   card now reads name, then credentials, rather than credentials, then name.
+
+   Screenshots-off is deliberately left alone: those selectors carry two attributes and outrank these, so a
+   reader who turned the images off keeps the order that was designed for not having them.
+
+   This block has to sit *below* the cards rules and not in the 640px query up beside the masthead ones,
+   because it repeats their selectors exactly and would otherwise lose to them on source order. Same
+   specificity, later wins.
+
+   What this does not fix: on a viewport 700px or shorter -- 375x667, 360x640 -- the name is still below the
+   fold, by 75 and 94px. Masthead 309 plus bar 165 plus 165 of screenshot is already past 640, so nothing
+   short of the screenshot itself or the bar's three rows of 44px targets reaches it, and both of those are
+   worth more than the pixels. */
+@media(max-width:640px){
+  html[data-view=cards] td.pj{grid-row:2}
+  html[data-view=cards] td.rk{grid-row:3}
+  html[data-view=cards] td.st-c{grid-row:3}
+}
 /* 44em is a measure for a line of prose in a wide table cell. Inside a 290px card it is not a constraint
    at all, and leaving it there only means the three of them disagree about what the card's width is. */
 html[data-view=cards] .desc,html[data-view=cards] .cmdrow,html[data-view=cards] .cmd{max-width:none}
