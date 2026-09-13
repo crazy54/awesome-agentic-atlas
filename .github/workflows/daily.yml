@@ -13,7 +13,7 @@
 # commit at the end of this job *is* the deployment -- GitHub's own pages-build-deployment run picks it
 # up. Nothing here has to be told the site's URL.
 #
-# Which is also why the thirteen-harness suite runs here, between the generators and that commit, rather
+# Which is also why the seventeen-harness suite runs here, between the generators and that commit, rather
 # than only in `tests.yml`: this job pushes with `secrets.GITHUB_TOKEN`, GitHub starts no workflow runs for
 # such a push, and so none of this job's ~30 commits a month has ever triggered a check. See the
 # verification block before the commit step, and `VERIFY_GATES_DEPLOY` in `env:` for whether a red suite
@@ -111,7 +111,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - run: python -m pip install --upgrade pip openpyxl pillow
+      # numpy is here for `27_semantic.py` and for nothing else in this job. It is the only stage that
+      # needs it, and it needs it for a one-off: a 29,528 x 256 float32 table, an SVD, and a quantisation
+      # pass. Doing that in the standard library would be a day of arithmetic to save a wheel.
+      - run: python -m pip install --upgrade pip openpyxl pillow numpy
 
       # `19_pages.py` reads CF_BEACON_TOKEN and treats an empty value as "no analytics", which is right for
       # a fork and for a local `python -m http.server` -- and wrong here. Declaring it in `env:` would set
@@ -363,6 +366,38 @@ jobs:
           # missing generator if either file is absent -- but "present" is not "current", and only the
           # order here makes it current.
           python scripts/24_pwa.py
+          # The semantic index (JFH-293). Last of all, and deliberately after 24_pwa rather than before
+          # it, which is not what its data dependency alone would ask for.
+          #
+          # What it needs from the order is only that it follow every stage that writes `docs/data.json`
+          # -- 19_pages, which rewrites it, and 25_velocity, which patches it -- because `meta.json`
+          # carries a SHA-256 of that file's `nwo` column and the vectors are addressed by row ordinal.
+          # Nothing at all reads what it writes. `docs/search/` is routed by 24_pwa's `PAGE_ASSETS`
+          # network-first and is not precached, so these bytes are not hashed into the worker's `VERSION`
+          # and a rebuild reaches an online reader on the next request without one.
+          #
+          # So failure semantics pick the position, and this is the only stage in the block that touches
+          # the network: on a cold `cache/m2v` the 30 MB model comes from huggingface.co. Run earlier, an
+          # outage there aborts the job with `index.html` rewritten and `sw.js` unstamped -- the one
+          # inconsistency on this site with no self-healing path, as the comment above spells out. Run
+          # last, the same outage leaves a complete and consistent site whose search index is one corpus
+          # behind, and that case is already handled: the page verifies the fingerprint before it scores
+          # anything and declines the feature on a mismatch rather than ranking against the wrong rows.
+          # Off is recoverable by the next run; wrong is not, because nothing would report it.
+          #
+          # It still fails the job. `set -euo pipefail` is the point, a stale index is a defect rather
+          # than a state to settle into, and tests/semantic_test.py asserts that same fingerprint against
+          # this same file -- so a run that skipped this stage turns the suite red instead of quietly
+          # publishing a search box that has stopped answering. The network cost is once per cache
+          # lifetime: the model lands in `cache/m2v`, under the same `actions/cache` entry as everything
+          # else here, and since JFH-225 that entry is saved even when the run fails -- so the retry after
+          # an outage is already warm.
+          #
+          # This job is also the one that makes the index good, not merely current. `02_fetch.py --force`
+          # and `11_fetch_all.py` above are what fill `cache/readmes/`, and this stage prefers a README
+          # over a ~24-token blurb; it prints the proportion it managed. A cold cache is not an error and
+          # is not treated as one, but it is the ceiling on how well any of this ranks.
+          python scripts/27_semantic.py
 
       # `20_landing.py` runs in this job as of JFH-215, and the history it costs is the whole argument, so
       # the measurement stays here where the decision is. It rewrites 156 prerendered pages and every byte
@@ -511,7 +546,7 @@ jobs:
       # ---------------------------------------------------------------- verification, before publication
       #
       # The suite runs here, against the tree this job just built and is about to publish, and that
-      # placement is the entire content of JFH-284. `tests.yml` next door runs the same thirteen harnesses
+      # placement is the entire content of JFH-284. `tests.yml` next door runs the same seventeen harnesses
       # on pull requests, on pushes to `latest_branch`, and as a Monday canary -- but this job pushes with
       # `secrets.GITHUB_TOKEN` through `actions/checkout`'s persisted credentials, and GitHub deliberately
       # starts no workflow runs for pushes made with that token. So not one of this job's ~30 commits a

@@ -1,4 +1,4 @@
-# The verification suite, in CI. Runs `node tests/run.mjs` -- all thirteen harnesses, 1,199 assertions --
+# The verification suite, in CI. Runs `node tests/run.mjs` -- all seventeen harnesses, 2,374 assertions --
 # and fails the job when anything is red. It writes nothing, commits nothing and deploys nothing.
 #
 # WHY THIS EXISTS (JFH-208)
@@ -54,7 +54,7 @@
 #
 # WHY NO BROWSER IS INSTALLED, AND WHICH ONE ACTUALLY GETS USED
 #
-# Three of the thirteen harnesses drive Chromium over CDP, and none of them installs one. `ubuntu-latest`
+# Three of the seventeen harnesses drive Chromium over CDP, and none of them installs one. `ubuntu-latest`
 # carries two on `PATH` -- `/usr/bin/chromium` and `/usr/bin/google-chrome` -- and `launch()` passes
 # `--headless=new` unconditionally, so either is headless-capable without a flag from here. That saves a
 # ~130 MB Playwright download on every run and matches the policy `lighthouse.yml` already states next
@@ -94,7 +94,7 @@
 # imports `20_landing` imports `19_pages` imports `17_markdown` imports `16_build_all`, whose line 41 is
 # `from openpyxl import Workbook` at import time. The same chain is reachable from here, because
 # `detail-churn.mjs` and `refresh_test.py` both drive stages that sit on it.
-name: Tests — the thirteen-harness verification suite
+name: Tests — the seventeen-harness verification suite
 
 on:
   pull_request:

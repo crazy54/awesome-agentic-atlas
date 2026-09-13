@@ -1,0 +1,21 @@
+# The semantic index's three matrices are raw int8/uint16, and they are committed, because docs/ is the
+# deployable artefact -- GitHub Pages serves this repository's bytes verbatim (`build_type: legacy`).
+#
+# Marked binary explicitly rather than left to Git's autodetection, which reads the first 8 KB and guesses
+# "text" if it finds no NUL byte. Today every one of these files has NUL bytes early -- a component that
+# quantised to zero -- so the guess is right and the committed blobs match the build byte for byte. That is
+# a property of the *data*, not of the format. A rebuild against a different corpus, a different `dims`, or
+# a smaller vocabulary could easily produce a first page with none, and on this Windows checkout
+# `core.autocrlf` would then rewrite every 0x0D 0x0A pair in a matrix of signed bytes on the way in.
+#
+# The result would not look like corruption. The file lengths would still divide by `dims`, so the shape
+# assertions in tests/semantic_test.py would pass; the fingerprint covers docs/data.json rather than these
+# bytes, so the staleness guard would pass; and the page would load the index, report SEM_STATE "live", and
+# rank every query against damaged vectors. Cheaper to state the format than to hope the data keeps hiding
+# the hazard.
+docs/search/*.bin binary
+
+# Written with newline="\n" by scripts/27_semantic.py and committed as LF, so that the bytes a reader
+# downloads do not depend on which OS ran the build. Pinned for the same reason: sorted keys and LF are
+# what keep these two files out of every diff.
+docs/search/*.json text eol=lf

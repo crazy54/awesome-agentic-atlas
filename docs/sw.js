@@ -2,8 +2,8 @@
 // version stops describing the bytes: the next build overwrites whatever was changed here, and until it
 // does, readers hold a cache whose name no longer matches its contents. Change the generator.
 //
-// Version 7fd9512a5e9e -- a hash of the precached files, so it moves when they do and not otherwise.
-const VERSION = "7fd9512a5e9e";
+// Version 449a3d4bd018 -- a hash of the precached files, so it moves when they do and not otherwise.
+const VERSION = "449a3d4bd018";
 const SHELL = "atlas-shell-" + VERSION;
 // Unversioned, and never deleted on activate, which is the difference between an offline reader and a
 // broken one. A version-keyed data cache would be emptied by the very update that proves the reader is
@@ -28,12 +28,14 @@ const CACHED = "x-atlas-cached";
 // the index's rows; `live.json` is the sidecar the 1,294 detail pages read (JFH-222). Kept in
 // `24_pwa.DATA_FILES` rather than written out here, so the list has one definition.
 const DATA_FILES = ["/data.json", "/live.json"];
-// The detail pages' stylesheet and script, cached on first visit under ASSETS (JFH-282). Two lists rather
+// The sub-resources some page fetches after paint -- the detail pages' stylesheet and script (JFH-282),
+// and the semantic index the search box loads on first use (JFH-293) -- cached on first visit under
+// ASSETS rather than precached at install. This one is routed by policy and not by caller. Two lists rather
 // than one because the marking differs and nothing else does: a `data.json` answered from cache has to say
 // so, since the index page turns that header into its freshness stamp, and a stylesheet answered from cache
 // has nobody to tell. Being absent from here is what used to make a detail page lose its star count offline
 // while the sidecar it reads was cached correctly -- routing by filename with no default cuts both ways.
-const PAGE_ASSETS = ["/repo/detail.css", "/repo/detail.js"];
+const PAGE_ASSETS = ["/repo/detail.css", "/repo/detail.js", "/search/meta.json", "/search/vocab.json", "/search/vocab.bin", "/search/docs.bin"];
 
 // Relative to this script, so the scope is the project's Pages prefix on the published site, the fork's
 // prefix on a fork, and "/" under a local `python -m http.server`. A literal "/awesome-agentic-atlas/"

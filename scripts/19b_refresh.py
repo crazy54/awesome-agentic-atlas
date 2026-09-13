@@ -171,7 +171,33 @@ def refresh_data(data: dict, ledger: dict) -> tuple[dict, int]:
     return data, live
 
 
-def render(data: dict) -> str:
+def render(data: dict, lists: int | None = None) -> str:
+    """The page. With `lists`, the source count describes the rows being rendered, not the checkout.
+
+    `19_pages.LISTS` is `len(10_parse_sources.SOURCES)`, and in a full build that is exactly right: the
+    crawl that wrote `data.json` walked those lists, so the number the page states and the rows it counts
+    come from one place. This stage is the one path where they can differ, because it renders committed
+    rows against a checkout that may have moved -- which is the whole hazard `check_sources` refuses on.
+
+    So `--allow-stale` no longer means "publish a page that contradicts itself". It means "describe the
+    dataset you have". The page then says 1,294 projects from 11 awesome-lists, which is true of the rows
+    it is serving, instead of 1,294 projects from 39, which is true of nothing: not of the rows, whose
+    crawl saw 11, and not of the checkout, which has 39 lists and no rows for 28 of them.
+
+    Overridden on the module rather than threaded through `substitute()`, because `LISTS` is read four
+    times from three functions and the alternative is a parameter on all of them that only this caller
+    would ever pass. `check_sources` has already returned without raising by the time `main()` gets here,
+    so the override is either a no-op -- the counts agreed -- or the deliberate consequence of
+    `--allow-stale`.
+
+    Opt-in, and that is not a convenience for the caller. `refresh_test.py` renders this twice to assert
+    that the prose source count is a constant with respect to the rows -- the independence that makes the
+    guard worth having in the first place -- and a default that silently rewrote `LISTS` from the data
+    would make that assertion measure nothing. Omitting the argument means "state the checkout's count",
+    which is what every caller but `main()` wants and what this function did before the override existed.
+    """
+    if lists is not None:
+        b19.LISTS = lists
     return b19.substitute(b19.PAGE, data, b19.REPO, b19.b17.SITE)
 
 
@@ -224,7 +250,7 @@ def main() -> None:
     data, live = refresh_data(data, ledger)
 
     path.write_text(json.dumps(data, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
-    (OUT / "index.html").write_text(render(data), encoding="utf-8")
+    (OUT / "index.html").write_text(render(data, lists), encoding="utf-8")
     reversion()
 
     for f in ("index.html", "data.json", "sw.js"):

@@ -152,6 +152,11 @@ const shim = [
   "export const api = {",
   "  get state(){return state}, get ROWS(){return ROWS}, get D(){return D},",
   "  render, match, relevance, hitScore, near, effSort, grams, SORTS, SORT_KEYS,",
+  // `semTokens` takes its vocabulary and its stoplist as arguments rather than reading `SEM`, which is the
+  // only reason it can be called from here: `SEM` is null until `loadSemantic()` has fetched four files,
+  // and there is no server in this harness. Exposed because it is the page's copy of an algorithm that
+  // exists three times over, and the drift nobody would notice is the one on this side of the wire.
+  "  semTokens,",
   "  readHash, writeHash, applyView,",
   // `RISE` is settable, not just readable, because the published `data.json` can only ever exercise one
   // side of the velocity feature at a time -- and the side it cannot reach is the side that renders.
@@ -1679,6 +1684,61 @@ ok("the file:// message survives inside a JS string with markup in it",
 ok("the footer's four repository links survive",
    (html.match(/https:\/\/github\.com\//g) || []).length >= 4,
    String((html.match(/https:\/\/github\.com\//g) || []).length));
+
+// SEARCH BY MEANING: the page's tokeniser against the one that built the index.
+//
+// This is the assertion the whole feature rests on and the only one that can catch its silent failure.
+// `scripts/27_semantic.py` writes each of its `PROBES` into `meta.json` as `probe`, paired with the slot
+// ordinals the reference implementation segmented it into. `tests/semantic_test.py` checks its own
+// transcription against those; this checks the page's, which is the copy a visitor actually runs.
+//
+// Why it matters more than it looks: a query segmented differently from the documents throws nothing,
+// returns nothing empty, and logs nothing. It returns a full page of confidently ranked, wrong projects.
+// Every other test of this index -- file lengths, unit norms, the fingerprint, the neighbour table -- goes
+// on passing while it happens, because none of them compares the two tokenisers.
+//
+// Slot ordinals, not token strings: ordinals are what both sides address `vocab.bin` by, so a rebuild that
+// reordered the vocabulary without changing the segmentation would also score noise, and would pass a
+// comparison made on strings.
+const searchDir = join(ROOT, "docs/search");
+let semMeta = null;
+try {
+  semMeta = JSON.parse(readFileSync(join(searchDir, "meta.json"), "utf8"));
+} catch { /* handled by the assertion below */ }
+// A hard failure rather than a skip. `docs/search/` is committed alongside the page, and a checkout
+// missing it is a checkout where search by meaning is silently absent in production -- which is precisely
+// the state a green suite must not describe as healthy.
+ok("docs/search/meta.json is there to check the tokeniser against", semMeta !== null,
+   "no index -- run scripts/27_semantic.py");
+if (semMeta) {
+  const tokens = JSON.parse(readFileSync(join(searchDir, "vocab.json"), "utf8")).tokens;
+  const slot = new Map(tokens.map((t, i) => [t, i]));
+  const stop = new Set(semMeta.stop || []);
+  ok("the index ships probe fixtures", Array.isArray(semMeta.probe) && semMeta.probe.length > 0,
+     "no `probe` key in meta.json, so this group asserts nothing");
+  ok("the index ships a stoplist", stop.size > 0,
+     "no `stop` key, so the page would strip nothing and topicless questions would score");
+  // One assertion per fixture, so a failure names the string that drifted rather than the fact that
+  // something did.
+  for (const [text, expected] of semMeta.probe || []) {
+    const got = A.semTokens(text, slot, stop);
+    ok(`the page segments ${JSON.stringify(text)} the way the build stage did`,
+       got.length === expected.length && got.every((v, i) => v === expected[i]),
+       `stage ${JSON.stringify(expected)}, page ${JSON.stringify(got)}`);
+  }
+  // And that the stoplist is actually consulted by the page's copy, not merely shipped to it. Without
+  // this, a `semTokens` that ignored its third argument would reproduce every fixture above whose text
+  // happens to contain no stopwords, and would still return twelve unrelated projects for "please help
+  // me choose".
+  ok("the page drops a query that is nothing but stopwords",
+     A.semTokens("please help me choose", slot, stop).length === 0,
+     JSON.stringify(A.semTokens("please help me choose", slot, stop)));
+  ok("...and keeps the topic when chatter is wrapped around one",
+     A.semTokens("what should I use to scrape a website", slot, stop).length > 0 &&
+     A.semTokens("scrape", slot, stop).every(
+       (t) => A.semTokens("what should I use to scrape a website", slot, stop).includes(t)),
+     JSON.stringify(A.semTokens("what should I use to scrape a website", slot, stop)));
+}
 
 // And that the substitution pass ran at all. A stripper that reformatted a placeholder -- or a template
 // that grew a new one nobody wired up -- ships the literal token to a reader, and `__COUNT__` in the

@@ -89,8 +89,18 @@ Not precached, deliberately:
     They are cached on first visit, the way the facet pages are, rather than at install. `atlas-assets`
     holds them: network-first, so an updated `detail.js` reaches an online reader on the next request, and
     answered from cache only when the network does not answer. No cap, and unlike `atlas-pages` it does not
-    need one -- `PAGE_ASSETS` is a two-element list fixed at build time, so the cache is bounded by
-    construction at two entries rather than by a number somebody has to maintain.
+    need one -- `PAGE_ASSETS` is a short list fixed at build time, so the cache is bounded by construction
+    at as many entries as it names rather than by a number somebody has to maintain.
+
+  * The four files of the semantic index under `docs/search/`, 758 KB, routed by `PAGE_ASSETS` as well
+    (JFH-293). The list is the policy and not the caller: these are fetched by `index.html` and not by a
+    detail page, and they belong on the same route because they want the same three things -- not
+    precached, cached on first use, not marked. 758 KB is by a wide margin the largest thing this site
+    could put in an install step, and `index.html` fetches it only when a reader touches the search box, so
+    charging it to every reader of the shell would be charging most of them for nothing. Cached on first
+    use it is paid once by the readers who use it, and then it is there offline -- which matters more here
+    than for a stylesheet, because a search box that answers "chat with my pdfs" on the train and stops
+    answering it in a tunnel is a feature that looks broken rather than absent.
 
   * The 7,980 screenshots. They are Open Graph cards on `opengraph.githubassets.com`, cross-origin and
     fetched no-cors, so a response is opaque: status 0, no readable headers. A worker cannot tell a real
@@ -232,7 +242,23 @@ DATA_FILES = ["data.json", "live.json"]
 # slots on them and -- because `trim()` evicts by insertion order rather than by use -- would evict them
 # before the pages that need them, then re-insert them on the next online visit and push a page out. Their
 # own cache is bounded by the length of this list instead.
-PAGE_ASSETS = ["repo/detail.css", "repo/detail.js"]
+PAGE_ASSETS = [
+    "repo/detail.css", "repo/detail.js",
+    # The semantic index (JFH-293), 758 KB across four files, on the same policy and for the same reasons.
+    # It is fetched by `index.html` rather than by a detail page, so the list is no longer "the detail
+    # pages' sub-resources" -- it is "what some page fetches after paint, cached on first use, unmarked",
+    # which is what the policy was all along.
+    #
+    # Precaching it would charge every reader 758 KB for a feature they may never open, and it is the
+    # largest single thing this site could put in an install step. Leaving it out of here entirely would
+    # mean search by meaning works online and silently stops working offline -- which is the worse of the
+    # two, because it is the case the reader cannot see the reason for. Routed here, the first reader to
+    # type into the box pays for it once and keeps it, including offline, and a reader who never types
+    # never fetches it at all.
+    #
+    # `near.bin` is deliberately absent: nothing on the page requests it yet.
+    "search/meta.json", "search/vocab.json", "search/vocab.bin", "search/docs.bin",
+]
 
 ICONS = [
     # (filename, pixels, maskable, opaque)
@@ -454,7 +480,9 @@ const CACHED = "__CACHEHDR__";
 // the index's rows; `live.json` is the sidecar the 1,294 detail pages read (JFH-222). Kept in
 // `24_pwa.DATA_FILES` rather than written out here, so the list has one definition.
 const DATA_FILES = __DATAFILES__;
-// The detail pages' stylesheet and script, cached on first visit under ASSETS (JFH-282). Two lists rather
+// The sub-resources some page fetches after paint -- the detail pages' stylesheet and script (JFH-282),
+// and the semantic index the search box loads on first use (JFH-293) -- cached on first visit under
+// ASSETS rather than precached at install. This one is routed by policy and not by caller. Two lists rather
 // than one because the marking differs and nothing else does: a `data.json` answered from cache has to say
 // so, since the index page turns that header into its freshness stamp, and a stylesheet answered from cache
 // has nobody to tell. Being absent from here is what used to make a detail page lose its star count offline

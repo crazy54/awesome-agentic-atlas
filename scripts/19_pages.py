@@ -648,6 +648,14 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .newchip[aria-pressed=true] .ni>.a,.newchip[aria-pressed=true] .ni>.b{fill:var(--onbar)}
 .nm .ni{margin-right:.34em}
 .newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
+/* "by meaning", on a row the semantic pass added. Built like a `.tag` rather than like `.newon`, because
+   it is a statement about *this search* and not a property of the project -- the pill reads as a badge the
+   row is wearing today, where bare coloured text beside the title reads as a fact about the repository.
+   `--link` and not `--warn` or `--good`: those two are already spoken for by the new-arrivals mark and by
+   the rising/verdict pair, and a fourth question wearing a third question's colour makes the two read as
+   one. It borrows the colour the page already uses for "this is a way through", which is what this is. */
+.senseon{display:inline-block;border:1px solid var(--link);border-radius:5px;padding:1px 6px;
+  font-size:11px;font-weight:600;color:var(--link);white-space:nowrap;vertical-align:1px}
 /* Rising wears `--good`, where the new-arrivals chip wears `--warn` and every other chip wears `--bar`.
    Three questions get three colours because a reader asks all three of a row at once -- is it alive, did it just
    arrive, is anyone arriving now -- and two of them sharing an accent would make the pair read as one
@@ -1663,8 +1671,13 @@ __OSSPRITE__
     <!-- aria-label as well as the <label>, because the narrow-viewport rule sets `display:none` on
          `label[for=q]` and that removes it from the accessibility tree as well as from the screen -- so
          on a phone the search box had no accessible name at all. -->
+    <!-- The placeholder is the only place the semantic pass is advertised, and it is worth the words: a box
+         that says "name, repo, description" is a box nobody types a sentence into, so the capability would
+         sit there unused. It names both halves in the order they are tried, and it is phrased as an
+         instruction rather than as a field list because the sentence half is the part that needs
+         permission. -->
     <input id="q" type="search" aria-label="Search projects"
-           placeholder="name, repo, description, language&hellip;"
+           placeholder="a name, or describe what you need it to do&hellip;"
            autocomplete="off" spellcheck="false">
     <!-- The handle on the filter sheet. Next to the search box because on a phone those two are the whole
          of the bar, and the pair reads as "what to look for, and what to look in".
@@ -2168,7 +2181,13 @@ fetch("data.json").then(r => {
   // Column-oriented on the wire, objects in here. One pass over every row, so the rest of the page can
   // read `r.stars` instead of `r[4]`.
   ROWS = d.rows.map(a => Object.fromEntries(d.cols.map((c, i) => [c, a[i]])));
-  ROWS.forEach(r => {
+  ROWS.forEach((r, i) => {
+    // Position in `d.rows`, kept because it is the only thing that addresses the semantic index:
+    // `docs.bin` is one 96-byte vector per row in this order and carries no keys. Recorded here rather
+    // than read from `ROWS.indexOf` at score time, which would be a 1,294-row scan per row scored, and
+    // recorded before anything sorts anything -- every sort in this page reorders copies, but a row that
+    // learned its own ordinal after a sort would learn the wrong one.
+    r.ord = i;
     r.hay = (r.name + " " + r.nwo + " " + r.blurb + " " + r.lang + " " + r.listed_by).toLowerCase();
     // `hay` answers "does this row match" and cannot answer "where did it match", which is the only
     // question ranking cares about. Lowercasing the three fields separately here rather than inside the
@@ -2237,6 +2256,11 @@ fetch("data.json").then(r => {
   buildChips();
   readHash();
   render();
+  // A shared link that already carries a query is a reader who has searched without ever touching the box,
+  // so neither of the two listeners in `buildChips` will fire. `render()` first and this second: the rows
+  // the words match go up immediately and the ones meaning finds are added when the bytes land, which is
+  // the same order a reader who types gets them in.
+  if (state.q) loadSemantic();
 }).catch(err => {
   // A browser will not let a file:// page fetch a sibling file, so double-clicking index.html out of a
   // clone loads the chrome and then nothing at all, with the reason only in the console. Anyone doing
@@ -2291,11 +2315,21 @@ function buildChips() {
   // visibly trailed the keyboard. Only ~20ms of that is row-count dependent; the rest is the innerHTML
   // rebuild and layout, so this is a defect at the current size and not only a future one. 150ms is short
   // enough to still read as live and collapses those seven renders into one.
-  document.getElementById("q").oninput = e => {
+  const qbox = document.getElementById("q");
+  qbox.oninput = e => {
     const v = e.target.value;
+    // Kicked off from here as well as from `focus`, because a reader who pasted a query or arrived on a
+    // `#q=` link never focused anything, and one whose first keystroke was into an already-focused box
+    // gets it from the other listener. `loadSemantic` returns immediately after the first call, so both
+    // paths firing costs one comparison.
+    loadSemantic();
     clearTimeout(typing);
     typing = setTimeout(() => set({q: v}, true), 150);
   };
+  // The download starts on the intent to search rather than on the search: 758 KB has to race the reader's
+  // first few keystrokes, and starting it when the query is complete would mean the first answer is the one
+  // without meaning in it. `once` because there is nothing to do on the second focus.
+  qbox.addEventListener("focus", loadSemantic, {once: true});
   document.getElementById("sort").onchange = e => set({sort: e.target.value});
   // Unhidden here rather than in the markup -- see the button for why it starts hidden. The announcement is
   // on this path only: `applyView` also runs from `render()`, and the view the page opened in is not news. It is
@@ -2611,10 +2645,16 @@ function palItems(query) {
   // the page's own controls, which is what it is for; listing 1,294 repositories there would bury them.
   // The same relevance scorer the results table uses, so the palette cannot disagree with the page about
   // what the best match for a word is.
+  //
+  // With the semantic term explicitly zero, which is the one place the two deliberately differ. The palette
+  // is a keyboard shortcut to a project whose name the reader is part-way through typing -- it answers
+  // "take me to the thing I mean", and eight rows found by resemblance rather than by the letters on screen
+  // would be eight chances to press Enter on the wrong repository. The table, which the reader reads before
+  // clicking anything, is where meaning belongs.
   let proj = [];
   if (words.length) {
     proj = ROWS.filter(r => words.every(w => r.hay.includes(w)));
-    for (const r of proj) r.rel = relevance(r, words);
+    for (const r of proj) r.rel = relevance(r, words, 0);
     proj = proj.sort(SORTS.relevance).slice(0, 8).map(r => ({
       group: "Projects", label: r.name, hint: r.nwo, stars: r.stars,
       // Same-tab, like the name links in the table. A palette that opened tabs when the table does not
@@ -3392,6 +3432,245 @@ function missLink() {
     "Searched for something that isn’t here? Tell us what’s missing</a></p>";
 }
 
+// ─────────────────────────────────────────────────────────────────────────────────────────────────────
+// SEARCH BY MEANING -- JFH-293.
+//
+// Every filter above this line is a substring test, and a substring test cannot answer the question most
+// people actually arrive with. Measured against the 1,294 rows as committed, 8 of 37 plausible queries
+// return literally nothing: "something to review PRs", "scrape websites", "chat with my pdfs", "turn
+// speech into text". The projects are all here. The words are not, because a maintainer wrote "pull
+// request" and the reader typed "PRs", and `hay.includes(w)` has no opinion about that.
+//
+// So the page also carries 96-dimensional vectors for every row, and encodes the reader's query into the
+// same space here, in the browser, with no model download and no WASM. `scripts/27_semantic.py` builds
+// `docs/search/` from `minishlab/potion-base-8M` -- a *static* embedding table, not a transformer, so
+// there is no attention to run and pooling is the whole of the forward pass. Encoding a query is:
+// segment it into WordPiece tokens, look each one up, add the vectors, normalise. That is the entire
+// model on this side, it is the four lines of `semVector` below, and it runs in well under a
+// millisecond. 758 KB across four files -- 504 KB gzipped -- fetched once, on the first
+// interaction with the search box. Not the 784 KB `docs/search/` weighs: `near.bin` and
+// `xy.bin` sit in that directory and nothing fetches them yet.
+//
+// WHY IT IS FETCHED ON INTERACTION rather than at load or in the precache. A reader who came for the
+// table and never types is charged nothing, and the download races the reader's first keystrokes rather
+// than the first paint. The trigger is `focus` as well as `input`, which in practice means the bytes are
+// usually there before the second character. Until they are, and forever if the fetch fails, the
+// substring filter is exactly what it was -- this feature has no state anywhere that can break it, which
+// is the reason there is no flag for it.
+//
+// THE STALENESS GUARD, which is the one failure that must not be quiet. These vectors are addressed by
+// row *ordinal*: `docs.bin` is row 0, row 1, row 2 with nothing naming them. An index built against a
+// different `data.json` therefore does not error, does not look wrong, and returns each project's
+// neighbour with total confidence. `meta.json` carries a SHA-256 of the `nwo` column it was built from
+// and this recomputes it from the rows in hand; a mismatch switches the whole feature off rather than
+// ranking with it. `crypto.subtle` needs a secure context, so on `file://` the guard falls back to the
+// row count alone -- which catches the ordinary case, a rebuilt crawl of a different size.
+//
+// WHAT IT WILL NOT DO, and this is a decision rather than a limit of the arithmetic. It never dilutes a
+// query that already works: see `render()`, where meaning is consulted only when the words themselves
+// found fewer than `SEM_THIN` rows. And it declines outright on a query no word of which appears
+// anywhere in the corpus. That gate is here because the obvious one does not work: measured over the
+// committed index, "qwerty zxcvb" tops out at cosine 0.576 and "xyzzy plugh frotz" at 0.487, while real
+// queries like "chat with my pdfs" reach only 0.452 and "keep my agent from deleting files" 0.483. The
+// similarity of nonsense is indistinguishable from the similarity of a real question, so any absolute
+// threshold either admits the nonsense or rejects the question. What *does* separate them is the corpus:
+// every real query above has at least one word that appears somewhere in these 1,294 rows, and every
+// nonsense one has none. That test costs an early-exiting scan of `hay` and no new bytes at all.
+const SEM_DIMS_MAX = 512;   // sanity bound on meta.dims before it is used as a stride
+const SEM_THIN = 12;        // exact matches at or above which meaning is not consulted
+const SEM_MAX = 12;         // most rows meaning may add
+const SEM_RATIO = 0.6;      // and only those within this fraction of the best cosine
+// Blended into `relevance()`, and the number is ordinal like every other weight there. A perfect cosine
+// scores 90 -- the same as a query word at the start of the project's name -- so meaning can outrank a
+// word found mid-name or in a blurb and can never outrank a row actually *called* what was typed.
+const SEM_LIFT = 90;
+// Its own regex object, and not the one `27_semantic.py` compiles, because this is a transcription
+// rather than a shared implementation and there is no way to share one across the two languages. The
+// stage has this pattern, `tests/semantic_test.py` has it a third time, and all three have to agree: a
+// query segmented one way against documents segmented another scores noise while looking healthy.
+const SEM_WORD = /[a-z0-9]+|[^\sa-z0-9]/g;
+let SEM = null, SEM_STATE = "cold";   // cold | loading | live | off
+
+// Greedy longest-match WordPiece, over the pruned vocabulary this page holds and not the model's full
+// one. `27_semantic.py` segments the corpus against exactly the tokens shipped in `vocab.json` for the
+// same reason: the stage shipped a subset, so it has to *build* against the subset too, or the same word
+// is two different token sequences on the two sides. A word no suffix of which is in the vocabulary is
+// dropped whole rather than partially, which is why the stage force-keeps every single-character token.
+//
+// `slot` is a parameter rather than a read of `SEM.slot`, which makes this the one function in the
+// semantic module with no dependency on module state -- and therefore the one a test can call. It is
+// also the function most worth calling: `meta.json` ships the stage's own segmentation of a handful of
+// texts, and `tests/probe.mjs` runs *this* code against those fixtures. Drift between the two
+// tokenisers is the failure that has no symptom -- no exception, no empty result, just a query pointing
+// somewhere the documents are not -- so it is checked by comparing token ids and nothing else.
+function semTokens(text, slot, stop) {
+  const out = [];
+  for (const word of String(text).toLowerCase().match(SEM_WORD) || []) {
+    // Before the lookup, never after, and never by leaving the token out of the vocabulary instead. A
+    // stopword whose token is missing does not disappear -- WordPiece re-spells it out of the longest
+    // surviving pieces, and those pieces are rare, so it comes back weighted *higher* than the content
+    // words. Measured on this corpus: "should" arrived as `sho` + `##uld` at row norms 172 and 152 against
+    // 179 for `pdf`. See the note on STOP in 27_semantic.py.
+    if (stop && stop.has(word)) continue;
+    let start = 0, ok = true;
+    const pieces = [];
+    while (start < word.length) {
+      let end = word.length;
+      for (; end > start; end--) {
+        const piece = start === 0 ? word.slice(start, end) : "##" + word.slice(start, end);
+        const id = slot.get(piece);
+        if (id !== undefined) { pieces.push(id); break; }
+      }
+      if (end === start) { ok = false; break; }
+      start = end;
+    }
+    if (ok) for (const p of pieces) out.push(p);
+  }
+  return out;
+}
+
+// The forward pass. Sum of the token rows, normalised -- the IDF weighting and the projection are already
+// baked into the shipped table, so there is nothing to weight here and nothing to project.
+function semVector(query) {
+  const ids = semTokens(query, SEM.slot, SEM.stop);
+  // Also how a topicless question declines. "please help me choose" is every word a stopword, so it
+  // produces no tokens at all and never reaches the corpus below -- which is a better answer than the
+  // twelve confident, unrelated projects it used to return.
+  if (!ids.length) return null;
+  const d = SEM.dims, v = new Float32Array(d);
+  for (const id of ids) {
+    const base = id * d;
+    for (let k = 0; k < d; k++) v[k] += SEM.table[base + k] * SEM.vs;
+  }
+  let n = 0;
+  for (let k = 0; k < d; k++) n += v[k] * v[k];
+  n = Math.sqrt(n);
+  if (!n) return null;
+  for (let k = 0; k < d; k++) v[k] /= n;
+  return v;
+}
+
+// Does this word appear anywhere in the atlas? Disjunction across the corpus, where the search box is a
+// conjunction within one row -- which is why this is a different question and not a slower version of
+// the same one. Early-exits on the first hit, so a common word costs one `includes` and only a word that
+// is nowhere pays for all 1,294. Words under three characters are not tested: they are in every corpus
+// and testing them would pass every query.
+function corpusKnows(word) {
+  for (const r of ROWS) if (r.hay.includes(word)) return true;
+  return false;
+}
+
+// Rows this corpus could plausibly mean, excluding the ones the words already found. Returns [] -- never
+// a weak guess -- when the index is not live, when nothing segments, or when the gate above declines.
+//
+// Writes `r.sem` on every row it scored, including the exact matches, because `relevance()` blends the
+// cosine into the ranking of the whole result set and not only of the rows meaning contributed. That is
+// the *only* thing this writes onto a row, and the restraint is the fix for a bug rather than a
+// preference: which rows meaning contributed was a `r.semonly` flag here for one draft, and a flag on a
+// row outlives the query that set it. Searching "chat with my pdfs" and then "claude" -- 300 substring
+// matches, so meaning is never consulted -- left exactly one row wearing a "by meaning" pill it had
+// earned under the previous query, on a result set that had nothing to do with meaning at all. `r.sem` is
+// safe where a flag was not because `relevance()` is passed the current render's `sense` and reads the
+// score only when meaning actually ran; the membership question is answered by a Set in `render()`, which
+// cannot outlive the render that built it.
+function senseHits(query, already) {
+  if (SEM_STATE !== "live") return [];
+  const words = query.toLowerCase().split(/\s+/).filter(w => w.length >= 3);
+  if (!words.length || !words.some(corpusKnows)) return [];
+  const v = semVector(query);
+  if (!v) return [];
+  const pool = poolWithoutQuery(), d = SEM.dims, scored = [];
+  for (const r of pool) {
+    const base = r.ord * d;
+    let dot = 0;
+    for (let k = 0; k < d; k++) dot += SEM.docs[base + k] * SEM.ds * v[k];
+    r.sem = dot;
+    scored.push(r);
+  }
+  if (!scored.length) return [];
+  scored.sort((a, b) => b.sem - a.sem);
+  // Relative to the best score, not to a constant: this corpus is expected to go from 1,294 rows to
+  // several thousand, and the top cosine for a given query moves as the corpus fills in around it while
+  // the *shape* of the tail does not.
+  const floor = scored[0].sem * SEM_RATIO;
+  const seen = new Set(already.map(r => r.nwo)), out = [];
+  for (const r of scored) {
+    if (out.length >= SEM_MAX || r.sem < floor) break;
+    if (seen.has(r.nwo)) continue;
+    out.push(r);
+  }
+  return out;
+}
+
+// Fetched once, on the reader's first contact with the search box. Everything here fails closed: any
+// throw, any 404, any disagreement with `docs/data.json` leaves `SEM_STATE` at "off" and the page behaves
+// as it did before this function existed.
+async function loadSemantic() {
+  if (SEM_STATE !== "cold") return;
+  SEM_STATE = "loading";
+  try {
+    const grab = async (name, how) => {
+      const res = await fetch("search/" + name);
+      if (!res.ok) throw new Error("search/" + name + " -> " + res.status);
+      return how === "json" ? res.json() : res.arrayBuffer();
+    };
+    const [meta, vocab, table, docs] = await Promise.all([
+      grab("meta.json", "json"), grab("vocab.json", "json"),
+      grab("vocab.bin", "buf"), grab("docs.bin", "buf"),
+    ]);
+    const dims = meta.dims | 0;
+    if (!(dims > 0 && dims <= SEM_DIMS_MAX)) throw new Error("meta.dims is " + meta.dims);
+    // The guard. The row count first because it is free and catches the common case; the fingerprint
+    // second because it is the only test that catches a rebuild of the *same* size in a different order,
+    // which is the one that silently returns the wrong project for every query.
+    if (meta.rows !== ROWS.length)
+      throw new Error("index has " + meta.rows + " rows, data.json has " + ROWS.length);
+    if (crypto.subtle) {
+      const body = new TextEncoder().encode(ROWS.map(r => r.nwo).join("\n"));
+      const hash = [...new Uint8Array(await crypto.subtle.digest("SHA-256", body))]
+        .map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 16);
+      if (hash !== meta.fingerprint)
+        throw new Error("data.json is " + hash + ", index was built against " + meta.fingerprint);
+    }
+    if (docs.byteLength !== meta.rows * dims) throw new Error("docs.bin is " + docs.byteLength + " B");
+    if (table.byteLength !== vocab.tokens.length * dims)
+      throw new Error("vocab.bin is " + table.byteLength + " B");
+    // The two scales, checked because they are the one input that would otherwise reach the arithmetic
+    // unvalidated -- and NaN does not fail closed here, it fails *open* and silent. A missing scale makes
+    // every `r.sem` NaN; `r.sem < floor` is then false for every row, so the cutoff never fires and a full
+    // twelve arbitrary projects are admitted and labelled "by meaning". Worse, `relevance()` returns NaN
+    // too, the comparator returns NaN for every pair, and the whole table -- including the rows that did
+    // match the reader's words -- comes out in arbitrary order. No exception, no warning, nothing that
+    // looks degraded. Unreachable from `27_semantic.py`, which always writes both; reachable from a
+    // truncated or hand-edited meta.json, which is exactly what a guard is for.
+    for (const [k, v] of [["doc_scale", meta.doc_scale], ["vocab_scale", meta.vocab_scale]])
+      if (!(typeof v === "number" && isFinite(v) && v > 0)) throw new Error("meta." + k + " is " + v);
+    SEM = {
+      dims,
+      slot: new Map(vocab.tokens.map((t, i) => [t, i])),
+      // Shipped rather than transcribed a fourth time, and applied by `semTokens` before it looks anything
+      // up. Absent in a schema 1 index built before this existed, which degrades to the old behaviour
+      // rather than throwing -- an empty set simply strips nothing.
+      stop: new Set(meta.stop || []),
+      table: new Int8Array(table),
+      docs: new Int8Array(docs),
+      // int8 was quantised against two separate maxima -- one shared scale crushed every unit-length
+      // document component to 0 or +/-1 and collapsed 1,294 rows onto a handful of distinct vectors.
+      ds: meta.doc_scale / 127,
+      vs: meta.vocab_scale / 127,
+    };
+    SEM_STATE = "live";
+    // Only if there is something on screen this changes. A reader who focused the box and typed nothing
+    // gets no re-render, and one who has already typed gets their answer the moment the bytes land.
+    if (state.q) render();
+  } catch (err) {
+    SEM_STATE = "off";
+    // Reported, not thrown. Search by meaning going quietly missing is a degradation; the page around it
+    // is unharmed, and a console line is what tells a contributor why their rebuilt index does nothing.
+    console.warn("search by meaning is off:", err.message);
+  }
+}
+
 // Trigram overlap, not Levenshtein: "langraph" vs "LangGraph" is one deletion but "claude cdoe" vs
 // "Claude Code" is a transposition inside a two-word name, and trigrams handle both without a matrix.
 // Padding with spaces makes the first and last characters count, which is where typos cluster.
@@ -3403,22 +3682,31 @@ function grams(s) {
   return out;
 }
 
+// Rows matching every filter *except* the search box. Both fallbacks below need exactly this set, and
+// they need it for the same reason: a reader who has picked a topic and an OS has told us something they
+// meant, so the term that failed is the one to relax and the other filters stand.
+//
+// Mutate-restore rather than a `match` that takes the query as an argument, which is `countWith`'s
+// argument above and the same one -- `match` runs once per row per keystroke and threading a parameter
+// through it to serve two paths that only fire on a thin table is the wrong trade.
+function poolWithoutQuery() {
+  const saved = state.q;
+  state.q = "";
+  const pool = ROWS.filter(match);
+  state.q = saved;
+  return pool;
+}
+
 // Rows matching every filter *except* the search box, ranked by how close their name is to what was
 // typed. Only ever called when the exact pass returned nothing, which is what makes it safe: a query that
 // does match is never diluted with approximate results, and the cost is paid on the one render where the
 // reader would otherwise be staring at an empty table.
-//
-// It relaxes the search box and nothing else. A reader who has picked a topic and an OS has told us
-// something they meant; the typo is in the word they were still typing, so the other filters stand.
 function near(q) {
   const want = grams(q);
   // Under three trigrams is a five-character fragment -- a prefix someone is mid-way through typing
   // rather than a misspelling of anything, and matching it loosely would be noise.
   if (want.size < 3) return [];
-  const saved = state.q;
-  state.q = "";
-  const pool = ROWS.filter(match);
-  state.q = saved;
+  const pool = poolWithoutQuery();
   const out = [];
   for (const r of pool) {
     if (!r.g) r.g = grams(r.name);
@@ -3461,10 +3749,17 @@ function hitScore(r, w) {
 // small: it settles ties between rows that matched the same way, and log10 tops out near 5.5 even for a
 // 300,000-star project, so it can never lift a blurb hit above a name hit. Linear stars would have made
 // this a star sort wearing a relevance label.
-function relevance(r, words) {
+//
+// `sense` is the cosine from `senseHits`, and it is passed in rather than read off the row so that a
+// stale score from the previous query cannot be blended into this one: it is a number only on the renders
+// where meaning actually ran, and 0 on every other. Weighted so that a *perfect* match by meaning ties
+// with a query word at the start of the name -- see `SEM_LIFT`. Rows meaning contributed score nothing
+// lexically at all, so without the blend they would sort below every exact match rather than among them,
+// and the whole point of the result set is that the two kinds are comparable.
+function relevance(r, words, sense) {
   let total = 0;
   for (const w of words) total += hitScore(r, w);
-  return total + Math.log10((r.stars || 0) + 1);
+  return total + (sense ? SEM_LIFT * (r.sem || 0) : 0) + Math.log10((r.stars || 0) + 1);
 }
 
 const SORTS = {
@@ -4107,18 +4402,49 @@ function render() {
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
   let hits = ROWS.filter(match);
 
-  // A single mistyped letter used to produce an empty page even when the answer was one letter away. The
-  // fallback runs only after the exact pass has failed, so a search that works is never diluted by it.
-  // Near matches keep their similarity order rather than the reader's chosen sort: this is a list of
-  // corrections, and "closest first" is the only ordering that makes it one.
-  let approx = false;
-  if (!hits.length && words.length) {
-    const alt = near(state.q);
-    if (alt.length) { hits = alt; approx = true; }
+  // Two fallbacks, and which one goes first is the whole of the decision. A single mistyped letter used to
+  // produce an empty page even when the answer was one letter away; a whole sentence used to produce one
+  // even when the project it described was in the table. Those are different failures and they want
+  // different instruments -- so the rule is the shape of the query, and it is one line:
+  //
+  //   nobody misspells a four-word sentence, and nobody writes a sentence as one word.
+  //
+  // One word that matched nothing is a typo, and `near()` gets first refusal. Several words that matched
+  // nothing is a description, and `senseHits()` does. Whichever goes second still runs if the first came
+  // back empty, so "kubernets" and "keep my agent from deleting files" both have two chances rather than
+  // one, and neither costs anything on the overwhelming majority of renders where the words just worked.
+  // `bym` is the membership answer, and it is a local rather than a flag on the rows for the reason
+  // `senseHits` explains: a row that wore a "by meaning" pill under one query wore it into the next.
+  // Rebuilt from scratch on every render, so there is no state here that can be stale by construction.
+  let approx = false, sense = 0, bym = null;
+  const senseInto = (base) => {
+    const extra = senseHits(state.q, base);
+    sense = extra.length;
+    if (!extra.length) return base;
+    bym = new Set(extra.map(r => r.nwo));
+    return base.concat(extra);
+  };
+  if (words.length) {
+    // A thin result set, never a healthy one. Forty exact matches need no help, and adding to them would
+    // read as the search quietly ignoring the words that were typed -- which is the failure mode of every
+    // search box that "helpfully" broadens. Meaning is a rescue here, not a re-interpretation.
+    if (hits.length && hits.length < SEM_THIN) hits = senseInto(hits);
+    if (!hits.length) {
+      if (words.length > 1) hits = senseInto(hits);
+      if (!hits.length) {
+        const alt = near(state.q);
+        if (alt.length) { hits = alt; approx = true; }
+      }
+      if (!hits.length) hits = senseInto(hits);
+    }
   }
+  // Near matches keep their similarity order rather than the reader's chosen sort: that list is a set of
+  // corrections, and "closest first" is the only ordering that makes it one. A set that meaning
+  // contributed to is *not* in that category -- those rows are answers, so they are sorted like answers,
+  // by whatever the reader picked.
   if (!approx) {
     const sort = effSort();
-    if (sort === "relevance") for (const r of hits) r.rel = relevance(r, words);
+    if (sort === "relevance") for (const r of hits) r.rel = relevance(r, words, sense);
     hits.sort(SORTS[sort]);
   }
   // After the sort and before the paging, which is exactly what the four exports need: the rows that matched, in
@@ -4128,11 +4454,22 @@ function render() {
   HITS = hits;
 
   const ranked = hits.filter(r => r.stars).length;
+  // The breakdown replaces the star count rather than joining it, on the renders where there is one. How
+  // many of these rows the reader's own words found is the more useful of the two facts and it is the only
+  // one that explains why a row with none of those words is on screen -- and a reader who cannot see that
+  // distinction has been handed a search box that appears to ignore what they type.
   const countHTML = approx
     ? "<b>" + hits.length.toLocaleString() + "</b> near " +
       (hits.length === 1 ? "match" : "matches") + " · nothing matches “" + esc(state.q) + "” exactly"
-    : "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() +
-      " · " + ranked.toLocaleString() + " with stars";
+    : sense
+      ? "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() + " · " +
+        (hits.length - sense
+          ? (hits.length - sense).toLocaleString() + " match your words, " +
+            sense.toLocaleString() + " by meaning"
+          : sense.toLocaleString() + " by meaning · nothing matches “" + esc(state.q) +
+            "” word for word")
+      : "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() +
+        " · " + ranked.toLocaleString() + " with stars";
   document.getElementById("count").innerHTML = countHTML;
   // The same sentence into the sheet's own header, along with the handle's badge. One string, two places:
   // the bar's copy is behind the sheet while the sheet is open, and a reader tapping chips has to see the
@@ -4203,6 +4540,15 @@ function render() {
       ? '<svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>'
       : "";
     const on = r.isnew ? ' <span class="newon">- New on ' + mmddyy(r.first_seen) + "</span>" : "";
+    // Why this row is here when none of the reader's words are in it. Words, not a glyph: this is the one
+    // label on the row that answers a question the reader is actively asking, and a mark would make them
+    // hover to find out. Membership comes from the render's own Set, so a row that matched the words as
+    // well is never labelled as if it had not, and neither is a row that qualified under a *previous*
+    // query -- which is the bug this replaced a per-row flag to fix.
+    const sensechip = bym && bym.has(r.nwo)
+      ? ' <span class="senseon" title="Found by what it does, not by the words you typed">' +
+        "by meaning</span>"
+      : "";
     // The install line, with a button when the clipboard is reachable. The command is the one thing on a
     // row a reader wants to take away, and taking it meant selecting wrapped monospace text without
     // catching the blurb above it. The name is in the label because a screen-reader user arrives at
@@ -4233,7 +4579,7 @@ function render() {
       // stays on the tag: once the src is set it is still the right hint for a picture that has since been
       // scrolled away from, and it costs nothing to leave the browser's own heuristic in play behind ours.
       shot +
-      '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on +
+      '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on + sensechip +
         // The way out. owner/name was already sitting under every title reading like a GitHub path, so
         // making it the outward link costs no new text and needs no new label -- "openclaw/openclaw" is a
         // better accessible name than "GitHub" repeated 120 times. It does add one tab stop per row,
@@ -4281,11 +4627,19 @@ function render() {
   // Said above the table as well as in the live region, because a sighted reader who mistyped needs to
   // know *why* they are looking at LangGraph when they asked for "langraph" -- otherwise the correction
   // looks like the search quietly ignoring them.
+  const within = state.cat || state.tgt || state.os.length || state.strict || state.fresh
+    ? ", within your other filters" : "";
+  // Said above the table on the one render that needs saying most: every row on screen was found by what
+  // it does rather than by what it is called, so a reader looking for their own words will not find one of
+  // them anywhere. Only when *all* of them came that way -- a mixed set explains itself, because the rows
+  // the words did find are sitting there with the term highlighted in them.
   const note = approx
     ? '<p class="approx">Nothing matches <b>' + esc(state.q) + "</b> exactly. Closest by name" +
-      (state.cat || state.tgt || state.os.length || state.strict || state.fresh
-        ? ", within your other filters" : "") + ":</p>"
-    : "";
+      within + ":</p>"
+    : sense && sense === hits.length
+      ? '<p class="approx">Nothing here says <b>' + esc(state.q) +
+        "</b>. These are the projects that mean it" + within + ":</p>"
+      : "";
   out.innerHTML = note +
     "<table><thead><tr><th class='n'>#</th>" +
     (FLAGS["index.project_screenshots"] ? "<th class='shot'>Shot</th>" : "") +

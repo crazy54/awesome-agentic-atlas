@@ -135,6 +135,8 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .newchip[aria-pressed=true] .ni>.a,.newchip[aria-pressed=true] .ni>.b{fill:var(--onbar)}
 .nm .ni{margin-right:.34em}
 .newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
+.senseon{display:inline-block;border:1px solid var(--link);border-radius:5px;padding:1px 6px;
+  font-size:11px;font-weight:600;color:var(--link);white-space:nowrap;vertical-align:1px}
 .risechip{display:none}
 .risechip.on{display:inline-block}
 .risechip[aria-pressed=true]{background:var(--good);border-color:var(--good);color:var(--onbar)}
@@ -500,8 +502,8 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--09--08_19:21_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-09-08T19:21:00Z">Last deployed 2026-09-08 19:21 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--09--12_18:13_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-09-12T18:13:00Z">Last deployed 2026-09-12 18:13 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
@@ -529,7 +531,7 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
   <div class="line">
     <label for="q">Search</label>
     <input id="q" type="search" aria-label="Search projects"
-           placeholder="name, repo, description, language&hellip;"
+           placeholder="a name, or describe what you need it to do&hellip;"
            autocomplete="off" spellcheck="false">
     <button class="chip" id="fbt" aria-expanded="false" aria-controls="sheet"
             aria-label="Filters">Filters<span id="fbn"></span></button>
@@ -671,7 +673,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-08T19:21:00Z";
+const BUILT = "2026-09-12T18:13:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -731,7 +733,8 @@ fetch("data.json").then(r => {
     throw new Error("data.json names " + d.os.length + " platforms and this page was built with " +
       OSI.length + " marks — see scripts/osicons.py");
   ROWS = d.rows.map(a => Object.fromEntries(d.cols.map((c, i) => [c, a[i]])));
-  ROWS.forEach(r => {
+  ROWS.forEach((r, i) => {
+    r.ord = i;
     r.hay = (r.name + " " + r.nwo + " " + r.blurb + " " + r.lang + " " + r.listed_by).toLowerCase();
     r.lname = r.name.toLowerCase();
     r.lnwo = r.nwo.toLowerCase();
@@ -755,6 +758,7 @@ fetch("data.json").then(r => {
   buildChips();
   readHash();
   render();
+  if (state.q) loadSemantic();
 }).catch(err => {
   document.getElementById("count").innerHTML =
     "Could not load <code>data.json</code> — " + String(err);
@@ -791,11 +795,14 @@ function buildChips() {
     const os = state.os.includes(i) ? state.os.filter(x => x !== i) : state.os.concat(i);
     set({os});
   }, OST[i], osIcon(i)));
-  document.getElementById("q").oninput = e => {
+  const qbox = document.getElementById("q");
+  qbox.oninput = e => {
     const v = e.target.value;
+    loadSemantic();
     clearTimeout(typing);
     typing = setTimeout(() => set({q: v}, true), 150);
   };
+  qbox.addEventListener("focus", loadSemantic, {once: true});
   document.getElementById("sort").onchange = e => set({sort: e.target.value});
   const vb = document.getElementById("view");
   vb.hidden = false;
@@ -982,7 +989,7 @@ function palItems(query) {
   let proj = [];
   if (words.length) {
     proj = ROWS.filter(r => words.every(w => r.hay.includes(w)));
-    for (const r of proj) r.rel = relevance(r, words);
+    for (const r of proj) r.rel = relevance(r, words, 0);
     proj = proj.sort(SORTS.relevance).slice(0, 8).map(r => ({
       group: "Projects", label: r.name, hint: r.nwo, stars: r.stars,
       run: () => { location.href = r.url; },
@@ -1419,19 +1426,146 @@ function missLink() {
     "Searched for something that isn’t here? Tell us what’s missing</a></p>";
 }
 
+const SEM_DIMS_MAX = 512;
+const SEM_THIN = 12;
+const SEM_MAX = 12;
+const SEM_RATIO = 0.6;
+const SEM_LIFT = 90;
+const SEM_WORD = /[a-z0-9]+|[^\sa-z0-9]/g;
+let SEM = null, SEM_STATE = "cold";
+
+function semTokens(text, slot, stop) {
+  const out = [];
+  for (const word of String(text).toLowerCase().match(SEM_WORD) || []) {
+    if (stop && stop.has(word)) continue;
+    let start = 0, ok = true;
+    const pieces = [];
+    while (start < word.length) {
+      let end = word.length;
+      for (; end > start; end--) {
+        const piece = start === 0 ? word.slice(start, end) : "##" + word.slice(start, end);
+        const id = slot.get(piece);
+        if (id !== undefined) { pieces.push(id); break; }
+      }
+      if (end === start) { ok = false; break; }
+      start = end;
+    }
+    if (ok) for (const p of pieces) out.push(p);
+  }
+  return out;
+}
+
+function semVector(query) {
+  const ids = semTokens(query, SEM.slot, SEM.stop);
+  if (!ids.length) return null;
+  const d = SEM.dims, v = new Float32Array(d);
+  for (const id of ids) {
+    const base = id * d;
+    for (let k = 0; k < d; k++) v[k] += SEM.table[base + k] * SEM.vs;
+  }
+  let n = 0;
+  for (let k = 0; k < d; k++) n += v[k] * v[k];
+  n = Math.sqrt(n);
+  if (!n) return null;
+  for (let k = 0; k < d; k++) v[k] /= n;
+  return v;
+}
+
+function corpusKnows(word) {
+  for (const r of ROWS) if (r.hay.includes(word)) return true;
+  return false;
+}
+
+function senseHits(query, already) {
+  if (SEM_STATE !== "live") return [];
+  const words = query.toLowerCase().split(/\s+/).filter(w => w.length >= 3);
+  if (!words.length || !words.some(corpusKnows)) return [];
+  const v = semVector(query);
+  if (!v) return [];
+  const pool = poolWithoutQuery(), d = SEM.dims, scored = [];
+  for (const r of pool) {
+    const base = r.ord * d;
+    let dot = 0;
+    for (let k = 0; k < d; k++) dot += SEM.docs[base + k] * SEM.ds * v[k];
+    r.sem = dot;
+    scored.push(r);
+  }
+  if (!scored.length) return [];
+  scored.sort((a, b) => b.sem - a.sem);
+  const floor = scored[0].sem * SEM_RATIO;
+  const seen = new Set(already.map(r => r.nwo)), out = [];
+  for (const r of scored) {
+    if (out.length >= SEM_MAX || r.sem < floor) break;
+    if (seen.has(r.nwo)) continue;
+    out.push(r);
+  }
+  return out;
+}
+
+async function loadSemantic() {
+  if (SEM_STATE !== "cold") return;
+  SEM_STATE = "loading";
+  try {
+    const grab = async (name, how) => {
+      const res = await fetch("search/" + name);
+      if (!res.ok) throw new Error("search/" + name + " -> " + res.status);
+      return how === "json" ? res.json() : res.arrayBuffer();
+    };
+    const [meta, vocab, table, docs] = await Promise.all([
+      grab("meta.json", "json"), grab("vocab.json", "json"),
+      grab("vocab.bin", "buf"), grab("docs.bin", "buf"),
+    ]);
+    const dims = meta.dims | 0;
+    if (!(dims > 0 && dims <= SEM_DIMS_MAX)) throw new Error("meta.dims is " + meta.dims);
+    if (meta.rows !== ROWS.length)
+      throw new Error("index has " + meta.rows + " rows, data.json has " + ROWS.length);
+    if (crypto.subtle) {
+      const body = new TextEncoder().encode(ROWS.map(r => r.nwo).join("\n"));
+      const hash = [...new Uint8Array(await crypto.subtle.digest("SHA-256", body))]
+        .map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 16);
+      if (hash !== meta.fingerprint)
+        throw new Error("data.json is " + hash + ", index was built against " + meta.fingerprint);
+    }
+    if (docs.byteLength !== meta.rows * dims) throw new Error("docs.bin is " + docs.byteLength + " B");
+    if (table.byteLength !== vocab.tokens.length * dims)
+      throw new Error("vocab.bin is " + table.byteLength + " B");
+    for (const [k, v] of [["doc_scale", meta.doc_scale], ["vocab_scale", meta.vocab_scale]])
+      if (!(typeof v === "number" && isFinite(v) && v > 0)) throw new Error("meta." + k + " is " + v);
+    SEM = {
+      dims,
+      slot: new Map(vocab.tokens.map((t, i) => [t, i])),
+      stop: new Set(meta.stop || []),
+      table: new Int8Array(table),
+      docs: new Int8Array(docs),
+      ds: meta.doc_scale / 127,
+      vs: meta.vocab_scale / 127,
+    };
+    SEM_STATE = "live";
+    if (state.q) render();
+  } catch (err) {
+    SEM_STATE = "off";
+    console.warn("search by meaning is off:", err.message);
+  }
+}
+
 function grams(s) {
   const p = " " + s.toLowerCase().replace(/\s+/g, " ").trim() + " ", out = new Set();
   for (let i = 0; i + 3 <= p.length; i++) out.add(p.slice(i, i + 3));
   return out;
 }
 
-function near(q) {
-  const want = grams(q);
-  if (want.size < 3) return [];
+function poolWithoutQuery() {
   const saved = state.q;
   state.q = "";
   const pool = ROWS.filter(match);
   state.q = saved;
+  return pool;
+}
+
+function near(q) {
+  const want = grams(q);
+  if (want.size < 3) return [];
+  const pool = poolWithoutQuery();
   const out = [];
   for (const r of pool) {
     if (!r.g) r.g = grams(r.name);
@@ -1457,10 +1591,10 @@ function hitScore(r, w) {
   return 0;
 }
 
-function relevance(r, words) {
+function relevance(r, words, sense) {
   let total = 0;
   for (const w of words) total += hitScore(r, w);
-  return total + Math.log10((r.stars || 0) + 1);
+  return total + (sense ? SEM_LIFT * (r.sem || 0) : 0) + Math.log10((r.stars || 0) + 1);
 }
 
 const SORTS = {
@@ -1756,14 +1890,28 @@ function render() {
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
   let hits = ROWS.filter(match);
 
-  let approx = false;
-  if (!hits.length && words.length) {
-    const alt = near(state.q);
-    if (alt.length) { hits = alt; approx = true; }
+  let approx = false, sense = 0, bym = null;
+  const senseInto = (base) => {
+    const extra = senseHits(state.q, base);
+    sense = extra.length;
+    if (!extra.length) return base;
+    bym = new Set(extra.map(r => r.nwo));
+    return base.concat(extra);
+  };
+  if (words.length) {
+    if (hits.length && hits.length < SEM_THIN) hits = senseInto(hits);
+    if (!hits.length) {
+      if (words.length > 1) hits = senseInto(hits);
+      if (!hits.length) {
+        const alt = near(state.q);
+        if (alt.length) { hits = alt; approx = true; }
+      }
+      if (!hits.length) hits = senseInto(hits);
+    }
   }
   if (!approx) {
     const sort = effSort();
-    if (sort === "relevance") for (const r of hits) r.rel = relevance(r, words);
+    if (sort === "relevance") for (const r of hits) r.rel = relevance(r, words, sense);
     hits.sort(SORTS[sort]);
   }
   HITS = hits;
@@ -1772,8 +1920,15 @@ function render() {
   const countHTML = approx
     ? "<b>" + hits.length.toLocaleString() + "</b> near " +
       (hits.length === 1 ? "match" : "matches") + " · nothing matches “" + esc(state.q) + "” exactly"
-    : "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() +
-      " · " + ranked.toLocaleString() + " with stars";
+    : sense
+      ? "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() + " · " +
+        (hits.length - sense
+          ? (hits.length - sense).toLocaleString() + " match your words, " +
+            sense.toLocaleString() + " by meaning"
+          : sense.toLocaleString() + " by meaning · nothing matches “" + esc(state.q) +
+            "” word for word")
+      : "<b>" + hits.length.toLocaleString() + "</b> of " + ROWS.length.toLocaleString() +
+        " · " + ranked.toLocaleString() + " with stars";
   document.getElementById("count").innerHTML = countHTML;
   paintSheet(countHTML);
 
@@ -1813,6 +1968,10 @@ function render() {
       ? '<svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>'
       : "";
     const on = r.isnew ? ' <span class="newon">- New on ' + mmddyy(r.first_seen) + "</span>" : "";
+    const sensechip = bym && bym.has(r.nwo)
+      ? ' <span class="senseon" title="Found by what it does, not by the words you typed">' +
+        "by meaning</span>"
+      : "";
     const cmd = FLAGS["index.install_commands"] && r.install
       ? '<div class="cmdrow"><code class="cmd">' + esc(r.install) + "</code>" +
         (CAN_COPY ? '<button class="copy" data-cmd="' + esc(r.install) +
@@ -1825,7 +1984,7 @@ function render() {
     return '<tr data-project="' + esc(r.nwo) + '" style="--card-accent:var(--accent-' + projectAccent(r.nwo) + ')">' +
       '<td class="n rk">' + (i + 1) + "</td>" +
       shot +
-      '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on +
+      '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on + sensechip +
         '<a class="nwo" href="' + url + '">' + esc(r.nwo) + "</a>" +
         saveBtn(r) +
         '<div class="meta os">' + os + "</div></td>" +
@@ -1841,11 +2000,15 @@ function render() {
         '<a href="' + url + '" aria-label="' + esc(r.nwo) + ' on GitHub">GitHub</a></div></td>' +
       "</tr>";
   }).join("");
+  const within = state.cat || state.tgt || state.os.length || state.strict || state.fresh
+    ? ", within your other filters" : "";
   const note = approx
     ? '<p class="approx">Nothing matches <b>' + esc(state.q) + "</b> exactly. Closest by name" +
-      (state.cat || state.tgt || state.os.length || state.strict || state.fresh
-        ? ", within your other filters" : "") + ":</p>"
-    : "";
+      within + ":</p>"
+    : sense && sense === hits.length
+      ? '<p class="approx">Nothing here says <b>' + esc(state.q) +
+        "</b>. These are the projects that mean it" + within + ":</p>"
+      : "";
   out.innerHTML = note +
     "<table><thead><tr><th class='n'>#</th>" +
     (FLAGS["index.project_screenshots"] ? "<th class='shot'>Shot</th>" : "") +
