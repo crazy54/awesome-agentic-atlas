@@ -484,5 +484,206 @@ check("the screenshots-off card order is left as it was",
                  SRC).group(1) for c in ("rk", "st-c", "pj")],
       ["1", "1", "2"])
 
+# ---------------------------------------------------------------------------------------------------
+# THE SECOND TABLE
+#
+# `render()` used to emit one <table> and nothing else, and the whole stylesheet was written against that. The
+# comparison panel (JFH-186) is the second one, and the two blocks that turn a row into a card -- the 640px
+# query and the cards view, which is the *default* view -- select bare `thead`, `table`, `tbody`, `tr` and `td`.
+# Both reached into the panel. Measured at 375px with four projects pinned, before this was fixed: the thead had
+# zero height, the cells were laid out by `grid-template-columns:1fr auto` in alternating 249/71px pairs,
+# `min-width:0` had collapsed every column, and the scroller had nothing left to scroll.
+#
+# Here rather than in `cards-check.mjs`, which measures real layout in a real browser and is the instrument that
+# ought to own this, for the reason the section above gives: `tests.yml` serves the *committed* `docs/` and
+# regenerates nothing, so a browser harness reads the last published stylesheet. It cannot see a rule added to
+# the generator today, in either direction -- it would neither fail on the defect nor confirm the fix. What is
+# checkable without a build is the source, so that is what this reads. `cards-check.mjs` gains the layout
+# assertions once a build has landed; the note on JFH-291 says so.
+#
+# Every assertion from here down reads the source with its comments stripped out, by the same
+# `scripts/pagemin.py` that strips them out of the page a reader is served. The reason is a defect this
+# repository has already shipped once: a source-reading test can be satisfied by the source's own comment. Half
+# of what is checked below -- `CMP_MAX`, `BY_NWO`, `FLAGS["index.compare"]`, `min-width:0`, and the cards-view
+# selectors this section is entirely about -- is *named in the prose beside the code*, at length and on purpose,
+# because that prose is where the reasoning lives. So a substring test against the raw file would pass on the
+# explanation of the rule after the rule itself had been deleted. Stripping first makes these tests read what
+# the browser reads.
+# Each region is stripped by the stripper for its own language, and not the whole file by both: `19_pages.py` is
+# Python, so `strip_js` run over it would meet triple-quoted strings and `https://` inside them with rules
+# written for JavaScript. The two regions below are genuine CSS and genuine JavaScript, which is what these
+# functions are for.
+sys.path.insert(0, str(PAGE.parent))
+import pagemin  # noqa: E402  -- after the path insert, which is what makes it importable
+
+CSS = pagemin.strip_css(SRC[SRC.index("<style>"):SRC.index("</style>")])
+PRINT = CSS[CSS.index("@media print{"):]
+
+# Pinned, not "at least one", for the same reason as the verdict map above: if the panel's block is ever
+# renamed, none of these substring tests can match, nothing collides, and every assertion below passes by
+# finding nothing. A count is what makes the section fail rather than go quiet.
+CMP_RULES = re.findall(r"^#cmp[^{]*\{", CSS, re.M)
+atleast("the comparison panel's rules are where this file expects them", len(CMP_RULES), 18)
+
+# An id and not the `.cmp` class every other component on this page is styled by. `html[data-view=cards]
+# tr:hover td` is the strongest thing either view block reaches for, at (0,2,2); one id beats all of it, so the
+# panel holds regardless of where the block sits and regardless of what is added to the cards view later. A
+# class would tie with `html[data-view=cards] td` and be decided by source order, which is a fix that works
+# until somebody moves a block.
+true("the panel is styled through an id, so no view rule can outrank it",
+     "#cmp{display:none}" in CSS and not re.search(r"^\.cmp[ .{\[]", CSS, re.M))
+# Belt as well as braces: the block also sits after both view blocks, so it wins ties too. Cheap to assert and
+# it documents the ordering for anyone who moves it back up beside `.shared`, where it reads like it belongs.
+true("the panel's block comes after the two blocks that would recast its table",
+     CSS.index("#cmp{display:none}") > CSS.rindex("html[data-view=cards]"))
+
+# The display types the two view blocks take away, restated. This is the actual defect: not one of these is
+# decoration, and a panel missing any one of them is a comparison a phone reader cannot read.
+for selector, value in (("table", "table"), ("thead", "table-header-group"),
+                        ("tbody", "table-row-group"), ("tr", "table-row")):
+    true("the panel's " + selector + " is restored to display:" + value,
+         re.search(r"^#cmp " + selector + r"\{[^}]*display:" + value + r"\b", CSS, re.M) is not None)
+true("the panel's cells are restored to display:table-cell",
+     re.search(r"^#cmp th,#cmp td\{[^}]*display:table-cell\b", CSS, re.M) is not None)
+# 148px is what makes the scroller a scroller: four of them plus the 104px label rail is 696px, so a 375px
+# phone has real width to swipe. The cards view sets `min-width:0` on every cell, which is right for a card
+# that must not push its grid track wider and is exactly wrong for a column somebody is trying to read.
+true("the panel's cells carry a width floor, which is what the cards view zeroed",
+     re.search(r"^#cmp td\{[^}]*min-width:1\d\dpx", CSS, re.M) is not None)
+# The row labels are what make four columns usable at 375px, and a sticky cell with a transparent background
+# has the cells sliding under it show through.
+true("the row labels are sticky and opaque",
+     re.search(r"^#cmp tbody th\{[^}]*position:sticky[^}]*background:var\(--", CSS, re.M) is not None)
+# Three rules paint a row on this page -- table view stripes alternate rows and tints the row under the
+# pointer, the cards view glows the row holding focus -- and all three are about a list being scanned. A
+# comparison whose cells change colour as the mouse crosses them is harder to read, not easier.
+true("no view's row paint reaches the panel",
+     re.search(r"^#cmp tbody td\{[^}]*background:transparent", CSS, re.M) is not None
+     and re.search(r"^#cmp tr:hover,#cmp tr:focus-within\{[^}]*box-shadow:none", CSS, re.M) is not None)
+
+# PAPER
+#
+# The panel is the one thing on this page that is more use printed than on screen: four projects in columns is
+# what somebody carries into the meeting where the choice is made. So it must survive the print sheet, and
+# every affordance built for swiping has to go -- paper has no horizontal scroll, and an affordance that
+# cannot be used there is not merely inert, it pushes content off the edge.
+#
+# Measured on a sheet of A4 less the 14mm margins, 182mm or about 673 CSS px, with four projects pinned:
+# releasing `overflow-x` alone left the table asking for 971px with its last column ending 992px from the
+# left -- 319px past the edge, nothing to clip it and nothing to say so. Releasing the 148px floor as well
+# still left it at 971px, because an auto layout sizes columns to content. `table-layout:fixed` is what
+# bounds it, and after it the table measures 631px with none of its 52 cells spilling.
+# Read as selector lists rather than by substring: the hide list is one rule with fourteen selectors in it, and
+# a substring test on it passes for `#cmp .unpin` when what is actually written is `#cmp .unpinned`.
+HIDDEN_IN_PRINT = {sel.strip() for group in re.findall(r"([^{}]+)\{display:none\}", PRINT)
+                   for sel in group.split(",")}
+true("the panel itself stays on the sheet", "#cmp" not in HIDDEN_IN_PRINT)
+for control in ("#cmp .ch .sp", "#cmp .unpin", ".pin"):
+    true("printing drops a control nobody can press: " + control, control in HIDDEN_IN_PRINT)
+true("printing releases the horizontal scroller",
+     re.search(r"#cmp \.scroll\{[^}]*overflow-x:visible", PRINT) is not None)
+true("printing bounds the table to the sheet rather than to its content",
+     re.search(r"#cmp table\{[^}]*table-layout:fixed", PRINT) is not None)
+true("printing releases the swipe-width floor that put it 319px off the page",
+     re.search(r"#cmp td\{[^}]*min-width:0", PRINT) is not None)
+true("printing unsticks the row labels, which have nothing left to stay in front of",
+     re.search(r"#cmp tbody th\{[^}]*position:static", PRINT) is not None)
+# Percentages and not pixels, so pinning two projects gives each of them half the sheet rather than a quarter
+# of it and three columns of white space. Measured: 274px each at two pinned, 137px each at four.
+true("the label rail's printed width is a share of the sheet, not a fixed one",
+     re.search(r"#cmp thead th:first-child\{width:\d+%\}", PRINT) is not None)
+
+
+# WHAT PINNING IS NOT
+#
+# The pinned set lives in `state`, which is where every filter lives, and it is not a filter. Three things
+# depend on that and none of them is enforced by anything but this section. `match()` reading `state.cmp`
+# would silently turn Compare into a filter; `rescue()` offering to drop it would invite the reader to throw
+# away the comparison to widen a search; `viewTitle()` naming it would put it in the exported Markdown's
+# title, where it is not a claim about what the table holds.
+def body_of(fn: str) -> str:
+    """One top-level function, cut at its closing brace in column 0, with its comments stripped."""
+    body = SRC[SRC.index("function " + fn + "("):]
+    return pagemin.strip_js(body[:body.index("\n}")])
+
+
+for fn in ("match", "rescue", "viewTitle"):
+    true(fn + "() does not treat the comparison as a filter", "state.cmp" not in body_of(fn))
+# `set()` does `Object.assign(state, patch, {shown: PAGE_SIZE})`, so anything routed through it throws the
+# reader back to row 1 of the results. That is right for a filter and wrong for pinning a project nine screens
+# down: the whole point is that the reader keeps their place. `toggleSave` already made this argument; this is
+# the second control to need it, and neither is protected by anything except not doing it.
+true("set() leaves the pinned set alone", "cmp" not in body_of("set"))
+true("pinning does not route through set(), which would scroll the reader back to the top",
+     "set(" not in re.sub(r"\bnew Set\(", "", body_of("togglePin")))
+
+# The cap is one named constant. Written as a literal in each of the five places that need it -- the button's
+# `disabled`, its accessible name, the refusal `say()`, the hash cap and the "pin N more" copy -- it drifts,
+# and the failure is silent in the direction that matters: a cap of 4 with copy that says 3.
+true("the cap is a named constant", re.search(r"^const CMP_MAX = \d+;", SRC, re.M) is not None)
+for fn in ("pinBtn", "pinLabel", "togglePin", "readHash", "paintCompare"):
+    true(fn + "() takes the cap from CMP_MAX rather than repeating it", "CMP_MAX" in body_of(fn))
+
+# Pinned keys resolve through `BY_NWO`, which is built from every row, and never through `HITS`, which holds
+# only what survived the current filter. This is the difference between "the selection survives a filter
+# change" -- one of the four things this feature promises -- and a comparison that empties itself when the
+# reader narrows the search that found the projects in the first place.
+for fn in ("readHash", "paintCompare"):
+    true(fn + "() resolves pinned keys against every row, not the filtered ones",
+         "BY_NWO" in body_of(fn) and "HITS" not in body_of(fn))
+# And the hash is not trusted: a hand-edited `cmp=` can name rows that do not exist and more than the cap.
+true("readHash() drops pinned keys that name no row", "BY_NWO.has" in body_of("readHash"))
+true("readHash() caps a hand-edited link at CMP_MAX", ".slice(0, CMP_MAX)" in body_of("readHash"))
+
+# The difference test compares the string the reader is shown, not the value behind it. Two pushes 9 and 11
+# days apart both render "1mo ago", and a `≠` on two cells that read identically does not teach the reader
+# that the marks mean something -- it teaches them the marks are noise. `since()` wraps `sinceText()` in a
+# span with a `title`, so comparing its output would compare two different ISO dates inside two identical
+# words. The split exists for this, and `since()` being built from `sinceText()` is what stops them drifting.
+true("since() is built from sinceText(), so the mark and the words cannot disagree",
+     "sinceText(iso)" in body_of("since"))
+true("the last-push row's difference test compares the rendered words",
+     re.search(r'\["Last push", r => \(\{html: since\(r\.pushed\), key: sinceText\(r\.pushed\)\}\)\]',
+               body_of("cmpFields")) is not None)
+# The platform rows key on the verdict word and not on the letter, so the two dash states -- which `VERDICT`
+# now draws with different marks but which both mean "we could not tell you" -- do not read as a difference.
+true("the platform rows key on the verdict's words, not its letter",
+     re.search(r"key: v\[1\]", body_of("cmpFields")) is not None)
+
+# Two channels for the mark, never one, which is the same claim the verdict legend above makes and is checked
+# the same way. The bar on the label cell is colour; the `≠` is not. Somebody comparing four things at once is
+# doing it because holding them in their head is not working, and a cue they cannot perceive is not a cue.
+DIFFERS = body_of("cmpTable")
+true("a differing row is marked by something that is not colour", '<span class="dx"' in DIFFERS)
+true("the mark is hidden from the accessibility tree", 'class="dx" aria-hidden="true"' in DIFFERS)
+true("and the words beside it are the accessible text", '<span class="sr">, these differ</span>' in DIFFERS)
+true("a differing row is also marked by colour, for the readers the glyph is not for",
+     re.search(r"^#cmp tr\.differs th\{[^}]*border-left:\dpx solid var\(--warn\)", CSS, re.M) is not None)
+# Deliberately no mark on the rows that agree: "these four all run on Linux" is not a finding, and drawing it
+# would put twelve marks on screen to say nothing. Asserted so that adding one is a decision, not a drift.
+true("the rows that agree are not marked at all", 'class="differs"' in DIFFERS and
+     DIFFERS.count('<span class="dx"') == 1)
+
+# The matrix keeps real table semantics, which is the whole reason the panel is a <table> and the reason the
+# CSS above had to be fought for. `scope` on both axes is what lets a screen reader answer "what is this
+# cell?" with "obra/superpowers, Licence" rather than reading a number with no referent -- and it is exactly
+# what a `display:block` recast destroys, silently, while every glyph stays on screen.
+# Both column headings are named, not just "a `scope=col` appears somewhere". Written as one test on the
+# corner cell it passed with the four project headings stripped of their axis, which is the half that matters:
+# the corner is a courtesy, and the project names are what every cell in the panel is relative to. Found by
+# deleting the attribute and watching nothing fail.
+true("the project column headings declare their axis",
+     re.search(r"""<th scope="col"><a href="' \+ detailURL\(""", DIFFERS) is not None)
+true("the empty corner cell declares its axis and is named for a screen reader",
+     '<th scope="col"><span class="sr">What is being compared</span>' in DIFFERS)
+check("nothing else in the panel claims to be a column heading", DIFFERS.count('scope="col"'), 2)
+true("the row labels declare their axis", '<th scope="row">' in DIFFERS)
+
+# Off, the feature leaves nothing behind. `app_flags_test.py` asserts that every index flag has *a* branch;
+# what matters here is which two functions carry it, because those are the only two entry points: no buttons
+# to press, and a `#cmp=` link in a shared URL ignored rather than half-honoured.
+for fn in ("pinBtn", "readHash"):
+    true(fn + '() is gated on FLAGS["index.compare"]', 'FLAGS["index.compare"]' in body_of(fn))
+
 print(f"\n{ok} passed, {bad} failed")
 sys.exit(1 if bad else 0)

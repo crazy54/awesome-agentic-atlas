@@ -49,6 +49,13 @@
       "off_effect": "The Export chip stays hidden and its dialog unreachable, a shared #list= link is ignored rather than filtering the page, and printing is left to the stylesheet rather than being switched to the table layout and light theme first."
     },
     {
+      "key": "index.compare",
+      "group": "Index page",
+      "name": "Side-by-side comparison",
+      "description": "Adds a Compare button to each result and a panel that puts up to four pinned projects in columns, marking every fact they disagree on. The pinned set travels in the URL, so a comparison is a link.",
+      "off_effect": "The per-row Compare buttons are omitted, the Compare chip stays hidden and its panel unreachable, and a #cmp= link is ignored rather than pinning anything."
+    },
+    {
       "key": "detail.install_command",
       "group": "Project detail pages",
       "name": "Install section",
