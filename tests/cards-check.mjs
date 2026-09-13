@@ -283,12 +283,31 @@ ok("Archie introduces a hovered project from its Atlas record", await evalIn(`((
 // The character cap is asserted, but the LINE COUNT is the assertion that matters and the reason this reads
 // geometry rather than string length: a cap does not buy a line count when a project name is an unbreakable
 // 67-character run, and a 72-character cap was measured reaching three lines for exactly that reason. The
-// generator's budgets were picked by rendering all 3,835 strings its templates can produce into this box; the
+// generator's budgets were picked by rendering all 3,837 strings its templates can produce into this box; the
 // worst of them is checked below, so this one asserts the row the reader is actually on.
 //
 // Blurb exclusion is separate because the cap alone would pass on a row whose blurb happens to be short.
 // `maxBlurb` is reported so a future reader can see what the cap is holding back rather than trusting that
 // it is holding anything.
+//
+// THE CAPS ARE READ OUT OF THE PAGE RATHER THAN COPIED INTO THIS FILE, and that is not tidiness. They were
+// written here nine times -- the name cap in four places, the sentence cap in two, the rest in prose -- and
+// the generator owns them. Cut a cap in `19_pages.py` and miss one of the nine and this harness goes wrong in
+// both directions at once: it asserts the old, larger bound, so a bubble that is now too big still passes,
+// AND it rebuilds the exhaustive string set under the old caps, so it measures sentences the page can no
+// longer say while never measuring the ones it now can. Both failures are silent and they hide each other.
+//
+// Parsed rather than exported because there is nothing to export from: the page's script is an IIFE and these
+// are `const`s inside it, invisible to `evalIn`. Matching the source text is the memory-hole risk this file
+// has hit before -- a substring check that matched the comment quoting a rule and stayed green after the rule
+// was deleted -- so this requires EXACTLY ONE match of a declaration-shaped pattern. `pagemin.py` strips the
+// page's comments before it ships, so a comment cannot supply the match, and the count assertion catches it
+// if that ever stops being true.
+const capsSource = await (await fetch(ORIGIN)).text();
+const capsFound = [...capsSource.matchAll(/const NAME_MAX = (\d+), SAY_MAX = (\d+)/g)];
+ok("the page declares Archie's two caps, exactly once, where this harness can read them",
+   capsFound.length === 1, JSON.stringify({matches: capsFound.length}));
+const NAME_MAX = Number(capsFound[0][1]), SAY_MAX = Number(capsFound[0][2]);
 const bubble = await evalIn(`(() => {
   const speech = document.getElementById('byte-speech');
   const row = ROWS.find(r => r.nwo === document.querySelector('#out tr[data-project]').dataset.project);
@@ -301,8 +320,8 @@ const bubble = await evalIn(`(() => {
             speech.textContent.includes(row.blurb.slice(0, 24))),
           maxBlurb: Math.max(...ROWS.map(r => (r.blurb || "").length))};
 })()`);
-ok("Archie says at most two short lines", bubble.len > 0 && bubble.len <= 74,
-   JSON.stringify({len: bubble.len, text: bubble.text}));
+ok("Archie says at most two short lines", bubble.len > 0 && bubble.len <= SAY_MAX,
+   JSON.stringify({len: bubble.len, cap: SAY_MAX, text: bubble.text}));
 ok("Archie's bubble is at most two lines tall as rendered", bubble.lines >= 1 && bubble.lines <= 2,
    JSON.stringify({lines: bubble.lines, text: bubble.text}));
 ok("Archie no longer reads the repository blurb aloud", !bubble.carriesBlurb,
@@ -328,20 +347,23 @@ const widest = await evalIn(`(() => {
   for (const r of ROWS) {
     const cat = (D.cats[r.cat] || {}).name || "the atlas";
     const tg = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
-    const name = clip(r.name, 26), owner = r.nwo.split("/")[0];
+    const name = clip(r.name, ${NAME_MAX}), owner = r.nwo.split("/")[0];
     const facts = [name + " is listed under " + cat + ".",
                    name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")];
     if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
     const tail = tg.length ? " Tagged for " + tg[0] + "." : "";
-    for (const f of facts) said.add(clip(f + ((f + tail).length <= 62 ? tail : ""), 74));
+    // One cap for both, and code points for the fit test, mirroring the generator. Two separate numbers here
+    // is what let the page's own pair drift into looking like a bound it was not; see the note in 19_pages.py.
+    for (const f of facts) said.add(clip(f + (Array.from(f + tail).length <= ${SAY_MAX} ? tail : ""), ${SAY_MAX}));
   }
   // TWO INSTRUMENTS, AND THEY HAVE TO AGREE. Dividing the box height by lineHeight infers a line count from
   // arithmetic, and it is only as good as the assumption that every line occupies exactly one lineHeight --
   // an inline image, a taller fallback font for one glyph, or a lineHeight the stylesheet later expresses as
   // a unitless number would all break it silently. A Range over the contents returns one client rect per line
   // box, which counts what the layout engine actually produced. Both are computed for every string and any
-  // disagreement is a failure, so neither can be quietly wrong: measured 0 disagreements across all 3,835,
-  // both maxing at 2, for 2.0s vs 2.2s.
+  // disagreement is a failure, so neither can be quietly wrong: measured 0 disagreements across all 3,837,
+  // both maxing at 2, for 2.0s vs 2.2s. Re-measured at 220px with the single cap: still 0 of 3,837, still
+  // maxing at 2, on the histogram 1,028 one-line and 2,809 two-line.
   const boxes = () => {
     const rg = document.createRange(); rg.selectNodeContents(speech);
     const tops = new Set();
@@ -416,10 +438,10 @@ const walk = await evalIn(`(async () => {
   // The wordings, named by what a reader would see. Membership is read off the live string; nothing here
   // decides what any row will say.
   //
-  // The clipped arm does not just look for an ellipsis, and that mattered: there are two clippers -- NAME_MAX 26 on the
-  // name and BUBBLE_MAX 74 on the finished sentence -- and an ellipsis on its own cannot say which one fired.
-  // Setting NAME_MAX to 999 while leaving BUBBLE_MAX alone left this arm reporting itself seen, because long
-  // unclipped names pushed whole sentences past 74 and the total clipper supplied the ellipsis. The drift was
+  // The clipped arm does not just look for an ellipsis, and that mattered: there are two clippers -- NAME_MAX on the
+  // name and SAY_MAX on the finished sentence -- and an ellipsis on its own cannot say which one fired.
+  // Setting NAME_MAX to 999 while leaving SAY_MAX alone left this arm reporting itself seen, because long
+  // unclipped names pushed whole sentences past SAY_MAX and the total clipper supplied the ellipsis. The drift was
   // still caught, but by the restated-set tie alone; this label was lying. It now asks the only question worth
   // asking -- is the name in this sentence this row's name, shortened -- so it can only be satisfied by the
   // clipper it is named after.
@@ -430,7 +452,7 @@ const walk = await evalIn(`(async () => {
     "published by an owner": t => t.includes(" comes from "),
     "tagged for a runtime": t => t.includes(" Tagged for "),
     "a name clipped to fit": (t, nwo) => {
-      const full = nameOf.get(nwo) || "", short = clip(full, 26);
+      const full = nameOf.get(nwo) || "", short = clip(full, ${NAME_MAX});
       return short !== full && t.startsWith(short);
     }
   };
@@ -443,8 +465,10 @@ const walk = await evalIn(`(async () => {
   };
   // WHAT THE RENDERED PAGE OWES, AND WHAT IT CANNOT BE ASKED FOR. Five of the six wordings depend only on a
   // row's category, list count, owner and tags, and the first 120 rows carry all five many times over. The
-  // sixth depends on a name being longer than 26 characters, and only 6 of the 120 rendered rows qualify --
-  // 5.0%, against 10.8% corpus-wide, because popular repositories have short names. PAGE_SIZE redraws that
+  // sixth depends on a name being longer than NAME_MAX, and only a handful of the 120 rendered rows qualify --
+  // 6 at the old cap of 26, more at 22, but "more" is not "guaranteed" and the count is read back rather than
+  // assumed, because popular repositories have short names. Corpus-wide it is 18.5% at 22 and was 10.8% at 26.
+  // Cutting the cap makes this arm likelier to appear and no less fragile. PAGE_SIZE redraws that
   // window from whatever the corpus becomes, and the next ingest takes it from 1,294 rows to roughly 8,293: a
   // new top 120 with no long name would turn this red with nobody having changed a line. So the clipped arm is
   // recorded here if it happens to appear and is REQUIRED of the probe below, which goes and finds the longest
@@ -486,23 +510,25 @@ const walk = await evalIn(`(async () => {
   // table and a leaked query would quietly change what those assertions are looking at.
   //
   // THE ROW IS FOUND BY IDENTITY, AND NOTHING HERE MAY COUNT ROWS OR TAKE THE FIRST ONE. This is the first
-  // harness to type into the reader's own search box, and what comes back is not this file's to predict: a
-  // query returning fewer than SEM_THIN (12) substring hits has up to SEM_MAX (12) semantically related rows
-  // APPENDED to it, and one exact project name is the thinnest query there is. MEASURED, not predicted: this
-  // probe's search renders 13 rows -- its one substring hit plus twelve neighbours -- so anything here that
-  // counted would already be wrong rather than about to be. Worse, the augmentation is conditional on the
-  // semantic index having loaded, so the count differs between a runner where that fetch succeeds and one where
-  // it does not:
-  // any assertion on how many rows came back would be green on one machine and red on another for reasons that
-  // have nothing to do with Archie. Selecting on the data-project attribute is immune to all of it, and was measured so --
-  // re-run with a four-character query that fills the page, the probe still finds its row, clips its name and
-  // restores the filter, with 120 rows rendered instead of 13.
+  // harness to type into the reader's own search box, and what comes back is not this file's to predict.
+  // On a tree with plain substring search an exact project name returns its one hit. On a tree carrying the
+  // semantic search (JFH-293), a query returning fewer than SEM_THIN substring hits has up to SEM_MAX
+  // semantically related rows APPENDED to it, and one exact project name is the thinnest query there is, so
+  // the same probe was measured returning 13. This file is merged across both and must be right on both,
+  // which is the whole argument: a count written here is a count that goes stale on somebody else's feature
+  // landing, with nothing in this file changed and no conflict to warn anyone.
+  // Worse, the augmentation is conditional on the semantic index having loaded, so once it exists the count
+  // differs between a runner where that fetch succeeds and one where it does not: any assertion on how many
+  // rows came back would be green on one machine and red on another for reasons that have nothing to do with
+  // Archie. Selecting on the data-project attribute is immune to all of it, and was measured so -- re-run with
+  // a four-character query that fills the page to 120 rows, the probe still finds its row, still clips its
+  // name and still restores the filter.
   //
   // The filtered count is recorded for that reason rather than checked. When this number changes, the change is
   // somebody else's feature working as intended, and the next person should be able to see it here instead of
   // rediscovering it.
   const longest = ROWS.reduce((a, r) => Array.from(r.name).length > Array.from(a.name).length ? r : a, ROWS[0]);
-  const clippable = Array.from(longest.name).length > 26;
+  const clippable = Array.from(longest.name).length > ${NAME_MAX};
   const qbox = document.getElementById('q'), rowsNow = () => document.querySelectorAll('#out tr[data-project]').length;
   const wasRows = rowsNow();
   let probe = null;
@@ -524,7 +550,7 @@ const walk = await evalIn(`(async () => {
         await new Promise(r => setTimeout(r, 25));
       const text = speech.textContent;
       probe = {filtered: rowsNow(), nwo: longest.nwo, full: longest.name, points: Array.from(longest.name).length,
-               short: clip(longest.name, 26), text, spoke: !speech.hidden && !!text,
+               short: clip(longest.name, ${NAME_MAX}), text, spoke: !speech.hidden && !!text,
                clipped: !!text && arms["a name clipped to fit"](text, longest.nwo),
                inSet: window.__saidByHarness.has(text),
                lines: Math.round((speech.getBoundingClientRect().height - chrome) / lh), box: boxes()};
@@ -540,7 +566,7 @@ const walk = await evalIn(`(async () => {
           clippable, longestPoints: Array.from(longest.name).length, probe,
           qRestored: rowsNow() === wasRows, qbox: qbox.value,
           clippableRendered: [...document.querySelectorAll('#out tr[data-project]')]
-            .filter(r => Array.from(nameOf.get(r.dataset.project) || "").length > 26).length,
+            .filter(r => Array.from(nameOf.get(r.dataset.project) || "").length > ${NAME_MAX}).length,
           tall: said.filter(s => s.lines > 2 || s.lines < 1 || s.box > 2 || s.box < 1),
           disagreed: said.filter(s => s.lines !== s.box),
           empty: said.filter(s => !s.len),
@@ -563,8 +589,8 @@ ok("every sentence Archie was caught saying is one the restated templates can pr
    !walk.broke && walk.adrift.length === 0 && walk.visited >= FLOOR,
    JSON.stringify({adrift: walk.adrift, visited: walk.visited}));
 // The clipped name, asked of the row that must have one rather than of whichever rows the corpus put on page
-// one. `clippable` false would mean no name in the atlas exceeds 26 characters, which is a real answer and not
-// a pass -- 140 of 1,294 do today -- so it is reported rather than skipped over.
+// one. `clippable` false would mean no name in the atlas exceeds NAME_MAX, which is a real answer and not
+// a pass -- 239 of 1,294 do at 22, and 140 did at 26 -- so it is reported rather than skipped over.
 ok("the longest name in the atlas is clipped in what Archie says about it, and still fits two lines",
    !walk.broke && walk.clippable && walk.probe && !walk.probe.broke && walk.probe.spoke
    && walk.probe.clipped && walk.probe.inSet && walk.probe.lines <= 2 && walk.probe.box <= 2

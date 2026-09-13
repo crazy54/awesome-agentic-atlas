@@ -625,8 +625,16 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
    the header's own `z-index:30` already carries it over the sticky filter bar.
    The width was `min(270px,calc(100vw - 200px))` and the second arm was inert: the bubble is hidden at 640
    and below, and at 641 that arm is 441px, so 270 always won. A clamp that cannot clamp is worse than no
-   clamp, because it reads as protection that is not there. */
-#byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:270px;
+   clamp, because it reads as protection that is not there.
+   220 AND NOT 270, WHICH IS A SEPARATE CUT FROM THE LINE COUNT AND WAS ASKED FOR SEPARATELY. Bottom-aligning
+   and capping at two lines already stopped the box covering anything -- what a reader saw before was 270x219
+   at its worst, twelve lines of somebody else's GitHub "about" field, and it sat on a nav link, the facet
+   line and the filter bar (sampled down its left edge with `elementFromPoint`, against the same points with
+   the bubble hidden). Two lines is 53px, and 53px cannot leave the masthead, which is opaque and paints at
+   `z-index:30`. So the remaining width was not covering results. It was still a 270px rectangle over the
+   navigation, and narrower is better as long as narrower is honest -- see `SAY_MAX` below, which is what
+   pays for this. 220x53 is 11,660px2 against the 59,130 a reader gets today: 80% less box. */
+#byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:220px;
   padding:9px 11px;border:1px solid var(--grid);border-left:3px solid var(--bar);border-radius:9px;
   background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;z-index:4;
   box-shadow:0 12px 28px rgba(0,0,0,.2)}
@@ -3158,13 +3166,41 @@ function initDiscovery() {
   // unrelated project wrote in its GitHub "about" field.
   //
   // A character cap alone does not buy a line count, which is the thing that actually covered the masthead:
-  // the box is 270px at 12px/1.38, so it fits about 42 characters a line, but a project name is one
+  // the box is 220px at 12px/1.38, so it fits about 34 characters a line, but a project name is one
   // unbreakable run of up to 67 characters and a category like "Orchestrators & Multi-Agent" is another 27.
-  // Every one of the 3,835 strings these templates can produce for the 1,294 committed rows was rendered
+  // Every one of the 3,837 strings these templates can produce for the 1,294 committed rows was rendered
   // into this box and its line count read back; a 140-character cap reached four lines and even 72 reached
-  // three. These three numbers are the largest that held two lines for all 3,835. NAME_MAX is the one that
-  // does the work -- it truncates 10.8% of names (median length is 12) and without it no total cap is
-  // enough, because a single long name fills both lines on its own.
+  // three.
+  //
+  // THERE IS ONE CAP AND NOT TWO, AND THE PAIR THIS REPLACES WAS A TRAP RATHER THAN A BELT AND BRACES. It
+  // was `TAG_MAX = 62, BUBBLE_MAX = 74`: add the tag only if the sentence plus tag fits 62, then clip the
+  // result to 74. Read as written, 74 is the guarantee and 62 is a nicety. It is the other way round. 74 was
+  // only reachable *because* 62 suppressed every string between 63 and 74 that had a tag on it, so the
+  // longest thing the page could actually say was well under its own stated cap, and the number a reader of
+  // this code would check the layout against was not the number holding it up. Raising TAG_MAX to meet
+  // BUBBLE_MAX -- which looks like a pure win, more tags kept, same stated bound -- takes the bubble to
+  // three lines immediately. Measured: at 220px, `24,65,65` is three lines where `24,53,65` is two.
+  //
+  // So `SAY_MAX` is both tests at once: the tag goes on only if the whole sentence still fits it, and the
+  // sentence is clipped to it. The longest string this page can produce is then exactly SAY_MAX code points,
+  // which is a bound that can be checked by reading one number. At 220px, 53 is the largest SAY_MAX that
+  // held two lines for all 3,837, on two independent instruments that agreed on every one of them (one
+  // client rect per line box from a Range, and box height over lineHeight).
+  //
+  // WHAT THE NARROWER BOX COSTS, because it is not free and the cost is in the copy rather than the layout.
+  // At 74 the tag survived on 41.2% of the rows that have one; at 53 it survives on 15.7%, and 10% of
+  // sentences now end in an ellipsis rather than a full stop where none did before. That is the trade the
+  // width buys and it is a real regression in what Archie manages to say -- 240px/57 would keep 27.5%, and
+  // 200px/49 would drop to 5.6% and effectively delete the tag. A reader still always gets a complete
+  // subject and verb: it is the category or the owner that gets cut, never the project's own name.
+  //
+  // NAME_MAX IS NO LONGER THE BINDING CONSTRAINT, which is the other thing collapsing the pair changed. It
+  // used to be the number doing the work, because with a total cap that could not really bound the string a
+  // single long name filled both lines on its own. Now SAY_MAX bounds the sentence whatever the name did, so
+  // NAME_MAX only decides *which end* gets sacrificed: 53 was the answer at 220px for NAME_MAX 20, 22, 24,
+  // 26 and 28 alike. Lowering it clips more names and saves more sentence tails, and 22 is the knee -- it
+  // truncates 18.5% of names (median length is 12) against 10.0% of sentences losing their full stop, where
+  // 24 costs 148 more broken sentences to spare 52 names.
   //
   // The cap is enforced here and not with `line-clamp` because clamping would hide the tail of a fact while
   // reporting a bubble that fits, so the text a reader cannot see would still be the text the page chose to
@@ -3196,7 +3232,7 @@ function initDiscovery() {
   // when the word-boundary version would throw away more than half the budget. That fallback is what fixes the
   // bare ellipsis and it does NOT fix the surrogate; deleting it as redundant would bring the empty bubble
   // back on its own.
-  const NAME_MAX = 26, TAG_MAX = 62, BUBBLE_MAX = 74;
+  const NAME_MAX = 22, SAY_MAX = 53;
   const clipWords = (text, limit) => {
     const points = Array.from(text);
     if (points.length <= limit) return text;
@@ -3227,7 +3263,17 @@ function initDiscovery() {
     for (let i = 0; i < r.nwo.length; i++) spread = (spread * 31 + r.nwo.charCodeAt(i)) | 0;
     const fact = facts[Math.abs(spread) % facts.length];
     const tagged = targets.length ? " Tagged for " + targets[0] + "." : "";
-    return clipWords(fact + ((fact + tagged).length <= TAG_MAX ? tagged : ""), BUBBLE_MAX);
+    // Code points here for the same reason `clipWords` counts them, and it is a different symptom of the
+    // same mistake rather than a second guard on the same one. `clipWords` counting units split a surrogate
+    // pair; this test counting units mismeasures a name that contains one, and the failure is silent in the
+    // other direction -- the tag is dropped from a sentence that would have fitted. `"Agents"` plus twelve
+    // robot emoji plus `"End"` is 21 characters and measures 33, so it loses its tag with 12 characters of
+    // room to spare. Nothing in today's rows reaches it; a rebuild that returns one emoji name would, and
+    // the narrower the box gets the more rows sit close enough to the cap for the 2x overcount to decide.
+    // SAY_MAX twice on purpose -- see the note above on why this used to be two numbers and must not be
+    // again. The tag goes on only if the finished sentence still fits the one bound, so nothing below ever
+    // clips a tag it has just added, and the longest string is SAY_MAX rather than something under it.
+    return clipWords(fact + (Array.from(fact + tagged).length <= SAY_MAX ? tagged : ""), SAY_MAX);
   };
   const speak = r => {
     if (muted || !speech || !r) return;
