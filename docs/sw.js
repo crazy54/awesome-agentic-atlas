@@ -2,8 +2,8 @@
 // version stops describing the bytes: the next build overwrites whatever was changed here, and until it
 // does, readers hold a cache whose name no longer matches its contents. Change the generator.
 //
-// Version a289f00eba88 -- a hash of the precached files, so it moves when they do and not otherwise.
-const VERSION = "a289f00eba88";
+// Version 5a60688a7a3a -- a hash of the precached files, so it moves when they do and not otherwise.
+const VERSION = "5a60688a7a3a";
 const SHELL = "atlas-shell-" + VERSION;
 // Unversioned, and never deleted on activate, which is the difference between an offline reader and a
 // broken one. A version-keyed data cache would be emptied by the very update that proves the reader is
@@ -35,7 +35,7 @@ const DATA_FILES = ["/data.json", "/live.json"];
 // so, since the index page turns that header into its freshness stamp, and a stylesheet answered from cache
 // has nobody to tell. Being absent from here is what used to make a detail page lose its star count offline
 // while the sidecar it reads was cached correctly -- routing by filename with no default cuts both ways.
-const PAGE_ASSETS = ["/repo/detail.css", "/repo/detail.js", "/search/meta.json", "/search/vocab.json", "/search/vocab.bin", "/search/docs.bin"];
+const PAGE_ASSETS = ["/repo/detail.css", "/repo/detail.js", "/search/meta.json", "/search/vocab.json", "/search/vocab.bin", "/search/docs.bin", "/search/xy.bin", "/search/near.bin"];
 
 // Relative to this script, so the scope is the project's Pages prefix on the published site, the fork's
 // prefix on a fork, and "/" under a local `python -m http.server`. A literal "/awesome-agentic-atlas/"

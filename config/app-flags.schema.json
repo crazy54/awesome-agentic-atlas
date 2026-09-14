@@ -56,6 +56,13 @@
       "off_effect": "The per-row Compare buttons are omitted, the Compare chip stays hidden and its panel unreachable, and a #cmp= link is ignored rather than pinning anything."
     },
     {
+      "key": "index.constellation",
+      "group": "Index page",
+      "name": "The atlas as a map",
+      "description": "Adds a Map chip that draws all of the projects as a constellation on the same vectors search by meaning scores against: one dot per project positioned by what it does, coloured by topic, with each project's eight nearest neighbours drawn as edges. Whatever the table is showing is what the map lights, so a search that names a kind of tool lands in one visible region and a search for a concern that cuts across every kind of tool visibly scatters. Reads two binaries the semantic index already ships and validates them with the same staleness guard.",
+      "off_effect": "The Map chip stays hidden and its dialog unreachable, and search/xy.bin and search/near.bin are never fetched."
+    },
+    {
       "key": "detail.install_command",
       "group": "Project detail pages",
       "name": "Install section",

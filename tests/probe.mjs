@@ -1329,6 +1329,36 @@ ok("the export dialog is labelled by its own heading",
    /<dialog id="exp" aria-labelledby="exph">/.test(html));
 ok("the kill switch reaches the export", html.includes('FLAGS["index.export"]'));
 
+// --- the constellation's chip and its refusal (JFH-298) ---
+// Asserted alongside the export because it is the same chip pattern, and then in one way the export is not:
+// this feature needs a capability the export does not, and the interesting assertion is what happens when
+// that capability is missing. Everything above this line ran, so the page booted -- which is half of it.
+const MCH = html.match(/<button class="chip mapchip" id="mapbtn"[^>]*>/)?.[0] || "";
+ok("the Map control announces that it opens a dialog", MCH.includes('aria-haspopup="dialog"'), MCH);
+ok("...and does not claim to be a toggle, because the map is not a sixth filter",
+   !MCH.includes("aria-pressed"), MCH);
+ok("...and is hidden by the stylesheet until it is wired", /\.mapchip\{display:none\}/.test(html));
+ok("the map dialog is labelled by its own heading",
+   /<dialog id="mapdlg" aria-labelledby="maph">/.test(html));
+ok("the kill switch reaches the map", html.includes('FLAGS["index.constellation"]'));
+// The refusal. This stub carries no `getContext`, which is a browser with no 2D canvas -- and the guard has
+// to be on the capability rather than on the element, because `getElementById` here (and a real page after a
+// markup rename) hands back *something* for any id. `if (!c) return` would prove nothing and pass anyway.
+// So: the chip is still hidden, and `search/xy.bin` was never going to be fetched.
+ok("mapWire declines a browser with no 2D canvas, leaving the chip hidden",
+   !document.getElementById("mapbtn").classList.contains("on"));
+ok("...while the export beside it, which needs no canvas, is switched on",
+   document.getElementById("take").classList.contains("on"));
+// The canvas is the one thing on the page that cannot be read as text, so it says what it is showing, and
+// `mapPaint` rewrites that sentence per view. A dot cloud with 1,294 ARIA nodes would be worse than the
+// table it duplicates; the promise is that the table underneath holds every fact in the picture.
+ok("the canvas describes itself for a reader who cannot see it",
+   /<canvas id="mapc" role="img" aria-label="[^"]+"><\/canvas>/.test(html));
+// Both overlay boxes declare a `display`, so `[hidden]` alone cannot hide them -- the trap the shared-list
+// strip shipped once. Checked here as well as in the source scan because this is the served stylesheet.
+ok("the hidden map overlays override their own display",
+   /#mapnope\[hidden\],\.mapkey\[hidden\]\{display:none\}/.test(html));
+
 // --- the printed sheet, which is the one output with no file to inspect ---
 // So it is asserted twice over: the rules exist in the stylesheet, and `printOn` actually changes the three
 // things the rules cannot.

@@ -92,15 +92,21 @@ Not precached, deliberately:
     need one -- `PAGE_ASSETS` is a short list fixed at build time, so the cache is bounded by construction
     at as many entries as it names rather than by a number somebody has to maintain.
 
-  * The four files of the semantic index under `docs/search/`, 758 KB, routed by `PAGE_ASSETS` as well
-    (JFH-293). The list is the policy and not the caller: these are fetched by `index.html` and not by a
-    detail page, and they belong on the same route because they want the same three things -- not
+  * All six files of the semantic index under `docs/search/`, 784 KB, routed by `PAGE_ASSETS` as well
+    (JFH-293, JFH-298). The list is the policy and not the caller: these are fetched by `index.html` and
+    not by a detail page, and they belong on the same route because they want the same three things -- not
     precached, cached on first use, not marked. 758 KB is by a wide margin the largest thing this site
     could put in an install step, and `index.html` fetches it only when a reader touches the search box, so
     charging it to every reader of the shell would be charging most of them for nothing. Cached on first
     use it is paid once by the readers who use it, and then it is there offline -- which matters more here
     than for a stylesheet, because a search box that answers "chat with my pdfs" on the train and stops
     answering it in a tunnel is a feature that looks broken rather than absent.
+
+    The last two, `xy.bin` and `near.bin`, are the constellation's 25 KB and are fetched on a second,
+    separate trigger: opening the map, not touching the search box. They are on this route for the search's
+    reasons plus one of their own -- the map is a picture of the whole atlas and is exactly the thing a
+    reader scrolls around offline, and it is 3% of what the search already costs, so a reader who has paid
+    for one and not the other has paid for the expensive half.
 
   * The 7,980 screenshots. They are Open Graph cards on `opengraph.githubassets.com`, cross-origin and
     fetched no-cors, so a response is opaque: status 0, no readable headers. A worker cannot tell a real
@@ -244,7 +250,7 @@ DATA_FILES = ["data.json", "live.json"]
 # own cache is bounded by the length of this list instead.
 PAGE_ASSETS = [
     "repo/detail.css", "repo/detail.js",
-    # The semantic index (JFH-293), 758 KB across four files, on the same policy and for the same reasons.
+    # The semantic index (JFH-293), 784 KB across six files, on the same policy and for the same reasons.
     # It is fetched by `index.html` rather than by a detail page, so the list is no longer "the detail
     # pages' sub-resources" -- it is "what some page fetches after paint, cached on first use, unmarked",
     # which is what the policy was all along.
@@ -256,8 +262,13 @@ PAGE_ASSETS = [
     # type into the box pays for it once and keeps it, including offline, and a reader who never types
     # never fetches it at all.
     #
-    # `near.bin` is deliberately absent: nothing on the page requests it yet.
+    # `xy.bin` and `near.bin` were absent here until JFH-298, with a comment saying nothing on the page
+    # requested them. The constellation requests them, on its own trigger: the four above are fetched when
+    # a reader touches the search box, these two when a reader opens the map. Both triggers land in the
+    # same cache because the answer to "precache, or cache on first use?" does not change between them --
+    # and they are 25 KB against the search's 758, so the reader who has one already has the costly part.
     "search/meta.json", "search/vocab.json", "search/vocab.bin", "search/docs.bin",
+    "search/xy.bin", "search/near.bin",
 ]
 
 ICONS = [

@@ -153,6 +153,8 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .clearsave.on{display:inline-block}
 .takechip{display:none}
 .takechip.on{display:inline-flex;align-items:center;gap:.4em}
+.mapchip{display:none}
+.mapchip.on{display:inline-flex;align-items:center;gap:.4em}
 .cmpchip{display:none}
 .cmpchip.on{display:inline-block}
 .cmpchip[aria-expanded=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
@@ -307,6 +309,43 @@ dialog#exp::backdrop{background:rgba(0,0,0,.55)}
 .expnote{margin:0;padding:0 16px 12px;color:var(--muted);font-size:12px;line-height:1.5}
 .expfoot{display:flex;justify-content:flex-end;background:var(--surface);
   border-top:1px solid var(--grid);padding:9px 14px}
+dialog#mapdlg{border:1px solid var(--grid);background:var(--plane);color:var(--ink);border-radius:12px;
+  padding:0;width:min(1180px,calc(100vw - 20px));height:min(820px,calc(100vh - 20px));overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.45);display:flex;flex-direction:column}
+dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
+.maphead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 14px;
+  border-bottom:1px solid var(--grid)}
+.maphead h2{margin:0;font-size:16px;white-space:nowrap}
+#mapwhat{margin:0;flex:1;min-width:120px;color:var(--muted);font-size:13px}
+#mapwhat b{color:var(--ink2)}
+.mapstage{position:relative;flex:1;min-height:0;background:var(--surface);overscroll-behavior:contain}
+#mapc{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair}
+#mapc.drag{cursor:grabbing}
+#maptip{position:absolute;left:0;top:0;pointer-events:none;width:max-content;max-width:300px;
+  background:var(--plane);border:1px solid var(--grid);border-radius:9px;padding:7px 10px;
+  font-size:12px;line-height:1.5;box-shadow:0 10px 26px rgba(0,0,0,.45);z-index:2}
+#maptip .tn{display:block;font-weight:600;font-size:13px;color:var(--ink)}
+#maptip .tk{color:var(--muted)}
+#maptip .tb{display:block;margin-top:3px;color:var(--ink2)}
+#mapnope{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;margin:0;
+  padding:0 32px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}
+#mapnope[hidden],.mapkey[hidden]{display:none}
+.mapkey{display:flex;flex-wrap:wrap;gap:3px 8px;padding:8px 14px;border-top:1px solid var(--grid);
+  background:var(--surface);max-height:22vh;overflow-y:auto}
+.mapkey button{display:inline-flex;align-items:center;gap:5px;background:none;border:1px solid transparent;
+  border-radius:20px;padding:2px 9px 2px 5px;color:var(--ink2);font:inherit;font-size:12px}
+.mapkey button:hover{border-color:var(--grid);color:var(--ink)}
+.mapkey button[aria-pressed=true]{border-color:var(--bar);background:var(--band);color:var(--ink)}
+.mapkey i{flex:0 0 auto;width:9px;height:9px;border-radius:50%;background:var(--sw);
+  box-shadow:0 0 7px var(--sw)}
+.mapkey .kn{color:var(--muted);font-variant-numeric:tabular-nums}
+.mapfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface);
+  border-top:1px solid var(--grid);padding:9px 14px}
+#maphint{flex:1;min-width:0;color:var(--muted);font-size:12px}
+@media (max-width:640px){
+  dialog#mapdlg{width:100vw;height:100vh;max-width:none;border:0;border-radius:0}
+  .mapkey{display:none}
+}
 .shared{display:none}
 .shared.on{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0 0;padding:10px 14px;
   border-left:3px solid var(--warn);background:var(--band);border-radius:0 6px 6px 0;
@@ -569,8 +608,8 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--09--13_18:17_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-09-13T18:17:00Z">Last deployed 2026-09-13 18:17 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--09--13_21:14_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-09-13T21:14:00Z">Last deployed 2026-09-13 21:14 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
@@ -632,6 +671,8 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
             title="Put the projects you have pinned side by side"><span id="cmplabel">Compare</span></button>
     <button class="chip takechip" id="take" aria-haspopup="dialog"
             title="Take this view away as a link, a Markdown table, an HTML page or a PDF">Export</button>
+    <button class="chip mapchip" id="mapbtn" aria-haspopup="dialog"
+            title="See all 1,294 projects at once, laid out by what they do">Map</button>
     <button class="chip" id="palhint"></button>
     <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
@@ -712,6 +753,21 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
   <div class="expfoot"><button class="chip" id="expdone">Done</button></div>
 </dialog>
 
+<dialog id="mapdlg" aria-labelledby="maph">
+  <div class="maphead"><h2 id="maph">The atlas, as a map</h2>
+    <p id="mapwhat"></p>
+    <button class="chip" id="mapreset">Reset the view</button>
+    <button class="chip" id="mapdone">Done</button></div>
+  <div class="mapstage" id="mapstage">
+    <canvas id="mapc" role="img" aria-label="A map of every project in the atlas"></canvas>
+    <div id="maptip" hidden></div>
+    <p id="mapnope" hidden></p>
+  </div>
+  <div class="mapkey" id="mapkey" role="group" aria-label="Topics"></div>
+  <div class="mapfoot"><span id="maphint"></span>
+    <button class="chip" id="mapnear" hidden></button></div>
+</dialog>
+
 <footer><div class="wrap">
   Every entry came from someone else's curation work; all 11 source lists are credited in the
   <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. Stars, language, licence and
@@ -733,7 +789,7 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
 
 <script>
 const PAGE_SIZE = 120;
-const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"index.mascot_commentary":1,"index.export":1,"index.compare":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1};
+const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"index.mascot_commentary":1,"index.export":1,"index.compare":1,"index.constellation":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1};
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
                saved: false, list: new Set(), cmp: new Set(), sort: "relevance", shown: PAGE_SIZE,
                view: "cards"};
@@ -770,7 +826,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-13T18:17:00Z";
+const BUILT = "2026-09-13T21:14:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -862,7 +918,7 @@ fetch("data.json").then(r => {
   buildChips();
   readHash();
   render();
-  if (state.q) loadSemantic();
+  if (state.q) semanticReady();
 }).catch(err => {
   document.getElementById("count").innerHTML =
     "Could not load <code>data.json</code> — " + String(err);
@@ -902,11 +958,11 @@ function buildChips() {
   const qbox = document.getElementById("q");
   qbox.oninput = e => {
     const v = e.target.value;
-    loadSemantic();
+    semanticReady();
     clearTimeout(typing);
     typing = setTimeout(() => set({q: v}, true), 150);
   };
-  qbox.addEventListener("focus", loadSemantic, {once: true});
+  qbox.addEventListener("focus", semanticReady, {once: true});
   document.getElementById("sort").onchange = e => set({sort: e.target.value});
   const vb = document.getElementById("view");
   vb.hidden = false;
@@ -951,6 +1007,7 @@ function buildChips() {
   window.addEventListener("hashchange", () => { readHash(); render(); });
   palWire();
   expWire();
+  mapWire();
 }
 
 function sheetWire() {
@@ -1711,6 +1768,7 @@ async function loadSemantic() {
       docs: new Int8Array(docs),
       ds: meta.doc_scale / 127,
       vs: meta.vocab_scale / 127,
+      rows: meta.rows, near: meta.near | 0, xys: meta.xy_scale,
     };
     SEM_STATE = "live";
     if (state.q) render();
@@ -1718,6 +1776,480 @@ async function loadSemantic() {
     SEM_STATE = "off";
     console.warn("search by meaning is off:", err.message);
   }
+}
+
+let SEM_LOAD = null;
+function semanticReady() { return SEM_LOAD || (SEM_LOAD = loadSemantic()); }
+
+const MAP_NEAR_MAX = 32;
+const MAP_ZOOM_OUT = 0.75;
+const MAP_ZOOM_IN = 26;
+const MAP_PICK = 13;
+const MAP_LABELS = 12;
+const MAP_PAD = 40;
+const MAP_FLY = 520;
+const MAP_DPR_MAX = 2;
+let MAP = null, MAP_STATE = "cold";
+let MAP_CAM = null, MAP_FIT = 1, MAP_FLIGHT = 0;
+let MAP_HOT = -1, MAP_PIN = -1;
+
+async function loadMap() {
+  if (MAP_STATE !== "cold") return MAP_STATE;
+  MAP_STATE = "loading";
+  try {
+    await semanticReady();
+    if (SEM_STATE !== "live") throw new Error("the semantic index is " + SEM_STATE);
+    const grab = async name => {
+      const res = await fetch("search/" + name);
+      if (!res.ok) throw new Error("search/" + name + " -> " + res.status);
+      return res.arrayBuffer();
+    };
+    const [xyb, nearb] = await Promise.all([grab("xy.bin"), grab("near.bin")]);
+    const rows = SEM.rows, n = SEM.near;
+    if (!(n > 0 && n <= MAP_NEAR_MAX)) throw new Error("meta.near is " + SEM.near);
+    if (!(typeof SEM.xys === "number" && isFinite(SEM.xys) && SEM.xys > 0))
+      throw new Error("meta.xy_scale is " + SEM.xys);
+    if (xyb.byteLength !== rows * 4) throw new Error("xy.bin is " + xyb.byteLength + " B");
+    if (nearb.byteLength !== rows * n * 2) throw new Error("near.bin is " + nearb.byteLength + " B");
+    const dv = new DataView(xyb), s = SEM.xys / 32767;
+    const x = new Float32Array(rows), y = new Float32Array(rows);
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (let i = 0; i < rows; i++) {
+      const a = dv.getInt16(i * 4, true) * s, b = dv.getInt16(i * 4 + 2, true) * s;
+      x[i] = a; y[i] = b;
+      if (a < x0) x0 = a;
+      if (a > x1) x1 = a;
+      if (b < y0) y0 = b;
+      if (b > y1) y1 = b;
+    }
+    if (!(x1 > x0 && y1 > y0)) throw new Error("xy.bin has no extent");
+    const nv = new DataView(nearb), near = new Uint16Array(rows * n);
+    const deg = new Uint16Array(rows);
+    for (let i = 0; i < near.length; i++) {
+      const v = nv.getUint16(i * 2, true);
+      if (v >= rows) throw new Error("near.bin names row " + v + " of " + rows);
+      near[i] = v;
+      deg[v]++;
+    }
+    MAP = {x, y, near, deg, n, x0, y0, x1, y1};
+    MAP_STATE = "live";
+  } catch (err) {
+    MAP_STATE = "off";
+    console.warn("the map is off:", err.message);
+  }
+  return MAP_STATE;
+}
+
+function mapHue(cat) { return ((cat | 0) * 137.508) % 360; }
+
+function mapPalette() {
+  const cs = getComputedStyle(document.documentElement);
+  const pick = (name, fallback) => cs.getPropertyValue(name).trim() || fallback;
+  const light = document.documentElement.dataset.theme === "light";
+  return {
+    light,
+    back: pick("--surface", light ? "#fff" : "#090A0D"),
+    ink: pick("--ink", light ? "#111" : "#EDEFF3"),
+    sub: pick("--muted", "#8A8F98"),
+    grid: pick("--grid", light ? "#DDE1E6" : "#22262E"),
+    plane: pick("--plane", light ? "#F6F7F9" : "#101217"),
+    lit: light ? 40 : 63,
+    dim: light ? 78 : 26,
+  };
+}
+
+function mapX(x) { return x * MAP_CAM.k + MAP_CAM.ox; }
+function mapY(y) { return MAP_CAM.oy - y * MAP_CAM.k; }
+
+function mapSize() {
+  const c = document.getElementById("mapc"), st = document.getElementById("mapstage");
+  if (!c || typeof c.getContext !== "function" || !MAP) return false;
+  const w = st.clientWidth || 0, h = st.clientHeight || 0;
+  if (!(w > 0 && h > 0)) return false;
+  const dpr = Math.min(window.devicePixelRatio || 1, MAP_DPR_MAX);
+  c.width = Math.round(w * dpr);
+  c.height = Math.round(h * dpr);
+  c.dataset.w = w;
+  c.dataset.h = h;
+  MAP_FIT = Math.min((w - MAP_PAD * 2) / (MAP.x1 - MAP.x0), (h - MAP_PAD * 2) / (MAP.y1 - MAP.y0));
+  return true;
+}
+
+function mapFrameOn(x0, y0, x1, y1, maxScale) {
+  const c = document.getElementById("mapc");
+  const w = +c.dataset.w, h = +c.dataset.h;
+  const k = Math.min(maxScale, (w - MAP_PAD * 2) / Math.max(x1 - x0, 1e-6),
+                     (h - MAP_PAD * 2) / Math.max(y1 - y0, 1e-6));
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  return {k, ox: w / 2 - cx * k, oy: h / 2 + cy * k};
+}
+
+function mapBoxOf(rows) {
+  if (!rows.length) return null;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const r of rows) {
+    const x = MAP.x[r.ord], y = MAP.y[r.ord];
+    if (x < x0) x0 = x;
+    if (x > x1) x1 = x;
+    if (y < y0) y0 = y;
+    if (y > y1) y1 = y;
+  }
+  const m = Math.max((x1 - x0) * 0.1, (y1 - y0) * 0.1, 0.4);
+  return [x0 - m, y0 - m, x1 + m, y1 + m];
+}
+
+function mapFly(to) {
+  const from = MAP_CAM, id = ++MAP_FLIGHT;
+  const still = typeof requestAnimationFrame !== "function" ||
+    (typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion:reduce)").matches);
+  if (still) { MAP_CAM = to; mapPaint(); return; }
+  const t0 = Date.now();
+  const step = () => {
+    if (id !== MAP_FLIGHT) return;
+    const t = Math.min(1, (Date.now() - t0) / MAP_FLY);
+    const e = 1 - Math.pow(1 - t, 3);
+    MAP_CAM = {k: from.k + (to.k - from.k) * e, ox: from.ox + (to.ox - from.ox) * e,
+               oy: from.oy + (to.oy - from.oy) * e};
+    mapPaint();
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function mapPaint() {
+  const c = document.getElementById("mapc");
+  if (!MAP || !c || typeof c.getContext !== "function" || !MAP_CAM) return;
+  const ctx = c.getContext("2d");
+  if (!ctx) return;
+  const w = +c.dataset.w, h = +c.dataset.h;
+  const dpr = c.width / (w || 1), p = mapPalette();
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = p.back;
+  ctx.fillRect(0, 0, w, h);
+  const lit = new Uint8Array(ROWS.length);
+  for (const r of HITS) lit[r.ord] = 1;
+  const n = MAP.n, rows = ROWS.length;
+
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = p.grid;
+  ctx.globalAlpha = p.light ? 0.5 : 0.34;
+  ctx.beginPath();
+  for (let i = 0; i < rows; i++) {
+    const ax = mapX(MAP.x[i]), ay = mapY(MAP.y[i]);
+    for (let k = 0; k < n; k++) {
+      const j = MAP.near[i * n + k];
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(mapX(MAP.x[j]), mapY(MAP.y[j]));
+    }
+  }
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  const rad = i => {
+    const s = ROWS[i].stars || 0;
+    return 1.6 + Math.min(4.4, Math.log10(s + 1) * 0.85);
+  };
+  for (let pass = 0; pass < 2; pass++) {
+    for (let i = 0; i < rows; i++) {
+      if (!!lit[i] !== !!pass) continue;
+      const px = mapX(MAP.x[i]), py = mapY(MAP.y[i]);
+      if (px < -8 || py < -8 || px > w + 8 || py > h + 8) continue;
+      ctx.beginPath();
+      ctx.arc(px, py, pass ? rad(i) : 1.5, 0, 6.283185307179586);
+      ctx.fillStyle = "hsl(" + mapHue(ROWS[i].cat) + "," + (pass ? "72%," : "18%,") +
+        (pass ? p.lit : p.dim) + "%)";
+      ctx.fill();
+    }
+  }
+
+  const focus = MAP_HOT >= 0 ? MAP_HOT : MAP_PIN;
+  if (focus >= 0) {
+    const fx = mapX(MAP.x[focus]), fy = mapY(MAP.y[focus]);
+    const hue = mapHue(ROWS[focus].cat);
+    ctx.strokeStyle = "hsl(" + hue + ",70%," + (p.light ? 46 : 58) + "%)";
+    ctx.globalAlpha = 0.22;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath();
+    for (let i = 0; i < rows; i++)
+      for (let k = 0; k < n; k++)
+        if (MAP.near[i * n + k] === focus) {
+          ctx.moveTo(fx, fy);
+          ctx.lineTo(mapX(MAP.x[i]), mapY(MAP.y[i]));
+        }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    for (let k = 0; k < n; k++) {
+      const j = MAP.near[focus * n + k];
+      ctx.moveTo(fx, fy);
+      ctx.lineTo(mapX(MAP.x[j]), mapY(MAP.y[j]));
+    }
+    ctx.stroke();
+    for (let k = 0; k < n; k++) {
+      const j = MAP.near[focus * n + k];
+      const jx = mapX(MAP.x[j]), jy = mapY(MAP.y[j]), jr = rad(j) + 2.6;
+      ctx.beginPath();
+      ctx.arc(jx, jy, jr, 0, 6.283185307179586);
+      ctx.fillStyle = p.plane;
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(fx, fy, rad(focus) + 4.5, 0, 6.283185307179586);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = p.ink;
+    ctx.shadowColor = "hsl(" + hue + ",70%,50%)";
+    ctx.shadowBlur = 12;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.lineWidth = 1;
+  }
+
+  ctx.font = "600 11px system-ui,-apple-system,Segoe UI,sans-serif";
+  ctx.textBaseline = "middle";
+  const named = HITS.filter(r => {
+    const px = mapX(MAP.x[r.ord]), py = mapY(MAP.y[r.ord]);
+    return px > 0 && py > 0 && px < w && py < h;
+  }).sort((a, b) => (b.stars || 0) - (a.stars || 0));
+  const taken = [];
+  if (focus >= 0) named.unshift(ROWS[focus]);
+  const cap = Math.max(4, Math.min(MAP_LABELS, Math.round(w * h / 40000))) + (focus >= 0 ? 1 : 0);
+  let drawn = 0;
+  for (const r of named) {
+    if (drawn >= cap) break;
+    const px = mapX(MAP.x[r.ord]), py = mapY(MAP.y[r.ord]);
+    const tw = ctx.measureText(r.name).width;
+    let box = [px + rad(r.ord) + 5, py - 8, tw + 6, 16];
+    if (box[0] + box[2] > w) box = [px - rad(r.ord) - 5 - (tw + 6), box[1], box[2], box[3]];
+    if (box[0] < 0 || box[0] + box[2] > w) continue;
+    if (taken.some(t => box[0] < t[0] + t[2] && t[0] < box[0] + box[2] &&
+                        box[1] < t[1] + t[3] && t[1] < box[1] + box[3])) continue;
+    taken.push(box);
+    drawn++;
+    ctx.globalAlpha = 0.82;
+    ctx.fillStyle = p.plane;
+    ctx.fillRect(box[0] - 3, box[1], box[2], box[3]);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = r.ord === focus ? p.ink : p.sub;
+    ctx.fillText(r.name, box[0], py);
+  }
+
+  c.setAttribute("aria-label", HITS.length.toLocaleString() + " of " + rows.toLocaleString() +
+    " projects lit on a map of the atlas. " + viewTitle() + ".");
+}
+
+function mapPickAt(px, py) {
+  let best = -1, bd = MAP_PICK * MAP_PICK;
+  for (let i = 0; i < ROWS.length; i++) {
+    const dx = mapX(MAP.x[i]) - px, dy = mapY(MAP.y[i]) - py, d = dx * dx + dy * dy;
+    if (d < bd) { bd = d; best = i; }
+  }
+  return best;
+}
+
+function mapTip(i, px, py) {
+  const tip = document.getElementById("maptip");
+  if (!tip) return;
+  if (i < 0) { tip.hidden = true; return; }
+  const r = ROWS[i], cat = D.cats[r.cat];
+  tip.innerHTML = '<span class="tn">' + esc(r.name) + "</span>" +
+    '<span class="tk">' + esc(cat ? cat.name : "") +
+    (r.stars ? " · " + r.stars.toLocaleString() + "★" : "") + "</span>" +
+    '<span class="tb">Names ' + MAP.n + " nearest · named by " + MAP.deg[i].toLocaleString() +
+    "</span>";
+  tip.hidden = false;
+  const c = document.getElementById("mapc"), w = +c.dataset.w, h = +c.dataset.h;
+  const bw = tip.offsetWidth || 200, bh = tip.offsetHeight || 60;
+  const dirs = [[1, 1], [-1, 1], [1, -1], [-1, -1]];
+  let bestAt = null, bestHit = Infinity;
+  for (const [sx, sy] of dirs) {
+    const lx = Math.max(4, Math.min(w - bw - 4, sx > 0 ? px + 14 : px - 14 - bw));
+    const ly = Math.max(4, Math.min(h - bh - 4, sy > 0 ? py + 14 : py - 14 - bh));
+    let hit = 0;
+    for (let k = 0; k < MAP.n; k++) {
+      const j = MAP.near[i * MAP.n + k], jx = mapX(MAP.x[j]), jy = mapY(MAP.y[j]);
+      if (jx >= lx && jx <= lx + bw && jy >= ly && jy <= ly + bh) hit++;
+    }
+    if (hit < bestHit) { bestHit = hit; bestAt = [lx, ly]; }
+    if (bestHit === 0) break;
+  }
+  tip.style.left = bestAt[0] + "px";
+  tip.style.top = bestAt[1] + "px";
+}
+
+function mapPin(i) {
+  MAP_PIN = i;
+  const b = document.getElementById("mapnear");
+  if (!b) return;
+  if (i < 0 || !FLAGS["index.export"]) { b.hidden = true; return; }
+  b.hidden = false;
+  b.textContent = "Show " + ROWS[i].name + " and its " + MAP.n + " nearest in the table";
+  b.onclick = () => {
+    const keep = new Set([ROWS[i].nwo]);
+    for (let k = 0; k < MAP.n; k++) keep.add(ROWS[MAP.near[i * MAP.n + k]].nwo);
+    set({list: keep, q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
+         saved: false});
+    document.getElementById("mapdlg").close();
+    say(keep.size.toLocaleString() + " projects shown — " + ROWS[i].name + " and its nearest neighbours.");
+  };
+}
+
+function mapKey() {
+  const box = document.getElementById("mapkey");
+  if (!box || !D) return;
+  const count = new Uint16Array(D.cats.length);
+  for (const r of HITS) count[r.cat]++;
+  if (!box.children.length) {
+    box.innerHTML = D.cats.map((c, i) =>
+      '<button type="button" data-cat="' + esc(c.slug) + '" aria-pressed="false" style="--sw:hsl(' +
+      mapHue(i).toFixed(1) + ',72%,58%)"><i aria-hidden="true"></i><span>' + esc(c.name) +
+      '</span> <span class="kn"></span></button>').join("");
+    for (const b of box.querySelectorAll("button"))
+      b.onclick = () => set({cat: b.dataset.cat === state.cat ? "" : b.dataset.cat});
+  }
+  const btns = box.querySelectorAll("button");
+  for (let i = 0; i < btns.length; i++) {
+    btns[i].setAttribute("aria-pressed", D.cats[i].slug === state.cat ? "true" : "false");
+    const n = btns[i].querySelector(".kn");
+    if (n) n.textContent = count[i] ? count[i].toLocaleString() : "";
+  }
+}
+
+function mapRepaint() {
+  const dlg = document.getElementById("mapdlg");
+  if (MAP_STATE !== "live" || !dlg || !dlg.open) return;
+  const what = document.getElementById("mapwhat");
+  if (what)
+    what.innerHTML = "<b>" + HITS.length.toLocaleString() + "</b> of <b>" +
+      ROWS.length.toLocaleString() + "</b> lit · " + esc(viewTitle());
+  mapKey();
+  const box = HITS.length && HITS.length < ROWS.length ? mapBoxOf(HITS) : null;
+  mapFly(box ? mapFrameOn(box[0], box[1], box[2], box[3], MAP_FIT * 7)
+             : mapFrameOn(MAP.x0, MAP.y0, MAP.x1, MAP.y1, MAP_FIT));
+}
+
+function mapOpen() {
+  const dlg = document.getElementById("mapdlg"), nope = document.getElementById("mapnope");
+  dlg.showModal();
+  document.getElementById("maphint").textContent =
+    "Hover a project to see the eight it is nearest. Drag to pan, scroll to zoom, click to pin.";
+  loadMap().then(st => {
+    if (!dlg.open) return;
+    if (st !== "live" || !mapSize()) {
+      nope.hidden = false;
+      nope.textContent = "The map is drawn from the same index as search by meaning, and that index does " +
+        "not match the projects on this page — so every dot would be in the wrong place. The console says " +
+        "which check failed. Everything the map would show is in the table behind this.";
+      document.getElementById("mapkey").hidden = true;
+      document.getElementById("maphint").textContent = "";
+      return;
+    }
+    nope.hidden = true;
+    MAP_HOT = -1;
+    mapPin(-1);
+    MAP_CAM = mapFrameOn(MAP.x0, MAP.y0, MAP.x1, MAP.y1, MAP_FIT);
+    mapPaint();
+    mapRepaint();
+  });
+}
+
+function mapWire() {
+  if (!FLAGS["index.constellation"]) return;
+  const dlg = document.getElementById("mapdlg"), chip = document.getElementById("mapbtn");
+  const c = document.getElementById("mapc");
+  if (!dlg || !dlg.showModal || !c || typeof c.getContext !== "function") return;
+  chip.classList.add("on");
+  chip.onclick = mapOpen;
+  document.getElementById("mapdone").onclick = () => dlg.close();
+  document.getElementById("mapreset").onclick = () => {
+    if (MAP_STATE !== "live") return;
+    MAP_HOT = -1;
+    mapPin(-1);
+    mapTip(-1);
+    mapFly(mapFrameOn(MAP.x0, MAP.y0, MAP.x1, MAP.y1, MAP_FIT));
+  };
+  dlg.addEventListener("close", () => { MAP_HOT = -1; mapPin(-1); mapTip(-1); });
+
+  let drag = null;
+  const at = e => {
+    const b = c.getBoundingClientRect();
+    return [e.clientX - b.left, e.clientY - b.top];
+  };
+  c.addEventListener("pointerdown", e => {
+    if (MAP_STATE !== "live") return;
+    const [px, py] = at(e);
+    drag = {px, py, ox: MAP_CAM.ox, oy: MAP_CAM.oy, moved: false};
+    c.setPointerCapture(e.pointerId);
+  });
+  c.addEventListener("pointermove", e => {
+    if (MAP_STATE !== "live" || !MAP_CAM) return;
+    const [px, py] = at(e);
+    if (drag) {
+      if (Math.abs(px - drag.px) + Math.abs(py - drag.py) > 3) {
+        drag.moved = true;
+        c.classList.add("drag");
+      }
+      if (drag.moved) {
+        MAP_CAM = {k: MAP_CAM.k, ox: drag.ox + (px - drag.px), oy: drag.oy + (py - drag.py)};
+        mapTip(-1);
+        mapPaint();
+        return;
+      }
+    }
+    const i = mapPickAt(px, py);
+    if (i !== MAP_HOT) { MAP_HOT = i; mapPaint(); }
+    mapTip(i, px, py);
+  });
+  c.addEventListener("pointerup", e => {
+    if (!drag) return;
+    const moved = drag.moved;
+    drag = null;
+    c.classList.remove("drag");
+    if (moved || MAP_STATE !== "live") return;
+    const [px, py] = at(e);
+    const i = mapPickAt(px, py);
+    mapPin(i === MAP_PIN ? -1 : i);
+    mapPaint();
+  });
+  c.addEventListener("pointerleave", () => { MAP_HOT = -1; mapTip(-1); mapPaint(); });
+  c.addEventListener("wheel", e => {
+    if (MAP_STATE !== "live" || !MAP_CAM) return;
+    e.preventDefault();
+    const [px, py] = at(e);
+    const step = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+    mapZoomBy(Math.exp(-step / 420), px, py);
+  }, {passive: false});
+  dlg.addEventListener("keydown", e => {
+    if (MAP_STATE !== "live" || !MAP_CAM) return;
+    const w = +c.dataset.w, h = +c.dataset.h;
+    const pan = (dx, dy) => { MAP_CAM = {k: MAP_CAM.k, ox: MAP_CAM.ox + dx, oy: MAP_CAM.oy + dy};
+                              mapPaint(); };
+    const step = e.shiftKey ? 160 : 60;
+    if (e.key === "ArrowLeft") pan(step, 0);
+    else if (e.key === "ArrowRight") pan(-step, 0);
+    else if (e.key === "ArrowUp") pan(0, step);
+    else if (e.key === "ArrowDown") pan(0, -step);
+    else if (e.key === "+" || e.key === "=") mapZoomBy(1.35, w / 2, h / 2);
+    else if (e.key === "-" || e.key === "_") mapZoomBy(1 / 1.35, w / 2, h / 2);
+    else return;
+    e.preventDefault();
+  });
+  const refit = () => {
+    if (!dlg.open || MAP_STATE !== "live" || !mapSize()) return;
+    mapPaint();
+  };
+  if ("ResizeObserver" in window) new ResizeObserver(refit).observe(document.getElementById("mapstage"));
+  else window.addEventListener("resize", refit);
+}
+
+function mapZoomBy(f, px, py) {
+  const k = Math.max(MAP_FIT * MAP_ZOOM_OUT, Math.min(MAP_FIT * MAP_ZOOM_IN, MAP_CAM.k * f));
+  const r = k / MAP_CAM.k;
+  MAP_CAM = {k, ox: px - (px - MAP_CAM.ox) * r, oy: py - (py - MAP_CAM.oy) * r};
+  mapPaint();
 }
 
 function grams(s) {
@@ -2295,6 +2827,7 @@ function render() {
     };
     out.appendChild(b);
   }
+  mapRepaint();
 }
 
 function esc(s) {

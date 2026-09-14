@@ -685,5 +685,134 @@ true("the row labels declare their axis", '<th scope="row">' in DIFFERS)
 for fn in ("pinBtn", "readHash"):
     true(fn + '() is gated on FLAGS["index.compare"]', 'FLAGS["index.compare"]' in body_of(fn))
 
+
+# ─── THE CONSTELLATION (JFH-298) ─────────────────────────────────────────────────────────────────────────
+#
+# Read the same way and for the same reason as everything above: stripped source, because the browser
+# harnesses serve the committed `docs/` and cannot see a rule added to the generator today. And with an extra
+# reason of its own. Every assertion below pins something whose failure mode is a *plausible picture*: a map
+# drawn from misread bytes, or from a stale index, does not throw and does not look broken. It looks like an
+# answer. There is no visual regression test that can catch a constellation of the wrong 1,294 projects,
+# because the right one and the wrong one are both dot clouds.
+LOADMAP = body_of("loadMap")
+
+# One guard for three binaries, borrowed and not repeated. `xy.bin` and `near.bin` are addressed by row
+# ordinal exactly as `docs.bin` is, so an index built against a different `data.json` positions every dot
+# confidently and wrongly. "live" is the only state in which the row count *and* the `nwo` fingerprint have
+# both been checked; a copied guard is a guard that can drift out of agreement with the one it was copied
+# from, which is the failure this shape exists to make impossible rather than merely unlikely.
+true("loadMap() waits on the semantic index's own guard", "semanticReady()" in LOADMAP)
+true("loadMap() decodes only when that guard came back live", 'SEM_STATE !== "live"' in LOADMAP)
+true("loadMap() does not compute a second fingerprint",
+     "subtle" not in LOADMAP and "sha" not in LOADMAP.lower())
+# And `loadSemantic()` is reached only through `semanticReady()`. It is idempotent but was not *joinable*: a
+# second caller arriving mid-`Promise.all` returned instantly from the `SEM_STATE` guard with nothing loaded,
+# so a reader who opened the map while the search fetch was in flight got "the semantic index is loading" and
+# a map that stayed off. Two occurrences: the declaration, and the one call inside the memo.
+check("loadSemantic() is called only through semanticReady()", pagemin.strip_js(SRC).count("loadSemantic("), 2)
+
+# Byte order, stated. A typed-array view over a raw `ArrayBuffer` reads it in the *platform's* order; the
+# stage writes little-endian. `docs.bin` gets away with a bare `Int8Array` because one byte has no order --
+# these are int16 and uint16 and do. Every machine anyone will read this on agrees today, which is what makes
+# the assumption invisible: on a big-endian reader every coordinate and every neighbour would be a different,
+# in-range, entirely wrong number. Asserted as both halves, because `getInt16(off)` without the `true` is the
+# same defect written more legibly.
+true("xy.bin is decoded through DataView, not a typed-array view over the buffer",
+     "getInt16(" in LOADMAP and "new Int16Array(" not in LOADMAP)
+true("near.bin is decoded through DataView too", "getUint16(" in LOADMAP)
+check("every 16-bit read states little-endian", LOADMAP.count(", true)"), LOADMAP.count("getInt16(") + LOADMAP.count("getUint16("))
+
+# Both files are sized against the corpus before a byte of either is read, and neighbour ordinals are bounds
+# checked. An out-of-range ordinal indexes `x` as `undefined`, and a canvas discards a line to NaN in silence
+# -- so a corrupt neighbour list would quietly draw fewer edges instead of failing, and the map would look
+# thinner rather than wrong.
+true("xy.bin's length is checked against the row count", "rows * 4" in LOADMAP)
+true("near.bin's length is checked against rows and the neighbour count", "rows * n * 2" in LOADMAP)
+true("a neighbour ordinal past the end of the corpus is refused", "v >= rows" in LOADMAP)
+true("a degenerate layout is refused rather than drawn", "no extent" in LOADMAP)
+
+# One scale for both axes, which is the stage's decision: `xy.bin` quantises x and y against a single
+# `xy_scale` so that the layout's aspect ratio survives the quantisation. Normalising each axis to the stage
+# separately would undo that -- the picture would fill the box, and every distance a reader is invited to read
+# off it would be stretched in one direction. Silent, and it would look better, which is the danger.
+check("one shared scale, applied to both axes", LOADMAP.count("SEM.xys / 32767"), 1)
+true("neither axis is rescaled on its own",
+     re.search(r"getInt16\(i \* 4, true\) \* s, b = dv\.getInt16\(i \* 4 \+ 2, true\) \* s", LOADMAP) is not None)
+
+# The animation checks the preference in JavaScript. The stylesheet's blanket `prefers-reduced-motion` rule
+# has no reach into a `requestAnimationFrame` loop -- it can stop a transition and cannot stop a camera.
+true("the fly-to honours reduced motion in JavaScript, not by stylesheet",
+     "prefers-reduced-motion" in body_of("mapFly"))
+true("the fly-to also survives a browser with no requestAnimationFrame",
+     "requestAnimationFrame" in body_of("mapFly"))
+
+MAPPAINT = body_of("mapPaint")
+# The map holds no state. It lights `HITS`, so every chip, the search box, a shared `#list=` and the saved set
+# reach it for free and *cannot* disagree with it. A `state.map` would be a second copy of the truth.
+true("the map draws whatever the table is drawing", "HITS" in MAPPAINT)
+true("the map keeps no filter of its own", "state.map" not in pagemin.strip_js(SRC))
+true("render() repaints the map on its way out", "mapRepaint()" in body_of("render"))
+# Labels are sorted before they are capped. Capping first takes the first twelve rows in the reader's current
+# sort order and labels the biggest of *those*: on "Name (A–Z)" the map would name the biggest project whose
+# name starts with an early letter, which is a wrong answer that looks like a right one.
+true("the labelled rows are sorted by size before the cap applies",
+     MAPPAINT.index(".sort((a, b) => (b.stars || 0)") < MAPPAINT.index("drawn >= cap"))
+true("the label cap is a named constant", re.search(r"^const MAP_LABELS = \d+;", SRC, re.M) is not None)
+# ...and it is a ceiling on a stage-relative number, not the number itself. Twelve plates on a 375px map cover
+# the dots they name. Asserted as both halves, because a floor with no ceiling names 30 projects on a desktop
+# and a ceiling with no floor names none on a small one.
+true("the label cap scales with the stage, between a floor and MAP_LABELS",
+     re.search(r"Math\.max\(\d+, Math\.min\(MAP_LABELS, Math\.round\(w \* h / \d+\)\)\)", MAPPAINT) is not None)
+# A canvas clips instead of wrapping, so a label placed right of a dot near the right edge is a word that
+# stops with no ellipsis to say it stopped. Flipped to the other side, and dropped if neither side fits.
+true("a label that would run off the canvas is flipped, then dropped rather than clipped",
+     "box[0] + box[2] > w" in MAPPAINT and "box[0] < 0" in MAPPAINT)
+# The camera follows the answer in both directions. Widening back to every row while the camera sat on a
+# nine-row neighbourhood showed one dense corner of the atlas as if it were the atlas.
+true("clearing a filter flies the camera back to the whole layout",
+     re.search(r"mapFly\(box \? mapFrameOn\([^)]*\)\s*:\s*mapFrameOn\(MAP\.x0, MAP\.y0, MAP\.x1, MAP\.y1",
+               body_of("mapRepaint")) is not None)
+# Canvas colour parsing is not CSS colour parsing in one respect that matters: a string the canvas cannot
+# parse is *ignored*, silently, and the previous fill is used. Space-separated `hsl(H S% L%)` is valid CSS and
+# not accepted by every canvas implementation, so every colour built for a 2D context here is comma syntax.
+# The failure is a picture drawn entirely in one colour, with nothing in the console.
+true("canvas colours are built in comma syntax, which every 2D context parses",
+     re.search(r'"hsl\(" \+ [A-Za-z0-9_.\[\]()]+ \+ " ', pagemin.strip_js(SRC)) is None)
+
+# The readout is placed where it hides the least of what it is describing. A plate pinned down-right of the
+# pointer sits on the neighbour edges the same plate is announcing -- "names 8 nearest" over five visible
+# lines. Measured: 18 of 37 sampled hovers move off down-right and 26 neighbour dots stay visible because of
+# it, so this is not a hypothetical. Both halves asserted: the four candidates, and the scoring against
+# `near` rather than against, say, distance from the stage centre, which would not know what it was avoiding.
+MAPTIP = body_of("mapTip")
+true("the readout has four candidate corners rather than one",
+     "[[1, 1], [-1, 1], [1, -1], [-1, -1]]" in MAPTIP)
+true("...and picks between them by what each would cover of the eight it is describing",
+     "MAP.near[i * MAP.n + k]" in MAPTIP and "hit < bestHit" in MAPTIP)
+
+# The two pieces of context state the focus pass sets and must put back. `setLineDash` and `shadowBlur` are
+# not per-path: a dash left set turns every ring below into a dotted circle, and a shadow left set gives all
+# twelve label plates a coloured halo. Both look like a styling choice rather than a leak, which is why they
+# are pinned here -- and both are set inside `if (focus >= 0)`, so the leak only appears on hover.
+true("the dashed in-edges put the dash back", MAPPAINT.count("setLineDash(") == 2 and "setLineDash([])" in MAPPAINT)
+true("the hub's glow puts the shadow back", "shadowBlur = 12" in MAPPAINT and "shadowBlur = 0" in MAPPAINT)
+# Direction is carried by two channels, not one. Out-edges solid and in-edges faint *and* dashed, for the
+# reason the comparison panel gives about colour-only marks: alpha is the first thing a dim screen takes away.
+true("the in-edges differ from the out-edges in more than opacity",
+     "setLineDash([3, 4])" in MAPPAINT and "globalAlpha = 0.22" in MAPPAINT)
+# And the eight are hollow rather than merely ringed: filled with the stage's own colour, so "which dots are
+# the eight" is answered by shape before colour. A ring on a dot that still reads as one of 1,294 filled dots
+# is a mark the eye has to hunt for.
+true("the named eight are drawn hollow, not just circled",
+     re.search(r"ctx\.fillStyle = p\.plane;\s*ctx\.fill\(\);\s*ctx\.stroke\(\);", MAPPAINT) is not None)
+
+# Off, it leaves nothing running and nothing fetched. `mapWire()` returns before it touches the dialog, which
+# is what keeps the two binaries unrequested -- the markup ships either way.
+true('mapWire() is gated on FLAGS["index.constellation"]', 'FLAGS["index.constellation"]' in body_of("mapWire"))
+# `#mapnope` and `.mapkey` both declare a `display`, and `[hidden]` is a user-agent rule: any author `display`
+# outranks it, so `hidden` would leave both boxes on screen. The shared-list strip has shipped this once.
+true("the hidden map boxes override their own display",
+     "#mapnope[hidden]" in CSS and ".mapkey[hidden]" in CSS)
+
 print(f"\n{ok} passed, {bad} failed")
 sys.exit(1 if bad else 0)
