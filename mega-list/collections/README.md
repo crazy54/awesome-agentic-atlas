@@ -2,7 +2,7 @@
 
 Curated sets, one project per slot. The rest of `mega-list/` is what 11 awesome-lists agreed on; these 5 pages are where somebody chose.
 
-Snapshot 2026-09-03 · 35 picks across 5 sets.
+Snapshot 2026-09-03 · 34 picks across 5 sets.
 
 ## [A first agentic setup](first-setup.md)
 
@@ -38,8 +38,8 @@ Snapshot 2026-09-03 · 35 picks across 5 sets.
 
 ## [Find out what the agent actually did](keep-it-honest.md)
 
-*Traces, tests, scans and the bill* — An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read…
+*Traces, tests and scans* — An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read…
 
-`The trace`  `The second opinion`  `The test suite`  `The metrics`  `The standard`  `The thing you install`  `The bill`
+`The trace`  `The second opinion`  `The test suite`  `The metrics`  `The standard`  `The thing you install`
 
-[Open the set in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector,mnfst/manifest) · [the page](https://crazy54.github.io/awesome-agentic-atlas/collections/keep-it-honest/)
+[Open the set in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector) · [the page](https://crazy54.github.io/awesome-agentic-atlas/collections/keep-it-honest/)
