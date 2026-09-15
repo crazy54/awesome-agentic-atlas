@@ -163,6 +163,11 @@ true("...and between them cover several topics",
 # merged first, #14's merge of `latest_branch` resolved the collision by keeping the pick, and the branch
 # shipped a seven-pick set beside #14's rewritten kicker and intro, which count six. Seventeen harnesses and
 # 2,455 assertions were green on it, because not one of them knew how many picks there are supposed to be.
+# That 2,455 is this sentence's evidence and not the suite's total: it is the count on the tree that shipped
+# the seven-pick set, and it is deliberately not requoted when the total moves. A real run today reports
+# 2,454. Anyone sweeping the figure out of `tests/README.md` and `tests.yml` should leave this one alone --
+# a stale figure and a historical citation are indistinguishable in a grep, so this is the sentence that
+# says which one this is.
 #
 # So the roster is stated here, in file order, slot by slot. Editing the curation now means editing this list
 # too, which is the point: a pick is an editorial claim, and the diff that adds or removes one should be a
