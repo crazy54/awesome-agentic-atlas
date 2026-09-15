@@ -1222,6 +1222,91 @@ const full = await clampIn();
 ok("the table still shows every blurb in full", full.clipped === 0, JSON.stringify(full));
 ok("...which is more than four lines for some of them", full.tallest > 4, JSON.stringify(full));
 
+// ---- THE SCROLLED PAGE, WHICH THIS FILE HAD NEVER LOOKED AT (JFH-354) ----------------------------------
+//
+// Every measurement above opens with `scrollTo(0, 0)`, and for a good reason: a plain `focus()` scrolls the
+// bar under the ruler and invents overlaps that are not real, which is why `clearance` takes focus with
+// `preventScroll` and says so. The cost of that convention was a blind spot exactly the shape of the defect
+// it was protecting against. `header` and `.bar` were siblings both at `position:sticky;top:0`, the header
+// at `z-index:30`; from the first scroll gesture the masthead covered the search box completely -- 100% at
+// 1440x900, 1024x800, 768x900 and 390x844 -- and a reader who wanted to search had to scroll back to the top
+// to find out. Every assertion in this file passed throughout, because none of them had scrolled.
+//
+// So this block scrolls on purpose, and it is the only one that does. It puts the scroll back afterwards for
+// the convention's sake, even though nothing follows it today.
+//
+// Two instruments, and the second is the one that speaks the reader's language. `elementFromPoint` at the
+// field's centre says what is painted on top. A real `Input.dispatchMouseEvent` at the same point says what
+// happens when somebody puts a finger there -- and a covered field answers that by leaving focus wherever it
+// was. CDP cannot emulate hover or pointer (see the note at the top of this file), but a dispatched click
+// hit-tests for real, which is why this half can be asserted on every runner.
+const BUDGET = 4;   // the pinned band may take at most a quarter of the viewport
+for (const [w, h] of [[1440, 900], [1024, 800], [768, 900], [390, 844]]) {
+  const at = `${w}x${h}`;
+  await resize(w, h);
+  await hardGoto(ORIGIN);
+  // At rest first, which is the half that says the fix moved nothing: the rails still render directly under
+  // the search line, in the same place, at the same width.
+  //
+  // A missing `.subbar` is reported rather than thrown: this measurement is the one that goes away if the
+  // rails are put back inside the bar, and a harness that dies on a null rect reports zero assertions, which
+  // is a louder failure than the one that actually happened and names none of it.
+  const rest = await evalIn(`(() => {
+    const subEl = document.querySelector('.subbar');
+    if (!subEl) return {missing: true};
+    const bar = document.querySelector('.bar').getBoundingClientRect();
+    const sub = subEl.getBoundingClientRect();
+    const q = document.querySelector('#q').getBoundingClientRect();
+    return {seam: Math.round(sub.top - bar.bottom), qTop: Math.round(q.top),
+            widths: Math.round(sub.width - bar.width),
+            hasRails: !!document.querySelector('.subbar #cats')};
+  })()`);
+  ok(`the rails sit directly under the search line at rest at ${at}`,
+     !rest.missing && Math.abs(rest.seam) <= 1 && Math.abs(rest.widths) <= 1 && rest.hasRails,
+     JSON.stringify(rest));
+
+  await evalIn("window.scrollTo(0, 900)");
+  await sleep(350);
+  const m = await evalIn(`(() => {
+    const q = document.querySelector('#q'), qb = q.getBoundingClientRect();
+    const head = document.querySelector('header').getBoundingClientRect();
+    const ox = Math.max(0, Math.min(qb.right, head.right) - Math.max(qb.left, head.left));
+    const oy = Math.max(0, Math.min(qb.bottom, head.bottom) - Math.max(qb.top, head.top));
+    const el = document.elementFromPoint(Math.round(qb.left + qb.width / 2),
+                                         Math.round(qb.top + qb.height / 2));
+    // Everything still pinned at the top edge once the page has moved. Before JFH-354 this was two boxes.
+    const stuck = [...document.querySelectorAll('header,.bar,.subbar')]
+      .filter(e => getComputedStyle(e).position === 'sticky' &&
+                   Math.round(e.getBoundingClientRect().top) <= 0.5);
+    document.activeElement && document.activeElement.blur();
+    return {vh: window.innerHeight, scrolled: Math.round(window.scrollY),
+            x: Math.round(qb.left + qb.width / 2), y: Math.round(qb.top + qb.height / 2),
+            coveredPct: Math.round((ox * oy) / (qb.width * qb.height) * 100),
+            hits: el ? (el.id ? '#' + el.id : el.tagName.toLowerCase()) : null,
+            pinnedPx: Math.round(stuck.reduce((n, e) => n + e.getBoundingClientRect().height, 0)),
+            pinned: stuck.map(e => e.id || e.className || e.tagName.toLowerCase()).join(","),
+            headerGone: Math.round(head.bottom) <= 0};
+  })()`);
+  ok(`the page actually scrolled and the masthead left with it at ${at}`,
+     m.scrolled > 0 && m.headerGone, JSON.stringify(m));
+  ok(`nothing covers the search box once the page has scrolled at ${at}`,
+     m.coveredPct === 0 && m.hits === "#q", JSON.stringify(m));
+  // 64 / 91 / 106 / 165px measured at the four sizes above, against viewports of 900 / 800 / 900 / 844: 7,
+  // 11, 12 and 20%. The budget is a quarter, which the widest case clears by a factor of three and the phone
+  // by a fifth -- generous on purpose, because the number to catch is the 51-to-86% this replaced and a floor
+  // tightened to today's measurement reddens on the next chip somebody adds to the bar.
+  ok(`the pinned band leaves the results most of the screen at ${at}`,
+     m.pinnedPx > 0 && m.pinnedPx <= m.vh / BUDGET,
+     `${m.pinnedPx}px of ${m.vh} (${Math.round(m.pinnedPx / m.vh * 100)}%), pinned: ${m.pinned}`);
+  await S("Input.dispatchMouseEvent", {type: "mousePressed", x: m.x, y: m.y, button: "left", clickCount: 1});
+  await S("Input.dispatchMouseEvent", {type: "mouseReleased", x: m.x, y: m.y, button: "left", clickCount: 1});
+  await sleep(120);
+  const landed = await evalIn("document.activeElement && document.activeElement.id");
+  ok(`clicking where the search box is drawn puts the cursor in it at ${at}`, landed === "q", String(landed));
+  if (w === 1440 || w === 390) await shot(`scrolled-bar-${at}`);
+  await evalIn("window.scrollTo(0, 0)");
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 ws.close();
 await browser.close();

@@ -555,9 +555,30 @@ a:hover{text-decoration:underline}
 .skip{position:absolute;left:-999px;top:0;z-index:40;background:var(--bar);color:var(--onbar);
   padding:10px 16px;border-radius:0 0 8px 0;font-weight:600}
 .skip:focus{left:0}
-/* Keep Archie and the primary navigation in reach while readers compare long card and table lists. */
-header{position:sticky;top:0;z-index:30;background:var(--plane);border-bottom:1px solid var(--grid);
-  padding:22px 20px 16px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+/* NOT STICKY, AND THAT IS THE FIX FOR JFH-354. This was pinned to keep Archie and the primary navigation
+   in reach, and it did that by covering the search box completely. `header` and `.bar` are siblings both
+   at `top:0`, so from the first scroll gesture they occupied the same band and the higher `z-index` won:
+   `elementFromPoint` at the centre of `#q` returned this element's `<h1>` at 1440x900, 1024x800, 768x900
+   and 390x844, with the field 100% covered on all four. The search box was not obscured, it was
+   unreachable, and getting to it meant scrolling back to the top with nothing on screen saying so.
+
+   Offsetting the bar below the header instead -- `.bar{top:var(--head-h)}` -- was measured and rejected:
+   it uncovers the field and then pins the sum of both, 51% of the viewport at 1440x900 and 86% at
+   1024x800. The masthead cannot be made short enough to fix that, because Archie is 177px of a 216px
+   header whose text block is 96px.
+
+   So the masthead scrolls away and the bar keeps the top of the screen: 7% of the viewport at 1440x900,
+   11% at 1024x800, 12% at 768x900, 20% at 390x844. Nothing pinned here is needed while reading rows --
+   the title, the tagline, the mascot, the nav to the other pages and the theme chip are all things you
+   use on arrival -- and the one thing that is needed is in the bar.
+
+   `position:relative` with a `z-index` *under* the bar's 20, not `static`: Archie's speech bubble is
+   absolutely positioned inside this element, so the header still needs a stacking context, and while the
+   masthead is halfway off the top the bar is pinned across it. Whatever is pinned paints over whatever is
+   scrolling, which is why 10 and not 30. The shadow moves to the bar for the same reason: it belongs to
+   the element that floats over the results, and that is no longer this one. */
+header{position:relative;z-index:10;background:var(--plane);border-bottom:1px solid var(--grid);
+  padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
@@ -681,9 +702,25 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
   .orbit-star{animation:none;opacity:1;transform:rotate(var(--orbit-angle)) translateY(-58px) rotate(45deg)}
 }
 button{font:inherit;cursor:pointer}
+/* The only pinned thing on the page, and therefore the only thing that carries the shadow. */
 .bar{position:sticky;top:0;z-index:20;background:var(--plane);
-  border-bottom:1px solid var(--grid);padding:10px 20px}
+  border-bottom:1px solid var(--grid);padding:10px 20px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
 .bar .wrap{display:flex;flex-direction:column;gap:8px}
+/* THE HALF OF THE BAR THAT DOES NOT STICK (JFH-354). The three facet rails are in `#sheet`, and they used
+   to be inside `.bar` -- which meant the pinned band was 240px at 1440x900 and 403px at 768x900, most of
+   it rows a reader scrolling results is not reading. They are not hidden and they have not moved: this
+   wrapper sits immediately after the bar, so it renders in exactly the place it always did and `#q`'s
+   unscrolled position is unchanged at every width. It simply is not part of what survives a scroll.
+
+   No JavaScript, no scroll listener, no stuck-state sentinel and no measured `--head-h`. A sticky element
+   that changes height while stuck moves everything below it, which is a jump to compensate for and a
+   threshold to add hysteresis to; a sticky element that was never that tall has neither.
+
+   The border and the padding are the bar's old bottom edge, moved down here: the bar keeps its own so the
+   pinned line has an edge of its own while scrolled, which is what makes the two read as one block at rest
+   and as chrome-over-content in motion. */
+.subbar{background:var(--plane);border-bottom:1px solid var(--grid);padding:0 20px 9px}
+.subbar .wrap{display:flex;flex-direction:column;gap:8px}
 .line{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .line>label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
   min-width:74px}
@@ -1235,13 +1272,18 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
     flex:1 1 0;min-width:0;
     scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
   #cats::-webkit-scrollbar,#tgts::-webkit-scrollbar,#oses::-webkit-scrollbar{display:none}
-  .bar .wrap{gap:5px}
+  .bar .wrap,.subbar .wrap{gap:5px}
   .chip{padding:4px 11px}
   /* And a cap on top of the rails, because rails alone still leave four to six control rows. On a tall
      screen the cap sits above the bar's natural height and nothing happens; on a short one the bar
      scrolls inside itself instead of over the page. A fraction rather than a pixel count so that it
      only ever binds where it is needed. `vh` first: a browser that does not understand `dvh` must
-     still get a cap rather than none. */
+     still get a cap rather than none.
+
+     Since JFH-354 the bar holds the search line alone, so what the cap guards is that one row wrapping on
+     a short landscape phone rather than the four-to-six it was written for. It is measured at 165px of an
+     844px screen, so it does not bind here and is not meant to: a cap that only ever fires where it is
+     needed is exactly a cap you cannot see working. */
   .bar{max-height:44vh;max-height:44dvh;overflow-y:auto}
 
   /* ---- and the sheet, which is what the rails and the cap above are the fallback for -----------------
@@ -1250,12 +1292,18 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
      control rows have to fit on a phone, and are not what you do once they no longer have to. */
   html[data-fb] #fbt{display:inline-flex;flex:none;min-height:44px;padding:0 14px}
   html[data-fb] #q{flex:1 1 0;min-width:9em;min-height:44px}
-  html[data-fb] .bar .chip,html[data-fb] select{min-height:44px}
+  /* `.bar .chip` until JFH-354, which was every chip that mattered only because `#sheet` was inside the
+     bar -- the sheet's own chips, `#strict`, `#reset` and every facet rail, got their 44px by descent. The
+     sheet moved out to stop being pinned, and a descendant selector would have dropped the WCAG 2.5.5
+     floor on precisely the controls a phone reader taps most, silently and with every assertion still
+     green. Unscoped is also the honest rule: the floor is a property of a touch viewport, not of one
+     container in it. */
+  html[data-fb] .chip,html[data-fb] select{min-height:44px}
   /* No `display` in this rule, deliberately. It outranks `.newchip{display:none}`, so setting one here
      would put the New and Rising chips on screen on every build whose window is empty -- which is the one
      thing those two classes exist to prevent. A <button> centres its own content vertically, so the
      min-height above needs no help. */
-  html[data-fb] .bar .chip{padding:0 13px}
+  html[data-fb] .chip{padding:0 13px}
   header button{min-height:44px;padding:0 14px}
   .fix{min-height:44px}
 
@@ -1320,6 +1368,7 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
      above the mascot below: every pixel here is one the first result does not get. */
   header{padding:12px 14px 10px}
   .bar{padding:8px 14px}
+  .subbar{padding:0 14px 7px}
   main{padding:0 14px 48px}
   footer{padding:18px 14px}
   h1{font-size:21px}
@@ -1573,9 +1622,15 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
 }
 
 /* Focus lands on a row after "Show more", so the row needs somewhere to put a ring and needs to clear
-   the sticky filter bar if anything ever does scroll it into view. */
+   the sticky filter bar if anything ever does scroll it into view.
+
+   160px was never enough to do that and could not have been: until JFH-354 the pinned band was the masthead
+   plus the whole bar, measured at 456px at 1440x900 and 731px at 768x900, so a row scrolled into view landed
+   underneath it whatever this number said. With the bar alone pinned the band is 64 / 91 / 106 / 165px at
+   1440x900, 1024x800, 768x900 and 390x844, and 172px clears the worst of those with a little air. The
+   surplus at a wide width costs nothing: `scroll-margin` only decides where a scroll stops. */
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
-#out tr{scroll-margin-top:160px}
+#out tr{scroll-margin-top:172px}
 
 /* ---- The comparison panel ----------------------------------------------------------------------------
    Above the results, in the slot `.shared` uses, and for the same reason: it is not a filter the reader chose
@@ -1675,9 +1730,13 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
    them rather than being applied once to a very long box. */
 @page{margin:14mm}
 @media print{
-  /* `.skip` included: a skip link is a keyboard affordance, and it is the first thing on the page. */
-  .bar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,.shared .sp,
-  .pin,#cmp .ch .sp,#cmp .unpin{display:none}
+  /* `.skip` included: a skip link is a keyboard affordance, and it is the first thing on the page.
+     `.subbar` included since JFH-354, and it is the one entry here that is not a new decision: the three
+     facet rails were inside `.bar` and went with it, so taking them out of the pinned band would have put
+     them on paper without a line of this rule changing. A hide-list scoped by containment stops being a
+     hide-list the moment the containment moves. */
+  .bar,.subbar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,
+  .shared .sp,.pin,#cmp .ch .sp,#cmp .unpin{display:none}
   /* The comparison itself stays, and this is the one thing on the sheet that is more use on paper than on
      screen: four projects in columns is what somebody carries into the meeting where the choice is made.
      Only its controls go -- an Unpin button under a printed column heading is a button nobody can press.
@@ -1951,15 +2010,24 @@ __OSSPRITE__
          is read as one sentence rather than as whichever digits changed. -->
     <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
-  <!-- Inside the bar rather than after it, because on a desktop these three rows are part of the sticky
-       bar and have been since the page was written; the sheet is a narrow-viewport reading of the same
-       markup, which is the trick the cards view plays on the table and it is here for the same reason.
-       `position:fixed` is not clipped by the bar's `overflow-y:auto` -- a fixed box's containing block is
-       the viewport, and the bar has no transform or `contain` to make itself one instead -- and the bar's
-       own `z-index:20` stacking context is what puts the sheet above the results rather than beneath them.
+</div></div>
 
-       The backdrop is a sibling and not a `::before` on the sheet: it has to cover the page the sheet is
-       over, and a pseudo-element of the sheet is inside it. -->
+<!-- AFTER THE BAR RATHER THAN INSIDE IT (JFH-354). These three rows were inside `.bar` from the day the page
+     was written, which made them part of the pinned band: 240px of chrome at 1440x900 and 403px at 768x900,
+     most of it rails nobody reads while scrolling results. They render in exactly the same place here -- the
+     wrapper follows the bar immediately and carries the bar's old bottom padding -- so the page a reader
+     opens is unchanged and only what survives a scroll is different.
+
+     Two things this also settles rather than breaks. The sheet's `position:fixed` needed an argument about
+     not being clipped by the bar's `overflow-y:auto`; out here there is no ancestor with an overflow to be
+     clipped by, so the argument is gone rather than answered. And its `z-index:30` used to be a *local*
+     number, resolved inside the bar's `z-index:20` stacking context, so the sheet could not paint over the
+     masthead that was pinned at 30 -- the same collision this ticket is about, in its other direction. In
+     the root context 30 outranks both the header's 10 and the bar's 20, which is what a modal sheet wants.
+
+     The backdrop is a sibling and not a `::before` on the sheet: it has to cover the page the sheet is
+     over, and a pseudo-element of the sheet is inside it. -->
+<div class="subbar"><div class="wrap">
   <div id="fbb"></div>
   <div id="sheet" role="group" aria-label="Filters" tabindex="-1">
     <!-- Only ever on screen in the sheet's narrow form; `.shead{display:none}` above is the desktop, where
