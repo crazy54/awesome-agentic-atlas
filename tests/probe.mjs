@@ -1146,6 +1146,57 @@ ok("...and inside a sub-bar that follows the bar immediately", subAt > barShut &
    subAt < sheetAt && divEnd(subAt) > sheetShut && /^\s*$/.test(html.slice(barShut + 6, subAt)),
    JSON.stringify(html.slice(barShut, subAt)));
 
+// --- somewhere for keyboard focus to land, once the bar is the thing that is pinned (JFH-356) -------------
+//
+// Moving focus scrolls the focused element into view, and the browser only leaves room for a pinned bar if
+// the element carries `scroll-margin-top`. Before this ticket exactly one selector did -- `#out tr` -- and a
+// `tr` has no `tabindex`, so it covered the one element a reader cannot tab to and nothing they can. (The
+// only code that focuses a row is the "Show more" handler, and it passes `preventScroll`, so the margin did
+// not bind there either.)
+// Shift+Tab then put the row's name link, its repo link, Save, Compare and thirteen facet chips fully behind
+// the bar. `cards-check.mjs` holds the measurement, at five widths in both views; what is asserted here is
+// the arrangement, and in particular the two halves that a positive test cannot see.
+const smtRules = cssRules(styles).filter(r => /scroll-margin-top/.test(r.body));
+const pinDecls = cssRules(styles).filter(r => /--pin:/.test(r.body));
+ok("the scroll clearance is a token, declared once per breakpoint and nowhere else", pinDecls.length === 2,
+   pinDecls.map(r => `${r.at || "(no query)"} ${r.sel} {${r.body.trim()}}`).join(" | "));
+// EVERY DECLARATION INSIDE A QUERY, WHICH IS THE HALF THAT BROKE. The narrow tier has to live in the phone
+// block near the top of the stylesheet, because `theme_test.py` asserts that query appears exactly twice. A
+// bare `html{--pin:...}` for the wide tier then wins on source order alone -- same selector, same
+// specificity, later in the file -- and the phone silently gets the desktop number. It did: 116px measured
+// at 390x844 with the 224px rule sitting right there in the stylesheet. Two non-overlapping queries cannot.
+ok("...with both tiers inside a media query, so neither can beat the other on source order",
+   pinDecls.length === 2 && pinDecls.every(r => /^@media/.test(r.at || "")),
+   pinDecls.map(r => r.at || "(no query)").join(" | "));
+const pinPx = pinDecls.map(r => ({at: r.at, px: parseFloat(/--pin:\s*(-?[\d.]+)px/.exec(r.body)?.[1])}));
+const narrowPin = pinPx.find(p => /max-width/.test(p.at)), widePin = pinPx.find(p => /min-width/.test(p.at));
+// The relationship, not the numbers. The bar is a wrapping flex line, so it is tallest where the screen is
+// narrowest -- 217px at 320px wide against 64px at 1440. A phone tier at or below the desktop one is the
+// cascade bug above wearing different clothes, and asserting 224 exactly would say nothing about the next
+// control somebody adds to the search line.
+ok("...and the narrow tier clears more than the wide one, because a narrow bar is a taller bar",
+   !!narrowPin && !!widePin && narrowPin.px > widePin.px,
+   JSON.stringify(pinPx));
+ok("...and every rule that uses it names the token rather than repeating the number",
+   smtRules.length >= 2 && smtRules.every(r => /scroll-margin-top:\s*var\(--pin/.test(r.body)),
+   smtRules.map(r => `${r.sel} {${r.body.trim()}}`).join(" | "));
+// A UA with custom properties but without these queries leaves `--pin` unset, which makes the declaration
+// invalid at computed-value time -- and that computes to 0, which is the defect this rule exists to fix.
+ok("...with a fallback, since an unset token computes to no clearance at all",
+   smtRules.every(r => /var\(--pin,\s*\d+px\)/.test(r.body)), smtRules.map(r => r.body.trim()).join(" | "));
+const focusSmt = smtRules.map(r => r.sel).join(" ");
+ok("the results table and the controls a reader can reach both get the clearance",
+   /(^|,| )#out(,|$)/.test(focusSmt.replace(/\s*,\s*/g, ",")) && /#out tr/.test(focusSmt) &&
+   /main a\[href\]/.test(focusSmt) && /main button/.test(focusSmt) &&
+   /\.subbar a\[href\]/.test(focusSmt) && /\.subbar button/.test(focusSmt), focusSmt);
+// THE NEGATIVE HALF. The bar is pinned, so its own controls are always visible and have nothing to clear --
+// and a scroll margin on `#q` would make focusing the search box jump a scrolled page to the top. A positive
+// assertion passes whether or not the exclusion holds, which is exactly how the tap-target floor on JFH-354
+// stayed green after the chips left the container it was scoped through.
+ok("...and the controls inside the pinned bar are deliberately left out",
+   !/\.bar\s+(a|button|select|summary|input|\.chip)/.test(focusSmt) && !/(^|,)\s*#q(,|$)/.test(focusSmt),
+   focusSmt);
+
 // --- the count, at 0, 1 and several ---
 const G = (id) => document.getElementById(id);
 ok("the CSS gate is set by JS, and by nothing else", document.documentElement.dataset.fb === "1");
