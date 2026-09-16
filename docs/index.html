@@ -58,8 +58,8 @@ a:hover{text-decoration:underline}
 .skip{position:absolute;left:-999px;top:0;z-index:40;background:var(--bar);color:var(--onbar);
   padding:10px 16px;border-radius:0 0 8px 0;font-weight:600}
 .skip:focus{left:0}
-header{position:sticky;top:0;z-index:30;background:var(--plane);border-bottom:1px solid var(--grid);
-  padding:22px 20px 16px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+header{position:relative;z-index:10;background:var(--plane);border-bottom:1px solid var(--grid);
+  padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
@@ -115,8 +115,10 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 }
 button{font:inherit;cursor:pointer}
 .bar{position:sticky;top:0;z-index:20;background:var(--plane);
-  border-bottom:1px solid var(--grid);padding:10px 20px}
+  border-bottom:1px solid var(--grid);padding:10px 20px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
 .bar .wrap{display:flex;flex-direction:column;gap:8px}
+.subbar{background:var(--plane);border-bottom:1px solid var(--grid);padding:0 20px 9px}
+.subbar .wrap{display:flex;flex-direction:column;gap:8px}
 .line{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .line>label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
   min-width:74px}
@@ -388,14 +390,14 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
     flex:1 1 0;min-width:0;
     scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
   #cats::-webkit-scrollbar,#tgts::-webkit-scrollbar,#oses::-webkit-scrollbar{display:none}
-  .bar .wrap{gap:5px}
+  .bar .wrap,.subbar .wrap{gap:5px}
   .chip{padding:4px 11px}
   .bar{max-height:44vh;max-height:44dvh;overflow-y:auto}
 
   html[data-fb] #fbt{display:inline-flex;flex:none;min-height:44px;padding:0 14px}
   html[data-fb] #q{flex:1 1 0;min-width:9em;min-height:44px}
-  html[data-fb] .bar .chip,html[data-fb] select{min-height:44px}
-  html[data-fb] .bar .chip{padding:0 13px}
+  html[data-fb] .chip,html[data-fb] select{min-height:44px}
+  html[data-fb] .chip{padding:0 13px}
   header button{min-height:44px;padding:0 14px}
   .fix{min-height:44px}
 
@@ -425,8 +427,10 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 }
 
 @media(max-width:640px){
+  html{--pin:280px}
   header{padding:12px 14px 10px}
   .bar{padding:8px 14px}
+  .subbar{padding:0 14px 7px}
   main{padding:0 14px 48px}
   footer{padding:18px 14px}
   h1{font-size:21px}
@@ -525,8 +529,13 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
     transition-duration:.01ms !important;scroll-behavior:auto !important}
 }
 
+@media(min-width:641px){html{--pin:116px}}
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
-#out tr{scroll-margin-top:160px}
+#out tr{scroll-margin-top:var(--pin,280px)}
+
+#out,
+main a[href],main button,main select,main summary,
+.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,280px)}
 
 #cmp{display:none}
 #cmp.on{display:block;margin:14px 0 0;border:1px solid var(--grid);border-radius:8px;background:var(--band)}
@@ -555,8 +564,8 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
 
 @page{margin:14mm}
 @media print{
-  .bar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,.shared .sp,
-  .pin,#cmp .ch .sp,#cmp .unpin{display:none}
+  .bar,.subbar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,
+  .shared .sp,.pin,#cmp .ch .sp,#cmp .unpin{display:none}
   #cmp .scroll{overflow-x:visible}
   #cmp table{table-layout:fixed}
   #cmp thead th:first-child{width:13%}
@@ -608,8 +617,8 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--09--13_21:14_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-09-13T21:14:00Z">Last deployed 2026-09-13 21:14 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--09--16_02:13_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-09-16T02:13:00Z">Last deployed 2026-09-16 02:13 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
@@ -676,6 +685,9 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
     <button class="chip" id="palhint"></button>
     <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
+</div></div>
+
+<div class="subbar"><div class="wrap">
   <div id="fbb"></div>
   <div id="sheet" role="group" aria-label="Filters" tabindex="-1">
     <div class="shead"><span class="sh" id="shtitle">Filters</span>
@@ -826,7 +838,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-13T21:14:00Z";
+const BUILT = "2026-09-16T02:13:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
