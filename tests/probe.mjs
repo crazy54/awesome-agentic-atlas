@@ -976,7 +976,7 @@ ok("...and the hidden attribute is given back the `display:none` that clamp just
 //    gate is never set, and the reader gets today's bar rather than a sheet with no chips in it that
 //    nothing can open. The gate is the whole fallback, so it is asserted from both sides: the default-off
 //    base rules, and that nothing which reveals or positions the sheet is missing the prefix.
-// 2. `html[data-fb] .bar .chip{...}` deliberately sets no `display`. It outranks `.newchip{display:none}`,
+// 2. `html[data-fb] .chip{...}` deliberately sets no `display`. It outranks `.newchip{display:none}`,
 //    so a `display:inline-flex` added to it for tidiness would reveal the New and Rising chips on every
 //    build whose velocity window is empty -- which is the build this site ships most days. That is a
 //    one-word regression with no visible cause, so it gets its own assertion.
@@ -1005,9 +1005,10 @@ ok("every rule that reveals or positions the sheet is behind the gate", reveal.l
 ok("...and the sheet itself is fixed to the bottom of the viewport, not the scrolling bar",
    /position:fixed/.test((ruleFor("html[data-fb] #sheet") || {body: ""}).body) &&
    /bottom:0/.test((ruleFor("html[data-fb] #sheet") || {body: ""}).body));
-// `.bar` caps itself at 44dvh and scrolls inside, so a sheet positioned within it would be clipped to that
-// cap. `position:fixed` takes the viewport as its containing block instead, which is what makes 80dvh
-// reachable from inside an ancestor 44dvh tall.
+// This used to need an argument about the bar's `overflow-y:auto` cap, which a sheet inside the bar would
+// have been clipped to; since JFH-354 the sheet is a sibling of the bar and there is no ancestor with an
+// overflow to be clipped by, so the argument is gone rather than answered. `position:fixed` is still what
+// makes 80dvh reachable, and it is still what puts the panel over the page rather than in it.
 ok("...at 80dvh with a vh fallback for engines without dvh",
    /max-height:80vh;max-height:80dvh/.test((ruleFor("html[data-fb] #sheet") || {body: ""}).body));
 ok("...and it scrolls inside itself without chaining to the page behind it",
@@ -1034,15 +1035,27 @@ ok("...and the bar's own cap is inside the same query", cssRules(styles).some(
 // WCAG 2.5.5. Measured in cards-check at real widths; asserted here as text because a floor that is only
 // ever measured on the three viewports someone thought of is a floor with holes in it.
 for (const sel of ["html[data-fb] #fbt", "html[data-fb] #q", "html[data-fb] #fbx",
-                   "html[data-fb] .bar .chip,html[data-fb] select", "header button", ".fix"])
+                   "html[data-fb] .chip,html[data-fb] select", "header button", ".fix"])
   ok("44px tap target: " + sel, /min-height:44px/.test((ruleFor(sel) ||
      cssRules(styles).find(r => r.sel === sel && r.at === NARROW) || {body: ""}).body),
      (cssRules(styles).find(r => r.sel === sel && r.at === NARROW) || {}).body);
+// And that the rule reaching them is not scoped by containment, which is how JFH-354 nearly dropped this
+// floor without a red assertion anywhere. It read `html[data-fb] .bar .chip` and covered the sheet's own
+// chips -- `#strict`, `#reset`, every facet rail -- purely because `#sheet` was a descendant of `.bar`.
+// Moving the sheet out to stop it being pinned would have taken the 44px off exactly the controls a phone
+// reader taps most, and the assertion above would still have passed, because the selector it looks up would
+// still have existed and still have said 44px. A floor asserted through a container is a floor that moves
+// when the container does.
+ok("...and the chip floor is not scoped to the bar, which the sheet no longer lives in",
+   cssRules(styles).some(r => r.at === NARROW && /(^|,)html\[data-fb\] \.chip(,|$)/.test(r.sel) &&
+                              /min-height:44px/.test(r.body)) &&
+   !cssRules(styles).some(r => r.at === NARROW && /html\[data-fb\] \.bar \.chip/.test(r.sel)),
+   cssRules(styles).filter(r => r.at === NARROW && /\.chip/.test(r.sel)).map(r => r.sel).join(" | "));
 // The one-word regression described at the top of this block.
 ok("the chip sizing rule sets no display, which would unhide the New and Rising chips",
    !/display/.test((cssRules(styles).find(
-     r => r.sel === "html[data-fb] .bar .chip" && r.at === NARROW) || {body: ""}).body),
-   (cssRules(styles).find(r => r.sel === "html[data-fb] .bar .chip") || {}).body);
+     r => r.sel === "html[data-fb] .chip" && r.at === NARROW) || {body: ""}).body),
+   (cssRules(styles).find(r => r.sel === "html[data-fb] .chip") || {}).body);
 
 // --- the markup: a disclosure, and one that actually contains the filters ---
 const fbtTag = (html.match(/<button[^>]*id="fbt"[^>]*>/) || [""])[0].replace(/\s+/g, " ");
@@ -1091,6 +1104,99 @@ ok("...and it wraps all three facet rails and both mode chips, not a subset",
 ok("the search box stays out of the sheet, its text being its own indicator",
    !sheetMarkup.includes('id="q"') && !sheetMarkup.includes('id="new"') &&
    !sheetMarkup.includes('id="rise"'));
+
+// --- ONE PINNED BAND, AND THE SEARCH BOX IS IN IT (JFH-354) ---------------------------------------------
+// `header` and `.bar` were siblings both at `position:sticky;top:0`, the header at `z-index:30` and the bar
+// at 20, so from the first scroll gesture they occupied the same band and the masthead painted over the
+// search field: 100% covered at 1440x900, 1024x800, 768x900 and 390x844, with `elementFromPoint` at the
+// field's centre returning the masthead `<h1>` on all four. Not obscured -- unreachable.
+//
+// The measured shape of that is in `cards-check.mjs`, which is the only place it can be: two sticky boxes
+// are a question about a scrolled viewport, and no source-reading harness has one. What is asserted here is
+// the arrangement that makes the measurement come out right, because a rule is a thing that can be edited
+// back by somebody who has not read the ticket.
+const chromeRule = (sel) => cssRules(styles).find(r => !r.at && r.sel === sel) || {body: "", sel};
+const zOf = (sel) => { const m = /z-index:(-?\d+)/.exec(chromeRule(sel).body); return m ? +m[1] : null; };
+const pinned = ["header", ".bar", ".subbar"].filter(s => /position:sticky/.test(chromeRule(s).body));
+ok("exactly one of the header, the bar and the sub-bar is pinned, and it is the bar",
+   pinned.length === 1 && pinned[0] === ".bar", pinned.join(", ") || "nothing is sticky");
+ok("...and it is pinned to the top of the viewport", /top:0/.test(chromeRule(".bar").body),
+   chromeRule(".bar").body);
+// The relationship and not the number: while the masthead is halfway off the top the bar is pinned across
+// it, so whichever of the two is higher paints over the other. Asserting `z-index:10` would agree with this
+// on today's stylesheet and stop meaning anything the moment either number is tuned.
+ok("...and the masthead sits under it, since the pinned thing has to paint over the scrolling one",
+   zOf("header") !== null && zOf(".bar") !== null && zOf("header") < zOf(".bar"),
+   `header ${zOf("header")} vs .bar ${zOf(".bar")}`);
+// The other half: the facet rails are outside the pinned element, which is what makes the pinned band 64px
+// at 1440x900 instead of 240px. Brace-matched with the same walker the sheet uses above, for the same
+// reason -- a stray `</div>` that closed the bar early would read as this being satisfied.
+const barAt = html.indexOf('<div class="bar">');
+const barShut = divEnd(barAt);
+const barMarkup = html.slice(barAt, barShut);
+ok("the bar opens and closes before the sheet begins", barAt > 0 && barShut > barAt && barShut < sheetAt,
+   `${barAt} -> ${barShut}, sheet at ${sheetAt}`);
+ok("...and the facet rails and their backdrop are outside it, so they are not pinned",
+   !barMarkup.includes('id="sheet"') && !barMarkup.includes('id="fbb"') &&
+   !barMarkup.includes('id="cats"'), barMarkup.length + " chars of bar");
+// And inside the wrapper rather than loose in the body, which is what keeps them in the place they have
+// always rendered: same width, same gutters, same gap under the search line.
+const subAt = html.indexOf('<div class="subbar">');
+ok("...and inside a sub-bar that follows the bar immediately", subAt > barShut &&
+   subAt < sheetAt && divEnd(subAt) > sheetShut && /^\s*$/.test(html.slice(barShut + 6, subAt)),
+   JSON.stringify(html.slice(barShut, subAt)));
+
+// --- somewhere for keyboard focus to land, once the bar is the thing that is pinned (JFH-356) -------------
+//
+// Moving focus scrolls the focused element into view, and the browser only leaves room for a pinned bar if
+// the element carries `scroll-margin-top`. Before this ticket exactly one selector did -- `#out tr` -- and a
+// `tr` has no `tabindex`, so it covered the one element a reader cannot tab to and nothing they can. (The
+// only code that focuses a row is the "Show more" handler, and it passes `preventScroll`, so the margin did
+// not bind there either.)
+// Shift+Tab then put the row's name link, its repo link, Save, Compare and thirteen facet chips fully behind
+// the bar. `cards-check.mjs` holds the measurement, at five widths in both views; what is asserted here is
+// the arrangement, and in particular the two halves that a positive test cannot see.
+const smtRules = cssRules(styles).filter(r => /scroll-margin-top/.test(r.body));
+const pinDecls = cssRules(styles).filter(r => /--pin:/.test(r.body));
+ok("the scroll clearance is a token, declared once per breakpoint and nowhere else", pinDecls.length === 2,
+   pinDecls.map(r => `${r.at || "(no query)"} ${r.sel} {${r.body.trim()}}`).join(" | "));
+// EVERY DECLARATION INSIDE A QUERY, WHICH IS THE HALF THAT BROKE. The narrow tier has to live in the phone
+// block near the top of the stylesheet, because `theme_test.py` asserts that query appears exactly twice. A
+// bare `html{--pin:...}` for the wide tier then wins on source order alone -- same selector, same
+// specificity, later in the file -- and the phone silently gets the desktop number. It did: 116px measured
+// at 390x844 with the 224px rule sitting right there in the stylesheet. Two non-overlapping queries cannot.
+ok("...with both tiers inside a media query, so neither can beat the other on source order",
+   pinDecls.length === 2 && pinDecls.every(r => /^@media/.test(r.at || "")),
+   pinDecls.map(r => r.at || "(no query)").join(" | "));
+const pinPx = pinDecls.map(r => ({at: r.at, px: parseFloat(/--pin:\s*(-?[\d.]+)px/.exec(r.body)?.[1])}));
+const narrowPin = pinPx.find(p => /max-width/.test(p.at)), widePin = pinPx.find(p => /min-width/.test(p.at));
+// The relationship, not the numbers. The bar is a wrapping flex line, so it is tallest where the screen is
+// narrowest -- 269px at 320px wide on CI's fonts against 64px at 1440. A phone tier at or below the
+// desktop one is the cascade bug above wearing different clothes, and asserting 280 exactly would say
+// nothing about the next control somebody adds to the search line -- or about a runner whose fonts wrap
+// the bar one line further, which is what raised the number from 224.
+ok("...and the narrow tier clears more than the wide one, because a narrow bar is a taller bar",
+   !!narrowPin && !!widePin && narrowPin.px > widePin.px,
+   JSON.stringify(pinPx));
+ok("...and every rule that uses it names the token rather than repeating the number",
+   smtRules.length >= 2 && smtRules.every(r => /scroll-margin-top:\s*var\(--pin/.test(r.body)),
+   smtRules.map(r => `${r.sel} {${r.body.trim()}}`).join(" | "));
+// A UA with custom properties but without these queries leaves `--pin` unset, which makes the declaration
+// invalid at computed-value time -- and that computes to 0, which is the defect this rule exists to fix.
+ok("...with a fallback, since an unset token computes to no clearance at all",
+   smtRules.every(r => /var\(--pin,\s*\d+px\)/.test(r.body)), smtRules.map(r => r.body.trim()).join(" | "));
+const focusSmt = smtRules.map(r => r.sel).join(" ");
+ok("the results table and the controls a reader can reach both get the clearance",
+   /(^|,| )#out(,|$)/.test(focusSmt.replace(/\s*,\s*/g, ",")) && /#out tr/.test(focusSmt) &&
+   /main a\[href\]/.test(focusSmt) && /main button/.test(focusSmt) &&
+   /\.subbar a\[href\]/.test(focusSmt) && /\.subbar button/.test(focusSmt), focusSmt);
+// THE NEGATIVE HALF. The bar is pinned, so its own controls are always visible and have nothing to clear --
+// and a scroll margin on `#q` would make focusing the search box jump a scrolled page to the top. A positive
+// assertion passes whether or not the exclusion holds, which is exactly how the tap-target floor on JFH-354
+// stayed green after the chips left the container it was scoped through.
+ok("...and the controls inside the pinned bar are deliberately left out",
+   !/\.bar\s+(a|button|select|summary|input|\.chip)/.test(focusSmt) && !/(^|,)\s*#q(,|$)/.test(focusSmt),
+   focusSmt);
 
 // --- the count, at 0, 1 and several ---
 const G = (id) => document.getElementById(id);
@@ -1367,6 +1473,13 @@ const printCSS = html.match(/@media print\{([\s\S]*?)\n?\}\n?<\/style>/)?.[1] ||
   html.match(/@media print\{([^@]*)/)?.[1] || "";
 ok("the print stylesheet exists and is not empty", printCSS.length > 80, String(printCSS.length));
 ok("...and takes the controls off the paper", /\.bar,/.test(printCSS) && /dialog/.test(printCSS), printCSS);
+// `.subbar` by name, because this list is where a hide-by-containment turns into a leak. The three facet
+// rails were inside `.bar` and went off the paper with it; JFH-354 moved them out to stop them being pinned,
+// and nothing in this rule had to change for them to start printing. There is no assertion that catches that
+// except naming the new element, which is the point: a list of what not to print is only as good as its last
+// reading of the markup.
+ok("...including the filter rails, which used to be hidden by living inside the bar",
+   /(^|,)\.subbar(,|\{)/.test(printCSS.replace(/\s+/g, "")), printCSS);
 ok("...and puts back the columns the narrow layout hides, paper being ~794px wide",
    /td\.hide,th\.hide\{display:table-cell\}/.test(printCSS), printCSS);
 ok("...and reveals the link that says where the sheet came from",
