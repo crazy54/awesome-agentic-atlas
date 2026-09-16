@@ -1363,6 +1363,17 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 }
 
 @media(max-width:640px){
+  /* The narrow half of --pin (JFH-356). It lives up here rather than beside its own comment and its wide
+     twin at `html{--pin:...}` because `theme_test.py` asserts this query is emitted exactly twice -- once
+     here and once for the card order -- and a third copy for one declaration is a third breakpoint to keep
+     in step. The reasoning, the 18-width sweep it comes from and the reason there are two tiers at all are
+     all at the --pin declaration; this is only the other number.
+
+     280px, against a 269px worst case: the bar at 320px wide in table view, measured on CI's Chromium.
+     Windows reads 217px at the same point -- the wrap depends on the rendered text and so on the fonts
+     installed -- and `cards-check.mjs` is what found the difference, by asserting the relationship instead
+     of this number. It prints both maxima on every run for that reason. */
+  html{--pin:280px}
   /* 20px gutters on all four sections cost 40px, 11% of a 375px screen, and the old query left them.
      The header's vertical padding comes down with them, and `.top`'s gap by 2px, for the reason set out
      above the mascot below: every pixel here is one the first result does not get. */
@@ -1627,10 +1638,84 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
    160px was never enough to do that and could not have been: until JFH-354 the pinned band was the masthead
    plus the whole bar, measured at 456px at 1440x900 and 731px at 768x900, so a row scrolled into view landed
    underneath it whatever this number said. With the bar alone pinned the band is 64 / 91 / 106 / 165px at
-   1440x900, 1024x800, 768x900 and 390x844, and 172px clears the worst of those with a little air. The
-   surplus at a wide width costs nothing: `scroll-margin` only decides where a scroll stops. */
+   1440x900, 1024x800, 768x900 and 390x844 -- which is where 172px came from, and 172px is WRONG. The
+   surplus at a wide width costs nothing (`scroll-margin` only decides where a scroll stops); the shortfall
+   at a narrow one costs the whole rule.
+
+   THOSE FOUR NUMBERS WERE A SAMPLE OF ONE VIEW AT FOUR ROUND WIDTHS. The bar is a wrapping flex line, so
+   its height is a step function of the width AND of the text in it -- and `#view` and `#take` relabel
+   between the two views ("Table view" / "Cards view"), which moves the wrap points. Swept 18 widths from
+   320 to 1920 in both views, measured while genuinely stuck (scrolled to 3000; unscrolled the bar is in
+   flow under the masthead and reads short):
+
+     cards   320:191  360-414:165  480-640:113  641-700:103  768-900:106  1024:91  1200+:64
+     table   320:217  360-414:191  480-540:139  600-640:113  641-768:108  820-1024:106  1200:91  1280+:64
+
+   THOSE HEIGHTS ARE THIS MACHINE'S. The wrap point is a function of the rendered text, so it is a function
+   of the fonts installed: CI's Chromium wraps one line further at 320px in table view and reads 269px where
+   Windows reads 217px. The tiers below clear the taller of the two, and `cards-check.mjs` prints the maximum
+   it measured on both sides of the fold on every run, so the next person choosing a number does not have to
+   trust this paragraph's machine.
+
+   So the worst case is 269px at 320px wide in table view, and 172px was already short by 19px at 320px in
+   the DEFAULT view before this ticket touched anything. Two tiers, split at the 640px breakpoint the layout
+   already turns on, each above the worst case on its side with air: 116px against a 108px maximum above the
+   break, 280px against 269px below it.
+
+   A TOKEN AND NOT A LITERAL, BECAUSE THE RULE BELOW NEEDS THE SAME NUMBER (JFH-356). A second copy is a
+   second thing to remember when the bar's contents change, and the measurements that justify it are here
+   and nowhere else. `cards-check.mjs` asserts the relationship rather than the number -- that `--pin` is at
+   least the bar's measured height at every width and view it probes -- so adding a control to the search
+   line reddens the suite instead of silently re-breaking this.
+
+   BOTH TIERS ARE INSIDE A QUERY, AND THAT IS DELIBERATE. The narrow one has to live in the
+   `@media(max-width:640px)` block ~275 lines above, because `theme_test.py` asserts that query is emitted
+   exactly twice and a third copy for one declaration is a third breakpoint to keep in step. A bare
+   `html{--pin:116px}` down here then beats it on nothing but source order -- same selector, same
+   specificity, later wins -- and the phone silently got the desktop number. Measured: `scroll-margin-top`
+   read 116px at 390x844 and 320x844 with the narrow rule sitting right there in the stylesheet. Two
+   non-overlapping queries cannot do that to each other whichever order they appear in. */
+@media(min-width:641px){html{--pin:116px}}
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
-#out tr{scroll-margin-top:172px}
+/* The fallback is for a UA that supports custom properties but not these queries: an unset `--pin` makes the
+   declaration invalid at computed-value time, which is 0, which is the bug. 280px is the safe side. */
+#out tr{scroll-margin-top:var(--pin,280px)}
+
+/* THE RULE ABOVE PROTECTS THE ONE ELEMENT A GUEST CANNOT TAB TO (JFH-356).
+
+   A `tr` carries no `tabindex` in the markup, so it is not focusable and cannot be a tab stop. The one
+   place anything focuses a row is the "Show more" handler, which does `t.tabIndex = -1` and then
+   `t.focus({preventScroll: true})` -- programmatically focusable, still never a tab stop, and `preventScroll`
+   means the margin below is not consulted even on that path. The rule binds nothing in either direction.
+   (Not "rows carry tabindex=-1", which is what this comment said first and is wrong: the two `tabindex="-1"`
+   attributes in the built page are on `#sheet` and the screenshot cell's link.)
+
+   A 60-stop forward tab walk at each of the four widths above hits `.skip`,
+   the masthead nav, `#q`, `#sort`, `#view`, `#take`, `#mapbtn`, 33 facet chips, `#strict`, `#reset`, the
+   `summary`, and `a.nm` / `a.nwo` / `.save` / `.pin` / `.copy` inside the rows -- and zero `tr`. Every one
+   of those reported `scroll-margin-top: 0px`.
+
+   That is only survivable while the page scrolls the way tests scroll it. Moving focus *forward* down a
+   document aligns the new element to the BOTTOM edge of the viewport, and nothing is pinned there, so the
+   forward walk finds nothing at any width. Shift+Tab scrolls upward and aligns to the TOP edge, which is
+   exactly where the bar is. Measured on 645b549 with dispatched Shift+Tab keys: of 30 reverse stops, 20 at
+   1024x800, 14 at 768x900 and 4 at 390x844 landed under the bar, 31 of those 38 entirely -- 100% covered,
+   with `document.elementFromPoint` at the focused control's own centre returning a child of `.bar`. The
+   focus ring was behind opaque chrome and a pointer could not reach the control either. With this rule the
+   same walk reports 0 at all four widths.
+
+   `#out` itself is in the list because it is the skip link's target (`<a class="skip" href="#out">`), and a
+   fragment jump is a scroll like any other: without a margin it put the table at `top:0` and the bar sat on
+   the first 4 / 3 / 2 / 1 data rows. The skip link's *focus* behaviour was already correct -- the next Tab
+   lands on the first row's name link -- so this is the landing position only.
+
+   NOT the controls inside `.bar`. The bar is pinned, so its contents are always visible and have nothing to
+   clear; giving `#q` a scroll margin would make focusing the search box jump a scrolled page to the top.
+   That exclusion is the reason this is a list of two ancestors rather than a bare `a,button,select,summary`,
+   and it is what the negative assertion in probe.mjs pins. */
+#out,
+main a[href],main button,main select,main summary,
+.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,280px)}
 
 /* ---- The comparison panel ----------------------------------------------------------------------------
    Above the results, in the slot `.shared` uses, and for the same reason: it is not a filter the reader chose

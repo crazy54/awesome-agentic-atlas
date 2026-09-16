@@ -1307,6 +1307,201 @@ for (const [w, h] of [[1440, 900], [1024, 800], [768, 900], [390, 844]]) {
   await evalIn("window.scrollTo(0, 0)");
 }
 
+// ---- WHERE FOCUS LANDS WHEN THE PAGE SCROLLS ITSELF (JFH-356) -------------------------------------------
+//
+// The block above proves nothing covers the search box. This one asks the same question about every OTHER
+// control, and the reason it is a separate question is that the browser, not the reader, chooses the scroll
+// position. Moving focus scrolls the focused element into view, and it only leaves room for a pinned bar if
+// the element carries `scroll-margin-top`. Before JFH-356 exactly one selector did -- `#out tr` -- and a `tr`
+// has no `tabindex` (see the note at the clearance helper above), so the rule protected the one element a
+// reader cannot tab to and nothing they can. The one handler that focuses a row passes `preventScroll`, so it
+// did not bind there either.
+//
+// WHY THE FORWARD DIRECTION CANNOT FIND THIS. Tabbing forward down a document aligns the new element to the
+// BOTTOM edge of the viewport, where nothing is pinned; a 60-stop forward walk at four widths found nothing
+// at all. Shift+Tab scrolls upward and aligns to the TOP edge, which is exactly where the bar is. So this
+// walks backwards, and it dispatches real key events -- `Input.dispatchKeyEvent` -- because sequential focus
+// navigation is the thing being measured and `el.focus()` does not reproduce its alignment.
+//
+// The instrument is the one JFH-354 settled on: the fraction of the focused box under the pinned bar, plus
+// `document.elementFromPoint` at the box's own centre, because a rect test cannot see a painted-over element.
+const focusAt = `(() => {
+  const el = document.activeElement;
+  if (!el || el === document.body || el === document.documentElement) return {none: true};
+  const bar = document.querySelector('.bar');
+  const b = el.getBoundingClientRect();
+  // The bar cannot obscure its own contents -- an element inside it overlaps its container by construction,
+  // which read as "100% covered" for every control in the search line and invented six failures.
+  const inBar = bar.contains(el);
+  const r = bar.getBoundingClientRect();
+  const ox = Math.max(0, Math.min(b.right, r.right) - Math.max(b.left, r.left));
+  const oy = Math.max(0, Math.min(b.bottom, r.bottom) - Math.max(b.top, r.top));
+  const area = b.width * b.height;
+  const cx = Math.round(b.left + b.width / 2), cy = Math.round(b.top + b.height / 2);
+  const at = (cy >= 0 && cy <= innerHeight && cx >= 0 && cx <= innerWidth)
+    ? document.elementFromPoint(cx, cy) : null;
+  return {name: el.id ? '#' + el.id : el.tagName.toLowerCase() +
+            (typeof el.className === 'string' && el.className.trim()
+              ? '.' + el.className.trim().split(/\\s+/)[0] : ''),
+          inBar, inResults: !!el.closest('#out'),
+          hiddenPct: inBar || !area ? 0 : Math.round(ox * oy / area * 100),
+          reachable: inBar || (!!at && (at === el || el.contains(at) || at.contains(el))),
+          aboveViewport: b.bottom <= 0,
+          smt: getComputedStyle(el).scrollMarginTop,
+          topmost: at ? (at.id ? '#' + at.id : at.tagName.toLowerCase()) : null};
+})()`;
+const tabKey = async (shift) => {
+  for (const type of ["rawKeyDown", "keyUp"])
+    await S("Input.dispatchKeyEvent", {type, key: "Tab", code: "Tab", windowsVirtualKeyCode: 9,
+                                       nativeVirtualKeyCode: 9, modifiers: shift ? 8 : 0});
+};
+// Measured: the view is NOT persisted -- a reload comes back in cards, and `#view` is a toggle. So this is
+// one click in practice. It is still written as "click until the page agrees" rather than "click once if the
+// view is table", because a toggle plus an assumption about the starting state is how a sweep silently
+// measures one view twice, and the alternative costs one property read.
+const setView = async (want) => {
+  for (let i = 0; i < 3; i++) {
+    if (await evalIn("document.documentElement.dataset.view") === want) return true;
+    await evalIn("document.getElementById('view').click()");
+    await sleep(300);
+  }
+  return await evalIn("document.documentElement.dataset.view") === want;
+};
+
+// ASSERT THE RELATIONSHIP, NOT THE NUMBER. `--pin` has to be at least as tall as the pinned bar, and the bar
+// is a wrapping flex line whose height is a step function of the width and of the text in it -- `#view` and
+// `#take` relabel between the views, which moves the wrap points. The original 172px came from four round
+// widths in one view and was already 19px short at 320px in the default view. A test that asserts 224 learns
+// nothing when somebody adds a control to the search line; this one reddens.
+//
+// AND IT DID, ON A RUNNER THAT IS NOT THIS ONE. The step function is a function of the *rendered* text, so it
+// is a function of the fonts installed. Windows measured 217px worst case at 320px in table view; CI's
+// Chromium wraps one line further and reads 269px, which a 224px token does not clear. The heights below are
+// printed rather than kept only in a failure detail, because the two tiers are chosen off them and a number
+// nobody can see gets re-derived from whichever machine last looked.
+const bands = [];
+for (const view of ["cards", "table"]) {
+  for (const [w, h] of [[1440, 900], [1024, 800], [768, 900], [390, 844], [320, 844]]) {
+    const at = `${w}x${h} in ${view} view`;
+    await resize(w, h);
+    await hardGoto(ORIGIN);
+    if (!await setView(view)) { ok(`the page can be put into ${view} view at ${w}x${h}`, false); continue; }
+    // Measured while genuinely stuck: unscrolled the bar sits in flow under the masthead and reads short.
+    await evalIn("window.scrollTo(0, 3000)");
+    await sleep(300);
+    const band = await evalIn(`(() => {
+      const bar = document.querySelector('.bar').getBoundingClientRect();
+      const pin = getComputedStyle(document.documentElement).getPropertyValue('--pin').trim();
+      return {barH: Math.round(bar.height), barTop: Math.round(bar.top), pin,
+              pinPx: parseFloat(pin), smtRow: getComputedStyle(
+                document.querySelector('#out tbody tr')).scrollMarginTop};
+    })()`);
+    ok(`the scroll margin clears the pinned bar at ${at}`,
+       band.pinPx > 0 && band.barH > 0 && band.pinPx >= band.barH, JSON.stringify(band));
+    // ...and the token is what the rules actually use, so the number above is not measured off a dead value.
+    ok(`...and a results row uses that token at ${at}`,
+       parseFloat(band.smtRow) === band.pinPx, JSON.stringify(band));
+    bands.push({w, view, barH: band.barH, pinPx: band.pinPx});
+    await evalIn("window.scrollTo(0, 0)");
+  }
+}
+{
+  const most = (rows) => rows.length ? Math.max(...rows.map(r => r.barH)) : 0;
+  const narrow = bands.filter(b => b.w <= 640), wide = bands.filter(b => b.w > 640);
+  console.log(`  the pinned bar is at most ${most(narrow)}px at 640px and below (--pin ` +
+              `${narrow[0] ? narrow[0].pinPx : "?"}px) and ${most(wide)}px above it (--pin ` +
+              `${wide[0] ? wide[0].pinPx : "?"}px)  ·  ` +
+              bands.map(b => `${b.w}${b.view[0]}:${b.barH}`).join(" "));
+}
+
+// The walk itself, at the two widths that failed hardest before the fix (20 of 30 reverse stops at 1024x800,
+// and at 390x844 the row's own name link, repo link, Save and Compare) and in both views.
+for (const view of ["cards", "table"]) {
+  for (const [w, h] of [[1024, 800], [390, 844]]) {
+    const at = `${w}x${h} in ${view} view`;
+    await resize(w, h);
+    await hardGoto(ORIGIN);
+    if (!await setView(view)) { ok(`the page can be put into ${view} view at ${w}x${h}`, false); continue; }
+    await evalIn("window.scrollTo(0, 0)");
+    const FWD = w < 500 ? 34 : 58;   // far enough to be inside the results at either width
+    for (let i = 0; i < FWD; i++) { await tabKey(false); await sleep(30); }
+    await sleep(200);
+    const stops = [];
+    for (let i = 0; i < 18; i++) {
+      await tabKey(true);
+      await sleep(55);
+      const f = await evalIn(focusAt);
+      if (!f.none) stops.push(f);
+    }
+    const buried = stops.filter(s => s.hiddenPct >= 25 || !s.reachable || s.aboveViewport);
+    // The vacuity guard. A walk that focused nothing, or never left the chrome, would report zero failures
+    // for the wrong reason -- and that is the one shape this cannot otherwise distinguish from a pass.
+    ok(`tabbing backwards visits real controls at ${at}`,
+       stops.length >= 12 && stops.some(s => s.inResults) && stops.some(s => !s.inBar),
+       `${stops.length} stops, ${stops.filter(s => s.inResults).length} in the results`);
+    ok(`nothing keyboard focus lands on hides under the pinned bar at ${at}`, buried.length === 0,
+       buried.slice(0, 4).map(s => `${s.name} ${s.hiddenPct}% under, topmost ${s.topmost}, smt ${s.smt}`)
+         .join(" | "));
+    if (buried.length) await shot(`focus-under-bar-${w}x${h}-${view}`);
+    await evalIn("window.scrollTo(0, 0)");
+  }
+}
+
+// The skip link is the same defect in the place it costs most: it is the first keystroke a keyboard or
+// screen-reader guest makes, and `#out` is not focusable, so the browser scrolls to it without focusing it.
+// Its focus behaviour was always right -- the next Tab lands on the first row's name link -- so what is
+// asserted here is the landing position: the rows the link exists to show are not under the bar.
+for (const [w, h] of [[1440, 900], [390, 844]]) {
+  const at = `${w}x${h}`;
+  await resize(w, h);
+  await hardGoto(ORIGIN);
+  await evalIn("window.scrollTo(0, 0)");
+  await tabKey(false);
+  await sleep(150);
+  const first = await evalIn(focusAt);
+  ok(`the first tab stop is the skip link at ${at}`, first.name === "a.skip", JSON.stringify(first));
+  await S("Input.dispatchKeyEvent", {type: "rawKeyDown", key: "Enter", code: "Enter",
+                                     windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13});
+  await S("Input.dispatchKeyEvent", {type: "keyUp", key: "Enter", code: "Enter",
+                                     windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13});
+  await sleep(500);
+  const land = await evalIn(`(() => {
+    const r = document.querySelector('.bar').getBoundingClientRect();
+    const rows = [...document.querySelectorAll('#out tbody tr')];
+    const touched = rows.filter(x => { const b = x.getBoundingClientRect();
+      return b.top < r.bottom && b.bottom > r.top; });
+    const b0 = rows[0].getBoundingClientRect();
+    const at = document.elementFromPoint(Math.round(b0.left + 60), Math.round(b0.top + b0.height / 2));
+    return {hash: location.hash, scrolled: Math.round(scrollY), rows: rows.length,
+            touched: touched.length, firstTop: Math.round(b0.top), barBottom: Math.round(r.bottom),
+            over: at ? (at.id ? '#' + at.id : at.tagName.toLowerCase() +
+              (typeof at.className === 'string' && at.className.trim()
+                ? '.' + at.className.trim().split(/\\s+/)[0] : '')) : null};
+  })()`);
+  ok(`"Skip to results" actually moves the page at ${at}`,
+     land.hash === "#out" && land.scrolled > 0, JSON.stringify(land));
+  ok(`...and lands with no result row under the bar at ${at}`, land.touched === 0, JSON.stringify(land));
+  ok(`...so what is drawn over the first row is the first row at ${at}`,
+     land.over !== "div.bar", JSON.stringify(land));
+  await evalIn("window.scrollTo(0, 0)");
+}
+
+// The deliberate exclusion, stated as an assertion because a positive one passes either way. The bar is
+// pinned, so its own controls are always visible and have nothing to clear -- and a scroll margin on `#q`
+// would make focusing the search box jump a scrolled page to the top.
+await resize(1440, 900);
+await hardGoto(ORIGIN);
+const excluded = await evalIn(`(() => {
+  const g = (s) => { const e = document.querySelector(s);
+    return e ? parseFloat(getComputedStyle(e).scrollMarginTop) : null; };
+  return {q: g('#q'), sort: g('#sort'), take: g('#take'),
+          rowLink: g('#out tbody tr a'), rowSave: g('#out tbody tr .save'), sub: g('.subbar .chip')};
+})()`);
+ok("the controls inside the pinned bar are left without a scroll margin",
+   excluded.q === 0 && excluded.sort === 0 && excluded.take === 0, JSON.stringify(excluded));
+ok("...while the ones outside it have one", excluded.rowLink > 0 && excluded.rowSave > 0 && excluded.sub > 0,
+   JSON.stringify(excluded));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 ws.close();
 await browser.close();
