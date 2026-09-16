@@ -427,7 +427,7 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 }
 
 @media(max-width:640px){
-  html{--pin:224px}
+  html{--pin:280px}
   header{padding:12px 14px 10px}
   .bar{padding:8px 14px}
   .subbar{padding:0 14px 7px}
@@ -531,11 +531,11 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
 
 @media(min-width:641px){html{--pin:116px}}
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
-#out tr{scroll-margin-top:var(--pin,224px)}
+#out tr{scroll-margin-top:var(--pin,280px)}
 
 #out,
 main a[href],main button,main select,main summary,
-.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,224px)}
+.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,280px)}
 
 #cmp{display:none}
 #cmp.on{display:block;margin:14px 0 0;border:1px solid var(--grid);border-radius:8px;background:var(--band)}
@@ -617,8 +617,8 @@ main a[href],main button,main select,main summary,
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--09--16_01:59_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-09-16T01:59:00Z">Last deployed 2026-09-16 01:59 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--09--16_02:13_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-09-16T02:13:00Z">Last deployed 2026-09-16 02:13 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
@@ -838,7 +838,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-16T01:59:00Z";
+const BUILT = "2026-09-16T02:13:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],

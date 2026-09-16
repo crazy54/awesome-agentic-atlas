@@ -1369,8 +1369,11 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
      in step. The reasoning, the 18-width sweep it comes from and the reason there are two tiers at all are
      all at the --pin declaration; this is only the other number.
 
-     224px against a 217px worst case, which is the bar at 320px wide in table view. */
-  html{--pin:224px}
+     280px, against a 269px worst case: the bar at 320px wide in table view, measured on CI's Chromium.
+     Windows reads 217px at the same point -- the wrap depends on the rendered text and so on the fonts
+     installed -- and `cards-check.mjs` is what found the difference, by asserting the relationship instead
+     of this number. It prints both maxima on every run for that reason. */
+  html{--pin:280px}
   /* 20px gutters on all four sections cost 40px, 11% of a 375px screen, and the old query left them.
      The header's vertical padding comes down with them, and `.top`'s gap by 2px, for the reason set out
      above the mascot below: every pixel here is one the first result does not get. */
@@ -1648,10 +1651,16 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
      cards   320:191  360-414:165  480-640:113  641-700:103  768-900:106  1024:91  1200+:64
      table   320:217  360-414:191  480-540:139  600-640:113  641-768:108  820-1024:106  1200:91  1280+:64
 
-   So the worst case is 217px at 320px wide in table view, and 172px was already short by 19px at 320px in
+   THOSE HEIGHTS ARE THIS MACHINE'S. The wrap point is a function of the rendered text, so it is a function
+   of the fonts installed: CI's Chromium wraps one line further at 320px in table view and reads 269px where
+   Windows reads 217px. The tiers below clear the taller of the two, and `cards-check.mjs` prints the maximum
+   it measured on both sides of the fold on every run, so the next person choosing a number does not have to
+   trust this paragraph's machine.
+
+   So the worst case is 269px at 320px wide in table view, and 172px was already short by 19px at 320px in
    the DEFAULT view before this ticket touched anything. Two tiers, split at the 640px breakpoint the layout
    already turns on, each above the worst case on its side with air: 116px against a 108px maximum above the
-   break, 224px against 217px below it.
+   break, 280px against 269px below it.
 
    A TOKEN AND NOT A LITERAL, BECAUSE THE RULE BELOW NEEDS THE SAME NUMBER (JFH-356). A second copy is a
    second thing to remember when the bar's contents change, and the measurements that justify it are here
@@ -1669,8 +1678,8 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
 @media(min-width:641px){html{--pin:116px}}
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
 /* The fallback is for a UA that supports custom properties but not these queries: an unset `--pin` makes the
-   declaration invalid at computed-value time, which is 0, which is the bug. 224px is the safe side. */
-#out tr{scroll-margin-top:var(--pin,224px)}
+   declaration invalid at computed-value time, which is 0, which is the bug. 280px is the safe side. */
+#out tr{scroll-margin-top:var(--pin,280px)}
 
 /* THE RULE ABOVE PROTECTS THE ONE ELEMENT A GUEST CANNOT TAB TO (JFH-356).
 
@@ -1706,7 +1715,7 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
    and it is what the negative assertion in probe.mjs pins. */
 #out,
 main a[href],main button,main select,main summary,
-.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,224px)}
+.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,280px)}
 
 /* ---- The comparison panel ----------------------------------------------------------------------------
    Above the results, in the slot `.shared` uses, and for the same reason: it is not a filter the reader chose

@@ -1373,6 +1373,13 @@ const setView = async (want) => {
 // `#take` relabel between the views, which moves the wrap points. The original 172px came from four round
 // widths in one view and was already 19px short at 320px in the default view. A test that asserts 224 learns
 // nothing when somebody adds a control to the search line; this one reddens.
+//
+// AND IT DID, ON A RUNNER THAT IS NOT THIS ONE. The step function is a function of the *rendered* text, so it
+// is a function of the fonts installed. Windows measured 217px worst case at 320px in table view; CI's
+// Chromium wraps one line further and reads 269px, which a 224px token does not clear. The heights below are
+// printed rather than kept only in a failure detail, because the two tiers are chosen off them and a number
+// nobody can see gets re-derived from whichever machine last looked.
+const bands = [];
 for (const view of ["cards", "table"]) {
   for (const [w, h] of [[1440, 900], [1024, 800], [768, 900], [390, 844], [320, 844]]) {
     const at = `${w}x${h} in ${view} view`;
@@ -1394,8 +1401,17 @@ for (const view of ["cards", "table"]) {
     // ...and the token is what the rules actually use, so the number above is not measured off a dead value.
     ok(`...and a results row uses that token at ${at}`,
        parseFloat(band.smtRow) === band.pinPx, JSON.stringify(band));
+    bands.push({w, view, barH: band.barH, pinPx: band.pinPx});
     await evalIn("window.scrollTo(0, 0)");
   }
+}
+{
+  const most = (rows) => rows.length ? Math.max(...rows.map(r => r.barH)) : 0;
+  const narrow = bands.filter(b => b.w <= 640), wide = bands.filter(b => b.w > 640);
+  console.log(`  the pinned bar is at most ${most(narrow)}px at 640px and below (--pin ` +
+              `${narrow[0] ? narrow[0].pinPx : "?"}px) and ${most(wide)}px above it (--pin ` +
+              `${wide[0] ? wide[0].pinPx : "?"}px)  ·  ` +
+              bands.map(b => `${b.w}${b.view[0]}:${b.barH}`).join(" "));
 }
 
 // The walk itself, at the two widths that failed hardest before the fix (20 of 30 reverse stops at 1024x800,

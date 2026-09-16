@@ -1171,9 +1171,10 @@ ok("...with both tiers inside a media query, so neither can beat the other on so
 const pinPx = pinDecls.map(r => ({at: r.at, px: parseFloat(/--pin:\s*(-?[\d.]+)px/.exec(r.body)?.[1])}));
 const narrowPin = pinPx.find(p => /max-width/.test(p.at)), widePin = pinPx.find(p => /min-width/.test(p.at));
 // The relationship, not the numbers. The bar is a wrapping flex line, so it is tallest where the screen is
-// narrowest -- 217px at 320px wide against 64px at 1440. A phone tier at or below the desktop one is the
-// cascade bug above wearing different clothes, and asserting 224 exactly would say nothing about the next
-// control somebody adds to the search line.
+// narrowest -- 269px at 320px wide on CI's fonts against 64px at 1440. A phone tier at or below the
+// desktop one is the cascade bug above wearing different clothes, and asserting 280 exactly would say
+// nothing about the next control somebody adds to the search line -- or about a runner whose fonts wrap
+// the bar one line further, which is what raised the number from 224.
 ok("...and the narrow tier clears more than the wide one, because a narrow bar is a taller bar",
    !!narrowPin && !!widePin && narrowPin.px > widePin.px,
    JSON.stringify(pinPx));

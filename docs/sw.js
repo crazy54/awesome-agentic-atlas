@@ -2,8 +2,8 @@
 // version stops describing the bytes: the next build overwrites whatever was changed here, and until it
 // does, readers hold a cache whose name no longer matches its contents. Change the generator.
 //
-// Version 05209a2b3c71 -- a hash of the precached files, so it moves when they do and not otherwise.
-const VERSION = "05209a2b3c71";
+// Version 5c54fe5b7a8b -- a hash of the precached files, so it moves when they do and not otherwise.
+const VERSION = "5c54fe5b7a8b";
 const SHELL = "atlas-shell-" + VERSION;
 // Unversioned, and never deleted on activate, which is the difference between an offline reader and a
 // broken one. A version-keyed data cache would be emptied by the very update that proves the reader is
