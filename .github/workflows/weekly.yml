@@ -199,6 +199,25 @@ jobs:
           # in daily.yml -- and if it is ever dropped from daily.yml that is exactly what happens, with
           # no error anywhere, which is why tests/live_test.py asserts it appears in both.
           python scripts/19c_live.py
+          # Discover: `docs/discover.json` and `docs/discover/index.html`. One invocation, in both workflows,
+          # and the stage decides which of its two jobs it is doing -- a run whose published plan already
+          # reaches today re-renders that plan against fresh rows and leaves the rotation ledger alone; a run
+          # whose plan does not reach today picks a fresh week and stamps `state/discover.json`. On Sundays
+          # this job is the second case and the nightly is the first, which is the whole design, and it is
+          # expressed as one command precisely so that the two cannot be given different flags and drift.
+          #
+          # Both workflows for the reason 19c_live is in both, and one stronger. A plan covers seven dated
+          # cohorts and the page shows the one dated today: weekly-only would mean six nights out of seven
+          # where the strip and the page carry names, stars and blurbs from last Sunday's data.json, and
+          # where a project that left the atlas on Tuesday keeps a card linking to a detail page no build
+          # wrote. Drop it from daily.yml and there is no error anywhere -- so tests/discover_test.py
+          # asserts it appears in both, exactly as live_test.py does for the sidecar above.
+          #
+          # After 19_pages because it reads the `docs/data.json` that stage rewrites, and before 20_landing
+          # because that stage imports this one's `urls()` into `docs/sitemap.xml`: run the other way round,
+          # the sitemap would name `discover/` on the first build and the directory would not be there yet,
+          # which `tests/indexnow_test.py` fails in both directions on purpose.
+          python scripts/19d_discover.py
           # 20 and 21 must both follow 19_pages and never precede it: that stage is what stamps the
           # ledger and rewrites data.json, and both of these read data.json and nothing else. Run first,
           # the feeds would publish yesterday's arrivals and the landing pages would prerender

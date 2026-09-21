@@ -489,7 +489,13 @@ for u in urls:
 # set and the sitemap set are equal in both directions. A page family in neither sitemap is a red build.
 land = (SCRIPTS / "20_landing.py").read_text(encoding="utf-8")
 true("20_landing.py is the one that puts them there", "collection_urls(data)" in land)
-true("...and passes them to the sitemap it owns", "sitemap(pages, data[\"snapshot\"], colls)" in land)
+# Asserted as "`colls` is in that argument" rather than as the whole of it, because the argument is a list
+# of URL families and families get added to it: `19d_discover.py`'s one page joined the collections there,
+# and pinning the exact expression made that a failure here -- this harness measuring a spelling rather
+# than the wiring it exists to check.
+call = re.search(r"sitemap\(pages, data\[\"snapshot\"\], ([^)]*)\)", land)
+true("...and passes them to the sitemap it owns", bool(call) and "colls" in call.group(1),
+     call.group(1) if call else "20_landing.py has no sitemap(pages, data[\"snapshot\"], ...) call")
 
 # Reachability. A page nothing links to is a page only a sitemap knows about.
 for name, path in (("the index", ROOT / "docs" / "index.html"),

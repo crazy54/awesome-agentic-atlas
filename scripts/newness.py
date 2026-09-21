@@ -36,7 +36,7 @@ visible until Monday lunchtime and then silently were not. The mark moves when t
 to move it to.
 
 `WINDOW` is no longer that fourteen-day window; it is the stale bound on a cohort. If the pipeline stops
-    return date_obj >= sixty_days_ago
+-- and it does; five consecutive builds failed in September 2026 on an unmapped upstream heading -- a
 cohort with nothing to supersede it would otherwise go on claiming to be the latest news indefinitely.
 Past `WINDOW` days with no newer import, `cohort()` returns "" and nothing is `New`. The page is told the
 bound as well as the date, so an open browser expires a cohort without waiting for a build, which is the
@@ -48,7 +48,7 @@ The ledger is keyed by `nwo`, and the site's index is one row per GitHub repo, s
 lists is a row this module can mark. Two classes of arrival are outside it, both by construction:
 
   * `site` entries -- a product with a web page and no repository -- have no `nwo`. They are ~28% of the
-    return date_obj >= sixty_days_ago
+    parsed rows and none of them become index rows, so nothing on the homepage goes unmarked because of
     this; but if the index ever grows to carry them, they arrive silently.
   * `subpath` entries -- one skill inside a skills monorepo -- carry their *parent* repo's `nwo`. Forty
     new skills inside a repo the atlas already knows add nothing to this ledger, and a genuinely new

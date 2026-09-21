@@ -2,12 +2,12 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the eighteen harnesses in turn, and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the nineteen harnesses in turn, and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY SEVENTEEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY NINETEEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
 //   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces, and
 //                     the one channel on the page that is not colour: the five platform verdict marks,
@@ -26,6 +26,17 @@
 //                     can see it -- a cohort is correct only in relation to the one before it, so every
 //                     assertion here needs two or more imports in sequence with the date supplied rather
 //                     than read from the clock. Four surfaces render this one rule.
+//   discover_test.py  the rule behind `docs/discover/`: fifty projects a day for seven days, every category
+//                     represented in every one of them, no project twice in a day and best-effort no project
+//                     twice in a week, and the rotation ledger that decides whose turn it is next. Pure and
+//                     instant, and the only harness that can see any of it -- every assertion needs a corpus
+//                     of a stated shape and a date supplied rather than read from the clock, and the
+//                     interesting ones need several weeks dealt in sequence, because fairness is a claim
+//                     about how long a category takes to come round and not about any one day. It also holds
+//                     the two things that have no other witness: that a plan which has run out cycles
+//                     through its seven cohorts rather than freezing on the last one, and that the stage is
+//                     wired into both workflows -- weekly-only would freeze the page for six nights in seven
+//                     with no error anywhere.
 //   probe.mjs         runs the page's own JavaScript against a stub DOM, and reads the stylesheet and the
 //                     page text. Sees every branch of the ranking, the hash and the palette. Cannot see
 //                     computed layout -- there is none in Node.
@@ -121,7 +132,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// eighteen files own their own plumbing. It is 200 lines of plumbing.
+// nineteen files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -146,6 +157,7 @@ const HARNESSES = [
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
   {file: "newness_test.py", label: "what `New` means: one cohort, superseded by the next import that brings anything", python: true, floor: 45},
+  {file: "discover_test.py", label: "fifty a day for seven days, every category in each, and the queue that rotates them", python: true, floor: 75},
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
   {file: "media_test.py", label: "one embedded part per screenshot, the entry ceiling, and the unpooled cover", python: true, floor: 45},
@@ -170,7 +182,7 @@ if (!existsSync(join(ROOT, "docs", "index.html"))) {
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and three of the eighteen harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and three of the nineteen harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -183,7 +195,7 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Fourteen of the eighteen need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Fifteen of the nineteen need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives the IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar,
@@ -193,7 +205,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and fourteen of the eighteen harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and fifteen of the nineteen harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

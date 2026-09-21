@@ -1,4 +1,4 @@
-# The verification suite, in CI. Runs `node tests/run.mjs` -- all eighteen harnesses, 2,609 assertions --
+# The verification suite, in CI. Runs `node tests/run.mjs` -- all nineteen harnesses, 2,789 assertions --
 # and fails the job when anything is red. It writes nothing, commits nothing and deploys nothing.
 #
 # That count and the one in `tests/README.md` are the same claim written twice, and they drifted apart the
@@ -60,7 +60,7 @@
 #
 # WHY NO BROWSER IS INSTALLED, AND WHICH ONE ACTUALLY GETS USED
 #
-# Three of the eighteen harnesses drive Chromium over CDP, and none of them installs one. `ubuntu-latest`
+# Three of the nineteen harnesses drive Chromium over CDP, and none of them installs one. `ubuntu-latest`
 # carries two on `PATH` -- `/usr/bin/chromium` and `/usr/bin/google-chrome` -- and `launch()` passes
 # `--headless=new` unconditionally, so either is headless-capable without a flag from here. That saves a
 # ~130 MB Playwright download on every run and matches the policy `lighthouse.yml` already states next
@@ -92,10 +92,11 @@
 # media pool. They are the generator's dependencies rather than the suite's, which is why `tests/README.md`
 # describes the other Python harnesses as standard-library-only, and both build workflows install them
 # already. Nothing else here needs a package: `app_flags_test.py`, `theme_test.py`, `signals_test.py`,
-# `indexnow_test.py`, `newness_test.py`, `pagemin_test.py`, `refresh_test.py` and `live_test.py` are standard
-# library -- `newness_test.py` imports `scripts/newness.py` alone and nothing that stage-loads, which is what
-# keeps a module the whole ingest depends on testable on a bare clone. The Node side has no `package.json` at
-# all by design.
+# `indexnow_test.py`, `newness_test.py`, `discover_test.py`, `pagemin_test.py`, `refresh_test.py` and
+# `live_test.py` are standard library -- `newness_test.py` imports `scripts/newness.py` alone and
+# `discover_test.py` imports `scripts/discover.py` alone, neither of them anything that stage-loads, which
+# is what keeps two modules the whole ingest depends on testable on a bare clone. The Node side has no
+# `package.json` at all by design.
 #
 # Do not trim this list by reasoning about what a test appears to need. Run 34151702414 of `og-preview.yml`
 # died on a missing `openpyxl` that had been left out on exactly that reasoning: drawing a social card

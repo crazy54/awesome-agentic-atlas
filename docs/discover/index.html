@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discover — 50 projects a day from the Awesome Agentic Atlas</title>
+<meta name="description" content="A different 50 of the 1,294 projects every day, drawn from all 14 categories so the ones a popularity ranking never reaches get their turn. Rolls over at midnight Chicago time.">
+<link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/discover/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Discover — 50 projects a day from the Awesome Agentic Atlas">
+<meta property="og:description" content="A different 50 of the 1,294 projects every day, drawn from all 14 categories so the ones a popularity ranking never reaches get their turn. Rolls over at midnight Chicago time.">
+<meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/discover/">
+<meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<meta property="og:image:alt" content="The Awesome Agentic Atlas repository on GitHub.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta name="theme-color" id="tc" content="#101217">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+} catch (e) {}
+</script>
+<link rel="stylesheet" href="../pages.css">
+</head>
+<body>
+<header><div class="wrap">
+  <div class="top">
+    <div>
+      <p class="kick">Discover</p>
+      <h1>50 projects, today only</h1>
+      <p class="sub" id="dline">Monday 21 September 2026 &middot; 50 projects &middot; every category,
+        none of them repeated this week</p>
+      <p class="blurb">The atlas ranks by stars, and a ranking has a top. This does not: every one of the
+        14 categories is in every day's 50, the ones that have waited longest go first, and no
+        project appears twice in a week. Tomorrow is 50 different ones.<span id="dzone"></span></p>
+    </div>
+  <nav>
+    <a href="../collections/">Collections</a> &middot;
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/main/mega-list/leaderboard.md">Leaderboard</a> &middot;
+    <a href="../repo/">All projects</a> &middot;
+    <a href="../#browse">Topics &amp; harnesses</a><br>
+    <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> &middot;
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown</a><br>
+    <button class="chip" id="theme" aria-pressed="false">Light theme</button>
+  </nav>
+  </div>
+</div></header>
+<main><div class="wrap">
+  <div class="dctl">
+    <button class="chip" id="dprev" aria-label="Previous projects">&larr; Back</button>
+    <button class="chip" id="dnext" aria-label="More projects">Next &rarr;</button>
+    <button class="chip" id="dmode" aria-pressed="false">Grid view</button>
+    <span class="dpos" id="dpos" role="status">1 of 50</span>
+  </div>
+  <p class="dnote" id="dnote" hidden></p>
+  <div class="drail" id="drail" tabindex="0" role="group" data-day="2026-09-21"
+       aria-label="50 projects for Monday 21 September 2026"><article class="dcard" id="d1" data-project="ComposioHQ/composio" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Agent Skills</span></p><h2><a href="../repo/composiohq/composio/">Composio</a></h2><a class="nwo" href="https://github.com/ComposioHQ/composio">ComposioHQ/composio</a><p class="dmeta"><b>30,034</b> stars · TypeScript · 1 list</p><p class="desc">Wraps 250+ SaaS APIs (GitHub, Slack, Linear, Notion, etc.) as agent-ready actions with managed OAuth, so tool integration becomes a one-line import rather than a custom harness component per service. The fastest path from &quot;the agent needs to call an external…</p><p class="dn">1 of 50</p></article><article class="dcard" id="d2" data-project="egoist/waku" style="--card-accent:var(--accent-mint)"><p class="dtag"><span class="tag cat">Coding Agents</span></p><h2><a href="../repo/egoist/waku/">Waku</a></h2><a class="nwo" href="https://github.com/egoist/waku">egoist/waku</a><p class="dmeta"><b>1,331</b> stars · Rust · 1 list</p><p class="desc">Native macOS desktop app for working with local coding agents, keeping projects, sessions, and transcripts on your machine. Supports Amp, Claude Code, Codex CLI, Cursor CLI, Grok Build, OpenCode, and Pi.</p><p class="dn">2 of 50</p></article><article class="dcard" id="d3" data-project="MasuRii/opencode-smart-voice-notify" style="--card-accent:var(--accent-violet)"><p class="dtag"><span class="tag cat">Plugins, Themes &amp; Clients</span></p><h2><a href="../repo/masurii/opencode-smart-voice-notify/">Smart Voice Notify</a></h2><a class="nwo" href="https://github.com/MasuRii/opencode-smart-voice-notify">MasuRii/opencode-smart-voice-notify</a><p class="dmeta"><b>70</b> stars · TypeScript · 1 list</p><p class="desc">Intelligent voice notifications</p><p class="dn">3 of 50</p></article><article class="dcard" id="d4" data-project="sagiyaacoby/TeamHero" style="--card-accent:var(--accent-sky)"><p class="dtag"><span class="tag cat">Orchestrators &amp; Multi-Agent</span></p><h2><a href="../repo/sagiyaacoby/teamhero/">TeamHero</a></h2><a class="nwo" href="https://github.com/sagiyaacoby/TeamHero">sagiyaacoby/TeamHero</a><p class="dmeta"><b>35</b> stars · JavaScript · 1 list</p><p class="desc">Open-source multi-agent orchestration with web dashboard, task lifecycle, knowledge base, and autopilot mode. Built on Claude Code. Runs locally</p><p class="dn">4 of 50</p></article><article class="dcard" id="d5" data-project="razzant/ouroboros" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Assistants &amp; Domain Agents</span></p><h2><a href="../repo/razzant/ouroboros/">Ouroboros</a></h2><a class="nwo" href="https://github.com/razzant/ouroboros">razzant/ouroboros</a><p class="dmeta"><b>1,255</b> stars · Python · 2 lists</p><p class="desc">Self-hosted general-purpose agent with durable identity and memory, reviewed self-modification, specialist subagent swarms, and desktop or headless operation</p><p class="dn">5 of 50</p></article><article class="dcard" id="d6" data-project="razzant/claudexor" style="--card-accent:var(--accent-violet)"><p class="dtag"><span class="tag cat">Frameworks &amp; SDKs</span></p><h2><a href="../repo/razzant/claudexor/">Claudexor</a></h2><a class="nwo" href="https://github.com/razzant/claudexor">razzant/claudexor</a><p class="dmeta"><b>429</b> stars · TypeScript · 1 list</p><p class="desc">Routes one coding thread across harnesses with quota-aware rotation between subscription profiles, Best-of-N runs, and cross-family review.</p><p class="dn">6 of 50</p></article><article class="dcard" id="d7" data-project="cynative/cynative" style="--card-accent:var(--accent-sky)"><p class="dtag"><span class="tag cat">Research &amp; Data Agents</span></p><h2><a href="../repo/cynative/cynative/">Cynative</a></h2><a class="nwo" href="https://github.com/cynative/cynative">cynative/cynative</a><p class="dmeta"><b>195</b> stars · Go · 1 list</p><p class="desc">Deep cybersecurity research agent for your cloud, code and runtime. Read-only, sandboxed</p><p class="dn">7 of 50</p></article><article class="dcard" id="d8" data-project="Meirtz/Awesome-Context-Engineering" style="--card-accent:var(--accent-coral)"><p class="dtag"><span class="tag cat">Docs, Learning &amp; Lists</span></p><h2><a href="../repo/meirtz/awesome-context-engineering/">Awesome Context Engineering</a></h2><a class="nwo" href="https://github.com/Meirtz/Awesome-Context-Engineering">Meirtz/Awesome-Context-Engineering</a><p class="dmeta"><b>3,290</b> stars · 1 list</p><p class="desc">Comprehensive survey on context engineering: prompt engineering, RAG, context window management, production AI systems</p><p class="dn">8 of 50</p></article><article class="dcard" id="d9" data-project="peteromallet/desloppify" style="--card-accent:var(--accent-sky)"><p class="dtag"><span class="tag cat">Harnesses &amp; Runtime Infra</span></p><h2><a href="../repo/peteromallet/desloppify/">desloppify</a></h2><a class="nwo" href="https://github.com/peteromallet/desloppify">peteromallet/desloppify</a><p class="dmeta"><b>3,045</b> stars · Python · 1 list</p><p class="desc">Agent harness that turns codebase quality improvement into a structured, score-driven workflow: mechanical detectors find dead code and complexity, LLM review assesses naming and abstractions, and a persistent next → fix → resolve loop keeps the agent on…</p><p class="dn">9 of 50</p></article><article class="dcard" id="d10" data-project="letta-ai/letta" style="--card-accent:var(--accent-mint)"><p class="dtag"><span class="tag cat">Context, Memory &amp; RAG</span></p><h2><a href="../repo/letta-ai/letta/">Letta</a></h2><a class="nwo" href="https://github.com/letta-ai/letta">letta-ai/letta</a><p class="dmeta"><b>24,602</b> stars · 3 lists</p><p class="desc">The reference architecture for stateful agents: three-tier memory (core / archival / recall) maps directly to harness state management design. Their agent loop redesign post is the most thorough public analysis of how memory structure shapes the harness</p><p class="dn">10 of 50</p></article><article class="dcard" id="d11" data-project="mensfeld/code-on-incus" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Sandbox, Security &amp; Governance</span></p><h2><a href="../repo/mensfeld/code-on-incus/">Code on Incus</a></h2><a class="nwo" href="https://github.com/mensfeld/code-on-incus">mensfeld/code-on-incus</a><p class="dmeta"><b>687</b> stars · Go · 1 list</p><p class="desc">by mensfeld - Give each AI agent its own isolated machine with root, Docker, and systemd. Active defense detects and stops threats automatically</p><p class="dn">11 of 50</p></article><article class="dcard" id="d12" data-project="traceloop/openllmetry" style="--card-accent:var(--accent-coral)"><p class="dtag"><span class="tag cat">Observability &amp; Evals</span></p><h2><a href="../repo/traceloop/openllmetry/">OpenLLMetry</a></h2><a class="nwo" href="https://github.com/traceloop/openllmetry">traceloop/openllmetry</a><p class="dmeta"><b>7,414</b> stars · Python · 1 list</p><p class="desc">OpenTelemetry-based instrumentation for LLM calls and agent steps: adds trace spans to every inference and tool call without modifying business logic. The cleanest way to bring the existing OTEL ecosystem (Grafana, Datadog, Jaeger) to a harness</p><p class="dn">12 of 50</p></article><article class="dcard" id="d13" data-project="Farama-Foundation/ChatArena" style="--card-accent:var(--accent-mint)"><p class="dtag"><span class="tag cat">Creative, Voice &amp; Media</span></p><h2><a href="../repo/farama-foundation/chatarena/">ChatArena</a></h2><a class="nwo" href="https://github.com/Farama-Foundation/ChatArena">Farama-Foundation/ChatArena</a><p class="dmeta"><b>1,560</b> stars · Python · 1 list</p><p class="desc">ChatArena (or Chat Arena) is a Multi-Agent Language Game Environments for LLMs. The goal is to develop communication and collaboration capabilities of AIs.</p><p class="dn">13 of 50</p></article><article class="dcard" id="d14" data-project="vinkius-labs/mcpfusion" style="--card-accent:var(--accent-coral)"><p class="dtag"><span class="tag cat">MCP Servers</span></p><h2><a href="../repo/vinkius-labs/mcpfusion/">vurb.ts</a></h2><a class="nwo" href="https://github.com/vinkius-labs/mcpfusion">vinkius-labs/mcpfusion</a><p class="dmeta"><b>256</b> stars · TypeScript · 1 list</p><p class="desc">TypeScript framework for building production MCP servers with a &quot;Presenter&quot; perception layer that strips undeclared fields, redacts PII, and gates tool visibility by workflow state. Fills a critical gap in the MCP ecosystem: most tooling focuses on consuming…</p><p class="dn">14 of 50</p></article><article class="dcard" id="d15" data-project="obra/superpowers" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Agent Skills</span></p><h2><a href="../repo/obra/superpowers/">Superpowers</a></h2><a class="nwo" href="https://github.com/obra/superpowers">obra/superpowers</a><p class="dmeta"><b>281,176</b> stars · Shell · 3 lists</p><p class="desc">by Jesse Vincent - A strong bundle of core competencies for software engineering, with good coverage of a large portion of the SDLC - from planning, reviewing, testing, debugging... Well written, well organized, and adaptable. The author refers to them as…</p><p class="dn">15 of 50</p></article><article class="dcard" id="d16" data-project="anomalyco/opencode" style="--card-accent:var(--accent-mint)"><p class="dtag"><span class="tag cat">Coding Agents</span></p><h2><a href="../repo/anomalyco/opencode/">OpenCode</a></h2><a class="nwo" href="https://github.com/anomalyco/opencode">anomalyco/opencode</a><p class="dmeta"><b>203,467</b> stars · TypeScript · 3 lists</p><p class="desc">Open-source terminal-native AI coding agent with 131K+ stars and 2.5M+ monthly active developers. Provider-agnostic architecture supports 75+ LLM providers plus native LSP auto-configuration, multi-session parallel agents, and MCP extensibility. The…</p><p class="dn">16 of 50</p></article><article class="dcard" id="d17" data-project="boxpositron/with-context-mcp" style="--card-accent:var(--accent-violet)"><p class="dtag"><span class="tag cat">Plugins, Themes &amp; Clients</span></p><h2><a href="../repo/boxpositron/with-context-mcp/">With Context MCP</a></h2><a class="nwo" href="https://github.com/boxpositron/with-context-mcp">boxpositron/with-context-mcp</a><p class="dmeta"><b>47</b> stars · TypeScript · 1 list</p><p class="desc">Project-specific markdown notes</p><p class="dn">17 of 50</p></article><article class="dcard" id="d18" data-project="zircote/workflows-plugin" style="--card-accent:var(--accent-sky)"><p class="dtag"><span class="tag cat">Orchestrators &amp; Multi-Agent</span></p><h2><a href="../repo/zircote/workflows-plugin/">Dynamic Workflow Design Patterns</a></h2><a class="nwo" href="https://github.com/zircote/workflows-plugin">zircote/workflows-plugin</a><p class="dmeta"><b>1</b> stars · JavaScript · 1 list</p><p class="desc">by Robert Allen - A Skill based on this extremely well authored article about dynamic workflows. Detailed explanations regarding the Workflow tool and sensible advice covering a range of patterns and anti-patterns</p><p class="dn">18 of 50</p></article><article class="dcard" id="d19" data-project="siddsachar/row-bot" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Assistants &amp; Domain Agents</span></p><h2><a href="../repo/siddsachar/row-bot/">row-bot</a></h2><a class="nwo" href="https://github.com/siddsachar/row-bot">siddsachar/row-bot</a><p class="dmeta"><b>1,480</b> stars · Python · 1 list</p><p class="desc">Local-first desktop assistant that reasons through messy context, orchestrates tools and providers, and works inside your files, repos, and channels — durable memory, scheduled tasks, voice, visible browser automation, and parent-led child agents for…</p><p class="dn">19 of 50</p></article><article class="dcard" id="d20" data-project="mergisi/awesome-openclaw-agents" style="--card-accent:var(--accent-violet)"><p class="dtag"><span class="tag cat">Frameworks &amp; SDKs</span></p><h2><a href="../repo/mergisi/awesome-openclaw-agents/">OpenClaw Agent Templates</a></h2><a class="nwo" href="https://github.com/mergisi/awesome-openclaw-agents">mergisi/awesome-openclaw-agents</a><p class="dmeta"><b>3,949</b> stars · HTML · 1 list</p><p class="desc">177 production-ready SOUL.md configs across 24 categories (PM, SEO, DevOps, Writer, Support). Copy-paste ready for OpenClaw. Visual deploy via CrewClaw</p><p class="dn">20 of 50</p></article><article class="dcard" id="d21" data-project="WenyuChiou/ai-research-skills" style="--card-accent:var(--accent-sky)"><p class="dtag"><span class="tag cat">Research &amp; Data Agents</span></p><h2><a href="../repo/wenyuchiou/ai-research-skills/">AI Research Skills</a></h2><a class="nwo" href="https://github.com/WenyuChiou/ai-research-skills">WenyuChiou/ai-research-skills</a><p class="dmeta"><b>237</b> stars · Python · 1 list</p><p class="desc">by Wenyu Chiou - A catalog of 15 Claude Code skills mapped to 8 research-workflow stages (literature → gap analysis → design → drafting → reviewer response), where each stage emits an explicit YAML/Markdown deliverable the next stage consumes. Thoughtfully…</p><p class="dn">21 of 50</p></article><article class="dcard" id="d22" data-project="LukeRenton/explore-claude-code" style="--card-accent:var(--accent-coral)"><p class="dtag"><span class="tag cat">Docs, Learning &amp; Lists</span></p><h2><a href="../repo/lukerenton/explore-claude-code/">explore-claude-code</a></h2><a class="nwo" href="https://github.com/LukeRenton/explore-claude-code">LukeRenton/explore-claude-code</a><p class="dmeta"><b>309</b> stars · JavaScript · 1 list</p><p class="desc">by Luke Renton - An interactive click-through of an annotated Claude Code project where every file and folder — CLAUDE.md, settings.json, rules, commands, skills, agents, hooks, plugins, and .mcp.json — is a real, explained concept, teaching the tool&#x27;s…</p><p class="dn">22 of 50</p></article><article class="dcard" id="d23" data-project="zakariagharzouli/sparda" style="--card-accent:var(--accent-sky)"><p class="dtag"><span class="tag cat">Harnesses &amp; Runtime Infra</span></p><h2><a href="../repo/zakariagharzouli/sparda/">SPARDA</a></h2><a class="nwo" href="https://github.com/zakariagharzouli/sparda">zakariagharzouli/sparda</a><p class="dmeta"><b>8</b> stars · JavaScript · 1 list</p><p class="desc">by Zakaria Gharzouli (Residual Labs) - Converts a running Express or FastAPI app into an MCP server by AST-parsing its routes and injecting a marked, byte-for-byte-removable /mcp router, so the agent can operate your live application (real auth, real data)…</p><p class="dn">23 of 50</p></article><article class="dcard" id="d24" data-project="getzep/zep" style="--card-accent:var(--accent-mint)"><p class="dtag"><span class="tag cat">Context, Memory &amp; RAG</span></p><h2><a href="../repo/getzep/zep/">Zep</a></h2><a class="nwo" href="https://github.com/getzep/zep">getzep/zep</a><p class="dmeta"><b>4,890</b> stars · Python · 1 list</p><p class="desc">Purpose-built agent memory store with automatic conversation summarization, entity extraction, and semantic search over session history. Solves long-session context overflow at the memory layer rather than forcing the harness to manage trimming manually</p><p class="dn">24 of 50</p></article><article class="dcard" id="d25" data-project="katspaugh/machine" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Sandbox, Security &amp; Governance</span></p><h2><a href="../repo/katspaugh/machine/">machine</a></h2><a class="nwo" href="https://github.com/katspaugh/machine">katspaugh/machine</a><p class="dmeta"><b>15</b> stars · Python · 1 list</p><p class="desc">by katspaugh - One isolated Lima VM per GitHub project — sandboxed Claude Code/Codex, Docker, Node, signed git</p><p class="dn">25 of 50</p></article><article class="dcard" id="d26" data-project="mag123c/toktrack" style="--card-accent:var(--accent-coral)"><p class="dtag"><span class="tag cat">Observability &amp; Evals</span></p><h2><a href="../repo/mag123c/toktrack/">toktrack</a></h2><a class="nwo" href="https://github.com/mag123c/toktrack">mag123c/toktrack</a><p class="dmeta"><b>187</b> stars · Rust · 1 list</p><p class="desc">by mag123c - Ultra-fast token &amp;amp; cost tracker for LLM Token Usage (e.g. Claude Code)</p><p class="dn">26 of 50</p></article><article class="dcard" id="d27" data-project="iart-ai/motion-skills" style="--card-accent:var(--accent-mint)"><p class="dtag"><span class="tag cat">Creative, Voice &amp; Media</span></p><h2><a href="../repo/iart-ai/motion-skills/">motion-skills</a></h2><a class="nwo" href="https://github.com/iart-ai/motion-skills">iart-ai/motion-skills</a><p class="dmeta"><b>407</b> stars · HTML · 1 list</p><p class="desc">by iart.ai - An open-source collection of ~50 motion-graphics, animation, and video skills across 14 installable packs — kinetic typography, data-driven charts, explainers, TikTok/Reels, web/WebGL animation, and Manim math animation — that teach an agent how…</p><p class="dn">27 of 50</p></article><article class="dcard" id="d28" data-project="lastmile-ai/mcp-agent" style="--card-accent:var(--accent-coral)"><p class="dtag"><span class="tag cat">MCP Servers</span></p><h2><a href="../repo/lastmile-ai/mcp-agent/">mcp-agent</a></h2><a class="nwo" href="https://github.com/lastmile-ai/mcp-agent">lastmile-ai/mcp-agent</a><p class="dmeta"><b>8,527</b> stars · Python · 1 list</p><p class="desc">Production-grade framework for building agents with MCP: composable workflows, built-in observability, and provider-agnostic model routing. The clearest reference for turning MCP servers from isolated utilities into a coherent agent harness</p><p class="dn">28 of 50</p></article><article class="dcard" id="d29" data-project="zebbern/claude-code-guide" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Agent Skills</span></p><h2><a href="../repo/zebbern/claude-code-guide/">Claude Code Guide</a></h2><a class="nwo" href="https://github.com/zebbern/claude-code-guide">zebbern/claude-code-guide</a><p class="dmeta"><b>4,600</b> stars · Python · 2 lists</p><p class="desc">by zebbern - A current single-page reference for Claude Code: install, environment variables, slash commands, MCP, hooks, and subagents, kept in sync with the official changelog</p><p class="dn">29 of 50</p></article><article class="dcard" id="d30" data-project="amrahman90/python-expert-agent" style="--card-accent:var(--accent-mint)"><p class="dtag"><span class="tag cat">Coding Agents</span></p><h2><a href="../repo/amrahman90/python-expert-agent/">Python Expert Agent for OpenCode</a></h2><a class="nwo" href="https://github.com/amrahman90/python-expert-agent">amrahman90/python-expert-agent</a><p class="dmeta"><b>16</b> stars · JavaScript · 1 list</p><p class="desc">Python Expert Agent toolkit for OpenCode with subagents and skills</p><p class="dn">30 of 50</p></article><article class="dcard" id="d31" data-project="iHildy/opencode-synced" style="--card-accent:var(--accent-violet)"><p class="dtag"><span class="tag cat">Plugins, Themes &amp; Clients</span></p><h2><a href="../repo/ihildy/opencode-synced/">Opencode Synced</a></h2><a class="nwo" href="https://github.com/iHildy/opencode-synced">iHildy/opencode-synced</a><p class="dmeta"><b>149</b> stars · TypeScript · 1 list</p><p class="desc">Sync configs across machines</p><p class="dn">31 of 50</p></article><article class="dcard" id="d32" data-project="tim-smart/lalph" style="--card-accent:var(--accent-sky)"><p class="dtag"><span class="tag cat">Orchestrators &amp; Multi-Agent</span></p><h2><a href="../repo/tim-smart/lalph/">lalph</a></h2><a class="nwo" href="https://github.com/tim-smart/lalph">tim-smart/lalph</a><p class="dmeta"><b>130</b> stars · TypeScript · 1 list</p><p class="desc">Orchestrator driven by whichever source of issues you point it at.</p><p class="dn">32 of 50</p></article><article class="dcard" id="d33" data-project="cloudflare/cloudflare-os" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Assistants &amp; Domain Agents</span></p><h2><a href="../repo/cloudflare/cloudflare-os/">Cloudflare OS</a></h2><a class="nwo" href="https://github.com/cloudflare/cloudflare-os">cloudflare/cloudflare-os</a><p class="dmeta"><b>9,500</b> stars · TypeScript · 1 list</p><p class="desc">Self-hostable &quot;company OS&quot; on Cloudflare Workers: a chat UI where agents preloaded with your company context do tasks, build sandboxed apps, and stay inside a Gatekeepers guardrail framework.</p><p class="dn">33 of 50</p></article><article class="dcard" id="d34" data-project="codecast-sh/codecast" style="--card-accent:var(--accent-violet)"><p class="dtag"><span class="tag cat">Frameworks &amp; SDKs</span></p><h2><a href="../repo/codecast-sh/codecast/">codecast</a></h2><a class="nwo" href="https://github.com/codecast-sh/codecast">codecast-sh/codecast</a><p class="dmeta"><b>30</b> stars · TypeScript · 1 list</p><p class="desc">Watches your real local sessions and surfaces them in a live triage inbox, keeping a searchable record with line-level agent attribution. Claude Code, Codex, Cursor, Gemini.</p><p class="dn">34 of 50</p></article><article class="dcard" id="d35" data-project="pedrohcgs/claude-code-my-workflow" style="--card-accent:var(--accent-sky)"><p class="dtag"><span class="tag cat">Research &amp; Data Agents</span></p><h2><a href="../repo/pedrohcgs/claude-code-my-workflow/">My Claude Code Setup</a></h2><a class="nwo" href="https://github.com/pedrohcgs/claude-code-my-workflow">pedrohcgs/claude-code-my-workflow</a><p class="dmeta"><b>1,554</b> stars · HTML · 1 list</p><p class="desc">by Pedro H. C. Sant&#x27;Anna - A ready-to-fork Claude Code template for academics using LaTeX/Beamer + R. Multi-agent review, quality gates, adversarial QA, and replication protocols. Great use of orchestration patterns and great documentation</p><p class="dn">35 of 50</p></article><article class="dcard" id="d36" data-project="evermeer/CodingAgentOrchestration" style="--card-accent:var(--accent-coral)"><p class="dtag"><span class="tag cat">Docs, Learning &amp; Lists</span></p><h2><a href="../repo/evermeer/codingagentorchestration/">Coding Agent Orchestration</a></h2><a class="nwo" href="https://github.com/evermeer/CodingAgentOrchestration">evermeer/CodingAgentOrchestration</a><p class="dmeta"><b>24</b> stars · 1 list</p><p class="desc">OpenCode Setup Guide / Orchestration</p><p class="dn">36 of 50</p></article><article class="dcard" id="d37" data-project="SuperagenticAI/metaharness" style="--card-accent:var(--accent-sky)"><p class="dtag"><span class="tag cat">Harnesses &amp; Runtime Infra</span></p><h2><a href="../repo/superagenticai/metaharness/">metaharness</a></h2><a class="nwo" href="https://github.com/SuperagenticAI/metaharness">SuperagenticAI/metaharness</a><p class="dmeta"><b>160</b> stars · Python · 1 list</p><p class="desc">Open-source Python library (April 2026) that implements an outer optimization loop around executable harnesses for coding agents. Inspired by the Meta-Harness paper, it treats AGENTS.md, setup scripts, validation logic, and test flows as optimizable…</p><p class="dn">37 of 50</p></article><article class="dcard" id="d38" data-project="jungjaehoon-lifegamez/MAMA" style="--card-accent:var(--accent-mint)"><p class="dtag"><span class="tag cat">Context, Memory &amp; RAG</span></p><h2><a href="../repo/jungjaehoon-lifegamez/mama/">MAMA</a></h2><a class="nwo" href="https://github.com/jungjaehoon-lifegamez/MAMA">jungjaehoon-lifegamez/MAMA</a><p class="dmeta"><b>12</b> stars · TypeScript · 1 list</p><p class="desc">by jungjaehoon-lifegamez - Always-on companion for Claude that remembers your decisions and their evolution. Local-first memory using SQLite + transformers.js embeddings</p><p class="dn">38 of 50</p></article><article class="dcard" id="d39" data-project="kenryu42/cc-safety-net" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Sandbox, Security &amp; Governance</span></p><h2><a href="../repo/kenryu42/cc-safety-net/">Claude Code Safety Net</a></h2><a class="nwo" href="https://github.com/kenryu42/cc-safety-net">kenryu42/cc-safety-net</a><p class="dmeta"><b>1,522</b> stars · TypeScript · 2 lists</p><p class="desc">by kenryu42 - A coding agent CLI hook that acts as a safety net, catching destructive git and filesystem commands before they execute. Supports Codex, Claude Code, OpenCode, Gemini CLI, Copilot CLI, Kimi Code and Pi</p><p class="dn">39 of 50</p></article><article class="dcard" id="d40" data-project="lookfree/cc-harness" style="--card-accent:var(--accent-coral)"><p class="dtag"><span class="tag cat">Observability &amp; Evals</span></p><h2><a href="../repo/lookfree/cc-harness/">CC Harness</a></h2><a class="nwo" href="https://github.com/lookfree/cc-harness">lookfree/cc-harness</a><p class="dmeta"><b>47</b> stars · TypeScript · 1 list</p><p class="desc">by lookfree - Desktop workbench that reads Claude Code session files locally and renders the subagent and workflow topology as a live graph, with per-node latency, token cost, and nesting depth. Token spend is broken down by source (base session, skills…</p><p class="dn">40 of 50</p></article><article class="dcard" id="d41" data-project="SHADOWPR0/security-bluebook-builder" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Agent Skills</span></p><h2><a href="../repo/shadowpr0/security-bluebook-builder/">SHADOWPR0/security-bluebook-builder</a></h2><a class="nwo" href="https://github.com/SHADOWPR0/security-bluebook-builder">SHADOWPR0/security-bluebook-builder</a><p class="dmeta"><b>7</b> stars · 1 list</p><p class="desc">Security documentation/buildbook skill for agent workflows</p><p class="dn">41 of 50</p></article><article class="dcard" id="d42" data-project="ouijit/ouijit" style="--card-accent:var(--accent-mint)"><p class="dtag"><span class="tag cat">Coding Agents</span></p><h2><a href="../repo/ouijit/ouijit/">Ouijit</a></h2><a class="nwo" href="https://github.com/ouijit/ouijit">ouijit/ouijit</a><p class="dmeta"><b>164</b> stars · TypeScript · 1 list</p><p class="desc">Kanban board and terminals wired together by lifecycle hooks, scripts, and a session-aware CLI, so a task runs by hand, on a script, or delegated to the agent. Per-task worktrees, optional VM sandboxing. Claude Code, Codex, Pi, OpenCode.</p><p class="dn">42 of 50</p></article><article class="dcard" id="d43" data-project="cathrynlavery/diagram-design" style="--card-accent:var(--accent-violet)"><p class="dtag"><span class="tag cat">Plugins, Themes &amp; Clients</span></p><h2><a href="../repo/cathrynlavery/diagram-design/">Diagram Design</a></h2><a class="nwo" href="https://github.com/cathrynlavery/diagram-design">cathrynlavery/diagram-design</a><p class="dmeta"><b>30,189</b> stars · HTML · 1 list</p><p class="desc">by Cathryn Lavery - Another welcome contribution to the domain of making Claude Code output look stylish, this collection of skills produces a variety of editorial diagrams in the form of self-contained HTML + SVG. Although I never thought I&#x27;d hear these…</p><p class="dn">43 of 50</p></article><article class="dcard" id="d44" data-project="spencermarx/orc" style="--card-accent:var(--accent-sky)"><p class="dtag"><span class="tag cat">Orchestrators &amp; Multi-Agent</span></p><h2><a href="../repo/spencermarx/orc/">orc</a></h2><a class="nwo" href="https://github.com/spencermarx/orc">spencermarx/orc</a><p class="dmeta"><b>23</b> stars · Shell · 1 list</p><p class="desc">Lightweight framework that piggybacks your existing CLI setup for planning, task decomposition, worktrees, and review.</p><p class="dn">44 of 50</p></article><article class="dcard" id="d45" data-project="muellerberndt/mini-agi" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Assistants &amp; Domain Agents</span></p><h2><a href="../repo/muellerberndt/mini-agi/">Mini AGI</a></h2><a class="nwo" href="https://github.com/muellerberndt/mini-agi">muellerberndt/mini-agi</a><p class="dmeta"><b>2,899</b> stars · Python · 1 list</p><p class="desc">MiniAGI is a simple general-purpose AI agent based on the OpenAI API.</p><p class="dn">45 of 50</p></article><article class="dcard" id="d46" data-project="strands-agents/harness-sdk" style="--card-accent:var(--accent-violet)"><p class="dtag"><span class="tag cat">Frameworks &amp; SDKs</span></p><h2><a href="../repo/strands-agents/harness-sdk/">Strands Agents SDK</a></h2><a class="nwo" href="https://github.com/strands-agents/harness-sdk">strands-agents/harness-sdk</a><p class="dmeta"><b>7,141</b> stars · Python · 3 lists</p><p class="desc">AWS&#x27;s open-source, model-driven agent SDK that treats the loop, tool binding, and guardrails as first-class primitives. Supports Bedrock, Anthropic, OpenAI, Gemini, and Ollama with native MCP, built-in observability, and multi-agent patterns — the missing…</p><p class="dn">46 of 50</p></article><article class="dcard" id="d47" data-project="K-Dense-AI/scientific-agent-skills" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Agent Skills</span></p><h2><a href="../repo/k-dense-ai/scientific-agent-skills/">K-Dense-AI/claude-scientific-skills</a></h2><a class="nwo" href="https://github.com/K-Dense-AI/scientific-agent-skills">K-Dense-AI/scientific-agent-skills</a><p class="dmeta"><b>42,319</b> stars · Python · 1 list</p><p class="desc">Scientific, research, engineering, finance, and writing skill suite (MIT)</p><p class="dn">47 of 50</p></article><article class="dcard" id="d48" data-project="anomalyco/opencode-sdk-go" style="--card-accent:var(--accent-mint)"><p class="dtag"><span class="tag cat">Coding Agents</span></p><h2><a href="../repo/anomalyco/opencode-sdk-go/">opencode-sdk-go</a></h2><a class="nwo" href="https://github.com/anomalyco/opencode-sdk-go">anomalyco/opencode-sdk-go</a><p class="dmeta"><b>152</b> stars · Go · 1 list</p><p class="desc">Official Go SDK for opencode</p><p class="dn">48 of 50</p></article><article class="dcard" id="d49" data-project="ndom91/open-plan-annotator" style="--card-accent:var(--accent-violet)"><p class="dtag"><span class="tag cat">Plugins, Themes &amp; Clients</span></p><h2><a href="../repo/ndom91/open-plan-annotator/">open-plan-annotator</a></h2><a class="nwo" href="https://github.com/ndom91/open-plan-annotator">ndom91/open-plan-annotator</a><p class="dmeta"><b>91</b> stars · TypeScript · 1 list</p><p class="desc">Annotate LLM plans like a Google Doc!</p><p class="dn">49 of 50</p></article><article class="dcard" id="d50" data-project="davidondrej/skills" style="--card-accent:var(--accent-gold)"><p class="dtag"><span class="tag cat">Agent Skills</span></p><h2><a href="../repo/davidondrej/skills/">davidondrej/skills</a></h2><a class="nwo" href="https://github.com/davidondrej/skills">davidondrej/skills</a><p class="dmeta"><b>3,901</b> stars · Shell · 1 list</p><p class="desc">Source for David Ondrej agent workflow skills across orchestration, research, setup, skill authoring, and documentation workflows (MIT)</p><p class="dn">50 of 50</p></article></div>
+  <section class="allin">
+    <h2>How these 50 were chosen</h2>
+    <p>Every category gets slots in every day, weighted by the square root of its size &mdash; so the
+      14 categories here are all represented, the largest one does not take half the page, and a
+      category with a few dozen projects in it is not crowded out by one with thousands. Within a
+      category, the projects that have gone longest without appearing go first. Stars are not an input:
+      the <a href="../">front page</a> already ranks by them, and a Discover that consulted them
+      would be the front page with a different heading.</p>
+    <p>The week's seven days are picked at once, on Sunday, and written to
+      <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/main/docs/discover.json">discover.json</a> &mdash; so
+      today's 50 are the same 50 for everyone, they can be linked to, and they are still here
+      when you come back this afternoon. The day turns over at midnight, Chicago time.</p>
+  </section>
+</div></main>
+<footer><div class="wrap">
+  50 of 1,294 projects a day, rotated so the whole atlas comes round rather than the popular end of
+  it being resampled. Stars, language and last-push come from the GitHub API on
+  2026-09-03 and drift daily; the picks are fixed for the week. Everything here is also
+  in the <a href="../">searchable index</a>, on each project's own page, and in the
+  <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown edition</a>.
+</div></footer>
+<script>
+/* DISCOVER CORE. Pure functions, asserted directly by tests/probe.mjs. See scripts/19d_discover.py. */
+const DISCOVER = (() => {
+  // The date in a named zone, as ISO. Assembled from `formatToParts` rather than taken from a locale that
+  // happens to format this way: `en-CA` does produce `2026-09-21` in every engine tested, and relying on
+  // that is relying on a locale database to keep a shape nobody promised. The zone comes from the plan, so
+  // this function has no opinion about which zone Discover rolls over in -- `scripts/discover.py` does.
+  const dayIn = (tz, at) => {
+    const p = {};
+    for (const {type, value} of new Intl.DateTimeFormat("en-US", {
+      timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit",
+    }).formatToParts(at)) p[type] = value;
+    return p.year + "-" + p.month + "-" + p.day;
+  };
+  // Midnight-to-midnight in whole days, both sides read as UTC. `Date.UTC` on the parts rather than
+  // `Date.parse`, which would take the offset of whatever zone the reader is in and land a day out for
+  // anyone east of Greenwich.
+  const asUTC = (iso) => {
+    const [y, m, d] = iso.split("-").map(Number);
+    return Date.UTC(y, m - 1, d);
+  };
+  const daysBetween = (a, b) => Math.round((asUTC(b) - asUTC(a)) / 86400000);
+  // The cohort for a date: the one dated that day, or -- if the plan has run out because nothing is
+  // building -- the one that day's offset lands on, cycling. `discover.for_day()` is the same arithmetic in
+  // Python and tests/probe.mjs asserts the two agree on every date in a fortnight either side of a plan.
+  // The `+ n) % n` is not decoration: a plain `%` on a date before the plan begins returns a negative
+  // index, and `days[-1]` in JavaScript is `undefined` rather than the last element.
+  const forDay = (plan, day) => {
+    const days = (plan && plan.days) || [];
+    if (!days.length) return null;
+    const hit = days.find((c) => c.date === day);
+    if (hit) return hit;
+    const n = days.length;
+    return days[((daysBetween(days[0].date, day) % n) + n) % n];
+  };
+  // `{name, cat, stars, ...}` from the wire's array, by name off `d.cols`. One pass, so a field appended to
+  // CARD_COLS arrives here without this function being touched.
+  const hydrate = (d) => {
+    const out = {};
+    for (const nwo of Object.keys(d.rows || {})) {
+      const o = {nwo};
+      d.cols.forEach((c, i) => { o[c] = d.rows[nwo][i]; });
+      out[nwo] = o;
+    }
+    return out;
+  };
+  const ACCENTS = ["sky", "mint", "gold", "coral", "violet"];
+  const DEVICE_NAMES = ["aux", "clock$", "com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8", "com9", "con", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9", "nul", "prn"];
+  // Verbatim from `19_pages.py`'s copy, which is verbatim from `22_detail.segment()`. Four copies of this
+  // rule exist and they must agree exactly or a card links to a 404; `tests/detail-churn.mjs` is what holds
+  // all four to the same answer on every row in the atlas.
+  const segment = (s) => {
+    if (s.startsWith(".")) s = "dot-" + s.slice(1);
+    if (s.endsWith(".")) s = s.slice(0, -1) + "-dot";
+    if (DEVICE_NAMES.includes(s.split(".")[0])) s = "dev-" + s;
+    return s;
+  };
+  const detailURL = (nwo) => "../repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
+  // `&#x27;` for the apostrophe, not the `&#39;` the index's own esc() writes. The two are the same
+  // character and render identically, which is exactly why this had to be pinned: Python's `html.escape`
+  // -- which is what `esc()` in 20_landing.py is -- emits the hex form, four of the fifty cards on a
+  // typical day have an apostrophe in the blurb, and a card rewritten after midnight with a decimal
+  // entity in it is a silent byte-level divergence between two renderers of the same card. Nothing on
+  // screen would have shown it; `tests/probe.mjs` compares the markup character for character and did.
+  const esc = (s) => String(s === null || s === undefined ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
+  const commas = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  // The card, and the contract with `card_html()` in scripts/19d_discover.py: same fields, same order,
+  // same markup, character for character. tests/probe.mjs asserts that against the built page rather than
+  // trusting this comment -- two renderers for one card is a cost paid for the no-JS page and the
+  // after-midnight swap, and an unasserted contract is how that cost turns into a bug.
+  const cardHTML = (r, i, total, cats, cohort) => {
+    const isnew = !!cohort && r.first_seen === cohort;
+    const label = r.cat >= 0 && r.cat < cats.length ? cats[r.cat] : "Uncategorised";
+    const meta = [];
+    if (r.stars) meta.push("<b>" + commas(r.stars) + "</b> stars");
+    if (r.lang) meta.push(esc(r.lang));
+    meta.push(r.lists > 1 ? r.lists + " lists" : "1 list");
+    return '<article class="dcard' + (isnew ? " nw" : "") + '" id="d' + (i + 1) +
+      '" data-project="' + esc(r.nwo) + '" style="--card-accent:var(--accent-' +
+      ACCENTS[r.cat % ACCENTS.length] + ')">' +
+      '<p class="dtag"><span class="tag cat">' + esc(label) + "</span>" +
+      (isnew ? '<span class="dnew">New</span>' : "") + "</p>" +
+      '<h2><a href="' + esc(detailURL(r.nwo)) + '">' + esc(r.name) + "</a></h2>" +
+      '<a class="nwo" href="https://github.com/' + esc(r.nwo) + '">' + esc(r.nwo) + "</a>" +
+      '<p class="dmeta">' + meta.join(" · ") + "</p>" +
+      '<p class="desc">' + esc(r.blurb) + "</p>" +
+      '<p class="dn">' + (i + 1) + " of " + total + "</p>" +
+      "</article>";
+  };
+  // `Sunday 21 September 2026`, matching `long_date()` in the stage. UTC, because the string is a label for
+  // a date that is already decided -- reading it in the reader's zone would print the day before for
+  // anyone west of Greenwich.
+  const longDate = (day) => {
+    const p = {};
+    for (const {type, value} of new Intl.DateTimeFormat("en-GB", {
+      timeZone: "UTC", weekday: "long", day: "numeric", month: "long", year: "numeric",
+    }).formatToParts(new Date(asUTC(day)))) p[type] = value;
+    return p.weekday + " " + p.day + " " + p.month + " " + p.year;
+  };
+  // The instant a cohort runs out: the first quarter-hour mark at which `tz` is no longer on `day`.
+  // Stepped rather than computed from an offset, for the reason this whole feature names a zone instead of
+  // an offset -- an offset is a second implementation of the DST rule. Fifteen minutes is the granularity
+  // every zone in the database uses, and the walk starts a day early and gives up after 75 hours, so it
+  // terminates whatever zone it is handed. Used only to tell a reader elsewhere in the world when their
+  // own clock reaches Chicago's midnight, so a null is a sentence not printed rather than a failure.
+  const endOf = (tz, day) => {
+    let t = Date.parse(day + "T00:00:00Z") - 86400000;
+    for (let i = 0; i < 300; i++, t += 900000) if (dayIn(tz, new Date(t)) > day) return new Date(t);
+    return null;
+  };
+  return {dayIn, daysBetween, forDay, hydrate, cardHTML, longDate, detailURL, esc, endOf, ACCENTS};
+})();
+</script>
+<script>
+(() => {
+  const rail = document.getElementById("drail");
+  const note = document.getElementById("dnote");
+  const pos = document.getElementById("dpos");
+  const line = document.getElementById("dline");
+  // The date this page was rendered for, and the plan it was rendered from. Both are written into the
+  // markup by the stage, so the script knows whether it has anything to do before it fetches anything.
+  const BUILT = rail.dataset.day;
+  let PLAN = null;
+  let SHOWN = BUILT;
+
+  // Which card the reader was pointed at. `#repo=owner/name` rather than a bare `#owner/name`: the
+  // fragment on this site already carries `key=value` state on the index, and an id-shaped fragment would
+  // make the browser try to scroll to an element named after a repository before the script ever runs.
+  const wanted = () => {
+    const m = /(?:^|[#&])repo=([^&]+)/.exec(location.hash || "");
+    return m ? decodeURIComponent(m[1]) : "";
+  };
+
+  const cards = () => [...rail.querySelectorAll(".dcard")];
+
+  // Which card is under the rail's left edge. Read from geometry rather than counted from a scroll
+  // position divided by a card width: the cards are a flex line with a gap and the last one is short, so
+  // the arithmetic version is off by one at the end of every rail.
+  const current = () => {
+    const left = rail.getBoundingClientRect().left;
+    let best = 0, gap = Infinity;
+    cards().forEach((c, i) => {
+      const d = Math.abs(c.getBoundingClientRect().left - left);
+      if (d < gap) { gap = d; best = i; }
+    });
+    return best;
+  };
+
+  const setPos = () => {
+    const n = cards().length;
+    pos.textContent = n ? (current() + 1) + " of " + n : "nothing to show";
+  };
+
+  // One rail-width, so a press moves by what the reader can see rather than by a fixed number of cards.
+  // `clientWidth` and not a card count: three cards fit at 1440px and one at 390px, and a button that
+  // moves three on a phone skips two of them past the reader. The 40px is the gap plus a sliver of the
+  // next card, which is what tells a reader there is one there.
+  const step = () => Math.max(rail.clientWidth - 40, 120);
+  // `behavior` is an argument here rather than the stylesheet's `scroll-behavior`, which a `scrollBy`
+  // option overrides -- so the reduced-motion answer has to be given in JavaScript at every call site, and
+  // `how()` is that one place. See the note beside the media query in pages.css.
+  const how = () => (CALM.matches ? "auto" : "smooth");
+  const page = (dir) => rail.scrollBy({left: dir * step(), behavior: how()});
+
+  // THE ROLL. A carousel that advances on its own is the reason "carousel" is a word people say with a
+  // sigh, and it is also the whole point of this page: fifty projects nobody asked to see, moving past.
+  // So it advances -- and every way of saying "stop" stops it for good. A pointer over the rail, focus
+  // inside it, a button, a touch, a wheel, a key, the grid view, a deep link to a particular card: after
+  // any of those it never restarts on its own, because a reader who has started reading has already
+  // answered the question the motion was asking.
+  //
+  // Off entirely under `prefers-reduced-motion`, and that is safe rather than merely polite: nothing here
+  // is communicated *by* the motion. All fifty cards are in the DOM, the rail scrolls, the buttons work
+  // and the count says where you are. Same rule as the blanket one in pages.css, restated in JavaScript
+  // because an interval is not an animation a stylesheet can reach.
+  const CALM = matchMedia("(prefers-reduced-motion: reduce)");
+  let timer = 0;
+  const roll = () => {
+    // A hidden tab still fires intervals. Skipping rather than clearing means a reader who comes back to
+    // the tab finds it where they left it and still moving, which is what they left.
+    if (document.hidden) return;
+    // Back to the start at the end, which is the one place this is a loop rather than a scroll: a rail that
+    // reaches card fifty and sits there has stopped being a carousel with no way of saying so.
+    if (current() >= cards().length - 1) rail.scrollTo({left: 0, behavior: how()});
+    else page(1);
+  };
+  const auto = () => {
+    if (timer || CALM.matches || cards().length < 2) return;
+    timer = setInterval(roll, 6000);
+  };
+  const quit = () => { clearInterval(timer); timer = 0; };
+  // `scroll` is deliberately not in this list. `roll()` scrolls, so quitting on it would stop the carousel
+  // one tick after it started; the reader's own scrolling arrives as a wheel, a touch or a key first.
+  ["pointerdown", "wheel", "touchstart", "keydown"].forEach((t) =>
+    rail.addEventListener(t, quit, {passive: true}));
+  rail.addEventListener("mouseenter", quit);
+  rail.addEventListener("focusin", quit);
+  rail.addEventListener("scroll", setPos, {passive: true});
+  CALM.addEventListener("change", () => { if (CALM.matches) quit(); });
+  document.getElementById("dprev").onclick = () => { quit(); page(-1); };
+  document.getElementById("dnext").onclick = () => { quit(); page(1); };
+
+  // Carousel or all fifty at once. A rail is how you meet something you were not looking for and a grid is
+  // how you scan what is on offer, and there is no reason to make a reader pick one of those at the door.
+  // The class is on <html> like the index's own view toggle, so the stylesheet does the work and the state
+  // survives a re-render of the rail's contents.
+  const mode = document.getElementById("dmode");
+  const setMode = (grid) => {
+    document.documentElement.setAttribute("data-dmode", grid ? "grid" : "rail");
+    mode.textContent = grid ? "Carousel view" : "Grid view";
+    mode.setAttribute("aria-pressed", grid ? "true" : "false");
+    try { localStorage.setItem("aaa-dmode", grid ? "grid" : "rail"); } catch (e) {}
+    if (grid) quit();
+  };
+  mode.onclick = () => setMode(document.documentElement.getAttribute("data-dmode") !== "grid");
+  try { if (localStorage.getItem("aaa-dmode") === "grid") setMode(true); } catch (e) {}
+
+  // Arrow keys on the rail itself. The cards are links, so Tab already walks them; this is for the reader
+  // who has the rail focused and expects Left and Right to do the obvious thing.
+  rail.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { page(1); e.preventDefault(); }
+    if (e.key === "ArrowLeft") { page(-1); e.preventDefault(); }
+  });
+
+  // Put the reader on the card they came for, and say something honest when it is not in today's fifty.
+  // `scrollIntoView` on the card rather than a hash jump, because the rail scrolls horizontally inside a
+  // page that scrolls vertically and a browser asked to reach an id does both at once.
+  const goto_ = (nwo) => {
+    if (!nwo) return;
+    const card = rail.querySelector('[data-project="' + CSS.escape(nwo) + '"]');
+    if (card) {
+      quit();
+      card.scrollIntoView({block: "nearest", inline: "start", behavior: "auto"});
+      card.setAttribute("tabindex", "-1");
+      card.focus({preventScroll: true});
+      card.classList.add("dhit");
+      setPos();
+      return;
+    }
+    // Not in today's cohort. Which day it *was* in is a fact the plan still holds, and it is the only
+    // thing worth saying here: a link shared yesterday afternoon is not broken, it is dated.
+    const was = PLAN && PLAN.days.find((c) => c.picks.includes(nwo));
+    const row = PLAN && DISCOVER.hydrate(PLAN)[nwo];
+    if (!row) return;
+    const when = was ? DISCOVER.longDate(was.date) : "an earlier day";
+    note.innerHTML = DISCOVER.esc(row.name) + " was in " + DISCOVER.esc(when) +
+      "'s fifty, not today's. " + '<a href="' + DISCOVER.esc(DISCOVER.detailURL(nwo)) + '">' +
+      "Open " + DISCOVER.esc(row.name) + "</a>, or browse today's below.";
+    note.hidden = false;
+  };
+
+  // Draw a cohort that is not the one the stage rendered. The only two ways here: the date has rolled over
+  // since this HTML was written, or the page came out of the service worker's cache from an older build.
+  const draw = (cohort) => {
+    const rows = DISCOVER.hydrate(PLAN);
+    const picks = cohort.picks.filter((n) => rows[n]);
+    rail.innerHTML = picks
+      .map((n, i) => DISCOVER.cardHTML(rows[n], i, picks.length, PLAN.cats, PLAN.cohort)).join("");
+    rail.dataset.day = cohort.date;
+    SHOWN = cohort.date;
+    line.textContent = DISCOVER.longDate(cohort.date) + " · " + picks.length +
+      " projects · every category, none of them repeated this week";
+    setPos();
+  };
+
+  // The rollover, in the browser. The stage rendered one day's fifty; a page held open past midnight, or
+  // served out of `atlas-pages` on a morning after the build that wrote it, is showing a day that has
+  // ended. Checked once on load and then once a minute, which is a `Date` comparison and a string compare
+  // -- and only redraws when the answer has actually changed.
+  const check = () => {
+    if (!PLAN) return;
+    const today = DISCOVER.dayIn(PLAN.tz, new Date());
+    if (today === SHOWN) return;
+    const cohort = DISCOVER.forDay(PLAN, today);
+    if (!cohort || cohort.date === SHOWN) return;
+    draw(cohort);
+    note.hidden = true;
+  };
+
+  fetch("../discover.json").then((r) => r.json()).then((d) => {
+    PLAN = d;
+    check();
+    goto_(wanted());
+    setInterval(check, 60000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) check(); });
+    addEventListener("hashchange", () => { note.hidden = true; goto_(wanted()); });
+    if (!wanted()) auto();
+    // "Tomorrow is fifty different ones" -- but tomorrow starts in Chicago, not where the reader is. For a
+    // reader in another zone that is a real difference of up to a day, and the plan carries the zone, so
+    // the page can say when the roll happens in their own clock instead of leaving them to work it out.
+    // Only for a reader who is somewhere else: telling somebody in Chicago that the day turns at midnight
+    // their time is a sentence that has said nothing.
+    const own = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const turns = own && own !== d.tz ? DISCOVER.endOf(d.tz, SHOWN) : null;
+    if (turns) document.getElementById("dzone").textContent = " Today's " + (PLAN.per_day || 50) +
+      " run out at " + new Intl.DateTimeFormat("en-GB", {timeZone: own, weekday: "long",
+        hour: "numeric", minute: "2-digit"}).format(turns) + " where you are.";
+  }).catch(() => {
+    // The page is already showing the day it was built for, with fifty real cards in it. A failed fetch
+    // costs the rollover and the deep link and nothing else, so there is nothing to say on screen.
+    auto();
+  });
+})();
+</script>
+<script>
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
+  const light = document.documentElement.dataset.theme !== "light";
+  document.documentElement.dataset.theme = light ? "light" : "dark";
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
+};
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

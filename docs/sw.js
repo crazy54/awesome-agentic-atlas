@@ -2,8 +2,8 @@
 // version stops describing the bytes: the next build overwrites whatever was changed here, and until it
 // does, readers hold a cache whose name no longer matches its contents. Change the generator.
 //
-// Version a7a67d461261 -- a hash of the precached files, so it moves when they do and not otherwise.
-const VERSION = "a7a67d461261";
+// Version fb85d9c0f16d -- a hash of the precached files, so it moves when they do and not otherwise.
+const VERSION = "fb85d9c0f16d";
 const SHELL = "atlas-shell-" + VERSION;
 // Unversioned, and never deleted on activate, which is the difference between an offline reader and a
 // broken one. A version-keyed data cache would be emptied by the very update that proves the reader is
@@ -27,7 +27,7 @@ const CACHED = "x-atlas-cached";
 // the network, never cached, and silently absent offline, with nothing anywhere to say so. `data.json` is
 // the index's rows; `live.json` is the sidecar the 1,294 detail pages read (JFH-222). Kept in
 // `24_pwa.DATA_FILES` rather than written out here, so the list has one definition.
-const DATA_FILES = ["/data.json", "/live.json"];
+const DATA_FILES = ["/data.json", "/live.json", "/discover.json"];
 // The sub-resources some page fetches after paint -- the detail pages' stylesheet and script (JFH-282),
 // and the semantic index the search box loads on first use (JFH-293) -- cached on first visit under
 // ASSETS rather than precached at install. This one is routed by policy and not by caller. Two lists rather

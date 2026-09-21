@@ -1950,6 +1950,166 @@ if (semMeta) {
      JSON.stringify(A.semTokens("what should I use to scrape a website", slot, stop)));
 }
 
+// DISCOVER: one card, two renderers, and one clock written twice.
+//
+// `docs/discover/` is rendered by `scripts/19d_discover.py` at build time *and* by the page's own script
+// after midnight, because the page has to work with no JavaScript and has to be right in a tab left open
+// overnight. That is two implementations of one card and two implementations of "what day is it in
+// Chicago", and neither pair can be shared: one side is Python and the other is 90 lines that would
+// otherwise be a second HTTP request on a page whose whole point is that nothing waits for a fetch.
+//
+// So the browser half's pure functions live in a `<script>` block of their own, marked `DISCOVER CORE`,
+// which this harness evaluates with no DOM at all -- `new Function`, no page, no clock -- and holds to the
+// stage's own output. Three questions, and each has a failure mode with no symptom on screen:
+//
+//   * `dayIn()` against the plan's `probe` map: UTC instants paired with the date `zoneinfo` resolved them
+//     to, both sides of both 2026 DST switches. A copy that read the reader's own clock instead would be
+//     right for most of the world most of the day and a day out for five hours every night.
+//   * `forDay()` against the plan's `cycle` map, three weeks of dates straddling the plan. The two
+//     languages disagree before the plan begins -- `days[-6]` is the seventh-from-last in Python and
+//     `undefined` in JavaScript -- and that is a blank carousel, on the day a build has stopped running.
+//   * `cardHTML()` against the markup in the built page, character for character, for every card in it.
+//     This is the one that found something: `html.escape` writes `&#x27;` and the index's JavaScript
+//     `esc()` writes `&#39;`, four cards a day have an apostrophe in the blurb, and the two entities look
+//     identical in every browser.
+//
+// The homepage strip's half of this is in `tests/discover_test.py` instead, and deliberately: `19_pages.py`
+// needs CI's crawl cache to run, so `docs/index.html` in any checkout predates the last change to the
+// strip, and an assertion here would be red for the whole gap. The four clock functions the strip copies
+// are compared there as source text against the block this section evaluates.
+let discHTML = null, discPlan = null;
+try {
+  discHTML = readFileSync(join(ROOT, "docs/discover/index.html"), "utf8");
+  discPlan = JSON.parse(readFileSync(join(ROOT, "docs/discover.json"), "utf8"));
+} catch { /* handled by the assertion below */ }
+// A hard failure, for the reason the semantic index above is: `docs/discover/` is committed alongside the
+// page, and a checkout without it is a checkout where Discover is a 404 in production.
+ok("docs/discover/ and discover.json are there to check the two renderers against",
+   discHTML !== null && discPlan !== null, "run python scripts/19d_discover.py");
+if (discHTML && discPlan) {
+  const cores = [...discHTML.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+    .map(m => m[1]).filter(b => /DISCOVER CORE/.test(b));
+  ok("the page has exactly one DISCOVER CORE block", cores.length === 1, String(cores.length));
+  // Evaluated, not text-matched. A regex over the source would pass on a block that throws on load, and a
+  // block that throws takes the rollover, the deep link and the carousel with it.
+  const C = cores.length === 1 ? new Function(cores[0] + "\nreturn DISCOVER;")() : null;
+  ok("...and it evaluates on its own, with no DOM, no fetch and no clock", C !== null &&
+     ["dayIn", "forDay", "hydrate", "cardHTML", "longDate", "detailURL", "esc", "endOf"]
+       .every(k => typeof C[k] === "function"));
+
+  if (C) {
+    // ---- the clock, against the dates zoneinfo resolved
+    const probe = Object.entries(discPlan.probe || {});
+    ok("the plan ships probe instants for the page's own clock", probe.length >= 5, String(probe.length));
+    for (const [instant, day] of probe)
+      ok(`the page reads ${instant} as ${day} in ${discPlan.tz}`,
+         C.dayIn(discPlan.tz, new Date(instant)) === day, C.dayIn(discPlan.tz, new Date(instant)));
+
+    // ---- the cohort for a date, against discover.for_day()
+    const cycle = Object.entries(discPlan.cycle || {});
+    ok("the plan ships three weeks of cohort dates straddling itself", cycle.length === 21,
+       String(cycle.length));
+    const cwrong = cycle.filter(([day, want]) => (C.forDay(discPlan, day) || {}).date !== want);
+    ok("...and forDay() lands on the same cohort as discover.for_day() for every date in them",
+       cwrong.length === 0,
+       cwrong.slice(0, 3).map(([d2, w]) => `${d2} wants ${w}, got ${(C.forDay(discPlan, d2) || {}).date}`)
+         .join("; "));
+    ok("a plan with no days in it is null rather than an exception",
+       C.forDay({days: []}, "2026-09-21") === null);
+
+    // ---- the card, against the markup the stage wrote
+    // The rail's own `</div>`: a card contains no `<div>`, which is why a non-greedy match is enough here.
+    const railM = /<div class="drail"[^>]*data-day="([^"]+)"[^>]*>([\s\S]*?)<\/div>/.exec(discHTML);
+    ok("the rendered rail says which day it was rendered for", railM !== null);
+    if (railM) {
+      const built = [...railM[2].matchAll(/<article class="dcard[\s\S]*?<\/article>/g)].map(m => m[0]);
+      const rows = C.hydrate(discPlan);
+      const cohort = discPlan.days.find(c => c.date === railM[1]);
+      const picks = (cohort ? cohort.picks : []).filter(n => rows[n]);
+      ok("...and that day is one the plan covers", !!cohort, railM[1]);
+      ok("...with one card in the markup per pick in it", built.length === picks.length,
+         built.length + " cards, " + picks.length + " picks");
+      ok("...and a full day of them, not a short rail", built.length === discPlan.per_day,
+         String(built.length));
+      const drift = built
+        .map((h, i) => [picks[i], h, C.cardHTML(rows[picks[i]], i, picks.length,
+                                                discPlan.cats, discPlan.cohort)])
+        .filter(([, a, b]) => a !== b);
+      ok(`the page's cardHTML reproduces the stage's markup for all ${built.length} cards`,
+         drift.length === 0,
+         drift.slice(0, 2).map(([n, a, b]) => `${n}\n    stage ${a}\n    page  ${b}`).join("\n  "));
+      // Which arms the fifty real cards happen to reach is a fact about this week's picks, so the ones they
+      // do reach are named. Without this the assertion above could be comparing fifty cards that all took
+      // the same branch -- see the fixtures below for the three arms no real day currently reaches.
+      const has = (re) => built.filter(h => re.test(h)).length;
+      ok("...over cards with a language and cards without one",
+         has(/stars · [^<·]+ ·/) > 0 && has(/<b>[\d,]+<\/b> stars · \d+ lists?<\/p>/) > 0,
+         has(/stars · [^<·]+ ·/) + " with, " + has(/<b>[\d,]+<\/b> stars · \d+ lists?<\/p>/) + " without");
+      ok("...and cards on one list and on several", has(/· 1 list</) > 0 && has(/· \d+ lists</) > 0,
+         has(/· 1 list</) + " on one, " + has(/· \d+ lists</) + " on several");
+    }
+
+    // ---- the three arms the real corpus does not currently reach
+    //
+    // No row in the committed atlas has a `first_seen`, because the arrivals ledger is written by a CI
+    // build, so the `New` badge is on none of the fifty. Nor is any of them starless. Those are the arms
+    // most likely to be wrong and least likely to be noticed, so they are fixtures -- and the expected
+    // markup below is written out by hand rather than taken from either renderer, because a comparison
+    // between two implementations proves they agree and not that either is right.
+    //
+    // `tests/discover_test.py` holds `card_html()` to these same three strings, which is what makes them a
+    // cross-language fixture rather than a JavaScript unit test. Changing one here means changing it there.
+    const DCATS = ["Coding Agents", "MCP Servers", "Plugins, Themes & Clients", "Docs & Learning",
+                   "Observability"];
+    const FIXTURES = [
+      ["a new project with no stars and no language, and an apostrophe in both its fields",
+       {nwo: "acme/tool.", name: "Ada's Tool & Co", cat: 0, stars: 0, lists: 1, lang: "",
+        first_seen: "2026-09-14", blurb: "Don't use <script> here"}, "2026-09-14",
+       '<article class="dcard nw" id="d1" data-project="acme/tool." ' +
+       'style="--card-accent:var(--accent-sky)"><p class="dtag">' +
+       '<span class="tag cat">Coding Agents</span><span class="dnew">New</span></p>' +
+       '<h2><a href="../repo/acme/tool-dot/">Ada&#x27;s Tool &amp; Co</a></h2>' +
+       '<a class="nwo" href="https://github.com/acme/tool.">acme/tool.</a>' +
+       '<p class="dmeta">1 list</p><p class="desc">Don&#x27;t use &lt;script&gt; here</p>' +
+       '<p class="dn">1 of 3</p></article>'],
+      ["an older project whose owner and name are both reserved by Windows",
+       {nwo: "aux/CON", name: "Con", cat: 4, stars: 12345, lists: 3, lang: "C++",
+        first_seen: "2026-01-01", blurb: "Plain"}, "2026-09-14",
+       '<article class="dcard" id="d2" data-project="aux/CON" ' +
+       'style="--card-accent:var(--accent-violet)"><p class="dtag">' +
+       '<span class="tag cat">Observability</span></p>' +
+       '<h2><a href="../repo/dev-aux/dev-con/">Con</a></h2>' +
+       '<a class="nwo" href="https://github.com/aux/CON">aux/CON</a>' +
+       '<p class="dmeta"><b>12,345</b> stars · C++ · 3 lists</p><p class="desc">Plain</p>' +
+       '<p class="dn">2 of 3</p></article>'],
+      ["a category off the end of the list, on a build with no arrivals cohort at all",
+       {nwo: "zz/x", name: "X", cat: 99, stars: 1, lists: 0, lang: "",
+        first_seen: "2026-09-14", blurb: ""}, "",
+       '<article class="dcard" id="d3" data-project="zz/x" ' +
+       'style="--card-accent:var(--accent-violet)"><p class="dtag">' +
+       '<span class="tag cat">Uncategorised</span></p>' +
+       '<h2><a href="../repo/zz/x/">X</a></h2>' +
+       '<a class="nwo" href="https://github.com/zz/x">zz/x</a>' +
+       '<p class="dmeta"><b>1</b> stars · 1 list</p><p class="desc"></p>' +
+       '<p class="dn">3 of 3</p></article>'],
+    ];
+    FIXTURES.forEach(([why, row, cohort, want], i) => {
+      const got = C.cardHTML(row, i, FIXTURES.length, DCATS, cohort);
+      ok("the card for " + why, got === want, got === want ? "" : "\n    want " + want + "\n    got  " + got);
+    });
+
+    // ---- the day's label, and the deep link's two halves
+    ok("the page's longDate() is the stage's long_date(), which is what the heading says",
+       discHTML.includes(C.longDate(railM ? railM[1] : discPlan.days[0].date)),
+       C.longDate(railM ? railM[1] : discPlan.days[0].date));
+    ok("a fragment the homepage strip writes is a fragment this page reads back",
+       C.esc("owner/name") === "owner/name" && /repo=\(\[\^&\]\+\)/.test(discHTML));
+    ok("no placeholder survived into the rendered page",
+       (discHTML.match(/__[A-Z][A-Z0-9_]*__/g) || []).length === 0,
+       [...new Set(discHTML.match(/__[A-Z][A-Z0-9_]*__/g) || [])].join(", "));
+  }
+}
+
 // And that the substitution pass ran at all. A stripper that reformatted a placeholder -- or a template
 // that grew a new one nobody wired up -- ships the literal token to a reader, and `__COUNT__` in the
 // header is the sort of thing that survives review because it looks like a build artefact.

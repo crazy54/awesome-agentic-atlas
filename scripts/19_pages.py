@@ -1256,6 +1256,55 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
 /* `margin-left:auto` on the pair, so the two buttons sit at the far end on a wide screen and fall under the
    sentence on a phone rather than squeezing it to one word per line. */
 .shared .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+/* THE DISCOVER STRIP, WHICH IS THE ONE THING ON THIS PAGE NOBODY ASKED FOR.
+   Every other control here answers "show me the ones that ...", and all of them need the reader to already
+   know what they are after. This answers the question the reader who does not cannot phrase, which is the
+   whole reason `docs/discover/` exists: fifty projects a day, drawn from every one of the fourteen
+   categories, rotated so the atlas comes round instead of the same top-starred hundred. Written by
+   `paintDiscover()` out of `discover.json`, which `scripts/19d_discover.py` publishes.
+
+   Every card here links to `discover/#repo=<nwo>` rather than to the project, and that is a decision about
+   honesty rather than layout: a strip that looks like a way into Discover and lands somewhere else is a
+   trick played for a clickthrough. Pressing one of these opens Discover at the card the reader was reading.
+
+   A real scroller -- `overflow-x:auto` plus `scroll-snap-type` -- and not a transformed track, so it drags,
+   flicks, keeps a scrollbar, and scrolls a focused card into view before a line of script has run. No
+   next/previous buttons here on purpose: this is a teaser, and the controls belong on the page it teases.
+   Absent rather than empty until there is both a payload and an unfiltered view, by a class for the reason
+   `.shared` uses one -- `[hidden]` comes from the user-agent sheet and the `display` below outranks it.
+
+   `--card-accent` per card, set inline from the category, for the reason the cards view sets it: the single
+   claim Discover makes is that every category is in every day, and a rail that visibly alternates between
+   five accents is that claim, readable without reading a tag. */
+.dstrip{display:none}
+.dstrip.on{display:block;margin:14px 0 0}
+.dsh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.dsh h2{margin:0;font-size:15px;color:var(--ink)}
+.dsh p{margin:0;font-size:13px;color:var(--muted)}
+/* `margin-left:auto` for the reason `.shared .sp` has it: the way out sits at the far end of a wide screen
+   and falls under the heading on a phone rather than squeezing it to one word per line. */
+.dsall{margin-left:auto;font-size:13px;font-weight:600}
+.dsrail{display:flex;gap:10px;overflow-x:auto;overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;padding:8px 2px 12px;scrollbar-width:thin}
+.dsc{flex:0 0 min(212px,62vw);scroll-snap-align:start;display:flex;flex-direction:column;gap:5px;
+  padding:9px 11px;text-decoration:none;font-size:12.5px;color:var(--ink2);
+  background:var(--band);border:1px solid var(--grid);border-top:3px solid var(--card-accent);
+  border-radius:7px}
+.dsc:hover{border-color:var(--card-accent);text-decoration:none}
+/* The category pill and the New badge on one line. `.tag` carries a bottom margin for the table cells it was
+   written for, and it is undone here rather than removed there: a flex row spaces its own children. */
+.dsc .t{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.dsc .t .tag{margin:0}
+.dsc .n{color:var(--ink);font-weight:600;font-size:13.5px;line-height:1.3}
+/* `margin-top:auto` on the last line, so the counts sit on one baseline across a row of cards whose names
+   ran to one line, two, or three. */
+.dsc .m{color:var(--muted);font-variant-numeric:tabular-nums;margin-top:auto}
+/* The same `--warn` ring the cards view puts on a new row, and the same swell over the top of it -- so a
+   reader who has met the pulse once on the results below reads it here without being taught it twice. A
+   box-shadow rather than an outline, because `:focus-visible` owns the outline on this page. */
+.dsc.nw{border-color:var(--warn);box-shadow:0 0 0 2px var(--warn);animation:new-breathe 3s ease-in-out 5}
+.dsnew{background:var(--warn);color:var(--onbar);border-radius:4px;padding:0 5px;font-size:11px;
+  font-weight:700;letter-spacing:.02em}
 .empty{padding:64px 0 80px;text-align:center;color:var(--muted)}
 /* "Nothing matches. Try clearing a filter." named neither the filter nor what clearing it would return,
    so the reader had to guess which of six controls was the tight one -- and it is usually not the one
@@ -1698,8 +1747,14 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
    while the outline, the chip and the count stay exactly as they were. The reader loses the nudge, which
    was worthless at that size, and keeps every way of actually finding the new rows.
    Placed after the cards rule it overrides, which is the same specificity; the table rule it overrides is
-   lower, so order does not matter there. */
-html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] tr.nw{animation:none}
+   lower, so order does not matter there.
+
+   The Discover strip is in here too, and it is the one entry that is not about the results: it draws fifty
+   cards of its own, they wear the same `.nw` ring, and an import that made most of the atlas new made most
+   of those fifty pulse as well. Same measurement decides both, because the strip is only ever on screen in
+   the unfiltered view -- where `hits` *is* the atlas, which is exactly the set the strip was drawn from. */
+html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] tr.nw,
+html[data-wave="1"] .dsc.nw{animation:none}
 
 /* The chip hovers transition, the chip rails scroll smoothly, and new arrivals breathe, and all three are
    motion a reader can have asked their operating system not to show them. A blanket rule stays safe because
@@ -1914,8 +1969,16 @@ main a[href],main button,main select,main summary,
      facet rails were inside `.bar` and went with it, so taking them out of the pinned band would have put
      them on paper without a line of this rule changing. A hide-list scoped by containment stops being a
      hide-list the moment the containment moves. */
+  /* `.dstrip` included, and it is the one entry here that is hidden for what it is rather than for being a
+     control: a rail that has to be swiped is nothing on paper, and fifty projects nobody asked for are not
+     what the reader pressed Ctrl+P to keep. Selected on the section rather than on `.dsrail` inside it, so
+     the heading and the way out go with it -- a hide-list scoped by containment stops being one the moment
+     the containment moves, which is the lesson `.subbar` above is here to remember. `.dstrip.on` and not
+     `.dstrip`, because the rule this has to beat is `.dstrip.on{display:block}` and that is two classes: a
+     single-class selector here would lose on specificity no matter how much later in the file it sits, and
+     would lose silently -- the strip would print and every other entry in this list would still vanish. */
   .bar,.subbar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,
-  .shared .sp,.pin,#cmp .ch .sp,#cmp .unpin{display:none}
+  .shared .sp,.pin,#cmp .ch .sp,#cmp .unpin,.dstrip.on{display:none}
   /* The comparison itself stays, and this is the one thing on the sheet that is more use on paper than on
      screen: four projects in columns is what somebody carries into the meeting where the choice is made.
      Only its controls go -- an Unpin button under a printed column heading is a button nobody can press.
@@ -2057,9 +2120,12 @@ __OSSPRITE__
   </div>
   <div class="headside">
   <nav>
-    <!-- First, because it is the only link here that answers "which of these should I install" and the
-         four beside it all answer "what is there". A reader who already knows what they want has the
-         filter bar; a reader who does not has 1,294 rows and no way in. -->
+    <!-- These two first, because they are the only links here that answer "which of these should I look
+         at" and the four beside them all answer "what is there". A reader who already knows what they
+         want has the filter bar; a reader who does not has 1,294 rows and no way in. Discover answers it
+         with no opinion at all -- fifty a day, every category, rotated so the whole corpus comes round --
+         and Collections answers it with one. -->
+    <a href="discover/">Discover</a> ·
     <a href="collections/">Collections</a> ·
     <a href="https://github.com/__REPO__/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
@@ -2269,6 +2335,30 @@ __OSSPRITE__
       <span class="sp"><button class="chip" id="cmpclear">Clear the comparison</button></span></div>
     <div class="scroll" id="cmptable"></div>
   </div>
+  <!-- The Discover teaser. Fifty projects for today, one card each, and every card a link into
+       `discover/#repo=<owner/name>` -- Discover's own deep link, which opens that page scrolled to the card
+       and highlights it. Not a link to the project: the reader pressed a Discover card, so they get Discover.
+       A strip that borrowed this feature's look to harvest a clickthrough somewhere else would be a trick.
+
+       Static shell filled by `paintDiscover()`, like the two boxes above it, but for a different reason and
+       the difference is worth writing down. Those two are static because what decides whether they belong on
+       screen is the reader's own URL, known before any fetch resolves. This one cannot know its fifty until
+       `discover.json` arrives -- so what the static markup buys here is only that the strip has somewhere to
+       land, and the reason that costs nothing is `#out` below: the results are drawn by script too, so there
+       is nothing beneath this that a strip appearing can push out from under the reader's eye.
+
+       A crawler therefore receives an empty strip, and that is answered rather than accepted: `docs/discover/`
+       is server-rendered by `scripts/19d_discover.py`, is in `sitemap.xml`, and is in the masthead nav on
+       every page of the site. The strip is a door for readers; the page is the one crawlers are given.
+
+       Below the comparison and above the legend, which is where it belongs on the same reasoning the two
+       above it use. This is not a filter and not a fact about any row -- it is a sideways offer, and it has to
+       sit above the answer to "what are the options" rather than under a screenful of them. -->
+  <section class="dstrip" id="dstrip" aria-labelledby="dstriph">
+    <div class="dsh"><h2 id="dstriph">Discover</h2><p id="dstripwhat"></p>
+      <a class="dsall" id="dstripall" href="discover/">See all fifty &rarr;</a></div>
+    <div class="dsrail" id="dsrail"></div>
+  </section>
   <!-- The verdict legend, and the only place on screen that says what the five marks mean. It used to be
        said in `listMarkdown()` and `listHTML()` and nowhere else -- that is, in the exports, and not on the
        page the exports are made from. On screen the sole explainer was each cell's `title`, which needs a
@@ -2861,6 +2951,29 @@ fetch("data.json").then(r => {
     '<a href="__SITE__">__SITE__</a>.</p>';
 });
 
+// The Discover payload, on a request of its own and started here rather than chained off the one above:
+// nothing in it needs a row, and a teaser that waited for the atlas would arrive after the results it sits
+// above. See `paintDiscover()`, which is what decides whether any of it reaches the screen.
+//
+// A missing or unreadable `discover.json` leaves `DISC` null and the strip absent, and the empty `catch` is
+// the whole of the error handling on purpose -- there is no sentence worth putting on a page to report that an
+// offer the reader never asked for could not be made. The feature is still reachable either way: the stage
+// that writes this file also writes `docs/discover/`, which is in the masthead nav of every page on the site.
+//
+// Behind the flag so that turning the strip off turns off the request as well. A page that downloads 90 KB it
+// has been configured not to use is not a disabled feature, it is a hidden one.
+if (FLAGS["index.discover_strip"]) {
+  fetch("discover.json").then(r => r.json()).then(d => {
+    DISC = d;
+    paintDiscover();
+    // The rollover. A minute is the resolution a reader would notice and the check costs one date format and
+    // one string compare; `paintDiscover()` returns without touching the DOM unless the date actually moved.
+    // `visibilitychange` as well, for the tab that was in the background when it did.
+    setInterval(paintDiscover, 60000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) paintDiscover(); });
+  }).catch(() => {});
+}
+
 // Before the fetch resolves, deliberately: none of this needs the data, and the theme toggle in
 // particular should work on the error page as well as on the atlas.
 wire();
@@ -3154,6 +3267,20 @@ function palWire() {
 // patch on this page replaces them wholesale and nothing mutates one in place.
 const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, since: false, rising: false,
                saved: false, list: new Set()};
+
+// Has this reader asked for anything at all? Every key of `CLEAR` still at the value `CLEAR` gives it, walked
+// rather than written out as nine comparisons -- so a tenth filter added to `CLEAR` is covered by this the
+// moment it is added, which is the whole reason it is derived from that object instead of listing its fields.
+// `state.sort`, `state.view`, `state.shown` and `state.cmp` are not in `CLEAR` and are correctly not here: a
+// sort order, a layout, a page size and a pinned comparison are all things a reader did to the *presentation*
+// of every row, and none of them is a narrower question than "show me the atlas".
+//
+// The Discover strip is the only thing that reads this, and the claim it makes is exactly this predicate: you
+// have not asked for anything, so here is something. See `paintDiscover()`.
+const unasked = () => Object.keys(CLEAR).every(k => {
+  const want = CLEAR[k], got = state[k];
+  return want instanceof Set ? got.size === 0 : Array.isArray(want) ? got.length === 0 : got === want;
+});
 
 // ---- Command palette -------------------------------------------------------------------------------
 //
@@ -5756,6 +5883,143 @@ function paintShared() {
   add.textContent = have === n ? "All saved" : "Save " + (n - have).toLocaleString() + " to my projects";
 }
 
+// ---- The Discover strip ------------------------------------------------------------------------------------
+//
+// Why it exists and where it sits are beside `.dstrip` in the stylesheet and beside `#dstrip` in the markup.
+// This is the how, and there are only two decisions in it.
+//
+// A fetch of its own, not a field on `data.json`. The plan is picked weekly and re-rendered nightly by
+// `scripts/19d_discover.py`, and `discover.json` carries its own copy of every row it names -- about 90 KB of
+// seven fields for the ~350 projects in the week. Joining it against `ROWS` instead would save those bytes and
+// cost the two things that matter more: the strip would wait on 569 KB it does not need, and it would go
+// silent on the one page state where it is the only thing left worth reading, which is the `data.json` error
+// path. It does wait for `D` all the same, and for a different reason -- see `paintDiscover()`.
+//
+// And it re-checks the clock. The strip is drawn for a date, so a laptop lid closed at half eleven and opened
+// at one in the morning is a page showing a day that ended. Once a minute plus a `visibilitychange`, which is
+// one date format and one string compare and redraws nothing unless the answer changed. `docs/discover/` does
+// exactly this; a reader should not get a fresher answer from the teaser than from the page.
+let DISC = null, DISC_DAY = "";
+
+// The five accent names in the order `ACCENTS` in scripts/19d_discover.py has them -- the same list by index
+// and not merely the same set, because a project has to wear the same colour here as on the page this links
+// to. `tests/probe.mjs` asserts that against the stage rather than trusting this sentence.
+//
+// By category, unlike `projectAccent()` above, which hashes the repository name. That is not an inconsistency
+// waiting to be tidied: the accent on a results card means "this project", and the accent here means "this
+// category", which is the one claim Discover makes -- every category in every day -- and a rail that visibly
+// alternates between five colours is that claim, legible without reading a single tag.
+const DACCENTS = ["sky", "mint", "gold", "coral", "violet"];
+
+// DISCOVER DAY. Verbatim from the `DISCOVER CORE` block in scripts/19d_discover.py: the same four functions,
+// the same text, character for character. That is the second implementation of `discover.today()` and
+// `discover.for_day()` in this repository and the third of the pair overall, so it is worth saying plainly
+// what holds them together. `tests/probe.mjs` evaluates the stage's copy against the `probe` map of UTC
+// instants that `scripts/discover.py` publishes inside the plan, and then extracts these four out of this page
+// by name and asserts they are the same source as that copy. A drift here is a test failure, not a page that
+// shows Tuesday's fifty on Wednesday for readers east of Greenwich.
+//
+// Copied rather than shared because the alternative is this page loading a second script to answer one
+// question -- what is today's date in Chicago -- on a page whose weight budget is 307,200 bytes.
+const DSTRIP = (() => {
+  const dayIn = (tz, at) => {
+    const p = {};
+    for (const {type, value} of new Intl.DateTimeFormat("en-US", {
+      timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit",
+    }).formatToParts(at)) p[type] = value;
+    return p.year + "-" + p.month + "-" + p.day;
+  };
+  const asUTC = (iso) => {
+    const [y, m, d] = iso.split("-").map(Number);
+    return Date.UTC(y, m - 1, d);
+  };
+  const daysBetween = (a, b) => Math.round((asUTC(b) - asUTC(a)) / 86400000);
+  const forDay = (plan, day) => {
+    const days = (plan && plan.days) || [];
+    if (!days.length) return null;
+    const hit = days.find((c) => c.date === day);
+    if (hit) return hit;
+    const n = days.length;
+    return days[((daysBetween(days[0].date, day) % n) + n) % n];
+  };
+  return {dayIn, forDay};
+})();
+
+// One card. Compact on purpose: this is a teaser, and the full card -- blurb, list count, its own accent edge
+// and its position in the fifty -- is what `docs/discover/` draws. What is here is what a reader needs to
+// decide whether to press it, which is the topic it came from, its name, and the one number everybody reads.
+//
+// The link is `discover/#repo=<owner/name>` and the `nwo` is not encoded, deliberately: GitHub allows only
+// `[A-Za-z0-9._-]` in an owner or a repository name, so there is nothing in one that a fragment has to escape,
+// and `decodeURIComponent` at the other end is a no-op on it. What that buys is the URL a reader sees in the
+// status bar before they press -- `discover/#repo=langchain-ai/langchain`, legible, and obviously the Discover
+// page. On a strip whose entire justification is that it is not a trick, that is worth four characters.
+function discoverCard(nwo, r, col, cohort) {
+  const cat = r[col.cat];
+  const isnew = !!cohort && r[col.first_seen] === cohort;
+  const label = cat >= 0 && cat < DISC.cats.length ? DISC.cats[cat] : "Uncategorised";
+  // Stars and language, and each omitted rather than dashed where a project has neither -- the same choice
+  // `card_html()` in the stage makes, and for the same reason: a row with no language is not a broken row.
+  const meta = [];
+  if (r[col.stars]) meta.push(r[col.stars].toLocaleString() + " stars");
+  if (r[col.lang]) meta.push(esc(r[col.lang]));
+  return '<a class="dsc' + (isnew ? " nw" : "") + '" href="discover/#repo=' + esc(nwo) +
+    '" style="--card-accent:var(--accent-' + DACCENTS[cat % DACCENTS.length] + ')">' +
+    '<span class="t"><span class="tag cat">' + esc(label) + "</span>" +
+    (isnew ? '<span class="dsnew">New</span>' : "") + "</span>" +
+    '<span class="n">' + esc(r[col.name]) + "</span>" +
+    '<span class="m">' + meta.join(" · ") + "</span></a>";
+}
+
+// Three facts decide this and nothing else: whether there is a payload, whether the reader has asked for
+// anything, and what the date is in the zone the plan names.
+//
+// Called from `render()`, so a filter hides the strip and Clear all brings it back without either of them
+// remembering to -- and from the fetch, and from a timer for the rollover. Gated on `D` as well as on `DISC`,
+// which looks like a dependency it does not have and is really a dependency on the *view*: `readHash()` runs
+// at the end of the data.json chain, so until then `state` is the default whatever URL the reader followed,
+// and painting before that shows the strip for half a second above a shared list that asked for twelve rows.
+function paintDiscover() {
+  const strip = document.getElementById("dstrip");
+  if (!strip || !FLAGS["index.discover_strip"]) return;
+  const cohort = D && DISC && DSTRIP.forDay(DISC, DSTRIP.dayIn(DISC.tz, new Date()));
+  const on = !!cohort && unasked();
+  strip.classList.toggle("on", on);
+  // Nothing more to do when it is off, and nothing more to do when today's fifty are already on screen: this
+  // runs on every render and once a minute forever, and rebuilding fifty cards because somebody pressed a
+  // sort menu would throw away their scroll position in the rail.
+  if (!on || cohort.date === DISC_DAY) return;
+  DISC_DAY = cohort.date;
+  const col = {};
+  DISC.cols.forEach((c, i) => { col[c] = i; });
+  // The same stale bound this page applies to its own rows, applied to the payload's cohort rather than
+  // trusting it. `19d_discover.py` copies the value `data.json` carries, so the two agree at build time -- but
+  // a `discover.json` that came out of the service worker's cache is as old as the tab that fetched it, and a
+  // strip that goes on badging a fortnight-old import as New is saying something the rows below it have
+  // already stopped saying. `window_days` travels in the payload for exactly this.
+  const stamp = DISC.cohort && daysAgo(DISC.cohort) <= (DISC.window_days || 14) ? DISC.cohort : "";
+  // Picks naming a row the payload does not carry are dropped, not rendered. The stage drops them too, for a
+  // stronger reason -- a card is a link to a detail page and a build that did not write one should not publish
+  // a link to it -- so this is a second guard on a case that should already be impossible.
+  const picks = cohort.picks.filter(n => DISC.rows[n]);
+  document.getElementById("dsrail").innerHTML =
+    picks.map(n => discoverCard(n, DISC.rows[n], col, stamp)).join("");
+  document.getElementById("dstripwhat").textContent =
+    picks.length + " for " + longDay(cohort.date) + ", one from every topic in the atlas";
+  document.getElementById("dstripall").textContent = "See all " + picks.length + " →";
+}
+
+// `2026-09-21` as `Sunday 21 September`. No year: this is always within a week of today, and a year on it
+// would read as an archive date rather than as "this is what today is". UTC, because the date is already
+// decided -- reading it in the reader's own zone prints the day before for anyone west of Greenwich.
+function longDay(day) {
+  const p = {};
+  for (const {type, value} of new Intl.DateTimeFormat("en-GB", {
+    timeZone: "UTC", weekday: "long", day: "numeric", month: "long",
+  }).formatToParts(new Date(Date.parse(day + "T00:00:00Z")))) p[type] = value;
+  return p.weekday + " " + p.day + " " + p.month;
+}
+
 // What the dialog says before anything is downloaded. Rebuilt on every open rather than kept in step, because
 // every fact in it -- the count, the sentence, the link -- is a function of a view the reader has been changing
 // since the last time they opened it.
@@ -5884,6 +6148,11 @@ function render() {
   // reader has filtered it off the page. The pin buttons *in* the rows are drawn further down, out of the same
   // `state.cmp` this reads.
   paintCompare();
+  // Fourth, and the only one of the four that is about something other than the rows: whether this reader has
+  // asked for anything yet. It is here rather than only on the fetch that fills it because every filter, every
+  // hashchange and Clear all have to be able to take the strip off screen and put it back, and this is the
+  // function all of them already end at.
+  paintDiscover();
   // Here as well as on the toggle, for the same reason the chips above are reflected here rather than only
   // where they are clicked: this is the one function every path that changes state already ends at, so a
   // `#view=cards` link, a hashchange and the browser's back button all arrive at the right layout without

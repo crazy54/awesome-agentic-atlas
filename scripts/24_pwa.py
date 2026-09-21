@@ -108,6 +108,17 @@ Not precached, deliberately:
     reader scrolls around offline, and it is 3% of what the search already costs, so a reader who has paid
     for one and not the other has paid for the expensive half.
 
+  * `discover.json`, about 90 KB, routed by `DATA_FILES` with the two above it. Two pages fetch it after
+    paint -- `discover/` draws its fifty out of it and the index draws the Discover strip from the same
+    file -- and not precaching it is the same arithmetic as `data.json`: the pages that need it download it
+    anyway, and a reader who never scrolls to the strip never asks for it.
+
+    What it is offline is worth stating, because it is not "the last thing you saw". The plan covers seven
+    dated cohorts and both readers of it resolve today against the zone it names, so a reader in a tunnel on
+    a Wednesday gets Wednesday's fifty -- and once the whole week in the cached copy has run out, they get
+    its seven cohorts cycling rather than an empty rail. That is why the `CACHED_HEADER` mark this route
+    stamps on it goes unread: how old the copy is changes nothing about what it says.
+
   * The 7,980 screenshots. They are Open Graph cards on `opengraph.githubassets.com`, cross-origin and
     fetched no-cors, so a response is opaque: status 0, no readable headers. A worker cannot tell a real
     card from GitHub's grey placeholder or from a 404, so it would cache failures indistinguishably from
@@ -234,7 +245,19 @@ PRECACHE = ["./", "manifest.webmanifest", "pages.css"]
 # cached, and is silently unavailable offline while every assertion about `data.json` still passes. That is
 # how `live.json` shipped uncached in the first draft of JFH-222. Leading slashes because the worker
 # compares against `url.pathname`, and matching a bare `data.json` would also match `notdata.json`.
-DATA_FILES = ["data.json", "live.json"]
+#
+# `discover.json` is the third, about 90 KB, and it is fetched by two pages rather than one: `discover/` draws
+# its fifty out of it and the index's Discover strip draws a compact rail from the same file, so one entry
+# routes both. It is here rather than in `PAGE_ASSETS` below on the strength of one measurement rather than a
+# preference -- `atlas-assets` does not exist at all for a reader who has opened no detail page, which is an
+# acceptance criterion of JFH-282 that `tests/pwa-check.mjs` asserts, and the index fetches this file. Routing
+# it there would have created that cache on an index-only visit and broken a guard that is about something
+# else entirely. `atlas-data` is where the index's own downloads already go.
+#
+# The `CACHED_HEADER` mark it inherits here is not read by anything and does no harm: the plan carries its own
+# dates, and both pages that read it resolve today against the zone it names rather than against when it was
+# fetched, so how stale the copy is changes nothing about what it says.
+DATA_FILES = ["data.json", "live.json", "discover.json"]
 
 # The sub-resources of the 1,294 detail pages, handled network-first and cached under `atlas-assets` on
 # first visit (JFH-282). Same shape as `DATA_FILES` and deliberately a separate list, because the two

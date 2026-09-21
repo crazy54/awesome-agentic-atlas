@@ -312,6 +312,100 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
 .coll{background:var(--plane);border:1px solid var(--grid);border-radius:10px;padding:16px 18px}
 .coll h2{margin:2px 0 0;font-size:18px;letter-spacing:-.02em}
 .coll .intro{font-size:13.5px;margin-top:8px}
+
+/* ---- Discover, docs/discover/, written by scripts/19d_discover.py ----
+   Here for the reason the collections block above is here: that page is this shell exactly -- same
+   masthead, nav, footer, chips, `.tag`, `.nwo`, `.desc` -- plus the rail below. A second stylesheet would
+   copy all of that to add twenty rules, and would cost a blocking request on a page whose whole design is
+   that the first paint is already the content.
+
+   The rail is `scroll-snap` and `overflow-x`, not a transformed track with JavaScript computing offsets.
+   That is what makes the carousel work before its script has run and keep working if the script never runs
+   at all: a reader can drag it, a trackpad flicks it, the scrollbar is a real scrollbar, and Tab into a
+   card scrolls it into view because that is what a browser does for a focused element inside a scroller.
+   The buttons and the auto-advance are `scrollBy` calls on top of that, so they add to the behaviour
+   instead of being the whole of it. */
+.drail{display:flex;gap:14px;margin:14px 0 0;padding:4px 4px 16px;overflow-x:auto;
+  scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:thin}
+/* A ring on the scroller itself, because it is `tabindex="0"` and the arrow keys are bound to it: a reader
+   has to be able to see when they are talking to the rail rather than to the page. */
+.drail:focus-visible{outline:2px solid var(--bar);outline-offset:3px}
+/* 320px is where a two-line project name, the `nwo` under it and six lines of blurb stop fighting each
+   other. `flex:0 0` rather than a min-width, so a card never stretches to fill a short rail; `min()` is the
+   phone, where a fixed 320 plus the padding leaves no sliver of the next card -- and that sliver is the
+   only thing on screen saying the rail scrolls. */
+.dcard{flex:0 0 min(320px,78vw);scroll-snap-align:start;display:flex;flex-direction:column;
+  background:var(--plane);border:1px solid var(--grid);border-radius:10px;padding:14px 16px 12px;
+  border-top:3px solid var(--card-accent)}
+.dcard h2{margin:6px 0 0;font-size:17px;letter-spacing:-.02em}
+.dcard .nwo{margin-top:3px}
+/* Clamped for the reason the index's cards are: these blurbs are other people's table cells and run from
+   six words to sixty, and in a rail the tall one does not stretch its neighbours, it just runs off the
+   bottom of its own card. Both spellings, because Firefox implements only the prefixed one. */
+.dcard .desc{margin:8px 0 0;font-size:13px;color:var(--ink2);max-width:none;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:6;line-clamp:6;overflow:hidden}
+.dtag{margin:0;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.dmeta{margin:7px 0 0;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
+.dmeta b{color:var(--ink);font-size:14px;font-weight:700}
+/* Pushed to the bottom by `margin-top:auto`, so "17 of 50" sits on one line across a row of cards whose
+   blurbs are different lengths. It is the one thing on a card that is about the rail rather than about the
+   project, and a reader looking for where they are should not have to hunt for it. */
+.dn{margin:auto 0 0;padding-top:8px;color:var(--muted);font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;font-variant-numeric:tabular-nums}
+.dctl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:18px}
+.dpos{margin-left:6px;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
+.dnote{margin:12px 0 0;background:var(--band);border:1px solid var(--grid);
+  border-left:3px solid var(--bar);border-radius:6px;padding:10px 13px;color:var(--ink2);font-size:13.5px}
+/* The card a deep link from the homepage landed on. The same `--bar` the rest of the site uses for "this
+   one", and it does not fade: a reader who followed a link to a particular project should still be able to
+   tell which one it was after reading two cards either side of it. */
+.dcard.dhit{border-color:var(--bar);box-shadow:0 0 0 2px var(--bar)}
+.dcard.dhit:focus{outline:none}
+/* New to the atlas, on a Discover card. The index's rule restated -- see the long note beside `tr.nw` in
+   `19_pages.py` for why this is an outline that breathes and not a colour wash -- and capped at five swells
+   for the same reason: it says "look at this one", and something that says that forever is not saying it.
+   No `data-wave` equivalent, because a day here is fifty cards drawn from a rotation rather than a filtered
+   set, so the case that rule exists for -- most of what is on screen being new at once -- cannot arise. */
+.dcard.nw{border-color:var(--warn);
+  box-shadow:0 0 0 2px var(--warn),0 0 12px color-mix(in srgb,var(--warn) 30%,transparent);
+  animation:new-breathe 3s ease-in-out 5}
+@keyframes new-breathe{
+  0%,100%{box-shadow:0 0 0 2px var(--warn),0 0 10px color-mix(in srgb,var(--warn) 24%,transparent)}
+  50%{box-shadow:0 0 0 3px var(--warn),0 0 26px color-mix(in srgb,var(--warn) 58%,transparent)}}
+.dnew{background:var(--warn);color:var(--onbar);border-radius:999px;padding:1px 8px;
+  font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+/* All fifty at once. The rail and the grid are the same cards in the same order with the same markup and
+   only the container changes, which is why the toggle is a class on <html> and nothing is re-rendered.
+   `auto-fill` on a 290px floor so it reflows from four across to one without a query per step, and the
+   cards give up their fixed width because here they are not a rail. */
+html[data-dmode=grid] .drail{display:grid;gap:14px;overflow:visible;padding-bottom:4px;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+html[data-dmode=grid] .dcard{flex-basis:auto}
+/* The two rail buttons have nothing to scroll in the grid, so they go rather than sit there inert. The view
+   toggle and the count stay, because both still mean something. */
+html[data-dmode=grid] #dprev,html[data-dmode=grid] #dnext{display:none}
+/* Guarded like every other hover on this sheet: a touch device latches a hover it can never clear, so
+   tapping a card to follow its link would leave it lit until something else was tapped. */
+@media(hover:hover){
+  .dcard:hover{border-color:var(--card-accent);
+    box-shadow:0 0 0 2px var(--card-accent),0 0 18px color-mix(in srgb,var(--card-accent) 40%,transparent)}
+}
+.dcard:focus-within{border-color:var(--card-accent);
+  box-shadow:0 0 0 2px var(--card-accent),0 0 18px color-mix(in srgb,var(--card-accent) 36%,transparent)}
+/* The three kinds of motion this section introduces, all off for a reader who asked for none. Scoped to
+   these selectors rather than written as the blanket `*{animation-duration:.01ms}` the index uses, because
+   this sheet is also the 156 facet pages and the five collection pages and none of those asked for a rule.
+   Nothing here is *communicated* by the motion: the pulse is a swell on a `--warn` ring that is already
+   there in the base rule, and the rail scrolls either way.
+
+   The third kind cannot be reached from CSS at all. `scroll-behavior` governs a scroll the document starts;
+   the buttons and the auto-advance pass `behavior` to `scrollBy`, which overrides it, and `setInterval` is
+   not an animation. So `19d_discover.py` checks the same media query in JavaScript -- and either half alone
+   would leave a reader who asked for no motion with most of it. */
+@media(prefers-reduced-motion:reduce){
+  .dcard.nw{animation:none}
+  .drail{scroll-behavior:auto}
+}
 footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
   color:var(--muted);font-size:13px}
 footer .wrap{max-width:1500px}
@@ -819,6 +913,7 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
     <a class="cta" href="{esc(page.live)}">Filter this live on the atlas &rarr;</a>
   </div>
   <nav>
+    <a href="{page.rel('discover/')}">Discover</a> ·
     <a href="{page.rel('collections/')}">Collections</a> ·
     <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="{page.rel('repo/')}">All projects</a> ·
@@ -881,6 +976,26 @@ def collection_urls(data: dict) -> list[str]:
     sys.modules["b25"] = b25
     cspec.loader.exec_module(b25)
     return b25.urls(data)
+
+
+def discover_urls() -> list[str]:
+    """The one URL `19d_discover.py` publishes, asked of that stage for the reason above.
+
+    `docs/discover/index.html` is in no sitemap otherwise -- it is not a facet, not a detail page and not a
+    collection -- and `tests/indexnow_test.py` compares the set of `docs/**/index.html` against the URLs in
+    both sitemaps in both directions, so leaving it out is a red build. Correctly: the page whose purpose is
+    that the tail of this corpus gets found would be the one page a crawler never hears about.
+
+    Takes no `data`, unlike `collection_urls`: that stage resolves five curated `nwo`s against the dataset
+    and can fail doing it, this one publishes a fixed path. Imported the same way and for the same reason --
+    `19d_discover.py` imports this module for `esc`, `repo_path` and the theme scripts.
+    """
+    sys.modules.setdefault("b20", sys.modules[__name__])
+    dspec = importlib.util.spec_from_file_location("b19d", HERE / "19d_discover.py")
+    b19d = importlib.util.module_from_spec(dspec)
+    sys.modules["b19d"] = b19d
+    dspec.loader.exec_module(b19d)
+    return b19d.urls()
 
 
 def sitemap(pages: list[Page], snapshot: str, extra: list[str] = ()) -> str:
@@ -1060,7 +1175,8 @@ def main() -> None:
 
     (OUT / "pages.css").write_text(CSS, encoding="utf-8")
     colls = collection_urls(data)
-    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls), encoding="utf-8")
+    disc = discover_urls()
+    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc), encoding="utf-8")
     (OUT / "robots.txt").write_text(robots(), encoding="utf-8")
     keyfile = b19.indexnow_key_file()
     (OUT / keyfile).write_text(key_text(b19.indexnow_key()), encoding="utf-8")
@@ -1077,8 +1193,9 @@ def main() -> None:
     print(f"{tops} topic · {tgt_n} target · {written - tops - tgt_n} crossing "
           f"= {written} pages · {kb(total)}")
     print(f"pages.css + sitemap.xml + robots.txt + {keyfile} · {kb(shells)} · "
-          f"{len(pages) + 1 + len(colls)} URLs, lastmod {data['snapshot']} "
-          f"({len(colls)} of them curated collections, from scripts/25_collections.py)")
+          f"{len(pages) + 1 + len(colls) + len(disc)} URLs, lastmod {data['snapshot']} "
+          f"({len(colls)} of them curated collections, from scripts/25_collections.py; "
+          f"{len(disc)} Discover, from scripts/19d_discover.py)")
     print(f"IndexNow key hosted at {SITE}{keyfile}"
           + (f" · {len(stale_keys)} stale key file(s) removed: "
              + ", ".join(p.name for p in stale_keys) if stale_keys else ""))
