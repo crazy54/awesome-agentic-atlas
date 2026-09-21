@@ -54,7 +54,10 @@
 //                     the five curated collections: that every pick is still in the atlas, that a page
 //                     claiming stated Windows support still has seven stated verdicts under it, and that
 //                     each refusal fires -- on a curation the file mutates, because the committed one
-//                     passes, and a guard nobody has seen fire is a guard nobody should trust.
+//                     passes, and a guard nobody has seen fire is a guard nobody should trust. Also that
+//                     a workflow runs the stage at all, which for every commit from 18d373a to this one
+//                     none did: the thirteen pages were published once and then frozen, and every other
+//                     assertion in that file was reading a file no build could rewrite.
 //   osicons_test.py   the five platform marks that replaced the words Windows, WSL2, macOS, Linux and
 //                     Docker. Mostly one assertion, walked over every built page: that every
 //                     `<use href="#...">` resolves to a `<symbol>` in that same document. A `<use>` with
