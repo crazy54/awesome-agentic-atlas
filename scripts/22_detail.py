@@ -576,6 +576,7 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
         <a class="alt" href="{esc(live)}">Find it in the atlas</a></p>
     </div>
     <nav class="util">
+      <a href="{repo.rel('discover/')}">Discover</a> ·
       <a href="{repo.rel('collections/')}">Collections</a> ·
       <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
       <a href="{repo.rel('repo/')}">All projects</a> ·
@@ -681,6 +682,7 @@ def directory(repos: list[Repo], data: dict) -> str:
       <p class="jump">{jump}</p>
     </div>
     <nav class="util">
+      <a href="../discover/">Discover</a> ·
       <a href="../collections/">Collections</a> ·
       <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
       <a href="../#browse">Topics &amp; harnesses</a><br>

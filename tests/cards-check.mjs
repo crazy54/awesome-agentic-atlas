@@ -1516,6 +1516,230 @@ ok("the controls inside the pinned bar are left without a scroll margin",
 ok("...while the ones outside it have one", excluded.rowLink > 0 && excluded.rowSave > 0 && excluded.sub > 0,
    JSON.stringify(excluded));
 
+// ---- DISCOVER'S CAROUSEL, WHICH IS A SCROLLER AND NOT A TRANSFORMED TRACK -------------------------------
+//
+// `docs/discover/` is the one page on this site whose primary control is horizontal, and everything worth
+// asserting about it is geometry: whether a rail of fifty 320px cards scrolls inside its own box or drags
+// the document sideways, whether a phone gets one card and a sliver of the next, whether the grid toggle
+// reflows the same fifty into columns, and whether the arrows and the buttons move by a screenful.
+//
+// probe.mjs has the other half -- that the markup the stage wrote is the markup the page's own renderer
+// produces -- and neither harness can do the other's job: a string comparison cannot tell you a rail
+// overflows its phone, and a browser cannot tell you two renderers disagree about an apostrophe.
+//
+// The auto-advance is checked in both directions, and that is the expensive part of this section: the
+// interval is six seconds, so proving it runs costs seven and proving it stays off under
+// `prefers-reduced-motion` costs seven more. Worth it, because a carousel that advances on its own is the
+// single most intrusive thing in this repository and "it is off for readers who asked for no motion" is a
+// claim no static check can make.
+const DORIGIN = ORIGIN.replace(/\/?$/, "/") + "discover/";
+const dSettle = async () => {
+  for (let i = 0; i < 100; i++) {
+    if (await evalIn("document.readyState === 'complete' && !!document.querySelector('#drail .dcard')"))
+      break;
+    await sleep(150);
+  }
+};
+// `about:blank` first, for the reason `hardGoto` does it: these navigations differ from each other only by
+// fragment, and `Page.navigate` to a URL you are already on with a fragment change is not a load at all --
+// which would mean the deep-link assertions below measured a page whose script had never re-run.
+const dGoto = async (tail = "") => {
+  await S("Page.navigate", {url: "about:blank"});
+  await S("Page.navigate", {url: DORIGIN + tail});
+  await dSettle();
+};
+// One read of the rail: how it is laid out, how far it can scroll, and whether the document had to grow
+// sideways to contain it. `fullyVisible` is the count a reader would call "on screen" -- a card clipped by
+// the rail's right edge is the sliver that says there are more, not a card you can read.
+const drail = `(() => {
+  const rail = document.getElementById('drail');
+  const cards = [...rail.querySelectorAll('.dcard')];
+  const rr = rail.getBoundingClientRect(), c0 = cards[0].getBoundingClientRect();
+  const across = cards.filter(c => Math.abs(c.getBoundingClientRect().top - c0.top) < 2).length;
+  const fully = cards.filter(c => { const b = c.getBoundingClientRect();
+    return b.left >= rr.left - 1 && b.right <= rr.right + 1; }).length;
+  return {
+    cards: cards.length, across, fullyVisible: fully,
+    cardW: Math.round(c0.width), railW: Math.round(rr.width),
+    scrollW: rail.scrollWidth, clientW: rail.clientWidth, scrollLeft: Math.round(rail.scrollLeft),
+    rows: new Set(cards.map(c => Math.round(c.getBoundingClientRect().top))).size,
+    snap: getComputedStyle(rail).scrollSnapType,
+    railOverflow: getComputedStyle(rail).overflowX,
+    docHScroll: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    mode: document.documentElement.getAttribute('data-dmode'),
+    pos: (document.getElementById('dpos') || {}).textContent,
+    noteShown: !document.getElementById('dnote').hidden,
+    note: document.getElementById('dnote').textContent,
+    focus: document.activeElement ? (document.activeElement.dataset.project ||
+      document.activeElement.id || document.activeElement.tagName.toLowerCase()) : null,
+  };
+})()`;
+
+await resize(1440, 900);
+await dGoto();
+const d14 = await evalIn(drail);
+ok("the rail is a single horizontal line of cards at 1440px",
+   d14.rows === 1 && d14.across === d14.cards, JSON.stringify(d14));
+ok("...a full day of them, so this is the page and not an empty shell", d14.cards === 50,
+   String(d14.cards));
+ok("...scrolling inside its own box rather than dragging the document sideways",
+   d14.scrollW > d14.clientW && d14.docHScroll === 0, JSON.stringify(d14));
+ok("...with snap points, so a drag lands on a card and not between two",
+   /mandatory/.test(d14.snap) && d14.railOverflow === "auto", d14.snap + " / " + d14.railOverflow);
+ok("...three or four cards visible at once, which is what a 320px card at this width means",
+   d14.fullyVisible >= 3 && d14.fullyVisible <= 5, String(d14.fullyVisible));
+ok("...and the counter says where in the fifty the reader is", /^1 of 50$/.test(d14.pos || ""),
+   JSON.stringify(d14.pos));
+
+// Next moves by a rail-width, Back undoes it. Measured rather than assumed because `step()` is
+// `clientWidth - 40`, and a button that moved by a fixed card count would skip two of them on a phone.
+await evalIn("document.getElementById('dnext').click()");
+await sleep(600);
+const dNext = await evalIn(drail);
+ok("Next moves the rail by about a screenful",
+   dNext.scrollLeft > d14.clientW * 0.7 && dNext.scrollLeft < d14.clientW * 1.1,
+   dNext.scrollLeft + " of " + d14.clientW);
+ok("...and the counter moves with it", dNext.pos !== d14.pos, JSON.stringify(dNext.pos));
+await evalIn("document.getElementById('dprev').click()");
+await sleep(900);
+// Not `=== 0`: the rail is `scroll-snap-type:mandatory`, so the final resting position is the snap point
+// nearest where the smooth scroll ended, and that is the first card's leading edge give or take the 4px of
+// rail padding. A failure here would be a Back button that moved nothing or moved half as far as Next.
+const dBack = (await evalIn(drail)).scrollLeft;
+ok("Back returns to the beginning", dBack < 8, dBack + " after " + dNext.scrollLeft);
+
+// The arrow keys on the rail itself, and the one thing about the auto-advance that matters more than
+// whether it runs: after a reader has touched it, it never starts again. The wait is longer than the
+// six-second interval, so a roll that restarted would show up as movement.
+await evalIn("document.getElementById('drail').focus()");
+for (const key of ["ArrowRight", "ArrowRight"]) {
+  await S("Input.dispatchKeyEvent", {type: "rawKeyDown", key, code: key,
+                                     windowsVirtualKeyCode: key === "ArrowRight" ? 39 : 37});
+  await S("Input.dispatchKeyEvent", {type: "keyUp", key, code: key,
+                                     windowsVirtualKeyCode: key === "ArrowRight" ? 39 : 37});
+  await sleep(500);
+}
+await sleep(900);
+const dKeys = await evalIn(drail);
+ok("ArrowRight on the focused rail scrolls it", dKeys.scrollLeft > 0, String(dKeys.scrollLeft));
+await sleep(7200);
+const dQuiet = await evalIn(drail);
+// A tolerance measured in snap points rather than an equality. Mandatory snapping keeps nudging a rail for
+// a little while after a smooth scroll ends -- 31px, on the run that first failed this -- and what the
+// assertion is about is a restarted six-second roll, which moves by a screenful and not by a nudge.
+ok("...and the carousel does not start rolling again after a keypress",
+   Math.abs(dQuiet.scrollLeft - dKeys.scrollLeft) < d14.cardW / 2,
+   dKeys.scrollLeft + " then " + dQuiet.scrollLeft + ", a card is " + d14.cardW);
+
+// The roll itself, on a page nobody has touched. This is the assertion the reduced-motion one below is only
+// meaningful against: without it, "nothing moved" would pass on a page where nothing ever moves.
+await dGoto();
+await sleep(7200);
+const dRolled = await evalIn(drail);
+ok("left alone, the carousel advances on its own", dRolled.scrollLeft > 0, String(dRolled.scrollLeft));
+
+// The New pulse, as this browser computes it rather than as the stylesheet declares it. No row in the
+// committed atlas carries a `first_seen` -- the arrivals ledger is written by a CI build -- so the class is
+// put on a card here instead of waiting for a day that has one. The class is what the rule selects, so a
+// computed `animationName` is the same reading a reader would get on a real arrival.
+const pulseOn = await evalIn("(() => { const c = document.querySelector('#drail .dcard');" +
+  " c.classList.add('nw'); return getComputedStyle(c).animationName; })()");
+ok("a card new to the atlas breathes, on the page as well as on the index", pulseOn === "new-breathe",
+   pulseOn);
+
+// `prefers-reduced-motion` is one of the two features CDP can actually override -- see the long note at the
+// top of this file about `hover`, which it cannot -- so this is a real emulation and not a proxy for one.
+await S("Emulation.setEmulatedMedia",
+        {features: [{name: "prefers-reduced-motion", value: "reduce"}]});
+await dGoto();
+const dCalm0 = await evalIn(drail);
+await sleep(7200);
+const dCalm = await evalIn(drail);
+ok("a reader who asked for no motion gets no carousel that moves on its own",
+   dCalm.scrollLeft === dCalm0.scrollLeft, dCalm0.scrollLeft + " then " + dCalm.scrollLeft);
+// The same card, the same class, the same property -- and `none` this time. The ring itself is in the base
+// rule and stays, which is the point: what is removed is the swell, not the thing it was drawing attention
+// to. `boxShadow` is read beside it so a rule that turned the whole badge off could not pass this.
+const calmPulse = await evalIn("(() => { const c = document.querySelector('#drail .dcard');" +
+  " c.classList.add('nw'); const s = getComputedStyle(c);" +
+  " return {animation: s.animationName, shadow: s.boxShadow}; })()");
+ok("...and the New pulse is off for them too, on a card whose ring stays",
+   calmPulse.animation === "none" && calmPulse.shadow !== "none", JSON.stringify(calmPulse));
+ok("...while the rail still scrolls, because nothing here is communicated by the motion",
+   dCalm.scrollW > dCalm.clientW && (await evalIn(
+     "(() => { const r = document.getElementById('drail'); r.scrollLeft = 500;" +
+     " return Math.round(r.scrollLeft); })()")) > 0);
+await S("Emulation.setEmulatedMedia", {features: []});
+
+// THE DEEP LINK, which is the whole reason the homepage strip is not a clickthrough grab: a card there links
+// to `discover/#repo=<owner/name>`, and landing on it has to deliver that card rather than the top of a
+// page with it somewhere inside.
+await dGoto();
+const pick30 = await evalIn(
+  "document.querySelectorAll('#drail .dcard')[29].getAttribute('data-project')");
+await dGoto("#repo=" + pick30);
+await sleep(700);
+const dHit = await evalIn(drail);
+ok("a #repo= link scrolls that card to the rail's leading edge", dHit.scrollLeft > 0,
+   pick30 + " at " + dHit.scrollLeft);
+ok("...and focuses it, so a keyboard reader arrives where a mouse reader is looking",
+   dHit.focus === pick30, JSON.stringify(dHit.focus));
+ok("...and marks it, so it is still findable after reading two cards either side",
+   await evalIn(`!!document.querySelector('.dcard.dhit[data-project="' + CSS.escape(${
+     JSON.stringify(pick30)}) + '"]') || !!document.querySelector('.dcard.dhit')`));
+ok("...and says nothing, because the card was in today's fifty", !dHit.noteShown, dHit.note);
+
+// A link shared yesterday afternoon. The project is in the plan and not in today's cohort, which is not a
+// broken link -- it is a dated one -- so the page says which day it was in and offers the project.
+const stale = await evalIn(`(async () => {
+  const d = await fetch("../discover.json").then(r => r.json());
+  const today = new Set([...document.querySelectorAll('#drail .dcard')].map(c => c.dataset.project));
+  for (const c of d.days) for (const n of c.picks) if (!today.has(n)) return n;
+  return "";
+})()`);
+ok("the plan has a project that is not in today's fifty, to follow a stale link to", stale !== "", stale);
+if (stale) {
+  await dGoto("#repo=" + stale);
+  await sleep(700);
+  const dStale = await evalIn(drail);
+  ok("a link to another day's card says which day it was in rather than scrolling to nothing",
+     dStale.noteShown && /fifty, not today's/.test(dStale.note), JSON.stringify(dStale.note));
+  ok("...and offers the project itself, which is what the reader was actually after",
+     await evalIn("!!document.querySelector('#dnote a[href^=\"../repo/\"]')"));
+}
+
+// Grid view: the same fifty cards, the same markup, a different container. The rail buttons go, because
+// there is nothing left for them to scroll.
+await dGoto();
+await evalIn("document.getElementById('dmode').click()");
+await sleep(400);
+const dGrid = await evalIn(drail);
+ok("Grid view reflows the same fifty into rows", dGrid.mode === "grid" && dGrid.cards === 50 &&
+   dGrid.rows > 1, JSON.stringify({mode: dGrid.mode, rows: dGrid.rows, cards: dGrid.cards}));
+ok("...with nothing left to scroll sideways, in the rail or in the document",
+   dGrid.scrollW <= dGrid.clientW + 1 && dGrid.docHScroll === 0, JSON.stringify(dGrid));
+ok("...and the two rail buttons gone rather than sitting there inert",
+   await evalIn("getComputedStyle(document.getElementById('dnext')).display === 'none'"));
+ok("...and the choice remembered, which is what a view toggle is for",
+   await evalIn("localStorage.getItem('aaa-dmode')") === "grid");
+await evalIn("document.getElementById('dmode').click()");
+await sleep(400);
+ok("...and reversible", (await evalIn(drail)).mode === "rail");
+await evalIn("localStorage.removeItem('aaa-dmode')");
+
+// 390px, where the fixed 320px card would leave no sliver of the next one and a reader would have nothing
+// on screen telling them the rail scrolls at all. `min(320px,78vw)` is the answer and this is the check.
+await resize(390, 844);
+await dGoto();
+const dPhone = await evalIn(drail);
+ok("a phone gets one card at a time", dPhone.fullyVisible === 1, JSON.stringify(dPhone));
+ok("...narrower than the screen, so the next one shows as a sliver",
+   dPhone.cardW < 390 - 24 && dPhone.cardW > 200, String(dPhone.cardW));
+ok("...and the document still does not scroll sideways", dPhone.docHScroll === 0,
+   String(dPhone.docHScroll));
+if (dPhone.docHScroll !== 0 || dPhone.fullyVisible !== 1) await shot("discover-390");
+await resize(1440, 900);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 ws.close();
 await browser.close();

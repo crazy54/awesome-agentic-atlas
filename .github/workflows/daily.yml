@@ -335,6 +335,24 @@ jobs:
           # Sorted, a day of churn rewrites values in place. Worth knowing that the naive figure is 2x and
           # not 11x -- zlib deltas a permuted JSON object far better than the 57 KB the file weighs.
           python scripts/19c_live.py
+          # Discover, re-rendered for today. The same command weekly.yml runs and in the same position, which
+          # is the point: the stage looks at the plan `docs/discover.json` already holds, finds that it still
+          # reaches today, and rebuilds the page and the payload from tonight's `data.json` without touching
+          # `state/discover.json`. Re-stamping that ledger here would move every row in the current week to
+          # the back of its category's queue a second time -- which changes nothing about this week and ages
+          # the whole corpus by a week every night, silently, until the rotation is meaningless.
+          #
+          # So this run is what makes the midnight rollover real rather than a promise the page's script has
+          # to keep on its own: tonight's build publishes tomorrow's fifty as prerendered HTML, with today's
+          # names, stars and blurbs, and with any project that left the atlas dropped rather than linked to a
+          # detail page this build did not write. The script's own rollover stays, for the tab left open and
+          # the page served out of the worker's cache, and it is a second answer to the same question by
+          # design -- see the note at the top of scripts/19d_discover.py.
+          #
+          # After 19_pages because it reads the data.json that stage rewrites, and before 20_landing because
+          # that stage puts this one's `urls()` in the sitemap. tests/discover_test.py asserts the stage is in
+          # this workflow as well as in weekly.yml; dropping it here would leave no error anywhere.
+          python scripts/19d_discover.py
           # Here as of JFH-215, in the same position weekly.yml already runs it in: after 19_pages and
           # 25_velocity, because it reads `docs/data.json` and nothing else, and before 24_pwa, because
           # it writes `docs/pages.css`, which that stage precaches and hashes. The note above 24_pwa is
@@ -466,9 +484,10 @@ jobs:
       # taxonomy, not a side effect of a build.
       #
       # This holds only while every generator still writes at least one file outside those prefixes --
-      # 17_markdown has mega-list/README.md, 19_pages has docs/index.html, 20_landing has
-      # docs/sitemap.xml, 21_feeds has docs/feed.xml. A future stage whose entire output is facet pages
-      # would warn where it should fail. Give any such stage one fixed-path file to write.
+      # 17_markdown has mega-list/README.md, 19_pages has docs/index.html, 19d_discover has
+      # docs/discover.json and docs/discover/index.html, 20_landing has docs/sitemap.xml, 21_feeds has
+      # docs/feed.xml. A future stage whose entire output is facet pages would warn where it should fail.
+      # Give any such stage one fixed-path file to write.
       #
       # The skipped arm is what the two remaining weekly-only stages cost: `docs/repo/**` and
       # `docs/sitemap-repos.xml` from `22_detail.py`, and `docs/og/**` from `23_og.py`, are not written by
@@ -566,7 +585,7 @@ jobs:
       # ---------------------------------------------------------------- verification, before publication
       #
       # The suite runs here, against the tree this job just built and is about to publish, and that
-      # placement is the entire content of JFH-284. `tests.yml` next door runs the same eighteen harnesses
+      # placement is the entire content of JFH-284. `tests.yml` next door runs the same nineteen harnesses
       # on pull requests, on pushes to `latest_branch`, and as a Monday canary -- but this job pushes with
       # `secrets.GITHUB_TOKEN` through `actions/checkout`'s persisted credentials, and GitHub deliberately
       # starts no workflow runs for pushes made with that token. So not one of this job's ~30 commits a

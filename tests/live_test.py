@@ -406,7 +406,8 @@ says("...and still names data.json beside it, so the change was additive", SW, '
 says("...and routes that whole list through the cached-data handler", SW,
      "DATA_FILES.some((name) => url.pathname.endsWith(name))")
 b24 = load("b24_for_test", "24_pwa.py")
-eq("the worker's list has one definition, in 24_pwa.py", b24.DATA_FILES, ["data.json", "live.json"])
+eq("the worker's list has one definition, in 24_pwa.py", b24.DATA_FILES,
+   ["data.json", "live.json", "discover.json"])
 eq("...and the served worker is what that definition produces",
    re.search(r"const DATA_FILES = (\[[^\]]*\]);", SW).group(1),
    json.dumps(["/" + f for f in b24.DATA_FILES]))

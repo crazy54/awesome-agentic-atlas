@@ -63,6 +63,13 @@
       "off_effect": "The Map chip stays hidden and its dialog unreachable, and search/xy.bin and search/near.bin are never fetched."
     },
     {
+      "key": "index.discover_strip",
+      "group": "Index page",
+      "name": "The Discover strip",
+      "description": "Adds a rail of today's fifty Discover projects above the results, on the unfiltered view only, with each card linking into the Discover page at that same card. The fifty are drawn from every topic in the atlas and rotate daily, so this is the one thing on the index that recommends projects a reader did not ask for and would not otherwise reach. Reads discover.json, which the Discover stage publishes alongside the page itself.",
+      "off_effect": "The strip never appears and discover.json is never fetched. The Discover page itself is unaffected and stays in the nav."
+    },
+    {
       "key": "detail.install_command",
       "group": "Project detail pages",
       "name": "Install section",

@@ -46,6 +46,7 @@ up there is now [one link — twenty tools, ranked][q1].
 | | Best for | Where |
 |---|---|---|
 | 🔎 **The Atlas site** | Live search and filtering with no download. Pick a topic, pick a harness, pick an OS, cross all three. Every view is a link. | [crazy54.github.io/awesome-agentic-atlas][site] |
+| 🎲 **Discover** | Not knowing what you are looking for. Fifty projects a day, dated, drawn from every category so a small one gets the same billing as a crowded one, rotated so what appeared this week goes to the back of the queue. Nothing here is ranked by stars. A new fifty at midnight Central, seven days picked each Sunday. | [discover][discover] |
 | 📊 **Excel workbook** | Filtering, sorting, "show me every Rust tool with >1k stars that runs native on Windows". 21 sheets, a screenshot embedded on every row, autofilter on every column. Two themes. | [dark][dark] · [light][light] |
 | 📄 **Markdown edition** | Reading in the browser, linking to, quoting. Same data, same ordering, split so no page hits GitHub's rendering limit. | [mega-list/](mega-list/README.md) |
 | 🏆 **Leaderboard** | The most-starred projects across every list at once, with how many lists name each one — a rough consensus score. | [leaderboard](mega-list/leaderboard.md) |
@@ -526,6 +527,7 @@ If you think something here should be attributed differently, open an issue and 
 
 [site]: https://crazy54.github.io/awesome-agentic-atlas/
 [new]: https://crazy54.github.io/awesome-agentic-atlas/#new=1
+[discover]: https://crazy54.github.io/awesome-agentic-atlas/discover/
 [data]: https://crazy54.github.io/awesome-agentic-atlas/data.json
 [dark]: https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx
 [light]: https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx
