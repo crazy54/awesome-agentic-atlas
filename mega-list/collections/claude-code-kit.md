@@ -4,7 +4,7 @@
 
 Claude Code is the harness the largest single share of this atlas is built for. Installing it is ten seconds; the next hour is the part nobody writes down. These seven cover the format skills come in, three bundles worth reading before writing your own, the two things that make long sessions cheaper, and where to look when you want more. Every project here targets Claude Code, and the build checks that too.
 
-7 picks · 931,081 combined stars · snapshot 2026-09-03
+7 picks · 959,718 combined stars · snapshot 2026-09-21
 
 [Open all 7 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=anthropics/skills,obra/superpowers,multica-ai/andrej-karpathy-skills,addyosmani/agent-skills,JuliusBrussee/caveman,ccusage/ccusage,hesreallyhim/awesome-claude-code) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -24,11 +24,11 @@ Anthropic's own repository for Agent Skills: the SKILL.md format, a template and
 git clone https://github.com/anthropics/skills.git
 ```
 
-**173,481** stars · 2 of 11 lists · Python · no licence stated · pushed 2026-09-01
+**177,431** stars · 6 of 39 lists · Python · no licence stated · pushed 2026-09-10
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
-Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic
+Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, MCP, Cursor
 
 ---
 
@@ -44,7 +44,7 @@ Core software-engineering competencies covering most of the SDLC, well organised
 git clone https://github.com/obra/superpowers.git
 ```
 
-**281,176** stars · 3 of 11 lists · Shell · MIT · pushed 2026-08-31
+**289,613** stars · 7 of 39 lists · Shell · MIT · pushed 2026-09-20
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -64,7 +64,7 @@ A drop-in CLAUDE.md distilling four behavioural guidelines, derived from Andrej 
 git clone https://github.com/multica-ai/andrej-karpathy-skills.git
 ```
 
-**209,837** stars · 2 of 11 lists · language not detected · no licence stated · pushed 2026-04-20
+**214,475** stars · 3 of 39 lists · language not detected · no licence stated · pushed 2026-04-20
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -84,11 +84,11 @@ Production-grade engineering skills, and portable: it also targets MCP, Codex an
 npx skills add addyosmani/agent-skills # install all 25 skills
 ```
 
-**91,887** stars · 2 of 11 lists · JavaScript · MIT · pushed 2026-09-03
+**98,036** stars · 4 of 39 lists · JavaScript · MIT · pushed 2026-09-20
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
-Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, MCP, Codex / OpenAI, Cursor
+Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, MCP, Codex / OpenAI, Gemini / Google, Cursor
 
 ---
 
@@ -101,14 +101,14 @@ Conserves tokens by shortening what the agent says back to you. It reads like a 
 > by Julius Brussee - A plugin that conserves message tokens by communicating in fragmented "caveman speak" - sort of a clever form of compression. Now accompanied by a whole caveman ecosystem including a memory system, caveman spec kit, and a caveman agent
 
 ```sh
-irm https://raw.githubusercontent.com/JuliusBrussee/caveman/v2.5.0/install.ps1 | iex
+irm https://raw.githubusercontent.com/JuliusBrussee/caveman/v2.7.0/install.ps1 | iex
 ```
 
-**102,940** stars · 1 list · Go · no licence stated · pushed 2026-09-02
+**107,114** stars · 2 of 39 lists · Go · no licence stated · pushed 2026-09-21
 
 Platforms: Win Y WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
-Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic
+Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, Codex / OpenAI
 
 ---
 
@@ -124,11 +124,11 @@ One npx command reports what your Claude Code sessions have actually cost. Zero 
 git clone https://github.com/ccusage/ccusage.git
 ```
 
-**18,314** stars · 1 list · Rust · no licence stated · pushed 2026-09-03
+**18,662** stars · 4 of 39 lists · Rust · no licence stated · pushed 2026-09-21
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
-Topic: Observability & Evals · Targets: Claude Code, Claude / Anthropic
+Topic: Observability & Evals · Targets: Claude Code, Claude / Anthropic, Codex / OpenAI
 
 ---
 
@@ -144,7 +144,7 @@ The specialist list for this harness. When the kit above stops being enough, thi
 git clone https://github.com/hesreallyhim/awesome-claude-code.git
 ```
 
-**53,446** stars · 1 list · Python · no licence stated · pushed 2026-09-03
+**54,387** stars · 3 of 39 lists · Python · no licence stated · pushed 2026-09-21
 
 Platforms: Win N WSL N mac Y Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -152,4 +152,4 @@ Topic: Docs, Learning & Lists · Targets: Claude Code, Claude / Anthropic
 
 ---
 
-These are editorial picks — the only editorial pages on the atlas. Everything else here is what 11 awesome-lists agreed on. The curation is a [reviewable file](https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json); open an issue if you would pick differently.
+These are editorial picks — the only editorial pages on the atlas. Everything else here is what 39 awesome-lists agreed on. The curation is a [reviewable file](https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json); open an issue if you would pick differently.

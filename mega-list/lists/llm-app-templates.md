@@ -4,7 +4,7 @@ Runnable example apps. Each row is a folder inside the one repo.
 
 Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awesome-llm-apps)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-116 entries · 3 distinct repos · 15 sections
+119 entries · 3 distinct repos · 16 sections
 
 [← back to the mega list](../README.md)
 
@@ -20,15 +20,16 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - [Starter AI Agents](#starter-ai-agents) (13)
 - [Advanced AI Agents](#advanced-ai-agents) (22)
 - [Always-on Agents](#always-on-agents) (2)
-- [Multi-agent Teams](#multi-agent-teams) (13)
+- [Multi-agent Teams](#multi-agent-teams) (14)
 - [Autonomous Game-Playing Agents](#autonomous-game-playing-agents) (3)
 - [RAG (Retrieval Augmented Generation)](#rag-retrieval-augmented-generation) (21)
 - [LLM Apps with Memory](#llm-apps-with-memory) (6)
 - [Chat with X](#chat-with-x) (6)
-- [Agent Skills](#agent-skills) (6)
+- [Agent Skills](#agent-skills) (7)
 - [MCP AI Agents](#mcp-ai-agents) (6)
 - [Voice AI Agents](#voice-ai-agents) (5)
 - [Generative UI and Agentic Frontends](#generative-ui-and-agentic-frontends) (7)
+- [AI Browser Tools](#ai-browser-tools) (1)
 - [LLM Optimization Tools](#llm-optimization-tools) (2)
 - [LLM Fine-tuning](#llm-fine-tuning) (2)
 - [AI Agent Framework Crash Courses](#ai-agent-framework-crash-courses) (2)
@@ -77,7 +78,7 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 
 ## Advanced AI Agents
 
-- **[🌐 Openwork - Open Browser Automation Agent](https://github.com/accomplish-ai/coworker)** — ↗ external - Open-source agent that operates a real browser
+- **[🌐 Openwork - Open Browser Automation Agent](https://github.com/accomplish-ai/coworker)** — external - Open-source agent that operates a real browser
   <sub>★ 10.9k · source · pushed 2026-08-13</sub>
   <sub>`git clone https://github.com/accomplish-ai/coworker.git`</sub>
 - **[🏚️ 🍌 AI Home Renovation Agent with Nano Banana Pro](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/advanced_ai_agents/multi_agent_apps/ai_home_renovation_agent)** — Photos of your space in, renovation plan and photorealistic renders out
@@ -194,6 +195,9 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - **[🌏 AI Travel Planner Agent Team](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/advanced_ai_agents/multi_agent_apps/agent_teams/ai_travel_planner_agent_team)** — A complete trip itinerary, crafted by a team
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/advanced_ai_agents/multi_agent_apps/agent_teams/ai_travel_planner_agent_team`</sub>
+- **[⚖️ LLM Panel Agent Team](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/advanced_ai_agents/multi_agent_apps/agent_teams/llm_panel_agent_team)** — Three vendors review the same diff blind, then argue it out anonymously
+  <sub>in-repo</sub>
+  <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/advanced_ai_agents/multi_agent_apps/agent_teams/llm_panel_agent_team`</sub>
 
 ## Autonomous Game-Playing Agents
 
@@ -320,6 +324,9 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - **[⚰️ Project Graveyard](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/agent_skills/project-graveyard)** — Finds every side project you abandoned, tells you why each one died, and helps you finish the one worth going back to
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/agent_skills/project-graveyard`</sub>
+- **[👁️ First Reader](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/agent_skills/first-reader)** — Simulates real readers going through your draft and reports where they lose interest, where they stop reading, and what they remember afterward, without rewriting a word
+  <sub>in-repo</sub>
+  <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/agent_skills/first-reader`</sub>
 - **[🔭 Scope Creep Detector](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/agent_skills/scope-creep-detector)** — Checks whether a diff grew beyond its stated intent and recommends what to keep, split, or justify
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/agent_skills/scope-creep-detector`</sub>
@@ -329,7 +336,7 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - **[🩺 Dependency Doctor](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/agent_skills/dependency-doctor)** — Checks a dependency manifest for standard-library pins, obsolete backports, unpinned entries, duplicate constraints, and yanked releases
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/agent_skills/dependency-doctor`</sub>
-- **[🧠 Advisor Orchestrator Worker](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/agent_skills/advisor-orchestrator-worker)** — Meta Loop with Claude Fable 5 as advisor, GPT-5.6 as orchestrator, and Gemini 3.7 Flash as worker
+- **[🧠 Advisor Orchestrator Worker](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/agent_skills/advisor-orchestrator-worker)** — Meta Loop with Claude Fable 5.1 as advisor, GPT-6 Astra as orchestrator, and Gemini 3.8 Flash as worker
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/agent_skills/advisor-orchestrator-worker`</sub>
 - **[♾️ Self-Improving Agent Skills](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/agent_skills/self-improving-agent-skills)** — Automatically optimize agent skills using Gemini and ADK
@@ -359,8 +366,8 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 
 ## Voice AI Agents
 
-- **[🎙️ OpenSource Voice Dictation Agent (Wispr Flow clone)](https://github.com/akshayaggarwal99/jarvis-ai-assistant)** — ↗ external - Open-source dictation that types where you talk
-  <sub>★ 622 · TypeScript · MIT · clone · pushed 2026-08-21 · Win? · macOS</sub>
+- **[🎙️ OpenSource Voice Dictation Agent (Wispr Flow clone)](https://github.com/akshayaggarwal99/jarvis-ai-assistant)** — external - Open-source dictation that types where you talk
+  <sub>★ 638 · TypeScript · MIT · clone · pushed 2026-08-21 · Win? · macOS</sub>
   <sub>`git clone https://github.com/akshayaggarwal99/jarvis-ai-assistant.git`</sub>
 - **[🗣️ AI Audio Tour Agent](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/voice_ai_agents/ai_audio_tour_agent)** — Self-guided audio tours from your location, interests, and pace
   <sub>in-repo</sub>
@@ -368,7 +375,7 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - **[📞 Customer Support Voice Agent](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/voice_ai_agents/customer_support_voice_agent)** — Voice answers grounded in your own docs
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/voice_ai_agents/customer_support_voice_agent`</sub>
-- **[🛡️ Insurance Claim Live Agent Team](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/voice_ai_agents/insurance_claim_live_agent_team)** — Real-time voice claim intake with Gemini Live
+- **[🛡️ Insurance Claim Live Agent Team](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/voice_ai_agents/insurance_claim_live_agent_team)** — Voice claim intake on Gemini 3.8 Live that writes a field notebook, looks at damage through the webcam, and sketches the incident
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/voice_ai_agents/insurance_claim_live_agent_team`</sub>
 - **[🔊 Voice RAG Agent (OpenAI SDK)](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/voice_ai_agents/voice_rag_openaisdk)** — Ask your PDFs questions, hear the answers
@@ -398,6 +405,12 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - **[🔍 AI Deep Research Agent](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/generative_ui_agents/ai-deep-research-agent)** — Research where every tool call renders as a live workspace card
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/generative_ui_agents/ai-deep-research-agent`</sub>
+
+## AI Browser Tools
+
+- **[🪡 Needle - A New Way to Find](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/advanced_llm_apps/needle)** — Search webpages by meaning and highlight the strongest source sentence, using a Chrome extension powered by TypeSafe Jev
+  <sub>in-repo</sub>
+  <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/advanced_llm_apps/needle`</sub>
 
 ## LLM Optimization Tools
 
@@ -429,6 +442,6 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 
 ---
 
-Snapshot 2026-09-03. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).
