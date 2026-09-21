@@ -16,7 +16,7 @@ category, the targets, the stars, the list count, the list names, the five OS ve
 install command, the language, the licence, the push date, the URL and the social card. That is enough
 to invert: one listing per (repo, list) pair reproduces `lists` and `listed_by`, a section that maps to
 the row's category reproduces the category vote, `meta.json` is the star map written back out, and a
-one-entry shot map reproduces the 686 rows that carry artwork of their own.
+one-entry shot map reproduces the rows that carry artwork of their own.
 
 So this is a *reconstruction*, not a mock. It writes no HTML and knows nothing about the page: it
 hands the real `main()` the three files it asks for and lets the real generator do the work. Whatever
@@ -45,27 +45,32 @@ WHAT IS AND IS NOT FAITHFUL
 
 Faithful: the row set, the row order, and every published column -- verified by `--verify`, which
 decodes both files through their own headers and compares by repo rather than by position, so a
-reordered `CATEGORIES` shows up as agreement and not as 1,294 differences. Today it renders 1,294 rows
-and 12,494,028 stars, and fifteen of the sixteen columns are identical on all of them.
+reordered `CATEGORIES` shows up as agreement and not as every row differing. Against the 2026-09-21
+snapshot it renders all 8,856 rows and 24,010,256 stars with every one of the sixteen columns
+identical on every repo, `first_seen` included -- all 7,572 of that day's stamps come back, because the
+tracked ledger is copied rather than rebuilt.
 
-The sixteenth is `targets`, on three rows, and it is the fixture working rather than failing: those
-repos say "antigravity" in their name, `\bantigravity\b` joined the Gemini/Google pattern on 2026-09-06,
-and `docs/data.json` was published on 2026-09-03. The render reflects the checkout. `--verify` therefore
-fails only on a column it *copies* -- `cat` and `targets` are derived through `taxonomy.py` and are
-allowed to move with the tree.
+`--verify` still only *fails* on a column it copies. `cat` and `targets` are derived through
+`taxonomy.py` on the tree the build ran on, so they are allowed to disagree with an older snapshot, and
+against the 1,294-row snapshot published on 2026-09-03 three rows did: they say "antigravity" in their
+name and `\bantigravity\b` joined the Gemini/Google pattern on 2026-09-06. That is the fixture working.
+The agreement above is not a weaker claim for it -- that snapshot was built by the taxonomy this tree
+has -- but a future edit to `taxonomy.py` will reopen the gap, and a report on those two columns means
+the tree moved, not that this file is wrong.
 
-Not faithful, and none of it matters to a render: the 8,683-repo corpus is not here (the fixture is
-the 1,294 *published* rows, which is what the page shows), `snapshot` and `generated` are today rather
-than the published day, `d7`/`d30` are absent because `25_velocity.py` appends those after this stage,
-and a listing's prose is the row's normalised blurb rather than the README it came from.
+Not faithful, and none of it matters to a render: the crawl's full listing set is not here (the fixture
+is one listing per published `(repo, list)` pair, 10,787 of them, which is what the page shows),
+`snapshot` and `generated` are today rather than the published day, `d7`/`d30` are absent because
+`25_velocity.py` appends those after this stage, and a listing's prose is the row's normalised blurb
+rather than the README it came from.
 
 One reconstruction is approximate and says so out loud. A listing's category is carried by its
-`(source, section)` pair, and 50 of the 1,450 listings name a list that has no section mapping to the
-category their repo ended up in -- the repo was filed by a *different* list's vote, and the losing
-listing's own section is not recoverable from the published row. Those get a synthetic section
-registered in `taxonomy.SECTIONS` for the duration of the build, named `fixture-section-NNN` so it
-cannot match a target pattern or the MCP/skill evidence rules. The count is printed on every run; if
-it grows a lot, the taxonomy moved.
+`(source, section)` pair, and some listings name a list that has no section mapping to the category
+their repo ended up in -- the repo was filed by a *different* list's vote, and the losing listing's own
+section is not recoverable from the published row. Those get a synthetic section registered in
+`taxonomy.SECTIONS` for the duration of the build, named `fixture-section-NNN` so it cannot match a
+target pattern or the MCP/skill evidence rules. It is 113 pairs over 446 of the 10,787 listings today,
+4.1%, and both counts are printed on every run; a jump means the taxonomy moved.
 """
 import argparse
 import importlib.util
@@ -199,6 +204,7 @@ def reconstruct(data: dict, b19) -> dict:
     meta: dict[str, dict] = {}
     shots: dict[str, dict] = {}
     synth: dict[tuple[str, str], str] = {}
+    approx = 0                       # listings that had to take a synthetic section
     unknown: Counter = Counter()
 
     for row in data["rows"]:
@@ -252,6 +258,7 @@ def reconstruct(data: dict, b19) -> dict:
                 # published row. A synthetic pair keeps the vote unanimous and therefore keeps the
                 # category. Digits only, so it cannot match a target pattern or the MCP/skill rules.
                 sec = synth.setdefault((src, cat), f"fixture-section-{len(synth):03d}")
+                approx += 1
             rec = dict(base, source=src, section=sec)
             if src == "orchestrators":
                 # `main()` reads `r["category"]` on the orchestrators records before anything else
@@ -264,7 +271,7 @@ def reconstruct(data: dict, b19) -> dict:
     if unknown:
         print(f"devfixture: {sum(unknown.values())} listing(s) name a list with no key in "
               f"LIST_TITLE and are dropped: {', '.join(sorted(unknown))}", flush=True)
-    return {"records_all": records, "records": orch, "meta": meta, "shots": shots,
+    return {"records_all": records, "records": orch, "meta": meta, "shots": shots, "approx": approx,
             "synthetic": {(s, c): sec for (s, c), sec in synth.items()}}
 
 
@@ -280,9 +287,10 @@ def report(fx: dict, data: dict, out: Path, writing: bool) -> None:
     print(f"  cache/meta.json         {len(fx['meta']):,} repos, star counts written back")
     print(f"  cache/shots_all.json    {len(fx['shots']):,} rows that publish their own artwork")
     print(f"  state/first-seen.json   copy of the tracked ledger, so `newness` writes here not there")
-    print(f"{listings:,} listings over {len(fx['meta']):,} repos · "
-          f"{len(fx['synthetic'])} synthetic section(s) for listings whose list cannot express their "
-          f"category")
+    share = f" ({fx['approx'] / listings:.1%} of listings)" if listings else ""
+    print(f"{listings:,} listings over {len(fx['meta']):,} repos · {len(fx['synthetic'])} synthetic "
+          f"section(s) over {fx['approx']:,} listing(s){share} whose list cannot express the category "
+          f"their repo was filed under")
 
 
 def write(fx: dict, out: Path) -> None:
@@ -339,11 +347,12 @@ def decode(data: dict) -> dict[str, dict]:
 
 # The two columns a build is allowed to disagree with the published snapshot about, because both are
 # derived through `taxonomy.py` on the tree the build ran on rather than copied out of the row. That is
-# the point of the fixture -- it renders what this checkout thinks, not what September thought -- so
-# drift here is reported and does not fail. Three rows drift today: `\bantigravity\b` joined the
-# Gemini/Google pattern on 2026-09-06, three days after the 2026-09-03 snapshot, and those repos say
-# "antigravity" in their name. Every other column is carried through verbatim, so a difference in one
-# is a defect in this file and fails the run.
+# the point of the fixture -- it renders what this checkout thinks, not what the snapshot thought -- so
+# drift here is reported and does not fail. Nothing drifts against the 2026-09-21 snapshot, because the
+# taxonomy that built it is the one in this tree; against the 1,294-row 2026-09-03 snapshot three rows
+# did, all of them repos with "antigravity" in the name, a pattern that arrived on 2026-09-06. Every
+# other column is carried through verbatim, so a difference in one is a defect in this file and fails
+# the run.
 DERIVED = ("cat", "targets")
 
 

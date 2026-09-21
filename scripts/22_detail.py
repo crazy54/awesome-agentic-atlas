@@ -111,6 +111,7 @@ HERE = Path(__file__).resolve().parent
 # `spec_from_file_location` ceremony below -- only `scripts/` on the path, which a plain
 # `python scripts/22_detail.py` already provides and a test that loads this module by file path does not.
 sys.path.insert(0, str(HERE))
+import mark  # noqa: E402
 import osicons  # noqa: E402
 
 # The same dynamic load `19b_refresh.py` and `20_landing.py` use, and for the same reason: the module is
@@ -556,7 +557,7 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
 </head>
 <body>
 {sprite}<header><div class="wrap">
-  <nav class="crumb"><a href="{repo.rel()}">Atlas</a> ›
+  <nav class="crumb">{mark.brand(repo.rel())} ›
     <a href="{repo.rel("topic/" + row["cat_slug"])}/">{esc(row["cat_name"])}</a> ›
     <a href="{repo.rel("repo/")}">All projects</a></nav>
   <div class="top">
@@ -1025,7 +1026,7 @@ table.os th[scope=row]{text-align:left;padding:10px;border-bottom:1px solid var(
   font-weight:600;white-space:nowrap}
 table.os td{padding:10px;border-bottom:1px solid var(--grid);vertical-align:top}
 table.os .why{color:var(--ink2);font-size:13px}
-""" + osicons.CSS + """
+""" + osicons.CSS + mark.CSS + """
 /* Bigger than the shared 1.15em, because this is the one surface where the mark stands beside its own
    word rather than in place of one: at the table's 14px that is ~17px, which matches the cap height of
    the word next to it instead of sitting under it. The margin is on top of the literal space in the

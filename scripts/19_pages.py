@@ -39,6 +39,7 @@ spec.loader.exec_module(b17)
 # effect of somebody else's import is how this breaks the day the import order changes. Stated here.
 sys.path.insert(0, str(Path(__file__).parent))
 import app_flags  # noqa: E402
+import mark  # noqa: E402
 import osicons  # noqa: E402
 import pagemin  # noqa: E402
 
@@ -424,6 +425,8 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             # `strip_page`, so a constant injected here would otherwise carry its own comments into the
             # published bytes, which is the one thing this function's comment strip exists to prevent. Its
             # input is still a constant, so the output is still a pure function of the source.
+            .replace("__MARK__", mark.svg())
+            .replace("__MARKCSS__", pagemin.strip_css(mark.CSS))
             .replace("__OSSPRITE__", osicons.SPRITE)
             .replace("__OSCSS__", pagemin.strip_css(osicons.CSS))
             .replace("__OSIDS__", osicons.JS_IDS)
@@ -1062,6 +1065,7 @@ a.nwo:hover{color:var(--ink)}
    and the ids come from, so the three stylesheets that draw them cannot drift. Sizing is per-surface and
    stays here, because a chip and a verdict want different answers. */
 __OSCSS__
+__MARKCSS__
 /* Inside a filter chip the mark *is* the label -- there is no word beside it to be in proportion to -- so it
    takes about the height a word would have taken. Deliberately over 1em: a chip is 13px, and a mark matched
    to that reads as punctuation on the button rather than as the thing being chosen. */
@@ -2101,7 +2105,7 @@ __OSSPRITE__
 </svg>
 <header><div class="wrap"><div class="top">
   <div>
-    <h1>Awesome Agentic Atlas <span>· __LISTS__ awesome-lists, merged</span></h1>
+    <h1>__MARK__Awesome Agentic Atlas <span>· __LISTS__ awesome-lists, merged</span></h1>
     <p class="sub"><b>__COUNT__</b> projects · <b>__TOPICS__</b> topics · <b>__STARS__</b> combined
       stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
       __SNAPSHOT__</span></p>

@@ -62,6 +62,7 @@ OUT = ROOT / "docs"
 # `spec_from_file_location` ceremony below -- only `scripts/` on the path, which `python
 # scripts/20_landing.py` already provides and a test that loads this module by file path does not.
 sys.path.insert(0, str(HERE))
+import mark  # noqa: E402
 import osicons  # noqa: E402
 
 # The same dynamic load `19b_refresh.py` uses, and for the same reason: the module is named `19_pages`,
@@ -235,7 +236,7 @@ a.nwo:hover{color:var(--ink)}
 .vY{color:var(--good);font-weight:700}
 .vL{color:var(--warn)}
 .vN,.va,.v-{color:var(--off)}
-""" + osicons.CSS + """
+""" + osicons.CSS + mark.CSS + """
 /* 14px rather than the shared 1.15em, which at this column's 11.5px would be 13.2px. A mark the same
    size as the text beside it does not read as a mark, it reads as a smudge in the line -- and unlike the
    detail page's table there is no word next to these to be measured against, so the mark has to carry
@@ -904,7 +905,8 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
 </head>
 <body>
 {osicons.SPRITE}
-<header><div class="wrap"><div class="top">
+<header><div class="wrap">
+  <nav class="brandbar">{mark.brand(page.rel())}</nav><div class="top">
   <div>
     <h1>{esc(page.heading)}</h1>
     <p class="sub"><b>{len(page.rows):,}</b> projects · <b>{ranked:,}</b> with stars to rank by ·
