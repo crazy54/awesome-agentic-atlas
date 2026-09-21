@@ -205,6 +205,13 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("llmapps", "MCP AI Agents"): "MCP Servers",
     ("llmapps", "RAG (Retrieval Augmented Generation)"): "Context, Memory & RAG",
     ("llmapps", "LLM Apps with Memory"): "Context, Memory & RAG",
+    # New upstream (2026-09), and the section a red build died on. Two browser shelves are already filed
+    # here and they went to different places: `agents2026/Browser and Desktop Agents` is agents, so it is
+    # `Assistants & Domain Agents`; `geminicli/Browser Extensions` is things that live inside a browser, so
+    # it is `Plugins, Themes & Clients`. This one follows the second. Its blurb is "small tools that bring
+    # AI into everyday browsing" and its entry is a Chrome extension -- something a reader installs into a
+    # client they already have, which is what that category means.
+    ("llmapps", "AI Browser Tools"): "Plugins, Themes & Clients",
     ("llmapps", "LLM Optimization Tools"): "Harnesses & Runtime Infra",
     ("llmapps", "LLM Fine-tuning"): "Harnesses & Runtime Infra",
     ("llmapps", "Voice AI Agents"): "Creative, Voice & Media",
@@ -388,6 +395,12 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("mcp_punkpeye", "Research"): "MCP Servers",
     ("mcp_punkpeye", "Search & Data Extraction"): "MCP Servers",
     ("mcp_punkpeye", "Security"): "MCP Servers",
+    # New upstream (2026-09), appended below `Star History` rather than beside the other shelves, which is
+    # why it reads as an afterthought and is still a section this file has to name. `MCP Servers` like every
+    # other key on this list, and deliberately not `Sandbox, Security & Governance`: the category axis asks
+    # what a thing *is*, its one entry is an MCP gateway, and `Security` directly above already answers the
+    # same question the same way. The domain is the section name, which the row prints in its own column.
+    ("mcp_punkpeye", "Security & Governance"): "MCP Servers",
     ("mcp_punkpeye", "Social Media"): "MCP Servers",
     ("mcp_punkpeye", "Speech-to-Text"): "MCP Servers",
     ("mcp_punkpeye", "Spirituality & Esoterica"): "MCP Servers",

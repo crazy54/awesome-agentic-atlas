@@ -18,12 +18,14 @@ already been built, and it is the format anything speaking JSON can read without
 
 Four decisions, all of them consequences of the fact that a feed is read by software with a memory:
 
-  * "New" means arrived after the baseline, not inside the fourteen-day window. The window is a rule for
-    a drop-in visitor -- it answers "is this worth a second look right now", and it has to expire on its
-    own because nothing rebuilds the page daily. A subscriber has the opposite problem: it polls on its
-    own schedule and wants everything since it last looked. Publishing only the last fortnight would
-    silently drop every arrival for anyone who reads their feeds monthly, or who was on holiday, and a
-    feed that loses items is worse than no feed. So the window is not applied here at all.
+  * "New" means arrived after the baseline, which is deliberately wider than what the site marks. The
+    site's `New` is one cohort -- what the most recent import brought -- because it answers "is this worth
+    a second look right now" for somebody who has just arrived on the page, and it is superseded the next
+    time anything lands. A subscriber has the opposite problem: it polls on its own schedule and wants
+    everything since it last looked. Publishing one cohort would silently drop every arrival for anyone who
+    reads their feeds weekly, or who was on holiday, and a feed that loses items is worse than no feed. So
+    neither the cohort nor the stale bound is applied here at all; the fifty-entry cap below is the only
+    thing that bounds this file.
 
   * Fifty entries, newest first. The ledger is an archive and grows forever; a feed is a window onto the
     end of it. Fifty is roughly two GitHub screens of reading, keeps both files inside a few tens of KB
@@ -275,9 +277,15 @@ def main() -> None:
 
     for f in ("feed.xml", "feed.json"):
         print(f"{f:12s} {(OUT / f).stat().st_size / 1024:8.1f} KB")
-    live = sum(1 for e in entries if newness.within(e["seen"]))
+    # Reported, not applied -- see the first bullet in the module docstring. The number says how much of this
+    # feed overlaps what the site is currently marking `New`, which is the one figure that lets a reader of
+    # this log compare the two surfaces. A feed far longer than its cohort is the normal state.
+    now = newness.cohort(ledger)
+    live = sum(1 for e in entries if now and e["seen"] == now) if now else 0
     print(f"{total:,} arrived since the baseline {ledger['baseline']} · "
-          f"{len(entries):,} in the feed (cap {LIMIT}) · {live:,} inside the {newness.WINDOW}-day window")
+          f"{len(entries):,} in the feed (cap {LIMIT}) · "
+          + (f"{live:,} of them in the {now} cohort the site marks New" if now
+             else "the site is marking nothing New"))
     print(f"feed updated {updated} · newest first · ids under tag:{TAG_HOST},{TAG_YEAR}")
     if orphans:
         print(f"{orphans:,} arrival(s) not yet in docs/data.json; run 19b_refresh.py to pick them up")

@@ -2,7 +2,7 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the seventeen harnesses in turn, and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the eighteen harnesses in turn, and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
@@ -20,6 +20,12 @@
 //   signals_test.py   the cache-staleness policy in scripts/signals.py, on fabricated entries. Pure and
 //                     instant, and the only test of it that can exist offline -- the three stages it
 //                     serves all shell out to `gh api graphql`, so nothing here sees a real crawl.
+//   newness_test.py   the cohort model in scripts/newness.py: that `New` is the most recent import that
+//                     brought anything, that the next one to bring anything takes the mark off the last,
+//                     and that an import bringing nothing moves neither. Pure, and the only harness that
+//                     can see it -- a cohort is correct only in relation to the one before it, so every
+//                     assertion here needs two or more imports in sequence with the date supplied rather
+//                     than read from the clock. Four surfaces render this one rule.
 //   probe.mjs         runs the page's own JavaScript against a stub DOM, and reads the stylesheet and the
 //                     page text. Sees every branch of the ranking, the hash and the palette. Cannot see
 //                     computed layout -- there is none in Node.
@@ -105,7 +111,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// seventeen files own their own plumbing. It is 200 lines of plumbing.
+// eighteen files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -129,6 +135,7 @@ const HARNESSES = [
   {file: "theme_test.py", label: "the palette's four copies, the verdict marks, the phone's fold, the compare panel", python: true, floor: 220},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
+  {file: "newness_test.py", label: "what `New` means: one cohort, superseded by the next import that brings anything", python: true, floor: 45},
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
   {file: "media_test.py", label: "one embedded part per screenshot, the entry ceiling, and the unpooled cover", python: true, floor: 45},
@@ -153,7 +160,7 @@ if (!existsSync(join(ROOT, "docs", "index.html"))) {
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and three of the seventeen harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and three of the eighteen harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -166,7 +173,7 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Thirteen of the seventeen need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Fourteen of the eighteen need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives the IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar,
@@ -176,7 +183,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and thirteen of the seventeen harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and fourteen of the eighteen harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

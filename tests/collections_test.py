@@ -161,7 +161,7 @@ true("...and between them cover several topics",
 # #13 re-pointed `mnfst/manifest` to `mnfst/llm-gateway` and kept its reason; #14 deleted the pick outright,
 # having measured that the reason -- per-agent cost accounting -- was no longer what the project does. #13
 # merged first, #14's merge of `latest_branch` resolved the collision by keeping the pick, and the branch
-# shipped a seven-pick set beside #14's rewritten kicker and intro, which count six. Seventeen harnesses and
+# shipped a seven-pick set beside #14's rewritten kicker and intro, which count six. Eighteen harnesses and
 # 2,455 assertions were green on it, because not one of them knew how many picks there are supposed to be.
 # That 2,455 is this sentence's evidence and not the suite's total: it is the count on the tree that shipped
 # the seven-pick set, and it is deliberately not requoted when the total moves. A real run today reports

@@ -639,10 +639,16 @@ def facet_page(rel, title, blurb, rows, shots, hub, other, live) -> list[tuple[s
     # Named up front as well as marked in the table, because a reader arriving at a page of hundreds
     # of rows has no way to know whether it is worth looking for the mark. This page is a snapshot;
     # the site's chip is the version that expires on its own.
+    #
+    # The sentence says which import rather than how long ago, because that is what the mark now means: one
+    # cohort, superseded by the next run that brings anything. "New in the last 14 days" was the old window's
+    # wording and would be a false statement about this set -- a cohort can be older than that and still be
+    # the latest news, and two cohorts inside a fortnight are never both marked.
     arrived = [r for r in rows if newness.mark(r["nwo"])]
     if arrived:
-        head += [f"✨ **{len(arrived)} new in the last {newness.WINDOW} days** — "
-                 f"marked below, and [filterable on the site]({live}{'&' if '#' in live else '#'}new=1).",
+        head += [f"✨ **{len(arrived)} new to the atlas** in the "
+                 f"{newness.pretty(newness.COHORT)} import — marked below, and "
+                 f"[filterable on the site]({live}{'&' if '#' in live else '#'}new=1).",
                  ""]
     blocks = []
     if ranked:

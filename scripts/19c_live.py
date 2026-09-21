@@ -52,9 +52,9 @@ every tracked file under `docs/` was rewritten by the build and fail the job nam
 `docs/live.json` is not on either skip list -- so dropping this stage from a workflow is a red build rather
 than a file that silently freezes. And `19b_refresh.py`, the cache-free render path, rewrites `data.json`
 without running this: that is safe, and it is safe for a checkable reason rather than by luck. It changes
-`first_seen`, `window_days`, `baseline` and `schema_version` and hands every other cell through untouched;
-it explicitly refuses to touch a star count, a push date or the snapshot, because it has no crawl to check
-them against. None of the three values here is among the four it changes.
+`first_seen`, `window_days`, `baseline`, `cohort` and `schema_version` and hands every other cell through
+untouched; it explicitly refuses to touch a star count, a push date or the snapshot, because it has no crawl
+to check them against. None of the three values here is among the five it changes.
 
   -- the shape --
 

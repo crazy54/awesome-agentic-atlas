@@ -124,8 +124,11 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
         ("MCP & Skills", ["MCP AI Agents", "Agent Skills"]),
         ("Voice & Generative UI", [
             "Voice AI Agents", "Generative UI and Agentic Frontends"]),
+        # `AI Browser Tools` is new upstream and would have been this sheet's ninth bucket, which the
+        # palette has no hue for. It joins the bucket named after what it is -- tooling around a model
+        # rather than an agent built on one -- and the row still prints its own section name.
         ("Tooling & Courses", [
-            "LLM Optimization Tools", "LLM Fine-tuning",
+            "LLM Optimization Tools", "LLM Fine-tuning", "AI Browser Tools",
             "AI Agent Framework Crash Courses"]),
     ],
     "opencode": [
@@ -214,8 +217,10 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
             "Finance & Fintech", "E-Commerce", "Legal", "Delivery", "Real Estate", "Cryptography"]),
         # `Identity` is new upstream and was the ninth bucket this sheet grew, which is one more hue than the
         # palette has. It joins Security, which is the shelf an identity or auth server shares in practice.
+        # `Security & Governance` arrived the same way `Identity` did and joins it here, next to the
+        # `Security` shelf it is a narrower spelling of.
         ("Cloud, Security & Monitoring", [
-            "Security", "Identity", "Aggregators", "Cloud Platforms", "Monitoring", "Embedded System",
+            "Security", "Identity", "Security & Governance", "Aggregators", "Cloud Platforms", "Monitoring", "Embedded System",
             "Home Automation", "Industrial & IoT"]),
         ("Communication & Marketing", [
             "Communication", "Marketing", "Social Media", "Customer Data Platforms",
