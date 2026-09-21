@@ -70,9 +70,14 @@
 //                     standard library, so what it asserts on is the code a visitor actually runs. Carries the
 //                     staleness guard -- vectors are addressed by row ordinal, so an index built against a
 //                     different data.json returns each project's neighbour with no error anywhere -- and the
-//                     retrieval cases themselves, scored on rank rather than on any similarity threshold,
-//                     because this corpus is expected to grow several times over and a number true at 1,294
-//                     rows would be false at 8,000. It also asserts that a question with no topic in it --
+//                     retrieval cases themselves, scored on what a reader sees: of the ten rows each query
+//                     returns, how many name the topic it asked about, totalled across eight queries. Not on a
+//                     similarity, and no longer on one fixture repository's rank either -- the corpus grew from
+//                     1,294 rows to 8,856 and a rank turned into a measure of how crowded one project's
+//                     neighbourhood is, which reddened three groups here on a build that had got better at
+//                     every query. Every statistic in this file is now relative to what the corpus makes
+//                     available, because a fixed one silently tightens as the corpus grows. It also asserts
+//                     that a question with no topic in it --
 //                     "please help me choose" -- produces no tokens and therefore no answer, and that
 //                     chatter wrapped around a real topic still keeps the topic.
 //                     Tokeniser parity is split across two harnesses on purpose: the algorithm exists three
@@ -83,9 +88,11 @@
 //                     constellation is drawn from, and every check on its shape can pass over a random
 //                     scatter. So it is scored against the one label the layout never saw -- of the eight
 //                     rows nearest a project on screen, how many share its curated cat -- and required to
-//                     beat what two rows drawn at random would share. 60% against 11.7% today; a random
-//                     layout scores 1x, and the floor is a multiple of chance rather than a number,
-//                     because chance itself moves when the corpus does.
+//                     close a fifth of the gap between what two rows drawn at random would share and 1.0.
+//                     The share of that gap, not a multiple of chance: a multiple sounds relative and is not,
+//                     because chance rises as the corpus concentrates. One import took the largest category
+//                     from 21% of rows to 51%, chance from 11.7% to 29.0%, and a 5x floor from comfortable to
+//                     arithmetically out of reach with nothing about the layout changed.
 //                     Drift there is the one failure in this feature with no symptom at all: nothing throws,
 //                     a full page comes back, and it is ranked by noise.
 //   live_test.py      the star/push sidecar the 1,294 detail pages read in place of data.json: that its keys

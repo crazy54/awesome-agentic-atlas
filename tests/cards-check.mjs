@@ -1423,8 +1423,22 @@ for (const view of ["cards", "table"]) {
     await hardGoto(ORIGIN);
     if (!await setView(view)) { ok(`the page can be put into ${view} view at ${w}x${h}`, false); continue; }
     await evalIn("window.scrollTo(0, 0)");
-    const FWD = w < 500 ? 34 : 58;   // far enough to be inside the results at either width
-    for (let i = 0; i < FWD; i++) { await tabKey(false); await sleep(30); }
+    // WALK IN BY STRUCTURE, NOT BY A KEYSTROKE COUNT. This used to Tab a fixed 58 times at 1024 and 34 at
+    // 390, tuned until focus was inside `#out`. 58 put it exactly two stops in, so the walk had one result
+    // element to report -- and the first ingest to reveal the New chip added one control to the bar, moved
+    // the boundary by one, and left the reverse walk with zero. The assertion that fired was the vacuity
+    // guard, which is the right assertion firing for a reason that is nothing to do with focus or the bar:
+    // a constant tuned against one build's chrome is a constant that expires the next time a chip appears.
+    // So walk until the page says focus is in the results, then six stops further, which is what makes the
+    // reverse walk below cross the boundary with a dozen stops left over on the other side of it.
+    const DEEP = 6;
+    let inside = 0;
+    for (let i = 0; i < 200 && inside < DEEP; i++) {
+      await tabKey(false);
+      await sleep(30);
+      if (await evalIn("!!(document.activeElement && document.activeElement.closest('#out'))")) inside++;
+    }
+    ok(`tabbing forward reaches the results at ${at}`, inside === DEEP, `${inside} of ${DEEP} stops inside`);
     await sleep(200);
     const stops = [];
     for (let i = 0; i < 18; i++) {

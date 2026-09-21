@@ -1426,11 +1426,11 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
      in step. The reasoning, the 18-width sweep it comes from and the reason there are two tiers at all are
      all at the --pin declaration; this is only the other number.
 
-     280px, against a 269px worst case: the bar at 320px wide in table view, measured on CI's Chromium.
-     Windows reads 217px at the same point -- the wrap depends on the rendered text and so on the fonts
+     324px, against a 295px worst case: the bar at 320px wide in table view, measured on CI's Chromium.
+     Windows reads 243px at the same point -- the wrap depends on the rendered text and so on the fonts
      installed -- and `cards-check.mjs` is what found the difference, by asserting the relationship instead
      of this number. It prints both maxima on every run for that reason. */
-  html{--pin:280px}
+  html{--pin:324px}
   /* 20px gutters on all four sections cost 40px, 11% of a 375px screen, and the old query left them.
      The header's vertical padding comes down with them, and `.top`'s gap by 2px, for the reason set out
      above the mascot below: every pixel here is one the first result does not get. */
@@ -1739,8 +1739,22 @@ html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] tr.nw{animation:none}
 
    So the worst case is 269px at 320px wide in table view, and 172px was already short by 19px at 320px in
    the DEFAULT view before this ticket touched anything. Two tiers, split at the 640px breakpoint the layout
-   already turns on, each above the worst case on its side with air: 116px against a 108px maximum above the
-   break, 280px against 269px below it.
+   already turns on, each above the worst case on its side.
+
+   BOTH TIERS WENT UP ONCE THE NEW CHIP HAD SOMETHING TO SAY (JFH-357), from 116/280 to 164/324. `#new` is
+   hidden until `buildChips` finds a cohort in `data.json`, and until the 2026-09-21 ingest there had never
+   been one -- so every measurement above was taken with one control missing from the line. Revealed, it is
+   a 111px chip reading "New · 7,572", and the whole growth is its wrap: measured on this machine at
+   768x900 in cards view the bar is 135px with it and 108px without, at 320x844 in table view 243px with and
+   191px without, at 1024x800 in table view 106px and 91px. CI, wrapping one line earlier as ever, reads
+   134px wide and 295px narrow.
+
+   The air is now a whole wrap line rather than the 8px the first pass left, and that is the point of the
+   re-tier rather than a side effect of it. The old numbers were thin on purpose, because `cards-check.mjs`
+   reddens when a control is added to the search line -- but that chip's label carries a count from the
+   data, so this bar's height is now a function of the *dataset* and not only of the source. A count that
+   grows a digit, or a second cohort-shaped chip, must not need a CSS change discovered by an ingest.
+   Surplus is still free: `scroll-margin` only decides where a scroll stops.
 
    A TOKEN AND NOT A LITERAL, BECAUSE THE RULE BELOW NEEDS THE SAME NUMBER (JFH-356). A second copy is a
    second thing to remember when the bar's contents change, and the measurements that justify it are here
@@ -1751,15 +1765,15 @@ html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] tr.nw{animation:none}
    BOTH TIERS ARE INSIDE A QUERY, AND THAT IS DELIBERATE. The narrow one has to live in the
    `@media(max-width:640px)` block ~275 lines above, because `theme_test.py` asserts that query is emitted
    exactly twice and a third copy for one declaration is a third breakpoint to keep in step. A bare
-   `html{--pin:116px}` down here then beats it on nothing but source order -- same selector, same
+   `html{--pin:164px}` down here then beats it on nothing but source order -- same selector, same
    specificity, later wins -- and the phone silently got the desktop number. Measured: `scroll-margin-top`
    read 116px at 390x844 and 320x844 with the narrow rule sitting right there in the stylesheet. Two
    non-overlapping queries cannot do that to each other whichever order they appear in. */
-@media(min-width:641px){html{--pin:116px}}
+@media(min-width:641px){html{--pin:164px}}
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
 /* The fallback is for a UA that supports custom properties but not these queries: an unset `--pin` makes the
-   declaration invalid at computed-value time, which is 0, which is the bug. 280px is the safe side. */
-#out tr{scroll-margin-top:var(--pin,280px)}
+   declaration invalid at computed-value time, which is 0, which is the bug. 324px is the safe side. */
+#out tr{scroll-margin-top:var(--pin,324px)}
 
 /* THE RULE ABOVE PROTECTS THE ONE ELEMENT A GUEST CANNOT TAB TO (JFH-356).
 
@@ -1795,7 +1809,7 @@ html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] tr.nw{animation:none}
    and it is what the negative assertion in probe.mjs pins. */
 #out,
 main a[href],main button,main select,main summary,
-.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,280px)}
+.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,324px)}
 
 /* ---- The comparison panel ----------------------------------------------------------------------------
    Above the results, in the slot `.shared` uses, and for the same reason: it is not a filter the reader chose
@@ -2612,10 +2626,19 @@ const CAN_COPY = !!(navigator.clipboard && navigator.clipboard.writeText && wind
 
 // Where 22_detail.py put this project's own page. The rule has to match `segment()` in that stage exactly
 // or every row links to a 404: lowercased, because 442 of the 1,294 nwo values carry capitals and Pages
-// resolves paths case-sensitively, and a leading dot rewritten because whether a dot-directory is served
-// at all is the one thing about this tree a local server cannot answer.
-const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/")
-  .map(s => s.startsWith(".") ? "dot-" + s.slice(1) : s).join("/") + "/";
+// resolves paths case-sensitively; a leading dot rewritten because whether a dot-directory is served at
+// all is the one thing about this tree a local server cannot answer; and a trailing dot rewritten because
+// NTFS cannot hold a directory whose name ends in one, so a page at that path makes the repository
+// impossible to check out on Windows. Same for the DOS device names, which no row uses today.
+const DEVICE_NAMES = ["con", "prn", "aux", "nul", "clock$", "com1", "com2", "com3", "com4", "com5",
+  "com6", "com7", "com8", "com9", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9"];
+const segment = s => {
+  if (s.startsWith(".")) s = "dot-" + s.slice(1);
+  if (s.endsWith(".")) s = s.slice(0, -1) + "-dot";
+  if (DEVICE_NAMES.includes(s.split(".")[0])) s = "dev-" + s;
+  return s;
+};
+const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
 
 // The rescue buttons drawn on an empty table, in the order render() drew them. Kept out of the markup
 // because a filter patch is an object -- serialising it into a data- attribute and parsing it back would
