@@ -2,7 +2,7 @@
 
 Targets Claude or the Anthropic API, whether or not it goes through Claude Code.
 
-**3,943 projects** · 3,509 with stars to rank by · 10,688,762 combined stars
+**3,943 projects** · 3,509 with stars to rank by · 10,691,061 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic)
 

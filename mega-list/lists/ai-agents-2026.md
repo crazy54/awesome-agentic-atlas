@@ -13,7 +13,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
 | <a href="https://github.com/openai/codex"><img src="https://raw.githubusercontent.com/openai/codex/main/.github/codex-cli-splash.png" width="260"></a> | <a href="https://github.com/google-gemini/gemini-cli"><img src="https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/assets/gemini-screenshot.png" width="260"></a> | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> |
 | **[OpenAI Codex CLI](https://github.com/openai/codex)**<br>★ 125.7k | **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 107.1k | **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 88.7k |
 | <a href="https://github.com/cline/cline"><img src="https://opengraph.githubassets.com/1/cline/cline" width="260"></a> | <a href="https://github.com/Aider-AI/aider"><img src="https://opengraph.githubassets.com/1/paul-gauthier/aider" width="260"></a> | <a href="https://github.com/RooCodeInc/Roo-Code"><img src="https://opengraph.githubassets.com/1/RooVetGit/Roo-Code" width="260"></a> |
-| **[Cline](https://github.com/cline/cline)**<br>★ 68.9k | **[Aider](https://github.com/Aider-AI/aider)**<br>★ 49.1k | **[RooCode](https://github.com/RooCodeInc/Roo-Code)**<br>★ 24.3k |
+| **[Cline](https://github.com/cline/cline)**<br>★ 69k | **[Aider](https://github.com/Aider-AI/aider)**<br>★ 49.1k | **[RooCode](https://github.com/RooCodeInc/Roo-Code)**<br>★ 24.3k |
 
 ## Contents
 
@@ -47,7 +47,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 88.7k · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[Cline](https://github.com/cline/cline)** — VS Code extension. Full terminal and browser access for Claude/GPT
-  <sub>★ 68.9k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 69k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g cline`</sub>
 - **[Aider](https://github.com/Aider-AI/aider)** — OSS pair programmer. Git-aware. Any LLM
   <sub>★ 49.1k · Python · Apache-2.0 · source · pushed 2026-05-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -503,7 +503,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 29.6k · Python · Apache-2.0 · npx · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add assafelovic/gpt-researcher`</sub>
 - **[Chroma](https://github.com/chroma-core/chroma)** — OSS embedding database. Fastest way to build RAG
-  <sub>★ 29.3k · Rust · Apache-2.0 · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 29.4k · Rust · Apache-2.0 · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install chromadb # python client`</sub>
 - **[PandasAI](https://github.com/sinaptik-ai/pandas-ai)** — Chat with your data. NL to Pandas/SQL
   <sub>★ 23.8k · Python · pip · pushed 2025-10-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -700,7 +700,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 77.4k · C++ · MIT · pip · pushed 2025-05-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install gpt4all`</sub>
 - **[Anything LLM](https://github.com/Mintplex-Labs/anything-llm)** — All-in-one AI app. RAG, agents. Desktop + Docker
-  <sub>★ 66.3k · JavaScript · MIT · source · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 66.3k · JavaScript · MIT · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Mintplex-Labs/anything-llm.git`</sub>
 - **[LocalAI](https://github.com/mudler/LocalAI)** — Drop-in OpenAI API replacement. No GPU required
   <sub>★ 49.2k · Go · MIT · docker · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>

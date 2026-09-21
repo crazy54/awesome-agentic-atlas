@@ -2,7 +2,7 @@
 
 Targets aider.
 
-**39 projects** · 36 with stars to rank by · 73,566 combined stars
+**39 projects** · 36 with stars to rank by · 73,570 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#target=aider)
 

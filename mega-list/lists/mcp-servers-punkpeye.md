@@ -102,7 +102,7 @@ Page **1** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 824 · TypeScript · npx · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx add-mcp next-devtools-mcp@latest`</sub>
 - **[sbroenne/mcp-server-excel](https://github.com/sbroenne/mcp-server-excel)** — #️⃣ 🏠 🪟 - Full-featured Excel MCP server. 173 operations: Power Query, DAX, VBA, PivotTables, Tables, Charts, ranges, formatting. 100% Excel compatibility - uses Excel app instead of creating .xlsx files. Windows only
-  <sub>★ 769 · C# · MIT · source · pushed 2026-09-21 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 770 · C# · MIT · source · pushed 2026-09-21 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/sbroenne/mcp-server-excel.git`</sub>
 - **[ckreiling/mcp-server-docker](https://github.com/ckreiling/mcp-server-docker)** — Integrate with Docker to manage containers, images, volumes, and networks
   <sub>★ 744 · Python · GPL-3.0 · source · pushed 2026-08-07 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -150,7 +150,7 @@ Page **1** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 384 · TypeScript · MIT · clone · pushed 2026-02-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/r-huijts/xcode-mcp-server.git`</sub>
 - **[hechtcarmel/jetbrains-index-mcp-plugin](https://github.com/hechtcarmel/jetbrains-index-mcp-plugin)** — A JetBrains IDE plugin that exposes an MCP server, enabling AI coding assistants to leverage the IDE's indexing and refactoring capabilities (rename, safe delete, find references, call hierarchy, type hierarchy, diagnostics and more)
-  <sub>★ 344 · Kotlin · MIT · source · pushed 2026-09-21 · Win? · WSL2</sub>
+  <sub>★ 345 · Kotlin · MIT · source · pushed 2026-09-21 · Win? · WSL2</sub>
   <sub>`git clone https://github.com/hechtcarmel/jetbrains-index-mcp-plugin.git`</sub>
 - **[joshuarileydev/app-store-connect-mcp-server](https://github.com/JoshuaRileyDev/app-store-connect-mcp-server)** — An MCP server to communicate with the App Store Connect API for iOS Developers
   <sub>★ 331 · TypeScript · MIT · npx · pushed 2025-09-02 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -272,15 +272,15 @@ Page **1** of 7, because this list is longer than the 512 KB GitHub will render 
 - **[CircleCI/mcp-server-circleci](https://github.com/CircleCI-Public/mcp-server-circleci)** — Enable AI Agents to fix build failures from CircleCI
   <sub>★ 94 · TypeScript · npx · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @smithery/cli install @CircleCI-Public/mcp-server-circleci --client claude`</sub>
+- **[PhpCodeArcheology/PhpCodeArcheology](https://github.com/PhpCodeArcheology/PhpCodeArcheology)** — PHP static analysis MCP server for architecture and maintainability. 11 tools exposing 60+ code quality metrics, problem detection, refactoring priorities, dependency graphs, git hotspots, test coverage, and impact analysis. Installable via Composer
+  <sub>★ 91 · PHP · MIT · docker · pushed 2026-09-19 · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>`docker run --rm -v "$(pwd)":/project -v "$(pwd)/report":/output phpcodearcheology /project`</sub>
 - **[ronantakizawa/a11ymcp](https://github.com/ronantakizawa/a11ymcp)** — Web accessibility testing MCP server that analyzes URLs and HTML for WCAG 2.0/2.1/2.2 compliance using axe-core. Tools for color contrast, ARIA validation, and orientation lock detection
   <sub>★ 91 · JavaScript · MIT · source · pushed 2026-03-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ronantakizawa/a11ymcp.git`</sub>
 - **[abrinsmead/mindpilot-mcp](https://github.com/abrinsmead/mindpilot-mcp)** — Visualizes code, architecture and other concepts as mermaid diagrams in a locally hosted web app. Just ask your agent to "show me this in a diagram"
   <sub>★ 90 · TypeScript · MIT · npx · pushed 2026-07-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @mindpilot/mcp@latest`</sub>
-- **[PhpCodeArcheology/PhpCodeArcheology](https://github.com/PhpCodeArcheology/PhpCodeArcheology)** — PHP static analysis MCP server for architecture and maintainability. 11 tools exposing 60+ code quality metrics, problem detection, refactoring priorities, dependency graphs, git hotspots, test coverage, and impact analysis. Installable via Composer
-  <sub>★ 90 · PHP · MIT · docker · pushed 2026-09-19 · WSL2 · macOS? · Linux · Docker</sub>
-  <sub>`docker run --rm -v "$(pwd)":/project -v "$(pwd)/report":/output phpcodearcheology /project`</sub>
 - **[ReAPI-com/mcp-openapi](https://github.com/ReAPI-com/mcp-openapi)** — MCP server that lets LLMs know everything about your OpenAPI specifications to discover, explain and generate code/mock data
   <sub>★ 90 · TypeScript · MIT · source · pushed 2025-03-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ReAPI-com/mcp-openapi.git`</sub>
@@ -1581,7 +1581,7 @@ Page **1** of 7, because this list is longer than the 512 KB GitHub will render 
 ## Version Control
 
 - **[github/github-mcp-server](https://github.com/github/github-mcp-server)** — Official GitHub server for integration with repository management, PRs, issues, and more
-  <sub>★ 33.1k · Go · MIT · source · pushed 2026-09-16 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 33.1k · Go · MIT · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/github/github-mcp-server.git`</sub>
 - **[Tiberriver256/mcp-server-azure-devops](https://github.com/Tiberriver256/mcp-server-azure-devops)** — Azure DevOps integration for repository management, work items, and pipelines
   <sub>★ 392 · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1629,7 +1629,7 @@ Page **1** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 4 · Go · Apache-2.0 · script · pushed 2026-07-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -sSL https://raw.githubusercontent.com/zach-snell/bbkt/main/install.sh | bash`</sub>
 - **[Doucs91/hivelore](https://github.com/Doucs91/hivelore)** — Deterministic policy gate for agent-written code: briefs agents with the team's repo-specific rules, then blocks any commit whose diff reintroduces a documented mistake — validated regex/AST/test guards enforced in Git hooks and CI
-  <sub>★ 3 · TypeScript · Apache-2.0 · npm · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3 · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @hivelore/cli`</sub>
 - **[gitopia/gitopia-mcp-server](https://github.com/gitopia/gitopia-mcp-server)** — Decentralized Git with on-chain governance, bounties, and DAOs. Tools for repos, issues, PRs, labels, releases, bounties, and DAO proposals. Auto-wallet on first use, trust tiers, and approval mode for human-in-the-loop. Go binary or Docker
   <sub>★ 3 · Go · MIT · go · pushed 2026-04-03 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -1964,7 +1964,7 @@ Page **1** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 27.8k · Python · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jlowin/fastmcp.git`</sub>
 - **[rocketride-org/rocketride-server](https://github.com/rocketride-org/rocketride-server)** — MCP server that exposes RocketRide AI pipelines as tools for Claude, Cursor, and Windsurf. Self-hosted, open-source pipeline tool with multi-LLM support
-  <sub>★ 8.8k · Python · MIT · pip · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 9.1k · Python · MIT · pip · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pip install rocketride`</sub>
 - **[FastMCP](https://github.com/punkpeye/fastmcp)** — A high-level framework for building MCP servers in TypeScript
   <sub>★ 3.3k · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2097,7 +2097,7 @@ Page **1** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 484 · JavaScript · MIT · npm · pushed 2026-09-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g mcp-ssh-manager`</sub>
 - **[20000419/fauxnix](https://github.com/20000419/fauxnix)** — bash for AI agents on Windows via deterministic bash→PowerShell translation — no WSL, VM, or bash toolchain. MCP bash tool with GNU-style output, bash-style errors, coreutils exit codes, session-persisted cwd/env across calls, and per-file UTF-8/GBK sniffing (GBK files grep correctly, unlike Git Bash). Unsupported bash constructs fail loudly with the construct named; native commands (git/node/npm)
-  <sub>★ 397 · TypeScript · MIT · npm · pushed 2026-09-21 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 398 · TypeScript · MIT · npm · pushed 2026-09-21 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g fauxnix-cli`</sub>
 - **[danmartuszewski/hop](https://github.com/danmartuszewski/hop)** — Fast SSH connection manager with TUI dashboard and MCP server for discovering, searching, and executing commands on remote hosts
   <sub>★ 62 · Go · MIT · go · pushed 2026-06-22 · Win? · WSL2? · macOS · Linux · Docker</sub>

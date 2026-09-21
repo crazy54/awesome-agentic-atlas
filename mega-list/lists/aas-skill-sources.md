@@ -107,7 +107,7 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 64 · Python · MIT · npx · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add longbridge/skills -g`</sub>
 - **[uizze/uizze](https://github.com/uizze/uizze)** — Official UIZZE source for the free anti-ui-slop skill—product-specific UI references, design contracts, required states, and a hard finish gate grounded in 800,000+ real web and iOS screens (MIT)
-  <sub>★ 22 · JavaScript · MIT · npx · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 22 · JavaScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://uizze.com --skill ui-design`</sub>
 - **[BuyWhere/buywhere-mcp](https://github.com/BuyWhere/buywhere-mcp)** — Official BuyWhere MCP server — search and compare products from Singapore, SEA, and US markets via Model Context Protocol
   <sub>★ 14 · TypeScript · MIT · npm · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -154,13 +154,13 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 267k · Shell · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills@latest add mattpocock/skills`</sub>
 - **[affaan-m/everything-claude-code](https://github.com/affaan-m/ECC)** — Large Claude Code configuration and workflow collection from an Anthropic hackathon winner (MIT)
-  <sub>★ 264.5k · JavaScript · MIT · clone · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 264.6k · JavaScript · MIT · clone · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/affaan-m/ECC.git`</sub>
 - **[multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)** — Source for the andrej-karpathy skill - English Karpathy-inspired LLM coding guidelines for simplicity, surgical changes, assumption surfacing, and verifiable success criteria (MIT)
   <sub>★ 214.5k · source · pushed 2026-04-20</sub>
   <sub>`git clone https://github.com/multica-ai/andrej-karpathy-skills.git`</sub>
 - **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)** — Source for constraint-driven-development, interview-me, using-agent-skills — only names not already in the catalog (22/25 overlap with existing entries) (MIT)
-  <sub>★ 98k · JavaScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 98.1k · JavaScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add addyosmani/agent-skills # install all 25 skills`</sub>
 - **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)** — Frontend design taste skill collection covering premium UI generation, redesign audits, GSAP motion, Stitch design systems, minimalist and brutalist visual modes, and full-output enforcement
   <sub>★ 89k · JavaScript · MIT · npx · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
@@ -175,7 +175,7 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 51.1k · JavaScript · MIT · npx · pushed 2026-09-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add coreyhaines31/marketingskills`</sub>
 - **[ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd)** — Source for the i-have-adhd skill — ADHD-friendly output shaping (MIT)
-  <sub>★ 49.6k · Python · MIT · source · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 49.7k · Python · MIT · source · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ayghri/i-have-adhd.git`</sub>
 - **[kepano/obsidian-skills](https://github.com/kepano/obsidian-skills)** — Obsidian-focused skills for markdown, Bases, JSON Canvas, CLI workflows, and content cleanup
   <sub>★ 48.7k · MIT · npx · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -187,19 +187,19 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 39.9k · Markdown · MIT · npx · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills@latest add emilkowalski/skills`</sub>
 - **[zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)** — Source for 43 security skills covering reverse engineering, binary analysis, offensive assessment orchestration, and threat-intelligence workflows, adapted with English metadata and upstream safety gates (MIT)
-  <sub>★ 36.8k · PowerShell · MIT · clone · pushed 2026-09-03 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 36.8k · PowerShell · MIT · clone · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/zhaoxuya520/reverse-skill.git`</sub>
 - **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills)** — Curated collection of 1000+ official and community agent skills from leading development teams (MIT)
   <sub>★ 34.7k · MIT · source · pushed 2026-09-21 · macOS</sub>
   <sub>`git clone https://github.com/VoltAgent/awesome-agent-skills.git`</sub>
 - **[zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides)** — Frontend slide-creation skills for web-based presentations (MIT)
-  <sub>★ 29.6k · JavaScript · MIT · clone · pushed 2026-06-23 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 29.7k · JavaScript · MIT · clone · pushed 2026-06-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/zarazhangrui/frontend-slides.git`</sub>
 - **[alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills)** — Senior Engineering and PM toolkit
   <sub>★ 26.2k · Python · MIT · npx · pushed 2026-08-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx agent-skills-cli add alirezarezvani/claude-skills --agent codex`</sub>
 - **[cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill)** — Cloudflare Web Security Audit Skill (by Cloudflare)
-  <sub>★ 18.7k · JavaScript · MIT · npx · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 18.8k · JavaScript · MIT · npx · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/cloudflare/security-audit-skill \`</sub>
 - **[muratcankoylan/Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering)** — Context-engineering, multi-agent, and production agent-system skill collection (MIT)
   <sub>★ 18k · Python · MIT · source · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -334,7 +334,7 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 196 · Python · Apache-2.0 · npx · pushed 2026-09-08 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills use sandbaseai/sandbase-skills@multi-source-search`</sub>
 - **[gokapso/agent-skills](https://github.com/gokapso/agent-skills)** — Kapso/WhatsApp-oriented agent skills
-  <sub>★ 163 · JavaScript · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 164 · JavaScript · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add gokapso/agent-skills`</sub>
 - **[Ducksss/codex-profiles](https://github.com/Ducksss/codex-profiles)** — Source for the codex-profiles skill - Codex CLI/Desktop profile isolation around separate CODEX_HOME directories, diagnostics, and account-context boundaries without copying auth tokens (MIT)
   <sub>★ 163 · Shell · MIT · brew · pushed 2026-09-15 · Win? · WSL2? · macOS · Linux?</sub>
@@ -490,7 +490,7 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 15 · Python · MIT · script · pushed 2026-02-28 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -sSL https://raw.githubusercontent.com/amartelr/antigravity-workspace-manager/main/install.sh | bash`</sub>
 - **[shitianfang/jev-use](https://github.com/shitianfang/jev-use)** — Source for the jev-use skill - routing an agent loop's no-text judgment steps to the Jev judgment model via the jev_judge / jev_gate MCP tools, batched per state, with a typed escalation contract that hands writing and low-confidence steps back to the LLM (MIT)
-  <sub>★ 13 · JavaScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 14 · JavaScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y jev-use install # wires Claude Code, Codex, and pi — whichever it finds`</sub>
 - **[abhinaykrupa/cowork-to-code-bridge](https://github.com/abhinaykrupa/cowork-to-code-bridge)** — Source for the cowork-to-code-bridge skill - consent-bound execution on the user's own machine with pinned provenance, narrow scopes, and explicit local-agent limitations (MIT)
   <sub>★ 13 · Python · MIT · pip · pushed 2026-09-05 · WSL2 · macOS? · Linux?</sub>

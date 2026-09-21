@@ -2,7 +2,7 @@
 
 Reading rather than running: guides, courses, pattern write-ups, practice postures, and the other awesome-lists this one was merged from.
 
-**142 projects** · 134 with stars to rank by · 929,296 combined stars
+**142 projects** · 134 with stars to rank by · 929,334 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#topic=docs-learning-lists)
 

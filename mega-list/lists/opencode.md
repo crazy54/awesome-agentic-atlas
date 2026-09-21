@@ -81,7 +81,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 1.6k · TypeScript · MIT · npm · pushed 2026-09-21 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g cc-safety-net`</sub>
 - **[Opencode Quota](https://github.com/slkiser/opencode-quota)** — Quota toasts and token tracking
-  <sub>★ 972 · TypeScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 973 · TypeScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @slkiser/opencode-quota init`</sub>
 - **[Swarm Plugin](https://github.com/joelhooks/swarm-tools)** — Swarm intelligence
   <sub>★ 741 · TypeScript · npm · pushed 2026-07-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -146,12 +146,12 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
 - **[Handoff](https://github.com/joshuadavidthomas/opencode-handoff)** — Session handoff prompts
   <sub>★ 170 · TypeScript · MIT · clone · pushed 2026-08-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/joshuadavidthomas/opencode-handoff`</sub>
+- **[Opencode Visualizer](https://github.com/psinetron/opencode-visualiser)** — 2D pixel-art office for AI agents
+  <sub>★ 166 · HTML · MIT · source · pushed 2026-08-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>`git clone https://github.com/psinetron/opencode-visualiser.git`</sub>
 - **[OpenCode Agent Tmux](https://github.com/AnganSamadder/opentmux)** — Real-time tmux panes for OpenCode agents with auto-launch, streaming, and cleanup
   <sub>★ 165 · TypeScript · source · pushed 2026-02-12 · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/AnganSamadder/opencode-agent-tmux.git`</sub>
-- **[Opencode Visualizer](https://github.com/psinetron/opencode-visualiser)** — 2D pixel-art office for AI agents
-  <sub>★ 165 · HTML · MIT · source · pushed 2026-08-31 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`git clone https://github.com/psinetron/opencode-visualiser.git`</sub>
 - **[OpenSpec](https://github.com/Octane0411/opencode-plugin-openspec)** — Add Architecture planning and specification agent for OpenSpec
   <sub>★ 161 · TypeScript · MIT · clone · pushed 2026-03-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Octane0411/opencode-plugin-openspec.git`</sub>
@@ -228,7 +228,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 64 · TypeScript · MIT · source · pushed 2026-03-03 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/pantheon-org/opencode-warcraft-notifications.git`</sub>
 - **[OpenCode Claude Memory](https://github.com/kuitos/opencode-claude-memory)** — Claude Code-compatible memory
-  <sub>★ 62 · TypeScript · MIT · source · pushed 2026-09-06 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 63 · TypeScript · MIT · source · pushed 2026-09-06 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/kuitos/opencode-claude-memory.git`</sub>
 - **[Direnv](https://github.com/simonwjackson/opencode-direnv)** — Load direnv variables
   <sub>★ 60 · TypeScript · clone · pushed 2025-12-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -528,7 +528,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 695 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @swarmvaultai/cli`</sub>
 - **[SwarmClaw](https://github.com/swarmclawai/swarmclaw)** — Self-hosted multi-agent runtime with first-class OpenCode delegation
-  <sub>★ 679 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 680 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g @swarmclawai/swarmclaw`</sub>
 - **[Vestige](https://github.com/samvallad33/vestige)** — Local persistent memory for OpenCode agents
   <sub>★ 628 · Rust · AGPL-3.0 · npm · pushed 2026-09-18 · Win · WSL2? · macOS · Linux</sub>
@@ -588,7 +588,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 89 · Kotlin · GPL-3.0 · source · pushed 2026-09-07</sub>
   <sub>`git clone https://github.com/theblazehen/P4OC.git`</sub>
 - **[OpenTab](https://github.com/hamidi-dev/opentab)** — Terminal UI for browsing your OpenCode spend by month, day, project, session, and model
-  <sub>★ 88 · Python · MIT · pipx · pushed 2026-09-20 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 88 · Python · MIT · pipx · pushed 2026-09-21 · WSL2 · macOS? · Linux</sub>
   <sub>`pipx install opentab-ai`</sub>
 - **[Opencode Web](https://github.com/shuv1337/oc-web)** — Browser-based access
   <sub>★ 75 · TypeScript · MIT · npm · pushed 2026-05-16 · Win? · WSL2? · macOS? · Linux?</sub>

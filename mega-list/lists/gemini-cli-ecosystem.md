@@ -287,7 +287,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 510 · Rust · MIT · psh · pushed 2026-09-13 · Win · WSL2 · macOS? · Linux?</sub>
   <sub>`irm https://github.com/aannoo/hcom/releases/latest/download/hcom-installer.ps1 | iex`</sub>
 - **[AgentBox](https://github.com/madarco/agentbox)** — Run multiple coding agents (Gemini CLI, Claude Code, Codex, OpenCode) in parallel, each teleported into its own sandboxed VM — local Docker, self-hosted, or cloud (Hetzner, Daytona, Vercel, E2B, DigitalOcean). Sub-1s checkpoint startup; git credentials stay on the host. MIT
-  <sub>★ 476 · TypeScript · MIT · clone · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 478 · TypeScript · MIT · clone · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/madarco/agentbox`</sub>
 - **[Ivy Tendril](https://github.com/Ivy-Interactive/Ivy-Tendril)** — Open-source desktop app that orchestrates Gemini CLI alongside Claude Code, Codex, and Copilot through a plan-based lifecycle with verification gates, self-improving memory, and git worktree isolation. Local-first, agent-agnostic, FSL licensed
   <sub>★ 198 · C# · psh · pushed 2026-09-15 · Win · WSL2? · macOS · Linux</sub>
@@ -380,7 +380,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 419 · Python · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add vivekchand/clawmetry --skill agent-kill-switch`</sub>
 - **[Splitrail](https://github.com/Piebald-AI/splitrail)** — Comprehensive usage analytics platform that tracks and optimizes your Gemini CLI workflows, helping teams understand and improve their AI-assisted development patterns
-  <sub>★ 223 · Rust · MIT · source · pushed 2026-09-11 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 223 · Rust · MIT · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Piebald-AI/splitrail.git`</sub>
 - **[Lockpaw](https://github.com/sorkila/lockpaw)** — macOS menu bar screen guard for unattended Gemini CLI runs. One hotkey covers the screen and blocks input while the agent keeps running (no sleep), and the locked screen glows plus fires a notification when Gemini CLI needs input or finishes, via a lockpaw ping hook. Touch ID unlock. Also works with Claude Code and Codex. Native Swift, free, open source
   <sub>★ 152 · Swift · MIT · brew · pushed 2026-09-15 · macOS</sub>
@@ -437,7 +437,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 15 · Rust · MIT · clone · pushed 2026-09-07 · macOS</sub>
   <sub>`git clone https://github.com/mathdevie/devie-ai-quota-tracker.git`</sub>
 - **[Pluribus](https://github.com/caioribeiroclw-pixel/pluribus)** — Sync one canonical project context into native AI coding-agent rule files, including Gemini CLI GEMINI.md, Claude Code CLAUDE.md/AGENTS.md, Cursor, Cline, Roo Code, Amazon Q, Junie, Warp, Copilot, Windsurf, Continue, Zed, OpenCode, and OpenClaw
-  <sub>★ 13 · JavaScript · MIT · npm · pushed 2026-07-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 14 · JavaScript · MIT · npm · pushed 2026-07-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g pluribus-context@latest`</sub>
 - **[tldr](https://github.com/SurefireStudios/tldr)** — Leads every response with a three-line TL;DR and folds the full detail underneath, so the answer is not buried. Never folds destructive commands, security findings, verbatim errors or diffs. Returns a parseable block for agent-to-agent reports. Ships a Gemini CLI extension
   <sub>★ 9 · Python · MIT · source · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>

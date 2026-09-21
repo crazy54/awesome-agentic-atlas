@@ -2,7 +2,7 @@
 
 Agents pointed at literature, the web and datasets: deep research, analysis, business intelligence and science.
 
-**41 projects** · 40 with stars to rank by · 203,251 combined stars
+**41 projects** · 40 with stars to rank by · 203,253 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#topic=research-data-agents)
 

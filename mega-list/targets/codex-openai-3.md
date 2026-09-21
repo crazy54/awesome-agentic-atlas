@@ -2,7 +2,7 @@
 
 Targets Codex, the OpenAI API, or the OpenAI Agents SDK.
 
-**1,578 projects** · 1,472 with stars to rank by · 8,229,803 combined stars
+**1,578 projects** · 1,472 with stars to rank by · 8,230,721 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai)
 

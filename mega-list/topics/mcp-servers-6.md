@@ -2,7 +2,7 @@
 
 The Model Context Protocol ecosystem: reference and third-party servers, inspectors, gateways, transports, and the sibling agent-to-agent protocols.
 
-**4,537 projects** · 3,717 with stars to rank by · 1,204,425 combined stars
+**4,537 projects** · 3,717 with stars to rank by · 1,204,564 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#topic=mcp-servers)
 

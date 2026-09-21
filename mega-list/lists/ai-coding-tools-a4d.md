@@ -166,7 +166,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 107.1k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @google/gemini-cli`</sub>
 - **[Cline (Claude Dev)](https://github.com/cline/cline)** — VS Code extension with full file system access and autonomous coding
-  <sub>★ 68.9k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 69k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g cline`</sub>
 - **[Open Interpreter](https://github.com/openinterpreter/openinterpreter)** — Open-source agent that runs code locally in response to natural language, supporting Python, JS, shell, and more
   <sub>★ 68.4k · Rust · Apache-2.0 · psh · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
@@ -211,7 +211,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 2.1k · TypeScript · MIT · clone · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Orkas-AI/Orkas.git`</sub>
 - **[SwarmClaw](https://github.com/swarmclawai/swarmclaw)** — Self-hosted multi-agent runtime with MCP client and server support, 23+ LLM providers, persistent memory, skills, schedules, and messaging connectors. Electron desktop app, CLI, and Docker
-  <sub>★ 679 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 680 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g @swarmclawai/swarmclaw`</sub>
 - **[agentty](https://github.com/1ay1/agentty)** — Native C++26 terminal coding agent and drop-in claude-code alternative. Single static binary, sub-millisecond cold start, sandboxed by default, and model-agnostic (Claude, OpenAI, Groq, OpenRouter, Ollama). Runs inside Zed over ACP and drives air-gapped hosts over SSH. MIT
   <sub>★ 604 · C++ · MIT · winget · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
@@ -429,13 +429,13 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 79 · JavaScript · MIT · npm · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g rolecraft`</sub>
 - **[Crab Code](https://github.com/lingcoder/crab-code)** — Rust-native agentic coding CLI supporting any LLM provider with multi-entry-point architecture (CLI/IDE/Web/Desktop). Apache-2.0
-  <sub>★ 75 · Rust · MIT · clone · pushed 2026-09-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 76 · Rust · MIT · clone · pushed 2026-09-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/lingcoder/crab-code.git`</sub>
 - **[Sipcode](https://github.com/Anuj7411/sipcode)** — Open source MIT CLI for Anthropic Claude Code. Caps verbose terminal tool output (git, npm, grep, ls, cat, find, tsc), dedups duplicate file reads within a session via a PreToolUse hook, and surfaces per-session cost stats via 15 MCP tools. 1,317 tests, zero network calls
   <sub>★ 46 · TypeScript · MIT · npm · pushed 2026-07-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g sipcode`</sub>
 - **[AI Badger](https://github.com/PVRLabs/aibadger)** — Local-first CLI for extracting clean, relevant codebase context to paste into any AI coding assistant
-  <sub>★ 41 · Go · MIT · brew · pushed 2026-09-18 · Win? · WSL2? · macOS · Linux</sub>
+  <sub>★ 41 · Go · MIT · brew · pushed 2026-09-21 · Win? · WSL2? · macOS · Linux</sub>
   <sub>`brew install pvrlabs/tap/badger`</sub>
 - **[Loadout](https://github.com/elleryfamilia/loadout)** — Adaptive context engine for AI coding agents. Detects your stack and equips the right context when you launch load claude, load codex, load cursor. Works with Claude, Codex, Cursor, opencode, and Copilot
   <sub>★ 31 · Rust · MIT · npx · pushed 2026-09-21 · Win? · WSL2 · macOS · Linux</sub>
@@ -453,7 +453,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 14 · TypeScript · MIT · npm · pushed 2026-04-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g codachi`</sub>
 - **[Pluribus](https://github.com/caioribeiroclw-pixel/pluribus)** — Open-source CLI that keeps one versioned AI coding context in sync across Claude Code, Cursor, Copilot, OpenClaw, Windsurf, Continue, and Zed
-  <sub>★ 13 · JavaScript · MIT · npm · pushed 2026-07-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 14 · JavaScript · MIT · npm · pushed 2026-07-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g pluribus-context@latest`</sub>
 - **[Runcap](https://github.com/kirder24-code/ai-agent-manager)** — Free local CLI that estimates, hard-caps, and losslessly compresses the cost of AI coding agents. Delta-encodes re-read files (37.9% proven on a real OpenAI call). MIT, 100% local
   <sub>★ 10 · JavaScript · MIT · npm · pushed 2026-06-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1306,7 +1306,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 12 · TypeScript · MIT · bun · pushed 2026-09-19 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`bun install -g @aistastudio/myc # 5.06 MB compressed, 15.63 MB unpacked, 16 files`</sub>
 - **[ControlKeel](https://github.com/aryaminus/controlkeel)** — Governance/control plane for AI coding agents. Validates risky actions, records findings, gates approvals, tracks budgets/providers, and creates proof bundles across Claude Code, Codex CLI, OpenCode, Cursor, and other hosts
-  <sub>★ 11 · Elixir · psh · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 11 · Elixir · psh · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://github.com/aryaminus/controlkeel/releases/latest/download/install.ps1 | iex`</sub>
 - **[PinkCode](https://github.com/3xian/PinkCode)** — Open-source desktop GUI for Grok Build with parallel agent sessions, live activity timelines, usage visualizations, file-change review, and permission controls over ACP
   <sub>★ 9 · TypeScript · Apache-2.0 · source · pushed 2026-09-04 · Win · WSL2 · macOS · Linux?</sub>

@@ -28,7 +28,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 129.5k · Python · MIT · clone · pushed 2026-09-21 · Win · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git`</sub>
 - **[thedotmack/claude-mem](https://github.com/thedotmack/claude-mem)** — Compresses and persists agent memory across sessions
-  <sub>★ 94.4k · TypeScript · Apache-2.0 · npm · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 94.4k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g claude-mem`</sub>
 - **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)** — High-agency frontend skill that gives AI good taste with tunable design variance, motion intensity, and visual density to stop generic UI slop
   <sub>★ 89k · JavaScript · MIT · npx · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
@@ -55,7 +55,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 33.1k · Python · Apache-2.0 · npx · pushed 2026-08-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add mukul975/Anthropic-Cybersecurity-Skills`</sub>
 - **[zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides)** — Generate animation-rich HTML presentations with visual style previews
-  <sub>★ 29.6k · JavaScript · MIT · clone · pushed 2026-06-23 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 29.7k · JavaScript · MIT · clone · pushed 2026-06-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/zarazhangrui/frontend-slides.git`</sub>
 - **[AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo)** — Universal SEO skill for comprehensive website analysis and optimization
   <sub>★ 17.4k · Python · MIT · script · pushed 2026-09-11 · Win · WSL2? · macOS · Linux</sub>
@@ -172,7 +172,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 900 · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx clawhub@latest install youtube-full`</sub>
 - **[wshuyi/x-article-publisher-skill](https://github.com/wshuyi/x-article-publisher-skill)** — Publish articles to X/Twitter
-  <sub>★ 866 · Python · MIT · clone · pushed 2026-01-25 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 867 · Python · MIT · clone · pushed 2026-01-25 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/wshuyi/x-article-publisher-skill.git`</sub>
 - **[indranilbanerjee/digital-marketing-pro](https://github.com/indranilbanerjee/digital-marketing-pro)** — 150-skill engagement methodology — 12-Part Strategy Flow, 25 specialist agents, EU AI Act Article 50 ready (C2PA signing), 6-platform AEO/GEO incl. Google AI Mode
   <sub>★ 829 · Python · MIT · source · pushed 2026-09-07 · Win · WSL2? · macOS · Linux</sub>
@@ -181,7 +181,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 750 · source · pushed 2026-04-07 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/ZhangHanDong/makepad-skills.git`</sub>
 - **[aeonfun/aeon](https://github.com/aeonfun/aeon)** — 70+ Claude Code skills + autonomous GitHub Actions agent framework
-  <sub>★ 747 · Shell · MIT · clone · pushed 2026-09-21</sub>
+  <sub>★ 748 · Shell · MIT · clone · pushed 2026-09-21</sub>
   <sub>`git clone https://github.com/<you>/aeon`</sub>
 - **[alinaqi/maggy](https://github.com/alinaqi/maggy)** — Opinionated project initialization with security-first guardrails, spec-driven atomic todos, LLM testing patterns, and CLI tool orchestration (gh, vercel, supabase)
   <sub>★ 708 · Python · MIT · pipx · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -205,7 +205,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 505 · Python · CC0-1.0 · source · pushed 2026-09-16 · Win · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/bitwize-music-studio/claude-ai-music-skills.git`</sub>
 - **[gitroomhq/postiz-agent](https://github.com/gitroomhq/postiz-agent)** — Schedule social media posts across 28+ platforms programmatically
-  <sub>★ 485 · TypeScript · npm · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 486 · TypeScript · npm · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g postiz`</sub>
 - **[JimmySadek/youtube-fetcher](https://github.com/JimmySadek/youtube-fetcher-to-markdown)** — Create Obsidian-ready Markdown notes from YouTube videos
   <sub>★ 481 · Python · MIT · npx · pushed 2026-09-05 · Win · WSL2? · macOS · Linux</sub>
@@ -450,12 +450,12 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
 - **[rainmanjam/poka-yoke](https://github.com/rainmanjam/poka-yoke)** — Make misuse unrepresentable: audit, design, and enforce mistake-proofing devices
   <sub>★ 22 · Python · MIT · clone · pushed 2026-09-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/rainmanjam/poka-yoke`</sub>
+- **[swaylq/humanize-chinese](https://github.com/swaylq/humanize-chinese)** — Detect and rewrite AI-generated Chinese text, fully offline, no LLM
+  <sub>★ 20 · Python · npx · pushed 2026-08-29 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx skills add https://github.com/swaylq/humanize-chinese.git`</sub>
 - **[cyperx84/claude-skills-mental-models](https://github.com/cyperx84/claude-skills-mental-models)** — Drop your own mental models in as files; 21 included
   <sub>★ 19 · MIT · clone · pushed 2026-09-10</sub>
   <sub>`git clone https://github.com/cyperx84/claude-skills-mental-models.git`</sub>
-- **[swaylq/humanize-chinese](https://github.com/swaylq/humanize-chinese)** — Detect and rewrite AI-generated Chinese text, fully offline, no LLM
-  <sub>★ 19 · Python · npx · pushed 2026-08-29 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx skills add https://github.com/swaylq/humanize-chinese.git`</sub>
 - **[PSPDFKit-labs/nutrient-agent-skill](https://github.com/PSPDFKit-labs/nutrient-agent-skill)** — Document processing with Nutrient DWS API: convert (PDF/DOCX/XLSX/PPTX/HTML/images), extract text/tables, OCR (20+ languages), redact PII (pattern + AI), watermark, digital signatures, form filling. MCP server also available
   <sub>★ 18 · Python · npx · pushed 2026-08-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add PSPDFKit-labs/nutrient-agent-skill`</sub>
@@ -493,7 +493,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 6 · Python · MIT · npx · pushed 2026-08-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add YannisKiefer/dark-psychology-skills`</sub>
 - **[lukstei/slop-grader](https://github.com/lukstei/slop-grader)** — Rule-based CLI tool powered by TypeSafe Jev that evaluates documents against custom rulesets, producing document scores and line-by-line violation flags to guide auto-fixing with an AI agent
-  <sub>★ 5 · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6 · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @lukstei/slop-grader@latest -r no-ai-slop examples/slop.md`</sub>
 - **[dankofly/perfectify](https://github.com/dankofly/perfectify)** — Self-improving control kernel (DAGx AGI Kernel): hard approval stops for irreversible actions, evidence-gated completion, and a self-learning playbook with drift governance. Behaviorally evaluated; works across Claude Code, Codex, Hermes, and OpenCode
   <sub>★ 4 · Python · MIT · npx · pushed 2026-08-25 · Win? · WSL2? · macOS? · Linux?</sub>

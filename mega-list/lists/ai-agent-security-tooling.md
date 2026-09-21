@@ -34,7 +34,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
   <sub>★ 6k · Python · Apache-2.0 · pip · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install agent-sandbox`</sub>
 - **[Kubernetes Agent Sandbox](https://github.com/kubernetes-sigs/agent-sandbox)** — A Kubernetes Native project providing a Sandbox Custom Resource Definition (CRD) to manage isolated, stateful workloads for AI agents
-  <sub>★ 4k · Go · Apache-2.0 · pip · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4k · Go · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install k8s-agent-sandbox`</sub>
 - **[SandboxAI](https://github.com/substratusai/sandboxai)** — An open-source runtime for executing AI-generated code (Python/Shell) in isolated containers with granular permission controls
   <sub>★ 143 · Go · pip · pushed 2025-02-05 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -99,7 +99,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
   <sub>★ 5k · Rust · Apache-2.0 · source · pushed 2026-09-21 · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/agentgateway/agentgateway.git`</sub>
 - **[Immunity Agent](https://github.com/PrismorSec/prismor)** — Security-focused AI agent runtime for scanning prompt injection, MCP risks, unsafe package installs, and dangerous agent actions before execution
-  <sub>★ 354 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 355 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install prismor`</sub>
 - **[Envoy AI Gateway](https://gateway.envoyproxy.io/)** — An Envoy-based gateway that manages request traffic to GenAI services, providing a control point for rate limiting and policy enforcement
   <sub>website</sub>

@@ -2,7 +2,7 @@
 
 Targets the Cursor editor — rules, agents and composer workflows.
 
-**1,121 projects** · 967 with stars to rank by · 3,279,361 combined stars
+**1,121 projects** · 967 with stars to rank by · 3,280,278 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#target=cursor)
 

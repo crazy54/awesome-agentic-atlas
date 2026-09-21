@@ -448,7 +448,7 @@ Page **4** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 371 · Shell · source · pushed 2026-09-21</sub>
   <sub>`git clone https://github.com/wegotdocs/open-mcp.git`</sub>
 - **[HelpCode-ai/anythingmcp](https://github.com/HelpCode-ai/anythingmcp)** — Self-hosted source-available MCP gateway and API-to-MCP bridge. Converts REST, SOAP/WSDL, GraphQL, and SQL/NoSQL databases (PostgreSQL, MySQL, MariaDB, MSSQL, Oracle, MongoDB, SQLite) into MCP tools — no SDK, no code. Imports OpenAPI / Postman / WSDL / GraphQL specs; bridges multiple MCP servers behind one endpoint. Ships with 29 pre-built adapters (DHL, DATEV, Weclapp, Personio, Handelsregister,
-  <sub>★ 266 · TypeScript · AGPL-3.0 · source · pushed 2026-09-21 · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 267 · TypeScript · AGPL-3.0 · source · pushed 2026-09-21 · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/HelpCode-ai/anythingmcp.git`</sub>
 - **[tsouth89/toolport](https://github.com/btsouth/toolport)** — One local gateway and manager for all your MCP servers, shared across every AI coding tool (Claude, Cursor, VS Code, Codex, and more). Set up and authenticate each server once; lazy discovery keeps each agent's context small, and keys stay in your OS keychain. No Docker, no cloud
   <sub>★ 218 · Rust · MIT · source · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
@@ -884,7 +884,7 @@ Page **4** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 149 · TypeScript · MIT · npm · pushed 2026-09-08 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @burtthecoder/mcp-virustotal`</sub>
 - **[timescale/rsigma](https://github.com/timescale/rsigma)** — Exposes the RSigma Sigma detection-engineering toolkit to AI agents over stdio or Streamable HTTP with rsigma mcp serve. Tools to author, lint, validate, and convert Sigma detection rules, evaluate and explain detections against log events, and inspect correlation state, all backed by a native Rust engine
-  <sub>★ 142 · Rust · MIT · cargo · pushed 2026-09-18 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 142 · Rust · MIT · cargo · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`cargo install --locked rsigma`</sub>
 - **[13bm/GhidraMCP](https://github.com/13bm/GhidraMCP)** — MCP server for integrating Ghidra with AI assistants. This plugin enables binary analysis, providing tools for function inspection, decompilation, memory exploration, and import/export analysis via the Model Context Protocol
   <sub>★ 140 · Java · Apache-2.0 · clone · pushed 2026-09-06 · Win · WSL2? · macOS · Linux</sub>
@@ -1130,7 +1130,7 @@ Page **4** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 4 · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g agent-passport-system-mcp`</sub>
 - **[AgentAvow/AgentAvow](https://github.com/AgentAvow/AgentAvow)** — Signed, independently-recomputable safety scores for the MCP servers, packages, and tools an agent connects to: a 0–100 score plus an Ed25519/JWS attestation you can recompute offline against a public JWKS, a README badge, and a GitHub Action to gate CI merges on a minimum score. Free, no account (formerly agentgraph-co/agentgraph)
-  <sub>★ 4 · Python · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 4 · Python · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install agentavow-trust`</sub>
 - **[behrensd/mcp-firewall](https://github.com/behrensd/mcpwall)** — Deterministic security proxy (iptables for MCP) that intercepts tool calls, enforces YAML policies, scans for secret leakage, and logs everything. No AI, no cloud
   <sub>★ 4 · TypeScript · Apache-2.0 · npm · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1616,7 +1616,7 @@ Page **4** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 49 · HTML · AGPL-3.0 · script · pushed 2026-09-10 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/rosenvladimirov/odoo-claude-mcp/2.0/install.sh | bash`</sub>
 - **[john-broadway/proximo](https://github.com/john-broadway/proximo)** — All four Proxmox surfaces — VE, Backup Server, Mail Gateway, Datacenter Manager — plus in-container exec on one audited control plane. Every mutation dry-runs to a PLAN with its blast radius named, snapshots first where the platform can, and lands in a hash-chained tamper-evident audit ledger. 365 tools, read-only by default. uvx proximo-proxmox
-  <sub>★ 47 · Python · Apache-2.0 · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 48 · Python · Apache-2.0 · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx proximo-proxmox doctor`</sub>
 - **[redis/mcp-redis-cloud](https://github.com/redis/mcp-redis-cloud)** — Manage your Redis Cloud resources effortlessly using natural language. Create databases, monitor subscriptions, and configure cloud deployments with simple commands
   <sub>★ 41 · TypeScript · MIT · source · pushed 2025-05-05 · WSL2 · Linux · Docker</sub>

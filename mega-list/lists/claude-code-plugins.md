@@ -639,7 +639,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 102 · HTML · script · pushed 2026-06-16 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -sSL https://raw.githubusercontent.com/cognyai/claude-code-marketing-skills/main/install.sh | bash`</sub>
 - **[x-skills](https://github.com/sergebulaev/x-skills)** — X (Twitter) marketing skills for Claude Code and Codex: write tweets, threads, and replies in your voice, strip AI tells, and publish via Publora. Open source, MIT. Content engineering by Creative Content Crafts.
-  <sub>★ 93 · Python · MIT · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 94 · Python · MIT · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add sergebulaev/x-skills`</sub>
 - **[Hermes Tweet](https://github.com/Xquik-dev/hermes-tweet)** — Native Hermes Agent plugin for X/Twitter research, monitoring, drafting, follower exports, and approval-gated actions
   <sub>★ 36 · Python · MIT · source · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>

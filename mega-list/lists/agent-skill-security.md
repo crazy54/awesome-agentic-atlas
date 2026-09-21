@@ -106,7 +106,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 180 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agent-memory-guard`</sub>
 - **[Humanbound](https://github.com/humanbound/humanbound)** — Open-source adversarial testing engine, SDK, and CLI for AI agents: runs live-endpoint, multi-turn, and tool-abuse tests against a deployed agent and converts findings into deployable guardrail rules
-  <sub>★ 150 · Python · Apache-2.0 · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 151 · Python · Apache-2.0 · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install humanbound # CLI + SDK, core deps`</sub>
 - **[Armorer Guard](https://github.com/ArmorerLabs/Armorer-Guard)** — Local Rust scanner for AI-agent prompt injection, credential redaction, sensitive-data requests, exfiltration-style text, and dangerous tool-call context
   <sub>★ 42 · Python · MIT · clone · pushed 2026-09-03 · Win? · WSL2? · macOS? · Linux?</sub>

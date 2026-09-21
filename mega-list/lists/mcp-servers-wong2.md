@@ -83,7 +83,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 37.4k · TypeScript · Apache-2.0 · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @playwright/mcp@latest --config path/to/config.json`</sub>
 - **[GitHub](https://github.com/github/github-mcp-server)** — GitHub's official MCP Server
-  <sub>★ 33.1k · Go · MIT · source · pushed 2026-09-16 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 33.1k · Go · MIT · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/github/github-mcp-server.git`</sub>
 - **[MCP Toolbox for Databases](https://github.com/googleapis/mcp-toolbox)** — Open source MCP server specializing in easy, fast, and secure tools for Databases
   <sub>★ 16.5k · Go · Apache-2.0 · npx · pushed 2026-09-21 · macOS</sub>
@@ -218,7 +218,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 316 · TypeScript · Apache-2.0 · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @postman/postman-mcp-server`</sub>
 - **[ECharts](https://github.com/hustcc/mcp-echarts)** — Generate visual charts using ECharts with AI MCP dynamically, used for chart generation and data analysis
-  <sub>★ 268 · TypeScript · MIT · npm · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 269 · TypeScript · MIT · npm · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g mcp-echarts`</sub>
 - **[Milvus](https://github.com/zilliztech/mcp-server-milvus)** — Search, Query and interact with data in your Milvus Vector Database
   <sub>★ 245 · Python · Apache-2.0 · clone · pushed 2026-08-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -896,7 +896,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 1k · Python · MPL-2.0 · source · pushed 2026-01-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/dmayboroda/minima.git`</sub>
 - **[Microsoft 365](https://github.com/Softeria/ms-365-mcp-server)** — MCP server that connects to the whole Microsoft 365 suite (Microsoft Office, Outlook, Excel) using Graph API (including mail, files, calendar)
-  <sub>★ 986 · TypeScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 987 · TypeScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @softeria/ms-365-mcp-server --toon`</sub>
 - **[weibaohui/k8m](https://github.com/weibaohui/k8m)** — Provides multi-cluster Kubernetes management and operations using MCP, featuring a management interface, logging, and nearly 50 built-in tools covering common DevOps and development scenarios. Supports both standard and CRD resources
   <sub>★ 885 · Go · MIT · source · pushed 2026-09-12 · Win · WSL2? · macOS · Linux · Docker</sub>

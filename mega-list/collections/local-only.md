@@ -4,7 +4,7 @@
 
 Sometimes the requirement is not cost or latency but that the code, the documents and the prompts stay on hardware you own. That rules out most of the atlas. What is left is a genuine stack: an engine, a runner in front of it, a chat surface, a serving layer for when one machine is not enough, and retrieval over your own files. Every project below names a local runtime as a target, and the build checks it.
 
-7 picks · 681,095 combined stars · snapshot 2026-09-21
+7 picks · 681,124 combined stars · snapshot 2026-09-21
 
 [Open all 7 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=ollama/ollama,ggml-org/llama.cpp,mozilla-ai/llamafile,open-webui/open-webui,nomic-ai/gpt4all,PromtEngineer/localGPT,vllm-project/vllm) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -24,7 +24,7 @@ Pull a model, run it, done. It is the layer that made local models an afternoon 
 irm https://ollama.com/install.ps1 | iex
 ```
 
-**181,368** stars · 4 of 39 lists · Go · MIT · pushed 2026-09-19
+**181,373** stars · 4 of 39 lists · Go · MIT · pushed 2026-09-19
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -44,7 +44,7 @@ CPU, GPU and Apple Silicon inference in C++, and the foundation most of the rest
 git clone https://github.com/ggml-org/llama.cpp.git
 ```
 
-**129,067** stars · 3 of 39 lists · C++ · MIT · pushed 2026-09-21
+**129,078** stars · 3 of 39 lists · C++ · MIT · pushed 2026-09-21
 
 Platforms: Win Y WSL N mac Y Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -64,7 +64,7 @@ A model and its runtime as one executable file. Nothing to install and nothing t
 git clone https://github.com/Mozilla-Ocho/llamafile.git
 ```
 
-**26,015** stars · 2 of 39 lists · C++ · no licence stated · pushed 2026-09-16
+**26,017** stars · 2 of 39 lists · C++ · no licence stated · pushed 2026-09-16
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -84,7 +84,7 @@ A self-hosted interface with access control and extensions, so the local stack h
 pip install open-webui
 ```
 
-**152,712** stars · 2 of 39 lists · Python · no licence stated · pushed 2026-09-21
+**152,716** stars · 2 of 39 lists · Python · no licence stated · pushed 2026-09-21
 
 Platforms: Win L WSL Y mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -144,7 +144,7 @@ High-throughput serving with paged attention. This is the step after a laptop --
 git clone https://github.com/vllm-project/vllm.git
 ```
 
-**92,343** stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-09-21
+**92,350** stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-09-21
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

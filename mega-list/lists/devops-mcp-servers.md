@@ -183,7 +183,7 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
 ## Version Control
 
 - **[github/github-mcp-server](https://github.com/github/github-mcp-server)** — Official GitHub server for integration with repository management, PRs, issues, and more
-  <sub>★ 33.1k · Go · MIT · source · pushed 2026-09-16 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 33.1k · Go · MIT · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/github/github-mcp-server.git`</sub>
 - **[adhikasp/mcp-git-ingest](https://github.com/adhikasp/mcp-git-ingest)** — Read and analyze GitHub repositories with your LLM
   <sub>★ 314 · Python · MIT · source · pushed 2025-01-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -723,7 +723,7 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
 ## Memory &amp; Context
 
 - **[vectorize-io/hindsight](https://github.com/vectorize-io/hindsight)** — Long-term memory for AI agents with semantic search, auto-capture, and framework integrations
-  <sub>★ 24.2k · Python · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 24.6k · Python · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx @vectorize-io/hindsight-coding-agents install all # every detected agent, wired natively`</sub>
 - **[mcpware/claude-code-organizer](https://github.com/mcpware/cross-code-organizer)** — MCP server to organize Claude Code configurations — scan, move, delete memories, skills, MCP servers, and hooks across project and user scopes
   <sub>★ 379 · JavaScript · MIT · npx · pushed 2026-09-13 · Win? · WSL2 · macOS? · Linux?</sub>

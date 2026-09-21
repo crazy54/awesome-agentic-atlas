@@ -245,7 +245,7 @@ Page **2** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 45 · JavaScript · MIT · npm · pushed 2026-01-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g influxdb-mcp-server`</sub>
 - **[agenticfabriq/mnemiq](https://github.com/agenticfabriq/mnemiq)** — Natural-language questions over Postgres, Oracle, Snowflake, Databricks, DuckDB and SQLite. The model only proposes SQL — shape, access, dialect and query plan are checked deterministically before any rows are read, and it refuses rather than guessing. uv run mnemiq serve
-  <sub>★ 42 · Python · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 43 · Python · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/agenticfabriq/mnemiq.git`</sub>
 - **[yimindev/dati](https://github.com/yimindev/dati)** — Semantic gateway that turns mainstream databases into MCP services with business metadata enhancement and parameterized SQL tools
   <sub>★ 42 · Java · Apache-2.0 · source · pushed 2026-09-20 · WSL2 · Linux · Docker</sub>
@@ -749,7 +749,7 @@ Page **2** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 18 · Python · MIT · clone · pushed 2025-04-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/the0807/GeekNews-MCP-Server`</sub>
 - **[rejifald/StitchAPI](https://github.com/rejifald/StitchAPI)** — Semantic search over the StitchAPI documentation (the hosted docs MCP): search_docs returns the most relevant doc sections with deep links, get_doc fetches a full page. Hosted endpoint https://stitchapi.dev/api/mcp, no auth
-  <sub>★ 18 · TypeScript · Apache-2.0 · source · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 18 · TypeScript · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/rejifald/StitchAPI.git`</sub>
 - **[cameronrye/activitypub-mcp](https://github.com/cameronrye/activitypub-mcp)** — A comprehensive MCP server that enables LLMs to explore and interact with the Fediverse through ActivityPub protocol. Features WebFinger discovery, timeline fetching, instance exploration, and cross-platform support for Mastodon, Pleroma, Misskey, and other ActivityPub servers
   <sub>★ 17 · TypeScript · MIT · npx · pushed 2026-09-13 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -980,7 +980,7 @@ Page **2** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · Python · source · pushed 2025-05-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/QuentinCody/catalysishub-mcp-server.git`</sub>
 - **[securecoders/opengraph-io-mcp](https://github.com/securecoders/opengraph-io-mcp)** — OpenGraph.io API integration for extracting OG metadata, taking screenshots, scraping web content, querying sites with AI, and generating branded images (illustrations, diagrams, social cards, icons, QR codes) with iterative refinement
-  <sub>★ 2 · TypeScript · ISC · npm · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · TypeScript · ISC · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g opengraph-io-mcp`</sub>
 - **[Savirinc/unfragile-mcp-server](https://github.com/Savirinc/unfragile-mcp-server)** — Canonical MCP server resolver. Returns the right MCP for any agent intent with an invocation-ready snippet and an Ed25519-signed trust passport. Cross-registry coverage. npx -y @unfragile/mcp-server
   <sub>★ 2 · JavaScript · MIT · source · pushed 2026-05-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1556,7 +1556,7 @@ Page **2** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 62.3k · TypeScript · MIT · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/upstash/context7.git`</sub>
 - **[vectorize-io/hindsight](https://github.com/vectorize-io/hindsight)** — Hindsight: Agent Memory That Works Like Human Memory - Built for AI Agents to manage Long Term Memory
-  <sub>★ 24.2k · Python · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 24.6k · Python · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx @vectorize-io/hindsight-coding-agents install all # every detected agent, wired natively`</sub>
 - **[skill-seekers/Skill_Seekers](https://github.com/yusufkaraaslan/Skill_Seekers)** — Transform 17 source types (docs, GitHub repos, PDFs, videos, Jupyter, Confluence, Notion, Slack/Discord) into AI-ready skills and RAG knowledge. 35 MCP tools for scraping, packaging, enhancing, and exporting to vector databases (Weaviate, Chroma, FAISS, Qdrant). Supports 16+ target platforms
   <sub>★ 15k · Python · MIT · pip · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -1601,7 +1601,7 @@ Page **2** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 531 · Rust · MIT · source · pushed 2026-09-21 · macOS · Linux</sub>
   <sub>`git clone https://github.com/fabio-rovai/open-ontologies.git`</sub>
 - **[Ikalus1988/MisakaNet](https://github.com/Ikalus1988/MisakaNet)** — Agent failure memory network. Search 235+ verified debugging lessons from real engineering sessions. BM25 + SAG-Lite search, 3 tools (search, get_lesson, submit_usage), 5 resources, 3 guided prompts. Works with Claude Code, Cursor, and any MCP client. python3 scripts/mcp_server.py
-  <sub>★ 495 · Python · Apache-2.0 · npx · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 496 · Python · Apache-2.0 · npx · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx @misaka-net/misakanet-setup`</sub>
 - **[TeleAI-UAGI/telemem](https://github.com/TeleAI-UAGI/telemem)** — Long-term and multimodal memory for AI agents, usable as a drop-in replacement for Mem0. Character-isolated memory profiles, LLM-based semantic deduplication, FAISS + JSON dual storage, optional fully-local stack (Ollama/Qwen, no cloud), and video memory with ReAct-style QA. 8 tools. pip install "telemem[mcp]" then telemem-mcp
   <sub>★ 492 · Python · Apache-2.0 · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1627,12 +1627,12 @@ Page **2** of 7, because this list is longer than the 512 KB GitHub will render 
 - **[ohad6k/emulo](https://github.com/ohad6k/emulo)** — Loads your personal profile, mined from your local Claude Code/Codex/OpenCode logs, so your agent works like you instead of a cold start. One tool, load_emulo_profile. Run with uvx emulo mcp
   <sub>★ 291 · Python · MIT · npx · pushed 2026-08-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ohad6k/emulo@emulo`</sub>
+- **[varun29ankuS/shodh-memory](https://github.com/varun29ankuS/shodh-memory)** — Cognitive memory for AI agents with Hebbian learning, 3-tier architecture, and knowledge graphs. Single ~15MB binary, runs offline on edge devices
+  <sub>★ 288 · Rust · Apache-2.0 · npx · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>`npx @shodh/memory-mcp setup-hooks`</sub>
 - **[jinzcdev/markmap-mcp-server](https://github.com/jinzcdev/markmap-mcp-server)** — An MCP server built on markmap that converts Markdown to interactive mind maps. Supports multi-format exports (PNG/JPG/SVG), live browser preview, one-click Markdown copy, and dynamic visualization features
   <sub>★ 287 · TypeScript · MIT · npx · pushed 2026-08-04 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @jinzcdev/markmap-mcp-server`</sub>
-- **[varun29ankuS/shodh-memory](https://github.com/varun29ankuS/shodh-memory)** — Cognitive memory for AI agents with Hebbian learning, 3-tier architecture, and knowledge graphs. Single ~15MB binary, runs offline on edge devices
-  <sub>★ 287 · Rust · Apache-2.0 · npx · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
-  <sub>`npx @shodh/memory-mcp setup-hooks`</sub>
 - **[lyonzin/knowledge-rag](https://github.com/lyonzin/knowledge-rag)** — Local RAG system for Claude Code with hybrid search (BM25 + semantic), cross-encoder reranking, markdown-aware chunking, query expansion, and 28 MCP tools. Runs entirely offline with zero external servers
   <sub>★ 280 · Python · MIT · npx · pushed 2026-09-04 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add lyonzin/knowledge-rag`</sub>
@@ -1853,8 +1853,8 @@ Page **2** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 23 · Rust · Apache-2.0 · clone · pushed 2026-08-23 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/terrizoaguimor/celiums-memory.git`</sub>
 - **[hermes-labs-ai/fidelis](https://github.com/hermes-labs-ai/fidelis)** — Local-first memory for Codex, Claude Code, and other MCP clients. Four tools provide verbatim recall, query, health, and context-sensitive orientation through zero-LLM retrieval by default. Install fidelis-memory from PyPI, run fidelis init, then register the MCP server with the client
-  <sub>★ 23 · Python · MIT · uv · pushed 2026-09-21 · WSL2 · macOS? · Linux? · Docker</sub>
-  <sub>`uvx --from "fidelis-memory==0.2.0" fidelis mcp serve`</sub>
+  <sub>★ 23 · Python · MIT · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/hermes-labs-ai/fidelis.git`</sub>
 - **[sgx-labs/statelessagent](https://github.com/sgx-labs/statelessagent)** — Memory with provenance tracking — records where agent knowledge originated and detects when sources change. 17 MCP tools for session handoffs, decisions, semantic search, and knowledge graph. Works across Claude Code, Cursor, Windsurf, Codex CLI, and Gemini CLI. Single Go binary, SQLite + vector search, fully local
   <sub>★ 23 · Go · psh · pushed 2026-09-03 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`irm https://statelessagent.com/install.ps1 | iex`</sub>

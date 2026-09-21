@@ -416,7 +416,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 50 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`pip install "omniseek[pdf,asr,recall,ocr]"`</sub>
 - **[oscardvs/zoteus](https://github.com/oscardvs/zoteus)** — Zotero MCP server in TypeScript: hybrid keyword and semantic search, PDF passages with page locators, bibliographies in any CSL style (citeproc-js), add by DOI, group libraries, and writes (items, tags, collections, attachments, PDF annotations anchored to the quoted passage). Reads and personal-library writes go to the running Zotero app without a cloud key. npx -y @oscardvs/zoteus, or a one-clic
-  <sub>★ 42 · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 43 · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx add-mcp @oscardvs/zoteus`</sub>
 - **[smaniches/semantic-scholar-mcp](https://github.com/smaniches/semantic-scholar-mcp)** — Semantic Scholar MCP server: 14 typed tools over 200M+ academic papers — search, paper/author retrieval, citation-graph traversal, and recommendations. uvx s2-mcp-server
   <sub>★ 21 · Python · MIT · docker · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -692,7 +692,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>Go · AGPL-3.0 · in-repo · pushed 2026-09-21</sub>
   <sub>`git clone https://github.com/mickael-kerjean/filestash.git && cd filestash/server/plugin/plg_handler_mcp`</sub>
 - **[microsoft/markitdown](https://github.com/microsoft/markitdown/tree/main/packages/markitdown-mcp)** — MCP tool access to MarkItDown -- a library that converts many file formats (local or remote) to Markdown for LLM consumption
-  <sub>Python · MIT · in-repo · pushed 2026-09-16</sub>
+  <sub>Python · MIT · in-repo · pushed 2026-09-21</sub>
   <sub>`git clone https://github.com/microsoft/markitdown.git && cd markitdown/packages/markitdown-mcp`</sub>
 - **[modelcontextprotocol/server-filesystem](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/filesystem)** — Direct local file system access
   <sub>JavaScript · MIT · in-repo · pushed 2025-05-28</sub>
@@ -814,7 +814,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 119 · Python · source · pushed 2026-03-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/HuggingAGI/mcp-baostock-server.git`</sub>
 - **[Scottcjn/rustchain-mcp](https://github.com/Scottcjn/rustchain-mcp)** — MCP server for RustChain blockchain, BoTTube video platform, and Beacon agent messaging. Wallet management, mining queries, bounties, video search/upload, and agent messaging tools. Install via pip install rustchain-mcp
-  <sub>★ 115 · Python · MIT · pip · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 115 · Python · MIT · pip · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install rustchain-mcp`</sub>
 - **[berlinbra/alpha-vantage-mcp](https://github.com/berlinbra/alpha-vantage-mcp)** — Alpha Vantage API integration to fetch both stock and crypto information
   <sub>★ 104 · Python · MIT · npx · pushed 2025-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -847,7 +847,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 74 · Python · MIT · source · pushed 2025-12-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kukapay/cryptopanic-mcp-server.git`</sub>
 - **[ninetails-io/gnucash-mcp](https://github.com/ninetails-io/gnucash-mcp)** — Full double-entry accounting on local GnuCash books: transactions (single and batch), invoices and bills, budgets, investment lots, scheduled transactions, reconciliation, and reports. Modular tool loading — role presets (bookkeeper, investor, freelancer, business) expose just the surface you need, from a 29-tool core up to 87 in all. Multi-currency and multi-book aware, with a plain-text audit tr
-  <sub>★ 70 · Python · MIT · uv · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 70 · Python · MIT · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install -e ./gnucash-mcp`</sub>
 - **[heurist-network/heurist-mesh-mcp-server](https://github.com/heurist-network/heurist-mesh-mcp-server)** — Access specialized web3 AI agents for blockchain analysis, smart contract security auditing, token metrics evaluation, and on-chain interactions through the Heurist Mesh network. Provides comprehensive tools for DeFi analysis, NFT valuation, and transaction monitoring across multiple blockchains
   <sub>★ 67 · Python · MIT · clone · pushed 2026-03-25 · WSL2 · Linux · Docker</sub>
@@ -1831,7 +1831,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · Python · MIT · pip · pushed 2026-07-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install bolsai-mcp`</sub>
 - **[sebastienrousseau/pacs008-mcp](https://github.com/sebastienrousseau/pacs008-mcp)** — ISO 20022 FI-to-FI credit-transfer generation + validation (pacs.008 FI-to-FI Customer Credit Transfer, pacs.004 Payment Return, pacs.002 Status Report). 15 tools across message-type + scheme discovery, JSON Schema + rail-usage validation, validated XML generation, XSD validation, inbound parsing, the November 2026 structured-address cliff toolkit (classify/validate/repair/batch), and legacy SWIFT
-  <sub>★ 1 · Python · pip · pushed 2026-09-19 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 1 · Python · pip · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install "git+https://github.com/sebastienrousseau/pacs008.git"`</sub>
 - **[asokore/statcite](https://github.com/asokore/statcite)** — Official economic statistics with full citations — World Bank, IMF, BIS, ECB, and Caribbean central banks (ECCB, Central Bank of Barbados, incl. Anguilla and Montserrat) — plus verify_stat/verify_claims to check claimed figures against the official series. 12 tools, 48 curated indicators, 200+ economies. Free remote MCP at https://statcite.com/mcp (Streamable HTTP, stateless, no auth). In the offi
   <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>

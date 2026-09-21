@@ -127,7 +127,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
 ## Skills
 
 - **[affaan-m/ECC](https://github.com/affaan-m/ECC)** — Skills, memory, security checks, and workflow configuration for Codex and other coding agents
-  <sub>★ 264.5k · JavaScript · MIT · npm · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 264.6k · JavaScript · MIT · npm · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npm install -g ecc-universal@2.2.2`</sub>
 - **[Egonex-AI/Understand-Anything](https://github.com/Egonex-AI/Understand-Anything)** — Turn any codebase into an interactive knowledge graph you can explore, search, and query. Multi-platform including Codex
   <sub>★ 83.5k · TypeScript · MIT · npx · pushed 2026-09-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -352,7 +352,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 3.4k · TypeScript · MIT · npx · pushed 2026-09-10 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx notebooklm-mcp@latest`</sub>
 - **[tuannvm/codex-mcp-server](https://github.com/tuannvm/codex-mcp-server)** — General-purpose MCP server for Codex with file operations, web search, and database queries
-  <sub>★ 635 · TypeScript · source · pushed 2026-05-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 636 · TypeScript · source · pushed 2026-05-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/tuannvm/codex-mcp-server.git`</sub>
 - **[Shelpuk-AI-Technology-Consulting/kindly-web-search-mcp-server](https://github.com/Shelpuk-AI-Technology-Consulting/kindly-web-search-mcp-server)** — Web search MCP with rate limiting and caching
   <sub>★ 389 · Python · MIT · uv · pushed 2026-09-19 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -673,7 +673,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 99 · PowerShell · npx · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add oil-oil/codex -g -y`</sub>
 - **[athola/skrills](https://github.com/athola/skrills)** — Cross-platform skill format. Write once, use in Codex and Claude Code
-  <sub>★ 69 · Rust · MIT · cargo · pushed 2026-09-18 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 69 · Rust · MIT · cargo · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`cargo install skrills`</sub>
 - **[abhishekgahlot2/codex-claude-bridge](https://github.com/abhishekgahlot2/codex-claude-bridge)** — Run Codex and Claude Code in tandem on the same codebase
   <sub>★ 58 · JavaScript · source · pushed 2026-09-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -718,7 +718,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 836 · JavaScript · MIT · npm · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g claude-replay`</sub>
 - **[mixpeek/amux](https://github.com/mixpeek/amux)** — Open-source agent multiplexer. Run dozens of parallel Codex/Claude agents unattended via tmux. Self-healing watchdog
-  <sub>★ 487 · Rust · pipx · pushed 2026-09-21 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 489 · Rust · pipx · pushed 2026-09-21 · WSL2 · macOS? · Linux</sub>
   <sub>`pipx install amux`</sub>
 - **[digipulse-engineering/GAAI-framework](https://github.com/digipulse-engineering/GAAI-framework)** — Drop a .gaai/ folder into any project to turn AI coding tools into reliable delivery systems. Markdown + YAML + bash
   <sub>★ 161 · Shell · clone · pushed 2026-09-19 · macOS</sub>

@@ -562,7 +562,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 907 · Python · Apache-2.0 · source · pushed 2025-04-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/guildai/guildai.git`</sub>
 - **[Kedro-Viz](https://github.com/kedro-org/kedro-viz)** — Kedro-Viz is an interactive development tool for building data science pipelines with Kedro. Kedro-Viz also allows users to view and compare different runs in the Kedro project
-  <sub>★ 762 · JavaScript · Apache-2.0 · source · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 762 · JavaScript · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kedro-org/kedro-viz.git`</sub>
 - **[LabNotebook](https://github.com/henripal/labnotebook)** — LabNotebook is a tool that allows you to flexibly monitor, record, save, and query all your machine learning experiments
   <sub>★ 528 · Jupyter Notebook · MIT · clone · pushed 2018-03-31 · WSL2? · Linux?</sub>
@@ -673,7 +673,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 2.7k · Python · Apache-2.0 · pip · pushed 2026-09-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install xturing`</sub>
 - **[AgentField](https://github.com/Agent-Field/agentfield)** — Open-source control plane for building and operating AI agents like APIs at scale, with routing, memory, observability, identity, auth, and policy controls
-  <sub>★ 2.6k · Go · Apache-2.0 · script · pushed 2026-09-19 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 2.6k · Go · Apache-2.0 · script · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://agentfield.ai/install.sh | bash`</sub>
 - **[magentic](https://github.com/jackmpcollins/magentic)** — Seamlessly integrate LLMs as Python functions. Use type annotations to specify structured output. Mix LLM queries and function calling with regular Python code to create complex LLM-powered functionality
   <sub>★ 2.4k · Python · MIT · pip · pushed 2026-03-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -697,7 +697,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 708 · Python · MIT · pip · pushed 2025-02-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llmflows`</sub>
 - **[SwarmClaw](https://github.com/swarmclawai/swarmclaw)** — Self-hosted multi-agent AI runtime with 23+ LLM providers, persistent memory, skills, schedules, sub-agent spawning, and MCP client + server support. Ships as desktop app, CLI, or Docker
-  <sub>★ 679 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 680 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g @swarmclawai/swarmclaw`</sub>
 - **[Contexto](https://github.com/ekailabs/contexto)** — Self-hosted context engine for AI agents with persistent conversation memory and recall. Works as a drop-in OpenAI-compatible proxy, OpenClaw plugin, or memory SDK — no code changes required
   <sub>★ 621 · TypeScript · Apache-2.0 · pip · pushed 2026-06-10 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -836,7 +836,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 15.9k · Apache-2.0 · source · pushed 2026-08-21</sub>
   <sub>`git clone https://github.com/kubeflow/kubeflow.git`</sub>
 - **[OpenLLM](https://github.com/bentoml/OpenLLM)** — An open platform for operating large language models (LLMs) in production. Fine-tune, serve, deploy, and monitor any LLMs with ease
-  <sub>★ 12.5k · Python · Apache-2.0 · pip · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 12.5k · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install openllm # or pip3 install openllm`</sub>
 - **[Kserve](https://github.com/kserve/kserve)** — Standardized Serverless ML Inference Platform on Kubernetes
   <sub>★ 6k · Go · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -881,7 +881,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 34.7k · Rust · Apache-2.0 · docker · pushed 2026-09-21 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -p 6333:6333 qdrant/qdrant`</sub>
 - **[Chroma](https://github.com/chroma-core/chroma)** — the open source embedding database
-  <sub>★ 29.3k · Rust · Apache-2.0 · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 29.4k · Rust · Apache-2.0 · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install chromadb # python client`</sub>
 - **[pgvector](https://github.com/pgvector/pgvector)** — Open-source vector similarity search for Postgres
   <sub>★ 23.1k · C · brew · pushed 2026-09-10 · Win? · WSL2 · macOS · Linux · Docker</sub>
@@ -956,7 +956,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 15.9k · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install 'dvc[s3]'`</sub>
 - **[Delta-Lake](https://github.com/delta-io/delta)** — Storage layer that brings scalable, ACID transactions to Apache Spark and other engines
-  <sub>★ 9k · Scala · Apache-2.0 · source · pushed 2026-09-20</sub>
+  <sub>★ 9k · Scala · Apache-2.0 · source · pushed 2026-09-21</sub>
   <sub>`git clone https://github.com/delta-io/delta.git`</sub>
 - **[Pachyderm](https://github.com/pachyderm/pachyderm)** — Pachyderm is a version control system for data
   <sub>★ 6.3k · Go · Apache-2.0 · source · pushed 2025-02-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1016,7 +1016,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
 ## Visualization
 
 - **[netron](https://github.com/lutzroeder/netron)** — Visualizer for neural network, deep learning, and machine learning models
-  <sub>★ 33.5k · JavaScript · MIT · winget · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 33.5k · JavaScript · MIT · winget · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`winget install -s winget netron`</sub>
 - **[TensorBoard](https://github.com/tensorflow/tensorboard)** — TensorFlow's Visualization Toolkit
   <sub>★ 7.2k · TypeScript · Apache-2.0 · source · pushed 2026-08-24 · Win? · WSL2? · macOS? · Linux?</sub>

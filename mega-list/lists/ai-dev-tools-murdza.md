@@ -663,7 +663,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 1.1k · Go · MIT · brew · pushed 2026-09-14 · WSL2 · macOS · Linux</sub>
   <sub>`brew install marcus/tap/sidecar`</sub>
 - **[SwarmClaw](https://github.com/swarmclawai/swarmclaw)** — Self-hosted AI runtime that orchestrates Claude Code, Codex, Gemini CLI, OpenCode, Copilot CLI, Cursor Agent, Goose, Qwen Code, and Droid with heartbeats, schedules, delegation, runtime skills, and an org chart view. Ships as a desktop app (Electron) and CLI. MIT licensed, TypeScript
-  <sub>★ 679 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 680 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g @swarmclawai/swarmclaw`</sub>
 - **[GolemBot](https://github.com/0xranx/golembot)** — Unified framework wrapping Claude Code, Cursor, OpenCode, and Codex CLIs behind a single streaming API. Adds IM adapters (Slack, Telegram, Discord, Feishu), Skill system, fleet mode, and HTTP embedding
   <sub>★ 323 · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>

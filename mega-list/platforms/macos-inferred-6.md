@@ -10,10 +10,11 @@ Page **6** of 9, because this list is longer than the 512 KB GitHub will render 
 
 ## The list (5,877)
 
-<sub>Projects 3,800–4,485 of 5,877. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 3,799–4,485 of 5,877. The rest are on this page's other parts, linked above and below.</sub>
 
 | # | Project | ★ | Lists | Support | Language | Install / Run | What it does | Why |
 |--:|---|--:|--:|---|---|---|---|---|
+| 3799 | **[pucilpet/crawlgraph-mcp](https://github.com/pucilpet/crawlgraph-mcp)**<br><sub>pucilpet/crawlgraph-mcp</sub> | 5 | 1 | Win? · WSL2? · macOS? · Linux? | TypeScript | `npx -y crawlgraph-mcp` | Backlink intelligence and competitor gap analysis on the public Common Crawl webgraph (4.4B edges, 120M domains) via CrawlGraph. 4 tools: backlink lookups, gap analysis, and a composite outreach-targets finder (domains… | <sub>install via npx; portable runtime (node)</sub> |
 | 3800 | **[qinghui316/ecl-harness-engineer](https://github.com/qinghui316/ecl-harness-engineer)**<br><sub>qinghui316/ecl-harness-engineer</sub> | 5 | 1 | Win? · WSL2? · macOS? · Linux? | Python | `npx skills add qinghui316/ecl-harness-engineer` | Source for the ecl-harness-engineer skill - ECL Agent Harness infrastructure for AI coding workflows, repository guidance, change tracking, lint checks, CI gates, and handoff docs (MIT) | <sub>install via npx; portable runtime (node)</sub> |
 | 3801 | **[r-huijts/ethics-check-mcp](https://github.com/r-huijts/ethics-check-mcp)**<br><sub>r-huijts/ethics-check-mcp</sub> | 5 | 1 | Win? · WSL2? · macOS? · Linux? | JavaScript | `npm install -g @r-huijts/ethics-vibe-check` | MCP server for comprehensive ethical analysis of AI conversations, detecting bias, harmful content, and providing critical thinking assessments with automated pattern learning | <sub>install via npm; portable runtime (node)</sub> |
 | 3802 | **[raalarcon9705/jira-mcp](https://github.com/raalarcon9705/jira-mcp)**<br><sub>raalarcon9705/jira-mcp</sub> | 5 | 1 | Win? · WSL2? · macOS? · Linux? | TypeScript | `npx raalarcon-jira-mcp-server` | Full-featured open source Jira &amp; Confluence MCP server with 24 tools: issue CRUD, sprint lifecycle, comments, transitions, user management, and wiki pages | <sub>install via npx; portable runtime (node)</sub> |

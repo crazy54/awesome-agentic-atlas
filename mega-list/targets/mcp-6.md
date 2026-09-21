@@ -2,7 +2,7 @@
 
 Speaks the Model Context Protocol — as a server, as a client, or as a gateway between.
 
-**5,104 projects** · 4,246 with stars to rank by · 5,556,289 combined stars
+**5,104 projects** · 4,246 with stars to rank by · 5,557,528 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#target=mcp)
 

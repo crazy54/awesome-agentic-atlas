@@ -124,7 +124,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 1.5k · Swift · brew · pushed 2026-09-14 · Win? · macOS</sub>
   <sub>`brew install --cask claudebar`</sub>
 - **[Claude Code Agent Monitor](https://github.com/hoangsonww/Claude-Code-Agent-Monitor)** — by hoangsonww - A self-hosted real-time dashboard that monitors Claude Code agent activity via its native hooks — live sessions, subagent orchestration trees, tool-call timelines, and per-session status — keeping data local (loopback-only). Built on Node/Express + React + SQLite, with a companion MCP server, VS Code extension, and desktop app
-  <sub>★ 1k · TypeScript · MIT · npx · pushed 2026-09-20 · macOS</sub>
+  <sub>★ 1k · JavaScript · MIT · npx · pushed 2026-09-21 · macOS</sub>
   <sub>`npx skills add hoangsonww/Claude-Code-Agent-Monitor --list`</sub>
 - **[claude-status-bar](https://github.com/m1ckc3s/claude-status-bar)** — by mick - A tiny, hook-driven macOS menu-bar indicator of Claude Code's live turn status — an animated icon while thinking or running a tool, a dot when awaiting permission, and an elapsed-turn timer — aggregated across concurrent CLI, Claude Desktop, and Cursor sessions. Stateless AppKit/Swift app that self-launches on session start and quits when idle
   <sub>★ 695 · Swift · MIT · brew · pushed 2026-09-18 · macOS</sub>
@@ -211,7 +211,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
 ## Multi-Purpose
 
 - **[Everything Claude Code (ECC)](https://github.com/affaan-m/ECC)** — by Affaan Mustafa - Top-notch, well-written resources covering "just about everything" from core engineering domains. What's nice about this "everything-" store is most of the resources have significant standalone value and unlike some all-encompassing frameworks, although you can opt in to the author's own specific workflow patterns if you choose, the individual resources offer exemplary patterns
-  <sub>★ 264.5k · JavaScript · MIT · npm · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 264.6k · JavaScript · MIT · npm · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npm install -g ecc-universal@2.2.2`</sub>
 - **[Fullstack Dev Skills](https://github.com/Jeffallan/claude-skills)** — by jeffallan - A comprehensive Claude Code plugin with 65 specialized skills covering full-stack development across a wide range of specific frameworks. Features 9 project workflow commands for Jira/Confluence integration and, notably, an interesting approach to context engineering via a /common-ground command that surfaces Claude's hidden assumptions about your project. This is a smart thing to d
   <sub>★ 11.6k · Python · MIT · source · pushed 2026-08-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -361,7 +361,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 20 · Shell · MIT · npm · pushed 2026-09-18 · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`npm install -g aicontainer`</sub>
 - **[compass](https://github.com/dshakes/compass)** — by dshakes - Developer-grade Claude Code + Codex configuration: cost-tiered subagents, workflow commands, guardrail hooks, MCP parity, and an installable plugin/marketplace
-  <sub>★ 19 · Shell · MIT · brew · pushed 2026-09-14 · macOS</sub>
+  <sub>★ 19 · Shell · MIT · brew · pushed 2026-09-21 · macOS</sub>
   <sub>`brew install dshakes/tap/compass # latest release · --HEAD to track main`</sub>
 - **[Cleat](https://github.com/cleatdev/cleat)** — by cleatdev - Give the agent a cage, not your keys. One-command Docker sandbox for AI coding agents: full autonomous permissions, per-project isolation, your host stays untouched
   <sub>★ 15 · Shell · MIT · brew · pushed 2026-09-07 · Win? · WSL2 · macOS · Linux · Docker</sub>
@@ -379,7 +379,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
 ## Agent Orchestration
 
 - **[gstack](https://github.com/garrytan/gstack)** — by Garry Tan - Garry Tan's (Y Combinator) Claude Code setup and "open source software factory" for managing the development lifecycle end-to-end. Includes a set of agents and in-depth skills/tools along with workflows for advancing a product from ideation to production
-  <sub>★ 133.8k · TypeScript · MIT · source · pushed 2026-09-20 · macOS</sub>
+  <sub>★ 133.8k · TypeScript · MIT · source · pushed 2026-09-21 · macOS</sub>
   <sub>`git clone https://github.com/garrytan/gstack.git`</sub>
 - **[Compound Engineering Plugin](https://github.com/EveryInc/compound-engineering-plugin)** — by EveryInc - A very pragmatic set of well-designed agents, skills, and commands, built around a discipline of turning past mistakes and errors into lessons and opportunities for future growth and improvement. Good documentation
   <sub>★ 25.2k · TypeScript · MIT · clone · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -649,7 +649,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 1.5k · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g rulesync`</sub>
 - **[Fixing Opus 5](https://github.com/disler/fixing-smartass-opus-5)** — by disler - A single appendable system prompt that retunes Opus 5's communication channel — cutting verbal tics, heading theater, and output-token bloat — passed via --append-system-prompt-file with no build step or dependencies. Comes with a just-driven side-by-side compare loop so you can see the difference, and a set of diagrams breaking down the prompt's anatomy. Opinionated, unusually specifi
-  <sub>★ 345 · Just · MIT · source · pushed 2026-08-16</sub>
+  <sub>★ 346 · Just · MIT · source · pushed 2026-08-16</sub>
   <sub>`git clone https://github.com/disler/fixing-smartass-opus-5.git`</sub>
 
 ## Creative Media
@@ -664,7 +664,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 689 · JavaScript · MIT · npm · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g capcut-cli`</sub>
 - **[motion-skills](https://github.com/iart-ai/motion-skills)** — by iart.ai - An open-source collection of ~50 motion-graphics, animation, and video skills across 14 installable packs — kinetic typography, data-driven charts, explainers, TikTok/Reels, web/WebGL animation, and Manim math animation — that teach an agent how a professional would build each piece. Every visual skill ships a deliver-and-verify loop (render a frame → screenshot → check) plus a small
-  <sub>★ 485 · HTML · MIT · npx · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 487 · HTML · MIT · npx · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add iart-ai/tiktok-video-skills`</sub>
 
 ## Linting

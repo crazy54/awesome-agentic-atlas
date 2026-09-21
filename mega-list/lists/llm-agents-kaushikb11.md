@@ -102,7 +102,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 873 · Python · Apache-2.0 · pip · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install promptise`</sub>
 - **[Aeon](https://github.com/aeonfun/aeon)** — Runs unattended on GitHub Actions, self-healing
-  <sub>★ 747 · Shell · MIT · clone · pushed 2026-09-21</sub>
+  <sub>★ 748 · Shell · MIT · clone · pushed 2026-09-21</sub>
   <sub>`git clone https://github.com/<you>/aeon`</sub>
 - **[Octochains](https://github.com/ahmadvh/octochains)** — Parallel isolated reasoning with an aggregator
   <sub>★ 373 · Python · pip · pushed 2026-08-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -206,7 +206,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 1.2k · Python · Apache-2.0 · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install bernstein # or: pipx install bernstein`</sub>
 - **[SwarmClaw](https://github.com/swarmclawai/swarmclaw)** — Self-hosted runtime for multi-agent CLI work
-  <sub>★ 679 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 680 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g @swarmclawai/swarmclaw`</sub>
 - **[h5i](https://github.com/h5i-dev/h5i)** — Runs agents in sandboxes, merges the verified result
   <sub>★ 648 · Rust · Apache-2.0 · npx · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
@@ -257,10 +257,10 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 65.8k · Python · Apache-2.0 · npm · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm install -g @mem0/cli # or: pip install mem0-cli`</sub>
 - **[AgentField](https://github.com/Agent-Field/agentfield)** — Agent identity and RPC using W3C DIDs
-  <sub>★ 2.6k · Go · Apache-2.0 · script · pushed 2026-09-19 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 2.6k · Go · Apache-2.0 · script · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://agentfield.ai/install.sh | bash`</sub>
 - **[openma](https://github.com/openma-ai/open-managed-agents)** — Self-hosted Managed Agents API implementation
-  <sub>★ 292 · TypeScript · Apache-2.0 · clone · pushed 2026-09-17 · WSL2 · Linux · Docker</sub>
+  <sub>★ 293 · TypeScript · Apache-2.0 · clone · pushed 2026-09-17 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/openma-ai/open-managed-agents.git`</sub>
 
 ## Retrieval &amp; Data
@@ -275,7 +275,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
 ## Memory &amp; Context
 
 - **[Hindsight](https://github.com/vectorize-io/hindsight)** — Agent memory with retain, recall and reflect
-  <sub>★ 24.2k · Python · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 24.6k · Python · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx @vectorize-io/hindsight-coding-agents install all # every detected agent, wired natively`</sub>
 - **[Caura](https://github.com/caura-ai/caura)** — Governed shared memory for fleets of agents
   <sub>★ 528 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>

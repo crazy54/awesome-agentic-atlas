@@ -1,7 +1,7 @@
 {
   "dims": 96,
-  "doc_scale": 0.9105545878410339,
-  "fingerprint": "1d116b520d96069e",
+  "doc_scale": 0.9105669856071472,
+  "fingerprint": "8b946d439f5aad80",
   "indexed_from_readme": 7965,
   "model": "minishlab/potion-base-8M",
   "near": 8,
@@ -9,7 +9,7 @@
     [
       "sandbox",
       [
-        666,
+        665,
         504
       ]
     ],
@@ -34,13 +34,13 @@
     [
       "caf\u00e9",
       [
-        7471
+        7472
       ]
     ],
     [
       "chat with my pdfs.",
       [
-        188,
+        189,
         861,
         0
       ]
@@ -60,7 +60,7 @@
         436,
         356,
         414,
-        432,
+        433,
         397,
         0
       ]
@@ -316,6 +316,6 @@
     "your"
   ],
   "vocab": 12960,
-  "vocab_scale": 122.36988830566406,
-  "xy_scale": 143.704345703125
+  "vocab_scale": 122.45137023925781,
+  "xy_scale": 139.1973876953125
 }

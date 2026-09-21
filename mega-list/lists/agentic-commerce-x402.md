@@ -35,7 +35,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
   <sub>★ 6.6k · TypeScript · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install x402`</sub>
 - **[Coinbase x402 development fork](https://github.com/coinbase/x402)** — A payments protocol for the internet. Built on HTTP.
-  <sub>★ 157 · TypeScript · Apache-2.0 · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 157 · TypeScript · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install x402`</sub>
 - **[x402 Official Website](https://www.x402.org)** — 
   <sub>website</sub>
@@ -71,7 +71,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 ## Open Source &amp; SDKs
 
 - **[Solana Foundation Pay (x402/MPP CLI and MCP)](https://github.com/solana-foundation/pay)** — Local payment layer for handling x402 payment challenges with wallet-authorized stablecoin signing
-  <sub>★ 1.8k · Rust · MIT · npm · pushed 2026-09-18 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 1.8k · Rust · MIT · npm · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @solana/pay`</sub>
 - **[x402-rs (Rust Facilitator &amp; SDK)](https://github.com/x402-rs/x402-rs)** — x402 payments in Rust: verify, settle, and monitor payments over HTTP 402 flows
   <sub>★ 290 · Rust · Apache-2.0 · docker · pushed 2026-07-13 · WSL2 · Linux · Docker</sub>
@@ -254,7 +254,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
   <sub>website</sub>
   <sub>`https://pinata.cloud/blog/using-x402-to-monetize-ai-hardware/`</sub>
 - **[x402 Example Gallery (GitHub)](https://github.com/coinbase/x402/tree/main/examples)** — A payments protocol for the internet. Built on HTTP.
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-18</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
   <sub>`git clone https://github.com/coinbase/x402.git && cd x402/examples`</sub>
 - **[Cloudflare Agents x402 Example](https://github.com/cloudflare/agents/tree/main/examples/x402)** — Official example showing how to gate Cloudflare Agents endpoints with x402 payments
   <sub>TypeScript · MIT · in-repo · pushed 2026-09-21</sub>

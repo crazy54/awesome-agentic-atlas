@@ -2,7 +2,7 @@
 
 Capability bundles an agent loads on demand — SKILL.md packages, subagents, slash commands, and the directories that collect them.
 
-**823 projects** · 749 with stars to rank by · 4,920,184 combined stars
+**823 projects** · 749 with stars to rank by · 4,921,060 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills)
 

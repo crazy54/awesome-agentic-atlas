@@ -439,7 +439,7 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 }
 
 @media(max-width:640px){
-  html{--pin:280px}
+  html{--pin:324px}
   header{padding:12px 14px 10px}
   .bar{padding:8px 14px}
   .subbar{padding:0 14px 7px}
@@ -548,13 +548,13 @@ html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] tr.nw{animation:none}
     transition-duration:.01ms !important;scroll-behavior:auto !important}
 }
 
-@media(min-width:641px){html{--pin:116px}}
+@media(min-width:641px){html{--pin:164px}}
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
-#out tr{scroll-margin-top:var(--pin,280px)}
+#out tr{scroll-margin-top:var(--pin,324px)}
 
 #out,
 main a[href],main button,main select,main summary,
-.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,280px)}
+.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,324px)}
 
 #cmp{display:none}
 #cmp.on{display:block;margin:14px 0 0;border:1px solid var(--grid);border-radius:8px;background:var(--band)}
@@ -629,15 +629,15 @@ main a[href],main button,main select,main summary,
 <header><div class="wrap"><div class="top">
   <div>
     <h1>Awesome Agentic Atlas <span>· 39 awesome-lists, merged</span></h1>
-    <p class="sub"><b>8,856</b> projects · <b>14</b> topics · <b>24,007,391</b> combined
+    <p class="sub"><b>8,856</b> projects · <b>14</b> topics · <b>24,010,256</b> combined
       stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
       2026-09-21</span></p>
     <p class="blurb" id="ctx"></p>
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--09--21_16:33_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-09-21T16:33:00Z">Last deployed 2026-09-21 16:33 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--09--21_18:07_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-09-21T18:07:00Z">Last deployed 2026-09-21 18:07 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
@@ -880,7 +880,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-21";
-const BUILT = "2026-09-21T16:33:00Z";
+const BUILT = "2026-09-21T18:07:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -899,8 +899,15 @@ function osIcon(k) {
 
 const CAN_COPY = !!(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext);
 
-const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/")
-  .map(s => s.startsWith(".") ? "dot-" + s.slice(1) : s).join("/") + "/";
+const DEVICE_NAMES = ["con", "prn", "aux", "nul", "clock$", "com1", "com2", "com3", "com4", "com5",
+  "com6", "com7", "com8", "com9", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9"];
+const segment = s => {
+  if (s.startsWith(".")) s = "dot-" + s.slice(1);
+  if (s.endsWith(".")) s = s.slice(0, -1) + "-dot";
+  if (DEVICE_NAMES.includes(s.split(".")[0])) s = "dev-" + s;
+  return s;
+};
+const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
 
 let RESCUE = [];
 

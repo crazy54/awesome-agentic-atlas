@@ -50,7 +50,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 70.5k · Python · MIT · pip · pushed 2026-01-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install --upgrade metagpt`</sub>
 - **[Cline](https://github.com/cline/cline)** — Open-source AI coding agent giving developers direct access to frontier models with full transparency. github
-  <sub>★ 68.9k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 69k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g cline`</sub>
 - **[Open Interpreter](https://github.com/openinterpreter/openinterpreter)** — Open Interpreter is a coding agent enabling language models to execute code locally, facilitating natural-language interaction with your computer's capabilities, overcoming limitations of hosted solutions like internet access and package restrictions. It features interactive and programmatic chats, system message customization, and can control your computer's keyboard and mouse, allowing for enhan
   <sub>★ 68.4k · Rust · Apache-2.0 · psh · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
@@ -161,7 +161,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 17.7k · Python · MIT · clone · pushed 2025-01-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/TransformerOptimus/SuperAGI.git`</sub>
 - **[Outlines](https://github.com/dottxt-ai/outlines)** — Outlines is a robust text generation library designed for agentic AI developers, featuring support for multiple model integrations, advanced prompting with Jinja, efficient structured generation through regex, JSON schema, context-free grammars, and more, enabling the creation of predictable and structured AI agent outputs github | website | discord
-  <sub>★ 15.9k · Python · Apache-2.0 · pip · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 15.9k · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install outlines`</sub>
 - **[Pipecat](https://github.com/pipecat-ai/pipecat)** — Open Source framework for voice and multimodal conversational AI. github
   <sub>★ 15.7k · Python · BSD-2-Clause · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -392,7 +392,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 777 · TypeScript · Apache-2.0 · pip · pushed 2023-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install --upgrade skyagi`</sub>
 - **[LLama Cpp Agent](https://github.com/Maximilian-Winter/llama-cpp-agent)** — The llama-cpp-agent framework is a tool designed for easy interaction with Large Language Models. github
-  <sub>★ 659 · Python · pip · pushed 2026-03-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 658 · Python · pip · pushed 2026-03-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llama-cpp-agent`</sub>
 - **[Lynkr](https://github.com/Fast-Editor/Lynkr)** — Lynkr is a proxy that lets Claude Code CLI talk to non-Anthropic LLMs, manage local tools, and compose Model Context Protocol (MCP) servers with prompt caching, repo intelligence, and Git-aware automation and several other features similar to anthropic backend
   <sub>★ 573 · JavaScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -479,7 +479,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 206 · Python · Apache-2.0 · source · pushed 2025-08-18 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/datastax/astra-assistants-api.git`</sub>
 - **[Autohand Code CLI](https://github.com/autohandai/code-cli)** — Autohand Code CLI is a self-evolving autonomous coding agent for the terminal, using the ReAct pattern to reason about and modify entire codebases through natural language, with 40+ tools, multi-LLM support (OpenRouter, Anthropic, OpenAI, Ollama, local models), semantic code search, modular skill system, and VS Code/Zed integration github | website
-  <sub>★ 196 · TypeScript · Apache-2.0 · brew · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 197 · TypeScript · Apache-2.0 · brew · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`brew install autohandai/code/autohand-code`</sub>
 - **[PyCodeAGI](https://github.com/chakkaradeep/pyCodeAGI)** — A small AGI experiment to generate a Python app given what app the user wants to build. github
   <sub>★ 184 · Python · source · pushed 2023-05-04 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1131,7 +1131,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 838 · Jupyter Notebook · Apache-2.0 · clone · pushed 2025-04-06</sub>
   <sub>`git clone https://github.com/LLMServe/DistServe.git`</sub>
 - **[Local-Rag](https://github.com/jonfairbanks/local-rag)** — Ingest files for retrieval augmented generation (RAG) with open-source Large Language Models (LLMs), all without 3rd parties or sensitive…
-  <sub>★ 761 · Python · GPL-3.0 · source · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 761 · Python · GPL-3.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jonfairbanks/local-rag.git`</sub>
 - **[Machine-Learning-Guide](https://github.com/mikeroyal/Machine-Learning-Guide)** — Machine learning Guide. Learn all about Machine Learning Tools, Libraries, Frameworks, Large Language Models (LLMs), and Training Models
   <sub>★ 710 · Python · source · pushed 2024-01-04 · Win · WSL2 · macOS · Linux · Docker</sub>
@@ -2230,7 +2230,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 4.4k · Python · source · pushed 2026-08-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/meta-llama/PurpleLlama.git`</sub>
 - **[Metorial](https://github.com/metorial/metorial)** — Connect AI agents to 600+ integrations with a single interface - OAuth, scaling, and monitoring included
-  <sub>★ 3.4k · TypeScript · pip · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.4k · TypeScript · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install metorial pydantic-ai python-dotenv`</sub>
 - **[Harbor](https://github.com/av/harbor)** — Effortlessly run LLM backends, APIs, frontends, and services with one command
   <sub>★ 3.2k · Python · Apache-2.0 · source · pushed 2026-09-21 · WSL2 · macOS? · Linux · Docker</sub>
@@ -2272,7 +2272,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 899 · TypeScript · MIT · clone · pushed 2025-02-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/paradigmxyz/flux.git`</sub>
 - **[Open-Webui-Tools](https://github.com/Haervwe/open-webui-tools)** — a Repository of Open-WebUI tools to use with your favourite LLMs
-  <sub>★ 812 · Python · MIT · source · pushed 2026-08-29 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 813 · Python · MIT · source · pushed 2026-08-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Haervwe/open-webui-tools.git`</sub>
 - **[Dingo](https://github.com/MigoXLab/dingo)** — Dingo - A Comprehensive Data Quality Evaluation Tool
   <sub>★ 756 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>

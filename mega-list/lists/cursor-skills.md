@@ -252,7 +252,7 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
 ## Code Quality &amp; Security
 
 - **[HOL Guard](https://github.com/hashgraph-online/hol-guard)** — Security harness that intercepts tool calls in AI coding agents before files change or network is contacted
-  <sub>★ 642 · Python · Apache-2.0 · pipx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 643 · Python · Apache-2.0 · pipx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pipx install hol-guard`</sub>
 - **[reviewing-code](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/reviewing-code/SKILL.md)** — Thorough code review focused on correctness, maintainability, performance, and best practices
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
@@ -513,7 +513,7 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>★ 32.2k · TypeScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add vercel-labs/agent-skills`</sub>
 - **[PostHog/context-mill](https://github.com/PostHog/context-mill)** — Assemble context for AI agents into Agent Skills-compliant packages
-  <sub>★ 60 · JavaScript · source · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 61 · JavaScript · source · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/PostHog/context-mill.git`</sub>
 - **[Anthropic Skill Creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)** — Official skill for drafting, testing, and optimizing custom SKILL.md files
   <sub>Python · in-repo · pushed 2026-09-10</sub>

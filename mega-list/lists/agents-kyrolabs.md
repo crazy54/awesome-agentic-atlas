@@ -125,7 +125,7 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 2.6k · Python · Apache-2.0 · source · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kayba-ai/agentic-context-engine.git`</sub>
 - **[AgentField](https://github.com/Agent-Field/agentfield)** — Open-source infrastructure for AI backends. Kubernetes for orchestration, Okta for identity—production-ready from day one
-  <sub>★ 2.6k · Go · Apache-2.0 · script · pushed 2026-09-19 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 2.6k · Go · Apache-2.0 · script · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://agentfield.ai/install.sh | bash`</sub>
 - **[Lagent](https://github.com/InternLM/lagent)** — A lightweight framework for building LLM-based agents
   <sub>★ 2.3k · Python · Apache-2.0 · clone · pushed 2026-09-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -155,10 +155,10 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 818 · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add desplega-ai/agent-swarm`</sub>
 - **[Aeon](https://github.com/aeonfun/aeon)** — Autonomous agent framework that runs unattended via GitHub Actions, with self-healing skills, output quality scoring, persistent memory, and reactive triggers
-  <sub>★ 747 · Shell · MIT · clone · pushed 2026-09-21</sub>
+  <sub>★ 748 · Shell · MIT · clone · pushed 2026-09-21</sub>
   <sub>`git clone https://github.com/<you>/aeon`</sub>
 - **[SwarmClaw](https://github.com/swarmclawai/swarmclaw)** — Self-hosted AI runtime for multi-agent orchestration with heartbeats, schedules, delegation, memory, and runtime skills across OpenClaw, Claude Code, Codex, Gemini CLI, and major LLM providers. Ships as a desktop app (Electron) and CLI
-  <sub>★ 679 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 680 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g @swarmclawai/swarmclaw`</sub>
 - **[SandBase Harness](https://github.com/sandbaseai/sandbase-harness)** — Local-first managed agent runtime with persistent sessions, sandboxed execution, MCP tools, audit, replay, and a human console
   <sub>★ 648 · TypeScript · Apache-2.0 · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -211,13 +211,13 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 81.2k · TypeScript · MIT · npx · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx --registry https://registry.npmjs.org paperclipai onboard --yes`</sub>
 - **[Cline](https://github.com/cline/cline)** — Open-source AI coding agent giving developers direct access to frontier models with full transparency
-  <sub>★ 68.9k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 69k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g cline`</sub>
 - **[Aider](https://github.com/Aider-AI/aider)** — aider is AI pair programming in your terminal
   <sub>★ 49.1k · Python · Apache-2.0 · source · pushed 2026-05-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Aider-AI/aider.git`</sub>
 - **[OpenCodeReview](https://github.com/alibaba/open-code-review)** — An open-source hybrid code reviewer combining deterministic rules with an LLM agent (tool-use, line-level comments); self-hostable, bring-your-own model
-  <sub>★ 39k · Go · Apache-2.0 · npm · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 39.1k · Go · Apache-2.0 · npm · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @alibaba-group/open-code-review`</sub>
 - **[DSPy](https://github.com/stanfordnlp/dspy)** — The framework for programming—not prompting—foundation models
   <sub>★ 38.2k · Python · MIT · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -316,7 +316,7 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 506 · Rust · MIT · psh · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://orcaagent.dev/install.ps1 | iex`</sub>
 - **[amux](https://github.com/mixpeek/amux)** — Agent multiplexer for running dozens of parallel Claude Code sessions with a web dashboard, self-healing watchdog, kanban board, agent-to-agent REST API, and mobile PWA. Python 3 + tmux
-  <sub>★ 487 · Rust · pipx · pushed 2026-09-21 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 489 · Rust · pipx · pushed 2026-09-21 · WSL2 · macOS? · Linux</sub>
   <sub>`pipx install amux`</sub>
 - **[Maestro Orchestrate](https://github.com/josstei/maestro-orchestrate)** — Multi-agent development orchestration platform coordinating 22 specialized AI agents through 4-phase workflows with native parallel execution, persistent sessions, and least-privilege security tiers. Runs on Gemini CLI, Claude Code, and Codex
   <sub>★ 464 · JavaScript · Apache-2.0 · clone · pushed 2026-08-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -376,7 +376,7 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 1k · Python · MIT · pip · pushed 2026-01-01 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`pip install agent-ix`</sub>
 - **[LLama Cpp Agent](https://github.com/Maximilian-Winter/llama-cpp-agent)** — The llama-cpp-agent framework is a tool designed for easy interaction with Large Language Models
-  <sub>★ 659 · Python · pip · pushed 2026-03-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 658 · Python · pip · pushed 2026-03-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llama-cpp-agent`</sub>
 - **[joinly](https://github.com/joinly-ai/joinly)** — Voice-first AI Assistant for online meetings that can actively participate and solve tasks live during the meeting
   <sub>★ 566 · Python · MIT · uv · pushed 2026-09-01 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -451,7 +451,7 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 38.3k · Python · AGPL-3.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install openviking --upgrade`</sub>
 - **[Hindsight](https://github.com/vectorize-io/hindsight)** — State-of-the-art long-term memory for AI agents by Vectorize
-  <sub>★ 24.2k · Python · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 24.6k · Python · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx @vectorize-io/hindsight-coding-agents install all # every detected agent, wired natively`</sub>
 - **[Local GPT](https://github.com/PromtEngineer/localGPT)** — Inspired on Private GPT with the GPT4ALL model replaced with the Vicuna-7B model and using the InstructorEmbeddings instead of LlamaEmbeddings
   <sub>★ 22.2k · Python · MIT · clone · pushed 2026-08-26 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -475,7 +475,7 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 250 · Go · Apache-2.0 · docker · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`docker run -d --name sage \`</sub>
 - **[Busabase](https://github.com/busabase/busabase)** — Local-first database and workspace for AI agents that keeps structured data, durable knowledge, documents, files, skills, and apps in one searchable place. Agents connect through MCP, OpenAPI, CLI, or coding-agent skills, and material writes can remain reviewable ChangeRequests before becoming canonical
-  <sub>★ 223 · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 224 · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g busabase # install once, then run: busabase server`</sub>
 - **[piia-engram](https://github.com/Patdolitse/piia-engram)** — Cross-tool persistent memory for AI agents. Local-first identity and knowledge layer and any MCP-compatible client
   <sub>★ 160 · Python · AGPL-3.0 · pip · pushed 2026-09-01 · Win? · WSL2? · macOS? · Linux?</sub>

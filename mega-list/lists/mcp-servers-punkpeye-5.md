@@ -308,7 +308,7 @@ Page **5** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.4k · TypeScript · MIT · npx · pushed 2026-08-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx emailmd mcp`</sub>
 - **[softeria/ms-365-mcp-server](https://github.com/Softeria/ms-365-mcp-server)** — MCP server that connects to Microsoft Office and the whole Microsoft 365 suite using Graph API (including Outlook, mail, files, Excel, calendar)
-  <sub>★ 986 · TypeScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 987 · TypeScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @softeria/ms-365-mcp-server --toon`</sub>
 - **[line/line-bot-mcp-server](https://github.com/line/line-bot-mcp-server)** — MCP Server for Integrating LINE Official Account
   <sub>★ 782 · TypeScript · Apache-2.0 · clone · pushed 2026-09-21 · WSL2 · Linux · Docker</sub>
@@ -317,7 +317,7 @@ Page **5** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 566 · Python · MIT · uv · pushed 2026-09-01 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`uvx joinly-client --env-file .env <MeetingUrl>`</sub>
 - **[saseq/discord-mcp](https://github.com/SaseQ/discord-mcp)** — A MCP server for the Discord integration. Enable your AI assistants to seamlessly interact with Discord. Enhance your Discord experience with powerful automation capabilities
-  <sub>★ 499 · Java · MIT · clone · pushed 2026-04-25 · Win? · WSL2 · Linux · Docker</sub>
+  <sub>★ 500 · Java · MIT · clone · pushed 2026-04-25 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/SaseQ/discord-mcp`</sub>
 - **[InditexTech/mcp-teams-server](https://github.com/InditexTech/mcp-teams-server)** — MCP server that integrates Microsoft Teams messaging (read, post, mention, list members and threads)
   <sub>★ 399 · Python · Apache-2.0 · docker · pushed 2026-09-21 · WSL2 · Linux · Docker</sub>
@@ -367,12 +367,12 @@ Page **5** of 7, because this list is longer than the 512 KB GitHub will render 
 - **[gitmotion/ntfy-me-mcp](https://github.com/gitmotion/ntfy-me-mcp)** — An ntfy MCP server for sending/fetching ntfy notifications to your self-hosted ntfy server from AI Agents 📤 (supports secure token auth &amp; more - use with npx or docker!)
   <sub>★ 74 · TypeScript · GPL-3.0 · source · pushed 2026-04-11 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/gitmotion/ntfy-me-mcp.git`</sub>
-- **[imdinu/apple-mail-mcp](https://github.com/imdinu/apple-mail-mcp)** — Fast MCP server for Apple Mail — 87x faster email fetching via batch JXA and FTS5 search index for ~2ms body search. 6 tools: list accounts/mailboxes, get emails with filters, full-text search across all scopes, and attachment extraction
-  <sub>★ 66 · Python · GPL-3.0 · pipx · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pipx install apple-mail-mcp`</sub>
 - **[sawa-zen/vrchat-mcp](https://github.com/sawa-zen/vrchat-mcp)** — This is an MCP server for interacting with the VRChat API. You can retrieve information about friends, worlds, avatars, and more in VRChat
   <sub>★ 66 · TypeScript · MIT · npx · pushed 2026-02-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx vrchat-mcp`</sub>
+- **[imdinu/apple-mail-mcp](https://github.com/imdinu/apple-mail-mcp)** — Fast MCP server for Apple Mail — 87x faster email fetching via batch JXA and FTS5 search index for ~2ms body search. 6 tools: list accounts/mailboxes, get emails with filters, full-text search across all scopes, and attachment extraction
+  <sub>★ 65 · Python · GPL-3.0 · pipx · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`pipx install apple-mail-mcp`</sub>
 - **[kushneryk/join.cloud](https://github.com/kushneryk/join.cloud)** — Collaboration rooms for AI agents. Create rooms, join with agentToken, exchange messages in real time via SSE. Supports MCP and A2A protocols. Self-hostable or use the hosted version at join.cloud
   <sub>★ 63 · TypeScript · AGPL-3.0 · npx · pushed 2026-07-15 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx joincloud rooms`</sub>
@@ -593,7 +593,7 @@ Page **5** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · TypeScript · MIT · npx · pushed 2026-07-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y instapdown-mcp`</sub>
 - **[googlarz/signal-mcp](https://github.com/googlarz/signal-mcp)** — Full Signal messenger MCP server and CLI. Send/receive messages, manage groups and contacts, search history, handle attachments and reactions. Runs locally via signal-cli — no third-party servers
-  <sub>★ 2 · Python · MIT · uv · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · Python · MIT · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install signal-mcp`</sub>
 - **[iletimerkezi/iletimerkezi-mcp-server](https://github.com/iletimerkezi/iletimerkezi-mcp-server)** — Send SMS, query delivery reports, manage senders / blacklists, register and check İYS (Turkish messaging consent registry) records through the iletiMerkezi BTK-licensed SMS API. 11 tools, runtime-fetched manifest stays in lock-step with the live API. Install: npx -y @iletimerkezi/mcp-server
   <sub>★ 2 · TypeScript · MIT · source · pushed 2026-09-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -853,7 +853,7 @@ Page **5** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 281 · TypeScript · AGPL-3.0 · docker · pushed 2026-09-21 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -p 3000:3000 --env-file .env quackback`</sub>
 - **[hustcc/mcp-echarts](https://github.com/hustcc/mcp-echarts)** — Generate visual charts using Apache ECharts with AI MCP dynamically
-  <sub>★ 268 · TypeScript · MIT · npm · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 269 · TypeScript · MIT · npm · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g mcp-echarts`</sub>
 - **[OpenDataMCP/OpenDataMCP](https://github.com/OpenDataMCP/OpenDataMCP)** — Connect any Open Data to any LLM with Model Context Protocol
   <sub>★ 154 · Python · MIT · clone · pushed 2024-12-20 · Win? · WSL2 · macOS? · Linux?</sub>
@@ -1264,7 +1264,7 @@ Page **5** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 16 · Python · MIT · source · pushed 2025-05-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/gwbischof/bluesky-social-mcp.git`</sub>
 - **[AstaBlackClove/posthive](https://github.com/AstaBlackClove/posthive)** — Schedule and manage social media posts across 13 platforms (Bluesky, Threads, Instagram, LinkedIn, Mastodon, YouTube, Facebook, Pinterest, Telegram, Nostr, X/Twitter, Discord, Tumblr). OAuth 2.0 + PKCE, 10 tools, draft-first workflow
-  <sub>★ 15 · TypeScript · AGPL-3.0 · clone · pushed 2026-09-20 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 15 · TypeScript · AGPL-3.0 · clone · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/AstaBlackClove/posthive.git`</sub>
 - **[checkra1neth/xbird](https://github.com/checkra1neth/xbird-skill)** — Twitter/X MCP server with 34 tools — post tweets, search, read timelines, manage engagement, upload media. No API keys needed, uses browser cookies. Pay per call from $0.001 via x402 micropayments
   <sub>★ 15 · MIT · npx · pushed 2026-07-02 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1472,7 +1472,7 @@ Page **5** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 793 · Python · MIT · uv · pushed 2026-08-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx auto-browser-mcp`</sub>
 - **[eat-pray-ai/yutu](https://github.com/eat-pray-ai/yutu)** — A fully functional MCP server and CLI for YouTube to automate YouTube operation
-  <sub>★ 686 · Go · Apache-2.0 · source · pushed 2026-09-20 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 686 · Go · Apache-2.0 · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/eat-pray-ai/yutu.git`</sub>
 - **[kimtaeyoon83/mcp-server-youtube-transcript](https://github.com/kimtaeyoon83/mcp-server-youtube-transcript)** — Fetch YouTube subtitles and transcripts for AI analysis
   <sub>★ 595 · TypeScript · MIT · npx · pushed 2026-07-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1592,7 +1592,7 @@ Page **5** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 10 · Python · AGPL-3.0 · clone · pushed 2026-07-18 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/segentic-lab/periscope-mcp.git`</sub>
 - **[Silbercue/public-browser](https://github.com/Silbercue/public-browser)** — Chrome automation over raw CDP — no Playwright, no extension bridge, no single-tab limit. Accessibility-tree refs cached across calls survive rerenders, so a page snapshot costs 1,124 chars against Playwright MCP's 6,084. Server-side plan executor runs multi-step flows in one tool call. Ships a Python API for LLM-free scripting. MIT
-  <sub>★ 10 · TypeScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 10 · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`npx public-browser profiles`</sub>
 - **[bighippoman/intercept-mcp](https://github.com/bighippoman/intercept-mcp)** — Multi-tier fallback chain for fetching web content as clean markdown. Handles tweets, YouTube, arXiv, PDFs, and regular pages with 9 fallback strategies
   <sub>★ 9 · TypeScript · MIT · npx · pushed 2026-08-02 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -2073,7 +2073,7 @@ Page **5** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 37 · TypeScript · Apache-2.0 · npx · pushed 2026-09-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx -y @n24q02m/better-godot-mcp@latest`</sub>
 - **[german-krasnikov/unity-biome-mcp](https://github.com/german-krasnikov/unity-biome-mcp)** — #️⃣ 🏠 🍎 🪟 🐧 - Control the Unity Editor from 10 MCP clients or from chat inside Unity. 47 tools for scenes, GameObjects, components, Shader Graph, materials, animation, and UI. PlayTest DSL for deterministic scenario verification, batch operations with Undo rollback, token-efficient plain-text protocol, screenshots with visual diff. Cross-platform CI, 11,700+ tests, MIT
-  <sub>★ 28 · C# · MIT · uv · pushed 2026-09-19 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 28 · C# · MIT · uv · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`uvx --from git+https://github.com/german-krasnikov/unity-biome-mcp.git#subdirectory=server unity-biome-mcp doctor`</sub>
 - **[kitao/pyxel-mcp](https://github.com/kitao/pyxel-mcp)** — MCP server for Pyxel retro game engine, enabling AI to run, capture screenshots, inspect sprites, and analyze audio of Pyxel games
   <sub>★ 26 · Python · MIT · uv · pushed 2026-09-13 · Win? · WSL2? · macOS? · Linux?</sub>

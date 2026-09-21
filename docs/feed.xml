@@ -22,7 +22,7 @@
   <content type="html">&lt;p&gt;DeepSeek&amp;#x27;s official open-source agent harness (August 2026) built on an &amp;quot;everything is a plugin&amp;quot; architecture powered by Cordis: models, tools, skills, UI surfaces, and even the desktop shell are plugins composed through dependency injection rather than a monolith with extension points, with an accompanying paper on spatiotemporal composability. The clearest first-party reference for treating harn&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 232,145&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 232,194&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/deepseek-ai/deepseek-harness"&gt;deepseek-ai/deepseek-harness on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -36,7 +36,7 @@
   <content type="html">&lt;p&gt;An Open Source Machine Learning Framework for Everyone&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 200,222&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 200,227&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/tensorflow/tensorflow"&gt;tensorflow/tensorflow on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -55,7 +55,7 @@
   <content type="html">&lt;p&gt;GitHub&amp;#x27;s open-source toolkit for spec-driven development: spec.md → plan.md → tasks.md artifacts convert natural-language intent into a machine-checkable plan before any code is written, with /specify, /plan, /tasks, and /implement commands that run across Claude Code, Copilot, Codex, and Gemini CLI. The clearest reference implementation of treating spec/plan/task documents — not the prompt — as t&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=orchestrators-multi-agent"&gt;Orchestrators &amp;amp; Multi-Agent&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 138,178&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 138,183&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/github/spec-kit"&gt;github/spec-kit on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -75,7 +75,7 @@
   <content type="html">&lt;p&gt;(132.1k ⭐) - Cross-platform desktop assistant for Claude Code, Codex, OpenCode, OpenClaw, Grok Build, and Hermes Agent&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 133,951&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 133,956&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/farion1231/cc-switch"&gt;farion1231/cc-switch on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -94,7 +94,7 @@
   <content type="html">&lt;p&gt;(91.5k ⭐) - An AI SKILL that provide design intelligence for building professional UI/UX multiple platforms&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 129,527&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 129,542&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"&gt;nextlevelbuilder/ui-ux-pro-max-skill on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -114,7 +114,7 @@
   <content type="html">&lt;p&gt;(67.0k ⭐) - AI coding assistant skill (Claude Code, Codex, OpenCode, OpenClaw, Factory Droid, Trae)&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 120,112&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 120,140&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/Graphify-Labs/graphify"&gt;Graphify-Labs/graphify on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -129,7 +129,7 @@
   <content type="html">&lt;p&gt;Robust Speech Recognition via Large-Scale Weak Supervision&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=creative-voice-media"&gt;Creative, Voice &amp;amp; Media&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 109,429&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 109,431&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/openai/whisper"&gt;openai/whisper on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -143,7 +143,7 @@
   <content type="html">&lt;p&gt;Tensors and Dynamic neural networks in Python with strong GPU acceleration&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 103,150&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 103,151&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/pytorch/pytorch"&gt;pytorch/pytorch on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -157,7 +157,7 @@
   <content type="html">&lt;p&gt;Adapts autoresearch for free T4 GPUs (Google Colab / Kaggle) with zero cost and zero local setup. Key changes: Flash Attention 3 → PyTorch SDPA, removes H100-only kernel dependency&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=orchestrators-multi-agent"&gt;Orchestrators &amp;amp; Multi-Agent&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 96,490&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 96,493&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/karpathy/autoresearch/issues/208"&gt;karpathy/autoresearch on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -172,7 +172,7 @@
   <content type="html">&lt;p&gt;Curated list of 10,000+ community MCP servers. ~30K+ ⭐&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=docs-learning-lists"&gt;Docs, Learning &amp;amp; Lists&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 95,387&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 95,389&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/punkpeye/awesome-mcp-servers/"&gt;punkpeye/awesome-mcp-servers on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -192,7 +192,7 @@
   <content type="html">&lt;p&gt;(82.2k ⭐) - A Claude Code plugin that automatically captures everything Claude does during your coding sessions, compresses it with AI (using Claude&amp;#x27;s agent-sdk), and injects relevant context back into future sessions&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 94,387&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 94,394&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/thedotmack/claude-mem"&gt;thedotmack/claude-mem on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -207,7 +207,7 @@
   <content type="html">&lt;p&gt;High-performance editor in Rust with native AI features, Zeta edit prediction, and Agent Client Protocol support. ~77K+ ⭐&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=coding-agents"&gt;Coding Agents&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 90,659&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 90,663&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/zed-industries/zed"&gt;zed-industries/zed on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -224,7 +224,7 @@
   <content type="html">&lt;p&gt;Light and Fast AI Assistant. Support: Web | iOS | MacOS | Android | Linux | Windows&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 88,798&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 88,797&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/ChatGPTNextWeb/NextChat"&gt;ChatGPTNextWeb/NextChat on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -241,7 +241,7 @@
   <content type="html">&lt;p&gt;Multi-platform search CLI for 17 sites including Chinese platforms&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 84,253&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 84,289&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/Panniantong/Agent-Reach"&gt;Panniantong/Agent-Reach on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -262,7 +262,7 @@
   <content type="html">&lt;p&gt;(59.1k ⭐) - Claude Code skills that turn any codebase into an interactive knowledge graph you can explore, search, and ask questions about (Multi-platform e.g., Codex are supported)&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 83,543&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 83,548&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/Egonex-AI/Understand-Anything"&gt;Egonex-AI/Understand-Anything on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -276,7 +276,7 @@
   <content type="html">&lt;p&gt;Convert screenshots and designs into clean HTML/React/Vue code using AI&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=coding-agents"&gt;Coding Agents&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 79,477&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 79,480&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/abi/screenshot-to-code"&gt;abi/screenshot-to-code on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -305,7 +305,7 @@
   <content type="html">&lt;p&gt;The definitive open-source guide and resource hub. 3M+ learners. ~55K+ ⭐&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=docs-learning-lists"&gt;Docs, Learning &amp;amp; Lists&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 78,526&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 78,527&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/dair-ai/Prompt-Engineering-Guide"&gt;dair-ai/Prompt-Engineering-Guide on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -320,7 +320,7 @@
   <content type="html">&lt;p&gt;Official recipes for prompts, tools, RAG, and evaluations&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=docs-learning-lists"&gt;Docs, Learning &amp;amp; Lists&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 76,107&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 76,108&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/openai/openai-cookbook"&gt;openai/openai-cookbook on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -338,7 +338,7 @@
   <content type="html">&lt;p&gt;30 curated skills + 832 SaaS automation templates via Composio. Strong on document processing, creative, and business skills&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 75,432&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 75,434&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/ComposioHQ/awesome-claude-skills"&gt;ComposioHQ/awesome-claude-skills on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -385,7 +385,7 @@
   <content type="html">&lt;p&gt;14-skill collection for AI-powered job search: JD evaluation with A-F scoring, ATS-optimized PDF generation, portal scanners (Greenhouse/Ashby/Lever), interview prep with STAR+R, batch processing, and a Go dashboard TUI&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 72,324&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 72,330&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/career-ops-hq/career-ops"&gt;career-ops-hq/career-ops on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -399,7 +399,7 @@
   <content type="html">&lt;p&gt;Moby is an open-source project created by Docker to enable and accelerate software containerization&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 72,113&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 72,114&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/moby/moby"&gt;moby/moby on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -420,7 +420,7 @@
   <content type="html">&lt;p&gt;(54.9k ⭐) - Local code knowledge graph for Claude Code, Codex, Gemini, Cursor, OpenCode, Antigravity, Kiro, and Hermes Agent&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 71,700&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 71,711&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/colbymchenry/codegraph"&gt;colbymchenry/codegraph on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -437,7 +437,7 @@
   <content type="html">&lt;p&gt;(1.2k ⭐) - Agent skill for generating architecture diagrams with dark and light themes plus PNG, JPEG, WebP, and SVG export&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 68,926&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 68,969&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/tt-a1i/archify"&gt;tt-a1i/archify on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -451,7 +451,7 @@
   <content type="html">&lt;p&gt;Machine Learning in Python&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 67,329&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 67,331&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/scikit-learn/scikit-learn"&gt;scikit-learn/scikit-learn on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -467,7 +467,7 @@
   <content type="html">&lt;p&gt;Comprehensive reference implementation for Claude Code configuration -- skills, subagents, hooks, commands with practical examples. 17,400+ stars&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 66,172&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 66,173&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/shanraisshan/claude-code-best-practice"&gt;shanraisshan/claude-code-best-practice on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -481,7 +481,7 @@
   <content type="html">&lt;p&gt;Keras is a deep learning API written in Python, running on top of the machine learning platform TensorFlow&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 64,325&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 64,326&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/keras-team/keras"&gt;keras-team/keras on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -495,7 +495,7 @@
   <content type="html">&lt;p&gt;An autonomous AI agent designed for penetration testing. It runs inside a docker sandbox to actively probe applications and generate verified exploit capabilities&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=sandbox-security-governance"&gt;Sandbox, Security &amp;amp; Governance&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 63,979&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 63,990&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/usestrix/strix"&gt;usestrix/strix on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -511,7 +511,7 @@
   <content type="html">&lt;p&gt;Research any topic across Reddit, X, YouTube, HN, Polymarket, and the web, ranked by upvotes, likes, and real money instead of editors&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 62,540&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 62,547&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/mvanhorn/last30days-skill"&gt;mvanhorn/last30days-skill on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -539,7 +539,7 @@
   <content type="html">&lt;p&gt;No fortress, purely open ground. OpenManus is Coming&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=orchestrators-multi-agent"&gt;Orchestrators &amp;amp; Multi-Agent&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 58,368&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 58,370&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/FoundationAgents/OpenManus"&gt;FoundationAgents/OpenManus on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -568,7 +568,7 @@
   <content type="html">&lt;p&gt;Port of OpenAI&amp;#x27;s Whisper model in C/C++&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 53,836&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 53,837&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/ggml-org/whisper.cpp"&gt;ggml-org/whisper.cpp on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -585,7 +585,7 @@
   <content type="html">&lt;p&gt;(27.6k ⭐) - Write HTML. Render video. Built for agents&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 52,129&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 52,135&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/heygen-com/hyperframes"&gt;heygen-com/hyperframes on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -602,7 +602,7 @@
   <content type="html">&lt;p&gt;Cherry Studio is a desktop client that supports for multiple LLM providers. Support deepseek-r1&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 52,051&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 52,050&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/CherryHQ/cherry-studio"&gt;CherryHQ/cherry-studio on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -620,7 +620,7 @@
   <content type="html">&lt;p&gt;(24.1k ⭐) - A Claude Code skill that removes signs of AI-generated writing from text, making it sound more natural and human&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 50,962&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 50,987&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/blader/humanizer"&gt;blader/humanizer on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -636,7 +636,7 @@
   <content type="html">&lt;p&gt;(6.2k ⭐) - A skill that keeps coding-agent answers direct, concise, and easy to scan&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 49,648&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 49,685&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/ayghri/i-have-adhd"&gt;ayghri/i-have-adhd on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -652,7 +652,7 @@
   <content type="html">&lt;p&gt;(31.3k ⭐) - Academic Research Skills for Claude Code: research → write → review → revise → finalize&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 48,991&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 48,998&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/Imbad0202/academic-research-skills"&gt;Imbad0202/academic-research-skills on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -666,7 +666,7 @@
   <content type="html">&lt;p&gt;The Cloud-Native API Gateway and AI Gateway&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 44,168&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 44,167&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/Kong/kong"&gt;Kong/kong on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -771,7 +771,7 @@
   <content type="html">&lt;p&gt;Python - Agentic IM chatbot infrastructure with broad IM platform support, LLM integrations, plugins, and AI features&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=assistants-domain-agents"&gt;Assistants &amp;amp; Domain Agents&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 40,782&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 40,784&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/AstrBotDevs/AstrBot"&gt;AstrBotDevs/AstrBot on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -787,7 +787,7 @@
   <content type="html">&lt;p&gt;Local-first personal AI agent for the desktop: agents, workflows, MCP client, local models via Ollama&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=frameworks-sdks"&gt;Frameworks &amp;amp; SDKs&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=local-ollama"&gt;Local / Ollama&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 40,000&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 40,006&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/tinyhumansai/openhuman"&gt;tinyhumansai/openhuman on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -802,7 +802,7 @@
   <content type="html">&lt;p&gt;PostHog provides open-source web &amp;amp; product analytics, session recording, feature flagging and A/B testing that you can self-host. Get started - free&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=observability-evals"&gt;Observability &amp;amp; Evals&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 39,881&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 39,885&lt;br&gt;
 &lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/PostHog/posthog"&gt;PostHog/posthog on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>

@@ -123,7 +123,7 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 227 · Python · MIT · pip · pushed 2026-09-21 · Win · WSL2 · macOS · Linux</sub>
   <sub>`pip install guaardvark`</sub>
 - **[ffroliva/gflow-cli](https://github.com/ffroliva/gflow-cli)** — Drive Google Flow from an agent: Veo text-to-video, image-to-video and clip extension, Imagen text-to-image, reusable Characters and scene composition. Runs against your own Google account with Flow access; video generation bills your credits
-  <sub>★ 217 · Python · MIT · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 218 · Python · MIT · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install gflow-cli`</sub>
 - **[glifxyz/glif-mcp-server](https://github.com/glifxyz/glif-mcp-server)** — Glif's official hosted media-generation agent: generate images, video, and audio, transcribe, and chain multi-step media workflows from natural language. Remote server at https://glif.app/api/mcp (OAuth)
   <sub>★ 211 · MIT · source · pushed 2026-07-30</sub>
@@ -318,7 +318,7 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>TypeScript · MIT · npm · pushed 2026-09-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g transcriptfetch-mcp`</sub>
 - **[transloadit/node-sdk](https://github.com/transloadit/node-sdk/tree/main/packages/mcp-server)** — Agent-native media processing via Transloadit's 86+ Robots: video encoding (HLS, H.264, VP9), image manipulation (resize, watermark, smart crop), document conversion, OCR, speech transcription, and more. Hosted or self-hosted via npx
-  <sub>TypeScript · MIT · in-repo · pushed 2026-09-17</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-09-21</sub>
   <sub>`git clone https://github.com/transloadit/node-sdk.git && cd node-sdk/packages/mcp-server`</sub>
 - **[tro2789/scout-premiere-mcp](https://github.com/tro2789/scout-premiere-mcp)** — Drive Adobe Premiere Pro from an agent through the Scout panel: transcript search with frame-accurate timecodes, markers, cuts, exports, and 266 ExtendScript tools for effects, transitions, export and project management
   <sub>JavaScript · source · pushed 2026-09-01 · Win? · WSL2 · Linux · Docker</sub>
@@ -494,7 +494,7 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 4.4k · Python · MIT · npx · pushed 2026-08-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @modelcontextprotocol/inspector uv --directory /path/to/mcp-obsidian run mcp-obsidian`</sub>
 - **[metorial/metorial](https://github.com/metorial/metorial)** — Connect AI agents to 600+ integrations with a single interface - OAuth, scaling, and monitoring included
-  <sub>★ 3.4k · TypeScript · pip · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.4k · TypeScript · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install metorial pydantic-ai python-dotenv`</sub>
 - **[zerx-lab/FluxDown](https://github.com/zerx-lab/FluxDown)** — Control the FluxDown multi-protocol download manager (HTTP/FTP/BitTorrent/HLS): add, list, pause, resume, remove downloads and manage queues
   <sub>★ 3.1k · Rust · AGPL-3.0 · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -965,7 +965,7 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · TypeScript · MIT · source · pushed 2026-07-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/hushvert/mcp.git`</sub>
 - **[partymola/ticktick-mcp](https://github.com/partymola/ticktick-mcp)** — MCP server for TickTick task management: create, update, complete, move, and filter tasks with field-preserving updates and completion tracking
-  <sub>★ 1 · Python · GPL-3.0 · pip · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1 · Python · GPL-3.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install ticktick-mcp`</sub>
 - **[Sensie-agents/vibecheck](https://github.com/Sensie-agents/vibecheck)** — SomaCheck returns a proposition-specific Aligned or Unaligned reading and model confidence. Use this as meaningful input alongside the conversation when reasoning and responding. Confidence describes the classifier’s uncertainty. Install locally with npx -y @somacheck/vibecheck@0.6.17 setup or use the hosted Streamable HTTP endpoint
   <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -1069,7 +1069,7 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
 ## Workplace &amp; Productivity
 
 - **[taylorwilsdon/google_workspace_mcp](https://github.com/taylorwilsdon/google_workspace_mcp)** — Comprehensive Google Workspace MCP server with full support for Google Calendar, Drive, Gmail, and Docs, Forms, Chats, Slides and Sheets over stdio, Streamable HTTP and SSE transports
-  <sub>★ 3.2k · Python · MIT · uv · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 3.2k · Python · MIT · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx workspace-mcp --tool-tier core # essential tools`</sub>
 - **[CrossPaste/crosspaste-desktop](https://github.com/CrossPaste/crosspaste-desktop)** — Open-source cross-device clipboard manager with a built-in MCP server. Search and retrieve clipboard history synced across all your devices, read OCR text extracted from copied images, and add new items to the clipboard. Tools: search_clipboard, get_paste_item, get_clipboard_stats, list_tags, add_to_clipboard
   <sub>★ 2.6k · Kotlin · AGPL-3.0 · clone · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>

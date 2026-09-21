@@ -2,7 +2,7 @@
 
 Built for Anthropic's terminal coding agent — skills, hooks, commands, status lines, MCP servers and the clients that wrap it.
 
-**2,395 projects** · 2,212 with stars to rank by · 8,457,998 combined stars
+**2,395 projects** · 2,212 with stars to rank by · 8,459,807 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code)
 

@@ -13,7 +13,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
 | <a href="https://github.com/openai/codex"><img src="https://raw.githubusercontent.com/openai/codex/main/.github/codex-cli-splash.png" width="260"></a> | <a href="https://github.com/google-gemini/gemini-cli"><img src="https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/assets/gemini-screenshot.png" width="260"></a> | <a href="https://github.com/zed-industries/zed"><img src="https://opengraph.githubassets.com/1/zed-industries/zed" width="260"></a> |
 | **[OpenAI Codex CLI](https://github.com/openai/codex)**<br>★ 125.7k | **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 107.1k | **[Zed](https://github.com/zed-industries/zed)**<br>★ 90.7k |
 | <a href="https://github.com/OpenHands/OpenHands"><img src="https://opengraph.githubassets.com/1/OpenHands/OpenHands" width="260"></a> | <a href="https://github.com/cline/cline"><img src="https://opengraph.githubassets.com/1/cline/cline" width="260"></a> | <a href="https://github.com/aaif-goose/goose"><img src="https://opengraph.githubassets.com/1/block/goose" width="260"></a> |
-| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 88.7k | **[Cline](https://github.com/cline/cline)**<br>★ 68.9k | **[Goose](https://github.com/aaif-goose/goose)**<br>★ 54.5k |
+| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 88.7k | **[Cline](https://github.com/cline/cline)**<br>★ 69k | **[Goose](https://github.com/aaif-goose/goose)**<br>★ 54.5k |
 
 ## Contents
 
@@ -47,7 +47,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 88.7k · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[Cline](https://github.com/cline/cline)** — Autonomous coding agent in VS Code with human-in-the-loop approvals; file editing, terminal commands, and browser use. ~59K+ ⭐
-  <sub>★ 68.9k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 69k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g cline`</sub>
 - **[Goose](https://github.com/aaif-goose/goose)** — Extensible open-source AI agent from Block (Square/Cash App); installs, executes, edits, and tests with any LLM. ~29K+ ⭐
   <sub>★ 54.5k · Rust · Apache-2.0 · script · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
@@ -113,7 +113,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 713 · TypeScript · MIT · source · pushed 2025-05-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/trypear/pearai-app.git`</sub>
 - **[Autohand Code CLI](https://github.com/autohandai/code-cli)** — Self-evolving autonomous terminal coding agent with multi-provider LLM support, 40+ tools, and modular skills system
-  <sub>★ 196 · TypeScript · Apache-2.0 · brew · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 197 · TypeScript · Apache-2.0 · brew · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`brew install autohandai/code/autohand-code`</sub>
 - **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)** — Anthropic's agentic coding CLI; understands full codebases and executes complex multi-step tasks via natural language
   <sub>website</sub>
@@ -266,7 +266,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 62.3k · TypeScript · MIT · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/upstash/context7.git`</sub>
 - **[GitHub MCP Server](https://github.com/github/github-mcp-server)** — GitHub's official MCP server for repo, issue, PR, and Actions interaction. ~15K+ ⭐
-  <sub>★ 33.1k · Go · MIT · source · pushed 2026-09-16 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 33.1k · Go · MIT · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/github/github-mcp-server.git`</sub>
 - **[FastMCP (Python)](https://github.com/PrefectHQ/fastmcp)** — High-level Pythonic framework for building MCP servers. ~5K+ ⭐
   <sub>★ 27.8k · Python · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
