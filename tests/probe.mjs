@@ -25,7 +25,13 @@ const ROOT = fileURLToPath(new URL("..", import.meta.url));
 // script cannot boot from one -- `__COUNT__` is not a number -- so nothing above the scans will run.
 const PAGE = process.env.AAA_PAGE || join(ROOT, "docs/index.html");
 const html = readFileSync(PAGE, "utf8");
-const data = JSON.parse(readFileSync(join(ROOT, "docs/data.json"), "utf8"));
+// `AAA_DATA` is the other half of the same hatch, and it exists for a case `AAA_PAGE` alone cannot serve:
+// running this harness against a rebuild the machine cannot check out. Two rows in the atlas are named with
+// a trailing dot, so `docs/repo/<that>/index.html` is a path NTFS refuses -- `git worktree add` exits 128 and
+// leaves no tree at all -- and the only way to probe a weekly's output on Windows is to point the two
+// overrides at the `index.html` and `data.json` pulled out of the commit. The page and the data have to move
+// together: half the assertions below read the dataset the page booted from.
+const data = JSON.parse(readFileSync(process.env.AAA_DATA || join(ROOT, "docs/data.json"), "utf8"));
 const readme = readFileSync(join(ROOT, "README.md"), "utf8");
 
 // The page has several <script> blocks. Picked by content rather than by position: "the last one" was
@@ -158,6 +164,10 @@ const shim = [
   // exists three times over, and the drift nobody would notice is the one on this side of the wire.
   "  semTokens,",
   "  readHash, writeHash, applyView,",
+  // `detailURL` is exposed because it is the fourth copy of `22_detail.py`'s `segment()`, and the rows that
+  // discriminate between the copies are not in every dataset -- calling it directly asserts the rule rather
+  // than whatever names today's `data.json` happens to carry.
+  "  detailURL,",
   // `RISE` is settable, not just readable, because the published `data.json` can only ever exercise one
   // side of the velocity feature at a time -- and the side it cannot reach is the side that renders.
   "  gained, get RISE(){return RISE}, set RISE(v){RISE=v},",
@@ -545,9 +555,23 @@ ok("every row still has a way out to the repository",
    outs.length === titles.length && outs.every(h => /^https?:\/\//.test(h)), outs[0]);
 ok("the shot link goes where the title goes, which is what lets it stay aria-hidden",
    shots.length === titles.length && shots.every((h, i) => h === titles[i]));
-ok("detail slugs are lowercased and dot-prefixes rewritten",
-   titles.every(h => h === h.toLowerCase() && !/\/\./.test(h)),
-   titles.find(h => h !== h.toLowerCase() || /\/\./.test(h)));
+// The trailing-dot half is not cosmetic: a `repo/owner/thing./` link means `22_detail.py` wrote a
+// directory whose name ends in a dot, and NTFS cannot hold one -- git refuses the whole checkout with
+// `invalid path` rather than skipping the file, so the repository stops being clonable on Windows. Two
+// rows in the 39 lists are named that way, so the page's own `detailURL` has to rewrite them exactly as
+// the stage's `segment()` does or the rows link to a 404.
+const badSlug = h => h !== h.toLowerCase() || /\/\./.test(h) || /\.\//.test(h);
+ok("detail slugs are lowercased and leading and trailing dots rewritten",
+   titles.every(h => !badSlug(h)), titles.find(badSlug));
+// The same three fixtures `tests/live_test.py` pins the stage's `segment()` to, spelled as URLs. Two files
+// asserting one literal is what makes a one-sided edit to the rule show up as a failure instead of as 8,856
+// working links and two 404s.
+for (const [nwo, want] of [
+  ["Hams-Ollo/Project-S.O.C.R.A.T.E.S.", "repo/hams-ollo/project-s.o.c.r.a.t.e.s-dot/"],
+  ["nul/CON.md", "repo/dev-nul/dev-con.md/"],
+  ["zircote/.Claude", "repo/zircote/dot-claude/"],
+  ["foo/Bar.js", "repo/foo/bar.js/"],
+]) ok(`the page slugs ${nwo} the way the stage does`, A.detailURL(nwo) === want, A.detailURL(nwo));
 ok("the footer offers the project directory as a crawlable path",
    /<a href="repo\/">/.test(html), "not in the page shell");
 
@@ -561,6 +585,21 @@ const unesc = s => s.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/
   .replace(/&#39;/g, "'").replace(/&quot;/g, '"');
 const palLabels = () => [...palList().matchAll(/<span class="t">([^<]*)</g)].map(m => unesc(m[1]));
 const palGroups = () => [...palList().matchAll(/class="grp"[^>]*>([^<]*)</g)].map(m => m[1]);
+// The labels under one group heading, in order. The alternative -- and what the Projects assertions below
+// used to do -- is to take every label from the first one matching the query to the end of the list, which
+// is the same answer only as long as nothing above the heading also matches. The ingest that took this
+// atlas from 1,294 rows to 8,856 added the `Plugs into` facet "LangChain / LangGraph", so searching
+// `langgraph` began matching a facet *and* the projects, the slice started one row too high, and a group
+// that still held its eight rows was reported as nine. The headings are in the markup; walk them.
+const palGroupItems = (name) => {
+  const out = [];
+  let inside = false;
+  for (const m of palList().matchAll(/class="(grp|t)"[^>]*>([^<]*)</g)) {
+    if (m[1] === "grp") inside = unesc(m[2]) === name;
+    else if (inside) out.push(unesc(m[2]));
+  }
+  return out;
+};
 const openPal = (text = "") => { A.palOpen(); palq.value = text; A.PALI = 0; A.palRender(); };
 
 A.state.q = ""; A.state.cat = ""; A.state.tgt = ""; A.state.os = [];
@@ -602,8 +641,10 @@ ok("'clear' finds Clear all filters", palLabels().includes("Clear all filters"),
 // A query surfaces projects as a second section, ranked by the same scorer the table uses.
 openPal("langgraph");
 ok("a query adds a Projects group", palGroups().includes("Projects"), palGroups().join(","));
-const palProj = palLabels().slice(palLabels().indexOf(
-  palLabels().find(l => /langgraph/i.test(l))));
+const palProj = palGroupItems("Projects");
+// Not vacuous: an empty group would satisfy both assertions below, and "the query found no projects" is
+// the failure they exist to catch.
+ok("the Projects group is not empty", palProj.length > 0, palGroups().join(","));
 ok("palette projects lead with LangGraph", /langgraph/i.test(palProj[0] || ""), palProj.slice(0, 3).join(" | "));
 ok("palette caps projects at 8", palProj.length <= 8, String(palProj.length));
 openPal("zzzqqqxxvvwwyy");
@@ -1171,10 +1212,12 @@ ok("...with both tiers inside a media query, so neither can beat the other on so
 const pinPx = pinDecls.map(r => ({at: r.at, px: parseFloat(/--pin:\s*(-?[\d.]+)px/.exec(r.body)?.[1])}));
 const narrowPin = pinPx.find(p => /max-width/.test(p.at)), widePin = pinPx.find(p => /min-width/.test(p.at));
 // The relationship, not the numbers. The bar is a wrapping flex line, so it is tallest where the screen is
-// narrowest -- 269px at 320px wide on CI's fonts against 64px at 1440. A phone tier at or below the
-// desktop one is the cascade bug above wearing different clothes, and asserting 280 exactly would say
+// narrowest -- 295px at 320px wide on CI's fonts against 64px at 1440. A phone tier at or below the
+// desktop one is the cascade bug above wearing different clothes, and asserting 324 exactly would say
 // nothing about the next control somebody adds to the search line -- or about a runner whose fonts wrap
-// the bar one line further, which is what raised the number from 224.
+// the bar one line further, which is what raised the number from 224. Both tiers have moved twice for
+// exactly those two reasons: 224 to 280 for CI's fonts, 280 to 324 when the first ingest to publish a
+// cohort revealed the New chip and gave the bar another control to wrap.
 ok("...and the narrow tier clears more than the wide one, because a narrow bar is a taller bar",
    !!narrowPin && !!widePin && narrowPin.px > widePin.px,
    JSON.stringify(pinPx));

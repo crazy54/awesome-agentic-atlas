@@ -190,6 +190,15 @@ def source_links() -> dict[str, str]:
 
 
 # ------------------------------------------------------------------ the page set
+# The DOS device names, which Windows still reserves in every directory. Lowercase because `segment()` is
+# only ever handed a lowercased string. Kept as a set beside the rule that uses it rather than inline, so
+# the three other copies of that rule -- `19_pages.py`'s `detailURL`, `tests/detail-churn.mjs` and
+# `tests/live_test.py` -- have one list to be checked against.
+DEVICE_NAMES = frozenset(["con", "prn", "aux", "nul", "clock$"]
+                         + [f"com{i}" for i in range(1, 10)]
+                         + [f"lpt{i}" for i in range(1, 10)])
+
+
 def segment(part: str) -> str:
     """One path segment of a repository's URL.
 
@@ -202,8 +211,27 @@ def segment(part: str) -> str:
     Jekyll excludes dotfiles by default and `.nojekyll` is documented as being about underscores, so
     whether `/repo/zircote/.claude/` is served at all is a guess. Renaming one segment of one page costs
     less than finding out in production.
+
+    A *trailing* dot is rewritten for a harder reason: NTFS cannot hold a path component that ends in a
+    dot at all. GitHub allows the repository name, two of them are in the 39 lists
+    (`hams-ollo/project-s.o.c.r.a.t.e.s.` and one of gauravsbin's), and the page for either one makes the
+    whole repository impossible to check out on Windows -- `git worktree add` exits 128 with
+    `invalid path`, and it takes the working tree with it rather than skipping the file. So this is not a
+    cosmetic URL rule like the one above; it decides whether a Windows contributor can clone at all.
+    Same reasoning covers the DOS device names, which cannot be directories either: none are in the data
+    today, but `owner/nul` is a legal repository name and would break the clone the same way.
+
+    Every rewrite here is a page at a different URL, so the collision check in `plan()` is what keeps the
+    set injective -- `a.` and `a-dot` both landing on `a-dot` fails the build rather than losing a page.
     """
-    return ("dot-" + part[1:]) if part.startswith(".") else part
+    if part.startswith("."):
+        part = "dot-" + part[1:]
+    if part.endswith("."):
+        part = part[:-1] + "-dot"
+    # The stem, not the whole segment: Windows resolves `nul.md` to the device as readily as `nul`.
+    if part.split(".")[0] in DEVICE_NAMES:
+        part = "dev-" + part
+    return part
 
 
 class Repo:

@@ -196,10 +196,16 @@ const editedFile = join(scratch, "data-edited.json");
 writeFileSync(editedFile, JSON.stringify(edited), "utf8");
 const ad = diff(fpA, fingerprint(generate("d", editedFile)));
 // The page for the repository whose blurb moved, by the path the stage's own `segment()` builds: lowercased,
-// a leading dot rewritten. Only the lowercasing matters for `rows[0]`, but both are here so the assertion
-// does not become wrong the day row 0 is a dot-repository.
-const victimPage = "repo/" + victim[col("nwo")].toLowerCase().split("/")
-  .map(s => (s.startsWith(".") ? "dot-" + s.slice(1) : s)).join("/") + "/index.html";
+// a leading dot rewritten to `dot-`, a trailing one to `-dot` (NTFS cannot hold that directory), a DOS device
+// name prefixed. Only the lowercasing matters for `rows[0]`, but all four are here so the assertion does not
+// become wrong the day row 0 is one of those repositories.
+const seg = s => {
+  if (s.startsWith(".")) s = "dot-" + s.slice(1);
+  if (s.endsWith(".")) s = s.slice(0, -1) + "-dot";
+  if (/^(con|prn|aux|nul|clock\$|com[1-9]|lpt[1-9])$/.test(s.split(".")[0])) s = "dev-" + s;
+  return s;
+};
+const victimPage = "repo/" + victim[col("nwo")].toLowerCase().split("/").map(seg).join("/") + "/index.html";
 ok("editing one curated blurb moves the page it belongs to", ad.includes(`differs: ${victimPage}`),
    `${victimPage} not among ${say(ad, 6)}`);
 // It moves more than that one, and that is correct rather than a bug: a blurb is printed again in the
