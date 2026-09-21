@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="en" data-skin="glass" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<title>Atlas — layout L, five card directions</title>
+<!-- The same mark the nav bar draws, so the tab agrees with the page. `../` is how this page reaches
+     `docs/`, which is one level up from a mode page and three from a project page; relative rather than
+     root-absolute for the reason `peer_href` records. -->
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" id="tc" content="rgba(10,14,28,.62)">
+<!-- Ahead of the stylesheet and inline, for the same reason the shipped page does it: the skin has to
+     settle before first paint or a reader who chose Neon Terminal gets a frame of somebody else's
+     palette. Phase 2 emits this one function into all five generators. -->
+<script>
+try {
+  var s = new URLSearchParams(location.search).get("skin")
+       || localStorage.getItem("atlas-skin");
+  if (!{"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"}[s]) s = "glass";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = {"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"}[s];
+  // Written back, not just read. A skin that arrived in the URL has to become the preference or it lasts
+  // exactly one page: click a card from a ?skin=terminal page and the project page would read whatever
+  // was in storage and flip palette mid-navigation. Sharing a skin is also choosing it.
+  localStorage.setItem("atlas-skin", s);
+} catch (e) {}
+</script>
+<style>
+:root{
+  --surface:#070912;
+  --plane:rgba(255,255,255,.045);
+  --band:rgba(255,255,255,.085);
+  --ink:#F4F7FF;
+  --ink2:#C7D0E4;
+  --muted:#8E9AB5;
+  --grid:rgba(255,255,255,.13);
+  --link:#7CC4FF;
+  --bar:#6FE3C4;
+  --onbar:#04121A;
+  --good:#5BE0B8;
+  --warn:#FF8FA3;
+  --off:#8E9AB5;
+  --accent-sky:#7CC4FF;
+  --accent-mint:#6FE3C4;
+  --accent-gold:#FFD479;
+  --accent-coral:#FF8FA3;
+  --accent-violet:#B9A6FF;
+  --accent-slate:#8E9AB5;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:14px;
+  --radius-sm:10px;
+  --hair:1px;
+  --blur:18px;
+  --panel:linear-gradient(158deg,rgba(255,255,255,.075),rgba(255,255,255,.02) 62%);
+  --panel-b:rgba(255,255,255,.14);
+  --rail-bg:rgba(10,14,28,.62);
+  --field:radial-gradient(900px 620px at 12% -8%,rgba(124,196,255,.20),transparent 62%),radial-gradient(760px 560px at 88% 4%,rgba(185,166,255,.17),transparent 60%),radial-gradient(1100px 760px at 62% 108%,rgba(111,227,196,.14),transparent 64%);
+  --shadow:0 18px 44px rgba(2,5,16,.5);
+  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.1em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:1;
+  --fx-lift:1;
+}
+html[data-skin=graphite]{
+  --surface:#090A0D;
+  --plane:#101217;
+  --band:#20242D;
+  --ink:#F7F8FA;
+  --ink2:#D0D5DD;
+  --muted:#9BA5B3;
+  --grid:#3A414D;
+  --link:#78B7F4;
+  --bar:#D6A034;
+  --onbar:#090A0D;
+  --good:#5BD5AA;
+  --warn:#EF7D86;
+  --off:#9BA5B3;
+  --accent-sky:#78B7F4;
+  --accent-mint:#5BD5AA;
+  --accent-gold:#E7B64D;
+  --accent-coral:#EF7D86;
+  --accent-violet:#A99AF7;
+  --accent-slate:#9BA5B3;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --radius:6px;
+  --radius-sm:4px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--plane);
+  --panel-b:var(--grid);
+  --rail-bg:var(--plane);
+  --field:none;
+  --shadow:none;
+  --lift:0 1px 2px rgba(0,0,0,.55),0 10px 24px -12px rgba(0,0,0,.8);
+  --lift-hi:0 2px 5px rgba(0,0,0,.6),0 26px 52px -16px rgba(0,0,0,.95);
+  --scrim:linear-gradient(to top,rgba(4,5,8,.94),rgba(4,5,8,.66) 34%,rgba(4,5,8,.14) 68%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.08em;
+  --fx-glow:0;
+  --fx-pulse:0;
+  --fx-scan:0;
+  --fx-sheen:0;
+  --fx-lift:0;
+}
+html[data-skin=glass]{
+  --surface:#070912;
+  --plane:rgba(255,255,255,.045);
+  --band:rgba(255,255,255,.085);
+  --ink:#F4F7FF;
+  --ink2:#C7D0E4;
+  --muted:#8E9AB5;
+  --grid:rgba(255,255,255,.13);
+  --link:#7CC4FF;
+  --bar:#6FE3C4;
+  --onbar:#04121A;
+  --good:#5BE0B8;
+  --warn:#FF8FA3;
+  --off:#8E9AB5;
+  --accent-sky:#7CC4FF;
+  --accent-mint:#6FE3C4;
+  --accent-gold:#FFD479;
+  --accent-coral:#FF8FA3;
+  --accent-violet:#B9A6FF;
+  --accent-slate:#8E9AB5;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:14px;
+  --radius-sm:10px;
+  --hair:1px;
+  --blur:18px;
+  --panel:linear-gradient(158deg,rgba(255,255,255,.075),rgba(255,255,255,.02) 62%);
+  --panel-b:rgba(255,255,255,.14);
+  --rail-bg:rgba(10,14,28,.62);
+  --field:radial-gradient(900px 620px at 12% -8%,rgba(124,196,255,.20),transparent 62%),radial-gradient(760px 560px at 88% 4%,rgba(185,166,255,.17),transparent 60%),radial-gradient(1100px 760px at 62% 108%,rgba(111,227,196,.14),transparent 64%);
+  --shadow:0 18px 44px rgba(2,5,16,.5);
+  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.1em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:1;
+  --fx-lift:1;
+}
+html[data-skin=terminal]{
+  --surface:#04070A;
+  --plane:#070E11;
+  --band:#0C181B;
+  --ink:#DCFFEA;
+  --ink2:#9BE8BE;
+  --muted:#4F9179;
+  --grid:#16332A;
+  --link:#52F2A0;
+  --bar:#52F2A0;
+  --onbar:#04070A;
+  --good:#52F2A0;
+  --warn:#FFB454;
+  --off:#4F9179;
+  --accent-sky:#57D9FF;
+  --accent-mint:#52F2A0;
+  --accent-gold:#FFD166;
+  --accent-coral:#FF7A85;
+  --accent-violet:#C792EA;
+  --accent-slate:#4F9179;
+  --ui:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --radius:0px;
+  --radius-sm:0px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--plane);
+  --panel-b:var(--grid);
+  --rail-bg:#050B0D;
+  --field:linear-gradient(180deg,rgba(82,242,160,.05),transparent 240px);
+  --shadow:none;
+  --lift:3px 3px 0 rgba(0,0,0,.9);
+  --lift-hi:6px 6px 0 rgba(0,0,0,.95);
+  --scrim:linear-gradient(to top,rgba(2,6,7,.96) 0 42%,rgba(2,6,7,.4) 76%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.14em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:1;
+  --fx-sheen:0;
+  --fx-lift:0;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--surface);color:var(--ink);font-family:var(--ui);font-size:14.5px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;min-height:100vh}
+/* The lit field the frosted panels frost. Fixed, so it does not scroll away from under them, and
+   behind everything. `none` in the skins that do not want one, which costs nothing. */
+body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-events:none;z-index:0}
+/* The scanline. One element, one token: at --fx-scan:0 it is invisible and at 1 it is a 3px repeating
+   gradient over the whole viewport. Deliberately not an overlay on every panel -- the point of a CRT
+   line is that it crosses everything at once, including the gaps between panels.
+   It flickers rather than drifts. A 3px gradient translated by 3px is a shimmer at any refresh rate and
+   reads as a rendering fault; an occasional dip in opacity is what a tube actually does, and it is the
+   technique the effects catalogue uses too. Both keyframe stops multiply by the token, so --fx-scan:0
+   still means exactly nothing rather than "invisible except during the flicker". */
+.scan{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:calc(var(--fx-scan) * .45);
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.34) 0 1px,transparent 1px 3px);
+  animation:scanflicker calc(5.5s * var(--fx-scan)) linear infinite}
+@keyframes scanflicker{
+  0%,96%,100%{opacity:calc(var(--fx-scan) * .45)}
+  97%{opacity:calc(var(--fx-scan) * .26)}
+  98.5%{opacity:calc(var(--fx-scan) * .58)}}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+button,input,select{font:inherit;font-family:var(--ui);color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--bar);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%)}
+
+/* ---- the one sticky layer ----
+   Today's page pins the masthead and the filter bar separately and spends 148px of a 900px viewport on
+   chrome before a single row. This is 52px, and it is the only thing that pins. */
+.rail{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;height:52px;
+  padding:0 16px;background:var(--rail-bg);border-bottom:var(--hair) solid var(--grid);
+  backdrop-filter:blur(var(--blur)) saturate(1.3);-webkit-backdrop-filter:blur(var(--blur)) saturate(1.3)}
+.mark{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+/* The mark has no tile, and losing it was the point. The first version set `background:var(--bar)` on this
+   box and centred a glyph in it, which is fine for a letter and fatal for this drawing: the mark's own
+   globe is `--bar`, so a gold globe landed on a gold square and the only thing left visible was the
+   meridian grid. The svg brings its own plate, so the job here is just to reserve the space.
+
+   The glow is a `drop-shadow` rather than a `box-shadow` for the same reason. A box-shadow traces this
+   element's border-box -- a 28px square -- while the thing being lit is a 25%-rounded plate with an antenna
+   sticking out of its corner, so the square's glow read as a halo around a tile that is not there.
+   `drop-shadow` follows the rendered alpha, which means the antenna glows too, and the antenna is the part
+   that leaves the silhouette. */
+.mark .glyph{display:grid;place-items:center;width:28px;height:28px;flex:none;color:var(--bar)}
+/* Seven seconds, which is slow enough to be noticed only if you are looking at it -- a nav mark that
+   pulses at a readable rate is a nav mark that competes with the page. Gated on the duration, so Graphite
+   computes `calc(7s * 0)` = 0s and the animation never enters `document.getAnimations()` at all, rather
+   than sitting in the compositor animating between two identical frames. The radius is gated separately on
+   `--fx-glow`, so the floor state is the flat drawing with no light on it and nothing missing. */
+.mark .glyph svg{width:30px;height:30px;display:block;overflow:visible;
+  filter:drop-shadow(0 0 calc(5px * var(--fx-glow)) color-mix(in srgb,var(--bar) 45%,transparent));
+  animation:markbreath calc(7s * var(--fx-pulse)) ease-in-out infinite}
+@keyframes markbreath{
+  0%,100%{filter:drop-shadow(0 0 calc(3px * var(--fx-glow))
+    color-mix(in srgb,var(--bar) 32%,transparent))}
+  50%{filter:drop-shadow(0 0 calc(9px * var(--fx-glow))
+    color-mix(in srgb,var(--bar) 60%,transparent))}}
+.mark b{font-size:15px}
+.mark .ver{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em}
+/* Search. Inert in this demo and labelled as such, because a box that looks live and is not is worse
+   than one that says so. */
+.qwrap{position:relative;flex:1 1 auto;max-width:520px;min-width:0}
+.qwrap .mag{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);
+  font-size:13px;pointer-events:none}
+#q{width:100%;height:34px;padding:0 74px 0 31px;border-radius:999px;
+  border:var(--hair) solid var(--grid);background:var(--band);color:var(--ink);font-size:13.5px}
+#q::placeholder{color:var(--muted)}
+.qwrap .kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--mono);
+  font-size:10.5px;color:var(--muted);border:var(--hair) solid var(--grid);border-radius:5px;
+  padding:2px 6px;pointer-events:none}
+.count{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink2);
+  white-space:nowrap}
+.count b{color:var(--ink)}
+.spring{flex:1 1 auto}
+/* The segmented view switch and the skin button share one shape, so the rail reads as one instrument
+   rather than a row of unrelated widgets -- which is the single biggest complaint about today's bar. */
+.seg{display:flex;gap:2px;padding:2px;border-radius:999px;background:var(--band);
+  border:var(--hair) solid var(--grid)}
+.seg button{height:26px;padding:0 11px;border:0;border-radius:999px;background:transparent;
+  color:var(--muted);font-size:12px;letter-spacing:.01em}
+.seg button[aria-pressed=true]{background:var(--bar);color:var(--onbar);font-weight:600;
+  box-shadow:0 0 calc(14px * var(--fx-glow)) color-mix(in srgb,var(--bar) 45%,transparent)}
+.ghost{height:30px;padding:0 12px;border-radius:999px;background:var(--band);
+  border:var(--hair) solid var(--grid);color:var(--ink2);font-size:12.5px;display:flex;
+  align-items:center;gap:7px;white-space:nowrap}
+.ghost:hover{color:var(--ink);border-color:var(--bar)}
+.dotrow{display:flex;gap:3px}
+.dotrow i{width:8px;height:8px;border-radius:50%;display:block}
+
+/* ---- skin picker ---- */
+.picker{position:relative}
+.menu{position:absolute;right:0;top:38px;min-width:266px;padding:6px;border-radius:var(--radius);
+  background:var(--panel);border:var(--hair) solid var(--panel-b);box-shadow:var(--shadow);
+  backdrop-filter:blur(calc(var(--blur) + 8px));-webkit-backdrop-filter:blur(calc(var(--blur) + 8px));
+  z-index:70}
+.menu[hidden]{display:none}
+.menu h3{margin:6px 8px 8px;font-size:10.5px;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);color:var(--muted);font-weight:600}
+.menu button{display:flex;width:100%;gap:10px;align-items:flex-start;padding:9px 9px;border:0;
+  border-radius:var(--radius-sm);background:transparent;text-align:left}
+.menu button:hover{background:var(--band)}
+.menu button[aria-pressed=true]{background:var(--band);outline:var(--hair) solid var(--bar)}
+.menu .sw{display:flex;flex:none;gap:0;margin-top:2px;border-radius:5px;overflow:hidden;
+  border:1px solid var(--grid)}
+.menu .sw i{width:12px;height:22px;display:block}
+.menu .nm{font-size:13px;font-weight:600;color:var(--ink)}
+.menu .ds{font-size:11.5px;color:var(--muted);line-height:1.35;margin-top:2px}
+.menu kbd{font-family:var(--mono);font-size:10px;color:var(--muted)}
+
+/* ---- the shell: facet rail, then content ---- */
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);gap:24px;
+  max-width:1680px;margin:0 auto;padding:20px 16px 72px;position:relative;z-index:1}
+.facets{align-self:start;position:sticky;top:72px;max-height:calc(100vh - 92px);overflow-y:auto;
+  scrollbar-width:thin;padding-right:4px}
+.fg{margin:0 0 20px}
+.fh{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 8px;
+  font-size:10.5px;font-weight:600;text-transform:var(--kick-case);letter-spacing:var(--kick-track);
+  color:var(--muted)}
+.fh em{font-style:normal;font-family:var(--num);color:var(--grid)}
+/* A facet row is a chip with a bar behind it. The bar is the whole reason the rail exists: the largest
+   topic holds 278 rows and the smallest 11, and three wrapping rows of same-sized chips cannot say that.
+   ::before rather than a child element so the 44px touch floor stays granted on the row itself. */
+.frow{position:relative;display:flex;align-items:center;gap:8px;width:100%;min-height:30px;
+  padding:5px 9px;margin:0 0 3px;border:0;border-radius:var(--radius-sm);background:transparent;
+  overflow:hidden;text-align:left;isolation:isolate}
+.frow::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w,0%);z-index:-1;
+  background:color-mix(in srgb,var(--fc,var(--bar)) 22%,transparent);
+  border-right:1px solid color-mix(in srgb,var(--fc,var(--bar)) 55%,transparent);
+  transition:width .75s cubic-bezier(.22,1,.36,1)}
+.frow:hover{background:var(--band)}
+.frow[aria-pressed=true]{outline:var(--hair) solid var(--bar)}
+.frow .lb{flex:1 1 auto;font-size:12.5px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.frow:hover .lb{color:var(--ink)}
+.frow .ct{flex:none;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;
+  color:var(--muted)}
+.more{width:100%;padding:6px 9px;border:0;background:transparent;color:var(--muted);font-size:11.5px;
+  text-align:left;border-radius:var(--radius-sm)}
+.more:hover{color:var(--ink);background:var(--band)}
+
+/* ---- the deck ----
+   Five figures over the set currently on screen. Today the page prints one count; these are the
+   questions a reader actually arrives with, and they are all free: the filtered set is already in hand
+   at render time, so this is an aggregation and not a second pass over the data. */
+.deck{display:grid;grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:10px;margin:0 0 18px}
+.tile{padding:11px 13px 12px;border-radius:var(--radius);background:var(--panel);
+  border:var(--hair) solid var(--panel-b);box-shadow:var(--shadow);
+  backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));position:relative;
+  overflow:hidden}
+.tile .k{font-size:10px;font-weight:600;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);color:var(--muted)}
+.tile .v{margin-top:5px;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:25px;
+  font-weight:600;letter-spacing:-.02em;line-height:1.05;color:var(--ink)}
+.tile .u{font-size:11.5px;color:var(--muted);margin-left:5px;font-weight:400}
+/* One tile is lit, and it is the one the page is about. Proportional to the token, so Graphite gets a
+   flat tile and glass gets a halo. */
+.tile.lit{border-color:color-mix(in srgb,var(--bar) 60%,var(--panel-b));
+  box-shadow:var(--shadow),inset 0 0 calc(40px * var(--fx-glow))
+    color-mix(in srgb,var(--bar) 14%,transparent)}
+.tile.lit .v{color:var(--bar)}
+
+/* ---- freshness dot ----
+   The pulse is the only animation tied to a row, and it fires on 7 days rather than 30 on purpose:
+   1,085 of 1,294 rows are inside six months and 725 inside a month, so a dot that pulses for a month
+   pulses for most of the page and says nothing. */
+.dot{position:relative;flex:none;width:7px;height:7px;border-radius:50%;background:var(--off)}
+.dot.hot{background:var(--good)}
+.dot.warm{background:var(--bar)}
+.dot.ok{background:var(--muted)}
+.dot.cold,.dot.stale,.dot.unk{background:var(--grid)}
+/* The token gates this twice, and the second gate is the one that matters. `opacity` alone made the ring
+   invisible under Graphite but the keyframes still ran -- one compositor animation per hot dot, painting
+   nothing. A duration of `calc(2.4s * 0)` is 0s, and a zero-duration animation finishes instantly with no
+   fill, so it never enters the running set at all. Opacity stays as the belt to the braces. */
+.dot.hot::after{content:"";position:absolute;inset:-3px;border-radius:50%;
+  border:1px solid var(--good);opacity:var(--fx-pulse);
+  animation:ping calc(2.4s * var(--fx-pulse)) ease-out infinite}
+@keyframes ping{0%{transform:scale(.6);opacity:calc(var(--fx-pulse) * .9)}
+  70%{transform:scale(1.9);opacity:0}100%{transform:scale(1.9);opacity:0}}
+
+/* ---- platform meter ---- */
+.meter{display:inline-flex;align-items:flex-end;gap:2px;height:11px}
+.meter .sl{width:4px;border-radius:1px;background:var(--grid);height:4px;display:block}
+.meter .sl.y{height:11px;background:var(--good)}
+.meter .sl.l{height:7px;background:color-mix(in srgb,var(--good) 55%,var(--grid))}
+
+/* ---- shared chips on a row ---- */
+.tag{display:inline-flex;align-items:center;gap:5px;padding:2px 7px;border-radius:var(--radius-sm);
+  background:var(--band);border:var(--hair) solid var(--grid);font-size:11px;color:var(--ink2);
+  white-space:nowrap;font-family:var(--mono)}
+.tag.acc{border-color:color-mix(in srgb,var(--ac,var(--bar)) 55%,transparent);
+  color:color-mix(in srgb,var(--ac,var(--bar)) 80%,var(--ink))}
+.pips{display:inline-flex;gap:2px;align-items:center}
+.pips i{width:4px;height:4px;border-radius:50%;background:var(--bar);display:block}
+.cmd{display:block;margin-top:9px;padding:6px 9px;border-radius:var(--radius-sm);background:var(--surface);
+  border:var(--hair) solid var(--grid);font-family:var(--mono);font-size:11.5px;color:var(--ink2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmd::before{content:"$ ";color:var(--muted)}
+
+/* Below the two-column threshold the facet rail stops being a rail and becomes the whole first screen:
+   33 filter rows and five headings before the first project. Desktop hid that completely, which is the
+   argument for measuring the narrow tier rather than assuming it reflows.
+   `order` rather than a DOM move, so the rail stays first in source -- it is first in the reading and tab
+   order for a keyboard user at desktop width, which is where it is actually a rail, and a screen reader
+   on a phone still meets the filters before the footer. The shipped page already owns the better phone
+   answer for this -- `#sheet`, the bottom sheet -- and Phase 5 promotes that rather than repeating this. */
+@media(max-width:1080px){
+  .facets{order:1}
+  footer{order:2}
+}
+/* The touch tier. The shipped page pins `header button{min-height:44px}` and this has to keep that
+   promise: at 390 the search field computes to 34px and the skin button to 30px, both of which are below
+   the floor. Declared on each control rather than on `.rail *` or `.facets *` -- a floor granted by
+   descent stops being granted the moment the control moves out of that container, and these controls are
+   going to move as the layout settles. Same 640px breakpoint the site already uses, so there is one
+   phone tier and not two. */
+@media(max-width:640px){
+  #q{height:44px}
+  .rail .ghost{min-height:44px}
+  .frow,.more{min-height:44px}
+  .lrow{padding-top:11px;padding-bottom:11px}
+  .iacts .go,.iacts .ghost{min-height:44px}
+  /* The rail is one row of four groups and their natural widths sum to 665px, which a 375px viewport
+     answers by scrolling the whole document sideways -- taking every card with it, so the page reads as
+     broken rather than as cramped. Wrapping to a second row is what it should do, and the switch gets its
+     own scroller: five layout names cannot be made to fit 375px and abbreviating them to letters costs
+     the one thing the switch has, which is that you can read where you are. It scrolls, and the pressed
+     one is scrolled into view by the rail script, so "where am I" survives the overflow. */
+  .rail{flex-wrap:wrap;height:auto;padding-bottom:8px;row-gap:8px}
+  .rail .seg{overflow-x:auto;scrollbar-width:none;max-width:100%}
+  .rail .seg::-webkit-scrollbar{display:none}
+  .rail .seg button{flex:none}
+  /* The two-column directions collapse at this width too, but those rules live at the end of CARD_CSS
+     rather than here: `.dossier` and `.rec` are *declared* in CARD_CSS, which is concatenated after this
+     sheet, so an equal-specificity rule in a media query up here loses to the bare desktop rule down
+     there on source order. A media query buys no specificity. */
+}
+@media (prefers-reduced-motion:reduce){
+  /* Motion goes; colour and depth stay. A reader who asked for less movement did not ask for a duller
+     palette, and treating the two as one request is why so many reduced-motion modes look broken. */
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .scan{opacity:0}
+}
+@media (prefers-reduced-transparency:reduce){
+  :root{--blur:0px;--panel:var(--plane);--rail-bg:var(--plane)}
+}
+
+
+/* ===== the card face =============================================================================
+   One base class for all five directions, because they differ in arrangement and not in substance: the
+   same border, the same depth, the same hover, the same state ring. A direction that needed its own
+   shadow would be a direction that had stopped being the same component. */
+/* `--ring` is how the state glow and the depth share one `box-shadow` without either having to know
+   about the other. The alternative -- a state rule that declares its own complete box-shadow -- means
+   every state needs a matching `:hover` rule to get the deeper lift back, and an *animated* state wins
+   over `:hover` outright, so a pulsing card would have refused to lift at all. One variable, composed in
+   both places, and the states only ever set the variable. */
+/* Two ring slots, not one, because two states can be true of the same project. `--ring` is the state's
+   own halo and `--ring2` is the rarity frame, and they are separate variables so that a card which is
+   both new and rare keeps both marks -- with one variable the later rule simply won and the rarer of the
+   two signals disappeared on exactly the cards where it mattered most. */
+.cx{--ring:0 0 0 0 transparent;--ring2:0 0 0 0 transparent;
+  position:relative;display:block;border-radius:var(--radius);background:var(--panel);
+  border:var(--hair) solid var(--panel-b);box-shadow:var(--lift),var(--ring),var(--ring2);overflow:hidden;
+  isolation:isolate;
+  transition:box-shadow .22s cubic-bezier(.22,1,.36,1),transform .22s cubic-bezier(.22,1,.36,1),
+    border-color .22s ease}
+/* Guarded, and this is the same latching bug the shipped table already fixed: a touch device reports a
+   hover that sticks after the tap, so an unguarded lift leaves one card raised until something else is
+   tapped -- which reads as a selection the reader did not make. */
+@media(hover:hover){
+  .cx:hover{box-shadow:var(--lift-hi),var(--ring),var(--ring2);transform:translateY(-3px);
+    border-color:color-mix(in srgb,var(--ac,var(--bar)) 45%,var(--panel-b))}
+  /* Terminal's depth is a hard offset, so its hover has to *move* rather than spread -- the shadow is
+     already at full strength at rest and a bigger blur is not available to it. Expressed through the
+     lift token rather than a skin selector: the rule is the same, the token differs. */
+  .cx:hover .ph img{transform:scale(1.035)}
+}
+.cx:focus-within{border-color:var(--bar)}
+/* The whole card is the link. A real anchor stretched over it rather than a click handler on the article:
+   middle-click, ctrl-click, "copy link address", tab focus and a screen reader's link list all keep
+   working, and none of them do for a div that listens for clicks. z-index 1 puts it over the image and
+   under the copy button, which is the one control that must not navigate. */
+.hit{position:absolute;inset:0;z-index:1}
+.cx .cp,.cx .plat i{position:relative;z-index:2}
+
+/* ---- the image slot ---- */
+.ph{position:relative;display:block;overflow:hidden;background:var(--band)}
+.ph img,.ph .pt{display:block;width:100%;height:auto}
+.ph img{object-fit:cover;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+/* The scrim. `--scrim` is per skin because the right answer depends on what is behind it -- see the token
+   note. Pointer-events off or it would eat the hover on the image under it. */
+.veil{position:absolute;inset:0;background:var(--scrim);pointer-events:none}
+/* The family seam: two pixels of the family hue along the bottom edge of the image.
+   This is the mark that makes fifty cards scannable, and the position is the whole reason it works. The
+   top edge was the obvious place and it is taken -- `.cx.s-hot` colours `border-top`, so a family bar
+   there would put two unrelated colour codes within one pixel of each other, which is the collision the
+   platform bars and the ordinal badge both died of. The seam is empty, it is full card width so it reads
+   from across a track, and it lands directly above the `.ln` row where `.lang i` already draws the same
+   hue -- so the family appears twice in adjacent positions and reinforces itself instead of competing.
+   The scrim is at its darkest here, which is what lets two pixels of saturated colour carry. */
+.ph::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;z-index:2;
+  background:var(--ac,var(--bar));
+  box-shadow:0 0 calc(10px * var(--fx-glow)) color-mix(in srgb,var(--ac,var(--bar)) 55%,transparent)}
+
+/* ---- the name, on the image ---- */
+/* The bottom-left stack: pills, owner, name, in one column on one left edge. See `overlay()`. */
+.ovl{position:absolute;z-index:1;left:13px;right:13px;bottom:11px;display:flex;flex-direction:column;
+  align-items:flex-start;gap:7px}
+.ovl .ttl{position:static;max-width:100%}
+.ttl{position:absolute;z-index:1;display:flex;flex-direction:column;gap:1px;line-height:1.15;
+  text-shadow:0 1px 3px rgba(0,0,0,.75);max-width:calc(100% - 24px)}
+.ttl.bl{left:13px;bottom:11px;align-items:flex-start;text-align:left}
+.ttl.tc{left:50%;top:13px;transform:translateX(-50%);align-items:center;text-align:center}
+.ttl .own{font-size:11px;color:var(--ink2);font-family:var(--mono);letter-spacing:.01em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+/* Clamped at two lines. The longest name in the corpus is 67 characters and the median is 12, so the
+   unbounded version is fine on nearly every row and covers the whole image on the handful that are not --
+   which is the kind of thing a design gets away with until the one card somebody screenshots. */
+.ttl .nm{font-size:19px;font-weight:650;letter-spacing:-.02em;color:#fff;overflow-wrap:anywhere;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* The name is over an image, so it cannot inherit `--ink`: three of the 686 screenshots are near-white
+   and a light-mode skin would print white on white. Fixed white over the scrim is the only pairing that
+   holds for every image in the set. */
+.ttl.st{position:static;text-shadow:none;max-width:none}
+.ttl.st .nm{color:var(--ink);font-size:17px}
+
+/* ---- the star count, over the image, top right ---- */
+.stz{position:absolute;z-index:1;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;
+  padding:3px 8px;border-radius:999px;font-family:var(--num);font-variant-numeric:tabular-nums;
+  font-size:12px;font-weight:600;color:#fff;background:rgba(8,10,18,.62);
+  border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.stz i{color:var(--accent-gold);font-style:normal;font-size:11px}
+
+/* ---- the kind chip, over the image, top left ---- */
+.chip.kind{position:absolute;z-index:1;top:10px;left:10px;padding:3px 8px;border-radius:999px;
+  font-size:10.5px;font-weight:600;text-transform:var(--kick-case);letter-spacing:var(--kick-track);
+  color:#fff;background:color-mix(in srgb,var(--ac,var(--bar)) 62%,rgba(6,8,14,.74));
+  border:1px solid color-mix(in srgb,var(--ac,var(--bar)) 72%,transparent)}
+
+/* ---- platform compatibility: five three-letter pills ---- */
+.plat{display:inline-flex;gap:3px;align-items:center}
+.plat i{font-style:normal;font-family:var(--mono);font-size:9.5px;line-height:1;letter-spacing:.02em;
+  padding:3px 4px;border-radius:3px;border:1px solid transparent;white-space:nowrap}
+.plat i.y{background:color-mix(in srgb,var(--good) 26%,transparent);
+  border-color:color-mix(in srgb,var(--good) 62%,transparent);color:var(--good);font-weight:600}
+.plat i.l{border-color:color-mix(in srgb,var(--good) 32%,transparent);color:var(--ink2)}
+.plat i.n{border-color:var(--grid);color:var(--muted);opacity:.62}
+/* Over an image the pills need their own plate, or a pale screenshot eats the two outlined states. The
+   plate applies wherever they sit on the image; only a pill row that is a *direct* child of the image gets
+   pinned to a corner, so the ones inside the bottom-left stack and inside the contact sheet's revealed
+   layer stay in their container's flow. */
+.ph .plat{padding:3px;border-radius:6px;background:rgba(8,10,18,.55);
+  border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.ph>.plat{position:absolute;z-index:1;right:9px;bottom:9px}
+.ph .plat i.l{color:#E7EDF7}
+.ph .plat i.n{color:#B9C2D0}
+
+/* ---- the body ---- */
+.cx .bd{padding:11px 13px 12px}
+/* One line, and the licence is the element that yields. It wrapped before: `flex-wrap:wrap` plus a
+   274px shelf card plus `BSD-2-Clause` put the RARE flag on a second line, which made that one card's
+   body taller than its neighbours' and stepped its install command 25px below theirs along the shelf.
+   Something has to give at that width, and of the four things in this row the licence is the one a
+   reader is least likely to be scanning for -- the language, the age and a rarity flag are all signals
+   you sort by, a licence is something you check once you care. So it truncates and they do not. */
+.ln{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;font-size:11.5px;color:var(--muted)}
+.lang{display:inline-flex;align-items:center;gap:5px;color:var(--ink2);flex:none}
+.lang i{width:7px;height:7px;border-radius:2px;background:var(--ac,var(--bar));display:block;flex:none}
+/* The family as a word, and hidden by default on every surface. It exists for the one case that needs it:
+   a calm-mode card whose row has no language, where the body row would otherwise be an empty band. 117 of
+   1,294 rows have no language, so this is 9% of cards and it is the 9% that looked unfinished. Standing in
+   for the language rather than sitting beside it, because both at once is two words for one idea. */
+.fam{display:none;align-items:center;gap:5px;color:var(--ac,var(--bar));font-weight:600;flex:none}
+.fam::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--ac,var(--bar));
+  display:block;flex:none}
+.age{display:inline-flex;align-items:center;gap:5px;flex:none}
+.lic{font-family:var(--mono);font-size:10.5px;flex:0 1 auto;min-width:0;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.ln .flag{flex:none}
+.dsc{margin:8px 0 0;font-size:12.5px;line-height:1.45;color:var(--ink2);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ---- the install command, and the one control that is not the link ---- */
+.cw{position:relative;display:flex;align-items:stretch;gap:0;margin-top:10px;border-radius:var(--radius-sm);
+  border:var(--hair) solid var(--grid);background:var(--surface);overflow:hidden}
+.cw .cmd{flex:1 1 auto;min-width:0;margin:0;border:0;border-radius:0;background:transparent}
+.cw .cp{flex:none;border:0;border-left:var(--hair) solid var(--grid);background:var(--band);
+  color:var(--muted);font-size:10.5px;padding:0 9px;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);font-weight:600}
+.cw .cp:hover{color:var(--bar)}
+.cw .cp.ok{color:var(--good)}
+.cw.none{padding:6px 9px;font-size:11px;color:var(--muted);font-style:italic;background:transparent;
+  border-style:dashed}
+
+/* ---- state flags. The word and the border always travel together -- see `flags()`. ---- */
+.flag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:10px;
+  font-weight:700;text-transform:var(--kick-case);letter-spacing:var(--kick-track);white-space:nowrap}
+.flag.new{color:var(--accent-gold);background:color-mix(in srgb,var(--accent-gold) 16%,transparent);
+  border:1px solid color-mix(in srgb,var(--accent-gold) 50%,transparent)}
+/* Achromatic for the same reason the rarity frame is: violet is Extend's hue now, and a violet RARE chip
+   sitting inside a mint Run card is the collision in its most concentrated form -- two colour claims about
+   one project, an inch apart. The word does the work here; it always did. */
+.flag.rare{color:var(--ink2);background:color-mix(in srgb,var(--ink) 11%,transparent);
+  border:1px solid color-mix(in srgb,var(--ink) 32%,transparent)}
+.ph .flag{position:absolute;z-index:1;left:10px;bottom:auto;top:38px}
+
+/* The border states. Each is a hue on the border plus a glow gated by `--fx-glow`, which means Graphite
+   still distinguishes a new project -- by hue, with no light -- rather than losing the state entirely.
+   That is the whole argument for tokens as multipliers: the information survives the skin that refuses
+   the effect.
+
+   THE PERIMETER IS STATE, THE INTERIOR IS FAMILY, AND THAT DIVISION IS WHY THESE RULES CHANGED.
+   Both of these states used to be a family hue: rare was violet and hot was mint. That was harmless while
+   the five accents were decorative and became a contradiction the moment a hue meant something -- a violet
+   *edge* saying "rare" eight pixels from a mint *seam* saying "Run" is one card making two claims in the
+   same colour vocabulary, and the reader has no way to know that position is what disambiguates them. So
+   the perimeter now spends exactly one hue: gold, for new, which is the one the brief asked for by name.
+   Rarity drops colour entirely and takes a second hairline instead -- a doubled frame, which is legible in
+   Graphite, legible in monochrome, and legible to a reader who cannot separate violet from blue. And hot
+   stops introducing a hue at all: it brightens the card's *own* family accent, so it says "more of what
+   this already is" rather than naming a second thing. */
+.cx.s-rare{--ring2:0 0 0 1px color-mix(in srgb,var(--ink) 30%,transparent)}
+.cx.s-new{border-color:color-mix(in srgb,var(--accent-gold) 62%,var(--panel-b));
+  --ring:0 0 calc(28px * var(--fx-glow)) color-mix(in srgb,var(--accent-gold) 32%,transparent)}
+/* Slight, and it breathes rather than flashes: a 4.5s cycle findable in a grid of thirty at the edge of
+   vision and not something a reader has to look away from. The *border* breathes and the halo holds
+   steady, which is the pairing that survives both skins -- Graphite takes `--fx-glow:0` and gets no halo
+   at all, so if the halo were the animated part Graphite would lose the state entirely, and the gold
+   border is what carries it there instead. Gated on the duration, so at `--fx-pulse:0` the animation is
+   0s, never enters `document.getAnimations()`, and the border simply stays at its resting gold. */
+.cx.s-new{animation:newbreath calc(4.5s * var(--fx-pulse)) ease-in-out infinite}
+@keyframes newbreath{
+  0%,100%{border-color:color-mix(in srgb,var(--accent-gold) 44%,var(--panel-b))}
+  50%{border-color:color-mix(in srgb,var(--accent-gold) 95%,var(--panel-b))}}
+.cx.s-hot{border-top-color:color-mix(in srgb,var(--ac,var(--bar)) 70%,var(--panel-b))}
+/* Selection, for the console and the shelves. A traced border rather than a fill, because the fill would
+   have to sit either over the image or under the text and both look like a rendering fault. */
+.cx.sel{border-color:var(--bar);
+  --ring:0 0 0 1px var(--bar),0 0 calc(34px * var(--fx-glow))
+    color-mix(in srgb,var(--bar) 34%,transparent)}
+
+/* ===== the generated portrait ======================================================================
+   Five layers, all from `portrait()`'s hash and the row's own numbers. No image, no request, no file.
+   `--p1` topic hue, `--p2` a second hue two steps round, `--px/--py` the light's position, `--ang/--gap`
+   the hatch, `--arc` the star percentile. */
+.pt{position:relative;display:block;width:100%;overflow:hidden;background:
+  radial-gradient(120% 118% at var(--px) var(--py),
+    color-mix(in srgb,var(--p1) 62%,transparent),transparent 64%),
+  radial-gradient(110% 120% at calc(100% - var(--px)) calc(100% - var(--py)),
+    color-mix(in srgb,var(--p2) 44%,transparent),transparent 62%),
+  linear-gradient(200deg,color-mix(in srgb,var(--p1) 12%,var(--surface)),var(--surface) 72%)}
+.pt>*{position:absolute}
+/* The hatch is what stops two projects in one topic reading as the same tile: the angle and the spacing
+   are both hash-derived, so the texture is the identity even when the hues repeat. */
+.pt-h{inset:0;opacity:.5;background:repeating-linear-gradient(var(--ang),
+  rgba(255,255,255,.075) 0 1.5px,transparent 1.5px var(--gap))}
+/* Every mark below is centred or top-centre, and that is a constraint the card imposed rather than a
+   composition choice: a poster already spends its top-left on the kind chip, its top-right on the star
+   count and its whole bottom-left on the name stack, so a portrait that put anything in a corner put it
+   under something. The centre band is the only part of the tile the card never covers.
+   The language, set as the picture rather than as a label -- a texture at this opacity, and a reader who
+   wants the word has it in the chip below the image. */
+.pt-w{inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:clamp(18px,17cqw,58px);
+  font-weight:700;letter-spacing:-.04em;line-height:.88;color:color-mix(in srgb,#fff 11%,transparent);
+  white-space:nowrap;overflow:hidden;text-transform:uppercase}
+/* The arc is the project's percentile by stars over the whole corpus: a full ring is the top of the
+   atlas, a sliver is the long tail. Masked to a ring so the fill inside it stays the artwork.
+
+   Hidden below 420px of container, which on a card grid means hidden everywhere except the spotlight,
+   and that is a concession to arithmetic rather than taste. It is sized in `cqw` because the same element
+   is drawn at 76px in a terminal record and at 772px in the spotlight, and a fixed size is a speck in one
+   and a dot in the other -- but the constraint that actually binds is *height*. A 16:9 tile 272px wide is
+   153px tall, the kind chip takes the top 24 and the name stack the bottom 89, so the free band is 40px
+   and 22cqw asks for 60. Sizing off the width while the height decides is how it collided on 54 of 95
+   cards. It could be shrunk to fit, but a 34px arc is not readable as a proportion, and the card already
+   prints the star count as a number in the top-right pill -- so a third encoding of one fact was buying a
+   collision. `container-type:inline-size` gives no `cqh` to size against without `container-type:size`,
+   which the dossier and the record cannot have: their height comes from the sibling column. */
+.pt-r{display:none}
+@container (min-width:420px){.pt-r{display:block}}
+.pt-r{left:50%;top:50%;width:min(22cqw,64px);aspect-ratio:1;transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:conic-gradient(from -90deg,color-mix(in srgb,#fff 82%,transparent) var(--arc),
+    rgba(255,255,255,.14) 0);
+  mask:radial-gradient(farthest-side,transparent 63%,#000 65%);
+  -webkit-mask:radial-gradient(farthest-side,transparent 63%,#000 65%)}
+.pt{container-type:inline-size}
+
+/* ===== per-direction arrangement =================================================================== */
+/* Poster: the default. 16:9 is the ratio the screenshots are already stored at, so nothing is cropped. */
+.poster .ph{aspect-ratio:16/9}
+.poster .dsc{min-height:2.9em}
+
+/* Dossier: image left, labelled rows right. The image stretches to the card rather than keeping a ratio,
+   because the spec list sets the height here and a 4/3 panel beside six rows leaves a gap under it. */
+.dossier{display:grid;grid-template-columns:168px minmax(0,1fr)}
+.dossier .ph{height:100%}
+.dossier .ph img,.dossier .ph .pt{height:100%;aspect-ratio:auto!important;object-fit:cover}
+.dossier .bd{padding:12px 14px 13px;min-width:0}
+.dossier .hd{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.dossier .spec{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;margin:10px 0 0}
+.dossier dt{font-size:10px;font-weight:600;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);color:var(--muted);padding-top:2px}
+.dossier dd{margin:0;font-size:12.5px;color:var(--ink2);min-width:0;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.dossier dd b{color:var(--ink);font-family:var(--num);font-variant-numeric:tabular-nums}
+.dossier dd em{font-style:normal;color:var(--muted);font-size:11px}
+
+/* Contact sheet: square, name always on, the rest on hover. */
+.sheet .ph{aspect-ratio:1/1}
+.sheet .ttl .nm{font-size:14px}
+.sheet .ttl .own{font-size:10px}
+.sheet .stz{font-size:11px;padding:2px 6px}
+.sheet .chip.kind{display:none}
+/* The revealed layer. Opacity and not `display`, so it is in the accessibility tree and reachable by tab
+   at any width -- and shown unconditionally where there is no hover to reveal it with. */
+/* The right inset clears the star pill, which is absolutely positioned in the same corner and does not
+   move when this layer appears. Without it the revealed kind chip -- 93px for "Framework", 109px for
+   "Orchestrator" -- was drawn straight under a 60px star pill on 11 of the 12 tiles, and because the
+   layer is revealed by opacity the collision only existed while somebody was looking at it. 76px and not
+   the pill's measured 60: the pill sits at `right:9px`, so its left edge is 69px in from the tile's right
+   and a 66px inset still kissed it by 2px. The chip is also set smaller here than anywhere else, and
+   truncates, because a 148px tile minus both insets is 64px of room for the longest of the fourteen
+   kinds -- clipping "Orchestrator" is the right answer when the alternative is printing it over a star
+   count. */
+.sheet .rev{position:absolute;z-index:1;inset:8px 76px auto 8px;display:flex;flex-wrap:wrap;gap:5px;
+  align-items:center;opacity:0;transition:opacity .2s ease}
+.sheet .rev .chip.kind{font-size:9px;padding:2px 6px;min-width:0;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.sheet .rev .chip.kind{display:inline-flex;position:static;top:auto;left:auto}
+.sheet:hover .rev,.sheet:focus-within .rev{opacity:1}
+@media(hover:none){.sheet .rev{opacity:1}}
+.sheet .ph .plat{padding:2px;border-radius:5px}
+
+/* Terminal record: a transcript with a strip of the picture beside it. */
+.rec{display:grid;grid-template-columns:76px minmax(0,1fr);font-family:var(--mono)}
+.rec .strip{height:100%;position:relative;overflow:hidden;background:var(--band)}
+.rec .strip img,.rec .strip .pt{height:100%;width:100%;aspect-ratio:auto!important;object-fit:cover}
+.rec .bd{padding:10px 12px 11px;min-width:0}
+.rec .pr{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.rec .pr b{color:var(--ink);font-weight:600}
+.rec .kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;margin:8px 0 0;
+  font-size:11.5px}
+.rec .kv .k{color:var(--muted)}
+.rec .kv .v{color:var(--ink2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec .kv .v em{font-style:normal;color:var(--muted)}
+.rec .dsc{font-family:var(--ui);margin-top:9px}
+
+/* ---- the phone tier for the card directions -------------------------------------------------------
+   Here, at the end of this sheet, and not in BASE_CSS's 640px block, for the reason recorded there: these
+   selectors are declared above and a media query adds no specificity, so the override has to come later
+   in the concatenation as well as narrower in the query. */
+@media(max-width:640px){
+  /* Two columns pinned by a fixed first track -- 168px for the dossier panel, 76px for the record strip.
+     At 375px the second track is left with less than its content floor, so instead of reflowing the
+     article grew to 436px and took the document's scroll width with it: 456 - 375 = the 81px of sideways
+     scroll measured on this page. One column, image on top at the ratio the screenshots are stored at. */
+  .dossier,.rec{grid-template-columns:minmax(0,1fr)}
+  .dossier .ph,.rec .strip{height:auto}
+  .dossier .ph img,.dossier .ph .pt,.rec .strip img,.rec .strip .pt{
+    aspect-ratio:16/9!important;height:auto;width:100%}
+  /* The switch is the one set of rail controls that was still under the 44px floor this preview promises
+     to keep -- 26px, because the pill was sized for a desktop rail. The container grows with them now
+     that the rail wraps. */
+  .rail .seg button{height:44px;min-height:44px;padding:0 13px}
+}
+
+/* ---- the lab's own chrome. One column, because the page is an argument and arguments are read. ---- */
+.labwrap{max-width:1460px;margin:0 auto;padding:22px 20px 80px;position:relative;z-index:1;
+  counter-reset:sec}
+.lead{max-width:82ch;margin:0 0 8px;font-size:15px;color:var(--ink2)}
+.lead b{color:var(--ink)}
+/* The measured constraints. Set apart rather than folded into the prose, because they are the two facts
+   that decide whether any of these directions is the right one. */
+.warn{margin:16px 0 34px;padding:12px 14px;border-radius:var(--radius);background:var(--panel);
+  border:var(--hair) solid var(--panel-b);border-left:3px solid var(--accent-gold);
+  box-shadow:var(--lift);font-size:12.5px;color:var(--ink2);max-width:104ch}
+.warn p{margin:0 0 7px}
+.warn p:last-child{margin:0}
+.warn b{color:var(--ink)}
+.warn code{font-family:var(--mono);font-size:11.5px;color:var(--bar)}
+.sec{margin:0 0 46px}
+.sec>h2{counter-increment:sec;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  margin:0 0 4px;font-size:19px;font-weight:650;letter-spacing:-.02em}
+.sec>h2::before{content:counter(sec);font-family:var(--num);font-size:12px;font-weight:600;
+  color:var(--onbar);background:var(--bar);border-radius:5px;padding:2px 7px;letter-spacing:0;
+  align-self:center}
+.sec>h2 em{font-style:normal;font-size:11.5px;font-weight:400;color:var(--muted);font-family:var(--mono)}
+.why{margin:0 0 16px;max-width:96ch;font-size:13px;line-height:1.55;color:var(--muted)}
+.why b{color:var(--ink2)}
+/* Each direction gets the grid it was designed for. `auto-fill` with a real minimum rather than a fixed
+   count: the poster wants 282px to hold a 19px name and a one-line install command, and the contact
+   sheet wants 148px, and those two numbers are the designs. */
+/* `min(Npx,100%)` rather than a bare `Npx` in every one of these, which is the whole fix for this page at
+   phone width. `minmax(436px,1fr)` is a floor the track honours even when the container is 375px wide, so
+   the dossier column stayed 436px, the article in it stayed 436px, and the *document* grew to 456px --
+   81px of sideways scroll that drags every card on the page with it and reads as broken rather than
+   cramped. `min(436px,100%)` says "436 unless that is more than I have", so the grid falls to one column
+   and the card reflows through the phone rules at the end of CARD_CSS. */
+.g-poster{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(282px,100%),1fr));gap:16px}
+.g-dossier{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(436px,100%),1fr));gap:14px}
+.g-sheet{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(148px,100%),1fr));gap:10px}
+.g-rec{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(418px,100%),1fr));gap:14px}
+/* The comparisons. A caption above each arm, so what is being compared is named and not inferred. */
+.ab{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:18px;align-items:start}
+.arm>h3{margin:0 0 7px;font-size:11px;font-weight:600;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);color:var(--muted);display:flex;align-items:center;gap:8px}
+.arm>h3 .pick{color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,transparent);
+  border-radius:999px;padding:1px 7px;font-size:9.5px}
+.arm>p{margin:8px 0 0;font-size:12px;color:var(--muted);line-height:1.5}
+.simlabel{margin:8px 0 0;font-size:11.5px;color:var(--accent-gold)}
+
+</style>
+</head>
+<body>
+<div class="scan" aria-hidden="true"></div>
+<header class="rail"><span class="mark"><span class="glyph" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="var(--bar)" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="var(--ink)" stroke="var(--bar)" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="var(--bar)"/><path d="M12 31h40M32 11v40" fill="none" stroke="var(--mk-dark,var(--onbar))" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="var(--mk-dark,var(--onbar))"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="var(--ink)"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="var(--mk-dark,var(--onbar))" stroke-width="2.5" stroke-linecap="round"/></g></svg></span><b>Atlas</b><span class="ver">v2 demo</span></span><span class="qwrap"><span class="mag">&#9906;</span><input id="q" type="search" placeholder="Search is inert in this demo" aria-label="Search (inert in this demo)"><span class="kbd">/</span></span><span class="count"><b>8,856</b> projects</span><span class="spring"></span><span class="seg"><button aria-pressed="false" data-layout="rail" title="Layout A — rail, deck and cards">Cards</button><button aria-pressed="false" data-layout="console" title="Layout C — three-pane console">Console</button><button aria-pressed="false" data-layout="matrix" title="Layout M — topic x harness matrix">Matrix</button><button aria-pressed="true" data-layout="lab" title="Layout L — five card directions">Lab</button><button aria-pressed="false" data-layout="shelves" title="Layout S — browse and discover">Browse</button><button aria-pressed="false" data-layout="discover" title="Layout D — the daily rolling carousel">Daily</button></span><div class="picker"><button class="ghost" id="skinbtn" aria-expanded="false"><span class="dotrow"><i style="background:#D6A034"></i><i style="background:#6FE3C4"></i><i style="background:#52F2A0"></i></span>Skin</button><div class="menu" id="skinmenu" hidden><h3>Skin <kbd>T</kbd> cycles</h3><button data-skin="graphite" aria-pressed="false"><span class="sw"><i style="background:#090A0D"></i><i style="background:#D6A034"></i><i style="background:#78B7F4"></i></span><span><span class="nm">Graphite</span><span class="ds">Hairline precision. One accent, mono numerals, no glow.</span></span></button><button data-skin="glass" aria-pressed="false"><span class="sw"><i style="background:#070912"></i><i style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span><span><span class="nm">Glass Console</span><span class="ds">Frosted planes over a lit field. Floating rail, pointer sheen, live glow.</span></span></button><button data-skin="terminal" aria-pressed="false"><span class="sw"><i style="background:#04070A"></i><i style="background:#52F2A0"></i><i style="background:#57D9FF"></i></span><span><span class="nm">Neon Terminal</span><span class="ds">All monospace. Phosphor green, bracket chips, panes not cards, scanline.</span></span></button></div></div></header><div class="labwrap"><p class="lead">Five ways to draw the same project, all of them rendering <b>real rows</b> from the 2026-09-21 snapshot &mdash; real names, real star counts, real five-character platform verdicts, real install commands and real blurbs at their real lengths. Every card carries the image, the name over the image, the platform compatibility, the language, what kind of thing it is, the star count, the author and the install command. Hover anything; copy anything; switch skin with <b>T</b>.</p><div class="warn"><p><b>Screenshots reach 53% of the corpus.</b> <code>img</code> is populated on 3162 of 8,856 rows, and on 30 of the top 44 by stars. So an image-first grid puts 608 projects behind a grey rectangle, which is the opposite of giving them screentime. Two fallbacks are possible and section 7 compares them: GitHub&rsquo;s generated social card, which exists for every repository but is a third-party request per card and renders as a near-white rectangle with the repo name on it; or artwork generated here from the row&rsquo;s own facts, at zero cost and different for every project.</p><p><b>No project qualifies as new today.</b> <code>first_seen</code> is empty on all 8,856 rows and <code>state/first-seen.json</code> stamps every repository with the <code>2026-09-03</code> baseline, so the set that would take the yellow glow currently has <b>0</b> members. The machinery is built and wired to <code>first_seen</code>; the NEW card in section 6 is explicitly simulated, and the state lights up on its own once an import brings arrivals.</p></div><section class="sec"><h2>Poster<em>direction 1</em></h2><p class="why">The straight reading of the brief, and the recommendation. 16:9 image &mdash; the ratio the screenshots are already stored at, so nothing is cropped &mdash; with the kind chip top-left, the star count top-right, the five platform pills bottom-right and the <b>owner and name bottom-left</b>. Underneath: language, age with its freshness dot, licence, two clamped lines of description and the install command with a copy button. The whole card is one anchor, so middle-click and &ldquo;copy link address&rdquo; work; the copy button sits above it and does not navigate. 3 of these 8 carry a screenshot; the other 5 are drawn by <code>portrait()</code> from the project's own facts.</p><div class="g-poster"><article class="cx poster s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/openclaw/openclaw.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-sky);--p2:var(--accent-gold);--px:26%;--py:37%;--ang:177deg;--gap:16px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="build" title="Frameworks &amp; SDKs — Build: things you build on">Framework</span><span class="stz" title="390,202 stars — #1 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>390.2k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">openclaw<span aria-hidden="true">/</span></span><span class="nm">openclaw</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>TypeScript</span><span class="fam">Build</span><span class="age"><i class="dot hot"></i>today</span><span class="spring"></span><span class="flag rare" title="AI Agents (Jenqyang), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), OpenClaw Assistants, Orchestrators">6 lists</span></div><p class="dsc">Open-source AI agent framework that turns LLMs into persistent, proactive personal AI agents with multi-channel messaging (Signal, Telegram, Discord, WhatsApp), cron scheduling, memory systems, MCP integration, skill plugins, sub-agent spawning, and browser automation</p><div class="cw"><code class="cmd">npm install -g openclaw@latest --allow-scripts=openclaw</code><button class="cp" data-cmd="npm install -g openclaw@latest --allow-scripts=openclaw" title="Copy">Copy</button></div></div><a class="hit" href="repo/openclaw/openclaw.html"><span class="sr">openclaw</span></a></article><article class="cx poster s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NNNNN" data-inst="1" data-shot="0" data-href="repo/obra/superpowers.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-violet);--p2:var(--accent-gold);--px:68%;--py:70%;--ang:51deg;--gap:12px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">SHELL</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="stz" title="289,634 stars — #2 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>289.6k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows no, WSL2 no, macOS no, Linux no, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="n" title="macOS — No. No evidence of support anywhere in the project.">Mac</i><i class="n" title="Linux — No. No evidence of support anywhere in the project.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">obra<span aria-hidden="true">/</span></span><span class="nm">Superpowers</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>Shell</span><span class="fam">Extend</span><span class="age"><i class="dot hot"></i>1d</span><span class="lic">MIT</span><span class="spring"></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (JackyST0), Agent Skills (VoltAgent), Agent Skills (libukai), Claude Code, Claude Code (jqueryscript), Harness Engineering">7 lists</span></div><p class="dsc">by Jesse Vincent - A strong bundle of core competencies for software engineering, with good coverage of a large portion of the SDLC - from planning, reviewing, testing, debugging... Well written, well organized, and adaptable. The author refers to them as &quot;superpowers&quot;, but many of them are just consolidating engineering best practices - which sometimes does feel like a superpower when working wit…</p><div class="cw"><code class="cmd">git clone https://github.com/obra/superpowers.git</code><button class="cp" data-cmd="git clone https://github.com/obra/superpowers.git" title="Copy">Copy</button></div></div><a class="hit" href="repo/obra/superpowers.html"><span class="sr">Superpowers</span></a></article><article class="cx poster s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="LLLLN" data-inst="1" data-shot="1" data-href="repo/mattpocock/skills.html"><span class="ph"><img src="https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skill-repo-light_2x.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:16/9"><span class="veil"></span><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="stz" title="267,011 stars — #3 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>267.0k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">mattpocock<span aria-hidden="true">/</span></span><span class="nm">skills</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>Shell</span><span class="fam">Extend</span><span class="age"><i class="dot hot"></i>3d</span><span class="lic">MIT</span><span class="spring"></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (VoltAgent), Claude Code (jqueryscript), Cursor Skills">4 lists</span></div><p class="dsc">Source for 17 Matt Pocock workflow skills - codebase design, TDD, bug diagnosis, triage, PRDs, issues, prototyping, handoff, teaching, and skill-writing guidance (MIT)</p><div class="cw"><code class="cmd">npx skills@latest add mattpocock/skills</code><button class="cp" data-cmd="npx skills@latest add mattpocock/skills" title="Copy">Copy</button></div></div><a class="hit" href="repo/mattpocock/skills.html"><span class="sr">skills</span></a></article><article class="cx poster s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NYYYY" data-inst="1" data-shot="1" data-href="repo/affaan-m/ecc.html"><span class="ph"><img src="https://raw.githubusercontent.com/affaan-m/ECC/main/assets/hero.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:16/9"><span class="veil"></span><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="stz" title="264,558 stars — #4 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>264.6k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows no, WSL2 yes, macOS yes, Linux yes, Docker yes"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="y" title="Docker — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Dkr</i></span><span class="ttl bl"><span class="own">affaan-m<span aria-hidden="true">/</span></span><span class="nm">Everything Claude Code (ECC)</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>JavaScript</span><span class="fam">Extend</span><span class="age"><i class="dot hot"></i>today</span><span class="lic">MIT</span><span class="spring"></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (JackyST0), Claude Code, Claude Code (jqueryscript), Codex CLI Ecosystem, Harness Engineering">6 lists</span></div><p class="dsc">by Affaan Mustafa - Top-notch, well-written resources covering &quot;just about everything&quot; from core engineering domains. What&#x27;s nice about this &quot;everything-&quot; store is most of the resources have significant standalone value and unlike some all-encompassing frameworks, although you can opt in to the author&#x27;s own specific workflow patterns if you choose, the individual resources offer exemplary patterns…</p><div class="cw"><code class="cmd">npm install -g ecc-universal@2.2.2</code><button class="cp" data-cmd="npm install -g ecc-universal@2.2.2" title="Copy">Copy</button></div></div><a class="hit" href="repo/affaan-m/ecc.html"><span class="sr">Everything Claude Code (ECC)</span></a></article><article class="cx poster s-rare s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/nousresearch/hermes-agent.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-mint);--p2:var(--accent-violet);--px:18%;--py:15%;--ang:120deg;--gap:12px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">PYTHON</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="run" title="Assistants &amp; Domain Agents — Run: things that do the work">Assistant</span><span class="stz" title="247,710 stars — #5 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>247.7k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">NousResearch<span aria-hidden="true">/</span></span><span class="nm">hermes-agent</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>Python</span><span class="fam">Run</span><span class="age"><i class="dot hot"></i>today</span><span class="lic">MIT</span><span class="spring"></span><span class="flag rare" title="Agents (kyrolabs), OpenClaw Assistants, Orchestrators">3 lists</span></div><p class="dsc">Python / TypeScript - Self-improving AI agent with autonomous skill creation, persistent memory, multi-platform messaging, and subagent delegation</p><div class="cw"><code class="cmd">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</code><button class="cp" data-cmd="curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash" title="Copy">Copy</button></div></div><a class="hit" href="repo/nousresearch/hermes-agent.html"><span class="sr">hermes-agent</span></a></article><article class="cx poster s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="LLLLN" data-inst="1" data-shot="0" data-href="repo/deepseek-ai/deepseek-harness.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-sky);--p2:var(--accent-coral);--px:40%;--py:65%;--ang:77deg;--gap:13px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="build" title="Harnesses &amp; Runtime Infra — Build: things you build on">Harness</span><span class="stz" title="232,194 stars — #6 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>232.2k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">deepseek-ai<span aria-hidden="true">/</span></span><span class="nm">DeepSeek Harness (dsh)</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>TypeScript</span><span class="fam">Build</span><span class="age"><i class="dot hot"></i>4d</span><span class="lic">MIT</span><span class="spring"></span></div><p class="dsc">DeepSeek&#x27;s official open-source agent harness (August 2026) built on an &quot;everything is a plugin&quot; architecture powered by Cordis: models, tools, skills, UI surfaces, and even the desktop shell are plugins composed through dependency injection rather than a monolith with extension points, with an accompanying paper on spatiotemporal composability. The clearest first-party reference for treating harn…</p><div class="cw"><code class="cmd">npx @deepseek-ai/dsh web</code><button class="cp" data-cmd="npx @deepseek-ai/dsh web" title="Copy">Copy</button></div></div><a class="hit" href="repo/deepseek-ai/deepseek-harness.html"><span class="sr">DeepSeek Harness (dsh)</span></a></article><article class="cx poster s-rare" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NNNNN" data-inst="1" data-shot="0" data-href="repo/multica-ai/andrej-karpathy-skills.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-violet);--p2:var(--accent-violet);--px:18%;--py:12%;--ang:136deg;--gap:12px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">SKILL</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="stz" title="214,489 stars — #7 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>214.5k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows no, WSL2 no, macOS no, Linux no, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="n" title="macOS — No. No evidence of support anywhere in the project.">Mac</i><i class="n" title="Linux — No. No evidence of support anywhere in the project.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">multica-ai<span aria-hidden="true">/</span></span><span class="nm">andrej-karpathy-skills</span></span></span></span><div class="bd"><div class="ln"><span class="fam">Extend</span><span class="age"><i class="dot ok"></i>5mo</span><span class="spring"></span><span class="flag rare" title="AAS Skill Sources, Claude Code, Claude Code (jqueryscript)">3 lists</span></div><p class="dsc">by multica-ai - A drop-in CLAUDE.md distilling four behavioral guidelines for LLM-assisted coding into Claude Code — a low-friction quick win. Karpathy-inspired, derived from Andrej Karpathy&#x27;s public notes on LLM coding pitfalls and authored by multica-ai</p><div class="cw"><code class="cmd">git clone https://github.com/multica-ai/andrej-karpathy-skills.git</code><button class="cp" data-cmd="git clone https://github.com/multica-ai/andrej-karpathy-skills.git" title="Copy">Copy</button></div></div><a class="hit" href="repo/multica-ai/andrej-karpathy-skills.html"><span class="sr">andrej-karpathy-skills</span></a></article><article class="cx poster s-rare s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="NNYYN" data-inst="1" data-shot="1" data-href="repo/anomalyco/opencode.html"><span class="ph"><img src="https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/assets/lander/screenshot.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:16/9"><span class="veil"></span><span class="chip kind" data-fam="run" title="Coding Agents — Run: things that do the work">Coding agent</span><span class="stz" title="209,094 stars — #8 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>209.1k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows no, WSL2 no, macOS yes, Linux yes, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">anomalyco<span aria-hidden="true">/</span></span><span class="nm">OpenCode</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>TypeScript</span><span class="fam">Run</span><span class="age"><i class="dot hot"></i>today</span><span class="lic">MIT</span><span class="spring"></span><span class="flag rare" title="Agents (kyrolabs), Harness Engineering, LLMOps (InftyAI), Opencode">4 lists</span></div><p class="dsc">Open-source terminal-native AI coding agent with 131K+ stars and 2.5M+ monthly active developers. Provider-agnostic architecture supports 75+ LLM providers plus native LSP auto-configuration, multi-session parallel agents, and MCP extensibility. The build/plan agent split and client/server architecture make it the most complete open-source reference for a terminal-first coding harness</p><div class="cw"><code class="cmd">scoop install opencode # Windows</code><button class="cp" data-cmd="scoop install opencode # Windows" title="Copy">Copy</button></div></div><a class="hit" href="repo/anomalyco/opencode.html"><span class="sr">OpenCode</span></a></article></div></section><section class="sec"><h2>Dossier<em>direction 2</em></h2><p class="why">Image left, labelled rows right. The one direction that does <b>not</b> put the name on the image, and deliberately: the panel is 168px wide and a 22-character repository name cannot be set legibly across it, so following the brief here would produce an unreadable card. It earns its place by answering &ldquo;what exactly is this&rdquo; faster than any amount of hierarchy on a poster &mdash; six labelled fields, nothing on hover, the install command always visible.</p><div class="g-dossier"><article class="cx dossier s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/openclaw/openclaw.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:4/3;--p1:var(--accent-sky);--p2:var(--accent-gold);--px:26%;--py:37%;--ang:177deg;--gap:16px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span><span class="veil"></span></span><div class="bd"><div class="hd"><span class="ttl st"><span class="own">openclaw<span aria-hidden="true">/</span></span><span class="nm">openclaw</span></span><span class="flag rare" title="AI Agents (Jenqyang), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), OpenClaw Assistants, Orchestrators">6 lists</span></div><dl class="spec"><dt>Kind</dt><dd>Framework</dd><dt>Language</dt><dd>TypeScript</dd><dt>Platforms</dt><dd><span class="plat" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span></dd><dt>Author</dt><dd>openclaw</dd><dt>Stars</dt><dd><b>390,202</b> <em>#1</em></dd><dt>Updated</dt><dd>today</dd></dl><div class="cw"><code class="cmd">npm install -g openclaw@latest --allow-scripts=openclaw</code><button class="cp" data-cmd="npm install -g openclaw@latest --allow-scripts=openclaw" title="Copy">Copy</button></div></div><a class="hit" href="repo/openclaw/openclaw.html"><span class="sr">openclaw</span></a></article><article class="cx dossier s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NNNNN" data-inst="1" data-shot="0" data-href="repo/obra/superpowers.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:4/3;--p1:var(--accent-violet);--p2:var(--accent-gold);--px:68%;--py:70%;--ang:51deg;--gap:12px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">SHELL</span><span class="pt-r"></span></span><span class="veil"></span></span><div class="bd"><div class="hd"><span class="ttl st"><span class="own">obra<span aria-hidden="true">/</span></span><span class="nm">Superpowers</span></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (JackyST0), Agent Skills (VoltAgent), Agent Skills (libukai), Claude Code, Claude Code (jqueryscript), Harness Engineering">7 lists</span></div><dl class="spec"><dt>Kind</dt><dd>Skill</dd><dt>Language</dt><dd>Shell</dd><dt>Platforms</dt><dd><span class="plat" aria-label="Platforms: Windows no, WSL2 no, macOS no, Linux no, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="n" title="macOS — No. No evidence of support anywhere in the project.">Mac</i><i class="n" title="Linux — No. No evidence of support anywhere in the project.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span></dd><dt>Author</dt><dd>obra</dd><dt>Stars</dt><dd><b>289,634</b> <em>#2</em></dd><dt>Updated</dt><dd>1d ago</dd></dl><div class="cw"><code class="cmd">git clone https://github.com/obra/superpowers.git</code><button class="cp" data-cmd="git clone https://github.com/obra/superpowers.git" title="Copy">Copy</button></div></div><a class="hit" href="repo/obra/superpowers.html"><span class="sr">Superpowers</span></a></article><article class="cx dossier s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="LLLLN" data-inst="1" data-shot="1" data-href="repo/mattpocock/skills.html"><span class="ph"><img src="https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skill-repo-light_2x.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:4/3"><span class="veil"></span></span><div class="bd"><div class="hd"><span class="ttl st"><span class="own">mattpocock<span aria-hidden="true">/</span></span><span class="nm">skills</span></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (VoltAgent), Claude Code (jqueryscript), Cursor Skills">4 lists</span></div><dl class="spec"><dt>Kind</dt><dd>Skill</dd><dt>Language</dt><dd>Shell</dd><dt>Platforms</dt><dd><span class="plat" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span></dd><dt>Author</dt><dd>mattpocock</dd><dt>Stars</dt><dd><b>267,011</b> <em>#3</em></dd><dt>Updated</dt><dd>3d ago</dd></dl><div class="cw"><code class="cmd">npx skills@latest add mattpocock/skills</code><button class="cp" data-cmd="npx skills@latest add mattpocock/skills" title="Copy">Copy</button></div></div><a class="hit" href="repo/mattpocock/skills.html"><span class="sr">skills</span></a></article><article class="cx dossier s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NYYYY" data-inst="1" data-shot="1" data-href="repo/affaan-m/ecc.html"><span class="ph"><img src="https://raw.githubusercontent.com/affaan-m/ECC/main/assets/hero.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:4/3"><span class="veil"></span></span><div class="bd"><div class="hd"><span class="ttl st"><span class="own">affaan-m<span aria-hidden="true">/</span></span><span class="nm">Everything Claude Code (ECC)</span></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (JackyST0), Claude Code, Claude Code (jqueryscript), Codex CLI Ecosystem, Harness Engineering">6 lists</span></div><dl class="spec"><dt>Kind</dt><dd>Skill</dd><dt>Language</dt><dd>JavaScript</dd><dt>Platforms</dt><dd><span class="plat" aria-label="Platforms: Windows no, WSL2 yes, macOS yes, Linux yes, Docker yes"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="y" title="Docker — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Dkr</i></span></dd><dt>Author</dt><dd>affaan-m</dd><dt>Stars</dt><dd><b>264,558</b> <em>#4</em></dd><dt>Updated</dt><dd>today</dd></dl><div class="cw"><code class="cmd">npm install -g ecc-universal@2.2.2</code><button class="cp" data-cmd="npm install -g ecc-universal@2.2.2" title="Copy">Copy</button></div></div><a class="hit" href="repo/affaan-m/ecc.html"><span class="sr">Everything Claude Code (ECC)</span></a></article></div></section><section class="sec"><h2>Contact sheet<em>direction 3</em></h2><p class="why">Square tiles, the name always on the image, everything else on hover. 24 fit where six posters do, which makes this the only direction that can put a whole topic on one screen &mdash; the smallest topic here holds 11 projects and the largest 278. The trade is the install command, which has nowhere to go at 148px and lives on the project page instead. Hover, or tab through: the revealed layer is opacity rather than <code>display</code>, so it stays in the accessibility tree and shows unconditionally on a device with no hover.</p><div class="g-sheet"><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/openclaw/openclaw.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:1/1;--p1:var(--accent-sky);--p2:var(--accent-gold);--px:26%;--py:37%;--ang:177deg;--gap:16px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span><span class="veil"></span><span class="stz" title="390,202 stars — #1 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>390.2k</span><span class="ttl bl"><span class="own">openclaw<span aria-hidden="true">/</span></span><span class="nm">openclaw</span></span><span class="rev"><span class="chip kind" data-fam="build" title="Frameworks &amp; SDKs — Build: things you build on">Framework</span><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>TypeScript</span></span><span class="flag rare" title="AI Agents (Jenqyang), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), OpenClaw Assistants, Orchestrators">6 lists</span></span><a class="hit" href="repo/openclaw/openclaw.html"><span class="sr">openclaw</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NNNNN" data-inst="1" data-shot="0" data-href="repo/obra/superpowers.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:1/1;--p1:var(--accent-violet);--p2:var(--accent-gold);--px:68%;--py:70%;--ang:51deg;--gap:12px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">SHELL</span><span class="pt-r"></span></span><span class="veil"></span><span class="stz" title="289,634 stars — #2 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>289.6k</span><span class="ttl bl"><span class="own">obra<span aria-hidden="true">/</span></span><span class="nm">Superpowers</span></span><span class="rev"><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="plat tight" aria-label="Platforms: Windows no, WSL2 no, macOS no, Linux no, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="n" title="macOS — No. No evidence of support anywhere in the project.">Mac</i><i class="n" title="Linux — No. No evidence of support anywhere in the project.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>Shell</span></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (JackyST0), Agent Skills (VoltAgent), Agent Skills (libukai), Claude Code, Claude Code (jqueryscript), Harness Engineering">7 lists</span></span><a class="hit" href="repo/obra/superpowers.html"><span class="sr">Superpowers</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="LLLLN" data-inst="1" data-shot="1" data-href="repo/mattpocock/skills.html"><span class="ph"><img src="https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skill-repo-light_2x.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="267,011 stars — #3 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>267.0k</span><span class="ttl bl"><span class="own">mattpocock<span aria-hidden="true">/</span></span><span class="nm">skills</span></span><span class="rev"><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>Shell</span></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (VoltAgent), Claude Code (jqueryscript), Cursor Skills">4 lists</span></span><a class="hit" href="repo/mattpocock/skills.html"><span class="sr">skills</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NYYYY" data-inst="1" data-shot="1" data-href="repo/affaan-m/ecc.html"><span class="ph"><img src="https://raw.githubusercontent.com/affaan-m/ECC/main/assets/hero.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="264,558 stars — #4 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>264.6k</span><span class="ttl bl"><span class="own">affaan-m<span aria-hidden="true">/</span></span><span class="nm">Everything Claude Code (ECC)</span></span><span class="rev"><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="plat tight" aria-label="Platforms: Windows no, WSL2 yes, macOS yes, Linux yes, Docker yes"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="y" title="Docker — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Dkr</i></span><span class="lang"><i></i>JavaScript</span></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (JackyST0), Claude Code, Claude Code (jqueryscript), Codex CLI Ecosystem, Harness Engineering">6 lists</span></span><a class="hit" href="repo/affaan-m/ecc.html"><span class="sr">Everything Claude Code (ECC)</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/nousresearch/hermes-agent.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:1/1;--p1:var(--accent-mint);--p2:var(--accent-violet);--px:18%;--py:15%;--ang:120deg;--gap:12px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">PYTHON</span><span class="pt-r"></span></span><span class="veil"></span><span class="stz" title="247,710 stars — #5 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>247.7k</span><span class="ttl bl"><span class="own">NousResearch<span aria-hidden="true">/</span></span><span class="nm">hermes-agent</span></span><span class="rev"><span class="chip kind" data-fam="run" title="Assistants &amp; Domain Agents — Run: things that do the work">Assistant</span><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>Python</span></span><span class="flag rare" title="Agents (kyrolabs), OpenClaw Assistants, Orchestrators">3 lists</span></span><a class="hit" href="repo/nousresearch/hermes-agent.html"><span class="sr">hermes-agent</span></a></article><article class="cx sheet s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="LLLLN" data-inst="1" data-shot="0" data-href="repo/deepseek-ai/deepseek-harness.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:1/1;--p1:var(--accent-sky);--p2:var(--accent-coral);--px:40%;--py:65%;--ang:77deg;--gap:13px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span><span class="veil"></span><span class="stz" title="232,194 stars — #6 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>232.2k</span><span class="ttl bl"><span class="own">deepseek-ai<span aria-hidden="true">/</span></span><span class="nm">DeepSeek Harness (dsh)</span></span><span class="rev"><span class="chip kind" data-fam="build" title="Harnesses &amp; Runtime Infra — Build: things you build on">Harness</span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>TypeScript</span></span></span><a class="hit" href="repo/deepseek-ai/deepseek-harness.html"><span class="sr">DeepSeek Harness (dsh)</span></a></article><article class="cx sheet s-rare" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NNNNN" data-inst="1" data-shot="0" data-href="repo/multica-ai/andrej-karpathy-skills.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:1/1;--p1:var(--accent-violet);--p2:var(--accent-violet);--px:18%;--py:12%;--ang:136deg;--gap:12px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">SKILL</span><span class="pt-r"></span></span><span class="veil"></span><span class="stz" title="214,489 stars — #7 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>214.5k</span><span class="ttl bl"><span class="own">multica-ai<span aria-hidden="true">/</span></span><span class="nm">andrej-karpathy-skills</span></span><span class="rev"><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="plat tight" aria-label="Platforms: Windows no, WSL2 no, macOS no, Linux no, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="n" title="macOS — No. No evidence of support anywhere in the project.">Mac</i><i class="n" title="Linux — No. No evidence of support anywhere in the project.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span></span><span class="flag rare" title="AAS Skill Sources, Claude Code, Claude Code (jqueryscript)">3 lists</span></span><a class="hit" href="repo/multica-ai/andrej-karpathy-skills.html"><span class="sr">andrej-karpathy-skills</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="NNYYN" data-inst="1" data-shot="1" data-href="repo/anomalyco/opencode.html"><span class="ph"><img src="https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/assets/lander/screenshot.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="209,094 stars — #8 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>209.1k</span><span class="ttl bl"><span class="own">anomalyco<span aria-hidden="true">/</span></span><span class="nm">OpenCode</span></span><span class="rev"><span class="chip kind" data-fam="run" title="Coding Agents — Run: things that do the work">Coding agent</span><span class="plat tight" aria-label="Platforms: Windows no, WSL2 no, macOS yes, Linux yes, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>TypeScript</span></span><span class="flag rare" title="Agents (kyrolabs), Harness Engineering, LLMOps (InftyAI), Opencode">4 lists</span></span><a class="hit" href="repo/anomalyco/opencode.html"><span class="sr">OpenCode</span></a></article><article class="cx sheet s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="NYYYY" data-inst="1" data-shot="1" data-href="repo/n8n-io/n8n.html"><span class="ph"><img src="https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="205,572 stars — #9 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>205.6k</span><span class="ttl bl"><span class="own">n8n-io<span aria-hidden="true">/</span></span><span class="nm">n8n</span></span><span class="rev"><span class="chip kind" data-fam="run" title="Orchestrators &amp; Multi-Agent — Run: things that do the work">Orchestrator</span><span class="plat tight" aria-label="Platforms: Windows no, WSL2 yes, macOS yes, Linux yes, Docker yes"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="y" title="Docker — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Dkr</i></span><span class="lang"><i></i>TypeScript</span></span></span><a class="hit" href="repo/n8n-io/n8n.html"><span class="sr">n8n</span></a></article><article class="cx sheet s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="LLLLN" data-inst="1" data-shot="0" data-href="repo/tensorflow/tensorflow.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:1/1;--p1:var(--accent-sky);--p2:var(--accent-gold);--px:15%;--py:28%;--ang:28deg;--gap:16px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">C++</span><span class="pt-r"></span></span><span class="veil"></span><span class="stz" title="200,227 stars — #10 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>200.2k</span><span class="ttl bl"><span class="own">tensorflow<span aria-hidden="true">/</span></span><span class="nm">TensorFlow</span></span><span class="rev"><span class="chip kind" data-fam="build" title="Harnesses &amp; Runtime Infra — Build: things you build on">Harness</span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>C++</span></span></span><a class="hit" href="repo/tensorflow/tensorflow.html"><span class="sr">TensorFlow</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="LLLLN" data-inst="1" data-shot="1" data-href="repo/significant-gravitas/autogpt.html"><span class="ph"><img src="https://raw.githubusercontent.com/Significant-Gravitas/AutoGPT/master/docs/home/.gitbook/assets/Banner_image.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="187,475 stars — #11 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>187.5k</span><span class="ttl bl"><span class="own">Significant-Gravitas<span aria-hidden="true">/</span></span><span class="nm">AutoGPT</span></span><span class="rev"><span class="chip kind" data-fam="build" title="Frameworks &amp; SDKs — Build: things you build on">Framework</span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>Python</span></span><span class="flag rare" title="AI Agents (Jenqyang), AI Agents (Schwoebel), AI Agents 2026, Agent Skill Security, Agents (e2b), LLM Agents (kaushikb11), LLMOps (InftyAI)">7 lists</span></span><a class="hit" href="repo/significant-gravitas/autogpt.html"><span class="sr">AutoGPT</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="YLYYN" data-inst="1" data-shot="0" data-href="repo/ollama/ollama.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:1/1;--p1:var(--accent-sky);--p2:var(--accent-coral);--px:71%;--py:40%;--ang:113deg;--gap:14px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">GO</span><span class="pt-r"></span></span><span class="veil"></span><span class="stz" title="181,373 stars — #12 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>181.4k</span><span class="ttl bl"><span class="own">ollama<span aria-hidden="true">/</span></span><span class="nm">Ollama</span></span><span class="rev"><span class="chip kind" data-fam="build" title="Harnesses &amp; Runtime Infra — Build: things you build on">Harness</span><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 likely, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>Go</span></span><span class="flag rare" title="AI Agents (Schwoebel), AI Agents 2026, LLMOps (InftyAI), LLMOps (tensorchord)">4 lists</span></span><a class="hit" href="repo/ollama/ollama.html"><span class="sr">Ollama</span></a></article><article class="cx sheet s-rare" style="--ac:var(--accent-violet)" data-fam="extend" data-os="LLLLN" data-inst="1" data-shot="0" data-href="repo/anthropics/skills.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:1/1;--p1:var(--accent-violet);--p2:var(--accent-gold);--px:76%;--py:29%;--ang:11deg;--gap:12px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">PYTHON</span><span class="pt-r"></span></span><span class="veil"></span><span class="stz" title="177,437 stars — #13 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>177.4k</span><span class="ttl bl"><span class="own">anthropics<span aria-hidden="true">/</span></span><span class="nm">Agent Skills</span></span><span class="rev"><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>Python</span></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (JackyST0), Agent Skills (libukai), Claude Code, Claude Code (jqueryscript), Cursor Skills">6 lists</span></span><a class="hit" href="repo/anthropics/skills.html"><span class="sr">Agent Skills</span></a></article><article class="cx sheet s-rare" style="--ac:var(--accent-gold)" data-fam="data" data-os="LLLLN" data-inst="1" data-shot="1" data-href="repo/f/prompts.chat.html"><span class="ph"><img src="https://raw.githubusercontent.com/f/prompts.chat/main/public/sponsors/clemta.webp" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="170,897 stars — #14 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>170.9k</span><span class="ttl bl"><span class="own">f<span aria-hidden="true">/</span></span><span class="nm">awesome-chatgpt-prompts</span></span><span class="rev"><span class="chip kind" data-fam="data" title="Docs, Learning &amp; Lists — Data: what it reads, remembers and produces">Reading</span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>HTML</span></span><span class="flag rare" title="AAS Skill Sources, Agent Skill Security, Prompt Engineering (promptslab)">3 lists</span></span><a class="hit" href="repo/f/prompts.chat.html"><span class="sr">awesome-chatgpt-prompts</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="NYNYY" data-inst="1" data-shot="1" data-href="repo/langgenius/dify.html"><span class="ph"><img src="https://raw.githubusercontent.com/langgenius/dify/main/images/GitHub_README_if.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="156,740 stars — #15 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>156.7k</span><span class="ttl bl"><span class="own">langgenius<span aria-hidden="true">/</span></span><span class="nm">Dify</span></span><span class="rev"><span class="chip kind" data-fam="build" title="Frameworks &amp; SDKs — Build: things you build on">Framework</span><span class="plat tight" aria-label="Platforms: Windows no, WSL2 yes, macOS no, Linux yes, Docker yes"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="n" title="macOS — No. No evidence of support anywhere in the project.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="y" title="Docker — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Dkr</i></span><span class="lang"><i></i>TypeScript</span></span><span class="flag rare" title="AI Agents 2026, Harness Engineering, LLM Agents (kaushikb11), LLMOps (InftyAI), LLMOps (tensorchord), Prompt Engineering (promptslab)">6 lists</span></span><a class="hit" href="repo/langgenius/dify.html"><span class="sr">Dify</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="YLYYY" data-inst="1" data-shot="1" data-href="repo/langflow-ai/langflow.html"><span class="ph"><img src="https://github.com/user-attachments/assets/03168b17-a11d-4b2a-b0f7-c1cce69e5a2c" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="155,095 stars — #16 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>155.1k</span><span class="ttl bl"><span class="own">langflow-ai<span aria-hidden="true">/</span></span><span class="nm">Langflow</span></span><span class="rev"><span class="chip kind" data-fam="run" title="Orchestrators &amp; Multi-Agent — Run: things that do the work">Orchestrator</span><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 likely, macOS yes, Linux yes, Docker yes"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="y" title="Docker — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Dkr</i></span><span class="lang"><i></i>Python</span></span><span class="flag rare" title="AI Agents 2026, LLMOps (tensorchord), Prompt Engineering (promptslab)">3 lists</span></span><a class="hit" href="repo/langflow-ai/langflow.html"><span class="sr">Langflow</span></a></article><article class="cx sheet s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="LYLLY" data-inst="1" data-shot="1" data-href="repo/open-webui/open-webui.html"><span class="ph"><img src="https://raw.githubusercontent.com/open-webui/open-webui/main/demo.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="152,716 stars — #17 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>152.7k</span><span class="ttl bl"><span class="own">open-webui<span aria-hidden="true">/</span></span><span class="nm">Open WebUI</span></span><span class="rev"><span class="chip kind" data-fam="build" title="Harnesses &amp; Runtime Infra — Build: things you build on">Harness</span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 yes, macOS likely, Linux likely, Docker yes"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="y" title="Docker — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Dkr</i></span><span class="lang"><i></i>Python</span></span></span><a class="hit" href="repo/open-webui/open-webui.html"><span class="sr">Open WebUI</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="YLLLN" data-inst="1" data-shot="1" data-href="repo/anthropics/claude-code.html"><span class="ph"><img src="https://raw.githubusercontent.com/anthropics/claude-code/main/demo.gif" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="147,434 stars — #18 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>147.4k</span><span class="ttl bl"><span class="own">anthropics<span aria-hidden="true">/</span></span><span class="nm">claude-code</span></span><span class="rev"><span class="chip kind" data-fam="run" title="Orchestrators &amp; Multi-Agent — Run: things that do the work">Orchestrator</span><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>TypeScript</span></span><span class="flag rare" title="Claude Code, Claude Code (jqueryscript), Vibe Coding">3 lists</span></span><a class="hit" href="repo/anthropics/claude-code.html"><span class="sr">claude-code</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="LLLLN" data-inst="1" data-shot="0" data-href="repo/langchain-ai/langchain.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:1/1;--p1:var(--accent-sky);--p2:var(--accent-violet);--px:45%;--py:28%;--ang:71deg;--gap:9px;--arc:99.8%"><span class="pt-h"></span><span class="pt-w">PYTHON</span><span class="pt-r"></span></span><span class="veil"></span><span class="stz" title="146,799 stars — #19 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>146.8k</span><span class="ttl bl"><span class="own">langchain-ai<span aria-hidden="true">/</span></span><span class="nm">LangChain</span></span><span class="rev"><span class="chip kind" data-fam="build" title="Frameworks &amp; SDKs — Build: things you build on">Framework</span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>Python</span></span><span class="flag rare" title="AI Agents (Jenqyang), AI Agents (Schwoebel), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), LLMOps (InftyAI), LLMOps (tensorchord), Prompt Engineering (promptslab)">8 lists</span></span><a class="hit" href="repo/langchain-ai/langchain.html"><span class="sr">LangChain</span></a></article><article class="cx sheet s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="LLLLN" data-inst="1" data-shot="1" data-href="repo/dietrichgebert/ponytail.html"><span class="ph"><img src="https://raw.githubusercontent.com/DietrichGebert/ponytail/main/assets/waitlist-banner.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="143,616 stars — #20 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>143.6k</span><span class="ttl bl"><span class="own">DietrichGebert<span aria-hidden="true">/</span></span><span class="nm">Ponytail</span></span><span class="rev"><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>JavaScript</span></span></span><a class="hit" href="repo/dietrichgebert/ponytail.html"><span class="sr">Ponytail</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="LLLLN" data-inst="1" data-shot="1" data-href="repo/shubhamsaboo/awesome-llm-apps.html"><span class="ph"><img src="https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/docs/banner/unwind_black.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="139,293 stars — #21 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>139.3k</span><span class="ttl bl"><span class="own">Shubhamsaboo<span aria-hidden="true">/</span></span><span class="nm">awesome-llm-apps</span></span><span class="rev"><span class="chip kind" data-fam="run" title="Assistants &amp; Domain Agents — Run: things that do the work">Assistant</span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>Python</span></span><span class="flag rare" title="Claude Code Toolkit, Harness Engineering, LLM App Templates">3 lists</span></span><a class="hit" href="repo/shubhamsaboo/awesome-llm-apps.html"><span class="sr">awesome-llm-apps</span></a></article><article class="cx sheet s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="LLLLN" data-inst="1" data-shot="0" data-href="repo/github/spec-kit.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:1/1;--p1:var(--accent-mint);--p2:var(--accent-gold);--px:41%;--py:30%;--ang:84deg;--gap:10px;--arc:99.8%"><span class="pt-h"></span><span class="pt-w">PYTHON</span><span class="pt-r"></span></span><span class="veil"></span><span class="stz" title="138,183 stars — #22 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>138.2k</span><span class="ttl bl"><span class="own">github<span aria-hidden="true">/</span></span><span class="nm">GitHub Spec Kit</span></span><span class="rev"><span class="chip kind" data-fam="run" title="Orchestrators &amp; Multi-Agent — Run: things that do the work">Orchestrator</span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>Python</span></span></span><a class="hit" href="repo/github/spec-kit.html"><span class="sr">GitHub Spec Kit</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="YYYYN" data-inst="1" data-shot="1" data-href="repo/farion1231/cc-switch.html"><span class="ph"><img src="https://raw.githubusercontent.com/farion1231/cc-switch/main/assets/screenshots/main-en.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="133,956 stars — #23 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>134.0k</span><span class="ttl bl"><span class="own">farion1231<span aria-hidden="true">/</span></span><span class="nm">cc-switch</span></span><span class="rev"><span class="chip kind" data-fam="extend" title="Plugins, Themes &amp; Clients — Extend: things you add to what you have">Plugin</span><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>Rust</span></span><span class="flag rare" title="Claude Code (jqueryscript), Claude Code Toolkit, Codex CLI Ecosystem">3 lists</span></span><a class="hit" href="repo/farion1231/cc-switch.html"><span class="sr">cc-switch</span></a></article><article class="cx sheet s-rare s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="NNYNN" data-inst="1" data-shot="1" data-href="repo/garrytan/gstack.html"><span class="ph"><img src="https://raw.githubusercontent.com/garrytan/gstack/main/docs/images/github-2026.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:1/1"><span class="veil"></span><span class="stz" title="133,846 stars — #24 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>133.8k</span><span class="ttl bl"><span class="own">garrytan<span aria-hidden="true">/</span></span><span class="nm">gstack</span></span><span class="rev"><span class="chip kind" data-fam="run" title="Orchestrators &amp; Multi-Agent — Run: things that do the work">Orchestrator</span><span class="plat tight" aria-label="Platforms: Windows no, WSL2 no, macOS yes, Linux no, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="n" title="Linux — No. No evidence of support anywhere in the project.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="lang"><i></i>TypeScript</span></span><span class="flag rare" title="Agent Skills (libukai), Claude Code, Claude Code (jqueryscript), Claude Code Toolkit">4 lists</span></span><a class="hit" href="repo/garrytan/gstack.html"><span class="sr">gstack</span></a></article></div></section><section class="sec"><h2>Terminal record<em>direction 4</em></h2><p class="why">The same facts as a command transcript. This one drops the image-first premise on purpose, to show the other end of the range: every field visible at once, nothing on hover, nothing truncated but the description, and the install command as the last line of a session that reads top to bottom. It is the densest face in the set, the only one that survives being printed, and under Neon Terminal it stops looking like a variant and starts looking like the native form.</p><div class="g-rec"><article class="cx rec s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/openclaw/openclaw.html"><span class="strip"><span class="pt" aria-hidden="true" style="aspect-ratio:3/4;--p1:var(--accent-sky);--p2:var(--accent-gold);--px:26%;--py:37%;--ang:177deg;--gap:16px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span></span><div class="bd"><div class="pr">$ atlas show <b>openclaw/openclaw</b><span class="flag rare" title="AI Agents (Jenqyang), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), OpenClaw Assistants, Orchestrators">6 lists</span></div><div class="kv"><span class="k">kind</span><span class="v">Framework</span><span class="k">lang</span><span class="v">TypeScript</span><span class="k">stars</span><span class="v">390,202 <em>#1 of 8,856</em></span><span class="k">plat</span><span class="v"><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span></span><span class="k">lists</span><span class="v">6 <em>AI Agents (Jenqyang), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), OpenClaw Assistants, Orchestrators</em></span><span class="k">push</span><span class="v">today</span></div><p class="dsc">Open-source AI agent framework that turns LLMs into persistent, proactive personal AI agents with multi-channel messaging (Signal, Telegram, Discord, WhatsApp), cron scheduling, memory systems, MCP integration, skill plugins, sub-agent spawning, and browser automation</p><div class="cw"><code class="cmd">npm install -g openclaw@latest --allow-scripts=openclaw</code><button class="cp" data-cmd="npm install -g openclaw@latest --allow-scripts=openclaw" title="Copy">Copy</button></div></div><a class="hit" href="repo/openclaw/openclaw.html"><span class="sr">openclaw</span></a></article><article class="cx rec s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NNNNN" data-inst="1" data-shot="0" data-href="repo/obra/superpowers.html"><span class="strip"><span class="pt" aria-hidden="true" style="aspect-ratio:3/4;--p1:var(--accent-violet);--p2:var(--accent-gold);--px:68%;--py:70%;--ang:51deg;--gap:12px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">SHELL</span><span class="pt-r"></span></span></span><div class="bd"><div class="pr">$ atlas show <b>obra/superpowers</b><span class="flag rare" title="AAS Skill Sources, Agent Skills (JackyST0), Agent Skills (VoltAgent), Agent Skills (libukai), Claude Code, Claude Code (jqueryscript), Harness Engineering">7 lists</span></div><div class="kv"><span class="k">kind</span><span class="v">Skill</span><span class="k">lang</span><span class="v">Shell</span><span class="k">stars</span><span class="v">289,634 <em>#2 of 8,856</em></span><span class="k">plat</span><span class="v"><span class="plat tight" aria-label="Platforms: Windows no, WSL2 no, macOS no, Linux no, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="n" title="macOS — No. No evidence of support anywhere in the project.">Mac</i><i class="n" title="Linux — No. No evidence of support anywhere in the project.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span></span><span class="k">lists</span><span class="v">7 <em>AAS Skill Sources, Agent Skills (JackyST0), Agent Skills (VoltAgent), Agent Skills (libukai), Claude Code, Claude Code (jqueryscript), Harness Engineering</em></span><span class="k">push</span><span class="v">1d</span></div><p class="dsc">by Jesse Vincent - A strong bundle of core competencies for software engineering, with good coverage of a large portion of the SDLC - from planning, reviewing, testing, debugging... Well written, well organized, and adaptable. The author refers to them as &quot;superpowers&quot;, but many of them are just consolidating engineering best practices - which sometimes does feel like a superpower when working wit…</p><div class="cw"><code class="cmd">git clone https://github.com/obra/superpowers.git</code><button class="cp" data-cmd="git clone https://github.com/obra/superpowers.git" title="Copy">Copy</button></div></div><a class="hit" href="repo/obra/superpowers.html"><span class="sr">Superpowers</span></a></article></div></section><section class="sec"><h2>Data portrait<em>direction 5</em></h2><p class="why">A poster that never fetches an image, <b>even when the row has one</b>. Built as its own direction rather than only as a fallback because the grid it makes is the more honest one: at 53% screenshot coverage an image-first grid is two grids interleaved, and a reader scanning it learns as much about which maintainer took a screenshot as about which project fits their problem. Every tile here is generated from the facts &mdash; hue is the topic, the hatch angle and spacing are a crc32 of the <code>nwo</code> so no two repeat and the watermark is the language. Zero requests, zero files, stable across builds. At spotlight size it adds an arc for the project&rsquo;s percentile by stars; on a card it does not, and neither does it draw the platform verdicts, because the pills and the star pill already carry both. A 272px tile leaves 40px between the kind chip and the name stack, and a second mark in there collided on <b>54 of 95</b> faces.</p><div class="g-poster"><article class="cx poster gen s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/openclaw/openclaw.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-sky);--p2:var(--accent-gold);--px:26%;--py:37%;--ang:177deg;--gap:16px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="build" title="Frameworks &amp; SDKs — Build: things you build on">Framework</span><span class="stz" title="390,202 stars — #1 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>390.2k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">openclaw<span aria-hidden="true">/</span></span><span class="nm">openclaw</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>TypeScript</span><span class="fam">Build</span><span class="age"><i class="dot hot"></i>today</span><span class="spring"></span><span class="flag rare" title="AI Agents (Jenqyang), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), OpenClaw Assistants, Orchestrators">6 lists</span></div><div class="cw"><code class="cmd">npm install -g openclaw@latest --allow-scripts=openclaw</code><button class="cp" data-cmd="npm install -g openclaw@latest --allow-scripts=openclaw" title="Copy">Copy</button></div></div><a class="hit" href="repo/openclaw/openclaw.html"><span class="sr">openclaw</span></a></article><article class="cx poster gen s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NNNNN" data-inst="1" data-shot="0" data-href="repo/obra/superpowers.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-violet);--p2:var(--accent-gold);--px:68%;--py:70%;--ang:51deg;--gap:12px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">SHELL</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="stz" title="289,634 stars — #2 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>289.6k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows no, WSL2 no, macOS no, Linux no, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="n" title="macOS — No. No evidence of support anywhere in the project.">Mac</i><i class="n" title="Linux — No. No evidence of support anywhere in the project.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">obra<span aria-hidden="true">/</span></span><span class="nm">Superpowers</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>Shell</span><span class="fam">Extend</span><span class="age"><i class="dot hot"></i>1d</span><span class="spring"></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (JackyST0), Agent Skills (VoltAgent), Agent Skills (libukai), Claude Code, Claude Code (jqueryscript), Harness Engineering">7 lists</span></div><div class="cw"><code class="cmd">git clone https://github.com/obra/superpowers.git</code><button class="cp" data-cmd="git clone https://github.com/obra/superpowers.git" title="Copy">Copy</button></div></div><a class="hit" href="repo/obra/superpowers.html"><span class="sr">Superpowers</span></a></article><article class="cx poster gen s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="LLLLN" data-inst="1" data-shot="1" data-href="repo/mattpocock/skills.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-violet);--p2:var(--accent-sky);--px:87%;--py:48%;--ang:89deg;--gap:10px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">SHELL</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="stz" title="267,011 stars — #3 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>267.0k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">mattpocock<span aria-hidden="true">/</span></span><span class="nm">skills</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>Shell</span><span class="fam">Extend</span><span class="age"><i class="dot hot"></i>3d</span><span class="spring"></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (VoltAgent), Claude Code (jqueryscript), Cursor Skills">4 lists</span></div><div class="cw"><code class="cmd">npx skills@latest add mattpocock/skills</code><button class="cp" data-cmd="npx skills@latest add mattpocock/skills" title="Copy">Copy</button></div></div><a class="hit" href="repo/mattpocock/skills.html"><span class="sr">skills</span></a></article><article class="cx poster gen s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NYYYY" data-inst="1" data-shot="1" data-href="repo/affaan-m/ecc.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-violet);--p2:var(--accent-sky);--px:80%;--py:58%;--ang:169deg;--gap:10px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">JAVASCRIPT</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="stz" title="264,558 stars — #4 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>264.6k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows no, WSL2 yes, macOS yes, Linux yes, Docker yes"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="y" title="Docker — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Dkr</i></span><span class="ttl bl"><span class="own">affaan-m<span aria-hidden="true">/</span></span><span class="nm">Everything Claude Code (ECC)</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>JavaScript</span><span class="fam">Extend</span><span class="age"><i class="dot hot"></i>today</span><span class="spring"></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (JackyST0), Claude Code, Claude Code (jqueryscript), Codex CLI Ecosystem, Harness Engineering">6 lists</span></div><div class="cw"><code class="cmd">npm install -g ecc-universal@2.2.2</code><button class="cp" data-cmd="npm install -g ecc-universal@2.2.2" title="Copy">Copy</button></div></div><a class="hit" href="repo/affaan-m/ecc.html"><span class="sr">Everything Claude Code (ECC)</span></a></article><article class="cx poster gen s-rare s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/nousresearch/hermes-agent.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-mint);--p2:var(--accent-violet);--px:18%;--py:15%;--ang:120deg;--gap:12px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">PYTHON</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="run" title="Assistants &amp; Domain Agents — Run: things that do the work">Assistant</span><span class="stz" title="247,710 stars — #5 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>247.7k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">NousResearch<span aria-hidden="true">/</span></span><span class="nm">hermes-agent</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>Python</span><span class="fam">Run</span><span class="age"><i class="dot hot"></i>today</span><span class="spring"></span><span class="flag rare" title="Agents (kyrolabs), OpenClaw Assistants, Orchestrators">3 lists</span></div><div class="cw"><code class="cmd">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</code><button class="cp" data-cmd="curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash" title="Copy">Copy</button></div></div><a class="hit" href="repo/nousresearch/hermes-agent.html"><span class="sr">hermes-agent</span></a></article><article class="cx poster gen s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="LLLLN" data-inst="1" data-shot="0" data-href="repo/deepseek-ai/deepseek-harness.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-sky);--p2:var(--accent-coral);--px:40%;--py:65%;--ang:77deg;--gap:13px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="build" title="Harnesses &amp; Runtime Infra — Build: things you build on">Harness</span><span class="stz" title="232,194 stars — #6 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>232.2k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">deepseek-ai<span aria-hidden="true">/</span></span><span class="nm">DeepSeek Harness (dsh)</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>TypeScript</span><span class="fam">Build</span><span class="age"><i class="dot hot"></i>4d</span><span class="spring"></span></div><div class="cw"><code class="cmd">npx @deepseek-ai/dsh web</code><button class="cp" data-cmd="npx @deepseek-ai/dsh web" title="Copy">Copy</button></div></div><a class="hit" href="repo/deepseek-ai/deepseek-harness.html"><span class="sr">DeepSeek Harness (dsh)</span></a></article><article class="cx poster gen s-rare" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NNNNN" data-inst="1" data-shot="0" data-href="repo/multica-ai/andrej-karpathy-skills.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-violet);--p2:var(--accent-violet);--px:18%;--py:12%;--ang:136deg;--gap:12px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">SKILL</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="stz" title="214,489 stars — #7 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>214.5k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows no, WSL2 no, macOS no, Linux no, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="n" title="macOS — No. No evidence of support anywhere in the project.">Mac</i><i class="n" title="Linux — No. No evidence of support anywhere in the project.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">multica-ai<span aria-hidden="true">/</span></span><span class="nm">andrej-karpathy-skills</span></span></span></span><div class="bd"><div class="ln"><span class="fam">Extend</span><span class="age"><i class="dot ok"></i>5mo</span><span class="spring"></span><span class="flag rare" title="AAS Skill Sources, Claude Code, Claude Code (jqueryscript)">3 lists</span></div><div class="cw"><code class="cmd">git clone https://github.com/multica-ai/andrej-karpathy-skills.git</code><button class="cp" data-cmd="git clone https://github.com/multica-ai/andrej-karpathy-skills.git" title="Copy">Copy</button></div></div><a class="hit" href="repo/multica-ai/andrej-karpathy-skills.html"><span class="sr">andrej-karpathy-skills</span></a></article><article class="cx poster gen s-rare s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="NNYYN" data-inst="1" data-shot="1" data-href="repo/anomalyco/opencode.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-mint);--p2:var(--accent-sky);--px:70%;--py:49%;--ang:38deg;--gap:8px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="run" title="Coding Agents — Run: things that do the work">Coding agent</span><span class="stz" title="209,094 stars — #8 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>209.1k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows no, WSL2 no, macOS yes, Linux yes, Docker no"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="n" title="WSL2 — No. No evidence of support anywhere in the project.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">anomalyco<span aria-hidden="true">/</span></span><span class="nm">OpenCode</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>TypeScript</span><span class="fam">Run</span><span class="age"><i class="dot hot"></i>today</span><span class="spring"></span><span class="flag rare" title="Agents (kyrolabs), Harness Engineering, LLMOps (InftyAI), Opencode">4 lists</span></div><div class="cw"><code class="cmd">scoop install opencode # Windows</code><button class="cp" data-cmd="scoop install opencode # Windows" title="Copy">Copy</button></div></div><a class="hit" href="repo/anomalyco/opencode.html"><span class="sr">OpenCode</span></a></article></div></section><section class="sec"><h2>The states a border can carry<em>borders and glows</em></h2><p class="why">Each state is a hue on the border plus a halo gated by <code>--fx-glow</code>, and each one also has a <b>word</b>. A state carried only by a border colour is not carried: it is invisible to anybody who has not been told the code, and gold-against-violet is one of the pairs that red-green colour blindness flattens. The border is what makes the word findable in a grid of thirty; the word is what makes it mean something. Switch to Graphite to see the design hold with every effect token at zero &mdash; the halo goes, the hue stays, no information is lost.</p><div class="ab"><div class="arm"><h3>Default</h3><article class="cx poster " style="--ac:var(--accent-gold)" data-fam="data" data-os="LLLLN" data-inst="1" data-shot="1" data-href="repo/openai/whisper.html"><span class="ph"><img src="https://raw.githubusercontent.com/openai/whisper/main/approach.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:16/9"><span class="veil"></span><span class="chip kind" data-fam="data" title="Creative, Voice &amp; Media — Data: what it reads, remembers and produces">Media</span><span class="stz" title="109,431 stars — #30 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>109.4k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">openai<span aria-hidden="true">/</span></span><span class="nm">whisper</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>Python</span><span class="fam">Data</span><span class="age"><i class="dot warm"></i>21d</span><span class="lic">MIT</span><span class="spring"></span></div><p class="dsc">Robust Speech Recognition via Large-Scale Weak Supervision</p><div class="cw"><code class="cmd">git clone https://github.com/openai/whisper.git</code><button class="cp" data-cmd="git clone https://github.com/openai/whisper.git" title="Copy">Copy</button></div></div><a class="hit" href="repo/openai/whisper.html"><span class="sr">whisper</span></a></article></div><div class="arm"><h3>New &mdash; simulated</h3><article class="cx poster s-new" style="--ac:var(--accent-violet)" data-fam="extend" data-os="NYYYY" data-inst="1" data-shot="1" data-href="repo/affaan-m/ecc.html"><span class="ph"><img src="https://raw.githubusercontent.com/affaan-m/ECC/main/assets/hero.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:16/9"><span class="veil"></span><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="stz" title="264,558 stars — #4 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>264.6k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows no, WSL2 yes, macOS yes, Linux yes, Docker yes"><i class="n" title="Windows — No. No evidence of support anywhere in the project.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="y" title="Docker — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Dkr</i></span><span class="ttl bl"><span class="own">affaan-m<span aria-hidden="true">/</span></span><span class="nm">Everything Claude Code (ECC)</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>JavaScript</span><span class="fam">Extend</span><span class="age"><i class="dot hot"></i>today</span><span class="lic">MIT</span><span class="spring"></span><span class="flag new">New</span></div><p class="dsc">by Affaan Mustafa - Top-notch, well-written resources covering &quot;just about everything&quot; from core engineering domains. What&#x27;s nice about this &quot;everything-&quot; store is most of the resources have significant standalone value and unlike some all-encompassing frameworks, although you can opt in to the author&#x27;s own specific workflow patterns if you choose, the individual resources offer exemplary patterns…</p><div class="cw"><code class="cmd">npm install -g ecc-universal@2.2.2</code><button class="cp" data-cmd="npm install -g ecc-universal@2.2.2" title="Copy">Copy</button></div></div><a class="hit" href="repo/affaan-m/ecc.html"><span class="sr">Everything Claude Code (ECC)</span></a></article><p class="simlabel">Simulated. 0 rows qualify today; see the note at the top.</p></div><div class="arm"><h3>Named by 3+ lists</h3><article class="cx poster s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/openclaw/openclaw.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-sky);--p2:var(--accent-gold);--px:26%;--py:37%;--ang:177deg;--gap:16px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="build" title="Frameworks &amp; SDKs — Build: things you build on">Framework</span><span class="stz" title="390,202 stars — #1 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>390.2k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">openclaw<span aria-hidden="true">/</span></span><span class="nm">openclaw</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>TypeScript</span><span class="fam">Build</span><span class="age"><i class="dot hot"></i>today</span><span class="spring"></span><span class="flag rare" title="AI Agents (Jenqyang), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), OpenClaw Assistants, Orchestrators">6 lists</span></div><p class="dsc">Open-source AI agent framework that turns LLMs into persistent, proactive personal AI agents with multi-channel messaging (Signal, Telegram, Discord, WhatsApp), cron scheduling, memory systems, MCP integration, skill plugins, sub-agent spawning, and browser automation</p><div class="cw"><code class="cmd">npm install -g openclaw@latest --allow-scripts=openclaw</code><button class="cp" data-cmd="npm install -g openclaw@latest --allow-scripts=openclaw" title="Copy">Copy</button></div></div><a class="hit" href="repo/openclaw/openclaw.html"><span class="sr">openclaw</span></a></article><p>Real state, and rare on purpose: 20 of 8,856 rows are named by three or more of the 39 upstream lists.</p></div><div class="arm"><h3>Pushed inside 7 days</h3><article class="cx poster s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/openclaw/openclaw.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-sky);--p2:var(--accent-gold);--px:26%;--py:37%;--ang:177deg;--gap:16px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="build" title="Frameworks &amp; SDKs — Build: things you build on">Framework</span><span class="stz" title="390,202 stars — #1 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>390.2k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">openclaw<span aria-hidden="true">/</span></span><span class="nm">openclaw</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>TypeScript</span><span class="fam">Build</span><span class="age"><i class="dot hot"></i>today</span><span class="spring"></span><span class="flag rare" title="AI Agents (Jenqyang), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), OpenClaw Assistants, Orchestrators">6 lists</span></div><p class="dsc">Open-source AI agent framework that turns LLMs into persistent, proactive personal AI agents with multi-channel messaging (Signal, Telegram, Discord, WhatsApp), cron scheduling, memory systems, MCP integration, skill plugins, sub-agent spawning, and browser automation</p><div class="cw"><code class="cmd">npm install -g openclaw@latest --allow-scripts=openclaw</code><button class="cp" data-cmd="npm install -g openclaw@latest --allow-scripts=openclaw" title="Copy">Copy</button></div></div><a class="hit" href="repo/openclaw/openclaw.html"><span class="sr">openclaw</span></a></article><p>Green hairline on the top edge, and the dot beside the age pulses. 319 rows qualify, which is why the threshold is 7 days and not 30 &mdash; 725 rows are inside a month.</p></div><div class="arm"><h3>Selected</h3><article class="cx poster sel s-rare s-hot" style="--ac:var(--accent-mint)" data-fam="run" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/nousresearch/hermes-agent.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-mint);--p2:var(--accent-violet);--px:18%;--py:15%;--ang:120deg;--gap:12px;--arc:99.9%"><span class="pt-h"></span><span class="pt-w">PYTHON</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="run" title="Assistants &amp; Domain Agents — Run: things that do the work">Assistant</span><span class="stz" title="247,710 stars — #5 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>247.7k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">NousResearch<span aria-hidden="true">/</span></span><span class="nm">hermes-agent</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>Python</span><span class="fam">Run</span><span class="age"><i class="dot hot"></i>today</span><span class="lic">MIT</span><span class="spring"></span><span class="flag rare" title="Agents (kyrolabs), OpenClaw Assistants, Orchestrators">3 lists</span></div><p class="dsc">Python / TypeScript - Self-improving AI agent with autonomous skill creation, persistent memory, multi-platform messaging, and subagent delegation</p><div class="cw"><code class="cmd">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</code><button class="cp" data-cmd="curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash" title="Copy">Copy</button></div></div><a class="hit" href="repo/nousresearch/hermes-agent.html"><span class="sr">hermes-agent</span></a></article><p>For the console and for keyboard navigation on the shelves.</p></div></div></section><section class="sec"><h2>Where the name goes<em>A/B</em></h2><p class="why">The brief offered bottom-left or top-centre. <b>Bottom-left</b> for three reasons. The 608 rows with no screenshot fall back to artwork that is centred and top-weighted, and the other candidate fallback &mdash; GitHub&rsquo;s social card &mdash; writes the repository name in the upper middle of the frame, so a top-centre overlay lands on top of the one thing already written there. Bottom-left shares a left edge with the metadata row underneath, which makes the card one column of text instead of two competing alignments. And a scrim that darkens upward from the bottom never covers the subject of a screenshot, which is almost always the top two-thirds of a UI.</p><div class="ab"><div class="arm"><h3>Bottom-left <span class="pick">recommended</span></h3><article class="cx poster s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="LLLLN" data-inst="1" data-shot="1" data-href="repo/mattpocock/skills.html"><span class="ph"><img src="https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skill-repo-light_2x.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:16/9"><span class="veil"></span><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="stz" title="267,011 stars — #3 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>267.0k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">mattpocock<span aria-hidden="true">/</span></span><span class="nm">skills</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>Shell</span><span class="fam">Extend</span><span class="age"><i class="dot hot"></i>3d</span><span class="lic">MIT</span><span class="spring"></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (VoltAgent), Claude Code (jqueryscript), Cursor Skills">4 lists</span></div><p class="dsc">Source for 17 Matt Pocock workflow skills - codebase design, TDD, bug diagnosis, triage, PRDs, issues, prototyping, handoff, teaching, and skill-writing guidance (MIT)</p><div class="cw"><code class="cmd">npx skills@latest add mattpocock/skills</code><button class="cp" data-cmd="npx skills@latest add mattpocock/skills" title="Copy">Copy</button></div></div><a class="hit" href="repo/mattpocock/skills.html"><span class="sr">skills</span></a></article></div><div class="arm"><h3>Top-centre</h3><article class="cx poster s-rare s-hot" style="--ac:var(--accent-violet)" data-fam="extend" data-os="LLLLN" data-inst="1" data-shot="1" data-href="repo/mattpocock/skills.html"><span class="ph"><img src="https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skill-repo-light_2x.png" alt="" loading="lazy" decoding="async" style="aspect-ratio:16/9"><span class="veil"></span><span class="chip kind" data-fam="extend" title="Agent Skills — Extend: things you add to what you have">Skill</span><span class="stz" title="267,011 stars — #3 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>267.0k</span><span class="ttl tc"><span class="own">mattpocock<span aria-hidden="true">/</span></span><span class="nm">skills</span></span><span class="plat tight" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>Shell</span><span class="fam">Extend</span><span class="age"><i class="dot hot"></i>3d</span><span class="lic">MIT</span><span class="spring"></span><span class="flag rare" title="AAS Skill Sources, Agent Skills (VoltAgent), Claude Code (jqueryscript), Cursor Skills">4 lists</span></div><p class="dsc">Source for 17 Matt Pocock workflow skills - codebase design, TDD, bug diagnosis, triage, PRDs, issues, prototyping, handoff, teaching, and skill-writing guidance (MIT)</p><div class="cw"><code class="cmd">npx skills@latest add mattpocock/skills</code><button class="cp" data-cmd="npx skills@latest add mattpocock/skills" title="Copy">Copy</button></div></div><a class="hit" href="repo/mattpocock/skills.html"><span class="sr">skills</span></a></article><p>Legible, and it centres a name against an image whose subject is rarely centred. Also the arm that collides with both fallbacks.</p></div></div></section><section class="sec"><h2>What an imageless card shows<em>A/B</em></h2><p class="why">The same project both ways &mdash; <code>openclaw/openclaw</code>, which has no screenshot in this snapshot, like 608 others. The social card is one network request per card to <code>opengraph.githubassets.com</code>; the portrait is a gradient stack in a style attribute.</p><div class="ab"><div class="arm"><h3>Generated portrait <span class="pick">recommended</span></h3><article class="cx poster s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/openclaw/openclaw.html"><span class="ph"><span class="pt" aria-hidden="true" style="aspect-ratio:16/9;--p1:var(--accent-sky);--p2:var(--accent-gold);--px:26%;--py:37%;--ang:177deg;--gap:16px;--arc:100.0%"><span class="pt-h"></span><span class="pt-w">TYPESCRIPT</span><span class="pt-r"></span></span><span class="veil"></span><span class="chip kind" data-fam="build" title="Frameworks &amp; SDKs — Build: things you build on">Framework</span><span class="stz" title="390,202 stars — #1 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>390.2k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">openclaw<span aria-hidden="true">/</span></span><span class="nm">openclaw</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>TypeScript</span><span class="fam">Build</span><span class="age"><i class="dot hot"></i>today</span><span class="spring"></span><span class="flag rare" title="AI Agents (Jenqyang), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), OpenClaw Assistants, Orchestrators">6 lists</span></div><p class="dsc">Open-source AI agent framework that turns LLMs into persistent, proactive personal AI agents with multi-channel messaging (Signal, Telegram, Discord, WhatsApp), cron scheduling, memory systems, MCP integration, skill plugins, sub-agent spawning, and browser automation</p><div class="cw"><code class="cmd">npm install -g openclaw@latest --allow-scripts=openclaw</code><button class="cp" data-cmd="npm install -g openclaw@latest --allow-scripts=openclaw" title="Copy">Copy</button></div></div><a class="hit" href="repo/openclaw/openclaw.html"><span class="sr">openclaw</span></a></article><p>No request, no file, deterministic, and different for every project &mdash; so a grid of imageless rows reads as a grid of distinct things.</p></div><div class="arm"><h3>GitHub social card</h3><article class="cx poster s-rare s-hot" style="--ac:var(--accent-sky)" data-fam="build" data-os="YYYYN" data-inst="1" data-shot="0" data-href="repo/openclaw/openclaw.html"><span class="ph"><img src="https://opengraph.githubassets.com/1/openclaw/openclaw" alt="" loading="lazy" decoding="async" style="aspect-ratio:16/9"><span class="veil"></span><span class="chip kind" data-fam="build" title="Frameworks &amp; SDKs — Build: things you build on">Framework</span><span class="stz" title="390,202 stars — #1 of 8,856 in the atlas"><i aria-hidden="true">&#9733;</i>390.2k</span><span class="ovl"><span class="plat tight" aria-label="Platforms: Windows yes, WSL2 yes, macOS yes, Linux yes, Docker no"><i class="y" title="Windows — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Win</i><i class="y" title="WSL2 — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">WSL</i><i class="y" title="macOS — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Mac</i><i class="y" title="Linux — Yes. Stated in the project&#x27;s own README, install route, CI config or release assets.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span><span class="ttl bl"><span class="own">openclaw<span aria-hidden="true">/</span></span><span class="nm">openclaw</span></span></span></span><div class="bd"><div class="ln"><span class="lang"><i></i>TypeScript</span><span class="fam">Build</span><span class="age"><i class="dot hot"></i>today</span><span class="spring"></span><span class="flag rare" title="AI Agents (Jenqyang), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), OpenClaw Assistants, Orchestrators">6 lists</span></div><p class="dsc">Open-source AI agent framework that turns LLMs into persistent, proactive personal AI agents with multi-channel messaging (Signal, Telegram, Discord, WhatsApp), cron scheduling, memory systems, MCP integration, skill plugins, sub-agent spawning, and browser automation</p><div class="cw"><code class="cmd">npm install -g openclaw@latest --allow-scripts=openclaw</code><button class="cp" data-cmd="npm install -g openclaw@latest --allow-scripts=openclaw" title="Copy">Copy</button></div></div><a class="hit" href="repo/openclaw/openclaw.html"><span class="sr">openclaw</span></a></article><p>Exists for every repository, so coverage is 100%. But it is a third-party request per card, it renders near-white in a dark skin, and twelve of them in a shelf are twelve of the same rectangle.</p></div></div></section><section class="sec"><h2>How platform compatibility reads<em>A/B</em></h2><p class="why">Five platforms, three states each &mdash; <b>Yes</b> stated in the project, <b>Likely</b> inferred from the runtime, <b>No</b> no evidence either way. The third state is not an edge case: 577 rows are exactly <code>LLLLN</code>, so flattening Likely into a yes would misreport nearly half the corpus. The bar meter is smaller and prettier and needs a legend to mean anything, which is fine in a table with a header row and useless on a card that might be the only thing a reader ever sees. Three letters need no legend.</p><div class="ab"><div class="arm"><h3>Three-letter pills <span class="pick">recommended</span></h3><div style="padding:14px 0"><span class="plat" aria-label="Platforms: Windows likely, WSL2 likely, macOS likely, Linux likely, Docker no"><i class="l" title="Windows — Likely. Inferred from the language or runtime. Nothing in the project says so.">Win</i><i class="l" title="WSL2 — Likely. Inferred from the language or runtime. Nothing in the project says so.">WSL</i><i class="l" title="macOS — Likely. Inferred from the language or runtime. Nothing in the project says so.">Mac</i><i class="l" title="Linux — Likely. Inferred from the language or runtime. Nothing in the project says so.">Lnx</i><i class="n" title="Docker — No. No evidence of support anywhere in the project.">Dkr</i></span></div><p>Self-describing, and the fill pattern is comparable at a glance across a whole grid.</p></div><div class="arm"><h3>Five-slot bar meter</h3><div style="padding:14px 0"><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span></div><p>What the console and the matrix already use, where a column header supplies the legend. Kept for the contact sheet, where three letters do not fit.</p></div></div></section><footer style="grid-column:1/-1;margin-top:30px;padding-top:16px;border-top:var(--hair) solid var(--grid);color:var(--muted);font-size:12px">Layout L -- five card directions. 8,856 real rows from the 2026-09-21 snapshot. Search and filtering are inert; skin switching, the bars, the deck and every hover, the copy buttons and the new-state pulse are live. <a href="rail.html">See layout A</a> &middot; <a href="console.html">See layout C</a> &middot; <a href="matrix.html">See layout M</a> &middot; <a href="shelves.html">See layout S</a> &middot; <a href="discover.html">See layout D</a> &middot; <a href="app.html">Back to the switcher</a></footer></div>
+<script>
+// Everything below is demo scaffolding for the parts of "is this nice to use" that a static page cannot
+// answer: the skin swap, the bars, the deck, the sheen and the selection. There is no search here.
+const SKIN_PLANE = {"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"};
+
+// ---- skins. One attribute on <html>; no other JS and no CSS rule knows which skin is active. ----
+const skinBtn = document.getElementById("skinbtn");
+const skinMenu = document.getElementById("skinmenu");
+const SKIN_IDS = Object.keys(SKIN_PLANE);
+
+function paintSkin() {
+  const cur = document.documentElement.dataset.skin;
+  skinMenu.querySelectorAll("[data-skin]").forEach(b => {
+    b.setAttribute("aria-pressed", String(b.dataset.skin === cur));
+  });
+  const tc = document.getElementById("tc");
+  if (tc) tc.content = SKIN_PLANE[cur] || tc.content;
+}
+function setSkin(id) {
+  if (!SKIN_PLANE[id]) return;
+  document.documentElement.dataset.skin = id;
+  try { localStorage.setItem("atlas-skin", id); } catch (e) {}
+  paintSkin();
+  // So the switcher frame can keep its own buttons in step without reloading the iframe.
+  try { parent.postMessage({atlasSkin: id}, "*"); } catch (e) {}
+}
+skinBtn.onclick = () => {
+  const open = skinMenu.hidden;
+  skinMenu.hidden = !open;
+  skinBtn.setAttribute("aria-expanded", String(open));
+};
+skinMenu.onclick = ev => {
+  const b = ev.target.closest("[data-skin]");
+  if (!b) return;
+  setSkin(b.dataset.skin);
+  skinMenu.hidden = true;
+  skinBtn.setAttribute("aria-expanded", "false");
+};
+document.addEventListener("click", ev => {
+  if (!skinMenu.hidden && !ev.target.closest(".picker")) {
+    skinMenu.hidden = true;
+    skinBtn.setAttribute("aria-expanded", "false");
+  }
+});
+addEventListener("message", ev => {
+  if (ev.data && ev.data.setSkin) setSkin(ev.data.setSkin);
+});
+paintSkin();
+
+// ---- layout switch, which in the demo is just a navigation ----
+document.querySelectorAll("[data-layout]").forEach(b => {
+  b.onclick = () => {
+    if (b.getAttribute("aria-pressed") === "true") return;
+    location.href = b.dataset.layout + ".html" + location.search;
+  };
+});
+
+// ---- the bars. Widths start at 0 and are written after first paint, so the CSS transition runs and
+//      the distribution arrives as motion rather than as a fact that was always there. ----
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  document.querySelectorAll(".frow[data-w]").forEach(r => {
+    r.style.setProperty("--w", r.dataset.w);
+  });
+}));
+document.querySelectorAll("[data-more]").forEach(btn => {
+  btn.onclick = () => {
+    const group = btn.closest(".fg");
+    group.querySelectorAll(".frow[hidden]").forEach(r => {
+      r.hidden = false;
+      requestAnimationFrame(() => r.style.setProperty("--w", r.dataset.w));
+    });
+    btn.remove();
+  };
+});
+document.querySelectorAll(".frow").forEach(r => {
+  r.onclick = () => r.setAttribute("aria-pressed",
+    r.getAttribute("aria-pressed") === "true" ? "false" : "true");
+});
+
+// ---- the deck rolls. Honest about the formatting: it interpolates the number and re-applies the same
+//      compaction the build used, so 12.5M counts up as 12.5M and not as 12494028. ----
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function fmt(n, shown) {
+  if (/M$/.test(shown)) return (n / 1e6).toFixed(1) + "M";
+  if (/k$/.test(shown)) return (n / 1e3).toFixed(1) + "k";
+  if (/d$/.test(shown)) return Math.round(n) + "d";
+  return Math.round(n).toLocaleString("en-US");
+}
+if (!reduce) {
+  document.querySelectorAll("[data-roll]").forEach(el => {
+    const target = Number(el.dataset.n), shown = el.dataset.roll, t0 = performance.now();
+    el.textContent = fmt(0, shown);
+    (function step(t) {
+      const p = Math.min(1, (t - t0) / 760);
+      el.textContent = fmt(target * (1 - Math.pow(1 - p, 3)), shown);
+      if (p < 1) requestAnimationFrame(step); else el.textContent = shown;
+    })(t0);
+  });
+}
+
+// ---- the sheen. Two custom properties per panel; the gradient is in CSS and is zero-opacity under a
+//      skin that sets --fx-sheen:0, so this listener is skin-agnostic. The project page's masthead takes
+//      it too, which is what makes arriving there feel like the same surface rather than a second site. ----
+document.querySelectorAll(".card,.hero").forEach(c => {
+  c.addEventListener("pointermove", ev => {
+    const r = c.getBoundingClientRect();
+    c.style.setProperty("--mx", (ev.clientX - r.left) + "px");
+    c.style.setProperty("--my", (ev.clientY - r.top) + "px");
+  });
+});
+
+// ---- a card is a link across its whole area ----
+// The name inside it is a real anchor and stays the accessible path; this only widens the target for a
+// pointer. Guarded on `closest("a")` so clicking the name is not handled twice, and on the modifier keys
+// and a live text selection, all three of which would otherwise turn an ordinary interaction into a
+// navigation the reader did not ask for.
+document.querySelectorAll(".card[data-href]").forEach(c => {
+  c.addEventListener("click", ev => {
+    if (ev.target.closest("a") || ev.metaKey || ev.ctrlKey || ev.shiftKey) return;
+    if (String(getSelection())) return;
+    location.href = c.dataset.href;
+  });
+  c.style.cursor = "pointer";
+});
+
+// ---- T cycles the skin, which is the shortcut Phase 2 ships ----
+addEventListener("keydown", ev => {
+  if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+  const t = ev.target.tagName;
+  if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT") return;
+  if (ev.key === "t" || ev.key === "T") {
+    const i = SKIN_IDS.indexOf(document.documentElement.dataset.skin);
+    setSkin(SKIN_IDS[(i + 1) % SKIN_IDS.length]);
+  }
+});
+
+// The copy button, delegated once for the whole page rather than bound per card -- there are up to 96 of
+// them on the shelves page. Feedback fires on the click and is *corrected* by a rejection, rather than
+// waiting for the promise to settle: a clipboard write that never settles (which is what an unfocused
+// document does) otherwise leaves a button that looks broken. Same reasoning as the project page's.
+document.addEventListener("click", ev => {
+  const b = ev.target.closest(".cp");
+  if (!b) return;
+  ev.preventDefault();
+  ev.stopPropagation();
+  const flash = (msg, good) => {
+    b.classList.toggle("ok", good);
+    b.textContent = msg;
+    clearTimeout(b._t);
+    b._t = setTimeout(() => { b.classList.remove("ok"); b.textContent = "Copy"; }, 1600);
+  };
+  if (!navigator.clipboard) return flash("Select it", false);
+  flash("Copied", true);
+  navigator.clipboard.writeText(b.dataset.cmd || "").catch(() => flash("Select it", false));
+});
+
+</script>
+</body>
+</html>

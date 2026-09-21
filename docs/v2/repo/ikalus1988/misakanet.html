@@ -1,0 +1,930 @@
+<!doctype html>
+<html lang="en" data-skin="glass" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<title>Ikalus1988/MisakaNet (Ikalus1988/MisakaNet) — MCP Servers — Atlas</title>
+<!-- The same mark the nav bar draws, so the tab agrees with the page. `../../../` is how this page reaches
+     `docs/`, which is one level up from a mode page and three from a project page; relative rather than
+     root-absolute for the reason `peer_href` records. -->
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta name="theme-color" id="tc" content="rgba(10,14,28,.62)">
+<!-- Ahead of the stylesheet and inline, for the same reason the shipped page does it: the skin has to
+     settle before first paint or a reader who chose Neon Terminal gets a frame of somebody else's
+     palette. Phase 2 emits this one function into all five generators. -->
+<script>
+try {
+  var s = new URLSearchParams(location.search).get("skin")
+       || localStorage.getItem("atlas-skin");
+  if (!{"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"}[s]) s = "glass";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = {"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"}[s];
+  // Written back, not just read. A skin that arrived in the URL has to become the preference or it lasts
+  // exactly one page: click a card from a ?skin=terminal page and the project page would read whatever
+  // was in storage and flip palette mid-navigation. Sharing a skin is also choosing it.
+  localStorage.setItem("atlas-skin", s);
+} catch (e) {}
+</script>
+<style>
+:root{
+  --surface:#070912;
+  --plane:rgba(255,255,255,.045);
+  --band:rgba(255,255,255,.085);
+  --ink:#F4F7FF;
+  --ink2:#C7D0E4;
+  --muted:#8E9AB5;
+  --grid:rgba(255,255,255,.13);
+  --link:#7CC4FF;
+  --bar:#6FE3C4;
+  --onbar:#04121A;
+  --good:#5BE0B8;
+  --warn:#FF8FA3;
+  --off:#8E9AB5;
+  --accent-sky:#7CC4FF;
+  --accent-mint:#6FE3C4;
+  --accent-gold:#FFD479;
+  --accent-coral:#FF8FA3;
+  --accent-violet:#B9A6FF;
+  --accent-slate:#8E9AB5;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:14px;
+  --radius-sm:10px;
+  --hair:1px;
+  --blur:18px;
+  --panel:linear-gradient(158deg,rgba(255,255,255,.075),rgba(255,255,255,.02) 62%);
+  --panel-b:rgba(255,255,255,.14);
+  --rail-bg:rgba(10,14,28,.62);
+  --field:radial-gradient(900px 620px at 12% -8%,rgba(124,196,255,.20),transparent 62%),radial-gradient(760px 560px at 88% 4%,rgba(185,166,255,.17),transparent 60%),radial-gradient(1100px 760px at 62% 108%,rgba(111,227,196,.14),transparent 64%);
+  --shadow:0 18px 44px rgba(2,5,16,.5);
+  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.1em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:1;
+  --fx-lift:1;
+}
+html[data-skin=graphite]{
+  --surface:#090A0D;
+  --plane:#101217;
+  --band:#20242D;
+  --ink:#F7F8FA;
+  --ink2:#D0D5DD;
+  --muted:#9BA5B3;
+  --grid:#3A414D;
+  --link:#78B7F4;
+  --bar:#D6A034;
+  --onbar:#090A0D;
+  --good:#5BD5AA;
+  --warn:#EF7D86;
+  --off:#9BA5B3;
+  --accent-sky:#78B7F4;
+  --accent-mint:#5BD5AA;
+  --accent-gold:#E7B64D;
+  --accent-coral:#EF7D86;
+  --accent-violet:#A99AF7;
+  --accent-slate:#9BA5B3;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --radius:6px;
+  --radius-sm:4px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--plane);
+  --panel-b:var(--grid);
+  --rail-bg:var(--plane);
+  --field:none;
+  --shadow:none;
+  --lift:0 1px 2px rgba(0,0,0,.55),0 10px 24px -12px rgba(0,0,0,.8);
+  --lift-hi:0 2px 5px rgba(0,0,0,.6),0 26px 52px -16px rgba(0,0,0,.95);
+  --scrim:linear-gradient(to top,rgba(4,5,8,.94),rgba(4,5,8,.66) 34%,rgba(4,5,8,.14) 68%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.08em;
+  --fx-glow:0;
+  --fx-pulse:0;
+  --fx-scan:0;
+  --fx-sheen:0;
+  --fx-lift:0;
+}
+html[data-skin=glass]{
+  --surface:#070912;
+  --plane:rgba(255,255,255,.045);
+  --band:rgba(255,255,255,.085);
+  --ink:#F4F7FF;
+  --ink2:#C7D0E4;
+  --muted:#8E9AB5;
+  --grid:rgba(255,255,255,.13);
+  --link:#7CC4FF;
+  --bar:#6FE3C4;
+  --onbar:#04121A;
+  --good:#5BE0B8;
+  --warn:#FF8FA3;
+  --off:#8E9AB5;
+  --accent-sky:#7CC4FF;
+  --accent-mint:#6FE3C4;
+  --accent-gold:#FFD479;
+  --accent-coral:#FF8FA3;
+  --accent-violet:#B9A6FF;
+  --accent-slate:#8E9AB5;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:14px;
+  --radius-sm:10px;
+  --hair:1px;
+  --blur:18px;
+  --panel:linear-gradient(158deg,rgba(255,255,255,.075),rgba(255,255,255,.02) 62%);
+  --panel-b:rgba(255,255,255,.14);
+  --rail-bg:rgba(10,14,28,.62);
+  --field:radial-gradient(900px 620px at 12% -8%,rgba(124,196,255,.20),transparent 62%),radial-gradient(760px 560px at 88% 4%,rgba(185,166,255,.17),transparent 60%),radial-gradient(1100px 760px at 62% 108%,rgba(111,227,196,.14),transparent 64%);
+  --shadow:0 18px 44px rgba(2,5,16,.5);
+  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.1em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:1;
+  --fx-lift:1;
+}
+html[data-skin=terminal]{
+  --surface:#04070A;
+  --plane:#070E11;
+  --band:#0C181B;
+  --ink:#DCFFEA;
+  --ink2:#9BE8BE;
+  --muted:#4F9179;
+  --grid:#16332A;
+  --link:#52F2A0;
+  --bar:#52F2A0;
+  --onbar:#04070A;
+  --good:#52F2A0;
+  --warn:#FFB454;
+  --off:#4F9179;
+  --accent-sky:#57D9FF;
+  --accent-mint:#52F2A0;
+  --accent-gold:#FFD166;
+  --accent-coral:#FF7A85;
+  --accent-violet:#C792EA;
+  --accent-slate:#4F9179;
+  --ui:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --radius:0px;
+  --radius-sm:0px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--plane);
+  --panel-b:var(--grid);
+  --rail-bg:#050B0D;
+  --field:linear-gradient(180deg,rgba(82,242,160,.05),transparent 240px);
+  --shadow:none;
+  --lift:3px 3px 0 rgba(0,0,0,.9);
+  --lift-hi:6px 6px 0 rgba(0,0,0,.95);
+  --scrim:linear-gradient(to top,rgba(2,6,7,.96) 0 42%,rgba(2,6,7,.4) 76%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.14em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:1;
+  --fx-sheen:0;
+  --fx-lift:0;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--surface);color:var(--ink);font-family:var(--ui);font-size:14.5px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;min-height:100vh}
+/* The lit field the frosted panels frost. Fixed, so it does not scroll away from under them, and
+   behind everything. `none` in the skins that do not want one, which costs nothing. */
+body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-events:none;z-index:0}
+/* The scanline. One element, one token: at --fx-scan:0 it is invisible and at 1 it is a 3px repeating
+   gradient over the whole viewport. Deliberately not an overlay on every panel -- the point of a CRT
+   line is that it crosses everything at once, including the gaps between panels.
+   It flickers rather than drifts. A 3px gradient translated by 3px is a shimmer at any refresh rate and
+   reads as a rendering fault; an occasional dip in opacity is what a tube actually does, and it is the
+   technique the effects catalogue uses too. Both keyframe stops multiply by the token, so --fx-scan:0
+   still means exactly nothing rather than "invisible except during the flicker". */
+.scan{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:calc(var(--fx-scan) * .45);
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.34) 0 1px,transparent 1px 3px);
+  animation:scanflicker calc(5.5s * var(--fx-scan)) linear infinite}
+@keyframes scanflicker{
+  0%,96%,100%{opacity:calc(var(--fx-scan) * .45)}
+  97%{opacity:calc(var(--fx-scan) * .26)}
+  98.5%{opacity:calc(var(--fx-scan) * .58)}}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+button,input,select{font:inherit;font-family:var(--ui);color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--bar);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%)}
+
+/* ---- the one sticky layer ----
+   Today's page pins the masthead and the filter bar separately and spends 148px of a 900px viewport on
+   chrome before a single row. This is 52px, and it is the only thing that pins. */
+.rail{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;height:52px;
+  padding:0 16px;background:var(--rail-bg);border-bottom:var(--hair) solid var(--grid);
+  backdrop-filter:blur(var(--blur)) saturate(1.3);-webkit-backdrop-filter:blur(var(--blur)) saturate(1.3)}
+.mark{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+/* The mark has no tile, and losing it was the point. The first version set `background:var(--bar)` on this
+   box and centred a glyph in it, which is fine for a letter and fatal for this drawing: the mark's own
+   globe is `--bar`, so a gold globe landed on a gold square and the only thing left visible was the
+   meridian grid. The svg brings its own plate, so the job here is just to reserve the space.
+
+   The glow is a `drop-shadow` rather than a `box-shadow` for the same reason. A box-shadow traces this
+   element's border-box -- a 28px square -- while the thing being lit is a 25%-rounded plate with an antenna
+   sticking out of its corner, so the square's glow read as a halo around a tile that is not there.
+   `drop-shadow` follows the rendered alpha, which means the antenna glows too, and the antenna is the part
+   that leaves the silhouette. */
+.mark .glyph{display:grid;place-items:center;width:28px;height:28px;flex:none;color:var(--bar)}
+/* Seven seconds, which is slow enough to be noticed only if you are looking at it -- a nav mark that
+   pulses at a readable rate is a nav mark that competes with the page. Gated on the duration, so Graphite
+   computes `calc(7s * 0)` = 0s and the animation never enters `document.getAnimations()` at all, rather
+   than sitting in the compositor animating between two identical frames. The radius is gated separately on
+   `--fx-glow`, so the floor state is the flat drawing with no light on it and nothing missing. */
+.mark .glyph svg{width:30px;height:30px;display:block;overflow:visible;
+  filter:drop-shadow(0 0 calc(5px * var(--fx-glow)) color-mix(in srgb,var(--bar) 45%,transparent));
+  animation:markbreath calc(7s * var(--fx-pulse)) ease-in-out infinite}
+@keyframes markbreath{
+  0%,100%{filter:drop-shadow(0 0 calc(3px * var(--fx-glow))
+    color-mix(in srgb,var(--bar) 32%,transparent))}
+  50%{filter:drop-shadow(0 0 calc(9px * var(--fx-glow))
+    color-mix(in srgb,var(--bar) 60%,transparent))}}
+.mark b{font-size:15px}
+.mark .ver{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em}
+/* Search. Inert in this demo and labelled as such, because a box that looks live and is not is worse
+   than one that says so. */
+.qwrap{position:relative;flex:1 1 auto;max-width:520px;min-width:0}
+.qwrap .mag{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);
+  font-size:13px;pointer-events:none}
+#q{width:100%;height:34px;padding:0 74px 0 31px;border-radius:999px;
+  border:var(--hair) solid var(--grid);background:var(--band);color:var(--ink);font-size:13.5px}
+#q::placeholder{color:var(--muted)}
+.qwrap .kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--mono);
+  font-size:10.5px;color:var(--muted);border:var(--hair) solid var(--grid);border-radius:5px;
+  padding:2px 6px;pointer-events:none}
+.count{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink2);
+  white-space:nowrap}
+.count b{color:var(--ink)}
+.spring{flex:1 1 auto}
+/* The segmented view switch and the skin button share one shape, so the rail reads as one instrument
+   rather than a row of unrelated widgets -- which is the single biggest complaint about today's bar. */
+.seg{display:flex;gap:2px;padding:2px;border-radius:999px;background:var(--band);
+  border:var(--hair) solid var(--grid)}
+.seg button{height:26px;padding:0 11px;border:0;border-radius:999px;background:transparent;
+  color:var(--muted);font-size:12px;letter-spacing:.01em}
+.seg button[aria-pressed=true]{background:var(--bar);color:var(--onbar);font-weight:600;
+  box-shadow:0 0 calc(14px * var(--fx-glow)) color-mix(in srgb,var(--bar) 45%,transparent)}
+.ghost{height:30px;padding:0 12px;border-radius:999px;background:var(--band);
+  border:var(--hair) solid var(--grid);color:var(--ink2);font-size:12.5px;display:flex;
+  align-items:center;gap:7px;white-space:nowrap}
+.ghost:hover{color:var(--ink);border-color:var(--bar)}
+.dotrow{display:flex;gap:3px}
+.dotrow i{width:8px;height:8px;border-radius:50%;display:block}
+
+/* ---- skin picker ---- */
+.picker{position:relative}
+.menu{position:absolute;right:0;top:38px;min-width:266px;padding:6px;border-radius:var(--radius);
+  background:var(--panel);border:var(--hair) solid var(--panel-b);box-shadow:var(--shadow);
+  backdrop-filter:blur(calc(var(--blur) + 8px));-webkit-backdrop-filter:blur(calc(var(--blur) + 8px));
+  z-index:70}
+.menu[hidden]{display:none}
+.menu h3{margin:6px 8px 8px;font-size:10.5px;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);color:var(--muted);font-weight:600}
+.menu button{display:flex;width:100%;gap:10px;align-items:flex-start;padding:9px 9px;border:0;
+  border-radius:var(--radius-sm);background:transparent;text-align:left}
+.menu button:hover{background:var(--band)}
+.menu button[aria-pressed=true]{background:var(--band);outline:var(--hair) solid var(--bar)}
+.menu .sw{display:flex;flex:none;gap:0;margin-top:2px;border-radius:5px;overflow:hidden;
+  border:1px solid var(--grid)}
+.menu .sw i{width:12px;height:22px;display:block}
+.menu .nm{font-size:13px;font-weight:600;color:var(--ink)}
+.menu .ds{font-size:11.5px;color:var(--muted);line-height:1.35;margin-top:2px}
+.menu kbd{font-family:var(--mono);font-size:10px;color:var(--muted)}
+
+/* ---- the shell: facet rail, then content ---- */
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);gap:24px;
+  max-width:1680px;margin:0 auto;padding:20px 16px 72px;position:relative;z-index:1}
+.facets{align-self:start;position:sticky;top:72px;max-height:calc(100vh - 92px);overflow-y:auto;
+  scrollbar-width:thin;padding-right:4px}
+.fg{margin:0 0 20px}
+.fh{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 8px;
+  font-size:10.5px;font-weight:600;text-transform:var(--kick-case);letter-spacing:var(--kick-track);
+  color:var(--muted)}
+.fh em{font-style:normal;font-family:var(--num);color:var(--grid)}
+/* A facet row is a chip with a bar behind it. The bar is the whole reason the rail exists: the largest
+   topic holds 278 rows and the smallest 11, and three wrapping rows of same-sized chips cannot say that.
+   ::before rather than a child element so the 44px touch floor stays granted on the row itself. */
+.frow{position:relative;display:flex;align-items:center;gap:8px;width:100%;min-height:30px;
+  padding:5px 9px;margin:0 0 3px;border:0;border-radius:var(--radius-sm);background:transparent;
+  overflow:hidden;text-align:left;isolation:isolate}
+.frow::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w,0%);z-index:-1;
+  background:color-mix(in srgb,var(--fc,var(--bar)) 22%,transparent);
+  border-right:1px solid color-mix(in srgb,var(--fc,var(--bar)) 55%,transparent);
+  transition:width .75s cubic-bezier(.22,1,.36,1)}
+.frow:hover{background:var(--band)}
+.frow[aria-pressed=true]{outline:var(--hair) solid var(--bar)}
+.frow .lb{flex:1 1 auto;font-size:12.5px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.frow:hover .lb{color:var(--ink)}
+.frow .ct{flex:none;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;
+  color:var(--muted)}
+.more{width:100%;padding:6px 9px;border:0;background:transparent;color:var(--muted);font-size:11.5px;
+  text-align:left;border-radius:var(--radius-sm)}
+.more:hover{color:var(--ink);background:var(--band)}
+
+/* ---- the deck ----
+   Five figures over the set currently on screen. Today the page prints one count; these are the
+   questions a reader actually arrives with, and they are all free: the filtered set is already in hand
+   at render time, so this is an aggregation and not a second pass over the data. */
+.deck{display:grid;grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:10px;margin:0 0 18px}
+.tile{padding:11px 13px 12px;border-radius:var(--radius);background:var(--panel);
+  border:var(--hair) solid var(--panel-b);box-shadow:var(--shadow);
+  backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));position:relative;
+  overflow:hidden}
+.tile .k{font-size:10px;font-weight:600;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);color:var(--muted)}
+.tile .v{margin-top:5px;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:25px;
+  font-weight:600;letter-spacing:-.02em;line-height:1.05;color:var(--ink)}
+.tile .u{font-size:11.5px;color:var(--muted);margin-left:5px;font-weight:400}
+/* One tile is lit, and it is the one the page is about. Proportional to the token, so Graphite gets a
+   flat tile and glass gets a halo. */
+.tile.lit{border-color:color-mix(in srgb,var(--bar) 60%,var(--panel-b));
+  box-shadow:var(--shadow),inset 0 0 calc(40px * var(--fx-glow))
+    color-mix(in srgb,var(--bar) 14%,transparent)}
+.tile.lit .v{color:var(--bar)}
+
+/* ---- freshness dot ----
+   The pulse is the only animation tied to a row, and it fires on 7 days rather than 30 on purpose:
+   1,085 of 1,294 rows are inside six months and 725 inside a month, so a dot that pulses for a month
+   pulses for most of the page and says nothing. */
+.dot{position:relative;flex:none;width:7px;height:7px;border-radius:50%;background:var(--off)}
+.dot.hot{background:var(--good)}
+.dot.warm{background:var(--bar)}
+.dot.ok{background:var(--muted)}
+.dot.cold,.dot.stale,.dot.unk{background:var(--grid)}
+/* The token gates this twice, and the second gate is the one that matters. `opacity` alone made the ring
+   invisible under Graphite but the keyframes still ran -- one compositor animation per hot dot, painting
+   nothing. A duration of `calc(2.4s * 0)` is 0s, and a zero-duration animation finishes instantly with no
+   fill, so it never enters the running set at all. Opacity stays as the belt to the braces. */
+.dot.hot::after{content:"";position:absolute;inset:-3px;border-radius:50%;
+  border:1px solid var(--good);opacity:var(--fx-pulse);
+  animation:ping calc(2.4s * var(--fx-pulse)) ease-out infinite}
+@keyframes ping{0%{transform:scale(.6);opacity:calc(var(--fx-pulse) * .9)}
+  70%{transform:scale(1.9);opacity:0}100%{transform:scale(1.9);opacity:0}}
+
+/* ---- platform meter ---- */
+.meter{display:inline-flex;align-items:flex-end;gap:2px;height:11px}
+.meter .sl{width:4px;border-radius:1px;background:var(--grid);height:4px;display:block}
+.meter .sl.y{height:11px;background:var(--good)}
+.meter .sl.l{height:7px;background:color-mix(in srgb,var(--good) 55%,var(--grid))}
+
+/* ---- shared chips on a row ---- */
+.tag{display:inline-flex;align-items:center;gap:5px;padding:2px 7px;border-radius:var(--radius-sm);
+  background:var(--band);border:var(--hair) solid var(--grid);font-size:11px;color:var(--ink2);
+  white-space:nowrap;font-family:var(--mono)}
+.tag.acc{border-color:color-mix(in srgb,var(--ac,var(--bar)) 55%,transparent);
+  color:color-mix(in srgb,var(--ac,var(--bar)) 80%,var(--ink))}
+.pips{display:inline-flex;gap:2px;align-items:center}
+.pips i{width:4px;height:4px;border-radius:50%;background:var(--bar);display:block}
+.cmd{display:block;margin-top:9px;padding:6px 9px;border-radius:var(--radius-sm);background:var(--surface);
+  border:var(--hair) solid var(--grid);font-family:var(--mono);font-size:11.5px;color:var(--ink2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmd::before{content:"$ ";color:var(--muted)}
+
+/* Below the two-column threshold the facet rail stops being a rail and becomes the whole first screen:
+   33 filter rows and five headings before the first project. Desktop hid that completely, which is the
+   argument for measuring the narrow tier rather than assuming it reflows.
+   `order` rather than a DOM move, so the rail stays first in source -- it is first in the reading and tab
+   order for a keyboard user at desktop width, which is where it is actually a rail, and a screen reader
+   on a phone still meets the filters before the footer. The shipped page already owns the better phone
+   answer for this -- `#sheet`, the bottom sheet -- and Phase 5 promotes that rather than repeating this. */
+@media(max-width:1080px){
+  .facets{order:1}
+  footer{order:2}
+}
+/* The touch tier. The shipped page pins `header button{min-height:44px}` and this has to keep that
+   promise: at 390 the search field computes to 34px and the skin button to 30px, both of which are below
+   the floor. Declared on each control rather than on `.rail *` or `.facets *` -- a floor granted by
+   descent stops being granted the moment the control moves out of that container, and these controls are
+   going to move as the layout settles. Same 640px breakpoint the site already uses, so there is one
+   phone tier and not two. */
+@media(max-width:640px){
+  #q{height:44px}
+  .rail .ghost{min-height:44px}
+  .frow,.more{min-height:44px}
+  .lrow{padding-top:11px;padding-bottom:11px}
+  .iacts .go,.iacts .ghost{min-height:44px}
+  /* The rail is one row of four groups and their natural widths sum to 665px, which a 375px viewport
+     answers by scrolling the whole document sideways -- taking every card with it, so the page reads as
+     broken rather than as cramped. Wrapping to a second row is what it should do, and the switch gets its
+     own scroller: five layout names cannot be made to fit 375px and abbreviating them to letters costs
+     the one thing the switch has, which is that you can read where you are. It scrolls, and the pressed
+     one is scrolled into view by the rail script, so "where am I" survives the overflow. */
+  .rail{flex-wrap:wrap;height:auto;padding-bottom:8px;row-gap:8px}
+  .rail .seg{overflow-x:auto;scrollbar-width:none;max-width:100%}
+  .rail .seg::-webkit-scrollbar{display:none}
+  .rail .seg button{flex:none}
+  /* The two-column directions collapse at this width too, but those rules live at the end of CARD_CSS
+     rather than here: `.dossier` and `.rec` are *declared* in CARD_CSS, which is concatenated after this
+     sheet, so an equal-specificity rule in a media query up here loses to the bare desktop rule down
+     there on source order. A media query buys no specificity. */
+}
+@media (prefers-reduced-motion:reduce){
+  /* Motion goes; colour and depth stay. A reader who asked for less movement did not ask for a duller
+     palette, and treating the two as one request is why so many reduced-motion modes look broken. */
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .scan{opacity:0}
+}
+@media (prefers-reduced-transparency:reduce){
+  :root{--blur:0px;--panel:var(--plane);--rail-bg:var(--plane)}
+}
+
+
+/* ---- the project page ----
+   Where a card goes when you click it. Today that page is a stack of eight full-width sections in source
+   order -- install, reader, screenshot, platforms, provenance, classification, related -- which means the
+   two facts a reader arrived for (is this alive, may I use it) are below the fold under a README viewer.
+   This turns it into a masthead, one instrument row, and then two columns: the reading surface on the left
+   and the evidence on the right, where it can be weighed against the prose without scrolling between them.
+
+   No facet rail here. A project page has one subject and nothing to filter, and the 248px would be 248px
+   of nothing -- which is why the rail is the one piece of the index shell this page drops. */
+.dshell{max-width:1180px;margin:0 auto;padding:18px 16px 72px;position:relative;z-index:1}
+.crumb{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);
+  margin:0 0 13px}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--ink)}
+.crumb .sep{color:var(--grid)}
+.crumb b{color:var(--ink2);font-weight:500}
+
+/* The masthead. Prose left, screenshot right, because the screenshot is evidence and not decoration: it
+   is the fastest available answer to "is this the thing I think it is". */
+.hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:26px;
+  padding:22px 24px;border-radius:var(--radius);background:var(--panel);
+  border:var(--hair) solid var(--panel-b);box-shadow:var(--shadow);
+  backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));
+  overflow:hidden;isolation:isolate}
+/* Same topic stripe as the card it was clicked from, same accent, same side. That continuity is the whole
+   trick of making a navigation feel like a zoom rather than a jump. */
+.hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac);
+  opacity:.8}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  opacity:calc(var(--fx-sheen) * var(--on,0));transition:opacity .3s;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),
+    rgba(255,255,255,.09),transparent 62%)}
+.hero:hover{--on:1}
+.hero .kick{font-size:10.5px;font-weight:600;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);color:var(--ac)}
+.hero h1{margin:7px 0 0;font-size:33px;line-height:1.08;letter-spacing:-.03em;font-weight:600;
+  overflow-wrap:anywhere;
+  text-shadow:0 0 calc(34px * var(--fx-glow)) color-mix(in srgb,var(--ac) 45%,transparent)}
+.hnwo{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:12.5px;color:var(--muted);
+  overflow-wrap:anywhere}
+.hnwo:hover{color:var(--ink)}
+.lead{margin:13px 0 0;font-size:15px;line-height:1.55;color:var(--ink2);max-width:60ch}
+.hacts{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0 0;align-items:center}
+/* The one filled control on the page, and it is the one thing the page is ultimately a signpost to. */
+.go{height:36px;padding:0 17px;border-radius:999px;background:var(--bar);color:var(--onbar);border:0;
+  font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 0 calc(22px * var(--fx-glow)) color-mix(in srgb,var(--bar) 45%,transparent)}
+.go:hover{text-decoration:none;filter:brightness(1.07)}
+a.ghost,button.ghost{height:36px;text-decoration:none}
+a.ghost:hover{text-decoration:none}
+/* The copy confirmation. Colour and a word, not just colour. */
+.ghost.ok{border-color:var(--good);color:var(--good)}
+.hshot img,.hshot .noshot{width:100%;aspect-ratio:2/1;object-fit:cover;display:block;
+  border-radius:var(--radius-sm);border:var(--hair) solid var(--grid);background:var(--band)}
+.hshot .noshot{display:grid;place-items:center;color:var(--muted);font-family:var(--mono);font-size:11px;
+  background:linear-gradient(140deg,var(--band),var(--surface))}
+.hshot .cap{margin:8px 0 0;font-size:11px;color:var(--muted);line-height:1.45}
+
+/* ---- the live row ----
+   Five tiles, three of which cannot exist in the committed bytes (see the note beside LISTS). They ship as
+   skeletons and fill in when the sidecar answers. A skeleton rather than the shipped page's `hidden`,
+   because hiding two of five tiles and then revealing them reflows the row under the reader's eyes; a bar
+   that becomes a number in the same box does not. If the fetch fails they resolve to an em dash with a
+   title saying why, which is the shipped page's own standard: no broken promises on the page. */
+.tile .sk{display:block;margin-top:7px;height:22px;width:74%;border-radius:4px;background:var(--band);
+  background-image:linear-gradient(90deg,var(--band),var(--grid),var(--band));background-size:220% 100%;
+  animation:sweep calc(1.5s * var(--fx-pulse)) linear infinite}
+@keyframes sweep{from{background-position:220% 0}to{background-position:-220% 0}}
+.tile .v .dot{display:inline-block;vertical-align:middle;margin-right:7px}
+/* The percentile. A bar rather than a second number, because "#1" and "top 0.1%" are the same fact twice
+   and one of them can be a shape. Width is written after paint so it eases out of zero like the facet
+   bars, which is the same gesture for the same reason: a proportion arriving as motion reads as a
+   proportion, where a static bar reads as a border. */
+.pbar{position:relative;height:3px;margin-top:9px;border-radius:2px;background:var(--band);
+  overflow:hidden}
+.pbar i{position:absolute;left:0;top:0;bottom:0;width:var(--w,0%);background:var(--bar);display:block;
+  box-shadow:0 0 calc(11px * var(--fx-glow)) var(--bar);
+  transition:width .95s cubic-bezier(.22,1,.36,1)}
+.tile .pctl{margin-top:6px;font-size:10.5px;line-height:1.35;color:var(--muted);min-height:14px}
+
+/* ---- the two columns ---- */
+.dgrid{display:grid;grid-template-columns:minmax(0,1fr) 332px;gap:22px;margin:18px 0 0;
+  align-items:start}
+.panel{padding:17px 19px 19px;border-radius:var(--radius);background:var(--panel);
+  border:var(--hair) solid var(--panel-b);box-shadow:var(--shadow);
+  backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));margin:0 0 16px}
+.panel:last-child{margin-bottom:0}
+/* Wraps, because one of these headings is "Related in " plus a topic name and the longest is 26 characters
+   in a 332px column with a count on the right. Unwrapped, the title and the count fought over one line and
+   the count lost twice: squeezed onto two lines reading "68 in / total", and vertically adrift from a title
+   that had itself become two lines. */
+.panel h2{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;margin:0 0 13px;font-size:10.5px;
+  font-weight:600;text-transform:var(--kick-case);letter-spacing:var(--kick-track);color:var(--muted)}
+/* `nowrap` is the other half of it: the count is three words that mean nothing apart, so it moves to its
+   own line whole rather than breaking. */
+.panel h2 em{font-style:normal;color:var(--grid);letter-spacing:0;text-transform:none;font-size:11px;
+  white-space:nowrap}
+.panel h2 .spring{flex:1 1 auto}
+.pnote{margin:12px 0 0;font-size:11.5px;line-height:1.5;color:var(--muted)}
+
+/* Install. `.cmd` is a one-line ellipsised chip everywhere else; here it is the payload, so it wraps. */
+.cmdrow{display:flex;gap:9px;align-items:stretch}
+.cmdrow .cmd{flex:1 1 auto;margin:0;padding:10px 12px;font-size:12.5px;white-space:normal;
+  overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
+.cmdrow .ghost{flex:none;align-self:stretch;height:auto}
+
+/* The repository reader. The chrome is real and the body is a skeleton, labelled as one -- the shipped
+   page fetches the README from the GitHub API on demand, which is not a thing to fake with invented
+   prose. What is being judged here is the frame: where it sits, how big it is, and that Rendered/Source
+   is a switch and not two links. */
+.reader{border-radius:var(--radius-sm);border:var(--hair) solid var(--grid);overflow:hidden;
+  background:var(--surface)}
+.rchrome{display:flex;align-items:center;gap:10px;padding:8px 11px;background:var(--band);
+  border-bottom:var(--hair) solid var(--grid)}
+.dots{display:flex;gap:5px;flex:none}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--grid);display:block}
+.rpath{font-family:var(--mono);font-size:11.5px;color:var(--ink2);overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.rtabs{margin-left:auto;display:flex;gap:2px;padding:2px;border-radius:999px;background:var(--surface);
+  border:var(--hair) solid var(--grid);flex:none}
+.rtabs button{height:22px;padding:0 11px;border:0;border-radius:999px;background:transparent;
+  color:var(--muted);font-size:11px}
+.rtabs button[aria-pressed=true]{background:var(--bar);color:var(--onbar);font-weight:600}
+.rbody{padding:16px 18px 18px;min-height:186px}
+.sk-line{height:11px;border-radius:3px;margin:0 0 12px;background:var(--band);
+  background-image:linear-gradient(90deg,var(--band),var(--grid),var(--band));background-size:220% 100%;
+  animation:sweep calc(2.1s * var(--fx-pulse)) linear infinite}
+.reader[data-tab=source] .sk-line{border-radius:1px;height:9px}
+.rfiles{display:flex;gap:6px;flex-wrap:wrap;margin:13px 0 0}
+
+/* Platform support. Five rows, each carrying the sentence the ingest would stand behind, because "Yes" on
+   its own is a claim with no provenance -- and provenance is the only thing that makes a derived verdict
+   worth printing. The class names are the shipped `.v*` ones, prefix included: `.-` alone is an invalid
+   CSS identifier and invalidates the whole selector list it appears in, which is a bug this project has
+   already had once. */
+table.plat{width:100%;border-collapse:collapse;font-size:12.5px}
+table.plat th{text-align:left;font-size:10px;font-weight:600;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);color:var(--muted);padding:0 12px 8px 0;
+  border-bottom:var(--hair) solid var(--grid);white-space:nowrap}
+table.plat td{padding:9px 12px 9px 0;border-bottom:var(--hair) solid var(--grid);color:var(--muted);
+  vertical-align:top;line-height:1.45}
+table.plat tr:last-child td{border-bottom:0}
+table.plat .pn{color:var(--ink);white-space:nowrap;font-weight:500}
+table.plat .pv{white-space:nowrap;font-weight:600}
+.pv.vY{color:var(--good)}
+.pv.vL{color:var(--warn)}
+.pv.vN,.pv.va,.pv.v-{color:var(--off)}
+/* The same slot the five-slot meter uses, on its own and at its own size -- so a row's verdict carries the
+   same mark here as it does in the compact meter, which is what stops the two readings of one fact from
+   looking like two facts. Sized here rather than inherited: `.meter .sl` is scoped to the meter. */
+.pv .sl{display:inline-block;width:4px;height:11px;border-radius:1px;margin-right:8px;
+  vertical-align:-1px;background:var(--grid)}
+.pv .sl.y{background:var(--good)}
+.pv .sl.l{height:7px;background:color-mix(in srgb,var(--good) 55%,var(--grid))}
+
+/* ---- the evidence column ---- */
+.spec{position:sticky;top:70px}
+.kv2{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 14px;margin:0;font-size:12.5px}
+.kv2 dt{color:var(--muted);font-size:10px;font-weight:600;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);padding-top:3px;white-space:nowrap}
+.kv2 dd{margin:0;color:var(--ink2);min-width:0;overflow-wrap:anywhere}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+/* Consensus. One segment per list count in the corpus, the project's own lit. The bar is the corpus and
+   the lit segment is where this project sits in it, which is the only way a small integer like "3" says
+   anything: 1,165 of 1,294 rows sit in the first segment. */
+.cons{display:flex;gap:3px;margin:0 0 10px}
+.cons i{flex:1 1 0;height:7px;border-radius:2px;background:var(--band);display:block}
+.cons i.on{background:var(--bar);
+  box-shadow:0 0 calc(14px * var(--fx-glow)) color-mix(in srgb,var(--bar) 65%,transparent)}
+.consn{font-size:12.5px;color:var(--ink2);line-height:1.5}
+.consn b{color:var(--ink)}
+.rel{display:flex;flex-direction:column;gap:1px}
+.rrow{display:flex;align-items:center;gap:9px;padding:8px 9px;margin:0 -9px;
+  border-radius:var(--radius-sm);font-size:12.5px;color:var(--ink2)}
+.rrow:hover{background:var(--band);text-decoration:none;color:var(--ink)}
+.rrow .rn{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rrow .rs{flex:none;font-size:11px;color:var(--muted);font-family:var(--mono)}
+
+@media (max-width:1080px){
+  .hero{grid-template-columns:minmax(0,1fr)}
+  /* Full width at 340px was a 340px column; full width at 1040px would be a 520px-tall image above the
+     fold. It stays evidence, so it stays the size of evidence. */
+  .hshot{max-width:420px}
+  .dgrid{grid-template-columns:minmax(0,1fr)}
+  .spec{position:static}
+}
+@media (max-width:640px){
+  .rail{gap:8px;padding:0 12px}
+  .mark b,.mark .ver{display:none}
+  .dshell{padding:14px 12px 56px}
+  .hero{padding:17px 16px}
+  .hero h1{font-size:25px}
+  .deck{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* Five tiles into two columns leaves the fifth alone beside a hole, which reads as a tile that failed
+     to load rather than as the end of the row. It spans instead. Scoped to this tier deliberately: at the
+     desktop five-across the fifth tile is also last-and-odd, and a full-width span there would be wrong. */
+  .deck .tile:last-child:nth-child(odd){grid-column:1/-1}
+  .tile .v{font-size:20px}
+  .cmdrow{flex-direction:column}
+  /* Same 44px floor, granted on each control rather than through a container, for the same reason as the
+     rail's: these are going to move. */
+  .go,a.ghost,button.ghost{min-height:44px}
+  /* 44 and not the 34 this was: the sentence above claims the floor is granted on each control, and a
+     rule two lines under it granting 34 makes that sentence false. The pill grows to 48 inside the
+     reader's chrome bar, which is the correct outcome -- a tab you switch with a thumb is a control. */
+  .rtabs button{min-height:44px}
+  .rrow{min-height:44px}
+}
+
+</style>
+</head>
+<body>
+<div class="scan" aria-hidden="true"></div>
+<header class="rail"><span class="mark"><span class="glyph" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="var(--bar)" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="var(--ink)" stroke="var(--bar)" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="var(--bar)"/><path d="M12 31h40M32 11v40" fill="none" stroke="var(--mk-dark,var(--onbar))" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="var(--mk-dark,var(--onbar))"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="var(--ink)"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="var(--mk-dark,var(--onbar))" stroke-width="2.5" stroke-linecap="round"/></g></svg></span><b>Atlas</b><span class="ver">v2 demo</span></span><span class="qwrap"><span class="mag">&#9906;</span><input id="q" type="search" placeholder="Search is inert in this demo" aria-label="Search (inert in this demo)"><span class="kbd">/</span></span><a class="ghost" href="../../rail.html" title="Back to the results (Esc)"><span aria-hidden="true">&larr;</span> All projects</a><span class="spring"></span><div class="picker"><button class="ghost" id="skinbtn" aria-expanded="false"><span class="dotrow"><i style="background:#D6A034"></i><i style="background:#6FE3C4"></i><i style="background:#52F2A0"></i></span>Skin</button><div class="menu" id="skinmenu" hidden><h3>Skin <kbd>T</kbd> cycles</h3><button data-skin="graphite" aria-pressed="false"><span class="sw"><i style="background:#090A0D"></i><i style="background:#D6A034"></i><i style="background:#78B7F4"></i></span><span><span class="nm">Graphite</span><span class="ds">Hairline precision. One accent, mono numerals, no glow.</span></span></button><button data-skin="glass" aria-pressed="false"><span class="sw"><i style="background:#070912"></i><i style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span><span><span class="nm">Glass Console</span><span class="ds">Frosted planes over a lit field. Floating rail, pointer sheen, live glow.</span></span></button><button data-skin="terminal" aria-pressed="false"><span class="sw"><i style="background:#04070A"></i><i style="background:#52F2A0"></i><i style="background:#57D9FF"></i></span><span><span class="nm">Neon Terminal</span><span class="ds">All monospace. Phosphor green, bracket chips, panes not cards, scanline.</span></span></button></div></div></header><div class="dshell"><nav class="crumb" aria-label="Breadcrumb"><a href="../../rail.html">Atlas</a><span class="sep" aria-hidden="true">&rsaquo;</span><a href="../../rail.html">MCP Servers</a><span class="sep" aria-hidden="true">&rsaquo;</span><b>Ikalus1988/MisakaNet</b></nav><section class="hero" style="--ac:var(--accent-slate)"><div><div class="kick">MCP Servers</div><h1>Ikalus1988/MisakaNet</h1><a class="hnwo" href="https://github.com/Ikalus1988/MisakaNet">Ikalus1988/MisakaNet</a><p class="lead">Agent failure memory network. Search 235+ verified debugging lessons from real engineering sessions. BM25 + SAG-Lite search, 3 tools (search, get_lesson, submit_usage), 5 resources, 3 guided prompts. Works with Claude Code, Cursor, and any MCP client. python3 scripts/mcp_server.py</p><div class="hacts"><a class="go" href="https://github.com/Ikalus1988/MisakaNet">View on GitHub <span aria-hidden="true">&#8599;</span></a><a class="ghost" href="../../rail.html">Find it in the atlas</a></div></div><div class="hshot"><img src="https://raw.githubusercontent.com/Ikalus1988/MisakaNet/main/promotional/search%20lesson.gif" alt="" loading="lazy" decoding="async"><p class="cap">The project's own screenshot. Fetched from source, never copied into this repository.</p></div></section><div class="deck"><div class="tile lit"><div class="k">stars</div><div class="v" data-live="stars"><span class="sk"></span></div></div><div class="tile"><div class="k">last push</div><div class="v" data-live="pushed"><span class="sk"></span></div><span class="u" id="pushedon"></span></div><div class="tile"><div class="k">rank by stars</div><div class="v" data-live="rank"><span class="sk"></span></div><span class="u" id="rankof"></span><div class="pbar"><i></i></div><div class="pctl" id="pctl"></div></div><div class="tile"><div class="k">named by</div><div class="v">2</div><span class="u">of 39 lists</span></div><div class="tile"><div class="k">harnesses</div><div class="v">4</div><span class="u">of 12</span></div></div><div class="dgrid"><main><section class="panel"><h2>Install</h2><div class="cmdrow"><code class="cmd">npx @misaka-net/misakanet-setup</code><button class="ghost" id="copy">Copy</button></div></section><section class="panel"><h2>Repository reader<em>read it before you clone it</em></h2><div class="reader" data-tab="rendered"><div class="rchrome"><span class="dots"><i></i><i></i><i></i></span><span class="rpath">README.md</span><span class="rtabs"><button data-tab="rendered" aria-pressed="true">Rendered</button><button data-tab="source" aria-pressed="false">Source</button></span></div><div class="rbody"><div class="sk-line" style="width:94%"></div><div class="sk-line" style="width:100%"></div><div class="sk-line" style="width:88%"></div><div class="sk-line" style="width:62%"></div><div class="sk-line" style="width:97%"></div><div class="sk-line" style="width:74%"></div></div></div><p class="pnote">The shipped page loads the project&rsquo;s README, skills and supporting Markdown from the GitHub API on demand, rendered here, source one click away. It is a skeleton in this demo rather than invented prose &mdash; the frame is the thing being judged.</p></section><section class="panel"><h2>Platform support</h2><table class="plat"><thead><tr><th>Platform</th><th>Runs here</th><th>On what evidence</th></tr></thead><tbody><tr><td class="pn">Windows</td><td class="pv vL"><i class="sl l"></i>Likely</td><td>Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><td class="pn">WSL2</td><td class="pv vY"><i class="sl y"></i>Yes</td><td>Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><td class="pn">macOS</td><td class="pv vL"><i class="sl l"></i>Likely</td><td>Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><td class="pn">Linux</td><td class="pv vL"><i class="sl l"></i>Likely</td><td>Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><td class="pn">Docker</td><td class="pv vN"><i class="sl n"></i>No</td><td>No evidence of support anywhere in the project.</td></tr></tbody></table><p class="pnote">Derived from the project&rsquo;s own README, install route, CI configuration and release assets &mdash; not from running it.</p></section></main><aside class="spec"><section class="panel"><h2>At a glance</h2><dl class="kv2"><dt>Topic</dt><dd><a href="../../rail.html">MCP Servers</a></dd><dt>Harness</dt><dd><span class="chips"><span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">MCP</span><span class="tag">Cursor</span></span></dd><dt>Language</dt><dd>Python</dd><dt>Licence</dt><dd>Apache-2.0</dd><dt>Platform</dt><dd><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span></dd></dl></section><section class="panel"><h2>Where it came from</h2><div class="cons" aria-hidden="true"><i class="on" title="7,639 projects are named by 1"></i><i class="on" title="837 projects are named by 2"></i><i class="" title="230 projects are named by 3"></i><i class="" title="70 projects are named by 4"></i><i class="" title="32 projects are named by 5"></i><i class="" title="20 projects are named by 6"></i><i class="" title="13 projects are named by 7"></i><i class="" title="9 projects are named by 8"></i><i class="" title="2 projects are named by 9"></i><i class="" title="3 projects are named by 10"></i><i class="" title="0 projects are named by 11"></i><i class="" title="0 projects are named by 12"></i><i class="" title="1 projects are named by 13"></i></div><p class="consn"><b>2</b> of the 39 lists name it, independently of each other. Only <b>1,217</b> of 8,856 projects manage that &mdash; 13.7%.</p><div class="chips" style="margin-top:11px"><span class="tag">AI Agents (Jenqyang)</span><span class="tag">MCP Servers (punkpeye)</span></div></section><section class="panel"><h2>Related in MCP Servers<em>4,537 in total</em></h2><div class="rel"><a class="rrow" href="../../../repo/vshulcz/deja-vu/"><span class="rn">deja-vu</span><span class="rs">4 shared</span></a><a class="rrow" href="../../../repo/runapi-ai/mcp/"><span class="rn">RunAPI MCP</span><span class="rs">4 shared</span></a><a class="rrow" href="../../../repo/samvallad33/vestige/"><span class="rn">Vestige</span><span class="rs">4 shared</span></a><a class="rrow" href="../../../repo/lians-ai/lians/"><span class="rn">Lians-ai/Lians</span><span class="rs">4 shared</span></a><a class="rrow" href="../../../repo/maxbaluev/accreted-intelligence/"><span class="rn">maxbaluev/accreted-intelligence</span><span class="rs">4 shared</span></a><a class="rrow" href="../../../repo/mohamedabdallah-14/prompt-to-asset/"><span class="rn">MohamedAbdallah-14/prompt-to-asset</span><span class="rs">4 shared</span></a></div><p class="pnote">Ranked by shared harnesses, then by how many lists named it &mdash; properties of the curation, not of a star count that moves daily.</p></section></aside></div><footer style="margin-top:26px;padding-top:16px;border-top:var(--hair) solid var(--grid);color:var(--muted);font-size:12px">One project page. Stars, last push and rank are fetched from <code style="font-family:var(--mono)">docs/live.json</code> after paint and are not in these bytes &mdash; which is what keeps 1,294 of these from being rewritten on every daily run. The reader is a skeleton here. <a href="../../rail.html">Cards</a> &middot; <a href="../../console.html">Console</a> &middot; <a href="../../app.html">Back to the switcher</a></footer></div>
+<script>
+// Everything below is demo scaffolding for the parts of "is this nice to use" that a static page cannot
+// answer: the skin swap, the bars, the deck, the sheen and the selection. There is no search here.
+const SKIN_PLANE = {"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"};
+
+// ---- skins. One attribute on <html>; no other JS and no CSS rule knows which skin is active. ----
+const skinBtn = document.getElementById("skinbtn");
+const skinMenu = document.getElementById("skinmenu");
+const SKIN_IDS = Object.keys(SKIN_PLANE);
+
+function paintSkin() {
+  const cur = document.documentElement.dataset.skin;
+  skinMenu.querySelectorAll("[data-skin]").forEach(b => {
+    b.setAttribute("aria-pressed", String(b.dataset.skin === cur));
+  });
+  const tc = document.getElementById("tc");
+  if (tc) tc.content = SKIN_PLANE[cur] || tc.content;
+}
+function setSkin(id) {
+  if (!SKIN_PLANE[id]) return;
+  document.documentElement.dataset.skin = id;
+  try { localStorage.setItem("atlas-skin", id); } catch (e) {}
+  paintSkin();
+  // So the switcher frame can keep its own buttons in step without reloading the iframe.
+  try { parent.postMessage({atlasSkin: id}, "*"); } catch (e) {}
+}
+skinBtn.onclick = () => {
+  const open = skinMenu.hidden;
+  skinMenu.hidden = !open;
+  skinBtn.setAttribute("aria-expanded", String(open));
+};
+skinMenu.onclick = ev => {
+  const b = ev.target.closest("[data-skin]");
+  if (!b) return;
+  setSkin(b.dataset.skin);
+  skinMenu.hidden = true;
+  skinBtn.setAttribute("aria-expanded", "false");
+};
+document.addEventListener("click", ev => {
+  if (!skinMenu.hidden && !ev.target.closest(".picker")) {
+    skinMenu.hidden = true;
+    skinBtn.setAttribute("aria-expanded", "false");
+  }
+});
+addEventListener("message", ev => {
+  if (ev.data && ev.data.setSkin) setSkin(ev.data.setSkin);
+});
+paintSkin();
+
+// ---- layout switch, which in the demo is just a navigation ----
+document.querySelectorAll("[data-layout]").forEach(b => {
+  b.onclick = () => {
+    if (b.getAttribute("aria-pressed") === "true") return;
+    location.href = b.dataset.layout + ".html" + location.search;
+  };
+});
+
+// ---- the bars. Widths start at 0 and are written after first paint, so the CSS transition runs and
+//      the distribution arrives as motion rather than as a fact that was always there. ----
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  document.querySelectorAll(".frow[data-w]").forEach(r => {
+    r.style.setProperty("--w", r.dataset.w);
+  });
+}));
+document.querySelectorAll("[data-more]").forEach(btn => {
+  btn.onclick = () => {
+    const group = btn.closest(".fg");
+    group.querySelectorAll(".frow[hidden]").forEach(r => {
+      r.hidden = false;
+      requestAnimationFrame(() => r.style.setProperty("--w", r.dataset.w));
+    });
+    btn.remove();
+  };
+});
+document.querySelectorAll(".frow").forEach(r => {
+  r.onclick = () => r.setAttribute("aria-pressed",
+    r.getAttribute("aria-pressed") === "true" ? "false" : "true");
+});
+
+// ---- the deck rolls. Honest about the formatting: it interpolates the number and re-applies the same
+//      compaction the build used, so 12.5M counts up as 12.5M and not as 12494028. ----
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function fmt(n, shown) {
+  if (/M$/.test(shown)) return (n / 1e6).toFixed(1) + "M";
+  if (/k$/.test(shown)) return (n / 1e3).toFixed(1) + "k";
+  if (/d$/.test(shown)) return Math.round(n) + "d";
+  return Math.round(n).toLocaleString("en-US");
+}
+if (!reduce) {
+  document.querySelectorAll("[data-roll]").forEach(el => {
+    const target = Number(el.dataset.n), shown = el.dataset.roll, t0 = performance.now();
+    el.textContent = fmt(0, shown);
+    (function step(t) {
+      const p = Math.min(1, (t - t0) / 760);
+      el.textContent = fmt(target * (1 - Math.pow(1 - p, 3)), shown);
+      if (p < 1) requestAnimationFrame(step); else el.textContent = shown;
+    })(t0);
+  });
+}
+
+// ---- the sheen. Two custom properties per panel; the gradient is in CSS and is zero-opacity under a
+//      skin that sets --fx-sheen:0, so this listener is skin-agnostic. The project page's masthead takes
+//      it too, which is what makes arriving there feel like the same surface rather than a second site. ----
+document.querySelectorAll(".card,.hero").forEach(c => {
+  c.addEventListener("pointermove", ev => {
+    const r = c.getBoundingClientRect();
+    c.style.setProperty("--mx", (ev.clientX - r.left) + "px");
+    c.style.setProperty("--my", (ev.clientY - r.top) + "px");
+  });
+});
+
+// ---- a card is a link across its whole area ----
+// The name inside it is a real anchor and stays the accessible path; this only widens the target for a
+// pointer. Guarded on `closest("a")` so clicking the name is not handled twice, and on the modifier keys
+// and a live text selection, all three of which would otherwise turn an ordinary interaction into a
+// navigation the reader did not ask for.
+document.querySelectorAll(".card[data-href]").forEach(c => {
+  c.addEventListener("click", ev => {
+    if (ev.target.closest("a") || ev.metaKey || ev.ctrlKey || ev.shiftKey) return;
+    if (String(getSelection())) return;
+    location.href = c.dataset.href;
+  });
+  c.style.cursor = "pointer";
+});
+
+// ---- T cycles the skin, which is the shortcut Phase 2 ships ----
+addEventListener("keydown", ev => {
+  if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+  const t = ev.target.tagName;
+  if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT") return;
+  if (ev.key === "t" || ev.key === "T") {
+    const i = SKIN_IDS.indexOf(document.documentElement.dataset.skin);
+    setSkin(SKIN_IDS[(i + 1) % SKIN_IDS.length]);
+  }
+});
+
+// ---- the project page ----
+// Everything derived from GitHub's counters is fetched, never baked: see the note beside LISTS in the
+// builder. `live.json` is the sidecar the shipped detail pages already read, and because it carries all
+// 1,294 repos the rank and the percentile can be computed here rather than committed anywhere.
+const NWO = "Ikalus1988/MisakaNet";
+const LIVEURL = "../../../../docs/live.json";
+const INSTALL = "npx @misaka-net/misakanet-setup";
+let BACK = "../../rail.html";
+
+// Where "All projects" goes. The baked value is layout A, because a page reached from a bookmark, a share
+// or with JS off has to point somewhere real -- but sending a reader who arrived from the console back to
+// the cards is the demo quietly losing their place, and losing it precisely at the moment they were
+// comparing the two layouts. The referrer is the only record of which one they came from, so when it names
+// one of ours, it wins. A referrer that is another project page (a related row) leaves the default alone:
+// the chain back to a layout is not recoverable from one hop, and "All projects" still tells the truth.
+(() => {
+  const back = document.querySelector(".rail a.ghost");
+  if (!back || !document.referrer) return;
+  let ref;
+  try { ref = new URL(document.referrer); } catch { return; }
+  if (ref.origin !== location.origin) return;
+  const from = {"rail.html": "the cards", "console.html": "the console", "matrix.html": "the matrix"};
+  const label = from[ref.pathname.split("/").pop()];
+  if (!label) return;
+  BACK = ref.href;
+  back.href = BACK;
+  back.title = "Back to " + label + " (Esc)";
+})();
+
+function tile(key) { return document.querySelector('[data-live="' + key + '"]'); }
+function fail(msg) {
+  document.querySelectorAll("[data-live]").forEach(el => {
+    el.innerHTML = '<span title="' + msg + '">&mdash;</span>';
+  });
+}
+
+// The same thresholds `freshness()` uses at build time. Duplicated here because the two sides of this one
+// figure are necessarily in two languages -- the class is a build-time fact for every other surface and a
+// runtime one only here -- so the table is the thing to keep identical, and it is five lines.
+function fresh(days) {
+  if (days === null) return ["unk", "unknown"];
+  if (days <= 7) return ["hot", days ? days + "d" : "today"];
+  if (days <= 30) return ["warm", days + "d"];
+  if (days <= 180) return ["ok", Math.floor(days / 30) + "mo"];
+  if (days <= 365) return ["cold", Math.floor(days / 30) + "mo"];
+  return ["stale", Math.floor(days / 365) + "y"];
+}
+
+if (window.fetch) {
+  fetch(LIVEURL).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(d => {
+    const mine = d.repos[NWO];
+    if (!mine) return fail("this project is not in the live sidecar");
+    const [stars, pushed] = mine;
+
+    tile("stars").textContent = stars.toLocaleString("en-US");
+
+    const days = Math.round(
+      (Date.parse(d.snapshot) - Date.parse(pushed)) / 86400000);
+    const [cls, label] = fresh(days);
+    tile("pushed").innerHTML = '<i class="dot ' + cls + '"></i>' + label;
+    const sub = document.getElementById("pushedon");
+    if (sub) sub.textContent = pushed;
+
+    // Rank over the whole corpus, counted in the browser out of the file that was fetched anyway. 1,294
+    // comparisons is nothing, and it means no ranking had to be committed to make the page say this.
+    const all = Object.values(d.repos);
+    let above = 0;
+    for (const [s] of all) if (s > stars) above++;
+    const rank = above + 1;
+    tile("rank").textContent = "#" + rank.toLocaleString("en-US");
+    const of = document.getElementById("rankof");
+    if (of) of.textContent = "of " + all.length.toLocaleString("en-US");
+    const bar = document.querySelector(".pbar i");
+    if (bar) {
+      const pct = (1 - (rank - 1) / all.length) * 100;
+      const pl = document.getElementById("pctl");
+      if (pl) pl.textContent = "brighter than " + pct.toFixed(pct > 99 ? 1 : 0) + "% of the corpus";
+      requestAnimationFrame(() => requestAnimationFrame(() => bar.style.setProperty("--w", pct + "%")));
+    }
+  }).catch(() => fail("live.json did not answer"));
+} else {
+  fail("this browser has no fetch");
+}
+
+// ---- copy the install command ----
+const cp = document.getElementById("copy");
+if (cp) {
+  let t = 0;
+  // The feedback fires on the click, not on the clipboard promise. Chrome gates a clipboard write on the
+  // document being focused, and when it is not focused it hands back a promise that stays *pending* rather
+  // than rejecting -- so a handler that only acts in `.then(done, done)` shows nothing at all, ever, which
+  // is what this button did. A button that swallows a click is worse than one that copies nothing, because
+  // the reader clicks it again. The label is optimistic and gets corrected if the write really does reject,
+  // which is the only case where "Copied" would have been a lie.
+  const flash = (msg, good) => {
+    cp.classList.toggle("ok", good);
+    cp.textContent = msg;
+    clearTimeout(t);
+    t = setTimeout(() => { cp.classList.remove("ok"); cp.textContent = "Copy"; }, 1600);
+  };
+  cp.onclick = () => {
+    if (!navigator.clipboard) return flash("Select and copy", false);
+    flash("Copied", true);
+    navigator.clipboard.writeText(INSTALL).catch(() => flash("Select and copy", false));
+  };
+}
+
+// ---- the reader's Rendered/Source switch. The body is a skeleton either way and says so; the switch is
+//      the part being judged, so it has to actually move. ----
+const reader = document.querySelector(".reader");
+document.querySelectorAll(".rtabs button").forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll(".rtabs button").forEach(
+      x => x.setAttribute("aria-pressed", String(x === b)));
+    reader.dataset.tab = b.dataset.tab;
+  };
+});
+
+// Escape goes back to the results, which is the one navigation a reader on this page wants and today has
+// to find in a breadcrumb.
+addEventListener("keydown", ev => {
+  if (ev.key === "Escape") location.href = BACK;
+});
+
+</script>
+</body>
+</html>

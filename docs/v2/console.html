@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="en" data-skin="glass" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<title>Atlas — layout C, three-pane console</title>
+<!-- The same mark the nav bar draws, so the tab agrees with the page. `../` is how this page reaches
+     `docs/`, which is one level up from a mode page and three from a project page; relative rather than
+     root-absolute for the reason `peer_href` records. -->
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" id="tc" content="rgba(10,14,28,.62)">
+<!-- Ahead of the stylesheet and inline, for the same reason the shipped page does it: the skin has to
+     settle before first paint or a reader who chose Neon Terminal gets a frame of somebody else's
+     palette. Phase 2 emits this one function into all five generators. -->
+<script>
+try {
+  var s = new URLSearchParams(location.search).get("skin")
+       || localStorage.getItem("atlas-skin");
+  if (!{"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"}[s]) s = "glass";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = {"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"}[s];
+  // Written back, not just read. A skin that arrived in the URL has to become the preference or it lasts
+  // exactly one page: click a card from a ?skin=terminal page and the project page would read whatever
+  // was in storage and flip palette mid-navigation. Sharing a skin is also choosing it.
+  localStorage.setItem("atlas-skin", s);
+} catch (e) {}
+</script>
+<style>
+:root{
+  --surface:#070912;
+  --plane:rgba(255,255,255,.045);
+  --band:rgba(255,255,255,.085);
+  --ink:#F4F7FF;
+  --ink2:#C7D0E4;
+  --muted:#8E9AB5;
+  --grid:rgba(255,255,255,.13);
+  --link:#7CC4FF;
+  --bar:#6FE3C4;
+  --onbar:#04121A;
+  --good:#5BE0B8;
+  --warn:#FF8FA3;
+  --off:#8E9AB5;
+  --accent-sky:#7CC4FF;
+  --accent-mint:#6FE3C4;
+  --accent-gold:#FFD479;
+  --accent-coral:#FF8FA3;
+  --accent-violet:#B9A6FF;
+  --accent-slate:#8E9AB5;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:14px;
+  --radius-sm:10px;
+  --hair:1px;
+  --blur:18px;
+  --panel:linear-gradient(158deg,rgba(255,255,255,.075),rgba(255,255,255,.02) 62%);
+  --panel-b:rgba(255,255,255,.14);
+  --rail-bg:rgba(10,14,28,.62);
+  --field:radial-gradient(900px 620px at 12% -8%,rgba(124,196,255,.20),transparent 62%),radial-gradient(760px 560px at 88% 4%,rgba(185,166,255,.17),transparent 60%),radial-gradient(1100px 760px at 62% 108%,rgba(111,227,196,.14),transparent 64%);
+  --shadow:0 18px 44px rgba(2,5,16,.5);
+  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.1em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:1;
+  --fx-lift:1;
+}
+html[data-skin=graphite]{
+  --surface:#090A0D;
+  --plane:#101217;
+  --band:#20242D;
+  --ink:#F7F8FA;
+  --ink2:#D0D5DD;
+  --muted:#9BA5B3;
+  --grid:#3A414D;
+  --link:#78B7F4;
+  --bar:#D6A034;
+  --onbar:#090A0D;
+  --good:#5BD5AA;
+  --warn:#EF7D86;
+  --off:#9BA5B3;
+  --accent-sky:#78B7F4;
+  --accent-mint:#5BD5AA;
+  --accent-gold:#E7B64D;
+  --accent-coral:#EF7D86;
+  --accent-violet:#A99AF7;
+  --accent-slate:#9BA5B3;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --radius:6px;
+  --radius-sm:4px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--plane);
+  --panel-b:var(--grid);
+  --rail-bg:var(--plane);
+  --field:none;
+  --shadow:none;
+  --lift:0 1px 2px rgba(0,0,0,.55),0 10px 24px -12px rgba(0,0,0,.8);
+  --lift-hi:0 2px 5px rgba(0,0,0,.6),0 26px 52px -16px rgba(0,0,0,.95);
+  --scrim:linear-gradient(to top,rgba(4,5,8,.94),rgba(4,5,8,.66) 34%,rgba(4,5,8,.14) 68%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.08em;
+  --fx-glow:0;
+  --fx-pulse:0;
+  --fx-scan:0;
+  --fx-sheen:0;
+  --fx-lift:0;
+}
+html[data-skin=glass]{
+  --surface:#070912;
+  --plane:rgba(255,255,255,.045);
+  --band:rgba(255,255,255,.085);
+  --ink:#F4F7FF;
+  --ink2:#C7D0E4;
+  --muted:#8E9AB5;
+  --grid:rgba(255,255,255,.13);
+  --link:#7CC4FF;
+  --bar:#6FE3C4;
+  --onbar:#04121A;
+  --good:#5BE0B8;
+  --warn:#FF8FA3;
+  --off:#8E9AB5;
+  --accent-sky:#7CC4FF;
+  --accent-mint:#6FE3C4;
+  --accent-gold:#FFD479;
+  --accent-coral:#FF8FA3;
+  --accent-violet:#B9A6FF;
+  --accent-slate:#8E9AB5;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:14px;
+  --radius-sm:10px;
+  --hair:1px;
+  --blur:18px;
+  --panel:linear-gradient(158deg,rgba(255,255,255,.075),rgba(255,255,255,.02) 62%);
+  --panel-b:rgba(255,255,255,.14);
+  --rail-bg:rgba(10,14,28,.62);
+  --field:radial-gradient(900px 620px at 12% -8%,rgba(124,196,255,.20),transparent 62%),radial-gradient(760px 560px at 88% 4%,rgba(185,166,255,.17),transparent 60%),radial-gradient(1100px 760px at 62% 108%,rgba(111,227,196,.14),transparent 64%);
+  --shadow:0 18px 44px rgba(2,5,16,.5);
+  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.1em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:1;
+  --fx-lift:1;
+}
+html[data-skin=terminal]{
+  --surface:#04070A;
+  --plane:#070E11;
+  --band:#0C181B;
+  --ink:#DCFFEA;
+  --ink2:#9BE8BE;
+  --muted:#4F9179;
+  --grid:#16332A;
+  --link:#52F2A0;
+  --bar:#52F2A0;
+  --onbar:#04070A;
+  --good:#52F2A0;
+  --warn:#FFB454;
+  --off:#4F9179;
+  --accent-sky:#57D9FF;
+  --accent-mint:#52F2A0;
+  --accent-gold:#FFD166;
+  --accent-coral:#FF7A85;
+  --accent-violet:#C792EA;
+  --accent-slate:#4F9179;
+  --ui:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --radius:0px;
+  --radius-sm:0px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--plane);
+  --panel-b:var(--grid);
+  --rail-bg:#050B0D;
+  --field:linear-gradient(180deg,rgba(82,242,160,.05),transparent 240px);
+  --shadow:none;
+  --lift:3px 3px 0 rgba(0,0,0,.9);
+  --lift-hi:6px 6px 0 rgba(0,0,0,.95);
+  --scrim:linear-gradient(to top,rgba(2,6,7,.96) 0 42%,rgba(2,6,7,.4) 76%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.14em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:1;
+  --fx-sheen:0;
+  --fx-lift:0;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--surface);color:var(--ink);font-family:var(--ui);font-size:14.5px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;min-height:100vh}
+/* The lit field the frosted panels frost. Fixed, so it does not scroll away from under them, and
+   behind everything. `none` in the skins that do not want one, which costs nothing. */
+body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-events:none;z-index:0}
+/* The scanline. One element, one token: at --fx-scan:0 it is invisible and at 1 it is a 3px repeating
+   gradient over the whole viewport. Deliberately not an overlay on every panel -- the point of a CRT
+   line is that it crosses everything at once, including the gaps between panels.
+   It flickers rather than drifts. A 3px gradient translated by 3px is a shimmer at any refresh rate and
+   reads as a rendering fault; an occasional dip in opacity is what a tube actually does, and it is the
+   technique the effects catalogue uses too. Both keyframe stops multiply by the token, so --fx-scan:0
+   still means exactly nothing rather than "invisible except during the flicker". */
+.scan{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:calc(var(--fx-scan) * .45);
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.34) 0 1px,transparent 1px 3px);
+  animation:scanflicker calc(5.5s * var(--fx-scan)) linear infinite}
+@keyframes scanflicker{
+  0%,96%,100%{opacity:calc(var(--fx-scan) * .45)}
+  97%{opacity:calc(var(--fx-scan) * .26)}
+  98.5%{opacity:calc(var(--fx-scan) * .58)}}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+button,input,select{font:inherit;font-family:var(--ui);color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--bar);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%)}
+
+/* ---- the one sticky layer ----
+   Today's page pins the masthead and the filter bar separately and spends 148px of a 900px viewport on
+   chrome before a single row. This is 52px, and it is the only thing that pins. */
+.rail{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;height:52px;
+  padding:0 16px;background:var(--rail-bg);border-bottom:var(--hair) solid var(--grid);
+  backdrop-filter:blur(var(--blur)) saturate(1.3);-webkit-backdrop-filter:blur(var(--blur)) saturate(1.3)}
+.mark{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+/* The mark has no tile, and losing it was the point. The first version set `background:var(--bar)` on this
+   box and centred a glyph in it, which is fine for a letter and fatal for this drawing: the mark's own
+   globe is `--bar`, so a gold globe landed on a gold square and the only thing left visible was the
+   meridian grid. The svg brings its own plate, so the job here is just to reserve the space.
+
+   The glow is a `drop-shadow` rather than a `box-shadow` for the same reason. A box-shadow traces this
+   element's border-box -- a 28px square -- while the thing being lit is a 25%-rounded plate with an antenna
+   sticking out of its corner, so the square's glow read as a halo around a tile that is not there.
+   `drop-shadow` follows the rendered alpha, which means the antenna glows too, and the antenna is the part
+   that leaves the silhouette. */
+.mark .glyph{display:grid;place-items:center;width:28px;height:28px;flex:none;color:var(--bar)}
+/* Seven seconds, which is slow enough to be noticed only if you are looking at it -- a nav mark that
+   pulses at a readable rate is a nav mark that competes with the page. Gated on the duration, so Graphite
+   computes `calc(7s * 0)` = 0s and the animation never enters `document.getAnimations()` at all, rather
+   than sitting in the compositor animating between two identical frames. The radius is gated separately on
+   `--fx-glow`, so the floor state is the flat drawing with no light on it and nothing missing. */
+.mark .glyph svg{width:30px;height:30px;display:block;overflow:visible;
+  filter:drop-shadow(0 0 calc(5px * var(--fx-glow)) color-mix(in srgb,var(--bar) 45%,transparent));
+  animation:markbreath calc(7s * var(--fx-pulse)) ease-in-out infinite}
+@keyframes markbreath{
+  0%,100%{filter:drop-shadow(0 0 calc(3px * var(--fx-glow))
+    color-mix(in srgb,var(--bar) 32%,transparent))}
+  50%{filter:drop-shadow(0 0 calc(9px * var(--fx-glow))
+    color-mix(in srgb,var(--bar) 60%,transparent))}}
+.mark b{font-size:15px}
+.mark .ver{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em}
+/* Search. Inert in this demo and labelled as such, because a box that looks live and is not is worse
+   than one that says so. */
+.qwrap{position:relative;flex:1 1 auto;max-width:520px;min-width:0}
+.qwrap .mag{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);
+  font-size:13px;pointer-events:none}
+#q{width:100%;height:34px;padding:0 74px 0 31px;border-radius:999px;
+  border:var(--hair) solid var(--grid);background:var(--band);color:var(--ink);font-size:13.5px}
+#q::placeholder{color:var(--muted)}
+.qwrap .kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--mono);
+  font-size:10.5px;color:var(--muted);border:var(--hair) solid var(--grid);border-radius:5px;
+  padding:2px 6px;pointer-events:none}
+.count{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink2);
+  white-space:nowrap}
+.count b{color:var(--ink)}
+.spring{flex:1 1 auto}
+/* The segmented view switch and the skin button share one shape, so the rail reads as one instrument
+   rather than a row of unrelated widgets -- which is the single biggest complaint about today's bar. */
+.seg{display:flex;gap:2px;padding:2px;border-radius:999px;background:var(--band);
+  border:var(--hair) solid var(--grid)}
+.seg button{height:26px;padding:0 11px;border:0;border-radius:999px;background:transparent;
+  color:var(--muted);font-size:12px;letter-spacing:.01em}
+.seg button[aria-pressed=true]{background:var(--bar);color:var(--onbar);font-weight:600;
+  box-shadow:0 0 calc(14px * var(--fx-glow)) color-mix(in srgb,var(--bar) 45%,transparent)}
+.ghost{height:30px;padding:0 12px;border-radius:999px;background:var(--band);
+  border:var(--hair) solid var(--grid);color:var(--ink2);font-size:12.5px;display:flex;
+  align-items:center;gap:7px;white-space:nowrap}
+.ghost:hover{color:var(--ink);border-color:var(--bar)}
+.dotrow{display:flex;gap:3px}
+.dotrow i{width:8px;height:8px;border-radius:50%;display:block}
+
+/* ---- skin picker ---- */
+.picker{position:relative}
+.menu{position:absolute;right:0;top:38px;min-width:266px;padding:6px;border-radius:var(--radius);
+  background:var(--panel);border:var(--hair) solid var(--panel-b);box-shadow:var(--shadow);
+  backdrop-filter:blur(calc(var(--blur) + 8px));-webkit-backdrop-filter:blur(calc(var(--blur) + 8px));
+  z-index:70}
+.menu[hidden]{display:none}
+.menu h3{margin:6px 8px 8px;font-size:10.5px;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);color:var(--muted);font-weight:600}
+.menu button{display:flex;width:100%;gap:10px;align-items:flex-start;padding:9px 9px;border:0;
+  border-radius:var(--radius-sm);background:transparent;text-align:left}
+.menu button:hover{background:var(--band)}
+.menu button[aria-pressed=true]{background:var(--band);outline:var(--hair) solid var(--bar)}
+.menu .sw{display:flex;flex:none;gap:0;margin-top:2px;border-radius:5px;overflow:hidden;
+  border:1px solid var(--grid)}
+.menu .sw i{width:12px;height:22px;display:block}
+.menu .nm{font-size:13px;font-weight:600;color:var(--ink)}
+.menu .ds{font-size:11.5px;color:var(--muted);line-height:1.35;margin-top:2px}
+.menu kbd{font-family:var(--mono);font-size:10px;color:var(--muted)}
+
+/* ---- the shell: facet rail, then content ---- */
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);gap:24px;
+  max-width:1680px;margin:0 auto;padding:20px 16px 72px;position:relative;z-index:1}
+.facets{align-self:start;position:sticky;top:72px;max-height:calc(100vh - 92px);overflow-y:auto;
+  scrollbar-width:thin;padding-right:4px}
+.fg{margin:0 0 20px}
+.fh{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 8px;
+  font-size:10.5px;font-weight:600;text-transform:var(--kick-case);letter-spacing:var(--kick-track);
+  color:var(--muted)}
+.fh em{font-style:normal;font-family:var(--num);color:var(--grid)}
+/* A facet row is a chip with a bar behind it. The bar is the whole reason the rail exists: the largest
+   topic holds 278 rows and the smallest 11, and three wrapping rows of same-sized chips cannot say that.
+   ::before rather than a child element so the 44px touch floor stays granted on the row itself. */
+.frow{position:relative;display:flex;align-items:center;gap:8px;width:100%;min-height:30px;
+  padding:5px 9px;margin:0 0 3px;border:0;border-radius:var(--radius-sm);background:transparent;
+  overflow:hidden;text-align:left;isolation:isolate}
+.frow::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w,0%);z-index:-1;
+  background:color-mix(in srgb,var(--fc,var(--bar)) 22%,transparent);
+  border-right:1px solid color-mix(in srgb,var(--fc,var(--bar)) 55%,transparent);
+  transition:width .75s cubic-bezier(.22,1,.36,1)}
+.frow:hover{background:var(--band)}
+.frow[aria-pressed=true]{outline:var(--hair) solid var(--bar)}
+.frow .lb{flex:1 1 auto;font-size:12.5px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.frow:hover .lb{color:var(--ink)}
+.frow .ct{flex:none;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;
+  color:var(--muted)}
+.more{width:100%;padding:6px 9px;border:0;background:transparent;color:var(--muted);font-size:11.5px;
+  text-align:left;border-radius:var(--radius-sm)}
+.more:hover{color:var(--ink);background:var(--band)}
+
+/* ---- the deck ----
+   Five figures over the set currently on screen. Today the page prints one count; these are the
+   questions a reader actually arrives with, and they are all free: the filtered set is already in hand
+   at render time, so this is an aggregation and not a second pass over the data. */
+.deck{display:grid;grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:10px;margin:0 0 18px}
+.tile{padding:11px 13px 12px;border-radius:var(--radius);background:var(--panel);
+  border:var(--hair) solid var(--panel-b);box-shadow:var(--shadow);
+  backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));position:relative;
+  overflow:hidden}
+.tile .k{font-size:10px;font-weight:600;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);color:var(--muted)}
+.tile .v{margin-top:5px;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:25px;
+  font-weight:600;letter-spacing:-.02em;line-height:1.05;color:var(--ink)}
+.tile .u{font-size:11.5px;color:var(--muted);margin-left:5px;font-weight:400}
+/* One tile is lit, and it is the one the page is about. Proportional to the token, so Graphite gets a
+   flat tile and glass gets a halo. */
+.tile.lit{border-color:color-mix(in srgb,var(--bar) 60%,var(--panel-b));
+  box-shadow:var(--shadow),inset 0 0 calc(40px * var(--fx-glow))
+    color-mix(in srgb,var(--bar) 14%,transparent)}
+.tile.lit .v{color:var(--bar)}
+
+/* ---- freshness dot ----
+   The pulse is the only animation tied to a row, and it fires on 7 days rather than 30 on purpose:
+   1,085 of 1,294 rows are inside six months and 725 inside a month, so a dot that pulses for a month
+   pulses for most of the page and says nothing. */
+.dot{position:relative;flex:none;width:7px;height:7px;border-radius:50%;background:var(--off)}
+.dot.hot{background:var(--good)}
+.dot.warm{background:var(--bar)}
+.dot.ok{background:var(--muted)}
+.dot.cold,.dot.stale,.dot.unk{background:var(--grid)}
+/* The token gates this twice, and the second gate is the one that matters. `opacity` alone made the ring
+   invisible under Graphite but the keyframes still ran -- one compositor animation per hot dot, painting
+   nothing. A duration of `calc(2.4s * 0)` is 0s, and a zero-duration animation finishes instantly with no
+   fill, so it never enters the running set at all. Opacity stays as the belt to the braces. */
+.dot.hot::after{content:"";position:absolute;inset:-3px;border-radius:50%;
+  border:1px solid var(--good);opacity:var(--fx-pulse);
+  animation:ping calc(2.4s * var(--fx-pulse)) ease-out infinite}
+@keyframes ping{0%{transform:scale(.6);opacity:calc(var(--fx-pulse) * .9)}
+  70%{transform:scale(1.9);opacity:0}100%{transform:scale(1.9);opacity:0}}
+
+/* ---- platform meter ---- */
+.meter{display:inline-flex;align-items:flex-end;gap:2px;height:11px}
+.meter .sl{width:4px;border-radius:1px;background:var(--grid);height:4px;display:block}
+.meter .sl.y{height:11px;background:var(--good)}
+.meter .sl.l{height:7px;background:color-mix(in srgb,var(--good) 55%,var(--grid))}
+
+/* ---- shared chips on a row ---- */
+.tag{display:inline-flex;align-items:center;gap:5px;padding:2px 7px;border-radius:var(--radius-sm);
+  background:var(--band);border:var(--hair) solid var(--grid);font-size:11px;color:var(--ink2);
+  white-space:nowrap;font-family:var(--mono)}
+.tag.acc{border-color:color-mix(in srgb,var(--ac,var(--bar)) 55%,transparent);
+  color:color-mix(in srgb,var(--ac,var(--bar)) 80%,var(--ink))}
+.pips{display:inline-flex;gap:2px;align-items:center}
+.pips i{width:4px;height:4px;border-radius:50%;background:var(--bar);display:block}
+.cmd{display:block;margin-top:9px;padding:6px 9px;border-radius:var(--radius-sm);background:var(--surface);
+  border:var(--hair) solid var(--grid);font-family:var(--mono);font-size:11.5px;color:var(--ink2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmd::before{content:"$ ";color:var(--muted)}
+
+/* Below the two-column threshold the facet rail stops being a rail and becomes the whole first screen:
+   33 filter rows and five headings before the first project. Desktop hid that completely, which is the
+   argument for measuring the narrow tier rather than assuming it reflows.
+   `order` rather than a DOM move, so the rail stays first in source -- it is first in the reading and tab
+   order for a keyboard user at desktop width, which is where it is actually a rail, and a screen reader
+   on a phone still meets the filters before the footer. The shipped page already owns the better phone
+   answer for this -- `#sheet`, the bottom sheet -- and Phase 5 promotes that rather than repeating this. */
+@media(max-width:1080px){
+  .facets{order:1}
+  footer{order:2}
+}
+/* The touch tier. The shipped page pins `header button{min-height:44px}` and this has to keep that
+   promise: at 390 the search field computes to 34px and the skin button to 30px, both of which are below
+   the floor. Declared on each control rather than on `.rail *` or `.facets *` -- a floor granted by
+   descent stops being granted the moment the control moves out of that container, and these controls are
+   going to move as the layout settles. Same 640px breakpoint the site already uses, so there is one
+   phone tier and not two. */
+@media(max-width:640px){
+  #q{height:44px}
+  .rail .ghost{min-height:44px}
+  .frow,.more{min-height:44px}
+  .lrow{padding-top:11px;padding-bottom:11px}
+  .iacts .go,.iacts .ghost{min-height:44px}
+  /* The rail is one row of four groups and their natural widths sum to 665px, which a 375px viewport
+     answers by scrolling the whole document sideways -- taking every card with it, so the page reads as
+     broken rather than as cramped. Wrapping to a second row is what it should do, and the switch gets its
+     own scroller: five layout names cannot be made to fit 375px and abbreviating them to letters costs
+     the one thing the switch has, which is that you can read where you are. It scrolls, and the pressed
+     one is scrolled into view by the rail script, so "where am I" survives the overflow. */
+  .rail{flex-wrap:wrap;height:auto;padding-bottom:8px;row-gap:8px}
+  .rail .seg{overflow-x:auto;scrollbar-width:none;max-width:100%}
+  .rail .seg::-webkit-scrollbar{display:none}
+  .rail .seg button{flex:none}
+  /* The two-column directions collapse at this width too, but those rules live at the end of CARD_CSS
+     rather than here: `.dossier` and `.rec` are *declared* in CARD_CSS, which is concatenated after this
+     sheet, so an equal-specificity rule in a media query up here loses to the bare desktop rule down
+     there on source order. A media query buys no specificity. */
+}
+@media (prefers-reduced-motion:reduce){
+  /* Motion goes; colour and depth stay. A reader who asked for less movement did not ask for a duller
+     palette, and treating the two as one request is why so many reduced-motion modes look broken. */
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .scan{opacity:0}
+}
+@media (prefers-reduced-transparency:reduce){
+  :root{--blur:0px;--panel:var(--plane);--rail-bg:var(--plane)}
+}
+
+
+/* ---- layout C: three panes ----
+   The middle column is a list rather than a grid because its job changed: in layout A a row is the
+   destination, here it is the index and the right pane is the destination. So it gets dense and
+   scannable, and the twelve-line card moves wholesale into the inspector. */
+.shell{grid-template-columns:224px minmax(300px,1fr) minmax(360px,420px);align-items:start}
+/* The deck is explicitly five across here, not auto-fit. The middle column is ~700px at 1440 against a
+   142px auto-fit floor, which lands on four-plus-one -- a wrapped deck reads as five unrelated boxes
+   instead of one instrument panel. Five fixed tracks and a smaller figure keep it one row, and the
+   minmax(0,...) is what lets a 1,294 with tabular numerals sit in a 130px track without pushing it. */
+.deck{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.tile{padding:9px 11px 10px}
+.tile .v{font-size:20px;margin-top:3px}
+.tile .u{display:block;margin:1px 0 0 0;font-size:10.5px}
+.listpane{border-radius:var(--radius);background:var(--panel);border:var(--hair) solid var(--panel-b);
+  box-shadow:var(--shadow);backdrop-filter:blur(var(--blur));
+  -webkit-backdrop-filter:blur(var(--blur));overflow:hidden}
+.lhead{display:flex;align-items:center;gap:10px;padding:9px 13px;
+  border-bottom:var(--hair) solid var(--grid);font-size:10.5px;font-weight:600;
+  text-transform:var(--kick-case);letter-spacing:var(--kick-track);color:var(--muted)}
+.lhead .spring{flex:1 1 auto}
+.lhead kbd{font-family:var(--mono);font-size:10px;letter-spacing:0;text-transform:none;
+  border:var(--hair) solid var(--grid);border-radius:4px;padding:1px 5px;color:var(--muted)}
+.lrow{position:relative;display:flex;align-items:center;gap:10px;width:100%;padding:8px 13px;
+  border:0;border-bottom:var(--hair) solid var(--grid);background:transparent;text-align:left;
+  isolation:isolate}
+.lrow:last-child{border-bottom:0}
+.lrow:hover{background:var(--band)}
+.lrow .rk{min-width:26px;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11px;
+  color:var(--muted);flex:none}
+.lrow .nm{flex:1 1 auto;min-width:0;font-size:13.5px;font-weight:500;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrow .ls{flex:none;font-family:var(--num);font-variant-numeric:tabular-nums;font-size:12px;
+  color:var(--ink2)}
+/* Selection traces the row and lights its left edge. The trace is a border animation rather than a
+   background swap so it reads as a cursor rather than a hover, which matters when j/k moves it. */
+.lrow[aria-selected=true]{background:var(--band)}
+.lrow[aria-selected=true]::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--bar);box-shadow:0 0 calc(14px * var(--fx-glow)) var(--bar)}
+.lrow[aria-selected=true] .nm{color:var(--bar);font-weight:600}
+
+.inspect{position:sticky;top:72px;border-radius:var(--radius);background:var(--panel);
+  border:var(--hair) solid var(--panel-b);box-shadow:var(--shadow);
+  backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));overflow:hidden}
+.ihead{padding:15px 16px 13px;border-bottom:var(--hair) solid var(--grid)}
+.ihead .kick{font-size:10px;font-weight:600;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);color:var(--bar)}
+.ihead h2{margin:5px 0 0;font-size:20px;font-weight:600;letter-spacing:-.02em;overflow-wrap:anywhere}
+.ihead .nwo{display:block;margin-top:3px;font-family:var(--mono);font-size:11.5px;color:var(--muted);
+  overflow-wrap:anywhere}
+.ibody{padding:14px 16px 16px}
+.shot{width:100%;aspect-ratio:2/1;object-fit:cover;border-radius:var(--radius-sm);
+  background:var(--band);border:var(--hair) solid var(--grid);display:block;margin:0 0 13px}
+.noshot{display:grid;place-items:center;color:var(--muted);font-family:var(--mono);font-size:11px;
+  background:linear-gradient(140deg,var(--band),var(--surface))}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:7px 14px;margin:0;font-size:12.5px}
+.kv dt{color:var(--muted);font-size:10.5px;font-weight:600;text-transform:var(--kick-case);
+  letter-spacing:var(--kick-track);padding-top:2px}
+.kv dd{margin:0;color:var(--ink2);font-family:var(--num);font-variant-numeric:tabular-nums}
+.kv dd.txt{font-family:var(--ui)}
+.iblurb{margin:13px 0 0;font-size:13px;line-height:1.5;color:var(--ink2)}
+.iacts{display:flex;gap:8px;margin:15px 0 0;flex-wrap:wrap}
+.iacts .go{height:32px;padding:0 14px;border-radius:999px;background:var(--bar);color:var(--onbar);
+  border:0;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:7px;
+  text-decoration:none;
+  box-shadow:0 0 calc(20px * var(--fx-glow)) color-mix(in srgb,var(--bar) 45%,transparent)}
+.iacts .go:hover{text-decoration:none;filter:brightness(1.07)}
+
+@media (max-width:1240px){
+  .shell{grid-template-columns:200px minmax(0,1fr)}
+  .inspect{grid-column:1/-1;position:static}
+}
+@media (max-width:1080px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .facets{position:static;max-height:none;display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 20px}
+}
+@media (max-width:640px){
+  .rail{gap:8px;padding:0 12px}
+  .mark b,.mark .ver,.count,.seg{display:none}
+  .shell{padding:14px 12px 56px}
+  .deck{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* Five tiles into two columns leaves the fifth alone beside a hole, which reads as a tile that failed
+     to load rather than as the end of the row. It spans instead. Scoped to this tier deliberately: at the
+     desktop five-across the fifth tile is also last-and-odd, and a full-width span there would be wrong. */
+  .deck .tile:last-child:nth-child(odd){grid-column:1/-1}
+  .tile .v{font-size:21px}
+}
+
+</style>
+</head>
+<body>
+<div class="scan" aria-hidden="true"></div>
+<header class="rail"><span class="mark"><span class="glyph" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="var(--bar)" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="var(--ink)" stroke="var(--bar)" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="var(--bar)"/><path d="M12 31h40M32 11v40" fill="none" stroke="var(--mk-dark,var(--onbar))" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="var(--mk-dark,var(--onbar))"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="var(--ink)"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="var(--mk-dark,var(--onbar))" stroke-width="2.5" stroke-linecap="round"/></g></svg></span><b>Atlas</b><span class="ver">v2 demo</span></span><span class="qwrap"><span class="mag">&#9906;</span><input id="q" type="search" placeholder="Search is inert in this demo" aria-label="Search (inert in this demo)"><span class="kbd">/</span></span><span class="count"><b>8,856</b> projects</span><span class="spring"></span><span class="seg"><button aria-pressed="false" data-layout="rail" title="Layout A — rail, deck and cards">Cards</button><button aria-pressed="true" data-layout="console" title="Layout C — three-pane console">Console</button><button aria-pressed="false" data-layout="matrix" title="Layout M — topic x harness matrix">Matrix</button><button aria-pressed="false" data-layout="lab" title="Layout L — five card directions">Lab</button><button aria-pressed="false" data-layout="shelves" title="Layout S — browse and discover">Browse</button><button aria-pressed="false" data-layout="discover" title="Layout D — the daily rolling carousel">Daily</button></span><div class="picker"><button class="ghost" id="skinbtn" aria-expanded="false"><span class="dotrow"><i style="background:#D6A034"></i><i style="background:#6FE3C4"></i><i style="background:#52F2A0"></i></span>Skin</button><div class="menu" id="skinmenu" hidden><h3>Skin <kbd>T</kbd> cycles</h3><button data-skin="graphite" aria-pressed="false"><span class="sw"><i style="background:#090A0D"></i><i style="background:#D6A034"></i><i style="background:#78B7F4"></i></span><span><span class="nm">Graphite</span><span class="ds">Hairline precision. One accent, mono numerals, no glow.</span></span></button><button data-skin="glass" aria-pressed="false"><span class="sw"><i style="background:#070912"></i><i style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span><span><span class="nm">Glass Console</span><span class="ds">Frosted planes over a lit field. Floating rail, pointer sheen, live glow.</span></span></button><button data-skin="terminal" aria-pressed="false"><span class="sw"><i style="background:#04070A"></i><i style="background:#52F2A0"></i><i style="background:#57D9FF"></i></span><span><span class="nm">Neon Terminal</span><span class="ds">All monospace. Phosphor green, bracket chips, panes not cards, scanline.</span></span></button></div></div></header><div class="shell"><aside class="facets" aria-label="Filters"><div class="fg"><div class="fh"><span>Topic</span><em>14</em></div><button class="frow" aria-pressed="false" data-w="100.0%" style="--fc:var(--accent-slate)"><span class="lb">MCP Servers</span><span class="ct">4,537</span></button><button class="frow" aria-pressed="false" data-w="18.1%" style="--fc:var(--accent-violet)"><span class="lb">Agent Skills</span><span class="ct">823</span></button><button class="frow" aria-pressed="false" data-w="14.7%" style="--fc:var(--accent-sky)"><span class="lb">Harnesses &amp; Runtime Infra</span><span class="ct">669</span></button><button class="frow" aria-pressed="false" data-w="13.5%" style="--fc:var(--accent-violet)"><span class="lb">Plugins, Themes &amp; Clients</span><span class="ct">611</span></button><button class="frow" aria-pressed="false" data-w="10.2%" style="--fc:var(--accent-sky)"><span class="lb">Frameworks &amp; SDKs</span><span class="ct">463</span></button><button class="frow" aria-pressed="false" data-w="9.3%" style="--fc:var(--accent-coral)"><span class="lb">Observability &amp; Evals</span><span class="ct">421</span></button><button class="frow" aria-pressed="false" data-w="7.4%" style="--fc:var(--accent-mint)"><span class="lb">Orchestrators &amp; Multi-Agent</span><span class="ct">338</span></button><button class="frow" aria-pressed="false" data-w="6.2%" style="--fc:var(--accent-mint)"><span class="lb">Coding Agents</span><span class="ct">281</span></button><button class="frow" aria-pressed="false" data-w="5.6%" style="--fc:var(--accent-mint)" hidden><span class="lb">Assistants &amp; Domain Agents</span><span class="ct">252</span></button><button class="frow" aria-pressed="false" data-w="3.3%" style="--fc:var(--accent-coral)" hidden><span class="lb">Sandbox, Security &amp; Governance</span><span class="ct">150</span></button><button class="frow" aria-pressed="false" data-w="3.1%" style="--fc:var(--accent-gold)" hidden><span class="lb">Docs, Learning &amp; Lists</span><span class="ct">142</span></button><button class="frow" aria-pressed="false" data-w="2.2%" style="--fc:var(--accent-gold)" hidden><span class="lb">Context, Memory &amp; RAG</span><span class="ct">99</span></button><button class="frow" aria-pressed="false" data-w="0.9%" style="--fc:var(--accent-mint)" hidden><span class="lb">Research &amp; Data Agents</span><span class="ct">41</span></button><button class="frow" aria-pressed="false" data-w="0.6%" style="--fc:var(--accent-gold)" hidden><span class="lb">Creative, Voice &amp; Media</span><span class="ct">29</span></button><button class="more" data-more>6 more <span aria-hidden="true">+</span></button></div><div class="fg"><div class="fh"><span>Harness</span><em>12</em></div><button class="frow" aria-pressed="false" data-w="100.0%" style="--fc:var(--accent-mint)"><span class="lb">MCP</span><span class="ct">5,104</span></button><button class="frow" aria-pressed="false" data-w="77.3%" style="--fc:var(--accent-mint)"><span class="lb">Claude / Anthropic</span><span class="ct">3,943</span></button><button class="frow" aria-pressed="false" data-w="46.9%" style="--fc:var(--accent-mint)"><span class="lb">Claude Code</span><span class="ct">2,395</span></button><button class="frow" aria-pressed="false" data-w="30.9%" style="--fc:var(--accent-mint)"><span class="lb">Codex / OpenAI</span><span class="ct">1,578</span></button><button class="frow" aria-pressed="false" data-w="22.0%" style="--fc:var(--accent-mint)"><span class="lb">Cursor</span><span class="ct">1,121</span></button><button class="frow" aria-pressed="false" data-w="12.8%" style="--fc:var(--accent-mint)"><span class="lb">Gemini / Google</span><span class="ct">653</span></button><button class="frow" aria-pressed="false" data-w="8.0%" style="--fc:var(--accent-mint)"><span class="lb">opencode</span><span class="ct">406</span></button><button class="frow" aria-pressed="false" data-w="4.7%" style="--fc:var(--accent-mint)"><span class="lb">GitHub Copilot</span><span class="ct">240</span></button><button class="frow" aria-pressed="false" data-w="3.4%" style="--fc:var(--accent-mint)" hidden><span class="lb">LangChain / LangGraph</span><span class="ct">175</span></button><button class="frow" aria-pressed="false" data-w="2.9%" style="--fc:var(--accent-mint)" hidden><span class="lb">Local / Ollama</span><span class="ct">146</span></button><button class="frow" aria-pressed="false" data-w="1.7%" style="--fc:var(--accent-mint)" hidden><span class="lb">Cline / Roo</span><span class="ct">89</span></button><button class="frow" aria-pressed="false" data-w="0.8%" style="--fc:var(--accent-mint)" hidden><span class="lb">Aider</span><span class="ct">39</span></button><button class="more" data-more>4 more <span aria-hidden="true">+</span></button></div><div class="fg"><div class="fh"><span>Language</span><em>55</em></div><button class="frow" aria-pressed="false" data-w="100.0%" style="--fc:var(--accent-violet)"><span class="lb">Python</span><span class="ct">3,022</span></button><button class="frow" aria-pressed="false" data-w="84.1%" style="--fc:var(--accent-violet)"><span class="lb">TypeScript</span><span class="ct">2,542</span></button><button class="frow" aria-pressed="false" data-w="34.7%" style="--fc:var(--accent-violet)"><span class="lb">JavaScript</span><span class="ct">1,049</span></button><button class="frow" aria-pressed="false" data-w="13.0%" style="--fc:var(--accent-violet)"><span class="lb">Go</span><span class="ct">394</span></button><button class="frow" aria-pressed="false" data-w="10.3%" style="--fc:var(--accent-violet)"><span class="lb">Rust</span><span class="ct">312</span></button><button class="frow" aria-pressed="false" data-w="7.5%" style="--fc:var(--accent-violet)"><span class="lb">Shell</span><span class="ct">228</span></button><button class="frow" aria-pressed="false" data-w="4.2%" style="--fc:var(--accent-violet)"><span class="lb">HTML</span><span class="ct">128</span></button><button class="frow" aria-pressed="false" data-w="3.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Jupyter Notebook</span><span class="ct">91</span></button><button class="frow" aria-pressed="false" data-w="1.9%" style="--fc:var(--accent-violet)" hidden><span class="lb">C#</span><span class="ct">57</span></button><button class="frow" aria-pressed="false" data-w="1.9%" style="--fc:var(--accent-violet)" hidden><span class="lb">Swift</span><span class="ct">56</span></button><button class="frow" aria-pressed="false" data-w="1.6%" style="--fc:var(--accent-violet)" hidden><span class="lb">Java</span><span class="ct">47</span></button><button class="frow" aria-pressed="false" data-w="1.3%" style="--fc:var(--accent-violet)" hidden><span class="lb">C++</span><span class="ct">39</span></button><button class="frow" aria-pressed="false" data-w="0.8%" style="--fc:var(--accent-violet)" hidden><span class="lb">Dockerfile</span><span class="ct">23</span></button><button class="frow" aria-pressed="false" data-w="0.6%" style="--fc:var(--accent-violet)" hidden><span class="lb">Lua</span><span class="ct">18</span></button><button class="frow" aria-pressed="false" data-w="0.5%" style="--fc:var(--accent-violet)" hidden><span class="lb">C</span><span class="ct">16</span></button><button class="frow" aria-pressed="false" data-w="0.4%" style="--fc:var(--accent-violet)" hidden><span class="lb">Kotlin</span><span class="ct">13</span></button><button class="frow" aria-pressed="false" data-w="0.3%" style="--fc:var(--accent-violet)" hidden><span class="lb">PowerShell</span><span class="ct">10</span></button><button class="frow" aria-pressed="false" data-w="0.3%" style="--fc:var(--accent-violet)" hidden><span class="lb">Ruby</span><span class="ct">10</span></button><button class="frow" aria-pressed="false" data-w="0.3%" style="--fc:var(--accent-violet)" hidden><span class="lb">MDX</span><span class="ct">9</span></button><button class="frow" aria-pressed="false" data-w="0.3%" style="--fc:var(--accent-violet)" hidden><span class="lb">CSS</span><span class="ct">9</span></button><button class="frow" aria-pressed="false" data-w="0.2%" style="--fc:var(--accent-violet)" hidden><span class="lb">Markdown</span><span class="ct">7</span></button><button class="frow" aria-pressed="false" data-w="0.2%" style="--fc:var(--accent-violet)" hidden><span class="lb">Elixir</span><span class="ct">6</span></button><button class="frow" aria-pressed="false" data-w="0.2%" style="--fc:var(--accent-violet)" hidden><span class="lb">Emacs Lisp</span><span class="ct">6</span></button><button class="frow" aria-pressed="false" data-w="0.2%" style="--fc:var(--accent-violet)" hidden><span class="lb">PHP</span><span class="ct">6</span></button><button class="frow" aria-pressed="false" data-w="0.2%" style="--fc:var(--accent-violet)" hidden><span class="lb">Dart</span><span class="ct">5</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">Zig</span><span class="ct">4</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">Astro</span><span class="ct">4</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">TeX</span><span class="ct">3</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">Just</span><span class="ct">3</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">Svelte</span><span class="ct">3</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">Solidity</span><span class="ct">3</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">Makefile</span><span class="ct">2</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">Vim Script</span><span class="ct">2</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">Vue</span><span class="ct">2</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">Clojure</span><span class="ct">2</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">GDScript</span><span class="ct">2</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-violet)" hidden><span class="lb">Bicep</span><span class="ct">2</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Mojo</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Scala</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Rich Text Format</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Nix</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">D</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">ReScript</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">YARA</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Max</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Jinja</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">MATLAB</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Roff</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Crystal</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">1C Enterprise</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">API Blueprint</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Handlebars</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Verilog</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">F#</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-violet)" hidden><span class="lb">Smarty</span><span class="ct">1</span></button><button class="more" data-more>48 more <span aria-hidden="true">+</span></button></div><div class="fg"><div class="fh"><span>Licence</span><em>21</em></div><button class="frow" aria-pressed="false" data-w="100.0%" style="--fc:var(--accent-gold)"><span class="lb">MIT</span><span class="ct">5,368</span></button><button class="frow" aria-pressed="false" data-w="25.8%" style="--fc:var(--accent-gold)"><span class="lb">Apache-2.0</span><span class="ct">1,384</span></button><button class="frow" aria-pressed="false" data-w="3.4%" style="--fc:var(--accent-gold)"><span class="lb">AGPL-3.0</span><span class="ct">181</span></button><button class="frow" aria-pressed="false" data-w="2.1%" style="--fc:var(--accent-gold)"><span class="lb">GPL-3.0</span><span class="ct">115</span></button><button class="frow" aria-pressed="false" data-w="0.6%" style="--fc:var(--accent-gold)"><span class="lb">BSD-3-Clause</span><span class="ct">34</span></button><button class="frow" aria-pressed="false" data-w="0.4%" style="--fc:var(--accent-gold)" hidden><span class="lb">CC0-1.0</span><span class="ct">24</span></button><button class="frow" aria-pressed="false" data-w="0.4%" style="--fc:var(--accent-gold)" hidden><span class="lb">MPL-2.0</span><span class="ct">23</span></button><button class="frow" aria-pressed="false" data-w="0.2%" style="--fc:var(--accent-gold)" hidden><span class="lb">ISC</span><span class="ct">13</span></button><button class="frow" aria-pressed="false" data-w="0.2%" style="--fc:var(--accent-gold)" hidden><span class="lb">CC-BY-4.0</span><span class="ct">10</span></button><button class="frow" aria-pressed="false" data-w="0.2%" style="--fc:var(--accent-gold)" hidden><span class="lb">MIT-0</span><span class="ct">9</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-gold)" hidden><span class="lb">GPL-2.0</span><span class="ct">6</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-gold)" hidden><span class="lb">LGPL-3.0</span><span class="ct">5</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-gold)" hidden><span class="lb">CC-BY-SA-4.0</span><span class="ct">5</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-gold)" hidden><span class="lb">Unlicense</span><span class="ct">5</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-gold)" hidden><span class="lb">WTFPL</span><span class="ct">4</span></button><button class="frow" aria-pressed="false" data-w="0.1%" style="--fc:var(--accent-gold)" hidden><span class="lb">BSD-2-Clause</span><span class="ct">3</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-gold)" hidden><span class="lb">EPL-2.0</span><span class="ct">2</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-gold)" hidden><span class="lb">EUPL-1.2</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-gold)" hidden><span class="lb">LGPL-2.1</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-gold)" hidden><span class="lb">MulanPSL-2.0</span><span class="ct">1</span></button><button class="frow" aria-pressed="false" data-w="0.0%" style="--fc:var(--accent-gold)" hidden><span class="lb">0BSD</span><span class="ct">1</span></button><button class="more" data-more>16 more <span aria-hidden="true">+</span></button></div><div class="fg"><div class="fh"><span>Platform</span><em>5</em></div><button class="frow" aria-pressed="false" data-w="100.0%" style="--fc:var(--accent-coral)"><span class="lb">Linux</span><span class="ct">7,706</span></button><button class="frow" aria-pressed="false" data-w="99.9%" style="--fc:var(--accent-coral)"><span class="lb">WSL2</span><span class="ct">7,699</span></button><button class="frow" aria-pressed="false" data-w="95.5%" style="--fc:var(--accent-coral)"><span class="lb">macOS</span><span class="ct">7,363</span></button><button class="frow" aria-pressed="false" data-w="91.1%" style="--fc:var(--accent-coral)"><span class="lb">Windows</span><span class="ct">7,019</span></button><button class="frow" aria-pressed="false" data-w="20.1%" style="--fc:var(--accent-coral)"><span class="lb">Docker</span><span class="ct">1,548</span></button></div></aside><main><div class="deck"><div class="tile lit"><div class="k">projects</div><div class="v" data-roll="8,856" data-n="8856">8,856</div></div><div class="tile"><div class="k">stars</div><div class="v" data-roll="24.0M" data-n="24010256">24.0M</div></div><div class="tile"><div class="k">median push</div><div class="v" data-roll="42d" data-n="42">42d</div><span class="u">ago</span></div><div class="tile"><div class="k">pushed &lt; 30d</div><div class="v" data-roll="3,941" data-n="3941">3,941</div></div><div class="tile"><div class="k">topics</div><div class="v" data-roll="14" data-n="14">14</div><span class="u">/ 12 harnesses</span></div></div><div class="listpane"><div class="lhead"><span>Rank</span><span class="spring"></span><kbd>j</kbd><kbd>k</kbd><span>to move</span></div><div role="listbox" aria-label="Projects"><button class="lrow" role="option" aria-selected="false" data-i="0"><span class="rk">1</span><i class="dot hot"></i><span class="nm">openclaw</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">390.2k</span></button><button class="lrow" role="option" aria-selected="false" data-i="1"><span class="rk">2</span><i class="dot hot"></i><span class="nm">Superpowers</span><span class="meter" aria-hidden="true"><i class="sl n" title="Windows"></i><i class="sl n" title="WSL2"></i><i class="sl n" title="macOS"></i><i class="sl n" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">289.6k</span></button><button class="lrow" role="option" aria-selected="true" data-i="2"><span class="rk">3</span><i class="dot hot"></i><span class="nm">mattpocock/skills</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">267.0k</span></button><button class="lrow" role="option" aria-selected="false" data-i="3"><span class="rk">4</span><i class="dot hot"></i><span class="nm">Everything Claude Code (ECC)</span><span class="meter" aria-hidden="true"><i class="sl n" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl y" title="Docker"></i></span><span class="ls">264.6k</span></button><button class="lrow" role="option" aria-selected="false" data-i="4"><span class="rk">5</span><i class="dot hot"></i><span class="nm">hermes-agent</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">247.7k</span></button><button class="lrow" role="option" aria-selected="false" data-i="5"><span class="rk">6</span><i class="dot hot"></i><span class="nm">DeepSeek Harness (dsh)</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">232.2k</span></button><button class="lrow" role="option" aria-selected="false" data-i="6"><span class="rk">7</span><i class="dot ok"></i><span class="nm">andrej-karpathy-skills</span><span class="meter" aria-hidden="true"><i class="sl n" title="Windows"></i><i class="sl n" title="WSL2"></i><i class="sl n" title="macOS"></i><i class="sl n" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">214.5k</span></button><button class="lrow" role="option" aria-selected="false" data-i="7"><span class="rk">8</span><i class="dot hot"></i><span class="nm">OpenCode</span><span class="meter" aria-hidden="true"><i class="sl n" title="Windows"></i><i class="sl n" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">209.1k</span></button><button class="lrow" role="option" aria-selected="false" data-i="8"><span class="rk">9</span><i class="dot hot"></i><span class="nm">n8n</span><span class="meter" aria-hidden="true"><i class="sl n" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl y" title="Docker"></i></span><span class="ls">205.6k</span></button><button class="lrow" role="option" aria-selected="false" data-i="9"><span class="rk">10</span><i class="dot hot"></i><span class="nm">TensorFlow</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">200.2k</span></button><button class="lrow" role="option" aria-selected="false" data-i="10"><span class="rk">11</span><i class="dot hot"></i><span class="nm">AutoGPT</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">187.5k</span></button><button class="lrow" role="option" aria-selected="false" data-i="11"><span class="rk">12</span><i class="dot hot"></i><span class="nm">Ollama</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">181.4k</span></button><button class="lrow" role="option" aria-selected="false" data-i="12"><span class="rk">13</span><i class="dot warm"></i><span class="nm">Agent Skills</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">177.4k</span></button><button class="lrow" role="option" aria-selected="false" data-i="13"><span class="rk">14</span><i class="dot warm"></i><span class="nm">f/awesome-chatgpt-prompts</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">170.9k</span></button><button class="lrow" role="option" aria-selected="false" data-i="14"><span class="rk">15</span><i class="dot hot"></i><span class="nm">Dify</span><span class="meter" aria-hidden="true"><i class="sl n" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl n" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl y" title="Docker"></i></span><span class="ls">156.7k</span></button><button class="lrow" role="option" aria-selected="false" data-i="15"><span class="rk">16</span><i class="dot hot"></i><span class="nm">Langflow</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl y" title="Docker"></i></span><span class="ls">155.1k</span></button><button class="lrow" role="option" aria-selected="false" data-i="16"><span class="rk">17</span><i class="dot hot"></i><span class="nm">Open WebUI</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl y" title="Docker"></i></span><span class="ls">152.7k</span></button><button class="lrow" role="option" aria-selected="false" data-i="17"><span class="rk">18</span><i class="dot hot"></i><span class="nm">claude-code</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">147.4k</span></button><button class="lrow" role="option" aria-selected="false" data-i="18"><span class="rk">19</span><i class="dot hot"></i><span class="nm">LangChain</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">146.8k</span></button><button class="lrow" role="option" aria-selected="false" data-i="19"><span class="rk">20</span><i class="dot hot"></i><span class="nm">Ponytail</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">143.6k</span></button><button class="lrow" role="option" aria-selected="false" data-i="20"><span class="rk">21</span><i class="dot hot"></i><span class="nm">awesome-llm-apps</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">139.3k</span></button><button class="lrow" role="option" aria-selected="false" data-i="21"><span class="rk">22</span><i class="dot hot"></i><span class="nm">GitHub Spec Kit</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">138.2k</span></button><button class="lrow" role="option" aria-selected="false" data-i="22"><span class="rk">23</span><i class="dot hot"></i><span class="nm">cc-switch</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">134.0k</span></button><button class="lrow" role="option" aria-selected="false" data-i="23"><span class="rk">24</span><i class="dot hot"></i><span class="nm">gstack</span><span class="meter" aria-hidden="true"><i class="sl n" title="Windows"></i><i class="sl n" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl n" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">133.8k</span></button><button class="lrow" role="option" aria-selected="false" data-i="24"><span class="rk">25</span><i class="dot hot"></i><span class="nm">ui-ux-pro-max-skill</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">129.5k</span></button><button class="lrow" role="option" aria-selected="false" data-i="25"><span class="rk">26</span><i class="dot hot"></i><span class="nm">llama.cpp</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl n" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl n" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">129.1k</span></button><button class="lrow" role="option" aria-selected="false" data-i="26"><span class="rk">27</span><i class="dot hot"></i><span class="nm">Codex CLI</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">125.7k</span></button><button class="lrow" role="option" aria-selected="false" data-i="27"><span class="rk">28</span><i class="dot hot"></i><span class="nm">graphify</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl y" title="Docker"></i></span><span class="ls">120.1k</span></button><button class="lrow" role="option" aria-selected="false" data-i="28"><span class="rk">29</span><i class="dot hot"></i><span class="nm">browser-use</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">115.7k</span></button><button class="lrow" role="option" aria-selected="false" data-i="29"><span class="rk">30</span><i class="dot warm"></i><span class="nm">whisper</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">109.4k</span></button><button class="lrow" role="option" aria-selected="false" data-i="30"><span class="rk">31</span><i class="dot hot"></i><span class="nm">Pi</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">108.1k</span></button><button class="lrow" role="option" aria-selected="false" data-i="31"><span class="rk">32</span><i class="dot hot"></i><span class="nm">Caveman</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl n" title="WSL2"></i><i class="sl n" title="macOS"></i><i class="sl n" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">107.1k</span></button><button class="lrow" role="option" aria-selected="false" data-i="32"><span class="rk">33</span><i class="dot hot"></i><span class="nm">Gemini CLI</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">107.1k</span></button><button class="lrow" role="option" aria-selected="false" data-i="33"><span class="rk">34</span><i class="dot stale"></i><span class="nm">DeepSeek V3/R1</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">104.5k</span></button><button class="lrow" role="option" aria-selected="false" data-i="34"><span class="rk">35</span><i class="dot hot"></i><span class="nm">PyTorch</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl y" title="Docker"></i></span><span class="ls">103.2k</span></button><button class="lrow" role="option" aria-selected="false" data-i="35"><span class="rk">36</span><i class="dot hot"></i><span class="nm">addyosmani/agent-skills</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">98.1k</span></button><button class="lrow" role="option" aria-selected="false" data-i="36"><span class="rk">37</span><i class="dot ok"></i><span class="nm">Colab/Kaggle T4 port</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">96.5k</span></button><button class="lrow" role="option" aria-selected="false" data-i="37"><span class="rk">38</span><i class="dot hot"></i><span class="nm">awesome-mcp-servers</span><span class="meter" aria-hidden="true"><i class="sl n" title="Windows"></i><i class="sl y" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl y" title="Docker"></i></span><span class="ls">95.4k</span></button><button class="lrow" role="option" aria-selected="false" data-i="38"><span class="rk">39</span><i class="dot hot"></i><span class="nm">claude-mem</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">94.4k</span></button><button class="lrow" role="option" aria-selected="false" data-i="39"><span class="rk">40</span><i class="dot hot"></i><span class="nm">vLLM</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">92.3k</span></button><button class="lrow" role="option" aria-selected="false" data-i="40"><span class="rk">41</span><i class="dot hot"></i><span class="nm">RAGFlow</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl y" title="Docker"></i></span><span class="ls">91.1k</span></button><button class="lrow" role="option" aria-selected="false" data-i="41"><span class="rk">42</span><i class="dot hot"></i><span class="nm">Zed</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">90.7k</span></button><button class="lrow" role="option" aria-selected="false" data-i="42"><span class="rk">43</span><i class="dot warm"></i><span class="nm">modelcontextprotocol/servers</span><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">90.5k</span></button><button class="lrow" role="option" aria-selected="false" data-i="43"><span class="rk">44</span><i class="dot hot"></i><span class="nm">Leonxlnx/taste-skill</span><span class="meter" aria-hidden="true"><i class="sl y" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl y" title="macOS"></i><i class="sl y" title="Linux"></i><i class="sl n" title="Docker"></i></span><span class="ls">89.0k</span></button></div></div></main><aside class="inspect" id="inspect"></aside><footer style="grid-column:1/-1;margin-top:30px;padding-top:16px;border-top:var(--hair) solid var(--grid);color:var(--muted);font-size:12px">Layout C -- three-pane console. 8,856 real rows from the 2026-09-21 snapshot. Search and filtering are inert; skin switching, the bars, the deck and row selection and the inspector are live. <a href="rail.html">See layout A</a> &middot; <a href="matrix.html">See layout M</a> &middot; <a href="lab.html">See layout L</a> &middot; <a href="shelves.html">See layout S</a> &middot; <a href="discover.html">See layout D</a> &middot; <a href="app.html">Back to the switcher</a></footer></div>
+<script>
+// Everything below is demo scaffolding for the parts of "is this nice to use" that a static page cannot
+// answer: the skin swap, the bars, the deck, the sheen and the selection. There is no search here.
+const SKIN_PLANE = {"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"};
+
+// ---- skins. One attribute on <html>; no other JS and no CSS rule knows which skin is active. ----
+const skinBtn = document.getElementById("skinbtn");
+const skinMenu = document.getElementById("skinmenu");
+const SKIN_IDS = Object.keys(SKIN_PLANE);
+
+function paintSkin() {
+  const cur = document.documentElement.dataset.skin;
+  skinMenu.querySelectorAll("[data-skin]").forEach(b => {
+    b.setAttribute("aria-pressed", String(b.dataset.skin === cur));
+  });
+  const tc = document.getElementById("tc");
+  if (tc) tc.content = SKIN_PLANE[cur] || tc.content;
+}
+function setSkin(id) {
+  if (!SKIN_PLANE[id]) return;
+  document.documentElement.dataset.skin = id;
+  try { localStorage.setItem("atlas-skin", id); } catch (e) {}
+  paintSkin();
+  // So the switcher frame can keep its own buttons in step without reloading the iframe.
+  try { parent.postMessage({atlasSkin: id}, "*"); } catch (e) {}
+}
+skinBtn.onclick = () => {
+  const open = skinMenu.hidden;
+  skinMenu.hidden = !open;
+  skinBtn.setAttribute("aria-expanded", String(open));
+};
+skinMenu.onclick = ev => {
+  const b = ev.target.closest("[data-skin]");
+  if (!b) return;
+  setSkin(b.dataset.skin);
+  skinMenu.hidden = true;
+  skinBtn.setAttribute("aria-expanded", "false");
+};
+document.addEventListener("click", ev => {
+  if (!skinMenu.hidden && !ev.target.closest(".picker")) {
+    skinMenu.hidden = true;
+    skinBtn.setAttribute("aria-expanded", "false");
+  }
+});
+addEventListener("message", ev => {
+  if (ev.data && ev.data.setSkin) setSkin(ev.data.setSkin);
+});
+paintSkin();
+
+// ---- layout switch, which in the demo is just a navigation ----
+document.querySelectorAll("[data-layout]").forEach(b => {
+  b.onclick = () => {
+    if (b.getAttribute("aria-pressed") === "true") return;
+    location.href = b.dataset.layout + ".html" + location.search;
+  };
+});
+
+// ---- the bars. Widths start at 0 and are written after first paint, so the CSS transition runs and
+//      the distribution arrives as motion rather than as a fact that was always there. ----
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  document.querySelectorAll(".frow[data-w]").forEach(r => {
+    r.style.setProperty("--w", r.dataset.w);
+  });
+}));
+document.querySelectorAll("[data-more]").forEach(btn => {
+  btn.onclick = () => {
+    const group = btn.closest(".fg");
+    group.querySelectorAll(".frow[hidden]").forEach(r => {
+      r.hidden = false;
+      requestAnimationFrame(() => r.style.setProperty("--w", r.dataset.w));
+    });
+    btn.remove();
+  };
+});
+document.querySelectorAll(".frow").forEach(r => {
+  r.onclick = () => r.setAttribute("aria-pressed",
+    r.getAttribute("aria-pressed") === "true" ? "false" : "true");
+});
+
+// ---- the deck rolls. Honest about the formatting: it interpolates the number and re-applies the same
+//      compaction the build used, so 12.5M counts up as 12.5M and not as 12494028. ----
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function fmt(n, shown) {
+  if (/M$/.test(shown)) return (n / 1e6).toFixed(1) + "M";
+  if (/k$/.test(shown)) return (n / 1e3).toFixed(1) + "k";
+  if (/d$/.test(shown)) return Math.round(n) + "d";
+  return Math.round(n).toLocaleString("en-US");
+}
+if (!reduce) {
+  document.querySelectorAll("[data-roll]").forEach(el => {
+    const target = Number(el.dataset.n), shown = el.dataset.roll, t0 = performance.now();
+    el.textContent = fmt(0, shown);
+    (function step(t) {
+      const p = Math.min(1, (t - t0) / 760);
+      el.textContent = fmt(target * (1 - Math.pow(1 - p, 3)), shown);
+      if (p < 1) requestAnimationFrame(step); else el.textContent = shown;
+    })(t0);
+  });
+}
+
+// ---- the sheen. Two custom properties per panel; the gradient is in CSS and is zero-opacity under a
+//      skin that sets --fx-sheen:0, so this listener is skin-agnostic. The project page's masthead takes
+//      it too, which is what makes arriving there feel like the same surface rather than a second site. ----
+document.querySelectorAll(".card,.hero").forEach(c => {
+  c.addEventListener("pointermove", ev => {
+    const r = c.getBoundingClientRect();
+    c.style.setProperty("--mx", (ev.clientX - r.left) + "px");
+    c.style.setProperty("--my", (ev.clientY - r.top) + "px");
+  });
+});
+
+// ---- a card is a link across its whole area ----
+// The name inside it is a real anchor and stays the accessible path; this only widens the target for a
+// pointer. Guarded on `closest("a")` so clicking the name is not handled twice, and on the modifier keys
+// and a live text selection, all three of which would otherwise turn an ordinary interaction into a
+// navigation the reader did not ask for.
+document.querySelectorAll(".card[data-href]").forEach(c => {
+  c.addEventListener("click", ev => {
+    if (ev.target.closest("a") || ev.metaKey || ev.ctrlKey || ev.shiftKey) return;
+    if (String(getSelection())) return;
+    location.href = c.dataset.href;
+  });
+  c.style.cursor = "pointer";
+});
+
+// ---- T cycles the skin, which is the shortcut Phase 2 ships ----
+addEventListener("keydown", ev => {
+  if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+  const t = ev.target.tagName;
+  if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT") return;
+  if (ev.key === "t" || ev.key === "T") {
+    const i = SKIN_IDS.indexOf(document.documentElement.dataset.skin);
+    setSkin(SKIN_IDS[(i + 1) % SKIN_IDS.length]);
+  }
+});
+
+// ---- layout C only: the inspector ----
+const P = [{"name":"openclaw","nwo":"openclaw/openclaw","stars":390202,"cat":"Frameworks & SDKs","targets":["MCP"],"lang":"TypeScript","license":"","pushed":"2026-09-21","age":"today","fresh":"hot","lists":6,"listed_by":"AI Agents (Jenqyang), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), OpenClaw Assistants, Orchestrators","blurb":"Open-source AI agent framework that turns LLMs into persistent, proactive personal AI agents with multi-channel messaging (Signal, Telegram, Discord, WhatsApp), cron scheduling, memory systems, MCP integration, skill plugins, sub-agent spawning, and browser automation","install":"npm install -g openclaw@latest --allow-scripts=openclaw","img":"","url":"https://github.com/openclaw/openclaw","href":"repo/openclaw/openclaw.html","os":"YYYYN","ac":"violet"},{"name":"Superpowers","nwo":"obra/superpowers","stars":289634,"cat":"Agent Skills","targets":["Claude Code","Claude / Anthropic","MCP","Codex / OpenAI","Gemini / Google","GitHub Copilot","Cursor"],"lang":"Shell","license":"MIT","pushed":"2026-09-20","age":"1d","fresh":"hot","lists":7,"listed_by":"AAS Skill Sources, Agent Skills (JackyST0), Agent Skills (VoltAgent), Agent Skills (libukai), Claude Code, Claude Code (jqueryscript), Harness Engineering","blurb":"by Jesse Vincent - A strong bundle of core competencies for software engineering, with good coverage of a large portion of the SDLC - from planning, reviewing, testing, debugging... Well written, well organized, and adaptable. The author refers to them as \"superpowers\", but many of them are just consolidating engineering best practices - which sometimes does feel like a superpower when working wit…","install":"git clone https://github.com/obra/superpowers.git","img":"","url":"https://github.com/obra/superpowers","href":"repo/obra/superpowers.html","os":"NNNNN","ac":"gold"},{"name":"mattpocock/skills","nwo":"mattpocock/skills","stars":267011,"cat":"Agent Skills","targets":["Claude Code","Claude / Anthropic","Cursor"],"lang":"Shell","license":"MIT","pushed":"2026-09-18","age":"3d","fresh":"hot","lists":4,"listed_by":"AAS Skill Sources, Agent Skills (VoltAgent), Claude Code (jqueryscript), Cursor Skills","blurb":"Source for 17 Matt Pocock workflow skills - codebase design, TDD, bug diagnosis, triage, PRDs, issues, prototyping, handoff, teaching, and skill-writing guidance (MIT)","install":"npx skills@latest add mattpocock/skills","img":"https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skill-repo-light_2x.png","url":"https://github.com/mattpocock/skills","href":"repo/mattpocock/skills.html","os":"LLLLN","ac":"gold"},{"name":"Everything Claude Code (ECC)","nwo":"affaan-m/ECC","stars":264558,"cat":"Agent Skills","targets":["Claude Code","Claude / Anthropic","opencode","MCP","Codex / OpenAI","Cursor"],"lang":"JavaScript","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":6,"listed_by":"AAS Skill Sources, Agent Skills (JackyST0), Claude Code, Claude Code (jqueryscript), Codex CLI Ecosystem, Harness Engineering","blurb":"by Affaan Mustafa - Top-notch, well-written resources covering \"just about everything\" from core engineering domains. What's nice about this \"everything-\" store is most of the resources have significant standalone value and unlike some all-encompassing frameworks, although you can opt in to the author's own specific workflow patterns if you choose, the individual resources offer exemplary patterns…","install":"npm install -g ecc-universal@2.2.2","img":"https://raw.githubusercontent.com/affaan-m/ECC/main/assets/hero.png","url":"https://github.com/affaan-m/ECC","href":"repo/affaan-m/ecc.html","os":"NYYYY","ac":"gold"},{"name":"hermes-agent","nwo":"NousResearch/hermes-agent","stars":247710,"cat":"Assistants & Domain Agents","targets":["Claude Code","Claude / Anthropic","Codex / OpenAI"],"lang":"Python","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":3,"listed_by":"Agents (kyrolabs), OpenClaw Assistants, Orchestrators","blurb":"Python / TypeScript - Self-improving AI agent with autonomous skill creation, persistent memory, multi-platform messaging, and subagent delegation","install":"curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash","img":"","url":"https://github.com/NousResearch/hermes-agent","href":"repo/nousresearch/hermes-agent.html","os":"YYYYN","ac":"gold"},{"name":"DeepSeek Harness (dsh)","nwo":"deepseek-ai/deepseek-harness","stars":232194,"cat":"Harnesses & Runtime Infra","targets":[],"lang":"TypeScript","license":"MIT","pushed":"2026-09-17","age":"4d","fresh":"hot","lists":1,"listed_by":"Harness Engineering","blurb":"DeepSeek's official open-source agent harness (August 2026) built on an \"everything is a plugin\" architecture powered by Cordis: models, tools, skills, UI surfaces, and even the desktop shell are plugins composed through dependency injection rather than a monolith with extension points, with an accompanying paper on spatiotemporal composability. The clearest first-party reference for treating harn…","install":"npx @deepseek-ai/dsh web","img":"","url":"https://github.com/deepseek-ai/deepseek-harness","href":"repo/deepseek-ai/deepseek-harness.html","os":"LLLLN","ac":"sky"},{"name":"andrej-karpathy-skills","nwo":"multica-ai/andrej-karpathy-skills","stars":214489,"cat":"Agent Skills","targets":["Claude Code","Claude / Anthropic"],"lang":"","license":"","pushed":"2026-04-20","age":"5mo","fresh":"ok","lists":3,"listed_by":"AAS Skill Sources, Claude Code, Claude Code (jqueryscript)","blurb":"by multica-ai - A drop-in CLAUDE.md distilling four behavioral guidelines for LLM-assisted coding into Claude Code — a low-friction quick win. Karpathy-inspired, derived from Andrej Karpathy's public notes on LLM coding pitfalls and authored by multica-ai","install":"git clone https://github.com/multica-ai/andrej-karpathy-skills.git","img":"","url":"https://github.com/multica-ai/andrej-karpathy-skills","href":"repo/multica-ai/andrej-karpathy-skills.html","os":"NNNNN","ac":"gold"},{"name":"OpenCode","nwo":"anomalyco/opencode","stars":209094,"cat":"Coding Agents","targets":["opencode","MCP"],"lang":"TypeScript","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":4,"listed_by":"Agents (kyrolabs), Harness Engineering, LLMOps (InftyAI), Opencode","blurb":"Open-source terminal-native AI coding agent with 131K+ stars and 2.5M+ monthly active developers. Provider-agnostic architecture supports 75+ LLM providers plus native LSP auto-configuration, multi-session parallel agents, and MCP extensibility. The build/plan agent split and client/server architecture make it the most complete open-source reference for a terminal-first coding harness","install":"scoop install opencode # Windows","img":"https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/assets/lander/screenshot.png","url":"https://github.com/anomalyco/opencode","href":"repo/anomalyco/opencode.html","os":"NNYYN","ac":"mint"},{"name":"n8n","nwo":"n8n-io/n8n","stars":205572,"cat":"Orchestrators & Multi-Agent","targets":[],"lang":"TypeScript","license":"","pushed":"2026-09-21","age":"today","fresh":"hot","lists":2,"listed_by":"AI Agents 2026, Prompt Engineering (promptslab)","blurb":"Workflow automation with AI agent capabilities and 400+ integrations. ~60K+ ⭐","install":"curl -fsSL https://get.n8n.io | sh","img":"https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png","url":"https://github.com/n8n-io/n8n","href":"repo/n8n-io/n8n.html","os":"NYYYY","ac":"sky"},{"name":"TensorFlow","nwo":"tensorflow/tensorflow","stars":200227,"cat":"Harnesses & Runtime Infra","targets":[],"lang":"C++","license":"Apache-2.0","pushed":"2026-09-21","age":"today","fresh":"hot","lists":1,"listed_by":"LLMOps (tensorchord)","blurb":"An Open Source Machine Learning Framework for Everyone","install":"pip install tensorflow","img":"","url":"https://github.com/tensorflow/tensorflow","href":"repo/tensorflow/tensorflow.html","os":"LLLLN","ac":"sky"},{"name":"AutoGPT","nwo":"Significant-Gravitas/AutoGPT","stars":187475,"cat":"Frameworks & SDKs","targets":["Codex / OpenAI"],"lang":"Python","license":"","pushed":"2026-09-21","age":"today","fresh":"hot","lists":7,"listed_by":"AI Agents (Jenqyang), AI Agents (Schwoebel), AI Agents 2026, Agent Skill Security, Agents (e2b), LLM Agents (kaushikb11), LLMOps (InftyAI)","blurb":"AutoGPT provides accessible AI tools for building and using AI agents, offering a comprehensive framework including Forge for agent creation, agbenchmark for performance evaluation, a leaderboard for competition, a user-friendly UI, and CLI for seamless integration and management github | github profile","install":"git clone https://github.com/Significant-Gravitas/AutoGPT.git","img":"https://raw.githubusercontent.com/Significant-Gravitas/AutoGPT/master/docs/home/.gitbook/assets/Banner_image.png","url":"https://github.com/Significant-Gravitas/AutoGPT","href":"repo/significant-gravitas/autogpt.html","os":"LLLLN","ac":"violet"},{"name":"Ollama","nwo":"ollama/ollama","stars":181373,"cat":"Harnesses & Runtime Infra","targets":["Local / Ollama"],"lang":"Go","license":"MIT","pushed":"2026-09-19","age":"2d","fresh":"hot","lists":4,"listed_by":"AI Agents (Schwoebel), AI Agents 2026, LLMOps (InftyAI), LLMOps (tensorchord)","blurb":"Ollama is a tool for running large language models locally, offering easy setup for macOS, Windows, Linux, and Docker, along with a library of models and quickstart guides for customization and integration github | github profile","install":"irm https://ollama.com/install.ps1 | iex","img":"","url":"https://github.com/ollama/ollama","href":"repo/ollama/ollama.html","os":"YLYYN","ac":"sky"},{"name":"Agent Skills","nwo":"anthropics/skills","stars":177437,"cat":"Agent Skills","targets":["Claude Code","Claude / Anthropic","MCP","Cursor"],"lang":"Python","license":"","pushed":"2026-09-10","age":"11d","fresh":"warm","lists":6,"listed_by":"AAS Skill Sources, Agent Skills (JackyST0), Agent Skills (libukai), Claude Code, Claude Code (jqueryscript), Cursor Skills","blurb":"by Anthropic - Anthropic's official repository for Agent Skills — the SKILL.md format, a skill template, and example skills, the same format Claude Code loads natively","install":"git clone https://github.com/anthropics/skills.git","img":"","url":"https://github.com/anthropics/skills","href":"repo/anthropics/skills.html","os":"LLLLN","ac":"gold"},{"name":"f/awesome-chatgpt-prompts","nwo":"f/prompts.chat","stars":170897,"cat":"Docs, Learning & Lists","targets":["Claude / Anthropic","Codex / OpenAI","Gemini / Google"],"lang":"HTML","license":"","pushed":"2026-09-09","age":"12d","fresh":"warm","lists":3,"listed_by":"AAS Skill Sources, Agent Skill Security, Prompt Engineering (promptslab)","blurb":"World's largest open-source prompt library. 1000s of prompts for all major models","install":"npx prompts.chat new my-prompt-library","img":"https://raw.githubusercontent.com/f/prompts.chat/main/public/sponsors/clemta.webp","url":"https://github.com/f/prompts.chat","href":"repo/f/prompts.chat.html","os":"LLLLN","ac":"coral"},{"name":"Dify","nwo":"langgenius/dify","stars":156740,"cat":"Frameworks & SDKs","targets":["Codex / OpenAI"],"lang":"TypeScript","license":"","pushed":"2026-09-21","age":"today","fresh":"hot","lists":6,"listed_by":"AI Agents 2026, Harness Engineering, LLM Agents (kaushikb11), LLMOps (InftyAI), LLMOps (tensorchord), Prompt Engineering (promptslab)","blurb":"February 2026 release making human oversight a native workflow primitive: suspend execution at critical decision points, expose review-and-edit UI mid-flow, and route subsequent execution based on human action (approve/reject/escalate). Demonstrates how HITL transitions from bolt-on approval gates to first-class execution-graph nodes with stateful pause/resume backed by Celery workers and Redis Pu…","install":"git clone https://github.com/langgenius/dify.git","img":"https://raw.githubusercontent.com/langgenius/dify/main/images/GitHub_README_if.png","url":"https://github.com/langgenius/dify","href":"repo/langgenius/dify.html","os":"NYNYY","ac":"violet"},{"name":"Langflow","nwo":"langflow-ai/langflow","stars":155095,"cat":"Orchestrators & Multi-Agent","targets":["Codex / OpenAI","LangChain / LangGraph"],"lang":"Python","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":3,"listed_by":"AI Agents 2026, LLMOps (tensorchord), Prompt Engineering (promptslab)","blurb":"An effortless way to experiment and prototype LangChain flows with drag-and-drop components and a chat interface","install":"docker run -p 7860:7860 langflowai/langflow:latest","img":"https://github.com/user-attachments/assets/03168b17-a11d-4b2a-b0f7-c1cce69e5a2c","url":"https://github.com/langflow-ai/langflow","href":"repo/langflow-ai/langflow.html","os":"YLYYY","ac":"sky"},{"name":"Open WebUI","nwo":"open-webui/open-webui","stars":152716,"cat":"Harnesses & Runtime Infra","targets":["Codex / OpenAI","Local / Ollama"],"lang":"Python","license":"","pushed":"2026-09-21","age":"today","fresh":"hot","lists":2,"listed_by":"AI Agents 2026, LLMOps (InftyAI)","blurb":"User-friendly AI Interface (Supports Ollama, OpenAI API, ...)","install":"pip install open-webui","img":"https://raw.githubusercontent.com/open-webui/open-webui/main/demo.png","url":"https://github.com/open-webui/open-webui","href":"repo/open-webui/open-webui.html","os":"LYLLY","ac":"sky"},{"name":"claude-code","nwo":"anthropics/claude-code","stars":147434,"cat":"Orchestrators & Multi-Agent","targets":["Claude Code","Claude / Anthropic"],"lang":"TypeScript","license":"","pushed":"2026-09-21","age":"today","fresh":"hot","lists":3,"listed_by":"Claude Code, Claude Code (jqueryscript), Vibe Coding","blurb":"by Anthropic PBC - The official Anthropic implementation of the Ralph Wiggum technique for iterative, self-referential AI development loops in Claude Code","install":"winget install Anthropic.ClaudeCode","img":"https://raw.githubusercontent.com/anthropics/claude-code/main/demo.gif","url":"https://github.com/anthropics/claude-code","href":"repo/anthropics/claude-code.html","os":"YLLLN","ac":"sky"},{"name":"LangChain","nwo":"langchain-ai/langchain","stars":146799,"cat":"Frameworks & SDKs","targets":["Claude / Anthropic","Codex / OpenAI","Gemini / Google","LangChain / LangGraph"],"lang":"Python","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":8,"listed_by":"AI Agents (Jenqyang), AI Agents (Schwoebel), AI Agents 2026, Agents (kyrolabs), LLM Agents (kaushikb11), LLMOps (InftyAI), LLMOps (tensorchord), Prompt Engineering (promptslab)","blurb":"Langchain integrates various providers like Anthropic, AWS, and OpenAI, and offers tools for components such as LLMs, chat models, and data analysis, supporting functionalities from Alpha Vantage to YouTube github | docs","install":"git clone https://github.com/langchain-ai/langchain.git","img":"","url":"https://github.com/langchain-ai/langchain","href":"repo/langchain-ai/langchain.html","os":"LLLLN","ac":"violet"},{"name":"Ponytail","nwo":"DietrichGebert/ponytail","stars":143616,"cat":"Agent Skills","targets":["Claude Code","Claude / Anthropic","MCP","Cursor"],"lang":"JavaScript","license":"MIT","pushed":"2026-09-14","age":"7d","fresh":"hot","lists":2,"listed_by":"Claude Code (jqueryscript), Harness Engineering","blurb":"Skill that makes coding agents behave like a \"lazy senior dev\": prefer built-in solutions, avoid new dependencies, and write the minimum code that works. Benchmarked on real Claude Code sessions with ~54% fewer lines, ~20% lower cost, and preserved safety guards — a rare harness-level incentive that fights over-engineering rather than just adding capability","install":"git clone https://github.com/DietrichGebert/ponytail","img":"https://raw.githubusercontent.com/DietrichGebert/ponytail/main/assets/waitlist-banner.png","url":"https://github.com/DietrichGebert/ponytail","href":"repo/dietrichgebert/ponytail.html","os":"LLLLN","ac":"gold"},{"name":"awesome-llm-apps","nwo":"Shubhamsaboo/awesome-llm-apps","stars":139293,"cat":"Assistants & Domain Agents","targets":["Claude Code","Claude / Anthropic","MCP","Codex / OpenAI","Gemini / Google","LangChain / LangGraph"],"lang":"Python","license":"Apache-2.0","pushed":"2026-09-20","age":"1d","fresh":"hot","lists":3,"listed_by":"Claude Code Toolkit, Harness Engineering, LLM App Templates","blurb":"Collection of production LLM applications with source code across RAG, multi-agent, and tool-use patterns. Good reference for how harness primitives combine in real applications","install":"npx skills add https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/agent_skills/project-graveyard","img":"https://raw.githubusercontent.com/Shubhamsaboo/awesome-llm-apps/main/docs/banner/unwind_black.png","url":"https://github.com/Shubhamsaboo/awesome-llm-apps","href":"repo/shubhamsaboo/awesome-llm-apps.html","os":"LLLLN","ac":"gold"},{"name":"GitHub Spec Kit","nwo":"github/spec-kit","stars":138183,"cat":"Orchestrators & Multi-Agent","targets":["Claude Code","Claude / Anthropic","Codex / OpenAI","Gemini / Google","GitHub Copilot"],"lang":"Python","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":1,"listed_by":"Harness Engineering","blurb":"GitHub's open-source toolkit for spec-driven development: spec.md → plan.md → tasks.md artifacts convert natural-language intent into a machine-checkable plan before any code is written, with /specify, /plan, /tasks, and /implement commands that run across Claude Code, Copilot, Codex, and Gemini CLI. The clearest reference implementation of treating spec/plan/task documents — not the prompt — as t…","install":"git clone https://github.com/github/spec-kit.git","img":"","url":"https://github.com/github/spec-kit","href":"repo/github/spec-kit.html","os":"LLLLN","ac":"sky"},{"name":"cc-switch","nwo":"farion1231/cc-switch","stars":133956,"cat":"Plugins, Themes & Clients","targets":["Claude Code","Claude / Anthropic","opencode","MCP","Codex / OpenAI","Gemini / Google"],"lang":"Rust","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":3,"listed_by":"Claude Code (jqueryscript), Claude Code Toolkit, Codex CLI Ecosystem","blurb":"(132.1k ⭐) - Cross-platform desktop assistant for Claude Code, Codex, OpenCode, OpenClaw, Grok Build, and Hermes Agent","install":"brew install --cask cc-switch","img":"https://raw.githubusercontent.com/farion1231/cc-switch/main/assets/screenshots/main-en.png","url":"https://github.com/farion1231/cc-switch","href":"repo/farion1231/cc-switch.html","os":"YYYYN","ac":"violet"},{"name":"gstack","nwo":"garrytan/gstack","stars":133846,"cat":"Orchestrators & Multi-Agent","targets":["Claude Code","Claude / Anthropic"],"lang":"TypeScript","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":4,"listed_by":"Agent Skills (libukai), Claude Code, Claude Code (jqueryscript), Claude Code Toolkit","blurb":"by Garry Tan - Garry Tan's (Y Combinator) Claude Code setup and \"open source software factory\" for managing the development lifecycle end-to-end. Includes a set of agents and in-depth skills/tools along with workflows for advancing a product from ideation to production","install":"git clone https://github.com/garrytan/gstack.git","img":"https://raw.githubusercontent.com/garrytan/gstack/main/docs/images/github-2026.png","url":"https://github.com/garrytan/gstack","href":"repo/garrytan/gstack.html","os":"NNYNN","ac":"sky"},{"name":"ui-ux-pro-max-skill","nwo":"nextlevelbuilder/ui-ux-pro-max-skill","stars":129542,"cat":"Agent Skills","targets":["Claude Code","Claude / Anthropic","Gemini / Google","GitHub Copilot","Cursor"],"lang":"Python","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":3,"listed_by":"Agent Skills (VoltAgent), Agent Skills (libukai), Claude Code (jqueryscript)","blurb":"(91.5k ⭐) - An AI SKILL that provide design intelligence for building professional UI/UX multiple platforms","install":"git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git","img":"https://raw.githubusercontent.com/nextlevelbuilder/ui-ux-pro-max-skill/main/screenshots/website.png","url":"https://github.com/nextlevelbuilder/ui-ux-pro-max-skill","href":"repo/nextlevelbuilder/ui-ux-pro-max-skill.html","os":"YYYYN","ac":"gold"},{"name":"llama.cpp","nwo":"ggml-org/llama.cpp","stars":129078,"cat":"Harnesses & Runtime Infra","targets":["Local / Ollama"],"lang":"C++","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":3,"listed_by":"AI Agents 2026, LLMOps (InftyAI), LLMOps (tensorchord)","blurb":"C/C++ inference. CPU, GPU, Apple Silicon. Foundation of local AI","install":"git clone https://github.com/ggml-org/llama.cpp.git","img":"https://github.com/user-attachments/assets/88726b48-1713-48aa-a525-95a02e78afc4","url":"https://github.com/ggml-org/llama.cpp","href":"repo/ggml-org/llama.cpp.html","os":"YNYNN","ac":"sky"},{"name":"Codex CLI","nwo":"openai/codex","stars":125728,"cat":"Coding Agents","targets":["Codex / OpenAI"],"lang":"Rust","license":"Apache-2.0","pushed":"2026-09-21","age":"today","fresh":"hot","lists":6,"listed_by":"AI Agents 2026, Codex CLI Ecosystem, Harness Engineering, LLMOps (InftyAI), Prompt Engineering (promptslab), Vibe Coding","blurb":"OpenAI's official autonomous coding agent CLI — the open-source reference implementation of the Codex harness with sandboxed tool execution, multi-file editing, and a streaming agent loop. Worth studying because it is the most widely adopted terminal-native coding agent harness and exposes the same loop architecture that OpenAI documents in its harness engineering posts","install":"npm install -g @openai/codex","img":"https://raw.githubusercontent.com/openai/codex/main/.github/codex-cli-splash.png","url":"https://github.com/openai/codex","href":"repo/openai/codex.html","os":"YLYYN","ac":"mint"},{"name":"graphify","nwo":"Graphify-Labs/graphify","stars":120140,"cat":"Agent Skills","targets":["Claude Code","Claude / Anthropic","opencode","Codex / OpenAI","Gemini / Google","Cursor"],"lang":"Python","license":"Apache-2.0","pushed":"2026-09-20","age":"1d","fresh":"hot","lists":1,"listed_by":"Claude Code (jqueryscript)","blurb":"(67.0k ⭐) - AI coding assistant skill (Claude Code, Codex, OpenCode, OpenClaw, Factory Droid, Trae)","install":"uv tool install graphifyy # install the CLI (or: pipx install graphifyy)","img":"https://raw.githubusercontent.com/Graphify-Labs/graphify/v8/docs/graph-hero.png","url":"https://github.com/Graphify-Labs/graphify","href":"repo/graphify-labs/graphify.html","os":"YYYYY","ac":"gold"},{"name":"browser-use","nwo":"browser-use/browser-use","stars":115737,"cat":"Frameworks & SDKs","targets":["Claude / Anthropic"],"lang":"Python","license":"MIT","pushed":"2026-09-18","age":"3d","fresh":"hot","lists":5,"listed_by":"AI Agents (Jenqyang), AI Agents 2026, Agent Skills (JackyST0), Harness Engineering, LLMOps (InftyAI)","blurb":"Minimal browser-automation agent harness with clean separation of tool registration, DOM state injection, action loop, and error recovery. Small codebase, clear structure — the best \"minimal viable harness\" reference for understanding core loop mechanics","install":"git clone https://github.com/browser-use/browser-use.git","img":"https://github.com/user-attachments/assets/135885e8-1141-4e10-b719-bf690ae7d260","url":"https://github.com/browser-use/browser-use","href":"repo/browser-use/browser-use.html","os":"LLLLN","ac":"violet"},{"name":"whisper","nwo":"openai/whisper","stars":109431,"cat":"Creative, Voice & Media","targets":["Codex / OpenAI"],"lang":"Python","license":"MIT","pushed":"2026-08-31","age":"21d","fresh":"warm","lists":1,"listed_by":"LLMOps (tensorchord)","blurb":"Robust Speech Recognition via Large-Scale Weak Supervision","install":"git clone https://github.com/openai/whisper.git","img":"https://raw.githubusercontent.com/openai/whisper/main/approach.png","url":"https://github.com/openai/whisper","href":"repo/openai/whisper.html","os":"LLLLN","ac":"mint"},{"name":"Pi","nwo":"earendil-works/pi","stars":108079,"cat":"Harnesses & Runtime Infra","targets":[],"lang":"TypeScript","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":1,"listed_by":"Harness Engineering","blurb":"Minimal terminal coding harness built around \"lazy skills\": each capability keeps only a one-line description in active context, loading full instructions and tool schemas only when invoked. Keeps the system prompt under 1,000 tokens versus 7,000–10,000 for typical agents, making it a concrete reference for context-minimal harness design","install":"git clone https://github.com/earendil-works/pi.git","img":"https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/docs/images/exy.png","url":"https://github.com/earendil-works/pi","href":"repo/earendil-works/pi.html","os":"YLYYN","ac":"sky"},{"name":"Caveman","nwo":"JuliusBrussee/caveman","stars":107127,"cat":"Agent Skills","targets":["Claude Code","Claude / Anthropic","Codex / OpenAI"],"lang":"Go","license":"","pushed":"2026-09-21","age":"today","fresh":"hot","lists":2,"listed_by":"Claude Code, Claude Code (jqueryscript)","blurb":"by Julius Brussee - A plugin that conserves message tokens by communicating in fragmented \"caveman speak\" - sort of a clever form of compression. Now accompanied by a whole caveman ecosystem including a memory system, caveman spec kit, and a caveman agent","install":"irm https://raw.githubusercontent.com/JuliusBrussee/caveman/v2.7.0/install.ps1 | iex","img":"https://raw.githubusercontent.com/JuliusBrussee/caveman/main/docs/assets/caveman-demo.gif","url":"https://github.com/JuliusBrussee/caveman","href":"repo/juliusbrussee/caveman.html","os":"YNNNN","ac":"gold"},{"name":"Gemini CLI","nwo":"google-gemini/gemini-cli","stars":107114,"cat":"Coding Agents","targets":["MCP","Gemini / Google"],"lang":"TypeScript","license":"Apache-2.0","pushed":"2026-09-21","age":"today","fresh":"hot","lists":6,"listed_by":"AI Agents 2026, AI Coding Tools (a4d), Gemini CLI Ecosystem, LLMOps (InftyAI), Prompt Engineering (promptslab), Vibe Coding","blurb":"The official open-source AI agent that brings the power of Gemini directly into your terminal. Features context-aware coding assistance, file manipulation, and command execution capabilities","install":"npm install -g @google/gemini-cli","img":"https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/assets/gemini-screenshot.png","url":"https://github.com/google-gemini/gemini-cli","href":"repo/google-gemini/gemini-cli.html","os":"LLLLN","ac":"mint"},{"name":"DeepSeek V3/R1","nwo":"deepseek-ai/DeepSeek-V3","stars":104474,"cat":"Harnesses & Runtime Infra","targets":[],"lang":"Python","license":"MIT","pushed":"2025-08-28","age":"1y","fresh":"stale","lists":1,"listed_by":"AI Agents 2026","blurb":"68x cheaper. Strong reasoning. V4 Lite in preview","install":"git clone https://github.com/deepseek-ai/DeepSeek-V3.git","img":"https://raw.githubusercontent.com/deepseek-ai/DeepSeek-V3/main/figures/benchmark.png","url":"https://github.com/deepseek-ai/DeepSeek-V3","href":"repo/deepseek-ai/deepseek-v3.html","os":"LLLLN","ac":"sky"},{"name":"PyTorch","nwo":"pytorch/pytorch","stars":103151,"cat":"Harnesses & Runtime Infra","targets":[],"lang":"Python","license":"","pushed":"2026-09-21","age":"today","fresh":"hot","lists":1,"listed_by":"LLMOps (tensorchord)","blurb":"Tensors and Dynamic neural networks in Python with strong GPU acceleration","install":"docker run --gpus all --rm -ti --ipc=host pytorch/pytorch:latest","img":"https://github.com/user-attachments/assets/49a3dfe7-81c2-4246-852b-bc3f807e95af","url":"https://github.com/pytorch/pytorch","href":"repo/pytorch/pytorch.html","os":"LYLYY","ac":"sky"},{"name":"addyosmani/agent-skills","nwo":"addyosmani/agent-skills","stars":98055,"cat":"Agent Skills","targets":["Claude Code","Claude / Anthropic","MCP","Codex / OpenAI","Gemini / Google","Cursor"],"lang":"JavaScript","license":"MIT","pushed":"2026-09-20","age":"1d","fresh":"hot","lists":4,"listed_by":"AAS Skill Sources, Agent Skills (JackyST0), Claude Code (jqueryscript), Harness Engineering","blurb":"Production-grade engineering skills for AI coding agents, packaged as 24 reusable skills covering the full development lifecycle from /spec to /ship. The slash-command interface and context-aware auto-activation make it a concrete reference for turning senior-engineering judgment into agent-executable harness artifacts","install":"npx skills add addyosmani/agent-skills # install all 25 skills","img":"https://addyosmani.com/assets/images/addys-agent-skills.jpg","url":"https://github.com/addyosmani/agent-skills","href":"repo/addyosmani/agent-skills.html","os":"LLLLN","ac":"gold"},{"name":"Colab/Kaggle T4 port","nwo":"karpathy/autoresearch","stars":96493,"cat":"Orchestrators & Multi-Agent","targets":[],"lang":"Python","license":"","pushed":"2026-03-26","age":"5mo","fresh":"ok","lists":1,"listed_by":"Prompt Engineering (promptslab)","blurb":"Adapts autoresearch for free T4 GPUs (Google Colab / Kaggle) with zero cost and zero local setup. Key changes: Flash Attention 3 → PyTorch SDPA, removes H100-only kernel dependency","install":"git clone https://github.com/karpathy/autoresearch/issues/208.git","img":"https://raw.githubusercontent.com/karpathy/autoresearch/master/progress.png","url":"https://github.com/karpathy/autoresearch/issues/208","href":"repo/karpathy/autoresearch.html","os":"LLLLN","ac":"sky"},{"name":"awesome-mcp-servers","nwo":"punkpeye/awesome-mcp-servers","stars":95389,"cat":"Docs, Learning & Lists","targets":["MCP"],"lang":"","license":"MIT","pushed":"2026-09-21","age":"today","fresh":"hot","lists":3,"listed_by":"Agent Skill Security, DevOps MCP Servers, Prompt Engineering (promptslab)","blurb":"Curated list of 10,000+ community MCP servers. ~30K+ ⭐","install":"npx awesome-mcp search postgres","img":"","url":"https://github.com/punkpeye/awesome-mcp-servers/","href":"repo/punkpeye/awesome-mcp-servers.html","os":"NYYYY","ac":"coral"},{"name":"claude-mem","nwo":"thedotmack/claude-mem","stars":94394,"cat":"Plugins, Themes & Clients","targets":["Claude Code","Claude / Anthropic","opencode","Codex / OpenAI","Gemini / Google","GitHub Copilot"],"lang":"TypeScript","license":"Apache-2.0","pushed":"2026-09-21","age":"today","fresh":"hot","lists":3,"listed_by":"Agent Skills (VoltAgent), Claude Code (jqueryscript), Claude Code Toolkit","blurb":"(82.2k ⭐) - A Claude Code plugin that automatically captures everything Claude does during your coding sessions, compresses it with AI (using Claude's agent-sdk), and injects relevant context back into future sessions","install":"npm install -g claude-mem","img":"https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/cm-preview.gif","url":"https://github.com/thedotmack/claude-mem","href":"repo/thedotmack/claude-mem.html","os":"LLLLN","ac":"violet"},{"name":"vLLM","nwo":"vllm-project/vllm","stars":92350,"cat":"Harnesses & Runtime Infra","targets":["Local / Ollama"],"lang":"Python","license":"Apache-2.0","pushed":"2026-09-21","age":"today","fresh":"hot","lists":3,"listed_by":"AI Agents 2026, LLMOps (InftyAI), LLMOps (tensorchord)","blurb":"A high-throughput and memory-efficient inference and serving engine for LLMs","install":"git clone https://github.com/vllm-project/vllm.git","img":"","url":"https://github.com/vllm-project/vllm","href":"repo/vllm-project/vllm.html","os":"LLLLN","ac":"sky"},{"name":"RAGFlow","nwo":"infiniflow/ragflow","stars":91103,"cat":"Context, Memory & RAG","targets":[],"lang":"Go","license":"Apache-2.0","pushed":"2026-09-21","age":"today","fresh":"hot","lists":2,"listed_by":"AI Agents 2026, LLMOps (InftyAI)","blurb":"RAGFlow is an open-source RAG (Retrieval-Augmented Generation) engine based on deep document understanding","install":"git clone https://github.com/infiniflow/ragflow.git","img":"https://raw.githubusercontent.com/infiniflow/ragflow-docs/refs/heads/image/image/agentic-dark.gif","url":"https://github.com/infiniflow/ragflow","href":"repo/infiniflow/ragflow.html","os":"YLYYY","ac":"mint"},{"name":"Zed","nwo":"zed-industries/zed","stars":90663,"cat":"Coding Agents","targets":["MCP"],"lang":"Rust","license":"","pushed":"2026-09-21","age":"today","fresh":"hot","lists":2,"listed_by":"MCP Servers (wong2), Prompt Engineering (promptslab)","blurb":"High-performance editor in Rust with native AI features, Zeta edit prediction, and Agent Client Protocol support. ~77K+ ⭐","install":"git clone https://github.com/zed-industries/zed.git","img":"","url":"https://github.com/zed-industries/zed","href":"repo/zed-industries/zed.html","os":"YLYYN","ac":"mint"},{"name":"modelcontextprotocol/servers","nwo":"modelcontextprotocol/servers","stars":90529,"cat":"MCP Servers","targets":["Claude / Anthropic","MCP"],"lang":"TypeScript","license":"","pushed":"2026-09-03","age":"18d","fresh":"warm","lists":6,"listed_by":"Agent Skills, DevOps MCP Servers, Harness Engineering, MCP Servers (punkpeye), MCP Servers (wong2), Prompt Engineering (promptslab)","blurb":"Anthropic's official reference MCP server implementations (GitHub, Slack, Postgres, Puppeteer, etc.). The authoritative source for understanding correct MCP server structure before building your own","install":"npx -y @modelcontextprotocol/server-memory","img":"","url":"https://github.com/modelcontextprotocol/servers","href":"repo/modelcontextprotocol/servers.html","os":"LLLLN","ac":"coral"},{"name":"Leonxlnx/taste-skill","nwo":"Leonxlnx/taste-skill","stars":89000,"cat":"Agent Skills","targets":["Claude Code","Claude / Anthropic"],"lang":"JavaScript","license":"MIT","pushed":"2026-09-20","age":"1d","fresh":"hot","lists":4,"listed_by":"AAS Skill Sources, Agent Skills, Agent Skills (VoltAgent), Claude Code (jqueryscript)","blurb":"Frontend design taste skill collection covering premium UI generation, redesign audits, GSAP motion, Stitch design systems, minimalist and brutalist visual modes, and full-output enforcement","install":"npx skills add https://github.com/Leonxlnx/taste-skill","img":"https://raw.githubusercontent.com/Leonxlnx/taste-skill/main/assets/readme-banner.webp","url":"https://github.com/Leonxlnx/taste-skill","href":"repo/leonxlnx/taste-skill.html","os":"YLYYN","ac":"gold"}];
+const OSN = ["Windows", "WSL2", "macOS", "Linux", "Docker"];
+const rows = [...document.querySelectorAll(".lrow")];
+let sel = 2;
+
+function meter(v) {
+  return '<span class="meter">' + [...v.slice(0, 5)].map((ch, i) =>
+    '<i class="sl ' + (ch === "Y" ? "y" : ch === "L" ? "l" : "n") +
+    '" title="' + OSN[i] + '"></i>').join("") + "</span>";
+}
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+}
+function paint(i) {
+  const p = P[i];
+  if (!p) return;
+  const box = document.getElementById("inspect");
+  const shot = p.img
+    ? '<img class="shot" src="' + esc(p.img) + '" alt="" loading="lazy" decoding="async">'
+    : '<div class="shot noshot">no screenshot in this snapshot</div>';
+  box.style.setProperty("--ac", "var(--accent-" + p.ac + ")");
+  box.innerHTML =
+    '<div class="ihead"><div class="kick">' + esc(p.cat) + '</div>' +
+    '<h2>' + esc(p.name) + '</h2>' +
+    '<a class="nwo" href="' + esc(p.url) + '">' + esc(p.nwo) + '</a></div>' +
+    '<div class="ibody">' + shot +
+    '<dl class="kv">' +
+    '<dt>Stars</dt><dd>' + p.stars.toLocaleString("en-US") + '</dd>' +
+    '<dt>Pushed</dt><dd><i class="dot ' + p.fresh + '" style="display:inline-block;' +
+      'vertical-align:middle;margin-right:6px"></i>' + esc(p.pushed) + ' &middot; ' +
+      // "today ago" is not a thing. `freshness()` returns a bare word for a same-day push and a
+      // duration for everything else, so only the durations get the preposition.
+      esc(p.age) + (p.age === "today" ? "" : " ago") + '</dd>' +
+    '<dt>Language</dt><dd class="txt">' + esc(p.lang || "not stated") + '</dd>' +
+    '<dt>Licence</dt><dd class="txt">' + esc(p.license || "none declared") + '</dd>' +
+    '<dt>Platform</dt><dd>' + meter(p.os) + '</dd>' +
+    '<dt>Harness</dt><dd class="txt">' + esc(p.targets.join(", ") || "none") + '</dd>' +
+    '<dt>Lists</dt><dd class="txt">' + p.lists + ' &middot; ' + esc(p.listed_by) + '</dd>' +
+    '</dl>' +
+    '<p class="iblurb">' + esc(p.blurb) + '</p>' +
+    (p.install ? '<code class="cmd">' + esc(p.install) + '</code>' : '') +
+    // An anchor, not a button. This is the one control in the inspector that leaves the page, and the
+    // whole point of the pane is that everything else does not -- so it should look like a link to the
+    // browser too: middle click, copy link, and the status bar all follow from the element.
+    '<div class="iacts"><a class="go" href="' + esc(p.href) + '">Open full page &rarr;</a>' +
+    '<button class="ghost">Compare</button><button class="ghost">Save</button></div></div>';
+}
+function select(i) {
+  if (i < 0 || i >= rows.length) return;
+  rows[sel].setAttribute("aria-selected", "false");
+  sel = i;
+  rows[sel].setAttribute("aria-selected", "true");
+  rows[sel].scrollIntoView({block: "nearest"});
+  paint(i);
+}
+rows.forEach((r, i) => { r.onclick = () => select(i); });
+addEventListener("keydown", ev => {
+  if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+  const t = ev.target.tagName;
+  if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT") return;
+  if (ev.key === "j" || ev.key === "ArrowDown") { ev.preventDefault(); select(sel + 1); }
+  if (ev.key === "k" || ev.key === "ArrowUp") { ev.preventDefault(); select(sel - 1); }
+});
+paint(sel);
+
+</script>
+</body>
+</html>

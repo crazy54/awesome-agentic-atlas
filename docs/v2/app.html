@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en" data-skin="glass">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<title>Atlas redesign — two layouts, three skins</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+:root{
+  --surface:#070912;
+  --plane:rgba(255,255,255,.045);
+  --band:rgba(255,255,255,.085);
+  --ink:#F4F7FF;
+  --ink2:#C7D0E4;
+  --muted:#8E9AB5;
+  --grid:rgba(255,255,255,.13);
+  --link:#7CC4FF;
+  --bar:#6FE3C4;
+  --onbar:#04121A;
+  --good:#5BE0B8;
+  --warn:#FF8FA3;
+  --off:#8E9AB5;
+  --accent-sky:#7CC4FF;
+  --accent-mint:#6FE3C4;
+  --accent-gold:#FFD479;
+  --accent-coral:#FF8FA3;
+  --accent-violet:#B9A6FF;
+  --accent-slate:#8E9AB5;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:14px;
+  --radius-sm:10px;
+  --hair:1px;
+  --blur:18px;
+  --panel:linear-gradient(158deg,rgba(255,255,255,.075),rgba(255,255,255,.02) 62%);
+  --panel-b:rgba(255,255,255,.14);
+  --rail-bg:rgba(10,14,28,.62);
+  --field:radial-gradient(900px 620px at 12% -8%,rgba(124,196,255,.20),transparent 62%),radial-gradient(760px 560px at 88% 4%,rgba(185,166,255,.17),transparent 60%),radial-gradient(1100px 760px at 62% 108%,rgba(111,227,196,.14),transparent 64%);
+  --shadow:0 18px 44px rgba(2,5,16,.5);
+  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.1em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:1;
+  --fx-lift:1;
+}
+html[data-skin=graphite]{
+  --surface:#090A0D;
+  --plane:#101217;
+  --band:#20242D;
+  --ink:#F7F8FA;
+  --ink2:#D0D5DD;
+  --muted:#9BA5B3;
+  --grid:#3A414D;
+  --link:#78B7F4;
+  --bar:#D6A034;
+  --onbar:#090A0D;
+  --good:#5BD5AA;
+  --warn:#EF7D86;
+  --off:#9BA5B3;
+  --accent-sky:#78B7F4;
+  --accent-mint:#5BD5AA;
+  --accent-gold:#E7B64D;
+  --accent-coral:#EF7D86;
+  --accent-violet:#A99AF7;
+  --accent-slate:#9BA5B3;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --radius:6px;
+  --radius-sm:4px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--plane);
+  --panel-b:var(--grid);
+  --rail-bg:var(--plane);
+  --field:none;
+  --shadow:none;
+  --lift:0 1px 2px rgba(0,0,0,.55),0 10px 24px -12px rgba(0,0,0,.8);
+  --lift-hi:0 2px 5px rgba(0,0,0,.6),0 26px 52px -16px rgba(0,0,0,.95);
+  --scrim:linear-gradient(to top,rgba(4,5,8,.94),rgba(4,5,8,.66) 34%,rgba(4,5,8,.14) 68%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.08em;
+  --fx-glow:0;
+  --fx-pulse:0;
+  --fx-scan:0;
+  --fx-sheen:0;
+  --fx-lift:0;
+}
+html[data-skin=glass]{
+  --surface:#070912;
+  --plane:rgba(255,255,255,.045);
+  --band:rgba(255,255,255,.085);
+  --ink:#F4F7FF;
+  --ink2:#C7D0E4;
+  --muted:#8E9AB5;
+  --grid:rgba(255,255,255,.13);
+  --link:#7CC4FF;
+  --bar:#6FE3C4;
+  --onbar:#04121A;
+  --good:#5BE0B8;
+  --warn:#FF8FA3;
+  --off:#8E9AB5;
+  --accent-sky:#7CC4FF;
+  --accent-mint:#6FE3C4;
+  --accent-gold:#FFD479;
+  --accent-coral:#FF8FA3;
+  --accent-violet:#B9A6FF;
+  --accent-slate:#8E9AB5;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:14px;
+  --radius-sm:10px;
+  --hair:1px;
+  --blur:18px;
+  --panel:linear-gradient(158deg,rgba(255,255,255,.075),rgba(255,255,255,.02) 62%);
+  --panel-b:rgba(255,255,255,.14);
+  --rail-bg:rgba(10,14,28,.62);
+  --field:radial-gradient(900px 620px at 12% -8%,rgba(124,196,255,.20),transparent 62%),radial-gradient(760px 560px at 88% 4%,rgba(185,166,255,.17),transparent 60%),radial-gradient(1100px 760px at 62% 108%,rgba(111,227,196,.14),transparent 64%);
+  --shadow:0 18px 44px rgba(2,5,16,.5);
+  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.1em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:1;
+  --fx-lift:1;
+}
+html[data-skin=terminal]{
+  --surface:#04070A;
+  --plane:#070E11;
+  --band:#0C181B;
+  --ink:#DCFFEA;
+  --ink2:#9BE8BE;
+  --muted:#4F9179;
+  --grid:#16332A;
+  --link:#52F2A0;
+  --bar:#52F2A0;
+  --onbar:#04070A;
+  --good:#52F2A0;
+  --warn:#FFB454;
+  --off:#4F9179;
+  --accent-sky:#57D9FF;
+  --accent-mint:#52F2A0;
+  --accent-gold:#FFD166;
+  --accent-coral:#FF7A85;
+  --accent-violet:#C792EA;
+  --accent-slate:#4F9179;
+  --ui:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --radius:0px;
+  --radius-sm:0px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--plane);
+  --panel-b:var(--grid);
+  --rail-bg:#050B0D;
+  --field:linear-gradient(180deg,rgba(82,242,160,.05),transparent 240px);
+  --shadow:none;
+  --lift:3px 3px 0 rgba(0,0,0,.9);
+  --lift-hi:6px 6px 0 rgba(0,0,0,.95);
+  --scrim:linear-gradient(to top,rgba(2,6,7,.96) 0 42%,rgba(2,6,7,.4) 76%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.14em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:1;
+  --fx-sheen:0;
+  --fx-lift:0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--surface);color:var(--ink);font-family:var(--ui);display:flex;
+  flex-direction:column;overflow:hidden}
+.top{flex:none;display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:11px 16px;
+  background:var(--plane);border-bottom:1px solid var(--grid)}
+.top h1{margin:0;font-size:14px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.top h1 span{color:var(--muted);font-weight:400}
+.grp{display:flex;align-items:center;gap:8px}
+.grp .lab{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--muted)}
+.tabs{display:flex;gap:2px;padding:2px;border-radius:999px;background:var(--band);
+  border:1px solid var(--grid)}
+.tabs button{height:28px;padding:0 13px;border:0;border-radius:999px;background:transparent;
+  color:var(--muted);font:inherit;font-size:12.5px;cursor:pointer;display:flex;align-items:center;
+  gap:7px}
+.tabs button[aria-pressed=true]{background:var(--bar);color:var(--onbar);font-weight:600}
+.tabs i{width:9px;height:9px;border-radius:50%;display:block}
+.spring{flex:1 1 auto}
+.hint{font-size:11.5px;color:var(--muted)}
+.hint kbd{font-family:var(--mono);border:1px solid var(--grid);border-radius:4px;padding:1px 5px;
+  font-size:10.5px}
+.note{flex:none;padding:8px 16px;font-size:12px;color:var(--ink2);background:var(--surface);
+  border-bottom:1px solid var(--grid)}
+iframe{flex:1 1 auto;width:100%;border:0;display:block;background:var(--surface)}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>Atlas redesign <span>&mdash; three layouts and a project page, three skins</span></h1>
+  <div class="grp"><span class="lab">Layout</span><div class="tabs" id="lt"><button data-layout="rail" aria-pressed="true">A &middot; Rail + deck + cards</button><button data-layout="console" aria-pressed="false">C &middot; Three-pane console</button><button data-layout="matrix" aria-pressed="false">M &middot; Topic &times; harness</button><button data-layout="lab" aria-pressed="false">L &middot; Card directions</button><button data-layout="shelves" aria-pressed="false">S &middot; Browse &amp; discover</button><button data-layout="discover" aria-pressed="false">D &middot; Daily carousel</button><button data-layout="detail" aria-pressed="false">P &middot; Project page</button></div></div>
+  <div class="grp"><span class="lab">Skin</span><div class="tabs" id="st"><button data-skin="graphite" aria-pressed="false"><i style="background:#D6A034"></i>Graphite</button><button data-skin="glass" aria-pressed="false"><i style="background:#6FE3C4"></i>Glass Console</button><button data-skin="terminal" aria-pressed="false"><i style="background:#52F2A0"></i>Neon Terminal</button></div></div>
+  <span class="spring"></span>
+  <span class="hint"><kbd>A</kbd><kbd>C</kbd><kbd>M</kbd><kbd>L</kbd><kbd>S</kbd><kbd>D</kbd><kbd>P</kbd> layout &middot; <kbd>1</kbd>&ndash;<kbd>3</kbd> skin
+    &middot; <kbd>T</kbd> cycles inside the page</span>
+</div>
+<div class="note" id="note"></div>
+<iframe id="f" title="Layout preview"></iframe>
+<script>
+const NOTES = {"rail": "Layout A. One 52px sticky rail, a left facet rail whose bars are proportional to real counts, a five-tile deck, and cards with a signal row. Hover a card for the sheen; the bars ease in on load.", "console": "Layout C. Same rail and facets; the middle column becomes a dense index and the right pane inspects the selection with no navigation. Click a row, or use j and k.", "matrix": "Layout M. Topic down, harness across, real counts at the 130 occupied crossings of 168. Hover for the crosshair and the readout, click to hold one. This is the question the site cannot answer today at any price.", "lab": "Layout L. Five ways to draw the same project, all on real rows \u2014 poster, dossier, contact sheet, terminal record and a portrait generated from the project's own facts. Plus the border states, and three A/B comparisons: where the name goes, what an imageless card shows, and how platform compatibility reads. Hover everything; the copy buttons work.", "shelves": "Layout S. Browsing without a ranking. A spotlight that rotates over the 1,094 projects outside the top 200, then a shelf per reason-to-be-shown: consensus across 39 lists, pushed this week, hidden gems, Windows-native, by language, the deep cuts, and one whole topic small enough to read to the end. The arithmetic of what that reaches is at the foot of the page.", "discover": "Layout D. Discover \u2014 the rolling daily carousel. Fifty projects a day, rolling over at your local midnight, and star counts are not consulted anywhere in the picking. The week is dealt by scripts/discover.py against a committed ledger of when each project was last featured, so the Sunday deploy bakes seven dated days and the client picks the one you are in. Past days in the week replay; future days are locked. Every category appears every day. The track rolls on its own and stops the moment you touch it.", "detail": "The project page \u2014 where a card goes when you click it. Same rail, same skin, same topic accent; no facet rail, because there is nothing to filter. Stars, last push and rank are fetched after paint rather than baked in. Reachable from any card in A or the inspector in C, and Esc comes back."};
+const SKINS = ["graphite", "glass", "terminal"];
+const KEYS = {"a": "rail", "c": "console", "m": "matrix", "l": "lab", "s": "shelves", "d": "discover", "p": "detail"};
+// A URL per tab rather than "<key>.html": the project page is not a layout, it is where a layout goes when
+// you click something, and it lives at the shipped address shape -- repo/<owner>/<name>/.
+const URLS = {"rail": "rail.html", "console": "console.html", "matrix": "matrix.html", "lab": "lab.html", "shelves": "shelves.html", "discover": "discover.html", "detail": "repo/mattpocock/skills.html"};
+let layout = "rail", skin = "glass";
+const f = document.getElementById("f");
+function go() {
+  document.documentElement.dataset.skin = skin;
+  f.src = URLS[layout] + "?skin=" + skin;
+  document.getElementById("note").textContent = NOTES[layout];
+  document.querySelectorAll("#lt button").forEach(b =>
+    b.setAttribute("aria-pressed", String(b.dataset.layout === layout)));
+  document.querySelectorAll("#st button").forEach(b =>
+    b.setAttribute("aria-pressed", String(b.dataset.skin === skin)));
+}
+document.getElementById("lt").onclick = ev => {
+  const b = ev.target.closest("[data-layout]"); if (!b) return;
+  layout = b.dataset.layout; go();
+};
+document.getElementById("st").onclick = ev => {
+  const b = ev.target.closest("[data-skin]"); if (!b) return;
+  skin = b.dataset.skin;
+  // Tell the frame rather than reloading it: the swap is meant to be seen as a swap.
+  f.contentWindow.postMessage({setSkin: skin}, "*");
+  document.documentElement.dataset.skin = skin;
+  document.querySelectorAll("#st button").forEach(x =>
+    x.setAttribute("aria-pressed", String(x.dataset.skin === skin)));
+};
+// If the skin is changed inside the frame, the tabs up here follow it.
+addEventListener("message", ev => {
+  if (!ev.data || !ev.data.atlasSkin) return;
+  skin = ev.data.atlasSkin;
+  document.documentElement.dataset.skin = skin;
+  document.querySelectorAll("#st button").forEach(x =>
+    x.setAttribute("aria-pressed", String(x.dataset.skin === skin)));
+});
+addEventListener("keydown", ev => {
+  if (ev.target.tagName === "INPUT") return;
+  const k = ev.key.toLowerCase();
+  if (KEYS[k]) { layout = KEYS[k]; go(); }
+  const n = parseInt(ev.key, 10);
+  if (n >= 1 && n <= SKINS.length) {
+    skin = SKINS[n - 1];
+    f.contentWindow.postMessage({setSkin: skin}, "*");
+    document.documentElement.dataset.skin = skin;
+    document.querySelectorAll("#st button").forEach(x =>
+      x.setAttribute("aria-pressed", String(x.dataset.skin === skin)));
+  }
+});
+go();
+</script>
+</body>
+</html>
