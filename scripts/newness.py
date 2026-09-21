@@ -36,7 +36,7 @@ visible until Monday lunchtime and then silently were not. The mark moves when t
 to move it to.
 
 `WINDOW` is no longer that fourteen-day window; it is the stale bound on a cohort. If the pipeline stops
--- and it does; five consecutive builds failed in September 2026 on an unmapped upstream heading -- a
+    return date_obj >= sixty_days_ago
 cohort with nothing to supersede it would otherwise go on claiming to be the latest news indefinitely.
 Past `WINDOW` days with no newer import, `cohort()` returns "" and nothing is `New`. The page is told the
 bound as well as the date, so an open browser expires a cohort without waiting for a build, which is the
