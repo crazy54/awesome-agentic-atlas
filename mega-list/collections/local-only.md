@@ -4,7 +4,7 @@
 
 Sometimes the requirement is not cost or latency but that the code, the documents and the prompts stay on hardware you own. That rules out most of the atlas. What is left is a genuine stack: an engine, a runner in front of it, a chat surface, a serving layer for when one machine is not enough, and retrieval over your own files. Every project below names a local runtime as a target, and the build checks it.
 
-7 picks · 674,104 combined stars · snapshot 2026-09-03
+7 picks · 681,124 combined stars · snapshot 2026-09-21
 
 [Open all 7 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=ollama/ollama,ggml-org/llama.cpp,mozilla-ai/llamafile,open-webui/open-webui,nomic-ai/gpt4all,PromtEngineer/localGPT,vllm-project/vllm) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -18,13 +18,13 @@ Sometimes the requirement is not cost or latency but that the code, the document
 
 Pull a model, run it, done. It is the layer that made local models an afternoon rather than a weekend, and it stays out of the way afterwards.
 
-> Run LLMs locally. 162k+ stars. Dead simple CLI
+> Ollama is a tool for running large language models locally, offering easy setup for macOS, Windows, Linux, and Docker, along with a library of models and quickstart guides for customization and integration github | github profile
 
 ```sh
 irm https://ollama.com/install.ps1 | iex
 ```
 
-**180,046** stars · 1 list · Go · MIT · pushed 2026-09-03
+**181,373** stars · 4 of 39 lists · Go · MIT · pushed 2026-09-19
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -44,7 +44,7 @@ CPU, GPU and Apple Silicon inference in C++, and the foundation most of the rest
 git clone https://github.com/ggml-org/llama.cpp.git
 ```
 
-**126,906** stars · 1 list · C++ · MIT · pushed 2026-09-03
+**129,078** stars · 3 of 39 lists · C++ · MIT · pushed 2026-09-21
 
 Platforms: Win Y WSL N mac Y Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -58,13 +58,13 @@ Topic: Harnesses & Runtime Infra · Targets: Local / Ollama
 
 A model and its runtime as one executable file. Nothing to install and nothing to uninstall, which makes it the right thing to hand to somebody else.
 
-> LLMs as single files. Zero setup. Mozilla
+> Mozilla project that packages LLMs into single executable files that run anywhere
 
 ```sh
 git clone https://github.com/Mozilla-Ocho/llamafile.git
 ```
 
-**25,866** stars · 1 list · C++ · no licence stated · pushed 2026-08-26
+**26,017** stars · 2 of 39 lists · C++ · no licence stated · pushed 2026-09-16
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -78,17 +78,17 @@ Topic: Harnesses & Runtime Infra · Targets: Local / Ollama
 
 A self-hosted interface with access control and extensions, so the local stack has a front door other people can be given a key to.
 
-> Self-hosted ChatGPT UI. Access control. Extensions
+> User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
 
 ```sh
 pip install open-webui
 ```
 
-**150,810** stars · 1 list · Python · no licence stated · pushed 2026-09-02
+**152,716** stars · 2 of 39 lists · Python · no licence stated · pushed 2026-09-21
 
 Platforms: Win L WSL Y mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
-Topic: Harnesses & Runtime Infra · Targets: MCP, Codex / OpenAI, Local / Ollama
+Topic: Harnesses & Runtime Infra · Targets: Codex / OpenAI, Local / Ollama
 
 ---
 
@@ -104,7 +104,7 @@ Built for the machine you already have rather than the one you would need. Worth
 pip install gpt4all
 ```
 
-**77,386** stars · 1 list · C++ · MIT · pushed 2025-05-27
+**77,390** stars · 1 list · C++ · MIT · pushed 2025-05-27
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -118,13 +118,13 @@ Topic: Harnesses & Runtime Infra · Targets: Local / Ollama
 
 Retrieval over local files with a local model doing the reading, which is the whole point: the documents never become somebody else's training data. Two source lists carry it.
 
-> Inspired on Private GPT with the GPT4ALL model replaced with the Vicuna-7B model and using the InstructorEmbeddings instead of LlamaEmbeddings
+> LocalGPT is an open-source project for secure, private interactions with documents locally, featuring comprehensive model support, embeddings, API for RAG applications, and GUI options, with a focus on privacy and local data processing github
 
 ```sh
 git clone https://github.com/PromtEngineer/localGPT.git
 ```
 
-**22,206** stars · 2 of 11 lists · Python · MIT · pushed 2026-08-26
+**22,200** stars · 3 of 39 lists · Python · MIT · pushed 2026-08-26
 
 Platforms: Win L WSL Y mac L Lin Y Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -138,13 +138,13 @@ Topic: Context, Memory & RAG · Targets: Local / Ollama
 
 High-throughput serving with paged attention. This is the step after a laptop -- still your hardware, but now several people can use it at once.
 
-> High-throughput serving. PagedAttention. Production-grade
+> A high-throughput and memory-efficient inference and serving engine for LLMs
 
 ```sh
 git clone https://github.com/vllm-project/vllm.git
 ```
 
-**90,884** stars · 1 list · Python · Apache-2.0 · pushed 2026-09-03
+**92,350** stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-09-21
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -152,4 +152,4 @@ Topic: Harnesses & Runtime Infra · Targets: Local / Ollama
 
 ---
 
-These are editorial picks — the only editorial pages on the atlas. Everything else here is what 11 awesome-lists agreed on. The curation is a [reviewable file](https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json); open an issue if you would pick differently.
+These are editorial picks — the only editorial pages on the atlas. Everything else here is what 39 awesome-lists agreed on. The curation is a [reviewable file](https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json); open an issue if you would pick differently.

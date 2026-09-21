@@ -157,6 +157,12 @@ def refresh_data(data: dict, ledger: dict) -> tuple[dict, int]:
     data["cols"] = cols
     data["window_days"] = newness.WINDOW
     data["baseline"] = baseline
+    # The cohort has to be published by this stage as well as by `19_pages.py`, because the page reads `New`
+    # from it and nowhere else: a refresh that left the key out would take the mark off every row, and a
+    # refresh that carried a stale one forward would put it back on the wrong set. Taken from `cohort()`
+    # rather than from `ledger["cohort"]` so the stale bound is applied here too -- this stage renders from a
+    # ledger it did not write and cannot assume anything about its age.
+    data["cohort"] = newness.cohort(ledger)
     # Backfilled rather than left absent. This stage round-trips a `data.json` that may predate the key,
     # and "absent means 1" is only a documented fallback -- a consumer reading the published file should
     # find the number rather than have to know the rule. `setdefault`, so a future version 2 written by
@@ -167,7 +173,10 @@ def refresh_data(data: dict, ledger: dict) -> tuple[dict, int]:
     # mtime -- would both be later than the truth and would therefore overstate how fresh the data is, which
     # is the failure JFH-207 exists to fix. A file that predates the key keeps none, and `stamp()` in the
     # page falls to `snapshot`, which is the same fact to the day and has always been in this file.
-    live = sum(1 for r in data["rows"] if newness.within(r[seen_at]))
+    # The marked set, which is cohort membership and not a date comparison -- `within()` would count every
+    # arrival of the last fortnight, and the page marks one import's worth. Empty when there is no cohort to
+    # show, which is the same answer the page will reach from the key written above.
+    live = sum(1 for r in data["rows"] if data["cohort"] and r[seen_at] == data["cohort"])
     return data, live
 
 
@@ -258,7 +267,12 @@ def main() -> None:
     fresh = sum(1 for n, d in ledger["repos"].items() if d > ledger["baseline"])
     print(f"{len(data['rows']):,} rows from {lists} source list(s) · "
           f"snapshot {data['snapshot']} (unchanged) · baseline {ledger['baseline']}")
-    print(f"{fresh:,} arrived since the baseline · {live:,} inside the {newness.WINDOW}-day window")
+    if data["cohort"]:
+        print(f"{fresh:,} arrived since the baseline · {live:,} in the {data['cohort']} cohort, "
+              f"which is what this page marks New")
+    else:
+        print(f"{fresh:,} arrived since the baseline · nothing is marked New: no import has added a repo "
+              f"since the baseline, or the last one that did is past the {newness.WINDOW}-day stale bound")
 
 
 if __name__ == "__main__":

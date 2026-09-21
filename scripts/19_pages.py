@@ -215,10 +215,24 @@ def build_data(facets, shots) -> dict:
                       .strftime("%Y-%m-%dT%H:%M:%SZ")),
         "repo": REPO,
         "cols": COLS,
-        # The page applies the window, so it has to be told what it is. Here rather than hardcoded in the
-        # JavaScript so that changing it is one edit in `newness.py` and not two files that disagree.
+        # The stale bound on a cohort, not a recency window -- see `newness.py`. Here rather than
+        # hardcoded in the JavaScript so that changing it is one edit in `newness.py` and not two files
+        # that disagree.
         "window_days": newness.WINDOW,
         "baseline": newness.load()["baseline"],
+        # WHAT THE PAGE COMPARES A ROW'S `first_seen` AGAINST TO DECIDE `New`.
+        #
+        # The date of the import that brought the current arrivals, or "" when there is not one to show.
+        # A row is New because `first_seen == cohort`, never because `first_seen` is recent: the atlas
+        # gains repos when a curator adds one to somebody's list, so every arrival here is years old in
+        # the world and the only newness this pipeline can observe is newness to this site.
+        #
+        # `newness.COHORT` rather than `newness.load()["cohort"]`, and the difference matters on the run
+        # that creates a cohort: `resolve()` has already written the ledger by the time this executes, so
+        # both would agree today -- but `COHORT` is the value that has been through `cohort()`, which is
+        # where the stale bound is applied. Reading the raw key would publish a cohort the rest of the
+        # build has already decided is too old to mark.
+        "cohort": newness.COHORT,
         # Slugs travel in the URL hash, and they are the same slugs that name the Markdown pages, so a
         # link into this page and a link into `mega-list/topics/` say the same word.
         "cats": [{"name": c, "slug": b17.fileslug(c),
@@ -746,6 +760,14 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .ni>.a{fill:var(--warn)}
 .ni>.b{fill:var(--bar)}
 .newchip[aria-pressed=true] .ni>.a,.newchip[aria-pressed=true] .ni>.b{fill:var(--onbar)}
+/* The since-your-last-visit chip keeps the plain `--bar` every ordinary filter wears, and does not borrow
+   `--warn` from the chip beside it even though the two answer the same question. `--warn` here means "the
+   atlas says this is the latest news", which is the same for every reader; this one means "your machine has
+   not seen this", which is true of nobody else. Two accents for two kinds of claim, and the reader who has
+   been away a month gets a number the New chip cannot give them. Hidden until there is a last visit to
+   count from, like `.newchip` above. */
+.sincechip{display:none}
+.sincechip.on{display:inline-block}
 .nm .ni{margin-right:.34em}
 .newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
 /* "by meaning", on a row the semantic pass added. Built like a `.tag` rather than like `.newon`, because
@@ -897,6 +919,41 @@ html[data-view=table] tbody tr:nth-child(even) td{background:var(--band)}
   html[data-view=table] tbody tr:hover td{
     background:color-mix(in srgb,var(--bar) 10%,var(--band));box-shadow:inset 0 -2px 0 var(--bar)}
 }
+/* NEW ARRIVALS WEAR AN OUTLINE, AND IT IS DRAWN TWICE
+   ---------------------------------------------------
+   `.nw` is on the row when the row belongs to the current cohort -- what the most recent import brought.
+   Two views, two mechanisms, and the split is forced rather than chosen: `table{border-collapse:collapse}`
+   above means a `<tr>` has no box of its own to hang a `box-shadow` on, and one set on it does not render
+   at all. So table view draws the edge as `inset` shadows on the *cells* -- the same trick as the hover
+   rule directly above -- while cards view, where a row is a grid and does have a box, gets a real ring.
+   Both are `--warn`, the page's established colour for this-is-new, and deliberately not `--card-accent`:
+   the accent means "this project", so a ring in it would be decoration that says nothing.
+
+   Top and bottom insets on every cell run the width of the row because the cells are adjacent; the two end
+   caps are `background-image` on the first and last cell rather than more `box-shadow`, which keeps the
+   whole shadow track free for `new-edge` to animate. An animated property outranks the cascade, so the
+   pulse survives the hover rule above without either needing to know about the other, and the row keeps
+   both its zebra fill and the pointer's tint because nothing here writes a background colour at all.
+
+   That last part started as a `--warn` wash behind the whole row and is deliberately gone. `.newon` -- the
+   "Added 09/21/26" beside the title -- is `--warn` text at 12px bold, which WCAG scores as body text at
+   4.5:1, and it clears that on `--band` by a whisker: 4.97 in the light palette. A 9% wash of its own colour
+   behind it took the same pair to 4.42, and the pointer tint on top of that to 3.80. So the edge is the only
+   thing drawn, the fill is left alone, and every contrast this page already guaranteed still holds. */
+html[data-view=table] tbody tr.nw td{
+  box-shadow:inset 0 1px 0 var(--warn),inset 0 -1px 0 var(--warn);
+  animation:new-edge 3s ease-in-out 5}
+html[data-view=table] tbody tr.nw td:first-child{
+  background-image:linear-gradient(to right,var(--warn) 0 3px,transparent 3px)}
+html[data-view=table] tbody tr.nw td:last-child{
+  background-image:linear-gradient(to left,var(--warn) 0 3px,transparent 3px)}
+/* The table pulse is thickness and nothing else -- no inner glow, for the reason the wash is gone. An
+   `inset` shadow paints between the cell's background and its text, so a blurred one reaching in from the
+   edges of a 44px row lands behind the row's own words, which is the contrast problem above with a timer on
+   it. Cards view can have the glow it wants because there the shadow is *outside* the box. */
+@keyframes new-edge{
+  0%,100%{box-shadow:inset 0 1px 0 var(--warn),inset 0 -1px 0 var(--warn)}
+  50%{box-shadow:inset 0 3px 0 var(--warn),inset 0 -3px 0 var(--warn)}}
 /* One table, three reading distances. Compact leaves the identifying facts visible for a fast scan;
    Normal keeps the useful preview; Expanded deliberately gives the evidence and install detail more air.
    The choice belongs to this browser, rather than the URL: it is a reading preference, not a claim about
@@ -1369,11 +1426,11 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
      in step. The reasoning, the 18-width sweep it comes from and the reason there are two tiers at all are
      all at the --pin declaration; this is only the other number.
 
-     280px, against a 269px worst case: the bar at 320px wide in table view, measured on CI's Chromium.
-     Windows reads 217px at the same point -- the wrap depends on the rendered text and so on the fonts
+     324px, against a 295px worst case: the bar at 320px wide in table view, measured on CI's Chromium.
+     Windows reads 243px at the same point -- the wrap depends on the rendered text and so on the fonts
      installed -- and `cards-check.mjs` is what found the difference, by asserting the relationship instead
      of this number. It prints both maxima on every run for that reason. */
-  html{--pin:280px}
+  html{--pin:324px}
   /* 20px gutters on all four sections cost 40px, 11% of a 375px screen, and the old query left them.
      The header's vertical padding comes down with them, and `.top`'s gap by 2px, for the reason set out
      above the mascot below: every pixel here is one the first result does not get. */
@@ -1609,6 +1666,18 @@ html[data-view=cards] .desc,html[data-view=cards] .cmdrow,html[data-view=cards] 
    `line-clamp` is newer, so both are set and the browser takes whichever it knows. */
 html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
   -webkit-line-clamp:4;line-clamp:4;overflow:hidden}
+/* The cards half of the new-arrivals outline -- see the long note beside the table rules for why the two
+   views cannot share one. Here a row *is* a box, so this is the straightforward version: a `--warn` ring
+   that breathes. It sits above the hover and focus rules so that those two, which are the same specificity,
+   win on source order: the pointer and the keyboard both need to be able to say "this one, now" over the
+   top of a standing property of the row. The pulse itself outlives them either way, because an animated
+   property beats the cascade. */
+html[data-view=cards] tr.nw{border-color:var(--warn);
+  box-shadow:0 0 0 2px var(--warn),0 0 12px color-mix(in srgb,var(--warn) 30%,transparent);
+  animation:new-breathe 3s ease-in-out 5}
+@keyframes new-breathe{
+  0%,100%{box-shadow:0 0 0 2px var(--warn),0 0 10px color-mix(in srgb,var(--warn) 24%,transparent)}
+  50%{box-shadow:0 0 0 3px var(--warn),0 0 26px color-mix(in srgb,var(--warn) 58%,transparent)}}
 /* The table tints the row the pointer is over; a card is a box, so it takes the accent on its edge. The
    cell rule has to be undone explicitly or the tint lands as six full-width strips inside the card with
    the gaps between them showing through. Inside `hover:hover` like the rule it overrides, so a touch
@@ -1622,11 +1691,22 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
   box-shadow:0 0 0 2px var(--card-accent),0 0 20px color-mix(in srgb,var(--card-accent) 40%,transparent)}
 @keyframes card-glow{from{box-shadow:0 0 0 2px var(--card-accent),0 0 12px color-mix(in srgb,var(--card-accent) 30%,transparent),0 12px 28px rgba(0,0,0,.2)}to{box-shadow:0 0 0 2px var(--card-accent),0 0 28px color-mix(in srgb,var(--card-accent) 58%,transparent),0 16px 36px rgba(0,0,0,.28)}}
+/* A pulse is a way of saying "look at this one", and it can only say that about a few. When an import brings
+   most of the atlas at once -- which is not hypothetical: the run that first read twenty-eight source lists
+   marked roughly 85% of the rows -- every visible row pulsing says nothing except that the page is busy.
+   `render()` sets `data-wave` when the cohort is the majority of the filtered set, and the motion stops
+   while the outline, the chip and the count stay exactly as they were. The reader loses the nudge, which
+   was worthless at that size, and keeps every way of actually finding the new rows.
+   Placed after the cards rule it overrides, which is the same specificity; the table rule it overrides is
+   lower, so order does not matter there. */
+html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] tr.nw{animation:none}
 
-/* Nothing here animates on a timer, but the chip hovers transition and the chip rails scroll smoothly,
-   and both are motion a reader can have asked their operating system not to show them. A blanket rule is
-   safe because no state on this page is communicated *by* an animation -- removing every one of them
-   changes nothing but the easing. */
+/* The chip hovers transition, the chip rails scroll smoothly, and new arrivals breathe, and all three are
+   motion a reader can have asked their operating system not to show them. A blanket rule stays safe because
+   no state on this page is communicated *by* an animation: the new-arrivals pulse is a swell on an outline
+   that is already there in the base rule, so stopping it leaves the same `--warn` ring, the same chip and
+   the same count. That is a constraint on anything added here, not just a description -- an animation that
+   is the only way to see something would be invisible to the readers this rule is for. */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
     transition-duration:.01ms !important;scroll-behavior:auto !important}
@@ -1659,8 +1739,22 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
 
    So the worst case is 269px at 320px wide in table view, and 172px was already short by 19px at 320px in
    the DEFAULT view before this ticket touched anything. Two tiers, split at the 640px breakpoint the layout
-   already turns on, each above the worst case on its side with air: 116px against a 108px maximum above the
-   break, 280px against 269px below it.
+   already turns on, each above the worst case on its side.
+
+   BOTH TIERS WENT UP ONCE THE NEW CHIP HAD SOMETHING TO SAY (JFH-357), from 116/280 to 164/324. `#new` is
+   hidden until `buildChips` finds a cohort in `data.json`, and until the 2026-09-21 ingest there had never
+   been one -- so every measurement above was taken with one control missing from the line. Revealed, it is
+   a 111px chip reading "New · 7,572", and the whole growth is its wrap: measured on this machine at
+   768x900 in cards view the bar is 135px with it and 108px without, at 320x844 in table view 243px with and
+   191px without, at 1024x800 in table view 106px and 91px. CI, wrapping one line earlier as ever, reads
+   134px wide and 295px narrow.
+
+   The air is now a whole wrap line rather than the 8px the first pass left, and that is the point of the
+   re-tier rather than a side effect of it. The old numbers were thin on purpose, because `cards-check.mjs`
+   reddens when a control is added to the search line -- but that chip's label carries a count from the
+   data, so this bar's height is now a function of the *dataset* and not only of the source. A count that
+   grows a digit, or a second cohort-shaped chip, must not need a CSS change discovered by an ingest.
+   Surplus is still free: `scroll-margin` only decides where a scroll stops.
 
    A TOKEN AND NOT A LITERAL, BECAUSE THE RULE BELOW NEEDS THE SAME NUMBER (JFH-356). A second copy is a
    second thing to remember when the bar's contents change, and the measurements that justify it are here
@@ -1671,15 +1765,15 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
    BOTH TIERS ARE INSIDE A QUERY, AND THAT IS DELIBERATE. The narrow one has to live in the
    `@media(max-width:640px)` block ~275 lines above, because `theme_test.py` asserts that query is emitted
    exactly twice and a third copy for one declaration is a third breakpoint to keep in step. A bare
-   `html{--pin:116px}` down here then beats it on nothing but source order -- same selector, same
+   `html{--pin:164px}` down here then beats it on nothing but source order -- same selector, same
    specificity, later wins -- and the phone silently got the desktop number. Measured: `scroll-margin-top`
    read 116px at 390x844 and 320x844 with the narrow rule sitting right there in the stylesheet. Two
    non-overlapping queries cannot do that to each other whichever order they appear in. */
-@media(min-width:641px){html{--pin:116px}}
+@media(min-width:641px){html{--pin:164px}}
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
 /* The fallback is for a UA that supports custom properties but not these queries: an unset `--pin` makes the
-   declaration invalid at computed-value time, which is 0, which is the bug. 280px is the safe side. */
-#out tr{scroll-margin-top:var(--pin,280px)}
+   declaration invalid at computed-value time, which is 0, which is the bug. 324px is the safe side. */
+#out tr{scroll-margin-top:var(--pin,324px)}
 
 /* THE RULE ABOVE PROTECTS THE ONE ELEMENT A GUEST CANNOT TAB TO (JFH-356).
 
@@ -1715,7 +1809,7 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
    and it is what the negative assertion in probe.mjs pins. */
 #out,
 main a[href],main button,main select,main summary,
-.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,280px)}
+.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,324px)}
 
 /* ---- The comparison panel ----------------------------------------------------------------------------
    Above the results, in the slot `.shared` uses, and for the same reason: it is not a filter the reader chose
@@ -2052,9 +2146,20 @@ __OSSPRITE__
       </select>
     </label>
     <button class="chip newchip" id="new" aria-pressed="false"
-            title="Projects the source lists added in the last __WINDOW__ days">
+            title="Projects the most recent import added to the atlas">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
       <span id="newlabel">New</span></button>
+    <!-- The reader's own answer to the same question, and the only filter on this bar that is deliberately
+         absent from the URL. Every other one names a property of the data, so a link reproduces the view on
+         anybody's machine; this one names a property of *this device* -- the day it was last here -- so a
+         shared `?since=1` would show the recipient a set neither of them chose. It stays a local control,
+         and `CLEAR` drops it like the rest.
+
+         Hidden until `render()` finds something for it, like the Saved chip beside it and for the same
+         reason: on a first visit there is no last visit, so there is nothing this could select. -->
+    <button class="chip sincechip" id="since" aria-pressed="false"
+            title="Projects added since this device last opened the atlas">
+      <span id="sincelabel">Since your last visit</span></button>
     <button class="chip risechip" id="rise" aria-pressed="false"
             title="Projects gaining stars fastest for their size">
       <span id="riselabel">Rising</span></button>
@@ -2332,10 +2437,15 @@ const FLAGS = __APP_FLAGS__;
 // never changes which rows are on screen and a pinned project survives every filter the reader then applies;
 // `rescue()` does not offer to drop it, because it cannot be the reason a table is empty; and `viewTitle()`
 // does not name it, because an export is of a view and this is not one.
-const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
+const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, since: false, rising: false,
                saved: false, list: new Set(), cmp: new Set(), sort: "relevance", shown: PAGE_SIZE,
                view: "__DEFAULT_VIEW__"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
+// The import whose arrivals are New, as this tab understands it. Not simply `D.cohort`: the build applies
+// the stale bound at build time, and a tab left open for a fortnight has to apply it again or it goes on
+// pulsing an outline around a cohort that stopped being the latest news while nobody was looking. Set by
+// `prepare()`, which is the one place that has `D`.
+let COHORT = "";
 
 // `owner/name` to the row object, built once when `ROWS` is. The comparison needs it and nothing else does:
 // every other consumer on this page walks `ROWS` because it is answering a question about all of them, and
@@ -2399,6 +2509,51 @@ function loadSaved() {
 function storeSaved() {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify([...SAVED]));
+  } catch (e) {}
+}
+
+// WHEN THIS DEVICE WAS LAST HERE, AND WHY IT IS A SEPARATE ANSWER FROM THE COHORT.
+//
+// The New chip counts the latest import. That is the right answer for a reader arriving cold and the wrong
+// one for a reader who is here every week: they were present for the last import, and what they have not
+// seen is everything that landed since their own last visit -- which can span several cohorts, or none.
+//
+// A date, not a timestamp. The ledger's resolution is a day, so a finer figure here would be compared
+// against `first_seen` strings that cannot answer it, and `r.first_seen > SEEN_AT` would start depending on
+// which side of midnight the build ran. Same reason `newness.pretty` prints a day.
+//
+// Read once at load and deliberately *not* refreshed while the tab is open: the count has to stay still
+// while it is being read. `markVisit()` writes today's date, so the next visit compares against this one.
+const VISIT_KEY = "atlas-last-visit";
+let SEEN_AT = "";
+let SINCE = 0;
+
+function loadVisit() {
+  try {
+    const raw = localStorage.getItem(VISIT_KEY) || "";
+    // Shape-checked, not trusted, for the reason `loadSaved` filters its array: this value survives every
+    // deploy and is editable by hand. A malformed one is treated as a first visit, which is the state that
+    // shows the reader the cohort instead -- never an error.
+    SEEN_AT = /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : "";
+  } catch (e) {
+    SEEN_AT = "";
+  }
+}
+
+function markVisit() {
+  // THE SNAPSHOT OF THE DATA THIS READER WAS SHOWN -- not `TODAY`, which is their own clock.
+  //
+  // What gets stored has to be comparable with `first_seen`, and `first_seen` is a build date. Storing the
+  // reader's date loses an import whenever they arrive before that day's build: visit at 08:00 on the 21st,
+  // store "2026-09-21", the build lands at 12:40 stamping its arrivals "2026-09-21", and on the next visit
+  // `first_seen > SEEN_AT` is false for every one of them. An import silently never happened.
+  //
+  // `D.snapshot` is the date of the rows they actually read, so anything stamped after it is genuinely
+  // unseen and anything stamped at or before it is genuinely seen. Two visits to the same snapshot report
+  // nothing new, which is correct rather than a bug. `TODAY` is the floor only for a `data.json` written
+  // before `snapshot` existed.
+  try {
+    localStorage.setItem(VISIT_KEY, (D && D.snapshot) || TODAY);
   } catch (e) {}
 }
 // Whether the rows on screen came out of the browser's cache instead of off the network. Set from the one
@@ -2471,10 +2626,19 @@ const CAN_COPY = !!(navigator.clipboard && navigator.clipboard.writeText && wind
 
 // Where 22_detail.py put this project's own page. The rule has to match `segment()` in that stage exactly
 // or every row links to a 404: lowercased, because 442 of the 1,294 nwo values carry capitals and Pages
-// resolves paths case-sensitively, and a leading dot rewritten because whether a dot-directory is served
-// at all is the one thing about this tree a local server cannot answer.
-const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/")
-  .map(s => s.startsWith(".") ? "dot-" + s.slice(1) : s).join("/") + "/";
+// resolves paths case-sensitively; a leading dot rewritten because whether a dot-directory is served at
+// all is the one thing about this tree a local server cannot answer; and a trailing dot rewritten because
+// NTFS cannot hold a directory whose name ends in one, so a page at that path makes the repository
+// impossible to check out on Windows. Same for the DOS device names, which no row uses today.
+const DEVICE_NAMES = ["con", "prn", "aux", "nul", "clock$", "com1", "com2", "com3", "com4", "com5",
+  "com6", "com7", "com8", "com9", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9"];
+const segment = s => {
+  if (s.startsWith(".")) s = "dot-" + s.slice(1);
+  if (s.endsWith(".")) s = s.slice(0, -1) + "-dot";
+  if (DEVICE_NAMES.includes(s.split(".")[0])) s = "dev-" + s;
+  return s;
+};
+const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
 
 // The rescue buttons drawn on an empty table, in the order render() drew them. Kept out of the markup
 // because a filter patch is an object -- serialising it into a data- attribute and parsing it back would
@@ -2557,6 +2721,20 @@ fetch("data.json").then(r => {
   if (d.os.length !== OSI.length)
     throw new Error("data.json names " + d.os.length + " platforms and this page was built with " +
       OSI.length + " marks — see scripts/osicons.py");
+  // THE COHORT, RE-BOUNDED IN THE BROWSER.
+  //
+  // `d.cohort` was already put through the stale bound by the build that wrote it, so this looks redundant
+  // and is not: the build applied the bound *on the day it ran*. A tab left open, or a page the service
+  // worker serves out of `atlas-data` after the pipeline has stopped, carries a `data.json` that keeps
+  // saying the same thing for as long as it is held -- and the pipeline does stop, for five consecutive
+  // days in September 2026 on one unmapped upstream heading. Without this, that fortnight-old import goes
+  // on being announced as the latest news, with an outline pulsing around every row of it.
+  //
+  // Same arithmetic as `newness.cohort`, against the reader's clock rather than the builder's, which is the
+  // only clock a held page has. `d.cohort` is absent in a `data.json` written before cohorts existed; `""`
+  // is the honest reading of that -- such a build never recorded which import brought what.
+  COHORT = d.cohort || "";
+  if (COHORT && daysAgo(COHORT) > (d.window_days || 14)) COHORT = "";
   // Column-oriented on the wire, objects in here. One pass over every row, so the rest of the page can
   // read `r.stars` instead of `r[4]`.
   ROWS = d.rows.map(a => Object.fromEntries(d.cols.map((c, i) => [c, a[i]])));
@@ -2596,10 +2774,39 @@ fetch("data.json").then(r => {
     //
     // `data.json` keeps the column. Only the render path changed -- see the note beside the writer.
     r.img = "https://opengraph.githubassets.com/1/" + r.nwo;
-    const age = r.first_seen ? daysAgo(r.first_seen) : Infinity;
-    r.isnew = age >= 0 && age <= (d.window_days || 14);
+    // NEW IS COHORT MEMBERSHIP, NOT AN AGE.
+    //
+    // `d.cohort` is the import that brought the current arrivals. A row is new because it came in on that
+    // import -- not because its `first_seen` is within some number of days, which is what stood here and
+    // which asked a question about the calendar when the interesting one is about the atlas. Repos reach
+    // this site when a curator adds them to a list, so they are all years old in the world; "new" here can
+    // only ever mean "new to this site", and the import that brought them is exactly that set.
+    //
+    // The build applies the stale bound and sends "" when a cohort is past it, so an empty `cohort` means
+    // nothing is new and the `&&` short-circuits every row to false. `COHORT_STALE` below re-applies the
+    // same bound in the browser, for the tab that was left open across the expiry.
+    r.isnew = !!r.first_seen && r.first_seen === COHORT;
+    // Per row rather than recomputed in the predicate, for the reason `lname` and `lblurb` above are
+    // precomputed: `filter()` runs this on every row on every keystroke, and a string compare per row per
+    // keystroke is the thing that map exists to avoid.
+    r.issince = !!r.first_seen && !!SEEN_AT && r.first_seen > SEEN_AT;
   });
   NEW = ROWS.filter(r => r.isnew).length;
+  // SINCE YOUR LAST VISIT -- the other half of the answer, and a different one per reader.
+  //
+  // The cohort serves a reader who arrives cold: "what did the last import bring". It serves an active
+  // reader badly, because they were here for the last import and the one before it, and what they have
+  // not seen is everything since *their* last visit, which may span several cohorts. `SEEN_AT` is that
+  // date, off this device; `SINCE` is the arrivals after it.
+  //
+  // Strictly wider than NEW is not guaranteed and must not be assumed: a reader who last visited an hour
+  // ago has an empty SINCE and a full NEW. The two chips are painted independently for that reason.
+  SINCE = ROWS.filter(r => r.issince).length;
+  // Record the visit now that it has been counted. Safe to call on a repaint -- `19c_live.py` can hand this
+  // page a fresher `data.json` and `prepare()` runs again -- because this writes storage and deliberately
+  // does not touch `SEEN_AT`. The in-memory value stays on whatever the tab loaded with, so the count a
+  // reader is looking at does not drop to zero underneath them mid-session.
+  markVisit();
   // Velocity. `25_velocity.py` writes the two columns and the `velocity` block; this page only reads them
   // and owns none of the arithmetic. `rise.col` names the window the ledger could actually answer -- `d30`
   // once a month of history exists, `d7` for the three weeks before that, and "" on the day the ledger
@@ -2733,7 +2940,24 @@ function buildChips() {
   if (NEW) {
     nb.classList.add("on");
     document.getElementById("newlabel").textContent = "New · " + NEW.toLocaleString();
+    // The date is on the chip's `title` rather than its label, because the label has to stay short enough to
+    // sit on one line of the bar at 360px and the count is the part a reader scans for. Saying *which*
+    // import is what stops "New · 7,412" reading as a claim about the last fortnight.
+    nb.title = "The " + mmddyy(COHORT) + " import added these " + NEW.toLocaleString() +
+      " projects to the atlas. The next import that brings anything replaces them.";
     nb.onclick = () => set({fresh: !state.fresh});
+  }
+  // Beside it, and painted here rather than in `render()` even though its count is per-reader: `SEEN_AT` is
+  // read once at boot and never refreshed, so `SINCE` is settled by the time this runs and cannot change
+  // while the page is open. That is what makes it a `buildChips` control and not a `render()` one -- unlike
+  // Saved, whose set the reader edits by clicking things.
+  const sb = document.getElementById("since");
+  if (SINCE) {
+    sb.classList.add("on");
+    document.getElementById("sincelabel").textContent = "Since your last visit · " + SINCE.toLocaleString();
+    sb.title = SINCE.toLocaleString() + " projects have been added since this device last opened the "
+      + "atlas on " + mmddyy(SEEN_AT) + ".";
+    sb.onclick = () => set({since: !state.since});
   }
   // Same shape as the chip above and the same reason for it: a control that selects zero of 1,294 rows is
   // worse than no control, and on the day the ledger starts that is exactly what this one would be. The
@@ -2928,8 +3152,8 @@ function palWire() {
 //
 // The two collection values are shared references, like `os` above them, and safe for the same reason: every
 // patch on this page replaces them wholesale and nothing mutates one in place.
-const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false, saved: false,
-               list: new Set()};
+const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, since: false, rising: false,
+               saved: false, list: new Set()};
 
 // ---- Command palette -------------------------------------------------------------------------------
 //
@@ -2971,6 +3195,8 @@ function palItems(query) {
     });
   // Same condition the chip itself uses: with nothing inside the window this filter selects zero rows.
   if (NEW) add("Filter", "New arrivals", state.fresh, () => set({fresh: !state.fresh}));
+  if (SINCE) add("Filter", "Added since your last visit", state.since,
+                 () => set({since: !state.since}));
   // Same condition the chip itself uses, for the same reason.
   if (RISE && RISING) add("Filter", "Rising", state.rising, () => set({rising: !state.rising}));
   add("Filter", "Confirmed platform support only", state.strict, () => set({strict: !state.strict}));
@@ -3116,6 +3342,10 @@ function wire() {
   // session, and work on the second. This is also the only synchronous storage read on the boot path besides
   // the theme, and it is one small key: the rows are waiting on a 556 KB fetch either way.
   loadSaved();
+  // Beside it and for a related reason: this has to be read before `prepare()` computes `r.issince`, and
+  // `prepare()` runs off the `data.json` fetch while this runs synchronously at boot. One more small key on
+  // a path already waiting on a 556 KB body.
+  loadVisit();
   const btn = document.getElementById("theme");
   const label = () => {
     const light = document.documentElement.dataset.theme === "light";
@@ -3752,8 +3982,11 @@ function readHash() {
   const names = D.os.map(o => o.toLowerCase());
   state.os = (p.get("os") || "").split(",").map(s => names.indexOf(s.trim())).filter(i => i >= 0);
   state.strict = p.get("confirmed") === "1";
-  // A `#new=1` link outlives the fortnight it was written in. Honouring it once the window has emptied
-  // would greet the reader with "nothing matches"; dropping it shows them the atlas instead.
+  // A `#new=1` link outlives the import it was written about -- and now outlives it sooner and more often
+  // than it used to, because a cohort is superseded by the next import that brings anything rather than
+  // lasting a fixed fortnight. Honouring the flag with no cohort to show would greet the reader with
+  // "nothing matches"; dropping it shows them the atlas instead. The guard is unchanged: `NEW > 0` is false
+  // both when the cohort is empty and when the build sent no cohort at all.
   state.fresh = p.get("new") === "1" && NEW > 0;
   // A `#rising=1` link can outlive its data as easily as `#new=1` outlives its fortnight: a build where
   // the ledger was reset has no rising rows, and honouring the flag would greet the reader with "nothing
@@ -3828,6 +4061,7 @@ function match(r) {
   if (state.list.size && !state.list.has(r.nwo)) return false;
   if (state.saved && !SAVED.has(r.nwo)) return false;
   if (state.fresh && !r.isnew) return false;
+  if (state.since && !r.issince) return false;
   if (state.rising && !r.rise) return false;
   if (state.cat && D.cats[r.cat].slug !== state.cat) return false;
   if (state.tgt) {
@@ -3876,6 +4110,7 @@ function rescue() {
   state.os.forEach(i => opts.push(["Drop " + D.os[i], {os: state.os.filter(x => x !== i)}]));
   if (state.strict) opts.push(["Allow inferred support", {strict: false}]);
   if (state.fresh) opts.push(["Drop the new-arrivals filter", {fresh: false}]);
+  if (state.since) opts.push(["Drop the since-your-last-visit filter", {since: false}]);
   if (state.rising) opts.push(["Drop the rising filter", {rising: false}]);
   // Offered like any other filter, and it is the one most likely to be the culprit: a saved set is single
   // digits, so crossing it with a topic or a platform empties the table far more easily than crossing two
@@ -4720,8 +4955,8 @@ function mapPin(i) {
     for (let k = 0; k < MAP.n; k++) keep.add(ROWS[MAP.near[i * MAP.n + k]].nwo);
     // Every other filter cleared, which is the only honest reading of this button: a neighbourhood crossed
     // with a search the reader typed ten seconds ago is neither of the two things they asked for.
-    set({list: keep, q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
-         saved: false});
+    set({list: keep, q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, since: false,
+         rising: false, saved: false});
     document.getElementById("mapdlg").close();
     say(keep.size.toLocaleString() + " projects shown — " + ROWS[i].name + " and its nearest neighbours.");
   };
@@ -5310,7 +5545,8 @@ function viewTitle() {
   if (t) w.push("that plug into " + t.name);
   if (state.os.length) w.push("running on " + state.os.map(i => D.os[i]).join(" and "));
   if (state.strict) w.push("with confirmed support");
-  if (state.fresh) w.push("added in the last " + (D.window_days || 14) + " days");
+  if (state.fresh) w.push("added by the latest import");
+  if (state.since) w.push("added since this device last visited");
   if (state.rising) w.push("gaining stars fastest for their size");
   if (state.saved) w.push("saved on this device");
   if (state.list.size) w.push("from a shared list");
@@ -5639,6 +5875,7 @@ function render() {
   press("oses", i => state.os.includes(i));
   document.getElementById("strict").setAttribute("aria-pressed", state.strict ? "true" : "false");
   document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
+  document.getElementById("since").setAttribute("aria-pressed", state.since ? "true" : "false");
   document.getElementById("rise").setAttribute("aria-pressed", state.rising ? "true" : "false");
   paintSaved();
   paintShared();
@@ -5706,6 +5943,20 @@ function render() {
   // empty one, so a reader who presses Export on "Nothing matches all of that" gets a dialog that says zero
   // rather than the contents of the last search that worked.
   HITS = hits;
+
+  // Whether the pulse is worth running -- `html[data-wave]` in the stylesheet is what acts on it. Two
+  // conditions, and both are needed. A majority alone would suppress the motion on a three-row result where
+  // two arrived yesterday, which is precisely the case a nudge is for; more new rows than fit on a screen
+  // alone would suppress it on a legitimately busy week in a big filtered set. Together they describe the
+  // only situation where the pulse stops meaning anything: the reader cannot see a row that is *not* new,
+  // so "look at this one" is being said about everything in front of them.
+  // Measured on `hits` and not on `ROWS`, so filtering down to one category hands the nudge back: the whole
+  // atlas being 85% new says nothing about the eleven rows a reader has narrowed to.
+  // Written through `dataset` with an explicit "1"/"" rather than `toggleAttribute`, which is the page's
+  // idiom for every other root-level switch (`theme`, `view`, `sheet`) and is what the stub DOM in
+  // tests/probe.mjs can carry -- its `documentElement` is an object with a `dataset` and no methods.
+  const fresh = hits.filter(r => r.isnew).length;
+  document.documentElement.dataset.wave = fresh > PAGE_SIZE && fresh > hits.length / 2 ? "1" : "";
 
   const ranked = hits.filter(r => r.stars).length;
   // The breakdown replaces the star count rather than joining it, on the renders where there is one. How
@@ -5793,7 +6044,11 @@ function render() {
     const star = r.isnew
       ? '<svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>'
       : "";
-    const on = r.isnew ? ' <span class="newon">- New on ' + mmddyy(r.first_seen) + "</span>" : "";
+    // "Added", not "New on". The chip already says New; what the row has to say is *when*, because that is
+    // the fact that makes the mark self-explaining -- and because these projects are not new, the atlas's
+    // knowledge of them is. A three-year-old repo labelled "New on 09/21/26" is a page making a claim about
+    // the repo; "Added 09/21/26" is the page making a claim about itself, which is the true one.
+    const on = r.isnew ? ' <span class="newon">- Added ' + mmddyy(r.first_seen) + "</span>" : "";
     // Why this row is here when none of the reader's words are in it. Words, not a glyph: this is the one
     // label on the row that answers a question the reader is actively asking, and a mark would make them
     // hover to find out. Membership comes from the render's own Set, so a row that matched the words as
@@ -5816,7 +6071,11 @@ function render() {
       ? '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
         '<img loading="lazy" decoding="async" alt="" data-src="' + img + '"></a></td>'
       : "";
-    return '<tr data-project="' + esc(r.nwo) + '" style="--card-accent:var(--accent-' + projectAccent(r.nwo) + ')">' +
+    // `nw` is the pulse hook, and it is a class on the row rather than a `:has()` on the star inside it so
+    // that the table view can reach the row's *cells* -- which is the only way to draw an edge around a row
+    // under `border-collapse:collapse`. See the `.nw` rules in the stylesheet.
+    return '<tr data-project="' + esc(r.nwo) + '"' + (r.isnew ? ' class="nw"' : "") +
+      ' style="--card-accent:var(--accent-' + projectAccent(r.nwo) + ')">' +
       '<td class="n rk">' + (i + 1) + "</td>" +
       // The screenshot is a second link to the same URL as the title next to it, so it was a duplicate
       // tab stop with no accessible name at all -- 120 unlabelled links per page, which is both a 2.4.4
@@ -5881,7 +6140,7 @@ function render() {
   // Said above the table as well as in the live region, because a sighted reader who mistyped needs to
   // know *why* they are looking at LangGraph when they asked for "langraph" -- otherwise the correction
   // looks like the search quietly ignoring them.
-  const within = state.cat || state.tgt || state.os.length || state.strict || state.fresh
+  const within = state.cat || state.tgt || state.os.length || state.strict || state.fresh || state.since
     ? ", within your other filters" : "";
   // Said above the table on the one render that needs saying most: every row on screen was found by what
   // it does rather than by what it is called, so a reader looking for their own words will not find one of
@@ -6023,9 +6282,12 @@ def main() -> None:
         print(f"{f:12s} {(OUT / f).stat().st_size / 1024:8.1f} KB")
     print(f"{len(data['rows']):,} repos · {len(data['cats'])} topics · "
           f"{len(data['targets'])} targets · {sum(r[4] for r in data['rows']):,} stars")
-    live = sum(1 for d in fresh.values() if newness.within(d))
-    print(f"{len(fresh):,} arrived since {data['baseline']} · {live:,} inside the "
-          f"{newness.WINDOW}-day window")
+    # Two numbers, because they answer different questions and a build that conflates them cannot be read.
+    # `fresh` is every arrival the ledger remembers; the cohort is the one set this page marks New.
+    live = sum(1 for d in fresh.values() if d == newness.COHORT) if newness.COHORT else 0
+    print(f"{len(fresh):,} arrived since {data['baseline']} · "
+          + (f"{live:,} in the {newness.COHORT} cohort, marked New"
+             if newness.COHORT else "nothing marked New"))
 
 
 if __name__ == "__main__":

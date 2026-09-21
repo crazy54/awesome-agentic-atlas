@@ -20,8 +20,9 @@ Six groups:
                     pick, the shell is the shared one, and the evidence beside each pick is the row's own.
   the twins      -- `mega-list/collections/`: same picks, same prose, same order, and links that resolve.
   the wiring     -- that the URLs reach `docs/sitemap.xml`, that every page is linked from somewhere a
-                    reader can get to, and that the pipe-into-a-shell warning is counted rather than
-                    asserted -- it was wrong once, in the direction of reassuring.
+                    reader can get to, that a workflow actually *runs* the stage -- it did not, for every
+                    commit from 18d373a to this one -- and that the pipe-into-a-shell warning is counted
+                    rather than asserted, it was wrong once, in the direction of reassuring.
 
 What this cannot see: whether the picks are *good*. Nothing here can. It can only check that every claim
 made beside them is one the dataset supports, which is the part a machine is better at than a reviewer.
@@ -34,6 +35,7 @@ Run: python tests/collections_test.py
 from __future__ import annotations
 
 import copy
+import fnmatch
 import importlib.util
 import json
 import re
@@ -161,7 +163,7 @@ true("...and between them cover several topics",
 # #13 re-pointed `mnfst/manifest` to `mnfst/llm-gateway` and kept its reason; #14 deleted the pick outright,
 # having measured that the reason -- per-agent cost accounting -- was no longer what the project does. #13
 # merged first, #14's merge of `latest_branch` resolved the collision by keeping the pick, and the branch
-# shipped a seven-pick set beside #14's rewritten kicker and intro, which count six. Seventeen harnesses and
+# shipped a seven-pick set beside #14's rewritten kicker and intro, which count six. Eighteen harnesses and
 # 2,455 assertions were green on it, because not one of them knew how many picks there are supposed to be.
 # That 2,455 is this sentence's evidence and not the suite's total: it is the count on the tree that shipped
 # the seven-pick set, and it is deliberately not requoted when the total moves. A real run today reports
@@ -495,6 +497,65 @@ for name, path in (("the index", ROOT / "docs" / "index.html"),
                    ("the repo hub", ROOT / "docs" / "repo" / "index.html")):
     text = path.read_text(encoding="utf-8")
     true(f"{name} links to the collections", 'collections/">Collections' in text)
+
+# Whether anything ever *runs* the stage, which is the one thing every assertion above took for granted.
+#
+# It did not. `25_collections.py` landed in 18d373a and was never added to a workflow, so from that commit
+# to this one the thirteen paths it owns were published once and frozen: every page above was asserted
+# against a file on disk that no build could rewrite. Both workflows carry an assertion for exactly this --
+# "N tracked file(s) are committed but were not written" -- and it never got to speak, because every weekly
+# run between then and now died at an earlier step. Seven in a row. A guard downstream of a red build is a
+# guard that is switched off, so the claim gets made here too, where it costs two seconds on a laptop.
+WEEKLY = (ROOT / ".github" / "workflows" / "weekly.yml").read_text(encoding="utf-8")
+DAILY = (ROOT / ".github" / "workflows" / "daily.yml").read_text(encoding="utf-8")
+STAGE = "python scripts/25_collections.py"
+true("weekly.yml runs the stage", STAGE in WEEKLY, "the pages can never change again")
+if STAGE in WEEKLY:
+    # The two orderings its own docstring asks for. After the stage that writes the dataset it reads, and
+    # before the stage that stamps the service worker with a hash of what it precaches -- a collection page
+    # written after that stamp is a page returning readers keep the previous copy of.
+    true("...after 19_pages.py, which writes the dataset it reads",
+         WEEKLY.index("python scripts/19_pages.py") < WEEKLY.index(STAGE))
+    true("...and before 24_pwa.py, so the worker's version covers what it wrote",
+         WEEKLY.index(STAGE) < WEEKLY.index("python scripts/24_pwa.py"))
+# Weekly-only on purpose: the stage fails the build rather than publish a pick whose claim stopped being
+# true, and the nightly job is the one that deploys. So daily has to excuse these paths instead -- and the
+# excusing is what this pair of assertions is really about. Dropping the stage from weekly again is only
+# survivable if somebody also adds a pattern there, so the second one is the load-bearing half.
+true("daily.yml leaves them to weekly rather than running the stage", STAGE not in DAILY)
+
+
+def case_globs(text: str) -> list[str]:
+    """Every glob in a shell `case` pattern list in a workflow file. Same extractor as live_test.py.
+
+    Deliberately not a substring search for `collections` in the file: both of the workflow comments
+    explaining this arrangement *name* these paths in prose, so a substring check would pass off a comment
+    and go on passing after the pattern itself was deleted.
+    """
+    out = []
+    for line in text.splitlines():
+        s = line.strip()
+        if not s.endswith(")") or "(" in s or s.startswith("#") or "/" not in s:
+            continue
+        parts = s[:-1].split("|")
+        if all(re.fullmatch(r"[A-Za-z0-9_.*/\[\]-]+", p) for p in parts):
+            out.extend(parts)
+    return out
+
+
+PAGES = ("docs/collections/index.html", "docs/collections/local-only/index.html",
+         "mega-list/collections/local-only.md", "mega-list/collections/README.md")
+for label, wf, excused in (("daily.yml", DAILY, True), ("weekly.yml", WEEKLY, False)):
+    globs = case_globs(wf)
+    # Not vacuous: the extractor has to find the patterns before "nothing matched" means anything.
+    true(f"{label}'s excuse patterns were found at all", any(g.startswith("docs/") for g in globs),
+         str(globs))
+    for page in PAGES:
+        hit = [g for g in globs if fnmatch.fnmatch(page, g)]
+        if excused:
+            true(f"...{label} excuses {page}", hit != [], str(globs))
+        else:
+            eq(f"...{label} excuses nothing about {page}, so losing the stage goes red", hit, [])
 
 # The stage must not need anything a bare clone lacks. Its whole promise is that a checkout with no crawl
 # cache can rebuild these pages, which is also why this test file can exist.

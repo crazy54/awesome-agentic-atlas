@@ -13,7 +13,7 @@
 # commit at the end of this job *is* the deployment -- GitHub's own pages-build-deployment run picks it
 # up. Nothing here has to be told the site's URL.
 #
-# Which is also why the seventeen-harness suite runs here, between the generators and that commit, rather
+# Which is also why the eighteen-harness suite runs here, between the generators and that commit, rather
 # than only in `tests.yml`: this job pushes with `secrets.GITHUB_TOKEN`, GitHub starts no workflow runs for
 # such a push, and so none of this job's ~30 commits a month has ever triggered a check. See the
 # verification block before the commit step, and `VERIFY_GATES_DEPLOY` in `env:` for whether a red suite
@@ -494,9 +494,19 @@ jobs:
           : > "$RUNNER_TEMP/prunable"
           : > "$RUNNER_TEMP/skipped"
           : > "$RUNNER_TEMP/deleted"
+          : > "$RUNNER_TEMP/static"
           git ls-files docs mega-list | while IFS= read -r f; do
             case "$f" in
-              docs/og/*|docs/repo/*|docs/sitemap-repos.xml)
+              # `docs/collections/*` and `mega-list/collections/*` join the weekly-only set rather than
+              # bringing `25_collections.py` into this job, and that is a choice with a cost worth naming:
+              # those pages print star counts and platform verdicts out of `data.json`, so leaving them to
+              # weekly.yml means a collection page can show a count up to six days older than the same
+              # repository's row on the index. The alternative is worse. That stage fails the build rather
+              # than publish a pick whose stated claim has stopped being true, and this job is the one that
+              # deploys the site every night -- wiring it in here would let one repository's verdict
+              # dropping take the whole daily deploy down, which is a much larger blast radius than a stale
+              # star count on five curated pages. Weekly owns them, same as `docs/repo/*`.
+              docs/og/*|docs/repo/*|docs/sitemap-repos.xml|docs/collections/*|mega-list/collections/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/skipped"; continue ;;
             esac
             # Existence before mtime, and the arm is here for the same reason weekly.yml grew it in
@@ -515,6 +525,11 @@ jobs:
             if [ ! -e "$f" ]; then printf '%s\n' "$f" >> "$RUNNER_TEMP/deleted"; continue; fi
             if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
             case "$f" in
+              # The three hand-checked-in files -- see weekly.yml for the whole note, including why this is
+              # a list of three names and not `docs/assets/*`. They are not in the skip above because they
+              # are not weekly's either: nothing in this repository generates them, on any schedule.
+              docs/CNAME|docs/favicon.svg|docs/assets/atlas-byte.png)
+                printf '%s\n' "$f" >> "$RUNNER_TEMP/static" ;;
               mega-list/topics/*|mega-list/targets/*|mega-list/lists/*|mega-list/platforms/*|docs/topic/*|docs/target/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/prunable" ;;
               *)
@@ -524,6 +539,11 @@ jobs:
           np="$(wc -l < "$RUNNER_TEMP/prunable" | tr -d ' ')"
           nf="$(wc -l < "$RUNNER_TEMP/frozen" | tr -d ' ')"
           nd="$(wc -l < "$RUNNER_TEMP/deleted" | tr -d ' ')"
+          nst="$(wc -l < "$RUNNER_TEMP/static" | tr -d ' ')"
+          if [ "$nst" -gt 0 ]; then
+            echo "Hand-maintained files no generator owns, left as they are:"
+            sed 's/^/  /' "$RUNNER_TEMP/static"
+          fi
           if [ "$nd" -gt 0 ]; then
             echo "Tracked files this build deleted, whose removal the commit below carries:"
             sed 's/^/  /' "$RUNNER_TEMP/deleted"
@@ -541,12 +561,12 @@ jobs:
           fi
           ns="$(wc -l < "$RUNNER_TEMP/skipped" | tr -d ' ')"
           nt="$(git ls-files docs mega-list | wc -l | tr -d ' ')"
-          echo "Rewrote all $((nt - ns - nd)) of the tracked files this job is responsible for, deleted ${nd}; skipped ${ns} left to weekly.yml."
+          echo "Rewrote all $((nt - ns - nd - nst)) of the tracked files this job is responsible for, deleted ${nd}; skipped ${ns} left to weekly.yml, ${nst} hand-maintained."
 
       # ---------------------------------------------------------------- verification, before publication
       #
       # The suite runs here, against the tree this job just built and is about to publish, and that
-      # placement is the entire content of JFH-284. `tests.yml` next door runs the same seventeen harnesses
+      # placement is the entire content of JFH-284. `tests.yml` next door runs the same eighteen harnesses
       # on pull requests, on pushes to `latest_branch`, and as a Monday canary -- but this job pushes with
       # `secrets.GITHUB_TOKEN` through `actions/checkout`'s persisted credentials, and GitHub deliberately
       # starts no workflow runs for pushes made with that token. So not one of this job's ~30 commits a

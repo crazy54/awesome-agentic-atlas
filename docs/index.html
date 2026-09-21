@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awesome Agentic Atlas — browse every agentic tool</title>
-<meta name="description" content="1,294 agentic AI projects from 11 awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
+<meta name="description" content="8,856 agentic AI projects from 39 awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
 <meta property="og:title" content="Awesome Agentic Atlas">
-<meta property="og:description" content="1,294 projects from 11 awesome-lists, one filterable index.">
+<meta property="og:description" content="8,856 projects from 39 awesome-lists, one filterable index.">
 <meta property="og:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/root.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -140,6 +140,8 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .ni>.a{fill:var(--warn)}
 .ni>.b{fill:var(--bar)}
 .newchip[aria-pressed=true] .ni>.a,.newchip[aria-pressed=true] .ni>.b{fill:var(--onbar)}
+.sincechip{display:none}
+.sincechip.on{display:inline-block}
 .nm .ni{margin-right:.34em}
 .newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
 .senseon{display:inline-block;border:1px solid var(--link);border-radius:5px;padding:1px 6px;
@@ -198,6 +200,16 @@ html[data-view=table] tbody tr:nth-child(even) td{background:var(--band)}
   html[data-view=table] tbody tr:hover td{
     background:color-mix(in srgb,var(--bar) 10%,var(--band));box-shadow:inset 0 -2px 0 var(--bar)}
 }
+html[data-view=table] tbody tr.nw td{
+  box-shadow:inset 0 1px 0 var(--warn),inset 0 -1px 0 var(--warn);
+  animation:new-edge 3s ease-in-out 5}
+html[data-view=table] tbody tr.nw td:first-child{
+  background-image:linear-gradient(to right,var(--warn) 0 3px,transparent 3px)}
+html[data-view=table] tbody tr.nw td:last-child{
+  background-image:linear-gradient(to left,var(--warn) 0 3px,transparent 3px)}
+@keyframes new-edge{
+  0%,100%{box-shadow:inset 0 1px 0 var(--warn),inset 0 -1px 0 var(--warn)}
+  50%{box-shadow:inset 0 3px 0 var(--warn),inset 0 -3px 0 var(--warn)}}
 html[data-view=table][data-density=compact] td{padding:6px 8px}
 html[data-view=table][data-density=compact] .shot,
 html[data-view=table][data-density=compact] .tg,
@@ -427,7 +439,7 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 }
 
 @media(max-width:640px){
-  html{--pin:280px}
+  html{--pin:324px}
   header{padding:12px 14px 10px}
   .bar{padding:8px 14px}
   .subbar{padding:0 14px 7px}
@@ -514,6 +526,12 @@ html[data-view=cards][data-index-screenshots=off] td.lc{grid-row:5}
 html[data-view=cards] .desc,html[data-view=cards] .cmdrow,html[data-view=cards] .cmd{max-width:none}
 html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
   -webkit-line-clamp:4;line-clamp:4;overflow:hidden}
+html[data-view=cards] tr.nw{border-color:var(--warn);
+  box-shadow:0 0 0 2px var(--warn),0 0 12px color-mix(in srgb,var(--warn) 30%,transparent);
+  animation:new-breathe 3s ease-in-out 5}
+@keyframes new-breathe{
+  0%,100%{box-shadow:0 0 0 2px var(--warn),0 0 10px color-mix(in srgb,var(--warn) 24%,transparent)}
+  50%{box-shadow:0 0 0 3px var(--warn),0 0 26px color-mix(in srgb,var(--warn) 58%,transparent)}}
 @media(hover:hover){
   html[data-view=cards] tr:hover td{background:transparent}
   html[data-view=cards] tr:hover{border-color:var(--card-accent);
@@ -523,19 +541,20 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
 html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
   box-shadow:0 0 0 2px var(--card-accent),0 0 20px color-mix(in srgb,var(--card-accent) 40%,transparent)}
 @keyframes card-glow{from{box-shadow:0 0 0 2px var(--card-accent),0 0 12px color-mix(in srgb,var(--card-accent) 30%,transparent),0 12px 28px rgba(0,0,0,.2)}to{box-shadow:0 0 0 2px var(--card-accent),0 0 28px color-mix(in srgb,var(--card-accent) 58%,transparent),0 16px 36px rgba(0,0,0,.28)}}
+html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] tr.nw{animation:none}
 
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
     transition-duration:.01ms !important;scroll-behavior:auto !important}
 }
 
-@media(min-width:641px){html{--pin:116px}}
+@media(min-width:641px){html{--pin:164px}}
 #out tr:focus{outline:2px solid var(--bar);outline-offset:-2px}
-#out tr{scroll-margin-top:var(--pin,280px)}
+#out tr{scroll-margin-top:var(--pin,324px)}
 
 #out,
 main a[href],main button,main select,main summary,
-.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,280px)}
+.subbar a[href],.subbar button,.subbar select,.subbar summary{scroll-margin-top:var(--pin,324px)}
 
 #cmp{display:none}
 #cmp.on{display:block;margin:14px 0 0;border:1px solid var(--grid);border-radius:8px;background:var(--band)}
@@ -609,16 +628,16 @@ main a[href],main button,main select,main summary,
 </svg>
 <header><div class="wrap"><div class="top">
   <div>
-    <h1>Awesome Agentic Atlas <span>· 11 awesome-lists, merged</span></h1>
-    <p class="sub"><b>1,294</b> projects · <b>14</b> topics · <b>12,494,028</b> combined
+    <h1>Awesome Agentic Atlas <span>· 39 awesome-lists, merged</span></h1>
+    <p class="sub"><b>8,856</b> projects · <b>14</b> topics · <b>24,010,256</b> combined
       stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
-      2026-09-03</span></p>
+      2026-09-21</span></p>
     <p class="blurb" id="ctx"></p>
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--09--16_02:13_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-09-16T02:13:00Z">Last deployed 2026-09-16 02:13 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--09--21_18:07_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-09-21T18:07:00Z">Last deployed 2026-09-21 18:07 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
@@ -667,9 +686,12 @@ main a[href],main button,main select,main summary,
       </select>
     </label>
     <button class="chip newchip" id="new" aria-pressed="false"
-            title="Projects the source lists added in the last 14 days">
+            title="Projects the most recent import added to the atlas">
       <svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>
       <span id="newlabel">New</span></button>
+    <button class="chip sincechip" id="since" aria-pressed="false"
+            title="Projects added since this device last opened the atlas">
+      <span id="sincelabel">Since your last visit</span></button>
     <button class="chip risechip" id="rise" aria-pressed="false"
             title="Projects gaining stars fastest for their size">
       <span id="riselabel">Rising</span></button>
@@ -681,7 +703,7 @@ main a[href],main button,main select,main summary,
     <button class="chip takechip" id="take" aria-haspopup="dialog"
             title="Take this view away as a link, a Markdown table, an HTML page or a PDF">Export</button>
     <button class="chip mapchip" id="mapbtn" aria-haspopup="dialog"
-            title="See all 1,294 projects at once, laid out by what they do">Map</button>
+            title="See all 8,856 projects at once, laid out by what they do">Map</button>
     <button class="chip" id="palhint"></button>
     <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
@@ -781,9 +803,9 @@ main a[href],main button,main select,main summary,
 </dialog>
 
 <footer><div class="wrap">
-  Every entry came from someone else's curation work; all 11 source lists are credited in the
+  Every entry came from someone else's curation work; all 39 source lists are credited in the
   <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. Stars, language, licence and
-  last-push come from the GitHub API on 2026-09-03 and drift daily. Platform verdicts are derived
+  last-push come from the GitHub API on 2026-09-21 and drift daily. Platform verdicts are derived
   from each project's own README, install route, CI config and release assets &mdash;
   <span class="vY">green&#8201;&#10003;</span> is stated evidence,
   <span class="vL">amber&#8201;?</span> is inferred from the language, and
@@ -795,17 +817,18 @@ main a[href],main button,main select,main summary,
   <nav class="facets" id="browse" aria-label="Browse by topic or by what a project plugs into">
     <p><b>Every topic:</b> <a href="topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a> · <a href="topic/coding-agents/">Coding Agents</a> · <a href="topic/agent-skills/">Agent Skills</a> · <a href="topic/mcp-servers/">MCP Servers</a> · <a href="topic/frameworks-sdks/">Frameworks &amp; SDKs</a> · <a href="topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> · <a href="topic/context-memory-rag/">Context, Memory &amp; RAG</a> · <a href="topic/sandbox-security-governance/">Sandbox, Security &amp; Governance</a> · <a href="topic/observability-evals/">Observability &amp; Evals</a> · <a href="topic/plugins-themes-clients/">Plugins, Themes &amp; Clients</a> · <a href="topic/research-data-agents/">Research &amp; Data Agents</a> · <a href="topic/creative-voice-media/">Creative, Voice &amp; Media</a> · <a href="topic/assistants-domain-agents/">Assistants &amp; Domain Agents</a> · <a href="topic/docs-learning-lists/">Docs, Learning &amp; Lists</a></p>
     <p><b>Every integration:</b> <a href="target/claude-code/">Claude Code</a> · <a href="target/claude-anthropic/">Claude / Anthropic</a> · <a href="target/opencode/">opencode</a> · <a href="target/mcp/">MCP</a> · <a href="target/codex-openai/">Codex / OpenAI</a> · <a href="target/gemini-google/">Gemini / Google</a> · <a href="target/github-copilot/">GitHub Copilot</a> · <a href="target/cursor/">Cursor</a> · <a href="target/cline-roo/">Cline / Roo</a> · <a href="target/aider/">Aider</a> · <a href="target/langchain-langgraph/">LangChain / LangGraph</a> · <a href="target/local-ollama/">Local / Ollama</a></p>
-    <p><b>Every project:</b> <a href="repo/">all 1,294 projects, one page each, grouped by topic</a></p>
+    <p><b>Every project:</b> <a href="repo/">all 8,856 projects, one page each, grouped by topic</a></p>
   </nav>
 </div></footer>
 
 <script>
 const PAGE_SIZE = 120;
 const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"index.mascot_commentary":1,"index.export":1,"index.compare":1,"index.constellation":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1};
-const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
+const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, since: false, rising: false,
                saved: false, list: new Set(), cmp: new Set(), sort: "relevance", shown: PAGE_SIZE,
                view: "cards"};
 let D = null, ROWS = [], NEW = 0, RISE = null, RISING = 0;
+let COHORT = "";
 
 let BY_NWO = new Map();
 
@@ -831,14 +854,33 @@ function storeSaved() {
     localStorage.setItem(SAVE_KEY, JSON.stringify([...SAVED]));
   } catch (e) {}
 }
+
+const VISIT_KEY = "atlas-last-visit";
+let SEEN_AT = "";
+let SINCE = 0;
+
+function loadVisit() {
+  try {
+    const raw = localStorage.getItem(VISIT_KEY) || "";
+    SEEN_AT = /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : "";
+  } catch (e) {
+    SEEN_AT = "";
+  }
+}
+
+function markVisit() {
+  try {
+    localStorage.setItem(VISIT_KEY, (D && D.snapshot) || TODAY);
+  } catch (e) {}
+}
 let FROM_CACHE = false;
 let typing = 0;
 
 const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
-const SNAPSHOT = "2026-09-03";
-const BUILT = "2026-09-16T02:13:00Z";
+const SNAPSHOT = "2026-09-21";
+const BUILT = "2026-09-21T18:07:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -857,8 +899,15 @@ function osIcon(k) {
 
 const CAN_COPY = !!(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext);
 
-const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/")
-  .map(s => s.startsWith(".") ? "dot-" + s.slice(1) : s).join("/") + "/";
+const DEVICE_NAMES = ["con", "prn", "aux", "nul", "clock$", "com1", "com2", "com3", "com4", "com5",
+  "com6", "com7", "com8", "com9", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9"];
+const segment = s => {
+  if (s.startsWith(".")) s = "dot-" + s.slice(1);
+  if (s.endsWith(".")) s = s.slice(0, -1) + "-dot";
+  if (DEVICE_NAMES.includes(s.split(".")[0])) s = "dev-" + s;
+  return s;
+};
+const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
 
 let RESCUE = [];
 
@@ -903,6 +952,8 @@ fetch("data.json").then(r => {
   if (d.os.length !== OSI.length)
     throw new Error("data.json names " + d.os.length + " platforms and this page was built with " +
       OSI.length + " marks — see scripts/osicons.py");
+  COHORT = d.cohort || "";
+  if (COHORT && daysAgo(COHORT) > (d.window_days || 14)) COHORT = "";
   ROWS = d.rows.map(a => Object.fromEntries(d.cols.map((c, i) => [c, a[i]])));
   ROWS.forEach((r, i) => {
     r.ord = i;
@@ -911,10 +962,12 @@ fetch("data.json").then(r => {
     r.lnwo = r.nwo.toLowerCase();
     r.lblurb = (r.blurb || "").toLowerCase();
     r.img = "https://opengraph.githubassets.com/1/" + r.nwo;
-    const age = r.first_seen ? daysAgo(r.first_seen) : Infinity;
-    r.isnew = age >= 0 && age <= (d.window_days || 14);
+    r.isnew = !!r.first_seen && r.first_seen === COHORT;
+    r.issince = !!r.first_seen && !!SEEN_AT && r.first_seen > SEEN_AT;
   });
   NEW = ROWS.filter(r => r.isnew).length;
+  SINCE = ROWS.filter(r => r.issince).length;
+  markVisit();
   RISE = (d.velocity && d.velocity.rise && d.velocity.rise.col)
     ? Object.assign({}, d.velocity.rise, d.velocity[d.velocity.rise.col]) : null;
   ROWS.forEach(r => {
@@ -992,7 +1045,17 @@ function buildChips() {
   if (NEW) {
     nb.classList.add("on");
     document.getElementById("newlabel").textContent = "New · " + NEW.toLocaleString();
+    nb.title = "The " + mmddyy(COHORT) + " import added these " + NEW.toLocaleString() +
+      " projects to the atlas. The next import that brings anything replaces them.";
     nb.onclick = () => set({fresh: !state.fresh});
+  }
+  const sb = document.getElementById("since");
+  if (SINCE) {
+    sb.classList.add("on");
+    document.getElementById("sincelabel").textContent = "Since your last visit · " + SINCE.toLocaleString();
+    sb.title = SINCE.toLocaleString() + " projects have been added since this device last opened the "
+      + "atlas on " + mmddyy(SEEN_AT) + ".";
+    sb.onclick = () => set({since: !state.since});
   }
   const rb = document.getElementById("rise"), sel = document.getElementById("sort"),
         ropt = [...sel.options].find(o => o.value === "rising");
@@ -1105,8 +1168,8 @@ function palWire() {
   dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
 }
 
-const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false, saved: false,
-               list: new Set()};
+const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, since: false, rising: false,
+               saved: false, list: new Set()};
 
 let PAL = [], PALI = 0;
 
@@ -1129,6 +1192,8 @@ function palItems(query) {
       set({sort: o.value});
     });
   if (NEW) add("Filter", "New arrivals", state.fresh, () => set({fresh: !state.fresh}));
+  if (SINCE) add("Filter", "Added since your last visit", state.since,
+                 () => set({since: !state.since}));
   if (RISE && RISING) add("Filter", "Rising", state.rising, () => set({rising: !state.rising}));
   add("Filter", "Confirmed platform support only", state.strict, () => set({strict: !state.strict}));
   if (SAVED.size) add("Filter", "Saved (" + SAVED.size + ")", state.saved, () => set({saved: !state.saved}));
@@ -1223,6 +1288,7 @@ function palOpen() {
 
 function wire() {
   loadSaved();
+  loadVisit();
   const btn = document.getElementById("theme");
   const label = () => {
     const light = document.documentElement.dataset.theme === "light";
@@ -1602,6 +1668,7 @@ function match(r) {
   if (state.list.size && !state.list.has(r.nwo)) return false;
   if (state.saved && !SAVED.has(r.nwo)) return false;
   if (state.fresh && !r.isnew) return false;
+  if (state.since && !r.issince) return false;
   if (state.rising && !r.rise) return false;
   if (state.cat && D.cats[r.cat].slug !== state.cat) return false;
   if (state.tgt) {
@@ -1643,6 +1710,7 @@ function rescue() {
   state.os.forEach(i => opts.push(["Drop " + D.os[i], {os: state.os.filter(x => x !== i)}]));
   if (state.strict) opts.push(["Allow inferred support", {strict: false}]);
   if (state.fresh) opts.push(["Drop the new-arrivals filter", {fresh: false}]);
+  if (state.since) opts.push(["Drop the since-your-last-visit filter", {since: false}]);
   if (state.rising) opts.push(["Drop the rising filter", {rising: false}]);
   if (state.saved) opts.push(["Look beyond your " + SAVED.size + " saved", {saved: false}]);
   if (state.list.size)
@@ -2102,8 +2170,8 @@ function mapPin(i) {
   b.onclick = () => {
     const keep = new Set([ROWS[i].nwo]);
     for (let k = 0; k < MAP.n; k++) keep.add(ROWS[MAP.near[i * MAP.n + k]].nwo);
-    set({list: keep, q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, rising: false,
-         saved: false});
+    set({list: keep, q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, since: false,
+         rising: false, saved: false});
     document.getElementById("mapdlg").close();
     say(keep.size.toLocaleString() + " projects shown — " + ROWS[i].name + " and its nearest neighbours.");
   };
@@ -2443,7 +2511,8 @@ function viewTitle() {
   if (t) w.push("that plug into " + t.name);
   if (state.os.length) w.push("running on " + state.os.map(i => D.os[i]).join(" and "));
   if (state.strict) w.push("with confirmed support");
-  if (state.fresh) w.push("added in the last " + (D.window_days || 14) + " days");
+  if (state.fresh) w.push("added by the latest import");
+  if (state.since) w.push("added since this device last visited");
   if (state.rising) w.push("gaining stars fastest for their size");
   if (state.saved) w.push("saved on this device");
   if (state.list.size) w.push("from a shared list");
@@ -2683,6 +2752,7 @@ function render() {
   press("oses", i => state.os.includes(i));
   document.getElementById("strict").setAttribute("aria-pressed", state.strict ? "true" : "false");
   document.getElementById("new").setAttribute("aria-pressed", state.fresh ? "true" : "false");
+  document.getElementById("since").setAttribute("aria-pressed", state.since ? "true" : "false");
   document.getElementById("rise").setAttribute("aria-pressed", state.rising ? "true" : "false");
   paintSaved();
   paintShared();
@@ -2717,6 +2787,9 @@ function render() {
     hits.sort(SORTS[sort]);
   }
   HITS = hits;
+
+  const fresh = hits.filter(r => r.isnew).length;
+  document.documentElement.dataset.wave = fresh > PAGE_SIZE && fresh > hits.length / 2 ? "1" : "";
 
   const ranked = hits.filter(r => r.stars).length;
   const countHTML = approx
@@ -2770,7 +2843,7 @@ function render() {
     const star = r.isnew
       ? '<svg class="ni"><use class="a" href="#star-a"></use><use class="b" href="#star-b"></use></svg>'
       : "";
-    const on = r.isnew ? ' <span class="newon">- New on ' + mmddyy(r.first_seen) + "</span>" : "";
+    const on = r.isnew ? ' <span class="newon">- Added ' + mmddyy(r.first_seen) + "</span>" : "";
     const sensechip = bym && bym.has(r.nwo)
       ? ' <span class="senseon" title="Found by what it does, not by the words you typed">' +
         "by meaning</span>"
@@ -2784,7 +2857,8 @@ function render() {
       ? '<td class="shot"><a href="' + page + '" tabindex="-1" aria-hidden="true">' +
         '<img loading="lazy" decoding="async" alt="" data-src="' + img + '"></a></td>'
       : "";
-    return '<tr data-project="' + esc(r.nwo) + '" style="--card-accent:var(--accent-' + projectAccent(r.nwo) + ')">' +
+    return '<tr data-project="' + esc(r.nwo) + '"' + (r.isnew ? ' class="nw"' : "") +
+      ' style="--card-accent:var(--accent-' + projectAccent(r.nwo) + ')">' +
       '<td class="n rk">' + (i + 1) + "</td>" +
       shot +
       '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on + sensechip +
@@ -2804,7 +2878,7 @@ function render() {
         '<a href="' + url + '" aria-label="' + esc(r.nwo) + ' on GitHub">GitHub</a></div></td>' +
       "</tr>";
   }).join("");
-  const within = state.cat || state.tgt || state.os.length || state.strict || state.fresh
+  const within = state.cat || state.tgt || state.os.length || state.strict || state.fresh || state.since
     ? ", within your other filters" : "";
   const note = approx
     ? '<p class="approx">Nothing matches <b>' + esc(state.q) + "</b> exactly. Closest by name" +

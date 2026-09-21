@@ -354,6 +354,34 @@ eq("...and the two sets are the same size, so neither comparison hid a collision
 eq("the slug rule is the generator's own, dots and all",
    page_parts("zircote/.Claude"), ("zircote", "dot-claude"))
 
+# ---- the page set is checkoutable on Windows ---------------------------------------------------------
+#
+# Not a URL question. NTFS cannot hold a path component that ends in a dot, or one whose stem is a DOS
+# device name, and git does not skip such a file -- `git worktree add` exits 128 with `invalid path` and
+# leaves no working tree at all. So one row named `owner/thing.` makes the entire repository impossible to
+# clone on Windows, which is where this project is developed. Two such rows are in the 39 source lists
+# (`hams-ollo/project-s.o.c.r.a.t.e.s.` is one) and the first ingest to publish them did exactly that.
+#
+# Asserted in three places because they fail at different times: the rule itself here (which holds even
+# when no such row is in the dataset), every row of the dataset (which is what a new ingest changes), and
+# every page on disk (which is what a contributor actually checks out).
+eq("a trailing dot is rewritten, because that directory cannot exist on Windows",
+   page_parts("hams-ollo/Project-S.O.C.R.A.T.E.S."), ("hams-ollo", "project-s.o.c.r.a.t.e.s-dot"))
+eq("...and a DOS device name is too, for the same reason", page_parts("nul/CON.md"), ("dev-nul", "dev-con.md"))
+eq("...and neither rewrite touches an ordinary dotted name", page_parts("foo/bar.js"), ("foo", "bar.js"))
+
+
+def unwindowsable(paths) -> list[str]:
+    """Every path here has at least one segment Windows cannot create."""
+    return sorted(p for p in paths
+                  if any(s != s.rstrip(". ") or s.split(".")[0] in b22.DEVICE_NAMES
+                         for s in p.split("/")))
+
+
+eq("no row in the dataset slugs to a path Windows cannot check out",
+   unwindowsable("/".join(page_parts(n)) for n in LIVE["repos"])[:5], [])
+eq("...and no detail page committed under docs/repo/ is one either", unwindowsable(pages)[:5], [])
+
 # ---- the wiring: four files that have to agree about one filename ------------------------------------
 NAME = b19c.NAME
 eq("the stage publishes the filename the rest of this section is about", NAME, "live.json")

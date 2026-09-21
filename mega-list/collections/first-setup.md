@@ -4,7 +4,7 @@
 
 The atlas has 1,294 projects in it, which is the wrong number to start from. This is one working setup instead: an agent, the things it loads, the place it runs, and the two tools that tell you afterwards whether it did what you asked. Every slot is filled once. Swap any of them later -- the point of the set is that you can start today and still know what each piece is for.
 
-7 picks · 821,311 combined stars · snapshot 2026-09-03
+7 picks · 839,039 combined stars · snapshot 2026-09-21
 
 [Open all 7 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=anomalyco/opencode,obra/superpowers,mem0ai/mem0,modelcontextprotocol/servers,daytonaio/daytona,langfuse/langfuse,shareAI-lab/learn-claude-code) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -22,7 +22,7 @@ Terminal-native, MIT, and the one coding agent here that three separate source l
 scoop install opencode # Windows
 ```
 
-**203,467** stars · 3 of 11 lists · TypeScript · MIT · pushed 2026-09-03
+**209,094** stars · 4 of 39 lists · TypeScript · MIT · pushed 2026-09-21
 
 Platforms: Win N WSL N mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -42,7 +42,7 @@ The most-starred skills bundle in the atlas and, unusually, one that spans seven
 git clone https://github.com/obra/superpowers.git
 ```
 
-**281,176** stars · 3 of 11 lists · Shell · MIT · pushed 2026-08-31
+**289,634** stars · 7 of 39 lists · Shell · MIT · pushed 2026-09-20
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -56,17 +56,17 @@ Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, MCP, Codex / Op
 
 A memory layer you drop in rather than a database you design. Apache-2.0, and it states support on Windows and in Docker, which most of this category does not.
 
-> Drop-in universal memory layer (YC-backed, AWS Agent SDK's exclusive memory provider) that handles cross-session retention without custom harness-level state management code. Lowest integration cost for production-grade persistent memory
+> Mem0 is an intelligent memory layer for Large Language Models that enhances personalized AI experiences by retaining and utilizing contextual information across various applications. github | website | docs | discord | twitter | github profile | linkedin
 
 ```sh
 npm install -g @mem0/cli # or: pip install mem0-cli
 ```
 
-**64,649** stars · 2 of 11 lists · Python · Apache-2.0 · pushed 2026-09-03
+**65,779** stars · 8 of 39 lists · Python · Apache-2.0 · pushed 2026-09-21
 
 Platforms: Win Y WSL L mac Y Lin Y Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
-Topic: Context, Memory & RAG · Targets: Codex / OpenAI
+Topic: Frameworks & SDKs · Targets: Codex / OpenAI
 
 ---
 
@@ -82,7 +82,7 @@ The reference MCP servers, from the people who wrote the protocol. Start here an
 npx -y @modelcontextprotocol/server-memory
 ```
 
-**90,050** stars · 2 of 11 lists · TypeScript · no licence stated · pushed 2026-09-03
+**90,529** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-03
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -102,7 +102,7 @@ Container sandboxes that start in under a tenth of a second, which is the differ
 pip install daytona
 ```
 
-**71,828** stars · 1 list · language not detected · no licence stated · pushed 2026-07-24
+**71,741** stars · 2 of 39 lists · language not detected · no licence stated · pushed 2026-07-24
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -122,7 +122,7 @@ Self-hostable tracing, so the record of what the agent sent and got back stays o
 pip install langfuse openai
 ```
 
-**34,156** stars · 2 of 11 lists · TypeScript · no licence stated · pushed 2026-09-03
+**34,900** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-21
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -142,7 +142,7 @@ A read-through of how a real coding agent is built rather than a tutorial for us
 npm i -g @shareai-lab/kode
 ```
 
-**75,985** stars · 2 of 11 lists · Python · MIT · pushed 2026-08-26
+**77,362** stars · 3 of 39 lists · Python · MIT · pushed 2026-08-26
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -150,4 +150,4 @@ Topic: Docs, Learning & Lists · Targets: Claude Code, Claude / Anthropic
 
 ---
 
-These are editorial picks — the only editorial pages on the atlas. Everything else here is what 11 awesome-lists agreed on. The curation is a [reviewable file](https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json); open an issue if you would pick differently.
+These are editorial picks — the only editorial pages on the atlas. Everything else here is what 39 awesome-lists agreed on. The curation is a [reviewable file](https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json); open an issue if you would pick differently.

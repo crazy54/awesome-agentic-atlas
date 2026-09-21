@@ -262,17 +262,35 @@ this atlas* today. So the pipeline keeps its own ledger,
 Everything already present when the ledger was created is stamped as founding stock, so day one marked
 nothing.
 
-Anything that arrives after that is marked for **fourteen days**:
+What is marked is **the most recent import that brought anything** — one cohort, not a rolling window. The
+next run that adds a repo takes the mark off the last lot by finding this lot, so `New` always answers "this
+is what just landed" rather than "this arrived within some number of days". A run that adds nothing changes
+nothing: the builds are daily and a quiet Tuesday should not silently expire Monday's arrivals.
 
-- On the site, a **New** chip appears beside the sort control with a count on it, and clicking it narrows
-  the table to exactly those projects. Their titles read `✨ ProjectName - New on 09/14/26`. The filter
-  lives in the URL, so it's a link: [`#new=1`][new].
-- In the Markdown edition, each topic and target page opens with a line saying how many arrived, and every
-  marked row carries a ✨ and its date.
+That matters here because almost nothing on this site is new *in the world*. Repos arrive when a curator adds
+them to somebody's list, and the median one has existed for a year or more; the only newness this pipeline can
+honestly observe is newness to the atlas. Three ways to see it:
 
-The fourteen days are counted in your browser against your own clock rather than fixed at build time, so a
-mark expires on time whether or not anything was rebuilt that day. A `#new=1` link that has outlived its
-window shows the whole atlas rather than an empty page.
+- A **New** chip beside the sort control, with a count on it, and clicking it narrows the table to exactly
+  those projects. Their titles read `✨ ProjectName - Added 09/21/26`. The filter lives in the URL, so it's a
+  link: [`#new=1`][new].
+- Each new row wears a `--warn` outline that pulses for a few seconds and then holds as a static edge, in
+  both the table and the cards view. If your system asks for reduced motion you get the edge without the
+  pulse; if an import brings more rows than fit on a screen *and* most of what you are looking at is new, the
+  pulse stops on its own — a nudge pointing at everything is not a nudge.
+- A **Since your last visit** chip, which is your device's own answer rather than the atlas's. It counts
+  across however many imports have landed since this browser was last here, so being away for a month shows
+  you a month. It is the one filter deliberately kept out of the URL: it describes your machine, so sharing
+  it would show somebody else a set neither of you chose.
+
+In the Markdown edition, each topic and target page opens with a line saying how many the latest import
+brought, and every marked row carries a ✨ and its date.
+
+One bound on all of this: a cohort with nothing newer to supersede it stops being `New` after **fourteen
+days**. That is not the definition, it is the failure mode — the pipeline does stop sometimes, and an import
+from three weeks ago should not go on presenting itself as the latest news. The bound is re-applied in your
+browser against your own clock as well as at build time, so a tab left open overnight expires it on time, and
+a `#new=1` link that has outlived its cohort shows the whole atlas rather than an empty page.
 
 ## The data as an API
 

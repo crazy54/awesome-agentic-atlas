@@ -208,6 +208,25 @@ jobs:
           # Both of these are weekly-only for the same reason 20_landing is -- see daily.yml. 22_detail
           # reads data.json and nothing else, so its only ordering constraint is to follow 19_pages.
           python scripts/22_detail.py
+          # The curated collections, and their absence from this list is what cost run 35613799572 its
+          # deploy: `25_collections.py` writes thirteen fixed paths -- `docs/collections/index.html`, five
+          # `docs/collections/<slug>/index.html`, and their seven Markdown twins under
+          # `mega-list/collections/` -- and no other stage writes any of them. The assertion below is
+          # exactly the check for that, and it had never had the chance to say so, because every weekly run
+          # since the stage landed in 18d373a died earlier. Seven consecutive failures, none of them here.
+          #
+          # After 19_pages for the ordinary reason -- it reads `docs/data.json` and nothing else, no cache
+          # and no network -- and before 24_pwa because its own docstring asks for that in as many words:
+          # the worker's version is a hash of what it precaches, so a collection page rewritten after the
+          # worker is stamped is a page returning readers keep the old copy of.
+          #
+          # This is also the one stage in the list that can redden a green ingest on purpose. A pick names
+          # a repository and states a claim about it -- "runs on Windows, and says so" is a page whose
+          # value is that the verdict is `Y` and not `L` -- and `check()` fails the build rather than
+          # publish the page with a weaker claim than its prose makes. A rename it survives, via `aka`. A
+          # verdict that drops under a fresh ingest it does not, by design: the fix is a curator editing
+          # `config/collections.json`, not a quieter stage.
+          python scripts/25_collections.py
           # After 20_landing, and not merely near it: that stage writes the og:image tags, this one writes
           # the files they point at, and the two are one change. A run that emitted the tags without the
           # cards would publish 156 pages referencing images that are not there.
@@ -240,6 +259,7 @@ jobs:
           : > "$RUNNER_TEMP/frozen"
           : > "$RUNNER_TEMP/prunable"
           : > "$RUNNER_TEMP/deleted"
+          : > "$RUNNER_TEMP/static"
           git ls-files docs mega-list | while IFS= read -r f; do
             # Existence before mtime, and that order is the whole of this arm. `git ls-files` reads the
             # *index*, so a file a generator deliberately deleted from the working tree is still listed
@@ -259,6 +279,19 @@ jobs:
             if [ ! -e "$f" ]; then printf '%s\n' "$f" >> "$RUNNER_TEMP/deleted"; continue; fi
             if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
             case "$f" in
+              # Three files under `docs/` are checked in by hand and no generator has ever written them:
+              # the custom domain, the site icon and the mascot. Every stage that mentions them *reads*
+              # them -- `19_pages` and `22_detail` link `favicon.svg`, `16_build_all` embeds the mascot in
+              # the workbooks -- so "not rewritten" is their steady state rather than a missing stage, and
+              # the strict arm below was calling all three an error. It is deliberately this list and not
+              # `docs/*.png` or a blanket `docs/assets/*`: `apple-touch-icon.png` and the three `icon-*`
+              # PNGs sit beside them and *are* generated, so a wider pattern would stop 24_pwa's output
+              # being checked at all -- the exact hole the note above about `docs/repo/*` describes.
+              #
+              # Listed rather than silently skipped, because the honest reading of a growing list here is
+              # that somebody is hand-maintaining published files, which is worth seeing on a green run.
+              docs/CNAME|docs/favicon.svg|docs/assets/atlas-byte.png)
+                printf '%s\n' "$f" >> "$RUNNER_TEMP/static" ;;
               # `docs/og/*.png` and not `docs/og/*`: a card whose content did not change is deliberately
               # not rewritten -- that skip is the whole reason the cards cost ~84 KB a week instead of
               # 527 -- so an unwritten PNG is expected. `cards.json` is written unconditionally, so it
@@ -277,6 +310,11 @@ jobs:
           np="$(wc -l < "$RUNNER_TEMP/prunable" | tr -d ' ')"
           nf="$(wc -l < "$RUNNER_TEMP/frozen" | tr -d ' ')"
           nd="$(wc -l < "$RUNNER_TEMP/deleted" | tr -d ' ')"
+          nst="$(wc -l < "$RUNNER_TEMP/static" | tr -d ' ')"
+          if [ "$nst" -gt 0 ]; then
+            echo "Hand-maintained files no generator owns, left as they are:"
+            sed 's/^/  /' "$RUNNER_TEMP/static"
+          fi
           if [ "$nd" -gt 0 ]; then
             echo "Tracked files this build deleted, whose removal the commit below carries:"
             sed 's/^/  /' "$RUNNER_TEMP/deleted"
@@ -292,7 +330,7 @@ jobs:
             echo "::error title=Generator missing from the build::${nf} tracked file(s) under docs/ or mega-list/ are committed but were not written. These have fixed paths, so no taxonomy change can explain them: the stage that writes them is missing from this workflow, and the published copy can never change again until it is put back."
             exit 1
           fi
-          echo "All $(git ls-files docs mega-list | wc -l | tr -d ' ') tracked files under docs/ and mega-list/ were rewritten by this build, or deleted by it ($nd)."
+          echo "All $(git ls-files docs mega-list | wc -l | tr -d ' ') tracked files under docs/ and mega-list/ were rewritten by this build, or deleted by it ($nd), or are hand-maintained ($nst)."
 
       - name: Record the source commits as built
         run: python scripts/watch_sources.py --update
