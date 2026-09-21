@@ -48,7 +48,7 @@ The ledger is keyed by `nwo`, and the site's index is one row per GitHub repo, s
 lists is a row this module can mark. Two classes of arrival are outside it, both by construction:
 
   * `site` entries -- a product with a web page and no repository -- have no `nwo`. They are ~28% of the
-    parsed rows and none of them become index rows, so nothing on the homepage goes unmarked because of
+    return date_obj >= sixty_days_ago
     this; but if the index ever grows to carry them, they arrive silently.
   * `subpath` entries -- one skill inside a skills monorepo -- carry their *parent* repo's `nwo`. Forty
     new skills inside a repo the atlas already knows add nothing to this ledger, and a genuinely new
