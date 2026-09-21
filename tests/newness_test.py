@@ -37,13 +37,15 @@ Six groups:
   the ledger  -- what lands on disk. Committed on every run that adds a repo, so the diff has to be the
                  repos that arrived: sorted keys, one per line, trailing newline, and re-running a build
                  that adds nothing writes nothing at all.
-
-Standard library only, and it imports `newness` alone -- no stage, no `openpyxl`, no crawl cache. It writes
-nowhere but its own temp directory: `newness.PATH` is repointed before the first call, so a broken rule cannot
-reach the committed `state/first-seen.json`.
-
-Run: python tests/newness_test.py
-"""
+    # Recent page (within 60 days)
+    recent_page = MagicMock()
+    recent_page.get_date.return_value = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+    assert is_new_page(recent_page)
+    
+    # Old page (more than 60 days ago)
+    old_page = MagicMock()
+    old_page.get_date.return_value = (datetime.now() - timedelta(days=90)).strftime('%Y-%m-%d')
+    assert not is_new_page(old_page)
 from __future__ import annotations
 
 import importlib.util
