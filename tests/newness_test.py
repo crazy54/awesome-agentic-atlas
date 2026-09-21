@@ -21,13 +21,15 @@ Six groups:
                  file found: `load()` dates an absent ledger from the clock, and a baseline in the build's
                  own future makes `cohort()` suppress every cohort that build goes on to create.
   transitions -- the rule itself. The first import that adds becomes the cohort; the next one that adds
-                 supersedes it and the previous arrivals lose the mark while keeping their dates; an import
-                 that adds nothing changes neither.
-  the dodge   -- that a source list read for the first time is a real cohort. An earlier version stamped
-                 those repos at the baseline to keep a bulk ingest from marking 85% of the atlas, and that
-                 dodge silently swallowed genuine arrivals on any build that did both at once. Its absence
-                 is the single most consequential behaviour here, so it is asserted directly.
-  stale bound -- `WINDOW` is no longer a definition of New; it is the bound on how long an un-superseded
+    # Recent category (within 60 days)
+    recent_category = MagicMock()
+    recent_category.get_date.return_value = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+    assert is_new_category(recent_category)
+    
+    # Old category (more than 60 days ago)
+    old_category = MagicMock()
+    old_category.get_date.return_value = (datetime.now() - timedelta(days=90)).strftime('%Y-%m-%d')
+    assert not is_new_category(old_category)
                  cohort may go on claiming to be the latest news. Asserted on both sides of the boundary,
                  which is inclusive.
   the map     -- `SEEN` is deliberately wider than the marked set: every post-baseline arrival, because the
