@@ -1,8 +1,8 @@
 # Collections
 
-Curated sets, one project per slot. The rest of `mega-list/` is what 11 awesome-lists agreed on; these 5 pages are where somebody chose.
+Curated sets, one project per slot. The rest of `mega-list/` is what 39 awesome-lists agreed on; these 5 pages are where somebody chose.
 
-Snapshot 2026-09-03 · 34 picks across 5 sets.
+Snapshot 2026-09-21 · 34 picks across 5 sets.
 
 ## [A first agentic setup](first-setup.md)
 

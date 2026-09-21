@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-nwo="Warishayat/LLM-s-Finetunning" data-root="../../../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Llm-S-Finetunning (Warishayat/LLM-s-Finetunning) — Frameworks &amp; SDKs — Awesome Agentic Atlas</title>
+<meta name="description" content="This library offers tools to easily fine-tune large language models (LLMs) on custom datasets. It enhances pre-trained models for specifi…">
+<link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/repo/warishayat/llm-s-finetunning/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Llm-S-Finetunning — Awesome Agentic Atlas">
+<meta property="og:description" content="This library offers tools to easily fine-tune large language models (LLMs) on custom datasets. It enhances pre-trained models for specifi…">
+<meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/repo/warishayat/llm-s-finetunning/">
+<meta property="og:image" content="https://opengraph.githubassets.com/1/Warishayat/LLM-s-Finetunning">
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<meta name="theme-color" id="tc" content="#101217">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The two literals track --plane in the two blocks at the top of detail.css. Once detail.js has run it
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+} catch (e) {}
+</script>
+<link rel="stylesheet" href="../../detail.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://crazy54.github.io/awesome-agentic-atlas/"},{"@type":"ListItem","position":2,"name":"Frameworks & SDKs","item":"https://crazy54.github.io/awesome-agentic-atlas/topic/frameworks-sdks/"},{"@type":"ListItem","position":3,"name":"Llm-S-Finetunning","item":"https://crazy54.github.io/awesome-agentic-atlas/repo/warishayat/llm-s-finetunning/"}]}</script>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
+<header><div class="wrap">
+  <nav class="crumb"><a href="../../../">Atlas</a> ›
+    <a href="../../../topic/frameworks-sdks/">Frameworks &amp; SDKs</a> ›
+    <a href="../../../repo/">All projects</a></nav>
+  <div class="top">
+    <div>
+      <h1>Llm-S-Finetunning</h1>
+      <p class="nwo"><a href="https://github.com/Warishayat/LLM-s-Finetunning">Warishayat/LLM-s-Finetunning</a></p>
+      <p class="lead">This library offers tools to easily fine-tune large language models (LLMs) on custom datasets. It enhances pre-trained models for specifi…</p>
+      <p class="facts">
+        <span>Language not detected</span>
+        <span>MIT</span>
+        <span id="stars" class="live"></span>
+        <span id="pushed" class="live"></span>
+        <span id="snap" class="live"></span>
+      </p>
+      <p class="acts"><a class="cta" href="https://github.com/Warishayat/LLM-s-Finetunning">View on GitHub &rarr;</a>
+        <a class="alt" href="../../../#q=Llm-S-Finetunning">Find it in the atlas</a></p>
+    </div>
+    <nav class="util">
+      <a href="../../../collections/">Collections</a> ·
+      <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+      <a href="../../../repo/">All projects</a> ·
+      <a href="../../../#browse">Topics &amp; harnesses</a><br>
+      <button class="chip" id="theme" aria-pressed="false">Light theme</button>
+    </nav>
+  </div>
+</div></header>
+
+<main><div class="wrap">
+<section>
+  <h2>Install</h2>
+  <div class="cmdrow"><code class="cmd" id="cmd">git clone https://github.com/Warishayat/LLM-s-Finetunning.git</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for Llm-S-Finetunning">Copy</button></div>
+</section>
+
+<section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
+  <div class="preview-intro">
+    <div>
+      <p class="eyebrow">Repository reader</p>
+      <h2 id="source-preview-title">Explore before you clone</h2>
+      <p class="lead">Read the project’s README, skills and supporting Markdown here. Rendered view is
+        shown first; source is one click away when you need the exact text.</p>
+    </div>
+    <span class="source-live"><i aria-hidden="true"></i>Fetched from GitHub</span>
+  </div>
+  <div class="reader" data-state="loading">
+    <div class="reader-chrome" aria-label="Repository file preview controls">
+      <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <label class="file-picker">
+        <span class="sr-only">Markdown file</span>
+        <select id="source-file" disabled aria-label="Markdown file">
+          <option>Finding Markdown files…</option>
+        </select>
+      </label>
+      <div class="reader-tabs" aria-label="Preview mode">
+        <button type="button" class="viewtab on" id="rendered-tab" aria-pressed="true">Rendered</button>
+        <button type="button" class="viewtab" id="source-tab" aria-pressed="false">Source</button>
+      </div>
+      <a class="open-source" id="open-source" href="https://github.com/Warishayat/LLM-s-Finetunning" target="_blank"
+         rel="noopener">Open on GitHub <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="reader-status" id="reader-status" role="status" aria-live="polite">
+      <span class="loader" aria-hidden="true"></span>
+      <span>Loading the project’s README…</span>
+    </div>
+    <article class="markdown-body" id="rendered-view" aria-label="Rendered Markdown preview" hidden></article>
+    <pre class="source-code" id="source-view" aria-label="Markdown source" tabindex="0" hidden><code></code></pre>
+  </div>
+  <p class="reader-note" id="reader-note">Public files are loaded on demand from the repository. The
+    atlas does not copy or modify them.</p>
+</section>
+
+<section>
+  <h2>Screenshot</h2>
+  <figure class="shot">
+    <img loading="lazy" decoding="async" src="https://opengraph.githubassets.com/1/Warishayat/LLM-s-Finetunning"
+         alt="Screenshot or social card for Llm-S-Finetunning">
+    <figcaption>GitHub's social card — no screenshot was found for this project, fetched from
+      source rather than copied into this repository.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Platform support</h2>
+  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr></tbody></table>
+</section>
+
+<section>
+  <h2>Where it came from</h2>
+  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li>AI Agents (Schwoebel)</li></ul>
+</section>
+
+<section>
+  <h2>How it is classified</h2>
+  <p class="lead">One topic, no
+    harnesses. Each link is a prerendered page of
+    everything else in that slice.</p>
+  <div class="chips"><a class="chip cat" href="../../../topic/frameworks-sdks/">Frameworks &amp; SDKs</a></div>
+</section>
+
+<section class="kin">
+  <h2>Related in Frameworks &amp; SDKs</h2>
+  <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
+    lists agreed on.</p>
+  <ul class="kinlist"><li><a href="../../microsoft/autogen/">Autogen</a><span class="nwo">microsoft/autogen</span><span class="desc">Microsoft&#x27;s multi-agent conversation framework with a complete AgentChat layer covering agent loop, tool integration, termination conditions, and…</span></li><li><a href="../../crewaiinc/crewai/">crewAI</a><span class="nwo">crewAIInc/crewAI</span><span class="desc">Dual-layer harness orchestration: Crew handles autonomous agent delegation, Flow provides event-driven deterministic control (branching + shared…</span></li><li><a href="../../langchain-ai/langchain/">LangChain</a><span class="nwo">langchain-ai/langchain</span><span class="desc">Langchain integrates various providers like Anthropic, AWS, and OpenAI, and offers tools for components such as LLMs, chat models, and data…</span></li><li><a href="../../run-llama/llama_index/">LlamaIndex</a><span class="nwo">run-llama/llama_index</span><span class="desc">LlamaIndex offers a variety of tools for building data agents, with top downloads including IonicShoppingToolSpec, OpenAPIToolSpec…</span></li><li><a href="../../mastra-ai/mastra/">Mastra</a><span class="nwo">mastra-ai/mastra</span><span class="desc">TypeScript-native agent framework (from the Gatsby team) with 22K+ stars and 300K+ weekly npm downloads. Connects to 40+ providers through one…</span></li><li><a href="../../mem0ai/mem0/">mem0</a><span class="nwo">mem0ai/mem0</span><span class="desc">Mem0 is an intelligent memory layer for Large Language Models that enhances personalized AI experiences by retaining and utilizing contextual…</span></li><li><a href="../../pydantic/pydantic-ai/">Pydantic AI v2</a><span class="nwo">pydantic/pydantic-ai</span><span class="desc">June 2026 harness-first redesign built around the Capability primitive: a single composable unit bundling instructions, tools, lifecycle hooks, and…</span></li><li><a href="../../significant-gravitas/autogpt/">AutoGPT</a><span class="nwo">Significant-Gravitas/AutoGPT</span><span class="desc">AutoGPT provides accessible AI tools for building and using AI agents, offering a comprehensive framework including Forge for agent creation…</span></li></ul>
+</section>
+</div></main>
+
+<footer><div class="wrap">
+  One project from the <a href="../../../">Awesome Agentic Atlas</a>, which merges 39
+  awesome-lists into a single index; all 39 are credited in the
+  <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. The description, install
+  command and platform verdicts are derived from this project's own README, install route, CI
+  configuration and release assets. Star count and last push are read from the atlas dataset, which is
+  a dated snapshot rather than a live figure — <a href="https://github.com/Warishayat/LLM-s-Finetunning">GitHub</a> is authoritative
+  for both. Nothing here is an endorsement, and nothing here has been run.
+</div></footer>
+<script src="../../detail.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

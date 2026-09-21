@@ -4,7 +4,7 @@
 
 Most agentic tooling is written on a Mac and tested on Linux, and "it's Python, it'll be fine" is how a Windows afternoon disappears. The atlas records a per-platform verdict for every project, and it distinguishes stated support from support merely inferred from the language. Every project below has documented Windows support -- the build refuses to publish this page if one of them stops.
 
-7 picks · 914,087 combined stars · snapshot 2026-09-03
+7 picks · 930,714 combined stars · snapshot 2026-09-21
 
 [Open all 7 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=openclaw/openclaw,earendil-works/pi,continuedev/continue,ollama/ollama,ggml-org/llama.cpp,headroomlabs-ai/headroom,nearai/ironclaw) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -24,7 +24,7 @@ The most-starred project in the atlas, and it puts Windows in the same sentence 
 npm install -g openclaw@latest --allow-scripts=openclaw
 ```
 
-**388,645** stars · 3 of 11 lists · TypeScript · no licence stated · pushed 2026-09-02
+**390,202** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-21
 
 Platforms: Win Y WSL Y mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -44,7 +44,7 @@ A deliberately small terminal harness built around skills loaded on demand. Smal
 git clone https://github.com/earendil-works/pi.git
 ```
 
-**101,379** stars · 1 list · TypeScript · MIT · pushed 2026-09-03
+**108,079** stars · 1 list · TypeScript · MIT · pushed 2026-09-21
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -58,17 +58,17 @@ Topic: Harnesses & Runtime Infra
 
 Ships as an editor extension, which is why it works on Windows without a WSL detour -- the editor has already solved that problem.
 
-> open-source coding agent
+> Continue is an open-source autopilot plugin for VS Code and JetBrains, enhancing coding with LLMs through features like task and tab autocomplete, natural language edits, file generation, and customization options, available under the Apache 2.0 license github | website
 
 ```sh
 git clone https://github.com/continuedev/continue.git
 ```
 
-**35,740** stars · 1 list · TypeScript · Apache-2.0 · pushed 2026-09-03
+**35,971** stars · 7 of 39 lists · TypeScript · Apache-2.0 · pushed 2026-09-21
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
-Topic: Coding Agents
+Topic: Coding Agents · Targets: MCP, Codex / OpenAI
 
 ---
 
@@ -78,13 +78,13 @@ Topic: Coding Agents
 
 A native Windows build, a one-line pull, and no Python environment to get wrong. If you want a local model on Windows this is the shortest path to one.
 
-> Run LLMs locally. 162k+ stars. Dead simple CLI
+> Ollama is a tool for running large language models locally, offering easy setup for macOS, Windows, Linux, and Docker, along with a library of models and quickstart guides for customization and integration github | github profile
 
 ```sh
 irm https://ollama.com/install.ps1 | iex
 ```
 
-**180,046** stars · 1 list · Go · MIT · pushed 2026-09-03
+**181,373** stars · 4 of 39 lists · Go · MIT · pushed 2026-09-19
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -104,7 +104,7 @@ The C++ layer under most of local AI, with first-class Windows builds and no run
 git clone https://github.com/ggml-org/llama.cpp.git
 ```
 
-**126,906** stars · 1 list · C++ · MIT · pushed 2026-09-03
+**129,078** stars · 3 of 39 lists · C++ · MIT · pushed 2026-09-21
 
 Platforms: Win Y WSL N mac Y Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -124,11 +124,11 @@ Compresses tool output, logs and files before they reach the window. Windows and
 uv tool install --python 3.13 "headroom-ai[all]" # CLI in a self-contained env
 ```
 
-**68,768** stars · 1 list · Python · Apache-2.0 · pushed 2026-09-03
+**73,385** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-21
 
 Platforms: Win Y WSL L mac Y Lin Y Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
-Topic: Context, Memory & RAG · Targets: Claude / Anthropic, MCP, LangChain / LangGraph
+Topic: Plugins, Themes & Clients · Targets: Claude Code, Claude / Anthropic, MCP, LangChain / LangGraph
 
 ---
 
@@ -144,12 +144,12 @@ Treats agent execution as a privacy and isolation problem rather than a convenie
 irm "https://github.com/nearai/ironclaw/releases/download/$IronClawReleaseTag/ironclaw-installer.ps1" | iex
 ```
 
-**12,603** stars · 2 of 11 lists · Rust · Apache-2.0 · pushed 2026-09-02
+**12,626** stars · 3 of 39 lists · Rust · Apache-2.0 · pushed 2026-09-21
 
 Platforms: Win Y WSL Y mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
-Topic: Sandbox, Security & Governance · Targets: MCP
+Topic: Assistants & Domain Agents · Targets: MCP
 
 ---
 
-These are editorial picks — the only editorial pages on the atlas. Everything else here is what 11 awesome-lists agreed on. The curation is a [reviewable file](https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json); open an issue if you would pick differently.
+These are editorial picks — the only editorial pages on the atlas. Everything else here is what 39 awesome-lists agreed on. The curation is a [reviewable file](https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json); open an issue if you would pick differently.

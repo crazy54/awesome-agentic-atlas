@@ -1,6 +1,6 @@
 # Awesome Agentic Atlas
 
-**11 curated awesome-lists merged into one.** 2,394 entries, 1,294 distinct GitHub repos, 12,494,028 stars — each entry resolved to its repo and given a screenshot, an install line, and platform evidence for Windows, WSL2, macOS, Linux and Docker.
+**39 curated awesome-lists merged into one.** 14,905 entries, 8,856 distinct GitHub repos, 24,010,256 stars — each entry resolved to its repo and given a screenshot, an install line, and platform evidence for Windows, WSL2, macOS, Linux and Docker.
 
 Every list below was made by someone else. This is not a new selection: it is their selections in one place, with the facts filled in and the overlap made visible.
 
@@ -10,56 +10,56 @@ Also here as spreadsheets, screenshots embedded and every column filterable: **[
 
 | Platform | Confirmed | Inferred | Total | Page |
 |---|--:|--:|--:|---|
-| **Windows** | 435 | 670 | 1,105 | [Windows](platforms/windows.md) · [inferred](platforms/windows-inferred.md) |
-| **macOS** | 378 | 714 | 1,092 | [macOS](platforms/macos.md) · [inferred](platforms/macos-inferred.md) |
-| **Linux** | 430 | 690 | 1,120 | [Linux](platforms/linux.md) · [inferred](platforms/linux-inferred.md) |
-| **Docker** | 210 | 0 | 210 | [Docker](platforms/docker.md) |
+| **Windows** | 2,065 | 5,608 | 7,673 | [Windows](platforms/windows.md) · [inferred](platforms/windows-inferred.md) |
+| **macOS** | 1,486 | 5,877 | 7,363 | [macOS](platforms/macos.md) · [inferred](platforms/macos-inferred.md) |
+| **Linux** | 1,986 | 5,720 | 7,706 | [Linux](platforms/linux.md) · [inferred](platforms/linux-inferred.md) |
+| **Docker** | 1,548 | 0 | 1,548 | [Docker](platforms/docker.md) |
 
 **Confirmed** means a release asset for that platform, or the README saying so outright. **Inferred** means the install route or the language runtime implies it and nothing states it — a good bet, not a promise, and each row carries the reasoning that put it there.
 
-Those four are drawn from the 1,255 distinct repos that entries across the eleven lists resolve to. A hosted product with no public repo and a folder inside a larger repo have no platform support of their own to report, so neither appears on a platform page — both are on their list's page instead.
+Those four are drawn from the 8,443 distinct repos that entries across the 39 lists resolve to. A hosted product with no public repo and a folder inside a larger repo have no platform support of their own to report, so neither appears on a platform page — both are on their list's page instead.
 
 ## Pick your topic
 
-Eleven curators used 140 different section names and agreed on almost none of them — `Frameworks`, `Agent Frameworks` and `Build-your-own` are one shelf under three names. These 14 are one vocabulary over all of it, so that "the best X" becomes a question with an answer.
+39 curators used 585 different section names and agreed on almost none of them — `Frameworks`, `Agent Frameworks` and `Build-your-own` are one shelf under three names. These 14 are one vocabulary over all of it, so that "the best X" becomes a question with an answer.
 
 | Topic | Projects | Ranked | ★ combined | Most-starred |
 |---|--:|--:|--:|---|
-| [**Orchestrators &amp; Multi-Agent**](topics/orchestrators-multi-agent.md) | 123 | 119 | 1,561,431 | [n8n](https://github.com/n8n-io/n8n) ★ 203.2k |
-| [**Coding Agents**](topics/coding-agents.md) | 165 | 162 | 1,529,302 | [OpenCode](https://github.com/anomalyco/opencode) ★ 203.5k |
-| [**Agent Skills**](topics/agent-skills.md) | 278 | 251 | 2,383,023 | [Superpowers](https://github.com/obra/superpowers) ★ 281.2k |
-| [**MCP Servers**](topics/mcp-servers.md) | 11 | 11 | 253,120 | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) ★ 90k |
-| [**Frameworks &amp; SDKs**](topics/frameworks-sdks.md) | 95 | 92 | 1,947,893 | [openclaw](https://github.com/openclaw/openclaw) ★ 388.6k |
-| [**Harnesses &amp; Runtime Infra**](topics/harnesses-runtime-infra.md) | 68 | 65 | 1,897,776 | [everything-claude-code](https://github.com/affaan-m/ECC) ★ 246.8k |
-| [**Context, Memory &amp; RAG**](topics/context-memory-rag.md) | 51 | 51 | 690,910 | [headroom](https://github.com/headroomlabs-ai/headroom) ★ 68.8k |
-| [**Sandbox, Security &amp; Governance**](topics/sandbox-security-governance.md) | 50 | 48 | 234,637 | [Daytona](https://github.com/daytonaio/daytona) ★ 71.8k |
-| [**Observability &amp; Evals**](topics/observability-evals.md) | 66 | 66 | 208,576 | [Langfuse](https://github.com/langfuse/langfuse) ★ 34.2k |
-| [**Plugins, Themes &amp; Clients**](topics/plugins-themes-clients.md) | 208 | 204 | 414,603 | [Oh My Opencode](https://github.com/code-yeongyu/oh-my-openagent) ★ 68.7k |
-| [**Research &amp; Data Agents**](topics/research-data-agents.md) | 24 | 23 | 389,117 | [RAGFlow](https://github.com/infiniflow/ragflow) ★ 90k |
-| [**Creative, Voice &amp; Media**](topics/creative-voice-media.md) | 21 | 21 | 133,523 | [Meta AudioCraft](https://github.com/facebookresearch/audiocraft) ★ 23.6k |
-| [**Assistants &amp; Domain Agents**](topics/assistants-domain-agents.md) | 84 | 78 | 582,353 | [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) ★ 135.9k |
-| [**Docs, Learning &amp; Lists**](topics/docs-learning-lists.md) | 50 | 48 | 267,764 | [Learn Claude Code](https://github.com/shareAI-lab/learn-claude-code) ★ 76k |
+| [**Orchestrators &amp; Multi-Agent**](topics/orchestrators-multi-agent.md) | 338 | 330 | 2,246,888 | [n8n](https://github.com/n8n-io/n8n) ★ 205.6k |
+| [**Coding Agents**](topics/coding-agents.md) | 281 | 267 | 2,010,552 | [OpenCode](https://github.com/anomalyco/opencode) ★ 209.1k |
+| [**Agent Skills**](topics/agent-skills.md) | 823 | 749 | 4,921,060 | [Superpowers](https://github.com/obra/superpowers) ★ 289.6k |
+| [**MCP Servers**](topics/mcp-servers.md) | 4,537 | 3,717 | 1,204,564 | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) ★ 90.5k |
+| [**Frameworks &amp; SDKs**](topics/frameworks-sdks.md) | 463 | 419 | 2,755,271 | [openclaw](https://github.com/openclaw/openclaw) ★ 390.2k |
+| [**Harnesses &amp; Runtime Infra**](topics/harnesses-runtime-infra.md) | 669 | 586 | 4,521,604 | [DeepSeek Harness (dsh)](https://github.com/deepseek-ai/deepseek-harness) ★ 232.2k |
+| [**Context, Memory &amp; RAG**](topics/context-memory-rag.md) | 99 | 94 | 913,743 | [RAGFlow](https://github.com/infiniflow/ragflow) ★ 91.1k |
+| [**Sandbox, Security &amp; Governance**](topics/sandbox-security-governance.md) | 150 | 124 | 320,134 | [Daytona](https://github.com/daytonaio/daytona) ★ 71.7k |
+| [**Observability &amp; Evals**](topics/observability-evals.md) | 421 | 327 | 713,367 | [LLMApp](https://github.com/pathwaycom/llm-app) ★ 58.9k |
+| [**Plugins, Themes &amp; Clients**](topics/plugins-themes-clients.md) | 611 | 581 | 1,593,586 | [cc-switch](https://github.com/farion1231/cc-switch) ★ 134k |
+| [**Research &amp; Data Agents**](topics/research-data-agents.md) | 41 | 40 | 203,253 | [Pathway](https://github.com/pathwaycom/pathway) ★ 62.3k |
+| [**Creative, Voice &amp; Media**](topics/creative-voice-media.md) | 29 | 28 | 467,923 | [whisper](https://github.com/openai/whisper) ★ 109.4k |
+| [**Assistants &amp; Domain Agents**](topics/assistants-domain-agents.md) | 252 | 234 | 1,208,977 | [hermes-agent](https://github.com/NousResearch/hermes-agent) ★ 247.7k |
+| [**Docs, Learning &amp; Lists**](topics/docs-learning-lists.md) | 142 | 134 | 929,334 | [f/awesome-chatgpt-prompts](https://github.com/f/prompts.chat) ★ 170.9k |
 
 [**All topics, with what is on each page →**](topics/README.md)
 
 ## Pick your harness
 
-The second axis: what a project plugs into, rather than what it is. Cross the two and you get the question none of the eleven lists could answer on its own — the best Claude Code observability tool, the best opencode plugin, the best local-runtime orchestrator.
+The second axis: what a project plugs into, rather than what it is. Cross the two and you get the question none of the 39 lists could answer on its own — the best Claude Code observability tool, the best opencode plugin, the best local-runtime orchestrator.
 
 | Runs with | Projects | Ranked | ★ combined | Most-starred |
 |---|--:|--:|--:|---|
-| [**Claude Code**](targets/claude-code.md) | 479 | 469 | 3,569,995 | [Superpowers](https://github.com/obra/superpowers) ★ 281.2k |
-| [**Claude / Anthropic**](targets/claude-anthropic.md) | 669 | 636 | 6,018,974 | [Superpowers](https://github.com/obra/superpowers) ★ 281.2k |
-| [**opencode**](targets/opencode.md) | 284 | 277 | 1,308,152 | [everything-claude-code](https://github.com/affaan-m/ECC) ★ 246.8k |
-| [**MCP**](targets/mcp.md) | 217 | 212 | 3,298,077 | [openclaw](https://github.com/openclaw/openclaw) ★ 388.6k |
-| [**Codex / OpenAI**](targets/codex-openai.md) | 374 | 365 | 4,526,669 | [Superpowers](https://github.com/obra/superpowers) ★ 281.2k |
-| [**Gemini / Google**](targets/gemini-google.md) | 132 | 129 | 1,709,780 | [Superpowers](https://github.com/obra/superpowers) ★ 281.2k |
-| [**GitHub Copilot**](targets/github-copilot.md) | 49 | 48 | 511,622 | [Superpowers](https://github.com/obra/superpowers) ★ 281.2k |
-| [**Cursor**](targets/cursor.md) | 133 | 130 | 1,400,055 | [Superpowers](https://github.com/obra/superpowers) ★ 281.2k |
-| [**Cline / Roo**](targets/cline-roo.md) | 13 | 13 | 206,476 | [Cline](https://github.com/cline/cline) ★ 67.4k |
-| [**Aider**](targets/aider.md) | 12 | 11 | 54,238 | [Aider](https://github.com/Aider-AI/aider) ★ 48.7k |
-| [**LangChain / LangGraph**](targets/langchain-langgraph.md) | 41 | 41 | 806,888 | [LangChain](https://github.com/langchain-ai/langchain) ★ 145.6k |
-| [**Local / Ollama**](targets/local-ollama.md) | 23 | 23 | 779,527 | [Ollama](https://github.com/ollama/ollama) ★ 180k |
+| [**Claude Code**](targets/claude-code.md) | 2,395 | 2,212 | 8,459,807 | [Superpowers](https://github.com/obra/superpowers) ★ 289.6k |
+| [**Claude / Anthropic**](targets/claude-anthropic.md) | 3,943 | 3,509 | 10,691,061 | [Superpowers](https://github.com/obra/superpowers) ★ 289.6k |
+| [**opencode**](targets/opencode.md) | 406 | 397 | 2,188,342 | [Everything Claude Code (ECC)](https://github.com/affaan-m/ECC) ★ 264.6k |
+| [**MCP**](targets/mcp.md) | 5,104 | 4,246 | 5,557,528 | [openclaw](https://github.com/openclaw/openclaw) ★ 390.2k |
+| [**Codex / OpenAI**](targets/codex-openai.md) | 1,578 | 1,472 | 8,230,721 | [Superpowers](https://github.com/obra/superpowers) ★ 289.6k |
+| [**Gemini / Google**](targets/gemini-google.md) | 653 | 613 | 3,490,195 | [Superpowers](https://github.com/obra/superpowers) ★ 289.6k |
+| [**GitHub Copilot**](targets/github-copilot.md) | 240 | 220 | 1,459,561 | [Superpowers](https://github.com/obra/superpowers) ★ 289.6k |
+| [**Cursor**](targets/cursor.md) | 1,121 | 967 | 3,280,278 | [Superpowers](https://github.com/obra/superpowers) ★ 289.6k |
+| [**Cline / Roo**](targets/cline-roo.md) | 89 | 77 | 249,111 | [Cline](https://github.com/cline/cline) ★ 69k |
+| [**Aider**](targets/aider.md) | 39 | 36 | 73,570 | [Aider](https://github.com/Aider-AI/aider) ★ 49.1k |
+| [**LangChain / LangGraph**](targets/langchain-langgraph.md) | 175 | 155 | 1,122,868 | [Langflow](https://github.com/langflow-ai/langflow) ★ 155.1k |
+| [**Local / Ollama**](targets/local-ollama.md) | 146 | 138 | 1,064,427 | [Ollama](https://github.com/ollama/ollama) ★ 181.4k |
 
 A project can be on several of these pages, because plenty serve Claude Code and opencode and Codex at once. A project on none of them only means no harness is named anywhere in its description.
 
@@ -73,36 +73,64 @@ A project can be on several of these pages, because plenty serve Claude Code and
 
 | Awesome list | ★ | Entries | Repos | What it covers | Page |
 |---|--:|--:|--:|---|---|
-| [andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) | — | 194 | 194 | The original list this workbook grew from: tools that run several coding agents at once. | [Orchestrators](lists/orchestrators.md) |
-| [kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agents) | 2,796 | 165 | 164 | Frameworks, dev tools and agent products, as curated by kyrolabs. | [Agents (kyrolabs)](lists/agents-kyrolabs.md) |
-| [e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) | 29,850 | 215 | 105 | e2b's catalogue of AI agents and the frameworks behind them. | [Agents (e2b)](lists/agents-e2b.md) |
-| [caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschiHG/awesome-ai-agents-2026) | 1,752 | 264 | 120 | A 2026 market survey — commercial products alongside open source. | [AI Agents 2026](lists/ai-agents-2026.md) |
-| [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) | 53,446 | 153 | 140 | Commands, hooks, status lines and tooling for Claude Code. | [Claude Code](lists/claude-code.md) |
-| [awesome-opencode/awesome-opencode](https://github.com/awesome-opencode/awesome-opencode) | 10,053 | 219 | 219 | Plugins, themes, agents and projects for the opencode terminal agent. | [Opencode](lists/opencode.md) |
-| [ai-boost/awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | 3,978 | 426 | 230 | How agent harnesses are built — primitives, papers and reference implementations. | [Harness Engineering](lists/harness-engineering.md) |
-| [nibzard/awesome-agentic-patterns](https://github.com/nibzard/awesome-agentic-patterns) | 4,938 | 193 | 1 | Named design patterns for agentic systems. Each row is a write-up, not a tool. | [Agentic Patterns](lists/agentic-patterns.md) |
-| [heilcheng/awesome-agent-skills](https://github.com/heilcheng/awesome-agent-skills) | 6,167 | 194 | 22 | Skill directories by vendor, plus community-published skills. | [Agent Skills](lists/agent-skills.md) |
-| [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills) | 45,915 | 255 | 252 | The upstream repos the Agentic Awesome Skills library aggregates. | [AAS Skill Sources](lists/aas-skill-sources.md) |
-| [shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awesome-llm-apps) | 135,881 | 116 | 3 | Runnable example apps. Each row is a folder inside the one repo. | [LLM App Templates](lists/llm-app-templates.md) |
+| [andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) | — | 226 | 226 | The original list this workbook grew from: tools that run several coding agents at once. | [Orchestrators](lists/orchestrators.md) |
+| [kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agents) | 2,826 | 170 | 169 | Frameworks, dev tools and agent products, as curated by kyrolabs. | [Agents (kyrolabs)](lists/agents-kyrolabs.md) |
+| [e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) | 30,107 | 215 | 105 | e2b's catalogue of AI agents and the frameworks behind them. | [Agents (e2b)](lists/agents-e2b.md) |
+| [caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschiHG/awesome-ai-agents-2026) | 1,892 | 264 | 120 | A 2026 market survey — commercial products alongside open source. | [AI Agents 2026](lists/ai-agents-2026.md) |
+| [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) | 54,391 | 202 | 189 | Commands, hooks, status lines and tooling for Claude Code. | [Claude Code](lists/claude-code.md) |
+| [awesome-opencode/awesome-opencode](https://github.com/awesome-opencode/awesome-opencode) | 10,324 | 219 | 219 | Plugins, themes, agents and projects for the opencode terminal agent. | [Opencode](lists/opencode.md) |
+| [ai-boost/awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | 4,440 | 442 | 241 | How agent harnesses are built — primitives, papers and reference implementations. | [Harness Engineering](lists/harness-engineering.md) |
+| [nibzard/awesome-agentic-patterns](https://github.com/nibzard/awesome-agentic-patterns) | 4,980 | 193 | 1 | Named design patterns for agentic systems. Each row is a write-up, not a tool. | [Agentic Patterns](lists/agentic-patterns.md) |
+| [heilcheng/awesome-agent-skills](https://github.com/heilcheng/awesome-agent-skills) | 6,222 | 194 | 22 | Skill directories by vendor, plus community-published skills. | [Agent Skills](lists/agent-skills.md) |
+| [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills) | 46,708 | 277 | 273 | The upstream repos the Agentic Awesome Skills library aggregates. | [AAS Skill Sources](lists/aas-skill-sources.md) |
+| [shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awesome-llm-apps) | 139,293 | 119 | 3 | Runnable example apps. Each row is a folder inside the one repo. | [LLM App Templates](lists/llm-app-templates.md) |
+| [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) | 95,389 | 4,242 | 4,216 | A collection of MCP servers. | [MCP Servers (punkpeye)](lists/mcp-servers-punkpeye.md) |
+| [jim-schwoebel/awesome_ai_agents](https://github.com/jim-schwoebel/awesome_ai_agents) | 1,986 | 1,013 | 887 | 🤖 A comprehensive list of 1,500+ resources and tools related to AI agents. | [AI Agents (Schwoebel)](lists/ai-agents-schwoebel.md) |
+| [github/awesome-copilot](https://github.com/github/awesome-copilot) | 39,235 | 959 | 1 | Community-contributed instructions, agents, skills, and configurations to help you make the most of GitHub Copilot. | [GitHub Copilot Customizations](lists/github-copilot-customizations.md) |
+| [rohitg00/awesome-claude-code-toolkit](https://github.com/rohitg00/awesome-claude-code-toolkit) | 2,632 | 699 | 328 | The most comprehensive toolkit for Claude Code -- 135 agents, 35 curated skills, 42 commands, 176+ plugins, 20 hooks, 15 rules, 7 templates, 14 MCP c… | [Claude Code Toolkit](lists/claude-code-toolkit.md) |
+| [jqueryscript/awesome-claude-code](https://github.com/jqueryscript/awesome-claude-code) | 518 | 683 | 659 | A curated list of awesome tools, IDE integrations, frameworks, and other resources for developers working with Anthropic's Claude Code. | [Claude Code (jqueryscript)](lists/claude-code-jqueryscript.md) |
+| [wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-servers) | 4,321 | 532 | 484 | A curated list of Model Context Protocol (MCP) servers | [MCP Servers (wong2)](lists/mcp-servers-wong2.md) |
+| [ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-for-developers/awesome-ai-coding-tools) | 2,095 | 509 | 221 | A curated list of AI-powered coding tools | [AI Coding Tools (a4d)](lists/ai-coding-tools-a4d.md) |
+| [tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome-LLMOps) | 5,943 | 383 | 339 | An awesome &amp; curated list of best LLMOps tools for developers | [LLMOps (tensorchord)](lists/llmops-tensorchord.md) |
+| [ccplugins/awesome-claude-code-plugins](https://github.com/ccplugins/awesome-claude-code-plugins) | 949 | 292 | 95 | Awesome Claude Code plugins — a curated list of slash commands, subagents, MCP servers, and hooks for Claude Code | [Claude Code Plugins](lists/claude-code-plugins.md) |
+| [Jenqyang/Awesome-AI-Agents](https://github.com/Jenqyang/Awesome-AI-Agents) | 1,242 | 279 | 264 | A collection of autonomous agents 🤖️ powered by LLM. | [AI Agents (Jenqyang)](lists/ai-agents-jenqyang.md) |
+| [jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/awesome-ai-devtools) | 3,947 | 278 | 87 | Curated list of AI-powered developer tools. | [AI Dev Tools (murdza)](lists/ai-dev-tools-murdza.md) |
+| [RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-codex-cli) | 527 | 272 | 214 | Curated list of 150+ tools, skills, subagents &amp; plugins for OpenAI Codex CLI | [Codex CLI Ecosystem](lists/codex-cli-ecosystem.md) |
+| [VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills) | 34,688 | 248 | 205 | A curated collection of 1000+ agent skills from official dev teams and the community, compatible with Claude Code, Codex, Gemini CLI, Cursor, and mor… | [Agent Skills (VoltAgent)](lists/agent-skills-voltagent.md) |
+| [InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps) | 262 | 233 | 231 | 🎉 An awesome &amp; curated list of best LLMOps tools. | [LLMOps (InftyAI)](lists/llmops-inftyai.md) |
+| [rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/awesome-devops-mcp-servers) | 1,023 | 225 | 215 | A curated list of awesome MCP servers focused on DevOps tools and capabilities. | [DevOps MCP Servers](lists/devops-mcp-servers.md) |
+| [promptslab/Awesome-Prompt-Engineering](https://github.com/promptslab/Awesome-Prompt-Engineering) | 6,337 | 221 | 180 | This repository contains a hand-curated resources for Prompt Engineering with a focus on Generative Pre-trained Transformer (GPT), ChatGPT, PaLM etc | [Prompt Engineering (promptslab)](lists/prompt-engineering-promptslab.md) |
+| [PatrickJS/awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules) | 40,810 | 216 | 1 | 📄 Configuration files that enhance Cursor AI editor experience with custom rules and behaviors | [Cursor Rules](lists/cursor-rules.md) |
+| [Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/awesome-gemini-cli) | 509 | 170 | 157 | A curated list of awesome tools, extensions, and resources for Gemini CLI. | [Gemini CLI Ecosystem](lists/gemini-cli-ecosystem.md) |
+| [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents) | 25,235 | 165 | 5 | A collection of 100+ specialized Claude Code subagents covering a wide range of development use cases | [Claude Code Subagents](lists/claude-code-subagents.md) |
+| [spencerpauly/awesome-cursor-skills](https://github.com/spencerpauly/awesome-cursor-skills) | 804 | 153 | 21 | A curated list of awesome skills for Cursor | [Cursor Skills](lists/cursor-skills.md) |
+| [Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-Systems/awesome-agentic-commerce) | 149 | 114 | 40 | Curated resources for the agentic commerce ecosystem | [Agentic Commerce (x402)](lists/agentic-commerce-x402.md) |
+| [kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/awesome-llm-agents) | 1,591 | 109 | 109 | A curated list of awesome LLM agents frameworks. | [LLM Agents (kaushikb11)](lists/llm-agents-kaushikb11.md) |
+| [filipecalegario/awesome-vibe-coding](https://github.com/filipecalegario/awesome-vibe-coding) | 5,270 | 100 | 48 | A curated list of vibe coding references, collaborating with AI to write code. | [Vibe Coding](lists/vibe-coding.md) |
+| [JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome-agent-skills) | 642 | 99 | 69 | 🤖 精选的 AI Agent Skills 列表，适用于 Cursor、Claude Code、GitHub Copilot 等 AI 编程工具 | [Agent Skills (JackyST0)](lists/agent-skills-jackyst0.md) |
+| [LLMSecurity/awesome-agent-skills-security](https://github.com/LLMSecurity/awesome-agent-skills-security) | 100 | 94 | 57 | 🛡️ A curated list of resources on agent skills security: attacks, defenses, frameworks, and benchmarks for securing AI agent tool use and skill ecosy… | [Agent Skill Security](lists/agent-skill-security.md) |
+| [machinae/awesome-claws](https://github.com/machinae/awesome-claws) | 503 | 36 | 36 | A curated list of awesome AI agents inspired by OpenClaw | [OpenClaw Assistants](lists/openclaw-assistants.md) |
+| [libukai/awesome-agent-skills](https://github.com/libukai/awesome-agent-skills) | 5,113 | 35 | 27 | Agent Skills 终极指南：快速入门、资源推荐、精选技能与实用工具 ｜The Ultimate Guide to Agent Skills: QuickStart, Resources, Features&amp;Toolkit | [Agent Skills (libukai)](lists/agent-skills-libukai.md) |
+| [ProjectRecon/awesome-ai-agents-security](https://github.com/ProjectRecon/awesome-ai-agents-security) | 71 | 25 | 23 | A living map of the AI agent security ecosystem. | [AI Agent Security Tooling](lists/ai-agent-security-tooling.md) |
 
-Lists overlap heavily — 124 projects are named by two or more of them. [**Leaderboard**](leaderboard.md) is the deduplicated view, ranked by stars, with the count of how many lists agree.
+Lists overlap heavily — 1167 projects are named by two or more of them. [**Leaderboard**](leaderboard.md) is the deduplicated view, ranked by stars, with the count of how many lists agree.
 
 ## Most-starred, across every list
 
 |   |   |   |
 |---|---|---|
-| <a href="https://github.com/openclaw/openclaw"><img src="https://opengraph.githubassets.com/1/openclaw/openclaw" width="260"></a> | <a href="https://github.com/obra/superpowers"><img src="https://opengraph.githubassets.com/1/obra/superpowers" width="260"></a> | <a href="https://github.com/affaan-m/ECC"><img src="https://raw.githubusercontent.com/affaan-m/ECC/main/docs/releases/2.1.0/assets/ecc-plan-canvas-demo.gif" width="260"></a> |
-| **[openclaw](https://github.com/openclaw/openclaw)**<br>★ 388.6k | **[Superpowers](https://github.com/obra/superpowers)**<br>★ 281.2k | **[everything-claude-code](https://github.com/affaan-m/ECC)**<br>★ 246.8k |
-| <a href="https://github.com/mattpocock/skills"><img src="https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skill-repo-light_2x.png" width="260"></a> | <a href="https://github.com/NousResearch/hermes-agent"><img src="https://opengraph.githubassets.com/1/NousResearch/hermes-agent" width="260"></a> | <a href="https://github.com/multica-ai/andrej-karpathy-skills"><img src="https://opengraph.githubassets.com/1/multica-ai/andrej-karpathy-skills" width="260"></a> |
-| **[mattpocock/skills](https://github.com/mattpocock/skills)**<br>★ 246.6k | **[hermes-agent](https://github.com/NousResearch/hermes-agent)**<br>★ 240k | **[andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)**<br>★ 209.8k |
+| <a href="https://github.com/openclaw/openclaw"><img src="https://opengraph.githubassets.com/1/openclaw/openclaw" width="260"></a> | <a href="https://github.com/obra/superpowers"><img src="https://opengraph.githubassets.com/1/obra/superpowers" width="260"></a> | <a href="https://github.com/mattpocock/skills"><img src="https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skill-repo-light_2x.png" width="260"></a> |
+| **[openclaw](https://github.com/openclaw/openclaw)**<br>★ 390.2k | **[Superpowers](https://github.com/obra/superpowers)**<br>★ 289.6k | **[mattpocock/skills](https://github.com/mattpocock/skills)**<br>★ 267k |
+| <a href="https://github.com/affaan-m/ECC"><img src="https://raw.githubusercontent.com/affaan-m/ECC/main/assets/hero.png" width="260"></a> | <a href="https://github.com/NousResearch/hermes-agent"><img src="https://opengraph.githubassets.com/1/NousResearch/hermes-agent" width="260"></a> | <a href="https://github.com/deepseek-ai/deepseek-harness"><img src="https://opengraph.githubassets.com/1/deepseek-ai/deepseek-harness" width="260"></a> |
+| **[Everything Claude Code (ECC)](https://github.com/affaan-m/ECC)**<br>★ 264.6k | **[hermes-agent](https://github.com/NousResearch/hermes-agent)**<br>★ 247.7k | **[DeepSeek Harness (dsh)](https://github.com/deepseek-ai/deepseek-harness)**<br>★ 232.2k |
 
 ## How to read this
 
 - **Stars, language, licence and last-push** come from the GitHub API at snapshot time. They drift daily; treat them as an order of magnitude, not a live count.
 - **Platform columns are derived evidence, not a vendor support matrix.** The strongest signal is a published release asset — a `.msi` or `windows-amd64.zip` proves native Windows, a lone `.dmg` disproves it. Then explicit README prose, then the install route, then the language runtime alone, which only ever earns a `?`.
 - **A `?` means inferred.** Every platform page carries the reasoning per row in its `Why` column, so a verdict you doubt can be checked rather than taken.
-- **618 entries are hosted products with no public repo** and 346 are items inside a larger repo (a template folder, a pattern write-up). Neither has stars or platform support of its own, so those show `—` rather than borrowing the parent's.
-- **24 listed repos now return an error from GitHub** — deleted, renamed, or made private. They are kept, marked, so nothing silently vanishes from a count.
+- **1,720 entries are hosted products with no public repo** and 2,571 are items inside a larger repo (a template folder, a pattern write-up). Neither has stars or platform support of its own, so those show `—` rather than borrowing the parent's.
+- **310 listed repos now return an error from GitHub** — deleted, renamed, or made private. They are kept, marked, so nothing silently vanishes from a count.
 - **Screenshots are the first usable image in the README**, falling back to the project's own social card and then to GitHub's. A GitHub card means no project image could be found, not that the project has no UI.
 - **Sections keep the wording each list published.** Nothing was renamed to make the lists agree, because a section name is part of the curation.
 
@@ -111,25 +139,53 @@ Lists overlap heavily — 124 projects are named by two or more of them. [**Lead
 - [Leaderboard](leaderboard.md) — top projects across every list, deduplicated
 - [Browse by topic](topics/README.md) — 14 topics, one page each
 - [Browse by harness](targets/README.md) — 12 harnesses, one page each
-- [The Atlas site](https://crazy54.github.io/awesome-agentic-atlas/) — all 1,294 in one page, both axes filterable
-- [Windows](platforms/windows.md) — 1,105 repos
-- [macOS](platforms/macos.md) — 1,092 repos
-- [Linux](platforms/linux.md) — 1,120 repos
-- [Docker](platforms/docker.md) — 210 repos
-- [Orchestrators](lists/orchestrators.md) — 194 entries from `andyrewlee/awesome-agent-orchestrators`
-- [Agents (kyrolabs)](lists/agents-kyrolabs.md) — 165 entries from `kyrolabs/awesome-agents`
+- [The Atlas site](https://crazy54.github.io/awesome-agentic-atlas/) — all 8,856 in one page, both axes filterable
+- [Windows](platforms/windows.md) — 7,673 repos
+- [macOS](platforms/macos.md) — 7,363 repos
+- [Linux](platforms/linux.md) — 7,706 repos
+- [Docker](platforms/docker.md) — 1,548 repos
+- [Orchestrators](lists/orchestrators.md) — 226 entries from `andyrewlee/awesome-agent-orchestrators`
+- [Agents (kyrolabs)](lists/agents-kyrolabs.md) — 170 entries from `kyrolabs/awesome-agents`
 - [Agents (e2b)](lists/agents-e2b.md) — 215 entries from `e2b-dev/awesome-ai-agents`
 - [AI Agents 2026](lists/ai-agents-2026.md) — 264 entries from `caramaschiHG/awesome-ai-agents-2026`
-- [Claude Code](lists/claude-code.md) — 153 entries from `hesreallyhim/awesome-claude-code`
+- [Claude Code](lists/claude-code.md) — 202 entries from `hesreallyhim/awesome-claude-code`
 - [Opencode](lists/opencode.md) — 219 entries from `awesome-opencode/awesome-opencode`
-- [Harness Engineering](lists/harness-engineering.md) — 426 entries from `ai-boost/awesome-harness-engineering`
+- [Harness Engineering](lists/harness-engineering.md) — 442 entries from `ai-boost/awesome-harness-engineering`
 - [Agentic Patterns](lists/agentic-patterns.md) — 193 entries from `nibzard/awesome-agentic-patterns`
 - [Agent Skills](lists/agent-skills.md) — 194 entries from `heilcheng/awesome-agent-skills`
-- [AAS Skill Sources](lists/aas-skill-sources.md) — 255 entries from `sickn33/agentic-awesome-skills`
-- [LLM App Templates](lists/llm-app-templates.md) — 116 entries from `shubhamsaboo/awesome-llm-apps`
+- [AAS Skill Sources](lists/aas-skill-sources.md) — 277 entries from `sickn33/agentic-awesome-skills`
+- [LLM App Templates](lists/llm-app-templates.md) — 119 entries from `shubhamsaboo/awesome-llm-apps`
+- [MCP Servers (punkpeye)](lists/mcp-servers-punkpeye.md) — 4,242 entries from `punkpeye/awesome-mcp-servers`
+- [AI Agents (Schwoebel)](lists/ai-agents-schwoebel.md) — 1,013 entries from `jim-schwoebel/awesome_ai_agents`
+- [GitHub Copilot Customizations](lists/github-copilot-customizations.md) — 959 entries from `github/awesome-copilot`
+- [Claude Code Toolkit](lists/claude-code-toolkit.md) — 699 entries from `rohitg00/awesome-claude-code-toolkit`
+- [Claude Code (jqueryscript)](lists/claude-code-jqueryscript.md) — 683 entries from `jqueryscript/awesome-claude-code`
+- [MCP Servers (wong2)](lists/mcp-servers-wong2.md) — 532 entries from `wong2/awesome-mcp-servers`
+- [AI Coding Tools (a4d)](lists/ai-coding-tools-a4d.md) — 509 entries from `ai-for-developers/awesome-ai-coding-tools`
+- [LLMOps (tensorchord)](lists/llmops-tensorchord.md) — 383 entries from `tensorchord/Awesome-LLMOps`
+- [Claude Code Plugins](lists/claude-code-plugins.md) — 292 entries from `ccplugins/awesome-claude-code-plugins`
+- [AI Agents (Jenqyang)](lists/ai-agents-jenqyang.md) — 279 entries from `Jenqyang/Awesome-AI-Agents`
+- [AI Dev Tools (murdza)](lists/ai-dev-tools-murdza.md) — 278 entries from `jamesmurdza/awesome-ai-devtools`
+- [Codex CLI Ecosystem](lists/codex-cli-ecosystem.md) — 272 entries from `RoggeOhta/awesome-codex-cli`
+- [Agent Skills (VoltAgent)](lists/agent-skills-voltagent.md) — 248 entries from `VoltAgent/awesome-agent-skills`
+- [LLMOps (InftyAI)](lists/llmops-inftyai.md) — 233 entries from `InftyAI/Awesome-LLMOps`
+- [DevOps MCP Servers](lists/devops-mcp-servers.md) — 225 entries from `rohitg00/awesome-devops-mcp-servers`
+- [Prompt Engineering (promptslab)](lists/prompt-engineering-promptslab.md) — 221 entries from `promptslab/Awesome-Prompt-Engineering`
+- [Cursor Rules](lists/cursor-rules.md) — 216 entries from `PatrickJS/awesome-cursorrules`
+- [Gemini CLI Ecosystem](lists/gemini-cli-ecosystem.md) — 170 entries from `Piebald-AI/awesome-gemini-cli`
+- [Claude Code Subagents](lists/claude-code-subagents.md) — 165 entries from `VoltAgent/awesome-claude-code-subagents`
+- [Cursor Skills](lists/cursor-skills.md) — 153 entries from `spencerpauly/awesome-cursor-skills`
+- [Agentic Commerce (x402)](lists/agentic-commerce-x402.md) — 114 entries from `Merit-Systems/awesome-agentic-commerce`
+- [LLM Agents (kaushikb11)](lists/llm-agents-kaushikb11.md) — 109 entries from `kaushikb11/awesome-llm-agents`
+- [Vibe Coding](lists/vibe-coding.md) — 100 entries from `filipecalegario/awesome-vibe-coding`
+- [Agent Skills (JackyST0)](lists/agent-skills-jackyst0.md) — 99 entries from `JackyST0/awesome-agent-skills`
+- [Agent Skill Security](lists/agent-skill-security.md) — 94 entries from `LLMSecurity/awesome-agent-skills-security`
+- [OpenClaw Assistants](lists/openclaw-assistants.md) — 36 entries from `machinae/awesome-claws`
+- [Agent Skills (libukai)](lists/agent-skills-libukai.md) — 35 entries from `libukai/awesome-agent-skills`
+- [AI Agent Security Tooling](lists/ai-agent-security-tooling.md) — 25 entries from `ProjectRecon/awesome-ai-agents-security`
 
 ---
 
-Snapshot 2026-09-03. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).
