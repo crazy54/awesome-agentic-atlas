@@ -4,7 +4,7 @@
 
 The atlas has 1,294 projects in it, which is the wrong number to start from. This is one working setup instead: an agent, the things it loads, the place it runs, and the two tools that tell you afterwards whether it did what you asked. Every slot is filled once. Swap any of them later -- the point of the set is that you can start today and still know what each piece is for.
 
-7 picks · 839,039 combined stars · snapshot 2026-09-21
+7 picks · 839,804 combined stars · snapshot 2026-09-22
 
 [Open all 7 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=anomalyco/opencode,obra/superpowers,mem0ai/mem0,modelcontextprotocol/servers,daytonaio/daytona,langfuse/langfuse,shareAI-lab/learn-claude-code) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -22,7 +22,7 @@ Terminal-native, MIT, and the one coding agent here that three separate source l
 scoop install opencode # Windows
 ```
 
-**209,094** stars · 4 of 39 lists · TypeScript · MIT · pushed 2026-09-21
+**209,306** stars · 4 of 39 lists · TypeScript · MIT · pushed 2026-09-22
 
 Platforms: Win N WSL N mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -42,7 +42,7 @@ The most-starred skills bundle in the atlas and, unusually, one that spans seven
 git clone https://github.com/obra/superpowers.git
 ```
 
-**289,634** stars · 7 of 39 lists · Shell · MIT · pushed 2026-09-20
+**290,022** stars · 7 of 39 lists · Shell · MIT · pushed 2026-09-20
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -62,7 +62,7 @@ A memory layer you drop in rather than a database you design. Apache-2.0, and it
 npm install -g @mem0/cli # or: pip install mem0-cli
 ```
 
-**65,779** stars · 8 of 39 lists · Python · Apache-2.0 · pushed 2026-09-21
+**65,833** stars · 8 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22
 
 Platforms: Win Y WSL L mac Y Lin Y Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -82,7 +82,7 @@ The reference MCP servers, from the people who wrote the protocol. Start here an
 npx -y @modelcontextprotocol/server-memory
 ```
 
-**90,529** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-03
+**90,545** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-03
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -102,7 +102,7 @@ Container sandboxes that start in under a tenth of a second, which is the differ
 pip install daytona
 ```
 
-**71,741** stars · 2 of 39 lists · language not detected · no licence stated · pushed 2026-07-24
+**71,740** stars · 2 of 39 lists · language not detected · no licence stated · pushed 2026-07-24
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -122,7 +122,7 @@ Self-hostable tracing, so the record of what the agent sent and got back stays o
 pip install langfuse openai
 ```
 
-**34,900** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-21
+**34,928** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -142,7 +142,7 @@ A read-through of how a real coding agent is built rather than a tutorial for us
 npm i -g @shareai-lab/kode
 ```
 
-**77,362** stars · 3 of 39 lists · Python · MIT · pushed 2026-08-26
+**77,430** stars · 3 of 39 lists · Python · MIT · pushed 2026-08-26
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

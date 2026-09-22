@@ -19,11 +19,24 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The two literals track --plane in the two blocks at the top of detail.css. Once detail.js has run it
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // The eight literals track --plane in the eight blocks at the top of detail.css. Once detail.js has run
+  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+  //
+  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
+  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
+  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
+  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
+  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"}};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s]) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -116,7 +129,7 @@ try {
 
 <section>
   <h2>Platform support</h2>
-  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr></tbody></table>
+  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr></tbody></table>
 </section>
 
 <section>

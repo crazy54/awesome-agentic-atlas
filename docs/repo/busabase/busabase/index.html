@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Busabase (busabase/busabase) — Context, Memory &amp; RAG — Awesome Agentic Atlas</title>
+<title>Busabase (busabase/busabase) — Frameworks &amp; SDKs — Awesome Agentic Atlas</title>
 <meta name="description" content="Local-first database and workspace for AI agents that keeps structured data, durable knowledge, documents, files, skills, and apps in one searchable place…">
 <link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/repo/busabase/busabase/">
 <meta property="og:type" content="website">
@@ -19,21 +19,34 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The two literals track --plane in the two blocks at the top of detail.css. Once detail.js has run it
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // The eight literals track --plane in the eight blocks at the top of detail.css. Once detail.js has run
+  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+  //
+  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
+  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
+  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
+  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
+  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"}};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s]) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://crazy54.github.io/awesome-agentic-atlas/"},{"@type":"ListItem","position":2,"name":"Context, Memory & RAG","item":"https://crazy54.github.io/awesome-agentic-atlas/topic/context-memory-rag/"},{"@type":"ListItem","position":3,"name":"Busabase","item":"https://crazy54.github.io/awesome-agentic-atlas/repo/busabase/busabase/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://crazy54.github.io/awesome-agentic-atlas/"},{"@type":"ListItem","position":2,"name":"Frameworks & SDKs","item":"https://crazy54.github.io/awesome-agentic-atlas/topic/frameworks-sdks/"},{"@type":"ListItem","position":3,"name":"Busabase","item":"https://crazy54.github.io/awesome-agentic-atlas/repo/busabase/busabase/"}]}</script>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
 <header><div class="wrap">
   <nav class="crumb"><a class="brand" href="../../../"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="#D6A034" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="#F7F8FA" stroke="#D6A034" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="#D6A034"/><path d="M12 31h40M32 11v40" fill="none" stroke="#20242D" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="#090A0D"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="#F7F8FA"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="#090A0D" stroke-width="2.5" stroke-linecap="round"/></g></svg></span><span>Atlas</span></a> ›
-    <a href="../../../topic/context-memory-rag/">Context, Memory &amp; RAG</a> ›
+    <a href="../../../topic/frameworks-sdks/">Frameworks &amp; SDKs</a> ›
     <a href="../../../repo/">All projects</a></nav>
   <div class="top">
     <div>
@@ -121,7 +134,7 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/kyrolabs/awesome-agents">Agents (kyrolabs)</a></li></ul>
+  <p class="lead">Named by <b>2</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li>AI Agents (Jenqyang)</li><li><a href="https://github.com/kyrolabs/awesome-agents">Agents (kyrolabs)</a></li></ul>
 </section>
 
 <section>
@@ -129,14 +142,14 @@ try {
   <p class="lead">One topic, 4
     harnesses. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/context-memory-rag/">Context, Memory &amp; RAG</a><a class="chip" href="../../../topic/context-memory-rag/target/claude-code/">Claude Code</a><a class="chip" href="../../../topic/context-memory-rag/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/context-memory-rag/target/mcp/">MCP</a><a class="chip" href="../../../topic/context-memory-rag/target/codex-openai/">Codex / OpenAI</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/frameworks-sdks/">Frameworks &amp; SDKs</a><a class="chip" href="../../../topic/frameworks-sdks/target/claude-code/">Claude Code</a><a class="chip" href="../../../topic/frameworks-sdks/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/frameworks-sdks/target/mcp/">MCP</a><a class="chip" href="../../../topic/frameworks-sdks/target/codex-openai/">Codex / OpenAI</a></div>
 </section>
 
 <section class="kin">
-  <h2>Related in Context, Memory &amp; RAG</h2>
+  <h2>Related in Frameworks &amp; SDKs</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../rohitg00/agentmemory/">agentmemory</a><span class="nwo">rohitg00/agentmemory</span><span class="desc">Persistent memory layer purpose-built for coding agents with 95.2% retrieval accuracy and 92% token reduction, backed by real-world benchmarks. Its…</span></li><li><a href="../../serpro69/capy/">capy</a><span class="nwo">serpro69/capy</span><span class="desc">by serpro69 - 🦫 Privacy-first virtualization layer for LLM context with MCP protocol for tool access</span></li><li><a href="../../kaelio/ktx/">ktx</a><span class="nwo">Kaelio/ktx</span><span class="desc">Self-improving executable context layer for data and analytics agents: it ingests warehouses, BI tools, and wikis to build a semantic layer with…</span></li><li><a href="../../jungjaehoon-lifegamez/mama/">MAMA</a><span class="nwo">jungjaehoon-lifegamez/MAMA</span><span class="desc">by jungjaehoon-lifegamez - Always-on companion for Claude that remembers your decisions and their evolution. Local-first memory using SQLite +…</span></li><li><a href="../../henu-wang/tokrepo/">TokRepo</a><span class="nwo">henu-wang/tokrepo</span><span class="desc">Cross-agent registry and CLI for discovering and installing 220+ AI assets including skills, prompts, MCP configs, and workflows</span></li><li><a href="../../vectorize-io/hindsight/">Hindsight</a><span class="nwo">vectorize-io/hindsight</span><span class="desc">Agent memory system organized around three explicit operations—retain, recall, and reflect—with semantic, keyword, graph, and temporal retrieval…</span></li><li><a href="../../wolfe-jam/faf-cli/">faf-cli</a><span class="nwo">Wolfe-Jam/faf-cli</span><span class="desc">by Wolfe-Jam - Authors and versions CLAUDE.md and AGENTS.md from a repository&#x27;s actual detected stack, so Claude Code&#x27;s project context stays in…</span></li><li><a href="../../mzmmoazam/claude-overlay/">claude-overlay</a><span class="nwo">mzmmoazam/claude-overlay</span><span class="desc">CLI for managing Claude Code project configs across custom providers (Databricks, Bedrock, OpenRouter, LiteLLM, Cloudflare). Overlay merge/remove…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../aeonfun/aeon/">aeon</a><span class="nwo">aeonfun/aeon</span><span class="desc">Autonomous agent framework that runs unattended on GitHub Actions, triggered by cron schedules or repository events. Dispatches skills to six…</span></li><li><a href="../../fmarzochi/egc/">EGC</a><span class="nwo">Fmarzochi/EGC</span><span class="desc">Persistent cross-session memory MCP server for 13+ AI coding tools. SQLite-backed state survives context resets and keeps Claude Code, Cursor…</span></li><li><a href="../../razzant/claudexor/">Claudexor</a><span class="nwo">razzant/claudexor</span><span class="desc">Routes one coding thread across harnesses with quota-aware rotation between subscription profiles, Best-of-N runs, and cross-family review.</span></li><li><a href="../../naw103/foremerge/">foremerge</a><span class="nwo">naw103/foremerge</span><span class="desc">Coordination protocol above Git: agents declare intent, semantic scope, and operation before writing code, deterministic rules raise findings when…</span></li><li><a href="../../lobu-ai/lobu/">Lobu</a><span class="nwo">lobu-ai/lobu</span><span class="desc">Open-source context and control plane for AI agents. Connect company tools once and share permission-aware context across ChatGPT, Claude, Codex…</span></li><li><a href="../../juspay/neurolink/">NeuroLink</a><span class="nwo">juspay/neurolink</span><span class="desc">Multi-provider AI agent framework that unifies 12+ LLM providers (OpenAI, Google, Anthropic, AWS, Azure, Groq, etc.) with workflow orchestration…</span></li><li><a href="../../strands-agents/harness-sdk/">Strands Agents SDK</a><span class="nwo">strands-agents/harness-sdk</span><span class="desc">AWS&#x27;s open-source, model-driven agent SDK that treats the loop, tool binding, and guardrails as first-class primitives. Supports Bedrock, Anthropic…</span></li><li><a href="../../upsonic/upsonic/">Upsonic</a><span class="nwo">Upsonic/Upsonic</span><span class="desc">GPT Computer Assistant is an unofficial app that brings ChatGPT functionality to Windows and Linux, allowing for screen reading, microphone use…</span></li></ul>
 </section>
 </div></main>
 

@@ -4,7 +4,7 @@
 
 An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put in front of a customer. Traces first, then tests, then the thing people leave until after the incident.
 
-6 picks · 115,581 combined stars · snapshot 2026-09-21
+6 picks · 115,753 combined stars · snapshot 2026-09-22
 
 [Open all 6 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -22,7 +22,7 @@ Self-hostable, which matters here more than anywhere: the traces contain your pr
 pip install langfuse openai
 ```
 
-**34,900** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-21
+**34,928** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -42,7 +42,7 @@ Three source lists carry it -- the strongest agreement in this category -- and i
 npx @arizeai/phoenix-cli setup
 ```
 
-**11,564** stars · 7 of 39 lists · Python · no licence stated · pushed 2026-09-21
+**11,574** stars · 7 of 39 lists · Python · no licence stated · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -62,7 +62,7 @@ Tests as YAML, with assertions and LLM-as-judge. It is the lowest-ceremony way t
 npm install -g promptfoo
 ```
 
-**25,336** stars · 5 of 39 lists · TypeScript · MIT · pushed 2026-09-21
+**25,369** stars · 5 of 39 lists · TypeScript · MIT · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -82,7 +82,7 @@ Twenty-plus built-in metrics for LLM and agent evaluation. Use it when you have 
 pip install -U deepeval
 ```
 
-**18,370** stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-09-21
+**18,388** stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -102,7 +102,7 @@ OpenTelemetry instrumentation for LLM calls and agent steps. The one pick here t
 pip install traceloop-sdk
 ```
 
-**7,441** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-17
+**7,443** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-17
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -122,7 +122,7 @@ Scans agent skills for vulnerabilities. Every other page on this site encourages
 uv tool install git+https://github.com/NVIDIA/skillspector.git
 ```
 
-**17,970** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-21
+**18,051** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

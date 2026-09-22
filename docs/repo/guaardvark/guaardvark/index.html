@@ -10,7 +10,7 @@
 <meta property="og:title" content="guaardvark/guaardvark — Awesome Agentic Atlas">
 <meta property="og:description" content="Self-hosted AI studio exposing its local image, video, music-video and Film Crew generation, upscaling, RAG and code intelligence as MCP tools (default-deny…">
 <meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/repo/guaardvark/guaardvark/">
-<meta property="og:image" content="https://raw.githubusercontent.com/guaardvark/guaardvark/main/docs/media/guaardvark-banner-light.png">
+<meta property="og:image" content="https://opengraph.githubassets.com/1/guaardvark/guaardvark">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <meta name="theme-color" id="tc" content="#101217">
 <script>
@@ -19,11 +19,24 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The two literals track --plane in the two blocks at the top of detail.css. Once detail.js has run it
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // The eight literals track --plane in the eight blocks at the top of detail.css. Once detail.js has run
+  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+  //
+  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
+  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
+  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
+  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
+  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"}};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s]) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -107,9 +120,9 @@ try {
 <section>
   <h2>Screenshot</h2>
   <figure class="shot">
-    <img loading="lazy" decoding="async" src="https://raw.githubusercontent.com/guaardvark/guaardvark/main/docs/media/guaardvark-banner-light.png"
+    <img loading="lazy" decoding="async" src="https://opengraph.githubassets.com/1/guaardvark/guaardvark"
          alt="Screenshot or social card for guaardvark/guaardvark">
-    <figcaption>The project's own screenshot, fetched from
+    <figcaption>GitHub's social card — no screenshot was found for this project, fetched from
       source rather than copied into this repository.</figcaption>
   </figure>
 </section>

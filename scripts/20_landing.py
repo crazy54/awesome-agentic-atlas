@@ -160,6 +160,15 @@ CSS = """/* Written by scripts/20_landing.py. Shared by every page under docs/to
   --good:#5BD5AA; --warn:#EF7D86; --off:#9BA5B3; --onbar:#090A0D;
   --accent-sky:#78B7F4; --accent-mint:#5BD5AA; --accent-gold:#E7B64D;
   --accent-coral:#EF7D86; --accent-violet:#A99AF7;
+  /* THE STRUCTURAL HALF OF A THEME. Not colours, so not contrast-bearing, and not declared per mode
+     either -- a typeface and a blur radius do not change when the lights go out. Graphite's values are
+     the page exactly as it shipped: the same font stack that was here in `body`, no wash, an opaque
+     panel and no backdrop filter. A reader who never opens Settings cannot tell this block exists.
+     --bdf is `none` rather than `blur(0px)` on purpose: a non-none backdrop-filter makes the element a
+     containing block and a stacking context, which would quietly re-parent the mascot's speech bubble
+     and re-rank the pinned bar for every reader, including the ones who chose nothing. */
+  --ui:"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:none; --panel:var(--plane); --bdf:none;
 }
 html[data-theme=light]{
   --surface:#F2F4F7; --plane:#FAFBFC; --band:#E7EAF0; --ink:#14171C; --ink2:#353C47;
@@ -168,12 +177,108 @@ html[data-theme=light]{
   --accent-sky:#1D5E9E; --accent-mint:#187557; --accent-gold:#9A6718;
   --accent-coral:#B6465E; --accent-violet:#6557C8;
 }
+/* THE THREE OPT-IN THEMES, six blocks, and the pattern is the same for each: `html[data-skin=X]` carries
+   the dark values and the structural tokens, `html[data-skin=X][data-theme=light]` carries the light
+   ones. Both selectors are one attribute stronger than nothing and the pair is stronger than the light
+   block above, so the cascade resolves skin-then-mode without a single `!important`.
+
+   The light block restates all thirteen colours and nothing else. It does not restate --ui or --bdf
+   because those are the same in both modes and the skin block above already applies at both, and it
+   does restate --panel and --wash because the alpha that reads as frosted over near-black is a smear
+   over near-white.
+
+   --panel IS translucent, and it is the one token that can be without giving up the measurement. Every
+   panel on this page sits on --surface and is filled from --plane, and the rgba below is --plane's own
+   channels: so whatever the compositor produces lies between two backdrops that ARE in the checked set,
+   and every text token clears 4.5:1 on both ends of that range. `theme_test.py` asserts the channels
+   match --plane rather than trusting this paragraph, because a hand-typed rgba is exactly the kind of
+   copy that drifts one digit and stops being a blend of anything. */
+html[data-skin=glass]{
+  --surface:#070912; --plane:#12141D; --band:#1C1E26; --ink:#F4F7FF; --ink2:#CBD5E8;
+  --muted:#95A2BE; --grid:#3D4152; --link:#7CC4FF; --bar:#6FE3C4;
+  --good:#86E0A0; --warn:#FF9BA8; --off:#95A2BE; --onbar:#04121A;
+  --accent-sky:#7CC4FF; --accent-mint:#6FE3C4; --accent-gold:#F3C46A;
+  --accent-coral:#FF9BA8; --accent-violet:#B3A6FF;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:radial-gradient(1100px 520px at 12% -12%,rgba(80,140,255,.22),transparent 70%),
+         radial-gradient(900px 480px at 88% 0%,rgba(110,227,196,.14),transparent 72%);
+  --panel:rgba(18,20,29,.72); --bdf:blur(14px) saturate(1.25);
+}
+html[data-skin=glass][data-theme=light]{
+  --surface:#EEF2FA; --plane:#F8FAFF; --band:#E2E8F5; --ink:#111726; --ink2:#323B4F;
+  --muted:#56627A; --grid:#C3CCDE; --link:#0F5FA6; --bar:#0B6E7A;
+  --good:#136B4E; --warn:#8A4A2B; --off:#56627A; --onbar:#FFFFFF;
+  --accent-sky:#0F5FA6; --accent-mint:#0B6E7A; --accent-gold:#8A5A00;
+  --accent-coral:#A63F52; --accent-violet:#4B44B8;
+  --wash:radial-gradient(1100px 520px at 12% -12%,rgba(60,120,255,.14),transparent 70%),
+         radial-gradient(900px 480px at 88% 0%,rgba(0,150,130,.10),transparent 72%);
+  --panel:rgba(248,250,255,.74);
+}
+/* Terminal is the one theme that changes the typeface, and that is the whole of it: a monospace stack,
+   phosphor greens for the foreground and amber for the action. Amber rather than a brighter green
+   because --bar is drawn as text as well as as a fill, and a green action beside the green --good is two
+   meanings in one hue -- the mark of a verdict and the colour of a button should not be the same thing. */
+html[data-skin=terminal]{
+  --surface:#050B0D; --plane:#0A1315; --band:#132220; --ink:#D8F5E6; --ink2:#A8D8C4;
+  --muted:#84AC99; --grid:#2D4741; --link:#6FD0FF; --bar:#FFB627;
+  --good:#3FE08C; --warn:#FF8B7A; --off:#84AC99; --onbar:#05100B;
+  --accent-sky:#6FD0FF; --accent-mint:#3FE08C; --accent-gold:#FFB627;
+  --accent-coral:#FF8B7A; --accent-violet:#C2A6FF;
+  --ui:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --wash:radial-gradient(1200px 620px at 50% -20%,rgba(63,224,140,.12),transparent 70%);
+  --panel:rgba(10,19,21,.86); --bdf:blur(3px);
+}
+html[data-skin=terminal][data-theme=light]{
+  --surface:#EEF4EF; --plane:#F9FCF9; --band:#E0EBE3; --ink:#0D1A14; --ink2:#2B3E34;
+  --muted:#4F6659; --grid:#BFCFC4; --link:#0C5F8F; --bar:#7A5300;
+  --good:#166B45; --warn:#9A3D22; --off:#4F6659; --onbar:#FFFFFF;
+  --accent-sky:#0C5F8F; --accent-mint:#166B45; --accent-gold:#7A5300;
+  --accent-coral:#9A3D22; --accent-violet:#5A3FA8;
+  --wash:radial-gradient(1200px 620px at 50% -20%,rgba(20,140,90,.10),transparent 70%);
+  --panel:rgba(249,252,249,.86);
+}
+/* Prism is the maximal one: five washes at five positions so the page is never one colour, magenta for
+   the action, and the deepest blur of the four. It is also where the constraint above shows its teeth --
+   the hues are all in the accents and the wash, and the thirteen tokens underneath them are as plain and
+   as measured as graphite's. Colour on this page is allowed to be loud in the background and never in
+   the contract between ink and its backdrop. */
+html[data-skin=prism]{
+  --surface:#0B0718; --plane:#17112C; --band:#241A3F; --ink:#FBF7FF; --ink2:#DCD2F0;
+  --muted:#ADA0C8; --grid:#4A3A70; --link:#8FD0FF; --bar:#FF9BD2;
+  --good:#63E6B8; --warn:#FFB36B; --off:#ADA0C8; --onbar:#14061B;
+  --accent-sky:#8FD0FF; --accent-mint:#63E6B8; --accent-gold:#FFD166;
+  --accent-coral:#FF9BD2; --accent-violet:#C0A8FF;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:radial-gradient(760px 430px at 6% -8%,rgba(255,155,210,.26),transparent 68%),
+         radial-gradient(680px 400px at 96% 2%,rgba(143,208,255,.22),transparent 68%),
+         radial-gradient(900px 520px at 50% 108%,rgba(99,230,184,.18),transparent 70%),
+         radial-gradient(520px 320px at 78% 54%,rgba(255,209,102,.15),transparent 70%),
+         radial-gradient(560px 340px at 18% 62%,rgba(192,168,255,.20),transparent 70%);
+  --panel:rgba(23,17,44,.70); --bdf:blur(18px) saturate(1.4);
+}
+html[data-skin=prism][data-theme=light]{
+  --surface:#F3EFFC; --plane:#FDFBFF; --band:#E8E0F8; --ink:#170B26; --ink2:#3A2B52;
+  --muted:#5E4F7A; --grid:#C7B9E4; --link:#1A4FB0; --bar:#9A2C7E;
+  --good:#0F6B52; --warn:#8A4410; --off:#5E4F7A; --onbar:#FFFFFF;
+  --accent-sky:#1A4FB0; --accent-mint:#0F6B52; --accent-gold:#8A4410;
+  --accent-coral:#9A2C7E; --accent-violet:#6A3FB8;
+  --wash:radial-gradient(760px 430px at 6% -8%,rgba(214,60,150,.16),transparent 68%),
+         radial-gradient(680px 400px at 96% 2%,rgba(40,120,220,.14),transparent 68%),
+         radial-gradient(900px 520px at 50% 108%,rgba(0,170,120,.12),transparent 70%),
+         radial-gradient(520px 320px at 78% 54%,rgba(230,160,20,.10),transparent 70%),
+         radial-gradient(560px 340px at 18% 62%,rgba(130,90,230,.13),transparent 70%);
+  --panel:rgba(253,251,255,.72);
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--surface);color:var(--ink);
-  font:15px/1.5 "Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif}
+/* --ui and --wash are the structural tokens declared in the block above; graphite resolves them to this
+   file's own font stack and to `none`, so a reader who has chosen no theme gets what was written here
+   before. See the note beside them in `19_pages.py` for why they are tokens at all. */
+body{margin:0;background:var(--surface);background-image:var(--wash);
+  background-attachment:fixed;color:var(--ink);font:15px/1.5 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
-header{background:var(--plane);border-bottom:1px solid var(--grid);padding:22px 20px 16px}
+header{background:var(--panel);backdrop-filter:var(--bdf);border-bottom:1px solid var(--grid);
+  padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 6px;font-size:26px;letter-spacing:-.02em}
 h2{margin:34px 0 8px;font-size:16px;letter-spacing:-.01em}
@@ -476,11 +581,24 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The two literals track --plane in the two blocks at the top of pages.css. After paint `label()`
+  // The eight literals track --plane in the eight blocks at the top of pages.css. After paint `label()`
   // re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+  //
+  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
+  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
+  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a topic page
+  // would otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to
+  // graphite for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"}};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s]) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
 </script>
 """
