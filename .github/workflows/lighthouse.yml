@@ -231,6 +231,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Both pages exist, asserted before anything is installed, because a missing one is the single most
+      # likely way this job fails and by far its worst diagnostic. `staticDistDir` serves `docs/` and a URL
+      # with no file behind it gets a 404 -- which Lighthouse does not report as a 404. It runs the whole
+      # audit against the error document, every insight logs `Caught exception: ERRORED_DOCUMENT_REQUEST`,
+      # and the last line is "Lighthouse was unable to reliably load the page you requested", which reads
+      # like a flaky runner. Several hundred log lines to say a file is not there.
+      #
+      # It is not hypothetical: a pull request that changes what the build writes is in exactly this state
+      # until a build has landed on the branch, and that is where anyone reading a red budget check starts.
+      # Two seconds here turns it into one line naming the path and the stage.
+      - name: Both pages the budget is about are in the tree
+        run: |
+          missing=0
+          for pair in "docs/index.html:scripts/31_home.py" "docs/catalog/index.html:scripts/19_pages.py"; do
+            file="${pair%%:*}"; stage="${pair##*:}"
+            if [ ! -f "$file" ]; then
+              echo "::error title=No page to measure::${file} is not in this tree, so the URL below it would 404 and the audit would run against the error document. This job measures the committed site, so either ${stage} has not run on this branch yet -- which is the ordinary state of a pull request that moves or adds a page, and lands with the build -- or the page has been renamed and this file's url list still names the old path."
+              missing=1
+            fi
+          done
+          if [ "$missing" = 0 ]; then echo "docs/index.html and docs/catalog/index.html are both here"; fi
+          exit "$missing"
+
       - uses: actions/setup-node@v4
         with:
           node-version: "22"

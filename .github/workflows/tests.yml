@@ -205,7 +205,12 @@ jobs:
           case "$status" in
             0) echo "the suite is green" ;;
             1) echo "::error::The suite is red. Either an assertion failed or a harness went quiet -- printed no tally, asserted nothing, or made fewer assertions than the floor in run.mjs's HARNESSES table. The per-harness summary above says which, and a quiet harness is reported in the total block with the reason in brackets." ;;
-            2) echo "::error::The suite refused to run: run.mjs exits 2 when it cannot find Chromium or Python 3, before any harness starts. It printed the env vars, cache directories and PATH it searched. Nothing about the code under test failed here -- this workflow's assumption that ubuntu-latest carries Google Chrome on PATH, or that setup-python put an interpreter there, has stopped holding. See the browser note in this file's header." ;;
+            # Three causes, and the line run.mjs printed says which. Two are about this workflow's machine:
+            # no Chromium, or no Python 3. The third is about the tree, and it is the one a reader on a pull
+            # request will hit -- the suite asserts on the *committed* site, so a branch that changes what the
+            # build writes is red here until a build has landed on it. Naming only the machine causes sent
+            # readers to a browser note on a run whose actual complaint was a missing `docs/catalog/index.html`.
+            2) echo "::error::The suite refused to run, before any harness started. run.mjs exits 2 for three reasons and its own output above says which: an entry point is missing from the committed docs/ (a branch that moves or adds a page is red here until its build has landed -- that is not a code failure and merging the build fixes it), or it could not find Chromium, or it could not find Python 3. For the latter two it printed the env vars, cache directories and PATH it searched, and the assumption that has stopped holding is that ubuntu-latest carries Google Chrome on PATH or that setup-python put an interpreter there. See the browser note in this file's header." ;;
             *) echo "::error::run.mjs exited ${status}, which it has no documented meaning for. Read its output above." ;;
           esac
           exit "$status"

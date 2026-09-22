@@ -727,7 +727,7 @@ jobs:
           case "$status" in
             0) echo "the suite is green against the tree this run is about to publish" ;;
             1) echo "::error title=The suite is red on today's build::An assertion failed, or a harness went quiet -- printed no tally, asserted nothing, or made fewer assertions than its floor in run.mjs's HARNESSES table. The per-harness summary above says which. This is a statement about the pages this run generated, not about the runner." ;;
-            2) echo "::error title=The suite could not run::run.mjs exits 2 when it cannot find Chromium or Python 3, before any harness starts, and prints the env vars, cache directories and PATH it searched. Nothing about today's build failed here -- the runner image or the setup steps above have stopped providing something the suite needs." ;;
+            2) echo "::error title=The suite could not run::run.mjs exits 2 for three reasons, before any harness starts, and its output above says which. Two are about the machine -- no Chromium, or no Python 3 -- and for those it prints the env vars, cache directories and PATH it searched: the runner image or the setup steps above have stopped providing something the suite needs, and nothing about today's build failed. The third is about the build: one of the two entry points it asserts on is not in docs/, which here means a generator that writes one of them is no longer in the list of stages this job runs." ;;
             *) echo "::error::run.mjs exited ${status}, which it has no documented meaning for. Read its output above." ;;
           esac
           exit 0
