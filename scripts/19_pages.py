@@ -338,7 +338,7 @@ def verification(token: str | None = None) -> str:
 
     Only the root page carries it, and the root page is the homepage -- it used to be this file's output and
     stopped being when the catalogue moved to `catalog/`. Verification is per *property*, and the property
-    here is the URL prefix `https://crazy54.github.io/awesome-agentic-atlas/`: Google fetches that one URL
+    here is the URL prefix `17_markdown.SITE` (the custom domain in `docs/CNAME`): Google fetches that URL
     and looks for the tag in what it gets back. A tag on any other page verifies nothing, which is a failure
     with no symptom -- the build stays green, the token stays valid, and Search Console just says the
     property is unverified. Emitting it on the other 1,450 pages would verify nothing extra either, and

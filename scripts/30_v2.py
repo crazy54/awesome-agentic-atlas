@@ -4600,7 +4600,11 @@ def main() -> None:
     # root -- which is what GitHub Pages does and what a repository-rooted `http.server` does not.
     print("\nserve:  python -m http.server 8766 --directory docs")
     print("open:   http://127.0.0.1:8766/v2/app.html")
-    print("live:   https://awesomeagents.dev/v2/app.html")
+    # The host Pages serves, read from the file that sets it. This used to name a domain that never
+    # resolved, and nothing checks a URL a stage only prints.
+    cname = ROOT / "docs" / "CNAME"
+    if cname.exists():
+        print(f"live:   https://{cname.read_text(encoding='utf-8').strip()}/v2/app.html")
 
 
 if __name__ == "__main__":

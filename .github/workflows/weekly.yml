@@ -481,7 +481,7 @@ jobs:
           - \`Awesome-Agentic-Atlas-DARK.xlsx\`
           - \`Awesome-Agentic-Atlas-LIGHT.xlsx\`
 
-          Also published: the [site](https://crazy54.github.io/awesome-agentic-atlas/) and the Markdown
+          Also published: the [site](https://aaa.jeremyfhall.com/) and the Markdown
           edition in \`mega-list/\`, both rebuilt from this same snapshot.
 
           Built by \`.github/workflows/weekly.yml\` (run ${{ github.run_id }})."

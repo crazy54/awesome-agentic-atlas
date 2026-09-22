@@ -49,7 +49,36 @@ SOURCES, SHEET_TITLE, LIST_TITLE = b16.b10.SOURCES, b16.SHEET_TITLE, b16.LIST_TI
 
 
 REPO = "crazy54/awesome-agentic-atlas"
-SITE = f"https://{REPO.split('/')[0]}.github.io/{REPO.split('/')[1]}/"
+
+# The address the site answers at, and so the one every canonical, sitemap `<loc>`, `og:url`, feed link
+# and IndexNow payload names. Read from `docs/CNAME` because that file *is* the Pages custom-domain
+# setting: Pages serves the domain it names and 301s the `github.io` project URL to it, so a canonical
+# pointing at the project URL points at a redirect. The file is hand-written and no stage regenerates it,
+# which is why it is the source and not a copy. A fork without one publishes under its own project URL.
+PAGES_URL = f"https://{REPO.split('/')[0]}.github.io/{REPO.split('/')[1]}/"
+HOSTNAME = re.compile(r"[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+")
+
+
+def read_cname(path: Path) -> str:
+    """The hostname in a Pages CNAME file, or "" when there is none.
+
+    Anything other than one bare lowercase hostname is a fault. A scheme, a path or a second line in this
+    file would be interpolated into every absolute URL the site publishes.
+    """
+    if not path.exists():
+        return ""
+    name = path.read_text(encoding="utf-8").strip()
+    if name and not HOSTNAME.fullmatch(name):
+        sys.exit(f"{path} must hold one bare lowercase hostname, got {name!r}")
+    return name
+
+
+def site_url(cname: str) -> str:
+    return f"https://{cname}/" if cname else PAGES_URL
+
+
+CNAME = read_cname(ROOT / "docs" / "CNAME")
+SITE = site_url(CNAME)
 
 
 def site(**filters) -> str:

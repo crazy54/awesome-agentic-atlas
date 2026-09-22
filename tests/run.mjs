@@ -71,7 +71,8 @@
 //                     assertion in that file was reading a file no build could rewrite.
 //   deeplinks_test.py the links into the catalogue since it moved to catalog/: the homepage's forwarder, run
 //                     under node against a stub location, and every generator's filtered link resolved
-//                     against the page that carries it.
+//                     against the page that carries it. Also the site's host, which is read from
+//                     docs/CNAME, and the feed ids that must not follow it.
 //   osicons_test.py   the five platform marks that replaced the words Windows, WSL2, macOS, Linux and
 //                     Docker. Mostly one assertion, walked over every built page: that every
 //                     `<use href="#...">` resolves to a `<symbol>` in that same document. A `<use>` with
@@ -169,7 +170,7 @@ const HARNESSES = [
   {file: "live_test.py", label: "the star/push sidecar the 1,294 detail pages read", python: true, floor: 90},
   {file: "semantic_test.py", label: "the semantic index, scored from the bytes a reader downloads", python: true, floor: 30},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
-  {file: "deeplinks_test.py", label: "the homepage forwarder, and every filtered link resolving into catalog/", python: true, floor: 16},
+  {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, and the host in docs/CNAME", python: true, floor: 34},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
   {file: "detail-churn.mjs", label: "1,294 detail pages, regenerated and hashed", floor: 7},
   {file: "detail-preview-check.mjs", label: "rendered repository reader, source and phone layout", needs: "browser", floor: 12},

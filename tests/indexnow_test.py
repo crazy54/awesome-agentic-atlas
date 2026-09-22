@@ -226,7 +226,11 @@ raises("...and so is an empty one", lambda: b20.b19.indexnow_key(""))
 
 # `keyLocation` is the field this deployment cannot omit, and it must point at the key file's directory.
 body = b26.payload([SITE], "abcdefgh")
-eq("the payload names the host bare, with no scheme or path", body["host"], "crazy54.github.io")
+# Read from the file Pages reads rather than from `SITE`: the claim is that the payload names the host the
+# site is actually served at, and `urlsplit(SITE).netloc` would agree with any `SITE` at all.
+cname = (ROOT / "docs" / "CNAME").read_text(encoding="utf-8").strip()
+eq("the payload names the host bare, with no scheme or path -- the one in docs/CNAME",
+   body["host"], cname)
 eq("keyLocation is the key file under SITE", body["keyLocation"], SITE + "abcdefgh.txt")
 true("...which is a directory every submitted URL is under",
      all(u.startswith(body["keyLocation"].rsplit("/", 1)[0] + "/") for u in mapped))
