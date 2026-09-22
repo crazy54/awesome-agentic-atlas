@@ -468,7 +468,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 12 · Python · MIT · pip · pushed 2026-03-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install privacy-mask`</sub>
 - **[security-sweep](https://github.com/Onome-AJ/security-sweep-plugin)** — Comprehensive security scanner covering OWASP Top 10 (2025), Mobile Top 10 (2024), and LLM Top 10 (2025). Scans for hardcoded secrets, injection flaws, auth issues, misconfigurations, AI-specific vulnerabilities, mobile security, and data exposure
-  <sub>★ 6 · MIT · source · pushed 2026-04-05</sub>
+  <sub>★ 7 · MIT · source · pushed 2026-04-05</sub>
   <sub>`git clone https://github.com/Onome-AJ/security-sweep-plugin.git`</sub>
 - **[openclaw-security](https://github.com/AtlasPA/openclaw-security)** — 11-tool security suite for agent workspaces: integrity scanning, secret detection, permission auditing, network DLP, supply-chain checks, injection defense, credential lifecycle, compliance enforcement, audit trails, cryptographic signing, and incident response
   <sub>★ 3 · Python · clone · pushed 2026-02-23 · Win · WSL2? · macOS · Linux</sub>
@@ -642,7 +642,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 97 · Python · MIT · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add sergebulaev/x-skills`</sub>
 - **[Hermes Tweet](https://github.com/Xquik-dev/hermes-tweet)** — Native Hermes Agent plugin for X/Twitter research, monitoring, drafting, follower exports, and approval-gated actions
-  <sub>★ 36 · Python · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 37 · Python · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Xquik-dev/hermes-tweet.git`</sub>
 - **[app-store-optimizer](https://github.com/ccplugins/awesome-claude-code-plugins/tree/HEAD/plugins/app-store-optimizer)** — Awesome Claude Code plugins — a curated list of slash commands, subagents, MCP servers, and hooks for Claude Code
   <sub>JavaScript · Apache-2.0 · in-repo · pushed 2026-08-12</sub>

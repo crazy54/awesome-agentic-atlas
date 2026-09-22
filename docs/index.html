@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-view="cards" data-index-screenshots="on">
+<html lang="en" data-theme="dark" data-skin="graphite" data-view="cards" data-index-screenshots="on">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +29,14 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"}};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s]) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
 </script>
 <style>
@@ -39,6 +46,8 @@ try {
   --good:#5BD5AA; --warn:#EF7D86; --off:#9BA5B3; --onbar:#090A0D;
   --accent-sky:#78B7F4; --accent-mint:#5BD5AA; --accent-gold:#E7B64D;
   --accent-coral:#EF7D86; --accent-violet:#A99AF7;
+  --ui:"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:none; --panel:var(--plane); --bdf:none;
 }
 html[data-theme=light]{
   --surface:#F2F4F7; --plane:#FAFBFC; --band:#E7EAF0; --ink:#14171C; --ink2:#353C47;
@@ -47,9 +56,76 @@ html[data-theme=light]{
   --accent-sky:#1D5E9E; --accent-mint:#187557; --accent-gold:#9A6718;
   --accent-coral:#B6465E; --accent-violet:#6557C8;
 }
+html[data-skin=glass]{
+  --surface:#070912; --plane:#12141D; --band:#1C1E26; --ink:#F4F7FF; --ink2:#CBD5E8;
+  --muted:#95A2BE; --grid:#3D4152; --link:#7CC4FF; --bar:#6FE3C4;
+  --good:#86E0A0; --warn:#FF9BA8; --off:#95A2BE; --onbar:#04121A;
+  --accent-sky:#7CC4FF; --accent-mint:#6FE3C4; --accent-gold:#F3C46A;
+  --accent-coral:#FF9BA8; --accent-violet:#B3A6FF;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:radial-gradient(1100px 520px at 12% -12%,rgba(80,140,255,.22),transparent 70%),
+         radial-gradient(900px 480px at 88% 0%,rgba(110,227,196,.14),transparent 72%);
+  --panel:rgba(18,20,29,.72); --bdf:blur(14px) saturate(1.25);
+}
+html[data-skin=glass][data-theme=light]{
+  --surface:#EEF2FA; --plane:#F8FAFF; --band:#E2E8F5; --ink:#111726; --ink2:#323B4F;
+  --muted:#56627A; --grid:#C3CCDE; --link:#0F5FA6; --bar:#0B6E7A;
+  --good:#136B4E; --warn:#8A4A2B; --off:#56627A; --onbar:#FFFFFF;
+  --accent-sky:#0F5FA6; --accent-mint:#0B6E7A; --accent-gold:#8A5A00;
+  --accent-coral:#A63F52; --accent-violet:#4B44B8;
+  --wash:radial-gradient(1100px 520px at 12% -12%,rgba(60,120,255,.14),transparent 70%),
+         radial-gradient(900px 480px at 88% 0%,rgba(0,150,130,.10),transparent 72%);
+  --panel:rgba(248,250,255,.74);
+}
+html[data-skin=terminal]{
+  --surface:#050B0D; --plane:#0A1315; --band:#132220; --ink:#D8F5E6; --ink2:#A8D8C4;
+  --muted:#84AC99; --grid:#2D4741; --link:#6FD0FF; --bar:#FFB627;
+  --good:#3FE08C; --warn:#FF8B7A; --off:#84AC99; --onbar:#05100B;
+  --accent-sky:#6FD0FF; --accent-mint:#3FE08C; --accent-gold:#FFB627;
+  --accent-coral:#FF8B7A; --accent-violet:#C2A6FF;
+  --ui:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --wash:radial-gradient(1200px 620px at 50% -20%,rgba(63,224,140,.12),transparent 70%);
+  --panel:rgba(10,19,21,.86); --bdf:blur(3px);
+}
+html[data-skin=terminal][data-theme=light]{
+  --surface:#EEF4EF; --plane:#F9FCF9; --band:#E0EBE3; --ink:#0D1A14; --ink2:#2B3E34;
+  --muted:#4F6659; --grid:#BFCFC4; --link:#0C5F8F; --bar:#7A5300;
+  --good:#166B45; --warn:#9A3D22; --off:#4F6659; --onbar:#FFFFFF;
+  --accent-sky:#0C5F8F; --accent-mint:#166B45; --accent-gold:#7A5300;
+  --accent-coral:#9A3D22; --accent-violet:#5A3FA8;
+  --wash:radial-gradient(1200px 620px at 50% -20%,rgba(20,140,90,.10),transparent 70%);
+  --panel:rgba(249,252,249,.86);
+}
+html[data-skin=prism]{
+  --surface:#0B0718; --plane:#17112C; --band:#241A3F; --ink:#FBF7FF; --ink2:#DCD2F0;
+  --muted:#ADA0C8; --grid:#4A3A70; --link:#8FD0FF; --bar:#FF9BD2;
+  --good:#63E6B8; --warn:#FFB36B; --off:#ADA0C8; --onbar:#14061B;
+  --accent-sky:#8FD0FF; --accent-mint:#63E6B8; --accent-gold:#FFD166;
+  --accent-coral:#FF9BD2; --accent-violet:#C0A8FF;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:radial-gradient(760px 430px at 6% -8%,rgba(255,155,210,.26),transparent 68%),
+         radial-gradient(680px 400px at 96% 2%,rgba(143,208,255,.22),transparent 68%),
+         radial-gradient(900px 520px at 50% 108%,rgba(99,230,184,.18),transparent 70%),
+         radial-gradient(520px 320px at 78% 54%,rgba(255,209,102,.15),transparent 70%),
+         radial-gradient(560px 340px at 18% 62%,rgba(192,168,255,.20),transparent 70%);
+  --panel:rgba(23,17,44,.70); --bdf:blur(18px) saturate(1.4);
+}
+html[data-skin=prism][data-theme=light]{
+  --surface:#F3EFFC; --plane:#FDFBFF; --band:#E8E0F8; --ink:#170B26; --ink2:#3A2B52;
+  --muted:#5E4F7A; --grid:#C7B9E4; --link:#1A4FB0; --bar:#9A2C7E;
+  --good:#0F6B52; --warn:#8A4410; --off:#5E4F7A; --onbar:#FFFFFF;
+  --accent-sky:#1A4FB0; --accent-mint:#0F6B52; --accent-gold:#8A4410;
+  --accent-coral:#9A2C7E; --accent-violet:#6A3FB8;
+  --wash:radial-gradient(760px 430px at 6% -8%,rgba(214,60,150,.16),transparent 68%),
+         radial-gradient(680px 400px at 96% 2%,rgba(40,120,220,.14),transparent 68%),
+         radial-gradient(900px 520px at 50% 108%,rgba(0,170,120,.12),transparent 70%),
+         radial-gradient(520px 320px at 78% 54%,rgba(230,160,20,.10),transparent 70%),
+         radial-gradient(560px 340px at 18% 62%,rgba(130,90,230,.13),transparent 70%);
+  --panel:rgba(253,251,255,.72);
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--surface);color:var(--ink);
-  font:15px/1.5 "Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif}
+body{margin:0;background:var(--surface);background-image:var(--wash);
+  background-attachment:fixed;color:var(--ink);font:15px/1.5 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
 :focus-visible{outline:2px solid var(--bar);outline-offset:2px;border-radius:4px}
@@ -58,8 +134,8 @@ a:hover{text-decoration:underline}
 .skip{position:absolute;left:-999px;top:0;z-index:40;background:var(--bar);color:var(--onbar);
   padding:10px 16px;border-radius:0 0 8px 0;font-weight:600}
 .skip:focus{left:0}
-header{position:relative;z-index:10;background:var(--plane);border-bottom:1px solid var(--grid);
-  padding:22px 20px 16px}
+header{position:relative;z-index:10;background:var(--panel);backdrop-filter:var(--bdf);
+  border-bottom:1px solid var(--grid);padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
@@ -114,10 +190,11 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
   .orbit-star{animation:none;opacity:1;transform:rotate(var(--orbit-angle)) translateY(-58px) rotate(45deg)}
 }
 button{font:inherit;cursor:pointer}
-.bar{position:sticky;top:0;z-index:20;background:var(--plane);
+.bar{position:sticky;top:0;z-index:20;background:var(--panel);backdrop-filter:var(--bdf);
   border-bottom:1px solid var(--grid);padding:10px 20px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
 .bar .wrap{display:flex;flex-direction:column;gap:8px}
-.subbar{background:var(--plane);border-bottom:1px solid var(--grid);padding:0 20px 9px}
+.subbar{background:var(--panel);backdrop-filter:var(--bdf);border-bottom:1px solid var(--grid);
+  padding:0 20px 9px}
 .subbar .wrap{display:flex;flex-direction:column;gap:8px}
 .line{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .line>label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
@@ -132,6 +209,24 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .chip:hover{border-color:var(--bar);color:var(--ink)}
 .chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar);
   font-weight:600}
+.setwrap{position:relative;display:inline-block}
+header.setopen{z-index:30}
+.setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:236px;text-align:left;
+  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
+  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75)}
+.setmenu[hidden]{display:none}
+.setlab{margin:14px 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase;
+  letter-spacing:.07em;font-weight:600}
+.setlab:first-child{margin-top:0}
+.setths{display:flex;flex-direction:column;gap:2px;margin-top:2px}
+.thb{display:flex;align-items:center;gap:9px;width:100%;min-height:36px;padding:0 9px;
+  background:none;border:1px solid transparent;border-radius:8px;color:var(--ink2);font-size:13px;
+  text-align:left}
+.thb:hover{border-color:var(--grid);color:var(--ink)}
+.thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600}
+.thsw{display:inline-flex;flex:none;width:34px;height:14px;border-radius:999px;overflow:hidden;
+  border:1px solid var(--grid)}
+.thsw i{flex:1}
 .newchip{display:none;align-items:center;gap:.4em}
 .newchip.on{display:inline-flex}
 .newchip[aria-pressed=true]{background:var(--warn);border-color:var(--warn);color:var(--onbar)}
@@ -620,8 +715,8 @@ main a[href],main button,main select,main summary,
 
 @page{margin:14mm}
 @media print{
-  .bar,.subbar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,
-  .shared .sp,.pin,#cmp .ch .sp,#cmp .unpin,.dstrip.on{display:none}
+  .bar,.subbar,.more,dialog,#fbb,#live,.skip,header nav,#setmenu,.stamp,.atlas-byte-wrap,.facets,.save,
+  .copy,.shot,.shared .sp,.pin,#cmp .ch .sp,#cmp .unpin,.dstrip.on{display:none}
   #cmp .scroll{overflow-x:visible}
   #cmp table{table-layout:fixed}
   #cmp thead th:first-child{width:13%}
@@ -666,15 +761,15 @@ main a[href],main button,main select,main summary,
 <header><div class="wrap"><div class="top">
   <div>
     <h1><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="#D6A034" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="#F7F8FA" stroke="#D6A034" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="#D6A034"/><path d="M12 31h40M32 11v40" fill="none" stroke="#20242D" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="#090A0D"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="#F7F8FA"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="#090A0D" stroke-width="2.5" stroke-linecap="round"/></g></svg></span>Awesome Agentic Atlas <span>· 39 awesome-lists, merged</span></h1>
-    <p class="sub"><b>8,858</b> projects · <b>14</b> topics · <b>24,048,967</b> combined
+    <p class="sub"><b>8,858</b> projects · <b>14</b> topics · <b>24,053,460</b> combined
       stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
       2026-09-22</span></p>
     <p class="blurb" id="ctx"></p>
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--09--22_13:46_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-09-22T13:46:00Z">Last deployed 2026-09-22 13:46 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--09--22_16:16_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-09-22T16:16:00Z">Last deployed 2026-09-22 16:16 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
@@ -685,7 +780,30 @@ main a[href],main button,main select,main summary,
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/releases/latest">Workbook</a><br>
-    <button class="chip" id="theme">Light theme</button>
+    <div class="setwrap">
+      <button class="chip" id="setbtn" aria-expanded="false" aria-controls="setmenu">Settings</button>
+      <div class="setmenu" id="setmenu" hidden>
+        <p class="setlab" id="setmodelab">Mode</p>
+        <div role="group" aria-labelledby="setmodelab">
+          <button class="chip" id="theme">Light theme</button>
+        </div>
+        <p class="setlab" id="setthemelab">Theme</p>
+        <div class="setths" role="group" aria-labelledby="setthemelab">
+          <button type="button" class="thb" data-skin="graphite" aria-pressed="true"><span
+            class="thsw" aria-hidden="true"><i style="background:#090A0D"></i><i
+            style="background:#D6A034"></i><i style="background:#78B7F4"></i></span>Graphite</button>
+          <button type="button" class="thb" data-skin="glass" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#070912"></i><i
+            style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span>Glass</button>
+          <button type="button" class="thb" data-skin="terminal" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#050B0D"></i><i
+            style="background:#FFB627"></i><i style="background:#6FD0FF"></i></span>Terminal</button>
+          <button type="button" class="thb" data-skin="prism" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#0B0718"></i><i
+            style="background:#FF9BD2"></i><i style="background:#8FD0FF"></i></span>Prism</button>
+        </div>
+      </div>
+    </div>
   </nav>
   <div class="atlas-byte-wrap">
     <button type="button" id="byte-tip" aria-label="Ask Archie 'Atlas' Algorithm for a browsing tip">
@@ -923,7 +1041,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-09-22";
-const BUILT = "2026-09-22T13:46:00Z";
+const BUILT = "2026-09-22T16:16:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -1257,6 +1375,8 @@ function palItems(query) {
   add("Filter", "Clear all filters", false, () => set(CLEAR));
   add("Page", (document.documentElement.dataset.theme === "light" ? "Dark" : "Light") + " theme", false,
     () => document.getElementById("theme").click());
+  for (const t of document.querySelectorAll(".thb"))
+    add("Theme", t.textContent.trim(), t.getAttribute("aria-pressed") === "true", () => t.click());
   add("Page", state.view === "cards" ? "Table view" : "Card view", false,
     () => document.getElementById("view").click());
   if (FLAGS["index.export"] && document.getElementById("take").classList.contains("on"))
@@ -1347,10 +1467,15 @@ function wire() {
   loadSaved();
   loadVisit();
   const btn = document.getElementById("theme");
-  const label = () => {
+  const menu = document.getElementById("setmenu");
+  const setbtn = document.getElementById("setbtn");
+  const ths = Array.from(document.querySelectorAll(".thb"));
+  const paintSettings = () => {
     const light = document.documentElement.dataset.theme === "light";
     btn.textContent = light ? "Dark theme" : "Light theme";
     btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
+    const skin = document.documentElement.dataset.skin;
+    for (const t of ths) t.setAttribute("aria-pressed", String(t.dataset.skin === skin));
     const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
     if (plane) document.getElementById("tc").content = plane;
     paintDeployBadge();
@@ -1359,14 +1484,34 @@ function wire() {
     const light = document.documentElement.dataset.theme !== "light";
     document.documentElement.dataset.theme = light ? "light" : "dark";
     try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
-    label();
+    paintSettings();
   };
-  label();
+  const setSkin = (s) => {
+    document.documentElement.dataset.skin = s;
+    try { localStorage.setItem("atlas-skin", s); } catch (e) {}
+    paintSettings();
+  };
+  for (const t of ths) t.onclick = () => setSkin(t.dataset.skin);
+  const setOpen = (open) => {
+    menu.hidden = !open;
+    setbtn.setAttribute("aria-expanded", String(open));
+    document.querySelector("header").classList.toggle("setopen", open);
+  };
+  setbtn.onclick = () => setOpen(menu.hidden);
+  menu.addEventListener("keydown", ev => {
+    if (ev.key === "Escape") { setOpen(false); setbtn.focus(); }
+  });
+  for (const kind of ["click", "focusin"])
+    document.addEventListener(kind, ev => {
+      const inside = ev.target && ev.target.closest && ev.target.closest(".setwrap");
+      if (!menu.hidden && !inside) setOpen(false);
+    });
+  paintSettings();
   try {
     matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
       if (localStorage.getItem("theme")) return;
       document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
-      label();
+      paintSettings();
     });
   } catch (e) {}
 

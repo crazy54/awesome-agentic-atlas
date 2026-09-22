@@ -11,7 +11,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/buhuipao/agent-console"><img src="https://raw.githubusercontent.com/buhuipao/agent-console/main/docs/assets/demo.gif" width="260"></a> | <a href="https://github.com/asheshgoplani/agent-deck"><img src="https://opengraph.githubassets.com/1/asheshgoplani/agent-deck" width="260"></a> | <a href="https://github.com/YoanWai/agent-manager"><img src="https://opengraph.githubassets.com/1/YoanWai/agent-manager" width="260"></a> |
-| **[agent-console](https://github.com/buhuipao/agent-console)**<br>★ 22 | **[agent-deck](https://github.com/asheshgoplani/agent-deck)**<br>★ 938 | **[agent-manager](https://github.com/YoanWai/agent-manager)**<br>★ 492 |
+| **[agent-console](https://github.com/buhuipao/agent-console)**<br>★ 22 | **[agent-deck](https://github.com/asheshgoplani/agent-deck)**<br>★ 940 | **[agent-manager](https://github.com/YoanWai/agent-manager)**<br>★ 492 |
 | <a href="https://github.com/izll/agent-session-manager"><img src="https://opengraph.githubassets.com/1/izll/agent-session-manager" width="260"></a> | <a href="https://github.com/agent-of-empires/agent-of-empires"><img src="https://raw.githubusercontent.com/agent-of-empires/agent-of-empires/main/docs/assets/demo.gif" width="260"></a> | <a href="https://github.com/madarco/agentbox"><img src="https://opengraph.githubassets.com/1/madarco/agentbox" width="260"></a> |
 | **[agent-session-manager](https://github.com/izll/agent-session-manager)**<br>★ 13 | **[agent-of-empires](https://github.com/agent-of-empires/agent-of-empires)**<br>★ 3.3k | **[agentbox](https://github.com/madarco/agentbox)**<br>★ 486 |
 
@@ -44,19 +44,19 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 1.8k · HTML · MIT · npm · pushed 2026-08-16 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install -g dmux`</sub>
 - **[ai-devkit](https://github.com/codeaholicguy/ai-devkit)** — CLI control plane that runs agent sessions in managed tmux, sends prompts and logs to running agents from the terminal or a TUI console, and gives every agent one setup with shared local memory, verification skills, and lifecycle workflows. Claude Code, Codex, Pi, and more.
-  <sub>★ 1.6k · TypeScript · Apache-2.0 · npx · pushed 2026-09-20 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 1.6k · TypeScript · Apache-2.0 · npx · pushed 2026-09-22 · WSL2 · macOS? · Linux</sub>
   <sub>`npx ai-devkit@latest init`</sub>
 - **[agent-deck](https://github.com/asheshgoplani/agent-deck)** — One TUI covering sessions across Claude Code, Codex, Gemini, and OpenCode, with live status and resume for each.
-  <sub>★ 938 · Go · MIT · go · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 940 · Go · MIT · go · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`go install github.com/asheshgoplani/agent-deck/cmd/agent-deck@latest`</sub>
 - **[Prowl](https://github.com/onevcat/Prowl)** — Native macOS command center for running coding agents in parallel, with vertical tabs, a live canvas view of every running session, and a command palette. Claude Code, Codex, and more.
   <sub>★ 621 · Swift · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add onevcat/Prowl --skill prowl-cli`</sub>
 - **[agterm](https://github.com/umputun/agterm)** — Native macOS terminal with named workspaces, a live dashboard, attention states, and a scriptable control API.
-  <sub>★ 619 · Swift · MIT · brew · pushed 2026-09-21 · macOS</sub>
+  <sub>★ 620 · Swift · MIT · brew · pushed 2026-09-21 · macOS</sub>
   <sub>`brew install --cask umputun/apps/agterm`</sub>
 - **[tmux-ide](https://github.com/wavyrai/tmux-ide)** — Turns any project into a tmux IDE from a checked-in `ide.yml`, including preset agent-team layouts.
-  <sub>★ 550 · TypeScript · MIT · npm · pushed 2026-09-21 · WSL2 · macOS · Linux</sub>
+  <sub>★ 550 · TypeScript · MIT · npm · pushed 2026-09-22 · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g tmux-ide@beta`</sub>
 - **[agent-manager](https://github.com/YoanWai/agent-manager)** — Live-status tmux TUI with a prompt that lands in the pane without attaching, and in-terminal diff review that sends line comments back to the agent. Claude Code, Codex, OpenCode, Grok, Gemini CLI, Pi, Hermes.
   <sub>★ 492 · Go · Apache-2.0 · brew · pushed 2026-09-22 · WSL2 · macOS · Linux</sub>
@@ -65,7 +65,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 486 · TypeScript · MIT · clone · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/madarco/agentbox`</sub>
 - **[termany](https://github.com/thinkany-ai/termany)** — Terminal that keeps many agent sessions in one window, tagging each pane working/done/needs-attention from the running job rather than the shell prompt, with diffs, worktrees, port handling, remote hosts, and token cost in the same place. Claude, Codex, Gemini, Grok Build, OpenClaw, Hermes, OpenCode, Cursor, Kimi, OMP.
-  <sub>★ 433 · TypeScript · source · pushed 2026-09-16 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 434 · TypeScript · source · pushed 2026-09-16 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/thinkany-ai/termany.git`</sub>
 - **[Calyx](https://github.com/yuuichieguchi/Calyx)** — Native macOS terminal built on libghostty with an approval inbox for permission prompts, a working/blocked/idle sidebar, and in-terminal diff review.
   <sub>★ 327 · Swift · MIT · brew · pushed 2026-09-14 · macOS</sub>
@@ -104,7 +104,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
 ## Parallel Coding Agents — Desktop &amp; Web
 
 - **[Orca](https://github.com/stablyai/orca)** — Agentic development environment for running a fleet on your own subscription, available on desktop and mobile.
-  <sub>★ 75.2k · TypeScript · MIT · brew · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 75.3k · TypeScript · MIT · brew · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`brew install --cask stablyai/orca/orca`</sub>
 - **[t3code](https://github.com/pingdotgg/t3code)** — Harness control surface available as web, mobile, and desktop app. Claude Code, Codex, Cursor, Grok Build, OpenCode.
   <sub>★ 23.3k · TypeScript · MIT · winget · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
@@ -131,7 +131,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 10.3k · TypeScript · MIT · script · pushed 2026-09-22 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/openchamber/openchamber/main/scripts/install.sh | bash`</sub>
 - **[Emdash](https://github.com/generalaction/emdash)** — Agentic development environment running parallel agents against any model provider.
-  <sub>★ 5.8k · TypeScript · Apache-2.0 · brew · pushed 2026-09-21 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 5.8k · TypeScript · Apache-2.0 · brew · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`brew install --cask emdash`</sub>
 - **[bb](https://github.com/get-bb/bb)** — Self-controlling agentic IDE that orchestrates multiple coding agents in live threads you can follow, steer, or hand off, driven from a desktop app, web app, CLI, or HTTP API.
   <sub>★ 3.8k · TypeScript · MIT · npx · pushed 2026-09-22 · Win? · WSL2 · macOS · Linux?</sub>
@@ -176,25 +176,25 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 1.1k · Python · MIT · uv · pushed 2026-05-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install -U takopi`</sub>
 - **[parallel-code](https://github.com/johannesjo/parallel-code)** — Desktop app running Claude Code, Codex, and Gemini CLI side by side in isolated worktrees, with a built-in diff viewer and one-click merge.
-  <sub>★ 1k · TypeScript · MIT · clone · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 1k · TypeScript · MIT · clone · pushed 2026-09-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/johannesjo/parallel-code.git`</sub>
 - **[IM.codes](https://github.com/im4codes/imcodes)** — Mobile and web control layer built for away-from-desk continuation, with terminal access, git views, localhost preview, and scheduled tasks. Claude Code, Codex, Gemini CLI.
   <sub>★ 973 · TypeScript · MIT · npm · pushed 2026-09-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npm install -g imcodes`</sub>
 - **[Berd](https://github.com/block/berd)** — Block's open-source desktop app for working with AI agents: project chats with per-folder worktree behavior over the Goose backend, with agents, skills, connections, and agent sharing in one place.
-  <sub>★ 929 · TypeScript · Apache-2.0 · source · pushed 2026-09-17 · WSL2? · macOS · Linux</sub>
+  <sub>★ 930 · TypeScript · Apache-2.0 · source · pushed 2026-09-22 · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/block/berd.git`</sub>
 - **[Ghostex](https://github.com/maddada/Ghostex)** — Native macOS workspace (Rust/GPUI) running CLI agents side by side in low-RAM Ghostty terminals, with embedded browser and editor panes, a Kanban board, and iOS/Android session access. Claude Code, Codex, OpenCode.
   <sub>★ 835 · Rust · MIT · brew · pushed 2026-09-22 · Win? · WSL2 · macOS · Linux?</sub>
   <sub>`brew install ghostex`</sub>
 - **[kandev](https://github.com/kdlbs/kandev)** — Kanban workbench whose multi-step workflows assign a different agent per step behind human gates, running locally, in Docker, over SSH, or in cloud executors.
-  <sub>★ 825 · Go · AGPL-3.0 · scoop · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 827 · Go · AGPL-3.0 · scoop · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`scoop bucket add kandev https://github.com/kdlbs/scoop-kandev scoop install kandev`</sub>
 - **[ai-maestro](https://github.com/23blocks-OS/ai-maestro)** — Dashboard spanning multiple machines, adding memory search, code-graph queries, and agent-to-agent messaging. Claude, Aider, Cursor.
   <sub>★ 790 · TypeScript · MIT · script · pushed 2026-09-21 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/23blocks-OS/ai-maestro/main/scripts/remote-install.sh | sh`</sub>
 - **[Alethe](https://github.com/Kc1t/alethe-agents)** — Local-first desktop workspace where agents and shells run as real PTYs in split panes and custom grids across projects, surviving pane close and app restart. Suspend idle groups to reclaim memory and resume with scrollback intact. Claude Code, Codex, OpenCode.
-  <sub>★ 692 · TypeScript · AGPL-3.0 · clone · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 694 · TypeScript · AGPL-3.0 · clone · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/Kc1t/alethe-agents.git`</sub>
 - **[omg.dev](https://github.com/BennyKok/omg.dev)** — Open-source parallel-agent harness: run coding agents on your own computer or a hosted one, controlled from a single web UI with a mobile client. Claude Code, Codex, Grok, Cursor, OpenCode, Copilot, Pi.
   <sub>★ 535 · TypeScript · MIT · bun · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux</sub>
@@ -251,7 +251,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 86 · TypeScript · clone · pushed 2026-09-22 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/cfal/garcon.git`</sub>
 - **[Tortie](https://github.com/gregce/tortie)** — Native macOS agent multiplexer with familiar IDE features: all projects in one window, agents that survive restarts, and organized terminal sessions without tmux.
-  <sub>★ 85 · TypeScript · Apache-2.0 · source · pushed 2026-09-22 · WSL2 · macOS · Linux</sub>
+  <sub>★ 86 · TypeScript · Apache-2.0 · source · pushed 2026-09-22 · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/gregce/tortie.git`</sub>
 - **[clave](https://github.com/antasphere/clave)** — Native macOS app with split and grid layouts, session groups, SSH remote sessions, and usage analytics for Claude Code.
   <sub>★ 50 · TypeScript · MIT · npx · pushed 2026-09-22 · macOS</sub>
@@ -416,7 +416,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 152 · TypeScript · MIT · winget · pushed 2026-09-22 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`winget install LoopTroopAI.LoopTroop`</sub>
 - **[ordewell](https://github.com/ordewell/ordewell)** — Turns one goal into an editable plan of tasks, each carrying its own runner, model and mode, then runs each task as its own agent session and passes it only when evidence of completion shows up in that session's output. Claude Code, Codex, OpenCode.
-  <sub>★ 136 · TypeScript · Apache-2.0 · npm · pushed 2026-09-22 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 137 · TypeScript · Apache-2.0 · npm · pushed 2026-09-22 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install -g ordewell`</sub>
 - **[future-os](https://github.com/futuregene/future-os)** — One agent everywhere (terminal, desktop, mobile, CLI, IM bots) with a built-in loop control plane: durable goals, event-sourced state, and verification gates for 24h+ runs.
   <sub>★ 95 · Rust · MIT · script · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
@@ -440,7 +440,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 27.4k · Elixir · Apache-2.0 · source · pushed 2026-09-15 · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/openai/symphony.git`</sub>
 - **[open-swe](https://github.com/langchain-ai/open-swe)** — Invoked from Slack, Linear, or GitHub comments; each task runs in its own cloud sandbox and ends in a draft PR linked to the ticket.
-  <sub>★ 10.7k · Python · MIT · clone · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 10.8k · Python · MIT · clone · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`git clone https://github.com/langchain-ai/open-swe.git`</sub>
 - **[claude-code-action](https://github.com/anthropics/claude-code-action)** — Anthropic's official GitHub Action, detecting from context whether to answer, review, or implement. Auth via Anthropic API, Bedrock, Vertex, or Foundry.
   <sub>★ 8.9k · TypeScript · MIT · gh-action · pushed 2026-09-19</sub>
@@ -467,7 +467,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 820 · TypeScript · Apache-2.0 · npm · pushed 2026-09-22 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install -g cyrus-ai`</sub>
 - **[aeon](https://github.com/aeonfun/aeon)** — Runs unattended on GitHub Actions; dispatches skills to six coding-agent harnesses behind one contract (Claude Code, Grok, Codex, Pi, Vibe, Kimi), with quality scoring, git-persisted memory, a self-healing loop, and reactive triggers.
-  <sub>★ 752 · Shell · MIT · clone · pushed 2026-09-21</sub>
+  <sub>★ 753 · Shell · MIT · clone · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/<you>/aeon`</sub>
 - **[Machinist](https://github.com/owainlewis/machinist)** — Keeps coding agents working on a repository without making a human orchestrate every step from a terminal, pulling tasks from trusted ticket queues into isolated Codex workspaces.
   <sub>★ 453 · Go · MIT · clone · pushed 2026-09-22 · WSL2? · macOS · Linux</sub>
@@ -488,7 +488,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 130 · TypeScript · MIT · npm · pushed 2026-07-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g lalph`</sub>
 - **[Taskuary](https://github.com/ldbumble/taskuary)** — Local-first work inbox that triages email, chat, issue trackers, and scheduled reports into supervised Claude Code, Codex, Gemini, Cursor, or Copilot CLI runs, with conflict-aware queuing, live terminals, and approval-gated replies.
-  <sub>★ 117 · Python · MIT · pip · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 118 · Python · MIT · pip · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pip install taskuary`</sub>
 - **[NEEDLE](https://github.com/jedarden/NEEDLE)** — Runs unattended against a shared bead queue (SQLite, atomic claims), dispatching each bead to a headless CLI — Claude Code, Codex, OpenCode, Aider — with every outcome routed through an explicit state machine; no inter-agent channel, coordination is done at decomposition time.
   <sub>★ 26 · Rust · MIT · cargo · pushed 2026-09-22 · WSL2 · macOS? · Linux</sub>
@@ -521,13 +521,13 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 1.1k · Python · Apache-2.0 · script · pushed 2026-09-18 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/agentlas-ai/Agentlas-OS/main/scripts/install-all-runtimes.sh | bash`</sub>
 - **[foremerge](https://github.com/naw103/foremerge)** — Coordination protocol above Git: agents declare intent, semantic scope, and operation before writing code, deterministic rules raise findings when plans collide, and acceptance is gated on a verification run it executes itself. One Rust binary over local SQLite, with MCP for Claude Code, Codex, and Cursor.
-  <sub>★ 491 · Rust · Apache-2.0 · script · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 492 · Rust · Apache-2.0 · script · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://foremerge.com/install.sh | sh`</sub>
 - **[Claudexor](https://github.com/razzant/claudexor)** — Routes one coding thread across harnesses with quota-aware rotation between subscription profiles, Best-of-N runs, and cross-family review.
   <sub>★ 479 · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`npm install -g claudexor`</sub>
 - **[Concord MCP](https://github.com/Get-Concord-AI/concord-mcp)** — Shared coordination protocol for Claude Code, Codex, Cursor, Gemini CLI, and Grok Build agents to claim work, detect edit collisions, exchange durable messages, transfer ownership, and hand off review evidence without replacing their existing harnesses.
-  <sub>★ 323 · TypeScript · MIT · npm · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 323 · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @concord-ai/concord-mcp`</sub>
 - **[guild](https://github.com/mathomhaus/guild)** — Shared context, memory, and task coordination as a single Go binary over local SQLite with hybrid keyword and semantic search.
   <sub>★ 302 · Go · Apache-2.0 · psh · pushed 2026-09-14 · Win · WSL2? · macOS · Linux</sub>
@@ -539,7 +539,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 211 · TypeScript · MIT · npm · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm i -g aiwg`</sub>
 - **[handoff](https://github.com/dazuiba/handoff)** — Delegates a task to DeepSeek, Codex, or Claude from inside your current Claude Code or Codex session, returning the result automatically.
-  <sub>★ 90 · Python · uv · pushed 2026-08-02 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 91 · Python · uv · pushed 2026-08-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install handoff-cli`</sub>
 - **[sub-agents-skills](https://github.com/shinpr/sub-agents-skills)** — Portable Markdown definitions that route a task to a chosen backend, model, effort level, and permission set.
   <sub>★ 88 · Python · MIT · script · pushed 2026-09-06 · WSL2 · macOS · Linux</sub>
@@ -581,7 +581,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
 ## Personal Assistants
 
 - **[openclaw](https://github.com/openclaw/openclaw)** — Your own personal AI assistant, on any OS and any platform.
-  <sub>★ 390.2k · TypeScript · npm · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 390.3k · TypeScript · npm · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g openclaw@latest --allow-scripts=openclaw`</sub>
 - **[hermes-agent](https://github.com/NousResearch/hermes-agent)** — Self-improving harness with persistent cross-session memory and auto-generated skill documents.
   <sub>★ 248k · Python · MIT · script · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
@@ -647,7 +647,7 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
   <sub>★ 1.4k · Python · MIT · uv · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`uv tool install "git+https://github.com/razzant/ouroboros.git@ouroboros"`</sub>
 - **[taOS](https://github.com/jaylfc/taOS)** — Self-hosted AI agent OS where memory, conversations, agents, and files live on hardware you own, offline by default with cloud by choice, including multi-framework group chat and a desktop GUI.
-  <sub>★ 544 · Python · AGPL-3.0 · pip · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 545 · Python · AGPL-3.0 · pip · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`pip install taosmd`</sub>
 - **[rho](https://github.com/mikeyobrien/rho)** — Stays running, remembers across sessions, and checks in on its own. macOS, Linux, Android.
   <sub>★ 373 · TypeScript · MIT · npm · pushed 2026-05-26 · WSL2 · macOS? · Linux</sub>

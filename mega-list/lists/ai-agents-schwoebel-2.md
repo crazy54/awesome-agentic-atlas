@@ -86,7 +86,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 3.5k · TypeScript · Apache-2.0 · clone · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/onecli/onecli.git`</sub>
 - **[Agentic_Security](https://github.com/msoedov/agentic_security)** — Agentic LLM Vulnerability Scanner / AI red teaming kit
-  <sub>★ 2k · Python · Apache-2.0 · pip · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2k · Python · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentic_security`</sub>
 - **[Invariant](https://github.com/invariantlabs-ai/invariant)** — Helps you build better AI agents through debuggable unit testing
   <sub>★ 461 · Python · Apache-2.0 · source · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>

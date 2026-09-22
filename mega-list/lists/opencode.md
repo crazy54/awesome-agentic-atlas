@@ -81,7 +81,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 1.6k · TypeScript · MIT · npm · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g cc-safety-net`</sub>
 - **[Opencode Quota](https://github.com/slkiser/opencode-quota)** — Quota toasts and token tracking
-  <sub>★ 977 · TypeScript · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 978 · TypeScript · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @slkiser/opencode-quota init`</sub>
 - **[Swarm Plugin](https://github.com/joelhooks/swarm-tools)** — Swarm intelligence
   <sub>★ 741 · TypeScript · npm · pushed 2026-07-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -237,7 +237,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 55 · TypeScript · MIT · source · pushed 2025-12-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Tarquinen/opencode-smart-title.git`</sub>
 - **[OpenCodeRAG](https://github.com/MrDoe/OpenCodeRAG)** — Local-first RAG plugin for semantic code search with tree-sitter chunking and LanceDB
-  <sub>★ 50 · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 50 · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g opencode-rag-plugin`</sub>
 - **[Pocket Universe](https://github.com/spoons-and-mirrors/pocket-universe)** — A subagent driven pocket universe for your primary agent
   <sub>★ 50 · TypeScript · source · pushed 2026-01-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -341,12 +341,12 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
 - **[Simple Notify](https://github.com/Yusuzhan/opencode-simple-notify)** — Native desktop notifications with near-zero dependencies
   <sub>★ 12 · JavaScript · MIT · source · pushed 2026-04-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Yusuzhan/opencode-simple-notify.git`</sub>
+- **[OpenCode Token Tracker](https://github.com/eserete/opencode-token-tracker)** — Real-time token usage, cost, and latency tracking for every AI request in OpenCode
+  <sub>★ 11 · JavaScript · source · pushed 2026-04-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/eserete/opencode-token-tracker.git`</sub>
 - **[Optimal Model Temps](https://github.com/Lyapsus/opencode-optimal-model-temps)** — Optimal sampling temperatures
   <sub>★ 11 · JavaScript · MIT · source · pushed 2026-05-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Lyapsus/opencode-optimal-model-temps.git`</sub>
-- **[OpenCode Token Tracker](https://github.com/eserete/opencode-token-tracker)** — Real-time token usage, cost, and latency tracking for every AI request in OpenCode
-  <sub>★ 10 · JavaScript · source · pushed 2026-04-14 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/eserete/opencode-token-tracker.git`</sub>
 - **[Opencode Usage Monitor](https://github.com/Mark1708/opencode-usage-monitor)** — Monitor OpenAI and Z.AI usage quotas in the TUI
   <sub>★ 9 · TypeScript · MIT · clone · pushed 2026-07-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Mark1708/opencode-usage-monitor.git`</sub>
@@ -360,7 +360,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 8 · TypeScript · MIT · source · pushed 2026-04-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/JasonLandbridge/opencode-ccs-sync.git`</sub>
 - **[kibi-opencode](https://github.com/Looted/kibi)** — Repo-local, branch-scoped knowledge and traceability for OpenCode
-  <sub>★ 8 · TypeScript · AGPL-3.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 8 · TypeScript · AGPL-3.0 · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Looted/kibi.git`</sub>
 - **[PR Auto-Signature](https://github.com/arttttt/opencode-pr-signature)** — Automatically adds AI model signature to PRs, Issues, and Commits
   <sub>★ 8 · TypeScript · Apache-2.0 · source · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -534,7 +534,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 628 · Rust · AGPL-3.0 · npm · pushed 2026-09-18 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g vestige-mcp-server@latest`</sub>
 - **[Gemini CLI to API](https://github.com/gzzhongqi/geminicli2api)** — Gemini proxy
-  <sub>★ 592 · Python · MIT · source · pushed 2025-12-17 · WSL2 · Linux · Docker</sub>
+  <sub>★ 591 · Python · MIT · source · pushed 2025-12-17 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/gzzhongqi/geminicli2api.git`</sub>
 - **[Universal LLM API Proxy](https://github.com/Mirrowel/LLM-API-Key-Proxy)** — Universal multi-model proxy and library - made with Opencode community
   <sub>★ 555 · Python · clone · pushed 2026-09-16 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -684,7 +684,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 133 · Python · MIT · clone · pushed 2026-04-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jjmartres/opencode.git`</sub>
 - **[RunAPI MCP](https://github.com/runapi-ai/mcp)** — MCP server for model API jobs
-  <sub>★ 55 · TypeScript · Apache-2.0 · npx · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 55 · TypeScript · Apache-2.0 · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @runapi.ai/mcp init claude`</sub>
 - **[kickstart.opencode](https://github.com/orionpax1997/kickstart.opencode)** — A heavily commented OpenCode starter config that teaches you what everything does
   <sub>★ 43 · MIT · clone · pushed 2026-07-15</sub>

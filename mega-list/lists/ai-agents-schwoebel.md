@@ -13,7 +13,7 @@ Curated by **[jim-schwoebel/awesome_ai_agents](https://github.com/jim-schwoebel/
 | <a href="https://github.com/Significant-Gravitas/AutoGPT"><img src="https://raw.githubusercontent.com/Significant-Gravitas/AutoGPT/master/docs/home/.gitbook/assets/Banner_image.png" width="260"></a> | <a href="https://github.com/Significant-Gravitas/AutoGPT"><img src="https://raw.githubusercontent.com/Torantulino/Auto-GPT/master/docs/home/.gitbook/assets/Banner_image.png" width="260"></a> | <a href="https://github.com/ollama/ollama"><img src="https://opengraph.githubassets.com/1/ollama/ollama" width="260"></a> |
 | **[AutoGPT](https://github.com/Significant-Gravitas/AutoGPT)**<br>★ 187.5k | **[Auto-GPT](https://github.com/Significant-Gravitas/AutoGPT)**<br>★ 187.5k | **[Ollama](https://github.com/ollama/ollama)**<br>★ 181.5k |
 | <a href="https://github.com/langchain-ai/langchain/"><img src="https://opengraph.githubassets.com/1/langchain-ai/langchain" width="260"></a> | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> |
-| **[LangChain Tools](https://github.com/langchain-ai/langchain/)**<br>★ 146.9k | **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 88.8k | **[OpenDevin](https://github.com/OpenHands/OpenHands)**<br>★ 88.8k |
+| **[LangChain Tools](https://github.com/langchain-ai/langchain/)**<br>★ 146.9k | **[OpenDevin](https://github.com/OpenHands/OpenHands)**<br>★ 88.8k | **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 88.8k |
 
 Page **1** of 2, because this list is longer than the 512 KB GitHub will render in one file. In order: **1** · [2](ai-agents-schwoebel-2.md) — [continue on page 2 →](ai-agents-schwoebel-2.md)
 
@@ -37,10 +37,10 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 - **[LangChain Tools](https://github.com/langchain-ai/langchain/)** — Langchain integrates various providers like Anthropic, AWS, and OpenAI, and offers tools for components such as LLMs, chat models, and data analysis, supporting functionalities from Alpha Vantage to YouTube github | docs
   <sub>★ 146.9k · Python · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/langchain-ai/langchain/.git`</sub>
-- **[OpenHands](https://github.com/OpenHands/OpenHands)** — OpenHands: Code Less, Make More. (formerly OpenDevin), a platform for software development agents powered by AI. github
+- **[OpenDevin](https://github.com/OpenHands/OpenHands)** — OpenDevin is an open-source initiative aimed at replicating and enhancing the autonomous AI software engineer Devin, focusing on collaboration and complex task execution in software development, emphasizing its relevance to advancing agentic AI technologies github | github profile
   <sub>★ 88.8k · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
-- **[OpenDevin](https://github.com/OpenHands/OpenHands)** — OpenDevin is an open-source initiative aimed at replicating and enhancing the autonomous AI software engineer Devin, focusing on collaboration and complex task execution in software development, emphasizing its relevance to advancing agentic AI technologies github | github profile
+- **[OpenHands](https://github.com/OpenHands/OpenHands)** — OpenHands: Code Less, Make More. (formerly OpenDevin), a platform for software development agents powered by AI. github
   <sub>★ 88.8k · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[Lobe Chat](https://github.com/lobehub/lobehub)** — Lobe Chat is an open-source UI framework for building ChatGPT/LLM-based chat applications, featuring modern design, speech synthesis, multi-modal support, extensible plugins, and free one-click deployment for various AI agents github | website
@@ -241,12 +241,12 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 - **[Marvin](https://github.com/PrefectHQ/marvin/)** — Marvin is an open-source AI toolkit designed for developers focused on enhancing AI agent capabilities, offering tools for natural language interfaces, image and audio generation, and entity extraction, scalable and easy to integrate into existing projects github | website
   <sub>★ 6.2k · Python · Apache-2.0 · source · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/PrefectHQ/marvin/.git`</sub>
-- **[DevOpsGPT](https://github.com/kuafuai/DevOpsGPT)** — DevOpsGPT is an AI-driven software development automation solution that combines large language models with DevOps tools to convert natural language requirements into working software, enhancing development efficiency, shortening cycles, and reducing communication costs github | github profile
-  <sub>★ 6k · HTML · source · pushed 2026-09-18 · Win? · WSL2 · Linux · Docker</sub>
-  <sub>`git clone https://github.com/kuafuai/DevOpsGPT.git`</sub>
 - **[Agents by AI Waves](https://github.com/aiwaves-cn/agents)** — Agents is an open-source framework for building autonomous language agents with features including long-short term memory, tool usage, web navigation, multi-agent communication, human-agent interaction, and symbolic control, allowing customization through natural language config files and deployment in various interfaces github | github profile
   <sub>★ 6k · Python · Apache-2.0 · pip · pushed 2024-09-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install git+https://github.com/aiwaves-cn/agents@master`</sub>
+- **[DevOpsGPT](https://github.com/kuafuai/DevOpsGPT)** — DevOpsGPT is an AI-driven software development automation solution that combines large language models with DevOps tools to convert natural language requirements into working software, enhancing development efficiency, shortening cycles, and reducing communication costs github | github profile
+  <sub>★ 6k · HTML · source · pushed 2026-09-18 · Win? · WSL2 · Linux · Docker</sub>
+  <sub>`git clone https://github.com/kuafuai/DevOpsGPT.git`</sub>
 - **[LLocalSearch](https://github.com/nilsherzig/LLocalSearch)** — LLocalSearch is a completely locally running search aggregator using LLM Agents. The user can ask a question and the system will use a chain of LLMs to find the answer. The user can see the progress of the agents and the final answer. No OpenAI or Google API keys are needed. github
   <sub>★ 5.9k · Go · Apache-2.0 · source · pushed 2026-03-24 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/nilsherzig/LLocalSearch.git`</sub>
@@ -479,7 +479,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 206 · Python · Apache-2.0 · source · pushed 2025-08-18 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/datastax/astra-assistants-api.git`</sub>
 - **[Autohand Code CLI](https://github.com/autohandai/code-cli)** — Autohand Code CLI is a self-evolving autonomous coding agent for the terminal, using the ReAct pattern to reason about and modify entire codebases through natural language, with 40+ tools, multi-LLM support (OpenRouter, Anthropic, OpenAI, Ollama, local models), semantic code search, modular skill system, and VS Code/Zed integration github | website
-  <sub>★ 197 · TypeScript · Apache-2.0 · brew · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 198 · TypeScript · Apache-2.0 · brew · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`brew install autohandai/code/autohand-code`</sub>
 - **[PyCodeAGI](https://github.com/chakkaradeep/pyCodeAGI)** — A small AGI experiment to generate a Python app given what app the user wants to build. github
   <sub>★ 184 · Python · source · pushed 2023-05-04 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1394,7 +1394,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 28.3k · TypeScript · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mastra-ai/mastra.git`</sub>
 - **[Botpress](https://github.com/botpress/botpress)** — The open-source hub to build &amp; deploy GPT/LLM Agents ⚡️
-  <sub>★ 14.9k · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 14.9k · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @botpress/cli # for npm`</sub>
 - **[Autogpt-Next-Web](https://github.com/ElricLiu/AutoGPT-Next-Web)** — Assemble, configure, and deploy autonomous AI Agents in your browser.一键免费部署你的私人AutoGPT 网页应用
   <sub>★ 3k · TypeScript · GPL-3.0 · clone · pushed 2025-02-10 · WSL2 · Linux · Docker</sub>
@@ -1911,7 +1911,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 18 · Python · Apache-2.0 · source · pushed 2023-05-22 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/montvieux/plark_ai_public.git`</sub>
 - **[Adtestpro](https://github.com/AnanyaP-WDW/AdTestPro)** — Open Source Tool To Preemptively Test Ad Creatives Against Synthetic Target Audiences
-  <sub>★ 16 · Python · source · pushed 2026-09-20 · WSL2 · Linux · Docker</sub>
+  <sub>★ 16 · Python · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/AnanyaP-WDW/AdTestPro.git`</sub>
 - **[Backtesteragent](https://github.com/The-Swarm-Corporation/BackTesterAgent)** — An enterprise-grade AI-powered backtesting framework built on the Swarms framework for automated trading strategy validation and optimiza…
   <sub>★ 15 · Python · MIT · pip · pushed 2025-10-13 · Win? · WSL2? · macOS? · Linux?</sub>

@@ -146,7 +146,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 146.9k · Python · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/langchain-ai/langchain.git`</sub>
 - **[DeerFlow](https://github.com/bytedance/deer-flow)** — ByteDance. No.1 GitHub Trending Feb 2026. 25k+ stars
-  <sub>★ 82.8k · Python · MIT · npx · pushed 2026-09-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 82.9k · Python · MIT · npx · pushed 2026-09-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add https://github.com/bytedance/deer-flow --skill claude-to-deerflow`</sub>
 - **[MetaGPT](https://github.com/FoundationAgents/MetaGPT)** — PM, architect, engineer roles. Software company sim
   <sub>★ 70.6k · Python · MIT · pip · pushed 2026-01-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -248,7 +248,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 205.7k · TypeScript · script · pushed 2026-09-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://get.n8n.io | sh`</sub>
 - **[Dify](https://github.com/langgenius/dify)** — OSS LLMOps. Visual agent builder. RAG. 130k+ stars
-  <sub>★ 156.8k · TypeScript · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
+  <sub>★ 156.9k · TypeScript · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/langgenius/dify.git`</sub>
 - **[Langflow](https://github.com/langflow-ai/langflow)** — Visual multi-agent and RAG builder
   <sub>★ 155.1k · Python · MIT · docker · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -679,13 +679,13 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
 ## Local and Self-Hosted AI
 
 - **[OpenClaw](https://github.com/openclaw/openclaw)** — Fastest-growing GitHub repo ever (9k to 188k stars in 60 days). Self-hosted agent across WhatsApp, Telegram, Slack, Discord, Signal. 5,700+ community skills
-  <sub>★ 390.2k · TypeScript · npm · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 390.3k · TypeScript · npm · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g openclaw@latest --allow-scripts=openclaw`</sub>
 - **[Ollama](https://github.com/ollama/ollama)** — Run LLMs locally. 162k+ stars. Dead simple CLI
   <sub>★ 181.5k · Go · MIT · psh · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://ollama.com/install.ps1 | iex`</sub>
 - **[Open WebUI](https://github.com/open-webui/open-webui)** — Self-hosted ChatGPT UI. Access control. Extensions
-  <sub>★ 152.8k · Python · pip · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 152.8k · Python · pip · pushed 2026-09-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`pip install open-webui`</sub>
 - **[llama.cpp](https://github.com/ggml-org/llama.cpp)** — C/C++ inference. CPU, GPU, Apple Silicon. Foundation of local AI
   <sub>★ 129.2k · C++ · MIT · source · pushed 2026-09-22 · Win · macOS</sub>
@@ -700,7 +700,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 77.4k · C++ · MIT · pip · pushed 2025-05-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install gpt4all`</sub>
 - **[Anything LLM](https://github.com/Mintplex-Labs/anything-llm)** — All-in-one AI app. RAG, agents. Desktop + Docker
-  <sub>★ 66.3k · JavaScript · MIT · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 66.3k · JavaScript · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Mintplex-Labs/anything-llm.git`</sub>
 - **[LocalAI](https://github.com/mudler/LocalAI)** — Drop-in OpenAI API replacement. No GPU required
   <sub>★ 49.2k · Go · MIT · docker · pushed 2026-09-22 · WSL2 · macOS · Linux · Docker</sub>

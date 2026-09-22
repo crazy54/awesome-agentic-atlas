@@ -11,7 +11,7 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/openclaw/openclaw"><img src="https://opengraph.githubassets.com/1/openclaw/openclaw" width="260"></a> | <a href="https://github.com/NousResearch/hermes-agent"><img src="https://opengraph.githubassets.com/1/NousResearch/hermes-agent" width="260"></a> | <a href="https://github.com/HKUDS/nanobot"><img src="https://opengraph.githubassets.com/1/HKUDS/nanobot" width="260"></a> |
-| **[OpenClaw](https://github.com/openclaw/openclaw)**<br>★ 390.2k | **[Hermes Agent](https://github.com/NousResearch/hermes-agent)**<br>★ 248k | **[nanobot](https://github.com/HKUDS/nanobot)**<br>★ 48.5k |
+| **[OpenClaw](https://github.com/openclaw/openclaw)**<br>★ 390.3k | **[Hermes Agent](https://github.com/NousResearch/hermes-agent)**<br>★ 248k | **[nanobot](https://github.com/HKUDS/nanobot)**<br>★ 48.5k |
 | <a href="https://github.com/AstrBotDevs/AstrBot"><img src="https://github.com/user-attachments/assets/f17cdb90-52d7-4773-be2e-ff64b566af6b" width="260"></a> | <a href="https://github.com/zeroclaw-labs/zeroclaw"><img src="https://opengraph.githubassets.com/1/zeroclaw-labs/zeroclaw" width="260"></a> | <a href="https://github.com/nanocoai/nanoclaw"><img src="https://opengraph.githubassets.com/1/qwibitai/nanoclaw" width="260"></a> |
 | **[AstrBot](https://github.com/AstrBotDevs/AstrBot)**<br>★ 40.8k | **[ZeroClaw](https://github.com/zeroclaw-labs/zeroclaw)**<br>★ 32.9k | **[NanoClaw](https://github.com/nanocoai/nanoclaw)**<br>★ 30.8k |
 
@@ -22,7 +22,7 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
 ## Main Projects
 
 - **[OpenClaw](https://github.com/openclaw/openclaw)** — TypeScript - The original full-featured personal AI assistant with multi-agent routing, voice wake, live canvas, companion apps, and 15+ messaging channels
-  <sub>★ 390.2k · TypeScript · npm · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 390.3k · TypeScript · npm · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g openclaw@latest --allow-scripts=openclaw`</sub>
 - **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** — Python / TypeScript - Self-improving AI agent with autonomous skill creation, persistent memory, multi-platform messaging, and subagent delegation
   <sub>★ 248k · Python · MIT · script · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
@@ -58,7 +58,7 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
   <sub>★ 3.6k · TypeScript · MIT · npx · pushed 2026-03-30 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npx tinyagi start`</sub>
 - **[Moltis](https://github.com/moltis-org/moltis)** — Rust - Personal AI gateway with single-binary deployment, multi-provider LLM support, long-term memory, sandboxed execution, voice, MCP tools, and multi-channel
-  <sub>★ 2.9k · Rust · MIT · cargo · pushed 2026-09-18 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 2.9k · Rust · MIT · cargo · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`cargo install moltis --git https://github.com/moltis-org/moltis`</sub>
 - **[zclaw](https://github.com/tnm/zclaw)** — C - The smallest possible AI personal assistant for ESP32
   <sub>★ 2.2k · C · MIT · source · pushed 2026-05-17 · WSL2? · macOS? · Linux?</sub>

@@ -126,7 +126,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 27.7k · Python · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install lerobot`</sub>
 - **[OpenPI](https://github.com/Physical-Intelligence/openpi)** — Open-source VLA models from Physical Intelligence, including π₀ and π₀.5 — flow-based vision-language-action models pretrained on large-scale robot data with fine-tuning support
-  <sub>★ 13.9k · Python · Apache-2.0 · source · pushed 2026-08-24 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 14k · Python · Apache-2.0 · source · pushed 2026-08-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Physical-Intelligence/openpi.git`</sub>
 - **[OpenVLA](https://github.com/openvla/openvla)** — A 7B-parameter open-source Vision-Language-Action model trained on 970K+ robot demonstrations from the Open X-Embodiment dataset for generalist robotic manipulation
   <sub>★ 7.1k · Python · MIT · pip · pushed 2025-03-23 · WSL2 · macOS? · Linux · Docker</sub>
@@ -250,7 +250,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 274 · Python · Apache-2.0 · pip · pushed 2023-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install modelz-llm`</sub>
 - **[LLMKube](https://github.com/defilantech/LLMKube)** — Kubernetes operator for LLM inference with pluggable runtimes (llama.cpp, PersonaPlex/Moshi, generic), multi-GPU sharding, NVIDIA CUDA and Apple Silicon Metal support, and GGUF/MLX/SafeTensors model formats
-  <sub>★ 211 · Go · Apache-2.0 · brew · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 211 · Go · Apache-2.0 · brew · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`brew install defilantech/tap/llmkube`</sub>
 
 ## Optimizations
@@ -325,7 +325,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 902 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U mosec`</sub>
 - **[mcpproxy-go](https://github.com/smart-mcp-proxy/mcpproxy-go)** — Open-source MCP proxy with BM25 tool filtering, quarantine security, activity logging, and web UI. Routes multiple MCP servers through single endpoint, reducing context bloat by ~97%
-  <sub>★ 379 · Go · MIT · go · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 379 · Go · MIT · go · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`go install github.com/smart-mcp-proxy/mcpproxy-go/cmd/mcpproxy@latest`</sub>
 - **[KubeStellar Console](https://github.com/kubestellar/console)** — AI-powered multi-cluster Kubernetes dashboard for hybrid edge and cloud. GPU monitoring, LLM inference cluster management, benchmark streaming, and 20+ CNCF integrations. CNCF Sandbox (Apache 2.0)
   <sub>★ 137 · TypeScript · Apache-2.0 · brew · pushed 2026-09-22 · Win? · WSL2 · macOS · Linux?</sub>
@@ -562,7 +562,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 907 · Python · Apache-2.0 · source · pushed 2025-04-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/guildai/guildai.git`</sub>
 - **[Kedro-Viz](https://github.com/kedro-org/kedro-viz)** — Kedro-Viz is an interactive development tool for building data science pipelines with Kedro. Kedro-Viz also allows users to view and compare different runs in the Kedro project
-  <sub>★ 762 · JavaScript · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 762 · JavaScript · Apache-2.0 · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kedro-org/kedro-viz.git`</sub>
 - **[LabNotebook](https://github.com/henripal/labnotebook)** — LabNotebook is a tool that allows you to flexibly monitor, record, save, and query all your machine learning experiments
   <sub>★ 528 · Jupyter Notebook · MIT · clone · pushed 2018-03-31 · WSL2? · Linux?</sub>
@@ -595,7 +595,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
 ## LLMOps
 
 - **[Dify](https://github.com/langgenius/dify)** — Open-source framework aims to enable developers (and even non-developers) to quickly build useful applications based on large language models, ensuring they are visual, operable, and improvable
-  <sub>★ 156.8k · TypeScript · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
+  <sub>★ 156.9k · TypeScript · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/langgenius/dify.git`</sub>
 - **[LangFlow](https://github.com/langflow-ai/langflow)** — An effortless way to experiment and prototype LangChain flows with drag-and-drop components and a chat interface
   <sub>★ 155.1k · Python · MIT · docker · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -845,7 +845,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 4.8k · Go · source · pushed 2026-03-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/SeldonIO/seldon-core.git`</sub>
 - **[Polyaxon](https://github.com/polyaxon/polyaxon)** — Machine Learning Management &amp; Orchestration Platform
-  <sub>★ 3.7k · MDX · Apache-2.0 · source · pushed 2026-09-19</sub>
+  <sub>★ 3.7k · MDX · Apache-2.0 · source · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/polyaxon/polyaxon.git`</sub>
 - **[PAI](https://github.com/microsoft/pai)** — Resource scheduling and cluster management for AI
   <sub>★ 2.7k · JavaScript · MIT · source · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -977,7 +977,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
   <sub>★ 7.1k · Rust · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install pylance`</sub>
 - **[LakeFS](https://github.com/treeverse/lakeFS)** — Git-like capabilities for your object storage
-  <sub>★ 5.5k · Go · Apache-2.0 · pip · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 5.5k · Go · pip · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pip install lakefs`</sub>
 
 ## Feature Engineering
@@ -1054,7 +1054,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
 ## Observability
 
 - **[Great Expectations](https://github.com/fivetran/great_expectations)** — Always know what to expect from your data
-  <sub>★ 11.8k · Python · Apache-2.0 · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 11.8k · Python · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install great_expectations`</sub>
 - **[Evidently](https://github.com/evidentlyai/evidently)** — An open-source framework to evaluate, test and monitor ML and LLM-powered systems
   <sub>★ 7.9k · Jupyter Notebook · Apache-2.0 · pip · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>

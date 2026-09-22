@@ -161,7 +161,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 33.9k · Rust · source · pushed 2026-06-30 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/TabbyML/tabby.git`</sub>
 - **[avante.nvim](https://github.com/avante-corp/avante.nvim)** — Neovim plugin designed to emulate the behavior of the Cursor AI IDE with AI-driven code suggestions
-  <sub>★ 18.2k · Lua · Apache-2.0 · source · pushed 2026-09-21 · Win · macOS</sub>
+  <sub>★ 18.2k · Lua · Apache-2.0 · source · pushed 2026-09-22 · Win · macOS</sub>
   <sub>`git clone https://github.com/yetone/avante.nvim.git`</sub>
 - **[copilot.vim](https://github.com/github/copilot.vim)** — Official GitHub Copilot plugin for Vim/Neovim
   <sub>★ 11.7k · Vim Script · source · pushed 2026-08-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -170,7 +170,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 6.9k · Lua · Apache-2.0 · source · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/olimorris/codecompanion.nvim.git`</sub>
 - **[Junie](https://github.com/JetBrains/junie)** — LLM-agnostic coding agent by JetBrains for terminal, IDE, and CI/CD
-  <sub>★ 454 · Shell · npm · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 456 · Shell · npm · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @jetbrains/junie`</sub>
 - **[backnotprop/prompt-tower](https://github.com/backnotprop/prompt-tower)** — A tool that helps you build prompts with many code blocks
   <sub>★ 388 · TypeScript · AGPL-3.0 · clone · pushed 2025-12-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -239,7 +239,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 14.5k · TypeScript · brew · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`brew install superset-sh/tap/superset`</sub>
 - **[Parallel Code](https://github.com/johannesjo/parallel-code)** — Desktop app for running multiple AI coding agents (Claude Code, Codex CLI, Gemini CLI) simultaneously in isolated git worktrees
-  <sub>★ 1k · TypeScript · MIT · clone · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 1k · TypeScript · MIT · clone · pushed 2026-09-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/johannesjo/parallel-code.git`</sub>
 - **[CCHub](https://github.com/Moresl/cchub)** — Desktop app for managing the Claude Code ecosystem — MCP server marketplace, config profile switching, workflow templates, security audit, and autopilot. Built with Tauri + React + Rust
   <sub>unavailable</sub>

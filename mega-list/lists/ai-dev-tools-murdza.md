@@ -246,7 +246,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 164 · TypeScript · MIT · npm · pushed 2026-08-01 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npm install -g @oxgeneral/orch # Install`</sub>
 - **[Octomind](https://github.com/Muvon/octomind)** — Session-based AI development assistant with MCP support, 7 LLM providers, and extensible architecture. Features plan-first workflow, semantic code search, and persistent memory
-  <sub>★ 140 · Rust · Apache-2.0 · cargo · pushed 2026-09-19 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 141 · Rust · Apache-2.0 · cargo · pushed 2026-09-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`cargo install octomind`</sub>
 - **[Baz CLI](https://github.com/baz-scm/baz-cli)** — CLI for AI assisted code review, with access to the actual code, diff etc
   <sub>★ 48 · TypeScript · AGPL-3.0 · npm · pushed 2026-08-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -479,7 +479,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 ## Desktop &amp; Mobile Applications
 
 - **[Parallel Code](https://github.com/johannesjo/parallel-code)** — Desktop app that runs multiple AI coding agents (Claude Code, Codex CLI, Gemini CLI) in parallel with automatic git worktree isolation, a unified GUI, and remote monitoring
-  <sub>★ 1k · TypeScript · MIT · clone · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 1k · TypeScript · MIT · clone · pushed 2026-09-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/johannesjo/parallel-code.git`</sub>
 - **[IM.codes](https://github.com/im4codes/imcodes)** — Mobile/web control layer for Claude Code, Codex, Gemini CLI, and other terminal-based coding agents, built for away-from-desk continuation with terminal access, file browsing, git views, localhost preview, notifications, and multi-agent workflows
   <sub>★ 973 · TypeScript · MIT · npm · pushed 2026-09-22 · WSL2 · macOS · Linux · Docker</sub>
@@ -731,7 +731,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 135 · Rust · MIT · winget · pushed 2026-09-14 · Win · WSL2? · macOS · Linux</sub>
   <sub>`winget install --id Luoyuctl.AgentTrace --exact`</sub>
 - **[WhereMyTokens](https://github.com/jeongwookie/WhereMyTokens)** — Windows system tray app for monitoring Claude Code token usage in real time. Displays per-session token counts, costs, context window usage, and tool call breakdowns; fetches 5h/1w rate-limit data from the Anthropic API with optional statusLine bridge integration for live data without polling
-  <sub>★ 82 · TypeScript · MIT · source · pushed 2026-09-19 · Win · macOS?</sub>
+  <sub>★ 83 · TypeScript · MIT · source · pushed 2026-09-19 · Win · macOS?</sub>
   <sub>`git clone https://github.com/jeongwookie/WhereMyTokens.git`</sub>
 - **[Code Insights](https://github.com/melagiri/code-insights)** — Local-first CLI and dashboard for analyzing AI coding sessions from Claude Code, Cursor, Codex CLI, Copilot CLI, and VS Code Copilot Chat. SQLite-backed with terminal analytics, browser dashboard, and LLM-powered insights
   <sub>★ 76 · TypeScript · MIT · npm · pushed 2026-06-01 · Win? · WSL2? · macOS? · Linux?</sub>

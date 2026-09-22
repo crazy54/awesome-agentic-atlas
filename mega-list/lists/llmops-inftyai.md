@@ -13,7 +13,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 | <a href="https://github.com/ollama/ollama"><img src="https://opengraph.githubassets.com/1/ollama/ollama" width="260"></a> | <a href="https://github.com/ggml-org/llama.cpp"><img src="https://github.com/user-attachments/assets/88726b48-1713-48aa-a525-95a02e78afc4" width="260"></a> | <a href="https://github.com/vllm-project/vllm"><img src="https://opengraph.githubassets.com/1/vllm-project/vllm" width="260"></a> |
 | **[Ollama](https://github.com/ollama/ollama)**<br>★ 181.5k | **[llama.cpp](https://github.com/ggml-org/llama.cpp)**<br>★ 129.2k | **[vLLM](https://github.com/vllm-project/vllm)**<br>★ 92.4k |
 | <a href="https://github.com/sgl-project/sglang"><img src="https://raw.githubusercontent.com/sgl-project/sgl-learning-materials/refs/heads/main/slides/adoption.png" width="260"></a> | <a href="https://github.com/tinygrad/tinygrad"><img src="https://opengraph.githubassets.com/1/tinygrad/tinygrad" width="260"></a> | <a href="https://github.com/modular/modular"><img src="https://opengraph.githubassets.com/1/modular/modular" width="260"></a> |
-| **[SGLang](https://github.com/sgl-project/sglang)**<br>★ 36.3k | **[TinyGrad](https://github.com/tinygrad/tinygrad)**<br>★ 33.6k | **[Modular](https://github.com/modular/modular)**<br>★ 29.8k |
+| **[SGLang](https://github.com/sgl-project/sglang)**<br>★ 36.3k | **[TinyGrad](https://github.com/tinygrad/tinygrad)**<br>★ 33.6k | **[Modular](https://github.com/modular/modular)**<br>★ 29.9k |
 
 ## Contents
 
@@ -128,7 +128,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## Inference Platform
 
 - **[Modular](https://github.com/modular/modular)** — The Modular Platform (includes MAX &amp; Mojo)
-  <sub>★ 29.8k · Mojo · source · pushed 2026-09-22</sub>
+  <sub>★ 29.9k · Mojo · source · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/modular/modular.git`</sub>
 - **[BentoML](https://github.com/bentoml/BentoML)** — The easiest way to serve AI apps and models - Build Model Inference APIs, Job queues, LLM apps, Multi-model pipelines, and more!
   <sub>★ 8.9k · Python · Apache-2.0 · pip · pushed 2026-09-07 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -206,10 +206,10 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 3k · Python · MIT · pip · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llmrouter-lib`</sub>
 - **[Otari](https://github.com/mozilla-ai/otari)** — Open-source, OpenAI-compatible LLM gateway you run yourself. One endpoint for 40+ providers, with virtual keys, budgets, and usage tracking
-  <sub>★ 485 · Python · Apache-2.0 · clone · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
+  <sub>★ 486 · Python · Apache-2.0 · clone · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/mozilla-ai/otari`</sub>
 - **[Ferro Labs AI Gateway](https://github.com/ferro-labs/ai-gateway)** — One API for 25+ LLMs, OpenAI, Anthropic, Bedrock, Azure. Caching, guardrails &amp; cost controls. Go-native LiteLLM &amp; Kong AI Gateway alternative
-  <sub>★ 264 · Go · Apache-2.0 · scoop · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 265 · Go · Apache-2.0 · scoop · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`scoop bucket add ferrolabs https://github.com/ferro-labs/homebrew-tap scoop install ferrogw`</sub>
 - **[Doubleword Control Layer](https://github.com/doublewordai/control-layer)** — The world’s fastest AI model gateway (450x less overhead than LiteLLM). Unified access to LLMs across endpoints (openAI, self-hosted, etc.) behind a single authentication layer - with API key generation, user management, request logging, and more
   <sub>★ 94 · Rust · Apache-2.0 · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
@@ -224,7 +224,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 21 · Python · MIT · pip · pushed 2026-09-08 · macOS</sub>
   <sub>`pip install ollama-herd`</sub>
 - **[Swobu](https://github.com/swobuforge/swobu)** — Local AI gateway for routing clients across providers, regions, accounts, and local models
-  <sub>★ 18 · Go · AGPL-3.0 · psh · pushed 2026-09-19 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 18 · Go · AGPL-3.0 · psh · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`irm https://swobu.com/install.ps1 | iex`</sub>
 - **[OpenPaths](https://github.com/lee101/openpaths)** — Open-source, OpenAI-compatible model router/AI gateway routing chat, image, video, music, speech, transcription, embeddings and reasoning models to the lowest-latency provider via a unified API
   <sub>★ 3 · TypeScript · clone · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -406,7 +406,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 58.4k · Python · MIT · clone · pushed 2026-08-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/FoundationAgents/OpenManus.git`</sub>
 - **[goose](https://github.com/aaif-goose/goose)** — an open source, extensible AI agent that goes beyond code suggestions - install, execute, edit, and test with any LLM
-  <sub>★ 54.5k · Rust · Apache-2.0 · script · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 54.6k · Rust · Apache-2.0 · script · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | bash`</sub>
 - **[Tongyi Deep Research](https://github.com/Alibaba-NLP/DeepResearch)** — Tongyi DeepResearch, the Leading Open-source DeepResearch Agent
   <sub>★ 20k · Python · Apache-2.0 · source · pushed 2026-02-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -430,7 +430,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 20.4k · Python · MIT · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/SWE-agent/SWE-agent.git`</sub>
 - **[Open SWE](https://github.com/langchain-ai/open-swe)** — An Open-Source Asynchronous Coding Agent
-  <sub>★ 10.7k · Python · MIT · clone · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 10.8k · Python · MIT · clone · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`git clone https://github.com/langchain-ai/open-swe.git`</sub>
 - **[Kolega Code](https://github.com/kolega-ai/kolega-code)** — Terminal coding agent where the model writes its own multi-agent workflows (Gigacode); provider-agnostic with MCP support and journaled resume
   <sub>★ 21 · Python · uv · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -439,7 +439,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## Workflow
 
 - **[Dify](https://github.com/langgenius/dify)** — Production-ready platform for agentic workflow development
-  <sub>★ 156.8k · TypeScript · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
+  <sub>★ 156.9k · TypeScript · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/langgenius/dify.git`</sub>
 - **[LangChain](https://github.com/langchain-ai/langchain)** — Build context-aware reasoning applications
   <sub>★ 146.9k · Python · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -475,13 +475,13 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 4.8k · Go · source · pushed 2026-03-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/SeldonIO/seldon-core.git`</sub>
 - **[Polyaxon](https://github.com/polyaxon/polyaxon)** — MLOps Tools For Managing &amp; Orchestrating The Machine Learning LifeCycle
-  <sub>★ 3.7k · MDX · Apache-2.0 · source · pushed 2026-09-19</sub>
+  <sub>★ 3.7k · MDX · Apache-2.0 · source · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/polyaxon/polyaxon.git`</sub>
 - **[Inference](https://github.com/roboflow/inference)** — Turn any computer or edge device into a command center for your computer vision projects
   <sub>★ 2.5k · Python · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install inference-cli`</sub>
 - **[Heym](https://github.com/heymrun/heym)** — Source-available, self-hosted visual platform for building, running, evaluating, and observing AI workflows with agents, RAG, and MCP
-  <sub>★ 1.2k · Python · clone · pushed 2026-09-21 · Win? · WSL2 · Linux · Docker</sub>
+  <sub>★ 1.2k · Python · clone · pushed 2026-09-22 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/heymrun/heym.git`</sub>
 - **[Nika](https://github.com/supernovae-st/nika)** — Intent-as-code AI workflow engine in a single Rust binary — reviewable YAML DAGs statically checked (schema, permits, honest cost floor) before any token is spent, tamper-evident traces after
   <sub>★ 89 · Rust · AGPL-3.0 · brew · pushed 2026-09-22 · Win? · WSL2 · macOS · Linux?</sub>
@@ -556,7 +556,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 29.4k · Rust · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install chromadb # python client`</sub>
 - **[Hindsight](https://github.com/vectorize-io/hindsight)** — Hindsight: Agent Memory That Learns
-  <sub>★ 25k · Python · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 25.1k · Python · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx @vectorize-io/hindsight-coding-agents install all # every detected agent, wired natively`</sub>
 - **[weaviate](https://github.com/weaviate/weaviate)** — Weaviate is an open-source vector database that stores both objects and vectors, allowing for the combination of vector search with structured filtering with the fault tolerance and scalability of a cloud-native database​
   <sub>★ 16.8k · Go · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -649,7 +649,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## Chatbot
 
 - **[Open WebUI](https://github.com/open-webui/open-webui)** — User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
-  <sub>★ 152.8k · Python · pip · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 152.8k · Python · pip · pushed 2026-09-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`pip install open-webui`</sub>
 - **[NextChat](https://github.com/ChatGPTNextWeb/NextChat)** — Light and Fast AI Assistant. Support: Web | iOS | MacOS | Android | Linux | Windows
   <sub>★ 88.8k · TypeScript · MIT · source · pushed 2026-08-11 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -658,7 +658,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 82.8k · TypeScript · source · pushed 2026-09-22 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/lobehub/lobe-chat.git`</sub>
 - **[AnythingLLM](https://github.com/Mintplex-Labs/anything-llm)** — The all-in-one Desktop &amp; Docker AI application with built-in RAG, AI agents, No-code agent builder, MCP compatibility, and more
-  <sub>★ 66.3k · JavaScript · MIT · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 66.3k · JavaScript · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Mintplex-Labs/anything-llm.git`</sub>
 - **[PrivateGPT](https://github.com/zylon-ai/private-gpt)** — Interact with your documents using the power of GPT, 100% privately, no data leaks
   <sub>★ 57.5k · Python · Apache-2.0 · brew · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux?</sub>
@@ -800,7 +800,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 4.7k · TypeScript · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @latitude-data/claude-code-telemetry install`</sub>
 - **[ClawMetry](https://github.com/vivekchand/clawmetry)** — Self-hosted observability for coding agents. Reads the session logs runtimes already write on disk, so there is no SDK and nothing in the request path
-  <sub>★ 420 · Python · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 421 · Python · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add vivekchand/clawmetry --skill agent-kill-switch`</sub>
 - **[OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)** — Record, replay and fork debugger for AI agents. Records a run below the harness, replays it offline with the network off, and forks it from any checkpoint onto another model
   <sub>★ 260 · TypeScript · Apache-2.0 · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>

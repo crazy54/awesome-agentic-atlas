@@ -11,7 +11,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> | <a href="https://github.com/usestrix/strix"><img src="https://raw.githubusercontent.com/usestrix/.github/main/imgs/cover.png" width="260"></a> | <a href="https://github.com/BerriAI/litellm"><img src="https://github.com/user-attachments/assets/c5ee0412-6fb5-4fb6-ab5b-bafae4209ca6" width="260"></a> |
-| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 88.8k | **[Strix](https://github.com/usestrix/strix)**<br>★ 64.1k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 59.4k |
+| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 88.8k | **[Strix](https://github.com/usestrix/strix)**<br>★ 64.2k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 59.4k |
 | <a href="https://github.com/NVIDIA/garak"><img src="https://opengraph.githubassets.com/1/leondz/garak" width="260"></a> | <a href="https://github.com/bridgecrewio/checkov"><img src="https://raw.githubusercontent.com/bridgecrewio/checkov/main/docs/checkov-jenkins.png" width="260"></a> | <a href="https://github.com/guardrails-ai/guardrails"><img src="https://opengraph.githubassets.com/1/guardrails-ai/guardrails" width="260"></a> |
 | **[Garak](https://github.com/NVIDIA/garak)**<br>★ 9.3k | **[Checkov](https://github.com/bridgecrewio/checkov)**<br>★ 9k | **[Guardrails](https://github.com/guardrails-ai/guardrails)**<br>★ 7.4k |
 
@@ -43,13 +43,13 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Red Teaming &amp; Vulnerability Scanners
 
 - **[Strix](https://github.com/usestrix/strix)** — An autonomous AI agent designed for penetration testing. It runs inside a docker sandbox to actively probe applications and generate verified exploit capabilities
-  <sub>★ 64.1k · Python · Apache-2.0 · npx · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 64.2k · Python · Apache-2.0 · npx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add usestrix/strix`</sub>
 - **[Garak](https://github.com/NVIDIA/garak)** — The "Nmap for LLMs." A vulnerability scanner that probes models for hallucination, data leakage, and prompt injection susceptibilities
   <sub>★ 9.3k · Python · Apache-2.0 · source · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/leondz/garak.git`</sub>
 - **[Agentic Security](https://github.com/msoedov/agentic_security)** — A dedicated vulnerability scanner for agent workflows and LLMs capable of running multi-step jailbreaks and fuzzing attacks against agent logic
-  <sub>★ 2k · Python · Apache-2.0 · pip · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2k · Python · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentic_security`</sub>
 - **[A2A Scanner](https://github.com/cisco-ai-defense/a2a-scanner)** — A scanner by Cisco designed to inspect "Agent-to-Agent" communication protocols for threats, validating agent identities and ensuring compliance with communication specs
   <sub>★ 165 · Python · Apache-2.0 · uv · pushed 2026-04-16 · Win? · WSL2? · macOS · Linux?</sub>

@@ -410,7 +410,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 81 · JavaScript · Apache-2.0 · source · pushed 2026-08-06 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/patsnap/patent-literature-search-mcp.git`</sub>
 - **[WenyuChiou/research-hub](https://github.com/WenyuChiou/research-hub)** — Research workspace MCP integrating Zotero, Obsidian, and NotebookLM. Search papers (arXiv/Semantic Scholar/PubMed/CrossRef), ingest into Zotero, sync notes to Obsidian, verify NotebookLM briefs. All three external tools optional. pip install research-hub-pipeline then research-hub serve
-  <sub>★ 55 · Python · MIT · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 56 · Python · MIT · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install research-hub-pipeline`</sub>
 - **[Battam1111/omniseek](https://github.com/Battam1111/omniseek)** — Self-hosted perception server for agents: local bilingual ASR, in-band vision, cross-lingual search, login-walled sources you hold credentials for, and a persistent relation graph
   <sub>★ 50 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
@@ -760,7 +760,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 806 · Python · MIT · pip · pushed 2026-03-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install metatrader-mcp-server`</sub>
 - **[openaccountants/openaccountants](https://github.com/openaccountants/openaccountants)** — Open-source AI accounting skills, checked by licensed accountants jurisdiction by jurisdiction. 3 tools: list skills by country/category, get full skill content, and get individual sections. Skills teach AI agents tax computations (income tax, VAT, payroll) across 134 countries plus US states and Canadian provinces. Hosted at https://www.openaccountants.com/api/mcp
-  <sub>★ 399 · Python · AGPL-3.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 400 · Python · AGPL-3.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install openaccountants-mcp`</sub>
 - **[polygon-io/mcp_polygon)](https://github.com/massive-com/mcp_massive)** — ) 🐍 ☁️ - An MCP server that provides access to Polygon.io financial market data APIs for stocks, indices, forex, options, and more
   <sub>★ 391 · Python · MIT · source · pushed 2026-06-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -781,7 +781,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 291 · CC0-1.0 · npx · pushed 2026-07-28 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx tollbooth-x402`</sub>
 - **[traceloop/opentelemetry-mcp-server](https://github.com/traceloop/opentelemetry-mcp-server.git)** — An MCP server for connecting to any OpenTelemetry backend (Datadog, Grafana, Dynatrace, Traceloop, etc.)
-  <sub>★ 203 · Python · Apache-2.0 · uv · pushed 2026-06-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 204 · Python · Apache-2.0 · uv · pushed 2026-06-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`uvx opentelemetry-mcp --backend jaeger --url http://localhost:16686`</sub>
 - **[narumiruna/yfinance-mcp](https://github.com/narumiruna/yfinance-mcp)** — An MCP server that uses yfinance to obtain information from Yahoo Finance
   <sub>★ 196 · Python · MIT · clone · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1011,9 +1011,6 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
 - **[RomThpt/xrpl-mcp-server](https://github.com/RomThpt/mcp-xrpl)** — MCP server for the XRP Ledger that provides access to account information, transaction history, and network data. Allows querying ledger objects, submitting transactions, and monitoring the XRPL network
   <sub>★ 13 · TypeScript · MIT · clone · pushed 2026-08-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/yourusername/mcp-xrpl.git`</sub>
-- **[ThomasMarches/substrate-mcp-rs](https://github.com/ThomasMarches/substrate-mcp-rs)** — An MCP server implementation to interact with Substrate-based blockchains. Built with Rust and interfacing the subxt crate
-  <sub>★ 13 · Rust · MIT · clone · pushed 2025-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/ThomasMarches/substrate-mcp-rs.git`</sub>
 - **[OSOJDJD/deeplook](https://github.com/OSOJDJD/deeplook)** — Free company research agent — 10 data sources, structured reports with bull/bear verdict in ~10 seconds. Stocks, crypto, and private companies
   <sub>★ 12 · Python · AGPL-3.0 · clone · pushed 2026-08-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/OSOJDJD/deeplook.git`</sub>
@@ -1026,6 +1023,9 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
 - **[Mattbusel/Reddit-Options-Trader-ROT](https://github.com/Mattbusel/Reddit-Options-Trader-ROT-)** — The first financial intelligence MCP server. Live AI-scored trading signals from Reddit, SEC filings, FDA approvals, Congressional trades, and 15+ sources. 7 tools, 2 resources, hosted remotely, free, no API key required
   <sub>★ 12 · Python · MIT · clone · pushed 2026-04-27 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/Mattbusel/Reddit-Options-Trader-ROT-.git`</sub>
+- **[ThomasMarches/substrate-mcp-rs](https://github.com/ThomasMarches/substrate-mcp-rs)** — An MCP server implementation to interact with Substrate-based blockchains. Built with Rust and interfacing the subxt crate
+  <sub>★ 12 · Rust · MIT · clone · pushed 2025-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/ThomasMarches/substrate-mcp-rs.git`</sub>
 - **[QuantOracledev/quantoracle](https://github.com/QuantOracledev/quantoracle)** — 63 deterministic quant finance tools for AI agents — options pricing, risk metrics, portfolio optimization, Monte Carlo, technical indicators, crypto/DeFi, and FX/macro. 1,000 free calls/day, no API key
   <sub>★ 11 · TypeScript · MIT · npm · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g quantoracle-cli`</sub>
@@ -1083,6 +1083,9 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
 - **[Avierovich/openpitch](https://github.com/Avierovich/openpitch)** — Open, real-time intelligence on AI startups — valuations, ARR, and funding, with every figure sourced, dated, and confidence-scored, plus public-source contradiction flags. A free, open PitchBook alternative that reads committed public data: no API key, no signup. uvx openpitch-mcp
   <sub>★ 8 · Python · MIT · uv · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx openpitch-mcp`</sub>
+- **[JosueM1109/personal-finance-mcp](https://github.com/JosueM1109/personal-finance-mcp)** — Self-hosted, read-only MCP server that connects banks, credit cards, loans, and brokerage accounts via Plaid. 9 tools for balances, transactions, recurring charges, liabilities, and investment holdings
+  <sub>★ 8 · Python · MIT · clone · pushed 2026-04-20 · WSL2 · Linux · Docker</sub>
+  <sub>`git clone https://github.com/JosueM1109/personal-finance-mcp.git`</sub>
 - **[kukapay/crypto-liquidations-mcp](https://github.com/kukapay/crypto-liquidations-mcp)** — Streams real-time cryptocurrency liquidation events from Binance
   <sub>★ 8 · Python · MIT · npx · pushed 2025-05-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli install @kukapay/crypto-liquidations-mcp --client claude`</sub>
@@ -1104,9 +1107,6 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
 - **[hoqqun/stooq-mcp](https://github.com/hoqqun/stooq-mcp)** — Fetch real-time stock prices from Stooq without API keys. Supports global markets (US, Japan, UK, Germany)
   <sub>★ 7 · Shell · script · pushed 2025-12-28 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/hoqqun/stooq-mcp/main/install.sh | bash`</sub>
-- **[JosueM1109/personal-finance-mcp](https://github.com/JosueM1109/personal-finance-mcp)** — Self-hosted, read-only MCP server that connects banks, credit cards, loans, and brokerage accounts via Plaid. 9 tools for balances, transactions, recurring charges, liabilities, and investment holdings
-  <sub>★ 7 · Python · MIT · clone · pushed 2026-04-20 · WSL2 · Linux · Docker</sub>
-  <sub>`git clone https://github.com/JosueM1109/personal-finance-mcp.git`</sub>
 - **[kukapay/chainlink-feeds-mcp](https://github.com/kukapay/chainlink-feeds-mcp)** — Providing real-time access to Chainlink's decentralized on-chain price feeds
   <sub>★ 7 · JavaScript · MIT · clone · pushed 2025-07-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kukapay/chainlink-feeds-mcp.git`</sub>
@@ -1312,7 +1312,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 3 · JavaScript · MIT · clone · pushed 2026-05-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/decksaga/market-pulse-mcp.git`</sub>
 - **[hifriendbot/agentwallet-mcp](https://github.com/hifriendbot/agentwallet-mcp)** — Permissionless wallet infrastructure for AI agents. 29 tools for wallet creation, transaction signing, token transfers, and x402 payments across all EVM chains and Solana. No KYC, no API keys — agents pay with USDC
-  <sub>★ 3 · TypeScript · MIT · source · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3 · TypeScript · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/hifriendbot/agentwallet-mcp.git`</sub>
 - **[Fund-z/fundzwatch-mcp](https://github.com/Fund-z/fundzwatch-mcp)** — Real-time business event intelligence for AI agents. Funding rounds, acquisitions, executive hires, AI-scored leads, and market intelligence
   <sub>★ 3 · TypeScript · MIT · npx · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>

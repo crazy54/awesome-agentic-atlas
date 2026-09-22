@@ -2,14 +2,14 @@
 
 Targets Cline or Roo Code.
 
-**89 projects** · 78 with stars to rank by · 249,632 combined stars
+**89 projects** · 78 with stars to rank by · 249,700 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#target=cline-roo)
 
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/diegosouzapw/OmniRoute"><img src="https://raw.githubusercontent.com/diegosouzapw/OmniRoute/release/v3.8.51/docs/screenshots/MainOmniRoute.png" width="260"></a> | <a href="https://github.com/cline/cline"><img src="https://opengraph.githubassets.com/1/cline/cline" width="260"></a> | <a href="https://github.com/zhaoxuya520/reverse-skill"><img src="https://opengraph.githubassets.com/1/zhaoxuya520/reverse-skill" width="260"></a> |
-| **[OmniRoute: Multi-Provider LLM Gateway](https://github.com/diegosouzapw/OmniRoute)**<br>★ 69.1k | **[Cline](https://github.com/cline/cline)**<br>★ 69k | **[zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)**<br>★ 36.9k |
+| **[OmniRoute: Multi-Provider LLM Gateway](https://github.com/diegosouzapw/OmniRoute)**<br>★ 69.2k | **[Cline](https://github.com/cline/cline)**<br>★ 69k | **[zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)**<br>★ 36.9k |
 | <a href="https://github.com/decolua/9router"><img src="https://img.youtube.com/vi/X69n5Lm06Yw/maxresdefault.jpg" width="260"></a> | <a href="https://github.com/RooCodeInc/Roo-Code"><img src="https://opengraph.githubassets.com/1/RooVetGit/Roo-Code" width="260"></a> | <a href="https://github.com/executeautomation/mcp-playwright"><img src="https://opengraph.githubassets.com/1/executeautomation/mcp-playwright" width="260"></a> |
 | **[9router](https://github.com/decolua/9router)**<br>★ 29.6k | **[RooCode](https://github.com/RooCodeInc/Roo-Code)**<br>★ 24.3k | **[executeautomation/playwright-mcp-server](https://github.com/executeautomation/mcp-playwright)**<br>★ 5.7k |
 
@@ -17,7 +17,7 @@ Targets Cline or Roo Code.
 
 | # | Project | ★ | Lists | Category | Runs on | Install / Run | What it does |
 |--:|---|--:|--:|---|---|---|---|
-| 1 | **[OmniRoute: Multi-Provider LLM Gateway](https://github.com/diegosouzapw/OmniRoute)**<br><sub>diegosouzapw/OmniRoute</sub> | 69.1k | 1 | <sub>Orchestrators &amp; Multi-Agent</sub> | <sub>Win · WSL2? · macOS · Linux · Docker</sub> | `npm install -g omniroute` | Intelligent routing across multiple LLM providers with load balancing, intelligent fallbacks, rate limiting, and response caching. Achieves 40–60% token cost reduction through sma… |
+| 1 | **[OmniRoute: Multi-Provider LLM Gateway](https://github.com/diegosouzapw/OmniRoute)**<br><sub>diegosouzapw/OmniRoute</sub> | 69.2k | 1 | <sub>Orchestrators &amp; Multi-Agent</sub> | <sub>Win · WSL2? · macOS · Linux · Docker</sub> | `npm install -g omniroute` | Intelligent routing across multiple LLM providers with load balancing, intelligent fallbacks, rate limiting, and response caching. Achieves 40–60% token cost reduction through sma… |
 | 2 | **[Cline](https://github.com/cline/cline)**<br><sub>cline/cline</sub> | 69k | 6 | <sub>Coding Agents</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npm i -g cline` | Autonomous coding agent in VS Code with human-in-the-loop approvals; file editing, terminal commands, and browser use. ~59K+ ⭐ |
 | 3 | **[zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)**<br><sub>zhaoxuya520/reverse-skill</sub> | 36.9k | 2 | <sub>Agent Skills</sub> | <sub>Win · WSL2? · macOS · Linux</sub> | `git clone https://github.com/zhaoxuya520/reverse-skill.git` | Source for 43 security skills covering reverse engineering, binary analysis, offensive assessment orchestration, and threat-intelligence workflows, adapted with English metadata a… |
 | 4 | **[9router](https://github.com/decolua/9router)**<br><sub>decolua/9router</sub> | 29.6k | 1 | <sub>Harnesses &amp; Runtime Infra</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `npm install -g 9router` | (23.7k ⭐) - Routes Claude Code, Codex, Cursor, Cline, and other coding agents to dozens of model providers with automatic fallback |

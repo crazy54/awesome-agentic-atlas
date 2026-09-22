@@ -11,7 +11,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/openclaw/openclaw"><img src="https://opengraph.githubassets.com/1/openclaw/openclaw" width="260"></a> | <a href="https://github.com/langchain-ai/langchain"><img src="https://opengraph.githubassets.com/1/langchain-ai/langchain" width="260"></a> | <a href="https://github.com/huggingface/smolagents"><img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/smolagents/smolagents.png" width="260"></a> |
-| **[OpenClaw](https://github.com/openclaw/openclaw)**<br>★ 390.2k | **[LangChain](https://github.com/langchain-ai/langchain)**<br>★ 146.9k | **[Smolagents](https://github.com/huggingface/smolagents)**<br>★ 29.4k |
+| **[OpenClaw](https://github.com/openclaw/openclaw)**<br>★ 390.3k | **[LangChain](https://github.com/langchain-ai/langchain)**<br>★ 146.9k | **[Smolagents](https://github.com/huggingface/smolagents)**<br>★ 29.4k |
 | <a href="https://github.com/microsoft/semantic-kernel"><img src="https://opengraph.githubassets.com/1/microsoft/semantic-kernel" width="260"></a> | <a href="https://github.com/mastra-ai/mastra"><img src="https://opengraph.githubassets.com/1/mastra-ai/mastra" width="260"></a> | <a href="https://github.com/google/adk-python"><img src="https://raw.githubusercontent.com/google/adk-python/main/assets/adk-web-dev-ui.png" width="260"></a> |
 | **[Semantic Kernel](https://github.com/microsoft/semantic-kernel)**<br>★ 28.6k | **[Mastra](https://github.com/mastra-ai/mastra)**<br>★ 28.3k | **[Google ADK](https://github.com/google/adk-python)**<br>★ 21.6k |
 
@@ -33,7 +33,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
 ## Core Frameworks
 
 - **[OpenClaw](https://github.com/openclaw/openclaw)** — Personal AI assistant that runs on any platform
-  <sub>★ 390.2k · TypeScript · npm · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 390.3k · TypeScript · npm · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g openclaw@latest --allow-scripts=openclaw`</sub>
 - **[LangChain](https://github.com/langchain-ai/langchain)** — Compose LLM apps from modular pieces
   <sub>★ 146.9k · Python · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -102,7 +102,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 873 · Python · Apache-2.0 · pip · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install promptise`</sub>
 - **[Aeon](https://github.com/aeonfun/aeon)** — Runs unattended on GitHub Actions, self-healing
-  <sub>★ 752 · Shell · MIT · clone · pushed 2026-09-21</sub>
+  <sub>★ 753 · Shell · MIT · clone · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/<you>/aeon`</sub>
 - **[Octochains](https://github.com/ahmadvh/octochains)** — Parallel isolated reasoning with an aggregator
   <sub>★ 374 · Python · pip · pushed 2026-08-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -117,7 +117,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 85 · Python · Apache-2.0 · clone · pushed 2026-09-14 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/NetMindAI-Open/NarraNexus.git`</sub>
 - **[ProtoLink](https://github.com/nMaroulis/protolink)** — Python agents with native A2A communication
-  <sub>★ 82 · Python · MIT · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 83 · Python · MIT · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install 'protolink[integrations]'`</sub>
 - **[ShaprAI](https://github.com/Scottcjn/shaprai)** — Sharpens raw models into principled agents
   <sub>★ 73 · Python · MIT · pip · pushed 2026-07-25 · Win · WSL2? · macOS · Linux</sub>
@@ -182,7 +182,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 120 · Python · MIT · pip · pushed 2026-09-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install flock-core`</sub>
 - **[Quorum](https://github.com/Detrol/quorum-cli)** — Structured multi-agent debate in the terminal
-  <sub>★ 116 · Python · pip · pushed 2026-01-01 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 117 · Python · pip · pushed 2026-01-01 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`pip install quorum-cli`</sub>
 - **[OpenAcme](https://github.com/sandydasari/openacme)** — Role-specialized agents that self-organize
   <sub>★ 87 · TypeScript · MIT · npm · pushed 2026-07-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -209,7 +209,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 680 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g @swarmclawai/swarmclaw`</sub>
 - **[h5i](https://github.com/h5i-dev/h5i)** — Runs agents in sandboxes, merges the verified result
-  <sub>★ 650 · Rust · Apache-2.0 · npx · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 650 · Rust · Apache-2.0 · npx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add h5i-dev/h5i # if you do not have the binary yet`</sub>
 - **[Dorothy](https://github.com/Charlie85270/Dorothy)** — Desktop app to run several CLI agents at once
   <sub>★ 346 · TypeScript · MIT · clone · pushed 2026-07-07 · WSL2? · macOS · Linux?</sub>
@@ -242,13 +242,13 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
 ## Low-Code &amp; Visual Builders
 
 - **[Dify](https://github.com/langgenius/dify)** — Visual orchestration for LLM apps and agents
-  <sub>★ 156.8k · TypeScript · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
+  <sub>★ 156.9k · TypeScript · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/langgenius/dify.git`</sub>
 - **[Kiln AI](https://github.com/Kiln-AI/Kiln)** — Desktop app for evals, RAG and fine-tuning
   <sub>★ 5.1k · Python · pip · pushed 2026-09-22 · Win · WSL2? · macOS · Linux?</sub>
   <sub>`pip install kiln-ai`</sub>
 - **[Heym](https://github.com/heymrun/heym)** — Visual builder for agentic workflow automation
-  <sub>★ 1.2k · Python · clone · pushed 2026-09-21 · Win? · WSL2 · Linux · Docker</sub>
+  <sub>★ 1.2k · Python · clone · pushed 2026-09-22 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/heymrun/heym.git`</sub>
 
 ## Agent Infrastructure
@@ -275,7 +275,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
 ## Memory &amp; Context
 
 - **[Hindsight](https://github.com/vectorize-io/hindsight)** — Agent memory with retain, recall and reflect
-  <sub>★ 25k · Python · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 25.1k · Python · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx @vectorize-io/hindsight-coding-agents install all # every detected agent, wired natively`</sub>
 - **[Caura](https://github.com/caura-ai/caura)** — Governed shared memory for fleets of agents
   <sub>★ 529 · Python · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -319,10 +319,10 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 4.6k · Python · MIT · source · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ruc-datalab/DeepAnalyze.git`</sub>
 - **[Darkmoon](https://github.com/ASCIT31/Dark-Moon)** — Autonomous pentesting across web, cloud and AD
-  <sub>★ 962 · Python · GPL-3.0 · clone · pushed 2026-09-21 · WSL2 · Linux · Docker</sub>
+  <sub>★ 963 · Python · GPL-3.0 · clone · pushed 2026-09-21 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/ASCIT31/Dark-Moon.git`</sub>
 - **[RAI](https://github.com/RobotecAI/rai)** — Agent framework for robotics, built on ROS 2
-  <sub>★ 590 · Python · Apache-2.0 · source · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 591 · Python · Apache-2.0 · source · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/RobotecAI/rai.git`</sub>
 - **[CleverBee](https://github.com/SureScaleAI/cleverbee)** — Deep research agent that browses with Playwright
   <sub>★ 302 · Python · AGPL-3.0 · clone · pushed 2026-01-31 · Win? · WSL2 · macOS? · Linux?</sub>
@@ -337,7 +337,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 107 · Python · MIT · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/wq19901103wq/wechat-mac-rpa.git`</sub>
 - **[Omni-Rewriter](https://github.com/WayneJin0918/Omni-Rewriter)** — Prompt expansion for image and video generation
-  <sub>★ 88 · Python · Apache-2.0 · pip · pushed 2026-08-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 89 · Python · Apache-2.0 · pip · pushed 2026-08-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install omni-rewriter`</sub>
 - **[DNA Claude Analysis](https://github.com/shmlkv/dna-claude-analysis)** — Explore your genome in natural language
   <sub>★ 57 · Python · MIT · source · pushed 2026-03-04 · Win? · WSL2? · macOS? · Linux?</sub>
