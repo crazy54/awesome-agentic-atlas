@@ -313,7 +313,7 @@ jobs:
           #
           # Here *and* in weekly.yml, and this is the copy that matters. `22_detail.py`'s 1,294 pages fetch
           # this file for the star count, the last-push date and the snapshot they qualify, and that stage
-          # is weekly-only (see the long note below) precisely because it emits no volatile byte. This file
+          # emits no volatile byte (see the note above `22_detail.py` below, which runs here too). This file
           # is the volatile bytes, so it is rebuilt on the same cadence as `data.json` itself. Dropped from
           # this workflow, the detail pages would show star counts up to six days behind the index page's,
           # for the same repository, with nothing failing -- so the daily arm of that pairing is asserted
@@ -366,6 +366,21 @@ jobs:
           # After 19_pages and never before: that stage is what stamps the ledger and rewrites data.json,
           # and the feeds are a read of both. Run first, it would publish yesterday's arrivals.
           python scripts/21_feeds.py
+          # The detail pages, here as of JFH-465 and in the position weekly.yml runs them in: after 19_pages
+          # and 25_velocity because the stage reads `docs/data.json` and nothing else, no cache and no
+          # network. It was weekly-only on the argument that its pages hold no volatile number, so a daily
+          # run "would cost history and change nothing". The first half is still true and is why
+          # `docs/live.json` stays a separate stage. The second half stopped being true once the daily
+          # refetched descriptions and followed renames. A day that renames one repository publishes a
+          # sidecar keyed by the new name beside a page still at the old path -- `tests/live_test.py` fails
+          # that in both directions -- and a day that edits five descriptions leaves five pages that
+          # `tests/detail-churn.mjs` can prove are not what the committed data renders. Both went red on
+          # every daily from 2026-09-22 until this line. The history cost is exactly the pages whose
+          # content moved, because the stage is byte-stable against the star drift it keeps out of its HTML,
+          # and the rename case prunes the old directory itself (`22_detail.prune`).
+          #
+          # 23_og stays weekly, and nothing here depends on it: a detail page carries no og:image.
+          python scripts/22_detail.py
           # The homepage. `docs/index.html` is the shelves page as of this commit, and `19_pages.py` above
           # writes `docs/catalog/index.html` instead -- the split is browsing here, searching there. Both
           # generators wrote `docs/index.html` before it, so they cannot be run out of the same tree unless
@@ -470,6 +485,9 @@ jobs:
       # `build_type: workflow` (JFH-205), which stops versioning generated output at all and takes this
       # cost to zero; that is a separate change and this one did not wait for it.
       #
+      # 22_detail has run here since JFH-465 -- see the note above it for why the argument below stopped
+      # holding for it. What follows is the case as it was made, and it still holds for 23_og.
+      #
       # Two stages are still absent, and they are now the only ones: 22_detail and 23_og, weekly for a
       # stronger reason than 20_landing ever had. Both are built to be byte-stable against a day's star
       # drift -- 22_detail keeps every volatile number out of its HTML and fetches them client-side, and
@@ -514,11 +532,10 @@ jobs:
       # reclassified as a prunable facet, which downgrades a frozen catalogue from a failed build to a
       # warning nobody reads. It is one file, not a set derived from the data.
       #
-      # The skipped arm is what the two remaining weekly-only stages cost: `docs/repo/**` and
-      # `docs/sitemap-repos.xml` from `22_detail.py`, and `docs/og/**` from `23_og.py`, are not written by
-      # this job, so they are skipped rather than reported. Either of those dropped from `weekly.yml` goes
+      # The skipped arm is what the remaining weekly-only stages cost: `docs/og/**` from `23_og.py` is not
+      # written by this job, so it is skipped rather than reported. Dropped from `weekly.yml` it goes
       # unnoticed here and is caught there instead, within seven days rather than one. weekly.yml has no
-      # such arm.
+      # such arm. `docs/repo/**` and `docs/sitemap-repos.xml` left this arm when 22_detail joined the job.
       #
       # `20_landing.py`'s five output prefixes used to be in that arm and are deliberately no longer:
       # the stage runs here now, so listing them as skipped would hide a genuine freeze in the one part
@@ -527,9 +544,6 @@ jobs:
       # exactly how weekly.yml has always classified them -- the two jobs no longer disagree about what
       # any path under `docs/` means.
       #
-      # `docs/repo/*` and not `docs/repo/*/*`, unlike weekly.yml: `docs/repo/index.html`, `detail.css` and
-      # `detail.js` are fixed paths there because 22_detail writes them, and none of the three is written
-      # here, so the broad glob is right in this file and wrong in that one.
       - name: Every tracked page was rewritten
         if: steps.gate.outputs.go == 'true'
         run: |
@@ -550,8 +564,8 @@ jobs:
               # than publish a pick whose stated claim has stopped being true, and this job is the one that
               # deploys the site every night -- wiring it in here would let one repository's verdict
               # dropping take the whole daily deploy down, which is a much larger blast radius than a stale
-              # star count on five curated pages. Weekly owns them, same as `docs/repo/*`.
-              docs/og/*|docs/repo/*|docs/sitemap-repos.xml|docs/collections/*|mega-list/collections/*)
+              # star count on five curated pages. Weekly owns them, same as `docs/og/*`.
+              docs/og/*|docs/collections/*|mega-list/collections/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/skipped"; continue ;;
             esac
             # Existence before mtime, and the arm is here for the same reason weekly.yml grew it in
@@ -581,7 +595,10 @@ jobs:
               # does. `scripts/30_v2.py` owns all 505 files and runs on demand.
               docs/v2/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/beta" ;;
-              mega-list/topics/*|mega-list/targets/*|mega-list/lists/*|mega-list/platforms/*|docs/topic/*|docs/target/*)
+              # `docs/repo/*/*` as in weekly.yml, now that 22_detail runs here: one directory per repository
+              # is a set derived from the data, while `docs/repo/index.html`, `detail.css`, `detail.js` and
+              # `docs/sitemap-repos.xml` are fixed paths and fall through to the strict arm.
+              mega-list/topics/*|mega-list/targets/*|mega-list/lists/*|mega-list/platforms/*|docs/topic/*|docs/target/*|docs/repo/*/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/prunable" ;;
               *)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/frozen" ;;
