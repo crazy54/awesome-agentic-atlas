@@ -255,7 +255,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 88 · Shell · MIT · source · pushed 2026-06-09 · Win · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/toroleapinc/claude-brain.git`</sub>
 - **[equilateral-agents](https://github.com/Equilateral-AI/equilateral-agents-open-core)** — 22 self-learning agents with memory, security review, code quality, deployment validation, and infrastructure checks
-  <sub>★ 59 · JavaScript · npx · pushed 2026-09-03 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 60 · JavaScript · npx · pushed 2026-09-03 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add Equilateral-AI/project-object-skill`</sub>
 - **[claude-recap](https://github.com/hatawong/claude-recap)** — Per-topic session memory using Shell hooks — archives each conversation topic as a separate Markdown summary. Two hooks, bash + Node.js, 100% local
   <sub>★ 39 · JavaScript · MIT · clone · pushed 2026-03-06 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -564,7 +564,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Project &amp; Product Management
 
 - **[plannotator](https://github.com/backnotprop/plannotator)** — Interactive plan review UI with visual annotation (install via /plugin marketplace add backnotprop/plannotator)
-  <sub>★ 8.9k · TypeScript · Apache-2.0 · psh · pushed 2026-09-21 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 8.9k · TypeScript · Apache-2.0 · psh · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`irm https://plannotator.ai/install.ps1 | iex`</sub>
 - **[product-manager-skills](https://github.com/Digidai/product-manager-skills)** — Senior PM agent with 30+ frameworks, 32 SaaS metrics with exact formulas, 12 templates, and anti-pattern detection. Pure Markdown, MIT-0 license
   <sub>★ 176 · Shell · npx · pushed 2026-04-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -639,7 +639,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 102 · HTML · script · pushed 2026-06-16 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -sSL https://raw.githubusercontent.com/cognyai/claude-code-marketing-skills/main/install.sh | bash`</sub>
 - **[x-skills](https://github.com/sergebulaev/x-skills)** — X (Twitter) marketing skills for Claude Code and Codex: write tweets, threads, and replies in your voice, strip AI tells, and publish via Publora. Open source, MIT. Content engineering by Creative Content Crafts.
-  <sub>★ 97 · Python · MIT · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 98 · Python · MIT · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add sergebulaev/x-skills`</sub>
 - **[Hermes Tweet](https://github.com/Xquik-dev/hermes-tweet)** — Native Hermes Agent plugin for X/Twitter research, monitoring, drafting, follower exports, and approval-gated actions
   <sub>★ 37 · Python · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -753,7 +753,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 108 · TypeScript · MIT · npx · pushed 2026-09-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add praneybehl/llm-wiki-plugin -a <agent> -g`</sub>
 - **[trigger-tree](https://github.com/Hedde/trigger_tree)** — Documentation-discovery telemetry for Claude Code — heat/cold maps, health grade, evidence-backed router fixes. 100% local, zero tokens. /tt
-  <sub>★ 14 · Python · MIT · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 14 · Python · MIT · uv · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx --from trigger-tree tt`</sub>
 - **[ai-humanizer](https://github.com/ofershap/ai-humanizer)** — Remove AI-detectable patterns from generated content
   <sub>★ 4 · JavaScript · MIT · npx · pushed 2026-02-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -891,7 +891,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 76 · Python · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx uxskill init # downloads pipx + uxskill on first run`</sub>
 - **[nano-banana](https://github.com/Ibrahim-3d/nano-banana-claude-plugin)** — Google Gemini image generation plugin. Text-to-image, text-guided image editing, style transfer, 4K output, search grounding, and multi-reference composition via /genimage. Uses gemini-2.5-flash-image (fast) and gemini-3-pro-image-preview (4K/search)
-  <sub>★ 13 · Python · AGPL-3.0 · clone · pushed 2026-04-08 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 14 · Python · AGPL-3.0 · clone · pushed 2026-04-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Ibrahim-3d/nano-banana-claude-plugin.git`</sub>
 - **[brand-guardian](https://github.com/ccplugins/awesome-claude-code-plugins/tree/HEAD/plugins/brand-guardian)** — Awesome Claude Code plugins — a curated list of slash commands, subagents, MCP servers, and hooks for Claude Code
   <sub>JavaScript · Apache-2.0 · in-repo · pushed 2026-08-12</sub>

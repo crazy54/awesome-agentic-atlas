@@ -246,7 +246,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 164 · TypeScript · MIT · npm · pushed 2026-08-01 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npm install -g @oxgeneral/orch # Install`</sub>
 - **[Octomind](https://github.com/Muvon/octomind)** — Session-based AI development assistant with MCP support, 7 LLM providers, and extensible architecture. Features plan-first workflow, semantic code search, and persistent memory
-  <sub>★ 141 · Rust · Apache-2.0 · cargo · pushed 2026-09-19 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 142 · Rust · Apache-2.0 · cargo · pushed 2026-09-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`cargo install octomind`</sub>
 - **[Baz CLI](https://github.com/baz-scm/baz-cli)** — CLI for AI assisted code review, with access to the actual code, diff etc
   <sub>★ 48 · TypeScript · AGPL-3.0 · npm · pushed 2026-08-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -660,7 +660,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 1.2k · Python · Apache-2.0 · uv · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install bernstein # or: pipx install bernstein`</sub>
 - **[Sidecar](https://github.com/marcus/sidecar)** — Terminal UI companion for CLI-based coding agents (Claude Code, Cursor, Gemini) with unified conversation history, git integration, task management, and workspace control
-  <sub>★ 1.1k · Go · MIT · brew · pushed 2026-09-14 · WSL2 · macOS · Linux</sub>
+  <sub>★ 1.1k · Go · MIT · brew · pushed 2026-09-22 · WSL2 · macOS · Linux</sub>
   <sub>`brew install marcus/tap/sidecar`</sub>
 - **[SwarmClaw](https://github.com/swarmclawai/swarmclaw)** — Self-hosted AI runtime that orchestrates Claude Code, Codex, Gemini CLI, OpenCode, Copilot CLI, Cursor Agent, Goose, Qwen Code, and Droid with heartbeats, schedules, delegation, runtime skills, and an org chart view. Ships as a desktop app (Electron) and CLI. MIT licensed, TypeScript
   <sub>★ 680 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -672,13 +672,13 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 256 · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g @shepai/cli # or install globally`</sub>
 - **[LoopTroop](https://github.com/looptroop-ai/LoopTroop)** — Local GUI orchestrator for AI coding agents with multi-model planning (LLM councils), iterative retry loops, and isolated git worktrees for long-running, correctness-first multi-file work
-  <sub>★ 152 · TypeScript · MIT · winget · pushed 2026-09-22 · Win · WSL2? · macOS? · Linux · Docker</sub>
+  <sub>★ 153 · TypeScript · MIT · winget · pushed 2026-09-22 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`winget install LoopTroopAI.LoopTroop`</sub>
 - **[osModa](https://github.com/bolivian-peru/os-moda)** — NixOS-based AI operating system with multi-agent routing (Opus agent for full system access, Sonnet agent for mobile/concise). Modular runtime swaps Claude Code and OpenClaw drivers per-agent via SIGHUP — no SSH or rebuild. 91 typed MCP tools across 9 Rust daemons, hash-chained audit ledger, atomic NixOS rollback, P2P encrypted mesh (Noise_XX + ML-KEM-768 hybrid PQ), encrypted credential store (AE
   <sub>★ 117 · Rust · Apache-2.0 · script · pushed 2026-06-24 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/bolivian-peru/os-moda/main/scripts/install.sh | sudo bash`</sub>
 - **[GreatCTO](https://github.com/avelikiy/great_cto)** — Multi-agent SDLC orchestrator running above Claude Code, Cursor, Codex, Aider, and Continue. 34 specialist agents (architect → reviewers → devops), 25 archetype overlays (fintech, healthcare, agent-product, voice-AI), and 10 compliance packs (PCI/HIPAA/EU AI Act/TCPA) auto-wired by repo detection. Two human gates per feature
-  <sub>★ 95 · JavaScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 95 · JavaScript · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx great-cto init`</sub>
 - **[Forge](https://github.com/LucasDuys/forge)** — Autonomous spec-driven development loop for Claude Code. Three-command pipeline (brainstorm, plan, execute) that turns ideas into shipped code with context survival, backpropagation, and Claude-on-Claude code review
   <sub>★ 56 · JavaScript · MIT · source · pushed 2026-07-15 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -725,7 +725,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 743 · Go · GPL-3.0 · psh · pushed 2026-09-20 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/onllm-dev/onwatch/main/install.ps1 | iex`</sub>
 - **[claude-lens](https://github.com/Astro-Han/claude-pace)** — Lightweight Bash + jq statusline for Claude Code with rate limit pace tracking. Compares burn rate to time remaining in 5h/7d windows, showing whether usage is ahead or behind sustainable pace. Single file, zero dependencies beyond jq
-  <sub>★ 232 · Shell · MIT · source · pushed 2026-07-28 · Win? · macOS?</sub>
+  <sub>★ 233 · Shell · MIT · source · pushed 2026-07-28 · Win? · macOS?</sub>
   <sub>`git clone https://github.com/Astro-Han/claude-lens.git`</sub>
 - **[agenttrace](https://github.com/luoyuctl/agenttrace)** — Local-first TUI observability for AI coding agents. Tracks cost, tokens, tool failures, anomalies, health, and CI gates across Claude Code, Codex CLI, Gemini CLI, Aider, and Cursor exports
   <sub>★ 135 · Rust · MIT · winget · pushed 2026-09-14 · Win · WSL2? · macOS · Linux</sub>
@@ -919,7 +919,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>website</sub>
   <sub>`https://claude-skills.bt199.com/`</sub>
 - **[Awesome AI Startups — Coding &amp; Developer Tools](https://github.com/nowork-studio/awesome-ai-startups#-coding--developer-tools)** — 100+ indie-built AI coding assistants, dev tools, and code-generation products from bootstrapped, pre-seed, and angel-funded startups
-  <sub>CC0-1.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>CC0-1.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/nowork-studio/awesome-ai-startups.git && cd awesome-ai-startups/#-coding--developer-tools`</sub>
 
 

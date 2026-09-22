@@ -11,9 +11,9 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/anthropics/claude-code"><img src="https://raw.githubusercontent.com/anthropics/claude-code/main/demo.gif" width="260"></a> | <a href="https://github.com/openai/codex"><img src="https://raw.githubusercontent.com/openai/codex/main/.github/codex-cli-splash.png" width="260"></a> | <a href="https://github.com/google-gemini/gemini-cli"><img src="https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/assets/gemini-screenshot.png" width="260"></a> |
-| **[anthropics/claude-code](https://github.com/anthropics/claude-code)**<br>★ 147.6k | **[OpenAI Codex CLI](https://github.com/openai/codex)**<br>★ 125.9k | **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 107.1k |
+| **[anthropics/claude-code](https://github.com/anthropics/claude-code)**<br>★ 147.6k | **[OpenAI Codex CLI](https://github.com/openai/codex)**<br>★ 126k | **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 107.1k |
 | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> | <a href="https://github.com/upstash/context7"><img src="https://raw.githubusercontent.com/upstash/context7/master/public/cover.png?raw=true" width="260"></a> | <a href="https://github.com/PatrickJS/awesome-cursorrules"><img src="https://opengraph.githubassets.com/1/PatrickJS/awesome-cursorrules" width="260"></a> |
-| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 88.8k | **[Context7](https://github.com/upstash/context7)**<br>★ 62.3k | **[awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules)**<br>★ 40.8k |
+| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 88.9k | **[Context7](https://github.com/upstash/context7)**<br>★ 62.3k | **[awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules)**<br>★ 40.8k |
 
 ## Contents
 
@@ -29,16 +29,16 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
 ## Command Line Tools
 
 - **[anthropics/claude-code](https://github.com/anthropics/claude-code)** — Coding agent that understands your codebase, automates tasks, explains code, and manages Git, all via natural language
-  <sub>★ 147.6k · TypeScript · winget · pushed 2026-09-21 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 147.6k · TypeScript · winget · pushed 2026-09-22 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`winget install Anthropic.ClaudeCode`</sub>
 - **[OpenAI Codex CLI](https://github.com/openai/codex)** — OpenAI's coding agent in the terminal with Codex Cloud, IDE extension, and multi-model support
-  <sub>★ 125.9k · Rust · Apache-2.0 · npm · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 126k · Rust · Apache-2.0 · npm · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @openai/codex`</sub>
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — An open-source AI agent from Google that brings the power of Gemini directly into your terminal. Generous free tier (60 req/min, 1000/day)
   <sub>★ 107.1k · TypeScript · Apache-2.0 · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @google/gemini-cli`</sub>
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** — Open-source AI-driven development agent with CLI, GUI, and cloud modes, supporting Claude, GPT, and other models
-  <sub>★ 88.8k · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 88.9k · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[charmbracelet/crush](https://github.com/charmbracelet/crush)** — "The glamorous AI coding agent for your favourite terminal", multi-model with beautiful TUI
   <sub>★ 28.2k · Go · winget · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>

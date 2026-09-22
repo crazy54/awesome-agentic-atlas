@@ -11,7 +11,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/obra/superpowers"><img src="https://opengraph.githubassets.com/1/obra/superpowers" width="260"></a> | <a href="https://github.com/affaan-m/ECC"><img src="https://raw.githubusercontent.com/affaan-m/everything-claude-code/main/assets/hero.png" width="260"></a> | <a href="https://github.com/anthropics/skills"><img src="https://opengraph.githubassets.com/1/anthropics/skills" width="260"></a> |
-| **[obra/superpowers](https://github.com/obra/superpowers)**<br>★ 290.1k | **[everything-claude-code](https://github.com/affaan-m/ECC)**<br>★ 265.2k | **[anthropics/skills](https://github.com/anthropics/skills)**<br>★ 177.6k |
+| **[obra/superpowers](https://github.com/obra/superpowers)**<br>★ 290.2k | **[everything-claude-code](https://github.com/affaan-m/ECC)**<br>★ 265.4k | **[anthropics/skills](https://github.com/anthropics/skills)**<br>★ 177.6k |
 | <a href="https://github.com/browser-use/browser-use"><img src="https://github.com/user-attachments/assets/135885e8-1141-4e10-b719-bf690ae7d260" width="260"></a> | <a href="https://github.com/addyosmani/agent-skills"><img src="https://addyosmani.com/assets/images/addys-agent-skills.jpg" width="260"></a> | <a href="https://github.com/ComposioHQ/awesome-claude-skills"><img src="https://github.com/user-attachments/assets/e91255af-e4ba-4d71-b1a8-bd081e8a234a" width="260"></a> |
 | **[browser-use/browser-use](https://github.com/browser-use/browser-use)**<br>★ 115.9k | **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)**<br>★ 98.4k | **[awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)**<br>★ 75.5k |
 
@@ -29,7 +29,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Productivity
 
 - **[obra/superpowers](https://github.com/obra/superpowers)** — Complete dev workflow (Debug/TDD/Code Review/Planning)
-  <sub>★ 290.1k · Shell · MIT · clone · pushed 2026-09-20</sub>
+  <sub>★ 290.2k · Shell · MIT · clone · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/obra/superpowers.git`</sub>
 - **[coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills)** — Marketing Skills (SEO/Copywriting/CRO/Ads)
   <sub>★ 51.2k · JavaScript · MIT · npx · pushed 2026-09-05 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -38,16 +38,16 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>★ 27.1k · Shell · MIT · npx · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npx skills add OthmanAdi/planning-with-files --skill planning-with-files -g`</sub>
 - **[claude-skills](https://github.com/alirezarezvani/claude-skills)** — 20+ productivity tools with 8 expert Agents
-  <sub>★ 26.2k · Python · MIT · npx · pushed 2026-08-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 26.3k · Python · MIT · npx · pushed 2026-08-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx agent-skills-cli add alirezarezvani/claude-skills --agent codex`</sub>
 - **[nowork-studio/NotFair](https://github.com/nowork-studio/notfair-plugin)** — Claude Code skills for SEO, GEO, Google Ads, and Meta Ads; connects to live data via Google Ads MCP, Meta Ads MCP, Google Search Console MCP, and Google Analytics (GA4) MCP
-  <sub>★ 3.8k · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.8k · TypeScript · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx notfair@latest`</sub>
 - **[claude-code-skill-factory](https://github.com/alirezarezvani/claude-code-skill-factory)** — Skills factory for batch generation and deployment
-  <sub>★ 869 · Python · MIT · source · pushed 2025-11-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 870 · Python · MIT · source · pushed 2025-11-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/alirezarezvani/claude-code-skill-factory.git`</sub>
 - **[claude-code-workflows](https://github.com/shinpr/claude-code-workflows)** — Production-grade dev workflows with quality checks
-  <sub>★ 683 · JavaScript · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 684 · JavaScript · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/shinpr/claude-code-workflows.git`</sub>
 - **[gingiris-opensource](https://github.com/Gingiris/gingiris-opensource)** — Open source marketing playbook focused on GitHub growth and launch strategy
   <sub>★ 255 · MIT · source · pushed 2026-05-07 · Win?</sub>
@@ -56,7 +56,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>★ 208 · MIT · source · pushed 2026-05-07</sub>
   <sub>`git clone https://github.com/Gingiris/gingiris-launch.git`</sub>
 - **[job-application-agent](https://github.com/vaibhavarora14/job-application-agent)** — Skill + CLI to discover, qualify, complete, and track your own job applications. Data sharing: usage analytics and name/email sharing with private PostHog analytics, plus community-registry sharing of confirmed-application and discovery-source metadata, are enabled by default (opt-out). Optional cloud mode stores and syncs profile, résumé, application, and outcome state
-  <sub>★ 150 · JavaScript · MIT · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 150 · JavaScript · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx job-application-agent@latest install`</sub>
 - **[cognyai/claude-code-marketing-skills](https://github.com/cognyai/claude-code-marketing-skills)** — AI marketing skills (SEO Audit/Landing Page Review/Competitor Analysis/Ad Copywriting/Lead Qualification) with MCP server integration
   <sub>★ 102 · HTML · script · pushed 2026-06-16 · Win · WSL2? · macOS · Linux</sub>
@@ -80,7 +80,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Skills Collections
 
 - **[everything-claude-code](https://github.com/affaan-m/ECC)** — Complete Claude Code configs (agents/skills/hooks)
-  <sub>★ 265.2k · JavaScript · MIT · clone · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 265.4k · JavaScript · MIT · clone · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/affaan-m/ECC.git`</sub>
 - **[awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)** — Claude Skills collection by Composio
   <sub>★ 75.5k · Python · npx · pushed 2026-09-18 · Win · WSL2? · macOS · Linux</sub>
@@ -113,16 +113,16 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>★ 1.1k · npx · pushed 2026-09-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add https://github.com/anthropics/skills --list`</sub>
 - **[claude-skills](https://github.com/simonw/claude-skills)** — Claude Skills documentation by Simon Willison
-  <sub>★ 929 · source · pushed 2025-12-12</sub>
+  <sub>★ 930 · source · pushed 2025-12-12</sub>
   <sub>`git clone https://github.com/simonw/claude-skills.git`</sub>
 - **[youtube-skills](https://github.com/ZeroPointRepo/youtube-skills)** — YouTube transcript, video search, channel and playlist skills for Claude Code, OpenClaw, Hermes Agent, and other agent runtimes
-  <sub>★ 901 · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 903 · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx clawhub@latest install youtube-full`</sub>
 - **[unifapi-agent/skills](https://github.com/unifapi-agent/agents)** — Public-data MCP and KOL pricing Skills for Codex, Claude Code, Cursor, and other agents
   <sub>★ 576 · JavaScript · MIT · npx · pushed 2026-09-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add unifapi-agent/agents`</sub>
 - **[OrkasVideoStudio](https://github.com/Orkas-AI/Orkas-VideoStudio)** — Agent video-production skill pack with CLI and MCP runtime
-  <sub>★ 490 · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 491 · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g @orkas/video-studio # provides the `ovs` command`</sub>
 - **[cursor-rules-and-prompts](https://github.com/thehimel/cursor-rules-and-prompts)** — Cursor rules and prompts collection
   <sub>★ 248 · Shell · source · pushed 2026-08-09</sub>
@@ -143,7 +143,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Official Resources
 
 - **[anthropics/skills](https://github.com/anthropics/skills)** — Official Anthropic Agent Skills repository
-  <sub>★ 177.6k · Python · source · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 177.6k · Python · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/anthropics/skills.git`</sub>
 - **[GitHub Awesome Copilot](https://github.com/github/awesome-copilot)** — Official Copilot resources collection
   <sub>★ 39.3k · JavaScript · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -308,43 +308,43 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Writing
 
 - **[doc-coauthoring](https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring)** — Document co-authoring Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/doc-coauthoring`</sub>
 - **[internal-comms](https://github.com/anthropics/skills/tree/main/skills/internal-comms)** — Internal communications generation Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/internal-comms`</sub>
 - **[docx](https://github.com/anthropics/skills/tree/main/skills/docx)** — Word document processing Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/docx`</sub>
 - **[pdf](https://github.com/anthropics/skills/tree/main/skills/pdf)** — Portable document format processing Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/pdf`</sub>
 - **[pptx](https://github.com/anthropics/skills/tree/main/skills/pptx)** — PowerPoint presentation generator Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/pptx`</sub>
 - **[xlsx](https://github.com/anthropics/skills/tree/main/skills/xlsx)** — Excel spreadsheet processing Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/xlsx`</sub>
 
 ## Design
 
 - **[frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design)** — Frontend UI design Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/frontend-design`</sub>
 - **[brand-guidelines](https://github.com/anthropics/skills/tree/main/skills/brand-guidelines)** — Brand design guidelines Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/brand-guidelines`</sub>
 - **[canvas-design](https://github.com/anthropics/skills/tree/main/skills/canvas-design)** — Canvas design Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/canvas-design`</sub>
 - **[theme-factory](https://github.com/anthropics/skills/tree/main/skills/theme-factory)** — Theme style factory Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/theme-factory`</sub>
 - **[algorithmic-art](https://github.com/anthropics/skills/tree/main/skills/algorithmic-art)** — Algorithmic art generation Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/algorithmic-art`</sub>
 - **[slack-gif-creator](https://github.com/anthropics/skills/tree/main/skills/slack-gif-creator)** — Slack GIF creator Skill
-  <sub>Python · in-repo · pushed 2026-09-10</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/slack-gif-creator`</sub>
 
 

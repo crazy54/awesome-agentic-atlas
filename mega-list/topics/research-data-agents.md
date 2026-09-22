@@ -2,7 +2,7 @@
 
 Agents pointed at literature, the web and datasets: deep research, analysis, business intelligence and science.
 
-**41 projects** · 40 with stars to rank by · 203,296 combined stars
+**41 projects** · 40 with stars to rank by · 203,319 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#topic=research-data-agents)
 
@@ -34,7 +34,7 @@ Agents pointed at literature, the web and datasets: deep research, analysis, bus
 | 15 | **[OpenLAIR/dr-claw](https://github.com/OpenLAIR/dr-claw)**<br><sub>OpenLAIR/dr-claw</sub> | 1.1k | 1 | <sub>Claude Code, Claude / Anthropic</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npm install -g dr-claw` | Open-source research workspace with sequential idea-to-paper pipelines and integrated autoresearch tool packs |
 | 16 | **[Human-Agent-Society/CORAL](https://github.com/Human-Agent-Society/CORAL)**<br><sub>Human-Agent-Society/CORAL</sub> | 1k | 1 | <sub>Claude Code, Claude / Anthropic, opencode, Codex / OpenAI</sub> | <sub>WSL2 · macOS · Linux</sub> | `curl -fsSL https://raw.githubusercontent.com/Human-Agent-Society/CORAL/main/install.sh \| sh` | CORAL: Autonomous multi-agent evolution for open-ended discovery (arXiv:2604.01658). Long-running agents with shared persistent memory, asynchronous execution, and heartbeat-based… |
 | 17 | **[ChemCrow](https://github.com/ur-whitelab/chemcrow-public)**<br><sub>ur-whitelab/chemcrow-public</sub> | 958 | 1 | <sub>—</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `pip install chemcrow` | Chemcrow |
-| 18 | **[data-to-paper](https://github.com/Technion-Kishony-lab/data-to-paper)**<br><sub>Technion-Kishony-lab/data-to-paper</sub> | 826 | 3 | <sub>—</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `pip install data-to-paper` | data-to-paper: AI-driven research from data to human-verifiable research papers. github |
+| 18 | **[data-to-paper](https://github.com/Technion-Kishony-lab/data-to-paper)**<br><sub>Technion-Kishony-lab/data-to-paper</sub> | 825 | 3 | <sub>—</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `pip install data-to-paper` | data-to-paper: AI-driven research from data to human-verifiable research papers. github |
 | 19 | **[BambooAI](https://github.com/pgalko/BambooAI)**<br><sub>pgalko/BambooAI</sub> | 791 | 1 | <sub>Local / Ollama</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `pip install bambooai` | An LLM-driven data analyst that works in a persistent Python kernel. Web app, Docker-isolated execution, your own model keys. Full support for open weights models via provider or… |
 | 20 | **[eimenhmdt/autoresearcher](https://github.com/eimenhmdt/autoresearcher)**<br><sub>eimenhmdt/autoresearcher</sub> | 443 | 1 | <sub>—</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `pip install autoresearcher` | Early open-source package for automating scientific workflows, currently centered on literature-review generation with an ambition toward broader autonomous research |
 | 21 | **[GPT Runner](https://github.com/nicepkg/gpt-runner)**<br><sub>nicepkg/gpt-runner</sub> | 385 | 1 | <sub>Claude / Anthropic, Codex / OpenAI, LangChain / LangGraph</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/nicepkg/gpt-runner.git` | Conversations with your files! Manage and run your AI presets! |

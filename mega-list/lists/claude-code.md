@@ -11,7 +11,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/multica-ai/andrej-karpathy-skills"><img src="https://opengraph.githubassets.com/1/multica-ai/andrej-karpathy-skills" width="260"></a> | <a href="https://github.com/anthropics/skills"><img src="https://opengraph.githubassets.com/1/anthropics/skills" width="260"></a> | <a href="https://github.com/shareAI-lab/learn-claude-code"><img src="https://opengraph.githubassets.com/1/shareAI-lab/learn-claude-code" width="260"></a> |
-| **[andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)**<br>★ 214.6k | **[Agent Skills](https://github.com/anthropics/skills)**<br>★ 177.6k | **[Learn Claude Code](https://github.com/shareAI-lab/learn-claude-code)**<br>★ 77.4k |
+| **[andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)**<br>★ 214.7k | **[Agent Skills](https://github.com/anthropics/skills)**<br>★ 177.6k | **[Learn Claude Code](https://github.com/shareAI-lab/learn-claude-code)**<br>★ 77.4k |
 | <a href="https://github.com/luongnv89/claude-howto"><img src="https://opengraph.githubassets.com/1/luongnv89/claude-howto" width="260"></a> | <a href="https://github.com/anthropics/claude-plugins-official"><img src="https://opengraph.githubassets.com/1/anthropics/claude-plugins-official" width="260"></a> | <a href="https://github.com/anthropics/claude-code-action"><img src="https://opengraph.githubassets.com/1/anthropics/claude-code-action" width="260"></a> |
 | **[claude-howto](https://github.com/luongnv89/claude-howto)**<br>★ 41.6k | **[Official Plugin Directory](https://github.com/anthropics/claude-plugins-official)**<br>★ 36.6k | **[Claude Code GitHub Action](https://github.com/anthropics/claude-code-action)**<br>★ 8.9k |
 
@@ -43,7 +43,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
 ## Start Here
 
 - **[andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)** — by multica-ai - A drop-in CLAUDE.md distilling four behavioral guidelines for LLM-assisted coding into Claude Code — a low-friction quick win. Karpathy-inspired, derived from Andrej Karpathy's public notes on LLM coding pitfalls and authored by multica-ai
-  <sub>★ 214.6k · source · pushed 2026-04-20</sub>
+  <sub>★ 214.7k · source · pushed 2026-04-20</sub>
   <sub>`git clone https://github.com/multica-ai/andrej-karpathy-skills.git`</sub>
 - **[Learn Claude Code](https://github.com/shareAI-lab/learn-claude-code)** — by shareAI-lab - A really interesting analysis of how coding agents like Claude Code are designed. It attempts to break an agent down into its fundamental parts and reconstruct it with minimal code. Great learning resource. Final product is a rudimentary agent with skills, sub-agents, and a todo-list in roughly a few hundred lines of Python
   <sub>★ 77.4k · Python · MIT · npm · pushed 2026-08-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -76,13 +76,13 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
 ## From Anthropic
 
 - **[Agent Skills](https://github.com/anthropics/skills)** — by Anthropic - Anthropic's official repository for Agent Skills — the SKILL.md format, a skill template, and example skills, the same format Claude Code loads natively
-  <sub>★ 177.6k · Python · source · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 177.6k · Python · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/anthropics/skills.git`</sub>
 - **[Official Plugin Directory](https://github.com/anthropics/claude-plugins-official)** — by Anthropic - Anthropic's official, curated directory of high-quality Claude Code plugins, installable from within Claude Code
-  <sub>★ 36.6k · Python · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 36.6k · Python · Apache-2.0 · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/anthropics/claude-plugins-official.git`</sub>
 - **[Claude Code GitHub Action](https://github.com/anthropics/claude-code-action)** — by Anthropic - The official GitHub Action for running Claude Code in CI: mention @claude in issues and pull requests to delegate code changes, reviews, and fixes
-  <sub>★ 8.9k · TypeScript · MIT · gh-action · pushed 2026-09-19</sub>
+  <sub>★ 8.9k · TypeScript · MIT · gh-action · pushed 2026-09-22</sub>
   <sub>`uses: anthropics/claude-code-action@main # in .github/workflows/*.yml`</sub>
 - **[Claude Code Security Review](https://github.com/anthropics/claude-code-security-review)** — by Anthropic - An official AI-powered security-review GitHub Action that uses Claude to analyze pull-request diffs for vulnerabilities
   <sub>★ 6.3k · Python · MIT · gh-action · pushed 2026-02-11</sub>
@@ -124,7 +124,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 1.5k · Swift · brew · pushed 2026-09-22 · Win? · macOS</sub>
   <sub>`brew install --cask claudebar`</sub>
 - **[Claude Code Agent Monitor](https://github.com/hoangsonww/Claude-Code-Agent-Monitor)** — by hoangsonww - A self-hosted real-time dashboard that monitors Claude Code agent activity via its native hooks — live sessions, subagent orchestration trees, tool-call timelines, and per-session status — keeping data local (loopback-only). Built on Node/Express + React + SQLite, with a companion MCP server, VS Code extension, and desktop app
-  <sub>★ 1k · JavaScript · MIT · npx · pushed 2026-09-21 · macOS</sub>
+  <sub>★ 1k · JavaScript · MIT · npx · pushed 2026-09-22 · macOS</sub>
   <sub>`npx skills add hoangsonww/Claude-Code-Agent-Monitor --list`</sub>
 - **[claude-status-bar](https://github.com/m1ckc3s/claude-status-bar)** — by mick - A tiny, hook-driven macOS menu-bar indicator of Claude Code's live turn status — an animated icon while thinking or running a tool, a dot when awaiting permission, and an elapsed-turn timer — aggregated across concurrent CLI, Claude Desktop, and Cursor sessions. Stateless AppKit/Swift app that self-launches on session start and quits when idle
   <sub>★ 697 · Swift · MIT · brew · pushed 2026-09-18 · macOS</sub>
@@ -133,7 +133,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 681 · TypeScript · MIT · clone · pushed 2026-09-04 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/simple10/agents-observe.git`</sub>
 - **[Claude Code Observability Stack](https://github.com/ColeMurray/claude-code-otel)** — by Cole Murray - A Dockerized OpenTelemetry-to-Grafana observability stack for Claude Code that implements Anthropic's observability guidance, surfacing session activity, performance, token usage, and cost in prebuilt dashboards
-  <sub>★ 503 · Makefile · MIT · source · pushed 2025-06-17 · WSL2 · Linux · Docker</sub>
+  <sub>★ 504 · Makefile · MIT · source · pushed 2025-06-17 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/ColeMurray/claude-code-otel.git`</sub>
 - **[ccxray](https://github.com/lis186/ccxray)** — by lis186 - A transparent HTTP proxy and real-time dashboard that sits between Claude Code and the Anthropic API. Captures every request and response without configuration, presenting them in a Miller-column interface with session grouping, token/cost tracking, and context-window visualization
   <sub>★ 295 · JavaScript · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -148,7 +148,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 191 · Rust · MIT · npx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx toktrack`</sub>
 - **[claude-esp](https://github.com/phiat/claude-esp)** — by phiat - Go-based TUI that streams Claude Code hidden output (thinking, tool calls, subagents) to a separate terminal. Watch multiple sessions simultaneously, filter by content type, and track background tasks. Ideal for debugging or understanding what Claude is doing under the hood without interrupting your main session
-  <sub>★ 154 · Go · MIT · go · pushed 2026-09-07 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 154 · Go · MIT · go · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`go install github.com/phiat/claude-esp@latest`</sub>
 - **[cctop](https://github.com/stefanprodan/cctop)** — by Stefan Prodan - A live top-style terminal TUI that lists every running Claude Code session with process stats, busy/idle state, context size, model, and git branch, plus a live sub-agent and sub-process tree with open and orphaned ports — reading only the local process table and ~/.claude session and transcript files. Zero-dependency Bun; can signal a runaway session or free orphaned dev-server
   <sub>★ 139 · TypeScript · Apache-2.0 · bun · pushed 2026-09-01 · WSL2 · macOS · Linux</sub>
@@ -157,7 +157,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 133 · TypeScript · MIT · clone · pushed 2026-09-07 · macOS</sub>
   <sub>`git clone https://github.com/sverrirsig/claude-control.git`</sub>
 - **[c9watch](https://github.com/minchenlee/c9watch)** — by minchenlee - A macOS menu-bar app (and companion JSON CLI, built from one Rust/Tauri binary) that auto-discovers running Claude Code sessions by scanning OS processes and shows live working / needs-attention / idle status, plus session-history search, cost tracking, and PM-style worker orchestration. Rust + Tauri 2 + Svelte 5, with a token-gated mobile web client
-  <sub>★ 127 · Rust · MIT · script · pushed 2026-09-13 · Win? · WSL2 · macOS · Linux</sub>
+  <sub>★ 127 · Rust · MIT · script · pushed 2026-09-22 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/minchenlee/c9watch/main/install.sh | bash`</sub>
 - **[CCDash](https://github.com/zihenghe04/CCDash)** — by zihenghe04 - Open-source unified usage dashboard for Claude — track tokens, quota, costs across Claude Code, claude.ai &amp;amp; API in one panel. 开源 Claude 全平台用量监控面板，聚合 Claude Code / claude.ai / API 数据，适用于 Pro/Max 订阅用户与开发者。https://dyp23yngrtumg.ok.kimi.link
   <sub>★ 71 · Python · MIT · clone · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -172,7 +172,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 46 · TypeScript · MIT · npm · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm i -g seedeep`</sub>
 - **[goccc](https://github.com/backstabslash/goccc)** — by backstabslash - Fast, zero-dependency cost calculator and customizable statusline for Claude Code. Breakdowns by model, day, project, and branch. Lightweight, single binary, no runtime needed
-  <sub>★ 35 · Go · MIT · go · pushed 2026-09-01 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 35 · Go · MIT · go · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`go install github.com/backstabslash/goccc@latest`</sub>
 - **[cc-costline](https://github.com/Ventuss-OvO/cc-costline)** — by Ventuss-OvO - Enhanced statusline for Claude Code — see your 7d/30d spend at a glance
   <sub>★ 28 · TypeScript · npm · pushed 2026-07-24 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -211,7 +211,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
 ## Multi-Purpose
 
 - **[Everything Claude Code (ECC)](https://github.com/affaan-m/ECC)** — by Affaan Mustafa - Top-notch, well-written resources covering "just about everything" from core engineering domains. What's nice about this "everything-" store is most of the resources have significant standalone value and unlike some all-encompassing frameworks, although you can opt in to the author's own specific workflow patterns if you choose, the individual resources offer exemplary patterns
-  <sub>★ 265.2k · JavaScript · MIT · npm · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 265.4k · JavaScript · MIT · npm · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npm install -g ecc-universal@2.2.2`</sub>
 - **[Fullstack Dev Skills](https://github.com/Jeffallan/claude-skills)** — by jeffallan - A comprehensive Claude Code plugin with 65 specialized skills covering full-stack development across a wide range of specific frameworks. Features 9 project workflow commands for Jira/Confluence integration and, notably, an interesting approach to context engineering via a /common-ground command that surfaces Claude's hidden assumptions about your project. This is a smart thing to d
   <sub>★ 11.6k · Python · MIT · source · pushed 2026-08-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -244,7 +244,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 15.1k · Python · MIT · clone · pushed 2026-09-10 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/AgriciDaniel/claude-obsidian.git`</sub>
 - **[Claude Code System Prompts](https://github.com/Piebald-AI/claude-code-system-prompts)** — by Piebald AI - All parts of Claude Code's system prompt, including builtin tool descriptions, sub agent prompts (Plan/Explore/Task), utility prompts (CLAUDE.md, compact, Bash cmd, security review, agent creation, etc.). Updated for each Claude Code version
-  <sub>★ 12.7k · JavaScript · MIT · source · pushed 2026-09-19 · WSL2 · Linux</sub>
+  <sub>★ 12.7k · JavaScript · MIT · source · pushed 2026-09-22 · WSL2 · Linux</sub>
   <sub>`git clone https://github.com/Piebald-AI/claude-code-system-prompts.git`</sub>
 - **[Codebase to Course](https://github.com/zarazhangrui/codebase-to-course)** — by Zara Zhang - A Claude Code skill that turns any codebase into a beautiful, interactive single-page HTML course for non-technical vibe coders
   <sub>★ 5.6k · CSS · source · pushed 2026-03-30</sub>
@@ -265,7 +265,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 309 · MIT · source · pushed 2026-07-11</sub>
   <sub>`git clone https://github.com/ThibautMelen/agentic-workflow-patterns.git`</sub>
 - **[ClaudoPro Directory](https://github.com/JSONbored/awesome-claude)** — by JSONbored - Well-crafted, wide selection of Claude Code hooks, slash commands, subagent files, and more, covering a range of specialized tasks and workflows. Better resources than your average "Claude-template-for-everything" site
-  <sub>★ 299 · MDX · MIT · source · pushed 2026-08-16 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 300 · MDX · MIT · source · pushed 2026-08-16 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/JSONbored/claudepro-directory.git`</sub>
 - **[Bloom](https://github.com/Li-Evan/Bloom)** — by Li-Evan - A self-contained Claude Code skill that turns Benjamin Bloom's "2-sigma" tutoring research into a personal AI tutor: it generates a structured syllabus, teaches one lesson at a time, and adapts each next lesson to the learner's annotations and feedback. The skill is dependency-free and makes no network calls beyond the configured LLM endpoint (an optional web app is also included)
   <sub>★ 271 · JavaScript · MIT · clone · pushed 2026-09-17 · WSL2 · Linux · Docker</sub>
@@ -280,7 +280,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 101 · HTML · MIT · source · pushed 2026-05-05</sub>
   <sub>`git clone https://github.com/iurykrieger/claude-bedrock.git`</sub>
 - **[agentcairn](https://github.com/ccf/agentcairn)** — by ccf - Long-term, cross-project memory for AI coding agents. Your own Obsidian vault as the source of truth. Daemonless and without opaque databases, your memory belongs to you
-  <sub>★ 57 · Python · Apache-2.0 · npx · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 58 · Python · Apache-2.0 · npx · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ccf/agentcairn --skill agentcairn-setup -g`</sub>
 - **[claude-code-docs](https://github.com/costiash/claude-code-docs)** — by Constantin Shafranski - A mirror of the Anthropic&amp;amp;copy; PBC documentation site for Claude/Code, but with bonus features like full-text search and query-time updates - up-to-the-minute, fully-indexed information so that Claude Code can read about itself
   <sub>★ 53 · Python · script · pushed 2026-09-22 · Win? · WSL2 · macOS · Linux</sub>
@@ -292,7 +292,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 27 · Rust · Apache-2.0 · cargo · pushed 2026-09-06 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`cargo install cxpak # any platform, incl. Windows`</sub>
 - **[RAG Learning Academy](https://github.com/TakaGoto/rag-learning-academy)** — by Taka Goto - A multi-agent Claude Code learning environment for mastering Retrieval-Augmented Generation, with 20 specialist agents, 22 slash commands, and a 9-module hands-on curriculum that runs zero-config inside Claude Code. Quality is evident — 616 tests, CI, and weekly/monthly content-freshness automation that opens issues for stale material
-  <sub>★ 19 · Python · MIT · clone · pushed 2026-04-03 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 20 · Python · MIT · clone · pushed 2026-04-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/TakaGoto/rag-learning-academy.git`</sub>
 - **[MDXG Redline](https://github.com/oubakiou/mdxg-redline)** — by oubakiou - A Claude Code skill plus single-file HTML tool that closes the human-review loop on AI-written docs: a person leaves inline comments in the browser, which export as structured JSON keyed by heading path and line, and the skill polls for that file and applies each comment to the exact lines. Strongly privacy-respecting — the local/CLI build enforces a strict CSP (connect-src 'none'),
   <sub>★ 15 · TypeScript · MIT · npx · pushed 2026-08-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -379,7 +379,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
 ## Agent Orchestration
 
 - **[gstack](https://github.com/garrytan/gstack)** — by Garry Tan - Garry Tan's (Y Combinator) Claude Code setup and "open source software factory" for managing the development lifecycle end-to-end. Includes a set of agents and in-depth skills/tools along with workflows for advancing a product from ideation to production
-  <sub>★ 133.9k · TypeScript · MIT · source · pushed 2026-09-21 · macOS</sub>
+  <sub>★ 133.9k · TypeScript · MIT · source · pushed 2026-09-22 · macOS</sub>
   <sub>`git clone https://github.com/garrytan/gstack.git`</sub>
 - **[Compound Engineering Plugin](https://github.com/EveryInc/compound-engineering-plugin)** — by EveryInc - A very pragmatic set of well-designed agents, skills, and commands, built around a discipline of turning past mistakes and errors into lessons and opportunities for future growth and improvement. Good documentation
   <sub>★ 25.2k · TypeScript · MIT · clone · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -394,7 +394,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 9.1k · HTML · Apache-2.0 · source · pushed 2026-07-24</sub>
   <sub>`git clone https://github.com/revfactory/harness.git`</sub>
 - **[Plannotator](https://github.com/backnotprop/plannotator)** — by backnotprop - Interactive review UI that intercepts ExitPlanMode via hooks, letting you visually annotate plans with comments, deletions, and replacements before approving or denying with detailed feedback. Has since grown to cover code and diff review, PRs, and rendered HTML artifacts, with feedback sent straight back to the agent. Supports several coding agents alongside Claude Code
-  <sub>★ 8.9k · TypeScript · Apache-2.0 · psh · pushed 2026-09-21 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 8.9k · TypeScript · Apache-2.0 · psh · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`irm https://plannotator.ai/install.ps1 | iex`</sub>
 - **[Claude Squad](https://github.com/smtg-ai/claude-squad)** — by smtg-ai - A terminal app that manages multiple Claude Code, Codex, and other local agents (including Aider) in separate workspaces, allowing you to work on multiple tasks simultaneously
   <sub>★ 8.5k · Go · AGPL-3.0 · brew · pushed 2026-08-20 · Win · WSL2? · macOS · Linux</sub>
@@ -406,7 +406,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 3.9k · MIT · source · pushed 2025-09-14</sub>
   <sub>`git clone https://github.com/OneRedOak/claude-code-workflows.git`</sub>
 - **[ralph-orchestrator](https://github.com/mikeyobrien/ralph-orchestrator)** — by mikeyobrien - Ralph Orchestrator implements the simple but effective "Ralph Wiggum" technique for autonomous task completion, continuously running an AI agent against a prompt file until the task is marked as complete or limits are reached. This implementation provides a robust, well-tested, and feature-complete orchestration system for AI-driven development. Also cited in the Anthropic Ralph p
-  <sub>★ 3.2k · Rust · MIT · npm · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.2k · Rust · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @ralph-orchestrator/ralph-cli`</sub>
 - **[Claude Code Harness](https://github.com/Chachamaru127/claude-code-harness)** — by Chachamaru - A Claude Code development harness that enables reliable high-quality development through an autonomous Plan -&amp;gt; Work -&amp;gt; Review cycle. Well documented and includes an Output Style
   <sub>★ 3.1k · Shell · MIT · source · pushed 2026-09-21</sub>
@@ -424,10 +424,10 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 777 · JavaScript · clone · pushed 2026-04-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/muratcankoylan/ralph-wiggum-marketer.git`</sub>
 - **[Claude Code Hook Comms (HCOM)](https://github.com/aannoo/hcom)** — by aannoo - Lightweight CLI tool for real-time communication between Claude Code sub agents using hooks. Enables multi-agent collaboration with @-mention targeting, live dashboard monitoring, and a zero-dependency implementation
-  <sub>★ 511 · Rust · MIT · psh · pushed 2026-09-13 · Win · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 512 · Rust · MIT · psh · pushed 2026-09-13 · Win · WSL2 · macOS? · Linux?</sub>
   <sub>`irm https://github.com/aannoo/hcom/releases/latest/download/hcom-installer.ps1 | iex`</sub>
 - **[AB Method](https://github.com/ayoubben18/ab-method)** — by Ayoub Bensalah - A principled, spec-driven workflow that transforms large problems into focused, incremental missions using Claude Code's specialized sub agents. Includes slash-commands, sub agents, and specialized workflows designed for specific parts of the SDLC
-  <sub>★ 191 · JavaScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 192 · JavaScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx ab-method`</sub>
 - **[RIPER Workflow](https://github.com/tony/claude-code-riper-5)** — by Tony Narlock - Structured development workflow enforcing separation between Research, Innovate, Plan, Execute, and Review phases. Features consolidated subagents for context-efficiency, branch-aware memory bank, and strict mode enforcement for guided development
   <sub>★ 95 · MIT · source · pushed 2026-08-16</sub>
@@ -445,7 +445,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>Vim Script · in-repo · pushed 2026-09-09</sub>
   <sub>`git clone https://github.com/harperreed/dotfiles.git && cd dotfiles/.claude/commands`</sub>
 - **[Ralph Wiggum Plugin](https://github.com/anthropics/claude-code/tree/main/plugins/ralph-wiggum)** — by Anthropic PBC - The official Anthropic implementation of the Ralph Wiggum technique for iterative, self-referential AI development loops in Claude Code
-  <sub>TypeScript · in-repo · pushed 2026-09-21</sub>
+  <sub>TypeScript · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/anthropics/claude-code.git && cd claude-code/plugins/ralph-wiggum`</sub>
 
 ## Memory &amp; Context Persistence
@@ -508,7 +508,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 93 · Python · MIT · clone · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/shengyanlin/claude-overlay.git`</sub>
 - **[Sidekick for Max](https://github.com/cesarandreslopez/sidekick-agent-hub)** — by César Andrés López - A VS Code extension and standalone terminal dashboard that adds visibility and AI conveniences on top of your Claude Max subscription — inline completions, code transforms, AI commit messages, plus deep session observability (token-burn, a 13-week quota heatmap, multi-account management, cross-session search, and asset extraction). Mature and well-maintained (CI, published
-  <sub>★ 85 · TypeScript · MIT · npm · pushed 2026-09-17 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 85 · TypeScript · MIT · npm · pushed 2026-09-22 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install -g sidekick-agent-hub # requires Node.js 20+`</sub>
 - **[FlyCrys](https://github.com/SergKam/FlyCrys)** — by Sergii Kamenskyi - A native Linux GUI for Claude Code agents built in Rust + GTK4 — single binary, no Electron, starts in under a second — with a file tree, syntax-highlighted viewer, markdown preview, embedded VTE4 terminal, streaming agent chat, workspace tabs, and tool-restricted agent profiles. Fills a real gap as essentially the only native (non-webview) Linux desktop client, using your ow
   <sub>★ 32 · Rust · MIT · clone · pushed 2026-09-04 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -532,16 +532,16 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 1.4k · MIT · source · pushed 2026-09-13</sub>
   <sub>`git clone https://github.com/skills-directory/skill-codex.git`</sub>
 - **[Claude Codex Settings](https://github.com/fcakyon/claude-codex-settings)** — by fatih akyon - A well-organized, well-written set of plugins covering core developer activities, such as working with common cloud platforms like GitHub, Azure, MongoDB, and popular services such as Tavily, Playwright, and more. Clear, not overly-opinionated, and compatible with a few other providers
-  <sub>★ 1.1k · Python · Apache-2.0 · npx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 1.2k · Python · Apache-2.0 · npx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/anthropic-office-skills --skill '*'`</sub>
 - **[Fusion Harness](https://github.com/disler/fusion-harness)** — by disler - Fuses 2–5 frontier models instead of racing them — one architect, one primary builder, and up to three secondary builders — giving N-way opinions, debate, fusion, coordinated implementation, direct one-agent routing, and gate-first validation. Ships as a composable Pi extension with pre-built model stacks and install/prime commands, and a video walkthrough of the whole approach
   <sub>★ 583 · TypeScript · MIT · source · pushed 2026-08-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/disler/fusion-harness.git`</sub>
 - **[Flue](https://github.com/SFKislev/Flue)** — by S.F. Kislev - A tiny bridge that lets Claude Code drive desktop software — Photoshop, Premiere, Blender, Unity, InDesign, Office, 13 apps total — by writing one-time scripts against each app's own automation runtime (COM / AppleScript / CEP), instead of MCP servers or fragile screenshot-based computer use. A genuinely novel approach that unlocks the apps' full scripting surfaces (InDesign alone
-  <sub>★ 86 · Python · MIT · pip · pushed 2026-09-01 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 87 · Python · MIT · pip · pushed 2026-09-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install flue`</sub>
 - **[llm-router](https://github.com/ypollak2/llm-router)** — by Yali Pollak - A local-first router that sits under Claude Code (and Codex/Gemini CLI) and sends each prompt to the cheapest capable model, with three-layer token compression and automatic provider fallback — protecting your premium quota and cutting cost with zero config on a Claude subscription. Credibly engineered: 1,900+ tests, an independent RouterArena benchmark placement, and an honest lo
-  <sub>★ 85 · Python · MIT · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 85 · Python · MIT · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llm-routing # installs the `llm-router` command`</sub>
 - **[OpenWeb](https://github.com/imoonkey/openweb)** — by openweb-org - An agent-native skill that accesses 90+ websites by calling their underlying APIs directly (typed JSON in, JSON out) instead of screenshotting and parsing the DOM, with auth auto-resolved locally from your existing browser session. Security is first-class — every operation is tagged read/write/delete/transact behind permission tiers, SSRF protection runs on each request, and there
   <sub>★ 65 · TypeScript · MIT · npm · pushed 2026-06-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -559,10 +559,10 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
 ## Skills
 
 - **[Superpowers](https://github.com/obra/superpowers)** — by Jesse Vincent - A strong bundle of core competencies for software engineering, with good coverage of a large portion of the SDLC - from planning, reviewing, testing, debugging... Well written, well organized, and adaptable. The author refers to them as "superpowers", but many of them are just consolidating engineering best practices - which sometimes does feel like a superpower when working wit
-  <sub>★ 290.1k · Shell · MIT · clone · pushed 2026-09-20</sub>
+  <sub>★ 290.2k · Shell · MIT · clone · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/obra/superpowers.git`</sub>
 - **[Caveman](https://github.com/JuliusBrussee/caveman)** — by Julius Brussee - A plugin that conserves message tokens by communicating in fragmented "caveman speak" - sort of a clever form of compression. Now accompanied by a whole caveman ecosystem including a memory system, caveman spec kit, and a caveman agent
-  <sub>★ 107.3k · Go · psh · pushed 2026-09-22 · Win</sub>
+  <sub>★ 107.4k · Go · psh · pushed 2026-09-22 · Win</sub>
   <sub>`irm https://raw.githubusercontent.com/JuliusBrussee/caveman/v2.7.0/install.ps1 | iex`</sub>
 - **[Claude Code Infrastructure Showcase](https://github.com/diet103/claude-code-infrastructure-showcase)** — by diet103 - A remarkably innovative approach to working with Skills, the centerpiece of which being a technique that leverages hooks to ensure that Claude intelligently selects and activates the appropriate Skill given the current context. Well-documented and adaptable to different projects and workflows
   <sub>★ 10k · TypeScript · MIT · clone · pushed 2026-07-13 · Win? · WSL2 · macOS? · Linux?</sub>
@@ -589,10 +589,10 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 962 · JavaScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add bitjaru/styleseed`</sub>
 - **[Web Assets Generator Skill](https://github.com/alonw0/web-asset-generator)** — by Alon Wolenitz - Easily generate web assets from Claude Code including favicons, app icons (PWA), and social media meta images (Open Graph) for Facebook, Twitter, WhatsApp, and LinkedIn. Handles image resizing, text-to-image generation, emojis, and provides proper HTML meta tags
-  <sub>★ 503 · Python · MIT · clone · pushed 2026-01-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 504 · Python · MIT · clone · pushed 2026-01-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/alonw0/web-asset-generator.git`</sub>
 - **[UI Craft](https://github.com/educlopez/ui-craft)** — by Eduardo Calvo - A deep design-engineering skill that makes agents "design like they have taste" by default, layered so you can just install it, drive it with 22 single-lens commands, or wire its deterministic MCP gates and CLI into CI. Its signature is a *scoreable, defensible* critique — Nielsen's heuristics × classic design laws × persona walkthroughs, every finding tagged by business impact
-  <sub>★ 352 · JavaScript · MIT · scoop · pushed 2026-09-03 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 353 · JavaScript · MIT · scoop · pushed 2026-09-03 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`scoop bucket add educlopez https://github.com/educlopez/scoop-bucket scoop install educlopez/ui-craft`</sub>
 - **[Snip](https://github.com/rixinhahaha/snip)** — by rixinhahaha - A visual whiteboard between you and your agent: Claude renders diagrams, HTML, or UI components through Snip instead of describing them in text, you approve or annotate directly on the output (circle, arrow, note), and the agent gets structured feedback and iterates. Works via CLI or MCP, doubles as a full local screenshot/annotation app with on-device AI organization (Ollama), an
   <sub>★ 326 · JavaScript · MIT · brew · pushed 2026-05-07 · WSL2? · macOS · Linux?</sub>
@@ -631,7 +631,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 4.7k · JavaScript · MIT · npm · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g avoid-ai-writing-detector`</sub>
 - **[Claude Style Patch](https://github.com/andrewroxby/claude-style-patch)** — by Andrew Roxby - A CLAUDE.md section that constrains Claude's prose style. It bans specific habits, including announcing a point before making it, colon-hinged sentences where the left side labels the right, verbless fragment openers, and stacked compression. Each rule names the habit, shows an example, and gives the rewrite
-  <sub>★ 147 · source · pushed 2026-09-15</sub>
+  <sub>★ 148 · source · pushed 2026-09-15</sub>
   <sub>`git clone https://github.com/andrewroxby/claude-style-patch.git`</sub>
 - **[Book Factory](https://github.com/robertguss/claude-code-toolkit)** — by Robert Guss - A comprehensive pipeline of Skills that replicates traditional publishing infrastructure for nonfiction book creation using specialized Claude skills
   <sub>★ 120 · Python · MIT · clone · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -643,13 +643,13 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
 ## Configuration
 
 - **[tweakcc](https://github.com/Piebald-AI/tweakcc)** — by Piebald-AI - Command-line tool to customize your Claude Code installation: themes, thinking verbs, spinners, and input-box styling, plus deeper tweaks like custom toolsets, system-prompt edits, input pattern highlighters, and AGENTS.md support. Works against both native and npm installs
-  <sub>★ 2.5k · TypeScript · MIT · npx · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 2.5k · TypeScript · MIT · npx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx tweakcc unpack <output-js-path> [binary-path]`</sub>
 - **[Rulesync](https://github.com/dyoshikawa/rulesync)** — by dyoshikawa - A Node.js CLI tool that automatically generates configs (rules, ignore files, MCP servers, commands, and subagents) for various AI coding agents. Rulesync can convert configs between Claude Code and other AI agents in both directions
   <sub>★ 1.5k · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g rulesync`</sub>
 - **[Fixing Opus 5](https://github.com/disler/fixing-smartass-opus-5)** — by disler - A single appendable system prompt that retunes Opus 5's communication channel — cutting verbal tics, heading theater, and output-token bloat — passed via --append-system-prompt-file with no build step or dependencies. Comes with a just-driven side-by-side compare loop so you can see the difference, and a set of diagrams breaking down the prompt's anatomy. Opinionated, unusually specifi
-  <sub>★ 347 · Just · MIT · source · pushed 2026-08-16</sub>
+  <sub>★ 349 · Just · MIT · source · pushed 2026-08-16</sub>
   <sub>`git clone https://github.com/disler/fixing-smartass-opus-5.git`</sub>
 
 ## Creative Media
@@ -664,7 +664,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 699 · JavaScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g capcut-cli`</sub>
 - **[motion-skills](https://github.com/iart-ai/motion-skills)** — by iart.ai - An open-source collection of ~50 motion-graphics, animation, and video skills across 14 installable packs — kinetic typography, data-driven charts, explainers, TikTok/Reels, web/WebGL animation, and Manim math animation — that teach an agent how a professional would build each piece. Every visual skill ships a deliver-and-verify loop (render a frame → screenshot → check) plus a small
-  <sub>★ 492 · HTML · MIT · npx · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 494 · HTML · MIT · npx · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add iart-ai/tiktok-video-skills`</sub>
 
 ## Linting
@@ -679,7 +679,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 19 · TypeScript · MIT · npx · pushed 2026-08-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`bunx agents-md-migrate # or: npx agents-md-migrate`</sub>
 - **[Schliff](https://github.com/Zandereins/schliff)** — by Zandereins - Deterministic quality scorer for AI agent instruction files — 8-dimension scoring with security, multi-format (SKILL.md, CLAUDE.md, .cursorrules, AGENTS.md), anti-gaming detection, zero dependencies
-  <sub>★ 17 · Python · MIT · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 17 · Python · MIT · uv · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx schliff score AGENTS.md # or any SKILL.md / CLAUDE.md / .cursorrules`</sub>
 - **[Upkeep](https://github.com/wei18/Upkeep)** — by wei18 - Upkeep — an AI audit crew for your repo. Catches docs/spec/asset drift with evidence; output-only. Claude Code plugin/skill + reusable CI workflow
   <sub>★ 16 · TypeScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -694,7 +694,7 @@ Curated by **[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/
   <sub>★ 152 · Swift · MIT · brew · pushed 2026-09-15 · macOS</sub>
   <sub>`brew tap sorkila/lockpaw`</sub>
 - **[Claudio](https://github.com/ctoth/claudio)** — by Christopher Toth - A no-frills little library that adds delightful OS-native sounds to Claude Code via simple hooks. It really sparks joy
-  <sub>★ 113 · Go · go · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 113 · Go · go · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`go install claudio.click/cmd/claudio@latest`</sub>
 - **[WhatsApp Channel Plugin](https://github.com/Rich627/whatsapp-claude-plugin)** — by Richie Liu - Connects WhatsApp as a native Claude Code channel via Baileys linked-device (no bot token or API keys), with bidirectional messaging, full media, voice transcription, remote tool approval, access control, and per-group personalities. Runs entirely locally and was the first community plugin officially reviewed and published on Anthropic's plugin marketplace
   <sub>★ 94 · TypeScript · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>

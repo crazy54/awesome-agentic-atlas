@@ -4,7 +4,7 @@
 
 Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMSecurity/awesome-agent-skills-security)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-95 entries · 57 distinct repos · 4 sections
+96 entries · 57 distinct repos · 4 sections
 
 [← back to the mega list](../README.md)
 
@@ -20,7 +20,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 - [Agent Skill Specifications](#agent-skill-specifications) (7)
 - [Related Awesome Lists](#related-awesome-lists) (6)
 - [Tools &amp; Frameworks](#tools--frameworks) (44)
-- [Benchmarks &amp; Datasets](#benchmarks--datasets) (38)
+- [Benchmarks &amp; Datasets](#benchmarks--datasets) (39)
 
 ## Agent Skill Specifications
 
@@ -112,7 +112,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 42 · Python · MIT · clone · pushed 2026-09-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ArmorerLabs/Armorer-Guard.git`</sub>
 - **[Nobulex](https://github.com/arian-gogani/nobulex)** — Trust Capital scoring layer for AI agents: bilateral Ed25519 receipts (pre- and post-execution signatures), content-addressed via action_ref and hash-chained per RFC 8785, that accumulate into a published 300-850 reputation score gating agent autonomy. CTEF v0.3.2 14/14 conformance. Python + TypeScript SDKs. Receipt-signing approach merged into Microsoft AGT
-  <sub>★ 40 · TypeScript · MIT · pip · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 40 · TypeScript · MIT · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install nobulex`</sub>
 - **[PIC Standard](https://github.com/pic-standard/pic-standard)** — Local-first standard and reference verifier that checks agent intent, provenance, and evidence at the action boundary and fails closed before high-impact tool calls; Python CLI, MCP/LangGraph/OpenClaw integrations, HTTP bridge, and a language-agnostic conformance suite
   <sub>★ 31 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -148,7 +148,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 6 · TypeScript · MIT · npm · pushed 2026-08-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g whatileaked # then just: whatileaked scan`</sub>
 - **[SkillTotal](https://github.com/pezhik/skilltotal)** — Static, offline scanner for AI components (MCP servers, agent skills, npm/PyPI packages, repos): supply-chain risk, dangerous capabilities, prompt-injection, exfiltration; deterministic, evidence-anchored, SARIF + pre-commit/GitHub Action
-  <sub>★ 4 · Python · Apache-2.0 · pipx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4 · Python · Apache-2.0 · pipx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install skilltotal`</sub>
 - **[DScan](https://github.com/DeepScan-Security/dscan)** — Open-source agent security suite for runtime tool-call tracing, prompt-injection shielding, MCP audits, adversarial testing, and sequence-level attack detection
   <sub>★ 3 · Python · pip · pushed 2026-07-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -264,6 +264,9 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 - **[WIPI](https://arxiv.org/abs/2402.16965)** — Web-based indirect injection
   <sub>website</sub>
   <sub>`https://arxiv.org/abs/2402.16965`</sub>
+- **[DUMA-Bench](https://arxiv.org/abs/2609.24662)** — Dual-control agent security (8 vuln classes)
+  <sub>website</sub>
+  <sub>`https://arxiv.org/abs/2609.24662`</sub>
 - **[SkillAtlas](https://arxiv.org/abs/2609.13353)** — Attack trace library for agent skills
   <sub>website</sub>
   <sub>`https://arxiv.org/abs/2609.13353`</sub>

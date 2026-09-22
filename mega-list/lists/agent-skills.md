@@ -193,7 +193,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Business, Productivity &amp; Marketing
 
 - **[trycourier/courier-skills](https://github.com/trycourier/courier-skills)** — Multi-channel notifications via email, SMS, push, and chat
-  <sub>★ 13 · MIT · npx · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 13 · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add trycourier/courier-skills`</sub>
 - **[stripe/stripe-best-practices](https://agent-skill.co/stripe/skills/stripe-best-practices)** — Best practices for building Stripe integrations
   <sub>website</sub>
@@ -556,16 +556,16 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Community Skills
 
 - **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)** — High-agency frontend skill to eliminate generic UI slop
-  <sub>★ 89.2k · JavaScript · MIT · npx · pushed 2026-09-20 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 89.3k · JavaScript · MIT · npx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add https://github.com/Leonxlnx/taste-skill`</sub>
 - **[AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo)** — Universal SEO skill for website analysis
-  <sub>★ 17.4k · Python · MIT · script · pushed 2026-09-11 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 17.5k · Python · MIT · script · pushed 2026-09-11 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/claude-seo/main/uninstall.sh | bash`</sub>
 - **[RoundTable02/tutor-skills](https://github.com/bevibing/tutor-skills)** — Transform docs or codebases into interactive StudyVaults
   <sub>★ 1.2k · Shell · MIT · npx · pushed 2026-02-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add RoundTable02/tutor-skills`</sub>
 - **[BrianRWagner/ai-marketing-skills](https://github.com/BrianRWagner/ai-marketing-claude-code-skills)** — 17 marketing frameworks for outreach and audits
-  <sub>★ 423 · Shell · clone · pushed 2026-03-19 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 424 · Shell · clone · pushed 2026-03-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/BrianRWagner/ai-marketing-claude-code-skills.git`</sub>
 - **[qdrant/skills](https://github.com/qdrant/skills)** — Agent skills for Qdrant vector search, scaling, and performance
   <sub>★ 245 · Python · Apache-2.0 · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -574,13 +574,13 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>★ 219 · Python · CC-BY-4.0 · npx · pushed 2026-08-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add smixs/creative-director-skill # asks where to install`</sub>
 - **[coderabbitai/skills](https://github.com/coderabbitai/skills)** — Code review and PR autofix workflows
-  <sub>★ 180 · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 181 · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add coderabbitai/skills`</sub>
 - **[wrsmith108/linear-claude-skill](https://github.com/wrsmith108/linear-claude-skill)** — Manage Linear issues, projects, and teams
   <sub>★ 128 · TypeScript · MIT · clone · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/wrsmith108/linear-claude-skill`</sub>
 - **[muthuishere/hand-drawn-diagrams](https://github.com/muthuishere/hand-drawn-diagrams)** — Generate hand-drawn Excalidraw diagrams from prompt
-  <sub>★ 75 · Python · npx · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 76 · Python · npx · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add muthuishere/hand-drawn-diagrams`</sub>
 - **[k-kolomeitsev/data-structure-protocol](https://github.com/k-kolomeitsev/data-structure-protocol)** — Graph-based memory for faster context and safer refactors
   <sub>★ 67 · Python · Apache-2.0 · psh · pushed 2026-08-10 · Win · WSL2? · macOS? · Linux · Docker</sub>

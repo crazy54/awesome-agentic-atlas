@@ -127,7 +127,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
 ## Skills
 
 - **[affaan-m/ECC](https://github.com/affaan-m/ECC)** — Skills, memory, security checks, and workflow configuration for Codex and other coding agents
-  <sub>★ 265.2k · JavaScript · MIT · npm · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 265.4k · JavaScript · MIT · npm · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npm install -g ecc-universal@2.2.2`</sub>
 - **[Egonex-AI/Understand-Anything](https://github.com/Egonex-AI/Understand-Anything)** — Turn any codebase into an interactive knowledge graph you can explore, search, and query. Multi-platform including Codex
   <sub>★ 83.7k · TypeScript · MIT · npx · pushed 2026-09-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -142,7 +142,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 33.2k · Python · Apache-2.0 · npx · pushed 2026-08-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add mukul975/Anthropic-Cybersecurity-Skills`</sub>
 - **[alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills)** — 220+ skills across engineering, marketing, compliance, C-level advisory. Works with Codex despite the name
-  <sub>★ 26.2k · Python · MIT · npx · pushed 2026-08-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 26.3k · Python · MIT · npx · pushed 2026-08-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx agent-skills-cli add alirezarezvani/claude-skills --agent codex`</sub>
 - **[JimLiu/baoyu-skills](https://github.com/JimLiu/baoyu-skills)** — Large curated skills repository with broad category coverage
   <sub>★ 26.1k · TypeScript · MIT · npx · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -211,7 +211,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 750 · Python · Apache-2.0 · uv · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx upskill`</sub>
 - **[skillmatic-ai/awesome-agent-skills](https://github.com/skillmatic-ai/awesome-agent-skills)** — Community-driven skill marketplace with quality ratings
-  <sub>★ 680 · CC0-1.0 · source · pushed 2026-05-14</sub>
+  <sub>★ 681 · CC0-1.0 · source · pushed 2026-05-14</sub>
   <sub>`git clone https://github.com/skillmatic-ai/awesome-agent-skills.git`</sub>
 - **[aldefy/compose-skill](https://github.com/aldefy/compose-skill)** — Jetpack Compose agent skill with actual androidx source code receipts. Works with Codex CLI, Claude Code, Gemini CLI
   <sub>★ 588 · Kotlin · clone · pushed 2026-07-23</sub>
@@ -280,7 +280,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 1.3k · TypeScript · MIT · npx · pushed 2026-09-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx @rely-ai/caliber bootstrap`</sub>
 - **[claude-codex-settings](https://github.com/fcakyon/claude-codex-settings)** — Dual AGENTS.md + CLAUDE.md setup for teams running both agents side-by-side
-  <sub>★ 1.1k · Python · Apache-2.0 · npx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 1.2k · Python · Apache-2.0 · npx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/anthropic-office-skills --skill '*'`</sub>
 - **[codex-cli-best-practice](https://github.com/shanraisshan/codex-cli-best-practice)** — Battle-tested AGENTS.md patterns with sandbox mode recommendations and approval policies
   <sub>★ 998 · Python · MIT · source · pushed 2026-06-04 · WSL2 · Linux</sub>
@@ -307,10 +307,10 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 1.4k · TypeScript · Apache-2.0 · clone · pushed 2026-03-16 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/GreenSheep01201/claw-empire.git`</sub>
 - **[mco-org/mco](https://github.com/mco-org/mco)** — Neutral orchestration layer for Claude Code, Codex CLI, Gemini CLI, OpenCode, Qwen Code. Works from any IDE or shell
-  <sub>★ 523 · Python · MIT · npx · pushed 2026-08-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 524 · Python · MIT · npx · pushed 2026-08-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @tt-a1i/mco@latest install`</sub>
 - **[aannoo/hcom](https://github.com/aannoo/hcom)** — Hierarchical agent communication framework. Agents delegate subtasks with context preservation
-  <sub>★ 511 · Rust · MIT · psh · pushed 2026-09-13 · Win · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 512 · Rust · MIT · psh · pushed 2026-09-13 · Win · WSL2 · macOS? · Linux?</sub>
   <sub>`irm https://github.com/aannoo/hcom/releases/latest/download/hcom-installer.ps1 | iex`</sub>
 - **[waltstephen/ArgusBot](https://github.com/waltstephen/ArgusBot)** — 24/7 supervisor agent that keeps Codex and Claude Code running, reviewing, and planning until tasks are done
   <sub>★ 316 · Python · MIT · clone · pushed 2026-04-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -352,13 +352,13 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 3.4k · TypeScript · MIT · npx · pushed 2026-09-10 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx notebooklm-mcp@latest`</sub>
 - **[tuannvm/codex-mcp-server](https://github.com/tuannvm/codex-mcp-server)** — General-purpose MCP server for Codex with file operations, web search, and database queries
-  <sub>★ 636 · TypeScript · source · pushed 2026-05-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 637 · TypeScript · source · pushed 2026-05-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/tuannvm/codex-mcp-server.git`</sub>
 - **[Shelpuk-AI-Technology-Consulting/kindly-web-search-mcp-server](https://github.com/Shelpuk-AI-Technology-Consulting/kindly-web-search-mcp-server)** — Web search MCP with rate limiting and caching
-  <sub>★ 389 · Python · MIT · uv · pushed 2026-09-19 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 390 · Python · MIT · uv · pushed 2026-09-19 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`uvx --from git+https://github.com/Shelpuk-AI-Technology-Consulting/kindly-web-search-mcp-server \`</sub>
 - **[milisp/mcp-linker](https://github.com/milisp/mcp-linker)** — Link multiple MCP servers together. Chain tools across servers
-  <sub>★ 326 · TypeScript · AGPL-3.0 · brew · pushed 2026-09-09 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 327 · TypeScript · AGPL-3.0 · brew · pushed 2026-09-09 · Win · WSL2? · macOS · Linux</sub>
   <sub>`brew install --cask milisp/mcp-linker/mcp-linker`</sub>
 - **[mrphrazer/agentic-malware-analysis](https://github.com/mrphrazer/agentic-malware-analysis)** — Agentic malware analysis environment with MCP-connected disassemblers and RE tooling
   <sub>★ 306 · YARA · GPL-2.0 · clone · pushed 2026-03-22 · WSL2 · Linux · Docker</sub>
@@ -385,7 +385,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 24 · MIT · clone · pushed 2026-04-01</sub>
   <sub>`git clone https://github.com/<your-username>/claude-codex`</sub>
 - **[Mr-Tomahawk/codex-cli-mcp-tool](https://github.com/Mr-Tomahawk/codex-cli-mcp-tool)** — Wrap Codex CLI as an MCP tool for use in other agent frameworks
-  <sub>★ 21 · TypeScript · MIT · npm · pushed 2025-08-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 22 · TypeScript · MIT · npm · pushed 2025-08-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g codex-cli-mcp-tool`</sub>
 - **[xiaolai/codex-octopus](https://github.com/xiaolai/codex-octopus)** — One brain, many arms - spawns multiple specialized Codex agents as MCP servers
   <sub>★ 20 · TypeScript · ISC · source · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -409,7 +409,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
 ## GUI &amp; Desktop Apps
 
 - **[farion1231/cc-switch](https://github.com/farion1231/cc-switch)** — Cross-platform desktop all-in-one assistant for Claude Code, Codex, OpenCode, OpenClaw, and Gemini CLI
-  <sub>★ 134.1k · Rust · MIT · brew · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 134.2k · Rust · MIT · brew · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`brew install --cask cc-switch`</sub>
 - **[slopus/happy](https://github.com/slopus/happy)** — Mobile and web client for Codex and Claude Code with end-to-end encryption. iOS/Android, push notifications, open-source
   <sub>★ 23.9k · TypeScript · MIT · npm · pushed 2026-09-22 · macOS</sub>
@@ -421,7 +421,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 4k · Rust · Apache-2.0 · npm · pushed 2026-09-16 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @just-every/code`</sub>
 - **[ilysenko/codex-desktop-linux](https://github.com/ilysenko/codex-desktop-linux)** — Automated installer to run the OpenAI Codex Desktop app on Linux
-  <sub>★ 3.8k · JavaScript · MIT · clone · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.8k · JavaScript · MIT · clone · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ilysenko/codex-desktop-linux.git`</sub>
 - **[xintaofei/codeg](https://github.com/xintaofei/codeg)** — Electron-based GUI with project templates and one-click sandboxing
   <sub>★ 3.6k · Rust · Apache-2.0 · psh · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -472,7 +472,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 1.1k · Dart · MIT · npx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx @ccpocket/bridge@latest`</sub>
 - **[PleasePrompto/ductor](https://github.com/PleasePrompto/ductor)** — Control Claude Code, Codex CLI, and Gemini CLI from Telegram. Live streaming, persistent memory, cron jobs, webhooks, Docker sandboxing
-  <sub>★ 458 · Python · MIT · pipx · pushed 2026-07-23 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 459 · Python · MIT · pipx · pushed 2026-07-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install ductor # or: uv tool install ductor`</sub>
 - **[ShunmeiCho/cc-clip](https://github.com/ShunmeiCho/cc-clip)** — Paste images into remote Claude Code and Codex CLI over SSH. Clipboard bridging for macOS and Windows
   <sub>★ 160 · Go · MIT · script · pushed 2026-08-29 · WSL2 · macOS · Linux</sub>
@@ -502,7 +502,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 721 · TypeScript · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/smallmain/vscode-unify-chat-provider.git`</sub>
 - **[tninja/ai-code-interface.el](https://github.com/tninja/ai-code-interface.el)** — Emacs interface for multiple AI coding agents including Codex
-  <sub>★ 283 · Emacs Lisp · Apache-2.0 · source · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 283 · Emacs Lisp · Apache-2.0 · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/tninja/ai-code-interface.el.git`</sub>
 - **[johnseth97/codex.nvim](https://github.com/johnseth97/codex.nvim)** — Neovim plugin with floating terminal, keybindings, and context passing
   <sub>★ 265 · Lua · source · pushed 2025-11-20</sub>
@@ -547,7 +547,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 33.3k · TypeScript · MIT · npm · pushed 2026-09-22 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install -g oh-my-codex`</sub>
 - **[PeonPing/peon-ping](https://github.com/PeonPing/peon-ping)** — Warcraft III Peon voice notifications for Codex, Claude Code, and IDEs. Stop babysitting your terminal
-  <sub>★ 5k · Shell · MIT · brew · pushed 2026-08-30 · macOS</sub>
+  <sub>★ 5.1k · Shell · MIT · brew · pushed 2026-08-30 · macOS</sub>
   <sub>`brew install PeonPing/tap/peon-ping`</sub>
 - **[shanraisshan/codex-cli-hooks](https://github.com/shanraisshan/codex-cli-hooks)** — Starter hooks collection: pre-commit validation, cost tracking, notification triggers
   <sub>★ 71 · Python · source · pushed 2026-06-04 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -580,13 +580,13 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
 ## Model Providers &amp; Proxies
 
 - **[router-for-me/CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI)** — Wrap Codex, Claude Code, Gemini CLI as OpenAI-compatible API endpoints. Multi-account load balancing, streaming
-  <sub>★ 52.8k · Go · MIT · source · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 52.9k · Go · MIT · source · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/router-for-me/CLIProxyAPI.git`</sub>
 - **[icebear0828/codex-proxy](https://github.com/icebear0828/codex-proxy)** — Lightweight local relay that converts Codex Desktop's Responses API to multiple protocol interfaces (OpenAI, Anthropic, Gemini)
-  <sub>★ 1.8k · TypeScript · npm · pushed 2026-09-21 · Win · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 1.8k · TypeScript · npm · pushed 2026-09-22 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npm install -g @icebear0828/codex-proxy`</sub>
 - **[lich0821/ccNexus](https://github.com/lich0821/ccNexus)** — Intelligent API gateway for Claude Code and Codex CLI. Rotate endpoints, monitor usage, seamlessly integrate OpenAI, Gemini, and others
-  <sub>★ 974 · Go · MIT · source · pushed 2026-08-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 973 · Go · MIT · source · pushed 2026-08-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/lich0821/ccNexus.git`</sub>
 - **[codingmoh/open-codex](https://github.com/codingmoh/open-codex)** — Open-source Codex-inspired CLI running 100% locally with Ollama. No API key required, offline capable
   <sub>★ 695 · Python · MIT · pipx · pushed 2025-07-07 · Win · WSL2? · macOS · Linux</sub>
@@ -625,7 +625,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 2.2k · TypeScript · npx · pushed 2026-01-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y opencode-openai-codex-auth@latest`</sub>
 - **[Lampese/codex-switcher](https://github.com/Lampese/codex-switcher)** — Switch between multiple OpenAI accounts. Useful for work/personal separation
-  <sub>★ 836 · Rust · clone · pushed 2026-09-19 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 838 · Rust · clone · pushed 2026-09-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Lampese/codex-switcher.git`</sub>
 - **[Ducksss/codex-profiles](https://github.com/Ducksss/codex-profiles)** — Run Codex CLI with named CODEX_HOME profiles that keep account configuration and local session state separate
   <sub>★ 166 · Shell · MIT · brew · pushed 2026-09-15 · Win? · WSL2? · macOS · Linux?</sub>
@@ -676,7 +676,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 69 · Rust · MIT · cargo · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`cargo install skrills`</sub>
 - **[abhishekgahlot2/codex-claude-bridge](https://github.com/abhishekgahlot2/codex-claude-bridge)** — Run Codex and Claude Code in tandem on the same codebase
-  <sub>★ 58 · JavaScript · source · pushed 2026-09-08 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 59 · JavaScript · source · pushed 2026-09-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/abhishekgahlot2/codex-claude-bridge.git`</sub>
 - **[lbb00/ai-rules-sync](https://github.com/lbb00/ai-rules-sync)** — Sync AGENTS.md ↔ CLAUDE.md ↔ .cursorrules. One source, all formats
   <sub>★ 38 · TypeScript · Unlicense · npm · pushed 2026-08-20 · macOS</sub>
@@ -766,7 +766,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
 ## Monitoring &amp; Analytics
 
 - **[steipete/CodexBar](https://github.com/steipete/CodexBar)** — macOS menu bar app showing usage stats for Codex, Claude, Cursor, Gemini without login. On-device parsing
-  <sub>★ 21.7k · Swift · MIT · brew · pushed 2026-09-22 · macOS</sub>
+  <sub>★ 21.8k · Swift · MIT · brew · pushed 2026-09-22 · macOS</sub>
   <sub>`brew install --cask codexbar`</sub>
 - **[ccusage/ccusage](https://github.com/ccusage/ccusage)** — Analyze local Codex and Claude Code usage with CLI reports and token-cost breakdowns
   <sub>★ 18.7k · Rust · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>

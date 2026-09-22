@@ -11,9 +11,9 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/openclaw/openclaw"><img src="https://opengraph.githubassets.com/1/openclaw/openclaw" width="260"></a> | <a href="https://github.com/NousResearch/hermes-agent"><img src="https://opengraph.githubassets.com/1/NousResearch/hermes-agent" width="260"></a> | <a href="https://github.com/HKUDS/nanobot"><img src="https://opengraph.githubassets.com/1/HKUDS/nanobot" width="260"></a> |
-| **[OpenClaw](https://github.com/openclaw/openclaw)**<br>★ 390.3k | **[Hermes Agent](https://github.com/NousResearch/hermes-agent)**<br>★ 248k | **[nanobot](https://github.com/HKUDS/nanobot)**<br>★ 48.5k |
+| **[OpenClaw](https://github.com/openclaw/openclaw)**<br>★ 390.3k | **[Hermes Agent](https://github.com/NousResearch/hermes-agent)**<br>★ 248.1k | **[nanobot](https://github.com/HKUDS/nanobot)**<br>★ 48.5k |
 | <a href="https://github.com/AstrBotDevs/AstrBot"><img src="https://github.com/user-attachments/assets/f17cdb90-52d7-4773-be2e-ff64b566af6b" width="260"></a> | <a href="https://github.com/zeroclaw-labs/zeroclaw"><img src="https://opengraph.githubassets.com/1/zeroclaw-labs/zeroclaw" width="260"></a> | <a href="https://github.com/nanocoai/nanoclaw"><img src="https://opengraph.githubassets.com/1/qwibitai/nanoclaw" width="260"></a> |
-| **[AstrBot](https://github.com/AstrBotDevs/AstrBot)**<br>★ 40.8k | **[ZeroClaw](https://github.com/zeroclaw-labs/zeroclaw)**<br>★ 32.9k | **[NanoClaw](https://github.com/nanocoai/nanoclaw)**<br>★ 30.8k |
+| **[AstrBot](https://github.com/AstrBotDevs/AstrBot)**<br>★ 40.9k | **[ZeroClaw](https://github.com/zeroclaw-labs/zeroclaw)**<br>★ 32.9k | **[NanoClaw](https://github.com/nanocoai/nanoclaw)**<br>★ 30.8k |
 
 ## Contents
 
@@ -25,13 +25,13 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
   <sub>★ 390.3k · TypeScript · npm · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g openclaw@latest --allow-scripts=openclaw`</sub>
 - **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** — Python / TypeScript - Self-improving AI agent with autonomous skill creation, persistent memory, multi-platform messaging, and subagent delegation
-  <sub>★ 248k · Python · MIT · script · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 248.1k · Python · MIT · script · pushed 2026-09-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`</sub>
 - **[nanobot](https://github.com/HKUDS/nanobot)** — Python - Ultra-lightweight OpenClaw-style assistant focused on research workflows, one-click deploy, MCP support, and agent social networking
   <sub>★ 48.5k · Python · MIT · psh · pushed 2026-09-22 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/HKUDS/nanobot/main/scripts/install.ps1 | iex`</sub>
 - **[AstrBot](https://github.com/AstrBotDevs/AstrBot)** — Python - Agentic IM chatbot infrastructure with broad IM platform support, LLM integrations, plugins, and AI features
-  <sub>★ 40.8k · Python · AGPL-3.0 · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 40.9k · Python · AGPL-3.0 · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install astrbot --python 3.12`</sub>
 - **[ZeroClaw](https://github.com/zeroclaw-labs/zeroclaw)** — Rust - Trait-driven, zero-overhead AI infrastructure with a fully swappable core that deploys across environments
   <sub>★ 32.9k · Rust · Apache-2.0 · script · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
@@ -85,7 +85,7 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
   <sub>★ 326 · TypeScript · Apache-2.0 · clone · pushed 2026-05-25 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/letta-ai/lettabot.git`</sub>
 - **[safeclaw](https://github.com/princezuda/safestclaw)** — Python - OpenClaw alternative focused on safe text and voice interactions without relying on an LLM, while preserving core assistant capabilities
-  <sub>★ 280 · Python · MIT · pipx · pushed 2026-06-19 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 280 · Python · MIT · pipx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pipx install "git+https://github.com/princezuda/safestclaw.git#egg=safestclaw[ml]"`</sub>
 - **[subzeroclaw](https://github.com/genlayerlabs/subzeroclaw)** — C - A skill-driven agentic daemon for edge hardware
   <sub>★ 135 · C · MIT · clone · pushed 2026-09-20 · WSL2? · Linux?</sub>

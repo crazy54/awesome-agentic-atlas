@@ -11,7 +11,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> | <a href="https://github.com/usestrix/strix"><img src="https://raw.githubusercontent.com/usestrix/.github/main/imgs/cover.png" width="260"></a> | <a href="https://github.com/BerriAI/litellm"><img src="https://github.com/user-attachments/assets/c5ee0412-6fb5-4fb6-ab5b-bafae4209ca6" width="260"></a> |
-| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 88.8k | **[Strix](https://github.com/usestrix/strix)**<br>★ 64.2k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 59.4k |
+| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 88.9k | **[Strix](https://github.com/usestrix/strix)**<br>★ 64.2k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 59.4k |
 | <a href="https://github.com/NVIDIA/garak"><img src="https://opengraph.githubassets.com/1/leondz/garak" width="260"></a> | <a href="https://github.com/bridgecrewio/checkov"><img src="https://raw.githubusercontent.com/bridgecrewio/checkov/main/docs/checkov-jenkins.png" width="260"></a> | <a href="https://github.com/guardrails-ai/guardrails"><img src="https://opengraph.githubassets.com/1/guardrails-ai/guardrails" width="260"></a> |
 | **[Garak](https://github.com/NVIDIA/garak)**<br>★ 9.3k | **[Checkov](https://github.com/bridgecrewio/checkov)**<br>★ 9k | **[Guardrails](https://github.com/guardrails-ai/guardrails)**<br>★ 7.4k |
 
@@ -28,7 +28,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Sandboxing &amp; Isolation Environments
 
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** — Formerly OpenDevin, this platform includes a secure runtime environment for autonomous coding agents to operate without accessing the host machine's sensitive files
-  <sub>★ 88.8k · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 88.9k · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[Agent-Infra Sandbox](https://github.com/agent-infra/sandbox)** — An "All-In-One" sandbox combining Browser, Shell, VSCode, and File System access in a single Docker container, optimized for agentic tasks
   <sub>★ 6k · Python · Apache-2.0 · pip · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -67,7 +67,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
   <sub>★ 59.4k · Python · uv · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install 'litellm[proxy]'`</sub>
 - **[Guardrails](https://github.com/guardrails-ai/guardrails)** — A Python framework for validating LLM outputs against structural and semantic rules (e.g., "must return valid JSON," "must not contain PII")
-  <sub>★ 7.4k · Python · Apache-2.0 · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 7.4k · Python · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install guardrails-ai`</sub>
 - **[NeMo Guardrails](https://github.com/NVIDIA-NeMo/Guardrails)** — NVIDIA's toolkit for adding programmable rails to LLM-based apps. It ensures agents stay on topic, avoid jailbreaks, and adhere to defined safety policies
   <sub>★ 7.2k · Python · source · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -99,7 +99,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
   <sub>★ 5k · Rust · Apache-2.0 · source · pushed 2026-09-22 · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/agentgateway/agentgateway.git`</sub>
 - **[Immunity Agent](https://github.com/PrismorSec/prismor)** — Security-focused AI agent runtime for scanning prompt injection, MCP risks, unsafe package installs, and dangerous agent actions before execution
-  <sub>★ 358 · Python · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 360 · Python · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install prismor`</sub>
 - **[Envoy AI Gateway](https://gateway.envoyproxy.io/)** — An Envoy-based gateway that manages request traffic to GenAI services, providing a control point for rate limiting and policy enforcement
   <sub>website</sub>

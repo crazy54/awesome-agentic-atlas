@@ -2,7 +2,7 @@
 
 Speaks the Model Context Protocol — as a server, as a client, or as a gateway between.
 
-**5,104 projects** · 4,247 with stars to rank by · 5,539,461 combined stars
+**5,104 projects** · 4,248 with stars to rank by · 5,541,741 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#target=mcp)
 
@@ -10,12 +10,13 @@ Speaks the Model Context Protocol — as a server, as a client, or as a gateway 
 
 Page **7** of 7, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp.md) · [2](mcp-2.md) · [3](mcp-3.md) · [4](mcp-4.md) · [5](mcp-5.md) · [6](mcp-6.md) · **7**.
 
-## Also here, unranked (857)
+## Also here, unranked (856)
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 704–857 of 857. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 702–856 of 856. The rest are on this page's other parts, linked above and below.</sub>
 
+- **[smeet666/mcp-imslp](https://github.com/smeet666/mcp-imslp)** — Read IMSLP, the Petrucci Music Library: search works and composers, read a work with its catalogue numbers, key and instrumentation, and page through its editions with the copyright status of each st…
 - **[smeet666/mcp-lever](https://github.com/smeet666/mcp-lever)** — Read the public job boards companies publish through Lever. Resolve a company name to its board, search the openings of the companies you name, and read one in full. No API key and no account. A site…
 - **[smeet666/mcp-libraryofcongress](https://github.com/smeet666/mcp-libraryofcongress)** — Full-text search of the Library of Congress's digitised American newspapers, plus catalogue search per media type and the curated collections. No API key. npx -y mcp-libraryofcongress
 - **[smeet666/mcp-lrclib](https://github.com/smeet666/mcp-lrclib)** — Search tracks on LRCLIB and read their lyrics, including time-synced (LRC) lines with a timestamp on every line. Strips lyrics from search results, cutting a search from ~29k to ~800 tokens. No API k…

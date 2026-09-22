@@ -218,7 +218,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2.2k · MIT · source · pushed 2026-08-17 · Win?</sub>
   <sub>`git clone https://github.com/Xnhyacinth/Awesome-LLM-Long-Context-Modeling.git`</sub>
 - **[Theagentcompany](https://github.com/TheAgentCompany/TheAgentCompany)** — An agent benchmark with tasks in a simulated software company
-  <sub>★ 782 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 783 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://github.com/TheAgentCompany/the-agent-company-backup-data/releases/download/setup-script-20241208/setup.sh | sh`</sub>
 - **[Agentlab](https://github.com/ServiceNow/AgentLab)** — AgentLab - An open-source framework for developing, testing, and benchmarking web agents on diverse tasks, designed for scalability and re…
   <sub>★ 637 · Python · pip · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -233,7 +233,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 487 · Python · MIT · source · pushed 2024-11-09 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/web-arena-x/visualwebarena.git`</sub>
 - **[Balrog](https://github.com/balrog-ai/BALROG)** — Benchmarking Agentic LLM and VLM Reasoning On Games
-  <sub>★ 271 · Python · MIT · clone · pushed 2026-04-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 272 · Python · MIT · clone · pushed 2026-04-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/balrog-ai/BALROG.git`</sub>
 - **[Comfybench](https://github.com/xxyQwQ/ComfyBench)** — Implementation for the paper "ComfyBench - Benchmarking LLM-based Agents in ComfyUI for Autonomously Designing Collaborative AI Systems"
   <sub>★ 205 · Python · clone · pushed 2025-12-24 · Win? · WSL2? · macOS? · Linux?</sub>

@@ -2,7 +2,7 @@
 
 The Model Context Protocol ecosystem: reference and third-party servers, inspectors, gateways, transports, and the sibling agent-to-agent protocols.
 
-**4,537 projects** · 3,718 with stars to rank by · 1,206,501 combined stars
+**4,537 projects** · 3,719 with stars to rank by · 1,206,935 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://crazy54.github.io/awesome-agentic-atlas/#topic=mcp-servers)
 
@@ -10,13 +10,12 @@ The Model Context Protocol ecosystem: reference and third-party servers, inspect
 
 Page **6** of 6, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp-servers.md) · [2](mcp-servers-2.md) · [3](mcp-servers-3.md) · [4](mcp-servers-4.md) · [5](mcp-servers-5.md) · **6**.
 
-## Also here, unranked (819)
+## Also here, unranked (818)
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 209–819 of 819. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 209–818 of 818. The rest are on this page's other parts, linked above and below.</sub>
 
-- **[einiba/canyougrab-api](https://github.com/einiba/canyougrab-api/tree/main/mcp-server)** — Confidence-scored domain availability checking with real-time DNS + WHOIS lookups. Bulk check up to 100 domains per request. Each result includes availability, confidence level, data source, and regi…
 - **[elang2/mcp-audit-gateway](https://github.com/elang2/mcp-audit-gateway)** — Tamper-proof audit trail for AI agent tool calls. Transparent stdio proxy with cryptographic attestation (Ed25519 signing), hash-chained records, YAML policy enforcement (allow/deny/transform), and O…
 - **[elberacasa/umbra](https://github.com/elberacasa/umbra)** — Trust score and guardrails for AI-generated code: static security rules, Docker-verified build/boot checks, and claim receipts that catch agents lying about tests. Tools: scan_repo, guard_content, ge…
 - **[elfsight/beamtrace-mcp](https://github.com/elfsight/beamtrace-mcp)** — AI visibility tracking &amp; website fixes for better AI search presence
