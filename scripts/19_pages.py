@@ -438,10 +438,16 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             # Substituted here rather than at the two call sites for exactly the reason in this function's
             # docstring: `19b_refresh.py` renders the same shell, and a placeholder it does not know about
             # would ship to readers as the literal text `__SETTINGS__` where the theme picker should be.
-            # Through `strip_page` for the same reason the platform marks are -- substitution runs after the
-            # comment strip, so a constant injected here would smuggle its own comments into the bytes.
+            # Stripped here for the same reason the platform marks are -- substitution runs after the comment
+            # strip, so a constant injected here would smuggle its own comments into the bytes. One stripper
+            # each, matched to what the constant actually is: markup, a rule block, and a bare script body.
+            # `strip_page` would be the wrong one for the last of those -- it looks for a `<script>` tag to
+            # decide that what follows is JavaScript, finds none in a naked function, and copies the whole
+            # thing through as HTML text with every `//` comment intact. That is exactly what happened, and
+            # what caught it was diffing a render against the same page built before the extraction.
             .replace("__SETTINGS__", pagemin.strip_page(SETTINGS_MENU))
             .replace("__SETCSS__", pagemin.strip_css(SETTINGS_CSS))
+            .replace("__SETJS__", pagemin.strip_js(SETTINGS_JS))
             .replace("__BUILT__", stamp_iso)
             .replace("__BUILT_UTC__", stamp_utc)
             .replace("__BUILT_BADGE__", shield_text(stamp_utc))
@@ -476,6 +482,107 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
 # the obvious next step: that file is linked by 178 facet pages and 6 collection pages, none of which carry
 # the menu markup yet, so moving it there is a change to their bytes and a service-worker re-version for a
 # control they do not have. Worth doing when they grow one; not worth bundling into the page move.
+# The behaviour of the same control, and the third and last piece of it to come out of `PAGE`. Extracted
+# with more care than the markup and the stylesheet were, because this one was interleaved: it sat inside
+# `wire()` among the index's own boot logic, and a careless slice would have taken `loadSaved()` with it or
+# left a local behind that the rest of the function still read. Nothing after it referenced `btn`, `menu`,
+# `setbtn`, `ths`, `setSkin`, `setOpen` or `paintSettings`, which is what made the slice safe, and that was
+# checked rather than assumed.
+#
+# One deliberate change of shape: the block used to call `paintDeployBadge()` directly. That global exists
+# on the index and not on the homepage, so it arrives as an argument. A `typeof` guard would have been
+# shorter and worse -- the index names the function at its call site, so deleting it is a `ReferenceError`
+# at boot instead of a badge that silently stops being repainted when the theme changes.
+#
+# Returns `paintSettings` for a caller that needs to repaint both axes for some other reason. Nothing uses
+# it yet; it is returned rather than hidden because the alternative is a second copy of a four-line
+# function the first time something does.
+SETTINGS_JS = r"""function wireSettings(onPaint) {
+  const btn = document.getElementById("theme");
+  const menu = document.getElementById("setmenu");
+  const setbtn = document.getElementById("setbtn");
+  const ths = Array.from(document.querySelectorAll(".thb"));
+  // One paint for both axes rather than one per control, because everything downstream of a theme change
+  // is downstream of either change: the mode toggle's label, which theme reads as pressed, the browser
+  // chrome, and the deployment badge's own colours. Every path that moves either axis calls this -- the
+  // toggle, the four theme buttons, the OS-preference listener, and the initial agreement with the head
+  // script -- so there is one place where "the page now looks like X" is made true.
+  const paintSettings = () => {
+    const light = document.documentElement.dataset.theme === "light";
+    btn.textContent = light ? "Dark theme" : "Light theme";
+    btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
+    const skin = document.documentElement.dataset.skin;
+    for (const t of ths) t.setAttribute("aria-pressed", String(t.dataset.skin === skin));
+    // Read off the stylesheet rather than restated here, so --plane and the browser chrome cannot drift.
+    // This is also what retires the head script's eight-entry map: after first paint the computed value
+    // exists, so the map is never consulted again and cannot be the thing that is wrong.
+    const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+    if (plane) document.getElementById("tc").content = plane;
+    // Named by the caller rather than reached for globally -- see this constant's comment.
+    if (onPaint) onPaint();
+  };
+  btn.onclick = () => {
+    const light = document.documentElement.dataset.theme !== "light";
+    document.documentElement.dataset.theme = light ? "light" : "dark";
+    // The choice is the point: it used to last until the next navigation, so a reader who needs light
+    // re-picked it on every page load and every shared filter link.
+    try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+    paintSettings();
+  };
+  // The theme axis, and it writes the same key the head script reads. Not validated here the way the head
+  // script validates it: the only values that reach this are the four `data-skin` attributes in the markup,
+  // and the page cannot offer a theme it has no block for. The head script is where an unknown name has to
+  // be rejected, because that is the one place a value can arrive from a previous release.
+  const setSkin = (s) => {
+    document.documentElement.dataset.skin = s;
+    try { localStorage.setItem("atlas-skin", s); } catch (e) {}
+    paintSettings();
+  };
+  for (const t of ths) t.onclick = () => setSkin(t.dataset.skin);
+  // `hidden` is the state, and the attribute rather than a class deliberately: it takes the panel out of
+  // the accessibility tree as well as off the screen, which is what a closed menu should be. aria-expanded
+  // on the button is the same fact said to a screen reader.
+  // `setopen` on the masthead is what lifts the panel over the pinned bar -- see the `.setmenu` comment in
+  // the stylesheet for why the parent has to move and not the panel. Toggled here and nowhere else, so the
+  // class and the `hidden` attribute cannot end up disagreeing about whether the menu is open.
+  const setOpen = (open) => {
+    menu.hidden = !open;
+    setbtn.setAttribute("aria-expanded", String(open));
+    document.querySelector("header").classList.toggle("setopen", open);
+  };
+  setbtn.onclick = () => setOpen(menu.hidden);
+  // Escape from anywhere inside, and focus goes back to the button that opened it -- a menu that closes
+  // and leaves focus on a removed element drops a keyboard reader at the top of the document.
+  menu.addEventListener("keydown", ev => {
+    if (ev.key === "Escape") { setOpen(false); setbtn.focus(); }
+  });
+  // Both of these ask the same question -- did attention leave the menu -- and they have to be two
+  // listeners because a pointer and a keyboard leave differently: a click lands somewhere else without
+  // moving focus, and Tab past the last theme moves focus without a click. `closest` on the wrapper and
+  // not on the panel, so pressing the button that opened it is not "leaving" and does not fight
+  // `setbtn.onclick` for who gets to close it. Guarded because `focusin` can target the document itself.
+  for (const kind of ["click", "focusin"])
+    document.addEventListener(kind, ev => {
+      const inside = ev.target && ev.target.closest && ev.target.closest(".setwrap");
+      if (!menu.hidden && !inside) setOpen(false);
+    });
+  // The head script already resolved both axes; this only has to agree with it, since the markup's
+  // hardcoded "Light theme" and pressed Graphite are wrong for any reader who chose otherwise.
+  paintSettings();
+  // Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a
+  // theme they explicitly chose because the sun went down is worse than not following at all. Only the
+  // mode axis: nothing in `prefers-*` has an opinion about which of four palettes a reader wants.
+  try {
+    matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+      if (localStorage.getItem("theme")) return;
+      document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+      paintSettings();
+    });
+  } catch (e) {}
+  return paintSettings;
+}"""
+
+
 SETTINGS_CSS = r"""/* THE SETTINGS MENU. Absolutely positioned inside a relative wrapper rather than laid out in the nav,
    because the nav is a wrapping inline flow at every width -- a panel in that flow would reflow the two
    link rows and the mascot beside them every time it opened. `right:0` so it grows leftwards from the
@@ -3759,6 +3866,7 @@ function palOpen() {
   document.getElementById("palq").focus();
 }
 
+__SETJS__
 // Theme and clipboard are wired outside buildChips because buildChips only runs once `data.json` has
 // arrived. When the fetch fails -- a contributor opening the file off disk, which the catch block above
 // exists for -- the toggle used to be dead too, so the error page could not be read in light mode.
@@ -3773,86 +3881,10 @@ function wire() {
   // `prepare()` runs off the `data.json` fetch while this runs synchronously at boot. One more small key on
   // a path already waiting on a 556 KB body.
   loadVisit();
-  const btn = document.getElementById("theme");
-  const menu = document.getElementById("setmenu");
-  const setbtn = document.getElementById("setbtn");
-  const ths = Array.from(document.querySelectorAll(".thb"));
-  // One paint for both axes rather than one per control, because everything downstream of a theme change
-  // is downstream of either change: the mode toggle's label, which theme reads as pressed, the browser
-  // chrome, and the deployment badge's own colours. Every path that moves either axis calls this -- the
-  // toggle, the four theme buttons, the OS-preference listener, and the initial agreement with the head
-  // script -- so there is one place where "the page now looks like X" is made true.
-  const paintSettings = () => {
-    const light = document.documentElement.dataset.theme === "light";
-    btn.textContent = light ? "Dark theme" : "Light theme";
-    btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
-    const skin = document.documentElement.dataset.skin;
-    for (const t of ths) t.setAttribute("aria-pressed", String(t.dataset.skin === skin));
-    // Read off the stylesheet rather than restated here, so --plane and the browser chrome cannot drift.
-    // This is also what retires the head script's eight-entry map: after first paint the computed value
-    // exists, so the map is never consulted again and cannot be the thing that is wrong.
-    const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
-    if (plane) document.getElementById("tc").content = plane;
-    paintDeployBadge();
-  };
-  btn.onclick = () => {
-    const light = document.documentElement.dataset.theme !== "light";
-    document.documentElement.dataset.theme = light ? "light" : "dark";
-    // The choice is the point: it used to last until the next navigation, so a reader who needs light
-    // re-picked it on every page load and every shared filter link.
-    try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
-    paintSettings();
-  };
-  // The theme axis, and it writes the same key the head script reads. Not validated here the way the head
-  // script validates it: the only values that reach this are the four `data-skin` attributes in the markup,
-  // and the page cannot offer a theme it has no block for. The head script is where an unknown name has to
-  // be rejected, because that is the one place a value can arrive from a previous release.
-  const setSkin = (s) => {
-    document.documentElement.dataset.skin = s;
-    try { localStorage.setItem("atlas-skin", s); } catch (e) {}
-    paintSettings();
-  };
-  for (const t of ths) t.onclick = () => setSkin(t.dataset.skin);
-  // `hidden` is the state, and the attribute rather than a class deliberately: it takes the panel out of
-  // the accessibility tree as well as off the screen, which is what a closed menu should be. aria-expanded
-  // on the button is the same fact said to a screen reader.
-  // `setopen` on the masthead is what lifts the panel over the pinned bar -- see the `.setmenu` comment in
-  // the stylesheet for why the parent has to move and not the panel. Toggled here and nowhere else, so the
-  // class and the `hidden` attribute cannot end up disagreeing about whether the menu is open.
-  const setOpen = (open) => {
-    menu.hidden = !open;
-    setbtn.setAttribute("aria-expanded", String(open));
-    document.querySelector("header").classList.toggle("setopen", open);
-  };
-  setbtn.onclick = () => setOpen(menu.hidden);
-  // Escape from anywhere inside, and focus goes back to the button that opened it -- a menu that closes
-  // and leaves focus on a removed element drops a keyboard reader at the top of the document.
-  menu.addEventListener("keydown", ev => {
-    if (ev.key === "Escape") { setOpen(false); setbtn.focus(); }
-  });
-  // Both of these ask the same question -- did attention leave the menu -- and they have to be two
-  // listeners because a pointer and a keyboard leave differently: a click lands somewhere else without
-  // moving focus, and Tab past the last theme moves focus without a click. `closest` on the wrapper and
-  // not on the panel, so pressing the button that opened it is not "leaving" and does not fight
-  // `setbtn.onclick` for who gets to close it. Guarded because `focusin` can target the document itself.
-  for (const kind of ["click", "focusin"])
-    document.addEventListener(kind, ev => {
-      const inside = ev.target && ev.target.closest && ev.target.closest(".setwrap");
-      if (!menu.hidden && !inside) setOpen(false);
-    });
-  // The head script already resolved both axes; this only has to agree with it, since the markup's
-  // hardcoded "Light theme" and pressed Graphite are wrong for any reader who chose otherwise.
-  paintSettings();
-  // Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a
-  // theme they explicitly chose because the sun went down is worse than not following at all. Only the
-  // mode axis: nothing in `prefers-*` has an opinion about which of four palettes a reader wants.
-  try {
-    matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
-      if (localStorage.getItem("theme")) return;
-      document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
-      paintSettings();
-    });
-  } catch (e) {}
+  // The whole Settings control -- both theme axes, the panel, and the OS-preference listener -- is
+  // `SETTINGS_JS`, shared verbatim with `31_home.py`. `paintDeployBadge` is passed in because it is
+  // this page's and not the control's.
+  wireSettings(paintDeployBadge);
 
   // One delegated listener rather than one per button: `render()` replaces the whole subtree on every
   // keystroke, so per-row handlers would be 120 attachments discarded 120 times a second of typing.
