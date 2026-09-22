@@ -542,7 +542,30 @@ def coverage(shelves: list[dict], hero_nwo: str, discover_n: int) -> str:
 
 
 # ---------------------------------------------------------------------------------------------------
-# The client half. Three pieces, none of them a framework.
+# The client half. Four pieces, none of them a framework.
+
+# The forwarder. Until the catalogue moved to `catalog/`, this URL *was* the catalogue, and every filtered
+# view of it was this URL plus a hash: `#topic=x&target=y`, `#q=name`, `#new=1`. Those links are in the
+# README, in the Markdown edition, in feed entries, in readers' bookmarks and in other people's posts, and
+# none of them can be regenerated. This page reads no hash of its own, so a fragment with a `=` in it can
+# only be one of them, and it goes where it was always meant to go. `replace` rather than `assign`, so the
+# back button skips the homepage the reader never asked for.
+#
+# Keyed on `=` rather than on the catalogue's list of parameters. The list grows (`cmp=`, `list=` and
+# `saved=` all arrived after the README's links were written), and a copy of it here would be a list that
+# forwards yesterday's links and drops tomorrow's. An in-page anchor is an id, and no id has a `=` in it.
+#
+# First in `<head>`, before the stylesheet, so a forwarded reader is not shown a frame of the wrong page.
+# Also on `hashchange`, for the reader who pastes a filter onto this URL without reloading.
+FORWARD_JS = r"""<script>
+(() => {
+  const go = () => {
+    if (location.hash.includes("=")) location.replace("catalog/" + location.search + location.hash);
+  };
+  go();
+  addEventListener("hashchange", go);
+})();
+</script>"""
 
 # The four clock functions, verbatim from the `DISCOVER CORE` block in `scripts/19d_discover.py`. This is
 # the third copy in the repository and the reason is the one the second copy gives: the alternative is this
@@ -668,6 +691,7 @@ def render() -> str:
 <html lang="en" data-theme="dark" data-skin="graphite">
 <head>
 <meta charset="utf-8">
+{FORWARD_JS}
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">

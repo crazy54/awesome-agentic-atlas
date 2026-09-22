@@ -39,7 +39,7 @@ count, language, licence, last push, install command, and a per-OS verdict for W
 and Docker.** Plus a screenshot of every project, so you can see it before you click it. That question
 up there is now [one link — twenty tools, ranked][q1].
 
-[q1]: https://crazy54.github.io/awesome-agentic-atlas/#topic=observability-evals&target=claude-code&os=windows&confirmed=1
+[q1]: https://crazy54.github.io/awesome-agentic-atlas/catalog/#topic=observability-evals&target=claude-code&os=windows&confirmed=1
 
 ## Pick your surface
 
@@ -129,9 +129,9 @@ these, because plenty of them serve Claude Code and opencode and Codex at once.
 **The two axes cross.** That's what the site and the workbook's *By Category* sheet are for — pick a
 topic and a harness at once and you get the answer the individual lists can't give you:
 
-- [the best Claude Code observability tools](https://crazy54.github.io/awesome-agentic-atlas/#topic=observability-evals&target=claude-code) — 38 of them, ranked
-- [memory and retrieval over MCP](https://crazy54.github.io/awesome-agentic-atlas/#topic=context-memory-rag&target=mcp) — 29
-- [skills that run native on Windows](https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills&os=windows&confirmed=1)
+- [the best Claude Code observability tools](https://crazy54.github.io/awesome-agentic-atlas/catalog/#topic=observability-evals&target=claude-code) — 38 of them, ranked
+- [memory and retrieval over MCP](https://crazy54.github.io/awesome-agentic-atlas/catalog/#topic=context-memory-rag&target=mcp) — 29
+- [skills that run native on Windows](https://crazy54.github.io/awesome-agentic-atlas/catalog/#topic=agent-skills&os=windows&confirmed=1)
 
 ## Browse by what you actually run
 
@@ -526,7 +526,7 @@ If you think something here should be attributed differently, open an issue and 
 </div>
 
 [site]: https://crazy54.github.io/awesome-agentic-atlas/
-[new]: https://crazy54.github.io/awesome-agentic-atlas/#new=1
+[new]: https://crazy54.github.io/awesome-agentic-atlas/catalog/#new=1
 [discover]: https://crazy54.github.io/awesome-agentic-atlas/discover/
 [data]: https://crazy54.github.io/awesome-agentic-atlas/data.json
 [dark]: https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx

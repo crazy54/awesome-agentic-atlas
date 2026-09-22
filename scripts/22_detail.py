@@ -439,8 +439,9 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
     row = repo.row
     # `#q=` is the index's own search parameter, so this lands the reader on their row with every other
     # filter still live. Quoted because 293 of these names contain a slash and three an ampersand, both
-    # of which are structural inside a query string.
-    live = repo.rel() + "#q=" + urllib.parse.quote(repo.name, safe="")
+    # of which are structural inside a query string. `catalog/` because the root is the homepage now, and
+    # the homepage reads no hash.
+    live = repo.rel("catalog/") + "#q=" + urllib.parse.quote(repo.name, safe="")
     peers = kin(repo, by_cat) if APP_FLAGS["detail.related_projects"] else []
     install = (f'<div class="cmdrow"><code class="cmd" id="cmd">{esc(row["install"])}</code>'
                '<button class="copy" hidden data-for="cmd" '
