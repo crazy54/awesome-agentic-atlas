@@ -250,8 +250,14 @@ jobs:
           # the files they point at, and the two are one change. A run that emitted the tags without the
           # cards would publish 156 pages referencing images that are not there.
           python scripts/23_og.py
+          # The homepage, in the same slot daily.yml runs it in and for the same three reads -- see the
+          # longer note there. `docs/index.html` is the shelves page now; `19_pages.py` above writes
+          # `docs/catalog/index.html`. Its inputs are `docs/discover.json` (19d_discover),
+          # `docs/pages.css` (20_landing) and `docs/data.json` (19_pages, patched by 25_velocity), and its
+          # one downstream constraint is the stage on the next line.
+          python scripts/31_home.py
           # Last, because the service worker's version is a hash of the files it precaches -- `index.html`
-          # from 19_pages and `pages.css` from 20_landing -- so it has to see both in their final state.
+          # from 31_home and `pages.css` from 20_landing -- so it has to see both in their final state.
           # It does not have to trust the ordering: the stage exits with a message if either is missing.
           python scripts/24_pwa.py
           # The semantic index (JFH-293). See daily.yml for the whole argument about this position -- in

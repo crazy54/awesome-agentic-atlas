@@ -29,6 +29,25 @@ if (!BIN || !ORIGIN) {
   console.log("usage: node tests/pwa-check.mjs <chrome-binary> <origin>");
   process.exit(2);
 }
+// TWO PAGES SINCE THE SITE GREW A HOMEPAGE, AND WHICH ONE EACH ASSERTION IS ABOUT.
+//
+// `ORIGIN` is the shelves homepage from `scripts/31_home.py`. It is the page the worker is registered from,
+// the page `PRECACHE`'s `"./"` resolves to, and therefore the page whose bytes are in `VERSION`. `CATALOG`
+// is the searching half from `scripts/19_pages.py`, which used to be the root and is one level down now:
+// client-rendered from `data.json`, network-first, and deliberately *not* precached.
+//
+// So the split is not cosmetic and it is not interchangeable. Every worker, manifest and shell-cache
+// assertion belongs at `ORIGIN` -- point one of those at `CATALOG` and it fails for a page that is working
+// correctly, because nothing precaches the catalogue and nothing registers a worker from it. Every
+// assertion about rows, the freshness stamp and `data.json` belongs at `CATALOG`, because those elements
+// exist on no other page: pointed at `ORIGIN` they fail with "the element is not there", which reads like a
+// broken site and is a broken test.
+//
+// `data.json` is at the root and both pages read it -- the catalogue as `../data.json`. Anything here that
+// reaches into `caches` for it uses `DATA_URL` rather than resolving against `location.href`, which would
+// ask for `catalog/data.json` and find nothing to doctor.
+const CATALOG = ORIGIN + "catalog/";
+const DATA_URL = ORIGIN + "data.json";
 const browser = await launch(BIN, process.env.AAA_TMP || tmpdir(), "pwa");
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -84,8 +103,14 @@ const ok = (n, c, extra = "") => {
 
 // -------- cold visit
 await goto(ORIGIN);
-ok("rows rendered on a cold visit", await evalIn("document.querySelectorAll('#out tbody tr').length") > 100,
-   String(await evalIn("document.querySelectorAll('#out tbody tr').length")));
+// The homepage needs no fetch to have content: every card on it was drawn at build time, which is the whole
+// difference from the catalogue below and the reason the offline section later can be this short. Two
+// selectors rather than one, because a stylesheet that failed to load leaves the shelves in the markup and
+// nothing recognisable on screen -- `section.sh` is the structure, `article.cx` is that the cards are in it.
+const shelves = await evalIn("document.querySelectorAll('main section.sh').length");
+ok("the homepage came with its shelves in it, needing no fetch", shelves >= 4, String(shelves));
+const cards = await evalIn("document.querySelectorAll('main article.cx').length");
+ok("...and with its cards drawn into them", cards > 50, String(cards));
 ok("the manifest resolved and is installable-shaped",
    (await S("Page.getAppManifest")).errors.length === 0,
    JSON.stringify((await S("Page.getAppManifest")).errors));
@@ -107,6 +132,31 @@ for (let i = 0; i < 60 && !reg; i++) {
 ok("a service worker became active", !!reg, JSON.stringify(reg));
 ok("its scope is the prefixed site, not the origin root", reg?.scope === ORIGIN, reg?.scope);
 ok("it is never read from the HTTP cache", reg?.via === "none", reg?.via);
+
+// Registered from the homepage, and that is the assertion rather than an incidental fact about where this
+// harness happened to navigate first. A worker's scope is the directory of its own script, and `PRECACHE`
+// begins with `"./"` -- so one registration at the root covers `catalog/`, `repo/`, `topic/` and
+// `discover/`, while a second registration from inside `catalog/` would claim a narrower scope over the
+// same file and cache the wrong document as the shell. The catalogue carries no registration at all, which
+// is invisible from a page that has already been given a worker by the homepage: hence the scope check
+// above, and the source-level half of this in `probe.mjs`.
+ok("its scope is the whole site and not the catalogue's subtree", reg?.scope !== CATALOG, reg?.scope);
+
+// -------- the catalogue, cold: the searching half, which fetches what the homepage was given
+//
+// Visited here rather than later because everything from the offline section down needs it in the runtime
+// cache, and the worker only fills that cache on a request it sees succeed. A run that went offline without
+// this visit would be testing what happens to a page nobody ever loaded, which the site does not claim to
+// handle and readers never reach.
+await goto(CATALOG);
+for (let i = 0; i < 60; i++) {
+  if (await evalIn("document.querySelectorAll('#out tbody tr').length") > 100) break;
+  await sleep(100);
+}
+const catRows = await evalIn("document.querySelectorAll('#out tbody tr').length");
+ok("the catalogue renders its rows from data.json on a cold visit", catRows > 100, String(catRows));
+ok("...and it is one level down, so its own fetch had to resolve one level up",
+   await evalIn("location.href") === CATALOG, await evalIn("location.href"));
 
 // -------- second visit: shell precached, data cached
 await goto(ORIGIN);
@@ -292,14 +342,28 @@ const net = async (offline) => {
 // Whether the worker is reachable at all, asked of the page rather than of the emulation settings. Used to
 // qualify the assertion below: "the stamp still says offline" and "the network is still off" are different
 // failures, and the second one is this file's fault rather than the site's.
+// `DATA_URL` and not a URL resolved against `location.href`: this is called from the catalogue, where that
+// would probe `catalog/data.json` -- a path nothing serves, so every call would answer "unreachable" and the
+// qualification it exists to provide would be a constant.
 const reachesNetwork = async () => evalIn(
-  `fetch(new URL('data.json?net-probe=' + Date.now(), location.href).href)
+  `fetch('${DATA_URL}?net-probe=' + Date.now())
      .then(r => 'HTTP ' + r.status + (r.headers.get('x-atlas-cached') ? ' from the cache' : ' from the network'))
      .catch(e => 'unreachable: ' + e.message)`);
 await net(true);
 ok("the worker is a target of its own, and was taken offline as well as the page", !!swSession,
    "no service_worker target to attach to -- an offline test that only stops the page is not one");
+// The homepage first, because it is the precached one and its offline guarantee is the stronger of the two:
+// the shell is in `atlas-shell-<version>` from the install, so it comes back with its shelves and cards
+// whether or not the reader ever visited before. Nothing about this depends on `data.json` -- the cards were
+// drawn at build time -- which is exactly why it is asserted separately from the catalogue below rather
+// than folded into it.
 await goto(ORIGIN);
+const offlineShelves = await evalIn("document.querySelectorAll('main section.sh').length");
+ok("offline, the homepage comes back out of the precached shell", offlineShelves >= 4, String(offlineShelves));
+// And the catalogue, whose offline story is the runtime cache and not the precache: the document from the
+// visit above and `data.json` from the fetch it made. A reader who has never opened it gets the worker's
+// offline page instead, which is the intended behaviour and not what this checks.
+await goto(CATALOG);
 const offlineRows = await evalIn("document.querySelectorAll('#out tbody tr').length");
 ok("the atlas still renders with the network off", offlineRows > 100, String(offlineRows));
 ok("and it is the real data, not an error page",
@@ -324,14 +388,14 @@ ok("and it is the real data, not an error page",
 // The document's own stamp is taken from the served HTML rather than from a page variable: Node's `fetch`
 // is not subject to the browser's emulated offline, and the bytes Pages would serve are the honest source
 // for "what the page claims on its own".
-const docStamp = (await (await fetch(ORIGIN)).text())
+const docStamp = (await (await fetch(CATALOG)).text())
   .match(/id="snap"[^>]*>snapshot\s+(\d{4}-\d{2}-\d{2})/)?.[1];
 ok("the served page has a snapshot date baked into it to be wrong with", !!docStamp, String(docStamp));
 
 // Doctors the cached `data.json` in place. Returns "ok", or a reason, so a cache that was not there to
 // doctor reports itself instead of quietly making the assertions below vacuous.
 const recache = (patch) => evalIn(`(async () => {
-  const url = new URL('data.json', location.href).href;
+  const url = '${DATA_URL}';
   const c = await caches.open('atlas-data');
   const hit = await c.match(url);
   if (!hit) return 'nothing cached under ' + url;
@@ -348,7 +412,7 @@ const recache = (patch) => evalIn(`(async () => {
 // and pass for the wrong reason.
 const stampAfterData = async () => {
   await net(true);
-  await goto(ORIGIN);
+  await goto(CATALOG);
   for (let i = 0; i < 60; i++) {
     if (await evalIn("document.querySelectorAll('#out tbody tr').length") > 100) break;
     await sleep(100);
@@ -388,7 +452,7 @@ await net(false);
 // cache" -- the worker fills that cache on every successful fetch, so a header set on the way *in* would
 // have every online reader told they were offline. The doctored body is still in the cache here and is
 // replaced by the fetch that succeeds, so this also checks the network still wins when it answers.
-await goto(ORIGIN);
+await goto(CATALOG);
 for (let i = 0; i < 60; i++) {
   if (await evalIn("document.querySelectorAll('#out tbody tr').length") > 100) break;
   await sleep(100);

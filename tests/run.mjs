@@ -173,9 +173,15 @@ const HARNESSES = [
   {file: "pwa-check.mjs", label: "manifest, worker, precache, offline, freshness, 404", needs: "browser", floor: 25},
 ];
 
-if (!existsSync(join(ROOT, "docs", "index.html"))) {
-  console.error("docs/index.html is not here. This suite asserts on the built site, and the built site is " +
-                "committed -- so this is either the wrong directory or a checkout with docs/ removed.");
+// Both entry points, because the site has two and either one missing is a different broken build:
+// `index.html` is the shelves homepage from `31_home.py`, `catalog/index.html` the catalogue from
+// `19_pages.py`. Two checks rather than one, so the message can name the stage that did not run.
+for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
+                            [["docs", "catalog", "index.html"], "scripts/19_pages.py"]]) {
+  if (existsSync(join(ROOT, ...rel))) continue;
+  console.error(`${rel.join("/")} is not here. This suite asserts on the built site, and the built site is ` +
+                "committed -- so this is either the wrong directory, a checkout with docs/ removed, or a " +
+                `tree where ${stage} has not run.`);
   process.exit(2);
 }
 

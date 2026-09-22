@@ -8,9 +8,17 @@ column. This page does what the workbook does, without Excel.
 Same data, same ordering, same verdicts as the other two: it imports `17_markdown`, which imports
 `16_build_all`, so nothing here re-derives a star count or a platform call.
 
-  docs/index.html   the page. no build step, no framework, no dependency to install.
-  docs/data.json    every repo, column-oriented.
-  docs/.nojekyll    stops Pages running Jekyll over a directory that has no Jekyll in it.
+  docs/catalog/index.html   the page. no build step, no framework, no dependency to install.
+  docs/data.json            every repo, column-oriented.
+  docs/.nojekyll            stops Pages running Jekyll over a directory that has no Jekyll in it.
+
+This was `docs/index.html` until the site grew a homepage. It is the catalogue now: the one page that holds
+all 8,858 rows at once and crosses both axes live. `scripts/31_home.py` writes the root, where a reader who
+has not decided what they are looking for arrives -- shelves that each say why the projects on them are
+there. The split is between browsing and searching, and this file is the searching half. Consequences worth
+knowing before editing: every relative URL here needs the `UP` prefix (there is an assertion), the service
+worker is registered from the homepage rather than from here, and `data.json` stays at the root because four
+other surfaces read it.
 
 Two decisions worth stating. The data is a separate file rather than inlined, so the page is 30 KB and
 cached separately from the nearly 8,000 rows that change on every rebuild. And every filter is mirrored
@@ -323,14 +331,22 @@ INDEXNOW_RE = re.compile(r"\A[A-Za-z0-9-]{8,128}\Z")
 def verification(token: str | None = None) -> str:
     """The Search Console meta tag, or "" while no token is set.
 
-    Returned *with* its newline, and substituted for `__VERIFY__\\n` rather than `__VERIFY__`, so the
-    unverified case removes the placeholder's whole line instead of leaving a blank one behind. That is
-    what makes wiring this up a zero-byte change to `docs/index.html` until there is a token to print.
+    Returned *with* its newline, so the unverified case leaves no blank line behind wherever it is printed:
+    `31_home.py` interpolates it immediately before another `<link>`, the same way it handles
+    `20_landing.HEAD_THEME`. That is what makes wiring this up a zero-byte change to `docs/index.html`
+    until there is a token to print.
 
-    Only the root page carries it. Verification is per *property*, and the property here is the URL prefix
-    `https://crazy54.github.io/awesome-agentic-atlas/` -- Google fetches that one URL and looks for the
-    tag in it. Emitting it on the other 1,450 pages would verify nothing extra and put an account-linked
-    identifier in 1,450 files that have no use for it.
+    Only the root page carries it, and the root page is the homepage -- it used to be this file's output and
+    stopped being when the catalogue moved to `catalog/`. Verification is per *property*, and the property
+    here is the URL prefix `https://crazy54.github.io/awesome-agentic-atlas/`: Google fetches that one URL
+    and looks for the tag in what it gets back. A tag on any other page verifies nothing, which is a failure
+    with no symptom -- the build stays green, the token stays valid, and Search Console just says the
+    property is unverified. Emitting it on the other 1,450 pages would verify nothing extra either, and
+    would put an account-linked identifier in 1,450 files that have no use for it.
+
+    Still defined in this file rather than moved beside its one caller, because the token, the alphabet
+    assertion and the argument for both are here, and splitting the value from its validation is how a
+    malformed token gets injected into a head without anything raising.
     """
     if token is None:
         token = os.environ.get("GOOGLE_SITE_VERIFICATION", VERIFY_TOKEN)
@@ -372,9 +388,14 @@ def facet_links(items: list[dict], prefix: str) -> str:
 
     Derived from the same lists the page filters by, rather than written out, so adding a topic adds its
     link. `escape` because these names carry an ampersand -- "Harnesses & Runtime Infra" -- and a raw one
-    is a parse error a validator will flag even where a browser recovers from it."""
+    is a parse error a validator will flag even where a browser recovers from it.
+
+    `__UP__` because the facet pages stay at the site root while this page moved into `catalog/`. These 26
+    links were the ones the eye missed: they are the only relative URLs on the page that no line of the
+    template contains, so reading the template for `href="` finds every other one and not these. That is
+    what `relative_urls_prefixed()` is for, and it caught them on the first render."""
     return " · ".join(
-        f'<a href="{prefix}/{i["slug"]}/">{escape(i["name"])}</a>' for i in items)
+        f'<a href="__UP__{prefix}/{i["slug"]}/">{escape(i["name"])}</a>' for i in items)
 
 
 def built() -> tuple[str, str]:
@@ -404,6 +425,38 @@ def shield_text(text: str) -> str:
     return text.replace("_", "__").replace("-", "--").replace(" ", "_")
 
 
+# Where this page sits relative to the site root, as a prefix for every URL it emits.
+#
+# It used to be `docs/index.html`, so every relative URL in the template was bare and correct. The homepage
+# is now the shelves page `31_home.py` writes, this page is the catalogue at `docs/catalog/index.html`, and
+# one level down every one of those bare URLs is a 404 -- `feed.xml`, `favicon.svg`, `data.json`, the whole
+# `repo/` tree. They are prefixed with this placeholder rather than with a literal `../` so that there is a
+# token to grep: `relative_urls_prefixed()` below fails the build on a relative URL that does not carry it,
+# and a literal `../` could not be told apart from the hundreds in this file's prose.
+#
+# Still relative rather than root-absolute, for the reason the head comment gives: a `/data.json` would break
+# both the `file://` clone and any deployment that is not at a domain root.
+UP = "../"
+
+
+def relative_urls_prefixed(page: str) -> None:
+    """Fail the build on a relative URL in the rendered markup that is not prefixed with `UP`.
+
+    The reason this is an assertion and not a comment: adding `href="feed.xml"` to the template is the
+    natural thing to write, it renders, it passes every test that reads the markup for structure, and it
+    404s only for a reader who clicks it. There is no import-time or render-time symptom at all.
+
+    Markup only -- script bodies are cut first. A URL a script builds is a string expression, not an
+    attribute (`href="' + url + '"`), so scanning the script text would flag every one of them and the
+    handful of real fetch literals are held by `tests/pages_test.py` against this module's source instead.
+    """
+    markup = re.sub(r"<script\b[^>]*>.*?</script>", "", page, flags=re.S)
+    bad = [u for u in re.findall(r'(?:href|src)="([^"]*)"', markup)
+           if not re.match(r"(?:https?:)?//|^(?:data|mailto|tel|javascript):|^#|^\.\./", u) and u]
+    assert not bad, (f"{len(bad)} relative URL(s) in the catalogue markup are missing the `UP` prefix and "
+                     f"will 404 one level down: {sorted(set(bad))[:8]}")
+
+
 def substitute(page: str, data: dict, repo: str, site: str) -> str:
     """Fill the template's placeholders. Both this stage and `19b_refresh.py` render the same shell, and
     when the two chains drifted the refreshed page quietly lost whichever one had been added since.
@@ -417,7 +470,7 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
     stamp_iso, stamp_utc = built()
     default_view = "cards" if APP_FLAGS["index.card_view"] else "table"
     deployment_badge = DEPLOYMENT_BADGE if APP_FLAGS["index.deployment_badge"] else ""
-    return (pagemin.strip_page(page)
+    out = (pagemin.strip_page(page)
             # The four platform-mark placeholders. `osicons` is the only copy of the geometry, the ids, the
             # hover text and the shared rule, so all four arrive here rather than being written into the
             # template -- which is what stops this page and the other three surfaces drawing Docker two ways.
@@ -463,11 +516,16 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             .replace("__SITE__", site)
             .replace("__REPO__", repo)
             .replace("__OGIMAGE__", image_tags(site, repo))
-            # The placeholder's newline is part of the match -- see `verification()`. With no token set
-            # this deletes the line, so the rendered page is byte-identical to one built before the tag
-            # was wired up, which is why adding it did not have to re-version the service worker.
-            .replace("__VERIFY__\n", verification())
+            # No `__VERIFY__` substitution any more: the Search Console tag belongs on the page Google
+            # fetches for the property, which is the root, and this page is a level down. `31_home.py`
+            # calls `verification()` directly -- there is no placeholder to substitute in a head it builds
+            # as an f-string. The function stays here because this is where the token, the alphabet
+            # assertion and the prose explaining both already live.
+            # Last, so a constant injected above carrying its own relative URLs is prefixed too.
+            .replace("__UP__", UP)
             .replace("__ANALYTICS__", beacon()))
+    relative_urls_prefixed(out)
+    return out
 
 
 # The stylesheet half of the same control, lifted out for the same reason and with the same caveat: the rules
@@ -707,28 +765,33 @@ PAGE = r"""<!doctype html>
 <meta property="og:title" content="Awesome Agentic Atlas">
 <meta property="og:description" content="__COUNT__ projects from __LISTS__ awesome-lists, one filterable index.">
 __OGIMAGE__
-<link rel="canonical" href="__SITE__">
-<!-- Google Search Console's HTML-tag verification, and nothing else: this whole line is absent until a
-     token exists, because `verification()` matches the placeholder's newline too. It is the discovery
-     mechanism `robots.txt` on this deployment cannot be -- a project Pages site's robots.txt is never
-     read, so the 1,452 URLs in sitemap.xml have to be *submitted*, and submitting them needs a verified
-     property. See `VERIFY_TOKEN` in this file, and JFH-206 for the manual half nobody can automate. -->
-__VERIFY__
-<!-- Autodiscovery for the arrivals feed. Relative, like the `fetch("data.json")` this page already does,
-     so it resolves on Pages and from a local `python -m http.server` alike. GitHub Pages serves .xml as
-     text/xml and cannot be told otherwise, so the `type` here is what actually declares the format --
-     readers sniff the root element regardless, but the link tag is where a browser looks first. -->
+<!-- `catalog/`, not the site root: the root is the shelves homepage now, and a canonical pointing there
+     would tell every crawler that this page -- the only one that lists all __COUNT__ projects -- is a
+     duplicate of a page that lists twelve per shelf. Absolute because canonical must be. -->
+<link rel="canonical" href="__SITE__catalog/">
+<!-- Google Search Console's HTML-tag verification used to be the next line here, and it is on the homepage
+     now: `verification()` below still owns the token and its format assertion, but `scripts/31_home.py`
+     prints the tag. Verification is per *property*, the property is the URL prefix `__SITE__`, and Google
+     fetches that one URL and reads the markup it gets back. This page stopped being that URL when it moved
+     to `catalog/`, so leaving the tag here would have verified nothing -- and silently, because the token is
+     empty until somebody sets the variable, so nothing would fail until the day it mattered. -->
+<!-- Autodiscovery for the arrivals feed. Relative, like the `fetch("__UP__data.json")` this page already
+     does, so it resolves on Pages and from a local `python -m http.server` alike -- and `__UP__` because
+     this page is one level down at `catalog/` while the feeds stay at the site root. GitHub Pages serves
+     .xml as text/xml and cannot be told otherwise, so the `type` here is what actually declares the format
+     -- readers sniff the root element regardless, but the link tag is where a browser looks first. -->
 <link rel="alternate" type="application/atom+xml" title="Awesome Agentic Atlas — new arrivals"
-      href="feed.xml">
+      href="__UP__feed.xml">
 <link rel="alternate" type="application/feed+json" title="Awesome Agentic Atlas — new arrivals"
-      href="feed.json">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+      href="__UP__feed.json">
+<link rel="icon" href="__UP__favicon.svg" type="image/svg+xml">
 <!-- Installability, and the offline shell. Every href relative, so the /awesome-agentic-atlas/ path
      prefix Pages adds takes care of itself. Both files are written by `scripts/24_pwa.py`; if that stage
-     has not run, the manifest link 404s and the registration at the foot of this page rejects into an
-     empty catch, which is the whole failure. -->
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+     has not run, the manifest link 404s -- and the app then installs with no manifest at all, because the
+     registration that used to sit at the foot of this page now lives on the homepage `31_home.py` writes.
+     One registration per site, on the page that is the scope root; two would fight over the same scope. -->
+<link rel="manifest" href="__UP__manifest.webmanifest">
+<link rel="apple-touch-icon" href="__UP__apple-touch-icon.png">
 <!-- One `theme-color`, managed by script, rather than the two `media` variants that would be the obvious
      way to write this. The HTML spec picks the *first* such element whose media matches, so a pair keyed
      on `prefers-color-scheme` cannot be overridden by anything appended later -- and this page lets a
@@ -2504,10 +2567,10 @@ __OSSPRITE__
          want has the filter bar; a reader who does not has 1,294 rows and no way in. Discover answers it
          with no opinion at all -- fifty a day, every category, rotated so the whole corpus comes round --
          and Collections answers it with one. -->
-    <a href="discover/">Discover</a> ·
-    <a href="collections/">Collections</a> ·
+    <a href="__UP__discover/">Discover</a> ·
+    <a href="__UP__collections/">Collections</a> ·
     <a href="https://github.com/__REPO__/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
-    <a href="repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
+    <a href="__UP__repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/__REPO__">Repository</a> ·
     <a href="https://github.com/__REPO__/tree/main/mega-list">Markdown</a> ·
     <a href="https://github.com/__REPO__/releases/latest">Workbook</a><br>
@@ -2541,7 +2604,7 @@ __OSSPRITE__
   </nav>
   <div class="atlas-byte-wrap">
     <button type="button" id="byte-tip" aria-label="Ask Archie 'Atlas' Algorithm for a browsing tip">
-    <img class="atlas-byte" src="assets/atlas-byte.png" width="512" height="532"
+    <img class="atlas-byte" src="__UP__assets/atlas-byte.png" width="512" height="532"
          alt="Archie 'Atlas' Algorithm, the Atlas mascot, wearing pixel sunglasses">
     </button>
     <!-- The accessible name is on `aria-label` so it stays the full name at every width, including the ones
@@ -2756,7 +2819,7 @@ __OSSPRITE__
        sit above the answer to "what are the options" rather than under a screenful of them. -->
   <section class="dstrip" id="dstrip" aria-labelledby="dstriph">
     <div class="dsh"><h2 id="dstriph">Discover</h2><p id="dstripwhat"></p>
-      <a class="dsall" id="dstripall" href="discover/">See all fifty &rarr;</a></div>
+      <a class="dsall" id="dstripall" href="__UP__discover/">See all fifty &rarr;</a></div>
     <div class="dsrail" id="dsrail"></div>
   </section>
   <!-- The verdict legend, and the only place on screen that says what the five marks mean. It used to be
@@ -2893,7 +2956,7 @@ __OSSPRITE__
          worse: the rows that link to them are drawn by the script below, so a crawler receives this page
          with an empty table and never sees one of them. This link and the directory it points at put
          every project page two clicks from the root. -->
-    <p><b>Every project:</b> <a href="repo/">all __COUNT__ projects, one page each, grouped by topic</a></p>
+    <p><b>Every project:</b> <a href="__UP__repo/">all __COUNT__ projects, one page each, grouped by topic</a></p>
   </nav>
 </div></footer>
 
@@ -3128,7 +3191,7 @@ const segment = s => {
   if (DEVICE_NAMES.includes(s.split(".")[0])) s = "dev-" + s;
   return s;
 };
-const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
+const detailURL = nwo => "__UP__repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
 
 // The rescue buttons drawn on an empty table, in the order render() drew them. Kept out of the markup
 // because a filter patch is an object -- serialising it into a data- attribute and parsing it back would
@@ -3189,7 +3252,7 @@ function gained(r) {
         " to " + D.velocity.to) + '">' + n + "</span>";
 }
 
-fetch("data.json").then(r => {
+fetch("__UP__data.json").then(r => {
   // The only place the real deployment time is available, and it arrives on a request the page was going
   // to make anyway. See `deployStamp`. Before `r.json()`, because that consumes the body and there is no
   // reason to wait for 561 KB to parse before correcting a badge that is already on screen.
@@ -3338,17 +3401,18 @@ fetch("data.json").then(r => {
   // the same order a reader who types gets them in.
   if (state.q) semanticReady();
 }).catch(err => {
-  // A browser will not let a file:// page fetch a sibling file, so double-clicking index.html out of a
+  // A browser will not let a file:// page fetch anything, so double-clicking catalog/index.html out of a
   // clone loads the chrome and then nothing at all, with the reason only in the console. Anyone doing
-  // that is a contributor, so the message is the two commands that fix it rather than an apology.
+  // that is a contributor, so the message is the two commands that fix it rather than an apology. The
+  // path it names is the parent now -- `data.json` sits at the site root and this page is one level down.
   document.getElementById("count").innerHTML =
     "Could not load <code>data.json</code> — " + String(err);
   document.getElementById("out").innerHTML =
     '<p style="max-width:62ch;line-height:1.6">If you opened this file straight off disk, that is ' +
-    'expected: browsers refuse to let a <code>file://</code> page read a sibling file. Serve the ' +
+    'expected: browsers refuse to let a <code>file://</code> page read another file. Serve the ' +
     'folder instead — <code>python -m http.server</code> from <code>docs/</code>, then open ' +
-    '<code>localhost:8000</code>. The published copy is at ' +
-    '<a href="__SITE__">__SITE__</a>.</p>';
+    '<code>localhost:8000/catalog/</code>. The published copy is at ' +
+    '<a href="__SITE__catalog/">__SITE__catalog/</a>.</p>';
 });
 
 // The Discover payload, on a request of its own and started here rather than chained off the one above:
@@ -3363,7 +3427,7 @@ fetch("data.json").then(r => {
 // Behind the flag so that turning the strip off turns off the request as well. A page that downloads 90 KB it
 // has been configured not to use is not a disabled feature, it is a hidden one.
 if (FLAGS["index.discover_strip"]) {
-  fetch("discover.json").then(r => r.json()).then(d => {
+  fetch("__UP__discover.json").then(r => r.json()).then(d => {
     DISC = d;
     paintDiscover();
     // The rollover. A minute is the resolution a reader would notice and the check costs one date format and
@@ -4871,8 +4935,8 @@ async function loadSemantic() {
   SEM_STATE = "loading";
   try {
     const grab = async (name, how) => {
-      const res = await fetch("search/" + name);
-      if (!res.ok) throw new Error("search/" + name + " -> " + res.status);
+      const res = await fetch("__UP__search/" + name);
+      if (!res.ok) throw new Error("__UP__search/" + name + " -> " + res.status);
       return how === "json" ? res.json() : res.arrayBuffer();
     };
     const [meta, vocab, table, docs] = await Promise.all([
@@ -5038,8 +5102,8 @@ async function loadMap() {
     await semanticReady();
     if (SEM_STATE !== "live") throw new Error("the semantic index is " + SEM_STATE);
     const grab = async name => {
-      const res = await fetch("search/" + name);
-      if (!res.ok) throw new Error("search/" + name + " -> " + res.status);
+      const res = await fetch("__UP__search/" + name);
+      if (!res.ok) throw new Error("__UP__search/" + name + " -> " + res.status);
       return res.arrayBuffer();
     };
     const [xyb, nearb] = await Promise.all([grab("xy.bin"), grab("near.bin")]);
@@ -6343,7 +6407,7 @@ function discoverCard(nwo, r, col, cohort) {
   const meta = [];
   if (r[col.stars]) meta.push(r[col.stars].toLocaleString() + " stars");
   if (r[col.lang]) meta.push(esc(r[col.lang]));
-  return '<a class="dsc' + (isnew ? " nw" : "") + '" href="discover/#repo=' + esc(nwo) +
+  return '<a class="dsc' + (isnew ? " nw" : "") + '" href="__UP__discover/#repo=' + esc(nwo) +
     '" style="--card-accent:var(--accent-' + DACCENTS[cat % DACCENTS.length] + ')">' +
     '<span class="t"><span class="tag cat">' + esc(label) + "</span>" +
     (isnew ? '<span class="dsnew">New</span>' : "") + "</span>" +
@@ -6845,28 +6909,14 @@ function esc(s) {
     c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 }
 </script>
-<!-- The offline shell. Last thing on the page and inside a `load` listener, because a service worker is
-     the least urgent thing here: registering it earlier competes with the fetch that puts rows on screen.
-     `sw.js` is written by `scripts/24_pwa.py` and caches the shell, this page's navigation and data.json;
-     everything cross-origin it leaves alone.
-
-     `updateViaCache: "none"` because Pages serves with `max-age=600`, and the one file that must never be
-     read from the HTTP cache is the worker that decides what the HTTP cache is for. The explicit
-     `reg.update()` is not belt-and-braces: per spec, `register()` with an unchanged script URL resolves
-     against the existing registration without queueing an update job, so without this line a reader who
-     keeps the tab open gets a new worker only when the browser's own soft-update timer decides.
-
-     Guarded on the protocol as well as on support: from `file://` the registration throws a
-     SecurityError, and a contributor opening the page off disk should not see it. -->
-<script>
-if ("serviceWorker" in navigator && location.protocol !== "file:") {
-  addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js", {updateViaCache: "none"})
-      .then(reg => { if (reg.active) reg.update().catch(() => {}); })
-      .catch(() => {});
-  });
-}
-</script>
+<!-- The offline shell is registered from the homepage, not from here. `scripts/31_home.py` carries the
+     registration verbatim, including the three clauses that are easy to drop and each load-bearing --
+     the `file://` guard, `updateViaCache: "none"` and the explicit `reg.update()`; see `SW_JS` there.
+     It moved because a worker's scope is the directory of its own script and `PRECACHE` in
+     `scripts/24_pwa.py` starts at `"./"`: registering from the site root covers this page and every other
+     directory, where a second registration from inside `catalog/` would claim a narrower scope over the
+     same worker. `sw.js` still caches this page's navigation and `data.json` -- what changed is which
+     page asks for it, not what it holds. -->
 __ANALYTICS__</body>
 </html>
 """
@@ -6925,10 +6975,16 @@ def main() -> None:
     # anything it decided looked like a draft. There is no Jekyll here.
     (OUT / ".nojekyll").write_text("", encoding="utf-8")
     page = substitute(PAGE, data, REPO, b17.SITE)
-    (OUT / "index.html").write_text(page, encoding="utf-8")
+    # `catalog/index.html`, not `index.html`. The site root is the shelves homepage `scripts/31_home.py`
+    # writes; this is the catalogue, and the two generators would otherwise overwrite each other depending
+    # on which stage ran last. `data.json` above stays at the root, because it is not this page's file --
+    # the homepage, the facet pages and the detail pages read it too, and moving it would be 180-odd
+    # relative URLs elsewhere to save one here. See `UP`.
+    (OUT / "catalog").mkdir(parents=True, exist_ok=True)
+    (OUT / "catalog" / "index.html").write_text(page, encoding="utf-8")
 
-    for f in ("index.html", "data.json"):
-        print(f"{f:12s} {(OUT / f).stat().st_size / 1024:8.1f} KB")
+    for f in (Path("catalog") / "index.html", Path("data.json")):
+        print(f"{str(f):20s} {(OUT / f).stat().st_size / 1024:8.1f} KB")
     print(f"{len(data['rows']):,} repos · {len(data['cats'])} topics · "
           f"{len(data['targets'])} targets · {sum(r[4] for r in data['rows']):,} stars")
     # Two numbers, because they answer different questions and a build that conflates them cannot be read.

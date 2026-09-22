@@ -679,7 +679,7 @@ def directory(repos: list[Repo], data: dict) -> str:
       <p class="lead">All <b>{len(repos):,}</b> projects the atlas merges, each with a page carrying its
         install command, its five platform verdicts and which of the {b19.LISTS} lists named it. Grouped by
         topic and alphabetical inside it — the star rankings are on the
-        <a href="../">interactive index</a> and the {len(cats)} topic pages.</p>
+        <a href="../catalog/">interactive index</a> and the {len(cats)} topic pages.</p>
       <p class="jump">{jump}</p>
     </div>
     <nav class="util">

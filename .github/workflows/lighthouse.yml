@@ -1,8 +1,29 @@
-# Lighthouse: a weight and layout budget for the one page nothing else measures.
+# Lighthouse: a weight and layout budget for the two pages nothing else measures.
 #
-# `docs/index.html` is a hand-written shell over a `data.json` that grows every day, and until this file
-# existed its performance was an accident: nothing recorded what it was, so nothing could notice it
+# `docs/catalog/index.html` is a hand-written shell over a `data.json` that grows every day, and until this
+# file existed its performance was an accident: nothing recorded what it was, so nothing could notice it
 # getting worse. This job records it and fails when it does.
+#
+# TWO URLS SINCE THE HOMEPAGE LANDED, AND WHICH ONE THE NUMBERS BELOW DESCRIBE
+#
+# Every baseline in this file was measured against the shell that used to be at `/`. That shell is at
+# `/catalog/` now, and `/` is the prerendered shelves homepage from `scripts/31_home.py` -- a different page
+# with a different shape: about 326 KB of markup against the catalogue's 15 KB, and no `data.json` fetch at
+# all, because every card it draws was drawn at build time. So the document line is not comparable between
+# them and the total line is not either.
+#
+# Both are collected, and the alternative was worse in both directions. Left at one URL, this job would have
+# gone on auditing `/` and silently changed its subject: same threshold set, same green tick, measuring a
+# page none of the prose below is about, and no longer measuring the page all of it is about. Pointed at
+# `/catalog/` alone it would keep the baselines honest and stop measuring the front door, which is the one
+# page every reader loads and the only one the service worker precaches.
+#
+# What that costs is runner minutes -- `numberOfRuns` is per URL, so six collections rather than three, and
+# `timeout-minutes` went to 25 to hold them -- and one honest gap: the assertions below are a single set
+# applied to both URLs, so the byte lines are now the looser of the two pages' needs rather than either
+# page's budget. Only `cumulative-layout-shift` is an error that either page can realistically reach. When
+# somebody re-baselines, the shape to move to is lhci's per-URL `assertMatrix`, which is exactly the thing
+# this file has never needed until there were two pages in it.
 #
 # WHAT IS ENFORCED AND WHAT IS ONLY REPORTED, WHICH IS THE ONLY DECISION HERE WORTH ARGUING ABOUT
 #
@@ -159,12 +180,20 @@ on:
   pull_request:
     paths:
       - docs/index.html
+      - docs/catalog/index.html
       - docs/data.json
       - docs/pages.css
       - docs/sw.js
       - docs/manifest.webmanifest
       - scripts/19_pages.py
       - scripts/19b_refresh.py
+      # The homepage's generator, and the two it reads from that are not already in this list: the shelves
+      # page is assembled at build time out of `30_v2.py`'s card system and `19d_discover.py`'s published
+      # plan, so a change to either moves bytes in the document this job weighs without touching any file
+      # above.
+      - scripts/31_home.py
+      - scripts/30_v2.py
+      - scripts/19d_discover.py
       # Not a stage: the comment stripper both render paths run through. A bug in it is a change to every
       # byte of the document line above, so it belongs in this list more obviously than most things here.
       - scripts/pagemin.py
@@ -193,7 +222,11 @@ concurrency:
 jobs:
   budget:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 25 rather than 15 because there are two URLs now and `numberOfRuns` is per URL: six Lighthouse
+    # collections, not three. Three took about six runner-minutes, so the old ceiling left roughly two
+    # minutes of slack over six -- close enough that a slow runner would report a timeout, which reads
+    # exactly like a failed budget and is not one.
+    timeout-minutes: 25
 
     steps:
       - uses: actions/checkout@v4
@@ -277,7 +310,7 @@ jobs:
             "ci": {
               "collect": {
                 "staticDistDir": "./docs",
-                "url": ["http://localhost/index.html"],
+                "url": ["http://localhost/index.html", "http://localhost/catalog/index.html"],
                 "numberOfRuns": 3,
                 "settings": {
                   "onlyCategories": ["performance"],

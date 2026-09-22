@@ -366,10 +366,28 @@ jobs:
           # After 19_pages and never before: that stage is what stamps the ledger and rewrites data.json,
           # and the feeds are a read of both. Run first, it would publish yesterday's arrivals.
           python scripts/21_feeds.py
-          # Last, and its ordering against 20_landing above is the one in this job that would break
-          # production without leaving a mark. The worker precaches `docs/index.html` and `docs/pages.css`
-          # and hashes both into its own `VERSION`, so it has to see both in their final state. Run it
-          # ahead of 20_landing on a day that changed the stylesheet and `sw.js` comes out byte-identical.
+          # The homepage. `docs/index.html` is the shelves page as of this commit, and `19_pages.py` above
+          # writes `docs/catalog/index.html` instead -- the split is browsing here, searching there. Both
+          # generators wrote `docs/index.html` before it, so they cannot be run out of the same tree unless
+          # this line and that move land together.
+          #
+          # Three upstream constraints, all of them reads and not preferences: it parses
+          # `docs/discover.json` at import time for the daily strip (19d_discover), it parses
+          # `docs/pages.css` in `stage_css()` for the sixteen theme values it must not fork (20_landing),
+          # and it reads `docs/data.json` through `scripts/30_v2.py` for the cards (19_pages, patched by
+          # 25_velocity). All four of those stages are above. Downstream there is exactly one: 24_pwa
+          # hashes `docs/index.html` into the worker's `VERSION`, so this has to come before it, and the
+          # note under 24_pwa is what getting that wrong costs.
+          #
+          # Failure is loud rather than partial: `stage_css()` and the discover read both fail the build if
+          # the shape they parse has moved, so a day that changes one of those files incompatibly stops the
+          # deploy rather than publishing a homepage with a forked palette or yesterday's fifty.
+          python scripts/31_home.py
+          # Last, and its ordering against 20_landing and 31_home above is the one in this job that would
+          # break production without leaving a mark. The worker precaches `docs/index.html` -- the homepage
+          # 31_home writes -- and `docs/pages.css`, and hashes both into its own `VERSION`, so it has to see
+          # both in their final state. Run it ahead of either on a day that changed the stylesheet or the
+          # shell and `sw.js` comes out byte-identical.
           #
           # Measured rather than reasoned, by perturbing one line of 20_landing's `CSS` constant and
           # running the pair both ways round against the committed `docs/`: pages.css moves from sha256
@@ -484,10 +502,17 @@ jobs:
       # taxonomy, not a side effect of a build.
       #
       # This holds only while every generator still writes at least one file outside those prefixes --
-      # 17_markdown has mega-list/README.md, 19_pages has docs/index.html, 19d_discover has
+      # 17_markdown has mega-list/README.md, 19_pages has docs/catalog/index.html, 19d_discover has
       # docs/discover.json and docs/discover/index.html, 20_landing has docs/sitemap.xml, 21_feeds has
-      # docs/feed.xml. A future stage whose entire output is facet pages would warn where it should fail.
-      # Give any such stage one fixed-path file to write.
+      # docs/feed.xml, 31_home has docs/index.html. A future stage whose entire output is facet pages would
+      # warn where it should fail. Give any such stage one fixed-path file to write.
+      #
+      # 19_pages' entry moved down a level when the catalogue did, and nothing in this step needed changing
+      # for it: `docs/catalog/index.html` matches no arm below, so it reaches the strict one, which is where
+      # a page with a fixed path belongs. Worth saying because the reverse mistake is cheap to make -- add a
+      # `docs/catalog/*` arm "for symmetry" with `docs/topic/*` and the largest page on the site is
+      # reclassified as a prunable facet, which downgrades a frozen catalogue from a failed build to a
+      # warning nobody reads. It is one file, not a set derived from the data.
       #
       # The skipped arm is what the two remaining weekly-only stages cost: `docs/repo/**` and
       # `docs/sitemap-repos.xml` from `22_detail.py`, and `docs/og/**` from `23_og.py`, are not written by
