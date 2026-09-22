@@ -435,6 +435,13 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             .replace("__INDEX_SCREENSHOTS__", "on" if APP_FLAGS["index.project_screenshots"] else "off")
             .replace("__APP_FLAGS__", app_flags.browser_json(APP_FLAGS))
             .replace("__DEPLOYMENT_BADGE__", deployment_badge)
+            # Substituted here rather than at the two call sites for exactly the reason in this function's
+            # docstring: `19b_refresh.py` renders the same shell, and a placeholder it does not know about
+            # would ship to readers as the literal text `__SETTINGS__` where the theme picker should be.
+            # Through `strip_page` for the same reason the platform marks are -- substitution runs after the
+            # comment strip, so a constant injected here would smuggle its own comments into the bytes.
+            .replace("__SETTINGS__", pagemin.strip_page(SETTINGS_MENU))
+            .replace("__SETCSS__", pagemin.strip_css(SETTINGS_CSS))
             .replace("__BUILT__", stamp_iso)
             .replace("__BUILT_UTC__", stamp_utc)
             .replace("__BUILT_BADGE__", shield_text(stamp_utc))
@@ -455,6 +462,121 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             # was wired up, which is why adding it did not have to re-version the service worker.
             .replace("__VERIFY__\n", verification())
             .replace("__ANALYTICS__", beacon()))
+
+
+# The stylesheet half of the same control, lifted out for the same reason and with the same caveat: the rules
+# stay in THIS file because `tests/theme_test.py` reads the open-panel stacking rule and the panel rule
+# straight out of this source with a regex, anchored on a newline -- so they are written at column zero
+# here exactly as they were in the stylesheet, and the harness cannot tell the difference. Named in prose
+# rather than quoted with their braces: one of those assertions counts how many times the selector appears,
+# and a comment quoting it is an occurrence. Writing it out here reddened that count, which is the
+# assertion doing its job.
+#
+# `31_home.py` inlines this verbatim. It does NOT go into `pages.css`, which would be the tidier home and is
+# the obvious next step: that file is linked by 178 facet pages and 6 collection pages, none of which carry
+# the menu markup yet, so moving it there is a change to their bytes and a service-worker re-version for a
+# control they do not have. Worth doing when they grow one; not worth bundling into the page move.
+SETTINGS_CSS = r"""/* THE SETTINGS MENU. Absolutely positioned inside a relative wrapper rather than laid out in the nav,
+   because the nav is a wrapping inline flow at every width -- a panel in that flow would reflow the two
+   link rows and the mascot beside them every time it opened. `right:0` so it grows leftwards from the
+   button and cannot leave the viewport on the side the button is pinned to.
+
+   No `@media(max-width:640px)` block, and that is deliberate rather than an omission: `theme_test.py`
+   asserts that query is emitted exactly twice and names which two blocks they are, so a third copy makes
+   a passing count fail for a reason that has nothing to do with what it is protecting. The panel does not
+   need one -- 236px fits inside a 375px viewport with the nav's own padding to spare, and it is measured
+   from the right edge of a button that is itself inside the wrap.
+
+   No `overflow:hidden` on the wrapper either. What did need fixing is the stacking, and the first version
+   of this comment argued the wrong way round: it said the panel is a child of `header` at z-index 10, the
+   pinned bar is 20, so an open menu paints under the bar, and that this was right because what is pinned
+   paints over what is scrolling. A screenshot settled it. The panel is 236px tall on a masthead 216px
+   deep, so two thirds of it lands in the bar's band: the Theme heading and the whole Graphite row were
+   invisible behind the search field and the topic chips. That ordering is correct for Archie's speech
+   bubble, which is decorative and transient. It is not correct for a menu, where the cost is a control a
+   reader cannot see or press. "What is pinned paints over what is scrolling" is a good rule that was
+   being applied to the one thing in this header it does not fit.
+
+   `header.setopen` and not a bigger number on `.setmenu`, because a child cannot out-rank its own
+   stacking context: `header` is `position:relative;z-index:10`, so every z-index inside it is resolved
+   *within* that context and the panel's own 1 could be 999 without reaching the bar. The parent is what
+   has to move. It moves only while the menu is open, and that is the whole point of the class rather than
+   a higher base number: `probe.mjs` asserts `zOf("header") < zOf(".bar")` on the base rule -- the pinned
+   thing must paint over the scrolling one -- and that assertion is right and stays green, because the
+   rule it reads is untouched. A reader who never opens Settings gets byte-identical stacking, including
+   Archie's bubble still passing under the bar. `setOpen()` in the page script is the only thing that adds
+   or removes the class, so the two states cannot drift apart. */
+.setwrap{position:relative;display:inline-block}
+header.setopen{z-index:30}
+.setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:236px;text-align:left;
+  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
+  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75)}
+/* `hidden` is the state and this rule is what makes it stick: `display:inline-block` on the wrapper does
+   not cascade to the child, but every UA default for [hidden] is `display:none`, and a later
+   `display:` on the same element would beat it. Restating it here keeps the attribute authoritative,
+   which matters because the attribute is also what takes the panel out of the accessibility tree. */
+.setmenu[hidden]{display:none}
+.setlab{margin:14px 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase;
+  letter-spacing:.07em;font-weight:600}
+.setlab:first-child{margin-top:0}
+.setths{display:flex;flex-direction:column;gap:2px;margin-top:2px}
+/* 36px rather than the 44 the mascot's buttons are held to. These are inside a panel a reader has already
+   opened on purpose and they are stacked with 2px between them, so the target is the row's full width --
+   212px by 36px is a larger area than any chip on the bar, and the 44px floor is about reaching a control
+   in a crowded band rather than about the area of a menu item. */
+.thb{display:flex;align-items:center;gap:9px;width:100%;min-height:36px;padding:0 9px;
+  background:none;border:1px solid transparent;border-radius:8px;color:var(--ink2);font-size:13px;
+  text-align:left}
+.thb:hover{border-color:var(--grid);color:var(--ink)}
+/* The border and the weight, not a fill. A filled row would be the `--bar` the chips use for an active
+   filter, and the theme in use is not a filter -- it is always exactly one of four, so a reader reading
+   this panel needs to see which, not to be told something is on. */
+.thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600}
+.thsw{display:inline-flex;flex:none;width:34px;height:14px;border-radius:999px;overflow:hidden;
+  border:1px solid var(--grid)}
+.thsw i{flex:1}"""
+
+
+# The Settings control, lifted out of `PAGE` into a constant for one reason: it is no longer this page's
+# control. `31_home.py` draws the same masthead on `/`, and a second hand-written copy of four theme
+# swatches whose twelve hex values are already a copy of the stylesheet is two chances to drift where the
+# design only permits one. Imported there rather than retyped, the way `25_collections.py` takes
+# `HEAD_THEME` from `20_landing.py` instead of keeping its own.
+#
+# It stays in THIS file, and not in a shared module, because `tests/theme_test.py` reads
+# `scripts/19_pages.py` as text -- it slices the twelve swatch hexes back out with a regex over the source
+# and compares each against the skin block it came from. Moving the markup somewhere else would silently
+# take twelve assertions with it. Same file, named constant: the harness still sees it, and there is still
+# one copy.
+#
+# No placeholders inside, which is what makes it safe to share: every value here is literal, so it renders
+# identically wherever it is dropped and it does not need `substitute()` to be correct. The one thing it
+# does depend on is `#theme` living inside it -- the mode toggle was moved into this panel rather than
+# replaced, and `probe.mjs` still clicks that id.
+SETTINGS_MENU = r"""<div class="setwrap">
+      <button class="chip" id="setbtn" aria-expanded="false" aria-controls="setmenu">Settings</button>
+      <div class="setmenu" id="setmenu" hidden>
+        <p class="setlab" id="setmodelab">Mode</p>
+        <div role="group" aria-labelledby="setmodelab">
+          <button class="chip" id="theme">Light theme</button>
+        </div>
+        <p class="setlab" id="setthemelab">Theme</p>
+        <div class="setths" role="group" aria-labelledby="setthemelab">
+          <button type="button" class="thb" data-skin="graphite" aria-pressed="true"><span
+            class="thsw" aria-hidden="true"><i style="background:#090A0D"></i><i
+            style="background:#D6A034"></i><i style="background:#78B7F4"></i></span>Graphite</button>
+          <button type="button" class="thb" data-skin="glass" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#070912"></i><i
+            style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span>Glass</button>
+          <button type="button" class="thb" data-skin="terminal" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#050B0D"></i><i
+            style="background:#FFB627"></i><i style="background:#6FD0FF"></i></span>Terminal</button>
+          <button type="button" class="thb" data-skin="prism" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#0B0718"></i><i
+            style="background:#FF9BD2"></i><i style="background:#8FD0FF"></i></span>Prism</button>
+        </div>
+      </div>
+    </div>"""
 
 
 DEPLOYMENT_BADGE = r'''<a class="stamp" id="deployed" href="https://github.com/__REPO__/deployments"
@@ -891,65 +1013,7 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .chip:hover{border-color:var(--bar);color:var(--ink)}
 .chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar);
   font-weight:600}
-/* THE SETTINGS MENU. Absolutely positioned inside a relative wrapper rather than laid out in the nav,
-   because the nav is a wrapping inline flow at every width -- a panel in that flow would reflow the two
-   link rows and the mascot beside them every time it opened. `right:0` so it grows leftwards from the
-   button and cannot leave the viewport on the side the button is pinned to.
-
-   No `@media(max-width:640px)` block, and that is deliberate rather than an omission: `theme_test.py`
-   asserts that query is emitted exactly twice and names which two blocks they are, so a third copy makes
-   a passing count fail for a reason that has nothing to do with what it is protecting. The panel does not
-   need one -- 236px fits inside a 375px viewport with the nav's own padding to spare, and it is measured
-   from the right edge of a button that is itself inside the wrap.
-
-   No `overflow:hidden` on the wrapper either. What did need fixing is the stacking, and the first version
-   of this comment argued the wrong way round: it said the panel is a child of `header` at z-index 10, the
-   pinned bar is 20, so an open menu paints under the bar, and that this was right because what is pinned
-   paints over what is scrolling. A screenshot settled it. The panel is 236px tall on a masthead 216px
-   deep, so two thirds of it lands in the bar's band: the Theme heading and the whole Graphite row were
-   invisible behind the search field and the topic chips. That ordering is correct for Archie's speech
-   bubble, which is decorative and transient. It is not correct for a menu, where the cost is a control a
-   reader cannot see or press. "What is pinned paints over what is scrolling" is a good rule that was
-   being applied to the one thing in this header it does not fit.
-
-   `header.setopen` and not a bigger number on `.setmenu`, because a child cannot out-rank its own
-   stacking context: `header` is `position:relative;z-index:10`, so every z-index inside it is resolved
-   *within* that context and the panel's own 1 could be 999 without reaching the bar. The parent is what
-   has to move. It moves only while the menu is open, and that is the whole point of the class rather than
-   a higher base number: `probe.mjs` asserts `zOf("header") < zOf(".bar")` on the base rule -- the pinned
-   thing must paint over the scrolling one -- and that assertion is right and stays green, because the
-   rule it reads is untouched. A reader who never opens Settings gets byte-identical stacking, including
-   Archie's bubble still passing under the bar. `setOpen()` in the page script is the only thing that adds
-   or removes the class, so the two states cannot drift apart. */
-.setwrap{position:relative;display:inline-block}
-header.setopen{z-index:30}
-.setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:236px;text-align:left;
-  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
-  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75)}
-/* `hidden` is the state and this rule is what makes it stick: `display:inline-block` on the wrapper does
-   not cascade to the child, but every UA default for [hidden] is `display:none`, and a later
-   `display:` on the same element would beat it. Restating it here keeps the attribute authoritative,
-   which matters because the attribute is also what takes the panel out of the accessibility tree. */
-.setmenu[hidden]{display:none}
-.setlab{margin:14px 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase;
-  letter-spacing:.07em;font-weight:600}
-.setlab:first-child{margin-top:0}
-.setths{display:flex;flex-direction:column;gap:2px;margin-top:2px}
-/* 36px rather than the 44 the mascot's buttons are held to. These are inside a panel a reader has already
-   opened on purpose and they are stacked with 2px between them, so the target is the row's full width --
-   212px by 36px is a larger area than any chip on the bar, and the 44px floor is about reaching a control
-   in a crowded band rather than about the area of a menu item. */
-.thb{display:flex;align-items:center;gap:9px;width:100%;min-height:36px;padding:0 9px;
-  background:none;border:1px solid transparent;border-radius:8px;color:var(--ink2);font-size:13px;
-  text-align:left}
-.thb:hover{border-color:var(--grid);color:var(--ink)}
-/* The border and the weight, not a fill. A filled row would be the `--bar` the chips use for an active
-   filter, and the theme in use is not a filter -- it is always exactly one of four, so a reader reading
-   this panel needs to see which, not to be told something is on. */
-.thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600}
-.thsw{display:inline-flex;flex:none;width:34px;height:14px;border-radius:999px;overflow:hidden;
-  border:1px solid var(--grid)}
-.thsw i{flex:1}
+__SETCSS__
 /* The new-arrivals chip wears `--warn` rather than the `--bar` every other chip uses, because it
    is the only filter that answers a question about time rather than about the data. It is also the only
    chip that can be absent: with nothing inside the window there is nothing to filter to, and a control
@@ -2366,30 +2430,7 @@ __OSSPRITE__
          copy, and `tests/theme_test.py` compares all twelve values against the blocks they came from
          rather than trusting the markup. aria-hidden because the name beside them is the label; a reader
          who cannot see the swatch is not helped by "black, amber, blue". -->
-    <div class="setwrap">
-      <button class="chip" id="setbtn" aria-expanded="false" aria-controls="setmenu">Settings</button>
-      <div class="setmenu" id="setmenu" hidden>
-        <p class="setlab" id="setmodelab">Mode</p>
-        <div role="group" aria-labelledby="setmodelab">
-          <button class="chip" id="theme">Light theme</button>
-        </div>
-        <p class="setlab" id="setthemelab">Theme</p>
-        <div class="setths" role="group" aria-labelledby="setthemelab">
-          <button type="button" class="thb" data-skin="graphite" aria-pressed="true"><span
-            class="thsw" aria-hidden="true"><i style="background:#090A0D"></i><i
-            style="background:#D6A034"></i><i style="background:#78B7F4"></i></span>Graphite</button>
-          <button type="button" class="thb" data-skin="glass" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#070912"></i><i
-            style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span>Glass</button>
-          <button type="button" class="thb" data-skin="terminal" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#050B0D"></i><i
-            style="background:#FFB627"></i><i style="background:#6FD0FF"></i></span>Terminal</button>
-          <button type="button" class="thb" data-skin="prism" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#0B0718"></i><i
-            style="background:#FF9BD2"></i><i style="background:#8FD0FF"></i></span>Prism</button>
-        </div>
-      </div>
-    </div>
+    __SETTINGS__
   </nav>
   <div class="atlas-byte-wrap">
     <button type="button" id="byte-tip" aria-label="Ask Archie 'Atlas' Algorithm for a browsing tip">
