@@ -469,7 +469,7 @@ PAGE = r"""<!doctype html>
      over an empty body until `data.json` lands and then vanish; with it the default view is the one that
      was there all along. A `#view=table` link still lands on the table -- `readHash` cannot run before
      the data either way, so this attribute governs the wait and nothing more. Keep the two in step. -->
-<html lang="en" data-theme="dark" data-view="__DEFAULT_VIEW__" data-index-screenshots="__INDEX_SCREENSHOTS__">
+<html lang="en" data-theme="dark" data-skin="graphite" data-view="__DEFAULT_VIEW__" data-index-screenshots="__INDEX_SCREENSHOTS__">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -516,18 +516,34 @@ __VERIFY__
 
      Precedence is explicit choice, then the operating system, then dark. Dark stays the fallback because
      it is the designed mode -- the one whose accent contrast ratios were actually measured. The markup's
-     data-theme="dark" is the floor if this throws, which localStorage does in some private modes. -->
+     data-theme="dark" is the floor if this throws, which localStorage does in some private modes.
+
+     The theme axis has no operating-system half -- nothing in `prefers-*` asks for graphite over prism --
+     so it is the saved choice or the default, and `data-skin="graphite"` on <html> is its floor for the
+     same reason `data-theme="dark"` is the other one's. Unknown values fall back rather than being
+     honoured: `atlas-skin` is reader-writable storage that outlives a release, so a theme that is
+     withdrawn leaves saved copies of its name behind, and `dataset.skin = "prism"` with no `[data-skin=
+     prism]` block is a page with graphite's colours and prism's name in the menu. -->
 <script>
 try {
   var t = localStorage.getItem("theme");
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The two literals track --plane in the two blocks below. After paint `wire()` re-derives this from the
-  // computed value so the stylesheet stays the single source of truth; here there is no computed value to
-  // read yet, and a chrome one shade out for one frame is the cost of not blocking the paint on a
-  // stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+  // Eight literals, and they track --plane in the eight blocks below -- the theme-colour meta is set
+  // before the stylesheet has parsed, so there is no computed value to read and the map is the only way
+  // to know the answer. This doubles as the list of themes that exist: the lookup is what rejects a
+  // withdrawn name, so a theme added below and not added here is a theme the menu cannot select. After
+  // paint `paintSettings()` re-derives the colour from the computed value, which keeps the stylesheet the
+  // single source of truth; a chrome one shade out for one frame is the cost of not blocking on a sheet.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"}};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s]) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
 </script>
 <style>
@@ -538,13 +554,38 @@ try {
 
    --onbar flips between the modes because --bar, --good and --warn are used both as text and as filled
    controls. `tests/theme_test.py` derives those roles from the stylesheet and verifies every text,
-   control and focus-ring pairing rather than trusting this description. */
+   control and focus-ring pairing rather than trusting this description.
+
+   TWO AXES, AND WHY THE SECOND ONE IS NOT JUST MORE COLOURS
+   Graphite is the theme this page was designed in and the one every ratio was measured for, so it is
+   declared here, on `:root`, where it needs no attribute to be true. The three below it are opt-in:
+   `data-skin` on <html>, chosen in the Settings menu and remembered in `atlas-skin`. The axes are
+   independent -- four themes times light and dark is eight token sets, and every one of them is checked
+   by the same arithmetic as this pair, which is the only reason offering eight is defensible.
+
+   The thirteen colour tokens are opaque hex in all eight sets, deliberately, and the frosted look is
+   built out of the four structural tokens below them instead. WCAG contrast is a ratio between two
+   colours; an rgba fill over an unknown backdrop has no second colour to be a ratio against, so a
+   translucent --band cannot be checked at all and would be a re-theme that turns the harness off. The
+   v2 prototype's glass border is the concrete case: flattened onto its own surface it measures 1.146
+   against its band, which is under the 1.15 floor this file has enforced since the last re-theme. So the
+   skins keep measured colours and spend their translucency on --panel, which is the one place it is
+   still checkable -- see the note on --panel below. */
 :root{
   --surface:#090A0D; --plane:#101217; --band:#20242D; --ink:#F7F8FA; --ink2:#D0D5DD;
   --muted:#9BA5B3; --grid:#3A414D; --link:#78B7F4; --bar:#D6A034;
   --good:#5BD5AA; --warn:#EF7D86; --off:#9BA5B3; --onbar:#090A0D;
   --accent-sky:#78B7F4; --accent-mint:#5BD5AA; --accent-gold:#E7B64D;
   --accent-coral:#EF7D86; --accent-violet:#A99AF7;
+  /* THE STRUCTURAL HALF OF A THEME. Not colours, so not contrast-bearing, and not declared per mode
+     either -- a typeface and a blur radius do not change when the lights go out. Graphite's values are
+     the page exactly as it shipped: the same font stack that was here in `body`, no wash, an opaque
+     panel and no backdrop filter. A reader who never opens Settings cannot tell this block exists.
+     --bdf is `none` rather than `blur(0px)` on purpose: a non-none backdrop-filter makes the element a
+     containing block and a stacking context, which would quietly re-parent the mascot's speech bubble
+     and re-rank the pinned bar for every reader, including the ones who chose nothing. */
+  --ui:"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:none; --panel:var(--plane); --bdf:none;
 }
 html[data-theme=light]{
   --surface:#F2F4F7; --plane:#FAFBFC; --band:#E7EAF0; --ink:#14171C; --ink2:#353C47;
@@ -553,9 +594,107 @@ html[data-theme=light]{
   --accent-sky:#1D5E9E; --accent-mint:#187557; --accent-gold:#9A6718;
   --accent-coral:#B6465E; --accent-violet:#6557C8;
 }
+/* THE THREE OPT-IN THEMES, six blocks, and the pattern is the same for each: `html[data-skin=X]` carries
+   the dark values and the structural tokens, `html[data-skin=X][data-theme=light]` carries the light
+   ones. Both selectors are one attribute stronger than nothing and the pair is stronger than the light
+   block above, so the cascade resolves skin-then-mode without a single `!important`.
+
+   The light block restates all thirteen colours and nothing else. It does not restate --ui or --bdf
+   because those are the same in both modes and the skin block above already applies at both, and it
+   does restate --panel and --wash because the alpha that reads as frosted over near-black is a smear
+   over near-white.
+
+   --panel IS translucent, and it is the one token that can be without giving up the measurement. Every
+   panel on this page sits on --surface and is filled from --plane, and the rgba below is --plane's own
+   channels: so whatever the compositor produces lies between two backdrops that ARE in the checked set,
+   and every text token clears 4.5:1 on both ends of that range. `theme_test.py` asserts the channels
+   match --plane rather than trusting this paragraph, because a hand-typed rgba is exactly the kind of
+   copy that drifts one digit and stops being a blend of anything. */
+html[data-skin=glass]{
+  --surface:#070912; --plane:#12141D; --band:#1C1E26; --ink:#F4F7FF; --ink2:#CBD5E8;
+  --muted:#95A2BE; --grid:#3D4152; --link:#7CC4FF; --bar:#6FE3C4;
+  --good:#86E0A0; --warn:#FF9BA8; --off:#95A2BE; --onbar:#04121A;
+  --accent-sky:#7CC4FF; --accent-mint:#6FE3C4; --accent-gold:#F3C46A;
+  --accent-coral:#FF9BA8; --accent-violet:#B3A6FF;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:radial-gradient(1100px 520px at 12% -12%,rgba(80,140,255,.22),transparent 70%),
+         radial-gradient(900px 480px at 88% 0%,rgba(110,227,196,.14),transparent 72%);
+  --panel:rgba(18,20,29,.72); --bdf:blur(14px) saturate(1.25);
+}
+html[data-skin=glass][data-theme=light]{
+  --surface:#EEF2FA; --plane:#F8FAFF; --band:#E2E8F5; --ink:#111726; --ink2:#323B4F;
+  --muted:#56627A; --grid:#C3CCDE; --link:#0F5FA6; --bar:#0B6E7A;
+  --good:#136B4E; --warn:#8A4A2B; --off:#56627A; --onbar:#FFFFFF;
+  --accent-sky:#0F5FA6; --accent-mint:#0B6E7A; --accent-gold:#8A5A00;
+  --accent-coral:#A63F52; --accent-violet:#4B44B8;
+  --wash:radial-gradient(1100px 520px at 12% -12%,rgba(60,120,255,.14),transparent 70%),
+         radial-gradient(900px 480px at 88% 0%,rgba(0,150,130,.10),transparent 72%);
+  --panel:rgba(248,250,255,.74);
+}
+/* Terminal is the one theme that changes the typeface, and that is the whole of it: a monospace stack,
+   phosphor greens for the foreground and amber for the action. Amber rather than a brighter green
+   because --bar is drawn as text as well as as a fill, and a green action beside the green --good is two
+   meanings in one hue -- the mark of a verdict and the colour of a button should not be the same thing. */
+html[data-skin=terminal]{
+  --surface:#050B0D; --plane:#0A1315; --band:#132220; --ink:#D8F5E6; --ink2:#A8D8C4;
+  --muted:#84AC99; --grid:#2D4741; --link:#6FD0FF; --bar:#FFB627;
+  --good:#3FE08C; --warn:#FF8B7A; --off:#84AC99; --onbar:#05100B;
+  --accent-sky:#6FD0FF; --accent-mint:#3FE08C; --accent-gold:#FFB627;
+  --accent-coral:#FF8B7A; --accent-violet:#C2A6FF;
+  --ui:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --wash:radial-gradient(1200px 620px at 50% -20%,rgba(63,224,140,.12),transparent 70%);
+  --panel:rgba(10,19,21,.86); --bdf:blur(3px);
+}
+html[data-skin=terminal][data-theme=light]{
+  --surface:#EEF4EF; --plane:#F9FCF9; --band:#E0EBE3; --ink:#0D1A14; --ink2:#2B3E34;
+  --muted:#4F6659; --grid:#BFCFC4; --link:#0C5F8F; --bar:#7A5300;
+  --good:#166B45; --warn:#9A3D22; --off:#4F6659; --onbar:#FFFFFF;
+  --accent-sky:#0C5F8F; --accent-mint:#166B45; --accent-gold:#7A5300;
+  --accent-coral:#9A3D22; --accent-violet:#5A3FA8;
+  --wash:radial-gradient(1200px 620px at 50% -20%,rgba(20,140,90,.10),transparent 70%);
+  --panel:rgba(249,252,249,.86);
+}
+/* Prism is the maximal one: five washes at five positions so the page is never one colour, magenta for
+   the action, and the deepest blur of the four. It is also where the constraint above shows its teeth --
+   the hues are all in the accents and the wash, and the thirteen tokens underneath them are as plain and
+   as measured as graphite's. Colour on this page is allowed to be loud in the background and never in
+   the contract between ink and its backdrop. */
+html[data-skin=prism]{
+  --surface:#0B0718; --plane:#17112C; --band:#241A3F; --ink:#FBF7FF; --ink2:#DCD2F0;
+  --muted:#ADA0C8; --grid:#4A3A70; --link:#8FD0FF; --bar:#FF9BD2;
+  --good:#63E6B8; --warn:#FFB36B; --off:#ADA0C8; --onbar:#14061B;
+  --accent-sky:#8FD0FF; --accent-mint:#63E6B8; --accent-gold:#FFD166;
+  --accent-coral:#FF9BD2; --accent-violet:#C0A8FF;
+  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:radial-gradient(760px 430px at 6% -8%,rgba(255,155,210,.26),transparent 68%),
+         radial-gradient(680px 400px at 96% 2%,rgba(143,208,255,.22),transparent 68%),
+         radial-gradient(900px 520px at 50% 108%,rgba(99,230,184,.18),transparent 70%),
+         radial-gradient(520px 320px at 78% 54%,rgba(255,209,102,.15),transparent 70%),
+         radial-gradient(560px 340px at 18% 62%,rgba(192,168,255,.20),transparent 70%);
+  --panel:rgba(23,17,44,.70); --bdf:blur(18px) saturate(1.4);
+}
+html[data-skin=prism][data-theme=light]{
+  --surface:#F3EFFC; --plane:#FDFBFF; --band:#E8E0F8; --ink:#170B26; --ink2:#3A2B52;
+  --muted:#5E4F7A; --grid:#C7B9E4; --link:#1A4FB0; --bar:#9A2C7E;
+  --good:#0F6B52; --warn:#8A4410; --off:#5E4F7A; --onbar:#FFFFFF;
+  --accent-sky:#1A4FB0; --accent-mint:#0F6B52; --accent-gold:#8A4410;
+  --accent-coral:#9A2C7E; --accent-violet:#6A3FB8;
+  --wash:radial-gradient(760px 430px at 6% -8%,rgba(214,60,150,.16),transparent 68%),
+         radial-gradient(680px 400px at 96% 2%,rgba(40,120,220,.14),transparent 68%),
+         radial-gradient(900px 520px at 50% 108%,rgba(0,170,120,.12),transparent 70%),
+         radial-gradient(520px 320px at 78% 54%,rgba(230,160,20,.10),transparent 70%),
+         radial-gradient(560px 340px at 18% 62%,rgba(130,90,230,.13),transparent 70%);
+  --panel:rgba(253,251,255,.72);
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--surface);color:var(--ink);
-  font:15px/1.5 "Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif}
+/* The font stack and the wash are both tokens now, and both resolve to what was written here before for
+   every reader who has not chosen a theme: --ui is this file's own stack, character for character, and
+   --wash is `none`. `background-attachment:fixed` so a theme's wash is a property of the window rather
+   than of the document -- at 8,856 rows a scrolling gradient is a gradient nobody ever sees the end of.
+   Two declarations rather than the `background` shorthand: the shorthand would reset background-color
+   from --surface on every skin that sets an image, and --surface is what the wash is translucent over. */
+body{margin:0;background:var(--surface);background-image:var(--wash);
+  background-attachment:fixed;color:var(--ink);font:15px/1.5 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
 /* Only #q had a focus ring, so every chip, the sort menu and both nav buttons were invisible to anyone
@@ -594,8 +733,8 @@ a:hover{text-decoration:underline}
    masthead is halfway off the top the bar is pinned across it. Whatever is pinned paints over whatever is
    scrolling, which is why 10 and not 30. The shadow moves to the bar for the same reason: it belongs to
    the element that floats over the results, and that is no longer this one. */
-header{position:relative;z-index:10;background:var(--plane);border-bottom:1px solid var(--grid);
-  padding:22px 20px 16px}
+header{position:relative;z-index:10;background:var(--panel);backdrop-filter:var(--bdf);
+  border-bottom:1px solid var(--grid);padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
@@ -720,7 +859,7 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 }
 button{font:inherit;cursor:pointer}
 /* The only pinned thing on the page, and therefore the only thing that carries the shadow. */
-.bar{position:sticky;top:0;z-index:20;background:var(--plane);
+.bar{position:sticky;top:0;z-index:20;background:var(--panel);backdrop-filter:var(--bdf);
   border-bottom:1px solid var(--grid);padding:10px 20px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
 .bar .wrap{display:flex;flex-direction:column;gap:8px}
 /* THE HALF OF THE BAR THAT DOES NOT STICK (JFH-354). The three facet rails are in `#sheet`, and they used
@@ -736,7 +875,8 @@ button{font:inherit;cursor:pointer}
    The border and the padding are the bar's old bottom edge, moved down here: the bar keeps its own so the
    pinned line has an edge of its own while scrolled, which is what makes the two read as one block at rest
    and as chrome-over-content in motion. */
-.subbar{background:var(--plane);border-bottom:1px solid var(--grid);padding:0 20px 9px}
+.subbar{background:var(--panel);backdrop-filter:var(--bdf);border-bottom:1px solid var(--grid);
+  padding:0 20px 9px}
 .subbar .wrap{display:flex;flex-direction:column;gap:8px}
 .line{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .line>label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
@@ -751,6 +891,50 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .chip:hover{border-color:var(--bar);color:var(--ink)}
 .chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar);
   font-weight:600}
+/* THE SETTINGS MENU. Absolutely positioned inside a relative wrapper rather than laid out in the nav,
+   because the nav is a wrapping inline flow at every width -- a panel in that flow would reflow the two
+   link rows and the mascot beside them every time it opened. `right:0` so it grows leftwards from the
+   button and cannot leave the viewport on the side the button is pinned to.
+
+   No `@media(max-width:640px)` block, and that is deliberate rather than an omission: `theme_test.py`
+   asserts that query is emitted exactly twice and names which two blocks they are, so a third copy makes
+   a passing count fail for a reason that has nothing to do with what it is protecting. The panel does not
+   need one -- 236px fits inside a 375px viewport with the nav's own padding to spare, and it is measured
+   from the right edge of a button that is itself inside the wrap.
+
+   No `overflow:hidden` on the wrapper either: the panel is a child of `header`, which is z-index 10 and
+   below the pinned bar's 20, so an open menu paints *under* the filter bar while the masthead scrolls.
+   That is the same ordering the masthead comment settles for Archie's speech bubble, and it is the right
+   answer here for the same reason -- what is pinned paints over what is scrolling. The menu is a thing
+   you use on arrival, like everything else in this header. */
+.setwrap{position:relative;display:inline-block}
+.setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:236px;text-align:left;
+  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
+  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75)}
+/* `hidden` is the state and this rule is what makes it stick: `display:inline-block` on the wrapper does
+   not cascade to the child, but every UA default for [hidden] is `display:none`, and a later
+   `display:` on the same element would beat it. Restating it here keeps the attribute authoritative,
+   which matters because the attribute is also what takes the panel out of the accessibility tree. */
+.setmenu[hidden]{display:none}
+.setlab{margin:14px 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase;
+  letter-spacing:.07em;font-weight:600}
+.setlab:first-child{margin-top:0}
+.setths{display:flex;flex-direction:column;gap:2px;margin-top:2px}
+/* 36px rather than the 44 the mascot's buttons are held to. These are inside a panel a reader has already
+   opened on purpose and they are stacked with 2px between them, so the target is the row's full width --
+   212px by 36px is a larger area than any chip on the bar, and the 44px floor is about reaching a control
+   in a crowded band rather than about the area of a menu item. */
+.thb{display:flex;align-items:center;gap:9px;width:100%;min-height:36px;padding:0 9px;
+  background:none;border:1px solid transparent;border-radius:8px;color:var(--ink2);font-size:13px;
+  text-align:left}
+.thb:hover{border-color:var(--grid);color:var(--ink)}
+/* The border and the weight, not a fill. A filled row would be the `--bar` the chips use for an active
+   filter, and the theme in use is not a filter -- it is always exactly one of four, so a reader reading
+   this panel needs to see which, not to be told something is on. */
+.thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600}
+.thsw{display:inline-flex;flex:none;width:34px;height:14px;border-radius:999px;overflow:hidden;
+  border:1px solid var(--grid)}
+.thsw i{flex:1}
 /* The new-arrivals chip wears `--warn` rather than the `--bar` every other chip uses, because it
    is the only filter that answers a question about time rather than about the data. It is also the only
    chip that can be absent: with nothing inside the window there is nothing to filter to, and a control
@@ -1981,8 +2165,13 @@ main a[href],main button,main select,main summary,
      `.dstrip`, because the rule this has to beat is `.dstrip.on{display:block}` and that is two classes: a
      single-class selector here would lose on specificity no matter how much later in the file it sits, and
      would lose silently -- the strip would print and every other entry in this list would still vanish. */
-  .bar,.subbar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,
-  .shared .sp,.pin,#cmp .ch .sp,#cmp .unpin,.dstrip.on{display:none}
+  /* `#setmenu` named in its own right even though `header nav` above already contains it, which is the
+     rule this list has been bitten by twice: a hide-list scoped by containment stops being one the moment
+     the containment moves, and a settings panel is precisely the kind of thing that gets moved to the
+     filter bar or to a corner of the viewport. Left open when a reader presses Ctrl+P it would otherwise
+     print a 236px panel of controls over the first rows of the table. */
+  .bar,.subbar,.more,dialog,#fbb,#live,.skip,header nav,#setmenu,.stamp,.atlas-byte-wrap,.facets,.save,
+  .copy,.shot,.shared .sp,.pin,#cmp .ch .sp,#cmp .unpin,.dstrip.on{display:none}
   /* The comparison itself stays, and this is the one thing on the sheet that is more use on paper than on
      screen: four projects in columns is what somebody carries into the meeting where the choice is made.
      Only its controls go -- an Unpin button under a printed column heading is a button nobody can press.
@@ -2136,12 +2325,56 @@ __OSSPRITE__
     <a href="https://github.com/__REPO__">Repository</a> ·
     <a href="https://github.com/__REPO__/tree/main/mega-list">Markdown</a> ·
     <a href="https://github.com/__REPO__/releases/latest">Workbook</a><br>
-    <!-- No aria-pressed. The label names the action and changes with the state, and "Dark theme" plus
-         pressed=true announces as "dark theme is on" -- which is the opposite of what it means. A toggle
-         gets a static label and a pressed state, or a changing label and no pressed state; this is the
-         second. It also stops the button rendering as a filled accent pill purely because the reader is
-         in light mode, which made it look like an active filter. -->
-    <button class="chip" id="theme">Light theme</button>
+    <!-- SETTINGS, and the light/dark toggle is *moved* into it rather than replaced by it. `#theme` keeps
+         its id, its changing label and its handler, because three other things already depend on that
+         button existing and behaving exactly as it does: the command palette delegates to it rather than
+         duplicating its body, `tests/probe.mjs` clicks it twice to prove the browser chrome follows the
+         stylesheet, and the OS-preference listener calls the same paint function it does. A menu is a new
+         parent, not a new control, and moving a control is the cheapest change that satisfies the brief.
+
+         Two groups, both `role="group"` with a visible label the group is named by, because they are two
+         different questions -- how bright, and which palette -- and a single flat list of seven buttons
+         says neither. Not `role="radiogroup"`: that contract obliges arrow-key navigation and a roving
+         tabindex, and getting either half wrong makes the control worse for exactly the reader the role
+         was added for. Plain buttons are Tab-reachable with no script at all.
+
+         The theme buttons DO carry aria-pressed, which the comment this replaces argued against for the
+         mode toggle -- and for the reason it gave. That button has a changing label, so a pressed state
+         would announce "dark theme is on" while reading "Dark theme", which is backwards. These have
+         static labels, so pressed is the only thing that can say which one is on, and the rule the old
+         comment stated was that a toggle gets one or the other. This is the first case, that was the
+         second.
+
+         The swatches are three of each theme's own tokens -- surface, action, link -- as literal hex,
+         because a swatch for a theme the page is not currently wearing cannot read that theme's custom
+         properties: they are declared on <html> and only one skin is on <html> at a time. So this is a
+         copy, and `tests/theme_test.py` compares all twelve values against the blocks they came from
+         rather than trusting the markup. aria-hidden because the name beside them is the label; a reader
+         who cannot see the swatch is not helped by "black, amber, blue". -->
+    <div class="setwrap">
+      <button class="chip" id="setbtn" aria-expanded="false" aria-controls="setmenu">Settings</button>
+      <div class="setmenu" id="setmenu" hidden>
+        <p class="setlab" id="setmodelab">Mode</p>
+        <div role="group" aria-labelledby="setmodelab">
+          <button class="chip" id="theme">Light theme</button>
+        </div>
+        <p class="setlab" id="setthemelab">Theme</p>
+        <div class="setths" role="group" aria-labelledby="setthemelab">
+          <button type="button" class="thb" data-skin="graphite" aria-pressed="true"><span
+            class="thsw" aria-hidden="true"><i style="background:#090A0D"></i><i
+            style="background:#D6A034"></i><i style="background:#78B7F4"></i></span>Graphite</button>
+          <button type="button" class="thb" data-skin="glass" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#070912"></i><i
+            style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span>Glass</button>
+          <button type="button" class="thb" data-skin="terminal" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#050B0D"></i><i
+            style="background:#FFB627"></i><i style="background:#6FD0FF"></i></span>Terminal</button>
+          <button type="button" class="thb" data-skin="prism" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#0B0718"></i><i
+            style="background:#FF9BD2"></i><i style="background:#8FD0FF"></i></span>Prism</button>
+        </div>
+      </div>
+    </div>
   </nav>
   <div class="atlas-byte-wrap">
     <button type="button" id="byte-tip" aria-label="Ask Archie 'Atlas' Algorithm for a browsing tip">
@@ -3341,6 +3574,13 @@ function palItems(query) {
   // localStorage write stay in exactly one place.
   add("Page", (document.documentElement.dataset.theme === "light" ? "Dark" : "Light") + " theme", false,
     () => document.getElementById("theme").click());
+  // The four themes, read off the buttons in the Settings menu rather than from a list here, for the same
+  // reason the sort modes are read off the <select>: a theme added to the menu appears here, and the
+  // palette can never offer one the page has no block for. This is the one group that reports state as
+  // well as offering an action -- exactly one theme is always on, so `active` marks which, and a reader
+  // who opens the palette to check gets an answer without pressing anything.
+  for (const t of document.querySelectorAll(".thb"))
+    add("Theme", t.textContent.trim(), t.getAttribute("aria-pressed") === "true", () => t.click());
   // Same delegation, same reason: the label, the title, the hash write and the announcement stay in the one
   // place that owns them. The label is the action, matching the button, so the palette never offers "Card
   // view" to someone already in it.
@@ -3478,13 +3718,23 @@ function wire() {
   // a path already waiting on a 556 KB body.
   loadVisit();
   const btn = document.getElementById("theme");
-  const label = () => {
+  const menu = document.getElementById("setmenu");
+  const setbtn = document.getElementById("setbtn");
+  const ths = Array.from(document.querySelectorAll(".thb"));
+  // One paint for both axes rather than one per control, because everything downstream of a theme change
+  // is downstream of either change: the mode toggle's label, which theme reads as pressed, the browser
+  // chrome, and the deployment badge's own colours. Every path that moves either axis calls this -- the
+  // toggle, the four theme buttons, the OS-preference listener, and the initial agreement with the head
+  // script -- so there is one place where "the page now looks like X" is made true.
+  const paintSettings = () => {
     const light = document.documentElement.dataset.theme === "light";
     btn.textContent = light ? "Dark theme" : "Light theme";
     btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
+    const skin = document.documentElement.dataset.skin;
+    for (const t of ths) t.setAttribute("aria-pressed", String(t.dataset.skin === skin));
     // Read off the stylesheet rather than restated here, so --plane and the browser chrome cannot drift.
-    // Folded into label() because label() is the one function every path that changes the theme already
-    // calls -- the toggle, the OS-preference listener, and the initial agreement with the head script.
+    // This is also what retires the head script's eight-entry map: after first paint the computed value
+    // exists, so the map is never consulted again and cannot be the thing that is wrong.
     const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
     if (plane) document.getElementById("tc").content = plane;
     paintDeployBadge();
@@ -3495,18 +3745,52 @@ function wire() {
     // The choice is the point: it used to last until the next navigation, so a reader who needs light
     // re-picked it on every page load and every shared filter link.
     try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
-    label();
+    paintSettings();
   };
-  // The head script already resolved the theme; this only has to agree with it, since the markup's
-  // hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
-  label();
+  // The theme axis, and it writes the same key the head script reads. Not validated here the way the head
+  // script validates it: the only values that reach this are the four `data-skin` attributes in the markup,
+  // and the page cannot offer a theme it has no block for. The head script is where an unknown name has to
+  // be rejected, because that is the one place a value can arrive from a previous release.
+  const setSkin = (s) => {
+    document.documentElement.dataset.skin = s;
+    try { localStorage.setItem("atlas-skin", s); } catch (e) {}
+    paintSettings();
+  };
+  for (const t of ths) t.onclick = () => setSkin(t.dataset.skin);
+  // `hidden` is the state, and the attribute rather than a class deliberately: it takes the panel out of
+  // the accessibility tree as well as off the screen, which is what a closed menu should be. aria-expanded
+  // on the button is the same fact said to a screen reader.
+  const setOpen = (open) => {
+    menu.hidden = !open;
+    setbtn.setAttribute("aria-expanded", String(open));
+  };
+  setbtn.onclick = () => setOpen(menu.hidden);
+  // Escape from anywhere inside, and focus goes back to the button that opened it -- a menu that closes
+  // and leaves focus on a removed element drops a keyboard reader at the top of the document.
+  menu.addEventListener("keydown", ev => {
+    if (ev.key === "Escape") { setOpen(false); setbtn.focus(); }
+  });
+  // Both of these ask the same question -- did attention leave the menu -- and they have to be two
+  // listeners because a pointer and a keyboard leave differently: a click lands somewhere else without
+  // moving focus, and Tab past the last theme moves focus without a click. `closest` on the wrapper and
+  // not on the panel, so pressing the button that opened it is not "leaving" and does not fight
+  // `setbtn.onclick` for who gets to close it. Guarded because `focusin` can target the document itself.
+  for (const kind of ["click", "focusin"])
+    document.addEventListener(kind, ev => {
+      const inside = ev.target && ev.target.closest && ev.target.closest(".setwrap");
+      if (!menu.hidden && !inside) setOpen(false);
+    });
+  // The head script already resolved both axes; this only has to agree with it, since the markup's
+  // hardcoded "Light theme" and pressed Graphite are wrong for any reader who chose otherwise.
+  paintSettings();
   // Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a
-  // theme they explicitly chose because the sun went down is worse than not following at all.
+  // theme they explicitly chose because the sun went down is worse than not following at all. Only the
+  // mode axis: nothing in `prefers-*` has an opinion about which of four palettes a reader wants.
   try {
     matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
       if (localStorage.getItem("theme")) return;
       document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
-      label();
+      paintSettings();
     });
   } catch (e) {}
 

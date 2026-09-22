@@ -136,7 +136,16 @@ FILL = sorted(AS_FILL - set(BACKDROPS) - {"onbar", "grid"})
 
 # ---------------------------------------------------------------- the assertions
 BODY, LARGE = 4.5, 3.0
-for mode, T in (("dark", DARK), ("light", LIGHT)):
+
+
+def audit(mode: str, T: dict[str, str]) -> None:
+    """Every ratio the page owes a reader, for one token set.
+
+    A function rather than the two-iteration loop this used to be, because there are eight token sets
+    now -- four themes on the `data-skin` axis times light and dark -- and the whole argument for
+    offering eight is that not one of them gets to be the one nobody measured. `mode` is only ever a
+    label here; nothing below branches on it.
+    """
     # Every token drawn as text, on every backdrop it can land on. Which backdrop a given rule actually
     # uses is not tracked, and deliberately: rows are striped, cards sit on the plane, and the same
     # `.stale` span appears in a table row and in a card. Requiring all three is the honest reading.
@@ -187,13 +196,28 @@ for mode, T in (("dark", DARK), ("light", LIGHT)):
     # broken. Worth stating that this palette is the better of the two on this axis: its worst pair is
     # 1.224 against the old theme's 1.168, and an earlier draft of this file failed it at a floor of
     # 1.25 that nothing in the repository's history would have passed.
+    #
+    # This floor is also the one that decided the shape of the three opt-in themes. Flattening the v2
+    # prototype's `rgba(255,255,255,.13)` border onto its own surface gives #272931, which measures
+    # 1.146 on its band -- under this floor, by four thousandths. A translucent --grid would not have
+    # been measurable here at all, so the themes keep opaque borders and spend their translucency on
+    # --panel, which is checked a different way further down.
     for b in BACKDROPS:
         atleast(f"{mode}: --grid is visible on --{b}", ratio(T["grid"], T[b]), 1.15)
     atleast(f"{mode}: --plane is distinguishable from --surface", ratio(T["plane"], T["surface"]), 1.03)
 
+
+for mode, T in (("dark", DARK), ("light", LIGHT)):
+    audit(mode, T)
     # The visual brief is graphite rather than absolute black and soft grey rather than absolute white.
     # Pinning the two endpoints catches the real regression this pass is for: a reader that receives the
     # old stark base while all the intermediate colours still happen to clear contrast.
+    #
+    # Graphite only, and that is now a statement about where graphite lives rather than about which
+    # theme is the default. It is declared on `:root`, so these four pins are also what holds `:root`
+    # to being the graphite dark palette -- which the two icon-pixel checks further down depend on
+    # without saying so, since they compare a generated PNG against `DARK`. Moving graphite off `:root`
+    # fails here first, which is the right place to find out.
     want_surface = "#090A0D" if mode == "dark" else "#F2F4F7"
     want_ink = "#F7F8FA" if mode == "dark" else "#14171C"
     check(f"{mode}: --surface is the intended graphite/soft-grey base", T["surface"], want_surface)
@@ -202,6 +226,128 @@ for mode, T in (("dark", DARK), ("light", LIGHT)):
           "#D6A034" if mode == "dark" else "#6557C8")
     check(f"{mode}: --warn stays distinct from the action colour", T["warn"],
           "#EF7D86" if mode == "dark" else "#875A19")
+
+# ---------------------------------------------------------------- the six opt-in theme blocks
+# Three themes a reader can choose from the Settings menu, each declared twice: `html[data-skin=X]` for
+# its dark values and `html[data-skin=X][data-theme=light]` for its light ones. Nothing here is checked
+# any more gently than graphite is -- `audit()` above is the same function, on the same role map, at the
+# same floors. That is the whole warrant for shipping four themes rather than one: a theme is a set of
+# thirteen colours that has been through this, and a theme that has not been through this is a mood.
+SKINS = ("glass", "terminal", "prism")
+SKIN = {}
+for skin in SKINS:
+    SKIN[(skin, "dark")] = block("html[data-skin=" + skin + "]{")
+    SKIN[(skin, "light")] = block("html[data-skin=" + skin + "][data-theme=light]{")
+
+# Pinned, because every assertion in this section iterates `SKIN` and an empty dict passes all of them.
+check("there are eight token sets in all", 2 + len(SKIN), 8)
+for (skin, mode), T in sorted(SKIN.items()):
+    # Same thirteen names, not merely thirteen of something. `var(--x)` with no fallback resolves to
+    # nothing, and the light block of a skin sits *after* its dark block on the same element -- so a
+    # token the light block forgets is not inherited from graphite, it is inherited from that skin's own
+    # dark value, and the result is one near-black cell in an otherwise pale page.
+    check(f"{skin} {mode} declares graphite's thirteen tokens and no others", sorted(T), sorted(DARK))
+    audit(f"{skin} {mode}", T)
+
+# And that the themes are actually different from each other, which no ratio above can ask. Without this
+# a copy-paste of graphite under three new selectors passes every contrast assertion in this file.
+for skin in SKINS:
+    true(f"{skin} is not graphite repainted", SKIN[(skin, "dark")] != DARK)
+    true(f"{skin} light is not graphite light repainted", SKIN[(skin, "light")] != LIGHT)
+check("no two themes share a dark --surface",
+      len({T["surface"] for (s, m), T in SKIN.items() if m == "dark"} | {DARK["surface"]}), 4)
+
+# ---------------------------------------------------------------- the structural tokens
+# The four tokens that are not colours: the font stack, the background wash, the panel fill and the
+# backdrop filter. They carry no contrast, which is exactly why they are where the frosted look lives --
+# see the note beside them in the generator.
+STRUCT = ("ui", "wash", "panel", "bdf")
+
+
+def raw(selector: str) -> str:
+    i = SRC.index(selector)
+    return SRC[i + len(selector):SRC.index("}", i)]
+
+
+ROOT_RAW = raw(":root{")
+for tok in STRUCT:
+    true(f"graphite declares --{tok} on :root, where it needs no attribute to be true",
+         f"--{tok}:" in ROOT_RAW)
+# The two that must not change under graphite, because graphite is what a reader who has chosen nothing
+# receives: the page's own font stack, and a panel that is opaque. `none` and not `blur(0px)`: a non-none
+# backdrop-filter makes the element a containing block and a stacking context, which would re-parent the
+# mascot's speech bubble and re-rank the pinned bar for every reader on the site.
+true("graphite's --ui is the font stack the page shipped with",
+     '--ui:"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;' in ROOT_RAW)
+true("graphite's --panel is the opaque plane, so the default page is unchanged",
+     "--panel:var(--plane)" in ROOT_RAW)
+true("graphite asks for no backdrop filter at all", "--bdf:none" in ROOT_RAW)
+true("--wash is off by default", "--wash:none" in ROOT_RAW)
+
+# --panel is the one translucent token, and this is what keeps it checkable. Every panel on the page sits
+# on --surface and is filled from --plane, so a composite of the two lies between two backdrops that ARE
+# in the checked set above -- but only if the rgba really is --plane's own channels. A hand-typed rgba is
+# the exact kind of copy that drifts one digit and silently stops being a blend of anything on the page.
+PANEL = re.compile(r"--panel:\s*rgba\((\d+),(\d+),(\d+),\s*\.\d+\)")
+for (skin, mode), T in sorted(SKIN.items()):
+    body = raw("html[data-skin=" + skin + "]{" if mode == "dark"
+               else "html[data-skin=" + skin + "][data-theme=light]{")
+    m = PANEL.search(body)
+    true(f"{skin} {mode} fills its panels from a translucent --panel", bool(m))
+    if m:
+        got = "#%02X%02X%02X" % tuple(int(g) for g in m.groups())
+        check(f"{skin} {mode}: --panel is --plane's own channels, so the blend stays measurable",
+              got, T["plane"])
+# The structural tokens a skin may leave alone, and the two it may not. --ui and --bdf are mode-
+# independent, so the skin block declares them once and the light block inherits from it; --wash and
+# --panel are not, because an alpha that reads as frosted over near-black is a smear over near-white.
+for skin in SKINS:
+    true(f"{skin} declares its own font stack", "--ui:" in raw("html[data-skin=" + skin + "]{"))
+    true(f"{skin} declares its own backdrop filter", "--bdf:" in raw("html[data-skin=" + skin + "]{"))
+    true(f"{skin} restates --wash for light, where the same alpha would be a smear",
+         "--wash:" in raw("html[data-skin=" + skin + "][data-theme=light]{"))
+
+# ---------------------------------------------------------------- the menu, and the two enumerations
+# `atlas-skin` is reader-writable storage that outlives the release that wrote it, so the head script
+# validates what it reads against a map of the themes that exist -- and that map is the second place the
+# list of themes is written down. Both directions are checked, because only one of them is the direction
+# that bites: a theme with a block and no map entry cannot be chosen, and a theme with a map entry and no
+# block is a name in the menu that paints graphite.
+HEADMAP = dict(re.findall(r"(\w+): \{dark: \"(#[0-9A-F]{6})\"", SRC))
+check("the head script's map names exactly the themes that have blocks",
+      sorted(HEADMAP), sorted(("graphite",) + SKINS))
+for skin, dark_plane in sorted(HEADMAP.items()):
+    T = DARK if skin == "graphite" else SKIN[(skin, "dark")]
+    check(f"the pre-paint literal for {skin} dark is its own --plane", dark_plane, T["plane"])
+LIGHTMAP = dict(re.findall(r"(\w+): \{dark: \"#[0-9A-F]{6}\", light: \"(#[0-9A-F]{6})\"", SRC))
+for skin, light_plane in sorted(LIGHTMAP.items()):
+    T = LIGHT if skin == "graphite" else SKIN[(skin, "light")]
+    check(f"the pre-paint literal for {skin} light is its own --plane", light_plane, T["plane"])
+check("every theme has a light literal too", sorted(LIGHTMAP), sorted(HEADMAP))
+
+# The third place, and the one that cannot be avoided: a swatch for a theme the page is not wearing
+# cannot read that theme's custom properties, because they are declared on <html> and one skin is on
+# <html> at a time. So the menu carries twelve literal hex values, and this is what makes them a copy of
+# something rather than a decision taken twice.
+MENU = re.findall(r'<button type="button" class="thb" data-skin="(\w+)"(.*?)</button>', SRC, re.S)
+check("the menu offers one button per theme", [s for s, _ in MENU], list(("graphite",) + SKINS))
+for skin, markup in MENU:
+    T = DARK if skin == "graphite" else SKIN[(skin, "dark")]
+    check(f"{skin}'s swatch is its own surface, action and link, in that order",
+          re.findall(r"background:(#[0-9A-F]{6})", markup),
+          [T["surface"], T["bar"], T["link"]])
+# Exactly one pressed in the markup, and it is the default: the floor a reader gets with JavaScript off,
+# where `paintSettings()` never runs and the menu is whatever the generator wrote.
+check("the markup presses exactly one theme",
+      [s for s, m in MENU if 'aria-pressed="true"' in m], ["graphite"])
+true("<html> carries the same theme as its floor, beside the dark-mode one",
+     'data-theme="dark" data-skin="graphite"' in SRC)
+# The panel is hidden by the attribute rather than by a class, so it leaves the accessibility tree with
+# the screen, and it is named in the print hide list in its own right. `header nav` already contains it,
+# which is the trap: a hide-list scoped by containment stops being one the moment the containment moves,
+# and this file has watched that happen twice -- to `.subbar` and to `.dstrip`.
+true("the menu is hidden by the attribute, which also takes it out of the a11y tree",
+     '<div class="setmenu" id="setmenu" hidden>' in SRC)
 
 # ---------------------------------------------------------------- the two literals that duplicate --plane
 # The pre-paint script sets `theme-color` before the stylesheet is parsed, so it cannot read the
@@ -239,10 +385,16 @@ SCRIPTS = PAGE.parent
 
 
 def palette_text(name: str) -> str:
-    """The two rules verbatim, from `:root{` to the close of the light block."""
+    """Every theme block verbatim, from `:root{` to the close of the last one.
+
+    Eight rules now rather than two, and the slice deliberately runs to the end of the last skin block
+    instead of stopping at the light one. A copy that carried graphite faithfully and got glass wrong
+    would be a page whose facet and detail views revert to graphite's colours for a reader who chose
+    glass -- which is the same class of defect this check was written for, one theme further out.
+    """
     src = (SCRIPTS / name).read_text(encoding="utf-8")
     i = src.index(":root{")
-    j = src.index("}", src.index("html[data-theme=light]{")) + 1
+    j = src.index("}", src.index("html[data-skin=prism][data-theme=light]{")) + 1
     return src[i:j]
 
 
@@ -578,7 +730,7 @@ true("no view's row paint reaches the panel",
 HIDDEN_IN_PRINT = {sel.strip() for group in re.findall(r"([^{}]+)\{display:none\}", PRINT)
                    for sel in group.split(",")}
 true("the panel itself stays on the sheet", "#cmp" not in HIDDEN_IN_PRINT)
-for control in ("#cmp .ch .sp", "#cmp .unpin", ".pin"):
+for control in ("#cmp .ch .sp", "#cmp .unpin", ".pin", "#setmenu"):
     true("printing drops a control nobody can press: " + control, control in HIDDEN_IN_PRINT)
 true("printing releases the horizontal scroller",
      re.search(r"#cmp \.scroll\{[^}]*overflow-x:visible", PRINT) is not None)

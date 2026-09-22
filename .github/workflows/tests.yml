@@ -1,4 +1,4 @@
-# The verification suite, in CI. Runs `node tests/run.mjs` -- all nineteen harnesses, 2,789 assertions --
+# The verification suite, in CI. Runs `node tests/run.mjs` -- all nineteen harnesses, 3,133 assertions --
 # and fails the job when anything is red. It writes nothing, commits nothing and deploys nothing.
 #
 # That count and the one in `tests/README.md` are the same claim written twice, and they drifted apart the
