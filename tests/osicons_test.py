@@ -305,12 +305,16 @@ eq("...so no page draws a mark it has no sprite for", spriteless[:6], [])
 eq("no page defines the same symbol twice", doubled[:6], [])
 # And the other direction, which is 1.4 KB of dead weight per page rather than a wrong answer -- but named
 # exactly rather than tolerated as a count, because the one legitimate case is a specific page for a
-# specific reason. `docs/index.html` builds its rows and chips in the browser, so its sprite is referenced
-# only after the script runs. Every other page either draws a mark or must not carry the sprite: the
+# specific reason. `docs/catalog/index.html` builds its rows and chips in the browser, so its sprite is
+# referenced only after the script runs. Every other page either draws a mark or must not carry the sprite: the
 # collections hub does not (it lists collections, not projects) and a detail page with the platform table
 # switched off does not, which is 1.8 MB of path data the flag is there to avoid committing.
-eq("the only page carrying a sprite it does not statically draw from is the client-rendered index",
-   unused, ["docs/index.html"])
+#
+# The path moved with the page: this was `docs/index.html` until the root became the shelves homepage. The
+# homepage is NOT in this list and must not be -- it draws its marks at build time, so it carries a sprite it
+# statically draws from and belongs with the prerendered pages in the `marked` count above.
+eq("the only page carrying a sprite it does not statically draw from is the client-rendered catalogue",
+   unused, ["docs/catalog/index.html"])
 
 # Every id the pages reference is one this module actually declares -- the reverse direction, which
 # catches a hand-typed `#oi-mac` where `#oi-macos` was meant on a page that happens to define both.

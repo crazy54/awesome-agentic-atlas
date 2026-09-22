@@ -42,11 +42,29 @@ why, instead of being shown a date that came from somewhere else.
 
 WHAT IS AND IS NOT PRECACHED
 
-Precached at install, ~66 KB: the root shell, the manifest and `pages.css`. Everything the page needs to
-paint is inside `index.html` already -- the CSS and all of the JavaScript are inline, by a decision
-`19_pages.py` explains -- so the entire render path is one file. `pages.css` is not needed by the root at
-all; it is the 8 KB stylesheet the 156 prerendered facet pages share, and it is precached so that a facet
-page kept in the runtime cache renders as itself rather than as unstyled markup.
+Precached at install: the root shell, the manifest and `pages.css` -- 358 KB on disk, 53 KB over the wire,
+which is the number that matters because Pages serves everything here gzipped.
+
+The root shell is the shelves homepage, which `scripts/31_home.py` writes. It used to be the catalogue from
+`19_pages.py`, and that page moved to `catalog/index.html`. Two things about this list changed with it, in
+opposite directions, and they very nearly cancel:
+
+  * The shell got bigger. 142 KB became 326 KB, because the homepage ships the artwork, prose and pills for
+    every card it draws instead of fetching 569 KB of `data.json` and building rows in the browser. Over the
+    wire it is 40 KB against 42 KB: repeated card markup compresses about eight to one, so the install cost
+    went up by two kilobytes, not by a hundred and eighty. Measured, not estimated -- and worth re-measuring
+    rather than trusting this sentence, because a shell that stops compressing is a real regression that no
+    on-disk figure would show.
+
+  * `pages.css` stopped being a courtesy. The old root inlined every rule it needed and this 30 KB file was
+    precached only so that a facet page pulled from the runtime cache rendered as itself rather than as
+    unstyled markup. The homepage `<link>`s it -- that is where its eight token sets live -- so it is now on
+    the root's own critical render path, and an install that skipped it would give an offline reader an
+    unstyled front page. Do not drop it from this list on the old argument; the old argument is gone.
+
+`catalog/` is deliberately NOT precached, on exactly the argument the facet pages get below: it is 150 KB
+nobody asked for at install time, it carries no unique render path, and it lands in the runtime page cache
+the first time it is actually visited.
 
 Not precached, deliberately:
 
@@ -787,9 +805,12 @@ def main() -> None:
     # This stage hashes the shell, so it cannot run before the stage that writes it. The failure without
     # this check is not a crash but a version computed from last week's `index.html`, which is a cache
     # that never invalidates -- so it is worth one explicit sentence.
+    # `31_home.py`, not `19_pages.py`. The root shell is the shelves homepage; `19_pages.py` writes
+    # `catalog/index.html`, which this stage does not precache and does not hash -- so running that stage and
+    # not this one leaves the worker describing the previous homepage, and running neither fails here.
     shell = OUT / "index.html"
     if not shell.exists():
-        sys.exit("docs/index.html is missing. Run scripts/19_pages.py first: this stage stamps the "
+        sys.exit("docs/index.html is missing. Run scripts/31_home.py first: this stage stamps the "
                  "worker with a hash of the shell it precaches.")
     if not (OUT / "pages.css").exists():
         sys.exit("docs/pages.css is missing. Run scripts/20_landing.py first: the facet pages' "

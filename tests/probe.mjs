@@ -23,7 +23,11 @@ const ROOT = fileURLToPath(new URL("..", import.meta.url));
 // `AAA_PAGE` is a development escape hatch, not part of the contract: it lets the text scans at the end of
 // this file be pointed at an unsubstituted template while `scripts/pagemin.py` is being worked on. The
 // script cannot boot from one -- `__COUNT__` is not a number -- so nothing above the scans will run.
-const PAGE = process.env.AAA_PAGE || join(ROOT, "docs/index.html");
+// `docs/catalog/index.html`, not `docs/index.html`: this harness boots the catalogue's page script, and the
+// catalogue moved one level down when the root became the shelves homepage `scripts/31_home.py` writes. The
+// root page has no `data.json` fetch, no view toggle and no filter state, so pointing this at it would not
+// fail loudly -- it would find none of the functions below and report on a page nothing here describes.
+const PAGE = process.env.AAA_PAGE || join(ROOT, "docs/catalog/index.html");
 const html = readFileSync(PAGE, "utf8");
 // `AAA_DATA` is the other half of the same hatch, and it exists for a case `AAA_PAGE` alone cannot serve:
 // running this harness against a rebuild the machine cannot check out. Two rows in the atlas are named with
@@ -248,7 +252,7 @@ ok("the README offers an Atlas Leaderboard badge that links to the leaderboard",
    lbBadge[2] === "mega-list/leaderboard.md", lbBadge ? lbBadge[0] : "no leaderboard badge");
 ok("the old Shields.io badge provider is gone", !readme.includes("img.shields.io"));
 ok("the web masthead promotes the leaderboard, all-project directory, and browse section",
-   html.includes("/blob/main/mega-list/leaderboard.md") && html.includes('href="repo/"') &&
+   html.includes("/blob/main/mega-list/leaderboard.md") && html.includes('href="../repo/"') &&
    html.includes('href="#browse"'), deployed.slice(0, 240));
 // Was `length === 5`, which went red the moment "Rising" was added and told you a number rather than a
 // property. What actually matters is that the keys and the menu agree: a key with no <option> is a sort
@@ -549,8 +553,15 @@ A.state.shown = 60; A.render();
 const titles = [...A.OUT.matchAll(/<a class="nm" href="([^"]*)"/g)].map(m => m[1]);
 const outs = [...A.OUT.matchAll(/<a class="nwo" href="([^"]*)"/g)].map(m => m[1]);
 const shots = [...A.OUT.matchAll(/<td class="shot"><a href="([^"]*)"/g)].map(m => m[1]);
+// `../repo/`, because this page is `catalog/index.html` now and the detail tree stays at the site root. The
+// prefix is named once here and stripped before the slug rules below -- not for tidiness: `badSlug` rejects a
+// `./` anywhere in the URL, and `../` contains one, so leaving it on would fail every row for a reason that
+// has nothing to do with slugs. Asserted as its own property instead, which is the half a strip would hide.
+const UP = "../";
 ok("every row title links to a local detail page",
-   titles.length > 0 && titles.every(h => /^repo\/[^"]+\/$/.test(h)), titles[0]);
+   titles.length > 0 && titles.every(h => new RegExp(`^${UP}repo/[^"]+/$`).test(h)), titles[0]);
+ok("...and does so relative to the site root, one level up from this page",
+   titles.every(h => h.startsWith(UP)), titles.find(h => !h.startsWith(UP)));
 ok("every row still has a way out to the repository",
    outs.length === titles.length && outs.every(h => /^https?:\/\//.test(h)), outs[0]);
 ok("the shot link goes where the title goes, which is what lets it stay aria-hidden",
@@ -561,19 +572,21 @@ ok("the shot link goes where the title goes, which is what lets it stay aria-hid
 // rows in the 39 lists are named that way, so the page's own `detailURL` has to rewrite them exactly as
 // the stage's `segment()` does or the rows link to a 404.
 const badSlug = h => h !== h.toLowerCase() || /\/\./.test(h) || /\.\//.test(h);
+const slugs = titles.map(h => h.slice(UP.length));
 ok("detail slugs are lowercased and leading and trailing dots rewritten",
-   titles.every(h => !badSlug(h)), titles.find(badSlug));
+   slugs.every(h => !badSlug(h)), slugs.find(badSlug));
 // The same three fixtures `tests/live_test.py` pins the stage's `segment()` to, spelled as URLs. Two files
 // asserting one literal is what makes a one-sided edit to the rule show up as a failure instead of as 8,856
-// working links and two 404s.
+// working links and two 404s. The expected values carry `UP` because `detailURL` is what emits it -- pinning
+// them without it would let the prefix be dropped from the page and still pass here.
 for (const [nwo, want] of [
   ["Hams-Ollo/Project-S.O.C.R.A.T.E.S.", "repo/hams-ollo/project-s.o.c.r.a.t.e.s-dot/"],
   ["nul/CON.md", "repo/dev-nul/dev-con.md/"],
   ["zircote/.Claude", "repo/zircote/dot-claude/"],
   ["foo/Bar.js", "repo/foo/bar.js/"],
-]) ok(`the page slugs ${nwo} the way the stage does`, A.detailURL(nwo) === want, A.detailURL(nwo));
+]) ok(`the page slugs ${nwo} the way the stage does`, A.detailURL(nwo) === UP + want, A.detailURL(nwo));
 ok("the footer offers the project directory as a crawlable path",
-   /<a href="repo\/">/.test(html), "not in the page shell");
+   /<a href="\.\.\/repo\/">/.test(html), "not in the page shell");
 
 // ---- command palette -------------------------------------------------------------------------------
 const dlg = document.getElementById("pal");
@@ -737,10 +750,11 @@ A.state.sort = "relevance"; A.state.q = "";
 // pre-paint script sets the meta's content, so a meta that moved below it would silently do nothing.
 const iTc = html.indexOf('<meta name="theme-color" id="tc"');
 const iPre = html.indexOf('var t = localStorage.getItem("theme")');
-ok("the manifest is linked", /<link rel="manifest" href="manifest\.webmanifest">/.test(html));
+ok("the manifest is linked", /<link rel="manifest" href="\.\.\/manifest\.webmanifest">/.test(html));
 ok("the manifest link is relative, so the Pages path prefix applies",
    !/<link rel="manifest" href="\//.test(html));
-ok("an apple-touch-icon is linked", /<link rel="apple-touch-icon" href="apple-touch-icon\.png">/.test(html));
+ok("an apple-touch-icon is linked",
+   /<link rel="apple-touch-icon" href="\.\.\/apple-touch-icon\.png">/.test(html));
 ok("there is exactly one theme-color meta",
    (html.match(/name="theme-color"/g) || []).length === 1);
 ok("the theme-color meta precedes the script that writes it", iTc > 0 && iPre > 0 && iTc < iPre,
@@ -763,15 +777,42 @@ ok("toggling back repaints it again", document.documentElement.dataset.theme ===
    tc.content === planeOf("dark"), tc.content);
 
 // The registration, which the harness cannot execute -- there is no service worker in Node -- so this
-// asserts the two guards that decide whether it ever runs, and that it is the last script on the page.
-const reg = html.match(/<script>\s*if \("serviceWorker" in navigator[\s\S]*?<\/script>/);
-ok("the service worker is registered", !!reg);
+// asserts the guards that decide whether it ever runs.
+//
+// Read off the HOMEPAGE, not off the page above. A worker's scope is the directory of its own script, so one
+// registration at the site root covers `catalog/`, `repo/`, `topic/` and the rest; registering from inside
+// `catalog/` would claim a narrower scope over the same file. It moved when the catalogue did.
+//
+// The four clauses below are the reason this block is worth carrying across rather than re-deriving: each one
+// is invisible when absent. Without the `file://` guard a contributor gets a SecurityError; without
+// `updateViaCache: "none"` the worker itself comes from a `max-age=600` cache; without the empty `catch` a
+// rejected registration reaches the reader as an unhandled rejection. A move that quietly dropped any of
+// them would look exactly like a move that worked.
+//
+// `AAA_HOME` is the third override and is here for the reason `AAA_PAGE` is: both pages this harness reads
+// are build products, so a checkout where one has been rebuilt and the other has not is the ordinary state
+// of working on either. Without it these seven assertions could first be exercised only after a full CI
+// build had landed -- which is to say, only after the commit that needed them.
+const homeHTML = (() => {
+  try { return readFileSync(process.env.AAA_HOME || join(ROOT, "docs/index.html"), "utf8"); }
+  catch { return ""; }
+})();
+ok("the homepage is there to check the registration against", homeHTML.length > 1000,
+   `${homeHTML.length} bytes -- docs/index.html is written by scripts/31_home.py`);
+const reg = homeHTML.match(/<script>\s*if \("serviceWorker" in navigator[\s\S]*?<\/script>/);
+ok("the service worker is registered, from the root and not from the catalogue", !!reg);
+ok("...and the catalogue does not register a second one",
+   !/if \("serviceWorker" in navigator/.test(html));
 ok("registration is guarded against file://", !!reg && /location\.protocol !== "file:"/.test(reg[0]));
 ok("registration waits for load", !!reg && /addEventListener\("load"/.test(reg[0]));
 ok("the worker is never read from the HTTP cache", !!reg && /updateViaCache: "none"/.test(reg[0]));
 ok("a failed registration cannot reach the reader", !!reg && /\.catch\(\(\) => \{\}\)/.test(reg[0]));
-ok("registration comes after the application script",
-   !!reg && html.indexOf(reg[0]) > html.indexOf("function relevance"));
+ok("an unchanged script URL still queues an update job", !!reg && /reg\.update\(\)/.test(reg[0]));
+// Was "comes after the application script", anchored on `function relevance` -- a function the homepage does
+// not have. The property that assertion was really about is that registering the worker never competes with
+// paint, and on this page that is "after the content it would compete with".
+ok("registration comes after the page's own content",
+   !!reg && homeHTML.indexOf("</main>") > 0 && homeHTML.indexOf(reg[0]) > homeHTML.indexOf("</main>"));
 
 // ------------------------------------------------------------------------------- the cards view
 // The layout itself is a stylesheet, so it is asserted against the stylesheet -- there is no computed
@@ -1888,7 +1929,7 @@ ok("...and it is either the rendered card or the documented GitHub fallback",
 ok("...and in the JS string that builds the same URL per row",
    /"https:\/\/opengraph\.githubassets\.com\/1\/"/.test(html));
 ok("the favicon points to the local Archie SVG",
-   /<link rel="icon" href="favicon\.svg" type="image\/svg\+xml">/.test(html));
+   /<link rel="icon" href="\.\.\/favicon\.svg" type="image\/svg\+xml">/.test(html));
 ok("the file:// message survives inside a JS string with markup in it",
    /<code>file:\/\/<\/code>/.test(html));
 ok("the footer's four repository links survive",

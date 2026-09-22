@@ -498,7 +498,7 @@ def render(coll: dict, others: list[dict], data: dict) -> str:
   {chips}
   <h2>Or browse the whole atlas</h2>
   <p>{len(data["rows"]):,} projects, no opinions, every filter in the URL.</p>
-  <a class="chip" href="{rel(depth)}">The interactive index</a>
+  <a class="chip" href="{rel(depth, 'catalog/')}">The interactive index</a>
   <a class="chip" href="{rel(depth, 'collections/')}">All collections</a>
 </nav>
 </div></main>

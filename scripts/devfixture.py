@@ -421,7 +421,9 @@ def main() -> None:
         return
     print()
     built = build(fx, out, b19)
-    print(f"\nrendered {out / 'docs' / 'index.html'}")
+    # `catalog/`, which is where `19_pages.main()` writes since the site grew a homepage. Printed as the real
+    # path rather than the directory, because the next thing anyone does with this line is open it.
+    print(f"\nrendered {out / 'docs' / 'catalog' / 'index.html'}")
     if args.verify and verify(built):
         raise SystemExit(1)
 

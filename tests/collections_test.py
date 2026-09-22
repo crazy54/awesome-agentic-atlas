@@ -498,7 +498,14 @@ true("...and passes them to the sitemap it owns", bool(call) and "colls" in call
      call.group(1) if call else "20_landing.py has no sitemap(pages, data[\"snapshot\"], ...) call")
 
 # Reachability. A page nothing links to is a page only a sitemap knows about.
-for name, path in (("the index", ROOT / "docs" / "index.html"),
+#
+# Both entry points are checked. They used to be one page: `docs/index.html` was the catalogue, and when the
+# root became the shelves homepage the catalogue moved to `docs/catalog/index.html`. Listing only the root
+# would leave the busiest page on the site unchecked, and listing only the catalogue would leave the page every
+# reader arrives on unchecked. The substring is matched without its prefix on purpose -- the homepage writes
+# `collections/` and the catalogue `../collections/`, and what this assertion is about is that the link exists.
+for name, path in (("the homepage", ROOT / "docs" / "index.html"),
+                   ("the catalogue", ROOT / "docs" / "catalog" / "index.html"),
                    ("a topic page", ROOT / "docs" / "topic" / "agent-skills" / "index.html"),
                    ("the repo hub", ROOT / "docs" / "repo" / "index.html")):
     text = path.read_text(encoding="utf-8")

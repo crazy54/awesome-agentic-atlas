@@ -1129,7 +1129,12 @@ def sitemap(pages: list[Page], snapshot: str, extra: list[str] = ()) -> str:
     No `changefreq` and no `priority`. Google ignores both, and a number invented for every page is
     noise in a file whose whole value is that everything in it is checkable.
     """
-    locs = [SITE] + [p.url for p in pages] + list(extra)
+    # The root, then the catalogue, then this stage's pages. `catalog/` is hard-coded rather than passed in
+    # `extra` because it is not derived from anything: it is the single page `19_pages.py` writes, and it has
+    # no other route into this file -- `pages` is this stage's own plan and `extra` is the collections and
+    # Discover URLs. Leaving it to a caller is how the largest page on the site ends up missing from the
+    # sitemap and nobody notices, because a sitemap cannot report an absence.
+    locs = [SITE, SITE + "catalog/"] + [p.url for p in pages] + list(extra)
     body = "\n".join(f"  <url><loc>{esc(u)}</loc><lastmod>{esc(snapshot)}</lastmod></url>"
                      for u in locs)
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'

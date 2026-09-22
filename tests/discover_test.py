@@ -436,15 +436,17 @@ eq("a ledger that is not there loads as an empty one", d.load(TMP / "nothing.jso
 eq("...and one written before the week key existed still loads",
    d.load(TMP / "old.json"), {"week": "", "shown": {"a/b": "2026-09-13"}})
 
-print("\n-- the copies: the strip on the index, and the stage that owns the original")
+print("\n-- the copies: the strip on the catalogue, the band on the homepage, and the stage that owns both")
 
-# Source text, not built output. The strip lives in `scripts/19_pages.py`, and that stage cannot run on this
-# machine -- it needs the crawl cache CI holds -- so `docs/index.html` in any checkout predates whatever was
-# last changed about the strip. An assertion here that read the built page would fail for the whole gap
-# between a change and the next successful build, which is why `tests/probe.mjs` gets the half of this that
-# needs a real evaluated function and this file gets the half that is a question about two files on disk.
+# Source text, not built output. The strip lives in `scripts/19_pages.py` and the band in `scripts/31_home.py`,
+# and neither stage can run on this machine -- both need the crawl cache CI holds -- so `docs/catalog/index.html`
+# and `docs/index.html` in any checkout predate whatever was last changed about either. An assertion here that
+# read the built pages would fail for the whole gap between a change and the next successful build, which is
+# why `tests/probe.mjs` gets the half of this that needs a real evaluated function and this file gets the half
+# that is a question about files on disk.
 PAGES = (SCRIPTS / "19_pages.py").read_text(encoding="utf-8")
 STAGE = (SCRIPTS / "19d_discover.py").read_text(encoding="utf-8")
+HOME = (SCRIPTS / "31_home.py").read_text(encoding="utf-8")
 
 
 def jsfn(src: str, name: str) -> str:
@@ -459,15 +461,23 @@ def jsfn(src: str, name: str) -> str:
     return src[at:end] if src[end - 1] == ";" else src[at:src.index("\n  };\n", at) + len("\n  };")]
 
 
-# THE FOUR FUNCTIONS THAT EXIST TWICE. `19_pages.py`'s `DSTRIP` is a copy of four members of the stage's
-# `DISCOVER CORE` block, taken rather than shared because the alternative is the index loading a second
-# script to answer one question. A copy is only safe if something notices when it stops being one, and this
-# is that something: the text, character for character, with the comments left where each copy has them.
-for name in ["dayIn", "asUTC", "daysBetween", "forDay"]:
-    eq(f"the index's {name}() is the stage's {name}(), character for character",
-       jsfn(PAGES, name), jsfn(STAGE, name))
-true("...and there are four of them, so the loop above is not iterating over nothing",
-     all(len(jsfn(PAGES, n)) > 40 for n in ["dayIn", "asUTC", "forDay"]))
+# THE FOUR FUNCTIONS THAT EXIST THREE TIMES. `19_pages.py`'s `DSTRIP` and `31_home.py`'s `DAYCHECK_JS` are
+# each a copy of four members of the stage's `DISCOVER CORE` block, taken rather than shared because the
+# alternative is a page loading a second script to answer one question: what is the date in the zone the plan
+# names. A copy is only safe if something notices when it stops being one, and this is that something: the
+# text, character for character, with the comments left where each copy has them.
+#
+# Both copies against the stage, rather than a chain of catalogue-to-homepage-to-stage. Equality is
+# transitive, so either shape catches any single drift -- but this one names the original in every failure
+# message, and the stage is the file whose `plan()` decides what the other two have to agree with. A chain
+# would report "the homepage disagrees with the catalogue" on a day somebody edited the stage, which sends
+# the reader to the two files that are not the cause.
+for src, whose in [(PAGES, "catalogue"), (HOME, "homepage")]:
+    for name in ["dayIn", "asUTC", "daysBetween", "forDay"]:
+        eq(f"the {whose}'s {name}() is the stage's {name}(), character for character",
+           jsfn(src, name), jsfn(STAGE, name))
+    true(f"...and there are four of them in the {whose}, so the loop above is not iterating over nothing",
+         all(len(jsfn(src, n)) > 40 for n in ["dayIn", "asUTC", "forDay"]))
 
 # The accents by index, not as sets. A card wears its category's colour on the strip and the same colour on
 # the page it links to, so two lists with the same five names in a different order would pass a set
@@ -494,8 +504,14 @@ true("...and carries a value, which is what the page is handed",
 # The teaser links to the page rather than to the project, which is the one thing about the strip that was
 # asked for by name. Both halves of the deep link are asserted: the shape the index writes and the shape the
 # page parses, in the two files that would have to agree for a click to land anywhere.
+#
+# `__UP__discover/` and not `discover/`: the catalogue moved to `docs/catalog/index.html`, so every relative
+# URL in that file carries the prefix `19_pages.substitute()` swaps for `../` on the way out -- and it is a
+# placeholder rather than a literal `../` precisely so that a bare relative URL can be told apart from a
+# prefixed one, which `19_pages.relative_urls_prefixed()` fails the build over. Asserting the pre-substitution
+# shape is what this file can honestly check: it reads the generator as text, so `../` never appears in it.
 true("a card on the strip links into Discover, not off to the project",
-     'href="discover/#repo=' in PAGES)
+     'href="__UP__discover/#repo=' in PAGES)
 true("...and the page reads that fragment back", "repo=([^&]+)" in STAGE and "decodeURIComponent" in STAGE)
 
 # BOTH WORKFLOWS. The same guard `19c_live.py` has, for the same reason: dropping this stage from the daily

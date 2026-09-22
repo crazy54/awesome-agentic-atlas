@@ -29,6 +29,12 @@ if (!BIN || !ORIGIN) {
   console.log("usage: node tests/cards-check.mjs <chrome-binary> <origin>");
   process.exit(2);
 }
+// The page this harness is about is the catalogue, and the catalogue is at `catalog/` -- the site root is
+// the shelves homepage now, which has no table, no card view, no filter bar and no `#view=` state. Pointed at
+// the root, nearly every assertion below would fail for one reason ("the element is not there") and none of
+// the failures would say why. `ORIGIN` is kept for the few checks that really are about the root: the
+// favicon, and `DORIGIN` for the Discover page.
+const CATALOG = ORIGIN.replace(/\/?$/, "/") + "catalog/";
 const SHOTS = process.env.AAA_ARTIFACTS || join(ROOT, "build-tmp");
 mkdirSync(SHOTS, {recursive: true});
 
@@ -218,7 +224,7 @@ const drawn = (h, computed, selector, value) => h.hoverMQ
 
 // ---- 1440px: the view exists for this width
 await resize(1440, 900);
-await goto(ORIGIN);
+await goto(CATALOG);
 const coldView = await evalIn("document.documentElement.dataset.view");
 ok("cards are what a cold visit gets", coldView === "cards", coldView);
 // No synthetic input before this check: the original loader waited for a human gesture.
@@ -332,7 +338,7 @@ ok("Archie introduces a hovered project from its Atlas record", await evalIn(`((
 // was deleted -- so this requires EXACTLY ONE match of a declaration-shaped pattern. `pagemin.py` strips the
 // page's comments before it ships, so a comment cannot supply the match, and the count assertion catches it
 // if that ever stops being true.
-const capsSource = await (await fetch(ORIGIN)).text();
+const capsSource = await (await fetch(CATALOG)).text();
 const capsFound = [...capsSource.matchAll(/const NAME_MAX = (\d+), SAY_MAX = (\d+)/g)];
 ok("the page declares Archie's two caps, exactly once, where this harness can read them",
    capsFound.length === 1, JSON.stringify({matches: capsFound.length}));
@@ -887,11 +893,16 @@ const reducedMascot = await evalIn(`(() => {
 ok("the mascot becomes still for reduced-motion readers", reducedMascot === "none", reducedMascot);
 await S("Emulation.setEmulatedMedia", {media: "screen", features: []});
 
+// Three values, deliberately: the attribute is `../favicon.svg` because this page sits in `catalog/`, the
+// file is at the site root, and the third fetch resolves the attribute the way a browser on this page would.
+// The attribute alone would pass on a link pointing one level too far up; the root fetch alone would pass on
+// a page with no favicon link at all.
 const faviconHref = await evalIn("document.querySelector('link[rel=icon]')?.getAttribute('href') || ''");
 const faviconResponse = await fetch(new URL("favicon.svg", ORIGIN));
+const faviconResolved = await fetch(new URL(faviconHref || "does-not-exist", CATALOG));
 ok("the globe emoji favicon is replaced by a local Archie SVG",
-   faviconHref === "favicon.svg" && faviconResponse.ok,
-   faviconHref + " / HTTP " + faviconResponse.status);
+   faviconHref === "../favicon.svg" && faviconResponse.ok && faviconResolved.ok,
+   `${faviconHref} / root HTTP ${faviconResponse.status} / resolved HTTP ${faviconResolved.status}`);
 
 // The default view is written twice in the generator and rendered once here, and nothing compared the three
 // until now. `data-view` on the <html> tag is what the reader looks at for the length of a 561 KB fetch,
@@ -905,7 +916,7 @@ ok("the globe emoji favicon is replaced by a local Archie SVG",
 //
 // Read off the served bytes rather than off `docs/index.html`, so it is the same copy the browser was given.
 // `fetch` is global in Node, so this costs no dependency.
-const source = await (await fetch(ORIGIN)).text();
+const source = await (await fetch(CATALOG)).text();
 const attr = source.match(/<html[^>]*\bdata-view="([a-z]+)"/)?.[1];
 const literal = source.match(/\bstate\s*=\s*\{[\s\S]{0,400}?\bview:\s*"([a-z]+)"/)?.[1];
 // Both halves are asserted to have been *found* before they are compared, because two failed matches are
@@ -925,7 +936,7 @@ await shot("view-cards-cold-1440");
 // below still measures the switch *from* the table *to* cards, which is the expensive direction and the one
 // worth measuring -- and the measurement's parity depends on the page being in the table when it starts.
 // That is what this navigation is for as much as the three assertions on it; see the note after it.
-await goto(ORIGIN + "#view=table");
+await goto(CATALOG + "#view=table");
 const densityHeights = [];
 for (const density of ["compact", "normal", "expanded"]) {
   densityHeights.push(await evalIn(`(() => {
@@ -936,7 +947,7 @@ for (const density of ["compact", "normal", "expanded"]) {
 }
 ok("table density changes actual row height", densityHeights[0] > 0 &&
    densityHeights[0] < densityHeights[1] && densityHeights[1] < densityHeights[2], densityHeights.join(','));
-await hardGoto(ORIGIN + "#view=table");
+await hardGoto(CATALOG + "#view=table");
 ok("table density survives reload", await evalIn("document.getElementById('density')?.value === 'expanded'"));
 await evalIn("document.getElementById('density') && (document.getElementById('density').value='normal',document.getElementById('density').dispatchEvent(new Event('change')))");
 const tbl = await evalIn(geom);
@@ -1094,7 +1105,7 @@ ok("and a keyboard reader keeps their focused row, the DOM never having been rep
 await evalIn("scrollTo(0, 0); document.getElementById('view').click()");
 
 // ---- a reload has to land back in cards, off the hash alone
-await goto(ORIGIN + "#view=cards");
+await goto(CATALOG + "#view=cards");
 ok("a #view=cards link opens in cards", await evalIn("document.documentElement.dataset.view") === "cards");
 const reloaded = await evalIn(geom);
 ok("...with the cards laid out, not just the attribute set", reloaded.across >= 3,
@@ -1104,7 +1115,7 @@ ok("...with the cards laid out, not just the attribute set", reloaded.across >= 
 // what the page now has to record, because it is the departure from the default -- and a reader who switches
 // back has to be left with a URL that carries no opinion at all, or every link they send would pin a view
 // they only ever passed through.
-await goto(ORIGIN + "#view=table");
+await goto(CATALOG + "#view=table");
 await evalIn("document.getElementById('view').click()");
 ok("switching to the default clears view= from the hash",
    !(await evalIn("location.hash")).includes("view="), await evalIn("location.hash"));
@@ -1114,7 +1125,7 @@ ok("and switching to the table writes it back, so that view is shareable",
 
 // ---- 900px, where the table drops the screenshot and the two detail columns
 await resize(900, 900);
-await goto(ORIGIN + "#view=cards");
+await goto(CATALOG + "#view=cards");
 const c900 = await evalIn(geom);
 ok("cards are two or three across at 900px", c900.across >= 2, JSON.stringify(c900));
 ok("the screenshot survives the width at which the table drops it", c900.imgShown);
@@ -1132,7 +1143,7 @@ await shot("view-cards-900");
 
 // ---- 375px: the 290px floor has to give exactly one column, not a sideways scroll
 await resize(375, 812);
-await goto(ORIGIN);
+await goto(CATALOG);
 ok("a phone's cold visit gets the cards as well",
    await evalIn("document.documentElement.dataset.view") === "cards",
    await evalIn("document.documentElement.dataset.view"));
@@ -1159,7 +1170,7 @@ await shot("view-cards-375");
 // The table's own narrow layout, which this must not have disturbed -- it is a click away on a phone rather
 // than the arrival state now. The two are one column either way and are still not the same thing: this one
 // drops the screenshot, and the screenshot is the entire reason the cards view exists.
-await goto(ORIGIN + "#view=table");
+await goto(CATALOG + "#view=table");
 const t375 = await evalIn(geom);
 ok("the table's own narrow layout is still one column",
    await evalIn("document.documentElement.dataset.view") === "table" && t375.across === 1,
@@ -1170,10 +1181,10 @@ await shot("view-table-375");
 // ---- 640px exactly: the boundary the name tag broke on, and it is `max-width`, so the rule applies AT 640
 // and not merely below it. 375 and 1440 alone would pass a rule that started one pixel off.
 await resize(640, 900);
-await goto(ORIGIN);
+await goto(CATALOG);
 await nametag("Archie's name tag is one word at the 640px boundary itself", 640, 1);
 await resize(641, 900);
-await goto(ORIGIN);
+await goto(CATALOG);
 // And the full name comes back one pixel later, in two lines, in a 128px column with 25% of slack rather than
 // 4% -- 108px of content against the 81px the widest face measured needs for "Archie 'Atlas'". This is the
 // assertion that would catch the swap being written as `max-width:641px` or applied at every width.
@@ -1188,7 +1199,7 @@ await nametag("and the full name, two lines, on the desktop side of that boundar
 await resize(1440, 900);
 const surfaceIn = async (theme) => {
   await evalIn(`localStorage.setItem('theme','${theme}')`);
-  await hardGoto(ORIGIN + "#view=cards");
+  await hardGoto(CATALOG + "#view=cards");
   ok("the " + theme + " theme resolved", await evalIn("document.documentElement.dataset.theme") === theme,
      await evalIn("document.documentElement.dataset.theme"));
   const bg = await evalIn("getComputedStyle(document.querySelector('#out tbody tr')).backgroundColor");
@@ -1244,7 +1255,7 @@ const BUDGET = 4;   // the pinned band may take at most a quarter of the viewpor
 for (const [w, h] of [[1440, 900], [1024, 800], [768, 900], [390, 844]]) {
   const at = `${w}x${h}`;
   await resize(w, h);
-  await hardGoto(ORIGIN);
+  await hardGoto(CATALOG);
   // At rest first, which is the half that says the fix moved nothing: the rails still render directly under
   // the search line, in the same place, at the same width.
   //
@@ -1384,7 +1395,7 @@ for (const view of ["cards", "table"]) {
   for (const [w, h] of [[1440, 900], [1024, 800], [768, 900], [390, 844], [320, 844]]) {
     const at = `${w}x${h} in ${view} view`;
     await resize(w, h);
-    await hardGoto(ORIGIN);
+    await hardGoto(CATALOG);
     if (!await setView(view)) { ok(`the page can be put into ${view} view at ${w}x${h}`, false); continue; }
     // Measured while genuinely stuck: unscrolled the bar sits in flow under the masthead and reads short.
     await evalIn("window.scrollTo(0, 3000)");
@@ -1420,7 +1431,7 @@ for (const view of ["cards", "table"]) {
   for (const [w, h] of [[1024, 800], [390, 844]]) {
     const at = `${w}x${h} in ${view} view`;
     await resize(w, h);
-    await hardGoto(ORIGIN);
+    await hardGoto(CATALOG);
     if (!await setView(view)) { ok(`the page can be put into ${view} view at ${w}x${h}`, false); continue; }
     await evalIn("window.scrollTo(0, 0)");
     // WALK IN BY STRUCTURE, NOT BY A KEYSTROKE COUNT. This used to Tab a fixed 58 times at 1024 and 34 at
@@ -1468,7 +1479,7 @@ for (const view of ["cards", "table"]) {
 for (const [w, h] of [[1440, 900], [390, 844]]) {
   const at = `${w}x${h}`;
   await resize(w, h);
-  await hardGoto(ORIGIN);
+  await hardGoto(CATALOG);
   await evalIn("window.scrollTo(0, 0)");
   await tabKey(false);
   await sleep(150);
@@ -1504,7 +1515,7 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
 // pinned, so its own controls are always visible and have nothing to clear -- and a scroll margin on `#q`
 // would make focusing the search box jump a scrolled page to the top.
 await resize(1440, 900);
-await hardGoto(ORIGIN);
+await hardGoto(CATALOG);
 const excluded = await evalIn(`(() => {
   const g = (s) => { const e = document.querySelector(s);
     return e ? parseFloat(getComputedStyle(e).scrollMarginTop) : null; };

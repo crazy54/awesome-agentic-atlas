@@ -8,9 +8,17 @@ column. This page does what the workbook does, without Excel.
 Same data, same ordering, same verdicts as the other two: it imports `17_markdown`, which imports
 `16_build_all`, so nothing here re-derives a star count or a platform call.
 
-  docs/index.html   the page. no build step, no framework, no dependency to install.
-  docs/data.json    every repo, column-oriented.
-  docs/.nojekyll    stops Pages running Jekyll over a directory that has no Jekyll in it.
+  docs/catalog/index.html   the page. no build step, no framework, no dependency to install.
+  docs/data.json            every repo, column-oriented.
+  docs/.nojekyll            stops Pages running Jekyll over a directory that has no Jekyll in it.
+
+This was `docs/index.html` until the site grew a homepage. It is the catalogue now: the one page that holds
+all 8,858 rows at once and crosses both axes live. `scripts/31_home.py` writes the root, where a reader who
+has not decided what they are looking for arrives -- shelves that each say why the projects on them are
+there. The split is between browsing and searching, and this file is the searching half. Consequences worth
+knowing before editing: every relative URL here needs the `UP` prefix (there is an assertion), the service
+worker is registered from the homepage rather than from here, and `data.json` stays at the root because four
+other surfaces read it.
 
 Two decisions worth stating. The data is a separate file rather than inlined, so the page is 30 KB and
 cached separately from the nearly 8,000 rows that change on every rebuild. And every filter is mirrored
@@ -323,14 +331,22 @@ INDEXNOW_RE = re.compile(r"\A[A-Za-z0-9-]{8,128}\Z")
 def verification(token: str | None = None) -> str:
     """The Search Console meta tag, or "" while no token is set.
 
-    Returned *with* its newline, and substituted for `__VERIFY__\\n` rather than `__VERIFY__`, so the
-    unverified case removes the placeholder's whole line instead of leaving a blank one behind. That is
-    what makes wiring this up a zero-byte change to `docs/index.html` until there is a token to print.
+    Returned *with* its newline, so the unverified case leaves no blank line behind wherever it is printed:
+    `31_home.py` interpolates it immediately before another `<link>`, the same way it handles
+    `20_landing.HEAD_THEME`. That is what makes wiring this up a zero-byte change to `docs/index.html`
+    until there is a token to print.
 
-    Only the root page carries it. Verification is per *property*, and the property here is the URL prefix
-    `https://crazy54.github.io/awesome-agentic-atlas/` -- Google fetches that one URL and looks for the
-    tag in it. Emitting it on the other 1,450 pages would verify nothing extra and put an account-linked
-    identifier in 1,450 files that have no use for it.
+    Only the root page carries it, and the root page is the homepage -- it used to be this file's output and
+    stopped being when the catalogue moved to `catalog/`. Verification is per *property*, and the property
+    here is the URL prefix `https://crazy54.github.io/awesome-agentic-atlas/`: Google fetches that one URL
+    and looks for the tag in what it gets back. A tag on any other page verifies nothing, which is a failure
+    with no symptom -- the build stays green, the token stays valid, and Search Console just says the
+    property is unverified. Emitting it on the other 1,450 pages would verify nothing extra either, and
+    would put an account-linked identifier in 1,450 files that have no use for it.
+
+    Still defined in this file rather than moved beside its one caller, because the token, the alphabet
+    assertion and the argument for both are here, and splitting the value from its validation is how a
+    malformed token gets injected into a head without anything raising.
     """
     if token is None:
         token = os.environ.get("GOOGLE_SITE_VERIFICATION", VERIFY_TOKEN)
@@ -372,9 +388,14 @@ def facet_links(items: list[dict], prefix: str) -> str:
 
     Derived from the same lists the page filters by, rather than written out, so adding a topic adds its
     link. `escape` because these names carry an ampersand -- "Harnesses & Runtime Infra" -- and a raw one
-    is a parse error a validator will flag even where a browser recovers from it."""
+    is a parse error a validator will flag even where a browser recovers from it.
+
+    `__UP__` because the facet pages stay at the site root while this page moved into `catalog/`. These 26
+    links were the ones the eye missed: they are the only relative URLs on the page that no line of the
+    template contains, so reading the template for `href="` finds every other one and not these. That is
+    what `relative_urls_prefixed()` is for, and it caught them on the first render."""
     return " · ".join(
-        f'<a href="{prefix}/{i["slug"]}/">{escape(i["name"])}</a>' for i in items)
+        f'<a href="__UP__{prefix}/{i["slug"]}/">{escape(i["name"])}</a>' for i in items)
 
 
 def built() -> tuple[str, str]:
@@ -404,6 +425,38 @@ def shield_text(text: str) -> str:
     return text.replace("_", "__").replace("-", "--").replace(" ", "_")
 
 
+# Where this page sits relative to the site root, as a prefix for every URL it emits.
+#
+# It used to be `docs/index.html`, so every relative URL in the template was bare and correct. The homepage
+# is now the shelves page `31_home.py` writes, this page is the catalogue at `docs/catalog/index.html`, and
+# one level down every one of those bare URLs is a 404 -- `feed.xml`, `favicon.svg`, `data.json`, the whole
+# `repo/` tree. They are prefixed with this placeholder rather than with a literal `../` so that there is a
+# token to grep: `relative_urls_prefixed()` below fails the build on a relative URL that does not carry it,
+# and a literal `../` could not be told apart from the hundreds in this file's prose.
+#
+# Still relative rather than root-absolute, for the reason the head comment gives: a `/data.json` would break
+# both the `file://` clone and any deployment that is not at a domain root.
+UP = "../"
+
+
+def relative_urls_prefixed(page: str) -> None:
+    """Fail the build on a relative URL in the rendered markup that is not prefixed with `UP`.
+
+    The reason this is an assertion and not a comment: adding `href="feed.xml"` to the template is the
+    natural thing to write, it renders, it passes every test that reads the markup for structure, and it
+    404s only for a reader who clicks it. There is no import-time or render-time symptom at all.
+
+    Markup only -- script bodies are cut first. A URL a script builds is a string expression, not an
+    attribute (`href="' + url + '"`), so scanning the script text would flag every one of them and the
+    handful of real fetch literals are held by `tests/pages_test.py` against this module's source instead.
+    """
+    markup = re.sub(r"<script\b[^>]*>.*?</script>", "", page, flags=re.S)
+    bad = [u for u in re.findall(r'(?:href|src)="([^"]*)"', markup)
+           if not re.match(r"(?:https?:)?//|^(?:data|mailto|tel|javascript):|^#|^\.\./", u) and u]
+    assert not bad, (f"{len(bad)} relative URL(s) in the catalogue markup are missing the `UP` prefix and "
+                     f"will 404 one level down: {sorted(set(bad))[:8]}")
+
+
 def substitute(page: str, data: dict, repo: str, site: str) -> str:
     """Fill the template's placeholders. Both this stage and `19b_refresh.py` render the same shell, and
     when the two chains drifted the refreshed page quietly lost whichever one had been added since.
@@ -417,7 +470,7 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
     stamp_iso, stamp_utc = built()
     default_view = "cards" if APP_FLAGS["index.card_view"] else "table"
     deployment_badge = DEPLOYMENT_BADGE if APP_FLAGS["index.deployment_badge"] else ""
-    return (pagemin.strip_page(page)
+    out = (pagemin.strip_page(page)
             # The four platform-mark placeholders. `osicons` is the only copy of the geometry, the ids, the
             # hover text and the shared rule, so all four arrive here rather than being written into the
             # template -- which is what stops this page and the other three surfaces drawing Docker two ways.
@@ -435,6 +488,19 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             .replace("__INDEX_SCREENSHOTS__", "on" if APP_FLAGS["index.project_screenshots"] else "off")
             .replace("__APP_FLAGS__", app_flags.browser_json(APP_FLAGS))
             .replace("__DEPLOYMENT_BADGE__", deployment_badge)
+            # Substituted here rather than at the two call sites for exactly the reason in this function's
+            # docstring: `19b_refresh.py` renders the same shell, and a placeholder it does not know about
+            # would ship to readers as the literal text `__SETTINGS__` where the theme picker should be.
+            # Stripped here for the same reason the platform marks are -- substitution runs after the comment
+            # strip, so a constant injected here would smuggle its own comments into the bytes. One stripper
+            # each, matched to what the constant actually is: markup, a rule block, and a bare script body.
+            # `strip_page` would be the wrong one for the last of those -- it looks for a `<script>` tag to
+            # decide that what follows is JavaScript, finds none in a naked function, and copies the whole
+            # thing through as HTML text with every `//` comment intact. That is exactly what happened, and
+            # what caught it was diffing a render against the same page built before the extraction.
+            .replace("__SETTINGS__", pagemin.strip_page(SETTINGS_MENU))
+            .replace("__SETCSS__", pagemin.strip_css(SETTINGS_CSS))
+            .replace("__SETJS__", pagemin.strip_js(SETTINGS_JS))
             .replace("__BUILT__", stamp_iso)
             .replace("__BUILT_UTC__", stamp_utc)
             .replace("__BUILT_BADGE__", shield_text(stamp_utc))
@@ -450,11 +516,232 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             .replace("__SITE__", site)
             .replace("__REPO__", repo)
             .replace("__OGIMAGE__", image_tags(site, repo))
-            # The placeholder's newline is part of the match -- see `verification()`. With no token set
-            # this deletes the line, so the rendered page is byte-identical to one built before the tag
-            # was wired up, which is why adding it did not have to re-version the service worker.
-            .replace("__VERIFY__\n", verification())
+            # No `__VERIFY__` substitution any more: the Search Console tag belongs on the page Google
+            # fetches for the property, which is the root, and this page is a level down. `31_home.py`
+            # calls `verification()` directly -- there is no placeholder to substitute in a head it builds
+            # as an f-string. The function stays here because this is where the token, the alphabet
+            # assertion and the prose explaining both already live.
+            # Last, so a constant injected above carrying its own relative URLs is prefixed too.
+            .replace("__UP__", UP)
             .replace("__ANALYTICS__", beacon()))
+    relative_urls_prefixed(out)
+    return out
+
+
+# The stylesheet half of the same control, lifted out for the same reason and with the same caveat: the rules
+# stay in THIS file because `tests/theme_test.py` reads the open-panel stacking rule and the panel rule
+# straight out of this source with a regex, anchored on a newline -- so they are written at column zero
+# here exactly as they were in the stylesheet, and the harness cannot tell the difference. Named in prose
+# rather than quoted with their braces: one of those assertions counts how many times the selector appears,
+# and a comment quoting it is an occurrence. Writing it out here reddened that count, which is the
+# assertion doing its job.
+#
+# `31_home.py` inlines this verbatim. It does NOT go into `pages.css`, which would be the tidier home and is
+# the obvious next step: that file is linked by 178 facet pages and 6 collection pages, none of which carry
+# the menu markup yet, so moving it there is a change to their bytes and a service-worker re-version for a
+# control they do not have. Worth doing when they grow one; not worth bundling into the page move.
+# The behaviour of the same control, and the third and last piece of it to come out of `PAGE`. Extracted
+# with more care than the markup and the stylesheet were, because this one was interleaved: it sat inside
+# `wire()` among the index's own boot logic, and a careless slice would have taken `loadSaved()` with it or
+# left a local behind that the rest of the function still read. Nothing after it referenced `btn`, `menu`,
+# `setbtn`, `ths`, `setSkin`, `setOpen` or `paintSettings`, which is what made the slice safe, and that was
+# checked rather than assumed.
+#
+# One deliberate change of shape: the block used to call `paintDeployBadge()` directly. That global exists
+# on the index and not on the homepage, so it arrives as an argument. A `typeof` guard would have been
+# shorter and worse -- the index names the function at its call site, so deleting it is a `ReferenceError`
+# at boot instead of a badge that silently stops being repainted when the theme changes.
+#
+# Returns `paintSettings` for a caller that needs to repaint both axes for some other reason. Nothing uses
+# it yet; it is returned rather than hidden because the alternative is a second copy of a four-line
+# function the first time something does.
+SETTINGS_JS = r"""function wireSettings(onPaint) {
+  const btn = document.getElementById("theme");
+  const menu = document.getElementById("setmenu");
+  const setbtn = document.getElementById("setbtn");
+  const ths = Array.from(document.querySelectorAll(".thb"));
+  // One paint for both axes rather than one per control, because everything downstream of a theme change
+  // is downstream of either change: the mode toggle's label, which theme reads as pressed, the browser
+  // chrome, and the deployment badge's own colours. Every path that moves either axis calls this -- the
+  // toggle, the four theme buttons, the OS-preference listener, and the initial agreement with the head
+  // script -- so there is one place where "the page now looks like X" is made true.
+  const paintSettings = () => {
+    const light = document.documentElement.dataset.theme === "light";
+    btn.textContent = light ? "Dark theme" : "Light theme";
+    btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
+    const skin = document.documentElement.dataset.skin;
+    for (const t of ths) t.setAttribute("aria-pressed", String(t.dataset.skin === skin));
+    // Read off the stylesheet rather than restated here, so --plane and the browser chrome cannot drift.
+    // This is also what retires the head script's eight-entry map: after first paint the computed value
+    // exists, so the map is never consulted again and cannot be the thing that is wrong.
+    const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+    if (plane) document.getElementById("tc").content = plane;
+    // Named by the caller rather than reached for globally -- see this constant's comment.
+    if (onPaint) onPaint();
+  };
+  btn.onclick = () => {
+    const light = document.documentElement.dataset.theme !== "light";
+    document.documentElement.dataset.theme = light ? "light" : "dark";
+    // The choice is the point: it used to last until the next navigation, so a reader who needs light
+    // re-picked it on every page load and every shared filter link.
+    try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+    paintSettings();
+  };
+  // The theme axis, and it writes the same key the head script reads. Not validated here the way the head
+  // script validates it: the only values that reach this are the four `data-skin` attributes in the markup,
+  // and the page cannot offer a theme it has no block for. The head script is where an unknown name has to
+  // be rejected, because that is the one place a value can arrive from a previous release.
+  const setSkin = (s) => {
+    document.documentElement.dataset.skin = s;
+    try { localStorage.setItem("atlas-skin", s); } catch (e) {}
+    paintSettings();
+  };
+  for (const t of ths) t.onclick = () => setSkin(t.dataset.skin);
+  // `hidden` is the state, and the attribute rather than a class deliberately: it takes the panel out of
+  // the accessibility tree as well as off the screen, which is what a closed menu should be. aria-expanded
+  // on the button is the same fact said to a screen reader.
+  // `setopen` on the masthead is what lifts the panel over the pinned bar -- see the `.setmenu` comment in
+  // the stylesheet for why the parent has to move and not the panel. Toggled here and nowhere else, so the
+  // class and the `hidden` attribute cannot end up disagreeing about whether the menu is open.
+  const setOpen = (open) => {
+    menu.hidden = !open;
+    setbtn.setAttribute("aria-expanded", String(open));
+    document.querySelector("header").classList.toggle("setopen", open);
+  };
+  setbtn.onclick = () => setOpen(menu.hidden);
+  // Escape from anywhere inside, and focus goes back to the button that opened it -- a menu that closes
+  // and leaves focus on a removed element drops a keyboard reader at the top of the document.
+  menu.addEventListener("keydown", ev => {
+    if (ev.key === "Escape") { setOpen(false); setbtn.focus(); }
+  });
+  // Both of these ask the same question -- did attention leave the menu -- and they have to be two
+  // listeners because a pointer and a keyboard leave differently: a click lands somewhere else without
+  // moving focus, and Tab past the last theme moves focus without a click. `closest` on the wrapper and
+  // not on the panel, so pressing the button that opened it is not "leaving" and does not fight
+  // `setbtn.onclick` for who gets to close it. Guarded because `focusin` can target the document itself.
+  for (const kind of ["click", "focusin"])
+    document.addEventListener(kind, ev => {
+      const inside = ev.target && ev.target.closest && ev.target.closest(".setwrap");
+      if (!menu.hidden && !inside) setOpen(false);
+    });
+  // The head script already resolved both axes; this only has to agree with it, since the markup's
+  // hardcoded "Light theme" and pressed Graphite are wrong for any reader who chose otherwise.
+  paintSettings();
+  // Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a
+  // theme they explicitly chose because the sun went down is worse than not following at all. Only the
+  // mode axis: nothing in `prefers-*` has an opinion about which of four palettes a reader wants.
+  try {
+    matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+      if (localStorage.getItem("theme")) return;
+      document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+      paintSettings();
+    });
+  } catch (e) {}
+  return paintSettings;
+}"""
+
+
+SETTINGS_CSS = r"""/* THE SETTINGS MENU. Absolutely positioned inside a relative wrapper rather than laid out in the nav,
+   because the nav is a wrapping inline flow at every width -- a panel in that flow would reflow the two
+   link rows and the mascot beside them every time it opened. `right:0` so it grows leftwards from the
+   button and cannot leave the viewport on the side the button is pinned to.
+
+   No `@media(max-width:640px)` block, and that is deliberate rather than an omission: `theme_test.py`
+   asserts that query is emitted exactly twice and names which two blocks they are, so a third copy makes
+   a passing count fail for a reason that has nothing to do with what it is protecting. The panel does not
+   need one -- 236px fits inside a 375px viewport with the nav's own padding to spare, and it is measured
+   from the right edge of a button that is itself inside the wrap.
+
+   No `overflow:hidden` on the wrapper either. What did need fixing is the stacking, and the first version
+   of this comment argued the wrong way round: it said the panel is a child of `header` at z-index 10, the
+   pinned bar is 20, so an open menu paints under the bar, and that this was right because what is pinned
+   paints over what is scrolling. A screenshot settled it. The panel is 236px tall on a masthead 216px
+   deep, so two thirds of it lands in the bar's band: the Theme heading and the whole Graphite row were
+   invisible behind the search field and the topic chips. That ordering is correct for Archie's speech
+   bubble, which is decorative and transient. It is not correct for a menu, where the cost is a control a
+   reader cannot see or press. "What is pinned paints over what is scrolling" is a good rule that was
+   being applied to the one thing in this header it does not fit.
+
+   `header.setopen` and not a bigger number on `.setmenu`, because a child cannot out-rank its own
+   stacking context: `header` is `position:relative;z-index:10`, so every z-index inside it is resolved
+   *within* that context and the panel's own 1 could be 999 without reaching the bar. The parent is what
+   has to move. It moves only while the menu is open, and that is the whole point of the class rather than
+   a higher base number: `probe.mjs` asserts `zOf("header") < zOf(".bar")` on the base rule -- the pinned
+   thing must paint over the scrolling one -- and that assertion is right and stays green, because the
+   rule it reads is untouched. A reader who never opens Settings gets byte-identical stacking, including
+   Archie's bubble still passing under the bar. `setOpen()` in the page script is the only thing that adds
+   or removes the class, so the two states cannot drift apart. */
+.setwrap{position:relative;display:inline-block}
+header.setopen{z-index:30}
+.setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:236px;text-align:left;
+  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
+  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75)}
+/* `hidden` is the state and this rule is what makes it stick: `display:inline-block` on the wrapper does
+   not cascade to the child, but every UA default for [hidden] is `display:none`, and a later
+   `display:` on the same element would beat it. Restating it here keeps the attribute authoritative,
+   which matters because the attribute is also what takes the panel out of the accessibility tree. */
+.setmenu[hidden]{display:none}
+.setlab{margin:14px 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase;
+  letter-spacing:.07em;font-weight:600}
+.setlab:first-child{margin-top:0}
+.setths{display:flex;flex-direction:column;gap:2px;margin-top:2px}
+/* 36px rather than the 44 the mascot's buttons are held to. These are inside a panel a reader has already
+   opened on purpose and they are stacked with 2px between them, so the target is the row's full width --
+   212px by 36px is a larger area than any chip on the bar, and the 44px floor is about reaching a control
+   in a crowded band rather than about the area of a menu item. */
+.thb{display:flex;align-items:center;gap:9px;width:100%;min-height:36px;padding:0 9px;
+  background:none;border:1px solid transparent;border-radius:8px;color:var(--ink2);font-size:13px;
+  text-align:left}
+.thb:hover{border-color:var(--grid);color:var(--ink)}
+/* The border and the weight, not a fill. A filled row would be the `--bar` the chips use for an active
+   filter, and the theme in use is not a filter -- it is always exactly one of four, so a reader reading
+   this panel needs to see which, not to be told something is on. */
+.thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600}
+.thsw{display:inline-flex;flex:none;width:34px;height:14px;border-radius:999px;overflow:hidden;
+  border:1px solid var(--grid)}
+.thsw i{flex:1}"""
+
+
+# The Settings control, lifted out of `PAGE` into a constant for one reason: it is no longer this page's
+# control. `31_home.py` draws the same masthead on `/`, and a second hand-written copy of four theme
+# swatches whose twelve hex values are already a copy of the stylesheet is two chances to drift where the
+# design only permits one. Imported there rather than retyped, the way `25_collections.py` takes
+# `HEAD_THEME` from `20_landing.py` instead of keeping its own.
+#
+# It stays in THIS file, and not in a shared module, because `tests/theme_test.py` reads
+# `scripts/19_pages.py` as text -- it slices the twelve swatch hexes back out with a regex over the source
+# and compares each against the skin block it came from. Moving the markup somewhere else would silently
+# take twelve assertions with it. Same file, named constant: the harness still sees it, and there is still
+# one copy.
+#
+# No placeholders inside, which is what makes it safe to share: every value here is literal, so it renders
+# identically wherever it is dropped and it does not need `substitute()` to be correct. The one thing it
+# does depend on is `#theme` living inside it -- the mode toggle was moved into this panel rather than
+# replaced, and `probe.mjs` still clicks that id.
+SETTINGS_MENU = r"""<div class="setwrap">
+      <button class="chip" id="setbtn" aria-expanded="false" aria-controls="setmenu">Settings</button>
+      <div class="setmenu" id="setmenu" hidden>
+        <p class="setlab" id="setmodelab">Mode</p>
+        <div role="group" aria-labelledby="setmodelab">
+          <button class="chip" id="theme">Light theme</button>
+        </div>
+        <p class="setlab" id="setthemelab">Theme</p>
+        <div class="setths" role="group" aria-labelledby="setthemelab">
+          <button type="button" class="thb" data-skin="graphite" aria-pressed="true"><span
+            class="thsw" aria-hidden="true"><i style="background:#090A0D"></i><i
+            style="background:#D6A034"></i><i style="background:#78B7F4"></i></span>Graphite</button>
+          <button type="button" class="thb" data-skin="glass" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#070912"></i><i
+            style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span>Glass</button>
+          <button type="button" class="thb" data-skin="terminal" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#050B0D"></i><i
+            style="background:#FFB627"></i><i style="background:#6FD0FF"></i></span>Terminal</button>
+          <button type="button" class="thb" data-skin="prism" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#0B0718"></i><i
+            style="background:#FF9BD2"></i><i style="background:#8FD0FF"></i></span>Prism</button>
+        </div>
+      </div>
+    </div>"""
 
 
 DEPLOYMENT_BADGE = r'''<a class="stamp" id="deployed" href="https://github.com/__REPO__/deployments"
@@ -478,28 +765,33 @@ PAGE = r"""<!doctype html>
 <meta property="og:title" content="Awesome Agentic Atlas">
 <meta property="og:description" content="__COUNT__ projects from __LISTS__ awesome-lists, one filterable index.">
 __OGIMAGE__
-<link rel="canonical" href="__SITE__">
-<!-- Google Search Console's HTML-tag verification, and nothing else: this whole line is absent until a
-     token exists, because `verification()` matches the placeholder's newline too. It is the discovery
-     mechanism `robots.txt` on this deployment cannot be -- a project Pages site's robots.txt is never
-     read, so the 1,452 URLs in sitemap.xml have to be *submitted*, and submitting them needs a verified
-     property. See `VERIFY_TOKEN` in this file, and JFH-206 for the manual half nobody can automate. -->
-__VERIFY__
-<!-- Autodiscovery for the arrivals feed. Relative, like the `fetch("data.json")` this page already does,
-     so it resolves on Pages and from a local `python -m http.server` alike. GitHub Pages serves .xml as
-     text/xml and cannot be told otherwise, so the `type` here is what actually declares the format --
-     readers sniff the root element regardless, but the link tag is where a browser looks first. -->
+<!-- `catalog/`, not the site root: the root is the shelves homepage now, and a canonical pointing there
+     would tell every crawler that this page -- the only one that lists all __COUNT__ projects -- is a
+     duplicate of a page that lists twelve per shelf. Absolute because canonical must be. -->
+<link rel="canonical" href="__SITE__catalog/">
+<!-- Google Search Console's HTML-tag verification used to be the next line here, and it is on the homepage
+     now: `verification()` below still owns the token and its format assertion, but `scripts/31_home.py`
+     prints the tag. Verification is per *property*, the property is the URL prefix `__SITE__`, and Google
+     fetches that one URL and reads the markup it gets back. This page stopped being that URL when it moved
+     to `catalog/`, so leaving the tag here would have verified nothing -- and silently, because the token is
+     empty until somebody sets the variable, so nothing would fail until the day it mattered. -->
+<!-- Autodiscovery for the arrivals feed. Relative, like the `fetch("__UP__data.json")` this page already
+     does, so it resolves on Pages and from a local `python -m http.server` alike -- and `__UP__` because
+     this page is one level down at `catalog/` while the feeds stay at the site root. GitHub Pages serves
+     .xml as text/xml and cannot be told otherwise, so the `type` here is what actually declares the format
+     -- readers sniff the root element regardless, but the link tag is where a browser looks first. -->
 <link rel="alternate" type="application/atom+xml" title="Awesome Agentic Atlas — new arrivals"
-      href="feed.xml">
+      href="__UP__feed.xml">
 <link rel="alternate" type="application/feed+json" title="Awesome Agentic Atlas — new arrivals"
-      href="feed.json">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+      href="__UP__feed.json">
+<link rel="icon" href="__UP__favicon.svg" type="image/svg+xml">
 <!-- Installability, and the offline shell. Every href relative, so the /awesome-agentic-atlas/ path
      prefix Pages adds takes care of itself. Both files are written by `scripts/24_pwa.py`; if that stage
-     has not run, the manifest link 404s and the registration at the foot of this page rejects into an
-     empty catch, which is the whole failure. -->
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+     has not run, the manifest link 404s -- and the app then installs with no manifest at all, because the
+     registration that used to sit at the foot of this page now lives on the homepage `31_home.py` writes.
+     One registration per site, on the page that is the scope root; two would fight over the same scope. -->
+<link rel="manifest" href="__UP__manifest.webmanifest">
+<link rel="apple-touch-icon" href="__UP__apple-touch-icon.png">
 <!-- One `theme-color`, managed by script, rather than the two `media` variants that would be the obvious
      way to write this. The HTML spec picks the *first* such element whose media matches, so a pair keyed
      on `prefers-color-scheme` cannot be overridden by anything appended later -- and this page lets a
@@ -891,65 +1183,7 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
 .chip:hover{border-color:var(--bar);color:var(--ink)}
 .chip[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:var(--onbar);
   font-weight:600}
-/* THE SETTINGS MENU. Absolutely positioned inside a relative wrapper rather than laid out in the nav,
-   because the nav is a wrapping inline flow at every width -- a panel in that flow would reflow the two
-   link rows and the mascot beside them every time it opened. `right:0` so it grows leftwards from the
-   button and cannot leave the viewport on the side the button is pinned to.
-
-   No `@media(max-width:640px)` block, and that is deliberate rather than an omission: `theme_test.py`
-   asserts that query is emitted exactly twice and names which two blocks they are, so a third copy makes
-   a passing count fail for a reason that has nothing to do with what it is protecting. The panel does not
-   need one -- 236px fits inside a 375px viewport with the nav's own padding to spare, and it is measured
-   from the right edge of a button that is itself inside the wrap.
-
-   No `overflow:hidden` on the wrapper either. What did need fixing is the stacking, and the first version
-   of this comment argued the wrong way round: it said the panel is a child of `header` at z-index 10, the
-   pinned bar is 20, so an open menu paints under the bar, and that this was right because what is pinned
-   paints over what is scrolling. A screenshot settled it. The panel is 236px tall on a masthead 216px
-   deep, so two thirds of it lands in the bar's band: the Theme heading and the whole Graphite row were
-   invisible behind the search field and the topic chips. That ordering is correct for Archie's speech
-   bubble, which is decorative and transient. It is not correct for a menu, where the cost is a control a
-   reader cannot see or press. "What is pinned paints over what is scrolling" is a good rule that was
-   being applied to the one thing in this header it does not fit.
-
-   `header.setopen` and not a bigger number on `.setmenu`, because a child cannot out-rank its own
-   stacking context: `header` is `position:relative;z-index:10`, so every z-index inside it is resolved
-   *within* that context and the panel's own 1 could be 999 without reaching the bar. The parent is what
-   has to move. It moves only while the menu is open, and that is the whole point of the class rather than
-   a higher base number: `probe.mjs` asserts `zOf("header") < zOf(".bar")` on the base rule -- the pinned
-   thing must paint over the scrolling one -- and that assertion is right and stays green, because the
-   rule it reads is untouched. A reader who never opens Settings gets byte-identical stacking, including
-   Archie's bubble still passing under the bar. `setOpen()` in the page script is the only thing that adds
-   or removes the class, so the two states cannot drift apart. */
-.setwrap{position:relative;display:inline-block}
-header.setopen{z-index:30}
-.setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:236px;text-align:left;
-  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
-  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75)}
-/* `hidden` is the state and this rule is what makes it stick: `display:inline-block` on the wrapper does
-   not cascade to the child, but every UA default for [hidden] is `display:none`, and a later
-   `display:` on the same element would beat it. Restating it here keeps the attribute authoritative,
-   which matters because the attribute is also what takes the panel out of the accessibility tree. */
-.setmenu[hidden]{display:none}
-.setlab{margin:14px 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase;
-  letter-spacing:.07em;font-weight:600}
-.setlab:first-child{margin-top:0}
-.setths{display:flex;flex-direction:column;gap:2px;margin-top:2px}
-/* 36px rather than the 44 the mascot's buttons are held to. These are inside a panel a reader has already
-   opened on purpose and they are stacked with 2px between them, so the target is the row's full width --
-   212px by 36px is a larger area than any chip on the bar, and the 44px floor is about reaching a control
-   in a crowded band rather than about the area of a menu item. */
-.thb{display:flex;align-items:center;gap:9px;width:100%;min-height:36px;padding:0 9px;
-  background:none;border:1px solid transparent;border-radius:8px;color:var(--ink2);font-size:13px;
-  text-align:left}
-.thb:hover{border-color:var(--grid);color:var(--ink)}
-/* The border and the weight, not a fill. A filled row would be the `--bar` the chips use for an active
-   filter, and the theme in use is not a filter -- it is always exactly one of four, so a reader reading
-   this panel needs to see which, not to be told something is on. */
-.thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600}
-.thsw{display:inline-flex;flex:none;width:34px;height:14px;border-radius:999px;overflow:hidden;
-  border:1px solid var(--grid)}
-.thsw i{flex:1}
+__SETCSS__
 /* The new-arrivals chip wears `--warn` rather than the `--bar` every other chip uses, because it
    is the only filter that answers a question about time rather than about the data. It is also the only
    chip that can be absent: with nothing inside the window there is nothing to filter to, and a control
@@ -2333,10 +2567,10 @@ __OSSPRITE__
          want has the filter bar; a reader who does not has 1,294 rows and no way in. Discover answers it
          with no opinion at all -- fifty a day, every category, rotated so the whole corpus comes round --
          and Collections answers it with one. -->
-    <a href="discover/">Discover</a> ·
-    <a href="collections/">Collections</a> ·
+    <a href="__UP__discover/">Discover</a> ·
+    <a href="__UP__collections/">Collections</a> ·
     <a href="https://github.com/__REPO__/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
-    <a href="repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
+    <a href="__UP__repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/__REPO__">Repository</a> ·
     <a href="https://github.com/__REPO__/tree/main/mega-list">Markdown</a> ·
     <a href="https://github.com/__REPO__/releases/latest">Workbook</a><br>
@@ -2366,34 +2600,11 @@ __OSSPRITE__
          copy, and `tests/theme_test.py` compares all twelve values against the blocks they came from
          rather than trusting the markup. aria-hidden because the name beside them is the label; a reader
          who cannot see the swatch is not helped by "black, amber, blue". -->
-    <div class="setwrap">
-      <button class="chip" id="setbtn" aria-expanded="false" aria-controls="setmenu">Settings</button>
-      <div class="setmenu" id="setmenu" hidden>
-        <p class="setlab" id="setmodelab">Mode</p>
-        <div role="group" aria-labelledby="setmodelab">
-          <button class="chip" id="theme">Light theme</button>
-        </div>
-        <p class="setlab" id="setthemelab">Theme</p>
-        <div class="setths" role="group" aria-labelledby="setthemelab">
-          <button type="button" class="thb" data-skin="graphite" aria-pressed="true"><span
-            class="thsw" aria-hidden="true"><i style="background:#090A0D"></i><i
-            style="background:#D6A034"></i><i style="background:#78B7F4"></i></span>Graphite</button>
-          <button type="button" class="thb" data-skin="glass" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#070912"></i><i
-            style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span>Glass</button>
-          <button type="button" class="thb" data-skin="terminal" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#050B0D"></i><i
-            style="background:#FFB627"></i><i style="background:#6FD0FF"></i></span>Terminal</button>
-          <button type="button" class="thb" data-skin="prism" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#0B0718"></i><i
-            style="background:#FF9BD2"></i><i style="background:#8FD0FF"></i></span>Prism</button>
-        </div>
-      </div>
-    </div>
+    __SETTINGS__
   </nav>
   <div class="atlas-byte-wrap">
     <button type="button" id="byte-tip" aria-label="Ask Archie 'Atlas' Algorithm for a browsing tip">
-    <img class="atlas-byte" src="assets/atlas-byte.png" width="512" height="532"
+    <img class="atlas-byte" src="__UP__assets/atlas-byte.png" width="512" height="532"
          alt="Archie 'Atlas' Algorithm, the Atlas mascot, wearing pixel sunglasses">
     </button>
     <!-- The accessible name is on `aria-label` so it stays the full name at every width, including the ones
@@ -2608,7 +2819,7 @@ __OSSPRITE__
        sit above the answer to "what are the options" rather than under a screenful of them. -->
   <section class="dstrip" id="dstrip" aria-labelledby="dstriph">
     <div class="dsh"><h2 id="dstriph">Discover</h2><p id="dstripwhat"></p>
-      <a class="dsall" id="dstripall" href="discover/">See all fifty &rarr;</a></div>
+      <a class="dsall" id="dstripall" href="__UP__discover/">See all fifty &rarr;</a></div>
     <div class="dsrail" id="dsrail"></div>
   </section>
   <!-- The verdict legend, and the only place on screen that says what the five marks mean. It used to be
@@ -2745,7 +2956,7 @@ __OSSPRITE__
          worse: the rows that link to them are drawn by the script below, so a crawler receives this page
          with an empty table and never sees one of them. This link and the directory it points at put
          every project page two clicks from the root. -->
-    <p><b>Every project:</b> <a href="repo/">all __COUNT__ projects, one page each, grouped by topic</a></p>
+    <p><b>Every project:</b> <a href="__UP__repo/">all __COUNT__ projects, one page each, grouped by topic</a></p>
   </nav>
 </div></footer>
 
@@ -2980,7 +3191,7 @@ const segment = s => {
   if (DEVICE_NAMES.includes(s.split(".")[0])) s = "dev-" + s;
   return s;
 };
-const detailURL = nwo => "repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
+const detailURL = nwo => "__UP__repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
 
 // The rescue buttons drawn on an empty table, in the order render() drew them. Kept out of the markup
 // because a filter patch is an object -- serialising it into a data- attribute and parsing it back would
@@ -3041,7 +3252,7 @@ function gained(r) {
         " to " + D.velocity.to) + '">' + n + "</span>";
 }
 
-fetch("data.json").then(r => {
+fetch("__UP__data.json").then(r => {
   // The only place the real deployment time is available, and it arrives on a request the page was going
   // to make anyway. See `deployStamp`. Before `r.json()`, because that consumes the body and there is no
   // reason to wait for 561 KB to parse before correcting a badge that is already on screen.
@@ -3190,17 +3401,18 @@ fetch("data.json").then(r => {
   // the same order a reader who types gets them in.
   if (state.q) semanticReady();
 }).catch(err => {
-  // A browser will not let a file:// page fetch a sibling file, so double-clicking index.html out of a
+  // A browser will not let a file:// page fetch anything, so double-clicking catalog/index.html out of a
   // clone loads the chrome and then nothing at all, with the reason only in the console. Anyone doing
-  // that is a contributor, so the message is the two commands that fix it rather than an apology.
+  // that is a contributor, so the message is the two commands that fix it rather than an apology. The
+  // path it names is the parent now -- `data.json` sits at the site root and this page is one level down.
   document.getElementById("count").innerHTML =
     "Could not load <code>data.json</code> — " + String(err);
   document.getElementById("out").innerHTML =
     '<p style="max-width:62ch;line-height:1.6">If you opened this file straight off disk, that is ' +
-    'expected: browsers refuse to let a <code>file://</code> page read a sibling file. Serve the ' +
+    'expected: browsers refuse to let a <code>file://</code> page read another file. Serve the ' +
     'folder instead — <code>python -m http.server</code> from <code>docs/</code>, then open ' +
-    '<code>localhost:8000</code>. The published copy is at ' +
-    '<a href="__SITE__">__SITE__</a>.</p>';
+    '<code>localhost:8000/catalog/</code>. The published copy is at ' +
+    '<a href="__SITE__catalog/">__SITE__catalog/</a>.</p>';
 });
 
 // The Discover payload, on a request of its own and started here rather than chained off the one above:
@@ -3215,7 +3427,7 @@ fetch("data.json").then(r => {
 // Behind the flag so that turning the strip off turns off the request as well. A page that downloads 90 KB it
 // has been configured not to use is not a disabled feature, it is a hidden one.
 if (FLAGS["index.discover_strip"]) {
-  fetch("discover.json").then(r => r.json()).then(d => {
+  fetch("__UP__discover.json").then(r => r.json()).then(d => {
     DISC = d;
     paintDiscover();
     // The rollover. A minute is the resolution a reader would notice and the check costs one date format and
@@ -3718,6 +3930,7 @@ function palOpen() {
   document.getElementById("palq").focus();
 }
 
+__SETJS__
 // Theme and clipboard are wired outside buildChips because buildChips only runs once `data.json` has
 // arrived. When the fetch fails -- a contributor opening the file off disk, which the catch block above
 // exists for -- the toggle used to be dead too, so the error page could not be read in light mode.
@@ -3732,86 +3945,10 @@ function wire() {
   // `prepare()` runs off the `data.json` fetch while this runs synchronously at boot. One more small key on
   // a path already waiting on a 556 KB body.
   loadVisit();
-  const btn = document.getElementById("theme");
-  const menu = document.getElementById("setmenu");
-  const setbtn = document.getElementById("setbtn");
-  const ths = Array.from(document.querySelectorAll(".thb"));
-  // One paint for both axes rather than one per control, because everything downstream of a theme change
-  // is downstream of either change: the mode toggle's label, which theme reads as pressed, the browser
-  // chrome, and the deployment badge's own colours. Every path that moves either axis calls this -- the
-  // toggle, the four theme buttons, the OS-preference listener, and the initial agreement with the head
-  // script -- so there is one place where "the page now looks like X" is made true.
-  const paintSettings = () => {
-    const light = document.documentElement.dataset.theme === "light";
-    btn.textContent = light ? "Dark theme" : "Light theme";
-    btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
-    const skin = document.documentElement.dataset.skin;
-    for (const t of ths) t.setAttribute("aria-pressed", String(t.dataset.skin === skin));
-    // Read off the stylesheet rather than restated here, so --plane and the browser chrome cannot drift.
-    // This is also what retires the head script's eight-entry map: after first paint the computed value
-    // exists, so the map is never consulted again and cannot be the thing that is wrong.
-    const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
-    if (plane) document.getElementById("tc").content = plane;
-    paintDeployBadge();
-  };
-  btn.onclick = () => {
-    const light = document.documentElement.dataset.theme !== "light";
-    document.documentElement.dataset.theme = light ? "light" : "dark";
-    // The choice is the point: it used to last until the next navigation, so a reader who needs light
-    // re-picked it on every page load and every shared filter link.
-    try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
-    paintSettings();
-  };
-  // The theme axis, and it writes the same key the head script reads. Not validated here the way the head
-  // script validates it: the only values that reach this are the four `data-skin` attributes in the markup,
-  // and the page cannot offer a theme it has no block for. The head script is where an unknown name has to
-  // be rejected, because that is the one place a value can arrive from a previous release.
-  const setSkin = (s) => {
-    document.documentElement.dataset.skin = s;
-    try { localStorage.setItem("atlas-skin", s); } catch (e) {}
-    paintSettings();
-  };
-  for (const t of ths) t.onclick = () => setSkin(t.dataset.skin);
-  // `hidden` is the state, and the attribute rather than a class deliberately: it takes the panel out of
-  // the accessibility tree as well as off the screen, which is what a closed menu should be. aria-expanded
-  // on the button is the same fact said to a screen reader.
-  // `setopen` on the masthead is what lifts the panel over the pinned bar -- see the `.setmenu` comment in
-  // the stylesheet for why the parent has to move and not the panel. Toggled here and nowhere else, so the
-  // class and the `hidden` attribute cannot end up disagreeing about whether the menu is open.
-  const setOpen = (open) => {
-    menu.hidden = !open;
-    setbtn.setAttribute("aria-expanded", String(open));
-    document.querySelector("header").classList.toggle("setopen", open);
-  };
-  setbtn.onclick = () => setOpen(menu.hidden);
-  // Escape from anywhere inside, and focus goes back to the button that opened it -- a menu that closes
-  // and leaves focus on a removed element drops a keyboard reader at the top of the document.
-  menu.addEventListener("keydown", ev => {
-    if (ev.key === "Escape") { setOpen(false); setbtn.focus(); }
-  });
-  // Both of these ask the same question -- did attention leave the menu -- and they have to be two
-  // listeners because a pointer and a keyboard leave differently: a click lands somewhere else without
-  // moving focus, and Tab past the last theme moves focus without a click. `closest` on the wrapper and
-  // not on the panel, so pressing the button that opened it is not "leaving" and does not fight
-  // `setbtn.onclick` for who gets to close it. Guarded because `focusin` can target the document itself.
-  for (const kind of ["click", "focusin"])
-    document.addEventListener(kind, ev => {
-      const inside = ev.target && ev.target.closest && ev.target.closest(".setwrap");
-      if (!menu.hidden && !inside) setOpen(false);
-    });
-  // The head script already resolved both axes; this only has to agree with it, since the markup's
-  // hardcoded "Light theme" and pressed Graphite are wrong for any reader who chose otherwise.
-  paintSettings();
-  // Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a
-  // theme they explicitly chose because the sun went down is worse than not following at all. Only the
-  // mode axis: nothing in `prefers-*` has an opinion about which of four palettes a reader wants.
-  try {
-    matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
-      if (localStorage.getItem("theme")) return;
-      document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
-      paintSettings();
-    });
-  } catch (e) {}
+  // The whole Settings control -- both theme axes, the panel, and the OS-preference listener -- is
+  // `SETTINGS_JS`, shared verbatim with `31_home.py`. `paintDeployBadge` is passed in because it is
+  // this page's and not the control's.
+  wireSettings(paintDeployBadge);
 
   // One delegated listener rather than one per button: `render()` replaces the whole subtree on every
   // keystroke, so per-row handlers would be 120 attachments discarded 120 times a second of typing.
@@ -4798,8 +4935,8 @@ async function loadSemantic() {
   SEM_STATE = "loading";
   try {
     const grab = async (name, how) => {
-      const res = await fetch("search/" + name);
-      if (!res.ok) throw new Error("search/" + name + " -> " + res.status);
+      const res = await fetch("__UP__search/" + name);
+      if (!res.ok) throw new Error("__UP__search/" + name + " -> " + res.status);
       return how === "json" ? res.json() : res.arrayBuffer();
     };
     const [meta, vocab, table, docs] = await Promise.all([
@@ -4965,8 +5102,8 @@ async function loadMap() {
     await semanticReady();
     if (SEM_STATE !== "live") throw new Error("the semantic index is " + SEM_STATE);
     const grab = async name => {
-      const res = await fetch("search/" + name);
-      if (!res.ok) throw new Error("search/" + name + " -> " + res.status);
+      const res = await fetch("__UP__search/" + name);
+      if (!res.ok) throw new Error("__UP__search/" + name + " -> " + res.status);
       return res.arrayBuffer();
     };
     const [xyb, nearb] = await Promise.all([grab("xy.bin"), grab("near.bin")]);
@@ -6270,7 +6407,7 @@ function discoverCard(nwo, r, col, cohort) {
   const meta = [];
   if (r[col.stars]) meta.push(r[col.stars].toLocaleString() + " stars");
   if (r[col.lang]) meta.push(esc(r[col.lang]));
-  return '<a class="dsc' + (isnew ? " nw" : "") + '" href="discover/#repo=' + esc(nwo) +
+  return '<a class="dsc' + (isnew ? " nw" : "") + '" href="__UP__discover/#repo=' + esc(nwo) +
     '" style="--card-accent:var(--accent-' + DACCENTS[cat % DACCENTS.length] + ')">' +
     '<span class="t"><span class="tag cat">' + esc(label) + "</span>" +
     (isnew ? '<span class="dsnew">New</span>' : "") + "</span>" +
@@ -6772,28 +6909,14 @@ function esc(s) {
     c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 }
 </script>
-<!-- The offline shell. Last thing on the page and inside a `load` listener, because a service worker is
-     the least urgent thing here: registering it earlier competes with the fetch that puts rows on screen.
-     `sw.js` is written by `scripts/24_pwa.py` and caches the shell, this page's navigation and data.json;
-     everything cross-origin it leaves alone.
-
-     `updateViaCache: "none"` because Pages serves with `max-age=600`, and the one file that must never be
-     read from the HTTP cache is the worker that decides what the HTTP cache is for. The explicit
-     `reg.update()` is not belt-and-braces: per spec, `register()` with an unchanged script URL resolves
-     against the existing registration without queueing an update job, so without this line a reader who
-     keeps the tab open gets a new worker only when the browser's own soft-update timer decides.
-
-     Guarded on the protocol as well as on support: from `file://` the registration throws a
-     SecurityError, and a contributor opening the page off disk should not see it. -->
-<script>
-if ("serviceWorker" in navigator && location.protocol !== "file:") {
-  addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js", {updateViaCache: "none"})
-      .then(reg => { if (reg.active) reg.update().catch(() => {}); })
-      .catch(() => {});
-  });
-}
-</script>
+<!-- The offline shell is registered from the homepage, not from here. `scripts/31_home.py` carries the
+     registration verbatim, including the three clauses that are easy to drop and each load-bearing --
+     the `file://` guard, `updateViaCache: "none"` and the explicit `reg.update()`; see `SW_JS` there.
+     It moved because a worker's scope is the directory of its own script and `PRECACHE` in
+     `scripts/24_pwa.py` starts at `"./"`: registering from the site root covers this page and every other
+     directory, where a second registration from inside `catalog/` would claim a narrower scope over the
+     same worker. `sw.js` still caches this page's navigation and `data.json` -- what changed is which
+     page asks for it, not what it holds. -->
 __ANALYTICS__</body>
 </html>
 """
@@ -6852,10 +6975,16 @@ def main() -> None:
     # anything it decided looked like a draft. There is no Jekyll here.
     (OUT / ".nojekyll").write_text("", encoding="utf-8")
     page = substitute(PAGE, data, REPO, b17.SITE)
-    (OUT / "index.html").write_text(page, encoding="utf-8")
+    # `catalog/index.html`, not `index.html`. The site root is the shelves homepage `scripts/31_home.py`
+    # writes; this is the catalogue, and the two generators would otherwise overwrite each other depending
+    # on which stage ran last. `data.json` above stays at the root, because it is not this page's file --
+    # the homepage, the facet pages and the detail pages read it too, and moving it would be 180-odd
+    # relative URLs elsewhere to save one here. See `UP`.
+    (OUT / "catalog").mkdir(parents=True, exist_ok=True)
+    (OUT / "catalog" / "index.html").write_text(page, encoding="utf-8")
 
-    for f in ("index.html", "data.json"):
-        print(f"{f:12s} {(OUT / f).stat().st_size / 1024:8.1f} KB")
+    for f in (Path("catalog") / "index.html", Path("data.json")):
+        print(f"{str(f):20s} {(OUT / f).stat().st_size / 1024:8.1f} KB")
     print(f"{len(data['rows']):,} repos · {len(data['cats'])} topics · "
           f"{len(data['targets'])} targets · {sum(r[4] for r in data['rows']):,} stars")
     # Two numbers, because they answer different questions and a build that conflates them cannot be read.
