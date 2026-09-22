@@ -514,6 +514,7 @@ jobs:
           : > "$RUNNER_TEMP/skipped"
           : > "$RUNNER_TEMP/deleted"
           : > "$RUNNER_TEMP/static"
+          : > "$RUNNER_TEMP/beta"
           git ls-files docs mega-list | while IFS= read -r f; do
             case "$f" in
               # `docs/collections/*` and `mega-list/collections/*` join the weekly-only set rather than
@@ -549,6 +550,12 @@ jobs:
               # are not weekly's either: nothing in this repository generates them, on any schedule.
               docs/CNAME|docs/favicon.svg|docs/assets/atlas-byte.png)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/static" ;;
+              # The redesign beta -- see weekly.yml for the whole note, including why it is its own arm
+              # rather than the `static` list above. It is not in the skip at the top of this step either:
+              # that list is what weekly.yml owns, and weekly does not build this any more than this job
+              # does. `scripts/30_v2.py` owns all 505 files and runs on demand.
+              docs/v2/*)
+                printf '%s\n' "$f" >> "$RUNNER_TEMP/beta" ;;
               mega-list/topics/*|mega-list/targets/*|mega-list/lists/*|mega-list/platforms/*|docs/topic/*|docs/target/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/prunable" ;;
               *)
@@ -559,9 +566,13 @@ jobs:
           nf="$(wc -l < "$RUNNER_TEMP/frozen" | tr -d ' ')"
           nd="$(wc -l < "$RUNNER_TEMP/deleted" | tr -d ' ')"
           nst="$(wc -l < "$RUNNER_TEMP/static" | tr -d ' ')"
+          nb="$(wc -l < "$RUNNER_TEMP/beta" | tr -d ' ')"
           if [ "$nst" -gt 0 ]; then
             echo "Hand-maintained files no generator owns, left as they are:"
             sed 's/^/  /' "$RUNNER_TEMP/static"
+          fi
+          if [ "$nb" -gt 0 ]; then
+            echo "Redesign beta under docs/v2/, owned by scripts/30_v2.py and rebuilt on demand: ${nb} file(s)."
           fi
           if [ "$nd" -gt 0 ]; then
             echo "Tracked files this build deleted, whose removal the commit below carries:"
@@ -580,7 +591,7 @@ jobs:
           fi
           ns="$(wc -l < "$RUNNER_TEMP/skipped" | tr -d ' ')"
           nt="$(git ls-files docs mega-list | wc -l | tr -d ' ')"
-          echo "Rewrote all $((nt - ns - nd - nst)) of the tracked files this job is responsible for, deleted ${nd}; skipped ${ns} left to weekly.yml, ${nst} hand-maintained."
+          echo "Rewrote all $((nt - ns - nd - nst - nb)) of the tracked files this job is responsible for, deleted ${nd}; skipped ${ns} left to weekly.yml, ${nst} hand-maintained, ${nb} in the docs/v2/ beta."
 
       # ---------------------------------------------------------------- verification, before publication
       #
