@@ -20,6 +20,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
 import app_flags  # noqa: E402
+import mark  # noqa: E402
 
 HOST = "127.0.0.1"
 
@@ -75,8 +76,9 @@ h1{font-size:clamp(31px,6vw,54px);line-height:1.02;letter-spacing:-.04em;margin:
   color:#b7c3df;padding:12px;font:11px/1.45 "Cascadia Code",Consolas,monospace;margin:0 0 18px}.log.on{display:block}
 @media(max-width:720px){.hero{padding-top:34px}.grid{grid-template-columns:1fr}.flag{padding:15px}.dockin{flex-wrap:wrap}.status{width:100%}
   .action{flex:1;padding-inline:8px}.switch{width:82px}}
+__MARKCSS__
 </style></head><body><div class="wrap hero">
-<p class="eyebrow">Local control panel · build-time kill switches</p><h1>Atlas application <span>flags</span></h1>
+<p class="eyebrow">Local control panel · build-time kill switches</p><h1>__MARK__Atlas application <span>flags</span></h1>
 <p class="intro">Every value is one bit and every effect is explicit. <b>1 means ON.</b> <b>0 means OFF / DISABLED.</b>
 Save atomically, then render the exact configuration readers will receive.</p>
 <div class="summary"><span class="pill"><b id="on-count">—</b> ON</span><span class="pill"><b id="off-count">—</b> OFF</span>
@@ -130,7 +132,9 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler API
         if self.path == "/":
-            self.reply(HTTPStatus.OK, PAGE.replace("__TOKEN__", self.token).encode("utf-8"), "text/html; charset=utf-8")
+            self.reply(HTTPStatus.OK, PAGE.replace("__TOKEN__", self.token)
+                    .replace("__MARK__", mark.svg())
+                    .replace("__MARKCSS__", mark.CSS).encode("utf-8"), "text/html; charset=utf-8")
         elif self.path == "/api/flags":
             try:
                 self.json_reply(HTTPStatus.OK, {"revision": app_flags.revision(), "flags": catalog()})

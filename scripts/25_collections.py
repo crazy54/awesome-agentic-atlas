@@ -97,6 +97,7 @@ b22 = _load("22_detail.py", "b22")
 # somebody else's import is how this breaks the day the import order changes. Stated here for that reason.
 # `osicons` is an identifier, so it needs none of the machinery above.
 sys.path.insert(0, str(HERE))
+import mark  # noqa: E402
 import osicons  # noqa: E402
 
 SITE = b19.b17.SITE
@@ -463,7 +464,8 @@ def render(coll: dict, others: list[dict], data: dict) -> str:
     return head(f"{coll['title']} — Awesome Agentic Atlas", desc, url, depth,
                 itemlist(coll, url)) + f"""<body>
 {osicons.SPRITE}
-<header><div class="wrap"><div class="top">
+<header><div class="wrap">
+  <nav class="brandbar">{mark.brand(rel(depth))}</nav><div class="top">
   <div>
     <p class="kick">Collection · {esc(coll["kicker"])}</p>
     <h1>{esc(coll["title"])}</h1>
@@ -547,7 +549,8 @@ def render_hub(colls: list[dict], data: dict) -> str:
     return head("Collections: recommended sets of agentic tools — Awesome Agentic Atlas",
                 desc, url, depth,
                 f'<script type="application/ld+json">{ld}</script>\n') + f"""<body>
-<header><div class="wrap"><div class="top">
+<header><div class="wrap">
+  <nav class="brandbar">{mark.brand(rel(depth))}</nav><div class="top">
   <div>
     <p class="kick">The opinionated corner</p>
     <h1>Collections</h1>
