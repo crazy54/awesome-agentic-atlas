@@ -19,11 +19,24 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The two literals track --plane in the two blocks at the top of detail.css. Once detail.js has run it
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // The eight literals track --plane in the eight blocks at the top of detail.css. Once detail.js has run
+  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+  //
+  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
+  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
+  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
+  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
+  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"}};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s]) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -136,7 +149,7 @@ try {
   <h2>Related in Plugins, Themes &amp; Clients</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../iofficeai/aionui/">AionUi</a><span class="nwo">iOfficeAI/AionUi</span><span class="desc">Open-source desktop client that runs multiple agent CLIs (Claude Code, Codex, Gemini CLI, Qwen Code) side by side, with multi-session chat, MCP and…</span></li><li><a href="../../farion1231/cc-switch/">cc-switch</a><span class="nwo">farion1231/cc-switch</span><span class="desc">(132.1k ⭐) - Cross-platform desktop assistant for Claude Code, Codex, OpenCode, OpenClaw, Grok Build, and Hermes Agent</span></li><li><a href="../../sangrokjung/claude-forge/">Claude Forge</a><span class="nwo">sangrokjung/claude-forge</span><span class="desc">&quot;oh-my-zsh for Claude Code&quot;. Complete toolkit: 11 agents, 33 commands, 24 skills, 15 hooks (covering 21 lifecycle events) + 9 opt-in examples, 9…</span></li><li><a href="../../trailhq/graft/">Graft</a><span class="nwo">trailhq/Graft</span><span class="desc">Builds a local, regenerable graph of plain-English system explanations and code relationships, then rides along inside Claude Code, Cursor, Codex…</span></li><li><a href="../../agentopology/agentopology/">AgenTopology</a><span class="nwo">agentopology/agentopology</span><span class="desc">Declarative language and CLI for multi-agent orchestration -- define agents, flows, gates, hooks, group chats in one .at file, scaffold to 7…</span></li><li><a href="../../feder-cr/aihawk/">AIHawk</a><span class="nwo">feder-cr/AIHawk</span><span class="desc">Gives Gemini CLI a real Firefox to drive from plain-English instructions: opens pages, clicks, types, reads and screenshots through the real pointer…</span></li><li><a href="../../cohesivity-org/cohesivity-plugin/">Cohesivity</a><span class="nwo">cohesivity-org/cohesivity-plugin</span><span class="desc">cohesivity.ai offers free agent native backend services. Anonymous account (no-signup) to get started through MCP or API. Hosting, postgres, email…</span></li><li><a href="../../drpcorg/drpc-agent-skills/">dRPC Agent Skills</a><span class="nwo">drpcorg/drpc-agent-skills</span><span class="desc">Query blockchain RPCs from Gemini CLI. Fetch balances, read contracts, and check gas prices via dRPC</span></li></ul>
+  <ul class="kinlist"><li><a href="../../iofficeai/aionui/">AionUi</a><span class="nwo">iOfficeAI/AionUi</span><span class="desc">Open-source desktop client that runs multiple agent CLIs (Claude Code, Codex, Gemini CLI, Qwen Code) side by side, with multi-session chat, MCP and…</span></li><li><a href="../../farion1231/cc-switch/">cc-switch</a><span class="nwo">farion1231/cc-switch</span><span class="desc">(132.1k ⭐) - Cross-platform desktop assistant for Claude Code, Codex, OpenCode, OpenClaw, Grok Build, and Hermes Agent</span></li><li><a href="../../sangrokjung/claude-forge/">Claude Forge</a><span class="nwo">sangrokjung/claude-forge</span><span class="desc">&quot;oh-my-zsh for Claude Code&quot;. Complete toolkit: 11 agents, 33 commands, 24 skills, 15 hooks (covering 21 lifecycle events) + 9 opt-in examples, 9…</span></li><li><a href="../../trailhq/graft/">Graft</a><span class="nwo">trailhq/Graft</span><span class="desc">Builds a local, regenerable graph of plain-English system explanations and code relationships, then rides along inside Claude Code, Cursor, Codex…</span></li><li><a href="../../agentopology/agentopology/">AgenTopology</a><span class="nwo">agentopology/agentopology</span><span class="desc">Declarative language and CLI for multi-agent orchestration -- define agents, flows, gates, hooks, group chats in one .at file, scaffold to 7…</span></li><li><a href="../../cohesivity-org/cohesivity-plugin/">Cohesivity</a><span class="nwo">cohesivity-org/cohesivity-plugin</span><span class="desc">cohesivity.ai offers free agent native backend services. Anonymous account (no-signup) to get started through MCP or API. Hosting, postgres, email…</span></li><li><a href="../../drpcorg/drpc-agent-skills/">dRPC Agent Skills</a><span class="nwo">drpcorg/drpc-agent-skills</span><span class="desc">Query blockchain RPCs from Gemini CLI. Fetch balances, read contracts, and check gas prices via dRPC</span></li><li><a href="../../piebald-ai/gemini-cli-desktop/">Gemini CLI Desktop</a><span class="nwo">Piebald-AI/gemini-cli-desktop</span><span class="desc">Beautiful desktop and web UI that makes Gemini CLI accessible to non-terminal/mobile users while preserving all its powerful features</span></li></ul>
 </section>
 </div></main>
 

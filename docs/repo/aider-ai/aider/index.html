@@ -19,11 +19,24 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The two literals track --plane in the two blocks at the top of detail.css. Once detail.js has run it
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // The eight literals track --plane in the eight blocks at the top of detail.css. Once detail.js has run
+  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+  //
+  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
+  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
+  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
+  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
+  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"}};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s]) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -136,7 +149,7 @@ try {
   <h2>Related in Coding Agents</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../asheshgoplani/agent-deck/">agent-deck</a><span class="nwo">asheshgoplani/agent-deck</span><span class="desc">One TUI covering sessions across Claude Code, Codex, Gemini, and OpenCode, with live status and resume for each.</span></li><li><a href="../../izll/agent-session-manager/">agent-session-manager</a><span class="nwo">izll/agent-session-manager</span><span class="desc">tmux TUI with live status, session groups, resume and fork, diff review, and mobile push when an agent needs an answer. Claude Code, Codex, Gemini…</span></li><li><a href="../../izll/agent-session-manager-desktop/">agent-session-manager-desktop</a><span class="nwo">izll/agent-session-manager-desktop</span><span class="desc">Desktop GUI over tmux where each session holds agent and shell tabs with per-tab working directories; waiting agents raise a header counter you can…</span></li><li><a href="../../alihamzaazam/repomon/">repomon</a><span class="nwo">AliHamzaAzam/repomon</span><span class="desc">Rust TUI that supervises a fleet across many repositories at once, in durable tmux sessions you can approve from your phone.</span></li><li><a href="../../archerkattri/stepback/">stepback</a><span class="nwo">Archerkattri/stepback</span><span class="desc">Checkpoint and rewind for any AI coding agent (Claude Code, Codex, aider) via isolated git shadow-refs that never touch your real HEAD, index, or…</span></li><li><a href="../../openhands/openhands/">OpenHands</a><span class="nwo">OpenHands/OpenHands</span><span class="desc">OpenDevin is an open-source initiative aimed at replicating and enhancing the autonomous AI software engineer Devin, focusing on collaboration and…</span></li><li><a href="../../swarmclawai/swarmclaw/">SwarmClaw</a><span class="nwo">swarmclawai/swarmclaw</span><span class="desc">Self-hosted AI runtime that orchestrates Claude Code, Codex, Gemini CLI, OpenCode, Copilot CLI, Cursor Agent, Goose, Qwen Code, and Droid with…</span></li><li><a href="../../charlie85270/dorothy/">dorothy</a><span class="nwo">Charlie85270/Dorothy</span><span class="desc">Open-source desktop app to orchestrate multiple AI CLI agents (Claude Code, Codex, Gemini) simultaneously with automations, Kanban management…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../asheshgoplani/agent-deck/">agent-deck</a><span class="nwo">asheshgoplani/agent-deck</span><span class="desc">One TUI covering sessions across Claude Code, Codex, Gemini, and OpenCode, with live status and resume for each.</span></li><li><a href="../../izll/agent-session-manager/">agent-session-manager</a><span class="nwo">izll/agent-session-manager</span><span class="desc">Live tmux TUI with session groups, resume and fork, diff review, and mobile push when an agent needs an answer. Claude Code, Codex, Gemini, Aider…</span></li><li><a href="../../izll/agent-session-manager-desktop/">agent-session-manager-desktop</a><span class="nwo">izll/agent-session-manager-desktop</span><span class="desc">Desktop GUI over tmux where each session holds agent and shell tabs with per-tab working directories; waiting agents raise a header counter you can…</span></li><li><a href="../../alihamzaazam/repomon/">repomon</a><span class="nwo">AliHamzaAzam/repomon</span><span class="desc">Rust TUI that supervises a fleet across many repositories at once, in durable tmux sessions you can approve from your phone.</span></li><li><a href="../../archerkattri/stepback/">stepback</a><span class="nwo">Archerkattri/stepback</span><span class="desc">Checkpoint and rewind for any AI coding agent (Claude Code, Codex, aider) via isolated git shadow-refs that never touch your real HEAD, index, or…</span></li><li><a href="../../openhands/openhands/">OpenHands</a><span class="nwo">OpenHands/OpenHands</span><span class="desc">OpenDevin is an open-source initiative aimed at replicating and enhancing the autonomous AI software engineer Devin, focusing on collaboration and…</span></li><li><a href="../../swarmclawai/swarmclaw/">SwarmClaw</a><span class="nwo">swarmclawai/swarmclaw</span><span class="desc">Self-hosted AI runtime that orchestrates Claude Code, Codex, Gemini CLI, OpenCode, Copilot CLI, Cursor Agent, Goose, Qwen Code, and Droid with…</span></li><li><a href="../../charlie85270/dorothy/">dorothy</a><span class="nwo">Charlie85270/Dorothy</span><span class="desc">Open-source desktop app to orchestrate multiple AI CLI agents (Claude Code, Codex, Gemini) simultaneously with automations, Kanban management…</span></li></ul>
 </section>
 </div></main>
 

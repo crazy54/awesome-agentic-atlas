@@ -19,11 +19,24 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The two literals track --plane in the two blocks at the top of detail.css. Once detail.js has run it
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // The eight literals track --plane in the eight blocks at the top of detail.css. Once detail.js has run
+  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+  //
+  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
+  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
+  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
+  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
+  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"}};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s]) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -136,7 +149,7 @@ try {
   <h2>Related in Frameworks &amp; SDKs</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../aeonfun/aeon/">aeon</a><span class="nwo">aeonfun/aeon</span><span class="desc">Autonomous agent framework that runs unattended on GitHub Actions, triggered by cron schedules or repository events. Dispatches skills to six…</span></li><li><a href="../../skullfire07/cortex-memory/">Cortex</a><span class="nwo">SKULLFIRE07/cortex-memory</span><span class="desc">Persistent AI memory for coding assistants. Auto-captures decisions, patterns, and context across sessions. VSCode extension + CLI + MCP server. MIT…</span></li><li><a href="../../fmarzochi/egc/">EGC</a><span class="nwo">Fmarzochi/EGC</span><span class="desc">Persistent cross-session memory MCP server for 13+ AI coding tools. SQLite-backed state survives context resets and keeps Claude Code, Cursor…</span></li><li><a href="../../razzant/claudexor/">Claudexor</a><span class="nwo">razzant/claudexor</span><span class="desc">Routes one coding thread across harnesses with quota-aware rotation between subscription profiles, Best-of-N runs, and cross-family review.</span></li><li><a href="../../naw103/foremerge/">foremerge</a><span class="nwo">naw103/foremerge</span><span class="desc">Coordination protocol above Git: agents declare intent, semantic scope, and operation before writing code, deterministic rules raise findings when…</span></li><li><a href="../../jamjet-labs/jamjet/">jamjet-labs/jamjet</a><span class="nwo">jamjet-labs/jamjet</span><span class="desc">Durable, agent-native AI runtime with native MCP client + server and A2A support. Rust core for performance, Python authoring for ergonomics…</span></li><li><a href="../../lobu-ai/lobu/">Lobu</a><span class="nwo">lobu-ai/lobu</span><span class="desc">Open-source context and control plane for AI agents. Connect company tools once and share permission-aware context across ChatGPT, Claude, Codex…</span></li><li><a href="../../pydantic/pydantic-ai/">Pydantic AI v2</a><span class="nwo">pydantic/pydantic-ai</span><span class="desc">June 2026 harness-first redesign built around the Capability primitive: a single composable unit bundling instructions, tools, lifecycle hooks, and…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../aeonfun/aeon/">aeon</a><span class="nwo">aeonfun/aeon</span><span class="desc">Autonomous agent framework that runs unattended on GitHub Actions, triggered by cron schedules or repository events. Dispatches skills to six…</span></li><li><a href="../../skullfire07/cortex-memory/">Cortex</a><span class="nwo">SKULLFIRE07/cortex-memory</span><span class="desc">Persistent AI memory for coding assistants. Auto-captures decisions, patterns, and context across sessions. VSCode extension + CLI + MCP server. MIT…</span></li><li><a href="../../fmarzochi/egc/">EGC</a><span class="nwo">Fmarzochi/EGC</span><span class="desc">Persistent cross-session memory MCP server for 13+ AI coding tools. SQLite-backed state survives context resets and keeps Claude Code, Cursor…</span></li><li><a href="../../busabase/busabase/">Busabase</a><span class="nwo">busabase/busabase</span><span class="desc">Local-first database and workspace for AI agents that keeps structured data, durable knowledge, documents, files, skills, and apps in one searchable…</span></li><li><a href="../../razzant/claudexor/">Claudexor</a><span class="nwo">razzant/claudexor</span><span class="desc">Routes one coding thread across harnesses with quota-aware rotation between subscription profiles, Best-of-N runs, and cross-family review.</span></li><li><a href="../../naw103/foremerge/">foremerge</a><span class="nwo">naw103/foremerge</span><span class="desc">Coordination protocol above Git: agents declare intent, semantic scope, and operation before writing code, deterministic rules raise findings when…</span></li><li><a href="../../jamjet-labs/jamjet/">jamjet-labs/jamjet</a><span class="nwo">jamjet-labs/jamjet</span><span class="desc">Durable, agent-native AI runtime with native MCP client + server and A2A support. Rust core for performance, Python authoring for ergonomics…</span></li><li><a href="../../lobu-ai/lobu/">Lobu</a><span class="nwo">lobu-ai/lobu</span><span class="desc">Open-source context and control plane for AI agents. Connect company tools once and share permission-aware context across ChatGPT, Claude, Codex…</span></li></ul>
 </section>
 </div></main>
 

@@ -19,11 +19,24 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The two literals track --plane in the two blocks at the top of detail.css. Once detail.js has run it
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // The eight literals track --plane in the eight blocks at the top of detail.css. Once detail.js has run
+  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+  //
+  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
+  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
+  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
+  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
+  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"}};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s]) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -136,7 +149,7 @@ try {
   <h2>Related in Context, Memory &amp; RAG</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../vectorize-io/hindsight/">Hindsight</a><span class="nwo">vectorize-io/hindsight</span><span class="desc">Agent memory system organized around three explicit operations—retain, recall, and reflect—with semantic, keyword, graph, and temporal retrieval…</span></li><li><a href="../../wolfe-jam/faf-cli/">faf-cli</a><span class="nwo">Wolfe-Jam/faf-cli</span><span class="desc">by Wolfe-Jam - Authors and versions CLAUDE.md and AGENTS.md from a repository&#x27;s actual detected stack, so Claude Code&#x27;s project context stays in…</span></li><li><a href="../../geiserx/lynxprompt/">LynxPrompt</a><span class="nwo">GeiserX/LynxPrompt</span><span class="desc">Self-hostable platform for managing AI IDE configuration files. Generates, syncs, and shares configs (.cursorrules, CLAUDE.md…</span></li><li><a href="../../coleam00/claude-memory-compiler/">claude-memory-compiler</a><span class="nwo">coleam00/claude-memory-compiler</span><span class="desc">Turns raw Claude Code sessions into a self-evolving knowledge base: hooks capture every interaction, the Agent SDK extracts decisions and lessons…</span></li><li><a href="../../mzmmoazam/claude-overlay/">claude-overlay</a><span class="nwo">mzmmoazam/claude-overlay</span><span class="desc">CLI for managing Claude Code project configs across custom providers (Databricks, Bedrock, OpenRouter, LiteLLM, Cloudflare). Overlay merge/remove…</span></li><li><a href="../../c0x12c/ai-toolkit/">spartan-ai-toolkit</a><span class="nwo">c0x12c/ai-toolkit</span><span class="desc">Engineering discipline layer for Claude Code -- 67 slash commands, 20 coding rules, 27 skills, 9 agents, quality gates between every step. 8 stack…</span></li><li><a href="../../rohitg00/agentmemory/">agentmemory</a><span class="nwo">rohitg00/agentmemory</span><span class="desc">Persistent memory layer purpose-built for coding agents with 95.2% retrieval accuracy and 92% token reduction, backed by real-world benchmarks. Its…</span></li><li><a href="../../busabase/busabase/">Busabase</a><span class="nwo">busabase/busabase</span><span class="desc">Local-first database and workspace for AI agents that keeps structured data, durable knowledge, documents, files, skills, and apps in one searchable…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../vectorize-io/hindsight/">Hindsight</a><span class="nwo">vectorize-io/hindsight</span><span class="desc">Agent memory system organized around three explicit operations—retain, recall, and reflect—with semantic, keyword, graph, and temporal retrieval…</span></li><li><a href="../../wolfe-jam/faf-cli/">faf-cli</a><span class="nwo">Wolfe-Jam/faf-cli</span><span class="desc">by Wolfe-Jam - Authors and versions CLAUDE.md and AGENTS.md from a repository&#x27;s actual detected stack, so Claude Code&#x27;s project context stays in…</span></li><li><a href="../../geiserx/lynxprompt/">LynxPrompt</a><span class="nwo">GeiserX/LynxPrompt</span><span class="desc">Self-hostable platform for managing AI IDE configuration files. Generates, syncs, and shares configs (.cursorrules, CLAUDE.md…</span></li><li><a href="../../coleam00/claude-memory-compiler/">claude-memory-compiler</a><span class="nwo">coleam00/claude-memory-compiler</span><span class="desc">Turns raw Claude Code sessions into a self-evolving knowledge base: hooks capture every interaction, the Agent SDK extracts decisions and lessons…</span></li><li><a href="../../mzmmoazam/claude-overlay/">claude-overlay</a><span class="nwo">mzmmoazam/claude-overlay</span><span class="desc">CLI for managing Claude Code project configs across custom providers (Databricks, Bedrock, OpenRouter, LiteLLM, Cloudflare). Overlay merge/remove…</span></li><li><a href="../../c0x12c/ai-toolkit/">spartan-ai-toolkit</a><span class="nwo">c0x12c/ai-toolkit</span><span class="desc">Engineering discipline layer for Claude Code -- 67 slash commands, 20 coding rules, 27 skills, 9 agents, quality gates between every step. 8 stack…</span></li><li><a href="../../rohitg00/agentmemory/">agentmemory</a><span class="nwo">rohitg00/agentmemory</span><span class="desc">Persistent memory layer purpose-built for coding agents with 95.2% retrieval accuracy and 92% token reduction, backed by real-world benchmarks. Its…</span></li><li><a href="../../serpro69/capy/">capy</a><span class="nwo">serpro69/capy</span><span class="desc">by serpro69 - 🦫 Privacy-first virtualization layer for LLM context with MCP protocol for tool access</span></li></ul>
 </section>
 </div></main>
 

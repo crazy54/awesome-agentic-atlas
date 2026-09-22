@@ -19,11 +19,24 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The two literals track --plane in the two blocks at the top of detail.css. Once detail.js has run it
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // The eight literals track --plane in the eight blocks at the top of detail.css. Once detail.js has run
+  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
-  document.getElementById("tc").content = t === "light" ? "#FAFBFC" : "#101217";
+  //
+  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
+  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
+  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
+  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
+  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"}};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s]) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -136,7 +149,7 @@ try {
   <h2>Related in MCP Servers</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../ypollak2/llm-router/">llm-router</a><span class="nwo">ypollak2/llm-router</span><span class="desc">by Yali Pollak - A local-first router that sits under Claude Code (and Codex/Gemini CLI) and sends each prompt to the cheapest capable model, with…</span></li><li><a href="../../vshulcz/deja-vu/">deja-vu</a><span class="nwo">vshulcz/deja-vu</span><span class="desc">Indexes coding-agent sessions already written to disk and serves them back over MCP with no LLM calls, embeddings, or API keys. The zero-dependency…</span></li><li><a href="../../lians-ai/lians/">Lians-ai/Lians</a><span class="nwo">Lians-ai/Lians</span><span class="desc">Bitemporal agent memory with deterministic fact supersession, point-in-time recall, memory lineage, conflict tracking, and tamper-evident audit…</span></li><li><a href="../../yylo-dev/roundtable/">Roundtable</a><span class="nwo">yylo-dev/roundtable</span><span class="desc">Zero-configuration unified AI assistant management built on the FastMCP framework. Provides seamless integration with Claude, ChatGPT, and other AI…</span></li><li><a href="../../betabots-llc/callimachus/">Callimachus</a><span class="nwo">BetaBots-LLC/callimachus</span><span class="desc">Local index and hybrid search (SQLite FTS5 + on-device vector KNN) over your AI coding-agent conversation history across 11 tools (Claude Code…</span></li><li><a href="../../get-concord-ai/concord-mcp/">Concord MCP</a><span class="nwo">Get-Concord-AI/concord-mcp</span><span class="desc">Shared coordination protocol for Claude Code, Codex, Cursor, Gemini CLI, and Grok Build agents to claim work, detect edit collisions, exchange…</span></li><li><a href="../../nagarjuna2997/ios-agent-skill/">Nagarjuna2997/ios-agent-skill</a><span class="nwo">Nagarjuna2997/ios-agent-skill</span><span class="desc">Swift code reviews, local Apple references and app scaffolding in one MCP connection. Bundled simulator tools require macOS/Xcode</span></li><li><a href="../../26zl/cybersec-toolkit/">26zl/cybersec-toolkit</a><span class="nwo">26zl/cybersec-toolkit</span><span class="desc">One command installs 670+ security tools; an authorization-gated MCP server lets AI clients discover and run them for CTF, pentest, bug bounty, and…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../ypollak2/llm-router/">llm-router</a><span class="nwo">ypollak2/llm-router</span><span class="desc">by Yali Pollak - A local-first router that sits under Claude Code (and Codex/Gemini CLI) and sends each prompt to the cheapest capable model, with…</span></li><li><a href="../../vshulcz/deja-vu/">deja-vu</a><span class="nwo">vshulcz/deja-vu</span><span class="desc">Indexes coding-agent sessions already written to disk and serves them back over MCP with no LLM calls, embeddings, or API keys. The zero-dependency…</span></li><li><a href="../../lians-ai/lians/">Lians-ai/Lians</a><span class="nwo">Lians-ai/Lians</span><span class="desc">Bitemporal agent memory with deterministic fact supersession, point-in-time recall, memory lineage, conflict tracking, and tamper-evident audit…</span></li><li><a href="../../yylo-dev/roundtable/">Roundtable</a><span class="nwo">yylo-dev/roundtable</span><span class="desc">Zero-configuration unified AI assistant management built on the FastMCP framework. Provides seamless integration with Claude, ChatGPT, and other AI…</span></li><li><a href="../../betabots-llc/callimachus/">Callimachus</a><span class="nwo">BetaBots-LLC/callimachus</span><span class="desc">Local index and hybrid search (SQLite FTS5 + on-device vector KNN) over your AI coding-agent conversation history across 11 tools (Claude Code…</span></li><li><a href="../../get-concord-ai/concord-mcp/">Concord MCP</a><span class="nwo">Get-Concord-AI/concord-mcp</span><span class="desc">Shared coordination protocol for Claude Code, Codex, Cursor, Gemini CLI, and Grok Build agents to claim work, detect edit collisions, exchange…</span></li><li><a href="../../mnemoverse/mcp-memory-server/">Mnemoverse</a><span class="nwo">mnemoverse/mcp-memory-server</span><span class="desc">Hosted memory engine over MCP: decisions, preferences, and lessons follow an agent between sessions and tools, and recall re-ranks from reported…</span></li><li><a href="../../nagarjuna2997/ios-agent-skill/">Nagarjuna2997/ios-agent-skill</a><span class="nwo">Nagarjuna2997/ios-agent-skill</span><span class="desc">Swift code reviews, local Apple references and app scaffolding in one MCP connection. Bundled simulator tools require macOS/Xcode</span></li></ul>
 </section>
 </div></main>
 
