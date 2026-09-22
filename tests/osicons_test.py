@@ -328,7 +328,7 @@ eq("...and draw every one it does", sorted(set(osicons.IDS) - referenced), [])
 
 print("\n── the names " + "─" * 84)
 
-INDEX = DOCS / "index.html"
+INDEX = DOCS / "catalog" / "index.html"
 # The three PRERENDERED families. The index is the fourth surface and is deliberately not in this dict:
 # it builds its table and its five filter chips in the browser, so `osIcon()` assembles `href="#" + OSI[k]`
 # at runtime and the committed document contains the sprite and no `<use>` at all. A static walk over it
