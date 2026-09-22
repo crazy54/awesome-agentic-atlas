@@ -11,7 +11,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/zed-industries/zed"><img src="https://opengraph.githubassets.com/1/zed-industries/zed" width="260"></a> | <a href="https://github.com/upstash/context7"><img src="https://raw.githubusercontent.com/upstash/context7/master/public/cover.png?raw=true" width="260"></a> | <a href="https://github.com/microsoft/playwright-mcp"><img src="https://opengraph.githubassets.com/1/microsoft/playwright-mcp" width="260"></a> |
-| **[Zed](https://github.com/zed-industries/zed)**<br>★ 90.7k | **[Context 7](https://github.com/upstash/context7)**<br>★ 62.3k | **[Playwright](https://github.com/microsoft/playwright-mcp)**<br>★ 37.4k |
+| **[Zed](https://github.com/zed-industries/zed)**<br>★ 90.7k | **[Context 7](https://github.com/upstash/context7)**<br>★ 62.3k | **[Playwright](https://github.com/microsoft/playwright-mcp)**<br>★ 37.5k |
 | <a href="https://github.com/continuedev/continue"><img src="https://raw.githubusercontent.com/continuedev/continue/main/media/github-readme.png" width="260"></a> | <a href="https://github.com/github/github-mcp-server"><img src="https://opengraph.githubassets.com/1/github/github-mcp-server" width="260"></a> | <a href="https://github.com/ScrapeGraphAI/Scrapegraph-ai"><img src="https://raw.githubusercontent.com/ScrapeGraphAI/Scrapegraph-ai/main/docs/assets/nodemaven-banner.png" width="260"></a> |
 | **[Continue](https://github.com/continuedev/continue)**<br>★ 36k | **[GitHub](https://github.com/github/github-mcp-server)**<br>★ 33.1k | **[ScrapeGraphAI](https://github.com/ScrapeGraphAI/Scrapegraph-ai)**<br>★ 31.2k |
 
@@ -26,16 +26,16 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
 ## Clients
 
 - **[Zed](https://github.com/zed-industries/zed)** — multiplayer code editor from the creators of atom
-  <sub>★ 90.7k · Rust · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 90.7k · Rust · source · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/zed-industries/zed.git`</sub>
 - **[Continue](https://github.com/continuedev/continue)** — vscode auto complete and chat tool (full feature support)
-  <sub>★ 36k · TypeScript · Apache-2.0 · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 36k · TypeScript · Apache-2.0 · source · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/continuedev/continue.git`</sub>
 - **[gpt-computer-assistant](https://github.com/Upsonic/Upsonic)** — dockerized mcp client with Anthropic, OpenAI and Langchain
   <sub>★ 8k · Python · MIT · source · pushed 2026-06-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Upsonic/gpt-computer-assistant.git`</sub>
 - **[genkit](https://github.com/genkit-ai/genkit)** — agent and data transformation framework
-  <sub>★ 6.5k · TypeScript · Apache-2.0 · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6.5k · TypeScript · Apache-2.0 · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g genkit-cli`</sub>
 - **[mcphub.nvim](https://github.com/ravitemer/mcphub.nvim)** — A Neovim plugin that provides a UI and api to interact with MCP servers
   <sub>★ 1.8k · Lua · MIT · source · pushed 2026-01-18</sub>
@@ -77,22 +77,22 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
 ## Official Servers
 
 - **[Context 7](https://github.com/upstash/context7)** — Context7 MCP - Up-to-date Docs For Any Cursor Prompt
-  <sub>★ 62.3k · TypeScript · MIT · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 62.3k · TypeScript · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/upstash/context7-mcp.git`</sub>
 - **[Playwright](https://github.com/microsoft/playwright-mcp)** — Playwright MCP server
-  <sub>★ 37.4k · TypeScript · Apache-2.0 · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 37.5k · TypeScript · Apache-2.0 · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @playwright/mcp@latest --config path/to/config.json`</sub>
 - **[GitHub](https://github.com/github/github-mcp-server)** — GitHub's official MCP Server
-  <sub>★ 33.1k · Go · MIT · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 33.1k · Go · MIT · source · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/github/github-mcp-server.git`</sub>
 - **[MCP Toolbox for Databases](https://github.com/googleapis/mcp-toolbox)** — Open source MCP server specializing in easy, fast, and secure tools for Databases
-  <sub>★ 16.5k · Go · Apache-2.0 · npx · pushed 2026-09-21 · macOS</sub>
+  <sub>★ 16.5k · Go · Apache-2.0 · npx · pushed 2026-09-22 · macOS</sub>
   <sub>`npx @toolbox-sdk/server --config tools.yaml`</sub>
 - **[Apify](https://github.com/apify/apify-mcp-server)** — Actors MCP Server: Use 3,000+ pre-built cloud tools to extract data from websites, e-commerce, social media, search engines, maps, and more
-  <sub>★ 7.9k · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 8k · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @apify/mcpc`</sub>
 - **[Firecrawl](https://github.com/firecrawl/firecrawl-mcp-server)** — Extract web data with Firecrawl
-  <sub>★ 7.5k · JavaScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 7.5k · JavaScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g firecrawl-mcp`</sub>
 - **[21st.dev Magic](https://github.com/21st-dev/magic-mcp)** — Create crafted UI components inspired by the best 21st.dev design engineers
   <sub>★ 5.9k · TypeScript · ISC · npx · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -110,13 +110,13 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 4.3k · TypeScript · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/cloudflare/mcp-server-cloudflare.git`</sub>
 - **[Grafana](https://github.com/grafana/mcp-grafana)** — Search dashboards, investigate incidents and query datasources in your Grafana instance
-  <sub>★ 3.5k · Go · Apache-2.0 · uv · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 3.5k · Go · Apache-2.0 · uv · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`uvx mcp-grafana`</sub>
 - **[Browserbase](https://github.com/browserbase/mcp-server-browserbase)** — Automate browser interactions in the cloud (e.g. web navigation, data extraction, form filling, and more)
   <sub>★ 3.4k · TypeScript · Apache-2.0 · clone · pushed 2026-07-20 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/browserbase/mcp-server-browserbase.git`</sub>
 - **[Supabase](https://github.com/supabase/mcp)** — Connects to Supabase platform for database, auth, edge functions and more
-  <sub>★ 2.9k · TypeScript · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2.9k · TypeScript · Apache-2.0 · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/supabase-community/supabase-mcp.git`</sub>
 - **[Bright Data](https://github.com/brightdata/brightdata-mcp)** — Discover, extract, and interact with the web - one interface powering automated access across the public internet
   <sub>★ 2.7k · JavaScript · MIT · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -134,7 +134,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 2k · TypeScript · MIT · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/microsoft/azure-devops-mcp.git`</sub>
 - **[Stripe](https://github.com/stripe/ai)** — Interact with Stripe API
-  <sub>★ 1.8k · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.8k · TypeScript · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://docs.stripe.com`</sub>
 - **[ElevenLabs](https://github.com/elevenlabs/elevenlabs-mcp)** — The official ElevenLabs MCP server
   <sub>★ 1.5k · Python · MIT · pip · pushed 2026-08-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -149,7 +149,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 984 · Python · MIT · source · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/neo4j-contrib/mcp-neo4j/.git`</sub>
 - **[JetBrains](https://github.com/JetBrains/mcp-jetbrains)** — Work on your code with JetBrains IDEs
-  <sub>★ 965 · JavaScript · Apache-2.0 · source · pushed 2026-01-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 964 · JavaScript · Apache-2.0 · source · pushed 2026-01-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/JetBrains/mcp-jetbrains.git`</sub>
 - **[Octocode](https://github.com/bgauryy/octocode)** — Leading AI-powered code assistant for advanced research, analysis and discovery across GitHub Repositories in large ecosystems
   <sub>★ 942 · TypeScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -158,7 +158,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 877 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install 'mcp-clickhouse[chdb]'`</sub>
 - **[Sentry](https://github.com/getsentry/sentry-mcp)** — Official MCP server for Sentry
-  <sub>★ 858 · TypeScript · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 858 · TypeScript · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @sentry/mcp-server@latest --access-token=sentry-user-token`</sub>
 - **[Hyperbrowser](https://github.com/hyperbrowserai/mcp)** — Hyperbrowser is the next-generation platform empowering AI agents and enabling effortless, scalable browser automation
   <sub>★ 791 · TypeScript · MIT · npx · pushed 2025-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -170,7 +170,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 688 · Python · MIT · uv · pushed 2025-10-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx semgrep-mcp # see --help for more options`</sub>
 - **[SonarQube](https://github.com/SonarSource/sonarqube-mcp-server)** — Provides seamless integration with SonarQube Server or Cloud, and enables analysis of code snippets directly within the agent context
-  <sub>★ 655 · Java · docker · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 655 · Java · docker · pushed 2026-09-22 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`docker run --init --pull=always -i --rm -e SONARQUBE_TOKEN -e SONARQUBE_ORG sonarsource/sonarqube-mcp`</sub>
 - **[Neon](https://github.com/neondatabase/mcp-server-neon)** — Interact with the Neon serverless Postgres platform
   <sub>★ 649 · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -179,19 +179,19 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 632 · JavaScript · Apache-2.0 · source · pushed 2026-09-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/GoogleCloudPlatform/cloud-run-mcp.git`</sub>
 - **[dbt](https://github.com/dbt-labs/dbt-mcp)** — Official MCP server for dbt (data build tool) providing integration with dbt Core/Cloud CLI, project metadata discovery, model information, and semantic layer querying capabilities
-  <sub>★ 609 · Python · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 610 · Python · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/dbt-labs/dbt-mcp.git`</sub>
 - **[Chroma](https://github.com/chroma-core/chroma-mcp)** — Embeddings, vector search, document storage, and full-text search with the open-source AI application database
   <sub>★ 597 · Python · Apache-2.0 · source · pushed 2025-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/chroma-core/chroma-mcp.git`</sub>
 - **[Kagi Search](https://github.com/kagisearch/kagimcp)** — Search the web using Kagi's search API
-  <sub>★ 526 · Python · MIT · npx · pushed 2026-07-07 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 527 · Python · MIT · npx · pushed 2026-07-07 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @smithery/cli install kagimcp --client claude`</sub>
 - **[MotherDuck](https://github.com/motherduckdb/mcp-server-motherduck)** — Query and analyze data with MotherDuck and local DuckDB
   <sub>★ 523 · Python · MIT · docker · pushed 2026-09-19 · WSL2 · Linux · Docker</sub>
   <sub>`docker run --rm -p 8000:8000 mcp-server-motherduck`</sub>
 - **[GitKraken](https://github.com/gitkraken/gk-cli)** — A CLI for interacting with GitKraken APIs. Includes an MCP server via gk mcp that not only wraps GitKraken APIs, but also Jira, GitHub, GitLab, and more
-  <sub>★ 459 · winget · pushed 2026-09-16 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 460 · winget · pushed 2026-09-16 · Win · WSL2? · macOS · Linux</sub>
   <sub>`winget install gitkraken.cli`</sub>
 - **[EdgeOne Pages MCP](https://github.com/TencentEdgeOne/edgeone-makers-mcp)** — An MCP service for deploying HTML content to EdgeOne Pages and obtaining a publicly accessible URL
   <sub>★ 435 · TypeScript · MIT · source · pushed 2026-07-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -203,7 +203,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 381 · TypeScript · MIT · npx · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y graphlit-mcp-server`</sub>
 - **[Xero](https://github.com/XeroAPI/xero-mcp-server)** — Interact with the accounting data in your business using our official MCP server
-  <sub>★ 368 · TypeScript · MIT · source · pushed 2026-06-05 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 369 · TypeScript · MIT · source · pushed 2026-06-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/XeroAPI/xero-mcp-server.git`</sub>
 - **[Mapbox](https://github.com/mapbox/mcp-server)** — Unlock geospatial intelligence through Mapbox APIs like geocoding, POI search, directions, isochrones and more
   <sub>★ 356 · TypeScript · MIT · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -212,22 +212,22 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 348 · Python · Apache-2.0 · pip · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install doris-mcp-server==1.0.0`</sub>
 - **[Plane](https://github.com/makeplane/plane-mcp-server)** — The official Plane MCP server provides integration with Plane APIs, enabling full AI automation of Plane projects, work items, cycles and more
-  <sub>★ 325 · Python · MIT · clone · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 325 · Python · MIT · clone · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/makeplane/plane-mcp-server`</sub>
 - **[Postman](https://github.com/postmanlabs/postman-mcp-server)** — Postman’s remote MCP server connects AI agents, assistants, and chatbots directly to your APIs on Postman
-  <sub>★ 316 · TypeScript · Apache-2.0 · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 316 · TypeScript · Apache-2.0 · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @postman/postman-mcp-server`</sub>
 - **[ECharts](https://github.com/hustcc/mcp-echarts)** — Generate visual charts using ECharts with AI MCP dynamically, used for chart generation and data analysis
-  <sub>★ 269 · TypeScript · MIT · npm · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 270 · TypeScript · MIT · npm · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g mcp-echarts`</sub>
 - **[Milvus](https://github.com/zilliztech/mcp-server-milvus)** — Search, Query and interact with data in your Milvus Vector Database
   <sub>★ 245 · Python · Apache-2.0 · clone · pushed 2026-08-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/zilliztech/mcp-server-milvus.git`</sub>
 - **[Comet Opik](https://github.com/comet-ml/opik-mcp)** — Query and analyze your Opik logs, traces, prompts and all other telemtry data from your LLMs in natural language
-  <sub>★ 221 · Python · Apache-2.0 · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 221 · Python · Apache-2.0 · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx add-mcp https://www.comet.com/opik/api/v1/mcp --name opik-mcp`</sub>
 - **[Meilisearch](https://github.com/meilisearch/meilisearch-mcp)** — Interact &amp; query with Meilisearch (Full-text &amp; semantic search API)
-  <sub>★ 196 · Python · MIT · npx · pushed 2026-09-08 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 197 · Python · MIT · npx · pushed 2026-09-08 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @modelcontextprotocol/inspector python -m src.meilisearch_mcp`</sub>
 - **[PayPal](https://github.com/paypal/agent-toolkit)** — The PayPal Model Context Protocol server allows you to integrate with PayPal APIs through function calling. This protocol supports various tools to interact with different PayPal services
   <sub>★ 193 · TypeScript · Apache-2.0 · source · pushed 2026-09-01 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -266,13 +266,13 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 155 · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @hostinger/mcp`</sub>
 - **[BrowserStack](https://github.com/browserstack/mcp-server)** — Bring the full power of BrowserStack’s Test Platform to your AI tools, making testing faster and easier for every developer and tester on your team
-  <sub>★ 151 · TypeScript · AGPL-3.0 · source · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 151 · TypeScript · AGPL-3.0 · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/browserstack/mcp-server.git`</sub>
 - **[Octagon](https://github.com/OctagonAI/octagon-mcp-server)** — Deliver real-time investment research with extensive private and public market data
-  <sub>★ 147 · TypeScript · MIT · npm · pushed 2026-07-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 148 · TypeScript · MIT · npm · pushed 2026-07-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g octagon-mcp`</sub>
 - **[Webflow](https://github.com/webflow/mcp-server)** — Interact with Webflow APIs to list and edit your site and CMS data
-  <sub>★ 140 · TypeScript · MIT · npx · pushed 2026-06-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 141 · TypeScript · MIT · npx · pushed 2026-06-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y webflow-mcp-server@latest`</sub>
 - **[FHIR](https://github.com/wso2/fhir-mcp-server/)** — Model Context Protocol server for Fast Healthcare Interoperability Resources (FHIR) APIs, enabling seamless integration with healthcare data through SMART-on-FHIR authentication and comprehensive FHIR operations
   <sub>★ 137 · Python · Apache-2.0 · uv · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -287,13 +287,13 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 128 · TypeScript · MIT · source · pushed 2026-09-09 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/its-dart/dart-mcp-server.git`</sub>
 - **[Mureka](https://github.com/SkyworkAI/Mureka-mcp)** — generate lyrics, song and background music(instrumental)
-  <sub>★ 114 · Python · MIT · source · pushed 2025-05-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 116 · Python · MIT · source · pushed 2025-05-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/SkyworkAI/Mureka-mcp.git`</sub>
 - **[Chronulus AI](https://github.com/ChronulusAI/chronulus-mcp)** — Predict anything with Chronulus AI forecasting and prediction agents
   <sub>★ 112 · Python · MIT · pip · pushed 2025-07-19 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install chronulus-mcp`</sub>
 - **[DINO-X](https://github.com/IDEA-Research/DINO-X-MCP)** — Advanced computer vision and object detection MCP server powered by Dino-X, enabling AI agents to analyze images, detect objects, identify keypoints, and perform visual understanding tasks
-  <sub>★ 111 · TypeScript · Apache-2.0 · clone · pushed 2026-06-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 112 · TypeScript · Apache-2.0 · clone · pushed 2026-06-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/IDEA-Research/DINO-X-MCP.git`</sub>
 - **[Twilio](https://github.com/twilio-labs/mcp)** — Interact with Twilio APIs to send messages, manage phone numbers, configure your account, and more
   <sub>★ 110 · TypeScript · MIT · source · pushed 2026-02-14 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -314,7 +314,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 103 · Python · MIT · npx · pushed 2025-07-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @smithery/cli install needle-mcp --client claude`</sub>
 - **[Harness](https://github.com/harness/mcp-server)** — Access and interact with Harness platform data, including pipelines, repositories, logs, and artifact registries
-  <sub>★ 102 · TypeScript · MIT · npm · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 102 · TypeScript · MIT · npm · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm install -g harness-mcp-v2`</sub>
 - **[Box](https://github.com/box-community/mcp-server-box)** — Interact with the Intelligent Content Management platform through Box AI
   <sub>★ 101 · Python · MIT · clone · pushed 2026-04-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -332,7 +332,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 94 · JavaScript · MIT · npm · pushed 2026-02-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g octagon-deep-research-mcp`</sub>
 - **[Keboola](https://github.com/keboola/mcp-server)** — Build robust data workflows, integrations, and analytics on a single intuitive platform
-  <sub>★ 86 · Python · MIT · uv · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 86 · Python · MIT · uv · pushed 2026-09-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`uvx keboola_mcp_server login --api-url https://connection.YOUR_REGION.keboola.com`</sub>
 - **[Tinybird](https://github.com/tinybirdco/mcp-tinybird)** — Interact with Tinybird serverless ClickHouse platform
   <sub>★ 79 · Python · Apache-2.0 · source · pushed 2025-09-01 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -382,14 +382,14 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
 - **[Crawlbase MCP](https://github.com/crawlbase/crawlbase-mcp)** — Enables AI agents to access real-time web data with HTML, markdown, and screenshot support. SDKs: Node.js, Python, Java, PHP, .NET
   <sub>★ 58 · JavaScript · clone · pushed 2026-04-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/crawlbase/crawlbase-mcp.git`</sub>
+- **[Norman Finance](https://github.com/norman-finance/norman-mcp-server)** — MCP server for managing accounting and taxes with Norman Finance
+  <sub>★ 58 · Python · MIT · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`pip install norman-mcp-server`</sub>
 - **[Teradata](https://github.com/Teradata/teradata-mcp-server)** — A collection of tools for managing the platform, addressing data quality and reading and writing to Teradata Database
   <sub>★ 57 · Python · MIT · source · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Teradata/teradata-mcp-server.git`</sub>
-- **[Norman Finance](https://github.com/norman-finance/norman-mcp-server)** — MCP server for managing accounting and taxes with Norman Finance
-  <sub>★ 56 · Python · MIT · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pip install norman-mcp-server`</sub>
 - **[Buildkite](https://github.com/buildkite/buildkite-mcp-server)** — Manage Buildkite pipelines and builds
-  <sub>★ 54 · Go · MIT · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 54 · Go · MIT · source · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/buildkite/buildkite-mcp-server.git`</sub>
 - **[1mcpserver](https://github.com/particlefuture/1mcpserver)** — MCP of MCPs. Automatic discovery and configure MCP servers on your local machine. Fully REMOTE! Just use https://mcp.1mcpserver.com/mcp/
   <sub>★ 52 · Python · Apache-2.0 · npx · pushed 2025-12-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -413,7 +413,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 49 · TypeScript · source · pushed 2025-04-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/VeyraX/veyrax-mcp.git`</sub>
 - **[ZenML](https://github.com/zenml-io/mcp-zenml)** — Interact with your MLOps and LLMOps pipelines through your ZenML MCP server
-  <sub>★ 49 · Python · MIT · docker · pushed 2026-09-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 49 · Python · MIT · docker · pushed 2026-09-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`docker run --rm -d --name mcp-zenml-apps -p 127.0.0.1:8001:8001 \`</sub>
 - **[YepCode](https://github.com/yepcode/mcp-server-js)** — Execute any LLM-generated code in the YepCode secure and scalable sandbox environment and create your own MCP tools using JavaScript or Python, with full support for NPM and PyPI packages
   <sub>★ 46 · TypeScript · MIT · source · pushed 2026-03-17 · WSL2 · Linux · Docker</sub>
@@ -443,14 +443,14 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 37 · TypeScript · clone · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Decodo/mcp-server`</sub>
 - **[Couchbase](https://github.com/couchbase/mcp-server-couchbase)** — Interact with the data stored in Couchbase clusters using natural language
-  <sub>★ 36 · Python · Apache-2.0 · uv · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 36 · Python · Apache-2.0 · uv · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx couchbase-mcp-server --disabled-tools upsert_document_by_id, delete_document_by_id`</sub>
+- **[Hologres](https://github.com/aliyun/alibabacloud-hologres-mcp-server)** — Connect to a Hologres instance, get table metadata, query and analyze data
+  <sub>★ 36 · Python · Apache-2.0 · uv · pushed 2026-08-05 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`uvx hologres-mcp-server --transport streamable-http --host 0.0.0.0 --port 8000`</sub>
 - **[ScreenshotOne](https://github.com/screenshotone/mcp/)** — Render website screenshots with ScreenshotOne
   <sub>★ 36 · TypeScript · MIT · source · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/screenshotone/mcp/.git`</sub>
-- **[Hologres](https://github.com/aliyun/alibabacloud-hologres-mcp-server)** — Connect to a Hologres instance, get table metadata, query and analyze data
-  <sub>★ 35 · Python · Apache-2.0 · uv · pushed 2026-08-05 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`uvx hologres-mcp-server --transport streamable-http --host 0.0.0.0 --port 8000`</sub>
 - **[Ramp](https://github.com/ramp-public/ramp_mcp)** — Interact with Ramp's Developer API to run analysis on your spend and gain insights leveraging LLMs
   <sub>★ 34 · Python · MIT · clone · pushed 2025-03-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone git@github.com:ramp/ramp-mcp.git`</sub>
@@ -470,7 +470,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 29 · Python · MIT · npx · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @modelcontextprotocol/inspector uv --directory . run -m greptimedb_mcp_server.server`</sub>
 - **[Aiven](https://github.com/Aiven-Open/mcp-aiven)** — Navigate your Aiven projects and interact with the PostgreSQL®, Apache Kafka®, ClickHouse® and OpenSearch® services
-  <sub>★ 28 · TypeScript · Apache-2.0 · source · pushed 2026-09-18 · WSL2 · Linux · Docker</sub>
+  <sub>★ 28 · TypeScript · Apache-2.0 · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/Aiven-Open/mcp-aiven.git`</sub>
 - **[EduBase](https://github.com/EduBase/MCP)** — Interact with EduBase, a comprehensive e-learning platform with advanced quizzing, exam management, and content organization capabilities
   <sub>★ 28 · TypeScript · MIT · npx · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -497,7 +497,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 21 · Python · uv · pushed 2025-05-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx fewsats-mcp`</sub>
 - **[Currents](https://github.com/currents-dev/currents-mcp)** — Enable AI Agents to fix Playwright test failures reported to Currents
-  <sub>★ 20 · TypeScript · Apache-2.0 · source · pushed 2026-09-21 · WSL2 · Linux · Docker</sub>
+  <sub>★ 20 · TypeScript · Apache-2.0 · source · pushed 2026-09-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/currents-dev/currents-mcp.git`</sub>
 - **[Audiense Insights](https://github.com/AudienseCo/mcp-audiense-insights)** — Marketing insights and audience analysis from Audiense reports, covering demographic, cultural, influencer, and content engagement analysis
   <sub>★ 19 · TypeScript · Apache-2.0 · source · pushed 2025-06-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -563,7 +563,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 11 · Python · Apache-2.0 · uv · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx --from "gcore-mcp-server@git+https://github.com/G-Core/gcore-mcp-server.git" gcore-mcp-server`</sub>
 - **[Hydrolix](https://github.com/hydrolix/mcp-hydrolix)** — Hydrolix time-series datalake integration providing schema exploration and query capabilities to LLM-based workflows
-  <sub>★ 11 · Python · Apache-2.0 · pip · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 11 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install mcp-hydrolix`</sub>
 - **[Carbon Voice](https://github.com/PhononX/cv-mcp-server)** — MCP Server that connects AI Agents to Carbon Voice. Create, manage, and interact with voice messages, conversations, direct messages, folders, voice memos, AI actions and more in Carbon Voice
   <sub>★ 10 · TypeScript · source · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -572,7 +572,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 9 · Python · npx · pushed 2025-03-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli install @devhub/devhub-cms-mcp --client claude`</sub>
 - **[Kontent.ai](https://github.com/kontent-ai/mcp-server)** — Create, manage, and explore your content and content model using natural language in any MCP-compatible AI tool
-  <sub>★ 9 · TypeScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 9 · TypeScript · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @kontent-ai/mcp-server@latest stdio`</sub>
 - **[Pearch](https://github.com/Pearch-ai/mcp_pearch)** — Best people search engine that reduces the time spent on talent discovery
   <sub>★ 9 · Python · MIT · source · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -602,7 +602,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 7 · Python · Apache-2.0 · docker · pushed 2026-08-21 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`docker run -p 8080:8080 -e x-api-key=<URLDNA_API_KEY> urldna-mcp-server`</sub>
 - **[Fulcra Context](https://github.com/fulcradynamics/fulcra-context-mcp)** — Fulcra Context MCP server for accessing your personal health, workouts, sleep, location, and more, all privately. Built around Context by Fulcra
-  <sub>★ 6 · Python · Apache-2.0 · source · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6 · Python · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/fulcradynamics/fulcra-context-mcp.git`</sub>
 - **[RAD Security](https://github.com/rad-security/mcp-server)** — Interact with the RAD Security platform which provides AI-powered security insights for Kubernetes and cloud environments
   <sub>★ 6 · TypeScript · MIT · source · pushed 2026-09-17 · WSL2 · Linux · Docker</sub>
@@ -671,22 +671,22 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>website</sub>
   <sub>`https://www.audioscrape.com/docs/mcp`</sub>
 - **[AWS Bedrock KB Retrieval](https://github.com/awslabs/mcp/tree/main/src/bedrock-kb-retrieval-mcp-server)** — Query Amazon Bedrock Knowledge Bases using natural language to retrieve relevant information from your data sources
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/awslabs/mcp.git && cd mcp/src/bedrock-kb-retrieval-mcp-server`</sub>
 - **[AWS CDK](https://github.com/awslabs/mcp/tree/main/src/cdk-mcp-server)** — Get prescriptive CDK advice, explain CDK Nag rules, check suppressions, generate Bedrock Agent schemas, and discover AWS Solutions Constructs patterns
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/awslabs/mcp.git && cd mcp/src/cdk-mcp-server`</sub>
 - **[AWS Core](https://github.com/awslabs/mcp/tree/main/src/core-mcp-server)** — Core AWS MCP server providing prompt understanding and server management capabilities
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/awslabs/mcp.git && cd mcp/src/core-mcp-server`</sub>
 - **[AWS Cost Analysis](https://github.com/awslabs/mcp/tree/main/src/cost-analysis-mcp-server)** — Analyze CDK projects to identify AWS services used and get pricing information from AWS pricing webpages and API
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/awslabs/mcp.git && cd mcp/src/cost-analysis-mcp-server`</sub>
 - **[AWS Documentation](https://github.com/awslabs/mcp/tree/main/src/aws-documentation-mcp-server)** — Fetch, convert, and search AWS documentation pages, with recommendations for related content
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/awslabs/mcp.git && cd mcp/src/aws-documentation-mcp-server`</sub>
 - **[AWS Nova Canvas](https://github.com/awslabs/mcp/tree/main/src/nova-canvas-mcp-server)** — Generate images using Amazon Nova Canvas with text prompts and color guidance
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/awslabs/mcp.git && cd mcp/src/nova-canvas-mcp-server`</sub>
 - **[Bankless Onchain](https://github.com/Bankless/onchain-mcp)** — Query Onchain data, like ERC20 tokens, transaction history, smart contract state
   <sub>source</sub>
@@ -695,7 +695,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>website</sub>
   <sub>`https://baserow.io/user-docs/mcp-server`</sub>
 - **[Bucket](https://github.com/bucketco/bucket-javascript-sdk/tree/main/packages/cli#model-context-protocol)** — Flag features, manage company data, and control feature access using Bucket
-  <sub>TypeScript · MIT · in-repo · pushed 2026-09-21</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/bucketco/bucket-javascript-sdk.git && cd bucket-javascript-sdk/packages/cli#model-context-protocol`</sub>
 - **[Chargebee](https://github.com/chargebee/agentkit/tree/main/modelcontextprotocol)** — MCP Server that connects AI agents to Chargebee platform
   <sub>TypeScript · MIT · in-repo · pushed 2025-11-18</sub>
@@ -710,10 +710,10 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>website</sub>
   <sub>`https://stack.convex.dev/convex-mcp-server`</sub>
 - **[Cua](https://github.com/trycua/cua/tree/main/libs/mcp-server)** — MCP server for the Computer-Use Agent (CUA), allowing you to run CUA through Claude Desktop or other MCP clients
-  <sub>HTML · MIT · in-repo · pushed 2026-09-21</sub>
+  <sub>HTML · MIT · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/trycua/cua.git && cd cua/libs/mcp-server`</sub>
 - **[Cycode](https://github.com/cycodehq/cycode-cli#mcp-command-experiment)** — Boost security in your dev lifecycle via SAST, SCA, Secrets &amp; IaC scanning with Cycode
-  <sub>Python · MIT · in-repo · pushed 2026-09-18</sub>
+  <sub>Python · MIT · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/cycodehq/cycode-cli.git && cd cycode-cli/#mcp-command-experiment`</sub>
 - **[DeepWiki by Devin](https://docs.devin.ai/work-with-devin/deepwiki-mcp)** — Remote, no-auth MCP server providing AI-powered codebase context and answers
   <sub>website</sub>
@@ -736,7 +736,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>Rust · MIT · in-repo · pushed 2025-04-17</sub>
   <sub>`git clone https://github.com/jamsocket/forevervm.git && cd forevervm/javascript/mcp-server`</sub>
 - **[Inbox Zero](https://github.com/elie222/inbox-zero/tree/main/apps/mcp-server)** — AI personal assistant for email Inbox Zero
-  <sub>TypeScript · in-repo · pushed 2026-09-20</sub>
+  <sub>TypeScript · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/elie222/inbox-zero.git && cd inbox-zero/apps/mcp-server`</sub>
 - **[InstantDB](https://github.com/instantdb/instant/tree/main/client/packages/mcp)** — Create, manage, and update applications on InstantDB, the modern Firebase
   <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
@@ -751,10 +751,10 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-20</sub>
   <sub>`git clone https://github.com/lingodotdev/lingo.dev.git && cd lingo.dev/mcp.md`</sub>
 - **[Mastra/mcp](https://github.com/mastra-ai/mastra/tree/main/packages/mcp)** — Client implementation for Mastra, providing seamless integration with MCP-compatible AI models and tools
-  <sub>TypeScript · in-repo · pushed 2026-09-21</sub>
+  <sub>TypeScript · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/mastra-ai/mastra.git && cd mastra/packages/mcp`</sub>
 - **[Mastra/mcp-docs-server](https://github.com/mastra-ai/mastra/tree/main/packages/mcp-docs-server)** — Provides AI assistants with direct access to Mastra.ai's complete knowledge base
-  <sub>TypeScript · in-repo · pushed 2026-09-21</sub>
+  <sub>TypeScript · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/mastra-ai/mastra.git && cd mastra/packages/mcp-docs-server`</sub>
 - **[Mercado Libre](https://mcp.mercadolibre.com/)** — Mercado Libre's official MCP server, offering tools to interact with our marketplace, simplifying tasks and product integration
   <sub>website</sub>
@@ -766,7 +766,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-16</sub>
   <sub>`git clone https://github.com/muxinc/mux-node-sdk.git && cd mux-node-sdk/packages/mcp-server`</sub>
 - **[Notte](https://github.com/nottelabs/notte/tree/main/packages/notte-mcp)** — Leverage Notte Web AI agents &amp; cloud browser sessions for scalable browser automation &amp; scraping workflows
-  <sub>Python · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/nottelabs/notte.git && cd notte/packages/notte-mcp`</sub>
 - **[OctoEverywhere For 3D Printing](https://octoeverywhere.com/mcp)** — A 3D Printing MCP server that allows for querying for live state, webcam snapshots, and 3D printer control
   <sub>website</sub>
@@ -833,7 +833,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 31.2k · Python · MIT · pip · pushed 2026-09-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install scrapegraphai`</sub>
 - **[IDA Pro MCP](https://github.com/mrexodia/ida-pro-mcp)** — MCP Server for automated reverse engineering with IDA Pro
-  <sub>★ 12.2k · Python · MIT · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 12.3k · Python · MIT · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install https://github.com/mrexodia/ida-pro-mcp/archive/refs/heads/main.zip`</sub>
 - **[Browser MCP](https://github.com/BrowserMCP/mcp)** — Automate your local browser
   <sub>★ 7.1k · TypeScript · Apache-2.0 · source · pushed 2025-04-24 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -848,7 +848,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 5.7k · TypeScript · MIT · npm · pushed 2025-12-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @executeautomation/playwright-mcp-server`</sub>
 - **[Peekaboo](https://github.com/openclaw/Peekaboo)** — a macOS-only MCP server that enables AI agents to capture screenshots of applications, or the entire system
-  <sub>★ 5.2k · Swift · MIT · npx · pushed 2026-09-21 · macOS</sub>
+  <sub>★ 5.2k · Swift · MIT · npx · pushed 2026-09-22 · macOS</sub>
   <sub>`npx -y @steipete/peekaboo --version`</sub>
 - **[Obsidian](https://github.com/MarkusPfundstein/mcp-obsidian)** — Interacting with Obsidian via REST API
   <sub>★ 4.4k · Python · MIT · npx · pushed 2026-08-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -884,7 +884,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 1.3k · Python · brew · pushed 2026-08-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`brew install pipeboard-co/tap/pipeboard`</sub>
 - **[SearXNG](https://github.com/ihor-sokoliuk/mcp-searxng)** — A Model Context Protocol Server for SearXNG
-  <sub>★ 1.2k · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1.2k · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g mcp-searxng`</sub>
 - **[Web Search MCP](https://github.com/mrkrsl/web-search-mcp)** — A server that provides local, full web search, summaries and page extration for use with Local LLMs
   <sub>★ 1.1k · TypeScript · MIT · clone · pushed 2025-08-08 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -896,13 +896,13 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 1k · Python · MPL-2.0 · source · pushed 2026-01-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/dmayboroda/minima.git`</sub>
 - **[Microsoft 365](https://github.com/Softeria/ms-365-mcp-server)** — MCP server that connects to the whole Microsoft 365 suite (Microsoft Office, Outlook, Excel) using Graph API (including mail, files, calendar)
-  <sub>★ 987 · TypeScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 988 · TypeScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @softeria/ms-365-mcp-server --toon`</sub>
 - **[weibaohui/k8m](https://github.com/weibaohui/k8m)** — Provides multi-cluster Kubernetes management and operations using MCP, featuring a management interface, logging, and nearly 50 built-in tools covering common DevOps and development scenarios. Supports both standard and CRD resources
-  <sub>★ 885 · Go · MIT · source · pushed 2026-09-12 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 887 · Go · MIT · source · pushed 2026-09-12 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/weibaohui/k8m.git`</sub>
 - **[aymericzip/intlayer](https://github.com/aymericzip/intlayer)** — A MCP Server that enhance your IDE with AI-powered assistance for Intlayer i18n / CMS tool: smart CLI access, versioned docs
-  <sub>★ 833 · TypeScript · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 833 · TypeScript · Apache-2.0 · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/aymericzip/intlayer.git`</sub>
 - **[Android MCP](https://github.com/minhalvp/android-mcp-server)** — An MCP server that provides control over Android devices through ADB. Offers device screenshot capture, UI layout analysis, package management, and ADB command execution capabilities
   <sub>★ 811 · Python · Apache-2.0 · clone · pushed 2025-05-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -923,7 +923,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 544 · Python · MIT · source · pushed 2025-03-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/reading-plus-ai/mcp-server-data-exploration.git`</sub>
 - **[Docker](https://github.com/QuantGeekDev/docker-mcp)** — Run and manage docker containers, docker compose, and logs
-  <sub>★ 504 · Python · MIT · npx · pushed 2024-12-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 503 · Python · MIT · npx · pushed 2024-12-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @smithery/cli install docker-mcp --client claude`</sub>
 - **[Vibe Check](https://github.com/PV-Bhat/vibe-check-mcp-server)** — The definitive Vibe Coder's sanity check MCP server: Prevents cascading errors by calling a "Vibe-check" agent to ensure alignment and prevent scope creep
   <sub>★ 503 · TypeScript · MIT · npx · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -980,7 +980,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 302 · JavaScript · MIT · source · pushed 2026-02-14 · WSL2 · Linux</sub>
   <sub>`git clone https://github.com/nickgnd/tmux-mcp.git`</sub>
 - **[Facebook Ads Library](https://github.com/proxy-intell/facebook-ads-library-mcp)** — Get any answer from the Facebook Ads Library, conduct deep research including messaging, creative testing and comparisons in seconds
-  <sub>★ 300 · Python · MIT · clone · pushed 2026-08-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 301 · Python · MIT · clone · pushed 2026-08-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/proxy-intell/facebook-ads-library-mcp.git`</sub>
 - **[consult7](https://github.com/szeider/consult7)** — Analyze large codebases and document collections using high-context models via OpenRouter, OpenAI, or Google AI -- very useful, e.g., with Claude Code
   <sub>★ 296 · Python · MIT · uv · pushed 2026-08-14 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -995,13 +995,13 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 269 · JavaScript · MIT · npx · pushed 2025-08-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @simonb97/server-win-cli --init-config ./config.json`</sub>
 - **[Notion](https://github.com/danhilse/notion_mcp)** — Integrates with Notion's API to manage personal todo list
-  <sub>★ 209 · Python · MIT · clone · pushed 2024-12-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 208 · Python · MIT · clone · pushed 2024-12-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/yourusername/notion-mcp.git`</sub>
 - **[MongoDB Lens](https://github.com/furey/mongodb-lens)** — Full Featured MCP Server for MongoDB Database
   <sub>★ 207 · JavaScript · MIT · npx · pushed 2025-04-23 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx -y mongodb-lens`</sub>
 - **[TikTok](https://github.com/Seym0n/tiktok-mcp)** — TikTok integration for getting post details and video subtitles
-  <sub>★ 198 · JavaScript · MIT · clone · pushed 2026-08-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 199 · JavaScript · MIT · clone · pushed 2026-08-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Seym0n/tiktok-mcp.git`</sub>
 - **[Snowflake](https://github.com/isaacwasserman/mcp-snowflake-server)** — Snowflake database integration with read/write capabilities and insight tracking
   <sub>★ 186 · Python · GPL-3.0 · npx · pushed 2025-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1024,12 +1024,12 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
 - **[just-every/mcp-read-website-fast](https://github.com/just-every/mcp-read-website-fast)** — Fast, token-efficient web content extraction that converts websites to clean Markdown. Features Mozilla Readability, smart caching, polite crawling with robots.txt support, and concurrent fetching with minimal dependencies
   <sub>★ 160 · TypeScript · MIT · source · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/just-every/mcp-read-website-fast.git`</sub>
+- **[Calculator](https://github.com/githejie/mcp-server-calculator)** — This server enables LLMs to use calculator for precise numerical calculations
+  <sub>★ 159 · Python · MIT · pip · pushed 2026-08-08 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`pip install mcp-server-calculator`</sub>
 - **[Svelte Documentation](https://github.com/khromov/svelte-llm-mcp)** — Remote server (SSE/Streamable) for the latest Svelte and SvelteKit documentation
   <sub>★ 159 · TypeScript · MIT · source · pushed 2026-02-14 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/khromov/llmctx.git`</sub>
-- **[Calculator](https://github.com/githejie/mcp-server-calculator)** — This server enables LLMs to use calculator for precise numerical calculations
-  <sub>★ 158 · Python · MIT · pip · pushed 2026-08-08 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pip install mcp-server-calculator`</sub>
 - **[weibaohui/kom](https://github.com/weibaohui/kom)** — Provides multi-cluster Kubernetes management and operations using MCP, It can be integrated as an SDK into your own project and includes nearly 50 built-in tools covering common DevOps and development scenarios. Supports both standard and CRD resources
   <sub>★ 149 · Go · MIT · source · pushed 2026-08-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/weibaohui/kom.git`</sub>
@@ -1076,7 +1076,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 107 · TypeScript · MIT · source · pushed 2026-08-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/akutishevsky/lunchmoney-mcp.git`</sub>
 - **[Google Keep](https://github.com/feuerdev/keep-mcp)** — Read, create, update and delete Google Keep notes
-  <sub>★ 102 · Python · MIT · source · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 103 · Python · MIT · source · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/feuerdev/keep-mcp.git`</sub>
 - **[Maya MCP](https://github.com/PatrickPalmer/MayaMCP)** — MCP server for Autodesk Maya
   <sub>★ 102 · Python · MIT · source · pushed 2025-05-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1183,12 +1183,12 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
 - **[Trello](https://github.com/m0xai/trello-mcp-server)** — Trello integration for working with boards, lists in boards and cards in lists
   <sub>★ 54 · Python · clone · pushed 2026-06-18 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/m0xai/trello-mcp-server.git`</sub>
+- **[BGG MCP](https://github.com/kkjdaniel/bgg-mcp)** — BGG MCP enables AI tools to interact with the BoardGameGeek API
+  <sub>★ 53 · Go · MIT · source · pushed 2026-08-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/kkjdaniel/bgg-mcp.git`</sub>
 - **[User Feedback](https://github.com/mrexodia/user-feedback-mcp)** — Simple MCP Server to enable a human-in-the-loop workflow in tools like Cline and Cursor
   <sub>★ 53 · Python · MIT · source · pushed 2025-03-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mrexodia/user-feedback-mcp.git`</sub>
-- **[BGG MCP](https://github.com/kkjdaniel/bgg-mcp)** — BGG MCP enables AI tools to interact with the BoardGameGeek API
-  <sub>★ 52 · Go · MIT · source · pushed 2026-08-20 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/kkjdaniel/bgg-mcp.git`</sub>
 - **[Random Number](https://github.com/zazencodes/random-number-mcp)** — Provides LLMs with essential random generation abilities, built entirely on Python's standard library
   <sub>★ 51 · Python · MIT · npx · pushed 2026-07-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @modelcontextprotocol/inspector uv run random-number-mcp`</sub>
@@ -1205,7 +1205,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 47 · TypeScript · MIT · npx · pushed 2026-08-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx mcp-tasks add "Your new task text" "To Do" 0`</sub>
 - **[Rootly-AI-Labs/Rootly-MCP-server](https://github.com/rootlyhq/rootly-mcp-server)** — MCP server for the incident management platform Rootly
-  <sub>★ 46 · Python · Apache-2.0 · go · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 46 · Python · Apache-2.0 · go · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`go install github.com/rootlyhq/rootly-cli/cmd/rootly@latest`</sub>
 - **[PiloTY](https://github.com/yiwenlu66/PiloTY)** — AI pilot for PTY operations that enables agents to control interactive terminals with stateful sessions, SSH connections, and background process management
   <sub>★ 45 · Python · uv · pushed 2026-04-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1508,7 +1508,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 2 · TypeScript · MIT · clone · pushed 2026-03-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/fajarmf/slite-mcp.git`</sub>
 - **[Squad AI](https://github.com/the-basilisk-ai/squad-mcp)** — Product‑discovery and strategy platform integration. Create, query and update opportunities, solutions, outcomes, requirements and feedback from any MCP‑aware LLM
-  <sub>★ 2 · TypeScript · clone · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · TypeScript · clone · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/the-basilisk-ai/squad-mcp.git`</sub>
 - **[xctools](https://github.com/nzrsky/xctools-mcp-server)** — MCP server for Xcode's xctrace, xcrun, xcodebuild
   <sub>★ 2 · Python · MIT · uv · pushed 2025-05-27 · macOS</sub>
@@ -1571,13 +1571,13 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>website</sub>
   <sub>`https://docspring.github.io/renamify/mcp/overview/`</sub>
 - **[Skyvern](https://github.com/Skyvern-AI/skyvern/tree/main/integrations/mcp)** — MCP Server to let Claude / your AI control the browser
-  <sub>Python · AGPL-3.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · AGPL-3.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/Skyvern-AI/skyvern.git && cd skyvern/integrations/mcp`</sub>
 
 ## Frameworks
 
 - **[ToolHive](https://github.com/stacklok/toolhive)** — A lightweight utility designed to simplify the deployment and management of MCP servers, ensuring ease of use, consistency, and security through containerization
-  <sub>★ 2.2k · Go · Apache-2.0 · source · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 2.2k · Go · Apache-2.0 · source · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Stacklok/toolhive.git`</sub>
 - **[mcp-framework](https://github.com/QuantGeekDev/mcp-framework)** — Fast and elegant Typescript framework for building MCP servers
   <sub>★ 930 · TypeScript · MIT · npm · pushed 2026-04-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1589,7 +1589,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 185 · TypeScript · MIT · npx · pushed 2025-04-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx litemcp dev server.js`</sub>
 - **[oatpp-mcp](https://github.com/oatpp/oatpp-mcp)** — Anthropic's Model Context Protocol implementation for Oat++
-  <sub>★ 50 · C++ · Apache-2.0 · source · pushed 2024-12-13</sub>
+  <sub>★ 49 · C++ · Apache-2.0 · source · pushed 2024-12-13</sub>
   <sub>`git clone https://github.com/oatpp/oatpp-mcp.git`</sub>
 - **[MCP Plexus](https://github.com/Super-I-Tech/mcp_plexus)** — A secure, multi-tenant Python MCP server framework built to integrate easily with external services via OAuth 2.1, offering scalable and robust solutions for managing complex AI applications
   <sub>★ 30 · Python · Apache-2.0 · clone · pushed 2025-06-09 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1625,6 +1625,6 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
 
 ---
 
-Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).

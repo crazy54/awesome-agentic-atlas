@@ -29,13 +29,13 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 ## Official Resources
 
 - **[x402 Foundation GitHub repo](https://github.com/x402-foundation/x402)** — canonical spec, SDKs, issues, proposals, and reference materials
-  <sub>★ 6.6k · TypeScript · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6.6k · TypeScript · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install x402`</sub>
 - **[Issues](https://github.com/x402-foundation/x402/issues)** — A payments protocol for the internet. Built on HTTP.
-  <sub>★ 6.6k · TypeScript · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6.6k · TypeScript · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install x402`</sub>
 - **[Coinbase x402 development fork](https://github.com/coinbase/x402)** — A payments protocol for the internet. Built on HTTP.
-  <sub>★ 157 · TypeScript · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 159 · TypeScript · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install x402`</sub>
 - **[x402 Official Website](https://www.x402.org)** — 
   <sub>website</sub>
@@ -71,7 +71,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 ## Open Source &amp; SDKs
 
 - **[Solana Foundation Pay (x402/MPP CLI and MCP)](https://github.com/solana-foundation/pay)** — Local payment layer for handling x402 payment challenges with wallet-authorized stablecoin signing
-  <sub>★ 1.8k · Rust · MIT · npm · pushed 2026-09-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 1.8k · Rust · MIT · npm · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @solana/pay`</sub>
 - **[x402-rs (Rust Facilitator &amp; SDK)](https://github.com/x402-rs/x402-rs)** — x402 payments in Rust: verify, settle, and monitor payments over HTTP 402 flows
   <sub>★ 290 · Rust · Apache-2.0 · docker · pushed 2026-07-13 · WSL2 · Linux · Docker</sub>
@@ -128,25 +128,25 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
   <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-06-02 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx x402-kit init my-paywall`</sub>
 - **[@zkproofport-ai/mcp](https://github.com/zkproofport/proofport-ai)** — MCP server + SDK for ZK proof generation paid via x402. Generate Coinbase KYC, Country, OIDC domain, or Google Workspace proofs from any AI agent
-  <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx zkproofport-mcp # Starts stdio MCP server`</sub>
 - **[MoltPe (AI agent payment infrastructure)](https://github.com/umangbuilds/moltpe-agent-payments)** — Non-custodial agent wallets with Shamir key splitting, programmable spending policies, and tri-rail support: x402 (HTTP-native), MPP (session-based), and fiat. 11 MCP tools for Claude Desktop, Cursor, Windsurf. Sub-second settlement on Polygon PoS, Base, Tempo. Free tier, no credit card. (Site)
   <sub>★ 1 · JavaScript · source · pushed 2026-05-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/umangbuilds/moltpe-agent-payments.git`</sub>
 - **[x402 TypeScript SDKs](https://github.com/x402-foundation/x402/tree/main/typescript)** — A payments protocol for the internet. Built on HTTP.
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/typescript`</sub>
 - **[x402 Python SDK](https://github.com/x402-foundation/x402/tree/main/python/x402)** — Official Python client/server, facilitator, and MCP helpers
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/python/x402`</sub>
 - **[x402 Python SDK (PyPI)](https://pypi.org/project/x402/)** — Official Python package for client, server, facilitator, and framework integrations
   <sub>website</sub>
   <sub>`https://pypi.org/project/x402/`</sub>
 - **[x402 Go SDK](https://github.com/x402-foundation/x402/tree/main/go)** — Official Go client/server, facilitator, and MCP package
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/go`</sub>
 - **[x402 Java SDK](https://github.com/x402-foundation/x402/tree/main/java)** — Official Java implementation for JVM services
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/java`</sub>
 - **[x402-analytics (NPM)](https://www.npmjs.com/package/x402-analytics)** — Analytics wrapper for x402 payments with monitoring and insights
   <sub>website</sub>
@@ -158,7 +158,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
   <sub>website</sub>
   <sub>`https://trustbench.io`</sub>
 - **[thirdweb/x402 (Github)](https://github.com/thirdweb-dev/js/tree/main/packages/thirdweb/src/x402)** — Best in class web3 SDKs for Browser, Node and Mobile apps
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/thirdweb-dev/js.git && cd js/packages/thirdweb/src/x402`</sub>
 - **[Bermuda (ZK-private x402)](https://www.bermudabay.xyz)** — ZK-private HTTP payments for x402 using Noir proofs on Base. Adds sender privacy so agents can pay without exposing wallet state. (Docs)
   <sub>website</sub>
@@ -257,7 +257,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
   <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
   <sub>`git clone https://github.com/coinbase/x402.git && cd x402/examples`</sub>
 - **[Cloudflare Agents x402 Example](https://github.com/cloudflare/agents/tree/main/examples/x402)** — Official example showing how to gate Cloudflare Agents endpoints with x402 payments
-  <sub>TypeScript · MIT · in-repo · pushed 2026-09-21</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/cloudflare/agents.git && cd agents/examples/x402`</sub>
 - **[x402 Analytics Examples](https://github.com/RemsLabs/x402-analytics-examples)** — Practical examples demonstrating x402-analytics usage with buyer and seller implementations
   <sub>TypeScript · MIT · source · pushed 2025-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -271,7 +271,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 ## Ecosystem
 
 - **[gold-402](https://github.com/Haustorium12/gold-402)** — Curated x402 directory by 24K Labs. 300+ handpicked entries across facilitators, SDKs, MCP servers, APIs, and tools, with editorial writeups and verified badges for production-confirmed services. Backed by a 29,000+ entry full catalog sourced from CDP Bazaar and Agentic.market
-  <sub>★ 11 · Python · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 11 · Python · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Haustorium12/gold-402.git`</sub>
 - **[x402Scan](https://x402scan.com/)** — Analytics and overview of the x402 ecosystem
   <sub>website</sub>
@@ -393,6 +393,6 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 
 ---
 
-Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).

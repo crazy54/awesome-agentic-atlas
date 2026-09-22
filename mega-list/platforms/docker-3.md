@@ -1,6 +1,6 @@
 # Docker
 
-Every project across all 39 lists that ships a container image, a Dockerfile or a compose file — **1,548** of 8,443 distinct repos, deduplicated to one row per repo.
+Every project across all 39 lists that ships a container image, a Dockerfile or a compose file — **1,548** of 8,445 distinct repos, deduplicated to one row per repo.
 
 For building a container environment. Membership is evidence-based, not aspirational: a row is here because something in the repo or its README actually names a container.
 
@@ -210,6 +210,6 @@ Page **3** of 3, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).

@@ -4,7 +4,7 @@ Runnable example apps. Each row is a folder inside the one repo.
 
 Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awesome-llm-apps)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-119 entries · 3 distinct repos · 16 sections
+120 entries · 3 distinct repos · 16 sections
 
 [← back to the mega list](../README.md)
 
@@ -25,7 +25,7 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - [RAG (Retrieval Augmented Generation)](#rag-retrieval-augmented-generation) (21)
 - [LLM Apps with Memory](#llm-apps-with-memory) (6)
 - [Chat with X](#chat-with-x) (6)
-- [Agent Skills](#agent-skills) (7)
+- [Agent Skills](#agent-skills) (8)
 - [MCP AI Agents](#mcp-ai-agents) (6)
 - [Voice AI Agents](#voice-ai-agents) (5)
 - [Generative UI and Agentic Frontends](#generative-ui-and-agentic-frontends) (7)
@@ -339,6 +339,9 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - **[🧠 Advisor Orchestrator Worker](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/agent_skills/advisor-orchestrator-worker)** — Meta Loop with Claude Fable 5.1 as advisor, GPT-6 Astra as orchestrator, and Gemini 3.8 Flash as worker
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/agent_skills/advisor-orchestrator-worker`</sub>
+- **[🎙️ Thinking Out Loud](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/agent_skills/thinking-out-loud)** — Echoes a voice ramble back as a scannable brief, with the model's guesses quarantined and your reversals flagged
+  <sub>in-repo</sub>
+  <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/agent_skills/thinking-out-loud`</sub>
 - **[♾️ Self-Improving Agent Skills](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/agent_skills/self-improving-agent-skills)** — Automatically optimize agent skills using Gemini and ADK
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/agent_skills/self-improving-agent-skills`</sub>
@@ -367,7 +370,7 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 ## Voice AI Agents
 
 - **[🎙️ OpenSource Voice Dictation Agent (Wispr Flow clone)](https://github.com/akshayaggarwal99/jarvis-ai-assistant)** — external - Open-source dictation that types where you talk
-  <sub>★ 638 · TypeScript · MIT · clone · pushed 2026-08-21 · Win? · macOS</sub>
+  <sub>★ 639 · TypeScript · MIT · clone · pushed 2026-08-21 · Win? · macOS</sub>
   <sub>`git clone https://github.com/akshayaggarwal99/jarvis-ai-assistant.git`</sub>
 - **[🗣️ AI Audio Tour Agent](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/voice_ai_agents/ai_audio_tour_agent)** — Self-guided audio tours from your location, interests, and pace
   <sub>in-repo</sub>
@@ -442,6 +445,6 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 
 ---
 
-Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).

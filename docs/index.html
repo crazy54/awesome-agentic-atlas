@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awesome Agentic Atlas — browse every agentic tool</title>
-<meta name="description" content="8,856 agentic AI projects from 39 awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
+<meta name="description" content="8,858 agentic AI projects from 39 awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
 <meta property="og:title" content="Awesome Agentic Atlas">
-<meta property="og:description" content="8,856 projects from 39 awesome-lists, one filterable index.">
+<meta property="og:description" content="8,858 projects from 39 awesome-lists, one filterable index.">
 <meta property="og:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/root.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -269,6 +269,22 @@ a.nwo:hover{color:var(--ink)}
 .oi{width:1.15em;height:1.15em;fill:currentColor;vertical-align:-.19em;flex:none}
 .oiw{white-space:nowrap}
 .oikey{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 12px;font-size:12.5px;color:var(--muted)}
+
+.mk{display:inline-grid;place-items:center;width:28px;height:28px;flex:none;
+  vertical-align:-7px;margin-right:2px}
+.brand{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:inherit;
+  font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.brand:hover span{text-decoration:underline}
+.brandbar{margin:0 0 14px}
+.brand .mk{vertical-align:baseline;margin-right:0}
+.mk svg{width:30px;height:30px;display:block;overflow:visible;
+  filter:drop-shadow(0 0 calc(5px * var(--fx-glow,1)) rgba(214,160,52,.45));
+  animation:mkbreath calc(6s * var(--fx-pulse,1)) ease-in-out infinite}
+@keyframes mkbreath{
+  0%,100%{filter:drop-shadow(0 0 calc(3px * var(--fx-glow,1)) rgba(214,160,52,.32))}
+  50%{filter:drop-shadow(0 0 calc(9px * var(--fx-glow,1)) rgba(214,160,52,.60))}}
+@media(prefers-reduced-motion:reduce){.mk svg{animation:none}}
+
 .chip .oi{width:1.25em;height:1.25em}
 .os .oi{width:14px;height:14px}
 .old{text-decoration:underline dotted;text-decoration-color:var(--muted);text-underline-offset:2px}
@@ -366,6 +382,26 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
   color:var(--ink2);font-size:14px}
 .shared b{color:var(--ink)}
 .shared .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.dstrip{display:none}
+.dstrip.on{display:block;margin:14px 0 0}
+.dsh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.dsh h2{margin:0;font-size:15px;color:var(--ink)}
+.dsh p{margin:0;font-size:13px;color:var(--muted)}
+.dsall{margin-left:auto;font-size:13px;font-weight:600}
+.dsrail{display:flex;gap:10px;overflow-x:auto;overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;padding:8px 2px 12px;scrollbar-width:thin}
+.dsc{flex:0 0 min(212px,62vw);scroll-snap-align:start;display:flex;flex-direction:column;gap:5px;
+  padding:9px 11px;text-decoration:none;font-size:12.5px;color:var(--ink2);
+  background:var(--band);border:1px solid var(--grid);border-top:3px solid var(--card-accent);
+  border-radius:7px}
+.dsc:hover{border-color:var(--card-accent);text-decoration:none}
+.dsc .t{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.dsc .t .tag{margin:0}
+.dsc .n{color:var(--ink);font-weight:600;font-size:13.5px;line-height:1.3}
+.dsc .m{color:var(--muted);font-variant-numeric:tabular-nums;margin-top:auto}
+.dsc.nw{border-color:var(--warn);box-shadow:0 0 0 2px var(--warn);animation:new-breathe 3s ease-in-out 5}
+.dsnew{background:var(--warn);color:var(--onbar);border-radius:4px;padding:0 5px;font-size:11px;
+  font-weight:700;letter-spacing:.02em}
 .empty{padding:64px 0 80px;text-align:center;color:var(--muted)}
 .empty .big{color:var(--ink);font-size:17px;font-weight:600;margin:0 0 6px}
 .empty p{margin:0 0 12px}
@@ -541,7 +577,8 @@ html[data-view=cards] tr.nw{border-color:var(--warn);
 html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
   box-shadow:0 0 0 2px var(--card-accent),0 0 20px color-mix(in srgb,var(--card-accent) 40%,transparent)}
 @keyframes card-glow{from{box-shadow:0 0 0 2px var(--card-accent),0 0 12px color-mix(in srgb,var(--card-accent) 30%,transparent),0 12px 28px rgba(0,0,0,.2)}to{box-shadow:0 0 0 2px var(--card-accent),0 0 28px color-mix(in srgb,var(--card-accent) 58%,transparent),0 16px 36px rgba(0,0,0,.28)}}
-html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] tr.nw{animation:none}
+html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] tr.nw,
+html[data-wave="1"] .dsc.nw{animation:none}
 
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
@@ -584,7 +621,7 @@ main a[href],main button,main select,main summary,
 @page{margin:14mm}
 @media print{
   .bar,.subbar,.more,dialog,#fbb,#live,.skip,header nav,.stamp,.atlas-byte-wrap,.facets,.save,.copy,.shot,
-  .shared .sp,.pin,#cmp .ch .sp,#cmp .unpin{display:none}
+  .shared .sp,.pin,#cmp .ch .sp,#cmp .unpin,.dstrip.on{display:none}
   #cmp .scroll{overflow-x:visible}
   #cmp table{table-layout:fixed}
   #cmp thead th:first-child{width:13%}
@@ -628,19 +665,20 @@ main a[href],main button,main select,main summary,
 </svg>
 <header><div class="wrap"><div class="top">
   <div>
-    <h1>Awesome Agentic Atlas <span>· 39 awesome-lists, merged</span></h1>
-    <p class="sub"><b>8,856</b> projects · <b>14</b> topics · <b>24,010,256</b> combined
+    <h1><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="#D6A034" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="#F7F8FA" stroke="#D6A034" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="#D6A034"/><path d="M12 31h40M32 11v40" fill="none" stroke="#20242D" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="#090A0D"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="#F7F8FA"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="#090A0D" stroke-width="2.5" stroke-linecap="round"/></g></svg></span>Awesome Agentic Atlas <span>· 39 awesome-lists, merged</span></h1>
+    <p class="sub"><b>8,858</b> projects · <b>14</b> topics · <b>24,048,967</b> combined
       stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
-      2026-09-21</span></p>
+      2026-09-22</span></p>
     <p class="blurb" id="ctx"></p>
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--09--21_18:07_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-09-21T18:07:00Z">Last deployed 2026-09-21 18:07 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--09--22_13:46_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-09-22T13:46:00Z">Last deployed 2026-09-22 13:46 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
+    <a href="discover/">Discover</a> ·
     <a href="collections/">Collections</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
@@ -703,7 +741,7 @@ main a[href],main button,main select,main summary,
     <button class="chip takechip" id="take" aria-haspopup="dialog"
             title="Take this view away as a link, a Markdown table, an HTML page or a PDF">Export</button>
     <button class="chip mapchip" id="mapbtn" aria-haspopup="dialog"
-            title="See all 8,856 projects at once, laid out by what they do">Map</button>
+            title="See all 8,858 projects at once, laid out by what they do">Map</button>
     <button class="chip" id="palhint"></button>
     <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
@@ -738,6 +776,11 @@ main a[href],main button,main select,main summary,
       <span class="sp"><button class="chip" id="cmpclear">Clear the comparison</button></span></div>
     <div class="scroll" id="cmptable"></div>
   </div>
+  <section class="dstrip" id="dstrip" aria-labelledby="dstriph">
+    <div class="dsh"><h2 id="dstriph">Discover</h2><p id="dstripwhat"></p>
+      <a class="dsall" id="dstripall" href="discover/">See all fifty &rarr;</a></div>
+    <div class="dsrail" id="dsrail"></div>
+  </section>
   <details class="vkey">
     <summary>What the <span aria-hidden="true" class="vY">✓</span>
       <span aria-hidden="true" class="vL">?</span> <span aria-hidden="true" class="vN">✗</span>
@@ -805,7 +848,7 @@ main a[href],main button,main select,main summary,
 <footer><div class="wrap">
   Every entry came from someone else's curation work; all 39 source lists are credited in the
   <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. Stars, language, licence and
-  last-push come from the GitHub API on 2026-09-21 and drift daily. Platform verdicts are derived
+  last-push come from the GitHub API on 2026-09-22 and drift daily. Platform verdicts are derived
   from each project's own README, install route, CI config and release assets &mdash;
   <span class="vY">green&#8201;&#10003;</span> is stated evidence,
   <span class="vL">amber&#8201;?</span> is inferred from the language, and
@@ -817,13 +860,13 @@ main a[href],main button,main select,main summary,
   <nav class="facets" id="browse" aria-label="Browse by topic or by what a project plugs into">
     <p><b>Every topic:</b> <a href="topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a> · <a href="topic/coding-agents/">Coding Agents</a> · <a href="topic/agent-skills/">Agent Skills</a> · <a href="topic/mcp-servers/">MCP Servers</a> · <a href="topic/frameworks-sdks/">Frameworks &amp; SDKs</a> · <a href="topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> · <a href="topic/context-memory-rag/">Context, Memory &amp; RAG</a> · <a href="topic/sandbox-security-governance/">Sandbox, Security &amp; Governance</a> · <a href="topic/observability-evals/">Observability &amp; Evals</a> · <a href="topic/plugins-themes-clients/">Plugins, Themes &amp; Clients</a> · <a href="topic/research-data-agents/">Research &amp; Data Agents</a> · <a href="topic/creative-voice-media/">Creative, Voice &amp; Media</a> · <a href="topic/assistants-domain-agents/">Assistants &amp; Domain Agents</a> · <a href="topic/docs-learning-lists/">Docs, Learning &amp; Lists</a></p>
     <p><b>Every integration:</b> <a href="target/claude-code/">Claude Code</a> · <a href="target/claude-anthropic/">Claude / Anthropic</a> · <a href="target/opencode/">opencode</a> · <a href="target/mcp/">MCP</a> · <a href="target/codex-openai/">Codex / OpenAI</a> · <a href="target/gemini-google/">Gemini / Google</a> · <a href="target/github-copilot/">GitHub Copilot</a> · <a href="target/cursor/">Cursor</a> · <a href="target/cline-roo/">Cline / Roo</a> · <a href="target/aider/">Aider</a> · <a href="target/langchain-langgraph/">LangChain / LangGraph</a> · <a href="target/local-ollama/">Local / Ollama</a></p>
-    <p><b>Every project:</b> <a href="repo/">all 8,856 projects, one page each, grouped by topic</a></p>
+    <p><b>Every project:</b> <a href="repo/">all 8,858 projects, one page each, grouped by topic</a></p>
   </nav>
 </div></footer>
 
 <script>
 const PAGE_SIZE = 120;
-const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"index.mascot_commentary":1,"index.export":1,"index.compare":1,"index.constellation":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1};
+const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"index.mascot_commentary":1,"index.export":1,"index.compare":1,"index.constellation":1,"index.discover_strip":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1};
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, since: false, rising: false,
                saved: false, list: new Set(), cmp: new Set(), sort: "relevance", shown: PAGE_SIZE,
                view: "cards"};
@@ -879,8 +922,8 @@ let typing = 0;
 const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
-const SNAPSHOT = "2026-09-21";
-const BUILT = "2026-09-21T18:07:00Z";
+const SNAPSHOT = "2026-09-22";
+const BUILT = "2026-09-22T13:46:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -994,6 +1037,15 @@ fetch("data.json").then(r => {
     '<code>localhost:8000</code>. The published copy is at ' +
     '<a href="https://crazy54.github.io/awesome-agentic-atlas/">https://crazy54.github.io/awesome-agentic-atlas/</a>.</p>';
 });
+
+if (FLAGS["index.discover_strip"]) {
+  fetch("discover.json").then(r => r.json()).then(d => {
+    DISC = d;
+    paintDiscover();
+    setInterval(paintDiscover, 60000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) paintDiscover(); });
+  }).catch(() => {});
+}
 
 wire();
 
@@ -1170,6 +1222,11 @@ function palWire() {
 
 const CLEAR = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, since: false, rising: false,
                saved: false, list: new Set()};
+
+const unasked = () => Object.keys(CLEAR).every(k => {
+  const want = CLEAR[k], got = state[k];
+  return want instanceof Set ? got.size === 0 : Array.isArray(want) ? got.length === 0 : got === want;
+});
 
 let PAL = [], PALI = 0;
 
@@ -2658,6 +2715,76 @@ function paintShared() {
   add.textContent = have === n ? "All saved" : "Save " + (n - have).toLocaleString() + " to my projects";
 }
 
+let DISC = null, DISC_DAY = "";
+
+const DACCENTS = ["sky", "mint", "gold", "coral", "violet"];
+
+const DSTRIP = (() => {
+  const dayIn = (tz, at) => {
+    const p = {};
+    for (const {type, value} of new Intl.DateTimeFormat("en-US", {
+      timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit",
+    }).formatToParts(at)) p[type] = value;
+    return p.year + "-" + p.month + "-" + p.day;
+  };
+  const asUTC = (iso) => {
+    const [y, m, d] = iso.split("-").map(Number);
+    return Date.UTC(y, m - 1, d);
+  };
+  const daysBetween = (a, b) => Math.round((asUTC(b) - asUTC(a)) / 86400000);
+  const forDay = (plan, day) => {
+    const days = (plan && plan.days) || [];
+    if (!days.length) return null;
+    const hit = days.find((c) => c.date === day);
+    if (hit) return hit;
+    const n = days.length;
+    return days[((daysBetween(days[0].date, day) % n) + n) % n];
+  };
+  return {dayIn, forDay};
+})();
+
+function discoverCard(nwo, r, col, cohort) {
+  const cat = r[col.cat];
+  const isnew = !!cohort && r[col.first_seen] === cohort;
+  const label = cat >= 0 && cat < DISC.cats.length ? DISC.cats[cat] : "Uncategorised";
+  const meta = [];
+  if (r[col.stars]) meta.push(r[col.stars].toLocaleString() + " stars");
+  if (r[col.lang]) meta.push(esc(r[col.lang]));
+  return '<a class="dsc' + (isnew ? " nw" : "") + '" href="discover/#repo=' + esc(nwo) +
+    '" style="--card-accent:var(--accent-' + DACCENTS[cat % DACCENTS.length] + ')">' +
+    '<span class="t"><span class="tag cat">' + esc(label) + "</span>" +
+    (isnew ? '<span class="dsnew">New</span>' : "") + "</span>" +
+    '<span class="n">' + esc(r[col.name]) + "</span>" +
+    '<span class="m">' + meta.join(" · ") + "</span></a>";
+}
+
+function paintDiscover() {
+  const strip = document.getElementById("dstrip");
+  if (!strip || !FLAGS["index.discover_strip"]) return;
+  const cohort = D && DISC && DSTRIP.forDay(DISC, DSTRIP.dayIn(DISC.tz, new Date()));
+  const on = !!cohort && unasked();
+  strip.classList.toggle("on", on);
+  if (!on || cohort.date === DISC_DAY) return;
+  DISC_DAY = cohort.date;
+  const col = {};
+  DISC.cols.forEach((c, i) => { col[c] = i; });
+  const stamp = DISC.cohort && daysAgo(DISC.cohort) <= (DISC.window_days || 14) ? DISC.cohort : "";
+  const picks = cohort.picks.filter(n => DISC.rows[n]);
+  document.getElementById("dsrail").innerHTML =
+    picks.map(n => discoverCard(n, DISC.rows[n], col, stamp)).join("");
+  document.getElementById("dstripwhat").textContent =
+    picks.length + " for " + longDay(cohort.date) + ", one from every topic in the atlas";
+  document.getElementById("dstripall").textContent = "See all " + picks.length + " →";
+}
+
+function longDay(day) {
+  const p = {};
+  for (const {type, value} of new Intl.DateTimeFormat("en-GB", {
+    timeZone: "UTC", weekday: "long", day: "numeric", month: "long",
+  }).formatToParts(new Date(Date.parse(day + "T00:00:00Z")))) p[type] = value;
+  return p.weekday + " " + p.day + " " + p.month;
+}
+
 function expOpen() {
   const n = HITS.length;
   document.getElementById("expwhat").innerHTML =
@@ -2757,6 +2884,7 @@ function render() {
   paintSaved();
   paintShared();
   paintCompare();
+  paintDiscover();
   applyView();
 
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);

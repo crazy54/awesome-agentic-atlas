@@ -415,7 +415,7 @@ Curated by **[VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAg
 ## 09. Meta &amp; Orchestration
 
 - **[moai-adk](https://github.com/modu-ai/moai-adk)** — SPEC-first Agentic Development Kit orchestrating 24 specialized agents with enforced Plan→Run→Sync workflow, TRUST 5 quality gates, 52 domain-specific skills, and 16-language project support
-  <sub>★ 1.2k · Go · Apache-2.0 · clone · pushed 2026-09-21 · WSL2 · macOS · Linux</sub>
+  <sub>★ 1.2k · Go · Apache-2.0 · clone · pushed 2026-09-22 · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/modu-ai/moai-adk.git`</sub>
 - **[airis-mcp-gateway](https://github.com/agiletec-inc/airis-mcp-gateway)** — Docker-based MCP multiplexer that aggregates 60+ tools behind 7 meta-tools, reducing context token usage by 97%. One command to start, auto-enables servers on demand
   <sub>★ 172 · Python · MIT · script · pushed 2026-09-18 · WSL2 · macOS · Linux</sub>
@@ -556,6 +556,6 @@ Curated by **[VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAg
 
 ---
 
-Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).

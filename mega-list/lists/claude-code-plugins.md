@@ -513,14 +513,14 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Automation DevOps
 
 - **[qovery-deploy](https://github.com/Qovery/qovery-skills)** — Deploy any app to Kubernetes on AWS/GCP/Azure/Scaleway. Creates Dockerfiles, provisions databases, deploys via CLI+API or Terraform. Install: curl -fsSL https://skill.qovery.com/install.sh | bash
-  <sub>★ 12 · Shell · script · pushed 2026-09-19 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 12 · Shell · script · pushed 2026-09-21 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://skill.qovery.com/install.sh | bash`</sub>
+- **[claude-snapshot](https://github.com/adhenawer/claude-snapshot)** — Portable .tar.gz snapshots of your Claude Code setup (settings, hooks, plugins, MCPs) with diff-before-apply and .bak rollback for migration and backup across machines
+  <sub>★ 4 · JavaScript · MIT · npx · pushed 2026-04-19 · Win · WSL2 · macOS · Linux</sub>
+  <sub>`npx -y claude-snapshot export`</sub>
 - **[PUIUX Pilot](https://github.com/PUIUX-Cloud/puiux-pilot)** — Auto-configures Claude Code hooks, MCPs, and skills for any project. Scans 95+ project types, selects from 28+ hooks, scores quality (0-100, A-F). npm i -g puiux-pilot
   <sub>★ 2 · TypeScript · Apache-2.0 · npm · pushed 2026-04-01 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm i -g puiux-pilot`</sub>
-- **[claude-snapshot](https://github.com/adhenawer/claude-snapshot)** — Portable .tar.gz snapshots of your Claude Code setup (settings, hooks, plugins, MCPs) with diff-before-apply and .bak rollback for migration and backup across machines
-  <sub>★ 2 · JavaScript · MIT · npx · pushed 2026-04-19 · Win · WSL2 · macOS · Linux</sub>
-  <sub>`npx -y claude-snapshot export`</sub>
 - **[deployment-engineer](https://github.com/ccplugins/awesome-claude-code-plugins/tree/HEAD/plugins/deployment-engineer)** — Awesome Claude Code plugins — a curated list of slash commands, subagents, MCP servers, and hooks for Claude Code
   <sub>JavaScript · Apache-2.0 · in-repo · pushed 2026-08-12</sub>
   <sub>`git clone https://github.com/ccplugins/awesome-claude-code-plugins.git && cd awesome-claude-code-plugins/plugins/deployment-engineer`</sub>
@@ -564,10 +564,10 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Project &amp; Product Management
 
 - **[plannotator](https://github.com/backnotprop/plannotator)** — Interactive plan review UI with visual annotation (install via /plugin marketplace add backnotprop/plannotator)
-  <sub>★ 8.8k · TypeScript · Apache-2.0 · psh · pushed 2026-09-21 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 8.9k · TypeScript · Apache-2.0 · psh · pushed 2026-09-21 · Win · WSL2 · macOS · Linux</sub>
   <sub>`irm https://plannotator.ai/install.ps1 | iex`</sub>
 - **[product-manager-skills](https://github.com/Digidai/product-manager-skills)** — Senior PM agent with 30+ frameworks, 32 SaaS metrics with exact formulas, 12 templates, and anti-pattern detection. Pure Markdown, MIT-0 license
-  <sub>★ 174 · Shell · npx · pushed 2026-04-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 176 · Shell · npx · pushed 2026-04-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add Digidai/product-manager-skills`</sub>
 - **[governor](https://github.com/0xhimanshu/governor)** — Claude Code usage governor: compact professional output, context slimming, tool-output filtering, telemetry, and drift guardrails.
   <sub>★ 133 · Python · MIT · source · pushed 2026-09-06 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -639,10 +639,10 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 102 · HTML · script · pushed 2026-06-16 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -sSL https://raw.githubusercontent.com/cognyai/claude-code-marketing-skills/main/install.sh | bash`</sub>
 - **[x-skills](https://github.com/sergebulaev/x-skills)** — X (Twitter) marketing skills for Claude Code and Codex: write tweets, threads, and replies in your voice, strip AI tells, and publish via Publora. Open source, MIT. Content engineering by Creative Content Crafts.
-  <sub>★ 94 · Python · MIT · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 97 · Python · MIT · npx · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add sergebulaev/x-skills`</sub>
 - **[Hermes Tweet](https://github.com/Xquik-dev/hermes-tweet)** — Native Hermes Agent plugin for X/Twitter research, monitoring, drafting, follower exports, and approval-gated actions
-  <sub>★ 36 · Python · MIT · source · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 36 · Python · MIT · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Xquik-dev/hermes-tweet.git`</sub>
 - **[app-store-optimizer](https://github.com/ccplugins/awesome-claude-code-plugins/tree/HEAD/plugins/app-store-optimizer)** — Awesome Claude Code plugins — a curated list of slash commands, subagents, MCP servers, and hooks for Claude Code
   <sub>JavaScript · Apache-2.0 · in-repo · pushed 2026-08-12</sub>
@@ -807,7 +807,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Data Analytics
 
 - **[newsmcp](https://github.com/pranciskus/newsmcp)** — Real-time world news for AI agents — events clustered from hundreds of sources, classified by 12 topics and 30+ geographic regions, ranked by importance. Free, no API key required
-  <sub>★ 34 · TypeScript · MIT · npx · pushed 2026-03-06 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 35 · TypeScript · MIT · npx · pushed 2026-03-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli install @newsmcp/server --client claude`</sub>
 - **[XVARY Stock Research](https://github.com/xvary-research/claude-code-stock-analysis-skill)** — Claude Code skill for public SEC EDGAR + market data: /analyze, /score, /compare. MIT
   <sub>★ 16 · Python · MIT · clone · pushed 2026-03-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -882,13 +882,13 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Communication &amp; Integrations
 
 - **[whatsapp-claude-plugin](https://github.com/Rich627/whatsapp-claude-plugin)** — WhatsApp channel plugin for Claude Code. Connects as a linked device via Baileys v7 with bidirectional messaging, full media support, voice transcription, permission relay, and access control
-  <sub>★ 93 · TypeScript · Apache-2.0 · source · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 94 · TypeScript · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Rich627/whatsapp-claude-plugin.git`</sub>
 
 ## Design UX
 
 - **[ux](https://github.com/Laith0003/ux-skill)** — Design intelligence engine for AI coding tools (Claude Code, Cursor, Windsurf). Deterministic anti-AI-slop linter with 152 rules, 160 brand specs, a 7-axis synthesizer, an MCP server (18 tools), 25 commands, 17 IDEs. Offline, never calls an LLM. MIT.
-  <sub>★ 76 · Python · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 76 · Python · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx uxskill init # downloads pipx + uxskill on first run`</sub>
 - **[nano-banana](https://github.com/Ibrahim-3d/nano-banana-claude-plugin)** — Google Gemini image generation plugin. Text-to-image, text-guided image editing, style transfer, 4K output, search grounding, and multi-reference composition via /genimage. Uses gemini-2.5-flash-image (fast) and gemini-3-pro-image-preview (4K/search)
   <sub>★ 13 · Python · AGPL-3.0 · clone · pushed 2026-04-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -939,7 +939,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Skills &amp; Frameworks
 
 - **[aurakit](https://github.com/smorky850612/Aurakit)** — All-in-one Claude Code skill: 46 modes, 23 sub-agents, 6-layer OWASP security, 10 lifecycle hooks, ~55% token savings. Cross-platform (Codex, Cursor, Manus, Windsurf). Install: npx @smorky85/aurakit
-  <sub>★ 41 · JavaScript · MIT · npx · pushed 2026-04-16 · Win · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 42 · JavaScript · MIT · npx · pushed 2026-04-16 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npx @smorky85/aurakit # Install once (~30 seconds, auto-installs jq)`</sub>
 
 ## MCP Servers
@@ -996,6 +996,6 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 
 ---
 
-Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).

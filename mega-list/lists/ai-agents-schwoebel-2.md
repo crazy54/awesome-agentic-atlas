@@ -89,7 +89,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2k · Python · Apache-2.0 · pip · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentic_security`</sub>
 - **[Invariant](https://github.com/invariantlabs-ai/invariant)** — Helps you build better AI agents through debuggable unit testing
-  <sub>★ 460 · Python · Apache-2.0 · source · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 461 · Python · Apache-2.0 · source · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/invariantlabs-ai/invariant.git`</sub>
 - **[Cyber-Security-Llm-Agents](https://github.com/NVISOsecurity/cyber-security-llm-agents)** — A collection of agents that use Large Language Models (LLMs) to perform tasks common on our day to day jobs in cyber security
   <sub>★ 394 · Jupyter Notebook · source · pushed 2024-05-07 · Win?</sub>
@@ -221,7 +221,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 782 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://github.com/TheAgentCompany/the-agent-company-backup-data/releases/download/setup-script-20241208/setup.sh | sh`</sub>
 - **[Agentlab](https://github.com/ServiceNow/AgentLab)** — AgentLab - An open-source framework for developing, testing, and benchmarking web agents on diverse tasks, designed for scalability and re…
-  <sub>★ 636 · Python · pip · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 637 · Python · pip · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentlab`</sub>
 - **[Bigcodebench](https://github.com/bigcode-project/bigcodebench)** — BigCodeBench - Benchmarking Code Generation Towards AGI
   <sub>★ 519 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -230,10 +230,10 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 518 · Python · Apache-2.0 · pip · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install appworld`</sub>
 - **[Visualwebarena](https://github.com/web-arena-x/visualwebarena)** — VisualWebArena is a benchmark for multimodal agents
-  <sub>★ 488 · Python · MIT · source · pushed 2024-11-09 · WSL2 · Linux · Docker</sub>
+  <sub>★ 487 · Python · MIT · source · pushed 2024-11-09 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/web-arena-x/visualwebarena.git`</sub>
 - **[Balrog](https://github.com/balrog-ai/BALROG)** — Benchmarking Agentic LLM and VLM Reasoning On Games
-  <sub>★ 269 · Python · MIT · clone · pushed 2026-04-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 271 · Python · MIT · clone · pushed 2026-04-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/balrog-ai/BALROG.git`</sub>
 - **[Comfybench](https://github.com/xxyQwQ/ComfyBench)** — Implementation for the paper "ComfyBench - Benchmarking LLM-based Agents in ComfyUI for Autonomously Designing Collaborative AI Systems"
   <sub>★ 205 · Python · clone · pushed 2025-12-24 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -242,7 +242,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 171 · Apache-2.0 · source · pushed 2026-08-19</sub>
   <sub>`git clone https://github.com/zhangxjohn/LLM-Agent-Benchmark-List.git`</sub>
 - **[Weblinx](https://github.com/McGill-NLP/weblinx)** — WebLINX is a benchmark for building web navigation agents with conversational capabilities
-  <sub>★ 163 · Python · Apache-2.0 · pip · pushed 2026-08-16 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 164 · Python · Apache-2.0 · pip · pushed 2026-08-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install weblinx`</sub>
 - **[Smartplay](https://github.com/microsoft/SmartPlay)** — SmartPlay is a benchmark for Large Language Models (LLMs). Uses a variety of games to test various important LLM capabilities as agents. …
   <sub>★ 145 · Python · CC-BY-4.0 · source · pushed 2024-04-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -364,6 +364,6 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).

@@ -10,10 +10,11 @@ Page **9** of 9, because this list is longer than the 512 KB GitHub will render 
 
 ## The list (5,877)
 
-<sub>Projects 5,845–5,877 of 5,877. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 5,844–5,877 of 5,877. The rest are on this page's other parts, linked above and below.</sub>
 
 | # | Project | ★ | Lists | Support | Language | Install / Run | What it does | Why |
 |--:|---|--:|--:|---|---|---|---|---|
+| 5844 | **[Vitalhome-Chat](https://github.com/vital-ai/vitalhome-chat)**<br><sub>vital-ai/vitalhome-chat</sub> | — | 1 | Win? · WSL2? · macOS? · Linux? | Python | `git clone https://github.com/vital-ai/vitalhome-chat.git` | Ontology for Chat Agents deployed on Chat.ai | <sub>inferred from language (Python)</sub> |
 | 5845 | **[vivek081166/japan-utils-mcp](https://github.com/vivek081166/japan-utils-mcp)**<br><sub>vivek081166/japan-utils-mcp</sub> | — | 1 | Win? · WSL2? · macOS? · Linux? | Python | `uvx japan-utils-mcp` | Japan-specific utilities for AI agents: era ↔ Western year conversion (令和8年 ↔ 2026), kanji-to-romaji transliteration, 7-digit postal code lookup, national holiday calendar, hiragana ↔ katakana conversion, full-width ↔ h… | <sub>install via uv; portable runtime (python)</sub> |
 | 5846 | **[Voice_Agent](https://github.com/drhammed/voice_agent)**<br><sub>drhammed/voice_agent</sub> | — | 1 | Win? · WSL2? · macOS? · Linux? | Python | `git clone https://github.com/drhammed/voice_agent.git` | Test app for the AI Voice Agent Project | <sub>inferred from language (Python)</sub> |
 | 5847 | **[vruum-gtm/mcp](https://github.com/vruum-gtm/mcp)**<br><sub>vruum-gtm/mcp</sub> | — | 1 | Win? · WSL2? · macOS? · Linux? | TypeScript | `npx @vruum/cli` | AI revenue platform. Operate outbound, deals, pipeline, and CRM automation from your agent: people, deals, outreach, engagement, and research tools over one MCP. Remote server at https://api.vruum.ai/mcp (OAuth 2.1, or… | <sub>install via npx; portable runtime (node)</sub> |
@@ -52,6 +53,6 @@ Page **9** of 9, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).

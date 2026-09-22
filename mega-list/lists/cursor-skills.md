@@ -252,7 +252,7 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
 ## Code Quality &amp; Security
 
 - **[HOL Guard](https://github.com/hashgraph-online/hol-guard)** — Security harness that intercepts tool calls in AI coding agents before files change or network is contacted
-  <sub>★ 643 · Python · Apache-2.0 · pipx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 650 · Python · Apache-2.0 · pipx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pipx install hol-guard`</sub>
 - **[reviewing-code](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/reviewing-code/SKILL.md)** — Thorough code review focused on correctness, maintainability, performance, and best practices
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
@@ -483,10 +483,10 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/adding-feature-flags/SKILL.md`</sub>
 - **[posthog-llm-analytics](https://github.com/PostHog/skills/tree/main/skills/posthog/llm-analytics)** — Instrument LLM calls with token usage, latency, cost tracking, and model comparison
-  <sub>Python · MIT · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · MIT · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/PostHog/skills.git && cd skills/skills/posthog/llm-analytics`</sub>
 - **[posthog-migrations](https://github.com/PostHog/skills/tree/main/skills/posthog/migrations)** — Migrate from other analytics providers (Amplitude, Mixpanel, GA) to PostHog
-  <sub>Python · MIT · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · MIT · in-repo · pushed 2026-09-22</sub>
   <sub>`git clone https://github.com/PostHog/skills.git && cd skills/skills/posthog/migrations`</sub>
 
 ## Error Tracking &amp; Monitoring
@@ -513,7 +513,7 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>★ 32.2k · TypeScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add vercel-labs/agent-skills`</sub>
 - **[PostHog/context-mill](https://github.com/PostHog/context-mill)** — Assemble context for AI agents into Agent Skills-compliant packages
-  <sub>★ 61 · JavaScript · source · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 62 · JavaScript · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/PostHog/context-mill.git`</sub>
 - **[Anthropic Skill Creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)** — Official skill for drafting, testing, and optimizing custom SKILL.md files
   <sub>Python · in-repo · pushed 2026-09-10</sub>
@@ -552,6 +552,6 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
 
 ---
 
-Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).

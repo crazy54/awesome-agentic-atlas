@@ -38,7 +38,7 @@ Page **7** of 7, because this list is longer than the 512 KB GitHub will render 
 ## Accessibility
 
 - **[kinti/a11y-toolkit](https://github.com/kinti/a11y-toolkit)** — MCP server + CLI for WCAG 2.2 accessibility: color contrast (pairs plus pixel-level text-over-image sampling), EU accessibility declaration generation (RD 1112/2018, Ley 11/2023 / European Accessibility Act, EN 301 549), and an aria-live announcement monitor. Multilanguage es/en, zero dependencies
-  <sub>★ 1 · Python · MIT · clone · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1 · Python · MIT · clone · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kinti/a11y-toolkit`</sub>
 - **[vince-gonzalez/opticquiz-mcp](https://github.com/vince-gonzalez/opticquiz-mcp)** — Color-vision accessibility. Check whether a palette or an image is colorblind-safe and name the conflicting pairs, generate colorblind-safe palettes (Okabe-Ito seeded), recolor an image as protanopia/deuteranopia/tritanopia renders it, and generate Ishihara-style test plates. Built on Machado, Oliveira &amp; Fernandes (2009) + CIEDE2000, published open access at doi.org/10.5281/zenodo.21310578. Runs l
   <sub>JavaScript · source · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -48,6 +48,6 @@ Page **7** of 7, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).

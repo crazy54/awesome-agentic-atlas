@@ -4,28 +4,28 @@
 
 Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMSecurity/awesome-agent-skills-security)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-94 entries · 57 distinct repos · 4 sections
+95 entries · 57 distinct repos · 4 sections
 
 [← back to the mega list](../README.md)
 
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/Significant-Gravitas/AutoGPT"><img src="https://raw.githubusercontent.com/Significant-Gravitas/AutoGPT/master/docs/home/.gitbook/assets/Banner_image.png" width="260"></a> | <a href="https://github.com/f/prompts.chat"><img src="https://raw.githubusercontent.com/f/prompts.chat/main/public/sponsors/clemta.webp" width="260"></a> | <a href="https://github.com/punkpeye/awesome-mcp-servers"><img src="https://opengraph.githubassets.com/1/punkpeye/awesome-mcp-servers" width="260"></a> |
-| **[AutoGPT Plugins](https://github.com/Significant-Gravitas/AutoGPT)**<br>★ 187.5k | **[awesome-chatgpt-prompts](https://github.com/f/prompts.chat)**<br>★ 170.9k | **[awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)**<br>★ 95.4k |
+| **[AutoGPT Plugins](https://github.com/Significant-Gravitas/AutoGPT)**<br>★ 187.5k | **[awesome-chatgpt-prompts](https://github.com/f/prompts.chat)**<br>★ 171k | **[awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)**<br>★ 95.4k |
 | <a href="https://github.com/e2b-dev/awesome-ai-agents"><img src="https://opengraph.githubassets.com/1/e2b-dev/awesome-ai-agents" width="260"></a> | <a href="https://github.com/promptfoo/promptfoo"><img src="https://raw.githubusercontent.com/promptfoo/promptfoo/main/site/static/img/claude-vs-gpt-example%402x.png" width="260"></a> | <a href="https://github.com/NVIDIA/NemoClaw"><img src="https://opengraph.githubassets.com/1/NVIDIA/NemoClaw" width="260"></a> |
-| **[awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents)**<br>★ 30.1k | **[Promptfoo](https://github.com/promptfoo/promptfoo)**<br>★ 25.3k | **[NemoClaw](https://github.com/NVIDIA/NemoClaw)**<br>★ 22.5k |
+| **[awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents)**<br>★ 30.1k | **[Promptfoo](https://github.com/promptfoo/promptfoo)**<br>★ 25.4k | **[NemoClaw](https://github.com/NVIDIA/NemoClaw)**<br>★ 22.5k |
 
 ## Contents
 
 - [Agent Skill Specifications](#agent-skill-specifications) (7)
 - [Related Awesome Lists](#related-awesome-lists) (6)
 - [Tools &amp; Frameworks](#tools--frameworks) (44)
-- [Benchmarks &amp; Datasets](#benchmarks--datasets) (37)
+- [Benchmarks &amp; Datasets](#benchmarks--datasets) (38)
 
 ## Agent Skill Specifications
 
 - **[AutoGPT Plugins](https://github.com/Significant-Gravitas/AutoGPT)** — Plugin system for autonomous agents
-  <sub>★ 187.5k · Python · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 187.5k · Python · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Significant-Gravitas/AutoGPT.git`</sub>
 - **[AgentSkills.io](https://agentskills.io/specification)** — Agent skill definition and security requirements
   <sub>website</sub>
@@ -49,7 +49,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 ## Related Awesome Lists
 
 - **[awesome-chatgpt-prompts](https://github.com/f/prompts.chat)** — Prompt engineering (includes adversarial examples)
-  <sub>★ 170.9k · HTML · npx · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 171k · HTML · npx · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx prompts.chat new my-prompt-library`</sub>
 - **[awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)** — MCP server ecosystem (attack surface reference)
   <sub>★ 95.4k · MIT · npx · pushed 2026-09-21 · WSL2 · macOS · Linux · Docker</sub>
@@ -70,43 +70,43 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 ## Tools &amp; Frameworks
 
 - **[Promptfoo](https://github.com/promptfoo/promptfoo)** — LLM red teaming and evaluation framework
-  <sub>★ 25.3k · TypeScript · MIT · npm · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 25.4k · TypeScript · MIT · npm · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g promptfoo`</sub>
 - **[NemoClaw](https://github.com/NVIDIA/NemoClaw)** — NVIDIA reference stack for running always-on AI agents more safely in sandboxes, with network policy, hardening, routed inference, and lifecycle controls
-  <sub>★ 22.5k · TypeScript · Apache-2.0 · source · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 22.5k · TypeScript · Apache-2.0 · source · pushed 2026-09-22 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/NVIDIA/NemoClaw.git`</sub>
 - **[CubeSandbox](https://github.com/TencentCloud/CubeSandbox)** — Hardware-isolated (per-kernel) sub-60ms sandbox for secure AI agent code execution, with an out-of-sandbox credential vault, eBPF network isolation, and domain-allowlisted egress controls with audit logging
-  <sub>★ 12.6k · Go · source · pushed 2026-09-21 · WSL2? · Linux</sub>
+  <sub>★ 12.7k · Go · source · pushed 2026-09-22 · WSL2? · Linux</sub>
   <sub>`git clone https://github.com/TencentCloud/CubeSandbox.git`</sub>
 - **[Garak](https://github.com/NVIDIA/garak)** — LLM vulnerability scanner
   <sub>★ 9.3k · Python · Apache-2.0 · source · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/leondz/garak.git`</sub>
 - **[NeMo Guardrails](https://github.com/NVIDIA-NeMo/Guardrails)** — NVIDIA's toolkit for adding guardrails to LLM-based applications
-  <sub>★ 7.2k · Python · source · pushed 2026-09-18 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 7.2k · Python · source · pushed 2026-09-21 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/NVIDIA/NeMo-Guardrails.git`</sub>
 - **[LLM Guard](https://github.com/protectai/llm-guard)** — Input/output scanning for LLM applications
   <sub>★ 3.2k · Python · MIT · pip · pushed 2026-07-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llm-guard`</sub>
 - **[Agent Scan](https://github.com/snyk/agent-scan)** — Snyk's scanner for local agent supply chains, covering MCP servers and skills with checks for prompt injection, tool poisoning, toxic flows, and malware-laced skill files
-  <sub>★ 3.1k · Python · Apache-2.0 · uv · pushed 2026-09-21 · Win? · WSL2 · macOS · Linux</sub>
+  <sub>★ 3.1k · Python · Apache-2.0 · uv · pushed 2026-09-22 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`uvx snyk-agent-scan@0.5.17`</sub>
 - **[Rebuff](https://github.com/protectai/rebuff)** — Self-hardening prompt injection detector
   <sub>★ 1.5k · TypeScript · Apache-2.0 · pip · pushed 2024-08-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install rebuff`</sub>
 - **[Pipelock](https://github.com/luckyPipewrench/pipelock)** — Open-source AI agent firewall and MCP-aware egress proxy with DLP, prompt injection scanning, process sandboxing, and mediator-signed action receipts
-  <sub>★ 894 · Go · Apache-2.0 · brew · pushed 2026-09-21 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 897 · Go · Apache-2.0 · brew · pushed 2026-09-22 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`brew install luckyPipewrench/tap/pipelock`</sub>
 - **[Invariant Guardrails](https://github.com/invariantlabs-ai/invariant)** — Policy-based agent security guardrails
-  <sub>★ 460 · Python · Apache-2.0 · source · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 461 · Python · Apache-2.0 · source · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/invariantlabs-ai/invariant.git`</sub>
 - **[Clawvisor](https://github.com/clawvisor/clawvisor)** — AI agent gateway for purpose-based authorization, credential vaulting, and audit logging — agents declare task scope, humans approve once, Clawvisor enforces on every request without the agent ever seeing credentials
   <sub>★ 278 · Go · script · pushed 2026-09-17 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/clawvisor/clawvisor/main/scripts/install.sh | sh`</sub>
 - **[Agent Memory Guard](https://github.com/OWASP/www-project-agent-memory-guard)** — OWASP reference implementation for ASI06 (Memory Poisoning): runtime defense that screens every agent memory read/write through detectors + a declarative policy, with source-class provenance, forensic SecurityEvents, and snapshot rollback. LangChain/OpenAI-Agents/AutoGen/CrewAI/mem0 integrations
-  <sub>★ 180 · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 182 · Python · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agent-memory-guard`</sub>
 - **[Humanbound](https://github.com/humanbound/humanbound)** — Open-source adversarial testing engine, SDK, and CLI for AI agents: runs live-endpoint, multi-turn, and tool-abuse tests against a deployed agent and converts findings into deployable guardrail rules
-  <sub>★ 151 · Python · Apache-2.0 · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 152 · Python · Apache-2.0 · pip · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install humanbound # CLI + SDK, core deps`</sub>
 - **[Armorer Guard](https://github.com/ArmorerLabs/Armorer-Guard)** — Local Rust scanner for AI-agent prompt injection, credential redaction, sensitive-data requests, exfiltration-style text, and dangerous tool-call context
   <sub>★ 42 · Python · MIT · clone · pushed 2026-09-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -124,7 +124,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 18 · Rust · Apache-2.0 · source · pushed 2026-09-04 · Win? · WSL2? · Linux</sub>
   <sub>`git clone https://github.com/TraceFold/tracefold.git`</sub>
 - **[AVE (Agentic Vulnerability Enumeration)](https://github.com/aveproject/ave)** — Open standard and behavioral vulnerability taxonomy for agentic AI components (MCP servers, agent skills, LLM plugins), stable IDs scored with OWASP's AIVSS framework
-  <sub>★ 18 · Python · Apache-2.0 · source · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 18 · Python · Apache-2.0 · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/aveproject/ave.git`</sub>
 - **[IPI-Proxy](https://github.com/VulcanLab/IPI-Proxy)** — Intercepting proxy for red-teaming web-browsing agents against indirect prompt injection on live whitelisted domains
   <sub>★ 15 · Python · pip · pushed 2026-05-05 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -133,7 +133,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 8 · Go · Apache-2.0 · scoop · pushed 2026-08-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`scoop bucket add skillci https://github.com/kabirnarang39/skillci scoop install skillci/skillci`</sub>
 - **[Sunglasses](https://github.com/sunglasses-dev/sunglasses)** — Runtime trust scanner for agent skills and tool use: 1,089 patterns across 65 attack categories (prompt injection, tool poisoning, MCP attacks, skill compromise) plus a mechanism layer, shipped as a pip package, GitHub Action, and free web scanner with a published precision/recall benchmark
-  <sub>★ 8 · Python · MIT · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 8 · Python · MIT · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install sunglasses # text scanning — zero dependencies`</sub>
 - **[Clay Seal](https://github.com/clayseal/clayseal-identity)** — Attested runtime identity and Biscuit capability tokens for agents: real GCP/Kubernetes/AWS node attestation, SPIFFE JWT-SVID and X.509-SVID (mTLS), and per-tool MCP authorization that is sender-constrained, so a token lifted from a log without the workload key authorizes nothing (Python + JS verifier)
   <sub>★ 7 · Python · MIT · pip · pushed 2026-08-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -148,7 +148,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 6 · TypeScript · MIT · npm · pushed 2026-08-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g whatileaked # then just: whatileaked scan`</sub>
 - **[SkillTotal](https://github.com/pezhik/skilltotal)** — Static, offline scanner for AI components (MCP servers, agent skills, npm/PyPI packages, repos): supply-chain risk, dangerous capabilities, prompt-injection, exfiltration; deterministic, evidence-anchored, SARIF + pre-commit/GitHub Action
-  <sub>★ 3 · Python · Apache-2.0 · pipx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4 · Python · Apache-2.0 · pipx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install skilltotal`</sub>
 - **[DScan](https://github.com/DeepScan-Security/dscan)** — Open-source agent security suite for runtime tool-call tracing, prompt-injection shielding, MCP audits, adversarial testing, and sequence-level attack detection
   <sub>★ 3 · Python · pip · pushed 2026-07-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -315,10 +315,13 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 - **[VLoc Bench](https://arxiv.org/abs/2609.15939)** — Repository-scale vulnerability localization by security agents (incl. refrain-on-patched)
   <sub>website</sub>
   <sub>`https://arxiv.org/abs/2609.15939`</sub>
+- **[APort Vault](https://huggingface.co/datasets/aporthq/vault-benchmark-v1)** — Payment authorization in tool-using agents (deterministic pre-action check vs. model-alone)
+  <sub>website</sub>
+  <sub>`https://huggingface.co/datasets/aporthq/vault-benchmark-v1`</sub>
 
 
 ---
 
-Snapshot 2026-09-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).
