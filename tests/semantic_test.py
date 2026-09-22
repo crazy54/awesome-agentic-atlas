@@ -321,6 +321,15 @@ def main() -> int:
     # Both axes, because a layout that collapsed onto a line keeps a full extent on one of them.
     h.check("the map has extent on both axes", min(span_x, span_y) > 32767,
             f"spans {span_x} x {span_y} of a possible 65,534")
+    # And the extent is the corpus's, not a few outliers'. The page fits the map to its bounding box, so
+    # the check above is satisfied by eight rows at the rim and 8,850 in a dot at the centre -- which is
+    # what shipped at 8,858 rows, with the 1st-99th percentile spanning ~2,000 of 65,534.
+    def body(vals: list[int]) -> int:
+        s = sorted(vals)
+        return s[int(len(s) * 0.99)] - s[int(len(s) * 0.01)] if s else 0
+    body_x, body_y = body([x for x, _ in at]), body([y for _, y in at])
+    h.check("the body of the corpus fills the map, not just its outliers", min(body_x, body_y) > 16384,
+            f"the 1st-99th percentile spans {body_x} x {body_y} of a possible 65,534")
 
     # Purity: the assertion that the picture means something. Sampled rather than exhaustive -- 1,294 rows
     # is 1.67M distances in pure Python and this harness runs in under a second -- and sampled with a fixed
