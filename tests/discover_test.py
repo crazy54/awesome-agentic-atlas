@@ -304,6 +304,87 @@ eq("...including the last day, rather than six empty ones after the queues ran o
 eq("an empty corpus produces seven empty days rather than a crash",
    [c["picks"] for c in d.plan([], d.blank(), "2026-09-20")[0]["days"]], [[]] * d.DAYS)
 
+print("\n-- the refill: a pick that leaves the corpus costs a substitution, not a slot")
+
+# `deal()` fills every day exactly, so a short day always means a pick was removed afterwards -- a featured
+# repository renamed, deleted or made private between Sunday's deal and a mid-week re-render. That really
+# happened: the week of 2026-09-20 published 49 cards on two of its seven days, because
+# `Opencode-DCP/opencode-dynamic-context-pruning` became a 301 and `ariana-dot-dev/ariana` a 404. Dropping
+# them is right; leaving the day one short of the count the page prints in its own heading is not.
+LIVE_SHOWN = d.plan(LIVE, d.blank(), "2026-09-20")[1]["shown"]
+whole = d.plan(LIVE, d.blank(), "2026-09-20")[0]["days"]
+pool = dict(LIVE)
+
+
+def wound(*where):
+    """The plan with one pick removed from each `(day, index)`, plus the pool those rows vanished from."""
+    hurt = [{"date": c["date"], "picks": list(c["picks"])} for c in whole]
+    gone = [hurt[i]["picks"].pop(j) for i, j in where]
+    return hurt, {n: c for n, c in pool.items() if n not in gone}, gone
+
+
+hurt, left, gone = wound((1, 7), (5, 20), (5, 3))
+eq("three dropped picks leave two days short", [len(c["picks"]) for c in hurt],
+   [50, 49, 50, 50, 50, 48, 50])
+back, added = d.topup(hurt, left, LIVE_SHOWN, "2026-09-20")
+eq("...and the refill returns all seven to the day's full count",
+   [len(c["picks"]) for c in back], [d.PER_DAY] * d.DAYS)
+eq("...one substitute per lost pick, no more", len(added), 3)
+true("...none of which is a row that left the corpus", not (set(added) & set(gone)))
+true("...and all of which are rows the corpus still has", all(n in left for n in added))
+eq("no day carries a row twice, which is the invariant the refill may not trade away",
+   [len(set(c["picks"])) for c in back], [d.PER_DAY] * d.DAYS)
+flat = [n for c in back for n in c["picks"]]
+eq("...and on a corpus this size the week stays distinct too", len(set(flat)), len(flat))
+true("the picks that survived are left exactly where they were, in order",
+     all(a["picks"] == b["picks"][:len(a["picks"])] for a, b in zip(hurt, back)))
+eq("...so the only difference is the substitutes appended",
+   sorted(set(flat) - {n for c in hurt for n in c["picks"]}), sorted(added))
+
+# Determinism matters more here than anywhere else in the module: this runs on every nightly re-render, and
+# a refill that chose differently each time would reshuffle days a reader has already seen.
+again = d.topup(*wound((1, 7), (5, 20), (5, 3))[:2], LIVE_SHOWN, "2026-09-20")[1]
+eq("two runs of the refill choose the same substitutes", added, again)
+true("...and a different week does not, since the hash that breaks ties is keyed to it",
+     d.topup(*wound((1, 7), (5, 20), (5, 3))[:2], LIVE_SHOWN, "2026-11-01")[1] != added)
+
+# On a stable corpus the category below its share is the one that lost the row, so the day is repaired
+# exactly. That equivalence is what breaks when the corpus grows unevenly -- see the docstring.
+eq("a substitute comes from the category that went short",
+   sorted(left[n] for n in added), sorted(pool[g] for g in gone))
+
+full, _, _ = wound()
+kept, none = d.topup(full, pool, LIVE_SHOWN, "2026-09-20")
+eq("a week with nothing missing is returned unchanged", [c["picks"] for c in kept],
+   [c["picks"] for c in whole])
+eq("...having added nothing", none, [])
+true("...as a copy, so a caller cannot mutate the plan it passed in",
+     all(a["picks"] is not b["picks"] for a, b in zip(full, kept)))
+
+# A whole day lost is the same problem at a different scale, and the allocation has to rebuild the mix from
+# nothing rather than assume a day is nearly right.
+blank_day = [{"date": c["date"], "picks": [] if i == 3 else list(c["picks"])}
+             for i, c in enumerate(whole)]
+rebuilt, refilled = d.topup(blank_day, pool, LIVE_SHOWN, "2026-09-20")
+eq("an emptied day is dealt again from scratch", len(rebuilt[3]["picks"]), d.PER_DAY)
+eq("...drawing a full day's worth", len(refilled), d.PER_DAY)
+eq("...and every category is represented in it, the promise the whole feature rests on",
+   len({pool[n] for n in rebuilt[3]["picks"]}), len(LIVE_SHAPE))
+
+# The one corpus that cannot be refilled. `take()` laps its queues and will repeat a row across a week to
+# keep a day full; this will not, so here the day publishes 8 rather than showing a project twice.
+nine = corpus({1: 9})
+nine_plan, nine_state = d.plan(nine, d.blank(), "2026-09-20")
+starved = [{"date": c["date"], "picks": list(c["picks"])} for c in nine_plan["days"]]
+starved[0]["picks"].pop()
+short, nothing = d.topup(starved, dict(nine), nine_state["shown"], "2026-09-20")
+eq("a corpus with nothing spare leaves the day short rather than padding it",
+   [len(c["picks"]) for c in short], [8] + [9] * 6)
+eq("...adding nothing at all", nothing, [])
+eq("an empty corpus refills nothing rather than dividing by zero",
+   d.topup([{"date": "2026-09-20", "picks": []}], {}, {}, "2026-09-20"), ([{"date": "2026-09-20",
+                                                                           "picks": []}], []))
+
 print("\n-- blindness: popularity, recency and row order change nothing")
 
 base = d.plan(LIVE, d.blank(), "2026-09-20")[0]["days"]

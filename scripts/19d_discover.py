@@ -171,13 +171,22 @@ def cohort_of(data: dict) -> str:
     return data.get("cohort") or ""
 
 
-def publish(data: dict, plan: dict) -> dict:
+def publish(data: dict, plan: dict, shown: dict | None = None) -> dict:
     """A week's plan plus everything the page needs to draw it, ready to be written as `discover.json`.
 
     Picks naming a row that is no longer in the corpus are dropped here rather than rendered: a card is a
     link to a detail page, and a build that did not write that page should not publish a link to it. This
     is only reachable on a re-render -- a plan picked from this same `data` cannot name a row it does not
     have -- which is exactly the mid-week case the docstring describes.
+
+    The slot is then refilled by `discover.topup()`, because dropping alone leaves the day one short of the
+    count the page prints in its own heading. `shown` is the ledger, read but never written: it decides
+    which replacement has waited longest, and the rule for that lives in `discover.py` with every other
+    decision about which rows get a turn.
+
+    The refill persists without being stored anywhere new. `discover.json` is this stage's output *and* the
+    `published` plan the next run reads, so tomorrow's re-render sees the substitute as an ordinary pick and
+    leaves it alone -- it is only reconsidered if it too leaves the corpus.
     """
     known = cards(data)
     days, dropped = [], []
@@ -185,8 +194,10 @@ def publish(data: dict, plan: dict) -> dict:
         keep = [n for n in c["picks"] if n in known]
         dropped += [n for n in c["picks"] if n not in known]
         days.append({"date": c["date"], "picks": keep})
+    days, added = discover.topup(days, dict(rows_of(data)), shown or {}, plan["week"],
+                                 plan.get("per_day", discover.PER_DAY))
     seen = {n for c in days for n in c["picks"]}
-    return dict(plan, days=days, dropped=sorted(set(dropped)),
+    return dict(plan, days=days, dropped=sorted(set(dropped)), added=sorted(set(added)),
                 snapshot=data.get("snapshot", ""),
                 cohort=cohort_of(data), window_days=data.get("window_days", 14),
                 cats=[c["name"] for c in data.get("cats", [])],
@@ -204,9 +215,10 @@ def pick(data: dict, day: str, force: bool = False,
     """
     rows = rows_of(data)
     if not force and published and discover.covers(published, day):
-        return publish(data, published), None
+        # The ledger is passed for ordering a refill and nothing else -- `None` back means don't write it.
+        return publish(data, published, (state or {}).get("shown", {})), None
     plan, state = discover.plan(rows, state if state is not None else discover.blank(), day)
-    return publish(data, plan), state
+    return publish(data, plan, state["shown"]), state
 
 
 # ------------------------------------------------------------------ the page

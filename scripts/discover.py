@@ -309,6 +309,86 @@ def deal(rows, shown: dict, week: str, days: list[str]) -> list[dict]:
     return out
 
 
+def topup(days: list[dict], cats: dict, shown: dict, week: str,
+          per_day: int = PER_DAY) -> tuple[list[dict], list[str]]:
+    """Refill days left short of `per_day`, drawing each replacement from the category the day now lacks.
+
+    `deal()` fills every day exactly, so a short day can only mean a pick was removed after the fact --
+    which happens on a mid-week re-render when a featured repository has been renamed, deleted or made
+    private and is no longer in the corpus. `19d_discover.py` is right to drop it rather than publish a card
+    linking to a detail page that was never written. Dropping without refilling is the part that is wrong:
+    the page promises the day's count in its own heading, and a reader who counts gets 49.
+
+    The replacement is not chosen freely, and the category it comes from is worked out rather than looked
+    up -- it has to be, because the row that left took its category with it and nothing recorded what it
+    was. A day's surviving picks are counted against `allocate()` on the corpus that exists *now*, and the
+    category furthest below that share fills first. Within it, `queue()` order: longest-waiting first, hash
+    for ties, so the substitute is the row that had the best claim to a slot anyway and two machines choose
+    the same one.
+
+    Be precise about what that does and does not restore, because the two coincide only some of the time.
+    On a corpus that has not moved since the deal, the category below its share *is* the one that lost the
+    row, so the day is repaired exactly. On a corpus that has grown unevenly they come apart: the week of
+    2026-09-20 was dealt before an ingest took the atlas to 8,858 rows, after which MCP Servers alone wants
+    nine slots a day and the standing plan gives it three -- so a refill on that week goes to MCP Servers
+    whatever category actually went missing. That is the better of the two available behaviours rather than
+    a compromise, since one slot cannot close a six-slot gap and spending it on the largest shortfall at
+    least moves toward the shape the corpus now has. What it is not is a repair of the specific loss, and a
+    reader comparing a day's mix against `allocate()` should not expect the deficit count to fall.
+
+    `cats` is `{nwo: cat}` for the corpus that exists now, which is the pool a replacement may come from.
+    Returns `(days, added)`; `added` is every substitute, for the caller to record.
+
+    Two bounds worth stating rather than discovering. A replacement is never a row the week already
+    features anywhere, which is stricter than `deal()` -- `take()` laps its queues and may repeat a row
+    across a week on a corpus too small to avoid it, and this will not. So on that corpus a short day stays
+    short (9 rows, one dropped, and the day publishes 8) rather than showing the same project twice to fill
+    a number. Refusing to pad is the cheaper failure: 8,858 rows against 350 picks means the real corpus
+    never reaches this, and a test corpus that does should not learn a different rule. And the ledger is
+    deliberately not stamped here: a
+    re-render must not age the corpus (see `pick()` in `19d_discover.py`), so a substitute keeps its place
+    in next week's queue and can be featured again. That costs at most a row or two a week, which is the
+    cheaper of the two mistakes -- the other one is a nightly build quietly moving all 8,858 rows to the
+    back of the queue.
+    """
+    if not cats:
+        return [dict(c, picks=list(c["picks"])) for c in days], []
+
+    by_cat: dict = {}
+    for nwo, cat in cats.items():
+        by_cat.setdefault(cat, []).append(nwo)
+    alloc = allocate({c: len(v) for c, v in by_cat.items()}, per_day)
+    queues = {c: queue(v, shown, week) for c, v in by_cat.items()}
+    used = {n for c in days for n in c["picks"]}
+
+    out, added = [], []
+    for c in days:
+        picks = list(c["picks"])
+        have: dict = {}
+        for n in picks:
+            if n in cats:
+                have[cats[n]] = have.get(cats[n], 0) + 1
+        while len(picks) < per_day:
+            # Furthest below its share first, then the name, so the choice is the data's and not the
+            # dict's insertion order.
+            got = None
+            for cat in sorted(alloc, key=lambda k: (have.get(k, 0) - alloc[k], str(k))):
+                for n in queues.get(cat, ()):
+                    if n not in used:
+                        got = n
+                        break
+                if got is not None:
+                    break
+            if got is None:
+                break  # Nothing unused left in any category: a corpus too small to refill from.
+            picks.append(got)
+            used.add(got)
+            have[cats[got]] = have.get(cats[got], 0) + 1
+            added.append(got)
+        out.append(dict(c, picks=picks))
+    return out, added
+
+
 def plan(rows, state: dict | None = None, day: str | None = None, snapshot: str = "") -> tuple[dict, dict]:
     """A week's plan and the ledger that records it. Pure: nothing is read or written here.
 
