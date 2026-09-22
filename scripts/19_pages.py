@@ -902,12 +902,27 @@ select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
    need one -- 236px fits inside a 375px viewport with the nav's own padding to spare, and it is measured
    from the right edge of a button that is itself inside the wrap.
 
-   No `overflow:hidden` on the wrapper either: the panel is a child of `header`, which is z-index 10 and
-   below the pinned bar's 20, so an open menu paints *under* the filter bar while the masthead scrolls.
-   That is the same ordering the masthead comment settles for Archie's speech bubble, and it is the right
-   answer here for the same reason -- what is pinned paints over what is scrolling. The menu is a thing
-   you use on arrival, like everything else in this header. */
+   No `overflow:hidden` on the wrapper either. What did need fixing is the stacking, and the first version
+   of this comment argued the wrong way round: it said the panel is a child of `header` at z-index 10, the
+   pinned bar is 20, so an open menu paints under the bar, and that this was right because what is pinned
+   paints over what is scrolling. A screenshot settled it. The panel is 236px tall on a masthead 216px
+   deep, so two thirds of it lands in the bar's band: the Theme heading and the whole Graphite row were
+   invisible behind the search field and the topic chips. That ordering is correct for Archie's speech
+   bubble, which is decorative and transient. It is not correct for a menu, where the cost is a control a
+   reader cannot see or press. "What is pinned paints over what is scrolling" is a good rule that was
+   being applied to the one thing in this header it does not fit.
+
+   `header.setopen` and not a bigger number on `.setmenu`, because a child cannot out-rank its own
+   stacking context: `header` is `position:relative;z-index:10`, so every z-index inside it is resolved
+   *within* that context and the panel's own 1 could be 999 without reaching the bar. The parent is what
+   has to move. It moves only while the menu is open, and that is the whole point of the class rather than
+   a higher base number: `probe.mjs` asserts `zOf("header") < zOf(".bar")` on the base rule -- the pinned
+   thing must paint over the scrolling one -- and that assertion is right and stays green, because the
+   rule it reads is untouched. A reader who never opens Settings gets byte-identical stacking, including
+   Archie's bubble still passing under the bar. `setOpen()` in the page script is the only thing that adds
+   or removes the class, so the two states cannot drift apart. */
 .setwrap{position:relative;display:inline-block}
+header.setopen{z-index:30}
 .setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:236px;text-align:left;
   background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
   padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75)}
@@ -3760,9 +3775,13 @@ function wire() {
   // `hidden` is the state, and the attribute rather than a class deliberately: it takes the panel out of
   // the accessibility tree as well as off the screen, which is what a closed menu should be. aria-expanded
   // on the button is the same fact said to a screen reader.
+  // `setopen` on the masthead is what lifts the panel over the pinned bar -- see the `.setmenu` comment in
+  // the stylesheet for why the parent has to move and not the panel. Toggled here and nowhere else, so the
+  // class and the `hidden` attribute cannot end up disagreeing about whether the menu is open.
   const setOpen = (open) => {
     menu.hidden = !open;
     setbtn.setAttribute("aria-expanded", String(open));
+    document.querySelector("header").classList.toggle("setopen", open);
   };
   setbtn.onclick = () => setOpen(menu.hidden);
   // Escape from anywhere inside, and focus goes back to the button that opened it -- a menu that closes

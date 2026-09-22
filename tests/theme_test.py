@@ -349,6 +349,39 @@ true("<html> carries the same theme as its floor, beside the dark-mode one",
 true("the menu is hidden by the attribute, which also takes it out of the a11y tree",
      '<div class="setmenu" id="setmenu" hidden>' in SRC)
 
+# ---- AND THAT AN OPEN PANEL IS VISIBLE, which is not the same claim as being displayed -----------------
+#
+# The first version of this shipped with the panel painting under the pinned bar: `header` is a stacking
+# context at z-index 10, `.bar` is 20, and two thirds of a 236px panel lands in the bar's band, so the
+# Theme heading and the entire Graphite row were behind the search field. `display:block` and
+# `aria-expanded="true"` were both true of it. Neither is a claim about whether a reader can see the
+# control, and the assertion above would have gone on passing forever.
+#
+# So: the class exists, it beats the bar rather than merely differing from it, the base `header` rule is
+# NOT what moves -- probe.mjs asserts the pinned thing paints over the scrolling one off that rule, and
+# that is a different and also correct requirement -- and the page script is the only thing that toggles
+# it. The relationship rather than the number 30, for the reason probe.mjs gives about z-index:10: a pin
+# on the digit agrees with today's stylesheet and stops meaning anything the moment either is tuned.
+#
+# Anchored on a newline, because `.bar{` also appears inside the comment four hundred lines above that
+# explains why the bar is not offset below the masthead -- `.bar{top:var(--head-h)}`, the arrangement that
+# was measured and rejected. The unanchored lookup found the comment, sliced to its `}` and asked a rule
+# with no z-index in it for one. The three rules this needs are all written at column zero.
+zof = lambda sel: int(re.search(r"z-index:(-?\d+)", raw("\n" + sel)).group(1))
+HDRZ, BARZ, SETZ = zof("header{"), zof(".bar{"), zof("header.setopen{")
+# `check` rather than `true` so a failure prints the three numbers instead of just False. The comparison is
+# the claim and the pair beside it is there to be read -- whoever tunes one of these needs to see all three.
+check("an open settings panel outranks the pinned bar, so it is visible and not merely displayed",
+      (BARZ < SETZ, BARZ, SETZ), (True, BARZ, SETZ))
+check("...and the masthead's own rule is untouched, so a closed menu stacks exactly as it always did",
+      (HDRZ < BARZ, HDRZ, BARZ), (True, HDRZ, BARZ))
+# `toggle(cls, open)` rather than `add` here and `remove` there: one statement that cannot leave the class
+# on a closed menu. Counted so that a later `add("setopen")` somewhere else has to come past this line.
+check("...and one rule declares it, toggled from one place, in step with the attribute",
+      (SRC.count("header.setopen{"), SRC.count('classList.toggle("setopen", open)'),
+       'add("setopen"' in SRC or 'remove("setopen"' in SRC),
+      (1, 1, False))
+
 # ---------------------------------------------------------------- the two literals that duplicate --plane
 # The pre-paint script sets `theme-color` before the stylesheet is parsed, so it cannot read the
 # computed value and hardcodes both. They are the one place in the page where a colour is written twice,
