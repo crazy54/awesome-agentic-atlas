@@ -50,6 +50,28 @@
   const hash = n => { const s = Math.sin(n * 12.9898) * 43758.5453; return s - Math.floor(s); };
   const smooth = x => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
 
+  // ---- Music ----------------------------------------------------------------------------------------
+  // "Dance with me" (`archie-dance.js`) listens to the reader's music and tells this script about it in two
+  // document events: `archie:music` {on, source} when music mode starts or stops, and `archie:beat`
+  // {strength, bpm, at} on every onset it hears, `at` on the performance.now() clock. While music mode is on,
+  // `window.archieMusic` has level() and bass() for reading every frame. The listeners are here rather than
+  // in start(), so that a reader who turned the music on before the model loaded is dancing when it does.
+  const music = {on: !!window.archieMusic, at: -1e9, bpm: null, kick: 0, fresh: false};
+  document.addEventListener("archie:music", e => {
+    music.on = !!(e.detail && e.detail.on);
+    if (!music.on) { music.at = -1e9; music.bpm = null; }
+  });
+  document.addEventListener("archie:beat", e => {
+    const d = e.detail || {};
+    music.at = typeof d.at === "number" ? d.at : performance.now();
+    if (d.bpm) music.bpm = d.bpm;
+    music.kick = Math.max(0, Math.min(1, typeof d.strength === "number" ? d.strength : 1));
+    music.fresh = true;
+  });
+  const loudness = () => {
+    try { const m = window.archieMusic; return m ? Math.max(0, Math.min(1, m.level())) : 0; } catch { return 0; }
+  };
+
   let started = false;
   const go = () => {
     if (started || !allowed() || !webgl()) return;
@@ -196,6 +218,10 @@
       await turn(0);
     };
     let last = "", idling = false, wish = null;
+    // Music on, and a beat in the last two seconds: he dances, back to back, with no idles, visits or
+    // walk-offs, and goes back to the director's own choices two seconds after the music stops. Not with
+    // the masthead off screen, where nobody would see it and the loop would never stop.
+    const grooving = () => music.on && seen && mode === "home" && performance.now() - music.at < 2000;
     const act = async name => {
       last = name;
       talk.act(name);
@@ -209,11 +235,15 @@
     const direct = async () => {
       if (asked && (DANCES.includes(asked) || OTHERS.includes(asked))) await act(asked);
       for (;;) {
-        idling = true;
-        await perform("idle", 2 + Math.floor(Math.random() * 2));
-        idling = false;
-        // A dance half the time, and never the same act twice running, unless the reader asked for one.
-        const pool = (wish || Math.random() < 0.5 ? DANCES : OTHERS).filter(n => n !== last);
+        if (!grooving()) {
+          idling = true;
+          await perform("idle", 2 + Math.floor(Math.random() * 2));
+          idling = false;
+        }
+        // A dance half the time, and never the same act twice running, unless the reader asked for one or
+        // the music did.
+        let pool = (wish || grooving() || Math.random() < 0.5 ? DANCES : OTHERS).filter(n => n !== last);
+        if (grooving() && pool.some(fits)) pool = pool.filter(fits);
         wish = null;
         await act(pool[Math.floor(Math.random() * pool.length)]);
       }
@@ -358,7 +388,7 @@
     };
     const maybeVisit = () => {
       if (seen || mode === "visit" || document.hidden || talk.quiet) return;
-      if (!idling || !done || Date.now() - scrolled < 1500 || Date.now() - lastVisit < 90000) {
+      if (!idling || !done || music.on || Date.now() - scrolled < 1500 || Date.now() - lastVisit < 90000) {
         timer = setTimeout(maybeVisit, 3000);       // mid-act, mid-scroll or too soon: ask again shortly
         return;
       }
@@ -380,6 +410,46 @@
     // With the masthead off screen it goes on ticking, undrawn, until he is back in the idle, and stops
     // there: that is where a visit can start from, and where he is when the reader scrolls back up.
     let seen = true, raf = 0, then = 0;
+    // To the music: the dance runs at the track's tempo over its own, folded by octaves to the nearer (a
+    // 170 bpm track takes a 120 bpm dance to 0.71x, not 1.42x) and held to 0.75x-1.35x so that he still
+    // looks like himself. Every light, the wall and the lasers take their beat from the clip's position, so
+    // keeping the clip on the music keeps all of them on it. On each onset the clip's phase is compared
+    // with the music's, and half the difference is made up over the next beat.
+    let grooved = false, lock = 0, lockUntil = 0, octave = 1;
+    // The rate for a dance of `own` beats a second, at whichever octave needs the least clamping, and how
+    // many of the clip's beats go by for each of the music's.
+    const fold = own => {
+      let best = null;
+      for (const k of [0.25, 0.5, 1, 2, 4]) {
+        const r = music.bpm / 60 / own * k, miss = r < 0.75 ? 0.75 / r : r > 1.35 ? r / 1.35 : 1;
+        if (!best || miss < best.miss) best = {r, k, miss};
+      }
+      return best;
+    };
+    // To music, only the dances that can keep time with it: at 128 bpm, the 120 bpm ones, and not
+    // `floss`, whose 180 would need 0.71x.
+    const fits = name => {
+      const c = clip[name];
+      return !music.bpm || fold(BEATS[name] / c.duration).miss === 1;
+    };
+    const tempo = (c, n) => {
+      const own = n / c.duration;                      // the clip's beats a second at 1x
+      const {r, k} = fold(own);
+      octave = k;
+      if (music.fresh) {
+        music.fresh = false;
+        // Where the clip was at the onset, in its beats; `octave` clip beats go by for each music beat,
+        // so a music beat should land on a multiple of min(1, octave) of them.
+        const at = current.time / c.duration * n - (performance.now() - music.at) / 1000 * own * r;
+        const span = Math.min(1, octave);
+        let e = ((at % span) + span) % span;
+        if (e > span / 2) e -= span;
+        lock = Math.max(-0.15, Math.min(0.15, -0.5 * e / octave));
+        lockUntil = clock + 60 / music.bpm;
+      }
+      if (clock > lockUntil) lock = 0;
+      return Math.max(0.75, Math.min(1.35, r * (1 + lock)));
+    };
     const tick = dt => {
       clock += dt;
       if (mode === "visit") anchor();
@@ -387,11 +457,18 @@
       if (speed) frustum(view.slide + speed * view.ppm * dt);
       const dr = turnTo - actor.rotation.y;
       actor.rotation.y += Math.sign(dr) * Math.min(Math.abs(dr), 5 * dt);
-      mixer.update(dt);
       const c = current && current.getClip(), n = c && BEATS[c.name];
+      const g = grooving();
+      if (g && !grooved) { talk.say("music"); if (idling && done) { const d = done; done = null; d(); } }
+      grooved = g;
+      if (n) current.timeScale = g && music.bpm ? tempo(c, n) : 1;
+      mixer.update(dt);
+      music.kick *= Math.exp(-6 * dt);
+      const kick = g ? music.kick : null, loud = g ? loudness() : null;
       rig.update(dt, clock, actor.position.x,
-                 n && rig.on ? {at: current.time / c.duration * n, rate: n / c.duration} : null);
-      laser.update(dt, n && rig.on ? {at: current.time / c.duration * n} : null, rig.level, beams());
+                 n && rig.on ? {at: current.time / c.duration * n, rate: n / c.duration * current.timeScale,
+                                kick, loud} : null);
+      laser.update(dt, n && rig.on ? {at: current.time / c.duration * n, kick} : null, rig.level, beams());
       talk.update(dt, idling);
       if (!seen && mode === "home" && idling) run();
     };
@@ -436,6 +513,10 @@
     renderer.render(scene, camera);
     slot.appendChild(canvas);
     slot.style.backgroundImage = "none";    // the first frame is up, so the poster can go
+    // Said out loud, for `archie-dance.js`, which bounces the poster to the music only while there is no
+    // model: `.mhmascot[data-live]`, and an `archie:live` event each way.
+    slot.dataset.live = "";
+    document.dispatchEvent(new CustomEvent("archie:live", {detail: {on: true}}));
     run();
     direct();
 
@@ -452,6 +533,8 @@
       laser.stop();
       canvas.remove();
       slot.style.backgroundImage = "";
+      delete slot.dataset.live;
+      document.dispatchEvent(new CustomEvent("archie:live", {detail: {on: false}}));
       renderer.dispose();
       started = false;
     };
@@ -553,6 +636,9 @@
     broken: [["...nothing?"], ["Huh. Must be a CSS button.", 1], ["I think it's decorative. Like my hands."],
              ["Works on my machine."], ["Should I file an issue?", 1]],
     again: [["Maybe if I press it HARDER."], ["Okay, one more time. With feeling."]],
+    // The reader's music, the first beat of it
+    music: [["Ooh, is this my jam?"], ["Now THIS is a banger."], ["You had me at the bass line."],
+            ["Finally, a soundtrack for my code."], ["Is it 4/4? Please say it's 4/4.", 1]],
     drop: [["Mind if I sit here?"], ["Just visiting. Carry on."], ["It's quieter down here.", 1],
            ["Nice scroll position you've got."]],
   };
@@ -938,7 +1024,8 @@
         if (beat) {
           b = Math.floor(beat.at); f = beat.at - b;
           const every = beat.rate > 3 ? 2 : 1;
-          pulse = 0.8 + 0.2 * (b % every ? 0 : Math.exp(-6 * f));
+          // To music, the flash is the onset that was heard, as hard as it was heard.
+          pulse = beat.kick != null ? 0.75 + 0.35 * beat.kick : 0.8 + 0.2 * (b % every ? 0 : Math.exp(-6 * f));
         }
         mean.setRGB(0, 0, 0);
         heads.forEach((h, i) => {
@@ -995,7 +1082,11 @@
           u.modeB.value = screenFor(bar4);
           u.fade.value = smooth((b % 4) + f);
           // Each bar of the equaliser jumps to a new height on the beat and sags until the next.
-          for (let i = 0; i < 16; i++) eq[i] = (0.2 + 0.75 * hash(b * 16 + i * 1.31)) * (0.55 + 0.45 * Math.exp(-5 * f));
+          // To music, as loud as the music is.
+          const vol = beat.loud != null ? 0.35 + 0.75 * beat.loud : 1;
+          for (let i = 0; i < 16; i++) {
+            eq[i] = Math.min(1, (0.2 + 0.75 * hash(b * 16 + i * 1.31)) * (0.55 + 0.45 * Math.exp(-5 * f)) * vol);
+          }
         } else {
           for (let i = 0; i < 16; i++) eq[i] *= Math.exp(-2 * dt);
         }
@@ -1079,7 +1170,7 @@
         g.clearRect(0, 0, W, H);
         g.globalCompositeOperation = light ? "source-over" : "lighter";
         g.lineCap = "round";
-        const pulse = beat ? 0.8 + 0.2 * Math.exp(-6 * (beat.at % 1)) : 1;
+        const pulse = !beat ? 1 : beat.kick != null ? 0.75 + 0.35 * beat.kick : 0.8 + 0.2 * Math.exp(-6 * (beat.at % 1));
         const bar = Math.floor(B / 4), x = smooth(B % 4);
         const p = Math.floor(hash(bar * 5.3 + 0.2) * PATTERNS.length);
         const q = Math.floor(hash((bar - 1) * 5.3 + 0.2) * PATTERNS.length);
