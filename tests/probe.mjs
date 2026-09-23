@@ -251,6 +251,38 @@ ok("the README offers an Atlas Leaderboard badge that links to the leaderboard",
    !!lbBadge && lbBadge[1].includes("/badge/Atlas-Leaderboard-") &&
    lbBadge[2] === "mega-list/leaderboard.md", lbBadge ? lbBadge[0] : "no leaderboard badge");
 ok("the old Shields.io badge provider is gone", !readme.includes("img.shields.io"));
+// The README's "data as an API" section is a published contract, and it had drifted without a red:
+// `d7`/`d30` joined `cols` and `generated`, `cohort` and `velocity` joined the top level while the tables
+// still listed sixteen columns and schema 1. So both tables are read back and compared with the dataset in
+// both directions -- a column the file carries and the README omits is as much a break as a documented key
+// the file no longer has. Columns are compared in order because the section tells readers `cols` order is
+// row order; keys as a set, because the same section tells them the object is unordered.
+const readmeTable = (heading) => {
+  const lines = readme.split(/\r?\n/);
+  const at = lines.indexOf(heading);
+  if (at < 0) return null;
+  const rows = [];
+  for (const line of lines.slice(at + 1)) {
+    if (line.startsWith("#")) break;
+    const m = line.match(/^\| `([^`]+)` \|/);
+    if (m) rows.push({key: m[1], line});
+  }
+  return rows;
+};
+const docCols = readmeTable("### The columns") || [];
+const docKeys = readmeTable("### The top-level keys") || [];
+ok("the README documents every data.json column, in cols order",
+   docCols.map(r => r.key).join(",") === data.cols.join(","),
+   `README: ${docCols.map(r => r.key).join(",")}\ndata:   ${data.cols.join(",")}`);
+const fileKeys = Object.keys(data).sort(), readKeys = docKeys.map(r => r.key).sort();
+ok("the README documents exactly the top-level keys data.json has",
+   readKeys.length === new Set(readKeys).size && readKeys.join(",") === fileKeys.join(","),
+   `undocumented: ${fileKeys.filter(k => !readKeys.includes(k)).join(",") || "-"}\n` +
+   `documented but absent: ${readKeys.filter(k => !fileKeys.includes(k)).join(",") || "-"}`);
+const schemaRow = docKeys.find(r => r.key === "schema_version");
+ok("the README's schema_version is the one data.json publishes",
+   !!schemaRow && schemaRow.line.split("|")[3].trim().startsWith("`" + data.schema_version + "`"),
+   schemaRow ? schemaRow.line : "no schema_version row");
 ok("the web masthead promotes the leaderboard, all-project directory, and browse section",
    html.includes("/blob/main/mega-list/leaderboard.md") && html.includes('href="../repo/"') &&
    html.includes('href="#browse"'), deployed.slice(0, 240));
