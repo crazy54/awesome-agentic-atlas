@@ -9,11 +9,12 @@
 // page's content for bandwidth.
 //
 // The model is `art/archie/archie.py`. Its clips are `idle` (a four-second loop: sway, foot tap, blinks),
-// `watch`, `sit`, `sleep`, thirteen Fortnite dances (the keys of `BEATS` below) and `walk`, a stride in
-// place. Every clip but `walk` starts and ends on the idle's first pose. The director
-// below idles for a few loops, then does one act -- a dance under moving-head lights, one of the others,
-// or a walk off the edge of the page and a moonwalk back in -- and idles again. He talks as he goes, in
-// speech and thought bubbles, and answers when poked: see `chatter()`.
+// `watch`, `sit`, `sleep`, `press` and `shrug`, thirteen Fortnite dances of 15 or 16 seconds each (the keys
+// of `BEATS` below) and `walk`, a stride in place. Every clip but `walk` starts and ends on the idle's first
+// pose. The director below idles for a few loops, then does one act -- a dance under moving-head lights, a
+// video wall and lasers over the page, one of the others, or a walk off the edge of the page and a moonwalk
+// back in -- and idles again. He talks as he goes, in speech and thought bubbles, and answers when poked:
+// see `chatter()`. A reader who scrolls on down the page gets a visit now and then: see "Visits".
 //
 // THE CANVAS IS WIDER THAN THE SLOT. It spans the viewport's width and the header's height, so that he can
 // walk out of the banner and so that the lights have somewhere to come from. The camera is the one the poster
@@ -40,11 +41,36 @@
   // The dances, each with the number of beats its clip counts, which is what the lights keep time to.
   // They come from the clip functions in `archie.py`; change a dance's rhythm there and change it here.
   const BEATS = {
-    "floss": 12, "take-the-l": 8, "default-dance": 16, "orange-justice": 12, "robot": 8, "electro-shuffle": 10,
-    "hype": 8, "boogie-down": 10, "get-griddy": 8, "billy-bounce": 8, "fresh": 8, "scenario": 8, "groove-jam": 10,
+    "floss": 48, "take-the-l": 32, "default-dance": 48, "orange-justice": 48, "robot": 32, "electro-shuffle": 30,
+    "hype": 32, "boogie-down": 30, "get-griddy": 32, "billy-bounce": 32, "fresh": 32, "scenario": 32, "groove-jam": 32,
   };
   const DANCES = Object.keys(BEATS);
   const OTHERS = ["watch", "sit", "sleep", "walk-off"];
+  // A number in [0, 1) that looks random but is the same every time for the same n: the lights' marks.
+  const hash = n => { const s = Math.sin(n * 12.9898) * 43758.5453; return s - Math.floor(s); };
+  const smooth = x => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+
+  // ---- Music ----------------------------------------------------------------------------------------
+  // "Dance with me" (`archie-dance.js`) listens to the reader's music and tells this script about it in two
+  // document events: `archie:music` {on, source} when music mode starts or stops, and `archie:beat`
+  // {strength, bpm, at} on every onset it hears, `at` on the performance.now() clock. While music mode is on,
+  // `window.archieMusic` has level() and bass() for reading every frame. The listeners are here rather than
+  // in start(), so that a reader who turned the music on before the model loaded is dancing when it does.
+  const music = {on: !!window.archieMusic, at: -1e9, bpm: null, kick: 0, fresh: false};
+  document.addEventListener("archie:music", e => {
+    music.on = !!(e.detail && e.detail.on);
+    if (!music.on) { music.at = -1e9; music.bpm = null; }
+  });
+  document.addEventListener("archie:beat", e => {
+    const d = e.detail || {};
+    music.at = typeof d.at === "number" ? d.at : performance.now();
+    if (d.bpm) music.bpm = d.bpm;
+    music.kick = Math.max(0, Math.min(1, typeof d.strength === "number" ? d.strength : 1));
+    music.fresh = true;
+  });
+  const loudness = () => {
+    try { const m = window.archieMusic; return m ? Math.max(0, Math.min(1, m.level())) : 0; } catch { return 0; }
+  };
 
   let started = false;
   const go = () => {
@@ -97,6 +123,7 @@
     const canvas = renderer.domElement;
     const header = slot.closest("header") || slot.parentElement;
     const host = slot.parentElement;       // the bubble and the poke target sit here, beside the slot
+    const laser = lasers(header);
     const edge = {left: -8, right: 8, top: 5};
     const view = {W: 1, H: 1, cx: 0, cy: 0, k: 1, sw: 240, sh: 240, ppm: 75, slide: 0, ox: 0, oy: 0};
     // The frustum, with its window `slide` CSS pixels right of the slot. This is how he walks: rather
@@ -191,6 +218,10 @@
       await turn(0);
     };
     let last = "", idling = false, wish = null;
+    // Music on, and a beat in the last two seconds: he dances, back to back, with no idles, visits or
+    // walk-offs, and goes back to the director's own choices two seconds after the music stops. Not with
+    // the masthead off screen, where nobody would see it and the loop would never stop.
+    const grooving = () => music.on && seen && mode === "home" && performance.now() - music.at < 2000;
     const act = async name => {
       last = name;
       talk.act(name);
@@ -204,15 +235,169 @@
     const direct = async () => {
       if (asked && (DANCES.includes(asked) || OTHERS.includes(asked))) await act(asked);
       for (;;) {
-        idling = true;
-        await perform("idle", 2 + Math.floor(Math.random() * 2));
-        idling = false;
-        // A dance half the time, and never the same act twice running, unless the reader asked for one.
-        const pool = (wish || Math.random() < 0.5 ? DANCES : OTHERS).filter(n => n !== last);
+        if (!grooving()) {
+          idling = true;
+          await perform("idle", 2 + Math.floor(Math.random() * 2));
+          idling = false;
+        }
+        // A dance half the time, and never the same act twice running, unless the reader asked for one or
+        // the music did.
+        let pool = (wish || grooving() || Math.random() < 0.5 ? DANCES : OTHERS).filter(n => n !== last);
+        if (grooving() && pool.some(fits)) pool = pool.filter(fits);
         wish = null;
         await act(pool[Math.floor(Math.random() * pool.length)]);
       }
     };
+    // ---- Visits ---------------------------------------------------------------------------------------
+    // A reader who has scrolled on down the page gets a visit now and then. He walks in from the left of the
+    // window (the side that keeps his jabbing arm towards the camera) to a button on screen and tries to press it, which does nothing: it is a picture of him pressing,
+    // drawn over the page, and the button never hears of it. He shrugs. Or, with no button to hand, he sits
+    // down at the bottom of the window for a while. Then he walks off by the nearer side.
+    //
+    // The canvas goes with him. For the visit it is fixed over the whole window, with a smaller slot, so
+    // that he is nearer the size of the page's text than of the masthead, and it comes home afterwards.
+    // Scroll the button out of view or come back up to the masthead, and the visit is over at once.
+    //
+    // Visits only start from the idle. The visit holds the idle's promise and gives it back, so the director
+    // carries on from where it was. Never in Quiet mode, and not more than once in 90 seconds.
+    // `?archie=visit` makes the first one come 1.5 s after the masthead leaves the screen, for checking.
+    const VISIT = 150;                       // the visit's slot size, CSS pixels, against the masthead's 240
+    const HURRY = 1.5;                       // he hurries on a visit: the clip and his speed, both, so no skating
+    // The front of his right fist at a jab's full extension in `press`, turned to face screen right, which
+    // puts that arm towards the camera: 0.74 m in front, 1.25 m up, 0.54 m to his right (from `archie.py`).
+    // The button's left edge goes here.
+    const FIST = new T.Vector3(0.74, 1.25, 0.54), FEET = new T.Vector3();
+    const layer = document.createElement("div");
+    layer.style.cssText = "position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:29";
+    let mode = "home", aborted = false, target = null, seat = 0, grip = {x: 0, y: 0}, lastVisit = -1e9;
+    let timer = 0, scrolled = 0;
+    const onScreen = r => r.top > 60 && r.bottom < innerHeight - 10 && r.left > 90 && r.right < innerWidth - 10;
+    const pickTarget = () => {
+      const all = [...document.querySelectorAll("main button, main [role=button]")].filter(b => {
+        const r = b.getBoundingClientRect();
+        return r.width >= 18 && r.width <= 320 && r.height >= 16 && r.height <= 80 && onScreen(r);
+      });
+      // He comes in from the left, so a button on the left half is a shorter walk
+      const near = all.filter(b => b.getBoundingClientRect().left < innerWidth * 0.55);
+      const from = near.length ? near : all;
+      return from.length && Math.random() < 0.75 ? from[Math.floor(Math.random() * from.length)] : null;
+    };
+    // Where world point p lands on screen, relative to the slot's centre: the frustum is a window slid
+    // across the canvas, so that offset is the same wherever the slot is.
+    const vp = new T.Vector3();
+    const offsetOf = p => {
+      const {cx, cy, slide} = view;
+      view.cx = view.cy = 0;
+      frustum(0);
+      vp.copy(p).project(camera);
+      const o = {x: (vp.x + 1) / 2 * view.W, y: (1 - vp.y) / 2 * view.H};
+      view.cx = cx; view.cy = cy;
+      frustum(slide);
+      return o;
+    };
+    // The slot, moved so that his fist meets the button's left edge, or his feet the bottom of the window.
+    // Every frame, because the button scrolls with the page.
+    const anchor = () => {
+      let x = seat, y = innerHeight - 6;
+      if (target) {
+        const r = target.getBoundingClientRect();
+        if (!target.isConnected || r.bottom < 0 || r.top > innerHeight) { abortVisit(); return; }
+        x = r.left + 2; y = r.top + r.height / 2;
+      }
+      view.cx = x - grip.x; view.cy = y - grip.y;
+      frustum(view.slide);
+    };
+    const visitLayout = () => {
+      const W = innerWidth, H = innerHeight;
+      canvas.style.cssText = `position:absolute;left:0;top:0;width:${W}px;height:${H}px;pointer-events:none`;
+      renderer.setSize(W, H, false);
+      Object.assign(view, {W, H, sw: VISIT, sh: VISIT, ox: 0, oy: 0,
+                           k: camera.near * Math.tan(FOV / 2) / (VISIT / 2)});
+      view.ppm = (VISIT / 2) / (camera.position.distanceTo(new T.Vector3(0, 1.08, 0)) * Math.tan(FOV / 2));
+      grip = offsetOf(target ? FIST : FEET);
+      anchor();
+    };
+    const relayout = () => (mode === "visit" ? visitLayout() : layout());
+    const vuntil = pred => until(() => aborted || pred());
+    const vperform = name => (aborted ? Promise.resolve() : perform(name));
+    const vturn = to => { turnTo = to; return vuntil(() => Math.abs(actor.rotation.y - to) < 0.02); };
+    const abortVisit = () => {
+      if (mode !== "visit" || aborted) return;
+      aborted = true;
+      const d = done; done = null; d && d();
+    };
+    const visit = async () => {
+      mode = "visit"; aborted = false; idling = false;
+      const held = done; done = null;
+      target = pickTarget();
+      seat = innerWidth * (0.25 + Math.random() * 0.5);
+      document.body.appendChild(layer);
+      layer.appendChild(canvas);
+      talk.move(layer, true);
+      view.slide = 0;
+      visitLayout();
+      // In from just off the left of the window, facing right for the button; to sit, from the nearer side.
+      const from = target || seat < innerWidth / 2 ? 1 : -1;
+      frustum(from > 0 ? -view.cx - view.sw / 2 : view.W - view.cx + view.sw / 2);
+      actor.rotation.y = turnTo = from * Math.PI / 2;
+      play("walk", Infinity).timeScale = HURRY;
+      speed = from * WALK_SPEED * HURRY;
+      await vuntil(() => from * view.slide >= 0);
+      speed = 0;
+      if (!aborted) frustum(0);
+      if (target) {
+        talk.say("button");
+        await vperform("press");
+        if (!aborted) talk.say("broken");
+        await vperform("shrug");
+        if (!aborted && Math.random() < 0.4) {       // one more go, harder
+          talk.say("again");
+          await vperform("press");
+          await vperform("shrug");
+        }
+      } else {
+        await vturn(0);
+        talk.say("drop");
+        await vperform("sit");
+      }
+      // Off by the nearer side of the window
+      const way = view.cx < view.W / 2 ? -1 : 1;
+      await vturn(way * Math.PI / 2);
+      if (!aborted) play("walk", Infinity).timeScale = HURRY;
+      speed = way * WALK_SPEED * HURRY;
+      await vuntil(() => way < 0 ? view.cx + view.slide < -view.sw / 2 : view.cx + view.slide > view.W + view.sw / 2);
+      // Home, whether he walked off or the visit was cut short, and back into the idle he left.
+      speed = 0; target = null;
+      actor.rotation.y = turnTo = 0;
+      slot.appendChild(canvas);
+      layer.remove();
+      talk.move(host, false);
+      mode = "home";
+      view.slide = 0;
+      layout();
+      play("idle", 1);
+      done = held; idling = true;
+      lastVisit = Date.now();
+      run();
+      plan();
+    };
+    const plan = () => {
+      clearTimeout(timer);
+      if (seen || mode === "visit") return;
+      timer = setTimeout(maybeVisit, asked === "visit" ? 1500 : 20000 + Math.random() * 25000);
+    };
+    const maybeVisit = () => {
+      if (seen || mode === "visit" || document.hidden || talk.quiet) return;
+      if (!idling || !done || music.on || Date.now() - scrolled < 1500 || Date.now() - lastVisit < 90000) {
+        timer = setTimeout(maybeVisit, 3000);       // mid-act, mid-scroll or too soon: ask again shortly
+        return;
+      }
+      visit();
+      run();
+    };
+    const onScroll = () => { scrolled = Date.now(); };
+    addEventListener("scroll", onScroll, {passive: true});
+
     // Asked for a dance (by poking, or by choosing the Prism skin): cut the idle short and dance next.
     // Mid-act, it waits for the act to end.
     const talk = chatter(T, {host, slot, header, camera, view, actor, head: gltf.scene.getObjectByName("head"),
@@ -221,19 +406,83 @@
         if (idling && done) { const d = done; done = null; d(); }
       }});
 
-    // ---- The loop: only ticks while someone can see it, the tab showing and the masthead on screen -----
+    // ---- The loop: only runs while the tab is showing, and only draws while someone can see him --------
+    // With the masthead off screen it goes on ticking, undrawn, until he is back in the idle, and stops
+    // there: that is where a visit can start from, and where he is when the reader scrolls back up.
     let seen = true, raf = 0, then = 0;
+    // To the music: the dance runs at the track's tempo over its own, folded by octaves to the nearer (a
+    // 170 bpm track takes a 120 bpm dance to 0.71x, not 1.42x) and held to 0.75x-1.35x so that he still
+    // looks like himself. Every light, the wall and the lasers take their beat from the clip's position, so
+    // keeping the clip on the music keeps all of them on it. On each onset the clip's phase is compared
+    // with the music's, and half the difference is made up over the next beat.
+    let grooved = false, lock = 0, lockUntil = 0, octave = 1;
+    // The rate for a dance of `own` beats a second, at whichever octave needs the least clamping, and how
+    // many of the clip's beats go by for each of the music's.
+    const fold = own => {
+      let best = null;
+      for (const k of [0.25, 0.5, 1, 2, 4]) {
+        const r = music.bpm / 60 / own * k, miss = r < 0.75 ? 0.75 / r : r > 1.35 ? r / 1.35 : 1;
+        if (!best || miss < best.miss) best = {r, k, miss};
+      }
+      return best;
+    };
+    // To music, only the dances that can keep time with it: at 128 bpm, the 120 bpm ones, and not
+    // `floss`, whose 180 would need 0.71x.
+    const fits = name => {
+      const c = clip[name];
+      return !music.bpm || fold(BEATS[name] / c.duration).miss === 1;
+    };
+    const tempo = (c, n) => {
+      const own = n / c.duration;                      // the clip's beats a second at 1x
+      const {r, k} = fold(own);
+      octave = k;
+      if (music.fresh) {
+        music.fresh = false;
+        // Where the clip was at the onset, in its beats; `octave` clip beats go by for each music beat,
+        // so a music beat should land on a multiple of min(1, octave) of them.
+        const at = current.time / c.duration * n - (performance.now() - music.at) / 1000 * own * r;
+        const span = Math.min(1, octave);
+        let e = ((at % span) + span) % span;
+        if (e > span / 2) e -= span;
+        lock = Math.max(-0.15, Math.min(0.15, -0.5 * e / octave));
+        lockUntil = clock + 60 / music.bpm;
+      }
+      if (clock > lockUntil) lock = 0;
+      return Math.max(0.75, Math.min(1.35, r * (1 + lock)));
+    };
     const tick = dt => {
       clock += dt;
+      if (mode === "visit") anchor();
       for (let i = waits.length - 1; i >= 0; i--) if (waits[i].pred()) waits.splice(i, 1)[0].res();
       if (speed) frustum(view.slide + speed * view.ppm * dt);
       const dr = turnTo - actor.rotation.y;
       actor.rotation.y += Math.sign(dr) * Math.min(Math.abs(dr), 5 * dt);
-      mixer.update(dt);
       const c = current && current.getClip(), n = c && BEATS[c.name];
+      const g = grooving();
+      if (g && !grooved) { talk.say("music"); if (idling && done) { const d = done; done = null; d(); } }
+      grooved = g;
+      if (n) current.timeScale = g && music.bpm ? tempo(c, n) : 1;
+      mixer.update(dt);
+      music.kick *= Math.exp(-6 * dt);
+      const kick = g ? music.kick : null, loud = g ? loudness() : null;
       rig.update(dt, clock, actor.position.x,
-                 n && rig.on ? {at: current.time / c.duration * n, rate: n / c.duration} : null);
+                 n && rig.on ? {at: current.time / c.duration * n, rate: n / c.duration * current.timeScale,
+                                kick, loud} : null);
+      laser.update(dt, n && rig.on ? {at: current.time / c.duration * n, kick} : null, rig.level, beams());
       talk.update(dt, idling);
+      if (!seen && mode === "home" && idling) run();
+    };
+    // The truss's heads, where they are on the page, for the lasers
+    const spots = [], hp = new T.Vector3();
+    const beams = () => {
+      if (!rig.level) return spots;
+      const r = canvas.getBoundingClientRect();
+      rig.heads.forEach((h, i) => {
+        hp.copy(h.body.position).project(camera);
+        spots[i] = {x: r.left + (hp.x + 1) / 2 * r.width, y: r.top + (1 - hp.y) / 2 * r.height,
+                    rgb: h.color.getStyle().slice(4, -1)};
+      });
+      return spots;
     };
     const frame = now => {
       raf = requestAnimationFrame(frame);
@@ -242,17 +491,21 @@
       const dt = then ? Math.min(Math.max((now - then) / 1000, 0), 0.1) : 0;
       then = now;
       tick(dt);
-      renderer.render(scene, camera);
+      if (seen || mode === "visit") renderer.render(scene, camera);
     };
     const run = () => {
-      const want = seen && !document.hidden;
+      const want = !document.hidden && (seen || mode === "visit" || !idling);
       if (want && !raf) { then = 0; raf = requestAnimationFrame(frame); }
-      if (!want && raf) { cancelAnimationFrame(raf); raf = 0; }
+      if (!want && raf) { cancelAnimationFrame(raf); raf = 0; laser.hide(); }
     };
-    const io = new IntersectionObserver(([e]) => { seen = e.isIntersecting; run(); });
+    const io = new IntersectionObserver(([e]) => {
+      seen = e.isIntersecting;
+      if (seen) { clearTimeout(timer); abortVisit(); } else plan();
+      run();
+    });
     io.observe(header);
     document.addEventListener("visibilitychange", run);
-    addEventListener("resize", layout);
+    addEventListener("resize", relayout);
 
     play("idle", 1);
     mixer.update(0);
@@ -260,6 +513,10 @@
     renderer.render(scene, camera);
     slot.appendChild(canvas);
     slot.style.backgroundImage = "none";    // the first frame is up, so the poster can go
+    // Said out loud, for `archie-dance.js`, which bounces the poster to the music only while there is no
+    // model: `.mhmascot[data-live]`, and an `archie:live` event each way.
+    slot.dataset.live = "";
+    document.dispatchEvent(new CustomEvent("archie:live", {detail: {on: true}}));
     run();
     direct();
 
@@ -267,11 +524,17 @@
       cancelAnimationFrame(raf); raf = 0;
       io.disconnect();
       document.removeEventListener("visibilitychange", run);
-      removeEventListener("resize", layout);
+      removeEventListener("resize", relayout);
+      removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+      layer.remove();
       waits.length = 0;                     // strands the director's pending act, which is the point
       talk.stop();
+      laser.stop();
       canvas.remove();
       slot.style.backgroundImage = "";
+      delete slot.dataset.live;
+      document.dispatchEvent(new CustomEvent("archie:live", {detail: {on: false}}));
       renderer.dispose();
       started = false;
     };
@@ -367,6 +630,17 @@
            ["Poke me a few more times and I might dance..."], ["Careful, I'm load-bearing."],
            ["Need a project? The Catalogue has thousands."]],
     pokes: [["Okay, okay! You want a dance? You get a dance!"]],
+    // On a visit: walking up to a button, finding it does nothing, trying again, and sitting down instead
+    button: [["Ooh, a button!"], ["What does this one do?"], ["I've always wanted to press one of these."],
+             ["Don't mind me. Just pressing things."]],
+    broken: [["...nothing?"], ["Huh. Must be a CSS button.", 1], ["I think it's decorative. Like my hands."],
+             ["Works on my machine."], ["Should I file an issue?", 1]],
+    again: [["Maybe if I press it HARDER."], ["Okay, one more time. With feeling."]],
+    // The reader's music, the first beat of it
+    music: [["Ooh, is this my jam?"], ["Now THIS is a banger."], ["You had me at the bass line."],
+            ["Finally, a soundtrack for my code."], ["Is it 4/4? Please say it's 4/4.", 1]],
+    drop: [["Mind if I sit here?"], ["Just visiting. Carry on."], ["It's quieter down here.", 1],
+           ["Nice scroll position you've got."]],
   };
 
   function chatter(T, o) {
@@ -397,7 +671,7 @@
       return bags[kind].pop();
     };
 
-    let t = 0, shown = false, until = 0, bw = 0, bh = 0, free = 5, seen = true;
+    let t = 0, shown = false, until = 0, bw = 0, bh = 0, free = 5, seen = true, away = false;
     const cooled = {};
     const show = (kind, vars = {}, reply = false) => {
       const [text, think] = pick(kind);
@@ -445,11 +719,11 @@
       }
     });
     mo.observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme", "data-skin"]});
-    let away = 0, gone = 0, stirred = Date.now(), lonely = false;
+    let hid = 0, gone = 0, stirred = Date.now(), lonely = false;
     const vis = () => {
-      if (document.hidden) { away = Date.now(); return; }
-      if (away && Date.now() - away > 30000) react("welcome", 60);
-      away = 0;
+      if (document.hidden) { hid = Date.now(); return; }
+      if (hid && Date.now() - hid > 30000) react("welcome", 60);
+      hid = 0;
     };
     const io = new IntersectionObserver(([e]) => {
       seen = e.isIntersecting;
@@ -502,6 +776,19 @@
     const at = new T.Vector3();
     const menu = document.getElementById("setmenu");
     return {
+      get quiet() { return quiet; },
+      // A line for a visit, said whether or not the masthead is on screen
+      say(kind) {
+        if (quiet) return;
+        show(kind);
+        free = Math.max(free, t + 20);
+      },
+      // Out on a visit, the bubble goes with him, and the poke target stays behind, hidden.
+      move(parent, out) {
+        away = out;
+        parent.append(bubble);
+        if (shown) { shown = false; bubble.classList.remove("on"); }
+      },
       // The poke target: the middle of the slot, where his body is.
       place() {
         poke.style.cssText = `left:${slot.offsetLeft + view.sw * 0.3}px;top:${slot.offsetTop + view.sh * 0.1}px;` +
@@ -515,7 +802,7 @@
       update(dt, idling) {
         t += dt;
         // Only at home: carried out past the edge of the page, it would give the page a sideways scrollbar.
-        poke.hidden = view.slide !== 0;
+        poke.hidden = away || view.slide !== 0;
         if (hello && t > 1.5) { hello = false; own("hello"); }
         else if (!hello && idling && !quiet) own("idle");
         if (!lonely && Date.now() - stirred > 75000) { lonely = true; react("lonely", 120); }
@@ -554,9 +841,10 @@
   // truss with four moving heads drops in from above the header, bounces to a stop, and the heads come up.
   // Each throws a smoky cone of coloured light, plus a spotlight that actually colours him and a pool on the
   // floor. On the dance's beat the heads snap to new marks, pulse a little, and change colour at every
-  // bar. A glow rises behind him. Once the rig is up, a laser "liquid sky" fades in overhead: a sheet of
-  // light seen from below, rippling like the surface of the sea seen from under water. When the dance ends
-  // it all fades, and the truss is hauled back up.
+  // bar. A glow rises behind him, and an LED video wall hangs from the truss and drops in with it. The wall
+  // shows an equaliser, rings, plasma, chevrons or a starburst: a new one every bar, all of them on the beat.
+  // The lasers leave the scene altogether and go over the page: see `lasers()`. When the dance ends it all
+  // fades, and the truss is hauled back up with the wall.
   //
   // Nothing strobes. A pulse is a fifth of the brightness, a colour change keeps the brightness it had,
   // and a fast dance pulses on every other beat, so no dance comes near three flashes a second. None of
@@ -566,7 +854,6 @@
     group.visible = false;
     scene.add(group);
     const PALETTE = [0xff2bd6, 0x22e1ff, 0x8a5bff, 0xffb000].map(c => new T.Color(c));
-    const SKY = [new T.Color(0x22e1ff), new T.Color(0x2bff9e)];
     const time = {value: 0};
     const glows = [];
 
@@ -593,9 +880,9 @@
       mat.blendSrcAlpha = light ? T.OneFactor : T.ZeroFactor;
       mat.blendDstAlpha = light ? T.OneMinusSrcAlphaFactor : T.OneFactor;
     };
-    const glow = frag => {
+    const glow = (frag, uniforms = {}, defs = "") => {
       const mat = new T.ShaderMaterial({
-        uniforms: {color: {value: new T.Color()}, level: {value: 0}, haze: {value: 0}, time},
+        uniforms: {color: {value: new T.Color()}, level: {value: 0}, haze: {value: 0}, time, ...uniforms},
         vertexShader: `varying vec2 vUv; varying vec3 vN, vV, vW;
           void main() { vUv = uv; vN = normalize(normalMatrix * normal);
             vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz;
@@ -604,6 +891,7 @@
         fragmentShader: `uniform vec3 color; uniform float level, haze, time;
           varying vec2 vUv; varying vec3 vN, vV, vW;
           ${NOISE}
+          ${defs}
           void main() { vec3 c = color; float a = 0.0;
             ${frag}
             a *= level;
@@ -625,16 +913,42 @@
     const BACK = `vec2 q = (vUv - 0.5) * 2.0;
       a = pow(max(0.0, 1.0 - length(q * vec2(1.0, 1.7))), 1.5)
         * (0.35 + 0.65 * noise(vec3(vW.xy * 0.9, time * 0.2))) * 0.3;`;
-    // Two layers of slow noise, folded through a sine into thin bright ridges: caustics, or the lines a laser
-    // sheet draws on smoke. Faded out towards every edge of the sheet, so it has no visible border.
-    const SKYSHEET = `vec2 p = vW.xz * 0.8;
-      float n = noise(vec3(p * 0.6, time * 0.22)) * 6.0 + noise(vec3(p * 1.7 + 3.0, time * 0.37)) * 2.0;
-      float ridge = pow(1.0 - abs(sin(n * 3.14159)), 9.0);
-      float fade = smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x)
-                 * smoothstep(0.0, 0.3, vUv.y) * smoothstep(1.0, 0.7, vUv.y);
-      c = mix(color, vec3(1.0), 0.3 * ridge);
-      a = (ridge * 0.9 + 0.1 * noise(vec3(p * 2.0, time * 0.3))) * fade;`;
-
+    // The video wall: a grid of round LEDs, each showing one sample of a picture. `modeA` fades into `modeB`
+    // over a bar's first beat; `beat` is the dance's position in beats, and `eq` the equaliser's sixteen
+    // bars, which the script sets because they jump on the beat.
+    const SCREENS = `uniform vec2 grid; uniform float beat, modeA, modeB, fade, eq[16];
+      vec3 hue(float x) { return 0.55 + 0.45 * cos(6.28318 * (x + vec3(0.0, 0.33, 0.67))); }
+      vec3 screen(float m, vec2 q) {
+        vec2 p = (q - 0.5) * vec2(grid.x / grid.y, 1.0);
+        if (m < 0.5) {                                   // equaliser
+          float x = fract(q.x * 16.0), h = eq[int(q.x * 16.0)];
+          return step(q.y, h) * step(0.14, x) * step(x, 0.86) * mix(vec3(0.1, 1.0, 0.6), vec3(1.0, 0.2, 0.8), q.y);
+        }
+        if (m < 1.5) {                                   // a ring out from the middle every beat
+          float d = length(p);
+          return hue(d * 0.6 - beat * 0.25) * pow(0.5 + 0.5 * cos((d * 3.0 - beat) * 6.28318), 6.0);
+        }
+        if (m < 2.5) {                                   // plasma
+          float v = sin(p.x * 5.0 + time) + sin(p.y * 7.0 - time * 1.3) + sin((p.x + p.y) * 4.0 + time * 0.7)
+                  + sin(length(p) * 8.0 - time * 2.0);
+          return hue(v * 0.15 + time * 0.05) * (0.55 + 0.45 * sin(v * 2.0));
+        }
+        if (m < 3.5) {                                   // chevrons marching up, a step a beat
+          float v = fract((abs(p.x) * 0.8 - p.y) * 2.0 - beat * 0.5);
+          return hue(floor(beat / 4.0) * 0.25 + p.x * 0.1) * smoothstep(0.55, 0.45, v);
+        }
+        float r = atan(p.y, p.x) + beat * 0.3927;        // a starburst turning a sixteenth a beat
+        return hue(length(p) * 0.4 + beat * 0.1) * smoothstep(0.35, 0.65, 0.5 + 0.5 * cos(r * 8.0))
+             * smoothstep(0.02, 0.2, length(p));
+      }`;
+    const WALL = `vec2 g = vUv * grid, q = (floor(g) + 0.5) / grid;
+      vec3 v = mix(screen(modeA, q), screen(modeB, q), fade);
+      float m = max(max(v.r, v.g), max(v.b, 1e-3));
+      float led = m * smoothstep(0.5, 0.28, length(fract(g) - 0.5));
+      c = v / m;
+      a = led * 1.3;
+      // Pale light vanishes into a light page, so there the LEDs are deeper and the panel shows, faintly.
+      if (haze > 0.5) { c = mix(vec3(0.08, 0.09, 0.12), c * c, min(1.0, led * 2.0)); a = max(led * 2.2, 0.2); }`;
     // The fixtures themselves, dark metal, so the truss reads as hardware against the masthead.
     const metal = new T.MeshStandardMaterial({color: 0x16181d, metalness: 0.8, roughness: 0.35});
     const bar = new T.Mesh(new T.BoxGeometry(1, 0.07, 0.07), metal);
@@ -661,27 +975,37 @@
       return {beam, body, lens, hang, pool, spot, x: 0, aim: new T.Vector3(), color: new T.Color()};
     });
     const back = new T.Mesh(new T.PlaneGeometry(9, 5), glow(BACK));
-    const sky = new T.Mesh(new T.PlaneGeometry(1, 30).rotateX(-Math.PI / 2), glow(SKYSHEET));
-    group.add(back, sky);
+    const eq = new Array(16).fill(0);
+    const wall = new T.Mesh(new T.PlaneGeometry(1, 1), glow(WALL, {
+      grid: {value: {x: 60, y: 30}}, beat: {value: 0}, modeA: {value: 2}, modeB: {value: 2}, fade: {value: 1},
+      eq: {value: eq}}, SCREENS));
+    // Its frame, in the truss's metal: top, bottom and the two sides.
+    const rails = [0, 1, 2, 3].map(() => new T.Mesh(new T.BoxGeometry(1, 1, 0.06), metal));
+    group.add(back, wall, ...rails);
 
-    const hash = n => { const s = Math.sin(n * 12.9898) * 43758.5453; return s - Math.floor(s); };
     // Where head i points on beat b: somewhere on or around him, a new mark every beat.
     const mark = (b, i, cx, out) => out.set(cx + (hash(b * 4 + i) - 0.5) * 3.4,
                                            0.15 + hash(b * 4 + i + 0.37) * 1.3,
                                            (hash(b * 4 + i + 0.71) - 0.5) * 1.6);
-    const smooth = x => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
     const outBack = x => 1 + 2.2 * (x - 1) ** 3 + 1.2 * (x - 1) ** 2;   // overshoots, then settles at 1
     const from = new T.Vector3(), to = new T.Vector3(), o = new T.Vector3(), d = new T.Vector3();
     const mean = new T.Color();
-    let top = 4, span = 3, drop = 0, level = 0, skyLevel = 0;
+    let top = 4, span = 3, drop = 0, level = 0, ww = 4, wh = 2;
+    const screenFor = bar => Math.floor(hash(bar * 3.7 + 0.5) * 5);
     return {
       on: false,
+      heads,
+      get level() { return level; },
       place(edge) {
         top = edge.top - 0.3;
         span = Math.min(4.5, (edge.right - edge.left) / 2.8);
         heads.forEach((h, i) => { h.x = (i - 1.5) / 1.5 * span; });
         bar.scale.x = span * 2 + 0.8;
-        sky.scale.x = (edge.right - edge.left) * 3;   // wider than the screen at the back
+        // From just under the truss to just off the floor, and never much wider than it is tall
+        ww = Math.min(span * 1.4, 6);
+        wh = Math.max(1, top - 0.42);
+        wall.scale.set(ww, wh, 1);
+        wall.material.uniforms.grid.value = {x: Math.round(ww / 0.075), y: Math.round(wh / 0.075)};
       },
       // `beat` is the dance's position in beats and its beats a second, or null between dances.
       update(dt, t, cx, beat) {
@@ -691,7 +1015,6 @@
         if (this.on) drop = Math.min(1, drop + dt / 0.6);
         else if (level === 0) drop = Math.max(0, drop - dt / 0.7);
         level = Math.max(0, Math.min(1, level + (this.on && drop === 1 ? 3 : -3) * dt));
-        skyLevel = Math.max(0, Math.min(1, skyLevel + (level === 1 ? 1.2 : -3) * dt));
         group.visible = drop > 0;
         if (!group.visible) { for (const h of heads) h.spot.intensity = 0; return; }
         const y = top + (1 - outBack(drop)) * 3;
@@ -701,7 +1024,8 @@
         if (beat) {
           b = Math.floor(beat.at); f = beat.at - b;
           const every = beat.rate > 3 ? 2 : 1;
-          pulse = 0.8 + 0.2 * (b % every ? 0 : Math.exp(-6 * f));
+          // To music, the flash is the onset that was heard, as hard as it was heard.
+          pulse = beat.kick != null ? 0.75 + 0.35 * beat.kick : 0.8 + 0.2 * (b % every ? 0 : Math.exp(-6 * f));
         }
         mean.setRGB(0, 0, 0);
         heads.forEach((h, i) => {
@@ -744,11 +1068,118 @@
         back.position.set(cx, 1.3, -2.4);
         back.material.uniforms.color.value.copy(mean);
         back.material.uniforms.level.value = level * pulse;
-        sky.position.set(0, 2.65, -12);
-        sky.material.uniforms.color.value.copy(SKY[0]).lerp(SKY[1], 0.5 + 0.5 * Math.sin(t * 0.3));
-        sky.material.uniforms.level.value = skyLevel;
-        sky.visible = skyLevel > 0;
+        // The wall hangs from the truss, so it drops and bounces with it.
+        const wt = y - 0.12, u = wall.material.uniforms;
+        wall.position.set(0, wt - wh / 2, -2.2);
+        rails[0].position.set(0, wt, -2.2); rails[0].scale.set(ww + 0.1, 0.05, 1);
+        rails[1].position.set(0, wt - wh, -2.2); rails[1].scale.set(ww + 0.1, 0.05, 1);
+        rails[2].position.set(-ww / 2, wt - wh / 2, -2.2); rails[2].scale.set(0.05, wh, 1);
+        rails[3].position.set(ww / 2, wt - wh / 2, -2.2); rails[3].scale.set(0.05, wh, 1);
+        if (beat) {
+          const bar4 = Math.floor(b / 4);
+          u.beat.value = beat.at;
+          u.modeA.value = screenFor(bar4 - 1);
+          u.modeB.value = screenFor(bar4);
+          u.fade.value = smooth((b % 4) + f);
+          // Each bar of the equaliser jumps to a new height on the beat and sags until the next.
+          // To music, as loud as the music is.
+          const vol = beat.loud != null ? 0.35 + 0.75 * beat.loud : 1;
+          for (let i = 0; i < 16; i++) {
+            eq[i] = Math.min(1, (0.2 + 0.75 * hash(b * 16 + i * 1.31)) * (0.55 + 0.45 * Math.exp(-5 * f)) * vol);
+          }
+        } else {
+          for (let i = 0; i < 16; i++) eq[i] *= Math.exp(-2 * dt);
+        }
+        u.level.value = level * 0.8;
       },
+    };
+  }
+
+  // The lasers: from each head on the truss, beams that leave the masthead and play over whatever part of the
+  // page the reader can see. They fan, wave, scissor, converge on a point that wanders the screen, or spin,
+  // a new pattern every bar, cross-faded over its first beat, and they move with the beat.
+  //
+  // They are a 2D canvas fixed over the viewport, not part of the scene: the scene's canvas is only the
+  // header's height. It takes no pointer events, and it is only there while a dance's lights are up and
+  // the masthead, where Archie is, is at the top of the window: scroll most of it away and they fade out,
+  // so a reader who has moved on to the page below is not danced at. As with the rest of the rig, nothing
+  // strobes: the beams sweep, and a beat's pulse is a fifth of their brightness. On the dark theme they are
+  // light, screened over the page; on the light theme, where light would not show, they are ink,
+  // multiplied into it.
+  function lasers(header) {
+    const cv = document.createElement("canvas");
+    cv.setAttribute("aria-hidden", "true");
+    cv.style.cssText = "position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:30;" +
+      "display:none";
+    document.body.appendChild(cv);
+    const g = cv.getContext("2d");
+    let fade = 0, B = 0, W = 0, H = 0;
+    const TAU = Math.PI * 2;
+    // Each pattern gives the angles, from straight down and positive to the right, of emitter e's beams at
+    // beat B, given how many emitters there are (n) and where this one is on screen (x, y). In order: a fan
+    // swinging, a wave, scissors, all of them on one wandering point, and spinning spokes.
+    const PATTERNS = [
+      (e, B) => [-2, -1, 0, 1, 2].map(k => k * 0.2 + 0.55 * Math.sin(B * Math.PI / 4 + e * Math.PI / 2)),
+      (e, B) => [0, 1, 2, 3, 4, 5, 6].map(k => (k / 6 - 0.5) * 1.5 + 0.3 * Math.sin(B * Math.PI / 2 + k * 0.8 + e)),
+      (e, B, n) => { const s = e < n / 2 ? 1 : -1, a = s * 0.75 * Math.sin(B * Math.PI / 4);
+                     return [a, a + s * 0.22]; },
+      (e, B, n, x, y) => {
+        const tx = W * (0.5 + 0.4 * Math.sin(B * Math.PI / 8)), ty = H * (0.55 + 0.35 * Math.sin(B * Math.PI / 4 + 1));
+        const a = Math.atan2(tx - x, ty - y);
+        return [a - 0.05, a, a + 0.05];
+      },
+      (e, B) => [0, 1, 2, 3, 4, 5].map(k => k * TAU / 6 + B * Math.PI / 8 * (e % 2 ? 1 : -1)),
+    ];
+    const beam = (x, y, a, rgb, alpha, sheet) => {
+      const L = Math.hypot(W, H) * 1.2, ex = x + Math.sin(a) * L, ey = y + Math.cos(a) * L;
+      // A spinning beam fades out as it swings up past the horizontal, rather than going over the header.
+      alpha *= smooth((Math.cos(a) + 0.1) / 0.3);
+      if (alpha <= 0.004) return;
+      const grad = g.createLinearGradient(x, y, ex, ey);
+      grad.addColorStop(0, `rgba(${rgb},${alpha})`);
+      grad.addColorStop(1, `rgba(${rgb},0)`);
+      g.strokeStyle = grad;
+      g.globalAlpha = 0.16; g.lineWidth = 8; g.beginPath(); g.moveTo(x, y); g.lineTo(ex, ey); g.stroke();
+      g.globalAlpha = 1; g.lineWidth = 1.6; g.stroke();
+      if (sheet) {                                  // a thin sheet of light between this beam and the next
+        const bx = x + Math.sin(sheet) * L, by = y + Math.cos(sheet) * L;
+        g.fillStyle = grad; g.globalAlpha = 0.07;
+        g.beginPath(); g.moveTo(x, y); g.lineTo(ex, ey); g.lineTo(bx, by); g.fill();
+        g.globalAlpha = 1;
+      }
+    };
+    const draw = (p, pts, alpha) => {
+      pts.forEach((pt, e) => {
+        const as = PATTERNS[p](e, B, pts.length, pt.x, pt.y);
+        as.forEach((a, k) => beam(pt.x, pt.y, a, pt.rgb, alpha, p === 0 && k < as.length - 1 && as[k + 1]));
+      });
+    };
+    return {
+      // `pts` are the heads, on screen, with their colours; `level` how far the lights are up.
+      update(dt, beat, level, pts) {
+        const r = header.getBoundingClientRect();
+        const want = level > 0 && r.bottom > r.height * 0.6 ? level : 0;
+        fade += Math.max(-3 * dt, Math.min(3 * dt, want - fade));
+        if (fade <= 0.001) { cv.style.display = "none"; return; }
+        if (cv.style.display) cv.style.display = "";
+        if (W !== innerWidth || H !== innerHeight) { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+        B = beat ? beat.at : B + dt * 2;
+        const light = document.documentElement.dataset.theme === "light";
+        cv.style.mixBlendMode = light ? "multiply" : "screen";
+        g.globalCompositeOperation = "source-over";
+        g.clearRect(0, 0, W, H);
+        g.globalCompositeOperation = light ? "source-over" : "lighter";
+        g.lineCap = "round";
+        const pulse = !beat ? 1 : beat.kick != null ? 0.75 + 0.35 * beat.kick : 0.8 + 0.2 * Math.exp(-6 * (beat.at % 1));
+        const bar = Math.floor(B / 4), x = smooth(B % 4);
+        const p = Math.floor(hash(bar * 5.3 + 0.2) * PATTERNS.length);
+        const q = Math.floor(hash((bar - 1) * 5.3 + 0.2) * PATTERNS.length);
+        const a = fade * pulse * (light ? 0.75 : 0.85);
+        if (x < 1 && q !== p) draw(q, pts, a * (1 - x));
+        draw(p, pts, q !== p ? a * x : a);
+      },
+      hide() { cv.style.display = "none"; fade = 0; },
+      stop() { cv.remove(); },
     };
   }
 

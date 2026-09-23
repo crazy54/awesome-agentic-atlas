@@ -57,6 +57,7 @@ THE THREE THINGS THAT CHANGE
 from __future__ import annotations
 
 import argparse
+import collections
 import datetime
 import hashlib
 import html
@@ -315,6 +316,32 @@ DOT_CSS = r"""/* The freshness dot. From BASE_CSS in scripts/30_v2.py -- the onl
 # This page's own rules, for the two bands the prototype does not have and the one thing `pages.css` does
 # not know: that a `<main>` on this page is shelves rather than a table.
 HOME_CSS = r"""/* WHAT THE PROTOTYPE DOES NOT HAVE. Everything else on this page is imported. */
+/* The Star link, a pill in the masthead's nav. GitHub starts nothing from another site, so it opens the
+   repository, where the Star button is; the count is the repository's own, filled by NUMBERS_JS. */
+header .top nav a.ghstar{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:3px 10px;
+  border-radius:999px;border:var(--hair) solid var(--panel-b);background:var(--panel);color:var(--ink);
+  text-decoration:none;font-weight:600}
+header .top nav a.ghstar:hover,header .top nav a.ghstar:focus-visible{border-color:var(--accent-gold)}
+header .top nav a.ghstar span{color:var(--accent-gold)}
+header .top nav a.ghstar b{font-family:var(--num);font-variant-numeric:tabular-nums;font-weight:600;
+  padding-left:7px;margin-left:2px;border-left:var(--hair) solid var(--panel-b)}
+/* The atlas in numbers */
+.numbers{margin:34px 0 0}
+.numbers h2{margin:0;font-size:20px;color:var(--ink)}
+.numbers h3{margin:22px 0 10px;font-size:13px;font-weight:600;color:var(--ink2);letter-spacing:.02em}
+.numbers .nsub{margin:4px 0 14px;font-size:12.5px;color:var(--ink2)}
+.numbers .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.numbers .tile{padding:12px 14px;border-radius:var(--radius);background:var(--panel);
+  border:var(--hair) solid var(--panel-b);box-shadow:var(--lift);display:flex;flex-direction:column;gap:2px}
+.numbers .tile b{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:24px;color:var(--ink)}
+.numbers .tile span{font-size:12.5px;color:var(--ink)}
+.numbers .tile small{font-size:11.5px;color:var(--ink2)}
+.numbers .langs{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-width:560px}
+.numbers .langs li{display:grid;grid-template-columns:90px 1fr 56px;align-items:center;gap:10px;font-size:12.5px;
+  color:var(--ink)}
+.numbers .langs i{display:block;height:8px;width:var(--w);border-radius:4px;background:var(--bar)}
+.numbers .langs b{font-family:var(--num);font-variant-numeric:tabular-nums;font-weight:500;color:var(--ink2);
+  text-align:right}
 /* THE MASTHEAD HAS NO BAR. Everywhere else the header is a panel with a rule under it; here it is drawn on
    a picture of this repository's own code -- its git log and lines from scripts/, made by
    scripts/masthead_art.py -- whose alpha is opaque at the top, reaches 0 at both sides, and fades from
@@ -402,30 +429,21 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
    in that file's follow-up rather than done from downstream. */
 .ph .plat.tight{padding:2px;border-radius:5px;gap:2px}
 .ph .plat.tight i{padding:2px 3px;font-size:9px}
-/* "DANCE WITH ME". The button and its panel are Settings' shapes -- a chip, and a panel hanging off a
-   relative wrapper -- restated under their own names, not shared, because Settings' script finds its panel
-   by `.setwrap` and would take a click in this one for a click inside its own. `danceopen` lifts the header
-   over the pinned bar exactly as `setopen` does, for the reason the `.setmenu` comment gives. */
-.dancewrap{position:relative;display:inline-block;margin-right:6px}
-header.danceopen{z-index:30}
-.dancemenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:264px;text-align:left;
-  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
-  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75);text-shadow:none}
-.dancemenu[hidden],.dsrc[hidden],#dancebtn[hidden]{display:none}
-.dancesrcs{display:flex;flex-direction:column;gap:4px}
-.dsrc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;min-height:44px;
-  padding:7px 10px;background:none;border:1px solid var(--grid);border-radius:8px;color:var(--ink);
-  font-size:13px;text-align:left}
-.dsrc span{color:var(--muted);font-size:12px}
-.dsrc:hover,.dsrc.dancelast{border-color:var(--accent-sky)}
-.dsrc:focus-visible{outline:2px solid var(--accent-sky);outline-offset:2px}
-.dancemsg{margin:8px 0 0;color:var(--ink2);font-size:12px}
-.dancemsg:empty{margin:0}
-.dancenote{margin:8px 0 0;color:var(--muted);font-size:11px;line-height:1.4}
-/* The beat, when nothing else is dancing him: a hop, short enough to finish before the next beat at 180. */
-.mhmascot.beat{animation:mhbeat .26s cubic-bezier(.3,1.6,.5,1)}
-@keyframes mhbeat{0%{transform:none}35%{transform:translateY(-9px) scale(1.03,.97)}100%{transform:none}}
-@media (prefers-reduced-motion:reduce){.mhmascot.beat{animation:none}}
+/* THE NEWER-VERSION NOTICE, drawn by UPDATE_JS only once `build.json` names a build this page is not. Pinned
+   to the bottom and centred rather than across the top, where the masthead and its menu already are, and
+   above them (30) so it is never under an open menu. The buttons are 44px: this is the one control a phone
+   reader is asked to hit. */
+.updbar{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);
+  z-index:40;display:flex;align-items:center;gap:10px;box-sizing:border-box;width:max-content;
+  max-width:calc(100vw - 24px);padding:6px 6px 6px 16px;border:1px solid var(--accent-sky);
+  border-radius:var(--radius);background:var(--panel);color:var(--ink);font-size:14px;line-height:1.35;
+  box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.updbar button{min-height:44px;min-width:44px;padding:0 16px;border:1px solid var(--accent-sky);
+  border-radius:var(--radius-sm);background:var(--accent-sky);color:var(--surface);font:inherit;font-weight:600;
+  cursor:pointer;flex:none}
+.updbar button:disabled{opacity:.7;cursor:progress}
+.updbar .updx{padding:0;border-color:transparent;background:transparent;color:var(--ink2);font-size:20px}
+.updbar button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 """
 
 # THE IMPORTED STYLESHEET IS NOT REWRITTEN, and the reason is worth a note because the obvious thing to do
@@ -715,8 +733,111 @@ def coverage(shelves: list[dict], hero_nwo: str, discover_n: int) -> str:
         ' filters, or by search.</div>')
 
 
+def numbers() -> str:
+    """The atlas in numbers: what the snapshot says about the corpus, and the repository's own GitHub counts.
+
+    Everything in the first two rows is counted here from the rows this page was built from, so it is the
+    same snapshot as the header's line and moves when the data does. The third row is this repository on
+    GitHub -- stars, forks, watchers, last push -- which only the reader's browser can ask for, since a count
+    baked at build time would be a week old by the next weekly. It stays hidden until `NUMBERS_JS` has an
+    answer, so a reader GitHub turns away (60 requests an hour an address) sees two rows and no hole.
+    """
+    n = len(ROWS)
+    stars = [b30.g(r, "stars") or 0 for r in ROWS]
+    snap = datetime.date.fromisoformat(DATA["snapshot"])
+
+    def recent(r) -> bool:
+        p = b30.g(r, "pushed")
+        try:
+            return bool(p) and (snap - datetime.date.fromisoformat(p[:10])).days <= 30
+        except ValueError:
+            return False
+
+    active = sum(1 for r in ROWS if recent(r))
+    consensus = sum(1 for r in ROWS if (b30.g(r, "lists") or 0) >= 3)
+    # A `git clone` is what a card falls back to, so it does not count as installing anything
+    install = sum(1 for r in ROWS if (b30.g(r, "install") or "git ").split(" ")[0] != "git")
+    windows = sum(1 for r in ROWS if (b30.g(r, "os") or "N")[:1] == "Y")
+    licensed = sum(1 for r in ROWS if b30.g(r, "license"))
+    median = sorted(stars)[n // 2]
+    total = sum(stars)
+    compact = f"{total / 1e6:.1f}M" if total >= 1e6 else b30.thousands(total)
+
+    def tile(value: str, label: str, note: str = "") -> str:
+        return (f'<div class="tile"><b>{value}</b><span>{label}</span>'
+                + (f'<small>{note}</small>' if note else "") + '</div>')
+
+    pct = lambda k: f"{k * 100 // n}%"
+    tiles = [
+        tile(b30.thousands(n), "projects", f"from {LISTS} awesome-lists"),
+        tile(str(len(DATA["cats"])), "topics", f"and {len(DATA['targets'])} target tools"),
+        tile(compact, "combined stars", f"median {b30.thousands(median)} a project"),
+        tile(b30.thousands(consensus), "named by 3+ lists", "the consensus picks"),
+        tile(pct(active), "pushed in the last 30 days", f"{b30.thousands(active)} projects"),
+        tile(b30.thousands(install), "install in one command", "npx, pip, brew, docker and the like"),
+        tile(b30.thousands(windows), "state Windows support", "in their own README or CI"),
+        tile(pct(licensed), "carry a licence", f"{b30.thousands(licensed)} projects"),
+    ]
+    langs = collections.Counter(b30.g(r, "lang") for r in ROWS if b30.g(r, "lang")).most_common(6)
+    top = langs[0][1] if langs else 1
+    bars = "".join(
+        f'<li><span>{esc(lang)}</span><i style="--w:{k * 100 / top:.1f}%"></i><b>{b30.thousands(k)}</b></li>'
+        for lang, k in langs)
+    repo = "".join(f'<div class="tile"><b data-gh="{k}">&ndash;</b><span>{label}</span></div>'
+                   for k, label in (("stars", "stars on GitHub"), ("forks", "forks"),
+                                    ("watchers", "watching"), ("pushed", "last updated")))
+    return (
+        '<section class="numbers" aria-labelledby="numbers-h">'
+        '<h2 id="numbers-h">The atlas in numbers</h2>'
+        f'<p class="nsub">Counted from snapshot {esc(DATA["snapshot"])}.</p>'
+        f'<div class="tiles">{"".join(tiles)}</div>'
+        f'<h3>Most common languages</h3><ol class="langs">{bars}</ol>'
+        f'<div class="ghrow" data-ghrow hidden><h3>This atlas on GitHub</h3><div class="tiles">{repo}</div></div>'
+        '</section>')
+
+
 # ---------------------------------------------------------------------------------------------------
 # The client half. Four pieces, none of them a framework.
+
+# The repository's own GitHub counts, for the Star link and the numbers' third row. Unauthenticated, so
+# GitHub allows an address 60 of these an hour; the answer is kept for an hour in localStorage and shown
+# from there first, and a refusal or a network failure leaves the page as it was built: no count on the
+# Star link, and the row hidden. So does a count of nought: "Star 0" asks nobody to be first.
+NUMBERS_JS = """<script>
+(() => {
+  const K = "atlas-gh-repo", H = 3600e3;
+  const ago = iso => {
+    const d = Math.floor((Date.now() - Date.parse(iso)) / 864e5);
+    return d <= 0 ? "today" : d === 1 ? "yesterday" : d + " days ago";
+  };
+  const show = r => {
+    const v = {stars: r.s, forks: r.f, watchers: r.w};
+    for (const el of document.querySelectorAll("[data-gh]")) {
+      const k = el.dataset.gh;
+      const t = k === "pushed" ? (r.p ? ago(r.p) : "") : typeof v[k] === "number" ? v[k].toLocaleString("en") : "";
+      if (!t || (k === "stars" && !r.s)) continue;
+      el.textContent = t;
+      el.hidden = false;
+    }
+    const row = document.querySelector("[data-ghrow]");
+    if (row && r.s > 0) row.hidden = false;
+  };
+  let c = null;
+  try { c = JSON.parse(localStorage.getItem(K)); } catch {}
+  if (c && c.r) show(c.r);
+  if (c && Date.now() - c.t < H) return;
+  if (!window.fetch) return;
+  fetch("https://api.github.com/repos/__REPO__", {headers: {Accept: "application/vnd.github+json"}})
+    .then(res => (res.ok ? res.json() : null))
+    .then(j => {
+      if (!j || typeof j.stargazers_count !== "number") return;
+      const r = {s: j.stargazers_count, f: j.forks_count, w: j.subscribers_count, p: j.pushed_at};
+      try { localStorage.setItem(K, JSON.stringify({t: Date.now(), r})); } catch {}
+      show(r);
+    })
+    .catch(() => {});
+})();
+</script>"""
 
 # The forwarder. Until the catalogue moved to `catalog/`, this URL *was* the catalogue, and every filtered
 # view of it was this URL plus a hash: `#topic=x&target=y`, `#q=name`, `#new=1`. Those links are in the
@@ -854,6 +975,96 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 </script>
 """
 
+# "A newer version has been published", and a button that fetches it past every cache it could be stuck in.
+#
+# The page knows which build it is from `<meta name="atlas-build">`, and `build.json` beside it names the
+# build the site is serving now; both are written by `main()` from one hash of this page, so they agree on
+# the day it is built and disagree from the first deploy after it. Not the worker's `controllerchange`,
+# which looks like the obvious signal and is not one: the first visit after a deploy loads the new page
+# *and* installs the new worker, so that event would call a page out of date that is not. `build.json` is
+# in none of the worker's lists, so it goes straight to the network, and `no-store` keeps it out of the
+# HTTP cache as well. On load, on returning to the tab, and every fifteen minutes, at most once a minute.
+#
+# The button cannot clear the HTTP cache -- no page can -- but it can overwrite every entry this page read
+# from it: each same-origin resource it loaded is fetched again with `cache: "reload"`, which is what gets
+# a stale `archie.js` or `pages.css` replaced rather than revalidated against its `max-age`. The shell cache
+# goes first, because it is cache-first and would otherwise answer those very requests from itself; it is
+# refilled with the fresh bytes afterwards, so an offline reader still has a shell. `atlas-data` and the
+# other runtime caches are network-first and stay, since online they are never what a reader is shown.
+UPDATE_JS = r"""<script>
+(() => {
+  const mine = document.querySelector('meta[name="atlas-build"]');
+  if (!mine || location.protocol === "file:" || !window.fetch) return;
+  let last = 0, bar = null, waived = "";
+  const same = (u) => { try { return new URL(u, location.href).origin === location.origin; } catch { return false; } };
+  const refresh = async (btn) => {
+    btn.disabled = true;
+    btn.textContent = "Updating…";
+    try {
+      const shells = [];
+      if (window.caches) {
+        for (const name of await caches.keys()) {
+          if (!name.startsWith("__SHELLPREFIX__")) continue;
+          shells.push([name, (await (await caches.open(name)).keys()).map((r) => r.url)]);
+          await caches.delete(name);
+        }
+      }
+      const urls = new Set([new URL("./", location.href).href,
+        ...performance.getEntriesByType("resource").map((e) => e.name).filter(same),
+        ...shells.flatMap(([, list]) => list)]);
+      const fresh = new Map();
+      await Promise.all([...urls].map((u) => fetch(u, {cache: "reload", credentials: "same-origin"})
+        .then((r) => { if (r.ok && !r.redirected) fresh.set(u, r); }).catch(() => {})));
+      for (const [name, list] of shells) {
+        const c = await caches.open(name);
+        for (const u of list) if (fresh.has(u)) await c.put(u, fresh.get(u).clone());
+      }
+      const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
+      if (reg) await reg.update().catch(() => {});
+    } catch {}
+    location.reload();
+  };
+  const show = (build) => {
+    bar = document.createElement("div");
+    bar.className = "updbar";
+    bar.setAttribute("role", "status");
+    document.body.appendChild(bar);
+    requestAnimationFrame(() => {
+      bar.innerHTML = '<span>A newer version of the atlas has been published.</span>' +
+        '<button type="button" class="updgo">Load it</button>' +
+        '<button type="button" class="updx" aria-label="Dismiss">×</button>';
+      bar.querySelector(".updgo").addEventListener("click", (e) => refresh(e.currentTarget));
+      bar.querySelector(".updx").addEventListener("click", () => { waived = build; bar.remove(); bar = null; });
+    });
+  };
+  const check = async () => {
+    if (bar || document.hidden || Date.now() - last < 60000) return;
+    last = Date.now();
+    try {
+      const r = await fetch("build.json", {cache: "no-store"});
+      if (!r.ok) return;
+      const {build} = await r.json();
+      if (build && build !== mine.content && build !== waived) show(build);
+    } catch {}
+  };
+  addEventListener("load", check);
+  document.addEventListener("visibilitychange", check);
+  setInterval(check, 900000);
+})();
+</script>
+"""
+# `24_pwa.CACHE_PREFIX`, the one name this page has to share with the worker. `deeplinks_test` holds the two
+# together, since a prefix that drifted would leave the button deleting nothing and reloading the stale shell.
+SHELL_PREFIX = "atlas-shell-"
+# The page's own build, substituted last over the finished page -- see `stamped()`.
+BUILD = "__BUILD__"
+BUILD_META = re.compile(r'<meta name="atlas-build" content="([0-9a-f]{12})">')
+
+
+def stamped(page: str) -> str:
+    """`page` with its build id in place: a hash of every other byte, so an unchanged page keeps its id."""
+    return page.replace(BUILD, hashlib.sha256(page.encode("utf-8")).hexdigest()[:12])
+
 
 def render() -> str:
     """The page.
@@ -895,6 +1106,7 @@ def render() -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
+<meta name="atlas-build" content="{BUILD}">
 <link rel="canonical" href="{esc(SITE)}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{esc(title)}">
@@ -929,8 +1141,10 @@ def render() -> str:
         '    <a href="catalog/">Catalogue</a> ·',
         '    <a href="repo/">All projects</a><br>',
         f'    <a href="https://github.com/{esc(REPO)}">Repository</a> ·',
-        f'    <a href="https://github.com/{esc(REPO)}/tree/main/mega-list">Markdown</a><br>',
-        '__DANCE__',
+        f'    <a href="https://github.com/{esc(REPO)}/tree/main/mega-list">Markdown</a>',
+        f'    <a class="ghstar" href="https://github.com/{esc(REPO)}" target="_blank" rel="noopener"'
+        ' aria-label="Star the Awesome Agentic Atlas on GitHub (opens GitHub)">'
+        '<span aria-hidden="true">&#9733;</span> Star<b data-gh="stars" hidden></b></a><br>',
         '__SETTINGS__',
         '  </nav>',
         '</div></div></header>',
@@ -940,6 +1154,7 @@ def render() -> str:
         band,
         *[shelf(sh) for sh in shelves],
         coverage(shelves, hero_nwo, discover_n),
+        numbers(),
         '</div></main>',
         '<footer><div class="wrap">',
         f'  The Awesome Agentic Atlas merges {LISTS} awesome-lists into one index; all {LISTS} are credited'
@@ -952,8 +1167,10 @@ def render() -> str:
         '<script>wireSettings();</script>',
         f'<script>{b30.SHELF_JS}</script>',
         DAYCHECK_JS,
+        NUMBERS_JS.replace("__REPO__", REPO),
         SW_JS,
-        *filter(None, [mascot()[1], dance()[1]]),
+        UPDATE_JS.replace("__SHELLPREFIX__", SHELL_PREFIX),
+        *filter(None, [mascot()[1]]),
         b19.beacon(),
         '</body>',
         '</html>',
@@ -972,11 +1189,10 @@ def render() -> str:
     # rules, and this page's own rules go last so that `.ph .plat.tight` can reach past `.ph .plat`.
     # `pages.css` is a `<link>` above all of them.
     css = BRIDGE_CSS + DOT_CSS + b30.SHELF_CSS + stage_css() + b19.SETTINGS_CSS + HOME_CSS + mascot()[0]
-    return (pagemin.strip_page(page)
-            .replace("__HOMECSS__", pagemin.strip_css(css))
-            .replace("__DANCE__", pagemin.strip_page(dance()[0]))
-            .replace("__SETTINGS__", pagemin.strip_page(b19.SETTINGS_MENU))
-            .replace("__SETJS__", "<script>" + pagemin.strip_js(b19.SETTINGS_JS) + "</script>"))
+    return stamped(pagemin.strip_page(page)
+                   .replace("__HOMECSS__", pagemin.strip_css(css))
+                   .replace("__SETTINGS__", pagemin.strip_page(b19.SETTINGS_MENU))
+                   .replace("__SETJS__", "<script>" + pagemin.strip_js(b19.SETTINGS_JS) + "</script>"))
 
 
 def main() -> None:
@@ -988,6 +1204,9 @@ def main() -> None:
     page = render()
     (dest / "index.html").write_text(page, encoding="utf-8", newline="\n")
     print(f"wrote {dest / 'index.html'}  {len(page):,} bytes")
+    # Beside the page and from the page, so the two cannot be written by different builds.
+    (dest / "build.json").write_text(json.dumps({"build": BUILD_META.search(page).group(1)}) + "\n",
+                                     encoding="utf-8", newline="\n")
     # The week's cards. Files for days that have left the plan are removed, so the directory is exactly the
     # plan and a stale cohort cannot be fetched by a page that still names it.
     cards = dest / CARDS_DIR
