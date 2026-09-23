@@ -358,8 +358,10 @@ const consoleErrs = () => events.filter(e => e.method === "Log.entryAdded" &&
   // The Cloudflare beacon cannot pass CORS against localhost, and it is fire-and-forget, so its failure
   // says nothing about this page. Nor does a picture GitHub declines to serve: every homepage image is its
   // social card, and a run that fetched them back to back alongside a second suite was answered with six
-  // 429s. Neither the worker nor the page caches or depends on them -- the check above pins that.
-  !/cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(e.params.entry.text + " " + (e.params.entry.url || "")));
+  // 429s. Neither the worker nor the page caches or depends on them -- the check above pins that. Nor
+  // do the repository's own counts on the homepage (NUMBERS_JS in 31_home.py): unauthenticated, 60 an
+  // hour an address, which a shared CI runner can have spent, and a refusal leaves the page as built.
+  !/cloudflareinsights|beacon|opengraph\.githubassets\.com|api\.github\.com\/repos\/crazy54\/awesome-agentic-atlas/.test(e.params.entry.text + " " + (e.params.entry.url || "")));
 const online = consoleErrs();
 ok("no console errors from the page or the worker while online", online.length === 0,
    online.map(e => e.params.entry.text).join(" | "));
