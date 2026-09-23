@@ -814,6 +814,17 @@ ok("an unchanged script URL still queues an update job", !!reg && /reg\.update\(
 ok("registration comes after the page's own content",
    !!reg && homeHTML.indexOf("</main>") > 0 && homeHTML.indexOf(reg[0]) > homeHTML.indexOf("</main>"));
 
+// Every picture on the homepage is GitHub's social card, never the row's own `img`. That column is whatever
+// each upstream README uses for its banner, and nothing bounds it: Lighthouse measured this page at 21.49 MB,
+// 21.41 MB of it from 13 lazy-loaded pictures, one of them an 11,955 KB GIF. The catalog made the same call
+// in JFH-218. Asserted as "no other host" rather than "no raw.githubusercontent.com", because the column also
+// points at github.com/user-attachments, user-images and arbitrary CDNs, and all of them were on this page.
+const homeImgs = [...homeHTML.matchAll(/<img\b[^>]*\bsrc="([^"]*)"/g)].map(m => m[1]);
+const notCard = homeImgs.filter(s => !/^https:\/\/opengraph\.githubassets\.com\/1\/[\w.-]+\/[\w.-]+$/.test(s));
+ok("the homepage has pictures to check", homeImgs.length > 10, String(homeImgs.length));
+ok("...and every one is a social card, of bounded size, rather than a README's own banner",
+   notCard.length === 0, notCard.slice(0, 3).join(" "));
+
 // ------------------------------------------------------------------------------- the cards view
 // The layout itself is a stylesheet, so it is asserted against the stylesheet -- there is no computed
 // layout in Node to measure. What this section can prove is the half that would break silently: that the
