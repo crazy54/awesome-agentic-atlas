@@ -51,7 +51,7 @@ up there is now [one link — twenty tools, ranked][q1].
 | 📄 **Markdown edition** | Reading in the browser, linking to, quoting. Same data, same ordering, split so no page hits GitHub's rendering limit. | [mega-list/](mega-list/README.md) |
 | 🏆 **Leaderboard** | The most-starred projects across every list at once, with how many lists name each one — a rough consensus score. | [leaderboard](mega-list/leaderboard.md) |
 | 🧰 **Curated collections** | Five recommended sets rather than a ranking — a first setup, a Windows-native one, a Claude Code kit, a local-only one. Each pick says what job it does and why it, and carries its own evidence. | [collections](mega-list/collections/README.md) |
-| 🧩 **The JSON dataset** | Building something on top of it. Every repo, verdict, topic and install command in one 548 KB file, documented and versioned. | [`data.json`][data] · [schema](#the-data-as-an-api) |
+| 🧩 **The JSON dataset** | Building something on top of it. Every repo, verdict, topic and install command in one file, documented and versioned. | [`data.json`][data] · [schema](#the-data-as-an-api) |
 
 ### Running the site locally
 
@@ -299,14 +299,15 @@ The site is one static page over one JSON file, and that file is public at a sta
 
 **<https://aaa.jeremyfhall.com/data.json>**
 
-548 KB, `application/json`, `Access-Control-Allow-Origin: *`, no key and nothing to sign up for,
-rewritten by the same job that republishes the site. It exists because the page needs it, but it is the
-whole atlas in one request — 1,294 repos, 14 topics, 12 targets, five OS verdicts each — so it is
+About 4 MB on the 2026-09-22 snapshot (it grows with the corpus), `application/json`,
+`Access-Control-Allow-Origin: *`, no key and nothing to sign up for, rewritten by the same job that
+republishes the site. It exists because the page needs it, but it is the whole atlas in one request —
+every repo, every topic and target, five OS verdicts each — so it is
 documented here rather than left to be reverse-engineered from view-source. It changes at most once a
 day; cache it accordingly.
 
-**Rows are arrays, not objects.** Sixteen keys repeated 1,294 times is roughly 380 KB of the word
-`"listed_by"` and its neighbours, on a file that is rewritten on every rebuild and that the table cannot
+**Rows are arrays, not objects.** Eighteen keys repeated on every one of thousands of rows would be
+megabytes of the word `"listed_by"` and its neighbours, on a file that is rewritten on every rebuild and that the table cannot
 draw until it has arrived. So the keys are hoisted into a `cols` array once and each row carries values
 in that order. The page maps them back into objects in a single pass on load, and any consumer should do
 the same — after one line the array shape stops mattering:
@@ -318,26 +319,29 @@ ix = {c: i for i, c in enumerate(d["cols"])}
 ### The columns
 
 In `cols` order. There is no `null` anywhere in the file: an absent string is `""`, an absent number is
-`0`, an absent list is `[]`.
+`0`, an absent list is `[]`. The one exception is `d7`/`d30`, where `0` is a real answer (no stars gained)
+and so an absent one is `""`.
 
 | Column | Type | Meaning |
 |---|---|---|
 | `name` | string | The project's display name, as all three surfaces print it. Not unique — two different projects are called *OpenCode*. `nwo` is the key. |
 | `nwo` | string | `owner/repo`, as the GitHub API reports it today, after renames are resolved. Unique across rows. |
 | `cat` | int | **An index into the top-level `cats` array**, not a name. Exactly one topic per repo. |
-| `targets` | int[] | **Indices into the top-level `targets` array**, ascending, no duplicates. Empty for 270 repos that plug into nothing in particular. |
+| `targets` | int[] | **Indices into the top-level `targets` array**, ascending, no duplicates. Empty for repos that plug into nothing in particular. |
 | `stars` | int | Stargazer count on `snapshot`. `0` covers both "genuinely none" and "has no count of its own" — `os` tells you which. |
-| `lists` | int | How many of the eleven source lists name this repo. 1 to 5. |
+| `lists` | int | How many of the source lists name this repo. At least 1; the ceiling moves as lists are added. |
 | `listed_by` | string | Those lists' short names, `", "`-joined. The count always matches `lists`. |
 | `os` | string | Five characters, one per entry of the top-level `os` array, in that order. Encoding below. |
-| `blurb` | string | The curator's description, whitespace-collapsed and cut to 400 characters with a trailing `…`. Empty for six repos nobody described. |
+| `blurb` | string | The curator's description, whitespace-collapsed and cut to 400 characters with a trailing `…`. Empty for the handful nobody described. |
 | `install` | string | One line you can paste — `git clone`, `npx`, `pip install`, `irm`. Empty where there was nothing to say. |
-| `lang` | string | GitHub's primary language. Empty for the 117 repos it reports none for. |
+| `lang` | string | GitHub's primary language. Empty for repos it reports none for. |
 | `license` | string | SPDX identifier. Empty for no licence *and* for `NOASSERTION`, which are the same thing to someone deciding whether they may use it. |
 | `pushed` | string | Last push, `YYYY-MM-DD`. Empty when the repo could not be read. |
 | `url` | string | The link the atlas prints. Effectively always `https://github.com/<nwo>`, but it is not derived from it — use the column. |
 | `img` | string | Screenshot or README banner. **Empty means "derive it"**, not "no image" — see below. |
-| `first_seen` | string | Arrival date, `YYYY-MM-DD`. Empty on most rows, and that is not "unknown" — see below. |
+| `first_seen` | string | Arrival date, `YYYY-MM-DD`. Empty for founding stock, and that is not "unknown" — see below. |
+| `d7` | int or `""` | Stars gained over the last seven days — the live `stars` minus a sample about a week old. Can be negative. **`""` means "no answer"**, never `0`: no sample of the right age yet, the repo postdates it, or either end is not a count. |
+| `d30` | int or `""` | The same over thirty days. `velocity` says which sample each window was measured from. |
 
 #### `os` — five characters, five verdicts
 
@@ -350,19 +354,19 @@ WSL2, macOS and Linux all confirmed, no Dockerfile.
 | `Y` | Yes | Stated evidence: an install command for that OS, a matching CI job, a released binary. |
 | `L` | Likely | Inferred from language and packaging. A pure Python package with no OS-specific dependency runs on Windows, but nobody said so out loud. |
 | `N` | No | Looked at, and there is no support. |
-| `a` | n/a | The question does not apply. Eight rows: pure GitHub Actions, which run on a hosted runner and are never installed on your machine. |
-| `-` | unknown | **Not "no".** Nothing was classifiable — the entry is a folder inside someone else's repo, the repo 404s, or it is a hosted product with no README to read. 36 rows, and the same 36 whose `stars` is `0` for want of a count rather than want of stars. |
+| `a` | n/a | The question does not apply. Pure GitHub Actions, which run on a hosted runner and are never installed on your machine. |
+| `-` | unknown | **Not "no".** Nothing was classifiable — the entry is a folder inside someone else's repo, the repo 404s, or it is a hosted product with no README to read. Every such row also has `stars` `0`, for want of a count rather than want of stars — though not every `0` is one of them. |
 
 A "does this run on Windows" filter usually wants `Y` or `L` in position 0, or `Y` in position 1, which
-is what the site's Windows chip does and where the 1,105 above comes from. `"L"` is an inference, not a
+is what the site's Windows chip does and where the Windows figure above comes from. `"L"` is an inference, not a
 promise; drop it if you need only stated support.
 
 #### `img` — empty means derive
 
 Every repo has a GitHub social card, so `img` is left empty whenever that card is what the surfaces
-would show anyway — 608 of the 1,294 rows in the current snapshot. Writing it out would be 55 bytes ×
-608 of a string that is a pure function of `nwo`. Treat empty as "this project has no image" and you
-drop the picture on nearly half the atlas:
+would show anyway — about two rows in three on the 2026-09-22 snapshot. Writing it out would be 55 bytes
+on each of them, of a string that is a pure function of `nwo`. Treat empty as "this project has no image"
+and you drop the picture on most of the atlas:
 
 ```python
 img = row[ix["img"]] or f"https://opengraph.githubassets.com/1/{row[ix['nwo']]}"
@@ -373,33 +377,35 @@ img = row[ix["img"]] or f"https://opengraph.githubassets.com/1/{row[ix['nwo']]}"
 `baseline` is the day the arrival ledger was created, and everything present on that day is founding
 stock. `first_seen` carries a date only for repos that arrived *after* the baseline; on every other row
 it is `""`, which means "here since before anyone was counting" — not "unknown", and certainly not
-"new". Right now `baseline` equals `snapshot` and every row is empty, because the ledger was seeded from
-the build that created it; the first post-baseline arrival gets the first date. The file carries the raw
-date and no flag, so the [fourteen-day window](#the-new-filter) is the consumer's to apply, against
-whatever clock it likes.
+"new". The file carries the raw date and no flag. What the site marks `New` is the rows whose
+`first_seen` equals the top-level `cohort` — [one import, not a rolling window](#the-new-filter) — and a
+consumer that wants the same answer should compare against `cohort` rather than against a clock.
 
 ### The top-level keys
 
 | Key | Type | Meaning |
 |---|---|---|
-| `schema_version` | int | `1`. Bumped only for a change to something this section calls stable. Absent from snapshots published before it was introduced, so read a missing key as `1`. |
+| `schema_version` | int | `2` — `d7` and `d30` joined `cols`. Bumped only for a change to something this section calls stable. Absent from snapshots published before it was introduced, so read a missing key as `1`. |
 | `snapshot` | string | Build date, `YYYY-MM-DD`. Every star count, language, licence and push date in the file is as of this day. |
 | `repo` | string | `crazy54/awesome-agentic-atlas` — the atlas's own repo, so a consumer can link back without hardcoding it. |
-| `cols` | string[] | The sixteen column names, in row order. This is the thing to read. |
-| `window_days` | int | `14`. The new-arrival window, carried here so the page and this file cannot disagree about it. |
+| `generated` | string | When this file was written, UTC, `YYYY-MM-DDTHH:MM:SSZ` to the minute. Later than `snapshot` on a rebuild that reused the day's data. |
+| `cols` | string[] | The column names, in row order. This is the thing to read. |
+| `window_days` | int | `14`. Not a recency window: the age at which a cohort nothing has superseded stops being `New`. Carried here so the page and this file cannot disagree about it. |
 | `baseline` | string | `YYYY-MM-DD`. The day the arrival ledger started; see `first_seen`. |
+| `cohort` | string | `YYYY-MM-DD`. The import whose arrivals are `New`: a row is new when its `first_seen` equals this. `""` when there is none to show, including once `window_days` has lapsed. |
 | `cats` | object[] | The 14 topics, `{name, slug, blurb}`. The index space for `cat`. |
 | `targets` | object[] | The 12 harnesses, `{name, slug, blurb}`. The index space for `targets`. |
 | `os` | string[] | The five OS labels, in the order the `os` column encodes them. |
-| `rows` | array[] | 1,294 arrays of 16 values each, sorted by stars descending, then name case-insensitively. |
+| `rows` | array[] | One array per repo, one value per `cols` entry, sorted by stars descending, then name case-insensitively. |
+| `velocity` | object | Where `d7` and `d30` came from. `to` is the date the gains run up to. `d7` and `d30` are each `{days, from, span, n}`: the nominal window, the date of the sample it was measured from (`""` if none was the right age), the days that sample really spans, and how many rows got an answer. `rise` is `{col, min_abs, min_pct}`: the window the site's Rising filter uses (`""` switches it off) and its threshold — a row rises when its gain is at least `max(min_abs, min_pct% of stars)`. |
 
 A topic's or target's `slug` is the same string that names its Markdown page and its URL hash:
 `cats[2].slug` is `agent-skills`, its page is `mega-list/topics/agent-skills.md`, and the filtered view
 is `#topic=agent-skills`. One vocabulary across all three surfaces, which is what lets a link into one
 of them mean something in the others.
 
-JSON objects are unordered, and this one genuinely is — `window_days` and `baseline` sit at the end of
-the file because a later stage appended them to a dataset that predated them. Read by key.
+JSON objects are unordered, and this one genuinely is — `velocity` sits after `rows` because a later
+stage appends it to a dataset that predated it. Read by key.
 
 ### What will and will not change
 
@@ -420,12 +426,12 @@ Not without a `schema_version` bump:
 - the `Y`/`L`/`N`/`a`/`-` verdict encoding, and the five-OS order the `os` column uses
 - `img` empty meaning "derive from `nwo`"
 - the slug rules — `#topic=agent-skills` is a link people have already sent each other
-- ISO `YYYY-MM-DD` for `snapshot`, `pushed`, `first_seen` and `baseline`
-- no `null`s: `""`, `0`, `[]`
+- ISO `YYYY-MM-DD` for `snapshot`, `pushed`, `first_seen`, `baseline` and `cohort`
+- no `null`s: `""`, `0`, `[]` — and `""`, never `0`, for a `d7`/`d30` with no answer
 
 **Read `cols`; do not hardcode positions.** `ix["stars"]` costs one line and survives a column being
 inserted. `row[4]` is correct until the day one is added in front of it, and then it does not raise — it
-reads `lists`, a number between 1 and 5, as a star count and ranks the atlas by nothing. That is the
+reads `lists`, a single-digit number, as a star count and ranks the atlas by nothing. That is the
 whole difference: a name lookup either finds its column or fails loudly on the rebuild that moved it,
 while a magic index quietly starts answering a different question.
 
