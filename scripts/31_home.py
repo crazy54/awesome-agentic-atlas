@@ -444,6 +444,30 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
 .updbar button:disabled{opacity:.7;cursor:progress}
 .updbar .updx{padding:0;border-color:transparent;background:transparent;color:var(--ink2);font-size:20px}
 .updbar button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+/* "DANCE WITH ME". The button and its panel are Settings' shapes -- a chip, and a panel hanging off a
+   relative wrapper -- restated under their own names, not shared, because Settings' script finds its panel
+   by `.setwrap` and would take a click in this one for a click inside its own. `danceopen` lifts the header
+   over the pinned bar exactly as `setopen` does, for the reason the `.setmenu` comment gives. */
+.dancewrap{position:relative;display:inline-block;margin-right:6px}
+header.danceopen{z-index:30}
+.dancemenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:264px;text-align:left;
+  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
+  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75);text-shadow:none}
+.dancemenu[hidden],.dsrc[hidden],#dancebtn[hidden]{display:none}
+.dancesrcs{display:flex;flex-direction:column;gap:4px}
+.dsrc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;min-height:44px;
+  padding:7px 10px;background:none;border:1px solid var(--grid);border-radius:8px;color:var(--ink);
+  font-size:13px;text-align:left}
+.dsrc span{color:var(--muted);font-size:12px}
+.dsrc:hover,.dsrc.dancelast{border-color:var(--accent-sky)}
+.dsrc:focus-visible{outline:2px solid var(--accent-sky);outline-offset:2px}
+.dancemsg{margin:8px 0 0;color:var(--ink2);font-size:12px}
+.dancemsg:empty{margin:0}
+.dancenote{margin:8px 0 0;color:var(--muted);font-size:11px;line-height:1.4}
+/* The beat, when nothing else is dancing him: a hop, short enough to finish before the next beat at 180. */
+.mhmascot.beat{animation:mhbeat .26s cubic-bezier(.3,1.6,.5,1)}
+@keyframes mhbeat{0%{transform:none}35%{transform:translateY(-9px) scale(1.03,.97)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.mhmascot.beat{animation:none}}
 """
 
 # THE IMPORTED STYLESHEET IS NOT REWRITTEN, and the reason is worth a note because the obvious thing to do
@@ -1145,6 +1169,7 @@ def render() -> str:
         f'    <a class="ghstar" href="https://github.com/{esc(REPO)}" target="_blank" rel="noopener"'
         ' aria-label="Star the Awesome Agentic Atlas on GitHub (opens GitHub)">'
         '<span aria-hidden="true">&#9733;</span> Star<b data-gh="stars" hidden></b></a><br>',
+        '__DANCE__',
         '__SETTINGS__',
         '  </nav>',
         '</div></div></header>',
@@ -1170,7 +1195,7 @@ def render() -> str:
         NUMBERS_JS.replace("__REPO__", REPO),
         SW_JS,
         UPDATE_JS.replace("__SHELLPREFIX__", SHELL_PREFIX),
-        *filter(None, [mascot()[1]]),
+        *filter(None, [mascot()[1], dance()[1]]),
         b19.beacon(),
         '</body>',
         '</html>',
@@ -1191,6 +1216,7 @@ def render() -> str:
     css = BRIDGE_CSS + DOT_CSS + b30.SHELF_CSS + stage_css() + b19.SETTINGS_CSS + HOME_CSS + mascot()[0]
     return stamped(pagemin.strip_page(page)
                    .replace("__HOMECSS__", pagemin.strip_css(css))
+                   .replace("__DANCE__", pagemin.strip_page(dance()[0]))
                    .replace("__SETTINGS__", pagemin.strip_page(b19.SETTINGS_MENU))
                    .replace("__SETJS__", "<script>" + pagemin.strip_js(b19.SETTINGS_JS) + "</script>"))
 

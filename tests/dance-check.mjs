@@ -5,8 +5,9 @@
 // WHAT THIS HARNESS CANNOT SEE: the "On this computer" path past its offer. A shared tab's audio needs a
 // picker a headless browser does not draw, so that choice is asserted to be offered and nothing more; the
 // analysis behind it is the same function the microphone feeds. Nor what the 3D model does with the beats:
-// that is `archie.js`, and this Chrome has no WebGL, so the slot is the poster here and its hop is what is
-// checked.
+// that is `archie.js`. Whether it goes live depends on this Chrome's WebGL -- it did in the suite and not
+// alone -- so WebGL2 is stubbed out here, the slot is always the poster, and its hop is what is checked;
+// the model's arm is `data-live` set by hand, under which the poster must not hop too.
 //
 //   node tests/dance-check.mjs <chrome-binary> <origin>
 import {writeFileSync, mkdtempSync} from "node:fs";
@@ -19,8 +20,10 @@ const TMP = process.env.AAA_TMP || tmpdir();
 
 // ---- The song: 16-bit mono PCM. 12 beats at 120 BPM, then 3 s of a quiet room's hiss, so a gap of about
 // 3 s between two detected beats is the silence being heard as silence and not as a hundred tiny onsets.
-// The hats are loud and in triplets, three to the beat: a detector that weighs every band alike hears them
-// and not the kick, and counts 180 rather than 120. Chrome loops the file.
+// The hats are loud and in triplets, three to the beat: the first detector here, which weighed every
+// frequency bin alike, heard them and not the kick, and counted 171. The per-band detector that replaced
+// it does not need its 4:1 bass weighting to pass this song; nothing here tests that weighting, nor the
+// level gate, the recent-peak floor, peak picking or the tempo's fold into 70-180. Chrome loops the file.
 const RATE = 48000, BPM = 120, BEAT = 60 / BPM, BEATS = 12, QUIET = 3;
 const N = Math.round((BEATS * BEAT + QUIET) * RATE);
 const pcm = new Float32Array(N);
@@ -76,6 +79,8 @@ const {targetId} = await send("Target.createTarget", {url: "about:blank"});
 const {sessionId} = await send("Target.attachToTarget", {targetId, flatten: true});
 const S = (m, p) => send(m, p, sessionId);
 await S("Page.enable"); await S("Runtime.enable"); await S("Log.enable");
+await S("Page.addScriptToEvaluateOnNewDocument", {source: `(() => { const get = HTMLCanvasElement.prototype.getContext;
+  HTMLCanvasElement.prototype.getContext = function (t, ...a) { return /webgl/.test(t) ? null : get.call(this, t, ...a); }; })()`});
 const ev = async expr => {
   const r = await S("Runtime.evaluate", {expression: expr, awaitPromise: true, returnByValue: true, userGesture: true});
   if (r.exceptionDetails) throw new Error(expr.slice(0, 60) + " threw: " + (r.exceptionDetails.exception?.description || r.exceptionDetails.text));
@@ -160,9 +165,14 @@ await ev(`(() => { window.__log = [];
 // each spectrum spanned more of the song, and it counted the triplet hats (171 BPM), but only when the
 // suite's other harnesses had the runner busy. The worklet it became is on the audio thread, which this
 // throttle does not slow.
+// And with long frames made on purpose, 120 ms of every 350, which is what the model rendering on a slow
+// laptop does: a beat whose message waits behind one must still say when it happened. Idle, the page
+// delivered its messages on time and a detector timing beats by their arrival passed.
 await S("Emulation.setCPUThrottlingRate", {rate: 4});
+await ev(`window.__busy = setInterval(() => { const t = performance.now(); while (performance.now() - t < 120); }, 350)`);
 await ev(`document.querySelector("#dancemenu [data-src=mic]").click()`);
 await sleep(13000);
+await ev(`clearInterval(__busy)`);
 await S("Emulation.setCPUThrottlingRate", {rate: 1});
 const got = await ev(`({log: __log, hops: __hops, label: document.getElementById("dancebtn").textContent,
   menu: document.getElementById("dancemenu").hidden, level: window.archieMusic?.level(),
@@ -182,16 +192,28 @@ ok("...500 ms apart, not on the hi-hat triplets at 167 and 333", onBeat >= Math.
    JSON.stringify(gaps.map(Math.round)));
 ok("...and not in the silence: one gap spans it", gaps.some(g => g > 2500), JSON.stringify(gaps.map(Math.round)));
 // Timed by the audio clock, every gap is within a few ms of 500 however late its message arrived. Timed by
-// arrival under this throttle, gaps ran from 359 to 643 ms, which is a model dancing off the beat.
+// arrival under this throttle, gaps ran from 359 to 643 ms, which is a model dancing off the beat. The first
+// gap is left out: the capture's start can be heard as an onset (672 ms before the first kick, once).
 ok("...each timed by the audio clock, not by when its message arrived",
-   gaps.filter(g => g < 2500).every(g => Math.abs(g - 500) <= 25), JSON.stringify(gaps.map(g => +g.toFixed(1))));
+   gaps.slice(1).filter(g => g < 2500).every(g => Math.abs(g - 500) <= 25), JSON.stringify(gaps.map(g => +g.toFixed(1))));
 const bpms = beats.map(b => b.bpm).filter(Boolean);
 ok("the tempo is found: 120 BPM", bpms.length >= 4 && Math.abs(bpms.at(-1) - BPM) <= 4, JSON.stringify(bpms));
 ok("...and is null until there are four gaps to take a median of", beats.length > 4 &&
    beats.slice(0, 4).every(b => b.bpm === null), JSON.stringify(beats.slice(0, 5).map(b => b.bpm)));
 ok("strength is 0..1", beats.every(b => b.strength >= 0 && b.strength <= 1));
-ok("the poster hops on the beat while there is no live model", !got.live && got.hops >= beats.length - 2,
+// Not one hop per beat: two beats whose messages waited behind the same long frame restart one hop, and the
+// first never starts (15 hops for 19 beats, once in four runs). A loop that hopped once would not get near.
+ok("the poster hops on the beat while there is no live model", !got.live && got.hops >= beats.length * 0.6,
    `${got.hops} hops, ${beats.length} beats, live ${got.live}`);
+// The model's arm: once `archie.js` marks it live, the beats go to the model and the poster stays still.
+// Five seconds, so at least two of them are music whatever part of the loop they fall in.
+const live = await ev(`(async () => { const slot = document.querySelector(".mhmascot");
+  slot.dataset.live = ""; __hops = 0; const n0 = __log.length;
+  await new Promise(r => setTimeout(r, 5000));
+  const r = {hops: __hops, beats: __log.slice(n0).filter(e => e.t === "beat").length};
+  delete slot.dataset.live; return r; })()`);
+ok("...and does not while the model is live, though the beats go on", live.beats >= 2 && live.hops === 0,
+   JSON.stringify(live));
 
 // ---- Stopping.
 await ev(`document.getElementById("dancebtn").click()`);

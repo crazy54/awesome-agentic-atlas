@@ -14,7 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awesome Agentic Atlas — browse and discover agentic AI projects</title>
 <meta name="description" content="8,858 agentic AI projects merged from 39 awesome-lists, on shelves with a stated reason for each one: named by three or more lists, shipped this week, hidden gems, runs on Windows. Snapshot 2026-09-22.">
-<meta name="atlas-build" content="7cd5da82d2ef">
+<meta name="atlas-build" content="c657a305190d">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Awesome Agentic Atlas — browse and discover agentic AI projects">
@@ -409,6 +409,25 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
 .updbar button:disabled{opacity:.7;cursor:progress}
 .updbar .updx{padding:0;border-color:transparent;background:transparent;color:var(--ink2);font-size:20px}
 .updbar button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.dancewrap{position:relative;display:inline-block;margin-right:6px}
+header.danceopen{z-index:30}
+.dancemenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:264px;text-align:left;
+  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
+  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75);text-shadow:none}
+.dancemenu[hidden],.dsrc[hidden],#dancebtn[hidden]{display:none}
+.dancesrcs{display:flex;flex-direction:column;gap:4px}
+.dsrc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;min-height:44px;
+  padding:7px 10px;background:none;border:1px solid var(--grid);border-radius:8px;color:var(--ink);
+  font-size:13px;text-align:left}
+.dsrc span{color:var(--muted);font-size:12px}
+.dsrc:hover,.dsrc.dancelast{border-color:var(--accent-sky)}
+.dsrc:focus-visible{outline:2px solid var(--accent-sky);outline-offset:2px}
+.dancemsg{margin:8px 0 0;color:var(--ink2);font-size:12px}
+.dancemsg:empty{margin:0}
+.dancenote{margin:8px 0 0;color:var(--muted);font-size:11px;line-height:1.4}
+.mhmascot.beat{animation:mhbeat .26s cubic-bezier(.3,1.6,.5,1)}
+@keyframes mhbeat{0%{transform:none}35%{transform:translateY(-9px) scale(1.03,.97)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.mhmascot.beat{animation:none}}
 .mhmascot{background:url(assets/archie-3d.webp) center/contain no-repeat}</style>
 </head><body>
 <div class="scan" aria-hidden="true"></div>
@@ -431,6 +450,18 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
     <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list">Markdown</a>
     <a class="ghstar" href="https://github.com/crazy54/awesome-agentic-atlas" target="_blank" rel="noopener" aria-label="Star the Awesome Agentic Atlas on GitHub (opens GitHub)"><span aria-hidden="true">&#9733;</span> Star<b data-gh="stars" hidden></b></a><br>
+<div class="dancewrap">
+      <button class="chip" id="dancebtn" aria-expanded="false" aria-controls="dancemenu" hidden>Dance with me</button>
+      <div class="dancemenu" id="dancemenu" hidden>
+        <p class="setlab">Where is the music playing?</p>
+        <div class="dancesrcs">
+          <button class="dsrc" data-src="system" hidden><b>On this computer</b><span>Share the tab or screen that is playing it</span></button>
+          <button class="dsrc" data-src="mic" hidden><b>In the room</b><span>Listen through the microphone</span></button>
+        </div>
+        <p class="dancemsg" role="status"></p>
+        <p class="dancenote">Archie only listens for the beat. Nothing is recorded, played back or sent anywhere.</p>
+      </div>
+    </div>
 <div class="setwrap">
       <button class="chip" id="setbtn" aria-expanded="false" aria-controls="setmenu">Settings</button>
       <div class="setmenu" id="setmenu" hidden>
@@ -706,6 +737,7 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 </script>
 
 <script type="module" src="assets/archie.js?v=e2f15d70e3"></script>
+<script type="module" src="assets/archie-dance.js?v=07eb812405"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script>
 </body>
 </html>
