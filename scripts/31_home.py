@@ -432,6 +432,22 @@ def spot_art(f: dict) -> str:
             ' style="aspect-ratio:16/9">')
 
 
+# The mascot in `.mhmascot`: a poster, then a live model once `assets/archie.js` has decided the reader can
+# have one (wide screen, motion allowed, WebGL2) and has drawn its first frame. The loader, the model and the
+# poster are committed separately from this page, so they are wired only when all three are there: a page
+# that names a script it does not have 404s it on every visit, and pwa-check counts that as a console error.
+# Whichever lands second, the next run of this stage turns it on.
+MASCOT = ("archie.js", "archie.glb", "archie-3d.webp")
+
+
+def mascot() -> tuple[str, str]:
+    """The poster rule and the loader tag, or two empty strings while any of MASCOT is missing."""
+    if not all((OUT / "assets" / f).is_file() for f in MASCOT):
+        return "", ""
+    return (".mhmascot{background:url(assets/archie-3d.webp) center/contain no-repeat}",
+            '<script type="module" src="assets/archie.js"></script>')
+
+
 def spotlight() -> str:
     """One project, chosen from outside the top 200, with its own reason for being there.
 
@@ -804,6 +820,7 @@ def render() -> str:
         f'<script>{b30.SHELF_JS}</script>',
         DAYCHECK_JS,
         SW_JS,
+        *filter(None, [mascot()[1]]),
         b19.beacon(),
         '</body>',
         '</html>',
@@ -821,7 +838,7 @@ def render() -> str:
     # the bulk, the stage block cancels light mode inside it, the Settings control travels with its own
     # rules, and this page's own rules go last so that `.ph .plat.tight` can reach past `.ph .plat`.
     # `pages.css` is a `<link>` above all of them.
-    css = BRIDGE_CSS + DOT_CSS + b30.SHELF_CSS + stage_css() + b19.SETTINGS_CSS + HOME_CSS
+    css = BRIDGE_CSS + DOT_CSS + b30.SHELF_CSS + stage_css() + b19.SETTINGS_CSS + HOME_CSS + mascot()[0]
     return (pagemin.strip_page(page)
             .replace("__HOMECSS__", pagemin.strip_css(css))
             .replace("__SETTINGS__", pagemin.strip_page(b19.SETTINGS_MENU))

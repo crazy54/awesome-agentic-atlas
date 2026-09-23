@@ -233,5 +233,23 @@ true("...which is never lazy, since it is the first screen's largest element",
      "loading=" not in b31.spot_art({"img": own, "nwo": "o/r"}))
 
 
+# The mascot is wired only when its loader, model and poster are all committed, so the page never names a
+# file that 404s. Both arms, on scratch directories, whatever docs/assets holds today.
+saved_out = b31.OUT
+try:
+    with tempfile.TemporaryDirectory() as tmp:
+        b31.OUT = Path(tmp)
+        (b31.OUT / "assets").mkdir()
+        for f in b31.MASCOT[:-1]:
+            (b31.OUT / "assets" / f).write_text("x")
+        eq("with any mascot file missing, nothing is wired", b31.mascot(), ("", ""))
+        (b31.OUT / "assets" / b31.MASCOT[-1]).write_text("x")
+        css, tag = b31.mascot()
+        true("with all of them, the poster is the slot's background", "assets/archie-3d.webp" in css, css)
+        eq("...and the loader is a module script", tag, '<script type="module" src="assets/archie.js"></script>')
+finally:
+    b31.OUT = saved_out
+
+
 print(f"deeplinks: {ok} passed, {bad} failed")
 sys.exit(1 if bad else 0)
