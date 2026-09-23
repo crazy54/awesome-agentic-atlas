@@ -2353,18 +2353,21 @@ def portrait(f: dict, ratio: str = "16/9") -> str:
 
 
 def art(f: dict, fallback: str = "portrait", ratio: str = "16/9") -> str:
-    """The image slot. A real screenshot when the row has one; otherwise whichever fallback is being shown.
+    """The image slot. GitHub's social card when the row has a screenshot; otherwise whichever fallback is shown.
 
     `social` is `https://opengraph.githubassets.com/1/<nwo>`, GitHub's generated card, which exists for
     every repository -- so 100% of rows can carry *an* image even though only 53% carry a screenshot. It is
     also a third-party request per card and it renders the repo name in Helvetica on a near-white card, so
     a shelf of twelve of them is twelve near-identical white rectangles. The A/B further down shows the
     same imageless project both ways; `portrait` is the default here because it is the one that makes the
-    grid legible."""
-    if f["img"]:
-        return (f'<img src="{esc(f["img"])}" alt="" loading="lazy" decoding="async"'
-                f' style="aspect-ratio:{ratio}">')
-    if fallback == "social":
+    grid legible.
+
+    A row's own `img` is *not* rendered here, for the reason the catalog stopped rendering it (JFH-218):
+    nothing bounds what those URLs serve. Lighthouse measured the homepage at 21.49 MB, 21.41 MB of it
+    images, from 13 lazy-loaded pictures -- one README GIF (`amux.gif`) was 11,955 KB on its own. A row
+    with a screenshot gets the social card instead, a fixed ~100 KB; animated demos stop moving, which is
+    the trade. The detail page still shows the real one, where a single image is nobody's budget."""
+    if f["img"] or fallback == "social":
         return (f'<img src="https://opengraph.githubassets.com/1/{esc(f["nwo"])}" alt=""'
                 f' loading="lazy" decoding="async" style="aspect-ratio:{ratio}">')
     return portrait(f, ratio)
