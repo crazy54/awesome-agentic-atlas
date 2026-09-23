@@ -339,11 +339,20 @@ main{position:relative;z-index:1}
 /* The type sits on lit code, so it gets a shadow in the page's own surface colour: a halo that is
    invisible against the page and lifts the words off the glyphs behind them. */
 header h1,header .sub,header .blurb,header .top nav{text-shadow:0 0 14px var(--surface),0 0 4px var(--surface)}
-/* Reserved for the mascot: an animated model standing between the title and the navigation, feet just past
-   the header's bottom edge, on the fading half of the picture. Empty until the model lands, and hidden
-   where the navigation wraps under the title and there is no room between them. */
+/* The mascot: an animated model standing between the title and the navigation, feet just past the header's
+   bottom edge, on the fading half of the picture. Hidden where the navigation wraps under the title and
+   there is no room between them.
+   Three layers inside the header, bottom to top: the mascot, the words, the Settings menu. The loader grows
+   its canvas from this slot to the whole header's width, and a dance adds light over it, so at the words'
+   level it would wash out the title and the navigation -- worst in light mode, where adding light to dark
+   ink on a pale field is what lowers contrast. The words are lifted over it rather than the mascot sunk under
+   the art: the art is `.mhart`, outside the header, and the header is z 2 above it, so a mascot at 0 here is
+   still drawn on the picture. The menu is given its own place above the words, rather than winning a tie
+   with the mascot on source order, which it did until now and would stop doing if either moved. */
 header .wrap{position:relative}
-.mhmascot{position:absolute;left:52%;bottom:-28px;width:240px;height:240px;pointer-events:none;z-index:1}
+.mhmascot{position:absolute;left:52%;bottom:-28px;width:240px;height:240px;pointer-events:none;z-index:0}
+header .brandbar,header .top{position:relative;z-index:1}
+header .setwrap{z-index:2}
 @media (max-width:899px){.mhmascot{display:none}}
 /* The lit field the frosted panels frost, for the themes that declare one. Fixed rather than scrolled so
    it does not slide out from under them, and behind everything. `none` in graphite, which costs nothing.
