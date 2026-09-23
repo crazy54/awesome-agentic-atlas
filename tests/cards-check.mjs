@@ -1550,6 +1550,81 @@ ok("the controls inside the pinned bar are left without a scroll margin",
 ok("...while the ones outside it have one", excluded.rowLink > 0 && excluded.rowSave > 0 && excluded.sub > 0,
    JSON.stringify(excluded));
 
+// ---- THE COMPARISON PANEL IS A TABLE IN EVERY VIEW AND AT EVERY WIDTH ----------------------------------
+//
+// The panel holds the page's second <table>, and the two blocks that turn a results row into a card -- the
+// 640px query and the cards view, which is the default -- used to select bare table elements and lay this one
+// out as cards too: a zero-height thead, cells in 249/71px grid pairs, every column collapsed and nothing left
+// to scroll. Those blocks now reach their table through `:where(#out)`, and theme_test.py pins that in the
+// source. What only a browser can say is whether the panel then *is* a table: display types, the 148px column
+// floor that gives the scroller something to scroll, the label rail that stays put while it does, and that
+// none of it depends on which view the results are in.
+//
+// Four pinned, which is the cap and the case the 148px floor was sized for: 104 + 4 x 148 = 696px.
+await resize(1440, 900);
+await hardGoto(CATALOG);
+const pins = await evalIn(`[...document.querySelectorAll('#out tr[data-project]')].slice(0, 4)
+  .map(t => t.dataset.project).join(",")`);
+await hardGoto(CATALOG + "#cmp=" + pins);
+for (let i = 0; i < 40 && !(await evalIn("!!document.querySelector('#cmp.on tbody td')")); i++) await sleep(150);
+const cmpGeom = `(() => {
+  const c = document.getElementById('cmp');
+  if (!c || !c.classList.contains('on')) return null;
+  const d = (s) => { const e = c.querySelector(s); return e ? getComputedStyle(e).display : null; };
+  const sc = c.querySelector('.scroll');
+  const tds = [...c.querySelectorAll('tbody tr:first-child td')];
+  const th = c.querySelector('tbody th');
+  const thBox = th.getBoundingClientRect();
+  return {table: d('table'), thead: d('thead'), tbody: d('tbody'), tr: d('tbody tr'), td: d('tbody td'),
+          theadH: c.querySelector('thead').getBoundingClientRect().height,
+          cols: tds.length, minTdW: Math.min(...tds.map(t => t.getBoundingClientRect().width)),
+          sticky: getComputedStyle(th).position, thLeft: Math.round(thBox.left - sc.getBoundingClientRect().left),
+          tdLeft: Math.round(tds[0].getBoundingClientRect().left - sc.getBoundingClientRect().left),
+          scrollW: sc.scrollWidth, clientW: sc.clientWidth,
+          docHScroll: document.documentElement.scrollWidth - document.documentElement.clientWidth};
+})()`;
+const cmpIn = async (view) => {
+  await evalIn(`(() => { document.documentElement.dataset.view = '${view}'; return 1; })()`);
+  await sleep(100);
+  return evalIn(cmpGeom);
+};
+for (const [w, h] of [[1440, 900], [375, 812]]) {
+  await resize(w, h);
+  await sleep(200);
+  const byView = {};
+  for (const view of ["cards", "table"]) byView[view] = await cmpIn(view);
+  const c = byView.cards;
+  ok(`the comparison panel opened from a #cmp= link at ${w}px`, c && c.cols === 4, JSON.stringify(c));
+  if (!c) continue;
+  ok(`...and is laid out as a table at ${w}px, in the cards view the results are in`,
+     c.table === "table" && c.thead === "table-header-group" && c.tbody === "table-row-group" &&
+     c.tr === "table-row" && c.td === "table-cell" && c.theadH > 0, JSON.stringify(c));
+  ok(`...with every column held at its 148px floor or wider at ${w}px`, c.minTdW >= 148 - 0.5,
+     String(c.minTdW));
+  ok(`...and its row labels in a sticky rail at ${w}px`, c.sticky === "sticky", c.sticky);
+  // Compared whole: any field that differs is a view rule reaching into the panel.
+  ok(`...and the table view lays it out identically at ${w}px`,
+     JSON.stringify(byView.table) === JSON.stringify(c), JSON.stringify(byView.table));
+  if (w === 375) {
+    ok("on a phone the panel scrolls inside itself, which is the whole of its phone story",
+       c.scrollW > c.clientW + 100, JSON.stringify({scrollW: c.scrollW, clientW: c.clientW}));
+    ok("...and the document does not", c.docHScroll <= 0, String(c.docHScroll));
+    // Swiped, the columns move and the label rail does not. Not "exactly where it was": the rail starts a
+    // border's width in from the scroller's edge and sticks at `left:0`, so it settles by 2px as the swipe
+    // begins. A sticky cell that has lost its sticky, or a scroller that is not the scrolling box, moves the
+    // rail the whole 200px with the columns.
+    await evalIn("(() => { document.querySelector('#cmp .scroll').scrollLeft = 200; return 1; })()");
+    await sleep(100);
+    const swiped = await evalIn(cmpGeom);
+    ok("...and swiping the columns leaves the project labels where they were",
+       c.tdLeft - swiped.tdLeft >= 150 && Math.abs(swiped.thLeft - c.thLeft) <= 3,
+       JSON.stringify({rail: [c.thLeft, swiped.thLeft], firstColumn: [c.tdLeft, swiped.tdLeft]}));
+    if (Math.abs(swiped.thLeft - c.thLeft) > 3 || c.scrollW <= c.clientW + 100) await shot("cmp-375");
+  }
+}
+await evalIn("(() => { document.documentElement.dataset.view = 'cards'; return 1; })()");
+await resize(1440, 900);
+
 // ---- DISCOVER'S CAROUSEL, WHICH IS A SCROLLER AND NOT A TRANSFORMED TRACK -------------------------------
 //
 // `docs/discover/` is the one page on this site whose primary control is horizontal, and everything worth

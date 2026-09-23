@@ -986,26 +986,26 @@ ok("every selector in it is scoped to the cards view",
      .map(r => r.sel).join(" | "));
 ok("nothing in it needed !important", !/!important/.test(cardsBlock));
 ok("the screenshot column comes back, which is the whole point of the view",
-   /html\[data-view=cards\] td\.shot\{[^}]*display:block/.test(cardsBlock) ||
-   /html\[data-view=cards\] td\{display:block/.test(cardsBlock),
+   /html\[data-view=cards\] (?::where\(#out\) )?td\.shot\{[^}]*display:block/.test(cardsBlock) ||
+   /html\[data-view=cards\] (?::where\(#out\) )?td\{display:block/.test(cardsBlock),
    cardsBlock.match(/td\.shot\{[^}]*\}/)?.[0] || "no td.shot rule");
 ok("the image fills the card rather than keeping its 200px table width",
-   /html\[data-view=cards\] td\.shot img\{[^}]*width:100%/.test(cardsBlock));
+   /html\[data-view=cards\] (?::where\(#out\) )?td\.shot img\{[^}]*width:100%/.test(cardsBlock));
 ok("the headings are dropped, since a card has nothing to head",
-   /html\[data-view=cards\] thead\{display:none\}/.test(cardsBlock));
+   /html\[data-view=cards\] (?::where\(#out\) )?thead\{display:none\}/.test(cardsBlock));
 ok("the grid sizes itself, so there is no second breakpoint to keep in step",
    /auto-fill,\s*minmax\(/.test(cardsBlock), cardsBlock.match(/grid-template-columns:[^;}]*/g)?.join(" | "));
 ok("the two hidden columns come back on a card, as they do on a phone",
-   /html\[data-view=cards\] td\.hide\{display:block\}/.test(cardsBlock));
+   /html\[data-view=cards\] (?::where\(#out\) )?td\.hide\{display:block\}/.test(cardsBlock));
 ok("the row's 9px phone margin is zeroed against the grid gap that replaced it",
-   /html\[data-view=cards\] tr\{[^}]*margin:0/.test(cardsBlock),
-   cardsBlock.match(/html\[data-view=cards\] tr\{[^}]*\}/)?.[0]);
+   /html\[data-view=cards\] (?::where\(#out\) )?tr\{[^}]*margin:0/.test(cardsBlock),
+   cardsBlock.match(/html\[data-view=cards\] (?::where\(#out\) )?tr\{[^}]*\}/)?.[0]);
 ok("the row tint is undone, or it would band the inside of every card",
-   /html\[data-view=cards\] tr:hover td\{background:transparent\}/.test(cardsBlock));
+   /html\[data-view=cards\] (?::where\(#out\) )?tr:hover td\{background:transparent\}/.test(cardsBlock));
 ok("...and only where a pointer can actually hover",
-   /@media\(hover:hover\)\{\s*html\[data-view=cards\] tr:hover td/.test(cardsBlock));
+   /@media\(hover:hover\)\{\s*html\[data-view=cards\] (?::where\(#out\) )?tr:hover td/.test(cardsBlock));
 ok("the rank gets its heading back as a glyph, the column heading being gone",
-   /html\[data-view=cards\] td\.rk::before\{content:"#"\}/.test(cardsBlock));
+   /html\[data-view=cards\] (?::where\(#out\) )?td\.rk::before\{content:"#"\}/.test(cardsBlock));
 // `-webkit-line-clamp` is inert on its own: without `display:-webkit-box` and a vertical box-orient beside
 // it the blurb simply does not clamp, and it fails that way silently. A browser doing the standard
 // `line-clamp` never notices the omission, which is exactly why this is checked here rather than in

@@ -2008,31 +2008,33 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
   .facet:has(>.chip)>#oses{flex:1 1 auto;min-width:62%}
 
   /* A row stops being a row. Four columns cannot share 335px -- the blurb on its own wants more than
-     that -- so each row becomes a card, and the headings, no longer above anything, go away. */
-  thead{display:none}
-  table,tbody,tr,td{display:block}
-  table{margin-top:12px}
-  tr{display:grid;grid-template-columns:1fr auto;gap:1px 12px;align-items:start;
+     that -- so each row becomes a card, and the headings, no longer above anything, go away. The results
+     table's rows, that is: `:where(#out)` keeps this off the comparison panel's matrix, and adds nothing to
+     any selector's weight -- the cards block below says why that matters. */
+  :where(#out) thead{display:none}
+  :where(#out) table,:where(#out) tbody,:where(#out) tr,:where(#out) td{display:block}
+  :where(#out) table{margin-top:12px}
+  :where(#out) tr{display:grid;grid-template-columns:1fr auto;gap:1px 12px;align-items:start;
     border:1px solid var(--grid);border-radius:10px;padding:11px 13px;margin:0 0 9px}
-  td{border-bottom:0;padding:0}
-  td.rk{grid-column:1;grid-row:1;text-align:left}
-  td.st-c{grid-column:2;grid-row:1}
-  td.pj{grid-column:1/-1;grid-row:2}
-  td.ds{grid-column:1/-1;grid-row:3;margin-top:6px}
+  :where(#out) td{border-bottom:0;padding:0}
+  :where(#out) td.rk{grid-column:1;grid-row:1;text-align:left}
+  :where(#out) td.st-c{grid-column:2;grid-row:1}
+  :where(#out) td.pj{grid-column:1/-1;grid-row:2}
+  :where(#out) td.ds{grid-column:1/-1;grid-row:3;margin-top:6px}
   /* The two `.hide` columns are dropped at 900px and, until now, never came back -- so a phone reader
      silently lost the topic and target tags and the language, licence and push date. That was a width
      decision inherited from the table, and a card is not competing for column width: it has a whole row
      to spend. `td.hide` outranks the `.hide` that hid them, so this wins without touching that rule and
      without affecting the 641-900px range, where the layout really is still a table.
      A higher specificity than `.hide`, not a later position, is what makes that true. */
-  td.hide{display:block}
-  td.tg{grid-column:1/-1;grid-row:4;margin-top:8px}
-  td.lc{grid-column:1/-1;grid-row:5;margin-top:2px;text-align:left}
+  :where(#out) td.hide{display:block}
+  :where(#out) td.tg{grid-column:1/-1;grid-row:4;margin-top:8px}
+  :where(#out) td.lc{grid-column:1/-1;grid-row:5;margin-top:2px;text-align:left}
   /* Three stacked lines is right in a centred 90px column and wrong on a card, where the same three
      facts fit on one line. The <br>s are the table's formatting, so they go away here rather than
      being conditionally emitted -- the markup stays one shape and the layout decides how to read it. */
-  td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
-  td.lc .meta br{display:none}
+  :where(#out) td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
+  :where(#out) td.lc .meta br{display:none}
   .st{font-size:15px}
   .desc{font-size:13px}
   .more{width:100%}
@@ -2040,7 +2042,7 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
 }
 
 /* ---- Cards view --------------------------------------------------------------------------------------
-   The same table, read as a gallery. `render()` emits one <table> and nothing else; this block decides how
+   The same table, read as a gallery. `render()` emits the results as one <table>; this block decides how
    it is laid out, which is exactly the trick the 640px query above plays and it is here for the same
    reason. Two things fall out of one markup shape. The toggle costs nothing -- no refetch, no re-render,
    not one row rebuilt, so switching is a repaint whether 120 rows are on screen or 1,294. And the two
@@ -2051,63 +2053,69 @@ footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20p
    than on source order. So this works at every width without !important and without either of those
    moving, which matters because both of them are load-bearing in the view this one is not.
 
+   And every table element is reached through `:where(#out)`, as the 640px block's are. The page has a second
+   <table> -- the comparison panel -- and a bare `td` here would lay that out as a card too; the note on
+   `#cmp` below has what that did. `:where()` rather than a plain `#out` because it adds no specificity: the
+   scoping decides *which* table, and every contest these rules win or lose against the rest of the sheet is
+   decided exactly as it was before the scoping existed.
+
    What it costs: a <table> whose cells are `display:block` stops being a table to a screen reader, the
    implicit role going with the display type. The 640px block already accepts that, and both get away with
    it for the same reason -- with the headings gone every cell still names itself, the star count carrying
    "N lists" and the topic and targets being pills. It is a real trade, and it is why the table stays the
    default rather than this. */
-html[data-view=cards] thead{display:none}
-html[data-view=cards] table{display:block;margin-top:14px}
+html[data-view=cards] :where(#out) thead{display:none}
+html[data-view=cards] :where(#out) table{display:block;margin-top:14px}
 /* `auto-fill` against a floor rather than a column count, so one rule is four cards on a desktop, two on a
    tablet and one on a phone with nothing to switch between and no second breakpoint to keep in step. The
    floor is what the widest thing a card must hold needs before it would scroll sideways: the install line,
    which is monospace, plus the two 13px gutters. */
-html[data-view=cards] tbody{display:grid;gap:14px;
+html[data-view=cards] :where(#out) tbody{display:grid;gap:14px;
   grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
 /* A grid inside the grid, two columns wide, for one reason: the rank and the star count share a line and
    everything else spans both. Placed by an explicit `grid-row` per cell, like the 640px block, because the
    cells arrive in the table's order, a card wants them in another one, and `order` -- which is the cheaper
    tool -- cannot put two of them side by side. `margin:0` is not tidiness: the block above gives every row
    a 9px bottom margin, which this view has a 14px grid gap for, and margins do not collapse in a grid. */
-html[data-view=cards] tr{display:grid;grid-template-columns:1fr auto;align-items:start;align-content:start;
+html[data-view=cards] :where(#out) tr{display:grid;grid-template-columns:1fr auto;align-items:start;align-content:start;
   gap:0 10px;margin:0;padding:0 0 12px;background:var(--band);
   border:1px solid color-mix(in srgb,var(--card-accent) 35%,var(--grid));border-radius:12px;overflow:hidden;
   transition:border-color .14s ease,box-shadow .14s ease,transform .14s ease}
-html[data-view=cards] td{display:block;border-bottom:0;padding:0 13px;min-width:0}
+html[data-view=cards] :where(#out) td{display:block;border-bottom:0;padding:0 13px;min-width:0}
 /* The screenshot is the whole argument for this view, so it comes back at the widths where the table drops
    it as not paying for its column, and it goes edge to edge. That is what the gutters being on the cells
    rather than on the card buys: this one cell opts out of them by zeroing its own padding. `aspect-ratio`
    is inherited from `.shot img` above, so a card reserves the image's height before it loads and a lazy
    one does not shove the rest of the grid down when it arrives. */
-html[data-view=cards] td.shot{grid-column:1/-1;grid-row:1;width:auto;padding:0}
-html[data-view=cards] td.shot img{width:100%;border:0;border-radius:0;
+html[data-view=cards] :where(#out) td.shot{grid-column:1/-1;grid-row:1;width:auto;padding:0}
+html[data-view=cards] :where(#out) td.shot img{width:100%;border:0;border-radius:0;
   border-bottom:1px solid var(--grid)}
-html[data-view=cards] td.rk{grid-column:1;grid-row:2;padding-top:10px;text-align:left}
+html[data-view=cards] :where(#out) td.rk{grid-column:1;grid-row:2;padding-top:10px;text-align:left}
 /* The "#" is the stylesheet's business here because in the table it is the column heading's, and this view
    has no headings -- a bare "37" at the top of a card is a number with nothing attached to it. */
-html[data-view=cards] td.rk::before{content:"#"}
-html[data-view=cards] td.st-c{grid-column:2;grid-row:2;padding-top:10px;text-align:right}
-html[data-view=cards] td.pj{grid-column:1/-1;grid-row:3;margin-top:4px}
-html[data-view=cards] td.ds{grid-column:1/-1;grid-row:4;margin-top:7px}
+html[data-view=cards] :where(#out) td.rk::before{content:"#"}
+html[data-view=cards] :where(#out) td.st-c{grid-column:2;grid-row:2;padding-top:10px;text-align:right}
+html[data-view=cards] :where(#out) td.pj{grid-column:1/-1;grid-row:3;margin-top:4px}
+html[data-view=cards] :where(#out) td.ds{grid-column:1/-1;grid-row:4;margin-top:7px}
 /* Both `.hide` columns come back, for the reason the 640px block gives: they were dropped at 900px because
    they stopped paying for their column *width*, and a card is not competing for column width. */
-html[data-view=cards] td.hide{display:block}
-html[data-view=cards] td.tg{grid-column:1/-1;grid-row:5;margin-top:9px}
-html[data-view=cards] td.lc{grid-column:1/-1;grid-row:6;margin-top:3px;text-align:left}
-html[data-view=cards] td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
-html[data-view=cards] td.lc .meta br{display:none}
+html[data-view=cards] :where(#out) td.hide{display:block}
+html[data-view=cards] :where(#out) td.tg{grid-column:1/-1;grid-row:5;margin-top:9px}
+html[data-view=cards] :where(#out) td.lc{grid-column:1/-1;grid-row:6;margin-top:3px;text-align:left}
+html[data-view=cards] :where(#out) td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
+html[data-view=cards] :where(#out) td.lc .meta br{display:none}
 html[data-view=cards] .project-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 html[data-view=cards] .project-actions a{border:1px solid color-mix(in srgb,var(--card-accent) 55%,var(--grid));
   border-radius:999px;padding:4px 9px;color:var(--ink2);font-size:12px;font-weight:600}
 html[data-view=cards] .project-actions a:first-child{background:color-mix(in srgb,var(--card-accent) 18%,var(--band));color:var(--ink)}
 html[data-view=cards] .project-actions a:hover{border-color:var(--card-accent);text-decoration:none}
 /* Close the banner slot when the screenshot kill switch omits the cell. */
-html[data-view=cards][data-index-screenshots=off] td.rk{grid-row:1;padding-top:10px}
-html[data-view=cards][data-index-screenshots=off] td.st-c{grid-row:1;padding-top:10px}
-html[data-view=cards][data-index-screenshots=off] td.pj{grid-row:2}
-html[data-view=cards][data-index-screenshots=off] td.ds{grid-row:3}
-html[data-view=cards][data-index-screenshots=off] td.tg{grid-row:4}
-html[data-view=cards][data-index-screenshots=off] td.lc{grid-row:5}
+html[data-view=cards][data-index-screenshots=off] :where(#out) td.rk{grid-row:1;padding-top:10px}
+html[data-view=cards][data-index-screenshots=off] :where(#out) td.st-c{grid-row:1;padding-top:10px}
+html[data-view=cards][data-index-screenshots=off] :where(#out) td.pj{grid-row:2}
+html[data-view=cards][data-index-screenshots=off] :where(#out) td.ds{grid-row:3}
+html[data-view=cards][data-index-screenshots=off] :where(#out) td.tg{grid-row:4}
+html[data-view=cards][data-index-screenshots=off] :where(#out) td.lc{grid-row:5}
 
 /* The other half of the above-the-fold budget the mascot rules opened, and the larger half. A card puts
    226px above its own name on a phone: 165 of screenshot, then the rank and star band under it, which
@@ -2135,9 +2143,9 @@ html[data-view=cards][data-index-screenshots=off] td.lc{grid-row:5}
    short of the screenshot itself or the bar's three rows of 44px targets reaches it, and both of those are
    worth more than the pixels. */
 @media(max-width:640px){
-  html[data-view=cards] td.pj{grid-row:2}
-  html[data-view=cards] td.rk{grid-row:3}
-  html[data-view=cards] td.st-c{grid-row:3}
+  html[data-view=cards] :where(#out) td.pj{grid-row:2}
+  html[data-view=cards] :where(#out) td.rk{grid-row:3}
+  html[data-view=cards] :where(#out) td.st-c{grid-row:3}
 }
 /* 44em is a measure for a line of prose in a wide table cell. Inside a 290px card it is not a constraint
    at all, and leaving it there only means the three of them disagree about what the card's width is. */
@@ -2158,7 +2166,7 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
    win on source order: the pointer and the keyboard both need to be able to say "this one, now" over the
    top of a standing property of the row. The pulse itself outlives them either way, because an animated
    property beats the cascade. */
-html[data-view=cards] tr.nw{border-color:var(--warn);
+html[data-view=cards] :where(#out) tr.nw{border-color:var(--warn);
   box-shadow:0 0 0 2px var(--warn),0 0 12px color-mix(in srgb,var(--warn) 30%,transparent);
   animation:new-breathe 3s ease-in-out 5}
 @keyframes new-breathe{
@@ -2169,12 +2177,12 @@ html[data-view=cards] tr.nw{border-color:var(--warn);
    the gaps between them showing through. Inside `hover:hover` like the rule it overrides, so a touch
    device -- which latches a hover it can never clear -- is not made to carry either of them. */
 @media(hover:hover){
-  html[data-view=cards] tr:hover td{background:transparent}
-  html[data-view=cards] tr:hover{border-color:var(--card-accent);
+  html[data-view=cards] :where(#out) tr:hover td{background:transparent}
+  html[data-view=cards] :where(#out) tr:hover{border-color:var(--card-accent);
     box-shadow:0 0 0 2px var(--card-accent),0 0 20px color-mix(in srgb,var(--card-accent) 44%,transparent),0 14px 32px rgba(0,0,0,.24);
     transform:translateY(-1px);animation:card-glow 1.5s ease-in-out infinite alternate}
 }
-html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
+html[data-view=cards] :where(#out) tr:focus-within{border-color:var(--card-accent);
   box-shadow:0 0 0 2px var(--card-accent),0 0 20px color-mix(in srgb,var(--card-accent) 40%,transparent)}
 @keyframes card-glow{from{box-shadow:0 0 0 2px var(--card-accent),0 0 12px color-mix(in srgb,var(--card-accent) 30%,transparent),0 12px 28px rgba(0,0,0,.2)}to{box-shadow:0 0 0 2px var(--card-accent),0 0 28px color-mix(in srgb,var(--card-accent) 58%,transparent),0 16px 36px rgba(0,0,0,.28)}}
 /* A pulse is a way of saying "look at this one", and it can only say that about a few. When an import brings
@@ -2190,7 +2198,7 @@ html[data-view=cards] tr:focus-within{border-color:var(--card-accent);
    cards of its own, they wear the same `.nw` ring, and an import that made most of the atlas new made most
    of those fifty pulse as well. Same measurement decides both, because the strip is only ever on screen in
    the unfiltered view -- where `hits` *is* the atlas, which is exactly the set the strip was drawn from. */
-html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] tr.nw,
+html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] :where(#out) tr.nw,
 html[data-wave="1"] .dsc.nw{animation:none}
 
 /* The chip hovers transition, the chip rails scroll smoothly, and new arrivals breathe, and all three are
@@ -2312,23 +2320,20 @@ main a[href],main button,main select,main summary,
    WHY THIS IS HERE AND NOT UP BESIDE `.shared`, WHICH IS WHERE IT BELONGS, and why every selector below
    is an id rather than the class every other component on this page is styled by.
 
-   This panel holds the page's second <table>. The sentence at the top of the cards block above -- "`render()`
-   emits one <table> and nothing else" -- was true when it was written, and the two view blocks were written
-   against it: the 640px card query selects bare `thead`, `table`, `tbody`, `tr` and `td`, and the cards block
-   selects them under `html[data-view=cards]`, which is the *default* view. Both reach in here. Measured at
-   375px with four projects pinned, before this block existed: the thead had zero height, the cells were laid
-   out by `grid-template-columns:1fr auto` in alternating 249/71px pairs, `min-width:0` had collapsed every
-   column, and the horizontal scroller had nothing left to scroll -- the panel's whole phone story.
+   This panel holds the page's second <table>. The two view blocks above were written when `render()` emitted
+   the only one, and selected bare `thead`, `table`, `tbody`, `tr` and `td` -- the 640px card query directly,
+   the cards block under `html[data-view=cards]`, which is the *default* view. Both reached in here. Measured
+   at 375px with four projects pinned, before this block existed: the thead had zero height, the cells were
+   laid out by `grid-template-columns:1fr auto` in alternating 249/71px pairs, `min-width:0` had collapsed
+   every column, and the horizontal scroller had nothing left to scroll -- the panel's whole phone story.
 
-   An id, so the fix does not depend on where it sits. The strongest thing either block reaches for is
-   `html[data-view=cards] tr:hover td`; one id outranks all of it, so nothing here can be undone by a rule
-   added up there later, and the panel does not need re-verifying every time the cards view is touched.
+   Both blocks now reach their table through `:where(#out)`, so none of that arrives here any more, and this
+   block no longer restates the display types they took away. What it still overrides is the table view's
+   row treatment -- zebra fills and the pointer's tint and underline, which are written against `tbody tr` in
+   general -- and the base `table` and `td` rules every table on the page starts from.
 
-   The fix this really wants is scoping those two blocks to `#out`, since the results table is what they were
-   always about -- `#out tr:focus` directly above is that pattern already. Not done here: it is thirty-odd
-   selectors on the layout every reader sees, and `tests.yml` serves the *committed* docs/, so
-   `cards-check.mjs` would measure the old stylesheet and pass whatever the change did to the new one. JFH-291
-   holds it, to land on its own with a build behind it. The narrow fix is the one that can be verified first.
+   An id, so none of that depends on where the block sits: one id outranks everything those rules reach for,
+   and cards-check.mjs measures the matrix in both views, so a rule that reaches in here again reddens it.
 
    `overflow-x:auto` on an inner box rather than on the panel, so the header and its buttons stay put while
    the columns are swiped, and so the rounded corners are not cut off by the scroller.
@@ -2344,16 +2349,8 @@ main a[href],main button,main select,main summary,
 #cmp .ch b{color:var(--ink)}
 #cmp .ch .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
 #cmp .scroll{overflow-x:auto;border-radius:0 0 8px 8px}
-/* The display types are restated, not inherited: this is what the two view blocks above took away. Written
-   out in full rather than as `display:revert`, which reverts to the *user-agent* sheet and would be correct
-   here by luck -- these are the UA values -- but says nothing about why they are being set. */
-#cmp table{display:table;border-collapse:collapse;width:100%;margin-top:0;font-size:13px}
-#cmp thead{display:table-header-group}
-#cmp tbody{display:table-row-group}
-/* `border` and `background` because the 640px query gives every row a card's outline and the cards block
-   gives it a fill; both paint on a `table-row` and neither belongs on a matrix. */
-#cmp tr{display:table-row;border:0;background:transparent}
-#cmp th,#cmp td{display:table-cell;padding:7px 12px;text-align:left;vertical-align:top;
+#cmp table{border-collapse:collapse;width:100%;margin-top:0;font-size:13px}
+#cmp th,#cmp td{padding:7px 12px;text-align:left;vertical-align:top;
   border-top:1px solid var(--grid)}
 #cmp thead th{border-top:0;vertical-align:bottom;color:var(--ink)}
 #cmp thead th a{font-weight:600}
@@ -2364,14 +2361,14 @@ main a[href],main button,main select,main summary,
   white-space:nowrap;min-width:104px}
 /* 148px is the floor that makes the scroller a scroller. Four columns of it plus the 104px label rail is
    696px, so on a 375px phone there is real width to swipe through rather than four columns squeezed to fit
-   and nothing legible in any of them. The cards block sets `min-width:0` on every cell, which is right for a
-   card that must not push its grid track wider and is exactly wrong here. */
+   and nothing legible in any of them -- which is what automatic table layout does with a 375px box, since
+   it shrinks every column toward its longest word before it will overflow. */
 #cmp td{color:var(--ink);min-width:148px}
-/* Table view stripes alternate rows and tints the row under the pointer; the cards view puts a glow on the
-   row that holds focus. All three are about a list of projects being scanned. This is a matrix being read,
-   and a comparison whose cells change colour as the mouse crosses them is harder to read, not easier. */
-#cmp tbody td{background:transparent}
-#cmp tr:hover,#cmp tr:focus-within{box-shadow:none;transform:none;animation:none;border:0}
+/* Table view stripes alternate rows, and tints and underlines the row under the pointer. Both are about a
+   list of projects being scanned. This is a matrix being read, and a comparison whose cells change as the
+   mouse crosses them is harder to read, not easier. The underline is a `box-shadow`, so it goes too: with
+   only the fill cancelled, table view still ruled a line under whichever row the pointer was on. */
+#cmp tbody td{background:transparent;box-shadow:none}
 #cmp .unpin{margin:5px 0 0;display:block}
 /* The marked rows are the only reason to build this panel: four projects agree about most things, and the
    handful they disagree about is the decision. Two channels, never one -- a 3px bar on the label cell and a

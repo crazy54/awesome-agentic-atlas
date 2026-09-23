@@ -655,17 +655,17 @@ true("the mascot's buttons keep a 44px tap target on a phone",
      "header button{min-height:44px;padding:0 14px}" in SRC)
 
 for cell, row in (("pj", "2"), ("rk", "3"), ("st-c", "3")):
-    found = re.search(r"html\[data-view=cards\] td\." + re.escape(cell) + r"\{grid-row:(\d)", CARD)
+    found = re.search(r"html\[data-view=cards\] :where\(#out\) td\." + re.escape(cell) + r"\{grid-row:(\d)", CARD)
     check("the phone card puts td." + cell + " on grid row " + row, found and found.group(1), row)
 
-DESKTOP_PJ = SRC.index("html[data-view=cards] td.pj{grid-column")
+DESKTOP_PJ = SRC.index("html[data-view=cards] :where(#out) td.pj{grid-column")
 true("the phone card order is emitted after the cards block whose selectors it repeats",
      SRC.index(PHONE, DESKTOP_PJ + 1) > DESKTOP_PJ)
 
 # Untouched on purpose. These carry two attributes and outrank the phone rules at every width, so a reader
 # who turned the screenshots off keeps the order that was designed for not having them -- rank, then name.
 check("the screenshots-off card order is left as it was",
-      [re.search(r"html\[data-view=cards\]\[data-index-screenshots=off\] td\." + c + r"\{grid-row:(\d)",
+      [re.search(r"html\[data-view=cards\]\[data-index-screenshots=off\] :where\(#out\) td\." + c + r"\{grid-row:(\d)",
                  SRC).group(1) for c in ("rk", "st-c", "pj")],
       ["1", "1", "2"])
 
@@ -683,8 +683,9 @@ check("the screenshots-off card order is left as it was",
 # ought to own this, for the reason the section above gives: `tests.yml` serves the *committed* `docs/` and
 # regenerates nothing, so a browser harness reads the last published stylesheet. It cannot see a rule added to
 # the generator today, in either direction -- it would neither fail on the defect nor confirm the fix. What is
-# checkable without a build is the source, so that is what this reads. `cards-check.mjs` gains the layout
-# assertions once a build has landed; the note on JFH-291 says so.
+# checkable without a build is the source, so that is what this reads. `cards-check.mjs` has the layout
+# assertions too -- table display, the column floor, the sticky rail, the phone scroller, and the same layout
+# in both views -- and they measure whatever build it is pointed at, which on CI is the last one published.
 #
 # Every assertion from here down reads the source with its comments stripped out, by the same
 # `scripts/pagemin.py` that strips them out of the page a reader is served. The reason is a defect this
@@ -708,7 +709,7 @@ PRINT = CSS[CSS.index("@media print{"):]
 # renamed, none of these substring tests can match, nothing collides, and every assertion below passes by
 # finding nothing. A count is what makes the section fail rather than go quiet.
 CMP_RULES = re.findall(r"^#cmp[^{]*\{", CSS, re.M)
-atleast("the comparison panel's rules are where this file expects them", len(CMP_RULES), 18)
+atleast("the comparison panel's rules are where this file expects them", len(CMP_RULES), 17)
 
 # An id and not the `.cmp` class every other component on this page is styled by. `html[data-view=cards]
 # tr:hover td` is the strongest thing either view block reaches for, at (0,2,2); one id beats all of it, so the
@@ -722,29 +723,42 @@ true("the panel is styled through an id, so no view rule can outrank it",
 true("the panel's block comes after the two blocks that would recast its table",
      CSS.index("#cmp{display:none}") > CSS.rindex("html[data-view=cards]"))
 
-# The display types the two view blocks take away, restated. This is the actual defect: not one of these is
-# decoration, and a panel missing any one of them is a comparison a phone reader cannot read.
-for selector, value in (("table", "table"), ("thead", "table-header-group"),
-                        ("tbody", "table-row-group"), ("tr", "table-row")):
-    true("the panel's " + selector + " is restored to display:" + value,
-         re.search(r"^#cmp " + selector + r"\{[^}]*display:" + value + r"\b", CSS, re.M) is not None)
-true("the panel's cells are restored to display:table-cell",
-     re.search(r"^#cmp th,#cmp td\{[^}]*display:table-cell\b", CSS, re.M) is not None)
+# The actual defect was the two view blocks laying this table out as cards: they selected bare table
+# elements, and the panel restated five display types to take them back. The fix is at the source now --
+# both blocks reach their table through `:where(#out)` -- so what is asserted is that source. Every selector
+# in either block that names a table element names it inside `#out`. Read off every comma-separated part,
+# since `html[data-view=cards] td.shot,html[data-view=cards] td.hide` half-scoped is the likely regression.
+TABLE_EL = re.compile(r"(?:^|[\s>+~])(?:table|thead|tbody|tr|td|th)(?![\w-])")
+VIEW_SELECTORS = [part.strip() for n in range(2)
+                  for rule in re.findall(r"(?:^|[{}])\s*([^{}@/]+)\{", media_block(CSS, PHONE, n))
+                  for part in rule.split(",")]
+VIEW_SELECTORS += [part.strip() for rule in re.findall(r"^\s*(html\[data-view=cards\][^{]*)\{", CSS, re.M)
+                   for part in rule.split(",")]
+REACHING = [x for x in VIEW_SELECTORS if TABLE_EL.search(x)]
+atleast("the view blocks' table-element selectors were found at all", len(REACHING), 40)
+check("every one of them is scoped to the results table",
+   [x for x in REACHING if ":where(#out) " not in x], [])
+# `:where()` and not a plain `#out`, and the difference is the whole of why the scoping changed nothing it
+# was not meant to. `#out td` is (1,0,1), which beats `.shot{display:none}` and the density rules' `td`
+# padding -- measured, that put screenshots back on every phone in table view. `:where(#out) td` is (0,0,1),
+# the weight `td` always had, so every contest these rules take part in comes out as it did before.
+check("...through :where(), which leaves every one of their weights as it was",
+   [x for x in REACHING if re.search(r"(?<!:where\()#out ", x)], [])
 # 148px is what makes the scroller a scroller: four of them plus the 104px label rail is 696px, so a 375px
-# phone has real width to swipe. The cards view sets `min-width:0` on every cell, which is right for a card
-# that must not push its grid track wider and is exactly wrong for a column somebody is trying to read.
-true("the panel's cells carry a width floor, which is what the cards view zeroed",
+# phone has real width to swipe, where automatic table layout would squeeze four columns into the box.
+true("the panel's cells carry a width floor",
      re.search(r"^#cmp td\{[^}]*min-width:1\d\dpx", CSS, re.M) is not None)
 # The row labels are what make four columns usable at 375px, and a sticky cell with a transparent background
 # has the cells sliding under it show through.
 true("the row labels are sticky and opaque",
      re.search(r"^#cmp tbody th\{[^}]*position:sticky[^}]*background:var\(--", CSS, re.M) is not None)
-# Three rules paint a row on this page -- table view stripes alternate rows and tints the row under the
-# pointer, the cards view glows the row holding focus -- and all three are about a list being scanned. A
-# comparison whose cells change colour as the mouse crosses them is harder to read, not easier.
+# Table view stripes alternate rows, and tints and underlines the row under the pointer, all against
+# `tbody tr` in general. Those are about a list being scanned; a comparison whose cells change as the mouse
+# crosses them is harder to read. The underline is a box-shadow, and for as long as only the fill was
+# cancelled, table view still ruled a line under the hovered row of the matrix.
 true("no view's row paint reaches the panel",
      re.search(r"^#cmp tbody td\{[^}]*background:transparent", CSS, re.M) is not None
-     and re.search(r"^#cmp tr:hover,#cmp tr:focus-within\{[^}]*box-shadow:none", CSS, re.M) is not None)
+     and re.search(r"^#cmp tbody td\{[^}]*box-shadow:none", CSS, re.M) is not None)
 
 # PAPER
 #
