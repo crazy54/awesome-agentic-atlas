@@ -5,10 +5,12 @@ Run it headless and it writes three files:
     blender --background --factory-startup --python art/archie/archie.py
 
   * `art/archie/archie.blend`  -- the scene, for anyone who wants to open it and push vertices around.
-  * `docs/assets/archie.glb`   -- the animated model the homepage banner loads, with nine named glTF
+  * `docs/assets/archie.glb`   -- the animated model the homepage banner loads, with eighteen named glTF
                                   animations at 30 fps: `idle` (a four-second loop: sway, foot tap,
-                                  blinks), `watch`, `sit`, `sleep`, four dances (`floss`, `take-the-l`,
-                                  `default-dance`, `orange-justice`) and `walk`, one stride in place that
+                                  blinks), `watch`, `sit`, `sleep`, thirteen Fortnite dances (`floss`,
+                                  `take-the-l`, `default-dance`, `orange-justice`, `robot`,
+                                  `electro-shuffle`, `hype`, `boogie-down`, `get-griddy`, `billy-bounce`,
+                                  `fresh`, `scenario`, `groove-jam`) and `walk`, one stride in place that
                                   the page moves across the banner. Every clip but `idle` and `walk`
                                   starts and ends on the idle's first pose, so the page can play any of
                                   them between two idles without a jump.
@@ -558,6 +560,247 @@ def orange_justice(t):
     return pose, {"hips": (0, 0, (-0.08 + 0.04 * abs(k)) * on)}, 1.0
 
 
+# The rest of the dances all run at 120 beats a minute -- fifteen frames a beat -- and count their beats as
+# `n * t`, so the light rig in `archie.js` can flash on them. `BEATS` there must agree with the `n` here.
+
+def goal(side: str, up: float) -> dict:
+    """An arm held out to the side at shoulder height with the forearm bent square: `up` 1 points the forearm
+    at the sky, -1 at the ground -- the robot's own 'goalpost'."""
+    sign = 1 if side == "right" else -1
+    return {f"upper-{side}": (0, sign * 85, 0), f"elbow-{side}": (0, sign * 90 * up, 0)}
+
+
+def held(poses: list, p: float, snap=0.22):
+    """Pose `floor(p)` of `poses`, popped into from the one before in the first `snap` of the beat and then
+    held dead still: the Robot's stop-start."""
+    i = math.floor(p)
+    f = smooth01((p - i) / snap)
+    return mix(poses[(i - 1) % len(poses)], poses[i % len(poses)], f), f
+
+
+def robot(t):
+    """The Robot: arms locked in right angles, snapping from one pose to the next on the beat and holding
+    it, with the head ticking round and the chest popping on each hit."""
+    on = envelope(t, 0.0, 0.06, 0.94, 1.0)
+    n = 8
+    p = n * t
+    A = {**goal("right", 1), **goal("left", -1), "head": (0, 0, -25), "torso": (0, -4, 0)}
+    B = {**goal("right", -1), **goal("left", 1), "head": (0, 0, 25), "torso": (0, 4, 0)}
+    C = {**goal("right", 1), **goal("left", 1), "head": (-8, 0, 0)}
+    D = {"upper-right": (0, 90, 0), "upper-left": (0, -90, 0), "elbow-right": (0, 0, 0),
+         "elbow-left": (0, 0, 0), "head": (6, 12, 0)}
+    E = {"upper-right": (0, 90, 0), "elbow-right": (0, 0, 0), **goal("left", 1), "head": (0, -14, -20),
+         "torso": (0, 6, 12)}
+    pose, f = held([A, B, A, B, C, D, E, C], p)
+    pose = mix(REST, pose, on)
+    hit = (1 - f) * on                                   # the jolt as each pose lands
+    add(pose, "torso", dx=5 * hit)
+    add(pose, "antenna", dy=25 * hit * (1 if math.floor(p) % 2 else -1))
+    for side in ("right", "left"):
+        add(pose, f"knee-{side}", dx=14 * on)
+        add(pose, f"leg-{side}", dx=-7 * on)
+    add(pose, "orbit", dz=-90 * math.floor(p) - 90 * f)  # the moon ticks round a quarter a beat
+    return pose, {"hips": (0, 0, (-0.03 - 0.015 * hit) * on)}, blink(t, 0.62)
+
+
+def electro_shuffle(t):
+    """The Electro Shuffle: both feet twisting heel and toe out to the sides and back, one leg kicking out on
+    each beat, fists pumping at the chest."""
+    on = envelope(t, 0.0, 0.06, 0.94, 1.0)
+    n = 10
+    p = n * t
+    twist = math.sin(math.pi * p)                        # swaps direction every beat
+    pose = mix(REST, DOWN, on)
+    for side, sign in (("right", 1), ("left", -1)):
+        kick = max(0.0, sign * math.sin(math.pi * p)) ** 1.5       # right on even beats, left on odd
+        add(pose, f"leg-{side}", dy=sign * 30 * kick * on, dz=35 * twist * on, dx=-8 * kick * on)
+        add(pose, f"knee-{side}", dx=(18 + 22 * kick) * on)
+        add(pose, f"heel-{side}", dx=-15 * kick * on)
+        pump = math.sin(TAU * p / 2 + (0 if sign > 0 else math.pi))
+        add(pose, f"upper-{side}", dx=(-45 - 30 * pump) * on, dy=sign * 30 * on)
+        add(pose, f"elbow-{side}", dx=-85 * on, dy=-sign * 35 * on)
+    add(pose, "hips", dy=-8 * twist * on, dz=-12 * twist * on)
+    add(pose, "torso", dz=10 * twist * on)
+    add(pose, "head", dy=6 * twist * on, dx=-4 * on)
+    add(pose, "orbit", dz=-720 * t)
+    bounce = abs(math.sin(math.pi * p))
+    return pose, {"hips": (0.04 * twist * on, 0, (-0.05 + 0.03 * bounce) * on)}, blink(t, 0.5)
+
+
+def hype(t):
+    """Hype: both fists punched to the sky and pulled back down to the shoulders on every beat, knees
+    bouncing, then arms crossed in an X over the chest for the last two beats."""
+    on = envelope(t, 0.0, 0.06, 0.94, 1.0)
+    n = 8
+    p = n * t
+    cross = smooth01((p - 5.8) / 0.4)
+    pull = 0.5 - 0.5 * math.cos(TAU * p)                 # 0: fists up; 1: pulled down, on the beat
+    pose = mix(REST, DOWN, on)
+    for side, sign in (("right", 1), ("left", -1)):
+        up = {f"upper-{side}": (0, sign * 165, 0), f"elbow-{side}": (0, sign * 5, 0)}
+        down = goal(side, 1)
+        x = {f"upper-{side}": (-75, -sign * 30, 0), f"elbow-{side}": (-35, -sign * 25, 0)}
+        arm = mix(mix(up, down, pull), x, cross)
+        for k, v in arm.items():
+            add(pose, k, *(c * on for c in v))
+    bounce = pull * (1 - cross)
+    for side in ("right", "left"):
+        add(pose, f"knee-{side}", dx=30 * bounce * on)
+        add(pose, f"leg-{side}", dx=-15 * bounce * on)
+        add(pose, f"heel-{side}", dx=-10 * bounce * on)
+    add(pose, "head", dx=(10 * bounce - 12 * cross) * on)
+    add(pose, "torso", dx=6 * bounce * on)
+    add(pose, "antenna", dx=-18 * bounce * on)
+    add(pose, "orbit", dz=-720 * t)
+    return pose, {"hips": (0, 0, -0.07 * bounce * on)}, blink(t, 0.3)
+
+
+def boogie_down(t):
+    """Boogie Down: the disco point -- right arm stabbing up at the sky, then down across the body at the
+    opposite hip, on alternate beats -- with the hips rolling from side to side and the left hand on the
+    hip."""
+    on = envelope(t, 0.0, 0.06, 0.94, 1.0)
+    n = 10
+    p = n * t
+    pt = 0.5 - 0.5 * math.cos(math.pi * p)             # 0: up, 1: down, swapping every beat
+    pt = smooth01(pt * 1.4 - 0.2)                        # snap, so each point reads as a hit
+    up = {"upper-right": (-30, 150, 0), "elbow-right": (0, 0, 0)}
+    down = {"upper-right": (-45, -40, 0), "elbow-right": (0, -15, 0)}
+    pose = mix(REST, {**REST, **mix(up, down, pt), "upper-left": (0, -45, 0), "elbow-left": (0, 95, 0)}, on)
+    roll = math.sin(math.pi * p)
+    add(pose, "hips", dy=10 * roll * on, dz=8 * math.cos(math.pi * p) * on)
+    for side in ("right", "left"):
+        add(pose, f"leg-{side}", dy=-10 * roll * on)
+    add(pose, "knee-right", dx=25 * max(0.0, roll) * on)
+    add(pose, "knee-left", dx=25 * max(0.0, -roll) * on)
+    add(pose, "torso", dy=-14 * roll * on)
+    add(pose, "head", dx=(-14 + 26 * pt) * on, dz=(-15 + 25 * pt) * on, dy=6 * roll * on)
+    add(pose, "orbit", dz=-720 * t)
+    return pose, {"hips": (0.05 * roll * on, 0, -0.04 * on)}, blink(t, 0.7)
+
+
+def get_griddy(t):
+    """The Griddy: hands up at the face making goggles, elbows out, while the feet walk in place, each heel
+    tapping down in front with the toe up and the body leaning back into it."""
+    on = envelope(t, 0.0, 0.08, 0.92, 1.0)
+    n = 8
+    p = n * t
+    # The head is too big for the hands to reach the eyes, so the goggles are held up beside the visor:
+    # upper arms raised forward past horizontal, forearms straight up and leaning in.
+    pose = mix(REST, {**DOWN, "upper-right": (-120, 22, 0), "elbow-right": (-60, -28, 0),
+                      "upper-left": (-120, -22, 0), "elbow-left": (-60, 28, 0), "head": (-6, 0, 0)}, on)
+    step = math.sin(math.pi * p)                          # +1: the right heel is out in front
+    for side, sign in (("right", 1), ("left", -1)):
+        out = max(0.0, sign * step)
+        add(pose, f"leg-{side}", dx=-38 * out * on)
+        add(pose, f"knee-{side}", dx=(12 - 8 * out) * on)
+        add(pose, f"heel-{side}", dx=-38 * out * on)
+        add(pose, f"elbow-{side}", dy=sign * 12 * out * on)   # the goggles wobble with the steps
+    add(pose, "torso", dx=-8 * abs(step) * on)
+    add(pose, "head", dy=8 * step * on, dx=4 * abs(step) * on)
+    add(pose, "hips", dz=-10 * step * on)
+    add(pose, "orbit", dz=-720 * t)
+    return pose, {"hips": (0, 0.04 * abs(step) * on, (-0.04 + 0.03 * abs(step)) * on)}, blink(t, 0.45)
+
+
+def billy_bounce(t):
+    """The Billy Bounce: a bouncy step to one side and then the other, knees high, arms hanging loose and
+    swinging with the body."""
+    on = envelope(t, 0.0, 0.08, 0.92, 1.0)
+    n = 8
+    p = n * t
+    side_of = math.sin(math.pi * p / 2)                  # two beats each way
+    bounce = abs(math.sin(math.pi * p))
+    pose = mix(REST, DOWN, on)
+    for side, sign in (("right", 1), ("left", -1)):
+        lift = max(0.0, math.sin(math.pi * p + (0 if sign > 0 else math.pi)))
+        add(pose, f"leg-{side}", dx=-30 * lift * on, dy=-sign * 8 * side_of * on)
+        add(pose, f"knee-{side}", dx=55 * lift * on)
+        add(pose, f"heel-{side}", dx=-10 * lift * on)
+        swing = math.sin(math.pi * p + (math.pi / 2 if sign > 0 else -math.pi / 2))
+        add(pose, f"upper-{side}", dx=-35 * swing * on, dy=sign * (15 + 10 * bounce) * on)
+        add(pose, f"elbow-{side}", dx=(-25 - 20 * max(0.0, swing)) * on)
+    add(pose, "torso", dy=-8 * side_of * on, dx=4 * bounce * on)
+    add(pose, "head", dy=12 * side_of * on, dx=8 * (1 - bounce) * on)
+    add(pose, "antenna", dy=-20 * side_of * on, dx=-12 * bounce * on)
+    add(pose, "orbit", dz=-720 * t)
+    return pose, {"hips": (0.12 * side_of * on, 0, (-0.03 + 0.05 * bounce) * on)}, blink(t, 0.55)
+
+
+def fresh(t):
+    """Fresh, the Carlton as Fortnite has it: both arms swung together from one side of the body to the
+    other in front of the hips, with a step-touch and the head turned the other way."""
+    on = envelope(t, 0.0, 0.08, 0.92, 1.0)
+    n = 8
+    p = n * t
+    s = math.sin(math.pi * p)                            # +1: arms over to the robot's left, screen right
+    pose = mix(REST, DOWN, on)
+    for side, sign in (("right", 1), ("left", -1)):
+        add(pose, f"upper-{side}", dx=-30 * on, dy=(-62 * s + sign * 14) * on)
+        add(pose, f"elbow-{side}", dx=-55 * on, dy=-35 * s * on)
+        touch = max(0.0, -sign * s)                      # the leg on the side the arms swing from
+        add(pose, f"leg-{side}", dy=sign * 18 * touch * on)
+        add(pose, f"knee-{side}", dx=20 * touch * on)
+        add(pose, f"heel-{side}", dx=-15 * touch * on)
+    add(pose, "hips", dy=6 * s * on, dz=-10 * s * on)
+    add(pose, "torso", dz=-12 * s * on)
+    add(pose, "head", dz=22 * s * on, dy=-6 * s * on)
+    add(pose, "orbit", dz=-720 * t)
+    bounce = abs(math.sin(math.pi * p))
+    return pose, {"hips": (-0.07 * s * on, 0, (0.02 * bounce - 0.03) * on)}, blink(t, 0.35)
+
+
+def scenario(t):
+    """Scenario: one arm then the other thrown straight up at the sky on every beat, the hips bouncing and
+    kicking out to the side of the raised arm."""
+    on = envelope(t, 0.0, 0.06, 0.94, 1.0)
+    n = 8
+    p = n * t
+    which = math.sin(math.pi * p)                        # +1: right arm up
+    bounce = abs(which)
+    pose = mix(REST, DOWN, on)
+    for side, sign in (("right", 1), ("left", -1)):
+        raise_ = max(0.0, sign * which) ** 0.7
+        # Raised by abduction alone: with any forward swing in it the Euler order points the arm at the
+        # camera, and a raised arm seen end-on is invisible.
+        add(pose, f"upper-{side}", dx=-10 * raise_ * on, dy=sign * (10 + 155 * raise_) * on)
+        add(pose, f"elbow-{side}", dx=-40 * (1 - raise_) * on)
+        add(pose, f"knee-{side}", dx=(10 + 30 * raise_) * on)
+        add(pose, f"heel-{side}", dx=-12 * raise_ * on)
+    add(pose, "hips", dy=12 * which * on)
+    for side in ("right", "left"):
+        add(pose, f"leg-{side}", dy=-12 * which * on)
+    add(pose, "torso", dy=-10 * which * on)
+    add(pose, "head", dx=-12 * bounce * on, dy=10 * which * on)
+    add(pose, "antenna", dy=-22 * which * on)
+    add(pose, "orbit", dz=-720 * t)
+    return pose, {"hips": (-0.06 * which * on, 0, (-0.05 + 0.04 * bounce) * on)}, blink(t, 0.6)
+
+
+def groove_jam(t):
+    """Groove Jam: a side step out and back, shoulders bouncing on every beat, both forearms up in front
+    swinging side to side like a pair of pendulums the wrong way up."""
+    on = envelope(t, 0.0, 0.06, 0.94, 1.0)
+    n = 10
+    p = n * t
+    step = math.sin(math.pi * p / 2)                     # two beats each way
+    swing = math.sin(math.pi * p)
+    bounce = abs(swing)
+    pose = mix(REST, DOWN, on)
+    for side, sign in (("right", 1), ("left", -1)):
+        add(pose, f"upper-{side}", dx=-30 * on, dy=(sign * 28 - 18 * swing) * on)
+        add(pose, f"elbow-{side}", dx=-100 * on, dy=-30 * swing * on)
+        add(pose, f"shoulder-{side}", dx=-6 * bounce * on)
+        out = max(0.0, sign * step)
+        add(pose, f"leg-{side}", dy=sign * 20 * out * on)
+        add(pose, f"knee-{side}", dx=(15 + 15 * bounce) * on)
+    add(pose, "torso", dy=-6 * step * on, dx=5 * bounce * on)
+    add(pose, "head", dx=8 * bounce * on, dy=10 * step * on)
+    add(pose, "antenna", dx=-15 * bounce * on)
+    add(pose, "orbit", dz=-720 * t)
+    return pose, {"hips": (0.08 * step * on, 0, (-0.06 + 0.035 * (1 - bounce)) * on)}, blink(t, 0.4)
+
+
 # How far each leg swings in the walk, in degrees, and the loop's length. `archie.js` moves the model at the
 # speed these two give -- `WALK_SPEED` there -- so the feet do not slide. Change one and change it there.
 STRIDE = 32
@@ -565,7 +808,11 @@ WALK = 24
 
 CLIPS = {"idle": (120, idle), "watch": (150, watch), "floss": (120, floss), "sit": (180, sit),
          "sleep": (270, sleep), "walk": (WALK, walk), "take-the-l": (120, take_the_l),
-         "default-dance": (150, default_dance), "orange-justice": (120, orange_justice)}
+         "default-dance": (150, default_dance), "orange-justice": (120, orange_justice),
+         "robot": (120, robot), "electro-shuffle": (150, electro_shuffle), "hype": (120, hype),
+         "boogie-down": (150, boogie_down), "get-griddy": (120, get_griddy),
+         "billy-bounce": (120, billy_bounce), "fresh": (120, fresh), "scenario": (120, scenario),
+         "groove-jam": (150, groove_jam)}
 
 
 def _fcurves(action):

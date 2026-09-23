@@ -9,8 +9,8 @@
 // page's content for bandwidth.
 //
 // The model is `art/archie/archie.py`. Its clips are `idle` (a four-second loop: sway, foot tap, blinks),
-// `watch`, `sit`, `sleep`, four dances (`floss`, `take-the-l`, `default-dance`, `orange-justice`) and
-// `walk`, a stride in place. Every clip but `walk` starts and ends on the idle's first pose. The director
+// `watch`, `sit`, `sleep`, thirteen Fortnite dances (the keys of `BEATS` below) and `walk`, a stride in
+// place. Every clip but `walk` starts and ends on the idle's first pose. The director
 // below idles for a few loops, then does one act -- a dance under moving-head lights, one of the others,
 // or a walk off the edge of the page and a moonwalk back in -- and idles again.
 //
@@ -36,7 +36,13 @@
   // Any other number and the feet skate.
   const WALK_SPEED = 1.5;
   const FOV = 2 * Math.atan(18 / 70);                  // radians, vertical, as the poster's camera
-  const DANCES = ["floss", "take-the-l", "default-dance", "orange-justice"];
+  // The dances, each with the number of beats its clip counts, which is what the lights keep time to.
+  // They come from the clip functions in `archie.py`; change a dance's rhythm there and change it here.
+  const BEATS = {
+    "floss": 12, "take-the-l": 8, "default-dance": 16, "orange-justice": 12, "robot": 8, "electro-shuffle": 10,
+    "hype": 8, "boogie-down": 10, "get-griddy": 8, "billy-bounce": 8, "fresh": 8, "scenario": 8, "groove-jam": 10,
+  };
+  const DANCES = Object.keys(BEATS);
   const OTHERS = ["watch", "sit", "sleep", "walk-off"];
 
   let started = false;
@@ -185,7 +191,9 @@
       const dr = turnTo - actor.rotation.y;
       actor.rotation.y += Math.sign(dr) * Math.min(Math.abs(dr), 5 * dt);
       mixer.update(dt);
-      rig.update(dt, clock, actor.position.x);
+      const c = current && current.getClip(), n = c && BEATS[c.name];
+      rig.update(dt, clock, actor.position.x,
+                 n && rig.on ? {at: current.time / c.duration * n, rate: n / c.duration} : null);
     };
     const frame = now => {
       raf = requestAnimationFrame(frame);
@@ -228,90 +236,204 @@
     };
   }
 
-  // Moving-head fixtures, the kind an EDM stage hangs from its truss: four heads just above the top of the
-  // header, each a soft cone of coloured light plus a spotlight that actually colours him, sweeping in
-  // crossing figures of eight. Out of sight except during a dance, when they fade up over half a second. The
-  // colours drift from one to the next; nothing flashes.
+  // The light show, the kind an EDM stage hangs over its crowd, for the dances only. When a dance starts, a
+  // truss with four moving heads drops in from above the header, bounces to a stop, and the heads come up.
+  // Each throws a smoky cone of coloured light, plus a spotlight that actually colours him and a pool on the
+  // floor. On the dance's beat the heads snap to new marks, pulse a little, and change colour at every
+  // bar. A glow rises behind him. Once the rig is up, a laser "liquid sky" fades in overhead: a sheet of
+  // light seen from below, rippling like the surface of the sea seen from under water. When the dance ends
+  // it all fades, and the truss is hauled back up.
+  //
+  // Nothing strobes. A pulse is a fifth of the brightness, a colour change keeps the brightness it had,
+  // and a fast dance pulses on every other beat, so no dance comes near three flashes a second. None of
+  // this runs for a reader who has asked for reduced motion, because nothing here does.
   function lights(T, scene) {
     const group = new T.Group();
     group.visible = false;
     scene.add(group);
-    const PALETTE = [0xff2bd6, 0x22e1ff, 0x8a5bff, 0xffb000];
-    const L = 10;
-    const geo = new T.CylinderGeometry(0.03, 0.7, L, 40, 1, true);
-    geo.translate(0, -L / 2, 0);
-    geo.rotateX(-Math.PI / 2);                          // apex at the origin, pointing down +Z for lookAt()
-    const heads = [0, 1, 2, 3].map(i => {
-      const mat = new T.ShaderMaterial({
-        uniforms: {color: {value: new T.Color(PALETTE[i])}, level: {value: 0}, haze: {value: 0}},
-        vertexShader: `varying vec2 vUv; varying vec3 vN, vV;
-          void main() { vUv = uv; vN = normalize(normalMatrix * normal);
-            vec4 mv = modelViewMatrix * vec4(position, 1.0); vV = normalize(-mv.xyz);
-            gl_Position = projectionMatrix * mv; }`,
-        // Brightest down the middle of the cone and at the fixture, falling to nothing at the edges and the
-        // far end, which is what makes a transparent cone read as a beam in haze.
-        fragmentShader: `uniform vec3 color; uniform float level, haze; varying vec2 vUv; varying vec3 vN, vV;
-          void main() { float a = pow(abs(dot(vN, vV)), 2.0) * pow(vUv.y, 1.6) * level;
-            gl_FragColor = haze > 0.5 ? vec4(color, a * 0.45) : vec4(color * a * 0.6, 0.0); }`,
-        transparent: true, depthWrite: false, side: T.DoubleSide, blending: T.CustomBlending,
-      });
-      tint(mat);
-      const beam = new T.Mesh(geo, mat);
-      // The spotlights stay in the scene at zero rather than being hidden with the beams: three.js compiles
-      // its shaders for the number of lights, so adding four at the first dance would stall that frame.
-      const spot = new T.SpotLight(PALETTE[i], 0, 0, 0.16, 0.6, 0);
-      group.add(beam);
-      scene.add(spot, spot.target);
-      return {beam, spot, mat, x: 0};
-    });
-    // On the dark theme the beams are light: colour added, alpha left alone. The canvas is transparent and
-    // premultiplied, so a beam that wrote alpha would be an opaque dark cone over the page; with alpha 0 its
-    // colour adds to whatever the page shows behind it. On the light theme, adding light to a near-white
-    // page gives white glare, so there they are a coloured haze laid over it instead. Only the blend
-    // factors and a uniform change, so switching theme mid-dance compiles nothing.
-    function tint(mat) {
+    const PALETTE = [0xff2bd6, 0x22e1ff, 0x8a5bff, 0xffb000].map(c => new T.Color(c));
+    const SKY = [new T.Color(0x22e1ff), new T.Color(0x2bff9e)];
+    const time = {value: 0};
+    const glows = [];
+
+    // Every glowing surface here is one of these: the fragment sets `a`, how bright it is, and may change
+    // `c` from the material's colour.
+    //
+    // On the dark theme they are light: colour added, alpha left alone. The canvas is transparent and
+    // premultiplied, so a glow that wrote alpha would be an opaque dark shape over the page; with alpha 0
+    // its colour adds to whatever the page shows behind it. On the light theme, adding light to a
+    // near-white page gives white glare, so there they are a coloured haze laid over it instead. Only
+    // blend factors and a uniform change, so switching theme mid-dance compiles nothing.
+    const NOISE = `float hash(vec3 p) { p = fract(p * 0.3183099 + 0.1); p *= 17.0;
+        return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
+      float noise(vec3 x) { vec3 i = floor(x), f = fract(x); f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(mix(hash(i), hash(i + vec3(1, 0, 0)), f.x),
+                       mix(hash(i + vec3(0, 1, 0)), hash(i + vec3(1, 1, 0)), f.x), f.y),
+                   mix(mix(hash(i + vec3(0, 0, 1)), hash(i + vec3(1, 0, 1)), f.x),
+                       mix(hash(i + vec3(0, 1, 1)), hash(i + vec3(1, 1, 1)), f.x), f.y), f.z); }`;
+    const tint = mat => {
       const light = document.documentElement.dataset.theme === "light";
       mat.uniforms.haze.value = light ? 1 : 0;
       mat.blendSrc = light ? T.SrcAlphaFactor : T.OneFactor;
       mat.blendDst = light ? T.OneMinusSrcAlphaFactor : T.OneFactor;
       mat.blendSrcAlpha = light ? T.OneFactor : T.ZeroFactor;
       mat.blendDstAlpha = light ? T.OneMinusSrcAlphaFactor : T.OneFactor;
-    }
-    new MutationObserver(() => heads.forEach(h => tint(h.mat)))
+    };
+    const glow = frag => {
+      const mat = new T.ShaderMaterial({
+        uniforms: {color: {value: new T.Color()}, level: {value: 0}, haze: {value: 0}, time},
+        vertexShader: `varying vec2 vUv; varying vec3 vN, vV, vW;
+          void main() { vUv = uv; vN = normalize(normalMatrix * normal);
+            vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz;
+            vec4 mv = viewMatrix * w; vV = normalize(-mv.xyz);
+            gl_Position = projectionMatrix * mv; }`,
+        fragmentShader: `uniform vec3 color; uniform float level, haze, time;
+          varying vec2 vUv; varying vec3 vN, vV, vW;
+          ${NOISE}
+          void main() { vec3 c = color; float a = 0.0;
+            ${frag}
+            a *= level;
+            gl_FragColor = haze > 0.5 ? vec4(c, min(a * 0.45, 0.8)) : vec4(c * a * 0.6, 0.0); }`,
+        transparent: true, depthWrite: false, side: T.DoubleSide, blending: T.CustomBlending,
+      });
+      tint(mat);
+      glows.push(mat);
+      return mat;
+    };
+    new MutationObserver(() => glows.forEach(tint))
       .observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
-    const aim = new T.Vector3();
-    const from = new T.Color(), to = new T.Color();
-    let level = 0;
+
+    // Brightest down the middle of the cone and at the fixture, falling away at the edges and the far end,
+    // and broken up by drifting smoke, which is what makes a transparent cone read as a beam in haze.
+    const BEAM = `a = pow(abs(dot(vN, vV)), 2.0) * pow(vUv.y, 1.6)
+        * (0.5 + 0.5 * noise(vW * 1.7 + vec3(0.0, -time * 0.3, time * 0.2)));`;
+    const POOL = `a = pow(max(0.0, 1.0 - length(vUv - 0.5) * 2.0), 2.0) * 0.9;`;
+    const BACK = `vec2 q = (vUv - 0.5) * 2.0;
+      a = pow(max(0.0, 1.0 - length(q * vec2(1.0, 1.7))), 1.5)
+        * (0.35 + 0.65 * noise(vec3(vW.xy * 0.9, time * 0.2))) * 0.3;`;
+    // Two layers of slow noise, folded through a sine into thin bright ridges: caustics, or the lines a laser
+    // sheet draws on smoke. Faded out towards every edge of the sheet, so it has no visible border.
+    const SKYSHEET = `vec2 p = vW.xz * 0.8;
+      float n = noise(vec3(p * 0.6, time * 0.22)) * 6.0 + noise(vec3(p * 1.7 + 3.0, time * 0.37)) * 2.0;
+      float ridge = pow(1.0 - abs(sin(n * 3.14159)), 9.0);
+      float fade = smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x)
+                 * smoothstep(0.0, 0.3, vUv.y) * smoothstep(1.0, 0.7, vUv.y);
+      c = mix(color, vec3(1.0), 0.3 * ridge);
+      a = (ridge * 0.9 + 0.1 * noise(vec3(p * 2.0, time * 0.3))) * fade;`;
+
+    // The fixtures themselves, dark metal, so the truss reads as hardware against the masthead.
+    const metal = new T.MeshStandardMaterial({color: 0x16181d, metalness: 0.8, roughness: 0.35});
+    const bar = new T.Mesh(new T.BoxGeometry(1, 0.07, 0.07), metal);
+    group.add(bar);
+    const L = 10;
+    const cone = new T.CylinderGeometry(0.03, 0.7, L, 40, 1, true);
+    cone.translate(0, -L / 2, 0);
+    cone.rotateX(-Math.PI / 2);                         // apex at the origin, pointing down +Z for lookAt()
+    const can = new T.CylinderGeometry(0.1, 0.13, 0.26, 20).rotateX(Math.PI / 2);
+    const face = new T.CircleGeometry(0.095, 20).translate(0, 0, 0.131);
+    const rod = new T.BoxGeometry(0.03, 0.2, 0.03);
+    const heads = [0, 1, 2, 3].map(() => {
+      const beam = new T.Mesh(cone, glow(BEAM));
+      const body = new T.Mesh(can, metal);
+      const lens = new T.Mesh(face, new T.MeshBasicMaterial({color: 0xffffff}));
+      body.add(lens);
+      const hang = new T.Mesh(rod, metal);
+      const pool = new T.Mesh(new T.CircleGeometry(0.6, 32).rotateX(-Math.PI / 2), glow(POOL));
+      // The spotlights stay in the scene at zero rather than being hidden with the rig: three.js compiles
+      // its shaders for the number of lights, so adding four at the first dance would stall that frame.
+      const spot = new T.SpotLight(0xffffff, 0, 0, 0.16, 0.6, 0);
+      group.add(beam, body, hang, pool);
+      scene.add(spot, spot.target);
+      return {beam, body, lens, hang, pool, spot, x: 0, aim: new T.Vector3(), color: new T.Color()};
+    });
+    const back = new T.Mesh(new T.PlaneGeometry(9, 5), glow(BACK));
+    const sky = new T.Mesh(new T.PlaneGeometry(1, 30).rotateX(-Math.PI / 2), glow(SKYSHEET));
+    group.add(back, sky);
+
+    const hash = n => { const s = Math.sin(n * 12.9898) * 43758.5453; return s - Math.floor(s); };
+    // Where head i points on beat b: somewhere on or around him, a new mark every beat.
+    const mark = (b, i, cx, out) => out.set(cx + (hash(b * 4 + i) - 0.5) * 3.4,
+                                           0.15 + hash(b * 4 + i + 0.37) * 1.3,
+                                           (hash(b * 4 + i + 0.71) - 0.5) * 1.6);
+    const smooth = x => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+    const outBack = x => 1 + 2.2 * (x - 1) ** 3 + 1.2 * (x - 1) ** 2;   // overshoots, then settles at 1
+    const from = new T.Vector3(), to = new T.Vector3(), o = new T.Vector3(), d = new T.Vector3();
+    const mean = new T.Color();
+    let top = 4, span = 3, drop = 0, level = 0, skyLevel = 0;
     return {
       on: false,
       place(edge) {
-        const span = Math.min(5, (edge.right - edge.left) / 2.5);
-        heads.forEach((h, i) => {
-          h.x = (i - 1.5) / 1.5 * span;
-          h.beam.position.set(h.x, edge.top + 0.6, -1.5);
-          h.spot.position.copy(h.beam.position);
-        });
+        top = edge.top - 0.3;
+        span = Math.min(4.5, (edge.right - edge.left) / 2.8);
+        heads.forEach((h, i) => { h.x = (i - 1.5) / 1.5 * span; });
+        bar.scale.x = span * 2 + 0.8;
+        sky.scale.x = (edge.right - edge.left) * 3;   // wider than the screen at the back
       },
-      update(dt, t, cx) {
-        level = Math.max(0, Math.min(1, level + (this.on ? 2 : -2) * dt));
-        group.visible = level > 0;
+      // `beat` is the dance's position in beats and its beats a second, or null between dances.
+      update(dt, t, cx, beat) {
+        time.value = t;
+        // The truss drops first and the heads come up once it has landed. Going off, they fade out first
+        // and the truss goes up after.
+        if (this.on) drop = Math.min(1, drop + dt / 0.6);
+        else if (level === 0) drop = Math.max(0, drop - dt / 0.7);
+        level = Math.max(0, Math.min(1, level + (this.on && drop === 1 ? 3 : -3) * dt));
+        skyLevel = Math.max(0, Math.min(1, skyLevel + (level === 1 ? 1.2 : -3) * dt));
+        group.visible = drop > 0;
         if (!group.visible) { for (const h of heads) h.spot.intensity = 0; return; }
-        const phase = (t / 2.4) % PALETTE.length;
+        const y = top + (1 - outBack(drop)) * 3;
+        bar.position.set(0, y, -1.5);
+
+        let pulse = 1, b = 0, f = 0;
+        if (beat) {
+          b = Math.floor(beat.at); f = beat.at - b;
+          const every = beat.rate > 3 ? 2 : 1;
+          pulse = 0.8 + 0.2 * (b % every ? 0 : Math.exp(-6 * f));
+        }
+        mean.setRGB(0, 0, 0);
         heads.forEach((h, i) => {
-          const s = i % 2 ? -1 : 1;
-          aim.set(cx + 1.6 * Math.sin(t * 1.3 + i * 1.7) * s, 0.2 + 0.9 * Math.abs(Math.sin(t * 0.9 + i)),
-                  0.9 * Math.sin(t * 2.6 + i * 0.8));
-          h.beam.lookAt(aim);
-          h.beam.scale.set(1, 1, h.beam.position.distanceTo(aim) * 1.25 / L);
-          h.spot.target.position.copy(aim);
-          const k = Math.floor(phase + i) % PALETTE.length, f = (phase + i) % 1;
-          from.set(PALETTE[k]);
-          to.set(PALETTE[(k + 1) % PALETTE.length]);
-          h.mat.uniforms.color.value.copy(from).lerp(to, f);
-          h.spot.color.copy(h.mat.uniforms.color.value);
-          h.mat.uniforms.level.value = level;
-          h.spot.intensity = 6 * level;
+          h.hang.position.set(h.x, y - 0.1, -1.5);
+          h.body.position.set(h.x, y - 0.3, -1.5);
+          h.beam.position.copy(h.body.position);
+          if (beat) {
+            // Snap to the beat's mark over its first third, and hold.
+            mark(b - 1, i, cx, from);
+            mark(b, i, cx, to);
+            h.aim.lerpVectors(from, to, smooth(f / 0.3));
+            // A new colour every bar of four, cross-faded over half a beat.
+            const bar4 = Math.floor(b / 4) + i;
+            h.color.copy(PALETTE[(bar4 + 3) % 4]).lerp(PALETTE[bar4 % 4], smooth(((b % 4) + f) / 0.5));
+          } else if (!h.aim.lengthSq()) {
+            mark(0, i, cx, h.aim);
+            h.color.copy(PALETTE[i]);
+          }
+          h.body.lookAt(h.aim);
+          h.beam.lookAt(h.aim);
+          h.beam.scale.set(1, 1, h.beam.position.distanceTo(h.aim) * 1.25 / L);
+          h.beam.material.uniforms.color.value.copy(h.color);
+          h.beam.material.uniforms.level.value = level * pulse;
+          h.lens.material.color.copy(h.color).multiplyScalar(0.25 + 0.75 * level * pulse);
+          h.spot.position.copy(h.body.position);
+          h.spot.target.position.copy(h.aim);
+          h.spot.color.copy(h.color);
+          h.spot.intensity = 6 * level * pulse;
+          // The pool is where the beam's line meets the floor.
+          o.copy(h.body.position);
+          d.subVectors(h.aim, o);
+          h.pool.visible = d.y < -1e-3;
+          if (h.pool.visible) {
+            h.pool.position.copy(o).addScaledVector(d, -o.y / d.y).setY(0.01);
+            h.pool.material.uniforms.color.value.copy(h.color);
+            h.pool.material.uniforms.level.value = level * pulse;
+          }
+          mean.r += h.color.r / 4; mean.g += h.color.g / 4; mean.b += h.color.b / 4;
         });
+        back.position.set(cx, 1.3, -2.4);
+        back.material.uniforms.color.value.copy(mean);
+        back.material.uniforms.level.value = level * pulse;
+        sky.position.set(0, 2.65, -12);
+        sky.material.uniforms.color.value.copy(SKY[0]).lerp(SKY[1], 0.5 + 0.5 * Math.sin(t * 0.3));
+        sky.material.uniforms.level.value = skyLevel;
+        sky.visible = skyLevel > 0;
       },
     };
   }
