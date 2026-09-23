@@ -246,7 +246,21 @@ try:
         (b31.OUT / "assets" / b31.MASCOT[-1]).write_text("x")
         css, tag = b31.mascot()
         true("with all of them, the poster is the slot's background", "assets/archie-3d.webp" in css, css)
-        eq("...and the loader is a module script", tag, '<script type="module" src="assets/archie.js"></script>')
+        v = re.fullmatch(r'<script type="module" src="assets/archie\.js\?v=([0-9a-f]{10})"></script>', tag)
+        true("...and the loader is a module script, versioned", v, tag)
+        a = b31.OUT / "assets"
+        (a / "archie.js").write_bytes(b"x\r\ny")
+        crlf = b31.mascot_version()
+        (a / "archie.js").write_bytes(b"x\ny")
+        eq("the version ignores line endings, which differ between a Windows checkout and CI",
+           b31.mascot_version(), crlf)
+        for f in ("archie.js", "three-archie.js", "archie.glb"):  # not VERSIONED: a name dropped from it must fail
+            before = b31.mascot_version()
+            (a / f).write_bytes((a / f).read_bytes() + b"!")
+            true(f"...and changes when {f} does", b31.mascot_version() != before)
+        before = b31.mascot_version()
+        (a / "archie-3d.webp").write_bytes(b"changed")
+        eq("...but not for the poster, which the page names directly", b31.mascot_version(), before)
 finally:
     b31.OUT = saved_out
 
