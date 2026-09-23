@@ -58,6 +58,7 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import hashlib
 import html
 import importlib.util
 import json
@@ -448,7 +449,20 @@ def spot_art(f: dict) -> str:
 # poster are committed separately from this page, so they are wired only when all three are there: a page
 # that names a script it does not have 404s it on every visit, and pwa-check counts that as a console error.
 # Whichever lands second, the next run of this stage turns it on.
-MASCOT = ("archie.js", "archie.glb", "archie-3d.webp")
+MASCOT = ("archie.js", "three-archie.js", "archie.glb", "archie-3d.webp")
+# The loader's query is its version: archie.js hands its own `?v=` on to the renderer and the model, and none
+# of the three is in the service worker's precache, so without it a replaced file can meet a stale sibling
+# from the HTTP cache and the mascot stays a poster. The scripts are hashed with LF endings, because the
+# checkout is CRLF on Windows and LF on CI; the model is binary and hashed as it is.
+VERSIONED = ("archie.js", "three-archie.js", "archie.glb")
+
+
+def mascot_version() -> str:
+    h = hashlib.sha256()
+    for f in VERSIONED:
+        b = (OUT / "assets" / f).read_bytes()
+        h.update(b.replace(b"\r\n", b"\n") if f.endswith(".js") else b)
+    return h.hexdigest()[:10]
 
 
 def mascot() -> tuple[str, str]:
@@ -456,7 +470,7 @@ def mascot() -> tuple[str, str]:
     if not all((OUT / "assets" / f).is_file() for f in MASCOT):
         return "", ""
     return (".mhmascot{background:url(assets/archie-3d.webp) center/contain no-repeat}",
-            '<script type="module" src="assets/archie.js"></script>')
+            f'<script type="module" src="assets/archie.js?v={mascot_version()}"></script>')
 
 
 def spotlight() -> str:
