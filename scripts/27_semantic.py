@@ -199,6 +199,17 @@ LAYOUT_CLIP = 4.0
 # would rewrite 5 KB of binary on every build whose input had not changed, and would move every project on
 # the map for no reason a reader could see. Verified by building twice and comparing bytes.
 LAYOUT_SEED = 20260912
+# How the layout is fitted to the int16 grid. The body of the corpus -- every row out to the MAP_CORE
+# quantile of distance from the median -- is scaled linearly, and the rows beyond it are pulled in along
+# their own bearing by a logarithm with slope MAP_TAIL. Scaling by the plain maximum is what shipped until
+# the 8,858-row corpus, and there a handful of rows flung out to the rim held the box open: 98% of the
+# atlas sat inside +/-1,300 of +/-32,767, and the page, which fits the map to its bounding box, drew nearly
+# every project inside 4% of the canvas. Measured on the committed coordinates, this fit spreads the 1st
+# to 99th percentile across ~40,000 units instead of ~2,000. Monotone in radius and exact in bearing, so
+# no row changes which side of another it is on; what the tail loses is its distance, which the page never
+# offered as a quantity anyone reads.
+MAP_CORE = 0.99
+MAP_TAIL = 0.15
 
 # Words dropped before WordPiece ever sees them, on both sides of the wire. Where they are dropped is the
 # entire subtlety, and getting it wrong is measurable.
@@ -481,6 +492,20 @@ def layout(unit: np.ndarray, near: np.ndarray) -> np.ndarray:
     return pos - pos.mean(0)
 
 
+def fit(pos: np.ndarray) -> np.ndarray:
+    """The layout on the int16 grid, with the body of the corpus filling it. See MAP_CORE."""
+    if not len(pos):
+        return np.zeros((0, 2), dtype=np.int16)
+    d = pos - np.median(pos, 0)
+    r = np.linalg.norm(d, axis=1)
+    core = float(np.quantile(r, MAP_CORE)) or 1.0
+    u = r / core
+    g = np.where(u <= 1.0, u, 1.0 + MAP_TAIL * np.log(np.maximum(u, 1.0)))
+    d *= np.divide(g, u, out=np.ones_like(u), where=u > 0)[:, None]
+    scale = float(np.abs(d).max()) or 1.0
+    return np.clip(np.rint(d / scale * 32767), -32767, 32767).astype(np.int16)
+
+
 def retention(pos: np.ndarray, near: np.ndarray) -> float:
     """Of each row's `NEAR` semantic neighbours, how many are among its `NEAR` nearest on screen.
 
@@ -686,12 +711,14 @@ def main() -> None:
             order = np.argsort(-sim, axis=1)[:, :NEAR]
             near[start:start + step] = order.astype(np.uint16)
 
-    # Where each row sits on the map. Quantised to int16 over the larger half-extent of the two axes, so
-    # the aspect ratio the layout produced survives the trip -- scaling each axis to its own range would
-    # stretch the picture to fill a square and pull apart rows the layout had placed together.
+    # Where each row sits on the map. Quantised to int16 with one scale for both axes, so the aspect ratio
+    # the layout produced survives the trip -- scaling each axis to its own range would stretch the picture
+    # to fill a square and pull apart rows the layout had placed together. `fit` decides that scale off the
+    # body of the corpus rather than its farthest row; `xy_scale` stays the plain half-extent, because the
+    # page only divides by it and 32767 of it is the rim either way.
     xy = layout(unit, near)
     xy_scale = float(np.abs(xy).max(initial=0.0)) or 1.0
-    xy_q = np.clip(np.rint(xy / xy_scale * 32767), -32767, 32767).astype(np.int16)
+    xy_q = fit(xy)
     # Measured on the quantised coordinates, which is what a reader gets, and against the plain projection
     # as a control -- a figure with nothing to compare it against does not say whether the solver earned
     # its epochs. Both are printed at the end of the run.

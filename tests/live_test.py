@@ -436,10 +436,17 @@ for label, wf in (("daily.yml", DAILY), ("weekly.yml", WEEKLY)):
         true(f"...{label} runs it after {writer}, which writes data.json",
              wf.index(f"python scripts/{writer}") < wf.index(STAGE),
              f"19c_live.py is at {wf.index(STAGE)}, {writer} at {wf.index(f'python scripts/{writer}')}")
-# The premise. If 22_detail.py ever moves into the daily job the argument above stops applying, and this
-# assertion is where that gets noticed rather than in a comment nobody re-reads.
-true("22_detail.py is weekly-only, which is why the sidecar is not its output",
-     "python scripts/22_detail.py" in WEEKLY and "python scripts/22_detail.py" not in DAILY)
+# The premise, as it stands since JFH-465. This used to assert 22_detail.py was weekly-only, and the
+# daily broke that arrangement from the other side: it refetches descriptions and follows renames, so a
+# weekly-only page set was out of step with the nightly sidecar the first day a repository was renamed --
+# the key-set comparison above failed in both directions. The stage now runs in both jobs. The sidecar
+# is still not its output, for the reason that never depended on cadence: the pages keep every volatile
+# number out of their HTML so that a night of star drift rewrites 57 KB rather than 8,858 pages.
+DETAIL = "python scripts/22_detail.py"
+for label, wf in (("daily.yml", DAILY), ("weekly.yml", WEEKLY)):
+    true(f"{label} renders the detail pages after 25_velocity, from the data.json that ships",
+         DETAIL in wf and wf.index("python scripts/25_velocity.py") < wf.index(DETAIL),
+         "the detail pages would render a copy of data.json that is not the published one")
 
 
 def case_globs(text: str) -> list[str]:

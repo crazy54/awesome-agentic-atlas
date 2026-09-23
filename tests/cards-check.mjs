@@ -300,11 +300,21 @@ ok("cards have varied curated accents", accents > 1, accents);
 // Archie only repeats facts already in the row. The browser check exercises the delayed hover path,
 // the reader-controlled quiet switch, and the hidden click sequence rather than merely looking for the
 // markup those behaviours need.
-const firstProjectPoint = await evalIn(`(() => {
-  const r = document.querySelector('#out tr[data-project]').getBoundingClientRect();
-  return {x: Math.round(r.left + 18), y: Math.round(r.top + Math.min(240, r.height - 18))};
+//
+// The point is measured each time it is used, and scrolled to when it is below the fold. The Discover strip
+// sits between the bar and the first card, and at 1440x900 it pushes the card's top past the viewport's
+// bottom edge -- a mouse event dispatched there hits nothing, so every Archie check read as a silent bubble.
+// Checks further down scroll back to the top for their own measurements, so a point fixed once would be
+// stale by the time it was reused.
+const firstProjectPoint = () => evalIn(`(() => {
+  const row = document.querySelector('#out tr[data-project]');
+  const at = () => { const r = row.getBoundingClientRect();
+    return {x: Math.round(r.left + 18), y: Math.round(r.top + Math.min(240, r.height - 18))}; };
+  let p = at();
+  if (p.y > innerHeight - 8 || p.y < 0) { window.scrollBy(0, p.y - innerHeight / 2); p = at(); }
+  return p;
 })()`);
-await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...firstProjectPoint});
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...await firstProjectPoint()});
 await sleep(450);
 ok("Archie introduces a hovered project from its Atlas record", await evalIn(`(() => {
   const speech = document.getElementById('byte-speech');
@@ -507,6 +517,11 @@ ok("the restated templates still match what the page says", widest.matchesLive,
 //   - all six wordings were actually observed. Without this the tie could stay green while five of the six
 //     went unexercised, which is exactly how the first attempt passed a control it should have failed. Under
 //     that control this arm names the missing wording and the tie names 24 strings the templates cannot say.
+// Take the pointer off the row before the walk scrolls back to the top. It is still resting where the hover
+// checks above left it, and scrolling the row out from under it fires a real `mouseout` a frame later -- which
+// lands after the walk has focused the first row and cancels the sentence that focus scheduled.
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 2, y: 2, buttons: 0});
+await evalIn("new Promise(r => { window.scrollTo(0, 0); requestAnimationFrame(() => requestAnimationFrame(r)); })");
 const walk = await evalIn(`(async () => {
   window.scrollTo(0, 0);
   const speech = document.getElementById('byte-speech'), cs = getComputedStyle(speech);
@@ -811,15 +826,23 @@ ok("a reader who enlarges the navigation keeps every link, even where the bubble
 // `hidden = false` and nothing on the hover path ever set it back, so the first hover of a visit pinned a
 // fact over the masthead until the reader found the quiet switch. Moving the pointer off the row is the
 // reader's own gesture, so it is dispatched rather than simulated in JS.
+//
+// The pointer is put on the row first, and the bubble confirmed showing, rather than assumed to be there from
+// whatever ran before. The walk above parks it in the corner, so without this the leave would be a move from
+// the corner to the corner -- no event at all -- and the check would read a bubble nothing had dismissed.
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...await firstProjectPoint()});
+await sleep(450);
+const beforeLeave = await evalIn("document.getElementById('byte-speech').hidden === false");
 await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 2, y: 2, buttons: 0});
 await sleep(120);
 ok("Archie stops speaking when the pointer leaves the row",
-   await evalIn("document.getElementById('byte-speech').hidden === true"));
+   beforeLeave && await evalIn("document.getElementById('byte-speech').hidden === true"),
+   JSON.stringify({showingBeforeLeave: beforeLeave}));
 
 // A FACT THAT WAS NEVER OWED. Brushing across a row on the way to the filter bar used to arm the 320ms timer
 // and let it land afterwards, about a row the pointer was no longer near. Leaving inside the delay has to
 // cancel it, so this waits well past 320ms and expects silence.
-await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...firstProjectPoint});
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...await firstProjectPoint()});
 await sleep(80);
 await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 2, y: 2, buttons: 0});
 await sleep(500);
@@ -853,7 +876,7 @@ ok("focusing a row speaks and Escape dismisses it", escaped.spoke && escaped.hid
 // Back onto the row, so the quiet switch below is measured from a bubble that is actually showing rather
 // than passing vacuously against one this block left hidden.
 await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 0, y: 0, buttons: 0});
-await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...firstProjectPoint});
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", ...await firstProjectPoint()});
 await sleep(450);
 ok("Archie speaks again on a fresh hover",
    await evalIn("document.getElementById('byte-speech').hidden === false"));

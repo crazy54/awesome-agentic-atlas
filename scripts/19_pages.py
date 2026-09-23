@@ -6453,6 +6453,17 @@ function paintDiscover() {
   document.getElementById("dstripall").textContent = "See all " + picks.length + " →";
 }
 
+// A card that takes focus is brought wholly into the rail. The browser's own focus scroll leaves a card
+// alone if any of it is showing. A rail always has one card peeking at each edge, so a Shift+Tab onto that
+// card could leave most of it outside the rail, often with its centre clipped. The mandatory snap makes it
+// worse: when focus leaves, the rail snaps back to a card start. At the end of the rail, the nearest start
+// cuts the last card off, so it is already clipped when Shift+Tab reaches it. `nearest` moves the rail only
+// by the part that is hidden, and vertically honours the pinned bar's `scroll-margin-top`.
+document.getElementById("dsrail")?.addEventListener("focusin", ev => {
+  const card = ev.target.closest(".dsc");
+  if (card) card.scrollIntoView({block: "nearest", inline: "nearest"});
+});
+
 // `2026-09-21` as `Sunday 21 September`. No year: this is always within a week of today, and a year on it
 // would read as an archive date rather than as "this is what today is". UTC, because the date is already
 // decided -- reading it in the reader's own zone prints the day before for anyone west of Greenwich.
