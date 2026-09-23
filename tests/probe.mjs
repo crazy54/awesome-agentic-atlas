@@ -846,6 +846,21 @@ ok("an unchanged script URL still queues an update job", !!reg && /reg\.update\(
 ok("registration comes after the page's own content",
    !!reg && homeHTML.indexOf("</main>") > 0 && homeHTML.indexOf(reg[0]) > homeHTML.indexOf("</main>"));
 
+// The newer-version notice (UPDATE_JS in 31_home.py) compares the page's own build with `build.json`, so the
+// two committed files have to name the same build or every reader is told the site has moved on. Read off
+// the committed files, since that pair is what Pages serves together.
+const buildMeta = (homeHTML.match(/<meta name="atlas-build" content="([0-9a-f]{12})">/) || [])[1];
+const buildFile = (() => {
+  try { return JSON.parse(readFileSync(join(ROOT, "docs/build.json"), "utf8")).build; }
+  catch { return undefined; }
+})();
+ok("the homepage names its build", !!buildMeta, "no <meta name=atlas-build> -- run scripts/31_home.py");
+ok("...and build.json names the same one", buildFile === buildMeta, `${buildFile} vs ${buildMeta}`);
+const updJs = (homeHTML.match(/<script>[^<]*meta\[name="atlas-build"\][\s\S]*?<\/script>/) || [""])[0];
+ok("the notice is wired, after the page's content", !!updJs &&
+   homeHTML.indexOf(updJs) > homeHTML.indexOf("</main>"));
+ok("...and asks past the HTTP cache", /fetch\("build\.json", \{cache: "no-store"\}\)/.test(updJs));
+
 // Every picture on the homepage is GitHub's social card, never the row's own `img`. That column is whatever
 // each upstream README uses for its banner, and nothing bounds it: Lighthouse measured this page at 21.49 MB,
 // 21.41 MB of it from 13 lazy-loaded pictures, one of them an 11,955 KB GIF. The catalog made the same call

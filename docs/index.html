@@ -14,6 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awesome Agentic Atlas — browse and discover agentic AI projects</title>
 <meta name="description" content="8,858 agentic AI projects merged from 39 awesome-lists, on shelves with a stated reason for each one: named by three or more lists, shipped this week, hidden gems, runs on Windows. Snapshot 2026-09-22.">
+<meta name="atlas-build" content="ee2834b6d622">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Awesome Agentic Atlas — browse and discover agentic AI projects">
@@ -374,6 +375,17 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
 .sh.rolled .dsold{display:block}
 .ph .plat.tight{padding:2px;border-radius:5px;gap:2px}
 .ph .plat.tight i{padding:2px 3px;font-size:9px}
+.updbar{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);
+  z-index:40;display:flex;align-items:center;gap:10px;box-sizing:border-box;width:max-content;
+  max-width:calc(100vw - 24px);padding:6px 6px 6px 16px;border:1px solid var(--accent-sky);
+  border-radius:var(--radius);background:var(--panel);color:var(--ink);font-size:14px;line-height:1.35;
+  box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.updbar button{min-height:44px;min-width:44px;padding:0 16px;border:1px solid var(--accent-sky);
+  border-radius:var(--radius-sm);background:var(--accent-sky);color:var(--surface);font:inherit;font-weight:600;
+  cursor:pointer;flex:none}
+.updbar button:disabled{opacity:.7;cursor:progress}
+.updbar .updx{padding:0;border-color:transparent;background:transparent;color:var(--ink2);font-size:20px}
+.updbar button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .mhmascot{background:url(assets/archie-3d.webp) center/contain no-repeat}</style>
 </head><body>
 <div class="scan" aria-hidden="true"></div>
@@ -569,6 +581,68 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
       .catch(() => {});
   });
 }
+</script>
+
+<script>
+(() => {
+  const mine = document.querySelector('meta[name="atlas-build"]');
+  if (!mine || location.protocol === "file:" || !window.fetch) return;
+  let last = 0, bar = null, waived = "";
+  const same = (u) => { try { return new URL(u, location.href).origin === location.origin; } catch { return false; } };
+  const refresh = async (btn) => {
+    btn.disabled = true;
+    btn.textContent = "Updating…";
+    try {
+      const shells = [];
+      if (window.caches) {
+        for (const name of await caches.keys()) {
+          if (!name.startsWith("atlas-shell-")) continue;
+          shells.push([name, (await (await caches.open(name)).keys()).map((r) => r.url)]);
+          await caches.delete(name);
+        }
+      }
+      const urls = new Set([new URL("./", location.href).href,
+        ...performance.getEntriesByType("resource").map((e) => e.name).filter(same),
+        ...shells.flatMap(([, list]) => list)]);
+      const fresh = new Map();
+      await Promise.all([...urls].map((u) => fetch(u, {cache: "reload", credentials: "same-origin"})
+        .then((r) => { if (r.ok && !r.redirected) fresh.set(u, r); }).catch(() => {})));
+      for (const [name, list] of shells) {
+        const c = await caches.open(name);
+        for (const u of list) if (fresh.has(u)) await c.put(u, fresh.get(u).clone());
+      }
+      const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
+      if (reg) await reg.update().catch(() => {});
+    } catch {}
+    location.reload();
+  };
+  const show = (build) => {
+    bar = document.createElement("div");
+    bar.className = "updbar";
+    bar.setAttribute("role", "status");
+    document.body.appendChild(bar);
+    requestAnimationFrame(() => {
+      bar.innerHTML = '<span>A newer version of the atlas has been published.</span>' +
+        '<button type="button" class="updgo">Load it</button>' +
+        '<button type="button" class="updx" aria-label="Dismiss">×</button>';
+      bar.querySelector(".updgo").addEventListener("click", (e) => refresh(e.currentTarget));
+      bar.querySelector(".updx").addEventListener("click", () => { waived = build; bar.remove(); bar = null; });
+    });
+  };
+  const check = async () => {
+    if (bar || document.hidden || Date.now() - last < 60000) return;
+    last = Date.now();
+    try {
+      const r = await fetch("build.json", {cache: "no-store"});
+      if (!r.ok) return;
+      const {build} = await r.json();
+      if (build && build !== mine.content && build !== waived) show(build);
+    } catch {}
+  };
+  addEventListener("load", check);
+  document.addEventListener("visibilitychange", check);
+  setInterval(check, 900000);
+})();
 </script>
 
 <script type="module" src="assets/archie.js?v=792e0d864c"></script>

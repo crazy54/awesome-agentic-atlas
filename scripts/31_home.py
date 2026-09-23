@@ -402,6 +402,21 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
    in that file's follow-up rather than done from downstream. */
 .ph .plat.tight{padding:2px;border-radius:5px;gap:2px}
 .ph .plat.tight i{padding:2px 3px;font-size:9px}
+/* THE NEWER-VERSION NOTICE, drawn by UPDATE_JS only once `build.json` names a build this page is not. Pinned
+   to the bottom and centred rather than across the top, where the masthead and its menu already are, and
+   above them (30) so it is never under an open menu. The buttons are 44px: this is the one control a phone
+   reader is asked to hit. */
+.updbar{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);
+  z-index:40;display:flex;align-items:center;gap:10px;box-sizing:border-box;width:max-content;
+  max-width:calc(100vw - 24px);padding:6px 6px 6px 16px;border:1px solid var(--accent-sky);
+  border-radius:var(--radius);background:var(--panel);color:var(--ink);font-size:14px;line-height:1.35;
+  box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.updbar button{min-height:44px;min-width:44px;padding:0 16px;border:1px solid var(--accent-sky);
+  border-radius:var(--radius-sm);background:var(--accent-sky);color:var(--surface);font:inherit;font-weight:600;
+  cursor:pointer;flex:none}
+.updbar button:disabled{opacity:.7;cursor:progress}
+.updbar .updx{padding:0;border-color:transparent;background:transparent;color:var(--ink2);font-size:20px}
+.updbar button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 """
 
 # THE IMPORTED STYLESHEET IS NOT REWRITTEN, and the reason is worth a note because the obvious thing to do
@@ -800,6 +815,96 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 </script>
 """
 
+# "A newer version has been published", and a button that fetches it past every cache it could be stuck in.
+#
+# The page knows which build it is from `<meta name="atlas-build">`, and `build.json` beside it names the
+# build the site is serving now; both are written by `main()` from one hash of this page, so they agree on
+# the day it is built and disagree from the first deploy after it. Not the worker's `controllerchange`,
+# which looks like the obvious signal and is not one: the first visit after a deploy loads the new page
+# *and* installs the new worker, so that event would call a page out of date that is not. `build.json` is
+# in none of the worker's lists, so it goes straight to the network, and `no-store` keeps it out of the
+# HTTP cache as well. On load, on returning to the tab, and every fifteen minutes, at most once a minute.
+#
+# The button cannot clear the HTTP cache -- no page can -- but it can overwrite every entry this page read
+# from it: each same-origin resource it loaded is fetched again with `cache: "reload"`, which is what gets
+# a stale `archie.js` or `pages.css` replaced rather than revalidated against its `max-age`. The shell cache
+# goes first, because it is cache-first and would otherwise answer those very requests from itself; it is
+# refilled with the fresh bytes afterwards, so an offline reader still has a shell. `atlas-data` and the
+# other runtime caches are network-first and stay, since online they are never what a reader is shown.
+UPDATE_JS = r"""<script>
+(() => {
+  const mine = document.querySelector('meta[name="atlas-build"]');
+  if (!mine || location.protocol === "file:" || !window.fetch) return;
+  let last = 0, bar = null, waived = "";
+  const same = (u) => { try { return new URL(u, location.href).origin === location.origin; } catch { return false; } };
+  const refresh = async (btn) => {
+    btn.disabled = true;
+    btn.textContent = "Updating…";
+    try {
+      const shells = [];
+      if (window.caches) {
+        for (const name of await caches.keys()) {
+          if (!name.startsWith("__SHELLPREFIX__")) continue;
+          shells.push([name, (await (await caches.open(name)).keys()).map((r) => r.url)]);
+          await caches.delete(name);
+        }
+      }
+      const urls = new Set([new URL("./", location.href).href,
+        ...performance.getEntriesByType("resource").map((e) => e.name).filter(same),
+        ...shells.flatMap(([, list]) => list)]);
+      const fresh = new Map();
+      await Promise.all([...urls].map((u) => fetch(u, {cache: "reload", credentials: "same-origin"})
+        .then((r) => { if (r.ok && !r.redirected) fresh.set(u, r); }).catch(() => {})));
+      for (const [name, list] of shells) {
+        const c = await caches.open(name);
+        for (const u of list) if (fresh.has(u)) await c.put(u, fresh.get(u).clone());
+      }
+      const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
+      if (reg) await reg.update().catch(() => {});
+    } catch {}
+    location.reload();
+  };
+  const show = (build) => {
+    bar = document.createElement("div");
+    bar.className = "updbar";
+    bar.setAttribute("role", "status");
+    document.body.appendChild(bar);
+    requestAnimationFrame(() => {
+      bar.innerHTML = '<span>A newer version of the atlas has been published.</span>' +
+        '<button type="button" class="updgo">Load it</button>' +
+        '<button type="button" class="updx" aria-label="Dismiss">×</button>';
+      bar.querySelector(".updgo").addEventListener("click", (e) => refresh(e.currentTarget));
+      bar.querySelector(".updx").addEventListener("click", () => { waived = build; bar.remove(); bar = null; });
+    });
+  };
+  const check = async () => {
+    if (bar || document.hidden || Date.now() - last < 60000) return;
+    last = Date.now();
+    try {
+      const r = await fetch("build.json", {cache: "no-store"});
+      if (!r.ok) return;
+      const {build} = await r.json();
+      if (build && build !== mine.content && build !== waived) show(build);
+    } catch {}
+  };
+  addEventListener("load", check);
+  document.addEventListener("visibilitychange", check);
+  setInterval(check, 900000);
+})();
+</script>
+"""
+# `24_pwa.CACHE_PREFIX`, the one name this page has to share with the worker. `deeplinks_test` holds the two
+# together, since a prefix that drifted would leave the button deleting nothing and reloading the stale shell.
+SHELL_PREFIX = "atlas-shell-"
+# The page's own build, substituted last over the finished page -- see `stamped()`.
+BUILD = "__BUILD__"
+BUILD_META = re.compile(r'<meta name="atlas-build" content="([0-9a-f]{12})">')
+
+
+def stamped(page: str) -> str:
+    """`page` with its build id in place: a hash of every other byte, so an unchanged page keeps its id."""
+    return page.replace(BUILD, hashlib.sha256(page.encode("utf-8")).hexdigest()[:12])
+
 
 def render() -> str:
     """The page.
@@ -841,6 +946,7 @@ def render() -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
+<meta name="atlas-build" content="{BUILD}">
 <link rel="canonical" href="{esc(SITE)}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{esc(title)}">
@@ -898,6 +1004,7 @@ def render() -> str:
         f'<script>{b30.SHELF_JS}</script>',
         DAYCHECK_JS,
         SW_JS,
+        UPDATE_JS.replace("__SHELLPREFIX__", SHELL_PREFIX),
         *filter(None, [mascot()[1]]),
         b19.beacon(),
         '</body>',
@@ -917,10 +1024,10 @@ def render() -> str:
     # rules, and this page's own rules go last so that `.ph .plat.tight` can reach past `.ph .plat`.
     # `pages.css` is a `<link>` above all of them.
     css = BRIDGE_CSS + DOT_CSS + b30.SHELF_CSS + stage_css() + b19.SETTINGS_CSS + HOME_CSS + mascot()[0]
-    return (pagemin.strip_page(page)
-            .replace("__HOMECSS__", pagemin.strip_css(css))
-            .replace("__SETTINGS__", pagemin.strip_page(b19.SETTINGS_MENU))
-            .replace("__SETJS__", "<script>" + pagemin.strip_js(b19.SETTINGS_JS) + "</script>"))
+    return stamped(pagemin.strip_page(page)
+                   .replace("__HOMECSS__", pagemin.strip_css(css))
+                   .replace("__SETTINGS__", pagemin.strip_page(b19.SETTINGS_MENU))
+                   .replace("__SETJS__", "<script>" + pagemin.strip_js(b19.SETTINGS_JS) + "</script>"))
 
 
 def main() -> None:
@@ -932,6 +1039,9 @@ def main() -> None:
     page = render()
     (dest / "index.html").write_text(page, encoding="utf-8", newline="\n")
     print(f"wrote {dest / 'index.html'}  {len(page):,} bytes")
+    # Beside the page and from the page, so the two cannot be written by different builds.
+    (dest / "build.json").write_text(json.dumps({"build": BUILD_META.search(page).group(1)}) + "\n",
+                                     encoding="utf-8", newline="\n")
     # The week's cards. Files for days that have left the plan are removed, so the directory is exactly the
     # plan and a stale cohort cannot be fetched by a page that still names it.
     cards = dest / CARDS_DIR
