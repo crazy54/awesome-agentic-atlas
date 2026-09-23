@@ -5,9 +5,11 @@ Run it headless and it writes three files:
     blender --background --factory-startup --python art/archie/archie.py
 
   * `art/archie/archie.blend`  -- the scene, for anyone who wants to open it and push vertices around.
-  * `docs/assets/archie.glb`   -- the animated model the homepage banner loads, with five named glTF
+  * `docs/assets/archie.glb`   -- the animated model the homepage banner loads, with nine named glTF
                                   animations at 30 fps: `idle` (a four-second loop: sway, foot tap,
-                                  blinks), `watch`, `dance`, `sit` and `sleep`. Every clip but `idle`
+                                  blinks), `watch`, `sit`, `sleep`, four dances (`floss`, `take-the-l`,
+                                  `default-dance`, `orange-justice`) and `walk`, one stride in place that
+                                  the page moves across the banner. Every clip but `idle` and `walk`
                                   starts and ends on the idle's first pose, so the page can play any of
                                   them between two idles without a jump.
   * `docs/assets/archie-3d.webp` -- a transparent still of the idle's first frame, for reduced motion, for
@@ -197,7 +199,7 @@ def globe_material():
     # A little of its own light, so the chest reads as the brightest thing on the robot as it does in the
     # drawing, and not only when a light happens to catch it.
     nt.links.new(tex.outputs["Color"], nt.nodes["Principled BSDF"].inputs["Emission Color"])
-    nt.nodes["Principled BSDF"].inputs["Emission Strength"].default_value = 0.35
+    nt.nodes["Principled BSDF"].inputs["Emission Strength"].default_value = 0.5
     return m
 
 # Each lens, drawn left to right as the viewer sees it; B black, W white glint, space nothing. Both lenses
@@ -246,14 +248,18 @@ def pixel_shades(parent, black, white, p=0.05):
 
 
 def build():
-    body = material("body", (0.030, 0.032, 0.040), metal=0.55, rough=0.3, coat=0.6)
-    joint = material("joint", (0.016, 0.017, 0.021), metal=0.4, rough=0.45)
+    # Near-black shells under a full clear coat: the body reads as darker than the drawing's charcoal and the
+    # highlights stay sharp, so the gold has more to stand out against.
+    body = material("body", (0.009, 0.010, 0.013), metal=0.6, rough=0.22, coat=1.0)
+    joint = material("joint", (0.004, 0.004, 0.005), metal=0.4, rough=0.5)
     visor = material("visor", (0.004, 0.005, 0.009), metal=0.2, rough=0.04, coat=1.0)
-    gold = material("gold", (1.0, 0.62, 0.10), metal=1.0, rough=0.25)
-    # Emission kept modest and saturated, so the rings read as gold light rather than white.
-    glow = material("glow", (1.0, 0.55, 0.06), metal=0.5, rough=0.3, glow=(1.0, 0.45, 0.02), strength=1.6)
-    eyes = material("eyes", (1.0, 0.7, 0.2), glow=(1.0, 0.55, 0.08), strength=2.4)
-    black = material("pixel-black", (0.004, 0.004, 0.005), rough=0.35)
+    gold = material("gold", (1.0, 0.62, 0.10), metal=1.0, rough=0.18)
+    # Emission kept low enough that no channel but red clips, so the rings read as gold light, not yellow.
+    glow = material("glow", (1.0, 0.5, 0.04), metal=0.5, rough=0.3, glow=(1.0, 0.36, 0.0), strength=1.25)
+    eyes = material("eyes", (1.0, 0.7, 0.2), glow=(1.0, 0.55, 0.08), strength=1.8)
+    # Matte, with no specular at all: a glossy black pixel reflects the key light and reads as grey.
+    black = material("pixel-black", (0.002, 0.002, 0.002), rough=1.0)
+    black.node_tree.nodes["Principled BSDF"].inputs["Specular IOR Level"].default_value = 0.0
     white = material("pixel-white", (0.95, 0.95, 0.95), rough=0.35, glow=(1, 1, 1), strength=0.4)
     orbit = material("orbit", (0.95, 0.85, 0.6), metal=0.8, rough=0.2, glow=(1.0, 0.7, 0.3), strength=0.5)
     globe = globe_material()
@@ -407,7 +413,7 @@ def watch(t):
     return pose, {}, blink(t, 0.5) * blink(t, 0.95)
 
 
-def dance(t):
+def floss(t):
     """The floss: straight arms swung together side to side, crossing in front and then behind, with the
     hips going the other way."""
     on = envelope(t, 0.0, 0.1, 0.9, 1.0)
@@ -465,8 +471,101 @@ def sleep(t):
     return pose, {"hips": (0, 0, 0.03 * startle)}, 1.0 - 0.93 * doze
 
 
-CLIPS = {"idle": (120, idle), "watch": (150, watch), "dance": (120, dance), "sit": (180, sit),
-         "sleep": (270, sleep)}
+def walk(t):
+    """One stride of each leg, in place: `archie.js` moves the model across the banner while this plays,
+    at the speed the stride covers, and plays it backwards for the moonwalk back in. Arms down and swinging
+    against the legs, so it reads as a walk and not as the idle's pose sliding."""
+    s = math.sin(TAU * t)
+    pose = dict(DOWN)
+    for side, sign in (("right", 1), ("left", -1)):
+        swing = sign * s                                # +1: this leg forward
+        add(pose, f"leg-{side}", dx=-STRIDE * swing)
+        # The knee bends through the swing, while the foot is off the ground and coming forward.
+        lift = max(0.0, math.sin(TAU * t + (0 if sign > 0 else math.pi) + math.pi / 2))
+        add(pose, f"knee-{side}", dx=38 * lift)
+        add(pose, f"heel-{side}", dx=-12 * lift + 10 * max(0.0, swing))
+        add(pose, f"upper-{side}", dx=24 * swing)
+        add(pose, f"elbow-{side}", dx=-18 - 10 * max(0.0, swing))
+    add(pose, "hips", dz=5 * s)
+    add(pose, "torso", dx=-4, dz=-3 * s)
+    add(pose, "head", dx=3, dz=2 * s)
+    add(pose, "antenna", dx=-10 * abs(math.cos(TAU * t)))
+    add(pose, "orbit", dz=-360 * t)
+    return pose, {"hips": (0, 0, 0.025 * abs(math.cos(TAU * t)) - 0.02)}, 1.0
+
+
+def take_the_l(t):
+    """Take the L: one hand an L on the forehead, the other arm swinging, hopping from foot to foot with the
+    free leg kicked out to the side."""
+    on = envelope(t, 0.0, 0.08, 0.92, 1.0)
+    beats = 8
+    hop = math.sin(TAU * beats / 2 * t)                 # +1 on the left foot, -1 on the right
+    pose = mix(REST, {**DOWN, "upper-right": (-130, 20, 0), "elbow-right": (100, 0, 0),
+                      "hand-right": (0, 0, 0), "head": (-6, 0, 0)}, on)
+    for side, sign in (("right", 1), ("left", -1)):
+        kick = max(0.0, sign * hop)                     # this leg is the one kicked out
+        add(pose, f"leg-{side}", dy=sign * 38 * kick * on, dx=-10 * kick * on)
+        add(pose, f"knee-{side}", dx=28 * kick * on)
+    add(pose, "upper-left", dx=-40 * hop * on, dy=-10 * on)
+    add(pose, "elbow-left", dy=40 * on)
+    add(pose, "hips", dy=-8 * hop * on)
+    add(pose, "head", dy=10 * hop * on)
+    add(pose, "orbit", dz=-720 * t)
+    bounce = 0.05 * abs(math.sin(TAU * beats / 2 * t)) * on
+    return pose, {"hips": (0.03 * hop * on, 0, bounce)}, 1.0
+
+
+def default_dance(t):
+    """The Default Dance, as the game's default emote goes: arms pumping down across the body in time with
+    a side step, then both arms thrown up and over, twice through."""
+    on = envelope(t, 0.0, 0.06, 0.94, 1.0)
+    pose = mix(REST, DOWN, on)
+    beats = 8
+    b = math.sin(TAU * beats * t)
+    half = (t * 2) % 1                                  # each half: pumping, then the overhead swing
+    pump = 1 - smooth01((half - 0.55) / 0.1)
+    over = smooth01((half - 0.55) / 0.1) * (1 - smooth01((half - 0.92) / 0.08))
+    for side, sign in (("right", 1), ("left", -1)):
+        beat = max(0.0, sign * b)
+        add(pose, f"upper-{side}", dx=(-55 - 25 * beat) * pump * on, dy=sign * -20 * beat * pump * on)
+        add(pose, f"elbow-{side}", dx=-70 * pump * on)
+        add(pose, f"upper-{side}", dx=-160 * over * on, dy=sign * 30 * math.sin(TAU * 4 * t) * over * on)
+        add(pose, f"leg-{side}", dy=sign * 10 * beat * on)
+        add(pose, f"knee-{side}", dx=20 * beat * on)
+    add(pose, "hips", dy=-6 * b * on)
+    add(pose, "head", dy=8 * b * on, dx=-5 * over * on)
+    add(pose, "orbit", dz=-720 * t)
+    return pose, {"hips": (0.05 * b * on, 0, 0.03 * abs(b) * on - 0.03 * on)}, blink(t, 0.5)
+
+
+def orange_justice(t):
+    """Orange Justice: both arms swung like pendulums, forward and back, while the knees knock in and out
+    and the whole body pumps up and down."""
+    on = envelope(t, 0.0, 0.08, 0.92, 1.0)
+    beats = 6
+    a = math.sin(TAU * beats * t)
+    k = math.sin(TAU * beats * 2 * t)
+    pose = mix(REST, DOWN, on)
+    for side, sign in (("right", 1), ("left", -1)):
+        add(pose, f"upper-{side}", dx=-60 * a * on, dy=sign * 15 * on)
+        add(pose, f"elbow-{side}", dx=-35 * on)
+        add(pose, f"leg-{side}", dz=sign * 25 * k * on, dx=-15 * on)
+        add(pose, f"knee-{side}", dx=30 * on + 10 * k * on)
+    add(pose, "torso", dx=8 * a * on)
+    add(pose, "head", dx=-6 * a * on, dz=10 * k * on)
+    add(pose, "antenna", dx=16 * a * on)
+    add(pose, "orbit", dz=-720 * t)
+    return pose, {"hips": (0, 0, (-0.08 + 0.04 * abs(k)) * on)}, 1.0
+
+
+# How far each leg swings in the walk, in degrees, and the loop's length. `archie.js` moves the model at the
+# speed these two give -- `WALK_SPEED` there -- so the feet do not slide. Change one and change it there.
+STRIDE = 32
+WALK = 24
+
+CLIPS = {"idle": (120, idle), "watch": (150, watch), "floss": (120, floss), "sit": (180, sit),
+         "sleep": (270, sleep), "walk": (WALK, walk), "take-the-l": (120, take_the_l),
+         "default-dance": (150, default_dance), "orange-justice": (120, orange_justice)}
 
 
 def _fcurves(action):
