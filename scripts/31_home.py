@@ -122,10 +122,10 @@ _probe = b30.face(ROWS[0])["href"]
 assert _probe.startswith("repo/") and _probe.endswith("/"), f"detail_href did not retarget: {_probe}"
 assert ".html" not in _probe, f"detail_href still points at a flat file: {_probe}"
 
-# The first shelf slot's size, and every other shelf's, which is `30_v2.SHELF_N`. Named here because the
-# Discover band is this file's and has to agree with the imported shelves about how wide a shelf is -- a
-# band of fifty cards in a column of twelves would read as a different kind of thing.
-BAND_N = b30.SHELF_N
+# Where each day's Discover cards are published for the band to swap in after midnight -- see
+# `day_fragments()`. Under `discover/` because they are that page's plan drawn as this page's cards, and JSON
+# rather than `.html` so nothing that walks the site's pages mistakes a fragment for one.
+CARDS_DIR = "discover/cards"
 
 # The published plan, read rather than recomputed. `19d_discover.py` writes it and `docs/discover/` draws
 # from it, so reading the same file is what makes the band and the page agree about what today's set is;
@@ -335,13 +335,14 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
 .bychip .ct{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;color:var(--muted)}
 .bychip:hover{border-color:var(--ac);color:var(--ink);text-decoration:none;transform:translateY(-1px)}
 .bychip:hover .ct{color:var(--ink2)}
-/* The Discover band's own header line. A shelf heading plus one link, and the link is the point of the
-   band: twelve of the day's set are here and the other thirty-eight are one press away. */
-.dsmore{font-size:12.5px;font-weight:600;color:var(--link);white-space:nowrap}
+/* The Discover band's own header line: the heading, its count, and the link to the page that shows the
+   day properly, kept together on the left. */
+.dsmore{font-size:12.5px;font-weight:600;color:var(--link);white-space:nowrap;margin-left:6px}
 /* The rolled-over state. Shown only by script, and only when the reader's clock has passed midnight in
-   the plan's own zone since this page was built -- see `DAYCHECK_JS`. It replaces the cards rather than
-   sitting above them, because the failure being handled is "these twelve are yesterday's" and leaving
-   them on screen under a notice is the one thing that would be worse than not checking at all. */
+   the plan's own zone since this page was built *and* the current day's cards could not be fetched -- see
+   `DAYCHECK_JS`. It replaces the cards rather than sitting above them, because leaving yesterday's on
+   screen under a notice is the one thing worse than not checking at all. `.swap` is the fetch in flight:
+   the stale cards are hidden, and nothing is announced yet. */
 .dsold{display:none;padding:18px 20px;border-radius:var(--radius);border:var(--hair) solid var(--grid);
   background:var(--panel);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
   color:var(--ink2);font-size:13.5px;line-height:1.6;max-width:70ch}
@@ -349,6 +350,7 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
    element -- they look live, they focus, and pressing either does nothing observable. The "See all 50" link
    stays, because it is the one control that still leads somewhere on this state. */
 .sh.rolled .rowscroll,.sh.rolled .shwhy,.sh.rolled .nav{display:none}
+.sh.swap .rowscroll{visibility:hidden}
 .sh.rolled .dsold{display:block}
 /* `.tight`, which the prototype asks for and does not define. `plat_pills(f, compact_pills=True)` emits
    `class="plat tight"` and no rule in 30_v2.py matches `.tight`, so the compact pills the hero asks for
@@ -430,12 +432,36 @@ def chip_row() -> str:
     return '<nav class="bystrip" aria-label="Browse by topic">' + "".join(chips) + "</nav>"
 
 
-def discover_band() -> str:
-    """The day's Discover picks, in the first shelf slot.
+def day_cards(day: str) -> tuple[str, int]:
+    """One day's poster cards and how many there are. Only picks `data.json` carries -- the stage drops the
+    rest too -- so the count is the one that survived, not `PLAN["per_day"]`."""
+    picks = [n for n in b30.discover.for_day(PLAN, day)[1] if n in b30.BY_NWO]
+    return "".join(b30.c_poster(b30.face(b30.BY_NWO[n])) for n in picks), len(picks)
 
-    Twelve of the day's fifty rather than all fifty, because this is a shelf and every other shelf on the
-    page is twelve -- a band of fifty in a column of twelves reads as a different kind of object, and the
-    other thirty-eight are one press away on a page built to show them properly.
+
+def day_fragments() -> dict[str, dict]:
+    """Every cohort in the plan, drawn, keyed by its date. `main()` writes one file per entry.
+
+    WHY THE BAND NEEDS THEM. The page is built by whichever job last ran, and the daily only rebuilds when a
+    source list moved, so the page routinely outlives the Discover day it was built for -- by hours every
+    night, by days in a quiet week. The band used to answer that with a notice in place of the cards, so
+    most of the time anyone looked, the homepage's Discover band was a paragraph of apology. The plan
+    already names every day of the week, so the fix is to draw them all now and let the browser fetch the
+    one its clock asks for. One file per day rather than all seven inline: the week is about 800 KB of
+    markup, and a reader only ever needs the day it is.
+    """
+    out = {}
+    for c in PLAN["days"]:
+        html, n = day_cards(c["date"])
+        out[c["date"]] = {"date": c["date"], "long": _long_day(c["date"]), "n": n, "html": html}
+    return out
+
+
+def discover_band() -> str:
+    """The day's Discover picks, all of them, in the first shelf slot.
+
+    All fifty rather than a shelf's twelve: the owner asked for the day's whole set here, and the rail
+    scrolls, so fifty costs nothing on the first screen.
 
     Server-rendered, unlike the teaser on the catalogue page, and that is the whole reason this is not that
     strip moved over. The catalogue's strip is painted by script from `discover.json` because it has to
@@ -449,24 +475,22 @@ def discover_band() -> str:
     # `discover.today()` and not `date.today()`: the plan rolls over in the zone it names, and a stage that
     # asked the runner's clock would publish a different cohort than `/discover/` for every build landing in
     # the hours between the runner's midnight and Chicago's.
-    dated, names = b30.discover.for_day(PLAN, b30.discover.today())
-    picks = [n for n in names if n in b30.BY_NWO]
-    shown = picks[:BAND_N]
-    # `len(picks)` and not `PLAN["per_day"]`, and not the literal fifty either. A pick naming a row that
-    # `data.json` does not carry is dropped above -- the stage drops them too -- so the only honest count
-    # is the one that survived, and a heading promising fifty above forty-nine cards is a defect this
-    # repository has already shipped once.
-    total = len(picks)
-    why = (f'{b30.thousands(total)} projects for {_long_day(dated)}, one from every topic in the'
-           f' atlas, and the star count is not consulted at any point in choosing them. Every project in'
-           f' the corpus gets a turn: the scheduler deals from all {b30.thousands(len(ROWS))} oldest-'
-           f'featured first, so the tail arrives here as often as the head. Twelve of the {total} are'
-           ' below.')
-    cards = "".join(b30.c_poster(b30.face(b30.BY_NWO[n])) for n in shown)
+    dated = b30.discover.for_day(PLAN, b30.discover.today())[0]
+    # The count that survived `day_cards()`, and not the literal fifty: a heading promising fifty above
+    # forty-nine cards is a defect this repository has already shipped once. Every place it is printed is a
+    # `data-n`, because the day the browser swaps in can have a different count.
+    cards, total = day_cards(b30.discover.today())
+    why = (f'<span data-n>{b30.thousands(total)}</span> projects for <span data-long>{_long_day(dated)}'
+           '</span>, one from every topic in the atlas, and the star count is not consulted at any point'
+           ' in choosing them. Every project in the corpus gets a turn: the scheduler deals from all'
+           f' {b30.thousands(len(ROWS))} oldest-featured first, so the tail arrives here as often as the'
+           ' head.')
+    # Now only the fallback for a day the browser could not fetch -- offline, or a day with no file.
     rolled = (
-        '<div class="dsold">Today&rsquo;s set has changed since this page was built, so the twelve that'
-        ' were here are yesterday&rsquo;s. <a href="discover/">Open Discover</a> for the current day'
-        ' &mdash; that page reads the clock itself and is always on the right one.</div>')
+        '<div class="dsold">Today&rsquo;s set has changed since this page was built, and could not be'
+        ' loaded here. <a href="discover/">Open Discover</a> for the current day &mdash; that page reads'
+        ' the clock itself and is always on the right one.</div>')
+    days = ",".join(c["date"] for c in PLAN["days"])
     return (
         # `data-day` is the day this page was *built for*, not `dated`. The two differ when the plan has run
         # out and `for_day` has cycled: the cohort's own date is then last week's, but it is still the right
@@ -474,11 +498,16 @@ def discover_band() -> str:
         # moment it loaded. The prose above says `dated`, which is the other half of the same distinction --
         # which day's picks these really are. The check downstream asks a narrower question: has midnight
         # passed since the build.
+        # `data-cohort` is `dated`, the cohort these cards are; `data-days` is every cohort a file was
+        # written for, which is all the browser needs to resolve its own day the way `/discover/` does.
         f'<section class="sh" data-sh data-day="{esc(b30.discover.today())}"'
-        f' data-tz="{esc(PLAN["tz"])}">'
-        f'<div class="shh"><h2>Discover</h2><span class="ct">{b30.thousands(total)}</span>'
+        f' data-tz="{esc(PLAN["tz"])}" data-cohort="{esc(dated)}" data-days="{esc(days)}"'
+        f' data-cards="{CARDS_DIR}/">'
+        # The link sits beside the heading rather than across the row from it, where it read as belonging
+        # to the arrows and was the last thing on the line anyone found.
+        f'<div class="shh"><h2>Discover</h2><span class="ct" data-n>{b30.thousands(total)}</span>'
+        f'<a class="dsmore" href="discover/">See all <span data-n>{b30.thousands(total)}</span> &rarr;</a>'
         '<span class="spring"></span>'
-        f'<a class="dsmore" href="discover/">See all {total} &rarr;</a>'
         '<span class="nav"><button data-dir="-1" aria-label="Scroll left">&#8592;</button>'
         '<button data-dir="1" aria-label="Scroll right">&#8594;</button></span></div>'
         f'<p class="shwhy">{why}</p>{rolled}'
@@ -608,14 +637,40 @@ const DSTRIP = (() => {
 // string compare. Once a minute plus a `visibilitychange`, because the case being handled is a lid closed
 // at half eleven and opened at one in the morning, which no page-load check can catch.
 //
-// The plan itself is not consulted, which is why `forDay` is unused here beyond being part of the copy:
-// the question is not "which cohort is current" -- this page cannot draw a cohort it did not build -- but
-// "is the one I drew still the current one", and the honest answer when it is not is a link.
+// When it is not, the day's cards are fetched from the file `day_fragments()` wrote for that cohort and
+// swapped in. `forDay` resolves the reader's day over the plan's dates exactly as `/discover/` does, cycling
+// once the week has run out, so the band and that page cannot disagree about which fifty are today's. Only
+// a failed fetch -- offline, or a day with no file -- falls back to the notice and its link.
 (() => {
   const band = document.querySelector("[data-day]");
   if (!band) return;
-  const built = band.dataset.day, tz = band.dataset.tz;
-  const check = () => band.classList.toggle("rolled", DSTRIP.dayIn(tz, new Date()) !== built);
+  const tz = band.dataset.tz, rail = band.querySelector(".rowscroll");
+  const plan = {days: (band.dataset.days || "").split(",").filter(Boolean).map(date => ({date}))};
+  let shown = band.dataset.day, have = band.dataset.cohort, want = "";
+  const check = () => {
+    const today = DSTRIP.dayIn(tz, new Date());
+    if (today === shown) return;
+    const c = DSTRIP.forDay(plan, today);
+    if (c && c.date === have) { shown = today; band.classList.remove("rolled"); return; }
+    if (!c || !rail) { band.classList.add("rolled"); return; }
+    if (want === c.date) return;
+    want = c.date;
+    band.classList.add("swap");
+    fetch(band.dataset.cards + c.date + ".json").then(r => {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(d => {
+      rail.innerHTML = d.html;
+      rail.scrollLeft = 0;
+      band.querySelectorAll("[data-n]").forEach(e => { e.textContent = d.n.toLocaleString("en-US"); });
+      band.querySelectorAll("[data-long]").forEach(e => { e.textContent = d.long; });
+      shown = today; have = d.date;
+      band.classList.remove("rolled");
+    }).catch(() => band.classList.add("rolled")).finally(() => {
+      want = "";
+      band.classList.remove("swap");
+    });
+  };
   check();
   setInterval(check, 60000);
   document.addEventListener("visibilitychange", () => { if (!document.hidden) check(); });
@@ -669,7 +724,7 @@ def render() -> str:
     hero = spotlight()
     hero_nwo = re.search(r'<p class="own">([^<]+)</p>', hero).group(1)
     band = discover_band()
-    discover_n = int(re.search(r'See all ([\d,]+) ', band).group(1).replace(",", ""))
+    discover_n = int(re.search(r'See all <span data-n>([\d,]+)</span>', band).group(1).replace(",", ""))
 
     stars = sum(b30.g(r, "stars") or 0 for r in ROWS)
     title = "Awesome Agentic Atlas — browse and discover agentic AI projects"
@@ -783,6 +838,18 @@ def main() -> None:
     page = render()
     (dest / "index.html").write_text(page, encoding="utf-8", newline="\n")
     print(f"wrote {dest / 'index.html'}  {len(page):,} bytes")
+    # The week's cards. Files for days that have left the plan are removed, so the directory is exactly the
+    # plan and a stale cohort cannot be fetched by a page that still names it.
+    cards = dest / CARDS_DIR
+    cards.mkdir(parents=True, exist_ok=True)
+    frags = day_fragments()
+    for old in cards.glob("*.json"):
+        if old.stem not in frags:
+            old.unlink()
+    for day, frag in frags.items():
+        (cards / f"{day}.json").write_text(json.dumps(frag, ensure_ascii=False, separators=(",", ":")),
+                                           encoding="utf-8", newline="\n")
+    print(f"wrote {len(frags)} day(s) of Discover cards to {cards}")
 
 
 if __name__ == "__main__":
