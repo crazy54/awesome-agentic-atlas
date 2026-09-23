@@ -5,7 +5,7 @@ The root used to be the catalogue, and a filtered view of it was the root plus a
 one of those links started landing on the shelves homepage, which reads no hash, so the filter was
 dropped without a word. The build stayed green, because no test followed a link.
 
-Three groups:
+Three groups, and a fourth that is here only because this file already loads 31_home.py:
 
   the forwarder  -- the script in the *rendered* homepage, run under node against a stub `location`. A
                     filtered hash is forwarded to `catalog/` with its query and hash intact. An in-page
@@ -23,6 +23,9 @@ Three groups:
                     the ones already published in the committed `docs/feed.xml`, because an id that moved
                     with the host would show every subscriber fifty old entries as new. `robots.txt` says it
                     is read when there is a custom domain, and says it is inert when there is not.
+  the spotlight  -- `spot_art()` gives the homepage's spotlight the project's own picture, and the social
+                    card for a GIF or no picture. Fed both arms directly, since the committed page
+                    shows only whichever one the day's row took.
 
 Nothing here writes to `docs/`. It reads the committed `docs/data.json` and `docs/discover.json`.
 
@@ -209,6 +212,43 @@ try:
     true("...and says it is inert when there is no custom domain", "inert" in b20.robots())
 finally:
     b17.CNAME = saved
+
+
+# =====================================================================  the spotlight's picture
+# Not a link, but this file already loads 31_home.py, and `spot_art()` needs its arms fed directly: which
+# one the committed page takes depends on the day's row, so probe.mjs can only check the arm it got.
+CARD = b31.b19.og("o/r")
+own = "https://raw.githubusercontent.com/o/r/main/banner.png"
+eq("the spotlight shows the project's own picture when it has one", re.search(
+    r'src="([^"]*)"', b31.spot_art({"img": own, "nwo": "o/r"})).group(1), own)
+for gif in ("https://x.io/demo.gif", "https://x.io/demo.GIF?raw=true", "https://x.io/a.gif#frag"):
+    eq(f"...but the social card instead of a GIF ({gif.rsplit('/', 1)[1]})", re.search(
+        r'src="([^"]*)"', b31.spot_art({"img": gif, "nwo": "o/r"})).group(1), CARD)
+eq("...and a PNG whose path merely contains .gif keeps its own picture", re.search(
+    r'src="([^"]*)"', b31.spot_art({"img": "https://x.io/a.gifts/b.png", "nwo": "o/r"})).group(1),
+   "https://x.io/a.gifts/b.png")
+eq("...and the social card when there is no picture at all", re.search(
+    r'src="([^"]*)"', b31.spot_art({"img": "", "nwo": "o/r"})).group(1), CARD)
+true("...which is never lazy, since it is the first screen's largest element",
+     "loading=" not in b31.spot_art({"img": own, "nwo": "o/r"}))
+
+
+# The mascot is wired only when its loader, model and poster are all committed, so the page never names a
+# file that 404s. Both arms, on scratch directories, whatever docs/assets holds today.
+saved_out = b31.OUT
+try:
+    with tempfile.TemporaryDirectory() as tmp:
+        b31.OUT = Path(tmp)
+        (b31.OUT / "assets").mkdir()
+        for f in b31.MASCOT[:-1]:
+            (b31.OUT / "assets" / f).write_text("x")
+        eq("with any mascot file missing, nothing is wired", b31.mascot(), ("", ""))
+        (b31.OUT / "assets" / b31.MASCOT[-1]).write_text("x")
+        css, tag = b31.mascot()
+        true("with all of them, the poster is the slot's background", "assets/archie-3d.webp" in css, css)
+        eq("...and the loader is a module script", tag, '<script type="module" src="assets/archie.js"></script>')
+finally:
+    b31.OUT = saved_out
 
 
 print(f"deeplinks: {ok} passed, {bad} failed")
