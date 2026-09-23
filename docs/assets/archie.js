@@ -50,12 +50,18 @@
   const go = () => {
     if (started || !allowed() || !webgl()) return;
     started = true;
-    start().catch(() => { stop(); started = false; });   // any failure leaves the poster, where we began
+    // Any failure leaves the poster, where we began, but says why: a half-cached release fails here, silently
+    // otherwise.
+    start().catch(e => { console.warn("Archie stayed a poster:", e); stop(); started = false; });
   };
   let stop = () => {};
 
   async function start() {
-    const T = await import("./three-archie.js");
+    // The page loads this script as `archie.js?v=<hash>`, the hash covering all three of its files, and the
+    // same query goes on the two it loads. A release then changes all three URLs at once, so the HTTP cache
+    // can never pair this script with an older renderer or model, or the reverse.
+    const V = new URL(import.meta.url).search;
+    const T = await import(`./three-archie.js${V}`);
     const renderer = new T.WebGLRenderer({alpha: true, antialias: true, powerPreference: "low-power"});
     // Capped lower than a page image would be: the canvas is the width of the screen.
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
@@ -80,7 +86,7 @@
     camera.lookAt(0, 1.08, 0);
     camera.updateMatrixWorld();
 
-    const gltf = await new T.GLTFLoader().loadAsync(new URL("archie.glb", import.meta.url).href);
+    const gltf = await new T.GLTFLoader().loadAsync(new URL(`archie.glb${V}`, import.meta.url).href);
     if (!allowed()) { started = false; return; }   // the reader resized or changed a setting meanwhile
     const actor = new T.Group();          // what the director moves and turns; the clips animate inside it
     actor.add(gltf.scene);
