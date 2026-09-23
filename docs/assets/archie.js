@@ -243,23 +243,19 @@
     geo.rotateX(-Math.PI / 2);                          // apex at the origin, pointing down +Z for lookAt()
     const heads = [0, 1, 2, 3].map(i => {
       const mat = new T.ShaderMaterial({
-        uniforms: {color: {value: new T.Color(PALETTE[i])}, level: {value: 0}},
+        uniforms: {color: {value: new T.Color(PALETTE[i])}, level: {value: 0}, haze: {value: 0}},
         vertexShader: `varying vec2 vUv; varying vec3 vN, vV;
           void main() { vUv = uv; vN = normalize(normalMatrix * normal);
             vec4 mv = modelViewMatrix * vec4(position, 1.0); vV = normalize(-mv.xyz);
             gl_Position = projectionMatrix * mv; }`,
         // Brightest down the middle of the cone and at the fixture, falling to nothing at the edges and the
         // far end, which is what makes a transparent cone read as a beam in haze.
-        fragmentShader: `uniform vec3 color; uniform float level; varying vec2 vUv; varying vec3 vN, vV;
-          void main() { float core = pow(abs(dot(vN, vV)), 2.0);
-            float along = pow(vUv.y, 1.6);
-            gl_FragColor = vec4(color * core * along * level * 0.6, 0.0); }`,
-        // Colour added, alpha left alone. The canvas is transparent and premultiplied, so a beam that wrote
-        // alpha would be an opaque dark cone over the page; with alpha 0 its colour adds to whatever the
-        // page shows behind it, which is what light does.
+        fragmentShader: `uniform vec3 color; uniform float level, haze; varying vec2 vUv; varying vec3 vN, vV;
+          void main() { float a = pow(abs(dot(vN, vV)), 2.0) * pow(vUv.y, 1.6) * level;
+            gl_FragColor = haze > 0.5 ? vec4(color, a * 0.45) : vec4(color * a * 0.6, 0.0); }`,
         transparent: true, depthWrite: false, side: T.DoubleSide, blending: T.CustomBlending,
-        blendSrc: T.OneFactor, blendDst: T.OneFactor, blendSrcAlpha: T.ZeroFactor, blendDstAlpha: T.OneFactor,
       });
+      tint(mat);
       const beam = new T.Mesh(geo, mat);
       // The spotlights stay in the scene at zero rather than being hidden with the beams: three.js compiles
       // its shaders for the number of lights, so adding four at the first dance would stall that frame.
@@ -268,6 +264,21 @@
       scene.add(spot, spot.target);
       return {beam, spot, mat, x: 0};
     });
+    // On the dark theme the beams are light: colour added, alpha left alone. The canvas is transparent and
+    // premultiplied, so a beam that wrote alpha would be an opaque dark cone over the page; with alpha 0 its
+    // colour adds to whatever the page shows behind it. On the light theme, adding light to a near-white
+    // page gives white glare, so there they are a coloured haze laid over it instead. Only the blend
+    // factors and a uniform change, so switching theme mid-dance compiles nothing.
+    function tint(mat) {
+      const light = document.documentElement.dataset.theme === "light";
+      mat.uniforms.haze.value = light ? 1 : 0;
+      mat.blendSrc = light ? T.SrcAlphaFactor : T.OneFactor;
+      mat.blendDst = light ? T.OneMinusSrcAlphaFactor : T.OneFactor;
+      mat.blendSrcAlpha = light ? T.OneFactor : T.ZeroFactor;
+      mat.blendDstAlpha = light ? T.OneMinusSrcAlphaFactor : T.OneFactor;
+    }
+    new MutationObserver(() => heads.forEach(h => tint(h.mat)))
+      .observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
     const aim = new T.Vector3();
     const from = new T.Color(), to = new T.Color();
     let level = 0;
