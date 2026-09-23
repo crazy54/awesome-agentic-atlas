@@ -1151,25 +1151,29 @@ def robots() -> str:
     required by the standard and is also the useful part: this file is the only place a crawler is
     guaranteed to look for it.
 
-    Both sitemaps are listed, `22_detail.py`'s as well as this stage's, and the comment in the file says
-    out loud that none of it currently has any effect. That is not defeatism, it is the one fact a reader
-    of this file needs: robots.txt is only ever read at a *host* root, and this is a project Pages site
-    served under `/awesome-agentic-atlas/`, so a crawler looks for it at `crazy54.github.io/robots.txt`
-    -- which 404s, because no user-repo Pages site exists there. Checked rather than assumed. Written
-    anyway because it costs nothing and becomes correct the day a custom domain appears; until then both
-    sitemaps have to be submitted in Search Console to be discovered at all.
+    Both sitemaps are listed, `22_detail.py`'s as well as this stage's. Whether that has any effect
+    depends on where the site is served, and the comment in the file says which case it is in. robots.txt
+    is only ever read at a *host* root. On the custom domain in `docs/CNAME` this file *is* the host root,
+    so crawlers fetch it and find both sitemaps. Without one, this is a project Pages site under
+    `/<repo>/`, and a crawler looks for `<owner>.github.io/robots.txt`, which 404s because no user-repo
+    Pages site exists there. In that case both sitemaps have to be submitted in Search Console to be
+    discovered at all. The file used to say only the second thing, and kept saying it after the domain was
+    attached, because the prose was a literal and the fact it described was not.
     """
+    if b19.b17.CNAME:
+        where = ("# Both sitemaps are listed here, and this file is read: the site is served at the\n"
+                 f"# root of {b19.b17.CNAME} (docs/CNAME), which is where a crawler looks for it.\n")
+    else:
+        where = ("# Both sitemaps are listed for correctness, not for effect. This file is inert on a\n"
+                 "# project Pages site: robots.txt is only read at a host root, and this one is served\n"
+                 "# under a /<repo>/ prefix. Until a custom domain appears in docs/CNAME, both sitemaps\n"
+                 "# have to be submitted in Search Console to be discovered at all.\n")
     return ("# Everything here is a static index of public repositories. Nothing to hide from a\n"
             "# crawler, and the hash-filtered views are all prerendered under /topic/, /target/\n"
             "# and /repo/.\n"
             "User-agent: *\n"
             "Allow: /\n\n"
-            "# Both sitemaps are listed for correctness, not for effect. This file is inert on the\n"
-            "# current deployment: robots.txt is only read at a host root, and this is a *project*\n"
-            "# Pages site served under /awesome-agentic-atlas/, so crawlers look for it at\n"
-            "# crazy54.github.io/robots.txt -- which is a 404, because no user-repo Pages site exists.\n"
-            "# Verified, not assumed. Until a custom domain appears, both sitemaps have to be submitted\n"
-            "# in Search Console to be discovered at all.\n"
+            + where +
             f"Sitemap: {SITE}sitemap.xml\n"
             f"Sitemap: {SITE}sitemap-repos.xml\n")
 
@@ -1186,12 +1190,12 @@ def robots() -> str:
 #
 # Where this file sits is load-bearing and it is the same trap `robots()` documents. IndexNow scopes a key
 # to the *directory* the key file is in: a key at the host root can submit any URL on the host, and a key
-# in a subdirectory can only submit URLs beneath it. This is a project Pages site under
-# `/awesome-agentic-atlas/`, so the host root is not ours to write to -- `crazy54.github.io/<key>.txt`
-# would be somebody else's 404. Hosting it here instead is not a workaround, it is the supported form:
-# `26_indexnow.py` sends `keyLocation` pointing at this file, and every URL it submits is under this
-# directory by construction. Unlike robots.txt, therefore, this one is not inert on the current
-# deployment -- it works today, with no custom domain.
+# in a subdirectory can only submit URLs beneath it. The file is written to the root of `docs/`, which is
+# the root of `SITE` either way. On the custom domain that is the host root. On a project Pages site it is
+# `/<repo>/`, because `<owner>.github.io/<key>.txt` is not ours to write. The second case is not a
+# workaround, it is the supported form: `26_indexnow.py` sends `keyLocation` pointing at this file, and
+# every URL it submits is under this directory by construction. So unlike robots.txt, this one works with
+# or without a custom domain.
 def key_text(key: str) -> str:
     """The key, and nothing else. No trailing newline: the spec says the file contains the key, and while
     every validator seen in the wild trims whitespace, "contains the key" is the only promise worth

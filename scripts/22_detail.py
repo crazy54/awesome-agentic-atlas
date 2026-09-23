@@ -252,7 +252,8 @@ class Repo:
 
     # Every detail page sits exactly three directories below `docs/`, so this is a constant rather than
     # a computed depth. Relative rather than absolute so the tree serves identically from a
-    # `python -m http.server` in `docs/` and from the `/awesome-agentic-atlas/` path prefix Pages adds.
+    # `python -m http.server` in `docs/`, from the custom domain's root, and from the `/<repo>/` path
+    # prefix Pages adds when there is no custom domain.
     def rel(self, tail: str = "") -> str:
         return "../../../" + tail
 

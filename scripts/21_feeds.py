@@ -94,8 +94,14 @@ ET.register_namespace("", ATOM)
 # The date is a literal year and deliberately not derived from anything in the ledger or the dataset: a
 # re-seed moves every baseline and every `first_seen`, and if the ids moved with them every subscriber
 # would be shown all fifty entries again as if they were new.
-TAG_HOST = urlsplit(SITE).netloc
-TAG_NAME = urlsplit(SITE).path.strip("/") or "atlas"
+#
+# For the same reason the authority is the project URL and not `SITE`. The ids were minted under the
+# `github.io` host, and RFC 4151 only requires that the name was under the author's control on the date in
+# the id, which it was. When a custom domain arrived, following `SITE` would have given every entry a new
+# id on the day the domain was attached. An id is a name, not an address, so a host that now redirects
+# is no reason to change it.
+TAG_HOST = urlsplit(b17.PAGES_URL).netloc
+TAG_NAME = urlsplit(b17.PAGES_URL).path.strip("/") or "atlas"
 TAG_YEAR = "2026"
 FEED_ID = f"tag:{TAG_HOST},{TAG_YEAR}:{TAG_NAME}/feeds/arrivals"
 

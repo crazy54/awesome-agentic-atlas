@@ -1,9 +1,9 @@
 <div align="center">
 
-<a href="https://crazy54.github.io/awesome-agentic-atlas/">
+<a href="https://aaa.jeremyfhall.com/">
   <img src="docs/favicon.svg" width="64" height="64" alt="Awesome Agentic Atlas logo: a gold globe in pixel sunglasses">
 </a>
-<a href="https://crazy54.github.io/awesome-agentic-atlas/">
+<a href="https://aaa.jeremyfhall.com/">
   <img src="docs/assets/atlas-byte.png" width="132" alt="Archie 'Atlas' Algorithm, the Awesome Agentic Atlas robot mascot, wearing pixel sunglasses and holding a globe">
 </a>
 
@@ -39,13 +39,13 @@ count, language, licence, last push, install command, and a per-OS verdict for W
 and Docker.** Plus a screenshot of every project, so you can see it before you click it. That question
 up there is now [one link — twenty tools, ranked][q1].
 
-[q1]: https://crazy54.github.io/awesome-agentic-atlas/catalog/#topic=observability-evals&target=claude-code&os=windows&confirmed=1
+[q1]: https://aaa.jeremyfhall.com/catalog/#topic=observability-evals&target=claude-code&os=windows&confirmed=1
 
 ## Pick your surface
 
 | | Best for | Where |
 |---|---|---|
-| 🔎 **The Atlas site** | Live search and filtering with no download. Pick a topic, pick a harness, pick an OS, cross all three. Every view is a link. | [crazy54.github.io/awesome-agentic-atlas][site] |
+| 🔎 **The Atlas site** | Live search and filtering with no download. Pick a topic, pick a harness, pick an OS, cross all three. Every view is a link. | [aaa.jeremyfhall.com][site] |
 | 🎲 **Discover** | Not knowing what you are looking for. Fifty projects a day, dated, drawn from every category so a small one gets the same billing as a crowded one, rotated so what appeared this week goes to the back of the queue. Nothing here is ranked by stars. A new fifty at midnight Central, seven days picked each Sunday. | [discover][discover] |
 | 📊 **Excel workbook** | Filtering, sorting, "show me every Rust tool with >1k stars that runs native on Windows". 21 sheets, a screenshot embedded on every row, autofilter on every column. Two themes. | [dark][dark] · [light][light] |
 | 📄 **Markdown edition** | Reading in the browser, linking to, quoting. Same data, same ordering, split so no page hits GitHub's rendering limit. | [mega-list/](mega-list/README.md) |
@@ -129,9 +129,9 @@ these, because plenty of them serve Claude Code and opencode and Codex at once.
 **The two axes cross.** That's what the site and the workbook's *By Category* sheet are for — pick a
 topic and a harness at once and you get the answer the individual lists can't give you:
 
-- [the best Claude Code observability tools](https://crazy54.github.io/awesome-agentic-atlas/catalog/#topic=observability-evals&target=claude-code) — 38 of them, ranked
-- [memory and retrieval over MCP](https://crazy54.github.io/awesome-agentic-atlas/catalog/#topic=context-memory-rag&target=mcp) — 29
-- [skills that run native on Windows](https://crazy54.github.io/awesome-agentic-atlas/catalog/#topic=agent-skills&os=windows&confirmed=1)
+- [the best Claude Code observability tools](https://aaa.jeremyfhall.com/catalog/#topic=observability-evals&target=claude-code) — 38 of them, ranked
+- [memory and retrieval over MCP](https://aaa.jeremyfhall.com/catalog/#topic=context-memory-rag&target=mcp) — 29
+- [skills that run native on Windows](https://aaa.jeremyfhall.com/catalog/#topic=agent-skills&os=windows&confirmed=1)
 
 ## Browse by what you actually run
 
@@ -297,7 +297,7 @@ a `#new=1` link that has outlived its cohort shows the whole atlas rather than a
 
 The site is one static page over one JSON file, and that file is public at a stable URL:
 
-**<https://crazy54.github.io/awesome-agentic-atlas/data.json>**
+**<https://aaa.jeremyfhall.com/data.json>**
 
 548 KB, `application/json`, `Access-Control-Allow-Origin: *`, no key and nothing to sign up for,
 rewritten by the same job that republishes the site. It exists because the page needs it, but it is the
@@ -436,7 +436,7 @@ while a magic index quietly starts answering a different question.
 ```python
 import json, urllib.request
 
-URL = "https://crazy54.github.io/awesome-agentic-atlas/data.json"
+URL = "https://aaa.jeremyfhall.com/data.json"
 with urllib.request.urlopen(URL) as r:
     d = json.load(r)
 
@@ -525,9 +525,9 @@ If you think something here should be attributed differently, open an issue and 
 
 </div>
 
-[site]: https://crazy54.github.io/awesome-agentic-atlas/
-[new]: https://crazy54.github.io/awesome-agentic-atlas/catalog/#new=1
-[discover]: https://crazy54.github.io/awesome-agentic-atlas/discover/
-[data]: https://crazy54.github.io/awesome-agentic-atlas/data.json
+[site]: https://aaa.jeremyfhall.com/
+[new]: https://aaa.jeremyfhall.com/catalog/#new=1
+[discover]: https://aaa.jeremyfhall.com/discover/
+[data]: https://aaa.jeremyfhall.com/data.json
 [dark]: https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx
 [light]: https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx

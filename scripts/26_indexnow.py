@@ -2,9 +2,10 @@
 
 `docs/sitemap.xml` and `docs/sitemap-repos.xml` list 1,452 URLs between them and, until JFH-206, nothing
 had ever told a search engine either file exists. `robots.txt` cannot: its `Sitemap:` directive is only
-read when a crawler fetches `robots.txt` for a host it already crawls, and this is a *project* Pages site
-under `/awesome-agentic-atlas/`, so the only robots.txt a crawler looks for is `crazy54.github.io/robots.txt`
--- which 404s. That leaves two routes, and they are not alternatives:
+read when a crawler fetches `robots.txt` for a host it already crawls, and on a project Pages site under
+`/<repo>/` the only robots.txt a crawler looks for is `<owner>.github.io/robots.txt`, which 404s. The custom
+domain in `docs/CNAME` fixed that half: `robots.txt` is now the host root's and is read. It still only
+helps a crawler that has already found the host. That leaves two routes, and they are not alternatives:
 
   * Search Console and Bing Webmaster Tools take the *whole* sitemap, once, and need a verified property,
     which needs a human with the account. `19_pages.verification()` is the build's half of that.
@@ -30,15 +31,16 @@ THE SUBDIRECTORY RULE, WHICH IS THE ONE THING THAT MAKES OR BREAKS THIS
 
 IndexNow scopes a key to the directory its key file sits in. A key at the host root may submit any URL on
 the host; a key in a subdirectory may only submit URLs beneath that subdirectory, and the request has to
-carry `keyLocation` saying where the file is. We cannot write to `crazy54.github.io/` -- that host root
-belongs to a user Pages site that does not exist -- so `20_landing.py` puts the key file inside
-`/awesome-agentic-atlas/` and every payload here names it. Every URL this site publishes is under that
-prefix by construction, so the narrower scope costs nothing. It is asserted rather than assumed below:
-a URL outside `SITE` would earn a 422 for the whole batch, taking the good URLs down with it.
+carry `keyLocation` saying where the file is. `20_landing.py` puts the key file at the root of `SITE`
+and every payload here names it. On the custom domain that is the host root. Without one it is the
+`/<repo>/` prefix, because `<owner>.github.io/` belongs to a user Pages site that does not exist. Every URL
+this site publishes is under `SITE` by construction, so the scope costs nothing either way. It is asserted
+rather than assumed below: a URL outside `SITE` would earn a 422 for the whole batch, taking the good URLs
+down with it.
 
 This is the same trap `20_landing.robots()` documents and the opposite outcome. robots.txt at a project
-Pages path is inert and stays inert until a custom domain appears. IndexNow at a project Pages path works,
-today, because the protocol has a supported answer for exactly this case.
+Pages path is inert. IndexNow at a project Pages path works, because the protocol has a supported answer
+for exactly this case, so this stage never depended on the custom domain.
 
 WHAT A BAD RESPONSE MEANS AND WHAT IT DOES NOT
 

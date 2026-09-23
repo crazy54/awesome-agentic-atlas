@@ -1,11 +1,11 @@
-"""Unit tests for the links into the catalogue, after the catalogue moved from the root to `catalog/`.
+"""Unit tests for the site's own addresses: the host it is served at, and the links into the catalogue.
 
 The root used to be the catalogue, and a filtered view of it was the root plus a hash: `#topic=x&target=y`,
 `#q=name`, `#new=1`. When `31_home.py` took the root and `19_pages.py` moved down to `catalog/`, every
 one of those links started landing on the shelves homepage, which reads no hash, so the filter was
 dropped without a word. The build stayed green, because no test followed a link.
 
-Two groups:
+Three groups:
 
   the forwarder  -- the script in the *rendered* homepage, run under node against a stub `location`. A
                     filtered hash is forwarded to `catalog/` with its query and hash intact. An in-page
@@ -17,6 +17,12 @@ Two groups:
                     the 156 facet pages' `live`, and the detail pages' `#q=` search link. Resolved rather
                     than string-matched, because the defect class here is a relative path that is right at
                     one depth and wrong at another.
+  the address    -- `SITE` is the host in `docs/CNAME`, read here from the file rather than from `SITE`,
+                    because Pages 301s the `github.io` project URL to that host and a canonical naming the
+                    project URL names a redirect. A malformed CNAME is refused. The feed's `tag:` ids are
+                    the ones already published in the committed `docs/feed.xml`, because an id that moved
+                    with the host would show every subscriber fifty old entries as new. `robots.txt` says it
+                    is read when there is a custom domain, and says it is inert when there is not.
 
 Nothing here writes to `docs/`. It reads the committed `docs/data.json` and `docs/discover.json`.
 
@@ -153,6 +159,56 @@ with tempfile.TemporaryDirectory() as tmp:
         got = urljoin(repo.url, h.replace("&amp;", "&"))
         true(f"detail page {repo.url}: its search link resolves into the catalogue",
              got.startswith(CATALOG + "#q="), got)
+
+
+# =====================================================================  3. the address
+def refused(text: str) -> bool:
+    with tempfile.TemporaryDirectory() as tmp:
+        f = Path(tmp) / "CNAME"
+        f.write_text(text, encoding="utf-8")
+        try:
+            b17.read_cname(f)
+        except SystemExit:
+            return True
+        return False
+
+
+cname_file = ROOT / "docs" / "CNAME"
+true("docs/CNAME is committed (Pages serves a custom domain only while it is)", cname_file.exists())
+cname = cname_file.read_text(encoding="utf-8").strip() if cname_file.exists() else ""
+eq("SITE is the host docs/CNAME names, at its root", SITE, f"https://{cname}/")
+eq("...and the project URL is what a fork without a CNAME gets", b17.site_url(""),
+   "https://crazy54.github.io/awesome-agentic-atlas/")
+with tempfile.TemporaryDirectory() as tmp:
+    eq("a missing CNAME reads as none", b17.read_cname(Path(tmp) / "CNAME"), "")
+    (Path(tmp) / "CNAME").write_bytes(b" atlas.example.org \r\n")
+    eq("surrounding whitespace and a CRLF are not part of the name", b17.read_cname(Path(tmp) / "CNAME"),
+       "atlas.example.org")
+for wrong in ["https://atlas.example.org", "atlas.example.org/atlas", "Atlas.Example.org",
+            "a.example.org\nb.example.org", "localhost", "-atlas.example.org"]:
+    true(f"a CNAME of {wrong!r} is refused rather than put in every URL", refused(wrong))
+
+b21 = load("b21", "21_feeds.py")
+feed = (ROOT / "docs" / "feed.xml").read_text(encoding="utf-8")
+ids = re.findall(r"<id>([^<]+)</id>", feed)
+eq("the feed id is the one already published", b21.FEED_ID, ids[0])
+first = re.search(r"<entry>.*?<id>([^<]+)</id>", feed, re.S).group(1)
+nwo = first.split("/repos/", 1)[1]
+eq("...and so is an entry's, so no subscriber is shown old entries as new", b21.entry_id(nwo), first)
+true("...neither of which names the custom domain, which is an address and not a name",
+     cname not in b21.FEED_ID)
+
+text = b20.robots()
+true("robots.txt points at both sitemaps under SITE",
+     f"Sitemap: {SITE}sitemap.xml\n" in text and f"Sitemap: {SITE}sitemap-repos.xml\n" in text, text)
+true("...says it is read, because on the custom domain it is the host root's",
+     "inert" not in text and cname in text, text)
+saved = b17.CNAME
+try:
+    b17.CNAME = ""
+    true("...and says it is inert when there is no custom domain", "inert" in b20.robots())
+finally:
+    b17.CNAME = saved
 
 
 print(f"deeplinks: {ok} passed, {bad} failed")

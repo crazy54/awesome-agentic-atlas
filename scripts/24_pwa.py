@@ -152,9 +152,10 @@ Not precached, deliberately:
 
 THE PATH PREFIX, WHICH IS WHERE THIS KIND OF WORK USUALLY DIES
 
-The atlas is a *project* Pages site: everything lives under `/awesome-agentic-atlas/`, not at the root
-of `crazy54.github.io`. Every path in the manifest and in the worker is therefore relative, and nothing
-below ever writes a leading slash. `start_url` and `scope` resolve against the manifest's own URL, and
+The atlas is served at the root of its custom domain (`docs/CNAME`), but it was built as a *project*
+Pages site, where everything lives under `/awesome-agentic-atlas/` and not at the root of
+`crazy54.github.io`, and a fork without a CNAME still is one. Every path in the manifest and in the worker
+is therefore relative, and nothing below ever writes a leading slash. `start_url` and `scope` resolve against the manifest's own URL, and
 the worker's `ROOT` resolves against `self.location`, so all three land on the prefix by construction --
 on the published site, on a fork under a different name, and on a local `python -m http.server` serving
 `docs/` at the root, which is the case that a hardcoded `/awesome-agentic-atlas/` would break. `main()`
