@@ -285,9 +285,11 @@ ok("the beacon and the Open Graph cards are not cached",
 // would have to whitelist the very failures it is watching for.
 const consoleErrs = () => events.filter(e => e.method === "Log.entryAdded" &&
   e.params.entry.level === "error" &&
-  // The Cloudflare beacon cannot pass CORS against localhost. It is the page's only third-party request
-  // and it is fire-and-forget, so its failure says nothing about this page.
-  !/cloudflareinsights|beacon/.test(e.params.entry.text + " " + (e.params.entry.url || "")));
+  // The Cloudflare beacon cannot pass CORS against localhost, and it is fire-and-forget, so its failure
+  // says nothing about this page. Nor does a picture GitHub declines to serve: every homepage image is its
+  // social card, and a run that fetched them back to back alongside a second suite was answered with six
+  // 429s. Neither the worker nor the page caches or depends on them -- the check above pins that.
+  !/cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(e.params.entry.text + " " + (e.params.entry.url || "")));
 const online = consoleErrs();
 ok("no console errors from the page or the worker while online", online.length === 0,
    online.map(e => e.params.entry.text).join(" | "));
