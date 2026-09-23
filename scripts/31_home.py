@@ -314,6 +314,37 @@ DOT_CSS = r"""/* The freshness dot. From BASE_CSS in scripts/30_v2.py -- the onl
 # This page's own rules, for the two bands the prototype does not have and the one thing `pages.css` does
 # not know: that a `<main>` on this page is shelves rather than a table.
 HOME_CSS = r"""/* WHAT THE PROTOTYPE DOES NOT HAVE. Everything else on this page is imported. */
+/* THE MASTHEAD HAS NO BAR. Everywhere else the header is a panel with a rule under it; here it is drawn on
+   a picture of this repository's own code -- its git log and lines from scripts/, made by
+   scripts/masthead_art.py -- whose alpha is opaque at the top, reaches 0 at both sides, and fades from
+   half-way down to 0 at the bottom. So there is no edge against the page anywhere but the top.
+   `.mhart` is its own element, absolutely placed at the top of the body, rather than the header's
+   background, because it runs on past the header's bottom and under the spotlight: that overlap is what
+   makes the fade seamless. Header and main are lifted over it, header above main, so the Settings menu
+   still drops over the page. `center bottom` with `cover`, so a screen too wide for the height crops the
+   opaque top, never the faded bottom. One file per mode, so each reader downloads one of the two.
+   The first layer is a scrim over the left, where the title and blurb sit: the code there is dimmed into
+   the page's own surface, so the words are read against a near-flat field and the lit code is on the
+   right, where the navigation is short. It is the page's colour, so it has no edge of its own either. */
+.mhart{position:absolute;left:0;right:0;top:0;height:clamp(340px,31.67vw,560px);z-index:0;
+  pointer-events:none;--scrim:linear-gradient(90deg,color-mix(in srgb,var(--surface) 88%,transparent) 0%,
+  color-mix(in srgb,var(--surface) 70%,transparent) 38%,transparent 62%);
+  background:var(--scrim),url(assets/masthead-dark.webp) center bottom/cover no-repeat}
+html[data-theme=light] .mhart{background:var(--scrim),url(assets/masthead-light.webp) center bottom/cover no-repeat}
+@media (max-width:899px){.mhart{--scrim:linear-gradient(color-mix(in srgb,var(--surface) 72%,transparent),
+  color-mix(in srgb,var(--surface) 72%,transparent))}}
+header{position:relative;z-index:2;background:transparent;border-bottom:0;
+  backdrop-filter:none;-webkit-backdrop-filter:none}
+main{position:relative;z-index:1}
+/* The type sits on lit code, so it gets a shadow in the page's own surface colour: a halo that is
+   invisible against the page and lifts the words off the glyphs behind them. */
+header h1,header .sub,header .blurb,header .top nav{text-shadow:0 0 14px var(--surface),0 0 4px var(--surface)}
+/* Reserved for the mascot: an animated model standing between the title and the navigation, feet just past
+   the header's bottom edge, on the fading half of the picture. Empty until the model lands, and hidden
+   where the navigation wraps under the title and there is no room between them. */
+header .wrap{position:relative}
+.mhmascot{position:absolute;left:52%;bottom:-28px;width:240px;height:240px;pointer-events:none;z-index:1}
+@media (max-width:899px){.mhmascot{display:none}}
 /* The lit field the frosted panels frost, for the themes that declare one. Fixed rather than scrolled so
    it does not slide out from under them, and behind everything. `none` in graphite, which costs nothing.
    On `body::before` rather than `body` because the shelves need a background of their own to sit on. */
@@ -380,6 +411,27 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
 # The bands, in the order they appear. Each one is a function returning markup so that `render()` reads as
 # the page's outline and the order is a list rather than a 200-line f-string.
 
+# The spotlight is the one card allowed the project's own picture. Every other card shows GitHub's social
+# card instead (see `art()` in 30_v2.py): nothing bounds what a README banner weighs, and 13 of them made this
+# page 21.49 MB. One picture is a different sum. A median banner is 447 KB, and this is the slot the page
+# exists to give a project that popularity would never surface, so it gets to look like itself.
+#
+# Except for GIFs. They are where the weight was -- 11,955, 2,176 and 1,971 KB were the three largest
+# pictures on the page, and all three were animated -- and one of them in this slot would put the page back
+# over its budget by itself. A GIF, and a row with no picture, get the social card, which GitHub draws for
+# every repository: its name, description, owner avatar and counts, at a fixed ~100 KB.
+#
+# Not lazy, and fetched at high priority: it is the largest thing on the first screen, so it is the page's
+# LCP element, and `loading=lazy` on an LCP image only delays the paint.
+HEAVY = re.compile(r"\.gif(?:$|[?#])", re.I)
+
+
+def spot_art(f: dict) -> str:
+    src = f["img"] if f["img"] and not HEAVY.search(f["img"]) else b19.og(f["nwo"])
+    return (f'<img src="{esc(src)}" alt="" decoding="async" fetchpriority="high"'
+            ' style="aspect-ratio:16/9">')
+
+
 def spotlight() -> str:
     """One project, chosen from outside the top 200, with its own reason for being there.
 
@@ -394,7 +446,7 @@ def spotlight() -> str:
     f = b30.face(hero)
     return (
         f'<article class="hero" style="--ac:{f["ac"]}">'
-        f'<span class="ph">{b30.art(f)}<span class="veil"></span>'
+        f'<span class="ph">{spot_art(f)}<span class="veil"></span>'
         f'{b30.kind_chip(f)}{b30.stars_over(f)}{b30.plat_pills(f, True)}</span>'
         f'<div class="bd"><p class="kick"><i></i>Spotlight</p>'
         f'<h2><a href="{f["href"]}">{esc(f["name"])}</a></h2>'
@@ -709,7 +761,9 @@ def render() -> str:
     body = [
         '<body>',
         '<div class="scan" aria-hidden="true"></div>',
+        '<div class="mhart" aria-hidden="true"></div>',
         '<header><div class="wrap">',
+        '  <div class="mhmascot" aria-hidden="true"></div>',
         f'  <nav class="brandbar">{mark.brand("./")}</nav><div class="top">',
         '  <div>',
         '    <h1>Awesome Agentic Atlas</h1>',

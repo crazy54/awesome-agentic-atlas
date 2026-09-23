@@ -15,7 +15,7 @@
 // Paths are resolved from this file's own location rather than from the working directory, so `node
 // tests/probe.mjs` works from anywhere. It used to be `readFileSync("docs/index.html")`, which was only
 // ever correct when run from the repository root.
-import {readFileSync} from "node:fs";
+import {existsSync, readFileSync} from "node:fs";
 import {fileURLToPath} from "node:url";
 import {join} from "node:path";
 
@@ -819,11 +819,35 @@ ok("registration comes after the page's own content",
 // 21.41 MB of it from 13 lazy-loaded pictures, one of them an 11,955 KB GIF. The catalog made the same call
 // in JFH-218. Asserted as "no other host" rather than "no raw.githubusercontent.com", because the column also
 // points at github.com/user-attachments, user-images and arbitrary CDNs, and all of them were on this page.
-const homeImgs = [...homeHTML.matchAll(/<img\b[^>]*\bsrc="([^"]*)"/g)].map(m => m[1]);
+//
+// Except the spotlight, which is cut out first and checked on its own below: it is the one card allowed the
+// project's own picture, so "every picture" means every picture outside `article.hero`.
+const heroHTML = (homeHTML.match(/<article class="hero"[\s\S]*?<\/article>/) || [""])[0];
+const homeImgs = [...homeHTML.replace(heroHTML, "").matchAll(/<img\b[^>]*\bsrc="([^"]*)"/g)].map(m => m[1]);
 const notCard = homeImgs.filter(s => !/^https:\/\/opengraph\.githubassets\.com\/1\/[\w.-]+\/[\w.-]+$/.test(s));
 ok("the homepage has pictures to check", homeImgs.length > 10, String(homeImgs.length));
 ok("...and every one is a social card, of bounded size, rather than a README's own banner",
    notCard.length === 0, notCard.slice(0, 3).join(" "));
+
+// The spotlight's picture. Which source it gets -- the row's own, or the social card -- depends on the day's
+// row, so that choice is tested on `spot_art()` directly in deeplinks_test.py, where both arms can be fed.
+// What is asserted here holds whichever arm today's page took: one picture, not a GIF (the three heaviest
+// pictures this page ever had were GIFs), and not lazy, because it is the largest thing on the first screen
+// and `loading=lazy` on the LCP element only delays its paint.
+const heroImg = heroHTML.match(/<img\b[^>]*>/g) || [];
+ok("the spotlight has exactly one picture", heroImg.length === 1, String(heroImg.length));
+ok("...which is not a GIF", heroImg.length === 1 && !/\bsrc="[^"]*\.gif(?:[?#"])/i.test(heroImg[0]),
+   heroImg[0]);
+ok("...and is fetched eagerly, at high priority",
+   heroImg.length === 1 && !/\bloading=/.test(heroImg[0]) && /\bfetchpriority="high"/.test(heroImg[0]),
+   heroImg[0]);
+
+// The masthead has no bar: the header is transparent and drawn over committed artwork, one file per mode. A
+// missing file would fail nothing else -- a CSS background that 404s is simply not drawn.
+ok("the masthead artwork is on the homepage", /<div class="mhart" aria-hidden="true"><\/div>/.test(homeHTML));
+for (const mode of ["dark", "light"])
+  ok(`...and its ${mode}-mode image is committed`,
+     existsSync(join(ROOT, "docs", "assets", `masthead-${mode}.webp`)), `docs/assets/masthead-${mode}.webp`);
 
 // ------------------------------------------------------------------------------- the cards view
 // The layout itself is a stylesheet, so it is asserted against the stylesheet -- there is no computed
