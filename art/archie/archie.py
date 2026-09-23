@@ -5,15 +5,16 @@ Run it headless and it writes three files:
     blender --background --factory-startup --python art/archie/archie.py
 
   * `art/archie/archie.blend`  -- the scene, for anyone who wants to open it and push vertices around.
-  * `docs/assets/archie.glb`   -- the animated model the homepage banner loads, with eighteen named glTF
+  * `docs/assets/archie.glb`   -- the animated model the homepage banner loads, with twenty named glTF
                                   animations at 30 fps: `idle` (a four-second loop: sway, foot tap,
                                   blinks), `watch`, `sit`, `sleep`, thirteen Fortnite dances (`floss`,
                                   `take-the-l`, `default-dance`, `orange-justice`, `robot`,
                                   `electro-shuffle`, `hype`, `boogie-down`, `get-griddy`, `billy-bounce`,
-                                  `fresh`, `scenario`, `groove-jam`) and `walk`, one stride in place that
-                                  the page moves across the banner. Every clip but `idle` and `walk`
-                                  starts and ends on the idle's first pose, so the page can play any of
-                                  them between two idles without a jump.
+                                  `fresh`, `scenario`, `groove-jam`) of fifteen or sixteen seconds each,
+                                  `press` (jabbing at a button that won't work), `shrug`, and `walk`,
+                                  one stride in place that the page moves across the banner. Every clip
+                                  but `idle` and `walk` starts and ends on the idle's first pose, so the
+                                  page can play any of them between two idles without a jump.
   * `docs/assets/archie-3d.webp` -- a transparent still of the idle's first frame, for reduced motion, for
                                   narrow screens, and for any browser that cannot or will not run WebGL.
 
@@ -358,8 +359,20 @@ def smooth01(x: float) -> float:
     return x * x * (3 - 2 * x)
 
 
+# `(R, T)` while a dance is being posed as one of R repeats of its pattern, T being the phase of the whole
+# repeated clip; `None` otherwise. See `pose_at`.
+LONG: tuple | None = None
+
+
 def envelope(t: float, a: float, b: float, c: float, d: float) -> float:
-    """0 before a, easing to 1 by b, holding until c, easing back to 0 by d."""
+    """0 before a, easing to 1 by b, holding until c, easing back to 0 by d.
+
+    While `LONG` is set, the envelope is taken over the whole repeated clip instead of the one pattern `t`
+    is the phase of, with the ramps kept the same length in frames. So a dance eases in from `REST` once at
+    the start and out once at the end, and it doesn't dip back to rest between repeats."""
+    if LONG:
+        r, t = LONG
+        a, b, c, d = a / r, b / r, 1 - (1 - c) / r, 1 - (1 - d) / r
     return smooth01((t - a) / (b - a)) * (1 - smooth01((t - c) / (d - c)))
 
 
@@ -525,8 +538,10 @@ def default_dance(t):
     beats = 8
     b = math.sin(TAU * beats * t)
     half = (t * 2) % 1                                  # each half: pumping, then the overhead swing
-    pump = 1 - smooth01((half - 0.55) / 0.1)
+    # The pumping comes back in as the arms come down from overhead, so each half ends on the pose the next
+    # one starts from.
     over = smooth01((half - 0.55) / 0.1) * (1 - smooth01((half - 0.92) / 0.08))
+    pump = 1 - over
     for side, sign in (("right", 1), ("left", -1)):
         beat = max(0.0, sign * b)
         add(pose, f"upper-{side}", dx=(-55 - 25 * beat) * pump * on, dy=sign * -20 * beat * pump * on)
@@ -629,11 +644,12 @@ def electro_shuffle(t):
 
 def hype(t):
     """Hype: both fists punched to the sky and pulled back down to the shoulders on every beat, knees
-    bouncing, then arms crossed in an X over the chest for the last two beats."""
+    bouncing, then arms crossed in an X over the chest for the last two beats, thrown open to the sky again
+    as the pattern starts over."""
     on = envelope(t, 0.0, 0.06, 0.94, 1.0)
     n = 8
     p = n * t
-    cross = smooth01((p - 5.8) / 0.4)
+    cross = smooth01((p - 5.8) / 0.4) * (1 - smooth01((p - 7.4) / 0.6))
     pull = 0.5 - 0.5 * math.cos(TAU * p)                 # 0: fists up; 1: pulled down, on the beat
     pose = mix(REST, DOWN, on)
     for side, sign in (("right", 1), ("left", -1)):
@@ -781,7 +797,7 @@ def groove_jam(t):
     """Groove Jam: a side step out and back, shoulders bouncing on every beat, both forearms up in front
     swinging side to side like a pair of pendulums the wrong way up."""
     on = envelope(t, 0.0, 0.06, 0.94, 1.0)
-    n = 10
+    n = 8                                                # a whole number of four-beat steps, so it repeats
     p = n * t
     step = math.sin(math.pi * p / 2)                     # two beats each way
     swing = math.sin(math.pi * p)
@@ -801,6 +817,74 @@ def groove_jam(t):
     return pose, {"hips": (0.08 * step * on, 0, (-0.06 + 0.035 * (1 - bounce)) * on)}, blink(t, 0.4)
 
 
+def pulse(s: float, at: float, rise: float, hold: float, fall: float) -> float:
+    """0, easing up to 1 over `rise` seconds ending at `at`, held for `hold`, easing back down over `fall`."""
+    if s < at:
+        return smooth01((s - at + rise) / rise)
+    return 1 - smooth01((s - at - hold) / fall)
+
+
+# The right arm's two links, pivot to elbow and elbow to wrist, for reaching along a line.
+BICEP, FOREARM = 0.25, 0.28
+
+
+def reach(angle: float, d: float) -> dict:
+    """The right arm with its wrist `d` metres from the shoulder along a line `angle` degrees forward of
+    straight down, the elbow dropping below the line as the arm pulls back: two-link IK in the arm's plane."""
+    d = min(d, BICEP + FOREARM - 1e-4)
+    inner = math.degrees(math.acos((BICEP ** 2 + FOREARM ** 2 - d * d) / (2 * BICEP * FOREARM)))
+    lift = math.degrees(math.asin(FOREARM * math.sin(math.radians(inner)) / d))
+    return {"upper-right": (-(angle - lift), 0, 0), "elbow-right": (-(180 - inner), 0, 0)}
+
+
+PRESS = 135                     # four and a half seconds
+PRESS_ANGLE = 100               # the jab's line: 10 degrees above horizontal, straight ahead; any higher
+                                # and the fist is lost against the head, seen from the side
+# The frames (from 0) each jab reaches full stretch on. Even, because the export keeps every other frame and
+# a peak between two kept frames would be cut short.
+PRESS_STEADY = (30, 46, 62)
+PRESS_CROSS = (94, 102, 110)
+
+
+def press(t):
+    """Tries to push a button in front of him that doesn't work: the right arm comes up to point straight
+    ahead and a little up, jabs three times on a steady beat, and holds still while he tilts his head at
+    the hand. Then three quicker, crosser jabs with the body leaning in, and the arm goes back down. The
+    jab is in the arm's own plane, so it reads best from the side, which is how the page shows it."""
+    s = t * PRESS / FPS
+    up = envelope(t, 0.1 * FPS / PRESS, 0.7 * FPS / PRESS, 3.8 * FPS / PRESS, 4.4 * FPS / PRESS)
+    steady = max(pulse(s, c / FPS, 0.12, 0.07, 0.22) for c in PRESS_STEADY)
+    cross = max(pulse(s, c / FPS, 0.07, 0.07, 0.12) for c in PRESS_CROSS)
+    ext = max(steady, cross)
+    arm = reach(PRESS_ANGLE, 0.34 + (BICEP + FOREARM - 0.34) * ext)
+    pose = mix(REST, {**REST, **arm, "head": (8, 0, -6)}, up)
+    look = envelope(s, 2.15, 2.45, 2.85, 3.05)
+    add(pose, "head", dx=10 * look, dy=16 * look, dz=-12 * look)
+    add(pose, "torso", dx=4 * steady * up + 7 * cross * up, dz=-4 * up)
+    add(pose, "head", dx=3 * steady * up - 4 * cross * up)
+    add(pose, "heel-right", dx=-18 * cross)                  # a stamp with each cross jab
+    add(pose, "antenna", dx=-14 * ext * up + 10 * look)
+    add(pose, "orbit", dz=-360 * t)
+    lean = {"shoulder-right": (0, -0.03 * ext * up, 0)}
+    return pose, lean, blink(t, 2.5 / 4.5) * blink(t, 2.75 / 4.5)
+
+
+def shrug(t):
+    """The shrug: forearms out in front with the hands turned palm up, shoulders hunched up to the ears and
+    the head cocked, then back to rest."""
+    up = envelope(t, 0.03, 0.25, 0.72, 0.97)
+    bob = up * (0.8 + 0.2 * math.sin(math.pi * smooth01((t - 0.25) / 0.47)))
+    pose = mix(REST, {
+        "upper-right": (-15, 28, 0), "elbow-right": (-80, 35, 0), "hand-right": (0, 0, 120),
+        "upper-left": (-15, -28, 0), "elbow-left": (-80, -35, 0), "hand-left": (0, 0, -120),
+        "head": (-6, 16, 0), "torso": (-3, 0, 0),
+    }, up)
+    add(pose, "antenna", dy=-18 * up)
+    add(pose, "orbit", dz=-180 * t)
+    lift = 0.06 * bob
+    return pose, {"shoulder-right": (0, 0, lift), "shoulder-left": (0, 0, lift)}, blink(t, 0.5)
+
+
 # How far each leg swings in the walk, in degrees, and the loop's length. `archie.js` moves the model at the
 # speed these two give -- `WALK_SPEED` there -- so the feet do not slide. Change one and change it there.
 STRIDE = 32
@@ -812,7 +896,30 @@ CLIPS = {"idle": (120, idle), "watch": (150, watch), "floss": (120, floss), "sit
          "robot": (120, robot), "electro-shuffle": (150, electro_shuffle), "hype": (120, hype),
          "boogie-down": (150, boogie_down), "get-griddy": (120, get_griddy),
          "billy-bounce": (120, billy_bounce), "fresh": (120, fresh), "scenario": (120, scenario),
-         "groove-jam": (150, groove_jam)}
+         "groove-jam": (120, groove_jam), "press": (PRESS, press), "shrug": (60, shrug)}
+
+# Each dance is baked as this many repeats of its pattern above, easing in and out once (see `envelope`), so
+# it lasts fifteen or sixteen seconds. The beats the page counts, `BEATS` in `archie.js`, are `n` times this.
+REPEAT = {"floss": 4, "take-the-l": 4, "default-dance": 3, "orange-justice": 4, "robot": 4,
+          "electro-shuffle": 3, "hype": 4, "boogie-down": 3, "get-griddy": 4, "billy-bounce": 4, "fresh": 4,
+          "scenario": 4, "groove-jam": 4}
+
+
+def frames_of(clip: str) -> int:
+    return CLIPS[clip][0] * REPEAT.get(clip, 1)
+
+
+def pose_at(clip: str, T: float):
+    """The clip's pose at phase T of the clip as baked: for a dance, of all its repeats together."""
+    global LONG
+    fn, r = CLIPS[clip][1], REPEAT.get(clip, 1)
+    if r == 1:
+        return fn(T)
+    LONG = (r, T)
+    try:
+        return fn(T * r % 1.0)
+    finally:
+        LONG = None
 
 
 def _fcurves(action):
@@ -825,8 +932,8 @@ def _fcurves(action):
     return out
 
 
-def apply_pose(P, base_rot, base_loc, t, fn):
-    rots, locs, eye = fn(t)
+def apply_pose(P, base_rot, base_loc, t, clip):
+    rots, locs, eye = pose_at(clip, t)
     for name, ob in P.items():
         r = rots.get(name, (0, 0, 0))
         ob.rotation_euler = tuple(b + math.radians(d) for b, d in zip(base_rot[name], r))
@@ -839,9 +946,10 @@ def animate(P) -> None:
     """One NLA track per clip, named for it; the glTF exporter turns each track into one animation."""
     base_rot = {k: tuple(v.rotation_euler) for k, v in P.items()}
     base_loc = {k: tuple(v.location) for k, v in P.items()}
-    for clip, (frames, fn) in CLIPS.items():
+    for clip in CLIPS:
+        frames = frames_of(clip)
         for f in range(1, frames + 1):
-            apply_pose(P, base_rot, base_loc, (f - 1) / frames, fn)
+            apply_pose(P, base_rot, base_loc, (f - 1) / frames, clip)
             for ob in P.values():
                 ob.keyframe_insert("rotation_euler", frame=f)
                 ob.keyframe_insert("location", frame=f)
@@ -857,7 +965,7 @@ def animate(P) -> None:
             strip = track.strips.new(clip, 1, act)
             strip.name = clip
             ob.animation_data.action = None
-    apply_pose(P, base_rot, base_loc, 0.0, idle)
+    apply_pose(P, base_rot, base_loc, 0.0, "idle")
 
 
 # ------------------------------------------------------------------------------------------------------
@@ -921,7 +1029,7 @@ def render(path: Path, clip="idle", t=0.0) -> None:
     for ob in pivots.values():
         if ob.animation_data:
             ob.animation_data.use_nla = False
-    apply_pose(pivots, BASE_ROT, BASE_LOC, t, CLIPS[clip][1])
+    apply_pose(pivots, BASE_ROT, BASE_LOC, t, clip)
     sc = bpy.context.scene
     sc.render.filepath = str(path)
     bpy.ops.render.render(write_still=True)

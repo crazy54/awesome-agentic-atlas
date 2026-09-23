@@ -583,69 +583,7 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 }
 </script>
 
-<script>
-(() => {
-  const mine = document.querySelector('meta[name="atlas-build"]');
-  if (!mine || location.protocol === "file:" || !window.fetch) return;
-  let last = 0, bar = null, waived = "";
-  const same = (u) => { try { return new URL(u, location.href).origin === location.origin; } catch { return false; } };
-  const refresh = async (btn) => {
-    btn.disabled = true;
-    btn.textContent = "Updating…";
-    try {
-      const shells = [];
-      if (window.caches) {
-        for (const name of await caches.keys()) {
-          if (!name.startsWith("atlas-shell-")) continue;
-          shells.push([name, (await (await caches.open(name)).keys()).map((r) => r.url)]);
-          await caches.delete(name);
-        }
-      }
-      const urls = new Set([new URL("./", location.href).href,
-        ...performance.getEntriesByType("resource").map((e) => e.name).filter(same),
-        ...shells.flatMap(([, list]) => list)]);
-      const fresh = new Map();
-      await Promise.all([...urls].map((u) => fetch(u, {cache: "reload", credentials: "same-origin"})
-        .then((r) => { if (r.ok && !r.redirected) fresh.set(u, r); }).catch(() => {})));
-      for (const [name, list] of shells) {
-        const c = await caches.open(name);
-        for (const u of list) if (fresh.has(u)) await c.put(u, fresh.get(u).clone());
-      }
-      const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
-      if (reg) await reg.update().catch(() => {});
-    } catch {}
-    location.reload();
-  };
-  const show = (build) => {
-    bar = document.createElement("div");
-    bar.className = "updbar";
-    bar.setAttribute("role", "status");
-    document.body.appendChild(bar);
-    requestAnimationFrame(() => {
-      bar.innerHTML = '<span>A newer version of the atlas has been published.</span>' +
-        '<button type="button" class="updgo">Load it</button>' +
-        '<button type="button" class="updx" aria-label="Dismiss">×</button>';
-      bar.querySelector(".updgo").addEventListener("click", (e) => refresh(e.currentTarget));
-      bar.querySelector(".updx").addEventListener("click", () => { waived = build; bar.remove(); bar = null; });
-    });
-  };
-  const check = async () => {
-    if (bar || document.hidden || Date.now() - last < 60000) return;
-    last = Date.now();
-    try {
-      const r = await fetch("build.json", {cache: "no-store"});
-      if (!r.ok) return;
-      const {build} = await r.json();
-      if (build && build !== mine.content && build !== waived) show(build);
-    } catch {}
-  };
-  addEventListener("load", check);
-  document.addEventListener("visibilitychange", check);
-  setInterval(check, 900000);
-})();
-</script>
-
-<script type="module" src="assets/archie.js?v=792e0d864c"></script>
+<script type="module" src="assets/archie.js?v=e2f15d70e3"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script>
 </body>
 </html>
