@@ -35,6 +35,13 @@ jobs:
     timeout-minutes: 350
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Whether a red verification suite stops this run publishing. It is the same switch as daily.yml's, set
+      # the other way on purpose. The daily ships "false" because a stalled site is the worse failure for a
+      # daily refresh. This job also cuts a dated workbook release marked `--latest`, and the README's
+      # permanent download links resolve to it, so on "true" a red suite records, commits, submits and
+      # releases nothing. The site keeps last week's build, the previous release stays latest, and the cache
+      # is still banked so a re-run resumes.
+      VERIFY_GATES_DEPLOY: "true"
 
     steps:
       - uses: actions/checkout@v4
@@ -379,6 +386,94 @@ jobs:
           fi
           echo "All $(git ls-files docs mega-list | wc -l | tr -d ' ') tracked files under docs/ and mega-list/ were rewritten by this build, or deleted by it ($nd), or are hand-maintained ($nst), or are the docs/v2/ beta ($nb)."
 
+      # ---------------------------------------------------------------- verification, before publication
+      #
+      # These six steps are daily.yml's verification block (JFH-284), lifted here for JFH-286, and the
+      # reasoning for each one is written out there. This job has the same hole: it pushes with
+      # `secrets.GITHUB_TOKEN`, so its commits never trigger `tests.yml`. Here the hole is bigger. The pages
+      # only this job writes are the social cards from `23_og.py` and the workbook release, and
+      # `detail-preview-check.mjs`, `cards-check.mjs` and `pwa-check.mjs` assert on what it publishes.
+      #
+      # Three things differ from the daily, and all three were worked out here rather than copied:
+      #
+      #   * No `if:`. This job has no gate step, so `steps.gate.outputs.go` does not exist here. As the
+      #     prune step above explains, pasting that condition would skip every step it guards.
+      #   * The decision step sits ahead of the release as well as the commit. Each later step carries the
+      #     implicit `success()`, so on "true" a red suite skips the SHA record, the push, IndexNow and the
+      #     release together. A red tree cannot ship as a workbook when it cannot ship as a site. The cache
+      #     steps above are `always()` and still bank the run's progress.
+      #   * The browser is pinned. This job installs Playwright's Chromium for the screenshot stages, and
+      #     `run.mjs` looks in the Playwright cache before PATH, so left alone the suite would run a different
+      #     build here from the one `tests.yml` and the daily use. Those two get the runner's own `chromium`
+      #     off PATH. `cards-check.mjs` has assertions that depend on the browser build, such as the
+      #     `(hover:hover)` query and font fallback. Pinning it means green here and green there are the
+      #     same claim.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # See daily.yml: `indexnow_test.py` compares `git ls-files docs` against the sitemaps on disk. This
+      # job rewrites `docs/sitemap-repos.xml` and prunes detail pages, so the index has to match the tree
+      # first.
+      - name: Stage the publish set, so the suite asserts on what is about to ship
+        run: |
+          set -euo pipefail
+          git add docs mega-list state
+          echo "staged $(git diff --cached --name-only -- docs mega-list state | wc -l | tr -d ' ') path(s):"
+          git diff --cached --name-status --no-renames -- docs mega-list state \
+            | cut -f1 | sort | uniq -c | tr -s ' ' | sed 's/^ /  /'
+
+      - name: Photograph the publish set before the suite touches anything
+        run: |
+          set -euo pipefail
+          git status --porcelain -- docs mega-list state > "$RUNNER_TEMP/publish-set-before"
+          echo "$(wc -l < "$RUNNER_TEMP/publish-set-before" | tr -d ' ') path(s) under docs/, mega-list/ and state/ stand changed by this build"
+
+      - name: Verify the site this build is about to publish
+        id: verify
+        continue-on-error: true
+        env:
+          AAA_CHROME_FLAGS: "--no-sandbox --disable-dev-shm-usage"
+        run: |
+          set -uo pipefail
+          # The daily's and tests.yml's browser, not the Playwright build installed above. See the note at
+          # the head of this block. If the runner image ever stops shipping it, `run.mjs` falls back to its
+          # own search and says which binary it found.
+          if pinned="$(command -v chromium)"; then export CHROME_PATH="$pinned"; fi
+          echo "browser for the suite: ${CHROME_PATH:-whatever run.mjs finds}"
+          status=0
+          node tests/run.mjs || status=$?
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+          case "$status" in
+            0) echo "the suite is green against the tree this run is about to publish" ;;
+            1) echo "::error title=The suite is red on this week's build::An assertion failed, or a harness went quiet -- printed no tally, asserted nothing, or made fewer assertions than its floor in run.mjs's HARNESSES table. The per-harness summary above says which. This is a statement about the pages this run generated, not about the runner." ;;
+            2) echo "::error title=The suite could not run::run.mjs exits 2 before any harness starts, for three reasons, and its output above says which. Two are about the machine -- no Chromium, or no Python 3 -- and nothing about this week's build failed. The third is a missing entry point in docs/, which here means a generator that writes one is no longer in the list of stages this job runs." ;;
+            *) echo "::error::run.mjs exited ${status}, which it has no documented meaning for. Read its output above." ;;
+          esac
+          exit 0
+
+      - name: Refuse to publish anything the suite itself wrote
+        run: |
+          set -euo pipefail
+          git status --porcelain -- docs mega-list state > "$RUNNER_TEMP/publish-set-after"
+          if ! diff -u "$RUNNER_TEMP/publish-set-before" "$RUNNER_TEMP/publish-set-after"; then
+            echo "::error title=The suite wrote into the publish set::A harness modified docs/, mega-list/ or state/ while running, and the difference is printed above. Every harness is supposed to write only into a mkdtemp or into gitignored build-tmp/, so one of them has grown an output path that reaches the repository. The commit step below would stage it and Pages would serve it."
+            exit 1
+          fi
+          echo "the suite wrote nothing into docs/, mega-list/ or state/"
+
+      - name: Decide whether a red suite stops this deploy
+        env:
+          STATUS: ${{ steps.verify.outputs.status }}
+        run: |
+          set -euo pipefail
+          if [ "${STATUS}" = "0" ]; then exit 0; fi
+          if [ "${VERIFY_GATES_DEPLOY}" = "true" ]; then
+            echo "::error title=Deploy blocked by a red suite::VERIFY_GATES_DEPLOY is true, so nothing is recorded, committed, submitted or released. The site keeps serving the last build and the last release stays latest. The cache was still banked above, so a re-run resumes rather than starting cold."
+            exit 1
+          fi
+          echo "::warning title=Publishing over a red suite::VERIFY_GATES_DEPLOY is false, so this week's site and workbooks ship and the run will end red to say so."
+
       - name: Record the source commits as built
         run: python scripts/watch_sources.py --update
 
@@ -496,3 +591,13 @@ jobs:
             gh release create "$tag" "${files[@]}" \
               --title "Awesome Agentic Atlas $tag" --notes "$notes" --latest
           fi
+
+      # Reachable only on "false". On "true" the decision step has already failed the run, and nothing
+      # after it ran. See daily.yml for why this is `always()`. The empty-status clause is here and not in
+      # the daily: this job has no gate, so a run that died before the suite reached it has no status at
+      # all, and saying "published, and red" about it would be false.
+      - name: End red if the suite was red
+        if: always() && steps.verify.outputs.status != '' && steps.verify.outputs.status != '0'
+        run: |
+          echo "::error title=Published, and red::The site and workbooks were published and the verification suite was not green on them (run.mjs exited ${{ steps.verify.outputs.status }}). Read the suite's own step above for which harness and which assertion."
+          exit 1
