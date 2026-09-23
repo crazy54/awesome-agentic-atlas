@@ -280,6 +280,76 @@ ok("the beacon and the Open Graph cards are not cached",
      .then(c => c.keys()).then(rs => rs.map(r => r.url))))).then(a => a.flat()
      .some(u => !u.startsWith(location.origin)))`)));
 
+// -------- a newer deploy is announced, and its button loads it past every cache (UPDATE_JS in 31_home.py)
+//
+// The newer deploy is faked by answering `build.json` over the Fetch domain, not by editing it in `docs/`:
+// peer sessions run their suites off the same tree, and a file rewritten under them is a failure in a run
+// that has nothing to do with this one.
+//
+// The stale copy is planted in the shell cache rather than in the HTTP cache, which no page can reach: it
+// is the cache-first one, so it is the copy that would outlive a plain reload, and the button's claim is
+// that it does not. Read back through the worker's own cache and compared with what this server hands a
+// plain request, so "replaced" means "replaced with the served bytes" and not merely "changed".
+const buildAsks = async () => {
+  for (let i = 0; i < 30; i++) {
+    const n = events.filter(e => e.method === "Network.requestWillBeSent" &&
+      /\/build\.json$/.test(e.params.request.url)).length;
+    if (n) return n;
+    await sleep(100);
+  }
+  return 0;
+};
+await goto(ORIGIN);
+ok("the homepage asks whether it is the build being served", await buildAsks() > 0);
+await sleep(500);
+ok("...and, since it is, says nothing", !(await evalIn("!!document.querySelector('.updbar')")));
+
+const NEWER = Buffer.from(JSON.stringify({build: "000000000000"})).toString("base64");
+const fake = ev => {
+  const m = JSON.parse(ev.data);
+  if (m.method !== "Fetch.requestPaused" || m.sessionId !== sessionId) return;
+  S("Fetch.fulfillRequest", {requestId: m.params.requestId, responseCode: 200, body: NEWER,
+    responseHeaders: [{name: "Content-Type", value: "application/json"}]}).catch(() => {});
+};
+ws.addEventListener("message", fake);
+await S("Fetch.enable", {patterns: [{urlPattern: "*/build.json*"}]});
+await goto(ORIGIN);
+let bar = null;
+for (let i = 0; i < 50 && !bar; i++) {
+  bar = await evalIn(`(() => { const b = document.querySelector(".updbar"), go = b && b.querySelector(".updgo");
+    return go ? {role: b.getAttribute("role"), text: b.textContent, h: go.getBoundingClientRect().height} : null; })()`);
+  if (!bar) await sleep(100);
+}
+ok("once build.json names another build, the notice appears", !!bar);
+ok("...as a status, so a screen reader hears it", bar?.role === "status", bar?.role);
+ok("...saying what happened", /newer version/.test(bar?.text || ""), bar?.text);
+ok("...with a button a thumb can hit", (bar?.h || 0) >= 44, String(bar?.h));
+await S("Fetch.disable");
+ws.removeEventListener("message", fake);
+
+const shellName = (await evalIn("caches.keys()")).find(c => c.startsWith("atlas-shell-"));
+const shellUrls = () => evalIn(`caches.open(${JSON.stringify(shellName)}).then(c => c.keys()).then(ks => ks.map(r => r.url).sort())`);
+const shellBefore = await shellUrls();
+await evalIn(`caches.open(${JSON.stringify(shellName)}).then(c => c.put(new URL("pages.css", location.href).href,
+  new Response("/* stale */", {headers: {"Content-Type": "text/css"}}))).then(() => true)`);
+await evalIn("window.__beforeUpdate = 1; document.querySelector('.updbar .updgo')?.click(); true");
+let reloaded = false;
+for (let i = 0; i < 100 && !reloaded; i++) {
+  await sleep(150);
+  try { reloaded = await evalIn("!window.__beforeUpdate && document.readyState === 'complete'"); } catch {}
+}
+ok("the button reloads the page", reloaded);
+const cachedCss = await evalIn(`caches.open(${JSON.stringify(shellName)}).then(c => c.match(new URL("pages.css", location.href).href))
+  .then(r => r ? r.text() : null)`);
+const servedCss = await (await fetch(ORIGIN + "pages.css")).text();
+ok("...having replaced the stale shell copy with the served bytes", cachedCss === servedCss,
+   cachedCss === null ? "pages.css is missing from the shell" : `${cachedCss.length} vs ${servedCss.length} bytes`);
+ok("...and left the shell holding everything it held before",
+   JSON.stringify(await shellUrls()) === JSON.stringify(shellBefore), JSON.stringify(await shellUrls()));
+await sleep(800);
+ok("...after which the page is the build being served, and says nothing",
+   !(await evalIn("!!document.querySelector('.updbar')")));
+
 // Checked here rather than at the end, because everything after this line fails a request on purpose --
 // the offline phase and the deliberate 404 -- so a check at the end would either be a false alarm or
 // would have to whitelist the very failures it is watching for.

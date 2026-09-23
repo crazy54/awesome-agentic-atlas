@@ -265,5 +265,22 @@ finally:
     b31.OUT = saved_out
 
 
+# The newer-version notice. Its button deletes and refills the worker's shell cache by name, so the prefix
+# the page substitutes in is the worker's own; and the page's build id is a hash of the page, so it holds
+# still across rebuilds of the same bytes and moves with any byte, or every visit would announce a
+# deploy -- or none would.
+b24 = load("b24", "24_pwa.py")
+eq("the notice's shell prefix is the worker's", b31.SHELL_PREFIX, b24.CACHE_PREFIX)
+true("...and it is the one substituted into the script",
+     "__SHELLPREFIX__" in b31.UPDATE_JS and b31.SHELL_PREFIX not in b31.UPDATE_JS)
+shell = f'<meta name="atlas-build" content="{b31.BUILD}"><p>a</p>'
+one = b31.stamped(shell)
+got = b31.BUILD_META.search(one)
+true("a stamped page carries a twelve-hex build id where the placeholder was", got and b31.BUILD not in one, one)
+eq("...the same one every time the same page is stamped", b31.stamped(shell), one)
+true("...and a different one for a page that differs by a byte",
+     b31.BUILD_META.search(b31.stamped(shell.replace("<p>a<", "<p>b<"))).group(1) != got.group(1))
+
+
 print(f"deeplinks: {ok} passed, {bad} failed")
 sys.exit(1 if bad else 0)
