@@ -13,7 +13,8 @@ export {
   WebGLRenderer, Scene, PerspectiveCamera, DirectionalLight, AnimationMixer, LoopOnce, LoopRepeat,
   PMREMGenerator, SRGBColorSpace, NoToneMapping, Color, Vector3, Group, Mesh, SpotLight, ShaderMaterial,
   CylinderGeometry, CustomBlending, OneFactor, ZeroFactor, SrcAlphaFactor,
-  OneMinusSrcAlphaFactor, DoubleSide,
+  OneMinusSrcAlphaFactor, DoubleSide, MeshStandardMaterial, MeshBasicMaterial, BoxGeometry, CircleGeometry,
+  PlaneGeometry,
 } from "three";
 export { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 export { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
