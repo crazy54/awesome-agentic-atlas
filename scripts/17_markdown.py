@@ -59,9 +59,13 @@ def site(**filters) -> str:
     these files — `fileslug`, one function, both places. So `topics/agent-skills.md` and
     `#topic=agent-skills` are the same view of the same data. It is the only one of the three surfaces
     that can hold both axes at once without Excel, which is why every facet page links into it.
+
+    Into `catalog/`, not the root. The root is the shelves homepage, which reads no filters; the homepage
+    forwards a filtered hash here, so an old link still lands, but a link written today should not need
+    the hop.
     """
     q = "&".join(f"{k}={v}" for k, v in filters.items() if v)
-    return SITE + (f"#{q}" if q else "")
+    return SITE + "catalog/" + (f"#{q}" if q else "")
 
 
 def book(depth: int, theme: str) -> str:

@@ -688,7 +688,8 @@ class Page:
         """
         q = "&".join(f"{k}={v}" for k, v in (("topic", self.cat and self.cat["slug"]),
                                              ("target", self.tgt and self.tgt["slug"])) if v)
-        return self.rel() + (f"#{q}" if q else "")
+        # `catalog/`, because the root is the shelves homepage and reads no hash.
+        return self.rel("catalog/") + (f"#{q}" if q else "")
 
     @property
     def heading(self) -> str:

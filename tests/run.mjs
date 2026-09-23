@@ -2,7 +2,7 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the nineteen harnesses in turn, and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the twenty harnesses in turn, and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
@@ -69,6 +69,9 @@
 //                     a workflow runs the stage at all, which for every commit from 18d373a to this one
 //                     none did: the thirteen pages were published once and then frozen, and every other
 //                     assertion in that file was reading a file no build could rewrite.
+//   deeplinks_test.py the links into the catalogue since it moved to catalog/: the homepage's forwarder, run
+//                     under node against a stub location, and every generator's filtered link resolved
+//                     against the page that carries it.
 //   osicons_test.py   the five platform marks that replaced the words Windows, WSL2, macOS, Linux and
 //                     Docker. Mostly one assertion, walked over every built page: that every
 //                     `<use href="#...">` resolves to a `<symbol>` in that same document. A `<use>` with
@@ -132,7 +135,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// nineteen files own their own plumbing. It is 200 lines of plumbing.
+// twenty files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -166,6 +169,7 @@ const HARNESSES = [
   {file: "live_test.py", label: "the star/push sidecar the 1,294 detail pages read", python: true, floor: 90},
   {file: "semantic_test.py", label: "the semantic index, scored from the bytes a reader downloads", python: true, floor: 30},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
+  {file: "deeplinks_test.py", label: "the homepage forwarder, and every filtered link resolving into catalog/", python: true, floor: 16},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
   {file: "detail-churn.mjs", label: "1,294 detail pages, regenerated and hashed", floor: 7},
   {file: "detail-preview-check.mjs", label: "rendered repository reader, source and phone layout", needs: "browser", floor: 12},
@@ -188,7 +192,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and three of the nineteen harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and three of the twenty harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -201,7 +205,7 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Fifteen of the nineteen need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Sixteen of the twenty need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives the IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar,
@@ -211,7 +215,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and fifteen of the nineteen harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and sixteen of the twenty harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

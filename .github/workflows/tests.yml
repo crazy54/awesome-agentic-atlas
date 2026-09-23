@@ -1,4 +1,4 @@
-# The verification suite, in CI. Runs `node tests/run.mjs` -- all nineteen harnesses, 3,157 assertions --
+# The verification suite, in CI. Runs `node tests/run.mjs` -- all twenty harnesses, 3,157 assertions --
 # and fails the job when anything is red. It writes nothing, commits nothing and deploys nothing.
 #
 # That count and the one in `tests/README.md` are the same claim written twice, and they drifted apart the
@@ -60,7 +60,7 @@
 #
 # WHY NO BROWSER IS INSTALLED, AND WHICH ONE ACTUALLY GETS USED
 #
-# Three of the nineteen harnesses drive Chromium over CDP, and none of them installs one. `ubuntu-latest`
+# Three of the twenty harnesses drive Chromium over CDP, and none of them installs one. `ubuntu-latest`
 # carries two on `PATH` -- `/usr/bin/chromium` and `/usr/bin/google-chrome` -- and `launch()` passes
 # `--headless=new` unconditionally, so either is headless-capable without a flag from here. That saves a
 # ~130 MB Playwright download on every run and matches the policy `lighthouse.yml` already states next
