@@ -380,7 +380,7 @@ header h1,header .sub,header .blurb,header .top nav{text-shadow:0 0 14px var(--s
 header .wrap{position:relative}
 .mhmascot{position:absolute;left:52%;bottom:-28px;width:240px;height:240px;pointer-events:none;z-index:0}
 header .brandbar,header .top{position:relative;z-index:1}
-header .setwrap{z-index:2}
+header .setwrap,header .dancewrap{z-index:2}
 @media (max-width:899px){.mhmascot{display:none}}
 /* The lit field the frosted panels frost, for the themes that declare one. Fixed rather than scrolled so
    it does not slide out from under them, and behind everything. `none` in graphite, which costs nothing.
@@ -499,9 +499,9 @@ MASCOT = ("archie.js", "three-archie.js", "archie.glb", "archie-3d.webp")
 VERSIONED = ("archie.js", "three-archie.js", "archie.glb")
 
 
-def mascot_version() -> str:
+def mascot_version(files: tuple[str, ...] = VERSIONED) -> str:
     h = hashlib.sha256()
-    for f in VERSIONED:
+    for f in files:
         b = (OUT / "assets" / f).read_bytes()
         h.update(b.replace(b"\r\n", b"\n") if f.endswith(".js") else b)
     return h.hexdigest()[:10]
@@ -513,6 +513,36 @@ def mascot() -> tuple[str, str]:
         return "", ""
     return (".mhmascot{background:url(assets/archie-3d.webp) center/contain no-repeat}",
             f'<script type="module" src="assets/archie.js?v={mascot_version()}"></script>')
+
+
+# "Dance with me": a button beside Settings that lets Archie hear the music the reader is playing, through a
+# shared tab or screen or through the microphone, and dance to its beat. Wired only with the mascot, since
+# without one there is nobody to dance, and only when its script is committed, for the same reason as MASCOT.
+# The button ships `hidden`; the script unhides it where the mascot is shown and motion is allowed, so a
+# reader the script never reaches never sees a control that does nothing. The beat detector is an
+# AudioWorklet in a file of its own, loaded under the dance script's `?v=`, so that version covers both.
+DANCE_JS = "archie-dance.js"
+DANCE = (DANCE_JS, "archie-beat.js")
+DANCE_MENU = r"""<div class="dancewrap">
+      <button class="chip" id="dancebtn" aria-expanded="false" aria-controls="dancemenu" hidden>Dance with me</button>
+      <div class="dancemenu" id="dancemenu" hidden>
+        <p class="setlab">Where is the music playing?</p>
+        <div class="dancesrcs">
+          <button class="dsrc" data-src="system" hidden><b>On this computer</b><span>Share the tab or screen that is playing it</span></button>
+          <button class="dsrc" data-src="mic" hidden><b>In the room</b><span>Listen through the microphone</span></button>
+        </div>
+        <p class="dancemsg" role="status"></p>
+        <p class="dancenote">Archie only listens for the beat. Nothing is recorded, played back or sent anywhere.</p>
+      </div>
+    </div>"""
+
+
+def dance() -> tuple[str, str]:
+    """The button and its menu, and the script tag, or two empty strings while there is no mascot to dance."""
+    if not mascot()[1] or not all((OUT / "assets" / f).is_file() for f in DANCE):
+        return "", ""
+    return (DANCE_MENU,
+            f'<script type="module" src="assets/{DANCE_JS}?v={mascot_version(DANCE)}"></script>')
 
 
 def spotlight() -> str:

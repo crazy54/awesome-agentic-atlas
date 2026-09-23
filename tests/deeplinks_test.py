@@ -261,6 +261,25 @@ try:
         before = b31.mascot_version()
         (a / "archie-3d.webp").write_bytes(b"changed")
         eq("...but not for the poster, which the page names directly", b31.mascot_version(), before)
+        # "Dance with me" rides on the mascot: no model, no button, and no button without its script.
+        eq("with the mascot but no dance script, no button", b31.dance(), ("", ""))
+        (a / b31.DANCE_JS).write_bytes(b"x\r\ny")
+        eq("...nor with the script but not its beat detector", b31.dance(), ("", ""))
+        (a / "archie-beat.js").write_bytes(b"b")
+        menu, tag = b31.dance()
+        true("with it, the button, shipped hidden for the script to reveal",
+             re.search(r'<button[^>]*id="dancebtn"[^>]*\bhidden\b', menu), menu[:200])
+        v = re.fullmatch(r'<script type="module" src="assets/archie-dance\.js\?v=([0-9a-f]{10})"></script>', tag)
+        true("...and the script, versioned", v, tag)
+        (a / b31.DANCE_JS).write_bytes(b"x\ny")
+        eq("...by its own bytes, line endings aside", b31.dance()[1], tag)
+        (a / b31.DANCE_JS).write_bytes(b"x\nz")
+        true("...which move it", b31.dance()[1] != tag)
+        before = b31.dance()[1]
+        (a / "archie-beat.js").write_bytes(b"c")
+        true("...as the detector's do, since it is loaded under the same version", b31.dance()[1] != before)
+        (a / "archie.glb").unlink()
+        eq("and no button when the mascot itself is not wired", b31.dance(), ("", ""))
 finally:
     b31.OUT = saved_out
 
