@@ -1,0 +1,221 @@
+// Archie's pranks, played for real on the live model: each one is asked for with `?archie=prank:<name>`,
+// which goes through the same gates as a prank he picks himself, and what is asserted is the page after it
+// -- put back exactly as it was, nothing saved, and a reader who changed something mid-prank keeping it.
+// The lights are timed as well as counted, because their rate is the one thing here with a safety rule
+// behind it: WCAG 2.3.1 allows three flashes a second, and they are meant to make 1.25.
+//
+// WHAT THIS HARNESS CANNOT SEE: whether a prank is funny, and when he picks one unasked -- the three-minute
+// gap and the one-in-three roll are the director's, and waiting them out would be a four-minute test. Nor
+// the tab title under a real tab switch: `document.hidden` is overridden and the event dispatched by hand.
+//
+// The model has to go live, so WebGL is swiftshader's; a Chrome that cannot give it one fails the first
+// assertion rather than passing the rest on the poster, which plays no pranks.
+//
+//   node tests/prank-check.mjs <chrome-binary> <origin>
+import {readFileSync} from "node:fs";
+import {tmpdir} from "node:os";
+import {launch} from "./lib/browser.mjs";
+
+const BIN = process.argv[2], ORIGIN = process.argv[3].replace(/\/?$/, "/");
+const TMP = process.env.AAA_TMP || tmpdir();
+
+// His lines, read from the script, so a bubble can be checked against the set it must come from.
+const SRC = readFileSync(new URL("../docs/assets/archie.js", import.meta.url), "utf8");
+const lines = key => {
+  const m = SRC.match(new RegExp(`"${key}": (\\[\\[[\\s\\S]*?\\]\\])(?=,\\s*\\n)`));
+  if (!m) throw new Error(`no LINES["${key}"] in archie.js`);
+  return Function(`return ${m[1]}`)().map(l => l[0]);
+};
+const AWAY = Function(`return ${SRC.match(/const AWAY = (\[[^\]]*\])/)[1]}`)();
+const OURS = name => [...lines(`prank-${name}`), ...lines(`prank-${name}-after`)];
+
+process.env.AAA_CHROME_FLAGS = [process.env.AAA_CHROME_FLAGS || "", "--enable-unsafe-swiftshader",
+  "--use-angle=swiftshader"].join(" ");
+const browser = await launch(BIN, TMP, "prank");
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let id = 0;
+const waiters = new Map(), errors = [];
+const ws = new WebSocket(browser.wsUrl);
+await new Promise(r => ws.addEventListener("open", r, {once: true}));
+const send = (method, params = {}, sid) => new Promise((res, rej) => {
+  const n = ++id; waiters.set(n, {res, rej});
+  ws.send(JSON.stringify({id: n, method, params, ...(sid ? {sessionId: sid} : {})}));
+});
+ws.addEventListener("message", ev => {
+  const m = JSON.parse(ev.data);
+  if (m.id && waiters.has(m.id)) {
+    const w = waiters.get(m.id); waiters.delete(m.id);
+    m.error ? w.rej(new Error(m.error.message)) : w.res(m.result);
+  } else if (m.method === "Runtime.exceptionThrown") errors.push(m.params.exceptionDetails.exception?.description || "exception");
+  // The Cloudflare beacon cannot pass CORS against localhost; pwa-check.mjs excuses it the same way.
+  else if (m.method === "Log.entryAdded" && m.params.entry.level === "error" &&
+           !/cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(m.params.entry.text + " " + (m.params.entry.url || "")))
+    errors.push(m.params.entry.text);
+});
+const {targetId} = await send("Target.createTarget", {url: "about:blank"});
+const {sessionId} = await send("Target.attachToTarget", {targetId, flatten: true});
+const S = (m, p) => send(m, p, sessionId);
+await S("Page.enable"); await S("Runtime.enable"); await S("Log.enable");
+await S("Emulation.setDeviceMetricsOverride", {width: 1440, height: 900, deviceScaleFactor: 1, mobile: false});
+// The recorder, in every document before the page's own scripts: every change to the theme and skin on
+// <html>, with when it happened; every write to localStorage; every line in his bubble.
+await S("Page.addScriptToEvaluateOnNewDocument", {source: `(() => {
+  const rec = window.__rec = {attr: [], writes: [], said: []};
+  const set = Storage.prototype.setItem;
+  Storage.prototype.setItem = function (k, v) { if (this === localStorage) rec.writes.push(k); return set.call(this, k, v); };
+  new MutationObserver(ms => { for (const m of ms) {
+    if (m.type === "attributes" && m.target === document.documentElement)
+      rec.attr.push({t: performance.now(), name: m.attributeName, v: m.target.getAttribute(m.attributeName)});
+    const b = (m.target.closest ? m.target : m.target.parentElement)?.closest?.(".archie-say");
+    if (b && m.type === "childList" && b.textContent && rec.said.at(-1)?.text !== b.textContent)
+      rec.said.push({t: performance.now(), text: b.textContent});
+  } }).observe(document, {subtree: true, childList: true, attributes: true, attributeFilter: ["data-theme", "data-skin"]});
+})()`});
+const ev = async expr => {
+  const r = await S("Runtime.evaluate", {expression: expr, awaitPromise: true, returnByValue: true, userGesture: true});
+  if (r.exceptionDetails) throw new Error(expr.slice(0, 60) + " threw: " + (r.exceptionDetails.exception?.description || r.exceptionDetails.text));
+  return r.result.value;
+};
+const goto = async (q = "") => {
+  await S("Page.navigate", {url: ORIGIN + q});
+  for (let i = 0; i < 80 && !(await ev("document.readyState === 'complete'")); i++) await sleep(150);
+  for (let i = 0; i < 200 && !(await ev(`!!document.querySelector(".mhmascot[data-live]")`)); i++) await sleep(150);
+  return ev(`!!document.querySelector(".mhmascot[data-live]")`);
+};
+// Until a condition on the page holds, or `ms` passes; returns whether it did.
+const until = async (expr, ms) => {
+  for (const end = Date.now() + ms; Date.now() < end; await sleep(100)) if (await ev(expr)) return true;
+  return false;
+};
+const rec = () => ev(`window.__rec`);
+// The prank is over when its excuse is in the bubble; a second more for the shrug's restore to land.
+const done = async name => {
+  const after = JSON.stringify(lines(`prank-${name}-after`));
+  const ok = await until(`${after}.includes(__rec.said.at(-1)?.text)`, 25000);
+  await sleep(1000);
+  return ok;
+};
+let pass = 0, fail = 0;
+const ok = (n, c, extra = "") => { if (c) pass++; else { fail++; console.log("FAIL " + n + (extra ? " -- " + extra : "")); } };
+// The changes to an attribute of <html> from `from` on, as values: the page sets both itself as it loads,
+// and setting one to the value it already has is recorded too, so neither counts as a change.
+const changes = (r, name, from) => {
+  const all = r.attr.filter(a => a.name === name), out = [];
+  let was = all.filter(a => a.t < from).at(-1)?.v ?? null;
+  for (const a of all) if (a.t >= from && a.v !== was) { out.push(a); was = a.v; }
+  return out;
+};
+const setup = (r, name) => r.said.find(s => lines(`prank-${name}`).includes(s.text))?.t ?? 1e12;
+const saidOnly = (r, name, from) => r.said.filter(s => s.t >= from).every(s => OURS(name).includes(s.text));
+
+// ---- lights
+ok("the model goes live under swiftshader, which the pranks need", await goto("?archie=prank:lights"));
+const start = await ev(`({theme: document.documentElement.dataset.theme, stored: localStorage.getItem("theme")})`);
+ok("lights: announced with one of its own set-up lines",
+   await until(`${JSON.stringify(lines("prank-lights"))}.includes(__rec.said.at(-1)?.text)`, 20000));
+ok("...and finished with one of its excuses", await done("lights"));
+let r = await rec();
+const flips = changes(r, "data-theme", setup(r, "lights"));
+const gaps = flips.slice(1).map((f, i) => f.t - flips[i].t);
+ok("...the theme swapped four times", flips.length === 4, JSON.stringify(flips.map(f => f.v)));
+ok("...at most 3 flashes a second: every swap at least 333 ms after the last (WCAG 2.3.1)",
+   gaps.every(g => g >= 333), JSON.stringify(gaps.map(Math.round)));
+ok("...and not slower than the 400 ms it is meant to take, so this is the rate asserted",
+   gaps.every(g => g <= 600), JSON.stringify(gaps.map(Math.round)));
+ok("...ending on the theme it started on", await ev(`document.documentElement.dataset.theme`) === start.theme);
+ok("...with nothing saved", !r.writes.includes("theme") &&
+   await ev(`localStorage.getItem("theme")`) === start.stored, JSON.stringify(r.writes));
+ok("...and not remarked on as if the reader had done it: no light, dark or flip line",
+   flips.length && saidOnly(r, "lights", flips[0].t - 50),
+   JSON.stringify(r.said.map(s => s.text)));
+
+// ---- lights, with the reader changing the theme in the middle of it
+await goto("?archie=prank:lights");
+ok("mid-flicker, a reader's own choice of theme can be made",
+   await until(`__rec.attr.filter(a => a.name === "data-theme").length >= 3`, 25000));
+await ev(`document.getElementById("theme").click()`);
+const chose = await ev(`localStorage.getItem("theme")`);
+await done("lights");
+ok("...and is still standing after the prank", await ev(`document.documentElement.dataset.theme`) === chose &&
+   await ev(`localStorage.getItem("theme")`) === chose, `chose ${chose}`);
+r = await rec();
+ok("...which stopped flickering when they chose", changes(r, "data-theme", setup(r, "lights")).length <= 3,
+   JSON.stringify(r.attr.map(a => a.v)));
+await ev(`localStorage.removeItem("theme")`);
+
+// ---- skin
+await goto("?archie=prank:skin");
+const skin0 = await ev(`document.documentElement.dataset.skin || ""`);
+ok("skin: finished with one of its excuses", await done("skin"));
+r = await rec();
+const skins = changes(r, "data-skin", setup(r, "skin")).map(a => a.v);
+ok("...Prism for a moment", skins[0] === (skin0 === "prism" ? "terminal" : "prism"), JSON.stringify(skins));
+ok("...then the reader's skin back", (await ev(`document.documentElement.dataset.skin || ""`)) === skin0 &&
+   (skins.at(-1) || "") === skin0, JSON.stringify(skins));
+ok("...with nothing saved", !r.writes.includes("atlas-skin"), JSON.stringify(r.writes));
+ok("...and not taken for the reader's Prism: no 'rave' line", saidOnly(r, "skin", setup(r, "skin") - 50),
+   JSON.stringify(r.said.map(s => s.text)));
+
+// ---- tilt
+await goto("?archie=prank:tilt");
+const rot0 = await ev(`document.querySelector("main").style.rotate`);
+ok("tilt: the page's <main> goes crooked", await until(`!["", "0deg"].includes(document.querySelector("main").style.rotate)`, 20000));
+ok("...by under a degree", Math.abs(parseFloat(await ev(`document.querySelector("main").style.rotate`))) < 1);
+ok("...and the header does not move with it", await ev(`!document.querySelector("header").style.rotate &&
+  !document.querySelector("main").contains(document.querySelector("header"))`));
+await done("tilt");
+ok("...then its inline style is exactly as it was", await ev(`document.querySelector("main").style.rotate`) === rot0 &&
+   await ev(`document.querySelector("main").style.transition`) === "");
+
+// ---- count
+await goto("?archie=prank:count");
+const count0 = await ev(`document.querySelector("header .sub b").textContent`);
+const plus = (parseInt(count0.replace(/[^0-9]/g, ""), 10) + 1).toLocaleString("en-US");
+ok("count: the masthead's count goes up by one: him", await until(`document.querySelector("header .sub b").textContent === ${JSON.stringify(plus)}`, 20000),
+   `${count0} -> want ${plus}`);
+await done("count");
+ok("...and back to exactly what it said", await ev(`document.querySelector("header .sub b").textContent`) === count0);
+
+// ---- cursor
+await goto("?archie=prank:cursor");
+const cur = `[...document.querySelectorAll("style")].find(s => s.textContent.includes("cursor:url("))`;
+ok("cursor: his own cursor takes over", await until(`!!${cur}`, 20000));
+ok("...with its hotspot at the arrow's tip, where a click would land anyway", await ev(`/\\) 3 2,auto!important/.test(${cur}.textContent)`));
+await done("cursor");
+ok("...and is gone again", await ev(`!${cur}`));
+
+// ---- the tab title while the reader is away
+const away = on => ev(`(() => { Object.defineProperty(document, "hidden", {configurable: true, get: () => ${on}});
+  document.dispatchEvent(new Event("visibilitychange")); })()`);
+await goto();
+const title0 = await ev(`document.title`);
+await away(true); await sleep(1500); await away(false); await sleep(3500);
+ok("title: a glance at another tab changes nothing", await ev(`document.title`) === title0);
+await away(true); await sleep(4600);
+const gone = await ev(`document.title`);
+ok("...four seconds away and the tab calls them back", AWAY.includes(gone), gone);
+await away(false); await sleep(200);
+ok("...and has the exact title back the moment they return", await ev(`document.title`) === title0);
+await goto();
+await away(true); await sleep(4600);
+await ev(`document.title = "Set by someone else"`);
+await away(false); await sleep(200);
+ok("...but does not put it back over a title something else set meanwhile", await ev(`document.title`) === "Set by someone else");
+
+// ---- quiet mode stops all of it
+await ev(`localStorage.setItem("atlas-byte-quiet", "1")`);
+await goto("?archie=prank:lights");
+await sleep(9000);
+r = await rec();
+ok("quiet mode: no prank", !changes(r, "data-theme", 1000).length && !changes(r, "data-skin", 1000).length &&
+   r.said.length === 0, JSON.stringify(r));
+await away(true); await sleep(4600);
+ok("...and no tab title", await ev(`document.title`) === title0);
+await away(false);
+await ev(`localStorage.removeItem("atlas-byte-quiet")`);
+
+ok("no console errors", errors.length === 0, errors.join(" | "));
+await browser.close();
+console.log(`\n${pass} passed, ${fail} failed`);
+process.exit(fail ? 1 : 0);
