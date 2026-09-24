@@ -15,7 +15,9 @@
 // video wall and lasers over the page, one of the others, or a walk off the edge of the page and a moonwalk
 // back in -- and idles again. He talks as he goes, in speech and thought bubbles, and answers when poked:
 // see `chatter()`. A reader who scrolls on down the page gets a visit now and then: see "Visits". Now and
-// then, instead of an act, he plays a prank on the page, and it never quite works: see `pranks()`.
+// then, instead of an act, he plays a prank on the page, and it never quite works: see `pranks()`. He has
+// a mood, which pokes raise and being ignored lowers, and a reader who has been around a while he tries,
+// and fails, to get rid of: see "His mood" in `chatter()`, and `tiring()`.
 //
 // THE CANVAS IS WIDER THAN THE SLOT. It spans the viewport's width and the header's height, so that he can
 // walk out of the banner and so that the lights have somewhere to come from. The camera is the one the poster
@@ -241,29 +243,54 @@
     let lastPrank = Date.now() - PRANK_GAP + 60000, trick = null, tricks = [];
     const forced = asked && asked.startsWith("prank:") && PRANKS.includes(asked.slice(6)) ? asked.slice(6) : "";
     if (forced) lastPrank = -1e9;
+    // Angry, he plays them as payback, and more often: every minute, and furious every forty seconds.
+    const payback = () => talk.feel === "angry" || talk.feel === "furious";
+    const prankGap = () => talk.feel === "furious" ? 40000 : talk.feel === "angry" ? 60000 : PRANK_GAP;
     const prankable = () => !talk.quiet && seen && mode === "home" && !music.on && !grooving() &&
-      Date.now() - lastPrank >= PRANK_GAP;
+      Date.now() - lastPrank >= prankGap();
     const prank = async name => {
       trick = trick || pranks(talk, header);
       if (!tricks.length) tricks = PRANKS.slice().sort(() => Math.random() - 0.5);
       name = name || tricks.pop();
       lastPrank = Date.now(); last = "prank";
-      talk.say("prank-" + name);
+      talk.say(payback() ? "revenge" : "prank-" + name);
       await perform("press");
       await trick[name]();
       talk.say("prank-" + name + "-after");
       await perform("shrug");
     };
+    // Tired of the reader, eight minutes after the tab first met him and every four minutes after that,
+    // he tries to get rid of them. Not a reader he adores, and through the same gates as a prank.
+    // `?archie=tired:<name>` plays one first, whatever the time.
+    const TIRED_AFTER = 480000, TIRED_GAP = 240000;
+    const forcedTired = asked && asked.startsWith("tired:") && TIRES.includes(asked.slice(6)) ? asked.slice(6) : "";
+    let lastTired = forcedTired ? -1e9 : 0, tire = null, tires = [];
+    const tirable = () => !talk.quiet && seen && mode === "home" && !music.on && !grooving() &&
+      talk.feel !== "adore" && (forcedTired || Date.now() - talk.since >= TIRED_AFTER) &&
+      Date.now() - lastTired >= TIRED_GAP;
+    const tired = async name => {
+      tire = tire || tiring({host, slot, turn});
+      if (!tires.length) tires = TIRES.slice().sort(() => Math.random() - 0.5);
+      name = name || tires.pop();
+      lastTired = Date.now(); last = "tired";
+      talk.say("tired-" + name);
+      if (name !== "sulk") await perform("press");
+      await tire[name]();
+      talk.say("tired-" + name + "-after");
+      await perform("shrug");
+    };
     const direct = async () => {
       if (asked && (DANCES.includes(asked) || OTHERS.includes(asked))) await act(asked);
       if (forced && prankable()) await prank(forced);
+      if (forcedTired && tirable()) await tired(forcedTired);
       for (;;) {
         if (!grooving()) {
           idling = true;
           await perform("idle", 2 + Math.floor(Math.random() * 2));
           idling = false;
         }
-        if (prankable() && Math.random() < 0.3) { await prank(); continue; }
+        if (tirable() && Math.random() < 0.3) { await tired(); continue; }
+        if (prankable() && Math.random() < (payback() ? 0.6 : 0.3)) { await prank(); continue; }
         // A dance half the time, and never the same act twice running, unless the reader asked for one or
         // the music did.
         let pool = (wish || grooving() || Math.random() < 0.5 ? DANCES : OTHERS).filter(n => n !== last);
@@ -602,7 +629,23 @@
   border-radius:45% 45% 30% 30%;cursor:pointer}
 .archie-poke:focus-visible{outline:2px solid var(--link);outline-offset:2px}
 .archie-sr{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip-path:inset(50%);
-  white-space:nowrap}`;
+  white-space:nowrap}
+.archie-heart{position:absolute;z-index:3;color:#ff2bd6;font:700 20px/1 var(--ui);pointer-events:none;
+  opacity:0;animation:archie-heart 1.3s ease-out forwards}
+@keyframes archie-heart{0%{opacity:0;translate:0 0;scale:.5}20%{opacity:1}100%{opacity:0;translate:0 -80px;scale:1.25}}
+.archie-prop{position:absolute;z-index:3;pointer-events:none;font:700 13px/1 var(--ui)}
+.archie-close{padding:9px 14px;border-radius:9px;background:#d93025;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.3);
+  animation:archie-pop .25s cubic-bezier(.34,1.56,.64,1)}
+.archie-close.stuck{animation:archie-stuck .12s linear 6}
+@keyframes archie-pop{from{scale:.3;opacity:0}}
+@keyframes archie-stuck{25%{translate:-3px 0}75%{translate:3px 0}}
+.archie-sign{padding:10px 16px;border:3px solid #6b4a2b;border-radius:6px;background:#f4e3c1;color:#6b4a2b;
+  letter-spacing:.12em;transform-origin:50% -40px;
+  animation:archie-hang .6s cubic-bezier(.34,1.56,.64,1),archie-fall 1s cubic-bezier(.55,0,1,.45) 2.6s forwards}
+.archie-sign::before,.archie-sign::after{content:"";position:absolute;bottom:100%;width:2px;height:40px;background:#6b4a2b}
+.archie-sign::before{left:18%}.archie-sign::after{right:18%}
+@keyframes archie-hang{from{translate:0 -160px}}
+@keyframes archie-fall{20%{rotate:14deg}100%{rotate:70deg;translate:40px 260px;opacity:0}}`;
 
   const NAMES = {
     "floss": "the Floss", "take-the-l": "Take the L", "default-dance": "the Default",
@@ -677,6 +720,33 @@
     "prank-count-after": [["They took me back off. Rude."], ["Apparently a mascot is not a repository.", 1]],
     "prank-cursor": [["Mind if I drive for a bit?"], ["Your cursor is mine now."]],
     "prank-cursor-after": [["Okay, okay, you can have it back."], ["Driving is harder than it looks.", 1]],
+    // His mood. Idle lines at each end of it, one line on the way down past each mark, and a poke's reply
+    // when he adores the reader or has just been forgiven.
+    adore: [["You're my favourite reader. Don't tell the others.", 1], ["Best. Visitor. Ever."],
+            ["I'd star you if I could."]],
+    sulk: [["Fine. Don't poke me. See if I care.", 1], ["I'm not sulking. You're sulking.", 1],
+           ["Some people say hi to the mascot. Just saying."]],
+    angry: [["You've been ignoring me for ages."], ["I have feelings. Mostly in the visor.", 1],
+            ["Poke. Me. It's one click."]],
+    furious: [["Right. That's it. There will be consequences."], ["Hell hath no fury like a mascot ignored."],
+              ["I know where your theme setting lives."]],
+    "to-sulk": [["Hello? I'm right here.", 1], ["Nobody pokes the mascot any more.", 1]],
+    "to-angry": [["Okay, now I'm annoyed."], ["Ignoring me? Bold move."]],
+    "to-furious": [["That's it. You've had your chance."], ["You're going to regret this."]],
+    love: [["Aww! I love you too!"], ["You came back for me! \u{1F496}"], ["More pokes! More!"],
+           ["This is the best day of my life."]],
+    forgive: [["...okay, fine, I forgive you. Instantly. I'm weak."], ["You poked me! All is forgiven!"],
+              ["I knew you cared!"]],
+    revenge: [["This is for ignoring me."], ["Payback time."], ["You should have poked me."]],
+    // Tired of the reader: trying to get rid of them, and failing
+    "tired-close": [["You know what? I'll close the tab for you."], ["Right. Closing time."]],
+    "tired-close-after": [["Why won't it close?!"], ["...that button is decorative too, isn't it."]],
+    "tired-sign": [["Sorry, we're closed. Go home."], ["Shop's shut. Come back never."]],
+    "tired-sign-after": [["...we're a static site. We can't close."], ["Cheap nails.", 1]],
+    "tired-shoo": [["Go on. Shoo. Scroll somewhere else."], ["Out you go. I need my space."]],
+    "tired-shoo-after": [["The page is heavier than it looks."], ["You're still here, aren't you."]],
+    "tired-sulk": [["I'm not talking to you."], ["I'll just face the wall, then.", 1]],
+    "tired-sulk-after": [["...okay, I can't stay mad at you."], ["Fine. You can stay. For now."]],
   };
   // The tab's title while the reader is on another tab: one of these, once per page, and theirs back the
   // moment they return.
@@ -738,6 +808,37 @@
     try { if (!sessionStorage.getItem("archie-hi")) { sessionStorage.setItem("archie-hi", "1"); free = 0; } }
     catch {}
     let hello = free === 0;
+
+    // ---- His mood ----------------------------------------------------------------------------------------
+    // -100 to 100, in sessionStorage, so it goes with the reader from page to page and is forgotten with the
+    // tab. A poke is +20; the pointer resting on him, +2 a second; every second the masthead is on screen
+    // and he goes unpoked, -0.3, so a reader who ignores him has him sulking in about a minute and a half,
+    // angry in three, and furious in four and a half. One poke forgives any of it: anger never gets the
+    // last word over a reader who comes back to him. `since` is when the tab first met him, which is what
+    // he gets tired of. Quiet mode freezes it.
+    const MOOD = "archie-mood", MARKS = [-25, -50, -80], DOWN = ["to-sulk", "to-angry", "to-furious"];
+    let mood = 0, since = Date.now(), low = 0, hovering = false, kept = 0;
+    try {
+      const m = JSON.parse(sessionStorage.getItem(MOOD) || "null");
+      if (m) { mood = Math.max(-100, Math.min(100, Number(m.v) || 0)); since = Number(m.since) || since; }
+    } catch {}
+    low = MARKS.filter(m => mood <= m).length;       // no announcing a mark he was already past
+    const save = () => { try { sessionStorage.setItem(MOOD, JSON.stringify({v: Math.round(mood), since})); } catch {} };
+    save();
+    const feel = () => mood >= 60 ? "adore" : mood <= -80 ? "furious" : mood <= -50 ? "angry" :
+      mood <= -25 ? "sulk" : "";
+    const hearts = () => {
+      for (let i = 0; i < 5; i++) {
+        const h = document.createElement("span");
+        h.className = "archie-heart";
+        h.textContent = "\u2665";
+        h.setAttribute("aria-hidden", "true");
+        h.style.cssText = `left:${poke.offsetLeft + poke.offsetWidth * (0.15 + 0.7 * Math.random())}px;` +
+          `top:${poke.offsetTop + poke.offsetHeight * 0.15}px;animation-delay:${i * 90}ms`;
+        host.append(h);
+        setTimeout(() => h.remove(), 1500 + i * 90);
+      }
+    };
 
     // ---- The reader --------------------------------------------------------------------------------------
     let theme = document.documentElement.dataset.theme, skin = document.documentElement.dataset.skin;
@@ -809,10 +910,16 @@
     const pokes = [];
     let hold = 0;
     const poked = () => {
+      const was = mood;
+      mood = was <= -25 ? 30 : Math.min(100, mood + 20);
+      low = 0;
+      save();
       pokes.push(t);
       while (pokes.length && pokes[0] < t - 6) pokes.shift();
-      if (pokes.length >= 4) { pokes.length = 0; hold = t + 2.5; show("pokes", {}, true); o.wish(); }
-      else if (t >= hold) { show("poke", {}, true); if (Math.random() < 0.2) o.wish(); }
+      if (was <= -25) { pokes.length = 0; hold = t + 2.5; show("forgive", {}, true); }
+      else if (pokes.length >= 4) { pokes.length = 0; hold = t + 2.5; show("pokes", {}, true); o.wish(); }
+      else if (t >= hold) { show(mood >= 60 ? "love" : "poke", {}, true); if (Math.random() < 0.2) o.wish(); }
+      if (mood >= 60) hearts();
       if (!quiet) free = Math.max(free, t + 20);
     };
     poke.addEventListener("click", poked);
@@ -826,7 +933,13 @@
       return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
     };
     const click = e => { if (onHim(e)) poked(); };
-    const hover = e => { header.style.cursor = onHim(e) ? "pointer" : ""; };
+    const hover = e => {
+      const on = onHim(e);
+      header.style.cursor = on ? "pointer" : "";
+      hovering = on || e.target === poke;
+    };
+    const leave = () => { hovering = false; };
+    header.addEventListener("pointerleave", leave);
     header.addEventListener("click", click);
     header.addEventListener("pointermove", hover);
 
@@ -834,6 +947,9 @@
     const menu = document.getElementById("setmenu");
     return {
       get quiet() { return quiet; },
+      get mood() { return mood; },
+      get feel() { return feel(); },
+      get since() { return since; },
       hush(on) { hushed = on; },
       // A line for a visit, said whether or not the masthead is on screen
       say(kind) {
@@ -862,7 +978,13 @@
         // Only at home: carried out past the edge of the page, it would give the page a sideways scrollbar.
         poke.hidden = away || view.slide !== 0;
         if (hello && t > 1.5) { hello = false; own("hello"); }
-        else if (!hello && idling && !quiet) own("idle");
+        else if (!hello && idling && !quiet) own(feel() || "idle");
+        if (!quiet && seen && !away) {
+          mood = Math.max(-100, Math.min(100, mood + dt * (hovering ? 2 : -0.3)));
+          const depth = MARKS.filter(m => mood <= m).length;
+          if (depth > low) { low = depth; react(DOWN[depth - 1], 0); }
+          if (t - kept > 2) { kept = t; save(); }
+        }
         if (!lonely && Date.now() - stirred > 75000) { lonely = true; react("lonely", 120); }
         if (shown && t > until) { shown = false; bubble.classList.remove("on"); }
         if (!shown) return;
@@ -891,7 +1013,9 @@
         header.removeEventListener("mouseover", over);
         header.removeEventListener("click", click);
         header.removeEventListener("pointermove", hover);
+        header.removeEventListener("pointerleave", leave);
         header.style.cursor = "";
+        save();
         poke.remove(); bubble.remove(); said.remove(); style.remove();
       },
     };
@@ -963,6 +1087,59 @@
         document.head.appendChild(style);
         await wait(4000);
         style.remove();
+      },
+    };
+  }
+
+  // Tired of the reader: what he does to get rid of them, none of which works. Each is a prop drawn in the
+  // masthead beside him, or a nudge to <main>, and each returns a promise for when it is gone again. Nothing
+  // closes, navigates or takes focus: the close button is a picture of one, and the props take no pointer
+  // events and are hidden from assistive technology, where a fake "Close tab" would be a lie.
+  const TIRES = ["close", "sign", "shoo", "sulk"];
+  function tiring(o) {
+    const {host, slot, turn} = o;
+    const wait = ms => new Promise(r => setTimeout(r, ms));
+    const prop = (cls, text, left, top) => {
+      const el = document.createElement("div");
+      el.className = "archie-prop " + cls;
+      el.textContent = text;
+      el.setAttribute("aria-hidden", "true");
+      el.style.left = left + "px";
+      el.style.top = top + "px";
+      host.append(el);
+      return el;
+    };
+    return {
+      async close() {
+        const b = prop("archie-close", "\u2715  Close tab", slot.offsetLeft + slot.offsetWidth * 0.78,
+                       slot.offsetTop + slot.offsetHeight * 0.38);
+        await wait(700);
+        b.classList.add("stuck");                    // pressed, and it only rattles
+        await wait(1500);
+        b.remove();
+      },
+      async sign() {
+        const g = prop("archie-sign", "CLOSED", slot.offsetLeft + slot.offsetWidth * 0.18, slot.offsetTop + 44);
+        await wait(3700);
+        g.remove();
+      },
+      // A shove at the page: <main> slides a little away and springs back, as the tilt prank does it.
+      async shoo() {
+        const main = document.querySelector("main");
+        if (!main) return;
+        const was = [main.style.translate, main.style.transition];
+        main.style.transition = "translate .7s cubic-bezier(.5,0,.75,0)";
+        main.style.translate = "36px 0";
+        await wait(900);
+        main.style.transition = "translate .5s cubic-bezier(.34,1.56,.64,1)";
+        main.style.translate = "0px 0";
+        await wait(700);
+        [main.style.translate, main.style.transition] = was;
+      },
+      async sulk() {
+        await turn(Math.PI);
+        await wait(4500);
+        await turn(0);
       },
     };
   }
