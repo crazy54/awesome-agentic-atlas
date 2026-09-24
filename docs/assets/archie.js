@@ -275,9 +275,11 @@
       if (current && current !== a) a.crossFadeFrom(current, 0.25, false);
       a.play();
       current = a;
+      slot.dataset.act = name;
       return a;
     };
-    mixer.addEventListener("finished", () => { const d = done; done = null; d && d(); });
+    // Only the clip now playing: one cut off and fading out can still reach its end, and would end the next.
+    mixer.addEventListener("finished", e => { if (e.action !== current) return; const d = done; done = null; d && d(); });
     const perform = (name, reps = 1) => new Promise(res => { play(name, reps); done = res; });
 
     // Waits measured on the render clock, so a hidden tab pauses the whole act rather than skipping it.
@@ -315,8 +317,10 @@
     };
     let last = "", idling = false, wish = null;
     // Music on, and a beat in the last two seconds: he dances, back to back, with no idles, visits or
-    // walk-offs, and goes back to the director's own choices two seconds after the music stops. Not with
-    // the masthead off screen, where nobody would see it and the loop would never stop.
+    // walk-offs. Not with the masthead off screen, where nobody would see it and the loop would never stop.
+    // Two seconds without a beat, a quiet passage or the gap between songs, and he stops: the dance is cut
+    // off where it was, and while music mode is on he only idles, waiting for the next beat. The director's
+    // own choices come back when music mode goes off.
     const grooving = () => music.on && seen && mode === "home" && performance.now() - music.at < 2000;
     let walking = false;                   // out on a walk-off, which a command must not cut in half
     const act = async name => {
@@ -419,6 +423,7 @@
           idling = false;
         }
         if (orders.length) continue;
+        if (music.on && !grooving()) continue;
         if (tirable() && Math.random() < 0.3) { await tired(); continue; }
         if (prankable() && Math.random() < (payback() ? 0.6 : 0.3)) { await prank(); continue; }
         // A dance half the time, and never the same act twice running, unless the reader asked for one or
@@ -770,6 +775,8 @@
       const c = current && current.getClip(), n = c && BEATS[c.name];
       const g = grooving();
       if (g && !grooved) { talk.say("music"); if (idling && done) { const d = done; done = null; d(); } }
+      // And when it goes quiet, the dance ends there; the director's idle cross-fades out of it.
+      if (!g && grooved && rig.on && done) { const d = done; done = null; d(); }
       grooved = g;
       if (n) current.timeScale = g && music.bpm ? tempo(c, n) : 1;
       mixer.update(dt);
@@ -777,6 +784,7 @@
       const kick = g ? music.kick : null, loud = g ? loudness() : null;
       // A dance's beat, or, between dances, a cue's own (see `rig.cue`), which the lights and lasers play
       // to and the stage effects do not: a cue brings up the floor and the fog, never the flames.
+      rig.stay = music.on && seen && mode === "home";
       const dancing = n && rig.on ? {at: current.time / c.duration * n, rate: n / c.duration * current.timeScale,
                                      kick, loud} : null;
       const beat = dancing || rig.synth(dt);
@@ -1486,7 +1494,10 @@
   }
 
   // The light show, the kind an EDM stage hangs over its crowd, for the dances, and for the named cues an
-  // admin can fire at any time (see `cue()` and `window.archieRig` in `start()`). What hangs, and where:
+  // admin can fire at any time (see `cue()` and `window.archieRig` in `start()`). When a dance ends it all
+  // fades, and the truss is hauled back up with the wall -- except in music mode (`stay`), where the rig
+  // stays hung between songs and through the quiet, dark and still, and powers up again with the beat.
+  // What hangs, and where:
   //
   //  - THE MAIN TRUSS drops in from above the header, bounces to a stop, and carries six moving heads, two
   //    blinders at its ends and two laser units between the heads. The heads are the star of the show:
@@ -1965,6 +1976,8 @@
 
     return {
       on: false,
+      // In music mode, hung between songs and through the quiet, dark: see `update()`.
+      stay: false,
       // For `archie-fx.js` (whose floor takes four colours) and `beams()` in start(): the truss's first
       // four heads, as the rig had before, and all nine for anything that wants them.
       get heads() { return four; },
@@ -2026,10 +2039,15 @@
         if (want && !wasOn) { loadGobos(); dress(); if (this.on) dances++; }
         wasOn = want;
         // The truss drops first and the heads come up once it has landed. Going off, they fade out first
-        // and the truss goes up after, and only then does the wall's video let go.
-        if (want) drop = Math.min(1, drop + dt / 0.6);
+        // and the truss goes up after, and only then does the wall's video let go. In music mode (`stay`) the
+        // truss stays down, dark, with the wall's video let go, until the beat brings the lights back up.
+        if (this.stay) dress();
+        if (want || this.stay) drop = Math.min(1, drop + dt / 0.6);
         else if (level === 0) drop = Math.max(0, drop - dt / 0.7);
         level = Math.max(0, Math.min(1, level + (want && drop === 1 ? 3 : -3) * dt));
+        // Where it is, on the slot: hauled up, hung and dark, or lit (or on its way).
+        const state = drop === 0 ? "away" : level === 0 && drop === 1 ? "dark" : level === 1 ? "lit" : "moving";
+        if (slot.dataset.rig !== state) slot.dataset.rig = state;
         group.visible = drop > 0;
         if (want && (this.on || cueing === "video-wall")) video.start();
         if (!group.visible) {
@@ -2038,6 +2056,7 @@
           video.stop();
           return;
         }
+        if (!want && level === 0) video.stop();
         video.update(dt);
         const y = top + (1 - outBack(drop)) * 3;
         bar.position.set(0, y, -1.5);

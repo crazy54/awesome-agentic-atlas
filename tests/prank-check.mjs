@@ -22,6 +22,11 @@
 // window, live, carrying his mood and saying so; and he does not, even as far as fetching himself, for a
 // reader who never met him in this tab, one in Quiet mode, or a URL in `archie-src` from another origin.
 //
+// To the music, fed as the beat detector feeds it (`archie:music`, `archie:beat`, `window.archieMusic`): he
+// dances and the rig is lit while the beats come; two seconds after they stop, the dance is cut off where it
+// was and he only idles, the rig still hung but dark and still, until the beats come back and so does it;
+// and with music mode off, the rig is hauled away.
+//
 // The model has to go live, so WebGL is swiftshader's; a Chrome that cannot give it one fails the first
 // assertion rather than passing the rest on the poster, which plays no pranks.
 //
@@ -268,6 +273,49 @@ await sleep(12000);
 r = await rec();
 ok("never tired of a reader he adores", !document_has(r, "tired-close") && await ev(`!document.querySelector(".archie-prop")`),
    JSON.stringify(r.said.map(s => s.text)));
+
+// ---- the music going quiet
+await goto("", 0);
+const DANCE = Object.keys(Function(`return ${SRC.match(/const BEATS = (\{[^}]*\})/)[1]}`)());
+const act = () => ev(`document.querySelector(".mhmascot").dataset.act || ""`);
+const rigIs = () => ev(`document.querySelector(".mhmascot").dataset.rig || ""`);
+const lasersOn = () => ev(`[...document.body.children].some(e => e.tagName === "CANVAS" && e.style.display !== "none")`);
+const beats = on => ev(on
+  ? `window.__beats = setInterval(() => document.dispatchEvent(new CustomEvent("archie:beat",
+       {detail: {strength: 0.9, bpm: 120, at: window.__lastBeat = performance.now()}})), 500)`
+  : `clearInterval(window.__beats)`);
+await ev(`window.archieMusic = {level: () => 0.6, bass: () => 0.6, bpm: 120, lastBeat: 0};
+  document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: true, source: "mic"}}))`);
+ok("music mode on, before a beat: the rig hangs, dark", await until(`document.querySelector(".mhmascot").dataset.rig === "dark"`, 4000),
+   await rigIs());
+await beats(true);
+ok("...the beat: he dances", await until(`${JSON.stringify(DANCE)}.includes(document.querySelector(".mhmascot").dataset.act)`, 25000),
+   await act());
+ok("...and the rig lights up, lasers and all", await until(`document.querySelector(".mhmascot").dataset.rig === "lit"`, 4000) &&
+   await lasersOn(), `${await rigIs()} lasers=${await lasersOn()}`);
+await sleep(2000);
+const dancing = await act();
+await beats(false);
+const cut = await until(`document.querySelector(".mhmascot").dataset.act === "idle"`, 5000);
+const after = await ev(`performance.now() - window.__lastBeat`);
+ok("quiet: two seconds on, the dance is cut off where it was", cut && after >= 1900 && after < 3000,
+   `${dancing} -> ${await act()} ${Math.round(after)} ms after the last beat`);
+ok("...the rig still hung, but dark", await until(`document.querySelector(".mhmascot").dataset.rig === "dark"`, 2000),
+   await rigIs());
+ok("...and the lasers off", !(await lasersOn()));
+const held = [];
+for (let i = 0; i < 40; i++) { held.push(`${await act()}/${await rigIs()}`); await sleep(250); }
+ok("...and so it stays through the quiet: no dance, no act, nothing lit", held.every(h => h === "idle/dark"),
+   [...new Set(held)].join(" "));
+await beats(true);
+ok("the beat back: he dances again", await until(`${JSON.stringify(DANCE)}.includes(document.querySelector(".mhmascot").dataset.act)`, 25000),
+   await act());
+ok("...and the rig powers up again", await until(`document.querySelector(".mhmascot").dataset.rig === "lit"`, 4000), await rigIs());
+await beats(false);
+await ev(`delete window.archieMusic;
+  document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: false, source: "mic"}}))`);
+ok("music mode off: the rig is hauled away", await until(`document.querySelector(".mhmascot").dataset.rig === "away"`, 6000),
+   await rigIs());
 
 // ---- following the reader down the page
 // Out of the layer itself, not just gone with it: the layer is detached after every visit and used again.
