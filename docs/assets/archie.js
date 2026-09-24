@@ -1702,6 +1702,7 @@
             lastPhrase = phrase;
             const says = `${now.move} ${now.colour} ${GOBOS[now.gobo]}`;
             if (says !== lastLook) slot.dataset.look = lastLook = says;
+            slot.dataset.phrase = phrase;
           }
         }
         mean.setRGB(0, 0, 0);

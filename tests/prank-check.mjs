@@ -313,10 +313,20 @@ for (let i = 0; i < 64; i++) {
   walls.add(await ev(`document.querySelector(".mhmascot").dataset.wall || ""`));
   await sleep(250);
 }
-ok("...a new look every phrase, counted across the dances, not starting again with each",
-   looks.size >= 3 && !looks.has(""), [...looks].join(" | "));
+ok("...a new look every phrase", looks.size >= 3 && !looks.has(""), [...looks].join(" | "));
 ok("...the wall shows the beat monitor all the while", [...walls].every(w => w.startsWith("monitor ")), [...walls].join(" | "));
 ok("...and the camera on him, now and then", walls.has("monitor camera") && walls.has("monitor visuals"), [...walls].join(" | "));
+// One clip is 30 to 48 beats, long enough for three looks on its own, so the looks alone cannot say whether
+// the count carries on into the next dance; the phrase number can, across the change of clip.
+{
+  const phrase = async () => +(await ev(`document.querySelector(".mhmascot").dataset.phrase || -1`));
+  const from = await act(), p0 = await phrase();
+  const next = await until(`(a => a !== ${JSON.stringify(from)} && ${JSON.stringify(DANCE)}.includes(a))(document.querySelector(".mhmascot").dataset.act)`, 40000);
+  await sleep(1500);
+  const p1 = await phrase();
+  ok("...the looks counted across the dances, not starting again with each", next && p0 > 0 && p1 >= p0,
+     `${from} phrase ${p0} -> ${await act()} phrase ${p1}`);
+}
 const dancing = await act();
 await beats(false);
 const cut = await until(`document.querySelector(".mhmascot").dataset.act === "idle"`, 5000);
