@@ -15,7 +15,8 @@
 // video wall and lasers over the page, on an LED floor in dry-ice fog with CO2, flames and sparks on cue
 // (`archie-fx.js`), one of the others, or a walk off the edge of the page and a moonwalk
 // back in -- and idles again. He talks as he goes, in speech and thought bubbles, and answers when poked:
-// see `chatter()`. A reader who scrolls on down the page gets a visit now and then: see "Visits".
+// see `chatter()`. A reader who scrolls on down the page gets a visit now and then: see "Visits". Now and
+// then, instead of an act, he plays a prank on the page, and it never quite works: see `pranks()`.
 //
 // THE CANVAS IS WIDER THAN THE SLOT. It spans the viewport's width and the header's height, so that he can
 // walk out of the banner and so that the lights have somewhere to come from. The camera is the one the poster
@@ -235,14 +236,37 @@
     };
     // `?archie=<act>` starts on that act, for checking one without waiting through the idles.
     const asked = new URLSearchParams(location.search).get("archie");
+    // A prank, now and then, in place of an act: at most one every three minutes, the first no sooner than
+    // a minute in. Not in quiet mode, not while the music has him dancing, not out on a visit, and only
+    // with the masthead on screen, so the reader sees who did it. `?archie=prank:<name>` plays that one
+    // first, through the same gates, so quiet mode can be checked to stop it.
+    const PRANK_GAP = 180000;
+    let lastPrank = Date.now() - PRANK_GAP + 60000, trick = null, tricks = [];
+    const forced = asked && asked.startsWith("prank:") && PRANKS.includes(asked.slice(6)) ? asked.slice(6) : "";
+    if (forced) lastPrank = -1e9;
+    const prankable = () => !talk.quiet && seen && mode === "home" && !music.on && !grooving() &&
+      Date.now() - lastPrank >= PRANK_GAP;
+    const prank = async name => {
+      trick = trick || pranks(talk, header);
+      if (!tricks.length) tricks = PRANKS.slice().sort(() => Math.random() - 0.5);
+      name = name || tricks.pop();
+      lastPrank = Date.now(); last = "prank";
+      talk.say("prank-" + name);
+      await perform("press");
+      await trick[name]();
+      talk.say("prank-" + name + "-after");
+      await perform("shrug");
+    };
     const direct = async () => {
       if (asked && (DANCES.includes(asked) || OTHERS.includes(asked))) await act(asked);
+      if (forced && prankable()) await prank(forced);
       for (;;) {
         if (!grooving()) {
           idling = true;
           await perform("idle", 2 + Math.floor(Math.random() * 2));
           idling = false;
         }
+        if (prankable() && Math.random() < 0.3) { await prank(); continue; }
         // A dance half the time, and never the same act twice running, unless the reader asked for one or
         // the music did.
         let pool = (wish || grooving() || Math.random() < 0.5 ? DANCES : OTHERS).filter(n => n !== last);
@@ -646,7 +670,22 @@
             ["Finally, a soundtrack for my code."], ["Is it 4/4? Please say it's 4/4.", 1]],
     drop: [["Mind if I sit here?"], ["Just visiting. Carry on."], ["It's quieter down here.", 1],
            ["Nice scroll position you've got."]],
+    // Pranks: the set-up, as he presses the button that does it, and the excuse, as it undoes itself
+    "prank-lights": [["Ooh, what does this switch do?"], ["Watch this. Lights... OFF!"]],
+    "prank-lights-after": [["Huh. It keeps coming back on."], ["You didn't see that. Nobody saw that."],
+                           ["I was testing dark mode. For science.", 1]],
+    "prank-skin": [["This place needs a makeover."], ["Prism. Everybody loves Prism."]],
+    "prank-skin-after": [["Rejected. Tough crowd."], ["The page has taste, apparently.", 1]],
+    "prank-tilt": [["Is the page crooked? Hang on..."], ["Let me just straighten this."]],
+    "prank-tilt-after": [["There. Perfectly level. Don't check."], ["Close enough. Ship it."]],
+    "prank-count": [["Let me just add myself to the count..."], ["One more project. Me. I'm the project."]],
+    "prank-count-after": [["They took me back off. Rude."], ["Apparently a mascot is not a repository.", 1]],
+    "prank-cursor": [["Mind if I drive for a bit?"], ["Your cursor is mine now."]],
+    "prank-cursor-after": [["Okay, okay, you can have it back."], ["Driving is harder than it looks.", 1]],
   };
+  // The tab's title while the reader is on another tab: one of these, once per page, and theirs back the
+  // moment they return.
+  const AWAY = ["Come back! \u{1F97A}", "Archie misses you", "Is anyone there?", "Psst. Over here."];
 
   function chatter(T, o) {
     const {host, slot, header, camera, view, actor, head} = o;
@@ -708,8 +747,12 @@
     // ---- The reader --------------------------------------------------------------------------------------
     let theme = document.documentElement.dataset.theme, skin = document.documentElement.dataset.skin;
     const flips = [];
+    // Hushed while a prank of his own switches theme or skin, so he does not remark on what he did himself,
+    // and does not take his Prism for the reader's and dance.
+    let hushed = false;
     const mo = new MutationObserver(() => {
       const d = document.documentElement.dataset;
+      if (hushed) { theme = d.theme; skin = d.skin; return; }
       if (d.theme !== theme) {
         theme = d.theme;
         flips.push(t);
@@ -725,8 +768,22 @@
     });
     mo.observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme", "data-skin"]});
     let hid = 0, gone = 0, stirred = Date.now(), lonely = false;
+    // Four seconds on another tab and he takes over this one's title. It is put back as it was, the exact
+    // string, and only if it is still his: another script may have set the title since.
+    let titled = false, title = "", mine = "", pending = 0;
     const vis = () => {
-      if (document.hidden) { hid = Date.now(); return; }
+      if (document.hidden) {
+        hid = Date.now();
+        if (!titled && !quiet) pending = setTimeout(() => {
+          if (!document.hidden) return;
+          titled = true; title = document.title;
+          document.title = mine = AWAY[Math.floor(Math.random() * AWAY.length)];
+        }, 4000);
+        return;
+      }
+      clearTimeout(pending);
+      if (mine && document.title === mine) document.title = title;
+      mine = "";
       if (hid && Date.now() - hid > 30000) react("welcome", 60);
       hid = 0;
     };
@@ -782,6 +839,7 @@
     const menu = document.getElementById("setmenu");
     return {
       get quiet() { return quiet; },
+      hush(on) { hushed = on; },
       // A line for a visit, said whether or not the masthead is on screen
       say(kind) {
         if (quiet) return;
@@ -832,12 +890,84 @@
         mo.disconnect(); io.disconnect();
         for (const ev of EVENTS) removeEventListener(ev, stir);
         document.removeEventListener("visibilitychange", vis);
+        clearTimeout(pending);
+        if (mine && document.title === mine) document.title = title;
         document.removeEventListener("copy", copy);
         header.removeEventListener("mouseover", over);
         header.removeEventListener("click", click);
         header.removeEventListener("pointermove", hover);
         header.style.cursor = "";
         poke.remove(); bubble.remove(); said.remove(); style.remove();
+      },
+    };
+  }
+
+  // What he does to the page when he plays a prank, and undoes. Each one returns a promise for when the page
+  // is back as it was. None of it is saved: the theme and skin are changed on <html> only, never in
+  // storage, and a reader who changes either while he is at it keeps their own, since their choice is
+  // saved and his undo checks storage first. Nothing is typed into anything, nothing takes focus, nothing
+  // moves under the pointer but a tilt of under a degree, and the waits are real time rather than the
+  // render clock, so a tab hidden mid-prank is still put back.
+  //
+  // The lights are the reader's theme, swapped four times 400 ms apart: 1.25 flashes a second, where WCAG
+  // 2.3.1 draws the line at three. Faster would be a seizure risk and not a joke, however funny it looks.
+  const PRANKS = ["lights", "skin", "tilt", "count", "cursor"];
+  function pranks(talk, header) {
+    const root = document.documentElement;
+    const wait = ms => new Promise(r => setTimeout(r, ms));
+    const stored = k => { try { return localStorage.getItem(k); } catch { return null; } };
+    // The observer's callback runs after the change, so the hush lifts a moment after the last one.
+    const unhush = () => setTimeout(() => talk.hush(false), 60);
+    return {
+      async lights() {
+        const theme = root.dataset.theme, saved = stored("theme");
+        talk.hush(true);
+        for (let i = 0; i < 4 && stored("theme") === saved; i++) {
+          root.dataset.theme = root.dataset.theme === "light" ? "dark" : "light";
+          await wait(400);
+        }
+        if (stored("theme") === saved) root.dataset.theme = theme;
+        unhush();
+      },
+      async skin() {
+        const skin = root.dataset.skin, saved = stored("atlas-skin");
+        talk.hush(true);
+        root.dataset.skin = skin === "prism" ? "terminal" : "prism";
+        await wait(1400);
+        if (stored("atlas-skin") === saved) root.dataset.skin = skin;
+        unhush();
+      },
+      // Crooked, then over-corrected, then level: the page's <main>, not <body>, so the header and anything
+      // pinned to the window stay where they are.
+      async tilt() {
+        const main = document.querySelector("main");
+        if (!main) return;
+        const was = [main.style.rotate, main.style.transition];
+        main.style.transition = "rotate .45s cubic-bezier(.34,1.56,.64,1)";
+        for (const deg of ["-0.6deg", "0.4deg", "0deg"]) { main.style.rotate = deg; await wait(900); }
+        [main.style.rotate, main.style.transition] = was;
+      },
+      // The masthead's project count, one up, for four seconds, then back, if it is still his number.
+      async count() {
+        const b = header.querySelector(".sub b");
+        const n = b && parseInt(b.textContent.replace(/[^0-9]/g, ""), 10);
+        if (!n) return;
+        const was = b.textContent, his = (n + 1).toLocaleString("en-US");
+        b.textContent = his;
+        await wait(4000);
+        if (b.textContent === his) b.textContent = was;
+      },
+      // His cursor for four seconds, with its hotspot at the tip, where the reader's own arrow's is, so a
+      // click lands where it always would.
+      async cursor() {
+        const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="30" viewBox="0 0 26 30">' +
+          '<path d="M3 2v22l6-6 4 9 4-2-4-9h8z" fill="#ff2bd6" stroke="#fff" stroke-width="2" ' +
+          'stroke-linejoin="round"/><circle cx="8" cy="11" r="1.6" fill="#fff"/></svg>';
+        const style = document.createElement("style");
+        style.textContent = `html,html *{cursor:url("data:image/svg+xml,${encodeURIComponent(svg)}") 3 2,auto!important}`;
+        document.head.appendChild(style);
+        await wait(4000);
+        style.remove();
       },
     };
   }
