@@ -515,12 +515,12 @@ def spot_art(f: dict) -> str:
 # poster are committed separately from this page, so they are wired only when all three are there: a page
 # that names a script it does not have 404s it on every visit, and pwa-check counts that as a console error.
 # Whichever lands second, the next run of this stage turns it on.
-MASCOT = ("archie.js", "three-archie.js", "archie.glb", "archie-3d.webp")
-# The loader's query is its version: archie.js hands its own `?v=` on to the renderer and the model, and none
-# of the three is in the service worker's precache, so without it a replaced file can meet a stale sibling
+MASCOT = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb", "archie-3d.webp")
+# The loader's query is its version: archie.js hands its own `?v=` on to the effects, the renderer and the
+# model, and none of the four is in the service worker's precache, so without it a replaced file can meet a stale sibling
 # from the HTTP cache and the mascot stays a poster. The scripts are hashed with LF endings, because the
 # checkout is CRLF on Windows and LF on CI; the model is binary and hashed as it is.
-VERSIONED = ("archie.js", "three-archie.js", "archie.glb")
+VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb")
 
 
 def mascot_version(files: tuple[str, ...] = VERSIONED) -> str:

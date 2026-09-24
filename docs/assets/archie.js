@@ -12,7 +12,8 @@
 // `watch`, `sit`, `sleep`, `press` and `shrug`, thirteen Fortnite dances of 15 or 16 seconds each (the keys
 // of `BEATS` below) and `walk`, a stride in place. Every clip but `walk` starts and ends on the idle's first
 // pose. The director below idles for a few loops, then does one act -- a dance under moving-head lights, a
-// video wall and lasers over the page, one of the others, or a walk off the edge of the page and a moonwalk
+// video wall and lasers over the page, on an LED floor in dry-ice fog with CO2, flames and sparks on cue
+// (`archie-fx.js`), one of the others, or a walk off the edge of the page and a moonwalk
 // back in -- and idles again. He talks as he goes, in speech and thought bubbles, and answers when poked:
 // see `chatter()`. A reader who scrolls on down the page gets a visit now and then: see "Visits".
 //
@@ -87,7 +88,8 @@
     // same query goes on the two it loads. A release then changes all three URLs at once, so the HTTP cache
     // can never pair this script with an older renderer or model, or the reverse.
     const V = new URL(import.meta.url).search;
-    const T = await import(`./three-archie.js${V}`);
+    // The stage effects (`archie-fx.js`: the dance floor, fog, haze, CO2, flames and sparks) come with it.
+    const [T, FX] = await Promise.all([import(`./three-archie.js${V}`), import(`./archie-fx.js${V}`)]);
     const renderer = new T.WebGLRenderer({alpha: true, antialias: true, powerPreference: "low-power"});
     // Capped lower than a page image would be: the canvas is the width of the screen.
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
@@ -125,6 +127,7 @@
     const host = slot.parentElement;       // the bubble and the poke target sit here, beside the slot
     const laser = lasers(header);
     const edge = {left: -8, right: 8, top: 5};
+    const fx = FX.effects(T, scene, rig, edge, canvas);
     const view = {W: 1, H: 1, cx: 0, cy: 0, k: 1, sw: 240, sh: 240, ppm: 75, slide: 0, ox: 0, oy: 0};
     // The frustum, with its window `slide` CSS pixels right of the slot. This is how he walks: rather
     // than moving him through the scene, which would carry him out to where a screen-wide perspective
@@ -469,6 +472,8 @@
                  n && rig.on ? {at: current.time / c.duration * n, rate: n / c.duration * current.timeScale,
                                 kick, loud} : null);
       laser.update(dt, n && rig.on ? {at: current.time / c.duration * n, kick} : null, rig.level, beams());
+      fx.update(dt, clock, actor.position.x, n && rig.on ? {at: current.time / c.duration * n, n, kick} : null,
+                rig.level);
       talk.update(dt, idling);
       if (!seen && mode === "home" && idling) run();
     };
@@ -996,6 +1001,9 @@
       on: false,
       heads,
       get level() { return level; },
+      // For `archie-fx.js`, so that its effects are drawn, and follow the theme, the way these are.
+      glow, NOISE,
+      lit(mat) { tint(mat); glows.push(mat); return mat; },
       place(edge) {
         top = edge.top - 0.3;
         span = Math.min(4.5, (edge.right - edge.left) / 2.8);

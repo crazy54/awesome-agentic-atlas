@@ -27,6 +27,11 @@ and one hand on the hip.
 Two liberties, both for the animation. The shades sit a little lower on the visor than in the drawing, so
 that there are eyes above them to blink with; and the orbit ring carries its moon round once per loop.
 
+Its surfaces are textured too, and the textures are generated here like everything else: tiling noise and
+line work, painted into 1024-pixel normal and roughness/metal maps -- staggered plate seams, rivets and
+gold circuit traces on the shell (the traces glow), brushed gold, gritty joints, and relief on the globe's
+continents -- and projected onto each part in metres so that a texel is the same size everywhere.
+
 Everything animated is animated at object level -- a hierarchy of pivots with no armature and no skinning --
 because that is the cheapest thing glTF can carry and the cheapest thing a browser can play, and a robot is
 rigid parts anyway. Each clip is a function of its own phase; the idle's is periodic, so its frame 120
@@ -36,8 +41,10 @@ from __future__ import annotations
 
 import math
 import sys
+import zlib
 from pathlib import Path
 
+import bmesh
 import bpy
 import numpy as np
 
@@ -114,7 +121,7 @@ def ball(name, parent, loc, scale, mat, segs=24, rings=12):
     return ob
 
 
-def blob(name, parent, loc, scale, mat, level=2):
+def blob(name, parent, loc, scale, mat, level=3):
     """A subdivided cube: the rounded-box shape every shell on this robot is."""
     bpy.ops.mesh.primitive_cube_add(size=2.0)
     ob = bpy.context.object
@@ -157,7 +164,7 @@ def rod(name, parent, loc, rot, radius, depth, mat, verts=16):
 # The globe's texture: gold continents on a gold sea, with a graticule
 # ------------------------------------------------------------------------------------------------------
 
-def globe_image(w=1024, h=512):
+def globe_field(w, h):
     """Equirectangular, and seamless because it is computed on the sphere rather than on the rectangle:
     each pixel's direction is fed to a sum of plane waves, so longitude 0 and 360 are the same point."""
     lon = (np.arange(w) + 0.5) / w * TAU - math.pi
@@ -172,6 +179,11 @@ def globe_image(w=1024, h=512):
             k = rng.normal(size=3)
             k /= np.linalg.norm(k)
             field += amp * np.sin(freq * (d @ k) + rng.uniform(0, TAU))
+    return field, lon, lat
+
+
+def globe_image(w=1024, h=512):
+    field, lon, lat = globe_field(w, h)
     land = field > np.quantile(field, 0.63)
     sea = np.array([1.00, 0.70, 0.16])
     ground = np.array([0.50, 0.29, 0.04])
@@ -203,7 +215,179 @@ def globe_material():
     # drawing, and not only when a light happens to catch it.
     nt.links.new(tex.outputs["Color"], nt.nodes["Principled BSDF"].inputs["Emission Color"])
     nt.nodes["Principled BSDF"].inputs["Emission Strength"].default_value = 0.5
+    # The continents stand proud of the sea, and are rougher than it.
+    relief, rough = globe_relief()
+    detail(m, normal=relief, orm=rough)
     return m
+
+
+# ------------------------------------------------------------------------------------------------------
+# Surface detail: panel seams, rivets, gold circuit traces, brushing and smudges
+# ------------------------------------------------------------------------------------------------------
+# Every texture below is computed, tiles seamlessly (each is a sum of whole waves across the tile, or a
+# pattern on the tile's own grid), and is fixed by its seed, so the robot is the same on every build. The
+# shells are box-projected in metres (`box_uv`), so a seam is the same width on the helmet as on a shin.
+#
+# At the banner's size he is about 100 CSS pixels a metre, so detail finer than a centimetre never reaches
+# the screen: the seams are 8 mm, the traces 5 mm, and 1024 texels across a 60 cm tile is already more than
+# a visit's close-up can show.
+
+TILE = 0.6                      # metres of surface one repeat of the shell textures covers
+N = 1024
+
+
+def smoothstep(a, b, x):
+    t = np.clip((x - a) / (b - a), 0, 1)
+    return t * t * (3 - 2 * t)
+
+
+def waves(n, lo, hi, seed, stretch=1.0):
+    """Tiling noise, unit variance: white noise kept to the band of lo..hi cycles a tile. `stretch` > 1
+    squeezes the band along x, for streaks that run along y."""
+    rng = np.random.default_rng(seed)
+    f = np.fft.fft2(rng.normal(size=(n, n)))
+    ky, kx = np.meshgrid(np.fft.fftfreq(n) * n, np.fft.fftfreq(n) * n, indexing="ij")
+    k = np.hypot(kx * stretch, ky / stretch)
+    x = np.real(np.fft.ifft2(f * ((k >= lo) & (k <= hi))))
+    return x / (x.std() + 1e-9)
+
+
+def to_normal(h, strength):
+    """A tangent-space normal map (glTF's, +Y up) from a height field whose rows run bottom to top."""
+    gx = (np.roll(h, -1, 1) - np.roll(h, 1, 1)) * 0.5 * strength
+    gy = (np.roll(h, -1, 0) - np.roll(h, 1, 0)) * 0.5 * strength
+    v = np.stack([-gx, -gy, np.ones_like(h)], -1)
+    return v / np.linalg.norm(v, axis=-1, keepdims=True) * 0.5 + 0.5
+
+
+def image(name, rgb, colour=False):
+    """Pack an (h, w, 3) array, rows bottom to top, as a Blender image. Data maps are Non-Color."""
+    h, w = rgb.shape[:2]
+    img = bpy.data.images.new(name, w, h, alpha=False)
+    img.colorspace_settings.name = "sRGB" if colour else "Non-Color"
+    img.pixels.foreach_set(np.concatenate([rgb, np.ones((h, w, 1))], -1).astype(np.float32).ravel())
+    img.pack()
+    return img
+
+
+def orm(rough, metal):
+    """glTF's metallic-roughness packing: roughness in green, metalness in blue."""
+    return np.stack([np.ones_like(rough), rough, np.broadcast_to(metal, rough.shape)], -1)
+
+
+def hull():
+    """The shells' tile: four rows of plates, each row cut at its own places so the seams stagger like
+    brickwork; a rivet either side of every cut; and in a few plates a gold trace, a line with one right-
+    angle turn that ends in a pad. Returns height, roughness and the traces' glow."""
+    n = N
+    y, x = np.mgrid[0:n, 0:n] + 0.5
+    rng = np.random.default_rng(33)
+    rows, rh = 4, n / 4
+    per = lambda d: np.abs((d + n / 2) % n - n / 2)          # distance on the tile's torus
+    dist = np.abs((y + rh / 2) % rh - rh / 2)                # to the nearest row seam
+    row = (y // rh).astype(int)
+    rivets, plates = [], []
+    for r in range(rows):
+        cuts = np.sort(rng.uniform(0, n, rng.integers(2, 4)))
+        band = row == r
+        for c in cuts:
+            dist = np.where(band, np.minimum(dist, per(x - c)), dist)
+            for side in (-1, 1):
+                rivets.append((c + side * 22, r * rh + rh / 2))
+        for a, b in zip(cuts, np.r_[cuts[1:], cuts[0] + n]):
+            plates.append((a, b, r * rh, (r + 1) * rh))
+    w = 7                                                    # the seam's half width, texels: 8 mm
+    groove = smoothstep(w, w * 0.35, dist)
+    h = -groove
+    for cx, cy in rivets:
+        d = np.hypot(per(x - cx), per(y - cy))
+        h += 0.7 * np.sqrt(np.clip(1 - (d / 7) ** 2, 0, 1))
+    trace = np.zeros((n, n))
+
+    def segment(ax, ay, bx, by, r):
+        px, py = (x - ax + n / 2) % n - n / 2, (y - ay + n / 2) % n - n / 2      # signed, on the torus
+        vx, vy = bx - ax, by - ay
+        t = np.clip((px * vx + py * vy) / (vx * vx + vy * vy + 1e-9), 0, 1)
+        return np.hypot(px - t * vx, py - t * vy) - r
+
+    for a, b, lo, hi in plates:
+        if rng.random() > 0.45 or b - a < 120:
+            continue
+        # From one end of the plate, along it, then turning up or down to a pad, all inside the plate.
+        sx = a + 40 if rng.random() < 0.5 else b - 40
+        sy = rng.uniform(lo + 45, hi - 45)
+        ex = sx + (1 if sx < (a + b) / 2 else -1) * rng.uniform(0.35, 0.7) * (b - a - 80)
+        ey = np.clip(sy + rng.choice([-1, 1]) * rng.uniform(40, 90), lo + 35, hi - 35)
+        d = np.minimum(segment(sx, sy, ex, sy, 2.5), segment(ex, sy, ex, ey, 2.5))
+        d = np.minimum(d, segment(ex, ey, ex, ey, 8.0))       # the pad
+        d = np.minimum(d, segment(sx, sy, sx, sy, 5.0))
+        trace = np.maximum(trace, smoothstep(1.2, -0.6, d))
+    h += 0.25 * trace + 0.04 * waves(n, 40, 160, 5)
+    smudge = waves(n, 1, 4, 8)
+    rough = np.clip(0.24 + 0.06 * smudge + 0.25 * groove - 0.08 * trace, 0.08, 0.9)
+    return h, rough, trace
+
+
+def brushed():
+    """Gold's tile: streaks along one direction, in the roughness and a little in the surface."""
+    s = waves(N // 2, 20, 200, 12, stretch=8.0)
+    return 0.03 * s, np.clip(0.2 + 0.05 * s + 0.04 * waves(N // 2, 1, 4, 13), 0.08, 0.6)
+
+
+def grit():
+    """The joints' and the visor's tile: fine grain in the surface and broad smudges in the roughness."""
+    return 0.05 * waves(N // 2, 60, 200, 21), waves(N // 2, 1, 5, 22)
+
+
+def globe_relief(w=1024, h=512):
+    """The globe's land as a height field, from the same field `globe_image` thresholds."""
+    field, _, _ = globe_field(w, h)
+    land = smoothstep(np.quantile(field, 0.6), np.quantile(field, 0.66), field)
+    return to_normal(land[::-1] * 6.0, 1.0), orm(0.22 + 0.25 * land[::-1], 0.85)
+
+
+def detail(m, normal=None, orm=None, glow=None, glow_colour=(1.0, 0.55, 0.1), glow_strength=0.0):
+    """Wire a material's maps: a normal map, a packed roughness-metal map and an emission mask."""
+    nt = m.node_tree
+    p = nt.nodes["Principled BSDF"]
+    if normal is not None:
+        tex = nt.nodes.new("ShaderNodeTexImage")
+        tex.image = image(f"{m.name}-normal", normal)
+        nm = nt.nodes.new("ShaderNodeNormalMap")
+        nt.links.new(tex.outputs["Color"], nm.inputs["Color"])
+        nt.links.new(nm.outputs["Normal"], p.inputs["Normal"])
+    if orm is not None:
+        tex = nt.nodes.new("ShaderNodeTexImage")
+        tex.image = image(f"{m.name}-orm", orm)
+        sep = nt.nodes.new("ShaderNodeSeparateColor")
+        nt.links.new(tex.outputs["Color"], sep.inputs["Color"])
+        nt.links.new(sep.outputs["Green"], p.inputs["Roughness"])
+        nt.links.new(sep.outputs["Blue"], p.inputs["Metallic"])
+    if glow is not None:
+        tex = nt.nodes.new("ShaderNodeTexImage")
+        tex.image = image(f"{m.name}-glow", glow[..., None] * np.array(glow_colour), colour=True)
+        nt.links.new(tex.outputs["Color"], p.inputs["Emission Color"])
+        p.inputs["Emission Strength"].default_value = glow_strength
+    m["textured"] = True
+    return m
+
+
+def box_uv(ob) -> None:
+    """UVs by box projection in metres, one tile every `TILE`, shifted per part so seams don't line up."""
+    me = ob.data
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    uv = bm.loops.layers.uv.verify()
+    s = ob.scale
+    off = zlib.crc32(ob.name.encode()) % 997 / 997.0
+    for f in bm.faces:
+        ax = max(range(3), key=lambda i: abs(f.normal[i] * s[i]))
+        for lp in f.loops:
+            q = (lp.vert.co.x * s.x, lp.vert.co.y * s.y, lp.vert.co.z * s.z)
+            u, v = [q[i] for i in range(3) if i != ax]
+            lp[uv].uv = (u / TILE + off, v / TILE + off * 0.61)
+    bm.to_mesh(me)
+    bm.free()
 
 # Each lens, drawn left to right as the viewer sees it; B black, W white glint, space nothing. Both lenses
 # use the same strings unmirrored, so both glints sit toward the upper left of their lens, as drawn.
@@ -266,6 +450,16 @@ def build():
     white = material("pixel-white", (0.95, 0.95, 0.95), rough=0.35, glow=(1, 1, 1), strength=0.4)
     orbit = material("orbit", (0.95, 0.85, 0.6), metal=0.8, rough=0.2, glow=(1.0, 0.7, 0.3), strength=0.5)
     globe = globe_material()
+    # The surface detail. The shells get the plates, rivets and gold traces; the coat is thinner than it
+    # was, so the seams show through it as well as in it.
+    h, rough, trace = hull()
+    body.node_tree.nodes["Principled BSDF"].inputs["Coat Weight"].default_value = 0.6
+    detail(body, normal=to_normal(h, 2.2), orm=orm(rough, 0.6), glow=trace, glow_strength=1.6)
+    bh, br = brushed()
+    detail(gold, normal=to_normal(bh, 2.0), orm=orm(br, 1.0))
+    gh, gs = grit()
+    detail(joint, normal=to_normal(gh, 2.0), orm=orm(np.clip(0.5 + 0.08 * gs, 0.2, 0.9), 0.4))
+    detail(visor, orm=orm(np.clip(0.05 + 0.03 * np.maximum(gs, 0), 0.02, 0.3), 0.2))
 
     P = {}                                               # every pivot the animation drives
     root = P["root"] = empty("archie")
@@ -337,6 +531,9 @@ def build():
     pixel_shades(shades, black, white)
     for side in (-1, 1):
         rod(f"temple-{side}", shades, (side * 0.39, 0.2, 0.0), (math.pi / 2, 0, 0), 0.016, 0.4, black, 8)
+    for ob in bpy.data.objects:
+        if ob.type == "MESH" and ob.name != "globe" and ob.data.materials and ob.data.materials[0].get("textured"):
+            box_uv(ob)
     return P
 
 
@@ -1016,6 +1213,9 @@ def stage() -> None:
     # live model -- same camera, same aim, same 28.8-degree field -- so the poster and the first rendered
     # frame are the same picture and the swap between them does not jump.
     sc.render.resolution_x, sc.render.resolution_y = 480, 480
+    # `--zoom 3` renders previews at three times the size, for looking at the surface detail.
+    if "--zoom" in sys.argv:
+        sc.render.resolution_percentage = int(100 * float(sys.argv[sys.argv.index("--zoom") + 1]))
     sc.render.image_settings.file_format = "PNG" if PREVIEW else "WEBP"
     sc.render.image_settings.color_mode = "RGBA"
     sc.render.image_settings.quality = 82
@@ -1039,20 +1239,20 @@ def render(path: Path, clip="idle", t=0.0) -> None:
 
 
 def export() -> None:
-    """The GLB the banner loads, kept small because it is fetched on every desktop visit: every mesh but the
-    globe loses its UVs (nothing else is textured, and they were an eighth of the file), the one texture
-    goes as JPEG, and the clips are sampled every other frame -- 15 a second, linear between -- which the
-    slowest motion here does not need more of."""
+    """The GLB the banner loads, kept small because it is fetched on every desktop visit: a mesh whose
+    material has no textures loses its UVs (they were an eighth of the file), the textures go as WebP, and
+    the clips are sampled every other frame -- 15 a second, linear between -- which the slowest motion here
+    does not need more of."""
     GLB.parent.mkdir(parents=True, exist_ok=True)
     for ob in bpy.data.objects:
-        if ob.type == "MESH" and ob.name != "globe":
+        if ob.type == "MESH" and not (ob.data.materials and ob.data.materials[0].get("textured")):
             while ob.data.uv_layers:
                 ob.data.uv_layers.remove(ob.data.uv_layers[0])
     bpy.ops.export_scene.gltf(
         filepath=str(GLB), export_format="GLB", export_apply=True, export_yup=True,
         export_animations=True, export_animation_mode="NLA_TRACKS", export_force_sampling=True,
         export_optimize_animation_size=True, export_cameras=False, export_lights=False,
-        export_extras=False, export_image_format="JPEG", export_jpeg_quality=85, export_frame_step=2)
+        export_extras=False, export_image_format="WEBP", export_image_quality=88, export_frame_step=2)
 
 
 PIVOTS: dict = {}
