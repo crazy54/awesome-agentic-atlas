@@ -272,6 +272,24 @@ CF_TOKEN = "1fe3cbfd55ef4fccab981c064489e656"
 TOKEN_RE = re.compile(r"\A[0-9a-f]{32}\Z")
 
 
+# Archie follows the reader off the index. `docs/assets/archie.js` keeps its own URL, with its release's
+# `?v=`, in sessionStorage's `archie-src` when it loads on the index; this, on every other page, loads it
+# again from there, and archie.js docks him in a corner of the window. Nothing for a reader who has not
+# been to the index in this tab, or who turned on Quiet mode. A module <script> rather than `import()`,
+# because `repo/detail.js` carries it too and is ES5: a browser without modules ignores the element, where
+# it would fail to parse the whole of detail.js over an `import(`. The origin check keeps a value some
+# other script put there from choosing what this page runs.
+FOLLOW_JS = ('(function(){try{var u=sessionStorage.getItem("archie-src");'
+             'if(u&&new URL(u).origin===location.origin&&localStorage.getItem("atlas-byte-quiet")!=="1")'
+             '{var s=document.createElement("script");s.type="module";s.src=u;document.head.appendChild(s)}'
+             '}catch(e){}})()')
+
+
+def follow() -> str:
+    """The script tag that brings Archie along from the index."""
+    return f"<script>{FOLLOW_JS}</script>\n"
+
+
 def beacon(token: str | None = None) -> str:
     """The analytics script tag, or "" when the token is disabled."""
     if token is None:
@@ -523,7 +541,7 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             # assertion and the prose explaining both already live.
             # Last, so a constant injected above carrying its own relative URLs is prefixed too.
             .replace("__UP__", UP)
-            .replace("__ANALYTICS__", beacon()))
+            .replace("__ANALYTICS__", follow() + beacon()))
     relative_urls_prefixed(out)
     return out
 
