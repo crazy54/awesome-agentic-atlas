@@ -14,6 +14,10 @@
 // who does not, and that each of his attempts to get rid of a reader comes to nothing and leaves the page
 // as it was. Not the eight minutes before he tires of a reader: `?archie=tired:<name>` skips them.
 //
+// And following the reader down the page: scrolled away from the masthead, he comes down a fireman's pole
+// or in a lift (`?archie=visit:pole`, `visit:lift`), drawn behind him in the visit's fixed layer, and every
+// prop is gone again whether he leaves the way he came or the reader scrolls back up mid-visit.
+//
 // The model has to go live, so WebGL is swiftshader's; a Chrome that cannot give it one fails the first
 // assertion rather than passing the rest on the poster, which plays no pranks.
 //
@@ -260,6 +264,38 @@ await sleep(12000);
 r = await rec();
 ok("never tired of a reader he adores", !document_has(r, "tired-close") && await ev(`!document.querySelector(".archie-prop")`),
    JSON.stringify(r.said.map(s => s.text)));
+
+// ---- following the reader down the page
+// Out of the layer itself, not just gone with it: the layer is detached after every visit and used again.
+const cleared = `!document.querySelector(".archie-pole,.archie-lift") && !!document.querySelector(".mhmascot canvas") &&
+  !__prop.parentNode`;
+for (const by of ["pole", "lift"]) {
+  await goto(`?archie=visit:${by}`, 30);
+  await ev(`scrollTo(0, 1600)`);
+  ok(`${by}: scrolled down, it arrives`, await until(`!!(window.__prop = document.querySelector(".archie-${by}"))`, 20000));
+  ok("...in the visit's fixed layer, hidden from assistive technology and taking no clicks", await ev(`(() => {
+    const p = document.querySelector(".archie-${by}");
+    return p.getAttribute("aria-hidden") === "true" && getComputedStyle(p).pointerEvents === "none" &&
+      getComputedStyle(p.parentElement).position === "fixed" && !!p.parentElement.querySelector("canvas") &&
+      !!(p.compareDocumentPosition(p.parentElement.querySelector("canvas")) & Node.DOCUMENT_POSITION_FOLLOWING); })()`),
+    await ev(`(() => { const p = document.querySelector(".archie-${by}"), l = p.parentElement;
+      return [p.getAttribute("aria-hidden"), getComputedStyle(p).pointerEvents, getComputedStyle(l).position,
+              [...l.children].map(c => c.tagName + "." + c.className).join(",")].join(" | "); })()`));
+  ok("...and he comes down by it, saying so", await saying(by, 20000), await last());
+  if (by === "pole")
+    ok("...a pole the height of the window, dropped in from the top", await ev(`(() => {
+      const r = document.querySelector(".archie-pole").getBoundingClientRect();
+      return Math.abs(r.height - innerHeight) < 2 && r.top > -2; })()`));
+  else
+    ok("...a lift that has counted down to the ground floor", /G$/.test(await ev(`document.querySelector(".archie-floor").textContent`)));
+  if (by === "pole") {
+    ok("...and, left to it, he goes back up the pole and takes it with him", await until(cleared, 40000));
+  } else {
+    await ev(`scrollTo(0, 0)`);
+    ok("...and scrolling back up mid-visit clears it away at once", await until(cleared, 5000));
+  }
+  await ev(`scrollTo(0, 0)`);
+}
 
 // ---- the tab title while the reader is away
 const away = on => ev(`(() => { Object.defineProperty(document, "hidden", {configurable: true, get: () => ${on}});

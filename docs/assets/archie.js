@@ -416,6 +416,11 @@
     // Visits only start from the idle. The visit holds the idle's promise and gives it back, so the director
     // carries on from where it was. Never in Quiet mode, and not more than once in 90 seconds.
     // `?archie=visit` makes the first one come 1.5 s after the masthead leaves the screen, for checking.
+    //
+    // Come down to sit, he has followed the reader down the page, so he comes down: a fireman's pole drops
+    // in and he slides down it, or a lift arrives, dings, and he steps out. Either way he leaves by the
+    // same, back up. Both are drawn in the visit's layer, behind him, hidden from assistive technology and
+    // taking no pointer events. `?archie=visit:pole` and `?archie=visit:lift` ask for one of them.
     const VISIT = 150;                       // the visit's slot size, CSS pixels, against the masthead's 240
     const HURRY = 1.5;                       // he hurries on a visit: the clip and his speed, both, so no skating
     // The front of his right fist at a jab's full extension in `press`, turned to face screen right, which
@@ -426,6 +431,113 @@
     layer.style.cssText = "position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:29";
     let mode = "home", aborted = false, target = null, seat = 0, grip = {x: 0, y: 0}, lastVisit = -1e9;
     let timer = 0, scrolled = 0;
+    // How far above where he stands he is drawn, in CSS pixels, eased from one height to another on the
+    // render clock: the pole's slide. `anchor()` adds it every frame.
+    let rise = {from: 0, to: 0, at: 0, secs: 1, ease: smooth};
+    const height = () => {
+      const k = Math.min(1, (clock - rise.at) / rise.secs);
+      return rise.from + (rise.to - rise.from) * rise.ease(k);
+    };
+    const glide = (to, secs, ease) => {
+      rise = {from: height(), to, at: clock, secs, ease};
+      return vuntil(() => clock >= rise.at + secs);
+    };
+    const vafter = secs => { const at = clock + secs; return vuntil(() => clock >= at); };
+    const prop = (cls, css, html = "") => {
+      const el = document.createElement("div");
+      el.className = cls;
+      el.setAttribute("aria-hidden", "true");
+      el.style.cssText = "position:absolute;pointer-events:none;" + css;
+      el.innerHTML = html;
+      layer.insertBefore(el, canvas);          // behind him
+      return el;
+    };
+    const POLE_CSS = "top:0;width:12px;border-radius:6px;translate:0 -100%;transition:translate .45s ease-out;" +
+      "background:linear-gradient(90deg,#6d747c,#f4f7fa 35%,#b9c0c7 55%,#5b6168);box-shadow:0 0 8px rgba(0,0,0,.35)";
+    const LIFT_CSS = "width:118px;height:176px;border:4px solid #6d747c;border-radius:8px 8px 0 0;" +
+      "background:#2b3036;box-shadow:0 10px 30px rgba(0,0,0,.45);transition:translate 1.4s cubic-bezier(.45,0,.25,1)";
+    const LIFT_HTML = '<div class="archie-floor" style="position:absolute;left:50%;top:-30px;translate:-50% 0;' +
+      'padding:3px 9px;border-radius:5px;background:#111;color:#ffb000;font:700 13px/1.2 ui-monospace,monospace">' +
+      '\u25BC 3</div>' +
+      '<div class="archie-door" style="position:absolute;left:0;top:0;width:50%;height:100%;' +
+      'background:linear-gradient(90deg,#9aa2aa,#d5dade);border-right:1px solid #5b6168;transition:translate .5s ease-in-out"></div>' +
+      '<div class="archie-door" style="position:absolute;right:0;top:0;width:50%;height:100%;' +
+      'background:linear-gradient(90deg,#d5dade,#9aa2aa);border-left:1px solid #5b6168;transition:translate .5s ease-in-out"></div>';
+    let props = [];
+    const doors = (car, open) => {
+      const [l, r] = car.querySelectorAll(".archie-door");
+      l.style.translate = open ? "-100% 0" : "0 0";
+      r.style.translate = open ? "100% 0" : "0 0";
+      car.classList.toggle("open", open);
+    };
+    const floors = async (car, from, to) => {
+      const sign = car.querySelector(".archie-floor");
+      for (let f = from; ; f += from < to ? 1 : -1) {
+        sign.textContent = (from < to ? "\u25B2 " : "\u25BC ") + (f === 0 ? "G" : f);
+        if (f === to) return;
+        await vafter(0.4);
+      }
+    };
+    // Down the pole: it drops in beside where he will stand, he slides down it with a bump at the bottom, and
+    // it goes back up without him.
+    const poleDown = async () => {
+      const pole = prop("archie-pole", `left:${seat - 6 - VISIT * 0.22}px;height:${innerHeight}px;` + POLE_CSS);
+      props.push(pole);
+      rise = {from: innerHeight, to: innerHeight, at: clock, secs: 1, ease: smooth};
+      actor.rotation.y = turnTo = -Math.PI / 2;        // facing the pole
+      play("idle", 1).timeScale = 0;                   // holding on
+      requestAnimationFrame(() => { pole.style.translate = "0 0"; });
+      await vafter(0.5);
+      talk.say("pole");
+      await glide(0, 1.1, k => k * k);                 // gravity: slow at the top, fast at the bottom
+      await glide(10, 0.12, smooth);
+      await glide(0, 0.18, smooth);
+      pole.style.translate = "0 -100%";
+    };
+    const poleUp = async () => {
+      const pole = props.find(e => e.classList.contains("archie-pole"));
+      if (!pole) return;
+      pole.style.translate = "0 0";
+      await vturn(-Math.PI / 2);
+      play("idle", 1).timeScale = 0;
+      await vafter(0.5);
+      await glide(innerHeight, 1.6, smooth);           // up is harder
+      pole.style.translate = "0 -100%";
+      await vafter(0.5);
+    };
+    // The lift: it comes down with him inside, out of sight, counts down its floors, dings and opens, and
+    // he steps out in front of it. It goes back up empty, and comes back for him when he leaves.
+    const liftDown = async () => {
+      const car = prop("archie-lift", `left:${seat - 59}px;top:${innerHeight - 6 - 176}px;` +
+        `translate:0 ${-innerHeight}px;` + LIFT_CSS, LIFT_HTML);
+      props.push(car);
+      actor.visible = false;
+      requestAnimationFrame(() => { car.style.translate = "0 0"; });
+      await floors(car, 3, 0);
+      await vafter(0.3);
+      doors(car, true);
+      await vafter(0.5);
+      actor.rotation.y = turnTo = 0;
+      actor.visible = true;
+      talk.say("lift");
+      await vafter(0.6);
+      doors(car, false);
+      await vafter(0.5);
+      car.style.translate = `0 ${-innerHeight}px`;
+    };
+    const liftUp = async () => {
+      const car = props.find(e => e.classList.contains("archie-lift"));
+      if (!car) return;
+      car.style.translate = "0 0";
+      await floors(car, 3, 0);
+      doors(car, true);
+      await vafter(0.6);
+      actor.visible = false;
+      doors(car, false);
+      await vafter(0.5);
+      car.style.translate = `0 ${-innerHeight}px`;
+      await vafter(1.4);
+    };
     const onScreen = r => r.top > 60 && r.bottom < innerHeight - 10 && r.left > 90 && r.right < innerWidth - 10;
     const pickTarget = () => {
       const all = [...document.querySelectorAll("main button, main [role=button]")].filter(b => {
@@ -435,7 +547,7 @@
       // He comes in from the left, so a button on the left half is a shorter walk
       const near = all.filter(b => b.getBoundingClientRect().left < innerWidth * 0.55);
       const from = near.length ? near : all;
-      return from.length && Math.random() < 0.75 ? from[Math.floor(Math.random() * from.length)] : null;
+      return from.length && !way && Math.random() < 0.5 ? from[Math.floor(Math.random() * from.length)] : null;
     };
     // Where world point p lands on screen, relative to the slot's centre: the frustum is a window slid
     // across the canvas, so that offset is the same wherever the slot is.
@@ -459,7 +571,7 @@
         if (!target.isConnected || r.bottom < 0 || r.top > innerHeight) { abortVisit(); return; }
         x = r.left + 2; y = r.top + r.height / 2;
       }
-      view.cx = x - grip.x; view.cy = y - grip.y;
+      view.cx = x - grip.x; view.cy = y - grip.y - height();
       frustum(view.slide);
     };
     const visitLayout = () => {
@@ -481,24 +593,32 @@
       aborted = true;
       const d = done; done = null; d && d();
     };
+    // How he comes down to sit: asked for, or the pole and the lift two times in five each, and walking in.
+    const way = ["visit:pole", "visit:lift"].includes(asked) ? asked.slice(6) : "";
     const visit = async () => {
       mode = "visit"; aborted = false; idling = false;
       const held = done; done = null;
       target = pickTarget();
+      const r = Math.random();
+      const by = target ? "walk" : way || (r < 0.4 ? "pole" : r < 0.8 ? "lift" : "walk");
       seat = innerWidth * (0.25 + Math.random() * 0.5);
       document.body.appendChild(layer);
       layer.appendChild(canvas);
       talk.move(layer, true);
       view.slide = 0;
       visitLayout();
-      // In from just off the left of the window, facing right for the button; to sit, from the nearer side.
-      const from = target || seat < innerWidth / 2 ? 1 : -1;
-      frustum(from > 0 ? -view.cx - view.sw / 2 : view.W - view.cx + view.sw / 2);
-      actor.rotation.y = turnTo = from * Math.PI / 2;
-      play("walk", Infinity).timeScale = HURRY;
-      speed = from * WALK_SPEED * HURRY;
-      await vuntil(() => from * view.slide >= 0);
-      speed = 0;
+      if (by === "pole") await poleDown();
+      else if (by === "lift") await liftDown();
+      else {
+        // In from just off the left of the window, facing right for the button; to sit, from the nearer side.
+        const from = target || seat < innerWidth / 2 ? 1 : -1;
+        frustum(from > 0 ? -view.cx - view.sw / 2 : view.W - view.cx + view.sw / 2);
+        actor.rotation.y = turnTo = from * Math.PI / 2;
+        play("walk", Infinity).timeScale = HURRY;
+        speed = from * WALK_SPEED * HURRY;
+        await vuntil(() => from * view.slide >= 0);
+        speed = 0;
+      }
       if (!aborted) frustum(0);
       if (target) {
         talk.say("button");
@@ -512,17 +632,25 @@
         }
       } else {
         await vturn(0);
-        talk.say("drop");
+        if (by === "walk") talk.say("drop");
         await vperform("sit");
       }
-      // Off by the nearer side of the window
-      const way = view.cx < view.W / 2 ? -1 : 1;
-      await vturn(way * Math.PI / 2);
-      if (!aborted) play("walk", Infinity).timeScale = HURRY;
-      speed = way * WALK_SPEED * HURRY;
-      await vuntil(() => way < 0 ? view.cx + view.slide < -view.sw / 2 : view.cx + view.slide > view.W + view.sw / 2);
+      if (by === "pole") await poleUp();
+      else if (by === "lift") await liftUp();
+      else {
+        // Off by the nearer side of the window
+        const off = view.cx < view.W / 2 ? -1 : 1;
+        await vturn(off * Math.PI / 2);
+        if (!aborted) play("walk", Infinity).timeScale = HURRY;
+        speed = off * WALK_SPEED * HURRY;
+        await vuntil(() => off < 0 ? view.cx + view.slide < -view.sw / 2 : view.cx + view.slide > view.W + view.sw / 2);
+      }
       // Home, whether he walked off or the visit was cut short, and back into the idle he left.
       speed = 0; target = null;
+      rise = {from: 0, to: 0, at: 0, secs: 1, ease: smooth};
+      actor.visible = true;
+      for (const e of props) e.remove();
+      props = [];
       actor.rotation.y = turnTo = 0;
       slot.appendChild(canvas);
       layer.remove();
@@ -539,7 +667,7 @@
     const plan = () => {
       clearTimeout(timer);
       if (seen || mode === "visit") return;
-      timer = setTimeout(maybeVisit, asked === "visit" ? 1500 : 20000 + Math.random() * 25000);
+      timer = setTimeout(maybeVisit, asked === "visit" || way ? 1500 : 20000 + Math.random() * 25000);
     };
     const maybeVisit = () => {
       if (seen || mode === "visit" || document.hidden || talk.quiet) return;
@@ -881,6 +1009,10 @@
             ["Finally, a soundtrack for my code."], ["Is it 4/4? Please say it's 4/4.", 1]],
     drop: [["Mind if I sit here?"], ["Just visiting. Carry on."], ["It's quieter down here.", 1],
            ["Nice scroll position you've got."]],
+    pole: [["Nee-naw! Coming down!"], ["Fireman's pole. The fastest way to follow a scroll."],
+           ["Wheeeee!"], ["Did someone scroll? I'm on my way!"]],
+    lift: [["Ding! Ground floor: you."], ["Going down? Me too."], ["The lift. Much more dignified.", 1],
+           ["Mind the doors. I followed you down."]],
     // Pranks: the set-up, as he presses the button that does it, and the excuse, as it undoes itself
     "prank-lights": [["Ooh, what does this switch do?"], ["Watch this. Lights... OFF!"]],
     "prank-lights-after": [["Huh. It keeps coming back on."], ["You didn't see that. Nobody saw that."],
