@@ -74,8 +74,11 @@
   const BEATS = {
     "floss": 48, "take-the-l": 32, "default-dance": 48, "orange-justice": 48, "robot": 32, "electro-shuffle": 30,
     "hype": 32, "boogie-down": 30, "get-griddy": 32, "billy-bounce": 32, "fresh": 32, "scenario": 32, "groove-jam": 32,
+    "headbang": 32, "the-drop": 32,
   };
   const DANCES = Object.keys(BEATS);
+  // The rave dances are for the music's heavy parts, not for any time: see `heavy()` and `building()`.
+  const RAVE = ["headbang", "the-drop"];
   const OTHERS = ["watch", "sit", "sleep", "walk-off"];
   // A number in [0, 1) that looks random but is the same every time for the same n: the lights' marks.
   const hash = n => { const s = Math.sin(n * 12.9898) * 43758.5453; return s - Math.floor(s); };
@@ -102,6 +105,16 @@
   const loudness = () => {
     try { const m = window.archieMusic; return m ? Math.max(0, Math.min(1, m.level())) : 0; } catch { return 0; }
   };
+  // How heavy the music is now against how it has been: its bass over about the last second (`fast`), and
+  // the last ten (`slow`). A drop is the bass well over its own recent run: he headbangs. A build is the
+  // bass gone out of it while the music carries on as loud: he bows his head and prays through it, and
+  // bangs when it drops (`the-drop`). Relative, so a quiet song has drops too, and a mic across the room.
+  const weight = {fast: 0, slow: 0};
+  const heft = () => {
+    try { const m = window.archieMusic; return m && m.bass ? Math.max(0, Math.min(1, m.bass())) : 0; } catch { return 0; }
+  };
+  const heavy = () => weight.fast > 0.4 && weight.fast > weight.slow * 1.35;
+  const building = () => weight.slow > 0.3 && weight.fast < weight.slow * 0.55 && loudness() > 0.25;
 
   let started = false, pals = null;          // `pals`: the friends' visit controller, see "Friends"
   const go = () => {
@@ -219,6 +232,7 @@
       document.removeEventListener("archie:cue", onCue);
       delete window.archieRig;
     });
+    const dimmer = house(header);
     const edge = {left: -8, right: 8, top: 5};
     const fx = FX.effects(T, scene, rig, edge, canvas);
     const view = {W: 1, H: 1, cx: 0, cy: 0, k: 1, sw: 240, sh: 240, ppm: 75, slide: 0, ox: 0, oy: 0};
@@ -428,7 +442,9 @@
         if (prankable() && Math.random() < (payback() ? 0.6 : 0.3)) { await prank(); continue; }
         // A dance half the time, and never the same act twice running, unless the reader asked for one or
         // the music did.
-        let pool = (wish || grooving() || Math.random() < 0.5 ? DANCES : OTHERS).filter(n => n !== last);
+        if (grooving() && (heavy() || building())) { wish = null; await act(heavy() ? "headbang" : "the-drop"); continue; }
+        let pool = (wish || grooving() || Math.random() < 0.5 ? DANCES : OTHERS)
+          .filter(n => n !== last && (!RAVE.includes(n) || n === wish));
         if (grooving() && pool.some(fits)) pool = pool.filter(fits);
         wish = null;
         await act(pool[Math.floor(Math.random() * pool.length)]);
@@ -765,6 +781,7 @@
       if (clock > lockUntil) lock = 0;
       return Math.max(0.75, Math.min(1.35, r * (1 + lock)));
     };
+    let heaving = "";
     const tick = dt => {
       clock += dt;
       if (mode === "visit") anchor();
@@ -777,6 +794,17 @@
       if (g && !grooved) { talk.say("music"); if (idling && done) { const d = done; done = null; d(); } }
       // And when it goes quiet, the dance ends there; the director's idle cross-fades out of it.
       if (!g && grooved && rig.on && done) { const d = done; done = null; d(); }
+      if (g) {
+        const h = heft();
+        // From silence any music would read as a drop, so the music starting sets where it is heavy from.
+        if (!grooved) weight.fast = weight.slow = h;
+        weight.fast += (h - weight.fast) * (1 - Math.exp(-dt / 0.8));
+        weight.slow += (h - weight.slow) * (1 - Math.exp(-dt / 10));
+        // The drop, or the build, starting: whatever he was dancing gives way to it at once.
+        const now = heavy() ? "headbang" : building() ? "the-drop" : "";
+        if (now && now !== heaving && c && !RAVE.includes(c.name) && done) { const d = done; done = null; d(); }
+        heaving = now;
+      } else heaving = "";
       grooved = g;
       if (n) current.timeScale = g && music.bpm ? tempo(c, n) : 1;
       mixer.update(dt);
@@ -785,6 +813,8 @@
       // A dance's beat, or, between dances, a cue's own (see `rig.cue`), which the lights and lasers play
       // to and the stage effects do not: a cue brings up the floor and the fog, never the flames.
       rig.stay = music.on && seen && mode === "home";
+      rig.boost = rig.stay ? 1.4 : 1;            // the house lights are down, so the stage's come up
+      dimmer.update(dt, rig.stay);
       const dancing = n && rig.on ? {at: current.time / c.duration * n, rate: n / c.duration * current.timeScale,
                                      kick, loud} : null;
       const beat = dancing || rig.synth(dt);
@@ -818,7 +848,7 @@
     const run = () => {
       const want = !document.hidden && (seen || mode === "visit" || !idling);
       if (want && !raf) { then = 0; raf = requestAnimationFrame(frame); }
-      if (!want && raf) { cancelAnimationFrame(raf); raf = 0; laser.hide(); }
+      if (!want && raf) { cancelAnimationFrame(raf); raf = 0; laser.hide(); dimmer.hide(); }
     };
     const io = new IntersectionObserver(([e]) => {
       seen = e.isIntersecting;
@@ -912,6 +942,7 @@
       waits.length = 0;                     // strands the director's pending act, which is the point
       talk.stop();
       laser.stop();
+      dimmer.stop();
       canvas.remove();
       slot.style.backgroundImage = "";
       delete slot.dataset.live;
@@ -983,6 +1014,7 @@
     "orange-justice": "Orange Justice", "robot": "the Robot", "electro-shuffle": "the Electro Shuffle",
     "hype": "Hype", "boogie-down": "Boogie Down", "get-griddy": "the Griddy", "billy-bounce": "the Billy Bounce",
     "fresh": "Fresh", "scenario": "Scenario", "groove-jam": "Groove Jam",
+    "headbang": "the Headbang", "the-drop": "the Drop",
   };
   // Each line is [text] for speech or [text, 1] for a thought. `{n}` is a dance's name, `{count}` the
   // masthead's own project count, so the joke can't go stale.
@@ -1493,10 +1525,37 @@
     };
   }
 
+  // The house lights: in music mode ("Dance with me"), with the masthead on screen, the rest of the page dims
+  // a little, as a club's does when the set starts, and the stage -- the masthead, where he and the rig are --
+  // stays as bright as it was, while the rig's heads come up brighter (`boost` in `lights()`). It is one
+  // element over the window with a hole the masthead's size, made of its own shadow, so nothing on the page
+  // is restyled; it takes no clicks, and sits under the lasers and the masthead's open menus.
+  function house(header) {
+    const el = document.createElement("div");
+    el.className = "archie-house";
+    el.setAttribute("aria-hidden", "true");
+    el.style.cssText = "position:fixed;pointer-events:none;z-index:29;border-radius:0;display:none;opacity:0";
+    document.body.appendChild(el);
+    let fade = 0;
+    return {
+      update(dt, want) {
+        fade += Math.max(-2 * dt, Math.min(2 * dt, (want ? 1 : 0) - fade));
+        if (fade <= 0.001) { if (el.style.display !== "none") el.style.display = "none"; fade = 0; return; }
+        const r = header.getBoundingClientRect(), light = document.documentElement.dataset.theme === "light";
+        Object.assign(el.style, {display: "", left: r.left + "px", top: r.top + "px", width: r.width + "px",
+                                 height: r.height + "px", opacity: String(fade),
+                                 boxShadow: `0 0 0 200vmax rgba(0,0,0,${light ? 0.28 : 0.45})`});
+      },
+      hide() { el.style.display = "none"; fade = 0; },
+      stop() { el.remove(); },
+    };
+  }
+
   // The light show, the kind an EDM stage hangs over its crowd, for the dances, and for the named cues an
   // admin can fire at any time (see `cue()` and `window.archieRig` in `start()`). When a dance ends it all
   // fades, and the truss is hauled back up with the wall -- except in music mode (`stay`), where the rig
-  // stays hung between songs and through the quiet, dark and still, and powers up again with the beat.
+  // stays hung between songs and through the quiet, dark and still, and powers up again with the beat. In
+  // music mode the heads also run brighter (`boost`), since the house lights are down: see `house()`.
   // What hangs, and where:
   //
   //  - THE MAIN TRUSS drops in from above the header, bounces to a stop, and carries six moving heads, two
@@ -1976,8 +2035,10 @@
 
     return {
       on: false,
-      // In music mode, hung between songs and through the quiet, dark: see `update()`.
+      // In music mode, hung between songs and through the quiet, dark: see `update()`. And brighter while
+      // it is lit (`boost`), since the house lights are down: see `house()`.
       stay: false,
+      boost: 1,
       // For `archie-fx.js` (whose floor takes four colours) and `beams()` in start(): the truss's first
       // four heads, as the rig had before, and all nine for anything that wants them.
       get heads() { return four; },
@@ -2133,7 +2194,7 @@
             mark(0, i, cx, h.aim);
             h.color.copy(C.beams[i % C.beams.length]);
           }
-          const lv = level * pulse * h.bump * h.gain * wash;
+          const lv = level * this.boost * pulse * h.bump * h.gain * wash;
           if (h.model) {
             // The model's yoke pans and its head tilts to put the lens's -Y on the mark; the beam starts
             // at the lens. Pan about the yoke's Y, then tilt by the angle from straight down.

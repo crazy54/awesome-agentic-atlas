@@ -27,6 +27,10 @@
 // was and he only idles, the rig still hung but dark and still, until the beats come back and so does it;
 // and with music mode off, the rig is hauled away.
 //
+// The heavy parts of the music choose his dance: steady music never gets a rave dance, the bass coming in hard
+// over its own recent run cuts whatever he is dancing short for the headbang, and the bass going out of it
+// while the music stays loud, a build, for the drop, which prays through it.
+//
 // The model has to go live, so WebGL is swiftshader's; a Chrome that cannot give it one fails the first
 // assertion rather than passing the rest on the poster, which plays no pranks.
 //
@@ -316,6 +320,41 @@ await ev(`delete window.archieMusic;
   document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: false, source: "mic"}}))`);
 ok("music mode off: the rig is hauled away", await until(`document.querySelector(".mhmascot").dataset.rig === "away"`, 6000),
    await rigIs());
+
+// ---- the heavy parts
+const RAVE = ["headbang", "the-drop"];
+const heavyFrom = async bass => {
+  await goto("", 0);
+  await ev(`window.__bass = ${bass}; window.archieMusic = {level: () => 0.6, bass: () => window.__bass, bpm: 120, lastBeat: 0,
+      wave: o => o.fill(0)};
+    document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: true, source: "mic"}}))`);
+  await beats(true);
+  return until(`${JSON.stringify(DANCE)}.includes(document.querySelector(".mhmascot").dataset.act)`, 25000);
+};
+{
+  await heavyFrom(0.3);
+  const seen = new Set();
+  for (let i = 0; i < 24; i++) { seen.add(await act()); await sleep(250); }
+  ok("steady music: he dances, and no rave dance", [...seen].every(a => DANCE.includes(a) && !RAVE.includes(a)),
+     [...seen].join(" "));
+  const was = await act();
+  await ev(`window.__bass = 0.95`);
+  ok("the bass coming in hard: he cuts to the headbang, there and then",
+     await until(`document.querySelector(".mhmascot").dataset.act === "headbang"`, 3000), `${was} -> ${await act()}`);
+  await beats(false);
+}
+{
+  await heavyFrom(0.7);
+  await sleep(3000);
+  const was = await act();
+  await ev(`window.__bass = 0.05`);
+  ok("the bass going out while it stays loud, a build: he cuts to the drop, and prays",
+     !RAVE.includes(was) && await until(`document.querySelector(".mhmascot").dataset.act === "the-drop"`, 3000),
+     `${was} -> ${await act()}`);
+  await beats(false);
+  await ev(`delete window.archieMusic;
+    document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: false, source: "mic"}}))`);
+}
 
 // ---- following the reader down the page
 // Out of the layer itself, not just gone with it: the layer is detached after every visit and used again.
