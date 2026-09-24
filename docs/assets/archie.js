@@ -22,6 +22,12 @@
 // reader who has been around a while he tries, and fails, to get rid of: see "His mood" in `chatter()`, and
 // `tiring()`.
 //
+// HE FOLLOWS THE READER. The index keeps this script's own URL, version and all, in sessionStorage's
+// `archie-src`, and every other page of the site has a one-line script that imports it from there (see
+// `follow()` in `scripts/19_pages.py`). A page with no `.mhmascot` of its own gets a corner of the window
+// instead: `dock()`. So he only turns up on a page for a reader who met him on the index in this tab, as the
+// same release of him, carrying the same mood, and never for one who turned on Quiet mode.
+//
 // THE CANVAS IS WIDER THAN THE SLOT. It spans the viewport's width and the header's height, so that he can
 // walk out of the banner and so that the lights have somewhere to come from. The camera is the one the poster
 // is rendered with: Blender's (0.9, -6.2, 1.55) aimed at z 1.08, a 70 mm lens on a 36 mm sensor, converted to
@@ -30,8 +36,27 @@
 // you move the camera here, move it in `stage()` too. The canvas takes no pointer events, so the header's
 // links work through it; the one thing that does is a button over his body, for poking him.
 (() => {
-  const slot = document.querySelector(".mhmascot");
-  if (!slot) return;
+  // Off the index: a strip along the bottom of the window, for the canvas, with a smaller slot at its right
+  // for him. Fixed, so he stays with the reader down the page, and taking no pointer events but his own.
+  const dock = () => {
+    const d = document.createElement("div");
+    d.className = "archie-dock";
+    d.style.cssText = "position:fixed;left:0;right:0;bottom:0;height:250px;pointer-events:none;z-index:28";
+    const s = document.createElement("div");
+    s.className = "mhmascot";
+    s.setAttribute("aria-hidden", "true");
+    s.style.cssText = "position:absolute;right:18px;bottom:-12px;width:150px;height:150px;pointer-events:none";
+    d.appendChild(s);
+    document.body.appendChild(d);
+    return s;
+  };
+  const home = document.querySelector(".mhmascot");
+  if (home) try { sessionStorage.setItem("archie-src", import.meta.url); } catch {}
+  let followed = false;
+  // Quiet mode is the loader's to check, and it never loads this: here it is only whether they have met.
+  try { followed = !home && !!sessionStorage.getItem("archie-hi"); } catch {}
+  if (!home && !followed) return;
+  const slot = home || dock();
   const wide = matchMedia("(min-width: 900px)");
   const calm = matchMedia("(prefers-reduced-motion: no-preference)");
   const allowed = () => wide.matches && calm.matches;
@@ -324,7 +349,8 @@
     };
     const prankOnce = async name => {
       trick = trick || pranks(talk, header);
-      if (!tricks.length) tricks = PRANKS.slice().sort(() => Math.random() - 0.5);
+      if (!tricks.length) tricks = PRANKS.filter(n => n !== "count" || header.querySelector(".sub b"))
+        .sort(() => Math.random() - 0.5);
       name = name || tricks.pop();
       lastPrank = Date.now(); last = "prank";
       talk.say(payback() ? "revenge" : "prank-" + name);
@@ -683,7 +709,7 @@
 
     // Asked for a dance (by poking, or by choosing the Prism skin): cut the idle short and dance next.
     // Mid-act, it waits for the act to end.
-    const talk = chatter(T, {host, slot, header, camera, view, actor, head: gltf.scene.getObjectByName("head"),
+    const talk = chatter(T, {host, slot, header, camera, view, actor, followed, head: gltf.scene.getObjectByName("head"),
       guest: () => (pals ? pals.poke() : null),
       wish() {
         wish = true;
@@ -924,6 +950,7 @@
 .archie-poke{position:absolute;left:0;top:0;z-index:0;margin:0;padding:0;border:0;background:none;
   border-radius:45% 45% 30% 30%;cursor:pointer}
 .archie-poke:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.archie-dock .archie-poke{pointer-events:auto}
 .archie-sr{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip-path:inset(50%);
   white-space:nowrap}
 .archie-heart{position:absolute;z-index:3;color:#ff2bd6;font:700 20px/1 var(--ui);pointer-events:none;
@@ -969,6 +996,11 @@
     watch: [["Is it Friday yet?"], ["The build has been running for how long?", 1]],
     leave: [["brb, CI is red."], ["Be right back, someone @-mentioned me."],
             ["Off to fetch more awesome-lists!"]],
+    follow: [["You thought you could leave without me?"], ["Wait up! I'm coming too."],
+             ["Following you. It's what I do now.", 1], ["Nice page. I'll hang out down here."],
+             ["Don't mind me. Just tagging along."]],
+    "follow-mad": [["Oh, you're HERE now? You didn't even say goodbye."], ["You left without poking me. Rude."],
+                   ["I followed you all this way and still no poke?"], ["You can't escape me that easily."]],
     back: [["Did you miss me?"], ["Moonwalking is a valid deploy strategy."],
            ["I'm back! Nothing's on fire. Probably."]],
     light: [["Light mode! My visor has never been so shiny."], ["Whoa, bright! Adjusting visor..."]],
@@ -1113,7 +1145,7 @@
     };
     try { if (!sessionStorage.getItem("archie-hi")) { sessionStorage.setItem("archie-hi", "1"); free = 0; } }
     catch {}
-    let hello = free === 0;
+    let hello = free === 0 ? "hello" : "";
 
     // ---- His mood ----------------------------------------------------------------------------------------
     // -100 to 100, in sessionStorage, so it goes with the reader from page to page and is forgotten with the
@@ -1131,6 +1163,7 @@
     low = MARKS.filter(m => mood <= m).length;       // no announcing a mark he was already past
     const save = () => { try { sessionStorage.setItem(MOOD, JSON.stringify({v: Math.round(mood), since})); } catch {} };
     save();
+    if (o.followed && !hello) { free = 0; hello = mood <= -25 ? "follow-mad" : "follow"; }
     const feel = () => mood >= 60 ? "adore" : mood <= -80 ? "furious" : mood <= -50 ? "angry" :
       mood <= -25 ? "sulk" : "";
     const hearts = () => {
@@ -1285,7 +1318,7 @@
         t += dt;
         // Only at home: carried out past the edge of the page, it would give the page a sideways scrollbar.
         poke.hidden = away || view.slide !== 0;
-        if (hello && t > 1.5) { hello = false; own("hello"); }
+        if (hello && t > 1.5) { own(hello); hello = ""; }
         else if (!hello && idling && !quiet) own(feel() || "idle");
         if (!quiet && seen && !away) {
           mood = Math.max(-100, Math.min(100, mood + dt * (hovering ? 2 : -0.3)));

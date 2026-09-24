@@ -466,3 +466,6 @@ function show(id, html) {
   el.innerHTML = html;
   el.className = "live on";
 }
+
+/* Archie, if the reader met him on the index: see `follow()` in 19_pages.py. */
+(function(){try{var u=sessionStorage.getItem("archie-src");if(u&&new URL(u).origin===location.origin&&localStorage.getItem("atlas-byte-quiet")!=="1"){var s=document.createElement("script");s.type="module";s.src=u;document.head.appendChild(s)}}catch(e){}})()

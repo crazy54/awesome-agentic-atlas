@@ -1186,7 +1186,7 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
   language. A dash in the star column means the row is a folder inside someone else's repo, or a dead
   link, and has no count of its own.
 </div></footer>
-{THEME_JS}{b19.beacon()}</body>
+{THEME_JS}{b19.follow()}{b19.beacon()}</body>
 </html>
 """
 

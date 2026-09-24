@@ -18,11 +18,15 @@
 // or in a lift (`?archie=visit:pole`, `visit:lift`), drawn behind him in the visit's fixed layer, and every
 // prop is gone again whether he leaves the way he came or the reader scrolls back up mid-visit.
 //
+// And off the index: met there, he follows the reader to the rest of the site and docks in a corner of the
+// window, live, carrying his mood and saying so; and he does not, even as far as fetching himself, for a
+// reader who never met him in this tab, one in Quiet mode, or a URL in `archie-src` from another origin.
+//
 // The model has to go live, so WebGL is swiftshader's; a Chrome that cannot give it one fails the first
 // assertion rather than passing the rest on the poster, which plays no pranks.
 //
 //   node tests/prank-check.mjs <chrome-binary> <origin>
-import {readFileSync} from "node:fs";
+import {readFileSync, readdirSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {launch} from "./lib/browser.mjs";
 
@@ -331,6 +335,41 @@ await sleep(9000);
 ok("...and no trying to get rid of anybody", !(await ev(`!!document.querySelector(".archie-prop")`)) &&
    (await rec()).said.length === 0);
 await ev(`localStorage.removeItem("atlas-byte-quiet")`);
+
+// ---- following the reader off the index
+const docked = `(() => { const d = document.querySelector(".archie-dock"), s = d && d.querySelector(".mhmascot[data-live]");
+  return !!s && getComputedStyle(d).position === "fixed" && getComputedStyle(d).pointerEvents === "none" &&
+    getComputedStyle(d.querySelector(".archie-poke")).pointerEvents === "auto"; })()`;
+const fetched = `performance.getEntriesByType("resource").some(e => e.name.includes("/archie.js"))`;
+ok("follow: the index keeps his own URL, release and all", /\/assets\/archie\.js\?v=\w/.test(
+   await ev(`sessionStorage.getItem("archie-src") || ""`)), await ev(`sessionStorage.getItem("archie-src")`));
+const TOPIC = readdirSync(new URL("../docs/topic/", import.meta.url))[0];
+for (const page of ["catalog/", "discover/", "collections/", `topic/${TOPIC}/`, "repo/"]) {
+  ok(`...to ${page}, where he is live`, await goto(page, 0));
+  ok("...docked in a fixed corner that takes no clicks but his own", await ev(docked));
+}
+ok("...and says he followed them", await saying("follow"), await last());
+await goto("catalog/", -40);
+ok("...mad, if they had been ignoring him", await saying("follow-mad"), await last());
+await pokeHim();
+await sleep(300);
+ok("...and a poke there forgives him too", lines("forgive").includes(await last()) && await mood() === 30, await last());
+const stranger = async (setup, name) => {
+  await S("Page.navigate", {url: ORIGIN + "robots.txt"});
+  await until(`location.pathname === "/robots.txt" && document.readyState === "complete"`, 5000);
+  await ev(setup);
+  await S("Page.navigate", {url: ORIGIN + "catalog/"});
+  await until(`document.readyState === "complete"`, 12000);
+  await sleep(6000);
+  ok(name, !(await ev(fetched)) && !(await ev(`!!document.querySelector(".archie-dock")`)),
+     await ev(`performance.getEntriesByType("resource").map(e => e.name).filter(n => /archie/.test(n)).join(" ")`));
+};
+await stranger(`sessionStorage.clear()`, "not for a reader who never met him in this tab: not even fetched");
+await goto("", 0);
+await stranger(`localStorage.setItem("atlas-byte-quiet", "1")`, "not in Quiet mode");
+await ev(`localStorage.removeItem("atlas-byte-quiet")`);
+await stranger(`sessionStorage.setItem("archie-src", "https://example.com/assets/archie.js?v=x")`,
+               "not from another origin, whatever sessionStorage says");
 
 ok("no console errors", errors.length === 0, errors.join(" | "));
 await browser.close();
