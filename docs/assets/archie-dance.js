@@ -23,7 +23,7 @@
 //   "archie:music"  {on, source: "system"|"mic"}   music mode starts or stops.
 //   "archie:beat"   {strength: 0..1, bpm|null, at}  every detected beat, `at` on performance.now() at the
 //                                                  onset, which the loader phase-locks his dance to.
-// and, only while music mode is on, `window.archieMusic = {level(), bass(), bpm, lastBeat}` for a caller
+// and, only while music mode is on, `window.archieMusic = {level(), bass(), wave(out), bpm, lastBeat}` for a caller
 // that wants to read the music every frame rather than wait for a beat. It is set before "archie:music"
 // {on:true} is sent, because the loader reads it at load too and music can start before the model does.
 //
@@ -183,6 +183,8 @@ const BEAT = new URL("archie-beat.js" + new URL(import.meta.url).search, import.
         for (let i = 1; i <= BASS; i++) b += bins[i];
         return b / (BASS * 255);
       },
+      // The latest samples, into the caller's own buffer (up to 2048), for anything that draws the wave.
+      wave(out) { an.getFloatTimeDomainData(out); return out; },
       get bpm() { return m.bpm; }, get lastBeat() { return m.lastBeat; }};
     beat = new AudioWorkletNode(ac, "archie-beat", {numberOfInputs: 1, numberOfOutputs: 1});
     node.connect(beat);

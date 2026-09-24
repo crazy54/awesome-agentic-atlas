@@ -25,7 +25,10 @@
 // To the music, fed as the beat detector feeds it (`archie:music`, `archie:beat`, `window.archieMusic`): he
 // dances and the rig is lit while the beats come; two seconds after they stop, the dance is cut off where it
 // was and he only idles, the rig still hung but dark and still, until the beats come back and so does it;
-// and with music mode off, the rig is hauled away.
+// and with music mode off, the rig is hauled away. While music mode is on, the house lights are down: the page
+// dims around the masthead, through the quiet as well, and not the masthead or anything the reader clicks.
+// To the beat, the rig runs a new look every phrase -- movement, colours, gobo -- counted across dances, and
+// the video wall shows the beat monitor, and now and then the camera on him.
 //
 // The model has to go live, so WebGL is swiftshader's; a Chrome that cannot give it one fails the first
 // assertion rather than passing the rest on the poster, which plays no pranks.
@@ -284,7 +287,13 @@ const beats = on => ev(on
   ? `window.__beats = setInterval(() => document.dispatchEvent(new CustomEvent("archie:beat",
        {detail: {strength: 0.9, bpm: 120, at: window.__lastBeat = performance.now()}})), 500)`
   : `clearInterval(window.__beats)`);
-await ev(`window.archieMusic = {level: () => 0.6, bass: () => 0.6, bpm: 120, lastBeat: 0};
+const dim = () => ev(`(() => { const h = document.querySelector(".archie-house"), r = document.querySelector("header").getBoundingClientRect();
+  if (!h || h.style.display === "none") return "off";
+  const b = h.getBoundingClientRect(), cs = getComputedStyle(h);
+  return JSON.stringify({o: +cs.opacity, pe: cs.pointerEvents, shade: cs.boxShadow.startsWith("rgba(0, 0, 0,"),
+    hole: Math.max(...["left", "top", "width", "height"].map(k => Math.abs(b[k] - r[k])))}); })()`);
+await ev(`window.archieMusic = {level: () => 0.6, bass: () => 0.6, bpm: 120, lastBeat: 0,
+    wave: o => { for (let i = 0; i < o.length; i++) o[i] = 0.3 * Math.sin(i / 8); return o; }};
   document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: true, source: "mic"}}))`);
 ok("music mode on, before a beat: the rig hangs, dark", await until(`document.querySelector(".mhmascot").dataset.rig === "dark"`, 4000),
    await rigIs());
@@ -293,7 +302,21 @@ ok("...the beat: he dances", await until(`${JSON.stringify(DANCE)}.includes(docu
    await act());
 ok("...and the rig lights up, lasers and all", await until(`document.querySelector(".mhmascot").dataset.rig === "lit"`, 4000) &&
    await lasersOn(), `${await rigIs()} lasers=${await lasersOn()}`);
-await sleep(2000);
+{
+  const d = JSON.parse(await dim() === "off" ? "{}" : await dim());
+  ok("...the house lights down: the page dims round the masthead, which stays as it was, and nothing is blocked",
+     d.o > 0.9 && d.pe === "none" && d.shade && d.hole < 1.5, JSON.stringify(d));
+}
+const looks = new Set(), walls = new Set();
+for (let i = 0; i < 64; i++) {
+  looks.add(await ev(`document.querySelector(".mhmascot").dataset.look || ""`));
+  walls.add(await ev(`document.querySelector(".mhmascot").dataset.wall || ""`));
+  await sleep(250);
+}
+ok("...a new look every phrase, counted across the dances, not starting again with each",
+   looks.size >= 3 && !looks.has(""), [...looks].join(" | "));
+ok("...the wall shows the beat monitor all the while", [...walls].every(w => w.startsWith("monitor ")), [...walls].join(" | "));
+ok("...and the camera on him, now and then", walls.has("monitor camera") && walls.has("monitor visuals"), [...walls].join(" | "));
 const dancing = await act();
 await beats(false);
 const cut = await until(`document.querySelector(".mhmascot").dataset.act === "idle"`, 5000);
@@ -307,6 +330,7 @@ const held = [];
 for (let i = 0; i < 40; i++) { held.push(`${await act()}/${await rigIs()}`); await sleep(250); }
 ok("...and so it stays through the quiet: no dance, no act, nothing lit", held.every(h => h === "idle/dark"),
    [...new Set(held)].join(" "));
+ok("...the house lights still down between songs", (await dim()) !== "off", await dim());
 await beats(true);
 ok("the beat back: he dances again", await until(`${JSON.stringify(DANCE)}.includes(document.querySelector(".mhmascot").dataset.act)`, 25000),
    await act());
@@ -316,6 +340,7 @@ await ev(`delete window.archieMusic;
   document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: false, source: "mic"}}))`);
 ok("music mode off: the rig is hauled away", await until(`document.querySelector(".mhmascot").dataset.rig === "away"`, 6000),
    await rigIs());
+ok("...and the house lights come back up", (await dim()) === "off", await dim());
 
 // ---- following the reader down the page
 // Out of the layer itself, not just gone with it: the layer is detached after every visit and used again.
