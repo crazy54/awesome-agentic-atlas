@@ -323,8 +323,11 @@ ok("music mode off: the rig is hauled away", await until(`document.querySelector
 
 // ---- the heavy parts
 const RAVE = ["headbang", "the-drop"];
-const heavyFrom = async bass => {
+// `pin` fixes the director's dice at the top of the pool, where `BEATS` puts the rave dances: were they in it,
+// he would draw one.
+const heavyFrom = async (bass, pin) => {
   await goto("", 0);
+  if (pin) await ev(`Math.random = () => 0.999`);
   await ev(`window.__bass = ${bass}; window.archieMusic = {level: () => 0.6, bass: () => window.__bass, bpm: 120, lastBeat: 0,
       wave: o => o.fill(0)};
     document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: true, source: "mic"}}))`);
@@ -332,7 +335,7 @@ const heavyFrom = async bass => {
   return until(`${JSON.stringify(DANCE)}.includes(document.querySelector(".mhmascot").dataset.act)`, 25000);
 };
 {
-  await heavyFrom(0.3);
+  await heavyFrom(0.5, true);
   const seen = new Set();
   for (let i = 0; i < 24; i++) { seen.add(await act()); await sleep(250); }
   ok("steady music: he dances, and no rave dance", [...seen].every(a => DANCE.includes(a) && !RAVE.includes(a)),
