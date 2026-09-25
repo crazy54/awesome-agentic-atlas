@@ -561,10 +561,12 @@ MASCOT = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb", "archie-
 # are fetched under the same query, so they are hashed in as well. They and the friends are OPTIONAL: the
 # loader plays without any of them, so a checkout or a scratch directory that lacks one versions what it
 # has instead of failing, while the four the model cannot do without must be there.
-RIG = ("rig-show.js", "rig/rig.glb", "rig/wall-a.webm", "rig/wall-a.mp4", "rig/wall-a.webp", "rig/wall-b.webm",
-       "rig/wall-b.mp4", "rig/wall-b.webp") + tuple(f"rig-gobos/{g}.svg" for g in (
+RIG = ("rig-show.js", "rig/rig.glb") + tuple(f"rig/wall-{w}.{ext}" for w in "abcd" for ext in (
+       "webm", "mp4", "webp")) + tuple(f"rig-gobos/{g}.svg" for g in (
        "breakup", "dots", "star", "spiral", "archie", "braces", "iris", "prism"))
-OPTIONAL = ("archie-friends.js", "archie-friends-data.js") + RIG
+# The admin panel is imported under the same query (see ADMIN_JS), so it is hashed in too: without it, an
+# edit to the panel alone would leave its URL, and a reader's cached copy, where they were.
+OPTIONAL = ("archie-friends.js", "archie-friends-data.js", "archie-admin.js") + RIG
 VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb") + OPTIONAL
 
 
@@ -1468,11 +1470,11 @@ def render() -> str:
         '  <nav>',
         '    <a href="discover/">Discover</a> ·',
         '    <a href="collections/">Collections</a> ·',
-        f'    <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·',
+        f'    <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·',
         '    <a href="catalog/">Catalogue</a> ·',
         '    <a href="repo/">All projects</a><br>',
         f'    <a href="https://github.com/{esc(REPO)}">Repository</a> ·',
-        f'    <a href="https://github.com/{esc(REPO)}/tree/main/mega-list">Markdown</a>',
+        f'    <a href="https://github.com/{esc(REPO)}/tree/HEAD/mega-list">Markdown</a>',
         f'    <a class="ghstar" href="https://github.com/{esc(REPO)}" target="_blank" rel="noopener"'
         ' aria-label="Star the Awesome Agentic Atlas on GitHub (opens GitHub)">'
         '<span aria-hidden="true">&#9733;</span> Star<b data-gh="stars" hidden></b></a><br>',

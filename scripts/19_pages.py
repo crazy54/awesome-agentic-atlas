@@ -37,8 +37,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 OUT = ROOT / "docs"
+# Where the catalogue this stage renders lives, relative to OUT. One name, because three stages write it
+# (this one, `19b_refresh.py` and `apply_flags.py`), and the site root it used to be is now the homepage
+# `31_home.py` writes. Two of the three kept writing `index.html` after the move, which replaced the
+# homepage with a second copy of the catalogue and left the real one stale.
+CATALOG = Path("catalog") / "index.html"
 
-spec = importlib.util.spec_from_file_location("b17", Path(__file__).parent / "17_markdown.py")
+spec =importlib.util.spec_from_file_location("b17", Path(__file__).parent / "17_markdown.py")
 b17 = importlib.util.module_from_spec(spec)
 sys.modules["b17"] = b17
 spec.loader.exec_module(b17)
@@ -270,6 +275,24 @@ def build_data(facets, shots) -> dict:
 # anything else is a typo worth stopping the build for instead of shipping a silent no-op.
 CF_TOKEN = "1fe3cbfd55ef4fccab981c064489e656"
 TOKEN_RE = re.compile(r"\A[0-9a-f]{32}\Z")
+
+
+# Archie follows the reader off the index. `docs/assets/archie.js` keeps its own URL, with its release's
+# `?v=`, in sessionStorage's `archie-src` when it loads on the index; this, on every other page, loads it
+# again from there, and archie.js docks him in a corner of the window. Nothing for a reader who has not
+# been to the index in this tab, or who turned on Quiet mode. A module <script> rather than `import()`,
+# because `repo/detail.js` carries it too and is ES5: a browser without modules ignores the element, where
+# it would fail to parse the whole of detail.js over an `import(`. The origin check keeps a value some
+# other script put there from choosing what this page runs.
+FOLLOW_JS = ('(function(){try{var u=sessionStorage.getItem("archie-src");'
+             'if(u&&new URL(u).origin===location.origin&&localStorage.getItem("atlas-byte-quiet")!=="1")'
+             '{var s=document.createElement("script");s.type="module";s.src=u;document.head.appendChild(s)}'
+             '}catch(e){}})()')
+
+
+def follow() -> str:
+    """The script tag that brings Archie along from the index."""
+    return f"<script>{FOLLOW_JS}</script>\n"
 
 
 def beacon(token: str | None = None) -> str:
@@ -523,7 +546,7 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             # assertion and the prose explaining both already live.
             # Last, so a constant injected above carrying its own relative URLs is prefixed too.
             .replace("__UP__", UP)
-            .replace("__ANALYTICS__", beacon()))
+            .replace("__ANALYTICS__", follow() + beacon()))
     relative_urls_prefixed(out)
     return out
 
@@ -2702,10 +2725,10 @@ __OSSPRITE__
          and Collections answers it with one. -->
     <a href="__UP__discover/">Discover</a> ·
     <a href="__UP__collections/">Collections</a> ·
-    <a href="https://github.com/__REPO__/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+    <a href="https://github.com/__REPO__/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="__UP__repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/__REPO__">Repository</a> ·
-    <a href="https://github.com/__REPO__/tree/main/mega-list">Markdown</a> ·
+    <a href="https://github.com/__REPO__/tree/HEAD/mega-list">Markdown</a> ·
     <a href="https://github.com/__REPO__/releases/latest">Workbook</a><br>
     <!-- SETTINGS, and the light/dark toggle is *moved* into it rather than replaced by it. `#theme` keeps
          its id, its changing label and its handler, because three other things already depend on that
@@ -7124,10 +7147,10 @@ def main() -> None:
     # on which stage ran last. `data.json` above stays at the root, because it is not this page's file --
     # the homepage, the facet pages and the detail pages read it too, and moving it would be 180-odd
     # relative URLs elsewhere to save one here. See `UP`.
-    (OUT / "catalog").mkdir(parents=True, exist_ok=True)
-    (OUT / "catalog" / "index.html").write_text(page, encoding="utf-8")
+    (OUT / CATALOG).parent.mkdir(parents=True, exist_ok=True)
+    (OUT / CATALOG).write_text(page, encoding="utf-8")
 
-    for f in (Path("catalog") / "index.html", Path("data.json")):
+    for f in (CATALOG, Path("data.json")):
         print(f"{str(f):20s} {(OUT / f).stat().st_size / 1024:8.1f} KB")
     print(f"{len(data['rows']):,} repos · {len(data['cats'])} topics · "
           f"{len(data['targets'])} targets · {sum(r[4] for r in data['rows']):,} stars")

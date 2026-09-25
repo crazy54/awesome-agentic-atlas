@@ -141,8 +141,8 @@ ok("one button for every command and every friend", want.length === have.length 
 // every cue the live rig has is in it.
 const cueN = list.filter(c => /^cue:/.test(c)).length;
 for (const [what, re, n] of [["dance", /^dance:/, 13], ["prank", /^prank:/, 5], ["friend", /^friend:/, ORDER.length],
-                             ["rig cue", /^cue:/, cueN]])
-  ok(`...including every ${what} (${n})`, n > 0 && have.filter(c => re.test(c)).length === n, String(have.filter(c => re.test(c)).length));
+                             ["rig cue", /^cue:/, 15]])
+  ok(`...including every ${what} (${n})`, have.filter(c => re.test(c)).length === n, String(have.filter(c => re.test(c)).length));
 for (const c of ["idle", "watch", "sit", "sleep", "press", "shrug", "walk-off", "show", "chatter", "poke", "quiet"])
   ok(`...and "${c}"`, have.includes(c));
 

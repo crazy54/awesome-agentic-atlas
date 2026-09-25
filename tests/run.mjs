@@ -8,7 +8,7 @@
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY NINETEEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY TWENTY-SIX HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
 //   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces, and
 //                     the one channel on the page that is not colour: the five platform verdict marks,
@@ -65,11 +65,11 @@
 //                     every frame of a dance and held under WCAG's three flashes a second, the blinders held to
 //                     a swell, and each of the admin panel's named cues taken and played, refused in Quiet mode
 //                     and absent under reduced motion. Cannot see what the show looks like, only what it asks for.
-//   admin-check.mjs   Archie's hidden admin panel on the live model: hidden and never fetched on a plain view, a
-//                     faint but focusable trigger, opened by keyboard and by `?archie=admin`, one button per
-//                     command and friend that dispatches exactly its own, a reason on every disabled one (a cue
-//                     the rig lacks, no rig, reduced motion), and Escape handing focus back. Cannot see what an
-//                     act looks like; the other Archie harnesses do.
+//   stage-check.mjs   what it looks like, as far as pixels can say: the video wall, each stage effect and the
+//                     blinders drawn on their own, fired by their cues and screenshotted, in both themes -- the
+//                     wall's picture must move and have contrast, CO2 read white, flames and sparks fire-coloured,
+//                     the haze light up where the beams go through it -- and pyro fired by simulated music.
+//                     Cannot see whether it looks good, nor a real browser that will not decode the clip.
 //   spotlight_test.py the homepage's daily spotlight and line of the day, off the generator: the day rule,
 //                     the rendered page's pickers run under node against it on a pinned clock and zone, the
 //                     pool's shape, the order the inline scripts depend on, and each refusal of the line file.
@@ -170,7 +170,7 @@
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
 // twenty-eight files own their own plumbing. It is 200 lines of plumbing.
-import {mkdtempSync, rmSync, existsSync, mkdirSync, readdirSync} from "node:fs";
+import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
 import {fileURLToPath} from "node:url";
@@ -201,13 +201,13 @@ const HARNESSES = [
   {file: "media_test.py", label: "one embedded part per screenshot, the entry ceiling, and the unpooled cover", python: true, floor: 45},
   {file: "workbook_branding_test.py", label: "the Atlas mark and mascot on both workbook covers, saved as a weekly saves them", python: true, floor: 24},
   {file: "refresh_test.py", label: "the cache-free render, refused when the source count moved", python: true, floor: 60},
-  {file: "live_test.py", label: "the star/push sidecar the 1,294 detail pages read", python: true, floor: 90},
+  {file: "live_test.py", label: "the star/push sidecar the detail pages read", python: true, floor: 90},
   {file: "semantic_test.py", label: "the semantic index, scored from the bytes a reader downloads", python: true, floor: 30},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
   {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, and the host in docs/CNAME", python: true, floor: 34},
   {file: "spotlight_test.py", label: "the daily spotlight and line: one rule in Python and in the page, the pool, the refusals", python: true, floor: 300},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
-  {file: "detail-churn.mjs", label: "1,294 detail pages, regenerated and hashed", floor: 7},
+  {file: "detail-churn.mjs", label: "every detail page, regenerated and hashed", floor: 7},
   {file: "detail-preview-check.mjs", label: "rendered repository reader, source and phone layout", needs: "browser", floor: 12},
   {file: "cards-check.mjs", label: "real layout at 1440/900/375 in both themes", needs: "browser", floor: 86},
   {file: "pwa-check.mjs", label: "manifest, worker, precache, offline, freshness, 404", needs: "browser", floor: 25},
@@ -216,7 +216,7 @@ const HARNESSES = [
   {file: "prank-check.mjs", label: "Archie's pranks: each undone, nothing saved, the flicker's rate", needs: "browser", floor: 28},
   {file: "friends-check.mjs", label: "Archie's friends: each comes, leaves, restores the page, and keeps off the controls", needs: "browser", floor: 80},
   {file: "rig-check.mjs", label: "Archie's light show: the flash rate of every fixture, the blinders' swell, and the cues", needs: "browser", floor: 40},
-  {file: "admin-check.mjs", label: "Archie's admin panel: hidden, one button per command, each dispatching its own, and why a button is greyed", needs: "browser", floor: 60},
+  {file: "stage-check.mjs", label: "Archie's stage by its pixels: the wall's picture moving, and pyro, CO2, haze and blinders seen", needs: "browser", floor: 45},
 ];
 
 // Every harness in this directory is in the list above. `admin-check.mjs` sat here unregistered, so

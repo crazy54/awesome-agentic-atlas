@@ -283,6 +283,47 @@ try:
 finally:
     b31.OUT = saved_out
 
+# Every file of Archie's that is loaded under the loader's `?v=` has to move that version when it changes,
+# or a reader's browser keeps the old copy under an unchanged URL for as long as the CDN's max-age (four
+# hours on the live site). The files are enumerated from what is committed in docs/assets, not from
+# VERSIONED, since a loop over the list under test cannot notice a name missing from it: `wall-c`/`wall-d`
+# and the admin panel were each played or imported under the version and hashed by none of it. Two groups
+# are left out, each for a reason of its own: the poster, which the page names directly, and the dance
+# script and its detector, which the page loads under a version of their own (tested above).
+ASSETS = ROOT / "docs" / "assets"
+FAMILY = sorted(p.relative_to(ASSETS).as_posix() for p in ASSETS.rglob("*") if p.is_file()
+                and p.relative_to(ASSETS).as_posix().startswith(("archie", "three-archie", "rig"))
+                and p.name != "archie-3d.webp" and p.name not in b31.DANCE)
+true("the family enumerated off docs/assets includes the four wall clips and the panel",
+     {"rig/wall-c.webm", "rig/wall-d.mp4", "archie-admin.js"} <= set(FAMILY), FAMILY)
+try:
+    with tempfile.TemporaryDirectory() as tmp:
+        shutil.copytree(ASSETS, Path(tmp) / "assets")
+        b31.OUT = Path(tmp)
+        missed = []
+        for f in FAMILY:
+            p = b31.OUT / "assets" / f
+            saved = p.read_bytes()
+            before = b31.mascot_version()
+            p.write_bytes(saved + b"!")
+            if b31.mascot_version() == before:
+                missed.append(f)
+            p.write_bytes(saved)
+        eq(f"each of the {len(FAMILY)} files loaded under archie.js's ?v= moves it", missed, [])
+finally:
+    b31.OUT = saved_out
+
+# ...and the committed page carries the version the committed assets hash to. The page is generated and the
+# assets are hand-written, so an edit to one without a run of 31_home.py leaves a URL that no longer
+# describes its file -- which is how a merge of two branches' pages left archie.js and the admin panel on
+# two versions, neither of them the one the merged files hash to.
+home = (ROOT / "docs" / "index.html").read_text(encoding="utf-8")
+got = dict(re.findall(r'assets/(archie(?:-admin|-dance)?\.js)\?v=([0-9a-f]+)', home))
+want = b31.mascot_version()
+eq("the committed homepage loads archie.js under the version its files hash to", got.get("archie.js"), want)
+eq("...and the admin panel under the same one", got.get("archie-admin.js"), want)
+eq("...and the dance script under its own", got.get("archie-dance.js"), b31.mascot_version(b31.DANCE))
+
 
 # The newer-version notice. Its button deletes and refills the worker's shell cache by name, so the prefix
 # the page substitutes in is the worker's own; and the page's build id is a hash of the page, so it holds

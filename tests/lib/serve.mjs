@@ -4,7 +4,7 @@
 // have to come over HTTP: `file://` has no origin, so there is no service worker, no manifest scope and no
 // `caches` API, and three quarters of pwa-check would have nothing to assert against.
 //
-// It serves under a path prefix rather than at the origin root, and that is the whole reason this is 90
+// It serves under a path prefix rather than at the origin root, and that is the whole reason this is 121
 // lines rather than one call to `python -m http.server`. Every URL in this site is relative -- the manifest
 // is `manifest.webmanifest`, its scope is `./`, the worker is `sw.js`, `data.json` is `data.json` -- because
 // the published site lives at `/<repo>/` on `<owner>.github.io` and an absolute path would be correct there
