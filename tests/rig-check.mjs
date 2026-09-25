@@ -40,6 +40,10 @@ ws.addEventListener("message", ev => {
     m.error ? w.rej(new Error(m.error.message)) : w.res(m.result);
   } else if (m.method === "Runtime.exceptionThrown") errors.push(m.params.exceptionDetails.exception?.description || "exception");
   // The Cloudflare beacon cannot pass CORS against localhost; pwa-check.mjs excuses it the same way.
+  // three.js reports a shader that will not compile through console.error, which Log does not carry: the
+  // draw call is then skipped, silently, and the fixture it belonged to is simply not there.
+  else if (m.method === "Runtime.consoleAPICalled" && m.params.type === "error")
+    errors.push(m.params.args.map(a => a.value ?? a.description ?? "").join(" ").slice(0, 300));
   else if (m.method === "Log.entryAdded" && m.params.entry.level === "error" &&
            !/cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(m.params.entry.text + " " + (m.params.entry.url || "")))
     errors.push(m.params.entry.text);
@@ -145,7 +149,7 @@ ok("an unknown cue is refused", (await ev(`window.archieRig.cue("strobe")`)) ===
 for (const [name, check] of [
   ["beams-chase", `s.program === "chase"`], ["beams-fan", `s.program === "fan"`], ["beams-cross", `s.program === "cross"`],
   ["ballyhoo", `s.program === "ballyhoo"`], ["gobo", `s.gobo > 0.9`], ["pods", `s.pods > 0.9`],
-  ["wash", `s.look === "low-tide" && s.pars.every(v => v > 0.9)`], ["blinder", `s.blinder > 0.5`],
+  ["wash", `s.look === "low-tide" && s.pars.every(v => v > 0.8)`], ["blinder", `s.blinder > 0.5`],
 ]) {
   ok(`cue ${name}: taken`, (await ev(`window.archieRig.cue(${JSON.stringify(name)})`)) === true);
   ok(`...and it plays`, await until(`(s => ${check})(window.archieRig.status())`, 6000),

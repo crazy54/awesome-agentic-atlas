@@ -1185,7 +1185,7 @@
       float u = vUv.x * 6.28318;
       a *= 0.35 + 0.65 * gob(vec2(cos(u), sin(u)) * 0.72) + 0.4 * gon;`;
     // The wash pars' cones: wider, softer, no smoke breakup, so they read as colour, not as beams.
-    const WASH = `a = pow(abs(dot(vN, vV)), 1.2) * pow(vUv.y, 2.2) * 0.55;`;
+    const WASH = `a = pow(abs(dot(vN, vV)), 1.5) * pow(vUv.y, 2.6) * 0.35;`;
     const POOL = `vec2 q = (vUv - 0.5) * 2.0;
       a = pow(max(0.0, 1.0 - length(q)), 1.4) * 0.9 * (0.35 + 0.65 * gob(q * 1.05)) * (1.0 + 0.6 * gon);`;
     // The backdrop's glow, with two gobo projections on it, where the heads would put them.
@@ -1201,7 +1201,7 @@
     // The video wall: a grid of round LEDs, each showing one sample of a picture. When a clip is playing,
     // `vid` is its frame and `von` how far it has faded in; otherwise, `modeA` fades into `modeB` over a
     // bar's first beat; `beat` is the dance's position in beats, and `eq` the equaliser's sixteen bars.
-    const SCREENS = `uniform vec2 grid; uniform float beat, modeA, modeB, fade, eq[16], von; uniform sampler2D vid;
+    const SCREENS = `uniform vec2 grid; uniform float beat, modeA, modeB, fade, eq[16], von, vgain; uniform sampler2D vid;
       vec3 hue(float x) { return 0.55 + 0.45 * cos(6.28318 * (x + vec3(0.0, 0.33, 0.67))); }
       vec3 screen(float m, vec2 q) {
         vec2 p = (q - 0.5) * vec2(grid.x / grid.y, 1.0);
@@ -1228,7 +1228,7 @@
       }`;
     const WALL = `vec2 g = vUv * grid, q = (floor(g) + 0.5) / grid;
       vec3 v = mix(screen(modeA, q), screen(modeB, q), fade);
-      if (von > 0.0) v = mix(v, texture2D(vid, q).rgb, von);
+      if (von > 0.0) v = mix(v, min(vec3(1.0), texture2D(vid, q).rgb * vgain), von);
       float m = max(max(v.r, v.g), max(v.b, 1e-3));
       float led = m * smoothstep(0.5, 0.28, length(fract(g) - 0.5));
       c = v / m;
@@ -1315,56 +1315,119 @@
     pars.forEach((p, i) => { p.k = i % 2; });
 
     const back = new T.Mesh(new T.PlaneGeometry(9, 5), glow(BACK, {...goboU(), g1: {value: {x: -1.4, y: 1.5}},
-                                                                   g2: {value: {x: 1.4, y: 1.5}}}, GOBO));
+                                                                   g2: {value: {x: 1.4, y: 1.5}}}, GOBO + "uniform vec2 g1, g2;"));
     const eq = new Array(16).fill(0);
     const wall = new T.Mesh(new T.PlaneGeometry(1, 1), glow(WALL, {
       grid: {value: {x: 60, y: 30}}, beat: {value: 0}, modeA: {value: 2}, modeB: {value: 2}, fade: {value: 1},
-      eq: {value: eq}, von: {value: 0}, vid: {value: null}}, SCREENS));
+      eq: {value: eq}, von: {value: 0}, vid: {value: null}, vgain: {value: 3}}, SCREENS));
     // Its frame, in the truss's metal: top, bottom and the two sides.
     const rails = [0, 1, 2, 3].map(() => new T.Mesh(new T.BoxGeometry(1, 1, 0.06), metal));
     group.add(back, wall, ...rails);
 
-    // ---- The wall's video. `VIDEO` is the artist's loops, in the order the wall plays them, one per dance.
-    // Fetched only when the lights come up, muted and inline so that autoplay is allowed and iOS does not
-    // take it full screen, with the poster shown by the wall's own visuals until the first frame decodes.
-    // When the lights are down the element is paused and its source dropped, which releases the decoder
-    // and the buffered bytes; the next dance fetches it again, from the HTTP cache.
-    const VIDEO = [];
-    const clip = {el: null, tex: null, n: 0, on: 0, fresh: false};
+    // ---- The artist's fixture models (`art/rig/rig.py` -> `rig/rig.glb`, 42 KB, 12 KB gzipped), fetched
+    // when the lights first come up. Until they land, and if they never do, the stand-ins above hang. Each
+    // root is a fixture at the origin, hung from its origin: `head` (a yoke `head_yoke` panning about its
+    // Y, a head `head_tilt` tilting about its X, the lens `head_lens` facing -Y at rest), `blinder` (its
+    // lamps `blinder_lens` facing +Z), `par` (`par_lens` facing -Y), `truss` (1 m along X), `pod` (with a
+    // 1 m cable `pod_cable` up +Y, scaled to the drop) and `laser` (a floor unit, `laser_lens` facing +Z).
+    // The file has no normals, on purpose, so GLTFLoader flat-shades it; each fixture's `lens` material is
+    // cloned so that its colour is its own, and the clone keeps that flat shading.
+    let dressed = false, dressAsked = false;
+    const dress = () => {
+      if (dressAsked) return;
+      dressAsked = true;
+      new T.GLTFLoader().loadAsync(new URL(`rig/rig.glb${V}`, import.meta.url).href).then(gltf => {
+        const root = n => gltf.scene.getObjectByName(n);
+        if (!["head", "blinder", "par", "truss", "pod", "laser"].every(root)) throw new Error("rig.glb lacks a fixture");
+        // A copy of fixture `n`, with lens materials of its own, collected in `lenses`.
+        const make = n => {
+          const m = root(n).clone(true), lenses = [];
+          m.traverse(o => { if (o.isMesh && o.material && o.material.name === "lens") {
+            o.material = o.material.clone(); o.material.emissive.setRGB(0, 0, 0); lenses.push(o.material); } });
+          group.add(m);
+          return {m, lenses};
+        };
+        for (const h of all) {
+          const {m, lenses} = make("head");
+          Object.assign(h, {model: m, lenses, yoke: m.getObjectByName("head_yoke"), tilt: m.getObjectByName("head_tilt"),
+                            lensAt: m.getObjectByName("head_lens")});
+        }
+        blinders.forEach(b => Object.assign(b, make("blinder")));
+        pars.forEach(p => Object.assign(p, make("par")));
+        pods.forEach(p => { p.model = make("pod").m; p.cableM = p.model.getObjectByName("pod_cable"); });
+        trusses = [make("truss").m, make("truss").m, make("truss").m];
+        units = [make("laser"), make("laser")];
+        for (const u of units) u.at = u.m.getObjectByName("laser_lens");
+        for (const o of [bar, bar2, ...towers, ...pods.map(p => p.frame)]) o.visible = false;
+        dressed = true;
+      }).catch(e => console.warn("Archie's rig hangs its stand-ins:", e));
+    };
+    let trusses = [], units = [];
+    const DOWN = new T.Vector3(0, -1, 0), q0 = new T.Vector3();
+
+    // ---- The wall's video: the artist's two seamless eight-second loops (`art/rig/wall.py`), 480 x 240, no
+    // audio, a tunnel of rings and an equaliser, the next one each dance. VP9 WebM where the browser plays
+    // it, H.264 MP4 where it does not (Safari), and a WebP poster each, 3-9 KB, which goes on the wall first,
+    // while the clip buffers. Nothing is fetched until the lights first come up; the element is muted and
+    // `playsinline`, so autoplay is allowed and iOS does not take it full screen, and it is never in the
+    // document. When the lights are down it is paused and its source dropped, which releases the decoder
+    // and the buffered bytes; the next dance fetches it again, from the HTTP cache. A clip that fails to
+    // load or play is not tried again this page view: the wall shows its own visuals, as it always did.
+    // The clips are dark, made to be tinted, and not equally so: each carries the gain that lifts its mean
+    // luminance to about 0.4 on the wall -- the tunnel (a) is 0.17-0.19, Archie in silhouette (c) 0.10-0.14,
+    // the equaliser (b) and the dot field (d) 0.08-0.14 -- so one bright clip is not overdriven to white
+    // while a dark one stays a smudge. A dance takes the next in the list; a page view that sees four
+    // dances sees each once.
+    const VIDEO = [["rig/wall-a", 2.2], ["rig/wall-c", 3.2], ["rig/wall-b", 3.5], ["rig/wall-d", 3.3]];
+    const clip = {el: null, tex: null, poster: null, n: 0, on: 0, fresh: false, failed: false};
+    const vu = () => wall.material.uniforms;
     const video = {
       start() {
-        if (clip.el || !VIDEO.length || !Tex) return;
+        if (clip.el || clip.failed || !VIDEO.length || !Tex) return;
+        const [base, gain] = VIDEO[clip.n++ % VIDEO.length];
+        vu().vgain.value = gain;
         const el = clip.el = document.createElement("video");
         el.muted = true; el.loop = true; el.playsInline = true; el.preload = "auto";
         el.setAttribute("muted", ""); el.setAttribute("playsinline", ""); el.setAttribute("aria-hidden", "true");
-        el.crossOrigin = "anonymous";
-        el.src = new URL(`${VIDEO[clip.n++ % VIDEO.length]}${V}`, import.meta.url).href;
+        const ext = el.canPlayType('video/webm; codecs="vp9"') ? "webm" : "mp4";
+        const poster = new Image();
+        poster.onload = () => {
+          if (clip.el !== el) return;
+          clip.poster = texture(poster);
+          if (el.readyState < 2) vu().vid.value = clip.poster;
+        };
+        poster.src = new URL(`${base}.webp${V}`, import.meta.url).href;
+        el.src = new URL(`${base}.${ext}${V}`, import.meta.url).href;
         clip.tex = texture(el);
-        const seen = () => { clip.fresh = true; if (el.requestVideoFrameCallback) el.requestVideoFrameCallback(seen); };
+        const seen = () => { if (clip.el !== el) return; clip.fresh = true; el.requestVideoFrameCallback(seen); };
         if (el.requestVideoFrameCallback) el.requestVideoFrameCallback(seen);
-        el.addEventListener("error", () => video.stop(), {once: true});
-        el.play().catch(() => video.stop());
-        wall.material.uniforms.vid.value = clip.tex;
+        const fail = () => { if (clip.el === el) { clip.failed = true; video.stop(); } };
+        el.addEventListener("error", fail, {once: true});
+        el.play().catch(fail);
       },
       stop() {
         const el = clip.el;
         if (!el) return;
         clip.el = null;
         el.pause(); el.removeAttribute("src"); el.load();
-        wall.material.uniforms.vid.value = null;
-        wall.material.uniforms.von.value = clip.on = 0;
-        if (clip.tex) { clip.tex.dispose(); clip.tex = null; }
+        vu().vid.value = null;
+        vu().von.value = clip.on = 0;
+        for (const k of ["tex", "poster"]) if (clip[k]) { clip[k].dispose(); clip[k] = null; }
       },
-      // Every frame: a new decoded frame goes up to the GPU, and the clip fades in over half a second once
-      // it has one. Without requestVideoFrameCallback, every frame the element has data for.
+      // Every frame: a new decoded frame goes up to the GPU, and the wall fades from its own visuals to the
+      // poster, then the clip, over half a second. Without requestVideoFrameCallback, every frame.
       update(dt) {
         const el = clip.el;
         if (!el) return;
         const ready = el.readyState >= 2;
-        if (ready && (clip.fresh || !el.requestVideoFrameCallback)) { clip.tex.needsUpdate = true; clip.fresh = false; }
-        clip.on = Math.min(1, Math.max(0, clip.on + (ready ? 2 : -2) * dt));
-        wall.material.uniforms.von.value = clip.on;
+        if (ready) {
+          if (vu().vid.value !== clip.tex) vu().vid.value = clip.tex;
+          if (clip.fresh || !el.requestVideoFrameCallback) { clip.tex.needsUpdate = true; clip.fresh = false; }
+        }
+        clip.on = Math.min(1, Math.max(0, clip.on + (ready || vu().vid.value ? 2 : -2) * dt));
+        vu().von.value = clip.on;
       },
+      get playing() { return !!clip.el && clip.el.readyState >= 2 && !clip.el.paused; },
     };
 
     // ---- Programs: where head i of n points at beat position B. ----------------------------------------
@@ -1409,7 +1472,7 @@
       return s < 0 ? 0 : s < 0.4 ? smooth(s / 0.4) : s < 0.65 ? 1 : s < 1.75 ? 1 - smooth((s - 0.65) / 1.1) : 0;
     };
     const rgb = c => `${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)}`;
-    const laserRGB = ["", ""];
+    const laserRGB = ["", ""], laserHex = [0, 0];
     const cols = () => (light() ? LOOKS[look].light : LOOKS[look].dark);
     // Eases colour `c` toward `to` at a rate that takes about a third of a second: every change a fade.
     const ease = (c, to, dt) => c.lerp(to, 1 - Math.exp(-8 * dt));
@@ -1451,7 +1514,7 @@
       // counted from. Allocates, so it is only for the test and the admin panel, not the frame loop.
       status() {
         return {level, look: LOOKS[look].id, program: prog, cue: this.cueing, gobo: goboOn, pods: podsOn,
-                blinder: blind, video: clip.on, lasers: this.lasering,
+                blinder: blind, video: clip.on, playing: video.playing, lasers: this.lasering,
                 heads: all.map(h => +(h.beam.material.uniforms.level.value).toFixed(3)),
                 pars: pars.map(p => +(p.beam.material.uniforms.level.value).toFixed(3))};
       },
@@ -1474,7 +1537,7 @@
         time.value = t; clock = t;
         const cueing = forced.until > t ? forced.name : "";
         const want = this.on || !!cueing;
-        if (want && !wasOn) { loadGobos(); if (this.on) dances++; }
+        if (want && !wasOn) { loadGobos(); dress(); if (this.on) dances++; }
         wasOn = want;
         // The truss drops first and the heads come up once it has landed. Going off, they fade out first
         // and the truss goes up after, and only then does the wall's video let go.
@@ -1493,6 +1556,16 @@
         const y = top + (1 - outBack(drop)) * 3;
         bar.position.set(0, y, -1.5);
         bar2.position.set(0, y - 0.22, -1.5);
+        if (dressed) {
+          // The truss: one section, stretched, across the top; one up each side, standing on the floor.
+          const tx = span + 0.55;
+          trusses[0].position.set(0, y - 0.1, -1.5); trusses[0].scale.set(span * 2 + 0.8, 1, 1);
+          trusses.slice(1).forEach((m, i) => { m.rotation.z = Math.PI / 2; m.scale.set(Math.max(0.5, y), 0.5, 0.5);
+                                               m.position.set((i ? 1 : -1) * tx, Math.max(0.5, y) / 2, -1.7); });
+          // The laser units stand on the stage floor at its front corners, facing the reader.
+          units.forEach((u, i) => { u.m.position.set((i ? 1 : -1) * span * 0.75, 0, 1.1); u.m.scale.setScalar(1.05);
+                                    u.lenses.forEach(l => l.emissive.set(this.lasering ? laserHex[i] : 0)); });
+        }
 
         let pulse = 1, b = 0, f = 0;
         if (beat) {
@@ -1520,7 +1593,7 @@
         }
         blind = swell(t) * level;
         const C = cols();
-        for (let i = 0; i < 2; i++) laserRGB[i] = C.laser[i].startsWith("#") ? rgb(target.set(C.laser[i])) : C.laser[i];
+        for (let i = 0; i < 2; i++) { laserHex[i] = target.set(C.laser[i]).getHex(); laserRGB[i] = rgb(target); }
         const cell = Math.max(0, GOBO_IDS.indexOf(LOOKS[look].gobo)), spin = t * 0.5;
 
         // ---- Heads, the truss's and the pods'
@@ -1528,7 +1601,13 @@
         mean.setRGB(0, 0, 0);
         const podY = top + 1.6 - outBack(Math.max(0.001, podsOn)) * 2.1;
         pods.forEach(p => {
-          p.frame.visible = p.cable.visible = p.head.body.visible = p.head.hang.visible = podsOn > 0;
+          const vis = podsOn > 0;
+          p.frame.visible = p.cable.visible = p.head.body.visible = p.head.hang.visible = vis && !dressed;
+          if (p.model) {
+            p.model.visible = p.head.model.visible = vis;
+            p.model.position.set(p.x, podY + 0.14, p.z);
+            p.cableM.scale.y = top + 3 - podY;
+          }
           p.frame.position.set(p.x, podY, p.z);
           const len = top + 3 - podY;
           p.cable.scale.y = len; p.cable.position.set(p.x, podY + len / 2, p.z);
@@ -1544,12 +1623,24 @@
             // A new colour every bar of four, round the look's four, eased.
             ease(h.color, C.beams[(Math.floor(b / 4) + i) % C.beams.length], dt);
             // The chase: a soft bump running along the line, one head a beat.
-            h.bump = prog === "chase" ? 0.45 + 0.55 * Math.exp(-2.5 * (((b - i) % 6 + 6) % 6 + f)) : 1;
+            h.bump = prog === "chase" ? 0.6 + 0.4 * Math.exp(-2.5 * (((b - i) % 6 + 6) % 6 + f)) : 1;
           } else if (!h.aim.lengthSq()) {
             mark(0, i, cx, h.aim);
             h.color.copy(C.beams[i % C.beams.length]);
           }
           const lv = level * pulse * h.bump * h.gain * wash;
+          if (h.model) {
+            // The model's yoke pans and its head tilts to put the lens's -Y on the mark; the beam starts
+            // at the lens. Pan about the yoke's Y, then tilt by the angle from straight down.
+            h.model.position.set(h.x, hy - 0.03, pz);
+            d.subVectors(h.aim, h.model.position);
+            h.yoke.rotation.y = Math.atan2(d.x, d.z);
+            h.tilt.rotation.x = Math.atan2(-Math.hypot(d.x, d.z), -d.y);
+            h.model.updateMatrixWorld(true);
+            h.lensAt.getWorldPosition(h.body.position);
+            h.beam.position.copy(h.body.position);
+            h.body.visible = h.hang.visible = false;
+          }
           h.body.lookAt(h.aim);
           h.beam.lookAt(h.aim);
           h.beam.scale.set(1, 1, h.beam.position.distanceTo(h.aim) * 1.25 / L);
@@ -1559,6 +1650,7 @@
           bu.spin.value = pu.spin.value = spin + i;
           h.beam.visible = lv > 0.002;
           h.lens.material.color.copy(h.color).multiplyScalar(0.15 + 0.85 * lv);
+          if (h.lenses) for (const l of h.lenses) l.emissive.copy(h.color).multiplyScalar(0.15 + 0.85 * lv);
           if (h.spot) {
             h.spot.position.copy(h.body.position);
             h.spot.target.position.copy(h.aim);
@@ -1586,6 +1678,12 @@
           const fu = bl.flare.material.uniforms;
           fu.color.value.copy(C.blinder); fu.level.value = blind;
           for (const c of bl.cells) c.material.color.copy(C.blinder).multiplyScalar(0.1 + 0.9 * blind);
+          if (bl.m) {
+            bl.body.visible = false;
+            bl.m.position.set(x, y - 0.05, -1.45); bl.m.scale.setScalar(1.4);
+            bl.flare.position.set(x, y - 0.232, -1.31);
+            for (const l of bl.lenses) l.emissive.copy(C.blinder).multiplyScalar(0.1 + 0.9 * blind);
+          }
         });
         warm.color.copy(C.blinder);
         warm.position.set(0, y - 0.3, 1.2);
@@ -1594,7 +1692,7 @@
         // ---- Wash: side towers' pars aim in across the backdrop, floor pars up at him and the wall.
         const tx = span + 0.55, th = Math.max(0.5, y);
         towers.forEach((m, i) => { m.scale.y = th; m.position.set((i ? 1 : -1) * tx, th / 2, -1.7); });
-        const swap = Math.floor(b / 8) % 2, wl = level * (cueing === "wash" ? 1 : 0.7);
+        const swap = Math.floor(b / 8) % 2, wl = level * (cueing === "wash" ? 0.9 : 0.5);
         pars.forEach((p, i) => {
           if (i < 4) {
             const s = i < 2 ? -1 : 1;
@@ -1602,16 +1700,23 @@
             p.aim.set(-s * 0.8, p.body.position.y * 0.6, -2.3);
           } else {
             const k = (i - 4) / 4 - 0.5;
-            p.body.position.set(k * span * 1.7, 0.06, 0.9);
+            p.body.position.set(k * span * 1.7, 0.06, 0.3);
             p.aim.set(k * span * 1.2, 2.2, -2.2);
           }
           p.body.lookAt(p.aim);
           p.beam.position.copy(p.body.position);
+          if (p.m) {
+            // The par's lens faces its -Y, so the model turns -Y onto the aim; the stand-in hides.
+            p.body.visible = false;
+            p.m.position.copy(p.body.position); p.m.scale.setScalar(i < 4 ? 1 : 0.75);
+            p.m.quaternion.setFromUnitVectors(DOWN, q0.subVectors(p.aim, p.body.position).normalize());
+            for (const l of p.lenses) l.emissive.copy(p.color).multiplyScalar(0.2 + 0.8 * wl);
+          }
           p.beam.lookAt(p.aim);
           // Deep wash colours add too little light on the dark theme, so there they are lifted toward the
           // look's first beam colour: still the wash's hue family, bright enough to see.
           target.copy(C.wash[(p.k + swap) % 2]);
-          if (!light()) target.lerp(C.beams[0], 0.35).multiplyScalar(1.6);
+          if (!light()) target.lerp(C.beams[0], 0.3).multiplyScalar(1.2);
           ease(p.color, target, dt * 0.5);
           const u = p.beam.material.uniforms;
           u.color.value.copy(p.color); u.level.value = wl;
@@ -1650,7 +1755,11 @@
         u.level.value = level * 0.8;
       },
       // Where the two laser units sit on the truss, in the scene, for `beams()` to put on the page.
-      laserAt(i, out) { return out.set((i ? 1 : -1) * span * 0.2, top + (1 - outBack(drop)) * 3 - 0.12, -1.5); },
+      // On the floor units once the models are in, on the truss before.
+      laserAt(i, out) {
+        if (dressed && units[i].at) return units[i].at.getWorldPosition(out);
+        return out.set((i ? 1 : -1) * span * 0.2, top + (1 - outBack(drop)) * 3 - 0.12, -1.5);
+      },
       stop() { video.stop(); },
     };
   }
