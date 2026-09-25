@@ -51,6 +51,13 @@
 //                     exactly, saves nothing, lets a reader's mid-prank choice stand, keeps the lights' flicker
 //                     under WCAG's three flashes a second, and stays out of quiet mode. Cannot see when he
 //                     picks one unasked -- that is three minutes of waiting -- nor a real tab switch.
+//   spotlight_test.py the homepage's daily spotlight and line of the day, off the generator: the day rule,
+//                     the rendered page's pickers run under node against it on a pinned clock and zone, the
+//                     pool's shape, the order the inline scripts depend on, and each refusal of the line file.
+//   spotlight-check.mjs
+//                     the same two slots in a real browser: a different pick on each of eight days, one pick
+//                     all day, the reader's local date rather than UTC's, no layout shift, and the <noscript>
+//                     card for a reader without script -- whose picture a reader with script never fetches.
 //   detail-churn.mjs  regenerates 1,294 detail pages and compares hashes. Nothing to do with a browser.
 //   detail-preview-check.mjs
 //                     opens one detail page against deterministic GitHub API fixtures and verifies the
@@ -178,12 +185,14 @@ const HARNESSES = [
   {file: "semantic_test.py", label: "the semantic index, scored from the bytes a reader downloads", python: true, floor: 30},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
   {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, and the host in docs/CNAME", python: true, floor: 34},
+  {file: "spotlight_test.py", label: "the daily spotlight and line: one rule in Python and in the page, the pool, the refusals", python: true, floor: 300},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
   {file: "detail-churn.mjs", label: "1,294 detail pages, regenerated and hashed", floor: 7},
   {file: "detail-preview-check.mjs", label: "rendered repository reader, source and phone layout", needs: "browser", floor: 12},
   {file: "cards-check.mjs", label: "real layout at 1440/900/375 in both themes", needs: "browser", floor: 86},
   {file: "pwa-check.mjs", label: "manifest, worker, precache, offline, freshness, 404", needs: "browser", floor: 25},
   {file: "dance-check.mjs", label: "Dance with me: the beat detector against a known tempo", needs: "browser", floor: 30},
+  {file: "spotlight-check.mjs", label: "the daily spotlight and line on a pinned clock: per day, all day, local, no shift, no script", needs: "browser", floor: 100},
   {file: "prank-check.mjs", label: "Archie's pranks: each undone, nothing saved, the flicker's rate", needs: "browser", floor: 28},
 ];
 
