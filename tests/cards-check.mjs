@@ -1082,11 +1082,11 @@ ok("the hover-guarded rules survived the reload into cards",
    cardHover.declared.length >= 2, JSON.stringify(cardHover.declared.map((r) => r.guard)));
 ok(`a card hover draws a thicker 2px accent outline (${cardHover.how})`,
    drawn(cardHover, (h) => /0px 0px 0px 2px/.test(h.row),
-         /\[data-view="cards"\] tr:hover\s*{/, /box-shadow:\s*0 0 0 2px/),
+         /\[data-view="cards"\] (?::where\(#out\) )?tr:hover\s*{/, /box-shadow:\s*0 0 0 2px/),
    JSON.stringify(cardHover));
 ok(`a card hover gently pulses its own accent glow (${cardHover.how})`,
    drawn(cardHover, (h) => h.animation === "card-glow",
-         /\[data-view="cards"\] tr:hover\s*{/, /animation:[^;]*card-glow/),
+         /\[data-view="cards"\] (?::where\(#out\) )?tr:hover\s*{/, /animation:[^;]*card-glow/),
    JSON.stringify(cardHover));
 ok("no row was rebuilt, so the same count is on screen", c1440.rows === tbl.rows,
    c1440.rows + " vs " + tbl.rows);
