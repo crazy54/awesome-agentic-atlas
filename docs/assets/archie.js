@@ -230,8 +230,24 @@
     document.addEventListener("archie:cue", onCue);
     window.archieRig = {
       cues: rig.cues.slice(),
-      cue: name => !talk.quiet && rig.cue(name),
+      cue: name => {
+        if (talk.quiet) return false;
+        if (!fx.cues.includes(name)) { if (name === "all-off") fx.cue(name); return rig.cue(name); }
+        if (name === "haze" && !rig.on && !rig.cueing) rig.cue("beams-fan");
+        return fx.cue(name);
+      },
       status: () => ({...rig.status(), dancing: rig.on, quiet: talk.quiet, laser: laser.colors()}),
+      // For `tests/stage-check.mjs`, which has to see one effect's pixels without the rest of the show over
+      // them: draw only the named parts (`rig.parts` and `fx.parts`: "wall", "blinders", "co2", "flames",
+      // "sparks", "haze", "fog", "floor") -- through a camera layer, so nothing else about the frame changes
+      // -- or everything again for none. Returns whether every name was a part.
+      solo: (...names) => {
+        const parts = {...rig.parts, ...fx.parts};
+        for (const [k, objs] of Object.entries(parts))
+          for (const o of objs) o.traverse(x => (names.includes(k) ? x.layers.enable(1) : x.layers.disable(1)));
+        camera.layers.set(names.length ? 1 : 0);
+        return names.every(k => k in parts);
+      },
     };
     const laser = lasers(header, rig, () => {
       document.removeEventListener("archie:cue", onCue);

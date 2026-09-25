@@ -10,7 +10,7 @@ node tests/run.mjs
 ```
 
 The runner takes no arguments. It runs every harness in the `HARNESSES` list in `tests/run.mjs`: on 2026-09-25 that was
-**26 harnesses, 16 Python and 10 Node**. Eight of the Node harnesses drive a headless Chromium and two do not.
+**29 harnesses, 17 Python and 12 Node**. Ten of the Node harnesses drive a headless Chromium and two do not.
 
 **Before a PR, run the whole suite.** A full local run took about 24 minutes on the 2026-09-25 baseline.
 The runner prints each harness's time in its closing table.
@@ -85,6 +85,7 @@ Node process on the machine, including other sessions' tools and test runs.
 | `app_flags_test.py` | Python | Feature-flag schema, the editor's atomic writes, every kill switch | 39 | 28 |
 | `theme_test.py` | Python | The eight skins' token sets, which must stay identical across their four copies; the theme menu; verdict marks; the phone layout | 1053 | 500 |
 | `signals_test.py` | Python | When a cached release or action answer must be re-queried | 210 | 170 |
+| `fetch_test.py` | Python | A batch GitHub keeps timing out on is split and retried; nothing else is | 27 | 20 |
 | `indexnow_test.py` | Python | Which URLs are submitted, the key prune, truncated responses. Network is stubbed | 140 | 100 |
 | `newness_test.py` | Python | What "New" means: one cohort, replaced by the next import that adds anything | 54 | 45 |
 | `discover_test.py` | Python | Discover's fifty-a-day selection, category fairness, rotation | 148 | 75 |
@@ -108,13 +109,12 @@ Node process on the machine, including other sessions' tools and test runs.
 | `prank-check.mjs` | browser | Archie's pranks: each undone, nothing saved, the flicker rate | 33 | 28 |
 | `friends-check.mjs` | browser | Archie's friends: each arrives, leaves, restores the page and keeps off the controls | 109 | 80 |
 | `rig-check.mjs` | browser | The light show: the flash rate of every fixture, the blinders' swell, the cues | 43 | 40 |
+| `admin-check.mjs` | browser | Archie's admin panel: hidden, one button per command, each dispatching its own, why a button is greyed | 69 | 60 |
+| `stage-check.mjs` | browser | The stage by its pixels: the LED wall moving; pyro, CO2, haze and blinders visible | 51 | 45 |
 
-The Assertions column counts passed plus failed. The four Archie browser harnesses (`prank`, `friends`, `rig`, and the unlisted
-`admin-check`) render the real model through swiftshader's software WebGL. They add the needed flags
+The Assertions column counts passed plus failed. The five Archie browser harnesses (`prank`, `friends`, `rig`, `admin` and
+`stage`) render the real model through swiftshader's software WebGL. They add the needed flags
 themselves.
-
-**`tests/admin-check.mjs` exists but is not in `HARNESSES`**, so `run.mjs` never runs it. Run it by hand
-as a browser harness if you touch `archie-admin.js`.
 
 ## Known-red and environment-sensitive checks
 
@@ -146,8 +146,8 @@ Other known sensitivities:
 
 ## When you add or change a harness
 
-- Add it to `HARNESSES` in `tests/run.mjs` with a `label` and a `floor`. A harness not in that list never runs;
-  `admin-check.mjs` is the current example.
+- Add it to `HARNESSES` in `tests/run.mjs` with a `label` and a `floor`. A harness file in `tests/` that is not in that
+  list reddens the run, so it cannot be forgotten silently.
 - Set the floor a little under the real count, so a harness that silently stops asserting fails the run.
 - Check that a deliberately broken input makes it fail. A check that has never been red has not been
   shown to work.
