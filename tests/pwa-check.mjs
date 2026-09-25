@@ -333,6 +333,7 @@ const shellUrls = () => evalIn(`caches.open(${JSON.stringify(shellName)}).then(c
 const shellBefore = await shellUrls();
 await evalIn(`caches.open(${JSON.stringify(shellName)}).then(c => c.put(new URL("pages.css", location.href).href,
   new Response("/* stale */", {headers: {"Content-Type": "text/css"}}))).then(() => true)`);
+const clickedAt = events.length;
 await evalIn("window.__beforeUpdate = 1; document.querySelector('.updbar .updgo')?.click(); true");
 let reloaded = false;
 for (let i = 0; i < 100 && !reloaded; i++) {
@@ -343,9 +344,19 @@ for (let i = 0; i < 100 && !reloaded; i++) {
 // "Updating", which is `refresh()` waiting on a fetch or on `reg.update()`; or a new document that never
 // reached `complete`, which is a sub-resource that never finished. The two need different fixes, and CI is
 // the only place this has been red.
-const whereReload = reloaded ? "" : await evalIn(`JSON.stringify({before: window.__beforeUpdate || 0,
-  ready: document.readyState, btn: document.querySelector(".updbar .updgo")?.textContent || null,
-  pending: performance.getEntriesByType("resource").filter(e => !e.responseEnd).map(e => e.name).slice(0, 5)})`)
+// `open` is every request the page started after the click with no finish or failure event yet, from this
+// session's own network events. `sw` is the registration's state, since a `reg.update()` that never
+// settles leaves an installing worker behind.
+const sinceClick = events.slice(clickedAt).filter(e => e.sessionId === sessionId);
+const settled = new Set(sinceClick.filter(e => e.method === "Network.loadingFinished" || e.method === "Network.loadingFailed")
+  .map(e => e.params.requestId));
+const open = sinceClick.filter(e => e.method === "Network.requestWillBeSent" && !settled.has(e.params.requestId))
+  .map(e => e.params.request.url.replace(ORIGIN, "/"));
+const whereReload = reloaded ? "" : await evalIn(`navigator.serviceWorker.getRegistration().then(r => JSON.stringify({
+  before: window.__beforeUpdate || 0, ready: document.readyState,
+  btn: document.querySelector(".updbar .updgo")?.textContent || null,
+  sw: r ? {installing: r.installing?.state || null, waiting: r.waiting?.state || null, active: r.active?.state || null} : null}))`)
+  .then(v => v + " no finish event seen for " + JSON.stringify([...new Set(open)].slice(0, 8)))
   .catch(e => "unreadable: " + e.message);
 ok("the button reloads the page", reloaded, whereReload);
 const cachedCss = await evalIn(`caches.open(${JSON.stringify(shellName)}).then(c => c.match(new URL("pages.css", location.href).href))
