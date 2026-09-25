@@ -58,11 +58,10 @@
 //                     click, Escape, Tab, a poke or reduced motion sends them off, and Quiet mode, reduced
 //                     motion, a narrow screen and no WebGL each keep them away. Cannot see the dice -- a
 //                     quarter of page views, 20 to 60 s in -- beyond nobody coming in the first twenty.
-//   admin-check.mjs   Archie's hidden admin panel and the `window.archie` dispatcher behind it, on the live
-//                     model: hidden and unfetched by default, opened by the footer's dot (by keyboard) and by
-//                     `?archie=admin`, one button per command, each dispatching its own, the dispatcher then
-//                     doing it, a disabled button saying why (no rig; reduced motion), and Escape handing
-//                     focus back. Cannot see lighting's real rig, only a stand-in with the agreed shape.
+//   rig-check.mjs     Archie's light show on the live model: every moving head, wash par and blinder read on
+//                     every frame of a dance and held under WCAG's three flashes a second, the blinders held to
+//                     a swell, and each of the admin panel's named cues taken and played, refused in Quiet mode
+//                     and absent under reduced motion. Cannot see what the show looks like, only what it asks for.
 //   spotlight_test.py the homepage's daily spotlight and line of the day, off the generator: the day rule,
 //                     the rendered page's pickers run under node against it on a pinned clock and zone, the
 //                     pool's shape, the order the inline scripts depend on, and each refusal of the line file.
@@ -207,7 +206,7 @@ const HARNESSES = [
   {file: "spotlight-check.mjs", label: "the daily spotlight and line on a pinned clock: per day, all day, local, no shift, no script", needs: "browser", floor: 100},
   {file: "prank-check.mjs", label: "Archie's pranks: each undone, nothing saved, the flicker's rate", needs: "browser", floor: 28},
   {file: "friends-check.mjs", label: "Archie's friends: each comes, leaves, restores the page, and keeps off the controls", needs: "browser", floor: 80},
-  {file: "admin-check.mjs", label: "Archie's hidden admin panel: hidden, opens, every command dispatches, Escape returns focus", needs: "browser", floor: 55},
+  {file: "rig-check.mjs", label: "Archie's light show: the flash rate of every fixture, the blinders' swell, and the cues", needs: "browser", floor: 40},
 ];
 
 // Both entry points, because the site has two and either one missing is a different broken build:

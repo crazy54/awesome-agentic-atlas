@@ -387,6 +387,32 @@ await sleep(800);
 ok("...after which the page is the build being served, and says nothing",
    !(await evalIn("!!document.querySelector('.updbar')")));
 
+// Once more, with the worker's update check made to hang, which is what CI's did: `refresh()` must reload
+// anyway, because it waits on `reg.update()` for three seconds at most (see UPDATE_JS in 31_home.py). Only
+// that promise is made to hang. Every fetch and cache call is still real, so this is the path above with
+// one answer missing, and the reload has the rest of this harness's 15 seconds to land in.
+ws.addEventListener("message", fake);
+await S("Fetch.enable", {patterns: [{urlPattern: "*/build.json*"}]});
+await goto(ORIGIN);
+let bar2 = false;
+for (let i = 0; i < 50 && !bar2; i++) {
+  bar2 = await evalIn("!!document.querySelector('.updbar .updgo')");
+  if (!bar2) await sleep(100);
+}
+await S("Fetch.disable");
+ws.removeEventListener("message", fake);
+await evalIn(`ServiceWorkerRegistration.prototype.update = () => new Promise(() => {});
+  window.__beforeUpdate = 1; document.querySelector('.updbar .updgo')?.click(); true`);
+let reloaded2 = false;
+for (let i = 0; i < 100 && !reloaded2; i++) {
+  await sleep(150);
+  try { reloaded2 = await evalIn("!window.__beforeUpdate && document.readyState === 'complete'"); } catch {}
+}
+ok("a worker update check that never answers does not keep the button from reloading the page",
+   bar2 && reloaded2, `notice ${bar2}, reloaded ${reloaded2}`);
+await sleep(800);
+ok("...and the page it reloads to says nothing", !(await evalIn("!!document.querySelector('.updbar')")));
+
 // Checked here rather than at the end, because everything after this line fails a request on purpose --
 // the offline phase and the deliberate 404 -- so a check at the end would either be a false alarm or
 // would have to whitelist the very failures it is watching for.

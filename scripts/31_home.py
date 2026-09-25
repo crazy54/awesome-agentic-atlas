@@ -557,18 +557,24 @@ MASCOT = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb", "archie-
 # His friends (`archie-friends.js`, the art and choreography, and `archie-friends-data.js`, who they are and
 # every line) are imported the same way, so they are hashed in too. They are not in MASCOT: without them
 # he loses his visitors, not his model.
-# The admin panel (`archie-admin.js`, see ADMIN_JS) is hashed in for the same reason: it drives
-# `window.archie`, which is archie.js's, and a stale panel against a newer model would offer commands it no
-# longer takes. Its own URL carries this version too.
-VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb",
-             "archie-friends.js", "archie-friends-data.js", "archie-admin.js")
+# The light show's look book, fixture models, gobos and wall clips (`rig-show.js`, `rig/`, `rig-gobos/`)
+# are fetched under the same query, so they are hashed in as well. They and the friends are OPTIONAL: the
+# loader plays without any of them, so a checkout or a scratch directory that lacks one versions what it
+# has instead of failing, while the four the model cannot do without must be there.
+RIG = ("rig-show.js", "rig/rig.glb", "rig/wall-a.webm", "rig/wall-a.mp4", "rig/wall-a.webp", "rig/wall-b.webm",
+       "rig/wall-b.mp4", "rig/wall-b.webp") + tuple(f"rig-gobos/{g}.svg" for g in (
+       "breakup", "dots", "star", "spiral", "archie", "braces", "iris", "prism"))
+OPTIONAL = ("archie-friends.js", "archie-friends-data.js") + RIG
+VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb") + OPTIONAL
 
 
 def mascot_version(files: tuple[str, ...] = VERSIONED) -> str:
     h = hashlib.sha256()
     for f in files:
+        if f in OPTIONAL and not (OUT / "assets" / f).is_file():
+            continue
         b = (OUT / "assets" / f).read_bytes()
-        h.update(b.replace(b"\r\n", b"\n") if f.endswith(".js") else b)
+        h.update(b.replace(b"\r\n", b"\n") if f.endswith((".js", ".svg")) else b)
     return h.hexdigest()[:10]
 
 
@@ -1311,6 +1317,12 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 # goes first, because it is cache-first and would otherwise answer those very requests from itself; it is
 # refilled with the fresh bytes afterwards, so an offline reader still has a shell. `atlas-data` and the
 # other runtime caches are network-first and stay, since online they are never what a reader is shown.
+#
+# The worker's own update check is asked for last, and waited on for three seconds at most. A promise from
+# `reg.update()` that never settles is not hypothetical. On CI it never settled, run after run, with the
+# worker active and nothing installing or waiting (pwa-check's detail names it). Unbounded, it left the
+# button reading "Updating..." forever with every fresh byte already in hand. The reload does not need
+# the answer: the new document's own registration runs the same check, with `updateViaCache: "none"`.
 UPDATE_JS = r"""<script>
 (() => {
   const mine = document.querySelector('meta[name="atlas-build"]');
@@ -1340,7 +1352,7 @@ UPDATE_JS = r"""<script>
         for (const u of list) if (fresh.has(u)) await c.put(u, fresh.get(u).clone());
       }
       const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
-      if (reg) await reg.update().catch(() => {});
+      if (reg) await Promise.race([reg.update().catch(() => {}), new Promise((r) => setTimeout(r, 3000))]);
     } catch {}
     location.reload();
   };
