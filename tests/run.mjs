@@ -8,7 +8,7 @@
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY NINETEEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY TWENTY-SIX HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
 //   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces, and
 //                     the one channel on the page that is not colour: the five platform verdict marks,
@@ -192,13 +192,13 @@ const HARNESSES = [
   {file: "media_test.py", label: "one embedded part per screenshot, the entry ceiling, and the unpooled cover", python: true, floor: 45},
   {file: "workbook_branding_test.py", label: "the Atlas mark and mascot on both workbook covers, saved as a weekly saves them", python: true, floor: 24},
   {file: "refresh_test.py", label: "the cache-free render, refused when the source count moved", python: true, floor: 60},
-  {file: "live_test.py", label: "the star/push sidecar the 1,294 detail pages read", python: true, floor: 90},
+  {file: "live_test.py", label: "the star/push sidecar the detail pages read", python: true, floor: 90},
   {file: "semantic_test.py", label: "the semantic index, scored from the bytes a reader downloads", python: true, floor: 30},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
   {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, and the host in docs/CNAME", python: true, floor: 34},
   {file: "spotlight_test.py", label: "the daily spotlight and line: one rule in Python and in the page, the pool, the refusals", python: true, floor: 300},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
-  {file: "detail-churn.mjs", label: "1,294 detail pages, regenerated and hashed", floor: 7},
+  {file: "detail-churn.mjs", label: "every detail page, regenerated and hashed", floor: 7},
   {file: "detail-preview-check.mjs", label: "rendered repository reader, source and phone layout", needs: "browser", floor: 12},
   {file: "cards-check.mjs", label: "real layout at 1440/900/375 in both themes", needs: "browser", floor: 86},
   {file: "pwa-check.mjs", label: "manifest, worker, precache, offline, freshness, 404", needs: "browser", floor: 25},
@@ -238,7 +238,7 @@ if (!bin) {
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
 // prerequisite that goes missing must stop the run, not reduce it. Sixteen of the twenty-six need it -- one runs
-// `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
+// `22_detail.py` over every detail page, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives the IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar,
 // one reads every built page looking for a platform mark that resolves to nothing, one re-derives the

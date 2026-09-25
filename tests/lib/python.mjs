@@ -1,7 +1,7 @@
 // Which `python` on this machine is a Python 3, answered by asking rather than by assuming.
 //
-// Two of the five harnesses need one: `detail-churn.mjs` runs `scripts/22_detail.py` four times, and
-// `pagemin_test.py` *is* Python. Neither can be skipped when no interpreter is found -- a suite that goes
+// Seventeen of the twenty-six harnesses need one: the sixteen `*_test.py` files *are* Python, and
+// `detail-churn.mjs` runs `scripts/22_detail.py` four times. Neither can be skipped when no interpreter is found -- a suite that goes
 // quiet when a tool is missing reports the same green as a suite that checked everything, and the only signal
 // CI reads is the exit code. So this returns null and the caller fails loudly; nothing here has a fallback.
 //
