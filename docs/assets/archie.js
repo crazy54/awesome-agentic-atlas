@@ -246,9 +246,9 @@
     let lastPrank = Date.now() - PRANK_GAP + 60000, trick = null, tricks = [];
     const forced = asked && asked.startsWith("prank:") && PRANKS.includes(asked.slice(6)) ? asked.slice(6) : "";
     if (forced) lastPrank = -1e9;
+    let pranking = false;                  // declared above its readers, `prankable` and the friends' `free()`
     const prankable = () => !talk.quiet && seen && mode === "home" && !music.on && !grooving() &&
       !pranking && !(pals && pals.busy) && Date.now() - lastPrank >= PRANK_GAP;
-    let pranking = false;
     const prank = async name => {
       pranking = true;
       try { await prankOnce(name); } finally { pranking = false; }
@@ -564,13 +564,13 @@
     // says to him goes through `talk.say`, which is his bubble and his Quiet mode. While one is visiting he
     // plays no prank (see `prankable`), and a poke gets an answer about the guest (see `chatter`).
     pals = null;
+    let stopped = false;                   // set by `stop()` below; read when the import lands, which is later
     import(`./archie-friends.js${V}`).then(F => {
       if (!started || stopped) return;
       pals = F.friends({header, slot, say: line => talk.say(line),
         free: () => !talk.quiet && seen && mode === "home" && idling && !pranking && !music.on && !grooving() &&
           actor.visible && view.slide === 0});
     }).catch(e => console.warn("Archie's friends stayed home:", e));
-    let stopped = false;
 
     stop = () => {
       stopped = true;

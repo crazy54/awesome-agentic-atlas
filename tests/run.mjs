@@ -2,7 +2,8 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the twenty-five harnesses in turn, and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the twenty-five harnesses in turn --
+// sixteen Python, seven in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
