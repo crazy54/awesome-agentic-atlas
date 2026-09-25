@@ -4,9 +4,9 @@
 
 Claude Code is the harness the largest single share of this atlas is built for. Installing it is ten seconds; the next hour is the part nobody writes down. These seven cover the format skills come in, three bundles worth reading before writing your own, the two things that make long sessions cheaper, and where to look when you want more. Every project here targets Claude Code, and the build checks that too.
 
-7 picks · 960,930 combined stars · snapshot 2026-09-22
+7 picks · 961,409 combined stars · snapshot 2026-09-22
 
-[Open all 7 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=anthropics/skills,obra/superpowers,multica-ai/andrej-karpathy-skills,addyosmani/agent-skills,JuliusBrussee/caveman,ccusage/ccusage,hesreallyhim/awesome-claude-code) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
+[Open all 7 in the atlas](https://aaa.jeremyfhall.com/#list=anthropics/skills,obra/superpowers,multica-ai/andrej-karpathy-skills,addyosmani/agent-skills,JuliusBrussee/caveman,ccusage/ccusage,hesreallyhim/awesome-claude-code) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
 > Every pick is checked at build time: `target` = `claude-code`. If the committed snapshot stops supporting that for any one of them, this page fails to build rather than quietly meaning something weaker.
 
@@ -14,7 +14,7 @@ Claude Code is the harness the largest single share of this atlas is built for. 
 
 ## 1. The format — [Agent Skills](https://github.com/anthropics/skills)
 
-`anthropics/skills` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/anthropics/skills/)
+`anthropics/skills` · [detail page](https://aaa.jeremyfhall.com/repo/anthropics/skills/)
 
 Anthropic's own repository for Agent Skills: the SKILL.md format, a template and worked examples. Read this first and every other skills bundle in the atlas becomes legible.
 
@@ -24,7 +24,7 @@ Anthropic's own repository for Agent Skills: the SKILL.md format, a template and
 git clone https://github.com/anthropics/skills.git
 ```
 
-**177,585** stars · 6 of 39 lists · Python · no licence stated · pushed 2026-09-10
+**177,647** stars · 6 of 39 lists · Python · no licence stated · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -34,7 +34,7 @@ Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, MCP, Cursor
 
 ## 2. The bundle — [Superpowers](https://github.com/obra/superpowers)
 
-`obra/superpowers` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/obra/superpowers/)
+`obra/superpowers` · [detail page](https://aaa.jeremyfhall.com/repo/obra/superpowers/)
 
 Core software-engineering competencies covering most of the SDLC, well organised and adaptable. It is the most-starred skills project here and the one most often forked as a starting point.
 
@@ -44,7 +44,7 @@ Core software-engineering competencies covering most of the SDLC, well organised
 git clone https://github.com/obra/superpowers.git
 ```
 
-**290,022** stars · 7 of 39 lists · Shell · MIT · pushed 2026-09-20
+**290,183** stars · 7 of 39 lists · Shell · MIT · pushed 2026-09-22
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -54,7 +54,7 @@ Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, MCP, Codex / Op
 
 ## 3. The instructions file — [andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)
 
-`multica-ai/andrej-karpathy-skills` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/multica-ai/andrej-karpathy-skills/)
+`multica-ai/andrej-karpathy-skills` · [detail page](https://aaa.jeremyfhall.com/repo/multica-ai/andrej-karpathy-skills/)
 
 A drop-in CLAUDE.md distilling four behavioural guidelines, derived from Andrej Karpathy's public notes on LLM coding pitfalls. One file, and the cheapest improvement on this page.
 
@@ -64,7 +64,7 @@ A drop-in CLAUDE.md distilling four behavioural guidelines, derived from Andrej 
 git clone https://github.com/multica-ai/andrej-karpathy-skills.git
 ```
 
-**214,598** stars · 3 of 39 lists · language not detected · no licence stated · pushed 2026-04-20
+**214,654** stars · 3 of 39 lists · language not detected · no licence stated · pushed 2026-04-20
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -74,7 +74,7 @@ Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic
 
 ## 4. The engineering set — [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)
 
-`addyosmani/agent-skills` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/addyosmani/agent-skills/)
+`addyosmani/agent-skills` · [detail page](https://aaa.jeremyfhall.com/repo/addyosmani/agent-skills/)
 
 Production-grade engineering skills, and portable: it also targets MCP, Codex and Cursor, so what you learn here is not stranded if you change harnesses.
 
@@ -84,7 +84,7 @@ Production-grade engineering skills, and portable: it also targets MCP, Codex an
 npx skills add addyosmani/agent-skills # install all 25 skills
 ```
 
-**98,320** stars · 4 of 39 lists · JavaScript · MIT · pushed 2026-09-20
+**98,430** stars · 4 of 39 lists · JavaScript · MIT · pushed 2026-09-20
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -94,7 +94,7 @@ Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, MCP, Codex / Op
 
 ## 5. The token diet — [Caveman](https://github.com/JuliusBrussee/caveman)
 
-`JuliusBrussee/caveman` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/juliusbrussee/caveman/)
+`JuliusBrussee/caveman` · [detail page](https://aaa.jeremyfhall.com/repo/juliusbrussee/caveman/)
 
 Conserves tokens by shortening what the agent says back to you. It reads like a joke and is not one -- long sessions are mostly the model narrating, and Windows support is stated.
 
@@ -104,7 +104,7 @@ Conserves tokens by shortening what the agent says back to you. It reads like a 
 irm https://raw.githubusercontent.com/JuliusBrussee/caveman/v2.7.0/install.ps1 | iex
 ```
 
-**107,292** stars · 2 of 39 lists · Go · no licence stated · pushed 2026-09-22
+**107,365** stars · 2 of 39 lists · Go · no licence stated · pushed 2026-09-22
 
 Platforms: Win Y WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -114,7 +114,7 @@ Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, Codex / OpenAI
 
 ## 6. The bill — [ccusage](https://github.com/ccusage/ccusage)
 
-`ccusage/ccusage` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/ccusage/ccusage/)
+`ccusage/ccusage` · [detail page](https://aaa.jeremyfhall.com/repo/ccusage/ccusage/)
 
 One npx command reports what your Claude Code sessions have actually cost. Zero install, no account, and the first honest number most people see.
 
@@ -124,7 +124,7 @@ One npx command reports what your Claude Code sessions have actually cost. Zero 
 git clone https://github.com/ccusage/ccusage.git
 ```
 
-**18,686** stars · 4 of 39 lists · Rust · no licence stated · pushed 2026-09-22
+**18,687** stars · 4 of 39 lists · Rust · no licence stated · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -134,7 +134,7 @@ Topic: Observability & Evals · Targets: Claude Code, Claude / Anthropic, Codex 
 
 ## 7. Where to look next — [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code)
 
-`hesreallyhim/awesome-claude-code` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/hesreallyhim/awesome-claude-code/)
+`hesreallyhim/awesome-claude-code` · [detail page](https://aaa.jeremyfhall.com/repo/hesreallyhim/awesome-claude-code/)
 
 The specialist list for this harness. When the kit above stops being enough, this is the catalogue to read rather than a search box to guess into.
 
@@ -144,7 +144,7 @@ The specialist list for this harness. When the kit above stops being enough, thi
 git clone https://github.com/hesreallyhim/awesome-claude-code.git
 ```
 
-**54,427** stars · 3 of 39 lists · Python · no licence stated · pushed 2026-09-22
+**54,443** stars · 3 of 39 lists · Python · no licence stated · pushed 2026-09-22
 
 Platforms: Win N WSL N mac Y Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

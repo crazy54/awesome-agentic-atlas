@@ -269,6 +269,120 @@ html[data-skin=prism][data-theme=light]{
          radial-gradient(560px 340px at 18% 62%,rgba(130,90,230,.13),transparent 70%);
   --panel:rgba(253,251,255,.72);
 }
+/* THE FOUR LIGHTER-HEARTED ONES, eight more blocks in exactly the pattern above, and held to exactly the
+   same arithmetic -- `theme_test.py` runs `audit()` over all sixteen sets. The fun is spent where it is
+   free: the wash, the typeface and the accents. None of them moves. Every --wash here is a static
+   gradient, so a reader who asked the OS for reduced motion has nothing to ask these to stop doing, and
+   none of them sets an --fx-* token on the homepage, which is the only place a theme can animate.
+
+   Sherbet is an ice-cream parlour: blackcurrant and cream, strawberry for the action, and a rounded face
+   where the platform has one. `ui-rounded` resolves on Apple platforms only; everywhere else the stack
+   falls through to Nunito if installed and then to the page's own Segoe UI, so the shape of the page is
+   never at the mercy of a font nobody has. */
+html[data-skin=sherbet]{
+  --surface:#1E1830; --plane:#272040; --band:#32294F; --ink:#FFF1E6; --ink2:#EEDCE6;
+  --muted:#C4B3D0; --grid:#554872; --link:#A8B4FF; --bar:#FF7AA2;
+  --good:#5FE0B4; --warn:#FFB36B; --off:#C4B3D0; --onbar:#1A1026;
+  --accent-sky:#A8B4FF; --accent-mint:#5FE0B4; --accent-gold:#FFD166;
+  --accent-coral:#FF9A8B; --accent-violet:#D0B3FF;
+  --ui:ui-rounded,"SF Pro Rounded","Nunito","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:radial-gradient(900px 480px at 8% -10%,rgba(255,122,162,.16),transparent 70%),
+         radial-gradient(820px 460px at 94% 104%,rgba(95,224,180,.12),transparent 70%),
+         radial-gradient(520px 300px at 70% 8%,rgba(255,209,102,.08),transparent 70%);
+  --panel:rgba(39,32,64,.80); --bdf:blur(12px) saturate(1.2);
+}
+html[data-skin=sherbet][data-theme=light]{
+  --surface:#FFF7EE; --plane:#FFFCF8; --band:#FBEADF; --ink:#2B2140; --ink2:#4A3D5E;
+  --muted:#6A5A78; --grid:#E8CFC3; --link:#3A48C9; --bar:#C22D62;
+  --good:#11704F; --warn:#8E4E00; --off:#6A5A78; --onbar:#FFFFFF;
+  --accent-sky:#3A48C9; --accent-mint:#11704F; --accent-gold:#8A5A00;
+  --accent-coral:#B23A3A; --accent-violet:#6B42C2;
+  --wash:radial-gradient(900px 480px at 8% -10%,rgba(232,70,124,.10),transparent 70%),
+         radial-gradient(820px 460px at 94% 104%,rgba(60,207,160,.10),transparent 70%),
+         radial-gradient(520px 300px at 70% 8%,rgba(255,209,102,.14),transparent 70%);
+  --panel:rgba(255,252,248,.82);
+}
+/* Riso is a risograph zine: two inks on off-white paper, and the second one printed a hair off register.
+   That is the wash -- a pink and a blue blob that overlap without lining up. Fluoro yellow is the third
+   drum and appears only as --accent-gold in dark, where it is ink on black; on paper it is a mustard,
+   because yellow on cream is 1.1:1 and a zine you cannot read is not a zine. Paper is nearly opaque, so
+   the panel is too, with just enough blur that a line of text behind the open Settings menu reads as a
+   smudge rather than as a second sentence. */
+html[data-skin=riso]{
+  --surface:#16161F; --plane:#1E1E29; --band:#282835; --ink:#F5F0E6; --ink2:#DCD6CA;
+  --muted:#AAA59C; --grid:#46465A; --link:#6FB4EA; --bar:#FF5CB8;
+  --good:#3FD08A; --warn:#FFB84D; --off:#AAA59C; --onbar:#16161F;
+  --accent-sky:#6FB4EA; --accent-mint:#3FD08A; --accent-gold:#FFE800;
+  --accent-coral:#FF7F7F; --accent-violet:#B9A2FF;
+  --ui:"Space Grotesk","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:radial-gradient(700px 420px at 14% -6%,rgba(255,72,176,.16),transparent 70%),
+         radial-gradient(700px 420px at 17% -3%,rgba(0,120,191,.14),transparent 70%),
+         radial-gradient(640px 380px at 92% 100%,rgba(255,232,0,.07),transparent 70%);
+  --panel:rgba(30,30,41,.96); --bdf:blur(6px);
+}
+html[data-skin=riso][data-theme=light]{
+  --surface:#F5F0E6; --plane:#FBF8F1; --band:#ECE5D6; --ink:#1A1A2E; --ink2:#34344A;
+  --muted:#5A5864; --grid:#CFC6B3; --link:#B0126E; --bar:#0066A6;
+  --good:#00703F; --warn:#A33A1F; --off:#5A5864; --onbar:#FFFFFF;
+  --accent-sky:#0066A6; --accent-mint:#00703F; --accent-gold:#7A6100;
+  --accent-coral:#B0126E; --accent-violet:#5B3FB0;
+  --wash:radial-gradient(700px 420px at 14% -6%,rgba(255,72,176,.14),transparent 70%),
+         radial-gradient(700px 420px at 17% -3%,rgba(0,120,191,.12),transparent 70%),
+         radial-gradient(640px 380px at 92% 100%,rgba(255,232,0,.16),transparent 70%);
+  --panel:rgba(251,248,241,.96);
+}
+/* Blueprint is a drafting sheet, and dark is the one it was drawn for: chalk on cyanotype blue with a
+   24px ruled grid and safety orange for the action. The blue is far lighter than any other dark surface
+   here, which is what the theme is and also what it costs -- every foreground had to be lifted to clear
+   the band, and the plane and band sit closer to the surface than the other themes' do so the orange can
+   still reach 4.5:1 on the lightest of the three. The grid is two `repeating-linear-gradient`s rather
+   than an image, so it needs no request and no `background-size`. */
+html[data-skin=blueprint]{
+  --surface:#0B3D91; --plane:#0D4399; --band:#104BA6; --ink:#F4F8FF; --ink2:#DCE8FF;
+  --muted:#C0D4F7; --grid:#4677D2; --link:#B5ECFF; --bar:#FFB27A;
+  --good:#9CF2C4; --warn:#FFB3C1; --off:#C0D4F7; --onbar:#0A2352;
+  --accent-sky:#B5ECFF; --accent-mint:#9CF2C4; --accent-gold:#FFE066;
+  --accent-coral:#FFB8B0; --accent-violet:#D8CCFF;
+  --ui:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --wash:repeating-linear-gradient(0deg,rgba(234,242,255,.07) 0 1px,transparent 1px 24px),
+         repeating-linear-gradient(90deg,rgba(234,242,255,.07) 0 1px,transparent 1px 24px);
+  --panel:rgba(13,67,153,.96); --bdf:blur(6px);
+}
+html[data-skin=blueprint][data-theme=light]{
+  --surface:#F3F7FF; --plane:#FBFDFF; --band:#E4ECFA; --ink:#0B2A5C; --ink2:#233F72;
+  --muted:#4A6290; --grid:#BFCDE8; --link:#1650B8; --bar:#B5470F;
+  --good:#0F6B4A; --warn:#A3245A; --off:#4A6290; --onbar:#FFFFFF;
+  --accent-sky:#1650B8; --accent-mint:#0F6B4A; --accent-gold:#7D5A00;
+  --accent-coral:#B5470F; --accent-violet:#5A3FB8;
+  --wash:repeating-linear-gradient(0deg,rgba(31,95,209,.07) 0 1px,transparent 1px 24px),
+         repeating-linear-gradient(90deg,rgba(31,95,209,.07) 0 1px,transparent 1px 24px);
+  --panel:rgba(251,253,255,.96);
+}
+/* Aurora is the northern lights over a midnight sky: one teal-to-violet curtain across the top of the
+   window and nothing else. Teal is the action, so the verdict green is pushed toward lime to keep "this
+   is a button" and "this runs here" in two different hues, the same separation terminal makes with
+   amber. The curtain is `fixed` like every wash, so it hangs in the window rather than scrolling away. */
+html[data-skin=aurora]{
+  --surface:#0A1128; --plane:#101936; --band:#172244; --ink:#F1F5FF; --ink2:#CFD7F0;
+  --muted:#9DA8CC; --grid:#35416B; --link:#8CC8FF; --bar:#2EC4B6;
+  --good:#A8EF7A; --warn:#FFB5E8; --off:#9DA8CC; --onbar:#06121F;
+  --accent-sky:#8CC8FF; --accent-mint:#A8EF7A; --accent-gold:#FFD98A;
+  --accent-coral:#FFB5E8; --accent-violet:#C39BF0;
+  --ui:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --wash:linear-gradient(172deg,rgba(46,196,182,.20),rgba(114,242,165,.10) 14%,rgba(157,78,221,.16) 26%,
+         transparent 40%),radial-gradient(900px 420px at 80% -10%,rgba(255,181,232,.12),transparent 70%);
+  --panel:rgba(16,25,54,.78); --bdf:blur(16px) saturate(1.3);
+}
+html[data-skin=aurora][data-theme=light]{
+  --surface:#F4F6FF; --plane:#FBFCFF; --band:#E6EAF8; --ink:#1B1F3B; --ink2:#373C5E;
+  --muted:#595F82; --grid:#C6CCE4; --link:#2447B0; --bar:#0E6E68;
+  --good:#3D6A0F; --warn:#A3316E; --off:#595F82; --onbar:#FFFFFF;
+  --accent-sky:#2447B0; --accent-mint:#3D6A0F; --accent-gold:#805A00;
+  --accent-coral:#A3316E; --accent-violet:#6A2CB0;
+  --wash:linear-gradient(172deg,rgba(18,122,115,.14),rgba(60,160,90,.07) 14%,rgba(123,44,191,.11) 26%,
+         transparent 40%),radial-gradient(900px 420px at 80% -10%,rgba(220,90,170,.08),transparent 70%);
+  --panel:rgba(251,252,255,.80);
+}
 *{box-sizing:border-box}
 /* --ui and --wash are the structural tokens declared in the block above; graphite resolves them to this
    file's own font stack and to `none`, so a reader who has chosen no theme gets what was written here
@@ -581,7 +695,7 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The eight literals track --plane in the eight blocks at the top of pages.css. After paint `label()`
+  // The sixteen literals track --plane in the sixteen blocks at the top of pages.css. After paint `label()`
   // re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
@@ -594,7 +708,11 @@ try {
   var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
                glass: {dark: "#12141D", light: "#F8FAFF"},
                terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"}};
+               prism: {dark: "#17112C", light: "#FDFBFF"},
+               sherbet: {dark: "#272040", light: "#FFFCF8"},
+               riso: {dark: "#1E1E29", light: "#FBF8F1"},
+               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
+               aurora: {dark: "#101936", light: "#FBFCFF"}};
   var s = localStorage.getItem("atlas-skin");
   if (!PLANE[s]) s = "graphite";
   document.documentElement.dataset.skin = s;

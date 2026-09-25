@@ -4,9 +4,9 @@
 
 Most agentic tooling is written on a Mac and tested on Linux, and "it's Python, it'll be fine" is how a Windows afternoon disappears. The atlas records a per-platform verdict for every project, and it distinguishes stated support from support merely inferred from the language. Every project below has documented Windows support -- the build refuses to publish this page if one of them stops.
 
-7 picks · 931,374 combined stars · snapshot 2026-09-22
+7 picks · 931,647 combined stars · snapshot 2026-09-22
 
-[Open all 7 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=openclaw/openclaw,earendil-works/pi,continuedev/continue,ollama/ollama,ggml-org/llama.cpp,headroomlabs-ai/headroom,nearai/ironclaw) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
+[Open all 7 in the atlas](https://aaa.jeremyfhall.com/#list=openclaw/openclaw,earendil-works/pi,continuedev/continue,ollama/ollama,ggml-org/llama.cpp,headroomlabs-ai/headroom,nearai/ironclaw) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
 > Every pick is checked at build time: `os` = `Windows`. If the committed snapshot stops supporting that for any one of them, this page fails to build rather than quietly meaning something weaker.
 
@@ -14,7 +14,7 @@ Most agentic tooling is written on a Mac and tested on Linux, and "it's Python, 
 
 ## 1. The framework — [openclaw](https://github.com/openclaw/openclaw)
 
-`openclaw/openclaw` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/openclaw/openclaw/)
+`openclaw/openclaw` · [detail page](https://aaa.jeremyfhall.com/repo/openclaw/openclaw/)
 
 The most-starred project in the atlas, and it puts Windows in the same sentence as macOS and Linux rather than in a footnote. Three source lists carry it.
 
@@ -24,7 +24,7 @@ The most-starred project in the atlas, and it puts Windows in the same sentence 
 npm install -g openclaw@latest --allow-scripts=openclaw
 ```
 
-**390,247** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22
+**390,260** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22
 
 Platforms: Win Y WSL Y mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -34,7 +34,7 @@ Topic: Frameworks & SDKs · Targets: MCP
 
 ## 2. The harness — [Pi](https://github.com/earendil-works/pi)
 
-`earendil-works/pi` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/earendil-works/pi/)
+`earendil-works/pi` · [detail page](https://aaa.jeremyfhall.com/repo/earendil-works/pi/)
 
 A deliberately small terminal harness built around skills loaded on demand. Small is what makes it portable: there is less of it to be Unix-shaped.
 
@@ -44,7 +44,7 @@ A deliberately small terminal harness built around skills loaded on demand. Smal
 git clone https://github.com/earendil-works/pi.git
 ```
 
-**108,413** stars · 1 list · TypeScript · MIT · pushed 2026-09-22
+**108,523** stars · 1 list · TypeScript · MIT · pushed 2026-09-22
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -54,7 +54,7 @@ Topic: Harnesses & Runtime Infra
 
 ## 3. The coding agent — [Continue](https://github.com/continuedev/continue)
 
-`continuedev/continue` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/continuedev/continue/)
+`continuedev/continue` · [detail page](https://aaa.jeremyfhall.com/repo/continuedev/continue/)
 
 Ships as an editor extension, which is why it works on Windows without a WSL detour -- the editor has already solved that problem.
 
@@ -64,7 +64,7 @@ Ships as an editor extension, which is why it works on Windows without a WSL det
 git clone https://github.com/continuedev/continue.git
 ```
 
-**35,990** stars · 7 of 39 lists · TypeScript · Apache-2.0 · pushed 2026-09-22
+**35,995** stars · 7 of 39 lists · TypeScript · Apache-2.0 · pushed 2026-09-22
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -74,7 +74,7 @@ Topic: Coding Agents · Targets: MCP, Codex / OpenAI
 
 ## 4. The model runner — [Ollama](https://github.com/ollama/ollama)
 
-`ollama/ollama` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/ollama/ollama/)
+`ollama/ollama` · [detail page](https://aaa.jeremyfhall.com/repo/ollama/ollama/)
 
 A native Windows build, a one-line pull, and no Python environment to get wrong. If you want a local model on Windows this is the shortest path to one.
 
@@ -84,7 +84,7 @@ A native Windows build, a one-line pull, and no Python environment to get wrong.
 irm https://ollama.com/install.ps1 | iex
 ```
 
-**181,455** stars · 4 of 39 lists · Go · MIT · pushed 2026-09-21
+**181,491** stars · 4 of 39 lists · Go · MIT · pushed 2026-09-22
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -94,7 +94,7 @@ Topic: Harnesses & Runtime Infra · Targets: Local / Ollama
 
 ## 5. The inference engine — [llama.cpp](https://github.com/ggml-org/llama.cpp)
 
-`ggml-org/llama.cpp` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/ggml-org/llama.cpp/)
+`ggml-org/llama.cpp` · [detail page](https://aaa.jeremyfhall.com/repo/ggml-org/llama.cpp/)
 
 The C++ layer under most of local AI, with first-class Windows builds and no runtime to install. Worth knowing directly once the layer above it surprises you.
 
@@ -104,7 +104,7 @@ The C++ layer under most of local AI, with first-class Windows builds and no run
 git clone https://github.com/ggml-org/llama.cpp.git
 ```
 
-**129,175** stars · 3 of 39 lists · C++ · MIT · pushed 2026-09-22
+**129,222** stars · 3 of 39 lists · C++ · MIT · pushed 2026-09-22
 
 Platforms: Win Y WSL N mac Y Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -114,7 +114,7 @@ Topic: Harnesses & Runtime Infra · Targets: Local / Ollama
 
 ## 6. The context budget — [headroom](https://github.com/headroomlabs-ai/headroom)
 
-`headroomlabs-ai/headroom` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/headroomlabs-ai/headroom/)
+`headroomlabs-ai/headroom` · [detail page](https://aaa.jeremyfhall.com/repo/headroomlabs-ai/headroom/)
 
 Compresses tool output, logs and files before they reach the window. Windows and Docker support are both stated, and it sits in front of whatever agent you chose.
 
@@ -124,7 +124,7 @@ Compresses tool output, logs and files before they reach the window. Windows and
 uv tool install --python 3.13 "headroom-ai[all]" # CLI in a self-contained env
 ```
 
-**73,467** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22
+**73,528** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22
 
 Platforms: Win Y WSL L mac Y Lin Y Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -134,7 +134,7 @@ Topic: Plugins, Themes & Clients · Targets: Claude Code, Claude / Anthropic, MC
 
 ## 7. The sandbox — [ironclaw](https://github.com/nearai/ironclaw)
 
-`nearai/ironclaw` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/nearai/ironclaw/)
+`nearai/ironclaw` · [detail page](https://aaa.jeremyfhall.com/repo/nearai/ironclaw/)
 
 Treats agent execution as a privacy and isolation problem rather than a convenience one. Two source lists agree, and Windows support is documented rather than assumed.
 
@@ -144,7 +144,7 @@ Treats agent execution as a privacy and isolation problem rather than a convenie
 irm "https://github.com/nearai/ironclaw/releases/download/$IronClawReleaseTag/ironclaw-installer.ps1" | iex
 ```
 
-**12,627** stars · 3 of 39 lists · Rust · Apache-2.0 · pushed 2026-09-21
+**12,628** stars · 3 of 39 lists · Rust · Apache-2.0 · pushed 2026-09-21
 
 Platforms: Win Y WSL Y mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

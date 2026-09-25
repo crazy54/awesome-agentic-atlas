@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Collections: recommended sets of agentic tools — Awesome Agentic Atlas</title>
 <meta name="description" content="5 curated sets of agentic AI tools, 34 picks in total: a first setup, a Windows stack, a Claude Code kit, a fully local stack, and the tools that tell you…">
-<link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/collections/">
+<link rel="canonical" href="https://aaa.jeremyfhall.com/collections/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Collections: recommended sets of agentic tools — Awesome Agentic Atlas">
 <meta property="og:description" content="5 curated sets of agentic AI tools, 34 picks in total: a first setup, a Windows stack, a Claude Code kit, a fully local stack, and the tools that tell you…">
-<meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/collections/">
+<meta property="og:url" content="https://aaa.jeremyfhall.com/collections/">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
 <meta property="og:image:alt" content="The Awesome Agentic Atlas repository on GitHub.">
 <meta name="twitter:card" content="summary_large_image">
@@ -22,7 +22,7 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The eight literals track --plane in the eight blocks at the top of pages.css. After paint `label()`
+  // The sixteen literals track --plane in the sixteen blocks at the top of pages.css. After paint `label()`
   // re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
@@ -35,7 +35,11 @@ try {
   var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
                glass: {dark: "#12141D", light: "#F8FAFF"},
                terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"}};
+               prism: {dark: "#17112C", light: "#FDFBFF"},
+               sherbet: {dark: "#272040", light: "#FFFCF8"},
+               riso: {dark: "#1E1E29", light: "#FBF8F1"},
+               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
+               aurora: {dark: "#101936", light: "#FBFCFF"}};
   var s = localStorage.getItem("atlas-skin");
   if (!PLANE[s]) s = "graphite";
   document.documentElement.dataset.skin = s;
@@ -43,7 +47,7 @@ try {
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../pages.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Collections","description":"5 curated sets of agentic AI tools, 34 picks in total: a first setup, a Windows stack, a Claude Code kit, a fully local stack, and the tools that tell you…","url":"https://crazy54.github.io/awesome-agentic-atlas/collections/","numberOfItems":5,"itemListOrder":"https://schema.org/ItemListUnordered","itemListElement":[{"@type":"ListItem","position":1,"name":"A first agentic setup","url":"https://crazy54.github.io/awesome-agentic-atlas/collections/first-setup/"},{"@type":"ListItem","position":2,"name":"Runs on Windows, and says so","url":"https://crazy54.github.io/awesome-agentic-atlas/collections/windows-first/"},{"@type":"ListItem","position":3,"name":"The Claude Code power kit","url":"https://crazy54.github.io/awesome-agentic-atlas/collections/claude-code-kit/"},{"@type":"ListItem","position":4,"name":"Nothing leaves the laptop","url":"https://crazy54.github.io/awesome-agentic-atlas/collections/local-only/"},{"@type":"ListItem","position":5,"name":"Find out what the agent actually did","url":"https://crazy54.github.io/awesome-agentic-atlas/collections/keep-it-honest/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Collections","description":"5 curated sets of agentic AI tools, 34 picks in total: a first setup, a Windows stack, a Claude Code kit, a fully local stack, and the tools that tell you…","url":"https://aaa.jeremyfhall.com/collections/","numberOfItems":5,"itemListOrder":"https://schema.org/ItemListUnordered","itemListElement":[{"@type":"ListItem","position":1,"name":"A first agentic setup","url":"https://aaa.jeremyfhall.com/collections/first-setup/"},{"@type":"ListItem","position":2,"name":"Runs on Windows, and says so","url":"https://aaa.jeremyfhall.com/collections/windows-first/"},{"@type":"ListItem","position":3,"name":"The Claude Code power kit","url":"https://aaa.jeremyfhall.com/collections/claude-code-kit/"},{"@type":"ListItem","position":4,"name":"Nothing leaves the laptop","url":"https://aaa.jeremyfhall.com/collections/local-only/"},{"@type":"ListItem","position":5,"name":"Find out what the agent actually did","url":"https://aaa.jeremyfhall.com/collections/keep-it-honest/"}]}</script>
 </head>
 <body>
 <header><div class="wrap">
@@ -79,7 +83,7 @@ try {
   <p class="intro">The atlas has 1,294 projects in it, which is the wrong number to start from. This is one working setup instead: an agent, the things it loads, the place it runs, and the two tools that tell you afterwards whether it did what you asked…</p>
   <p class="meta"><span class="tag">The agent</span><span class="tag">What it knows how to do</span><span class="tag">What it remembers</span><span class="tag">How it reaches your tools</span><span class="tag">Where it runs</span><span class="tag">What it actually did</span><span class="tag">What to read while it runs</span></p>
   <p class="meta ev"><b>7</b> picks ·
-    <b>839,804</b> combined stars</p>
+    <b>840,100</b> combined stars</p>
 </li>
 <li class="coll">
   <p class="kick">Stated support, not inferred</p>
@@ -87,7 +91,7 @@ try {
   <p class="intro">Most agentic tooling is written on a Mac and tested on Linux, and &quot;it&#x27;s Python, it&#x27;ll be fine&quot; is how a Windows afternoon disappears. The atlas records a per-platform verdict for every project, and it distinguishes stated support from…</p>
   <p class="meta"><span class="tag">The framework</span><span class="tag">The harness</span><span class="tag">The coding agent</span><span class="tag">The model runner</span><span class="tag">The inference engine</span><span class="tag">The context budget</span><span class="tag">The sandbox</span></p>
   <p class="meta ev"><b>7</b> picks ·
-    <b>931,374</b> combined stars · every pick's os claim re-checked at build time</p>
+    <b>931,647</b> combined stars · every pick's os claim re-checked at build time</p>
 </li>
 <li class="coll">
   <p class="kick">What to install after the agent</p>
@@ -95,7 +99,7 @@ try {
   <p class="intro">Claude Code is the harness the largest single share of this atlas is built for. Installing it is ten seconds; the next hour is the part nobody writes down. These seven cover the format skills come in, three bundles worth reading before…</p>
   <p class="meta"><span class="tag">The format</span><span class="tag">The bundle</span><span class="tag">The instructions file</span><span class="tag">The engineering set</span><span class="tag">The token diet</span><span class="tag">The bill</span><span class="tag">Where to look next</span></p>
   <p class="meta ev"><b>7</b> picks ·
-    <b>960,930</b> combined stars · every pick's target claim re-checked at build time</p>
+    <b>961,409</b> combined stars · every pick's target claim re-checked at build time</p>
 </li>
 <li class="coll">
   <p class="kick">A local stack, top to bottom</p>
@@ -103,7 +107,7 @@ try {
   <p class="intro">Sometimes the requirement is not cost or latency but that the code, the documents and the prompts stay on hardware you own. That rules out most of the atlas. What is left is a genuine stack: an engine, a runner in front of it, a chat…</p>
   <p class="meta"><span class="tag">The runner</span><span class="tag">The engine</span><span class="tag">The zero-setup option</span><span class="tag">The chat surface</span><span class="tag">The consumer-hardware path</span><span class="tag">Your own documents</span><span class="tag">When one machine is not enough</span></p>
   <p class="meta ev"><b>7</b> picks ·
-    <b>681,457</b> combined stars · every pick's target claim re-checked at build time</p>
+    <b>681,620</b> combined stars · every pick's target claim re-checked at build time</p>
 </li>
 <li class="coll">
   <p class="kick">Traces, tests and scans</p>
@@ -111,7 +115,7 @@ try {
   <p class="intro">An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all…</p>
   <p class="meta"><span class="tag">The trace</span><span class="tag">The second opinion</span><span class="tag">The test suite</span><span class="tag">The metrics</span><span class="tag">The standard</span><span class="tag">The thing you install</span></p>
   <p class="meta ev"><b>6</b> picks ·
-    <b>115,753</b> combined stars</p>
+    <b>115,838</b> combined stars</p>
 </li>
 </ul>
 <section class="allin">

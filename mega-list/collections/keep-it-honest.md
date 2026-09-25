@@ -4,15 +4,15 @@
 
 An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put in front of a customer. Traces first, then tests, then the thing people leave until after the incident.
 
-6 picks · 115,753 combined stars · snapshot 2026-09-22
+6 picks · 115,838 combined stars · snapshot 2026-09-22
 
-[Open all 6 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
+[Open all 6 in the atlas](https://aaa.jeremyfhall.com/#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
 ---
 
 ## 1. The trace — [Langfuse](https://github.com/langfuse/langfuse)
 
-`langfuse/langfuse` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/langfuse/langfuse/)
+`langfuse/langfuse` · [detail page](https://aaa.jeremyfhall.com/repo/langfuse/langfuse/)
 
 Self-hostable, which matters here more than anywhere: the traces contain your prompts and your customers' data. The most widely adopted of the open options, and two source lists agree.
 
@@ -22,7 +22,7 @@ Self-hostable, which matters here more than anywhere: the traces contain your pr
 pip install langfuse openai
 ```
 
-**34,928** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22
+**34,944** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -32,7 +32,7 @@ Topic: Observability & Evals · Targets: Codex / OpenAI, LangChain / LangGraph
 
 ## 2. The second opinion — [Arize-Phoenix](https://github.com/Arize-ai/phoenix)
 
-`Arize-ai/phoenix` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/arize-ai/phoenix/)
+`Arize-ai/phoenix` · [detail page](https://aaa.jeremyfhall.com/repo/arize-ai/phoenix/)
 
 Three source lists carry it -- the strongest agreement in this category -- and it pairs a trace UI with an eval runtime, so you can grade the runs you are looking at.
 
@@ -42,7 +42,7 @@ Three source lists carry it -- the strongest agreement in this category -- and i
 npx @arizeai/phoenix-cli setup
 ```
 
-**11,574** stars · 7 of 39 lists · Python · no licence stated · pushed 2026-09-22
+**11,579** stars · 7 of 39 lists · Python · no licence stated · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -52,7 +52,7 @@ Topic: Observability & Evals
 
 ## 3. The test suite — [promptfoo](https://github.com/promptfoo/promptfoo)
 
-`promptfoo/promptfoo` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/promptfoo/promptfoo/)
+`promptfoo/promptfoo` · [detail page](https://aaa.jeremyfhall.com/repo/promptfoo/promptfoo/)
 
 Tests as YAML, with assertions and LLM-as-judge. It is the lowest-ceremony way to turn "it seemed better" into something a pull request can fail on.
 
@@ -62,7 +62,7 @@ Tests as YAML, with assertions and LLM-as-judge. It is the lowest-ceremony way t
 npm install -g promptfoo
 ```
 
-**25,369** stars · 5 of 39 lists · TypeScript · MIT · pushed 2026-09-22
+**25,371** stars · 5 of 39 lists · TypeScript · MIT · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -72,7 +72,7 @@ Topic: Observability & Evals · Targets: Claude / Anthropic, Codex / OpenAI, Gem
 
 ## 4. The metrics — [DeepEval](https://github.com/confident-ai/deepeval)
 
-`confident-ai/deepeval` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/confident-ai/deepeval/)
+`confident-ai/deepeval` · [detail page](https://aaa.jeremyfhall.com/repo/confident-ai/deepeval/)
 
 Twenty-plus built-in metrics for LLM and agent evaluation. Use it when you have stopped arguing about whether output is good and started arguing about which axis.
 
@@ -82,7 +82,7 @@ Twenty-plus built-in metrics for LLM and agent evaluation. Use it when you have 
 pip install -U deepeval
 ```
 
-**18,388** stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22
+**18,397** stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -92,7 +92,7 @@ Topic: Observability & Evals
 
 ## 5. The standard — [OpenLLMetry](https://github.com/traceloop/openllmetry)
 
-`traceloop/openllmetry` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/traceloop/openllmetry/)
+`traceloop/openllmetry` · [detail page](https://aaa.jeremyfhall.com/repo/traceloop/openllmetry/)
 
 OpenTelemetry instrumentation for LLM calls and agent steps. The one pick here that does not lock you in: the traces go wherever your existing observability already goes.
 
@@ -112,7 +112,7 @@ Topic: Observability & Evals
 
 ## 6. The thing you install — [SkillSpector](https://github.com/NVIDIA/SkillSpector)
 
-`NVIDIA/SkillSpector` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/nvidia/skillspector/)
+`NVIDIA/SkillSpector` · [detail page](https://aaa.jeremyfhall.com/repo/nvidia/skillspector/)
 
 Scans agent skills for vulnerabilities. Every other page on this site encourages you to install other people's instructions; this is the tool that reads them first.
 
@@ -122,7 +122,7 @@ Scans agent skills for vulnerabilities. Every other page on this site encourages
 uv tool install git+https://github.com/NVIDIA/skillspector.git
 ```
 
-**18,051** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22
+**18,104** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

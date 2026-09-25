@@ -14,7 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awesome Agentic Atlas — browse and discover agentic AI projects</title>
 <meta name="description" content="8,858 agentic AI projects merged from 39 awesome-lists, on shelves with a stated reason for each one: named by three or more lists, shipped this week, hidden gems, runs on Windows. Snapshot 2026-09-22.">
-<meta name="atlas-build" content="b1cf162c1d09">
+<meta name="atlas-build" content="68892c6b6061">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Awesome Agentic Atlas — browse and discover agentic AI projects">
@@ -32,7 +32,11 @@ try {
   var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
                glass: {dark: "#12141D", light: "#F8FAFF"},
                terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"}};
+               prism: {dark: "#17112C", light: "#FDFBFF"},
+               sherbet: {dark: "#272040", light: "#FFFCF8"},
+               riso: {dark: "#1E1E29", light: "#FBF8F1"},
+               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
+               aurora: {dark: "#101936", light: "#FBFCFF"}};
   var s = localStorage.getItem("atlas-skin");
   if (!PLANE[s]) s = "graphite";
   document.documentElement.dataset.skin = s;
@@ -52,6 +56,8 @@ try {
 html[data-skin=glass]{--fx-glow:1; --fx-pulse:1}
 html[data-skin=terminal]{--fx-glow:1; --fx-pulse:1; --fx-scan:1}
 html[data-skin=prism]{--fx-glow:1; --fx-pulse:1}
+html[data-skin=sherbet]{--fx-glow:1}
+html[data-skin=aurora]{--fx-glow:1}
 :root{
   --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
   --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
@@ -320,22 +326,26 @@ html[data-theme=light] .ph{--surface:#090A0D;--band:#20242D;--ink:#F7F8FA;--ink2
 html[data-skin=glass][data-theme=light] .ph{--surface:#070912;--band:#1C1E26;--ink:#F4F7FF;--ink2:#CBD5E8;color:#F4F7FF}
 html[data-skin=terminal][data-theme=light] .ph{--surface:#050B0D;--band:#132220;--ink:#D8F5E6;--ink2:#A8D8C4;color:#D8F5E6}
 html[data-skin=prism][data-theme=light] .ph{--surface:#0B0718;--band:#241A3F;--ink:#FBF7FF;--ink2:#DCD2F0;color:#FBF7FF}
+html[data-skin=sherbet][data-theme=light] .ph{--surface:#1E1830;--band:#32294F;--ink:#FFF1E6;--ink2:#EEDCE6;color:#FFF1E6}
+html[data-skin=riso][data-theme=light] .ph{--surface:#16161F;--band:#282835;--ink:#F5F0E6;--ink2:#DCD6CA;color:#F5F0E6}
+html[data-skin=blueprint][data-theme=light] .ph{--surface:#0B3D91;--band:#104BA6;--ink:#F4F8FF;--ink2:#DCE8FF;color:#F4F8FF}
+html[data-skin=aurora][data-theme=light] .ph{--surface:#0A1128;--band:#172244;--ink:#F1F5FF;--ink2:#CFD7F0;color:#F1F5FF}
 .setwrap{position:relative;display:inline-block}
 header.setopen{z-index:30}
-.setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:236px;text-align:left;
+.setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:280px;text-align:left;
   background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
   padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75)}
 .setmenu[hidden]{display:none}
 .setlab{margin:14px 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase;
   letter-spacing:.07em;font-weight:600}
 .setlab:first-child{margin-top:0}
-.setths{display:flex;flex-direction:column;gap:2px;margin-top:2px}
-.thb{display:flex;align-items:center;gap:9px;width:100%;min-height:36px;padding:0 9px;
+.setths{display:grid;grid-template-columns:1fr 1fr;gap:2px 4px;margin-top:2px}
+.thb{display:flex;align-items:center;gap:7px;width:100%;min-height:36px;padding:0 7px;
   background:none;border:1px solid transparent;border-radius:8px;color:var(--ink2);font-size:13px;
   text-align:left}
 .thb:hover{border-color:var(--grid);color:var(--ink)}
 .thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600}
-.thsw{display:inline-flex;flex:none;width:34px;height:14px;border-radius:999px;overflow:hidden;
+.thsw{display:inline-flex;flex:none;width:28px;height:14px;border-radius:999px;overflow:hidden;
   border:1px solid var(--grid)}
 .thsw i{flex:1}
 header .top nav a.ghstar{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:3px 10px;
@@ -483,6 +493,18 @@ header.danceopen{z-index:30}
           <button type="button" class="thb" data-skin="prism" aria-pressed="false"><span
             class="thsw" aria-hidden="true"><i style="background:#0B0718"></i><i
             style="background:#FF9BD2"></i><i style="background:#8FD0FF"></i></span>Prism</button>
+          <button type="button" class="thb" data-skin="sherbet" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#1E1830"></i><i
+            style="background:#FF7AA2"></i><i style="background:#A8B4FF"></i></span>Sherbet</button>
+          <button type="button" class="thb" data-skin="riso" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#16161F"></i><i
+            style="background:#FF5CB8"></i><i style="background:#6FB4EA"></i></span>Riso</button>
+          <button type="button" class="thb" data-skin="blueprint" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#0B3D91"></i><i
+            style="background:#FFB27A"></i><i style="background:#B5ECFF"></i></span>Blueprint</button>
+          <button type="button" class="thb" data-skin="aurora" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#0A1128"></i><i
+            style="background:#2EC4B6"></i><i style="background:#8CC8FF"></i></span>Aurora</button>
         </div>
       </div>
     </div>
@@ -736,7 +758,7 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 })();
 </script>
 
-<script type="module" src="assets/archie.js?v=8fb8ca29f4"></script>
+<script type="module" src="assets/archie.js?v=55ad477631"></script>
 <script type="module" src="assets/archie-dance.js?v=07eb812405"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script>
 </body>
