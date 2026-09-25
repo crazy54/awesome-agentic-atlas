@@ -25,7 +25,9 @@
 // To the music, fed as the beat detector feeds it (`archie:music`, `archie:beat`, `window.archieMusic`): he
 // dances and the rig is lit while the beats come; two seconds after they stop, the dance is cut off where it
 // was and he only idles, the rig still hung but dark and still, until the beats come back and so does it;
-// and with music mode off, the rig is hauled away.
+// and with music mode off, the rig is hauled away. While music mode is on ("Dance with me"), the house lights
+// are down: the page dims around the masthead, through the quiet as well, and not the masthead or anything the
+// reader clicks; and the rig's heads run brighter than a dance without music can make them.
 //
 // The heavy parts of the music choose his dance: steady music never gets a rave dance, the bass coming in hard
 // over its own recent run cuts whatever he is dancing short for the headbang, and the bass going out of it
@@ -284,6 +286,13 @@ const DANCE = Object.keys(Function(`return ${SRC.match(/const BEATS = (\{[^}]*\}
 const act = () => ev(`document.querySelector(".mhmascot").dataset.act || ""`);
 const rigIs = () => ev(`document.querySelector(".mhmascot").dataset.rig || ""`);
 const lasersOn = () => ev(`[...document.body.children].some(e => e.tagName === "CANVAS" && e.style.display !== "none")`);
+// The rig's heads, from its own status (`window.archieRig`): the brightest of them now, 0 when all are dark.
+const headsUp = () => ev(`Math.max(0, ...window.archieRig.status().heads)`);
+const dim = () => ev(`(() => { const h = document.querySelector(".archie-house"), r = document.querySelector("header").getBoundingClientRect();
+  if (!h || h.style.display === "none") return "off";
+  const b = h.getBoundingClientRect(), cs = getComputedStyle(h);
+  return JSON.stringify({o: +cs.opacity, pe: cs.pointerEvents, shade: cs.boxShadow.startsWith("rgba(0, 0, 0,"),
+    hole: Math.max(...["left", "top", "width", "height"].map(k => Math.abs(b[k] - r[k])))}); })()`);
 const beats = on => ev(on
   ? `window.__beats = setInterval(() => document.dispatchEvent(new CustomEvent("archie:beat",
        {detail: {strength: 0.9, bpm: 120, at: window.__lastBeat = performance.now()}})), 500)`
@@ -295,9 +304,17 @@ ok("music mode on, before a beat: the rig hangs, dark", await until(`document.qu
 await beats(true);
 ok("...the beat: he dances", await until(`${JSON.stringify(DANCE)}.includes(document.querySelector(".mhmascot").dataset.act)`, 25000),
    await act());
-ok("...and the rig lights up, lasers and all", await until(`document.querySelector(".mhmascot").dataset.rig === "lit"`, 4000) &&
-   await lasersOn(), `${await rigIs()} lasers=${await lasersOn()}`);
-await sleep(2000);
+ok("...and the rig lights up", await until(`document.querySelector(".mhmascot").dataset.rig === "lit"`, 4000) &&
+   await headsUp() > 0, `${await rigIs()} heads=${await headsUp()}`);
+{
+  const d = JSON.parse(await dim() === "off" ? "{}" : await dim());
+  ok("...the house lights down: the page dims round the masthead, which stays as it was, and nothing is blocked",
+     d.o > 0.9 && d.pe === "none" && d.shade && d.hole < 1.5, JSON.stringify(d));
+  // A head is at most 1.1 without music mode's boost (the rig's level, times a kick's pulse of at most 1.1).
+  let top = 0;
+  for (let i = 0; i < 8; i++) { top = Math.max(top, await headsUp()); await sleep(250); }
+  ok("...and the stage's lights come up brighter than a dance alone makes them", top > 1.15, `brightest head ${top}`);
+}
 const dancing = await act();
 await beats(false);
 const cut = await until(`document.querySelector(".mhmascot").dataset.act === "idle"`, 5000);
@@ -306,11 +323,12 @@ ok("quiet: two seconds on, the dance is cut off where it was", cut && after >= 1
    `${dancing} -> ${await act()} ${Math.round(after)} ms after the last beat`);
 ok("...the rig still hung, but dark", await until(`document.querySelector(".mhmascot").dataset.rig === "dark"`, 2000),
    await rigIs());
-ok("...and the lasers off", !(await lasersOn()));
+ok("...the heads and the lasers off", !(await lasersOn()) && await headsUp() === 0, `heads=${await headsUp()}`);
 const held = [];
 for (let i = 0; i < 40; i++) { held.push(`${await act()}/${await rigIs()}`); await sleep(250); }
 ok("...and so it stays through the quiet: no dance, no act, nothing lit", held.every(h => h === "idle/dark"),
    [...new Set(held)].join(" "));
+ok("...the house lights still down between songs", (await dim()) !== "off", await dim());
 await beats(true);
 ok("the beat back: he dances again", await until(`${JSON.stringify(DANCE)}.includes(document.querySelector(".mhmascot").dataset.act)`, 25000),
    await act());
@@ -320,6 +338,7 @@ await ev(`delete window.archieMusic;
   document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: false, source: "mic"}}))`);
 ok("music mode off: the rig is hauled away", await until(`document.querySelector(".mhmascot").dataset.rig === "away"`, 6000),
    await rigIs());
+ok("...and the house lights come back up", (await dim()) === "off", await dim());
 
 // ---- the heavy parts
 const RAVE = ["headbang", "the-drop"];
