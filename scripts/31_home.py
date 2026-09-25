@@ -1269,6 +1269,12 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 # goes first, because it is cache-first and would otherwise answer those very requests from itself; it is
 # refilled with the fresh bytes afterwards, so an offline reader still has a shell. `atlas-data` and the
 # other runtime caches are network-first and stay, since online they are never what a reader is shown.
+#
+# The worker's own update check is asked for last, and waited on for three seconds at most. A promise from
+# `reg.update()` that never settles is not hypothetical. On CI it never settled, run after run, with the
+# worker active and nothing installing or waiting (pwa-check's detail names it). Unbounded, it left the
+# button reading "Updating..." forever with every fresh byte already in hand. The reload does not need
+# the answer: the new document's own registration runs the same check, with `updateViaCache: "none"`.
 UPDATE_JS = r"""<script>
 (() => {
   const mine = document.querySelector('meta[name="atlas-build"]');
@@ -1298,7 +1304,7 @@ UPDATE_JS = r"""<script>
         for (const u of list) if (fresh.has(u)) await c.put(u, fresh.get(u).clone());
       }
       const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
-      if (reg) await reg.update().catch(() => {});
+      if (reg) await Promise.race([reg.update().catch(() => {}), new Promise((r) => setTimeout(r, 3000))]);
     } catch {}
     location.reload();
   };
