@@ -2702,10 +2702,10 @@ __OSSPRITE__
          and Collections answers it with one. -->
     <a href="__UP__discover/">Discover</a> ·
     <a href="__UP__collections/">Collections</a> ·
-    <a href="https://github.com/__REPO__/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+    <a href="https://github.com/__REPO__/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="__UP__repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/__REPO__">Repository</a> ·
-    <a href="https://github.com/__REPO__/tree/main/mega-list">Markdown</a> ·
+    <a href="https://github.com/__REPO__/tree/HEAD/mega-list">Markdown</a> ·
     <a href="https://github.com/__REPO__/releases/latest">Workbook</a><br>
     <!-- SETTINGS, and the light/dark toggle is *moved* into it rather than replaced by it. `#theme` keeps
          its id, its changing label and its handler, because three other things already depend on that

@@ -640,11 +640,11 @@ def nav() -> str:
     """The header navigation, matching `20_landing.py`'s so the page families feel like one site."""
     return f"""  <nav>
     <a href="{esc(rel('collections/'))}">Collections</a> &middot;
-    <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> &middot;
+    <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> &middot;
     <a href="{esc(rel('repo/'))}">All projects</a> &middot;
     <a href="{esc(rel())}#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/{esc(REPO)}">Repository</a> &middot;
-    <a href="https://github.com/{esc(REPO)}/tree/main/mega-list">Markdown</a><br>
+    <a href="https://github.com/{esc(REPO)}/tree/HEAD/mega-list">Markdown</a><br>
     <button class="chip" id="theme" aria-pressed="false">Light theme</button>
   </nav>"""
 
@@ -694,7 +694,7 @@ def render(published: dict, data: dict, day: str) -> str:
       the <a href="{esc(rel())}">front page</a> already ranks by them, and a Discover that consulted them
       would be the front page with a different heading.</p>
     <p>The week's seven days are picked at once, on Sunday, and written to
-      <a href="https://github.com/{esc(REPO)}/blob/main/docs/discover.json">discover.json</a> &mdash; so
+      <a href="https://github.com/{esc(REPO)}/blob/HEAD/docs/discover.json">discover.json</a> &mdash; so
       today's {total} are the same {total} for everyone, they can be linked to, and they are still here
       when you come back this afternoon. The day turns over at midnight, {esc(zone)} time.</p>
   </section>
@@ -704,7 +704,7 @@ def render(published: dict, data: dict, day: str) -> str:
   it being resampled. Stars, language and last-push come from the GitHub API on
   {esc(published['snapshot'])} and drift daily; the picks are fixed for the week. Everything here is also
   in the <a href="{esc(rel())}">searchable index</a>, on each project's own page, and in the
-  <a href="https://github.com/{esc(REPO)}/tree/main/mega-list">Markdown edition</a>.
+  <a href="https://github.com/{esc(REPO)}/tree/HEAD/mega-list">Markdown edition</a>.
 </div></footer>
 {core_js()}{PAGE_JS}{THEME_JS}{b19.beacon()}</body>
 </html>

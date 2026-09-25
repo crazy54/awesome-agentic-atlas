@@ -337,11 +337,11 @@ def nav(depth: int) -> str:
     return f"""  <nav>
     <a href="{rel(depth, 'discover/')}">Discover</a> ·
     <a href="{rel(depth, 'collections/')}">Collections</a> ·
-    <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+    <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="{rel(depth, 'repo/')}">All projects</a> ·
     <a href="{rel(depth)}#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/{esc(REPO)}">Repository</a> ·
-    <a href="https://github.com/{esc(REPO)}/tree/main/mega-list">Markdown</a><br>
+    <a href="https://github.com/{esc(REPO)}/tree/HEAD/mega-list">Markdown</a><br>
     <button class="chip" id="theme" aria-pressed="false">Light theme</button>
   </nav>"""
 
@@ -357,7 +357,7 @@ def foot(depth: int, snapshot: str, lists: int) -> str:
   <a href="{rel(depth)}">Awesome Agentic Atlas</a> &mdash; every other page is what {lists}
   awesome-lists agreed on, ranked by a number GitHub maintains. Here somebody chose, the reasoning is
   printed beside each pick, and the curation is a
-  <a href="https://github.com/{esc(REPO)}/blob/main/config/collections.json">reviewable file</a> you can
+  <a href="https://github.com/{esc(REPO)}/blob/HEAD/config/collections.json">reviewable file</a> you can
   open an issue against. Stars, language, licence and last-push come from the GitHub API on
   {esc(snapshot)} and drift daily. Platform verdicts are derived from each project's own README, install
   route, CI config and release assets &mdash; <span class="vY">green</span> is stated evidence,
@@ -572,7 +572,7 @@ def render_hub(colls: list[dict], data: dict) -> str:
 <section class="allin">
   <h2>How these are made</h2>
   <p>The picks live in
-    <a href="https://github.com/{esc(REPO)}/blob/main/config/collections.json">one JSON file</a>, so a
+    <a href="https://github.com/{esc(REPO)}/blob/HEAD/config/collections.json">one JSON file</a>, so a
     disagreement is a diff rather than an argument about a rendered page. Every pick is checked against
     the committed snapshot before anything is published: a project that has left the atlas, or a
     "runs on Windows" pick whose platform verdict has dropped from stated to inferred, fails the build
@@ -625,7 +625,7 @@ def markdown(coll: dict, data: dict, lists: int) -> str:
                 "---", ""]
     out += ["These are editorial picks — the only editorial pages on the atlas. Everything else here is "
             f"what {lists} awesome-lists agreed on. The curation is a "
-            f"[reviewable file](https://github.com/{REPO}/blob/main/config/collections.json); open an "
+            f"[reviewable file](https://github.com/{REPO}/blob/HEAD/config/collections.json); open an "
             "issue if you would pick differently.", ""]
     return "\n".join(out)
 
