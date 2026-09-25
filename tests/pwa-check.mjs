@@ -334,6 +334,21 @@ const shellBefore = await shellUrls();
 await evalIn(`caches.open(${JSON.stringify(shellName)}).then(c => c.put(new URL("pages.css", location.href).href,
   new Response("/* stale */", {headers: {"Content-Type": "text/css"}}))).then(() => true)`);
 const clickedAt = events.length;
+// Every promise refresh() waits on, wrapped so a red can say which never settled: each fetch, each cache
+// call, and the registration's update(). Wrapping only adds bookkeeping; the calls themselves are the
+// page's own.
+await evalIn(`(() => {
+  const log = window.__refreshCalls = [];
+  const track = (what, p) => { const e = {what, done: false}; log.push(e);
+    p.then(() => { e.done = true; }, () => { e.done = "rejected"; }); return p; };
+  const f = window.fetch; window.fetch = (u, o) => track("fetch " + String(u).replace(location.origin, ""), f(u, o));
+  for (const k of ["keys", "open", "delete"]) { const m = caches[k].bind(caches); caches[k] = (...a) => track("caches." + k, m(...a)); }
+  const put = Cache.prototype.put; Cache.prototype.put = function (u, r) { return track("put " + String(u).replace(location.origin, ""), put.call(this, u, r)); };
+  const up = ServiceWorkerRegistration.prototype.update; ServiceWorkerRegistration.prototype.update = function () { return track("reg.update", up.call(this)); };
+  const gr = navigator.serviceWorker.getRegistration.bind(navigator.serviceWorker);
+  navigator.serviceWorker.getRegistration = (...a) => track("getRegistration", gr(...a));
+  return true;
+})()`);
 await evalIn("window.__beforeUpdate = 1; document.querySelector('.updbar .updgo')?.click(); true");
 let reloaded = false;
 for (let i = 0; i < 100 && !reloaded; i++) {
@@ -355,7 +370,9 @@ const open = sinceClick.filter(e => e.method === "Network.requestWillBeSent" && 
 const whereReload = reloaded ? "" : await evalIn(`navigator.serviceWorker.getRegistration().then(r => JSON.stringify({
   before: window.__beforeUpdate || 0, ready: document.readyState,
   btn: document.querySelector(".updbar .updgo")?.textContent || null,
-  sw: r ? {installing: r.installing?.state || null, waiting: r.waiting?.state || null, active: r.active?.state || null} : null}))`)
+  sw: r ? {installing: r.installing?.state || null, waiting: r.waiting?.state || null, active: r.active?.state || null} : null,
+  unsettled: (window.__refreshCalls || []).filter(e => !e.done).map(e => e.what).slice(0, 8),
+  calls: (window.__refreshCalls || []).length}))`)
   .then(v => v + " no finish event seen for " + JSON.stringify([...new Set(open)].slice(0, 8)))
   .catch(e => "unreadable: " + e.message);
 ok("the button reloads the page", reloaded, whereReload);
