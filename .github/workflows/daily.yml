@@ -584,10 +584,11 @@ jobs:
             if [ ! -e "$f" ]; then printf '%s\n' "$f" >> "$RUNNER_TEMP/deleted"; continue; fi
             if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
             case "$f" in
-              # The three hand-checked-in files -- see weekly.yml for the whole note, including why this is
-              # a list of three names and not `docs/assets/*`. They are not in the skip above because they
-              # are not weekly's either: nothing in this repository generates them, on any schedule.
-              docs/CNAME|docs/favicon.svg|docs/assets/atlas-byte.png)
+              # The hand-checked-in files -- see weekly.yml for the whole note, including why `docs/*.png`
+              # would be wrong while `docs/assets/*` is right: nothing under `docs/assets/` is generated.
+              # They are not in the skip above because they are not weekly's either: nothing in this
+              # repository generates them, on any schedule.
+              docs/CNAME|docs/favicon.svg|docs/assets/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/static" ;;
               # The redesign beta -- see weekly.yml for the whole note, including why it is its own arm
               # rather than the `static` list above. It is not in the skip at the top of this step either:
