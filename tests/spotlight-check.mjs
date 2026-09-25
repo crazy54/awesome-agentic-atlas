@@ -66,7 +66,7 @@ await S("Emulation.setTimezoneOverride", {timezoneId: "America/Chicago"});
 // Layout shifts from the very first one, including those before any script of ours could observe.
 await S("Page.addScriptToEvaluateOnNewDocument", {source: `(() => {
   window.__shifts = [];
-  try { new PerformanceObserver(l => { for (const e of l.getEntries()) window.__shifts.push({v: e.value, t: Math.round(e.startTime), rects: (e.sources || []).map(s => [s.previousRect.y, s.previousRect.height, s.currentRect.y, s.currentRect.height].map(Math.round)),
+  try { new PerformanceObserver(l => { for (const e of l.getEntries()) window.__shifts.push({v: e.value, t: Math.round(e.startTime), rects: (e.sources || []).map(s => [s.previousRect.x, s.previousRect.y, s.previousRect.width, s.previousRect.height, s.currentRect.x, s.currentRect.y, s.currentRect.width, s.currentRect.height].map(v => Math.round(v * 10) / 10)),
     who: (e.sources || []).map(s => s.node && s.node.nodeType === 1 ? (s.node.closest(".hero") ? "hero" :
       s.node.closest(".daily") ? "daily" : s.node.closest(".bystrip") ? "bystrip" : s.node.className || s.node.tagName) : "?")}); })
     .observe({type: "layout-shift", buffered: true}); } catch (e) {}
