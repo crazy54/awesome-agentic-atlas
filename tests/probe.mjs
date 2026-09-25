@@ -2165,9 +2165,17 @@ if (discHTML && discPlan) {
       // do reach are named. Without this the assertion above could be comparing fifty cards that all took
       // the same branch -- see the fixtures below for the three arms no real day currently reaches.
       const has = (re) => built.filter(h => re.test(h)).length;
-      ok("...over cards with a language and cards without one",
-         has(/stars · [^<·]+ ·/) > 0 && has(/<b>[\d,]+<\/b> stars · \d+ lists?<\/p>/) > 0,
-         has(/stars · [^<·]+ ·/) + " with, " + has(/<b>[\d,]+<\/b> stars · \d+ lists?<\/p>/) + " without");
+      // "Without a language" is read off the whole meta line, stars or none. The pattern this replaced
+      // required `<b>N</b> stars ·` in front, so it only counted a starred card with no language, and a
+      // starless one (`<p class="dmeta">1 list</p>`) fell into neither count. On 24 September the rail's
+      // only two cards without a language were both starless, and this reported "48 with, 0 without" on
+      // a day that reached both arms.
+      const withLang = has(/<p class="dmeta">(?:<b>[\d,]+<\/b> stars · )?[^<·]+ · \d+ lists?<\/p>/);
+      const noLang = has(/<p class="dmeta">(?:<b>[\d,]+<\/b> stars · )?\d+ lists?<\/p>/);
+      ok("...over cards with a language and cards without one", withLang > 0 && noLang > 0,
+         withLang + " with, " + noLang + " without");
+      ok("...and every card is one or the other, so neither count is missing a shape of meta line",
+         withLang + noLang === built.length, `${withLang} + ${noLang} of ${built.length}`);
       ok("...and cards on one list and on several", has(/· 1 list</) > 0 && has(/· \d+ lists</) > 0,
          has(/· 1 list</) + " on one, " + has(/· \d+ lists</) + " on several");
     }
@@ -2175,7 +2183,8 @@ if (discHTML && discPlan) {
     // ---- the three arms the real corpus does not currently reach
     //
     // No row in the committed atlas has a `first_seen`, because the arrivals ledger is written by a CI
-    // build, so the `New` badge is on none of the fifty. Nor is any of them starless. Those are the arms
+    // build, so the `New` badge is on none of the fifty. Whether any of them is starless depends on the
+    // day (two were on 24 September, none when this was first written). Those are the arms
     // most likely to be wrong and least likely to be noticed, so they are fixtures -- and the expected
     // markup below is written out by hand rather than taken from either renderer, because a comparison
     // between two implementations proves they agree and not that either is right.
