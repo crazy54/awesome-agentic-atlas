@@ -134,7 +134,11 @@ jobs:
     # three browser harnesses are 20 more. Twenty minutes is roughly eight times the expected worst case,
     # which leaves room for a slow runner and still fails rather than hanging: `run.mjs` streams each
     # harness's output as it goes, so a job killed here shows exactly which harness stopped producing.
-    timeout-minutes: 20
+    # That estimate is out of date. The four Archie harnesses under swiftshader brought latest_branch's run
+    # to about 17 minutes on 2026-09-25, and a branch run the same day was cancelled at the 20-minute limit.
+    # The admin panel's harness adds another. 30 minutes restores some headroom, and the job still fails
+    # rather than hangs.
+    timeout-minutes: 30
 
     steps:
       # `indexnow_test.py` asserts against the *tracked* paths under `docs/` rather than a walk of the

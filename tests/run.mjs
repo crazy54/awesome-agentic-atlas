@@ -219,6 +219,17 @@ const HARNESSES = [
   {file: "stage-check.mjs", label: "Archie's stage by its pixels: the wall's picture moving, and pyro, CO2, haze and blinders seen", needs: "browser", floor: 45},
 ];
 
+// Every harness in this directory is in the list above. `admin-check.mjs` sat here unregistered, so
+// neither this runner nor CI ever ran it, and by the time it was found three of its assertions described a
+// page that no longer existed. Enumerated off the directory, not off HARNESSES, because a loop over the list
+// cannot see what is missing from it. A harness is any .py or .mjs here except this runner; `lib/` holds
+// helpers, not harnesses. This does not stop the run, it reddens it: a new file should not hide the rest.
+const UNREGISTERED = readdirSync(HERE, {withFileTypes: true})
+  .filter((d) => d.isFile() && /\.(py|mjs)$/.test(d.name) && d.name !== "run.mjs")
+  .map((d) => d.name).filter((f) => !HARNESSES.some((h) => h.file === f)).sort();
+if (UNREGISTERED.length)
+  console.log(`not in HARNESSES, so never run: ${UNREGISTERED.join(", ")} -- add each, with a floor`);
+
 // Both entry points, because the site has two and either one missing is a different broken build:
 // `index.html` is the shelves homepage from `31_home.py`, `catalog/index.html` the catalogue from
 // `19_pages.py`. Two checks rather than one, so the message can name the stage that did not run.
@@ -386,5 +397,9 @@ if (results.length < HARNESSES.length)
   console.log(`  ${HARNESSES.length - results.length} harness(es) never ran`);
 console.log(`  ${results.length} of ${HARNESSES.length} harnesses · ${passed} passed, ${failed} failed`);
 if (results.length < HARNESSES.length) exit = exit || 1;
+if (UNREGISTERED.length) {
+  console.log(`  ${UNREGISTERED.length} harness file(s) not registered, and not run: ${UNREGISTERED.join(", ")}`);
+  exit = exit || 1;
+}
 console.log(exit === 0 && failed === 0 ? "\ngreen" : "\nRED");
 process.exit(exit || (failed ? 1 : 0));
