@@ -5,12 +5,14 @@ Run it headless and it writes three files:
     blender --background --factory-startup --python art/archie/archie.py
 
   * `art/archie/archie.blend`  -- the scene, for anyone who wants to open it and push vertices around.
-  * `docs/assets/archie.glb`   -- the animated model the homepage banner loads, with twenty named glTF
+  * `docs/assets/archie.glb`   -- the animated model the homepage banner loads, with twenty-two named glTF
                                   animations at 30 fps: `idle` (a four-second loop: sway, foot tap,
                                   blinks), `watch`, `sit`, `sleep`, thirteen Fortnite dances (`floss`,
                                   `take-the-l`, `default-dance`, `orange-justice`, `robot`,
                                   `electro-shuffle`, `hype`, `boogie-down`, `get-griddy`, `billy-bounce`,
                                   `fresh`, `scenario`, `groove-jam`) of fifteen or sixteen seconds each,
+                                  two rave dances for the music's heavy parts (`headbang`,
+                                  `the-drop`) of sixteen,
                                   `press` (jabbing at a button that won't work), `shrug`, and `walk`,
                                   one stride in place that the page moves across the banner. Every clip
                                   but `idle` and `walk` starts and ends on the idle's first pose, so the
@@ -508,6 +510,15 @@ def build():
         ball(f"fist-{name}", hand, (0, 0, 0), (0.1, 0.095, 0.1), body)
         for i in range(3):                                           # knuckles, on the fist's front
             ball(f"knuckle-{name}-{i}", hand, (0, -0.075, 0.045 - i * 0.045), (0.05, 0.035, 0.028), body)
+        # Two fingers, the index and the little one, for the rave's horns and for praying hands, on the fist's
+        # two edges so the folded knuckles show between them. Built folded back along the forearm, leaning in
+        # to stay inside it and the fist, so every clip that does not ask for them is the same picture it
+        # was; `fingers()` swings them out.
+        for j, fx in enumerate((-0.06, 0.06)):
+            f = P[f"finger-{name}-{j}"] = empty(f"finger-{name}-{j}", hand, (fx, -0.03, -0.03),
+                                                (0, math.radians(FOLD if j == 0 else -FOLD), 0))
+            rod(f"finger-rod-{name}-{j}", f, (0, 0, 0.09), (0, 0, 0), 0.026, 0.18, body, 12)
+            ball(f"fingertip-{name}-{j}", f, (0, 0, 0.18), (0.026, 0.026, 0.026), body, segs=12, rings=6)
     # Thumb on the right fist, pointing along the forearm's continuation -- which the pose turns skyward.
     ball("thumb", P["hand-right"], (0, -0.02, -0.12), (0.035, 0.035, 0.07), body)
     # The watch, on the left wrist, for the clip that looks at it.
@@ -1014,6 +1025,87 @@ def groove_jam(t):
     return pose, {"hips": (0.08 * step * on, 0, (-0.06 + 0.035 * (1 - bounce)) * on)}, blink(t, 0.4)
 
 
+# How far each folded finger leans in toward the forearm's axis, in degrees, to stay inside it.
+FOLD = 15
+
+
+def fingers(side: str, out: float, splay=12.0) -> dict:
+    """The side's two fingers swung `out` of the fist, 0 folded away to 1 straight on along the forearm,
+    and each spread `splay` degrees out from it: with the default, the rock-on horns."""
+    return {f"finger-{side}-0": (180 * out, (splay - FOLD) * out, 0),
+            f"finger-{side}-1": (180 * out, (FOLD - splay) * out, 0)}
+
+
+def bang(p: float) -> float:
+    """How far down the head is in a headbang at `p` beats: at the bottom on each beat, snapped down into it
+    over the last fifth of the beat before and lifted slowly out of it."""
+    f = p % 1.0
+    return 1 - smooth01(f / 0.7) if f < 0.8 else smooth01((f - 0.8) / 0.2)
+
+
+def headbang(t):
+    """The headbang, for the heavy sections: the head slammed down on every beat and the chest following it,
+    the knees giving with each hit and the first beat of each bar the hardest, the left arm straight up
+    throwing the horns and pumping them on the beat, the right fist low in front, bouncing along."""
+    on = envelope(t, 0.0, 0.06, 0.94, 1.0)
+    n = 8
+    p = n * t
+    d = bang(p) * (1.2 if math.floor(p + 0.2) % 4 == 0 else 1.0)
+    # Out to the side and the forearm straight up, not overhead: his arms are too short to clear the helmet,
+    # and a fist beside it has the headphone cup behind it and does not read.
+    pose = mix(REST, {**REST, "upper-left": (-10, -125, 0), "elbow-left": (0, -40, 0),
+                      "upper-right": (-25, 14, 0), "elbow-right": (-55, 0, 0), **fingers("left", 1)}, on)
+    add(pose, "head", dx=(-10 + 40 * d) * on)
+    add(pose, "torso", dx=12 * d * on)
+    add(pose, "upper-left", dx=-12 * d * on, dy=8 * d * on)          # the horns punch forward on the hit
+    add(pose, "elbow-left", dy=-20 * d * on)
+    add(pose, "upper-right", dx=-10 * d * on)
+    for side in ("right", "left"):
+        add(pose, f"knee-{side}", dx=(10 + 22 * d) * on)
+        add(pose, f"leg-{side}", dx=(-5 - 11 * d) * on)
+    add(pose, "antenna", dx=-24 * d * on)
+    add(pose, "orbit", dz=-720 * t)
+    return pose, {"hips": (0, 0, (-0.02 - 0.05 * d) * on)}, blink(t, 0.45)
+
+
+# The drop's 32 beats: praying through the build until `DROP`, then banging to the end.
+DROP = 8
+
+
+def the_drop(t):
+    """The drop, dubstep's: through the build he stands with his head bowed and his hands pressed together
+    in front of his chest, fingers up, as if praying, nodding on each beat, for two bars. Then the drop:
+    the head comes up and slams down on every beat, and on every one both fists pound down and forward at
+    the stage, the knees and chest going down with them."""
+    on = envelope(t, 0.0, 0.03, 0.97, 1.0)
+    p = 32 * t
+    drop = smooth01((p - (DROP - 0.25)) / 0.25)
+    nod = (1 - drop) * max(0.0, math.cos(math.pi * (p % 1.0))) ** 4    # a small nod on each beat of the build
+    # The fists together in front of the chest and the fingers leaning in to meet over them. His arms are
+    # too short to reach across the globe from where they hang, so the shoulders hunch in and forward too.
+    pray = {"upper-right": (-79, -16, 15), "elbow-right": (0, -70, -25), "hand-right": (3, -47, -54),
+            "upper-left": (-79, 16, -15), "elbow-left": (0, 70, 25), "hand-left": (3, 47, 54),
+            **fingers("right", 1, 0), **fingers("left", 1, 0),
+            "head": (24, 0, 0), "torso": (8, 0, 0), "knee-right": (8, 0, 0), "knee-left": (8, 0, 0)}
+    d = bang(p) * drop
+    # Fists up in front of the face, then punched straight out and down at the stage, turned in a little
+    # so that from the front they come at the camera rather than out to the sides.
+    up = {"upper-right": (-100, 0, 20), "elbow-right": (-60, 0, 0),
+          "upper-left": (-100, 0, -20), "elbow-left": (-60, 0, 0)}
+    pound = {"upper-right": (-75, 0, 18), "elbow-right": (-5, 0, 0), "hand-right": (20, 0, 0),
+             "upper-left": (-75, 0, -18), "elbow-left": (-5, 0, 0), "hand-left": (20, 0, 0)}
+    banging = {**REST, **mix(up, pound, d), "head": (-10 + 42 * d, 0, 0), "torso": (13 * d, 0, 0),
+               "knee-right": (10 + 24 * d, 0, 0), "knee-left": (10 + 24 * d, 0, 0),
+               "leg-right": (-5 - 12 * d, 0, 0), "leg-left": (-5 - 12 * d, 0, 0), "antenna": (-24 * d, 0, 0)}
+    pose = mix(REST, mix({**REST, **pray}, banging, drop), on)
+    add(pose, "head", dx=6 * nod * on)
+    add(pose, "orbit", dz=-720 * t)
+    sink = (1 - drop) * 0.015 * nod + drop * (0.02 + 0.05 * d)
+    hunch = (1 - drop) * on
+    return pose, {"hips": (0, 0, -sink * on), "shoulder-right": (0.06 * hunch, -0.1 * hunch, 0),
+                  "shoulder-left": (-0.06 * hunch, -0.1 * hunch, 0)}, blink(t, 0.1) * blink(t, 0.7)
+
+
 def pulse(s: float, at: float, rise: float, hold: float, fall: float) -> float:
     """0, easing up to 1 over `rise` seconds ending at `at`, held for `hold`, easing back down over `fall`."""
     if s < at:
@@ -1093,13 +1185,14 @@ CLIPS = {"idle": (120, idle), "watch": (150, watch), "floss": (120, floss), "sit
          "robot": (120, robot), "electro-shuffle": (150, electro_shuffle), "hype": (120, hype),
          "boogie-down": (150, boogie_down), "get-griddy": (120, get_griddy),
          "billy-bounce": (120, billy_bounce), "fresh": (120, fresh), "scenario": (120, scenario),
-         "groove-jam": (120, groove_jam), "press": (PRESS, press), "shrug": (60, shrug)}
+         "groove-jam": (120, groove_jam), "headbang": (120, headbang), "the-drop": (480, the_drop),
+         "press": (PRESS, press), "shrug": (60, shrug)}
 
 # Each dance is baked as this many repeats of its pattern above, easing in and out once (see `envelope`), so
 # it lasts fifteen or sixteen seconds. The beats the page counts, `BEATS` in `archie.js`, are `n` times this.
 REPEAT = {"floss": 4, "take-the-l": 4, "default-dance": 3, "orange-justice": 4, "robot": 4,
           "electro-shuffle": 3, "hype": 4, "boogie-down": 3, "get-griddy": 4, "billy-bounce": 4, "fresh": 4,
-          "scenario": 4, "groove-jam": 4}
+          "scenario": 4, "groove-jam": 4, "headbang": 4}
 
 
 def frames_of(clip: str) -> int:

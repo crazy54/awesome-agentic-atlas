@@ -1846,7 +1846,9 @@ function show(id, html) {
   el.innerHTML = html;
   el.className = "live on";
 }
-"""
+
+/* Archie, if the reader met him on the index: see `follow()` in 19_pages.py. */
+""" + b19.FOLLOW_JS + "\n"
 
 # Copied from the template so a detail page in a bookmark bar looks like the site.
 ICON = "favicon.svg"

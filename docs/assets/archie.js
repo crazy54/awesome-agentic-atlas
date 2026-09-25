@@ -18,7 +18,15 @@
 // see `chatter()`. A reader who scrolls on down the page gets a visit now and then: see "Visits". Now and
 // then, instead of an act, he plays a prank on the page, and it never quite works: see `pranks()`. And now
 // and then a friend of his drops by and makes mischief of their own, which he tells them off for: see
-// "Friends" below and `archie-friends.js`.
+// "Friends" below and `archie-friends.js`. He has a mood, which pokes raise and being ignored lowers, and a
+// reader who has been around a while he tries, and fails, to get rid of: see "His mood" in `chatter()`, and
+// `tiring()`.
+//
+// HE FOLLOWS THE READER. The index keeps this script's own URL, version and all, in sessionStorage's
+// `archie-src`, and every other page of the site has a one-line script that imports it from there (see
+// `follow()` in `scripts/19_pages.py`). A page with no `.mhmascot` of its own gets a corner of the window
+// instead: `dock()`. So he only turns up on a page for a reader who met him on the index in this tab, as the
+// same release of him, carrying the same mood, and never for one who turned on Quiet mode.
 //
 // THE CANVAS IS WIDER THAN THE SLOT. It spans the viewport's width and the header's height, so that he can
 // walk out of the banner and so that the lights have somewhere to come from. The camera is the one the poster
@@ -28,8 +36,27 @@
 // you move the camera here, move it in `stage()` too. The canvas takes no pointer events, so the header's
 // links work through it; the one thing that does is a button over his body, for poking him.
 (() => {
-  const slot = document.querySelector(".mhmascot");
-  if (!slot) return;
+  // Off the index: a strip along the bottom of the window, for the canvas, with a smaller slot at its right
+  // for him. Fixed, so he stays with the reader down the page, and taking no pointer events but his own.
+  const dock = () => {
+    const d = document.createElement("div");
+    d.className = "archie-dock";
+    d.style.cssText = "position:fixed;left:0;right:0;bottom:0;height:250px;pointer-events:none;z-index:28";
+    const s = document.createElement("div");
+    s.className = "mhmascot";
+    s.setAttribute("aria-hidden", "true");
+    s.style.cssText = "position:absolute;right:18px;bottom:-12px;width:150px;height:150px;pointer-events:none";
+    d.appendChild(s);
+    document.body.appendChild(d);
+    return s;
+  };
+  const home = document.querySelector(".mhmascot");
+  if (home) try { sessionStorage.setItem("archie-src", import.meta.url); } catch {}
+  let followed = false;
+  // Quiet mode is the loader's to check, and it never loads this: here it is only whether they have met.
+  try { followed = !home && !!sessionStorage.getItem("archie-hi"); } catch {}
+  if (!home && !followed) return;
+  const slot = home || dock();
   const wide = matchMedia("(min-width: 900px)");
   const calm = matchMedia("(prefers-reduced-motion: no-preference)");
   const allowed = () => wide.matches && calm.matches;
@@ -47,8 +74,11 @@
   const BEATS = {
     "floss": 48, "take-the-l": 32, "default-dance": 48, "orange-justice": 48, "robot": 32, "electro-shuffle": 30,
     "hype": 32, "boogie-down": 30, "get-griddy": 32, "billy-bounce": 32, "fresh": 32, "scenario": 32, "groove-jam": 32,
+    "headbang": 32, "the-drop": 32,
   };
   const DANCES = Object.keys(BEATS);
+  // The rave dances are for the music's heavy parts, not for any time: see `heavy()` and `building()`.
+  const RAVE = ["headbang", "the-drop"];
   const OTHERS = ["watch", "sit", "sleep", "walk-off"];
   // A number in [0, 1) that looks random but is the same every time for the same n: the lights' marks.
   const hash = n => { const s = Math.sin(n * 12.9898) * 43758.5453; return s - Math.floor(s); };
@@ -75,6 +105,16 @@
   const loudness = () => {
     try { const m = window.archieMusic; return m ? Math.max(0, Math.min(1, m.level())) : 0; } catch { return 0; }
   };
+  // How heavy the music is now against how it has been: its bass over about the last second (`fast`), and
+  // the last ten (`slow`). A drop is the bass well over its own recent run: he headbangs. A build is the
+  // bass gone out of it while the music carries on as loud: he bows his head and prays through it, and
+  // bangs when it drops (`the-drop`). Relative, so a quiet song has drops too, and a mic across the room.
+  const weight = {fast: 0, slow: 0};
+  const heft = () => {
+    try { const m = window.archieMusic; return m && m.bass ? Math.max(0, Math.min(1, m.bass())) : 0; } catch { return 0; }
+  };
+  const heavy = () => weight.fast > 0.4 && weight.fast > weight.slow * 1.35;
+  const building = () => weight.slow > 0.3 && weight.fast < weight.slow * 0.55 && loudness() > 0.25;
 
   let started = false, pals = null;          // `pals`: the friends' visit controller, see "Friends"
   const go = () => {
@@ -192,6 +232,7 @@
       document.removeEventListener("archie:cue", onCue);
       delete window.archieRig;
     });
+    const dimmer = house(header);
     const edge = {left: -8, right: 8, top: 5};
     const fx = FX.effects(T, scene, rig, edge, canvas);
     const view = {W: 1, H: 1, cx: 0, cy: 0, k: 1, sw: 240, sh: 240, ppm: 75, slide: 0, ox: 0, oy: 0};
@@ -248,9 +289,11 @@
       if (current && current !== a) a.crossFadeFrom(current, 0.25, false);
       a.play();
       current = a;
+      slot.dataset.act = name;
       return a;
     };
-    mixer.addEventListener("finished", () => { const d = done; done = null; d && d(); });
+    // Only the clip now playing: one cut off and fading out can still reach its end, and would end the next.
+    mixer.addEventListener("finished", e => { if (e.action !== current) return; const d = done; done = null; d && d(); });
     const perform = (name, reps = 1) => new Promise(res => { play(name, reps); done = res; });
 
     // Waits measured on the render clock, so a hidden tab pauses the whole act rather than skipping it.
@@ -288,8 +331,10 @@
     };
     let last = "", idling = false, wish = null;
     // Music on, and a beat in the last two seconds: he dances, back to back, with no idles, visits or
-    // walk-offs, and goes back to the director's own choices two seconds after the music stops. Not with
-    // the masthead off screen, where nobody would see it and the loop would never stop.
+    // walk-offs. Not with the masthead off screen, where nobody would see it and the loop would never stop.
+    // Two seconds without a beat, a quiet passage or the gap between songs, and he stops: the dance is cut
+    // off where it was, and while music mode is on he only idles, waiting for the next beat. The director's
+    // own choices come back when music mode goes off.
     const grooving = () => music.on && seen && mode === "home" && performance.now() - music.at < 2000;
     let walking = false;                   // out on a walk-off, which a command must not cut in half
     const act = async name => {
@@ -311,32 +356,61 @@
     const forced = asked && asked.startsWith("prank:") && PRANKS.includes(asked.slice(6)) ? asked.slice(6) : "";
     if (forced) lastPrank = -1e9;
     let pranking = false;                  // declared above its readers, `prankable` and the friends' `free()`
+    // Angry, he plays them as payback, and more often: every minute, and furious every forty seconds.
+    const payback = () => talk.feel === "angry" || talk.feel === "furious";
+    const prankGap = () => talk.feel === "furious" ? 40000 : talk.feel === "angry" ? 60000 : PRANK_GAP;
     const prankable = () => !talk.quiet && seen && mode === "home" && !music.on && !grooving() &&
-      !pranking && !(pals && pals.busy) && Date.now() - lastPrank >= PRANK_GAP;
+      !pranking && !(pals && pals.busy) && Date.now() - lastPrank >= prankGap();
     const prank = async name => {
       pranking = true;
       try { await prankOnce(name); } finally { pranking = false; }
     };
     const prankOnce = async name => {
       trick = trick || pranks(talk, header);
-      if (!tricks.length) tricks = PRANKS.slice().sort(() => Math.random() - 0.5);
+      if (!tricks.length) tricks = PRANKS.filter(n => n !== "count" || header.querySelector(".sub b"))
+        .sort(() => Math.random() - 0.5);
       name = name || tricks.pop();
       lastPrank = Date.now(); last = "prank";
-      talk.say("prank-" + name);
+      talk.say(payback() ? "revenge" : "prank-" + name);
       await perform("press");
       await trick[name]();
       talk.say("prank-" + name + "-after");
       await perform("shrug");
     };
+    // Tired of the reader, eight minutes after the tab first met him and every four minutes after that,
+    // he tries to get rid of them. Not a reader he adores, and through the same gates as a prank.
+    // `?archie=tired:<name>` plays one first, whatever the time.
+    const TIRED_AFTER = 480000, TIRED_GAP = 240000;
+    const forcedTired = asked && asked.startsWith("tired:") && TIRES.includes(asked.slice(6)) ? asked.slice(6) : "";
+    let lastTired = forcedTired ? -1e9 : 0, tire = null, tires = [], tiringNow = false;
+    const tirable = () => !talk.quiet && seen && mode === "home" && !music.on && !grooving() &&
+      talk.feel !== "adore" && (forcedTired || Date.now() - talk.since >= TIRED_AFTER) &&
+      Date.now() - lastTired >= TIRED_GAP;
+    const tired = async name => {
+      tiringNow = true;
+      try {
+        tire = tire || tiring({host, slot, turn});
+        if (!tires.length) tires = TIRES.slice().sort(() => Math.random() - 0.5);
+        name = name || tires.pop();
+        lastTired = Date.now(); last = "tired";
+        talk.say("tired-" + name);
+        if (name !== "sulk") await perform("press");
+        await tire[name]();
+        talk.say("tired-" + name + "-after");
+        await perform("shrug");
+      } finally { tiringNow = false; }
+    };
     // Commands (see "Commands" at the top) wait here, and the director takes the next one before it
     // chooses for itself. A flag is one command queued before the first idle: `?archie=<act>` as it always
     // was, and `?archie=prank:<name>` through `prankable()`, so quiet mode can still be checked to stop it.
-    // From the panel, a prank skips only the three-minute spacing.
+    // From the panel, a prank skips only the three-minute spacing. `?archie=tired:<name>` goes through
+    // `tirable()` the same way.
     const orders = [];
     const obey = async ({cmd, flag}) => {
       const [kind, name] = parse(cmd);
       if (kind === "dance") return act(name);
       if (kind === "prank") return !flag || prankable() ? prank(name) : undefined;
+      if (kind === "tired") return !flag || tirable() ? tired(name) : undefined;
       if (cmd === "show") {
         const pool = DANCES.filter(fits);
         return act((pool.length ? pool : DANCES)[Math.floor(Math.random() * (pool.length || DANCES.length))]);
@@ -346,13 +420,15 @@
       return perform(cmd, cmd === "idle" ? 2 : 1);           // idle, press, shrug: a clip, and no more
     };
     // Cut what he is doing short so the command goes next: an idle or a dance, never a walk-off (he would be
-    // left off the edge of the page) or a prank (its trick would be left on the page).
+    // left off the edge of the page), a prank or a try at getting rid of the reader (its prop would be left on
+    // the page).
     const cut = () => {
-      if (done && mode === "home" && !walking && !pranking) { const d = done; done = null; d(); }
+      if (done && mode === "home" && !walking && !pranking && !tiringNow) { const d = done; done = null; d(); }
     };
     const direct = async () => {
       if (asked && (DANCES.includes(asked) || OTHERS.includes(asked))) orders.push({cmd: DANCES.includes(asked) ? "dance:" + asked : asked, flag: true});
       if (forced) orders.push({cmd: "prank:" + forced, flag: true});
+      if (forcedTired) orders.push({cmd: "tired:" + forcedTired, flag: true});
       for (;;) {
         if (orders.length) { await obey(orders.shift()); continue; }
         if (!grooving()) {
@@ -361,10 +437,14 @@
           idling = false;
         }
         if (orders.length) continue;
-        if (prankable() && Math.random() < 0.3) { await prank(); continue; }
+        if (music.on && !grooving()) continue;
+        if (tirable() && Math.random() < 0.3) { await tired(); continue; }
+        if (prankable() && Math.random() < (payback() ? 0.6 : 0.3)) { await prank(); continue; }
         // A dance half the time, and never the same act twice running, unless the reader asked for one or
         // the music did.
-        let pool = (wish || grooving() || Math.random() < 0.5 ? DANCES : OTHERS).filter(n => n !== last);
+        if (grooving() && (heavy() || building())) { wish = null; await act(heavy() ? "headbang" : "the-drop"); continue; }
+        let pool = (wish || grooving() || Math.random() < 0.5 ? DANCES : OTHERS)
+          .filter(n => n !== last && (!RAVE.includes(n) || n === wish));
         if (grooving() && pool.some(fits)) pool = pool.filter(fits);
         wish = null;
         await act(pool[Math.floor(Math.random() * pool.length)]);
@@ -383,6 +463,11 @@
     // Visits only start from the idle. The visit holds the idle's promise and gives it back, so the director
     // carries on from where it was. Never in Quiet mode, and not more than once in 90 seconds.
     // `?archie=visit` makes the first one come 1.5 s after the masthead leaves the screen, for checking.
+    //
+    // Come down to sit, he has followed the reader down the page, so he comes down: a fireman's pole drops
+    // in and he slides down it, or a lift arrives, dings, and he steps out. Either way he leaves by the
+    // same, back up. Both are drawn in the visit's layer, behind him, hidden from assistive technology and
+    // taking no pointer events. `?archie=visit:pole` and `?archie=visit:lift` ask for one of them.
     const VISIT = 150;                       // the visit's slot size, CSS pixels, against the masthead's 240
     const HURRY = 1.5;                       // he hurries on a visit: the clip and his speed, both, so no skating
     // The front of his right fist at a jab's full extension in `press`, turned to face screen right, which
@@ -393,6 +478,113 @@
     layer.style.cssText = "position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:29";
     let mode = "home", aborted = false, target = null, seat = 0, grip = {x: 0, y: 0}, lastVisit = -1e9;
     let timer = 0, scrolled = 0;
+    // How far above where he stands he is drawn, in CSS pixels, eased from one height to another on the
+    // render clock: the pole's slide. `anchor()` adds it every frame.
+    let rise = {from: 0, to: 0, at: 0, secs: 1, ease: smooth};
+    const height = () => {
+      const k = Math.min(1, (clock - rise.at) / rise.secs);
+      return rise.from + (rise.to - rise.from) * rise.ease(k);
+    };
+    const glide = (to, secs, ease) => {
+      rise = {from: height(), to, at: clock, secs, ease};
+      return vuntil(() => clock >= rise.at + secs);
+    };
+    const vafter = secs => { const at = clock + secs; return vuntil(() => clock >= at); };
+    const prop = (cls, css, html = "") => {
+      const el = document.createElement("div");
+      el.className = cls;
+      el.setAttribute("aria-hidden", "true");
+      el.style.cssText = "position:absolute;pointer-events:none;" + css;
+      el.innerHTML = html;
+      layer.insertBefore(el, canvas);          // behind him
+      return el;
+    };
+    const POLE_CSS = "top:0;width:12px;border-radius:6px;translate:0 -100%;transition:translate .45s ease-out;" +
+      "background:linear-gradient(90deg,#6d747c,#f4f7fa 35%,#b9c0c7 55%,#5b6168);box-shadow:0 0 8px rgba(0,0,0,.35)";
+    const LIFT_CSS = "width:118px;height:176px;border:4px solid #6d747c;border-radius:8px 8px 0 0;" +
+      "background:#2b3036;box-shadow:0 10px 30px rgba(0,0,0,.45);transition:translate 1.4s cubic-bezier(.45,0,.25,1)";
+    const LIFT_HTML = '<div class="archie-floor" style="position:absolute;left:50%;top:-30px;translate:-50% 0;' +
+      'padding:3px 9px;border-radius:5px;background:#111;color:#ffb000;font:700 13px/1.2 ui-monospace,monospace">' +
+      '\u25BC 3</div>' +
+      '<div class="archie-door" style="position:absolute;left:0;top:0;width:50%;height:100%;' +
+      'background:linear-gradient(90deg,#9aa2aa,#d5dade);border-right:1px solid #5b6168;transition:translate .5s ease-in-out"></div>' +
+      '<div class="archie-door" style="position:absolute;right:0;top:0;width:50%;height:100%;' +
+      'background:linear-gradient(90deg,#d5dade,#9aa2aa);border-left:1px solid #5b6168;transition:translate .5s ease-in-out"></div>';
+    let props = [];
+    const doors = (car, open) => {
+      const [l, r] = car.querySelectorAll(".archie-door");
+      l.style.translate = open ? "-100% 0" : "0 0";
+      r.style.translate = open ? "100% 0" : "0 0";
+      car.classList.toggle("open", open);
+    };
+    const floors = async (car, from, to) => {
+      const sign = car.querySelector(".archie-floor");
+      for (let f = from; ; f += from < to ? 1 : -1) {
+        sign.textContent = (from < to ? "\u25B2 " : "\u25BC ") + (f === 0 ? "G" : f);
+        if (f === to) return;
+        await vafter(0.4);
+      }
+    };
+    // Down the pole: it drops in beside where he will stand, he slides down it with a bump at the bottom, and
+    // it goes back up without him.
+    const poleDown = async () => {
+      const pole = prop("archie-pole", `left:${seat - 6 - VISIT * 0.22}px;height:${innerHeight}px;` + POLE_CSS);
+      props.push(pole);
+      rise = {from: innerHeight, to: innerHeight, at: clock, secs: 1, ease: smooth};
+      actor.rotation.y = turnTo = -Math.PI / 2;        // facing the pole
+      play("idle", 1).timeScale = 0;                   // holding on
+      requestAnimationFrame(() => { pole.style.translate = "0 0"; });
+      await vafter(0.5);
+      talk.say("pole");
+      await glide(0, 1.1, k => k * k);                 // gravity: slow at the top, fast at the bottom
+      await glide(10, 0.12, smooth);
+      await glide(0, 0.18, smooth);
+      pole.style.translate = "0 -100%";
+    };
+    const poleUp = async () => {
+      const pole = props.find(e => e.classList.contains("archie-pole"));
+      if (!pole) return;
+      pole.style.translate = "0 0";
+      await vturn(-Math.PI / 2);
+      play("idle", 1).timeScale = 0;
+      await vafter(0.5);
+      await glide(innerHeight, 1.6, smooth);           // up is harder
+      pole.style.translate = "0 -100%";
+      await vafter(0.5);
+    };
+    // The lift: it comes down with him inside, out of sight, counts down its floors, dings and opens, and
+    // he steps out in front of it. It goes back up empty, and comes back for him when he leaves.
+    const liftDown = async () => {
+      const car = prop("archie-lift", `left:${seat - 59}px;top:${innerHeight - 6 - 176}px;` +
+        `translate:0 ${-innerHeight}px;` + LIFT_CSS, LIFT_HTML);
+      props.push(car);
+      actor.visible = false;
+      requestAnimationFrame(() => { car.style.translate = "0 0"; });
+      await floors(car, 3, 0);
+      await vafter(0.3);
+      doors(car, true);
+      await vafter(0.5);
+      actor.rotation.y = turnTo = 0;
+      actor.visible = true;
+      talk.say("lift");
+      await vafter(0.6);
+      doors(car, false);
+      await vafter(0.5);
+      car.style.translate = `0 ${-innerHeight}px`;
+    };
+    const liftUp = async () => {
+      const car = props.find(e => e.classList.contains("archie-lift"));
+      if (!car) return;
+      car.style.translate = "0 0";
+      await floors(car, 3, 0);
+      doors(car, true);
+      await vafter(0.6);
+      actor.visible = false;
+      doors(car, false);
+      await vafter(0.5);
+      car.style.translate = `0 ${-innerHeight}px`;
+      await vafter(1.4);
+    };
     const onScreen = r => r.top > 60 && r.bottom < innerHeight - 10 && r.left > 90 && r.right < innerWidth - 10;
     const pickTarget = () => {
       const all = [...document.querySelectorAll("main button, main [role=button]")].filter(b => {
@@ -402,7 +594,7 @@
       // He comes in from the left, so a button on the left half is a shorter walk
       const near = all.filter(b => b.getBoundingClientRect().left < innerWidth * 0.55);
       const from = near.length ? near : all;
-      return from.length && Math.random() < 0.75 ? from[Math.floor(Math.random() * from.length)] : null;
+      return from.length && !way && Math.random() < 0.5 ? from[Math.floor(Math.random() * from.length)] : null;
     };
     // Where world point p lands on screen, relative to the slot's centre: the frustum is a window slid
     // across the canvas, so that offset is the same wherever the slot is.
@@ -426,7 +618,7 @@
         if (!target.isConnected || r.bottom < 0 || r.top > innerHeight) { abortVisit(); return; }
         x = r.left + 2; y = r.top + r.height / 2;
       }
-      view.cx = x - grip.x; view.cy = y - grip.y;
+      view.cx = x - grip.x; view.cy = y - grip.y - height();
       frustum(view.slide);
     };
     const visitLayout = () => {
@@ -448,24 +640,32 @@
       aborted = true;
       const d = done; done = null; d && d();
     };
+    // How he comes down to sit: asked for, or the pole and the lift two times in five each, and walking in.
+    const way = ["visit:pole", "visit:lift"].includes(asked) ? asked.slice(6) : "";
     const visit = async () => {
       mode = "visit"; aborted = false; idling = false;
       const held = done; done = null;
       target = pickTarget();
+      const r = Math.random();
+      const by = target ? "walk" : way || (r < 0.4 ? "pole" : r < 0.8 ? "lift" : "walk");
       seat = innerWidth * (0.25 + Math.random() * 0.5);
       document.body.appendChild(layer);
       layer.appendChild(canvas);
       talk.move(layer, true);
       view.slide = 0;
       visitLayout();
-      // In from just off the left of the window, facing right for the button; to sit, from the nearer side.
-      const from = target || seat < innerWidth / 2 ? 1 : -1;
-      frustum(from > 0 ? -view.cx - view.sw / 2 : view.W - view.cx + view.sw / 2);
-      actor.rotation.y = turnTo = from * Math.PI / 2;
-      play("walk", Infinity).timeScale = HURRY;
-      speed = from * WALK_SPEED * HURRY;
-      await vuntil(() => from * view.slide >= 0);
-      speed = 0;
+      if (by === "pole") await poleDown();
+      else if (by === "lift") await liftDown();
+      else {
+        // In from just off the left of the window, facing right for the button; to sit, from the nearer side.
+        const from = target || seat < innerWidth / 2 ? 1 : -1;
+        frustum(from > 0 ? -view.cx - view.sw / 2 : view.W - view.cx + view.sw / 2);
+        actor.rotation.y = turnTo = from * Math.PI / 2;
+        play("walk", Infinity).timeScale = HURRY;
+        speed = from * WALK_SPEED * HURRY;
+        await vuntil(() => from * view.slide >= 0);
+        speed = 0;
+      }
       if (!aborted) frustum(0);
       if (target) {
         talk.say("button");
@@ -479,17 +679,25 @@
         }
       } else {
         await vturn(0);
-        talk.say("drop");
+        if (by === "walk") talk.say("drop");
         await vperform("sit");
       }
-      // Off by the nearer side of the window
-      const way = view.cx < view.W / 2 ? -1 : 1;
-      await vturn(way * Math.PI / 2);
-      if (!aborted) play("walk", Infinity).timeScale = HURRY;
-      speed = way * WALK_SPEED * HURRY;
-      await vuntil(() => way < 0 ? view.cx + view.slide < -view.sw / 2 : view.cx + view.slide > view.W + view.sw / 2);
+      if (by === "pole") await poleUp();
+      else if (by === "lift") await liftUp();
+      else {
+        // Off by the nearer side of the window
+        const off = view.cx < view.W / 2 ? -1 : 1;
+        await vturn(off * Math.PI / 2);
+        if (!aborted) play("walk", Infinity).timeScale = HURRY;
+        speed = off * WALK_SPEED * HURRY;
+        await vuntil(() => off < 0 ? view.cx + view.slide < -view.sw / 2 : view.cx + view.slide > view.W + view.sw / 2);
+      }
       // Home, whether he walked off or the visit was cut short, and back into the idle he left.
       speed = 0; target = null;
+      rise = {from: 0, to: 0, at: 0, secs: 1, ease: smooth};
+      actor.visible = true;
+      for (const e of props) e.remove();
+      props = [];
       actor.rotation.y = turnTo = 0;
       slot.appendChild(canvas);
       layer.remove();
@@ -506,7 +714,7 @@
     const plan = () => {
       clearTimeout(timer);
       if (seen || mode === "visit") return;
-      timer = setTimeout(maybeVisit, asked === "visit" ? 1500 : 20000 + Math.random() * 25000);
+      timer = setTimeout(maybeVisit, asked === "visit" || way ? 1500 : 20000 + Math.random() * 25000);
     };
     const maybeVisit = () => {
       if (seen || mode === "visit" || document.hidden || talk.quiet) return;
@@ -522,7 +730,7 @@
 
     // Asked for a dance (by poking, or by choosing the Prism skin): cut the idle short and dance next.
     // Mid-act, it waits for the act to end.
-    const talk = chatter(T, {host, slot, header, camera, view, actor, head: gltf.scene.getObjectByName("head"),
+    const talk = chatter(T, {host, slot, header, camera, view, actor, followed, head: gltf.scene.getObjectByName("head"),
       guest: () => (pals ? pals.poke() : null),
       wish() {
         wish = true;
@@ -573,6 +781,7 @@
       if (clock > lockUntil) lock = 0;
       return Math.max(0.75, Math.min(1.35, r * (1 + lock)));
     };
+    let heaving = "";
     const tick = dt => {
       clock += dt;
       if (mode === "visit") anchor();
@@ -583,6 +792,19 @@
       const c = current && current.getClip(), n = c && BEATS[c.name];
       const g = grooving();
       if (g && !grooved) { talk.say("music"); if (idling && done) { const d = done; done = null; d(); } }
+      // And when it goes quiet, the dance ends there; the director's idle cross-fades out of it.
+      if (!g && grooved && rig.on && done) { const d = done; done = null; d(); }
+      if (g) {
+        const h = heft();
+        // From silence any music would read as a drop, so the music starting sets where it is heavy from.
+        if (!grooved) weight.fast = weight.slow = h;
+        weight.fast += (h - weight.fast) * (1 - Math.exp(-dt / 0.8));
+        weight.slow += (h - weight.slow) * (1 - Math.exp(-dt / 10));
+        // The drop, or the build, starting: whatever he was dancing gives way to it at once.
+        const now = heavy() ? "headbang" : building() ? "the-drop" : "";
+        if (now && now !== heaving && c && !RAVE.includes(c.name) && done) { const d = done; done = null; d(); }
+        heaving = now;
+      } else heaving = "";
       grooved = g;
       if (n) current.timeScale = g && music.bpm ? tempo(c, n) : 1;
       mixer.update(dt);
@@ -590,6 +812,9 @@
       const kick = g ? music.kick : null, loud = g ? loudness() : null;
       // A dance's beat, or, between dances, a cue's own (see `rig.cue`), which the lights and lasers play
       // to and the stage effects do not: a cue brings up the floor and the fog, never the flames.
+      rig.stay = music.on && seen && mode === "home";
+      rig.boost = rig.stay ? 1.4 : 1;            // the house lights are down, so the stage's come up
+      dimmer.update(dt, rig.stay);
       const dancing = n && rig.on ? {at: current.time / c.duration * n, rate: n / c.duration * current.timeScale,
                                      kick, loud} : null;
       const beat = dancing || rig.synth(dt);
@@ -626,7 +851,7 @@
     const run = () => {
       const want = !document.hidden && (seen || mode === "visit" || !idling);
       if (want && !raf) { then = 0; raf = requestAnimationFrame(frame); }
-      if (!want && raf) { cancelAnimationFrame(raf); raf = 0; laser.hide(); }
+      if (!want && raf) { cancelAnimationFrame(raf); raf = 0; laser.hide(); dimmer.hide(); }
     };
     const io = new IntersectionObserver(([e]) => {
       seen = e.isIntersecting;
@@ -720,6 +945,7 @@
       waits.length = 0;                     // strands the director's pending act, which is the point
       talk.stop();
       laser.stop();
+      dimmer.stop();
       canvas.remove();
       slot.style.backgroundImage = "";
       delete slot.dataset.live;
@@ -766,14 +992,32 @@
 .archie-poke{position:absolute;left:0;top:0;z-index:0;margin:0;padding:0;border:0;background:none;
   border-radius:45% 45% 30% 30%;cursor:pointer}
 .archie-poke:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.archie-dock .archie-poke{pointer-events:auto}
 .archie-sr{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip-path:inset(50%);
-  white-space:nowrap}`;
+  white-space:nowrap}
+.archie-heart{position:absolute;z-index:3;color:#ff2bd6;font:700 20px/1 var(--ui);pointer-events:none;
+  opacity:0;animation:archie-heart 1.3s ease-out forwards}
+@keyframes archie-heart{0%{opacity:0;translate:0 0;scale:.5}20%{opacity:1}100%{opacity:0;translate:0 -80px;scale:1.25}}
+.archie-prop{position:absolute;z-index:3;pointer-events:none;font:700 13px/1 var(--ui)}
+.archie-close{padding:9px 14px;border-radius:9px;background:#d93025;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.3);
+  animation:archie-pop .25s cubic-bezier(.34,1.56,.64,1)}
+.archie-close.stuck{animation:archie-stuck .12s linear 6}
+@keyframes archie-pop{from{scale:.3;opacity:0}}
+@keyframes archie-stuck{25%{translate:-3px 0}75%{translate:3px 0}}
+.archie-sign{padding:10px 16px;border:3px solid #6b4a2b;border-radius:6px;background:#f4e3c1;color:#6b4a2b;
+  letter-spacing:.12em;transform-origin:50% -40px;
+  animation:archie-hang .6s cubic-bezier(.34,1.56,.64,1),archie-fall 1s cubic-bezier(.55,0,1,.45) 2.6s forwards}
+.archie-sign::before,.archie-sign::after{content:"";position:absolute;bottom:100%;width:2px;height:40px;background:#6b4a2b}
+.archie-sign::before{left:18%}.archie-sign::after{right:18%}
+@keyframes archie-hang{from{translate:0 -160px}}
+@keyframes archie-fall{20%{rotate:14deg}100%{rotate:70deg;translate:40px 260px;opacity:0}}`;
 
   const NAMES = {
     "floss": "the Floss", "take-the-l": "Take the L", "default-dance": "the Default",
     "orange-justice": "Orange Justice", "robot": "the Robot", "electro-shuffle": "the Electro Shuffle",
     "hype": "Hype", "boogie-down": "Boogie Down", "get-griddy": "the Griddy", "billy-bounce": "the Billy Bounce",
     "fresh": "Fresh", "scenario": "Scenario", "groove-jam": "Groove Jam",
+    "headbang": "the Headbang", "the-drop": "the Drop",
   };
   // Each line is [text] for speech or [text, 1] for a thought. `{n}` is a dance's name, `{count}` the
   // masthead's own project count, so the joke can't go stale.
@@ -795,6 +1039,11 @@
     watch: [["Is it Friday yet?"], ["The build has been running for how long?", 1]],
     leave: [["brb, CI is red."], ["Be right back, someone @-mentioned me."],
             ["Off to fetch more awesome-lists!"]],
+    follow: [["You thought you could leave without me?"], ["Wait up! I'm coming too."],
+             ["Following you. It's what I do now.", 1], ["Nice page. I'll hang out down here."],
+             ["Don't mind me. Just tagging along."]],
+    "follow-mad": [["Oh, you're HERE now? You didn't even say goodbye."], ["You left without poking me. Rude."],
+                   ["I followed you all this way and still no poke?"], ["You can't escape me that easily."]],
     back: [["Did you miss me?"], ["Moonwalking is a valid deploy strategy."],
            ["I'm back! Nothing's on fire. Probably."]],
     light: [["Light mode! My visor has never been so shiny."], ["Whoa, bright! Adjusting visor..."]],
@@ -835,6 +1084,10 @@
             ["Finally, a soundtrack for my code."], ["Is it 4/4? Please say it's 4/4.", 1]],
     drop: [["Mind if I sit here?"], ["Just visiting. Carry on."], ["It's quieter down here.", 1],
            ["Nice scroll position you've got."]],
+    pole: [["Nee-naw! Coming down!"], ["Fireman's pole. The fastest way to follow a scroll."],
+           ["Wheeeee!"], ["Did someone scroll? I'm on my way!"]],
+    lift: [["Ding! Ground floor: you."], ["Going down? Me too."], ["The lift. Much more dignified.", 1],
+           ["Mind the doors. I followed you down."]],
     // Pranks: the set-up, as he presses the button that does it, and the excuse, as it undoes itself
     "prank-lights": [["Ooh, what does this switch do?"], ["Watch this. Lights... OFF!"]],
     "prank-lights-after": [["Huh. It keeps coming back on."], ["You didn't see that. Nobody saw that."],
@@ -847,6 +1100,33 @@
     "prank-count-after": [["They took me back off. Rude."], ["Apparently a mascot is not a repository.", 1]],
     "prank-cursor": [["Mind if I drive for a bit?"], ["Your cursor is mine now."]],
     "prank-cursor-after": [["Okay, okay, you can have it back."], ["Driving is harder than it looks.", 1]],
+    // His mood. Idle lines at each end of it, one line on the way down past each mark, and a poke's reply
+    // when he adores the reader or has just been forgiven.
+    adore: [["You're my favourite reader. Don't tell the others.", 1], ["Best. Visitor. Ever."],
+            ["I'd star you if I could."]],
+    sulk: [["Fine. Don't poke me. See if I care.", 1], ["I'm not sulking. You're sulking.", 1],
+           ["Some people say hi to the mascot. Just saying."]],
+    angry: [["You've been ignoring me for ages."], ["I have feelings. Mostly in the visor.", 1],
+            ["Poke. Me. It's one click."]],
+    furious: [["Right. That's it. There will be consequences."], ["Hell hath no fury like a mascot ignored."],
+              ["I know where your theme setting lives."]],
+    "to-sulk": [["Hello? I'm right here.", 1], ["Nobody pokes the mascot any more.", 1]],
+    "to-angry": [["Okay, now I'm annoyed."], ["Ignoring me? Bold move."]],
+    "to-furious": [["That's it. You've had your chance."], ["You're going to regret this."]],
+    love: [["Aww! I love you too!"], ["You came back for me! \u{1F496}"], ["More pokes! More!"],
+           ["This is the best day of my life."]],
+    forgive: [["...okay, fine, I forgive you. Instantly. I'm weak."], ["You poked me! All is forgiven!"],
+              ["I knew you cared!"]],
+    revenge: [["This is for ignoring me."], ["Payback time."], ["You should have poked me."]],
+    // Tired of the reader: trying to get rid of them, and failing
+    "tired-close": [["You know what? I'll close the tab for you."], ["Right. Closing time."]],
+    "tired-close-after": [["Why won't it close?!"], ["...that button is decorative too, isn't it."]],
+    "tired-sign": [["Sorry, we're closed. Go home."], ["Shop's shut. Come back never."]],
+    "tired-sign-after": [["...we're a static site. We can't close."], ["Cheap nails.", 1]],
+    "tired-shoo": [["Go on. Shoo. Scroll somewhere else."], ["Out you go. I need my space."]],
+    "tired-shoo-after": [["The page is heavier than it looks."], ["You're still here, aren't you."]],
+    "tired-sulk": [["I'm not talking to you."], ["I'll just face the wall, then.", 1]],
+    "tired-sulk-after": [["...okay, I can't stay mad at you."], ["Fine. You can stay. For now."]],
   };
   // The tab's title while the reader is on another tab: one of these, once per page, and theirs back the
   // moment they return.
@@ -908,7 +1188,39 @@
     };
     try { if (!sessionStorage.getItem("archie-hi")) { sessionStorage.setItem("archie-hi", "1"); free = 0; } }
     catch {}
-    let hello = free === 0;
+    let hello = free === 0 ? "hello" : "";
+
+    // ---- His mood ----------------------------------------------------------------------------------------
+    // -100 to 100, in sessionStorage, so it goes with the reader from page to page and is forgotten with the
+    // tab. A poke is +20; the pointer resting on him, +2 a second; every second the masthead is on screen
+    // and he goes unpoked, -0.3, so a reader who ignores him has him sulking in about a minute and a half,
+    // angry in three, and furious in four and a half. One poke forgives any of it: anger never gets the
+    // last word over a reader who comes back to him. `since` is when the tab first met him, which is what
+    // he gets tired of. Quiet mode freezes it.
+    const MOOD = "archie-mood", MARKS = [-25, -50, -80], DOWN = ["to-sulk", "to-angry", "to-furious"];
+    let mood = 0, since = Date.now(), low = 0, hovering = false, kept = 0;
+    try {
+      const m = JSON.parse(sessionStorage.getItem(MOOD) || "null");
+      if (m) { mood = Math.max(-100, Math.min(100, Number(m.v) || 0)); since = Number(m.since) || since; }
+    } catch {}
+    low = MARKS.filter(m => mood <= m).length;       // no announcing a mark he was already past
+    const save = () => { try { sessionStorage.setItem(MOOD, JSON.stringify({v: Math.round(mood), since})); } catch {} };
+    save();
+    if (o.followed && !hello) { free = 0; hello = mood <= -25 ? "follow-mad" : "follow"; }
+    const feel = () => mood >= 60 ? "adore" : mood <= -80 ? "furious" : mood <= -50 ? "angry" :
+      mood <= -25 ? "sulk" : "";
+    const hearts = () => {
+      for (let i = 0; i < 5; i++) {
+        const h = document.createElement("span");
+        h.className = "archie-heart";
+        h.textContent = "\u2665";
+        h.setAttribute("aria-hidden", "true");
+        h.style.cssText = `left:${poke.offsetLeft + poke.offsetWidth * (0.15 + 0.7 * Math.random())}px;` +
+          `top:${poke.offsetTop + poke.offsetHeight * 0.15}px;animation-delay:${i * 90}ms`;
+        host.append(h);
+        setTimeout(() => h.remove(), 1500 + i * 90);
+      }
+    };
 
     // ---- The reader --------------------------------------------------------------------------------------
     let theme = document.documentElement.dataset.theme, skin = document.documentElement.dataset.skin;
@@ -980,12 +1292,18 @@
     const pokes = [];
     let hold = 0;
     const poked = () => {
+      const was = mood;
+      mood = was <= -25 ? 30 : Math.min(100, mood + 20);
+      low = 0;
+      save();
       pokes.push(t);
       while (pokes.length && pokes[0] < t - 6) pokes.shift();
       const guest = o.guest && o.guest();        // a friend is over: he answers about them, and does not dance
       if (guest) { pokes.length = 0; show(guest, {}, true); }
+      else if (was <= -25) { pokes.length = 0; hold = t + 2.5; show("forgive", {}, true); }
       else if (pokes.length >= 4) { pokes.length = 0; hold = t + 2.5; show("pokes", {}, true); o.wish(); }
-      else if (t >= hold) { show("poke", {}, true); if (Math.random() < 0.2) o.wish(); }
+      else if (t >= hold) { show(mood >= 60 ? "love" : "poke", {}, true); if (Math.random() < 0.2) o.wish(); }
+      if (mood >= 60) hearts();
       if (!quiet) free = Math.max(free, t + 20);
     };
     poke.addEventListener("click", poked);
@@ -999,7 +1317,13 @@
       return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
     };
     const click = e => { if (onHim(e)) poked(); };
-    const hover = e => { header.style.cursor = onHim(e) ? "pointer" : ""; };
+    const hover = e => {
+      const on = onHim(e);
+      header.style.cursor = on ? "pointer" : "";
+      hovering = on || e.target === poke;
+    };
+    const leave = () => { hovering = false; };
+    header.addEventListener("pointerleave", leave);
     header.addEventListener("click", click);
     header.addEventListener("pointermove", hover);
 
@@ -1007,6 +1331,9 @@
     const menu = document.getElementById("setmenu");
     return {
       get quiet() { return quiet; },
+      get mood() { return mood; },
+      get feel() { return feel(); },
+      get since() { return since; },
       hush(on) { hushed = on; },
       // A line for a visit, said whether or not the masthead is on screen
       say(kind) {
@@ -1034,8 +1361,14 @@
         t += dt;
         // Only at home: carried out past the edge of the page, it would give the page a sideways scrollbar.
         poke.hidden = away || view.slide !== 0;
-        if (hello && t > 1.5) { hello = false; own("hello"); }
-        else if (!hello && idling && !quiet) own("idle");
+        if (hello && t > 1.5) { own(hello); hello = ""; }
+        else if (!hello && idling && !quiet) own(feel() || "idle");
+        if (!quiet && seen && !away) {
+          mood = Math.max(-100, Math.min(100, mood + dt * (hovering ? 2 : -0.3)));
+          const depth = MARKS.filter(m => mood <= m).length;
+          if (depth > low) { low = depth; react(DOWN[depth - 1], 0); }
+          if (t - kept > 2) { kept = t; save(); }
+        }
         if (!lonely && Date.now() - stirred > 75000) { lonely = true; react("lonely", 120); }
         if (shown && t > until) { shown = false; bubble.classList.remove("on"); }
         if (!shown) return;
@@ -1064,7 +1397,9 @@
         header.removeEventListener("mouseover", over);
         header.removeEventListener("click", click);
         header.removeEventListener("pointermove", hover);
+        header.removeEventListener("pointerleave", leave);
         header.style.cursor = "";
+        save();
         poke.remove(); bubble.remove(); said.remove(); style.remove();
       },
     };
@@ -1140,8 +1475,91 @@
     };
   }
 
+  // Tired of the reader: what he does to get rid of them, none of which works. Each is a prop drawn in the
+  // masthead beside him, or a nudge to <main>, and each returns a promise for when it is gone again. Nothing
+  // closes, navigates or takes focus: the close button is a picture of one, and the props take no pointer
+  // events and are hidden from assistive technology, where a fake "Close tab" would be a lie.
+  const TIRES = ["close", "sign", "shoo", "sulk"];
+  function tiring(o) {
+    const {host, slot, turn} = o;
+    const wait = ms => new Promise(r => setTimeout(r, ms));
+    const prop = (cls, text, left, top) => {
+      const el = document.createElement("div");
+      el.className = "archie-prop " + cls;
+      el.textContent = text;
+      el.setAttribute("aria-hidden", "true");
+      el.style.left = left + "px";
+      el.style.top = top + "px";
+      host.append(el);
+      return el;
+    };
+    return {
+      async close() {
+        const b = prop("archie-close", "\u2715  Close tab", slot.offsetLeft + slot.offsetWidth * 0.78,
+                       slot.offsetTop + slot.offsetHeight * 0.38);
+        await wait(700);
+        b.classList.add("stuck");                    // pressed, and it only rattles
+        await wait(1500);
+        b.remove();
+      },
+      async sign() {
+        const g = prop("archie-sign", "CLOSED", slot.offsetLeft + slot.offsetWidth * 0.18, slot.offsetTop + 44);
+        await wait(3700);
+        g.remove();
+      },
+      // A shove at the page: <main> slides a little away and springs back, as the tilt prank does it.
+      async shoo() {
+        const main = document.querySelector("main");
+        if (!main) return;
+        const was = [main.style.translate, main.style.transition];
+        main.style.transition = "translate .7s cubic-bezier(.5,0,.75,0)";
+        main.style.translate = "36px 0";
+        await wait(900);
+        main.style.transition = "translate .5s cubic-bezier(.34,1.56,.64,1)";
+        main.style.translate = "0px 0";
+        await wait(700);
+        [main.style.translate, main.style.transition] = was;
+      },
+      async sulk() {
+        await turn(Math.PI);
+        await wait(4500);
+        await turn(0);
+      },
+    };
+  }
+
+  // The house lights: in music mode ("Dance with me"), with the masthead on screen, the rest of the page dims
+  // a little, as a club's does when the set starts, and the stage -- the masthead, where he and the rig are --
+  // stays as bright as it was, while the rig's heads come up brighter (`boost` in `lights()`). It is one
+  // element over the window with a hole the masthead's size, made of its own shadow, so nothing on the page
+  // is restyled; it takes no clicks, and sits under the lasers and the masthead's open menus.
+  function house(header) {
+    const el = document.createElement("div");
+    el.className = "archie-house";
+    el.setAttribute("aria-hidden", "true");
+    el.style.cssText = "position:fixed;pointer-events:none;z-index:29;border-radius:0;display:none;opacity:0";
+    document.body.appendChild(el);
+    let fade = 0;
+    return {
+      update(dt, want) {
+        fade += Math.max(-2 * dt, Math.min(2 * dt, (want ? 1 : 0) - fade));
+        if (fade <= 0.001) { if (el.style.display !== "none") el.style.display = "none"; fade = 0; return; }
+        const r = header.getBoundingClientRect(), light = document.documentElement.dataset.theme === "light";
+        Object.assign(el.style, {display: "", left: r.left + "px", top: r.top + "px", width: r.width + "px",
+                                 height: r.height + "px", opacity: String(fade),
+                                 boxShadow: `0 0 0 200vmax rgba(0,0,0,${light ? 0.28 : 0.45})`});
+      },
+      hide() { el.style.display = "none"; fade = 0; },
+      stop() { el.remove(); },
+    };
+  }
+
   // The light show, the kind an EDM stage hangs over its crowd, for the dances, and for the named cues an
-  // admin can fire at any time (see `cue()` and `window.archieRig` in `start()`). What hangs, and where:
+  // admin can fire at any time (see `cue()` and `window.archieRig` in `start()`). When a dance ends it all
+  // fades, and the truss is hauled back up with the wall -- except in music mode (`stay`), where the rig
+  // stays hung between songs and through the quiet, dark and still, and powers up again with the beat. In
+  // music mode the heads also run brighter (`boost`), since the house lights are down: see `house()`.
+  // What hangs, and where:
   //
   //  - THE MAIN TRUSS drops in from above the header, bounces to a stop, and carries six moving heads, two
   //    blinders at its ends and two laser units between the heads. The heads are the star of the show:
@@ -1652,6 +2070,10 @@
 
     return {
       on: false,
+      // In music mode, hung between songs and through the quiet, dark: see `update()`. And brighter while
+      // it is lit (`boost`), since the house lights are down: see `house()`.
+      stay: false,
+      boost: 1,
       // For `archie-fx.js` (whose floor takes four colours) and `beams()` in start(): the truss's first
       // four heads, as the rig had before, and all nine for anything that wants them.
       get heads() { return four; },
@@ -1715,10 +2137,15 @@
         if (want && !wasOn) { loadGobos(); dress(); if (this.on) dances++; }
         wasOn = want;
         // The truss drops first and the heads come up once it has landed. Going off, they fade out first
-        // and the truss goes up after, and only then does the wall's video let go.
-        if (want) drop = Math.min(1, drop + dt / 0.6);
+        // and the truss goes up after, and only then does the wall's video let go. In music mode (`stay`) the
+        // truss stays down, dark, with the wall's video let go, until the beat brings the lights back up.
+        if (this.stay) dress();
+        if (want || this.stay) drop = Math.min(1, drop + dt / 0.6);
         else if (level === 0) drop = Math.max(0, drop - dt / 0.7);
         level = Math.max(0, Math.min(1, level + (want && drop === 1 ? 3 : -3) * dt));
+        // Where it is, on the slot: hauled up, hung and dark, or lit (or on its way).
+        const state = drop === 0 ? "away" : level === 0 && drop === 1 ? "dark" : level === 1 ? "lit" : "moving";
+        if (slot.dataset.rig !== state) slot.dataset.rig = state;
         group.visible = drop > 0;
         if (want && (this.on || cueing === "video-wall")) video.start();
         if (!group.visible) {
@@ -1727,6 +2154,7 @@
           video.stop();
           return;
         }
+        if (!want && level === 0) video.stop();
         video.update(dt);
         const y = top + (1 - outBack(drop)) * 3;
         bar.position.set(0, y, -1.5);
@@ -1813,7 +2241,7 @@
             mark(0, i, cx, h.aim);
             h.color.copy(C.beams[i % C.beams.length]);
           }
-          const lv = level * pulse * h.bump * h.gain * wash;
+          const lv = level * this.boost * pulse * h.bump * h.gain * wash;
           if (h.model) {
             // The model's yoke pans and its head tilts to put the lens's -Y on the mark; the beam starts
             // at the lens. Pan about the yoke's Y, then tilt by the angle from straight down.

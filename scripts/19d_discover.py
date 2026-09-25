@@ -706,7 +706,7 @@ def render(published: dict, data: dict, day: str) -> str:
   in the <a href="{esc(rel())}">searchable index</a>, on each project's own page, and in the
   <a href="https://github.com/{esc(REPO)}/tree/HEAD/mega-list">Markdown edition</a>.
 </div></footer>
-{core_js()}{PAGE_JS}{THEME_JS}{b19.beacon()}</body>
+{core_js()}{PAGE_JS}{THEME_JS}{b19.follow()}{b19.beacon()}</body>
 </html>
 """
 
