@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Frameworks &amp; SDKs tools for Cline / Roo — Awesome Agentic Atlas</title>
 <meta name="description" content="1 Frameworks &amp; SDKs projects that plug into Cline / Roo, ranked by GitHub stars. Libraries you build an agent out of, and the tool-calling interfaces it…">
-<link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/topic/frameworks-sdks/target/cline-roo/">
+<link rel="canonical" href="https://aaa.jeremyfhall.com/topic/frameworks-sdks/target/cline-roo/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Frameworks &amp; SDKs tools for Cline / Roo">
 <meta property="og:description" content="1 Frameworks &amp; SDKs projects that plug into Cline / Roo, ranked by GitHub stars. Libraries you build an agent out of, and the tool-calling interfaces it…">
-<meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/topic/frameworks-sdks/target/cline-roo/">
-<meta property="og:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-frameworks-sdks.png">
+<meta property="og:url" content="https://aaa.jeremyfhall.com/topic/frameworks-sdks/target/cline-roo/">
+<meta property="og:image" content="https://aaa.jeremyfhall.com/og/topic-frameworks-sdks.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Frameworks &amp; SDKs on the Awesome Agentic Atlas: the project count and the three most starred projects.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://crazy54.github.io/awesome-agentic-atlas/og/topic-frameworks-sdks.png">
+<meta name="twitter:image" content="https://aaa.jeremyfhall.com/og/topic-frameworks-sdks.png">
 <link rel="icon" href="../../../../favicon.svg" type="image/svg+xml">
 <meta name="theme-color" id="tc" content="#101217">
 <script>
@@ -25,7 +25,7 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The eight literals track --plane in the eight blocks at the top of pages.css. After paint `label()`
+  // The sixteen literals track --plane in the sixteen blocks at the top of pages.css. After paint `label()`
   // re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
@@ -38,7 +38,11 @@ try {
   var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
                glass: {dark: "#12141D", light: "#F8FAFF"},
                terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"}};
+               prism: {dark: "#17112C", light: "#FDFBFF"},
+               sherbet: {dark: "#272040", light: "#FFFCF8"},
+               riso: {dark: "#1E1E29", light: "#FBF8F1"},
+               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
+               aurora: {dark: "#101936", light: "#FBFCFF"}};
   var s = localStorage.getItem("atlas-skin");
   if (!PLANE[s]) s = "graphite";
   document.documentElement.dataset.skin = s;
@@ -46,7 +50,7 @@ try {
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../../../pages.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Frameworks & SDKs tools for Cline / Roo","description":"1 Frameworks & SDKs projects that plug into Cline / Roo, ranked by GitHub stars. Libraries you build an agent out of, and the tool-calling interfaces it…","url":"https://crazy54.github.io/awesome-agentic-atlas/topic/frameworks-sdks/target/cline-roo/","numberOfItems":1,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"Cortex","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/skullfire07/cortex-memory/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Frameworks & SDKs tools for Cline / Roo","description":"1 Frameworks & SDKs projects that plug into Cline / Roo, ranked by GitHub stars. Libraries you build an agent out of, and the tool-calling interfaces it…","url":"https://aaa.jeremyfhall.com/topic/frameworks-sdks/target/cline-roo/","numberOfItems":1,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"Cortex","url":"https://aaa.jeremyfhall.com/repo/skullfire07/cortex-memory/"}]}</script>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
@@ -57,7 +61,7 @@ try {
     <p class="sub"><b>1</b> projects · <b>1</b> with stars to rank by ·
       <b>8</b> combined stars · snapshot 2026-09-22</p>
     <p class="blurb">Libraries you build an agent out of, and the tool-calling interfaces it reaches the world through.</p><p class="blurb">Targets Cline or Roo Code.</p>
-    <a class="cta" href="../../../../#topic=frameworks-sdks&amp;target=cline-roo">Filter this live on the atlas &rarr;</a>
+    <a class="cta" href="../../../../catalog/#topic=frameworks-sdks&amp;target=cline-roo">Filter this live on the atlas &rarr;</a>
   </div>
   <nav>
     <a href="../../../../discover/">Discover</a> ·

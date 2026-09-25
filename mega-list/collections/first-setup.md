@@ -4,15 +4,15 @@
 
 The atlas has 1,294 projects in it, which is the wrong number to start from. This is one working setup instead: an agent, the things it loads, the place it runs, and the two tools that tell you afterwards whether it did what you asked. Every slot is filled once. Swap any of them later -- the point of the set is that you can start today and still know what each piece is for.
 
-7 picks · 839,804 combined stars · snapshot 2026-09-22
+7 picks · 840,100 combined stars · snapshot 2026-09-22
 
-[Open all 7 in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=anomalyco/opencode,obra/superpowers,mem0ai/mem0,modelcontextprotocol/servers,daytonaio/daytona,langfuse/langfuse,shareAI-lab/learn-claude-code) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
+[Open all 7 in the atlas](https://aaa.jeremyfhall.com/#list=anomalyco/opencode,obra/superpowers,mem0ai/mem0,modelcontextprotocol/servers,daytonaio/daytona,langfuse/langfuse,shareAI-lab/learn-claude-code) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
 ---
 
 ## 1. The agent — [OpenCode](https://github.com/anomalyco/opencode)
 
-`anomalyco/opencode` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/anomalyco/opencode/)
+`anomalyco/opencode` · [detail page](https://aaa.jeremyfhall.com/repo/anomalyco/opencode/)
 
 Terminal-native, MIT, and the one coding agent here that three separate source lists picked independently. It runs against whichever model you already pay for rather than tying the setup to one vendor.
 
@@ -22,7 +22,7 @@ Terminal-native, MIT, and the one coding agent here that three separate source l
 scoop install opencode # Windows
 ```
 
-**209,306** stars · 4 of 39 lists · TypeScript · MIT · pushed 2026-09-22
+**209,402** stars · 4 of 39 lists · TypeScript · MIT · pushed 2026-09-22
 
 Platforms: Win N WSL N mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -32,7 +32,7 @@ Topic: Coding Agents · Targets: opencode, MCP
 
 ## 2. What it knows how to do — [Superpowers](https://github.com/obra/superpowers)
 
-`obra/superpowers` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/obra/superpowers/)
+`obra/superpowers` · [detail page](https://aaa.jeremyfhall.com/repo/obra/superpowers/)
 
 The most-starred skills bundle in the atlas and, unusually, one that spans seven different harnesses -- so the competencies survive changing your mind about the agent above.
 
@@ -42,7 +42,7 @@ The most-starred skills bundle in the atlas and, unusually, one that spans seven
 git clone https://github.com/obra/superpowers.git
 ```
 
-**290,022** stars · 7 of 39 lists · Shell · MIT · pushed 2026-09-20
+**290,183** stars · 7 of 39 lists · Shell · MIT · pushed 2026-09-22
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -52,7 +52,7 @@ Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, MCP, Codex / Op
 
 ## 3. What it remembers — [mem0](https://github.com/mem0ai/mem0)
 
-`mem0ai/mem0` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/mem0ai/mem0/)
+`mem0ai/mem0` · [detail page](https://aaa.jeremyfhall.com/repo/mem0ai/mem0/)
 
 A memory layer you drop in rather than a database you design. Apache-2.0, and it states support on Windows and in Docker, which most of this category does not.
 
@@ -62,7 +62,7 @@ A memory layer you drop in rather than a database you design. Apache-2.0, and it
 npm install -g @mem0/cli # or: pip install mem0-cli
 ```
 
-**65,833** stars · 8 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22
+**65,840** stars · 8 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22
 
 Platforms: Win Y WSL L mac Y Lin Y Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -72,7 +72,7 @@ Topic: Frameworks & SDKs · Targets: Codex / OpenAI
 
 ## 4. How it reaches your tools — [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)
 
-`modelcontextprotocol/servers` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/modelcontextprotocol/servers/)
+`modelcontextprotocol/servers` · [detail page](https://aaa.jeremyfhall.com/repo/modelcontextprotocol/servers/)
 
 The reference MCP servers, from the people who wrote the protocol. Start here and you learn the shape every third-party server in the atlas is copying.
 
@@ -82,7 +82,7 @@ The reference MCP servers, from the people who wrote the protocol. Start here an
 npx -y @modelcontextprotocol/server-memory
 ```
 
-**90,545** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-03
+**90,550** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -92,7 +92,7 @@ Topic: MCP Servers · Targets: Claude / Anthropic, MCP
 
 ## 5. Where it runs — [Daytona](https://github.com/daytonaio/daytona)
 
-`daytonaio/daytona` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/daytonaio/daytona/)
+`daytonaio/daytona` · [detail page](https://aaa.jeremyfhall.com/repo/daytonaio/daytona/)
 
 Container sandboxes that start in under a tenth of a second, which is the difference between isolating every run and isolating the runs you remember to. An agent with shell access and no sandbox is a decision, not a default.
 
@@ -102,7 +102,7 @@ Container sandboxes that start in under a tenth of a second, which is the differ
 pip install daytona
 ```
 
-**71,740** stars · 2 of 39 lists · language not detected · no licence stated · pushed 2026-07-24
+**71,734** stars · 2 of 39 lists · language not detected · no licence stated · pushed 2026-07-24
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -112,7 +112,7 @@ Topic: Sandbox, Security & Governance
 
 ## 6. What it actually did — [Langfuse](https://github.com/langfuse/langfuse)
 
-`langfuse/langfuse` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/langfuse/langfuse/)
+`langfuse/langfuse` · [detail page](https://aaa.jeremyfhall.com/repo/langfuse/langfuse/)
 
 Self-hostable tracing, so the record of what the agent sent and got back stays on your own machine. Two source lists agree on it and it is the most widely adopted of the open options.
 
@@ -122,7 +122,7 @@ Self-hostable tracing, so the record of what the agent sent and got back stays o
 pip install langfuse openai
 ```
 
-**34,928** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22
+**34,944** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -132,7 +132,7 @@ Topic: Observability & Evals · Targets: Codex / OpenAI, LangChain / LangGraph
 
 ## 7. What to read while it runs — [Learn Claude Code](https://github.com/shareAI-lab/learn-claude-code)
 
-`shareAI-lab/learn-claude-code` · [detail page](https://crazy54.github.io/awesome-agentic-atlas/repo/shareai-lab/learn-claude-code/)
+`shareAI-lab/learn-claude-code` · [detail page](https://aaa.jeremyfhall.com/repo/shareai-lab/learn-claude-code/)
 
 A read-through of how a real coding agent is built rather than a tutorial for using one. It is the fastest way to stop being surprised by the six choices above.
 
@@ -142,7 +142,7 @@ A read-through of how a real coding agent is built rather than a tutorial for us
 npm i -g @shareai-lab/kode
 ```
 
-**77,430** stars · 3 of 39 lists · Python · MIT · pushed 2026-08-26
+**77,447** stars · 3 of 39 lists · Python · MIT · pushed 2026-08-26
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
