@@ -70,6 +70,13 @@ await S("Page.addScriptToEvaluateOnNewDocument", {source: `(() => {
     who: (e.sources || []).map(s => s.node && s.node.nodeType === 1 ? (s.node.closest(".hero") ? "hero" :
       s.node.closest(".daily") ? "daily" : s.node.closest(".bystrip") ? "bystrip" : s.node.className || s.node.tagName) : "?")}); })
     .observe({type: "layout-shift", buffered: true}); } catch (e) {}
+  // The page's own width, at first paint and at the end, for the detail of a red: a shift that moves the
+  // slots sideways along with the masthead is a change of the width they are laid out in, and this says
+  // whether the viewport's changed (a scrollbar) or only the content's.
+  const w = () => ({inner: innerWidth, client: document.documentElement.clientWidth,
+    scroll: document.documentElement.scrollWidth, t: Math.round(performance.now())});
+  document.addEventListener("DOMContentLoaded", () => requestAnimationFrame(() => { window.__w0 = w(); }));
+  window.__w = w;
 })()`});
 
 const ev = async expr => {
@@ -116,6 +123,7 @@ const state = () => ev(`(() => {
     fallback: ns ? (ns.textContent.match(/<p class="own">([^<]+)<\\/p>/) || [])[1] : null,
     fallbackImg: ns ? (ns.textContent.match(/<img\\b[^>]*\\bsrc="([^"]+)"/) || [])[1] : null,
     shifts: window.__shifts || [],
+    widths: [window.__w0 || null, window.__w ? window.__w() : null],
   };
 })()`);
 // The rule, restated from the date string: days since 1970-01-01, modulo the pool.
@@ -151,7 +159,8 @@ for (const [y, mo, d] of days) {
        String(s.friend));
   }
   const bad = s.shifts.filter(e => e.who.some(w => ["hero", "daily", "bystrip"].includes(w)));
-  ok(`${tag}: no layout shift moves the spotlight, the line or the strip below them`, bad.length === 0, JSON.stringify(bad));
+  ok(`${tag}: no layout shift moves the spotlight, the line or the strip below them`, bad.length === 0,
+     JSON.stringify(bad) + " widths " + JSON.stringify(s.widths));
   // The fallback card's own picture must not have been fetched on a day it is not the one shown -- that is
   // the whole reason it is in a <noscript>. Only askable when the two pictures differ.
   if (s.fallbackImg && s.fallbackImg !== s.img)
@@ -178,7 +187,8 @@ for (const [y, mo, d] of days.slice(0, 3)) {
   ok(`${tag}: exactly one spotlight card, at its full size`, s.heroes === 1 && s.visible, String(s.heroes));
   ok(`${tag}: the rule's pick`, s.nwo === pickOf(s.pool, y, mo, d));
   const bad = s.shifts.filter(e => e.who.some(w => ["hero", "daily", "bystrip"].includes(w)));
-  ok(`${tag}: no layout shift moves the spotlight, the line or the strip`, bad.length === 0, JSON.stringify(bad));
+  ok(`${tag}: no layout shift moves the spotlight, the line or the strip`, bad.length === 0,
+     JSON.stringify(bad) + " widths " + JSON.stringify(s.widths));
 }
 await S("Emulation.setDeviceMetricsOverride", {width: 1440, height: 900, deviceScaleFactor: 1, mobile: false});
 
