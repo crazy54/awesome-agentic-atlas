@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "lines": [
+    {"id": "tip-slash-search", "kind": "tip", "text": "In the Catalogue, press / to jump straight to the search box. No mouse required.", "href": "catalog/"},
+    {"id": "dyk-merged-lists", "kind": "didyouknow", "text": "Every project here was found on at least one awesome-list. The Atlas merges them, so you only read each project once."},
+    {"id": "friend-nib-hello", "kind": "friend", "friend": "nib", "text": "Friend of the day: Nib, Archie's old cursor. It collects letters. Keep an eye on the headings."},
+
+    {"id": "tip-palette", "kind": "tip", "text": "Ctrl+K (or Cmd+K) in the Catalogue opens Jump to, for going anywhere in a few keystrokes.", "href": "catalog/"},
+    {"id": "dyk-three-lists", "kind": "didyouknow", "text": "When three or more awesome-lists name the same project independently, it lands on the Named by three or more lists shelf."},
+    {"id": "friend-posy-hello", "kind": "friend", "friend": "posy", "text": "Friend of the day: Posy, a sticky note with opinions. If a card gets a note, it's a compliment."},
+
+    {"id": "tip-discover", "kind": "tip", "text": "Not sure what you want yet? Discover is the browsing aisle: fresh finds, hidden gems and deep cuts.", "href": "discover/"},
+    {"id": "dyk-own-page", "kind": "didyouknow", "text": "Every project in the Atlas has a page of its own, with the lists that named it. Even the weird ones.", "href": "repo/"},
+    {"id": "friend-lumen-hello", "kind": "friend", "friend": "lumen", "text": "Friend of the day: Lumen, a moth who thinks the spotlight is the moon. She may pose for it."},
+
+    {"id": "tip-quiet-mode", "kind": "tip", "text": "Archie and friends too chatty? The Quiet mode button in the Catalogue hushes the lot. They won't sulk. Much.", "href": "catalog/"},
+    {"id": "dyk-hidden-gems", "kind": "didyouknow", "text": "Hidden gems are projects two or more lists named that are still under 500 stars. Get in early.", "href": "discover/"},
+    {"id": "friend-ohfour-hello", "kind": "friend", "friend": "oh-four", "text": "Friend of the day: Oh-Four, a shy little ghost. If something peeks over the search button, just wave."},
+
+    {"id": "tip-collections", "kind": "tip", "text": "Collections are hand-picked sets for a job, like playlists for repositories. Start with First setup.", "href": "collections/first-setup/"},
+    {"id": "dyk-activity-dots", "kind": "didyouknow", "text": "The little dot beside a card's age is how recently the project was pushed to: hot, warm, stale or cold at a glance."},
+    {"id": "friend-quack-hello", "kind": "friend", "friend": "quack", "text": "Friend of the day: Quack, the debugging duck. Quack says nothing. Archie explains everything. Bugs get fixed."},
+
+    {"id": "tip-markdown", "kind": "tip", "text": "Prefer plain text? The whole Atlas is also a Markdown mega-list on GitHub, greppable to the last line.", "href": "https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list"},
+    {"id": "dyk-spotlight-daily", "kind": "didyouknow", "text": "The spotlight changes every day, so a different project gets its turn at the top of the page each morning."},
+    {"id": "friend-nib-font", "kind": "friend", "friend": "nib", "text": "Nib is back. It says its font is nearly finished. It needs just one more letter. It always needs one more letter."},
+
+    {"id": "tip-dance", "kind": "tip", "text": "When Archie is up in the masthead, put some music on and try Dance with me. He keeps time to what he hears."},
+    {"id": "dyk-windows-shelf", "kind": "didyouknow", "text": "There's a shelf just for projects that run natively on Windows, no WSL required.", "href": "collections/windows-first/"},
+    {"id": "friend-posy-fridge", "kind": "friend", "friend": "posy", "text": "Posy's here again, with a fresh pad of notes. Archie has asked her to go easy on the adhesive."},
+
+    {"id": "tip-poke", "kind": "tip", "text": "Archie can be poked. Poke him a few times in a row and see what happens. He's load-bearing, but not that fragile."},
+    {"id": "dyk-local-only", "kind": "didyouknow", "text": "Want nothing to leave your machine? The Local only collection gathers projects that run without a cloud.", "href": "collections/local-only/"},
+    {"id": "friend-lumen-poem", "kind": "friend", "friend": "lumen", "text": "Lumen drifted in overnight. She has written a poem about today's spotlight. It is mostly the word glow."},
+
+    {"id": "tip-topics", "kind": "tip", "text": "Browse by topic: MCP servers, coding agents, agent skills and more, each with a page of its own.", "href": "topic/mcp-servers/"},
+    {"id": "dyk-deep-cuts", "kind": "didyouknow", "text": "Deep cuts are projects outside the top 200 by stars: nearly all of the Atlas, and invisible if you sort by popularity.", "href": "discover/"},
+    {"id": "friend-ohfour-found", "kind": "friend", "friend": "oh-four", "text": "Oh-Four got lost on the way here and found itself in the Catalogue. It says it's not lost. It's exploring."},
+
+    {"id": "tip-star-originals", "kind": "tip", "text": "Found something good? Star the original repository too. The maintainers see that; the Atlas is just the map."},
+    {"id": "dyk-shipped-week", "kind": "didyouknow", "text": "The Shipped in the last seven days shelf is projects pushed within a week of the latest snapshot. Proof of life.", "href": "discover/"},
+    {"id": "friend-quack-why", "kind": "friend", "friend": "quack", "text": "Quack asked Archie one question this morning: why? He's been explaining ever since. He's found three bugs."},
+
+    {"id": "tip-feed", "kind": "tip", "text": "Follow new arrivals from your feed reader: the Atlas publishes a feed of projects it has just added, newest first.", "href": "feed.xml"},
+    {"id": "dyk-honest", "kind": "didyouknow", "text": "The Keep it honest collection is tools for checking what agents actually did, not just what they said they did.", "href": "collections/keep-it-honest/"},
+    {"id": "friend-nib-kerning", "kind": "friend", "friend": "nib", "text": "Nib has opinions about kerning today. If a heading looks one letter lighter, that's Nib. It gives them back."},
+
+    {"id": "tip-skins", "kind": "tip", "text": "The Atlas comes in several skins. Try a new one today. Archie has a remark ready for every one of them."},
+    {"id": "dyk-rust-go", "kind": "didyouknow", "text": "The homepage keeps shelves by language, so the Rust and Go crowds can each find their own corner."},
+    {"id": "friend-posy-reminder", "kind": "friend", "friend": "posy", "text": "Posy left a reminder on Archie's visor: drink some water. It applies to you too. She insists."},
+
+    {"id": "tip-claude-kit", "kind": "tip", "text": "Setting up a coding agent? The Claude Code kit collection is a good first shopping list.", "href": "collections/claude-code-kit/"},
+    {"id": "dyk-search-local", "kind": "didyouknow", "text": "The Catalogue's search runs in your browser, over an index the site ships with. Your queries stay on your machine.", "href": "catalog/"},
+    {"id": "friend-lumen-moon", "kind": "friend", "friend": "lumen", "text": "Lumen is visiting again. Please don't tell her the spotlight is not the moon. She's having such a nice time."},
+
+    {"id": "tip-leaderboard", "kind": "tip", "text": "Curious who has the most stars? The leaderboard lives in the Markdown mega-list on GitHub.", "href": "https://github.com/crazy54/awesome-agentic-atlas/blob/main/mega-list/leaderboard.md"},
+    {"id": "dyk-new-arrivals", "kind": "didyouknow", "text": "The Atlas re-reads its source lists regularly. Projects that were not there last time show up as new arrivals.", "href": "discover/"},
+    {"id": "friend-ohfour-boo", "kind": "friend", "friend": "oh-four", "text": "Oh-Four practised its boo all night. It is still more of an apologetic whisper. Be encouraging."},
+
+    {"id": "tip-evals", "kind": "tip", "text": "Shipping an agent? Observability and evals has the tools for seeing what it did and whether it did it well.", "href": "topic/observability-evals/"},
+    {"id": "dyk-archie-reads", "kind": "didyouknow", "text": "Archie claims he has read every README in the Atlas. He has read the first line of every README in the Atlas."},
+    {"id": "friend-quack-silent", "kind": "friend", "friend": "quack", "text": "Quack is on call today. If Archie starts talking to himself, he isn't. He's talking to the duck."},
+
+    {"id": "tip-memory-rag", "kind": "tip", "text": "Building something that has to remember? Context, memory and RAG is the topic to start with.", "href": "topic/context-memory-rag/"},
+    {"id": "dyk-friends-rare", "kind": "didyouknow", "text": "Archie's friends only visit now and then, and never while you're typing. If you saw one today, you were lucky."},
+    {"id": "friend-all-party", "kind": "friend", "friend": "nib", "text": "Nib, Posy, Lumen, Oh-Four and Quack are all around today. Only one gets to visit. They drew straws. Nib cheated."}
+  ]
+}
