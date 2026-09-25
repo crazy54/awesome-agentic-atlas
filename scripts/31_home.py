@@ -208,6 +208,13 @@ BRIDGE_CSS = r"""/* THE PROTOTYPE'S TOKENS, IN THE SITE'S. See BRIDGE_CSS in scr
 html[data-skin=glass]{--fx-glow:1; --fx-pulse:1}
 html[data-skin=terminal]{--fx-glow:1; --fx-pulse:1; --fx-scan:1}
 html[data-skin=prism]{--fx-glow:1; --fx-pulse:1}
+/* The four lighter-hearted themes are all still, by design: the fun on this page comes from Archie and
+   his friends, and a theme that pulsed would be a second thing moving that a reader did not ask for. So
+   no --fx-pulse and no --fx-scan for any of them. Sherbet and Aurora take the static glow, because a
+   soft halo is what an ice-cream sign and a night sky are; Riso and Blueprint are ink on paper and
+   inherit the zeroes, which is why they have no line here. */
+html[data-skin=sherbet]{--fx-glow:1}
+html[data-skin=aurora]{--fx-glow:1}
 /* The depth shadows and the poster scrim, per mode. Dark first because dark is the default and lives at
    `:root` everywhere else in this codebase. The scrim is what a poster's title sits on top of its artwork
    in, so it is doing contrast work in a sense -- but against a photograph, which no ratio can be computed
@@ -253,11 +260,13 @@ html[data-theme=light]{
 # second file would be correct on the day they were copied and silently wrong after the first palette edit.
 STAGE_TOKENS = ("--surface", "--band", "--ink", "--ink2")
 
-# `:root` is graphite; the other three are `html[data-skin=X]`. Both forms are the *dark* declaration in
+# `:root` is graphite; the other seven are `html[data-skin=X]`. Both forms are the *dark* declaration in
 # `pages.css` -- the light halves live behind `[data-theme=light]`, which is exactly what this block is
 # cancelling, so matching on a selector without it is what picks the right side.
 STAGE_SKINS = (("graphite", r":root\{"), ("glass", r"html\[data-skin=glass\]\{"),
-               ("terminal", r"html\[data-skin=terminal\]\{"), ("prism", r"html\[data-skin=prism\]\{"))
+               ("terminal", r"html\[data-skin=terminal\]\{"), ("prism", r"html\[data-skin=prism\]\{"),
+               ("sherbet", r"html\[data-skin=sherbet\]\{"), ("riso", r"html\[data-skin=riso\]\{"),
+               ("blueprint", r"html\[data-skin=blueprint\]\{"), ("aurora", r"html\[data-skin=aurora\]\{"))
 
 
 def stage_css() -> str:
