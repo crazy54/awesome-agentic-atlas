@@ -135,9 +135,14 @@ const want = [...list, ...ORDER.map(i => "friend:" + i)];
 const have = await ev(`[...document.querySelectorAll("#archiepanel button[data-cmd]")].map(b => b.dataset.cmd)`);
 ok("one button for every command and every friend", want.length === have.length && want.every(c => have.includes(c)),
    `missing ${want.filter(c => !have.includes(c)).join(",")} extra ${have.filter(c => !want.includes(c)).join(",")}`);
+// The rig's cue count is read from the page rather than pinned: archie.js names the set, and the stage
+// work adds cues to it (11 here, 15 with co2, flames, sparks and haze). That every one of them has a button
+// is the "one button for every command" check above; this one says the set is not empty, and below, that
+// every cue the live rig has is in it.
+const cueN = list.filter(c => /^cue:/.test(c)).length;
 for (const [what, re, n] of [["dance", /^dance:/, 13], ["prank", /^prank:/, 5], ["friend", /^friend:/, ORDER.length],
-                             ["rig cue", /^cue:/, 11]])
-  ok(`...including every ${what} (${n})`, have.filter(c => re.test(c)).length === n, String(have.filter(c => re.test(c)).length));
+                             ["rig cue", /^cue:/, cueN]])
+  ok(`...including every ${what} (${n})`, n > 0 && have.filter(c => re.test(c)).length === n, String(have.filter(c => re.test(c)).length));
 for (const c of ["idle", "watch", "sit", "sleep", "press", "shrug", "walk-off", "show", "chatter", "poke", "quiet"])
   ok(`...and "${c}"`, have.includes(c));
 
@@ -149,6 +154,8 @@ const cueState = () => ev(`[...document.querySelectorAll("#archiepanel button[da
   .map(b => [b.dataset.cmd.slice(4), b.disabled, b.title])`);
 const rigHas = await ev(`window.archieRig && Array.isArray(window.archieRig.cues) ? window.archieRig.cues.slice() : null`);
 ok("the live model's rig is up, with its cues", Array.isArray(rigHas) && rigHas.length > 0, JSON.stringify(rigHas));
+ok("...each of which has a button", (rigHas || []).every(c => have.includes("cue:" + c)),
+   (rigHas || []).filter(c => !have.includes("cue:" + c)).join(","));
 const upCues = await cueState();
 ok("...and every cue it has is enabled", upCues.length && upCues.filter(([c]) => (rigHas || []).includes(c)).every(([, d]) => !d),
    JSON.stringify(upCues.filter(([, d]) => d)));
