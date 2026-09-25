@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Find out what the agent actually did — Awesome Agentic Atlas</title>
 <meta name="description" content="6 picked projects: An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that…">
-<link rel="canonical" href="https://crazy54.github.io/awesome-agentic-atlas/collections/keep-it-honest/">
+<link rel="canonical" href="https://aaa.jeremyfhall.com/collections/keep-it-honest/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Find out what the agent actually did — Awesome Agentic Atlas">
 <meta property="og:description" content="6 picked projects: An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that…">
-<meta property="og:url" content="https://crazy54.github.io/awesome-agentic-atlas/collections/keep-it-honest/">
+<meta property="og:url" content="https://aaa.jeremyfhall.com/collections/keep-it-honest/">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
 <meta property="og:image:alt" content="The Awesome Agentic Atlas repository on GitHub.">
 <meta name="twitter:card" content="summary_large_image">
@@ -22,7 +22,7 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The eight literals track --plane in the eight blocks at the top of pages.css. After paint `label()`
+  // The sixteen literals track --plane in the sixteen blocks at the top of pages.css. After paint `label()`
   // re-derives this from the computed value so the stylesheet stays the single source of truth; here
   // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
   // blocking the paint on a stylesheet.
@@ -35,7 +35,11 @@ try {
   var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
                glass: {dark: "#12141D", light: "#F8FAFF"},
                terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"}};
+               prism: {dark: "#17112C", light: "#FDFBFF"},
+               sherbet: {dark: "#272040", light: "#FFFCF8"},
+               riso: {dark: "#1E1E29", light: "#FBF8F1"},
+               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
+               aurora: {dark: "#101936", light: "#FBFCFF"}};
   var s = localStorage.getItem("atlas-skin");
   if (!PLANE[s]) s = "graphite";
   document.documentElement.dataset.skin = s;
@@ -43,7 +47,7 @@ try {
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../pages.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Find out what the agent actually did","description":"An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put…","url":"https://crazy54.github.io/awesome-agentic-atlas/collections/keep-it-honest/","numberOfItems":6,"itemListOrder":"https://schema.org/ItemListUnordered","itemListElement":[{"@type":"ListItem","position":1,"name":"Langfuse","description":"The trace","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/langfuse/langfuse/"},{"@type":"ListItem","position":2,"name":"Arize-Phoenix","description":"The second opinion","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/arize-ai/phoenix/"},{"@type":"ListItem","position":3,"name":"promptfoo","description":"The test suite","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/promptfoo/promptfoo/"},{"@type":"ListItem","position":4,"name":"DeepEval","description":"The metrics","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/confident-ai/deepeval/"},{"@type":"ListItem","position":5,"name":"OpenLLMetry","description":"The standard","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/traceloop/openllmetry/"},{"@type":"ListItem","position":6,"name":"SkillSpector","description":"The thing you install","url":"https://crazy54.github.io/awesome-agentic-atlas/repo/nvidia/skillspector/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Find out what the agent actually did","description":"An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put…","url":"https://aaa.jeremyfhall.com/collections/keep-it-honest/","numberOfItems":6,"itemListOrder":"https://schema.org/ItemListUnordered","itemListElement":[{"@type":"ListItem","position":1,"name":"Langfuse","description":"The trace","url":"https://aaa.jeremyfhall.com/repo/langfuse/langfuse/"},{"@type":"ListItem","position":2,"name":"Arize-Phoenix","description":"The second opinion","url":"https://aaa.jeremyfhall.com/repo/arize-ai/phoenix/"},{"@type":"ListItem","position":3,"name":"promptfoo","description":"The test suite","url":"https://aaa.jeremyfhall.com/repo/promptfoo/promptfoo/"},{"@type":"ListItem","position":4,"name":"DeepEval","description":"The metrics","url":"https://aaa.jeremyfhall.com/repo/confident-ai/deepeval/"},{"@type":"ListItem","position":5,"name":"OpenLLMetry","description":"The standard","url":"https://aaa.jeremyfhall.com/repo/traceloop/openllmetry/"},{"@type":"ListItem","position":6,"name":"SkillSpector","description":"The thing you install","url":"https://aaa.jeremyfhall.com/repo/nvidia/skillspector/"}]}</script>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
@@ -53,7 +57,7 @@ try {
     <p class="kick">Collection · Traces, tests and scans</p>
     <h1>Find out what the agent actually did</h1>
     <p class="sub"><b>6</b> picks · <b>2</b> of the atlas's
-      14 topics · <b>115,753</b> combined stars ·
+      14 topics · <b>115,838</b> combined stars ·
       snapshot 2026-09-22</p>
     <p class="intro">An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put in front of a customer. Traces first, then tests, then the thing people leave until after the incident.</p>
     <a class="cta" href="../../#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector">Open all 6 in the atlas &rarr;</a>
@@ -82,7 +86,7 @@ try {
   <p class="why">Self-hostable, which matters here more than anywhere: the traces contain your prompts and your customers&#x27; data. The most widely adopted of the open options, and two source lists agree.</p>
   <p class="desc">The most widely adopted self-hostable LLM observability platform: traces every agent step, manages prompt versions, and runs evals in one tool. Preferred over cloud-only alternatives when data residency or cost control is a constraint</p>
   <code class="cmd">pip install langfuse openai</code>
-  <p class="meta ev"><b>34,928</b> stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22</p>
+  <p class="meta ev"><b>34,944</b> stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22</p>
   <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vY" title="Docker: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
   <p class="meta tp"><a href="../../topic/observability-evals/">Observability &amp; Evals</a> <span class="tag">Codex / OpenAI</span><span class="tag">LangChain / LangGraph</span></p>
 </li>
@@ -93,7 +97,7 @@ try {
   <p class="why">Three source lists carry it -- the strongest agreement in this category -- and it pairs a trace UI with an eval runtime, so you can grade the runs you are looking at.</p>
   <p class="desc">Self-hostable trace UI and eval runtime for agent workflows. Lets harness engineers audit and replay every reasoning step and tool call offline, without sending data to a third-party cloud</p>
   <code class="cmd">npx @arizeai/phoenix-cli setup</code>
-  <p class="meta ev"><b>11,574</b> stars · 7 of 39 lists · Python · no licence stated · pushed 2026-09-22</p>
+  <p class="meta ev"><b>11,579</b> stars · 7 of 39 lists · Python · no licence stated · pushed 2026-09-22</p>
   <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vY" title="Docker: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
   <p class="meta tp"><a href="../../topic/observability-evals/">Observability &amp; Evals</a> </p>
 </li>
@@ -104,7 +108,7 @@ try {
   <p class="why">Tests as YAML, with assertions and LLM-as-judge. It is the lowest-ceremony way to turn &quot;it seemed better&quot; into something a pull request can fail on.</p>
   <p class="desc">YAML-driven LLM testing framework with LLM-as-judge, assertion DSL, and native CI integration. The most practical tool for adding agent output regression tests to a PR pipeline without writing a test harness from scratch</p>
   <code class="cmd">npm install -g promptfoo</code>
-  <p class="meta ev"><b>25,369</b> stars · 5 of 39 lists · TypeScript · MIT · pushed 2026-09-22</p>
+  <p class="meta ev"><b>25,371</b> stars · 5 of 39 lists · TypeScript · MIT · pushed 2026-09-22</p>
   <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vN" title="Docker: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
   <p class="meta tp"><a href="../../topic/observability-evals/">Observability &amp; Evals</a> <span class="tag">Claude / Anthropic</span><span class="tag">Codex / OpenAI</span><span class="tag">Gemini / Google</span></p>
 </li>
@@ -115,7 +119,7 @@ try {
   <p class="why">Twenty-plus built-in metrics for LLM and agent evaluation. Use it when you have stopped arguing about whether output is good and started arguing about which axis.</p>
   <p class="desc">The most complete open-source LLM/agent eval framework: 20+ built-in metrics (hallucination, answer relevancy, RAGAs, tool correctness), pytest integration, and a CI-friendly runner. Removes the need to hand-roll eval infrastructure when you need structured, repeatable agent quality gates</p>
   <code class="cmd">pip install -U deepeval</code>
-  <p class="meta ev"><b>18,388</b> stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22</p>
+  <p class="meta ev"><b>18,397</b> stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22</p>
   <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vN" title="Docker: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
   <p class="meta tp"><a href="../../topic/observability-evals/">Observability &amp; Evals</a> </p>
 </li>
@@ -137,7 +141,7 @@ try {
   <p class="why">Scans agent skills for vulnerabilities. Every other page on this site encourages you to install other people&#x27;s instructions; this is the tool that reads them first.</p>
   <p class="desc">by NVIDIA - Security scanner for AI agent skills. Detect vulnerabilities, malicious patterns, and security risks</p>
   <code class="cmd">uv tool install git+https://github.com/NVIDIA/skillspector.git</code>
-  <p class="meta ev"><b>18,051</b> stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22</p>
+  <p class="meta ev"><b>18,104</b> stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-22</p>
   <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vY" title="Docker: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
   <p class="meta tp"><a href="../../topic/agent-skills/">Agent Skills</a> <span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">MCP</span><span class="tag">Codex / OpenAI</span></p>
 </li>
@@ -160,7 +164,7 @@ uv tool install git+https://github.com/NVIDIA/skillspector.git</pre>
   <a class="chip" href="../../collections/first-setup/">A first agentic setup <span class="ct">7</span></a><a class="chip" href="../../collections/windows-first/">Runs on Windows, and says so <span class="ct">7</span></a><a class="chip" href="../../collections/claude-code-kit/">The Claude Code power kit <span class="ct">7</span></a><a class="chip" href="../../collections/local-only/">Nothing leaves the laptop <span class="ct">7</span></a>
   <h2>Or browse the whole atlas</h2>
   <p>8,858 projects, no opinions, every filter in the URL.</p>
-  <a class="chip" href="../../">The interactive index</a>
+  <a class="chip" href="../../catalog/">The interactive index</a>
   <a class="chip" href="../../collections/">All collections</a>
 </nav>
 </div></main>

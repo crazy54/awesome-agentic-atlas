@@ -208,6 +208,13 @@ BRIDGE_CSS = r"""/* THE PROTOTYPE'S TOKENS, IN THE SITE'S. See BRIDGE_CSS in scr
 html[data-skin=glass]{--fx-glow:1; --fx-pulse:1}
 html[data-skin=terminal]{--fx-glow:1; --fx-pulse:1; --fx-scan:1}
 html[data-skin=prism]{--fx-glow:1; --fx-pulse:1}
+/* The four lighter-hearted themes are all still, by design: the fun on this page comes from Archie and
+   his friends, and a theme that pulsed would be a second thing moving that a reader did not ask for. So
+   no --fx-pulse and no --fx-scan for any of them. Sherbet and Aurora take the static glow, because a
+   soft halo is what an ice-cream sign and a night sky are; Riso and Blueprint are ink on paper and
+   inherit the zeroes, which is why they have no line here. */
+html[data-skin=sherbet]{--fx-glow:1}
+html[data-skin=aurora]{--fx-glow:1}
 /* The depth shadows and the poster scrim, per mode. Dark first because dark is the default and lives at
    `:root` everywhere else in this codebase. The scrim is what a poster's title sits on top of its artwork
    in, so it is doing contrast work in a sense -- but against a photograph, which no ratio can be computed
@@ -253,11 +260,13 @@ html[data-theme=light]{
 # second file would be correct on the day they were copied and silently wrong after the first palette edit.
 STAGE_TOKENS = ("--surface", "--band", "--ink", "--ink2")
 
-# `:root` is graphite; the other three are `html[data-skin=X]`. Both forms are the *dark* declaration in
+# `:root` is graphite; the other seven are `html[data-skin=X]`. Both forms are the *dark* declaration in
 # `pages.css` -- the light halves live behind `[data-theme=light]`, which is exactly what this block is
 # cancelling, so matching on a selector without it is what picks the right side.
 STAGE_SKINS = (("graphite", r":root\{"), ("glass", r"html\[data-skin=glass\]\{"),
-               ("terminal", r"html\[data-skin=terminal\]\{"), ("prism", r"html\[data-skin=prism\]\{"))
+               ("terminal", r"html\[data-skin=terminal\]\{"), ("prism", r"html\[data-skin=prism\]\{"),
+               ("sherbet", r"html\[data-skin=sherbet\]\{"), ("riso", r"html\[data-skin=riso\]\{"),
+               ("blueprint", r"html\[data-skin=blueprint\]\{"), ("aurora", r"html\[data-skin=aurora\]\{"))
 
 
 def stage_css() -> str:
@@ -468,6 +477,31 @@ header.danceopen{z-index:30}
 .mhmascot.beat{animation:mhbeat .26s cubic-bezier(.3,1.6,.5,1)}
 @keyframes mhbeat{0%{transform:none}35%{transform:translateY(-9px) scale(1.03,.97)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.mhmascot.beat{animation:none}}
+/* THE LINE OF THE DAY, under the spotlight -- see `daily_line()`. A frosted strip in the chips' shapes, not
+   a card: it is one sentence and should read as an aside to the spotlight rather than a second one. No
+   height is reserved for it, and none needs to be: its picker runs as the parser reaches it, before
+   anything below is laid out, so a longer line on another day is a different page rather than a shift of
+   this one -- `tests/spotlight-check.mjs` asserts no layout-shift entry names it. (A reservation could
+   not have been honest anyway: at 375px the kicker takes its own line and 140 characters take four more.)
+   The text is --ink2 on --panel, which the theme test holds at 4.5:1 in every token set; the link keeps
+   the site's own focus ring rather than restating one. */
+.daily{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:-12px 0 26px;padding:10px 16px;
+  border-radius:var(--radius);border:var(--hair) solid var(--grid);background:var(--panel);
+  backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);font-size:13.5px;line-height:1.5}
+.daily .dkick{margin:0;display:inline-flex;align-items:center;gap:7px;flex:none;color:var(--muted);
+  font-size:11px;font-weight:650;letter-spacing:.08em;text-transform:uppercase}
+.daily .dkick i{width:7px;height:7px;border-radius:50%;background:var(--accent-sky)}
+.daily .dtext{margin:0;flex:1 1 30ch;min-width:0;color:var(--ink2)}
+.daily .dtext a{color:var(--link)}
+/* THE SPOTLIGHT'S PICTURE, TAKEN OUT OF THE ROW'S SIZING. Two columns wide, the prototype sizes the picture
+   `height:100%` inside a grid row whose height the picture itself helps decide, so until it arrives the row
+   is the text column's height, and when it arrives its own proportions can make the row taller: 46px on one
+   pick in `tests/spotlight-check.mjs`, 24 and 5 on others, and a layout shift under the whole page each
+   time. That was always true of the slot; a pool of thirty-one different pictures is what made it
+   measurable, because one of them on any given day is the tall one. Absolutely positioned, the picture fills
+   the box the text and the 268px floor have already decided and cannot change it. Two columns only: at 900
+   and below the picture is on top and sized by its own 16/9, which is known before it loads. */
+@media(min-width:901px){.hero .ph img{position:absolute;inset:0}}
 """
 
 # THE IMPORTED STYLESHEET IS NOT REWRITTEN, and the reason is worth a note because the obvious thing to do
@@ -573,18 +607,58 @@ def dance() -> tuple[str, str]:
             f'<script type="module" src="assets/{DANCE_JS}?v={mascot_version(DANCE)}"></script>')
 
 
-def spotlight() -> str:
-    """One project, chosen from outside the top 200, with its own reason for being there.
+# THE DAILY SPOTLIGHT, AND WHY IT IS PICKED IN THE BROWSER. The slot used to be a crc32 of the snapshot
+# date, which sounds daily and is not: the daily workflow rebuilds this page only when a source list moved,
+# so in a quiet week the "project of the day" sat on one project for six days running. The fix is the one
+# the Discover band already made for the same reason (see `day_fragments()`): decide at build time *what
+# can* be shown, and let the reader's clock decide *which*. The band fetches its day because a day of it is
+# 110 KB; a spotlight is one card of about 2.2 KB, so the whole pool rides inline in the page and nothing is
+# fetched at all -- there is no request to wait for, fail, or be offline for.
+#
+# The pool is SPOT_POOL_N projects, dealt by `rotate()` from the eligible set, so it is stable for one
+# snapshot and reshuffled by the next. 31 because it is the longest month: the pick is the reader's day
+# number modulo the pool, so within a pool no project comes round twice in 31 days and two consecutive days
+# are never the same project -- which a hash of the date could not promise, since a hash modulo 31 repeats
+# on consecutive days one time in 31. The day number is a pure function of the reader's local YYYY-MM-DD,
+# identical here and in `SPOTPICK_JS`; `tests/spotlight_test.py` holds the two to each other across a
+# spread of dates that crosses a month, a year and a leap day.
+#
+# ELIGIBLE is narrower than the old pool on purpose. The old one was every project outside the top 200
+# with an install command -- 8,380 of them, which is nearly the whole corpus and includes 1,269 that have not
+# been pushed in over a year. A slot that argues "look at this one" should be arguing it about a project
+# that at least two independent list maintainers chose and that someone is still working on. That is 598
+# projects on the snapshot this was written against: still twenty pools deep, and still entirely outside
+# the ranking a star-sorted page would show.
+SPOT_POOL_N = 31
+SPOT_EPOCH = datetime.date(1970, 1, 1)
 
-    The prototype's hero, called rather than redrawn, because the argument it makes is exactly the one this
-    page exists to make: the slot with the most prominence is the one slot a project cannot reach by being
-    popular. The pool is projects outside the top 200 that carry an install command, and the choice is a
-    crc32 of the snapshot date -- so it is the same for every reader today and a different project when the
-    data next moves.
-    """
-    tail = [r for r in ROWS if b30.g(r, "nwo") not in b30.TOP200 and b30.g(r, "install")]
-    hero = b30.rotate(tail, 1, "spotlight")[0]
-    f = b30.face(hero)
+
+def spot_eligible() -> list:
+    """Outside the top 200, installable, named by two or more lists, pushed recently, and with a blurb."""
+    out = []
+    for r in ROWS:
+        if b30.g(r, "nwo") in b30.TOP200 or not b30.g(r, "install"):
+            continue
+        f = b30.face(r)
+        if f["lists"] >= 2 and f["fresh"] in ("hot", "warm") and f["blurb"].strip():
+            out.append(r)
+    return out
+
+
+def spot_day(day: str) -> int:
+    """Days from 1970-01-01 to `day`, a YYYY-MM-DD. The browser computes the same integer as
+    `Date.UTC(y, m - 1, d) / 86400000` over the reader's *local* calendar date -- not their UTC instant,
+    which would roll the spotlight over at 7pm in Chicago."""
+    return (datetime.date.fromisoformat(day) - SPOT_EPOCH).days
+
+
+def spot_index(day: str, n: int) -> int:
+    return spot_day(day) % n
+
+
+def hero_card(row, eligible_n: int) -> str:
+    """One spotlight card. The prototype's hero, called rather than redrawn -- see `spotlight()`."""
+    f = b30.face(row)
     return (
         f'<article class="hero" style="--ac:{f["ac"]}">'
         f'<span class="ph">{spot_art(f)}<span class="veil"></span>'
@@ -598,10 +672,188 @@ def spotlight() -> str:
         f'{b30.lic_chip(f)}{b30.flags(f)}</div>'
         f'<p class="rot">Why you are seeing this: it is <b>#{f["rank"]} of'
         f' {b30.thousands(len(ROWS))}</b> by stars, so it cannot reach a first screen ordered by'
-        f' popularity. The slot rotates on a hash of the snapshot date over the'
-        f' {b30.thousands(len(tail))} projects outside the top 200, so it is the same for every reader'
-        ' today and a different project tomorrow.</p>'
+        f' popularity. It is one of {SPOT_POOL_N} drawn from the {b30.thousands(eligible_n)} projects'
+        ' outside the top 200 that two or more lists name and that were pushed recently, and your'
+        ' calendar date picks which, so it is the same for everyone on a given day and a different'
+        ' project tomorrow.</p>'
         f'{b30.cmdline(f)}</div></article>')
+
+
+def spot_pool() -> tuple[list, int]:
+    """The day's candidates, in the order the browser indexes them, and the size of the set they came from."""
+    eligible = spot_eligible()
+    assert len(eligible) >= SPOT_POOL_N, (
+        f"only {len(eligible)} projects are eligible for the spotlight, fewer than its pool of"
+        f" {SPOT_POOL_N}; loosen spot_eligible() rather than let a short pool repeat inside a month")
+    return b30.rotate(eligible, SPOT_POOL_N, "spotlight"), len(eligible)
+
+
+def inline_json(value) -> str:
+    """JSON that is safe inside a `<script>` element. The two sequences that can end or derail a script's
+    raw text are `</` and `<!--`; both go out escaped (`<\\/`, `<\\u0021--`), which JSON.parse reads back as
+    themselves, so a `</script>` inside a blurb cannot end the element early. Only those two, rather than
+    every `<` as `\\u003c`: the pool is thirty-one cards of markup, and escaping every angle bracket made
+    it 25 KB heavier for no further safety.
+
+    The pool's markup is still out of reach of anything that reads the page by pattern, because JSON has
+    already escaped every attribute quote: `probe.mjs` counts pictures with `<img ... src="`, and the pool
+    only ever says `src=\\"`, so thirty-one serialised cards are not thirty-one pictures nobody is shown."""
+    s = json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+    return s.replace("</", "<\\/").replace("<!--", "<\\u0021--")
+
+
+# The reader's calendar day, once, for every rotating slot on the page. A classic inline script so that it
+# runs during parsing, before the first paint and before either slot below asks for it; `n` is the same
+# integer `spot_day()` computes. Named `ATLASDAY` at the top level so the later inline scripts can read it,
+# since separate classic scripts share one global scope.
+DAYPICK_JS = r"""<script>
+const ATLASDAY = (() => {
+  const d = new Date(), y = d.getFullYear(), m = d.getMonth(), day = d.getDate();
+  const p = (v) => String(v).padStart(2, "0");
+  return {iso: y + "-" + p(m + 1) + "-" + p(day), n: Math.round(Date.UTC(y, m, day) / 86400000)};
+})();
+</script>"""
+
+# The picker. It sits immediately after the pool and immediately before the `<noscript>` fallback, and it
+# inserts today's card in front of itself with `insertAdjacentHTML` while the parser is still here -- so the
+# card is in the document before anything below it is laid out and before the first paint, and there is no
+# layout shift to reserve space against: nothing was drawn in that position to be shifted.
+#
+# WHY THE FALLBACK IS IN `<noscript>` rather than drawn and then replaced. The hero's picture is the page's
+# LCP element and is fetched at high priority, and the preload scanner finds it long before any script
+# runs, so a drawn-then-replaced card downloads yesterday's picture -- up to ~450 KB -- on every day that is
+# not the build day, and then throws it away. With scripting on, `<noscript>` content is raw text to both
+# the parser and the preload scanner, so the only picture fetched is the one shown. A reader without script,
+# and a crawler that does not run it, get the build day's card from the `<noscript>` as ordinary markup.
+#
+# If anything here throws -- a pool that did not parse, a browser without `insertAdjacentHTML` -- the catch
+# puts the `<noscript>`'s own text in instead, which with scripting on *is* the fallback card's markup, so a
+# broken picker costs the reader the rotation and never the card.
+SPOTPICK_JS = r"""<script>
+(() => {
+  const me = document.currentScript, ns = me.nextElementSibling;
+  let html = "";
+  try {
+    const pool = JSON.parse(document.getElementById("spotpool").textContent);
+    html = pool[((ATLASDAY.n % pool.length) + pool.length) % pool.length];
+  } catch (e) {
+    html = ns ? ns.textContent : "";
+  }
+  me.insertAdjacentHTML("beforebegin", html);
+})();
+</script>"""
+
+
+def spotlight() -> tuple[str, str]:
+    """The spotlight's markup, and the `nwo` of the build day's pick, which the coverage note counts.
+
+    One project, chosen from outside the top 200, with its own reason for being there. The prototype's hero,
+    called rather than redrawn, because the argument it makes is exactly the one this page exists to make:
+    the slot with the most prominence is the one slot a project cannot reach by being popular. Which of the
+    pool it is, is the reader's calendar day's to decide -- see the note above `SPOT_POOL_N`.
+    """
+    pool, eligible_n = spot_pool()
+    cards = [hero_card(r, eligible_n) for r in pool]
+    pick = spot_index(b30.discover.today(), len(pool))
+    return (
+        f'<script type="application/json" id="spotpool">{inline_json(cards)}</script>'
+        f'{SPOTPICK_JS}<noscript>{cards[pick]}</noscript>',
+        b30.g(pool[pick], "nwo"))
+
+
+# THE LINE OF THE DAY: a tip, a did-you-know, or one of Archie's friends, under the spotlight. The words are
+# the designer's and live in `docs/assets/daily-lines.json`, which is read here, validated, and inlined --
+# not fetched -- for the reason the spotlight's pool is: a slot on the first screen that waits for a request
+# is a slot that is empty on a slow connection and wrong offline. It rotates by the same `ATLASDAY.n` as the
+# spotlight, one line a day over the file's own order, so consecutive days always differ and the designer
+# controls the rhythm by ordering the file (tip, fact, friend, tip, ...) rather than by asking for a
+# scheduler.
+#
+# Wired only while the file is committed, as the mascot is: the slot is somebody else's content, and a page
+# that renders an empty box for it -- or fails to build -- because the words have not landed yet has turned
+# a sequencing detail into a defect. The next run of this stage after the file lands turns it on.
+#
+# The file is checked, not trusted, because nothing downstream would notice a bad one: a line of 400
+# characters wraps the box to five lines on a phone and shoves the shelves down; a duplicate id makes two
+# days identical; a `javascript:` href is a link that runs code; a friend line without a friend is a
+# sentence about nobody. Each of those fails the build with the line's id rather than shipping.
+DAILY_FILE = "daily-lines.json"
+DAILY_KINDS = {"tip": "Tip of the day", "didyouknow": "Did you know?", "friend": "Friend of the day"}
+DAILY_MAX = 140
+DAILY_HREF = re.compile(r"^(?:https://[^\s\"'<>]+|(?![a-z][a-z0-9+.-]*:)(?!/)[A-Za-z0-9._~/#?=&%-]*)$", re.I)
+
+
+def daily_lines(path: Path | None = None) -> list[dict]:
+    """The designer's lines, validated, in file order. Empty while the file is not committed."""
+    path = path or OUT / "assets" / DAILY_FILE
+    if not path.is_file():
+        return []
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    assert doc.get("version") == 1, f"{path.name}: unknown version {doc.get('version')!r}"
+    lines, seen = doc["lines"], set()
+    assert lines, f"{path.name}: no lines"
+    for ln in lines:
+        i = ln.get("id")
+        assert isinstance(i, str) and i and i not in seen, f"{path.name}: missing or duplicate id {i!r}"
+        seen.add(i)
+        assert ln.get("kind") in DAILY_KINDS, f"{path.name}: {i}: kind {ln.get('kind')!r}"
+        t = ln.get("text")
+        assert isinstance(t, str) and t.strip() and len(t) <= DAILY_MAX, (
+            f"{path.name}: {i}: text must be 1-{DAILY_MAX} characters, is {len(t or '')}")
+        assert "<" not in t and ">" not in t, f"{path.name}: {i}: text is plain, and this has markup in it"
+        if ln["kind"] == "friend":
+            assert isinstance(ln.get("friend"), str) and ln["friend"], f"{path.name}: {i}: friend line, no friend"
+        if ln.get("href") is not None:
+            assert isinstance(ln["href"], str) and DAILY_HREF.match(ln["href"]), (
+                f"{path.name}: {i}: href {ln['href']!r} is neither relative nor https")
+    return lines
+
+
+# The picker for the line. It runs after the pool it reads, which is why the order is slot, pool, picker. The
+# slot is drawn server-side with the build day's line, which is what a reader without script sees; this replaces the kicker and the text in place while the parser is still here, so,
+# like the spotlight, it lands before the first paint. Text is set with `textContent` and the link with
+# `href` -- the lines are plain text, and this is what keeps them so even if the file stopped being.
+# `data-friend` is the hook for the friends' runtime: on a friend day it names the friend the line is
+# about, so the sprite that walks on can be the one the sentence introduces.
+DAILYPICK_JS = r"""<script>
+(() => {
+  const box = document.querySelector("[data-daily]");
+  try {
+    const d = JSON.parse(document.getElementById("dailylines").textContent);
+    const ln = d.lines[((ATLASDAY.n % d.lines.length) + d.lines.length) % d.lines.length];
+    box.querySelector("[data-k]").textContent = d.kinds[ln.kind];
+    const t = box.querySelector("[data-t]");
+    t.textContent = "";
+    const inner = document.createElement(ln.href ? "a" : "span");
+    inner.textContent = ln.text;
+    if (ln.href) inner.href = ln.href;
+    t.appendChild(inner);
+    box.dataset.kind = ln.kind;
+    box.dataset.line = ln.id;
+    if (ln.friend) box.dataset.friend = ln.friend; else delete box.dataset.friend;
+  } catch (e) {}
+})();
+</script>"""
+
+
+def daily_line(lines: list[dict] | None = None, day: str | None = None) -> str:
+    """The slot, drawn for the build day, with its lines and its picker; or "" while there are no lines."""
+    lines = daily_lines() if lines is None else lines
+    if not lines:
+        return ""
+    ln = lines[spot_index(day or b30.discover.today(), len(lines))]
+    text = esc(ln["text"])
+    inner = f'<a href="{esc(ln["href"])}">{text}</a>' if ln.get("href") else f"<span>{text}</span>"
+    friend = f' data-friend="{esc(ln["friend"])}"' if ln.get("friend") else ""
+    slim = [{k: ln[k] for k in ("id", "kind", "text", "friend", "href") if ln.get(k)} for ln in lines]
+    return (
+        f'<aside class="daily" aria-label="Of the day" data-daily data-kind="{esc(ln["kind"])}"'
+        f' data-line="{esc(ln["id"])}"{friend}>'
+        f'<p class="dkick"><i></i><span data-k>{esc(DAILY_KINDS[ln["kind"]])}</span></p>'
+        f'<p class="dtext" data-t>{inner}</p></aside>'
+        f'<script type="application/json" id="dailylines">'
+        f'{inline_json({"kinds": DAILY_KINDS, "lines": slim})}</script>'
+        f'{DAILYPICK_JS}')
 
 
 def chip_row() -> str:
@@ -742,9 +994,11 @@ def coverage(shelves: list[dict], hero_nwo: str, discover_n: int) -> str:
     union = {b30.g(r, "nwo") for sh in shelves for r in sh["rows"]} | {hero_nwo}
     outside = sum(1 for n in union if n not in b30.TOP200)
     med = sorted(b30.RANK[n] for n in union)[len(union) // 2]
-    tail = [r for r in ROWS if b30.g(r, "nwo") not in b30.TOP200 and b30.g(r, "install")]
+    # The spotlight's reach is its eligible set rather than today's pool of 31: the pool is redealt from
+    # that set by every snapshot, which is the same sense in which a shelf's pool, and not its twelve, is
+    # what the shelf can reach.
     reach = ({b30.g(r, "nwo") for sh in shelves for r in sh["pool"]}
-             | {b30.g(r, "nwo") for r in tail})
+             | {b30.g(r, "nwo") for r in spot_eligible()})
     return (
         '<div class="cover">'
         f'What this page reaches. The bands above put <b>{len(union)}</b> distinct projects on screen'
@@ -1105,8 +1359,7 @@ def render() -> str:
     # empty one because on a preview page the absence is the subject; on the front page of the site it is
     # just a hole, and the shelf will reappear by itself on the snapshot that fills it.
     shelves = [sh for sh in shelves if sh["rows"]]
-    hero = spotlight()
-    hero_nwo = re.search(r'<p class="own">([^<]+)</p>', hero).group(1)
+    hero, hero_nwo = spotlight()
     band = discover_band()
     discover_n = int(re.search(r'See all <span data-n>([\d,]+)</span>', band).group(1).replace(",", ""))
 
@@ -1178,7 +1431,9 @@ def render() -> str:
         '  </nav>',
         '</div></div></header>',
         '<main><div class="shwrap">',
+        DAYPICK_JS,
         hero,
+        daily_line(),
         chip_row(),
         band,
         *[shelf(sh) for sh in shelves],

@@ -10,7 +10,7 @@ Snapshot 2026-09-22 · 34 picks across 5 sets.
 
 `The agent`  `What it knows how to do`  `What it remembers`  `How it reaches your tools`  `Where it runs`  `What it actually did`  `What to read while it runs`
 
-[Open the set in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=anomalyco/opencode,obra/superpowers,mem0ai/mem0,modelcontextprotocol/servers,daytonaio/daytona,langfuse/langfuse,shareAI-lab/learn-claude-code) · [the page](https://crazy54.github.io/awesome-agentic-atlas/collections/first-setup/)
+[Open the set in the atlas](https://aaa.jeremyfhall.com/#list=anomalyco/opencode,obra/superpowers,mem0ai/mem0,modelcontextprotocol/servers,daytonaio/daytona,langfuse/langfuse,shareAI-lab/learn-claude-code) · [the page](https://aaa.jeremyfhall.com/collections/first-setup/)
 
 ## [Runs on Windows, and says so](windows-first.md)
 
@@ -18,7 +18,7 @@ Snapshot 2026-09-22 · 34 picks across 5 sets.
 
 `The framework`  `The harness`  `The coding agent`  `The model runner`  `The inference engine`  `The context budget`  `The sandbox`
 
-[Open the set in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=openclaw/openclaw,earendil-works/pi,continuedev/continue,ollama/ollama,ggml-org/llama.cpp,headroomlabs-ai/headroom,nearai/ironclaw) · [the page](https://crazy54.github.io/awesome-agentic-atlas/collections/windows-first/)
+[Open the set in the atlas](https://aaa.jeremyfhall.com/#list=openclaw/openclaw,earendil-works/pi,continuedev/continue,ollama/ollama,ggml-org/llama.cpp,headroomlabs-ai/headroom,nearai/ironclaw) · [the page](https://aaa.jeremyfhall.com/collections/windows-first/)
 
 ## [The Claude Code power kit](claude-code-kit.md)
 
@@ -26,7 +26,7 @@ Snapshot 2026-09-22 · 34 picks across 5 sets.
 
 `The format`  `The bundle`  `The instructions file`  `The engineering set`  `The token diet`  `The bill`  `Where to look next`
 
-[Open the set in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=anthropics/skills,obra/superpowers,multica-ai/andrej-karpathy-skills,addyosmani/agent-skills,JuliusBrussee/caveman,ccusage/ccusage,hesreallyhim/awesome-claude-code) · [the page](https://crazy54.github.io/awesome-agentic-atlas/collections/claude-code-kit/)
+[Open the set in the atlas](https://aaa.jeremyfhall.com/#list=anthropics/skills,obra/superpowers,multica-ai/andrej-karpathy-skills,addyosmani/agent-skills,JuliusBrussee/caveman,ccusage/ccusage,hesreallyhim/awesome-claude-code) · [the page](https://aaa.jeremyfhall.com/collections/claude-code-kit/)
 
 ## [Nothing leaves the laptop](local-only.md)
 
@@ -34,7 +34,7 @@ Snapshot 2026-09-22 · 34 picks across 5 sets.
 
 `The runner`  `The engine`  `The zero-setup option`  `The chat surface`  `The consumer-hardware path`  `Your own documents`  `When one machine is not enough`
 
-[Open the set in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=ollama/ollama,ggml-org/llama.cpp,mozilla-ai/llamafile,open-webui/open-webui,nomic-ai/gpt4all,PromtEngineer/localGPT,vllm-project/vllm) · [the page](https://crazy54.github.io/awesome-agentic-atlas/collections/local-only/)
+[Open the set in the atlas](https://aaa.jeremyfhall.com/#list=ollama/ollama,ggml-org/llama.cpp,mozilla-ai/llamafile,open-webui/open-webui,nomic-ai/gpt4all,PromtEngineer/localGPT,vllm-project/vllm) · [the page](https://aaa.jeremyfhall.com/collections/local-only/)
 
 ## [Find out what the agent actually did](keep-it-honest.md)
 
@@ -42,4 +42,4 @@ Snapshot 2026-09-22 · 34 picks across 5 sets.
 
 `The trace`  `The second opinion`  `The test suite`  `The metrics`  `The standard`  `The thing you install`
 
-[Open the set in the atlas](https://crazy54.github.io/awesome-agentic-atlas/#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector) · [the page](https://crazy54.github.io/awesome-agentic-atlas/collections/keep-it-honest/)
+[Open the set in the atlas](https://aaa.jeremyfhall.com/#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector) · [the page](https://aaa.jeremyfhall.com/collections/keep-it-honest/)

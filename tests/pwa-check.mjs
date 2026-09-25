@@ -19,6 +19,7 @@
 // first four assertions below are about a *cold* visit, with no worker registered and no caches, so a
 // reused profile would make the second run of this file assert something different from the first.
 import {execFileSync} from "node:child_process";
+import {existsSync, readFileSync} from "node:fs";
 import {createHash} from "node:crypto";
 import {tmpdir} from "node:os";
 import {fileURLToPath} from "node:url";
@@ -558,8 +559,24 @@ ok("back online, the stamp is the network's data and says nothing about the cach
 //
 // The page is taken from `sitemap-repos.xml` rather than hardcoded, because a hardcoded `nwo` is a repo
 // that will one day leave the source lists and turn this section into a 404 that passes.
-const repoLocs = [...(await (await fetch(ORIGIN + "sitemap-repos.xml")).text())
-  .matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => new URL(m[1]).pathname.split("/").filter(Boolean));
+//
+// A `<loc>` is an absolute URL on the published site, and that site is not this server: it is
+// `scripts/17_markdown.py`'s `SITE`, the custom domain in `docs/CNAME` or, without one, the project's github.io
+// URL. So each loc is made relative to that base, the same `read_cname`/`site_url` rule, and not to the
+// `/awesome-agentic-atlas/` prefix this harness is served under. Stripping a fixed prefix instead read every
+// loc as three segments once the CNAME landed, matched no detail page, and took eight assertions below down
+// with it. A loc outside the base is a sitemap naming another site, and is a failure in its own right.
+const CNAME_FILE = new URL("../docs/CNAME", import.meta.url);
+const cname = existsSync(CNAME_FILE) ? readFileSync(CNAME_FILE, "utf8").trim() : "";
+ok("docs/CNAME is absent or one bare lowercase hostname, as 17_markdown.read_cname requires",
+   !cname || /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(cname), JSON.stringify(cname));
+const SITE = cname ? `https://${cname}/` : "https://crazy54.github.io/awesome-agentic-atlas/";
+const locs = [...(await (await fetch(ORIGIN + "sitemap-repos.xml")).text()).matchAll(/<loc>([^<]+)<\/loc>/g)]
+  .map(m => m[1]);
+const offSite = locs.filter(u => !u.startsWith(SITE));
+ok(`every repo sitemap loc is under the configured site, ${SITE}`, locs.length > 0 && !offSite.length,
+   `${locs.length} locs, ${offSite.length} elsewhere: ${offSite.slice(0, 3).join(" ")}`);
+const repoLocs = locs.filter(u => u.startsWith(SITE)).map(u => u.slice(SITE.length).split("/").filter(Boolean));
 // Both figures have to exist on whichever page is chosen, or the offline assertions below cannot tell a
 // rendered figure from an absent one and would pass on a page that shows neither. `detail.js` guards the
 // push date with `if (row[1])`, and 24 of the 1,294 rows in `live.json` have an empty one -- a 1.9% chance
@@ -567,12 +584,12 @@ const repoLocs = [...(await (await fetch(ORIGIN + "sitemap-repos.xml")).text())
 // from the sitemap rather than hardcoded, for the original reason: a named repository is one that will
 // eventually leave the source lists and turn this section into a 404 that passes.
 const liveRows = (await (await fetch(ORIGIN + "live.json")).json()).repos || {};
-const repoPaths = repoLocs.filter(p => p.length === 4 && p[1] === "repo");
+const repoPaths = repoLocs.filter(p => p.length === 3 && p[0] === "repo");
 const withBoth = repoPaths.filter(p => {
-  const row = liveRows[`${p[2]}/${p[3]}`];
+  const row = liveRows[`${p[1]}/${p[2]}`];
   return Array.isArray(row) && row[0] && row[1];
 });
-const detailPath = (withBoth[0] || repoPaths[0] || []).slice(1).join("/") + "/";
+const detailPath = (withBoth[0] || repoPaths[0] || []).join("/") + "/";
 ok("the repo sitemap names a detail page whose star count and push date both exist", !!withBoth.length,
    `${repoPaths.length} detail pages in the sitemap, ${withBoth.length} with both figures in live.json`);
 const detailUrl = ORIGIN + detailPath;

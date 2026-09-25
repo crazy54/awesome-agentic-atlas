@@ -141,9 +141,9 @@ BODY, LARGE = 4.5, 3.0
 def audit(mode: str, T: dict[str, str]) -> None:
     """Every ratio the page owes a reader, for one token set.
 
-    A function rather than the two-iteration loop this used to be, because there are eight token sets
-    now -- four themes on the `data-skin` axis times light and dark -- and the whole argument for
-    offering eight is that not one of them gets to be the one nobody measured. `mode` is only ever a
+    A function rather than the two-iteration loop this used to be, because there are sixteen token sets
+    now -- eight themes on the `data-skin` axis times light and dark -- and the whole argument for
+    offering sixteen is that not one of them gets to be the one nobody measured. `mode` is only ever a
     label here; nothing below branches on it.
     """
     # Every token drawn as text, on every backdrop it can land on. Which backdrop a given rule actually
@@ -227,20 +227,20 @@ for mode, T in (("dark", DARK), ("light", LIGHT)):
     check(f"{mode}: --warn stays distinct from the action colour", T["warn"],
           "#EF7D86" if mode == "dark" else "#875A19")
 
-# ---------------------------------------------------------------- the six opt-in theme blocks
-# Three themes a reader can choose from the Settings menu, each declared twice: `html[data-skin=X]` for
+# ---------------------------------------------------------------- the fourteen opt-in theme blocks
+# Seven themes a reader can choose from the Settings menu, each declared twice: `html[data-skin=X]` for
 # its dark values and `html[data-skin=X][data-theme=light]` for its light ones. Nothing here is checked
 # any more gently than graphite is -- `audit()` above is the same function, on the same role map, at the
-# same floors. That is the whole warrant for shipping four themes rather than one: a theme is a set of
+# same floors. That is the whole warrant for shipping eight themes rather than one: a theme is a set of
 # thirteen colours that has been through this, and a theme that has not been through this is a mood.
-SKINS = ("glass", "terminal", "prism")
+SKINS = ("glass", "terminal", "prism", "sherbet", "riso", "blueprint", "aurora")
 SKIN = {}
 for skin in SKINS:
     SKIN[(skin, "dark")] = block("html[data-skin=" + skin + "]{")
     SKIN[(skin, "light")] = block("html[data-skin=" + skin + "][data-theme=light]{")
 
 # Pinned, because every assertion in this section iterates `SKIN` and an empty dict passes all of them.
-check("there are eight token sets in all", 2 + len(SKIN), 8)
+check("there are sixteen token sets in all", 2 + len(SKIN), 16)
 for (skin, mode), T in sorted(SKIN.items()):
     # Same thirteen names, not merely thirteen of something. `var(--x)` with no fallback resolves to
     # nothing, and the light block of a skin sits *after* its dark block on the same element -- so a
@@ -250,12 +250,12 @@ for (skin, mode), T in sorted(SKIN.items()):
     audit(f"{skin} {mode}", T)
 
 # And that the themes are actually different from each other, which no ratio above can ask. Without this
-# a copy-paste of graphite under three new selectors passes every contrast assertion in this file.
+# a copy-paste of graphite under seven new selectors passes every contrast assertion in this file.
 for skin in SKINS:
     true(f"{skin} is not graphite repainted", SKIN[(skin, "dark")] != DARK)
     true(f"{skin} light is not graphite light repainted", SKIN[(skin, "light")] != LIGHT)
 check("no two themes share a dark --surface",
-      len({T["surface"] for (s, m), T in SKIN.items() if m == "dark"} | {DARK["surface"]}), 4)
+      len({T["surface"] for (s, m), T in SKIN.items() if m == "dark"} | {DARK["surface"]}), 1 + len(SKINS))
 
 # ---------------------------------------------------------------- the structural tokens
 # The four tokens that are not colours: the font stack, the background wash, the panel fill and the
@@ -327,7 +327,7 @@ check("every theme has a light literal too", sorted(LIGHTMAP), sorted(HEADMAP))
 
 # The third place, and the one that cannot be avoided: a swatch for a theme the page is not wearing
 # cannot read that theme's custom properties, because they are declared on <html> and one skin is on
-# <html> at a time. So the menu carries twelve literal hex values, and this is what makes them a copy of
+# <html> at a time. So the menu carries twenty-four literal hex values, and this is what makes them a copy of
 # something rather than a decision taken twice.
 MENU = re.findall(r'<button type="button" class="thb" data-skin="(\w+)"(.*?)</button>', SRC, re.S)
 check("the menu offers one button per theme", [s for s, _ in MENU], list(("graphite",) + SKINS))
@@ -420,14 +420,14 @@ SCRIPTS = PAGE.parent
 def palette_text(name: str) -> str:
     """Every theme block verbatim, from `:root{` to the close of the last one.
 
-    Eight rules now rather than two, and the slice deliberately runs to the end of the last skin block
+    Sixteen rules now rather than two, and the slice deliberately runs to the end of the last skin block
     instead of stopping at the light one. A copy that carried graphite faithfully and got glass wrong
     would be a page whose facet and detail views revert to graphite's colours for a reader who chose
     glass -- which is the same class of defect this check was written for, one theme further out.
     """
     src = (SCRIPTS / name).read_text(encoding="utf-8")
     i = src.index(":root{")
-    j = src.index("}", src.index("html[data-skin=prism][data-theme=light]{")) + 1
+    j = src.index("}", src.index("html[data-skin=" + SKINS[-1] + "][data-theme=light]{")) + 1
     return src[i:j]
 
 
