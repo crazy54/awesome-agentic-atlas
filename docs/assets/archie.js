@@ -91,8 +91,11 @@
     // same query goes on the two it loads. A release then changes all three URLs at once, so the HTTP cache
     // can never pair this script with an older renderer or model, or the reverse.
     const V = new URL(import.meta.url).search;
-    // The stage effects (`archie-fx.js`: the dance floor, fog, haze, CO2, flames and sparks) come with it.
-    const [T, FX] = await Promise.all([import(`./three-archie.js${V}`), import(`./archie-fx.js${V}`)]);
+    // The stage effects (`archie-fx.js`: the dance floor, fog, haze, CO2, flames and sparks) come with it,
+    // and so does the light show's look book (`rig-show.js`: colours, gobos, laser graphics), which is 8 KB
+    // and data only. Without the look book the rig still plays, in one house look and with open beams.
+    const [T, FX, SHOW] = await Promise.all([import(`./three-archie.js${V}`), import(`./archie-fx.js${V}`),
+      import(`./rig-show.js${V}`).catch(e => { console.warn("Archie's rig plays the house look:", e); return null; })]);
     const renderer = new T.WebGLRenderer({alpha: true, antialias: true, powerPreference: "low-power"});
     // Capped lower than a page image would be: the canvas is the width of the screen.
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
@@ -122,13 +125,28 @@
     const actor = new T.Group();          // what the director moves and turns; the clips animate inside it
     actor.add(gltf.scene);
     scene.add(actor);
-    const rig = lights(T, scene);
+    const rig = lights(T, scene, SHOW, V);
 
     // ---- Layout: a screen-wide canvas, and a frustum that keeps the slot's window where the poster was --
     const canvas = renderer.domElement;
     const header = slot.closest("header") || slot.parentElement;
     const host = slot.parentElement;       // the bubble and the poke target sit here, beside the slot
-    const laser = lasers(header);
+    // The rig's named cues, for the admin panel: `window.archieRig.cue(name)`, or an `archie:cue` event
+    // with {name} for a caller that holds no reference. They exist only while the live model does, so a
+    // reader on the poster, or one who asked for reduced motion, has none; and they do nothing in Quiet
+    // mode, which is a reader asking the mascot to leave them alone. Taken down with the model, by
+    // `laser.stop()`, which `stop()` already calls.
+    const onCue = e => { if (window.archieRig) window.archieRig.cue(e.detail && e.detail.name); };
+    document.addEventListener("archie:cue", onCue);
+    window.archieRig = {
+      cues: rig.cues.slice(),
+      cue: name => !talk.quiet && rig.cue(name),
+      status: () => ({...rig.status(), dancing: rig.on, quiet: talk.quiet}),
+    };
+    const laser = lasers(header, rig, SHOW, () => {
+      document.removeEventListener("archie:cue", onCue);
+      delete window.archieRig;
+    });
     const edge = {left: -8, right: 8, top: 5};
     const fx = FX.effects(T, scene, rig, edge, canvas);
     const view = {W: 1, H: 1, cx: 0, cy: 0, k: 1, sw: 240, sh: 240, ppm: 75, slide: 0, ox: 0, oy: 0};
@@ -500,24 +518,26 @@
       mixer.update(dt);
       music.kick *= Math.exp(-6 * dt);
       const kick = g ? music.kick : null, loud = g ? loudness() : null;
-      rig.update(dt, clock, actor.position.x,
-                 n && rig.on ? {at: current.time / c.duration * n, rate: n / c.duration * current.timeScale,
-                                kick, loud} : null);
-      laser.update(dt, n && rig.on ? {at: current.time / c.duration * n, kick} : null, rig.level, beams());
+      // A dance's beat, or, between dances, a cue's own (see `rig.cue`), which the lights and lasers play
+      // to and the stage effects do not: a cue brings up the floor and the fog, never the flames.
+      const dancing = n && rig.on ? {at: current.time / c.duration * n, rate: n / c.duration * current.timeScale,
+                                     kick, loud} : null;
+      const beat = dancing || rig.synth(dt);
+      rig.update(dt, clock, actor.position.x, beat, dancing ? n : 0);
+      laser.update(dt, beat, rig.level, beams());
       fx.update(dt, clock, actor.position.x, n && rig.on ? {at: current.time / c.duration * n, n, kick} : null,
                 rig.level);
       talk.update(dt, idling);
       if (!seen && mode === "home" && idling) run();
     };
-    // The truss's heads, where they are on the page, for the lasers
-    const spots = [], hp = new T.Vector3();
+    // The truss's two laser units, where they are on the page, for the lasers. Two objects, made once.
+    const spots = [{x: 0, y: 0}, {x: 0, y: 0}], hp = new T.Vector3();
     const beams = () => {
       if (!rig.level) return spots;
       const r = canvas.getBoundingClientRect();
-      rig.heads.forEach((h, i) => {
-        hp.copy(h.body.position).project(camera);
-        spots[i] = {x: r.left + (hp.x + 1) / 2 * r.width, y: r.top + (1 - hp.y) / 2 * r.height,
-                    rgb: h.color.getStyle().slice(4, -1)};
+      spots.forEach((p, i) => {
+        rig.laserAt(i, hp).project(camera);
+        p.x = r.left + (hp.x + 1) / 2 * r.width; p.y = r.top + (1 - hp.y) / 2 * r.height;
       });
       return spots;
     };
@@ -1005,25 +1025,98 @@
     };
   }
 
-  // The light show, the kind an EDM stage hangs over its crowd, for the dances only. When a dance starts, a
-  // truss with four moving heads drops in from above the header, bounces to a stop, and the heads come up.
-  // Each throws a smoky cone of coloured light, plus a spotlight that actually colours him and a pool on the
-  // floor. On the dance's beat the heads snap to new marks, pulse a little, and change colour at every
-  // bar. A glow rises behind him, and an LED video wall hangs from the truss and drops in with it. The wall
-  // shows an equaliser, rings, plasma, chevrons or a starburst: a new one every bar, all of them on the beat.
-  // The lasers leave the scene altogether and go over the page: see `lasers()`. When the dance ends it all
-  // fades, and the truss is hauled back up with the wall.
+  // The light show, the kind an EDM stage hangs over its crowd, for the dances, and for the named cues an
+  // admin can fire at any time (see `cue()` and `window.archieRig` in `start()`). What hangs, and where:
   //
-  // Nothing strobes. A pulse is a fifth of the brightness, a colour change keeps the brightness it had,
-  // and a fast dance pulses on every other beat, so no dance comes near three flashes a second. None of
-  // this runs for a reader who has asked for reduced motion, because nothing here does.
-  function lights(T, scene) {
+  //  - THE MAIN TRUSS drops in from above the header, bounces to a stop, and carries six moving heads, two
+  //    blinders at its ends and two laser units between the heads. The heads are the star of the show:
+  //    each throws a smoky cone through the haze, a spotlight that actually colours him and a pool on the
+  //    floor, and runs one program a phrase of eight beats -- marks (a new spot every beat), a chase (all on
+  //    him, the brightness running along the line), a fan (opening and closing on the floor), crossings
+  //    (left heads to the right and back), and a ballyhoo (big circles out over the stage). Every other
+  //    phrase the heads put in a gobo from the designer's set (`rig-show.js`, `rig-gobos/*.svg`), which
+  //    breaks the cone into fingers of light and projects, turning, into the floor pools and onto the
+  //    backdrop.
+  //  - TWO SIDE TOWERS, a vertical truss each side of the stage, with two LED wash pars apiece throwing
+  //    colour in across the backdrop; and a ROW OF FLOOR PARS at the stage front uplighting him and the
+  //    wall. The wash is the look's two wash colours, swapped every two bars and cross-faded, never cut.
+  //  - THREE DROP-DOWN PODS, a short triangle truss on a cable each, one in each top corner of the canvas and
+  //    one high over him, with a moving head apiece. They lower halfway through a dance, or on the `pods`
+  //    cue, and join the heads' program.
+  //  - THE VIDEO WALL hangs from the truss and drops with it. It plays a looped clip (`VIDEO` below)
+  //    through a texture, fetched only when the lights first come up, paused and released when they go
+  //    down; until a clip has frames, and on any failure, it shows the procedural visuals it always had.
+  //
+  // COLOUR is the designer's look book, `rig-show.js`: four looks, each with four beam colours, two wash,
+  // two laser and a blinder colour, and a deeper set for the light theme, where pale light vanishes into
+  // the page. A dance arcs through them, cool to warm and back: Blue Hour for its first third, Ember for
+  // the middle, Afterglow to the end, and Low Tide whenever the reader's music drops quiet. Every colour a
+  // fixture shows is eased toward its target, so a change of look or bar is a cross-fade, never a cut.
+  //
+  // NOTHING STROBES (WCAG 2.3.1: no more than three flashes in any second, and no large bright area
+  // flashing at all). A beat's pulse is a fifth of a head's brightness and comes on every other beat when a
+  // dance runs faster than three beats a second; the chase moves a soft bump along the heads, so any one
+  // head brightens once in six beats; the wash never pulses. The blinders, which on a real stage are the
+  // hardest hit there is, SWELL here: a small warm glow over 0.4 s, a quarter-second hold and 1.1 s to
+  // fade, on a big downbeat only (the first beat of every sixteen), and never twice in four seconds, so the
+  // fastest they can go is once in four. `tests/rig-check.mjs` samples every fixture's level each frame and
+  // counts. None of this runs for a reader who has asked for reduced motion, because nothing here does.
+  //
+  // The artist's fixture models (`rig/rig.glb`: `head` with `head_yoke` panning about Y and `head_tilt`
+  // tilting about X, `blinder`, `par`, `truss`, `pod`) replace the stand-in geometry below when `MODELS`
+  // names the file; until then, and if it fails to load, the stand-ins are what hang.
+  function lights(T, scene, SHOW, V) {
     const group = new T.Group();
     group.visible = false;
     scene.add(group);
-    const PALETTE = [0xff2bd6, 0x22e1ff, 0x8a5bff, 0xffb000].map(c => new T.Color(c));
     const time = {value: 0};
     const glows = [];
+    // The bundled renderer (`three-archie.js`) does not export `Texture`, and rebuilding it for one class
+    // would cost more than this whole rig. The environment map made above is one, so its constructor is
+    // the class: a texture whose `image` is a canvas or a <video> is exactly what CanvasTexture and
+    // VideoTexture are, with `needsUpdate` set by hand when the pixels change. 1006 is THREE.LinearFilter.
+    const Tex = scene.environment && scene.environment.constructor;
+    const texture = img => {
+      if (!Tex) return null;
+      const t = new Tex(img);
+      t.colorSpace = T.SRGBColorSpace; t.minFilter = t.magFilter = 1006; t.generateMipmaps = false;
+      t.needsUpdate = true;
+      return t;
+    };
+
+    // ---- The looks, as colours, made once. `dark` and `light` are the two themes' sets. ----------------
+    const col = h => new T.Color(h);
+    const LOOKS = (SHOW && SHOW.LOOKS && SHOW.LOOKS.length ? SHOW.LOOKS : [{id: "house",
+      beams: ["#ff2bd6", "#22e1ff", "#8a5bff", "#ffb000"], wash: ["#5b1e7a", "#0f6e6a"], laser: ["#3cf2d8", "#ff5cb8"],
+      blinder: "#ffe7c2", gobo: "", lasers: []}]).map(l => {
+      const set = s => ({beams: s.beams.map(col), wash: s.wash.map(col), laser: s.laser.slice(), blinder: col(s.blinder)});
+      return {id: l.id, gobo: l.gobo, lasers: l.lasers || [], dark: set(l), light: set(l.light || l)};
+    });
+    const lookId = id => Math.max(0, LOOKS.findIndex(l => l.id === id));
+    const ARC = [lookId("blue-hour"), lookId("ember"), lookId("afterglow")], QUIET = lookId("low-tide");
+    const GOBO_IDS = (SHOW && SHOW.GOBOS || []).map(g => g.id);
+
+    // ---- The gobo atlas: every gobo in one strip, 128 px a cell, so one texture serves every beam. ------
+    // It starts as open circles, which is a beam with no gobo in, and each SVG is drawn into its cell as it
+    // loads. Fetched when the lights first come up, not before.
+    const CELL = 128, CELLS = Math.max(1, GOBO_IDS.length);
+    const atlas = document.createElement("canvas");
+    atlas.width = CELL * CELLS; atlas.height = CELL;
+    const ag = atlas.getContext("2d");
+    ag.fillStyle = "#000"; ag.fillRect(0, 0, atlas.width, atlas.height);
+    ag.fillStyle = "#fff";
+    for (let i = 0; i < CELLS; i++) { ag.beginPath(); ag.arc(i * CELL + 64, 64, 60, 0, Math.PI * 2); ag.fill(); }
+    const goboTex = texture(atlas);
+    let gobosAsked = false;
+    const loadGobos = () => {
+      if (gobosAsked || !goboTex) return;
+      gobosAsked = true;
+      GOBO_IDS.forEach((id, i) => {
+        const img = new Image();
+        img.onload = () => { ag.drawImage(img, i * CELL, 0, CELL, CELL); goboTex.needsUpdate = true; };
+        img.src = new URL(`rig-gobos/${id}.svg${V}`, import.meta.url).href;
+      });
+    };
 
     // Every glowing surface here is one of these: the fragment sets `a`, how bright it is, and may change
     // `c` from the material's colour.
@@ -1040,13 +1133,14 @@
                        mix(hash(i + vec3(0, 1, 0)), hash(i + vec3(1, 1, 0)), f.x), f.y),
                    mix(mix(hash(i + vec3(0, 0, 1)), hash(i + vec3(1, 0, 1)), f.x),
                        mix(hash(i + vec3(0, 1, 1)), hash(i + vec3(1, 1, 1)), f.x), f.y), f.z); }`;
+    const light = () => document.documentElement.dataset.theme === "light";
     const tint = mat => {
-      const light = document.documentElement.dataset.theme === "light";
-      mat.uniforms.haze.value = light ? 1 : 0;
-      mat.blendSrc = light ? T.SrcAlphaFactor : T.OneFactor;
-      mat.blendDst = light ? T.OneMinusSrcAlphaFactor : T.OneFactor;
-      mat.blendSrcAlpha = light ? T.OneFactor : T.ZeroFactor;
-      mat.blendDstAlpha = light ? T.OneMinusSrcAlphaFactor : T.OneFactor;
+      const l = light();
+      mat.uniforms.haze.value = l ? 1 : 0;
+      mat.blendSrc = l ? T.SrcAlphaFactor : T.OneFactor;
+      mat.blendDst = l ? T.OneMinusSrcAlphaFactor : T.OneFactor;
+      mat.blendSrcAlpha = l ? T.OneFactor : T.ZeroFactor;
+      mat.blendDstAlpha = l ? T.OneMinusSrcAlphaFactor : T.OneFactor;
     };
     const glow = (frag, uniforms = {}, defs = "") => {
       const mat = new T.ShaderMaterial({
@@ -1073,18 +1167,41 @@
     new MutationObserver(() => glows.forEach(tint))
       .observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
 
+    // A gobo is a mask in the gate: `gob(p)` is how much light passes at p, in [-1, 1] across the gate,
+    // turned by `spin`. `cell` picks the gobo from the atlas; `gon` is how far it is in (0 is open white).
+    const GOBO = `uniform sampler2D gobo; uniform float cell, cells, spin, gon;
+      float gob(vec2 p) {
+        float cs = cos(spin), sn = sin(spin); p = vec2(cs * p.x - sn * p.y, sn * p.x + cs * p.y);
+        float t = texture2D(gobo, vec2((cell + 0.5 + p.x * 0.47) / cells, 0.5 - p.y * 0.47)).r;
+        return mix(1.0, t, gon * step(length(p), 1.0));
+      }`;
+    const goboU = () => ({gobo: {value: goboTex}, cell: {value: 0}, cells: {value: CELLS}, spin: {value: 0},
+                          gon: {value: 0}});
     // Brightest down the middle of the cone and at the fixture, falling away at the edges and the far end,
-    // and broken up by drifting smoke, which is what makes a transparent cone read as a beam in haze.
+    // and broken up by drifting smoke, which is what makes a transparent cone read as a beam in haze. With
+    // a gobo in, the cone's surface is the gate's rim carried down the beam, so it breaks into fingers.
     const BEAM = `a = pow(abs(dot(vN, vV)), 2.0) * pow(vUv.y, 1.6)
-        * (0.5 + 0.5 * noise(vW * 1.7 + vec3(0.0, -time * 0.3, time * 0.2)));`;
-    const POOL = `a = pow(max(0.0, 1.0 - length(vUv - 0.5) * 2.0), 2.0) * 0.9;`;
+        * (0.5 + 0.5 * noise(vW * 1.7 + vec3(0.0, -time * 0.3, time * 0.2)));
+      float u = vUv.x * 6.28318;
+      a *= 0.35 + 0.65 * gob(vec2(cos(u), sin(u)) * 0.72) + 0.4 * gon;`;
+    // The wash pars' cones: wider, softer, no smoke breakup, so they read as colour, not as beams.
+    const WASH = `a = pow(abs(dot(vN, vV)), 1.5) * pow(vUv.y, 2.6) * 0.35;`;
+    const POOL = `vec2 q = (vUv - 0.5) * 2.0;
+      a = pow(max(0.0, 1.0 - length(q)), 1.4) * 0.9 * (0.35 + 0.65 * gob(q * 1.05)) * (1.0 + 0.6 * gon);`;
+    // The backdrop's glow, with two gobo projections on it, where the heads would put them.
     const BACK = `vec2 q = (vUv - 0.5) * 2.0;
       a = pow(max(0.0, 1.0 - length(q * vec2(1.0, 1.7))), 1.5)
-        * (0.35 + 0.65 * noise(vec3(vW.xy * 0.9, time * 0.2))) * 0.3;`;
-    // The video wall: a grid of round LEDs, each showing one sample of a picture. `modeA` fades into `modeB`
-    // over a bar's first beat; `beat` is the dance's position in beats, and `eq` the equaliser's sixteen
-    // bars, which the script sets because they jump on the beat.
-    const SCREENS = `uniform vec2 grid; uniform float beat, modeA, modeB, fade, eq[16];
+        * (0.35 + 0.65 * noise(vec3(vW.xy * 0.9, time * 0.2))) * 0.3;
+      vec2 s1 = (vW.xy - g1) / 0.8, s2 = (vW.xy - g2) / 0.8;
+      a += gon * 0.55 * (step(length(s1), 1.0) * gob(s1) * (1.0 - length(s1) * 0.6)
+                       + step(length(s2), 1.0) * gob(s2) * (1.0 - length(s2) * 0.6));`;
+    // A small soft disc facing the camera: a lens's flare. The blinders' is warm and is all they light.
+    const FLARE = `float r = length(vUv - 0.5) * 2.0; a = pow(max(0.0, 1.0 - r), 2.2) * 1.4;
+      c = mix(vec3(1.0), color, smoothstep(0.0, 0.5, r));`;
+    // The video wall: a grid of round LEDs, each showing one sample of a picture. When a clip is playing,
+    // `vid` is its frame and `von` how far it has faded in; otherwise, `modeA` fades into `modeB` over a
+    // bar's first beat; `beat` is the dance's position in beats, and `eq` the equaliser's sixteen bars.
+    const SCREENS = `uniform vec2 grid; uniform float beat, modeA, modeB, fade, eq[16], von, vgain; uniform sampler2D vid;
       vec3 hue(float x) { return 0.55 + 0.45 * cos(6.28318 * (x + vec3(0.0, 0.33, 0.67))); }
       vec3 screen(float m, vec2 q) {
         vec2 p = (q - 0.5) * vec2(grid.x / grid.y, 1.0);
@@ -1109,87 +1226,372 @@
         return hue(length(p) * 0.4 + beat * 0.1) * smoothstep(0.35, 0.65, 0.5 + 0.5 * cos(r * 8.0))
              * smoothstep(0.02, 0.2, length(p));
       }`;
-    const WALL = `vec2 g = vUv * grid, q = (floor(g) + 0.5) / grid;
+    // With a clip in, the wall is a picture, not a scatter of dots: the LEDs are packed three times as
+    // densely, fill most of their pitch, and each takes its colour as the frame has it rather than
+    // normalised to full brightness. The frame arrives decoded to linear light (the texture is sRGB, as it
+    // should be), so the clip's gain is applied there, where light adds, and the result is encoded back to
+    // sRGB for the canvas, since a ShaderMaterial's output is written as it stands. The clip's own level
+    // is never tied to the beat: it is the rig's master level, as every fixture's is, and nothing else.
+    // On the light theme the panel is what a real LED wall is with the house lights up -- a dark screen
+    // with the picture on it, nearly opaque -- because added to a near-white page there is no headroom.
+    const WALL = `vec2 g = vUv * grid * (1.0 + 2.0 * step(0.001, von)), q = (floor(g) + 0.5) / (grid * (1.0 + 2.0 * step(0.001, von)));
       vec3 v = mix(screen(modeA, q), screen(modeB, q), fade);
       float m = max(max(v.r, v.g), max(v.b, 1e-3));
-      float led = m * smoothstep(0.5, 0.28, length(fract(g) - 0.5));
+      float dotm = smoothstep(0.5, 0.28, length(fract(g) - 0.5));
+      float led = m * dotm;
       c = v / m;
       a = led * 1.3;
       // Pale light vanishes into a light page, so there the LEDs are deeper and the panel shows, faintly.
-      if (haze > 0.5) { c = mix(vec3(0.08, 0.09, 0.12), c * c, min(1.0, led * 2.0)); a = max(led * 2.2, 0.2); }`;
-    // The fixtures themselves, dark metal, so the truss reads as hardware against the masthead.
+      if (haze > 0.5) { c = mix(vec3(0.08, 0.09, 0.12), c * c, min(1.0, led * 2.0)); a = max(led * 2.2, 0.2); }
+      if (von > 0.0) {
+        vec3 pic = pow(min(vec3(1.0), texture2D(vid, q).rgb * vgain), vec3(0.4545));
+        float fill = 0.7 + 0.3 * smoothstep(0.62, 0.4, max(abs(fract(g).x - 0.5), abs(fract(g).y - 0.5)));
+        vec3 pc = pic; float pa = fill * 1.7;
+        if (haze > 0.5) { pc = mix(vec3(0.05, 0.06, 0.08), pic, fill); pa = 2.4; }
+        c = mix(c, pc, von); a = mix(a, pa, von);
+      }`;
+
+    // ---- Hardware. Dark metal, so the rig reads as hardware against the masthead. -----------------------
     const metal = new T.MeshStandardMaterial({color: 0x16181d, metalness: 0.8, roughness: 0.35});
+    const lensMat = () => new T.MeshBasicMaterial({color: 0x000000});
     const bar = new T.Mesh(new T.BoxGeometry(1, 0.07, 0.07), metal);
-    group.add(bar);
+    const bar2 = new T.Mesh(new T.BoxGeometry(1, 0.035, 0.035), metal);   // the box truss's lower chord
+    group.add(bar, bar2);
     const L = 10;
     const cone = new T.CylinderGeometry(0.03, 0.7, L, 40, 1, true);
     cone.translate(0, -L / 2, 0);
     cone.rotateX(-Math.PI / 2);                         // apex at the origin, pointing down +Z for lookAt()
+    const washCone = new T.CylinderGeometry(0.06, 1.1, 3, 24, 1, true);
+    washCone.translate(0, -1.5, 0);
+    washCone.rotateX(-Math.PI / 2);
     const can = new T.CylinderGeometry(0.1, 0.13, 0.26, 20).rotateX(Math.PI / 2);
     const face = new T.CircleGeometry(0.095, 20).translate(0, 0, 0.131);
     const rod = new T.BoxGeometry(0.03, 0.2, 0.03);
-    const heads = [0, 1, 2, 3].map(() => {
-      const beam = new T.Mesh(cone, glow(BEAM));
+    const flareGeo = new T.PlaneGeometry(1, 1);
+    const poolGeo = new T.CircleGeometry(0.6, 32).rotateX(-Math.PI / 2);
+
+    // A moving head: yoke, can, lens, beam, floor pool and a real spotlight. The spotlights stay in the
+    // scene at zero rather than being hidden with the rig: three.js compiles its shaders for the number of
+    // lights, so adding them at the first dance would stall that frame. Only the truss's six carry one;
+    // the pods' three are beams and pools only, to keep the light count where it was.
+    const makeHead = spotlit => {
+      const beam = new T.Mesh(cone, glow(BEAM, goboU(), GOBO));
       const body = new T.Mesh(can, metal);
-      const lens = new T.Mesh(face, new T.MeshBasicMaterial({color: 0xffffff}));
+      const lens = new T.Mesh(face, lensMat());
       body.add(lens);
       const hang = new T.Mesh(rod, metal);
-      const pool = new T.Mesh(new T.CircleGeometry(0.6, 32).rotateX(-Math.PI / 2), glow(POOL));
-      // The spotlights stay in the scene at zero rather than being hidden with the rig: three.js compiles
-      // its shaders for the number of lights, so adding four at the first dance would stall that frame.
-      const spot = new T.SpotLight(0xffffff, 0, 0, 0.16, 0.6, 0);
+      const pool = new T.Mesh(poolGeo, glow(POOL, goboU(), GOBO));
       group.add(beam, body, hang, pool);
-      scene.add(spot, spot.target);
-      return {beam, body, lens, hang, pool, spot, x: 0, aim: new T.Vector3(), color: new T.Color()};
+      let spot = null;
+      if (spotlit) { spot = new T.SpotLight(0xffffff, 0, 0, 0.16, 0.6, 0); scene.add(spot, spot.target); }
+      return {beam, body, lens, hang, pool, spot, x: 0, gain: 1, bump: 1, aim: new T.Vector3(), color: new T.Color()};
+    };
+    const heads = [0, 1, 2, 3, 4, 5].map(i => makeHead(i >= 1 && i <= 4));
+    const four = heads.slice(0, 4);
+    // The pods: a triangle of truss on a cable, a head hanging under it.
+    const pods = [0, 1, 2].map(() => {
+      const frame = new T.Mesh(new T.CylinderGeometry(0.2, 0.2, 0.12, 3, 1, true), metal);
+      const cable = new T.Mesh(new T.BoxGeometry(0.012, 1, 0.012), metal);
+      group.add(frame, cable);
+      const head = makeHead(false);
+      return {frame, cable, head, x: 0, z: 0, low: 0};
     });
-    const back = new T.Mesh(new T.PlaneGeometry(9, 5), glow(BACK));
+    const all = heads.concat(pods.map(p => p.head));
+
+    // Blinders: a two-lite on each end of the truss, facing the reader. Their light is a flare over each
+    // cell and one warm point light on him, both at zero until a swell.
+    const blinders = [0, 1].map(() => {
+      const body = new T.Mesh(new T.BoxGeometry(0.34, 0.18, 0.1), metal);
+      const cells = [-0.08, 0.08].map(x => {
+        const l = new T.Mesh(new T.CircleGeometry(0.065, 16).translate(x, 0, 0.051), lensMat());
+        body.add(l);
+        return l;
+      });
+      const flare = new T.Mesh(flareGeo, glow(FLARE));
+      group.add(body, flare);
+      return {body, cells, flare};
+    });
+    const warm = new T.PointLight(0xffd9a0, 0, 0, 0);
+    scene.add(warm);
+
+    // Wash pars: two on each side tower, facing in, and a row of five on the stage floor, facing up.
+    const makePar = () => {
+      const body = new T.Mesh(new T.CylinderGeometry(0.07, 0.08, 0.14, 16).rotateX(Math.PI / 2), metal);
+      const lens = new T.Mesh(new T.CircleGeometry(0.06, 16).translate(0, 0, 0.071), lensMat());
+      body.add(lens);
+      const beam = new T.Mesh(washCone, glow(WASH));
+      group.add(body, beam);
+      return {body, lens, beam, aim: new T.Vector3(), color: new T.Color(), k: 0};
+    };
+    const towers = [0, 1].map(() => { const m = new T.Mesh(new T.BoxGeometry(0.07, 1, 0.07), metal); group.add(m); return m; });
+    const sidePars = [0, 1, 2, 3].map(makePar);
+    const floorPars = [0, 1, 2, 3, 4].map(makePar);
+    const pars = sidePars.concat(floorPars);
+    pars.forEach((p, i) => { p.k = i % 2; });
+
+    const back = new T.Mesh(new T.PlaneGeometry(9, 5), glow(BACK, {...goboU(), g1: {value: {x: -1.4, y: 1.5}},
+                                                                   g2: {value: {x: 1.4, y: 1.5}}}, GOBO + "uniform vec2 g1, g2;"));
     const eq = new Array(16).fill(0);
     const wall = new T.Mesh(new T.PlaneGeometry(1, 1), glow(WALL, {
       grid: {value: {x: 60, y: 30}}, beat: {value: 0}, modeA: {value: 2}, modeB: {value: 2}, fade: {value: 1},
-      eq: {value: eq}}, SCREENS));
+      eq: {value: eq}, von: {value: 0}, vid: {value: null}, vgain: {value: 3}}, SCREENS));
     // Its frame, in the truss's metal: top, bottom and the two sides.
     const rails = [0, 1, 2, 3].map(() => new T.Mesh(new T.BoxGeometry(1, 1, 0.06), metal));
     group.add(back, wall, ...rails);
 
-    // Where head i points on beat b: somewhere on or around him, a new mark every beat.
-    const mark = (b, i, cx, out) => out.set(cx + (hash(b * 4 + i) - 0.5) * 3.4,
-                                           0.15 + hash(b * 4 + i + 0.37) * 1.3,
-                                           (hash(b * 4 + i + 0.71) - 0.5) * 1.6);
+    // ---- The artist's fixture models (`art/rig/rig.py` -> `rig/rig.glb`, 42 KB, 12 KB gzipped), fetched
+    // when the lights first come up. Until they land, and if they never do, the stand-ins above hang. Each
+    // root is a fixture at the origin, hung from its origin: `head` (a yoke `head_yoke` panning about its
+    // Y, a head `head_tilt` tilting about its X, the lens `head_lens` facing -Y at rest), `blinder` (its
+    // lamps `blinder_lens` facing +Z), `par` (`par_lens` facing -Y), `truss` (1 m along X), `pod` (with a
+    // 1 m cable `pod_cable` up +Y, scaled to the drop) and `laser` (a floor unit, `laser_lens` facing +Z).
+    // The file has no normals, on purpose, so GLTFLoader flat-shades it; each fixture's `lens` material is
+    // cloned so that its colour is its own, and the clone keeps that flat shading.
+    let dressed = false, dressAsked = false;
+    const dress = () => {
+      if (dressAsked) return;
+      dressAsked = true;
+      new T.GLTFLoader().loadAsync(new URL(`rig/rig.glb${V}`, import.meta.url).href).then(gltf => {
+        const root = n => gltf.scene.getObjectByName(n);
+        if (!["head", "blinder", "par", "truss", "pod", "laser"].every(root)) throw new Error("rig.glb lacks a fixture");
+        // A copy of fixture `n`, with lens materials of its own, collected in `lenses`.
+        const make = n => {
+          const m = root(n).clone(true), lenses = [];
+          m.traverse(o => { if (o.isMesh && o.material && o.material.name === "lens") {
+            o.material = o.material.clone(); o.material.emissive.setRGB(0, 0, 0); lenses.push(o.material); } });
+          group.add(m);
+          return {m, lenses};
+        };
+        for (const h of all) {
+          const {m, lenses} = make("head");
+          Object.assign(h, {model: m, lenses, yoke: m.getObjectByName("head_yoke"), tilt: m.getObjectByName("head_tilt"),
+                            lensAt: m.getObjectByName("head_lens")});
+        }
+        blinders.forEach(b => Object.assign(b, make("blinder")));
+        pars.forEach(p => Object.assign(p, make("par")));
+        pods.forEach(p => { p.model = make("pod").m; p.cableM = p.model.getObjectByName("pod_cable"); });
+        trusses = [make("truss").m, make("truss").m, make("truss").m];
+        units = [make("laser"), make("laser")];
+        for (const u of units) u.at = u.m.getObjectByName("laser_lens");
+        for (const o of [bar, bar2, ...towers, ...pods.map(p => p.frame)]) o.visible = false;
+        dressed = true;
+      }).catch(e => console.warn("Archie's rig hangs its stand-ins:", e));
+    };
+    let trusses = [], units = [];
+    const DOWN = new T.Vector3(0, -1, 0), q0 = new T.Vector3();
+
+    // ---- The wall's video: the artist's two seamless eight-second loops (`art/rig/wall.py`), 480 x 240, no
+    // audio, a tunnel of rings and an equaliser, the next one each dance. VP9 WebM where the browser plays
+    // it, H.264 MP4 where it does not (Safari), and a WebP poster each, 3-9 KB, which goes on the wall first,
+    // while the clip buffers. Nothing is fetched until the lights first come up; the element is muted and
+    // `playsinline`, so autoplay is allowed and iOS does not take it full screen, and it is never in the
+    // document. When the lights are down it is paused and its source dropped, which releases the decoder
+    // and the buffered bytes; the next dance fetches it again, from the HTTP cache. A clip that fails to
+    // load or play is not tried again this page view: the wall shows its own visuals, as it always did.
+    // The clips are dark, made to be tinted, and not equally so: each carries the gain, in linear light, that lifts its mean
+    // to about 0.4 as sRGB on the wall -- the tunnel (a) is 0.17-0.19, Archie in silhouette (c) 0.10-0.14,
+    // the equaliser (b) and the dot field (d) 0.08-0.14 -- so one bright clip is not overdriven to white
+    // while a dark one stays a smudge. A dance takes the next in the list; a page view that sees four
+    // dances sees each once.
+    const VIDEO = [["rig/wall-a", 5], ["rig/wall-c", 12], ["rig/wall-b", 14], ["rig/wall-d", 14]];
+    const clip = {el: null, tex: null, poster: null, cv: null, g: null, n: 0, on: 0, fresh: false, failed: false};
+    const vu = () => wall.material.uniforms;
+    const video = {
+      start() {
+        if (clip.el || clip.failed || !VIDEO.length || !Tex) return;
+        const [base, gain] = VIDEO[clip.n++ % VIDEO.length];
+        vu().vgain.value = gain;
+        const el = clip.el = document.createElement("video");
+        el.muted = true; el.loop = true; el.playsInline = true; el.preload = "auto";
+        el.setAttribute("muted", ""); el.setAttribute("playsinline", ""); el.setAttribute("aria-hidden", "true");
+        const ext = el.canPlayType('video/webm; codecs="vp9"') ? "webm" : "mp4";
+        const poster = new Image();
+        poster.onload = () => {
+          if (clip.el !== el) return;
+          clip.poster = texture(poster);
+          if (el.readyState < 2) vu().vid.value = clip.poster;
+        };
+        poster.src = new URL(`${base}.webp${V}`, import.meta.url).href;
+        el.src = new URL(`${base}.${ext}${V}`, import.meta.url).href;
+        // The frame goes to the GPU through a canvas of its own, not straight from the <video>. Uploading a
+        // video element directly gave a texture that sampled black under swiftshader while the element
+        // played and a poster through the same uniform showed (a readback of the element through a 2D
+        // canvas read mean 0.19, texture version climbing, wall black), and a browser that cannot upload
+        // a video will not say so. A 480 x 240 drawImage per decoded frame is cheap, and a canvas uploads
+        // everywhere. The canvas is made once and reused by every clip after.
+        const cv = clip.cv || (clip.cv = document.createElement("canvas"));
+        cv.width = 480; cv.height = 240;
+        clip.g = clip.g || cv.getContext("2d");
+        clip.tex = texture(cv);
+        const seen = () => { if (clip.el !== el) return; clip.fresh = true; el.requestVideoFrameCallback(seen); };
+        if (el.requestVideoFrameCallback) el.requestVideoFrameCallback(seen);
+        const fail = () => { if (clip.el === el) { clip.failed = true; video.stop(); } };
+        el.addEventListener("error", fail, {once: true});
+        el.play().catch(fail);
+      },
+      stop() {
+        const el = clip.el;
+        if (!el) return;
+        clip.el = null;
+        el.pause(); el.removeAttribute("src"); el.load();
+        vu().vid.value = null;
+        vu().von.value = clip.on = 0;
+        for (const k of ["tex", "poster"]) if (clip[k]) { clip[k].dispose(); clip[k] = null; }
+      },
+      // Every frame: a new decoded frame goes up to the GPU, and the wall fades from its own visuals to the
+      // poster, then the clip, over half a second. Without requestVideoFrameCallback, every frame.
+      update(dt) {
+        const el = clip.el;
+        if (!el) return;
+        const ready = el.readyState >= 2;
+        if (ready) {
+          if (vu().vid.value !== clip.tex) vu().vid.value = clip.tex;
+          if (clip.fresh || !el.requestVideoFrameCallback) {
+            clip.g.drawImage(el, 0, 0, 480, 240); clip.tex.needsUpdate = true; clip.fresh = false;
+          }
+        }
+        clip.on = Math.min(1, Math.max(0, clip.on + (ready || vu().vid.value ? 2 : -2) * dt));
+        vu().von.value = clip.on;
+      },
+      get playing() { return !!clip.el && clip.el.readyState >= 2 && !clip.el.paused; },
+    };
+
+    // ---- Programs: where head i of n points at beat position B. ----------------------------------------
+    const PROGRAMS = ["marks", "chase", "fan", "cross", "ballyhoo"];
+    const mark = (b, i, cx, out) => out.set(cx + (hash(b * 9 + i) - 0.5) * 3.4,
+                                           0.15 + hash(b * 9 + i + 0.37) * 1.3,
+                                           (hash(b * 9 + i + 0.71) - 0.5) * 1.6);
+    const from = new T.Vector3(), to = new T.Vector3();
+    const aim = (prog, B, i, n, hx, cx, out) => {
+      const b = Math.floor(B), f = B - b, k = n > 1 ? i / (n - 1) - 0.5 : 0, P = Math.PI;
+      switch (prog) {
+        case "chase": return out.set(cx + k * 0.5 + 0.15 * Math.sin(B * P / 2 + i), 0.9 + 0.2 * Math.sin(B * P / 4), 0);
+        case "fan": { const w = 1.4 + 1.6 * (0.5 + 0.5 * Math.sin(B * P / 4));
+                      return out.set(cx + k * w * 2, 0, 0.6 + 0.3 * Math.cos(B * P / 4)); }
+        case "cross": { const s = Math.sin(B * P / 4);
+                        return out.set(-hx * (0.4 + 0.6 * s) + cx * 0.3, 0, 0.4 + 0.5 * Math.abs(k)); }
+        case "ballyhoo": { const a = B * P / 4 + i * P / 3;
+                           return out.set(hx * 0.6 + 1.5 * Math.cos(a), 0, 0.3 + 1.1 * Math.sin(a)); }
+        default:                                         // marks: snap over a beat's first third, and hold
+          mark(b - 1, i, cx, from); mark(b, i, cx, to);
+          return out.lerpVectors(from, to, smooth(f / 0.3));
+      }
+    };
+
     const outBack = x => 1 + 2.2 * (x - 1) ** 3 + 1.2 * (x - 1) ** 2;   // overshoots, then settles at 1
-    const from = new T.Vector3(), to = new T.Vector3(), o = new T.Vector3(), d = new T.Vector3();
-    const mean = new T.Color();
-    let top = 4, span = 3, drop = 0, level = 0, ww = 4, wh = 2;
+    const o = new T.Vector3(), d = new T.Vector3(), up = new T.Vector3(), hp = new T.Vector3();
+    const mean = new T.Color(), target = new T.Color();
+    let top = 4, span = 3, drop = 0, level = 0, ww = 4, wh = 2, blind = 0, blindAt = -1e9, lastB = -1;
+    let look = 0, prog = "marks", goboOn = 0, podsOn = 0, dances = 0, wasOn = false;
     const screenFor = bar => Math.floor(hash(bar * 3.7 + 0.5) * 5);
+    // A cue, fired from `window.archieRig`: its name, until when (on the render clock), and a beat of its
+    // own at 120 BPM for when he is not dancing. The one object is reused, so a cue allocates nothing.
+    const forced = {name: "", until: 0, at: 0, beat: {at: 0, rate: 2, kick: null, loud: null}};
+    const CUES = ["beams-chase", "beams-fan", "beams-cross", "ballyhoo", "gobo", "laser-symbol", "blinder", "wash",
+                  "pods", "video-wall", "all-off"];
+    const PROG_OF = {"beams-chase": "chase", "beams-fan": "fan", "beams-cross": "cross", "ballyhoo": "ballyhoo"};
+    let clock = 0;
+    // A blinder swell, if the last one finished at least four seconds before this.
+    const hit = t => { if (t - blindAt >= 4) blindAt = t; };
+    const swell = t => {
+      const s = t - blindAt;
+      return s < 0 ? 0 : s < 0.4 ? smooth(s / 0.4) : s < 0.65 ? 1 : s < 1.75 ? 1 - smooth((s - 0.65) / 1.1) : 0;
+    };
+    const rgb = c => `${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)}`;
+    const laserRGB = ["", ""], laserHex = [0, 0];
+    const cols = () => (light() ? LOOKS[look].light : LOOKS[look].dark);
+    // Eases colour `c` toward `to` at a rate that takes about a third of a second: every change a fade.
+    const ease = (c, to, dt) => c.lerp(to, 1 - Math.exp(-8 * dt));
+
     return {
       on: false,
-      heads,
+      // For `archie-fx.js` (whose floor takes four colours) and `beams()` in start(): the truss's first
+      // four heads, as the rig had before, and all nine for anything that wants them.
+      get heads() { return four; },
+      all,
       get level() { return level; },
+      get look() { return LOOKS[look]; },
+      get laserRGB() { return laserRGB; },
+      // What the lasers should draw this bar: true when the look calls for them (one bar in four in a
+      // dance) or a `laser-symbol` cue is up.
+      lasering: false,
+      cues: CUES,
       // For `archie-fx.js`, so that its effects are drawn, and follow the theme, the way these are.
       glow, NOISE,
       lit(mat) { tint(mat); glows.push(mat); return mat; },
+      // A named look, for 8 seconds on its own beat. `all-off` ends one. Returns whether it took.
+      cue(name) {
+        if (!CUES.includes(name)) return false;
+        if (name === "all-off") { forced.name = ""; forced.until = 0; return true; }
+        if (!forced.name || forced.until <= clock) forced.at = 0;
+        forced.name = name; forced.until = clock + 8;
+        if (name === "blinder") hit(clock + 0.3);
+        return true;
+      },
+      get cueing() { return forced.until > clock ? forced.name : ""; },
+      // The cue's own beat, for the frame when no dance gives one.
+      synth(dt) {
+        if (forced.until <= clock) return null;
+        forced.at += dt * 2;
+        forced.beat.at = forced.at;
+        return forced.beat;
+      },
+      // For `tests/rig-check.mjs`: every fixture's brightness right now, 0..1, which is what a flash is
+      // counted from. Allocates, so it is only for the test and the admin panel, not the frame loop.
+      status() {
+        return {level, look: LOOKS[look].id, program: prog, cue: this.cueing, gobo: goboOn, pods: podsOn,
+                blinder: blind, video: clip.on, playing: video.playing, lasers: this.lasering,
+                heads: all.map(h => +(h.beam.material.uniforms.level.value).toFixed(3)),
+                pars: pars.map(p => +(p.beam.material.uniforms.level.value).toFixed(3))};
+      },
       place(edge) {
         top = edge.top - 0.3;
         span = Math.min(4.5, (edge.right - edge.left) / 2.8);
-        heads.forEach((h, i) => { h.x = (i - 1.5) / 1.5 * span; });
-        bar.scale.x = span * 2 + 0.8;
+        heads.forEach((h, i) => { h.x = (i - 2.5) / 2.5 * span; });
+        bar.scale.x = bar2.scale.x = span * 2 + 0.8;
+        // The pods: the two top corners, clear of the towers, and one high over him.
+        const px = Math.min(span + 1.3, Math.max(-edge.left, edge.right) - 0.5);
+        [[-px, -0.6], [px, -0.6], [0, -0.9]].forEach(([x, z], i) => { pods[i].x = x; pods[i].z = z; });
         // From just under the truss to just off the floor, and never much wider than it is tall
         ww = Math.min(span * 1.4, 6);
         wh = Math.max(1, top - 0.42);
         wall.scale.set(ww, wh, 1);
         wall.material.uniforms.grid.value = {x: Math.round(ww / 0.075), y: Math.round(wh / 0.075)};
       },
-      // `beat` is the dance's position in beats and its beats a second, or null between dances.
-      update(dt, t, cx, beat) {
-        time.value = t;
+      // `beat` is the dance's position in beats and its beats a second (or the cue's own), or null between.
+      update(dt, t, cx, beat, n) {
+        time.value = t; clock = t;
+        const cueing = forced.until > t ? forced.name : "";
+        const want = this.on || !!cueing;
+        if (want && !wasOn) { loadGobos(); dress(); if (this.on) dances++; }
+        wasOn = want;
         // The truss drops first and the heads come up once it has landed. Going off, they fade out first
-        // and the truss goes up after.
-        if (this.on) drop = Math.min(1, drop + dt / 0.6);
+        // and the truss goes up after, and only then does the wall's video let go.
+        if (want) drop = Math.min(1, drop + dt / 0.6);
         else if (level === 0) drop = Math.max(0, drop - dt / 0.7);
-        level = Math.max(0, Math.min(1, level + (this.on && drop === 1 ? 3 : -3) * dt));
+        level = Math.max(0, Math.min(1, level + (want && drop === 1 ? 3 : -3) * dt));
         group.visible = drop > 0;
-        if (!group.visible) { for (const h of heads) h.spot.intensity = 0; return; }
+        if (want && (this.on || cueing === "video-wall")) video.start();
+        if (!group.visible) {
+          for (const h of heads) if (h.spot) h.spot.intensity = 0;
+          warm.intensity = 0;
+          video.stop();
+          return;
+        }
+        video.update(dt);
         const y = top + (1 - outBack(drop)) * 3;
         bar.position.set(0, y, -1.5);
+        bar2.position.set(0, y - 0.22, -1.5);
+        if (dressed) {
+          // The truss: one section, stretched, across the top; one up each side, standing on the floor.
+          const tx = span + 0.55;
+          trusses[0].position.set(0, y - 0.1, -1.5); trusses[0].scale.set(span * 2 + 0.8, 1, 1);
+          trusses.slice(1).forEach((m, i) => { m.rotation.z = Math.PI / 2; m.scale.set(Math.max(0.5, y), 0.5, 0.5);
+                                               m.position.set((i ? 1 : -1) * tx, Math.max(0.5, y) / 2, -1.7); });
+          // The laser units stand on the stage floor at its front corners, facing the reader.
+          units.forEach((u, i) => { u.m.position.set((i ? 1 : -1) * span * 0.75, 0, 1.1); u.m.scale.setScalar(1.05);
+                                    u.lenses.forEach(l => l.emissive.set(this.lasering ? laserHex[i] : 0)); });
+        }
 
         let pulse = 1, b = 0, f = 0;
         if (beat) {
@@ -1197,48 +1599,163 @@
           const every = beat.rate > 3 ? 2 : 1;
           // To music, the flash is the onset that was heard, as hard as it was heard.
           pulse = beat.kick != null ? 0.75 + 0.35 * beat.kick : 0.8 + 0.2 * (b % every ? 0 : Math.exp(-6 * f));
+          // The look: the dance's arc, cool, warm, then both; quiet music gets the breakdown's.
+          const frac = n ? beat.at / n : 0.5;
+          look = beat.loud != null && beat.loud < 0.2 ? QUIET : ARC[frac < 0.3 ? 0 : frac < 0.65 ? 1 : 2];
+          if (cueing === "wash") look = QUIET;
+          // A program a phrase of eight beats, counted across dances so no two dances open alike.
+          const phrase = Math.floor(b / 8) + dances * 3;
+          prog = PROG_OF[cueing] || PROGRAMS[Math.floor(hash(phrase * 2.3 + 0.1) * PROGRAMS.length)];
+          // Gobos every other phrase; and the blinders on a big downbeat, which is the first of sixteen.
+          const gWant = cueing === "gobo" || (!cueing && phrase % 2 === 1) ? 1 : 0;
+          goboOn += Math.max(-2 * dt, Math.min(2 * dt, gWant - goboOn));
+          if (b !== lastB && this.on && b > 0 && b % 16 === 0 && (beat.kick == null || beat.kick > 0.6)) hit(t);
+          lastB = b;
+          podsOn += Math.max(-dt / 1.2, Math.min(dt / 1.2, (cueing === "pods" || (this.on && n && frac >= 0.5) ? 1 : 0) - podsOn));
+          this.lasering = cueing === "laser-symbol" || (this.on && !cueing && Math.floor(b / 4) % 4 === 3);
+        } else {
+          podsOn = Math.max(0, podsOn - dt / 1.2);
+          this.lasering = false;
         }
+        blind = swell(t) * level;
+        const C = cols();
+        for (let i = 0; i < 2; i++) { laserHex[i] = target.set(C.laser[i]).getHex(); laserRGB[i] = rgb(target); }
+        const cell = Math.max(0, GOBO_IDS.indexOf(LOOKS[look].gobo)), spin = t * 0.5;
+
+        // ---- Heads, the truss's and the pods'
+        const wash = cueing === "wash" ? 0.3 : 1;              // the wash cue sets the heads back
         mean.setRGB(0, 0, 0);
-        heads.forEach((h, i) => {
-          h.hang.position.set(h.x, y - 0.1, -1.5);
-          h.body.position.set(h.x, y - 0.3, -1.5);
+        const podY = top + 1.6 - outBack(Math.max(0.001, podsOn)) * 2.1;
+        pods.forEach(p => {
+          const vis = podsOn > 0;
+          p.frame.visible = p.cable.visible = p.head.body.visible = p.head.hang.visible = vis && !dressed;
+          if (p.model) {
+            p.model.visible = p.head.model.visible = vis;
+            p.model.position.set(p.x, podY + 0.14, p.z);
+            p.cableM.scale.y = top + 3 - podY;
+          }
+          p.frame.position.set(p.x, podY, p.z);
+          const len = top + 3 - podY;
+          p.cable.scale.y = len; p.cable.position.set(p.x, podY + len / 2, p.z);
+          p.head.x = p.x; p.head.gain = smooth(podsOn);
+        });
+        all.forEach((h, i) => {
+          const pod = i >= heads.length, pz = pod ? pods[i - heads.length].z : -1.5, hy = pod ? podY - 0.1 : y;
+          h.hang.position.set(h.x, hy - 0.1, pz);
+          h.body.position.set(h.x, hy - 0.3, pz);
           h.beam.position.copy(h.body.position);
           if (beat) {
-            // Snap to the beat's mark over its first third, and hold.
-            mark(b - 1, i, cx, from);
-            mark(b, i, cx, to);
-            h.aim.lerpVectors(from, to, smooth(f / 0.3));
-            // A new colour every bar of four, cross-faded over half a beat.
-            const bar4 = Math.floor(b / 4) + i;
-            h.color.copy(PALETTE[(bar4 + 3) % 4]).lerp(PALETTE[bar4 % 4], smooth(((b % 4) + f) / 0.5));
+            aim(prog, beat.at, i % heads.length, heads.length, h.x, cx, h.aim);
+            // A new colour every bar of four, round the look's four, eased.
+            ease(h.color, C.beams[(Math.floor(b / 4) + i) % C.beams.length], dt);
+            // The chase: a soft bump running along the line, one head a beat.
+            h.bump = prog === "chase" ? 0.6 + 0.4 * Math.exp(-2.5 * (((b - i) % 6 + 6) % 6 + f)) : 1;
           } else if (!h.aim.lengthSq()) {
             mark(0, i, cx, h.aim);
-            h.color.copy(PALETTE[i]);
+            h.color.copy(C.beams[i % C.beams.length]);
+          }
+          const lv = level * pulse * h.bump * h.gain * wash;
+          if (h.model) {
+            // The model's yoke pans and its head tilts to put the lens's -Y on the mark; the beam starts
+            // at the lens. Pan about the yoke's Y, then tilt by the angle from straight down.
+            h.model.position.set(h.x, hy - 0.03, pz);
+            d.subVectors(h.aim, h.model.position);
+            h.yoke.rotation.y = Math.atan2(d.x, d.z);
+            h.tilt.rotation.x = Math.atan2(-Math.hypot(d.x, d.z), -d.y);
+            h.model.updateMatrixWorld(true);
+            h.lensAt.getWorldPosition(h.body.position);
+            h.beam.position.copy(h.body.position);
+            h.body.visible = h.hang.visible = false;
           }
           h.body.lookAt(h.aim);
           h.beam.lookAt(h.aim);
           h.beam.scale.set(1, 1, h.beam.position.distanceTo(h.aim) * 1.25 / L);
-          h.beam.material.uniforms.color.value.copy(h.color);
-          h.beam.material.uniforms.level.value = level * pulse;
-          h.lens.material.color.copy(h.color).multiplyScalar(0.25 + 0.75 * level * pulse);
-          h.spot.position.copy(h.body.position);
-          h.spot.target.position.copy(h.aim);
-          h.spot.color.copy(h.color);
-          h.spot.intensity = 6 * level * pulse;
+          const bu = h.beam.material.uniforms, pu = h.pool.material.uniforms;
+          bu.color.value.copy(h.color); bu.level.value = lv;
+          bu.gon.value = pu.gon.value = goboOn; bu.cell.value = pu.cell.value = cell;
+          bu.spin.value = pu.spin.value = spin + i;
+          h.beam.visible = lv > 0.002;
+          h.lens.material.color.copy(h.color).multiplyScalar(0.15 + 0.85 * lv);
+          if (h.lenses) for (const l of h.lenses) l.emissive.copy(h.color).multiplyScalar(0.15 + 0.85 * lv);
+          if (h.spot) {
+            h.spot.position.copy(h.body.position);
+            h.spot.target.position.copy(h.aim);
+            h.spot.color.copy(h.color);
+            h.spot.intensity = 6 * lv;
+          }
           // The pool is where the beam's line meets the floor.
           o.copy(h.body.position);
           d.subVectors(h.aim, o);
-          h.pool.visible = d.y < -1e-3;
+          h.pool.visible = d.y < -1e-3 && lv > 0.002;
           if (h.pool.visible) {
             h.pool.position.copy(o).addScaledVector(d, -o.y / d.y).setY(0.01);
-            h.pool.material.uniforms.color.value.copy(h.color);
-            h.pool.material.uniforms.level.value = level * pulse;
+            pu.color.value.copy(h.color);
+            pu.level.value = lv;
           }
-          mean.r += h.color.r / 4; mean.g += h.color.g / 4; mean.b += h.color.b / 4;
+          if (i < 4) { mean.r += h.color.r / 4; mean.g += h.color.g / 4; mean.b += h.color.b / 4; }
         });
+
+        // ---- Blinders: at the truss's ends, facing the reader; a swell, never a hit.
+        blinders.forEach((bl, i) => {
+          const x = (i ? 1 : -1) * (span + 0.3);
+          bl.body.position.set(x, y - 0.18, -1.45);
+          bl.flare.position.set(x, y - 0.18, -1.38);
+          bl.flare.scale.setScalar(0.35 + 0.35 * blind);
+          const fu = bl.flare.material.uniforms;
+          fu.color.value.copy(C.blinder); fu.level.value = blind;
+          for (const c of bl.cells) c.material.color.copy(C.blinder).multiplyScalar(0.1 + 0.9 * blind);
+          if (bl.m) {
+            bl.body.visible = false;
+            bl.m.position.set(x, y - 0.05, -1.45); bl.m.scale.setScalar(1.4);
+            bl.flare.position.set(x, y - 0.232, -1.31);
+            for (const l of bl.lenses) l.emissive.copy(C.blinder).multiplyScalar(0.1 + 0.9 * blind);
+          }
+        });
+        warm.color.copy(C.blinder);
+        warm.position.set(0, y - 0.3, 1.2);
+        warm.intensity = 2.5 * blind;
+
+        // ---- Wash: side towers' pars aim in across the backdrop, floor pars up at him and the wall.
+        const tx = span + 0.55, th = Math.max(0.5, y);
+        towers.forEach((m, i) => { m.scale.y = th; m.position.set((i ? 1 : -1) * tx, th / 2, -1.7); });
+        const swap = Math.floor(b / 8) % 2, wl = level * (cueing === "wash" ? 0.9 : 0.5);
+        pars.forEach((p, i) => {
+          if (i < 4) {
+            const s = i < 2 ? -1 : 1;
+            p.body.position.set(s * (tx - 0.12), i % 2 ? th * 0.72 : th * 0.36, -1.7);
+            p.aim.set(-s * 0.8, p.body.position.y * 0.6, -2.3);
+          } else {
+            const k = (i - 4) / 4 - 0.5;
+            p.body.position.set(k * span * 1.7, 0.06, 0.3);
+            p.aim.set(k * span * 1.2, 2.2, -2.2);
+          }
+          p.body.lookAt(p.aim);
+          p.beam.position.copy(p.body.position);
+          if (p.m) {
+            // The par's lens faces its -Y, so the model turns -Y onto the aim; the stand-in hides.
+            p.body.visible = false;
+            p.m.position.copy(p.body.position); p.m.scale.setScalar(i < 4 ? 1 : 0.75);
+            p.m.quaternion.setFromUnitVectors(DOWN, q0.subVectors(p.aim, p.body.position).normalize());
+            for (const l of p.lenses) l.emissive.copy(p.color).multiplyScalar(0.2 + 0.8 * wl);
+          }
+          p.beam.lookAt(p.aim);
+          // Deep wash colours add too little light on the dark theme, so there they are lifted toward the
+          // look's first beam colour: still the wash's hue family, bright enough to see.
+          target.copy(C.wash[(p.k + swap) % 2]);
+          if (!light()) target.lerp(C.beams[0], 0.3).multiplyScalar(1.2);
+          ease(p.color, target, dt * 0.5);
+          const u = p.beam.material.uniforms;
+          u.color.value.copy(p.color); u.level.value = wl;
+          p.beam.visible = wl > 0.002;
+          p.lens.material.color.copy(p.color).multiplyScalar(0.2 + 0.8 * wl);
+        });
+
+        const bu = back.material.uniforms;
+        bu.color.value.copy(mean);
+        bu.level.value = level * pulse;
+        bu.gon.value = goboOn; bu.cell.value = cell; bu.spin.value = -spin;
+        bu.g1.value.x = cx - 1.5 - 0.4 * Math.sin(t * 0.4); bu.g2.value.x = cx + 1.5 + 0.4 * Math.sin(t * 0.4);
         back.position.set(cx, 1.3, -2.4);
-        back.material.uniforms.color.value.copy(mean);
-        back.material.uniforms.level.value = level * pulse;
         // The wall hangs from the truss, so it drops and bounces with it.
         const wt = y - 0.12, u = wall.material.uniforms;
         wall.position.set(0, wt - wh / 2, -2.2);
@@ -1263,94 +1780,116 @@
         }
         u.level.value = level * 0.8;
       },
+      // Where the two laser units sit on the truss, in the scene, for `beams()` to put on the page.
+      // On the floor units once the models are in, on the truss before.
+      laserAt(i, out) {
+        if (dressed && units[i].at) return units[i].at.getWorldPosition(out);
+        return out.set((i ? 1 : -1) * span * 0.2, top + (1 - outBack(drop)) * 3 - 0.12, -1.5);
+      },
+      stop() { video.stop(); },
     };
   }
 
-  // The lasers: from each head on the truss, beams that leave the masthead and play over whatever part of the
-  // page the reader can see. They fan, wave, scissor, converge on a point that wanders the screen, or spin,
-  // a new pattern every bar, cross-faded over its first beat, and they move with the beat.
+  // The lasers: an accent, not a spray. A real show's lasers draw pictures -- a scanned dot traced round a
+  // shape faster than the eye can follow -- and that is what these do. From the two laser units on the
+  // truss, a graphic from the designer's set (`rig-show.js` LASERS: Archie's face, a heart, a star, a bolt,
+  // a globe, a waveform, "AI", chevrons; and its beat-driven PATTERNS: a rippling sheet, a breathing cone,
+  // a fan, a chevron tunnel) is traced onto the page below the masthead. The trace draws on over the
+  // bar's first beat, as a projector's scan would if you could see it, then holds and turns slowly, with a
+  // few faint beams from the units to points on it so the picture reads as thrown, not printed. Strokes
+  // are drawn separately, the beam blanked between them, as a laser's is.
   //
-  // They are a 2D canvas fixed over the viewport, not part of the scene: the scene's canvas is only the
-  // header's height. It takes no pointer events, and it is only there while a dance's lights are up and
-  // the masthead, where Archie is, is at the top of the window: scroll most of it away and they fade out,
-  // so a reader who has moved on to the page below is not danced at. As with the rest of the rig, nothing
-  // strobes: the beams sweep, and a beat's pulse is a fifth of their brightness. On the dark theme they are
-  // light, screened over the page; on the light theme, where light would not show, they are ink,
-  // multiplied into it.
-  function lasers(header) {
+  // They come in for one bar in four of a dance, a new graphic each time from the look's own list, and on
+  // the `laser-symbol` cue. They are a 2D canvas fixed over the viewport, not part of the scene: the
+  // scene's canvas is only the header's height. It takes no pointer events, and it is only there while
+  // the lights are up and the masthead, where Archie is, is at the top of the window: scroll most of it
+  // away and they fade out, so a reader who has moved on to the page below is not danced at. Nothing
+  // strobes: a graphic fades in and out over a third of a second, and a beat's pulse is a fifth of its
+  // brightness. On the dark theme they are light, screened over the page; on the light theme, where light
+  // would not show, they are ink, multiplied into it, in the look's deeper laser colours.
+  //
+  // `onStop` is start()'s, run when the model comes down: it takes `window.archieRig` with it.
+  function lasers(header, rig, SHOW, onStop) {
     const cv = document.createElement("canvas");
     cv.setAttribute("aria-hidden", "true");
     cv.style.cssText = "position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:30;" +
       "display:none";
     document.body.appendChild(cv);
     const g = cv.getContext("2d");
-    let fade = 0, B = 0, W = 0, H = 0;
-    const TAU = Math.PI * 2;
-    // Each pattern gives the angles, from straight down and positive to the right, of emitter e's beams at
-    // beat B, given how many emitters there are (n) and where this one is on screen (x, y). In order: a fan
-    // swinging, a wave, scissors, all of them on one wandering point, and spinning spokes.
-    const PATTERNS = [
-      (e, B) => [-2, -1, 0, 1, 2].map(k => k * 0.2 + 0.55 * Math.sin(B * Math.PI / 4 + e * Math.PI / 2)),
-      (e, B) => [0, 1, 2, 3, 4, 5, 6].map(k => (k / 6 - 0.5) * 1.5 + 0.3 * Math.sin(B * Math.PI / 2 + k * 0.8 + e)),
-      (e, B, n) => { const s = e < n / 2 ? 1 : -1, a = s * 0.75 * Math.sin(B * Math.PI / 4);
-                     return [a, a + s * 0.22]; },
-      (e, B, n, x, y) => {
-        const tx = W * (0.5 + 0.4 * Math.sin(B * Math.PI / 8)), ty = H * (0.55 + 0.35 * Math.sin(B * Math.PI / 4 + 1));
-        const a = Math.atan2(tx - x, ty - y);
-        return [a - 0.05, a, a + 0.05];
-      },
-      (e, B) => [0, 1, 2, 3, 4, 5].map(k => k * TAU / 6 + B * Math.PI / 8 * (e % 2 ? 1 : -1)),
-    ];
-    const beam = (x, y, a, rgb, alpha, sheet) => {
-      const L = Math.hypot(W, H) * 1.2, ex = x + Math.sin(a) * L, ey = y + Math.cos(a) * L;
-      // A spinning beam fades out as it swings up past the horizontal, rather than going over the header.
-      alpha *= smooth((Math.cos(a) + 0.1) / 0.3);
-      if (alpha <= 0.004) return;
-      const grad = g.createLinearGradient(x, y, ex, ey);
-      grad.addColorStop(0, `rgba(${rgb},${alpha})`);
-      grad.addColorStop(1, `rgba(${rgb},0)`);
-      g.strokeStyle = grad;
-      g.globalAlpha = 0.16; g.lineWidth = 8; g.beginPath(); g.moveTo(x, y); g.lineTo(ex, ey); g.stroke();
-      g.globalAlpha = 1; g.lineWidth = 1.6; g.stroke();
-      if (sheet) {                                  // a thin sheet of light between this beam and the next
-        const bx = x + Math.sin(sheet) * L, by = y + Math.cos(sheet) * L;
-        g.fillStyle = grad; g.globalAlpha = 0.07;
-        g.beginPath(); g.moveTo(x, y); g.lineTo(ex, ey); g.lineTo(bx, by); g.fill();
-        g.globalAlpha = 1;
+    let fade = 0, W = 0, H = 0, B = 0, pick = -1, id = "";
+    // Every graphic as flat strokes, made once: the LASERS as they are, and each PATTERN sampled at 16
+    // phases of its beat, so the frame loop only indexes arrays and allocates nothing.
+    const G = {};
+    const L = (SHOW && SHOW.LASERS) || {}, P = (SHOW && SHOW.PATTERNS) || {};
+    for (const k of Object.keys(L)) G[k] = [L[k].strokes];
+    for (const k of Object.keys(P)) G[k] = Array.from({length: 16}, (_, i) => [P[k](i / 16, 48)]);
+    const ids = Object.keys(G);
+    // The beams from the units to the picture land on these fractions of its first stroke.
+    const TIPS = [0.1, 0.35, 0.6, 0.85];
+    const trace = (strokes, cx, cy, s, sx, upto) => {
+      let drawn = 0, total = 0;
+      for (const st of strokes) total += st.length;
+      const limit = upto * total;
+      g.beginPath();
+      for (const st of strokes) {
+        for (let i = 0; i < st.length && drawn < limit; i++, drawn++) {
+          const x = cx + st[i][0] * s * sx, y = cy - st[i][1] * s;
+          if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+        }
+        if (drawn >= limit) break;
       }
     };
-    const draw = (p, pts, alpha) => {
-      pts.forEach((pt, e) => {
-        const as = PATTERNS[p](e, B, pts.length, pt.x, pt.y);
-        as.forEach((a, k) => beam(pt.x, pt.y, a, pt.rgb, alpha, p === 0 && k < as.length - 1 && as[k + 1]));
-      });
-    };
     return {
-      // `pts` are the heads, on screen, with their colours; `level` how far the lights are up.
+      // `pts` are the laser units, on screen; `level` how far the lights are up.
       update(dt, beat, level, pts) {
         const r = header.getBoundingClientRect();
-        const want = level > 0 && r.bottom > r.height * 0.6 ? level : 0;
+        const want = rig.lasering && level > 0 && r.bottom > r.height * 0.6 && ids.length ? level : 0;
         fade += Math.max(-3 * dt, Math.min(3 * dt, want - fade));
-        if (fade <= 0.001) { cv.style.display = "none"; return; }
+        if (fade <= 0.001) { cv.style.display = "none"; pick = -1; return; }
         if (cv.style.display) cv.style.display = "";
         if (W !== innerWidth || H !== innerHeight) { W = cv.width = innerWidth; H = cv.height = innerHeight; }
         B = beat ? beat.at : B + dt * 2;
+        // A new graphic each time they come in, from the look's list where it names ones we have.
+        const bar = Math.floor(B / 4);
+        if (pick !== bar && want) {
+          pick = bar;
+          const own = rig.look.lasers.filter(k => G[k]);
+          const from = own.length ? own : ids;
+          id = from[Math.floor(hash(bar * 7.1 + 0.3) * from.length)];
+        }
+        const frames = G[id];
+        if (!frames) return;
+        const strokes = frames.length > 1 ? frames[Math.floor((B % 1) * 16) % 16] : frames[0];
         const light = document.documentElement.dataset.theme === "light";
         cv.style.mixBlendMode = light ? "multiply" : "screen";
         g.globalCompositeOperation = "source-over";
         g.clearRect(0, 0, W, H);
         g.globalCompositeOperation = light ? "source-over" : "lighter";
-        g.lineCap = "round";
-        const pulse = !beat ? 1 : beat.kick != null ? 0.75 + 0.35 * beat.kick : 0.8 + 0.2 * Math.exp(-6 * (beat.at % 1));
-        const bar = Math.floor(B / 4), x = smooth(B % 4);
-        const p = Math.floor(hash(bar * 5.3 + 0.2) * PATTERNS.length);
-        const q = Math.floor(hash((bar - 1) * 5.3 + 0.2) * PATTERNS.length);
-        const a = fade * pulse * (light ? 0.75 : 0.85);
-        if (x < 1 && q !== p) draw(q, pts, a * (1 - x));
-        draw(p, pts, q !== p ? a * x : a);
+        g.lineCap = g.lineJoin = "round";
+        const pulse = !beat ? 1 : beat.kick != null ? 0.8 + 0.25 * beat.kick : 0.85 + 0.15 * Math.exp(-6 * (B % 1));
+        const a = fade * pulse * (light ? 0.8 : 0.9);
+        // Where the picture goes: below the masthead, drifting a little, turning about its upright.
+        const s = Math.min(W, H) * 0.2;
+        const cx = W * (0.5 + 0.12 * Math.sin(B * Math.PI / 16)), cy = Math.max(r.bottom + s * 1.2, H * 0.45);
+        const sx = 0.55 + 0.45 * Math.cos(B * Math.PI / 16);
+        const upto = smooth((B % 4) / 1.0);
+        const [c0, c1] = rig.laserRGB;
+        // The beams from the units: faint, thin, to a few points on the picture.
+        g.strokeStyle = `rgba(${c1},${a * 0.22})`; g.lineWidth = 1;
+        const first = strokes[0];
+        g.beginPath();
+        for (const p of pts) for (const t of TIPS) {
+          const q = first[Math.floor(t * (first.length - 1))];
+          g.moveTo(p.x, p.y); g.lineTo(cx + q[0] * s * sx, cy - q[1] * s);
+        }
+        g.stroke();
+        // The picture: a wide soft pass for the glow in the haze, then the thin bright line.
+        trace(strokes, cx, cy, s, sx, upto);
+        g.strokeStyle = `rgba(${c0},${a * 0.25})`; g.lineWidth = 7; g.stroke();
+        g.strokeStyle = `rgba(${c0},${a})`; g.lineWidth = 2; g.stroke();
       },
       hide() { cv.style.display = "none"; fade = 0; },
-      stop() { cv.remove(); },
+      stop() { cv.remove(); rig.stop(); if (onStop) onStop(); },
     };
   }
 

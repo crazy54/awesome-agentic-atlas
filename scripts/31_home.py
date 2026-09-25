@@ -557,15 +557,24 @@ MASCOT = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb", "archie-
 # His friends (`archie-friends.js`, the art and choreography, and `archie-friends-data.js`, who they are and
 # every line) are imported the same way, so they are hashed in too. They are not in MASCOT: without them
 # he loses his visitors, not his model.
-VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb",
-             "archie-friends.js", "archie-friends-data.js")
+# The light show's look book, fixture models, gobos and wall clips (`rig-show.js`, `rig/`, `rig-gobos/`)
+# are fetched under the same query, so they are hashed in as well. They and the friends are OPTIONAL: the
+# loader plays without any of them, so a checkout or a scratch directory that lacks one versions what it
+# has instead of failing, while the four the model cannot do without must be there.
+RIG = ("rig-show.js", "rig/rig.glb", "rig/wall-a.webm", "rig/wall-a.mp4", "rig/wall-a.webp", "rig/wall-b.webm",
+       "rig/wall-b.mp4", "rig/wall-b.webp") + tuple(f"rig-gobos/{g}.svg" for g in (
+       "breakup", "dots", "star", "spiral", "archie", "braces", "iris", "prism"))
+OPTIONAL = ("archie-friends.js", "archie-friends-data.js") + RIG
+VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb") + OPTIONAL
 
 
 def mascot_version(files: tuple[str, ...] = VERSIONED) -> str:
     h = hashlib.sha256()
     for f in files:
+        if f in OPTIONAL and not (OUT / "assets" / f).is_file():
+            continue
         b = (OUT / "assets" / f).read_bytes()
-        h.update(b.replace(b"\r\n", b"\n") if f.endswith(".js") else b)
+        h.update(b.replace(b"\r\n", b"\n") if f.endswith((".js", ".svg")) else b)
     return h.hexdigest()[:10]
 
 
