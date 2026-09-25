@@ -321,9 +321,20 @@ jobs:
               # PNGs sit beside them and *are* generated, so a wider pattern would stop 24_pwa's output
               # being checked at all -- the exact hole the note above about `docs/repo/*` describes.
               #
+              # `docs/assets/*` IS now in the list, whole, and the paragraph above still holds: the four
+              # generated PNGs are at `docs/` root, not under `docs/assets/`, so this pattern cannot reach
+              # them. Everything under `docs/assets/` is checked in by hand -- Archie's model, scripts and
+              # posters, the rig's clips and gobos, the masthead art (`scripts/masthead_art.py`, run by
+              # hand), `daily-lines.json` (which `31_home` *reads*) -- and between 23 and 25 September that
+              # directory went from one file to thirty-six. Naming them one by one broke the daily build
+              # on the first of them (every run from 24 September died here with nine "missing
+              # generators" that were never generated) and would break it again on each new one. If a
+              # stage ever starts writing under `docs/assets/`, it must move out of this directory or this
+              # arm must be narrowed, because nothing here would notice that stage going missing.
+              #
               # Listed rather than silently skipped, because the honest reading of a growing list here is
               # that somebody is hand-maintaining published files, which is worth seeing on a green run.
-              docs/CNAME|docs/favicon.svg|docs/assets/atlas-byte.png)
+              docs/CNAME|docs/favicon.svg|docs/assets/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/static" ;;
               # `docs/v2/*` is the redesign beta, and it is the one place where a generator exists and is
               # deliberately *not* wired into this workflow. `scripts/30_v2.py` writes all 505 of these
