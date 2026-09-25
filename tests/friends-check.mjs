@@ -282,10 +282,14 @@ await S("Page.removeScriptToEvaluateOnNewDocument", {identifier: noGL.identifier
 
 ok("unflagged: the model goes live", await goto());
 const load = await ev(`performance.getEntriesByType("navigation")[0].loadEventEnd`);
-await sleep(14000);
+// Watched until the page's own clock passes 20 s, however long the model took to go live: on CI it can be
+// most of that (a run failed "now 20537" with nobody seen, which is a slow runner, not a visitor). Anyone
+// seen counts only if it came before the 20 s mark.
+for (let t = Date.now(); Date.now() - t < 30000 && await ev(`performance.now() < 20000`);) await sleep(250);
 r = await rec();
-ok("...and nobody comes in the first twenty seconds", !r.seen && await ev(`performance.now() < 20000`) ,
-   `seen at ${r.seen}, now ${await ev("performance.now()")}`);
+const now = await ev("performance.now()");
+ok("...and nobody comes in the first twenty seconds", now >= 20000 && (!r.seen || r.seen >= 20000),
+   `seen at ${r.seen}, now ${now}`);
 const fetched = await ev(`performance.getEntriesByType("resource").filter(e => /archie-friends/.test(e.name)).map(e => e.startTime)`);
 ok("...and whatever it fetches for them, it fetches after the page's load", fetched.every(t => t >= load),
    `load ${load}, fetched ${JSON.stringify(fetched)}`);
