@@ -86,6 +86,51 @@
   };
   let stop = () => {};
 
+  // ---- Commands -------------------------------------------------------------------------------------
+  // One way in to everything he does, shared by the `?archie=` flags (see `direct()`) and the hidden admin
+  // panel in the footer (`archie-admin.js`, which loads only when its trigger is used or `?archie=admin` is
+  // in the address). `window.archie` is:
+  //
+  //   list()     every command name, in the panel's order: `dance:<a BEATS key>`, `idle`, `watch`, `sit`,
+  //              `sleep`, `press`, `shrug`, `walk-off` (off the edge and the moonwalk back), `show` (a dance
+  //              under the full rig), `prank:<name>`, `chatter`, `poke`, `cue:<rig cue>` and `quiet`.
+  //              Friends are `friend:<id>`, one per id in `archie-friends-data.js`'s ORDER, which the panel
+  //              reads for itself: listing them here would mean loading that file for every reader.
+  //   can(cmd)   "" when `run(cmd)` would be taken now, or why not, in words for the panel's button. With
+  //              the model not running -- reduced motion, a narrow screen, no WebGL -- everything says so.
+  //   run(cmd)   true when taken (for `friend:<id>`, a promise of it). Acts queue behind whatever he is doing and cut an idle or a dance short;
+  //              chatter, poke, a friend, a rig cue and `quiet` happen at once. `quiet` empties the queue,
+  //              sends a visitor home, cuts the act short and cues the rig off.
+  //   status()   {act, queued}: the act he is on or last did, and the commands waiting; null with no model.
+  //
+  // The rig cues are the ones `lights()` exposes as `window.archieRig` ({cues, cue(name), status()}) while
+  // the live model's rig is up. They are named here too, so the panel can list the whole set and grey out
+  // any this build's rig does not have.
+  //
+  // NOT A SECURITY BOUNDARY. This is a static site with no server and no accounts: anybody can type
+  // `?archie=admin`, or call `window.archie.run()` from the console, and nothing here pretends otherwise.
+  // Every command is something the director already does on its own; the panel only saves waiting for it.
+  const RIG_CUES = ["beams-chase", "beams-fan", "beams-cross", "ballyhoo", "gobo", "laser-symbol", "blinder",
+                    "wash", "pods", "video-wall", "all-off"];
+  const CALM_ACTS = ["idle", "watch", "sit", "sleep", "press", "shrug", "walk-off", "show"];
+  let live = null;                           // start()'s side, {can, run}, while the model is up
+  const parse = cmd => (cmd.includes(":") ? cmd.split(/:(.*)/).slice(0, 2) : [cmd, ""]);
+  const rigCues = () => {
+    const r = window.archieRig;
+    return r && Array.isArray(r.cues) ? r.cues : [];
+  };
+  window.archie = {
+    list: () => [...DANCES.map(d => "dance:" + d), ...CALM_ACTS, ...PRANKS.map(p => "prank:" + p), "chatter",
+                 "poke", ...[...new Set([...RIG_CUES, ...rigCues()])].map(c => "cue:" + c), "quiet"],
+    can: cmd => live ? live.can(String(cmd)) :
+      !calm.matches ? "reduced motion is on, so Archie is a poster" :
+      !wide.matches ? "the screen is under 900px, so Archie is hidden" :
+      !webgl() ? "no WebGL here, so Archie is a poster" : "Archie is still loading",
+    // A friend's answer is a promise, because the friend may have to be looked up first.
+    run: cmd => (live && !live.can(String(cmd)) ? live.run(String(cmd)) : false),
+    status: () => (live ? live.status() : null),
+  };
+
   async function start() {
     // The page loads this script as `archie.js?v=<hash>`, the hash covering all three of its files, and the
     // same query goes on the two it loads. A release then changes all three URLs at once, so the HTTP cache
@@ -228,10 +273,11 @@
     // walk-offs, and goes back to the director's own choices two seconds after the music stops. Not with
     // the masthead off screen, where nobody would see it and the loop would never stop.
     const grooving = () => music.on && seen && mode === "home" && performance.now() - music.at < 2000;
+    let walking = false;                   // out on a walk-off, which a command must not cut in half
     const act = async name => {
       last = name;
       talk.act(name);
-      if (name === "walk-off") return walkOff();
+      if (name === "walk-off") { walking = true; try { return await walkOff(); } finally { walking = false; } }
       rig.on = DANCES.includes(name);
       await perform(name);
       rig.on = false;
@@ -264,15 +310,39 @@
       talk.say("prank-" + name + "-after");
       await perform("shrug");
     };
+    // Commands (see "Commands" at the top) wait here, and the director takes the next one before it
+    // chooses for itself. A flag is one command queued before the first idle: `?archie=<act>` as it always
+    // was, and `?archie=prank:<name>` through `prankable()`, so quiet mode can still be checked to stop it.
+    // From the panel, a prank skips only the three-minute spacing.
+    const orders = [];
+    const obey = async ({cmd, flag}) => {
+      const [kind, name] = parse(cmd);
+      if (kind === "dance") return act(name);
+      if (kind === "prank") return !flag || prankable() ? prank(name) : undefined;
+      if (cmd === "show") {
+        const pool = DANCES.filter(fits);
+        return act((pool.length ? pool : DANCES)[Math.floor(Math.random() * (pool.length || DANCES.length))]);
+      }
+      if (OTHERS.includes(cmd)) return act(cmd);
+      last = cmd; talk.act(cmd);
+      return perform(cmd, cmd === "idle" ? 2 : 1);           // idle, press, shrug: a clip, and no more
+    };
+    // Cut what he is doing short so the command goes next: an idle or a dance, never a walk-off (he would be
+    // left off the edge of the page) or a prank (its trick would be left on the page).
+    const cut = () => {
+      if (done && mode === "home" && !walking && !pranking) { const d = done; done = null; d(); }
+    };
     const direct = async () => {
-      if (asked && (DANCES.includes(asked) || OTHERS.includes(asked))) await act(asked);
-      if (forced && prankable()) await prank(forced);
+      if (asked && (DANCES.includes(asked) || OTHERS.includes(asked))) orders.push({cmd: DANCES.includes(asked) ? "dance:" + asked : asked, flag: true});
+      if (forced) orders.push({cmd: "prank:" + forced, flag: true});
       for (;;) {
+        if (orders.length) { await obey(orders.shift()); continue; }
         if (!grooving()) {
           idling = true;
           await perform("idle", 2 + Math.floor(Math.random() * 2));
           idling = false;
         }
+        if (orders.length) continue;
         if (prankable() && Math.random() < 0.3) { await prank(); continue; }
         // A dance half the time, and never the same act twice running, unless the reader asked for one or
         // the music did.
@@ -572,8 +642,50 @@
           actor.visible && view.slide === 0});
     }).catch(e => console.warn("Archie's friends stayed home:", e));
 
+    // ---- Commands, this side ---------------------------------------------------------------------------
+    // What `window.archie` (see "Commands" at the top) asks of the running model. `can` answers from the same
+    // state the director's own gates read; `run` queues acts for `direct()` and does the rest at once.
+    const pokeTarget = () => host.querySelector(".archie-poke");
+    live = {
+      status: () => ({act: last, queued: orders.map(o => o.cmd)}),
+      can(cmd) {
+        const [kind, name] = parse(cmd);
+        if (kind === "cue") return !window.archieRig ? "the rig is not up" :
+          !rigCues().includes(name) ? "not in this build's rig" : "";
+        if (cmd === "quiet") return "";
+        if (cmd === "chatter") return talk.quiet ? "Quiet mode is on" : "";
+        if (cmd === "poke") return pokeTarget() && !pokeTarget().hidden ? "" : "he is out on a visit";
+        if (kind === "friend") return !pals ? "his friends are still loading" : pals.busy ? "a friend is over already" :
+          !seen || mode !== "home" ? "the masthead is off screen" : "";
+        if (kind === "dance") return DANCES.includes(name) ? "" : "no such dance";
+        if (kind === "prank") return !PRANKS.includes(name) ? "no such prank" : pranking ? "a prank is on" :
+          pals && pals.busy ? "a friend is over" : !seen ? "the masthead is off screen" : "";
+        return CALM_ACTS.includes(cmd) ? "" : "no such command";
+      },
+      run(cmd) {
+        const [kind, name] = parse(cmd);
+        if (kind === "cue") return !!window.archieRig.cue(name);
+        if (kind === "friend") return pals.send(name);
+        if (cmd === "chatter") { talk.say("idle"); return true; }
+        if (cmd === "poke") { pokeTarget().click(); return true; }
+        if (cmd === "quiet") {
+          orders.length = 0;
+          if (pals) pals.leave();
+          abortVisit();
+          if (rigCues().includes("all-off")) window.archieRig.cue("all-off");
+          cut();
+          return true;
+        }
+        orders.push({cmd, flag: false});
+        abortVisit();                        // a visit gives the director back its idle, which is then cut
+        cut();
+        return true;
+      },
+    };
+
     stop = () => {
       stopped = true;
+      live = null;
       if (pals) { pals.stop(); pals = null; }
       cancelAnimationFrame(raf); raf = 0;
       io.disconnect();

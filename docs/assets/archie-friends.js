@@ -400,6 +400,25 @@ export function friends(o) {
     get busy() { return busy; },
     // What Archie says when he is poked mid-visit, instead of his usual reply: "Shh, Quack's thinking."
     poke() { return busy && guest ? guest() : null; },
+    // Sent for, by `archie.js`'s commands (the footer's admin panel): that friend, now, skipping the dice and
+    // the wait, and whether or not somebody visited already this page view. False if the id is unknown,
+    // somebody is over, or the friend has nowhere on screen to stand (`TARGETS`), which is the same test
+    // `choose()` puts a flagged friend through. Loads who they are on first use, as the flag does.
+    async send(id) {
+      if (stopped || busy) return false;
+      if (!FRIENDS) {
+        const m = await import(`./archie-friends-data.js${V}`);
+        FRIENDS = m.FRIENDS; ORDER = m.ORDER || Object.keys(m.FRIENDS);
+      }
+      if (stopped || busy || !FRIENDS[id] || !ART[id]) return false;
+      const target = TARGETS[id](o);
+      if (!target) return false;
+      clearTimeout(timer);
+      visit(id, target);
+      return true;
+    },
+    // Home at once, as Escape sends them; the visit's own teardown, so nothing is left on the page.
+    leave() { if (finish) finish(); },
     stop() {
       stopped = true;
       clearTimeout(timer);

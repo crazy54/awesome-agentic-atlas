@@ -14,7 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awesome Agentic Atlas — browse and discover agentic AI projects</title>
 <meta name="description" content="8,858 agentic AI projects merged from 39 awesome-lists, on shelves with a stated reason for each one: named by three or more lists, shipped this week, hidden gems, runs on Windows. Snapshot 2026-09-22.">
-<meta name="atlas-build" content="045cf7e94be0">
+<meta name="atlas-build" content="89d63f1215dc">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Awesome Agentic Atlas — browse and discover agentic AI projects">
@@ -447,7 +447,7 @@ header.danceopen{z-index:30}
 .daily .dtext{margin:0;flex:1 1 30ch;min-width:0;color:var(--ink2)}
 .daily .dtext a{color:var(--link)}
 @media(min-width:901px){.hero .ph img{position:absolute;inset:0}}
-.mhmascot{background:url(assets/archie-3d.webp) center/contain no-repeat}</style>
+.mhmascot{background:url(assets/archie-3d.webp) center/contain no-repeat}.archieadmin{margin:0 0 0 .3em;padding:0 .3em;border:0;background:none;color:inherit;font:inherit;opacity:.25;cursor:default;line-height:1}.archieadmin:focus-visible{opacity:1;outline:2px solid var(--link);outline-offset:2px}</style>
 </head><body>
 <div class="scan" aria-hidden="true"></div>
 <div class="mhart" aria-hidden="true"></div>
@@ -574,7 +574,7 @@ const ATLASDAY = (() => {
 <section class="numbers" aria-labelledby="numbers-h"><h2 id="numbers-h">The atlas in numbers</h2><p class="nsub">Counted from snapshot 2026-09-22.</p><div class="tiles"><div class="tile"><b>8,858</b><span>projects</span><small>from 39 awesome-lists</small></div><div class="tile"><b>14</b><span>topics</span><small>and 12 target tools</small></div><div class="tile"><b>24.1M</b><span>combined stars</span><small>median 21 a project</small></div><div class="tile"><b>380</b><span>named by 3+ lists</span><small>the consensus picks</small></div><div class="tile"><b>44%</b><span>pushed in the last 30 days</span><small>3,972 projects</small></div><div class="tile"><b>4,545</b><span>install in one command</span><small>npx, pip, brew, docker and the like</small></div><div class="tile"><b>1,092</b><span>state Windows support</span><small>in their own README or CI</small></div><div class="tile"><b>81%</b><span>carry a licence</span><small>7,196 projects</small></div></div><h3>Most common languages</h3><ol class="langs"><li><span>Python</span><i style="--w:100.0%"></i><b>3,022</b></li><li><span>TypeScript</span><i style="--w:84.1%"></i><b>2,542</b></li><li><span>JavaScript</span><i style="--w:34.7%"></i><b>1,050</b></li><li><span>Go</span><i style="--w:13.0%"></i><b>394</b></li><li><span>Rust</span><i style="--w:10.3%"></i><b>312</b></li><li><span>Shell</span><i style="--w:7.6%"></i><b>229</b></li></ol><div class="ghrow" data-ghrow hidden><h3>This atlas on GitHub</h3><div class="tiles"><div class="tile"><b data-gh="stars">&ndash;</b><span>stars on GitHub</span></div><div class="tile"><b data-gh="forks">&ndash;</b><span>forks</span></div><div class="tile"><b data-gh="watchers">&ndash;</b><span>watching</span></div><div class="tile"><b data-gh="pushed">&ndash;</b><span>last updated</span></div></div></div></section>
 </div></main>
 <footer><div class="wrap">
-  The Awesome Agentic Atlas merges 39 awesome-lists into one index; all 39 are credited in the <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. Stars, language, licence and last-push come from the GitHub API on 2026-09-22 and drift daily. Card artwork is each project&rsquo;s own Open Graph image where it has one, and a gradient drawn from its facts where it does not.
+  The Awesome Agentic Atlas merges 39 awesome-lists into one index; all 39 are credited in the <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. Stars, language, licence and last-push come from the GitHub API on 2026-09-22 and drift daily. Card artwork is each project&rsquo;s own Open Graph image where it has one, and a gradient drawn from its facts where it does not.<button type="button" id="archieadmin" class="archieadmin" aria-label="Archie admin panel" aria-expanded="false" aria-controls="archiepanel">&middot;</button>
 </div></footer>
 <script>function wireSettings(onPaint) {
   const btn = document.getElementById("theme");
@@ -805,8 +805,17 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 })();
 </script>
 
-<script type="module" src="assets/archie.js?v=fa7e43cbfa"></script>
+<script type="module" src="assets/archie.js?v=e4e1956d9b"></script>
 <script type="module" src="assets/archie-dance.js?v=07eb812405"></script>
+<script>(() => {
+  const b = document.getElementById("archieadmin");
+  if (!b) return;
+  const go = () => import("./assets/archie-admin.js?v=e4e1956d9b")
+    .then((m) => (b.getAttribute("aria-expanded") === "true" ? m.close() : m.open(b)))
+    .catch((e) => console.warn("Archie's admin panel did not load:", e));
+  b.addEventListener("click", go);
+  if (new URLSearchParams(location.search).get("archie") === "admin") go();
+})();</script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script>
 </body>
 </html>

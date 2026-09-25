@@ -557,8 +557,11 @@ MASCOT = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb", "archie-
 # His friends (`archie-friends.js`, the art and choreography, and `archie-friends-data.js`, who they are and
 # every line) are imported the same way, so they are hashed in too. They are not in MASCOT: without them
 # he loses his visitors, not his model.
+# The admin panel (`archie-admin.js`, see ADMIN_JS) is hashed in for the same reason: it drives
+# `window.archie`, which is archie.js's, and a stale panel against a newer model would offer commands it no
+# longer takes. Its own URL carries this version too.
 VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb",
-             "archie-friends.js", "archie-friends-data.js")
+             "archie-friends.js", "archie-friends-data.js", "archie-admin.js")
 
 
 def mascot_version(files: tuple[str, ...] = VERSIONED) -> str:
@@ -605,6 +608,41 @@ def dance() -> tuple[str, str]:
         return "", ""
     return (DANCE_MENU,
             f'<script type="module" src="assets/{DANCE_JS}?v={mascot_version(DANCE)}"></script>')
+
+
+# ARCHIE'S ADMIN PANEL: a button for each thing he does, behind a trigger at the very end of the footer that
+# is meant to be missed -- a "·" at a quarter opacity after the footer's last sentence. It is a real
+# <button> with an aria-label, so it is in the tab order like anything else; nothing points readers at it.
+# `?archie=admin` opens it too. The panel (`assets/archie-admin.js`) is imported on first use, so a reader
+# who never presses the dot never fetches it. It drives `window.archie`, archie.js's command dispatcher,
+# which is also the path the `?archie=` flags take (see "Commands" in archie.js).
+#
+# This is a static site with no server, so "hidden" means out of the way, not locked: anyone can open it,
+# and every command is one the director already plays by itself. It is a toy, not a security boundary.
+# Wired only with the mascot and the panel's file both there, for the reason MASCOT gives.
+ADMIN_JS_FILE = "archie-admin.js"
+ADMIN_CSS = (".archieadmin{margin:0 0 0 .3em;padding:0 .3em;border:0;background:none;color:inherit;font:inherit;"
+             "opacity:.25;cursor:default;line-height:1}"
+             ".archieadmin:focus-visible{opacity:1;outline:2px solid var(--link);outline-offset:2px}")
+ADMIN_BTN = ('<button type="button" id="archieadmin" class="archieadmin" aria-label="Archie admin panel"'
+             ' aria-expanded="false" aria-controls="archiepanel">&middot;</button>')
+ADMIN_JS = r"""<script>(() => {
+  // The admin trigger: see ADMIN_JS in 31_home.py. A second press closes the panel.
+  const b = document.getElementById("archieadmin");
+  if (!b) return;
+  const go = () => import("./assets/archie-admin.js?v=__V__")
+    .then((m) => (b.getAttribute("aria-expanded") === "true" ? m.close() : m.open(b)))
+    .catch((e) => console.warn("Archie's admin panel did not load:", e));
+  b.addEventListener("click", go);
+  if (new URLSearchParams(location.search).get("archie") === "admin") go();
+})();</script>"""
+
+
+def admin() -> tuple[str, str, str]:
+    """The trigger's CSS, the trigger, and its script, or three empty strings without a mascot or panel."""
+    if not mascot()[1] or not (OUT / "assets" / ADMIN_JS_FILE).is_file():
+        return "", "", ""
+    return ADMIN_CSS, ADMIN_BTN, ADMIN_JS.replace("__V__", mascot_version())
 
 
 # THE DAILY SPOTLIGHT, AND WHY IT IS PICKED IN THE BROWSER. The slot used to be a crc32 of the snapshot
@@ -1445,7 +1483,7 @@ def render() -> str:
         f' in the <a href="https://github.com/{esc(REPO)}#the-source-lists">repository</a>. Stars,'
         f' language, licence and last-push come from the GitHub API on {esc(DATA["snapshot"])} and drift'
         ' daily. Card artwork is each project&rsquo;s own Open Graph image where it has one, and a gradient'
-        ' drawn from its facts where it does not.',
+        ' drawn from its facts where it does not.' + admin()[1],
         '</div></footer>',
         '__SETJS__',
         '<script>wireSettings();</script>',
@@ -1454,7 +1492,7 @@ def render() -> str:
         NUMBERS_JS.replace("__REPO__", REPO),
         SW_JS,
         UPDATE_JS.replace("__SHELLPREFIX__", SHELL_PREFIX),
-        *filter(None, [mascot()[1], dance()[1]]),
+        *filter(None, [mascot()[1], dance()[1], admin()[2]]),
         b19.beacon(),
         '</body>',
         '</html>',
@@ -1472,7 +1510,7 @@ def render() -> str:
     # the bulk, the stage block cancels light mode inside it, the Settings control travels with its own
     # rules, and this page's own rules go last so that `.ph .plat.tight` can reach past `.ph .plat`.
     # `pages.css` is a `<link>` above all of them.
-    css = BRIDGE_CSS + DOT_CSS + b30.SHELF_CSS + stage_css() + b19.SETTINGS_CSS + HOME_CSS + mascot()[0]
+    css = BRIDGE_CSS + DOT_CSS + b30.SHELF_CSS + stage_css() + b19.SETTINGS_CSS + HOME_CSS + mascot()[0] + admin()[0]
     return stamped(pagemin.strip_page(page)
                    .replace("__HOMECSS__", pagemin.strip_css(css))
                    .replace("__DANCE__", pagemin.strip_page(dance()[0]))
