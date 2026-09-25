@@ -152,4 +152,4 @@ Topic: Harnesses & Runtime Infra · Targets: Local / Ollama
 
 ---
 
-These are editorial picks — the only editorial pages on the atlas. Everything else here is what 39 awesome-lists agreed on. The curation is a [reviewable file](https://github.com/crazy54/awesome-agentic-atlas/blob/main/config/collections.json); open an issue if you would pick differently.
+These are editorial picks — the only editorial pages on the atlas. Everything else here is what 39 awesome-lists agreed on. The curation is a [reviewable file](https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/config/collections.json); open an issue if you would pick differently.

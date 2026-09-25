@@ -284,7 +284,7 @@ ok("the README's schema_version is the one data.json publishes",
    !!schemaRow && schemaRow.line.split("|")[3].trim().startsWith("`" + data.schema_version + "`"),
    schemaRow ? schemaRow.line : "no schema_version row");
 ok("the web masthead promotes the leaderboard, all-project directory, and browse section",
-   html.includes("/blob/main/mega-list/leaderboard.md") && html.includes('href="../repo/"') &&
+   html.includes("/blob/HEAD/mega-list/leaderboard.md") && html.includes('href="../repo/"') &&
    html.includes('href="#browse"'), deployed.slice(0, 240));
 // Was `length === 5`, which went red the moment "Rising" was added and told you a number rather than a
 // property. What actually matters is that the keys and the menu agree: a key with no <option> is a sort

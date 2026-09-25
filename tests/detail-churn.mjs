@@ -150,7 +150,7 @@ ok("the reader ships distinct prose, heading, and code typography on the site's 
    detailCSS.includes("--read-accent:var(--bar)") &&
    !detailCSS.includes("--read-violet"));
 ok("detail pages promote the existing leaderboard and project directory",
-   samplePage.includes("/blob/main/mega-list/leaderboard.md") &&
+   samplePage.includes("/blob/HEAD/mega-list/leaderboard.md") &&
    samplePage.includes('href="../../../"') && samplePage.includes('href="../../../repo/"'));
 
 // ---- run B: the same data again. Determinism, full stop.

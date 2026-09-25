@@ -1468,11 +1468,11 @@ def render() -> str:
         '  <nav>',
         '    <a href="discover/">Discover</a> ·',
         '    <a href="collections/">Collections</a> ·',
-        f'    <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·',
+        f'    <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·',
         '    <a href="catalog/">Catalogue</a> ·',
         '    <a href="repo/">All projects</a><br>',
         f'    <a href="https://github.com/{esc(REPO)}">Repository</a> ·',
-        f'    <a href="https://github.com/{esc(REPO)}/tree/main/mega-list">Markdown</a>',
+        f'    <a href="https://github.com/{esc(REPO)}/tree/HEAD/mega-list">Markdown</a>',
         f'    <a class="ghstar" href="https://github.com/{esc(REPO)}" target="_blank" rel="noopener"'
         ' aria-label="Star the Awesome Agentic Atlas on GitHub (opens GitHub)">'
         '<span aria-hidden="true">&#9733;</span> Star<b data-gh="stars" hidden></b></a><br>',
