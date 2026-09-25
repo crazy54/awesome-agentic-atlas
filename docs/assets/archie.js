@@ -1226,15 +1226,30 @@
         return hue(length(p) * 0.4 + beat * 0.1) * smoothstep(0.35, 0.65, 0.5 + 0.5 * cos(r * 8.0))
              * smoothstep(0.02, 0.2, length(p));
       }`;
-    const WALL = `vec2 g = vUv * grid, q = (floor(g) + 0.5) / grid;
+    // With a clip in, the wall is a picture, not a scatter of dots: the LEDs are packed three times as
+    // densely, fill most of their pitch, and each takes its colour as the frame has it rather than
+    // normalised to full brightness. The frame arrives decoded to linear light (the texture is sRGB, as it
+    // should be), so the clip's gain is applied there, where light adds, and the result is encoded back to
+    // sRGB for the canvas, since a ShaderMaterial's output is written as it stands. The clip's own level
+    // is never tied to the beat: it is the rig's master level, as every fixture's is, and nothing else.
+    // On the light theme the panel is what a real LED wall is with the house lights up -- a dark screen
+    // with the picture on it, nearly opaque -- because added to a near-white page there is no headroom.
+    const WALL = `vec2 g = vUv * grid * (1.0 + 2.0 * step(0.001, von)), q = (floor(g) + 0.5) / (grid * (1.0 + 2.0 * step(0.001, von)));
       vec3 v = mix(screen(modeA, q), screen(modeB, q), fade);
-      if (von > 0.0) v = mix(v, min(vec3(1.0), texture2D(vid, q).rgb * vgain), von);
       float m = max(max(v.r, v.g), max(v.b, 1e-3));
-      float led = m * smoothstep(0.5, 0.28, length(fract(g) - 0.5));
+      float dotm = smoothstep(0.5, 0.28, length(fract(g) - 0.5));
+      float led = m * dotm;
       c = v / m;
       a = led * 1.3;
       // Pale light vanishes into a light page, so there the LEDs are deeper and the panel shows, faintly.
-      if (haze > 0.5) { c = mix(vec3(0.08, 0.09, 0.12), c * c, min(1.0, led * 2.0)); a = max(led * 2.2, 0.2); }`;
+      if (haze > 0.5) { c = mix(vec3(0.08, 0.09, 0.12), c * c, min(1.0, led * 2.0)); a = max(led * 2.2, 0.2); }
+      if (von > 0.0) {
+        vec3 pic = pow(min(vec3(1.0), texture2D(vid, q).rgb * vgain), vec3(0.4545));
+        float fill = 0.7 + 0.3 * smoothstep(0.62, 0.4, max(abs(fract(g).x - 0.5), abs(fract(g).y - 0.5)));
+        vec3 pc = pic; float pa = fill * 1.7;
+        if (haze > 0.5) { pc = mix(vec3(0.05, 0.06, 0.08), pic, fill); pa = 2.4; }
+        c = mix(c, pc, von); a = mix(a, pa, von);
+      }`;
 
     // ---- Hardware. Dark metal, so the rig reads as hardware against the masthead. -----------------------
     const metal = new T.MeshStandardMaterial({color: 0x16181d, metalness: 0.8, roughness: 0.35});
@@ -1373,13 +1388,13 @@
     // document. When the lights are down it is paused and its source dropped, which releases the decoder
     // and the buffered bytes; the next dance fetches it again, from the HTTP cache. A clip that fails to
     // load or play is not tried again this page view: the wall shows its own visuals, as it always did.
-    // The clips are dark, made to be tinted, and not equally so: each carries the gain that lifts its mean
-    // luminance to about 0.4 on the wall -- the tunnel (a) is 0.17-0.19, Archie in silhouette (c) 0.10-0.14,
+    // The clips are dark, made to be tinted, and not equally so: each carries the gain, in linear light, that lifts its mean
+    // to about 0.4 as sRGB on the wall -- the tunnel (a) is 0.17-0.19, Archie in silhouette (c) 0.10-0.14,
     // the equaliser (b) and the dot field (d) 0.08-0.14 -- so one bright clip is not overdriven to white
     // while a dark one stays a smudge. A dance takes the next in the list; a page view that sees four
     // dances sees each once.
-    const VIDEO = [["rig/wall-a", 2.2], ["rig/wall-c", 3.2], ["rig/wall-b", 3.5], ["rig/wall-d", 3.3]];
-    const clip = {el: null, tex: null, poster: null, n: 0, on: 0, fresh: false, failed: false};
+    const VIDEO = [["rig/wall-a", 5], ["rig/wall-c", 12], ["rig/wall-b", 14], ["rig/wall-d", 14]];
+    const clip = {el: null, tex: null, poster: null, cv: null, g: null, n: 0, on: 0, fresh: false, failed: false};
     const vu = () => wall.material.uniforms;
     const video = {
       start() {
@@ -1398,7 +1413,16 @@
         };
         poster.src = new URL(`${base}.webp${V}`, import.meta.url).href;
         el.src = new URL(`${base}.${ext}${V}`, import.meta.url).href;
-        clip.tex = texture(el);
+        // The frame goes to the GPU through a canvas of its own, not straight from the <video>. Uploading a
+        // video element directly gave a texture that sampled black under swiftshader while the element
+        // played and a poster through the same uniform showed (a readback of the element through a 2D
+        // canvas read mean 0.19, texture version climbing, wall black), and a browser that cannot upload
+        // a video will not say so. A 480 x 240 drawImage per decoded frame is cheap, and a canvas uploads
+        // everywhere. The canvas is made once and reused by every clip after.
+        const cv = clip.cv || (clip.cv = document.createElement("canvas"));
+        cv.width = 480; cv.height = 240;
+        clip.g = clip.g || cv.getContext("2d");
+        clip.tex = texture(cv);
         const seen = () => { if (clip.el !== el) return; clip.fresh = true; el.requestVideoFrameCallback(seen); };
         if (el.requestVideoFrameCallback) el.requestVideoFrameCallback(seen);
         const fail = () => { if (clip.el === el) { clip.failed = true; video.stop(); } };
@@ -1422,7 +1446,9 @@
         const ready = el.readyState >= 2;
         if (ready) {
           if (vu().vid.value !== clip.tex) vu().vid.value = clip.tex;
-          if (clip.fresh || !el.requestVideoFrameCallback) { clip.tex.needsUpdate = true; clip.fresh = false; }
+          if (clip.fresh || !el.requestVideoFrameCallback) {
+            clip.g.drawImage(el, 0, 0, 480, 240); clip.tex.needsUpdate = true; clip.fresh = false;
+          }
         }
         clip.on = Math.min(1, Math.max(0, clip.on + (ready || vu().vid.value ? 2 : -2) * dt));
         vu().von.value = clip.on;
