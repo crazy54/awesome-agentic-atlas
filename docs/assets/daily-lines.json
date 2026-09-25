@@ -3,23 +3,23 @@
   "lines": [
     {"id": "tip-slash-search", "kind": "tip", "text": "In the Catalogue, press / to jump straight to the search box. No mouse required.", "href": "catalog/"},
     {"id": "dyk-merged-lists", "kind": "didyouknow", "text": "Every project here was found on at least one awesome-list. The Atlas merges them, so you only read each project once."},
-    {"id": "friend-nib-hello", "kind": "friend", "friend": "nib", "text": "Friend of the day: Nib, Archie's old cursor. It collects letters. Keep an eye on the headings."},
+    {"id": "friend-nib-hello", "kind": "friend", "friend": "nib", "text": "Meet Nib, Archie's old cursor. It collects letters. Keep an eye on the headings."},
 
     {"id": "tip-palette", "kind": "tip", "text": "Ctrl+K (or Cmd+K) in the Catalogue opens Jump to, for going anywhere in a few keystrokes.", "href": "catalog/"},
     {"id": "dyk-three-lists", "kind": "didyouknow", "text": "When three or more awesome-lists name the same project independently, it lands on the Named by three or more lists shelf."},
-    {"id": "friend-posy-hello", "kind": "friend", "friend": "posy", "text": "Friend of the day: Posy, a sticky note with opinions. If a card gets a note, it's a compliment."},
+    {"id": "friend-posy-hello", "kind": "friend", "friend": "posy", "text": "Meet Posy, a sticky note with opinions. If a card gets a note, it's a compliment."},
 
     {"id": "tip-discover", "kind": "tip", "text": "Not sure what you want yet? Discover is the browsing aisle: fresh finds, hidden gems and deep cuts.", "href": "discover/"},
     {"id": "dyk-own-page", "kind": "didyouknow", "text": "Every project in the Atlas has a page of its own, with the lists that named it. Even the weird ones.", "href": "repo/"},
-    {"id": "friend-lumen-hello", "kind": "friend", "friend": "lumen", "text": "Friend of the day: Lumen, a moth who thinks the spotlight is the moon. She may pose for it."},
+    {"id": "friend-lumen-hello", "kind": "friend", "friend": "lumen", "text": "Meet Lumen, a moth who thinks the spotlight is the moon. She may pose for it."},
 
     {"id": "tip-quiet-mode", "kind": "tip", "text": "Archie and friends too chatty? The Quiet mode button in the Catalogue hushes the lot. They won't sulk. Much.", "href": "catalog/"},
     {"id": "dyk-hidden-gems", "kind": "didyouknow", "text": "Hidden gems are projects two or more lists named that are still under 500 stars. Get in early.", "href": "discover/"},
-    {"id": "friend-ohfour-hello", "kind": "friend", "friend": "oh-four", "text": "Friend of the day: Oh-Four, a shy little ghost. If something peeks over the search button, just wave."},
+    {"id": "friend-ohfour-hello", "kind": "friend", "friend": "oh-four", "text": "Meet Oh-Four, a shy little ghost. If something peeks over the search button, just wave."},
 
     {"id": "tip-collections", "kind": "tip", "text": "Collections are hand-picked sets for a job, like playlists for repositories. Start with First setup.", "href": "collections/first-setup/"},
     {"id": "dyk-activity-dots", "kind": "didyouknow", "text": "The little dot beside a card's age is how recently the project was pushed to: hot, warm, stale or cold at a glance."},
-    {"id": "friend-quack-hello", "kind": "friend", "friend": "quack", "text": "Friend of the day: Quack, the debugging duck. Quack says nothing. Archie explains everything. Bugs get fixed."},
+    {"id": "friend-quack-hello", "kind": "friend", "friend": "quack", "text": "Meet Quack, the debugging duck. Quack says nothing. Archie explains everything. Bugs get fixed."},
 
     {"id": "tip-markdown", "kind": "tip", "text": "Prefer plain text? The whole Atlas is also a Markdown mega-list on GitHub, greppable to the last line.", "href": "https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list"},
     {"id": "dyk-spotlight-daily", "kind": "didyouknow", "text": "The spotlight changes every day, so a different project gets its turn at the top of the page each morning."},
