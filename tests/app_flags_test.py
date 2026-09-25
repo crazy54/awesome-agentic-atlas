@@ -139,5 +139,22 @@ ok("constellation OFF reaches the page as a zero", '"index.constellation":0' in 
 ok("constellation OFF leaves the chip in the markup but hidden and unwired",
    'id="mapbtn"' in root_page and ".mapchip{display:none}" in root_page)
 
+# Where Save & render puts the catalogue. `apply_flags.render_index` used to write it to `docs/index.html`,
+# which since the homepage split is the homepage, so every render replaced the homepage with a copy of the
+# catalogue and left `docs/catalog/index.html` stale. Run into a scratch `docs/` holding only the data it
+# reads, so the committed tree is unreachable; the path is spelled out rather than read from
+# `19_pages.CATALOG`, so the constant drifting back to the root fails here instead of moving with it.
+import apply_flags  # noqa: E402
+with tempfile.TemporaryDirectory() as tmp:
+    out = Path(tmp)
+    (out / "data.json").write_bytes((ROOT / "docs" / "data.json").read_bytes())
+    apply_flags.render_index(out)
+    catalogue = out / "catalog" / "index.html"
+    page = catalogue.read_text(encoding="utf-8") if catalogue.exists() else ""
+    ok("Save & render writes the catalogue to catalog/index.html", catalogue.exists(), sorted(out.rglob("*")))
+    ok("...a page whose canonical is the catalogue's",
+       f'rel="canonical" href="{b19.b17.SITE}catalog/"' in page)
+    ok("...and nothing over the homepage at the site root", not (out / "index.html").exists())
+
 print(f"\n{passed} passed, {failed} failed")
 raise SystemExit(1 if failed else 0)
