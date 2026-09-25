@@ -16,7 +16,9 @@
 // (`archie-fx.js`), one of the others, or a walk off the edge of the page and a moonwalk
 // back in -- and idles again. He talks as he goes, in speech and thought bubbles, and answers when poked:
 // see `chatter()`. A reader who scrolls on down the page gets a visit now and then: see "Visits". Now and
-// then, instead of an act, he plays a prank on the page, and it never quite works: see `pranks()`.
+// then, instead of an act, he plays a prank on the page, and it never quite works: see `pranks()`. And now
+// and then a friend of his drops by and makes mischief of their own, which he tells them off for: see
+// "Friends" below and `archie-friends.js`.
 //
 // THE CANVAS IS WIDER THAN THE SLOT. It spans the viewport's width and the header's height, so that he can
 // walk out of the banner and so that the lights have somewhere to come from. The camera is the one the poster
@@ -74,7 +76,7 @@
     try { const m = window.archieMusic; return m ? Math.max(0, Math.min(1, m.level())) : 0; } catch { return 0; }
   };
 
-  let started = false;
+  let started = false, pals = null;          // `pals`: the friends' visit controller, see "Friends"
   const go = () => {
     if (started || !allowed() || !webgl()) return;
     started = true;
@@ -245,8 +247,13 @@
     const forced = asked && asked.startsWith("prank:") && PRANKS.includes(asked.slice(6)) ? asked.slice(6) : "";
     if (forced) lastPrank = -1e9;
     const prankable = () => !talk.quiet && seen && mode === "home" && !music.on && !grooving() &&
-      Date.now() - lastPrank >= PRANK_GAP;
+      !pranking && !(pals && pals.busy) && Date.now() - lastPrank >= PRANK_GAP;
+    let pranking = false;
     const prank = async name => {
+      pranking = true;
+      try { await prankOnce(name); } finally { pranking = false; }
+    };
+    const prankOnce = async name => {
       trick = trick || pranks(talk, header);
       if (!tricks.length) tricks = PRANKS.slice().sort(() => Math.random() - 0.5);
       name = name || tricks.pop();
@@ -428,6 +435,7 @@
     // Asked for a dance (by poking, or by choosing the Prism skin): cut the idle short and dance next.
     // Mid-act, it waits for the act to end.
     const talk = chatter(T, {host, slot, header, camera, view, actor, head: gltf.scene.getObjectByName("head"),
+      guest: () => (pals ? pals.poke() : null),
       wish() {
         wish = true;
         if (idling && done) { const d = done; done = null; d(); }
@@ -549,7 +557,24 @@
     run();
     direct();
 
+    // ---- Friends --------------------------------------------------------------------------------------
+    // `archie-friends.js`, fetched only now that the first frame is up, under this script's own `?v=`. It
+    // decides for itself whether anyone visits this page view, and asks `free()` before anyone does: he is
+    // at home, on screen, idle, not dancing to music or mid-prank, and not in Quiet mode. What a friend
+    // says to him goes through `talk.say`, which is his bubble and his Quiet mode. While one is visiting he
+    // plays no prank (see `prankable`), and a poke gets an answer about the guest (see `chatter`).
+    pals = null;
+    import(`./archie-friends.js${V}`).then(F => {
+      if (!started || stopped) return;
+      pals = F.friends({header, slot, say: line => talk.say(line),
+        free: () => !talk.quiet && seen && mode === "home" && idling && !pranking && !music.on && !grooving() &&
+          actor.visible && view.slide === 0});
+    }).catch(e => console.warn("Archie's friends stayed home:", e));
+    let stopped = false;
+
     stop = () => {
+      stopped = true;
+      if (pals) { pals.stop(); pals = null; }
       cancelAnimationFrame(raf); raf = 0;
       io.disconnect();
       document.removeEventListener("visibilitychange", run);
@@ -644,6 +669,11 @@
     terminal: [["Terminal mode. I feel like I should be hacking something."]],
     prism: [["Prism?! Now THIS is a rave."]],
     graphite: [["Back to Graphite. Classic, like a good README."]],
+    // The four newer skins; their copy is the designer's, from `ARCHIE` in `archie-friends-data.js`
+    sherbet: [["Sherbet! My visor feels fizzy."]],
+    riso: [["Riso! Everything's slightly misaligned. On purpose."]],
+    blueprint: [["Blueprint. Finally, I can see how I was built."]],
+    aurora: [["Aurora! Okay, this one's pretty."]],
     welcome: [["Welcome back! I didn't touch anything. Probably."], ["Oh hi! I was definitely not napping."]],
     up: [["Oh hey, you came back up!"], ["A visitor from further down the page!"]],
     lonely: [["...is this thing on?", 1], ["*taps visor* ...hello?", 1]],
@@ -717,8 +747,9 @@
 
     let t = 0, shown = false, until = 0, bw = 0, bh = 0, free = 5, seen = true, away = false;
     const cooled = {};
+    // `kind` is a key of LINES, or a line itself, [text] or [text, 1], for what a visiting friend has him say.
     const show = (kind, vars = {}, reply = false) => {
-      const [text, think] = pick(kind);
+      const [text, think] = Array.isArray(kind) ? kind : pick(kind);
       bubble.textContent = text.replace("{n}", vars.n || "").replace("{count}", count);
       bubble.classList.toggle("think", !!think);
       bubble.classList.add("on");
@@ -816,7 +847,9 @@
     const poked = () => {
       pokes.push(t);
       while (pokes.length && pokes[0] < t - 6) pokes.shift();
-      if (pokes.length >= 4) { pokes.length = 0; hold = t + 2.5; show("pokes", {}, true); o.wish(); }
+      const guest = o.guest && o.guest();        // a friend is over: he answers about them, and does not dance
+      if (guest) { pokes.length = 0; show(guest, {}, true); }
+      else if (pokes.length >= 4) { pokes.length = 0; hold = t + 2.5; show("pokes", {}, true); o.wish(); }
       else if (t >= hold) { show("poke", {}, true); if (Math.random() < 0.2) o.wish(); }
       if (!quiet) free = Math.max(free, t + 20);
     };

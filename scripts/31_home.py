@@ -520,7 +520,11 @@ MASCOT = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb", "archie-
 # model, and none of the four is in the service worker's precache, so without it a replaced file can meet a stale sibling
 # from the HTTP cache and the mascot stays a poster. The scripts are hashed with LF endings, because the
 # checkout is CRLF on Windows and LF on CI; the model is binary and hashed as it is.
-VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb")
+# His friends (`archie-friends.js`, the art and choreography, and `archie-friends-data.js`, who they are and
+# every line) are imported the same way, so they are hashed in too. They are not in MASCOT: without them
+# he loses his visitors, not his model.
+VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb",
+             "archie-friends.js", "archie-friends-data.js")
 
 
 def mascot_version(files: tuple[str, ...] = VERSIONED) -> str:

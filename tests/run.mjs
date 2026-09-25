@@ -2,7 +2,7 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the twenty-two harnesses in turn, and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the twenty-three harnesses in turn, and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
@@ -51,6 +51,12 @@
 //                     exactly, saves nothing, lets a reader's mid-prank choice stand, keeps the lights' flicker
 //                     under WCAG's three flashes a second, and stays out of quiet mode. Cannot see when he
 //                     picks one unasked -- that is three minutes of waiting -- nor a real tab switch.
+//   friends-check.mjs Archie's friends, each sent for on the live model: it comes, says its own lines, gets
+//                     one of his, does its trick and goes; the page's DOM is exactly as it was, nothing is
+//                     saved or focused, no control stays under a friend, nothing on their layer flashes, a
+//                     click, Escape, a poke or reduced motion sends them off, and Quiet mode, reduced
+//                     motion, a narrow screen and no WebGL each keep them away. Cannot see the dice -- a
+//                     quarter of page views, 20 to 60 s in -- beyond nobody coming in the first twenty.
 //   detail-churn.mjs  regenerates 1,294 detail pages and compares hashes. Nothing to do with a browser.
 //   detail-preview-check.mjs
 //                     opens one detail page against deterministic GitHub API fixtures and verifies the
@@ -143,7 +149,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// twenty-two files own their own plumbing. It is 200 lines of plumbing.
+// twenty-three files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -185,6 +191,7 @@ const HARNESSES = [
   {file: "pwa-check.mjs", label: "manifest, worker, precache, offline, freshness, 404", needs: "browser", floor: 25},
   {file: "dance-check.mjs", label: "Dance with me: the beat detector against a known tempo", needs: "browser", floor: 30},
   {file: "prank-check.mjs", label: "Archie's pranks: each undone, nothing saved, the flicker's rate", needs: "browser", floor: 28},
+  {file: "friends-check.mjs", label: "Archie's friends: each comes, leaves, restores the page, and keeps off the controls", needs: "browser", floor: 80},
 ];
 
 // Both entry points, because the site has two and either one missing is a different broken build:
@@ -202,7 +209,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and six of the twenty-two harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and six of the twenty-three harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -215,7 +222,7 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Sixteen of the twenty-two need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Sixteen of the twenty-three need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives the IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar,
@@ -225,7 +232,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and sixteen of the twenty-two harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and sixteen of the twenty-three harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +
