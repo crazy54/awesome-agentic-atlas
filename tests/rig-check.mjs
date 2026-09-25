@@ -103,15 +103,18 @@ const rate = (rec, pick) => {
 
 // ---- A dance, all of it.
 ok("the model goes live under swiftshader, which the rig needs", await goto("?archie=floss"));
-ok("window.archieRig is there once the model is, with the cues the admin panel lists",
+ok("window.archieRig is there once the model is, with the cues the admin panel lists: the rig's, then the stage effects'",
    await ev(`JSON.stringify(window.archieRig && window.archieRig.cues) === JSON.stringify(["beams-chase","beams-fan",
-     "beams-cross","ballyhoo","gobo","laser-symbol","blinder","wash","pods","video-wall","all-off"])`));
+     "beams-cross","ballyhoo","gobo","laser-symbol","blinder","wash","pods","video-wall","all-off",
+     "co2","flames","sparks","haze"])`));
 ok("the lights come up for the dance", await until(`window.archieRig.status().level > 0.9`, 15000));
 await ev(RECORD);
 // The whole of floss is 48 beats in 15-16 s; the pods drop at its half-way beat and the blinders swell
-// on beats 16 and 32. Read for 14 s from the lights being up.
+// on beats 16 and 32. Read for 14 s from the lights being up, and on until the dance is over: a frame's
+// time step is capped at a tenth of a second, so where swiftshader draws four frames a second (the CI
+// runner) the dance plays at under half speed, and fourteen seconds never reached its half-way beat.
 const seen = {look: new Set(), program: new Set(), gobo: 0, pods: 0, lasers: false};
-for (let i = 0; i < 28; i++) {
+for (let i = 0; i < 28 || (i < 120 && (await ev(`window.archieRig.status().dancing`))); i++) {
   await sleep(500);
   const s = await ev(`window.archieRig.status()`);
   seen.look.add(s.look); seen.program.add(s.program);
@@ -155,12 +158,18 @@ for (const [name, check] of [
   ok(`...and it plays`, await until(`(s => ${check})(window.archieRig.status())`, 6000),
      name + " " + JSON.stringify(await ev(`window.archieRig.status()`)));
 }
+// A second blinder cue as soon as the first swell is over swells them again: a dance's downbeat in the
+// four seconds before once swallowed the cue, which is how it failed on CI, mid-dance.
+await until(`window.archieRig.status().blinder < 0.05`, 6000);
+ok("cue blinder, again straight after a swell: taken", (await ev(`window.archieRig.cue("blinder")`)) === true);
+ok("...and it swells again", await until(`window.archieRig.status().blinder > 0.5`, 3000),
+   JSON.stringify(await ev(`window.archieRig.status()`)));
 ok("cue laser-symbol: taken", (await ev(`window.archieRig.cue("laser-symbol")`)) === true);
 const laserCanvas = `[...document.querySelectorAll("body > canvas")].find(c => c.style.zIndex === "30")`;
 ok("...the laser canvas comes in", await until(`${laserCanvas}?.style.display === ""`, 6000));
 ok("...over the page, taking no pointer events", await ev(`getComputedStyle(${laserCanvas}).pointerEvents === "none"`));
 ok("cue all-off: taken", (await ev(`window.archieRig.cue("all-off")`)) === true);
-ok("...and the lights go down", await until(`window.archieRig.status().level === 0`, 6000));
+ok("...and the lights go down", await until(`window.archieRig.status().level === 0`, 6000), JSON.stringify(await ev(`window.archieRig.status()`)));
 ok("...and the lasers with them", await until(`${laserCanvas}.style.display === "none"`, 4000));
 ok("an archie:cue event fires a cue too", await ev(`(async () => {
   document.dispatchEvent(new CustomEvent("archie:cue", {detail: {name: "beams-fan"}}));
