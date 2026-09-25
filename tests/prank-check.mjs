@@ -1,4 +1,4 @@
-// Archie's pranks, played for real on the live model: each one is asked for with `?archie=prank:<name>`,
+// Archie's pranks and moods, played for real on the live model: each prank is asked for with `?archie=prank:<name>`,
 // which goes through the same gates as a prank he picks himself, and what is asserted is the page after it
 // -- put back exactly as it was, nothing saved, and a reader who changed something mid-prank keeping it.
 // The lights are timed as well as counted, because their rate is the one thing here with a safety rule
@@ -8,11 +8,36 @@
 // gap and the one-in-three roll are the director's, and waiting them out would be a four-minute test. Nor
 // the tab title under a real tab switch: `document.hidden` is overridden and the event dispatched by hand.
 //
+// Then his mood, which is sessionStorage's `archie-mood` and is set there before each page load: that
+// being ignored lowers it and a poke or a resting pointer raises it, that it carries to the next page, that
+// one poke forgives anything, that he adores a reader who pokes a lot and plays his pranks as payback on one
+// who does not, and that each of his attempts to get rid of a reader comes to nothing and leaves the page
+// as it was. Not the eight minutes before he tires of a reader: `?archie=tired:<name>` skips them.
+//
+// And following the reader down the page: scrolled away from the masthead, he comes down a fireman's pole
+// or in a lift (`?archie=visit:pole`, `visit:lift`), drawn behind him in the visit's fixed layer, and every
+// prop is gone again whether he leaves the way he came or the reader scrolls back up mid-visit.
+//
+// And off the index: met there, he follows the reader to the rest of the site and docks in a corner of the
+// window, live, carrying his mood and saying so; and he does not, even as far as fetching himself, for a
+// reader who never met him in this tab, one in Quiet mode, or a URL in `archie-src` from another origin.
+//
+// To the music, fed as the beat detector feeds it (`archie:music`, `archie:beat`, `window.archieMusic`): he
+// dances and the rig is lit while the beats come; two seconds after they stop, the dance is cut off where it
+// was and he only idles, the rig still hung but dark and still, until the beats come back and so does it;
+// and with music mode off, the rig is hauled away. While music mode is on ("Dance with me"), the house lights
+// are down: the page dims around the masthead, through the quiet as well, and not the masthead or anything the
+// reader clicks; and the rig's heads run brighter than a dance without music can make them.
+//
+// The heavy parts of the music choose his dance: steady music never gets a rave dance, the bass coming in hard
+// over its own recent run cuts whatever he is dancing short for the headbang, and the bass going out of it
+// while the music stays loud, a build, for the drop, which prays through it.
+//
 // The model has to go live, so WebGL is swiftshader's; a Chrome that cannot give it one fails the first
 // assertion rather than passing the rest on the poster, which plays no pranks.
 //
 //   node tests/prank-check.mjs <chrome-binary> <origin>
-import {readFileSync} from "node:fs";
+import {readFileSync, readdirSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {launch} from "./lib/browser.mjs";
 
@@ -22,7 +47,7 @@ const TMP = process.env.AAA_TMP || tmpdir();
 // His lines, read from the script, so a bubble can be checked against the set it must come from.
 const SRC = readFileSync(new URL("../docs/assets/archie.js", import.meta.url), "utf8");
 const lines = key => {
-  const m = SRC.match(new RegExp(`"${key}": (\\[\\[[\\s\\S]*?\\]\\])(?=,\\s*\\n)`));
+  const m = SRC.match(new RegExp(`\\s"?${key}"?: (\\[\\[[\\s\\S]*?\\]\\])(?=,\\s*\\n)`));
   if (!m) throw new Error(`no LINES["${key}"] in archie.js`);
   return Function(`return ${m[1]}`)().map(l => l[0]);
 };
@@ -77,7 +102,16 @@ const ev = async expr => {
   if (r.exceptionDetails) throw new Error(expr.slice(0, 60) + " threw: " + (r.exceptionDetails.exception?.description || r.exceptionDetails.text));
   return r.result.value;
 };
-const goto = async (q = "") => {
+// `mood` is his mood on arrival, as though the tab had met him just now; null keeps whatever it was. It is
+// set from robots.txt, on the same origin, because a page with him on it saves his own mood every two
+// seconds and would write over it before the navigation.
+const goto = async (q = "", mood = 0) => {
+  if (mood !== null) {
+    await S("Page.navigate", {url: ORIGIN + "robots.txt"});
+    for (let i = 0; i < 40 && !(await ev(`location.pathname === "/robots.txt" && document.readyState === "complete"`)); i++)
+      await sleep(100);
+    await ev(`sessionStorage.setItem("archie-mood", JSON.stringify({v: ${mood}, since: Date.now()}))`);
+  }
   await S("Page.navigate", {url: ORIGIN + q});
   for (let i = 0; i < 80 && !(await ev("document.readyState === 'complete'")); i++) await sleep(150);
   for (let i = 0; i < 200 && !(await ev(`!!document.querySelector(".mhmascot[data-live]")`)); i++) await sleep(150);
@@ -89,13 +123,11 @@ const until = async (expr, ms) => {
   return false;
 };
 const rec = () => ev(`window.__rec`);
+// Whether the bubble's latest line is one of LINES[key], within `ms`.
+const saying = (key, ms = 20000) => until(`${JSON.stringify(lines(key))}.includes(__rec.said.at(-1)?.text)`, ms);
 // The prank is over when its excuse is in the bubble; a second more for the shrug's restore to land.
-const done = async name => {
-  const after = JSON.stringify(lines(`prank-${name}-after`));
-  const ok = await until(`${after}.includes(__rec.said.at(-1)?.text)`, 25000);
-  await sleep(1000);
-  return ok;
-};
+const over = async key => { const ok = await saying(key, 25000); await sleep(1000); return ok; };
+const done = name => over(`prank-${name}-after`);
 let pass = 0, fail = 0;
 const ok = (n, c, extra = "") => { if (c) pass++; else { fail++; console.log("FAIL " + n + (extra ? " -- " + extra : "")); } };
 // The changes to an attribute of <html> from `from` on, as values: the page sets both itself as it loads,
@@ -107,6 +139,7 @@ const changes = (r, name, from) => {
   return out;
 };
 const setup = (r, name) => r.said.find(s => lines(`prank-${name}`).includes(s.text))?.t ?? 1e12;
+const document_has = (r, key) => r.said.some(s => lines(key).includes(s.text));
 const saidOnly = (r, name, from) => r.said.filter(s => s.t >= from).every(s => OURS(name).includes(s.text));
 
 // ---- lights
@@ -187,6 +220,196 @@ ok("...with its hotspot at the arrow's tip, where a click would land anyway", aw
 await done("cursor");
 ok("...and is gone again", await ev(`!${cur}`));
 
+// ---- his mood
+const mood = () => ev(`JSON.parse(sessionStorage.getItem("archie-mood")).v`);
+const last = () => ev(`__rec.said.at(-1)?.text || ""`);
+const pokeHim = () => ev(`document.querySelector(".archie-poke").click()`);
+await goto("", 0);
+await sleep(8000);
+const m1 = await mood();
+ok("mood: ignored, it falls", m1 < 0 && m1 >= -5, String(m1));
+await goto("", null);
+const m2 = await mood();
+ok("...and follows the reader to the next page, where it goes on falling", m2 <= m1 && m2 > m1 - 8, `${m1} then ${m2}`);
+await goto("", -23);
+ok("...and he says so when it sinks past sulking", await saying("to-sulk", 20000), await last());
+await goto("", 0);
+const box = await ev(`(() => { const r = document.querySelector(".archie-poke").getBoundingClientRect();
+  return {x: r.left + r.width / 2, y: r.top + r.height / 2}; })()`);
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: box.x, y: box.y});
+await sleep(4000);
+const hov = await mood();
+await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 5, y: 890});
+ok("a pointer resting on him raises it", hov >= 4, String(hov));
+await goto("", -60);
+await pokeHim();
+await sleep(300);
+ok("an angry Archie, poked, forgives at once", lines("forgive").includes(await last()), await last());
+ok("...all the way: from -60 to 30", await mood() === 30, String(await mood()));
+await goto("", 70);
+await pokeHim();
+await sleep(300);
+ok("one who adores the reader says so when poked", lines("love").includes(await last()), await last());
+ok("...with hearts", await ev(`document.querySelectorAll(".archie-heart[aria-hidden=true]").length`) === 5);
+ok("...a poke is +20", await mood() >= 88 && await mood() <= 90, String(await mood()));
+await sleep(2500);
+ok("...and the hearts are gone again", await ev(`document.querySelectorAll(".archie-heart").length`) === 0);
+await goto("?archie=prank:tilt", -90);
+ok("furious, a prank is announced as payback", await saying("revenge"), await last());
+await done("tilt");
+ok("...and still put back afterwards", await ev(`document.querySelector("main").style.rotate`) === "");
+
+// ---- tired of the reader, and failing to get rid of them
+for (const name of ["close", "sign", "shoo", "sulk"]) {
+  await goto(`?archie=tired:${name}`, 0);
+  const href = await ev(`location.href`);
+  ok(`tired, ${name}: announced`, await saying(`tired-${name}`), await last());
+  if (name === "close" || name === "sign")
+    ok("...its prop drawn, hidden from assistive technology and taking no clicks",
+       await until(`(() => { const p = document.querySelector(".archie-prop"); return !!p &&
+         p.getAttribute("aria-hidden") === "true" && getComputedStyle(p).pointerEvents === "none"; })()`, 10000));
+  if (name === "shoo") ok("...<main> shoved aside", await until(`!!parseFloat(document.querySelector("main").style.translate)`, 10000));
+  ok("...and failing, with an excuse", await over(`tired-${name}-after`), await last());
+  ok("...leaving the page as it was", await ev(`!document.querySelector(".archie-prop") &&
+    document.querySelector("main").style.translate === "" && document.querySelector("main").style.transition === ""`) &&
+    await ev(`location.href`) === href);
+}
+await goto("?archie=tired:close", 90);
+await sleep(12000);
+r = await rec();
+ok("never tired of a reader he adores", !document_has(r, "tired-close") && await ev(`!document.querySelector(".archie-prop")`),
+   JSON.stringify(r.said.map(s => s.text)));
+
+// ---- the music going quiet
+await goto("", 0);
+const DANCE = Object.keys(Function(`return ${SRC.match(/const BEATS = (\{[^}]*\})/)[1]}`)());
+const act = () => ev(`document.querySelector(".mhmascot").dataset.act || ""`);
+const rigIs = () => ev(`document.querySelector(".mhmascot").dataset.rig || ""`);
+const lasersOn = () => ev(`[...document.body.children].some(e => e.tagName === "CANVAS" && e.style.display !== "none")`);
+// The rig's heads, from its own status (`window.archieRig`): the brightest of them now, 0 when all are dark.
+const headsUp = () => ev(`Math.max(0, ...window.archieRig.status().heads)`);
+const dim = () => ev(`(() => { const h = document.querySelector(".archie-house"), r = document.querySelector("header").getBoundingClientRect();
+  if (!h || h.style.display === "none") return "off";
+  const b = h.getBoundingClientRect(), cs = getComputedStyle(h);
+  return JSON.stringify({o: +cs.opacity, pe: cs.pointerEvents, shade: cs.boxShadow.startsWith("rgba(0, 0, 0,"),
+    hole: Math.max(...["left", "top", "width", "height"].map(k => Math.abs(b[k] - r[k])))}); })()`);
+const beats = on => ev(on
+  ? `window.__beats = setInterval(() => document.dispatchEvent(new CustomEvent("archie:beat",
+       {detail: {strength: 0.9, bpm: 120, at: window.__lastBeat = performance.now()}})), 500)`
+  : `clearInterval(window.__beats)`);
+await ev(`window.archieMusic = {level: () => 0.6, bass: () => 0.6, bpm: 120, lastBeat: 0};
+  document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: true, source: "mic"}}))`);
+ok("music mode on, before a beat: the rig hangs, dark", await until(`document.querySelector(".mhmascot").dataset.rig === "dark"`, 4000),
+   await rigIs());
+await beats(true);
+ok("...the beat: he dances", await until(`${JSON.stringify(DANCE)}.includes(document.querySelector(".mhmascot").dataset.act)`, 25000),
+   await act());
+ok("...and the rig lights up", await until(`document.querySelector(".mhmascot").dataset.rig === "lit"`, 4000) &&
+   await headsUp() > 0, `${await rigIs()} heads=${await headsUp()}`);
+{
+  const d = JSON.parse(await dim() === "off" ? "{}" : await dim());
+  ok("...the house lights down: the page dims round the masthead, which stays as it was, and nothing is blocked",
+     d.o > 0.9 && d.pe === "none" && d.shade && d.hole < 1.5, JSON.stringify(d));
+  // A head is at most 1.1 without music mode's boost (the rig's level, times a kick's pulse of at most 1.1).
+  let top = 0;
+  for (let i = 0; i < 8; i++) { top = Math.max(top, await headsUp()); await sleep(250); }
+  ok("...and the stage's lights come up brighter than a dance alone makes them", top > 1.15, `brightest head ${top}`);
+}
+const dancing = await act();
+await beats(false);
+const cut = await until(`document.querySelector(".mhmascot").dataset.act === "idle"`, 5000);
+const after = await ev(`performance.now() - window.__lastBeat`);
+ok("quiet: two seconds on, the dance is cut off where it was", cut && after >= 1900 && after < 3000,
+   `${dancing} -> ${await act()} ${Math.round(after)} ms after the last beat`);
+ok("...the rig still hung, but dark", await until(`document.querySelector(".mhmascot").dataset.rig === "dark"`, 2000),
+   await rigIs());
+ok("...the heads and the lasers off", !(await lasersOn()) && await headsUp() === 0, `heads=${await headsUp()}`);
+const held = [];
+for (let i = 0; i < 40; i++) { held.push(`${await act()}/${await rigIs()}`); await sleep(250); }
+ok("...and so it stays through the quiet: no dance, no act, nothing lit", held.every(h => h === "idle/dark"),
+   [...new Set(held)].join(" "));
+ok("...the house lights still down between songs", (await dim()) !== "off", await dim());
+await beats(true);
+ok("the beat back: he dances again", await until(`${JSON.stringify(DANCE)}.includes(document.querySelector(".mhmascot").dataset.act)`, 25000),
+   await act());
+ok("...and the rig powers up again", await until(`document.querySelector(".mhmascot").dataset.rig === "lit"`, 4000), await rigIs());
+await beats(false);
+await ev(`delete window.archieMusic;
+  document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: false, source: "mic"}}))`);
+ok("music mode off: the rig is hauled away", await until(`document.querySelector(".mhmascot").dataset.rig === "away"`, 6000),
+   await rigIs());
+ok("...and the house lights come back up", (await dim()) === "off", await dim());
+
+// ---- the heavy parts
+const RAVE = ["headbang", "the-drop"];
+// `pin` fixes the director's dice at the top of the pool, where `BEATS` puts the rave dances: were they in it,
+// he would draw one.
+const heavyFrom = async (bass, pin) => {
+  await goto("", 0);
+  if (pin) await ev(`Math.random = () => 0.999`);
+  await ev(`window.__bass = ${bass}; window.archieMusic = {level: () => 0.6, bass: () => window.__bass, bpm: 120, lastBeat: 0,
+      wave: o => o.fill(0)};
+    document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: true, source: "mic"}}))`);
+  await beats(true);
+  return until(`${JSON.stringify(DANCE)}.includes(document.querySelector(".mhmascot").dataset.act)`, 25000);
+};
+{
+  await heavyFrom(0.5, true);
+  const seen = new Set();
+  for (let i = 0; i < 24; i++) { seen.add(await act()); await sleep(250); }
+  ok("steady music: he dances, and no rave dance", [...seen].every(a => DANCE.includes(a) && !RAVE.includes(a)),
+     [...seen].join(" "));
+  const was = await act();
+  await ev(`window.__bass = 0.95`);
+  ok("the bass coming in hard: he cuts to the headbang, there and then",
+     await until(`document.querySelector(".mhmascot").dataset.act === "headbang"`, 3000), `${was} -> ${await act()}`);
+  await beats(false);
+}
+{
+  await heavyFrom(0.7);
+  await sleep(3000);
+  const was = await act();
+  await ev(`window.__bass = 0.05`);
+  ok("the bass going out while it stays loud, a build: he cuts to the drop, and prays",
+     !RAVE.includes(was) && await until(`document.querySelector(".mhmascot").dataset.act === "the-drop"`, 3000),
+     `${was} -> ${await act()}`);
+  await beats(false);
+  await ev(`delete window.archieMusic;
+    document.dispatchEvent(new CustomEvent("archie:music", {detail: {on: false, source: "mic"}}))`);
+}
+
+// ---- following the reader down the page
+// Out of the layer itself, not just gone with it: the layer is detached after every visit and used again.
+const cleared = `!document.querySelector(".archie-pole,.archie-lift") && !!document.querySelector(".mhmascot canvas") &&
+  !__prop.parentNode`;
+for (const by of ["pole", "lift"]) {
+  await goto(`?archie=visit:${by}`, 30);
+  await ev(`scrollTo(0, 1600)`);
+  ok(`${by}: scrolled down, it arrives`, await until(`!!(window.__prop = document.querySelector(".archie-${by}"))`, 20000));
+  ok("...in the visit's fixed layer, hidden from assistive technology and taking no clicks", await ev(`(() => {
+    const p = document.querySelector(".archie-${by}");
+    return p.getAttribute("aria-hidden") === "true" && getComputedStyle(p).pointerEvents === "none" &&
+      getComputedStyle(p.parentElement).position === "fixed" && !!p.parentElement.querySelector("canvas") &&
+      !!(p.compareDocumentPosition(p.parentElement.querySelector("canvas")) & Node.DOCUMENT_POSITION_FOLLOWING); })()`),
+    await ev(`(() => { const p = document.querySelector(".archie-${by}"), l = p.parentElement;
+      return [p.getAttribute("aria-hidden"), getComputedStyle(p).pointerEvents, getComputedStyle(l).position,
+              [...l.children].map(c => c.tagName + "." + c.className).join(",")].join(" | "); })()`));
+  ok("...and he comes down by it, saying so", await saying(by, 20000), await last());
+  if (by === "pole")
+    ok("...a pole the height of the window, dropped in from the top", await ev(`(() => {
+      const r = document.querySelector(".archie-pole").getBoundingClientRect();
+      return Math.abs(r.height - innerHeight) < 2 && r.top > -2; })()`));
+  else
+    ok("...a lift that has counted down to the ground floor", /G$/.test(await ev(`document.querySelector(".archie-floor").textContent`)));
+  if (by === "pole") {
+    ok("...and, left to it, he goes back up the pole and takes it with him", await until(cleared, 40000));
+  } else {
+    await ev(`scrollTo(0, 0)`);
+    ok("...and scrolling back up mid-visit clears it away at once", await until(cleared, 5000));
+  }
+  await ev(`scrollTo(0, 0)`);
+}
+
 // ---- the tab title while the reader is away
 const away = on => ev(`(() => { Object.defineProperty(document, "hidden", {configurable: true, get: () => ${on}});
   document.dispatchEvent(new Event("visibilitychange")); })()`);
@@ -215,7 +438,47 @@ ok("quiet mode: no prank", !changes(r, "data-theme", 1000).length && !changes(r,
 await away(true); await sleep(4600);
 ok("...and no tab title", await ev(`document.title`) === title0);
 await away(false);
+ok("...and a mood that stays where it was", await mood() === 0, String(await mood()));
+await goto("?archie=tired:close", 0);
+await sleep(9000);
+ok("...and no trying to get rid of anybody", !(await ev(`!!document.querySelector(".archie-prop")`)) &&
+   (await rec()).said.length === 0);
 await ev(`localStorage.removeItem("atlas-byte-quiet")`);
+
+// ---- following the reader off the index
+const docked = `(() => { const d = document.querySelector(".archie-dock"), s = d && d.querySelector(".mhmascot[data-live]");
+  return !!s && getComputedStyle(d).position === "fixed" && getComputedStyle(d).pointerEvents === "none" &&
+    getComputedStyle(d.querySelector(".archie-poke")).pointerEvents === "auto"; })()`;
+const fetched = `performance.getEntriesByType("resource").some(e => e.name.includes("/archie.js"))`;
+ok("follow: the index keeps his own URL, release and all", /\/assets\/archie\.js\?v=\w/.test(
+   await ev(`sessionStorage.getItem("archie-src") || ""`)), await ev(`sessionStorage.getItem("archie-src")`));
+const TOPIC = readdirSync(new URL("../docs/topic/", import.meta.url))[0];
+for (const page of ["catalog/", "discover/", "collections/", `topic/${TOPIC}/`, "repo/"]) {
+  ok(`...to ${page}, where he is live`, await goto(page, 0));
+  ok("...docked in a fixed corner that takes no clicks but his own", await ev(docked));
+}
+ok("...and says he followed them", await saying("follow"), await last());
+await goto("catalog/", -40);
+ok("...mad, if they had been ignoring him", await saying("follow-mad"), await last());
+await pokeHim();
+await sleep(300);
+ok("...and a poke there forgives him too", lines("forgive").includes(await last()) && await mood() === 30, await last());
+const stranger = async (setup, name) => {
+  await S("Page.navigate", {url: ORIGIN + "robots.txt"});
+  await until(`location.pathname === "/robots.txt" && document.readyState === "complete"`, 5000);
+  await ev(setup);
+  await S("Page.navigate", {url: ORIGIN + "catalog/"});
+  await until(`document.readyState === "complete"`, 12000);
+  await sleep(6000);
+  ok(name, !(await ev(fetched)) && !(await ev(`!!document.querySelector(".archie-dock")`)),
+     await ev(`performance.getEntriesByType("resource").map(e => e.name).filter(n => /archie/.test(n)).join(" ")`));
+};
+await stranger(`sessionStorage.clear()`, "not for a reader who never met him in this tab: not even fetched");
+await goto("", 0);
+await stranger(`localStorage.setItem("atlas-byte-quiet", "1")`, "not in Quiet mode");
+await ev(`localStorage.removeItem("atlas-byte-quiet")`);
+await stranger(`sessionStorage.setItem("archie-src", "https://example.com/assets/archie.js?v=x")`,
+               "not from another origin, whatever sessionStorage says");
 
 ok("no console errors", errors.length === 0, errors.join(" | "));
 await browser.close();

@@ -151,6 +151,8 @@ const PAGE = `(() => {
   const h = document.querySelector("header").cloneNode(true), m = document.querySelector("main").cloneNode(true);
   h.querySelectorAll("canvas,.archie-say,.archie-poke,.archie-sr").forEach(e => e.remove());
   for (const x of [h, m]) x.querySelectorAll("[data-ghrow],[data-gh]").forEach(e => e.remove());
+  // Archie's own state, which he reports on his slot for the harnesses: what he plays and where the rig is.
+  h.querySelectorAll(".mhmascot").forEach(e => { delete e.dataset.act; delete e.dataset.rig; });
   return m.outerHTML + h.outerHTML + document.title;
 })()`;
 const rec = () => ev(`window.__rec`);

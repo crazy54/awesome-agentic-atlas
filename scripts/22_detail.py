@@ -581,7 +581,7 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
     <nav class="util">
       <a href="{repo.rel('discover/')}">Discover</a> ·
       <a href="{repo.rel('collections/')}">Collections</a> ·
-      <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+      <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
       <a href="{repo.rel('repo/')}">All projects</a> ·
       <a href="{repo.rel()}#browse">Topics &amp; harnesses</a><br>
       <button class="chip" id="theme" aria-pressed="false">Light theme</button>
@@ -687,7 +687,7 @@ def directory(repos: list[Repo], data: dict) -> str:
     <nav class="util">
       <a href="../discover/">Discover</a> ·
       <a href="../collections/">Collections</a> ·
-      <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+      <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
       <a href="../#browse">Topics &amp; harnesses</a><br>
       <button class="chip" id="theme" aria-pressed="false">Light theme</button>
     </nav>
@@ -1846,7 +1846,9 @@ function show(id, html) {
   el.innerHTML = html;
   el.className = "live on";
 }
-"""
+
+/* Archie, if the reader met him on the index: see `follow()` in 19_pages.py. */
+""" + b19.FOLLOW_JS + "\n"
 
 # Copied from the template so a detail page in a bookmark bar looks like the site.
 ICON = "favicon.svg"
