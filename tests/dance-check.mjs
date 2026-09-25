@@ -207,10 +207,22 @@ ok("the poster hops on the beat while there is no live model", !got.live && got.
    `${got.hops} hops, ${beats.length} beats, live ${got.live}`);
 // The model's arm: once `archie.js` marks it live, the beats go to the model and the poster stays still.
 // Five seconds, so at least two of them are music whatever part of the loop they fall in.
+// Counted as hops ASKED FOR -- the slot's `beat` class put back on, which is what `bounce()` does -- not as
+// `animationstart`s. The event comes at the next style pass, which on this runner is 20 to 150 ms after the
+// beat, so a hop asked for by a beat 2 ms before the slot went live started 21 ms after, and was counted
+// against the live model (hops:1, in 1 run of 3 here and 3 of 4 on another checkout). A class mutation is recorded in the task
+// that made it, so one made before this block runs is delivered before it, and every one counted here
+// was asked for while the model was live.
 const live = await ev(`(async () => { const slot = document.querySelector(".mhmascot");
-  slot.dataset.live = ""; __hops = 0; const n0 = __log.length;
+  let asked = 0;
+  // One bounce() is a remove and an add in one task, so one delivery: counted once.
+  const mo = new MutationObserver(ms => { if (slot.classList.contains("beat") &&
+    ms.some(m => !(" " + (m.oldValue || "") + " ").includes(" beat "))) asked++; });
+  slot.dataset.live = ""; const n0 = __log.length;
+  mo.observe(slot, {attributes: true, attributeFilter: ["class"], attributeOldValue: true});
   await new Promise(r => setTimeout(r, 5000));
-  const r = {hops: __hops, beats: __log.slice(n0).filter(e => e.t === "beat").length};
+  mo.disconnect();
+  const r = {hops: asked, beats: __log.slice(n0).filter(e => e.t === "beat").length};
   delete slot.dataset.live; return r; })()`);
 ok("...and does not while the model is live, though the beats go on", live.beats >= 2 && live.hops === 0,
    JSON.stringify(live));
