@@ -2,8 +2,8 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the twenty-six harnesses in turn --
-// sixteen Python, eight in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the twenty-seven harnesses in turn --
+// seventeen Python, eight in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
@@ -21,7 +21,10 @@
 //   signals_test.py   the cache-staleness policy in scripts/signals.py, on fabricated entries. Pure and
 //                     instant, and the only test of it that can exist offline -- the three stages it
 //                     serves all shell out to `gh api graphql`, so nothing here sees a real crawl.
-//   newness_test.py   the cohort model in scripts/newness.py: that `New` is the most recent import that
+//   fetch_test.py     what `graphql_batch` in scripts/02_fetch.py does when a batch fails, against a fake
+//                     `gh`: a batch GitHub keeps timing out on is split and reassembled alias for alias,
+//                     while a rate limit, a rejected query and an outage fail exactly as they did.
+//   newness_test.py  the cohort model in scripts/newness.py: that `New` is the most recent import that
 //                     brought anything, that the next one to bring anything takes the mark off the last,
 //                     and that an import bringing nothing moves neither. Pure, and the only harness that
 //                     can see it -- a cohort is correct only in relation to the one before it, so every
@@ -161,7 +164,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// twenty-six files own their own plumbing. It is 200 lines of plumbing.
+// twenty-seven files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -184,6 +187,7 @@ const HARNESSES = [
   {file: "app_flags_test.py", label: "the 0/1 schema, atomic editor writes, and every kill switch", python: true, floor: 28},
   {file: "theme_test.py", label: "eight token sets in four copies, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
+  {file: "fetch_test.py", label: "a batch GitHub keeps timing out on is split, and nothing else is", python: true, floor: 20},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
   {file: "newness_test.py", label: "what `New` means: one cohort, superseded by the next import that brings anything", python: true, floor: 45},
   {file: "discover_test.py", label: "fifty a day for seven days, every category in each, and the queue that rotates them", python: true, floor: 75},
@@ -224,7 +228,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and eight of the twenty-six harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and eight of the twenty-seven harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -237,9 +241,10 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Sixteen of the twenty-six need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Seventeen of the twenty-seven need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
-// entries it holds, one decides which repos a crawl would ask about, one drives the IndexNow client and
+// entries it holds, one decides which repos a crawl would ask about, one drives a fake `gh` through the
+// batch fetch's failure handling, one drives the IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar,
 // one reads every built page looking for a platform mark that resolves to nothing, one re-derives the
 // semantic index's arithmetic from the committed bytes -- and between them they are most of the assertions
@@ -247,7 +252,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and sixteen of the twenty-six harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and seventeen of the twenty-seven harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +
