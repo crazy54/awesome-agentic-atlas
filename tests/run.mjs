@@ -2,13 +2,13 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the twenty-seven harnesses in turn --
-// seventeen Python, eight in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the twenty-eight harnesses in turn --
+// seventeen Python, nine in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY NINETEEN HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY TWENTY-SIX HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
 //   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces, and
 //                     the one channel on the page that is not colour: the five platform verdict marks,
@@ -65,6 +65,11 @@
 //                     every frame of a dance and held under WCAG's three flashes a second, the blinders held to
 //                     a swell, and each of the admin panel's named cues taken and played, refused in Quiet mode
 //                     and absent under reduced motion. Cannot see what the show looks like, only what it asks for.
+//   stage-check.mjs   what it looks like, as far as pixels can say: the video wall, each stage effect and the
+//                     blinders drawn on their own, fired by their cues and screenshotted, in both themes -- the
+//                     wall's picture must move and have contrast, CO2 read white, flames and sparks fire-coloured,
+//                     the haze light up where the beams go through it -- and pyro fired by simulated music.
+//                     Cannot see whether it looks good, nor a real browser that will not decode the clip.
 //   spotlight_test.py the homepage's daily spotlight and line of the day, off the generator: the day rule,
 //                     the rendered page's pickers run under node against it on a pinned clock and zone, the
 //                     pool's shape, the order the inline scripts depend on, and each refusal of the line file.
@@ -164,7 +169,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// twenty-seven files own their own plumbing. It is 200 lines of plumbing.
+// twenty-eight files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -196,13 +201,13 @@ const HARNESSES = [
   {file: "media_test.py", label: "one embedded part per screenshot, the entry ceiling, and the unpooled cover", python: true, floor: 45},
   {file: "workbook_branding_test.py", label: "the Atlas mark and mascot on both workbook covers, saved as a weekly saves them", python: true, floor: 24},
   {file: "refresh_test.py", label: "the cache-free render, refused when the source count moved", python: true, floor: 60},
-  {file: "live_test.py", label: "the star/push sidecar the 1,294 detail pages read", python: true, floor: 90},
+  {file: "live_test.py", label: "the star/push sidecar the detail pages read", python: true, floor: 90},
   {file: "semantic_test.py", label: "the semantic index, scored from the bytes a reader downloads", python: true, floor: 30},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
   {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, and the host in docs/CNAME", python: true, floor: 34},
   {file: "spotlight_test.py", label: "the daily spotlight and line: one rule in Python and in the page, the pool, the refusals", python: true, floor: 300},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
-  {file: "detail-churn.mjs", label: "1,294 detail pages, regenerated and hashed", floor: 7},
+  {file: "detail-churn.mjs", label: "every detail page, regenerated and hashed", floor: 7},
   {file: "detail-preview-check.mjs", label: "rendered repository reader, source and phone layout", needs: "browser", floor: 12},
   {file: "cards-check.mjs", label: "real layout at 1440/900/375 in both themes", needs: "browser", floor: 86},
   {file: "pwa-check.mjs", label: "manifest, worker, precache, offline, freshness, 404", needs: "browser", floor: 25},
@@ -211,6 +216,7 @@ const HARNESSES = [
   {file: "prank-check.mjs", label: "Archie's pranks: each undone, nothing saved, the flicker's rate", needs: "browser", floor: 28},
   {file: "friends-check.mjs", label: "Archie's friends: each comes, leaves, restores the page, and keeps off the controls", needs: "browser", floor: 80},
   {file: "rig-check.mjs", label: "Archie's light show: the flash rate of every fixture, the blinders' swell, and the cues", needs: "browser", floor: 40},
+  {file: "stage-check.mjs", label: "Archie's stage by its pixels: the wall's picture moving, and pyro, CO2, haze and blinders seen", needs: "browser", floor: 45},
 ];
 
 // Both entry points, because the site has two and either one missing is a different broken build:
@@ -228,7 +234,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and eight of the twenty-seven harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and nine of the twenty-eight harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -241,7 +247,7 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Seventeen of the twenty-seven need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Seventeen of the twenty-eight need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives a fake `gh` through the
 // batch fetch's failure handling, one drives the IndexNow client and
@@ -252,7 +258,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and seventeen of the twenty-seven harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and seventeen of the twenty-eight harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

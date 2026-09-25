@@ -129,7 +129,7 @@ const have = await ev(`[...document.querySelectorAll("#archiepanel button[data-c
 ok("one button for every command and every friend", want.length === have.length && want.every(c => have.includes(c)),
    `missing ${want.filter(c => !have.includes(c)).join(",")} extra ${have.filter(c => !want.includes(c)).join(",")}`);
 for (const [what, re, n] of [["dance", /^dance:/, 13], ["prank", /^prank:/, 5], ["friend", /^friend:/, ORDER.length],
-                             ["rig cue", /^cue:/, 11]])
+                             ["rig cue", /^cue:/, 15]])
   ok(`...including every ${what} (${n})`, have.filter(c => re.test(c)).length === n, String(have.filter(c => re.test(c)).length));
 for (const c of ["idle", "watch", "sit", "sleep", "press", "shrug", "walk-off", "show", "chatter", "poke", "quiet"])
   ok(`...and "${c}"`, have.includes(c));
