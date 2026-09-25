@@ -113,8 +113,8 @@ three ways round that.
   ```
 
 - **`scripts/19b_refresh.py`** re-renders the page shell over the committed rows, and refuses when those
-  rows disagree with the checkout's `SOURCES`. **Caution:** it still writes to `docs/index.html`, which is
-  now the homepage, not the catalogue. See [troubleshooting.md](troubleshooting.md#known-issues).
+  rows disagree with the checkout's `SOURCES`. It writes the catalogue at `docs/catalog/index.html`
+  (`19_pages.CATALOG`), not `docs/index.html`, which is the homepage.
 
 ## Order matters
 

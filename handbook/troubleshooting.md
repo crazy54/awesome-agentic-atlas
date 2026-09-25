@@ -81,18 +81,11 @@ See issue G below.
 
 ## Known issues
 
-These were found while writing this handbook, on `latest_branch` at `a77b46eb`, 2026-09-25. None was
-fixed in the documentation PR, because they are code changes. Delete each entry when its fix merges.
-
-| | Issue | Effect | Fix |
-|---|---|---|---|
-| A | `docs/sw.js` `VERSION` is stale: `9d3af8107726` against a computed `5afe04a0201f` | `pwa-check` red (2 assertions); returning readers are pinned to an old homepage shell | `python scripts/24_pwa.py`, commit `docs/sw.js` |
-| B | In `docs/index.html`, the `?v=` on `archie.js` (`1b1a98d0ed`) and on `archie-admin.js` (`e4e1956d9b`) disagree with each other and with what `31_home.py` computes. It looks like a hand merge of two branches' output | readers can get a mismatched set of Archie files from cache | `python scripts/31_home.py`, then `python scripts/24_pwa.py` |
-| C | `RIG` in `scripts/31_home.py` hashes `wall-a` and `wall-b` only, but `archie.js` also plays `wall-c` and `wall-d` | editing those two clips does not change `?v=`, so readers keep the old clips | add `wall-c`/`wall-d` to `RIG` |
-| D | `archie-admin.js` is not in `VERSIONED` in `31_home.py` | editing the panel alone does not bust its cache | add it to `OPTIONAL` |
-| E | `scripts/apply_flags.py` (line 41) and `scripts/19b_refresh.py` (line 262) write the catalogue template (`b19.PAGE`) to `docs/index.html`, which since the homepage split is the homepage | running either, or the flags app's **Save & render**, **replaces the homepage with a copy of the catalogue**, and does not update `docs/catalog/index.html` | write to `docs/catalog/index.html`. Until then, restore with `31_home.py` + `24_pwa.py` |
-| F | `tests/admin-check.mjs` is not in `HARNESSES` in `tests/run.mjs` | the admin panel is never tested by the suite or CI | add it, with a floor |
-| G | The `static` allowlist in the "Every tracked page was rewritten" step of `daily.yml` (and the matching one in `weekly.yml`) names only `docs/CNAME`, `docs/favicon.svg` and `docs/assets/atlas-byte.png` | Archie's hand-written assets count as "Generator missing". The 2026-09-24 daily failed on exactly that, listing nine `docs/assets/` files. Dailies failed on 09-22, 09-23 and 09-24, and the live snapshot was still `2026-09-22` | allowlist the hand-written `docs/assets/` files |
+Seven issues, found on `latest_branch` at `a77b46eb` on 2026-09-25 while this handbook was being written,
+are now all fixed: a stale `sw.js` `VERSION`, mismatched `?v=` values, two gaps in the Archie asset hash,
+the catalogue overwriting the homepage, `admin-check.mjs` left out of the suite, and the daily's
+allowlist missing `docs/assets/`. Add new issues here as a table: issue, effect, fix. Delete each entry
+when its fix merges.
 
 Also found, and lower priority:
 

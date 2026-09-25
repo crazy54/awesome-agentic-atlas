@@ -135,12 +135,12 @@ const want = [...list, ...ORDER.map(i => "friend:" + i)];
 const have = await ev(`[...document.querySelectorAll("#archiepanel button[data-cmd]")].map(b => b.dataset.cmd)`);
 ok("one button for every command and every friend", want.length === have.length && want.every(c => have.includes(c)),
    `missing ${want.filter(c => !have.includes(c)).join(",")} extra ${have.filter(c => !want.includes(c)).join(",")}`);
-// The rig's cue count is read from the page rather than pinned: archie.js names the set, and the stage
+// Dances are 15 since the rave pair (headbang, drop) landed. The rig's cue count is read from the page rather than pinned: archie.js names the set, and the stage
 // work adds cues to it (11 here, 15 with co2, flames, sparks and haze). That every one of them has a button
 // is the "one button for every command" check above; this one says the set is not empty, and below, that
 // every cue the live rig has is in it.
 const cueN = list.filter(c => /^cue:/.test(c)).length;
-for (const [what, re, n] of [["dance", /^dance:/, 13], ["prank", /^prank:/, 5], ["friend", /^friend:/, ORDER.length],
+for (const [what, re, n] of [["dance", /^dance:/, 15], ["prank", /^prank:/, 5], ["friend", /^friend:/, ORDER.length],
                              ["rig cue", /^cue:/, 15]])
   ok(`...including every ${what} (${n})`, have.filter(c => re.test(c)).length === n, String(have.filter(c => re.test(c)).length));
 for (const c of ["idle", "watch", "sit", "sleep", "press", "shrug", "walk-off", "show", "chatter", "poke", "quiet"])

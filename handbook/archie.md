@@ -3,10 +3,6 @@
 Archie is the 3D robot in the homepage masthead. He idles, reacts, dances, plays pranks, has friends to
 visit, and can put on a light show. He appears only on the homepage (`/`, built by `31_home.py`).
 
-> **Being changed in parallel (2026-09-25).** Other PRs are reworking the stage rig's lasers, lights, LED
-> wall and effects. The [rig and effects](#the-stage-rig-and-effects) section below describes only where
-> things live and how to test them. **Re-check it once those PRs merge.**
-
 ## Files
 
 Every runtime file is under `docs/assets/`, written by hand, and served as-is. Sizes are as measured on 2026-09-25.
@@ -78,12 +74,14 @@ Archie dances to the beat, and the rig follows along. `dance-check.mjs` feeds th
 
 ## The stage rig and effects
 
-*Where things live and how to test them. See the note at the top of the page.*
-
 - **Lighting and cues** are in `archie.js`, in `lights()`. It exposes `window.archieRig` =
-  `{cues, cue(name), status()}` while the live model's rig is up. The named cues (`RIG_CUES`) were
-  `beams-chase`, `beams-fan`, `beams-cross`, `ballyhoo`, `gobo`, `laser-symbol`, `blinder`, `wash`, `pods`,
-  `video-wall` and `all-off`. You can fire one in three ways:
+  `{cues, cue(name), status(), solo(...parts)}` while the live model's rig is up. The rig's cues
+  (`RIG_CUES`) are `beams-chase`, `beams-fan`, `beams-cross`, `ballyhoo`, `gobo`, `laser-symbol`,
+  `blinder`, `wash`, `pods`, `video-wall` and `all-off`. `cue()` sends `co2`, `flames`, `sparks` and
+  `haze` to `archie-fx.js` instead, and `all-off` to both. `haze` fans the beams first if the rig is
+  idle, because haze is only visible where a beam crosses it. `solo()` renders only the named rig or
+  effect parts (`solo()` with no arguments renders everything again). `stage-check.mjs` uses it to
+  measure one effect at a time. You can fire a cue in three ways:
   - `window.archieRig.cue("gobo")`;
   - dispatching an `archie:cue` event;
   - the admin panel.
@@ -97,7 +95,7 @@ Archie dances to the beat, and the rig follows along. `dance-check.mjs` feeds th
 To test the rig:
 
 ```bash
-node tests/run.mjs          # includes rig-check, prank-check, friends-check and dance-check
+node tests/run.mjs          # includes rig-check, stage-check, admin-check, prank-check, friends-check and dance-check
 ```
 
 Or run `rig-check.mjs` alone; see [testing.md](testing.md#running-one-harness). To look at it yourself,
@@ -126,7 +124,7 @@ static, and anyone can call `window.archie.run()` from the console.
   - `friend:<id>`
   - `quiet`, which empties the queue, sends a visitor home and cues the rig off.
 
-It is tested by `tests/admin-check.mjs`, which is **not** in the suite's run list. Run it by hand.
+It is tested by `tests/admin-check.mjs`, which runs in the suite.
 
 ## `?archie=` URL flags
 
@@ -176,10 +174,9 @@ python scripts/24_pwa.py      # index.html changed, so the service worker's VERS
 Commit `docs/index.html`, `docs/sw.js` and the asset together. **If you skip `31_home.py`, readers keep the
 old file from their HTTP cache.** A new `archie.js` can then meet a stale sibling, and Archie stays a poster.
 
-Two gaps in that hashing, known on 2026-09-25 (see [troubleshooting.md](troubleshooting.md#known-issues)):
-
-- `RIG` lists only `wall-a` and `wall-b`, so edits to `wall-c` and `wall-d` do not change the hash.
-- `archie-admin.js` is not in `VERSIONED`.
+The hash covers every file the loader fetches under that query: all four wall clips in each format,
+the gobos, the friends and `archie-admin.js`. A file added to that set has to be added to `RIG` or
+`OPTIONAL` in `31_home.py`, or editing it will not bust the cache.
 
 `archie-dance.js` has its own version, which also covers `archie-beat.js`.
 

@@ -5,8 +5,8 @@ node tests/run.mjs
 ```
 
 That is the whole thing. It finds a Chromium the machine already has, serves `docs/` under the Pages path
-prefix `/awesome-agentic-atlas/` on a port the OS picks, runs twenty-six harnesses in turn (sixteen Python,
-eight in a browser, two in plain Node), prints what each one asserted, and exits non-zero if anything failed.
+prefix `/awesome-agentic-atlas/` on a port the OS picks, runs twenty-nine harnesses in turn (seventeen Python,
+ten in a browser, two in plain Node), prints what each one asserted, and exits non-zero if anything failed.
 About 24 minutes on a Windows workstation (2026-09-25), most of it in `detail-churn.mjs` regenerating every
 detail page, `osicons_test.py` walking every built page, and the Archie browser checks. No install step, no
 arguments, no configuration. The [handbook's testing page](../handbook/testing.md) has the current
@@ -16,7 +16,7 @@ It asserts on `docs/` as committed, not on the generator's intentions. `docs/` i
 Pages — `build_type: legacy`, so what is in the repository is what a reader downloads — which means the bytes
 in the checkout are the deployable artefact and are the honest thing to test.
 
-Individual harnesses can be run alone. The eight that drive a browser need to be given one and told where the
+Individual harnesses can be run alone. The ten that drive a browser need to be given one and told where the
 site is, because `run.mjs` owns both. The origin must be a server that serves `docs/` under
 `/awesome-agentic-atlas/`, which is what `lib/serve.mjs` does:
 
@@ -30,6 +30,7 @@ Leave that running, and in another shell (in `run.mjs` order):
 python tests/app_flags_test.py
 python tests/theme_test.py
 python tests/signals_test.py
+python tests/fetch_test.py
 python tests/indexnow_test.py
 python tests/newness_test.py
 python tests/discover_test.py
@@ -53,10 +54,12 @@ node tests/spotlight-check.mjs      <chrome-binary> <origin>
 node tests/prank-check.mjs          <chrome-binary> <origin>
 node tests/friends-check.mjs        <chrome-binary> <origin>
 node tests/rig-check.mjs            <chrome-binary> <origin>
+node tests/admin-check.mjs          <chrome-binary> <origin>
+node tests/stage-check.mjs          <chrome-binary> <origin>
 ```
 
-`tests/admin-check.mjs` (Archie's admin panel) takes the same two arguments but is **not** in `run.mjs`'s
-list, so neither the suite nor CI runs it.
+A harness file in `tests/` that is not in `run.mjs`'s list reddens the run, so a new one cannot be
+left out of the suite and CI by accident.
 
 ## What each one covers, and what it deliberately does not
 
@@ -79,6 +82,7 @@ cannot see; this is the summary. Assertion counts are passed plus failed from th
 | `media_test.py` | `scripts/media.py` against a synthetic workbook of the real one's shape: that a plain `wb.save` writes one media part per *placement*, that the pool collapses those to one part per distinct picture, that nothing else in the package changes, and that every drawing relationship still resolves to a part that is present — asserted against the archive itself rather than against a reading of openpyxl. Then the entry-count projection against the 65,535-entry ZIP ceiling, written down as arithmetic that can be re-run instead of re-argued. 49 assertions. | Whether Excel draws the shared part in every cell it is anchored to: it reads the package with `zipfile` and `openpyxl`, and no spreadsheet application opens it. Nor the real workbook — stages 14+ need a crawl that is not committed, so the shape is a miniature. |
 | `workbook_branding_test.py` | A disposable pair of light/dark covers from `scripts/16_build_all.py`: both shared source assets exist, both covers embed exactly the compact logo and Archie artwork, their displayed bounds and upper-right anchors stay fixed, the mascot keeps its name tag, the theme-switch cell survives, and each archive contains one drawing part with two media parts. It also checks the package-preserving fallback used when the crawler cache is absent. 26 assertions. | The release-sized workbooks: their full data and screenshot cache are not committed, so this harness proves the cover builder and fallback without requiring a crawl to test two small cover images. |
 | `signals_test.py` | `scripts/signals.py`, the rule deciding when a cached release-asset or `action.yml` answer needs re-querying: every term of it at its boundaries, every timestamp spelling that reaches those files, every earlier schema still loading and reading as stale, and a textual tripwire that the three fetch stages still consult it and still stamp what they write. 210 assertions, no I/O, instant. | Whether GitHub answers the queries. The three stages shell out to `gh api graphql`, so the crawl itself is untested here and untestable offline — this harness only asserts which repos would be asked about. |
+| `fetch_test.py` | `graphql_batch` in `scripts/02_fetch.py`, which every stage that asks GitHub for repository nodes goes through: a batch GitHub keeps timing out on (502, 504 or a TIMEOUT error) is split and each half asked separately, with every alias back where it belongs. A rate limit, a rejected query and a single repository that times out on its own still raise. Once the split budget is spent, a timing-out batch fails as it did before. `gh` and `time.sleep` are faked. 27 assertions, instant. | Whether GitHub answers. No query leaves the machine. |
 | `newness_test.py` | `scripts/newness.py`, the rule that decides what `New` means on four surfaces: that it is the most recent import which brought anything rather than the last fortnight, that the next import to bring anything takes the mark off the previous cohort while leaving its dates alone, that an import bringing nothing moves neither, that a source list read for the first time is a real cohort rather than back-dated founding stock, and the stale bound on both sides of its boundary. Run against a ledger in a scratch directory several imports deep, with the date supplied rather than read from the clock. 54 assertions, instant. | Whether the surfaces render what it computes. It imports no stage: the chip, the outline and the two feeds read `COHORT` and `SEEN`, and that reading is `probe.mjs`'s and `refresh_test.py`'s half. |
 | `discover_test.py` | `scripts/discover.py`, the daily-fifty rule: fifty projects a day, seven days a deploy, rolled over at 00:00 in one named zone. Run over eight consecutive weeks against synthetic corpora shaped to break it — a category with fewer rows than its allocation, more categories than slots, a corpus smaller than one day — with the date supplied rather than read from the clock and the ledger repointed into a temp directory. Nine groups: the day (both 2026 DST switches and the hour UTC has turned over and Chicago has not, with the expected dates written out by hand, because taking them from the module would only prove it agrees with itself); the shape; the split (`allocate()` sums to the day's slots and never starves a live category); fairness (every category in every day, no row twice in a week, no overlap between consecutive weeks); rotation (this week's picks at the back of next week's queue, asserted as a trajectory over eight weeks rather than one comparison); blindness (three shuffles and a star permutation each produce a byte-identical plan, because a Discover that consulted stars would be the front page with a different heading); the fallback (`covers()`, `for_day()`, and the ledger's format on disk); the copies (the four clock functions that exist twice, in `19d_discover.py` and in the homepage strip in `19_pages.py`, compared character for character off the two files as text, plus the accents, the flag, the deep link's two halves, and the stage being in both workflows); and the payload (the real `docs/discover.json` — columns against `CARD_COLS`, every pick backed by a row, no row carried that no day names, the ledger's week matching the plan's). 148 assertions, instant. | Whether the page renders what it computes, or whether the fifty are any good. The carousel, the deep link into it and the rollover in a browser are `probe.mjs`'s and `cards-check.mjs`'s half. The homepage strip is asserted here as *source* rather than as built output, because `19_pages.py` needs CI's crawl cache: the committed `docs/index.html` in any checkout predates whatever was last changed about the strip. |
 | `refresh_test.py` | The staleness guard in `scripts/19b_refresh.py` — the only render path that works without the crawl cache, and the one that renders a live template over committed rows. Constructs the disagreement the guard exists for: the `listed_by` reader on every shape it comes in, a fabricated `SOURCES` one list too long and one too short, what the refusal says, `main()` three times against a scratch `docs/` with `reversion()` stubbed so a broken guard cannot reach the deployable tree, and the hazard itself — drop a row from the committed data and the rendered count and star total both move while `__LISTS__` beside them, filled from the live `SOURCES` rather than from the rows, does not. 74 assertions, ~1 s. | Whether a real crawl would produce the labels it counts. Stages 14+ need a crawl that is not committed, so the source count is inferred from the committed rows — it measures "lists that produced at least one row", not "lists configured". |
@@ -92,7 +96,9 @@ cannot see; this is the summary. Assertion counts are passed plus failed from th
 | `spotlight-check.mjs` | The homepage's spotlight and line of the day in a real browser, on a clock the harness sets: a different pick on different days and the same one all day, keyed to the reader's *local* date, no layout shift, and a `<noscript>` card for readers without script. 117 assertions. | A real midnight passing on an open tab, and whether the pool is any good. |
 | `prank-check.mjs` | Archie's pranks, played on the live model through `?archie=prank:<name>`: the page is put back exactly, nothing is saved, and the light flicker is timed against WCAG 2.3.1. 33 assertions. | Whether a prank is funny, and when he picks one unasked. |
 | `friends-check.mjs` | Archie's visiting friends: each arrives, leaves, restores the page it touched, and keeps clear of the page's controls. 109 assertions. | Their art. |
-| `rig-check.mjs` | The stage rig: the flash rate of every fixture against WCAG 2.3.1, the blinders' swell, and that each cue plays. 43 assertions. The rig is being reworked in parallel (2026-09-25), so re-read this row against the harness after that lands. | How the show looks. |
+| `rig-check.mjs` | The stage rig: the flash rate of every fixture against WCAG 2.3.1, the blinders' swell, and that each cue plays. 43 assertions. | How the show looks. |
+| `admin-check.mjs` | Archie's admin panel: hidden until asked for, one button for every command, cue and friend the page names, each button dispatching its own command, and a greyed button saying why. | Whether the commands look right once they run. That is the other Archie harnesses' job. |
+| `stage-check.mjs` | The stage by its pixels, read off rendered frames: the LED wall's picture moving, and pyro, CO2, flames, sparks, haze and the blinders each changing what the camera sees when cued. | Whether the show is any good. It asserts that each effect is visible, not how it looks. |
 
 Between them, 4,377 assertions on 2026-09-25 (4,368 passed, 9 failed, all 26 harnesses ran), from a real run
 rather than by adding up the figures above. The number only matters in one direction; see the floors below.

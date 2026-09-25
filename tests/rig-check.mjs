@@ -123,10 +123,12 @@ ok("window.archieRig is there once the model is, with the cues the admin panel l
 ok("the lights come up for the dance", await until(`window.archieRig.status().level > 0.9`, 15000));
 await ev(RECORD);
 // The whole of floss is 48 beats in 15-16 s; the pods drop at its half-way beat and the blinders swell
-// on beats 16 and 32. Read for 14 s from the lights being up.
+// on beats 16 and 32. Read for 14 s from the lights being up, and on until the dance is over: a frame's
+// time step is capped at a tenth of a second, so where swiftshader draws four frames a second (the CI
+// runner) the dance plays at under half speed, and fourteen seconds never reached its half-way beat.
 const seen = {look: new Set(), program: new Set(), gobo: 0, pods: 0, lasers: 0, samples: 0, wash: [], scenes: new Set(),
               white: 0, whiteOnHim: false, coloured: false};
-for (let i = 0; i < 28; i++) {
+for (let i = 0; i < 28 || (i < 120 && (await ev(`window.archieRig.status().dancing`))); i++) {
   await sleep(500);
   const s = await ev(`window.archieRig.status()`), dark = await ev(`document.documentElement.dataset.theme !== "light"`);
   seen.look.add(s.look); seen.program.add(s.program);

@@ -74,9 +74,8 @@ Either way, editing the file changes nothing until the page is regenerated. The 
 - **Edit locally:** `python scripts/flags_app.py [--port N] [--no-open]` serves a small editor. Its writes
   are atomic.
 - **Override the path:** set `AAA_APP_FLAGS=/path/to/flags.json`, for experiments.
-- **Re-render:** `scripts/apply_flags.py`. **Caution:** it currently writes the catalogue template to
-  `docs/index.html`, which is the homepage. See [troubleshooting.md](troubleshooting.md#known-issues).
-  So do the flags app's **Save & render** button, which calls `apply_flags.py`, and `19b_refresh.py`.
+- **Re-render:** `scripts/apply_flags.py`, or the flags app's **Save & render** button, which calls it.
+  It writes the catalogue, `docs/catalog/index.html` (`19_pages.CATALOG`), and leaves the homepage alone.
   Until that is fixed, restore the homepage afterwards with `python scripts/31_home.py` followed by
   `python scripts/24_pwa.py`. Also check that `docs/catalog/index.html` really changed: `apply_flags.py`
   does not write the catalogue at all. Its detail-page and service-worker steps (`22_detail.py`, `24_pwa.py`) are correct.
