@@ -339,7 +339,15 @@ for (let i = 0; i < 100 && !reloaded; i++) {
   await sleep(150);
   try { reloaded = await evalIn("!window.__beforeUpdate && document.readyState === 'complete'"); } catch {}
 }
-ok("the button reloads the page", reloaded);
+// On a red, where the page got to: still the old document (`before` is 1) with the button reading
+// "Updating", which is `refresh()` waiting on a fetch or on `reg.update()`; or a new document that never
+// reached `complete`, which is a sub-resource that never finished. The two need different fixes, and CI is
+// the only place this has been red.
+const whereReload = reloaded ? "" : await evalIn(`JSON.stringify({before: window.__beforeUpdate || 0,
+  ready: document.readyState, btn: document.querySelector(".updbar .updgo")?.textContent || null,
+  pending: performance.getEntriesByType("resource").filter(e => !e.responseEnd).map(e => e.name).slice(0, 5)})`)
+  .catch(e => "unreadable: " + e.message);
+ok("the button reloads the page", reloaded, whereReload);
 const cachedCss = await evalIn(`caches.open(${JSON.stringify(shellName)}).then(c => c.match(new URL("pages.css", location.href).href))
   .then(r => r ? r.text() : null)`);
 const servedCss = await (await fetch(ORIGIN + "pages.css")).text();
