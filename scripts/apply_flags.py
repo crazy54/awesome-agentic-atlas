@@ -21,8 +21,12 @@ def run(script: str) -> None:
         raise SystemExit(f"{script} failed with exit code {result.returncode}")
 
 
-def render_index() -> None:
-    """Render the shell against the committed dataset without pretending a new crawl happened.
+def render_index(out: Path = ROOT / "docs") -> None:
+    """Render the catalogue against the committed dataset without pretending a new crawl happened.
+
+    Into `out / 19_pages.CATALOG`, which is `docs/catalog/index.html`. It used to write `docs/index.html`,
+    which since the homepage split is the homepage `31_home.py` writes, so every Save & render replaced
+    the homepage with a copy of the catalogue and left the real catalogue as it was.
 
     This intentionally does not call 19b_refresh.py: that stage also mutates first-seen data and refuses
     a checkout whose configured sources are ahead of its last crawl. A flag change is presentation-only.
@@ -32,14 +36,15 @@ def render_index() -> None:
     spec = importlib.util.spec_from_file_location("flags_b19", HERE / "19_pages.py")
     b19 = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(b19)
-    data_path = ROOT / "docs" / "data.json"
+    data_path = out / "data.json"
     data = json.loads(data_path.read_text(encoding="utf-8"))
     listed_by = data["cols"].index("listed_by")
     labels = {name.strip() for row in data["rows"] for name in row[listed_by].split(",") if name.strip()}
     b19.LISTS = len(labels)
     page = b19.substitute(b19.PAGE, data, b19.REPO, b19.b17.SITE)
-    (ROOT / "docs" / "index.html").write_text(page, encoding="utf-8")
-    print(f"index.html rendered from {len(data['rows']):,} committed rows and {len(labels)} source labels")
+    (out / b19.CATALOG).parent.mkdir(parents=True, exist_ok=True)
+    (out / b19.CATALOG).write_text(page, encoding="utf-8")
+    print(f"{b19.CATALOG.as_posix()} rendered from {len(data['rows']):,} committed rows and {len(labels)} source labels")
 
 
 def main() -> None:

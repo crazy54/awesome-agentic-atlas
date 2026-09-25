@@ -211,7 +211,13 @@ def render(data: dict, lists: int | None = None) -> str:
 
 
 def reversion() -> None:
-    """Re-run `24_pwa.py`, because this stage just rewrote a file the service worker precaches.
+    """Re-run `24_pwa.py`, because this stage used to rewrite a file the service worker precaches.
+
+    It no longer does: the page it renders is the catalogue at `catalog/index.html`, which is not in the
+    precache, and the precached `index.html` is the homepage, which is `31_home.py`'s. The call is kept
+    because it is harmless when nothing precached moved, since the version is a hash of those bytes, and it
+    is the guard if the precache list ever grows to include a file this stage writes. What follows
+    describes the hazard it was added for.
 
     `sw.js` carries `const VERSION`, a hash of the three precached files -- `index.html` among them. The
     browser decides whether to install a new worker by byte-comparing `sw.js` alone. So rewriting the page
@@ -259,11 +265,14 @@ def main() -> None:
     data, live = refresh_data(data, ledger)
 
     path.write_text(json.dumps(data, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
-    (OUT / "index.html").write_text(render(data, lists), encoding="utf-8")
+    # The catalogue, at `19_pages.CATALOG`. Not `index.html`: that is the homepage `31_home.py` writes, and
+    # writing this page there replaced it with a copy of the catalogue and left the real one stale.
+    (OUT / b19.CATALOG).parent.mkdir(parents=True, exist_ok=True)
+    (OUT / b19.CATALOG).write_text(render(data, lists), encoding="utf-8")
     reversion()
 
-    for f in ("index.html", "data.json", "sw.js"):
-        print(f"{f:12s} {(OUT / f).stat().st_size / 1024:8.1f} KB")
+    for f in (b19.CATALOG.as_posix(), "data.json", "sw.js"):
+        print(f"{f:20s} {(OUT / f).stat().st_size / 1024:8.1f} KB")
     fresh = sum(1 for n, d in ledger["repos"].items() if d > ledger["baseline"])
     print(f"{len(data['rows']):,} rows from {lists} source list(s) · "
           f"snapshot {data['snapshot']} (unchanged) · baseline {ledger['baseline']}")

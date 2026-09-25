@@ -37,8 +37,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 OUT = ROOT / "docs"
+# Where the catalogue this stage renders lives, relative to OUT. One name, because three stages write it
+# (this one, `19b_refresh.py` and `apply_flags.py`), and the site root it used to be is now the homepage
+# `31_home.py` writes. Two of the three kept writing `index.html` after the move, which replaced the
+# homepage with a second copy of the catalogue and left the real one stale.
+CATALOG = Path("catalog") / "index.html"
 
-spec = importlib.util.spec_from_file_location("b17", Path(__file__).parent / "17_markdown.py")
+spec =importlib.util.spec_from_file_location("b17", Path(__file__).parent / "17_markdown.py")
 b17 = importlib.util.module_from_spec(spec)
 sys.modules["b17"] = b17
 spec.loader.exec_module(b17)
@@ -7124,10 +7129,10 @@ def main() -> None:
     # on which stage ran last. `data.json` above stays at the root, because it is not this page's file --
     # the homepage, the facet pages and the detail pages read it too, and moving it would be 180-odd
     # relative URLs elsewhere to save one here. See `UP`.
-    (OUT / "catalog").mkdir(parents=True, exist_ok=True)
-    (OUT / "catalog" / "index.html").write_text(page, encoding="utf-8")
+    (OUT / CATALOG).parent.mkdir(parents=True, exist_ok=True)
+    (OUT / CATALOG).write_text(page, encoding="utf-8")
 
-    for f in (Path("catalog") / "index.html", Path("data.json")):
+    for f in (CATALOG, Path("data.json")):
         print(f"{str(f):20s} {(OUT / f).stat().st_size / 1024:8.1f} KB")
     print(f"{len(data['rows']):,} repos · {len(data['cats'])} topics · "
           f"{len(data['targets'])} targets · {sum(r[4] for r in data['rows']):,} stars")

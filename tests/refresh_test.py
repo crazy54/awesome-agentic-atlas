@@ -240,6 +240,10 @@ def run_main(argv: list[str], sources: list[str],
     return out, called, stdout, stderr
 
 
+# Where the catalogue belongs, spelled out here rather than read from `19_pages.CATALOG`, so that the
+# constant drifting back to the site root fails this file instead of moving the assertions with it. The root
+# is the homepage `31_home.py` writes, and this stage used to render the catalogue over it.
+CAT = Path("catalog") / "index.html"
 LIVE = [s["nwo"] for s in b19b.b10.SOURCES]
 IMPLIED = b19b.source_labels(REAL)
 # A source list of exactly the size the committed rows imply, which is what makes the three cases below
@@ -275,20 +279,20 @@ refused = raises("the stage refuses when the checkout has a list the rows do not
 says("...and the refusal names the list that was added", refused, "owner/newly-added-list")
 # The page is the artifact this ticket is about, so the assertion is that it was never written -- not
 # merely that the exit code was non-zero.
-true("a refused run writes no index.html", not (stale_out / "index.html").exists())
+true("a refused run writes no page", not (stale_out / CAT).exists() and not (stale_out / "index.html").exists())
 eq("a refused run leaves data.json byte-identical", (stale_out / "data.json").read_bytes(), SEED)
 
 # 2. the same disagreement, waved through on purpose
 waved, called, w_out, w_err = run_main(["--allow-stale"], MATCHED + ["owner/newly-added-list"])
-true("--allow-stale renders the page anyway", (waved / "index.html").exists())
+true("--allow-stale renders the page anyway", (waved / CAT).exists())
 says("--allow-stale warns while it does it", w_err.getvalue(), "--allow-stale")
 eq("--allow-stale still re-versions the service worker", called, ["reversion"])
 says("the mixed page really does carry the committed row count",
-     (waved / "index.html").read_text(encoding="utf-8"), f"{len(REAL['rows']):,} agentic AI projects")
+     (waved / CAT).read_text(encoding="utf-8"), f"{len(REAL['rows']):,} agentic AI projects")
 
 # 3. the agreeing case, which is the acceptance criterion: the stage still works
 fresh, called, f_out, f_err = run_main([], MATCHED)
-true("the stage renders normally when the two agree", (fresh / "index.html").exists())
+true("the stage renders normally when the two agree", (fresh / CAT).exists())
 eq("...and says nothing on stderr", f_err.getvalue(), "")
 eq("...and re-versions the worker exactly once", called, ["reversion"])
 says("...and reports the source count it checked", f_out.getvalue(),
@@ -297,8 +301,12 @@ says("...and still reports the row count", f_out.getvalue(), f"{len(REAL['rows']
 fresh_data = json.loads((fresh / "data.json").read_text(encoding="utf-8"))
 eq("...and rewrites data.json with the same rows it read", len(fresh_data["rows"]), len(REAL["rows"]))
 eq("...and with the same source labels", b19b.source_labels(fresh_data), b19b.source_labels(REAL))
-true("...and a page that is a page", (fresh / "index.html").read_text(encoding="utf-8")
+true("...and a page that is a page", (fresh / CAT).read_text(encoding="utf-8")
      .startswith("<!doctype html>"))
+true("...into catalog/, the catalogue's own place, as its canonical says",
+     'rel="canonical" href="' + b19b.b19.b17.SITE + 'catalog/"' in (fresh / CAT).read_text(encoding="utf-8"))
+true("...and not over the homepage at the site root, which is 31_home.py's",
+     not (fresh / "index.html").exists() and not (waved / "index.html").exists())
 true("nothing here touched the committed data.json",
      (ROOT / "docs" / "data.json").read_bytes() == REAL_BYTES)
 
