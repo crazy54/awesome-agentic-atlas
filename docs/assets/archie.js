@@ -144,14 +144,15 @@
   //   status()   {act, queued}: the act he is on or last did, and the commands waiting; null with no model.
   //
   // The rig cues are the ones `lights()` exposes as `window.archieRig` ({cues, cue(name), status()}) while
-  // the live model's rig is up. They are named here too, so the panel can list the whole set and grey out
-  // any this build's rig does not have.
+  // the live model's rig is up, followed by the stage effects' (`co2`, `flames`, `sparks`, `haze`, from
+  // `archie-fx.js`), which had no cue at all before and could only be seen inside a dance. They are named
+  // here too, so the panel can list the whole set and grey out any this build's rig does not have.
   //
   // NOT A SECURITY BOUNDARY. This is a static site with no server and no accounts: anybody can type
   // `?archie=admin`, or call `window.archie.run()` from the console, and nothing here pretends otherwise.
   // Every command is something the director already does on its own; the panel only saves waiting for it.
   const RIG_CUES = ["beams-chase", "beams-fan", "beams-cross", "ballyhoo", "gobo", "laser-symbol", "blinder",
-                    "wash", "pods", "video-wall", "all-off"];
+                    "wash", "pods", "video-wall", "all-off", "co2", "flames", "sparks", "haze"];
   const CALM_ACTS = ["idle", "watch", "sit", "sleep", "press", "shrug", "walk-off", "show"];
   let live = null;                           // start()'s side, {can, run}, while the model is up
   const parse = cmd => (cmd.includes(":") ? cmd.split(/:(.*)/).slice(0, 2) : [cmd, ""]);
@@ -221,6 +222,10 @@
     // reader on the poster, or one who asked for reduced motion, has none; and they do nothing in Quiet
     // mode, which is a reader asking the mascot to leave them alone. Taken down with the model, by
     // `laser.stop()`, which `stop()` already calls.
+    //
+    // The stage effects' cues (`co2`, `flames`, `sparks`, `haze`, from `archie-fx.js`) are in the same list,
+    // after the rig's, and go to the effects; `haze` brings the beams up with it when nothing else has,
+    // since haze with no light through it is invisible, and `all-off` ends the effects' cues too.
     const onCue = e => { if (window.archieRig) window.archieRig.cue(e.detail && e.detail.name); };
     document.addEventListener("archie:cue", onCue);
     window.archieRig = {
@@ -235,6 +240,7 @@
     const dimmer = house(header);
     const edge = {left: -8, right: 8, top: 5};
     const fx = FX.effects(T, scene, rig, edge, canvas);
+    window.archieRig.cues.push(...fx.cues);
     const view = {W: 1, H: 1, cx: 0, cy: 0, k: 1, sw: 240, sh: 240, ppm: 75, slide: 0, ox: 0, oy: 0};
     // The frustum, with its window `slide` CSS pixels right of the slot. This is how he walks: rather
     // than moving him through the scene, which would carry him out to where a screen-wide perspective
@@ -1731,9 +1737,12 @@
       vec2 s1 = (vW.xy - g1) / 0.8, s2 = (vW.xy - g2) / 0.8;
       a += gon * 0.55 * (step(length(s1), 1.0) * gob(s1) * (1.0 - length(s1) * 0.6)
                        + step(length(s2), 1.0) * gob(s2) * (1.0 - length(s2) * 0.6));`;
-    // A small soft disc facing the camera: a lens's flare. The blinders' is warm and is all they light.
+    // A soft disc facing the camera: a lens's flare, white-hot in the middle. The blinders' is warm, and at
+    // the top of a swell it is a sheet of light two metres across, which is what a blinder is for. On the
+    // light theme a white middle is lost in the white page, so there it is the blinder's colour throughout.
     const FLARE = `float r = length(vUv - 0.5) * 2.0; a = pow(max(0.0, 1.0 - r), 2.2) * 1.4;
-      c = mix(vec3(1.0), color, smoothstep(0.0, 0.5, r));`;
+      c = mix(vec3(1.0), color, smoothstep(0.0, 0.5, r));
+      if (haze > 0.5) { c = color; a *= 1.8; }`;
     // The video wall: a grid of round LEDs, each showing one sample of a picture. When a clip is playing,
     // `vid` is its frame and `von` how far it has faded in; otherwise, `modeA` fades into `modeB` over a
     // bar's first beat; `beat` is the dance's position in beats, and `eq` the equaliser's sixteen bars.
@@ -1763,29 +1772,29 @@
              * smoothstep(0.02, 0.2, length(p));
       }`;
     // With a clip in, the wall is a picture, not a scatter of dots: the LEDs are packed three times as
-    // densely, fill most of their pitch, and each takes its colour as the frame has it rather than
-    // normalised to full brightness. The frame arrives decoded to linear light (the texture is sRGB, as it
-    // should be), so the clip's gain is applied there, where light adds, and the result is encoded back to
-    // sRGB for the canvas, since a ShaderMaterial's output is written as it stands. The clip's own level
-    // is never tied to the beat: it is the rig's master level, as every fixture's is, and nothing else.
-    // On the light theme the panel is what a real LED wall is with the house lights up -- a dark screen
-    // with the picture on it, nearly opaque -- because added to a near-white page there is no headroom.
-    const WALL = `vec2 g = vUv * grid * (1.0 + 2.0 * step(0.001, von)), q = (floor(g) + 0.5) / (grid * (1.0 + 2.0 * step(0.001, von)));
+    // densely, fill most of their pitch, and each takes its colour as the frame has it. The frame arrives
+    // decoded to linear light (the texture is sRGB, as it should be), so the clip's gain is applied there,
+    // where light adds, and the result is encoded back to sRGB for the canvas, since a ShaderMaterial's
+    // output is written as it stands. The clip's own level is never tied to the beat: it is the rig's
+    // master level, as every fixture's is, and nothing else.
+    //
+    // THE WALL IS A SCREEN, NOT A GLOW. Everything else in the rig is light added to the page, which is
+    // right for a beam and wrong for a picture: added to the masthead, the clip was a pale veil with the
+    // page's code showing through it, its blacks lifted to grey by the gain and the page's own texture
+    // louder than the picture. So the wall alone is drawn "over" (premultiplied: see `panel()`): a
+    // near-black face, nearly opaque, that hides what is behind it, with the LEDs' light on it -- what a
+    // real LED wall is -- and the same on both themes. It comes up with the lights, over their first third.
+    const WALL = `float dens = 1.0 + 2.0 * step(0.001, von);
+      vec2 g = vUv * grid * dens, q = (floor(g) + 0.5) / (grid * dens);
       vec3 v = mix(screen(modeA, q), screen(modeB, q), fade);
-      float m = max(max(v.r, v.g), max(v.b, 1e-3));
-      float dotm = smoothstep(0.5, 0.28, length(fract(g) - 0.5));
-      float led = m * dotm;
-      c = v / m;
-      a = led * 1.3;
-      // Pale light vanishes into a light page, so there the LEDs are deeper and the panel shows, faintly.
-      if (haze > 0.5) { c = mix(vec3(0.08, 0.09, 0.12), c * c, min(1.0, led * 2.0)); a = max(led * 2.2, 0.2); }
+      vec3 led = v * smoothstep(0.5, 0.28, length(fract(g) - 0.5));
       if (von > 0.0) {
         vec3 pic = pow(min(vec3(1.0), texture2D(vid, q).rgb * vgain), vec3(0.4545));
         float fill = 0.7 + 0.3 * smoothstep(0.62, 0.4, max(abs(fract(g).x - 0.5), abs(fract(g).y - 0.5)));
-        vec3 pc = pic; float pa = fill * 1.7;
-        if (haze > 0.5) { pc = mix(vec3(0.05, 0.06, 0.08), pic, fill); pa = 2.4; }
-        c = mix(c, pc, von); a = mix(a, pa, von);
-      }`;
+        led = mix(led, pic * fill, von);
+      }
+      c = vec3(0.012, 0.014, 0.02) + led * level;
+      a = 0.97 * min(1.0, level * 3.0);`;
 
     // ---- Hardware. Dark metal, so the rig reads as hardware against the masthead. -----------------------
     const metal = new T.MeshStandardMaterial({color: 0x16181d, metalness: 0.8, roughness: 0.35});
@@ -1869,7 +1878,22 @@
     const back = new T.Mesh(new T.PlaneGeometry(9, 5), glow(BACK, {...goboU(), g1: {value: {x: -1.4, y: 1.5}},
                                                                    g2: {value: {x: 1.4, y: 1.5}}}, GOBO + "uniform vec2 g1, g2;"));
     const eq = new Array(16).fill(0);
-    const wall = new T.Mesh(new T.PlaneGeometry(1, 1), glow(WALL, {
+    // The wall's material: like `glow()`, but its fragment's `c` is the colour to show and `a` its coverage,
+    // drawn over the page with premultiplied alpha. Theme-blind, so it is not in `glows`.
+    const panel = (frag, uniforms, defs) => new T.ShaderMaterial({
+      uniforms: {level: {value: 0}, time, ...uniforms},
+      vertexShader: `varying vec2 vUv;
+        void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader: `uniform float level, time; varying vec2 vUv;
+        ${defs}
+        void main() { vec3 c = vec3(0.0); float a = 0.0;
+          ${frag}
+          gl_FragColor = vec4(c * a, a); }`,
+      transparent: true, depthWrite: false, side: T.DoubleSide, blending: T.CustomBlending,
+      blendSrc: T.OneFactor, blendDst: T.OneMinusSrcAlphaFactor,
+      blendSrcAlpha: T.OneFactor, blendDstAlpha: T.OneMinusSrcAlphaFactor,
+    });
+    const wall = new T.Mesh(new T.PlaneGeometry(1, 1), panel(WALL, {
       grid: {value: {x: 60, y: 30}}, beat: {value: 0}, modeA: {value: 2}, modeB: {value: 2}, fade: {value: 1},
       eq: {value: eq}, von: {value: 0}, vid: {value: null}, vgain: {value: 3}}, SCREENS));
     // Its frame, in the truss's metal: top, bottom and the two sides.
@@ -1925,13 +1949,15 @@
     // document. When the lights are down it is paused and its source dropped, which releases the decoder
     // and the buffered bytes; the next dance fetches it again, from the HTTP cache. A clip that fails to
     // load or play is not tried again this page view: the wall shows its own visuals, as it always did.
-    // The clips are dark, made to be tinted, and not equally so: each carries the gain, in linear light, that lifts its mean
-    // to about 0.4 as sRGB on the wall -- the tunnel (a) is 0.17-0.19, Archie in silhouette (c) 0.10-0.14,
-    // the equaliser (b) and the dot field (d) 0.08-0.14 -- so one bright clip is not overdriven to white
-    // while a dark one stays a smudge. A dance takes the next in the list; a page view that sees four
-    // dances sees each once.
-    const VIDEO = [["rig/wall-a", 5], ["rig/wall-c", 12], ["rig/wall-b", 14], ["rig/wall-d", 14]];
-    const clip = {el: null, tex: null, poster: null, cv: null, g: null, n: 0, on: 0, fresh: false, failed: false};
+    // The clips are dark, made to be tinted, and not equally so: the tunnel (a) has a mean of 0.17-0.19 as
+    // sRGB, Archie in silhouette (c) 0.10-0.14, the equaliser (b) and the dot field (d) 0.08-0.14. Each
+    // carries a gain, in linear light, that brings its bright parts up to the tunnel's without lifting its
+    // blacks off the panel's face. (These were 5-14 once, to lift each clip's MEAN to 0.4, when the wall was
+    // added light: that took the clips' near-black grounds to a flat mid-grey and left no picture.) A dance
+    // takes the next in the list; a page view that sees four dances sees each once.
+    const VIDEO = [["rig/wall-a", 1.6], ["rig/wall-c", 2.6], ["rig/wall-b", 3], ["rig/wall-d", 3]];
+    const clip = {el: null, tex: null, poster: null, cv: null, g: null, n: 0, on: 0, fresh: false, failed: false,
+                  t: -1, frames: 0, retry: 1};
     const vu = () => wall.material.uniforms;
     const video = {
       start() {
@@ -1943,11 +1969,7 @@
         el.setAttribute("muted", ""); el.setAttribute("playsinline", ""); el.setAttribute("aria-hidden", "true");
         const ext = el.canPlayType('video/webm; codecs="vp9"') ? "webm" : "mp4";
         const poster = new Image();
-        poster.onload = () => {
-          if (clip.el !== el) return;
-          clip.poster = texture(poster);
-          if (el.readyState < 2) vu().vid.value = clip.poster;
-        };
+        poster.onload = () => { if (clip.el === el) clip.poster = texture(poster); };
         poster.src = new URL(`${base}.webp${V}`, import.meta.url).href;
         el.src = new URL(`${base}.${ext}${V}`, import.meta.url).href;
         // The frame goes to the GPU through a canvas of its own, not straight from the <video>. Uploading a
@@ -1960,6 +1982,7 @@
         cv.width = 480; cv.height = 240;
         clip.g = clip.g || cv.getContext("2d");
         clip.tex = texture(cv);
+        clip.t = -1; clip.frames = 0; clip.retry = 1;
         const seen = () => { if (clip.el !== el) return; clip.fresh = true; el.requestVideoFrameCallback(seen); };
         if (el.requestVideoFrameCallback) el.requestVideoFrameCallback(seen);
         const fail = () => { if (clip.el === el) { clip.failed = true; video.stop(); } };
@@ -1976,19 +1999,26 @@
         for (const k of ["tex", "poster"]) if (clip[k]) { clip[k].dispose(); clip[k] = null; }
       },
       // Every frame: a new decoded frame goes up to the GPU, and the wall fades from its own visuals to the
-      // poster, then the clip, over half a second. Without requestVideoFrameCallback, every frame.
+      // poster, then the clip, over half a second.
+      //
+      // A new frame is one requestVideoFrameCallback reported OR one the clock has moved past. The callback
+      // alone is not enough: it fires when a frame is presented, and this element is never in the document,
+      // so a browser is free never to present it -- and while it waited for a callback that never came, the
+      // wall sampled a canvas nothing had been drawn on, which is black, which added to the page is nothing
+      // at all. For the same reason the canvas goes on the wall only once a frame is on it; until then the
+      // poster does. And a play() a power-saving mode holds, neither resolved nor refused, is asked again.
       update(dt) {
         const el = clip.el;
         if (!el) return;
-        const ready = el.readyState >= 2;
-        if (ready) {
-          if (vu().vid.value !== clip.tex) vu().vid.value = clip.tex;
-          if (clip.fresh || !el.requestVideoFrameCallback) {
-            clip.g.drawImage(el, 0, 0, 480, 240); clip.tex.needsUpdate = true; clip.fresh = false;
-          }
+        if (el.readyState >= 2 && (clip.fresh || el.currentTime !== clip.t)) {
+          clip.g.drawImage(el, 0, 0, 480, 240); clip.tex.needsUpdate = true;
+          clip.fresh = false; clip.t = el.currentTime; clip.frames++;
         }
-        clip.on = Math.min(1, Math.max(0, clip.on + (ready || vu().vid.value ? 2 : -2) * dt));
+        const pic = clip.frames ? clip.tex : clip.poster;
+        if (vu().vid.value !== pic) vu().vid.value = pic;
+        clip.on = Math.min(1, Math.max(0, clip.on + (pic ? 2 : -2) * dt));
         vu().von.value = clip.on;
+        if (el.paused && (clip.retry -= dt) < 0) { clip.retry = 1; el.play().catch(() => {}); }
       },
       get playing() { return !!clip.el && clip.el.readyState >= 2 && !clip.el.paused; },
     };
@@ -2093,7 +2123,9 @@
         if (name === "all-off") { forced.name = ""; forced.until = 0; return true; }
         if (!forced.name || forced.until <= clock) forced.at = 0;
         forced.name = name; forced.until = clock + 8;
-        if (name === "blinder") hit(clock + 0.3);
+        // A cue swells them now, whatever the dance last did: only a swell still under way holds it off,
+        // so the rate stays one in 1.75 s. Through hit() a downbeat in the four seconds before refused it.
+        if (name === "blinder" && clock + 0.3 - blindAt >= 1.75) blindAt = clock + 0.3;
         return true;
       },
       get cueing() { return forced.until > clock ? forced.name : ""; },
@@ -2288,7 +2320,7 @@
           const x = (i ? 1 : -1) * (span + 0.3);
           bl.body.position.set(x, y - 0.18, -1.45);
           bl.flare.position.set(x, y - 0.18, -1.38);
-          bl.flare.scale.setScalar(0.35 + 0.35 * blind);
+          bl.flare.scale.setScalar(0.35 + 1.9 * blind);
           const fu = bl.flare.material.uniforms;
           fu.color.value.copy(C.blinder); fu.level.value = blind;
           for (const c of bl.cells) c.material.color.copy(C.blinder).multiplyScalar(0.1 + 0.9 * blind);
@@ -2301,7 +2333,7 @@
         });
         warm.color.copy(C.blinder);
         warm.position.set(0, y - 0.3, 1.2);
-        warm.intensity = 2.5 * blind;
+        warm.intensity = 6 * blind;
 
         // ---- Wash: side towers' pars aim in across the backdrop, floor pars up at him and the wall.
         const tx = span + 0.55, th = Math.max(0.5, y);
@@ -2379,7 +2411,7 @@
         } else {
           for (let i = 0; i < 16; i++) eq[i] *= Math.exp(-2 * dt);
         }
-        u.level.value = level * 0.8;
+        u.level.value = level;
       },
       // Where the two laser units sit on the truss, in the scene, for `beams()` to put on the page.
       // On the floor units once the models are in, on the truss before.
@@ -2388,6 +2420,8 @@
         return out.set((i ? 1 : -1) * span * 0.2, top + (1 - outBack(drop)) * 3 - 0.12, -1.5);
       },
       stop() { video.stop(); },
+      // For `window.archieRig.solo()`: the parts a test can draw on their own.
+      parts: {wall: [wall, ...rails], blinders: blinders.map(b => b.flare)},
     };
   }
 
