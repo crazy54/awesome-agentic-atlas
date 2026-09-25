@@ -17,8 +17,17 @@ python scripts/flags_app.py
 ```
 
 It opens a local-only page with every flag, its effect, and a large ON/OFF switch. **Save & render
-site** writes the JSON atomically, rebuilds the index and all project detail pages, and updates the
-service-worker version. **Save values only** is useful when a workflow will perform the build later.
+site** writes the JSON atomically and runs `scripts/apply_flags.py`, which renders the catalogue
+template from the committed `docs/data.json`, rebuilds all project detail pages (`22_detail.py`), and
+updates the service-worker version (`24_pwa.py`). **Save values only** is useful when a workflow will
+perform the build later.
+
+> **Caution (2026-09-25).** `apply_flags.py` still writes the rendered catalogue to `docs/index.html`,
+> which since the homepage moved to `31_home.py` is the **homepage**, and it does not touch
+> `docs/catalog/index.html`. So a render replaces the homepage with a copy of the catalogue. Until that is
+> fixed, restore the homepage afterwards with `python scripts/31_home.py` and `python scripts/24_pwa.py`,
+> or prefer **Save values only** and let CI build. See
+> [the handbook's known issues](../handbook/troubleshooting.md#known-issues) (issue E).
 
 The file is also intentionally easy to edit by hand or by an agent. After a manual edit, apply it with:
 
@@ -43,7 +52,7 @@ Unset `AAA_APP_FLAGS` before making a production build. The Flags app always edi
 # Curated collections
 
 `collections.json` is the source for the pages under `docs/collections/`. Everything else on this site
-is generated from what 11 source lists agreed on; these pages are the one place where we say *pick this
+is generated from what the 39 source lists agreed on; these pages are the one place where we say *pick this
 one*, so the opinions live in a reviewable file rather than in a template.
 
 Each collection has a `slug`, a `title`, a short `kicker`, an `intro` paragraph explaining the criteria,
