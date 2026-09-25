@@ -21,7 +21,7 @@
     {"id": "dyk-activity-dots", "kind": "didyouknow", "text": "The little dot beside a card's age is how recently the project was pushed to: hot, warm, stale or cold at a glance."},
     {"id": "friend-quack-hello", "kind": "friend", "friend": "quack", "text": "Meet Quack, the debugging duck. Quack says nothing. Archie explains everything. Bugs get fixed."},
 
-    {"id": "tip-markdown", "kind": "tip", "text": "Prefer plain text? The whole Atlas is also a Markdown mega-list on GitHub, greppable to the last line.", "href": "https://github.com/crazy54/awesome-agentic-atlas/tree/main/mega-list"},
+    {"id": "tip-markdown", "kind": "tip", "text": "Prefer plain text? The whole Atlas is also a Markdown mega-list on GitHub, greppable to the last line.", "href": "https://github.com/crazy54/awesome-agentic-atlas/tree/HEAD/mega-list"},
     {"id": "dyk-spotlight-daily", "kind": "didyouknow", "text": "The spotlight changes every day, so a different project gets its turn at the top of the page each morning."},
     {"id": "friend-nib-font", "kind": "friend", "friend": "nib", "text": "Nib is back. It says its font is nearly finished. It needs just one more letter. It always needs one more letter."},
 
@@ -53,7 +53,7 @@
     {"id": "dyk-search-local", "kind": "didyouknow", "text": "The Catalogue's search runs in your browser, over an index the site ships with. Your queries stay on your machine.", "href": "catalog/"},
     {"id": "friend-lumen-moon", "kind": "friend", "friend": "lumen", "text": "Lumen is visiting again. Please don't tell her the spotlight is not the moon. She's having such a nice time."},
 
-    {"id": "tip-leaderboard", "kind": "tip", "text": "Curious who has the most stars? The leaderboard lives in the Markdown mega-list on GitHub.", "href": "https://github.com/crazy54/awesome-agentic-atlas/blob/main/mega-list/leaderboard.md"},
+    {"id": "tip-leaderboard", "kind": "tip", "text": "Curious who has the most stars? The leaderboard lives in the Markdown mega-list on GitHub.", "href": "https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/mega-list/leaderboard.md"},
     {"id": "dyk-new-arrivals", "kind": "didyouknow", "text": "The Atlas re-reads its source lists regularly. Projects that were not there last time show up as new arrivals.", "href": "discover/"},
     {"id": "friend-ohfour-boo", "kind": "friend", "friend": "oh-four", "text": "Oh-Four practised its boo all night. It is still more of an apologetic whisper. Be encouraging."},
 

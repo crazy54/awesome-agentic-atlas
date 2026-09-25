@@ -145,6 +145,66 @@ def _retry_wait(p: subprocess.CompletedProcess, attempt: int) -> float:
     return max(0.5, min(RETRY_BASE * 2 ** (attempt - 1), RETRY_CAP) * (0.5 + random.random()))
 
 
+# Splitting a batch that GitHub keeps timing out on. The retry arithmetic above assumes each attempt
+# fails independently, and for a 502 or 504 that assumption is wrong: those are how GitHub answers a
+# GraphQL query that ran past its time limit, and the identical query costs the same time on the next
+# attempt. Daily run 35881532013 (23 September) is the case. One 15-repo batch in 03_releases.py (four
+# releases times forty assets per repo) got 502, 504, 502, and that single batch took the whole daily
+# build down. Two halves of an expensive query are two cheaper queries, so after the last attempt a
+# batch that failed that way is split and each half gets its own three attempts, down to one repo.
+#
+# The allowance is per process for the same reason RETRY_BUDGET is. When GitHub is actually down, every
+# batch fails this way, and splitting all of them would multiply the calls an outage costs by about
+# twice the batch size. Sixteen splits cover a few slow batches in one run. After that, a failing batch
+# raises exactly as it did before this existed.
+SPLIT_BUDGET = 16
+_splits_left = SPLIT_BUDGET
+OVERLOAD_STATUSES = ("502", "503", "504")
+
+
+def _overloaded(p: subprocess.CompletedProcess, doc) -> bool:
+    """Did GitHub give up on the query's cost rather than refuse it or rate-limit it?
+
+    Narrower than _transient on purpose. A rate limit is transient but splitting would only spend the
+    limit twice as fast, so it is not here. Neither is a query GitHub read and rejected.
+    """
+    blob = f"{p.stderr or ''}"
+    if any(f"HTTP {s}" in blob for s in OVERLOAD_STATUSES):
+        return True
+    if isinstance(doc, dict):
+        if str(doc.get("status") or "") in OVERLOAD_STATUSES:
+            return True
+        return any(isinstance(e, dict) and e.get("type") == "TIMEOUT" for e in doc.get("errors") or [])
+    return False
+
+
+def _take_split() -> bool:
+    global _splits_left
+    if _splits_left <= 0:
+        return False
+    _splits_left -= 1
+    return True
+
+
+def _split(batch: list[dict], fields: str, why: str) -> dict:
+    """Ask for each half separately and hand back one `data` dict aliased as if nothing happened.
+
+    The callers read `data[f"r{i}"]` by position in the batch they passed, so the second half's aliases
+    are renumbered by the size of the first. If either half still fails, it raises and the caller
+    writes the whole batch off, same as before. A half that raised told us nothing about its repos.
+    """
+    mid = (len(batch) + 1) // 2
+    print(f"  splitting {len(batch)}-repo batch into {mid} + {len(batch) - mid} after "
+          f"{RETRY_ATTEMPTS} attempts: {why[:160]}", file=sys.stderr, flush=True)
+    left = graphql_batch(batch[:mid], fields)
+    right = graphql_batch(batch[mid:], fields)
+    out = {k: v for k, v in left.items()}
+    for k, v in right.items():
+        m = re.fullmatch(r"r(\d+)", k)
+        out[f"r{int(m.group(1)) + mid}" if m else k] = v
+    return out
+
+
 def graphql_batch(batch: list[dict], fields: str = FIELDS) -> dict:
     """One aliased query for the whole batch. `fields` so 03/03b/13 share the triage below.
 
@@ -201,6 +261,8 @@ def graphql_batch(batch: list[dict], fields: str = FIELDS) -> dict:
         # Three ways out without sleeping: attempts exhausted, an error that will read the same next
         # time, or the process having already spent its whole sleep allowance on earlier batches.
         if attempt == RETRY_ATTEMPTS or not _transient(p, doc) or _retry_spent >= RETRY_BUDGET:
+            if attempt == RETRY_ATTEMPTS and len(batch) > 1 and _overloaded(p, doc) and _take_split():
+                return _split(batch, fields, why)
             raise RuntimeError(f"gh api graphql failed: {why}")
         wait = _retry_wait(p, attempt)
         _retry_spent += wait

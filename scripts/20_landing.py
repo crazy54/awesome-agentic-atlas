@@ -1154,11 +1154,11 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
   <nav>
     <a href="{page.rel('discover/')}">Discover</a> ·
     <a href="{page.rel('collections/')}">Collections</a> ·
-    <a href="https://github.com/{esc(REPO)}/blob/main/mega-list/leaderboard.md">Leaderboard</a> ·
+    <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="{page.rel('repo/')}">All projects</a> ·
     <a href="{page.rel()}#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/{esc(REPO)}">Repository</a> ·
-    <a href="https://github.com/{esc(REPO)}/tree/main/mega-list">Markdown</a><br>
+    <a href="https://github.com/{esc(REPO)}/tree/HEAD/mega-list">Markdown</a><br>
     <button class="chip" id="theme" aria-pressed="false">Light theme</button>
   </nav>
 </div></div></header>
