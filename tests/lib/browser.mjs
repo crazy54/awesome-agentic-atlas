@@ -8,7 +8,7 @@
 //
 // It differs from `chrome.py` in one way, and on purpose. `find()` there returns None and the build
 // degrades to Open Graph cards, because a missing browser costs the build its screenshots and not the
-// build. A missing browser costs this suite two of its four harnesses, which is not a degraded pass, so
+// build. A missing browser costs this suite eight of its twenty-six harnesses, which is not a degraded pass, so
 // `find()` here returns null and `tests/run.mjs` turns that into a message naming the three places it
 // looked and the env var that overrides them.
 //

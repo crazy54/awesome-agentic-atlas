@@ -11,11 +11,11 @@
 
 **Thirty-nine of the best agentic awesome-lists, merged into one searchable atlas.**
 
-13,640 entries · nearly 8,000 repos · 12.5M combined stars · one spreadsheet · zero tab-hopping
+14,914 entries · 8,858 repos · 24.1M combined stars · one spreadsheet · zero tab-hopping
 
-[![entries](https://shieldcn.dev/badge/entries-13%2C640-6557C8.svg?logo=ri%3ALuDatabase&size=sm&font=geist&split=true)](mega-list/README.md)
-[![repos](https://shieldcn.dev/badge/repos-%7E8%2C000-1D5E9E.svg?logo=ri%3ALuGithub&size=sm&font=geist&split=true)](mega-list/leaderboard.md)
-[![stars](https://shieldcn.dev/badge/combined_stars-12.5M-875A19.svg?logo=ri%3AGoStarFill&size=sm&font=geist&split=true)](mega-list/leaderboard.md)
+[![entries](https://shieldcn.dev/badge/entries-14%2C914-6557C8.svg?logo=ri%3ALuDatabase&size=sm&font=geist&split=true)](mega-list/README.md)
+[![repos](https://shieldcn.dev/badge/repos-8%2C858-1D5E9E.svg?logo=ri%3ALuGithub&size=sm&font=geist&split=true)](mega-list/leaderboard.md)
+[![stars](https://shieldcn.dev/badge/combined_stars-24.1M-875A19.svg?logo=ri%3AGoStarFill&size=sm&font=geist&split=true)](mega-list/leaderboard.md)
 [![lists merged](https://shieldcn.dev/badge/lists_merged-39-187557.svg?logo=ri%3ALuListChecks&size=sm&font=geist&split=true)](#the-source-lists)
 [![license](https://shieldcn.dev/badge/license-MIT-596574.svg?logo=ri%3ALuScale&size=sm&font=geist&split=true)](LICENSE)
 
@@ -37,7 +37,10 @@ tool that runs on Windows" means opening dozens of tabs and reading all of them.
 So all thirty-nine are in here once, deduplicated, with the columns those lists don't have: **star
 count, language, licence, last push, install command, and a per-OS verdict for Windows, macOS, Linux
 and Docker.** Plus a screenshot of every project, so you can see it before you click it. That question
-up there is now [one link — twenty tools, ranked][q1].
+up there is now [one link, ranked][q1].
+
+Figures on this page are from the **2026-09-22 snapshot** (`snapshot` in [`data.json`][data]) and drift
+with every rebuild. Working on the project itself? Start with the [handbook](handbook/README.md).
 
 [q1]: https://aaa.jeremyfhall.com/catalog/#topic=observability-evals&target=claude-code&os=windows&confirmed=1
 
@@ -55,30 +58,34 @@ up there is now [one link — twenty tools, ranked][q1].
 
 ### Running the site locally
 
-The site is one static page plus one JSON file, so a clone serves it with nothing installed but Python:
+The site is static files in `docs/`, so a clone serves it with nothing installed but Python:
 
 ```bash
 python -m http.server -d docs 8000
 ```
 
-Then open <http://localhost:8000>. It does have to be *served* — a `file://` page is not allowed to
-`fetch` a sibling file, so double-clicking `docs/index.html` gives you the layout and none of the
-nearly 8,000 rows. Nothing here is built or bundled: edit `docs/index.html` and reload.
+Then open <http://localhost:8000> for the homepage, or <http://localhost:8000/catalog/> for the
+searchable catalogue. It does have to be *served*: a `file://` page is not allowed to `fetch` a
+sibling file, so double-clicking `docs/catalog/index.html` gives you the layout and none of the rows.
+
+Almost everything in `docs/` is **generated** by the scripts in `scripts/`, so edit the generator,
+not the page. The [handbook](handbook/README.md) says which script owns which file, and which ones
+can be re-run without the CI-only cache.
 
 ## Top of the leaderboard
 
 | ★ | Project | Named by |
 |---:|---|---:|
-| 388,645 | [openclaw/openclaw](https://github.com/openclaw/openclaw) | 3 lists |
-| 281,176 | [obra/superpowers](https://github.com/obra/superpowers) | 3 lists |
-| 246,813 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 2 lists |
-| 246,557 | [mattpocock/skills](https://github.com/mattpocock/skills) | 1 list |
-| 239,998 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 2 lists |
-| 209,837 | [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) | 2 lists |
-| 203,467 | [anomalyco/opencode](https://github.com/anomalyco/opencode) | 3 lists |
-| 203,229 | [n8n-io/n8n](https://github.com/n8n-io/n8n) | 1 list |
-| 187,101 | [Significant-Gravitas/AutoGPT](https://github.com/Significant-Gravitas/AutoGPT) | 1 list |
-| 180,046 | [ollama/ollama](https://github.com/ollama/ollama) | 1 list |
+| 390,260 | [openclaw/openclaw](https://github.com/openclaw/openclaw) | 6 lists |
+| 290,183 | [obra/superpowers](https://github.com/obra/superpowers) | 6 lists |
+| 267,783 | [mattpocock/skills](https://github.com/mattpocock/skills) | 3 lists |
+| 265,361 | [affaan-m/ECC](https://github.com/affaan-m/ECC) | 6 lists |
+| 248,091 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 3 lists |
+| 233,380 | [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) | 1 list |
+| 214,654 | [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) | 3 lists |
+| 209,402 | [anomalyco/opencode](https://github.com/anomalyco/opencode) | 4 lists |
+| 205,712 | [n8n-io/n8n](https://github.com/n8n-io/n8n) | 2 lists |
+| 200,254 | [tensorflow/tensorflow](https://github.com/tensorflow/tensorflow) | 1 list |
 
 [**Full leaderboard — 250 projects →**](mega-list/leaderboard.md)
 
@@ -91,20 +98,20 @@ them and agreed on almost none, so this is one shared vocabulary laid over all o
 
 | Topic | Projects | Top of the topic |
 |---|---:|---|
-| [Agent Skills](mega-list/topics/agent-skills.md) | 278 | [Superpowers](https://github.com/obra/superpowers) |
-| [Plugins, Themes & Clients](mega-list/topics/plugins-themes-clients.md) | 208 | [Oh My Opencode](https://github.com/code-yeongyu/oh-my-openagent) |
-| [Coding Agents](mega-list/topics/coding-agents.md) | 165 | [OpenCode](https://github.com/anomalyco/opencode) |
-| [Orchestrators & Multi-Agent](mega-list/topics/orchestrators-multi-agent.md) | 123 | [n8n](https://github.com/n8n-io/n8n) |
-| [Frameworks & SDKs](mega-list/topics/frameworks-sdks.md) | 95 | [openclaw](https://github.com/openclaw/openclaw) |
-| [Assistants & Domain Agents](mega-list/topics/assistants-domain-agents.md) | 84 | [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) |
-| [Harnesses & Runtime Infra](mega-list/topics/harnesses-runtime-infra.md) | 68 | [everything-claude-code](https://github.com/affaan-m/ECC) |
-| [Observability & Evals](mega-list/topics/observability-evals.md) | 66 | [Langfuse](https://github.com/langfuse/langfuse) |
-| [Context, Memory & RAG](mega-list/topics/context-memory-rag.md) | 51 | [headroom](https://github.com/headroomlabs-ai/headroom) |
-| [Sandbox, Security & Governance](mega-list/topics/sandbox-security-governance.md) | 50 | [Daytona](https://github.com/daytonaio/daytona) |
-| [Docs, Learning & Lists](mega-list/topics/docs-learning-lists.md) | 50 | [Learn Claude Code](https://github.com/shareAI-lab/learn-claude-code) |
-| [Research & Data Agents](mega-list/topics/research-data-agents.md) | 24 | [RAGFlow](https://github.com/infiniflow/ragflow) |
-| [Creative, Voice & Media](mega-list/topics/creative-voice-media.md) | 21 | [Meta AudioCraft](https://github.com/facebookresearch/audiocraft) |
-| [MCP Servers](mega-list/topics/mcp-servers.md) | 11 | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) |
+| [MCP Servers](mega-list/topics/mcp-servers.md) | 4,537 | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) |
+| [Agent Skills](mega-list/topics/agent-skills.md) | 823 | [Superpowers](https://github.com/obra/superpowers) |
+| [Harnesses & Runtime Infra](mega-list/topics/harnesses-runtime-infra.md) | 670 | [DeepSeek Harness (dsh)](https://github.com/deepseek-ai/deepseek-harness) |
+| [Plugins, Themes & Clients](mega-list/topics/plugins-themes-clients.md) | 611 | [cc-switch](https://github.com/farion1231/cc-switch) |
+| [Frameworks & SDKs](mega-list/topics/frameworks-sdks.md) | 464 | [openclaw](https://github.com/openclaw/openclaw) |
+| [Observability & Evals](mega-list/topics/observability-evals.md) | 421 | [LLMApp](https://github.com/pathwaycom/llm-app) |
+| [Orchestrators & Multi-Agent](mega-list/topics/orchestrators-multi-agent.md) | 339 | [n8n](https://github.com/n8n-io/n8n) |
+| [Coding Agents](mega-list/topics/coding-agents.md) | 281 | [OpenCode](https://github.com/anomalyco/opencode) |
+| [Assistants & Domain Agents](mega-list/topics/assistants-domain-agents.md) | 252 | [hermes-agent](https://github.com/NousResearch/hermes-agent) |
+| [Sandbox, Security & Governance](mega-list/topics/sandbox-security-governance.md) | 150 | [Daytona](https://github.com/daytonaio/daytona) |
+| [Docs, Learning & Lists](mega-list/topics/docs-learning-lists.md) | 142 | [f/awesome-chatgpt-prompts](https://github.com/f/prompts.chat) |
+| [Context, Memory & RAG](mega-list/topics/context-memory-rag.md) | 98 | [RAGFlow](https://github.com/infiniflow/ragflow) |
+| [Research & Data Agents](mega-list/topics/research-data-agents.md) | 41 | [Pathway](https://github.com/pathwaycom/pathway) |
+| [Creative, Voice & Media](mega-list/topics/creative-voice-media.md) | 29 | [whisper](https://github.com/openai/whisper) |
 
 [**All 14 topics, with what each one covers →**](mega-list/topics/README.md)
 
@@ -113,24 +120,24 @@ them and agreed on almost none, so this is one shared vocabulary laid over all o
 The other axis: not what a project *is* but what it *runs with*. A project can appear on several of
 these, because plenty of them serve Claude Code and opencode and Codex at once.
 
-[Claude / Anthropic](mega-list/targets/claude-anthropic.md) 669 ·
-[Claude Code](mega-list/targets/claude-code.md) 479 ·
-[Codex / OpenAI](mega-list/targets/codex-openai.md) 374 ·
-[opencode](mega-list/targets/opencode.md) 284 ·
-[MCP](mega-list/targets/mcp.md) 217 ·
-[Cursor](mega-list/targets/cursor.md) 133 ·
-[Gemini / Google](mega-list/targets/gemini-google.md) 132 ·
-[GitHub Copilot](mega-list/targets/github-copilot.md) 49 ·
-[LangChain / LangGraph](mega-list/targets/langchain-langgraph.md) 41 ·
-[Local / Ollama](mega-list/targets/local-ollama.md) 23 ·
-[Cline / Roo](mega-list/targets/cline-roo.md) 13 ·
-[Aider](mega-list/targets/aider.md) 12
+[MCP](mega-list/targets/mcp.md) 5,104 ·
+[Claude / Anthropic](mega-list/targets/claude-anthropic.md) 3,944 ·
+[Claude Code](mega-list/targets/claude-code.md) 2,396 ·
+[Codex / OpenAI](mega-list/targets/codex-openai.md) 1,579 ·
+[Cursor](mega-list/targets/cursor.md) 1,122 ·
+[Gemini / Google](mega-list/targets/gemini-google.md) 653 ·
+[opencode](mega-list/targets/opencode.md) 406 ·
+[GitHub Copilot](mega-list/targets/github-copilot.md) 240 ·
+[LangChain / LangGraph](mega-list/targets/langchain-langgraph.md) 175 ·
+[Local / Ollama](mega-list/targets/local-ollama.md) 146 ·
+[Cline / Roo](mega-list/targets/cline-roo.md) 89 ·
+[Aider](mega-list/targets/aider.md) 39
 
 **The two axes cross.** That's what the site and the workbook's *By Category* sheet are for — pick a
 topic and a harness at once and you get the answer the individual lists can't give you:
 
-- [the best Claude Code observability tools](https://aaa.jeremyfhall.com/catalog/#topic=observability-evals&target=claude-code) — 38 of them, ranked
-- [memory and retrieval over MCP](https://aaa.jeremyfhall.com/catalog/#topic=context-memory-rag&target=mcp) — 29
+- [the best Claude Code observability tools](https://aaa.jeremyfhall.com/catalog/#topic=observability-evals&target=claude-code), ranked
+- [memory and retrieval over MCP](https://aaa.jeremyfhall.com/catalog/#topic=context-memory-rag&target=mcp)
 - [skills that run native on Windows](https://aaa.jeremyfhall.com/catalog/#topic=agent-skills&os=windows&confirmed=1)
 
 ## Browse by what you actually run
@@ -140,10 +147,10 @@ README, install instructions and CI config for what it actually supports:
 
 | Platform | Projects | Page |
 |---|---:|---|
-| 🪟 Windows | 1,105 | [windows.md](mega-list/platforms/windows.md) · [inferred](mega-list/platforms/windows-inferred.md) |
-| 🍎 macOS | 1,092 | [macos.md](mega-list/platforms/macos.md) · [inferred](mega-list/platforms/macos-inferred.md) |
-| 🐧 Linux | 1,120 | [linux.md](mega-list/platforms/linux.md) · [inferred](mega-list/platforms/linux-inferred.md) |
-| 🐳 Docker | 210 | [docker.md](mega-list/platforms/docker.md) |
+| 🪟 Windows | 2,066 | [windows.md](mega-list/platforms/windows.md) · [inferred](mega-list/platforms/windows-inferred.md) |
+| 🍎 macOS | 1,486 | [macos.md](mega-list/platforms/macos.md) · [inferred](mega-list/platforms/macos-inferred.md) |
+| 🐧 Linux | 1,985 | [linux.md](mega-list/platforms/linux.md) · [inferred](mega-list/platforms/linux-inferred.md) |
+| 🐳 Docker | 1,548 | [docker.md](mega-list/platforms/docker.md) |
 
 Each platform is split into two pages on purpose. The main page is projects with **direct evidence** —
 an install command for that OS, a matching CI job, a released binary. The `-inferred` page is projects
@@ -159,17 +166,17 @@ Every entry here came from someone else's curation work. All thirty-nine are cre
 
 | List | Curator | Entries | Page |
 |---|---|---:|---|
-| [awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | ai-boost | 426 | [→](mega-list/lists/harness-engineering.md) |
+| [awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | ai-boost | 443 | [→](mega-list/lists/harness-engineering.md) |
+| [agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills) | sickn33 | 278 | [→](mega-list/lists/aas-skill-sources.md) |
 | [awesome-ai-agents-2026](https://github.com/caramaschiHG/awesome-ai-agents-2026) | caramaschiHG | 264 | [→](mega-list/lists/ai-agents-2026.md) |
-| [agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills) | sickn33 | 255 | [→](mega-list/lists/aas-skill-sources.md) |
+| [awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) | andyrewlee | 227 | [→](mega-list/lists/orchestrators.md) |
 | [awesome-opencode](https://github.com/awesome-opencode/awesome-opencode) | awesome-opencode | 219 | [→](mega-list/lists/opencode.md) |
 | [awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) | e2b-dev | 215 | [→](mega-list/lists/agents-e2b.md) |
-| [awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) | andyrewlee | 194 | [→](mega-list/lists/orchestrators.md) |
+| [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) | hesreallyhim | 202 | [→](mega-list/lists/claude-code.md) |
 | [awesome-agent-skills](https://github.com/heilcheng/awesome-agent-skills) | heilcheng | 194 | [→](mega-list/lists/agent-skills.md) |
 | [awesome-agentic-patterns](https://github.com/nibzard/awesome-agentic-patterns) | nibzard | 193 | [→](mega-list/lists/agentic-patterns.md) |
-| [awesome-agents](https://github.com/kyrolabs/awesome-agents) | kyrolabs | 165 | [→](mega-list/lists/agents-kyrolabs.md) |
-| [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) | hesreallyhim | 153 | [→](mega-list/lists/claude-code.md) |
-| [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | Shubhamsaboo | 116 | [→](mega-list/lists/llm-app-templates.md) |
+| [awesome-agents](https://github.com/kyrolabs/awesome-agents) | kyrolabs | 170 | [→](mega-list/lists/agents-kyrolabs.md) |
+| [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | Shubhamsaboo | 120 | [→](mega-list/lists/llm-app-templates.md) |
 
 If you maintain one of these: thank you, and please tell me if anything here misrepresents your list.
 
@@ -202,9 +209,8 @@ Aggregating other people's lists introduces failure modes worth naming:
 - **The same repo arrives under several names.** GitHub redirects renamed repos for ever, so lists
   written at different times link to the same project under different owners and every link
   works. `OpenDevin/OpenDevin`, `All-Hands-AI/OpenHands` and `OpenHands/OpenHands` are one project.
-  Twenty-four repos were in here more than once that way. Every name is now resolved to the one the
-  API reports, which took **1,102,114 double-counted stars off the total** — 258,781 from three repos
-  spelled in two cases, and 843,333 from twenty that had simply been renamed.
+  Every name is resolved to the one the API reports, so a renamed project, or one spelled in two
+  cases, is one row and its stars are counted once.
 - **Some entries are folders, not repos.** A skill that lives in a directory of someone else's
   monorepo has no star count of its own. Those rows show a dash rather than borrowing the parent's
   number, and they're excluded from the leaderboard.
@@ -220,7 +226,9 @@ Two GitHub Actions workflows keep the three surfaces from going stale, and neith
 **Daily** ([`daily.yml`](.github/workflows/daily.yml), 11:12 UTC) asks each of the thirty-nine source lists
 for its newest commit. If none of them has moved, the job stops there — a rebuild would produce byte-identical
 files. If any has, it refetches every repo's metadata, rebuilds the site and the Markdown edition, and
-commits them, which is what republishes the site.
+commits them, which is what republishes the site. It also stops, successfully, when the last weekly
+run did not finish its screenshots, so a green daily is not proof that anything was published; the
+`snapshot` in `data.json` is ([details](handbook/ci-cd.md#the-daily-build)).
 
 **Weekly** ([`weekly.yml`](.github/workflows/weekly.yml), Sundays) does all of that and then the expensive
 part the daily run skips: capturing a screenshot for each new project, rebuilding both workbooks, and
@@ -358,8 +366,9 @@ WSL2, macOS and Linux all confirmed, no Dockerfile.
 | `-` | unknown | **Not "no".** Nothing was classifiable — the entry is a folder inside someone else's repo, the repo 404s, or it is a hosted product with no README to read. Every such row also has `stars` `0`, for want of a count rather than want of stars — though not every `0` is one of them. |
 
 A "does this run on Windows" filter usually wants `Y` or `L` in position 0, or `Y` in position 1, which
-is what the site's Windows chip does and where the Windows figure above comes from. `"L"` is an inference, not a
-promise; drop it if you need only stated support.
+is what the site's Windows chip does. `"L"` is an inference, not a promise; drop it if you need only
+stated support. The Windows figure in the platform table above is that stricter count: `Y` in position 0
+or 1.
 
 #### `img` — empty means derive
 
@@ -459,12 +468,12 @@ for r in hits[:5]:
 ```
 
 ```
-39 Rust projects with stated Windows support, snapshot 2026-09-03
- 68,230  openinterpreter/openinterpreter     Coding Agents
- 53,881  aaif-goose/goose                    Harnesses & Runtime Infra
- 40,909  Hmbown/Codewhale                    Harnesses & Runtime Infra
- 32,713  zeroclaw-labs/zeroclaw              Assistants & Domain Agents
- 30,947  cjpais/Handy                        Plugins, Themes & Clients
+159 Rust projects with stated Windows support, snapshot 2026-09-22
+134,191  farion1231/cc-switch                Plugins, Themes & Clients
+125,960  openai/codex                        Coding Agents
+ 90,728  zed-industries/zed                  Coding Agents
+ 68,404  openinterpreter/openinterpreter     Coding Agents
+ 54,567  aaif-goose/goose                    Coding Agents
 ```
 
 Two lookups and no magic numbers, and the same dozen lines keep working across a rebuild that adds a
@@ -472,12 +481,15 @@ column, a topic or four hundred repos.
 
 ## How it's built
 
-A nineteen-stage Python pipeline: pull each source list that has moved, parse its Markdown, resolve and fetch every repo
+A Python pipeline of numbered stages in [`scripts/`](scripts/): pull each source list that has moved, parse its Markdown, resolve and fetch every repo
 through the GitHub API, pull release and Actions metadata, classify OS support from README and CI
 evidence, capture a screenshot per project, then render the workbooks with `openpyxl`, the Markdown
 edition, and the site's dataset from the same in-memory records — so the three surfaces cannot
 disagree. The topic and target assignments come from one taxonomy module all three read, which is why
-`topics/agent-skills.md`, `#topic=agent-skills` and `Category = Agent Skills` are the same 278 rows.
+`topics/agent-skills.md`, `#topic=agent-skills` and `Category = Agent Skills` are the same rows.
+
+The [handbook](handbook/README.md) documents every stage (what it reads, what it writes, and which
+ones need the CI-only cache), the two build workflows, the test suite and the front end.
 
 The build cache (a fetched README and a screenshot per project) is deliberately **not** committed. It
 is other people's content, it grows with every list added, and it is reproducible from the fetch scripts.
@@ -507,6 +519,10 @@ Corrections are the most valuable thing you can send. Especially:
 
 Open an issue with the repo name and what's wrong. New source lists are welcome — the parser needs one
 per list, so say which list and I'll add it.
+
+Changing the code? Read the [contributor guide](handbook/contributing.md) first. Pull requests go
+against `latest_branch`, which is also the branch the site is published from, and
+`node tests/run.mjs` runs the full suite ([testing](handbook/testing.md)).
 
 ## Licence and credit
 
