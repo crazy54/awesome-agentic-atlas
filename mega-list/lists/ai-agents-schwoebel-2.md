@@ -89,7 +89,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2k · Python · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentic_security`</sub>
 - **[Invariant](https://github.com/invariantlabs-ai/invariant)** — Helps you build better AI agents through debuggable unit testing
-  <sub>★ 461 · Python · Apache-2.0 · source · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 463 · Python · Apache-2.0 · source · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/invariantlabs-ai/invariant.git`</sub>
 - **[Cyber-Security-Llm-Agents](https://github.com/NVISOsecurity/cyber-security-llm-agents)** — A collection of agents that use Large Language Models (LLMs) to perform tasks common on our day to day jobs in cyber security
   <sub>★ 394 · Jupyter Notebook · source · pushed 2024-05-07 · Win?</sub>
@@ -101,7 +101,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 155 · Python · MIT · pip · pushed 2026-02-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install zenguard`</sub>
 - **[Netsecgame](https://github.com/stratosphereips/NetSecGame)** — An environment simulation for networks security tasks for development and testing AI based agents. Part of AI Dojo project
-  <sub>★ 71 · Jupyter Notebook · GPL-2.0 · pip · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 70 · Jupyter Notebook · GPL-2.0 · pip · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install netsecgame`</sub>
 - **[Council-Of-Ai](https://github.com/seanpixel/council-of-ai)** — Security measure for agentic LLMs using a council of AIs moderted by a veto system. The council judges an agent's actions outputs based o…
   <sub>★ 41 · Python · MIT · clone · pushed 2023-04-14 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -218,17 +218,17 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2.2k · MIT · source · pushed 2026-08-17 · Win?</sub>
   <sub>`git clone https://github.com/Xnhyacinth/Awesome-LLM-Long-Context-Modeling.git`</sub>
 - **[Theagentcompany](https://github.com/TheAgentCompany/TheAgentCompany)** — An agent benchmark with tasks in a simulated software company
-  <sub>★ 783 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 785 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://github.com/TheAgentCompany/the-agent-company-backup-data/releases/download/setup-script-20241208/setup.sh | sh`</sub>
 - **[Agentlab](https://github.com/ServiceNow/AgentLab)** — AgentLab - An open-source framework for developing, testing, and benchmarking web agents on diverse tasks, designed for scalability and re…
-  <sub>★ 637 · Python · pip · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 638 · Python · pip · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentlab`</sub>
-- **[Bigcodebench](https://github.com/bigcode-project/bigcodebench)** — BigCodeBench - Benchmarking Code Generation Towards AGI
-  <sub>★ 519 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pip install bigcodebench --upgrade`</sub>
 - **[Appworld](https://github.com/StonyBrookNLP/appworld)** — Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL'24 Best Resource Paper
-  <sub>★ 518 · Python · Apache-2.0 · pip · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 520 · Python · Apache-2.0 · pip · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install appworld`</sub>
+- **[Bigcodebench](https://github.com/bigcode-project/bigcodebench)** — BigCodeBench - Benchmarking Code Generation Towards AGI
+  <sub>★ 518 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`pip install bigcodebench --upgrade`</sub>
 - **[Visualwebarena](https://github.com/web-arena-x/visualwebarena)** — VisualWebArena is a benchmark for multimodal agents
   <sub>★ 487 · Python · MIT · source · pushed 2024-11-09 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/web-arena-x/visualwebarena.git`</sub>
@@ -272,7 +272,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 81 · Python · clone · pushed 2026-08-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/chuanruihu/Level-Navi-Agent-Search.git`</sub>
 - **[Safeagentbench](https://github.com/shengyin1224/SafeAgentBench)** — Codes for paper "SafeAgentBench - A Benchmark for Safe Task Planning of \\ Embodied LLM Agents"
-  <sub>★ 76 · Python · source · pushed 2025-02-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 77 · Python · source · pushed 2025-02-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/shengyin1224/SafeAgentBench.git`</sub>
 - **[Debatellm](https://github.com/instadeepai/DebateLLM)** — Benchmarking Multi-Agent Debate between Language Models for Truthfulness in Q&amp;A
   <sub>★ 62 · Jupyter Notebook · Apache-2.0 · source · pushed 2026-03-26</sub>
@@ -364,6 +364,6 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
-The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).
+The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

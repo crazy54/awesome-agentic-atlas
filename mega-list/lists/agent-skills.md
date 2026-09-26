@@ -11,7 +11,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 |   |   |   |
 |---|---|---|
 | <a href="https://support.claude.com/en/articles/12512180-using-skills-in-claude"><img src="https://downloads.intercomcdn.com/i/o/lupk8zyo/792494/717b10d3ebd874823db64841659b/76f3062d78ebbb04863fb1de3ef9cca0.png" width="260"></a> | <a href="https://support.claude.com/en/articles/12512198-creating-custom-skills"><img src="https://downloads.intercomcdn.com/i/o/lupk8zyo/792494/717b10d3ebd874823db64841659b/76f3062d78ebbb04863fb1de3ef9cca0.png" width="260"></a> | <a href="https://github.com/trycourier/courier-skills"><img src="https://opengraph.githubassets.com/1/trycourier/courier-skills" width="260"></a> |
-| **[Using skills in Claude](https://support.claude.com/en/articles/12512180-using-skills-in-claude)**<br>★ — | **[How to create custom skills](https://support.claude.com/en/articles/12512198-creating-custom-skills)**<br>★ — | **[trycourier/courier-skills](https://github.com/trycourier/courier-skills)**<br>★ 13 |
+| **[Using skills in Claude](https://support.claude.com/en/articles/12512180-using-skills-in-claude)**<br>★ — | **[How to create custom skills](https://support.claude.com/en/articles/12512198-creating-custom-skills)**<br>★ — | **[trycourier/courier-skills](https://github.com/trycourier/courier-skills)**<br>★ 14 |
 | <a href="https://github.com/resend/resend-skills/tree/main/skills/resend"><img src="https://opengraph.githubassets.com/1/resend/resend-skills" width="260"></a> | <a href="https://github.com/resend/resend-skills/tree/main/skills/react-email"><img src="https://opengraph.githubassets.com/1/resend/resend-skills" width="260"></a> | <a href="https://github.com/resend/resend-skills/tree/main/skills/email-best-practices"><img src="https://opengraph.githubassets.com/1/resend/resend-skills" width="260"></a> |
 | **[resend/resend](https://github.com/resend/resend-skills/tree/main/skills/resend)**<br>★ — | **[resend/react-email](https://github.com/resend/resend-skills/tree/main/skills/react-email)**<br>★ — | **[resend/email-best-practices](https://github.com/resend/resend-skills/tree/main/skills/email-best-practices)**<br>★ — |
 
@@ -193,7 +193,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Business, Productivity &amp; Marketing
 
 - **[trycourier/courier-skills](https://github.com/trycourier/courier-skills)** — Multi-channel notifications via email, SMS, push, and chat
-  <sub>★ 13 · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 14 · MIT · npx · pushed 2026-09-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add trycourier/courier-skills`</sub>
 - **[stripe/stripe-best-practices](https://agent-skill.co/stripe/skills/stripe-best-practices)** — Best practices for building Stripe integrations
   <sub>website</sub>
@@ -217,13 +217,13 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>website</sub>
   <sub>`https://agent-skill.co/makenotion/skills/spec-to-implementation`</sub>
 - **[resend/resend](https://github.com/resend/resend-skills/tree/main/skills/resend)** — Send and manage emails via the Resend API
-  <sub>JavaScript · MIT · in-repo · pushed 2026-09-18</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-09-25</sub>
   <sub>`git clone https://github.com/resend/resend-skills.git && cd resend-skills/skills/resend`</sub>
 - **[resend/react-email](https://github.com/resend/resend-skills/tree/main/skills/react-email)** — Build emails with React Email components
-  <sub>JavaScript · MIT · in-repo · pushed 2026-09-18</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-09-25</sub>
   <sub>`git clone https://github.com/resend/resend-skills.git && cd resend-skills/skills/react-email`</sub>
 - **[resend/email-best-practices](https://github.com/resend/resend-skills/tree/main/skills/email-best-practices)** — Email deliverability and design best practices
-  <sub>JavaScript · MIT · in-repo · pushed 2026-09-18</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-09-25</sub>
   <sub>`git clone https://github.com/resend/resend-skills.git && cd resend-skills/skills/email-best-practices`</sub>
 - **[sanity-io/sanity-best-practices](https://agent-skill.co/sanity-io/skills/sanity-best-practices)** — Best practices for Sanity Studio and content workflows
   <sub>website</sub>
@@ -400,7 +400,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Model Context Protocol (MCP)
 
 - **[MCP Server Examples](https://github.com/modelcontextprotocol/servers)** — Official server implementations
-  <sub>★ 90.5k · TypeScript · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 90.6k · TypeScript · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @modelcontextprotocol/server-memory`</sub>
 - **[MCP Official Documentation](https://modelcontextprotocol.io/)** — The open standard
   <sub>website</sub>
@@ -556,43 +556,43 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Community Skills
 
 - **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)** — High-agency frontend skill to eliminate generic UI slop
-  <sub>★ 89.3k · JavaScript · MIT · npx · pushed 2026-09-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 90.3k · JavaScript · MIT · npx · pushed 2026-09-26 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add https://github.com/Leonxlnx/taste-skill`</sub>
 - **[AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo)** — Universal SEO skill for website analysis
-  <sub>★ 17.5k · Python · MIT · script · pushed 2026-09-11 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 17.7k · Python · MIT · script · pushed 2026-09-23 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/claude-seo/main/uninstall.sh | bash`</sub>
 - **[RoundTable02/tutor-skills](https://github.com/bevibing/tutor-skills)** — Transform docs or codebases into interactive StudyVaults
-  <sub>★ 1.2k · Shell · MIT · npx · pushed 2026-02-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.3k · Shell · MIT · npx · pushed 2026-02-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add RoundTable02/tutor-skills`</sub>
 - **[BrianRWagner/ai-marketing-skills](https://github.com/BrianRWagner/ai-marketing-claude-code-skills)** — 17 marketing frameworks for outreach and audits
-  <sub>★ 424 · Shell · clone · pushed 2026-03-19 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 425 · Shell · clone · pushed 2026-03-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/BrianRWagner/ai-marketing-claude-code-skills.git`</sub>
 - **[qdrant/skills](https://github.com/qdrant/skills)** — Agent skills for Qdrant vector search, scaling, and performance
-  <sub>★ 245 · Python · Apache-2.0 · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 253 · Python · Apache-2.0 · npx · pushed 2026-09-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add qdrant/skills/meta/qdrant-advisor`</sub>
 - **[smixs/creative-director-skill](https://github.com/smixs/creative-director-skill)** — 20+ creative methodologies (SIT, TRIZ, SCAMPER)
-  <sub>★ 219 · Python · CC-BY-4.0 · npx · pushed 2026-08-08 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 222 · Python · CC-BY-4.0 · npx · pushed 2026-08-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add smixs/creative-director-skill # asks where to install`</sub>
 - **[coderabbitai/skills](https://github.com/coderabbitai/skills)** — Code review and PR autofix workflows
-  <sub>★ 181 · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 183 · MIT · npx · pushed 2026-09-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add coderabbitai/skills`</sub>
 - **[wrsmith108/linear-claude-skill](https://github.com/wrsmith108/linear-claude-skill)** — Manage Linear issues, projects, and teams
-  <sub>★ 128 · TypeScript · MIT · clone · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 130 · TypeScript · MIT · clone · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/wrsmith108/linear-claude-skill`</sub>
 - **[muthuishere/hand-drawn-diagrams](https://github.com/muthuishere/hand-drawn-diagrams)** — Generate hand-drawn Excalidraw diagrams from prompt
-  <sub>★ 76 · Python · npx · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 78 · Python · npx · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add muthuishere/hand-drawn-diagrams`</sub>
 - **[k-kolomeitsev/data-structure-protocol](https://github.com/k-kolomeitsev/data-structure-protocol)** — Graph-based memory for faster context and safer refactors
-  <sub>★ 67 · Python · Apache-2.0 · psh · pushed 2026-08-10 · Win · WSL2? · macOS? · Linux · Docker</sub>
+  <sub>★ 68 · Python · Apache-2.0 · psh · pushed 2026-08-10 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/k-kolomeitsev/data-structure-protocol/main/install.ps1 | iex`</sub>
-- **[hanfang/claude-memory-skill](https://github.com/hanfang/claude-memory-skill)** — Hierarchical memory system with filesystem persistence
-  <sub>★ 56 · Shell · MIT · script · pushed 2026-02-07 · WSL2 · macOS · Linux</sub>
-  <sub>`curl -fsSL https://raw.githubusercontent.com/hanfang/claude-memory-skill/main/install.sh | bash`</sub>
 - **[SHADOWPR0/beautiful_prose](https://github.com/SHADOWPR0/beautiful_prose)** — Hard-edged writing style contract for forceful English prose
-  <sub>★ 55 · source · pushed 2025-12-30</sub>
+  <sub>★ 57 · source · pushed 2025-12-30</sub>
   <sub>`git clone https://github.com/SHADOWPR0/beautiful_prose.git`</sub>
+- **[hanfang/claude-memory-skill](https://github.com/hanfang/claude-memory-skill)** — Hierarchical memory system with filesystem persistence
+  <sub>★ 55 · Shell · MIT · script · pushed 2026-02-07 · WSL2 · macOS · Linux</sub>
+  <sub>`curl -fsSL https://raw.githubusercontent.com/hanfang/claude-memory-skill/main/install.sh | bash`</sub>
 - **[massimodeluisa/recursive-decomposition-skill](https://github.com/massimodeluisa/recursive-decomposition-skill)** — Handle long-context tasks (100+ files) via decomposition
-  <sub>★ 48 · HTML · MIT · npx · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 49 · HTML · MIT · npx · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add massimodeluisa/recursive-decomposition-skill`</sub>
 - **[PSPDFKit-labs/nutrient-agent-skill](https://github.com/PSPDFKit-labs/nutrient-agent-skill)** — Document processing: convert, OCR, and redact PII
   <sub>★ 18 · Python · npx · pushed 2026-08-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -643,6 +643,6 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 
 ---
 
-Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
-The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).
+The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

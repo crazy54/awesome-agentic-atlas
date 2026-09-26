@@ -252,7 +252,7 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
 ## Code Quality &amp; Security
 
 - **[HOL Guard](https://github.com/hashgraph-online/hol-guard)** — Security harness that intercepts tool calls in AI coding agents before files change or network is contacted
-  <sub>★ 650 · Python · Apache-2.0 · pipx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 668 · Python · Apache-2.0 · pipx · pushed 2026-09-26 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pipx install hol-guard`</sub>
 - **[reviewing-code](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/reviewing-code/SKILL.md)** — Thorough code review focused on correctness, maintainability, performance, and best practices
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
@@ -264,22 +264,22 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/auditing-performance/SKILL.md`</sub>
 - **[sentry-code-simplifier](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/code-simplifier)** — Refactor for clarity, consistency, and maintainability — eliminates dead code, fixes naming, and reduces complexity
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-26</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/code-simplifier`</sub>
 - **[sentry-find-bugs](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/find-bugs)** — Scan local branch changes for bugs, security vulnerabilities, and code quality issues
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-26</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/find-bugs`</sub>
 - **[sentry-code-review](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/code-review)** — Code review following Sentry's engineering practices
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-26</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/code-review`</sub>
 - **[sentry-security-review](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/security-review)** — Security code review for injection, XSS, auth bypass, and IDOR vulnerabilities
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-26</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/security-review`</sub>
 - **[sentry-django-perf-review](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/django-perf-review)** — Django-specific performance review — N+1 queries, select_related, caching, and serialization
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-26</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/django-perf-review`</sub>
 - **[sentry-skill-scanner](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/skill-scanner)** — Scan agent skills for security issues — prompt injection, exfiltration, and unsafe tool use
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-26</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/skill-scanner`</sub>
 - **[verifying-markdown-formatting](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/verifying-markdown-formatting/SKILL.md)** — Verify headings, lists, links, code blocks, spacing, and style consistency in Markdown files
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
@@ -303,10 +303,10 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/python-tdd-with-uv/SKILL.md`</sub>
 - **[mattpocock-tdd](https://github.com/mattpocock/skills/tree/main/tdd)** — Vertical-slice TDD for AI agents — one test, one implementation, repeat. Prevents over-engineering and speculative tests
-  <sub>Shell · MIT · in-repo · pushed 2026-09-18</sub>
+  <sub>Shell · MIT · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/mattpocock/skills.git && cd skills/tdd`</sub>
 - **[anthropic-webapp-testing](https://github.com/anthropics/skills/tree/main/skills/webapp-testing)** — Automated browser testing for web apps with screenshot verification and interaction flows
-  <sub>Python · in-repo · pushed 2026-09-22</sub>
+  <sub>Python · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/webapp-testing`</sub>
 - **[api-smoke-testing](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/api-smoke-testing/SKILL.md)** — Discover API routes from the codebase, hit every endpoint, and report which ones return errors
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
@@ -324,7 +324,7 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/converting-css-modules-to-tailwind/SKILL.md`</sub>
 - **[anthropic-frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design)** — Generate polished, production-ready frontend UI with consistent styling and responsive layouts
-  <sub>Python · in-repo · pushed 2026-09-22</sub>
+  <sub>Python · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/frontend-design`</sub>
 - **[shadcn-ui](https://ui.shadcn.com/docs/skills)** — Managing shadcn components — adding, searching, debugging, styling, and composing UI
   <sub>website</sub>
@@ -351,19 +351,19 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/adding-api-docs/SKILL.md`</sub>
 - **[anthropic-doc-coauthoring](https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring)** — Structured workflow for co-authoring technical documentation with an AI agent
-  <sub>Python · in-repo · pushed 2026-09-22</sub>
+  <sub>Python · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/doc-coauthoring`</sub>
 - **[anthropic-docx](https://github.com/anthropics/skills/tree/main/skills/docx)** — Generate Word documents (DOCX) programmatically with formatting, tables, and images
-  <sub>Python · in-repo · pushed 2026-09-22</sub>
+  <sub>Python · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/docx`</sub>
 - **[anthropic-pdf](https://github.com/anthropics/skills/tree/main/skills/pdf)** — Generate PDF documents with layouts, charts, and structured content
-  <sub>Python · in-repo · pushed 2026-09-22</sub>
+  <sub>Python · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/pdf`</sub>
 - **[anthropic-pptx](https://github.com/anthropics/skills/tree/main/skills/pptx)** — Create PowerPoint presentations with slides, layouts, and visual content
-  <sub>Python · in-repo · pushed 2026-09-22</sub>
+  <sub>Python · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/pptx`</sub>
 - **[anthropic-xlsx](https://github.com/anthropics/skills/tree/main/skills/xlsx)** — Build Excel spreadsheets with formulas, charts, and data formatting
-  <sub>Python · in-repo · pushed 2026-09-22</sub>
+  <sub>Python · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/xlsx`</sub>
 
 ## Utilities
@@ -384,7 +384,7 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/seo-auditing/SKILL.md`</sub>
 - **[seo-analysis](https://github.com/nowork-studio/toprank/blob/main/seo/seo-analysis/SKILL.md)** — Full SEO audit using Search Console, URL inspection, PageSpeed, technical crawling, metadata checks, schema review, and a prioritized 30-day action plan
-  <sub>TypeScript · MIT · in-repo · pushed 2026-09-22</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-09-25</sub>
   <sub>`git clone https://github.com/nowork-studio/toprank.git && cd toprank/seo/seo-analysis/SKILL.md`</sub>
 - **[writing-copy](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/writing-copy/SKILL.md)** — Write marketing copy for landing pages, CTAs, emails, microcopy, and product descriptions
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
@@ -396,16 +396,16 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>★ 1 · Shell · MIT · npx · pushed 2026-07-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @hanv89/azure-arch-skill@latest install --agent=claude-code`</sub>
 - **[mattpocock-prd-to-issues](https://github.com/mattpocock/skills/tree/main/prd-to-issues)** — Convert a product requirements doc into a set of well-scoped GitHub issues
-  <sub>Shell · MIT · in-repo · pushed 2026-09-18</sub>
+  <sub>Shell · MIT · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/mattpocock/skills.git && cd skills/prd-to-issues`</sub>
 - **[mattpocock-improve-architecture](https://github.com/mattpocock/skills/tree/main/improve-codebase-architecture)** — Analyze a codebase and propose concrete architecture improvements
-  <sub>Shell · MIT · in-repo · pushed 2026-09-18</sub>
+  <sub>Shell · MIT · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/mattpocock/skills.git && cd skills/improve-codebase-architecture`</sub>
 - **[mattpocock-grill-me](https://github.com/mattpocock/skills/tree/main/grill-me)** — Challenge assumptions and push back on ideas before committing to an approach
-  <sub>Shell · MIT · in-repo · pushed 2026-09-18</sub>
+  <sub>Shell · MIT · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/mattpocock/skills.git && cd skills/grill-me`</sub>
 - **[anthropic-mcp-builder](https://github.com/anthropics/skills/tree/main/skills/mcp-builder)** — Build Model Context Protocol servers from scratch with tool definitions and transport setup
-  <sub>Python · in-repo · pushed 2026-09-22</sub>
+  <sub>Python · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/mcp-builder`</sub>
 - **[architecture-decision-records](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/architecture-decision-records/SKILL.md)** — Document technical decisions as ADRs with context, options considered, and rationale
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
@@ -483,10 +483,10 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/adding-feature-flags/SKILL.md`</sub>
 - **[posthog-llm-analytics](https://github.com/PostHog/skills/tree/main/skills/posthog/llm-analytics)** — Instrument LLM calls with token usage, latency, cost tracking, and model comparison
-  <sub>Python · MIT · in-repo · pushed 2026-09-22</sub>
+  <sub>Python · MIT · in-repo · pushed 2026-09-26</sub>
   <sub>`git clone https://github.com/PostHog/skills.git && cd skills/skills/posthog/llm-analytics`</sub>
 - **[posthog-migrations](https://github.com/PostHog/skills/tree/main/skills/posthog/migrations)** — Migrate from other analytics providers (Amplitude, Mixpanel, GA) to PostHog
-  <sub>Python · MIT · in-repo · pushed 2026-09-22</sub>
+  <sub>Python · MIT · in-repo · pushed 2026-09-26</sub>
   <sub>`git clone https://github.com/PostHog/skills.git && cd skills/skills/posthog/migrations`</sub>
 
 ## Error Tracking &amp; Monitoring
@@ -504,19 +504,19 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>★ 3.6k · Python · CC0-1.0 · clone · pushed 2026-05-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/sanjeed5/awesome-cursor-rules-mdc.git`</sub>
 - **[tugkanboz/awesome-cursorrules](https://github.com/tugkanboz/awesome-cursorrules)** — Showcases modern Cursor Rules system with MDC format
-  <sub>★ 21 · MIT · clone · pushed 2026-09-21</sub>
+  <sub>★ 21 · MIT · clone · pushed 2026-09-25</sub>
   <sub>`git clone https://github.com/your-org/awesome-cursor-rules`</sub>
 
 ## Tools
 
 - **[npx skills](https://github.com/vercel-labs/skills)** — CLI to search, install, and manage skills
-  <sub>★ 32.3k · TypeScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 32.5k · TypeScript · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add vercel-labs/agent-skills`</sub>
 - **[PostHog/context-mill](https://github.com/PostHog/context-mill)** — Assemble context for AI agents into Agent Skills-compliant packages
-  <sub>★ 62 · JavaScript · source · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 63 · JavaScript · source · pushed 2026-09-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/PostHog/context-mill.git`</sub>
 - **[Anthropic Skill Creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)** — Official skill for drafting, testing, and optimizing custom SKILL.md files
-  <sub>Python · in-repo · pushed 2026-09-22</sub>
+  <sub>Python · in-repo · pushed 2026-09-24</sub>
   <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/skill-creator`</sub>
 
 ## Learning
@@ -552,6 +552,6 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
 
 ---
 
-Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
-The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).
+The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

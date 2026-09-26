@@ -3,802 +3,830 @@
  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/feeds/arrivals</id>
  <title>Awesome Agentic Atlas — new arrivals</title>
  <subtitle>Repos added to the atlas since it started keeping a ledger, newest first. One entry per project, with its topic, the harnesses it targets and its star count.</subtitle>
- <updated>2026-09-22T00:00:00Z</updated>
- <link rel="self" type="application/atom+xml" href="https://crazy54.github.io/awesome-agentic-atlas/feed.xml" />
- <link rel="alternate" type="text/html" href="https://crazy54.github.io/awesome-agentic-atlas/" />
+ <updated>2026-09-26T00:00:00Z</updated>
+ <link rel="self" type="application/atom+xml" href="https://aaa.jeremyfhall.com/feed.xml" />
+ <link rel="alternate" type="text/html" href="https://aaa.jeremyfhall.com/" />
  <author>
   <name>Awesome Agentic Atlas</name>
-  <uri>https://crazy54.github.io/awesome-agentic-atlas/</uri>
+  <uri>https://aaa.jeremyfhall.com/</uri>
  </author>
- <rights>Blurbs and metadata from the source lists; see https://crazy54.github.io/awesome-agentic-atlas/</rights>
+ <rights>Blurbs and metadata from the source lists; see https://aaa.jeremyfhall.com/</rights>
  <generator uri="https://github.com/crazy54/awesome-agentic-atlas">21_feeds.py</generator>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/feder-cr/invisible_playwright_mcp</id>
-  <title>AIHawk</title>
-  <link rel="alternate" type="text/html" href="https://github.com/feder-cr/invisible_playwright_mcp" />
-  <published>2026-09-22T00:00:00Z</published>
-  <updated>2026-09-22T00:00:00Z</updated>
-  <category term="plugins-themes-clients" label="Plugins, Themes &amp; Clients" />
-  <category term="gemini-google" label="Gemini / Google" />
-  <content type="html">&lt;p&gt;Gives Gemini CLI a real Firefox to drive from plain-English instructions: opens pages, clicks, types, reads and screenshots through the real pointer and keyboard. Open source, MIT. Install via gemini extensions install https://github.com/feder-cr/AIHawk&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 31,626&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/22/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/feder-cr/invisible_playwright_mcp"&gt;feder-cr/invisible_playwright_mcp on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/zai-org/ZCode</id>
-  <title>ZCode</title>
-  <link rel="alternate" type="text/html" href="https://github.com/zai-org/ZCode" />
-  <published>2026-09-22T00:00:00Z</published>
-  <updated>2026-09-22T00:00:00Z</updated>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/LibreChat-AI/LibreChat</id>
+  <title>LibreChat</title>
+  <link rel="alternate" type="text/html" href="https://github.com/LibreChat-AI/LibreChat" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
   <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;Z.ai&amp;#x27;s official open-source coding agent harness (September 2026, Apache-2.0): a single TypeScript agent runtime — CLI, TUI, tools, and an RPC client SDK — served through three client surfaces (Electron desktop, browser, terminal) from one zcode command. The clearest recent first-party reference for the &amp;quot;one agent core, many client surfaces&amp;quot; split, complementing grok-build and DeepSeek Harness for&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 6,266&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/22/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/zai-org/ZCode"&gt;zai-org/ZCode on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/vastsa/PI-Desktop</id>
-  <title>PI-Desktop</title>
-  <link rel="alternate" type="text/html" href="https://github.com/vastsa/PI-Desktop" />
-  <published>2026-09-22T00:00:00Z</published>
-  <updated>2026-09-22T00:00:00Z</updated>
-  <category term="orchestrators-multi-agent" label="Orchestrators &amp; Multi-Agent" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
   <category term="mcp" label="MCP" />
-  <content type="html">&lt;p&gt;Local-first desktop workspace for AI coding agents with persistent projects and sessions, model switching, Plan/Goal modes, permission controls, plugins, MCP, and multi-agent orchestration&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=orchestrators-multi-agent"&gt;Orchestrators &amp;amp; Multi-Agent&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 5,204&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/22/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/vastsa/PI-Desktop"&gt;vastsa/PI-Desktop on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <category term="codex-openai" label="Codex / OpenAI" />
+  <category term="gemini-google" label="Gemini / Google" />
+  <category term="langchain-langgraph" label="LangChain / LangGraph" />
+  <content type="html">&lt;p&gt;Self-hosted multi-model chat. All major providers&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=langchain-langgraph"&gt;LangChain / LangGraph&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 44,973&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/LibreChat-AI/LibreChat"&gt;LibreChat-AI/LibreChat on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/fastcrw/crw</id>
-  <title>us/crw</title>
-  <link rel="alternate" type="text/html" href="https://github.com/fastcrw/crw" />
-  <published>2026-09-22T00:00:00Z</published>
-  <updated>2026-09-22T00:00:00Z</updated>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/google/ax</id>
+  <title>AX</title>
+  <link rel="alternate" type="text/html" href="https://github.com/google/ax" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="frameworks-sdks" label="Frameworks &amp; SDKs" />
+  <content type="html">&lt;p&gt;Google&amp;#x27;s declarative runtime for running autonomous agent workloads at cluster scale: Kubernetes-style task specs, sandboxed workspaces, and network fencing.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=frameworks-sdks"&gt;Frameworks &amp;amp; SDKs&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 11,815&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/google/ax"&gt;google/ax on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/getsentry/MobileBuildMCP</id>
+  <title>XcodeBuildMCP</title>
+  <link rel="alternate" type="text/html" href="https://github.com/getsentry/MobileBuildMCP" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
   <category term="mcp-servers" label="MCP Servers" />
   <category term="mcp" label="MCP" />
-  <content type="html">&lt;p&gt;fastCRW — open-source (AGPL-3.0), self-hostable Rust web crawler &amp;amp; search API for AI agents. Tools: scrape, crawl, map, and SearXNG-backed search. Single ~6MB static binary; reproducible 1K-URL benchmarks faster than hosted alternatives. Hosted MCP at fastcrw.com/mcp (Streamable HTTP, OAuth) or self-host&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 1,061&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/22/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/fastcrw/crw"&gt;fastcrw/crw on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt; Popular MCP server that enables AI agents to scaffold, build, run and test iOS, macOS, visionOS and watchOS apps or simulators and wired and wireless devices. It has powerful UI-automation capabilities like controlling the simulator, capturing run-time logs, as well as taking screenshots and viewing the accessibility hierarchy&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 6,428&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/getsentry/MobileBuildMCP"&gt;getsentry/MobileBuildMCP on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/firstloophq-archive/claude-code-test-runner</id>
-  <title>claude-code-test-runner</title>
-  <link rel="alternate" type="text/html" href="https://github.com/firstloophq-archive/claude-code-test-runner" />
-  <published>2026-09-22T00:00:00Z</published>
-  <updated>2026-09-22T00:00:00Z</updated>
-  <category term="plugins-themes-clients" label="Plugins, Themes &amp; Clients" />
-  <category term="claude-code" label="Claude Code" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <content type="html">&lt;p&gt;(22 ⭐) - An automated E2E natural language test runner built on Claude Code&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 24&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/22/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/firstloophq-archive/claude-code-test-runner"&gt;firstloophq-archive/claude-code-test-runner on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/deepseek-ai/deepseek-harness</id>
-  <title>DeepSeek Harness (dsh)</title>
-  <link rel="alternate" type="text/html" href="https://github.com/deepseek-ai/deepseek-harness" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;DeepSeek&amp;#x27;s official open-source agent harness (August 2026) built on an &amp;quot;everything is a plugin&amp;quot; architecture powered by Cordis: models, tools, skills, UI surfaces, and even the desktop shell are plugins composed through dependency injection rather than a monolith with extension points, with an accompanying paper on spatiotemporal composability. The clearest first-party reference for treating harn&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/TencentCloud/Octop</id>
+  <title>Octop</title>
+  <link rel="alternate" type="text/html" href="https://github.com/TencentCloud/Octop" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="assistants-domain-agents" label="Assistants &amp; Domain Agents" />
+  <content type="html">&lt;p&gt;Self-hosted multi-user assistant with a built-in expert team operating in parallel, reachable from web, Telegram, Feishu, DingTalk, QQ, and WeCom.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=assistants-domain-agents"&gt;Assistants &amp;amp; Domain Agents&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 233,380&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/deepseek-ai/deepseek-harness"&gt;deepseek-ai/deepseek-harness on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+&lt;strong&gt;Stars:&lt;/strong&gt; 5,056&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/TencentCloud/Octop"&gt;TencentCloud/Octop on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/tensorflow/tensorflow</id>
-  <title>TensorFlow</title>
-  <link rel="alternate" type="text/html" href="https://github.com/tensorflow/tensorflow" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;An Open Source Machine Learning Framework for Everyone&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 200,254&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/tensorflow/tensorflow"&gt;tensorflow/tensorflow on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/github/spec-kit</id>
-  <title>GitHub Spec Kit</title>
-  <link rel="alternate" type="text/html" href="https://github.com/github/spec-kit" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/openswarm-ai/openswarm</id>
+  <title>openswarm</title>
+  <link rel="alternate" type="text/html" href="https://github.com/openswarm-ai/openswarm" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
   <category term="orchestrators-multi-agent" label="Orchestrators &amp; Multi-Agent" />
-  <category term="claude-code" label="Claude Code" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <category term="codex-openai" label="Codex / OpenAI" />
-  <category term="gemini-google" label="Gemini / Google" />
-  <category term="github-copilot" label="GitHub Copilot" />
-  <content type="html">&lt;p&gt;GitHub&amp;#x27;s open-source toolkit for spec-driven development: spec.md → plan.md → tasks.md artifacts convert natural-language intent into a machine-checkable plan before any code is written, with /specify, /plan, /tasks, and /implement commands that run across Claude Code, Copilot, Codex, and Gemini CLI. The clearest reference implementation of treating spec/plan/task documents — not the prompt — as t&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=orchestrators-multi-agent"&gt;Orchestrators &amp;amp; Multi-Agent&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 138,398&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/github/spec-kit"&gt;github/spec-kit on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/farion1231/cc-switch</id>
-  <title>cc-switch</title>
-  <link rel="alternate" type="text/html" href="https://github.com/farion1231/cc-switch" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="plugins-themes-clients" label="Plugins, Themes &amp; Clients" />
-  <category term="claude-code" label="Claude Code" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <category term="opencode" label="opencode" />
-  <category term="mcp" label="MCP" />
-  <category term="codex-openai" label="Codex / OpenAI" />
-  <category term="gemini-google" label="Gemini / Google" />
-  <content type="html">&lt;p&gt;(132.1k ⭐) - Cross-platform desktop assistant for Claude Code, Codex, OpenCode, OpenClaw, Grok Build, and Hermes Agent&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 134,191&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/farion1231/cc-switch"&gt;farion1231/cc-switch on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/nextlevelbuilder/ui-ux-pro-max-skill</id>
-  <title>ui-ux-pro-max-skill</title>
-  <link rel="alternate" type="text/html" href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
-  <category term="claude-code" label="Claude Code" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <category term="gemini-google" label="Gemini / Google" />
-  <category term="github-copilot" label="GitHub Copilot" />
-  <category term="cursor" label="Cursor" />
-  <content type="html">&lt;p&gt;(91.5k ⭐) - An AI SKILL that provide design intelligence for building professional UI/UX multiple platforms&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 129,868&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"&gt;nextlevelbuilder/ui-ux-pro-max-skill on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/Graphify-Labs/graphify</id>
-  <title>graphify</title>
-  <link rel="alternate" type="text/html" href="https://github.com/Graphify-Labs/graphify" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
-  <category term="claude-code" label="Claude Code" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <category term="opencode" label="opencode" />
-  <category term="codex-openai" label="Codex / OpenAI" />
-  <category term="gemini-google" label="Gemini / Google" />
-  <category term="cursor" label="Cursor" />
-  <content type="html">&lt;p&gt;(67.0k ⭐) - AI coding assistant skill (Claude Code, Codex, OpenCode, OpenClaw, Factory Droid, Trae)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 120,541&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/Graphify-Labs/graphify"&gt;Graphify-Labs/graphify on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/openai/whisper</id>
-  <title>whisper</title>
-  <link rel="alternate" type="text/html" href="https://github.com/openai/whisper" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="creative-voice-media" label="Creative, Voice &amp; Media" />
-  <category term="codex-openai" label="Codex / OpenAI" />
-  <content type="html">&lt;p&gt;Robust Speech Recognition via Large-Scale Weak Supervision&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=creative-voice-media"&gt;Creative, Voice &amp;amp; Media&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 109,486&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/openai/whisper"&gt;openai/whisper on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/pytorch/pytorch</id>
-  <title>PyTorch</title>
-  <link rel="alternate" type="text/html" href="https://github.com/pytorch/pytorch" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;Tensors and Dynamic neural networks in Python with strong GPU acceleration&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
+  <content type="html">&lt;p&gt;Local mission-control center for launching, monitoring, approving, and coordinating multiple AI agents in parallel.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=orchestrators-multi-agent"&gt;Orchestrators &amp;amp; Multi-Agent&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 103,179&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/pytorch/pytorch"&gt;pytorch/pytorch on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+&lt;strong&gt;Stars:&lt;/strong&gt; 821&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/openswarm-ai/openswarm"&gt;openswarm-ai/openswarm on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/karpathy/autoresearch</id>
-  <title>Colab/Kaggle T4 port</title>
-  <link rel="alternate" type="text/html" href="https://github.com/karpathy/autoresearch/issues/208" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="orchestrators-multi-agent" label="Orchestrators &amp; Multi-Agent" />
-  <content type="html">&lt;p&gt;Adapts autoresearch for free T4 GPUs (Google Colab / Kaggle) with zero cost and zero local setup. Key changes: Flash Attention 3 → PyTorch SDPA, removes H100-only kernel dependency&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=orchestrators-multi-agent"&gt;Orchestrators &amp;amp; Multi-Agent&lt;/a&gt;&lt;br&gt;
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/feder-cr/jev</id>
+  <title>Resume_Render_From_Job_Description</title>
+  <link rel="alternate" type="text/html" href="https://github.com/feder-cr/jev" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="frameworks-sdks" label="Frameworks &amp; SDKs" />
+  <content type="html">&lt;p&gt;Resume_Builder_AIHawk is a powerful Python tool that allows you to automatically customize your resume based on a job URL, ensuring it pe…&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=frameworks-sdks"&gt;Frameworks &amp;amp; SDKs&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 96,586&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/karpathy/autoresearch/issues/208"&gt;karpathy/autoresearch on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+&lt;strong&gt;Stars:&lt;/strong&gt; 432&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/feder-cr/jev"&gt;feder-cr/jev on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/punkpeye/awesome-mcp-servers</id>
-  <title>awesome-mcp-servers</title>
-  <link rel="alternate" type="text/html" href="https://github.com/punkpeye/awesome-mcp-servers/" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/DEEP-JLU/Awesome-Graph-Engineering</id>
+  <title>DEEP-JLU/Awesome-Graph-Engineering</title>
+  <link rel="alternate" type="text/html" href="https://github.com/DEEP-JLU/Awesome-Graph-Engineering" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
   <category term="docs-learning-lists" label="Docs, Learning &amp; Lists" />
-  <category term="mcp" label="MCP" />
-  <content type="html">&lt;p&gt;Curated list of 10,000+ community MCP servers. ~30K+ ⭐&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=docs-learning-lists"&gt;Docs, Learning &amp;amp; Lists&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 95,434&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/punkpeye/awesome-mcp-servers/"&gt;punkpeye/awesome-mcp-servers on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;August 2026 survey companion on graph engineering in the era of LLM agents, organizing research from model intelligence through individual intelligence (loop architecture, runtime orchestration, memory, environment feedback) to system intelligence (task graphs, agent coordination, state management). Its loop-architecture and state-management sections are a research-grade complement to this list, a&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=docs-learning-lists"&gt;Docs, Learning &amp;amp; Lists&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 365&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/DEEP-JLU/Awesome-Graph-Engineering"&gt;DEEP-JLU/Awesome-Graph-Engineering on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/thedotmack/claude-mem</id>
-  <title>claude-mem</title>
-  <link rel="alternate" type="text/html" href="https://github.com/thedotmack/claude-mem" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="plugins-themes-clients" label="Plugins, Themes &amp; Clients" />
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/ZeKaiNie/universal-examprep-skill</id>
+  <title>ZeKaiNie/universal-examprep-skill</title>
+  <link rel="alternate" type="text/html" href="https://github.com/ZeKaiNie/universal-examprep-skill" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="agent-skills" label="Agent Skills" />
   <category term="claude-code" label="Claude Code" />
   <category term="claude-anthropic" label="Claude / Anthropic" />
-  <category term="opencode" label="opencode" />
   <category term="codex-openai" label="Codex / OpenAI" />
   <category term="gemini-google" label="Gemini / Google" />
-  <category term="github-copilot" label="GitHub Copilot" />
-  <content type="html">&lt;p&gt;(82.2k ⭐) - A Claude Code plugin that automatically captures everything Claude does during your coding sessions, compresses it with AI (using Claude&amp;#x27;s agent-sdk), and injects relevant context back into future sessions&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 94,479&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/thedotmack/claude-mem"&gt;thedotmack/claude-mem on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <category term="cursor" label="Cursor" />
+  <content type="html">&lt;p&gt;Multimodal grounded active-learning tutor for college textbooks (PDF/PPTX/DOCX). Features native PDF vector diagram cropping (pypdfium2), real homework quiz banks, hard exit-code anti-hallucination, and persistent cross-session state. Tested on 1,000+ pages of real college courseware on small cheap models&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 293&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/ZeKaiNie/universal-examprep-skill"&gt;ZeKaiNie/universal-examprep-skill on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/zed-industries/zed</id>
-  <title>Zed</title>
-  <link rel="alternate" type="text/html" href="https://github.com/zed-industries/zed" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/socai-io/socai</id>
+  <title>socai</title>
+  <link rel="alternate" type="text/html" href="https://github.com/socai-io/socai" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="assistants-domain-agents" label="Assistants &amp; Domain Agents" />
+  <category term="claude-code" label="Claude Code" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="codex-openai" label="Codex / OpenAI" />
+  <content type="html">&lt;p&gt;Open-source browser-use agent for social-media research that reuses a signed-in Chrome session to search and read posts and comments, capture media, and return structured evidence through CLI, TUI, or Desktop&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=assistants-domain-agents"&gt;Assistants &amp;amp; Domain Agents&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 217&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/socai-io/socai"&gt;socai-io/socai on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/swarajbachu/zuse</id>
+  <title>zuse</title>
+  <link rel="alternate" type="text/html" href="https://github.com/swarajbachu/zuse" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
   <category term="coding-agents" label="Coding Agents" />
-  <category term="mcp" label="MCP" />
-  <content type="html">&lt;p&gt;High-performance editor in Rust with native AI features, Zeta edit prediction, and Agent Client Protocol support. ~77K+ ⭐&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=coding-agents"&gt;Coding Agents&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 90,728&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/zed-industries/zed"&gt;zed-industries/zed on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/ChatGPTNextWeb/NextChat</id>
-  <title>NextChat</title>
-  <link rel="alternate" type="text/html" href="https://github.com/ChatGPTNextWeb/NextChat" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="plugins-themes-clients" label="Plugins, Themes &amp; Clients" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <category term="codex-openai" label="Codex / OpenAI" />
-  <category term="gemini-google" label="Gemini / Google" />
-  <content type="html">&lt;p&gt;Light and Fast AI Assistant. Support: Web | iOS | MacOS | Android | Linux | Windows&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 88,803&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/ChatGPTNextWeb/NextChat"&gt;ChatGPTNextWeb/NextChat on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/Panniantong/Agent-Reach</id>
-  <title>Panniantong/Agent-Reach</title>
-  <link rel="alternate" type="text/html" href="https://github.com/Panniantong/Agent-Reach" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
-  <category term="claude-code" label="Claude Code" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <category term="cursor" label="Cursor" />
-  <content type="html">&lt;p&gt;Multi-platform search CLI for 17 sites including Chinese platforms&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 84,781&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/Panniantong/Agent-Reach"&gt;Panniantong/Agent-Reach on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/Egonex-AI/Understand-Anything</id>
-  <title>Understand-Anything</title>
-  <link rel="alternate" type="text/html" href="https://github.com/Egonex-AI/Understand-Anything" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
   <category term="claude-code" label="Claude Code" />
   <category term="claude-anthropic" label="Claude / Anthropic" />
   <category term="opencode" label="opencode" />
   <category term="codex-openai" label="Codex / OpenAI" />
   <category term="gemini-google" label="Gemini / Google" />
-  <category term="github-copilot" label="GitHub Copilot" />
   <category term="cursor" label="Cursor" />
-  <content type="html">&lt;p&gt;(59.1k ⭐) - Claude Code skills that turn any codebase into an interactive knowledge graph you can explore, search, and ask questions about (Multi-platform e.g., Codex are supported)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 83,747&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/Egonex-AI/Understand-Anything"&gt;Egonex-AI/Understand-Anything on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;Chat-first desktop app wrapping Claude Code, Codex, Grok, Gemini, Cursor, and OpenCode in persistent sessions. macOS and Linux.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=coding-agents"&gt;Coding Agents&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 206&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/swarajbachu/zuse"&gt;swarajbachu/zuse on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/abi/screenshot-to-code</id>
-  <title>Screenshot-to-Code</title>
-  <link rel="alternate" type="text/html" href="https://github.com/abi/screenshot-to-code" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/orbi-build/orbi</id>
+  <title>Orbi</title>
+  <link rel="alternate" type="text/html" href="https://github.com/orbi-build/orbi" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
   <category term="coding-agents" label="Coding Agents" />
-  <content type="html">&lt;p&gt;Convert screenshots and designs into clean HTML/React/Vue code using AI&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=coding-agents"&gt;Coding Agents&lt;/a&gt;&lt;br&gt;
+  <content type="html">&lt;p&gt;Self-hosted autonomous coding agent that takes a labelled GitHub Issue through implementation, an independent review session, merge of the exact reviewed head, and a tagged release&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=coding-agents"&gt;Coding Agents&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 79,543&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/abi/screenshot-to-code"&gt;abi/screenshot-to-code on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+&lt;strong&gt;Stars:&lt;/strong&gt; 193&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/orbi-build/orbi"&gt;orbi-build/orbi on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/coder/code-server</id>
-  <title>code server</title>
-  <link rel="alternate" type="text/html" href="https://github.com/coder/code-server" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;Run VS Code on any machine anywhere and access it in the browser&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 79,395&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/coder/code-server"&gt;coder/code-server on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/dair-ai/Prompt-Engineering-Guide</id>
-  <title>Prompt Engineering Guide (DAIR.AI)</title>
-  <link rel="alternate" type="text/html" href="https://github.com/dair-ai/Prompt-Engineering-Guide" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="docs-learning-lists" label="Docs, Learning &amp; Lists" />
-  <category term="codex-openai" label="Codex / OpenAI" />
-  <content type="html">&lt;p&gt;The definitive open-source guide and resource hub. 3M+ learners. ~55K+ ⭐&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=docs-learning-lists"&gt;Docs, Learning &amp;amp; Lists&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 78,554&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/dair-ai/Prompt-Engineering-Guide"&gt;dair-ai/Prompt-Engineering-Guide on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/openai/openai-cookbook</id>
-  <title>OpenAI Cookbook</title>
-  <link rel="alternate" type="text/html" href="https://github.com/openai/openai-cookbook" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="docs-learning-lists" label="Docs, Learning &amp; Lists" />
-  <category term="codex-openai" label="Codex / OpenAI" />
-  <content type="html">&lt;p&gt;Official recipes for prompts, tools, RAG, and evaluations&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=docs-learning-lists"&gt;Docs, Learning &amp;amp; Lists&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 76,124&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/openai/openai-cookbook"&gt;openai/openai-cookbook on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/ComposioHQ/awesome-claude-skills</id>
-  <title>awesome-claude-skills (Composio)</title>
-  <link rel="alternate" type="text/html" href="https://github.com/ComposioHQ/awesome-claude-skills" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/yicheng47/runner</id>
+  <title>Runner</title>
+  <link rel="alternate" type="text/html" href="https://github.com/yicheng47/runner" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="coding-agents" label="Coding Agents" />
   <category term="claude-code" label="Claude Code" />
   <category term="claude-anthropic" label="Claude / Anthropic" />
   <category term="codex-openai" label="Codex / OpenAI" />
-  <category term="gemini-google" label="Gemini / Google" />
-  <content type="html">&lt;p&gt;30 curated skills + 832 SaaS automation templates via Composio. Strong on document processing, creative, and business skills&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 75,495&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/ComposioHQ/awesome-claude-skills"&gt;ComposioHQ/awesome-claude-skills on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <category term="github-copilot" label="GitHub Copilot" />
+  <content type="html">&lt;p&gt;Native macOS and Windows app running CLI agents side by side in split panes, each keeping its own TUI in a real terminal, and putting them on one mission as a crew with a lead. Claude Code, Codex, Copilot CLI, pi.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=coding-agents"&gt;Coding Agents&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 170&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/yicheng47/runner"&gt;yicheng47/runner on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/hiyouga/LlamaFactory</id>
-  <title>LLaMa-Factory</title>
-  <link rel="alternate" type="text/html" href="https://github.com/hiyouga/LlamaFactory" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;Unified Efficient Fine-Tuning of 100+ LLMs &amp;amp; VLMs (ACL 2024)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/egoist/lorca</id>
+  <title>lorca</title>
+  <link rel="alternate" type="text/html" href="https://github.com/egoist/lorca" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="assistants-domain-agents" label="Assistants &amp; Domain Agents" />
+  <content type="html">&lt;p&gt;E2E-encrypted personal agent chat: create bots, talk 1:1 or in group chats, and let them hand work to each other. Rust CLI, native macOS client, and phone apps.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=assistants-domain-agents"&gt;Assistants &amp;amp; Domain Agents&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 74,979&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/hiyouga/LlamaFactory"&gt;hiyouga/LlamaFactory on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+&lt;strong&gt;Stars:&lt;/strong&gt; 163&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/egoist/lorca"&gt;egoist/lorca on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/CompVis/stable-diffusion</id>
-  <title>stable-diffusion</title>
-  <link rel="alternate" type="text/html" href="https://github.com/CompVis/stable-diffusion" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="creative-voice-media" label="Creative, Voice &amp; Media" />
-  <content type="html">&lt;p&gt;A latent text-to-image diffusion model&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=creative-voice-media"&gt;Creative, Voice &amp;amp; Media&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 73,464&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/CompVis/stable-diffusion"&gt;CompVis/stable-diffusion on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/career-ops-hq/career-ops</id>
-  <title>career-ops-hq/career-ops</title>
-  <link rel="alternate" type="text/html" href="https://github.com/career-ops-hq/career-ops" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/dat999zx/knowl</id>
+  <title>dat999zx/knowl</title>
+  <link rel="alternate" type="text/html" href="https://github.com/dat999zx/knowl" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
   <category term="claude-code" label="Claude Code" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
+  <category term="codex-openai" label="Codex / OpenAI" />
+  <category term="cursor" label="Cursor" />
+  <content type="html">&lt;p&gt;Persistent memory for Claude Code, Cursor and Codex where a replaced fact is retired at write time, so what an agent reads back is the current answer rather than the one that was true in March. Facts are typed and carry provenance and a review trail; nothing is deleted, it stops being current. Local SQLite, queries answered from a local replica and never sent to a server, no API keys. npx -y @dat9&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 111&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/dat999zx/knowl"&gt;dat999zx/knowl on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/monorepo-labs/dray</id>
+  <title>Dray</title>
+  <link rel="alternate" type="text/html" href="https://github.com/monorepo-labs/dray" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="coding-agents" label="Coding Agents" />
+  <category term="claude-code" label="Claude Code" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="codex-openai" label="Codex / OpenAI" />
+  <content type="html">&lt;p&gt;Native desktop app wrapping Claude Code, Codex, fx, and pi in a chat UI, with one worktree per session plus diff, PR, and issue panels and an embedded browser.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=coding-agents"&gt;Coding Agents&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 101&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/monorepo-labs/dray"&gt;monorepo-labs/dray on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/BeatAPI/BeatDesign</id>
+  <title>BeatAPI/BeatDesign</title>
+  <link rel="alternate" type="text/html" href="https://github.com/BeatAPI/BeatDesign" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;Local-first AI media workbench with a Canvas, short-form timeline editor, shared Assets, and 29 MCP tools for agent-controlled projects&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 95&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/BeatAPI/BeatDesign"&gt;BeatAPI/BeatDesign on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/thefalconry/talon</id>
+  <title>Talon</title>
+  <link rel="alternate" type="text/html" href="https://github.com/thefalconry/talon" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="frameworks-sdks" label="Frameworks &amp; SDKs" />
   <category term="claude-anthropic" label="Claude / Anthropic" />
   <category term="opencode" label="opencode" />
+  <category term="mcp" label="MCP" />
   <category term="codex-openai" label="Codex / OpenAI" />
-  <category term="gemini-google" label="Gemini / Google" />
-  <content type="html">&lt;p&gt;14-skill collection for AI-powered job search: JD evaluation with A-F scoring, ATS-optimized PDF generation, portal scanners (Greenhouse/Ashby/Lever), interview prep with STAR+R, batch processing, and a Go dashboard TUI&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 72,440&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/career-ops-hq/career-ops"&gt;career-ops-hq/career-ops on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;Self-hosted, multi-frontend agentic harness that runs one persistent agent across Telegram, Discord, Teams, and the terminal. Pluggable backends (Claude, OpenAI Agents, Codex, Kilo, OpenCode), full MCP tool access, and always-on background agents — Goals, Heartbeat, and Dream — backed by a long-term memory palace. MIT, TypeScript&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=frameworks-sdks"&gt;Frameworks &amp;amp; SDKs&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 84&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/thefalconry/talon"&gt;thefalconry/talon on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/moby/moby</id>
-  <title>Docker</title>
-  <link rel="alternate" type="text/html" href="https://github.com/moby/moby" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/archcore-ai/archcore</id>
+  <title>Archcore</title>
+  <link rel="alternate" type="text/html" href="https://github.com/archcore-ai/archcore" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
   <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;Moby is an open-source project created by Docker to enable and accelerate software containerization&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 72,127&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/moby/moby"&gt;moby/moby on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/colbymchenry/codegraph</id>
-  <title>codegraph</title>
-  <link rel="alternate" type="text/html" href="https://github.com/colbymchenry/codegraph" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="plugins-themes-clients" label="Plugins, Themes &amp; Clients" />
   <category term="claude-code" label="Claude Code" />
   <category term="claude-anthropic" label="Claude / Anthropic" />
-  <category term="opencode" label="opencode" />
+  <category term="mcp" label="MCP" />
   <category term="codex-openai" label="Codex / OpenAI" />
   <category term="gemini-google" label="Gemini / Google" />
   <category term="github-copilot" label="GitHub Copilot" />
   <category term="cursor" label="Cursor" />
-  <content type="html">&lt;p&gt;(54.9k ⭐) - Local code knowledge graph for Claude Code, Codex, Gemini, Cursor, OpenCode, Antigravity, Kiro, and Hermes Agent&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 71,822&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/colbymchenry/codegraph"&gt;colbymchenry/codegraph on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;Git-native context engineering CLI and MCP server for AI coding agents; archcore init --agent gemini-cli wires Gemini CLI hooks and MCP&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=github-copilot"&gt;GitHub Copilot&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 64&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/archcore-ai/archcore"&gt;archcore-ai/archcore on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/tt-a1i/archify</id>
-  <title>archify</title>
-  <link rel="alternate" type="text/html" href="https://github.com/tt-a1i/archify" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
-  <category term="claude-code" label="Claude Code" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <category term="codex-openai" label="Codex / OpenAI" />
-  <content type="html">&lt;p&gt;(1.2k ⭐) - Agent skill for generating architecture diagrams with dark and light themes plus PNG, JPEG, WebP, and SVG export&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 69,856&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/tt-a1i/archify"&gt;tt-a1i/archify on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/Hyperiux-Immersion-Labs/hyperiux-components</id>
+  <title>Hyperiux-Immersion-Labs/hyperiux-components</title>
+  <link rel="alternate" type="text/html" href="https://github.com/Hyperiux-Immersion-Labs/hyperiux-components" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;MCP server for the Hyperiux Vault effect registry: three read-only tools to browse/search 150+ React/Next.js animation and interaction effects (50+ free, 100+ Pro), fetch full detail (dependencies, changelog, install command, and source for effects you&amp;#x27;re entitled to), and list categories. Install via NPM: npx -y hyperiux-mcp-server&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 40&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/Hyperiux-Immersion-Labs/hyperiux-components"&gt;Hyperiux-Immersion-Labs/hyperiux-components on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/scikit-learn/scikit-learn</id>
-  <title>scikit-learn</title>
-  <link rel="alternate" type="text/html" href="https://github.com/scikit-learn/scikit-learn" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;Machine Learning in Python&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/ai-ecoverse/slicc</id>
+  <title>SLICC</title>
+  <link rel="alternate" type="text/html" href="https://github.com/ai-ecoverse/slicc" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="assistants-domain-agents" label="Assistants &amp; Domain Agents" />
+  <content type="html">&lt;p&gt;Browser-native agent runtime with a POSIX shell, virtual filesystem, git, and sandboxed parallel sub-agents, driving web apps through the browser session the user is already signed in to&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=assistants-domain-agents"&gt;Assistants &amp;amp; Domain Agents&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 67,344&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/scikit-learn/scikit-learn"&gt;scikit-learn/scikit-learn on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+&lt;strong&gt;Stars:&lt;/strong&gt; 32&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/ai-ecoverse/slicc"&gt;ai-ecoverse/slicc on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/shanraisshan/claude-code-best-practice</id>
-  <title>claude-code-best-practice</title>
-  <link rel="alternate" type="text/html" href="https://github.com/shanraisshan/claude-code-best-practice" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
-  <category term="claude-code" label="Claude Code" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <content type="html">&lt;p&gt;Comprehensive reference implementation for Claude Code configuration -- skills, subagents, hooks, commands with practical examples. 17,400+ stars&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 66,242&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/shanraisshan/claude-code-best-practice"&gt;shanraisshan/claude-code-best-practice on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/keras-team/keras</id>
-  <title>Keras</title>
-  <link rel="alternate" type="text/html" href="https://github.com/keras-team/keras" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;Keras is a deep learning API written in Python, running on top of the machine learning platform TensorFlow&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 64,328&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/keras-team/keras"&gt;keras-team/keras on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/usestrix/strix</id>
-  <title>Strix</title>
-  <link rel="alternate" type="text/html" href="https://github.com/usestrix/strix" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="sandbox-security-governance" label="Sandbox, Security &amp; Governance" />
-  <content type="html">&lt;p&gt;An autonomous AI agent designed for penetration testing. It runs inside a docker sandbox to actively probe applications and generate verified exploit capabilities&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=sandbox-security-governance"&gt;Sandbox, Security &amp;amp; Governance&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 64,210&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/usestrix/strix"&gt;usestrix/strix on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/mvanhorn/last30days-skill</id>
-  <title>last30days-skill</title>
-  <link rel="alternate" type="text/html" href="https://github.com/mvanhorn/last30days-skill" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
-  <category term="claude-code" label="Claude Code" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <content type="html">&lt;p&gt;Research any topic across Reddit, X, YouTube, HN, Polymarket, and the web, ranked by upvotes, likes, and real money instead of editors&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 62,662&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/mvanhorn/last30days-skill"&gt;mvanhorn/last30days-skill on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/pathwaycom/llm-app</id>
-  <title>LLMApp</title>
-  <link rel="alternate" type="text/html" href="https://github.com/pathwaycom/llm-app" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="observability-evals" label="Observability &amp; Evals" />
-  <content type="html">&lt;p&gt;LLM App is a Python library that helps you build real-time LLM-enabled data pipelines with few lines of code&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=observability-evals"&gt;Observability &amp;amp; Evals&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 58,906&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/pathwaycom/llm-app"&gt;pathwaycom/llm-app on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/FoundationAgents/OpenManus</id>
-  <title>OpenManus</title>
-  <link rel="alternate" type="text/html" href="https://github.com/FoundationAgents/OpenManus" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="orchestrators-multi-agent" label="Orchestrators &amp; Multi-Agent" />
-  <content type="html">&lt;p&gt;No fortress, purely open ground. OpenManus is Coming&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=orchestrators-multi-agent"&gt;Orchestrators &amp;amp; Multi-Agent&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 58,381&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/FoundationAgents/OpenManus"&gt;FoundationAgents/OpenManus on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/facebookresearch/segment-anything</id>
-  <title>segment-anything (SAM)</title>
-  <link rel="alternate" type="text/html" href="https://github.com/facebookresearch/segment-anything" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="creative-voice-media" label="Creative, Voice &amp; Media" />
-  <content type="html">&lt;p&gt;produces high quality object masks from input prompts such as points or boxes, and it can be used to generate masks for all objects in an image&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=creative-voice-media"&gt;Creative, Voice &amp;amp; Media&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 54,912&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/facebookresearch/segment-anything"&gt;facebookresearch/segment-anything on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/ggml-org/whisper.cpp</id>
-  <title>whisper.cpp</title>
-  <link rel="alternate" type="text/html" href="https://github.com/ggml-org/whisper.cpp" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <category term="codex-openai" label="Codex / OpenAI" />
-  <content type="html">&lt;p&gt;Port of OpenAI&amp;#x27;s Whisper model in C/C++&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 53,864&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/ggml-org/whisper.cpp"&gt;ggml-org/whisper.cpp on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/heygen-com/hyperframes</id>
-  <title>hyperframes</title>
-  <link rel="alternate" type="text/html" href="https://github.com/heygen-com/hyperframes" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/infino-ai/supergrep</id>
+  <title>infino-ai/code-context</title>
+  <link rel="alternate" type="text/html" href="https://github.com/infino-ai/supergrep" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
   <category term="claude-code" label="Claude Code" />
   <category term="claude-anthropic" label="Claude / Anthropic" />
   <category term="mcp" label="MCP" />
-  <content type="html">&lt;p&gt;(27.6k ⭐) - Write HTML. Render video. Built for agents&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 52,381&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/heygen-com/hyperframes"&gt;heygen-com/hyperframes on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <category term="cursor" label="Cursor" />
+  <content type="html">&lt;p&gt;Local code search for AI coding agents: hybrid keyword + semantic search with SQL relevance ranking over a plain-file index. No accounts, keys, or server&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 31&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/infino-ai/supergrep"&gt;infino-ai/supergrep on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/CherryHQ/cherry-studio</id>
-  <title>Cherry Studio</title>
-  <link rel="alternate" type="text/html" href="https://github.com/CherryHQ/cherry-studio" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="plugins-themes-clients" label="Plugins, Themes &amp; Clients" />
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/dynatrace-oss/dynatrace-managed-mcp</id>
+  <title>dynatrace-oss/dynatrace-managed-mcp</title>
+  <link rel="alternate" type="text/html" href="https://github.com/dynatrace-oss/dynatrace-managed-mcp" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;interact with self-hosted Dynatrace Managed environments to retrieve observability data, security insights, and performance metrics. It allows users to query problems, logs, events, and SLOs through natural language interfaces in both local and remote modes&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 31&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/dynatrace-oss/dynatrace-managed-mcp"&gt;dynatrace-oss/dynatrace-managed-mcp on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/madeinorbit/podium</id>
+  <title>Podium ADE</title>
+  <link rel="alternate" type="text/html" href="https://github.com/madeinorbit/podium" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="coding-agents" label="Coding Agents" />
   <category term="claude-code" label="Claude Code" />
   <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="opencode" label="opencode" />
   <category term="codex-openai" label="Codex / OpenAI" />
-  <content type="html">&lt;p&gt;Cherry Studio is a desktop client that supports for multiple LLM providers. Support deepseek-r1&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 52,079&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/CherryHQ/cherry-studio"&gt;CherryHQ/cherry-studio on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;Open-source workspace for taking ideas from conversation to coordinated work with coding agents. A shared task system lets them organize the effort while developers follow progress and change direction.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=coding-agents"&gt;Coding Agents&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=opencode"&gt;opencode&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 22&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/madeinorbit/podium"&gt;madeinorbit/podium on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/blader/humanizer</id>
-  <title>humanizer</title>
-  <link rel="alternate" type="text/html" href="https://github.com/blader/humanizer" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/cgrtml/reasongate</id>
+  <title>cgrtml/reasongate</title>
+  <link rel="alternate" type="text/html" href="https://github.com/cgrtml/reasongate" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;Provenance gateway for stdio MCP servers: blocks tool calls whose destination or content came from an untrusted tool result, regardless of wording; policies drafted from the tools&amp;#x27; own schemas&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 15&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/cgrtml/reasongate"&gt;cgrtml/reasongate on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/pasichDev/docket</id>
+  <title>pasichDev/docket</title>
+  <link rel="alternate" type="text/html" href="https://github.com/pasichDev/docket" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
   <category term="claude-code" label="Claude Code" />
   <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
   <category term="codex-openai" label="Codex / OpenAI" />
   <category term="cursor" label="Cursor" />
-  <content type="html">&lt;p&gt;(24.1k ⭐) - A Claude Code skill that removes signs of AI-generated writing from text, making it sound more natural and human&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 51,400&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/blader/humanizer"&gt;blader/humanizer on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;One todo list and backlog every coding agent can write to (Claude Code, Codex, Cursor and any MCP host), filed per project from the git remote, with claims so two agents don&amp;#x27;t pick up the same item and a local web dashboard. Local-first, no account; optional self-hosting&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 10&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/pasichDev/docket"&gt;pasichDev/docket on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/ayghri/i-have-adhd</id>
-  <title>ayghri/i-have-adhd</title>
-  <link rel="alternate" type="text/html" href="https://github.com/ayghri/i-have-adhd" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
-  <category term="claude-code" label="Claude Code" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <content type="html">&lt;p&gt;(6.2k ⭐) - A skill that keeps coding-agent answers direct, concise, and easy to scan&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 50,287&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/ayghri/i-have-adhd"&gt;ayghri/i-have-adhd on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/Imbad0202/academic-research-skills</id>
-  <title>academic-research-skills</title>
-  <link rel="alternate" type="text/html" href="https://github.com/Imbad0202/academic-research-skills" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="agent-skills" label="Agent Skills" />
-  <category term="claude-code" label="Claude Code" />
-  <category term="claude-anthropic" label="Claude / Anthropic" />
-  <content type="html">&lt;p&gt;(31.3k ⭐) - Academic Research Skills for Claude Code: research → write → review → revise → finalize&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 49,161&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/Imbad0202/academic-research-skills"&gt;Imbad0202/academic-research-skills on GitHub&lt;/a&gt;&lt;/p&gt;</content>
- </entry>
- <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/Kong/kong</id>
-  <title>Kong</title>
-  <link rel="alternate" type="text/html" href="https://github.com/Kong/kong" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;The Cloud-Native API Gateway and AI Gateway&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/evoelsewhere/evoflux</id>
+  <title>EvoFlux</title>
+  <link rel="alternate" type="text/html" href="https://github.com/evoelsewhere/evoflux" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="coding-agents" label="Coding Agents" />
+  <content type="html">&lt;p&gt;Local-first desktop workspace coordinating specialist AI agents across conversations, files, terminal, browser, Git, memory, and verification.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=coding-agents"&gt;Coding Agents&lt;/a&gt;&lt;br&gt;
 &lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 44,175&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/Kong/kong"&gt;Kong/kong on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+&lt;strong&gt;Stars:&lt;/strong&gt; 10&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/evoelsewhere/evoflux"&gt;evoelsewhere/evoflux on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/ray-project/ray</id>
-  <title>Ray</title>
-  <link rel="alternate" type="text/html" href="https://github.com/ray-project/ray" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;Ray is an AI compute engine. Ray consists of a core distributed runtime and a set of AI Libraries for accelerating ML workloads&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 43,897&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/ray-project/ray"&gt;ray-project/ray on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/HasData/facebook-mcp</id>
+  <title>HasData/facebook-mcp</title>
+  <link rel="alternate" type="text/html" href="https://github.com/HasData/facebook-mcp" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
+  <category term="cursor" label="Cursor" />
+  <content type="html">&lt;p&gt;Remote MCP server for public Facebook pages and profiles: likes, followers, talking-about counts, contact details and the post feed with reactions, as JSON&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 10&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/HasData/facebook-mcp"&gt;HasData/facebook-mcp on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/gradio-app/gradio</id>
-  <title>Gradio</title>
-  <link rel="alternate" type="text/html" href="https://github.com/gradio-app/gradio" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/getclera/mcp</id>
+  <title>Clera</title>
+  <link rel="alternate" type="text/html" href="https://github.com/getclera/mcp" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
   <category term="plugins-themes-clients" label="Plugins, Themes &amp; Clients" />
-  <content type="html">&lt;p&gt;Build and share delightful machine learning apps, all in Python. 🌟 Star to support our work!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 43,600&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/gradio-app/gradio"&gt;gradio-app/gradio on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <category term="claude-code" label="Claude Code" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
+  <category term="codex-openai" label="Codex / OpenAI" />
+  <category term="gemini-google" label="Gemini / Google" />
+  <category term="cursor" label="Cursor" />
+  <content type="html">&lt;p&gt;Gemini CLI extension for hiring: search 210,000+ vetted startup candidates, review Clera&amp;#x27;s picks for your open roles and request intros through Clera&amp;#x27;s hosted OAuth MCP server&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=plugins-themes-clients"&gt;Plugins, Themes &amp;amp; Clients&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 9&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/getclera/mcp"&gt;getclera/mcp on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/deepspeedai/DeepSpeed</id>
-  <title>DeepSpeed</title>
-  <link rel="alternate" type="text/html" href="https://github.com/deepspeedai/DeepSpeed" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/apimasterai/codex-provider-switcher</id>
+  <title>RomaCredit/codex-provider-switcher</title>
+  <link rel="alternate" type="text/html" href="https://github.com/apimasterai/codex-provider-switcher" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
   <category term="harnesses-runtime-infra" label="Harnesses &amp; Runtime Infra" />
-  <content type="html">&lt;p&gt;DeepSpeed is a deep learning optimization library that makes distributed training and inference easy, efficient, and effective&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 43,154&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/deepspeedai/DeepSpeed"&gt;deepspeedai/DeepSpeed on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <category term="codex-openai" label="Codex / OpenAI" />
+  <content type="html">&lt;p&gt;Switch local provider profiles and align Codex Desktop history metadata, with backups before changes&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=harnesses-runtime-infra"&gt;Harnesses &amp;amp; Runtime Infra&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 6&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/apimasterai/codex-provider-switcher"&gt;apimasterai/codex-provider-switcher on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  <entry>
-  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/facebookresearch/faiss</id>
-  <title>Faiss</title>
-  <link rel="alternate" type="text/html" href="https://github.com/facebookresearch/faiss" />
-  <published>2026-09-21T00:00:00Z</published>
-  <updated>2026-09-21T00:00:00Z</updated>
-  <category term="context-memory-rag" label="Context, Memory &amp; RAG" />
-  <content type="html">&lt;p&gt;A library for efficient similarity search and clustering of dense vectors&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://crazy54.github.io/awesome-agentic-atlas/#topic=context-memory-rag"&gt;Context, Memory &amp;amp; RAG&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;Targets:&lt;/strong&gt; —&lt;br&gt;
-&lt;strong&gt;Stars:&lt;/strong&gt; 40,957&lt;br&gt;
-&lt;strong&gt;Added:&lt;/strong&gt; 09/21/26&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/facebookresearch/faiss"&gt;facebookresearch/faiss on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/motock/fagan</id>
+  <title>motock/fagan</title>
+  <link rel="alternate" type="text/html" href="https://github.com/motock/fagan" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="claude-code" label="Claude Code" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;Autonomous coding pipeline: a frontier model plans, reviews, and adjudicates risk while a local model implements under TDD, acceptance-oracle grading, and a merge gate that re-runs the suite against the rebased branch&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 5&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/motock/fagan"&gt;motock/fagan on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/carldaws/squiggles</id>
+  <title>carldaws/squiggles</title>
+  <link rel="alternate" type="text/html" href="https://github.com/carldaws/squiggles" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;Let your agent see the squiggles: any number of LSP servers from one YAML config — diagnostics, go-to-definition, rename — plus each server&amp;#x27;s custom powers, like expanding Rust macros or running govulncheck through gopls&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 5&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/carldaws/squiggles"&gt;carldaws/squiggles on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/AntonG87/codearia-sieve</id>
+  <title>AntonG87/codearia-sieve</title>
+  <link rel="alternate" type="text/html" href="https://github.com/AntonG87/codearia-sieve" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="claude-code" label="Claude Code" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
+  <category term="cursor" label="Cursor" />
+  <content type="html">&lt;p&gt;Turns a web page into decision-ready state for agents: dates as ISO fields, numbers with units as facts, token-budgeted chunks with anchors back to the page, and the token bill (median 53,718 → 1,106). Deterministic, no model or API key; pairs with decision models such as Jev. npx -y codearia-sieve&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 5&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/AntonG87/codearia-sieve"&gt;AntonG87/codearia-sieve on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/aurelio-nakamura/cmdxray</id>
+  <title>aurelio-nakamura/cmdxray</title>
+  <link rel="alternate" type="text/html" href="https://github.com/aurelio-nakamura/cmdxray" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;A safety gate and explainer for AI coding agents that run shell commands. check_command_safety returns a danger/caution/none verdict for a proposed command — catching rm -rf /, curl | sudo bash, dd/mkfs/shred to a device, chmod -R 777 /, fork bombs, git push --force and CI ${{ }} script-injection — so an agent can guard a command before executing it. explain_command gives a token-by-token breakdow&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 4&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/aurelio-nakamura/cmdxray"&gt;aurelio-nakamura/cmdxray on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/wangkuangkuang/jev-mcp-server</id>
+  <title>wangkuangkuang/jev-mcp-server</title>
+  <link rel="alternate" type="text/html" href="https://github.com/wangkuangkuang/jev-mcp-server" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="claude-code" label="Claude Code" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;Fast typed judgments from Jev (TypeSafe System One): the official choice/score/noul question types with calibrated probabilities, plus A/B compare, claim-vs-evidence verify and batch classify — sub-second, sub-cent decisions for triage, routing, risk scoring and gating in coding agents. One-command client install: uvx jev-mcp-server install claude-code&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 3&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/wangkuangkuang/jev-mcp-server"&gt;wangkuangkuang/jev-mcp-server on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/ruslanlap/loopguard</id>
+  <title>loopguard</title>
+  <link rel="alternate" type="text/html" href="https://github.com/ruslanlap/loopguard" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="orchestrators-multi-agent" label="Orchestrators &amp; Multi-Agent" />
+  <category term="claude-code" label="Claude Code" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="codex-openai" label="Codex / OpenAI" />
+  <category term="gemini-google" label="Gemini / Google" />
+  <content type="html">&lt;p&gt;Watchdog that tails Gemini CLI session transcripts and alerts when the agent loops, oscillates, or stalls — Telegram notifications, zero dependencies&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=orchestrators-multi-agent"&gt;Orchestrators &amp;amp; Multi-Agent&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 3&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/ruslanlap/loopguard"&gt;ruslanlap/loopguard on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/ieranama/discomcp</id>
+  <title>ieranama/discomcp</title>
+  <link rel="alternate" type="text/html" href="https://github.com/ieranama/discomcp" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;Profile any MCP server into a reusable, read-only skill that captures how you actually use it — your workflows, the identifier hops that chain one call into the next, and each tool&amp;#x27;s safety class. Exploration runs behind a default-deny gate that provably never writes (a SELECT runs; a DROP on the same tool is refused by inspecting the statement). One static binary. npx @ieranama/discomcp&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 3&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/ieranama/discomcp"&gt;ieranama/discomcp on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/zuneracodes/localkeep</id>
+  <title>zuneracodes/localkeep</title>
+  <link rel="alternate" type="text/html" href="https://github.com/zuneracodes/localkeep" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="claude-code" label="Claude Code" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;Local-first chronological memory Hub + MCP: you write dated memory banks in a local UI; Claude recalls them on demand via SQLite FTS5. Human-authored, editable banks—not auto-logged chat. pip install localkeep then localkeep-hub / localkeep-mcp&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 2&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/zuneracodes/localkeep"&gt;zuneracodes/localkeep on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/usestring/string-ai-mcp</id>
+  <title>usestring/string-ai-mcp</title>
+  <link rel="alternate" type="text/html" href="https://github.com/usestring/string-ai-mcp" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;Search the web, fetch any URL and map a site — clean Markdown, past anti-bot blocks. Install via npx -y @usestring/mcp, or use the hosted endpoint at https://mcp.usestring.ai/v1/mcp&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 2&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/usestring/string-ai-mcp"&gt;usestring/string-ai-mcp on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/wwewtech/oneroster-csv-validator</id>
+  <title>wwewtech/oneroster-csv-validator</title>
+  <link rel="alternate" type="text/html" href="https://github.com/wwewtech/oneroster-csv-validator" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="agent-skills" label="Agent Skills" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <content type="html">&lt;p&gt;Source for the oneroster-csv-validator skill — community guidance and examples under MIT&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 1&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/wwewtech/oneroster-csv-validator"&gt;wwewtech/oneroster-csv-validator on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/wwewtech/marlin-bed-leveling</id>
+  <title>wwewtech/marlin-bed-leveling</title>
+  <link rel="alternate" type="text/html" href="https://github.com/wwewtech/marlin-bed-leveling" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="agent-skills" label="Agent Skills" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <content type="html">&lt;p&gt;Source for the marlin-bed-leveling skill — community guidance and examples under MIT&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 1&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/wwewtech/marlin-bed-leveling"&gt;wwewtech/marlin-bed-leveling on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/wwewtech/esl-price-sync</id>
+  <title>wwewtech/esl-price-sync</title>
+  <link rel="alternate" type="text/html" href="https://github.com/wwewtech/esl-price-sync" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="agent-skills" label="Agent Skills" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <content type="html">&lt;p&gt;Source for the esl-price-sync skill — community guidance and examples under MIT&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 1&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/wwewtech/esl-price-sync"&gt;wwewtech/esl-price-sync on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/wwewtech/eol-resistor-calculator</id>
+  <title>wwewtech/eol-resistor-calculator</title>
+  <link rel="alternate" type="text/html" href="https://github.com/wwewtech/eol-resistor-calculator" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="agent-skills" label="Agent Skills" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <content type="html">&lt;p&gt;Source for the eol-resistor-calculator skill — community guidance and examples under MIT&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 1&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/wwewtech/eol-resistor-calculator"&gt;wwewtech/eol-resistor-calculator on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/wwewtech/dali-short-address-commissioner</id>
+  <title>wwewtech/dali-short-address-commissioner</title>
+  <link rel="alternate" type="text/html" href="https://github.com/wwewtech/dali-short-address-commissioner" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="agent-skills" label="Agent Skills" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <content type="html">&lt;p&gt;Source for the dali-short-address-commissioner skill — community guidance and examples under MIT&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=agent-skills"&gt;Agent Skills&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 1&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/wwewtech/dali-short-address-commissioner"&gt;wwewtech/dali-short-address-commissioner on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/mambalabsdev/mcp-gtm-tech-stack-signal-scraper</id>
+  <title>mambalabsdev/mcp-gtm-tech-stack-signal-scraper</title>
+  <link rel="alternate" type="text/html" href="https://github.com/mambalabsdev/mcp-gtm-tech-stack-signal-scraper" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;Detects CRM, sequencer, and marketing automation tools from a company domain, returning flat boolean GTM tool signals for Clay enrichment&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 1&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/mambalabsdev/mcp-gtm-tech-stack-signal-scraper"&gt;mambalabsdev/mcp-gtm-tech-stack-signal-scraper on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/insumerapi/mcp-server-insumer</id>
+  <title>douglasborthwick-crypto/mcp-server-insumer</title>
+  <link rel="alternate" type="text/html" href="https://github.com/insumerapi/mcp-server-insumer" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
+  <category term="cursor" label="Cursor" />
+  <category term="langchain-langgraph" label="LangChain / LangGraph" />
+  <content type="html">&lt;p&gt;On-chain attestation across 31 blockchains. 25 tools: ECDSA-signed verification, wallet trust profiles, compliance templates, merchant onboarding, ACP/UCP commerce protocols&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=langchain-langgraph"&gt;LangChain / LangGraph&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 1&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/insumerapi/mcp-server-insumer"&gt;insumerapi/mcp-server-insumer on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/amidabuddha/jev-decision-mcp</id>
+  <title>amidabuddha/jev-decision-mcp</title>
+  <link rel="alternate" type="text/html" href="https://github.com/amidabuddha/jev-decision-mcp" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="mcp" label="MCP" />
+  <category term="codex-openai" label="Codex / OpenAI" />
+  <content type="html">&lt;p&gt;TypeSafe Jev typed decisions through one batched tool: classification, rubric scores, and yes/no probabilities. Includes Codex compatibility checks. Requires a TypeSafe API key&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 1&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/amidabuddha/jev-decision-mcp"&gt;amidabuddha/jev-decision-mcp on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/VerificateAI/verificate-mcp-quickstart</id>
+  <title>VerificateAI/verificate-mcp-quickstart</title>
+  <link rel="alternate" type="text/html" href="https://github.com/VerificateAI/verificate-mcp-quickstart" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="claude-code" label="Claude Code" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
+  <category term="cursor" label="Cursor" />
+  <content type="html">&lt;p&gt;The merge gate for AI-written code: deterministic checks veto placeholder/mock implementations, tests that cannot fail and unsupported &amp;quot;it&amp;#x27;s done&amp;quot; claims, then a model review checks for calls to APIs that do not exist, grades what remains and returns a fix plan. Remote server, no signup needed to start&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 1&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/VerificateAI/verificate-mcp-quickstart"&gt;VerificateAI/verificate-mcp-quickstart on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/CapMonsterCloud/capmonster-mcp-captcha-solver</id>
+  <title>CapMonsterCloud/capmonster-mcp-captcha-solver</title>
+  <link rel="alternate" type="text/html" href="https://github.com/CapMonsterCloud/capmonster-mcp-captcha-solver" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
+  <category term="cursor" label="Cursor" />
+  <content type="html">&lt;p&gt;The solve brain for CAPTCHA workflows: identifies CAPTCHA type and task parameters, serves CapMonster Cloud docs, creates solving tasks, and retrieves results via the CapMonster Cloud API. In the official MCP Registry as io.github.CapMonsterCloud/capmonster-mcp-captcha-solver. uvx capmonster-mcp or npx capmonster-mcp&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 1&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/CapMonsterCloud/capmonster-mcp-captcha-solver"&gt;CapMonsterCloud/capmonster-mcp-captcha-solver on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/AICommander-dev/aicommander</id>
+  <title>AICommander-dev/aicommander</title>
+  <link rel="alternate" type="text/html" href="https://github.com/AICommander-dev/aicommander" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="mcp" label="MCP" />
+  <content type="html">&lt;p&gt;Outbound-only remote shell, detached long-running jobs, and temporary file courier for AI agents (https://aicommander.dev). Hosted Streamable HTTP; no exposed SSH/ports/VPN. Install via npx -y @aicommander/mcp&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 1&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/AICommander-dev/aicommander"&gt;AICommander-dev/aicommander on GitHub&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <id>tag:crazy54.github.io,2026:awesome-agentic-atlas/repos/yuluo688/gen-image-mcp</id>
+  <title>yuluo688/gen-image-mcp</title>
+  <link rel="alternate" type="text/html" href="https://github.com/yuluo688/gen-image-mcp" />
+  <published>2026-09-26T00:00:00Z</published>
+  <updated>2026-09-26T00:00:00Z</updated>
+  <category term="mcp-servers" label="MCP Servers" />
+  <category term="claude-code" label="Claude Code" />
+  <category term="claude-anthropic" label="Claude / Anthropic" />
+  <category term="mcp" label="MCP" />
+  <category term="codex-openai" label="Codex / OpenAI" />
+  <category term="gemini-google" label="Gemini / Google" />
+  <category term="cursor" label="Cursor" />
+  <content type="html">&lt;p&gt;Local image-workflow MCP for AI coding agents: generate and edit images via your own OpenAI-compatible or Gemini image APIs and save results into the project directory, with optional model fallback. npx -y gen-image-mcp&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Topic:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers"&gt;MCP Servers&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Targets:&lt;/strong&gt; &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-code"&gt;Claude Code&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic"&gt;Claude / Anthropic&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=mcp"&gt;MCP&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=codex-openai"&gt;Codex / OpenAI&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=gemini-google"&gt;Gemini / Google&lt;/a&gt;, &lt;a href="https://aaa.jeremyfhall.com/catalog/#target=cursor"&gt;Cursor&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;Stars:&lt;/strong&gt; 0&lt;br&gt;
+&lt;strong&gt;Added:&lt;/strong&gt; 09/26/26&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/yuluo688/gen-image-mcp"&gt;yuluo688/gen-image-mcp on GitHub&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
 </feed>

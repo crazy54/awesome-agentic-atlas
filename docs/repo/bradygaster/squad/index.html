@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Squad (bradygaster/squad) — Harnesses &amp; Runtime Infra — Awesome Agentic Atlas</title>
+<title>squad (bradygaster/squad) — Orchestrators &amp; Multi-Agent — Awesome Agentic Atlas</title>
 <meta name="description" content="Repository-native multi-agent orchestration framework built on GitHub Copilot. Initializes a persistent AI team (lead, frontend, backend, tester) as files…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/bradygaster/squad/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Squad — Awesome Agentic Atlas">
+<meta property="og:title" content="squad — Awesome Agentic Atlas">
 <meta property="og:description" content="Repository-native multi-agent orchestration framework built on GitHub Copilot. Initializes a persistent AI team (lead, frontend, backend, tester) as files…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/bradygaster/squad/">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/bradygaster/squad">
@@ -44,17 +44,17 @@ try {
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Harnesses & Runtime Infra","item":"https://aaa.jeremyfhall.com/topic/harnesses-runtime-infra/"},{"@type":"ListItem","position":3,"name":"Squad","item":"https://aaa.jeremyfhall.com/repo/bradygaster/squad/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Orchestrators & Multi-Agent","item":"https://aaa.jeremyfhall.com/topic/orchestrators-multi-agent/"},{"@type":"ListItem","position":3,"name":"squad","item":"https://aaa.jeremyfhall.com/repo/bradygaster/squad/"}]}</script>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
 <header><div class="wrap">
   <nav class="crumb"><a class="brand" href="../../../"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="#D6A034" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="#F7F8FA" stroke="#D6A034" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="#D6A034"/><path d="M12 31h40M32 11v40" fill="none" stroke="#20242D" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="#090A0D"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="#F7F8FA"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="#090A0D" stroke-width="2.5" stroke-linecap="round"/></g></svg></span><span>Atlas</span></a> ›
-    <a href="../../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> ›
+    <a href="../../../topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a> ›
     <a href="../../../repo/">All projects</a></nav>
   <div class="top">
     <div>
-      <h1>Squad</h1>
+      <h1>squad</h1>
       <p class="nwo"><a href="https://github.com/bradygaster/squad">bradygaster/squad</a></p>
       <p class="lead">Repository-native multi-agent orchestration framework built on GitHub Copilot. Initializes a persistent AI team (lead, frontend, backend, tester) as files inside your repo — knowledge compounds across sessions through committed history.md and decisions.md. The most accessible reference for teams that want multi-agent coordination without heavy infrastructure</p>
       <p class="facts">
@@ -65,7 +65,7 @@ try {
         <span id="snap" class="live"></span>
       </p>
       <p class="acts"><a class="cta" href="https://github.com/bradygaster/squad">View on GitHub &rarr;</a>
-        <a class="alt" href="../../../catalog/#q=Squad">Find it in the atlas</a></p>
+        <a class="alt" href="../../../catalog/#q=squad">Find it in the atlas</a></p>
     </div>
     <nav class="util">
       <a href="../../../discover/">Discover</a> ·
@@ -81,7 +81,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">winget install --id bradygaster.Squad --exact</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for Squad">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">winget install --id bradygaster.Squad --exact</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for squad">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -125,7 +125,7 @@ try {
   <h2>Screenshot</h2>
   <figure class="shot">
     <img loading="lazy" decoding="async" src="https://opengraph.githubassets.com/1/bradygaster/squad"
-         alt="Screenshot or social card for Squad">
+         alt="Screenshot or social card for squad">
     <figcaption>GitHub's social card — no screenshot was found for this project, fetched from
       source rather than copied into this repository.</figcaption>
   </figure>
@@ -138,7 +138,7 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/ai-boost/awesome-harness-engineering">Harness Engineering</a></li></ul>
+  <p class="lead">Named by <b>2</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li><a href="https://github.com/ai-boost/awesome-harness-engineering">Harness Engineering</a></li><li><a href="https://github.com/andyrewlee/awesome-agent-orchestrators">Orchestrators</a></li></ul>
 </section>
 
 <section>
@@ -146,14 +146,14 @@ try {
   <p class="lead">One topic, 1
     harness. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/github-copilot/">GitHub Copilot</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a><a class="chip" href="../../../topic/orchestrators-multi-agent/target/github-copilot/">GitHub Copilot</a></div>
 </section>
 
 <section class="kin">
-  <h2>Related in Harnesses &amp; Runtime Infra</h2>
+  <h2>Related in Orchestrators &amp; Multi-Agent</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../kbwo/ccmanager/">ccmanager</a><span class="nwo">kbwo/ccmanager</span><span class="desc">Coding agent session manager supporting Claude Code, Gemini CLI, Codex, Cursor, Copilot, Cline, OpenCode, Kimi CLI. Smart auto-approval via Haiku…</span></li><li><a href="../../jazzyalex/agent-sessions/">Agent Sessions</a><span class="nwo">jazzyalex/agent-sessions</span><span class="desc">Local-first macOS app to search, browse, and resume Gemini CLI sessions alongside Codex CLI, Claude Code, OpenCode, and other agents, with live…</span></li><li><a href="../../devgiordane/openfiles/">OpenFiles</a><span class="nwo">devgiordane/openfiles</span><span class="desc">VS Code extension (also on Open VSX for Cursor, Windsurf and VSCodium) that opens every file Gemini CLI edits so ESLint, TypeScript and other…</span></li><li><a href="../../decolua/9router/">9router</a><span class="nwo">decolua/9router</span><span class="desc">(23.7k ⭐) - Routes Claude Code, Codex, Cursor, Cline, and other coding agents to dozens of model providers with automatic fallback</span></li><li><a href="../../kimtth/azure-openai-llm-notes/">Awesome-Azure-Openai-Llm</a><span class="nwo">kimtth/azure-openai-llm-notes</span><span class="desc">a curated list of 🌌 Azure OpenAI, 🦙Large Language Models, and references with notes</span></li><li><a href="../../ericc-ch/copilot-api/">copilot-api</a><span class="nwo">ericc-ch/copilot-api</span><span class="desc">(4.0k ⭐) - Turns GitHub Copilot into an OpenAI/Anthropic API compatible server, usable with Claude Code</span></li><li><a href="../../mathdevie/devie-ai-quota-tracker/">Devie AI Quota Tracker</a><span class="nwo">mathdevie/devie-ai-quota-tracker</span><span class="desc">Dashboard and macOS menu bar for tracking AI subscription quotas in one place (Claude Code, Codex, Gemini CLI, GitHub Copilot, and Cursor). Supports…</span></li><li><a href="../../feiskyer/codex-settings/">feiskyer/codex-settings</a><span class="nwo">feiskyer/codex-settings</span><span class="desc">Ready-to-use configs for LiteLLM, Ollama, LM Studio, OpenRouter, and Azure OpenAI</span></li></ul>
+  <ul class="kinlist"><li><a href="../../sipyourdrink-ltd/bernstein/">bernstein</a><span class="nwo">sipyourdrink-ltd/bernstein</span><span class="desc">Deterministic multi-agent orchestrator for 37 CLI coding agents (Claude Code, Codex, Cursor, Aider, Gemini CLI, GitHub Copilot CLI, OpenHands…</span></li><li><a href="../../777genius/agent-teams-ai/">Agent Teams</a><span class="nwo">777genius/agent-teams-ai</span><span class="desc">Desktop app where you give high-level commands to autonomous coding-agent teams across Claude Code, Codex, OpenCode, Cursor, Grok, GitHub Copilot…</span></li><li><a href="../../seemseam/claude_codex_bridge/">claude_codex_bridge</a><span class="nwo">SeemSeam/claude_codex_bridge</span><span class="desc">(3.5k ⭐) - Visible multi-agent CLI workspace for mixing Codex, Claude, Gemini, Kimi, Qwen, Cursor, Copilot, Pi, OpenCode, and other AI coding agents</span></li><li><a href="../../microsoft/taskweaver/">microsoft/TaskWeaver</a><span class="nwo">microsoft/TaskWeaver</span><span class="desc">Code-first task decomposition framework with a planner/executor split and a plugin system for injecting domain knowledge into the planning layer…</span></li><li><a href="../../wshobson/agents/">wshobson/agents</a><span class="nwo">wshobson/agents</span><span class="desc">Cross-harness plugin marketplace that maintains one source-of-truth plugins/ directory and generates harness-native artifacts for Claude Code, Codex…</span></li><li><a href="../../getpaseo/paseo/">Paseo</a><span class="nwo">getpaseo/paseo</span><span class="desc">Self-hosted daemon running agents in parallel on your own machines, driven from desktop, iOS/Android, web, or CLI, with voice control, diff review…</span></li><li><a href="../../rxdt/loopgate_harness/">rxdt/loopgate_harness</a><span class="nwo">rxdt/loopgate_harness</span><span class="desc">Tiny Python scaffold for running Gemini CLI, Claude Code, Codex CLI, and similar coding agents in guarded local loops. It uses repo-local specs…</span></li><li><a href="../../moonrunnerkc/swarm-orchestrator/">swarm-orchestrator</a><span class="nwo">moonrunnerkc/swarm-orchestrator</span><span class="desc">Contract-first multi-agent orchestrator that races persona candidates per typed obligation, verifies before commit, and logs every action in an…</span></li></ul>
 </section>
 </div></main>
 

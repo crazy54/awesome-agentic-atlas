@@ -4,7 +4,7 @@ Runnable example apps. Each row is a folder inside the one repo.
 
 Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awesome-llm-apps)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-120 entries · 3 distinct repos · 16 sections
+121 entries · 3 distinct repos · 16 sections
 
 [← back to the mega list](../README.md)
 
@@ -29,7 +29,7 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - [MCP AI Agents](#mcp-ai-agents) (6)
 - [Voice AI Agents](#voice-ai-agents) (5)
 - [Generative UI and Agentic Frontends](#generative-ui-and-agentic-frontends) (7)
-- [AI Browser Tools](#ai-browser-tools) (1)
+- [AI Browser Tools](#ai-browser-tools) (2)
 - [LLM Optimization Tools](#llm-optimization-tools) (2)
 - [LLM Fine-tuning](#llm-fine-tuning) (2)
 - [AI Agent Framework Crash Courses](#ai-agent-framework-crash-courses) (2)
@@ -370,7 +370,7 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 ## Voice AI Agents
 
 - **[🎙️ OpenSource Voice Dictation Agent (Wispr Flow clone)](https://github.com/akshayaggarwal99/jarvis-ai-assistant)** — external - Open-source dictation that types where you talk
-  <sub>★ 639 · TypeScript · MIT · clone · pushed 2026-08-21 · Win? · macOS</sub>
+  <sub>★ 640 · TypeScript · MIT · clone · pushed 2026-09-23 · Win? · macOS</sub>
   <sub>`git clone https://github.com/akshayaggarwal99/jarvis-ai-assistant.git`</sub>
 - **[🗣️ AI Audio Tour Agent](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/voice_ai_agents/ai_audio_tour_agent)** — Self-guided audio tours from your location, interests, and pace
   <sub>in-repo</sub>
@@ -414,6 +414,9 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - **[🪡 Needle - A New Way to Find](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/advanced_llm_apps/needle)** — Search webpages by meaning and highlight the strongest source sentence, using a Chrome extension powered by TypeSafe Jev
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/advanced_llm_apps/needle`</sub>
+- **[🌀 Ripple - Change One Thing, Find What Else Needs to Change](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/advanced_llm_apps/ripple)** — Find related inconsistencies and suggested fixes as you edit a Google Doc, using TypeSafe Jev and Gemini
+  <sub>in-repo</sub>
+  <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/advanced_llm_apps/ripple`</sub>
 
 ## LLM Optimization Tools
 
@@ -445,6 +448,6 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 
 ---
 
-Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
-The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).
+The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

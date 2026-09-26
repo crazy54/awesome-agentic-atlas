@@ -415,16 +415,16 @@ Curated by **[VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAg
 ## 09. Meta &amp; Orchestration
 
 - **[moai-adk](https://github.com/modu-ai/moai-adk)** — SPEC-first Agentic Development Kit orchestrating 24 specialized agents with enforced Plan→Run→Sync workflow, TRUST 5 quality gates, 52 domain-specific skills, and 16-language project support
-  <sub>★ 1.2k · Go · Apache-2.0 · clone · pushed 2026-09-22 · WSL2 · macOS · Linux</sub>
+  <sub>★ 1.2k · Go · Apache-2.0 · clone · pushed 2026-09-26 · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/modu-ai/moai-adk.git`</sub>
 - **[airis-mcp-gateway](https://github.com/agiletec-inc/airis-mcp-gateway)** — Docker-based MCP multiplexer that aggregates 60+ tools behind 7 meta-tools, reducing context token usage by 97%. One command to start, auto-enables servers on demand
   <sub>★ 172 · Python · MIT · script · pushed 2026-09-18 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/agiletec-inc/airis-mcp-gateway/main/install.sh | bash`</sub>
 - **[taskade](https://github.com/taskade/mcp)** — AI-powered workspace with autonomous agents, real-time collaboration, and workflow automation with MCP integration
-  <sub>★ 164 · TypeScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 165 · TypeScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @taskade/mcp-server`</sub>
 - **[pied-piper](https://github.com/sathish316/pied-piper/)** — Orchestrate Team of AI Subagents for repetitive SDLC workflows
-  <sub>★ 80 · Go · MIT · go · pushed 2026-08-05 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 81 · Go · MIT · go · pushed 2026-08-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`go install github.com/sathish316/pied-piper`</sub>
 - **[agent-installer](https://github.com/VoltAgent/awesome-claude-code-subagents/tree/HEAD/categories/09-meta-orchestration/agent-installer.md)** — Browse and install agents from this repository via GitHub
   <sub>Shell · MIT · in-repo · pushed 2026-09-21</sub>
@@ -556,6 +556,6 @@ Curated by **[VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAg
 
 ---
 
-Snapshot 2026-09-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-09-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
-The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://crazy54.github.io/awesome-agentic-atlas/).
+The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).
