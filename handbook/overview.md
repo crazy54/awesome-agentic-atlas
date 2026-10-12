@@ -94,7 +94,6 @@ Hand-written inputs that are not generated:
 | `tests/` | The verification suite. See [testing.md](testing.md) |
 | `art/` | Blender and Python sources for `archie.glb`, `rig.glb` and the video-wall clips |
 | `.github/workflows/` | `daily.yml`, `weekly.yml`, `tests.yml`, `lighthouse.yml`, `og-preview.yml`. See [ci-cd.md](ci-cd.md) |
-| `docs-notes/` | Design notes that must not be published |
 | `handbook/` | This documentation |
 | `cache/`, `build-tmp/`, `preview/` | Untracked: the build cache, test scratch, and Excel PDF previews |
 

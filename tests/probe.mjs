@@ -430,8 +430,7 @@ ok("empty state offers clearing everything", /data-all="1"/.test(A.OUT));
 // --- the zero-result search link ---
 // Cloudflare's beacon blanks the hash before it reports a URL, so `#q=<term>` never reaches Cloudflare and
 // no plan upgrade recovers it -- a search that found nothing is the one thing about this page that cannot be
-// counted, so the empty branch asks instead. (Traceway, since 2026-10-11, records the hash inside each
-// session's navigations -- `telemetry()` in scripts/19_pages.py -- which is a replay, not a count.) What is
+// counted, so the empty branch asks instead. What is
 // worth asserting is the *encoding* of the href it composes, and that is precisely what this harness can see
 // and a screenshot cannot.
 const missAttr = () => (A.OUT.match(/<a class="miss" href="([^"]*)"/) || [])[1] ?? null;

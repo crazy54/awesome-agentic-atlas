@@ -1,23 +1,5 @@
-// Starts Traceway telemetry on the live site, and does nothing anywhere else. Hand-maintained, like the rest of
-// docs/assets: no generator writes it. Every page loads it with `defer`, last of three, after the vendored
-// traceway-1.2.1.js (@tracewayapp/frontend, unmodified) and web-vitals-6.2.3.js (web-vitals, unmodified), whose
-// globals it reads; `telemetry()` in scripts/19_pages.py writes the three tags, and its comment says why.
-//
-// Nothing secret is committed. The connection string is fetched at run time from blog.jeremyfhall.com, and the
-// data goes to the owner's self-hosted Traceway. The hostname check comes first, so a fork, a `file://` clone,
-// a `python -m http.server` and every harness in tests/ (served from 127.0.0.1) send nothing at all. Every
-// failure is silent: telemetry being down must never be something a reader can see.
-//
-// `mask()` gives every form field `rr-block`, and re-applies it to fields added later. `rr-mask` and
-// `rr-ignore` alone are not enough. The SDK starts rrweb with its defaults, which mask only password values,
-// so without `rr-block` a field's text would be written into the full-page snapshots the replay takes at the
-// start and every 30 s. A blocked field is recorded as an empty placeholder of the same size, so nothing
-// typed into it is ever recorded. Fields added later are covered too: this observer is created before the
-// SDK's, so it marks a new field before the replay serialises it. The page's address is a different matter.
-// Navigation capture records the whole URL, hash included, and that includes a `#q=` search. The root README
-// says all of this in plain words, under "What the site records".
-//
-// A classic script in ES5, like repo/detail.js, so a browser too old for the SDK fails nowhere it can be seen.
+// Error and latency monitoring for aaa.jeremyfhall.com. It starts on that host only, and does nothing anywhere
+// else. A classic ES5 script, like repo/detail.js.
 (function () {
   'use strict';
   var HOST = 'aaa.jeremyfhall.com';

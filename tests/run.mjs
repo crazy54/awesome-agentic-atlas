@@ -110,8 +110,8 @@
 //   deeplinks_test.py the links into the catalogue since it moved to catalog/: the homepage's forwarder, run
 //                     under node against a stub location, and every generator's filtered link resolved
 //                     against the page that carries it. Also the site's host, which is read from
-//                     docs/CNAME, and the feed ids that must not follow it; and the Traceway tags on every
-//                     page, resolved the same way, with the loader run to show it starts on that host alone.
+//                     docs/CNAME, and the feed ids that must not follow it; and the monitoring tags on every
+//                     page, resolved the same way.
 //   osicons_test.py   the five platform marks that replaced the words Windows, WSL2, macOS, Linux and
 //                     Docker. Mostly one assertion, walked over every built page: that every
 //                     `<use href="#...">` resolves to a `<symbol>` in that same document. A `<use>` with
@@ -210,7 +210,7 @@ const HARNESSES = [
   {file: "live_test.py", label: "the star/push sidecar the detail pages read", python: true, floor: 90},
   {file: "semantic_test.py", label: "the semantic index, scored from the bytes a reader downloads", python: true, floor: 30},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
-  {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, the host in docs/CNAME, and the telemetry tags", python: true, floor: 34},
+  {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, the host in docs/CNAME, and the monitoring tags", python: true, floor: 34},
   {file: "spotlight_test.py", label: "the daily spotlight and line: one rule in Python and in the page, the pool, the refusals", python: true, floor: 300},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
   {file: "detail-churn.mjs", label: "every detail page, regenerated and hashed", floor: 7},

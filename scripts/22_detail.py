@@ -116,7 +116,7 @@ import osicons  # noqa: E402
 
 # The same dynamic load `19b_refresh.py` and `20_landing.py` use, and for the same reason: the module is
 # named `19_pages`, which is not an identifier, so `import` cannot reach it. Three things are wanted --
-# `beacon()` and `telemetry()`, so the analytics live in one file; `b17.SITE`, so the absolute URL in every
+# `beacon()` and `telemetry()`, so those tags live in one file; `b17.SITE`, so the absolute URL in every
 # canonical is the one string the rest of the project links to; and `b16.SHEETS`, so the eleven list
 # labels in `data.json`'s `listed_by` can be turned back into links to the lists themselves.
 spec = importlib.util.spec_from_file_location("b19", HERE / "19_pages.py")

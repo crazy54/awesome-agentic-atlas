@@ -72,9 +72,6 @@ Almost everything in `docs/` is **generated** by the scripts in `scripts/`, so e
 not the page. The [handbook](handbook/README.md) says which script owns which file, and which ones
 can be re-run without the CI-only cache.
 
-A local copy records nothing. The session recorder described under
-[What the site records](#what-the-site-records) starts only on `aaa.jeremyfhall.com`.
-
 ## Top of the leaderboard
 
 | ★ | Project | Named by |
@@ -527,9 +524,6 @@ Changing the code? Read the [contributor guide](handbook/contributing.md) first.
 against `latest_branch`, which is also the branch the site is published from, and
 `node tests/run.mjs` runs the full suite ([testing](handbook/testing.md)).
 
-## What the site records
-Some user data is collected by the site owner, aka me, the guy who wrote this README.md! I do not sell data, use data to give you ads, nothing is collected except a session ID and what you were most focused on. That data helps find errors in the code and it helps me narrow in on what my community actually cares about. I hate my data being stolen so, I call it out that I take some data from you to improve the site. 
-
 ## Licence and credit
 
 This repository is **MIT** — see [LICENSE](LICENSE). MIT rather than Apache-2.0 deliberately: this is a
@@ -540,11 +534,6 @@ That covers **this project's own work**: the pipeline, the platform classificati
 compilation. It does not relicense the thirty-nine source lists — the descriptive text is the work of the
 curators named above, each of whom retains their own licence, and every entry links back to both the
 project and the list that found it. Star counts, languages and licences are facts from the GitHub API.
-
-The telemetry runs two other projects' code, unmodified: the [Traceway](https://tracewayapp.com) browser
-SDK (MIT, which bundles [rrweb](https://github.com/rrweb-io/rrweb), MIT) and Google's
-[web-vitals](https://github.com/GoogleChrome/web-vitals) (Apache-2.0). Their licences are next to them in
-[`docs/assets/`](docs/assets/).
 
 If you think something here should be attributed differently, open an issue and I'll fix it.
 

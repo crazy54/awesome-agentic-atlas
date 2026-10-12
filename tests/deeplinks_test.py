@@ -23,10 +23,10 @@ Four groups, and a fifth that is here only because this file already loads 31_ho
                     the ones already published in the committed `docs/feed.xml`, because an id that moved
                     with the host would show every subscriber fifty old entries as new. `robots.txt` says it
                     is read when there is a custom domain, and says it is inert when there is not.
-  the telemetry  -- the three Traceway scripts `telemetry()` writes onto every page family, resolved
+  the monitoring -- the three script tags `telemetry()` writes onto every page family, resolved
                     against every committed page's own URL at all five depths, in order; the two vendored
                     builds pinned to npm's bytes; and the loader, run under node, starting on the host in
-                    `docs/CNAME` and on no other, so the test server and a local copy send nothing.
+                    `docs/CNAME` and on no other.
   the spotlight  -- `spot_art()` gives the homepage's spotlight the project's own picture, and the social
                     card for a GIF or no picture. Fed both arms directly, since the committed page
                     shows only whichever one the day's row took.
@@ -219,13 +219,11 @@ finally:
     b17.CNAME = saved
 
 
-# =====================================================================  4. the telemetry
-# The three Traceway scripts `telemetry()` in 19_pages.py puts on every page, each with a src relative to
-# the page that carries it. That is the defect class this file exists for: a src with one `../` too few
-# renders, runs nothing and reports nothing, and a reader sees no difference at all. So every committed
-# page is resolved, not a sample of them -- the pages sit at five depths, from the homepage down to a
-# topic-by-harness crossing, and each family passes its own `up`. `docs/v2/` is `30_v2.py`'s beta, built on
-# demand, and carries no telemetry.
+# =====================================================================  4. the monitoring tags
+# The three script tags `telemetry()` in 19_pages.py puts on every page, each with a src relative to the page
+# that carries it. A src with one `../` too few renders and runs nothing, and a reader sees no difference at
+# all, so every committed page is resolved, not a sample -- the pages sit at five depths, and each family
+# passes its own `up`. `docs/v2/` is `30_v2.py`'s beta, built on demand, and carries none of them.
 b19 = b20.b19
 DOCS = ROOT / "docs"
 TW = DOCS / "assets"
@@ -269,10 +267,8 @@ eq("...and those are the two builds the tags load", sorted(PINS), sorted(b19.TEL
 # The loader, run rather than read, like the forwarder above: a stub `window` per case, and the calls it
 # made on it. It must start on the host docs/CNAME names and on nothing else -- not the test server, not
 # `localhost`, not a `file://` page (whose hostname is empty), not the github.io URL a fork is served at --
-# and not when the SDK did not load. A HOST that drifted from the CNAME would fail no other test and
-# silently record nothing. On the live host it must block every kind of form field from the replay before
-# it asks for its settings: `rr-block`, not just `rr-mask`, because the SDK's rrweb masks only password
-# values and would otherwise write a field's text into every full snapshot.
+# and not when the SDK did not load. A HOST that drifted from the CNAME would fail no other test. On the
+# live host it must mark every kind of form field `rr-block` before it asks for its settings.
 LOADER = (TW / "traceway-loader.js").read_text(encoding="utf-8") if (TW / "traceway-loader.js").is_file() else ""
 CONFIG = "fetch https://blog.jeremyfhall.com/api/telemetry-config?site=aaa"
 TW_CASES = [

@@ -260,8 +260,7 @@ def build_data(facets, shots) -> dict:
 
 # Cloudflare Web Analytics: one script, no cookies, nothing to install, and it works on Pages without the
 # domain being on Cloudflare -- the beacon reports from the reader's browser, so the "JS beacon" mode needs
-# no DNS change. It is no longer the only measurement on the page: since 2026-10-11 every page also loads
-# the owner's self-hosted Traceway, which records far more than this does. See `telemetry()` below.
+# no DNS change.
 #
 # The token is committed rather than injected from a secret, because it is not one. Pages serves `docs/`
 # verbatim and has no build step of its own, so the token has to be *in* the generated page, and that page
@@ -312,41 +311,16 @@ def beacon(token: str | None = None) -> str:
             "<!-- End Cloudflare Web Analytics -->\n")
 
 
-# Traceway: errors, Core Web Vitals, a replay of each session and the network requests it made, sent to the
-# owner's self-hosted Traceway at traceway.jeremyfhall.com. It is the same set-up as the owner's homepage,
-# added on 2026-10-11 by the owner's decision. The dated addendum to `docs-notes/JFH-198-analytics-events.md`
-# records that decision against the privacy line that note drew, and the root README says in plain words
-# what is collected. Change those two in the same commit as anything that changes what this loads.
-#
-# Three classic scripts, deferred, so they run in document order after the parse. The loader is last
-# because it reads the globals the other two define:
-#
-#   assets/traceway-1.2.1.js     @tracewayapp/frontend 1.2.1, dist/traceway.iife.global.js (MIT; bundles rrweb)
-#   assets/web-vitals-6.2.3.js   web-vitals 6.2.3, dist/web-vitals.iife.js (Apache-2.0)
-#   assets/traceway-loader.js    hand-written ES5: the host check, form fields blocked, `Traceway.init`
-#
-# The first two are npm's bytes, unmodified. They are hand-maintained in `docs/assets/` like Archie's files,
-# with `.gitattributes` keeping autocrlf away from them, and `tests/deeplinks_test.py` pins their hashes.
-# They are vendored rather than loaded from a CDN, so the only new origins a page talks to are the owner's
-# own two. Nothing secret is committed: the loader fetches its connection string from blog.jeremyfhall.com
-# at run time.
-#
-# There is no environment switch here, unlike `beacon()`, because the loader has one of its own. It returns
-# before doing anything unless `location.hostname` is the live host, so a fork, a `file://` clone, a
-# `python -m http.server` and every harness in `tests/` (served from 127.0.0.1) download three files and send
-# nothing.
-#
-# `up` is the caller's own path back to `docs/`: "" from the homepage, `UP` from the catalogue, `../../../`
-# from a detail page. The src values are relative for the reason `UP` gives below. A root-absolute
-# `/assets/...` is right on the custom domain and a 404 under any path prefix, and the test server is one.
-# This is substituted after the comment strip, as the beacon is, so it must never carry a comment of its
-# own: `tests/probe.mjs` counts the HTML comments left in the catalogue, and the beacon's two are the only
-# ones allowed.
+# Error and latency monitoring: three deferred scripts, the loader last because it reads the globals the
+# other two define. The first two are vendored npm builds, unmodified, and `tests/deeplinks_test.py` pins
+# their hashes. `up` is the caller's own path back to `docs/`, relative for the reason `UP` gives below.
+# Substituted after the comment strip, as the beacon is, so it must never carry a comment of its own:
+# `tests/probe.mjs` counts the HTML comments left in the catalogue.
 TELEMETRY = ("traceway-1.2.1.js", "web-vitals-6.2.3.js", "traceway-loader.js")
 
 
 def telemetry(up: str) -> str:
-    """The three Traceway script tags, for a page whose way back to `docs/` is `up`."""
+    """The three monitoring script tags, for a page whose way back to `docs/` is `up`."""
     return "".join(f'<script defer src="{up}assets/{f}"></script>' for f in TELEMETRY) + "\n"
 
 
@@ -4905,10 +4879,7 @@ const REPO = "__REPO__";
 // Cloudflare Web Analytics has no custom-event API at any plan level, and its beacon runs every URL it
 // reports through a helper that blanks the hash and the query before sending -- read out of
 // beacon.min.js 2026.9.1 -- so `#q=kubernetes` never reaches Cloudflare and no dashboard filter, GraphQL
-// dimension or plan upgrade can recover it there. (The Traceway telemetry added on 2026-10-11 does record
-// the hash, in each session's trail of navigations: see `telemetry()` above the template. That is one
-// reader's session to replay, not a list of the searches that found nothing, so this link still earns its
-// place.) Which topic and harness a reader crossed *is* already collected,
+// dimension or plan upgrade can recover it there. Which topic and harness a reader crossed *is* already collected,
 // but by paths and not by events: `20_landing.py` and `22_detail.py` prerender 1,451 pages besides this one,
 // and each is an ordinary page view of an ordinary `Path`. A search that found nothing has no path to be,
 // and it is the more useful of the two facts -- it names either a tool this atlas is missing or a word its

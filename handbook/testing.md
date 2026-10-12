@@ -97,7 +97,7 @@ Node process on the machine, including other sessions' tools and test runs.
 | `live_test.py` | Python | `live.json`, the sidecar detail pages read | 106 | 90 |
 | `semantic_test.py` | Python | The semantic index, scored from the published bytes | 48 | 30 |
 | `collections_test.py` | Python | Curated picks and every refusal that keeps them honest | 652 | 500 |
-| `deeplinks_test.py` | Python | The homepage forwarding old `/#…` links into `catalog/`, the host in `docs/CNAME`, and the Traceway tags on every page (added 2026-10-11, after this count). Needs `node` on PATH | 66 | 34 |
+| `deeplinks_test.py` | Python | The homepage forwarding old `/#…` links into `catalog/`, and the host in `docs/CNAME`. Needs `node` on PATH | 66 | 34 |
 | `spotlight_test.py` | Python | The daily spotlight rule, which is written in both Python and JS and must agree. Needs `node` on PATH | 326 | 300 |
 | `osicons_test.py` | Python | The five platform icons, resolved over every built page. Slow: about 3 min | 251 | 200 |
 | `detail-churn.mjs` | Node | Re-runs `22_detail.py` four times and hashes every output file, so unchanged data must mean unchanged bytes. Slow: about 7 min | 13 | 7 |
