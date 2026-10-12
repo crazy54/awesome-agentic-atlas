@@ -541,11 +541,11 @@ site's owner hosts at `traceway.jeremyfhall.com`, so the data goes to the owner 
 analytics company. On every page it records:
 
 - **A replay of your visit:** what the page showed, and where you moved the pointer, scrolled and clicked.
-  Your keystrokes in the search box and other fields are not recorded. The replay does take a snapshot
-  of the whole page when it starts and every 30 seconds after that, and **text that is in a field at that
-  moment is in the snapshot**.
+  The search box and every other form field are blocked from the replay. Each one is recorded as an empty
+  placeholder of the same size, so nothing you type into one is ever recorded.
 - **Every address you visit on the site, in full,** including the part after `#`. The catalogue keeps your
-  search words and filters there, so **what you search for is recorded** this way too.
+  search words and filters there (`#q=…`), so **a search can still be recorded through the address**, even
+  though the box itself is blocked.
 - **Which links you click,** by their path only. For a link to a project on GitHub, that is its
   `owner/name`.
 - **The requests the page's own scripts make:** the address, how long each took, its size, and whether it
@@ -557,10 +557,9 @@ A random session id in your tab's `sessionStorage` ties one visit's recording to
 long as the tab does. Like any server, the two that receive this see your IP address. They are
 `traceway.jeremyfhall.com`, and `blog.jeremyfhall.com`, which gives each page its Traceway settings.
 Nothing is recorded anywhere but `aaa.jeremyfhall.com`, so a clone, a local copy or a fork sends nothing.
-The scripts are in
-[`docs/assets/`](docs/assets/): `traceway-loader.js` is the part written for this site. The reasoning, and
-how this changed the site's earlier position on privacy, is in the dated addendum to
-[`docs-notes/JFH-198-analytics-events.md`](docs-notes/JFH-198-analytics-events.md).
+The scripts are in [`docs/assets/`](docs/assets/), and `traceway-loader.js` is the part written for this
+site. The reasoning, and how this changed the site's earlier position on privacy, is in the dated addendum
+to [`docs-notes/JFH-198-analytics-events.md`](docs-notes/JFH-198-analytics-events.md).
 
 ## Licence and credit
 

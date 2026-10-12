@@ -270,7 +270,9 @@ eq("...and those are the two builds the tags load", sorted(PINS), sorted(b19.TEL
 # made on it. It must start on the host docs/CNAME names and on nothing else -- not the test server, not
 # `localhost`, not a `file://` page (whose hostname is empty), not the github.io URL a fork is served at --
 # and not when the SDK did not load. A HOST that drifted from the CNAME would fail no other test and
-# silently record nothing.
+# silently record nothing. On the live host it must block every kind of form field from the replay before
+# it asks for its settings: `rr-block`, not just `rr-mask`, because the SDK's rrweb masks only password
+# values and would otherwise write a field's text into every full snapshot.
 LOADER = (TW / "traceway-loader.js").read_text(encoding="utf-8") if (TW / "traceway-loader.js").is_file() else ""
 CONFIG = "fetch https://blog.jeremyfhall.com/api/telemetry-config?site=aaa"
 TW_CASES = [
@@ -279,7 +281,8 @@ TW_CASES = [
     ("a file:// page", "", True, []),
     ("a fork's project URL", "crazy54.github.io", True, []),
     ("the live host, with the SDK missing", cname, False, []),
-    ("the live host", cname, True, ["mark the fields", CONFIG]),
+    ("the live host", cname, True, ['find input, textarea, select, [contenteditable="true"]',
+                                    "block rr-mask rr-ignore rr-block", CONFIG]),
 ]
 if node and LOADER:
     harness = r"""
@@ -288,7 +291,8 @@ const [src, cases] = [process.argv[1], JSON.parse(process.argv[2])];
 console.log(JSON.stringify(cases.map(([hostname, sdk]) => {
   const calls = [];
   const document = {documentElement: {}, addEventListener: () => calls.push("listen"),
-                    querySelectorAll: () => { calls.push("mark the fields"); return []; }};
+                    querySelectorAll: sel => { calls.push("find " + sel);
+                      return [{classList: {add: (...c) => calls.push("block " + c.join(" "))}}]; }};
   const window = {location: {hostname, href: "https://" + hostname + "/"}, document,
                   fetch: u => { calls.push("fetch " + u); return new Promise(() => {}); }};
   if (sdk) window.Traceway = {init: () => calls.push("init")};

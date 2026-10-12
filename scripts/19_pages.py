@@ -323,7 +323,7 @@ def beacon(token: str | None = None) -> str:
 #
 #   assets/traceway-1.2.1.js     @tracewayapp/frontend 1.2.1, dist/traceway.iife.global.js (MIT; bundles rrweb)
 #   assets/web-vitals-6.2.3.js   web-vitals 6.2.3, dist/web-vitals.iife.js (Apache-2.0)
-#   assets/traceway-loader.js    hand-written ES5: the host check, the field masking, `Traceway.init`
+#   assets/traceway-loader.js    hand-written ES5: the host check, form fields blocked, `Traceway.init`
 #
 # The first two are npm's bytes, unmodified. They are hand-maintained in `docs/assets/` like Archie's files,
 # with `.gitattributes` keeping autocrlf away from them, and `tests/deeplinks_test.py` pins their hashes.

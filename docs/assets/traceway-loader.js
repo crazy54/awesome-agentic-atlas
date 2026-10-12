@@ -8,11 +8,14 @@
 // a `python -m http.server` and every harness in tests/ (served from 127.0.0.1) send nothing at all. Every
 // failure is silent: telemetry being down must never be something a reader can see.
 //
-// `mask()` marks every form field, including fields added later, so the replay ignores keystrokes in them.
-// That is narrower than it sounds. The SDK starts rrweb with its defaults, which mask only password values,
-// so a field's text still appears in the full-page snapshots the replay takes at the start and every 30 s.
-// Navigation capture also records the whole URL, hash included. The root README says all of this in plain
-// words, under "What the site records".
+// `mask()` gives every form field `rr-block`, and re-applies it to fields added later. `rr-mask` and
+// `rr-ignore` alone are not enough. The SDK starts rrweb with its defaults, which mask only password values,
+// so without `rr-block` a field's text would be written into the full-page snapshots the replay takes at the
+// start and every 30 s. A blocked field is recorded as an empty placeholder of the same size, so nothing
+// typed into it is ever recorded. Fields added later are covered too: this observer is created before the
+// SDK's, so it marks a new field before the replay serialises it. The page's address is a different matter.
+// Navigation capture records the whole URL, hash included, and that includes a `#q=` search. The root README
+// says all of this in plain words, under "What the site records".
 //
 // A classic script in ES5, like repo/detail.js, so a browser too old for the SDK fails nowhere it can be seen.
 (function () {
@@ -22,8 +25,8 @@
   if (window.location.hostname !== HOST || window.__jfhTelemetryStarted || !window.Traceway || !window.fetch) return;
   window.__jfhTelemetryStarted = true;
   function mask() {
-    var fields = document.querySelectorAll('input, textarea, [contenteditable="true"]');
-    for (var i = 0; i < fields.length; i++) fields[i].classList.add('rr-mask', 'rr-ignore');
+    var fields = document.querySelectorAll('input, textarea, select, [contenteditable="true"]');
+    for (var i = 0; i < fields.length; i++) fields[i].classList.add('rr-mask', 'rr-ignore', 'rr-block');
   }
   mask();
   if (window.MutationObserver) new MutationObserver(mask).observe(document.documentElement, { childList: true, subtree: true });

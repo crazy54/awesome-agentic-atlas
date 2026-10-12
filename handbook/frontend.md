@@ -121,12 +121,22 @@ always run `24_pwa.py` after `31_home.py`, so only hand-made changes can miss it
   - `docs/assets/traceway-loader.js`: hand-written ES5. It returns at once unless the host is
     `aaa.jeremyfhall.com`, so local runs, forks and the test server send nothing and the browser harnesses
     see no new console output. It fetches the connection string from `blog.jeremyfhall.com` at run time,
-    so nothing secret is committed.
+    so nothing secret is committed. It gives every `input`, `textarea`, `select` and `contenteditable`
+    the classes `rr-mask rr-ignore rr-block`, including fields added later. The SDK's rrweb masks only
+    password values by default, so it takes `rr-block` to keep a field's text out of the replay's
+    snapshots. A blocked field is recorded as an empty placeholder.
 
   There is no build-time setting and no off switch other than removing the tags. To upgrade a vendored
   build, add it under its new versioned name, then update `TELEMETRY`, the pins in `deeplinks_test.py`,
   `.gitattributes` and the licence file, and regenerate every page family. What it collects is listed in
   the root README under "What the site records". Change that section whenever what is collected changes.
+
+  **Is it working?** No test can tell you, because nothing reports off the live host.
+  `.github/workflows/traceway-live.yml` runs `scripts/check-traceway-live.mjs` against the deployed site
+  after each Pages build and once a day. It passes only when the telemetry-config fetch returns 200 and at
+  least one report POST to `traceway.jeremyfhall.com` returns 200. Run it by hand with
+  `node scripts/check-traceway-live.mjs https://aaa.jeremyfhall.com/`; see
+  [ci-cd.md](ci-cd.md#traceway-liveyml).
 - **IndexNow:** the key file `docs/<key>.txt`, written by `20_landing.py`.
 - **Google Search Console:** a meta tag, emitted only when `GOOGLE_SITE_VERIFICATION` is set. It was unset on 2026-09-25.
 

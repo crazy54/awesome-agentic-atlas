@@ -656,16 +656,19 @@ this in plain words.
 Read out of the shipped `traceway-1.2.1.js` on 2026-10-11, not taken from its documentation:
 
 - **Session replay (rrweb).** A full snapshot of the page's DOM when recording starts and at every 30-second
-  segment boundary, then every mutation, pointer movement, scroll and click. The loader gives every
-  `input`, `textarea` and `contenteditable` the classes `rr-mask rr-ignore`, and re-applies them to fields
-  added later. `rr-ignore` stops keystrokes in those fields being recorded. It does not keep their contents
-  out of the snapshots. Traceway starts rrweb with no masking options, so rrweb masks password values only,
-  and `rr-mask` masks text nodes, not input values. Whatever is in the search box when a snapshot is taken
-  is recorded in clear.
+  segment boundary, then every mutation, pointer movement, scroll and click. Traceway starts rrweb with no
+  masking options, so rrweb masks password values only. `rr-mask` masks text nodes, not input values, and
+  `rr-ignore` only drops input events. Neither class keeps a field's value out of a full snapshot. So the
+  loader gives every `input`, `textarea`, `select` and `contenteditable` the classes
+  `rr-mask rr-ignore rr-block`, and re-applies them to fields added later. Its MutationObserver is created
+  before rrweb's, so a new field is marked before rrweb serialises it. rrweb records a blocked element as
+  an empty placeholder: its class and its size, with no value, no children and no input events. **Nothing
+  typed into a field is recorded.** A first draft of the loader used only `rr-mask rr-ignore`, and the
+  search box's contents were in every snapshot. `rr-block` was added before this shipped.
 - **Navigation.** Every `pushState`, `replaceState`, `popstate` and `hashchange`, recorded as
   `pathname + search + hash`. `writeHash()` calls `replaceState` on every filter change and search, so the
-  catalogue's search terms and filters are recorded. That includes the zero-result terms Finding 2 said
-  could never leave the browser.
+  catalogue's search terms and filters are recorded through the URL, `#q=` included, even though the box
+  itself is blocked. That includes the zero-result terms Finding 2 said could never leave the browser.
 - **Network.** For every `fetch` and XHR, same-origin or not (a detail page's reader calls
   `api.github.com`): the method, URL, duration, status, request and response sizes, and any error. Bodies
   are not recorded. Same-origin requests also get a `traceway-trace-id` header.
@@ -683,8 +686,8 @@ How long Traceway keeps any of this is set by the owner's instance and is not re
 ### Which statements above this makes false
 
 - Finding 4's *"No PII, no cookies, no consent banner — true today and must stay true."* There are still no
-  cookies, and no consent banner was added. "No PII" no longer holds, because replays and full URLs can
-  carry whatever a reader types or searches for. The premise behind having no banner, that nothing
+  cookies, and no consent banner was added. "No PII" no longer holds. Full URLs carry whatever a reader
+  searches for, and a replay shows what the page showed them. The premise behind having no banner, that nothing
   personal is collected, is gone. Whether that changes the need for a banner is the owner's call, and
   this note does not settle it.
 - The binding constraints in "Options for zero-result search terms": *"no third-party script beyond the
@@ -693,8 +696,8 @@ How long Traceway keeps any of this is set by the owner's instance and is not re
   measurement system, and they can collect personal data.
 - Option B's mitigations were called mandatory: truncate the term, reject `@` and URL shapes, drop control
   characters, store no IP, set no cookie. Traceway applies only the last. Option B's own wording is now an
-  accurate description of the site: it "collects the words readers type into the search box", without
-  B's filtering.
+  accurate description of the site: it "collects the words readers type into the search box", through
+  the URL rather than the box, and without B's filtering.
 - "The privacy line": *"Nothing the site collects can be tied to a person."* No longer true. One tab's
   activity is tied together by its session id, and the servers that receive it see the reader's IP.
 - The same section's *"If option B ships, the README has to say what is collected, in plain words, before
