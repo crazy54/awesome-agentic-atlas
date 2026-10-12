@@ -27,7 +27,6 @@ Other documentation in the repository, each of which stays next to the thing it 
 
 - [`tests/README.md`](../tests/README.md): the suite's design notes, which are longer than the summary in [testing.md](testing.md).
 - [`config/README.md`](../config/README.md): the application flags and the curated collections file.
-- [`docs-notes/`](../docs-notes/): a design note on analytics events. Kept outside `docs/` so Pages does not publish it.
 - [`WORK-IN-PROGRESS.md`](../WORK-IN-PROGRESS.md): a handoff log from the September 2026 redesign. It is history, and says so at the top.
 - Long module docstrings at the top of most files in `scripts/` and `tests/`. They are the most detailed
   documentation in the repository. This handbook summarises them and points at them; it does not replace them.

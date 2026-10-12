@@ -67,7 +67,7 @@ import osicons  # noqa: E402
 
 # The same dynamic load `19b_refresh.py` uses, and for the same reason: the module is named `19_pages`,
 # which is not an identifier, so `import` cannot reach it. Two things are wanted from it -- `beacon()`
-# and `telemetry()`, so the analytics live in exactly one file, and `b17.SITE`, so the absolute URL that
+# and `telemetry()`, so those tags live in exactly one file, and `b17.SITE`, so the absolute URL that
 # goes in every canonical and every sitemap entry is the one string the Markdown edition already links to.
 spec = importlib.util.spec_from_file_location("b19", HERE / "19_pages.py")
 b19 = importlib.util.module_from_spec(spec)

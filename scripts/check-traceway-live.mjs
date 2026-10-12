@@ -1,15 +1,11 @@
 #!/usr/bin/env node
-// Live Traceway check: loads each URL in headless Chrome and passes only when the
-// page fetched its Traceway configuration (HTTP 200) and the SDK delivered at least
-// one report to traceway.jeremyfhall.com/api/report (HTTP 200).
+// Post-deploy monitoring check: loads each URL in headless Chrome and passes when the page fetched its
+// configuration and delivered at least one report (both HTTP 200).
 //
-//   node check-traceway-live.mjs https://blog.jeremyfhall.com/ [more URLs]
+//   node check-traceway-live.mjs <url> [more URLs]
 //
-// No dependencies: it drives Chrome over the DevTools protocol with Node's built-in
-// WebSocket (Node 22+). Set CHROME_PATH if Chrome is not in a standard location,
-// TRACEWAY_CHECK_TIMEOUT (seconds per attempt, default 60) to wait longer for the first
-// report, and TRACEWAY_CHECK_ATTEMPTS (default 1) to retry a failing URL 30 seconds
-// later, which covers a deploy that is still propagating.
+// Node 22+. CHROME_PATH, TRACEWAY_CHECK_TIMEOUT (seconds per attempt, default 60) and
+// TRACEWAY_CHECK_ATTEMPTS (default 1) adjust it.
 import { spawn } from 'node:child_process'
 import { existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -136,8 +132,8 @@ try {
     }
     failed ||= !ok
     console.log(`${ok ? 'PASS' : 'FAIL'} ${url}`)
-    console.log(`  telemetry config: ${result.config ?? 'no response'}`)
-    console.log(`  reports to Traceway: ${result.reports.length ? result.reports.join(', ') : 'none'}`)
+    console.log(`  config: ${result.config ?? 'no response'}`)
+    console.log(`  reports: ${result.reports.length ? result.reports.join(', ') : 'none'}`)
     for (const failure of result.failures) console.log(`  failed request: ${failure}`)
     for (const exception of result.exceptions.slice(0, 5)) console.log(`  page exception: ${exception.split('\n')[0]}`)
   }
