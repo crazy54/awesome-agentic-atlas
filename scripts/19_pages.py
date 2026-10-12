@@ -69,7 +69,8 @@ APP_FLAGS = app_flags.FLAGS
 # and all four said "eleven" for a while after the atlas had stopped being eleven lists. `SOURCES` is
 # the same authority `16_build_all.LIST_TITLE` and `watch_sources.py` read, so the site cannot
 # disagree with the workbook about how many lists were merged.
-LISTS = len(b16.b10.SOURCES)
+# Curated lists only: the scout is a source but not a list (see SYNTHETIC in 16_build_all.py).
+LISTS = sum(1 for s in b16.b10.SOURCES if not s.get("synthetic"))
 
 # Verdicts compress to one character each because there are only five of them and every row prints all
 # five -- some forty thousand characters across the dataset. The page expands them back for display;
@@ -4541,7 +4542,8 @@ function initDiscovery() {
     // it is dropped rather than repeated when the project is named after whoever publishes it.
     const facts = [
       name + " is listed under " + category + ".",
-      name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")
+      r.lists ? name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")
+              : name + " was found by the atlas's GitHub search; no curated list names it yet."
     ];
     if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
     // WHICH FACT A PROJECT SAYS USED TO DEPEND ON THE LENGTH OF A COLOUR NAME. It was
@@ -6095,7 +6097,7 @@ function cmpFields(picks) {
   const plain = s => ({html: esc(s), key: s});
   const f = [
     ["Stars", r => plain(r.stars ? r.stars.toLocaleString() : "—")],
-    ["Named by", r => plain(r.lists + (r.lists === 1 ? " list" : " lists"))],
+    ["Named by", r => plain(r.lists ? r.lists + (r.lists === 1 ? " list" : " lists") : "GitHub search")],
     ["Topic", r => plain(D.cats[r.cat].name)],
     ["Plugs into", r => plain(r.targets.length ? r.targets.map(t => D.targets[t].name).join(", ") : "—")],
   ];
@@ -6999,7 +7001,8 @@ function render() {
         // The gain sits under the star count because the two are the same quantity measured twice, and a
         // reader comparing two rows compares both at once. `gained` draws nothing where the ledger has no
         // history for the row, which is what "degrade quietly rather than showing zero" means here.
-        '<div class="meta">' + r.lists + (r.lists === 1 ? " list" : " lists") + gained(r) +
+        '<div class="meta">' + (r.lists ? r.lists + (r.lists === 1 ? " list" : " lists") : "found by search") +
+          gained(r) +
           "</div></td>" +
       '<td class="hide tg">' + tags + "</td>" +
       '<td class="ds"><div class="desc">' + esc(r.blurb) + "</div>" + cmd + "</td>" +

@@ -393,6 +393,9 @@ def provenance(repo: Repo, lists: dict[str, str]) -> str:
         items.append(f'<li><a href="https://github.com/{esc(nwo)}">{esc(n)}</a></li>' if nwo
                      else f"<li>{esc(n)}</li>")
     n = repo.row["lists"]
+    if not n:
+        return ('<p class="lead">No curated list names this project yet: the atlas found it through its '
+                'own GitHub search, which adds fast-rising agentic repositories before a list catches up.</p>')
     return (f'<p class="lead">Named by <b>{n}</b> of the {b19.LISTS} lists the atlas merges'
             + ("." if n == 1 else ", independently of each other.")
             + f'</p><ul class="lists">{"".join(items)}</ul>')

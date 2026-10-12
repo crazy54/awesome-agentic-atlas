@@ -254,7 +254,7 @@ def card_html(nwo: str, row: list, i: int, cats: list[str], cohort: str) -> str:
     meta = [f'<b>{stars:,}</b> stars'] if stars else []
     if lang:
         meta.append(esc(lang))
-    meta.append(f"{lists} lists" if lists > 1 else "1 list")
+    meta.append(f"{lists} lists" if lists > 1 else "1 list" if lists else "found by search")
     return (
         f'<article class="dcard{" nw" if isnew else ""}" id="d{i + 1}" data-project="{esc(nwo)}"'
         f' style="--card-accent:var(--accent-{ACCENTS[cat % len(ACCENTS)]})">'
@@ -389,7 +389,7 @@ const DISCOVER = (() => {
     const meta = [];
     if (r.stars) meta.push("<b>" + commas(r.stars) + "</b> stars");
     if (r.lang) meta.push(esc(r.lang));
-    meta.push(r.lists > 1 ? r.lists + " lists" : "1 list");
+    meta.push(r.lists > 1 ? r.lists + " lists" : r.lists ? "1 list" : "found by search");
     return '<article class="dcard' + (isnew ? " nw" : "") + '" id="d' + (i + 1) +
       '" data-project="' + esc(r.nwo) + '" style="--card-accent:var(--accent-' +
       ACCENTS[r.cat % ACCENTS.length] + ')">' +

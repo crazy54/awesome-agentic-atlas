@@ -772,7 +772,16 @@ scout_rec = {"source": "scout", "nwo": "acme/taxbot", "kind": "repo", "descripti
 pool_rows = {r["nwo"]: r for r in b16.repo_pool([curated_rec, scout_rec], [], {})}
 eq("a scouted listing does not replace a curator's blurb with a longer tagline",
    pool_rows["acme/taxbot"]["blurb"], "Files expenses.")
-eq("...and the repo still names both sources", pool_rows["acme/taxbot"]["sources"], {"agents", "scout"})
+# The scout is a source, not a list. "Named by N lists" and the homepage's two-or-more picks are the
+# consensus the site sells, and a search agreeing with a curator is not a second opinion.
+eq("...and the scout does not count as a second list beside the curator",
+   (pool_rows["acme/taxbot"]["sources"], pool_rows["acme/taxbot"]["list_count"]), ({"agents"}, 1))
+eq("...or appear among the lists that name it", pool_rows["acme/taxbot"]["listed_by"], "agents")
+alone = b16.repo_pool([dict(scout_rec, nwo="acme/alone")], [], {})[0]
+eq("a repo only the scout found is in the pool, named by no list",
+   (alone["nwo"], alone["list_count"], alone["listed_by"]), ("acme/alone", 0, ""))
+eq("16_build_all's SYNTHETIC is exactly the sources SOURCES marks synthetic",
+   set(b16.SYNTHETIC), {src["key"] for src in s.b10.SOURCES if src.get("synthetic")})
 pool_rows = {r["nwo"]: r for r in b16.repo_pool([dict(curated_rec, blurb="", description=""), scout_rec],
                                                  [], {})}
 eq("...but fills a blurb the curator left empty", pool_rows["acme/taxbot"]["blurb"], scout_rec["blurb"])
@@ -783,6 +792,30 @@ full = {"source": "scout", "nwo": "morluto/rea", "kind": "repo", "description": 
 row = b16.repo_pool([sub, full], [], {})[0]
 eq("the motivating case: a curator's sub-folder row is promoted to the scout's full repo row",
    (row["kind"], row["name"], row["blurb"]), ("repo", "rea", "RE skill"))
+eq("...and is still named by exactly the one list that cited it", (row["list_count"], row["listed_by"]),
+   (1, "skills_voltagent"))
+
+group("every surface counts curated lists only")
+curated_n = sum(1 for src in s.b10.SOURCES if not src.get("synthetic"))
+true("(fixture: the scout is configured, so SOURCES is one longer than the curated lists)",
+     len(s.b10.SOURCES) == curated_n + 1)
+for stage, text in (("19_pages.py", "LISTS = sum(1 for s in b16.b10.SOURCES if not s.get(\"synthetic\"))"),
+                    ("17_markdown.py", "lists=len(per_source) - sum(1 for s in SOURCES if s.get(\"synthetic\")),")):
+    true(f"{stage}'s list count leaves the scout out", text in (SCRIPTS / stage).read_text(encoding="utf-8"))
+spec20 = importlib.util.spec_from_file_location("b20_for_scout_test", SCRIPTS / "20_landing.py")
+b20 = importlib.util.module_from_spec(spec20)
+sys.modules["b20_for_scout_test"] = b20
+spec20.loader.exec_module(b20)
+eq("the site's 'N awesome-lists' is the curated count", b20.LISTS, curated_n)
+eq("a facet row with no list says where it came from instead of '0 lists'",
+   [b20.lists_label(n) for n in (0, 1, 3)], ["found by search", "1 list", "3 lists"])
+# The surfaces written in JavaScript or in f-strings too long to call here, by the words they print for 0.
+for stage, words in (("19_pages.py", "was found by the atlas's GitHub search"), ("19_pages.py", '"GitHub search"'),
+                     ("19_pages.py", '"found by search"'), ("22_detail.py", "No curated list names this project yet"),
+                     ("19d_discover.py", '"found by search"'), ("30_v2.py", "No curated list names it yet"),
+                     ("30_v2.py", "found by GitHub search")):
+    true(f"{stage} has words for a repo no list names: {words}", words in (SCRIPTS / stage).read_text(encoding="utf-8"))
+true("30_v2.py no longer turns a 0 into 1", '"lists") or 1' not in (SCRIPTS / "30_v2.py").read_text(encoding="utf-8"))
 
 group("the wiring")
 daily = (ROOT / ".github" / "workflows" / "daily.yml").read_text(encoding="utf-8").splitlines()

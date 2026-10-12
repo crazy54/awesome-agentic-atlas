@@ -151,6 +151,12 @@ SHEET_TITLE = {k: t for k, t, *_ in SHEETS}
 # "Claude Code". SHEETS wins where it has an entry, so the ten already-shipped names do not move, and
 # `orchestrators` keeps the short label the workbook has always used for it rather than its SOURCES
 # title. Everything else takes the title its SOURCES entry already declares.
+# The sources that are not lists. The scout (`12_scout.py`) is a search, not a curator, so it decides
+# which repos are in the atlas but never counts toward `list_count` or `listed_by`: those are the
+# consensus the site sells -- "named by three lists" -- and a search agreeing with a list is not a second
+# opinion. A repo only the scout found has `list_count` 0 and an empty `listed_by`, and every surface says
+# "found by GitHub search" for it instead of a count.
+SYNTHETIC = frozenset(s["key"] for s in b10.SOURCES if s.get("synthetic"))
 LIST_TITLE = {**{s["key"]: s["title"] for s in b10.SOURCES},
               "orchestrators": "Orchestrators", **SHEET_TITLE}
 
@@ -688,7 +694,8 @@ def repo_pool(records, orch, label, keep=None):
             # and a later listing can. Never fires for `platform_pool`, whose `keep` makes every
             # eligible listing a full one; it exists for the pools that keep the thin listings.
             a = pool[nwo] = dict(r, sources=a["sources"], blurb=a.get("blurb") or "")
-        a["sources"].add(r["source"])
+        if r["source"] not in SYNTHETIC:
+            a["sources"].add(r["source"])
         offer_blurb(a, r)
     out = []
     for nwo, a in pool.items():
@@ -1853,7 +1860,8 @@ def main() -> None:
             continue
         a = agg.setdefault(nwo, dict(r))
         a.setdefault("sources", set())
-        a["sources"].add(r["source"])
+        if r["source"] not in SYNTHETIC:
+            a["sources"].add(r["source"])
         offer_blurb(a, r)
     label = LIST_TITLE
     board = []

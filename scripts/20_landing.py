@@ -971,7 +971,7 @@ def row_html(page: Page, r: dict, i: int, os_labels: list[str]) -> str:
         f'<a class="nwo" href="{url}">{esc(r["nwo"])}</a>'
         f'<div class="meta os" role="img" aria-label="{os_name}">{os}</div></td>'
         f'<td class="n st-c"><span class="st{"" if r["stars"] else " none"}">{stars}</span>'
-        f'<div class="meta">{r["lists"]} {"list" if r["lists"] == 1 else "lists"}</div></td>'
+        f'<div class="meta">{lists_label(r["lists"])}</div></td>'
         f'<td class="hide">{tags}</td>'
         f'<td class="ds"><div class="desc">{esc(r["blurb"])}</div>'
         + (f'<code class="cmd">{esc(r["install"])}</code>' if r["install"] else "")
@@ -1189,6 +1189,11 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
 {THEME_JS}{b19.follow()}{b19.beacon()}</body>
 </html>
 """
+
+
+def lists_label(n: int) -> str:
+    """"3 lists", "1 list", or -- for a repo only the scout found -- "found by search"."""
+    return "found by search" if not n else f"{n} {'list' if n == 1 else 'lists'}"
 
 
 # ------------------------------------------------------------------ sitemap & robots
