@@ -411,6 +411,18 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
             "Red Teaming and Prompt Security"]),
         ("Guides & Collections", ["Other Notable Repositories", "Related Resources"]),
     ],
+    # The scout's ten sections are atlas categories, so the folds follow the category list: the two
+    # "build an agent" shelves together, and the two "check the agent" shelves together.
+    "scout": [
+        ("Orchestration & Frameworks", ["Orchestrators & Multi-Agent", "Frameworks & SDKs"]),
+        ("Coding Agents", ["Coding Agents"]),
+        ("Agent Skills", ["Agent Skills"]),
+        ("MCP Servers", ["MCP Servers"]),
+        ("Context, Memory & RAG", ["Context, Memory & RAG"]),
+        ("Security & Evals", ["Sandbox, Security & Governance", "Observability & Evals"]),
+        ("Assistants & Domain Agents", ["Assistants & Domain Agents"]),
+        ("Plugins & Clients", ["Plugins, Themes & Clients"]),
+    ],
 }
 
 

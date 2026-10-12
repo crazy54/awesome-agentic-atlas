@@ -29,7 +29,8 @@ which topic a project is filed under.
 ## How data flows
 
 ```
-source lists on GitHub
+source lists on GitHub, and GitHub search
+   │  12_scout.py            rising repos no list has yet, as one more source   → cache/sources/scout.md
    │  pull_sources.py        pulls only lists whose head commit moved          → cache/sources/
    │  10_parse_sources.py    parses every list into rows (01_parse.py for the original list)
    │  11_fetch_all.py        GitHub GraphQL: stars, language, licence, README  → cache/meta.json, cache/readmes/

@@ -11,6 +11,7 @@ Output is cache/entries_all.json -- one row per listed item per source. A repo
 listed by two sources stays two rows (that overlap is itself a finding); the
 fetch stage dedupes on nwo so each repo is still only hit once.
 """
+import hashlib
 import json
 import re
 import sys
@@ -305,6 +306,24 @@ SOURCES = [
          mode={"bullet", "table"}, cat_at=3,
          keep={"tools & frameworks", "benchmarks & datasets",
                "agent skill specifications", "related awesome lists"}),
+    # Not a curated list: GitHub search, run by scripts/12_scout.py, which writes this document from
+    # the committed ledger state/scout-repos.json. `synthetic` is the one thing that makes it different,
+    # and only two stages read it: pull_sources.py has no upstream commit to pull it at, and
+    # watch_sources.py compares `content_digest` against the ledger where a list's commit id would go.
+    # Everything downstream of this parser treats it as a list. `nwo` is this repository, because that
+    # is where the document comes from and it is what the Sources sheet and the site link a list to.
+    # One section per atlas category, spelled as the category, so taxonomy.SECTIONS maps each to itself.
+    # Last on purpose: a repo a curated list also has is met there first, which is what keeps a curator's
+    # row the one the merged pools start from (tests/scout_test.py asserts the position).
+    #
+    # Two counts treat it as a list today, and both are presentation choices for the generators rather
+    # than facts this file can settle: `len(SOURCES)` is what the site's "N awesome-lists" prose prints
+    # (19_pages.LISTS), and `16_build_all.repo_pool`'s `list_count` -- "Named by N lists", the homepage's
+    # consensus picks -- counts the scout beside the curators. Filtering on `synthetic` is the one-line
+    # change in either place if the scout should stop counting as a list.
+    dict(key="scout", nwo="crazy54/awesome-agentic-atlas",
+         title="Scouted on GitHub", short="Scout", file="scout.md",
+         mode={"bullet"}, cat_at=2, synthetic=True),
 ]
 
 MD_H = re.compile(r"^(#{2,4})\s+(?P<txt>.+?)\s*#*$")
@@ -359,6 +378,21 @@ def read_source(src: dict) -> str:
     is `(source key, section name)` no matter which file the heading was written in.
     """
     return "\n\n".join(p.read_text(encoding="utf-8") for p in source_paths(src) if p.exists())
+
+
+def content_digest(src: dict) -> str | None:
+    """`sha256:<hex>` of a source's text, or None if any of its files is missing.
+
+    The identity of a synthetic source's content, standing where a list's head commit id stands: a
+    document with no upstream repository has no commit to compare, so `watch_sources.py` compares this
+    instead and `--update` records it in the same ledger slot. It hashes the *text* `read_source`
+    returns rather than the bytes on disk, and that is load-bearing: text mode folds CRLF to LF on
+    read, and `cache/` is shared between a Linux runner and Windows checkouts, so the same set of
+    entries has to digest the same whichever of them wrote the file. tests/scout_test.py holds that.
+    """
+    if not all(p.exists() for p in source_paths(src)):
+        return None
+    return "sha256:" + hashlib.sha256(read_source(src).encode("utf-8")).hexdigest()
 
 
 def url_key(url: str) -> str:
@@ -692,9 +726,14 @@ def main() -> None:
               if src.get("file") and not all(p.exists() for p in source_paths(src))]
     if absent:
         names = ", ".join(s["key"] for s in absent)
+        # The synthetic source is not pulled, it is written, so it needs its own instruction. `--offline`
+        # is the one that always works: it renders the committed ledger and touches no network.
+        scout = (" The scout's document is written by `python scripts/12_scout.py` (`--offline` renders "
+                 "it from the committed state/scout-repos.json without searching)."
+                 if any(s.get("synthetic") for s in absent) else "")
         sys.exit(f"no cached content for {len(absent)}/{len(SOURCES)} sources ({names}).\n"
                  f"Run `python scripts/pull_sources.py` first -- it pulls each list at its head "
-                 f"commit into {SRC.relative_to(ROOT).as_posix()}/.")
+                 f"commit into {SRC.relative_to(ROOT).as_posix()}/.{scout}")
 
     all_rows: list[dict] = []
     print(f"{'source':14s} {'rows':>5s} {'repo':>5s} {'sub':>5s} {'site':>5s}  categories")

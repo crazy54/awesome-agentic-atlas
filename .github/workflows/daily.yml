@@ -176,6 +176,25 @@ jobs:
           key: atlas-cache-${{ github.run_id }}
           restore-keys: atlas-cache-
 
+      # The scout: GitHub search for rising agentic repos no curated list has yet, written as one more
+      # source document (`cache/sources/scout.md`), plus `state/scout-lists.json`, the curated lists GitHub
+      # has that SOURCES does not. Before the watch step and not inside "Fetch and classify", because the
+      # watch step is what decides whether this run builds at all, and for the scout "moved" means its
+      # document's digest differs from the one `watch_sources.py --update` recorded after the last good
+      # build -- so the document has to exist, and be today's, before the watch looks at it.
+      #
+      # It cannot fail the run over GitHub. A search that errors, rate-limits past its retries or comes
+      # back incomplete leaves the committed ledger as it was and re-renders the same document from it, so
+      # the digest does not move and nothing scouted is deleted; the step prints a warning and exits 0.
+      # About 130 search requests, spaced under the 30-a-minute limit: four to five minutes, run every day
+      # whether or not anything else moved, since finding out is the point. Its summary -- what it added,
+      # and the top candidate lists -- goes to the job summary page.
+      #
+      # On a day the gate below says no, what this wrote under `state/` is not committed. That is safe:
+      # the ledger only grows by observation, so tomorrow's run finds the same repos again.
+      - name: Scout GitHub for rising repos and lists not yet in SOURCES
+        run: python scripts/12_scout.py
+
       - name: Has any source list moved?
         id: watch
         run: python scripts/watch_sources.py
@@ -235,6 +254,8 @@ jobs:
           # on a day when one list moved it re-reads one list and not all thirty-nine. It also prints which
           # entries each list added or changed, and queues the changed ones for the weekly screenshot
           # job -- the step that probes SHAs above cannot, because it deliberately does not download.
+          # The scout's document is not among them: it has no upstream to pull, and the scout step above
+          # has already written it.
           python scripts/pull_sources.py
           # --force empties cache/meta.json, which is the store 11_fetch_all also fills and the reason a
           # warm cache would otherwise never refresh a star count. Everything downstream re-derives.
@@ -788,7 +809,8 @@ jobs:
 
       # Only now, and only because everything above succeeded. Recording the SHAs earlier would mean a
       # build that failed halfway was never retried: the next run would compare against the commit it
-      # died on, conclude there was nothing to do, and the new entries would be lost for good.
+      # died on, conclude there was nothing to do, and the new entries would be lost for good. The scout's
+      # slot gets the digest of the document this build parsed, by the same rule.
       - name: Record the source commits as built
         if: steps.gate.outputs.go == 'true'
         run: python scripts/watch_sources.py --update
