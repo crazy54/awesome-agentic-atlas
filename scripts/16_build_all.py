@@ -151,6 +151,12 @@ SHEET_TITLE = {k: t for k, t, *_ in SHEETS}
 # "Claude Code". SHEETS wins where it has an entry, so the ten already-shipped names do not move, and
 # `orchestrators` keeps the short label the workbook has always used for it rather than its SOURCES
 # title. Everything else takes the title its SOURCES entry already declares.
+# The sources that are not lists. The scout (`12_scout.py`) is a search, not a curator, so it decides
+# which repos are in the atlas but never counts toward `list_count` or `listed_by`: those are the
+# consensus the site sells -- "named by three lists" -- and a search agreeing with a list is not a second
+# opinion. A repo only the scout found has `list_count` 0 and an empty `listed_by`, and every surface says
+# "found by GitHub search" for it instead of a count.
+SYNTHETIC = frozenset(s["key"] for s in b10.SOURCES if s.get("synthetic"))
 LIST_TITLE = {**{s["key"]: s["title"] for s in b10.SOURCES},
               "orchestrators": "Orchestrators", **SHEET_TITLE}
 
@@ -651,6 +657,22 @@ def _thin(rec) -> bool:
     return rec.get("kind") == "subpath" or bool(rec.get("unavailable"))
 
 
+def offer_blurb(a: dict, r: dict) -> None:
+    """Longest blurb wins, except that an advisory listing's never displaces one already there.
+
+    A scouted listing has no blurb of its own -- the scout writes no descriptions -- so what it offers
+    is GitHub's description of the repo, which is also what a curated listing falls back to when its
+    curator wrote nothing. Measured on length alone it would replace a curator's sentence with the
+    repo's own tagline whenever the tagline is longer, which is the opposite of the rule `14_classify_all`
+    states: the list's own blurb is usually the better-written one. So it only fills a gap.
+    """
+    blurb = r.get("blurb") or r.get("description") or ""
+    if r.get("source") in tax.ADVISORY and a.get("blurb"):
+        return
+    if len(blurb) > len(a.get("blurb") or ""):
+        a["blurb"] = blurb
+
+
 def repo_pool(records, orch, label, keep=None):
     """One row per repo across every list, merged: earliest listing wins, longest blurb wins.
 
@@ -672,10 +694,9 @@ def repo_pool(records, orch, label, keep=None):
             # and a later listing can. Never fires for `platform_pool`, whose `keep` makes every
             # eligible listing a full one; it exists for the pools that keep the thin listings.
             a = pool[nwo] = dict(r, sources=a["sources"], blurb=a.get("blurb") or "")
-        a["sources"].add(r["source"])
-        blurb = r.get("blurb") or r.get("description") or ""
-        if len(blurb) > len(a.get("blurb") or ""):
-            a["blurb"] = blurb
+        if r["source"] not in SYNTHETIC:
+            a["sources"].add(r["source"])
+        offer_blurb(a, r)
     out = []
     for nwo, a in pool.items():
         a["list_count"] = len(a["sources"])
@@ -1839,9 +1860,9 @@ def main() -> None:
             continue
         a = agg.setdefault(nwo, dict(r))
         a.setdefault("sources", set())
-        a["sources"].add(r["source"])
-        if len(r.get("blurb") or r.get("description") or "") > len(a.get("blurb") or ""):
-            a["blurb"] = r.get("blurb") or r.get("description") or ""
+        if r["source"] not in SYNTHETIC:
+            a["sources"].add(r["source"])
+        offer_blurb(a, r)
     label = LIST_TITLE
     board = []
     for nwo, a in agg.items():

@@ -2,13 +2,13 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the twenty-nine harnesses in turn --
-// seventeen Python, ten in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty harnesses in turn --
+// eighteen Python, ten in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY TWENTY-NINE HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY THIRTY HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
 //   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces, and
 //                     the one channel on the page that is not colour: the five platform verdict marks,
@@ -41,6 +41,12 @@
 //                     through its seven cohorts rather than freezing on the last one, and that the stage is
 //                     wired into both workflows -- weekly-only would freeze the page for six nights in seven
 //                     with no error anywhere.
+//   scout_test.py     the scout, scripts/12_scout.py: GitHub search as a second intake path beside the curated
+//                     lists. Every exclusion rule on a fixture clean in every other respect (the REA download-
+//                     bait clone is the spam case), both star bars at their boundaries, the sticky ledger, a
+//                     failed search leaving every byte as it was, candidate lists keeping their first-seen
+//                     date, and the gate: watch_sources.py treating a changed scouted set as a list that
+//                     moved. Pure -- the search transport, the clock and every output path are replaced.
 //   probe.mjs         runs the page's own JavaScript against a stub DOM, and reads the stylesheet and the
 //                     page text. Sees every branch of the ranking, the hash and the palette. Cannot see
 //                     computed layout -- there is none in Node.
@@ -175,7 +181,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// twenty-nine files own their own plumbing. It is 200 lines of plumbing.
+// thirty files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync, readdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -202,6 +208,7 @@ const HARNESSES = [
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
   {file: "newness_test.py", label: "what `New` means: one cohort, superseded by the next import that brings anything", python: true, floor: 45},
   {file: "discover_test.py", label: "fifty a day for seven days, every category in each, and the queue that rotates them", python: true, floor: 75},
+  {file: "scout_test.py", label: "the scout: what GitHub search may add, the sticky ledger, a failed search, and the gate", python: true, floor: 180},
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
   {file: "media_test.py", label: "one embedded part per screenshot, the entry ceiling, and the unpooled cover", python: true, floor: 45},
@@ -252,7 +259,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and ten of the twenty-nine harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and ten of the thirty harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -265,18 +272,19 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Seventeen of the twenty-nine need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Eighteen of the thirty need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives a fake `gh` through the
 // batch fetch's failure handling, one drives the IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar,
+// one runs the scout's rules and its gate against a fake GitHub search,
 // one reads every built page looking for a platform mark that resolves to nothing, one re-derives the
 // semantic index's arithmetic from the committed bytes -- and between them they are most of the assertions
 // below, comfortably over half.
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and seventeen of the twenty-nine harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and eighteen of the thirty harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

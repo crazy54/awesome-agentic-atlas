@@ -1,0 +1,1313 @@
+{
+ "lists": {
+  "0xNyk/awesome-agent-cortex": {
+   "description": "Curated map of AI agent frameworks, protocols, runtimes, skills, memory, identity, security, evaluation, and commerce.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-22",
+   "stars": 224
+  },
+  "0xNyk/awesome-hermes-agent": {
+   "description": "Independent directory of useful skills, plugins, memory providers, tools, surfaces, and guides for Nous Research's open-source Hermes Agent.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-22",
+   "stars": 5832
+  },
+  "0xsline/awesome-deepseek-harness": {
+   "description": "DeepSeek Harness (DSH) ecosystem: curated plugins, tools, and infrastructure from dsh-external/hub and the public dsh-plugin topic.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-10",
+   "stars": 1166
+  },
+  "ARUNAGIRINATHAN-K/awesome-ai-agents-2026": {
+   "description": "✨ Awesome AI Agents for 2026",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-10",
+   "stars": 342
+  },
+  "AbdelStark/awesome-typesafe-jev": {
+   "description": "Awesome Jev: a source-backed field guide to TypeSafe's System One model, with SDKs, live demos, agent tools, and independent evaluations.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-09",
+   "stars": 581
+  },
+  "Agenta-AI/awesome-ai-agent-platforms": {
+   "description": "A curated list of open-source AI agent platforms: AI coworkers and teammates, agent builders and frameworks, workflow automation platforms, browser agents, and coding agents, with licenses.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-01",
+   "stars": 395
+  },
+  "AgenticHealthAI/Awesome-AI-Agents-for-Healthcare": {
+   "description": "Latest Advances on Agentic AI & AI Agents for Healthcare",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-02",
+   "stars": 1269
+  },
+  "Alchemyst-ai/awesome-saas": {
+   "description": "Collection of templates using the Alchemyst AI Platform for your next big AI app.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 420
+  },
+  "Alexey-Popov/awesome-ai-architect": {
+   "description": "10x your AI Architect journey: plain‑language, guides that blend AI engineering + solution architecture.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-29",
+   "stars": 224
+  },
+  "Amal-David/awesome-jev": {
+   "description": "Jev demos, projects, SDKs and skills, with source links and a curated X gallery.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 236
+  },
+  "Anil-matcha/awesome-gpt-6-astra": {
+   "description": "Evidence-backed use cases, prompts, integrations, evaluations, and safety notes for OpenAI GPT-6 Astra.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-03",
+   "stars": 1147
+  },
+  "Anil-matcha/awesome-jev-by-typesafe": {
+   "description": "Evidence-backed use cases, patterns, prompts, and starter code for TypeSafe Jev — a System One model for fast, typed, confidence-aware decisions in software.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-03",
+   "stars": 913
+  },
+  "Anil-matcha/awesome-muse-connectors": {
+   "description": "A source-backed catalog of Meta Muse integrations and community connector skills, with capability, authentication, and permission notes.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-05",
+   "stars": 1355
+  },
+  "Anil-matcha/awesome-seedance-2.5-api-prompts": {
+   "description": "Seedance 2.5 API guide, prompts, parameters, and examples for video generation",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-06",
+   "stars": 322
+  },
+  "Anil-matcha/awesome-vibecoded-saas": {
+   "description": "Open-source alternatives to the SaaS tools people pay for",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-17",
+   "stars": 1041
+  },
+  "AnotiaWang/awesome-decision-models": {
+   "description": "A curated list of decision models (System One / typed decision models): hosted APIs, open-weight models, runtimes, SDKs, applications, benchmarks, and papers.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 637
+  },
+  "Arindam200/awesome-ai-apps": {
+   "description": "A collection of projects showcasing RAG, agents, workflows, and other AI use cases",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-09",
+   "stars": 16110
+  },
+  "AspirinCode/awesome-AI4MolConformation-MD": {
+   "description": "List of molecules (small molecules, RNA, peptide, protein, enzymes, antibody,  and PPIs)  conformations and molecular dynamics (force fields) using generative artificial intelligence and deep learning",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 308
+  },
+  "AtlasCloudAI/awesome-seedance-2.5-prompts-skills": {
+   "description": "100+ curated Seedance 2.5 prompts with real video previews, plus an installable Agent Skill that optimizes prompts, creates storyboards, and generates videos via Seedance models.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 234
+  },
+  "BlockRunAI/awesome-OpenClaw-Money-Maker": {
+   "description": "🦞💰 Curated list of ways to make money with OpenClaw - automations, skills, services, and strategies",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 363
+  },
+  "BlockRunAI/awesome-finance-mcp": {
+   "description": "A curated list of MCP servers for AI finance agents",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-05",
+   "stars": 224
+  },
+  "CHIANGEL/Awesome-LLM-for-RecSys": {
+   "description": "Survey: A collection of AWESOME papers and resources on the large language model (LLM) related recommender system topics.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-08",
+   "stars": 1559
+  },
+  "ComposioHQ/awesome-claude-skills": {
+   "description": "A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-18",
+   "stars": 76894
+  },
+  "CryptoAILab/Awesome-LM-SSP": {
+   "description": "A reading list for large models safety, security, and privacy (including Awesome LLM Security, Safety, etc.).",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-02",
+   "stars": 2084
+  },
+  "Danielskry/Awesome-RAG": {
+   "description": "😎 Awesome list of Retrieval-Augmented Generation (RAG) applications in Generative AI.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-06",
+   "stars": 1391
+  },
+  "DasterProkio/awesome-ai-companion": {
+   "description": "Open-source AI companions, desktop pets, long-term memory & proactive chat. 人机恋开源项目大全。让你的家机能够脱离官端自主存在，拥有记忆和主动性。",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 923
+  },
+  "DavidZWZ/Awesome-Deep-Research": {
+   "description": "[ACL 2026 KnowFM] Awesome Agentic Deep Research Resources",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-23",
+   "stars": 870
+  },
+  "DavidZWZ/Awesome-RAG-Reasoning": {
+   "description": "[EMNLP 2025] Awesome RAG Reasoning Resources",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-23",
+   "stars": 459
+  },
+  "Dominic789654/awesome-deepseek-harness": {
+   "description": "A curated list of plugins, skills, MCP servers, patch/profile layers, orchestrators & UIs for DeepSeek Harness (DSH). Visualization · PPT · Coding · Agents · Loops (auto-research) and more. #dsh",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 376
+  },
+  "EmbraceAGI/awesome-chatgpt-zh": {
+   "description": "ChatGPT 中文指南🔥，ChatGPT 中文调教指南，指令指南，应用开发指南，精选资源清单，更好的使用 chatGPT 让你的生产力 up up up! 🚀",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-30",
+   "stars": 11749
+  },
+  "Engineering4AI/awesome-spec-driven-development": {
+   "description": "A curated list of awesome resources for spec-driven development (SDD)",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 295
+  },
+  "EvoLinkAI/awesome-gpt-image-2-API-and-Prompts": {
+   "description": "GPT-Image-2 API and Prompts",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-18",
+   "stars": 17303
+  },
+  "EvoLinkAI/awesome-seedance-2.5-guide": {
+   "description": "Seedance 2.5 official guide with 36 official media assets and the preserved Seedance 2 legacy guide.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-05",
+   "stars": 409
+  },
+  "EvoMap/awesome-agent-evolution": {
+   "description": "A curated list of AI Agent evolution, memory systems, multi-agent architectures, and self-improvement projects. | evomap.ai",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-07",
+   "stars": 234
+  },
+  "GeminiLight/awesome-ai-llm4education": {
+   "description": "Awesome artificial intelligence (AI) and large language model (LLM) for education papers.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-05",
+   "stars": 220
+  },
+  "Gloriaameng/Awesome-Agent-Harness": {
+   "description": "Agent Harness for Large Language Model Agents: A Survey. Survey on LLM agentharnessengineering with a taxonomy. 110+papers, 23 systems analyzed.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-28",
+   "stars": 367
+  },
+  "HKUSTDial/awesome-data-agents": {
+   "description": "Continuously updated paper list on advancements in Data Agents. Companion repo to our paper \"A Survey of Data Agents: Emerging Paradigm or Overstated Hype?\"",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-05",
+   "stars": 774
+  },
+  "HenryPengZou/Awesome-Human-Agent-Collaboration-Interaction-Systems": {
+   "description": "[ACL 2026] LLM-Based Human-Agent Collaboration and Interaction Systems: A Survey | Awesome Human-Agent Collaboration | Human-AI Collaboration",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-23",
+   "stars": 236
+  },
+  "IAAR-Shanghai/Awesome-AI-Memory": {
+   "description": "Awesome AI Memory | LLM Memory | A curated knowledge base on AI memory for LLMs and agents, covering long-term memory, reasoning, retrieval, and memory-native system design.  Awesome-AI-Memory 是一个 集中式、持续更新的 AI 记忆知识库，系统性整理了与 大模型记忆（LLM Memory）与智能体记忆（Agent Memory） 相关的前沿研究、工程框架、系统设计、评测基准与真实应用实践。",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 1269
+  },
+  "InternScience/Awesome-Scientific-Skills": {
+   "description": "An open, curated collection of Agent Skills for scientific research — clone it, use it, extend it!",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-13",
+   "stars": 565
+  },
+  "JSONbored/awesome-claude": {
+   "description": "HeyClaude is a curated registry and distribution surface for Claude and AI-workflow assets: agents, MCP servers, skills, commands, hooks, rules, guides, tools, jobs, Raycast feeds, static data exports, and an npm MCP package.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-16",
+   "stars": 300
+  },
+  "KingLeoJr/awesome-vibe-coding-prompt-code-templates": {
+   "description": "builder prompts which can be sent to builders like cursor, bolt.diy, bolt.new, trae, project idx, Claude code, lovable.dev, llmacoder, geminicoder, windsurf, deepseek-artifact, cline, aider etc",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-27",
+   "stars": 279
+  },
+  "KrishMunot/awesome-startup": {
+   "description": ":sunglasses: All the required resources to build your own startup",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-26",
+   "stars": 2367
+  },
+  "LLMQuant/awesome-trading-agents": {
+   "description": "Curated list of LLM-driven trading agents, MCP servers, and agent skills for market research, strategy, and execution.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-13",
+   "stars": 885
+  },
+  "LearnPrompt/awesome-seedance": {
+   "description": "🎬 Evidence-led Seedance 2.5 / 2.0 prompt library: 600+ cases traced to original posts, 260+ cross-model retest runs with public verdicts, 25 copy-ready templates, 50+ installable AI-video Skills. Synced daily from goodcase.ai. EN / 中文 / 日本語.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 1974
+  },
+  "MartinDelophy/awesome-gpt-6-astra": {
+   "description": "A curated collection of fun games built with GPT-6 Astra, with source code, demos, and prompts. | GPT-6 Astra 游戏精选",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 361
+  },
+  "NishilBalar/Awesome-LVLM-Hallucination": {
+   "description": "up-to-date curated list of  state-of-the-art Large vision language models hallucinations research work, papers & resources",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-28",
+   "stars": 332
+  },
+  "OmniJev/awesome-jev-gallery": {
+   "description": "🔥🔥 Awesome Jev:  open-source models, projects, benchmarks, and independent evaluations for Jev and System One models.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 502
+  },
+  "Peiyang-Song/Awesome-LLM-Reasoning-Failures": {
+   "description": "Repo for \"Large Language Model Reasoning Failures\"",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-20",
+   "stars": 223
+  },
+  "PolyX-Research/Awesome-Remote-Sensing-Agents": {
+   "description": "🚀Official Repository of Intelligent Remote Sensing Agents: A Survey",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-29",
+   "stars": 614
+  },
+  "Prat011/awesome-llm-skills": {
+   "description": "A curated list of awesome LLM and AI Agent Skills, resources and tools for customising AI Agent workflows - that works with Claude Code, Codex, Gemini CLI and your custom AI Agents",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-14",
+   "stars": 1792
+  },
+  "QuesmaOrg/awesome-ai-tokenomics": {
+   "description": "A curated list on AI token economics: what tokens cost, where they get wasted, and how to cut the bill. Tools, benchmarks, papers, and copy-paste configs for the token economy of LLMs and coding agents.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-04",
+   "stars": 200
+  },
+  "RiccardoBiosas/awesome-MLSecOps": {
+   "description": "A curated list of MLSecOps tools and resources for securing machine learning and AI systems - adversarial ML defense, LLM security, AI red teaming, model scanning, supply-chain protection, and MLOps pipeline security.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 475
+  },
+  "RongleCat/awesome-grok-bot": {
+   "description": "Curated bilingual list of Grok Bot resources — always-on AI teammates with their own cloud computer.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-10",
+   "stars": 403
+  },
+  "SAILResearch/awesome-ai-leaderboard": {
+   "description": "A curated list of awesome leaderboard-oriented resources for AI domain",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 382
+  },
+  "Sri-Krishna-V/awesome-adk-agents": {
+   "description": "Curated collection of AI agents built with Google’s Agent Development Kit (ADK): templates, best practices, and production-ready examples for research, business, automation, education, and more.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 348
+  },
+  "TeleAI-UAGI/Awesome-Agent-Memory": {
+   "description": "Curated systems, benchmarks, and papers etc. on memory for LLMs/MLLMs --- long-term context, retrieval, and reasoning.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 670
+  },
+  "TensorBlock/awesome-mcp-servers": {
+   "description": "A comprehensive collection of Model Context Protocol (MCP) servers",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 891
+  },
+  "Tom-roujiang/Awesome-LLM-Quantitative-Trading-Papers": {
+   "description": "🚀 A curated collection of papers focusing on LLM-based quantitative trading.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-24",
+   "stars": 256
+  },
+  "TreeAI-Lab/Awesome-KV-Cache-Management": {
+   "description": "This repository serves as a comprehensive survey of LLM development, featuring numerous research papers along with their corresponding code links.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-16",
+   "stars": 362
+  },
+  "TripoGrowthLab/awesome-astra-prompts": {
+   "description": "200+ Curated GPT-6 Astra prompts and 3D examples for games, Blender scenes and interactive worlds. 14 languages, previews and source links. Updated twice daily. Curated by Tripo.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 335
+  },
+  "TsinghuaC3I/Awesome-RL-for-LRMs": {
+   "description": "A Survey of Reinforcement Learning for Large Reasoning Models",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-14",
+   "stars": 2491
+  },
+  "ValueByte-AI/Awesome-LLM-in-Social-Science": {
+   "description": "Awesome papers involving LLMs in Social Science.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-24",
+   "stars": 651
+  },
+  "VoltAgent/awesome-ai-agent-papers": {
+   "description": "A curated collection of AI agent research papers released in 2026, covering agent engineering, memory, evaluation, workflows, and autonomous systems.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-02",
+   "stars": 1840
+  },
+  "VoltAgent/awesome-codex-subagents": {
+   "description": "A collection of 130+ specialized Codex subagents covering a wide range of development use cases.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-05",
+   "stars": 6304
+  },
+  "VoltAgent/awesome-design-md": {
+   "description": "A collection of DESIGN.md files analysis by popular brand design systems. Drop one into your project and let coding agents generate a matching UI.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-05",
+   "stars": 120365
+  },
+  "VoltAgent/awesome-openclaw-skills": {
+   "description": "The awesome collection of OpenClaw skills. 5,400+ skills filtered and categorized from the official OpenClaw Skills Registry.🦞",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 53074
+  },
+  "WangRongsheng/awesome-LLM-resources": {
+   "description": "🧑‍🚀 全世界最好的LLM资料总结（多模态生成、Agent、辅助编程、AI审稿、数据处理、模型训练、模型推理、o1 模型、MCP、小语言模型、视觉语言模型） | Summary of the world's best LLM resources.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-07",
+   "stars": 9014
+  },
+  "WecoAI/awesome-autoresearch": {
+   "description": "Curated list of AutoResearch use cases with optimization traces and open source implementations",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-30",
+   "stars": 1067
+  },
+  "WenyuChiou/awesome-agentic-ai-zh": {
+   "description": "A trilingual (繁中 / English / 简中) learning roadmap for agentic AI: from LLM basics to multi-agent systems, with 240+ curated resources and hands-on examples. 中文 AI agent 學習地圖。",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 7531
+  },
+  "XMUDeepLIT/Awesome-Self-Evolving-Agents": {
+   "description": "A Survey of Self-Evolving Agents | A curated list of resources (surveys, papers, benchmarks, and opensource projects) on Self-Evolving Agents.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-04",
+   "stars": 471
+  },
+  "Xiaohao-Liu/Awesome-Multi-Token-Prediction": {
+   "description": "A curated list of papers, tools, and resources on Multi-Token Prediction (MTP) and related techniques in Large Language Models (LLMs), Speech-Language Models (SLMs), and more.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-08",
+   "stars": 210
+  },
+  "Xnhyacinth/Awesome-LLM-Long-Context-Modeling": {
+   "description": "📰 Must-read papers and blogs on LLM based Long Context Modeling 🔥",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-17",
+   "stars": 2179
+  },
+  "YerbaPage/Awesome-Repo-Level-Code-Generation": {
+   "description": "Must-read papers on Repository-level Code Generation & Issue Resolution 🔥",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-21",
+   "stars": 335
+  },
+  "Yeti-791/Awesome-Offensive-AI-Agentic-Landscape": {
+   "description": "This document curates open-source projects, academic papers, capability benchmarks, and commercial solutions (international & China) in AI penetration testing, LLM red teaming, autonomous offensive agents, and vulnerability discovery—aimed at helping researchers, security engineers, and enterprise d",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-10",
+   "stars": 352
+  },
+  "Yigtwxx/awesome-rag-production": {
+   "description": "A curated list of battle-tested tools, frameworks, and best practices for building scalable, production-grade Retrieval-Augmented Generation (RAG) systems.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-05",
+   "stars": 279
+  },
+  "YouMind-OpenLab/awesome-gpt-image-2": {
+   "description": "🚀 World's largest GPT Image 2 prompt library, updated daily — 2000+ curated prompts with preview images, 16 languages. OpenAI's next-gen image model with pixel-perfect text rendering, cross-image consistency, and commercial-grade illustration. Free & open source.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 10079
+  },
+  "YouMind-OpenLab/awesome-nano-banana-pro-prompts": {
+   "description": "🍌 World's largest Nano Banana Pro prompt library — 10,000+ curated prompts with preview images, 16 languages. Google Gemini AI image generation. Free & open source.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 13564
+  },
+  "YouMind-OpenLab/awesome-seedance-2-prompts": {
+   "description": "🎬 2000+ curated Seedance 2.0 video generation prompts — cinematic, anime, UGC, ads, meme styles. Includes Seedance API guides, character consistency tips, and advanced video workflows.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 2113
+  },
+  "YuanchenBei/Awesome-Graphs-Meet-Agents": {
+   "description": "[Up-to-date] A curated list of resources on graph-empowered agents and agent-facilitated graph learning (Graphs Meet Agents & Agentic Graph Engineering).",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-28",
+   "stars": 212
+  },
+  "YuzeHao2023/Awesome-MCP-Servers": {
+   "description": "A curated list of Model Context Protocol (MCP) servers",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-07",
+   "stars": 1072
+  },
+  "ZJU-REAL/Awesome-GUI-Agents": {
+   "description": "A curated collection of resources, tools, and frameworks for developing GUI Agents.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-28",
+   "stars": 460
+  },
+  "ZeroLu/awesome-gpt-image": {
+   "description": "A curated collection of the best GPT Image 2 and GPT Image 2.5 prompts and examples. The prompts come from top creators on X.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 2262
+  },
+  "ZeroLu/awesome-nanobanana-pro": {
+   "description": "🚀 An awesome list of curated Nano Banana pro prompts and examples. Your go-to resource for mastering prompt engineering and exploring the creative potential of the Nano banana pro(Nano banana 2) AI image model.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 10340
+  },
+  "ZeroLu/awesome-seedance": {
+   "description": "The ultimate collection of high-fidelity Seedance 2.0 prompts and Seedance AI resources. Discover Seedance 2.0 how to use for cinematic film, anime, UGC, social media, meme and advertising. Includes Seedance API guides and advanced video generation workflows.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 2676
+  },
+  "ZeroPointRepo/awesome-hermes-skills": {
+   "description": "Hermes Agent skills and plugins: 350+ tools, memory providers, and guides for Nous Research's agent.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-05",
+   "stars": 610
+  },
+  "Zhiyuan-Fan/Awesome-DeepSeek-Harness-Plugins": {
+   "description": "Curated DeepSeek Harness (DSH) plugins, extensions, tools, skills, clients, runtimes, integrations, and verified references — English and Chinese.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-15",
+   "stars": 574
+  },
+  "Zijian-Ni/awesome-ai-agents-2026": {
+   "description": "🤖 A curated list of AI Agent frameworks, tools, platforms, and resources for 2026 — the year agents went mainstream",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-08",
+   "stars": 245
+  },
+  "aarora4/Awesome-Prediction-Market-Tools": {
+   "description": "A curated list of Prediction Market Tools - AI Agents, Analytics, APIs, Dashboards, Copy Trading, Alerting, Tracking and More!!",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-07",
+   "stars": 771
+  },
+  "acvnace/awesome-vibe-coding-resources": {
+   "description": "A curated list of awesome resources for vibe coding",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 309
+  },
+  "ai-boost/awesome-a2a": {
+   "description": "Agent2Agent (A2A) – awesome A2A agents, tools, servers & clients, all in one place.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 698
+  },
+  "ai-boost/awesome-prompts": {
+   "description": "Curated list of chatgpt prompts from the top-rated GPTs in the GPTs Store. Prompt Engineering, prompt attack & prompt protect. Advanced Prompt Engineering papers.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 9043
+  },
+  "aliaihub/awesome-hermes-usecases": {
+   "description": "Curated real-world use cases for Hermes Agent — the self-improving AI agent from Nous Research. Backed by primary sources.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-09",
+   "stars": 260
+  },
+  "alvinreal/awesome-openclaw": {
+   "description": "A curated list of the best OpenClaw resources: official projects, skills, plugins, dashboards, deployment tooling, memory systems, and guides.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-09",
+   "stars": 742
+  },
+  "alvinreal/awesome-opensource-ai": {
+   "description": "Curated list of the best truly open-source AI projects, models, tools, and infrastructure. Daily updated.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 4869
+  },
+  "apify/awesome-skills": {
+   "description": "Community collection of Apify agent skills for AI coding assistants",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-22",
+   "stars": 269
+  },
+  "aristoapp/awesome-second-brain": {
+   "description": "A curated solutions to building a self-evolving second brain that helps AI agents understand your personal and team context.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-13",
+   "stars": 558
+  },
+  "athemeroy/awesome-claude-5-5-videos": {
+   "description": "Source-linked Claude 5.5 video workflows: Opus and Sonnet demos, separately labeled next-Fable testing reports, prompts, tools and production evidence.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 522
+  },
+  "av/awesome-llm-services": {
+   "description": "A list of self-hostable LLM services",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 269
+  },
+  "awesome-vibe-coding/awesome-vibe-coding": {
+   "description": "A hand-picked collection of tools and resources for Vibe Coding",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-13",
+   "stars": 864
+  },
+  "benchflow-ai/awesome-evals": {
+   "description": "A curated, non-BS library of the best resources for building and evaluating AI agents — papers, blogs, talks, tools, benchmarks. Maintained by BenchFlow.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-09",
+   "stars": 970
+  },
+  "brandonhimpfen/awesome-prompt-engineering": {
+   "description": "A curated list of resources, tools, papers, and platforms for prompt engineering in large language models (LLMs) and generative AI.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-06",
+   "stars": 254
+  },
+  "brycewang-stanford/Awesome-Journal-Skills": {
+   "description": "Journal-specific Claude Code/Codex skill packs covering mainstream journals — AER, QJE, Nature, Cell, 管理世界, 经济研究 & 200+ more — your fast track to getting published. ｜ 覆盖主流期刊的 Claude Code/Codex 期刊技能包，从选题、识别策略到表格规范与审稿回复全流程，助你快速发论文。",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-27",
+   "stars": 1241
+  },
+  "bytedoger/awesome-OpenPrice": {
+   "description": "开源的 AI 订阅价格聚合与比价平台，收录 ChatGPT、Claude、Gemini、Grok、Cursor 等产品的官方订阅价格和卡网渠道报价，帮助用户快速查询并比较不同购买渠道。",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-27",
+   "stars": 989
+  },
+  "cclank/lanshu-awesome-ai-video-kit": {
+   "description": "做企业 AI 视频项目逼出来的工具包 · 411 prompt · 15 模型 · 7 Claude Skill · 14 篇方法论",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-07",
+   "stars": 417
+  },
+  "chrisliu298/awesome-llm-unlearning": {
+   "description": "A resource repository for machine unlearning in large language models",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-06",
+   "stars": 630
+  },
+  "chrisliu298/awesome-on-policy-distillation": {
+   "description": "A curated collection of papers, technical reports, frameworks, and tools for on-policy distillation (OPD) of large language models",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-06",
+   "stars": 877
+  },
+  "cobanov/awesome-jev": {
+   "description": "A curated, source-backed list of projects built with Jev, TypeSafe AI's System One model for typed decisions.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-06",
+   "stars": 541
+  },
+  "cogine-ai/awesome-openclaw-zh": {
+   "description": "OpenClaw 中文实战库：192 个可复制使用场景，从部署到5分钟上手到完全精通。案例覆盖自动化、内容创作、运营增长与安全使用。",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 241
+  },
+  "composio-community/awesome-claude-plugins": {
+   "description": "A curated list of Plugins that let you extend Claude Code with custom commands, agents, hooks, and MCP servers through the plugin system.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-26",
+   "stars": 1939
+  },
+  "composio-community/awesome-codex-skills": {
+   "description": "A curated list of practical Codex skills for automating workflows across the Codex CLI and API.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-26",
+   "stars": 16869
+  },
+  "cssmagic/Awesome-AI": {
+   "description": "收集分享 AI 大型语言模型 (LLM)、AI 辅助编程、AI 绘画等领域的常用资料，探索生成式人工智能的应用与开发。",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-02",
+   "stars": 298
+  },
+  "dalisoft/awesome-hosting": {
+   "description": "List of awesome hosting sorted by minimal plan price",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-09",
+   "stars": 940
+  },
+  "devanshug2307/Awesome-AI-Image-Prompts": {
+   "description": "1,000+ curated AI image prompts, including copy-ready JSON prompts for OpenAI image tools, product photography, portraits, character design, and more.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-08",
+   "stars": 276
+  },
+  "eltociear/awesome-AI-driven-development": {
+   "description": "Awesome list of AI-Driven Development.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-07",
+   "stars": 554
+  },
+  "enescingoz/awesome-n8n-templates": {
+   "description": "280+ free n8n automation templates — ready-to-use workflows for Gmail, Telegram, Slack, Discord, WhatsApp, Google Drive, Notion, OpenAI, and more. AI agents, RAG   chatbots, email automation, social media, DevOps, and document processing. The largest open-source n8n template collection.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-12",
+   "stars": 25877
+  },
+  "felladrin/awesome-ai-web-search": {
+   "description": "List of software that allows searching the web with the assistance of AI: https://hf.co/spaces/felladrin/awesome-ai-web-search",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-05",
+   "stars": 1477
+  },
+  "freestylefly/awesome-gpt-image-2": {
+   "description": "Prompt as Code | GPT Image 2 / 2.5 提示词与案例库，530+ 个案例、20+ 套工业级模板与可复用 Skills，新增 2.5 同提示词对比专区，附完整提示词与生成记录，持续更新。",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-09",
+   "stars": 34308
+  },
+  "gamedev-skills/awesome-gamedev-agent-skills": {
+   "description": "74 game-dev skills for AI coding agents — Godot, Unity, Unreal, Phaser, PixiJS, three.js, Bevy, pygame, LÖVE, Roblox. Portable SKILL.md Agent Skills (the format Anthropic launched as Claude Skills), with a router that loads the right skill for your engine and task. Runs in Claude Code, Cursor, Kiro,",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-09",
+   "stars": 1435
+  },
+  "gavischneider/awesome-llm-wiki": {
+   "description": "A curated list of foundational blueprints, functional frameworks, and technical guides for building compounding, AI-compiled knowledge bases.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 218
+  },
+  "global-fde/awesome-fde-resources": {
+   "description": "A curated collection of resources, tools, practices, case studies, and opportunities for Forward Deployed Engineers.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-04",
+   "stars": 299
+  },
+  "gokayfem/awesome-vlm-architectures": {
+   "description": "Curated visual catalog of 155+ vision-language model (VLM/MLLM) architectures: papers, diagrams, training recipes, datasets, and a release timeline for multimodal AI agents.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-31",
+   "stars": 1334
+  },
+  "guanmo-ai/awesome-ai-motion": {
+   "description": "发现惊艳动效、创意视频与交互艺术，探索背后的源码、提示词与制作过程。Curated motion design, creative video & interactive art — with source code, prompts & making-of resources.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 301
+  },
+  "hanlulong/awesome-ai-for-economists": {
+   "description": "A curated list of AI tools, libraries, and resources for economics research, teaching, and policy analysis. Maintained by the OpenEcon team.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-20",
+   "stars": 667
+  },
+  "haoruilee/awesome-agent-native-services": {
+   "description": "A curated list of agent-native services and infrastructure for AI agents: email, browsers, memory, sandboxes, payments, and MCP tools. Includes selection criteria and onboarding guides.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 477
+  },
+  "hashgraph-online/awesome-ai-plugins": {
+   "description": "A curated list of the best awesome AI plugins for AI assistants including Claude Code, OpenAI Codex / ChatGPT, Gemini, Antigravity, Pi / Oh My Pi, Grok, OpenCodek DSH, Kimi and More. https://hol.org/plugins",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 533
+  },
+  "hashgraph-online/awesome-codex-plugins": {
+   "description": "A curated list of awesome OpenAI Codex / ChatGPT plugins, skills, and resources. The #1 Codex Marketplace.  See live plugins at: https://hol.org/plugins/best-codex-plugins",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 1284
+  },
+  "holtwood/awesome-cursorrules-zh": {
+   "description": "Cursor AI 编程规则精选集 | 132+ 规则，覆盖前端/后端/AI/DevOps 等 32 个领域",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-10",
+   "stars": 236
+  },
+  "huhusmang/Awesome-LLMs-for-Vulnerability-Detection": {
+   "description": "The community's most comprehensive, continuously-updated index of research on Large Language Models for software vulnerability detection — papers across function-level, repository-level, agentic, and smart-contract detection, plus datasets, benchmarks, and surveys.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 1483
+  },
+  "ikaijua/Awesome-AITools": {
+   "description": "Collection of AI-related utilities. Welcome to submit pull requests /收藏AI相关的实用工具，欢迎提交pull requests",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 6219
+  },
+  "ilsilfverskiold/Awesome-LLM-Resources-List": {
+   "description": "A Curated Collection of resources for applied AI engineering (work in progress).",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-25",
+   "stars": 553
+  },
+  "jjiantong/Awesome-KV-Cache-Optimization": {
+   "description": "[ACL 2026] Towards Efficient Large Language Model Serving: A Survey on System-Aware KV Cache Optimization",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 418
+  },
+  "junchenzhi/Awesome-LLM-Ensemble": {
+   "description": "A curated list of Awesome-LLM-Ensemble papers for the survey \"Harnessing Multiple Large Language Models: A Survey on LLM Ensemble\"",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-01",
+   "stars": 256
+  },
+  "jxzhangjhu/Awesome-LLM-RAG": {
+   "description": "Awesome-LLM-RAG: a curated list of advanced retrieval augmented generation (RAG) in Large Language Models",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-05",
+   "stars": 1367
+  },
+  "jxzhangjhu/Awesome-LLM-Uncertainty-Reliability-Robustness": {
+   "description": "Awesome-LLM-Robustness: a curated list of Uncertainty, Reliability and Robustness in Large Language Models",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-03",
+   "stars": 838
+  },
+  "karanb192/awesome-claude-code-mods": {
+   "description": "Community catalogue of public Claude Code mods (function hooks), scanned from GitHub with what each mod can read, write, run or send over the network. Browse https://mods.aidojo.si/",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 501
+  },
+  "karanb192/awesome-claude-skills": {
+   "description": "🎯 The definitive collection of 50+ verified Awesome Claude Skills for Claude Code, Claude.ai, and API. Boost productivity with TDD, debugging, git workflows, document processing, and more. Community-driven, actively maintained.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-02",
+   "stars": 544
+  },
+  "kesslernity/awesome-copilot-studio-agents": {
+   "description": "103 paste-ready declarative agents for Microsoft 365 Copilot. No coding. No Azure. Deploy in minutes.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-08",
+   "stars": 521
+  },
+  "kesslernity/awesome-microsoft-copilot-prompts": {
+   "description": "The definitive Microsoft 365 Copilot prompt library for business teams. 573 prompts for Office apps, Copilot Studio, security operations, and enterprise deployment.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-08",
+   "stars": 549
+  },
+  "kydlikebtc/awesome-grokbot": {
+   "description": "1894 live x.ai/bot shares for Grok Bot — every link status-checked, every row attributed. Bilingual EN/中文 catalog with a JSON schema, CI, and a searchable site.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 350
+  },
+  "kydlikebtc/awesome-jev": {
+   "description": "1207 public resources for Jev, TypeSafe AI's System One decision model, indexed by decision pattern. Source citations, dated link checks and scheduled call-site text checks; runtime and performance are not independently tested here. EN/中文, JSON schema and platform compatibility.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 598
+  },
+  "kyegomez/awesome-multi-agent-papers": {
+   "description": "A compilation of the best multi-agent papers",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 1699
+  },
+  "kyrolabs/awesome-langchain": {
+   "description": "😎 Awesome list of tools and projects with the awesome LangChain framework",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 9562
+  },
+  "langgptai/Awesome-Multimodal-Prompts": {
+   "description": "Prompts of GPT-4V & DALL-E3 to full utilize the multi-modal ability. GPT4V Prompts, DALL-E3 Prompts.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-30",
+   "stars": 289
+  },
+  "langgptai/awesome-claude-prompts": {
+   "description": "This repo includes Claude prompt curation to use Claude better.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-25",
+   "stars": 5516
+  },
+  "langgptai/awesome-gemini-prompts": {
+   "description": "Gemini Prompts, Gemini 3 Prompts, jailbreak, LLM Prompts, LangGPT —— by 云中江树",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-25",
+   "stars": 493
+  },
+  "langgptai/awesome-llama-prompts": {
+   "description": "LLM prompts, llama3 prompts, llama2 prompts",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-30",
+   "stars": 272
+  },
+  "lawve-ai/awesome-legal-skills": {
+   "description": "A curated list of awesome Agent Skills for automating legal work",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-02",
+   "stars": 854
+  },
+  "legeling/awesome-codex-pet": {
+   "description": "A curated gallery of community-made Codex pets, with generated action previews and one-command installation. codex宠物，codex 小宠物，像素宠物，桌宠，桌面宠物",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 1094
+  },
+  "leoncuhk/awesome-quant-ai": {
+   "description": "A curated list of awesome resources for quantitative investment and trading strategies focusing on artificial intelligence and machine learning applications in finance.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-27",
+   "stars": 635
+  },
+  "lingxling/awesome-skills-cn": {
+   "description": "热门Skills中文cn学习版+教程，提供7000+Skills，集成claude skills (11w+Star) | awesome-openclaw-skills (4w+Star) | ui-ux-pro-max-skill (4w+Star)等10余个热门Skill项目",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-07",
+   "stars": 306
+  },
+  "liu673/Awesome-LLM4Security": {
+   "description": "This project aims to consolidate and share high-quality resources and tools across the cybersecurity domain.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-11",
+   "stars": 359
+  },
+  "liunian-Jay/Awesome-RAG": {
+   "description": "💡 Awesome RAG: A resource of Retrieval-Augmented Generation (RAG) for LLMs, focusing on the development of technology.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-16",
+   "stars": 519
+  },
+  "llm-jp/awesome-japanese-llm": {
+   "description": "日本語LLMまとめ - Overview of Japanese LLMs",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-03",
+   "stars": 1442
+  },
+  "lobehub/awesome-rsi": {
+   "description": "A curated research map of Recursive Self-Improvement (RSI): models, agents, harnesses, embodied systems, automated AI R&D, benchmarks, and safety.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-06",
+   "stars": 609
+  },
+  "logicrw/awesome-jev-projects": {
+   "description": "Awesome Jev: source-backed open-source ecosystem radar, plain-language project discovery, and automatic GitHub sync",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 682
+  },
+  "lonePatient/awesome-pretrained-chinese-nlp-models": {
+   "description": "Awesome Pretrained Chinese NLP Models，高质量中文预训练模型&大模型&多模态模型&大语言模型集合",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-30",
+   "stars": 5597
+  },
+  "loulanyue/awesome-claude-notes": {
+   "description": "Community-maintained distribution of reusable AI coding agents, commands, skills, hooks, and cross-harness workflows.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-05",
+   "stars": 272
+  },
+  "marketingtoolslist/awesome-marketing": {
+   "description": "A curated list of awesome marketing tools and resources",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-27",
+   "stars": 476
+  },
+  "matrix-agent/awesome-agentic-world-modeling": {
+   "description": "Agentic World Modeling: Foundations, Capabilities, Laws, and Beyond",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-30",
+   "stars": 326
+  },
+  "maxbogo/awesome-ai-tools-for-ui": {
+   "description": "Curated list of awesome AI tools to build beautiful UI/UX.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-25",
+   "stars": 952
+  },
+  "menkesu/awesome-pm-skills": {
+   "description": "Product management workflows grounded in Lenny's Podcast, for Claude Code, Codex, and Cursor.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-06",
+   "stars": 440
+  },
+  "mergisi/awesome-openclaw-agents": {
+   "description": "162 production-ready AI agent templates for OpenClaw. SOUL.md configs across 19 categories. Submit yours!",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-26",
+   "stars": 4002
+  },
+  "mliu98/awesome-human-distillation": {
+   "description": "A curated catalog of human distillliation agent skills",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-08",
+   "stars": 750
+  },
+  "mnfst/awesome-free-llm-apis": {
+   "description": "List of Permanent Free LLM API  (API Keys)",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 9896
+  },
+  "modoojunko/awesome-novel-agent": {
+   "description": "让 AI agent成为你的小说创作搭档。从世界观搭建到角色塑造，从章节规划到正文写作，一步步陪你完成整部小说。",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-25",
+   "stars": 798
+  },
+  "momozi1996/awesome-ai-persona-skills": {
+   "description": "全网最全的、持续更新的、最火爆的 100+ 人格 蒸馏skills 合集｜ 多agent系统 ｜名人/导演/天涯大神/古籍/二次元/职场/情感全品类",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-02",
+   "stars": 931
+  },
+  "moov-io/awesome-fintech": {
+   "description": "A curated collection of open source fintech libraries for payments, banking, and financial infrastructure.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-05",
+   "stars": 389
+  },
+  "naodeng/awesome-qa-skills": {
+   "description": "Awesome QA Skills is an open-source AI-native Quality Engineering skill system that helps engineering teams reason about, design, execute, evaluate, and continuously improve software quality across the entire SDLC.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 252
+  },
+  "nick7nlp/Awesome-LLM-On-Policy-Distillation": {
+   "description": "A curated collection of papers and resources on On-Policy Distillation for Large Language Models.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 577
+  },
+  "nubenetes/awesome-kubernetes": {
+   "description": "A curated list of awesome references collected since 2018.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-07",
+   "stars": 672
+  },
+  "nuwa-skills/awesome-nuwa": {
+   "description": "Awesome list of 女娲.skill — 用女娲蒸馏的人物思维框架合集 | Distilled human thinking frameworks for Claude Code",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-25",
+   "stars": 403
+  },
+  "oh-jon-paul/awesome-i18n": {
+   "description": "🌍 A curated list of i18n resources for all kind of languages and frameworks",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-18",
+   "stars": 412
+  },
+  "peter123023/awesome-claude-api": {
+   "description": "收集和整理的可靠Claude中转API资源列表，帮助开发者快速找到稳定、高性价比的Claude API服务",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-09",
+   "stars": 463
+  },
+  "pierpaolo28/Awesome-FDE-Roadmap": {
+   "description": "🚀 The definitive roadmap to becoming a Forward Deployment Engineer (FDE). Master AI Agents, Enterprise Data Architecture, and Strategic Consulting. Bridging the gap between HQ and the field. Inspired by the \"Delta\" role at Palantir, OpenAI, and Scale AI.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-13",
+   "stars": 1357
+  },
+  "punkpeye/awesome-mcp-devtools": {
+   "description": "A curated list of developer tools, SDKs, libraries, and testing utilities for Model Context Protocol (MCP) server development.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-04",
+   "stars": 486
+  },
+  "punkpeye/awesome-remote-mcp-servers": {
+   "description": "A collection of remote MCP servers.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-09",
+   "stars": 1070
+  },
+  "qianlima-lab/awesome-lifelong-llm-agent": {
+   "description": "TPAMI 2026 | This repository collects awesome survey, resource, and paper for lifelong learning LLM agents",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-01",
+   "stars": 337
+  },
+  "quemsah/awesome-claude-plugins": {
+   "description": "Automated index of Claude Code plugins and adoption metrics across GitHub repositories, powered by a Node.js/TypeScript crawler",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 1425
+  },
+  "rafska/awesome-local-llm": {
+   "description": "A curated list of awesome platforms, tools, practices and resources that helps run LLMs locally",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 2955
+  },
+  "reasoning-survey/Awesome-Reasoning-Foundation-Models": {
+   "description": "✨✨Latest Papers and Benchmarks in Reasoning with Foundation Models",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-03",
+   "stars": 660
+  },
+  "scadastrangelove/awesome-ai-security-tools": {
+   "description": "A curated list of public-source, research, and commercial tools for AI security and AI-assisted cybersecurity — autotriage, agent security, AI/ML supply chain, pentest agents, AI SAST, LLM-driven fuzzing, threat intelligence, SOC/SIEM triage, reverse engineering, LLM red-teaming, and more.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-08",
+   "stars": 1604
+  },
+  "seb1n/awesome-ai-agent-skills": {
+   "description": "103 ready-to-use AI agent skills for Claude Code, OpenAI Codex, Gemini CLI, Cursor, GitHub Copilot, Windsurf, and other Agent Skills-compatible tools. Complete SKILL.md workflows—not a link directory.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-09",
+   "stars": 209
+  },
+  "selfimproving-agent/Awesome-Self-Improving-Agents": {
+   "description": "A curated list for Self-Improvement in Foundation Model Based Agentic Systems.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-12",
+   "stars": 548
+  },
+  "slavakurilyak/awesome-ai-agents": {
+   "description": "Awesome list of 300+ agentic AI resources",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-04",
+   "stars": 2432
+  },
+  "soxoj/awesome-osint-mcp-servers": {
+   "description": "🔌 A curated list of OSINT MCP servers. Pull requests are welcomed!",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-10",
+   "stars": 507
+  },
+  "steel-dev/awesome-web-agents": {
+   "description": "🔥 A list of tools, frameworks, and resources for building AI web agents",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-25",
+   "stars": 1590
+  },
+  "steven2358/awesome-generative-ai": {
+   "description": "A curated list of modern Generative Artificial Intelligence projects and services",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 12727
+  },
+  "study8677/awesome-architecture": {
+   "description": "🧭 Architecture-first system design: 26 bilingual tutorials, 25 architecture templates, and 6 end-to-end cases covering distributed systems, AI-native systems, RAG, coding Agents, and production trade-offs.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-21",
+   "stars": 2428
+  },
+  "taishi-i/awesome-ChatGPT-repositories": {
+   "description": "A curated list of open source GitHub repositories related to ChatGPT, the OpenAI API, and Codex. Searchable via Claude Code  and Codex skills.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 3289
+  },
+  "taishi-i/awesome-japanese-nlp-resources": {
+   "description": "A curated list of resources for Japanese natural language processing (NLP): Python libraries, LLMs, dictionaries, corpora, and datasets. Includes Claude Code and Codex skills to search resources.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-06",
+   "stars": 1021
+  },
+  "topoteretes/awesome-ai-memory": {
+   "description": "A list of AI memory projects",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-24",
+   "stars": 887
+  },
+  "uhub/awesome-llm": {
+   "description": "A curated list of awesome LLM frameworks, libraries and software.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-19",
+   "stars": 855
+  },
+  "unipds-engenharia-de-ia-aplicada/awesome-unipds-projects": {
+   "description": "A curated list of original projects built by students of the UNIPDS Software engineering with Applied AI Engineering postgrad course.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-22",
+   "stars": 253
+  },
+  "vectara/awesome-agent-failures": {
+   "description": "A community curated collection of AI agent failure modes and battle-tested solutions.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-02",
+   "stars": 216
+  },
+  "walidboulanouar/awesome-jev-use-cases": {
+   "description": "Awesome list of TypeSafe AI Jev use cases: 74 demos ranked by likes, 150+ GitHub repos, limits, cost and API examples. CC0",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-26",
+   "stars": 420
+  },
+  "walkinglabs/awesome-harness-engineering": {
+   "description": "🛠️ Awesome tools & guides for harness engineering.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-19",
+   "stars": 4378
+  },
+  "webfuse-com/awesome-autoresearch": {
+   "description": "A curated list of autonomous improvement loops, research agents, and autoresearch-style systems inspired by Karpathy's autoresearch.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-21",
+   "stars": 2564
+  },
+  "webfuse-com/awesome-claude": {
+   "description": "A curated list of awesome things related to Anthropic Claude",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-30",
+   "stars": 1684
+  },
+  "weitianxin/Awesome-Agentic-Reasoning": {
+   "description": "A curated list of papers and resources based on the survey \"Agentic Reasoning for Large Language Models\"",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-21",
+   "stars": 1402
+  },
+  "weiwei966/awesome-ai-harness": {
+   "description": "The model is the engine; the harness is the car. Curated knowledge on harness engineering — context management, tool design, agent loops, memory, sandboxing, evals. EN/中文",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-08-19",
+   "stars": 216
+  },
+  "wh000wh000/awesome-jev-live": {
+   "description": "Awesome Jev — evidence-graded index of TypeSafe System One: SDKs, MCP tools, agents, apps and open models. 20 languages, rebuilt every 2 hours.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-10",
+   "stars": 286
+  },
+  "worldbench/awesome-ai-auto-research": {
+   "description": "🔥 A Survey on AI Auto-Research",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 543
+  },
+  "worldbench/awesome-vla-for-ad": {
+   "description": "🌐 Vision-Language-Action Models for Autonomous Driving: Past, Present, and Future",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 492
+  },
+  "worryzyy/awesome-cursor-download": {
+   "description": "Cursor历史版本下载、Cursor下载链接追踪器，Cursor beta版本、 Cursor下载中心",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-09",
+   "stars": 378
+  },
+  "xianyu110/awesome-nanobananapro-prompts": {
+   "description": "Nano Banana Pro (Gemini 3 Pro Image) 全网最全提示词 908+ 案例，附效果图与在线图库 | Best Nano Banana Pro prompts with images",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-06",
+   "stars": 814
+  },
+  "xianyu110/awesome-openclaw-tutorial": {
+   "description": "OpenClaw 中文教程（4500+ Star · 已出版纸质书）：安装、配置、Skills、飞书接入与避坑｜作者的 GPT-6 / Codex / Claude Code 新项目见 README 顶部",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-04",
+   "stars": 4564
+  },
+  "xixu-me/awesome-persona-distill-skills": {
+   "description": "Curated list of Agent Skills centered on people, relationships, commemorative scenes, and methodological perspectives",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-08",
+   "stars": 4689
+  },
+  "xpaysh/awesome-x402": {
+   "description": "🚀 Curated list of x402 resources: HTTP 402 Payment Required protocol for blockchain payments, crypto micropayments, AI agents, API monetization. Includes SDKs (TypeScript, Python, Rust), examples, facilitators (Coinbase, Cloudflare), MCP integration, tutorials. Accept USDC payments with one line of ",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-07-28",
+   "stars": 290
+  },
+  "xxzcc/Awesome-Credit-Assignment-in-LLM-RL": {
+   "description": "Curated papers, taxonomy, benchmarks, and decision guides for credit assignment in reasoning and agentic LLM reinforcement learning.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-23",
+   "stars": 292
+  },
+  "yibie/awesome-jev": {
+   "description": "A curated list of public projects, integrations, and discussions built on Jev — TypeSafe AI's System One model for typed decisions.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 2277
+  },
+  "yigitkonur/awesome-herdr": {
+   "description": "A curated guide to the Herdr ecosystem: tools, workflows, configs, clients, skills, and integrations.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-20",
+   "stars": 259
+  },
+  "yihui-dev/awesome-opus5-5-videos": {
+   "description": "A growing collection of viral videos made with Claude Opus 5.5 and the prompts behind them. Watch each original next to a live remake on Skillry. Updated regularly.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-08",
+   "stars": 4275
+  },
+  "youart-open-source/awesome-gpt-image-2-5-prompts": {
+   "description": "GPT Image 2.5 prompts, verbatim and credited: 150 community prompts across 9 use cases, each with the author who wrote it and their post. Free to run.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-11",
+   "stars": 589
+  },
+  "yueliu1999/Awesome-Jailbreak-on-LLMs": {
+   "description": "Awesome-Jailbreak-on-LLMs is a collection of state-of-the-art, novel, exciting jailbreak methods on LLMs. It contains papers, codes, datasets, evaluations, and analyses.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-07",
+   "stars": 1678
+  },
+  "yzfly/Awesome-AGI-Agents": {
+   "description": "🤖 Awesome list of AGI Agents. Agents 精选资源合集.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-20",
+   "stars": 564
+  },
+  "yzfly/Awesome-MCP-ZH": {
+   "description": "MCP 资源精选， MCP指南，Claude MCP，MCP Servers, MCP Clients",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-09-20",
+   "stars": 7721
+  },
+  "zhuyansen/awesome-claude-video-skills": {
+   "description": "Open-source skills and toolkits that let Claude Code, Codex and other coding agents make video. 180 repos by type, each security-graded. English / 中文.",
+   "first_seen": "2026-10-11",
+   "pushed_at": "2026-10-11",
+   "stars": 552
+  }
+ },
+ "version": 1
+}

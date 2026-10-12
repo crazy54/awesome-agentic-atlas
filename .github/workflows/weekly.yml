@@ -130,6 +130,13 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p cache
+          # The scout first, because it writes a source document (`cache/sources/scout.md`) that
+          # 10_parse_sources reads below. daily.yml runs it as its own step ahead of the watch, since there
+          # its digest decides whether to build; this job has no gate, so it only has to be ahead of the
+          # parser. Same failure rule as there: a search GitHub would not answer keeps the committed
+          # ledger and re-renders the same document from it, and exits 0. Its digest is recorded by the
+          # "Record the source commits as built" step below, alongside the lists' commit ids.
+          python scripts/12_scout.py
           # Unlike the daily job this one is not gated on the lists having moved, so it is also the run
           # that repairs a cache that came back partially restored: pull_sources re-pulls any list whose
           # cached content has gone missing even when its commit id still matches.

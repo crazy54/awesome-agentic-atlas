@@ -255,6 +255,13 @@ def pull_one(src: dict, state: dict, force: bool) -> dict:
     line = {"key": key, "nwo": nwo, "was": have, "sha": None, "status": "", "files": [],
             "entries": rec.get("entries", 0), "added": 0, "removed": 0, "changed": 0, "queued": 0}
 
+    if src.get("synthetic"):
+        # Nothing upstream to pull: scripts/12_scout.py writes this document, and its `nwo` is this
+        # repository, whose head moves with every build. Probing it would "pull" the atlas's own README
+        # over the scout's document. Never recorded in the index for the same reason.
+        line["status"] = "synthetic"
+        return line
+
     sha = watch_sources.head(nwo)
     if sha is None:
         # watch_sources' reasoning, unchanged: a list that 404s today is far likelier to be a
@@ -335,9 +342,15 @@ def record(key: str, sha: str, entries: int, pulled: list[tuple[Path, bytes]]) -
 def show_status() -> None:
     state = load_index()
     srcs = state["sources"]
-    print(f"{len(srcs)}/{len(b10.SOURCES)} sources cached in {rel(INDEX)}\n")
+    pullable = sum(1 for s in b10.SOURCES if not s.get("synthetic"))
+    print(f"{len(srcs)}/{pullable} pullable sources cached in {rel(INDEX)}\n")
     print(f"{'source':14s} {'commit':10s} {'entries':>7s}  {'bytes':>10s}  pulled")
     for src in b10.SOURCES:
+        if src.get("synthetic"):
+            here = all(p.exists() for p in b10.source_paths(src))
+            print(f"{src['key']:14s} {'synthetic':10s} {'-':>7s}  {'-':>10s}  "
+                  f"{'written by 12_scout.py' if here else 'absent -- run 12_scout.py'}")
+            continue
         rec = srcs.get(src["nwo"])
         if not rec:
             print(f"{src['key']:14s} {'-':10s} {'-':>7s}  {'-':>10s}  never")
@@ -384,7 +397,7 @@ def main() -> None:
         lines.append(line)
         # Saved per source: a run killed by the job timeout keeps whatever it already pulled.
         save_index(state)
-        flag = {"unchanged": "  = ", "unreachable": "  ? "}.get(line["status"], "PULL")
+        flag = {"unchanged": "  = ", "unreachable": "  ? ", "synthetic": "  ~ "}.get(line["status"], "PULL")
         if line["status"].startswith("failed"):
             flag = "FAIL"
         counts = ""
@@ -398,7 +411,8 @@ def main() -> None:
     unreachable = [ln for ln in lines if ln["status"] == "unreachable"]
     unchanged = [ln for ln in lines if ln["status"] == "unchanged"]
     # Anything that is not one of those three got its bytes: first pull, changed, refill, undiffable.
-    quiet = {"unreachable", "unchanged"}
+    # A synthetic source is neither, and is not counted as pulled: 12_scout.py wrote it, not this.
+    quiet = {"unreachable", "unchanged", "synthetic"}
     pulled = [ln for ln in lines
               if ln["status"] not in quiet and not ln["status"].startswith("failed")]
     added = sum(ln["added"] for ln in lines)

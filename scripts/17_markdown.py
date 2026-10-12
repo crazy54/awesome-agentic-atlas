@@ -975,7 +975,8 @@ def main() -> None:
     per_source = [summarise(nwo, title, blurb, rows) for title, nwo, blurb, rows in listing]
 
     stats = dict(
-        lists=len(per_source),
+        # The scout has a page in lists/ like any source, but it is a search, not a curated list.
+        lists=len(per_source) - sum(1 for s in SOURCES if s.get("synthetic")),
         items=len(records) + len(orch),
         repos=len({r["nwo"] for r in records if r.get("nwo")} | {r["nwo"] for r in orch}),
         # b16's definition, not a second one summed over the platform pool: this page and the

@@ -43,7 +43,11 @@ returns 404), so a red check does not block a merge by itself.
    this gate. A green daily can therefore have published nothing; check the deployed
    `docs/data.json` `snapshot` to be sure.
 3. **Change gate.** `watch_sources.py` asks whether any list's head commit moved. The job continues only if
-   one did, or if `force` is set.
+   one did, or if `force` is set. Just before it (and before the screenshot check, as its own step),
+   `12_scout.py` searches GitHub for rising agentic repos and writes `cache/sources/scout.md`; for that
+   synthetic source "moved" means the document's SHA-256 differs from the one last recorded. A search that
+   fails keeps the committed `state/scout-repos.json` and re-renders the same document, so it never fails
+   the job and never moves the gate.
 4. **Fetch.** `pull_sources`, then `01`, `02 --force`, `03`, `03b`, `04`, `10`, `11`, `13`, `14`.
 5. **Build.** `17`, `check_markdown`, `19`, `25_velocity`, `19c`, `19d`, `20`, `21`, `22`, `31`, `24`, `27`.
 6. **Verify.** A check that nothing outside the expected paths was rewritten, then `node tests/run.mjs`.

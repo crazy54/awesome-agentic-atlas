@@ -15,6 +15,14 @@ They are separate because the recorded SHA means "this commit has been built", n
 seen". Recording it before the build means a build that then fails would never be retried -- the next
 run would compare against the SHA it failed on and decide there was nothing to do. So the workflow
 reports first, builds, and only records on success.
+
+A synthetic source -- the scout, `scripts/12_scout.py` -- has no upstream commit, so its slot in the
+ledger holds `10_parse_sources.content_digest` of the document the scout wrote instead: `sha256:<hex>`
+of the rendered set of scouted repos. "Moved" then means what it means for a list: the build would read
+something it has not built. The rules carry over unchanged. The digest is read off the document on disk,
+so this has to run after the scout and the scout has to run first in the job; a missing document is
+reported and treated as unchanged, like an unreachable list; and `--update` records the digest of the
+document that was built, read again at the end of a successful run.
 """
 from __future__ import annotations
 
@@ -40,6 +48,7 @@ spec.loader.exec_module(b10)
 # The parser is the single definition of which lists this project is built from, so the watcher reads
 # it rather than keeping a second copy that could drift out of step with it.
 SOURCES = [(s["key"], s["nwo"]) for s in b10.SOURCES]
+SYNTHETIC = {s["nwo"]: s for s in b10.SOURCES if s.get("synthetic")}
 
 
 def head(nwo: str) -> str | None:
@@ -59,6 +68,20 @@ def head(nwo: str) -> str | None:
     return sha
 
 
+def digest(nwo: str) -> str | None:
+    """A synthetic source's stand-in for `head()`: the digest of the document it wrote, or None."""
+    d = b10.content_digest(SYNTHETIC[nwo])
+    if d is None:
+        print(f"  ?? {nwo}: no {SYNTHETIC[nwo]['key']} document in cache/sources/ -- scripts/12_scout.py "
+              f"writes it and runs before this step", file=sys.stderr)
+    return d
+
+
+def short(ident: str) -> str:
+    """Nine characters of either kind of id, so the table lines up: a commit SHA, or a digest's hex."""
+    return ident.split(":", 1)[-1][:9]
+
+
 def main() -> None:
     update = "--update" in sys.argv
     state = newness.load()
@@ -66,7 +89,7 @@ def main() -> None:
 
     moved, checked, failed = [], {}, []
     for key, nwo in SOURCES:
-        sha = head(nwo)
+        sha = digest(nwo) if nwo in SYNTHETIC else head(nwo)
         if sha is None:
             failed.append(nwo)
             continue
@@ -74,8 +97,9 @@ def main() -> None:
         was = known.get(nwo)
         if was != sha:
             moved.append((nwo, was, sha))
-        print(f"  {'NEW ' if was != sha else '  = '} {sha[:9]}  {nwo}"
-              + (f"  (was {was[:9]})" if was and was != sha else "")
+        print(f"  {'NEW ' if was != sha else '  = '} {short(sha)}  {nwo}"
+              + ("  (scouted)" if nwo in SYNTHETIC else "")
+              + (f"  (was {short(was)})" if was and was != sha else "")
               + ("  (first time seen)" if not was else ""))
 
     changed = bool(moved)

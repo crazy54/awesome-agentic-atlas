@@ -95,7 +95,9 @@
 # `indexnow_test.py`, `newness_test.py`, `discover_test.py`, `pagemin_test.py`, `refresh_test.py` and
 # `live_test.py` are standard library -- `newness_test.py` imports `scripts/newness.py` alone and
 # `discover_test.py` imports `scripts/discover.py` alone, neither of them anything that stage-loads, which
-# is what keeps two modules the whole ingest depends on testable on a bare clone. The Node side has no
+# is what keeps two modules the whole ingest depends on testable on a bare clone. `scout_test.py` is the
+# exception that proves the reason: its last group imports `16_build_all.py`, and so openpyxl, to check
+# how the workbook builder's repo pool takes in a scouted listing. The Node side has no
 # `package.json` at all by design.
 #
 # Do not trim this list by reasoning about what a test appears to need. Run 34151702414 of `og-preview.yml`

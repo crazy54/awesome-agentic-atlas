@@ -210,7 +210,7 @@ for _r in ROWS:
 # The consensus distribution: 1,165 rows are named by one list, 109 by two, 14 by three, 5 by four, 1 by
 # five. That shape is what makes "named by 3 lists" worth printing -- on its own it is a small integer, and
 # against this it is the top 1.5% of the corpus by independent agreement.
-LISTS_N = collections.Counter(g(r, "lists") or 1 for r in ROWS)
+LISTS_N = collections.Counter(g(r, "lists") or 0 for r in ROWS)
 LISTS_MAX = max(LISTS_N)
 
 # Copied verbatim from `scripts/22_detail.py`, including the evidence sentences, so the two surfaces cannot
@@ -257,7 +257,7 @@ def related(row, k: int = 6) -> list:
     mine = set(g(row, "targets"))
     peers = [p for p in BY_CAT[g(row, "cat")] if g(p, "nwo") != g(row, "nwo")]
     peers.sort(key=lambda p: (-len(mine & set(g(p, "targets"))),
-                              -(g(p, "lists") or 1),
+                              -(g(p, "lists") or 0),
                               g(p, "name").lower()))
     return peers[:k]
 
@@ -1486,7 +1486,7 @@ def card(row, rank: int) -> str:
     cls, age = freshness(row)
     lic = g(row, "license") or ""
     lang = g(row, "lang") or ""
-    lists = g(row, "lists") or 1
+    lists = g(row, "lists") or 0
     cmd = g(row, "install") or ""
     tags = []
     if lang:
@@ -1536,7 +1536,7 @@ def inspector_payload(rows) -> str:
             "targets": [HARNESSES[i] for i in g(r, "targets")],
             "lang": g(r, "lang") or "", "license": g(r, "license") or "",
             "pushed": g(r, "pushed") or "", "age": age, "fresh": cls,
-            "lists": g(r, "lists") or 1, "listed_by": g(r, "listed_by") or "",
+            "lists": g(r, "lists") or 0, "listed_by": g(r, "listed_by") or "",
             "blurb": blurb(r), "install": g(r, "install") or "",
             "img": g(r, "img") or "", "url": g(r, "url") or "",
             "href": detail_href(r),
@@ -2032,7 +2032,7 @@ def detail_page(row) -> str:
     # social card is a fact about GitHub and a screenshot is a fact about the project.
     own_shot = bool(g(row, "img"))
     img = g(row, "img") or f"https://opengraph.githubassets.com/1/{nwo}"
-    n_lists = g(row, "lists") or 1
+    n_lists = g(row, "lists") or 0
     listed = [s.strip() for s in (g(row, "listed_by") or "").split(",") if s.strip()]
     ac = accent_for(row)
     back = DETAIL_UP + "rail.html"
@@ -2136,7 +2136,10 @@ def detail_page(row) -> str:
         f'<i class="{"on" if i < n_lists else ""}"'
         f' title="{thousands(LISTS_N.get(i + 1, 0))} projects are named by {i + 1}"></i>'
         for i in range(LISTS_MAX))
-    if n_lists == 1:
+    if not n_lists:
+        consn = ('No curated list names it yet. The atlas found it through its own GitHub search, which '
+                 'adds fast-rising agentic repositories before a list catches up with them.')
+    elif n_lists == 1:
         consn = (f'One of the {LISTS} lists names it &mdash; like <b>{share:.0f}%</b> of the corpus. '
                  f'Agreement between independent curators is the atlas&rsquo;s own signal, and this is '
                  f'its floor.')
@@ -2289,7 +2292,7 @@ def face(row) -> dict:
     if name.lower().startswith(owner.lower() + "/"):
         name = name[len(owner) + 1:]
     fresh, age = freshness(row)
-    lists = g(row, "lists") or 1
+    lists = g(row, "lists") or 0
     rank = RANK[nwo]
     states = []
     # Ordered by which one the border gets to show, most newsworthy first, because a card has one border
@@ -2889,7 +2892,8 @@ def c_record(f: dict) -> str:
         ln("lang", esc(f["lang"]) or "&mdash;"),
         ln("stars", f'{thousands(f["stars"])} <em>#{f["rank"]} of {thousands(len(ROWS))}</em>'),
         ln("plat", plat_pills(f, True)),
-        ln("lists", f'{f["lists"]} <em>{esc(f["listed_by"])}</em>'),
+        ln("lists", f'{f["lists"]} <em>{esc(f["listed_by"])}</em>' if f["lists"]
+                    else '<em>found by GitHub search</em>'),
         ln("push", esc(f["age"])),
     ]
     return (
@@ -3202,8 +3206,8 @@ def lab_html(layout: str) -> str:
 
     # --- the states row. One face, five conditions. ---
     hot = next((r for r in RANKED if freshness(r)[0] == "hot"), RANKED[0])
-    rare = next((r for r in RANKED if (g(r, "lists") or 1) >= 3), RANKED[1])
-    plain = next((r for r in RANKED if freshness(r)[0] != "hot" and (g(r, "lists") or 1) < 3), RANKED[2])
+    rare = next((r for r in RANKED if (g(r, "lists") or 0) >= 3), RANKED[1])
+    plain = next((r for r in RANKED if freshness(r)[0] != "hot" and (g(r, "lists") or 0) < 3), RANKED[2])
     simulated = face(RANKED[3])
     simulated["states"] = ["s-new"]
     selected = face(RANKED[4])
@@ -3327,7 +3331,7 @@ def shelf_defs() -> list[dict]:
         out.append({"key": key, "title": title, "why": why, "pool": pool,
                     "rows": rows if rows is not None else rotate(pool, SHELF_N, key), "href": href})
 
-    consensus = [r for r in ROWS if (g(r, "lists") or 1) >= 3]
+    consensus = [r for r in ROWS if (g(r, "lists") or 0) >= 3]
     add("consensus", "Named by three or more lists",
         f'{len(consensus)} projects of {thousands(len(ROWS))} were picked independently by three or more of'
         f' the {LISTS} upstream lists this atlas reads. {thousands(LISTS_N[1])} rows were named once, so'
@@ -3340,7 +3344,7 @@ def shelf_defs() -> list[dict]:
         ' Ordered by rotation, not by stars &mdash; sorting this shelf by stars would show the famous'
         ' projects that happen to have shipped this week, which is the leaderboard again.', week)
 
-    gems = [r for r in ROWS if (g(r, "stars") or 0) < 500 and (g(r, "lists") or 1) >= 2]
+    gems = [r for r in ROWS if (g(r, "stars") or 0) < 500 and (g(r, "lists") or 0) >= 2]
     ranks = sorted(RANK[g(r, "nwo")] for r in gems)
     med = ranks[len(ranks) // 2] if ranks else 0
     add("gems", "Hidden gems",
@@ -4447,7 +4451,7 @@ def showcase() -> list:
 
     def filled(r) -> int:
         return sum((bool(g(r, "img")), bool(g(r, "license")), bool(g(r, "install")),
-                    (g(r, "lists") or 1) > 1, bool(g(r, "targets"))))
+                    (g(r, "lists") or 0) > 1, bool(g(r, "targets"))))
 
     return max(pool, key=lambda r: (filled(r), -RANK[g(r, "nwo")]))
 

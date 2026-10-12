@@ -794,6 +794,22 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("skills_security", "Tools & Frameworks"): "Sandbox, Security & Governance",
     ("skills_security", "Benchmarks & Datasets"): "Observability & Evals",
     ("skills_security", "Related Awesome Lists"): "Docs, Learning & Lists",
+
+    # The scout -- GitHub search, not a curator; see scripts/12_scout.py. Its sections are named after
+    # the categories they file into, because the scout decides a repo's section from its topics with
+    # this very list in mind, so each key here is the identity and there is no curator's wording to
+    # translate. `12_scout.SECTIONS` is the other half of this block, and tests/scout_test.py asserts
+    # the two name the same ten.
+    ("scout", "Orchestrators & Multi-Agent"): "Orchestrators & Multi-Agent",
+    ("scout", "Coding Agents"): "Coding Agents",
+    ("scout", "Agent Skills"): "Agent Skills",
+    ("scout", "MCP Servers"): "MCP Servers",
+    ("scout", "Frameworks & SDKs"): "Frameworks & SDKs",
+    ("scout", "Context, Memory & RAG"): "Context, Memory & RAG",
+    ("scout", "Sandbox, Security & Governance"): "Sandbox, Security & Governance",
+    ("scout", "Observability & Evals"): "Observability & Evals",
+    ("scout", "Assistants & Domain Agents"): "Assistants & Domain Agents",
+    ("scout", "Plugins, Themes & Clients"): "Plugins, Themes & Clients",
 }
 
 # The second axis: what a thing plugs into. Matched on text because no curator has a column for it --
@@ -864,6 +880,15 @@ SOURCE_TARGETS = {
 }
 
 RANK = {c: i for i, c in enumerate(CATEGORIES)}
+
+# Sources whose listing is a sighting rather than a filing. The scout files a repo by its GitHub topics,
+# which is a guess made by a regex; every other source files it by a person's judgement. So in `by_repo`
+# an advisory listing decides the category only of a repo that no curated listing has filed, and is not
+# a vote beside them. Without that, one scouted listing ties any repo a single list carries, and the tie
+# goes to whichever category is earlier in CATEGORIES -- a topic heuristic quietly re-filing a curator's
+# choice for every such repo. Spelled out rather than read off `10_parse_sources.SOURCES` (this module
+# imports no stage); tests/scout_test.py asserts it is exactly the set of keys SOURCES marks `synthetic`.
+ADVISORY = {"scout"}
 
 # One key in `SECTIONS` is both shelves at once and too big to file wholesale on either:
 # `harness / Skills & MCP` is 41 entries holding the MCP specification, `modelcontextprotocol/servers`,
@@ -972,25 +997,28 @@ def by_repo(records: list[dict]) -> dict[str, dict]:
     archived project, one the API never returned stars for. `rank` says which is which. Dropping them
     instead would quietly shrink the category pages, and a browsable page has every reason to list a
     skill that lives in a folder even though a leaderboard has no way to rank it.
+
+    A listing from an `ADVISORY` source votes only for a repo no curated listing has filed: see there.
     """
     votes: dict[str, Counter] = defaultdict(Counter)
+    hints: dict[str, Counter] = defaultdict(Counter)
     agg: dict[str, dict] = {}
     for r in records:
         nwo = r.get("nwo")
         if not nwo:
             continue
-        votes[nwo][category_of(r)] += 1
+        (hints if source_of(r) in ADVISORY else votes)[nwo][category_of(r)] += 1
         a = agg.setdefault(nwo, {"targets": set(), "sources": set(), "stars": 0, "rank": False})
         a["targets"].update(targets_of(r))
         a["sources"].add(source_of(r))
         a["stars"] = max(a["stars"], stars_of(r))
         a["rank"] = a["rank"] or rankable(r)
     for nwo, a in agg.items():
-        v = votes[nwo]
+        v = votes[nwo] or hints[nwo]
         a["category"] = min(v, key=lambda c: (-v[c], RANK[c]))
         a["targets"] = [t for t, _ in TARGETS if t in a["targets"]]
         a["sources"] = sorted(a["sources"])
-        a["listings"] = sum(v.values())
+        a["listings"] = sum(votes[nwo].values()) + sum(hints[nwo].values())
     return agg
 
 
