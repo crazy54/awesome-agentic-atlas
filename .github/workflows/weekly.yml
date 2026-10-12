@@ -13,9 +13,11 @@ name: Weekly — screenshots & workbooks
 
 on:
   schedule:
-    # Sundays, 12:40 UTC -- an hour and a half after the daily run, so the two are not queued behind each
-    # other on the shared concurrency group even on a day when the daily build has a lot to do.
-    - cron: "40 12 * * 0"
+    # Sundays and Wednesdays, 12:40 UTC -- an hour and a half after the daily run, so the two are not
+    # queued behind each other on the shared concurrency group even on a day when the daily build has a
+    # lot to do. Twice rather than once because the repository is public, so the minutes are free, and a
+    # new arrival otherwise waits up to a week on its Open Graph card before it gets a real screenshot.
+    - cron: "40 12 * * 0,3"
   workflow_dispatch:
 
 permissions:
