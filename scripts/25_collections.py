@@ -99,6 +99,7 @@ b22 = _load("22_detail.py", "b22")
 sys.path.insert(0, str(HERE))
 import mark  # noqa: E402
 import osicons  # noqa: E402
+import sitewide  # noqa: E402
 
 SITE = b19.b17.SITE
 REPO = b19.REPO
@@ -327,7 +328,7 @@ def head(title: str, desc: str, url: str, depth: int, ld: str = "") -> str:
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="{card}">
 <link rel="icon" href="{rel(depth, ICON)}" type="image/svg+xml">
-{HEAD_THEME}<link rel="stylesheet" href="{rel(depth, 'pages.css')}">
+{sitewide.font_preload(rel(depth))}{HEAD_THEME}<link rel="stylesheet" href="{rel(depth, 'pages.css')}">
 {ld}</head>
 """
 
@@ -353,6 +354,7 @@ def foot(depth: int, snapshot: str, lists: int) -> str:
     a reader who thinks the picks are a merge of somebody else's judgement has been misled by the shell.
     """
     return f"""<footer><div class="wrap">
+  {sitewide.buildtags(REPO)}
   These are editorial picks, and the only editorial pages on the
   <a href="{rel(depth)}">Awesome Agentic Atlas</a> &mdash; every other page is what {lists}
   awesome-lists agreed on, ranked by a number GitHub maintains. Here somebody chose, the reasoning is
@@ -364,7 +366,7 @@ def foot(depth: int, snapshot: str, lists: int) -> str:
   <span class="vL">amber</span> is inferred from the language. A build here fails rather than publish a
   pick whose evidence has stopped supporting the claim above it.
 </div></footer>
-{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(rel(depth))}</body>
+{sitewide.site_script(rel(depth))}{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(rel(depth))}</body>
 </html>
 """
 

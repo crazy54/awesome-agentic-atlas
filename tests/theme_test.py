@@ -227,20 +227,22 @@ for mode, T in (("dark", DARK), ("light", LIGHT)):
     check(f"{mode}: --warn stays distinct from the action colour", T["warn"],
           "#EF7D86" if mode == "dark" else "#875A19")
 
-# ---------------------------------------------------------------- the fourteen opt-in theme blocks
-# Seven themes a reader can choose from the Settings menu, each declared twice: `html[data-skin=X]` for
-# its dark values and `html[data-skin=X][data-theme=light]` for its light ones. Nothing here is checked
+# ---------------------------------------------------------------- the sixteen opt-in theme blocks
+# Eight opt-in themes, each declared twice: `html[data-skin=X]` for its dark values and
+# `html[data-skin=X][data-theme=light]` for its light ones. Seven are in the Settings menu; Holo, last, is
+# in it too but hidden until the admin panel unlocks it -- see "the lock" below. Nothing here is checked
 # any more gently than graphite is -- `audit()` above is the same function, on the same role map, at the
-# same floors. That is the whole warrant for shipping eight themes rather than one: a theme is a set of
-# thirteen colours that has been through this, and a theme that has not been through this is a mood.
-SKINS = ("glass", "terminal", "prism", "sherbet", "riso", "blueprint", "aurora")
+# same floors, and a theme nobody can see yet is held to it all the same. That is the whole warrant for
+# shipping nine themes rather than one: a theme is a set of thirteen colours that has been through this,
+# and a theme that has not been through this is a mood.
+SKINS = ("glass", "terminal", "prism", "sherbet", "riso", "blueprint", "aurora", "holo")
 SKIN = {}
 for skin in SKINS:
     SKIN[(skin, "dark")] = block("html[data-skin=" + skin + "]{")
     SKIN[(skin, "light")] = block("html[data-skin=" + skin + "][data-theme=light]{")
 
 # Pinned, because every assertion in this section iterates `SKIN` and an empty dict passes all of them.
-check("there are sixteen token sets in all", 2 + len(SKIN), 16)
+check("there are eighteen token sets in all", 2 + len(SKIN), 18)
 for (skin, mode), T in sorted(SKIN.items()):
     # Same thirteen names, not merely thirteen of something. `var(--x)` with no fallback resolves to
     # nothing, and the light block of a skin sits *after* its dark block on the same element -- so a
@@ -277,8 +279,21 @@ for tok in STRUCT:
 # receives: the page's own font stack, and a panel that is opaque. `none` and not `blur(0px)`: a non-none
 # backdrop-filter makes the element a containing block and a stacking context, which would re-parent the
 # mascot's speech bubble and re-rank the pinned bar for every reader on the site.
-true("graphite's --ui is the font stack the page shipped with",
-     '--ui:"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;' in ROOT_RAW)
+# The stack the page shipped with, behind the embedded Geist: a reader whose browser cannot fetch the
+# face gets exactly the page they used to.
+true("graphite's --ui is the embedded Geist, then the font stack the page shipped with",
+     '--ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;' in ROOT_RAW)
+true("graphite declares --mono as the embedded Geist Mono, then the platform monospaces",
+     '--mono:"Geist Mono",ui-monospace,' in ROOT_RAW)
+# Every theme's stack reaches an embedded face before any platform face. Without this, a theme whose first
+# choice is a font few readers have installed -- riso's Space Grotesk, blueprint's IBM Plex Sans -- falls
+# straight through to Segoe UI, which is the platform lottery the embedding exists to end.
+FIRST_PLATFORM = ('"Segoe UI"', "system-ui", "ui-monospace", '"SF Mono"')
+for skin in SKINS:
+    stack = re.search(r"--ui:([^;]+);", raw("html[data-skin=" + skin + "]{")).group(1)
+    first_platform = min(stack.index(p) for p in FIRST_PLATFORM if p in stack)
+    true(f"{skin}'s font stack reaches an embedded face before a platform one",
+         any(0 <= stack.find(f) < first_platform for f in ('"Geist"', '"Geist Mono"')))
 true("graphite's --panel is the opaque plane, so the default page is unchanged",
      "--panel:var(--plane)" in ROOT_RAW)
 true("graphite asks for no backdrop filter at all", "--bdf:none" in ROOT_RAW)
@@ -340,6 +355,51 @@ for skin, markup in MENU:
 # where `paintSettings()` never runs and the menu is whatever the generator wrote.
 check("the markup presses exactly one theme",
       [s for s, m in MENU if 'aria-pressed="true"' in m], ["graphite"])
+
+# ---------------------------------------------------------------- the lock
+# A locked theme is three promises kept in three files: the head script refuses to wear it (`LOCKED`), the
+# menu ships its button hidden and marked (`data-locked hidden`), and the admin panel is where it is
+# unlocked (`HIDDEN` in atlas-admin.js). Any one of them alone is a leak or a dead end -- a hidden button
+# for a theme the head script wears is a theme anyone can set by hand-editing storage and keep, and a theme
+# the panel does not list can never be unlocked at all -- so the three lists are held to each other.
+LOCKED = re.findall(r"(\w+): 1", (re.search(r"var LOCKED = \{([^}]*)\}", SRC) or [None, ""])[1])
+check("the head script locks exactly one theme, holo", LOCKED, ["holo"])
+true("...and the lock reads the panel's key", '"atlas-unlock"' in SRC[SRC.index("var LOCKED"):][:400])
+check("the locked themes' menu buttons ship hidden and marked, and no other button does",
+      sorted(s for s, m in MENU if m.lstrip().startswith("data-locked hidden")), sorted(LOCKED))
+check("no unlocked theme's button is hidden",
+      [s for s, m in MENU if " hidden" in m.split(">", 1)[0] and s not in LOCKED], [])
+ADMIN = (PAGE.parent.parent / "docs" / "assets" / "atlas-admin.js").read_text(encoding="utf-8")
+PANEL_IDS = re.findall(r'\{id: "(\w+)", name:', ADMIN)
+check("the admin panel offers exactly the locked themes", sorted(PANEL_IDS), sorted(LOCKED))
+for skin in LOCKED:
+    m = re.search(r'\{id: "' + skin + r'".*?swatch: \[("#[0-9A-F]{6}"), ("#[0-9A-F]{6}"), ("#[0-9A-F]{6}")\]',
+                  ADMIN, re.S)
+    true(f"the panel's {skin} card carries a swatch", bool(m))
+    if m:
+        T = SKIN[(skin, "dark")]
+        check(f"the panel's {skin} swatch is its own surface, action and link",
+              [g.strip('"') for g in m.groups()], [T["surface"], T["bar"], T["link"]])
+# `.thb{display:flex}` outranks the UA's `[hidden]{display:none}`, so without this rule `hidden` on a locked
+# button is an attribute the page ignores, and Holo sits in every reader's menu.
+true("a hidden theme button is actually not displayed", "\n.thb[hidden]{display:none}" in SRC)
+SETJS = SRC[SRC.index("SETTINGS_JS = r"):SRC.index('"""', SRC.index("SETTINGS_JS = r") + 20)]
+# The calls, not the words: the comment beside that code names both, and a check on the bare strings would
+# stay green with the code deleted under it.
+true("the settings script unhides a locked button only when its id is unlocked",
+     't.hasAttribute("data-locked")' in SETJS and 'localStorage.getItem("atlas-unlock")' in SETJS)
+true("...and exposes its repaint, so the admin panel can show a theme it just unlocked",
+     "window.atlasPaintSettings = paintSettings" in SETJS)
+# The command palette builds its Theme group from the same buttons, so it must skip a hidden one -- or Ctrl+K
+# offers Holo to every reader. `probe.mjs` cannot see this: its fake document has no buttons to query.
+true("the command palette does not offer a locked theme",
+     'for (const t of document.querySelectorAll(".thb"))\n    if (!t.hidden) add("Theme",' in SRC)
+# The facet and detail pages wear a saved theme too, so their head scripts carry the same lock. Not
+# covered by `palette_text()`, which stops at the last stylesheet block.
+LOCK_LINES = SRC[SRC.index("  var LOCKED = "):SRC.index('s = "graphite";', SRC.index("  var LOCKED = "))]
+for follower in ("20_landing.py", "22_detail.py"):
+    true(f"{follower}'s head script carries the same lock",
+         LOCK_LINES in (PAGE.parent / follower).read_text(encoding="utf-8"))
 true("<html> carries the same theme as its floor, beside the dark-mode one",
      'data-theme="dark" data-skin="graphite"' in SRC)
 # The panel is hidden by the attribute rather than by a class, so it leaves the accessibility tree with

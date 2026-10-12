@@ -9,7 +9,8 @@
 //   * hidden by default. On a plain page view there is no panel, the panel's module is never requested, and
 //     the trigger is the footer's last thing, faint (a quarter opacity), and still a focusable <button>
 //     with an aria-label;
-//   * it opens from the trigger, by keyboard (Enter on the focused dot), and from `?archie=admin`;
+//   * it opens from the trigger, by keyboard (Enter on the focused dot), and from the address: `=admin1337`
+//     at the end of it opens the site's own panel (`atlas-admin.js`), whose Archie button opens this one;
 //   * one button per command: every name `window.archie.list()` gives, and a `friend:<id>` for each id in
 //     `archie-friends-data.js`'s ORDER, read here from the file rather than from the page;
 //   * each enabled button dispatches its own command, and only it: `window.archie.run` is wrapped and every
@@ -231,8 +232,19 @@ await ev(`document.getElementById("archieadmin").click()`);
 ok("...and a second click closes it", await until(`!${PANEL}`, 3000));
 
 // ---- The flags: the same path ---------------------------------------------------------------------------
-ok("?archie=admin: the model goes live", await goto("?archie=admin"));
-ok("...and the panel opens by itself", await until(PANEL, 5000));
+ok("?=admin1337?: the model goes live", await goto("?=admin1337?"));
+ok("...the site's admin panel opens by itself", await until(`!!document.getElementById("atlasadmin")`, 5000));
+ok("...and takes the trigger off the address", await ev(`!/admin1337/.test(location.href)`), await ev(`location.href`));
+ok("...it has an Archie button on the homepage", await ev(`!!document.querySelector('#atlasadmin [data-act="archie"]')`));
+await ev(`document.querySelector('#atlasadmin [data-act="archie"]').click()`);
+ok("...which opens his panel", await until(PANEL, 5000));
+ok("...and closes the site's, so the two never stack", await ev(`!document.getElementById("atlasadmin")`));
+ok("the old ?archie=admin flag no longer opens anything",
+   await goto("?archie=admin") && !(await until(PANEL, 1500)) && !(await ev(`!!document.getElementById("atlasadmin")`)));
+await goto("?=admin1337?");
+await until(`!!document.getElementById("atlasadmin")`, 5000);
+await ev(`document.querySelector('#atlasadmin [data-act="archie"]').click()`);
+await until(PANEL, 5000);
 await key("Escape", "Escape", 27);
 ok("...Escape closes it, and focus lands on the trigger", await until(`!${PANEL}`, 2000) && (await focused()) === "archieadmin",
    String(await focused()));
@@ -241,9 +253,11 @@ ok("?archie=robot goes through the dispatcher", await goto("?archie=robot") && a
 
 // ---- Reduced motion: a poster, and every button says so ----------------------------------------------
 await S("Emulation.setEmulatedMedia", {features: [{name: "prefers-reduced-motion", value: "reduce"}]});
-await goto("?archie=admin", false);
+await goto("?=admin1337?", false);
 ok("reduced motion: the model stays a poster", !(await ev(`!!document.querySelector(".mhmascot[data-live]")`)));
-ok("...the flag still opens the panel", await until(PANEL, 5000));
+await until(`!!document.getElementById("atlasadmin")`, 5000);
+await ev(`document.querySelector('#atlasadmin [data-act="archie"]').click()`);
+ok("...the address still reaches the panel", await until(PANEL, 5000));
 await sleep(700);
 const rm = await ev(`[...document.querySelectorAll("#archiepanel button[data-cmd]")].map(b => [b.dataset.cmd, b.disabled, b.title])`);
 ok("...with every button disabled", rm.length === want.length && rm.every(([, d]) => d), `${rm.length} of ${want.length}; enabled: ` + rm.filter(([, d]) => !d).map(x => x[0]).join(","));

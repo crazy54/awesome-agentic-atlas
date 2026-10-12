@@ -1,6 +1,6 @@
 // Archie's admin panel: a button for everything he does, for trying one without waiting for the director to
 // get round to it. Loaded only when the footer's hidden trigger (`#archieadmin`, a faint "·" after the
-// footer's last sentence) is used, or when the address has `?archie=admin`; see ADMIN_JS in
+// footer's last sentence) is used -- by a reader, or by the site's admin panel (`atlas-admin.js`); see ADMIN_JS in
 // `scripts/31_home.py`. A reader who does neither never fetches this file.
 //
 // NOT A SECURITY BOUNDARY. This is a static site with no server: the "hidden" in hidden panel means out of
@@ -49,7 +49,7 @@ const CSS = `
 let panel = null, opener = null, poll = 0;
 
 const groups = async () => {
-  // `?archie=admin` can open the panel before archie.js, a module script and so deferred, has run; every
+  // The site's admin panel can press the trigger before archie.js, a module script and so deferred, has run; every
   // module has by `load`.
   if (!window.archie && document.readyState !== "complete")
     await new Promise(r => addEventListener("load", r, {once: true}));

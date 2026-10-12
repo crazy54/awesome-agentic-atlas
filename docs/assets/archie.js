@@ -128,8 +128,8 @@
 
   // ---- Commands -------------------------------------------------------------------------------------
   // One way in to everything he does, shared by the `?archie=` flags (see `direct()`) and the hidden admin
-  // panel in the footer (`archie-admin.js`, which loads only when its trigger is used or `?archie=admin` is
-  // in the address). `window.archie` is:
+  // panel in the footer (`archie-admin.js`, which loads only when its trigger is pressed -- by a reader, or
+  // by the site's admin panel, which `=admin1337` at the end of the address opens). `window.archie` is:
   //
   //   list()     every command name, in the panel's order: `dance:<a BEATS key>`, `idle`, `watch`, `sit`,
   //              `sleep`, `press`, `shrug`, `walk-off` (off the edge and the moonwalk back), `show` (a dance
@@ -149,7 +149,7 @@
   // here too, so the panel can list the whole set and grey out any this build's rig does not have.
   //
   // NOT A SECURITY BOUNDARY. This is a static site with no server and no accounts: anybody can type
-  // `?archie=admin`, or call `window.archie.run()` from the console, and nothing here pretends otherwise.
+  // `=admin1337`, or call `window.archie.run()` from the console, and nothing here pretends otherwise.
   // Every command is something the director already does on its own; the panel only saves waiting for it.
   const RIG_CUES = ["beams-chase", "beams-fan", "beams-cross", "ballyhoo", "gobo", "laser-symbol", "blinder",
                     "wash", "pods", "video-wall", "all-off", "co2", "flames", "sparks", "haze"];

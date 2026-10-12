@@ -112,6 +112,7 @@ b20 = _load("20_landing.py", "b20")
 # picked is decided in this file.
 sys.path.insert(0, str(HERE))
 import discover  # noqa: E402
+import sitewide  # noqa: E402
 
 SITE = b19.b17.SITE
 REPO = b19.REPO
@@ -302,7 +303,7 @@ def head(title: str, desc: str, url: str) -> str:
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="{card}">
 <link rel="icon" href="{esc(rel(ICON))}" type="image/svg+xml">
-{HEAD_THEME}<link rel="stylesheet" href="{esc(rel('pages.css'))}">
+{sitewide.font_preload(rel())}{HEAD_THEME}<link rel="stylesheet" href="{esc(rel('pages.css'))}">
 </head>
 """
 
@@ -700,13 +701,14 @@ def render(published: dict, data: dict, day: str) -> str:
   </section>
 </div></main>
 <footer><div class="wrap">
+  {sitewide.buildtags(REPO)}
   {total} of {rows:,} projects a day, rotated so the whole atlas comes round rather than the popular end of
   it being resampled. Stars, language and last-push come from the GitHub API on
   {esc(published['snapshot'])} and drift daily; the picks are fixed for the week. Everything here is also
   in the <a href="{esc(rel())}">searchable index</a>, on each project's own page, and in the
   <a href="https://github.com/{esc(REPO)}/tree/HEAD/mega-list">Markdown edition</a>.
 </div></footer>
-{core_js()}{PAGE_JS}{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(rel())}</body>
+{sitewide.site_script(rel())}{core_js()}{PAGE_JS}{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(rel())}</body>
 </html>
 """
 

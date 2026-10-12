@@ -145,7 +145,10 @@ ok("the shared reader asks GitHub for rendered Markdown and discovers nested fil
    detailJS.includes("/git/trees/HEAD?recursive=1") && detailJS.includes("/^skill\\.md$/i"));
 ok("the reader ships distinct prose, heading, and code typography on the site's shared palette",
    detailCSS.includes('Charter,"Bitstream Charter","Sitka Text"') &&
-   detailCSS.includes('"Cascadia Code","SFMono-Regular"') &&
+   // Code is the embedded Geist Mono, declared once as --mono (see scripts/sitewide.py), not a platform stack.
+   detailCSS.includes(".markdown-body code,.markdown-body kbd{font:13px/1.55 var(--mono)}") &&
+   detailCSS.includes('--mono:"Geist Mono",') &&
+   detailCSS.includes('@font-face{font-family:"Geist Mono";src:url(../assets/fonts/geist-mono.woff2)') &&
    detailCSS.includes("--read-panel:var(--plane)") &&
    detailCSS.includes("--read-accent:var(--bar)") &&
    !detailCSS.includes("--read-violet"));
