@@ -134,6 +134,8 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("claudecode", "Writing & Prose Quality"): "Creative, Voice & Media",
     ("claudecode", "Research & Scientific Inquiry"): "Research & Data Agents",
     ("claudecode", "Documentation, Knowledge & Learning"): "Docs, Learning & Lists",
+    # Other awesome lists -- the first is a list of Claude Code mods -- so a reader's next list to read.
+    ("claudecode", "Lists & Collections"): "Docs, Learning & Lists",
 
     # e2b-dev/awesome-ai-agents -- the long tail is one-entry industry shelves
     ("e2b", "Coding"): "Coding Agents",

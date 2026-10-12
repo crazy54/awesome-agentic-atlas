@@ -72,7 +72,11 @@ SOURCES = [
                "what you get in this repository", "best ways to explore",
                "compare alternatives", "start with bundles",
                "use workflows for outcome-driven execution",
-               "need fewer active skills at runtime?"}),
+               "need fewer active skills at runtime?",
+               # Contributor leaderboards: rows are ranks ("1".."10") linking to people's profiles.
+               # The h3s are named as well as the h2, because cat_at=3 re-decides `dropped` at
+               # every h3 rather than inheriting it from the h2 above.
+               "top contributors", "most commits", "most skills added"}),
     # Pure HTML: an outer <details><summary><strong>CATEGORY</strong> wraps one
     # inner <details> per entry, with the repo URL on a "View Repository" link.
     dict(key="opencode", nwo="awesome-opencode/awesome-opencode",

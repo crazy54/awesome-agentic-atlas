@@ -54,10 +54,11 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
         # which is what TDD Guard and the QA auditors have in common. The row still prints "Testing".
         ("Observability & Monitoring", ["Observability & Monitoring", "Testing"]),
         # The two bundle sections land here because a bundle is what they are -- curated collections, which
-        # is already what this bucket groups. Neither names a technique any other bucket carries.
+        # is already what this bucket groups. Neither names a technique any other bucket carries. Lists &
+        # Collections (2026-10) joins them for the same reason, and left unmapped it was a ninth bucket.
         ("Docs, Knowledge & Research", [
             "Documentation, Knowledge & Learning", "Research & Scientific Inquiry",
-            "Multi-Purpose", "Open Source Software"]),
+            "Multi-Purpose", "Open Source Software", "Lists & Collections"]),
         ("Security", ["Security"]),
         ("Orchestration", ["Agent Orchestration"]),
         ("Memory & Context", ["Memory & Context Persistence"]),
