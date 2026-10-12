@@ -528,38 +528,7 @@ against `latest_branch`, which is also the branch the site is published from, an
 `node tests/run.mjs` runs the full suite ([testing](handbook/testing.md)).
 
 ## What the site records
-
-The website at [aaa.jeremyfhall.com][site] measures how it is used, in two ways. Neither one sets a
-cookie or writes to `localStorage`.
-
-**Cloudflare Web Analytics** counts page views and measures how fast pages load, by page, referring site,
-browser, device type and country. It removes everything after `#` and `?` from an address before sending
-it, so your searches and filters never reach Cloudflare.
-
-**Traceway**, since 11 October 2026, records sessions. It is an error and session recorder that the
-site's owner hosts at `traceway.jeremyfhall.com`, so the data goes to the owner rather than to an
-analytics company. On every page it records:
-
-- **A replay of your visit:** what the page showed, and where you moved the pointer, scrolled and clicked.
-  The search box and every other form field are blocked from the replay. Each one is recorded as an empty
-  placeholder of the same size, so nothing you type into one is ever recorded.
-- **Every address you visit on the site, in full,** including the part after `#`. The catalogue keeps your
-  search words and filters there (`#q=…`), so **a search can still be recorded through the address**, even
-  though the box itself is blocked.
-- **Which links you click,** by their path only. For a link to a project on GitHub, that is its
-  `owner/name`.
-- **The requests the page's own scripts make:** the address, how long each took, its size, and whether it
-  failed. Not what was in them.
-- **Errors** in the page's scripts, and **speed measurements:** the Core Web Vitals for loading,
-  responsiveness and layout shift.
-
-A random session id in your tab's `sessionStorage` ties one visit's recording together. It lasts only as
-long as the tab does. Like any server, the two that receive this see your IP address. They are
-`traceway.jeremyfhall.com`, and `blog.jeremyfhall.com`, which gives each page its Traceway settings.
-Nothing is recorded anywhere but `aaa.jeremyfhall.com`, so a clone, a local copy or a fork sends nothing.
-The scripts are in [`docs/assets/`](docs/assets/), and `traceway-loader.js` is the part written for this
-site. The reasoning, and how this changed the site's earlier position on privacy, is in the dated addendum
-to [`docs-notes/JFH-198-analytics-events.md`](docs-notes/JFH-198-analytics-events.md).
+Some user data is collected by the site owner, aka me, the guy who wrote this README.md! I do not sell data, use data to give you ads, nothing is collected except a session ID and what you were most focused on. That data helps find errors in the code and it helps me narrow in on what my community actually cares about. I hate my data being stolen so, I call it out that I take some data from you to improve the site. 
 
 ## Licence and credit
 
