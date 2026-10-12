@@ -57,7 +57,7 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
         # is already what this bucket groups. Neither names a technique any other bucket carries.
         ("Docs, Knowledge & Research", [
             "Documentation, Knowledge & Learning", "Research & Scientific Inquiry",
-            "Multi-Purpose", "Open Source Software"]),
+            "Multi-Purpose", "Open Source Software", "Lists & Collections"]),
         ("Security", ["Security"]),
         ("Orchestration", ["Agent Orchestration"]),
         ("Memory & Context", ["Memory & Context Persistence"]),

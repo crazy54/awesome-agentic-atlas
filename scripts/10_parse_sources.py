@@ -72,7 +72,11 @@ SOURCES = [
                "what you get in this repository", "best ways to explore",
                "compare alternatives", "start with bundles",
                "use workflows for outcome-driven execution",
-               "need fewer active skills at runtime?"}),
+               "need fewer active skills at runtime?",
+               # The two contributor leaderboards under "Top Contributors": every link in them is a
+               # GitHub profile, not a repo. Each needs naming here rather than via its parent, because
+               # an h3 at cat_at re-decides `dropped` for itself and would un-drop under a dropped h2.
+               "most commits", "most skills added"}),
     # Pure HTML: an outer <details><summary><strong>CATEGORY</strong> wraps one
     # inner <details> per entry, with the repo URL on a "View Repository" link.
     dict(key="opencode", nwo="awesome-opencode/awesome-opencode",
