@@ -42,6 +42,7 @@ Run `node tests/run.mjs` before opening it. Say in the description which failure
 | `scripts/`, `tests/`, `config/`, `art/`, `.github/`, `handbook/`, READMEs | `docs/**/*.html`, `docs/*.json`, `docs/*.xml`, `docs/pages.css`, `docs/sw.js`, `docs/manifest.webmanifest`, `docs/search/`, `docs/og/`, `docs/repo/` |
 | `docs/assets/archie*.js`, `docs/assets/rig-show.js`, `docs/CNAME`, `docs/favicon.svg`, `docs/assets/atlas-byte.png` | `mega-list/**` |
 | `docs/assets/three-archie.js` and the `.glb`/`.webm`/`.webp` art: not edited by hand, but rebuilt from `art/` (see [archie.md](archie.md)) | `state/*.json`: ledgers written by the pipeline. Never hand-edit them; on a merge conflict, keep both sides |
+| `docs/assets/traceway-loader.js`. Beside it, `docs/assets/traceway-1.2.1.js` and `web-vitals-6.2.3.js` are npm builds vendored unmodified: never edited, only replaced by a newer build under a new name (see [frontend.md](frontend.md#analytics-and-verification)) | |
 
 Every generated HTML file carries its generator's name in the pipeline table in [pipeline.md](pipeline.md).
 When in doubt, search `scripts/` for the output path.

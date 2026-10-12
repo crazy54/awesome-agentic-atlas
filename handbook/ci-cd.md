@@ -15,7 +15,7 @@ Nothing is ever deployed from `main`. There is no deploy workflow: a commit to `
 Since a merge to `latest_branch` publishes immediately, **merged means deployed**. The reverse is also
 true: work that is only on a feature branch is not live, however green its PR.
 
-## The five workflows
+## The six workflows
 
 | Workflow | Triggers | Job | Writes to the repo? |
 |---|---|---|---|
@@ -24,6 +24,7 @@ true: work that is only on a feature branch is not live, however green its PR.
 | `tests.yml` | every pull request, pushes to `latest_branch`, cron `40 7 * * 1`, dispatch | `node tests/run.mjs` on ubuntu-latest | No |
 | `lighthouse.yml` | pull requests touching page generators or `docs/` (see its `paths:`), cron `40 13 * * 1`, dispatch | Lighthouse CI 0.15.1 against `/index.html` and `/catalog/index.html` | No |
 | `og-preview.yml` | dispatch only | Renders the OG cards to a temp directory with `23_og.py --out` and diffs them against the committed cards | No |
+| `traceway-live.yml` | `page_build` (each Pages build), cron `25 18 * * *` (18:25 UTC), dispatch | `node scripts/check-traceway-live.mjs https://aaa.jeremyfhall.com/` with `TRACEWAY_CHECK_ATTEMPTS=6`, Node 24 | No |
 
 `daily.yml` and `weekly.yml` share the concurrency group `atlas-build`, so they never run at once.
 Scheduled start times lag: in September 2026 the 11:12 daily usually started around 15:30 UTC.
@@ -90,6 +91,27 @@ This workflow runs on ubuntu-latest with Node 22 and Python 3.12.
 - CI tests the **merge ref** (`refs/pull/N/merge`), not your branch head. A failure you cannot reproduce on
   your branch may come from `latest_branch` moving underneath it.
 
+### traceway-live.yml
+
+Added on 2026-10-11. It is the only check that looks at the deployed site rather than a checkout. The
+Traceway loader does nothing off `aaa.jeremyfhall.com`, so nothing in `tests/` can see telemetry work.
+
+- It passes only when the live homepage's telemetry-config fetch returns 200 **and** at least one POST to
+  `traceway.jeremyfhall.com/api/report` returns 200, in headless Chrome. ubuntu-latest's
+  `/usr/bin/google-chrome` is used, and nothing is installed.
+- `scripts/check-traceway-live.mjs` is the owner's shared check, identical on each of their sites. Change
+  it at the source and copy it here. It lives in `scripts/` and not `tests/`, because `run.mjs` counts any
+  `.mjs` in `tests/` as a harness.
+- `page_build` runs it after a Pages build. The daily and weekly builds push with `GITHUB_TOKEN` (see
+  above), and it has not yet been observed whether their Pages builds fire `page_build`. The 18:25 UTC
+  schedule covers those deploys either way.
+- `TRACEWAY_CHECK_ATTEMPTS=6` retries a failure 30 s apart, for a deploy the CDN has not caught up with.
+  A real failure therefore takes about nine minutes to report.
+- At 03:45 UTC on 2026-10-12, before this work was deployed, it failed against the live site, as it should:
+  `telemetry config: no response`, `reports to Traceway: none`.
+- Run it by hand with `node scripts/check-traceway-live.mjs https://aaa.jeremyfhall.com/`. It needs Node 22
+  or newer and a Chrome, and you can set `CHROME_PATH` if it cannot find one.
+
 ## Configuration: variables and secrets
 
 The workflows read four optional settings. Each can be set either as a repository variable or as a
@@ -104,6 +126,10 @@ secret, read as `vars.X || secrets.X`. Every one has a committed default or a sa
 
 The workflows write these to `$GITHUB_ENV` only when a value exists. Declaring them in `env:` would set
 them to `""` whenever they are unset, and for two of the four `""` means something different from unset.
+
+The Traceway telemetry added on 2026-10-11 reads no setting at all. Its connection string is fetched by the
+browser at run time, and its loader only starts on `aaa.jeremyfhall.com`. See
+[frontend.md](frontend.md#analytics-and-verification).
 
 ## Caches and state
 

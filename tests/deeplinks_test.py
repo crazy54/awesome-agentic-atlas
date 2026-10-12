@@ -5,7 +5,7 @@ The root used to be the catalogue, and a filtered view of it was the root plus a
 one of those links started landing on the shelves homepage, which reads no hash, so the filter was
 dropped without a word. The build stayed green, because no test followed a link.
 
-Three groups, and a fourth that is here only because this file already loads 31_home.py:
+Four groups, and a fifth that is here only because this file already loads 31_home.py:
 
   the forwarder  -- the script in the *rendered* homepage, run under node against a stub `location`. A
                     filtered hash is forwarded to `catalog/` with its query and hash intact. An in-page
@@ -23,16 +23,21 @@ Three groups, and a fourth that is here only because this file already loads 31_
                     the ones already published in the committed `docs/feed.xml`, because an id that moved
                     with the host would show every subscriber fifty old entries as new. `robots.txt` says it
                     is read when there is a custom domain, and says it is inert when there is not.
+  the telemetry  -- the three Traceway scripts `telemetry()` writes onto every page family, resolved
+                    against every committed page's own URL at all five depths, in order; the two vendored
+                    builds pinned to npm's bytes; and the loader, run under node, starting on the host in
+                    `docs/CNAME` and on no other, so the test server and a local copy send nothing.
   the spotlight  -- `spot_art()` gives the homepage's spotlight the project's own picture, and the social
                     card for a GIF or no picture. Fed both arms directly, since the committed page
                     shows only whichever one the day's row took.
 
-Nothing here writes to `docs/`. It reads the committed `docs/data.json` and `docs/discover.json`.
+Nothing here writes to `docs/`. It reads the committed `docs/data.json`, `docs/discover.json` and pages.
 
 Run: python tests/deeplinks_test.py
 """
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import re
@@ -212,6 +217,97 @@ try:
     true("...and says it is inert when there is no custom domain", "inert" in b20.robots())
 finally:
     b17.CNAME = saved
+
+
+# =====================================================================  4. the telemetry
+# The three Traceway scripts `telemetry()` in 19_pages.py puts on every page, each with a src relative to
+# the page that carries it. That is the defect class this file exists for: a src with one `../` too few
+# renders, runs nothing and reports nothing, and a reader sees no difference at all. So every committed
+# page is resolved, not a sample of them -- the pages sit at five depths, from the homepage down to a
+# topic-by-harness crossing, and each family passes its own `up`. `docs/v2/` is `30_v2.py`'s beta, built on
+# demand, and carries no telemetry.
+b19 = b20.b19
+DOCS = ROOT / "docs"
+TW = DOCS / "assets"
+WANT = [SITE + "assets/" + f for f in b19.TELEMETRY]
+TAG = re.compile(r'<script defer src="([^"]*)"></script>')
+true("the three files the tags name are committed", all((TW / f).is_file() for f in b19.TELEMETRY),
+     [f for f in b19.TELEMETRY if not (TW / f).is_file()])
+true("...and the loader is last, since it reads what the other two define",
+     b19.TELEMETRY[-1] == "traceway-loader.js")
+for up, url in [("", SITE), ("../", CATALOG), ("../../../", SITE + "repo/o/n/"),
+                ("../../../../", SITE + "topic/t/target/h/")]:
+    eq(f"telemetry({up!r}) resolves from {url}", [urljoin(url, s) for s in TAG.findall(b19.telemetry(up))], WANT)
+wrong, walked = [], 0
+for p in sorted(DOCS.rglob("index.html")):
+    parts = p.relative_to(DOCS).parts[:-1]
+    if parts[:1] == ("v2",):
+        continue
+    walked += 1
+    url = SITE + "".join(s + "/" for s in parts)
+    got = [urljoin(url, s) for s in TAG.findall(p.read_text(encoding="utf-8"))]
+    if got != WANT:
+        wrong.append(f"{'/'.join(parts) or '(root)'}: {got}")
+true(f"every one of the {walked:,} committed pages loads the three from docs/assets/, in order",
+     walked and not wrong, f"{len(wrong):,} do not, e.g.\n  " + "\n  ".join(wrong[:5]))
+
+# The two vendored builds are npm's published bytes, unmodified, and are pinned here so that an edit is a
+# red rather than a quietly different SDK. Hashed raw, against this repository's rule of normalising CRLF
+# first, because `.gitattributes` marks both files `-text`: every platform checks out the same bytes, and
+# a normalised hash would wave through the one change autocrlf could make to them.
+PINS = {
+    # @tracewayapp/frontend 1.2.1, dist/traceway.iife.global.js
+    "traceway-1.2.1.js": "e4855ae39209d50877a2872406d49380207714fb28ac9478f761efb9a0dec743",
+    # web-vitals 6.2.3, dist/web-vitals.iife.js
+    "web-vitals-6.2.3.js": "1e5e9b9af6b8d71cfef508e5a869c53b4cf2bbccad8c9b5ac664c34e93f6151a",
+}
+for f, pin in PINS.items():
+    eq(f"docs/assets/{f} is the published npm build, byte for byte",
+       hashlib.sha256((TW / f).read_bytes()).hexdigest() if (TW / f).is_file() else None, pin)
+eq("...and those are the two builds the tags load", sorted(PINS), sorted(b19.TELEMETRY[:-1]))
+
+# The loader, run rather than read, like the forwarder above: a stub `window` per case, and the calls it
+# made on it. It must start on the host docs/CNAME names and on nothing else -- not the test server, not
+# `localhost`, not a `file://` page (whose hostname is empty), not the github.io URL a fork is served at --
+# and not when the SDK did not load. A HOST that drifted from the CNAME would fail no other test and
+# silently record nothing. On the live host it must block every kind of form field from the replay before
+# it asks for its settings: `rr-block`, not just `rr-mask`, because the SDK's rrweb masks only password
+# values and would otherwise write a field's text into every full snapshot.
+LOADER = (TW / "traceway-loader.js").read_text(encoding="utf-8") if (TW / "traceway-loader.js").is_file() else ""
+CONFIG = "fetch https://blog.jeremyfhall.com/api/telemetry-config?site=aaa"
+TW_CASES = [
+    ("the test server", "127.0.0.1", True, []),
+    ("a local http.server", "localhost", True, []),
+    ("a file:// page", "", True, []),
+    ("a fork's project URL", "crazy54.github.io", True, []),
+    ("the live host, with the SDK missing", cname, False, []),
+    ("the live host", cname, True, ['find input, textarea, select, [contenteditable="true"]',
+                                    "block rr-mask rr-ignore rr-block", CONFIG]),
+]
+if node and LOADER:
+    harness = r"""
+const vm = require("vm");
+const [src, cases] = [process.argv[1], JSON.parse(process.argv[2])];
+console.log(JSON.stringify(cases.map(([hostname, sdk]) => {
+  const calls = [];
+  const document = {documentElement: {}, addEventListener: () => calls.push("listen"),
+                    querySelectorAll: sel => { calls.push("find " + sel);
+                      return [{classList: {add: (...c) => calls.push("block " + c.join(" "))}}]; }};
+  const window = {location: {hostname, href: "https://" + hostname + "/"}, document,
+                  fetch: u => { calls.push("fetch " + u); return new Promise(() => {}); }};
+  if (sdk) window.Traceway = {init: () => calls.push("init")};
+  vm.runInNewContext(src, {window, document});
+  return calls;
+})));
+"""
+    run = subprocess.run([node, "-e", harness, LOADER, json.dumps([[c[1], c[2]] for c in TW_CASES])],
+                         capture_output=True, text=True)
+    true("the loader runs under node", run.returncode == 0, run.stderr)
+    if run.returncode == 0:
+        for (label, *_, want), calls in zip(TW_CASES, json.loads(run.stdout)):
+            eq(f"loader on {label}", calls, want)
+else:
+    true("the loader is committed and node is on PATH", False)
 
 
 # =====================================================================  the spotlight's picture

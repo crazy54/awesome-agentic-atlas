@@ -92,6 +92,7 @@ The module docstrings are the detailed documentation. Read the one at the top of
 | `masthead_art.py` | Draws `docs/assets/masthead-{dark,light}.webp`. Run by hand only |
 | `try_source.py` | Works out a parse strategy for a candidate new source list. Writes to `cache/candidates/` |
 | `devfixture.py` | Rebuilds the cache files `19_pages.py` needs, from the committed `docs/data.json` (see below) |
+| `check-traceway-live.mjs` | Not part of the pipeline, and the one Node file here: the post-deploy check `traceway-live.yml` runs against the live site, passing only when Traceway reports. See [ci-cd.md](ci-cd.md#traceway-liveyml) |
 
 ## Working without the cache
 

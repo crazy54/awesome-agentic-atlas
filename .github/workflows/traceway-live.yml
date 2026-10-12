@@ -1,0 +1,65 @@
+# Checks that Traceway is live on the published site. It loads https://aaa.jeremyfhall.com/ in headless
+# Chrome and passes only when two things happen: the page's telemetry-config fetch to blog.jeremyfhall.com
+# returns 200, and at least one POST to traceway.jeremyfhall.com/api/report returns 200. It writes nothing,
+# commits nothing and deploys nothing.
+#
+# WHY THIS EXISTS
+#
+# Every other check in this repository runs against a checkout, and the Traceway loader does nothing at all
+# off the live host (see `telemetry()` in scripts/19_pages.py). That is deliberate, and it means no harness
+# in tests/ can ever see telemetry work. A deploy that dropped the tags, a loader whose HOST drifted from
+# docs/CNAME, a config endpoint that started refusing this origin, or a Traceway instance that stopped
+# accepting reports would all leave every other check green and simply record nothing. This job looks at
+# the deployed site, which is the only place telemetry runs.
+#
+# The check is scripts/check-traceway-live.mjs. It is the owner's shared check, kept identical across their
+# sites, so change it there and copy it here rather than editing this copy. It has no dependencies and
+# drives Chrome over the DevTools protocol with Node's built-in WebSocket, which is why Node 24 is set up
+# below. ubuntu-latest ships Google Chrome at /usr/bin/google-chrome, and the script looks there first.
+#
+# WHEN IT RUNS
+#
+# `page_build` fires when GitHub Pages builds this repository. With the legacy build type that means after
+# every push to latest_branch, which is a deploy (see handbook/ci-cd.md). The daily and weekly builds push
+# with secrets.GITHUB_TOKEN, and GitHub starts no workflow run for an event that token causes. Whether a
+# Pages build triggered by one of those pushes still fires `page_build` here has not been observed yet. The
+# daily schedule is the backstop for those deploys either way: 18:25 UTC is after the daily build's usual
+# start time, which lagged to about 15:30 UTC in September 2026.
+#
+# A page_build can arrive before the CDN serves the new pages, so TRACEWAY_CHECK_ATTEMPTS=6 retries a
+# failing check five times, 30 seconds apart. Each attempt waits up to 60 seconds for the first report, so a
+# check that is going to fail takes about eight and a half minutes.
+name: Traceway live check
+
+on:
+  page_build:
+  schedule:
+    - cron: "25 18 * * *"
+  workflow_dispatch:
+
+# It reads the tree for the script and reports through the check itself.
+permissions:
+  contents: read
+
+# One at a time. Two deploys in quick succession leave one interesting answer, the newest one.
+concurrency:
+  group: traceway-live
+  cancel-in-progress: true
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    # Six attempts of up to 60 s with 30 s between them is about nine minutes, plus Chrome's start.
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Traceway reports from the live site
+        env:
+          TRACEWAY_CHECK_ATTEMPTS: "6"
+        run: node scripts/check-traceway-live.mjs https://aaa.jeremyfhall.com/

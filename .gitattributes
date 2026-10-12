@@ -19,3 +19,11 @@ docs/search/*.bin binary
 # downloads do not depend on which OS ran the build. Pinned for the same reason: sorted keys and LF are
 # what keep these two files out of every diff.
 docs/search/*.json text eol=lf
+
+# The vendored Traceway SDK and web-vitals builds are npm's bytes, unmodified, and
+# tests/deeplinks_test.py pins their hashes to the published files. Neither has a CR in it today, so
+# autocrlf would leave the committed blobs alone -- but on this Windows checkout it would write CRLF into
+# the working tree, and a byte comparison against the npm tarball would then fail on a file nobody
+# changed. Not text, so what is on disk, in the repository and on the site are the same bytes everywhere.
+docs/assets/traceway-1.2.1.js -text
+docs/assets/web-vitals-6.2.3.js -text
