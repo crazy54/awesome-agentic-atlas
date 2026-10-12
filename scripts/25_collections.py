@@ -64,7 +64,7 @@ CURATION = ROOT / "config" / "collections.json"
 # identifiers. Both do their work under `if __name__`, so importing them runs no build.
 #
 # What is taken from each is the part that must not be spelled twice. From `19_pages.py`: the site URL, the
-# repository, the count of merged lists that goes in the footer, and the analytics beacon. From
+# repository, the count of merged lists that goes in the footer, and the analytics tags. From
 # `20_landing.py`: `esc`, `clip`, `repo_path` -- the rule that turns an `nwo` into a detail-page path -- and
 # the two theme scripts, so a reader following a link from a facet page to a collection page sees the same
 # palette resolved by the same code before first paint. Nothing here has its own copy of any of that.
@@ -364,7 +364,7 @@ def foot(depth: int, snapshot: str, lists: int) -> str:
   <span class="vL">amber</span> is inferred from the language. A build here fails rather than publish a
   pick whose evidence has stopped supporting the claim above it.
 </div></footer>
-{THEME_JS}{b19.follow()}{b19.beacon()}</body>
+{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(rel(depth))}</body>
 </html>
 """
 

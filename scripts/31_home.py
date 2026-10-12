@@ -97,7 +97,7 @@ def _load(name: str, alias: str):
 
 
 # What each one is here for. `19_pages.py`: the Settings control, in the three pieces it was lifted into so
-# that a second page could use it, and the analytics beacon. `20_landing.py`: the pre-paint theme script and
+# that a second page could use it, and the analytics tags. `20_landing.py`: the pre-paint theme script and
 # the one rule that turns an `nwo` into a detail-page path. `30_v2.py`: the entire card and shelf system.
 b19 = _load("19_pages.py", "b19")
 b20 = _load("20_landing.py", "b20")
@@ -1508,6 +1508,7 @@ def render() -> str:
         UPDATE_JS.replace("__SHELLPREFIX__", SHELL_PREFIX),
         *filter(None, [mascot()[1], dance()[1], admin()[2]]),
         b19.beacon(),
+        b19.telemetry(""),
         '</body>',
         '</html>',
         '',

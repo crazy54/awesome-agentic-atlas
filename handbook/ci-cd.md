@@ -105,6 +105,10 @@ secret, read as `vars.X || secrets.X`. Every one has a committed default or a sa
 The workflows write these to `$GITHUB_ENV` only when a value exists. Declaring them in `env:` would set
 them to `""` whenever they are unset, and for two of the four `""` means something different from unset.
 
+The Traceway telemetry added on 2026-10-11 reads no setting at all. Its connection string is fetched by the
+browser at run time, and its loader only starts on `aaa.jeremyfhall.com`. See
+[frontend.md](frontend.md#analytics-and-verification).
+
 ## Caches and state
 
 - **`cache/`** lives only in the GitHub Actions cache. If it is evicted (7 days unused, or the 10 GB cap),

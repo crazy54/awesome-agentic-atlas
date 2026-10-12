@@ -3,6 +3,11 @@
 Investigation note, 2026-09-06. Not a published surface: `docs-notes/` sits outside `docs/`, so GitHub
 Pages never sees it.
 
+> **Addendum, 2026-10-11.** The privacy line this note draws no longer describes the site. The owner has
+> since added self-hosted Traceway telemetry, with session replay, to every page. The note below is left
+> as it was written. [The addendum at the end](#addendum-2026-10-11-traceway-telemetry) records the
+> decision, what Traceway collects, and which statements here it makes false.
+
 The ticket asks for an event layer over the analytics shipped in JFH-177. Before designing one it has to
 be settled whether Cloudflare Web Analytics can carry custom events at all, and whether it already sees
 the URL hash — because this site puts every filter in the hash, and if the beacon reported it, most of
@@ -400,6 +405,8 @@ every result — see "Weaknesses".
 
 ## The privacy line
 
+> As of 2026-09-06. Superseded on 2026-10-11; see [the addendum](#addendum-2026-10-11-traceway-telemetry).
+
 Where the site stands today, and it is worth stating precisely because it is unusually good: no cookies,
 no `localStorage` beyond a single `theme` key that is the reader's own explicit choice, no identifiers, no
 consent banner, and one third-party script that Cloudflare designed to strip fragments, query strings and
@@ -618,3 +625,84 @@ All fetched 2026-09-06. Cloudflare docs carry their own last-updated dates, quot
 Repository evidence, read directly: `scripts/19_pages.py` (`beacon()`, `writeHash()`, `readHash()`,
 `set()`, `wire()`, `render()`, `detailURL`), `scripts/20_landing.py` (14 + 12 + 130 prerendered paths,
 `related()`, `live`), and the on-disk counts under `docs/topic/`, `docs/target/` and `docs/repo/`.
+
+---
+
+## Addendum, 2026-10-11: Traceway telemetry
+
+Written a month after the note above. The note is left as it was: it records what was true, and what was
+decided, on 2026-09-06.
+
+### The decision
+
+On 2026-10-11 the site's owner decided to add Traceway to every page, with full capture: errors, Core Web
+Vitals, session replay and network capture. It is the same set-up as the owner's homepage. Data goes to the
+owner's self-hosted Traceway at `traceway.jeremyfhall.com`. Each page fetches its connection string from
+`blog.jeremyfhall.com` at run time, so nothing secret is committed. Three files, all served from this site's
+own origin:
+
+| File | What it is |
+| --- | --- |
+| `docs/assets/traceway-1.2.1.js` | `@tracewayapp/frontend` 1.2.1, `dist/traceway.iife.global.js`, unmodified. MIT; bundles rrweb (MIT) |
+| `docs/assets/web-vitals-6.2.3.js` | `web-vitals` 6.2.3, `dist/web-vitals.iife.js`, unmodified. Apache-2.0 |
+| `docs/assets/traceway-loader.js` | Hand-written. Does nothing unless the host is `aaa.jeremyfhall.com` |
+
+`telemetry()` in `scripts/19_pages.py`, beside `beacon()`, writes the three tags onto every page family. The
+Cloudflare beacon stays as it was. The root README's "What the site records" section tells readers all of
+this in plain words.
+
+### What it collects
+
+Read out of the shipped `traceway-1.2.1.js` on 2026-10-11, not taken from its documentation:
+
+- **Session replay (rrweb).** A full snapshot of the page's DOM when recording starts and at every 30-second
+  segment boundary, then every mutation, pointer movement, scroll and click. The loader gives every
+  `input`, `textarea` and `contenteditable` the classes `rr-mask rr-ignore`, and re-applies them to fields
+  added later. `rr-ignore` stops keystrokes in those fields being recorded. It does not keep their contents
+  out of the snapshots. Traceway starts rrweb with no masking options, so rrweb masks password values only,
+  and `rr-mask` masks text nodes, not input values. Whatever is in the search box when a snapshot is taken
+  is recorded in clear.
+- **Navigation.** Every `pushState`, `replaceState`, `popstate` and `hashchange`, recorded as
+  `pathname + search + hash`. `writeHash()` calls `replaceState` on every filter change and search, so the
+  catalogue's search terms and filters are recorded. That includes the zero-result terms Finding 2 said
+  could never leave the browser.
+- **Network.** For every `fetch` and XHR, same-origin or not (a detail page's reader calls
+  `api.github.com`): the method, URL, duration, status, request and response sizes, and any error. Bodies
+  are not recorded. Same-origin requests also get a `traceway-trace-id` header.
+- **Errors.** Uncaught exceptions with stack traces, and HTTP 5xx responses (`captureHttpServerErrors`).
+  Console output is not captured (`captureLogs: false`).
+- **Actions.** CLS, INP, LCP, FCP and TTFB from web-vitals, and every link click, recorded by `pathname`
+  only.
+- **Storage.** A session id in `sessionStorage`, under `traceway:session:<token>`. No cookies and no
+  `localStorage`.
+- **Weight.** 214,689 B (68,766 B gzipped) plus 8,991 B (3,349 B gzipped) plus the loader, deferred, on
+  every page. The beacon was about 30 KB.
+
+How long Traceway keeps any of this is set by the owner's instance and is not recorded here.
+
+### Which statements above this makes false
+
+- Finding 4's *"No PII, no cookies, no consent banner — true today and must stay true."* There are still no
+  cookies, and no consent banner was added. "No PII" no longer holds, because replays and full URLs can
+  carry whatever a reader types or searches for. The premise behind having no banner, that nothing
+  personal is collected, is gone. Whether that changes the need for a banner is the owner's call, and
+  this note does not settle it.
+- The binding constraints in "Options for zero-result search terms": *"no third-party script beyond the
+  one beacon, no cookies, no personal data"*. The Traceway files are served from this origin and report to
+  the owner's own domain, so no new outside party receives reader data. But they add a second
+  measurement system, and they can collect personal data.
+- Option B's mitigations were called mandatory: truncate the term, reject `@` and URL shapes, drop control
+  characters, store no IP, set no cookie. Traceway applies only the last. Option B's own wording is now an
+  accurate description of the site: it "collects the words readers type into the search box", without
+  B's filtering.
+- "The privacy line": *"Nothing the site collects can be tied to a person."* No longer true. One tab's
+  activity is tied together by its session id, and the servers that receive it see the reader's IP.
+- The same section's *"If option B ships, the README has to say what is collected, in plain words, before
+  anyone asks."* That rule is applied here: the root README now has that section.
+- "Considered and rejected: smuggling the term into the path". Its first reason was that free-typed reader
+  text would land in a store with no truncation, no filtering and no owner control. Traceway puts the same
+  text, untruncated and unfiltered, into a store the owner does control. That is the difference the
+  rejection drew between the path trick and option B.
+
+Unchanged: the prefilled-issue link (option A) still ships and still collects nothing by itself. Cloudflare
+still sees no hash. Findings 1 to 3 describe the beacon and stay accurate.

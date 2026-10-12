@@ -111,7 +111,25 @@ always run `24_pwa.py` after `31_home.py`, so only hand-made changes can miss it
 
 - **Cloudflare Web Analytics:** a beacon on every page family, with the token committed in `19_pages.py`.
   See [ci-cd.md](ci-cd.md#configuration-variables-and-secrets) for overrides.
+- **Traceway telemetry, since 2026-10-11:** errors, Core Web Vitals, session replay and network capture,
+  sent to the owner's self-hosted Traceway at `traceway.jeremyfhall.com`. `telemetry()` in `19_pages.py`,
+  next to `beacon()`, writes three deferred scripts onto every page family, with `src`s relative to the
+  page's depth:
+  - `docs/assets/traceway-1.2.1.js` and `docs/assets/web-vitals-6.2.3.js`: npm builds, vendored
+    unmodified. Their licences are beside them, `.gitattributes` keeps autocrlf off them, and
+    `deeplinks_test.py` pins their hashes.
+  - `docs/assets/traceway-loader.js`: hand-written ES5. It returns at once unless the host is
+    `aaa.jeremyfhall.com`, so local runs, forks and the test server send nothing and the browser harnesses
+    see no new console output. It fetches the connection string from `blog.jeremyfhall.com` at run time,
+    so nothing secret is committed.
+
+  There is no build-time setting and no off switch other than removing the tags. To upgrade a vendored
+  build, add it under its new versioned name, then update `TELEMETRY`, the pins in `deeplinks_test.py`,
+  `.gitattributes` and the licence file, and regenerate every page family. What it collects is listed in
+  the root README under "What the site records". Change that section whenever what is collected changes.
 - **IndexNow:** the key file `docs/<key>.txt`, written by `20_landing.py`.
 - **Google Search Console:** a meta tag, emitted only when `GOOGLE_SITE_VERIFICATION` is set. It was unset on 2026-09-25.
 
-`docs-notes/JFH-198-analytics-events.md` is an investigation note from 2026-09-06 on whether custom analytics events are possible.
+`docs-notes/JFH-198-analytics-events.md` is an investigation note from 2026-09-06 on whether custom analytics
+events are possible. Its 2026-10-11 addendum records the decision to add Traceway, and which of the note's
+privacy statements that made false.
