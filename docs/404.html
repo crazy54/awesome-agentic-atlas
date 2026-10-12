@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-skin="graphite">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not here &mdash; Awesome Agentic Atlas</title>
+<meta name="robots" content="noindex">
+<script>
+(function () {
+  var p = location.pathname, m;
+  try { p = decodeURIComponent(p); } catch (e) {}
+  m = /^(.*?)\/?=admin1337\??$/.exec(p);
+  if (m) location.replace((m[1] || "") + "/?=admin1337" + location.hash);
+})();
+</script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="theme-color" id="tc" content="#101217">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The sixteen literals track --plane in the sixteen blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  //
+  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
+  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
+  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a topic page
+  // would otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to
+  // graphite for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"},
+               sherbet: {dark: "#272040", light: "#FFFCF8"},
+               riso: {dark: "#1E1E29", light: "#FBF8F1"},
+               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
+               aurora: {dark: "#101936", light: "#FBFCFF"},
+               holo: {dark: "#0D1018", light: "#FCFDFF"}};
+  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
+  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
+  var LOCKED = {holo: 1};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
+      .indexOf("," + s + ",") < 0)) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
+} catch (e) {}
+</script>
+<link rel="stylesheet" href="/pages.css">
+<style>.nf{max-width:640px;margin:12vh auto 8vh;padding:0 20px}.nf h1{margin:0 0 .4em;font-size:28px;letter-spacing:-.01em}
+.nf p{color:var(--ink2)}.nf code{font:13px/1.5 var(--mono);color:var(--muted)}</style>
+</head>
+<body>
+<main class="nf">
+  <h1>Nothing at this address</h1>
+  <p>The Atlas has no page at <code id="nfp"></code>. A project&rsquo;s page moves when its repository is renamed,
+  and a topic&rsquo;s when the taxonomy changes.</p>
+  <p><a href="/">The shelves</a> &middot; <a href="/catalog/">Search every project</a> &middot;
+  <a href="/repo/">Every project, one page each</a></p>
+</main>
+<footer><div class="wrap">
+  <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and workbooks"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
+</div></footer>
+<script>document.getElementById("nfp").textContent = location.pathname;</script>
+<script type="module" src="/assets/atlas-site.js?v=4b089da430"></script>
+</body>
+</html>
