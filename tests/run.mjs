@@ -66,7 +66,7 @@
 //                     a swell, and each of the admin panel's named cues taken and played, refused in Quiet mode
 //                     and absent under reduced motion. Cannot see what the show looks like, only what it asks for.
 //   admin-check.mjs   Archie's hidden admin panel on the live model: hidden and never fetched on a plain view, a
-//                     faint but focusable trigger, opened by keyboard and by `?archie=admin`, one button per
+//                     faint but focusable trigger, opened by keyboard and from `=admin1337` via the site panel, one button per
 //                     command and friend that dispatches exactly its own, a reason on every disabled one (a cue
 //                     the rig lacks, no rig, reduced motion), and Escape handing focus back. Cannot see what an
 //                     act looks like; the other Archie harnesses do.

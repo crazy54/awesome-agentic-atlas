@@ -55,6 +55,7 @@ import app_flags  # noqa: E402
 import mark  # noqa: E402
 import osicons  # noqa: E402
 import pagemin  # noqa: E402
+import sitewide  # noqa: E402
 
 newness = b17.newness
 
@@ -524,6 +525,12 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             .replace("__INDEX_SCREENSHOTS__", "on" if APP_FLAGS["index.project_screenshots"] else "off")
             .replace("__APP_FLAGS__", app_flags.browser_json(APP_FLAGS))
             .replace("__DEPLOYMENT_BADGE__", deployment_badge)
+            # The typefaces, the build tags and the site script, which every page family carries; see
+            # scripts/sitewide.py. Constants, so stripped on the way in like the platform marks above.
+            .replace("__FONTPRELOAD__", sitewide.font_preload(UP))
+            .replace("__SITECSS__", pagemin.strip_css(sitewide.font_faces(UP) + sitewide.BUILDTAGS_CSS))
+            .replace("__BUILDTAGS__", sitewide.buildtags(repo))
+            .replace("__SITEJS__", sitewide.site_script(UP))
             # Substituted here rather than at the two call sites for exactly the reason in this function's
             # docstring: `19b_refresh.py` renders the same shell, and a placeholder it does not know about
             # would ship to readers as the literal text `__SETTINGS__` where the theme picker should be.
@@ -607,6 +614,11 @@ SETTINGS_JS = r"""function wireSettings(onPaint) {
     btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
     const skin = document.documentElement.dataset.skin;
     for (const t of ths) t.setAttribute("aria-pressed", String(t.dataset.skin === skin));
+    // A locked theme's button stays hidden until the admin panel (`assets/atlas-admin.js`) has put its id
+    // in `atlas-unlock` -- the same list the head script checks before it will wear the theme at all.
+    let open = ",";
+    try { open = "," + (localStorage.getItem("atlas-unlock") || "") + ","; } catch (e) {}
+    for (const t of ths) if (t.hasAttribute("data-locked")) t.hidden = open.indexOf("," + t.dataset.skin + ",") < 0;
     // Read off the stylesheet rather than restated here, so --plane and the browser chrome cannot drift.
     // This is also what retires the head script's sixteen-entry map: after first paint the computed value
     // exists, so the map is never consulted again and cannot be the thing that is wrong.
@@ -673,6 +685,8 @@ SETTINGS_JS = r"""function wireSettings(onPaint) {
       paintSettings();
     });
   } catch (e) {}
+  // For the admin panel, which unlocks a theme and has to make its button appear in a menu it does not own.
+  window.atlasPaintSettings = paintSettings;
   return paintSettings;
 }"""
 
@@ -739,6 +753,9 @@ header.setopen{z-index:30}
    filter, and the theme in use is not a filter -- it is always exactly one of eight, so a reader reading
    this panel needs to see which, not to be told something is on. */
 .thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600}
+/* A locked theme's button (`data-locked`, see `paintSettings`) ships `hidden`, and `.thb`'s own
+   `display:flex` would beat the UA rule for the attribute -- the same trap `.setmenu[hidden]` names. */
+.thb[hidden]{display:none}
 .thsw{display:inline-flex;flex:none;width:28px;height:14px;border-radius:999px;overflow:hidden;
   border:1px solid var(--grid)}
 .thsw i{flex:1}"""
@@ -793,6 +810,9 @@ SETTINGS_MENU = r"""<div class="setwrap">
           <button type="button" class="thb" data-skin="aurora" aria-pressed="false"><span
             class="thsw" aria-hidden="true"><i style="background:#0A1128"></i><i
             style="background:#2EC4B6"></i><i style="background:#8CC8FF"></i></span>Aurora</button>
+          <button type="button" class="thb" data-skin="holo" data-locked hidden aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#07090F"></i><i
+            style="background:#A99BFF"></i><i style="background:#7AD7FF"></i></span>Holo</button>
         </div>
       </div>
     </div>"""
@@ -839,7 +859,7 @@ __OGIMAGE__
 <link rel="alternate" type="application/feed+json" title="Awesome Agentic Atlas — new arrivals"
       href="__UP__feed.json">
 <link rel="icon" href="__UP__favicon.svg" type="image/svg+xml">
-<!-- Installability, and the offline shell. Every href relative, so the /awesome-agentic-atlas/ path
+__FONTPRELOAD__<!-- Installability, and the offline shell. Every href relative, so the /awesome-agentic-atlas/ path
      prefix Pages adds takes care of itself. Both files are written by `scripts/24_pwa.py`; if that stage
      has not run, the manifest link 404s -- and the app then installs with no manifest at all, because the
      registration that used to sit at the foot of this page now lives on the homepage `31_home.py` writes.
@@ -889,9 +909,14 @@ try {
                sherbet: {dark: "#272040", light: "#FFFCF8"},
                riso: {dark: "#1E1E29", light: "#FBF8F1"},
                blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"}};
+               aurora: {dark: "#101936", light: "#FBFCFF"},
+               holo: {dark: "#0D1018", light: "#FCFDFF"}};
+  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
+  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
+  var LOCKED = {holo: 1};
   var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s]) s = "graphite";
+  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
+      .indexOf("," + s + ",") < 0)) s = "graphite";
   document.documentElement.dataset.skin = s;
   document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
@@ -929,12 +954,15 @@ try {
   --accent-coral:#EF7D86; --accent-violet:#A99AF7;
   /* THE STRUCTURAL HALF OF A THEME. Not colours, so not contrast-bearing, and not declared per mode
      either -- a typeface and a blur radius do not change when the lights go out. Graphite's values are
-     the page exactly as it shipped: the same font stack that was here in `body`, no wash, an opaque
-     panel and no backdrop filter. A reader who never opens Settings cannot tell this block exists.
+     the page as it shipped, with one change since: the face is Geist, embedded from `assets/fonts/`
+     (see scripts/sitewide.py), so every reader gets the same type rather than whichever sans their
+     platform has. No wash, an opaque panel and no backdrop filter. --mono is Geist Mono, for code
+     and the build tags. A reader who never opens Settings cannot otherwise tell this block exists.
      --bdf is `none` rather than `blur(0px)` on purpose: a non-none backdrop-filter makes the element a
      containing block and a stacking context, which would quietly re-parent the mascot's speech bubble
      and re-rank the pinned bar for every reader, including the ones who chose nothing. */
-  --ui:"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"Geist Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
   --wash:none; --panel:var(--plane); --bdf:none;
 }
 html[data-theme=light]{
@@ -966,7 +994,7 @@ html[data-skin=glass]{
   --good:#86E0A0; --warn:#FF9BA8; --off:#95A2BE; --onbar:#04121A;
   --accent-sky:#7CC4FF; --accent-mint:#6FE3C4; --accent-gold:#F3C46A;
   --accent-coral:#FF9BA8; --accent-violet:#B3A6FF;
-  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
   --wash:radial-gradient(1100px 520px at 12% -12%,rgba(80,140,255,.22),transparent 70%),
          radial-gradient(900px 480px at 88% 0%,rgba(110,227,196,.14),transparent 72%);
   --panel:rgba(18,20,29,.72); --bdf:blur(14px) saturate(1.25);
@@ -991,7 +1019,7 @@ html[data-skin=terminal]{
   --good:#3FE08C; --warn:#FF8B7A; --off:#84AC99; --onbar:#05100B;
   --accent-sky:#6FD0FF; --accent-mint:#3FE08C; --accent-gold:#FFB627;
   --accent-coral:#FF8B7A; --accent-violet:#C2A6FF;
-  --ui:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --ui:"Geist Mono","SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
   --wash:radial-gradient(1200px 620px at 50% -20%,rgba(63,224,140,.12),transparent 70%);
   --panel:rgba(10,19,21,.86); --bdf:blur(3px);
 }
@@ -1015,7 +1043,7 @@ html[data-skin=prism]{
   --good:#63E6B8; --warn:#FFB36B; --off:#ADA0C8; --onbar:#14061B;
   --accent-sky:#8FD0FF; --accent-mint:#63E6B8; --accent-gold:#FFD166;
   --accent-coral:#FF9BD2; --accent-violet:#C0A8FF;
-  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
   --wash:radial-gradient(760px 430px at 6% -8%,rgba(255,155,210,.26),transparent 68%),
          radial-gradient(680px 400px at 96% 2%,rgba(143,208,255,.22),transparent 68%),
          radial-gradient(900px 520px at 50% 108%,rgba(99,230,184,.18),transparent 70%),
@@ -1052,7 +1080,7 @@ html[data-skin=sherbet]{
   --good:#5FE0B4; --warn:#FFB36B; --off:#C4B3D0; --onbar:#1A1026;
   --accent-sky:#A8B4FF; --accent-mint:#5FE0B4; --accent-gold:#FFD166;
   --accent-coral:#FF9A8B; --accent-violet:#D0B3FF;
-  --ui:ui-rounded,"SF Pro Rounded","Nunito","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:ui-rounded,"SF Pro Rounded","Nunito","Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
   --wash:radial-gradient(900px 480px at 8% -10%,rgba(255,122,162,.16),transparent 70%),
          radial-gradient(820px 460px at 94% 104%,rgba(95,224,180,.12),transparent 70%),
          radial-gradient(520px 300px at 70% 8%,rgba(255,209,102,.08),transparent 70%);
@@ -1081,7 +1109,7 @@ html[data-skin=riso]{
   --good:#3FD08A; --warn:#FFB84D; --off:#AAA59C; --onbar:#16161F;
   --accent-sky:#6FB4EA; --accent-mint:#3FD08A; --accent-gold:#FFE800;
   --accent-coral:#FF7F7F; --accent-violet:#B9A2FF;
-  --ui:"Space Grotesk","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:"Space Grotesk","Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
   --wash:radial-gradient(700px 420px at 14% -6%,rgba(255,72,176,.16),transparent 70%),
          radial-gradient(700px 420px at 17% -3%,rgba(0,120,191,.14),transparent 70%),
          radial-gradient(640px 380px at 92% 100%,rgba(255,232,0,.07),transparent 70%);
@@ -1110,7 +1138,7 @@ html[data-skin=blueprint]{
   --good:#9CF2C4; --warn:#FFB3C1; --off:#C0D4F7; --onbar:#0A2352;
   --accent-sky:#B5ECFF; --accent-mint:#9CF2C4; --accent-gold:#FFE066;
   --accent-coral:#FFB8B0; --accent-violet:#D8CCFF;
-  --ui:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:"IBM Plex Sans","Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
   --wash:repeating-linear-gradient(0deg,rgba(234,242,255,.07) 0 1px,transparent 1px 24px),
          repeating-linear-gradient(90deg,rgba(234,242,255,.07) 0 1px,transparent 1px 24px);
   --panel:rgba(13,67,153,.96); --bdf:blur(6px);
@@ -1135,7 +1163,7 @@ html[data-skin=aurora]{
   --good:#A8EF7A; --warn:#FFB5E8; --off:#9DA8CC; --onbar:#06121F;
   --accent-sky:#8CC8FF; --accent-mint:#A8EF7A; --accent-gold:#FFD98A;
   --accent-coral:#FFB5E8; --accent-violet:#C39BF0;
-  --ui:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --ui:"Geist",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
   --wash:linear-gradient(172deg,rgba(46,196,182,.20),rgba(114,242,165,.10) 14%,rgba(157,78,221,.16) 26%,
          transparent 40%),radial-gradient(900px 420px at 80% -10%,rgba(255,181,232,.12),transparent 70%);
   --panel:rgba(16,25,54,.78); --bdf:blur(16px) saturate(1.3);
@@ -1149,6 +1177,42 @@ html[data-skin=aurora][data-theme=light]{
   --wash:linear-gradient(172deg,rgba(18,122,115,.14),rgba(60,160,90,.07) 14%,rgba(123,44,191,.11) 26%,
          transparent 40%),radial-gradient(900px 420px at 80% -10%,rgba(220,90,170,.08),transparent 70%);
   --panel:rgba(251,252,255,.80);
+}
+/* Holo is the one theme the Settings menu does not offer until it is unlocked from the admin panel (see
+   `docs/assets/atlas-admin.js`), and the head script will not wear it before then either. Clean lines,
+   texture and light, in three layers of --wash, top first: a film-grain tile -- an SVG fractal-noise
+   filter in a data URI, so it costs no request -- then a 32px hairline grid, then an iridescent violet,
+   cyan and rose light falling from the top of the window. Violet is the action and cyan the link, so a
+   button and a link are never one hue, and the thirteen tokens underneath are as plain and as measured as
+   graphite's: all the colour is in the wash and the accents, where it costs no contrast. */
+html[data-skin=holo]{
+  --surface:#07090F; --plane:#0D1018; --band:#161A25; --ink:#F2F5FB; --ink2:#C8D0DF;
+  --muted:#939EB5; --grid:#353D52; --link:#7AD7FF; --bar:#A99BFF;
+  --good:#5FE3B1; --warn:#FF93A6; --off:#939EB5; --onbar:#0B0820;
+  --accent-sky:#7AD7FF; --accent-mint:#5FE3B1; --accent-gold:#FFD38A;
+  --accent-coral:#FF93A6; --accent-violet:#C6B8FF;
+  --ui:"Geist",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --wash:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+         repeating-linear-gradient(0deg,rgba(122,215,255,.05) 0 1px,transparent 1px 32px),
+         repeating-linear-gradient(90deg,rgba(122,215,255,.05) 0 1px,transparent 1px 32px),
+         radial-gradient(900px 460px at 88% -10%,rgba(169,155,255,.24),transparent 70%),
+         radial-gradient(760px 420px at 4% -8%,rgba(122,215,255,.18),transparent 70%),
+         radial-gradient(640px 360px at 50% -14%,rgba(255,147,166,.10),transparent 70%);
+  --panel:rgba(13,16,24,.74); --bdf:blur(16px) saturate(1.5);
+}
+html[data-skin=holo][data-theme=light]{
+  --surface:#F3F5FA; --plane:#FCFDFF; --band:#E7EBF3; --ink:#0D1220; --ink2:#2C3446;
+  --muted:#525D73; --grid:#C0C7D6; --link:#0B57C2; --bar:#5A3FD1;
+  --good:#0E6B4C; --warn:#A32F4F; --off:#525D73; --onbar:#FFFFFF;
+  --accent-sky:#0B57C2; --accent-mint:#0E6B4C; --accent-gold:#7A5600;
+  --accent-coral:#A32F4F; --accent-violet:#5A3FD1;
+  --wash:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .055 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+         repeating-linear-gradient(0deg,rgba(90,63,209,.055) 0 1px,transparent 1px 32px),
+         repeating-linear-gradient(90deg,rgba(90,63,209,.055) 0 1px,transparent 1px 32px),
+         radial-gradient(900px 460px at 88% -10%,rgba(90,63,209,.13),transparent 70%),
+         radial-gradient(760px 420px at 4% -8%,rgba(11,87,194,.10),transparent 70%),
+         radial-gradient(640px 360px at 50% -14%,rgba(163,47,79,.07),transparent 70%);
+  --panel:rgba(252,253,255,.78);
 }
 *{box-sizing:border-box}
 /* The font stack and the wash are both tokens now, and both resolve to what was written here before for
@@ -1608,7 +1672,7 @@ a.nwo:hover{color:var(--ink)}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
 .desc{color:var(--ink2);font-size:13.5px;max-width:44em;overflow-wrap:anywhere}
-.cmd{display:block;margin-top:7px;font:12px/1.5 Consolas,ui-monospace,monospace;
+.cmd{display:block;margin-top:7px;font:12px/1.5 var(--mono);
   color:var(--ink2);background:var(--band);border:1px solid var(--grid);border-radius:5px;
   padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
 /* The install line is the one thing on a row a reader wants to take with them, and taking it meant
@@ -1727,7 +1791,7 @@ dialog#pal::backdrop{background:rgba(0,0,0,.55)}
 .palfoot{display:flex;gap:14px;background:var(--surface);border-top:1px solid var(--grid);
   padding:7px 14px;color:var(--muted);font-size:12px}
 kbd{background:var(--band);border:1px solid var(--grid);border-bottom-width:2px;border-radius:4px;
-  padding:1px 5px;color:var(--ink2);font:11px/1.6 ui-monospace,Consolas,monospace}
+  padding:1px 5px;color:var(--ink2);font:11px/1.6 var(--mono)}
 /* A shortcut nobody is told about is a shortcut nobody uses, and this hint is the only affordance for it.
    Hidden until `buildChips` confirms the browser has `showModal`, like the New chip: a control that opens
    nothing is worse than no control. Hidden again on narrow screens, where there is no keyboard to press
@@ -1768,7 +1832,7 @@ dialog#exp::backdrop{background:rgba(0,0,0,.55)}
    payload a reader may have to lift by hand. Read-only rather than disabled: a disabled input cannot take
    focus, so it cannot be selected either, which is exactly the fallback this is for. */
 #expurl{flex:1;min-width:0;background:var(--surface);color:var(--ink2);border:1px solid var(--grid);
-  border-radius:7px;padding:8px 10px;font:12px/1.5 ui-monospace,Consolas,monospace}
+  border-radius:7px;padding:8px 10px;font:12px/1.5 var(--mono)}
 #expurl:focus{outline:2px solid var(--bar);outline-offset:-1px}
 .expnote{margin:0;padding:0 16px 12px;color:var(--muted);font-size:12px;line-height:1.5}
 .expfoot{display:flex;justify-content:flex-end;background:var(--surface);
@@ -2678,6 +2742,7 @@ main a[href],main button,main select,main summary,
   tr,td{break-inside:avoid}
   thead{display:table-header-group}
 }
+__SITECSS__
 </style>
 </head>
 <body>
@@ -3102,6 +3167,7 @@ __OSSPRITE__
 </dialog>
 
 <footer><div class="wrap">
+  __BUILDTAGS__
   Every entry came from someone else's curation work; all __LISTS__ source lists are credited in the
   <a href="https://github.com/__REPO__#the-source-lists">repository</a>. Stars, language, licence and
   last-push come from the GitHub API on __SNAPSHOT__ and drift daily. Platform verdicts are derived
@@ -3128,6 +3194,7 @@ __OSSPRITE__
     <p><b>Every project:</b> <a href="__UP__repo/">all __COUNT__ projects, one page each, grouped by topic</a></p>
   </nav>
 </div></footer>
+__SITEJS__
 
 <script>
 const PAGE_SIZE = 120;
@@ -3975,8 +4042,10 @@ function palItems(query) {
   // palette can never offer one the page has no block for. This is the one group that reports state as
   // well as offering an action -- exactly one theme is always on, so `active` marks which, and a reader
   // who opens the palette to check gets an answer without pressing anything.
+  // Not a hidden one: a locked theme's button is in the menu, hidden, until the admin panel unlocks it, and a
+  // palette that offered it would be a way round the lock that the menu itself does not provide.
   for (const t of document.querySelectorAll(".thb"))
-    add("Theme", t.textContent.trim(), t.getAttribute("aria-pressed") === "true", () => t.click());
+    if (!t.hidden) add("Theme", t.textContent.trim(), t.getAttribute("aria-pressed") === "true", () => t.click());
   // Same delegation, same reason: the label, the title, the hash write and the announcement stay in the one
   // place that owns them. The label is the action, matching the button, so the palette never offers "Card
   // view" to someone already in it.
@@ -4037,7 +4106,12 @@ function palItems(query) {
       run: () => { location.href = r.url; },
     }));
   }
-  return ranked.slice(0, words.length ? 8 : 40).concat(proj);
+  // Eight per search, and every control when the box is empty. The empty case was capped at 40, which held
+  // every control when the atlas had seven integrations; the 8,856-row ingest brought fourteen, the sorts and
+  // filters grew, and the cut fell inside the list -- the Page and Theme groups, last in it, stopped being
+  // offered at all, and `probe.mjs` has said so on every run since. An empty palette is the page's own menu,
+  // so it is shown whole; it is a scrolling list of about sixty short rows.
+  return (words.length ? ranked.slice(0, 8) : ranked).concat(proj);
 }
 
 function palRender() {

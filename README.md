@@ -23,6 +23,11 @@
 
 [![Atlas Leaderboard](https://shieldcn.dev/badge/Atlas-Leaderboard-875A19.svg?logo=ri%3ALuTrophy&size=sm&font=geist&split=true)](mega-list/leaderboard.md)
 
+[![daily build](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=sm&split=true&labelColor=101217&workflow=daily.yml&label=daily%20build&logo=ri%3ALuWorkflow)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml)
+[![screenshots & workbooks](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=sm&split=true&labelColor=101217&workflow=weekly.yml&label=screenshots%20%26%20workbooks&logo=ri%3ALuPackage)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml)
+[![tests](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=sm&split=true&labelColor=101217&workflow=tests.yml&label=tests&logo=ri%3ALuFlaskConical)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml)
+[![lighthouse](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=sm&split=true&labelColor=101217&workflow=lighthouse.yml&label=lighthouse&logo=ri%3ALuGauge)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/lighthouse.yml)
+
 </div>
 
 ---

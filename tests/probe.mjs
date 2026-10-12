@@ -241,8 +241,15 @@ ok("the Shieldcn deployment badge stays below the old 23px treatment",
    /height:22px/.test(stampRule), stampRule);
 const readmeBadges = [...readme.matchAll(/!\[[^\]]*\]\((https?:\/\/[^)]+)\)/g)].map(m => m[1]);
 ok("every README badge uses Shieldcn SVG output",
-   readmeBadges.length === 6 && readmeBadges.every(u => u.startsWith("https://shieldcn.dev/") &&
+   readmeBadges.length === 10 && readmeBadges.every(u => u.startsWith("https://shieldcn.dev/") &&
      u.includes(".svg")), readmeBadges.join("\n"));
+// The build row: one live status per workflow, on the branch Pages publishes. Pinned by workflow file
+// rather than by count, because a badge for the wrong branch stays green while the site stops moving.
+const buildBadges = readmeBadges.filter(u => u.startsWith("https://shieldcn.dev/github/ci/"));
+ok("the README shows the live status of all four workflows on latest_branch",
+   ["daily.yml", "weekly.yml", "tests.yml", "lighthouse.yml"].every(wf =>
+     buildBadges.some(u => u.includes(`workflow=${wf}`) && u.includes("branch=latest_branch"))),
+   buildBadges.join("\n"));
 // The leaderboard badge sits under the surface links, not in the stat row above them: the five stats
 // describe the atlas, this one is a way in. It points at the same file the web masthead links to, so a
 // reader who arrives from either surface lands on the same ranking.
@@ -2248,6 +2255,40 @@ if (discHTML && discPlan) {
 // header is the sort of thing that survives review because it looks like a build artefact.
 const holes = [...new Set(html.match(/__[A-Z][A-Z0-9_]*__/g) || [])];
 ok("every __PLACEHOLDER__ was resolved", holes.length === 0, holes.join(", "));
+
+// ---- The locked theme, behaviourally --------------------------------------------------------------------
+// theme_test.py reads the lock out of the generators as text, which cannot tell a gate that works from one
+// that is written down and never bites (`LOCKED[s] && false && ...` reads the same). So the head script of
+// every page family that wears a saved theme is run here, as published, against a fake storage: a saved
+// `holo` is refused until `atlas-unlock` names it, exactly, and every unlocked theme is worn as saved.
+const {runInNewContext} = await import("node:vm");
+const prepaint = (page) => {
+  const m = readFileSync(join(ROOT, "docs", page), "utf8").match(/<script>\s*(try \{\s*var t = localStorage[\s\S]*?)<\/script>/);
+  return m ? m[1] : null;
+};
+const wears = (script, store) => {
+  const el = {dataset: {}}, tc = {content: ""};
+  runInNewContext(script, {
+    localStorage: {getItem: (k) => (k in store ? store[k] : null)},
+    matchMedia: () => ({matches: false}),
+    document: {documentElement: el, getElementById: () => tc},
+  });
+  return el.dataset.skin;
+};
+const FAMILIES = {"catalog/index.html": "the catalog", "repo/index.html": "the project directory",
+                  "collections/index.html": "the collections", "index.html": "the homepage"};
+for (const [page, label] of Object.entries(FAMILIES)) {
+  const script = prepaint(page);
+  ok(`${label}'s pre-paint script was found`, !!script, page);
+  if (!script) continue;
+  ok(`${label}: a saved holo is refused while locked`, wears(script, {"atlas-skin": "holo"}) === "graphite");
+  ok(`${label}: ...and worn once unlocked`, wears(script, {"atlas-skin": "holo", "atlas-unlock": "holo"}) === "holo");
+  ok(`${label}: ...by its exact id, not a substring of another`,
+     wears(script, {"atlas-skin": "holo", "atlas-unlock": "holographic,xholo"}) === "graphite");
+  ok(`${label}: ...or as one entry of several`,
+     wears(script, {"atlas-skin": "holo", "atlas-unlock": "other,holo"}) === "holo");
+  ok(`${label}: an unlocked theme needs no key`, wears(script, {"atlas-skin": "aurora"}) === "aurora");
+}
 
 console.log("\n" + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);

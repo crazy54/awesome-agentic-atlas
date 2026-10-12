@@ -113,6 +113,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import mark  # noqa: E402
 import osicons  # noqa: E402
+import sitewide  # noqa: E402
 
 # The same dynamic load `19b_refresh.py` and `20_landing.py` use, and for the same reason: the module is
 # named `19_pages`, which is not an identifier, so `import` cannot reach it. Three things are wanted --
@@ -554,7 +555,7 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
 <meta property="og:url" content="{esc(repo.url)}">
 <meta property="og:image" content="{esc(repo.shot)}">
 <link rel="icon" href="{repo.rel(ICON)}" type="image/svg+xml">
-{HEAD_THEME}<link rel="stylesheet" href="../../detail.css">
+{sitewide.font_preload(repo.rel())}{HEAD_THEME}<link rel="stylesheet" href="../../detail.css">
 <script type="application/ld+json">{breadcrumb(repo)}</script>
 </head>
 <body>
@@ -606,6 +607,7 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
 </div></main>
 
 <footer><div class="wrap">
+  {sitewide.buildtags(REPO)}
   One project from the <a href="{repo.rel()}">Awesome Agentic Atlas</a>, which merges {b19.LISTS}
   awesome-lists into a single index; all {b19.LISTS} are credited in the
   <a href="https://github.com/{esc(REPO)}#the-source-lists">repository</a>. The description, install
@@ -615,6 +617,7 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
+{sitewide.site_script(repo.rel())}
 {b19.beacon()}{b19.telemetry(repo.rel())}</body>
 </html>
 """
@@ -670,7 +673,7 @@ def directory(repos: list[Repo], data: dict) -> str:
 <meta property="og:url" content="{esc(url)}">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/{esc(REPO)}">
 <link rel="icon" href="../{ICON}" type="image/svg+xml">
-{HEAD_THEME}<link rel="stylesheet" href="detail.css">
+{sitewide.font_preload("../")}{HEAD_THEME}<link rel="stylesheet" href="detail.css">
 </head>
 <body>
 <header><div class="wrap">
@@ -695,11 +698,13 @@ def directory(repos: list[Repo], data: dict) -> str:
 </div></header>
 <main><div class="wrap">{"".join(blocks)}</div></main>
 <footer><div class="wrap">
+  {sitewide.buildtags(REPO)}
   A directory of the <a href="../">Awesome Agentic Atlas</a>. Every name here links to a page about one
   project; all {b19.LISTS} source lists are credited in the
   <a href="https://github.com/{esc(REPO)}#the-source-lists">repository</a>.
 </div></footer>
 <script src="detail.js"></script>
+{sitewide.site_script("../")}
 {b19.beacon()}{b19.telemetry("../")}</body>
 </html>
 """
@@ -788,7 +793,8 @@ def main() -> None:
     base = out / "repo"
     base.mkdir(parents=True, exist_ok=True)
     (base / "index.html").write_text(directory(repos, data), encoding="utf-8")
-    (base / "detail.css").write_text(CSS, encoding="utf-8")
+    # detail.css is one level below `docs/`, so its font URLs are `../`. See scripts/sitewide.py.
+    (base / "detail.css").write_text(CSS + sitewide.font_faces("../") + sitewide.BUILDTAGS_CSS, encoding="utf-8")
     (base / "detail.js").write_text(JS, encoding="utf-8")
     (out / "sitemap-repos.xml").write_text(sitemap(repos), encoding="utf-8")
 
@@ -840,12 +846,15 @@ CSS = """/* Written by scripts/22_detail.py. Shared by every page under docs/rep
   --accent-coral:#EF7D86; --accent-violet:#A99AF7;
   /* THE STRUCTURAL HALF OF A THEME. Not colours, so not contrast-bearing, and not declared per mode
      either -- a typeface and a blur radius do not change when the lights go out. Graphite's values are
-     the page exactly as it shipped: the same font stack that was here in `body`, no wash, an opaque
-     panel and no backdrop filter. A reader who never opens Settings cannot tell this block exists.
+     the page as it shipped, with one change since: the face is Geist, embedded from `assets/fonts/`
+     (see scripts/sitewide.py), so every reader gets the same type rather than whichever sans their
+     platform has. No wash, an opaque panel and no backdrop filter. --mono is Geist Mono, for code
+     and the build tags. A reader who never opens Settings cannot otherwise tell this block exists.
      --bdf is `none` rather than `blur(0px)` on purpose: a non-none backdrop-filter makes the element a
      containing block and a stacking context, which would quietly re-parent the mascot's speech bubble
      and re-rank the pinned bar for every reader, including the ones who chose nothing. */
-  --ui:"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"Geist Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
   --wash:none; --panel:var(--plane); --bdf:none;
 }
 html[data-theme=light]{
@@ -877,7 +886,7 @@ html[data-skin=glass]{
   --good:#86E0A0; --warn:#FF9BA8; --off:#95A2BE; --onbar:#04121A;
   --accent-sky:#7CC4FF; --accent-mint:#6FE3C4; --accent-gold:#F3C46A;
   --accent-coral:#FF9BA8; --accent-violet:#B3A6FF;
-  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
   --wash:radial-gradient(1100px 520px at 12% -12%,rgba(80,140,255,.22),transparent 70%),
          radial-gradient(900px 480px at 88% 0%,rgba(110,227,196,.14),transparent 72%);
   --panel:rgba(18,20,29,.72); --bdf:blur(14px) saturate(1.25);
@@ -902,7 +911,7 @@ html[data-skin=terminal]{
   --good:#3FE08C; --warn:#FF8B7A; --off:#84AC99; --onbar:#05100B;
   --accent-sky:#6FD0FF; --accent-mint:#3FE08C; --accent-gold:#FFB627;
   --accent-coral:#FF8B7A; --accent-violet:#C2A6FF;
-  --ui:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --ui:"Geist Mono","SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
   --wash:radial-gradient(1200px 620px at 50% -20%,rgba(63,224,140,.12),transparent 70%);
   --panel:rgba(10,19,21,.86); --bdf:blur(3px);
 }
@@ -926,7 +935,7 @@ html[data-skin=prism]{
   --good:#63E6B8; --warn:#FFB36B; --off:#ADA0C8; --onbar:#14061B;
   --accent-sky:#8FD0FF; --accent-mint:#63E6B8; --accent-gold:#FFD166;
   --accent-coral:#FF9BD2; --accent-violet:#C0A8FF;
-  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
   --wash:radial-gradient(760px 430px at 6% -8%,rgba(255,155,210,.26),transparent 68%),
          radial-gradient(680px 400px at 96% 2%,rgba(143,208,255,.22),transparent 68%),
          radial-gradient(900px 520px at 50% 108%,rgba(99,230,184,.18),transparent 70%),
@@ -963,7 +972,7 @@ html[data-skin=sherbet]{
   --good:#5FE0B4; --warn:#FFB36B; --off:#C4B3D0; --onbar:#1A1026;
   --accent-sky:#A8B4FF; --accent-mint:#5FE0B4; --accent-gold:#FFD166;
   --accent-coral:#FF9A8B; --accent-violet:#D0B3FF;
-  --ui:ui-rounded,"SF Pro Rounded","Nunito","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:ui-rounded,"SF Pro Rounded","Nunito","Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
   --wash:radial-gradient(900px 480px at 8% -10%,rgba(255,122,162,.16),transparent 70%),
          radial-gradient(820px 460px at 94% 104%,rgba(95,224,180,.12),transparent 70%),
          radial-gradient(520px 300px at 70% 8%,rgba(255,209,102,.08),transparent 70%);
@@ -992,7 +1001,7 @@ html[data-skin=riso]{
   --good:#3FD08A; --warn:#FFB84D; --off:#AAA59C; --onbar:#16161F;
   --accent-sky:#6FB4EA; --accent-mint:#3FD08A; --accent-gold:#FFE800;
   --accent-coral:#FF7F7F; --accent-violet:#B9A2FF;
-  --ui:"Space Grotesk","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:"Space Grotesk","Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
   --wash:radial-gradient(700px 420px at 14% -6%,rgba(255,72,176,.16),transparent 70%),
          radial-gradient(700px 420px at 17% -3%,rgba(0,120,191,.14),transparent 70%),
          radial-gradient(640px 380px at 92% 100%,rgba(255,232,0,.07),transparent 70%);
@@ -1021,7 +1030,7 @@ html[data-skin=blueprint]{
   --good:#9CF2C4; --warn:#FFB3C1; --off:#C0D4F7; --onbar:#0A2352;
   --accent-sky:#B5ECFF; --accent-mint:#9CF2C4; --accent-gold:#FFE066;
   --accent-coral:#FFB8B0; --accent-violet:#D8CCFF;
-  --ui:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --ui:"IBM Plex Sans","Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
   --wash:repeating-linear-gradient(0deg,rgba(234,242,255,.07) 0 1px,transparent 1px 24px),
          repeating-linear-gradient(90deg,rgba(234,242,255,.07) 0 1px,transparent 1px 24px);
   --panel:rgba(13,67,153,.96); --bdf:blur(6px);
@@ -1046,7 +1055,7 @@ html[data-skin=aurora]{
   --good:#A8EF7A; --warn:#FFB5E8; --off:#9DA8CC; --onbar:#06121F;
   --accent-sky:#8CC8FF; --accent-mint:#A8EF7A; --accent-gold:#FFD98A;
   --accent-coral:#FFB5E8; --accent-violet:#C39BF0;
-  --ui:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --ui:"Geist",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
   --wash:linear-gradient(172deg,rgba(46,196,182,.20),rgba(114,242,165,.10) 14%,rgba(157,78,221,.16) 26%,
          transparent 40%),radial-gradient(900px 420px at 80% -10%,rgba(255,181,232,.12),transparent 70%);
   --panel:rgba(16,25,54,.78); --bdf:blur(16px) saturate(1.3);
@@ -1060,6 +1069,42 @@ html[data-skin=aurora][data-theme=light]{
   --wash:linear-gradient(172deg,rgba(18,122,115,.14),rgba(60,160,90,.07) 14%,rgba(123,44,191,.11) 26%,
          transparent 40%),radial-gradient(900px 420px at 80% -10%,rgba(220,90,170,.08),transparent 70%);
   --panel:rgba(251,252,255,.80);
+}
+/* Holo is the one theme the Settings menu does not offer until it is unlocked from the admin panel (see
+   `docs/assets/atlas-admin.js`), and the head script will not wear it before then either. Clean lines,
+   texture and light, in three layers of --wash, top first: a film-grain tile -- an SVG fractal-noise
+   filter in a data URI, so it costs no request -- then a 32px hairline grid, then an iridescent violet,
+   cyan and rose light falling from the top of the window. Violet is the action and cyan the link, so a
+   button and a link are never one hue, and the thirteen tokens underneath are as plain and as measured as
+   graphite's: all the colour is in the wash and the accents, where it costs no contrast. */
+html[data-skin=holo]{
+  --surface:#07090F; --plane:#0D1018; --band:#161A25; --ink:#F2F5FB; --ink2:#C8D0DF;
+  --muted:#939EB5; --grid:#353D52; --link:#7AD7FF; --bar:#A99BFF;
+  --good:#5FE3B1; --warn:#FF93A6; --off:#939EB5; --onbar:#0B0820;
+  --accent-sky:#7AD7FF; --accent-mint:#5FE3B1; --accent-gold:#FFD38A;
+  --accent-coral:#FF93A6; --accent-violet:#C6B8FF;
+  --ui:"Geist",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --wash:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+         repeating-linear-gradient(0deg,rgba(122,215,255,.05) 0 1px,transparent 1px 32px),
+         repeating-linear-gradient(90deg,rgba(122,215,255,.05) 0 1px,transparent 1px 32px),
+         radial-gradient(900px 460px at 88% -10%,rgba(169,155,255,.24),transparent 70%),
+         radial-gradient(760px 420px at 4% -8%,rgba(122,215,255,.18),transparent 70%),
+         radial-gradient(640px 360px at 50% -14%,rgba(255,147,166,.10),transparent 70%);
+  --panel:rgba(13,16,24,.74); --bdf:blur(16px) saturate(1.5);
+}
+html[data-skin=holo][data-theme=light]{
+  --surface:#F3F5FA; --plane:#FCFDFF; --band:#E7EBF3; --ink:#0D1220; --ink2:#2C3446;
+  --muted:#525D73; --grid:#C0C7D6; --link:#0B57C2; --bar:#5A3FD1;
+  --good:#0E6B4C; --warn:#A32F4F; --off:#525D73; --onbar:#FFFFFF;
+  --accent-sky:#0B57C2; --accent-mint:#0E6B4C; --accent-gold:#7A5600;
+  --accent-coral:#A32F4F; --accent-violet:#5A3FD1;
+  --wash:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .055 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+         repeating-linear-gradient(0deg,rgba(90,63,209,.055) 0 1px,transparent 1px 32px),
+         repeating-linear-gradient(90deg,rgba(90,63,209,.055) 0 1px,transparent 1px 32px),
+         radial-gradient(900px 460px at 88% -10%,rgba(90,63,209,.13),transparent 70%),
+         radial-gradient(760px 420px at 4% -8%,rgba(11,87,194,.10),transparent 70%),
+         radial-gradient(640px 360px at 50% -14%,rgba(163,47,79,.07),transparent 70%);
+  --panel:rgba(252,253,255,.78);
 }
 *{box-sizing:border-box}
 /* --ui and --wash are the structural tokens declared in the block above; graphite resolves them to this
@@ -1147,7 +1192,7 @@ html[data-theme=light] .reader{
   color:var(--read-muted);pointer-events:none;font-size:15px}
 .file-picker select{width:100%;height:35px;appearance:none;border:1px solid var(--read-line);
   border-radius:7px;background:var(--read-raised);color:var(--read-ink);padding:0 32px 0 11px;
-  font:12.5px/1 "Cascadia Code","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  font:12.5px/1 var(--mono);
   text-overflow:ellipsis;cursor:pointer}
 .file-picker select:focus,.viewtab:focus-visible,.open-source:focus-visible{
   outline:2px solid var(--read-link);outline-offset:2px}
@@ -1189,8 +1234,7 @@ html[data-theme=light] .reader{
 .markdown-body blockquote{margin:1.2em 0;padding:.7em 1.05em;border-left:4px solid var(--read-accent);
   border-radius:0 8px 8px 0;background:var(--read-quote);color:var(--read-muted)}
 .markdown-body blockquote>:last-child{margin-bottom:0}
-.markdown-body code,.markdown-body kbd{font:13px/1.55 "Cascadia Code","SFMono-Regular",Consolas,
-  "Liberation Mono",monospace}
+.markdown-body code,.markdown-body kbd{font:13px/1.55 var(--mono)}
 .markdown-body :not(pre)>code{padding:.16em .38em;border:1px solid var(--read-line);border-radius:5px;
   background:var(--read-code);color:var(--read-warn);font-size:.84em}
 .markdown-body pre{overflow:auto;margin:1.15em 0;padding:16px 18px;border:1px solid var(--read-line);
@@ -1218,13 +1262,13 @@ html[data-theme=light] .reader{
   border-bottom-width:2px;border-radius:4px;background:var(--read-raised);font-size:.75em}
 .source-code{max-height:760px;min-height:280px;overflow:auto;margin:0;padding:25px 28px 40px;
   border:0;background:var(--read-code);color:var(--read-ink);tab-size:2;white-space:pre;
-  font:13px/1.65 "Cascadia Code","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  font:13px/1.65 var(--mono);
   scrollbar-color:var(--read-line) var(--read-bg)}
 .reader-note{margin:9px 2px 0;color:var(--muted);font-size:12px}
 /* The install command, and the button that takes it away. Selecting wrapped monospace text without
    catching the paragraph above it is the thing this replaces. */
 .cmdrow{display:flex;gap:10px;align-items:flex-start}
-.cmd{flex:1;min-width:0;font:13.5px/1.6 Consolas,ui-monospace,monospace;color:var(--ink);
+.cmd{flex:1;min-width:0;font:13.5px/1.6 var(--mono);color:var(--ink);
   background:var(--band);border:1px solid var(--grid);border-radius:6px;padding:10px 12px;
   overflow-wrap:anywhere;display:block}
 .copy{background:var(--band);color:var(--ink2);border:1px solid var(--grid);border-radius:6px;
@@ -1365,9 +1409,14 @@ try {
                sherbet: {dark: "#272040", light: "#FFFCF8"},
                riso: {dark: "#1E1E29", light: "#FBF8F1"},
                blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"}};
+               aurora: {dark: "#101936", light: "#FBFCFF"},
+               holo: {dark: "#0D1018", light: "#FCFDFF"}};
+  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
+  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
+  var LOCKED = {holo: 1};
   var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s]) s = "graphite";
+  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
+      .indexOf("," + s + ",") < 0)) s = "graphite";
   document.documentElement.dataset.skin = s;
   document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}

@@ -77,6 +77,7 @@ OUT = ROOT / "docs"
 sys.path.insert(0, str(HERE))
 import mark  # noqa: E402
 import pagemin  # noqa: E402
+import sitewide  # noqa: E402
 
 
 def _load(name: str, alias: str):
@@ -179,7 +180,7 @@ BRIDGE_CSS = r"""/* THE PROTOTYPE'S TOKENS, IN THE SITE'S. See BRIDGE_CSS in scr
   /* Geometry and type. Not contrast-bearing and not mode-dependent. */
   --radius:14px; --radius-sm:10px; --hair:1px;
   --num:var(--ui);
-  --mono:ui-monospace,"SF Mono","Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --mono:"Geist Mono",ui-monospace,"SF Mono","Cascadia Mono",Consolas,"Liberation Mono",monospace;
   --kick-case:uppercase; --kick-track:.1em;
 }
 /* The effects axis. Four themes, and the values are the argument each theme already makes about itself:
@@ -621,9 +622,11 @@ def dance() -> tuple[str, str]:
 # ARCHIE'S ADMIN PANEL: a button for each thing he does, behind a trigger at the very end of the footer that
 # is meant to be missed -- a "·" at a quarter opacity after the footer's last sentence. It is a real
 # <button> with an aria-label, so it is in the tab order like anything else; nothing points readers at it.
-# `?archie=admin` opens it too. The panel (`assets/archie-admin.js`) is imported on first use, so a reader
-# who never presses the dot never fetches it. It drives `window.archie`, archie.js's command dispatcher,
-# which is also the path the `?archie=` flags take (see "Commands" in archie.js).
+# The site's own admin panel (`=admin1337` at the end of any address; see `assets/atlas-admin.js`) has a
+# button that presses this one, which replaced the `?archie=admin` flag that used to open it. The panel
+# (`assets/archie-admin.js`) is imported on first use, so a reader who never presses the dot never fetches
+# it. It drives `window.archie`, archie.js's command dispatcher, which is also the path the `?archie=` flags
+# take (see "Commands" in archie.js).
 #
 # This is a static site with no server, so "hidden" means out of the way, not locked: anyone can open it,
 # and every command is one the director already plays by itself. It is a toy, not a security boundary.
@@ -642,7 +645,6 @@ ADMIN_JS = r"""<script>(() => {
     .then((m) => (b.getAttribute("aria-expanded") === "true" ? m.close() : m.open(b)))
     .catch((e) => console.warn("Archie's admin panel did not load:", e));
   b.addEventListener("click", go);
-  if (new URLSearchParams(location.search).get("archie") === "admin") go();
 })();</script>"""
 
 
@@ -1446,7 +1448,7 @@ def render() -> str:
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{esc(SITE)}">
 {b19.verification()}<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="manifest" href="manifest.webmanifest">
+{sitewide.font_preload("")}<link rel="manifest" href="manifest.webmanifest">
 {b20.HEAD_THEME}<link rel="stylesheet" href="pages.css">
 <style>__HOMECSS__</style>
 </head>"""
@@ -1493,6 +1495,7 @@ def render() -> str:
         numbers(),
         '</div></main>',
         '<footer><div class="wrap">',
+        sitewide.buildtags(REPO),
         f'  The Awesome Agentic Atlas merges {LISTS} awesome-lists into one index; all {LISTS} are credited'
         f' in the <a href="https://github.com/{esc(REPO)}#the-source-lists">repository</a>. Stars,'
         f' language, licence and last-push come from the GitHub API on {esc(DATA["snapshot"])} and drift'
@@ -1507,6 +1510,7 @@ def render() -> str:
         SW_JS,
         UPDATE_JS.replace("__SHELLPREFIX__", SHELL_PREFIX),
         *filter(None, [mascot()[1], dance()[1], admin()[2]]),
+        sitewide.site_script(""),
         b19.beacon(),
         b19.telemetry(""),
         '</body>',
@@ -1542,6 +1546,8 @@ def main() -> None:
     page = render()
     (dest / "index.html").write_text(page, encoding="utf-8", newline="\n")
     print(f"wrote {dest / 'index.html'}  {len(page):,} bytes")
+    # The site's 404, here because this is the stage that owns the root. See `not_found()` in sitewide.py.
+    (dest / "404.html").write_text(sitewide.not_found(REPO, b20.HEAD_THEME), encoding="utf-8", newline="\n")
     # Beside the page and from the page, so the two cannot be written by different builds.
     (dest / "build.json").write_text(json.dumps({"build": BUILD_META.search(page).group(1)}) + "\n",
                                      encoding="utf-8", newline="\n")

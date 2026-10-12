@@ -12,6 +12,9 @@
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/openmoss/anygpt/">
 <meta property="og:image" content="http://img.youtube.com/vi/oW3E3pIsaRg/0.jpg">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
 <meta name="theme-color" id="tc" content="#101217">
 <script>
 try {
@@ -36,9 +39,14 @@ try {
                sherbet: {dark: "#272040", light: "#FFFCF8"},
                riso: {dark: "#1E1E29", light: "#FBF8F1"},
                blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"}};
+               aurora: {dark: "#101936", light: "#FBFCFF"},
+               holo: {dark: "#0D1018", light: "#FCFDFF"}};
+  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
+  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
+  var LOCKED = {holo: 1};
   var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s]) s = "graphite";
+  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
+      .indexOf("," + s + ",") < 0)) s = "graphite";
   document.documentElement.dataset.skin = s;
   document.getElementById("tc").content = PLANE[s][t];
 } catch (e) {}
@@ -158,6 +166,7 @@ try {
 </div></main>
 
 <footer><div class="wrap">
+  <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and workbooks"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
   One project from the <a href="../../../">Awesome Agentic Atlas</a>, which merges 39
   awesome-lists into a single index; all 39 are credited in the
   <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. The description, install
@@ -167,6 +176,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>
