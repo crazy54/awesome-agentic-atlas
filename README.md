@@ -538,14 +538,14 @@ it, so your searches and filters never reach Cloudflare.
 
 **Traceway**, since 11 October 2026, records sessions. It is an error and session recorder that the
 site's owner hosts at `traceway.jeremyfhall.com`, so the data goes to the owner rather than to an
-analytics company. On every page it records:
+analytics company. The owner chose full capture on purpose. On every page it records:
 
 - **A replay of your visit:** what the page showed, and where you moved the pointer, scrolled and clicked.
-  The search box and every other form field are blocked from the replay. Each one is recorded as an empty
-  placeholder of the same size, so nothing you type into one is ever recorded.
+  Form fields are blocked from the replay, the search box included. They show as empty boxes, and what is
+  in them is never recorded.
 - **Every address you visit on the site, in full,** including the part after `#`. The catalogue keeps your
-  search words and filters there (`#q=…`), so **a search can still be recorded through the address**, even
-  though the box itself is blocked.
+  search words and filters there (`#q=…`), so **what you search for is recorded through the address**,
+  even though the box itself is blocked.
 - **Which links you click,** by their path only. For a link to a project on GitHub, that is its
   `owner/name`.
 - **The requests the page's own scripts make:** the address, how long each took, its size, and whether it

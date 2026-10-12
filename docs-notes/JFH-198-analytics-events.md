@@ -636,7 +636,8 @@ decided, on 2026-09-06.
 ### The decision
 
 On 2026-10-11 the site's owner decided to add Traceway to every page, with full capture: errors, Core Web
-Vitals, session replay and network capture. It is the same set-up as the owner's homepage. Data goes to the
+Vitals, session replay and network capture. The owner accepted what full capture means, including the full
+page addresses described below. It is the same set-up as the owner's homepage. Data goes to the
 owner's self-hosted Traceway at `traceway.jeremyfhall.com`. Each page fetches its connection string from
 `blog.jeremyfhall.com` at run time, so nothing secret is committed. Three files, all served from this site's
 own origin:
@@ -662,13 +663,16 @@ Read out of the shipped `traceway-1.2.1.js` on 2026-10-11, not taken from its do
   loader gives every `input`, `textarea`, `select` and `contenteditable` the classes
   `rr-mask rr-ignore rr-block`, and re-applies them to fields added later. Its MutationObserver is created
   before rrweb's, so a new field is marked before rrweb serialises it. rrweb records a blocked element as
-  an empty placeholder: its class and its size, with no value, no children and no input events. **Nothing
-  typed into a field is recorded.** A first draft of the loader used only `rr-mask rr-ignore`, and the
-  search box's contents were in every snapshot. `rr-block` was added before this shipped.
+  an empty placeholder: its class and its size, with no value, no children and no input events. **Form
+  fields are blocked from the replay, the search box included. They show as empty boxes, and their
+  contents are never recorded.** A first draft of the loader used only `rr-mask rr-ignore`, and the
+  search box's contents were in every snapshot. `rr-block` was added before this shipped. It is the same
+  shared logic already live on the owner's homepage, blog, ai-os and chorus sites.
 - **Navigation.** Every `pushState`, `replaceState`, `popstate` and `hashchange`, recorded as
-  `pathname + search + hash`. `writeHash()` calls `replaceState` on every filter change and search, so the
-  catalogue's search terms and filters are recorded through the URL, `#q=` included, even though the box
-  itself is blocked. That includes the zero-result terms Finding 2 said could never leave the browser.
+  `pathname + search + hash`. `writeHash()` calls `replaceState` on every filter change and search, so
+  **page addresses are recorded in full, including the `#q=` search words and the filters**, even though
+  the box itself is blocked. That includes the zero-result terms Finding 2 said could never leave the
+  browser.
 - **Network.** For every `fetch` and XHR, same-origin or not (a detail page's reader calls
   `api.github.com`): the method, URL, duration, status, request and response sizes, and any error. Bodies
   are not recorded. Same-origin requests also get a `traceway-trace-id` header.
