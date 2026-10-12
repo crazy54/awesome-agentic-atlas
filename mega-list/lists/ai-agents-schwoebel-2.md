@@ -18,7 +18,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ## Tools
 
-<sub>Entries 167–188 of 188. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Entries 168–188 of 188. The rest are on this page's other parts, linked above and below.</sub>
 
 - **[Llm-Tools](https://github.com/TheTeslak/LLM-Tools)** — Scripts for preparing data for LLMs - text extraction, Telegram export processing, and file merging with filtering and stats
   <sub>★ 1 · Python · source · pushed 2024-12-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -34,9 +34,6 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>`pip install litellm`</sub>
 - **[Agent-Manager-Skill](https://github.com/fractalmind-ai/agent-manager-skill)** — tmux + Python agent lifecycle manager for running multiple CLI AI agents (start/stop/monitor/assign) with cron-friendly scheduling
   <sub>unavailable</sub>
-- **[AgentWatch](https://github.com/nicofains1/agentwatch)** — Multi-agent observability library with cascade failure detection, heartbeat-based liveness monitoring, cross-agent correlation, and forensic replay. Provides fleet-level monitoring above per-agent tracing tools github | npm
-  <sub>TypeScript · MIT · npx · pushed 2026-04-16 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx @nicofains1/agentwatch demo`</sub>
 - **[Ai-Anime-Art-Generator](https://github.com/enterwiz/ai-anime-art-generator)** — AI-driven cutting-edge tool for anime arts creation, perfect for beginners to easily create stunning anime art without any prior experience
   <sub>unavailable</sub>
 - **[AI Conference Deadline](https://aiconferenceddl.com)** — A tracker for AI/ML conference submission deadlines, helping researchers track major CFPs, access official conference websites, and plan submissions without accounts or setup website
@@ -83,16 +80,16 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 ## Security
 
 - **[OneCLI](https://github.com/onecli/onecli)** — Open-source credential vault for AI agents. A Rust HTTP gateway intercepts agent requests and injects API credentials transparently, so agents never handle raw keys
-  <sub>★ 3.5k · TypeScript · Apache-2.0 · clone · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/onecli/onecli.git`</sub>
+  <sub>★ 3.6k · TypeScript · Apache-2.0 · helm · pushed 2026-10-09 · WSL2 · Linux · Docker</sub>
+  <sub>`helm install onecli oci://ghcr.io/onecli/charts/onecli`</sub>
 - **[Agentic_Security](https://github.com/msoedov/agentic_security)** — Agentic LLM Vulnerability Scanner / AI red teaming kit
   <sub>★ 2k · Python · Apache-2.0 · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentic_security`</sub>
 - **[Invariant](https://github.com/invariantlabs-ai/invariant)** — Helps you build better AI agents through debuggable unit testing
-  <sub>★ 463 · Python · Apache-2.0 · source · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 469 · Python · Apache-2.0 · source · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/invariantlabs-ai/invariant.git`</sub>
 - **[Cyber-Security-Llm-Agents](https://github.com/NVISOsecurity/cyber-security-llm-agents)** — A collection of agents that use Large Language Models (LLMs) to perform tasks common on our day to day jobs in cyber security
-  <sub>★ 394 · Jupyter Notebook · source · pushed 2024-05-07 · Win?</sub>
+  <sub>★ 397 · Jupyter Notebook · source · pushed 2024-05-07 · Win?</sub>
   <sub>`git clone https://github.com/NVISOsecurity/cyber-security-llm-agents.git`</sub>
 - **[Owasp-Agentic-Ai](https://github.com/precize/Agentic-AI-Top10-Vulnerability)** — OWASP Top 10 for Agentic AI (AI Agent Security) - Pre-release version
   <sub>★ 202 · source · pushed 2026-06-02</sub>
@@ -107,7 +104,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 41 · Python · MIT · clone · pushed 2023-04-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/seanpixel/council-of-ai.git`</sub>
 - **[Agentos](https://github.com/The-Swarm-Corporation/AgentOS)** — AgentOS implements a comprehensive security architecture leveraging containerization, orchestration, and multi-layer isolation to ensure …
-  <sub>★ 30 · Python · MIT · pip · pushed 2025-07-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 32 · Python · MIT · pip · pushed 2025-07-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip3 install -U agentos-sdk`</sub>
 - **[Ai-Security-Demos](https://github.com/shaialon/ai-security-demos)** — AI Security EXPOSED! Live Demos Showing Hidden Risks of 🤖 Agentic AI Flows: 💉Prompt Injection, ☣️ Data Poisoning. Watch the recorded se…
   <sub>★ 24 · JavaScript · MIT · clone · pushed 2024-07-05 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -218,28 +215,28 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2.2k · MIT · source · pushed 2026-08-17 · Win?</sub>
   <sub>`git clone https://github.com/Xnhyacinth/Awesome-LLM-Long-Context-Modeling.git`</sub>
 - **[Theagentcompany](https://github.com/TheAgentCompany/TheAgentCompany)** — An agent benchmark with tasks in a simulated software company
-  <sub>★ 785 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 794 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://github.com/TheAgentCompany/the-agent-company-backup-data/releases/download/setup-script-20241208/setup.sh | sh`</sub>
 - **[Agentlab](https://github.com/ServiceNow/AgentLab)** — AgentLab - An open-source framework for developing, testing, and benchmarking web agents on diverse tasks, designed for scalability and re…
-  <sub>★ 638 · Python · pip · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 649 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentlab`</sub>
 - **[Appworld](https://github.com/StonyBrookNLP/appworld)** — Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL'24 Best Resource Paper
-  <sub>★ 520 · Python · Apache-2.0 · pip · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 532 · Python · Apache-2.0 · pip · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install appworld`</sub>
 - **[Bigcodebench](https://github.com/bigcode-project/bigcodebench)** — BigCodeBench - Benchmarking Code Generation Towards AGI
-  <sub>★ 518 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 516 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install bigcodebench --upgrade`</sub>
 - **[Visualwebarena](https://github.com/web-arena-x/visualwebarena)** — VisualWebArena is a benchmark for multimodal agents
-  <sub>★ 487 · Python · MIT · source · pushed 2024-11-09 · WSL2 · Linux · Docker</sub>
+  <sub>★ 488 · Python · MIT · source · pushed 2024-11-09 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/web-arena-x/visualwebarena.git`</sub>
 - **[Balrog](https://github.com/balrog-ai/BALROG)** — Benchmarking Agentic LLM and VLM Reasoning On Games
-  <sub>★ 272 · Python · MIT · clone · pushed 2026-04-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 274 · Python · MIT · clone · pushed 2026-04-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/balrog-ai/BALROG.git`</sub>
 - **[Comfybench](https://github.com/xxyQwQ/ComfyBench)** — Implementation for the paper "ComfyBench - Benchmarking LLM-based Agents in ComfyUI for Autonomously Designing Collaborative AI Systems"
   <sub>★ 205 · Python · clone · pushed 2025-12-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/xxyQwQ/ComfyBench`</sub>
 - **[Llm-Agent-Benchmark-List](https://github.com/zhangxjohn/LLM-Agent-Benchmark-List)** — A banchmark list for evaluation of large language models
-  <sub>★ 171 · Apache-2.0 · source · pushed 2026-08-19</sub>
+  <sub>★ 172 · Apache-2.0 · source · pushed 2026-10-10</sub>
   <sub>`git clone https://github.com/zhangxjohn/LLM-Agent-Benchmark-List.git`</sub>
 - **[Weblinx](https://github.com/McGill-NLP/weblinx)** — WebLINX is a benchmark for building web navigation agents with conversational capabilities
   <sub>★ 164 · Python · Apache-2.0 · pip · pushed 2026-08-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -248,7 +245,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 145 · Python · CC-BY-4.0 · source · pushed 2024-04-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/microsoft/SmartPlay.git`</sub>
 - **[R-Judge](https://github.com/Lordog/R-Judge)** — R-Judge - Benchmarking Safety Risk Awareness for LLM Agents (EMNLP Findings 2024)
-  <sub>★ 114 · Python · source · pushed 2026-01-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 116 · Python · source · pushed 2026-01-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Lordog/R-Judge.git`</sub>
 - **[Shortcutsbench](https://github.com/EachSheep/ShortcutsBench)** — ShortcutsBench - A Large-Scale Real-World Benchmark for API-Based Agents
   <sub>★ 113 · Python · Apache-2.0 · source · pushed 2025-06-24 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -278,16 +275,16 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 62 · Jupyter Notebook · Apache-2.0 · source · pushed 2026-03-26</sub>
   <sub>`git clone https://github.com/instadeepai/DebateLLM.git`</sub>
 - **[Mobilebench](https://github.com/XiaoMi/MobileBench)** — Mobile-Bench - An Evaluation Benchmark for LLM-based Mobile Agents
-  <sub>★ 32 · Python · source · pushed 2024-12-06 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 33 · Python · source · pushed 2024-12-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/XiaoMi/MobileBench.git`</sub>
 - **[Flowbench](https://github.com/Justherozen/FlowBench)** — [EMNLP 2024] FlowBench - Revisiting and Benchmarking Workflow-Guided Planning for LLM-based Agents
-  <sub>★ 25 · Python · source · pushed 2025-01-06 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 26 · Python · source · pushed 2025-01-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Justherozen/FlowBench.git`</sub>
 - **[Shampoosalesagent](https://github.com/jackfsuia/ShampooSalesAgent)** — A minimal LLM sales agent framework for sales agent fast deployment and benchmark. Support OpenAI models, Claude, HuggingFace models, Gem…
   <sub>★ 20 · Python · MIT · clone · pushed 2024-09-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jackfsuia/ShampooSalesAgent.git`</sub>
 - **[Multiagent-Collab-Scenario-Benchmark](https://github.com/aws-samples/multiagent-collab-scenario-benchmark)** — Benchmarking data and script used for LLM multi-agent collaboration systems from AWS Bedrock Agents Science team
-  <sub>★ 18 · Python · MIT-0 · source · pushed 2024-12-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 19 · Python · MIT-0 · source · pushed 2024-12-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/aws-samples/multiagent-collab-scenario-benchmark.git`</sub>
 - **[Appworld-Leaderboard](https://github.com/StonyBrookNLP/appworld-leaderboard)** — Leaderboard Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL2024
   <sub>★ 7 · Python · pip · pushed 2026-09-02 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -364,6 +361,6 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-09-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-12. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

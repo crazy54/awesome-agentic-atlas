@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>scion (GoogleCloudPlatform/scion) — Orchestrators &amp; Multi-Agent — Awesome Agentic Atlas</title>
-<meta name="description" content="Orchestration testbed running agents in parallel isolated containers with dynamic coordination and normalized telemetry.">
+<meta name="description" content="Google&#x27;s experimental &quot;hypervisor for agents&quot; (April 2026, Apache-2.0): orchestrates Claude Code, Gemini CLI, Codex, and OpenCode as isolated concurrent…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/googlecloudplatform/scion/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="scion — Awesome Agentic Atlas">
-<meta property="og:description" content="Orchestration testbed running agents in parallel isolated containers with dynamic coordination and normalized telemetry.">
+<meta property="og:description" content="Google&#x27;s experimental &quot;hypervisor for agents&quot; (April 2026, Apache-2.0): orchestrates Claude Code, Gemini CLI, Codex, and OpenCode as isolated concurrent…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/googlecloudplatform/scion/">
 <meta property="og:image" content="https://github.com/user-attachments/assets/51be1c80-4bb3-48ad-90e9-356aeffcb678">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
@@ -64,7 +64,7 @@ try {
     <div>
       <h1>scion</h1>
       <p class="nwo"><a href="https://github.com/GoogleCloudPlatform/scion">GoogleCloudPlatform/scion</a></p>
-      <p class="lead">Orchestration testbed running agents in parallel isolated containers with dynamic coordination and normalized telemetry.</p>
+      <p class="lead">Google&#x27;s experimental &quot;hypervisor for agents&quot; (April 2026, Apache-2.0): orchestrates Claude Code, Gemini CLI, Codex, and OpenCode as isolated concurrent processes, each with its own container, git worktree, credentials, and network policy. The core harness insight is *isolation over coordination* — let agents run fully autonomous inside their containers and enforce guardrails at the infrastructure</p>
       <p class="facts">
         <span>Go</span>
         <span>Apache-2.0</span>
@@ -146,22 +146,22 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/andyrewlee/awesome-agent-orchestrators">Orchestrators</a></li></ul>
+  <p class="lead">Named by <b>2</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li><a href="https://github.com/ai-boost/awesome-harness-engineering">Harness Engineering</a></li><li><a href="https://github.com/andyrewlee/awesome-agent-orchestrators">Orchestrators</a></li></ul>
 </section>
 
 <section>
   <h2>How it is classified</h2>
-  <p class="lead">One topic, no
+  <p class="lead">One topic, 5
     harnesses. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a><a class="chip" href="../../../topic/orchestrators-multi-agent/target/claude-code/">Claude Code</a><a class="chip" href="../../../topic/orchestrators-multi-agent/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/orchestrators-multi-agent/target/opencode/">opencode</a><a class="chip" href="../../../topic/orchestrators-multi-agent/target/codex-openai/">Codex / OpenAI</a><a class="chip" href="../../../topic/orchestrators-multi-agent/target/gemini-google/">Gemini / Google</a></div>
 </section>
 
 <section class="kin">
   <h2>Related in Orchestrators &amp; Multi-Agent</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../sipyourdrink-ltd/bernstein/">bernstein</a><span class="nwo">sipyourdrink-ltd/bernstein</span><span class="desc">Deterministic multi-agent orchestrator for 37 CLI coding agents (Claude Code, Codex, Cursor, Aider, Gemini CLI, GitHub Copilot CLI, OpenHands…</span></li><li><a href="../../aannoo/hcom/">hcom</a><span class="nwo">aannoo/hcom</span><span class="desc">by aannoo - Lightweight CLI tool for real-time communication between Claude Code sub agents using hooks. Enables multi-agent collaboration with…</span></li><li><a href="../../foundationagents/metagpt/">MetaGPT</a><span class="nwo">FoundationAgents/MetaGPT</span><span class="desc">MetaGPT is a multi-agent framework enabling GPT to collaborate within a software company, facilitating complex tasks by assigning different roles to…</span></li><li><a href="../../berriai/litellm/">LiteLLM</a><span class="nwo">BerriAI/litellm</span><span class="desc">Unified proxy and SDK that routes to 100+ LLM providers behind a single OpenAI-compatible interface, with a Router handling retry/fallback across…</span></li><li><a href="../../wecoai/aideml/">AIDE</a><span class="nwo">WecoAI/aideml</span><span class="desc">Open-source ML engineering agent that uses tree search to explore solution spaces. Automates machine learning experimentation from data analysis to…</span></li><li><a href="../../5dive-ai/5dive/">5dive</a><span class="nwo">5dive-ai/5dive</span><span class="desc">Self-hosted CLI that runs a team of coding agents on one Linux host: each agent is its own Linux user running claude, codex, opencode, hermes or…</span></li><li><a href="../../777genius/agent-teams-ai/">Agent Teams</a><span class="nwo">777genius/agent-teams-ai</span><span class="desc">Desktop app where you give high-level commands to autonomous coding-agent teams across Claude Code, Codex, OpenCode, Cursor, Grok, GitHub Copilot…</span></li><li><a href="../../agentsmesh/agentsmesh/">agentsmesh</a><span class="nwo">AgentsMesh/AgentsMesh</span><span class="desc">Self-hostable AI Agent Workforce Platform. Multi-agent orchestration with remote AI workstations (AgentPods), PTY sandbox + git worktree isolation…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../sipyourdrink-ltd/bernstein/">bernstein</a><span class="nwo">sipyourdrink-ltd/bernstein</span><span class="desc">Deterministic scheduler for 40+ CLI coding agents running in parallel git worktrees with an HMAC-signed audit chain, signed agent cards, and…</span></li><li><a href="../../aannoo/hcom/">hcom</a><span class="nwo">aannoo/hcom</span><span class="desc">by aannoo - Lightweight CLI tool for real-time communication between Claude Code sub agents using hooks. Enables multi-agent collaboration with…</span></li><li><a href="../../5dive-ai/5dive/">5dive</a><span class="nwo">5dive-ai/5dive</span><span class="desc">Self-hosted CLI that runs a team of coding agents on one Linux host: each agent is its own Linux user running claude, codex, opencode, hermes or…</span></li><li><a href="../../agentsmesh/agentsmesh/">agentsmesh</a><span class="nwo">AgentsMesh/AgentsMesh</span><span class="desc">Self-hostable AI Agent Workforce Platform. Multi-agent orchestration with remote AI workstations (AgentPods), PTY sandbox + git worktree isolation…</span></li><li><a href="../../rustykuntz/clideck/">clideck</a><span class="nwo">rustykuntz/clideck</span><span class="desc">WhatsApp-like dashboard for managing multiple AI coding agents (including Gemini CLI) in one browser window. Live status, session resume, autopilot…</span></li><li><a href="../../seemseam/claude_codex_bridge/">claude_codex_bridge</a><span class="nwo">SeemSeam/claude_codex_bridge</span><span class="desc">(3.5k ⭐) - Visible multi-agent CLI workspace for mixing Codex, Claude, Gemini, Kimi, Qwen, Cursor, Copilot, Pi, OpenCode, and other AI coding agents</span></li><li><a href="../../nexus-substrate/nexus-agents/">williamzujkowski/nexus-agents</a><span class="nwo">nexus-substrate/nexus-agents</span><span class="desc">Intelligent orchestration platform routing tasks to Claude, Gemini, Codex, and OpenCode via Budget→TOPSIS→LinUCB composite router. 30 MCP tools…</span></li><li><a href="../../wshobson/agents/">wshobson/agents</a><span class="nwo">wshobson/agents</span><span class="desc">Cross-harness plugin marketplace that maintains one source-of-truth plugins/ directory and generates harness-native artifacts for Claude Code, Codex…</span></li></ul>
 </section>
 </div></main>
 

@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MongLong0214/commitlore — Coding Agents — Awesome Agentic Atlas</title>
-<meta name="description" content="Returns the decision records still in force for the path an agent is about to edit: constraints, already-ruled-out alternatives, and warnings, stored as…">
+<meta name="description" content="Git-native decision memory that stores constraints and ruled-out alternatives as git trailers and notes, giving coding agents only the guidance still in…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/monglong0214/commitlore/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="MongLong0214/commitlore — Awesome Agentic Atlas">
-<meta property="og:description" content="Returns the decision records still in force for the path an agent is about to edit: constraints, already-ruled-out alternatives, and warnings, stored as…">
+<meta property="og:description" content="Git-native decision memory that stores constraints and ruled-out alternatives as git trailers and notes, giving coding agents only the guidance still in…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/monglong0214/commitlore/">
 <meta property="og:image" content="https://raw.githubusercontent.com/MongLong0214/commitlore/main/assets/readme/demo.gif">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
@@ -64,7 +64,7 @@ try {
     <div>
       <h1>MongLong0214/commitlore</h1>
       <p class="nwo"><a href="https://github.com/MongLong0214/commitlore">MongLong0214/commitlore</a></p>
-      <p class="lead">Returns the decision records still in force for the path an agent is about to edit: constraints, already-ruled-out alternatives, and warnings, stored as ordinary git trailers and notes, with superseded and expired records filtered out</p>
+      <p class="lead">Git-native decision memory that stores constraints and ruled-out alternatives as git trailers and notes, giving coding agents only the guidance still in force for the file being edited</p>
       <p class="facts">
         <span>TypeScript</span>
         <span>MIT</span>
@@ -89,7 +89,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">curl -fsSL https://raw.githubusercontent.com/MongLong0214/commitlore/v1.7.0/install.sh | sh -s v1.7.0</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for MongLong0214/commitlore">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">curl -fsSL https://raw.githubusercontent.com/MongLong0214/commitlore/v1.7.3/install.sh | sh -s v1.7.3</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for MongLong0214/commitlore">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -161,7 +161,7 @@ try {
   <h2>Related in Coding Agents</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../swarmclawai/swarmclaw/">SwarmClaw</a><span class="nwo">swarmclawai/swarmclaw</span><span class="desc">Self-hosted AI runtime that orchestrates Claude Code, Codex, Gemini CLI, OpenCode, Copilot CLI, Cursor Agent, Goose, Qwen Code, and Droid with…</span></li><li><a href="../../caliber-ai-org/ai-setup/">Caliber</a><span class="nwo">caliber-ai-org/ai-setup</span><span class="desc">Open-source CLI that scans your codebase and generates AI agent configs (CLAUDE.md, .cursorrules, skills, MCPs) for Claude Code, Cursor, and Codex…</span></li><li><a href="../../houseofmvps/codesight/">codesight</a><span class="nwo">Houseofmvps/codesight</span><span class="desc">CLI token optimizer and AI context generator. Scans codebases to extract routes, schema, components, and dependencies for Claude Code, Cursor…</span></li><li><a href="../../antonbabenko/deliberation/">deliberation</a><span class="nwo">antonbabenko/deliberation</span><span class="desc">Ask GPT, Gemini, Grok, or OpenRouter for a second opinion or a fix, as expert subagents over MCP</span></li><li><a href="../../cristicretu/diri/">diri</a><span class="nwo">cristicretu/diri</span><span class="desc">Native macOS app running Claude Code, Codex, Cursor, Gemini, and shells in parallel across git worktrees or remote hosts, with live status, session…</span></li><li><a href="../../fwdai/fletch/">Fletch</a><span class="nwo">fwdai/fletch</span><span class="desc">Native macOS IDE that seals each agent in its own repo clone under Seatbelt or Docker, serves each a shared symbol and call-graph index over MCP…</span></li><li><a href="../../charlie85270/dorothy/">dorothy</a><span class="nwo">Charlie85270/Dorothy</span><span class="desc">Open-source desktop app to orchestrate multiple AI CLI agents (Claude Code, Codex, Gemini) simultaneously with automations, Kanban management…</span></li><li><a href="../../oxgeneral/orch/">ORCH</a><span class="nwo">oxgeneral/ORCH</span><span class="desc">CLI runtime orchestrating Claude Code, Codex, and Cursor as typed agent teams with state machine (todo→review→done), auto-retry, inter-agent…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../swarmclawai/swarmclaw/">SwarmClaw</a><span class="nwo">swarmclawai/swarmclaw</span><span class="desc">Self-hosted AI runtime that orchestrates Claude Code, Codex, Gemini CLI, OpenCode, Copilot CLI, Cursor Agent, Goose, Qwen Code, and Droid with…</span></li><li><a href="../../caliber-ai-org/ai-setup/">Caliber</a><span class="nwo">caliber-ai-org/ai-setup</span><span class="desc">Open-source CLI that scans your codebase and generates AI agent configs (CLAUDE.md, .cursorrules, skills, MCPs) for Claude Code, Cursor, and Codex…</span></li><li><a href="../../houseofmvps/codesight/">codesight</a><span class="nwo">Houseofmvps/codesight</span><span class="desc">CLI token optimizer and AI context generator. Scans codebases to extract routes, schema, components, and dependencies for Claude Code, Cursor…</span></li><li><a href="../../antonbabenko/deliberation/">deliberation</a><span class="nwo">antonbabenko/deliberation</span><span class="desc">Ask GPT, Gemini, Grok, or OpenRouter for a second opinion or a fix, as expert subagents over MCP</span></li><li><a href="../../cristicretu/diri/">diri</a><span class="nwo">cristicretu/diri</span><span class="desc">Native macOS app running Claude Code, Codex, Cursor, Gemini, and shells in parallel across git worktrees or remote hosts, with live status, session…</span></li><li><a href="../../fwdai/fletch/">Fletch</a><span class="nwo">fwdai/fletch</span><span class="desc">Native macOS IDE that seals each agent in its own repo clone under Seatbelt or Docker, serves each a shared symbol and call-graph index over MCP…</span></li><li><a href="../../liyupi/ai-guide/">ai-guide</a><span class="nwo">liyupi/ai-guide</span><span class="desc">程序员鱼皮的 AI 资源大全 + Vibe Coding 零基础教程，分享 OpenClaw 保姆级教程、大模型玩法（DeepSeek / GPT / Gemini / Claude / GLM）、最新 AI 资讯、Prompt 提示词大全、AI 知识百科（Agent Skills / RAG…</span></li><li><a href="../../gentleman-programming/gentle-ai/">gentle-ai</a><span class="nwo">Gentleman-Programming/gentle-ai</span><span class="desc">Gentle-AI configures the AI coding agents you already use: Claude Code, Cursor, OpenCode, Codex, Pi, and more. Choose persistent memory…</span></li></ul>
 </section>
 </div></main>
 
