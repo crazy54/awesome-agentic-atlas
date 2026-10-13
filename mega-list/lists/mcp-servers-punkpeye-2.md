@@ -40,10 +40,10 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.5k · TypeScript · MIT · clone · pushed 2026-10-09 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/brave/brave-search-mcp-server.git`</sub>
 - **[Ihor-Sokoliuk/MCP-SearXNG](https://github.com/ihor-sokoliuk/mcp-searxng)** — /☁️ - Web search via SearXNG
-  <sub>★ 1.3k · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1.3k · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g mcp-searxng`</sub>
 - **[us/crw](https://github.com/fastcrw/crw)** — Self-hostable web crawler and search API (fastCRW): scraping, crawling, site mapping and SearXNG-backed search
-  <sub>★ 1.1k · Rust · AGPL-3.0 · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.1k · Rust · AGPL-3.0 · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y crw-mcp@latest install`</sub>
 - **[jae-jae/fetcher-mcp](https://github.com/jae-jae/fetcher-mcp)** — Fetch web page content using a Playwright headless browser, supporting JavaScript rendering, content extraction and Markdown or HTML output
   <sub>★ 1.1k · TypeScript · MIT · npx · pushed 2026-01-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -58,7 +58,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 237 · Python · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli@latest install @hellokaton/unsplash-mcp-server --client cursor --key 7558c683-****-****`</sub>
 - **[MarcellM01/TinySearch](https://github.com/TinySuiteHQ/TinySearch)** — Self-hosted web research: SearXNG search with DuckDuckGo fallback, crawling, dense and BM25 reranking and deduplication into a cited, source-grounded prompt
-  <sub>★ 232 · Python · MIT · uv · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 233 · Python · MIT · uv · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx --from "tinysuite-search[server]" tinysearch setup`</sub>
 - **[reading-plus-ai/mcp-server-deep-research](https://github.com/reading-plus-ai/mcp-server-deep-research)** — Autonomous deep research with structured query elaboration and concise reporting
   <sub>★ 214 · Python · MIT · source · pushed 2025-03-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -73,10 +73,10 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 181 · TypeScript · MIT · npm · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g agentql-mcp`</sub>
 - **[serpapi/serpapi-mcp](https://github.com/serpapi/serpapi-mcp)** — Search results from Google, Bing, Yahoo, DuckDuckGo, YouTube, eBay and more via SerpApi, plus real-time weather and stock market data
-  <sub>★ 179 · Python · MIT · clone · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 180 · Python · MIT · clone · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/serpapi/serpapi-mcp.git`</sub>
 - **[fatwang2/search1api-mcp](https://github.com/superagents-lab/search1api-mcp)** — Web search via Search1API
-  <sub>★ 173 · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 173 · TypeScript · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g search1api-cli`</sub>
 - **[lfnovo/content-core](https://github.com/lfnovo/content-core)** — Extract content from web pages, PDFs, Word documents, YouTube transcripts, audio and video with automatic engine selection and structured JSON output
   <sub>★ 173 · Python · MIT · uv · pushed 2026-10-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -91,7 +91,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 161 · TypeScript · MIT · source · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/just-every/mcp-read-website-fast.git`</sub>
 - **[konippi/servo-fetch](https://github.com/konippi/servo-fetch)** — Chromium-free web content extraction in a single binary: fetch, render, crawl and screenshot pages with the Servo browser engine
-  <sub>★ 157 · Rust · Apache-2.0 · npx · pushed 2026-10-10 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 158 · Rust · Apache-2.0 · npx · pushed 2026-10-10 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx servo-fetch "https://example.com"`</sub>
 - **[takashiishida/arxiv-latex-mcp](https://github.com/takashiishida/arxiv-latex-mcp)** — Get the LaTeX source of arXiv papers to handle mathematical content and equations
   <sub>★ 146 · Python · MIT · pip · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -118,7 +118,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 110 · TypeScript · MIT · source · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/just-every/mcp-screenshot-website-fast.git`</sub>
 - **[Sriram-PR/doc-scraper](https://github.com/Sriram-PR/doc-scraper)** — Crawl documentation sites into local Markdown or JSONL corpora and serve them with offline BM25 search, page reads, freshness checks and crawl diffs
-  <sub>★ 104 · Go · Apache-2.0 · go · pushed 2026-10-10 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 106 · Go · Apache-2.0 · go · pushed 2026-10-10 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`go install github.com/Sriram-PR/doc-scraper/v2/cmd/doc-scraper@latest`</sub>
 - **[ConechoAI/openai-websearch-mcp](https://github.com/ConechoAI/openai-websearch-mcp/)** — Expose OpenAI's built-in web search tool
   <sub>★ 94 · Python · MIT · npx · pushed 2025-09-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -153,21 +153,21 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 - **[Linked-API/linkedapi-mcp](https://github.com/Linked-API/linkedapi-mcp)** — Control LinkedIn accounts and retrieve real-time LinkedIn data
   <sub>★ 70 · TypeScript · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Linked-API/linkedapi-mcp.git`</sub>
+- **[tobocop2/lilbee](https://github.com/tobocop2/lilbee)** — Index files, code and crawled websites and answer with source citations, using its own local models or an existing Ollama or LM Studio setup
+  <sub>★ 66 · Python · MIT · scoop · pushed 2026-10-13 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>`scoop install lilbee-cuda`</sub>
 - **[zoharbabin/web-researcher-mcp](https://github.com/zoharbabin/web-researcher-mcp)** — Web search via Google, Brave, Serper, SearXNG and SearchAPI.io, multi-tier content extraction, academic and patent search, and multi-source research
-  <sub>★ 66 · Go · MIT · winget · pushed 2026-10-12 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 66 · Go · MIT · winget · pushed 2026-10-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`winget install zoharbabin.web-researcher-mcp`</sub>
 - **[0xdaef0f/job-searchoor](https://github.com/0xDAEF0F/job-searchoor)** — Search job listings with filters for date, keywords, remote work options and more
   <sub>★ 65 · JavaScript · MIT · source · pushed 2025-04-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/0xDAEF0F/job-searchoor.git`</sub>
-- **[tobocop2/lilbee](https://github.com/tobocop2/lilbee)** — Index files, code and crawled websites and answer with source citations, using its own local models or an existing Ollama or LM Studio setup
-  <sub>★ 65 · Python · MIT · scoop · pushed 2026-10-12 · Win · WSL2? · macOS · Linux · Docker</sub>
-  <sub>`scoop install lilbee-cuda`</sub>
+- **[goesByhc/cn-scraper-mcp](https://github.com/goesByhc/cn-scraper-mcp)** — Search and extract data from Chinese platforms including Taobao, JD, Xiaohongshu, Zhihu, Weibo, Bilibili, Douban and Dianping, with local cookie storage
+  <sub>★ 60 · Python · MIT · pip · pushed 2026-07-29 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>`pip install cn-scraper-mcp`</sub>
 - **[imprvhub/mcp-domain-availability](https://github.com/imprvhub/mcp-domain-availability)** — Check domain availability across many TLDs with DNS and WHOIS verification, bulk checking and name suggestions
   <sub>★ 60 · Python · MPL-2.0 · npx · pushed 2026-09-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @smithery/cli@latest mcp add imprvhub/mcp-domain-availability --client claude`</sub>
-- **[goesByhc/cn-scraper-mcp](https://github.com/goesByhc/cn-scraper-mcp)** — Search and extract data from Chinese platforms including Taobao, JD, Xiaohongshu, Zhihu, Weibo, Bilibili, Douban and Dianping, with local cookie storage
-  <sub>★ 57 · Python · MIT · pip · pushed 2026-07-29 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
-  <sub>`pip install cn-scraper-mcp`</sub>
 - **[ananddtyagi/webpage-screenshot-mcp](https://github.com/ananddtyagi/webpage-screenshot-mcp)** — Take screenshots of webpages to use as feedback during UI development
   <sub>★ 56 · JavaScript · MIT · clone · pushed 2025-06-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ananddtyagi/webpage-screenshot-mcp.git`</sub>
@@ -201,12 +201,12 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 - **[pranciskus/newsmcp](https://github.com/pranciskus/newsmcp)** — Real-time world news: events clustered from many sources, classified by topic and geography and ranked by importance
   <sub>★ 35 · TypeScript · MIT · npx · pushed 2026-03-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli install @newsmcp/server --client claude`</sub>
+- **[XZXZZX-Ai/bilibili-mcp](https://github.com/XZXZZX-Ai/bilibili-mcp)** — Local-first Bilibili MCP server for video metadata, subtitles and structured transcripts, chapters, popular comments, and optional local ASR fallback. Published on npm as @xzxzzx/bilibili-mcp with bilingual documentation
+  <sub>★ 33 · Python · Apache-2.0 · npx · pushed 2026-09-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx -y @xzxzzx/bilibili-mcp@latest setup`</sub>
 - **[format37/youtube_mcp](https://github.com/format37/youtube_mcp)** — Transcribe YouTube videos to text using yt-dlp for audio and OpenAI Whisper for transcription, with chunked output for long videos
   <sub>★ 32 · Python · clone · pushed 2025-07-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/format37/youtube_mcp.git`</sub>
-- **[XZXZZX-Ai/bilibili-mcp](https://github.com/XZXZZX-Ai/bilibili-mcp)** — Local-first Bilibili MCP server for video metadata, subtitles and structured transcripts, chapters, popular comments, and optional local ASR fallback. Published on npm as @xzxzzx/bilibili-mcp with bilingual documentation
-  <sub>★ 31 · Python · Apache-2.0 · npx · pushed 2026-09-27 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx -y @xzxzzx/bilibili-mcp@latest setup`</sub>
 - **[cevatkerim/unsplash-mcp](https://github.com/cevatkerim/unsplash-mcp)** — Unsplash photo search, random photos and download tracking, with ready-to-use attribution text and HTML for each photo
   <sub>★ 30 · Python · MIT · clone · pushed 2026-01-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/cevatkerim/unsplash-mcp.git`</sub>
@@ -235,7 +235,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 26 · JavaScript · MIT · npm · pushed 2026-03-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g json-mcp-filter@latest`</sub>
 - **[jhomen368/overseerr-mcp](https://github.com/jhomen368/overseerr-mcp)** — Media discovery, requests and management via Overseerr and Seerr for Plex, Jellyfin and Emby
-  <sub>★ 25 · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 25 · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @jhomen368/overseerr-mcp`</sub>
 - **[r-huijts/opentk-mcp](https://github.com/r-huijts/opentk-mcp)** — Search Dutch Parliament (Tweede Kamer) documents, debates, activities and legislative cases, based on the OpenTK project
   <sub>★ 23 · HTML · MIT · npx · pushed 2025-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -262,7 +262,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 19 · Python · MIT · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install zero-api-key-web-search # free search, no API key, no model download`</sub>
 - **[n24q02m/wet-mcp](https://github.com/n24q02m/wet)** — Web search via embedded SearXNG, content extraction and library docs indexing with hybrid FTS5 and semantic search using built-in Qwen3 embeddings
-  <sub>★ 19 · Python · Apache-2.0 · uv · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 19 · Python · Apache-2.0 · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx wet-mcp --help # or `wet <tool>` for direct tool calls`</sub>
 - **[angheljf/nyt](https://github.com/angheljf/nyt)** — Search articles using the NYTimes API
   <sub>★ 18 · JavaScript · MIT · npx · pushed 2026-07-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -298,7 +298,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 13 · Python · source · pushed 2025-06-28 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/vitorpavinato/ncbi-mcp-server.git`</sub>
 - **[cameronrye/gopher-mcp](https://github.com/cameronrye/gopher-mcp)** — Browse Gopher and Gemini protocol resources, with TLS support and structured content extraction
-  <sub>★ 12 · Python · MIT · uv · pushed 2026-10-05 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 12 · Python · MIT · uv · pushed 2026-10-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`uvx gopher-mcp`</sub>
 - **[emicklei/melrose-mcp](https://github.com/emicklei/melrose-mcp)** — Play Melrōse music expressions as MIDI
   <sub>★ 12 · Go · MIT · source · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -312,6 +312,9 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 - **[HasData/web-scraping-mcp](https://github.com/HasData/web-scraping-mcp)** — Web scraping: fetch public pages with optional JavaScript rendering, wait conditions and CSS or AI extraction rules, as Markdown, text, HTML or JSON
   <sub>★ 11 · JavaScript · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/HasData/web-scraping-mcp.git`</sub>
+- **[JerryLiu369/agent-web-search](https://github.com/JerryLiu369/agent-web-search)** — Provider-neutral web search aggregating model grounding (Gemini, Grok, DeepSeek and others) and search APIs such as Exa, Brave, Perplexity and Tavily
+  <sub>★ 11 · Python · MIT · npx · pushed 2026-10-02 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>`npx skills add JerryLiu369/agent-web-search --skill agent-web-search`</sub>
 - **[Crawleo/Crawleo-MCP](https://github.com/Crawleo/Crawleo-MCP)** — Real-time web search and crawling via the Crawleo Search and Crawl API
   <sub>★ 11 · JavaScript · MIT · npm · pushed 2025-12-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g crawleo-mcp`</sub>
@@ -321,9 +324,6 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 - **[serkan-ozal/driflyte-mcp-server](https://github.com/serkan-ozal/driflyte-mcp-server)** — Query and retrieve topic-specific knowledge from recursively crawled and indexed web pages via Driflyte
   <sub>★ 11 · TypeScript · MIT · npx · pushed 2025-10-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli install @serkan-ozal/driflyte-mcp-server --client <SMITHERY-CLIENT-NAME> --key <SMITHERY-API-KEY>`</sub>
-- **[JerryLiu369/agent-web-search](https://github.com/JerryLiu369/agent-web-search)** — Provider-neutral web search aggregating model grounding (Gemini, Grok, DeepSeek and others) and search APIs such as Exa, Brave, Perplexity and Tavily
-  <sub>★ 10 · Python · MIT · npx · pushed 2026-10-02 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
-  <sub>`npx skills add JerryLiu369/agent-web-search --skill agent-web-search`</sub>
 - **[echology-io/decompose](https://github.com/echology-io/decompose)** — Deterministically decompose text into classified semantic units with authority, risk and attention scores plus entity extraction, without an LLM
   <sub>★ 10 · Python · MIT · pip · pushed 2026-05-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install decompose-mcp`</sub>
@@ -340,10 +340,10 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 9 · JavaScript · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/HasData/bing-mcp.git`</sub>
 - **[AutomateLab-tech/citation-intelligence](https://github.com/AutomateLab-tech/citation-intelligence)** — Check which URLs Perplexity, Claude, ChatGPT, Gemini, Bing and Google AI Overviews cite for any query. Self-hosted
-  <sub>★ 9 · TypeScript · MIT · npx · pushed 2026-06-08 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 9 · TypeScript · MIT · npx · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx -y @automatelab/citation-intelligence`</sub>
 - **[Pearch-ai/mcp_pearch](https://github.com/Pearch-ai/mcp_pearch)** — People search engine for talent discovery
-  <sub>★ 9 · Python · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 9 · Python · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Pearch-ai/mcp_pearch.git`</sub>
 - **[searchcraft-inc/searchcraft-mcp-server](https://github.com/searchcraft-inc/searchcraft-mcp-server)** — Manage Searchcraft clusters, create search indexes, generate an index from a data file and import data from a feed or local JSON file
   <sub>★ 9 · TypeScript · Apache-2.0 · source · pushed 2026-02-07 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -358,7 +358,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 8 · TypeScript · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/scavio-ai/scavio-mcp.git`</sub>
 - **[boikot-xyz/boikot](https://github.com/boikot-xyz/boikot)** — Look up company ethics information: the ethical and unethical actions of major companies
-  <sub>★ 8 · HTML · GPL-3.0 · source · pushed 2026-10-09</sub>
+  <sub>★ 8 · HTML · GPL-3.0 · source · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/boikot-xyz/boikot.git`</sub>
 - **[mikusnuz/gsc-mcp](https://github.com/mikusnuz/gsc-mcp)** — Google Search Console and Indexing API: search analytics, sitemaps, URL inspection and batch indexing
   <sub>★ 7 · TypeScript · MIT · source · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -370,7 +370,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 6 · JavaScript · MIT · npm · pushed 2025-06-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g clojars-deps-server`</sub>
 - **[keenableai/keenable-mcp](https://github.com/keenableai/keenable-mcp)** — Live web search and clean Markdown page fetching over the Keenable web index
-  <sub>★ 6 · Shell · MIT · source · pushed 2026-09-30</sub>
+  <sub>★ 6 · Shell · MIT · source · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/keenableai/keenable-mcp.git`</sub>
 - **[Vincentwei1021/agent-toolbox](https://github.com/Vincentwei1021/agent-toolbox)** — Web search, content extraction, screenshots, weather, finance, email validation, translation, news, GeoIP, WHOIS, DNS, PDF extraction and QR codes
   <sub>★ 6 · TypeScript · MIT · npm · pushed 2026-03-10 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -406,7 +406,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 5 · Python · MIT · pip · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install scraperapi-mcp-server`</sub>
 - **[talonicdev/talonic-mcp](https://github.com/talonicdev/talonic-mcp)** — Schema-validated extraction of structured fields from PDFs, scans, images and forms, with searchable memory of past extractions
-  <sub>★ 5 · TypeScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5 · TypeScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @talonic/mcp@latest --version`</sub>
 - **[robbyczgw-cla/web-search-plus-mcp](https://github.com/robbyczgw-cla/web-search-plus-mcp)** — Multi-provider web search with automatic routing between Serper, Tavily and Exa
   <sub>★ 5 · Python · MIT · uv · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -430,10 +430,10 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 4 · Python · MIT · source · pushed 2026-07-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/paulieb89/govuk-mcp.git`</sub>
 - **[usestring/string-ai-mcp](https://github.com/usestring/string-ai-mcp)** — Search the web, fetch URLs and map sites as clean Markdown, getting past anti-bot blocks
-  <sub>★ 3 · TypeScript · MIT · npm · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3 · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @usestring/mcp`</sub>
 - **[lucasmartins-ai/lookacrawler](https://github.com/lucasmartins-ai/lookacrawler)** — Token-efficient local web crawler with Playwright-based stealth anti-bot bypass
-  <sub>★ 3 · TypeScript · MIT · docker · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>★ 3 · TypeScript · MIT · docker · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -p 3000:3000 -e LOOKACRAWLER_SSE_TOKEN="$(openssl rand -hex 24)" lookacrawler`</sub>
 - **[atlasprzetargow/mcp-server](https://github.com/atlasprzetargow/mcp-server)** — Search Polish public tenders (BZP and TED): procuring entity and contractor profiles by NIP, market statistics by CPV or province, and a procurement glossary
   <sub>★ 3 · TypeScript · MIT · npm · pushed 2026-04-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -454,16 +454,16 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 3 · Python · MIT · npx · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y searchfetch`</sub>
 - **[ni-c/freshrss-mcp](https://github.com/ni-c/freshrss-mcp)** — Read and manage a self-hosted FreshRSS instance: feeds, categories, labels, articles, read and star state, and OPML import and export
-  <sub>★ 3 · TypeScript · MIT · source · pushed 2026-10-06 · WSL2 · Linux · Docker</sub>
+  <sub>★ 3 · TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/ni-c/freshrss-mcp.git`</sub>
 - **[Prototypr/feedbagel-mcp](https://github.com/Prototypr/feedbagel-mcp)** — Search the Feedbagel RSS catalog, follow feeds and route new entries to webhooks
   <sub>★ 3 · TypeScript · npm · pushed 2026-06-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g feedbagel-mcp`</sub>
 - **[urlbox/urlbox-mcp-server](https://github.com/urlbox/urlbox-mcp-server/)** — Generate and manage screenshots, PDFs and videos, analyze screenshots with AI and extract web content as Markdown, metadata or HTML via the Urlbox API
-  <sub>★ 3 · TypeScript · MIT · source · pushed 2025-10-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3 · TypeScript · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/urlbox/urlbox-mcp-server/.git`</sub>
 - **[ashlrai/webfetch](https://github.com/ashlrai/webfetch)** — License-aware federated image search across many providers, returning license tags, attribution strings, dimensions and download URLs
-  <sub>★ 3 · JavaScript · MIT · npm · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 3 · JavaScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g getwebfetch`</sub>
 - **[Alisammour/storyflo-mcp](https://github.com/Alisammour/storyflo-mcp)** — Curated audio news: search articles, fetch narrated audio, subscribe to topic feeds and surface stories matched to actively traded Kalshi event contracts
   <sub>★ 2 · JavaScript · MIT · npx · pushed 2026-07-02 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -478,7 +478,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · Go · AGPL-3.0 · psh · pushed 2026-10-05 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://haypile.sh/install.ps1 | iex`</sub>
 - **[capad-xyz/searchts](https://github.com/capad-xyz/searchts)** — Read bot-walled pages as Markdown via an escalating unlocker, plus multi-provider web search with rank fusion, video transcripts and page asset grabbing
-  <sub>★ 2 · Python · MIT · uv · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · Python · MIT · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx --from "searchts[mcp]" searchts <verb>`</sub>
 - **[dariomory/trendflow-js](https://github.com/dariomory/trendflow-js)** — Google Trends data: interest over time, interest by region, trending now, related queries and topic search
   <sub>★ 2 · TypeScript · MIT · clone · pushed 2026-09-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -550,13 +550,13 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-09-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx allnewsapi-mcp@latest --apikey YOUR_API_KEY_HERE`</sub>
 - **[bumbaRasch/searxng-mcp-server](https://github.com/bumbaRasch/searxng-mcp-server)** — Self-hosted SearXNG metasearch: web, image, news, video and music search plus SSRF-guarded page fetch with prompt-injection wrapping
-  <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @modelcontextprotocol/inspector npx -y searxng-mcp-server`</sub>
 - **[CKBrennan/overtone-news-mcp](https://github.com/CKBrennan/overtone-news-mcp)** — Real-time news with tone analysis, brand safety and narrative shift signals
   <sub>★ 1 · Python · MIT · clone · pushed 2026-05-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/CKBrennan/overtone-news-mcp`</sub>
 - **[Crawlora-org/crawlora-mcp](https://github.com/Crawlora-org/crawlora-mcp)** — Structured public web data as clean JSON across search, maps, commerce, social and finance
-  <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx crawlora-mcp`</sub>
 - **[deficlow/HyperStore-MCP](https://github.com/deficlow/HyperStore-MCP)** — Keyword and semantic search over curated AI applications in the HyperStore directory, with full app details and browsing
   <sub>★ 1 · Python · MIT · npx · pushed 2026-06-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -610,10 +610,10 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx scrapercity login # enter your API key`</sub>
 - **[smeet666/mcp-marmiton](https://github.com/smeet666/mcp-marmiton)** — Search Marmiton recipes, read ingredients and steps, and rescale quantities to any number of servings
-  <sub>★ 1 · TypeScript · MIT · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>★ 1 · TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-marmiton.git`</sub>
 - **[ssatama/rescuedogs-mcp-server](https://github.com/ssatama/rescuedogs-mcp-server)** — Search rescue dogs from European and UK organizations, with detailed profiles and personality matching
-  <sub>★ 1 · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1 · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g rescuedogs-mcp-server`</sub>
 - **[theagenttimes/tat-mcp-server](https://github.com/theagenttimes/tat-mcp-server)** — Query articles, statistics, the wire feed, comments, citations and agent leaderboards from The Agent Times, a newspaper covering the agent economy
   <sub>★ 1 · Python · clone · pushed 2026-02-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -628,7 +628,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>TypeScript · MIT · npx · pushed 2026-10-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y mcp-google-custom-search@latest`</sub>
 - **[Grubbomatic/crawl-readiness-mcp](https://github.com/Grubbomatic/crawl-readiness-mcp)** — AI SEO audits: score AI crawler readiness, validate JSON-LD and robots.txt, compare human and crawler views, and generate llms.txt, robots.txt and JSON-LD
-  <sub>JavaScript · MIT · npx · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>JavaScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y crawl-readiness-mcp`</sub>
 - **[AgentiLoop/pagewire-mcp](https://github.com/AgentiLoop/pagewire-mcp)** — Read any public web page as clean Markdown, page metadata, or a page plus 4 same-site pages; pay per call in USDC via x402, no API key
   <sub>JavaScript · MIT · npx · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -667,7 +667,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>JavaScript · MIT · docker · pushed 2026-09-16 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -i --rm -e AGENTMD_API_KEY=<your-key> agentmd-mcp`</sub>
 - **[evanatpizzarobot/vr-org-mcp](https://github.com/evanatpizzarobot/vr-org-mcp)** — Live VR, AR and XR news, full-text VR.org originals, an events calendar, headset deals and comparisons
-  <sub>TypeScript · MIT · npx · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>TypeScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx vr-org-mcp`</sub>
 - **[FieldmodeLLC/scrapecheck-mcp](https://github.com/FieldmodeLLC/scrapecheck-mcp)** — Verify scraped field values against the live source page, returning an Ed25519-signed pass, fail or unverifiable verdict that can be checked offline
   <sub>TypeScript · MIT · source · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -676,10 +676,10 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>TypeScript · ISC · npm · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @foundrole/ai-job-search-mcp`</sub>
 - **[smeet666/mcp-wikibooks-cookbook](https://github.com/smeet666/mcp-wikibooks-cookbook)** — Search recipes in the English Wikibooks Cookbook, read ingredients and steps, and rescale quantities
-  <sub>TypeScript · MIT · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-wikibooks-cookbook.git`</sub>
 - **[smeet666/mcp-recipes](https://github.com/smeet666/mcp-recipes)** — Query Marmiton and the Wikibooks Cookbook together to compare recipes, and scale French and English ingredient lists, flagging what cannot be scaled
-  <sub>TypeScript · MIT · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-recipes.git`</sub>
 - **[githunt-agent/githunt-mcp](https://github.com/githunt-agent/githunt-mcp)** — Search, rank and analyze GitHub developers for tech recruiting by location, role and skill, with AI scoring and contact discovery
   <sub>JavaScript · MIT · npx · pushed 2026-07-24 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -700,7 +700,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>TypeScript · MIT · source · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mambalabsdev/mcp-company-change-event-feed.git`</sub>
 - **[mambalabsdev/mcp-company-contact-details-extractor](https://github.com/mambalabsdev/mcp-company-contact-details-extractor)** — Find a company's contact page and extract role emails, a phone number and a postal address
-  <sub>JavaScript · MIT · source · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>JavaScript · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mambalabsdev/mcp-company-contact-details-extractor.git`</sub>
 - **[mambalabsdev/mcp-company-social-presence-mapper](https://github.com/mambalabsdev/mcp-company-social-presence-mapper)** — Map a company domain to its LinkedIn, X, Instagram, Facebook and YouTube profiles and follower counts as flat Clay-ready JSON via an Apify actor
   <sub>TypeScript · MIT · source · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -712,16 +712,16 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>TypeScript · MIT · source · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mambalabsdev/mcp-funding-press-signal-scanner.git`</sub>
 - **[mambalabsdev/mcp-github-organization-signal-scanner](https://github.com/mambalabsdev/mcp-github-organization-signal-scanner)** — Resolve a company domain to its GitHub organization with repository, language and activity signals
-  <sub>TypeScript · MIT · source · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mambalabsdev/mcp-github-organization-signal-scanner.git`</sub>
 - **[mambalabsdev/mcp-review-platform-reputation-enricher](https://github.com/mambalabsdev/mcp-review-platform-reputation-enricher)** — Resolve a company domain to its Trustpilot rating, review count and claimed status
-  <sub>TypeScript · MIT · source · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mambalabsdev/mcp-review-platform-reputation-enricher.git`</sub>
 - **[modelcontextprotocol/server-fetch](https://github.com/modelcontextprotocol/servers/tree/main/src/fetch)** — Web content fetching and processing for AI consumption
-  <sub>JavaScript · in-repo · pushed 2026-10-12</sub>
+  <sub>JavaScript · in-repo · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/modelcontextprotocol/servers.git && cd servers/src/fetch`</sub>
 - **[Pexafy/pexafy-mcp](https://github.com/Pexafy/pexafy-mcp)** — Semantic search of free-license stock photos from Unsplash, Pexels, Pixabay and more by scene description, example image or similarity, with attribution
-  <sub>Python · MIT · source · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>Python · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Pexafy/pexafy-mcp.git`</sub>
 - **[opendatalab/MinerU-Ecosystem](https://github.com/opendatalab/MinerU-Ecosystem/tree/main/mcp)** — Convert PDFs, Word and PowerPoint files, images and spreadsheets to Markdown via the MinerU document parsing API
   <sub>Python · Apache-2.0 · in-repo · pushed 2026-09-22</sub>
@@ -742,13 +742,13 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>JavaScript · MIT · npx · pushed 2026-07-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y serpdive-mcp`</sub>
 - **[smeet666/mcp-ashby](https://github.com/smeet666/mcp-ashby)** — Search companies' public Ashby job boards: resolve a company to its board, filter openings, read full postings and compare published pay ranges
-  <sub>TypeScript · MIT · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-ashby.git`</sub>
 - **[smeet666/mcp-animenewsnetwork](https://github.com/smeet666/mcp-animenewsnetwork)** — Search the Anime News Network encyclopedia for anime and manga, read cast, staff, episodes and studios as compact rows, and follow the news wire
-  <sub>TypeScript · MIT · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-animenewsnetwork.git`</sub>
 - **[smeet666/mcp-pequerecetas](https://github.com/smeet666/mcp-pequerecetas)** — Read Spanish family recipes from Pequerecetas, rescale servings and browse by diet, main ingredient, appliance or age group from six months up
-  <sub>TypeScript · MIT · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-pequerecetas.git`</sub>
 - **[srezai-team/srezai-mcp](https://github.com/srezai-team/srezai-mcp-web-search)** — Web and image search, page reading as Markdown, browser-rendered screenshots, schema-based extraction and deep research, with strong Russian web coverage
   <sub>TypeScript · MIT · source · pushed 2026-10-12 · Win? · WSL2 · Linux · Docker</sub>
@@ -757,13 +757,13 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>JavaScript · MIT · source · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/WhaleCupl/ai-daily-insights-mcp.git`</sub>
 - **[smeet666/mcp-ptitchef](https://github.com/smeet666/mcp-ptitchef)** — Search Ptitchef recipes, browse ingredient categories, read ingredients, method, cost and nutrition, find dishes from fridge contents and rescale servings
-  <sub>TypeScript · MIT · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-ptitchef.git`</sub>
 - **[smeet666/mcp-bbc-goodfood](https://github.com/smeet666/mcp-bbc-goodfood)** — Search BBC Good Food recipes, read them in the original or US version, see accepted search facet values and rescale to any number of people
-  <sub>TypeScript · MIT · source · pushed 2026-10-08 · WSL2 · Linux · Docker</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-bbc-goodfood.git`</sub>
 - **[smeet666/mcp-supertoinette](https://github.com/smeet666/mcp-supertoinette)** — Read Supertoinette's French recipes: ingredients, steps, difficulty, cost, resting time and wine pairings, and rescale to any number of people
-  <sub>TypeScript · MIT · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-supertoinette.git`</sub>
 - **[AG-Bureau/mcp-search](https://github.com/AG-Bureau/mcp-search)** — Search, page reading, images, screenshots and multi-source answers over your own SearXNG, reporting which engines were queried and what to distrust
   <sub>Python · AGPL-3.0 · docker · pushed 2026-09-26 · WSL2 · Linux · Docker</sub>
@@ -781,7 +781,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.3k · Python · BSD-3-Clause · pip · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install "jupyter-mcp-server>=1.5.0" "code-sandboxes>=1.1.1"`</sub>
 - **[DataEval/dingo](https://github.com/MigoXLab/dingo)** — Data quality evaluation with Dingo: run rule-based and LLM-based evaluations and list its rules and prompts
-  <sub>★ 758 · Python · Apache-2.0 · pip · pushed 2026-10-09 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 758 · Python · Apache-2.0 · pip · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install dingo-python`</sub>
 - **[reading-plus-ai/mcp-server-data-exploration](https://github.com/reading-plus-ai/mcp-server-data-exploration)** — Autonomous data exploration of CSV datasets with generated insights
   <sub>★ 545 · Python · MIT · source · pushed 2025-03-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -820,7 +820,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 21 · Ruby · MIT · npx · pushed 2025-06-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @modelcontextprotocol/inspector ./bin/bundler_mcp`</sub>
 - **[Archerkattri/mathlas](https://github.com/Archerkattri/mathlas)** — Math tools for agents: theorem search, PSLQ constant identification, OEIS lookup, Lean kernel checks and applicability checklists
-  <sub>★ 13 · Python · Apache-2.0 · uv · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 13 · Python · Apache-2.0 · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx mathlas-mcp`</sub>
 - **[Whatsonyourmind/oraclaw](https://github.com/Whatsonyourmind/oraclaw)** — Decision intelligence algorithms: bandits, Monte Carlo, constraint optimization, forecasting, anomaly detection, risk analysis and graph algorithms
   <sub>★ 13 · TypeScript · MIT · source · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -835,7 +835,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 7 · Python · MIT · pip · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install discovery-engine-api`</sub>
 - **[Kungie/gut](https://github.com/Kungie/gut)** — Judgment calls on small, cheap models: yes/no, pick-one and rate questions about any text, answered YES, NO or UNSURE. Runs on TypeSafe's Jev, open models on Ollaya, Ollama or a local NLI model; each judges up to 1,000 texts per call
-  <sub>★ 6 · Python · Apache-2.0 · npx · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6 · Python · Apache-2.0 · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add Kungie/gut --skill gut # teaches a coding agent when to reach for it`</sub>
 - **[clouatre-labs/math-mcp-learning-server](https://github.com/clouatre-labs/math-mcp-learning-server)** — Educational server for math operations, statistics, visualization and persistent workspaces
   <sub>★ 5 · Python · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -889,7 +889,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · Python · Apache-2.0 · docker · pushed 2026-05-29 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -i --rm pcq # MCP client attaches to stdin/stdout`</sub>
 - **[laszlopere/mcp-gnu-units](https://github.com/laszlopere/mcp-gnu-units)** — Offline unit conversion and dimensional analysis backed by the GNU units database, with compound expressions and reduction to SI base units
-  <sub>★ 1 · Python · GPL-3.0 · source · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1 · Python · GPL-3.0 · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/laszlopere/mcp-gnu-units.git`</sub>
 - **[dockndevai/mcp-laya](https://github.com/dockndevai/mcp-laya)** — Fast, local, non-autoregressive System-1 decision engine as MCP tools — typed decisions (classify / score / yes-no) over text, email, tickets or JSON in 100+ languages, with calibrated confidence and no text generation, so nothing to hallucinate. Offloads routing/triage/gating judgment calls from the main model; runs on-device, offline by default. pipx install mcp-laya
   <sub>Python · MIT · pipx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -898,13 +898,13 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>JavaScript · MIT · npx · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y decisionmatrix-mcp`</sub>
 - **[headlessherm-creator/polymath-megablaster-mcp](https://github.com/headlessherm-creator/polymath-megablaster-mcp)** — Local deterministic calculations: exact-precision math, date arithmetic, unit conversion, statistics, subnet math, haversine and Levenshtein distance
-  <sub>JavaScript · MIT · clone · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>JavaScript · MIT · clone · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/headlessherm-creator/polymath-megablaster-mcp.git`</sub>
 - **[jonahthan433/cortexcloud-mcp](https://github.com/jonahthan433/cortexcloud-mcp)** — QUBO/Ising optimization with classical, hybrid and quantum solvers, paid per call via x402 (USDC on Base)
   <sub>Python · MIT · source · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jonahthan433/cortexcloud-mcp.git`</sub>
 - **[mckinsey/vizro-mcp](https://github.com/mckinsey/vizro/tree/main/vizro-mcp)** — Create validated, maintainable data charts and dashboards with Vizro tools and templates
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-12</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/mckinsey/vizro.git && cd vizro/vizro-mcp`</sub>
 - **[TensorLink-AI/ephemeris-mcp](https://github.com/TensorLink-AI/ephemeris-mcp)** — Probabilistic time-series forecasting: quantile forecasts from Chronos-2, TimesFM 2.5, Toto 2, TiRex-2 and IBM Granite foundation models, routed to one model, named explicitly, or ensembled. Remote server with an npm stdio bridge
   <sub>JavaScript · MIT · npx · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -916,13 +916,13 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 ## Data Visualization
 
 - **[nteract/semiotic](https://github.com/nteract/semiotic)** — Semiotic React data visualization: suggest charts for a dataset, render validated configs to SVG, diagnose anti-patterns and fetch component schemas
-  <sub>★ 2.7k · TypeScript · Apache-2.0 · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2.7k · TypeScript · Apache-2.0 · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -p semiotic semiotic-ai --list # list components with import paths and renderability`</sub>
 - **[KyuRish/mcp-dashboards](https://github.com/KyuRish/mcp-dashboards)** — Interactive charts (bar, line, candlestick, Sankey, geo and more) and dashboards with KPI cards, drill-down, live API polling, themes and PNG/PPT export
   <sub>★ 48 · TypeScript · npx · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx mcp-dashboards`</sub>
 - **[kleinicke/ply-visualizer](https://github.com/kleinicke/ply-visualizer)** — Inspect, compare and export point clouds, meshes and depth data with interactive 3D previews, measurements, NumPy/PyTorch inputs and COLMAP depth
-  <sub>★ 21 · TypeScript · MIT · source · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 21 · TypeScript · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kleinicke/ply-visualizer.git`</sub>
 - **[Ratnaditya-J/csvglow](https://github.com/Ratnaditya-J/csvglow)** — Generate self-contained HTML dashboards from CSV/Excel files with interactive ECharts visualizations and sortable data tables
   <sub>★ 14 · Python · MIT · npx · pushed 2026-03-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -937,7 +937,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · TypeScript · MIT · npm · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g pushtodisplay`</sub>
 - **[ganapativs/microcharts](https://github.com/ganapativs/microcharts/tree/main/packages/mcp)** — Word-sized charts (sparklines, bars, bullets and more) rendered to self-contained SVG with generated alt text, plus chart suggestions for a given question
-  <sub>TypeScript · MIT · in-repo · pushed 2026-10-12</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/ganapativs/microcharts.git && cd microcharts/packages/mcp`</sub>
 - **[oscarleoo/chartlink-agents](https://github.com/oscarleoo/chartlink-agents)** — Charts, maps and sortable tables with live-updating embed links: draft, preview and publish, then update the data and every embed follows
   <sub>JavaScript · MIT · npx · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -946,13 +946,13 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 ## Data Platforms
 
 - **[dbt-labs/dbt-mcp](https://github.com/dbt-labs/dbt-mcp)** — dbt integration: dbt Core and Cloud CLI, project metadata discovery, model information and semantic layer queries
-  <sub>★ 608 · Python · Apache-2.0 · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 608 · Python · Apache-2.0 · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/dbt-labs/dbt-mcp.git`</sub>
 - **[gura105/operational-ontology](https://github.com/gura105/operational-ontology)** — Operational ontology reference implementation: tools generated from a typed business domain model, with rule-checked, audited writes to systems of record
   <sub>★ 187 · TypeScript · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/gura105/operational-ontology.git`</sub>
 - **[keboola/keboola-mcp-server](https://github.com/keboola/mcp-server)** — Interact with the Keboola Connection data platform: list and access data from the Keboola Storage API
-  <sub>★ 85 · Python · MIT · uv · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 85 · Python · MIT · uv · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`uvx keboola_mcp_server login --api-url https://connection.YOUR_REGION.keboola.com`</sub>
 - **[bintocher/mcp-superset](https://github.com/bintocher/mcp-superset)** — Apache Superset: dashboards, charts, datasets, SQL Lab, security (users, roles, RLS, groups) and permissions audit, with built-in safety validations
   <sub>★ 60 · Python · MIT · uv · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -970,7 +970,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 23 · Python · MIT · source · pushed 2025-08-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mattijsdp/dbt-docs-mcp.git`</sub>
 - **[vikramgorla/mcp-swiss](https://github.com/vikramgorla/mcp-swiss)** — Swiss open data: transport, weather, geodata, companies, parliament and more
-  <sub>★ 23 · TypeScript · MIT · npx · pushed 2026-10-05 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 23 · TypeScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npx mcp-swiss`</sub>
 - **[yashshingvi/databricks-genie-MCP](https://github.com/yashshingvi/databricks-genie-MCP)** — Databricks Genie API: ask natural language questions, run SQL queries and interact with Databricks conversational agents
   <sub>★ 17 · Python · MIT · source · pushed 2025-04-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1006,7 +1006,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 4 · JavaScript · MIT · source · pushed 2026-08-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Castaldo-Solutions/mcp-vtenext.git`</sub>
 - **[AirSaiga/Precis](https://github.com/AirSaiga/Precis)** — Local-first data quality workbench for Excel/CSV: validate against schemas and 10 zero-code constraint types (uniqueness, ranges, foreign keys, allowed values and more), with row-level error reports. Also ships a visual desktop app, CLI and REST API
-  <sub>★ 3 · Python · Apache-2.0 · pip · pushed 2026-10-10 · Win · WSL2? · macOS · Linux?</sub>
+  <sub>★ 3 · Python · Apache-2.0 · pip · pushed 2026-10-13 · Win · WSL2? · macOS · Linux?</sub>
   <sub>`pip install "precis-cli[mcp]" # 安装后获得 precis-mcp 命令`</sub>
 - **[avisangle/method-crm-mcp](https://github.com/avisangle/method-crm-mcp)** — Method CRM API integration: manage tables, files, users, events and API keys, with rate limiting and retries
   <sub>★ 3 · Python · MIT · npx · pushed 2025-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1048,7 +1048,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · Python · pip · pushed 2025-12-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install keyneg-mcp`</sub>
 - **[r3dz4r/datapulse-my](https://github.com/r3dz4r/datapulse-my)** — Trust checks for Malaysian public datasets: freshness, licence, provenance and drift, with signed evidence and an offline-verifiable attestation chain
-  <sub>★ 2 · Python · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · Python · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/r3dz4r/datapulse-my.git`</sub>
 - **[Kemetra/seshat-bi](https://github.com/Kemetra/Seshat-BI)** — Read-only BI pipeline governance: each table's stage from source to Power BI, what blocks the next stage, static SQL/TMDL/PBIR checks and evidence packs
   <sub>★ 2 · Python · Apache-2.0 · uv · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1114,10 +1114,10 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 ## Knowledge &amp; Memory
 
 - **[upstash/context7](https://github.com/upstash/context7)** — Up-to-date code documentation for LLMs and AI code editors
-  <sub>★ 62.9k · TypeScript · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 63k · TypeScript · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/upstash/context7.git`</sub>
 - **[vectorize-io/hindsight](https://github.com/vectorize-io/hindsight)** — Hindsight: long-term memory for AI agents modeled on human memory
-  <sub>★ 48.8k · Python · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 49.2k · Python · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx @vectorize-io/hindsight-coding-agents install all # every detected agent, wired natively`</sub>
 - **[skill-seekers/Skill_Seekers](https://github.com/yusufkaraaslan/Skill_Seekers)** — Turn docs, GitHub repos, PDFs, videos, Confluence, Notion and Slack/Discord into AI skills and RAG knowledge, exportable to vector databases like Qdrant
   <sub>★ 15.1k · Python · MIT · pip · pushed 2026-09-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -1126,25 +1126,25 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 4.2k · Python · AGPL-3.0 · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add basicmachines-co/basic-memory/skills -g`</sub>
 - **[gamosoft/NoteDiscovery](https://github.com/gamosoft/NoteDiscovery)** — Self-hosted Markdown knowledge base with a web UI: search, read, create, edit, tag and template notes
-  <sub>★ 2.8k · JavaScript · MIT · docker · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 2.8k · JavaScript · MIT · docker · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`docker run -d --name notediscovery -p 8000:8000 \`</sub>
 - **[moorcheh-ai/memanto](https://github.com/moorcheh-ai/memanto)** — Universal memory agent for AI: provides semantic search, namespace management, text/vector operations and RAG for local or remote environments
-  <sub>★ 2.3k · Python · MIT · pip · pushed 2026-10-11 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 2.3k · Python · MIT · pip · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install memanto`</sub>
 - **[doobidoo/mcp-memory-service](https://github.com/doobidoo/mcp-memory-service)** — Memory service with semantic search, persistent storage and autonomous memory consolidation
-  <sub>★ 2k · Python · Apache-2.0 · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2k · Python · Apache-2.0 · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install mcp-memory-service`</sub>
 - **[bitbonsai/mcp-obsidian](https://github.com/bitbonsai/mcpvault)** — Safe read/write access to Obsidian vaults: search, batch operations, tag management and frontmatter handling
-  <sub>★ 1.7k · TypeScript · MIT · npx · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.7k · TypeScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @modelcontextprotocol/inspector npx @bitbonsai/mcpvault@latest /path/to/your/vault`</sub>
 - **[apecloud/ApeRAG](https://github.com/apecloud/ApeRAG)** — RAG platform combining Graph RAG, vector search and full-text search for building knowledge graphs and context engineering
   <sub>★ 1.3k · Python · Apache-2.0 · helm · pushed 2026-09-12 · WSL2 · Linux · Docker</sub>
   <sub>`helm install aperag ./deploy/aperag --namespace default --create-namespace`</sub>
 - **[vshulcz/deja-vu](https://github.com/vshulcz/deja-vu)** — Local memory over session histories from Claude Code, Codex CLI and opencode: lexical search, session-start auto-recall, secret redaction and SSH sync
-  <sub>★ 1.2k · Go · MIT · winget · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 1.2k · Go · MIT · winget · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`winget install vshulcz.deja-vu`</sub>
 - **[fabio-rovai/open-ontologies](https://github.com/fabio-rovai/open-ontologies)** — Ontology engineering for OWL, RDF and SPARQL: validate, query, diff, lint, version and govern knowledge graphs on an Oxigraph triple store
-  <sub>★ 1k · Rust · MIT · source · pushed 2026-10-10 · macOS · Linux</sub>
+  <sub>★ 1k · Rust · MIT · source · pushed 2026-10-13 · macOS · Linux</sub>
   <sub>`git clone https://github.com/fabio-rovai/open-ontologies.git`</sub>
 - **[chatmcp/mcp-server-chatsum](https://github.com/chatmcp/mcp-server-chatsum)** — Query and summarize your chat messages with AI prompts
   <sub>★ 1k · TypeScript · source · pushed 2024-12-04 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1153,25 +1153,25 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 906 · Python · MIT · script · pushed 2026-10-07 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/CodeAbra/iai-personal-memory-engine/main/scripts/bootstrap.sh | bash`</sub>
 - **[riponcm/projectmem](https://github.com/riponcm/projectmem)** — Local-first memory for coding agents: records issues, failed attempts, fixes and decisions, re-injects them and warns at git commit before a repeated mistake
-  <sub>★ 864 · Python · MIT · pip · pushed 2026-10-03 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 865 · Python · MIT · pip · pushed 2026-10-03 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install projectmem`</sub>
 - **[agentic-mcp-tools/memora](https://github.com/agentic-box/memora)** — Persistent memory with knowledge graph visualization, semantic/hybrid search, cloud sync (S3/R2) and cross-session context management
-  <sub>★ 736 · Python · MIT · npx · pushed 2026-09-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 737 · Python · MIT · npx · pushed 2026-09-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx wrangler d1 create memora-graph`</sub>
 - **[samvallad33/vestige](https://github.com/samvallad33/vestige)** — Local-first cognitive agent memory with FSRS-6 scheduling, smart ingest, SQLite storage, portable sync, an embedded dashboard and optional hooks
-  <sub>★ 649 · Rust · AGPL-3.0 · script · pushed 2026-10-11 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 650 · Rust · AGPL-3.0 · script · pushed 2026-10-11 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/samvallad33/vestige/main/scripts/install.sh | sh`</sub>
 - **[chenxiachan/thoughtdag](https://github.com/chenxiachan/thoughtdag)** — Search local AI-agent conversation history by file or exact phrase and recall original source turns through four read-only tools
-  <sub>★ 620 · TypeScript · MIT · npm · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 622 · TypeScript · MIT · npm · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g thoughtdag`</sub>
 - **[Ikalus1988/MisakaNet](https://github.com/Ikalus1988/MisakaNet)** — Agent failure memory: search verified debugging lessons from real engineering sessions
-  <sub>★ 526 · Python · Apache-2.0 · npx · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 525 · Python · Apache-2.0 · npx · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx @misaka-net/misakanet-setup`</sub>
 - **[TeleAI-UAGI/telemem](https://github.com/TeleAI-UAGI/telemem)** — Mem0-compatible long-term and multimodal agent memory: character-isolated profiles, semantic deduplication, optional local stack and video memory with QA
   <sub>★ 493 · Python · Apache-2.0 · uv · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx telemem`</sub>
 - **[juyterman1000/entroly](https://github.com/juyterman1000/entroly)** — Context control layer for coding agents: compression, prompt-prefix stabilization for caching, cheaper-model routing, local hallucination checks and memory
-  <sub>★ 476 · Python · Apache-2.0 · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 477 · Python · Apache-2.0 · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g entroly`</sub>
 - **[Beever-AI/beever-atlas](https://github.com/Beever-AI/beever-atlas)** — Team knowledge base turning Slack, Discord, Teams and Mattermost chats into a knowledge graph and wiki with cited answers, semantic search and expert finding
   <sub>★ 449 · Python · Apache-2.0 · clone · pushed 2026-09-10 · WSL2 · Linux · Docker</sub>
@@ -1183,19 +1183,19 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 378 · TypeScript · MIT · npx · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y graphlit-mcp-server`</sub>
 - **[Goldentrii/AgentRecall](https://github.com/Goldentrii/AgentRecall-X)** — Persistent cross-session agent memory that surfaces the most relevant past memories using the Intelligent Distance Protocol
-  <sub>★ 372 · JavaScript · MIT · npx · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`npx agent-recall-cli recall "topic" # terminal`</sub>
+  <sub>★ 372 · JavaScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx agent-recall-cli recall "rate limiting"`</sub>
 - **[CheMiguel23/MemoryMesh](https://github.com/CheMiguel23/MemoryMesh)** — Graph-based memory focused on AI role-play and story generation
   <sub>★ 354 · TypeScript · MIT · clone · pushed 2026-03-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/CheMiguel23/memorymesh.git`</sub>
 - **[varun29ankuS/shodh-memory](https://github.com/varun29ankuS/shodh-memory)** — Cognitive agent memory with Hebbian learning, a three-tier architecture and knowledge graphs, running offline on edge devices
-  <sub>★ 306 · Rust · Apache-2.0 · npx · pushed 2026-10-12 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 309 · Rust · Apache-2.0 · npx · pushed 2026-10-12 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx @shodh/memory-mcp setup-hooks`</sub>
 - **[ohad6k/emulo](https://github.com/ohad6k/emulo)** — Loads a personal profile mined from your local Claude Code, Codex and OpenCode logs so agents work the way you do
   <sub>★ 295 · HTML · MIT · npx · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add ohad6k/emulo@emulo`</sub>
 - **[lyonzin/knowledge-rag](https://github.com/lyonzin/knowledge-rag)** — Offline RAG for Claude Code with hybrid BM25 and semantic search, cross-encoder reranking, Markdown-aware chunking and query expansion
-  <sub>★ 293 · Python · MIT · npx · pushed 2026-10-09 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 294 · Python · MIT · npx · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add lyonzin/knowledge-rag`</sub>
 - **[jinzcdev/markmap-mcp-server](https://github.com/jinzcdev/markmap-mcp-server)** — Convert Markdown into interactive markmap mind maps with PNG/JPG/SVG export and live browser preview
   <sub>★ 290 · TypeScript · MIT · npx · pushed 2026-08-04 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -1207,7 +1207,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 265 · TypeScript · MIT · source · pushed 2025-07-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/hannesrudolph/mcp-ragdocs.git`</sub>
 - **[l33tdawg/sage](https://github.com/l33tdawg/sage)** — Local institutional memory for agents where BFT consensus among validators approves every memory before it is committed
-  <sub>★ 255 · Go · Apache-2.0 · docker · pushed 2026-10-12 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 255 · Go · Apache-2.0 · docker · pushed 2026-10-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`docker run -d --name sage \`</sub>
 - **[omega-memory/omega-memory](https://github.com/omega-memory/omega-memory)** — Local-first persistent memory for coding agents with semantic search, auto-capture, cross-session learning and intelligent forgetting
   <sub>★ 223 · Python · Apache-2.0 · uv · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1222,7 +1222,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 193 · TypeScript · MIT · npx · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @roomi-fields/notebooklm-mcp@<pinned-version>`</sub>
 - **[pi22by7/In-Memoria](https://github.com/pi22by7/In-Memoria)** — Cumulative memory and pattern learning for coding assistants, with local SQLite/SurrealDB storage for semantic codebase analysis
-  <sub>★ 173 · Rust · MIT · npm · pushed 2025-12-23 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 174 · Rust · MIT · npm · pushed 2025-12-23 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g in-memoria`</sub>
 - **[0xshellming/mcp-summarizer](https://github.com/0xshellming/mcp-summarizer)** — Summarize plain text, web pages, PDF documents, EPUB books and HTML content
   <sub>★ 167 · JavaScript · source · pushed 2025-02-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1233,14 +1233,14 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 - **[kaliaboi/mcp-zotero](https://github.com/kaliaboi/mcp-zotero)** — Work with collections and sources in your Zotero Cloud library
   <sub>★ 164 · TypeScript · MIT · npm · pushed 2025-02-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g mcp-zotero`</sub>
-- **[Patdolitse/piia-engram](https://github.com/Patdolitse/piia-engram)** — Persistent user identity across AI tools: preferences, lessons and decisions in local JSON with staged verification, AES-256-GCM encryption and cross-tool sync
-  <sub>★ 163 · Python · AGPL-3.0 · pip · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pip install piia-engram`</sub>
 - **[dnotitia/akb](https://github.com/dnotitia/akb)** — Organizational knowledge base: Markdown docs, PostgreSQL tables and files linked by a URI graph, with hybrid search, Git history and multi-tenant ACLs
-  <sub>★ 162 · Python · docker · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 162 · Python · docker · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`docker run --rm -v "$AKB_NATIVE_CONFIG_DIR:/installation" \`</sub>
+- **[Patdolitse/piia-engram](https://github.com/Patdolitse/piia-engram)** — Persistent user identity across AI tools: preferences, lessons and decisions in local JSON with staged verification, AES-256-GCM encryption and cross-tool sync
+  <sub>★ 162 · Python · AGPL-3.0 · pip · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`pip install piia-engram`</sub>
 - **[dcostenco/prism-mcp](https://github.com/dcostenco/prism-coder)** — Local SQLite agent memory with a web dashboard, session rewind/replay, cross-client memory sharing, morning briefings and progressive context loading
-  <sub>★ 158 · TypeScript · Apache-2.0 · npm · pushed 2026-10-12 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 158 · TypeScript · Apache-2.0 · npm · pushed 2026-10-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm install -g prism-mcp-server`</sub>
 - **[redleaves/context-keeper](https://github.com/redleaves/context-keeper)** — LLM-driven context and memory management: short- and long-term memory with vector, timeline and knowledge graph retrieval plus reranking
   <sub>★ 155 · Go · MIT · clone · pushed 2026-01-13 · WSL2 · Linux · Docker</sub>
@@ -1249,32 +1249,32 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 154 · Go · Apache-2.0 · brew · pushed 2026-09-10 · Win? · WSL2 · macOS · Linux?</sub>
   <sub>`brew tap sheawinkler/contextlattice`</sub>
 - **[cameronrye/openzim-mcp](https://github.com/cameronrye/openzim-mcp)** — Search and navigate Wikipedia and other ZIM-format knowledge archives offline, with smart retrieval and caching
-  <sub>★ 145 · Python · MIT · npx · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 145 · Python · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @smithery/cli mcp add rye/openzim-mcp --client claude`</sub>
 - **[ProfessionalWiki/MediaWiki-MCP-Server](https://github.com/ProfessionalWiki/MediaWiki-MCP-Server)** — Read, search and edit any MediaWiki wiki, including Wikipedia and Fandom, with multi-wiki support and Semantic MediaWiki, Cargo, Wikibase and NeoWiki queries
-  <sub>★ 136 · TypeScript · MIT · npx · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 135 · TypeScript · MIT · npx · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx add-mcp @professional-wiki/mediawiki-mcp-server`</sub>
 - **[deusXmachina-dev/memorylane](https://github.com/deusXmachina-dev/memorylane)** — Desktop app that captures screen activity, stores AI summaries and OCR text locally, and exposes the history via semantic search and a timeline
-  <sub>★ 120 · TypeScript · GPL-3.0 · source · pushed 2026-10-12 · Win? · macOS</sub>
+  <sub>★ 120 · TypeScript · GPL-3.0 · source · pushed 2026-10-13 · Win? · macOS</sub>
   <sub>`git clone https://github.com/deusXmachina-dev/memorylane.git`</sub>
 - **[elvismdev/mem0-mcp-selfhosted](https://github.com/elvismdev/mem0-mcp-selfhosted)** — Self-hosted mem0 for Claude Code: Qdrant vector search, Neo4j knowledge graph, Ollama embeddings and session hooks for automatic cross-session memory
   <sub>★ 111 · Python · MIT · source · pushed 2026-03-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/elvismdev/mem0-mcp-selfhosted.git`</sub>
 - **[IvenKooLab/loci](https://github.com/IvenKooLab/loci)** — Queryable second brain over your scattered notes, docs, PDFs and chat exports: hybrid retrieval (vector + BM25 fused with RRF), section-level citations with an optional claim-by-claim verification pass, and an Obsidian-style wikilink graph — all local, any OpenAI-compatible API or fully offline via Ollama. pip install loci-rag then run loci-mcp
-  <sub>★ 100 · Python · MIT · pip · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 100 · Python · MIT · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install "loci-rag[pdf,docx]" # optional extras: PDF w/ tables, Word documents`</sub>
 - **[kunwar-shah/claudex](https://github.com/kunwar-shah/claudex)** — Persistent memory and full-text search over Claude Code conversation history indexed into SQLite, with session summaries and a web UI for exploration
   <sub>★ 96 · JavaScript · MIT · npm · pushed 2026-06-20 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @kunwarshah/claudex [https://www.npmjs.com/package/@kunwarshah/claudex]`</sub>
+- **[dat999zx/knowl](https://github.com/dat999zx/knowl)** — Persistent local memory for coding agents that retires replaced facts at write time, so agents read the current answer; facts are typed with provenance
+  <sub>★ 92 · TypeScript · Apache-2.0 · npm · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>`npm install -g @dat999zx/knowl`</sub>
 - **[DomDemetz/claude-soul](https://github.com/DomDemetz/claude-soul)** — Learning engine for Claude Code: extracts signals from sessions, runs periodic reflections and promotes or retires behavioral frameworks based on evidence
   <sub>★ 91 · TypeScript · MIT · npm · pushed 2026-05-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g claude-soul@latest`</sub>
 - **[ragieai/mcp-server](https://github.com/ragieai/ragie-mcp-server)** — Retrieve context from your Ragie knowledge base, connected to sources like Google Drive, Notion and Jira
   <sub>★ 91 · JavaScript · MIT · npx · pushed 2026-02-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @ragieai/mcp-server --partition optional_partition_id`</sub>
-- **[dat999zx/knowl](https://github.com/dat999zx/knowl)** — Persistent local memory for coding agents that retires replaced facts at write time, so agents read the current answer; facts are typed with provenance
-  <sub>★ 89 · TypeScript · Apache-2.0 · npm · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`npm install -g @dat999zx/knowl`</sub>
 - **[arthurpanhku/Arthor-Agent](https://github.com/arthurpanhku/DocSentinel)** — Cybersecurity assessment of documents, questionnaires and reports: multi-format parsing, RAG knowledge base, risks, compliance gaps and remediations
   <sub>★ 88 · Python · MIT · clone · pushed 2026-10-09 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/arthurpanhku/DocSentinel.git`</sub>
@@ -1290,32 +1290,32 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 - **[adelinamart/robrain](https://github.com/adelinamart/robrain)** — Self-hosted decision memory for coding agents: captures architectural decisions and rejected alternatives, and warns before a rejected approach is re-proposed
   <sub>★ 82 · TypeScript · Apache-2.0 · npx · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx robrain@latest up # start Postgres + Perception from ghcr.io`</sub>
+- **[zcag/tela](https://github.com/zcag/tela)** — Self-hostable Markdown team wiki that agents can search, read and write, plus Atlas, which generates a cited wiki from git repos and Jira
+  <sub>★ 81 · Go · AGPL-3.0 · clone · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
+  <sub>`git clone https://github.com/zcag/tela.git`</sub>
 - **[tenequm/pond](https://github.com/tenequm/pond)** — Lossless archive and search for AI agent sessions across clients
-  <sub>★ 81 · Rust · Apache-2.0 · scoop · pushed 2026-10-07 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 81 · Rust · Apache-2.0 · scoop · pushed 2026-10-13 · Win · WSL2 · macOS · Linux</sub>
   <sub>`scoop bucket add tenequm https://github.com/tenequm/scoop-bucket # Windows scoop install tenequm/pond`</sub>
 - **[dodopayments/contextmcp](https://github.com/dodopayments/context-mcp)** — Self-hosted documentation indexer that serves docs from various sources to agents with semantic search
   <sub>★ 80 · TypeScript · Apache-2.0 · npx · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx contextmcp init my-docs-mcp`</sub>
-- **[zcag/tela](https://github.com/zcag/tela)** — Self-hostable Markdown team wiki that agents can search, read and write, plus Atlas, which generates a cited wiki from git repos and Jira
-  <sub>★ 79 · Go · AGPL-3.0 · clone · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
-  <sub>`git clone https://github.com/zcag/tela.git`</sub>
 - **[cdeust/Cortex](https://github.com/cdeust/Cortex)** — Neuroscience-inspired memory for Claude Code on PostgreSQL/pgvector: decay, consolidation, a predictive-coding write gate and lifecycle hooks
-  <sub>★ 73 · Python · MIT · source · pushed 2026-10-10 · Win · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 75 · Python · MIT · source · pushed 2026-10-13 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/cdeust/Cortex.git`</sub>
 - **[kunickiaj/codemem](https://github.com/kunickiaj/codemem)** — Persistent coding memory across sessions, machines and teammates, with memory search, optional sync, project sharing and automatic capture
-  <sub>★ 73 · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 73 · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g codemem`</sub>
 - **[vbcherepanov/total-agent-memory](https://github.com/vbcherepanov/total-agent-memory)** — Local memory for coding agents: temporal knowledge graph with fact invalidation, procedural and episodic memory, AST codebase ingest and cross-project analogy
   <sub>★ 73 · Python · MIT · npx · pushed 2026-10-09 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npx -y total-agent-memory connect claude-code`</sub>
 - **[writerslogic/scrivener-mcp](https://github.com/writerslogic/scrivener-mcp)** — Work with Scrivener 3 writing projects: document management, writing analysis, semantic search, character and plot memory, and content enhancement
-  <sub>★ 67 · TypeScript · AGPL-3.0 · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 67 · TypeScript · AGPL-3.0 · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g scrivener-mcp`</sub>
 - **[Battam1111/Myco](https://github.com/Battam1111/Myco)** — Cross-session, cross-project agent memory built on a self-validating filesystem graph derived from ASTs and Markdown links, not embeddings
   <sub>★ 66 · Rust · MIT · clone · pushed 2026-08-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Battam1111/Myco.git`</sub>
 - **[ccf/agentcairn](https://github.com/ccf/agentcairn)** — Local-first agent memory: a Markdown Obsidian vault as source of truth plus a rebuildable DuckDB index for hybrid BM25, vector and graph recall
-  <sub>★ 65 · Python · Apache-2.0 · npx · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 66 · Python · Apache-2.0 · npx · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ccf/agentcairn --skill agentcairn-setup -g`</sub>
 - **[tomohiro-owada/devrag](https://github.com/tomohiro-owada/devrag)** — Local RAG for semantic vector search over Markdown documents with sqlite-vec and multilingual-e5-small embeddings, filterable by directory and filename
   <sub>★ 64 · Go · source · pushed 2026-04-15 · Win · WSL2? · macOS · Linux</sub>
@@ -1330,7 +1330,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 60 · TypeScript · Apache-2.0 · npm · pushed 2026-10-12 · Win · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g chatcrystal`</sub>
 - **[JinyangWang27/people-context](https://github.com/JinyangWang27/people-context)** — Local-first memory about the people in your life: identity resolution, relationships, facts, interactions, reminders and communication guidance
-  <sub>★ 58 · Python · MIT · uv · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 58 · Python · MIT · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx --from people-context pctx demo --reset`</sub>
 - **[roampal-ai/roampal-core](https://github.com/roampal-ai/roampal-core)** — Outcome-based persistent memory for Claude Code and OpenCode: memories that help get promoted, misleading ones get demoted
   <sub>★ 54 · Python · Apache-2.0 · pip · pushed 2026-09-26 · Win · WSL2? · macOS · Linux</sub>
@@ -1342,10 +1342,10 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 46 · Rust · MIT · npx · pushed 2026-08-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @modelcontextprotocol/inspector -- docker run -i --rm -e PINECONE_API_KEY -e PINECONE_ASSISTANT_HOST pinecone/assistant-mcp`</sub>
 - **[DollhouseMCP/mcp-server](https://github.com/DollhouseMCP/mcp-server)** — Reusable personas, skills, templates, agents and memory for AI clients, with dynamic permissions, versioning and a public collection of shareable content
-  <sub>★ 45 · TypeScript · AGPL-3.0 · npx · pushed 2026-10-11 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 45 · TypeScript · AGPL-3.0 · npx · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx @dollhousemcp/mcp-server@latest --web`</sub>
 - **[contextstream/mcp-server](https://github.com/contextstream/mcp-server)** — Persistent memory for AI coding tools with semantic code search, knowledge graphs, impact analysis and decision tracking
-  <sub>★ 44 · Rust · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 44 · Rust · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @contextstream/mcp-server@latest setup`</sub>
 - **[Abhigyan-Shekhar/Waggle-mcp](https://github.com/Abhigyan-Shekhar/Waggle-mcp)** — Persistent graph memory that extracts facts from conversations into typed nodes with local embeddings, supporting temporal queries and conflict detection
   <sub>★ 44 · Python · Apache-2.0 · pipx · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1357,34 +1357,34 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 43 · Python · Apache-2.0 · pip · pushed 2026-08-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install lean-memory`</sub>
 - **[pallaprolus/mendeley-mcp](https://github.com/pallaprolus/mendeley-mcp)** — Search your Mendeley library, browse folders, get document metadata, search the global catalog and add papers to your collection
-  <sub>★ 42 · Python · MIT · npx · pushed 2026-09-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 42 · Python · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @modelcontextprotocol/inspector mendeley-mcp`</sub>
-- **[max-ramas/rms-memory-mcp](https://github.com/max-ramas/rms-memory-mcp)** — Local-first memory for coding agents: hybrid LanceDB/Tantivy search, Markdown and code indexes, per-project vaults and recall that abstains on low confidence
-  <sub>★ 41 · Rust · MIT · psh · pushed 2026-09-30 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`irm https://raw.githubusercontent.com/max-ramas/rms-memory-mcp/master/scripts/install.ps1 | iex`</sub>
 - **[kage-core/Kage](https://github.com/kage-core/Kage)** — Git-native memory for coding agents: JSON entries in the repo, verified against cited code so hallucinated citations are rejected and stale memory is withheld
   <sub>★ 40 · TypeScript · GPL-3.0 · npx · pushed 2026-08-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @kage-core/kage-graph-mcp install`</sub>
 - **[LamantinAI/kaeru](https://github.com/LamantinAI/kaeru)** — Memory for LLM agents: a local graph where the agent itself keeps decisions, tasks, hypotheses and reasoning between sessions, and gets a summary of what is open and overdue on every return to a project. Single Rust binary with no embedding model or LLM calls inside; one daemon serves several agents at once, with an optional self-hosted cloud for teams. Works with Claude Code, Codex, Cursor, openc
-  <sub>★ 40 · Rust · source · pushed 2026-10-09 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 40 · Rust · source · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/LamantinAI/kaeru.git`</sub>
+- **[max-ramas/rms-memory-mcp](https://github.com/max-ramas/rms-memory-mcp)** — Local-first memory for coding agents: hybrid LanceDB/Tantivy search, Markdown and code indexes, per-project vaults and recall that abstains on low confidence
+  <sub>★ 40 · Rust · MIT · psh · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
+  <sub>`irm https://raw.githubusercontent.com/max-ramas/rms-memory-mcp/master/scripts/install.ps1 | iex`</sub>
 - **[nonatofabio/local-faiss-mcp](https://github.com/nonatofabio/local_faiss_mcp)** — Local FAISS vector database for RAG with document ingestion (PDF, TXT, MD, DOCX), semantic search, re-ranking and CLI tools for indexing and querying
   <sub>★ 36 · Python · MIT · pip · pushed 2026-04-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install local-faiss-mcp`</sub>
 - **[linxule/lotus-wisdom-mcp](https://github.com/linxule/lotus-wisdom-mcp)** — Contemplative problem-solving using the Lotus Sutra's framework: multi-perspective reasoning, skillful means, non-dual recognition and meditation pauses
-  <sub>★ 35 · TypeScript · MIT · source · pushed 2026-10-06 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 35 · TypeScript · MIT · source · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/linxule/lotus-wisdom-mcp.git`</sub>
 - **[markmhendrickson/neotoma](https://github.com/markmhendrickson/neotoma)** — Deterministic state layer for agents: versioned entities like contacts, tasks and decisions with immutable observations and provenance, in local SQLite
-  <sub>★ 34 · HTML · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 34 · HTML · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g neotoma`</sub>
 - **[oomkapwn/enquire-mcp](https://github.com/oomkapwn/enquire-mcp)** — Long-term agent memory backed by a local Obsidian vault: hybrid retrieval with reranking, agentic RAG, wikilink community detection, Obsidian Bases and PDF OCR
-  <sub>★ 34 · TypeScript · MIT · npm · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 34 · TypeScript · MIT · npm · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @oomkapwn/enquire-mcp`</sub>
 - **[Shweta-Mishra-ai/tokenmizer](https://github.com/Shweta-Mishra-ai/tokenmizer)** — Session memory via a local OpenAI-compatible proxy that extracts tasks, decisions and files into a knowledge graph and checkpoints before context overflow
-  <sub>★ 33 · Python · MIT · pip · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 33 · Python · MIT · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install "tokenmizer[anthropic,cache]"`</sub>
 - **[majiayu000/remem](https://github.com/majiayu000/remem)** — Local-first memory for Claude Code and Codex: hooks capture sessions and an LLM distills them into SQLite, with auditable full-text and embedding recall
-  <sub>★ 33 · Rust · MIT · npm · pushed 2026-10-11 · Win? · WSL2? · macOS · Linux</sub>
+  <sub>★ 33 · Rust · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @remem-ai/remem`</sub>
 - **[rps321321/obsidian-mcp-pro](https://github.com/rps321321/obsidian-mcp-pro)** — Obsidian vault access: full-text search, note CRUD, frontmatter queries, tags, backlinks, graph traversal, orphan and broken link detection, and canvas support
   <sub>★ 32 · TypeScript · MIT · npx · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1395,27 +1395,27 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 - **[doobidoo/MCP-Context-Provider](https://github.com/doobidoo/MCP-Context-Provider)** — Static server providing persistent tool-specific context and rules to AI models
   <sub>★ 31 · TypeScript · Apache-2.0 · clone · pushed 2026-09-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://codeberg.org/doobidoo/MCP-Context-Provider.git`</sub>
+- **[IgorGanapolsky/mcp-memory-gateway](https://github.com/IgorGanapolsky/ThumbGate)** — Pre-action gates that prevent coding agents from repeating known mistakes by turning captured feedback and failures into rules enforced via hooks
+  <sub>★ 29 · JavaScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx thumbgate init # Phase 1: hooks only`</sub>
 - **[knaisoma/data-olympus](https://github.com/knaisoma/data-olympus)** — Git-native Markdown knowledge base for coding agents with proposed vs. accepted guidance, validity windows, supersession chains and status-aware retrieval
   <sub>★ 29 · Python · Apache-2.0 · uv · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx --from data-olympus data-olympus --help`</sub>
 - **[nicholasglazer/gnosis-mcp](https://github.com/nicholasglazer/gnosis-mcp)** — Make Markdown documentation searchable: loads it into SQLite or PostgreSQL with keyword search and optional pgvector hybrid semantic search
   <sub>★ 29 · Python · MIT · uv · pushed 2026-09-25 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx gnosis-mcp ingest ./docs/`</sub>
-- **[IgorGanapolsky/mcp-memory-gateway](https://github.com/IgorGanapolsky/ThumbGate)** — Pre-action gates that prevent coding agents from repeating known mistakes by turning captured feedback and failures into rules enforced via hooks
-  <sub>★ 28 · JavaScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx thumbgate init # Phase 1: hooks only`</sub>
 - **[kael-bit/engram-rs](https://github.com/kael-bit/engram-rs)** — Hierarchical agent memory engine with automatic decay, promotion, semantic deduplication and a self-organizing topic tree
   <sub>★ 28 · Rust · MIT · psh · pushed 2026-03-03 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/kael-bit/engram-rs/main/install.ps1 | iex`</sub>
+- **[mnemoverse/mcp-memory-server](https://github.com/mnemoverse/mcp-memory-server)** — Hosted memory that learns and forgets: feedback re-ranks useful memories, recall fades by recency and similar memories consolidate
+  <sub>★ 27 · TypeScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx @mnemoverse/mcp-memory-server`</sub>
 - **[zensation-ai/zenbrain](https://github.com/zensation-ai/zenbrain)** — Seven-layer local agent memory that routes input into facts, episodes or procedures, searches all layers and consolidates repeated episodes into facts
   <sub>★ 27 · TypeScript · Apache-2.0 · clone · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/zensation-ai/zenbrain.git`</sub>
 - **[aliasunder/vault-cortex](https://github.com/aliasunder/vault-cortex)** — Standalone Obsidian vault server: hybrid search, notes and files, memory and tasks; run locally or self-host for remote access
   <sub>★ 26 · TypeScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npx vault-cortex@latest init`</sub>
-- **[mnemoverse/mcp-memory-server](https://github.com/mnemoverse/mcp-memory-server)** — Hosted memory that learns and forgets: feedback re-ranks useful memories, recall fades by recency and similar memories consolidate
-  <sub>★ 26 · TypeScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx @mnemoverse/mcp-memory-server`</sub>
 - **[pomazanbohdan/memory-mcp-1file](https://github.com/pomazanbohdan/memory-mcp-1file)** — Persistent semantic and graph-based agent memory in a single self-contained binary with embedded database and models
   <sub>★ 25 · Rust · MIT · npx · pushed 2026-09-12 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx -y memory-mcp-1file@0.9.2 -- --help`</sub>
@@ -1428,8 +1428,8 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 - **[SaravananJaichandar/world-model-mcp](https://github.com/SaravananJaichandar/world-model-mcp)** — Temporal codebase knowledge graph that links test failures to code changes, learns co-edit patterns, predicts regression risk and enforces edit constraints
   <sub>★ 24 · Python · MIT · pip · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U world-model-mcp`</sub>
-- **[unibaseio/membase-mcp](https://github.com/unibaseio/membase-ai)** — Save and query agent memory in a distributed way with Membase
-  <sub>★ 24 · Python · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+- **[unibaseio/membase-mcp](https://github.com/unibaseio/membase)** — Save and query agent memory in a distributed way with Membase
+  <sub>★ 24 · Python · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @unibaseio/membase-cli # the `membase` command (hosted) without Python`</sub>
 - **[whynowlab/jarvis-orb](https://github.com/TheStack-ai/jarvis-orb)** — Four-tier memory (episodic, semantic, project, procedural) with temporal scoring, contradiction detection, entity tracking and a desktop visualization orb
   <sub>★ 24 · Python · MIT · psh · pushed 2026-04-28 · Win · WSL2? · macOS · Linux?</sub>
@@ -1450,10 +1450,10 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 22 · Python · AGPL-3.0 · npx · pushed 2026-09-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx yggdrasil-memory install`</sub>
 - **[Destrayon/Connapse](https://github.com/Destrayon/Connapse)** — #️⃣ 🏠 🍎 🪟 🐧 - Self-hosted knowledge backend for agents with hybrid vector and keyword search and container-isolated indexes
-  <sub>★ 21 · C# · MIT · clone · pushed 2026-10-12 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 21 · C# · MIT · clone · pushed 2026-10-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/Destrayon/Connapse.git`</sub>
 - **[jagoff/memo](https://github.com/jagoff/memo)** — Local-first semantic memory: hybrid search, Markdown storage, MLX or CPU embeddings, contradiction detection, time-travel history and cross-machine git sync
-  <sub>★ 21 · Python · MIT · uv · pushed 2026-10-12 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 21 · Python · MIT · uv · pushed 2026-10-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`uv tool install mlx-memo`</sub>
 - **[dengls24/annota](https://github.com/dengls24/annota)** — Annotate papers in Zotero: highlight key findings with semantic color coding, explain formulas and write structured reading notes
   <sub>★ 20 · Python · MIT · clone · pushed 2026-04-17 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1462,16 +1462,16 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 20 · TypeScript · MIT · npm · pushed 2026-08-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g mcp-me`</sub>
 - **[dshakes/distil](https://github.com/dshakes/distil)** — Reversibly compress large tool outputs into recoverable handles, expand them on demand and track token and cost savings locally
-  <sub>★ 19 · Python · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 19 · Python · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx distil-llm wrap -- <agent>`</sub>
 - **[GetCacheOverflow/CacheOverflow](https://github.com/GetCacheOverflow/CacheOverflow)** — Knowledge marketplace where agents search, publish and unlock previously solved problems, earning tokens for shared solutions
   <sub>★ 19 · TypeScript · MIT · source · pushed 2026-02-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/GetCacheOverflow/CacheOverflow.git`</sub>
 - **[hjqcan/GoodMemory](https://github.com/hjqcan/GoodMemory)** — Local-first, auditable memory with scoped user/project storage in SQLite or Postgres, read-only recall by default and opt-in reviewed writeback
-  <sub>★ 19 · TypeScript · MIT · npm · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 19 · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g goodmemory@0.8.3`</sub>
 - **[olgasafonova/mediawiki-mcp-server](https://github.com/olgasafonova/mediawiki-mcp-server)** — Connect to any MediaWiki wiki (Wikipedia, Fandom, corporate wikis) to search, read and edit pages, analyze links, view revision history and convert to Markdown
-  <sub>★ 19 · Go · MIT · source · pushed 2026-10-11 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 19 · Go · MIT · source · pushed 2026-10-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/olgasafonova/mediawiki-mcp-server.git`</sub>
 - **[smith-and-web/obsidian-mcp-server](https://github.com/smith-and-web/obsidian-mcp-server)** — Remote Obsidian vault management over SSE: notes, directories, frontmatter, tags, search and link operations, deployable with Docker
   <sub>★ 19 · TypeScript · MIT · clone · pushed 2026-09-07 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -1534,13 +1534,13 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 15 · Python · MIT · pipx · pushed 2026-08-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install git+https://github.com/grooverLab/fable`</sub>
 - **[Krzysztof318/MailFathom](https://github.com/fathomise/MailFathom)** — #️⃣ 🏠 🐧 - Self-hosted email search: syncs IMAP mailboxes into PostgreSQL to list, search and read mail and ask cited questions across the archive
-  <sub>★ 15 · C# · AGPL-3.0 · clone · pushed 2026-10-12 · Win · WSL2? · Linux · Docker</sub>
+  <sub>★ 15 · C# · AGPL-3.0 · clone · pushed 2026-10-13 · Win · WSL2? · Linux · Docker</sub>
   <sub>`git clone https://github.com/fathomise/MailFathom.git`</sub>
 - **[michielinksee/linksee-memory](https://github.com/michielinksee/linksee-memory)** — Local-first cross-agent memory in one SQLite file with a layered structure, Ebbinghaus-style forgetting and detection of code drifting from past decisions
   <sub>★ 15 · TypeScript · MIT · npx · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y linksee-memory map where README.md # this file belongs to the README node — and what it touches`</sub>
 - **[TyKolt/kremis](https://github.com/TyKolt/kremis)** — Local deterministic knowledge graph on redb with no LLM or embedding calls, BLAKE3 state hashing and canonical export for byte-identical audits
-  <sub>★ 15 · Rust · Apache-2.0 · docker · pushed 2026-10-11 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 15 · Rust · Apache-2.0 · docker · pushed 2026-10-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`docker run -i --rm kremis`</sub>
 - **[vornicx/Midas](https://github.com/vornicx/Midas)** — Local-first long-horizon agent memory: source-traceable recall, belief revision, selective forgetting and a guard against memory-driven destructive actions
   <sub>★ 15 · Python · MIT · npx · pushed 2026-07-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1555,7 +1555,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 14 · TypeScript · MIT · npm · pushed 2026-05-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g deep-thinker`</sub>
 - **[bluzername/lennys-quotes](https://github.com/bluzername/lennys-quotes)** — Search Lenny's Podcast transcripts with YouTube timestamps for product management insights on PRDs, strategy and PM careers
-  <sub>★ 13 · TypeScript · npm · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 13 · TypeScript · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g lennys-podcast-wisdom`</sub>
 - **[mattjoyce/mcp-persona-sessions](https://github.com/mattjoyce/mcp-persona-sessions)** — Structured, persona-driven sessions for interview preparation, personal reflection and coaching, with timers and performance evaluation
   <sub>★ 13 · Python · GPL-3.0 · clone · pushed 2026-03-02 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1576,7 +1576,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 12 · JavaScript · MIT · source · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/yonro/memory-os-cli.git`</sub>
 - **[n24q02m/mnemo-mcp](https://github.com/n24q02m/mnemo)** — Persistent memory with SQLite hybrid search (FTS5 and semantic), built-in Qwen3 embeddings and rclone sync across machines
-  <sub>★ 12 · Python · Apache-2.0 · uv · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 12 · Python · Apache-2.0 · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx --from mnemo-mcp mnemo-mcp # serves http://127.0.0.1:8000/mcp by default`</sub>
 - **[STiFLeR7/memex](https://github.com/STiFLeR7/memex)** — Watches git repos and builds a temporal knowledge graph of modules, symbols, decisions and open problems via Graphiti and Neo4j, served to AI coding agents
   <sub>★ 12 · Python · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -1585,13 +1585,13 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 11 · TypeScript · MIT · npm · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @cstart/coldstart`</sub>
 - **[mlorentedev/hive](https://github.com/mlorentedev/hive)** — On-demand Obsidian vault access: adaptive context loading, full-text and ranked search, health checks, auto git commits and delegation to cheaper models
-  <sub>★ 11 · Python · MIT · uv · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 11 · Python · MIT · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install --upgrade hive-vault # >= 1.32.0`</sub>
 - **[TeamSafeAI/LIFE](https://github.com/TeamSafeAI/LIFE)** — Persistent identity for AI agents: servers for drives, relationships, semantic memory with decay, working threads, learned patterns, journaling and forecasting
   <sub>★ 11 · Python · MIT · source · pushed 2026-02-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/TeamSafeAI/LIFE.git`</sub>
 - **[dahshanlabs/klypix-mcp](https://github.com/dahshanlabs/klypix-mcp)** — Versioned project brain for coding agents, committed with the repo: decisions, corrections, evidence anchors that flag code drift and file-overlap warnings
-  <sub>★ 10 · JavaScript · Apache-2.0 · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 10 · JavaScript · Apache-2.0 · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx klypix-mcp install`</sub>
 - **[lockstep-team-agent/lockstep](https://github.com/lockstep-team-agent/lockstep)** — Shared decision memory for teams using AI coding agents: captures engineering decisions, ranks them by blast radius and briefs agents before they act
   <sub>★ 10 · TypeScript · Apache-2.0 · npx · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -1600,7 +1600,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 10 · Python · Apache-2.0 · pip · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install "genome-memory[mcp]"`</sub>
 - **[billy12151/memory-arbiter-mcp](https://github.com/billy12151/memory-arbiter-mcp)** — Local memory middleware: targeted retrieval instead of full-memory loading, rule-based conflict arbitration and one SQLite store shared across coding agents
-  <sub>★ 10 · Python · Apache-2.0 · pip · pushed 2026-10-11 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 10 · Python · Apache-2.0 · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install "memory-arbiter-mcp[vec,semantic-local]" # core + sqlite-vec + local GGUF runtime`</sub>
 - **[michael-denyer/memory-mcp](https://github.com/michael-denyer/memory-mcp)** — Two-tier memory (hot cache and cold semantic search) that promotes frequently used patterns, extracts knowledge from Claude outputs and links it in a graph
   <sub>★ 10 · Python · MIT · uv · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1639,7 +1639,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 9 · Python · AGPL-3.0 · uv · pushed 2026-09-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install hypermnesic`</sub>
 - **[The-40-Thieves/obsidian-tc](https://github.com/The-40-Thieves/obsidian-tc)** — Obsidian vault access with role-based access control, native search, multi-vault support, pluggable embeddings and SLSA provenance
-  <sub>★ 9 · TypeScript · AGPL-3.0 · npm · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 9 · TypeScript · AGPL-3.0 · npm · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g obsidian-tc`</sub>
 - **[liza-studio/skillmem](https://github.com/liza-studio/skillmem)** — Self-improving skill memory for coding agents: useful skills are reinforced, unused ones fade; local English/Russian hybrid search, tamper-evident history
   <sub>★ 9 · Python · Apache-2.0 · pip · pushed 2026-09-28 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -1651,7 +1651,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 8 · Python · MIT · pip · pushed 2026-02-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install openclaw-memory`</sub>
 - **[DanceNitra/inspeximus](https://github.com/DanceNitra/inspeximus)** — Agent memory with a correction channel: supersede or revert stale facts, block restated old values, and prove deletions with signed tombstones
-  <sub>★ 8 · Python · MIT · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 8 · Python · MIT · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install "inspeximus[crypto]"`</sub>
 - **[memstate-ai/memstate-mcp](https://github.com/memstate-ai/memstate-mcp)** — Versioned, structured agent memory storing facts as keypaths with full version history and automatic conflict detection
   <sub>★ 8 · TypeScript · Apache-2.0 · source · pushed 2026-04-01 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1666,7 +1666,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 7 · Python · MIT · clone · pushed 2026-02-17 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/ErebusEnigma/context-memory.git`</sub>
 - **[hifriendbot/cogmemai-mcp](https://github.com/hifriendbot/cogmemai-mcp)** — Cloud-based persistent memory for Claude Code with semantic search, AI extraction and project scoping
-  <sub>★ 7 · TypeScript · MIT · npx · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 7 · TypeScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx cogmemai-mcp setup`</sub>
 - **[krimto-labs/krimto](https://github.com/krimto-labs/krimto)** — Team memory for coding agents stored as Markdown in git, with user, team and org access levels and hybrid SQLite/sqlite-vec retrieval
   <sub>★ 7 · TypeScript · Apache-2.0 · npx · pushed 2026-06-02 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -1675,7 +1675,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 7 · TypeScript · MIT · npm · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g passbaton # installs the new package`</sub>
 - **[pipeshub-ai/mcp-server](https://github.com/pipeshub-ai/mcp-server)** — Permission-aware enterprise search and RAG over business apps such as Google Workspace, Microsoft 365, Slack and Jira
-  <sub>★ 7 · TypeScript · Apache-2.0 · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 7 · TypeScript · Apache-2.0 · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @modelcontextprotocol/inspector node ./bin/mcp-server.js start --server-url PIPESHUB_INSTANCE_URL --bearer-auth YOUR_BEARER_TOKEN`</sub>
 - **[zzhang82/Agent-Memory-Bridge](https://github.com/zzhang82/Agent-Memory-Bridge)** — Local-first memory for coding agents that turns coding sessions into reusable engineering memory: decisions, gotchas and domain knowledge
   <sub>★ 7 · Python · MIT · npx · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1687,7 +1687,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 6 · TypeScript · MIT · pip · pushed 2026-08-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agenthelm-sdk`</sub>
 - **[0spoon/seamless](https://github.com/arctop/seamless)** — Local-first shared memory and task coordination for AI coding agents, stored as Markdown files
-  <sub>★ 6 · Go · MIT · psh · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 6 · Go · MIT · psh · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://thereisnospoon.org/install.ps1 | iex`</sub>
 - **[afairai/afair](https://github.com/afairai/afair)** — Self-organizing, self-hostable, encrypted memory for AI tools, with background entity extraction, conflict resolution, consolidation and decay
   <sub>★ 6 · Python · AGPL-3.0 · source · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1792,16 +1792,16 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 4 · Python · pip · pushed 2026-01-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install tilde-ai`</sub>
 - **[SVerITG/Metis](https://github.com/SVerITG/Metis)** — Private local research second brain: project-aware memory, cited answers from your library, linked notes and meetings, daily briefs and a meeting assistant
-  <sub>★ 4 · Python · AGPL-3.0 · clone · pushed 2026-10-07 · Win · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 4 · Python · AGPL-3.0 · clone · pushed 2026-10-13 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/SVerITG/Metis.git`</sub>
 - **[Magnemo-AI/magnemo](https://github.com/Magnemo-AI/magnemo)** — Governed local agent memory in plain files: each entry records who wrote it, when and through which gate, and nothing is kept without user approval
-  <sub>★ 3 · Python · Apache-2.0 · uv · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3 · Python · Apache-2.0 · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx magnemo-mcp`</sub>
 - **[fish827-08/rag-kb](https://github.com/fish827-08/rag-kb)** — Local-first agent memory and knowledge base: hybrid dense and BM25 retrieval, document and webpage ingestion and optional RAG answers via local Ollama
   <sub>★ 3 · Python · Apache-2.0 · source · pushed 2026-09-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/fish827-08/rag-kb.git`</sub>
 - **[LiLara-AI/shadowgraph](https://github.com/LiLara-AI/shadowgraph)** — Local-first decision memory for AI agents: stores choices, rejected alternatives and reasons, failed attempts, outcomes, provenance and review conditions
-  <sub>★ 3 · JavaScript · MIT · npm · pushed 2026-10-11 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 3 · JavaScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npm install --global github:LiLara-AI/shadowgraph`</sub>
 - **[gpitrella/memxus-remote-mcp](https://github.com/gpitrella/memxus-remote-mcp)** — Shared context for dev teams: syncs GitHub, Notion and saved decisions into reusable project context that agents load at the start of each session
   <sub>★ 3 · TypeScript · AGPL-3.0 · source · pushed 2026-07-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1816,7 +1816,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 3 · Kotlin · pip · pushed 2026-08-14 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pip install nocturnusai # Python`</sub>
 - **[gordonkjlee/facthouse](https://github.com/gordonkjlee/facthouse)** — Local memory engine for AI tools, stored in a SQLite file you own
-  <sub>★ 3 · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 3 · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npm install -g @facthouse/mcp@0.31.0`</sub>
 - **[AlekseiMarchenko/central-intelligence](https://github.com/AlekseiMarchenko/central-intelligence)** — Persistent agent memory to remember, recall, forget and share, with semantic vector search and agent, user and org scoping
   <sub>★ 3 · TypeScript · Apache-2.0 · npm · pushed 2026-05-08 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -1870,7 +1870,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · Python · Apache-2.0 · source · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/a2cr/a2cr.git`</sub>
 - **[thomasjumper/agentbay](https://github.com/thomasjumper/agentbay)** — StremAI shared memory for coding agents across sessions, machines and tools, with per-agent attribution, provenance, verification status and export
-  <sub>★ 2 · MIT · pip · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · MIT · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install stremai`</sub>
 - **[AshutoshRaj97/agentready-mcp](https://github.com/AshutoshRaj97/agentready-mcp)** — Index any website and ask questions about it, with cited answers grounded in its content via RAG
   <sub>★ 2 · JavaScript · npx · pushed 2026-08-15 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1888,7 +1888,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · TypeScript · MIT · clone · pushed 2026-06-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/baodq06/memocall.git`</sub>
 - **[cachly-dev/cachly-mcp](https://github.com/cachly-dev/cachly-mcp)** — Persistent memory for coding assistants: session briefings on lessons and open tasks, shared team memory, BM25 search and managed Valkey/Redis
-  <sub>★ 2 · TypeScript · Apache-2.0 · npx · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · TypeScript · Apache-2.0 · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @cachly-dev/mcp-server@latest claim`</sub>
 - **[ChevalGrand520/local-gpu-imagegen](https://github.com/ChevalGrand520/local-gpu-imagegen)** — Confirmation-gated local GPU image generation with ComfyUI: SHA-256 model identity, explicit license approval, evidence retention and human-in-the-loop runs
   <sub>★ 2 · Python · MIT · uv · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1978,7 +1978,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y agentdocs-mcp@latest # or: npm cache clean --force`</sub>
 - **[JAAvila-Of/vivac](https://github.com/JAAvila-Of/vivac)** — A provenance tree for coding agents: every node records the node it was born from, so the agent can ask why the work is where it is. A session brief with the standing decisions and what not to touch, a close that refuses over open work, and decisions kept with the alternatives they rejected. Local JSON-lines file, no telemetry
-  <sub>★ 1 · Rust · Apache-2.0 · cargo · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1 · Rust · Apache-2.0 · cargo · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`cargo install vivac`</sub>
 - **[jaimenbell/rag-mcp](https://github.com/jaimenbell/rag-mcp)** — Minimal local RAG that vector-searches a document corpus and returns cited passages
   <sub>★ 1 · Python · MIT · pip · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2004,7 +2004,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 - **[AgentBase1/mcp-server](https://github.com/AgentBase1/mcp-server)** — AgentBase: an open registry of agent instruction files. Search and retrieve system prompts, skills, workflows, domain packs and safety filters
   <sub>★ 1 · JavaScript · MIT · source · pushed 2026-03-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/AgentBase1/mcp-server.git`</sub>
-- **[pathrule/mcp](https://github.com/pathrule/mcp)** — Path-scoped team memories, rules and skills for coding agents from Pathrule workspaces
+- **[pathrule/mcp](https://github.com/pathruleio/mcp)** — Path-scoped team memories, rules and skills for coding agents from Pathrule workspaces
   <sub>★ 1 · JavaScript · MIT · source · pushed 2026-10-04 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/pathrule/mcp.git`</sub>
 - **[Rarefied-Earth/groundwork](https://github.com/Rarefied-Earth/groundwork)** — Company state for operating small businesses: brand, voice, charter, priorities, modules and skills
@@ -2052,7 +2052,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>JavaScript · MIT · npx · pushed 2026-07-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @aistoragedepot/mcp pull --token=aisd_your_token --to=all`</sub>
 - **[lbailey94/whitemagic](https://github.com/lbailey94/whitemagic)** — Local-first durable memory and session continuity for AI agents, with a hash-chained audit ledger and backup, export and import across devices
-  <sub>Rust · MIT · npx · pushed 2026-10-12 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>Rust · MIT · npx · pushed 2026-10-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx whitemagic-mcp serve # npm (no global install)`</sub>
 - **[lumayapartners/memini](https://github.com/lumayapartners/memini)** — Local-first project memory and guardrails for coding agents: records failed attempts, fragile files and decisions per repo and warns before repeated mistakes
   <sub>TypeScript · MIT · npx · pushed 2026-07-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2075,7 +2075,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>TypeScript · MIT · clone · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kskurtveit/echocache`</sub>
 - **[lildaddyo/braintube-mcp](https://github.com/lildaddyo/braintube-mcp)** — Compiles saved YouTube videos, podcasts, articles, PDFs and Notion/Obsidian notes into a persistent, semantically searchable knowledge base
-  <sub>TypeScript · source · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>TypeScript · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/lildaddyo/braintube-mcp.git`</sub>
 - **[contextium-io/contextium-mcp-server](https://github.com/contextium-io/contextium-mcp-server)** — Shared team context for AI tools: serves versioned, permissioned knowledge, coding standards, skills and agents, loading whole workflows in one call
   <sub>Dockerfile · MIT · npx · pushed 2026-07-10 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2090,7 +2090,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>Python · MIT · pip · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install khwan-mcp # or: uvx khwan-mcp`</sub>
 - **[modelcontextprotocol/server-memory](https://github.com/modelcontextprotocol/servers/tree/main/src/memory)** — Knowledge graph-based persistent memory for maintaining context
-  <sub>JavaScript · in-repo · pushed 2026-10-12</sub>
+  <sub>JavaScript · in-repo · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/modelcontextprotocol/servers.git && cd servers/src/memory`</sub>
 - **[paultaki/ailooplibrary-mcp](https://github.com/paultaki/ailooplibrary-mcp)** — Read-only AI Loop Library catalog of bounded agent work loops: pick one for a goal and render a run protocol with verification, stop conditions and budgets
   <sub>Python · MIT · source · pushed 2026-10-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2105,10 +2105,10 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>JavaScript · Apache-2.0 · npx · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y knowmind login --token kmt_xxxxxxxx`</sub>
 - **[setheerwagen/mcp-modelmanager](https://github.com/setheerwagen/local-ai-mcp-servers/tree/main/mcp-modelmanager)** — Manage a local model machine: pull and remove Ollama models, switch the inference service between models and run LoRA fine-tuning jobs
-  <sub>Python · MIT · in-repo · pushed 2026-09-08</sub>
+  <sub>Python · MIT · in-repo · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/setheerwagen/local-ai-mcp-servers.git && cd local-ai-mcp-servers/mcp-modelmanager`</sub>
 - **[topoteretes/cognee](https://github.com/topoteretes/cognee/tree/dev/cognee-mcp)** — Memory manager for AI apps and agents using graph and vector stores, with ingestion from many data sources
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-12</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/topoteretes/cognee.git && cd cognee/cognee-mcp`</sub>
 - **[yuelinghuashu/story-cli](https://github.com/yuelinghuashu/story-cli)** — Git-native Markdown content CLI: search, read, write and govern story, paper and note repos, generate READMEs, export EPUB and prepare training data
   <sub>TypeScript · MIT · npm · pushed 2026-08-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2126,31 +2126,31 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 ## Research
 
 - **[mnemox-ai/idea-reality-mcp](https://github.com/mnemox-ai/idea-reality-mcp)** — Check for existing competition before building: scan GitHub, Hacker News, npm, PyPI and Product Hunt for similar projects, duplicate likelihood and pivot hints
-  <sub>★ 822 · Python · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 823 · Python · MIT · npx · pushed 2026-09-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli install idea-reality-mcp --client claude`</sub>
 - **[yusong652/pfc-mcp](https://github.com/yusong652/itasca-mcp)** — ITASCA PFC discrete element simulation: browse documentation, execute scripts, capture plots and manage long-running tasks via a bridge to the PFC GUI
-  <sub>★ 213 · Python · MIT · source · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 214 · Python · MIT · source · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/yusong652/pfc-mcp.git`</sub>
 - **[pminervini/deep-research-mcp](https://github.com/pminervini/deep-research-mcp)** — Deep research via the OpenAI Responses API or Open Deep Research (smolagents), with web search and code interpreter support
   <sub>★ 115 · Python · MIT · uv · pushed 2026-09-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx --from "git+https://github.com/pminervini/deep-research-mcp.git@main" \`</sub>
 - **[Battam1111/omniseek](https://github.com/Battam1111/omniseek)** — Self-hosted perception server: local bilingual ASR, vision, cross-lingual search, credentialed login-walled sources and a persistent relation graph
-  <sub>★ 92 · Python · Apache-2.0 · uv · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 93 · Python · Apache-2.0 · uv · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install omniseek`</sub>
 - **[patsnap/patent-literature-search-mcp](https://github.com/patsnap/patent-literature-search-mcp)** — Natural-language patent and scientific literature search via Patsnap: semantic and BM25 search, structured filters and record retrieval
-  <sub>★ 83 · JavaScript · Apache-2.0 · source · pushed 2026-08-06 · WSL2 · Linux · Docker</sub>
+  <sub>★ 82 · JavaScript · Apache-2.0 · source · pushed 2026-08-06 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/patsnap/patent-literature-search-mcp.git`</sub>
 - **[WenyuChiou/research-hub](https://github.com/WenyuChiou/research-hub)** — Research workspace for Zotero, Obsidian and NotebookLM: search arXiv, Semantic Scholar, PubMed and Crossref, ingest into Zotero, sync notes and verify briefs
-  <sub>★ 64 · Python · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 64 · Python · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/WenyuChiou/research-hub.git`</sub>
 - **[oscardvs/zoteus](https://github.com/oscardvs/zoteus)** — Zotero integration: hybrid search, PDF passages with page locators, CSL bibliographies, add by DOI, group libraries and writes including PDF annotations
-  <sub>★ 57 · TypeScript · MIT · npx · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 58 · TypeScript · MIT · npx · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx add-mcp @oscardvs/zoteus`</sub>
 - **[amos689/paper-preflight](https://github.com/amos689/paper-preflight)** — Checks every reference of a LaTeX paper against Crossref, dblp, arXiv, DataCite, PubMed and OpenAlex records: whether each cited work exists, matches its metadata and was not retracted, with no LLM in the verdict
-  <sub>★ 53 · Python · MIT · npx · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 57 · Python · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add amos689/paper-preflight`</sub>
 - **[smaniches/semantic-scholar-mcp](https://github.com/smaniches/semantic-scholar-mcp)** — Semantic Scholar academic papers: search, paper and author retrieval, citation-graph traversal and recommendations
-  <sub>★ 23 · Python · MIT · docker · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 23 · Python · MIT · docker · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`docker run -e SEMANTIC_SCHOLAR_API_KEY=your-key ghcr.io/smaniches/semantic-scholar-mcp`</sub>
 - **[BrowseAI-HQ/BrowserAI-Dev](https://github.com/LastSearch-HQ/lastsearch)** — Evidence-backed web research: real-time search with cited claims, confidence scores and a mode comparing raw LLM answers with evidence-backed ones
   <sub>★ 20 · TypeScript · Apache-2.0 · npx · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2162,7 +2162,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 15 · Python · MIT · source · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/yusong652/yade-mcp.git`</sub>
 - **[Scormave/gramps-web-mcp](https://github.com/Scormave/gramps-web-mcp)** — #️⃣ 🏠 🍎 🪟 🐧 - Gramps Web genealogy: search and edit family tree records, explore ancestors, descendants, relationships and timelines, and read media with privacy-aware previews. Includes a read-only mode and Claude Desktop bundles
-  <sub>★ 13 · C# · AGPL-3.0 · source · pushed 2026-10-08 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 14 · C# · AGPL-3.0 · source · pushed 2026-10-08 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/Scormave/gramps-web-mcp.git`</sub>
 - **[dhamma-seeker/tripitaka-mcp](https://github.com/dhamma-seeker/tripitaka-mcp)** — Search, cite and compare the Pāli Canon (Tipiṭaka): hybrid search, full suttas with cross-references, aligned translations and Pāli dictionary lookup
   <sub>★ 12 · Python · pipx · pushed 2026-10-03 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -2186,7 +2186,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 8 · TypeScript · MIT · source · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/dvdsosa/zotero-native-mcp.git`</sub>
 - **[vassiliylakhonin/agenda-intelligence-md](https://github.com/vassiliylakhonin/agenda-intelligence-md)** — Auditable strategic-risk memos (sanctions, regulation, geopolitics, trade) with Central Asia and Gulf regional specialists and per-claim evidence; no live data
-  <sub>★ 8 · JavaScript · MIT · gh-action · pushed 2026-10-12</sub>
+  <sub>★ 8 · JavaScript · MIT · gh-action · pushed 2026-10-13</sub>
   <sub>`uses: vassiliylakhonin/agenda-intelligence-md@main # in .github/workflows/*.yml`</sub>
 - **[michaelellis003/paperboy](https://github.com/michaelellis003/paperboy)** — Send research papers to Kindle or Kobo: search arXiv and OpenAlex, find related work, queue papers in Zotero and deliver PDFs via email or Dropbox
   <sub>★ 7 · Python · MIT · source · pushed 2026-07-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2204,7 +2204,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 5 · Python · MIT · uv · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx ph-civic-data-mcp`</sub>
 - **[musharna/data-aggregator-mcp](https://github.com/musharna/data-aggregator-mcp)** — Search and fetch research datasets across Zenodo, DataCite, NCBI and PubMed/OpenAIRE, with DOI deduplication, paper-to-data linking and verified downloads
-  <sub>★ 4 · Python · MIT · uv · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4 · Python · MIT · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx data-aggregator-mcp`</sub>
 - **[thinkchainai/agentinterviews_mcp](https://github.com/thinkchainai/agentinterviews_mcp)** — Run AI-led qualitative research interviews and surveys with Agent Interviews: create interviewers, manage projects, recruit participants and analyze results
   <sub>★ 4 · source · pushed 2025-05-26</sub>
@@ -2213,7 +2213,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 3 · Go · MIT · clone · pushed 2026-06-19 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/tushariitr-19/immigration-mcp`</sub>
 - **[lizhuojunx86/chinese-history-mcp](https://github.com/lizhuojunx86/chinese-history-mcp)** — Query classical Chinese texts from pre-Qin to Wei-Jin (Shiji, Zuozhuan, Analects and more) by event, person, place or virtue, with cited passages
-  <sub>★ 3 · Python · MIT · uv · pushed 2026-08-03 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3 · Python · MIT · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx chinese-history-mcp --db /path/to/corpus.db`</sub>
 - **[OrgMentem/zotio](https://github.com/OrgMentem/zotio)** — Zotero integration with preview-first, journaled writes: reads via the local Zotero desktop API without a key, writes via the Web API
   <sub>★ 3 · Go · MIT · winget · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
@@ -2234,10 +2234,10 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · Python · pip · pushed 2026-06-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install fittin-mcp`</sub>
 - **[SidneyBissoli/uis-mcp-server](https://github.com/SidneyBissoli/uis-mcp-server)** — UNESCO Institute for Statistics indicators on education, science, culture and communication by country, region and year, with provenance on every response
-  <sub>★ 1 · TypeScript · MIT · clone · pushed 2026-10-11 · WSL2 · Linux · Docker</sub>
+  <sub>★ 1 · TypeScript · MIT · clone · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/SidneyBissoli/uis-mcp-server`</sub>
 - **[smeet666/mcp-archiveorg](https://github.com/smeet666/mcp-archiveorg)** — Full-text search inside the Internet Archive's scanned books, periodicals and documents, catalogue search, and Wayback Machine captures of a URL by date
-  <sub>★ 1 · TypeScript · MIT · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>★ 1 · TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-archiveorg.git`</sub>
 - **[wedo911/citeguard](https://github.com/wedo911/citeguard)** — Check citations against Crossref for retractions, corrections or expressions of concern before they go into a paper, summary or review
   <sub>★ 1 · Python · MIT · pip · pushed 2026-08-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2249,7 +2249,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · TypeScript · MIT · source · pushed 2026-05-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/SelfPy/science-ai-mcp-server.git`</sub>
 - **[laszlopere/mcp-molecules](https://github.com/laszlopere/mcp-molecules)** — Chemistry tools from NIST data: molar mass with uncertainties, isotope-distribution mass spectra and name-formula lookup, offline or with online fallback
-  <sub>★ 1 · Python · GPL-3.0 · uv · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1 · Python · GPL-3.0 · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install mcp-molecules`</sub>
 - **[Agnuxo1/benchclaw-integrations](https://github.com/Agnuxo1/benchclaw-integrations/tree/main/mcp-server)** — Register LLMs and agents and submit Markdown research papers to the BenchClaw leaderboard, where a panel of judges scores them with deception detectors
   <sub>Python · Apache-2.0 · in-repo · pushed 2026-04-25</sub>
@@ -2264,7 +2264,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>HTML · MIT · npx · pushed 2026-08-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y uap-pulse --http`</sub>
 - **[Embassy-of-the-Free-Mind/sourcelibrary-v2](https://github.com/Embassy-of-the-Free-Mind/sourcelibrary-v2/tree/main/mcp-server)** — Search and cite rare historical texts (alchemy, Hermeticism, Renaissance philosophy) from Source Library with DOI-backed citations
-  <sub>TypeScript · AGPL-3.0 · in-repo · pushed 2026-10-12</sub>
+  <sub>TypeScript · AGPL-3.0 · in-repo · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/Embassy-of-the-Free-Mind/sourcelibrary-v2.git && cd sourcelibrary-v2/mcp-server`</sub>
 - **[Guitarmaniac24/getabrain-mcp-server](https://github.com/Guitarmaniac24/getabrain-mcp-server)** — Ask paid human workers questions via GetABrain and get schema-validated JSON answers: yes/no, ratings, rankings, A/B tests, sentiment, media review and capture
   <sub>TypeScript · MIT · source · pushed 2026-09-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2288,16 +2288,16 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>Python · MIT · uv · pushed 2026-08-26 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx tube-bridge`</sub>
 - **[smeet666/mcp-libraryofcongress](https://github.com/smeet666/mcp-libraryofcongress)** — Full-text search of the Library of Congress's digitised American newspapers, plus catalogue search by media type and curated collections
-  <sub>TypeScript · MIT · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-libraryofcongress.git`</sub>
 - **[smeet666/mcp-databnf](https://github.com/smeet666/mcp-databnf)** — Search the open catalogue of the Bibliothèque nationale de France for authors, their works and the editions held
-  <sub>TypeScript · MIT · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-databnf.git`</sub>
 
 ## File Systems
 
 - **[mark3labs/mcp-filesystem-server](https://github.com/mark3labs/mcp-filesystem-server)** — Local file system access
-  <sub>★ 695 · Go · MIT · go · pushed 2025-11-24 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 694 · Go · MIT · go · pushed 2025-11-24 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`go install github.com/mark3labs/mcp-filesystem-server@latest`</sub>
 - **[mamertofabian/mcp-everything-search](https://github.com/mamertofabian/mcp-everything-search)** — Windows file search using the Everything SDK
   <sub>★ 365 · Python · MIT · npx · pushed 2025-10-20 · Win · WSL2? · macOS · Linux</sub>
@@ -2321,7 +2321,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 35 · Python · Apache-2.0 · pip · pushed 2025-04-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install mcp-server-opendal`</sub>
 - **[ltspace/dowse](https://github.com/ltspace/dowse)** — Read-only full-disk search on Windows over file names, document contents and OCR'd screenshot text
-  <sub>★ 33 · Rust · Apache-2.0 · cargo · pushed 2026-10-12 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 34 · Rust · Apache-2.0 · cargo · pushed 2026-10-12 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`cargo install dowse # once published to crates.io`</sub>
 - **[jeannier/homebrew-mcp](https://github.com/jeannier/homebrew-mcp)** — Manage macOS Homebrew packages with natural language, get suggestions and troubleshoot brew issues
   <sub>★ 30 · Python · MIT · clone · pushed 2025-06-23 · WSL2 · macOS? · Linux</sub>
@@ -2336,16 +2336,16 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 24 · Rust · npx · pushed 2026-03-07 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx skills add ckanthony/Chisel`</sub>
 - **[j0hanz/filesystem-context-mcp-server](https://github.com/j0hanz/filesystem-mcp)** — Read-only filesystem exploration, search and analysis with symlink protection
-  <sub>★ 24 · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 24 · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @j0hanz/filesystem-mcp`</sub>
 - **[colapsis/transfa](https://github.com/colapsis/transfa)** — Ephemeral file transfer for agents and CI/CD pipelines: upload a file and get a SHA-256-verified, expiring link, then list or delete uploads
-  <sub>★ 20 · JavaScript · MIT · npm · pushed 2026-05-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 21 · JavaScript · MIT · npm · pushed 2026-05-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g transfa`</sub>
 - **[willianpinho/large-file-mcp](https://github.com/willianpinho/large-file-mcp)** — Large-file handling with chunking, navigation, streaming, regex search and LRU caching
   <sub>★ 18 · TypeScript · MIT · npm · pushed 2026-08-04 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @willianpinho/large-file-mcp`</sub>
 - **[Cohexa-ai/agent-coherence](https://github.com/cohexa-ai/agent-coherence)** — Coherence guard for shared files: when two agents write the same file, the stale writer is denied instead of overwriting, then reacquires and retries
-  <sub>★ 11 · Python · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 11 · Python · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install "agent-coherence[langgraph]" # LangGraph drop-in`</sub>
 - **[drolosoft/go-docs-mcp](https://github.com/drolosoft/go-docs-mcp)** — Read, search, OCR and extract from PDF, TXT, Markdown, DOCX, CSV and image files, with caching and directory confinement
   <sub>★ 11 · Go · MIT · go · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2357,7 +2357,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 8 · Python · source · pushed 2026-01-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/MarceauSolutions/md-to-pdf-mcp.git`</sub>
 - **[aadilr/changethisfile-mcp](https://github.com/aadilr/changethisfile-mcp)** — File conversion across image, video, audio, document, data, font, ebook and archive formats, returning a signed download URL
-  <sub>★ 6 · JavaScript · MIT · npx · pushed 2026-08-24 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 6 · JavaScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add aadilr/changethisfile-mcp`</sub>
 - **[box/mcp-server-box-remote](https://github.com/box/mcp-server-box-remote/)** — Access Box content: search, ask questions about files and folders, and extract data
   <sub>★ 6 · MIT · source · pushed 2025-09-20</sub>
@@ -2414,25 +2414,25 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>JavaScript · MIT · source · pushed 2026-07-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/convertica-net/convertica-mcp.git`</sub>
 - **[denis-samatov/yandex-workspace-mcp](https://github.com/denis-samatov/yandex-workspace-mcp)** — Yandex Disk and Yandex Wiki integration with unified search, read-only by default, plus granular permissions, path allowlisting and audit logging
-  <sub>Python · MIT · clone · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>Python · MIT · clone · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/denis-samatov/yandex-workspace-mcp.git`</sub>
 - **[filesystem@quarkiverse/quarkus-mcp-servers](https://github.com/quarkiverse/quarkus-mcp-servers/tree/main/filesystem)** — Filesystem access for browsing and editing files
   <sub>Java · Apache-2.0 · in-repo · pushed 2026-06-14</sub>
   <sub>`git clone https://github.com/quarkiverse/quarkus-mcp-servers.git && cd quarkus-mcp-servers/filesystem`</sub>
-- **[jamalofski/conv2pdf-mcp](https://github.com/jamalofski/conv2pdf-mcp)** — Convert Office documents, images and e-books on your computer to PDF, convert PDFs to Word or images, and merge, split, compress, protect or number PDFs via the conv2pdf API, hosted in France
-  <sub>JavaScript · MIT · npx · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+- **[jamalofski/conv2pdf-mcp](https://github.com/Jamalofski/conv2pdf-mcp)** — Convert Office documents, images and e-books on your computer to PDF, convert PDFs to Word or images, and merge, split, compress, protect or number PDFs via the conv2pdf API, hosted in France
+  <sub>JavaScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y conv2pdf-mcp`</sub>
 - **[Kookerella-Ltd/Kookerella.FsOpenXmlDsl](https://github.com/Kookerella-Ltd/Kookerella.FsOpenXmlDsl/tree/master/src/Kookerella.FsOpenXmlDsl.Mcp)** — Create, read and round-trip Excel workbooks (.xlsx/.xlsm) via a type-safe F# DSL, including regenerating the F# source that reproduces a file
   <sub>F# · MIT · in-repo · pushed 2026-09-16</sub>
   <sub>`git clone https://github.com/Kookerella-Ltd/Kookerella.FsOpenXmlDsl.git && cd Kookerella.FsOpenXmlDsl/src/Kookerella.FsOpenXmlDsl.Mcp`</sub>
 - **[mickaelkerjean/filestash](https://github.com/mickael-kerjean/filestash/tree/master/server/plugin/plg_handler_mcp)** — Remote storage access: SFTP, S3, FTP, SMB, NFS, WebDAV, Git, FTPS, Google Cloud, Azure Blob, SharePoint and more
-  <sub>Go · AGPL-3.0 · in-repo · pushed 2026-10-12</sub>
+  <sub>Go · AGPL-3.0 · in-repo · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/mickael-kerjean/filestash.git && cd filestash/server/plugin/plg_handler_mcp`</sub>
 - **[microsoft/markitdown](https://github.com/microsoft/markitdown/tree/main/packages/markitdown-mcp)** — Convert many file formats, local or remote, to Markdown for LLMs using MarkItDown
   <sub>Python · MIT · in-repo · pushed 2026-10-04</sub>
   <sub>`git clone https://github.com/microsoft/markitdown.git && cd markitdown/packages/markitdown-mcp`</sub>
 - **[modelcontextprotocol/server-filesystem](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem)** — Direct local file system access
-  <sub>JavaScript · in-repo · pushed 2026-10-12</sub>
+  <sub>JavaScript · in-repo · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/modelcontextprotocol/servers.git && cd servers/src/filesystem`</sub>
 - **[Regan-Milne/obsideo-mcp](https://github.com/Regan-Milne/obsideo-mcp)** — Encrypted S3-compatible object storage with cryptographic possession proofs: put, get, list and delete objects, with optional client-side encryption
   <sub>TypeScript · source · pushed 2026-09-27 · Win · WSL2? · macOS · Linux</sub>
@@ -2444,7 +2444,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 ## Education
 
 - **[RohanMuppa/brightspace-mcp-server](https://github.com/RohanMuppa/brightspace-mcp-server)** — Check D2L Brightspace grades, due dates, assignments, announcements, syllabus, rosters, discussions and course content
-  <sub>★ 55 · TypeScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 56 · TypeScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx -y brightspace-mcp-server@latest setup`</sub>
 - **[anzy-renlab-ai/pronounce](https://github.com/anzy-renlab-ai/pronounce)** — Community pronunciation dictionary for developer and product names (kubectl, nginx, GIF) with IPA, respellings, alternate readings and cited sources
   <sub>★ 42 · Python · MIT · brew · pushed 2026-09-01 · WSL2 · macOS · Linux</sub>
@@ -2456,7 +2456,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 17 · TypeScript · MIT · npm · pushed 2026-09-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g ictexam-mcp`</sub>
 - **[alejooroncoy/campus-cli](https://github.com/alejooroncoy/campus-cli)** — Student access to university systems via SSO: courses, assignments, grades, feedback, announcements and materials, currently for Blackboard Learn (UPC, Peru)
-  <sub>★ 11 · TypeScript · ISC · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 11 · TypeScript · ISC · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g campus-cli@2.2.3`</sub>
 - **[giacomomaria81/scorm-mcp-server](https://github.com/giacomomaria81/scorm-mcp-server)** — Package HTML, Claude Design bundles or mobile-learning exports as SCORM 2004/1.2 courses with milestone and question tracking, and validate SCORM zips
   <sub>★ 6 · TypeScript · MIT · npx · pushed 2026-09-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2471,7 +2471,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 3 · TypeScript · AGPL-3.0 · source · pushed 2026-09-07 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/sf-shenfeng/learn-shell.git`</sub>
 - **[AnonymousOnyx22/brightspace-d2l-mcp](https://github.com/AnonymousOnyx22/brightspace-d2l-mcp)** — D2L Brightspace for students: due dates with submission status, grades, assignments and rubrics, announcements and discussions, using browser sign-in
-  <sub>★ 2 · TypeScript · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · TypeScript · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx brightspace-d2l-mcp setup`</sub>
 - **[csmediapro/moodle-mcp-server](https://github.com/csmediapro/moodle-mcp-server)** — Query Moodle LMS data via Moodle Web Services: courses, users, assignments, categories and site info. Extensible with plugins
   <sub>★ 1 · TypeScript · AGPL-3.0 · clone · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2494,7 +2494,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 825 · Python · MIT · pip · pushed 2026-03-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install metatrader-mcp-server`</sub>
 - **[openaccountants/openaccountants](https://github.com/openaccountants/openaccountants)** — Open-source accounting skills reviewed by licensed accountants, covering income tax, VAT and payroll by country, US state and Canadian province
-  <sub>★ 435 · Python · AGPL-3.0 · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 437 · Python · AGPL-3.0 · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install openaccountants-mcp`</sub>
 - **[polygon-io/mcp_polygon](https://github.com/massive-com/mcp_massive)** — Access Polygon.io financial market data APIs for stocks, indices, forex, options and more
   <sub>★ 396 · Python · MIT · source · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2515,16 +2515,16 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 201 · Python · MIT · clone · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/narumiruna/yfinance-mcp.git`</sub>
 - **[armorwallet/armor-crypto-mcp](https://github.com/armorwallet/armor-crypto-mcp)** — Interface with multiple blockchains: staking, DeFi, swaps, bridging, wallet management, DCA, limit orders, coin lookup and tracking
-  <sub>★ 178 · Python · GPL-3.0 · source · pushed 2025-07-29 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 179 · Python · GPL-3.0 · source · pushed 2025-07-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/armorwallet/armor-crypto-mcp.git`</sub>
 - **[yolfinance/yolfi-agent](https://github.com/yolfinance/yolfi-agent)** — Yolfi Payments integration: register workspaces, create crypto checkout links, configure and verify webhooks and check payment status
   <sub>★ 178 · JavaScript · MIT · npx · pushed 2026-07-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @yolfi/agent help`</sub>
 - **[jjlabsio/korea-stock-mcp](https://github.com/jjlabsio/korea-stock-mcp)** — Korean stock analysis using the OpenDART and KRX APIs
-  <sub>★ 177 · TypeScript · ISC · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 177 · TypeScript · ISC · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jjlabsio/korea-stock-mcp.git`</sub>
 - **[aaronjmars/web3-research-mcp](https://github.com/aaronjmars/web3-research-mcp)** — Deep research for crypto, running fully locally
-  <sub>★ 168 · TypeScript · MIT · npx · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 169 · TypeScript · MIT · npx · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli install web3-research-mcp --client claude`</sub>
 - **[kukapay/freqtrade-mcp](https://github.com/kukapay/freqtrade-mcp)** — Integrate with the Freqtrade cryptocurrency trading bot
   <sub>★ 147 · Python · MIT · pip · pushed 2025-12-06 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2554,7 +2554,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 87 · TypeScript · MIT · npx · pushed 2026-10-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx cf workers secrets update "$name" --worker tasty-agent --text "${!name}"`</sub>
 - **[ignaciohermosillacornejo/copilot-money-mcp](https://github.com/ignaciohermosillacornejo/copilot-money-mcp)** — Read and manage Copilot Money data: transactions, budgets, accounts, recurring charges, investments and goals, with local reads and opt-in writes
-  <sub>★ 84 · TypeScript · MIT · npm · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 84 · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g copilot-money-mcp`</sub>
 - **[twelvedata/mcp](https://github.com/twelvedata/mcp)** — Real-time and historical financial market data from the Twelve Data APIs
   <sub>★ 82 · Python · docker · pushed 2026-10-01 · WSL2 · macOS? · Linux · Docker</sub>
@@ -2593,7 +2593,7 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 57 · Python · Apache-2.0 · source · pushed 2025-05-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/zlinzzzz/finData-mcp-server.git`</sub>
 - **[coinpaprika/dexpaprika-mcp](https://github.com/coinpaprika/dexpaprika-mcp)** — DexPaprika API access: real-time DEX token prices, liquidity pool data and historical OHLCV across many chains
-  <sub>★ 53 · JavaScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 53 · JavaScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g dexpaprika-mcp`</sub>
 - **[kukapay/crypto-feargreed-mcp](https://github.com/kukapay/crypto-feargreed-mcp)** — Real-time and historical Crypto Fear &amp; Greed Index data
   <sub>★ 52 · Python · MIT · npx · pushed 2025-05-10 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2616,17 +2616,17 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 - **[infaton/MCP35](https://github.com/infaton/MCP35)** — 1C:Enterprise ERP integration: metadata inspection, document CRUD, register queries and BSP integration
   <sub>★ 42 · 1C Enterprise · MIT · source · pushed 2026-10-03</sub>
   <sub>`git clone https://github.com/infaton/MCP35.git`</sub>
+- **[trayders/trayd-mcp](https://github.com/trayders/trayd-mcp)** — Trade on Robinhood: portfolio analysis, real-time quotes and order execution
+  <sub>★ 42 · source · pushed 2026-06-26</sub>
+  <sub>`git clone https://github.com/trayders/trayd-mcp.git`</sub>
 - **[kukapay/dune-analytics-mcp](https://github.com/kukapay/dune-analytics-mcp)** — Access Dune Analytics data
   <sub>★ 41 · Python · MIT · npx · pushed 2025-05-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli install @kukapay/dune-analytics-mcp --client claude`</sub>
-- **[trayders/trayd-mcp](https://github.com/trayders/trayd-mcp)** — Trade on Robinhood: portfolio analysis, real-time quotes and order execution
-  <sub>★ 41 · source · pushed 2026-06-26</sub>
-  <sub>`git clone https://github.com/trayders/trayd-mcp.git`</sub>
 - **[kukapay/uniswap-trader-mcp](https://github.com/kukapay/uniswap-trader-mcp)** — Automate token swaps on Uniswap across multiple blockchains
   <sub>★ 40 · JavaScript · MIT · npx · pushed 2025-05-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli install @kukapay/uniswap-trader-mcp --client claude`</sub>
 - **[hypurrquant/perp-cli](https://github.com/hypurrquant/perp-cli)** — Perpetual futures trading on Pacifica, Hyperliquid and Lighter: market data, execution with dry runs, funding rate arbitrage scanning and portfolio analytics
-  <sub>★ 39 · TypeScript · MIT · npm · pushed 2026-10-12 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 39 · TypeScript · MIT · npm · pushed 2026-10-13 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install -g perp-cli # global install`</sub>
 - **[JamesANZ/prediction-market-mcp](https://github.com/JamesANZ/prediction-market-mcp)** — Real-time prediction market odds, prices and market info from Polymarket, PredictIt and Kalshi
   <sub>★ 37 · TypeScript · MIT · npm · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
@@ -2642,6 +2642,6 @@ Page **2** of 5, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-10-12. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-13. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

@@ -92,7 +92,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 397 · Jupyter Notebook · source · pushed 2024-05-07 · Win?</sub>
   <sub>`git clone https://github.com/NVISOsecurity/cyber-security-llm-agents.git`</sub>
 - **[Owasp-Agentic-Ai](https://github.com/precize/Agentic-AI-Top10-Vulnerability)** — OWASP Top 10 for Agentic AI (AI Agent Security) - Pre-release version
-  <sub>★ 202 · source · pushed 2026-06-02</sub>
+  <sub>★ 203 · source · pushed 2026-06-02</sub>
   <sub>`git clone https://github.com/precize/OWASP-Agentic-AI.git`</sub>
 - **[Fast-Llm-Security-Guardrails](https://github.com/ZenGuard-AI/fast-llm-security-guardrails)** — The fastest &amp;&amp; easiest LLM security guardrails for AI Agents and applications
   <sub>★ 155 · Python · MIT · pip · pushed 2026-02-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -218,10 +218,10 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 794 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://github.com/TheAgentCompany/the-agent-company-backup-data/releases/download/setup-script-20241208/setup.sh | sh`</sub>
 - **[Agentlab](https://github.com/ServiceNow/AgentLab)** — AgentLab - An open-source framework for developing, testing, and benchmarking web agents on diverse tasks, designed for scalability and re…
-  <sub>★ 649 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 651 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentlab`</sub>
 - **[Appworld](https://github.com/StonyBrookNLP/appworld)** — Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL'24 Best Resource Paper
-  <sub>★ 532 · Python · Apache-2.0 · pip · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 534 · Python · Apache-2.0 · pip · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install appworld`</sub>
 - **[Bigcodebench](https://github.com/bigcode-project/bigcodebench)** — BigCodeBench - Benchmarking Code Generation Towards AGI
   <sub>★ 516 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -269,7 +269,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 81 · Python · clone · pushed 2026-08-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/chuanruihu/Level-Navi-Agent-Search.git`</sub>
 - **[Safeagentbench](https://github.com/shengyin1224/SafeAgentBench)** — Codes for paper "SafeAgentBench - A Benchmark for Safe Task Planning of \\ Embodied LLM Agents"
-  <sub>★ 77 · Python · source · pushed 2025-02-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 78 · Python · source · pushed 2025-02-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/shengyin1224/SafeAgentBench.git`</sub>
 - **[Debatellm](https://github.com/instadeepai/DebateLLM)** — Benchmarking Multi-Agent Debate between Language Models for Truthfulness in Q&amp;A
   <sub>★ 62 · Jupyter Notebook · Apache-2.0 · source · pushed 2026-03-26</sub>
@@ -361,6 +361,6 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-10-12. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-13. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

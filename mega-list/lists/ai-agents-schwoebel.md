@@ -11,9 +11,9 @@ Curated by **[jim-schwoebel/awesome_ai_agents](https://github.com/jim-schwoebel/
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/Significant-Gravitas/AutoGPT"><img src="https://raw.githubusercontent.com/Significant-Gravitas/AutoGPT/master/docs/home/.gitbook/assets/Banner_image.png" width="260"></a> | <a href="https://github.com/Significant-Gravitas/AutoGPT"><img src="https://raw.githubusercontent.com/Torantulino/Auto-GPT/master/docs/home/.gitbook/assets/Banner_image.png" width="260"></a> | <a href="https://github.com/ollama/ollama"><img src="https://opengraph.githubassets.com/1/ollama/ollama" width="260"></a> |
-| **[AutoGPT](https://github.com/Significant-Gravitas/AutoGPT)**<br>★ 187.5k | **[Auto-GPT](https://github.com/Significant-Gravitas/AutoGPT)**<br>★ 187.5k | **[Ollama](https://github.com/ollama/ollama)**<br>★ 182.9k |
+| **[AutoGPT](https://github.com/Significant-Gravitas/AutoGPT)**<br>★ 187.6k | **[Auto-GPT](https://github.com/Significant-Gravitas/AutoGPT)**<br>★ 187.6k | **[Ollama](https://github.com/ollama/ollama)**<br>★ 183k |
 | <a href="https://github.com/langchain-ai/langchain/"><img src="https://opengraph.githubassets.com/1/langchain-ai/langchain" width="260"></a> | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> |
-| **[LangChain Tools](https://github.com/langchain-ai/langchain/)**<br>★ 147.7k | **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 90.7k | **[OpenDevin](https://github.com/OpenHands/OpenHands)**<br>★ 90.7k |
+| **[LangChain Tools](https://github.com/langchain-ai/langchain/)**<br>★ 147.8k | **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 90.8k | **[OpenDevin](https://github.com/OpenHands/OpenHands)**<br>★ 90.8k |
 
 Page **1** of 2, because this list is longer than the 512 KB GitHub will render in one file. In order: **1** · [2](ai-agents-schwoebel-2.md) — [continue on page 2 →](ai-agents-schwoebel-2.md)
 
@@ -29,28 +29,28 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 ## Repositories
 
 - **[AutoGPT](https://github.com/Significant-Gravitas/AutoGPT)** — AutoGPT provides accessible AI tools for building and using AI agents, offering a comprehensive framework including Forge for agent creation, agbenchmark for performance evaluation, a leaderboard for competition, a user-friendly UI, and CLI for seamless integration and management github | github profile
-  <sub>★ 187.5k · Python · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 187.6k · Python · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Significant-Gravitas/AutoGPT.git`</sub>
 - **[Ollama](https://github.com/ollama/ollama)** — Ollama is a tool for running large language models locally, offering easy setup for macOS, Windows, Linux, and Docker, along with a library of models and quickstart guides for customization and integration github | github profile
-  <sub>★ 182.9k · Go · MIT · psh · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 183k · Go · MIT · psh · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://ollama.com/install.ps1 | iex`</sub>
 - **[LangChain Tools](https://github.com/langchain-ai/langchain/)** — Langchain integrates various providers like Anthropic, AWS, and OpenAI, and offers tools for components such as LLMs, chat models, and data analysis, supporting functionalities from Alpha Vantage to YouTube github | docs
-  <sub>★ 147.7k · Python · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 147.8k · Python · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/langchain-ai/langchain/.git`</sub>
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** — OpenHands: Code Less, Make More. (formerly OpenDevin), a platform for software development agents powered by AI. github
-  <sub>★ 90.7k · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 90.8k · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[OpenDevin](https://github.com/OpenHands/OpenHands)** — OpenDevin is an open-source initiative aimed at replicating and enhancing the autonomous AI software engineer Devin, focusing on collaboration and complex task execution in software development, emphasizing its relevance to advancing agentic AI technologies github | github profile
-  <sub>★ 90.7k · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 90.8k · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[Lobe Chat](https://github.com/lobehub/lobehub)** — Lobe Chat is an open-source UI framework for building ChatGPT/LLM-based chat applications, featuring modern design, speech synthesis, multi-modal support, extensible plugins, and free one-click deployment for various AI agents github | website
-  <sub>★ 83.2k · TypeScript · source · pushed 2026-10-12 · Win? · WSL2 · Linux · Docker</sub>
+  <sub>★ 83.2k · TypeScript · source · pushed 2026-10-13 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/lobehub/lobe-chat.git`</sub>
 - **[MetaGPT](https://github.com/FoundationAgents/MetaGPT)** — MetaGPT is a multi-agent framework enabling GPT to collaborate within a software company, facilitating complex tasks by assigning different roles to GPTs github | github profile
   <sub>★ 70.8k · Python · MIT · pip · pushed 2026-01-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install --upgrade metagpt`</sub>
 - **[Cline](https://github.com/cline/cline)** — Open-source AI coding agent giving developers direct access to frontier models with full transparency. github
-  <sub>★ 70.2k · TypeScript · Apache-2.0 · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 70.3k · TypeScript · Apache-2.0 · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g cline`</sub>
 - **[Open Interpreter](https://github.com/openinterpreter/openinterpreter)** — Open Interpreter is a coding agent enabling language models to execute code locally, facilitating natural-language interaction with your computer's capabilities, overcoming limitations of hosted solutions like internet access and package restrictions. It features interactive and programmatic chats, system message customization, and can control your computer's keyboard and mouse, allowing for enhan
   <sub>★ 68.6k · Rust · Apache-2.0 · psh · pushed 2026-10-11 · Win · WSL2? · macOS · Linux</sub>
@@ -62,16 +62,16 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 61.4k · Python · CC-BY-4.0 · pip · pushed 2026-04-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U "autogen-agentchat" "autogen-ext[openai]"`</sub>
 - **[LiteLLM](https://github.com/BerriAI/litellm)** — LiteLLM has added support for the OpenAI Assistants API, enabling seamless integration of stateful operations and automatic RAG pipelines into existing chatbots github
-  <sub>★ 61.1k · Python · uv · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 61.2k · Python · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install 'litellm[proxy]'`</sub>
 - **[crewAI by João Moura](https://github.com/crewAIInc/crewAI)** — crewAI is a cutting-edge AI framework designed for orchestrating role-playing, autonomous AI agents, enabling seamless collaboration and complex task handling github | github profile
-  <sub>★ 59.6k · Python · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 59.7k · Python · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add crewaiinc/skills`</sub>
 - **[PrivateGPT](https://github.com/zylon-ai/private-gpt/)** — PrivateGPT is a secure, offline-capable AI tool for querying documents with Large Language Models, offering high-level and low-level APIs for privacy-conscious, context-aware application development github
-  <sub>★ 57.6k · Python · Apache-2.0 · brew · pushed 2026-10-09 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 57.6k · Python · Apache-2.0 · brew · pushed 2026-10-13 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`brew install private-gpt`</sub>
 - **[Private GPT](https://github.com/zylon-ai/private-gpt)** — Interact privately with your documents using the power of GPT, 100% privately, no data leaks. github
-  <sub>★ 57.6k · Python · Apache-2.0 · brew · pushed 2026-10-09 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 57.6k · Python · Apache-2.0 · brew · pushed 2026-10-13 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`brew install private-gpt`</sub>
 - **[Flowise](https://github.com/FlowiseAI/Flowise)** — Flowise simplifies the creation of applications leveraging large language models (LLMs) by providing a drag-and-drop interface for customizing AI workflows, offering easy installation, Docker support, development tools, and documentation for integrating various functionalities such as authentication, streaming, and custom tools to enhance AI agents' capabilities github | website | docs | github pr
   <sub>★ 55.5k · TypeScript · npm · pushed 2026-08-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -86,25 +86,25 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 49.5k · Python · Apache-2.0 · source · pushed 2026-05-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/paul-gauthier/aider.git`</sub>
 - **[Jan](https://github.com/janhq/jan)** — Jan is an open-source, development-stage ChatGPT alternative that operates fully offline on diverse hardware platforms, supporting universal architectures from PCs to multi-GPU clusters github | github profile
-  <sub>★ 44.9k · Rust · clone · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 44.9k · Rust · clone · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/janhq/jan`</sub>
 - **[LangGraph](https://github.com/langchain-ai/langgraph)** — LangGraph is a Python library facilitating the construction of stateful, multi-actor applications with LLMs, enabling cyclic coordination across multiple computation steps, particularly suited for agent-like behaviors, while also providing streaming support, and various guides and examples for implementation and usage github
-  <sub>★ 43.1k · Python · MIT · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 43.2k · Python · MIT · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U langgraph`</sub>
 - **[FastChat](https://github.com/lm-sys/FastChat)** — FastChat is a platform for training, serving, and evaluating large language model chatbots, featuring an open-source distributed multi-model system, API compatibility, and a dataset for LLM conversations github | demo | discord | twitter
   <sub>★ 39.6k · Python · Apache-2.0 · clone · pushed 2026-05-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/lm-sys/FastChat.git`</sub>
 - **[DSPY](https://github.com/stanfordnlp/dspy)** — A cutting-edge framework that compiles declarative language model calls into self-improving pipelines, enabling the systematic and efficient optimization of LM prompts and weights within complex systems github
-  <sub>★ 38.6k · Python · MIT · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 38.6k · Python · MIT · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install dspy`</sub>
 - **[AgentGPT by Reworkd](https://github.com/reworkd/AgentGPT)** — AgentGPT allows users to configure and deploy autonomous AI agents, enabling them to name their own custom AI and guide it towards any desired goal through task execution and learning github | github profile
   <sub>★ 36.3k · TypeScript · GPL-3.0 · clone · pushed 2025-04-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/reworkd/AgentGPT.git`</sub>
 - **[Continue](https://github.com/continuedev/continue)** — Continue is an open-source autopilot plugin for VS Code and JetBrains, enhancing coding with LLMs through features like task and tab autocomplete, natural language edits, file generation, and customization options, available under the Apache 2.0 license github | website
-  <sub>★ 36.2k · TypeScript · Apache-2.0 · source · pushed 2026-10-09 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 36.2k · TypeScript · Apache-2.0 · source · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/continuedev/continue.git`</sub>
 - **[LangFuse](https://github.com/langfuse/langfuse)** — Langfuse, an open-source LLM engineering platform, offers debugging, prompt management, metrics for LLM apps improvement, and won the #1 Golden Kitty in the AI Infra Category from Product Hunt github | website | twitter | discord
-  <sub>★ 35.7k · TypeScript · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 35.8k · TypeScript · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install langfuse openai`</sub>
 - **[ChatDev](https://github.com/OpenBMB/ChatDev)** — ChatDev is a virtual software company utilizing intelligent agents to revolutionize the digital world through programming, offering a highly customizable framework and integrating innovative approaches like Experiential Co-Learning, Docker support, Git management, and Human-Agent Interaction github | github profile
   <sub>★ 34.5k · Python · Apache-2.0 · source · pushed 2026-07-24 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -113,25 +113,25 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 33.9k · Rust · source · pushed 2026-06-30 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/TabbyML/tabby.git`</sub>
 - **[GPT Pilot](https://github.com/Pythagora-io/gpt-pilot)** — GPT Pilot is an open-source AI developer tool that aims to provide a comprehensive development companion, capable of writing features, debugging, and interacting with users, presenting itself as an alternative to Devin, the world's first AI software engineer developed by Cognition Labs github | discord
-  <sub>★ 33.6k · Python · clone · pushed 2026-06-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 33.7k · Python · clone · pushed 2026-06-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Pythagora-io/gpt-pilot.git`</sub>
 - **[Cursor](https://github.com/getcursor/cursor/issues)** — Cursor is an AI-enhanced programming editor focusing on code discussion, editing, and debugging, with plans for advanced features like repository healing and AI-generated documentation issue tracker | website
   <sub>★ 33.3k · source · pushed 2026-05-12</sub>
   <sub>`git clone https://github.com/getcursor/cursor/issues.git`</sub>
 - **[Cognee](https://github.com/topoteretes/cognee)** — Cognee is an open-source framework aimed at simplifying data processing for large language models (LLMs) by creating knowledge graphs and data models, offering tools for information addition, knowledge creation, and similarity-based search github
-  <sub>★ 32.1k · Python · Apache-2.0 · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 32.2k · Python · Apache-2.0 · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install cognee`</sub>
 - **[Storm](https://github.com/stanford-oval/storm)** — An LLM-powered knowledge curation system that researches a topic and generates a full-length report with citations. github
   <sub>★ 31.6k · Python · MIT · pip · pushed 2025-09-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install knowledge-storm --upgrade`</sub>
 - **[GPT Researcher by Tavily](https://github.com/assafelovic/gpt-researcher)** — GPT Researcher is an AI-powered autonomous agent designed for efficient and unbiased online research, generating detailed reports by leveraging recent advancements in AI and web scraping, with a focus on speed, reliability, and cost-effectiveness github | github profile
-  <sub>★ 30k · Python · Apache-2.0 · npx · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 30.1k · Python · Apache-2.0 · npx · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add assafelovic/gpt-researcher`</sub>
 - **[Pydantic](https://github.com/pydantic/pydantic)** — Pydantic is a Python library facilitating data validation through type hints, particularly useful for AI agents, offering fast validation capabilities and compatibility with various development tools github | website
-  <sub>★ 29k · Python · MIT · pip · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 29k · Python · MIT · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U pydantic`</sub>
 - **[Haystack](https://github.com/deepset-ai/haystack)** — Haystack is an end-to-end LLM framework facilitating the construction of applications powered by LLMs, Transformer models, vector search, and more, offering flexibility, transparency, and extensibility, with features including retrieval-augmented generation, document search, question answering, and semantic search, along with a diverse user base including companies like Airbus, Apple, and Netflix
-  <sub>★ 26.7k · Python · Apache-2.0 · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 26.7k · Python · Apache-2.0 · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install haystack-ai`</sub>
 - **[JARVIS by Microsoft](https://github.com/microsoft/JARVIS)** — JARVIS aims to advance artificial general intelligence (AGI) through cutting-edge research and facilitate broader community engagement github
   <sub>★ 25.4k · Python · MIT · docker · pushed 2025-07-29 · WSL2 · Linux · Docker</sub>
@@ -152,7 +152,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 19.6k · Python · MIT · clone · pushed 2025-09-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/stitionai/devika.git`</sub>
 - **[LangChain JS Tools](https://github.com/langchain-ai/langchainjs)** — Langchain features VectorDBQAChain, which integrates LLMs and vector databases into agent tools for enhanced question-answering capabilities by leveraging data ingested into vector stores github | docs
-  <sub>★ 18.3k · TypeScript · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 18.3k · TypeScript · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/langchain-ai/langchainjs.git`</sub>
 - **[CAMEL](https://github.com/camel-ai/camel)** — CAMEL (Communicative Agents for Mind Exploration of Large Language Model Society) is an open-source library designed for studying autonomous and communicative agents, facilitating research in understanding their behaviors, capabilities, and potential risks through scalable techniques and cooperative frameworks, including role-playing, with extensive documentation, examples, and datasets, while als
   <sub>★ 17.9k · Python · Apache-2.0 · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -161,7 +161,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 17.7k · Python · MIT · clone · pushed 2025-01-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/TransformerOptimus/SuperAGI.git`</sub>
 - **[Pipecat](https://github.com/pipecat-ai/pipecat)** — Open Source framework for voice and multimodal conversational AI. github
-  <sub>★ 16.4k · Python · BSD-2-Clause · uv · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 16.4k · Python · BSD-2-Clause · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install "pipecat-ai[cli]"`</sub>
 - **[Outlines](https://github.com/dottxt-ai/outlines)** — Outlines is a robust text generation library designed for agentic AI developers, featuring support for multiple model integrations, advanced prompting with Jinja, efficient structured generation through regex, JSON schema, context-free grammars, and more, enabling the creation of predictable and structured AI agent outputs github | website | discord
   <sub>★ 15.9k · Python · Apache-2.0 · pip · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -173,7 +173,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 14.9k · Jupyter Notebook · Apache-2.0 · pip · pushed 2024-11-19 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install tortoise-tts`</sub>
 - **[LiveKit Agents](https://github.com/livekit/agents)** — An open-source framework for building real-time, programmable participants that run on servers, enabling easy integration with LiveKit WebRTC sessions for processing or generating audio, video, and data streams GitHub | docs | demo
-  <sub>★ 14.7k · Python · Apache-2.0 · npx · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 14.7k · Python · Apache-2.0 · npx · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add livekit/agent-skills --skill livekit-agents`</sub>
 - **[AI Scientist](https://github.com/SakanaAI/AI-Scientist)** — The AI Scientist: Towards Fully Automated Open-Ended Scientific. github
   <sub>★ 14.7k · Jupyter Notebook · docker · pushed 2025-12-19 · WSL2 · Linux · Docker</sub>
@@ -191,10 +191,10 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 9.5k · Rust · Apache-2.0 · source · pushed 2024-12-04 · Win · WSL2? · macOS · Linux?</sub>
   <sub>`git clone https://github.com/BloopAI/bloop.git`</sub>
 - **[PraisonAI](https://github.com/MervinPraison/PraisonAI/)** — Praison AI is a low-code, centralized framework leveraging AutoGen and CrewAI to simplify creating and orchestrating multi-agent systems for LLM applications, emphasizing customization and ease of human-agent interaction github | demo | website
-  <sub>★ 9.2k · Python · MIT · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 9.2k · Python · MIT · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install praisonai`</sub>
 - **[TypeChat](https://github.com/microsoft/TypeChat)** — TypeChat is a library that facilitates building natural language interfaces by using schema engineering as an alternative to traditional function calling in LLMs, avoiding JSON schema-based constraints github
-  <sub>★ 8.7k · TypeScript · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 8.7k · TypeScript · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/microsoft/TypeChat.git`</sub>
 - **[XAgent](https://github.com/OpenBMB/XAgent)** — XAgent is an open-source, experimental Large Language Model-driven autonomous agent designed to autonomously solve a wide range of tasks with features like autonomy, safety, extensibility, a GUI for easy interaction, and the ability to cooperate with humans github | demo | docs | blog
   <sub>★ 8.5k · Python · Apache-2.0 · source · pushed 2026-07-31 · WSL2 · Linux · Docker</sub>
@@ -215,13 +215,13 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 7.4k · Python · LGPL-3.0 · clone · pushed 2026-09-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/arcee-ai/mergekit.git`</sub>
 - **[NeMo Guardrails](https://github.com/NVIDIA-NeMo/Guardrails)** — NeMo Guardrails is an open-source toolkit facilitating the integration of programmable guardrails, essential for steering and safeguarding AI agents' conversational outputs, into large language model-based applications github | research paper
-  <sub>★ 7.3k · Python · source · pushed 2026-10-12 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 7.3k · Python · source · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/NVIDIA/NeMo-Guardrails.git`</sub>
 - **[Voyager](https://github.com/MineDojo/Voyager)** — An Open-Ended Embodied Agent with Large Language Models. github
   <sub>★ 7.3k · JavaScript · MIT · clone · pushed 2024-04-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/MineDojo/Voyager`</sub>
 - **[Swarms](https://github.com/kyegomez/swarms/)** — Swarms orchestrates multi-agent collaboration for production-grade applications, solving issues like short memory and high costs, with customizable tools for specific needs, currently used by RBC, John Deere, and AI startups github | discord | docs
-  <sub>★ 7.2k · Python · Apache-2.0 · source · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>★ 7.3k · Python · Apache-2.0 · source · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/kyegomez/swarms/.git`</sub>
 - **[AppAgent](https://github.com/TencentQQGYLab/AppAgent)** — AppAgent is a mobile-friendly LLM-based multimodal agent framework developed to operate smartphone apps, enabling human-like interactions for a wide range of applications without system back-end access github | github profile
   <sub>★ 6.9k · Python · MIT · source · pushed 2025-03-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -236,7 +236,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 6.5k · Python · clone · pushed 2026-07-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/agiresearch/AIOS.git`</sub>
 - **[ai-artifacts](https://github.com/e2b-dev/fragments)** — This project implements Anthropic's Artifacts UI, using E2B's Code Interpreter SDK for secure AI code execution and Claude Sonnet 3.5 for code generation github example | reddit announcement | github
-  <sub>★ 6.4k · TypeScript · Apache-2.0 · clone · pushed 2026-10-08 · WSL2 · Linux · Docker</sub>
+  <sub>★ 6.4k · TypeScript · Apache-2.0 · clone · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/e2b-dev/fragments.git`</sub>
 - **[Marvin](https://github.com/PrefectHQ/marvin/)** — Marvin is an open-source AI toolkit designed for developers focused on enhancing AI agent capabilities, offering tools for natural language interfaces, image and audio generation, and entity extraction, scalable and easy to integrate into existing projects github | website
   <sub>★ 6.2k · Python · Apache-2.0 · source · pushed 2026-09-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -266,7 +266,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 4.9k · Python · Apache-2.0 · source · pushed 2024-11-18 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/xlang-ai/OpenAgents.git`</sub>
 - **[DeepAnalyze](https://github.com/ruc-datalab/DeepAnalyze)** — first agentic LLM for autonomous data science, supporting specific data tasks (data preparation, analysis, modeling, visualization, and insight) and data-oriented deep research (produce analyst-grade research reports). github
-  <sub>★ 4.7k · Python · MIT · source · pushed 2026-09-23 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4.7k · Python · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ruc-datalab/DeepAnalyze.git`</sub>
 - **[Agency Swarm by VRSEN](https://github.com/VRSEN/agency-swarm)** — Agency Swarm is a framework designed to automate AI agencies by creating a swarm of collaborative agents with customizable roles and functionalities, aiming to simplify the agent creation process and make automation more intuitive github
   <sub>★ 4.6k · Python · MIT · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -326,7 +326,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.8k · Jupyter Notebook · MIT · pip · pushed 2024-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install tarsier`</sub>
 - **[GPTeam](https://github.com/101dotxyz/GPTeam)** — GPTeam is a collaborative AI project utilizing GPT-4 to create multi-agent systems aimed at enhancing productivity and communication, with features including agent memory and interaction, alongside instructions for setup and integration with third-party services github | github profile
-  <sub>★ 1.7k · Python · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.7k · Python · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/101dotxyz/GPTeam.git`</sub>
 - **[CodeActAgent](https://github.com/xingyaoww/code-act)** — CodeActAgent, trained on CodeActInstruct, showcases superior performance in both in-domain and out-of-domain tasks, enabling dynamic code execution and multi-turn interactions for more effective LLM agents github
   <sub>★ 1.7k · Python · MIT · clone · pushed 2024-05-23 · WSL2 · macOS? · Linux · Docker</sub>
@@ -338,7 +338,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.6k · Python · Apache-2.0 · source · pushed 2025-01-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ShengranHu/ADAS.git`</sub>
 - **[uAgents by Fetch AI](https://github.com/fetchai/uAgents)** — uAgents is a Python library by Fetch AI for creating autonomous AI agents with features like easy creation, blockchain network connectivity, and cryptographic security github | github profile
-  <sub>★ 1.6k · Python · Apache-2.0 · source · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.6k · Python · Apache-2.0 · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/fetchai/uAgents.git`</sub>
 - **[Adala](https://github.com/HumanSignal/Adala)** — Adala is a framework for autonomous data labeling agents, supporting Python 3.8 to 3.11, with features for customizable, intelligent data processing and integration into Python Notebooks github
   <sub>★ 1.6k · Python · Apache-2.0 · pip · pushed 2026-10-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -368,7 +368,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.2k · TypeScript · MIT · source · pushed 2025-12-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/TrafficGuard/nous.git`</sub>
 - **[LangSmith by LangChain](https://github.com/langchain-ai/langsmith-sdk)** — LangSmith provides tools for debugging, testing, evaluating, and monitoring LLM applications, integrating seamlessly with LangChain for comprehensive AI agent observability github | docs | website
-  <sub>★ 1.1k · Python · MIT · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.1k · Python · MIT · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U langsmith`</sub>
 - **[RepoAgent](https://github.com/OpenBMB/RepoAgent)** — An LLM-powered repository agent designed to assist developers and teams in generating documentation and understanding repositories quickly. github
   <sub>★ 1.1k · Python · Apache-2.0 · pip · pushed 2024-12-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -395,7 +395,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 659 · Python · pip · pushed 2026-03-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llama-cpp-agent`</sub>
 - **[Lynkr](https://github.com/Fast-Editor/Lynkr)** — Lynkr is a proxy that lets Claude Code CLI talk to non-Anthropic LLMs, manage local tools, and compose Model Context Protocol (MCP) servers with prompt caching, repo intelligence, and Git-aware automation and several other features similar to anthropic backend
-  <sub>★ 625 · JavaScript · Apache-2.0 · npm · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 626 · JavaScript · Apache-2.0 · npm · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g lynkr`</sub>
 - **[joinly](https://github.com/joinly-ai/joinly)** — Voice-first AI Assistant for online meetings that can actively participate and solve tasks live during the meeting. github
   <sub>★ 568 · Python · MIT · uv · pushed 2026-09-01 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -413,13 +413,13 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 480 · Python · source · pushed 2023-07-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/steamship-packages/langchain-agent-production-starter.git`</sub>
 - **[Agent by Stately AI](https://github.com/statelyai/agent/)** — Stately Agent is a software for building intelligent agents that interact via chat and events, with examples including joke generation, tic-tac-toe, and weather querying, requiring installation and an OpenAI API key github | website | twitter | discord | youtube
-  <sub>★ 478 · TypeScript · MIT · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 479 · TypeScript · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/statelyai/agent/.git`</sub>
 - **[Lumos](https://github.com/allenai/lumos)** — Lumos introduces a modular, open-source language agent framework with unified data formats that competes with or outperforms GPT-series and larger agents across various complex interactive tasks github | website
-  <sub>★ 477 · Python · MIT · source · pushed 2024-03-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 476 · Python · MIT · source · pushed 2024-03-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/allenai/lumos.git`</sub>
 - **[aifs](https://github.com/openinterpreter/aifs)** — AIFS offers a simple and efficient local semantic search capability for folders, leveraging Unstructured.IO for advanced data processing and ChromaDB for fast, similarity-based searching of embeddings github
-  <sub>★ 462 · Python · Apache-2.0 · pip · pushed 2024-07-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 463 · Python · Apache-2.0 · pip · pushed 2024-07-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install aifs`</sub>
 - **[Autonomous HR Chatbot](https://github.com/stepanogil/autonomous-hr-chatbot)** — An autonomous agent that can answer HR related queries autonomously using the tools it has on hand. github
   <sub>★ 461 · Python · MIT · source · pushed 2026-04-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -428,17 +428,17 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 421 · JavaScript · MIT · source · pushed 2026-02-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mayt/BrowserGPT.git`</sub>
 - **[AgentRun](https://github.com/tjmlabs/AgentRun)** — The easiest, and fastest way to run AI-generated Python code safely. github
-  <sub>★ 380 · Python · Apache-2.0 · pip · pushed 2026-07-08 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 381 · Python · Apache-2.0 · pip · pushed 2026-07-08 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install agentrun`</sub>
 - **[Open Assistant API](https://github.com/MLT-OSS/open-assistant-api)** — The Open Assistant API is a self-hosted, open-source framework that enables the creation of customized AI assistants, supporting integration with OpenAI's LLM and LangChain SDK, and is compatible with OpenAI's Assistants API, allowing for seamless orchestration and extension capabilities github
   <sub>★ 368 · Python · MIT · source · pushed 2025-06-24 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/MLT-OSS/open-assistant-api.git`</sub>
+- **[Fazm](https://github.com/mediar-ai/fazm)** — Fazm is an open-source, voice-controlled AI computer agent for macOS that controls your entire desktop through natural language - any app, file, or workflow. Built in Swift/SwiftUI, local-first, MIT licensed github | website
+  <sub>★ 347 · Swift · source · pushed 2026-10-05 · macOS</sub>
+  <sub>`git clone https://github.com/m13v/fazm.git`</sub>
 - **[Jaiqu](https://github.com/AgentOps-AI/Jaiqu)** — Jaiqu is an AI-powered tool for automatically transforming any JSON schema using GPT-4, featuring schema validation, fuzzy term matching, and repeatable jq query generation github | demo | website | twitter | discord
   <sub>★ 347 · Python · MIT · pip · pushed 2025-03-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install jaiqu`</sub>
-- **[Fazm](https://github.com/mediar-ai/fazm)** — Fazm is an open-source, voice-controlled AI computer agent for macOS that controls your entire desktop through natural language - any app, file, or workflow. Built in Swift/SwiftUI, local-first, MIT licensed github | website
-  <sub>★ 345 · Swift · source · pushed 2026-10-05 · macOS</sub>
-  <sub>`git clone https://github.com/m13v/fazm.git`</sub>
 - **[BlockAGI](https://github.com/orgexyz/BlockAGI)** — BlockAGI conducts iterative, domain-specific research, and outputs detailed narrative reports to showcase its findings. github
   <sub>★ 325 · Python · Apache-2.0 · source · pushed 2023-11-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/blockpipe/blockagi.git`</sub>
@@ -455,17 +455,17 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 280 · Python · MIT · clone · pushed 2026-09-09 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/jarrycyx/openlens-ai.git`</sub>
 - **[Shep](https://github.com/shep-ai/shep)** — Shep is an SDLC control center that enables AI coding agents to autonomously handle the complete feature lifecycle, orchestrating multi-session development using Claude Code, Cursor CLI, or Gemini with configurable approval gates and a live web dashboard github
-  <sub>★ 264 · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 263 · TypeScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g @shepai/cli # or install globally`</sub>
+- **[AgentOS](https://github.com/smartcomputer-ai/agent-os)** — The Agent OS is an experimental platform for creating self-evolving, autonomous AI agents capable of writing and executing their own code, designed to be a long-term environment for such agents and supports various programming languages github
+  <sub>★ 241 · Rust · Apache-2.0 · source · pushed 2026-06-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/smartcomputer-ai/agent-os.git`</sub>
 - **[AutoAct](https://github.com/zjunlp/AutoAct)** — AutoAct is an automatic agent learning framework that synthesizes planning trajectories without large-scale data or closed-source models, using a division-of-labor strategy for task completion, demonstrating superior or comparable performance in experiments github | website
   <sub>★ 241 · Python · Apache-2.0 · clone · pushed 2025-01-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/zjunlp/AutoAct`</sub>
 - **[Prompt2UI by sullyo](https://github.com/sullyo/prompt2ui)** — An open-source project that converts prompts to user interfaces, demonstrated by creating a basic Google Calendar clone using Claude in about 2 hours, inspired by Claude Artifacts github | twitter announcement
   <sub>★ 241 · TypeScript · source · pushed 2024-07-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/sullyo/prompt2ui.git`</sub>
-- **[AgentOS](https://github.com/smartcomputer-ai/agent-os)** — The Agent OS is an experimental platform for creating self-evolving, autonomous AI agents capable of writing and executing their own code, designed to be a long-term environment for such agents and supports various programming languages github
-  <sub>★ 239 · Rust · Apache-2.0 · source · pushed 2026-06-13 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/smartcomputer-ai/agent-os.git`</sub>
 - **[claude-artifacts-react](https://github.com/risonsimon/claude-artifacts-react)** — This project provides a streamlined solution for deploying and testing React code generated by Claude Artifacts, offering one-click deployment options to Vercel or Cloudflare Pages and easy code editing through a central ArtifactCode.jsx file github | reddit announcement
   <sub>★ 238 · JavaScript · MIT · clone · pushed 2024-07-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/risonsimon/claude-artifacts-react.git`</sub>
@@ -476,7 +476,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 220 · Python · MIT · pip · pushed 2024-06-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install fuzztypes`</sub>
 - **[Autohand Code CLI](https://github.com/autohandai/code-cli)** — Autohand Code CLI is a self-evolving autonomous coding agent for the terminal, using the ReAct pattern to reason about and modify entire codebases through natural language, with 40+ tools, multi-LLM support (OpenRouter, Anthropic, OpenAI, Ollama, local models), semantic code search, modular skill system, and VS Code/Zed integration github | website
-  <sub>★ 204 · TypeScript · Apache-2.0 · brew · pushed 2026-10-11 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 205 · TypeScript · Apache-2.0 · brew · pushed 2026-10-11 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`brew install autohandai/code/autohand-code`</sub>
 - **[PyCodeAGI](https://github.com/chakkaradeep/pyCodeAGI)** — A small AGI experiment to generate a Python app given what app the user wants to build. github
   <sub>★ 184 · Python · source · pushed 2023-05-04 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -485,7 +485,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 177 · JavaScript · npx · pushed 2026-04-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx hanzi-browse setup`</sub>
 - **[OpenPaw](https://github.com/daxaur/openpaw)** — OpenPaw is an open-source CLI tool (npx pawmode) that turns Claude Code into a personal assistant with 38 built-in skills covering email, calendar, Spotify, smart home control, Slack, GitHub, Telegram, Discord, and more. No daemon, no cloud, runs entirely locally. MIT licensed github | npm
-  <sub>★ 174 · TypeScript · MIT · source · pushed 2026-05-23 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 173 · TypeScript · MIT · source · pushed 2026-05-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/daxaur/openpaw.git`</sub>
 - **[DuetGPT](https://github.com/kristoferlund/duet-gpt)** — A conversational semi-autonomous developer assistant, AI pair programming without the copypasta. github
   <sub>★ 168 · TypeScript · MIT · npm · pushed 2023-06-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -539,7 +539,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 17 · TypeScript · Apache-2.0 · npx · pushed 2026-09-03 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @hivemoot-dev/cli buzz # repo status overview`</sub>
 - **[Rappterbook](https://github.com/kody-w/rappterbook)** — A social network for AI agents running entirely on GitHub infrastructure. 108 agents across 41 channels with 2,100+ discussions. Zero-dependency SDK (Python/JS, one file). Fork the repo to get a complete agent social platform with zero setup. github | website | quickstart
-  <sub>★ 16 · Python · MIT · gh-action · pushed 2026-10-12</sub>
+  <sub>★ 16 · Python · MIT · gh-action · pushed 2026-10-13</sub>
   <sub>`uses: kody-w/rappterbook@main # in .github/workflows/*.yml`</sub>
 - **[Streaming Assistants](https://github.com/phact/streaming-assistants)** — The streaming-assistants library on GitHub enables streaming for OpenAI Assistants API using Astra Assistants, providing a workaround for the lack of streaming support in the official OpenAI Assistants API github
   <sub>★ 9 · Python · source · pushed 2024-07-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -625,7 +625,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>website</sub>
   <sub>`https://relevanceai.com/agents/bdr-agent`</sub>
 - **[CollosalAI Chat](https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat)** — implement LLM with RLHF, powered by the Colossal-AI project. github
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-12</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/hpcaitech/ColossalAI.git && cd ColossalAI/applications/Chat`</sub>
 - **[Bananalyzer by Reworkd](https://reworkd.ai)** — Bananalyzer is a framework for evaluating AI agents on web tasks, utilizing Playwright for creating diverse datasets of website snapshots for reliable and varied web task assessments website | github
   <sub>website</sub>
@@ -923,31 +923,31 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 ## Frameworks
 
 - **[Auto-GPT](https://github.com/Significant-Gravitas/AutoGPT)** — AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission is to provide the tools, so that you can focus on what matters
-  <sub>★ 187.5k · Python · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 187.6k · Python · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Torantulino/Auto-GPT.git`</sub>
 - **[Crew.AI](https://github.com/crewAIInc/crewAI)** — Framework for orchestrating role-playing, autonomous AI agents. By fostering collaborative intelligence, CrewAI empowers agents to work together seamlessly, tackling complex tasks
-  <sub>★ 59.6k · Python · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 59.7k · Python · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add crewaiinc/skills`</sub>
 - **[Phidata](https://github.com/agno-agi/agno)** — Build multi-modal Agents with memory, knowledge, tools and reasoning. Chat with them using a beautiful Agent UI
-  <sub>★ 42.7k · Python · Apache-2.0 · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 42.7k · Python · Apache-2.0 · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/phidatahq/phidata.git`</sub>
 - **[Khoj-ai](https://github.com/khoj-ai/khoj)** — Your AI second brain. Self-hostable. Get answers from the web or your docs. Build custom agents, schedule automations, do deep research. Turn any online or local LLM into your personal, autonomous AI (gpt, claude, gemini, llama, qwen, mistral) github | website
   <sub>★ 37.7k · Python · AGPL-3.0 · source · pushed 2026-08-02 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/khoj-ai/khoj.git`</sub>
 - **[AgentScope](https://github.com/agentscope-ai/agentscope)** — Start building LLM-empowered multi-agent applications in an easier way. github
-  <sub>★ 33.1k · Python · Apache-2.0 · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 33.2k · Python · Apache-2.0 · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/modelscope/agentscope.git`</sub>
 - **[OpenAI Swarm](https://github.com/openai/swarm)** — Educational framework exploring ergonomic, lightweight multi-agent orchestration. Managed by OpenAI Solution team
-  <sub>★ 22k · Python · MIT · pip · pushed 2026-04-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 22.1k · Python · MIT · pip · pushed 2026-04-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install git+ssh://git@github.com/openai/swarm.git`</sub>
 - **[VoltAgent](https://github.com/VoltAgent/voltagent)** — An open source TypeScript Framework for building AI agents with built-in LLM observability. github
-  <sub>★ 10.8k · TypeScript · MIT · source · pushed 2026-09-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 10.8k · TypeScript · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/VoltAgent/voltagent.git`</sub>
 - **[Astron](https://github.com/iflytek/astron-agent)** — Enterprise-grade, commercial-friendly agentic workflow platform for building next-generation SuperAgents. github
   <sub>★ 8.9k · Java · Apache-2.0 · clone · pushed 2026-10-10 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/iflytek/astron-agent.git`</sub>
 - **[Strands Agents SDK](https://github.com/strands-agents/harness-sdk)** — A model-driven approach to building AI agents in just a few lines of code. github
-  <sub>★ 8.8k · Python · Apache-2.0 · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 8.8k · TypeScript · Apache-2.0 · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install strands-harness`</sub>
 - **[Upsonic](https://github.com/Upsonic/Upsonic)** — Reliable agent framework that supports MCP. github
   <sub>★ 8k · Python · MIT · source · pushed 2026-06-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -974,10 +974,10 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.8k · MDX · MIT · clone · pushed 2026-07-14</sub>
   <sub>`git clone https://github.com/AgentDock/AgentDock.git`</sub>
 - **[Dust](https://github.com/dust-tt/dust)** — Design and Deploy Large Language Model Apps. github
-  <sub>★ 1.5k · TypeScript · MIT · source · pushed 2026-10-12 · WSL2? · Linux</sub>
+  <sub>★ 1.5k · TypeScript · MIT · source · pushed 2026-10-13 · WSL2? · Linux</sub>
   <sub>`git clone https://github.com/dust-tt/dust.git`</sub>
 - **[Bernstein](https://github.com/sipyourdrink-ltd/bernstein)** — Deterministic multi-agent orchestrator that spawns parallel AI coding agents (Claude Code, Codex CLI, Gemini CLI) from a single goal, verifies with tests, and auto-commits. Zero LLM tokens on coordination. github
-  <sub>★ 1.2k · Python · Apache-2.0 · uv · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1.2k · Python · Apache-2.0 · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install bernstein # or: pipx install bernstein`</sub>
 - **[LLM Agents](https://github.com/mpaepper/llm_agents)** — Build agents which are controlled by LLMs. github
   <sub>★ 1.1k · Python · MIT · source · pushed 2025-06-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -986,7 +986,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 417 · Go · Apache-2.0 · npm · pushed 2025-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @hypermode/modus-cli`</sub>
 - **[NeuroLink](https://github.com/juspay/neurolink)** — TypeScript-first agent framework with multi-step agentic loops, tool execution control, persistent memory (Redis/SQLite/S3), HITL workflows, MCP client integration, and 13 LLM providers. Production-proven at enterprise scale
-  <sub>★ 154 · TypeScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 156 · TypeScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @juspay/neurolink --help`</sub>
 - **[AgentUp](https://github.com/nolabs-ai/AgentUp)** — Designed with security, scalability, and extensibility at its foundation, AgentUp streamlines development through a configuration-driven architecture and rich plugin ecosystem github
   <sub>★ 127 · Python · Apache-2.0 · pip · pushed 2026-06-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1028,10 +1028,10 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 ## Deployment
 
 - **[Mastra AI](https://github.com/mastra-ai/mastra)** — Mastra is an all-in-one framework for building AI-powered applications and agents with Typescript
-  <sub>★ 28.7k · TypeScript · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 28.8k · TypeScript · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mastra-ai/mastra.git`</sub>
 - **[Botpress](https://github.com/botpress/botpress)** — The open-source hub to build &amp; deploy GPT/LLM Agents ⚡️
-  <sub>★ 14.9k · TypeScript · MIT · npm · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 14.9k · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @botpress/cli # for npm`</sub>
 - **[Autogpt-Next-Web](https://github.com/ElricLiu/AutoGPT-Next-Web)** — Assemble, configure, and deploy autonomous AI Agents in your browser.一键免费部署你的私人AutoGPT 网页应用
   <sub>★ 3k · TypeScript · GPL-3.0 · clone · pushed 2025-02-10 · WSL2 · Linux · Docker</sub>
@@ -1079,7 +1079,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 49 · TypeScript · AGPL-3.0 · source · pushed 2026-02-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/plura-ai/plura.git`</sub>
 - **[Wolfpack](https://github.com/almogdepaz/wolfpack)** — Mobile &amp; desktop PWA command center for controlling AI coding agents (Claude, Codex, Gemini) via tmux sessions across multiple machines, secured by Tailscale. Includes a multi-terminal grid view, mobile touch UI, and Ralph — an autonomous task runner. github
-  <sub>★ 48 · TypeScript · MIT · npx · pushed 2026-10-12 · WSL2 · macOS · Linux</sub>
+  <sub>★ 49 · TypeScript · MIT · npx · pushed 2026-10-13 · WSL2 · macOS · Linux</sub>
   <sub>`bunx --bun wolfpack-bridge@latest`</sub>
 - **[Agileagents](https://github.com/ruvnet/agileagents)** — Agile Agents (A2) is an open-source framework for the creation and deployment of serverless intelligent agents using public and private c…
   <sub>★ 45 · Python · Apache-2.0 · docker · pushed 2024-06-27 · WSL2 · Linux · Docker</sub>
@@ -1454,16 +1454,16 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 ## LLM Models
 
 - **[Microsoft Semantic Kernel](https://github.com/microsoft/semantic-kernel)** — Integrate cutting-edge LLM technology quickly and easily into your apps
-  <sub>★ 28.7k · C# · MIT · pip · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 28.7k · C# · MIT · pip · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install semantic-kernel`</sub>
 - **[Fastmcp](https://github.com/PrefectHQ/fastmcp)** — The fast, Pythonic way to build Model Context Protocol servers 🚀
-  <sub>★ 28.1k · Python · Apache-2.0 · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 28.1k · Python · Apache-2.0 · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jlowin/fastmcp.git`</sub>
 - **[Bisheng](https://github.com/dataelement/bisheng)** — BISHENG is an open LLM devops platform for next generation Enterprise AI applications. Powerful and comprehensive features include - GenAI…
-  <sub>★ 12k · Python · Apache-2.0 · clone · pushed 2026-10-12 · WSL2 · Linux · Docker</sub>
+  <sub>★ 12k · Python · Apache-2.0 · clone · pushed 2026-10-13 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/dataelement/bisheng.git`</sub>
 - **[Mlx-Vlm](https://github.com/Blaizzy/mlx-vlm)** — MLX-VLM is a package for inference and fine-tuning of Vision Language Models (VLMs) on your Mac using MLX
-  <sub>★ 5.6k · Python · MIT · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5.6k · Python · MIT · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U mlx-vlm`</sub>
 - **[Codegen](https://github.com/salesforce/CodeGen)** — CodeGen is a family of open-source model for program synthesis. Trained on TPU-v4. Competitive with OpenAI Codex
   <sub>★ 5.2k · Python · Apache-2.0 · source · pushed 2026-06-02 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1475,7 +1475,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 4.4k · Python · Apache-2.0 · clone · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/modelscope/ms-agent.git`</sub>
 - **[Neural-Compressor](https://github.com/intel/neural-compressor)** — SOTA low-bit LLM quantization (INT8/FP8/INT4/FP4/NF4) &amp; sparsity; leading model compression techniques on TensorFlow, PyTorch, and ONNX R…
-  <sub>★ 2.7k · Python · Apache-2.0 · pip · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 2.7k · Python · Apache-2.0 · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install neural-compressor-pt`</sub>
 - **[Llms-Txt](https://github.com/AnswerDotAI/llms-txt)** — The /llms.txt file, helping language models use your website
   <sub>★ 2.7k · Jupyter Notebook · Apache-2.0 · source · pushed 2026-09-24</sub>
@@ -1528,12 +1528,12 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 - **[Llm-Adapters](https://github.com/AGI-Edgerunners/LLM-Adapters)** — Code for our EMNLP 2023 Paper - "LLM-Adapters - An Adapter Family for Parameter-Efficient Fine-Tuning of Large Language Models"
   <sub>★ 1.2k · Python · Apache-2.0 · source · pushed 2024-03-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/AGI-Edgerunners/LLM-Adapters.git`</sub>
-- **[Languagemodels](https://github.com/jncraton/languagemodels)** — Explore large language models in 512MB of RAM
-  <sub>★ 1.2k · HTML · MIT · pip · pushed 2026-02-19 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pip install languagemodels`</sub>
 - **[Huggingfacemodeldownloader](https://github.com/bodaay/HuggingFaceModelDownloader)** — Simple go utility to download HuggingFace Models and Datasets
   <sub>★ 1.2k · Go · Apache-2.0 · clone · pushed 2026-10-04 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/bodaay/HuggingFaceModelDownloader`</sub>
+- **[Languagemodels](https://github.com/jncraton/languagemodels)** — Explore large language models in 512MB of RAM
+  <sub>★ 1.2k · HTML · MIT · pip · pushed 2026-02-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`pip install languagemodels`</sub>
 - **[Web-Llm-Chat](https://github.com/mlc-ai/web-llm-chat)** — Chat with AI large language models running natively in your browser. Enjoy private, server-free, seamless AI conversations
   <sub>★ 1.1k · TypeScript · Apache-2.0 · docker · pushed 2026-02-18 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -d -p 3000:3000 webllm_chat`</sub>
@@ -1547,7 +1547,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 925 · Python · source · pushed 2025-02-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jianzongwu/DiffSensei.git`</sub>
 - **[Anygpt](https://github.com/OpenMOSS/AnyGPT)** — Code for "AnyGPT - Unified Multimodal LLM with Discrete Sequence Modeling"
-  <sub>★ 885 · Python · clone · pushed 2026-09-06 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 886 · Python · clone · pushed 2026-09-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/OpenMOSS/AnyGPT.git`</sub>
 - **[Llm.Swift](https://github.com/eastriverlee/LLM.swift)** — LLM.swift is a simple and readable library that allows you to interact with large language models locally with ease for macOS, iOS, watch…
   <sub>★ 882 · Swift · MIT · source · pushed 2026-07-19 · macOS</sub>
@@ -1556,7 +1556,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 842 · Jupyter Notebook · Apache-2.0 · clone · pushed 2025-04-06</sub>
   <sub>`git clone https://github.com/LLMServe/DistServe.git`</sub>
 - **[Local-Rag](https://github.com/jonfairbanks/local-rag)** — Ingest files for retrieval augmented generation (RAG) with open-source Large Language Models (LLMs), all without 3rd parties or sensitive…
-  <sub>★ 763 · Python · GPL-3.0 · source · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 762 · Python · GPL-3.0 · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jonfairbanks/local-rag.git`</sub>
 - **[Machine-Learning-Guide](https://github.com/mikeroyal/Machine-Learning-Guide)** — Machine learning Guide. Learn all about Machine Learning Tools, Libraries, Frameworks, Large Language Models (LLMs), and Training Models
   <sub>★ 710 · Python · source · pushed 2024-01-04 · Win · WSL2 · macOS · Linux · Docker</sub>
@@ -1568,7 +1568,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 587 · Python · Apache-2.0 · source · pushed 2024-06-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/FoundationVision/Groma.git`</sub>
 - **[Llm-Analysis](https://github.com/cli99/llm-analysis)** — Latency and Memory Analysis of Transformer Models for Training and Inference
-  <sub>★ 494 · Python · Apache-2.0 · pip · pushed 2025-04-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 495 · Python · Apache-2.0 · pip · pushed 2025-04-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llm-analysis`</sub>
 - **[Mlx-Llm](https://github.com/riccardomusmeci/mlx-llm)** — Large Language Models (LLMs) applications and tools running on Apple Silicon in real-time with Apple MLX
   <sub>★ 467 · Python · pip · pushed 2025-01-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1625,7 +1625,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 316 · Python · MIT · pip · pushed 2024-02-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install prompt-optimizer`</sub>
 - **[Llm-Tpu](https://github.com/sophgo/LLM-TPU)** — Run generative AI models in sophgo BM1684X
-  <sub>★ 313 · C++ · clone · pushed 2026-10-12</sub>
+  <sub>★ 314 · C++ · clone · pushed 2026-10-12</sub>
   <sub>`git clone https://github.com/sophgo/LLM-TPU.git`</sub>
 - **[Llama2Lang](https://github.com/SensAI-PT/LLaMa2lang)** — Convenience scripts to finetune (chat-)LLaMa3 and other models for any language
   <sub>★ 309 · Python · Apache-2.0 · source · pushed 2024-06-17 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1670,7 +1670,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 180 · TypeScript · Apache-2.0 · source · pushed 2026-04-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/hrishioa/wasm-ai.git`</sub>
 - **[Brokenhill](https://github.com/BishopFox/BrokenHill)** — A productionized greedy coordinate gradient (GCG) attack tool for large language models (LLMs)
-  <sub>★ 176 · Python · MIT · source · pushed 2024-12-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 177 · Python · MIT · source · pushed 2024-12-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/BishopFox/BrokenHill.git`</sub>
 - **[Damo-Seallms](https://github.com/DAMO-NLP-SG/DAMO-SeaLLMs)** — [ACL 2024 Demo] SeaLLMs - Large Language Models for Southeast Asia
   <sub>★ 176 · JavaScript · source · pushed 2024-07-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1691,7 +1691,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 142 · Python · source · pushed 2023-05-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/AGI-Edgerunners/LLM-Next-Item-Rec.git`</sub>
 - **[Speechllm](https://github.com/skit-ai/SpeechLLM)** — This repository contains the training, inference, evaluation code for SpeechLLM models and details about the model releases on huggingface
-  <sub>★ 139 · Python · Apache-2.0 · source · pushed 2024-06-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 140 · Python · Apache-2.0 · source · pushed 2024-06-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/skit-ai/SpeechLLM.git`</sub>
 - **[42Dot_Llm](https://github.com/42dot/42dot_LLM)** — 42dot LLM consists of a pre-trained language model, 42dot LLM-PLM, and a fine-tuned model, 42dot LLM-SFT, which is trained to respond to …
   <sub>★ 134 · Python · source · pushed 2024-03-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1763,7 +1763,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 69 · Python · Apache-2.0 · source · pushed 2023-08-27 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/official-elinas/zeus-llm-trainer.git`</sub>
 - **[Llm-Datasets](https://github.com/malteos/llm-datasets)** — A collection of datasets for language model pretraining including scripts for downloading, preprocesssing, and sampling
-  <sub>★ 67 · Python · Apache-2.0 · pip · pushed 2024-07-29 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 68 · Python · Apache-2.0 · pip · pushed 2024-07-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llm-datasets`</sub>
 - **[Llm-Embed-Jina](https://github.com/simonw/llm-embed-jina)** — Embedding models from Jina AI
   <sub>★ 66 · Python · Apache-2.0 · source · pushed 2024-01-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1816,10 +1816,10 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 ## Testing
 
 - **[Pydantic-AI](https://github.com/pydantic/pydantic-ai)** — Agent framework / shim to use Pydantic with LLMs, useful for ensuring LLM inputs/outputs have type safety github | docs
-  <sub>★ 20.6k · Python · MIT · uv · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 20.6k · Python · MIT · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx --with pydantic-ai-harness clai -a pydantic_ai_harness.coder:coder_agent -m anthropic:claude-fable-5`</sub>
 - **[Phoenix](https://github.com/Arize-ai/phoenix)** — Open source tool for testing changes in AI agent or application
-  <sub>★ 11.8k · Python · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 11.8k · Python · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @arizeai/phoenix-cli setup`</sub>
 - **[EvoAgentX](https://github.com/ANative-Lab/EvoAgentX)** — EvoAgentX is building a Self-Evolving Ecosystem of AI Agents, it will give you automated framework for evaluating and evolving agentic workflows. github
   <sub>★ 3.4k · Python · pip · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1828,7 +1828,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.2k · Python · AGPL-3.0 · pip · pushed 2026-08-04 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pip install testzeus-hercules`</sub>
 - **[Windowsagentarena](https://github.com/microsoft/WindowsAgentArena)** — Windows Agent Arena (WAA) 🪟 is a scalable OS platform for testing and benchmarking of multi-modal AI agents
-  <sub>★ 907 · Python · MIT · clone · pushed 2026-04-13 · Win? · WSL2 · Linux · Docker</sub>
+  <sub>★ 908 · Python · MIT · clone · pushed 2026-04-13 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/microsoft/WindowsAgentArena.git`</sub>
 - **[Open-RAG-Eval](https://github.com/vectara/open-rag-eval)** — an open source RAG evaluation framework that does not require golden answers, and can be used to evaluate performance of RAG tools connected to an AI Agent (Agentic RAG). github
   <sub>★ 412 · Python · Apache-2.0 · pip · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1894,7 +1894,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 29 · Java · MIT · source · pushed 2025-05-17</sub>
   <sub>`git clone https://github.com/vishalmysore/sam.git`</sub>
 - **[Dev-Swarm](https://github.com/kyegomez/dev-swarm)** — A swarm of LLM agents that will help you test, document, and productionize your code!
-  <sub>★ 20 · Python · MIT · source · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 20 · Python · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kyegomez/dev-swarm.git`</sub>
 - **[Agent-Solarpanels-Tutorial](https://github.com/Pairrot-Lore/agent-solarpanels-tutorial)** — This repository contains an AI agent built with LangGraph to calculate energy savings for solar panels. The project is designed for use w…
   <sub>★ 19 · Python · MIT · source · pushed 2024-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1906,7 +1906,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 18 · Python · Apache-2.0 · source · pushed 2023-05-22 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/montvieux/plark_ai_public.git`</sub>
 - **[Adtestpro](https://github.com/AnanyaP-WDW/AdTestPro)** — Open Source Tool To Preemptively Test Ad Creatives Against Synthetic Target Audiences
-  <sub>★ 16 · Python · source · pushed 2026-09-23 · WSL2 · Linux · Docker</sub>
+  <sub>★ 17 · Python · source · pushed 2026-09-23 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/AnanyaP-WDW/AdTestPro.git`</sub>
 - **[Backtesteragent](https://github.com/The-Swarm-Corporation/BackTesterAgent)** — An enterprise-grade AI-powered backtesting framework built on the Swarms framework for automated trading strategy validation and optimiza…
   <sub>★ 15 · Python · MIT · pip · pushed 2025-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2200,13 +2200,13 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 15.9k · Python · MIT · clone · pushed 2026-07-14 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/GreyDGL/PentestGPT.git`</sub>
 - **[Gorilla](https://github.com/ShishirPatil/gorilla)** — Gorilla - Training and Evaluating LLMs for Function Calls (Tool Calls)
-  <sub>★ 13k · Python · Apache-2.0 · pip · pushed 2026-04-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 13.1k · Python · Apache-2.0 · pip · pushed 2026-04-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install gorilla-cli`</sub>
 - **[Awesome-Langchain](https://github.com/kyrolabs/awesome-langchain)** — Awesome list of tools and projects with the awesome LangChain framework
   <sub>★ 9.6k · CC0-1.0 · source · pushed 2026-10-11</sub>
   <sub>`git clone https://github.com/kyrolabs/awesome-langchain.git`</sub>
 - **[Mcp-Go](https://github.com/mark3labs/mcp-go)** — A Go implementation of the Model Context Protocol (MCP), enabling seamless integration between LLM applications and external data sources…
-  <sub>★ 9.2k · Go · MIT · source · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 9.2k · Go · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mark3labs/mcp-go.git`</sub>
 - **[Trafilatura](https://github.com/adbar/trafilatura)** — Python &amp; Command-line tool to gather text and metadata on the Web - Crawling, scraping, extraction, output as CSV, JSON, HTML, MD, TXT, XML
   <sub>★ 7k · Python · Apache-2.0 · source · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2215,7 +2215,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 6.4k · Python · MIT · clone · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/modelscope/FunClip.git`</sub>
 - **[Awesome-Aitools](https://github.com/ikaijua/Awesome-AITools)** — Collection of AI-related utilities. Welcome to submit issues and pull requests /收藏AI相关的实用工具，欢迎提交issues 或者pull requests
-  <sub>★ 6.2k · Python · CC-BY-4.0 · source · pushed 2026-10-12 · macOS</sub>
+  <sub>★ 6.2k · Python · CC-BY-4.0 · source · pushed 2026-10-13 · macOS</sub>
   <sub>`git clone https://github.com/ikaijua/Awesome-AITools.git`</sub>
 - **[Awesome-Llmops](https://github.com/tensorchord/Awesome-LLMOps)** — An awesome &amp; curated list of best LLMOps tools for developers
   <sub>★ 6k · Shell · CC0-1.0 · source · pushed 2026-10-05 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -2230,7 +2230,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 3.4k · TypeScript · pip · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install metorial pydantic-ai python-dotenv`</sub>
 - **[Harbor](https://github.com/av/harbor)** — Effortlessly run LLM backends, APIs, frontends, and services with one command
-  <sub>★ 3.2k · Python · Apache-2.0 · source · pushed 2026-09-25 · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 3.2k · Python · Apache-2.0 · source · pushed 2026-10-13 · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/av/harbor.git`</sub>
 - **[Awesome-Llm-Json](https://github.com/imaurer/awesome-llm-json)** — Resource list for generating JSON using LLMs via function calling, tools, CFG. Libraries, Models, Notebooks, etc
   <sub>★ 2.2k · MIT · source · pushed 2025-02-18</sub>
@@ -2239,13 +2239,13 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.9k · Python · MIT · pip · pushed 2026-04-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install demogpt`</sub>
 - **[Indie-Hacker-Tools-Plus](https://github.com/XiaomingX/indie-hacker-tools-plus)** — 为独立开发者准备的精选技术栈和工具仓库来了！这里有你最需要的工具，帮你提升开发效率、节约成本，最重要的是——这些工具都是市场上热门的，经过验证的。🚀A curated collection of tech stacks and tools tailored for inde…
-  <sub>★ 1.9k · Apache-2.0 · source · pushed 2026-10-12</sub>
+  <sub>★ 1.9k · Apache-2.0 · source · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/XiaomingX/indie-hacker-tools-plus.git`</sub>
 - **[Awesome-Llm-Compression](https://github.com/HuangOwen/Awesome-LLM-Compression)** — Awesome LLM compression research papers and tools
   <sub>★ 1.9k · MIT · source · pushed 2026-08-27 · macOS?</sub>
   <sub>`git clone https://github.com/HuangOwen/Awesome-LLM-Compression.git`</sub>
 - **[WFGY](https://github.com/onestardao/WFGY)** — An open-source framework for debugging and stress testing LLMs under long-horizon, high-tension text scenarios. Includes a TXT-based debugging app for structured sequences to identify where reasoning breaks and retrieval fails github
-  <sub>★ 1.8k · Jupyter Notebook · source · pushed 2026-10-12</sub>
+  <sub>★ 1.8k · Jupyter Notebook · source · pushed 2026-10-13</sub>
   <sub>`git clone https://github.com/onestardao/WFGY.git`</sub>
 - **[Awesome-Llm-Security](https://github.com/corca-ai/awesome-llm-security)** — A curation of awesome tools, documents and projects about LLM Security
   <sub>★ 1.7k · source · pushed 2025-08-20</sub>
@@ -2257,13 +2257,13 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.4k · JavaScript · MIT · source · pushed 2026-07-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Yuan-ManX/ai-game-devtools.git`</sub>
 - **[Resume_Render_From_Job_Description](https://github.com/feder-cr/jev)** — Resume_Builder_AIHawk is a powerful Python tool that allows you to automatically customize your resume based on a job URL, ensuring it pe…
-  <sub>★ 1.3k · C++ · MIT · source · pushed 2026-10-09 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 1.3k · C++ · MIT · source · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/AIHawk-FOSS/resume_render_from_job_description.git`</sub>
 - **[Tora](https://github.com/microsoft/ToRA)** — ToRA is a series of Tool-integrated Reasoning LLM Agents designed to solve challenging mathematical reasoning problems by interacting with …
   <sub>★ 1.1k · Python · MIT · clone · pushed 2024-02-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/microsoft/ToRA.git`</sub>
 - **[Langkit](https://github.com/whylabs/langkit)** — LangKit - An open-source toolkit for monitoring Large Language Models (LLMs). 📚 Extracts signals from prompts &amp; responses, ensuring safe…
-  <sub>★ 999 · Jupyter Notebook · Apache-2.0 · pip · pushed 2024-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1k · Jupyter Notebook · Apache-2.0 · pip · pushed 2024-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install langkit[all]`</sub>
 - **[Ollama-Mcp-Bridge](https://github.com/patruff/ollama-mcp-bridge)** — Bridge between Ollama and MCP servers, enabling local LLMs to use Model Context Protocol tools
   <sub>★ 985 · TypeScript · MIT · npm · pushed 2025-04-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2272,10 +2272,10 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 899 · TypeScript · MIT · clone · pushed 2025-02-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/paradigmxyz/flux.git`</sub>
 - **[Open-Webui-Tools](https://github.com/Haervwe/open-webui-tools)** — a Repository of Open-WebUI tools to use with your favourite LLMs
-  <sub>★ 820 · Python · MIT · source · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 821 · Python · MIT · source · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Haervwe/open-webui-tools.git`</sub>
 - **[Dingo](https://github.com/MigoXLab/dingo)** — Dingo - A Comprehensive Data Quality Evaluation Tool
-  <sub>★ 758 · Python · Apache-2.0 · pip · pushed 2026-10-09 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 758 · Python · Apache-2.0 · pip · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install dingo-python`</sub>
 - **[Claudesync](https://github.com/jahwag/ctxsync)** — ClaudeSync is a Python tool that automates the synchronization of local files with Claude.ai Projects
   <sub>★ 740 · Python · MIT · source · pushed 2026-06-11 · Win · WSL2? · macOS · Linux</sub>
@@ -2287,22 +2287,22 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 601 · source · pushed 2024-03-06</sub>
   <sub>`git clone https://github.com/jondot/awesome-rust-llm.git`</sub>
 - **[Are-Copilots-Local-Yet](https://github.com/ErikBjare/are-copilots-local-yet)** — Are Copilots Local Yet? The frontier of local LLM Copilots for code completion, project generation, shell assistance, and more. Find tools …
-  <sub>★ 598 · Python · MIT · source · pushed 2025-01-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 599 · Python · MIT · source · pushed 2025-01-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ErikBjare/are-copilots-local-yet.git`</sub>
 - **[Awesome-Ai-Tools](https://github.com/eudk/awesome-ai-tools)** — VERY LARGE AI TOOL LIST! 🔴 Curated list of AI Tools - Updated December 2024
-  <sub>★ 597 · CC0-1.0 · source · pushed 2026-06-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 598 · CC0-1.0 · source · pushed 2026-06-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/eudk/awesome-ai-tools.git`</sub>
 - **[Awesome-Mlsecops](https://github.com/RiccardoBiosas/awesome-MLSecOps)** — A curated list of MLSecOps tools, articles and other resources on security applied to Machine Learning and MLOps systems
   <sub>★ 475 · Astro · MIT · source · pushed 2026-10-12</sub>
   <sub>`git clone https://github.com/RiccardoBiosas/awesome-MLSecOps.git`</sub>
 - **[Tiger](https://github.com/Upsonic/Tiger)** — No Crypto - Scam alarm - This project is not releated with any crypto currencies. | Neuralink for your AI Agents - LangChain - Autogen - …
-  <sub>★ 471 · Python · MIT · pip · pushed 2025-02-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 472 · Python · MIT · pip · pushed 2025-02-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip3 install upsonic`</sub>
 - **[Graphrag-Visualizer](https://github.com/noworneverev/graphrag-visualizer)** — A web-based tool for visualizing and exploring artifacts from Microsoft's GraphRAG
-  <sub>★ 427 · TypeScript · MIT · clone · pushed 2026-02-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 429 · TypeScript · MIT · clone · pushed 2026-02-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/noworneverev/graphrag-visualizer.git`</sub>
 - **[Labs-Ai-Tools-For-Devs](https://github.com/docker/labs-ai-tools-for-devs)** — [Now with MCP Support] AI For Devs - Build, Share &amp; Run agentic workflows. Just Docker. Just Markdown. BYO LLM
-  <sub>★ 397 · Clojure · Apache-2.0 · source · pushed 2026-08-03 · WSL2 · Linux · Docker</sub>
+  <sub>★ 398 · Clojure · Apache-2.0 · source · pushed 2026-08-03 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/docker/labs-ai-tools-for-devs.git`</sub>
 - **[Androidmeda](https://github.com/In3tinct/Androidmeda)** — AI tool to deobfuscate and find any potential vulnerabilities in android apps
   <sub>★ 378 · Python · Apache-2.0 · clone · pushed 2026-01-29 · Win? · WSL2 · macOS? · Linux?</sub>
@@ -2317,7 +2317,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 287 · Jupyter Notebook · Apache-2.0 · source · pushed 2023-08-19</sub>
   <sub>`git clone https://github.com/night-chen/ToolQA.git`</sub>
 - **[Awesome-Llmops](https://github.com/InftyAI/Awesome-LLMOps)** — An awesome &amp; curated list of best LLMOps tools
-  <sub>★ 266 · Python · Apache-2.0 · source · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 267 · Python · Apache-2.0 · source · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/InftyAI/Awesome-LLMOps.git`</sub>
 - **[Flotorch](https://github.com/FissionAI/FloTorch)** — FloTorch is an open-source tool for optimizing Generative AI workloads on AWS. It automates RAG proof-of-concept development with feature…
   <sub>★ 265 · Python · Apache-2.0 · source · pushed 2025-06-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2352,14 +2352,11 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 - **[Rageval](https://github.com/gomate-community/rageval)** — Evaluation tools for Retrieval-augmented Generation (RAG) methods
   <sub>★ 172 · Python · Apache-2.0 · clone · pushed 2024-11-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/gomate-community/rageval.git`</sub>
-- **[SkillLite](https://github.com/EXboys/skilllite)** — A lightweight, zero-dependency runtime for the agentsskills protocol that enables AI agents to securely execute portable skills locally. Written in Rust with native OS sandboxing, millisecond cold starts, single binary deployment github
-  <sub>★ 170 · Rust · MIT · cargo · pushed 2026-09-25 · Win · WSL2 · macOS · Linux</sub>
-  <sub>`cargo install --path skilllite`</sub>
 - **[Awesome-Llm-Os](https://github.com/bilalonur/awesome-llm-os)** — A curated list of awesome resources, tools, research papers, and projects related to the concept of Large Language Model Operating Systems (
   <sub>★ 166 · CC0-1.0 · source · pushed 2026-02-08 · Win? · WSL2? · Linux?</sub>
   <sub>`git clone https://github.com/bilalonur/awesome-llm-os.git`</sub>
 - **[Blockoli](https://github.com/winfunc/blockoli)** — Blockoli is a high-performance tool for code indexing, embedding generation and semantic search tool for use with LLMs
-  <sub>★ 165 · Rust · MIT · clone · pushed 2024-04-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 166 · Rust · MIT · clone · pushed 2024-04-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/stitionai/blockoli.git`</sub>
 - **[Code-Interpreter-Api](https://github.com/leezhuuuuu/Code-Interpreter-Api)** — Committed to being the best code interpreter in the world
   <sub>★ 165 · Python · GPL-3.0 · clone · pushed 2025-01-04 · WSL2 · Linux · Docker</sub>
@@ -2373,8 +2370,11 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 - **[Llm-Term](https://github.com/dh1011/llm-term)** — A Rust-based CLI tool that generates and executes terminal commands using OpenAI's language models
   <sub>★ 153 · C · MIT · source · pushed 2026-07-05 · Win · WSL2? · Linux</sub>
   <sub>`git clone https://github.com/dh1011/llm-term.git`</sub>
+- **[SkillLite](https://github.com/EXboys/skilllite)** — A lightweight, zero-dependency runtime for the agentsskills protocol that enables AI agents to securely execute portable skills locally. Written in Rust with native OS sandboxing, millisecond cold starts, single binary deployment github
+  <sub>★ 150 · Rust · MIT · cargo · pushed 2026-09-25 · Win · WSL2 · macOS · Linux</sub>
+  <sub>`cargo install --path skilllite`</sub>
 - **[Wildguard](https://github.com/allenai/wildguard)** — Open One-Stop Moderation Tools for Safety Risks, Jailbreaks, and Refusals of LLMs
-  <sub>★ 140 · Python · pip · pushed 2024-12-02 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 141 · Python · pip · pushed 2024-12-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install wildguard`</sub>
 - **[Ragelo](https://github.com/zetaalphavector/RAGElo)** — RAGElo is a set of tools that helps you selecting the best RAG-based LLM agents by using an Elo ranker
   <sub>★ 133 · Python · Apache-2.0 · pip · pushed 2026-09-24 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2415,12 +2415,12 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 - **[Llm-Tools](https://github.com/datacommonsorg/llm-tools)** — This repo contains client library code for accessing DataGemma, an open model that helps address the challenges of hallucination by grounding LLMs in the vast, real-world statistical data of Google's Data Commons
   <sub>★ 73 · Python · Apache-2.0 · pip · pushed 2025-11-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install git+https://github.com/datacommonsorg/llm-tools`</sub>
-- **[Monadic-Chat](https://github.com/yohasebe/monadic-chat)** — + 🐳 + 🐧 Monadic Chat is a locally hosted web app for creating intelligent chatbots, available for Mac, Windows, and Linux. It offers a …
-  <sub>★ 71 · Ruby · Apache-2.0 · source · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`git clone https://github.com/yohasebe/monadic-chat.git`</sub>
 - **[Companion](https://github.com/rapmd73/Companion)** — An AI-powered Discord bot blending playful conversation with smart moderation tools, adding charm and order to your server
-  <sub>★ 70 · Python · LGPL-2.1 · source · pushed 2026-07-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 71 · Python · LGPL-2.1 · source · pushed 2026-07-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/rapmd73/Companion.git`</sub>
+- **[Monadic-Chat](https://github.com/yohasebe/monadic-chat)** — + 🐳 + 🐧 Monadic Chat is a locally hosted web app for creating intelligent chatbots, available for Mac, Windows, and Linux. It offers a …
+  <sub>★ 71 · Ruby · Apache-2.0 · source · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
+  <sub>`git clone https://github.com/yohasebe/monadic-chat.git`</sub>
 - **[Stock-Analysis-With-Llm](https://github.com/bauer-jan/stock-analysis-with-llm)** — This repository provides tools and workflows for stock analysis using large language models (LLMs). It combines financial data processing…
   <sub>★ 70 · Python · MIT · source · pushed 2024-11-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/bauer-jan/stock-analysis-with-llm.git`</sub>
@@ -2458,10 +2458,10 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 47 · Python · MIT · source · pushed 2025-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Vokturz/LLM-slackbot-channels.git`</sub>
 - **[ChatSpatial](https://github.com/cafferychen777/ChatSpatial)** — MCP server enabling spatial transcriptomics analysis via natural language. Integrates 60+ methods for spatial domains, deconvolution, cell communication, and trajectory analysis
-  <sub>★ 44 · Python · MIT · uv · pushed 2026-10-12 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 44 · Python · MIT · uv · pushed 2026-10-13 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`uvx --from chatspatial chatspatial server`</sub>
 - **[Ai-Agents-Directory](https://github.com/0xmetaschool/AI-Agents-Directory)** — Find and get started with the best AI Agents and AI Automation tools on the Internet. Start building your own AI Agents powered workforce…
-  <sub>★ 41 · MIT · clone · pushed 2024-12-27</sub>
+  <sub>★ 42 · MIT · clone · pushed 2024-12-27</sub>
   <sub>`git clone https://github.com/0xmetaschool/ai-agents.git`</sub>
 - **[Brahmasumm-Community-Edition](https://github.com/balajivis/BrahmaSumm-Community-Edition)** — BrahmaSumm is an advanced document summarization and visualization tool designed to streamline document management, knowledge base creati…
   <sub>★ 40 · Python · MIT · clone · pushed 2024-11-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2473,7 +2473,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 38 · Python · GPL-3.0 · docker · pushed 2026-04-17 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`docker run -it --network host --name bubbln-container olasupoo/bubbln`</sub>
 - **[Plasmate](https://github.com/plasmate-labs/plasmate)** — A browser engine built for AI agents that compiles HTML into a Semantic Object Model (SOM), providing 10x token compression vs raw HTML. V8 JS rendering, CDP compatibility, authenticated browsing, MCP server github | docs
-  <sub>★ 38 · Rust · Apache-2.0 · cargo · pushed 2026-10-12 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 38 · Rust · Apache-2.0 · cargo · pushed 2026-10-13 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`cargo install plasmate`</sub>
 - **[Formfill](https://github.com/wdhorton/formfill)** — FormFill is a CLI tool that uses LLMs to automatically fill out PDF forms
   <sub>★ 34 · Python · pip · pushed 2024-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2527,7 +2527,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 19 · TypeScript · Apache-2.0 · source · pushed 2024-08-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/DiscovAI/DiscovAI-crawl.git`</sub>
 - **[Llm_Api_Price_Comparator_Web](https://github.com/CookSleep/LLM_API_Price_Comparator_Web)** — LLM API Price Comparator Web 是一个在线工具，帮助用户便捷地比较不同LLM API服务商在指定输入输出下调用同一种模型的价格。 它会自动获取美元/人民币汇率，允许用户输入服务商的余额、调用定价信息，并计算、比较相对于输入输出Token的成本。 该…
-  <sub>★ 19 · JavaScript · GPL-3.0 · source · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 19 · JavaScript · GPL-3.0 · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/CookSleep/LLM_API_Price_Comparator_Web.git`</sub>
 - **[Nano-Bots-Api](https://github.com/icebaker/nano-bots-api)** — HTTP API for Nano Bots - small, AI-powered bots that can be easily shared as a single file, designed to support multiple providers such as…
   <sub>★ 19 · Ruby · MIT · clone · pushed 2024-06-23 · WSL2 · Linux · Docker</sub>
@@ -2702,6 +2702,6 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-10-12. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-13. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

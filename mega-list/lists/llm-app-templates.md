@@ -79,7 +79,7 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 ## Advanced AI Agents
 
 - **[🌐 Openwork - Open Browser Automation Agent](https://github.com/accomplish-ai/coworker)** — external - Open-source agent that operates a real browser
-  <sub>★ 10.8k · source · pushed 2026-08-13</sub>
+  <sub>★ 10.9k · source · pushed 2026-08-13</sub>
   <sub>`git clone https://github.com/accomplish-ai/coworker.git`</sub>
 - **[🏚️ 🍌 AI Home Renovation Agent with Nano Banana Pro](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/advanced_ai_agents/multi_agent_apps/ai_home_renovation_agent)** — Photos of your space in, renovation plan and photorealistic renders out
   <sub>in-repo</sub>
@@ -370,7 +370,7 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 ## Voice AI Agents
 
 - **[🎙️ OpenSource Voice Dictation Agent (Wispr Flow clone)](https://github.com/akshayaggarwal99/jarvis-ai-assistant)** — external - Open-source dictation that types where you talk
-  <sub>★ 649 · TypeScript · MIT · clone · pushed 2026-09-23 · Win? · macOS</sub>
+  <sub>★ 650 · TypeScript · MIT · clone · pushed 2026-09-23 · Win? · macOS</sub>
   <sub>`git clone https://github.com/akshayaggarwal99/jarvis-ai-assistant.git`</sub>
 - **[🗣️ AI Audio Tour Agent](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/voice_ai_agents/ai_audio_tour_agent)** — Self-guided audio tours from your location, interests, and pace
   <sub>in-repo</sub>
@@ -448,6 +448,6 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 
 ---
 
-Snapshot 2026-10-12. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-13. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).
