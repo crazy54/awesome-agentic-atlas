@@ -217,13 +217,13 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>website</sub>
   <sub>`https://agent-skill.co/makenotion/skills/spec-to-implementation`</sub>
 - **[resend/resend](https://github.com/resend/resend-skills/tree/main/skills/resend)** — Send and manage emails via the Resend API
-  <sub>JavaScript · MIT · in-repo · pushed 2026-10-13</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/resend/resend-skills.git && cd resend-skills/skills/resend`</sub>
 - **[resend/react-email](https://github.com/resend/resend-skills/tree/main/skills/react-email)** — Build emails with React Email components
-  <sub>JavaScript · MIT · in-repo · pushed 2026-10-13</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/resend/resend-skills.git && cd resend-skills/skills/react-email`</sub>
 - **[resend/email-best-practices](https://github.com/resend/resend-skills/tree/main/skills/email-best-practices)** — Email deliverability and design best practices
-  <sub>JavaScript · MIT · in-repo · pushed 2026-10-13</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/resend/resend-skills.git && cd resend-skills/skills/email-best-practices`</sub>
 - **[sanity-io/sanity-best-practices](https://agent-skill.co/sanity-io/skills/sanity-best-practices)** — Best practices for Sanity Studio and content workflows
   <sub>website</sub>
@@ -244,22 +244,22 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>website</sub>
   <sub>`https://agent-skill.co/better-auth/skills/twoFactor`</sub>
 - **[coreyhaines31/ai-seo](https://github.com/coreyhaines31/marketingskills/tree/main/skills/ai-seo)** — Optimize content for AI-generated answers
-  <sub>JavaScript · MIT · in-repo · pushed 2026-10-13</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/coreyhaines31/marketingskills.git && cd marketingskills/skills/ai-seo`</sub>
 - **[coreyhaines31/copywriting](https://github.com/coreyhaines31/marketingskills/tree/main/skills/copywriting)** — Write marketing copy for landing pages and ads
-  <sub>JavaScript · MIT · in-repo · pushed 2026-10-13</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/coreyhaines31/marketingskills.git && cd marketingskills/skills/copywriting`</sub>
 - **[coreyhaines31/email-sequence](https://github.com/coreyhaines31/marketingskills/tree/main/skills/email-sequence)** — Build email sequences and drip campaigns
-  <sub>JavaScript · MIT · in-repo · pushed 2026-10-13</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/coreyhaines31/marketingskills.git && cd marketingskills/skills/email-sequence`</sub>
 - **[coreyhaines31/page-cro](https://github.com/coreyhaines31/marketingskills/tree/main/skills/page-cro)** — Improve conversion rates on marketing pages
-  <sub>JavaScript · MIT · in-repo · pushed 2026-10-13</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/coreyhaines31/marketingskills.git && cd marketingskills/skills/page-cro`</sub>
 - **[coreyhaines31/pricing-strategy](https://github.com/coreyhaines31/marketingskills/tree/main/skills/pricing-strategy)** — Define pricing and packaging for SaaS
-  <sub>JavaScript · MIT · in-repo · pushed 2026-10-13</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/coreyhaines31/marketingskills.git && cd marketingskills/skills/pricing-strategy`</sub>
 - **[coreyhaines31/social-content](https://github.com/coreyhaines31/marketingskills/tree/main/skills/social-content)** — Create and schedule social media content
-  <sub>JavaScript · MIT · in-repo · pushed 2026-10-13</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/coreyhaines31/marketingskills.git && cd marketingskills/skills/social-content`</sub>
 - **[deanpeters/epic-hypothesis](https://github.com/deanpeters/Product-Manager-Skills/tree/main/skills/epic-hypothesis)** — Turn initiatives into testable hypotheses
   <sub>Shell · in-repo · pushed 2026-09-01</sub>
@@ -274,16 +274,16 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>Shell · in-repo · pushed 2026-09-01</sub>
   <sub>`git clone https://github.com/deanpeters/Product-Manager-Skills.git && cd Product-Manager-Skills/skills/roadmap-planning`</sub>
 - **[phuryn/create-prd](https://github.com/phuryn/pm-skills/tree/main/pm-execution/skills/create-prd)** — Create a PRD with 8-section template
-  <sub>MIT · in-repo · pushed 2026-10-10</sub>
+  <sub>MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/phuryn/pm-skills.git && cd pm-skills/pm-execution/skills/create-prd`</sub>
 - **[phuryn/product-strategy](https://github.com/phuryn/pm-skills/tree/main/pm-product-strategy/skills/product-strategy)** — Create product strategy using the Canvas
-  <sub>MIT · in-repo · pushed 2026-10-10</sub>
+  <sub>MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/phuryn/pm-skills.git && cd pm-skills/pm-product-strategy/skills/product-strategy`</sub>
 - **[phuryn/user-personas](https://github.com/phuryn/pm-skills/tree/main/pm-market-research/skills/user-personas)** — Create user personas with JTBD, pains, and gains
-  <sub>MIT · in-repo · pushed 2026-10-10</sub>
+  <sub>MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/phuryn/pm-skills.git && cd pm-skills/pm-market-research/skills/user-personas`</sub>
 - **[phuryn/market-sizing](https://github.com/phuryn/pm-skills/tree/main/pm-market-research/skills/market-sizing)** — Estimate TAM, SAM, SOM with top-down and bottom-up
-  <sub>MIT · in-repo · pushed 2026-10-10</sub>
+  <sub>MIT · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/phuryn/pm-skills.git && cd pm-skills/pm-market-research/skills/market-sizing`</sub>
 - **[garrytan/office-hours](https://agent-skill.co/garrytan/skills/office-hours)** — YC Office Hours: reframing product before code
   <sub>website</sub>
@@ -400,7 +400,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Model Context Protocol (MCP)
 
 - **[MCP Server Examples](https://github.com/modelcontextprotocol/servers)** — Official server implementations
-  <sub>★ 91.2k · JavaScript · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 91.3k · JavaScript · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @modelcontextprotocol/server-memory`</sub>
 - **[MCP Official Documentation](https://modelcontextprotocol.io/)** — The open standard
   <sub>website</sub>
@@ -556,31 +556,31 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Community Skills
 
 - **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)** — High-agency frontend skill to eliminate generic UI slop
-  <sub>★ 95.5k · JavaScript · MIT · npx · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 96.1k · JavaScript · MIT · npx · pushed 2026-10-14 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add https://github.com/Leonxlnx/taste-skill`</sub>
 - **[AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo)** — Universal SEO skill for website analysis
   <sub>★ 18.9k · Python · MIT · script · pushed 2026-10-04 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/claude-seo/main/uninstall.sh | bash`</sub>
 - **[RoundTable02/tutor-skills](https://github.com/bevibing/tutor-skills)** — Transform docs or codebases into interactive StudyVaults
-  <sub>★ 1.3k · Shell · MIT · npx · pushed 2026-02-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.4k · Shell · MIT · npx · pushed 2026-02-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add RoundTable02/tutor-skills`</sub>
 - **[BrianRWagner/ai-marketing-skills](https://github.com/BrianRWagner/ai-marketing-claude-code-skills)** — 17 marketing frameworks for outreach and audits
-  <sub>★ 445 · Shell · clone · pushed 2026-03-19 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 444 · Shell · clone · pushed 2026-03-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/BrianRWagner/ai-marketing-claude-code-skills.git`</sub>
 - **[qdrant/skills](https://github.com/qdrant/skills)** — Agent skills for Qdrant vector search, scaling, and performance
-  <sub>★ 255 · Python · Apache-2.0 · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 257 · Python · Apache-2.0 · npx · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add qdrant/skills/meta/qdrant-advisor`</sub>
 - **[smixs/creative-director-skill](https://github.com/smixs/creative-director-skill)** — 20+ creative methodologies (SIT, TRIZ, SCAMPER)
   <sub>★ 254 · Python · CC-BY-4.0 · npx · pushed 2026-08-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add smixs/creative-director-skill # asks where to install`</sub>
 - **[coderabbitai/skills](https://github.com/coderabbitai/skills)** — Code review and PR autofix workflows
-  <sub>★ 189 · TypeScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 190 · TypeScript · MIT · npx · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add coderabbitai/skills`</sub>
 - **[wrsmith108/linear-claude-skill](https://github.com/wrsmith108/linear-claude-skill)** — Manage Linear issues, projects, and teams
-  <sub>★ 134 · TypeScript · MIT · clone · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 135 · TypeScript · MIT · clone · pushed 2026-07-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/wrsmith108/linear-claude-skill`</sub>
 - **[muthuishere/hand-drawn-diagrams](https://github.com/muthuishere/hand-drawn-diagrams)** — Generate hand-drawn Excalidraw diagrams from prompt
-  <sub>★ 78 · Python · npx · pushed 2026-09-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 79 · Python · npx · pushed 2026-09-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add muthuishere/hand-drawn-diagrams`</sub>
 - **[k-kolomeitsev/data-structure-protocol](https://github.com/k-kolomeitsev/data-structure-protocol)** — Graph-based memory for faster context and safer refactors
   <sub>★ 68 · Python · Apache-2.0 · psh · pushed 2026-08-10 · Win · WSL2? · macOS? · Linux · Docker</sub>
@@ -643,6 +643,6 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 
 ---
 
-Snapshot 2026-10-13. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-14. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

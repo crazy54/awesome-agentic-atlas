@@ -11,7 +11,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> | <a href="https://github.com/usestrix/strix"><img src="https://raw.githubusercontent.com/usestrix/.github/main/imgs/cover.png" width="260"></a> | <a href="https://github.com/BerriAI/litellm"><img src="https://github.com/user-attachments/assets/c5ee0412-6fb5-4fb6-ab5b-bafae4209ca6" width="260"></a> |
-| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 90.8k | **[Strix](https://github.com/usestrix/strix)**<br>★ 68.4k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 61.2k |
+| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 90.9k | **[Strix](https://github.com/usestrix/strix)**<br>★ 68.5k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 61.2k |
 | <a href="https://github.com/NVIDIA/garak"><img src="https://opengraph.githubassets.com/1/leondz/garak" width="260"></a> | <a href="https://github.com/bridgecrewio/checkov"><img src="https://raw.githubusercontent.com/bridgecrewio/checkov/main/docs/checkov-jenkins.png" width="260"></a> | <a href="https://github.com/guardrails-ai/guardrails"><img src="https://opengraph.githubassets.com/1/guardrails-ai/guardrails" width="260"></a> |
 | **[Garak](https://github.com/NVIDIA/garak)**<br>★ 9.6k | **[Checkov](https://github.com/bridgecrewio/checkov)**<br>★ 9.1k | **[Guardrails](https://github.com/guardrails-ai/guardrails)**<br>★ 7.5k |
 
@@ -28,13 +28,13 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Sandboxing &amp; Isolation Environments
 
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** — Formerly OpenDevin, this platform includes a secure runtime environment for autonomous coding agents to operate without accessing the host machine's sensitive files
-  <sub>★ 90.8k · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 90.9k · TypeScript · MIT · npm · pushed 2026-10-14 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[Agent-Infra Sandbox](https://github.com/agent-infra/sandbox)** — An "All-In-One" sandbox combining Browser, Shell, VSCode, and File System access in a single Docker container, optimized for agentic tasks
   <sub>★ 6.2k · Python · Apache-2.0 · pip · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install agent-sandbox`</sub>
 - **[Kubernetes Agent Sandbox](https://github.com/kubernetes-sigs/agent-sandbox)** — A Kubernetes Native project providing a Sandbox Custom Resource Definition (CRD) to manage isolated, stateful workloads for AI agents
-  <sub>★ 4.2k · Go · Apache-2.0 · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4.3k · Go · Apache-2.0 · pip · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install k8s-agent-sandbox`</sub>
 - **[SandboxAI](https://github.com/substratusai/sandboxai)** — An open-source runtime for executing AI-generated code (Python/Shell) in isolated containers with granular permission controls
   <sub>★ 143 · Go · pip · pushed 2025-02-05 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -43,7 +43,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Red Teaming &amp; Vulnerability Scanners
 
 - **[Strix](https://github.com/usestrix/strix)** — An autonomous AI agent designed for penetration testing. It runs inside a docker sandbox to actively probe applications and generate verified exploit capabilities
-  <sub>★ 68.4k · Python · Apache-2.0 · npx · pushed 2026-10-13 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 68.5k · Python · Apache-2.0 · npx · pushed 2026-10-14 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add usestrix/strix`</sub>
 - **[Garak](https://github.com/NVIDIA/garak)** — The "Nmap for LLMs." A vulnerability scanner that probes models for hallucination, data leakage, and prompt injection susceptibilities
   <sub>★ 9.6k · Python · Apache-2.0 · source · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -64,28 +64,28 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Guardrails &amp; Compliance
 
 - **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)** — While known for model proxying, LiteLLM includes built-in guardrail features to filter requests and responses across multiple LLM providers
-  <sub>★ 61.2k · Python · uv · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 61.2k · Python · uv · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install 'litellm[proxy]'`</sub>
 - **[Guardrails](https://github.com/guardrails-ai/guardrails)** — A Python framework for validating LLM outputs against structural and semantic rules (e.g., "must return valid JSON," "must not contain PII")
   <sub>★ 7.5k · Python · Apache-2.0 · pip · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install guardrails-ai`</sub>
 - **[NeMo Guardrails](https://github.com/NVIDIA-NeMo/Guardrails)** — NVIDIA's toolkit for adding programmable rails to LLM-based apps. It ensures agents stay on topic, avoid jailbreaks, and adhere to defined safety policies
-  <sub>★ 7.3k · Python · source · pushed 2026-10-13 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 7.3k · Python · source · pushed 2026-10-14 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/NVIDIA/NeMo-Guardrails.git`</sub>
 - **[OWASP Agent Memory Guard](https://github.com/OWASP/www-project-agent-memory-guard)** — An official OWASP project that detects and blocks AI agent memory poisoning attacks (OWASP ASI06). Provides a drop-in middleware for LangChain, AutoGen, and CrewAI pipelines with real-time threat detection, sanitization hooks, and audit logging. pip install agent-memory-guard
-  <sub>★ 185 · Python · Apache-2.0 · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 186 · Python · Apache-2.0 · pip · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agent-memory-guard`</sub>
 
 ## Static Analysis &amp; Linters
 
 - **[Checkov](https://github.com/bridgecrewio/checkov)** — While primarily for IaC, Checkov includes policies for scanning AI infrastructure and configurations to prevent misconfigurations in deployment
-  <sub>★ 9.1k · Python · Apache-2.0 · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 9.1k · Python · Apache-2.0 · pip · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip3 install checkov`</sub>
 - **[Agentic Radar](https://github.com/splx-ai/agentic-radar)** — A static analysis tool that visualizes agent workflows (LangGraph, CrewAI, AutoGen). It detects risky tool usage, permission loops, and maps them to known vulnerabilities
   <sub>★ 1.1k · Python · Apache-2.0 · pip · pushed 2025-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentic-radar`</sub>
 - **[ATR (Agent Threat Rules)](https://github.com/Agent-Threat-Rule/agent-threat-rules)** — 108 open-source regex detection rules for AI agent threats (prompt injection, tool poisoning, credential exfiltration, skill compromise). &lt;1ms per scan. Adopted by Cisco AI Defense
-  <sub>★ 413 · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 415 · TypeScript · MIT · npm · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g agent-threat-rules`</sub>
 - **[Aguara](https://github.com/garagon/aguara)** — A static security scanner for AI agent skills and MCP server configurations. Detects prompt injection, credential leaks, data exfiltration, and supply-chain attacks with 173 built-in rules, 4 analysis layers, and remediation guidance
   <sub>★ 94 · Go · Apache-2.0 · go · pushed 2026-10-05 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -96,10 +96,10 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Agent Firewalls &amp; Gateways (Runtime Protection)
 
 - **[AgentGateway](https://github.com/agentgateway/agentgateway)** — A Linux Foundation project providing an AI-native proxy for secure connectivity (A2A &amp; MCP protocols). It adds RBAC, observability, and policy enforcement to agent-tool interactions
-  <sub>★ 5.3k · Rust · Apache-2.0 · source · pushed 2026-10-13 · WSL2? · macOS · Linux</sub>
+  <sub>★ 5.3k · Rust · Apache-2.0 · source · pushed 2026-10-14 · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/agentgateway/agentgateway.git`</sub>
 - **[Immunity Agent](https://github.com/PrismorSec/prismor)** — Security-focused AI agent runtime for scanning prompt injection, MCP risks, unsafe package installs, and dangerous agent actions before execution
-  <sub>★ 417 · Python · Apache-2.0 · pip · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 417 · Python · Apache-2.0 · pip · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install prismor`</sub>
 - **[Envoy AI Gateway](https://gateway.envoyproxy.io/)** — An Envoy-based gateway that manages request traffic to GenAI services, providing a control point for rate limiting and policy enforcement
   <sub>website</sub>
@@ -108,7 +108,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Identity &amp; Authentication
 
 - **[OneCLI](https://github.com/onecli/onecli)** — Open-source credential vault for AI agents. A Rust HTTP gateway intercepts agent requests and injects API credentials transparently, so agents never handle raw keys. Supports per-agent scoped tokens and AES-256-GCM encryption at rest
-  <sub>★ 3.6k · TypeScript · Apache-2.0 · helm · pushed 2026-10-09 · WSL2 · Linux · Docker</sub>
+  <sub>★ 3.6k · TypeScript · Apache-2.0 · helm · pushed 2026-10-14 · WSL2 · Linux · Docker</sub>
   <sub>`helm install onecli oci://ghcr.io/onecli/charts/onecli`</sub>
 - **[WSO2](https://github.com/wso2)** — An identity management solution that treats AI agents as first-class identities, enabling secure authentication and authorization for agent actions
   <sub>website</sub>
@@ -123,6 +123,6 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 
 ---
 
-Snapshot 2026-10-13. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-14. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

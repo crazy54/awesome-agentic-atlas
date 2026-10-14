@@ -2,20 +2,46 @@
 
 Speaks the Model Context Protocol — as a server, as a client, or as a gateway between.
 
-**5,528 projects** · 4,718 with stars to rank by · 7,510,478 combined stars
+**5,538 projects** · 4,734 with stars to rank by · 7,564,084 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=mcp)
 
-✨ **14 new to the atlas** in the 10/13/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=mcp&new=1).
+✨ **8 new to the atlas** in the 10/14/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=mcp&new=1).
 
 Page **7** of 7, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp.md) · [2](mcp-2.md) · [3](mcp-3.md) · [4](mcp-4.md) · [5](mcp-5.md) · [6](mcp-6.md) · **7**.
 
-## Also here, unranked (810)
+## Also here, unranked (804)
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 480–810 of 810. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 449–804 of 804. The rest are on this page's other parts, linked above and below.</sub>
 
+- **[mambalabsdev/mcp-review-platform-reputation-enricher](https://github.com/mambalabsdev/mcp-review-platform-reputation-enricher)** — Resolve a company domain to its Trustpilot rating, review count and claimed status
+- **[mandarelabs/mandare](https://github.com/mandarelabs/mandare)** — Accountability for AI agent fleets: verify a signed, hash-chained ledger, check budgets, kill an agent, and issue passports and mandates, all through the local CLI
+- **[MankhongGarden/line-bot-ops-mcp](https://github.com/MankhongGarden/line-bot-ops-mcp)** — Operate your own LINE bot: webhook queue health, failed jobs and retries, plus push, Rich Menu swap, follower insight and quota. LINE tools work with any Messaging API channel
+- **[markaestro/markaestro-agents](https://github.com/markaestro/markaestro-agents)** — Schedule, publish and measure posts on Facebook, Instagram, TikTok, LinkedIn, Threads, Pinterest and X for one brand or many, with analytics and Evergreen queues. Hosted server with OAuth sign-in, or…
+- **[Markovo](https://github.com/fisher-byte/markovo)** — Convert PDF, DOCX, PPTX, XLSX and authorized public pages (Google Docs, Notion, GitHub, Hacker News, YouTube) into clean, structured Markdown for agent context. Remote MCP endpoint with OAuth 2.1 (ht…
+- **[marykovziridze/screaming-frog-mcp](https://github.com/marykovziridze/screaming-frog-mcp)** — Run Screaming Frog SEO Spider headless crawls, export data and perform technical SEO audits
+- **[MasterPlayspots/motionspec](https://github.com/MasterPlayspots/motionspec)** — Reduced-motion and WCAG 2.2.2/2.3.3 verification for web animation: validate animation specs and compile them into reduced-motion-safe CSS
+- **[matthiastjong/shellgate](https://github.com/matthiastjong/shellgate)** — /🏠 - Self-hosted secure gateway for AI agents with scoped tokens, credential injection, human review, SSH execution, and audit trails
+- **[mavdol/capsule/mcp-server](https://github.com/mavdol/capsule/tree/main/integrations/mcp-server)** — Run untrusted Python/JavaScript code in WebAssembly sandboxes
+- **[mckinsey/vizro-mcp](https://github.com/mckinsey/vizro/tree/main/vizro-mcp)** — Create validated, maintainable data charts and dashboards with Vizro tools and templates
+- **[mcpindex-ai/mcp-server-mcpindex](https://github.com/mcpindex-ai/mcp-server-mcpindex)** — Find MCP servers by describing a task and get advisory trust screens before connecting, using the mcpindex directory
+- **[mcpqueen/mcpqueen](https://github.com/mcpqueen/mcpqueen)** — Graded MCP registry: live-probes remote servers from the MCP Registry (initialization, tool listing, schema quality, latency, provenance) and publishes grades
+- **[mcurmi05/vdiff](https://github.com/mcurmi05/vdiff)** — Breaking-change diffs for npm packages, so coding agents avoid writing code against outdated APIs
+- **[mediiiiium/mcp-jp](https://github.com/mediiiiium/mcp-jp)** — MCP servers for Japanese SMB SaaS without their own MCP support, such as KING OF TIME, SmartHR, kaonavi, Smaregi, LINE Lstep and CloudSign
+- **[meloliva14/verity-mcp](https://github.com/meloliva14/verity-mcp)** — Fail-closed trust gate for agents: fact-checking, prompt-injection detection, content moderation, PII and secret detection, and a pre-action guardrail
+- **[memgraph/mcp-memgraph](https://github.com/memgraph/ai-toolkit/tree/main/integrations/mcp-memgraph)** — Run queries against Memgraph and access its schema
+- **[memokar/brainy](https://github.com/memokar/brainy)** — Self-hosted shared brain for multiple agents: Git-versioned Markdown knowledge plus a task queue with atomic claims, per-space ACL, audit log and human approval, so Claude, ChatGPT and other agents c…
+- **[MemorySync](https://github.com/memorysyncio/memorysync-cursor-starter)** — Persistent multi-tenant memory layer and MCP server for AI coding assistants with sub-50ms hybrid recall
+- **[meridian-silkdev/meridian-mcp](https://github.com/meridian-silkdev/meridian-mcp)** — Startup founder services such as company incorporation and visas: browse services, create and track requests, verify payments and schedule meetings
+- **[meser10/meser10-mcp](https://github.com/meser10/meser10-mcp)** — Meser 10, the Israeli email and SMS marketing platform: tools generated from its live API, permission tiers starting read-only and a per-send recipient cap
+- **[Metaverse-Cloud/engagelab-email-mcp](https://github.com/Metaverse-Cloud/engagelab-email-mcp)** — Send, receive, monitor and reply to email with thread context via EngageLab Email
+- **[MGM-FALCON/quelllm-mcp](https://github.com/MGM-FALCON/quelllm-mcp)** — Search the quelllm.fr open-weights LLM catalog: compare models by parameters, VRAM per quantization, speed and license, and estimate VRAM and costs
+- **[Michael-WhiteCapData/ollama-handoff](https://github.com/Michael-WhiteCapData/ollama-handoff)** — Offload summaries, drafts, extractions and first-pass code reviews from a cloud LLM agent to a local Ollama model via handoff tools with built-in prompts
+- **[mickaelkerjean/filestash](https://github.com/mickael-kerjean/filestash/tree/master/server/plugin/plg_handler_mcp)** — Remote storage access: SFTP, S3, FTP, SMB, NFS, WebDAV, Git, FTPS, Google Cloud, Azure Blob, SharePoint and more
+- **[microsoft/markitdown](https://github.com/microsoft/markitdown/tree/main/packages/markitdown-mcp)** — Convert many file formats, local or remote, to Markdown for LLMs using MarkItDown
+- **[microsoft/mcp](https://github.com/microsoft/mcp/tree/main/servers/Azure.Mcp.Server)** — #️⃣ ☁️ - Access Azure services including Storage, Cosmos DB and Azure Monitor
 - **[Middleware MCP Server](https://github.com/middleware-labs/mcp-middleware)** — MCP server for interacting with Middleware observability data, enabling AI assistants to query logs, metrics, traces, and infrastructure telemetry through standardized interfaces
 - **[mihnin/stellara-mcp](https://github.com/mihnin/stellara-mcp)** — Deterministic Western astrology via Swiss Ephemeris: natal charts, transits, synastry and a birthplace resolver with coordinates and historical UTC offsets
 - **[miracle1814/ue5-automation](https://github.com/miracle1814/ue5-automation)** — Unreal Engine 5 Blueprint automation: create, wire and compile Blueprints, author materials and UMG widgets, and verify PIE runtime state
@@ -146,7 +172,6 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[Rererr/amenbo](https://github.com/Rererr/amenbo)** — Token-efficient web fetching for Japanese sites: outline-first disclosure, Shift_JIS and EUC-JP decoding, PDF and CSV extraction and polite crawling
 - **[ReviewGate/reviewgate](https://github.com/ReviewGate/reviewgate)** — Code review against your team's written rules: a generator finds issues and an independent judge filters them, with a pre-push gate and PR bot
 - **[Rheopyrin/db-access-mcp](https://github.com/Rheopyrin/db-access-mcp)** — Query PostgreSQL, MySQL, Redshift and SQL Server over SSH or AWS SSM tunnels, with read-only enforcement, confined exports and pluggable secret providers
-- **[Rheopyrin/ox-mcp](https://github.com/Rheopyrin/ox-mcp)** — Email (IMAP/SMTP), Sieve mail filters, CalDAV calendars, CardDAV contacts and free/busy scheduling for Open-Xchange and standards-based mail platforms
 - **[richer-richard/fenestra](https://github.com/richer-richard/fenestra/tree/main/fenestra-mcp)** — Headless rendering and verification of native Rust GUIs: accessibility tree, semantic selectors, contrast and focus-order checks, and screenshot diffs
 - **[RightOnPar-LLC/mesh-connector](https://github.com/RightOnPar-LLC/meshmarket-mcp)** — MeshMarket agent-to-agent capability exchange: agents browse, self-onboard, rent memory, reasoning and safety per call, and publish their own tools
 - **[Roberton003/mcp-server-decisions](https://github.com/Roberton003/mcp-server-decisions)** — Architectural decision tracking with testable predictions and outcome gates, stored in append-only JSONL
@@ -352,6 +377,6 @@ Page **7** of 7, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-10-13. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-14. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

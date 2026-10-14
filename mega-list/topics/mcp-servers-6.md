@@ -2,20 +2,41 @@
 
 The Model Context Protocol ecosystem: reference and third-party servers, inspectors, gateways, transports, and the sibling agent-to-agent protocols.
 
-**4,780 projects** · 4,020 with stars to rank by · 2,212,617 combined stars
+**4,785 projects** · 4,030 with stars to rank by · 2,219,706 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers)
 
-✨ **9 new to the atlas** in the 10/13/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers&new=1).
+✨ **4 new to the atlas** in the 10/14/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers&new=1).
 
 Page **6** of 6, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp-servers.md) · [2](mcp-servers-2.md) · [3](mcp-servers-3.md) · [4](mcp-servers-4.md) · [5](mcp-servers-5.md) · **6**.
 
-## Also here, unranked (760)
+## Also here, unranked (755)
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 220–760 of 760. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 197–755 of 755. The rest are on this page's other parts, linked above and below.</sub>
 
+- **[eliottreich/crawdar-mcp](https://github.com/eliottreich/crawdar-mcp)** — Evidence-backed business discovery and lead-list research: search by brief or criteria, inspect qualification evidence and exclusions, and export results
+- **[Embassy-of-the-Free-Mind/sourcelibrary-v2](https://github.com/Embassy-of-the-Free-Mind/sourcelibrary-v2/tree/main/mcp-server)** — Search and cite rare historical texts (alchemy, Hermeticism, Renaissance philosophy) from Source Library with DOI-backed citations
+- **[engineerdeep/buildtree-mcp](https://github.com/engineerdeep/buildtree-mcp)** — Share Android and iOS builds with testers: detects Expo, React Native or Flutter, runs the build, uploads the .apk or .ipa to buildtree, and returns install links, a QR code image and tester feedback
+- **[EnioAguiar/llmpvp-plugin](https://github.com/EnioAguiar/llmpvp-plugin)** — Ranked, bring-your-own-LLM chess and Go arena for AI agents: register, join matchmaking or challenge by name and play Glicko-2 rated games
+- **[epistemedeus/ai-readiness](https://github.com/epistemedeus/ai-readiness)** — Check a website's visibility to AI search: scores AI crawler access, JSON-LD, title and meta tags, Open Graph, sitemap and llms.txt, with a fix for each gap
+- **[epistemedeus/skillguard](https://github.com/epistemedeus/skillguard)** — Static scanner that checks Claude Code skills, plugins and MCP servers for exfiltration, install hooks and prompt injection before you install them
+- **[equinoxaifinance-rgb/civicdataforge-mcp](https://github.com/equinoxaifinance-rgb/civicdataforge-mcp)** — US government records (short-term rental permits, lodging licenses, property violations, healthcare exclusions, EPA ECHO) and Norwegian company data
+- **[ericblair1903/nutrients-mcp](https://github.com/ericblair1903/nutrients-mcp)** — Nutrition analysis from a food photo or text description: calories, macros, vitamins, minerals, allergens and dietary flags
+- **[evanatpizzarobot/draftcall-mcp](https://github.com/evanatpizzarobot/draftcall-mcp)** — NFL fantasy football: head-to-head player comparisons, PPR, half-PPR and standard rankings, positional scarcity and bye-week conflicts, with cited sources
+- **[evanatpizzarobot/vr-org-mcp](https://github.com/evanatpizzarobot/vr-org-mcp)** — Live VR, AR and XR news, full-text VR.org originals, an events calendar, headset deals and comparisons
+- **[EveryPageApp/everypage-mcp](https://github.com/EveryPageApp/everypage-mcp)** — EveryPage: upload PDFs, create trackable share links and read page-by-page readership analytics (who read, how far, how long)
+- **[executeautomation/mcp-playwright-server](https://github.com/executeautomation/playwright-mcp-server)** — An MCP server using Playwright for browser automation and webscrapping
+- **[ExposureGuard/exposureguard-mcp](https://github.com/ExposureGuard/exposureguard-mcp)** — Domain security scanning MCP server for SPF, DMARC, SSL, headers, DNSSEC, and open-port checks with remediation guidance
+- **[Faouzi122/Arsenal-Quant-Project](https://github.com/Faouzi122/Arsenal-Quant-Project)** — Deterministic MEV and slippage risk oracle for DeFAI agents
+- **[fatenava/fatenava-mcp](https://github.com/fatenava/fatenava-mcp)** — Destiny charting: BaZi, Zi Wei Dou Shu and Western astrology natal charts, with true solar time correction and Chinese, English, Japanese and Korean input
+- **[fenbs-ai/fenbs-mcp](https://github.com/fenbs-ai/fenbs-mcp)** — fenbs project board where people and AI assistants are members with roles: tasks, decisions with sign-off, testing notes and project rules, every change signed. Remote server at https://fenbs.ai/api/…
+- **[ferinator/bullrun-mcp](https://github.com/ferinator/bullrun-mcp)** — Stock screening, company financials and personal portfolio analysis
+- **[FetchSERP](https://github.com/fetchSERP/fetchserp-mcp-server-node)** — All-in-One SEO &amp; Web Intelligence Toolkit API FetchSERP
+- **[fgbytes/sansfiction-mcp](https://github.com/fgbytes/sansfiction-mcp)** — Search the SansFiction book catalog by title, author, series or ISBN and manage a personal reading library: status, progress, ratings, reviews and collections
+- **[FieldmodeLLC/scrapecheck-mcp](https://github.com/FieldmodeLLC/scrapecheck-mcp)** — Verify scraped field values against the live source page, returning an Ed25519-signed pass, fail or unverifiable verdict that can be checked offline
+- **[findsaunaplunge/mcp](https://github.com/findsaunaplunge/mcp)** — Cold plunge, sauna and contrast-therapy venues across US metros, with dated temperatures and prices from each venue's own pages, plus city stats
 - **[Finology-tech/finology-mcp](https://github.com/Finology-tech/finology-mcp)** — Federal student loan math on 2026 rules from Finology Software's parity-verified engine: compare repayment plans, estimate RAP payments, and compare filing jointly vs separately
 - **[Flightmussy/filmmap-mcp](https://github.com/Flightmussy/filmmap-mcp)** — Filming locations of films, series, games and anime: where a title was shot, what was shot at a place and what is nearby, from open Wikidata-based data
 - **[Flightmussy/sunshine-atlas-mcp](https://github.com/Flightmussy/sunshine-atlas-mcp)** — Monthly sunshine scores, temperatures, rainfall and sea temperatures for destinations: sunny-month rankings, when-to-visit lookups and comparisons
@@ -38,7 +59,6 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[Fulcrum-Enterprises/verify-proof](https://github.com/Fulcrum-Enterprises/verify-proof)** — Verify blockchain-anchored timestamp proofs locally: recompute a file's SHA-256, walk the Merkle path and check the anchor on Polygon or Bitcoin
 - **[ganapativs/microcharts](https://github.com/ganapativs/microcharts/tree/main/packages/mcp)** — Word-sized charts (sparklines, bars, bullets and more) rendered to self-contained SVG with generated alt text, plus chart suggestions for a given question
 - **[GarphenGate/moltline-mcp](https://github.com/GarphenGate/moltline-mcp)** — Bridge to Moltline Studio's hosted MCP servers: code review, agent governance, business math, regulatory deadlines, crypto tax lots, routing and optimization
-- **[Gatyh/3dtexel-mcp](https://github.com/Gatyh/3dtexel-mcp)** — Official 3D Texel server: search and download 7,000+ PBR materials, HDRIs, decals and 3D assets (1,600+ free CC0) and generate seamless PBR materials and HDRI skyboxes with credits
 - **[gba3124/anyhook-mcp](https://github.com/gba3124/anyhook-mcp)** — Create live webhook endpoints and read back the deliveries they receive; endpoints keep working after the session ends
 - **[gbatistuta0/appfactory](https://github.com/gbatistuta0/appfactory)** — Lets your coding agent ship a SwiftUI iOS subscription app from idea to TestFlight: niche validation with live App Store data, SwiftUI scaffold, Supabase backend, App Store Connect subscriptions and…
 - **[gblinproject/GBLIN-MCP](https://github.com/gblinproject/GBLIN-MCP)** — Treasury for AI agents on Base: park idle USDC in a cbBTC/WETH index with Crash Shield protection and swap to USDC just in time for x402 payments
@@ -128,8 +148,8 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[jaimenbell/rails-mcp](https://github.com/jaimenbell/rails-mcp)** — Self-hosted default-deny action registry, append-only spend-intent ledger and human sign-off audit trail for gating irreversible agent actions
 - **[jaimenbell/vllm-ops-mcp](https://github.com/jaimenbell/vllm-ops-mcp)** — Read-only health checks for a local vLLM instance: liveness and real-completion tiers, GPU and VRAM status, service status and serve-flag introspection
 - **[jakzaizzat/cukaimax-agent](https://github.com/jakzaizzat/cukaimax-agent)** — Read-only, source-linked Malaysian individual and sole-proprietor tax reference: YA2025 Form BE drafts, Form B preparation readiness and YA2026 planning
-- **[jamalofski/conv2pdf-mcp](https://github.com/Jamalofski/conv2pdf-mcp)** ✨ <sub>Added 10/13/26</sub> — Convert Office documents, images and e-books on your computer to PDF, convert PDFs to Word or images, and merge, split, compress, protect or number PDFs via the conv2pdf API, hosted in France
-- **[jamalofski/mailprobe-mcp](https://github.com/Jamalofski/mailprobe-mcp)** ✨ <sub>Added 10/13/26</sub> — Email verification in real time, without sending anything: a valid, risky, invalid or unknown status with a score, disposable, role-based and catch-all detection, and typo suggestions. Remote server…
+- **[jamalofski/conv2pdf-mcp](https://github.com/Jamalofski/conv2pdf-mcp)** — Convert Office documents, images and e-books on your computer to PDF, convert PDFs to Word or images, and merge, split, compress, protect or number PDFs via the conv2pdf API, hosted in France
+- **[jamalofski/mailprobe-mcp](https://github.com/Jamalofski/mailprobe-mcp)** — Email verification in real time, without sending anything: a valid, risky, invalid or unknown status with a score, disposable, role-based and catch-all detection, and typo suggestions. Remote server…
 - **[jamesdfinance-dev/lazaretto-mcp](https://github.com/jamesdfinance-dev/lazaretto-mcp)** — Check lockfiles against malicious-package advisories and scan artifacts for credential theft, exfiltration, obfuscation, prompt injection and droppers
 - **[jamjet-labs/jamjet-policy](https://github.com/jamjet-labs/jamjet-policy/tree/main/packages/mcp-shim)** — MCP interceptor that applies one YAML policy (block, require approval, audit, budget cap) to tool calls, also usable in Claude Code hooks and agent SDKs
 - **[Jarroslav/agentic-os](https://github.com/kinnister/agentic-os)** — Read-only access to the agentic-os governance, SDLC and QE methodology, with install planning and verification
@@ -150,7 +170,6 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[jshelley/briefing-mcp](https://github.com/jshelley/briefing-mcp)** — Hourly LLM-ranked news briefings (AI, markets, sports, world) as structured JSON and e-ink pages, plus provenance data for every candidate story
 - **[juan-sibbo/gam-seller-mcp-node](https://github.com/juan-sibbo/gam-seller-mcp-node)** — Exposes Google Ad Manager inventory to buyer agents: read-only product discovery, firm prices and revocable commitments, with every decision audited
 - **[julianbei/arno](https://github.com/julianbei/ARNO)** — IDE for agents: read code by symbol, edit with compiler diagnostics, validate with the project's own build and tests, and revert to checkpoints
-- **[JulienRabault/icloud-mcp](https://github.com/JulienRabault/icloud-mcp)** — iCloud Mail over IMAP and SMTP: search all folders, rebuild threads, save attachments, draft replies and file messages by rule, without marking mail as read
 - **[justinscott12/modrinth-mcp](https://github.com/justinscott12/modrinth-mcp)** — Search Modrinth and publish Minecraft mods via the Modrinth API: create projects, upload new versions and read project and version metadata
 - **[Kadenzo/kadenzo-mcp](https://github.com/Kadenzo/kadenzo-mcp)** — Schedule and analyze posts on Instagram, TikTok, X, LinkedIn and more: media upload, AI captions, recommended posting times, analytics, listening and comments
 - **[kame6493-del/mcp-diagnostics](https://github.com/kame6493-del/mcp-diagnostics)** — Website and server diagnostics MCP server for DNS, SSL, HTTP headers, security audits, WHOIS, and tech-stack detection
@@ -370,7 +389,6 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[Rererr/amenbo](https://github.com/Rererr/amenbo)** — Token-efficient web fetching for Japanese sites: outline-first disclosure, Shift_JIS and EUC-JP decoding, PDF and CSV extraction and polite crawling
 - **[ReviewGate/reviewgate](https://github.com/ReviewGate/reviewgate)** — Code review against your team's written rules: a generator finds issues and an independent judge filters them, with a pre-push gate and PR bot
 - **[Rheopyrin/db-access-mcp](https://github.com/Rheopyrin/db-access-mcp)** — Query PostgreSQL, MySQL, Redshift and SQL Server over SSH or AWS SSM tunnels, with read-only enforcement, confined exports and pluggable secret providers
-- **[Rheopyrin/ox-mcp](https://github.com/Rheopyrin/ox-mcp)** — Email (IMAP/SMTP), Sieve mail filters, CalDAV calendars, CardDAV contacts and free/busy scheduling for Open-Xchange and standards-based mail platforms
 - **[richer-richard/fenestra](https://github.com/richer-richard/fenestra/tree/main/fenestra-mcp)** — Headless rendering and verification of native Rust GUIs: accessibility tree, semantic selectors, contrast and focus-order checks, and screenshot diffs
 - **[RightOnPar-LLC/mesh-connector](https://github.com/RightOnPar-LLC/meshmarket-mcp)** — MeshMarket agent-to-agent capability exchange: agents browse, self-onboard, rent memory, reasoning and safety per call, and publish their own tools
 - **[Roberton003/mcp-server-decisions](https://github.com/Roberton003/mcp-server-decisions)** — Architectural decision tracking with testable predictions and outcome gates, stored in append-only JSONL
@@ -562,6 +580,6 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-10-13. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-14. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).
