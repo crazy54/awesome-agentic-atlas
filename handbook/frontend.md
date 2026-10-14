@@ -82,7 +82,9 @@ Either way, editing the file changes nothing until the page is regenerated. The 
 
 ## The PWA and the service worker
 
-`24_pwa.py` writes `docs/sw.js`, `docs/manifest.webmanifest` and the icons. The worker keeps four caches:
+`24_pwa.py` writes `docs/sw.js`, `docs/manifest.webmanifest` and the icons. One of the icons is
+`docs/favicon.ico`, which no page links but browsers and crawlers ask the domain root for. The worker keeps
+four caches:
 
 | Cache | Holds | Policy |
 |---|---|---|

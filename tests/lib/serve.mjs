@@ -4,7 +4,7 @@
 // have to come over HTTP: `file://` has no origin, so there is no service worker, no manifest scope and no
 // `caches` API, and three quarters of pwa-check would have nothing to assert against.
 //
-// It serves under a path prefix rather than at the origin root, and that is the whole reason this is 121
+// It serves under a path prefix rather than at the origin root, and that is the whole reason this is 128
 // lines rather than one call to `python -m http.server`. Every URL in this site is relative -- the manifest
 // is `manifest.webmanifest`, its scope is `./`, the worker is `sw.js`, `data.json` is `data.json` -- because
 // the published site lives at `/<repo>/` on `<owner>.github.io` and an absolute path would be correct there
@@ -24,7 +24,7 @@
 // `max-age` so that nothing here can pass because of a stale HTTP cache; the service worker's own caches are
 // unaffected by it, which is what pwa-check is reading.
 import {createServer} from "node:http";
-import {createReadStream, statSync} from "node:fs";
+import {createReadStream, existsSync, statSync} from "node:fs";
 import {join, normalize, extname} from "node:path";
 
 // Long enough to cover what `docs/` holds, and no `application/octet-stream` default that would let a
@@ -72,6 +72,13 @@ export async function serve(root, prefix = "/awesome-agentic-atlas/") {
     let path;
     try { path = decodeURIComponent(new URL(req.url, "http://127.0.0.1").pathname); }
     catch { return send(400, "bad escape sequence in path\n"); }
+
+    // One URL outside the prefix belongs to the site: `/favicon.ico`, which no page links and which Chrome
+    // asks the origin root for on its own when it shows a document that names no icon (`robots.txt`, a feed,
+    // JSON). Pages serves this site at the root of the custom domain in `docs/CNAME`, so in production that
+    // request reaches `docs/favicon.ico`. It is answered from there here too, and only while there is a
+    // CNAME, so a harness that opens such a document gets the answer production gives, a 404 included.
+    if (path === "/favicon.ico" && existsSync(join(root, "CNAME"))) path = prefix + "favicon.ico";
 
     if (!path.startsWith(prefix))
       return send(404, `nothing is served outside ${prefix} -- this server models the Pages ` +

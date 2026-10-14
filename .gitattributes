@@ -24,3 +24,7 @@ docs/search/*.json text eol=lf
 # bytes on disk, in the repository and on the site are the same everywhere.
 docs/assets/traceway-1.2.1.js -text
 docs/assets/web-vitals-6.2.3.js -text
+
+# Written by scripts/24_pwa.py. Its header always opens with NUL bytes, so autodetection gets it right today;
+# pinned anyway, as every new binary format here is (handbook/contributing.md).
+docs/favicon.ico binary
