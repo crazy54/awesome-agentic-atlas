@@ -204,9 +204,12 @@ REAL_BYTES = (ROOT / "docs" / "data.json").read_bytes()
 SEED = json.dumps(REAL, indent=1).encode("utf-8")
 
 
-def run_main(argv: list[str], sources: list[str],
+def run_main(argv: list[str], sources: list,
              out: Path | None = None) -> tuple[Path, list, io.StringIO, io.StringIO]:
     """`main()` against a scratch `docs/` holding a copy of the committed data.
+
+    `sources` is the `SOURCES` the stage sees: an `nwo` string per list, or a whole entry where one needs
+    more than its `nwo` -- the scout's `synthetic` flag.
 
     `OUT` is repointed and `reversion()` is stubbed, so this exercises the guard, the row walk, the render
     and the write in one pass without the deployable tree being reachable at all. That is not
@@ -227,7 +230,7 @@ def run_main(argv: list[str], sources: list[str],
 
     keep_out, keep_src, keep_argv = b19b.OUT, b19b.b10.SOURCES, sys.argv
     keep_rev = b19b.reversion
-    b19b.OUT, b19b.b10.SOURCES = out, [{"nwo": n} for n in sources]
+    b19b.OUT, b19b.b10.SOURCES = out, [n if isinstance(n, dict) else {"nwo": n} for n in sources]
     b19b.reversion = stub_reversion
     sys.argv = ["19b_refresh.py", *argv]
     stdout, stderr = io.StringIO(), io.StringIO()
@@ -244,7 +247,9 @@ def run_main(argv: list[str], sources: list[str],
 # constant drifting back to the site root fails this file instead of moving the assertions with it. The root
 # is the homepage `31_home.py` writes, and this stage used to render the catalogue over it.
 CAT = Path("catalog") / "index.html"
-LIVE = [s["nwo"] for s in b19b.b10.SOURCES]
+# What `main()` compares the rows against: the curated lists, not every entry in `SOURCES`. See the
+# synthetic-source case below for why the two differ.
+LIVE = b19b.curated_lists()
 IMPLIED = b19b.source_labels(REAL)
 # A source list of exactly the size the committed rows imply, which is what makes the three cases below
 # about the guard rather than about whether this checkout happens to be mid-window. The names are
@@ -307,14 +312,44 @@ true("...into catalog/, the catalogue's own place, as its canonical says",
      'rel="canonical" href="' + b19b.b19.b17.SITE + 'catalog/"' in (fresh / CAT).read_text(encoding="utf-8"))
 true("...and not over the homepage at the site root, which is 31_home.py's",
      not (fresh / "index.html").exists() and not (waved / "index.html").exists())
+# 4. a synthetic source -- the scout -- configured beside lists the rows match. It is in `SOURCES`, but it
+# is a search rather than a list and no row ever carries its label, so it is not a list the rows are
+# missing. Counting it is what made this stage refuse every real checkout from the day the scout landed:
+# 39 lists named by the rows, 40 configured, and a page whose prose and rows agreed was never rendered.
+# Caught rather than left to end the file: a refusal here is the regression, and it should fail by name.
+try:
+    scouted, called, s_out, s_err = run_main([], MATCHED + [{"nwo": "owner/the-scout", "synthetic": True}])
+except SystemExit as refusal_:
+    scouted, s_out, s_err = None, io.StringIO(), io.StringIO(str(refusal_))
+true("a synthetic source beside the matched lists does not stop the render",
+     scouted is not None and (scouted / CAT).exists(), s_err.getvalue()[:200])
+eq("...and is not reported as a disagreement", s_err.getvalue(), "")
+says("...and is not in the source count the stage reports", s_out.getvalue(),
+     f"rows from {len(MATCHED)} source list(s)")
 true("nothing here touched the committed data.json",
      (ROOT / "docs" / "data.json").read_bytes() == REAL_BYTES)
 
-# ---- the invariant that makes counting labels sound, on the real 1,294 rows
+# ---- the invariant that makes counting labels sound, on the real rows
+#
+# A row naming no list used to mean a build had lost its provenance. Since the scout (`12_scout.py`) it has
+# one legitimate meaning as well: a repo GitHub search found and no curated list names yet. `16_build_all`
+# keeps the scout out of `listed_by` on purpose, so such a row has `lists` 0 and an empty label. That is the
+# only way a row may name no list, so it is asserted as exactly that rather than dropped: every listless row
+# is in the scout's committed ledger, and the scout's own title is never a label, which is what would make
+# `source_labels` count a search as one more list.
 cols = REAL["cols"]
 lb_at, n_at = cols.index("listed_by"), cols.index("lists")
-eq("every committed row names at least one list",
-   [r[1] for r in REAL["rows"] if not r[lb_at].strip()], [])
+SCOUT_LEDGER = ROOT / "state" / "scout-repos.json"
+true("state/scout-repos.json is committed, so a row naming no list has a ledger to be found in",
+     SCOUT_LEDGER.exists())
+SCOUTED = ({n.lower() for n in json.loads(SCOUT_LEDGER.read_text(encoding="utf-8"))["repos"]}
+           if SCOUT_LEDGER.exists() else set())
+eq("every committed row names at least one list, or is one the scout found",
+   [r[1] for r in REAL["rows"] if not r[lb_at].strip() and r[1].lower() not in SCOUTED], [])
+SCOUT_TITLES = {b19b.b19.b16.LIST_TITLE[s["key"]] for s in b19b.b10.SOURCES if s.get("synthetic")}
+true("(the scout is configured, so the next assertion has a title to look for)", bool(SCOUT_TITLES))
+eq("no committed row carries the scout's own label, so the guard never counts a search as a list",
+   b19b.source_labels(REAL) & SCOUT_TITLES, set())
 eq("every committed row's list count equals the labels it carries",
    [r[1] for r in REAL["rows"]
     if r[n_at] != len([n for n in r[lb_at].split(",") if n.strip()])], [])

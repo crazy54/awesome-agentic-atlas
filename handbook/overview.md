@@ -7,10 +7,12 @@ catalogue. Each project gets its GitHub metadata (stars, language, licence, last
 command, a screenshot, a topic, the harnesses it plugs into, and a per-OS verdict for Windows, WSL2,
 macOS, Linux and Docker.
 
-The number of lists is `len(SOURCES)` in `scripts/10_parse_sources.py`. It was 39 on 2026-09-25. To measure it:
+The number of lists is the curated entries of `SOURCES` in `scripts/10_parse_sources.py`: every entry
+except the scout (`12_scout.py`), which is marked `synthetic` because it is a GitHub search rather than a
+list. It was 39 on 2026-10-14. To measure it:
 
 ```bash
-python -c "import importlib.util as u; s=u.spec_from_file_location('m','scripts/10_parse_sources.py'); m=u.module_from_spec(s); s.loader.exec_module(m); print(len(m.SOURCES))"
+python -c "import importlib.util as u; s=u.spec_from_file_location('m','scripts/10_parse_sources.py'); m=u.module_from_spec(s); s.loader.exec_module(m); print(sum(1 for x in m.SOURCES if not x.get('synthetic')))"
 ```
 
 ## The published surfaces
