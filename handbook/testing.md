@@ -143,6 +143,19 @@ Other known sensitivities:
   rule in a generator therefore turns CI red until someone regenerates and commits the output.
 - **Don't mutate `docs/` in place to test drift.** Peer sessions sharing the checkout run the suite against
   the same files. Copy the file somewhere and point `probe.mjs` at the copy with `AAA_PAGE`, `AAA_DATA` or `AAA_HOME`.
+- **CI's browser is not the one a local run finds.** CI runs full Chromium (`/usr/bin/chromium`); locally,
+  `run.mjs` finds Playwright's headless shell first. Only full Chromium asks the origin root for
+  `/favicon.ico` when it shows `robots.txt`, a feed, JSON or an image, so a 404 there is red in CI and
+  invisible locally. To see what CI sees, set `CHROME_PATH` to a full Chromium, such as Playwright's
+  `chromium-<build>/chrome-win64/chrome.exe`.
+- **The GitHub API's anonymous limit.** The homepage's star count and every footer's build tags call
+  `api.github.com` without a token: 60 calls an hour per address, shared by every run on the machine. Once
+  that is used up, each refused call is a 403 that the page ignores and Chrome logs as a console error.
+  `prank-check` and `dance-check` excuse a 403 or 429 from `api.github.com`. The other harnesses that count
+  console errors don't yet.
+- **Wait for state; don't sleep for it.** With the CPU throttled four times, a matchMedia `change` event took
+  a second to arrive, and a poll read Archie's quiet cut 300 to 600 ms after the page made it. Wait with
+  `until()`, or stamp the moment in the page, and keep the bound on the thing being measured.
 
 ## When you add or change a harness
 
