@@ -46,6 +46,9 @@ Nine groups:
                      multiple of it silently demands more purity as the corpus concentrates -- which is
                      exactly what happened on 2026-09-21. A layout that collapsed, or one seeded off the
                      clock, closes none of the gap while every shape assertion above still passes.
+                     Scored over every row a list filed, exactly, and over no row only the scout found:
+                     that row's `cat` is a regex's guess, not a curator's, so it is not the label this
+                     claims to score against.
   the retrieval   -- the queries this feature exists for, scored on what a reader sees: of the ten rows
                      each query returns, how many name the topic the query asked about. Never on a
                      similarity and no longer on one fixture repository's rank either -- the corpus went
@@ -72,6 +75,7 @@ from __future__ import annotations
 
 import array
 import hashlib
+import heapq
 import json
 import math
 import random
@@ -239,6 +243,54 @@ def page_constant(name: str) -> int | None:
     return int(m.group(1)) if m else None
 
 
+def nearest(at: list[tuple[int, int]], k: int) -> list[list[int]]:
+    """Every point's `k` nearest other points on the plane, exactly, ties going to the lower index.
+
+    The same answer as sorting all n-1 squared distances for every point and keeping the first `k`, which
+    is what this file did for a 200-row sample -- at a cost that grows with n rather than n squared, so it
+    can afford every row. A uniform grid sized to put about two points per cell across the body of the
+    corpus; each point searches outward ring by ring and stops once its k-th best is no farther than the
+    nearest unsearched cell can be, which is `r` whole cells away. The rows the map's fit pulled in along
+    its log tail are farther apart and cost a few more rings, which is all they cost.
+    """
+    n = len(at)
+    if n <= k:
+        return [[j for j in range(n) if j != i] for i in range(n)]
+    xs, ys = sorted(x for x, _ in at), sorted(y for _, y in at)
+    lo, hi = int(n * 0.01), int(n * 0.99)
+    area = max(xs[hi] - xs[lo], 1) * max(ys[hi] - ys[lo], 1)
+    cell = max(1, int(math.sqrt(area * 2.0 / n)))
+    grid: dict[tuple[int, int], list[int]] = {}
+    for j, (x, y) in enumerate(at):
+        grid.setdefault((x // cell, y // cell), []).append(j)
+    out = []
+    for i, (x, y) in enumerate(at):
+        cx, cy = x // cell, y // cell
+        found: list[tuple[int, int]] = []
+        r = 0
+        while True:
+            if r == 0:
+                ring = [(cx, cy)]
+            else:
+                ring = [(cx + d, cy - r) for d in range(-r, r + 1)] + \
+                       [(cx + d, cy + r) for d in range(-r, r + 1)] + \
+                       [(cx - r, cy + d) for d in range(1 - r, r)] + \
+                       [(cx + r, cy + d) for d in range(1 - r, r)]
+            for c in ring:
+                for j in grid.get(c, ()):
+                    if j != i:
+                        found.append(((x - at[j][0]) ** 2 + (y - at[j][1]) ** 2, j))
+            # Anything not yet searched is in a cell more than `r` cells from this point's own, so it is
+            # strictly farther than r * cell: once the k-th best is within that, nothing left can displace it.
+            if len(found) >= k:
+                found = heapq.nsmallest(k, found)
+                if found[-1][0] <= (r * cell) ** 2:
+                    break
+            r += 1
+        out.append([j for _, j in found])
+    return out
+
+
 def main() -> int:
     h = Harness()
     if not SEARCH.exists():
@@ -365,26 +417,43 @@ def main() -> int:
     h.check("the body of the corpus fills the map, not just its outliers", min(body_x, body_y) > 16384,
             f"the 1st-99th percentile spans {body_x} x {body_y} of a possible 65,534")
 
-    # Purity: the assertion that the picture means something. Sampled rather than exhaustive -- 1,294 rows
-    # is 1.67M distances in pure Python and this harness runs in under a second -- and sampled with a fixed
-    # seed so a failure is reproducible rather than a coin toss somebody re-runs until it passes.
-    cat_at = ix.get("cat")
-    if cat_at is None:
-        h.check("docs/data.json carries a cat column", False, "no `cat` column to score the map against")
+    # Purity: the assertion that the picture means something. Over every row a list filed, each against the
+    # eight nearest rows a list filed, with chance taken over those same rows.
+    #
+    # EVERY ROW, NOT A SAMPLE. This scored 200 rows drawn with a fixed seed, so that a failure would be
+    # reproducible -- and it was, within one build. Across builds it was a coin toss: the seed fixes
+    # ordinals, the scout inserts rows every day, and the 200 rows under those ordinals change with them.
+    # Measured on the committed indexes, a 200-row draw has a standard deviation of 0.033 to 0.041 in the
+    # share of the gap below, and it read 0.200, 0.269 and 0.205 on the 2026-10-12, -13 and -14 dailies,
+    # whose exact figure was 0.264, 0.265 and 0.265. The 2026-10-14 weekly drew 0.197 and went red on a map
+    # its own build log put at the same 44% against 24%.
+    # `nearest()` makes the exact figure cost less than the sample did.
+    #
+    # ROWS A LIST FILED, NOT ROWS THE SCOUT FOUND. Since 2026-10-12 about one row in eight comes only from
+    # `12_scout.py`. Its `lists` is 0 and its `cat` is the scout's regex over GitHub topics
+    # (`taxonomy.ADVISORY`), not a curator's verdict, and it is not the label this assertion claims to
+    # score against. Measured 2026-10-14, those 1,267 rows share a category with their own semantic
+    # neighbours in `near.bin` -- the graph the layout is built from, before any layout -- 23% of the time,
+    # against 52% for rows a list filed and 24% by chance, so the disagreement is upstream of the map and a
+    # map scored on it is scoring the scout's classifier. Over all rows the share of the gap fell from
+    # 0.296-0.304 on every 8,856- to 8,937-row build to 0.264 on the first one with the scout in it; over
+    # the rows a list filed it went to 0.288, and on 2026-10-14 it is 0.290 (48.7% against 27.8%). The
+    # scout's rows are still drawn and still asserted on below by `near.bin`; their figure is printed.
+    cat_at, lists_at = ix.get("cat"), ix.get("lists")
+    if cat_at is None or lists_at is None:
+        h.check("docs/data.json carries cat and lists columns", False,
+                "no `cat` to score the map against, or no `lists` to say which rows a curator filed")
     else:
         cat = [r[cat_at] for r in data["rows"]]
+        filed = [i for i, r in enumerate(data["rows"]) if r[lists_at]]
         counts: dict = {}
-        for c in cat:
-            counts[c] = counts.get(c, 0) + 1
-        chance = sum((n / rows) * ((n - 1) / max(rows - 1, 1)) for n in counts.values()) if rows else 0.0
-        sample = random.Random(20260912).sample(range(rows), min(200, rows))
-        same = 0
-        for i in sample:
-            xi, yi = at[i]
-            far = sorted(((xi - at[j][0]) ** 2 + (yi - at[j][1]) ** 2, j)
-                         for j in range(rows) if j != i)[:8]
-            same += sum(1 for _, j in far if cat[j] == cat[i])
-        pure = same / float(len(sample) * 8) if sample else 0.0
+        for i in filed:
+            counts[cat[i]] = counts.get(cat[i], 0) + 1
+        m = len(filed)
+        chance = sum((n / m) * ((n - 1) / max(m - 1, 1)) for n in counts.values()) if m else 0.0
+        close = nearest([at[i] for i in filed], 8)
+        same = sum(1 for a, nb in enumerate(close) for b in nb if cat[filed[b]] == cat[filed[a]])
+        pure = same / float(sum(len(nb) for nb in close) or 1)
         # HOW FAR ACROSS THE AVAILABLE GAP, NOT HOW MANY TIMES CHANCE. This was `pure >= chance * 2.5`,
         # measured at 5.2x on the committed index, and a multiple of chance is not a scale-free number: the
         # most any layout can score is 1/chance, so the headroom above the floor is a function of the
@@ -398,12 +467,22 @@ def main() -> int:
         # invariant: 0.55 on the 1,294-row index (60.5% against 11.7%), 0.31 on the 8,856-row one (51.1%
         # against 29.0%), and 0.00 for the null -- measured, by shuffling the positions between rows and
         # re-running this exact statistic, which scored 28.2% against a 29.0% chance. A floor of 0.20 is
-        # nineteen standard deviations clear of that null and clears both real builds.
+        # nineteen standard deviations clear of that null and clears both real builds. Re-measured exactly
+        # over the rows a list filed on 2026-10-14: 0.290 for the map, and between -0.004 and +0.002 for
+        # its positions shuffled, on every committed index since the 8,856-row one.
         lift = (pure - chance) / (1.0 - chance) if chance < 1.0 else 0.0
-        h.check(f"the map groups like with like ({pure:.0%} of neighbours share a category, "
-                f"{chance:.0%} by chance)", lift >= 0.20,
+        h.check(f"the map groups like with like ({pure:.0%} of {m:,} filed rows' neighbours share a "
+                f"category, {chance:.0%} by chance: {lift:.2f} of the gap)", lift >= 0.20,
                 f"{pure:.1%} against {chance:.1%} by chance closes {lift:.2f} of the gap between them, "
                 f"which is close enough to arbitrary that the map is not worth drawing")
+        guessed = [i for i, r in enumerate(data["rows"]) if not r[lists_at]]
+        if guessed:
+            k_ = meta["near"]
+            agree = lambda ids: (sum(1 for i in ids for k in range(k_) if cat[near[i * k_ + k]] == cat[i])
+                                 / float(len(ids) * k_ or 1))
+            print(f"  not scored: {len(guessed):,} rows no list filed, whose category is the scout's guess "
+                  f"-- it agrees with their near.bin neighbours {agree(guessed):.0%} of the time, against "
+                  f"{agree(filed):.0%} for filed rows")
         # The other direction, and the cheaper one: the rows `near.bin` calls neighbours have to be closer
         # together on the map than two rows picked at random. Purity could in principle be satisfied by a
         # layout that grouped categories while ignoring the graph it was built from.

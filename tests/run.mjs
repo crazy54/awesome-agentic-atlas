@@ -152,7 +152,10 @@
 //                     The share of that gap, not a multiple of chance: a multiple sounds relative and is not,
 //                     because chance rises as the corpus concentrates. One import took the largest category
 //                     from 21% of rows to 51%, chance from 11.7% to 29.0%, and a 5x floor from comfortable to
-//                     arithmetically out of reach with nothing about the layout changed.
+//                     arithmetically out of reach with nothing about the layout changed. Scored exactly and
+//                     over the rows a list filed only: a row only the scout found carries a regex's guess at a
+//                     category, not a curator's, and a 200-row sample read anywhere from 0.20 to 0.27 on
+//                     builds whose exact figure did not move.
 //                     Drift there is the one failure in this feature with no symptom at all: nothing throws,
 //                     a full page comes back, and it is ranked by noise.
 //   live_test.py      the star/push sidecar the 1,294 detail pages read in place of data.json: that its keys

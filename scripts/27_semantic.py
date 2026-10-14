@@ -726,6 +726,13 @@ def main() -> None:
     cat_of = np.array([r[ix["cat"]] for r in rows])
     keep_map, fill_map = retention(seen, near), spread(seen)
     pure_map, chance = purity(seen, cat_of)
+    # And over the rows a list filed, which is the figure tests/semantic_test.py asserts on. A row only the
+    # scout found has `lists` 0 and a `cat` guessed from its GitHub topics, so it is drawn but is no
+    # evidence about the map either way: on 2026-10-14 those rows agreed with their own `near.bin`
+    # neighbours 23% of the time against 52% for filed rows, before any layout touched them.
+    filed = np.array([bool(r[ix["lists"]]) for r in rows], dtype=bool)
+    pure_filed, chance_filed = purity(seen[filed], cat_of[filed])
+    gap_filed = (pure_filed - chance_filed) / (1.0 - chance_filed) if chance_filed < 1.0 else 0.0
     # The control, and it has to be built here rather than quoted from the comment above: a figure with
     # nothing beside it does not say whether the solver earned its epochs, and a figure hard-coded in a
     # comment stops being true the first time the corpus changes.
@@ -797,9 +804,15 @@ def main() -> None:
           f"{fill_map:.0%} of the box occupied")
     print(f"     the plain 2-component projection this replaced scores {pure_flat:.0%} / "
           f"{keep_flat:.1f} / {fill_flat:.0%} on the same three")
-    if pure_map <= chance * 2:
-        print(f"     WARNING: purity is within 2x of chance, so the map is close to arbitrary. Something "
-              f"is wrong with the layout or with the vectors it was built from.")
+    print(f"     over the {int(filed.sum()):,} rows a list filed: {pure_filed:.0%} against {chance_filed:.0%} "
+          f"by chance, {gap_filed:.2f} of the gap between them closed (the suite asks for 0.20)")
+    # On the share of the gap, as the suite is, and not on a multiple of chance: this said "within 2x of
+    # chance" on every build from the 8,856-row ingest on, because chance had risen to 29% and 2x of it asked
+    # for 58% from a layout scoring 51%, which closes 0.30 of the gap -- and a warning that fires on every
+    # build is one nobody reads. See the note on purity in tests/semantic_test.py.
+    if gap_filed < 0.20:
+        print(f"     WARNING: the map closes under a fifth of the gap from chance to 1.0, so it is close to "
+              f"arbitrary. Something is wrong with the layout or with the vectors it was built from.")
     if from_readme == n_docs:
         print(f"indexed from READMEs for all {n_docs:,} rows")
     else:
