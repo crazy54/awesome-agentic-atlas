@@ -4627,10 +4627,16 @@ function initDiscovery() {
     // `r.name` is the full `owner/name` for 267 of the committed rows, which made the old "comes from"
     // sentence name the same string twice. The owner alone is the fact that sentence was reaching for, and
     // it is dropped rather than repeated when the project is named after whoever publishes it.
+    //
+    // A repo only the scout found (`lists` 0) says where it came from instead of "is on 0 source lists", in
+    // words short enough to fit SAY_MAX after the longest clipped name: 22 + 28 = 50 of 53. The first
+    // version ran 70 code points after the name, so it fitted no name at all and always shipped clipped --
+    // "firecrawl was found by the atlas's GitHub search;…" -- losing the clause that said no list names
+    // it and never keeping a tag. The detail page has room for the long version and says it.
     const facts = [
       name + " is listed under " + category + ".",
       r.lists ? name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")
-              : name + " was found by the atlas's GitHub search; no curated list names it yet."
+              : name + " was found by GitHub search."
     ];
     if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
     // WHICH FACT A PROJECT SAYS USED TO DEPEND ON THE LENGTH OF A COLOUR NAME. It was

@@ -920,8 +920,8 @@ main a[href],main button,main select,main summary,
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--10--14_17:26_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-10-14T17:26:00Z">Last deployed 2026-10-14 17:26 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--10--14_22:21_UTC-187557.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-10-14T22:21:00Z">Last deployed 2026-10-14 22:21 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
@@ -1210,7 +1210,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-10-14";
-const BUILT = "2026-10-14T17:26:00Z";
+const BUILT = "2026-10-14T22:21:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -1914,7 +1914,7 @@ function initDiscovery() {
     const facts = [
       name + " is listed under " + category + ".",
       r.lists ? name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")
-              : name + " was found by the atlas's GitHub search; no curated list names it yet."
+              : name + " was found by GitHub search."
     ];
     if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
     let spread = 0;

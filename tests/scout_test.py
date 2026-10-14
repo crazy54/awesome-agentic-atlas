@@ -810,7 +810,9 @@ eq("the site's 'N awesome-lists' is the curated count", b20.LISTS, curated_n)
 eq("a facet row with no list says where it came from instead of '0 lists'",
    [b20.lists_label(n) for n in (0, 1, 3)], ["found by search", "1 list", "3 lists"])
 # The surfaces written in JavaScript or in f-strings too long to call here, by the words they print for 0.
-for stage, words in (("19_pages.py", "was found by the atlas's GitHub search"), ("19_pages.py", '"GitHub search"'),
+# Archie's sentence is the whole template literal, full stop included, because its length is the point: it has
+# to fit his bubble's SAY_MAX after a clipped name, and cards-check.mjs restates it to measure that it does.
+for stage, words in (("19_pages.py", '" was found by GitHub search."'), ("19_pages.py", '"GitHub search"'),
                      ("19_pages.py", '"found by search"'), ("22_detail.py", "No curated list names this project yet"),
                      ("19d_discover.py", '"found by search"'), ("30_v2.py", "No curated list names it yet"),
                      ("30_v2.py", "found by GitHub search")):

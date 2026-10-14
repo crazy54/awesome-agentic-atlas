@@ -393,8 +393,10 @@ const widest = await evalIn(`(() => {
     const cat = (D.cats[r.cat] || {}).name || "the atlas";
     const tg = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
     const name = clip(r.name, ${NAME_MAX}), owner = r.nwo.split("/")[0];
+    // A row no curated list names (lists 0, a repo only the scout found) says where it came from instead.
     const facts = [name + " is listed under " + cat + ".",
-                   name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")];
+                   r.lists ? name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")
+                           : name + " was found by GitHub search."];
     if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
     const tail = tg.length ? " Tagged for " + tg[0] + "." : "";
     // One cap for both, and code points for the fit test, mirroring the generator. Two separate numbers here
@@ -514,9 +516,11 @@ ok("the restated templates still match what the page says", widest.matchesLive,
 //     even if the corpus sweep above ever drifts.
 //   - every live string it saw is in the restated set. That is the tie, now over 29 strings covering every
 //     wording the generator has rather than over one.
-//   - all six wordings were actually observed. Without this the tie could stay green while five of the six
+//   - all seven wordings were actually observed. Without this the tie could stay green while some of them
 //     went unexercised, which is exactly how the first attempt passed a control it should have failed. Under
 //     that control this arm names the missing wording and the tie names 24 strings the templates cannot say.
+//     Two of the seven are asked of rows chosen for them rather than waited for: a clipped name, and a repo
+//     only the scout found. See the two probes at the end of the walk.
 // Take the pointer off the row before the walk scrolls back to the top. It is still resting where the hover
 // checks above left it, and scrolling the row out from under it fires a real `mouseout` a frame later -- which
 // lands after the walk has focused the first row and cancels the sentence that focus scheduled.
@@ -552,7 +556,8 @@ const walk = await evalIn(`(async () => {
     "a name clipped to fit": (t, nwo) => {
       const full = nameOf.get(nwo) || "", short = clip(full, ${NAME_MAX});
       return short !== full && t.startsWith(short);
-    }
+    },
+    "found by GitHub search": t => t.includes(" was found by GitHub search.")
   };
   const boxes = () => {
     const rg = document.createRange(); rg.selectNodeContents(speech);
@@ -571,7 +576,13 @@ const walk = await evalIn(`(async () => {
   // new top 120 with no long name would turn this red with nobody having changed a line. So the clipped arm is
   // recorded here if it happens to appear and is REQUIRED of the probe below, which goes and finds the longest
   // name in the whole corpus instead of hoping it sorted into the first page.
-  const names = Object.keys(arms), fromRows = names.filter(n => n !== "a name clipped to fit");
+  //
+  // The scout's wording is the same kind of arm for a different reason. It needs a row no curated list names
+  // AND a hash that picks the list fact for it, out of two or three, and how many such rows sort into the
+  // first 120 is a fact about this week's corpus: six on 2026-10-14, and falling every time a curator lists a
+  // repo the scout found first. So it too is recorded if the walk meets it and required of a probe below.
+  const probed = ["a name clipped to fit", "found by GitHub search"];
+  const names = Object.keys(arms), fromRows = names.filter(n => !probed.includes(n));
   const seen = {}, said = [];
   for (const row of [...document.querySelectorAll('#out tr[data-project]')]) {
     if (fromRows.every(n => seen[n])) break;
@@ -662,7 +673,60 @@ const walk = await evalIn(`(async () => {
       await new Promise(r => setTimeout(r, 25));
   }
 
-  return {visited: said.length, seen, missing: fromRows.filter(n => !seen[n]),
+  // THE SCOUT PROBE: rows no curated list names, each fetched through the search box by its full owner/name --
+  // the narrowest query there is, and one the search haystack carries -- until one of them says the scout's
+  // sentence. Which fact a row says is the hash's choice, and this file does not repeat the hash, so it asks
+  // rather than predicts: each row says its list fact one time in two or three, and SCOUT_TRIES rows in a row
+  // all saying something else is at worst (2/3)^24, about one in 17,000. Found by identity, never by count,
+  // for the reasons written above the longest-name probe. A corpus with no such row at all is reported rather
+  // than passed, as clippable false is: it would leave the scout's wording untested, not proven.
+  //
+  // Unlike the longest name, these rows are often on page one already, so the row is in the table BEFORE the
+  // query has been applied: the search is debounced by 150ms, and focusing the old row then re-rendering
+  // under it takes the focus and the sentence away (measured: firecrawl/firecrawl read back empty). So each
+  // query waits for the table to stop changing before it looks for its row.
+  const out = document.getElementById('out');
+  const settled = async () => {
+    let last = performance.now();
+    const mo = new MutationObserver(() => { last = performance.now(); });
+    mo.observe(out, {childList: true, subtree: true});
+    const t0 = performance.now();
+    while (performance.now() - t0 < 3000 && (performance.now() - t0 < 200 || performance.now() - last < 250))
+      await new Promise(res => setTimeout(res, 25));
+    mo.disconnect();
+  };
+  const scouted = ROWS.filter(r => !r.lists), SCOUT_TRIES = 24;
+  const scout = {rows: scouted.length, tried: []};
+  for (const r of scouted.slice(0, SCOUT_TRIES)) {
+    qbox.value = r.nwo;
+    qbox.dispatchEvent(new Event('input'));
+    await settled();
+    const target = document.querySelector('#out tr[data-project="' + r.nwo + '"]');
+    if (!target) { scout.broke = 'searching for ' + r.nwo + ' never rendered its row'; break; }
+    if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+    speech.hidden = true;
+    speech.textContent = "";
+    (target.querySelector('a') || target).focus({preventScroll: true});
+    for (let waited = 0; waited < 2500 && (speech.hidden || !speech.textContent); waited += 25)
+      await new Promise(res => setTimeout(res, 25));
+    const text = speech.hidden ? "" : speech.textContent;
+    scout.tried.push(r.nwo + ': ' + text);
+    if (text && arms["found by GitHub search"](text)) {
+      Object.assign(scout, {nwo: r.nwo, text, inSet: window.__saidByHarness.has(text),
+                            lines: Math.round((speech.getBoundingClientRect().height - chrome) / lh), box: boxes(),
+                            cut: speech.scrollHeight > speech.clientHeight + 1});
+      seen["found by GitHub search"] = seen["found by GitHub search"] || r.nwo;
+      break;
+    }
+  }
+  if (scout.tried.length) {
+    qbox.value = "";
+    qbox.dispatchEvent(new Event('input'));
+    for (let waited = 0; waited < 3000 && rowsNow() !== wasRows; waited += 25)
+      await new Promise(r => setTimeout(r, 25));
+  }
+
+  return {visited: said.length, seen, missing: fromRows.filter(n => !seen[n]), scout,
           clippable, longestPoints: Array.from(longest.name).length, probe,
           qRestored: rowsNow() === wasRows, qbox: qbox.value,
           clippableRendered: [...document.querySelectorAll('#out tr[data-project]')]
@@ -700,6 +764,12 @@ ok("the longest name in the atlas is clipped in what Archie says about it, and s
    && (walk.probe.box <= 2 || walk.probe.cut)
    && walk.qRestored, JSON.stringify({clippable: walk.clippable, longestPoints: walk.longestPoints,
                                       probe: walk.probe, qRestored: walk.qRestored, q: walk.qbox}));
+// The scout's wording, asked of rows that can say it. The arm only matches the sentence whole, full stop
+// included, so passing also says it was never clipped: it is written to fit SAY_MAX after any clipped name.
+ok("a repo only GitHub search found says so whole, in words the restated templates produce, in two lines",
+   !walk.broke && !walk.scout.broke && walk.scout.rows > 0 && !!walk.scout.text && walk.scout.inSet
+   && walk.scout.lines >= 1 && walk.scout.lines <= 2 && (walk.scout.box <= 2 || walk.scout.cut)
+   && walk.qRestored, JSON.stringify({scout: walk.scout, qRestored: walk.qRestored, q: walk.qbox}));
 
 // THE BUBBLE MUST NOT LAND ON ANYTHING THE READER CAME FOR, and "the navigation" turned out to be too narrow
 // a way to say that. It was anchored `right:calc(100% + 12px); top:8px`, immediately left of the mascot at the
