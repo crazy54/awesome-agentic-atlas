@@ -280,6 +280,11 @@
    "section": "Assistants & Domain Agents",
    "since": "2026-10-13"
   },
+  "AhmadHassan-BTed/OpenOPC-Shadow-Adapter": {
+   "id": 1311850318,
+   "section": "Orchestrators & Multi-Agent",
+   "since": "2026-10-15"
+  },
   "Aisland-SJL/dsh-worktable": {
    "id": 1336092482,
    "section": "Assistants & Domain Agents",
@@ -329,6 +334,11 @@
    "id": 1243017690,
    "section": "MCP Servers",
    "since": "2026-10-11"
+  },
+  "Anil-matcha/open-agent-email": {
+   "id": 636553615,
+   "section": "MCP Servers",
+   "since": "2026-10-15"
   },
   "Anil-matcha/open-dots": {
    "id": 645381450,
@@ -847,7 +857,7 @@
   },
   "EverMind-AI/Raven": {
    "id": 1245465729,
-   "section": "Assistants & Domain Agents",
+   "section": "Orchestrators & Multi-Agent",
    "since": "2026-10-11"
   },
   "EverMind-AI/SkillCorpus": {
@@ -1189,6 +1199,11 @@
    "id": 1301485816,
    "section": "Agent Skills",
    "since": "2026-10-11"
+  },
+  "HermannBjorgvin/Clawdmeter": {
+   "id": 1235122687,
+   "section": "Plugins, Themes & Clients",
+   "since": "2026-10-15"
   },
   "HolmesGPT/holmesgpt": {
    "id": 808146034,
@@ -2960,6 +2975,11 @@
    "section": "MCP Servers",
    "since": "2026-10-11"
   },
+  "Zfinix/eleven": {
+   "id": 1417155242,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-10-15"
+  },
   "ZhangJinHaHaHa/AgentLens": {
    "id": 1211671981,
    "section": "Sandbox, Security & Governance",
@@ -3320,6 +3340,16 @@
    "section": "MCP Servers",
    "since": "2026-10-11"
   },
+  "alpunlu12-commits/jarvis": {
+   "id": 1238608979,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-10-15"
+  },
+  "alvinunreal/lazyskills": {
+   "id": 1274056720,
+   "section": "Agent Skills",
+   "since": "2026-10-15"
+  },
   "alvinunreal/oh-my-opencode-slim": {
    "id": 1135179558,
    "section": "Assistants & Domain Agents",
@@ -3350,7 +3380,7 @@
    "section": "Agent Skills",
    "since": "2026-10-11"
   },
-  "amplifthq/opentag": {
+  "amplifthq/openmeld": {
    "id": 1278926400,
    "section": "Orchestrators & Multi-Agent",
    "since": "2026-10-11"
@@ -3777,12 +3807,12 @@
   },
   "browser-use/browser-harness": {
    "id": 1213049020,
-   "section": "Assistants & Domain Agents",
+   "section": "MCP Servers",
    "since": "2026-10-11"
   },
   "browser-use/browser-use": {
    "id": 881458615,
-   "section": "Assistants & Domain Agents",
+   "section": "MCP Servers",
    "since": "2026-10-11"
   },
   "browser-use/bux": {
@@ -5020,6 +5050,11 @@
    "section": "MCP Servers",
    "since": "2026-10-11"
   },
+  "graygnatconsole/mcp-audit-tool": {
+   "id": 1388409097,
+   "section": "Sandbox, Security & Governance",
+   "since": "2026-10-15"
+  },
   "graykode/abtop": {
    "id": 1195165448,
    "section": "Coding Agents",
@@ -5225,6 +5260,11 @@
    "section": "Coding Agents",
    "since": "2026-10-11"
   },
+  "humanfia/humanize": {
+   "id": 1310474846,
+   "section": "Coding Agents",
+   "since": "2026-10-15"
+  },
   "humanlayer/humanlayer": {
    "id": 838542536,
    "section": "Assistants & Domain Agents",
@@ -5259,6 +5299,11 @@
    "id": 846579774,
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
+  },
+  "i12bp8/decomp.wtf": {
+   "id": 1416692900,
+   "section": "MCP Servers",
+   "since": "2026-10-15"
   },
   "iAmCorey/kooky": {
    "id": 1232744559,
@@ -5610,6 +5655,11 @@
    "section": "Plugins, Themes & Clients",
    "since": "2026-10-11"
   },
+  "justxor/claude-code-pro-course": {
+   "id": 1397840198,
+   "section": "Coding Agents",
+   "since": "2026-10-15"
+  },
   "jzjzzzzzzz/agent-me": {
    "id": 1348053574,
    "section": "Orchestrators & Multi-Agent",
@@ -5635,10 +5685,20 @@
    "section": "Plugins, Themes & Clients",
    "since": "2026-10-11"
   },
+  "kajisho5/ffmpeg-skill": {
+   "id": 1356077516,
+   "section": "MCP Servers",
+   "since": "2026-10-15"
+  },
   "kanwas-ai/kanwas": {
    "id": 1217914588,
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
+  },
+  "kaomei/stickman-video-director": {
+   "id": 1321408165,
+   "section": "Agent Skills",
+   "since": "2026-10-15"
   },
   "karanb192/itr-wala": {
    "id": 1312554298,
@@ -6049,11 +6109,6 @@
    "id": 1144115288,
    "section": "Coding Agents",
    "since": "2026-10-11"
-  },
-  "marclou/mailcheap": {
-   "id": 1413187188,
-   "section": "MCP Servers",
-   "since": "2026-10-14"
   },
   "mariagorskikh/open-instinct": {
    "id": 1403597414,
@@ -6512,7 +6567,7 @@
   },
   "nanobrowser/nanobrowser": {
    "id": 910418754,
-   "section": "Orchestrators & Multi-Agent",
+   "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
   },
   "nanocoai/nanoclaw": {
@@ -7245,6 +7300,11 @@
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
   },
+  "razorpay/slashdocs": {
+   "id": 1259123999,
+   "section": "MCP Servers",
+   "since": "2026-10-15"
+  },
   "razzant/claudexor": {
    "id": 1259999244,
    "section": "Coding Agents",
@@ -7534,6 +7594,11 @@
    "id": 1269151566,
    "section": "Agent Skills",
    "since": "2026-10-11"
+  },
+  "scaleapi/agentenv-framework": {
+   "id": 1386191888,
+   "section": "MCP Servers",
+   "since": "2026-10-15"
   },
   "scasella/claude-dynamic-workflows-codex": {
    "id": 1255596359,
@@ -8025,6 +8090,11 @@
    "section": "Coding Agents",
    "since": "2026-10-11"
   },
+  "testdouble/han": {
+   "id": 1231980017,
+   "section": "Agent Skills",
+   "since": "2026-10-15"
+  },
   "text2future/flowix": {
    "id": 1248774202,
    "section": "Context, Memory & RAG",
@@ -8039,6 +8109,11 @@
    "id": 1048065319,
    "section": "Agent Skills",
    "since": "2026-10-11"
+  },
+  "thesysdev/open-intelligent-ui": {
+   "id": 1409792187,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-10-15"
   },
   "thinkany-ai/dscode": {
    "id": 1318383417,
@@ -8204,6 +8279,11 @@
    "id": 1267314128,
    "section": "Orchestrators & Multi-Agent",
    "since": "2026-10-11"
+  },
+  "tw93/Kami": {
+   "id": 1216173720,
+   "section": "Agent Skills",
+   "since": "2026-10-15"
   },
   "tw93/Waza": {
    "id": 1179363570,
@@ -8469,6 +8549,11 @@
    "id": 1039579222,
    "section": "Agent Skills",
    "since": "2026-10-11"
+  },
+  "wheelry/deep-skill-finder": {
+   "id": 1285104880,
+   "section": "Agent Skills",
+   "since": "2026-10-15"
   },
   "wheresryan22/anatomy": {
    "id": 1410124849,

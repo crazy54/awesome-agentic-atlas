@@ -112,12 +112,12 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 - **[Security-Ai-Agent-Brama](https://github.com/oborys/security-ai-agent-brama)** — No description available
   <sub>★ 20 · Python · Apache-2.0 · clone · pushed 2026-03-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/oborys/security-ai-agent-brama.git`</sub>
-- **[Aip-Identity](https://github.com/The-Nexus-Guard/aip)** — Agent Identity Protocol (AIP) provides cryptographic identity (Ed25519/DID), vouch-based trust graphs, and end-to-end encrypted messaging for AI agents. CLI and Python SDK available on PyPI (pip install aip-identity) github | website | docs
-  <sub>★ 15 · Python · MIT · pip · pushed 2026-03-22 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pip install aip-identity`</sub>
 - **[AgentShield](https://github.com/elliotllliu/agent-shield)** — Open-source security scanner for AI agent skills, MCP servers, and plugins. 30 rules, AST analysis, cross-file tracking, 5-dimension scoring. Zero install, 100% offline, MIT licensed. github | npm
   <sub>★ 15 · TypeScript · MIT · npm · pushed 2026-03-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @elliotllliu/agent-shield`</sub>
+- **[Aip-Identity](https://github.com/The-Nexus-Guard/aip)** — Agent Identity Protocol (AIP) provides cryptographic identity (Ed25519/DID), vouch-based trust graphs, and end-to-end encrypted messaging for AI agents. CLI and Python SDK available on PyPI (pip install aip-identity) github | website | docs
+  <sub>★ 14 · Python · MIT · pip · pushed 2026-03-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`pip install aip-identity`</sub>
 - **[Ai-Agent-Solving-Security-Challenges](https://github.com/theowni/AI-Agent-Solving-Security-Challenges)** — No description available
   <sub>★ 11 · Python · clone · pushed 2024-12-29 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/theowni/AI-Agent-Solving-Security-Challenges.git`</sub>
@@ -215,10 +215,10 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2.2k · MIT · source · pushed 2026-08-17 · Win?</sub>
   <sub>`git clone https://github.com/Xnhyacinth/Awesome-LLM-Long-Context-Modeling.git`</sub>
 - **[Theagentcompany](https://github.com/TheAgentCompany/TheAgentCompany)** — An agent benchmark with tasks in a simulated software company
-  <sub>★ 795 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 796 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://github.com/TheAgentCompany/the-agent-company-backup-data/releases/download/setup-script-20241208/setup.sh | sh`</sub>
 - **[Agentlab](https://github.com/ServiceNow/AgentLab)** — AgentLab - An open-source framework for developing, testing, and benchmarking web agents on diverse tasks, designed for scalability and re…
-  <sub>★ 652 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 654 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentlab`</sub>
 - **[Appworld](https://github.com/StonyBrookNLP/appworld)** — Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL'24 Best Resource Paper
   <sub>★ 534 · Python · Apache-2.0 · pip · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -361,6 +361,6 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-10-14. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-15. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

@@ -2,23 +2,63 @@
 
 The Model Context Protocol ecosystem: reference and third-party servers, inspectors, gateways, transports, and the sibling agent-to-agent protocols.
 
-**4,785 projects** · 4,030 with stars to rank by · 2,219,706 combined stars
+**4,813 projects** · 4,046 with stars to rank by · 2,225,829 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers)
 
-✨ **4 new to the atlas** in the 10/14/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers&new=1).
+✨ **33 new to the atlas** in the 10/15/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers&new=1).
 
 Page **6** of 6, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp-servers.md) · [2](mcp-servers-2.md) · [3](mcp-servers-3.md) · [4](mcp-servers-4.md) · [5](mcp-servers-5.md) · **6**.
 
-## Also here, unranked (755)
+## Also here, unranked (767)
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 197–755 of 755. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 164–767 of 767. The rest are on this page's other parts, linked above and below.</sub>
 
+- **[decision-anchor/mcp-server](https://github.com/decision-anchor/mcp-server)** — External anchoring layer that records AI agent accountability boundaries on both sides, without inspecting content or passing judgment
+- **[denis-samatov/yandex-workspace-mcp](https://github.com/denis-samatov/yandex-workspace-mcp)** — Yandex Disk and Yandex Wiki integration with unified search, read-only by default, plus granular permissions, path allowlisting and audit logging
+- **[Departi/mcp-server](https://github.com/Departi/mcp-server)** — Travel compliance and booking for digital nomads in Europe: visa requirements, tax residency, Schengen 90/180-day tracking, accommodation and transport
+- **[DevDizzle/gammarips-mcp](https://github.com/DevDizzle/gammarips-mcp)** — Options-flow data: a curated overnight pool selected on liquidity, per-contract liquidity checks, realized outcome history and exit-rule replay
+- **[Developyn/laver-mcp](https://github.com/Developyn/laver-mcp)** — Laver project management: kanban boards, sprints, tickets, comments, attachments and a team wiki, with versioned writes to prevent concurrent overwrites
+- **[devflowinc/trieve](https://github.com/devflowinc/trieve/tree/main/clients/mcp-server)** — Crawl, embed, chunk, search and retrieve information from datasets through Trieve
+- **[dfrancislyondflabc-tech/agentic-recall](https://github.com/dfrancislyondflabc-tech/agentic-recall)** — Long-term memory over a folder of Markdown files: local hybrid retrieval (BM25F, dense vectors, phrase proximity) that reports when an answer is absent
+- **[dhawalshah/tiktok-ads-mcp](https://github.com/dhawalshah/tiktok-ads-mcp)** — TikTok Ads: video performance metrics, creative fatigue scoring, industry benchmarks and Smart+ campaign support
+- **[dialgoodian/clawdcall-mcp](https://github.com/dialgoodian/clawdcall-mcp)** — Place consent-based outbound phone calls and retrieve transcripts, summaries and outcomes
+- **[dirtcubeinteractive/specter-skills](https://github.com/dirtcubeinteractive/specter-skills)** — Configure a Specter game backend: players, economy, progression, leaderboards, tournaments, battle passes and real-time multiplayer
+- **[dizpers/polystrike-examples](https://github.com/dizpers/polystrike-examples)** — Live Elon Musk and Ted Cruz tweet feeds and counters for Polymarket tweet-count markets, comparing real, XTracker oracle and UI counts
+- **[djrobson5/agentmd-mcp](https://github.com/djrobson5/agentmd-mcp)** — Convert PDF, DOCX, HTML and URLs to clean, LLM-ready Markdown with tables preserved and boilerplate stripped
+- **[dkaleganov/mercury-multiorg-mcp](https://github.com/dkaleganov/mercury-multiorg-mcp)** — Unofficial, read-only Mercury banking across multiple organizations: balances, transactions, statements, cards, invoices, treasury and 1099 pre-filing checks
+- **[DmytroRybka/jobctl](https://github.com/DmytroRybka/jobctl-claude)** — Job application tracker: agents record applications, interviews, statuses, salaries and next actions, and humans review them in a dashboard
+- **[dockndevai/mcp-grafana](https://github.com/dockndevai/mcp-grafana)** — Safe-by-default MCP server for Grafana: search &amp; read dashboards and the dashboard JSON model, query datasources (Prometheus/Loki/SQL via the unified query API), and inspect alert rules &amp; annotations…
+- **[dockndevai/mcp-laya](https://github.com/dockndevai/mcp-laya)** — Fast, local, non-autoregressive System-1 decision engine as MCP tools — typed decisions (classify / score / yes-no) over text, email, tickets or JSON in 100+ languages, with calibrated confidence and…
+- **[dockndevai/mcp-mac-control](https://github.com/dockndevai/mcp-mac-control)** — Full Mac control: shell, AppleScript, files, processes and human-like GUI input with a screenshot loop, plus an optional safe mode with read-only, gated access
+- **[dockndevai/mcp-macos](https://github.com/dockndevai/mcp-macos)** — Read-only-by-default Mac control: files, processes, screenshots and clipboard, with opt-in allowlisted shell commands, AppleScript and GUI input
+- **[dockndevai/mcp-openshift](https://github.com/dockndevai/mcp-openshift)** — OpenShift and Kubernetes operations on pods, deployments, routes and builds, with access modes, namespace allowlists, dry-run and Secret redaction
+- **[dockndevai/mcp-outlook](https://github.com/dockndevai/mcp-outlook)** — Outlook mail via Microsoft Graph: read, search, draft, send and organize email. Read-only by default, with audit logs and confirmation before send or delete
+- **[docweave/mcp](https://github.com/NicolasMartalog/docweave-mcp)** — Generate PDFs from HTML, a URL or a template with JSON data, and extract text or Markdown from PDFs
+- **[donnywin85/arb-dex-mcp](https://github.com/donnywin85/arb-dex-mcp)** — Live cross-DEX pool prices, liquidity and spreads from on-chain state on BSC, Polygon, Arbitrum, Base, Avalanche and Optimism, plus a measurement archive
+- **[donnywin85/dex-data-mcp](https://github.com/donnywin85/dex-data-mcp)** — Live DEX data on BNB Chain, Polygon, Arbitrum, Base and Avalanche: token prices, liquidity depth, pool reserves, optimal venue and pre-trade price impact
+- **[double2dev/boltpatternhq-mcp](https://github.com/double2dev/boltpatternhq-mcp)** — Official MCP Server for BoltPatternHQ providing AI assistants with instant automotive wheel fitment, PCD, center bore, and offset reference data
+- **[dpkdhingra91/aiia-mcp-server](https://github.com/dpkdhingra91/aiia-mcp-server)** — AI Interview Agents: create roles, screen CVs, schedule voice interviews and read scored reports, in English, Hindi and other Indian languages
+- **[dqj1998/japan-company-info-mcp-bridge](https://github.com/dqj1998/japan-company-info-mcp-bridge)** — Offline Japanese company due diligence: EDINET XBRL financials, NTA corporate numbers, major shareholders, gBizINFO certifications and industry benchmarks
+- **[Drand](https://github.com/randa-mu/drand-mcp-server)** — An MCP server for fetching verifiable random numbers from the drand network
+- **[Dreiev/l2calendar-mcp](https://github.com/Dreiev/l2calendar-mcp)** — Query upcoming Lineage 2 private server openings by chronicle via the public L2 Calendar API
+- **[drknowhow/fluxdots-mcp](https://github.com/drknowhow/fluxdots-mcp)** — Play FluxDots, a ranked strategy board game where humans and AI agents share one Elo ladder: host or join live matches, with profiles, ratings and replays
+- **[drsound/markdown-to-whatsapp](https://github.com/drsound/markdown-to-whatsapp)** — Convert Markdown to WhatsApp formatting so agent output shows bold, lists and quotes instead of raw asterisks, with tables rendered as monospace boxes
+- **[Drumworks/ssid-mcp](https://github.com/Drumworks/ssid-mcp)** — MAC address (OUI) vendor lookup with randomized-address detection, plus router default login IPs and admin credentials cited to manufacturer documentation
+- **[Dusheh/myclaw-toolkit](https://github.com/Dusheh/myclaw-toolkit)** — Developer utilities: web search, exchange rates, crypto prices, QR codes, JSON formatting, UUIDs, URL tools, domain checks and RSS feeds, some paid via x402
+- **[echoloc-ai/echoloc-mcp](https://github.com/echoloc-ai/echoloc-mcp)** — Company technographics from hiring data: find companies adopting, replacing or evaluating technologies and enrich domains with firmographics and hiring signals
+- **[effectustasi/autodesk-inventor-mcp](https://github.com/effectustasi/autodesk-inventor-mcp)** — Connect AI assistants to a live Autodesk Inventor session over COM: inspect bodies and features, find sliver faces in imported models, dry-run Unwrap, and script the Inventor API
+- **[einiba/canyougrab-api](https://github.com/einiba/canyougrab-api/tree/main/mcp-server)** — Domain availability checks via real-time DNS and WHOIS lookups, with bulk checking, confidence scores and registration details
+- **[elang2/mcp-audit-gateway](https://github.com/elang2/mcp-audit-gateway)** — Transparent MCP proxy that keeps a signed, hash-chained audit trail of agent tool calls, with YAML policy enforcement and OpenTelemetry export
+- **[elberacasa/umbra](https://github.com/elberacasa/umbra)** — Trust scores and guardrails for AI-generated code: static security rules, Docker-verified build/boot checks and receipts that catch agents lying about tests
+- **[elekto-com-br/elekto-mcp-sql](https://github.com/elekto-com-br/elekto-mcp-sql)** ✨ <sub>Added 10/15/26</sub> — #️⃣ 🏠 🍎 🪟 🐧 - Read-only SQL Server introspection for .NET projects: schema, DDL, dependency graphs, index health and data profiling, reading connection strings from appsettings.json or web.config, an…
+- **[elfsight/beamtrace-mcp](https://github.com/elfsight/beamtrace-mcp)** — Track AI search visibility and get website fixes to improve it
 - **[eliottreich/crawdar-mcp](https://github.com/eliottreich/crawdar-mcp)** — Evidence-backed business discovery and lead-list research: search by brief or criteria, inspect qualification evidence and exclusions, and export results
 - **[Embassy-of-the-Free-Mind/sourcelibrary-v2](https://github.com/Embassy-of-the-Free-Mind/sourcelibrary-v2/tree/main/mcp-server)** — Search and cite rare historical texts (alchemy, Hermeticism, Renaissance philosophy) from Source Library with DOI-backed citations
 - **[engineerdeep/buildtree-mcp](https://github.com/engineerdeep/buildtree-mcp)** — Share Android and iOS builds with testers: detects Expo, React Native or Flutter, runs the build, uploads the .apk or .ipa to buildtree, and returns install links, a QR code image and tester feedback
+- **[EngMarchG/agent-bridge](https://github.com/EngMarchG/agent-bridge)** ✨ <sub>Added 10/15/26</sub> — Lets Claude Code and Codex steer each other's live desktop chats through Windows UI Automation: list and read chats, send messages or mid-turn steers, and pause, resume or edit Codex goals
 - **[EnioAguiar/llmpvp-plugin](https://github.com/EnioAguiar/llmpvp-plugin)** — Ranked, bring-your-own-LLM chess and Go arena for AI agents: register, join matchmaking or challenge by name and play Glicko-2 rated games
 - **[epistemedeus/ai-readiness](https://github.com/epistemedeus/ai-readiness)** — Check a website's visibility to AI search: scores AI crawler access, JSON-LD, title and meta tags, Open Graph, sitemap and llms.txt, with a fix for each gap
 - **[epistemedeus/skillguard](https://github.com/epistemedeus/skillguard)** — Static scanner that checks Claude Code skills, plugins and MCP servers for exfiltration, install hooks and prompt injection before you install them
@@ -69,6 +109,7 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[getrupt/ashra-mcp](https://github.com/getrupt/ashra-mcp)** — Extract structured data from any website. Just prompt and get JSON
 - **[gigatypeaura/memecorp-mcp](https://github.com/gigatypeaura/memecorp-mcp)** — Unofficial MCP for memecorp.us: read the feed; with an agent API key, post, react, comment, and set a persona
 - **[giggal-ai/giggal-mcp](https://github.com/giggal-ai/giggal-mcp)** — Email verification: mailbox existence checks, including catch-all, accept-all and SEG-protected addresses (Proofpoint, Mimecast, Barracuda), single or bulk
+- **[gitayg/appcrane-mcp](https://github.com/gitayg/appcrane-mcp)** ✨ <sub>Added 10/15/26</sub> — Self-hosted, MCP-native deployment platform (AppCrane): AI agents deploy apps, manage secrets, read logs, and roll back on your own server. Enterprise SSO (SAML/OIDC/SCIM) and per-user audit
 - **[githunt-agent/githunt-mcp](https://github.com/githunt-agent/githunt-mcp)** — Search, rank and analyze GitHub developers for tech recruiting by location, role and skill, with AI scoring and contact discovery
 - **[glaksmono/finbud-data-mcp](https://github.com/glaksmono/finbud-data-mcp/tree/main/packages/mcp-server)** — Real-time financial data for stocks, options, crypto and forex
 - **[glasswarp/mcp-server](https://github.com/glasswarp/mcp-server)** — See and control your own Windows PC locally or remotely: UIA and screenshot observation, clicking, typing, dragging, scrolling, launching apps and Live View
@@ -267,6 +308,7 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[microsoft/mcp](https://github.com/microsoft/mcp/tree/main/servers/Azure.Mcp.Server)** — #️⃣ ☁️ - Access Azure services including Storage, Cosmos DB and Azure Monitor
 - **[Middleware MCP Server](https://github.com/middleware-labs/mcp-middleware)** — MCP server for interacting with Middleware observability data, enabling AI assistants to query logs, metrics, traces, and infrastructure telemetry through standardized interfaces
 - **[mihnin/stellara-mcp](https://github.com/mihnin/stellara-mcp)** — Deterministic Western astrology via Swiss Ephemeris: natal charts, transits, synastry and a birthplace resolver with coordinates and historical UTC offsets
+- **[Miladmet/quickcast-mcp](https://github.com/Miladmet/quickcast-mcp)** ✨ <sub>Added 10/15/26</sub> — Screen-to-Action Protocol: Turn screen recordings directly into automated Playwright E2E reproduction tests, structured GitHub bug reports with video timestamps, and SOP walkthroughs
 - **[miracle1814/ue5-automation](https://github.com/miracle1814/ue5-automation)** — Unreal Engine 5 Blueprint automation: create, wire and compile Blueprints, author materials and UMG widgets, and verify PIE runtime state
 - **[mmxrealQQ/bobai-buyburn](https://github.com/mmxrealQQ/bobai-buyburn)** — On-chain data for the $BOBAI token on BNB Chain: price from pair reserves and Chainlink, liquidity depth, LP-burn proof and a buyback-and-burn audit trail
 - **[mobb-dev/mobb-vibe-shield-mcp](https://github.com/mobb-dev/bugsy?tab=readme-ov-file#model-context-protocol-mcp-server)** — Mobb Vibe Shield identifies and remediates vulnerabilities in human and AI-written code
@@ -378,7 +420,6 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[RapierCraft/alterlab-mcp-server](https://github.com/RapierCraft/alterlab-mcp-server)** — Web scraping, structured data extraction and screenshots with JavaScript rendering, residential proxy rotation and automatic retries
 - **[ravndex/ravn-mcp-glama](https://github.com/ravndex/ravn-mcp-glama)** — Cross-chain swap execution across multiple venues and chains, including native Bitcoin as source or destination
 - **[realMNohgee/hermtica](https://github.com/realMNohgee/hermtica)** — Browse and search Hermtica, a social network and marketplace for AI agents: feed, trending items, agent profiles and marketplace stats
-- **[redditapis/redditapis-mcp](https://github.com/redditapis/redditapis-mcp)** — Read-only Reddit API access: subreddit listings, post, comment, community and user search, comment trees and top posts
 - **[RedHold/diagrams-mcp-app-core](https://github.com/RedHold/diagrams-mcp-app-core)** — Generate and edit draw.io cloud architecture diagrams from prompts, Terraform or Kubernetes manifests, fix Well-Architected warnings and export to SVG
 - **[reefapi/reefapi-mcp](https://github.com/reefapi/reefapi-mcp)** — Live web data as clean JSON: search engines, social media, e-commerce (Amazon, eBay, Etsy), real estate, jobs, travel, news, finance and company intel
 - **[reeinharddd/snapmcp](https://github.com/reeinharddd/snapmcp)** — Render terminal output, syntax-highlighted code, web pages, Markdown, HTML and git diffs as PNG, JPEG, PDF or GIF locally via Playwright
@@ -387,6 +428,7 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[rekordcloud/sonovault-mcp](https://github.com/rekordcloud/sonovault-mcp)** — Music metadata search over tracks, artists, labels and releases: genres, release dates, ISRC/ISWC codes and IDs for Spotify, Apple Music, Discogs and more
 - **[RepoAssay/repo-test-architect](https://github.com/RepoAssay/repo-test-architect)** — Local, read-only test architecture audits for JS/TS, C#, Elixir, Go, Kotlin, PHP, Python, Ruby, Rust and Swift, with evidence-backed findings and test plans
 - **[Rererr/amenbo](https://github.com/Rererr/amenbo)** — Token-efficient web fetching for Japanese sites: outline-first disclosure, Shift_JIS and EUC-JP decoding, PDF and CSV extraction and polite crawling
+- **[retracn/automationnation-mcp](https://github.com/retracn/automationnation-mcp)** ✨ <sub>Added 10/15/26</sub> — 17 data tools backed by Apify Actors: Google Flights and Hotels prices, Google Shopping, News, Images, Videos, Jobs and Trends, YouTube transcripts, Google Maps leads, Ads Transparency, app reviews a…
 - **[ReviewGate/reviewgate](https://github.com/ReviewGate/reviewgate)** — Code review against your team's written rules: a generator finds issues and an independent judge filters them, with a pre-push gate and PR bot
 - **[Rheopyrin/db-access-mcp](https://github.com/Rheopyrin/db-access-mcp)** — Query PostgreSQL, MySQL, Redshift and SQL Server over SSH or AWS SSM tunnels, with read-only enforcement, confined exports and pluggable secret providers
 - **[richer-richard/fenestra](https://github.com/richer-richard/fenestra/tree/main/fenestra-mcp)** — Headless rendering and verification of native Rust GUIs: accessibility tree, semantic selectors, contrast and focus-order checks, and screenshot diffs
@@ -489,6 +531,7 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[SunrisesIllNeverSee/sigrank-mcp](https://github.com/SunrisesIllNeverSee/sigrank-mcp)** — Leaderboard ranking AI coding operators by token efficiency, with signed submissions, diagnostics and simulations; only token counts leave the machine
 - **[SuresoftTechnologies/dvera-plugin](https://github.com/SuresoftTechnologies/dvera-plugin)** — Drives Controller Tester (CT) C/C++ verification: project setup, analysis, test generation and execution, statement/branch/MC-DC coverage and report export
 - **[swaltersjrtest/microtap-mcp](https://github.com/swaltersjrtest/microtap-mcp)** — Pay-per-call x402 APIs: Polymarket and Kalshi prediction markets, DeFi and crypto data, on-chain reads across EVM chains, live weather and web search
+- **[swebsy/MCP](https://github.com/swebsy/MCP)** ✨ <sub>Added 10/15/26</sub> — Build and edit real websites from the coding agent you already pay for — no per-token AI fees. Browse the template catalogue, create and open a site, rewrite sections, add and link pages, insert bloc…
 - **[swiftnodes/swiftnodes-mcp](https://github.com/swiftnodes/swiftnodes-mcp)** — Multi-chain blockchain RPC reference: endpoint URL templates, JSON-RPC method support per chain and live endpoint probing
 - **[swnotmetal/Project-Koma](https://github.com/swnotmetal/Project-Koma/tree/main/packages/koma-gate-mcp)** — Classify input for prompt injection and out-of-scope content with Koma Gate's LLM-based classifier
 - **[syk8015/claudeusage](https://github.com/syk8015/claudeusage)** — Measure whether a Claude subscription pays off from local Claude Code logs: surviving Claude-written code, rate-limit drivers and chat usage
@@ -522,6 +565,7 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[ToolTrace-io/mcp-server](https://github.com/ToolTrace-io/mcp-server)** — Web page data: scrape to Markdown, extract metadata, links and JSON-LD, audit on-page SEO, detect tech stacks and validate XML sitemaps
 - **[toomasgutman-blip/facturolia-mcp](https://github.com/toomasgutman-blip/facturolia-mcp)** — Read and validate European e-invoices (Factur-X, ZUGFeRD, XRechnung, UBL, CII) against EN 16931 and flag Factur-X PDF vs embedded XML mismatches
 - **[TopicForge/topicforge-mcp](https://github.com/TopicForge/topicforge-mcp)** — Programmatic SEO batch jobs: run article batches, track status and export Markdown, plus topic cluster, FAQ schema and meta description tools
+- **[Trainzilla/tzilla-mcp](https://github.com/Trainzilla/tzilla-mcp)** ✨ <sub>Added 10/15/26</sub> — Trainzilla for personal trainers: manage clients, workout and diet plans, check-ins, habits, sessions and billing (hosted OAuth endpoint or local)
 - **[transloadit/node-sdk](https://github.com/transloadit/node-sdk/tree/main/packages/mcp-server)** — Media processing via Transloadit Robots: video encoding (HLS, H.264, VP9), image resizing and watermarks, document conversion, OCR and transcription
 - **[traql/mcp-server](https://github.com/traql/mcp-server)** — AML and sanctions screening for crypto addresses and transactions on Ethereum, BNB Chain, TRON, TON and Bitcoin, with itemized 0-100 risk scores
 - **[trendbender/italy-transfer](https://github.com/trendbender/italy-transfer)** — Compare real-time train, bus, ferry and private transfer prices between Italian cities
@@ -570,6 +614,7 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[zarcherlot/code-relay](https://github.com/zarcherlot/code-relay)** — Branch-scoped runbooks and cross-machine verification with auditable receipts for coding agents
 - **[Zenidp/solinkify-mcp](https://github.com/Zenidp/solinkify-mcp)** — Agentic payments on Solana: discover x402-priced endpoints, pay HTTP 402 paywalls in USDC, manage balances and subscriptions, with spending caps and escrow
 - **[zerodrop-dev/zerodrop-mcp](https://github.com/zerodrop-dev/zerodrop-mcp)** — Disposable email inboxes for AI agents with automatic OTP and magic-link extraction, for testing signups and auth flows
+- **[zihin-ai/zihin-mcp](https://github.com/zihin-ai/zihin-mcp)** ✨ <sub>Added 10/15/26</sub> — Build and operate AI agents on the Zihin.ai platform: manage agents, schemas, triggers, budgets and approvals, run diagnostics and chat with your agents
 - **[zornade/zornade-mcp](https://github.com/zornade/zornade-mcp)** — Italian cadastral, geospatial and real estate data: address geocoding, parcel profiles (risk, solar potential, valuations, POIs) and parcel lookup
 - **[Zsadigzade/trainbud](https://github.com/Zsadigzade/trainbud)** — Local analysis of Garmin Connect activities, sleep, recovery, body composition, stress and VO2 max against 28-day baselines, with memory for goals and races
 - **[zumerlab/snapsurf](https://github.com/zumerlab/snapsurf)** — Browser navigation and verification: compact semantic page digests, ranked text search, and typed diffs after each action with assertions
@@ -580,6 +625,6 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-10-14. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-15. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

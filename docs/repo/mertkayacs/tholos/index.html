@@ -10,7 +10,7 @@
 <meta property="og:title" content="Tholos — Awesome Agentic Atlas">
 <meta property="og:description" content="Local AI assistants that run on a schedule and share tables, notes and a task board, with rules that allow, ask about or deny each action. Works with…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/mertkayacs/tholos/">
-<meta property="og:image" content="https://opengraph.githubassets.com/1/mertkayacs/tholos">
+<meta property="og:image" content="https://raw.githubusercontent.com/mertkayacs/tholos/main/docs/demo.webp">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
@@ -89,7 +89,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">git clone https://github.com/mertkayacs/tholos.git</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for Tholos">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">docker run -d --name tholos -p 127.0.0.1:7070:7070 -v tholos:/data \</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for Tholos">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -132,16 +132,16 @@ try {
 <section>
   <h2>Screenshot</h2>
   <figure class="shot">
-    <img loading="lazy" decoding="async" src="https://opengraph.githubassets.com/1/mertkayacs/tholos"
+    <img loading="lazy" decoding="async" src="https://raw.githubusercontent.com/mertkayacs/tholos/main/docs/demo.webp"
          alt="Screenshot or social card for Tholos">
-    <figcaption>GitHub's social card — no screenshot was found for this project, fetched from
+    <figcaption>The project's own screenshot, fetched from
       source rather than copied into this repository.</figcaption>
   </figure>
 </section>
 
 <section>
   <h2>Platform support</h2>
-  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr></tbody></table>
+  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr></tbody></table>
 </section>
 
 <section>
