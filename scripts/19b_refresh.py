@@ -90,6 +90,18 @@ def source_labels(data: dict) -> set[str]:
     return {n.strip() for row in data["rows"] for n in row[ix].split(",") if n.strip()}
 
 
+def curated_lists() -> list[str]:
+    """The lists this checkout configures, which is the other side of `check_sources`: curated ones only.
+
+    The scout (`12_scout.py`) is in `SOURCES` as a `synthetic` source, but it is a search and not a list,
+    so `16_build_all` never puts its label in `listed_by` (see SYNTHETIC there). The rows cannot carry it,
+    so counting it here made every checkout look one list ahead of its own rows, and this stage refused a
+    page whose rows and prose agreed: 39 lists named by the rows, 40 configured (2026-10-14).
+    `19_pages.LISTS` leaves the scout out by the same test, which keeps this count and the prose's one number.
+    """
+    return [s["nwo"] for s in b10.SOURCES if not s.get("synthetic")]
+
+
 def check_sources(data: dict, configured: list[str], allow_stale: bool = False) -> int:
     """Stop, unless the rows on disk and the lists in the checkout agree on how many lists there are.
 
@@ -183,10 +195,11 @@ def refresh_data(data: dict, ledger: dict) -> tuple[dict, int]:
 def render(data: dict, lists: int | None = None) -> str:
     """The page. With `lists`, the source count describes the rows being rendered, not the checkout.
 
-    `19_pages.LISTS` is `len(10_parse_sources.SOURCES)`, and in a full build that is exactly right: the
-    crawl that wrote `data.json` walked those lists, so the number the page states and the rows it counts
-    come from one place. This stage is the one path where they can differ, because it renders committed
-    rows against a checkout that may have moved -- which is the whole hazard `check_sources` refuses on.
+    `19_pages.LISTS` is the curated lists in `10_parse_sources.SOURCES` -- `curated_lists()`, counted --
+    and in a full build that is exactly right: the crawl that wrote `data.json` walked those lists, so the
+    number the page states and the rows it counts come from one place. This stage is the one path where
+    they can differ, because it renders committed rows against a checkout that may have moved -- which is
+    the whole hazard `check_sources` refuses on.
 
     So `--allow-stale` no longer means "publish a page that contradicts itself". It means "describe the
     dataset you have". The page then says 1,294 projects from 11 awesome-lists, which is true of the rows
@@ -260,7 +273,7 @@ def main() -> None:
     # Before the first write, not after: a check that reports on a file it has already overwritten is a
     # description of the damage rather than a guard against it, and this stage rewrites the page that
     # gets served.
-    lists = check_sources(data, [s["nwo"] for s in b10.SOURCES], args.allow_stale)
+    lists = check_sources(data, curated_lists(), args.allow_stale)
     ledger = newness.load()
     data, live = refresh_data(data, ledger)
 

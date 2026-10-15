@@ -2178,8 +2178,13 @@ if (discHTML && discPlan) {
       // starless one (`<p class="dmeta">1 list</p>`) fell into neither count. On 24 September the rail's
       // only two cards without a language were both starless, and this reported "48 with, 0 without" on
       // a day that reached both arms.
-      const withLang = has(/<p class="dmeta">(?:<b>[\d,]+<\/b> stars · )?[^<·]+ · \d+ lists?<\/p>/);
-      const noLang = has(/<p class="dmeta">(?:<b>[\d,]+<\/b> stars · )?\d+ lists?<\/p>/);
+      //
+      // And a list count is not the only way the line can end. A repo only the scout found has no list to
+      // count, and the card says "found by search" where the count would be; on 14 October one of the fifty
+      // did, and fell into neither count exactly as the starless cards once had. Both patterns take either
+      // ending, and nothing else, so the sum below still catches a third shape.
+      const withLang = has(/<p class="dmeta">(?:<b>[\d,]+<\/b> stars · )?[^<·]+ · (?:\d+ lists?|found by search)<\/p>/);
+      const noLang = has(/<p class="dmeta">(?:<b>[\d,]+<\/b> stars · )?(?:\d+ lists?|found by search)<\/p>/);
       ok("...over cards with a language and cards without one", withLang > 0 && noLang > 0,
          withLang + " with, " + noLang + " without");
       ok("...and every card is one or the other, so neither count is missing a shape of meta line",
@@ -2197,8 +2202,10 @@ if (discHTML && discPlan) {
     // markup below is written out by hand rather than taken from either renderer, because a comparison
     // between two implementations proves they agree and not that either is right.
     //
-    // `tests/discover_test.py` holds `card_html()` to these same three strings, which is what makes them a
-    // cross-language fixture rather than a JavaScript unit test. Changing one here means changing it there.
+    // These are held against the page's `cardHTML()` only. The stage's `card_html()` meets them nowhere --
+    // `tests/discover_test.py` imports the rule alone and renders no card, whatever this comment once said --
+    // so the Python side is held to the JavaScript only through the fifty built cards above, and an arm none
+    // of the day's fifty reach is checked in one language. Changing a string here means changing both.
     const DCATS = ["Coding Agents", "MCP Servers", "Plugins, Themes & Clients", "Docs & Learning",
                    "Observability"];
     const FIXTURES = [
@@ -2222,7 +2229,11 @@ if (discHTML && discPlan) {
        '<a class="nwo" href="https://github.com/aux/CON">aux/CON</a>' +
        '<p class="dmeta"><b>12,345</b> stars · C++ · 3 lists</p><p class="desc">Plain</p>' +
        '<p class="dn">2 of 3</p></article>'],
-      ["a category off the end of the list, on a build with no arrivals cohort at all",
+      // `lists: 0` was a value no row could have when this was written, and both renderers floored it to
+      // "1 list". The scout made it real -- a repo GitHub search found and no curated list names -- and
+      // since then a 0 reads "found by search" on every surface that printed a count, this card included.
+      ["a category off the end of the list, found by search rather than named by a list, on a build with " +
+       "no arrivals cohort at all",
        {nwo: "zz/x", name: "X", cat: 99, stars: 1, lists: 0, lang: "",
         first_seen: "2026-09-14", blurb: ""}, "",
        '<article class="dcard" id="d3" data-project="zz/x" ' +
@@ -2230,7 +2241,7 @@ if (discHTML && discPlan) {
        '<span class="tag cat">Uncategorised</span></p>' +
        '<h2><a href="../repo/zz/x/">X</a></h2>' +
        '<a class="nwo" href="https://github.com/zz/x">zz/x</a>' +
-       '<p class="dmeta"><b>1</b> stars · 1 list</p><p class="desc"></p>' +
+       '<p class="dmeta"><b>1</b> stars · found by search</p><p class="desc"></p>' +
        '<p class="dn">3 of 3</p></article>'],
     ];
     FIXTURES.forEach(([why, row, cohort, want], i) => {

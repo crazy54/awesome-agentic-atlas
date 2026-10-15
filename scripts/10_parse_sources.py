@@ -316,11 +316,11 @@ SOURCES = [
     # Last on purpose: a repo a curated list also has is met there first, which is what keeps a curator's
     # row the one the merged pools start from (tests/scout_test.py asserts the position).
     #
-    # Two counts treat it as a list today, and both are presentation choices for the generators rather
-    # than facts this file can settle: `len(SOURCES)` is what the site's "N awesome-lists" prose prints
-    # (19_pages.LISTS), and `16_build_all.repo_pool`'s `list_count` -- "Named by N lists", the homepage's
-    # consensus picks -- counts the scout beside the curators. Filtering on `synthetic` is the one-line
-    # change in either place if the scout should stop counting as a list.
+    # No count treats it as a list. Everything that counts lists filters on `synthetic`: the site's
+    # "N awesome-lists" prose (19_pages.LISTS), `list_count` and `listed_by` (16_build_all.SYNTHETIC,
+    # so a repo only the scout found has 0 and an empty label), the Markdown hub's count, and the list
+    # count 19b_refresh.check_sources compares those labels against (19b_refresh.curated_lists). Anything
+    # new that counts lists has to filter on it too, or it is one list ahead of every row.
     dict(key="scout", nwo="crazy54/awesome-agentic-atlas",
          title="Scouted on GitHub", short="Scout", file="scout.md",
          mode={"bullet"}, cat_at=2, synthetic=True),
