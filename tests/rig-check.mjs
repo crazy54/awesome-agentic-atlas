@@ -20,6 +20,7 @@
 // the pixels the GPU drew; a shader that ignored `level` would pass here and flash on screen.
 //
 //   node tests/rig-check.mjs <chrome-binary> <origin>
+import {readFileSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {launch} from "./lib/browser.mjs";
 
@@ -38,6 +39,12 @@ const send = (method, params = {}, sid) => new Promise((res, rej) => {
   const n = ++id; waiters.set(n, {res, rej});
   ws.send(JSON.stringify({id: n, method, params, ...(sid ? {sessionId: sid} : {})}));
 });
+// And GitHub turning down the page's anonymous API calls -- the homepage's star count and the footer's build
+// tags, sixty an hour to an address, which every suite run from the same machine shares -- is a 403 or a 429
+// that both take silently and that Chrome logs all the same. Only those two: any other answer from the API is
+// still an error. A page view with a cold cache spends five calls, so a busy afternoon of runs uses the hour up.
+const excused = e => /cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(e.text + " " + (e.url || "")) ||
+  (/^https:\/\/api\.github\.com\//.test(e.url || "") && /status of (403|429)\b/.test(e.text));
 ws.addEventListener("message", ev => {
   const m = JSON.parse(ev.data);
   if (m.id && waiters.has(m.id)) {
@@ -49,9 +56,8 @@ ws.addEventListener("message", ev => {
   // draw call is then skipped, silently, and the fixture it belonged to is simply not there.
   else if (m.method === "Runtime.consoleAPICalled" && m.params.type === "error")
     errors.push(m.params.args.map(a => a.value ?? a.description ?? "").join(" ").slice(0, 300));
-  else if (m.method === "Log.entryAdded" && m.params.entry.level === "error" &&
-           !/cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(m.params.entry.text + " " + (m.params.entry.url || "")))
-    errors.push(m.params.entry.text);
+  else if (m.method === "Log.entryAdded" && m.params.entry.level === "error" && !excused(m.params.entry))
+    errors.push(m.params.entry.text + (m.params.entry.url ? ` (${m.params.entry.url})` : ""));
 });
 const {targetId} = await send("Target.createTarget", {url: "about:blank"});
 const {sessionId} = await send("Target.attachToTarget", {targetId, flatten: true});
@@ -73,6 +79,37 @@ const until = async (expr, ms) => {
   for (const end = Date.now() + ms; Date.now() < end; await sleep(100)) if (await ev(expr)) return true;
   return false;
 };
+// The rig keeps time by its frames: each steps it on by the time since the last, capped at a tenth of a second
+// (`frame()` in archie.js). So a cue's eight seconds, the pods' 1.2 s drop and a swell's 1.75 s are the rig's
+// seconds, and where swiftshader draws under two frames a second -- CI mid-cue, which got the pods eleven of
+// their twelve capped steps down in six seconds, in nine of thirteen CI runs -- each takes five times as long
+// on the wall, or more. Waits sized in wall-clock milliseconds then gave up first: the pods short of nine
+// tenths when six seconds were up, and the second blinder cue fired while the first swell was still dying,
+// whose swell the rig rightly holds off.
+// `untilRig` bounds a wait in the rig's own seconds instead, summed the same way off the same frame
+// timestamps; the cap is read out of archie.js, so the two cannot drift apart. The wall-clock ceiling is only
+// for frames that stop altogether.
+const CAP = Number(/const dt = then \? Math\.min\(Math\.max\(\(now - then\) \/ 1000, 0\), ([\d.]+)\) : 0;/.exec(
+  readFileSync(new URL("../docs/assets/archie.js", import.meta.url), "utf8"))?.[1]);
+if (!(CAP > 0)) throw new Error("archie.js's frame() no longer caps its step as untilRig expects: re-read it");
+const RIG_CLOCK = `(() => { if ("__rigClock" in window) return; window.__rigClock = 0; let then = 0;
+  const f = now => { if (then) window.__rigClock += Math.min(Math.max((now - then) / 1000, 0), ${CAP});
+    then = now; requestAnimationFrame(f); };
+  requestAnimationFrame(f); })()`;
+const waited = {rig: 0, ms: 0};
+const untilRig = async (expr, secs, ceiling = 240000) => {
+  await ev(RIG_CLOCK);
+  const from = await ev(`window.__rigClock`), t0 = Date.now();
+  for (const end = t0 + ceiling; Date.now() < end; await sleep(100)) {
+    const [hit, now] = await ev(`[!!(${expr}), window.__rigClock]`);
+    Object.assign(waited, {rig: now - from, ms: Date.now() - t0});
+    if (hit) return true;
+    if (now - from >= secs) return false;
+  }
+  return false;
+};
+// For a failure message: how long the last `untilRig` waited, on both clocks.
+const wait = () => `after ${waited.rig.toFixed(2)} s on the rig's clock, ${waited.ms} ms on the wall's`;
 let pass = 0, fail = 0;
 const ok = (n, c, extra = "") => { if (c) pass++; else { fail++; console.log("FAIL " + n + (extra ? " -- " + extra : "")); } };
 
@@ -189,15 +226,20 @@ for (const [name, check] of [
   ["wash", `s.look === "low-tide" && s.pars.every(v => v > 0.8)`], ["blinder", `s.blinder > 0.5`],
 ]) {
   ok(`cue ${name}: taken`, (await ev(`window.archieRig.cue(${JSON.stringify(name)})`)) === true);
-  ok(`...and it plays`, await until(`(s => ${check})(window.archieRig.status())`, 6000),
-     name + " " + JSON.stringify(await ev(`window.archieRig.status()`)));
+  // Six of the cue's eight seconds, on its clock.
+  ok(`...and it plays`, await untilRig(`(s => ${check})(window.archieRig.status())`, 6),
+     `${name} ${wait()} ${JSON.stringify(await ev(`window.archieRig.status()`))}`);
 }
 // A second blinder cue as soon as the first swell is over swells them again: a dance's downbeat in the
-// four seconds before once swallowed the cue, which is how it failed on CI, mid-dance.
-await until(`window.archieRig.status().blinder < 0.05`, 6000);
+// four seconds before once swallowed the cue, which is how it failed on CI, mid-dance. "Over" is waited for,
+// and asserted: a swell still under way holds the next cue's swell off (it is still taken), so a wait that
+// gave up early would fail the assertion after it for a reason that is not the cue's. The whole swell is
+// 1.75 s of the rig's time.
+ok("...the swell dies away", await untilRig(`window.archieRig.status().blinder < 0.05`, 3),
+   `${wait()} ${JSON.stringify(await ev(`window.archieRig.status()`))}`);
 ok("cue blinder, again straight after a swell: taken", (await ev(`window.archieRig.cue("blinder")`)) === true);
-ok("...and it swells again", await until(`window.archieRig.status().blinder > 0.5`, 3000),
-   JSON.stringify(await ev(`window.archieRig.status()`)));
+ok("...and it swells again", await untilRig(`window.archieRig.status().blinder > 0.5`, 3),
+   `${wait()} ${JSON.stringify(await ev(`window.archieRig.status()`))}`);
 ok("cue laser-symbol: taken", (await ev(`window.archieRig.cue("laser-symbol")`)) === true);
 const laserCanvas = `[...document.querySelectorAll("body > canvas")].find(c => c.style.zIndex === "30")`;
 ok("...the laser canvas comes in", await until(`${laserCanvas}?.style.display === ""`, 6000));
@@ -239,18 +281,32 @@ for (const [skin, mode] of [["riso", "light"], ["aurora", "dark"], ["sherbet", "
   ok(`switching to ${skin}, ${mode}: the lasers re-read the theme's accents`, t.got && t.pal.join() !== first.pal.join(),
      JSON.stringify([t.pal, await ev(`window.archieRig.status().laser`)]));
   ok("...and draw in the new ones", t.px.n > 200 && t.px.share >= 0.6, JSON.stringify(t.px));
+  // The beams ease from the last theme's colours to the new at a rate of 8 a second of the rig's time
+  // (`ink()`), and part-way they can pass near the first theme's: from riso's inks to aurora's pastels by way
+  // of graphite's. The wait above stops at the first sample that is mostly new, and where frames come one or
+  // two a second the canvas can still be mid-ease then (on CI, a third of it, once). So the old palette is
+  // given one second of the rig's time, eight of the ease's, to be gone.
+  const gone = await untilRig(`${onPalette(first.pal, t.pal)}.share < 0.2`, 1);
   const old = await ev(onPalette(first.pal, t.pal));
-  ok("...not the old", old.share < 0.2, JSON.stringify(old));
+  ok("...not the old", gone, `${wait()} ${JSON.stringify(old)}`);
 }
 await ev(`document.documentElement.dataset.skin = "graphite"; document.documentElement.dataset.theme = "dark"; 1`);
 // That took long enough for him to have started a dance of his own, which keeps the lights up whatever the
-// cues say. Wait it out, and put the lasers' cue back up, so that it is all-off that takes them down.
-await until(`!window.archieRig.status().dancing`, 25000);
+// cues say. Wait it out, and put the lasers' cue back up, so that it is all-off that takes them down. All on
+// the rig's clock, the dance's too: a dance is one play of a 30- to 48-beat clip, floss's 48 in 16 s, and
+// under swiftshader it outlasted the 25 wall-clock seconds this once waited (pinned to two cores here, full
+// Chromium), which left all-off nothing to take down. So the dance's end is waited for in 40 rig seconds,
+// with a wall-clock ceiling to suit, and asserted, as the swell's is above. The lasers need the lights back
+// up first, the truss's drop and the heads' rise: a rig second or so.
+ok("...his own dance, if he started one, is over", await untilRig(`!window.archieRig.status().dancing`, 40, 600000),
+   `${wait()} ${JSON.stringify(await ev(`window.archieRig.status()`))}`);
 await ev(`window.archieRig.cue("laser-symbol")`);
-await until(`${laserCanvas}.style.display === ""`, 6000);
+await untilRig(`${laserCanvas}.style.display === ""`, 3);
 ok("cue all-off: taken", (await ev(`window.archieRig.cue("all-off")`)) === true);
-ok("...and the lights go down", await until(`window.archieRig.status().level === 0`, 6000), JSON.stringify(await ev(`window.archieRig.status()`)));
-ok("...and the lasers with them", await until(`${laserCanvas}.style.display === "none"`, 4000));
+// A third of a rig second for each, the heads' fade and the lasers'.
+ok("...and the lights go down", await untilRig(`window.archieRig.status().level === 0`, 3),
+   `${wait()} ${JSON.stringify(await ev(`window.archieRig.status()`))}`);
+ok("...and the lasers with them", await untilRig(`${laserCanvas}.style.display === "none"`, 3), wait());
 ok("an archie:cue event fires a cue too", await ev(`(async () => {
   document.dispatchEvent(new CustomEvent("archie:cue", {detail: {name: "beams-fan"}}));
   await new Promise(r => setTimeout(r, 1500)); return window.archieRig.status().cue === "beams-fan"; })()`));
