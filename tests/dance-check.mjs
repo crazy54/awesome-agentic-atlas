@@ -64,6 +64,12 @@ const send = (method, params = {}, sid) => new Promise((res, rej) => {
   const n = ++id; waiters.set(n, {res, rej});
   ws.send(JSON.stringify({id: n, method, params, ...(sid ? {sessionId: sid} : {})}));
 });
+// And GitHub turning down the page's anonymous API calls -- the homepage's star count and the footer's build
+// tags, sixty an hour to an address, which every suite run from the same machine shares -- is a 403 or a 429
+// that both take silently and that Chrome logs all the same. Only those two: any other answer from the API is
+// still an error. Each run here spends four calls, so a busy afternoon of runs is enough to use the hour up.
+const excused = e => /cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(e.text + " " + (e.url || "")) ||
+  (/^https:\/\/api\.github\.com\//.test(e.url || "") && /status of (403|429)\b/.test(e.text));
 ws.addEventListener("message", ev => {
   const m = JSON.parse(ev.data);
   if (m.id && waiters.has(m.id)) {
@@ -71,9 +77,8 @@ ws.addEventListener("message", ev => {
     m.error ? w.rej(new Error(m.error.message)) : w.res(m.result);
   } else if (m.method === "Runtime.exceptionThrown") errors.push(m.params.exceptionDetails.exception?.description || "exception");
   // The Cloudflare beacon cannot pass CORS against localhost; pwa-check.mjs excuses it the same way.
-  else if (m.method === "Log.entryAdded" && m.params.entry.level === "error" &&
-           !/cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(m.params.entry.text + " " + (m.params.entry.url || "")))
-    errors.push(m.params.entry.text);
+  else if (m.method === "Log.entryAdded" && m.params.entry.level === "error" && !excused(m.params.entry))
+    errors.push(m.params.entry.text + (m.params.entry.url ? ` (${m.params.entry.url})` : ""));
 });
 const {targetId} = await send("Target.createTarget", {url: "about:blank"});
 const {sessionId} = await send("Target.attachToTarget", {targetId, flatten: true});
@@ -92,6 +97,11 @@ const goto = async () => {
   for (let i = 0; i < 80 && !(await ev("document.readyState === 'complete'")); i++) await sleep(150);
   await sleep(300);                                // module scripts run after load's microtasks
 };
+// Until a condition on the page holds, or `ms` passes; returns whether it did.
+const until = async (expr, ms) => {
+  for (const end = Date.now() + ms; Date.now() < end; await sleep(100)) if (await ev(expr)) return true;
+  return false;
+};
 let pass = 0, fail = 0;
 const ok = (n, c, extra = "") => { if (c) pass++; else { fail++; console.log("FAIL " + n + (extra ? " -- " + extra : "")); } };
 const shown = `(() => { const b = document.getElementById("dancebtn"); return !!b && !b.hidden && b.getBoundingClientRect().width > 0; })()`;
@@ -106,16 +116,21 @@ ok("...in the masthead's navigation, just before Settings", await ev(`(() => {
   return !!d.closest("header nav") && !!(d.compareDocumentPosition(s) & Node.DOCUMENT_POSITION_FOLLOWING); })()`));
 ok("...as tall as the Settings chip beside it", await ev(`document.getElementById("dancebtn").offsetHeight ===
   document.getElementById("setbtn").offsetHeight`));
+// Each of these waited for, not slept on. The page hides and shows the button from matchMedia `change`
+// listeners, which Chrome delivers in its next rendering step and not when the emulation call returns.
+// From that call to the button's `hidden` flipping: 86 to 132 ms on a quiet workstation, against the 200 ms
+// sleeps these were, and 890 to 1,050 ms with the CPU throttled four times, where the sleeps failed the
+// reduced-motion pair exactly as the daily build's runner did -- still shown at the first, not yet back at
+// the second. Coming back at 1440 is waited for too, or a button still hidden from 375 would pass for one
+// hidden by the preference.
 await size(375, 740);
-await sleep(200);
-ok("hidden at 375, where there is no mascot to dance", !(await ev(shown)));
+ok("hidden at 375, where there is no mascot to dance", await until(`!${shown}`, 10000));
 await size(1440, 900);
+ok("...and back at 1440", await until(shown, 10000));
 await S("Emulation.setEmulatedMedia", {features: [{name: "prefers-reduced-motion", value: "reduce"}]});
-await sleep(200);
-ok("hidden for a reader who asked for reduced motion", !(await ev(shown)));
+ok("hidden for a reader who asked for reduced motion", await until(`!${shown}`, 10000));
 await S("Emulation.setEmulatedMedia", {features: []});
-await sleep(200);
-ok("...and back when they stop asking", await ev(shown));
+ok("...and back when they stop asking", await until(shown, 10000));
 
 // ---- The menu.
 await ev(`document.getElementById("dancebtn").click()`);

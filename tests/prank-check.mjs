@@ -67,6 +67,12 @@ const send = (method, params = {}, sid) => new Promise((res, rej) => {
   const n = ++id; waiters.set(n, {res, rej});
   ws.send(JSON.stringify({id: n, method, params, ...(sid ? {sessionId: sid} : {})}));
 });
+// And GitHub turning down the page's anonymous API calls -- the homepage's star count and the footer's build
+// tags, sixty an hour to an address, which every suite run from the same machine shares -- is a 403 or a 429
+// that both take silently and that Chrome logs all the same. Only those two: any other answer from the API is
+// still an error. Each run here spends four calls, so a busy afternoon of runs is enough to use the hour up.
+const excused = e => /cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(e.text + " " + (e.url || "")) ||
+  (/^https:\/\/api\.github\.com\//.test(e.url || "") && /status of (403|429)\b/.test(e.text));
 ws.addEventListener("message", ev => {
   const m = JSON.parse(ev.data);
   if (m.id && waiters.has(m.id)) {
@@ -74,9 +80,8 @@ ws.addEventListener("message", ev => {
     m.error ? w.rej(new Error(m.error.message)) : w.res(m.result);
   } else if (m.method === "Runtime.exceptionThrown") errors.push(m.params.exceptionDetails.exception?.description || "exception");
   // The Cloudflare beacon cannot pass CORS against localhost; pwa-check.mjs excuses it the same way.
-  else if (m.method === "Log.entryAdded" && m.params.entry.level === "error" &&
-           !/cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(m.params.entry.text + " " + (m.params.entry.url || "")))
-    errors.push(m.params.entry.text);
+  else if (m.method === "Log.entryAdded" && m.params.entry.level === "error" && !excused(m.params.entry))
+    errors.push(m.params.entry.text + (m.params.entry.url ? ` (${m.params.entry.url})` : ""));
 });
 const {targetId} = await send("Target.createTarget", {url: "about:blank"});
 const {sessionId} = await send("Target.attachToTarget", {targetId, flatten: true});
@@ -104,11 +109,16 @@ const ev = async expr => {
 };
 // `mood` is his mood on arrival, as though the tab had met him just now; null keeps whatever it was. It is
 // set from robots.txt, on the same origin, because a page with him on it saves his own mood every two
-// seconds and would write over it before the navigation.
+// seconds and would write over it before the navigation. Chrome asks the origin root for /favicon.ico when it
+// shows robots.txt, which names no icon; tests/lib/serve.mjs answers that from docs/, as the custom domain does.
+//
+// `endsWith`, because the site is served here under a path prefix: an exact "/robots.txt" never matched, so
+// every one of these waits ran its full four seconds and never checked what it was waiting for.
+const atRobots = `location.pathname.endsWith("/robots.txt") && document.readyState === "complete"`;
 const goto = async (q = "", mood = 0) => {
   if (mood !== null) {
     await S("Page.navigate", {url: ORIGIN + "robots.txt"});
-    for (let i = 0; i < 40 && !(await ev(`location.pathname === "/robots.txt" && document.readyState === "complete"`)); i++)
+    for (let i = 0; i < 40 && !(await ev(atRobots)); i++)
       await sleep(100);
     await ev(`sessionStorage.setItem("archie-mood", JSON.stringify({v: ${mood}, since: Date.now()}))`);
   }
@@ -236,11 +246,18 @@ ok("...and he says so when it sinks past sulking", await saying("to-sulk", 20000
 await goto("", 0);
 const box = await ev(`(() => { const r = document.querySelector(".archie-poke").getBoundingClientRect();
   return {x: r.left + r.width / 2, y: r.top + r.height / 2}; })()`);
+// Waited for, not slept on. What is read is the mood he saved, and he saves it every two seconds of his own
+// clock, which is the frames' clock: a frame moves it by at most a tenth of a second, so on a slow runner it
+// runs slower than real time. Sampled every half second with the pointer on him, in three runs here, the
+// saved value went 0, 3, 7, 12, 16: the first save landed 1.7 to 2.2 s in, at 3, and the next near 4 s, at 7.
+// A read after a four-second sleep got 3 or 7 depending on where the save cycle fell, and CI read 3. Ignored,
+// his mood only falls, so reaching 4 from 0 at all is the pointer's doing; the twenty seconds are a ceiling.
 await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: box.x, y: box.y});
-await sleep(4000);
-const hov = await mood();
+const rested = Date.now();
+const rose = await until(`JSON.parse(sessionStorage.getItem("archie-mood")).v >= 4`, 20000);
+const hov = await mood(), took = Date.now() - rested;
 await S("Input.dispatchMouseEvent", {type: "mouseMoved", x: 5, y: 890});
-ok("a pointer resting on him raises it", hov >= 4, String(hov));
+ok("a pointer resting on him raises it", rose, `${hov} after ${took} ms`);
 await goto("", -60);
 await pokeHim();
 await sleep(300);
@@ -316,9 +333,16 @@ ok("...and the rig lights up", await until(`document.querySelector(".mhmascot").
   ok("...and the stage's lights come up brighter than a dance alone makes them", top > 1.15, `brightest head ${top}`);
 }
 const dancing = await act();
+// When he is cut off, stamped on the page as it happens. Read over CDP after the poll that saw it, this was
+// the poll's time and not his: each poll is a sleep and a round trip to a page busy with swiftshader's
+// frames, which added 300 to 600 ms here (2,437 ms polled for a cut stamped at 2,110) and took CI's reading
+// to 3,104 ms. The cut itself is made on the first frame past two seconds, on performance.now().
+await ev(`window.__idleAt = 0; new MutationObserver((ms, o) => {
+  if (document.querySelector(".mhmascot").dataset.act === "idle") { window.__idleAt = performance.now(); o.disconnect(); }
+}).observe(document.querySelector(".mhmascot"), {attributes: true, attributeFilter: ["data-act"]}); 1`);
 await beats(false);
 const cut = await until(`document.querySelector(".mhmascot").dataset.act === "idle"`, 5000);
-const after = await ev(`performance.now() - window.__lastBeat`);
+const after = await ev(`window.__idleAt - window.__lastBeat`);
 ok("quiet: two seconds on, the dance is cut off where it was", cut && after >= 1900 && after < 3000,
    `${dancing} -> ${await act()} ${Math.round(after)} ms after the last beat`);
 ok("...the rig still hung, but dark", await until(`document.querySelector(".mhmascot").dataset.rig === "dark"`, 2000),
@@ -465,7 +489,7 @@ await sleep(300);
 ok("...and a poke there forgives him too", lines("forgive").includes(await last()) && await mood() === 30, await last());
 const stranger = async (setup, name) => {
   await S("Page.navigate", {url: ORIGIN + "robots.txt"});
-  await until(`location.pathname === "/robots.txt" && document.readyState === "complete"`, 5000);
+  await until(atRobots, 5000);
   await ev(setup);
   await S("Page.navigate", {url: ORIGIN + "catalog/"});
   await until(`document.readyState === "complete"`, 12000);

@@ -5,6 +5,7 @@
   docs/icon-512.png
   docs/icon-maskable-512.png      the same mark inside Android's safe circle, full bleed
   docs/apple-touch-icon.png       iOS ignores the manifest's icons and reads this link instead
+  docs/favicon.ico                what a browser, crawler or feed reader asks the domain root for, unlinked
   docs/sw.js                      the cache policy, with a version stamped from the shell it caches
 
   python scripts/24_pwa.py        after 19_pages.py, which writes the shell this hashes
@@ -327,6 +328,16 @@ ICONS = [
     ("apple-touch-icon.png", 180, False, True),
 ]
 
+# `/favicon.ico`, which no page links -- every page names `favicon.svg` -- and which is asked for anyway.
+# Chrome asks the origin root for it on its own whenever it shows a document that names no icon of its own
+# (`robots.txt`, `feed.xml`, `data.json`, an image opened by itself), and crawlers and feed readers ask for
+# it by convention. The site is the root of the custom domain in `docs/CNAME`, so that URL is this file;
+# without it every one of those requests was a 404 answered with the whole of `404.html`.
+# `tests/prank-check.mjs` caught it: it opens `robots.txt` before each page, and in CI's full Chromium --
+# unlike the headless shell -- that logged "Failed to load resource ... 404" for `/favicon.ico`.
+# The "any" mark at 16, 32 and 48 pixels.
+FAVICON = ("favicon.ico", (16, 32, 48))
+
 
 # ------------------------------------------------------------------ icons
 def _chunk(kind: bytes, body: bytes) -> bytes:
@@ -346,6 +357,24 @@ def png(size: int, rows: list[bytearray]) -> bytes:
     raw = b"".join(b"\x00" + bytes(r) for r in rows)
     return (b"\x89PNG\r\n\x1a\n" + _chunk(b"IHDR", ihdr)
             + _chunk(b"IDAT", zlib.compress(raw, 9)) + _chunk(b"IEND", b""))
+
+
+def ico(images: list[tuple[int, bytes]]) -> bytes:
+    """An ICO file holding PNGs, from `(pixels, png bytes)` pairs.
+
+    PNG entries rather than bitmaps, so this needs nothing but `png()` above. Every current browser reads
+    them, and so has Windows since Vista. The layout is a six-byte header (reserved, type 1 for an icon, the
+    count), then a sixteen-byte entry per image giving its size, bit depth, length and offset, then the
+    images one after another.
+    """
+    head = struct.pack("<HHH", 0, 1, len(images))
+    at = len(head) + 16 * len(images)
+    entries, body = b"", b""
+    for size, data in images:
+        # A width or height of 256 is written as 0. None here is that big.
+        entries += struct.pack("<BBBBHHII", size % 256, size % 256, 0, 0, 1, 32, len(data), at + len(body))
+        body += data
+    return head + entries + body
 
 
 def _cover(d: float) -> float:
@@ -822,6 +851,9 @@ def main() -> None:
     # rewritten by the build, and a write-if-different path would report this stage as missing.
     for name, size, maskable, opaque in ICONS:
         (OUT / name).write_bytes(icon(size, maskable, opaque))
+    # Not hashed, since nothing precached refers to it, but written every run for the icons' reason: both
+    # workflows check that a generator rewrote every tracked file under `docs/`.
+    (OUT / FAVICON[0]).write_bytes(ico([(px, icon(px, False, False)) for px in FAVICON[1]]))
 
     man = manifest()
     (OUT / "manifest.webmanifest").write_text(
@@ -854,7 +886,7 @@ def main() -> None:
     (OUT / "sw.js").write_text(sw, encoding="utf-8")
 
     total = sum((OUT / p if p != "./" else shell).stat().st_size for p in PRECACHE)
-    for f in ("manifest.webmanifest", "sw.js", *(n for n, *_ in ICONS)):
+    for f in ("manifest.webmanifest", "sw.js", *(n for n, *_ in ICONS), FAVICON[0]):
         print(f"{f:24s} {(OUT / f).stat().st_size / 1024:7.1f} KB")
     print(f"precache {len(PRECACHE)} files · {total / 1024:.0f} KB · version "
           f"{version(files)} · scope {prefix}")
