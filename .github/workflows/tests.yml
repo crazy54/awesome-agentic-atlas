@@ -140,7 +140,9 @@ jobs:
     # to about 17 minutes on 2026-09-25, and a branch run the same day was cancelled at the 20-minute limit.
     # The admin panel's harness adds another. 30 minutes restores some headroom, and the job still fails
     # rather than hangs.
-    timeout-minutes: 30
+    # By 2026-10-14 the job took 23 to 29 minutes on branches, and a branch run was cancelled at 30 with its
+    # suite still running. 45 minutes restores the headroom; a hung harness still ends the job.
+    timeout-minutes: 45
 
     steps:
       # `indexnow_test.py` asserts against the *tracked* paths under `docs/` rather than a walk of the
