@@ -34,7 +34,8 @@
 // and then goes the next time Archie is free: at home in the masthead, the masthead on screen, idle, not
 // dancing to music, not mid-prank, not in Quiet mode (`atlas-byte-quiet`, which `archie.js` reads and
 // passes on). A visit runs about 15 to 20 seconds, because each line is on screen as long as Archie keeps
-// his own; that is longer than the five seconds after which moving content must be stoppable (WCAG 2.2.2),
+// his own, and it keeps to that on a page drawing only a frame a second (see `step()`); that is longer than
+// the five seconds after which moving content must be stoppable (WCAG 2.2.2),
 // and it is: any click, Escape or Tab ends it at once. A hard stop at 25 s tears the layer down whatever
 // state the choreography is in, so a throttled background tab cannot strand a friend on screen.
 // While a friend is visiting, Archie plays no prank.
@@ -64,6 +65,7 @@ const TRICKS = {nib: "borrow", posy: "note", lumen: "photobomb", "oh-four": "pee
 const CHANCE = 0.25;                 // of page views that get a visit at all
 const EARLIEST = 20000, LATEST = 60000;
 const HARD_STOP = 25000;             // ms from arrival to the layer being gone, whatever else happens
+const CATCH_UP = 2000;               // ms of lateness a visit makes up, at most: see `step()` in `visit()`
 
 const CSS = String.raw`
 .archie-pals{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:30;contain:strict}
@@ -298,13 +300,41 @@ export function friends(o) {
     const anims = new Set();
     const go = (el, frames, opts) => {
       const a = el.animate(frames, {fill: "forwards", easing: "ease-in-out", ...opts});
+      // On the timetable (see `step()`): started from when it was due, so a show running late catches up on
+      // screen instead of ending late, and at the latest from the last frame drawn, so it is under way at the
+      // next; but never more than CATCH_UP back, which a hidden tab's last frame can be.
+      const drawn = document.timeline.currentTime;
+      if (drawn != null) a.startTime = Math.max(Math.min(behind(), drawn), performance.now() - CATCH_UP);
       anims.add(a);
       return a;
     };
     // Waits for an animation or a time, then checks the visit is still on: an abort anywhere unwinds the
     // whole choreography from its next step.
+    //
+    // The show keeps to a timetable: `due` is when, by the choreography, the step now starting was due. An
+    // animation starts on the frame after it is asked for and ends on the first frame after its time, and a
+    // timer runs once the frame in front of it is drawn, so on a page drawing a frame or two a second
+    // (software WebGL, with Archie dancing) every step ended a frame or two late. Started each from when the
+    // last was seen to end, a 20 s show ran late by that much a step, into the hard stop, which cut the
+    // friend off mid-line. So a pause, or a line's time on screen, is shortened by however late the visit is
+    // running, never below nothing; an animation is started from when it was due (`go()`); and an animation
+    // waited for moves the timetable on by its length. Lateness past `CATCH_UP` is forgiven rather than made
+    // up, so a show that stalled for longer (a hidden tab draws no frames) carries on where it stopped, and
+    // no two steps are ever brought more than CATCH_UP nearer each other than written, so the flash rule
+    // above holds at any frame rate.
+    let due = performance.now();
+    const behind = () => (due = Math.max(due, performance.now() - CATCH_UP));
     const step = async p => {
-      try { await (typeof p === "number" ? new Promise(r => setTimeout(r, p)) : p.finished); }
+      try {
+        if (typeof p === "number") {
+          const at = (due = behind() + p);
+          await new Promise(r => setTimeout(r, at - performance.now()));
+        } else {
+          const end = p.effect.getComputedTiming().endTime;
+          due = behind() + (isFinite(end) ? end : 0);
+          await p.finished;
+        }
+      }
       catch { /* cancelled */ }
       if (dead) throw ABORT;
     };
@@ -326,9 +356,10 @@ export function friends(o) {
     // A line stays up as long as Archie keeps his own: 2 s plus 55 ms a character, at most 6.5 s. `hold()`
     // waits out whatever of that is left (and at least `ms`), so the next line never replaces one that is
     // still being read; `read(l)` is the same sum for a line of Archie's, whose bubble keeps its own clock.
+    // Both on the timetable: a line said late is held to when it was due to end.
     let hideBubble = 0, shownUntil = 0;
     const read = l => l ? Math.min(6500, 2000 + 55 * l[0].length) : 0;
-    const hold = (ms = 0) => step(Math.max(ms, shownUntil - performance.now()));
+    const hold = (ms = 0) => step(Math.max(ms, shownUntil - behind()));
     const speak = (l, x, y) => {
       if (!l) return;
       bubble.textContent = l[0];
@@ -339,7 +370,8 @@ export function friends(o) {
       bubble.style.translate = `${Math.round(left ? x - 10 - w : x + 10)}px ${Math.round(Math.max(4, y - 14 - h))}px`;
       bubble.classList.add("on");
       clearTimeout(hideBubble);
-      shownUntil = performance.now() + read(l);
+      // From when it was due, or from now if it is said mid-step (a poke), when the timetable is ahead.
+      shownUntil = Math.min(behind(), performance.now()) + read(l);
       hideBubble = setTimeout(() => bubble.classList.remove("on"), read(l));
     };
     const archie = k => { const l = line(k); if (l) o.say(l); return l; };

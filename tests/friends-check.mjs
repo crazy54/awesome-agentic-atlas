@@ -17,12 +17,17 @@
 // The model has to go live, so WebGL is swiftshader's, as in prank-check.mjs.
 //
 //   node tests/friends-check.mjs <chrome-binary> <origin>
+import {readFileSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {launch} from "./lib/browser.mjs";
 
 const BIN = process.argv[2], ORIGIN = process.argv[3].replace(/\/?$/, "/");
 const TMP = process.env.AAA_TMP || tmpdir();
 const {FRIENDS, ORDER} = await import(new URL("../docs/assets/archie-friends-data.js", import.meta.url));
+// The hard stop, read from the file that arms it, so that "well before the hard stop" below stays true to it.
+const HARD_STOP = Number(/const HARD_STOP = (\d+);/.exec(
+  readFileSync(new URL("../docs/assets/archie-friends.js", import.meta.url), "utf8"))?.[1]);
+if (!(HARD_STOP > 0)) throw new Error("no `const HARD_STOP = <ms>;` in archie-friends.js: re-read how a visit is cut off");
 const TRICKS = {nib: "borrow", posy: "note", lumen: "photobomb", "oh-four": "peek", quack: "debug"};
 const texts = list => (list || []).map(l => l[0]);
 // A friend's own lines, and Archie's lines about it
@@ -44,15 +49,20 @@ const send = (method, params = {}, sid) => new Promise((res, rej) => {
   const n = ++id; waiters.set(n, {res, rej});
   ws.send(JSON.stringify({id: n, method, params, ...(sid ? {sessionId: sid} : {})}));
 });
+// And GitHub turning down the page's anonymous API calls -- the homepage's star count and the footer's build
+// tags, sixty an hour to an address, which every suite run from the same machine shares -- is a 403 or a 429
+// that both take silently and that Chrome logs all the same. Only those two: any other answer from the API is
+// still an error. A page view with a cold cache spends five calls, so a busy afternoon of runs uses the hour up.
+const excused = e => /cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(e.text + " " + (e.url || "")) ||
+  (/^https:\/\/api\.github\.com\//.test(e.url || "") && /status of (403|429)\b/.test(e.text));
 ws.addEventListener("message", ev => {
   const m = JSON.parse(ev.data);
   if (m.id && waiters.has(m.id)) {
     const w = waiters.get(m.id); waiters.delete(m.id);
     m.error ? w.rej(new Error(m.error.message)) : w.res(m.result);
   } else if (m.method === "Runtime.exceptionThrown") errors.push(m.params.exceptionDetails.exception?.description || "exception");
-  else if (m.method === "Log.entryAdded" && m.params.entry.level === "error" &&
-           !/cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(m.params.entry.text + " " + (m.params.entry.url || "")))
-    errors.push(m.params.entry.text);
+  else if (m.method === "Log.entryAdded" && m.params.entry.level === "error" && !excused(m.params.entry))
+    errors.push(m.params.entry.text + (m.params.entry.url ? ` (${m.params.entry.url})` : ""));
 });
 const {targetId} = await send("Target.createTarget", {url: "about:blank"});
 const {sessionId} = await send("Target.attachToTarget", {targetId, flatten: true});
@@ -61,21 +71,31 @@ await S("Page.enable"); await S("Runtime.enable"); await S("Log.enable");
 const size = w => S("Emulation.setDeviceMetricsOverride", {width: w, height: 900, deviceScaleFactor: 1, mobile: false});
 await size(1440);
 // The recorder, in every document before the page's own scripts. Archie's lines (his bubble in the header)
-// and the friend's (its bubble on the layer) are kept apart; every localStorage write; and, every 100 ms
+// and the friend's (its bubble on the layer) are kept apart; every localStorage write; the layer's arrival
+// and removal, to the task, with the acts Archie started and the frames drawn in between; and, every 100 ms
 // while a friend is on the layer, which on-screen controls are under it, how long each has been, and the
 // opacity animations running on the layer.
 await S("Page.addScriptToEvaluateOnNewDocument", {source: `(() => {
   const rec = window.__rec = {archie: [], friend: [], writes: [], seen: 0, gone: 0, covered: 0, coveredBy: "",
-                              fast: [], props: {}, near: 1e9, overlap: 0, ghost: 0};
+                              fast: [], props: {}, near: 1e9, overlap: 0, ghost: 0, came: 0, went: 0, acts: [], frames: 0};
   const set = Storage.prototype.setItem;
   Storage.prototype.setItem = function (k, v) { if (this === localStorage) rec.writes.push(k); return set.call(this, k, v); };
+  const up = () => rec.came && !rec.went;
+  const frame = () => { if (up()) rec.frames++; requestAnimationFrame(frame); };
+  requestAnimationFrame(frame);
   new MutationObserver(ms => { for (const m of ms) {
+    for (const n of m.addedNodes) if (n.classList && n.classList.contains("archie-pals") && !rec.came) rec.came = performance.now();
+    for (const n of m.removedNodes) if (n.classList && n.classList.contains("archie-pals") && up()) rec.went = performance.now();
+    if (m.type === "attributes") {
+      if (up() && m.target.classList.contains("mhmascot") && m.target.dataset.act) rec.acts.push(m.target.dataset.act + " at " + (performance.now() - rec.came).toFixed(0));
+      continue;
+    }
     const e = m.target.nodeType === 1 ? m.target : m.target.parentElement;
     const b = e && e.closest && e.closest(".archie-say");
     if (!b || !b.textContent) continue;
     const list = b.closest(".archie-pals") ? rec.friend : rec.archie;
     if (list.at(-1) !== b.textContent) list.push(b.textContent);
-  } }).observe(document, {subtree: true, childList: true, characterData: true});
+  } }).observe(document, {subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["data-act"]});
   const under = new Map(), started = new WeakSet(), starts = new Map();
   setInterval(() => {
     const layer = document.querySelector(".archie-pals");
@@ -177,10 +197,20 @@ for (const f of ORDER) {
     return p.offsetWidth <= 56 && p.offsetHeight <= 56; })()`));
   ok(`${f}: gone again within the 25 s hard stop`, await until(GONE, 27000));
   await sleep(300);
-  const r = await rec();
-  ok(`${f}: ...on screen for a visit's length, not a flicker`, r.gone - r.seen > 5000, `${Math.round(r.gone - r.seen)} ms`);
-  // A visit that ends only because the hard stop fired is one whose teardown is broken.
-  ok(`${f}: ...and gone on its own, well before the hard stop`, r.gone - r.seen < 23000, `${Math.round(r.gone - r.seen)} ms`);
+  const r = await rec(), stay = r.went - r.came;
+  ok(`${f}: ...on screen for a visit's length, not a flicker`, r.came && r.went && stay > 5000, `${Math.round(stay)} ms`);
+  // A visit that ends only because the hard stop fired is one whose teardown is broken, and one that ends
+  // just short of it leaves no room for a slow page. The stop is armed in the task that adds the layer and
+  // cannot fire sooner than HARD_STOP after it, so a layer gone two seconds sooner went on its own, with
+  // two to spare. Timed from the observer's stamps, which are exact to the task, and not the 100 ms
+  // sampler's: a sampler tick waits out whatever long task is running, and with Archie dancing under
+  // software WebGL those run past a second, so either end could be a second late. The visit keeps to its
+  // timetable however slowly the page draws (`step()` in archie-friends.js); before it did, CI's Posy ran
+  // 23.2 s and 24.1 s and its Quack 25.2 s, into the hard stop. The acts and the frames say what the page
+  // was doing meanwhile.
+  ok(`${f}: ...and gone on its own, well before the hard stop`, r.came && r.went && stay < HARD_STOP - 2000,
+     `${Math.round(stay)} ms of a ${HARD_STOP} ms hard stop, ${r.frames} frames ` +
+     `(${Math.round(stay / Math.max(1, r.frames))} ms each); Archie: ${r.acts.join(", ") || "idle"}`);
   ok(`${f}: ...never taking clicks once faded out`, r.ghost <= 200, `${r.ghost} ms`);
   ok(`${f}: said something, all of it its own lines`, r.friend.length > 0 && r.friend.every(t => own(f).includes(t)),
      JSON.stringify(r.friend));
