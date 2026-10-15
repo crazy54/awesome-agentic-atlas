@@ -33,6 +33,26 @@ Something rewrote `docs/index.html`, `docs/pages.css` or the manifest without re
 `python scripts/24_pwa.py`. Run it and commit `docs/sw.js`. Until then, returning readers keep the old
 homepage.
 
+### `spotlight-check`: a layout shift moves the spotlight, Archie and the nav sideways
+
+The detail names `hero`, `mhmascot` and `NAV`. Every rect moves left (8 px; the nav 15) and none moves down,
+and the widths read `"inner":1440,"client":1425`. That is a scrollbar appearing after the first paint. Loaded,
+the homepage is always taller than the window. On a slow CPU, though, Chrome paints while the parser is still
+between the spotlight and the first shelf, when the page still fits the window. The shelves arrive, the
+scrollbar appears, and the page is laid out 15 px narrower. `html{scrollbar-gutter:stable}` in `HOME_CSS` in
+`31_home.py` keeps the width the same either way. If this comes back, look for whatever removed that rule or
+put an `overflow` on the root.
+
+To reproduce, throttle the page with `Emulation.setCPUThrottlingRate` at rate 8 in the harness's session. On
+2026-10-15, before the rule, that shifted 75 of 96 visits at 1440 px in 12 runs. The GitHub API made no
+difference: it was as likely with `api.github.com` stubbed to answer 200 as stubbed to answer 403. With the
+rule, none of 96 shifted that way.
+
+A smaller shift names only `daily` and moves it sideways (21 px right on a friend day). It is the line of
+the day: the parser painted the build day's line before the script after it swapped in today's, and a kicker
+of another length ("Friend of the day" for "Did you know?") moved the text beside it. See the known issue
+below.
+
 ### Archie stays a poster
 
 - Is the window at least 900 px wide? Is reduced motion off? Does the browser have WebGL2? Add `?archie=admin`
@@ -92,6 +112,10 @@ are now all fixed: a stale `sw.js` `VERSION`, mismatched `?v=` values, two gaps 
 the catalogue overwriting the homepage, `admin-check.mjs` left out of the suite, and the daily's
 allowlist missing `docs/assets/`. Add new issues here as a table: issue, effect, fix. Delete each entry
 when its fix merges.
+
+| Issue | Effect | Fix |
+|---|---|---|
+| The line of the day is drawn with the build day's line, and `DAILYPICK_JS` swaps in today's after the `#dailylines` pool that follows it. `31_home.py` says the swap "lands before the first paint", but on a slow CPU the parser can paint in between (found 2026-10-15) | A layout shift naming `daily`. Under 8x CPU throttling it failed `spotlight-check` once in 12 runs; it has not been seen on CI | Draw the slot the way the spotlight is drawn: insert it from the script, with the build day's line in a `<noscript>` |
 
 Also found, and lower priority:
 

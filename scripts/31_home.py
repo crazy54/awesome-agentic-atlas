@@ -503,6 +503,18 @@ header.danceopen{z-index:30}
    the box the text and the 268px floor have already decided and cannot change it. Two columns only: at 900
    and below the picture is on top and sized by its own 16/9, which is known before it loads. */
 @media(min-width:901px){.hero .ph img{position:absolute;inset:0}}
+/* THE SCROLLBAR'S GUTTER, RESERVED FROM THE FIRST FRAME. Loaded, this page is always taller than the window
+   (6,468px at 1440x900 on 2026-10-15), but it is not drawn in one go. A browser short of CPU paints while the
+   parser is still between the spotlight and the first shelf, when the document is shorter than the window
+   and so has no scrollbar; the shelves arrive, a classic scrollbar appears, and the page is laid out 15px
+   narrower. The spotlight's text column, Archie and the nav then move 8, 8 and 15px left: a layout shift
+   naming the spotlight, which `tests/spotlight-check.mjs` saw on CI's slower runners and which 8x CPU
+   throttling reproduces in most visits, whether api.github.com answers or refuses. Reserving the gutter
+   makes the width the page is laid out in the same with and without the scrollbar, so how far the parser
+   has got by the first paint no longer moves anything. It costs nothing on this page, whose scrollbar
+   always arrives to fill the gutter; overlay scrollbars (phones, and macOS by default) take no gutter and
+   are unaffected. */
+html{scrollbar-gutter:stable}
 """
 
 # THE IMPORTED STYLESHEET IS NOT REWRITTEN, and the reason is worth a note because the obvious thing to do
