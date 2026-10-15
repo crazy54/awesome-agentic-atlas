@@ -46,15 +46,20 @@ Nine groups:
                      multiple of it silently demands more purity as the corpus concentrates -- which is
                      exactly what happened on 2026-09-21. A layout that collapsed, or one seeded off the
                      clock, closes none of the gap while every shape assertion above still passes.
+                     Scored over every row a list filed, exactly, and over no row only the scout found:
+                     that row's `cat` is a regex's guess, not a curator's, so it is not the label this
+                     claims to score against.
   the retrieval   -- the queries this feature exists for, scored on what a reader sees: of the ten rows
                      each query returns, how many name the topic the query asked about. Never on a
                      similarity and no longer on one fixture repository's rank either -- the corpus went
                      from 1,294 rows to 8,856 and every absolute measure of one project's place in it,
                      rank included, turned into a measure of how crowded its neighbourhood is.
-  the regression  -- that these queries really do return nothing under the substring filter the page
-                     ships today. Without this the retrieval group proves the index works and not that
-                     it was ever needed, and it is the half that will look wrong to a later reader. Five
-                     of the eight, printing the ones that have stopped being zero-result and why.
+  the regression  -- that the page really does answer each of these queries by meaning: the substring
+                     filter it ships finds fewer rows than the page's own `SEM_THIN`, read from the
+                     shipped page, which is the line below which `render()` consults the index at all.
+                     Without this the retrieval group proves the index works and not that it was ever
+                     needed. One assertion per query, so the one the growing corpus starts answering by
+                     accident fails by name rather than eroding a count nobody is watching.
 
 What this cannot see: whether the vectors are *good*. Ranking quality is bounded by how much text each
 row has, and with a cold `cache/readmes/` every row falls back to a ~24-token blurb -- so the retrieval
@@ -70,6 +75,7 @@ from __future__ import annotations
 
 import array
 import hashlib
+import heapq
 import json
 import math
 import random
@@ -80,14 +86,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SEARCH = ROOT / "docs" / "search"
 DATA = ROOT / "docs" / "data.json"
+PAGE = ROOT / "docs" / "catalog" / "index.html"
 
 WORD = re.compile(r"[a-z0-9]+|[^\sa-z0-9]")
 
-# Each case is a query that returns nothing, or nearly nothing, from the page's current substring filter
-# (that is the regression group's claim, and it is measured rather than assumed); a repository that is a
-# good answer to it, kept for context; and a pattern naming the topic the query is about, in the words a
-# project about that topic uses. Matched on `nwo` rather than the display name because a name is editable
-# upstream and `owner/name` is the key everything else in the atlas is indexed by.
+# Each case is a query the page's substring filter answers with fewer rows than the page's `SEM_THIN`, so the
+# page consults meaning for it (that is the regression group's claim, and it is measured rather than
+# assumed); a repository that is a good answer to it, kept for context; and a pattern naming the topic the
+# query is about, in the words a project about that topic uses. Matched on `nwo` rather than the display
+# name because a name is editable upstream and `owner/name` is the key everything else in the atlas is
+# indexed by.
 #
 # THE ASSERTION IS ON THE TOPIC, NOT ON THE REPOSITORY, AND THAT CHANGED IN THIS FILE'S SECOND YEAR OF
 # LIFE. It used to require each named repository inside a fixed rank -- top 5, top 10, top 20 -- and the
@@ -100,13 +108,23 @@ WORD = re.compile(r"[a-z0-9]+|[^\sa-z0-9]")
 #
 # So the measurement is: of the eighty rows these eight queries put in front of a reader, how many name the
 # thing the reader asked about. Measured 51 of 80 on the committed 1,294-row index, 64 of 80 on the 8,856-row
-# one -- it got better, not worse -- against 5 to 7 of 80 for a ranking drawn at random, which is what every
-# failure this group exists for degrades to. The patterns are the test author's, written from the query and
-# never shown to the index, so they cannot be satisfied by the index agreeing with itself.
+# one -- it got better, not worse -- and 65 of 80 on the 10,468-row one of 2026-10-14, against 5 to 7 of 80
+# for a ranking drawn at random, which is what every failure this group exists for degrades to. The patterns
+# are the test author's, written from the query and never shown to the index, so they cannot be satisfied by
+# the index agreeing with itself.
+#
+# The third case was `run agents in parallel` until 2026-10-14, and it never measured anything a reader saw:
+# "run" and "in" are substrings of most of the corpus, so the filter found 15 rows for it at 1,294 rows and 29
+# at 10,468 -- over `SEM_THIN` both times, so the page answered it from the words and never asked the index.
+# The same question with the one word the corpus mostly does not use for it finds 0 rows, and it cannot pass
+# 4, which is how many rows say "simultaneously" at all, until that word is three times as common as it is.
+# The topic pattern is unchanged. The 2026-10-14 index scores it 6 of 10, the same as the case it replaces;
+# a cold-cache build of the same rows scores it 2 against 9, because an index of blurbs is nearly lexical and
+# "parallel" is the literal word -- which is the difference between this group and the substring filter.
 CASES = [
     ("something to review PRs", "The-PR-Agent/pr-agent", r"\bpr\b|pull[- ]request|review"),
     ("scrape websites", "xberg-io/plugins", r"scrap|crawl|web ?page|website"),
-    ("run agents in parallel", "actionbook/actionbook",
+    ("run agents simultaneously", "Charlie85270/Dorothy",
      r"parallel|concurren|multi[- ]?agent|orchestrat|swarm|fleet|worktree"),
     ("sandbox my agent safely", "kubernetes-sigs/agent-sandbox", r"sandbox|isolat|secur|safe|contain"),
     ("chat with my pdfs", "xwmxcz/papers-skill", r"pdf|document|paper"),
@@ -120,11 +138,18 @@ CASES = [
 # what this has to separate is a working index from a broken one, and the gap between those two is the
 # 45 rows between 51 and 6 rather than the 13 between 51 and 64.
 ON_TOPIC = 40
-# And how many of the eight the substring filter has to be unable to answer at all. Five, down from six: the
-# ingest that grew the corpus 6.8x gave `scrape websites` three literal matches it did not have before. That
-# is a fact about the corpus, not about this code, and it is why the weight of this group now sits on
-# ON_TOPIC above -- see "the regression" at the bottom of `main`.
-ZERO_RESULT = 5
+# The regression group used to require that five of the eight return nothing at all -- six, until the ingest
+# that grew the corpus 6.8x gave `scrape websites` three literal matches. Zero is not a line the page draws.
+# `render()` consults meaning whenever the words found fewer than `SEM_THIN` rows, so `observability
+# dashboards`, whose one literal match has been there since 2026-09-21, shows that row and up to twelve more
+# by meaning: the index is as needed there as on a query that finds nothing. Counting zeros made any new row
+# that happened to hold four common substrings a red build, and the scout adds about twenty a day: on
+# 2026-10-13 a scouted coding agent that "writes and edits files, runs commands and tests" took `agent that
+# writes tests` from 0 rows to 1 and the count from five to four, and the 2026-10-14 daily and weekly went red
+# on it with the index unchanged in every respect this group exists to check. So each case is now held to the
+# page's own line, read from the shipped page rather than copied here, and the zero-result count is printed
+# beside it. Measured 2026-10-14 at 10,468 rows: the most any case finds is the 4 rows of `scrape websites`,
+# against a `SEM_THIN` of 12, and five of the eight find none.
 
 
 class Harness:
@@ -203,6 +228,67 @@ def segmentation_matches_the_stage(h: "Harness", meta: dict, slot: dict[str, int
         got = wordpiece(text, slot, stop)
         h.check(f"segments {text!r} the way the stage did", got == list(expected),
                 f"stage got {expected}, this file got {got}")
+
+
+def page_constant(name: str) -> int | None:
+    """An integer `const` as the shipped catalogue page declares it, or None if it no longer does.
+
+    Read from `docs/catalog/index.html` rather than written down here, for the reason this file reads the
+    stoplist from `meta.json`: a copy of the page's threshold is a second opinion about the page, and the
+    day someone tunes the page the copy is still right about the old one.
+    """
+    if not PAGE.exists():
+        return None
+    m = re.search(rf"\bconst {name}\s*=\s*(\d+)\s*;", PAGE.read_text(encoding="utf-8"))
+    return int(m.group(1)) if m else None
+
+
+def nearest(at: list[tuple[int, int]], k: int) -> list[list[int]]:
+    """Every point's `k` nearest other points on the plane, exactly, ties going to the lower index.
+
+    The same answer as sorting all n-1 squared distances for every point and keeping the first `k`, which
+    is what this file did for a 200-row sample -- at a cost that grows with n rather than n squared, so it
+    can afford every row. A uniform grid sized to put about two points per cell across the body of the
+    corpus; each point searches outward ring by ring and stops once its k-th best is no farther than the
+    nearest unsearched cell can be, which is `r` whole cells away. The rows the map's fit pulled in along
+    its log tail are farther apart and cost a few more rings, which is all they cost.
+    """
+    n = len(at)
+    if n <= k:
+        return [[j for j in range(n) if j != i] for i in range(n)]
+    xs, ys = sorted(x for x, _ in at), sorted(y for _, y in at)
+    lo, hi = int(n * 0.01), int(n * 0.99)
+    area = max(xs[hi] - xs[lo], 1) * max(ys[hi] - ys[lo], 1)
+    cell = max(1, int(math.sqrt(area * 2.0 / n)))
+    grid: dict[tuple[int, int], list[int]] = {}
+    for j, (x, y) in enumerate(at):
+        grid.setdefault((x // cell, y // cell), []).append(j)
+    out = []
+    for i, (x, y) in enumerate(at):
+        cx, cy = x // cell, y // cell
+        found: list[tuple[int, int]] = []
+        r = 0
+        while True:
+            if r == 0:
+                ring = [(cx, cy)]
+            else:
+                ring = [(cx + d, cy - r) for d in range(-r, r + 1)] + \
+                       [(cx + d, cy + r) for d in range(-r, r + 1)] + \
+                       [(cx - r, cy + d) for d in range(1 - r, r)] + \
+                       [(cx + r, cy + d) for d in range(1 - r, r)]
+            for c in ring:
+                for j in grid.get(c, ()):
+                    if j != i:
+                        found.append(((x - at[j][0]) ** 2 + (y - at[j][1]) ** 2, j))
+            # Anything not yet searched is in a cell more than `r` cells from this point's own, so it is
+            # strictly farther than r * cell: once the k-th best is within that, nothing left can displace it.
+            if len(found) >= k:
+                found = heapq.nsmallest(k, found)
+                if found[-1][0] <= (r * cell) ** 2:
+                    break
+            r += 1
+        out.append([j for _, j in found])
+    return out
 
 
 def main() -> int:
@@ -331,26 +417,43 @@ def main() -> int:
     h.check("the body of the corpus fills the map, not just its outliers", min(body_x, body_y) > 16384,
             f"the 1st-99th percentile spans {body_x} x {body_y} of a possible 65,534")
 
-    # Purity: the assertion that the picture means something. Sampled rather than exhaustive -- 1,294 rows
-    # is 1.67M distances in pure Python and this harness runs in under a second -- and sampled with a fixed
-    # seed so a failure is reproducible rather than a coin toss somebody re-runs until it passes.
-    cat_at = ix.get("cat")
-    if cat_at is None:
-        h.check("docs/data.json carries a cat column", False, "no `cat` column to score the map against")
+    # Purity: the assertion that the picture means something. Over every row a list filed, each against the
+    # eight nearest rows a list filed, with chance taken over those same rows.
+    #
+    # EVERY ROW, NOT A SAMPLE. This scored 200 rows drawn with a fixed seed, so that a failure would be
+    # reproducible -- and it was, within one build. Across builds it was a coin toss: the seed fixes
+    # ordinals, the scout inserts rows every day, and the 200 rows under those ordinals change with them.
+    # Measured on the committed indexes, a 200-row draw has a standard deviation of 0.033 to 0.041 in the
+    # share of the gap below, and it read 0.200, 0.269 and 0.205 on the 2026-10-12, -13 and -14 dailies,
+    # whose exact figure was 0.264, 0.265 and 0.265. The 2026-10-14 weekly drew 0.197 and went red on a map
+    # its own build log put at the same 44% against 24%.
+    # `nearest()` makes the exact figure cost less than the sample did.
+    #
+    # ROWS A LIST FILED, NOT ROWS THE SCOUT FOUND. Since 2026-10-12 about one row in eight comes only from
+    # `12_scout.py`. Its `lists` is 0 and its `cat` is the scout's regex over GitHub topics
+    # (`taxonomy.ADVISORY`), not a curator's verdict, and it is not the label this assertion claims to
+    # score against. Measured 2026-10-14, those 1,267 rows share a category with their own semantic
+    # neighbours in `near.bin` -- the graph the layout is built from, before any layout -- 23% of the time,
+    # against 52% for rows a list filed and 24% by chance, so the disagreement is upstream of the map and a
+    # map scored on it is scoring the scout's classifier. Over all rows the share of the gap fell from
+    # 0.296-0.304 on every 8,856- to 8,937-row build to 0.264 on the first one with the scout in it; over
+    # the rows a list filed it went to 0.288, and on 2026-10-14 it is 0.290 (48.7% against 27.8%). The
+    # scout's rows are still drawn and still asserted on below by `near.bin`; their figure is printed.
+    cat_at, lists_at = ix.get("cat"), ix.get("lists")
+    if cat_at is None or lists_at is None:
+        h.check("docs/data.json carries cat and lists columns", False,
+                "no `cat` to score the map against, or no `lists` to say which rows a curator filed")
     else:
         cat = [r[cat_at] for r in data["rows"]]
+        filed = [i for i, r in enumerate(data["rows"]) if r[lists_at]]
         counts: dict = {}
-        for c in cat:
-            counts[c] = counts.get(c, 0) + 1
-        chance = sum((n / rows) * ((n - 1) / max(rows - 1, 1)) for n in counts.values()) if rows else 0.0
-        sample = random.Random(20260912).sample(range(rows), min(200, rows))
-        same = 0
-        for i in sample:
-            xi, yi = at[i]
-            far = sorted(((xi - at[j][0]) ** 2 + (yi - at[j][1]) ** 2, j)
-                         for j in range(rows) if j != i)[:8]
-            same += sum(1 for _, j in far if cat[j] == cat[i])
-        pure = same / float(len(sample) * 8) if sample else 0.0
+        for i in filed:
+            counts[cat[i]] = counts.get(cat[i], 0) + 1
+        m = len(filed)
+        chance = sum((n / m) * ((n - 1) / max(m - 1, 1)) for n in counts.values()) if m else 0.0
+        close = nearest([at[i] for i in filed], 8)
+        same = sum(1 for a, nb in enumerate(close) for b in nb if cat[filed[b]] == cat[filed[a]])
+        pure = same / float(sum(len(nb) for nb in close) or 1)
         # HOW FAR ACROSS THE AVAILABLE GAP, NOT HOW MANY TIMES CHANCE. This was `pure >= chance * 2.5`,
         # measured at 5.2x on the committed index, and a multiple of chance is not a scale-free number: the
         # most any layout can score is 1/chance, so the headroom above the floor is a function of the
@@ -364,12 +467,22 @@ def main() -> int:
         # invariant: 0.55 on the 1,294-row index (60.5% against 11.7%), 0.31 on the 8,856-row one (51.1%
         # against 29.0%), and 0.00 for the null -- measured, by shuffling the positions between rows and
         # re-running this exact statistic, which scored 28.2% against a 29.0% chance. A floor of 0.20 is
-        # nineteen standard deviations clear of that null and clears both real builds.
+        # nineteen standard deviations clear of that null and clears both real builds. Re-measured exactly
+        # over the rows a list filed on 2026-10-14: 0.290 for the map, and between -0.004 and +0.002 for
+        # its positions shuffled, on every committed index since the 8,856-row one.
         lift = (pure - chance) / (1.0 - chance) if chance < 1.0 else 0.0
-        h.check(f"the map groups like with like ({pure:.0%} of neighbours share a category, "
-                f"{chance:.0%} by chance)", lift >= 0.20,
+        h.check(f"the map groups like with like ({pure:.0%} of {m:,} filed rows' neighbours share a "
+                f"category, {chance:.0%} by chance: {lift:.2f} of the gap)", lift >= 0.20,
                 f"{pure:.1%} against {chance:.1%} by chance closes {lift:.2f} of the gap between them, "
                 f"which is close enough to arbitrary that the map is not worth drawing")
+        guessed = [i for i, r in enumerate(data["rows"]) if not r[lists_at]]
+        if guessed:
+            k_ = meta["near"]
+            agree = lambda ids: (sum(1 for i in ids for k in range(k_) if cat[near[i * k_ + k]] == cat[i])
+                                 / float(len(ids) * k_ or 1))
+            print(f"  not scored: {len(guessed):,} rows no list filed, whose category is the scout's guess "
+                  f"-- it agrees with their near.bin neighbours {agree(guessed):.0%} of the time, against "
+                  f"{agree(filed):.0%} for filed rows")
         # The other direction, and the cheaper one: the rows `near.bin` calls neighbours have to be closer
         # together on the map than two rows picked at random. Purity could in principle be satisfied by a
         # layout that grouped categories while ignoring the graph it was built from.
@@ -448,20 +561,27 @@ def main() -> int:
     # concatenated field. This is what the eight queries above are measured against.
     hay = [" ".join(str(r[ix[k]] or "") for k in ("name", "nwo", "blurb", "lang", "listed_by")).lower()
            for r in data["rows"]]
-    still_zero = 0
+    # And the page's line, from the page. Below it `render()` hands the query to meaning; at or above it the
+    # words are trusted and the index is never asked -- so a case at or above it is scoring a ranking no
+    # reader is shown. See the note above ON_TOPIC for why this replaced a count of zero-result queries.
+    thin = page_constant("SEM_THIN")
+    h.check("the catalogue page declares SEM_THIN", bool(thin),
+            f"no `const SEM_THIN = <n>;` in docs/catalog/index.html, so there is no line to "
+            f"hold these queries to -- find what the page now consults meaning on and read that instead")
+    zero = 0
     for query, _, _ in CASES:
         words = query.lower().split()
         n = sum(1 for h_ in hay if all(w in h_ for w in words))
-        if not n:
-            still_zero += 1
-        else:
-            # Printed rather than silent, because this is the number that decays as the corpus grows and the
-            # only way a later reader can see it moving. `run agents in parallel` has never been zero-result
-            # -- three common words, 13 incidental matches at 1,294 rows and 23 at 8,856 -- and `scrape
-            # websites` stopped being one in the 2026-09-21 ingest.
-            print(f"  {query!r} is no longer zero-result: {n} row(s) match every word")
-    h.check("these queries return nothing from the substring filter", still_zero >= ZERO_RESULT,
-            f"only {still_zero} of {len(CASES)} are zero-result today, against {ZERO_RESULT} required")
+        zero += not n
+        if thin:
+            # One per case and with the count in the label, so the number that grows with the corpus is
+            # in every run's output and the case that crosses the line is the one that fails.
+            h.check(f"{query!r} is answered by meaning (the filter finds {n}; the page asks below {thin})",
+                    n < thin,
+                    f"{n} rows contain every word, so the page answers this from the words alone and its "
+                    f"retrieval score above measures nothing a reader sees -- replace it with a phrasing "
+                    f"of the same need that the substring filter cannot answer")
+    print(f"  {zero} of {len(CASES)} return nothing at all from the filter")
 
     print(f"\n{h.passed} passed, {len(h.failed)} failed")
     for line in h.failed:
