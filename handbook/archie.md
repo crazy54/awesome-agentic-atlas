@@ -16,7 +16,7 @@ Every runtime file is under `docs/assets/`, written by hand, and served as-is. S
 | `archie-fx.js` | 15 KB | Stage effects: LED dance floor, fog, haze, CO2 jets, flames and sparks |
 | `rig-show.js` | 8 KB | The rig's look book: `LOOKS` (colours), `GOBOS`, `LASERS` (laser graphics) and `PATTERNS` |
 | `rig/rig.glb`, `rig/wall-{a,b,c,d}.{webm,mp4,webp}`, `rig-gobos/*.svg` | | Fixture models, LED-wall video loops and their posters, gobo masks |
-| `archie-friends.js`, `archie-friends-data.js` | 39 KB, 17 KB | The friends' art and choreography; their roster and lines. `ORDER` is `nib`, `posy`, `lumen`, `oh-four`, `quack` |
+| `archie-friends.js`, `archie-friends-data.js` | 41 KB, 17 KB | The friends' art and choreography; their roster and lines. `ORDER` is `nib`, `posy`, `lumen`, `oh-four`, `quack` |
 | `archie-dance.js`, `archie-beat.js` | 13 KB, 3 KB | "Dance with me": the audio source picker and the AudioWorklet beat detector |
 | `archie-admin.js` | 8 KB | The hidden admin panel |
 
