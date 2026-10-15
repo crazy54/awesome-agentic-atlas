@@ -292,13 +292,14 @@ for (const [skin, mode] of [["riso", "light"], ["aurora", "dark"], ["sherbet", "
 }
 await ev(`document.documentElement.dataset.skin = "graphite"; document.documentElement.dataset.theme = "dark"; 1`);
 // That took long enough for him to have started a dance of his own, which keeps the lights up whatever the
-// cues say. Wait it out, and put the lasers' cue back up, so that it is all-off that takes them down. All on
-// the rig's clock, the dance's too: a dance is one play of a 30- to 48-beat clip, floss's 48 in 16 s, and
-// under swiftshader it outlasted the 25 wall-clock seconds this once waited (pinned to two cores here, full
-// Chromium), which left all-off nothing to take down. So the dance's end is waited for in 40 rig seconds,
-// with a wall-clock ceiling to suit, and asserted, as the swell's is above. The lasers need the lights back
-// up first, the truss's drop and the heads' rise: a rig second or so.
-ok("...his own dance, if he started one, is over", await untilRig(`!window.archieRig.status().dancing`, 40, 600000),
+// cues say. This used to wait it out, for 25 wall-clock seconds, which a dance under swiftshader outlasted
+// (pinned to two cores here, full Chromium), leaving all-off nothing to take down; waited out on the rig's
+// clock instead, one would cost CI a minute or two of a job that has thirty. So it is cut short, as the admin
+// panel does: a command cuts a dance short ("Commands" in archie.js), and `idle` is the one that changes
+// nothing else. That it is over is asserted, as the swell's end is above. Then the lasers' cue goes back up,
+// so that it is all-off that takes them down; they need the lights back up first, a rig second or so.
+await ev(`window.archie.run("idle")`);
+ok("...his own dance, if he started one, is over", await untilRig(`!window.archieRig.status().dancing`, 3),
    `${wait()} ${JSON.stringify(await ev(`window.archieRig.status()`))}`);
 await ev(`window.archieRig.cue("laser-symbol")`);
 await untilRig(`${laserCanvas}.style.display === ""`, 3);
