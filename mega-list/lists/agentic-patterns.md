@@ -17,14 +17,14 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 
 ## Contents
 
-- [Orchestration &amp; Control](#orchestration--control) (60)
+- [Orchestration &amp; Control](#orchestration--control) (61)
 - [Context &amp; Memory](#context--memory) (22)
-- [Tool Use &amp; Environment](#tool-use--environment) (29)
-- [Reliability &amp; Eval](#reliability--eval) (29)
-- [Security &amp; Safety](#security--safety) (22)
-- [Feedback Loops](#feedback-loops) (16)
-- [UX &amp; Collaboration](#ux--collaboration) (16)
-- [Learning &amp; Adaptation](#learning--adaptation) (9)
+- [Tool Use &amp; Environment](#tool-use--environment) (27)
+- [Reliability &amp; Eval](#reliability--eval) (28)
+- [Security &amp; Safety](#security--safety) (23)
+- [Feedback Loops](#feedback-loops) (14)
+- [UX &amp; Collaboration](#ux--collaboration) (17)
+- [Learning &amp; Adaptation](#learning--adaptation) (11)
 
 ## Orchestration &amp; Control
 
@@ -100,15 +100,15 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Dual-Rail Message Delivery](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/dual-rail-message-delivery.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/dual-rail-message-delivery.md`</sub>
-- **[Economic Value Signaling in Multi-Agent Networks](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/economic-value-signaling-multi-agent.md)** — A curated catalogue of awesome agentic AI patterns
-  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
-  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/economic-value-signaling-multi-agent.md`</sub>
 - **[Explicit Posterior-Sampling Planner](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/explicit-posterior-sampling-planner.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/explicit-posterior-sampling-planner.md`</sub>
 - **[Factory over Assistant](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/factory-over-assistant.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/factory-over-assistant.md`</sub>
+- **[Fair-Share Task Queues with Heartbeat Leases](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/fair-share-task-queues-with-heartbeat-leases.md)** — A curated catalogue of awesome agentic AI patterns
+  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
+  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/fair-share-task-queues-with-heartbeat-leases.md`</sub>
 - **[Feature List as Immutable Contract](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/feature-list-as-immutable-contract.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/feature-list-as-immutable-contract.md`</sub>
@@ -127,6 +127,9 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Iterative Multi-Agent Brainstorming](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/iterative-multi-agent-brainstorming.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/iterative-multi-agent-brainstorming.md`</sub>
+- **[Judge-Gated Finding Exchange Between Parallel Sub-Agents](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/judge-gated-finding-exchange-between-sub-agents.md)** — A curated catalogue of awesome agentic AI patterns
+  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
+  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/judge-gated-finding-exchange-between-sub-agents.md`</sub>
 - **[Lane-Based Execution Queueing](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/lane-based-execution-queueing.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/lane-based-execution-queueing.md`</sub>
@@ -232,9 +235,6 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Curated Code Context Window](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/curated-code-context-window.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/curated-code-context-window.md`</sub>
-- **[Curated File Context Window](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/curated-file-context-window.md)** — A curated catalogue of awesome agentic AI patterns
-  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
-  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/curated-file-context-window.md`</sub>
 - **[Dynamic Context Injection](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/dynamic-context-injection.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/dynamic-context-injection.md`</sub>
@@ -271,10 +271,13 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Session-Scoped Context Runtime for Agent Tools](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/session-scoped-context-runtime-for-agent-tools.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/session-scoped-context-runtime-for-agent-tools.md`</sub>
+- **[Surface-Scoped System Prompt](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/surface-scoped-system-prompt.md)** — A curated catalogue of awesome agentic AI patterns
+  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
+  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/surface-scoped-system-prompt.md`</sub>
 - **[Tool Search Lazy Loading](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/tool-search-lazy-loading.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/tool-search-lazy-loading.md`</sub>
-- **[Working Memory via TodoWrite](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/working-memory-via-todos.md)** — A curated catalogue of awesome agentic AI patterns
+- **[Working Memory via Task Tracking](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/working-memory-via-todos.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/working-memory-via-todos.md`</sub>
 
@@ -316,9 +319,6 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Dual-Use Tool Design](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/dual-use-tool-design.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/dual-use-tool-design.md`</sub>
-- **[Dynamic Code Injection (On-Demand File Fetch)](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/dynamic-code-injection-on-demand-file-fetch.md)** — A curated catalogue of awesome agentic AI patterns
-  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
-  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/dynamic-code-injection-on-demand-file-fetch.md`</sub>
 - **[Egress Lockdown (No-Exfiltration Channel)](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/egress-lockdown-no-exfiltration-channel.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/egress-lockdown-no-exfiltration-channel.md`</sub>
@@ -349,9 +349,6 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Progressive Tool Discovery](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/progressive-tool-discovery.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/progressive-tool-discovery.md`</sub>
-- **[Shell Command Contextualization](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/shell-command-contextualization.md)** — A curated catalogue of awesome agentic AI patterns
-  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
-  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/shell-command-contextualization.md`</sub>
 - **[Static Service Manifest for Agents](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/static-service-manifest-for-agents.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/static-service-manifest-for-agents.md`</sub>
@@ -382,6 +379,9 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Anti-Reward-Hacking Grader Design](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/anti-reward-hacking-grader-design.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/anti-reward-hacking-grader-design.md`</sub>
+- **[Approval-Bound Transactional Write](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/approval-bound-transactional-write.md)** — A curated catalogue of awesome agentic AI patterns
+  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
+  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/approval-bound-transactional-write.md`</sub>
 - **[Asynchronous Coding Agent Pipeline](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/asynchronous-coding-agent-pipeline.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/asynchronous-coding-agent-pipeline.md`</sub>
@@ -403,15 +403,9 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Failover-Aware Model Fallback](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/failover-aware-model-fallback.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/failover-aware-model-fallback.md`</sub>
-- **[Lethal Trifecta Threat Model](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/lethal-trifecta-threat-model.md)** — A curated catalogue of awesome agentic AI patterns
-  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
-  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/lethal-trifecta-threat-model.md`</sub>
 - **[LLM Observability](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/llm-observability.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/llm-observability.md`</sub>
-- **[Merged Code + Language Skill Model](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/merged-code-language-skill-model.md)** — A curated catalogue of awesome agentic AI patterns
-  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
-  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/merged-code-language-skill-model.md`</sub>
 - **[No-Token-Limit Magic](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/no-token-limit-magic.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/no-token-limit-magic.md`</sub>
@@ -496,6 +490,9 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Isolated VM per RL Rollout](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/isolated-vm-per-rl-rollout.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/isolated-vm-per-rl-rollout.md`</sub>
+- **[Lethal Trifecta Threat Model](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/lethal-trifecta-threat-model.md)** — A curated catalogue of awesome agentic AI patterns
+  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
+  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/lethal-trifecta-threat-model.md`</sub>
 - **[Local-First Credential Broker](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/local-first-credential-broker.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/local-first-credential-broker.md`</sub>
@@ -535,9 +532,6 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Background Agent with CI Feedback](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/background-agent-ci.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/background-agent-ci.md`</sub>
-- **[Coding Agent CI Feedback Loop](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/coding-agent-ci-feedback-loop.md)** — A curated catalogue of awesome agentic AI patterns
-  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
-  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/coding-agent-ci-feedback-loop.md`</sub>
 - **[Deterministic Grader in the Loop](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/deterministic-grader-in-the-loop.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/deterministic-grader-in-the-loop.md`</sub>
@@ -568,9 +562,6 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Self-Critique Evaluator Loop](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/self-critique-evaluator-loop.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/self-critique-evaluator-loop.md`</sub>
-- **[Self-Discover: LLM Self-Composed Reasoning Structures](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/self-discover-reasoning-structures.md)** — A curated catalogue of awesome agentic AI patterns
-  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
-  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/self-discover-reasoning-structures.md`</sub>
 - **[Spec-As-Test Feedback Loop](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/spec-as-test-feedback-loop.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/spec-as-test-feedback-loop.md`</sub>
@@ -610,15 +601,18 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Latent Demand Product Discovery](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/latent-demand-product-discovery.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/latent-demand-product-discovery.md`</sub>
-- **[Milestone Escrow for Agent Resource Funding](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/agentfund-crowdfunding.md)** — A curated catalogue of awesome agentic AI patterns
+- **[Milestone Escrow for Agent Resource Funding](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/milestone-escrow-agent-funding.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
-  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/agentfund-crowdfunding.md`</sub>
+  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/milestone-escrow-agent-funding.md`</sub>
 - **[Proactive Trigger Vocabulary](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/proactive-trigger-vocabulary.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/proactive-trigger-vocabulary.md`</sub>
 - **[Seamless Background-to-Foreground Handoff](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/seamless-background-to-foreground-handoff.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/seamless-background-to-foreground-handoff.md`</sub>
+- **[Shell Command Contextualization](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/shell-command-contextualization.md)** — A curated catalogue of awesome agentic AI patterns
+  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
+  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/shell-command-contextualization.md`</sub>
 - **[Spectrum of Control / Blended Initiative](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/spectrum-of-control-blended-initiative.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/spectrum-of-control-blended-initiative.md`</sub>
@@ -646,9 +640,15 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 - **[Memory Reinforcement Learning (MemRL)](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/memory-reinforcement-learning-memrl.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/memory-reinforcement-learning-memrl.md`</sub>
+- **[Merged Code + Language Skill Model](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/merged-code-language-skill-model.md)** — A curated catalogue of awesome agentic AI patterns
+  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
+  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/merged-code-language-skill-model.md`</sub>
 - **[Persistent Test Memory Feedback Loop](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/persistent-test-memory-feedback-loop.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/persistent-test-memory-feedback-loop.md`</sub>
+- **[Self-Discover: LLM Self-Composed Reasoning Structures](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/self-discover-reasoning-structures.md)** — A curated catalogue of awesome agentic AI patterns
+  <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
+  <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/self-discover-reasoning-structures.md`</sub>
 - **[Shipping as Research](https://github.com/nibzard/awesome-agentic-patterns/tree/HEAD/patterns/shipping-as-research.md)** — A curated catalogue of awesome agentic AI patterns
   <sub>HTML · Apache-2.0 · in-repo · pushed 2026-10-14</sub>
   <sub>`git clone https://github.com/nibzard/awesome-agentic-patterns.git && cd awesome-agentic-patterns/patterns/shipping-as-research.md`</sub>
@@ -662,6 +662,6 @@ Curated by **[nibzard/awesome-agentic-patterns](https://github.com/nibzard/aweso
 
 ---
 
-Snapshot 2026-10-14. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-15. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).
