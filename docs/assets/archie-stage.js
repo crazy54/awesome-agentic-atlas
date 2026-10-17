@@ -195,7 +195,7 @@ export function stage(o) {
       this.mixer = new T.AnimationMixer(gltf.scene);
       this.clips = {};
       for (const c of gltf.animations) this.clips[c.name] = c;
-      this.x = 0; this.y = 0; this.ppm = PPM; this.facing = 0; this.turnTo = 0; this.current = null;
+      this.x = 0; this.y = 0; this.z = 0; this.ppm = PPM; this.facing = 0; this.turnTo = 0; this.current = null;
       this.done = null;
       this.mixer.addEventListener("finished", e => {
         if (e.action !== this.current) return;
@@ -205,11 +205,16 @@ export function stage(o) {
       this.bubble.className = "pals-say";
       this.bones = {};
       gltf.scene.traverse(n => { if (n.isBone || n.type === "Object3D" || n.isGroup) this.bones[n.name] = n; });
+      // A skinned mesh is culled by its bounds in the bind pose, which don't follow the clip: his eyes, small
+      // meshes of their own, would vanish whenever he stands off the window's edge and leans back into it.
+      gltf.scene.traverse(n => { if (n.isSkinnedMesh) n.frustumCulled = false; });
     }
     add(clips) { for (const c of clips) this.clips[c.name] = c; }
     at(x, y, ppm = this.ppm) { this.x = x; this.y = y; this.ppm = ppm; this.place(); return this; }
+    // Who is in front, when two pals overlap: the larger `z` (CSS px towards the reader) is drawn in front.
+    depth(z) { this.z = z; this.place(); return this; }
     place() {
-      this.root.position.set(this.x, -this.y, 0);
+      this.root.position.set(this.x, -this.y, this.z);
       this.root.scale.setScalar(this.ppm);
       // turn, eased: a quarter turn in about a fifth of a second
       const d = this.turnTo - this.turn.rotation.y;
@@ -247,10 +252,10 @@ export function stage(o) {
     // Walk to x (CSS px) along the ground he is on, at the speed his walk clip was made for (times
     // `speed`, which speeds the clip up too). Another clip -- a run, a sneak, a carry -- gives its own ground
     // speed as `mps` (metres a second, from its clip module), so its feet don't skate either.
-    async walkTo(x, {speed = 1, clip, mps} = {}) {
+    async walkTo(x, {speed = 1, clip, mps, backwards = false} = {}) {
       const dir = Math.sign(x - this.x);
       if (!dir) return;
-      await this.face(dir);
+      await this.face(backwards ? -dir : dir);          // `backwards`: facing away, as in a moonwalk
       const c = clip || this.spec.walk;
       this.play(c, {loop: true, speed});
       const v = (mps || this.spec.speed) * speed;     // metres a second
@@ -368,6 +373,39 @@ export function stage(o) {
       undo();
     },
     undo: fn => undos.push(fn),
+    // Where the masthead's (or the dock's) Archie stands, so a bit can take him over in place: his feet's
+    // x and y on the page and the CSS px to the metre he is drawn at there (archie.js lays the slot out
+    // with his feet 84% of the way down it, and the slot's height a 3.2 m window of the poster camera).
+    slot() {
+      const el = document.querySelector(".mhmascot");
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return {x: r.left + r.width / 2, y: r.top + r.height * 0.84, ppm: r.height / 3.21, rect: r};
+    },
+    // A page element turned or shifted for a moment, as the tilt prank does <main>: `rotate` degrees about
+    // `origin` (a CSS transform-origin), `x`/`y` px, eased over `secs`. Its own inline style comes back
+    // exactly when the bit ends, however it ends; `back()` (the returned function) eases it home sooner.
+    nudge(q, {rotate = 0, x = 0, y = 0, origin = "50% 50%", secs = 0.4, ease = "cubic-bezier(.34,1.56,.64,1)"} = {}) {
+      const el = typeof q === "string" ? document.querySelector(q) : q;
+      if (!el) return () => {};
+      if (!el.__palsWas) el.__palsWas = [el.style.rotate, el.style.translate, el.style.transformOrigin, el.style.transition];
+      const restore = () => {
+        if (!el.__palsWas) return;
+        [el.style.rotate, el.style.translate, el.style.transformOrigin, el.style.transition] = el.__palsWas;
+        delete el.__palsWas;
+      };
+      undos.push(restore);
+      el.style.transformOrigin = origin;
+      el.style.transition = `rotate ${secs}s ${ease}, translate ${secs}s ${ease}`;
+      el.style.rotate = rotate + "deg";
+      el.style.translate = `${x}px ${y}px`;
+      return (s2 = 0.3) => {
+        el.style.transition = `rotate ${s2}s ${ease}, translate ${s2}s ${ease}`;
+        el.style.rotate = "0deg";
+        el.style.translate = "0px 0px";
+        return after(s2 + 0.05).then(restore);
+      };
+    },
   };
 
   // ---- drawing over the cast: lines a pal draws, doors, signs -------------------------------------------
@@ -571,6 +609,87 @@ export function stage(o) {
     return () => attachments.delete(a);
   };
 
+  // ---- the Atlas Core in a bit, and little holograms ---------------------------------------------------
+  // The Core's glow, as archie-core.js draws it: added, each glow keeping its own strength. A file's scene is
+  // shared by everything that fetches it, so a material already swapped is left as it is.
+  const glow = root => root.traverse(m => {
+    if (!m.isMesh) return;
+    const swap = mat => {
+      if (!mat || !/^holo/i.test(mat.name) || mat.isMeshBasicMaterial) return mat;
+      const c = mat.emissive && mat.emissive.getHex() ? mat.emissive.clone() : mat.color.clone();
+      c.multiplyScalar(Math.min(1.6, Math.max(1, mat.emissiveIntensity || 1)));
+      return new T.MeshBasicMaterial({color: c, transparent: true, opacity: mat.opacity < 1 ? mat.opacity : 0.85,
+        blending: T.AdditiveBlending, depthWrite: false, side: T.DoubleSide, name: mat.name});
+    };
+    m.material = Array.isArray(m.material) ? m.material.map(swap) : swap(m.material);
+  });
+  // The Core itself, for a bit: pals/core.glb and its clips (closed, unfold, wont-open, ...: art/pals/core.py),
+  // on `pal`'s `core` bone (`dock()`) or his left palm (`hold()`). `page(above)` is where the ball is on the
+  // page (CSS px), `above` metres over its centre. It starts closed and docked, and goes when the bit ends.
+  async function core(pal) {
+    const g = await fetchGLB("pals/core.glb");
+    glow(g.scene);
+    const root = new T.Group(), v = new T.Vector3();
+    root.add(g.scene);
+    const mixer = new T.AnimationMixer(g.scene), clips = Object.fromEntries(g.animations.map(c => [c.name, c]));
+    mixers.add(mixer);
+    let cur = null, off = null;
+    const c = {
+      root, scene: g.scene, clips,
+      // a clip of the Core's, cross-faded from the last; returns its length in seconds
+      play(name, {loop = false, fade = 0.06} = {}) {
+        const a = mixer.clipAction(clips[name]);
+        a.reset().setLoop(loop ? T.LoopRepeat : T.LoopOnce, loop ? Infinity : 1);
+        a.clampWhenFinished = true;
+        if (cur && cur !== a) a.crossFadeFrom(cur, fade, false);
+        a.play();
+        cur = a;
+        return clips[name].duration;
+      },
+      dock() { if (off) off(); off = attach(root, pal, "core", {offset: [0, 0.018, 0]}); },
+      hold() { if (off) off(); off = attach(root, pal, "grip_L", {offset: [0, 0, 0.085]}); },
+      page(above = 0.07) { root.getWorldPosition(v); return {x: v.x, y: -v.y - above * pal.ppm}; },
+    };
+    undos.push(() => { mixer.stopAllAction(); mixers.delete(mixer); if (off) off(); root.removeFromParent(); });
+    c.play("closed");
+    c.dock();
+    return c;
+  }
+  // `n` copies of a hologram figure -- a prop with a skeleton, as holo-agent and holo-archie are (Archie's
+  // own bones, so his clips play on them) -- each with its own mixer, and drawn see-through cyan blended
+  // normally rather than added, so they show on the light theme as well as the dark. They go when the bit
+  // ends; `root` is each one's to place (on the stage, a world's island, a pal's hand).
+  async function figures(name, n) {
+    const g = await fetchGLB(`pals/props/${name}.glb`), out = [];
+    const clips = Object.fromEntries(g.animations.map(c => [c.name, c]));
+    for (let i = 0; i < n; i++) {
+      const model = T.cloneSkinned(g.scene), root = new T.Group();
+      root.add(model);
+      model.traverse(m => {
+        if (!m.isMesh) return;
+        m.frustumCulled = false;                  // a skinned mesh's bind-pose bounds don't follow its clip
+        const swap = mat => {
+          if (!mat || mat.isMeshBasicMaterial) return mat;
+          const c = mat.emissive && mat.emissive.getHex() ? mat.emissive.clone() : mat.color.clone();
+          return new T.MeshBasicMaterial({color: c, transparent: true, opacity: 0.78, name: mat.name});
+        };
+        m.material = Array.isArray(m.material) ? m.material.map(swap) : swap(m.material);
+      });
+      const mixer = new T.AnimationMixer(model);
+      mixers.add(mixer);
+      out.push({root, model, mixer, clips, play(clip, loop = true) {
+        mixer.stopAllAction();
+        const a = mixer.clipAction(typeof clip === "string" ? clips[clip] : clip);
+        a.reset().setLoop(loop ? T.LoopRepeat : T.LoopOnce, loop ? Infinity : 1);
+        a.clampWhenFinished = true;
+        a.play();
+        return a;
+      }});
+    }
+    undos.push(() => out.forEach(f => { f.mixer.stopAllAction(); mixers.delete(f.mixer); f.root.removeFromParent(); }));
+    return out;
+  }
+
   // ---- running a bit ---------------------------------------------------------------------------------
   const stop = () => { aborted = true; };
   const onKey = e => { if (e.key === "Escape" || e.key === "Tab") stop(); };
@@ -602,8 +721,9 @@ export function stage(o) {
         a.show(false);
         cast[n] = a;
       }
-      const s = {cast, ...cast, after, until, page, prop, svg, glb, attach, holo: holoMats,
+      const s = {cast, ...cast, after, until, page, prop, svg, glb, attach, holo: holoMats, glow,
                  project: name => project(name, true), add: o => scene.add(o),
+                 where: () => where(), core, figures,
                  mixer: root => { const m = new T.AnimationMixer(root); mixers.add(m); return m; },
                  W: () => W, H: () => H, clock: () => clock,
                  get alive() { return !aborted; }, tick,
@@ -614,11 +734,12 @@ export function stage(o) {
     } finally {
       for (const u of undos.splice(0).reverse()) { try { u(); } catch {} }
       for (const a of Object.values(cast)) {
-        a.hush(); a.mixer.stopAllAction(); mixers.delete(a.mixer); a.current = null; a.clipRight(null);
+        a.hush(); a.mixer.stopAllAction(); mixers.delete(a.mixer); a.current = null; a.clipRight(null); a.z = 0; a.turn.position.z = 0;
       }
       svg.clear();
       tickers.clear();
       attachments.clear();
+      mixers.clear();
       if (projection) { const pj = projection; projection = null; try { pj.root.removeFromParent(); } catch {} }
       removeEventListener("pointerdown", onClick, true);
       removeEventListener("keydown", onKey, true);

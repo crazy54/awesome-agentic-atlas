@@ -465,7 +465,14 @@ def bake(clip: Clip, skel: Skeleton, face_ob=None, start=1, props=None, track_su
     callable t -> world Matrix, for props baked alongside (each gets its own action on the same track
     name). Returns the actions."""
     arm = skel.ob
-    n = clip.frames + (1 if not clip.loop else 0)
+    # Every clip is baked through its closing frame, a loop included (its last pose is its first again): the
+    # exporter turns the strip's length into the animation's duration, so without it a loop came out a
+    # frame short, and sampling every other frame (export.glb's frame_step 2) cut a second frame off an odd
+    # count. Loops should have an even frame count for the same reason.
+    n = clip.frames + 1
+    if clip.loop and clip.frames % 2:
+        print(f"anim.bake: loop {clip.name} has an odd frame count ({clip.frames}); sampled every other frame "
+              "its last frame is dropped")
     frames = [start + i for i in range(n)]
     poses = [clip.at(i / clip.fps, skel) for i in range(n)]
     name = clip.name + track_suffix

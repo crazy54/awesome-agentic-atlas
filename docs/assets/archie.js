@@ -221,6 +221,9 @@
     if (!allowed()) { started = false; return; }   // the reader resized or changed a setting meanwhile
     const actor = new T.Group();          // what the director moves and turns; the clips animate inside it
     actor.add(gltf.scene);
+    // culled by his bounds in the bind pose, which don't follow a clip, his eyes (small meshes of their own)
+    // could vanish at the window's edge
+    gltf.scene.traverse(n => { if (n.isSkinnedMesh) n.frustumCulled = false; });
     scene.add(actor);
     const rig = lights(T, scene, SHOW, V);
 
