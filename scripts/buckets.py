@@ -107,9 +107,11 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
         ("AI Platforms & Models", ["AI Platforms & Models", "Claude and Anthropic"]),
         ("Business & Productivity", ["Business, Productivity & Marketing"]),
         ("Cloud & Infrastructure", ["Cloud & Infrastructure"]),
+        # `Agent Skills Specification` (new upstream, 2026-10; the SKILL.md spec) is the sheet's other
+        # developer-facing shelf, so it shares that hue rather than spending the last one on a single row.
         ("Developer Tools & Frameworks", [
             "Developer Tools & Frameworks", "Model Context Protocol (MCP)",
-            "GitHub Copilot"]),
+            "GitHub Copilot", "Agent Skills Specification"]),
         ("Security & Web Intelligence", ["Security & Web Intelligence"]),
         ("Community Skills", ["Community Skills"]),
         ("Google Ecosystem", ["Google Ecosystem"]),
@@ -127,8 +129,9 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
         # `AI Browser Tools` is new upstream and would have been this sheet's ninth bucket, which the
         # palette has no hue for. It joins the bucket named after what it is -- tooling around a model
         # rather than an agent built on one -- and the row still prints its own section name.
+        # `Standalone Apps & Tools` (2026-10) was the next ninth bucket, and joins it for the same reason.
         ("Tooling & Courses", [
-            "LLM Optimization Tools", "LLM Fine-tuning", "AI Browser Tools",
+            "LLM Optimization Tools", "LLM Fine-tuning", "AI Browser Tools", "Standalone Apps & Tools",
             "AI Agent Framework Crash Courses"]),
     ],
     "opencode": [
