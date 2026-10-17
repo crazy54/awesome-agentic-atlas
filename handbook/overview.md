@@ -82,8 +82,8 @@ Hand-written inputs that are not generated:
 - `config/collections.json`: the curated collections.
 - `docs/CNAME`: the Pages custom domain. `17_markdown.py` reads it to build absolute URLs.
 - `docs/favicon.svg` and `docs/assets/atlas-byte.png`: hand-maintained art. `daily.yml` lists them as static.
-- `docs/assets/archie*.js` and `docs/assets/rig-show.js`: Archie's code, written by hand. See [archie.md](archie.md).
-- `art/`: Blender and Python sources for Archie and the stage rig.
+- `docs/assets/archie*.js`: Archie's code, written by hand. See [archie.md](archie.md).
+- `art/`: Blender and Python sources for Archie and his pals.
 
 ## Directory layout
 
@@ -95,7 +95,7 @@ Hand-written inputs that are not generated:
 | `state/` | Committed ledgers (first-seen, star history, Discover rotation) |
 | `config/` | Feature flags and curated collections |
 | `tests/` | The verification suite. See [testing.md](testing.md) |
-| `art/` | Blender and Python sources for `archie.glb`, `rig.glb` and the video-wall clips |
+| `art/` | Blender and Python sources for `archie.glb`, the pals, the Atlas Core and the bits |
 | `.github/workflows/` | `daily.yml`, `weekly.yml`, `tests.yml`, `lighthouse.yml`, `og-preview.yml`. See [ci-cd.md](ci-cd.md) |
 | `handbook/` | This documentation |
 | `cache/`, `build-tmp/`, `preview/` | Untracked: the build cache, test scratch, and Excel PDF previews |

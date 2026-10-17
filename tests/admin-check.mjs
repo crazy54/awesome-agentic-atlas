@@ -16,15 +16,13 @@
 //   * each enabled button dispatches its own command, and only it: `window.archie.run` is wrapped and every
 //     button pressed. Then the dispatcher is shown to do the thing, not just take the call: a dance and a
 //     sit become the act `status()` reports, a flag (`?archie=robot`) goes the same way, a poke answers in
-//     his live region, a friend comes and `quiet` sends it home, and a rig cue reaches `window.archieRig`;
-//   * a command that cannot run is a disabled button that says why: a cue the live rig lacks, every cue once
-//     `window.archieRig` is taken away, and every button under reduced motion, where Archie is a poster;
+//     his live region, and a friend comes and `quiet` sends it home;
+//   * a command that cannot run is a disabled button that says why: a friend while the masthead is off
+//     screen, and while another is over, and every button under reduced motion, where Archie is a poster;
 //   * Escape closes it and focus goes back to the trigger, from either way of opening it.
 //
-// WHAT IT CANNOT SEE: whether an act looks right (that is dance-check's, prank-check's and friends-check's),
-// or what a cue does to the rig: that is rig-check's. The panel's side of a cue is checked against the live
-// `window.archieRig` for which cues are enabled, and against a stand-in with the same shape
-// ({cues, cue(name)}), installed from here, for what reaches the rig -- then the real one is put back.
+// WHAT IT CANNOT SEE: whether an act looks right. That is dance-check's, prank-check's, friends-check's and
+// bits-check's.
 import {tmpdir} from "node:os";
 import {launch} from "./lib/browser.mjs";
 
@@ -136,39 +134,11 @@ const want = [...list, ...ORDER.map(i => "friend:" + i)];
 const have = await ev(`[...document.querySelectorAll("#archiepanel button[data-cmd]")].map(b => b.dataset.cmd)`);
 ok("one button for every command and every friend", want.length === have.length && want.every(c => have.includes(c)),
    `missing ${want.filter(c => !have.includes(c)).join(",")} extra ${have.filter(c => !want.includes(c)).join(",")}`);
-// Dances are 15 since the rave pair (headbang, drop) landed. The rig's cue count is read from the page rather than pinned: archie.js names the set, and the stage
-// work adds cues to it (11 here, 15 with co2, flames, sparks and haze). That every one of them has a button
-// is the "one button for every command" check above; this one says the set is not empty, and below, that
-// every cue the live rig has is in it.
-const cueN = list.filter(c => /^cue:/.test(c)).length;
-for (const [what, re, n] of [["dance", /^dance:/, 15], ["prank", /^prank:/, 5], ["friend", /^friend:/, ORDER.length],
-                             ["rig cue", /^cue:/, 15]])
+// Dances are 15 since the rave pair (headbang, drop) landed.
+for (const [what, re, n] of [["dance", /^dance:/, 15], ["prank", /^prank:/, 5], ["friend", /^friend:/, ORDER.length]])
   ok(`...including every ${what} (${n})`, have.filter(c => re.test(c)).length === n, String(have.filter(c => re.test(c)).length));
-for (const c of ["idle", "watch", "sit", "sleep", "press", "shrug", "walk-off", "show", "chatter", "poke", "quiet"])
+for (const c of ["idle", "watch", "sit", "sleep", "press", "shrug", "walk-off", "core", "chatter", "poke", "quiet"])
   ok(`...and "${c}"`, have.includes(c));
-
-// A command that cannot run says so. The live model's rig is up (this file was written before it landed,
-// and asserted every cue disabled; it has been in the suite's page since), so first: the cues it has are
-// enabled and a name it lacks is not. Then the rig is taken away, and every cue greys out with a reason.
-await sleep(700);
-const cueState = () => ev(`[...document.querySelectorAll("#archiepanel button[data-cmd^='cue:']")]
-  .map(b => [b.dataset.cmd.slice(4), b.disabled, b.title])`);
-const rigHas = await ev(`window.archieRig && Array.isArray(window.archieRig.cues) ? window.archieRig.cues.slice() : null`);
-ok("the live model's rig is up, with its cues", Array.isArray(rigHas) && rigHas.length > 0, JSON.stringify(rigHas));
-ok("...each of which has a button", (rigHas || []).every(c => have.includes("cue:" + c)),
-   (rigHas || []).filter(c => !have.includes("cue:" + c)).join(","));
-const upCues = await cueState();
-ok("...and every cue it has is enabled", upCues.length && upCues.filter(([c]) => (rigHas || []).includes(c)).every(([, d]) => !d),
-   JSON.stringify(upCues.filter(([, d]) => d)));
-ok("...while a cue it lacks is disabled, saying so", upCues.filter(([c]) => !(rigHas || []).includes(c))
-   .every(([, d, t]) => d && /rig/.test(t)), JSON.stringify(upCues.filter(([c]) => !(rigHas || []).includes(c))));
-await ev(`window.__rig = window.archieRig; delete window.archieRig`);
-await sleep(700);
-const cues = (await cueState()).map(([, d, t]) => [d, t]);
-ok("with no rig up, every cue button is disabled", cues.length && cues.every(([d]) => d));
-ok("...and says why", cues.every(([, t]) => /rig/.test(t)), JSON.stringify(cues[0]));
-ok("...and the status line says it too", await ev(`/rig/.test(document.querySelector("#archiepanel .why").textContent)`));
-await ev(`window.archieRig = window.__rig`);
 
 // Each button dispatches its own command. The real `run` is swapped for a recorder for this pass, so that
 // thirty-odd acts, pranks and friends do not pile into one another, and every button is enabled for it.
@@ -211,14 +181,6 @@ ok("...then the other friends say one is over", await until(`(() => { const b = 
   return b.disabled && /friend/.test(b.title); })()`, 2000));
 await ev(`document.querySelector('#archiepanel button[data-cmd="quiet"]').click()`);
 ok("...and quiet sends it home", await until(`!document.querySelector(".archie-pals")`, 4000));
-// The rig, through the agreed shape
-await ev(`window.__cued = []; window.archieRig = {cues: ["gobo", "all-off"], cue: n => (window.__cued.push(n), true), status: () => ({})}`);
-ok("with a rig up, its cues are enabled", (await press("cue:gobo")) === "ok");
-ok("...and a cue reaches the rig", await until(`window.__cued.includes("gobo")`, 2000), JSON.stringify(await ev(`window.__cued`)));
-ok("...while a cue this rig lacks stays disabled", await ev(`document.querySelector('#archiepanel button[data-cmd="cue:blinder"]').disabled`));
-await ev(`document.querySelector('#archiepanel button[data-cmd="quiet"]').click()`);
-ok("...and quiet cues it off", await until(`window.__cued.includes("all-off")`, 2000));
-await ev(`window.archieRig = window.__rig`);
 
 // Escape closes it, and focus goes back to the trigger
 await ev(`document.querySelector('#archiepanel button[data-cmd="dance:floss"]').focus()`);

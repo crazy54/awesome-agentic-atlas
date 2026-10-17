@@ -378,16 +378,16 @@ finally:
 # Every file of Archie's that is loaded under the loader's `?v=` has to move that version when it changes,
 # or a reader's browser keeps the old copy under an unchanged URL for as long as the CDN's max-age (four
 # hours on the live site). The files are enumerated from what is committed in docs/assets, not from
-# VERSIONED, since a loop over the list under test cannot notice a name missing from it: `wall-c`/`wall-d`
-# and the admin panel were each played or imported under the version and hashed by none of it. Two groups
-# are left out, each for a reason of its own: the poster, which the page names directly, and the dance
-# script and its detector, which the page loads under a version of their own (tested above).
+# VERSIONED, since a loop over the list under test cannot notice a name missing from it: the admin panel
+# was once imported under the version and hashed by none of it. Two groups are left out, each for a reason
+# of its own: the poster, which the page names directly, and the dance script and its detector, which the
+# page loads under a version of their own (tested above).
 ASSETS = ROOT / "docs" / "assets"
 FAMILY = sorted(p.relative_to(ASSETS).as_posix() for p in ASSETS.rglob("*") if p.is_file()
-                and p.relative_to(ASSETS).as_posix().startswith(("archie", "three-archie", "rig"))
+                and p.relative_to(ASSETS).as_posix().startswith(("archie", "three-archie"))
                 and p.name != "archie-3d.webp" and p.name not in b31.DANCE)
-true("the family enumerated off docs/assets includes the four wall clips and the panel",
-     {"rig/wall-c.webm", "rig/wall-d.mp4", "archie-admin.js"} <= set(FAMILY), FAMILY)
+true("the family enumerated off docs/assets includes the dances, the panel and the pals' stage",
+     {"archie-dances.glb", "archie-admin.js", "archie-stage.js"} <= set(FAMILY), FAMILY)
 try:
     with tempfile.TemporaryDirectory() as tmp:
         shutil.copytree(ASSETS, Path(tmp) / "assets")

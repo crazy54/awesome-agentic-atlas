@@ -18,10 +18,10 @@
    - `(hover: hover)`, which is false on CI;
    - line endings: CRLF locally, LF on CI;
    - a merge-ref difference, since CI tests your branch merged into `latest_branch`;
-   - the frame rate, in the Archie harnesses. Under swiftshader a CI runner draws a frame or two a second
-     once the rig is lit. Archie's clock steps at most 0.1 s a frame, so anything timed by it (a cue, a
-     swell, the pods) takes five times as long on the wall or more: wait for it in the rig's seconds, as
-     `untilRig` in `rig-check.mjs` does, never in wall-clock milliseconds. To reproduce it locally, pin the
+   - the frame rate, in the Archie harnesses. Under swiftshader a CI runner can draw only a few frames a
+     second. Archie's clock steps at most 0.1 s a frame, so anything timed by it (an act, a visit, a bit)
+     takes several times as long on the wall: wait for it by his own clock, as `bits-check.mjs` steps the
+     stage's, never in wall-clock milliseconds. To reproduce it locally, pin the
      browser's whole process tree to one or two cores. On Windows `start /affinity` misses the GPU process,
      which is where swiftshader runs, so set `ProcessorAffinity` on every descendant of the harness instead.
 6. **Red after a generator change, while the generator's own output looks right.** Probes read the *committed*

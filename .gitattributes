@@ -28,3 +28,7 @@ docs/assets/web-vitals-6.2.3.js -text
 # Written by scripts/24_pwa.py. Its header always opens with NUL bytes, so autodetection gets it right today;
 # pinned anyway, as every new binary format here is (handbook/contributing.md).
 docs/favicon.ico binary
+
+# The pals' models and clips (art/pals/build.py) are binary glTF, which carries NUL bytes today; pinned anyway, as
+# every binary format here is: autocrlf rewriting a 0x0D 0x0A in an accessor would corrupt a mesh silently.
+*.glb binary

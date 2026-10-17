@@ -5,10 +5,11 @@ node tests/run.mjs
 ```
 
 That is the whole thing. It finds a Chromium the machine already has, serves `docs/` under the Pages path
-prefix `/awesome-agentic-atlas/` on a port the OS picks, runs thirty harnesses in turn (eighteen Python,
-ten in a browser, two in plain Node), prints what each one asserted, and exits non-zero if anything failed.
+prefix `/awesome-agentic-atlas/` on a port the OS picks, runs thirty harnesses in turn (nineteen Python,
+nine in a browser, two in plain Node), prints what each one asserted, and exits non-zero if anything failed.
 About 24 minutes on a Windows workstation (2026-09-25), most of it in `detail-churn.mjs` regenerating every
-detail page, `osicons_test.py` walking every built page, and the Archie browser checks. No install step, no
+detail page, `osicons_test.py` walking every built page, and the Archie browser checks; `bits-check.mjs`,
+added since, takes about half an hour more on its own (2026-10-17). No install step, no
 arguments, no configuration. The [handbook's testing page](../handbook/testing.md) has the current
 known-red list and a quicker reference.
 
@@ -16,7 +17,7 @@ It asserts on `docs/` as committed, not on the generator's intentions. `docs/` i
 Pages — `build_type: legacy`, so what is in the repository is what a reader downloads — which means the bytes
 in the checkout are the deployable artefact and are the honest thing to test.
 
-Individual harnesses can be run alone. The ten that drive a browser need to be given one and told where the
+Individual harnesses can be run alone. The eleven that drive a browser need to be given one and told where the
 site is, because `run.mjs` owns both. The origin must be a server that serves `docs/` under
 `/awesome-agentic-atlas/`, which is what `lib/serve.mjs` does:
 
@@ -31,6 +32,7 @@ python tests/app_flags_test.py
 python tests/theme_test.py
 python tests/signals_test.py
 python tests/fetch_test.py
+python tests/dead_repos_test.py
 python tests/indexnow_test.py
 python tests/newness_test.py
 python tests/discover_test.py
@@ -54,9 +56,8 @@ node tests/dance-check.mjs          <chrome-binary> <origin>
 node tests/spotlight-check.mjs      <chrome-binary> <origin>
 node tests/prank-check.mjs          <chrome-binary> <origin>
 node tests/friends-check.mjs        <chrome-binary> <origin>
-node tests/rig-check.mjs            <chrome-binary> <origin>
 node tests/admin-check.mjs          <chrome-binary> <origin>
-node tests/stage-check.mjs          <chrome-binary> <origin>
+node tests/bits-check.mjs           <chrome-binary> <origin>
 ```
 
 A harness file in `tests/` that is not in `run.mjs`'s list reddens the run, so a new one cannot be
@@ -64,7 +65,7 @@ left out of the suite and CI by accident.
 
 ## What each one covers, and what it deliberately does not
 
-There are twenty-six files rather than one because they are twenty-six instruments, and the overlap between them is the
+There are thirty files rather than one because they are thirty instruments, and the overlap between them is the
 reason to keep them apart rather than the reason to merge them. Each file's header says at length what it
 cannot see; this is the summary. Assertion counts are passed plus failed from the 2026-09-25 run on
 `latest_branch` `a77b46eb`; they drift, and the floors in `run.mjs` are what is enforced.
@@ -84,6 +85,7 @@ cannot see; this is the summary. Assertion counts are passed plus failed from th
 | `workbook_branding_test.py` | A disposable pair of light/dark covers from `scripts/16_build_all.py`: both shared source assets exist, both covers embed exactly the compact logo and Archie artwork, their displayed bounds and upper-right anchors stay fixed, the mascot keeps its name tag, the theme-switch cell survives, and each archive contains one drawing part with two media parts. It also checks the package-preserving fallback used when the crawler cache is absent. 26 assertions. | The release-sized workbooks: their full data and screenshot cache are not committed, so this harness proves the cover builder and fallback without requiring a crawl to test two small cover images. |
 | `signals_test.py` | `scripts/signals.py`, the rule deciding when a cached release-asset or `action.yml` answer needs re-querying: every term of it at its boundaries, every timestamp spelling that reaches those files, every earlier schema still loading and reading as stale, and a textual tripwire that the three fetch stages still consult it and still stamp what they write. 210 assertions, no I/O, instant. | Whether GitHub answers the queries. The three stages shell out to `gh api graphql`, so the crawl itself is untested here and untestable offline — this harness only asserts which repos would be asked about. |
 | `fetch_test.py` | `graphql_batch` in `scripts/02_fetch.py`, which every stage that asks GitHub for repository nodes goes through: a batch GitHub keeps timing out on (502, 504 or a TIMEOUT error) is split and each half asked separately, with every alias back where it belongs. A rate limit, a rejected query and a single repository that times out on its own still raise. Once the split budget is spent, a timing-out batch fails as it did before. `gh` and `time.sleep` are faked. 27 assertions, instant. | Whether GitHub answers. No query leaves the machine. |
+| `dead_repos_test.py` | The weekly dead-repo scan, `scripts/dead_repos.py`, against a fake GitHub: deleted, taken down, blocked and disabled repos told apart from renamed ones and from a rate limit, fifty to a GraphQL query with REST only for the ones GraphQL cannot find, the ledger's comings and goings, the guard that refuses to bury too much at once, and `14_classify_all.py` leaving every ledger repo out. 37 assertions, instant. | Whether GitHub answers, and the workflow itself: `dead-repos.yml` only runs in Actions. |
 | `newness_test.py` | `scripts/newness.py`, the rule that decides what `New` means on four surfaces: that it is the most recent import which brought anything rather than the last fortnight, that the next import to bring anything takes the mark off the previous cohort while leaving its dates alone, that an import bringing nothing moves neither, that a source list read for the first time is a real cohort rather than back-dated founding stock, and the stale bound on both sides of its boundary. Run against a ledger in a scratch directory several imports deep, with the date supplied rather than read from the clock. 54 assertions, instant. | Whether the surfaces render what it computes. It imports no stage: the chip, the outline and the two feeds read `COHORT` and `SEEN`, and that reading is `probe.mjs`'s and `refresh_test.py`'s half. |
 | `discover_test.py` | `scripts/discover.py`, the daily-fifty rule: fifty projects a day, seven days a deploy, rolled over at 00:00 in one named zone. Run over eight consecutive weeks against synthetic corpora shaped to break it — a category with fewer rows than its allocation, more categories than slots, a corpus smaller than one day — with the date supplied rather than read from the clock and the ledger repointed into a temp directory. Nine groups: the day (both 2026 DST switches and the hour UTC has turned over and Chicago has not, with the expected dates written out by hand, because taking them from the module would only prove it agrees with itself); the shape; the split (`allocate()` sums to the day's slots and never starves a live category); fairness (every category in every day, no row twice in a week, no overlap between consecutive weeks); rotation (this week's picks at the back of next week's queue, asserted as a trajectory over eight weeks rather than one comparison); blindness (three shuffles and a star permutation each produce a byte-identical plan, because a Discover that consulted stars would be the front page with a different heading); the fallback (`covers()`, `for_day()`, and the ledger's format on disk); the copies (the four clock functions that exist twice, in `19d_discover.py` and in the homepage strip in `19_pages.py`, compared character for character off the two files as text, plus the accents, the flag, the deep link's two halves, and the stage being in both workflows); and the payload (the real `docs/discover.json` — columns against `CARD_COLS`, every pick backed by a row, no row carried that no day names, the ledger's week matching the plan's). 148 assertions, instant. | Whether the page renders what it computes, or whether the fifty are any good. The carousel, the deep link into it and the rollover in a browser are `probe.mjs`'s and `cards-check.mjs`'s half. The homepage strip is asserted here as *source* rather than as built output, because `19_pages.py` needs CI's crawl cache: the committed `docs/index.html` in any checkout predates whatever was last changed about the strip. |
 | `scout_test.py` | `scripts/12_scout.py`, the second intake path: GitHub search for rising agentic repos no curated list has, written as one more source document, plus the candidate lists `SOURCES` does not have yet. Every exclusion in `verdict()` on a fixture clean in every other respect — fork, archived, disabled, mirror, no description, spam (the `ReverseEngineerAnything/REA` download-bait clone of `morluto/rea`, given enough stars to pass every bar), off-topic, an awesome list, a list already in `SOURCES` — and both bars at their boundaries: the 180-day window's first day, its 300-star floor, the any-age tier's 2,000-star floor, its `ERA` floor and its narrower topics. Sections by most topics, ties to the earlier family, the two fallbacks in order, and the ten sections agreeing with `taxonomy.SECTIONS` and `buckets.py` in both directions. The sticky ledger: absence and aging out remove nothing, a quality failure seen today does, renames are followed by id, `ignore` keeps a repo out and `--reset` applies a tightened rule. The document parsed through the real `10_parse_sources.parse`, byte-identical however results or ledger keys are ordered, with no date or star count in it. Five ways for search to fail, each leaving both ledgers and the document byte-identical, including onto a cold cache; pacing, a rate limit waited out, a 422 never retried, pagination and the 1,000 cap. Candidates keeping `first_seen` across runs. The gate: `watch_sources.py` against a scratch ledger, where a changed scouted set is a move and the same set re-rendered, in CRLF, or missing is not, and `head()` is never asked about the scout. Then `taxonomy.by_repo` and `16_build_all.repo_pool` not letting a scouted listing out-vote a curator's category or replace a curator's blurb, and the stage's place in both workflows. 210 assertions, ~3 s. | Whether GitHub answers, or whether the scouted repos are any good. The transport is a fake that honours only the `topic:` qualifier, so the client-side rules are what is tested, not the search API's; the thresholds were tuned by hand against the 2026-10-11 results and nothing here can say they are still right. Needs openpyxl for the downstream group, which imports `16_build_all.py`. |
@@ -98,16 +100,15 @@ cannot see; this is the summary. Assertion counts are passed plus failed from th
 | `spotlight-check.mjs` | The homepage's spotlight and line of the day in a real browser, on a clock the harness sets: a different pick on different days and the same one all day, keyed to the reader's *local* date, no layout shift, and a `<noscript>` card for readers without script. 117 assertions. | A real midnight passing on an open tab, and whether the pool is any good. |
 | `prank-check.mjs` | Archie's pranks, played on the live model through `?archie=prank:<name>`: the page is put back exactly, nothing is saved, and the light flicker is timed against WCAG 2.3.1. 107 assertions. | Whether a prank is funny, and when he picks one unasked. |
 | `friends-check.mjs` | Archie's visiting friends: each arrives, leaves, restores the page it touched, and keeps clear of the page's controls. 109 assertions. | Their art. |
-| `rig-check.mjs` | The stage rig: the flash rate of every fixture against WCAG 2.3.1, the blinders' swell, and that each cue plays. 43 assertions. | How the show looks. |
-| `admin-check.mjs` | Archie's admin panel: hidden until asked for, one button for every command, cue and friend the page names, each button dispatching its own command, and a greyed button saying why. | Whether the commands look right once they run. That is the other Archie harnesses' job. |
-| `stage-check.mjs` | The stage by its pixels, read off rendered frames: the LED wall's picture moving, and pyro, CO2, flames, sparks, haze and the blinders each changing what the camera sees when cued. | Whether the show is any good. It asserts that each effect is visible, not how it looks. |
+| `admin-check.mjs` | Archie's admin panel: hidden until asked for, one button for every command and friend the page names, each button dispatching its own command, and a greyed button saying why. | Whether the commands look right once they run. That is the other Archie harnesses' job. |
+| `bits-check.mjs` | The pals' bits, every one in `archie-bits.js`'s `BITS`, each on a fresh page view: placed on the first family in its `pages` where `archie.can()` says it can play (the top, then each element bits stand on scrolled 250 px down, with a mouse pointer brought onto the page, or the README's request held open, for a bit whose `ready()` wants one), then played in capture mode with the stage's clock stepped 0.2 s at a time, and required to end inside 120 stage seconds. Before and after: every element's tag, id, class and style, `<main>`'s text, `<html>`'s attributes and every scroll position; storage byte-identical and no cookie; focus never moved, sampled every step; the theme's flashes counted per second of stage time against WCAG 2.3.1; the stage's layer aria-hidden, without pointer events and with nothing focusable in it, and nothing added to the document outside it; no console error, and none of the stage's "pals: ..." warnings for an exception it swallowed or a clip a bit lacks. Then Escape on the three longest bits and a pointerdown on an empty spot for a fourth, each gone within a stage second with the page put back. 696 assertions on 2026-10-17, 42 bits, 29 minutes: every bit is a fresh page view, the stage loads six seconds after the model, and swiftshader draws every step. | What a bit looks like; the director choosing one unasked, or a `cue` firing on its own. The 404 page, which has no Archie on it. A bit whose moment it cannot make is reported as skipped, not passed. |
 
 Between them, 4,377 assertions on 2026-09-25 (4,368 passed, 9 failed, all 26 harnesses ran), from a real run
 rather than by adding up the figures above. The number only matters in one direction; see the floors below.
 The nine red ones were red on `latest_branch` `a77b46eb` before any documentation change, and each is named
 with its cause, where known, in [the handbook](../handbook/testing.md#known-red-and-environment-sensitive-checks):
 one in `probe.mjs`, one in `semantic_test.py`, one in `detail-preview-check.mjs`, two in `pwa-check.mjs` (the
-worker's `VERSION` is stale), two in `dance-check.mjs`, one in `friends-check.mjs` and one in `rig-check.mjs`.
+worker's `VERSION` is stale), two in `dance-check.mjs`, one in `friends-check.mjs` and one in `rig-check.mjs` (since removed, with the light show).
 Re-run the suite to update this paragraph; do not adjust the numbers by hand.
 
 One blind spot is structural. `probe.mjs` reads the committed `docs/catalog/index.html`, which only

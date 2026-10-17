@@ -40,8 +40,8 @@ Run `node tests/run.mjs` before opening it. Say in the description which failure
 | Hand-written, edit freely | Generated, edit the generator instead |
 |---|---|
 | `scripts/`, `tests/`, `config/`, `art/`, `.github/`, `handbook/`, READMEs | `docs/**/*.html`, `docs/*.json`, `docs/*.xml`, `docs/pages.css`, `docs/sw.js`, `docs/manifest.webmanifest`, `docs/search/`, `docs/og/`, `docs/repo/` |
-| `docs/assets/archie*.js`, `docs/assets/rig-show.js`, `docs/CNAME`, `docs/favicon.svg`, `docs/assets/atlas-byte.png` | `mega-list/**` |
-| `docs/assets/three-archie.js` and the `.glb`/`.webm`/`.webp` art: not edited by hand, but rebuilt from `art/` (see [archie.md](archie.md)) | `state/*.json`: ledgers written by the pipeline. Never hand-edit them; on a merge conflict, keep both sides |
+| `docs/assets/archie*.js`, `docs/CNAME`, `docs/favicon.svg`, `docs/assets/atlas-byte.png` | `mega-list/**` |
+| `docs/assets/three-archie.js` and the `.glb`/`.webp` art: not edited by hand, but rebuilt from `art/` (see [archie.md](archie.md)) | `state/*.json`: ledgers written by the pipeline. Never hand-edit them; on a merge conflict, keep both sides |
 
 Every generated HTML file carries its generator's name in the pipeline table in [pipeline.md](pipeline.md).
 When in doubt, search `scripts/` for the output path.
@@ -114,6 +114,6 @@ editor rather than `cat <<'EOF'`.
 | Run the data-only stages (19c to 31) | Python 3 |
 | Run `27_semantic.py` | numpy, and network access for the model |
 | Anything that fetches | `gh`, authenticated |
-| Rebuild Archie or the rig | Blender (5.2 is the default path `wall.py` assumes); numpy and Pillow for `wall.py` |
+| Rebuild Archie or his pals | Blender 5; Node with `@gltf-transform/cli` and `meshoptimizer` for the meshopt step (see [archie.md](archie.md)) |
 | Rebuild `three-archie.js` | Node, `npm i three@0.186.0 esbuild` in a scratch directory |
 | `08_verify.py`, `09_pdf.py` | Windows with Microsoft Excel |
