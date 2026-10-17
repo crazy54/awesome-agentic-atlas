@@ -1,8 +1,8 @@
 # Archie and his pals, in 3D
 
 Archie, Zip and Brick, the Atlas Core Archie carries, and every prop their bits use: built, rigged, animated
-and exported from Python, headless, the way `art/archie/archie.py` built the Archie before them. A change to
-a pal is a reviewable diff of numbers, not a binary.
+and exported from Python, headless, as the first Archie was (his script, `art/archie/archie.py`, is retired:
+these replace him). A change to a pal is a reviewable diff of numbers, not a binary.
 
 ```
 blender -b --factory-startup --python art/pals/archie.py -- [--views front,side,back,three,face,hand]
