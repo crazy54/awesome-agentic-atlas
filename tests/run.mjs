@@ -264,9 +264,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and nine of the thirty harnesses drive one over CDP.
-
-" +
+    "No Chromium found, and nine of the thirty harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -292,9 +290,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and nineteen of the thirty harnesses are Python or drive it.
-
-" +
+    "No Python 3 found, and nineteen of the thirty harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +
