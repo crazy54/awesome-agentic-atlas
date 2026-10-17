@@ -22,16 +22,20 @@
     s.page.undo(() => remote.remove());
     const tiny = figs[0];
 
-    // ---- Tiny Archie's bubbles: the pals' own, tinted as a hologram's ----
+    // ---- Tiny Archie's bubbles: the pals' own, tinted as a hologram's, inside the stage's layer (its tint's
+    // rules with it); no stage, no bubble ----
     const stage = document.querySelector(".pals-stage");
-    const css = document.createElement("style");
-    css.textContent = ".pals-say.holo{background:#dcfbfe;color:#06535d;box-shadow:0 0 0 2px #2fe3f1,0 4px 14px rgba(0,0,0,.2)}" +
-      ".pals-say.holo::after{border-top-color:#dcfbfe}";
-    document.head.append(css);
-    const bub = document.createElement("p");
-    bub.className = "pals-say holo";
-    (stage || document.body).append(bub);
-    s.page.undo(() => { bub.remove(); css.remove(); });
+    let bub = null;
+    if (stage) {
+      const css = document.createElement("style");
+      css.textContent = ".pals-say.holo{background:#dcfbfe;color:#06535d;box-shadow:0 0 0 2px #2fe3f1,0 4px 14px rgba(0,0,0,.2)}" +
+        ".pals-say.holo::after{border-top-color:#dcfbfe}";
+      bub = document.createElement("p");
+      bub.className = "pals-say holo";
+      stage.append(css, bub);
+      s.page.undo(() => { bub.remove(); css.remove(); });
+    }
+    const hush = () => { if (bub) bub.classList.remove("on"); };
     let bubAt = null;                                  // () => {x, y}: where its tail points, or null: hidden
     const v = new T.Vector3();
     const tinyHead = () => {
@@ -40,13 +44,14 @@
       h.getWorldPosition(v);
       return {x: v.x, y: -v.y - 1.0 * TINY * SIZE / 2};
     };
-    const placeBub = s.tick(() => {
-      if (!bubAt) return;
+    s.tick(() => {
+      if (!bubAt || !bub) return;
       const p = bubAt();
       bub.style.left = p.x + "px";
       bub.style.top = (p.y - 6) + "px";
     });
     const holoSay = async (text, secs, at = tinyHead) => {
+      if (!bub) return s.after(secs);
       bub.textContent = text;
       bubAt = at;
       bub.classList.add("on");
@@ -166,7 +171,7 @@
     proj.hide(0.3);
     await s.after(0.3);
     bubAt = null;
-    bub.classList.remove("on");
+    hush();
     follow();
     tiny.root.removeFromParent();
     lights(true);
@@ -189,7 +194,7 @@
     // from off the window's edge, where he went: the Core again, and him (his bubble brought in to the edge)
     holoSay("Ahem! I am ARCH--", 1.0, () => ({x: 110, y: floor - 1.9 * ppm}));
     await s.after(0.8);
-    bub.classList.remove("on");
+    hush();
     await gone;
     A.headAt = () => ({x: 60, y: floor - 2.3 * ppm});
     s.page.undo(() => { delete A.headAt; });

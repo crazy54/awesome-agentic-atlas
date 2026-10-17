@@ -44,6 +44,7 @@ import math
 from mathutils import Vector
 
 from . import _corekit as CK
+from ._handkit import Hand, rest_hands
 from common import blink_layer, brows, look
 from kit.anim import Clip, Pose, ease, pulse, smooth
 
@@ -83,56 +84,6 @@ def clips(bodies):
 def wobble(t, rate=6.0):
     """A lip going: two near frequencies, so it never quite repeats."""
     return 0.5 * math.sin(TAU * rate * t) + 0.5 * math.sin(TAU * rate * 1.37 * t + 1.1)
-
-
-def slerp(a, b, w):
-    if w <= 0:
-        return a
-    if w >= 1:
-        return b
-    return a.to_quaternion().slerp(b.to_quaternion(), w).to_matrix()
-
-
-def mixt(a, b, w):
-    return tuple(x + (y - x) * w for x, y in zip(a, b))
-
-
-def rest_hands(body):
-    """{side: (wrist, hand world rotation)} at REST, feet planted."""
-    q = body.lib.REST.copy()
-    body.plant(q, 1)
-    body.plant(q, -1)
-    out = {}
-    for sg, s in ((1, "_L"), (-1, "_R")):
-        M = body.skel.fk(q, "hand" + s)["hand" + s]
-        out[sg] = (M.translation.copy(), M.to_3x3())
-    return out
-
-
-class Hand:
-    """A hand's states and its path between them. A state is (wrist (a function of the pose, so it follows
-    the body), hand world rotation, elbow pole, fingers (curl, spread, thumb)); `path` is the state it starts
-    in, then (t0, t1, state, easing) moves. Wrist, rotation, pole and fingers all blend, so nothing pops."""
-
-    def __init__(self, body, side, states):
-        self.body, self.side, self.states = body, side, states
-
-    def __call__(self, p, t, path):
-        prev = cur = path[0]
-        w = 1.0
-        for a, b, st, how in path[1:]:
-            if t < a:
-                break
-            prev, cur = cur, st
-            w = ease(how, (t - a) / (b - a)) if t < b else 1.0
-        s0, s1 = self.states[prev], self.states[cur]
-        wr = s0[0](p).lerp(s1[0](p), w)
-        self.body.hand_to(p, self.side, wr, elbow=mixt(s0[2], s1[2], w), hand_rot=slerp(s0[1], s1[1], w))
-        f0, f1 = s0[3], s1[3]
-        c0, c1 = (x if isinstance(x, tuple) else (x, x, x) for x in (f0[0], f1[0]))
-        curl = mixt(c0, c1, w)
-        p.fingers(self.side, curl, spread=f0[1] + (f1[1] - f0[1]) * w, thumb=f0[2] + (f1[2] - f0[2]) * w)
-        return p
 
 
 # ------------------------------------------------------------------------------------------ archie

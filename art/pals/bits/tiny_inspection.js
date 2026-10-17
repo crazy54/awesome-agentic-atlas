@@ -43,15 +43,17 @@
     hole.position.z = -0.02;
     panel.root.add(hole);
     const flap = panel.model.getObjectByName("panel");
-    const flap0 = flap ? flap.quaternion.clone() : null;
+    // a thump from inside rattles it: a shake on top of wherever its clip has it this frame (the stage runs
+    // the mixers before the tickers), so it never holds the flap away from the clip's pose
     let jolt = 0;
+    const axis = new T.Vector3(0, 0, 1), dq = new T.Quaternion();
     const rattle = s.tick(dt => {
       if (!flap || jolt < 0.001) return;
       const k = jolt * Math.sin(s.clock() * 70);
       jolt *= Math.exp(-9 * dt);                           // dying away over a third of a second, at any fps
-      flap.quaternion.copy(flap.userData.held || flap0).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0, 0, 1), 0.035 * k));
+      flap.quaternion.multiply(dq.setFromAxisAngle(axis, 0.035 * k));
     });
-    const thump = (k = 1) => { if (flap) flap.userData.held = flap.quaternion.clone(); jolt = k; };
+    const thump = (k = 1) => { jolt = k; };
     s.holo(torch.root);
     const beam = torch.model.getObjectByName("beam");
     if (beam) beam.visible = false;
@@ -99,29 +101,26 @@
     thump(1);
 
     // ---- the inspection: his light moving about inside, leaking out ----
-    const el = (tag, attrs) => { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; };
-    const svg = s.svg.path({stroke: "none", width: 0}).el.ownerSVGElement;
-    const g = el("g", {});
+    // (drawn in this order, back to front: the fan of light on the floor, the seams, the light in them, the
+    // empty screw holes and the light through them)
+    const g = s.svg.el("g");
+    const el = (tag, attrs, parent = g) => s.svg.el(tag, attrs, parent);
     const defs = el("defs", {});
-    const grad = el("linearGradient", {id: "zip-fan", x1: "0", y1: "0", x2: "0", y2: "1"});
-    grad.append(el("stop", {offset: "0", "stop-color": "#ffd23a", "stop-opacity": "0.9"}),
-                el("stop", {offset: "1", "stop-color": "#ffd23a", "stop-opacity": "0"}));
-    const blur = el("filter", {id: "zip-glow", x: "-50%", y: "-50%", width: "200%", height: "200%"});
-    blur.append(el("feGaussianBlur", {stdDeviation: "2.5"}));
-    defs.append(grad, blur);
+    const grad = el("linearGradient", {id: "zip-fan", x1: "0", y1: "0", x2: "0", y2: "1"}, defs);
+    el("stop", {offset: "0", "stop-color": "#ffd23a", "stop-opacity": "0.9"}, grad);
+    el("stop", {offset: "1", "stop-color": "#ffd23a", "stop-opacity": "0"}, grad);
+    const blur = el("filter", {id: "zip-glow", x: "-50%", y: "-50%", width: "200%", height: "200%"}, defs);
+    el("feGaussianBlur", {stdDeviation: "2.5"}, blur);
+    const fan = el("polygon", {fill: "url(#zip-fan)", opacity: 0});
     // the panel's seams, dark (so the light in them reads on a light page as well as a dark one), and the
     // light in each
     const seam = [[left, top - 1.5, pw, 3], [left, bottom - 1.5, pw, 3], [left - 1.5, top, 3, ph], [right - 1.5, top, 3, ph]];
-    const seams = seam.map(([x, y, w, h]) => el("rect", {x: x - 0.5, y: y - 0.5, width: w + 1, height: h + 1, fill: "#15161b", opacity: 0.8, rx: 2}));
+    seam.forEach(([x, y, w, h]) => el("rect", {x: x - 0.5, y: y - 0.5, width: w + 1, height: h + 1, fill: "#15161b", opacity: 0.8, rx: 2}));
     const edges = seam.map(([x, y, w, h]) => el("rect", {x: x - 1, y: y - 1, width: w + 2, height: h + 2, fill: "#ffd84a",
                                                      opacity: 0, rx: 2, filter: "url(#zip-glow)"}));
-    const holes = [[right - 0.06 * PS, top + 0.06 * PS], [left + 0.06 * PS, bottom - 0.06 * PS], [right - 0.06 * PS, bottom - 0.06 * PS]]
-      .map(([cx, cy]) => el("circle", {cx, cy, r: 5, fill: "#ffe66b", opacity: 0, filter: "url(#zip-glow)"}));
-    const dark = holes.map(h => el("circle", {cx: h.getAttribute("cx"), cy: h.getAttribute("cy"), r: 3.8, fill: "#15161b", opacity: 0.85}));
-    const fan = el("polygon", {fill: "url(#zip-fan)", opacity: 0});
-    g.append(defs, fan, ...seams, ...edges, ...dark, ...holes);
-    svg.appendChild(g);
-    s.page.undo(() => g.remove());
+    const spots = [[right - 0.06 * PS, top + 0.06 * PS], [left + 0.06 * PS, bottom - 0.06 * PS], [right - 0.06 * PS, bottom - 0.06 * PS]];
+    spots.forEach(([cx, cy]) => el("circle", {cx, cy, r: 3.8, fill: "#15161b", opacity: 0.85}));
+    const holes = spots.map(([cx, cy]) => el("circle", {cx, cy, r: 5, fill: "#ffe66b", opacity: 0, filter: "url(#zip-glow)"}));
     const t0 = s.clock();
     let on = 1;
     const light = s.tick(() => {

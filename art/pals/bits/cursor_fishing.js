@@ -40,23 +40,17 @@
     const tip = () => { if (!line1) return Z.pageAt("grip_R"); line1.getWorldPosition(v); return {x: v.x, y: -v.y}; };
 
     // ---- the line and the magnet, drawn over the page ----
-    const NS = "http://www.w3.org/2000/svg";
-    const el = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const [k, a] of Object.entries(attrs)) e.setAttribute(k, a); return e; };
-    const svg = s.svg.path({stroke: "none", width: 0}).el.ownerSVGElement;
-    const line = el("path", {fill: "none", stroke: "#2b2a29", "stroke-width": 1.6, "stroke-linecap": "round", opacity: 0});
+    const line = s.svg.el("path", {fill: "none", stroke: "#2b2a29", "stroke-width": 1.6, "stroke-linecap": "round", opacity: 0});
     const m = 0.11 * ppm;                                  // the magnet's half-width
-    const magnet = el("g", {opacity: 0});
+    const magnet = s.svg.el("g", {opacity: 0});
     // drawn with the top of its bend at its origin, where the line ties on, and its poles POLE below
     const POLE = m * 2.85;
-    magnet.append(
-      el("path", {d: `M ${-m} ${m * 2.3} L ${-m} ${m} A ${m} ${m} 0 0 1 ${m} ${m} L ${m} ${m * 2.3}`, fill: "none",
-                  stroke: "#d8322a", "stroke-width": m * 0.62, "stroke-linecap": "butt"}),
-      el("rect", {x: -m * 1.31, y: m * 2.1, width: m * 0.62, height: m * 0.75, fill: "#c9ccd2"}),
-      el("rect", {x: m * 0.69, y: m * 2.1, width: m * 0.62, height: m * 0.75, fill: "#c9ccd2"}),
-      el("path", {d: `M ${-m * 0.55} ${m * 0.38} q ${m * 0.55} ${-m * 0.3} ${m * 1.1} 0`, fill: "none", stroke: "#fff",
-                  "stroke-width": 1.2, opacity: 0.6}));
-    svg.append(line, magnet);
-    s.page.undo(() => { line.remove(); magnet.remove(); });
+    s.svg.el("path", {d: `M ${-m} ${m * 2.3} L ${-m} ${m} A ${m} ${m} 0 0 1 ${m} ${m} L ${m} ${m * 2.3}`, fill: "none",
+                      stroke: "#d8322a", "stroke-width": m * 0.62, "stroke-linecap": "butt"}, magnet);
+    s.svg.el("rect", {x: -m * 1.31, y: m * 2.1, width: m * 0.62, height: m * 0.75, fill: "#c9ccd2"}, magnet);
+    s.svg.el("rect", {x: m * 0.69, y: m * 2.1, width: m * 0.62, height: m * 0.75, fill: "#c9ccd2"}, magnet);
+    s.svg.el("path", {d: `M ${-m * 0.55} ${m * 0.38} q ${m * 0.55} ${-m * 0.3} ${m * 1.1} 0`, fill: "none", stroke: "#fff",
+                      "stroke-width": 1.2, opacity: 0.6}, magnet);
     // the magnet: where its bend is (the line ties on there), the way its poles point (radians, 0 = down)
     const mag = {x: 0, y: 0, ang: 0, slack: 0.3, line: false};
     let stuck = null, onHorn = false;

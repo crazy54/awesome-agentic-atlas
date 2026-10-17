@@ -86,6 +86,7 @@
     if (!s.alive) return;
     const turning = A.face(1, AIM);
     await s.tween(0.4, e => A.depth(0.6 * P + (az - 0.6 * P) * e));
+    if (!s.alive) return;
     await turning;
     if (!s.alive) return;
     const sitting = A.perform("apology-video/sit-down");
@@ -96,19 +97,24 @@
     if (!s.alive) return;
     A.play("apology-video/sad", {loop: true});
     await s.after(0.4);
+    if (!s.alive) return;
     rolling = true;
 
     // ---- take one: Zip's card, and Archie reads it out -- cheerfully ----
     await s.after(0.3);
+    if (!s.alive) return;
     const zUp = Z.perform("apology-video/card-up");
     await s.after(SHOW.zip);
+    if (!s.alive) return;
     zc.visible = true;
     await zUp;
     if (!s.alive) return;
     Z.play("apology-video/card-hold", {loop: true});
     await s.after(0.3);
+    if (!s.alive) return;
     const lines = A.perform("apology-video/apology");
     await s.after(SAY_AT);
+    if (!s.alive) return;
     A.say("I am so sorry.", 1.5);
     await s.after(1.5);
     if (!s.alive) return;
@@ -122,13 +128,16 @@
     // ---- Brick's card: its back to the room, then round ----
     const bUp = B.perform("apology-video/card-up");
     await s.after(SHOW.brick);
+    if (!s.alive) return;
     bc.visible = true;
     await bUp;
     if (!s.alive) return;
     B.play("apology-video/card-hold", {loop: true});
     await s.after(0.3);
+    if (!s.alive) return;
     const turn = B.perform("apology-video/card-turn");
     await s.after(TURN_AT);
+    if (!s.alive) return;
     sadder.play("turn");
     await turn;
     if (!s.alive) return;
@@ -140,6 +149,7 @@
     if (!s.alive) return;
     Z.perform("apology-video/moved").then(() => s.alive && Z.play("apology-video/card-hold", {loop: true}));
     await s.after(SOB_AT - 1.4);
+    if (!s.alive) return;
     A.say("Sooo sorry!", 1.6);
     await works;
     if (!s.alive) return;
@@ -150,18 +160,23 @@
     // ---- that'll do: Brick's card down with a nod, and the camera stops ----
     const down = B.perform("apology-video/card-down");
     await s.after(HIDE.brick);
+    if (!s.alive) return;
     bc.visible = false;
     await down;
     if (!s.alive) return;
     B.play("idle", {loop: true});
     rolling = false;
     await s.after(0.3);
+    if (!s.alive) return;
     const perk = A.perform("apology-video/perk-up");
     await s.after(GUNS_AT);
+    if (!s.alive) return;
     A.say("Nailed it!", 1.4);
     await s.after(0.4);
+    if (!s.alive) return;
     const zDown = Z.perform("apology-video/card-down");
     await s.after(HIDE.zip);
+    if (!s.alive) return;
     zc.visible = false;
     await zDown;
     if (!s.alive) return;
@@ -175,6 +190,7 @@
     await s.after(0.6);
     if (!s.alive) return;
     await B.face(0);
+    if (!s.alive) return;
     await B.perform("raise-brow");
     if (!s.alive) return;
     B.play("idle", {loop: true});

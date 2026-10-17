@@ -100,6 +100,7 @@ export const BITS = {
       if (!s.alive) return;
       const turning = A.face(1, AIM);
       await s.tween(0.4, e => A.depth(0.6 * P + (az - 0.6 * P) * e));
+      if (!s.alive) return;
       await turning;
       if (!s.alive) return;
       const sitting = A.perform("apology-video/sit-down");
@@ -110,19 +111,24 @@ export const BITS = {
       if (!s.alive) return;
       A.play("apology-video/sad", {loop: true});
       await s.after(0.4);
+      if (!s.alive) return;
       rolling = true;
 
       // ---- take one: Zip's card, and Archie reads it out -- cheerfully ----
       await s.after(0.3);
+      if (!s.alive) return;
       const zUp = Z.perform("apology-video/card-up");
       await s.after(SHOW.zip);
+      if (!s.alive) return;
       zc.visible = true;
       await zUp;
       if (!s.alive) return;
       Z.play("apology-video/card-hold", {loop: true});
       await s.after(0.3);
+      if (!s.alive) return;
       const lines = A.perform("apology-video/apology");
       await s.after(SAY_AT);
+      if (!s.alive) return;
       A.say("I am so sorry.", 1.5);
       await s.after(1.5);
       if (!s.alive) return;
@@ -136,13 +142,16 @@ export const BITS = {
       // ---- Brick's card: its back to the room, then round ----
       const bUp = B.perform("apology-video/card-up");
       await s.after(SHOW.brick);
+      if (!s.alive) return;
       bc.visible = true;
       await bUp;
       if (!s.alive) return;
       B.play("apology-video/card-hold", {loop: true});
       await s.after(0.3);
+      if (!s.alive) return;
       const turn = B.perform("apology-video/card-turn");
       await s.after(TURN_AT);
+      if (!s.alive) return;
       sadder.play("turn");
       await turn;
       if (!s.alive) return;
@@ -154,6 +163,7 @@ export const BITS = {
       if (!s.alive) return;
       Z.perform("apology-video/moved").then(() => s.alive && Z.play("apology-video/card-hold", {loop: true}));
       await s.after(SOB_AT - 1.4);
+      if (!s.alive) return;
       A.say("Sooo sorry!", 1.6);
       await works;
       if (!s.alive) return;
@@ -164,18 +174,23 @@ export const BITS = {
       // ---- that'll do: Brick's card down with a nod, and the camera stops ----
       const down = B.perform("apology-video/card-down");
       await s.after(HIDE.brick);
+      if (!s.alive) return;
       bc.visible = false;
       await down;
       if (!s.alive) return;
       B.play("idle", {loop: true});
       rolling = false;
       await s.after(0.3);
+      if (!s.alive) return;
       const perk = A.perform("apology-video/perk-up");
       await s.after(GUNS_AT);
+      if (!s.alive) return;
       A.say("Nailed it!", 1.4);
       await s.after(0.4);
+      if (!s.alive) return;
       const zDown = Z.perform("apology-video/card-down");
       await s.after(HIDE.zip);
+      if (!s.alive) return;
       zc.visible = false;
       await zDown;
       if (!s.alive) return;
@@ -189,6 +204,7 @@ export const BITS = {
       await s.after(0.6);
       if (!s.alive) return;
       await B.face(0);
+      if (!s.alive) return;
       await B.perform("raise-brow");
       if (!s.alive) return;
       B.play("idle", {loop: true});
@@ -357,16 +373,20 @@ export const BITS = {
       s.page.undo(() => remote.remove());
       const tiny = figs[0];
 
-      // ---- Tiny Archie's bubbles: the pals' own, tinted as a hologram's ----
+      // ---- Tiny Archie's bubbles: the pals' own, tinted as a hologram's, inside the stage's layer (its tint's
+      // rules with it); no stage, no bubble ----
       const stage = document.querySelector(".pals-stage");
-      const css = document.createElement("style");
-      css.textContent = ".pals-say.holo{background:#dcfbfe;color:#06535d;box-shadow:0 0 0 2px #2fe3f1,0 4px 14px rgba(0,0,0,.2)}" +
-        ".pals-say.holo::after{border-top-color:#dcfbfe}";
-      document.head.append(css);
-      const bub = document.createElement("p");
-      bub.className = "pals-say holo";
-      (stage || document.body).append(bub);
-      s.page.undo(() => { bub.remove(); css.remove(); });
+      let bub = null;
+      if (stage) {
+        const css = document.createElement("style");
+        css.textContent = ".pals-say.holo{background:#dcfbfe;color:#06535d;box-shadow:0 0 0 2px #2fe3f1,0 4px 14px rgba(0,0,0,.2)}" +
+          ".pals-say.holo::after{border-top-color:#dcfbfe}";
+        bub = document.createElement("p");
+        bub.className = "pals-say holo";
+        stage.append(css, bub);
+        s.page.undo(() => { bub.remove(); css.remove(); });
+      }
+      const hush = () => { if (bub) bub.classList.remove("on"); };
       let bubAt = null;                                  // () => {x, y}: where its tail points, or null: hidden
       const v = new T.Vector3();
       const tinyHead = () => {
@@ -375,13 +395,14 @@ export const BITS = {
         h.getWorldPosition(v);
         return {x: v.x, y: -v.y - 1.0 * TINY * SIZE / 2};
       };
-      const placeBub = s.tick(() => {
-        if (!bubAt) return;
+      s.tick(() => {
+        if (!bubAt || !bub) return;
         const p = bubAt();
         bub.style.left = p.x + "px";
         bub.style.top = (p.y - 6) + "px";
       });
       const holoSay = async (text, secs, at = tinyHead) => {
+        if (!bub) return s.after(secs);
         bub.textContent = text;
         bubAt = at;
         bub.classList.add("on");
@@ -501,7 +522,7 @@ export const BITS = {
       proj.hide(0.3);
       await s.after(0.3);
       bubAt = null;
-      bub.classList.remove("on");
+      hush();
       follow();
       tiny.root.removeFromParent();
       lights(true);
@@ -524,7 +545,7 @@ export const BITS = {
       // from off the window's edge, where he went: the Core again, and him (his bubble brought in to the edge)
       holoSay("Ahem! I am ARCH--", 1.0, () => ({x: 110, y: floor - 1.9 * ppm}));
       await s.after(0.8);
-      bub.classList.remove("on");
+      hush();
       await gone;
       A.headAt = () => ({x: 60, y: floor - 2.3 * ppm});
       s.page.undo(() => { delete A.headAt; });
@@ -1612,6 +1633,7 @@ export const BITS = {
         a.clipBelow(floor);
         const x = a.x;
         await s.tween(0.4, u => a.at(x, floor + 3 * P * u), u => u * u);
+        if (!s.alive) return;
         a.show(false);
       };
       // the hand-over: Brick's hand out from under his folded arms, the giver's into it, and back under
@@ -1626,6 +1648,7 @@ export const BITS = {
         if (!s.alive) return;
         toBrick(r);
         await s.after(0.15);
+        if (!s.alive) return;
         const take = B.perform(n("take"));
         s.after(TAKE_HIDE).then(() => { r.root.visible = false; });   // put away
         await giving;
@@ -1649,6 +1672,7 @@ export const BITS = {
         }
         const x0 = cx - 4.6 * P, x1 = cx + 1.6 * P;
         await s.tween(2.4, u => {
+        if (!s.alive) return;
           const x = x0 + (x1 - x0) * u, hop = Math.abs(Math.sin(u * Math.PI * 3)) * 0.35 * P;
           g.setAttribute("transform", `translate(${x},${floor - r - hop}) rotate(${(x - x0) / r * 57.3})`);
           g.setAttribute("opacity", Math.min(1, u * 6, (1 - u) * 6));
@@ -1671,6 +1695,7 @@ export const BITS = {
       inHand(ra, A);
       const draw = A.perform(n("produce"));
       await s.after(PRODUCE_AT);
+      if (!s.alive) return;
       ra.root.visible = true;
       await draw;
       if (!s.alive) return;
@@ -1687,6 +1712,7 @@ export const BITS = {
       await A.walkTo(cx + ABACK * P, {speed: 0.8});
       if (!s.alive) return;
       await A.face(0);
+      if (!s.alive) return;
       A.play("idle", {loop: true});
       await rise(Z, cx + ZX * P);
       if (!s.alive) return;
@@ -1697,6 +1723,7 @@ export const BITS = {
       inHand(rz, Z);
       const draw2 = Z.perform(n("produce"));
       await s.after(PRODUCE_AT);
+      if (!s.alive) return;
       rz.root.visible = true;
       await draw2;
       if (!s.alive) return;
@@ -1726,6 +1753,7 @@ export const BITS = {
       if (!s.alive) return;
       B.play("guard-hold", {loop: true});
       await Promise.all([sink(A), s.after(0.15).then(() => s.alive && sink(Z))]);
+      if (!s.alive) return;
       await s.after(0.6);
     },
   }),
@@ -4647,15 +4675,17 @@ export const BITS = {
       hole.position.z = -0.02;
       panel.root.add(hole);
       const flap = panel.model.getObjectByName("panel");
-      const flap0 = flap ? flap.quaternion.clone() : null;
+      // a thump from inside rattles it: a shake on top of wherever its clip has it this frame (the stage runs
+      // the mixers before the tickers), so it never holds the flap away from the clip's pose
       let jolt = 0;
+      const axis = new T.Vector3(0, 0, 1), dq = new T.Quaternion();
       const rattle = s.tick(dt => {
         if (!flap || jolt < 0.001) return;
         const k = jolt * Math.sin(s.clock() * 70);
         jolt *= Math.exp(-9 * dt);                           // dying away over a third of a second, at any fps
-        flap.quaternion.copy(flap.userData.held || flap0).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0, 0, 1), 0.035 * k));
+        flap.quaternion.multiply(dq.setFromAxisAngle(axis, 0.035 * k));
       });
-      const thump = (k = 1) => { if (flap) flap.userData.held = flap.quaternion.clone(); jolt = k; };
+      const thump = (k = 1) => { jolt = k; };
       s.holo(torch.root);
       const beam = torch.model.getObjectByName("beam");
       if (beam) beam.visible = false;
