@@ -2,13 +2,13 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty harnesses in turn --
-// eighteen Python, ten in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty-one harnesses in turn --
+// eighteen Python, eleven in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY THIRTY HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY THIRTY-ONE HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
 //   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces, and
 //                     the one channel on the page that is not colour: the five platform verdict marks,
@@ -81,6 +81,13 @@
 //                     wall's picture must move and have contrast, CO2 read white, flames and sparks fire-coloured,
 //                     the haze light up where the beams go through it -- and pyro fired by simulated music.
 //                     Cannot see whether it looks good, nor a real browser that will not decode the clip.
+//   bits-check.mjs    the pals' bits, every one in BITS placed where its `pages` and `ready()` let it play and
+//                     run to the end on the stage's frozen, stepped clock: inside 120 stage seconds, the page's
+//                     DOM, text, <html> and scroll put back exactly, nothing saved, focused or added outside
+//                     the stage's inert layer, the theme under three flashes a second, nothing thrown; then
+//                     Escape and a pointerdown each stopping a long one within a stage second. A bit whose
+//                     moment it cannot make is reported skipped, not passed. Cannot see what a bit looks like,
+//                     nor the director choosing one unasked.
 //   spotlight_test.py the homepage's daily spotlight and line of the day, off the generator: the day rule,
 //                     the rendered page's pickers run under node against it on a pinned clock and zone, the
 //                     pool's shape, the order the inline scripts depend on, and each refusal of the line file.
@@ -184,7 +191,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// thirty files own their own plumbing. It is 200 lines of plumbing.
+// thirty-one files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync, readdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -234,6 +241,7 @@ const HARNESSES = [
   {file: "rig-check.mjs", label: "Archie's light show: the flash rate of every fixture, the blinders' swell, and the cues", needs: "browser", floor: 40},
   {file: "admin-check.mjs", label: "Archie's admin panel: hidden, one button per command, each dispatching its own, and why a button is greyed", needs: "browser", floor: 60},
   {file: "stage-check.mjs", label: "Archie's stage by its pixels: the wall's picture moving, and pyro, CO2, haze and blinders seen", needs: "browser", floor: 45},
+  {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450},
 ];
 
 // Every harness in this directory is in the list above. `admin-check.mjs` sat here unregistered, so
@@ -262,7 +270,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and ten of the thirty harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and eleven of the thirty-one harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -275,7 +283,7 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Eighteen of the thirty need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Eighteen of the thirty-one need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives a fake `gh` through the
 // batch fetch's failure handling, one drives the IndexNow client and
@@ -287,7 +295,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and eighteen of the thirty harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and eighteen of the thirty-one harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

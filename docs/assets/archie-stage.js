@@ -70,7 +70,7 @@ export function where(doc = document, loc = location) {
   if (seg[0] === "discover") return {page: "discover", topic: null, world: "discover"};
   if (seg[0] === "collections") return {page: "collections", topic: null, world: "collections"};
   if (seg[0] === "target") return {page: "target", topic: null, world: seg[1] === "mcp" ? "mcp-servers" : "home"};
-  if (/^404|not found/i.test(doc.title)) return {page: "lost", topic: null, world: "lost"};
+  if (/^404|not found|^not here/i.test(doc.title)) return {page: "lost", topic: null, world: "lost"};
   return {page: seg[0], topic: null, world: "home"};
 }
 
@@ -468,10 +468,11 @@ export function stage(o) {
     nudge(q, {rotate = 0, x = 0, y = 0, origin = "50% 50%", secs = 0.4, ease = "cubic-bezier(.34,1.56,.64,1)"} = {}) {
       const el = typeof q === "string" ? document.querySelector(q) : q;
       if (!el) return () => {};
-      if (!el.__palsWas) el.__palsWas = [el.style.rotate, el.style.translate, el.style.transformOrigin, el.style.transition];
+      // its style attribute as written, to the character: put back as it was, not re-serialised
+      if (!("__palsWas" in el)) el.__palsWas = el.getAttribute("style");
       const restore = () => {
-        if (!el.__palsWas) return;
-        [el.style.rotate, el.style.translate, el.style.transformOrigin, el.style.transition] = el.__palsWas;
+        if (!("__palsWas" in el)) return;
+        if (el.__palsWas === null) el.removeAttribute("style"); else el.setAttribute("style", el.__palsWas);
         delete el.__palsWas;
       };
       undos.push(restore);

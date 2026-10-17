@@ -5,10 +5,11 @@ node tests/run.mjs
 ```
 
 That is the whole thing. It finds a Chromium the machine already has, serves `docs/` under the Pages path
-prefix `/awesome-agentic-atlas/` on a port the OS picks, runs thirty harnesses in turn (eighteen Python,
-ten in a browser, two in plain Node), prints what each one asserted, and exits non-zero if anything failed.
+prefix `/awesome-agentic-atlas/` on a port the OS picks, runs thirty-one harnesses in turn (eighteen Python,
+eleven in a browser, two in plain Node), prints what each one asserted, and exits non-zero if anything failed.
 About 24 minutes on a Windows workstation (2026-09-25), most of it in `detail-churn.mjs` regenerating every
-detail page, `osicons_test.py` walking every built page, and the Archie browser checks. No install step, no
+detail page, `osicons_test.py` walking every built page, and the Archie browser checks; `bits-check.mjs`,
+added since, takes about half an hour more on its own (2026-10-17). No install step, no
 arguments, no configuration. The [handbook's testing page](../handbook/testing.md) has the current
 known-red list and a quicker reference.
 
@@ -16,7 +17,7 @@ It asserts on `docs/` as committed, not on the generator's intentions. `docs/` i
 Pages — `build_type: legacy`, so what is in the repository is what a reader downloads — which means the bytes
 in the checkout are the deployable artefact and are the honest thing to test.
 
-Individual harnesses can be run alone. The ten that drive a browser need to be given one and told where the
+Individual harnesses can be run alone. The eleven that drive a browser need to be given one and told where the
 site is, because `run.mjs` owns both. The origin must be a server that serves `docs/` under
 `/awesome-agentic-atlas/`, which is what `lib/serve.mjs` does:
 
@@ -57,6 +58,7 @@ node tests/friends-check.mjs        <chrome-binary> <origin>
 node tests/rig-check.mjs            <chrome-binary> <origin>
 node tests/admin-check.mjs          <chrome-binary> <origin>
 node tests/stage-check.mjs          <chrome-binary> <origin>
+node tests/bits-check.mjs           <chrome-binary> <origin>
 ```
 
 A harness file in `tests/` that is not in `run.mjs`'s list reddens the run, so a new one cannot be
@@ -101,6 +103,7 @@ cannot see; this is the summary. Assertion counts are passed plus failed from th
 | `rig-check.mjs` | The stage rig: the flash rate of every fixture against WCAG 2.3.1, the blinders' swell, and that each cue plays. 43 assertions. | How the show looks. |
 | `admin-check.mjs` | Archie's admin panel: hidden until asked for, one button for every command, cue and friend the page names, each button dispatching its own command, and a greyed button saying why. | Whether the commands look right once they run. That is the other Archie harnesses' job. |
 | `stage-check.mjs` | The stage by its pixels, read off rendered frames: the LED wall's picture moving, and pyro, CO2, flames, sparks, haze and the blinders each changing what the camera sees when cued. | Whether the show is any good. It asserts that each effect is visible, not how it looks. |
+| `bits-check.mjs` | The pals' bits, every one in `archie-bits.js`'s `BITS`, each on a fresh page view: placed on the first family in its `pages` where `archie.can()` says it can play (the top, then each element bits stand on scrolled 250 px down, with a mouse pointer brought onto the page, or the README's request held open, for a bit whose `ready()` wants one), then played in capture mode with the stage's clock stepped 0.2 s at a time, and required to end inside 120 stage seconds. Before and after: every element's tag, id, class and style, `<main>`'s text, `<html>`'s attributes and every scroll position; storage byte-identical and no cookie; focus never moved, sampled every step; the theme's flashes counted per second of stage time against WCAG 2.3.1; the stage's layer aria-hidden, without pointer events and with nothing focusable in it, and nothing added to the document outside it; no console error, and none of the stage's "pals: ..." warnings for an exception it swallowed or a clip a bit lacks. Then Escape on the three longest bits and a pointerdown on an empty spot for a fourth, each gone within a stage second with the page put back. 696 assertions on 2026-10-17, 42 bits, 29 minutes: every bit is a fresh page view, the stage loads six seconds after the model, and swiftshader draws every step. | What a bit looks like; the director choosing one unasked, or a `cue` firing on its own. The 404 page, which has no Archie on it. A bit whose moment it cannot make is reported as skipped, not passed. |
 
 Between them, 4,377 assertions on 2026-09-25 (4,368 passed, 9 failed, all 26 harnesses ran), from a real run
 rather than by adding up the figures above. The number only matters in one direction; see the floors below.

@@ -58,12 +58,13 @@ export const BITS = {
       s.add(lamp.target);
       // and the light falling on him, a warm haze from the diffuser
       const sx = cx - 1.45 * P + 0.22 * P, haze = s.svg.el("polygon", {opacity: 0, fill: "url(#apology-haze)",
-        points: [[sx, floor - 1.78 * P], [cx + 0.75 * P, floor - 2.2 * P], [cx + 0.75 * P, floor - 0.45 * P],
+        points: [[sx, floor - 1.78 * P], [cx + 0.4 * P, floor - 2.1 * P], [cx + 0.4 * P, floor - 0.55 * P],
                  [sx, floor - 1.12 * P]].map(q => q.join(",")).join(" ")});
       const defs = s.svg.el("defs", {});
       const grad = s.svg.el("linearGradient", {id: "apology-haze", x1: 0, y1: 0, x2: 1, y2: 0}, defs);
-      s.svg.el("stop", {offset: 0, "stop-color": "#ffe6a8", "stop-opacity": 0.55}, grad);
-      s.svg.el("stop", {offset: 1, "stop-color": "#ffe6a8", "stop-opacity": 0.08}, grad);
+      s.svg.el("stop", {offset: 0, "stop-color": "#ffe6a8", "stop-opacity": 0.5}, grad);
+      s.svg.el("stop", {offset: 0.7, "stop-color": "#ffe6a8", "stop-opacity": 0.14}, grad);
+      s.svg.el("stop", {offset: 1, "stop-color": "#ffe6a8", "stop-opacity": 0}, grad);
       const card = (prop, scale, backwards) => {
         const g = new T.Group();
         g.add(prop.root);
@@ -200,7 +201,7 @@ export const BITS = {
   // Everyone points at everyone else. A little replay pops up beside them -- three figures in a huddle, a high
   // five, a nudge, the cone going over -- and Archie walks over and closes it. The cone and the replay are
   // props; the replay's picture is drawn on a canvas. Clips: blame_button.py.
-  ({
+  Object.assign({packs: {archie: "pals/bits/blame-button@archie.glb", zip: null, brick: "pals/bits/blame-button@brick.glb"}}, ({
     cast: ["archie", "zip", "brick"],
     pages: ["home"],
     ppm: 58,
@@ -329,7 +330,7 @@ export const BITS = {
       if (!s.alive) return;
       await s.after(0.3);
     },
-  }),
+  })),
 
   "bootleg-archie":
   // Bootleg Archie. Archie stands, dignified. Zip sneaks up beside him and clicks a remote at the Atlas Core in
@@ -730,23 +731,17 @@ export const BITS = {
       const tip = () => { if (!line1) return Z.pageAt("grip_R"); line1.getWorldPosition(v); return {x: v.x, y: -v.y}; };
 
       // ---- the line and the magnet, drawn over the page ----
-      const NS = "http://www.w3.org/2000/svg";
-      const el = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const [k, a] of Object.entries(attrs)) e.setAttribute(k, a); return e; };
-      const svg = s.svg.path({stroke: "none", width: 0}).el.ownerSVGElement;
-      const line = el("path", {fill: "none", stroke: "#2b2a29", "stroke-width": 1.6, "stroke-linecap": "round", opacity: 0});
+      const line = s.svg.el("path", {fill: "none", stroke: "#2b2a29", "stroke-width": 1.6, "stroke-linecap": "round", opacity: 0});
       const m = 0.11 * ppm;                                  // the magnet's half-width
-      const magnet = el("g", {opacity: 0});
+      const magnet = s.svg.el("g", {opacity: 0});
       // drawn with the top of its bend at its origin, where the line ties on, and its poles POLE below
       const POLE = m * 2.85;
-      magnet.append(
-        el("path", {d: `M ${-m} ${m * 2.3} L ${-m} ${m} A ${m} ${m} 0 0 1 ${m} ${m} L ${m} ${m * 2.3}`, fill: "none",
-                    stroke: "#d8322a", "stroke-width": m * 0.62, "stroke-linecap": "butt"}),
-        el("rect", {x: -m * 1.31, y: m * 2.1, width: m * 0.62, height: m * 0.75, fill: "#c9ccd2"}),
-        el("rect", {x: m * 0.69, y: m * 2.1, width: m * 0.62, height: m * 0.75, fill: "#c9ccd2"}),
-        el("path", {d: `M ${-m * 0.55} ${m * 0.38} q ${m * 0.55} ${-m * 0.3} ${m * 1.1} 0`, fill: "none", stroke: "#fff",
-                    "stroke-width": 1.2, opacity: 0.6}));
-      svg.append(line, magnet);
-      s.page.undo(() => { line.remove(); magnet.remove(); });
+      s.svg.el("path", {d: `M ${-m} ${m * 2.3} L ${-m} ${m} A ${m} ${m} 0 0 1 ${m} ${m} L ${m} ${m * 2.3}`, fill: "none",
+                        stroke: "#d8322a", "stroke-width": m * 0.62, "stroke-linecap": "butt"}, magnet);
+      s.svg.el("rect", {x: -m * 1.31, y: m * 2.1, width: m * 0.62, height: m * 0.75, fill: "#c9ccd2"}, magnet);
+      s.svg.el("rect", {x: m * 0.69, y: m * 2.1, width: m * 0.62, height: m * 0.75, fill: "#c9ccd2"}, magnet);
+      s.svg.el("path", {d: `M ${-m * 0.55} ${m * 0.38} q ${m * 0.55} ${-m * 0.3} ${m * 1.1} 0`, fill: "none", stroke: "#fff",
+                        "stroke-width": 1.2, opacity: 0.6}, magnet);
       // the magnet: where its bend is (the line ties on there), the way its poles point (radians, 0 = down)
       const mag = {x: 0, y: 0, ang: 0, slack: 0.3, line: false};
       let stuck = null, onHorn = false;
@@ -1552,6 +1547,189 @@ export const BITS = {
     },
   }),
 
+  "fake-settings-panel":
+  // The fake settings panel. Brick stands guard under the theme switch (the Settings button on home and the
+  // catalogue, the theme chip elsewhere), arms folded. Archie climbs up from behind the page, sizes up the switch
+  // and Brick, and produces a remote control: aimed. Brick holds out his hand. Archie hands it over, and Brick
+  // folds his arms again. Archie backs off, sulking -- and Zip pops up and produces another remote. The standoff:
+  // Zip aims it, Brick stares, a tumbleweed rolls by, Archie begs him not to. Brick's hand comes out again; Zip
+  // hands it over too. The two of them point up at the switch for the reader (you do it), and Brick raises a
+  // brow. The switch is never pressed and the page never changes: the remotes are pictures. Clips:
+  // fake_settings_panel.py (the layout and timings below are its constants).
+  ({
+    cast: ["archie", "zip", "brick"],
+    pages: ["home", "topic", "catalog"],
+    // The switch, the floor under it (the spotlight's top edge on home, else the header's bottom) and the
+    // size that puts the switch SW_Z (3.3 m) above that floor, clear over Brick's head.
+    layout(s) {
+      const vis = q => { const r = s.page.rect(q); return r && r.width > 0 && r.height > 0 ? r : null; };
+      const sw = vis("#setbtn") || vis("#theme");
+      if (!sw) return null;
+      const hero = vis("article.hero"), head = vis("header");
+      const below = r => r && r.top > sw.bottom + 50 ? r.top : null;
+      const floor = below(hero) || (head && head.bottom > sw.bottom + 50 ? head.bottom : null);
+      if (!floor) return null;
+      const ppm = (floor - (sw.top + sw.height / 2)) / 3.3;
+      return ppm >= 28 && ppm <= 60 ? {sw, floor, ppm, cx: sw.left + sw.width / 2} : null;
+    },
+    ready(s) {
+      const L = this.layout(s);
+      if (!L) return false;
+      return L.sw.top > 0 && L.floor < innerHeight - 4 && L.cx + 1.4 * L.ppm < document.documentElement.clientWidth &&
+        L.cx - 3.6 * L.ppm > 0;
+    },
+    async play(s) {
+      const {archie: A, zip: Z, brick: B} = s;
+      const L = this.layout(s);
+      if (!L) return;
+      const {floor, ppm: P, cx} = L;
+      const AX = -2.1, ABACK = -3.0, ZX = -1.85, REMOTE_S = 4.5, PRODUCE_AT = 0.35, HANDOFF_AT = 1.55;
+      const TAKE_HIDE = 1.0, HOP_RISE = 0.45;                      // ... and _moves.HOP_RISE
+      for (const a of [A, Z, B]) a.ppm = P;
+      const [ra, rz] = await Promise.all([s.prop("remote"), s.prop("remote-zip")]);
+      if (!s.alive) return;
+      const n = piece => `fake-settings-panel/${piece}`;
+      // a remote into his left hand, out of sight until he produces it; and, handed over, into Brick's right,
+      // kept just where it is
+      const inHand = (r, who) => { r.hold(who, "grip_L"); r.root.scale.setScalar(REMOTE_S); r.root.visible = false; };
+      const toBrick = r => {
+        const b = B.bone("grip_R");
+        B.model.updateMatrixWorld(true);
+        r.root.parent.updateMatrixWorld(true);
+        b.attach(r.root);
+      };
+      // up from behind the page's edge, and back down
+      const rise = async (a, x) => {
+        a.clipBelow(floor);
+        a.at(x, floor + 3 * P).show(true);
+        const hop = a.perform(n("hop-up"), {fade: 0});
+        await s.tween(HOP_RISE, u => a.at(x, floor + 3 * P * (1 - u)), u => 1 - (1 - u) * (1 - u));
+        if (!s.alive) return;
+        a.clipBelow(null);
+        await hop;
+      };
+      const sink = async a => {
+        a.clipBelow(floor);
+        const x = a.x;
+        await s.tween(0.4, u => a.at(x, floor + 3 * P * u), u => u * u);
+        a.show(false);
+      };
+      // the hand-over: Brick's hand out from under his folded arms, the giver's into it, and back under
+      const confiscate = async (who, r) => {
+        await B.perform(n("palm-out"));
+        if (!s.alive) return;
+        B.play(n("palm-hold"), {loop: true});
+        await s.after(0.7);
+        if (!s.alive) return;
+        const giving = who.perform(n("hand-over"));
+        await s.until(() => who.time() >= HANDOFF_AT || !s.alive);
+        if (!s.alive) return;
+        toBrick(r);
+        await s.after(0.15);
+        const take = B.perform(n("take"));
+        s.after(TAKE_HIDE).then(() => { r.root.visible = false; });   // put away
+        await giving;
+        if (!s.alive) return;
+        who.play("idle", {loop: true});
+        await take;
+        if (!s.alive) return;
+        B.play("guard-hold", {loop: true});
+      };
+      // a tumbleweed across the foreground
+      const tumbleweed = async () => {
+        const g = s.svg.el("g", {opacity: 0}), r = 0.32 * P;
+        for (const [rx, ry, a] of [[1, 0.8, 0], [0.85, 1, 40], [0.95, 0.7, 100], [0.6, 0.75, 150]]) {
+          s.svg.el("ellipse", {cx: 0, cy: 0, rx: r * rx, ry: r * ry, transform: `rotate(${a})`, fill: "none",
+                               stroke: "#a5773f", "stroke-width": 1.6}, g);
+        }
+        for (let i = 0; i < 6; i++) {
+          const a = i * 1.05, b = a + 2.2;
+          s.svg.el("line", {x1: r * 0.8 * Math.cos(a), y1: r * 0.8 * Math.sin(a), x2: r * 0.7 * Math.cos(b),
+                            y2: r * 0.7 * Math.sin(b), stroke: "#8a6232", "stroke-width": 1.2}, g);
+        }
+        const x0 = cx - 4.6 * P, x1 = cx + 1.6 * P;
+        await s.tween(2.4, u => {
+          const x = x0 + (x1 - x0) * u, hop = Math.abs(Math.sin(u * Math.PI * 3)) * 0.35 * P;
+          g.setAttribute("transform", `translate(${x},${floor - r - hop}) rotate(${(x - x0) / r * 57.3})`);
+          g.setAttribute("opacity", Math.min(1, u * 6, (1 - u) * 6));
+        }, u => u);
+        g.remove();
+      };
+
+      // ---- Brick on guard; Archie up, sizing it up ----
+      B.at(cx, floor).show(true);
+      B.play("guard-hold", {loop: true});
+      await s.after(0.8);
+      if (!s.alive) return;
+      await rise(A, cx + AX * P);
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await A.perform(n("case"));
+      if (!s.alive) return;
+
+      // ---- the remote ----
+      inHand(ra, A);
+      const draw = A.perform(n("produce"));
+      await s.after(PRODUCE_AT);
+      ra.root.visible = true;
+      await draw;
+      if (!s.alive) return;
+      A.play(n("aim"), {loop: true});
+      A.say("Heh.", 1.0);
+      await s.after(0.6);
+      if (!s.alive) return;
+      await confiscate(A, ra);
+      if (!s.alive) return;
+
+      // ---- Archie backs off; Zip comes up with another ----
+      await A.perform(n("sulk"));
+      if (!s.alive) return;
+      await A.walkTo(cx + ABACK * P, {speed: 0.8});
+      if (!s.alive) return;
+      await A.face(0);
+      A.play("idle", {loop: true});
+      await rise(Z, cx + ZX * P);
+      if (!s.alive) return;
+      Z.play("idle", {loop: true});
+      Z.say("Psst!", 1.0);
+      await Z.perform(n("psst"));
+      if (!s.alive) return;
+      inHand(rz, Z);
+      const draw2 = Z.perform(n("produce"));
+      await s.after(PRODUCE_AT);
+      rz.root.visible = true;
+      await draw2;
+      if (!s.alive) return;
+      Z.play(n("aim"), {loop: true});
+
+      // ---- the standoff ----
+      B.play(n("stare"), {loop: true, fade: 0.4});
+      const tw = tumbleweed();
+      await s.after(1.6);
+      if (!s.alive) return;
+      A.say("Don't!", 1.0);
+      await A.perform(n("dont"));
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await tw;
+      if (!s.alive) return;
+      await confiscate(Z, rz);
+      if (!s.alive) return;
+
+      // ---- you do it; Brick, at the reader; and down they go ----
+      A.perform(n("please")).then(() => s.alive && A.play("idle", {loop: true}));
+      await s.after(0.2);
+      Z.perform(n("please")).then(() => s.alive && Z.play("idle", {loop: true}));
+      await s.after(1.2);
+      if (!s.alive) return;
+      await B.perform(n("brow"));
+      if (!s.alive) return;
+      B.play("guard-hold", {loop: true});
+      await Promise.all([sink(A), s.after(0.15).then(() => s.alive && sink(Z))]);
+      await s.after(0.6);
+    },
+  }),
+
   "forbidden-button":
   // The forbidden button. Zip runs on and a pedestal rises out of the floor beside him: a big red button, DO NOT
   // PRESS (a prop: nothing real is behind it). He lunges for it; Archie arrives and holds him off by the dome,
@@ -2153,7 +2331,7 @@ export const BITS = {
   // edge of the window. Zip joins in. Brick takes hold and gives it one gentle tug -- and Archie is yanked off
   // his feet from behind: the cable is his own tether, from the port low on his back, along the floor under
   // their feet and round. The cable and tether are drawn lines over the page. Clips: invisible_tug_of_war.py.
-  ({
+  Object.assign({packs: {archie: "pals/bits/invisible-tug-of-war@archie.glb", zip: null, brick: "pals/bits/invisible-tug-of-war@brick.glb"}}, ({
     cast: ["archie", "zip", "brick"],
     pages: ["home"],
     ppm: 58,
@@ -2260,7 +2438,7 @@ export const BITS = {
       if (!s.alive) return;
       draw();
     },
-  }),
+  })),
 
   "leveling-dispute":
   // The leveling dispute. Archie pops up onto the README viewer's top edge, lays a spirit level along it and
@@ -2511,7 +2689,7 @@ export const BITS = {
   // Brick wanders over, looks at the bar, and lets off its hand brake: it shoots forward, filling up as it
   // rolls, and bowls Archie over. The bar is a prop over the page: it never reports on the real wait.
   // Clips: loading_bar_tow_truck.py.
-  ({
+  Object.assign({packs: {archie: "pals/bits/loading-bar-tow-truck@archie.glb", zip: null, brick: "pals/bits/loading-bar-tow-truck@brick.glb"}}, ({
     cast: ["archie", "zip", "brick"],
     pages: ["repo"],
     ppm: 56,
@@ -2627,7 +2805,7 @@ export const BITS = {
       if (!s.alive) return;
       drawRope();
     },
-  }),
+  })),
 
   "mic-drop":
   // The mic drop. On top of the spotlight, Archie presents its project into a tiny microphone (a FRAGILE
@@ -3835,7 +4013,7 @@ export const BITS = {
   // light. Zip swings the light round onto himself and starts dancing; Archie wrestles it back. Then Brick
   // switches on a third spotlight, twice the size, and dances them both off the stage. The lights are props
   // over the page; the project's own card is never touched. Clips: stolen_spotlight.py.
-  ({
+  Object.assign({packs: {archie: "pals/bits/stolen-spotlight@archie.glb", zip: "pals/bits/stolen-spotlight@zip.glb", brick: null}}, ({
     cast: ["archie", "zip", "brick"],
     pages: ["home"],
     ppm: 58,
@@ -3976,7 +4154,7 @@ export const BITS = {
       if (!s.alive) return;
       steer();
     },
-  }),
+  })),
 
   "the-escapee":
   // The escapee. Archie opens the Atlas Core on the page's own world, and one tiny hologram bot on its front
@@ -4525,29 +4703,26 @@ export const BITS = {
       thump(1);
 
       // ---- the inspection: his light moving about inside, leaking out ----
-      const el = (tag, attrs) => { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; };
-      const svg = s.svg.path({stroke: "none", width: 0}).el.ownerSVGElement;
-      const g = el("g", {});
+      // (drawn in this order, back to front: the fan of light on the floor, the seams, the light in them, the
+      // empty screw holes and the light through them)
+      const g = s.svg.el("g");
+      const el = (tag, attrs, parent = g) => s.svg.el(tag, attrs, parent);
       const defs = el("defs", {});
-      const grad = el("linearGradient", {id: "zip-fan", x1: "0", y1: "0", x2: "0", y2: "1"});
-      grad.append(el("stop", {offset: "0", "stop-color": "#ffd23a", "stop-opacity": "0.9"}),
-                  el("stop", {offset: "1", "stop-color": "#ffd23a", "stop-opacity": "0"}));
-      const blur = el("filter", {id: "zip-glow", x: "-50%", y: "-50%", width: "200%", height: "200%"});
-      blur.append(el("feGaussianBlur", {stdDeviation: "2.5"}));
-      defs.append(grad, blur);
+      const grad = el("linearGradient", {id: "zip-fan", x1: "0", y1: "0", x2: "0", y2: "1"}, defs);
+      el("stop", {offset: "0", "stop-color": "#ffd23a", "stop-opacity": "0.9"}, grad);
+      el("stop", {offset: "1", "stop-color": "#ffd23a", "stop-opacity": "0"}, grad);
+      const blur = el("filter", {id: "zip-glow", x: "-50%", y: "-50%", width: "200%", height: "200%"}, defs);
+      el("feGaussianBlur", {stdDeviation: "2.5"}, blur);
+      const fan = el("polygon", {fill: "url(#zip-fan)", opacity: 0});
       // the panel's seams, dark (so the light in them reads on a light page as well as a dark one), and the
       // light in each
       const seam = [[left, top - 1.5, pw, 3], [left, bottom - 1.5, pw, 3], [left - 1.5, top, 3, ph], [right - 1.5, top, 3, ph]];
-      const seams = seam.map(([x, y, w, h]) => el("rect", {x: x - 0.5, y: y - 0.5, width: w + 1, height: h + 1, fill: "#15161b", opacity: 0.8, rx: 2}));
+      seam.forEach(([x, y, w, h]) => el("rect", {x: x - 0.5, y: y - 0.5, width: w + 1, height: h + 1, fill: "#15161b", opacity: 0.8, rx: 2}));
       const edges = seam.map(([x, y, w, h]) => el("rect", {x: x - 1, y: y - 1, width: w + 2, height: h + 2, fill: "#ffd84a",
                                                        opacity: 0, rx: 2, filter: "url(#zip-glow)"}));
-      const holes = [[right - 0.06 * PS, top + 0.06 * PS], [left + 0.06 * PS, bottom - 0.06 * PS], [right - 0.06 * PS, bottom - 0.06 * PS]]
-        .map(([cx, cy]) => el("circle", {cx, cy, r: 5, fill: "#ffe66b", opacity: 0, filter: "url(#zip-glow)"}));
-      const dark = holes.map(h => el("circle", {cx: h.getAttribute("cx"), cy: h.getAttribute("cy"), r: 3.8, fill: "#15161b", opacity: 0.85}));
-      const fan = el("polygon", {fill: "url(#zip-fan)", opacity: 0});
-      g.append(defs, fan, ...seams, ...edges, ...dark, ...holes);
-      svg.appendChild(g);
-      s.page.undo(() => g.remove());
+      const spots = [[right - 0.06 * PS, top + 0.06 * PS], [left + 0.06 * PS, bottom - 0.06 * PS], [right - 0.06 * PS, bottom - 0.06 * PS]];
+      spots.forEach(([cx, cy]) => el("circle", {cx, cy, r: 3.8, fill: "#15161b", opacity: 0.85}));
+      const holes = spots.map(([cx, cy]) => el("circle", {cx, cy, r: 5, fill: "#ffe66b", opacity: 0, filter: "url(#zip-glow)"}));
       const t0 = s.clock();
       let on = 1;
       const light = s.tick(() => {
@@ -4934,7 +5109,7 @@ export const BITS = {
   // harness built for a car comes down out of the sky; they rig the button into it and up it goes, Archie
   // waving it away like a banksman. The button, cones and harness are props: none of the page's own buttons is
   // touched. Clips: unnecessary_crew.py.
-  ({
+  Object.assign({packs: {archie: "pals/bits/unnecessary-crew@archie.glb", zip: null, brick: null}}, ({
     cast: ["archie", "zip", "brick"],
     pages: ["home"],
     ppm: 58,
@@ -5054,7 +5229,7 @@ export const BITS = {
       if (!s.alive) return;
       await s.after(0.4);
     },
-  }),
+  })),
 
   "victory-dance-theft":
   // The victory dance theft. Along the bottom of the window: Archie, "Watch this!", starts his big dance. Brick,
