@@ -44,9 +44,17 @@ lib = importlib.import_module(f"{pal}_base")
 import common  # noqa: E402
 
 body = common.Body(skel, **getattr(lib, "BODY", {}))
+body.lib = lib
 CLIPS = lib.clips(body)
-for extra in ("bits_archie",):
-    pass
+# A bit's pieces, by "<bit>/<piece>": load that bit's module and add its clips for this pal.
+import bits as _bits  # noqa: E402
+_all = None
+for n in names:
+    if "/" in n and n not in CLIPS:
+        _all = _all or _bits.all_bits()
+        mod = _all[n.split("/")[0]]
+        for c in mod.clips({pal: body}).get(pal, []):
+            CLIPS[c.name] = c
 
 H = {"archie": 2.4, "zip": 2.0, "brick": 2.8}.get(pal, 2.4)
 focus = Vector((0, 0, H * 0.5))
@@ -69,13 +77,15 @@ for name in names:
     if "--video" in ARGS:
         sc = bpy.context.scene
         sc.render.fps = c.fps
-        sc.render.image_settings.file_format = "FFMPEG"
+        if hasattr(sc.render.image_settings, "media_type"):
+    sc.render.image_settings.media_type = "VIDEO"         # Blender 5: video is a media type, then FFMPEG
+sc.render.image_settings.file_format = "FFMPEG"
         sc.render.ffmpeg.format = "MPEG4"
         sc.render.ffmpeg.codec = "H264"
         sc.render.ffmpeg.constant_rate_factor = "MEDIUM"
         anim.bake(c, skel, face)
         sc.frame_start, sc.frame_end = 1, c.frames
-        sc.render.filepath = str(out / f"{name}.mp4")
+        sc.render.filepath = str(out / f"{name.replace('/', '__')}.mp4")
         bpy.ops.render.render(animation=True)
         print("VIDEO", out / f"{name}.mp4")
         continue
@@ -87,7 +97,7 @@ for name in names:
     files = []
     for t in times:
         anim.apply(c, skel, t, face)
-        f = out / f"{name}-{t:06.2f}.png"
+        f = out / f"{name.replace('/', '__')}-{t:06.2f}.png"
         studio.render(f)
         files.append(str(f))
     print("STRIP", name, "|".join(files))

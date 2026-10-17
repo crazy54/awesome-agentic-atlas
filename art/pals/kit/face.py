@@ -163,7 +163,7 @@ def brow(prefix, side, surf: geo.Surface, pts2d, half_h, half_d, mat, bones, off
         for vg, w in zip(vgs, (w_in, w_mid, w_out)):
             if w > 1e-4:
                 vg.add([v.index], w, "REPLACE")
-    ob["mesh"] = "face"
+    ob["mesh"] = "body"                 # bent by its bones, so it needs no shape keys: the body mesh
     return ob
 
 
@@ -186,6 +186,23 @@ def _outline(P, u):
     t_bot = max(lo + th * 0.5, up - P["teeth"] * open_ - th * 0.3) if P["teeth"] > 0 else up - th * 0.4
     lt_top = min(up - th * 0.5, lo + P["low_teeth"] * open_ + th * 0.3) if P["low_teeth"] > 0 else lo + th * 0.4
     return x, up, lo, t_bot, lt_top
+
+
+def _vertex_coloured(name, like):
+    """A material whose base colour is the mesh's vertex colour "Col", otherwise like `like`."""
+    import bpy
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    b = nt.nodes["Principled BSDF"]
+    src = like.node_tree.nodes["Principled BSDF"]
+    for k in ("Roughness", "Metallic", "Specular IOR Level", "Coat Weight", "Coat Roughness"):
+        b.inputs[k].default_value = src.inputs[k].default_value
+    vc = nt.nodes.new("ShaderNodeVertexColor")
+    vc.layer_name = "Col"
+    nt.links.new(vc.outputs["Color"], b.inputs["Base Color"])
+    m.use_backface_culling = True
+    return m
 
 
 def mouth(name, surf: geo.Surface, centre2d, shapes: dict, mats, cols=28, rows=5, trows=2, offset=0.0025,
@@ -242,8 +259,18 @@ def mouth(name, surf: geo.Surface, centre2d, shapes: dict, mats, cols=28, rows=5
     for f in bm.faces:
         if f.normal.y > 0:
             f.normal_flip()
-    ob = mesh_object(name, bm, inside, smooth_=True)
-    ob.data.materials.append(teeth)
+    ob = mesh_object(name, bm, None, smooth_=True)
+    # One material, the inside and the teeth told apart by vertex colour: a single primitive, so three.js
+    # loads the face as one mesh, named as the node is, and a clip file's `weights` tracks (which name that
+    # node) bind to it (see kit/proxy.py). The teeth lose only a little gloss.
+    me = ob.data
+    col = me.color_attributes.new(name="Col", type="FLOAT_COLOR", domain="CORNER")
+    tones = [tuple(m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value) for m in (inside, teeth)]
+    for poly in me.polygons:
+        for li in poly.loop_indices:
+            col.data[li].color = tones[poly.material_index]
+        poly.material_index = 0
+    me.materials.append(_vertex_coloured(name + "-mat", inside))
     ob.shape_key_add(name="rest", from_mix=False)
     for key, P in shapes.items():
         if key == "rest":

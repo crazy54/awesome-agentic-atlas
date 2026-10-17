@@ -165,7 +165,8 @@
     return r && Array.isArray(r.cues) ? r.cues : [];
   };
   window.archie = {
-    list: () => [...DANCES.map(d => "dance:" + d), ...CALM_ACTS, ...PRANKS.map(p => "prank:" + p), "chatter",
+    list: () => [...DANCES.map(d => "dance:" + d), ...CALM_ACTS, ...PRANKS.map(p => "prank:" + p),
+                 ...(live && live.bits ? live.bits().map(b => "bit:" + b) : []), "chatter",
                  "poke", ...[...new Set([...RIG_CUES, ...rigCues()])].map(c => "cue:" + c), "quiet"],
     can: cmd => live ? live.can(String(cmd)) :
       !calm.matches ? "reduced motion is on, so Archie is a poster" :
@@ -329,6 +330,38 @@
     };
     // Only the clip now playing: one cut off and fading out can still reach its end, and would end the next.
     mixer.addEventListener("finished", e => { if (e.action !== current) return; const d = done; done = null; d && d(); });
+    // ---- The stage: the pals' bits (archie-stage.js, archie-bits.js) ------------------------------------
+    // Loaded in idle time once he is up, so the admin panel can list the bits; the models a bit needs are
+    // fetched only when it is about to play. A bit takes him off the masthead (or the dock) for its length,
+    // the way a visit does, and gives him back to the idle he left.
+    let stageMods = null;
+    const staged = () => (stageMods ||= Promise.all([import(`./archie-stage.js${V}`), import(`./archie-bits.js${V}`)])
+      .then(([S, B]) => {
+        const st = S.stage({T, V, base: new URL("./", import.meta.url)});
+        window.archieStage = {status: st.status, stop: st.stop, capture: st.capture, step: st.step};
+        return {S, B, st};
+      }));
+    let bitsReady = null;
+    (window.requestIdleCallback || setTimeout)(() => staged().then(m => { bitsReady = m; })
+      .catch(e => console.warn("Archie's stage is closed:", e)));
+    let bitting = false;
+    const bitNames = () => (bitsReady ? Object.keys(bitsReady.B.BITS) : []);
+    const playBit = async name => {
+      const m = bitsReady || await staged();
+      const b = m.B.BITS[name];
+      if (!b || !m.st.can(b)) return;
+      bitting = true;
+      last = "bit:" + name;
+      const was = actor.visible;
+      actor.visible = false;                         // he is on the stage now
+      try {
+        await m.st.run({name, ...b});
+      } finally {
+        actor.visible = was;
+        bitting = false;
+        play("idle", 1);
+      }
+    };
     const perform = async (name, reps = 1) => {
       if (!clip[name]) await dances;
       if (!clip[name]) name = "idle";
@@ -450,6 +483,7 @@
       if (kind === "dance") return act(name);
       if (kind === "prank") return !flag || prankable() ? prank(name) : undefined;
       if (kind === "tired") return !flag || tirable() ? tired(name) : undefined;
+      if (kind === "bit") return playBit(name);
       if (cmd === "show") {
         const pool = DANCES.filter(fits);
         return act((pool.length ? pool : DANCES)[Math.floor(Math.random() * (pool.length || DANCES.length))]);
@@ -462,12 +496,13 @@
     // left off the edge of the page), a prank or a try at getting rid of the reader (its prop would be left on
     // the page).
     const cut = () => {
-      if (done && mode === "home" && !walking && !pranking && !tiringNow) { const d = done; done = null; d(); }
+      if (done && mode === "home" && !walking && !pranking && !tiringNow && !bitting) { const d = done; done = null; d(); }
     };
     const direct = async () => {
       if (asked && (DANCES.includes(asked) || OTHERS.includes(asked))) orders.push({cmd: DANCES.includes(asked) ? "dance:" + asked : asked, flag: true});
       if (forced) orders.push({cmd: "prank:" + forced, flag: true});
       if (forcedTired) orders.push({cmd: "tired:" + forcedTired, flag: true});
+      if (asked && asked.startsWith("bit:")) orders.push({cmd: asked, flag: true});
       for (;;) {
         if (orders.length) { await obey(orders.shift()); continue; }
         if (!grooving()) {
@@ -935,6 +970,7 @@
     // state the director's own gates read; `run` queues acts for `direct()` and does the rest at once.
     const pokeTarget = () => host.querySelector(".archie-poke");
     live = {
+      bits: bitNames,
       status: () => ({act: last, queued: orders.map(o => o.cmd)}),
       can(cmd) {
         const [kind, name] = parse(cmd);
@@ -946,6 +982,12 @@
         if (kind === "friend") return !pals ? "his friends are still loading" : pals.busy ? "a friend is over already" :
           !seen || mode !== "home" ? "the masthead is off screen" : "";
         if (kind === "dance") return DANCES.includes(name) ? "" : "no such dance";
+        if (kind === "bit") {
+          if (!bitsReady) return "the stage is still loading";
+          const b = bitsReady.B.BITS[name];
+          return !b ? "no such bit" : bitting ? "a bit is on" :
+            !bitsReady.st.can(b) ? "not here, or not now (its page or its element)" : "";
+        }
         if (kind === "prank") return !PRANKS.includes(name) ? "no such prank" : pranking ? "a prank is on" :
           pals && pals.busy ? "a friend is over" : !seen ? "the masthead is off screen" : "";
         return CALM_ACTS.includes(cmd) ? "" : "no such command";

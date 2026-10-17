@@ -580,8 +580,16 @@ RIG = ("rig-show.js", "rig/rig.glb") + tuple(f"rig/wall-{w}.{ext}" for w in "abc
 # The admin panel is imported under the same query (see ADMIN_JS), so it is hashed in too: without it, an
 # edit to the panel alone would leave its URL, and a reader's cached copy, where they were.
 # The dances (`archie-dances.glb`) come under the same query too; without them he idles where he would dance.
-OPTIONAL = ("archie-friends.js", "archie-friends-data.js", "archie-admin.js", "archie-dances.glb") + RIG
+# So do the pals' stage and bits (`archie-stage.js`, `archie-bits.js`) and everything under `assets/pals/`
+# (Zip, Brick, the Atlas Core and its worlds, the props and each bit's clips): see PALS below.
+OPTIONAL = ("archie-friends.js", "archie-friends-data.js", "archie-admin.js", "archie-dances.glb",
+            "archie-stage.js", "archie-bits.js") + RIG
 VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb") + OPTIONAL
+
+
+# Every file under assets/pals/, by name, in a fixed order: the stage fetches them under the loader's query
+# as each bit needs them, and there are too many (a clip file per pal per bit) to list one by one.
+PALS = "pals"
 
 
 def mascot_version(files: tuple[str, ...] = VERSIONED) -> str:
@@ -591,6 +599,11 @@ def mascot_version(files: tuple[str, ...] = VERSIONED) -> str:
             continue
         b = (OUT / "assets" / f).read_bytes()
         h.update(b.replace(b"\r\n", b"\n") if f.endswith((".js", ".svg")) else b)
+    pals = OUT / "assets" / PALS
+    if files is VERSIONED and pals.is_dir():
+        for f in sorted(p for p in pals.rglob("*") if p.is_file() and not p.name.endswith(".raw.glb")):
+            h.update(f.relative_to(pals).as_posix().encode())
+            h.update(f.read_bytes())
     return h.hexdigest()[:10]
 
 

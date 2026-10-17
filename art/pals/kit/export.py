@@ -38,6 +38,7 @@ def glb(path, objs, animations=True, frame_step=1, image_quality=86, fps=30):
     bpy.ops.export_scene.gltf(
         filepath=str(path), export_format="GLB", use_selection=True, export_apply=False, export_yup=True,
         export_texcoords=True, export_normals=True, export_tangents=False, export_materials="EXPORT",
+        export_vertex_color="MATERIAL",
         export_image_format="WEBP", export_image_quality=image_quality, export_cameras=False, export_lights=False,
         export_extras=False, export_skins=True, export_def_bones=True, export_rest_position_armature=True,
         export_leaf_bone=False, export_morph=True, export_morph_normal=False, export_morph_tangent=False,

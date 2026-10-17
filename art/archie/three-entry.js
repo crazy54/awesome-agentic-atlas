@@ -17,7 +17,7 @@ export {
   PlaneGeometry, Points, BufferGeometry, BufferAttribute, PointLight,
   OrthographicCamera, AdditiveBlending, NormalBlending, Line, LineBasicMaterial, LineSegments, Quaternion,
   Matrix4, Euler, Box3, Object3D, MathUtils, AgXToneMapping, NeutralToneMapping, AnimationClip, Raycaster,
-  Vector2, SphereGeometry, TorusGeometry, CanvasTexture, Sprite, SpriteMaterial, LoopPingPong,
+  Vector2, SphereGeometry, TorusGeometry, CanvasTexture, Sprite, SpriteMaterial, LoopPingPong, Plane,
 } from "three";
 export { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 export { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
