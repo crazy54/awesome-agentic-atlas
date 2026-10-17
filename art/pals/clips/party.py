@@ -54,13 +54,13 @@ archie = pals["archie"]
 CLIPS = archie["body"].lib.clips(archie["body"])
 names = opt("--dances", ",".join(archie["body"].lib.DANCES)).split(",")
 
-focus = Vector((0.3, 0, 1.35))
+focus = Vector((0.25, 0, 1.3))
 studio.sheet_lights(focus, 1.6)
 fl = studio.floor(0.0)
 fl.is_shadow_catcher = False
 fl.data.materials.append(mat.principled("floor", "#77787c", rough=0.8))
 studio.settings(res=RES, samples=16, engine="EEVEE", view="Standard", exposure=-0.9)
-studio.camera("cam", focus, 8, 12.0, lens=50)
+studio.camera("cam", focus, 0, 11.5, lens=50)
 
 
 def clear(ob):
