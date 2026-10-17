@@ -175,6 +175,7 @@ export function stage(o) {
       if (aborted || waits[i].pred()) { const w = waits[i]; waits.splice(i, 1); w.res(); }
     }
     for (const a of Object.values(actors)) a.place();
+    for (const a of attachments) a.update();
     if (renderer) renderer.render(scene, camera);
   };
 
@@ -461,12 +462,12 @@ export function stage(o) {
     m.material = Array.isArray(m.material) ? m.material.map(swap) : swap(m.material);
   });
   let projection = null;
-  async function project(name) {
-    if (running) return null;
+  async function project(name, inBit = false) {
+    if (running && !inBit) return null;
     let g;
     try { g = await fetchGLB(`pals/worlds/${name}.glb`); }
-    catch { if (name === "home") return null; return project("home"); }
-    if (running) return null;
+    catch { if (name === "home") return null; return project("home", inBit); }
+    if (running && !inBit) return null;
     open();
     const root = new T.Group(), tilt = new T.Group();
     root.add(tilt);
@@ -477,6 +478,8 @@ export function stage(o) {
     const mixer = new T.AnimationMixer(g.scene);
     mixers.add(mixer);
     const clips = Object.fromEntries(g.animations.map(c => [c.name, c]));
+    // A world is shared by every projection of it (one GLB, cached), so a projection takes the scene for
+    // its length and hands it back.
     const play = (c, loop) => {
       if (!clips[c]) return;
       mixer.stopAllAction();
@@ -512,6 +515,7 @@ export function stage(o) {
     };
     const grow = tick(() => { if (!gone) k = 1 - Math.pow(1 - Math.min(1, (clock - born) / 0.5), 3); draw(); });
     const h = {
+      root, world: g.scene, play,
       // the Core's point on the page, the world's width there (CSS px), and the side of him it is held on
       // (+1 screen right); called every frame
       at(x, y, size, side = 1) { last = [x, y, size, side]; },
@@ -528,10 +532,40 @@ export function stage(o) {
         projection = null;
         if (!running) close();
       },
+      // straight onto the page at (x, y) and a width, with no beam: a world that has left the Core
+      free(x, y, size) { last = null; beam.remove(); root.position.set(x, -y, 0); root.scale.setScalar(size / 2); k = 1; },
     };
     projection = h;
     return h;
   }
+
+  // ---- tools for a bit: any of the pals' files, glow, things that ride on a pal --------------------------
+  const glb = path => fetchGLB(path);                 // assets-relative ("pals/core.glb"), cached
+  const attachments = new Set();
+  const av = new T.Vector3(), aq = new T.Quaternion(), mq = new T.Quaternion();
+  // Keep `obj` on `actor`'s `bone` every frame: at the bone (plus `offset`, metres, in the bone's own frame),
+  // and either turned with it, or `upright` (turned only as the pal faces). Returns its remover.
+  const attach = (obj, actor, bone, {offset = [0, 0, 0], upright = true} = {}) => {
+    const b = actor.bone(bone);
+    if (!b) return () => {};
+    if (obj.parent !== actor.model) actor.model.add(obj);
+    const off = new T.Vector3(...offset);
+    const a = {obj, update() {
+      b.updateWorldMatrix(true, false);
+      av.copy(off).applyMatrix4(b.matrixWorld);
+      actor.model.worldToLocal(av);
+      obj.position.copy(av);
+      if (upright) obj.quaternion.identity();
+      else {
+        b.getWorldQuaternion(aq);
+        actor.model.getWorldQuaternion(mq);
+        obj.quaternion.copy(mq.invert().multiply(aq));     // the bone's turn, in the model's own frame
+      }
+    }};
+    attachments.add(a);
+    a.update();
+    return () => attachments.delete(a);
+  };
 
   // ---- running a bit ---------------------------------------------------------------------------------
   const stop = () => { aborted = true; };
@@ -564,7 +598,10 @@ export function stage(o) {
         a.show(false);
         cast[n] = a;
       }
-      const s = {cast, ...cast, after, until, page, prop, svg, W: () => W, H: () => H, clock: () => clock,
+      const s = {cast, ...cast, after, until, page, prop, svg, glb, attach, holo: holoMats,
+                 project: name => project(name, true), add: o => scene.add(o),
+                 mixer: root => { const m = new T.AnimationMixer(root); mixers.add(m); return m; },
+                 W: () => W, H: () => H, clock: () => clock,
                  get alive() { return !aborted; }, tick,
                  ctx, scene, T};
       await bit.play(s);
@@ -577,6 +614,8 @@ export function stage(o) {
       }
       svg.clear();
       tickers.clear();
+      attachments.clear();
+      if (projection) { const pj = projection; projection = null; try { pj.root.removeFromParent(); } catch {} }
       removeEventListener("pointerdown", onClick, true);
       removeEventListener("keydown", onKey, true);
       document.removeEventListener("visibilitychange", onHide);

@@ -69,8 +69,13 @@ A staging file is one object expression in parentheses; the bit's name is the fi
 `.face(-1|0|1)`, `.play(clip, {loop})`, `.perform(clip)` (resolves at its end), `.say(text, secs)`,
 `.pageAt(bone)`, `.time()`, `.clipRight(x)`), `s.after(secs)`, `s.until(pred)`, `s.tick(fn)` (returns its
 remover), `s.page.rect(sel)`, `s.page.flicker(n)`, `s.page.undo(fn)`, `s.svg.path()`, `s.svg.door(box)`,
-`s.prop(name)` (a prop GLB from `pals/props/`: `.at(x, y)`, `.hold(pal, bone)`, `.play(clip)`), and
-`s.alive`. Positions are CSS pixels in the window, x across and y down; a pal's `y` is his floor.
+`s.prop(name)` (a prop GLB from `pals/props/`: `.at(x, y)`, `.hold(pal, bone)`, `.play(clip)`),
+`s.glb(path)` (any assets-relative GLB, cached: the Core is `pals/core.glb`), `s.holo(root)` (swap its
+`holo*` materials for additive glow), `s.attach(obj, pal, bone, {offset, upright})` (keep an object on a
+pal's bone every frame; returns its remover), `s.project(world)` (the Core's projection of a world, as in
+archie-core.js: `.at(x, y, width, side)` every frame, `.idle()`, `.play(clip)`, `.free(x, y, width)`,
+`.hide(secs)`), `s.add(obj)` (into the scene, page px units), `s.mixer(root)` (an AnimationMixer the stage
+updates), `s.T` (three.js), and `s.alive`. Positions are CSS pixels in the window, x across and y down; a pal's `y` is his floor.
 
 * After every `await`, `if (!s.alive) return;`. A click, Escape, Tab or a hidden tab ends the bit; the stage
   then puts the page back (anything registered with `s.page.undo`) and takes the cast away.
