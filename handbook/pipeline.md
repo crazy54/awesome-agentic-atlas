@@ -42,7 +42,8 @@ The module docstrings are the detailed documentation. Read the one at the top of
 | `10_parse_sources.py` | **Defines `SOURCES`**, the list of source lists. Parses every list except `orchestrators` (which goes through `01`/`04`). Fails on a section heading it cannot map to a topic | `cache/sources/*.md` | `cache/entries_all.json` | No; it says to run `pull_sources.py` first |
 | `11_fetch_all.py` | Runs 02's batching over every distinct repo | `cache/entries_all.json`, `cache/meta.json` | `cache/meta.json`, `cache/readmes/` | No |
 | `13_signals_all.py` | Releases and actions for every repo in one pass. The staleness rule is in `signals.py` | as above | `cache/releases.json`, `cache/actions.json` | No |
-| `14_classify_all.py` | The final record per listed item, of kind `repo`, `subpath` or `site` | everything above | `cache/records_all.json` | No |
+| `14_classify_all.py` | The final record per listed item, of kind `repo`, `subpath` or `site`. Leaves out every row whose repo is in the dead-repo ledger, so a repo GitHub no longer serves is on no surface | everything above; `state/dead-repos.json` | `cache/records_all.json` | No |
+| `dead_repos.py` | **Not a build stage**: run weekly by `dead-repos.yml`. Asks GitHub about every repo in `docs/data.json` and every repo already in the ledger, and records the ones that are gone: GraphQL `NOT_FOUND` and then REST 404, 451 or a 403 `block`, or `isDisabled`. Renamed and archived repos are alive. A repo that answers again leaves the ledger. Writes nothing if any request fails for a reason that is not about the repo, or if the scan would newly mark more than 10% of the atlas (at least 25) dead | `docs/data.json`, `state/dead-repos.json`; `gh api` | `state/dead-repos.json`; `$GITHUB_STEP_SUMMARY` | Yes; `--status` reads the ledger with no network, `--dry-run` scans and writes nothing |
 
 ## Screenshots and workbooks (weekly only)
 

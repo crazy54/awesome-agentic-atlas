@@ -1,0 +1,73 @@
+# Weekly: which listed repositories GitHub no longer serves, and a rebuild that leaves them out.
+#
+# A repo that was deleted, made private or disabled stays in its source list, and the build used to keep
+# publishing it -- a card with no picture, a detail page whose README never loads. `scripts/dead_repos.py`
+# asks GitHub about every repo the site lists and records the ones that are gone in
+# `state/dead-repos.json`; `14_classify_all.py` leaves every row in that ledger out of the build. A repo
+# that comes back is taken out of the ledger by the next scan and listed again.
+#
+# This job only scans and records. The rebuild is the daily build, dispatched at the end with `force`,
+# so there is one build in this repository and not a second, smaller one that could drift from it:
+# the dispatched run fetches, classifies (now without the dead rows), rebuilds the site and the Markdown
+# edition, runs the suite and publishes, exactly as every night.
+name: Weekly — dead repos
+
+on:
+  schedule:
+    # Saturdays, 09:30 UTC: clear of the daily build (11:12) and a day ahead of the weekly one, so
+    # Sunday's workbooks are built without the dead repos too.
+    - cron: "30 9 * * 6"
+  workflow_dispatch:
+
+permissions:
+  contents: write                # commit the ledger
+  actions: write                 # dispatch the rebuild
+
+# Shared with daily.yml and weekly.yml: all three push to the same branch, and the ledger commit must not
+# race a build's push.
+concurrency:
+  group: atlas-build
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Writes nothing if GitHub could not be asked properly (an outage, a rate limit, a bad token) or if
+      # the scan would bury implausibly much of the atlas at once; either way the step fails and the
+      # ledger is untouched. The report goes to the run's summary page.
+      - name: Ask GitHub about every listed repo
+        run: python scripts/dead_repos.py
+
+      - name: Commit the ledger
+        id: commit
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/dead-repos.json
+          if git diff --cached --quiet; then
+            echo "The ledger did not change."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Dead-repo scan $(date -u +%Y-%m-%d)"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Only when the ledger changed: a repo newly gone or one come back. The daily build is dispatched
+      # with `force` because its own gate rebuilds only when a source list moved, and a repo vanishing is
+      # not a list moving. `workflow_dispatch` is one of the two events GITHUB_TOKEN may trigger.
+      - name: Rebuild the site without them
+        if: steps.commit.outputs.changed == 'true'
+        run: gh workflow run daily.yml --ref "${GITHUB_REF_NAME}" -f force=true

@@ -18,6 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from buckets import bucket_map, bucket_order  # noqa: E402
 import signals as sig  # noqa: E402
+from dead_repos import dead_set  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
@@ -42,8 +43,14 @@ def main() -> None:
     rel = json.loads((CACHE / "releases.json").read_text(encoding="utf-8"))
     acts = json.loads((CACHE / "actions.json").read_text(encoding="utf-8"))
 
-    records = []
+    # Repos the weekly scan found gone from GitHub (scripts/dead_repos.py, state/dead-repos.json): left out
+    # of every surface, rather than published as a card with no picture and a page with no README.
+    dead = dead_set()
+    records, dropped = [], 0
     for r in rows:
+        if (r.get("nwo") or "").lower() in dead:
+            dropped += 1
+            continue
         bm = bucket_map(r["source"])
         rec = dict(r)
         rec["section"] = r["category"]
@@ -133,7 +140,7 @@ def main() -> None:
     out = CACHE / "records_all.json"
     out.write_text(json.dumps(records, indent=1, ensure_ascii=False), encoding="utf-8")
 
-    print(f"classified {len(records)} rows -> {out}\n")
+    print(f"classified {len(records)} rows -> {out}; left out {dropped} rows of {len(dead)} dead repos\n")
     print(f"{'source':13s} {'rows':>5s} {'stars>0':>7s} {'win Y/L':>9s} {'install':>7s} "
           f"{'shots':>5s}  buckets")
     for src in dict.fromkeys(r["source"] for r in records):
