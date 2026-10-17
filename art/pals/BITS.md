@@ -65,7 +65,7 @@ A staging file is one object expression in parentheses; the bit's name is the fi
 })
 ```
 
-`s` is the stage: `s.archie` / `s.zip` / `s.brick` (each `.at(x, y)`, `.show(on)`, `.walkTo(x, {speed})`,
+`s` is the stage: `s.archie` / `s.zip` / `s.brick` (each `.at(x, y)`, `.show(on)`, `.walkTo(x, {speed, clip, mps})` (`mps`: a clip's own ground speed, from its module),
 `.face(-1|0|1)`, `.play(clip, {loop})`, `.perform(clip)` (resolves at its end), `.say(text, secs)`,
 `.pageAt(bone)`, `.time()`, `.clipRight(x)`), `s.after(secs)`, `s.until(pred)`, `s.tick(fn)` (returns its
 remover), `s.page.rect(sel)`, `s.page.flicker(n)`, `s.page.undo(fn)`, `s.svg.path()`, `s.svg.door(box)`,

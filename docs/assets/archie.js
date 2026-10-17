@@ -214,6 +214,8 @@
     camera.updateMatrixWorld();
 
     // The pals' GLBs are meshopt-compressed (art/pals/kit/export.py); the decoder is in the bundle.
+    // Decoded off the main thread, in two workers: on a slow machine the page is still loading meanwhile.
+    if (T.MeshoptDecoder.useWorkers) T.MeshoptDecoder.useWorkers(2);
     const loader = new T.GLTFLoader().setMeshoptDecoder(T.MeshoptDecoder);
     const gltf = await loader.loadAsync(new URL(`archie.glb${V}`, import.meta.url).href);
     if (!allowed()) { started = false; return; }   // the reader resized or changed a setting meanwhile
@@ -310,9 +312,17 @@
     // ---- Clips ----------------------------------------------------------------------------------------
     const mixer = new T.AnimationMixer(gltf.scene);
     const clip = Object.fromEntries(gltf.animations.map(a => [a.name, a]));
+    // What he can do without for his first seconds -- the dances, the Atlas Core, the pals' stage -- waits
+    // until he is live and the page is idle: a slow machine is still finishing the page (and its poster is
+    // still dancing to the music) while the model loads, and these would only take the main thread from it.
+    let liveAt = null;
+    const isLive = new Promise(res => { liveAt = res; });
+    const later = (secs, fn) => isLive.then(() => new Promise(res => setTimeout(res, secs * 1000)))
+      .then(() => new Promise(res => (window.requestIdleCallback || setTimeout)(res, {timeout: 4000})))
+      .then(fn);
     // ---- The Atlas Core (archie-core.js): docked in his belly from the start, shown by the `core` act --
     let atlas = null, atlasUp = false;
-    Promise.all([import(`./archie-core.js${V}`), import(`./archie-stage.js${V}`)]).then(([C, S]) => {
+    later(4, () => Promise.all([import(`./archie-core.js${V}`), import(`./archie-stage.js${V}`)])).then(([C, S]) => {
       const cv = new T.Vector3();
       atlas = C.atlas({T, V, base: new URL("./", import.meta.url), loader, model: gltf.scene, where: () => S.where(),
         project: name => staged().then(m => m.st.project(name)),
@@ -329,7 +339,9 @@
     // (which is after the page's own load already). A dance asked for before they land waits for them, and
     // if they never land he idles instead. Their clips drive the same skeleton and face by name, so they
     // play on this model's mixer like its own.
-    const dances = loader.loadAsync(new URL(`archie-dances.glb${V}`, import.meta.url).href)
+    let dancesWanted = null;
+    const dances = Promise.race([later(2, () => 0), new Promise(res => { dancesWanted = res; })])
+      .then(() => loader.loadAsync(new URL(`archie-dances.glb${V}`, import.meta.url).href))
       .then(g => { for (const a of g.animations) clip[a.name] = a; })
       .catch(e => console.warn("Archie can't dance this time:", e));
     let current = null, done = null;
@@ -359,15 +371,31 @@
         return {S, B, st};
       }));
     let bitsReady = null;
-    (window.requestIdleCallback || setTimeout)(() => staged().then(m => { bitsReady = m; })
-      .catch(e => console.warn("Archie's stage is closed:", e)));
+    later(6, () => staged().then(m => { bitsReady = m; }))
+      .catch(e => console.warn("Archie's stage is closed:", e));
     let bitting = false;
     const bitNames = () => (bitsReady ? Object.keys(bitsReady.B.BITS) : []);
+    // Now and then, on its own: at most one bit every three minutes, the first no sooner than 45 seconds
+    // into the page; each at most once a page view; only one that can play where the reader is, now (its
+    // page, and its element on screen with room: `ready()`); never in Quiet mode, to music, during a prank
+    // or a friend's visit, and never with an `?archie=` flag on the page, which is a test asking for
+    // something else (`?archie=bit:<name>` plays that one).
+    const BIT_GAP = 180000, BIT_FIRST = 45000;
+    let lastBit = Date.now() - BIT_GAP + BIT_FIRST;
+    const playedBits = new Set();
+    const bitable = () => !asked && !talk.quiet && !music.on && !pranking && !bitting && !(pals && pals.busy) &&
+      !!bitsReady && Date.now() - lastBit >= BIT_GAP;
+    const pickBit = () => {
+      const pool = bitNames().filter(n => !playedBits.has(n) && bitsReady.st.can({name: n, ...bitsReady.B.BITS[n]}));
+      return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
+    };
     const playBit = async name => {
       const m = bitsReady || await staged();
       const b = m.B.BITS[name];
-      if (!b || !m.st.can(b)) return;
+      if (!b || !m.st.can({name, ...b})) return;
       bitting = true;
+      playedBits.add(name);
+      lastBit = Date.now();
       last = "bit:" + name;
       const was = actor.visible;
       actor.visible = false;                         // he is on the stage now
@@ -380,7 +408,7 @@
       }
     };
     const perform = async (name, reps = 1) => {
-      if (!clip[name]) await dances;
+      if (!clip[name]) { dancesWanted(); await dances; }
       if (!clip[name]) name = "idle";
       return new Promise(res => { play(name, reps); done = res; });
     };
@@ -538,6 +566,7 @@
         if (music.on && !grooving()) continue;
         if (tirable() && Math.random() < 0.3) { await tired(); continue; }
         if (prankable() && Math.random() < (payback() ? 0.6 : 0.3)) { await prank(); continue; }
+        if (seen && bitable() && Math.random() < 0.4) { const b = pickBit(); if (b) { await playBit(b); continue; } }
         // A dance half the time, and never the same act twice running, unless the reader asked for one or
         // the music did.
         if (grooving() && (heavy() || building())) { wish = null; await act(heavy() ? "headbang" : "the-drop"); continue; }
@@ -820,8 +849,24 @@
         timer = setTimeout(maybeVisit, 3000);       // mid-act, mid-scroll or too soon: ask again shortly
         return;
       }
+      // Instead of a visit, sometimes, a bit: the reader is down the page, where most bits happen.
+      if (bitable() && Math.random() < 0.5) {
+        const b = pickBit();
+        if (b) { bitVisit(b); return; }
+      }
       visit();
       run();
+    };
+    // A bit played from the visit's timer: it holds the idle the director is waiting in, as a visit does,
+    // and gives it back.
+    const bitVisit = async name => {
+      const held = done; done = null; idling = false;
+      try { await playBit(name); } finally {
+        done = held; idling = true;
+        lastVisit = Date.now();
+        run();
+        plan();
+      }
     };
     const onScroll = () => { scrolled = Date.now(); };
     addEventListener("scroll", onScroll, {passive: true});
@@ -971,6 +1016,7 @@
     // Said out loud, for `archie-dance.js`, which bounces the poster to the music only while there is no
     // model: `.mhmascot[data-live]`, and an `archie:live` event each way.
     slot.dataset.live = "";
+    liveAt();
     document.dispatchEvent(new CustomEvent("archie:live", {detail: {on: true}}));
     run();
     direct();

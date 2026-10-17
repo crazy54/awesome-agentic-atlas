@@ -38,8 +38,10 @@ const CSS = `
 // and the ground speed the clip was made for (metres a second), so its feet don't skate.
 export const CAST = {
   archie: {glb: "archie.glb", extra: ["archie-dances.glb"], height: 2.25, walk: "walk", speed: 0.6 / (0.62 * 0.8)},
-  zip: {glb: "pals/zip.glb", height: 1.75, walk: "walk", speed: 1.2},
-  brick: {glb: "pals/brick.glb", height: 2.75, walk: "walk", speed: 0.9},
+  // clips/zip_base.py: stride 0.46 m, stance 0.58, period 0.6 s (run 3.75, sneak 0.40, carry 0.86 m/s)
+  zip: {glb: "pals/zip.glb", height: 1.75, walk: "walk", speed: 0.46 / (0.58 * 0.6)},
+  // clips/brick_base.py: stride 0.75 m, stance 0.64, period 1.3 s (`carry` walks at the same speed)
+  brick: {glb: "pals/brick.glb", height: 2.75, walk: "walk", speed: 0.75 / (0.64 * 1.3)},
 };
 
 // Where the reader is, for a bit's `pages` and for the Atlas Core's world: the page family from the
@@ -242,14 +244,16 @@ export function stage(o) {
         waits.push({pred: () => aborted, res});
       });
     }
-    // Walk to x (CSS px) along the ground he is on, at the speed his walk clip was made for.
-    async walkTo(x, {speed = 1, clip} = {}) {
+    // Walk to x (CSS px) along the ground he is on, at the speed his walk clip was made for (times
+    // `speed`, which speeds the clip up too). Another clip -- a run, a sneak, a carry -- gives its own ground
+    // speed as `mps` (metres a second, from its clip module), so its feet don't skate either.
+    async walkTo(x, {speed = 1, clip, mps} = {}) {
       const dir = Math.sign(x - this.x);
       if (!dir) return;
       await this.face(dir);
       const c = clip || this.spec.walk;
       this.play(c, {loop: true, speed});
-      const v = this.spec.speed * speed;              // metres a second
+      const v = (mps || this.spec.speed) * speed;     // metres a second
       const tick = dt => { this.x += dir * v * this.ppm * dt; if (dir * (x - this.x) <= 0) this.x = x; };
       tickers.add(tick);
       await until(() => this.x === x);
