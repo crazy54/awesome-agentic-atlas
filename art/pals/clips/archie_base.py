@@ -1,5 +1,5 @@
-"""Archie's everyday clips: the twenty-two the homepage director already knows by name (art/archie/archie.py
-made the first set; docs/assets/archie.js plays them), re-made for his new skeleton, plus `moonwalk`.
+"""Archie's everyday clips: the twenty-two the homepage director knows by name (docs/assets/archie.js plays
+them; the first Archie's script made the first set), re-made for this skeleton, plus `moonwalk`.
 
     idle (4 s loop)  watch  sit  sleep  press  shrug  walk (one 0.8 s stride in place)  moonwalk (ditto)
     floss  take-the-l  default-dance  orange-justice  robot  electro-shuffle  hype  boogie-down

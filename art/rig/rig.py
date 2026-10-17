@@ -37,7 +37,7 @@ them it is 42 KB (12 KB gzipped) and GLTFLoader, finding no normal attribute, gi
 copy of its material (`flatShading = true`, same name). Faceted is the low-poly look these are meant to have.
 A page that swaps in its own lens material must set `flatShading: true` on it too, or the mesh lights black.
 
-Procedural rather than modelled by hand, for the same reason as `art/archie/archie.py`: a change to a
+Procedural rather than modelled by hand, for the same reason as the pals (`art/pals/`): a change to a
 fixture is a reviewable change to a number here, not a binary nobody can read.
 """
 from __future__ import annotations

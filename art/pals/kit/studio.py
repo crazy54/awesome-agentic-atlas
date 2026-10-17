@@ -98,7 +98,7 @@ def camera(name, focus, angle_deg, distance, height=0.0, lens=85, ortho=None, sh
 
 
 def site_camera():
-    """The homepage banner's camera (archie.js `start()` and art/archie/archie.py `stage()`): Blender's
+    """The homepage banner's camera (archie.js `start()`): Blender's
     (0.9, -6.2, 1.55) aimed at z 1.08, a 70 mm lens on a 36 mm sensor."""
     cam = bpy.data.cameras.new("site")
     cam.lens = 70
