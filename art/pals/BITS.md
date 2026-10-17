@@ -72,6 +72,7 @@ A staging file is one object expression in parentheses; the bit's name is the fi
   `.face(-1|0|1)` (or `.face(dir, radians)`), `.depth(z)` (who is drawn in front where two overlap: larger is
   nearer the reader), `.play(clip, {loop})`, `.perform(clip)` (resolves at its end), `.time()`,
   `.say(text, secs)`, `.pageAt(bone)` (`{x, y, z}`), `.headAt()`, `.handsAt()` (between his grips),
+  `.clipLeft(x)`,
   `.clipRight(x)` / `.clipBelow(y)` (hide him right of x, or below y: through a doorway, behind an edge;
   `null` to stop).
 * **Time**, all on the stage's clock (never `setTimeout`, `requestAnimationFrame` or `performance.now`: a
@@ -80,7 +81,8 @@ A staging file is one object expression in parentheses; the bit's name is the fi
   bit is stopped), `s.clock()`.
 * **The page**: `s.page.rect(sel)`, `s.page.slot()` (where the masthead's Archie stands, and his size there),
   `s.page.nudge(el, {rotate, x, y, origin, secs})` (turn or shift a page element for a moment; returns
-  `back(secs)`), `s.page.flicker(n, ms)`, `s.page.undo(fn)`; `s.where()` (`{page, topic, world}`).
+  `back(secs)`), `s.page.flicker(n, ms)`, `s.page.undo(fn)`; `s.where()` (`{page, topic, world}`);
+  `s.pointer()` (`{x, y, seen}`: where the reader's mouse last was, read only -- `ready(s)` has it too).
 * **Drawing**: `s.svg.path()`, `s.svg.door(box)`; `s.add(obj)` (into the scene, page px units).
 * **Props**: `s.prop(name)` (a prop from `pals/props/`, each call its own copy, materials and all: `.at(x, y,
   ppm)`, `.hold(pal, bone)`, `.play(clip)`, `.remove()`), `s.attach(obj, pal, bone, {offset, upright})` (keep

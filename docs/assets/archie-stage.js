@@ -119,6 +119,15 @@ export function stage(o) {
   let clock = 0, running = null, aborted = false;
   const waits = [], tickers = new Set(), actors = {}, mixers = new Set();
 
+  // ---- the reader's mouse pointer, for a bit that plays with it (a picture of one, never the real one):
+  // where it last was and whether it has been seen at all, from a passive listener that only reads.
+  const pointer = {x: 0, y: 0, seen: false};
+  addEventListener("pointermove", e => {
+    if (e.pointerType !== "mouse") return;
+    pointer.x = e.clientX; pointer.y = e.clientY; pointer.seen = true;
+  }, {passive: true});
+  const pointerAt = () => ({...pointer});
+
   // ---- the clock: waits measured on the render clock, so a hidden tab pauses a bit rather than skipping it
   const until = pred => new Promise(res => {
     if (aborted || pred()) return res();
@@ -268,6 +277,9 @@ export function stage(o) {
     play(name, {loop = false, reps = 1, fade = 0.2, speed = 1, clamp = true} = {}) {
       const clip = this.clips[name];
       if (!clip) { console.warn(`pals: ${this.name} has no clip ${name}`); return null; }
+      // a perform() this cuts short is over, now: its promise resolves rather than waiting for an end that
+      // will never come
+      if (this.done) { const d = this.done; this.done = null; d(); }
       const a = this.mixer.clipAction(clip);
       a.reset();
       a.timeScale = speed;
@@ -802,7 +814,7 @@ export function stage(o) {
       }
       const s = {cast, ...cast, after, until, page, prop, svg, glb, attach, holo: holoMats, glow,
                  project: name => project(name, true), add: o => scene.add(o),
-                 where: () => where(), core, figures, tween, tone: root => tone(T, root),
+                 where: () => where(), core, figures, tween, tone: root => tone(T, root), pointer: pointerAt,
                  mixer: root => { const m = new T.AnimationMixer(root); mixers.add(m); return m; },
                  W: () => W, H: () => H, clock: () => clock,
                  get alive() { return !aborted; }, tick,
@@ -831,7 +843,7 @@ export function stage(o) {
 
   // Whether a bit could start now: its page, and its own `ready()` against the page as it is.
   const can = (bit, here = where()) => !running && (!bit.pages || bit.pages.includes(here.page)) &&
-    (!bit.ready || !!bit.ready({page}));
+    (!bit.ready || !!bit.ready({page, pointer: pointerAt}));
 
   // What is on, for the admin panel and the browser checks (window.archieStage, set by archie.js).
   const status = () => ({bit: running, clock: +clock.toFixed(2), aborted,
