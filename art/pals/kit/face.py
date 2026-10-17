@@ -37,12 +37,15 @@ def _sphere_cap(name, r, mat, phi0, phi1, segs=40, rings=12):
 
 def eye(prefix, side, centre, r, look, rig_bones, iris_mat, lid_mat, lash_mat, glint_mat, lid_r=1.07,
         lash=0.12, lash_flick=0.0, lower=True, glint=(0.42, 0.42), glint_size=0.17, res=10, lid_roll=0.0,
-        up_open=40.0, lo_open=45.0):
+        up_open=40.0, lo_open=45.0, lash_span=1.75, iris_up=0.0):
     """Build one eye at `centre`, gazing along `look`. `rig_bones` names the bones:
     dict(eye=, lid_up=, lid_lo=, head=). The lids are hemispheres, built rolled `up_open` degrees up and
     `lo_open` down from meeting at the eye's equator, so the rest pose is the open eye and a blink is the
     lid bones turning back by those angles. `lid_roll` tilts both lid lines (degrees, outer corner down for
-    positive). Returns the parts and the eye's frame."""
+    positive). `lash_span` is how far round the lid's rim the lash line runs either side of straight ahead
+    (radians): an eye set deep in a socket shows less of its rim. `iris_up` draws the iris that much higher
+    on the ball (in its texture's units, 0.5 the ball's radius), for an eye that looks a little up without
+    turning its lids with it. Returns the parts and the eye's frame."""
     c = Vector(centre)
     R = basis(look, (0, 0, 1))            # local: z = gaze, y = up, x = across (character's left)
     R4 = R.to_4x4()
@@ -55,7 +58,7 @@ def eye(prefix, side, centre, r, look, rig_bones, iris_mat, lid_mat, lash_mat, g
     for li, loop in enumerate(me.loops):
         p = me.vertices[loop.vertex_index].co
         # geo.superquad builds about the origin with z as its own axis: the gaze is +z here.
-        uv[li].uv = (0.5 + p.x / (2 * r), 0.5 + p.y / (2 * r))
+        uv[li].uv = (0.5 + p.x / (2 * r), 0.5 + p.y / (2 * r) - iris_up)
     geo.transform(ball, Matrix.Translation(c) @ R4)
     parts.append(part(ball, rig_bones["eye"]))
 
@@ -84,11 +87,11 @@ def eye(prefix, side, centre, r, look, rig_bones, iris_mat, lid_mat, lash_mat, g
     pts, rad = [], []
     n = 28
     for i in range(n + 1):
-        a = lerp(-1.75, 1.75, i / n)              # radians either side of straight ahead
+        a = lerp(-lash_span, lash_span, i / n)    # radians either side of straight ahead
         # rim of the upper hemisphere (y=0 in lid frame): (sin a, 0, cos a) * rl
         p = Vector((math.sin(a) * rl * 1.01, 0.0, math.cos(a) * rl * 1.01))
         outer = (a * side) > 0                    # towards the character's own outside
-        t = abs(a) / 1.75
+        t = abs(a) / lash_span
         w = lash * r * (0.35 + 0.65 * math.sin(math.pi * min(1.0, (i / n)))) * (1.0 + (0.5 * t if outer else 0))
         pts.append(p)
         rad.append(max(w, lash * r * 0.15))
@@ -169,7 +172,14 @@ def brow(prefix, side, surf: geo.Surface, pts2d, half_h, half_d, mat, bones, off
 
 # ---------------------------------------------------------------------------------------------- mouth
 DEFAULT = dict(w=0.1, smile=0.02, lift_L=0.0, lift_R=0.0, top=0.0, bot=0.0, round=0.0, teeth=0.0,
-               low_teeth=0.0, thick=0.008, dx=0.0, dz=0.0, pinch=0.0)
+               low_teeth=0.0, thick=0.008, dx=0.0, dz=0.0, pinch=0.0, open_a=-1.0, open_b=1.0, hook_L=0.0,
+               hook_R=0.0, lip=None)
+# open_a, open_b: the stretch of the mouth (in u, -1 the character's right corner .. 1 his left) that opens;
+#   the default, the whole width, is the symmetric opening every mouth had before these existed. A smirk
+#   opens on one side only, the other corner left a closed line.
+# hook_L, hook_R: a dimple's upturn at the very end of that corner.
+# lip: how much of the dark line shows above the top teeth (metres). None, the default, is the teeth reaching
+#   almost to the top of the opening, as before; a white face needs the line, or its teeth vanish into it.
 
 
 def _outline(P, u):
@@ -177,15 +187,24 @@ def _outline(P, u):
     w = P["w"] * (1 - P["pinch"] * (1 - u * u) * 0.0)
     x = u * w + P["dx"]
     zc = P["smile"] * u * u + (P["lift_L"] if u > 0 else P["lift_R"]) * abs(u) ** 2.5 + P["dz"]
+    hook = P["hook_L"] if u > 0 else P["hook_R"]
+    if hook and abs(u) > 0.82:
+        zc += hook * ((abs(u) - 0.82) / 0.18) ** 2
     p = lerp(1.0, 0.5, P["round"])
-    prof = max(0.0, 1 - u * u) ** p
+    a, b = P["open_a"], P["open_b"]
+    if (a, b) == (-1.0, 1.0):
+        prof = max(0.0, 1 - u * u) ** p
+    else:
+        s = (u - a) / (b - a)
+        prof = math.sin(math.pi * s) ** (p * 1.6) if 0.0 < s < 1.0 else 0.0
     th = P["thick"] * max(0.0, 1 - u * u) ** 0.5 * 0.5 + P["thick"] * 0.12
     up = zc + P["top"] * prof + th
     lo = zc - P["bot"] * prof - th
     open_ = (P["top"] + P["bot"]) * prof
     t_bot = max(lo + th * 0.5, up - P["teeth"] * open_ - th * 0.3) if P["teeth"] > 0 else up - th * 0.4
     lt_top = min(up - th * 0.5, lo + P["low_teeth"] * open_ + th * 0.3) if P["low_teeth"] > 0 else lo + th * 0.4
-    return x, up, lo, t_bot, lt_top
+    t_top = up - (up - lo) * 0.04 if P["lip"] is None else up - P["lip"]
+    return x, up, lo, min(t_bot, t_top), lt_top, t_top
 
 
 def _vertex_coloured(name, like):
@@ -220,13 +239,13 @@ def mouth(name, surf: geo.Surface, centre2d, shapes: dict, mats, cols=28, rows=5
         us = [math.copysign(abs(u) ** 0.85, u) for u in us]
         O = [_outline(P, u) for u in us]
         for j in range(rows + 1):
-            for (x, up, lo, tb, lt) in O:
+            for (x, up, lo, tb, lt, tt) in O:
                 pts.append((x, lerp(lo, up, j / rows), 0))
         for j in range(trows + 1):
-            for (x, up, lo, tb, lt) in O:
-                pts.append((x, lerp(tb, up - (up - lo) * 0.04, j / trows), 1))
+            for (x, up, lo, tb, lt, tt) in O:
+                pts.append((x, lerp(tb, tt, j / trows), 1))
         for j in range(trows + 1):
-            for (x, up, lo, tb, lt) in O:
+            for (x, up, lo, tb, lt, tt) in O:
                 pts.append((x, lerp(lo + (up - lo) * 0.04, lt, j / trows), 1))
         return pts
 

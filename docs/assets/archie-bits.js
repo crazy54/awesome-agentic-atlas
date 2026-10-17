@@ -1308,7 +1308,7 @@ export const BITS = {
       A.say("Hello! Welcome to th—", 3);
       await s.until(() => A.time() >= CRASH || !s.alive);
       A.hush();
-      s.attach(screen.root, A, "head", {offset: [0, 0.178, 0.305], upright: false});
+      s.attach(screen.root, A, "head", {offset: [0, 0.178, 0.32], upright: false});
       screen.play("on");
       await hello;
       if (!s.alive) return;
@@ -4855,7 +4855,7 @@ export const BITS = {
       const R = () => s.page.rect(".source-preview .reader");
       const edge = R().top, right = R().right;
       const x0 = right - 1.2 * ppm;
-      // unauthorized_renovation.py: BALCONY_DEPTH, READ_TAKE; Archie's hard hat sits 0.37 m up his head bone
+      // unauthorized_renovation.py: BALCONY_DEPTH, READ_TAKE; Archie's hard hat sits 0.33 m up his head bone
       const DEPTH = 2.4, TAKE = 0.7;
       const [hat, hammer, balcony, chair, notice, zhat, bhat, zhammer] = await Promise.all(["hard-hat-lime",
         "hammer", "balcony", "deck-chair", "eviction-notice", "hard-hat-violet", "hard-hat-orange", "hammer"]
@@ -4863,7 +4863,7 @@ export const BITS = {
       if (!s.alive) return;
       const Z = s.zip, B = s.brick;
       // hats on: each sits this far up its pal's head bone (the bone starts at the neck's top)
-      hat.hold(A, "head", [0, 0.37, 0.05]);
+      hat.hold(A, "head", [0, 0.33, 0.03]);
       if (Z) zhat.hold(Z, "head", [0, 0.33, 0.02]);
       if (B) bhat.hold(B, "head", [0, 0.26, -0.03]);
       // the hammer upright in his right fist, its head forward

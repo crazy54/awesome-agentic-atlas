@@ -13,12 +13,13 @@ the sole bottom. "Char right" is screen left in the front view.
 
 | part | front view | side view (face points +x, screen right) |
 |---|---|---|
-| crest tip | (355, 65) | (800, 60) — fin sweeps from the back of the skull up and *forward* |
-| head shell | x 248–358, y 100–225 (w 110, h 125); broad dome, tapering to a rounded chin | x 680 (back) – 800 (face), depth ≈120 |
-| ear cups | centres (238,182) and (366,182), r≈25 | centre (720,165): behind the head's middle |
-| eyes | centres (290,170), (338,178); sclera r≈16, lime iris r≈11, pupil r≈5 | inset in the face, iris lime |
-| brows | thick graphite arcs; char-left brow arched higher (smug) | |
-| mouth | open smirk, y≈200, x 268–330, teeth visible | |
+| crest tip | (358, 62) — about (343, 56) with the head's tilt taken out | (801, 57) — the pompadour sweeps from the back of the skull up and *forward*; its top edge a near-straight rise from (681, 133) through (731, 99) and (781, 75), curling up at the tip; its front face bulges to x≈813 at y 80–105 |
+| crest, across | a swoosh: a long hollow slope from char-right's temple (x≈255 at y≈125) to the tip, the char-left side near upright (x≈366, y 90–115); graphite with a lime front face on the tip and a lime streak rising along each flank | from behind, its foot nearly the skull's width, the tip a little to char-left |
+| head shell | x 250–368 at its widest (y 175–190), skull top y≈114 under the crest, chin y≈228 (w≈118, h≈114); round outline, full cheeks, the jaw narrowing to a soft chin. The head is tilted ≈8° towards char-left in this view | x 668 (back) – 800 (face), depth ≈132: the face upright from forehead to mouth, the back a ball; a face-plate seam just in front of the ear cups, the back panelled like a football (a hexagon in the middle) |
+| ear cups | centres ≈(238,182) and (366,184); ceramic housing r≈28 with a lime band round its front, graphite face r≈21, thin lime ring r≈15, dark lens, brass pin | centre ≈(708,175), behind the head's middle |
+| eyes | centres (288,178), (340,185) (tilted); openings ≈41 x 43 px, round, set into the face; lime iris ≈26 px across, high in the opening with white below it; big pupil (≈18 px); heavy dark upper lid line with a wing at the outer corner | the eye's front a little behind the cheek's |
+| brows | thick graphite arcs (≈12 px): char-right's long and arched high (peak ≈47 px above its eye), char-left's lower and flatter, its inner end thick and turned up — the smirk's eyebrow | |
+| mouth | the smirk: a wide thin line from (281,191) to (341,205), char-right's corner higher with a dimple, open only on char-left's half: a dark lip line, top teeth, dark inside (≈7 px at most) | |
 | neck | graphite segmented, x 282–318, y 222–248 | |
 | chest | ceramic, x 240–360, y 245–320; lime chevron piping at y≈290 dipping to 297 at centre; lime collar trim | depth ≈105 (x 685–790) |
 | abdomen | graphite segmented plates x 270–330, y 315–365 — the Atlas Core dock (octagonal recess, lime clasp) | |

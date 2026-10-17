@@ -31,7 +31,7 @@
     A.say("Hello! Welcome to th—", 3);
     await s.until(() => A.time() >= CRASH || !s.alive);
     A.hush();
-    s.attach(screen.root, A, "head", {offset: [0, 0.178, 0.305], upright: false});
+    s.attach(screen.root, A, "head", {offset: [0, 0.178, 0.32], upright: false});
     screen.play("on");
     await hello;
     if (!s.alive) return;

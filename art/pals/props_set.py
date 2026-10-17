@@ -381,7 +381,7 @@ def _hard_hat(p, color, W, letter):
 
 
 @prop("hard-hat-lime", "The unauthorized renovation (Archie's)",
-      "the middle of its opening, front (peak) towards -Y; 0.5 m wide, for Archie's 0.48 m head (rim about "
+      "the middle of its opening, front (peak) towards -Y; 0.5 m wide, for Archie's 0.5 m head (rim about "
       "0.1 m above the head's centre; his crest pokes through)")
 def hard_hat_lime(p):
     _hard_hat(p, "lime", 0.5, "A")

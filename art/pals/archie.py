@@ -4,10 +4,12 @@
             [--out DIR] [--samples N] [--res WxH] [--sheet-pose] [--save PATH] [--no-render]
 
 The reference is `Archie robot model reference sheet.png` (the sheets live outside the repository; their
-landmarks are transcribed in art/pals/reference.md). Glazed ceramic white, graphite and lime: an egg of a
-head with lime-iris eyes, heavy brows, a smirk and a graphite-and-lime crest swept forward; headphone cups
-for ears; a graphite neck and spine; the Atlas Core's octagonal dock in his belly; four-digit hands with brass
-knuckle rings; chunky sneakers.
+landmarks are transcribed in art/pals/reference.md). Glazed ceramic white, graphite and lime: a broad, round
+helmet of a head -- as wide as it is tall and deeper than either, an upright face plate on the front and a
+ball of panels behind -- with big lime-iris eyes set into it, heavy brows (his right one arched high), the
+sheet's lopsided smirk, and a graphite-and-lime pompadour swept up and over to his left; headphone cups for
+ears, ceramic with a lime band; a graphite neck and spine; the Atlas Core's octagonal dock in his belly;
+four-digit hands with brass knuckle rings; chunky sneakers.
 
 Scale: the crest's tip stands 2.40 m up, the height of the Archie the homepage banner was framed for, so the
 new one stands in the same pixels. One sheet pixel is 2.40 / 567 m; landmarks are sheet pixels put through
@@ -64,11 +66,11 @@ def palette():
         steel=mat.principled("steel", "#a9a6a2", metal=1.0, rough=0.28, aniso=0.4),
         brass=mat.principled("brass", "#b8893f", metal=1.0, rough=0.32),
         lens=mat.principled("lens", "#121416", rough=0.08, coat=1.0, coat_rough=0.02, spec=0.8),
-        mouth=mat.principled("mouth", "#3a1216", rough=0.6, spec=0.3),
+        mouth=mat.principled("mouth", "#26090c", rough=0.6, spec=0.3),
         teeth=mat.principled("teeth", "#f6f4ef", rough=0.18, coat=0.8),
         glint=mat.principled("glint", "#ffffff", rough=0.3, emit="#ffffff", strength=2.5),
         eye=mat.eye_material("archie-eye", inner_hex="#dcf55e", outer_hex="#77a40a", limbal_hex="#1a2604",
-                             iris_r=0.37, pupil_r=0.155),
+                             iris_r=0.285, pupil_r=0.185),
     )
     for m in P.values():
         m["pal"] = "archie"
@@ -83,8 +85,106 @@ HIP_X, KNEE_X, ANKLE_X = 0.165, 0.19, 0.205
 SHOULDER = V(0.335, 0.0, Z(280))
 ELBOW = V(0.61, 0.0, Z(331))
 WRIST = V(0.865, 0.0, Z(388))
-HEAD_C = V(0.0, SY(742), Z(160))
-HEAD_R = (0.242, 0.262, 0.27)                    # half width, half depth, half height
+HEAD_C = V(0.0, SY(734), Z(171))
+HEAD_R = (0.25, 0.279, 0.24)                     # the skull's half width, half depth, half height
+EYE_X, EYE_Z = 0.112, Z(180)                     # the eyes' centres across and up
+EYE_R = 0.105                                    # eyeball radius (only a cap of it shows)
+EYE_SINK = 0.0                                   # how far the eye's front sits under the face round it
+SOCKET = (0.045, 0.07, 0.14)                     # socket depth, and the radii its wall starts and ends at
+EAR_Y, EAR_Z = SY(708), Z(175)
+MOUTH_Z = Z(204)                                 # the bottom of the smile's curve
+
+
+def _skull_F(x, y, z):
+    """The skull about HEAD_C, < 1 inside. Seen from above it is round, face and all; seen from the side the
+    face is upright -- the forehead straight up to a tight turn on to a flat crown, the chin turning under
+    more softly -- and the back of the head a ball. The jaw narrows to the chin, more at the front."""
+    rx0, ry0, rz0 = HEAD_R
+    zt = z / rz0
+    below = max(0.0, -zt)
+    fr = max(0.0, -y / ry0)
+    rx = rx0 * (1 - 0.1 * below ** 2.2 - 0.22 * below ** 2.4 * fr ** 1.5)
+    a = 2.1
+    h = ((abs(x) / rx) ** a + (abs(y) / ry0) ** a) ** (1 / a)
+    # How squarely each point faces forward (or back), seen from above: the upright face is the middle of
+    # the front only, so that seen from the front the head keeps a round outline and full cheeks.
+    c_f = max(0.0, -y / ry0) / max(h, 1e-6)
+    c_b = max(0.0, y / ry0) / max(h, 1e-6)
+    b = (2.5 + (lerp(3.0, 4.3, smooth(-0.2, 0.3, zt)) - 2.5) * smooth(0.35, 0.97, c_f)
+         - 0.3 * smooth(0.2, 0.9, c_b))
+    return h ** b + abs(zt) ** b
+
+
+def _skull_r(d):
+    """Distance from HEAD_C to the skull along the unit direction `d` (before the sockets)."""
+    lo, hi = 0.0, 0.6
+    for _ in range(32):
+        k = (lo + hi) / 2
+        lo, hi = (k, hi) if _skull_F(d.x * k, d.y * k, d.z * k) < 1 else (lo, k)
+    return (lo + hi) / 2
+
+
+def _face_y(x, z):
+    """Y (relative to HEAD_C) of the skull's front at `x` across and `z` up from HEAD_C."""
+    lo, hi = -0.6, 0.0
+    for _ in range(40):
+        m = (lo + hi) / 2
+        lo, hi = (lo, m) if _skull_F(x, m, z) < 1 else (m, hi)
+    return (lo + hi) / 2
+
+
+def eye_axis(sx):
+    """Where the eye's socket meets the face (relative to HEAD_C), and the way it faces: out of the face,
+    which is turning away towards the side there."""
+    ez = EYE_Z - HEAD_C.z
+    return V(sx * EYE_X, _face_y(EYE_X, ez), ez), V(sx * 0.32, -1, 0.02).normalized()
+
+
+def _socket_r(q):
+    """How far `q` (relative to HEAD_C) is from the nearer eye's axis."""
+    best = 9.0
+    for sx in (1, -1):
+        e, n = eye_axis(sx)
+        d = q - e
+        best = min(best, (d - n * d.dot(n)).length)
+    return best
+
+
+def eye_centre(sx):
+    e, n = eye_axis(sx)
+    return HEAD_C + e - n * (EYE_R + EYE_SINK), n
+
+
+def skull(M):
+    """The head shell: a spherified cube put onto `_skull_F`, cut finer where the sockets' walls are, with
+    the two sockets pressed in along the eyes' axes."""
+    import bmesh
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=2.0)
+    bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=17, use_grid_fill=True)
+    axes = [eye_axis(sx) for sx in (1, -1)]
+
+    def place(co):
+        d = geo._spherify(co).normalized()
+        return d * _skull_r(d)
+
+    fine = set()
+    for f in bm.faces:
+        q = place(f.calc_center_median())
+        if q.y < -0.1 and 0.035 < _socket_r(q) < 0.14:
+            fine.update(f.edges)
+    bmesh.ops.subdivide_edges(bm, edges=list(fine), cuts=2, use_grid_fill=True)
+    sd, s0, s1 = SOCKET
+    for v in bm.verts:
+        q = place(v.co)
+        if q.y < 0:
+            for e, n in axes:
+                d = q - e
+                r = (d - n * d.dot(n)).length
+                q -= n * (sd * (1 - smooth(s0, s1, r)) * smooth(0.0, 0.1, -q.y))
+        v.co = HEAD_C + q
+    bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-7)
+    return geo.mesh_object("head-shell", bm, M["ceramic"])
 
 
 def build():
@@ -113,13 +213,13 @@ def build():
     R.bone("chest", (0, 0, Z(318)), (0, 0, Z(250)), "spine")
     R.bone("neck", (0, 0.0, Z(250)), (0, 0.0, Z(224)), "chest")
     R.bone("head", (0, 0.0, Z(224)), (0, 0.0, Z(150)), "neck")
-    crest_path = [(0.0, 728, 128), (0.03, 744, 100), (0.09, 765, 80), (0.165, 787, 66), (0.228, 803, 57)]
+    crest_path = [(-0.045, 736, 134), (-0.025, 750, 118), (0.01, 770, 96), (0.07, 792, 74), (0.125, 801, 57)]
     cp = [V(x, SY(px), Z(pz)) for x, px, pz in crest_path]
     R.bone("crest_1", cp[0], cp[1], "head", z=(0, -1, 0.3))
     R.bone("crest_2", cp[1], cp[3], "crest_1", z=(0, -1, 0.3))
     R.bone("crest_3", cp[3], cp[4], "crest_2", z=(0, -1, 0.3))
     for s, sx in rig.SIDES:
-        R.bone(f"ear{s}", (sx * 0.27, SY(722), Z(180)), (sx * 0.34, SY(722), Z(180)), "head", z=(0, -1, 0))
+        R.bone(f"ear{s}", (sx * 0.27, EAR_Y, EAR_Z), (sx * 0.34, EAR_Y, EAR_Z), "head", z=(0, -1, 0))
     R.bone("core", (0, -0.11, Z(342)), (0, -0.23, Z(342)), "spine", z=(0, 0, 1))
     # The tether port low on his back (the end of his own tether, in "the invisible tug-of-war"). (The
     # back door's `hatch` bone is made with the door, below: it hangs on the plate's own edge.)
@@ -134,70 +234,99 @@ def build():
         R.bone(f"toe{s}", (sx * 0.222, -0.25, 0.075), (sx * 0.222, -0.46, 0.075), f"foot{s}", z=(0, 0, 1))
 
     # ---- head --------------------------------------------------------------------------------------
-    def head_shape(p, q):
-        # A broad, shield-shaped head: a full cranium, cheeks carried well down, a wide rounded chin; the
-        # face flatter than the back of the skull.
-        below = max(0.0, -q.z)
-        sx = 1.0 - 0.2 * below ** 2.3
-        sy = 1.0 - 0.17 * below ** 2.0
-        p = Vector((p.x * sx, p.y * sy, p.z))
-        if q.y < 0:
-            p.y *= 0.88 - 0.04 * max(0.0, q.z)
-        else:
-            p.y *= 1.05
-        p.y -= 0.028 * below ** 2                # the chin a touch forward
-        return p
+    # The sheet's head is a broad ceramic helmet, as wide as it is tall and deeper than either, the face a
+    # flat plate on the front of it and the back a ball of panels. The eyes are set into sockets in that
+    # plate, so the shell is finer round them than elsewhere (see `skull`).
+    skull_ob = add(skull(M), "head")
+    geo.box_uv(skull_ob, 0.5)
+    surf = geo.Surface(skull_ob)
 
-    skull = add(geo.superquad("head-shell", HEAD_R, M["ceramic"], HEAD_C, n=(2.25, 2.15, 2.2), shape=head_shape,
-                              res=15), "head")
-    geo.box_uv(skull, 0.5)
-    surf = geo.Surface(skull)
-    # Panel seams over the back of the skull, as on the sheet's back view: one down the middle, two
-    # across, laid just proud of the shell in graphite.
-    for k, pts in enumerate([
-            [V(0.0, y, z) for y, z in ((0.05, 2.26), (0.13, 2.22), (0.2, 2.13), (0.24, 2.0), (0.24, 1.9))],
-            [V(x, 0.2, 2.12 - 0.12 * x * x) for x in (-0.2, -0.13, -0.06, 0.0, 0.06, 0.13, 0.2)],
-            [V(x, 0.22, 1.96 - 0.1 * x * x) for x in (-0.21, -0.14, -0.07, 0.0, 0.07, 0.14, 0.21)]]):
-        seam = [surf.toward(p, HEAD_C, offset=0.0015) for p in pts]
-        seam = [q for q in seam if q is not None]
-        if len(seam) > 2:
-            add(geo.tube(f"head-seam{k}", seam, 0.0045, M["graphite"], segs=5), "head")
+    def on_skull(name, dirs, r=0.0042):
+        """A seam: graphite laid just proud of the shell along the directions `dirs` (from HEAD_C)."""
+        pts = [surf.toward(HEAD_C + d.normalized() * 0.6, HEAD_C, offset=0.0016) for d in dirs]
+        pts = [p for p in pts if p is not None]
+        if len(pts) > 2:
+            add(geo.tube(name, pts, r, M["graphite"], segs=5), "head")
 
-    # Ear cups: layered on the X axis, as on the head-profile panel.
+    def az_el(a, e):
+        """A direction by azimuth round from the back of the head (+Y) towards his left, and elevation."""
+        return V(math.sin(a) * math.cos(e), math.cos(a) * math.cos(e), math.sin(e))
+
+    def chain(*pts, n=10):
+        out = []
+        for (a0, e0), (a1, e1) in zip(pts, pts[1:]):
+            out += [az_el(lerp(a0, a1, i / n), lerp(e0, e1, i / n)) for i in range(n)]
+        return out + [az_el(*pts[-1])]
+
+    # The face plate's edge: up the temples just in front of the ear cups, over the top under the crest and
+    # round under the jaw.
+    fy = SY(749) - HEAD_C.y
+    on_skull("face-seam", [V(math.cos(a) * 0.5, fy, math.sin(a) * 0.5) for a in
+                           (math.tau * i / 72 for i in range(73))])
+    # The back of the head, as on the sheet's back view: a hexagonal panel in the middle and the seams that
+    # run from its corners to the crest, the ear cups and the neck.
+    hexv = [(-0.3, 0.42), (0.3, 0.42), (0.47, 0.02), (0.3, -0.4), (-0.3, -0.4), (-0.47, 0.02), (-0.3, 0.42)]
+    on_skull("head-seam-hex", chain(*hexv, n=8))
+    for k, (a, b) in enumerate([((-0.3, 0.42), (-0.5, 0.85)), ((0.3, 0.42), (0.5, 0.85)),
+                                ((0.47, 0.02), (1.05, 0.08)), ((-0.47, 0.02), (-1.05, 0.08)),
+                                ((0.3, -0.4), (0.62, -0.85)), ((-0.3, -0.4), (-0.62, -0.85)),
+                                ((0.75, 0.05), (0.95, 0.55)), ((-0.75, 0.05), (-0.95, 0.55))]):
+        on_skull(f"head-seam{k}", chain(a, b, n=10))
+
+    # Ear cups, layered on the X axis as on the head-profile panel: a ceramic housing with a lime band round
+    # its front, a graphite face, a thin lime ring, the dark lens and a brass pin.
     for s, sx in rig.SIDES:
-        c = V(sx * 0.262, SY(722), Z(181))
+        c = V(sx * 0.258, EAR_Y, EAR_Z)
         ax = (sx, 0, 0)
-        add([geo.disc(f"ear-housing{s}", 0.11, 0.075, M["graphite"], c, ax, bevel_r=0.022, segs=36),
-             geo.ring(f"ear-lime{s}", 0.096, 0.017, M["lime"], c + V(sx * 0.038, 0, 0), ax, segs=32, sides=6,
-                      squash=0.8),
-             geo.disc(f"ear-face{s}", 0.08, 0.03, M["graphite"], c + V(sx * 0.044, 0, 0), ax, bevel_r=0.01,
-                      segs=32),
-             geo.ring(f"ear-lime2{s}", 0.054, 0.0075, M["lime"], c + V(sx * 0.06, 0, 0), ax, segs=32, sides=6),
-             geo.disc(f"ear-lens{s}", 0.044, 0.02, M["lens"], c + V(sx * 0.06, 0, 0), ax, bevel_r=0.008,
-                      segs=28, bulge=0.006),
-             geo.disc(f"ear-pin{s}", 0.012, 0.012, M["brass"], c + V(sx * 0.072, 0, 0), ax, segs=12)],
+        band = [c + V(sx * 0.037, -math.sin(a) * 0.101, math.cos(a) * 0.101)
+                for a in (lerp(0.15, 2.95, i / 24) for i in range(25))]
+        add([geo.disc(f"ear-housing{s}", 0.12, 0.072, M["ceramic"], c, ax, bevel_r=0.026, segs=40),
+             geo.sweep(f"ear-lime{s}", band, 0.013, 0.006, M["lime"], segs=6, up=ax),
+             geo.disc(f"ear-face{s}", 0.088, 0.03, M["graphite"], c + V(sx * 0.044, 0, 0), ax, bevel_r=0.012,
+                      segs=36),
+             geo.ring(f"ear-lime2{s}", 0.064, 0.0085, M["lime"], c + V(sx * 0.06, 0, 0), ax, segs=36, sides=6),
+             geo.disc(f"ear-lens{s}", 0.055, 0.02, M["lens"], c + V(sx * 0.06, 0, 0), ax, bevel_r=0.008,
+                      segs=32, bulge=0.008),
+             geo.disc(f"ear-pin{s}", 0.018, 0.014, M["brass"], c + V(sx * 0.074, 0, 0), ax, segs=14)],
             f"ear{s}")
 
     # The crest: a pompadour, lofted from the sheet's side view. Each slice is an ellipse spanning the
-    # crest's back edge to its front edge (sheet pixels, side view), its half-width across the head
-    # tapering to the tip, its centre leaning to the character's left (the front view's lean).
+    # crest's back edge to its front edge (sheet pixels, side view). Across the head, each slice's centre
+    # and half-width are read off the front view (with the sheet's head tilt taken out): seen from the front
+    # the crest is a swoosh, a long hollow slope from his right temple up to a tip over his left eye, and
+    # a near-upright left side.
+    across = [  # t, centre, half-width (metres, + his left)
+        (0.0, -0.03, 0.2), (0.15, 0.01, 0.175), (0.3, 0.05, 0.135), (0.45, 0.085, 0.095), (0.6, 0.105, 0.067),
+        (0.75, 0.12, 0.042), (0.88, 0.12, 0.02), (1.0, 0.11, 0.004)]
     edges = [  # t, back (x, y), front (x, y)
-        (0.00, (684, 152), (786, 132)), (0.14, (690, 128), (791, 114)), (0.28, (701, 108), (795, 101)),
-        (0.42, (715, 93), (798, 89)), (0.56, (732, 80), (801, 78)), (0.70, (752, 69), (803, 68)),
-        (0.84, (775, 61), (805, 61)), (0.94, (793, 58), (805, 58)), (1.0, (802, 56), (803, 56))]
-    rings, ring_n = [], 20
-    for t, (bx, by), (fx, fy) in edges:
-        B, Fp = V(0, SY(bx), Z(by)), V(0, SY(fx), Z(fy))
-        Cn = (B + Fp) / 2 + V(0.03 + 0.2 * t ** 1.3, 0, 0)
+        (0.00, (681, 141), (792, 129)), (0.15, (698, 118), (802, 118)), (0.30, (716, 105), (809, 106)),
+        (0.45, (735, 95), (813, 94)), (0.60, (755, 85), (813, 83)), (0.75, (774, 74), (810, 72)),
+        (0.88, (790, 65), (806, 63)), (1.0, (801, 57), (802, 57))]
+    def through(rows, t):
+        """The rows' values at `t`, on a smooth curve through them (Catmull-Rom in each column)."""
+        ts = [r[0] for r in rows]
+        i = max(0, min(len(rows) - 2, next((k for k in range(len(ts) - 1) if t <= ts[k + 1]), len(ts) - 2)))
+        f = (t - ts[i]) / (ts[i + 1] - ts[i])
+        P = [rows[max(0, min(len(rows) - 1, k))][1:] for k in (i - 1, i, i + 1, i + 2)]
+        return [0.5 * (2 * b + (-a + c) * f + (2 * a - 5 * b + 4 * c - d) * f * f + (-a + 3 * b - 3 * c + d) * f ** 3)
+                for a, b, c, d in zip(*P)]
+
+    flat = [(t, bx, by, fx, fy_) for t, (bx, by), (fx, fy_) in edges]
+    rings, ring_n = [], 32
+    for t in (1 - (1 - i / 20) ** 1.25 for i in range(21)):        # closer together towards the tip
+        bx, by, fx, fy_ = through(flat, t)
+        B, Fp = V(0, SY(bx), Z(by)), V(0, SY(fx), Z(fy_))
         u = (Fp - B)
         d = max(u.length / 2, 0.002)
         u = u.normalized() if u.length > 1e-6 else V(0, -1, 0)
-        w = max(0.002, 0.12 * (1 - t) ** 0.9 * (1 - 0.25 * smooth(0.0, 0.3, t)) + 0.0)
-        rings.append((Cn, u, d, w))
+        x0, w = through(across, t)
+        w = max(w, 0.003)
+        cb, cf = x0 + 0.015 * (1 - t), x0 - 0.025 * (1 - t)
+        rings.append(((B + Fp) / 2, u, d, w, cb, cf, t))
     import bmesh as _bm
     bm = _bm.new()
     vrows = []
-    for Cn, u, d, w in rings:
+    for Cn, u, d, w, cb, cf, t in rings:
         row = []
         for j in range(ring_n):
             a = math.tau * j / ring_n
@@ -205,27 +334,39 @@ def build():
             # a superellipse, squarer across than along
             px = math.copysign(abs(ca) ** 0.8, ca) * d
             py = math.copysign(abs(sa) ** 0.7, sa) * w
-            row.append(bm.verts.new(Cn + u * px + V(1, 0, 0) * py))
+            shear = lerp(cb, cf, (px / d + 1) / 2)
+            co = Cn + u * px + V(1, 0, 0) * (py + shear)
+            if t == 0.0:
+                # the foot: dropped on to the skull and a little into it, so the crest sits down into the
+                # head all round, however the crown falls away under its edges
+                hit, _ = surf.cast((co.x, co.y, co.z + 1.0), (0, 0, -1))
+                if hit is not None:
+                    co = hit - V(0, 0, 0.022)
+            row.append(bm.verts.new(co))
         vrows.append(row)
-    for r0, r1 in zip(vrows, vrows[1:]):
+
+    def crest_lime(a, t):
+        # The tip's front face, and a streak along each flank, kept to the loft's own lines so it runs
+        # smoothly: low at the back of the foot, climbing to the tip (seen from the side, the sheet's
+        # stripe rising along the crest; from behind, one up either side).
+        a = math.atan2(math.sin(a), math.cos(a))           # -pi .. pi: his right flank is negative
+        return (t > 0.36 and math.cos(a) > 0.74) or (t < 0.9 and 1.76 < abs(a) < 2.32)
+
+    for (r0, r1), (_, _, _, _, _, _, t) in zip(zip(vrows, vrows[1:]), rings):
         for j in range(ring_n):
             f = bm.faces.new((r0[j], r0[(j + 1) % ring_n], r1[(j + 1) % ring_n], r1[j]))
-            a = math.tau * (j + 0.5) / ring_n
-            # lime: a streak down the character's-left flank, just off the front edge (seen from the front, the
-            # sheet's graphite crest with a lime stripe on its left); graphite elsewhere
-            f.material_index = 1 if 0.3 < a < 1.8 else 0
-    tipv = bm.verts.new(rings[-1][0] + rings[-1][1] * 0.002 + V(0, 0, 0.004))
+            f.material_index = 1 if crest_lime(math.tau * (j + 0.5) / ring_n, t + 0.025) else 0
+    tipv = bm.verts.new(sum((v.co for v in vrows[-1]), V(0, 0, 0)) / ring_n + V(0, -0.002, 0.004))
     for j in range(ring_n):
         f = bm.faces.new((vrows[-1][j], vrows[-1][(j + 1) % ring_n], tipv))
         f.material_index = 1
-    basev = bm.verts.new(rings[0][0] - V(0, 0, 0.03))
+    basev = bm.verts.new(sum((v.co for v in vrows[0]), V(0, 0, 0)) / ring_n - V(0, 0, 0.05))
     for j in range(ring_n):
         bm.faces.new((vrows[0][(j + 1) % ring_n], vrows[0][j], basev))
     _bm.ops.recalc_face_normals(bm, faces=bm.faces[:])
     crest = geo.mesh_object("crest", bm, M["graphite"])
     crest.data.materials.append(M["lime"])
-    geo.subsurf(crest, 1)
-    zr0, zr1 = Z(140), Z(57)
+    zr0, zr1 = Z(141), Z(57)
     vgs = [crest.vertex_groups.new(name=f"crest_{i}") for i in (1, 2, 3)]
     for v in crest.data.vertices:
         t = (v.co.z - zr0) / (zr1 - zr0)
@@ -236,59 +377,88 @@ def build():
                 vg.add([v.index], x / tot, "REPLACE")
     parts.append(crest)
 
-    # Eyes, set into the face, gazing straight out.
-    eye_r = 17.5 * PX
+    # Eyes, set into the sockets, gazing straight out. The eyeball is bigger than the socket's mouth, so only
+    # a shallow cap of it shows: wide open, a big lime iris and a big pupil, the heavy upper lid just over
+    # the top of the iris.
     for s, sx in rig.SIDES:
-        ex, ez = sx * 0.106, Z(171)
-        front = surf.front(ex, ez)
-        c = V(ex, front.y + eye_r * 0.52, ez)
-        look = V(sx * 0.05, -1, 0.0).normalized()
+        c, look = eye_centre(sx)
         R.bone(f"eye{s}", c, c + look * 0.08, "head", z=(0, 0, 1))
         R.bone(f"lid_up{s}", c, c + look * 0.07, "head", z=(0, 0, 1))
         R.bone(f"lid_lo{s}", c, c + look * 0.06, "head", z=(0, 0, 1))
-        eparts, _ = face.eye(f"eye{s}", sx, c, eye_r, look,
+        eparts, _ = face.eye(f"eye{s}", sx, c, EYE_R, look,
                              dict(eye=f"eye{s}", lid_up=f"lid_up{s}", lid_lo=f"lid_lo{s}", head="head"),
-                             M["eye"], M["ceramic"], M["graphite"], M["glint"], lash=0.2, lash_flick=0.4,
-                             up_open=34, lo_open=70, lid_roll=-5, res=8, lid_r=1.035)
+                             M["eye"], M["ceramic"], M["graphite"], M["glint"], lash=0.115, lash_flick=0.0,
+                             up_open=43, lo_open=47, lid_roll=-4, res=10, lid_r=1.03, lash_span=0.95,
+                             glint=(0.26, 0.42), glint_size=0.13, iris_up=0.076)
         parts.extend(eparts)
+        # the lash line's wing, past the outer corner and up, on the face itself
+        wing = [surf.front(sx * (EYE_X + dx), EYE_Z + dz, offset=0.003) for dx, dz in
+                ((0.066, 0.04), (0.08, 0.044), (0.093, 0.052), (0.104, 0.064))]
+        add(geo.sweep(f"eye-wing{s}", [p for p in wing if p], [0.011, 0.0095, 0.0065, 0.002],
+                      [0.005, 0.0045, 0.0035, 0.0012], M["graphite"], segs=6, up=(0, -1, 0)), "head")
 
-    # Brows: heavy graphite bars, the inner end low and blunt, arching to a tapered outer end.
+    # Brows: heavy graphite bars, rounded at the ends. His right one is the sheet's high, arched one; his
+    # left sits lower and flatter, its inner end thick and turned up -- the smirk's eyebrow.
+    brow_pts = {
+        1: [(0.032, Z(146)), (0.07, Z(148)), (0.11, Z(149)), (0.15, Z(152)), (0.185, Z(158))],
+        -1: [(-0.035, Z(141)), (-0.075, Z(134)), (-0.115, Z(131)), (-0.155, Z(134)), (-0.19, Z(141)),
+             (-0.207, Z(149))],
+    }
+
+    def spline(pts, n=14):
+        """A smooth curve through `pts` (Catmull-Rom), so a brow bends rather than kinks."""
+        P = [pts[0]] + pts + [pts[-1]]
+        out = []
+        for i in range(1, len(P) - 2):
+            for k in range(n // (len(pts) - 1) + (1 if i == len(P) - 3 else 0)):
+                t = k / (n // (len(pts) - 1))
+                a, b, c, d = P[i - 1], P[i], P[i + 1], P[i + 2]
+                out.append(tuple(0.5 * (2 * b[j] + (-a[j] + c[j]) * t + (2 * a[j] - 5 * b[j] + 4 * c[j] - d[j]) * t * t
+                                        + (-a[j] + 3 * b[j] - 3 * c[j] + d[j]) * t ** 3) for j in (0, 1)))
+        return out
+
     for s, sx in rig.SIDES:
-        pts2d = [(sx * 0.032, Z(151)), (sx * 0.065, Z(143)), (sx * 0.105, Z(138)), (sx * 0.145, Z(139)),
-                 (sx * 0.178, Z(146)), (sx * 0.198, Z(156))]
+        pts2d = spline(brow_pts[sx])
         names = [f"brow_in{s}", f"brow_mid{s}", f"brow_out{s}"]
         for nm, (bx, bz) in zip(names, [pts2d[0], pts2d[2], pts2d[-1]]):
             p = surf.front(bx, bz)
             R.bone(nm, p, p + V(0, 0, 0.05), "head", z=(0, -1, 0))
-        parts.append(face.brow(f"brow{s}", sx, surf, pts2d, 0.03, 0.017, M["graphite"], names,
-                               taper=(0.8, 1.0, 0.4)))
+        parts.append(face.brow(f"brow{s}", sx, surf, pts2d, 0.028, 0.018, M["graphite"], names,
+                               taper=(1.2, 1.0, 0.45) if sx > 0 else (0.9, 1.0, 0.4), segs=12))
 
-    # Mouth: rest is a closed, pleased smile; `grin` is the sheet's open smirk and is on by default.
+    # Mouth: rest is a closed, pleased smile; `grin` is the sheet's smirk and is on by default -- wide and
+    # thin, his right corner higher and dimpled, only the left half open, over a strip of top teeth.
     shapes = dict(
-        rest=dict(w=0.11, smile=0.026, thick=0.01, lift_L=0.008),
-        grin=dict(w=0.14, smile=0.036, top=0.006, bot=0.044, teeth=0.42, thick=0.009, lift_L=0.03, lift_R=-0.004),
-        smile=dict(w=0.125, smile=0.04, bot=0.014, thick=0.01),
-        wide=dict(w=0.15, smile=0.032, top=0.014, bot=0.08, teeth=0.3, low_teeth=0.12, round=0.3),
-        open=dict(w=0.09, smile=0.0, top=0.024, bot=0.056, round=0.6, teeth=0.18),
-        oh=dict(w=0.045, smile=0.0, top=0.032, bot=0.036, round=1.0, thick=0.007),
-        frown=dict(w=0.105, smile=-0.032, thick=0.01),
-        flat=dict(w=0.095, smile=0.0, thick=0.009),
-        smirk_L=dict(w=0.115, smile=0.008, lift_L=0.045, lift_R=-0.006, thick=0.01),
-        smirk_R=dict(w=0.115, smile=0.008, lift_R=0.045, lift_L=-0.006, thick=0.01),
-        grit=dict(w=0.13, smile=-0.004, top=0.018, bot=0.02, teeth=0.5, low_teeth=0.5, thick=0.007),
-        ee=dict(w=0.145, smile=0.032, top=0.009, bot=0.026, teeth=0.55, low_teeth=0.3),
+        rest=dict(w=0.118, smile=0.02, thick=0.011, lift_R=0.012, hook_R=0.008),
+        grin=dict(w=0.136, smile=0.012, lift_R=0.028, lift_L=0.005, hook_R=0.014, bot=0.036, open_a=-0.55,
+                  open_b=0.93, teeth=0.42, thick=0.013, lip=0.0055),
+        smile=dict(w=0.128, smile=0.036, bot=0.014, thick=0.011),
+        wide=dict(w=0.148, smile=0.03, top=0.012, bot=0.064, teeth=0.3, low_teeth=0.12, round=0.3, lip=0.006),
+        open=dict(w=0.09, smile=0.0, top=0.022, bot=0.05, round=0.6, teeth=0.18, lip=0.006),
+        oh=dict(w=0.045, smile=0.0, top=0.03, bot=0.034, round=1.0, thick=0.007),
+        frown=dict(w=0.105, smile=-0.03, thick=0.01),
+        flat=dict(w=0.098, smile=0.0, thick=0.009),
+        smirk_L=dict(w=0.118, smile=0.008, lift_L=0.042, lift_R=-0.006, hook_L=0.006, thick=0.01),
+        smirk_R=dict(w=0.118, smile=0.008, lift_R=0.042, lift_L=-0.006, hook_R=0.006, thick=0.01),
+        grit=dict(w=0.13, smile=-0.004, top=0.016, bot=0.018, teeth=0.5, low_teeth=0.5, thick=0.007, lip=0.004),
+        ee=dict(w=0.142, smile=0.03, top=0.008, bot=0.024, teeth=0.55, low_teeth=0.3, lip=0.005),
     )
-    mth = face.mouth("mouth", surf, (0.008, Z(201)), shapes, (M["mouth"], M["teeth"]))
+    mth = face.mouth("mouth", surf, (0.0, MOUTH_Z), shapes, (M["mouth"], M["teeth"]))
     mth.data.shape_keys.key_blocks["grin"].value = 1.0
     parts.append(mth)
 
-    # Neck: a graphite column of rings on a core.
+    # Neck: a graphite spine, as on the sheet's head panels -- four ribbed segments up a core, each split
+    # down the front into a left and a right half, narrowing a little towards the head.
     nz0, nz1 = Z(252), Z(214)
-    add(geo.segment("neck-core", (0, 0, nz0 - 0.03), (0, 0, nz1 + 0.05), 0.062, M["graphite"], res=7), "neck")
-    for i in range(3):
-        z = lerp(nz0, nz1, (i + 0.5) / 3)
-        add(geo.disc(f"neck-ring{i}", 0.084 - 0.005 * i, 0.03, M["graphite"], (0, 0.005, z), (0, 0, 1),
-                     bevel_r=0.012, segs=24), "neck" if i else "chest")
+    add(geo.segment("neck-core", (0, 0, nz0 - 0.03), (0, 0, nz1 + 0.05), 0.058, M["graphite"], res=7), "neck")
+    for i in range(4):
+        z = lerp(nz0, nz1, (i + 0.5) / 4)
+        k = 1 - 0.05 * i
+        for sx in (1, -1):
+            add(geo.superquad(f"neck-rib{i}{'_L' if sx > 0 else '_R'}", (0.037 * k, 0.066 * k, 0.017),
+                              M["graphite"], (sx * 0.039 * k, 0.004, z), n=(2.6, 2.4, 2.2), res=4,
+                              shape=lambda p, q: Vector((p.x, p.y - 0.008 * max(0.0, -q.y) * (1 - abs(q.z)), p.z))),
+                "neck" if i else "chest")
 
     # ---- torso -------------------------------------------------------------------------------------
     CH_C = V(0, -0.025, Z(279))
