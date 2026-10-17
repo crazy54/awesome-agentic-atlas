@@ -15,7 +15,7 @@ Nothing is ever deployed from `main`. There is no deploy workflow: a commit to `
 Since a merge to `latest_branch` publishes immediately, **merged means deployed**. The reverse is also
 true: work that is only on a feature branch is not live, however green its PR.
 
-## The six workflows
+## The seven workflows
 
 | Workflow | Triggers | Job | Writes to the repo? |
 |---|---|---|---|
@@ -23,9 +23,10 @@ true: work that is only on a feature branch is not live, however green its PR.
 | `weekly.yml` | cron `40 12 * * 0` (Sunday 12:40 UTC), and dispatch | Full rebuild including screenshots, OG cards, collections and both workbooks | Yes: commits "Weekly rebuild", then publishes a release |
 | `tests.yml` | every pull request, pushes to `latest_branch`, cron `40 7 * * 1`, dispatch | `node tests/run.mjs` on ubuntu-latest | No |
 | `lighthouse.yml` | pull requests touching page generators or `docs/` (see its `paths:`), cron `40 13 * * 1`, dispatch | Lighthouse CI 0.15.1 against `/index.html` and `/catalog/index.html` | No |
+| `dead-repos.yml` | cron `30 9 * * 6` (Saturday 09:30 UTC), and dispatch | Asks GitHub which listed repos are gone and records them in `state/dead-repos.json`; dispatches `daily.yml` with `force` when that changed | Yes: commits "Dead-repo scan YYYY-MM-DD" to `latest_branch` |
 | `og-preview.yml` | dispatch only | Renders the OG cards to a temp directory with `23_og.py --out` and diffs them against the committed cards | No |
 
-`daily.yml` and `weekly.yml` share the concurrency group `atlas-build`, so they never run at once.
+`daily.yml`, `weekly.yml` and `dead-repos.yml` share the concurrency group `atlas-build`, so they never run at once.
 Scheduled start times lag: in September 2026 the 11:12 daily usually started around 15:30 UTC.
 
 Each workflow opens with a long comment explaining its design. **Read it before editing the file.**
@@ -74,6 +75,30 @@ The weekly build runs the same fetch as the daily, then adds:
 **`18_slicers.py` runs in neither workflow**, so released workbooks have no slicers. Nothing in CI builds
 the legacy orchestrators workbook (`07`, `08`, `09`) either.
 
+### The dead-repo scan
+
+A repo that is deleted, made private, taken down or disabled stays in its source list, and the build used
+to keep publishing it: a card with no picture (its Open Graph image 404s) and a detail page whose README
+never loads. `dead-repos.yml` runs `scripts/dead_repos.py` every Saturday, a day before the weekly build:
+
+1. **Scan.** Every repo in `docs/data.json`, plus every repo already in the ledger, is asked about through
+   `graphql_batch`, fifty to a query. Only the repos GraphQL cannot find are asked about again over REST,
+   which follows renames. Dead means REST 404, 451 or a 403 with a `block` object, or `isDisabled`.
+   Renamed and archived repos are alive.
+2. **Guards.** Any request that fails for a reason that is not about the repo (a rate limit, a 5xx, a bad
+   token) fails the step, and nothing is written. A scan that would newly mark more than 10% of the atlas
+   dead, or more than 25 repos on a small atlas, also fails without writing.
+3. **Commit.** If `state/dead-repos.json` changed, the job commits it to the branch it ran on. The run's
+   summary page lists the repos newly gone and the ones that came back.
+4. **Rebuild.** Only when the ledger changed, it dispatches `daily.yml` with `force=true`. `14_classify_all.py`
+   leaves every ledger repo out, so that run drops them from the site and the Markdown edition, and
+   Sunday's weekly drops them from the workbooks. The daily's screenshot gate still applies.
+
+A repo stays in the ledger while it is still gone, including after its list drops it. One that answers
+again is removed by the next scan and is listed again by the build after it. To look at the ledger without
+a network, run `python scripts/dead_repos.py --status`. A curated pick in `config/collections.json` that
+goes dead fails the weekly at `25_collections`, by design; remove or replace the pick.
+
 ### Pushes by a workflow do not run the tests
 
 The daily and weekly builds push with `secrets.GITHUB_TOKEN`. GitHub starts no workflow runs for pushes
@@ -113,7 +138,7 @@ them to `""` whenever they are unset, and for two of the four `""` means somethi
 
 - **`cache/`** lives only in the GitHub Actions cache. If it is evicted (7 days unused, or the 10 GB cap),
   the next weekly starts cold, and every daily skips until that weekly finishes its screenshots.
-- **`state/*.json`** is committed. It holds the first-seen ledger, star history and Discover rotation, and
+- **`state/*.json`** is committed. It holds the first-seen ledger, star history, Discover rotation and the dead-repo ledger, and
   must survive any cache loss. See [overview.md](overview.md#committed-state).
 
 ## Running a build by hand
@@ -123,6 +148,7 @@ Dispatch a workflow from the Actions tab, or run:
 ```bash
 gh workflow run daily.yml --ref latest_branch -f force=true
 gh workflow run weekly.yml --ref latest_branch
+gh workflow run dead-repos.yml --ref latest_branch
 ```
 
 Dispatching against a feature branch (`--ref your-branch`) rebuilds from that branch's scripts and pushes to
