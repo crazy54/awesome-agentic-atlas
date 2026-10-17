@@ -125,13 +125,14 @@ def mirror(ob, name=None, swap=True):
     link(new)
     for m in ob.modifiers:
         nm = new.modifiers.new(m.name, m.type)
-        for attr in ("levels", "render_levels", "width", "segments", "limit_method", "angle_limit",
-                     "harden_normals", "profile"):
-            if hasattr(m, attr):
-                try:
-                    setattr(nm, attr, getattr(m, attr))
-                except AttributeError:
-                    pass
+        for prop in m.bl_rna.properties:
+            k = prop.identifier
+            if prop.is_readonly or k in ("name", "type", "show_expanded", "is_override_data_editable"):
+                continue
+            try:
+                setattr(nm, k, getattr(m, k))
+            except (AttributeError, TypeError):
+                pass
     if "bone" in ob and swap:
         new["bone"] = flip_name(ob["bone"])
     for k in ob.keys():
@@ -458,3 +459,131 @@ class Surface:
     def normal_at(self, point):
         _, nor, _, _ = self.tree.find_nearest(Vector(point))
         return nor
+
+
+# ---------------------------------------------------------------------------------------------- plates
+def cut_field(bm, field):
+    """Cut a bmesh along the zero set of `field(co)`, keeping where it is >= 0. Edges that cross zero are
+    split exactly at the crossing and the faces they bound are divided there, so the boundary is a smooth
+    curve on the surface rather than a staircase of whole faces."""
+    vals = {v: field(v.co) for v in bm.verts}
+    zero = set()
+    for e in list(bm.edges):
+        a, b = e.verts
+        fa, fb = vals[a], vals[b]
+        if (fa >= 0) != (fb >= 0) and abs(fa - fb) > 1e-12:
+            t = fa / (fa - fb)
+            if 1e-4 < t < 1 - 1e-4:
+                _, nv = bmesh.utils.edge_split(e, a, t)
+                vals[nv] = 0.0
+                zero.add(nv)
+            else:
+                v = a if t <= 1e-4 else b
+                vals[v] = 0.0
+                zero.add(v)
+    for f in list(bm.faces):
+        vs = [v for v in f.verts if v in zero]
+        if len(vs) == 2 and not any(e for e in f.edges if set(e.verts) == set(vs)):
+            try:
+                bmesh.ops.connect_verts(bm, verts=vs)
+            except Exception:
+                pass
+    dead = [f for f in bm.faces if sum(vals.get(v, field(v.co)) for v in f.verts) / len(f.verts) < 0
+            or any(vals.get(v, 0.0) < -1e-9 for v in f.verts)]
+    bmesh.ops.delete(bm, geom=dead, context="FACES")
+    loose = [v for v in bm.verts if not v.link_faces]
+    bmesh.ops.delete(bm, geom=loose, context="VERTS")
+    return bm
+
+
+def boundary_loops(bm):
+    """The boundary of an open mesh as ordered loops of positions: [(points, closed), ...]."""
+    edges = [e for e in bm.edges if len(e.link_faces) == 1]
+    nbr = {}
+    for e in edges:
+        a, b = e.verts
+        nbr.setdefault(a, []).append(b)
+        nbr.setdefault(b, []).append(a)
+    seen, loops = set(), []
+    for start in list(nbr):
+        if start in seen:
+            continue
+        chain = [start]
+        seen.add(start)
+        prev, cur = None, start
+        while True:
+            nxt = [n for n in nbr[cur] if n is not prev and n not in seen]
+            if not nxt:
+                break
+            prev, cur = cur, nxt[0]
+            chain.append(cur)
+            seen.add(cur)
+        closed = start in nbr[cur] and len(chain) > 2
+        loops.append(([v.co.copy() for v in chain], closed))
+    return loops
+
+
+def _smooth_loop(pts, closed, passes=2):
+    for _ in range(passes):
+        n = len(pts)
+        out = []
+        for i in range(n):
+            if not closed and (i == 0 or i == n - 1):
+                out.append(pts[i])
+                continue
+            a, b, c = pts[(i - 1) % n], pts[i], pts[(i + 1) % n]
+            out.append(b * 0.5 + (a + c) * 0.25)
+        pts = out
+    return pts
+
+
+def _resample(pts, closed, step):
+    """Evenly spaced points along a polyline, about `step` apart."""
+    P = list(pts) + ([pts[0]] if closed else [])
+    seg = [(P[i + 1] - P[i]).length for i in range(len(P) - 1)]
+    L = sum(seg)
+    n = max(4, int(L / step))
+    out, i, acc = [], 0, 0.0
+    for k in range(n + (0 if closed else 1)):
+        d = L * k / n
+        while i < len(seg) - 1 and acc + seg[i] < d:
+            acc += seg[i]
+            i += 1
+        t = (d - acc) / seg[i] if seg[i] > 1e-12 else 0.0
+        out.append(P[i].lerp(P[i + 1], min(1.0, max(0.0, t))))
+    return out
+
+
+def plate(name, src, field, mat, thickness=0.02, offset=0.0, rim=None, rim_r=0.008, rim_inset=0.0,
+          bevel_w=None, smooth_=True):
+    """An armour plate cut from the solid `src` (an object or a bmesh-able mesh; it is not changed): the
+    part of its surface where `field(co) >= 0`, pushed out `offset` along the normals, given `thickness`
+    inwards with a rounded rim. With `rim` (a material) a tube of radius `rim_r` is laid along the plate's
+    edge, `rim_inset` in from it: the cast's lime piping. Returns (plate, [rim tubes])."""
+    bm = bmesh.new()
+    me = src.data if hasattr(src, "data") else src
+    bm.from_mesh(me)
+    if offset:
+        bm.normal_update()
+        for v in bm.verts:
+            v.co += v.normal * offset
+    cut_field(bm, field)
+    bm.normal_update()
+    loops = boundary_loops(bm) if rim is not None else []
+    ob = mesh_object(name, bm, mat, smooth_)
+    sol = ob.modifiers.new("solidify", "SOLIDIFY")
+    sol.thickness, sol.offset = thickness, -1.0
+    sol.use_even_offset, sol.use_rim, sol.use_rim_only = True, True, False
+    bv = ob.modifiers.new("bevel", "BEVEL")
+    bv.width = bevel_w if bevel_w is not None else thickness * 0.45
+    bv.segments, bv.limit_method, bv.angle_limit = 1, "ANGLE", math.radians(50)
+    tubes = []
+    for k, (pts, closed) in enumerate(loops):
+        if len(pts) < 4:
+            continue
+        pts = _resample(_smooth_loop(pts, closed, 3), closed, max(rim_r * 1.5, 0.012))
+        if rim_inset:
+            c = sum(pts, Vector()) / len(pts)
+            pts = [p + (c - p).normalized() * rim_inset for p in pts]
+        tubes.append(tube(f"{name}-rim{k}", pts, rim_r, rim, segs=6, caps=not closed, closed=closed))
+    return ob, tubes

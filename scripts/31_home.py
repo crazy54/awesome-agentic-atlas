@@ -579,7 +579,8 @@ RIG = ("rig-show.js", "rig/rig.glb") + tuple(f"rig/wall-{w}.{ext}" for w in "abc
        "breakup", "dots", "star", "spiral", "archie", "braces", "iris", "prism"))
 # The admin panel is imported under the same query (see ADMIN_JS), so it is hashed in too: without it, an
 # edit to the panel alone would leave its URL, and a reader's cached copy, where they were.
-OPTIONAL = ("archie-friends.js", "archie-friends-data.js", "archie-admin.js") + RIG
+# The dances (`archie-dances.glb`) come under the same query too; without them he idles where he would dance.
+OPTIONAL = ("archie-friends.js", "archie-friends-data.js", "archie-admin.js", "archie-dances.glb") + RIG
 VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb") + OPTIONAL
 
 

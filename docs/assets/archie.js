@@ -8,10 +8,13 @@
 // 160 KB gzipped) and the model (`archie.glb`) come after that, so the banner never competes with the
 // page's content for bandwidth.
 //
-// The model is `art/archie/archie.py`. Its clips are `idle` (a four-second loop: sway, foot tap, blinks),
-// `watch`, `sit`, `sleep`, `press` and `shrug`, thirteen Fortnite dances of 15 or 16 seconds each (the keys
-// of `BEATS` below) and `walk`, a stride in place. Every clip but `walk` starts and ends on the idle's first
-// pose. The director below idles for a few loops, then does one act -- a dance under moving-head lights, a
+// The model is `art/pals/archie.py`, built from his model sheet, with his clips in `art/pals/clips/` and
+// both baked by `art/pals/build.py`. `archie.glb` is the model and the everyday clips: `idle` (a four-second
+// loop: a weight shift, a toe tap, a glance, blinks), `watch`, `sit`, `sleep`, `press` and `shrug`, `walk`
+// (a stride in place) and `moonwalk` (ditto, backwards). `archie-dances.glb`, fetched in idle time once he is
+// up, is the skeleton and face again with the fifteen dances of 15 or 16 seconds each (the keys of `BEATS`
+// below). Every clip but `walk` and `moonwalk` starts and ends on the idle's first pose. The director
+// below idles for a few loops, then does one act -- a dance under moving-head lights, a
 // video wall and lasers over the page, on an LED floor in dry-ice fog with CO2, flames and sparks on cue
 // (`archie-fx.js`), one of the others, or a walk off the edge of the page and a moonwalk
 // back in -- and idles again. He talks as he goes, in speech and thought bubbles, and answers when poked:
@@ -64,10 +67,11 @@
     try { return !!document.createElement("canvas").getContext("webgl2"); } catch { return false; }
   };
 
-  // The walk's ground speed, in metres a second, and it has to be the clip's: `STRIDE` = 32 degrees of leg
-  // swing on a 0.57 m leg is 2 x 0.57 x sin 32 = 0.60 m a step, two steps in `WALK` = 24 frames at 30 fps.
+  // The walk's ground speed, in metres a second, and it has to be the clip's: each foot slides back 0.60 m
+  // while it is down, which is 62% of the 0.8 s stride (art/pals/clips/archie_base.py, WALK_SPEED there).
+  // The moonwalk's ball foot holds the floor for half its 1 s stride while he glides 0.60 m back over it.
   // Any other number and the feet skate.
-  const WALK_SPEED = 1.5;
+  const WALK_SPEED = 0.6 / (0.62 * 0.8), MOON_SPEED = 0.6 / 0.5;
   const FOV = 2 * Math.atan(18 / 70);                  // radians, vertical, as the poster's camera
   // The dances, each with the number of beats its clip counts, which is what the lights keep time to.
   // They come from the clip functions in `archie.py`; change a dance's rhythm there and change it here.
@@ -206,7 +210,9 @@
     camera.lookAt(0, 1.08, 0);
     camera.updateMatrixWorld();
 
-    const gltf = await new T.GLTFLoader().loadAsync(new URL(`archie.glb${V}`, import.meta.url).href);
+    // The pals' GLBs are meshopt-compressed (art/pals/kit/export.py); the decoder is in the bundle.
+    const loader = new T.GLTFLoader().setMeshoptDecoder(T.MeshoptDecoder);
+    const gltf = await loader.loadAsync(new URL(`archie.glb${V}`, import.meta.url).href);
     if (!allowed()) { started = false; return; }   // the reader resized or changed a setting meanwhile
     const actor = new T.Group();          // what the director moves and turns; the clips animate inside it
     actor.add(gltf.scene);
@@ -301,6 +307,13 @@
     // ---- Clips ----------------------------------------------------------------------------------------
     const mixer = new T.AnimationMixer(gltf.scene);
     const clip = Object.fromEntries(gltf.animations.map(a => [a.name, a]));
+    // The dances come second: about half a megabyte the first screen does not need, fetched once he is up
+    // (which is after the page's own load already). A dance asked for before they land waits for them, and
+    // if they never land he idles instead. Their clips drive the same skeleton and face by name, so they
+    // play on this model's mixer like its own.
+    const dances = loader.loadAsync(new URL(`archie-dances.glb${V}`, import.meta.url).href)
+      .then(g => { for (const a of g.animations) clip[a.name] = a; })
+      .catch(e => console.warn("Archie can't dance this time:", e));
     let current = null, done = null;
     const play = (name, reps = 1) => {
       const a = mixer.clipAction(clip[name]);
@@ -316,7 +329,11 @@
     };
     // Only the clip now playing: one cut off and fading out can still reach its end, and would end the next.
     mixer.addEventListener("finished", e => { if (e.action !== current) return; const d = done; done = null; d && d(); });
-    const perform = (name, reps = 1) => new Promise(res => { play(name, reps); done = res; });
+    const perform = async (name, reps = 1) => {
+      if (!clip[name]) await dances;
+      if (!clip[name]) name = "idle";
+      return new Promise(res => { play(name, reps); done = res; });
+    };
 
     // Waits measured on the render clock, so a hidden tab pauses the whole act rather than skipping it.
     let clock = 0;
@@ -338,12 +355,12 @@
       speed = 0;
       actor.visible = false;
       await after(1.5 + Math.random() * 2);
-      // Back in from the other side, facing the way he left and gliding backwards: the reversed walk.
+      // Back in from the other side, facing the way he left and gliding backwards: the moonwalk.
       frustum(-view.cx - view.sw / 2);
       actor.rotation.y = turnTo = -Math.PI / 2;
       actor.visible = true;
-      play("walk", Infinity).timeScale = -1;
-      speed = WALK_SPEED;
+      play("moonwalk", Infinity);
+      speed = MOON_SPEED;
       await until(() => view.slide >= 0);
       speed = 0;
       frustum(0);
@@ -783,6 +800,7 @@
     // `floss`, whose 180 would need 0.71x.
     const fits = name => {
       const c = clip[name];
+      if (!c) return false;                            // not landed yet (see `dances`)
       return !music.bpm || fold(BEATS[name] / c.duration).miss === 1;
     };
     const tempo = (c, n) => {
@@ -1053,10 +1071,10 @@
            ["git commit -m \"final final v2\"", 1], ["Psst. Discover has the good stuff."],
            ["Is it a bug or a feature? Depends who's asking.", 1],
            ["I'd help you search, but my hands are mostly decorative."],
-           ["Merge conflicts are just git saying hi.", 1], ["Rate my visor. Go on. Very reflective."]],
+           ["Merge conflicts are just git saying hi.", 1], ["Rate my crest. Go on. Hand-polished."]],
     dance: [["Time for {n}!"], ["Lights! Camera! {n}!"], ["Deploying {n} to production."],
             ["DJ, drop the beat. It's {n} time."], ["Nobody asked for {n}. Too bad!"]],
-    sit: [["Just resting my visor.", 1], ["So this is what 'blocked on review' feels like.", 1]],
+    sit: [["Just resting my eyes.", 1], ["So this is what 'blocked on review' feels like.", 1]],
     sleep: [["zzz... merge conflicts... zzz", 1], ["zzz... 404... zzz", 1], ["zzz... one more commit... zzz", 1]],
     watch: [["Is it Friday yet?"], ["The build has been running for how long?", 1]],
     leave: [["brb, CI is red."], ["Be right back, someone @-mentioned me."],
@@ -1068,7 +1086,7 @@
                    ["I followed you all this way and still no poke?"], ["You can't escape me that easily."]],
     back: [["Did you miss me?"], ["Moonwalking is a valid deploy strategy."],
            ["I'm back! Nothing's on fire. Probably."]],
-    light: [["Light mode! My visor has never been so shiny."], ["Whoa, bright! Adjusting visor..."]],
+    light: [["Light mode! My ceramic has never been so shiny."], ["Whoa, bright! Adjusting crest..."]],
     dark: [["Ahh, the dark side. Easier on the circuits."], ["Lights down. Now it's a party."]],
     flip: [["It's a theme switch, not a fidget toy! ...okay, it is a bit fun."]],
     glass: [["Ooh, frosted glass. Very fancy."]],
@@ -1076,13 +1094,13 @@
     prism: [["Prism?! Now THIS is a rave."]],
     graphite: [["Back to Graphite. Classic, like a good README."]],
     // The four newer skins; their copy is the designer's, from `ARCHIE` in `archie-friends-data.js`
-    sherbet: [["Sherbet! My visor feels fizzy."]],
+    sherbet: [["Sherbet! My crest feels fizzy."]],
     riso: [["Riso! Everything's slightly misaligned. On purpose."]],
     blueprint: [["Blueprint. Finally, I can see how I was built."]],
     aurora: [["Aurora! Okay, this one's pretty."]],
     welcome: [["Welcome back! I didn't touch anything. Probably."], ["Oh hi! I was definitely not napping."]],
     up: [["Oh hey, you came back up!"], ["A visitor from further down the page!"]],
-    lonely: [["...is this thing on?", 1], ["*taps visor* ...hello?", 1]],
+    lonely: [["...is this thing on?", 1], ["*taps ear cup* ...hello?", 1]],
     copy: [["Copying? Great taste. Star the originals too!"]],
     discover: [["Discover is where the fresh finds live."]],
     collections: [["Collections: like playlists, but for repos."]],
@@ -1128,7 +1146,7 @@
             ["I'd star you if I could."]],
     sulk: [["Fine. Don't poke me. See if I care.", 1], ["I'm not sulking. You're sulking.", 1],
            ["Some people say hi to the mascot. Just saying."]],
-    angry: [["You've been ignoring me for ages."], ["I have feelings. Mostly in the visor.", 1],
+    angry: [["You've been ignoring me for ages."], ["I have feelings. Mostly in the crest.", 1],
             ["Poke. Me. It's one click."]],
     furious: [["Right. That's it. There will be consequences."], ["Hell hath no fury like a mascot ignored."],
               ["I know where your theme setting lives."]],

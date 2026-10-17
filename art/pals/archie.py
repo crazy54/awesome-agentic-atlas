@@ -121,6 +121,10 @@ def build():
     for s, sx in rig.SIDES:
         R.bone(f"ear{s}", (sx * 0.27, SY(722), Z(180)), (sx * 0.34, SY(722), Z(180)), "head", z=(0, -1, 0))
     R.bone("core", (0, -0.11, Z(342)), (0, -0.23, Z(342)), "spine", z=(0, 0, 1))
+    # The back hatch (hinged along its top edge, swings up and out: Brick opens it in "the fake crash")
+    # and the tether port low on his back (the end of his own tether, in "the invisible tug-of-war").
+    R.bone("hatch", (0, 0.205, Z(262)), (0, 0.205, Z(318)), "chest", z=(0, 1, 0))
+    R.bone("tether", (0, 0.17, Z(380)), (0, 0.27, Z(380)), "hips", z=(0, 0, 1))
     for s, sx in rig.SIDES:
         R.bone(f"shoulder{s}", (sx * 0.08, 0, Z(262)), (sx * SHOULDER.x, 0, SHOULDER.z), "chest")
         R.bone(f"upper_arm{s}", (sx * SHOULDER.x, 0, SHOULDER.z), (sx * ELBOW.x, 0, ELBOW.z), f"shoulder{s}")
@@ -132,22 +136,33 @@ def build():
 
     # ---- head --------------------------------------------------------------------------------------
     def head_shape(p, q):
-        # Broad cranium, full cheeks, a rounded chin; the face flatter than the back of the skull.
+        # A broad, shield-shaped head: a full cranium, cheeks carried well down, a wide rounded chin; the
+        # face flatter than the back of the skull.
         below = max(0.0, -q.z)
-        sx = 1.0 - 0.27 * below ** 1.9
-        sy = 1.0 - 0.2 * below ** 1.8
+        sx = 1.0 - 0.2 * below ** 2.3
+        sy = 1.0 - 0.17 * below ** 2.0
         p = Vector((p.x * sx, p.y * sy, p.z))
         if q.y < 0:
-            p.y *= 0.9 - 0.05 * max(0.0, q.z)
+            p.y *= 0.88 - 0.04 * max(0.0, q.z)
         else:
             p.y *= 1.05
-        p.y -= 0.03 * below ** 2                # the chin a touch forward
+        p.y -= 0.028 * below ** 2                # the chin a touch forward
         return p
 
-    skull = add(geo.superquad("head-shell", HEAD_R, M["ceramic"], HEAD_C, n=2.15, shape=head_shape, res=15),
-                "head")
+    skull = add(geo.superquad("head-shell", HEAD_R, M["ceramic"], HEAD_C, n=(2.25, 2.15, 2.2), shape=head_shape,
+                              res=15), "head")
     geo.box_uv(skull, 0.5)
     surf = geo.Surface(skull)
+    # Panel seams over the back of the skull, as on the sheet's back view: one down the middle, two
+    # across, laid just proud of the shell in graphite.
+    for k, pts in enumerate([
+            [V(0.0, y, z) for y, z in ((0.05, 2.26), (0.13, 2.22), (0.2, 2.13), (0.24, 2.0), (0.24, 1.9))],
+            [V(x, 0.2, 2.12 - 0.12 * x * x) for x in (-0.2, -0.13, -0.06, 0.0, 0.06, 0.13, 0.2)],
+            [V(x, 0.22, 1.96 - 0.1 * x * x) for x in (-0.21, -0.14, -0.07, 0.0, 0.07, 0.14, 0.21)]]):
+        seam = [surf.toward(p, HEAD_C, offset=0.0015) for p in pts]
+        seam = [q for q in seam if q is not None]
+        if len(seam) > 2:
+            add(geo.tube(f"head-seam{k}", seam, 0.0045, M["graphite"], segs=5), "head")
 
     # Ear cups: layered on the X axis, as on the head-profile panel.
     for s, sx in rig.SIDES:
@@ -164,45 +179,61 @@ def build():
              geo.disc(f"ear-pin{s}", 0.012, 0.012, M["brass"], c + V(sx * 0.072, 0, 0), ax, segs=12)],
             f"ear{s}")
 
-    # The crest: a fin of graphite rising from the crown and sweeping forward, lime along its leading edge
-    # and its outer (character's left) flank.
-    depth = [0.17, 0.135, 0.09, 0.045, 0.004]       # half-size in the plane of symmetry
-    thick = [0.062, 0.058, 0.046, 0.028, 0.004]     # half-size across
-    pts, dd, tt = [], [], []
-    for i in range(len(cp) - 1):                    # densify the path
-        for k in range(4):
-            t = k / 4
-            pts.append(cp[i].lerp(cp[i + 1], t))
-            dd.append(lerp(depth[i], depth[i + 1], t))
-            tt.append(lerp(thick[i], thick[i + 1], t))
-    pts.append(cp[-1])
-    dd.append(depth[-1])
-    tt.append(thick[-1])
-    pts.insert(0, cp[0] + V(0, 0.01, -0.06))       # root it inside the skull
-    dd.insert(0, 0.16)
-    tt.insert(0, 0.05)
-    crest = geo.sweep("crest", pts, tt, dd, M["graphite"], n=2.4, segs=16, up=(0, -1, 0.15))
-    # The lime: a band capping the fin's leading edge from the brow to the tip, a little proud of it.
-    T_, N_, B_ = geo._frames(pts, (0, -1, 0.15))
-    lead_pts, lead_w, lead_h = [], [], []
-    for i in range(2, len(pts)):
-        lead_pts.append(pts[i] + N_[i] * dd[i] * 0.78 + B_[i] * tt[i] * 0.42)
-        lead_w.append(tt[i] * 0.72 + 0.002)
-        lead_h.append(max(0.004, min(0.036, dd[i] * 0.3)))
-    lime_band = geo.sweep("crest-lime", lead_pts, lead_w, lead_h, M["lime"], n=2.4, segs=14, up=(0, -1, 0.15))
-    geo.subsurf(lime_band, 1)
-    parts.append(lime_band)
+    # The crest: a pompadour, lofted from the sheet's side view. Each slice is an ellipse spanning the
+    # crest's back edge to its front edge (sheet pixels, side view), its half-width across the head
+    # tapering to the tip, its centre leaning to the character's left (the front view's lean).
+    edges = [  # t, back (x, y), front (x, y)
+        (0.00, (684, 152), (786, 132)), (0.14, (690, 128), (791, 114)), (0.28, (701, 108), (795, 101)),
+        (0.42, (715, 93), (798, 89)), (0.56, (732, 80), (801, 78)), (0.70, (752, 69), (803, 68)),
+        (0.84, (775, 61), (805, 61)), (0.94, (793, 58), (805, 58)), (1.0, (802, 56), (803, 56))]
+    rings, ring_n = [], 20
+    for t, (bx, by), (fx, fy) in edges:
+        B, Fp = V(0, SY(bx), Z(by)), V(0, SY(fx), Z(fy))
+        Cn = (B + Fp) / 2 + V(0.03 + 0.2 * t ** 1.3, 0, 0)
+        u = (Fp - B)
+        d = max(u.length / 2, 0.002)
+        u = u.normalized() if u.length > 1e-6 else V(0, -1, 0)
+        w = max(0.002, 0.12 * (1 - t) ** 0.9 * (1 - 0.25 * smooth(0.0, 0.3, t)) + 0.0)
+        rings.append((Cn, u, d, w))
+    import bmesh as _bm
+    bm = _bm.new()
+    vrows = []
+    for Cn, u, d, w in rings:
+        row = []
+        for j in range(ring_n):
+            a = math.tau * j / ring_n
+            ca, sa = math.cos(a), math.sin(a)
+            # a superellipse, squarer across than along
+            px = math.copysign(abs(ca) ** 0.8, ca) * d
+            py = math.copysign(abs(sa) ** 0.7, sa) * w
+            row.append(bm.verts.new(Cn + u * px + V(1, 0, 0) * py))
+        vrows.append(row)
+    for r0, r1 in zip(vrows, vrows[1:]):
+        for j in range(ring_n):
+            f = bm.faces.new((r0[j], r0[(j + 1) % ring_n], r1[(j + 1) % ring_n], r1[j]))
+            a = math.tau * (j + 0.5) / ring_n
+            # lime: the front edge and the character's-left flank; graphite behind and on the right
+            f.material_index = 1 if (a < 1.75 or a > math.tau - 0.35) else 0
+    tipv = bm.verts.new(rings[-1][0] + rings[-1][1] * 0.002 + V(0, 0, 0.004))
+    for j in range(ring_n):
+        f = bm.faces.new((vrows[-1][j], vrows[-1][(j + 1) % ring_n], tipv))
+        f.material_index = 1
+    basev = bm.verts.new(rings[0][0] - V(0, 0, 0.03))
+    for j in range(ring_n):
+        bm.faces.new((vrows[0][(j + 1) % ring_n], vrows[0][j], basev))
+    _bm.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    crest = geo.mesh_object("crest", bm, M["graphite"])
+    crest.data.materials.append(M["lime"])
     geo.subsurf(crest, 1)
     zr0, zr1 = Z(140), Z(57)
-    for ob in (crest, lime_band):
-        vgs = [ob.vertex_groups.new(name=f"crest_{i}") for i in (1, 2, 3)]
-        for v in ob.data.vertices:
-            t = (v.co.z - zr0) / (zr1 - zr0)
-            w = [max(0.0, 1 - abs(t - c) / 0.4) + 1e-6 for c in (0.0, 0.5, 1.0)]
-            tot = sum(w)
-            for vg, x in zip(vgs, w):
-                if x / tot > 1e-3:
-                    vg.add([v.index], x / tot, "REPLACE")
+    vgs = [crest.vertex_groups.new(name=f"crest_{i}") for i in (1, 2, 3)]
+    for v in crest.data.vertices:
+        t = (v.co.z - zr0) / (zr1 - zr0)
+        w = [max(0.0, 1 - abs(t - c) / 0.4) + 1e-6 for c in (0.0, 0.5, 1.0)]
+        tot = sum(w)
+        for vg, x in zip(vgs, w):
+            if x / tot > 1e-3:
+                vg.add([v.index], x / tot, "REPLACE")
     parts.append(crest)
 
     # Eyes, set into the face, gazing straight out.
@@ -210,7 +241,7 @@ def build():
     for s, sx in rig.SIDES:
         ex, ez = sx * 0.106, Z(171)
         front = surf.front(ex, ez)
-        c = V(ex, front.y + eye_r * 0.45, ez)
+        c = V(ex, front.y + eye_r * 0.52, ez)
         look = V(sx * 0.05, -1, 0.0).normalized()
         R.bone(f"eye{s}", c, c + look * 0.08, "head", z=(0, 0, 1))
         R.bone(f"lid_up{s}", c, c + look * 0.07, "head", z=(0, 0, 1))
@@ -218,7 +249,7 @@ def build():
         eparts, _ = face.eye(f"eye{s}", sx, c, eye_r, look,
                              dict(eye=f"eye{s}", lid_up=f"lid_up{s}", lid_lo=f"lid_lo{s}", head="head"),
                              M["eye"], M["ceramic"], M["graphite"], M["glint"], lash=0.2, lash_flick=0.4,
-                             up_open=34, lo_open=62, lid_roll=-5, res=8)
+                             up_open=34, lo_open=70, lid_roll=-5, res=8, lid_r=1.035)
         parts.extend(eparts)
 
     # Brows: heavy graphite bars, the inner end low and blunt, arching to a tapered outer end.
@@ -265,50 +296,93 @@ def build():
     def chest_shape(p, q):
         # Wide at the shoulders, tapering to the waist; pecs forward, the back flatter.
         t = (q.z + 1) / 2                       # 0 bottom .. 1 top
-        sx = lerp(0.72, 1.0, smooth(0.0, 0.7, t))
+        sx = lerp(0.7, 1.0, smooth(0.0, 0.7, t))
         p = Vector((p.x * sx, p.y, p.z))
         if q.y < 0:
-            p.y *= 1.0 + 0.1 * math.sin(math.pi * t) * (1 - 0.5 * abs(q.x))
+            p.y *= 1.0 + 0.12 * math.sin(math.pi * t) * (1 - 0.5 * abs(q.x))
         else:
             p.y *= 0.86
         return p
 
-    chest = add(geo.superquad("chest-shell", (0.278, 0.222, 0.186), M["ceramic"], CH_C, n=(2.6, 2.4, 3.3),
-                              shape=chest_shape, res=13), "chest")
-    geo.box_uv(chest, 0.5)
-    csurf = geo.Surface(chest)
+    # The torso is white plates over a graphite body, as on the sheet: the black shows at the V of the
+    # collar, under the arms, down the spine and at the waist.
+    add(geo.superquad("torso-core", (0.235, 0.175, 0.19), M["graphite"], CH_C + V(0, 0.015, -0.02), n=(2.5, 2.4, 2.6),
+                      shape=lambda p, q: Vector((p.x * lerp(0.78, 1.0, smooth(-1, 0.6, q.z)), p.y, p.z)), res=10),
+        "chest")
+    chest_base = geo.superquad("chest-base", (0.282, 0.226, 0.188), M["ceramic"], CH_C, n=(2.6, 2.4, 3.3),
+                               shape=chest_shape, res=13)
 
-    def on_chest(name, xz, r, bone="chest", offset=0.002):
+    def chest_front(co):
+        neck_v = Z(250) - 0.045 + 0.4 * abs(co.x)            # the V of the collar
+        return min(CH_C.y + 0.075 - co.y,                     # the front three fifths
+                   neck_v - co.z,
+                   0.266 - abs(co.x) - 0.06 * max(0.0, co.z - CH_C.z) / 0.18)   # clear of the armpits
+
+    chest, rims = geo.plate("chest-plate", chest_base, chest_front, M["ceramic"], thickness=0.03, rim=M["lime"],
+                            rim_r=0.009)
+    geo.box_uv(chest, 0.5)
+    add(chest, "chest")
+    add(rims, "chest")
+
+    def chest_back(co):
+        return min(co.y - (CH_C.y + 0.1), abs(co.x) - 0.065, Z(256) - co.z, 0.258 - abs(co.x))
+
+    back, brims = geo.plate("back-plate", chest_base, chest_back, M["ceramic"], thickness=0.03, rim=M["lime"],
+                            rim_r=0.007)
+    geo.box_uv(back, 0.5)
+    add(back, "chest")
+    add(brims, "chest")
+    csurf = geo.Surface(chest_base)
+    bpy.data.objects.remove(chest_base)
+
+    def on_chest(name, xz, r, bone="chest", offset=0.006):
         pts = [p for p in (csurf.front(x, z, offset=offset) for x, z in xz) if p is not None]
         return add(geo.tube(name, pts, r, M["lime"], segs=7), bone)
 
-    # Lime piping: the chevron under the pecs, the collar, and the V seams out to the shoulders.
-    on_chest("chest-chevron", [(u * 0.25, Z(291) - 0.03 * (1 - abs(u)) ** 1.5 + 0.03 * abs(u) ** 3)
-                               for u in (-1 + 2 * i / 26 for i in range(27))], 0.0095)
-    on_chest("chest-collar", [(u * 0.115, Z(252) - 0.045 * (1 - u * u)) for u in (-1 + 2 * i / 22 for i in range(23))],
-             0.012)
+    # Lime piping across the pecs: a shallow chevron, and from its ends down and in to the waist.
+    on_chest("chest-chevron", [(u * 0.23, Z(290) - 0.022 * (1 - abs(u)) ** 1.4 + 0.02 * abs(u) ** 3)
+                               for u in (-1 + 2 * i / 26 for i in range(27))], 0.009)
     for sx in (1, -1):
-        on_chest(f"chest-seam{'_L' if sx > 0 else '_R'}",
-                 [(sx * lerp(0.115, 0.255, t), lerp(Z(253), Z(266), t)) for t in (i / 11 for i in range(12))], 0.0075)
+        on_chest(f"chest-flank{'_L' if sx > 0 else '_R'}",
+                 [(sx * lerp(0.232, 0.17, t), lerp(Z(291), Z(316), t)) for t in (i / 8 for i in range(9))], 0.008)
 
-    # Graphite under-armour: the spine down the back, flush.
+    # Graphite under-armour: the spine down the back, segmented.
     add(geo.segment("spine-back", (0, 0.14, Z(252)), (0, 0.14, Z(328)), 0.075, M["graphite"], flat=0.62, n=2.8,
                     res=7), "chest")
     for i in range(5):
         z = lerp(Z(258), Z(326), i / 4)
-        add(geo.superquad(f"spine-plate{i}", (0.068, 0.02, 0.015), M["graphite"], (0, 0.158, z), n=2.6, res=3),
+        add(geo.superquad(f"spine-plate{i}", (0.062, 0.024, 0.015), M["graphite"], (0, 0.166, z), n=2.6, res=3),
             "chest")
 
-    # Abdomen: graphite ribs round a core, and the Atlas Core's octagonal dock in front.
-    AB_Z0, AB_Z1 = Z(368), Z(312)
+    # The hatch: a ceramic door over the upper back with a lime rim, a graphite cavity behind it.
+    hz0, hz1 = Z(262), Z(312)
+    hatch_c = V(0, 0.0, (hz0 + hz1) / 2)
+    back_y = csurf.back(0.0, hatch_c.z).y
+    hb = geo.superquad("hatch-door", (0.1, 0.03, (hz0 - hz1) / 2), M["ceramic"], (0, back_y + 0.012, hatch_c.z),
+                       n=(3.2, 2.2, 3.2), res=6)
+    geo.box_uv(hb, 0.5)
+    add(hb, "hatch")
+    rim = [V(0.094 * math.cos(a), back_y + 0.036, hatch_c.z + ((hz0 - hz1) / 2 - 0.006) * math.sin(a))
+           for a in (math.tau * i / 28 for i in range(28))]
+    add(geo.tube("hatch-rim", rim, 0.007, M["lime"], segs=6, caps=False, closed=True), "hatch")
+    add(geo.superquad("hatch-cavity", (0.088, 0.02, (hz0 - hz1) / 2 - 0.01), M["rubber"], (0, back_y - 0.006, hatch_c.z),
+                      n=3.0, res=4), "chest")
+    # The tether port: a graphite socket with a lime ring, low on the back.
+    tp = V(0, 0.16, Z(382))
+    add([geo.disc("tether-port", 0.04, 0.04, M["graphite"], tp, (0, 1, 0), bevel_r=0.01, segs=20),
+         geo.ring("tether-ring", 0.032, 0.006, M["lime"], tp + V(0, 0.02, 0), (0, 1, 0), segs=20, sides=6)], "hips")
+
+    # Abdomen: graphite plates stacked like abs, narrowing downwards, and the Atlas Core's octagonal dock.
+    AB_Z0, AB_Z1 = Z(370), Z(312)
     add(geo.segment("abdomen-core", (0, 0.0, AB_Z0 - 0.02), (0, 0.0, AB_Z1 + 0.03), 0.14, M["graphite"],
                     flat=0.85, n=2.4, res=8), "spine")
     for i in range(4):
         z = lerp(AB_Z0 + 0.02, AB_Z1 - 0.02, i / 3)
-        rr = 0.155 - 0.012 * abs(i - 1.5)
-        add(geo.superquad(f"abdomen-rib{i}", (rr, rr * 0.84, 0.023), M["graphite"], (0, 0.012, z), n=(2.4, 2.4, 3),
-                          res=5), "spine")
-    dock_c = V(0, -0.125, Z(342))
+        rr = 0.15 - 0.016 * (3 - i)
+        add(geo.superquad(f"abdomen-rib{i}", (rr, rr * 0.86, 0.024), M["graphite"], (0, 0.008, z), n=(2.4, 2.4, 3),
+                          res=5, shape=lambda p, q: Vector((p.x, p.y, p.z - 0.012 * max(0.0, -q.y) * (1 - abs(q.x))))),
+            "spine")
+    dock_c = V(0, -0.128, Z(342))
     turn = Matrix.Translation(dock_c) @ Matrix.Rotation(math.pi / 8, 4, (0, 1, 0)) @ Matrix.Translation(-dock_c)
     frame = geo.lathe("dock-frame", geo.rounded_profile(0.118, 0.042, 0.012, r_inner=0.085), M["graphite"],
                       dock_c, (0, -1, 0), segs=8, y_hint=(0, 0, 1))
@@ -318,28 +392,35 @@ def build():
     add(geo.superquad("dock-clasp", (0.032, 0.018, 0.013), M["lime"], dock_c + V(0, -0.012, 0.11), n=2.6, res=4),
         "spine")
 
-    # Pelvis: a ceramic brief, a lime-edged plate in front, graphite hip joints at its sides.
+    # Pelvis: a ceramic brief with a lime waistband and a lime-edged panel in front; the big graphite hip
+    # joints face forward and out, as on the sheet's front view.
     PV_C = V(0, 0.0, Z(392))
 
     def pelvis_shape(p, q):
         t = (q.z + 1) / 2
-        sx = lerp(0.6, 1.0, smooth(0.0, 0.9, t))
+        sx = lerp(0.58, 1.0, smooth(0.0, 0.9, t))
         return Vector((p.x * sx, p.y * lerp(0.8, 1.0, t), p.z))
 
-    pelvis = add(geo.superquad("pelvis-shell", (0.22, 0.172, 0.118), M["ceramic"], PV_C, n=(2.5, 2.3, 2.4),
-                               shape=pelvis_shape, res=10), "hips")
+    pv_base = geo.superquad("pelvis-base", (0.222, 0.175, 0.122), M["ceramic"], PV_C, n=(2.5, 2.3, 2.4),
+                            shape=pelvis_shape, res=12)
+    pelvis, prims = geo.plate("pelvis-shell", pv_base, lambda co: (PV_C.z + 0.085) - co.z, M["ceramic"],
+                              thickness=0.04, rim=M["lime"], rim_r=0.009)
     geo.box_uv(pelvis, 0.5)
-    psurf = geo.Surface(pelvis)
-    # a U-shaped panel: down from the waistband and round under
-    plate = [psurf.front(0.06 * math.sin(a), PV_C.z + 0.085 - 0.11 * math.cos(a * 0.9), offset=0.002)
+    add(pelvis, "hips")
+    add(prims, "hips")
+    add(geo.superquad("pelvis-core", (0.17, 0.13, 0.05), M["graphite"], PV_C + V(0, 0, 0.08), n=2.6, res=6), "hips")
+    psurf = geo.Surface(pv_base)
+    bpy.data.objects.remove(pv_base)
+    panel = [psurf.front(0.062 * math.sin(a), PV_C.z + 0.075 - 0.105 * math.cos(a * 0.9), offset=0.004)
              for a in (lerp(-1.5, 1.5, i / 20) for i in range(21))]
-    add(geo.tube("pelvis-plate", [p for p in plate if p], 0.0075, M["lime"], segs=7), "hips")
+    add(geo.tube("pelvis-panel", [p for p in panel if p], 0.0075, M["lime"], segs=7), "hips")
     for s, sx in rig.SIDES:
-        c = V(sx * 0.172, 0.0, HIP_Z)
-        add(geo.disc(f"hip-joint{s}", 0.086, 0.075, M["graphite"], c + V(sx * 0.035, 0, 0), (sx, 0, 0),
-                     bevel_r=0.022, segs=28), f"thigh{s}")
-        add(geo.ring(f"hip-ring{s}", 0.066, 0.0085, M["lime"], c + V(sx * 0.074, 0, 0), (sx, 0, 0), segs=28, sides=6),
-            f"thigh{s}")
+        c = V(sx * 0.2, -0.045, HIP_Z - 0.005)
+        ax = V(sx * 0.55, -0.83, 0).normalized()
+        add([geo.disc(f"hip-joint{s}", 0.098, 0.07, M["graphite"], c, ax, bevel_r=0.022, segs=32),
+             geo.ring(f"hip-ring{s}", 0.08, 0.009, M["graphite"], c + ax * 0.036, ax, segs=32, sides=6),
+             geo.disc(f"hip-hub{s}", 0.05, 0.03, M["lens"], c + ax * 0.036, ax, bevel_r=0.008, segs=24, bulge=0.006),
+             geo.ring(f"hip-lime{s}", 0.062, 0.0055, M["lime"], c + ax * 0.04, ax, segs=32, sides=6)], f"thigh{s}")
 
     # ---- legs and arms (built on the left, mirrored) -----------------------------------------------
     leg(M, both)
@@ -361,15 +442,35 @@ def build():
     return R, parts, M
 
 
-def stripe(name, surf, pts3d, centre_fn, r, m, offset=0.002):
-    """Lime trim laid onto a limb: each guide point is pushed onto the surface along the line from its own
-    axis point (`centre_fn(p)`) outwards."""
-    out = []
-    for p in pts3d:
-        q = surf.toward(p, centre_fn(p), offset=offset, far=0.4)
-        if q is not None:
-            out.append(q)
-    return geo.tube(name, out, r, m, segs=6) if len(out) > 2 else None
+def sleeve(name, a, b, ra, rb, M, cut=(0.1, 0.1), rims=(True, True), tilt=(None, None), bulge=0.06, front=0.0,
+           flat=0.95, n=2.25, res=7, shape=None, core=0.62, y_hint=(0, 1, 0)):
+    """A limb as the sheet draws one: a graphite core from `a` to `b` and over it a ceramic sleeve, its ends
+    cut back (`cut` = fractions of the length at each end, `tilt` = an optional plane normal for a slanted
+    cut) with lime piping round each open end that `rims` asks for. Returns the parts, untagged."""
+    a, b = Vector(a), Vector(b)
+    axis = (b - a).normalized()
+    L = (b - a).length
+    out = [geo.segment(f"{name}-core", a, b, ra * core, M["graphite"], rb=rb * core, n=2.2, res=4, y_hint=y_hint)]
+    base = geo.segment(f"{name}-base", a, b, ra, M["ceramic"], rb=rb, bulge=bulge, front=front, flat=flat, n=n,
+                       res=res, shape=shape, y_hint=y_hint)
+
+    def field(co):
+        s0 = (co - a).dot(Vector(tilt[0]).normalized() * -1 if tilt[0] else axis) - cut[0] * L
+        s1 = (b - co).dot(Vector(tilt[1]).normalized() if tilt[1] else axis) - cut[1] * L
+        return min(s0, s1)
+
+    shell, tubes = geo.plate(name, base, field, M["ceramic"], thickness=0.022, rim=M["lime"], rim_r=0.0085)
+    bpy.data.objects.remove(base)
+    geo.box_uv(shell, 0.5)
+    out.append(shell)
+    for tb in tubes:
+        c = sum((v.co for v in tb.data.vertices), Vector()) / max(1, len(tb.data.vertices))
+        end = 0 if (c - a).dot(axis) < L / 2 else 1
+        if rims[end]:
+            out.append(tb)
+        else:
+            bpy.data.objects.remove(tb)
+    return out
 
 
 def leg(M, both):
@@ -377,47 +478,34 @@ def leg(M, both):
     hip = V(sx * HIP_X, 0, HIP_Z)
     knee = V(sx * KNEE_X, -0.005, KNEE_Z)
     ankle = V(sx * ANKLE_X, 0.03, ANKLE_Z)
-    th = geo.segment(f"thigh{s}", hip + V(sx * 0.014, 0, -0.035), knee + V(0, 0, 0.075), 0.124, M["ceramic"],
-                     rb=0.098, flat=0.93, bulge=0.07, front=0.07, n=2.3, res=8)
-    geo.box_uv(th, 0.5)
-    both(th, f"thigh{s}")
-    tsurf = geo.Surface(th)
-    axis = lambda p: hip.lerp(knee, max(0.0, min(1.0, (HIP_Z - p.z) / (HIP_Z - KNEE_Z))))
-    st = stripe(f"thigh-stripe{s}", tsurf,
-                [V(sx * (0.3 - 0.02 * t), -0.04 - 0.03 * t, lerp(HIP_Z - 0.06, KNEE_Z + 0.12, t)) for t in
-                 (i / 10 for i in range(11))], axis, 0.0075, M["lime"])
-    if st:
-        both(st, f"thigh{s}")
-    band = geo.ring(f"thigh-band{s}", 0.1, 0.009, M["lime"], knee + V(0, -0.002, 0.13), (0.03, 0, 1), segs=28, sides=6,
-                    squash=1.2)
-    both(band, f"thigh{s}")
-    # knee: a graphite hinge with lime rings, and a ceramic cap with lime edging in front
-    both(geo.disc(f"knee-joint{s}", 0.074, 0.18, M["graphite"], knee, (1, 0, 0), bevel_r=0.03, segs=28), f"shin{s}")
+    # The thigh's sleeve: cut on a slant at the top (higher outside, round the hip joint), square above
+    # the knee; lime at both ends.
+    for ob in sleeve(f"thigh{s}", hip + V(sx * 0.016, 0, 0.02), knee + V(0, 0, 0.06), 0.13, 0.1, M,
+                     cut=(0.08, 0.06), tilt=(V(-sx * 0.35, 0.0, 1.0), None), bulge=0.07, front=0.07, flat=0.93):
+        both(ob, f"thigh{s}")
+    # knee: a graphite hinge, lime rings either side, and a ceramic shield of a kneecap edged in lime
+    both(geo.disc(f"knee-joint{s}", 0.078, 0.19, M["graphite"], knee, (1, 0, 0), bevel_r=0.03, segs=28), f"shin{s}")
     for k, off in enumerate((-1, 1)):
-        both(geo.ring(f"knee-ring{k}{s}", 0.066, 0.0085, M["lime"], knee + V(off * 0.088, 0, 0), (1, 0, 0), segs=28,
+        both(geo.ring(f"knee-ring{k}{s}", 0.066, 0.0085, M["lime"], knee + V(off * 0.094, 0, 0), (1, 0, 0), segs=28,
                       sides=6), f"shin{s}")
-    cap = geo.superquad(f"kneecap{s}", (0.092, 0.05, 0.112), M["ceramic"], knee + V(0, -0.09, 0.005),
-                        n=(2.3, 2.0, 2.4), res=8,
-                        shape=lambda p, q: Vector((p.x, p.y + 0.022 * (q.x * q.x + q.z * q.z), p.z)))
+    cap_base = geo.superquad(f"kneecap-base{s}", (0.094, 0.07, 0.118), M["ceramic"], knee + V(0, -0.075, 0.005),
+                             n=(2.6, 2.0, 2.8), res=9)
+    cap, crims = geo.plate(f"kneecap{s}", cap_base, lambda co: (knee.y - 0.065) - co.y, M["ceramic"], thickness=0.03,
+                           rim=M["lime"], rim_r=0.008)
+    bpy.data.objects.remove(cap_base)
     geo.box_uv(cap, 0.5)
     both(cap, f"shin{s}")
-    ksurf = geo.Surface(cap)
-    edge = [ksurf.front(knee.x + 0.077 * math.sin(a), knee.z + 0.005 + 0.094 * math.cos(a), offset=0.001)
-            for a in (math.tau * i / 30 for i in range(30))]
-    edge = [p for p in edge if p]
-    if len(edge) > 4:
-        both(geo.tube(f"kneecap-edge{s}", edge, 0.008, M["lime"], segs=6, caps=False, closed=True), f"shin{s}")
-    sh = geo.segment(f"shin{s}", knee + V(0, 0, -0.065), ankle + V(0, 0, 0.045), 0.1, M["ceramic"], rb=0.078,
-                     flat=0.95, bulge=0.06, n=2.3, res=8,
-                     shape=lambda p, q: Vector((p.x, p.y + (0.028 * (1 - q.z * q.z) if q.y > 0 else 0), p.z)))
-    geo.box_uv(sh, 0.5)
-    both(sh, f"shin{s}")
-    both(geo.ring(f"shin-band{s}", 0.092, 0.0085, M["lime"], knee + V(0, 0.004, -0.09), (0.02, -0.08, 1), segs=28,
-                  sides=6, squash=1.2), f"shin{s}")
+    for tb in crims:
+        both(tb, f"shin{s}")
+    # the shin's sleeve: a calf behind, lime at the top under the knee and at the ankle
+    for ob in sleeve(f"shin{s}", knee + V(0, 0, -0.05), ankle + V(0, 0, 0.035), 0.106, 0.08, M, cut=(0.06, 0.05),
+                     bulge=0.06, flat=0.95,
+                     shape=lambda p, q: Vector((p.x, p.y + (0.03 * (1 - q.z * q.z) if q.y > 0 else 0), p.z))):
+        both(ob, f"shin{s}")
     both(geo.disc(f"ankle-joint{s}", 0.066, 0.16, M["graphite"], ankle, (1, 0, 0), bevel_r=0.026, segs=24), f"foot{s}")
-    both(geo.disc(f"ankle-disc{s}", 0.054, 0.03, M["graphite"], ankle + V(sx * 0.082, 0, 0), (sx, 0, 0),
+    both(geo.disc(f"ankle-disc{s}", 0.056, 0.03, M["graphite"], ankle + V(sx * 0.082, 0, 0), (sx, 0, 0),
                   bevel_r=0.01, segs=24), f"foot{s}")
-    both(geo.ring(f"ankle-ring{s}", 0.043, 0.0065, M["lime"], ankle + V(sx * 0.098, 0, 0), (sx, 0, 0), segs=24,
+    both(geo.ring(f"ankle-ring{s}", 0.044, 0.0065, M["lime"], ankle + V(sx * 0.098, 0, 0), (sx, 0, 0), segs=24,
                   sides=6), f"foot{s}")
     for ob in sneaker(s, sx, M):
         both(ob)
@@ -430,47 +518,41 @@ def arm(M, R, both):
     wr = V(sx * WRIST.x, 0, WRIST.z)
     up = (el - sh_).normalized()
     fw = (wr - el).normalized()
-    both(geo.disc(f"shoulder-joint{s}", 0.08, 0.065, M["graphite"], sh_ + V(-sx * 0.02, 0, 0.0), (sx, 0, 0),
-                  bevel_r=0.02, segs=28), f"upper_arm{s}")
-    # The pad: a ceramic cap over the joint, lime round its lower edge.
-    pad_c = sh_ + V(sx * 0.02, 0, 0.055)
+    # The shoulder: a big graphite joint of stepped rings, and over it a ceramic pauldron cut away
+    # underneath, lime round its edge (the sheet's shoulder detail).
+    jc = sh_ + V(sx * 0.03, 0, 0.0)
+    both(geo.disc(f"shoulder-joint{s}", 0.09, 0.07, M["graphite"], jc, (sx, 0, 0), bevel_r=0.02, segs=32), f"upper_arm{s}")
+    both(geo.ring(f"shoulder-ring{s}", 0.072, 0.008, M["graphite"], jc + V(sx * 0.037, 0, 0), (sx, 0, 0), segs=32,
+                  sides=6), f"upper_arm{s}")
+    both(geo.disc(f"shoulder-hub{s}", 0.045, 0.03, M["lens"], jc + V(sx * 0.036, 0, 0), (sx, 0, 0), bevel_r=0.008,
+                  segs=24, bulge=0.006), f"upper_arm{s}")
+    pad_c = sh_ + V(sx * 0.012, -0.005, 0.06)
 
-    def pad_shape(p, q):
-        z = p.z * (1.0 if q.z > -0.15 else 0.5)
-        return Vector((p.x * (1 - 0.1 * max(0.0, -q.x * sx)), p.y, z))
+    def pad_field(co):
+        # keep the top and the outside; the cut line drops from high in front to low at the outer side
+        out_ = sx * (co.x - pad_c.x)
+        return (co.z - (pad_c.z - 0.035)) + 0.55 * max(0.0, out_) - 0.25 * max(0.0, -out_)
 
-    pad = geo.superquad(f"shoulder-pad{s}", (0.13, 0.13, 0.115), M["ceramic"], pad_c, n=2.25, res=8, shape=pad_shape)
+    pad_base = geo.superquad(f"pauldron-base{s}", (0.138, 0.14, 0.125), M["ceramic"], pad_c, n=2.25, res=9)
+    pad, pr = geo.plate(f"pauldron{s}", pad_base, pad_field, M["ceramic"], thickness=0.028, rim=M["lime"],
+                        rim_r=0.0105)
+    bpy.data.objects.remove(pad_base)
     geo.box_uv(pad, 0.5)
     both(pad, f"upper_arm{s}")
-    rim = [pad_c + V(math.cos(a) * 0.124, math.sin(a) * 0.126, -0.058) for a in (math.tau * i / 36 for i in range(36))]
-    both(geo.tube(f"shoulder-pad-rim{s}", rim, 0.012, M["lime"], segs=7, caps=False, closed=True), f"upper_arm{s}")
-    ua = geo.segment(f"upper-arm{s}", sh_ + up * 0.06, el - up * 0.03, 0.086, M["ceramic"], rb=0.074, bulge=0.08,
-                     flat=0.95, n=2.25, res=8, y_hint=(0, 0, 1))
-    geo.box_uv(ua, 0.5)
-    both(ua, f"upper_arm{s}")
-    both(geo.ring(f"upper-arm-band{s}", 0.074, 0.0085, M["lime"], el - up * 0.075, up, segs=28, sides=6, squash=1.4),
-         f"upper_arm{s}")
-    both(geo.disc(f"elbow-joint{s}", 0.066, 0.135, M["graphite"], el, (0, 1, 0), bevel_r=0.024, segs=24), f"forearm{s}")
+    for tb in pr:
+        both(tb, f"upper_arm{s}")
+    for ob in sleeve(f"upper-arm{s}", sh_ + up * 0.05, el - up * 0.02, 0.09, 0.077, M, cut=(0.08, 0.1),
+                     rims=(False, True), bulge=0.08, y_hint=(0, 0, 1)):
+        both(ob, f"upper_arm{s}")
+    both(geo.disc(f"elbow-joint{s}", 0.068, 0.14, M["graphite"], el, (0, 1, 0), bevel_r=0.024, segs=24), f"forearm{s}")
     for k, off in enumerate((-1, 1)):
-        both(geo.ring(f"elbow-ring{k}{s}", 0.057, 0.0075, M["lime"], el + V(0, off * 0.067, 0), (0, 1, 0), segs=24,
+        both(geo.ring(f"elbow-ring{k}{s}", 0.058, 0.0075, M["lime"], el + V(0, off * 0.07, 0), (0, 1, 0), segs=24,
                       sides=6), f"forearm{s}")
-    fa = geo.segment(f"forearm{s}", el + fw * 0.045, wr - fw * 0.035, 0.084, M["ceramic"], rb=0.066, bulge=0.06,
-                     flat=0.93, n=2.25, res=8, y_hint=(0, 0, 1),
-                     shape=lambda p, q: Vector((p.x * (1 + 0.08 * max(0.0, -q.z)), p.y, p.z)))
-    geo.box_uv(fa, 0.5)
-    both(fa, f"forearm{s}")
-    fsurf = geo.Surface(fa)
-    out_dir = V(fw.z, 0, -fw.x).normalized() * (1 if sx > 0 else -1)      # the forearm's outer, upper edge
-    if out_dir.z < 0:
-        out_dir = -out_dir
-    st = stripe(f"forearm-stripe{s}", fsurf,
-                [el.lerp(wr, t) + out_dir * 0.2 + V(0, -0.03, 0) for t in (lerp(0.2, 0.8, i / 9) for i in range(10))],
-                lambda p: el + fw * (p - el).dot(fw), 0.0075, M["lime"])
-    if st:
-        both(st, f"forearm{s}")
-    both(geo.ring(f"wrist-cuff{s}", 0.066, 0.012, M["lime"], wr - fw * 0.1, fw, segs=28, sides=6, squash=1.6),
-         f"forearm{s}")
-    both(geo.disc(f"wrist-joint{s}", 0.05, 0.055, M["graphite"], wr, fw, bevel_r=0.013, segs=20), f"hand{s}")
+    for ob in sleeve(f"forearm{s}", el + fw * 0.035, wr - fw * 0.02, 0.09, 0.07, M, cut=(0.1, 0.1), bulge=0.06,
+                     flat=0.93, y_hint=(0, 0, 1),
+                     shape=lambda p, q: Vector((p.x * (1 + 0.08 * max(0.0, -q.z)), p.y, p.z))):
+        both(ob, f"forearm{s}")
+    both(geo.disc(f"wrist-joint{s}", 0.05, 0.06, M["graphite"], wr, fw, bevel_r=0.013, segs=20), f"hand{s}")
     for ob in hand(R, s, sx, wr, fw, M):
         both(ob)
 
