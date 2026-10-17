@@ -11,6 +11,1685 @@
 // than three times a second; and the reader's own cursor, text and numbers are never touched -- a cursor, a
 // card or a star in a bit is a picture of one.
 export const BITS = {
+  "apology-video":
+  // The apology video. After a prank: Archie shuffles on, sits on a chair in front of a video camera, and the
+  // softbox comes on -- soft, flattering light. The camera rolls. Zip, beside it, holds up a cue card (I AM SO
+  // SORRY) and Archie reads it out far too cheerfully, with a thumbs-up to finish. Brick, the director, arms
+  // folded, unfolds them, raises a card of his own and turns it round: LOOK SADDER. Archie gives it everything --
+  // hands clasped, lip wobbling, the back of his hand to his brow -- and Zip has to wipe an eye. Brick lowers his
+  // card with a nod, the camera stops, and Archie is up at once: finger guns, "Nailed it!", and off. Brick raises a
+  // brow at the reader. Clips: apology_video.py (the layout and timings below are its constants).
+  ({
+    cast: ["archie", "zip", "brick"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ready(s) {
+      return innerWidth >= 1100 && innerHeight >= 640;
+    },
+    async play(s) {
+      const {archie: A, zip: Z, brick: B, T} = s;
+      const AIM = 0.5, CHAIR_S = 1.2, SEAT_FROM = 0.33, SAY_AT = 1.0, SOB_AT = 2.75, GUNS_AT = 0.45, TURN_AT = 0.35;
+      const SHOW = {zip: 0.22, brick: 0.4}, HIDE = {zip: 0.45, brick: 0.65};
+      const W = s.W(), floor = innerHeight - 8;
+      const P = Math.min(140, (W - 40) / 6.95, (innerHeight - 140) / 3.3);
+      const cx = Math.round(W / 2 - 1.575 * P);                     // the chair: the set runs -1.85 m .. 5.0 m
+      for (const a of [A, Z, B]) a.ppm = P;
+      const names = ["folding-chair", "softbox", "video-camera", "cue-card-sorry", "cue-card"];
+      const [chair, softbox, camera, sorry, sadder] = await Promise.all(names.map(n => s.prop(n)));
+      if (!s.alive) return;
+
+      // ---- the set: the chair turned to the camera, the softbox off, the cards in their hands but not yet out ----
+      chair.at(cx, floor, CHAIR_S * P);
+      chair.root.rotation.y = AIM;
+      softbox.at(cx - 1.45 * P, floor, P);
+      softbox.root.position.z = -0.3 * P;
+      softbox.root.rotation.y = 0.8;                                // its diffuser at him
+      camera.at(cx + 1.0 * P, floor, P);
+      camera.root.position.z = 1.0 * P;                             // in front: we look over its shoulder
+      camera.root.rotation.y = -2.33;                               // its lens on him
+      const diffusers = [];
+      softbox.root.traverse(m => { if (m.isMesh && /holo-soft/.test(m.material.name)) diffusers.push(m.material); });
+      const glow = diffusers.map(m => [m, m.emissiveIntensity, m.color.clone()]);
+      const dim = k => glow.forEach(([m, e, c]) => { m.emissiveIntensity = e * k; m.color.copy(c).multiplyScalar(0.72 + 0.28 * k); });
+      dim(0);
+      const lamp = new T.SpotLight(0xffe7c4, 0, 0, 0.42, 1, 0);    // soft, warm, and on him
+      lamp.position.set(cx - 1.3 * P, -(floor - 1.5 * P), 0.1 * P);
+      lamp.target.position.set(cx + 0.1 * P, -(floor - 1.2 * P), 0.3 * P);
+      s.add(lamp);
+      s.add(lamp.target);
+      // and the light falling on him, a warm haze from the diffuser
+      const sx = cx - 1.45 * P + 0.22 * P, haze = s.svg.el("polygon", {opacity: 0, fill: "url(#apology-haze)",
+        points: [[sx, floor - 1.78 * P], [cx + 0.75 * P, floor - 2.2 * P], [cx + 0.75 * P, floor - 0.45 * P],
+                 [sx, floor - 1.12 * P]].map(q => q.join(",")).join(" ")});
+      const defs = s.svg.el("defs", {});
+      const grad = s.svg.el("linearGradient", {id: "apology-haze", x1: 0, y1: 0, x2: 1, y2: 0}, defs);
+      s.svg.el("stop", {offset: 0, "stop-color": "#ffe6a8", "stop-opacity": 0.55}, grad);
+      s.svg.el("stop", {offset: 1, "stop-color": "#ffe6a8", "stop-opacity": 0.08}, grad);
+      const card = (prop, scale, backwards) => {
+        const g = new T.Group();
+        g.add(prop.root);
+        g.scale.setScalar(scale);
+        if (backwards) prop.root.rotation.y = Math.PI;              // its back to the room, until he turns it
+        g.visible = false;
+        return g;
+      };
+      const zc = card(sorry, 1.5, false), bc = card(sadder, 1.9, true);
+      s.attach(zc, Z, "grip_R");
+      s.attach(bc, B, "grip_R");
+
+      // the camera's REC light, as a badge over it: blinking while it rolls
+      const cam = {x: cx + 1.0 * P, y: floor - 1.42 * P};
+      const rec = s.svg.el("g", {opacity: 0});
+      s.svg.el("circle", {cx: cam.x - 16, cy: cam.y, r: 6, fill: "#ff3b30"}, rec);
+      const label = s.svg.el("text", {x: cam.x - 6, y: cam.y + 5, fill: "#ff3b30",
+                                      style: "font:700 14px/1 system-ui,sans-serif;letter-spacing:.06em"}, rec);
+      label.textContent = "REC";
+      let rolling = false;
+      s.tick(() => { rec.setAttribute("opacity", rolling && s.clock() % 1 < 0.6 ? 1 : 0); });
+
+      // ---- on: Zip and Brick at their places, Archie shuffling in ----
+      Z.at(cx + 1.85 * P, floor).depth(0.55 * P).show(true);
+      Z.face(-1, -0.5);
+      Z.play("idle", {loop: true});
+      B.at(cx + 3.7 * P, floor).depth(-0.15 * P).show(true);
+      B.face(-1, -0.35);
+      B.play("guard-hold", {loop: true});
+      const ax = cx + SEAT_FROM * Math.sin(AIM) * P, az = SEAT_FROM * Math.cos(AIM) * P;
+      A.at(-0.7 * P, floor).depth(0.6 * P).show(true);
+      await A.walkTo(ax, {speed: 0.9});
+      if (!s.alive) return;
+      const turning = A.face(1, AIM);
+      await s.tween(0.4, e => A.depth(0.6 * P + (az - 0.6 * P) * e));
+      await turning;
+      if (!s.alive) return;
+      const sitting = A.perform("apology-video/sit-down");
+      await s.after(1.0);
+      if (!s.alive) return;
+      s.tween(0.25, e => { dim(e); lamp.intensity = 1.6 * e; haze.setAttribute("opacity", e); });   // ka-chunk: on
+      await sitting;
+      if (!s.alive) return;
+      A.play("apology-video/sad", {loop: true});
+      await s.after(0.4);
+      rolling = true;
+
+      // ---- take one: Zip's card, and Archie reads it out -- cheerfully ----
+      await s.after(0.3);
+      const zUp = Z.perform("apology-video/card-up");
+      await s.after(SHOW.zip);
+      zc.visible = true;
+      await zUp;
+      if (!s.alive) return;
+      Z.play("apology-video/card-hold", {loop: true});
+      await s.after(0.3);
+      const lines = A.perform("apology-video/apology");
+      await s.after(SAY_AT);
+      A.say("I am so sorry.", 1.5);
+      await s.after(1.5);
+      if (!s.alive) return;
+      const unfold = B.perform("guard-off");                        // Brick has seen enough
+      await lines;
+      if (!s.alive) return;
+      A.play("apology-video/cheesy", {loop: true});
+      await unfold;
+      if (!s.alive) return;
+
+      // ---- Brick's card: its back to the room, then round ----
+      const bUp = B.perform("apology-video/card-up");
+      await s.after(SHOW.brick);
+      bc.visible = true;
+      await bUp;
+      if (!s.alive) return;
+      B.play("apology-video/card-hold", {loop: true});
+      await s.after(0.3);
+      const turn = B.perform("apology-video/card-turn");
+      await s.after(TURN_AT);
+      sadder.play("turn");
+      await turn;
+      if (!s.alive) return;
+      B.play("apology-video/card-hold", {loop: true});
+
+      // ---- take two: the works; Zip is moved ----
+      const works = A.perform("apology-video/sadder");
+      await s.after(1.4);
+      if (!s.alive) return;
+      Z.perform("apology-video/moved").then(() => s.alive && Z.play("apology-video/card-hold", {loop: true}));
+      await s.after(SOB_AT - 1.4);
+      A.say("Sooo sorry!", 1.6);
+      await works;
+      if (!s.alive) return;
+      A.play("apology-video/weep", {loop: true});
+      await s.after(1.2);
+      if (!s.alive) return;
+
+      // ---- that'll do: Brick's card down with a nod, and the camera stops ----
+      const down = B.perform("apology-video/card-down");
+      await s.after(HIDE.brick);
+      bc.visible = false;
+      await down;
+      if (!s.alive) return;
+      B.play("idle", {loop: true});
+      rolling = false;
+      await s.after(0.3);
+      const perk = A.perform("apology-video/perk-up");
+      await s.after(GUNS_AT);
+      A.say("Nailed it!", 1.4);
+      await s.after(0.4);
+      const zDown = Z.perform("apology-video/card-down");
+      await s.after(HIDE.zip);
+      zc.visible = false;
+      await zDown;
+      if (!s.alive) return;
+      Z.play("idle", {loop: true});
+      await perk;
+      if (!s.alive) return;
+
+      // ---- off he goes; Brick, at the reader ----
+      A.depth(0.6 * P);
+      const off = A.walkTo(-0.8 * P);
+      await s.after(0.6);
+      if (!s.alive) return;
+      await B.face(0);
+      await B.perform("raise-brow");
+      if (!s.alive) return;
+      B.play("idle", {loop: true});
+      await off;
+    },
+  }),
+
+  "blame-button":
+  // The blame button. Up on the home page's spotlight, a traffic cone falls over between the three of them.
+  // Everyone points at everyone else. A little replay pops up beside them -- three figures in a huddle, a high
+  // five, a nudge, the cone going over -- and Archie walks over and closes it. The cone and the replay are
+  // props; the replay's picture is drawn on a canvas. Clips: blame_button.py.
+  ({
+    cast: ["archie", "zip", "brick"],
+    pages: ["home"],
+    ppm: 58,
+    ready(s) {
+      const r = s.page.rect("article.hero");
+      return !!r && r.width > 900 && r.top > 170 && r.top < innerHeight - 220;
+    },
+    // The replay's picture: three little figures (Archie lime-crested, Zip violet, Brick orange) huddle by a
+    // cone, high-five, and Brick knocks it over; `t` seconds in.
+    _replay(ctx, w, h, t) {
+      ctx.fillStyle = "#18202c"; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = "rgba(255,255,255,0.035)";
+      for (let y = 0; y < h; y += 4) ctx.fillRect(0, y, w, 2);
+      const ground = h * 0.8;
+      ctx.fillStyle = "#2c3a2a"; ctx.fillRect(0, ground, w, h - ground);
+      const k = u => Math.max(0, Math.min(1, u));
+      const huddle = k(t / 0.9), five = k((t - 1.0) / 0.4) * (1 - k((t - 1.7) / 0.3)), fall = k((t - 2.0) / 0.35);
+      const apart = k((t - 2.5) / 0.4);
+      const cx = w * 0.52;
+      // the cone, toppling
+      ctx.save(); ctx.translate(cx + 14, ground); ctx.rotate(fall * Math.PI / 2);
+      ctx.fillStyle = "#ff6a24"; ctx.beginPath(); ctx.moveTo(-14, 0); ctx.lineTo(14, 0); ctx.lineTo(0, -46); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#f6f4ef"; ctx.fillRect(-9, -22, 18, 6); ctx.restore();
+      const fig = (x, col, ht, head, armUp, crest) => {
+        ctx.fillStyle = col; ctx.fillRect(x - ht * 0.16, ground - ht * 0.72, ht * 0.32, ht * 0.5);
+        ctx.fillRect(x - ht * 0.14, ground - ht * 0.22, ht * 0.08, ht * 0.22);
+        ctx.fillRect(x + ht * 0.06, ground - ht * 0.22, ht * 0.08, ht * 0.22);
+        ctx.beginPath(); ctx.arc(x, ground - ht * 0.84, ht * head, 0, Math.PI * 2); ctx.fillStyle = crest ? "#ebe5da" : col; ctx.fill();
+        if (crest) { ctx.fillStyle = "#a4c812"; ctx.beginPath(); ctx.moveTo(x - 3, ground - ht * 0.96); ctx.lineTo(x + 8, ground - ht * 1.12); ctx.lineTo(x + 4, ground - ht * 0.94); ctx.fill(); }
+        ctx.strokeStyle = col; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(x, ground - ht * 0.66); ctx.lineTo(x + armUp[0], ground - ht * 0.66 + armUp[1]); ctx.stroke();
+      };
+      const lean = 18 * huddle * (1 - apart), spread = 40 * apart;
+      fig(cx - 70 + lean - spread, "#ebe5da", 70, 0.13, [22 * five + 6, -34 * five - 4], true);
+      fig(cx + 64 - lean + spread, "#7440b8", 60, 0.16, [-20 * five - 6, -30 * five - 4], false);
+      const bx = cx - 6 - (t > 1.8 && t < 2.2 ? -10 : 0);
+      fig(bx - 4 * apart, "#e5671d", 82, 0.11, [fall > 0 && fall < 1 ? 26 : 14 * five, -40 * five], false);
+      // the burned-in caption and a slow REC dot (one blink a second)
+      ctx.fillStyle = (t % 1) < 0.6 ? "#ff3b30" : "#5a2020";
+      ctx.beginPath(); ctx.arc(14, 14, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#f4f1ea"; ctx.font = "700 13px system-ui, sans-serif"; ctx.fillText("REPLAY", 24, 19);
+      ctx.font = "600 11px ui-monospace, monospace"; ctx.fillText("00:0" + Math.min(9, Math.floor(t + 1)), w - 46, 19);
+      if (t > 1.0 && t < 1.8) { ctx.fillStyle = "#fff36e"; ctx.font = "800 15px system-ui"; ctx.fillText("✋", cx - 10, ground - 70); }
+    },
+    async play(s) {
+      const A = s.archie, ppm = A.ppm, T = s.T;
+      const H = () => s.page.rect("article.hero");
+      const edge = H().top;
+      const x0 = H().left + H().width * 0.28;
+      // blame_button.py: CONE_X, ZIP_X, BRICK_X, CLOSE_HIT; the replay's close button is (0.4, 0.26) m from its
+      // centre before scaling (props_paper.py)
+      const CONE = 1.1, ZX = 2.2, BX = -1.9, HIT = 0.8, SC = 2.2;
+      const [cone, rp] = await Promise.all([s.prop("traffic-cone-large"), s.prop("replay-screen")]);
+      if (!s.alive) return;
+      const cx = x0 + CONE * ppm;
+      cone.at(cx, edge, ppm);
+      A.at(x0, edge).show(true);
+      A.play("idle", {loop: true});
+      const Z = s.zip, B = s.brick;
+      if (Z) { Z.at(x0 + ZX * ppm, edge).show(true); Z.play("idle", {loop: true}); }
+      if (B) { B.at(x0 + BX * ppm, edge).show(true); B.play("idle", {loop: true}); }
+      await s.after(0.8);
+      if (!s.alive) return;
+
+      // Over it goes, toppling about the corner of its base, with a bounce.
+      const base = 0.29 * 0.62 * ppm;
+      await s.tween(0.55, u => {
+        const a = -Math.PI / 2 * u;
+        const px = cx + base, py = edge;
+        cone.root.rotation.z = a;
+        cone.root.position.set(px + (-base) * Math.cos(a), -py + (-base) * Math.sin(a), 0);
+      }, u => u * u);
+      await s.tween(0.25, u => { cone.root.rotation.z = -Math.PI / 2 + 0.12 * Math.sin(Math.PI * u); });
+      if (!s.alive) return;
+
+      // Him! No, him!
+      const pointing = [A.perform("blame-button/point")];
+      if (Z) { Z.face(-0.6); pointing.push(Z.perform("point")); }
+      if (B && B.has("blame-button/point")) pointing.push(B.perform("blame-button/point"));
+      await Promise.all(pointing);
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+
+      // The replay, beside them at head height, its picture drawn on a canvas.
+      const rx = x0 + 4.6 * ppm, ry = edge - 1.55 * ppm;
+      rp.at(rx, ry, ppm * SC);
+      rp.root.position.z = -60;
+      const cv = document.createElement("canvas");
+      cv.width = 320; cv.height = 180;
+      const ctx = cv.getContext("2d");
+      const tex = new T.CanvasTexture(cv);
+      tex.flipY = false;
+      tex.colorSpace = T.SRGBColorSpace;
+      rp.model.traverse(n => {
+        if (!n.isMesh) return;
+        for (const m of [].concat(n.material)) if (m.name === "screen-face") {
+          m.map = tex; m.emissiveMap = tex; m.emissive = new T.Color(0xffffff); m.emissiveIntensity = 0.9; m.needsUpdate = true;
+        }
+      });
+      rp.play("pop_in");
+      rp.play("play");
+      const t0 = s.clock();
+      const draw = s.tick(() => { this._replay(ctx, cv.width, cv.height, s.clock() - t0); tex.needsUpdate = true; });
+      await s.after(3.4);
+      if (!s.alive) return;
+
+      // Archie closes it: under its close button, a poke.
+      const btn = new T.Vector3();
+      rp.model.updateMatrixWorld(true);
+      const cb = rp.model.getObjectByName("close_button");
+      (cb || rp.root).getWorldPosition(btn);
+      await A.walkTo(btn.x - 0.55 * ppm);
+      if (!s.alive) return;
+      await A.face(0);
+      if (!s.alive) return;
+      const close = A.perform("blame-button/close");
+      await s.until(() => A.time() >= HIT || !s.alive);
+      if (!s.alive) return;
+      rp.play("close");
+      await close;
+      if (!s.alive) return;
+      draw();
+      if (Z) { await Z.face(0); Z.play("shrug"); }
+      if (B) B.play("shrug");
+      await A.perform("blame-button/whistle");
+      if (!s.alive) return;
+      await s.after(0.3);
+    },
+  }),
+
+  "bootleg-archie":
+  // Bootleg Archie. Archie stands, dignified. Zip sneaks up beside him and clicks a remote at the Atlas Core in
+  // Archie's belly: it opens by itself and projects a tiny, big-headed hologram Archie, lecturing the reader in
+  // pompous bubbles. Real Archie folds his arms. Tiny Archie folds his arms. A wagged finger ("Stop that."),
+  // copied; Zip cracks up, and the remote goes behind his back as Archie presses the Core shut and goes -- and Zip, alone, clicks once more at where he went. Clips: bootleg_archie.py; Tiny Archie is
+  // the holo-archie prop, on Archie's skeleton, so it plays Archie's own pieces.
+  ({
+    cast: ["archie", "zip"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1000 && innerHeight >= 620;
+    },
+    async play(s) {
+      const A = s.archie, Z = s.zip, T = s.T, ppm = A.ppm;
+      const ZIP_X = 3.4, PRESS = 0.95, REMOTE = 0.7, CLICK = 1.35, AGAIN = 1.0;   // bootleg_archie.py
+      const SNEAK = 0.32 / (0.62 * 1.2), RUN = 0.6 / (0.4 * 0.4);                // clips/zip_base.py
+      const SIZE = 340, TINY = 0.2;                     // the projection's width (px); Tiny Archie in its units
+      const floor = innerHeight - 8, ax = Math.round(innerWidth * 0.25), zx = ax + ZIP_X * ppm;
+      const clip = n => A.clips[`bootleg-archie/${n}`];
+      const [core, remote, figs] = await Promise.all([s.core(A), s.prop("remote-zip"), s.figures("holo-archie", 1)]);
+      if (!s.alive) return;
+      s.page.undo(() => remote.remove());
+      const tiny = figs[0];
+
+      // ---- Tiny Archie's bubbles: the pals' own, tinted as a hologram's ----
+      const stage = document.querySelector(".pals-stage");
+      const css = document.createElement("style");
+      css.textContent = ".pals-say.holo{background:#dcfbfe;color:#06535d;box-shadow:0 0 0 2px #2fe3f1,0 4px 14px rgba(0,0,0,.2)}" +
+        ".pals-say.holo::after{border-top-color:#dcfbfe}";
+      document.head.append(css);
+      const bub = document.createElement("p");
+      bub.className = "pals-say holo";
+      (stage || document.body).append(bub);
+      s.page.undo(() => { bub.remove(); css.remove(); });
+      let bubAt = null;                                  // () => {x, y}: where its tail points, or null: hidden
+      const v = new T.Vector3();
+      const tinyHead = () => {
+        const h = tiny.model.getObjectByName("head");
+        if (!h) return {x: 0, y: 0};
+        h.getWorldPosition(v);
+        return {x: v.x, y: -v.y - 1.0 * TINY * SIZE / 2};
+      };
+      const placeBub = s.tick(() => {
+        if (!bubAt) return;
+        const p = bubAt();
+        bub.style.left = p.x + "px";
+        bub.style.top = (p.y - 6) + "px";
+      });
+      const holoSay = async (text, secs, at = tinyHead) => {
+        bub.textContent = text;
+        bubAt = at;
+        bub.classList.add("on");
+        await s.after(secs);
+        if (bub.textContent === text) bub.classList.remove("on");
+      };
+
+      // ---- on: Archie, and Zip creeping up beside him ----
+      A.at(-0.45 * ppm, floor).show(true);
+      A.play("idle", {loop: true});
+      await A.walkTo(ax);
+      if (!s.alive) return;
+      await A.face(0);
+      A.play("idle", {loop: true});
+      A.say("Today: a calm, dignified page.", 2.4);
+      // Zip, in at a run while he talks, and the last steps on tiptoe
+      Z.at(innerWidth + 0.5 * ppm, floor).show(true);
+      Z.play("idle", {loop: true});
+      await Z.walkTo(zx + 0.5 * ppm, {clip: "run", mps: RUN});
+      if (!s.alive) return;
+      await Z.walkTo(zx, {clip: "sneak", mps: SNEAK});
+      if (!s.alive) return;
+      await Z.face(0);
+
+      // ---- the remote; the Core opens by itself ----
+      const rm = Z.perform("bootleg-archie/remote");
+      await s.after(REMOTE);
+      remote.hold(Z, "grip_R", [0, 0, 0], [0, Math.PI, 0]);
+      remote.root.scale.setScalar(1.6);
+      await s.after(CLICK - REMOTE);
+      if (!s.alive) return;
+      remote.play("click");
+      core.play("unfold");
+      const st = A.perform("bootleg-archie/startle");
+      await s.after(0.4);
+      A.say("!", 0.7);
+      await rm;
+      if (!s.alive) return;
+      Z.play("bootleg-archie/aim", {loop: true});
+      core.play("open-idle", {loop: true});
+      const proj = await s.project(s.where().world);
+      if (!s.alive || !proj) return;
+      const follow = s.tick(() => { const p = core.page(); proj.at(p.x, p.y, SIZE, 1); });
+      // Tiny Archie, at the front of the world's middle (clear of its own sights), popping up as it finishes
+      // rising (appear is 0.8 s)
+      const w = proj.world, anchor = w.getObjectByName("anchor_centre") || w;
+      anchor.add(tiny.root);
+      const ap = w.worldToLocal(anchor.getWorldPosition(new T.Vector3()));
+      tiny.root.position.set(0, 0, Math.max(0, 0.3 - ap.z));
+      tiny.root.scale.setScalar(1e-4);
+      tiny.play("pompous", true);
+      await st;
+      if (!s.alive) return;
+      A.play("bootleg-archie/watch", {loop: true});
+      // the world's own holograms switched off for Zip's broadcast (the world is shared: they go back on)
+      const off = [], his = new Set();
+      tiny.root.traverse(m => his.add(m));
+      w.traverse(m => {
+        if (his.has(m)) return;
+        const mats = m.isMesh ? (Array.isArray(m.material) ? m.material : [m.material]) : [];
+        if (m.visible && mats.some(x => x && /^holo/i.test(x.name))) off.push(m);
+      });
+      const lights = on => off.forEach(m => { m.visible = on; });
+      s.page.undo(() => lights(true));
+      lights(false);
+      s.tween(0.3, u => tiny.root.scale.setScalar(Math.max(1e-4, TINY * u)), u => 1 + 2.7 * Math.pow(u - 1, 3) + 1.7 * Math.pow(u - 1, 2));
+      proj.idle();
+      await s.after(0.4);
+
+      // ---- the lecture ----
+      for (const [line, secs] of [["Ahem. I am ARCHIE.", 1.6], ["Scroll slowly. I am being admired.", 2.1]]) {
+        await holoSay(line, secs);
+        if (!s.alive) return;
+        await s.after(0.15);
+      }
+
+      // ---- real Archie folds his arms; Tiny Archie folds his arms ----
+      const fold = A.perform("bootleg-archie/fold");
+      await s.after(0.7);
+      tiny.play(clip("fold"), false);
+      await fold;
+      if (!s.alive) return;
+      A.play("bootleg-archie/folded", {loop: true});
+      await s.after(0.4);
+      tiny.play(clip("folded"), true);
+      await s.after(0.4);
+      if (!s.alive) return;
+
+      // ---- "Stop that." -- copied ----
+      const wag = A.perform("bootleg-archie/wag");
+      await s.after(0.4);
+      A.say("Stop that.", 1.3);
+      await s.after(0.5);
+      tiny.play(clip("wag"), false);
+      await s.after(0.3);
+      holoSay("Stop that.", 1.3);
+      await wag;
+      if (!s.alive) return;
+      A.play("bootleg-archie/folded", {loop: true});
+      await s.after(0.3);
+      tiny.play(clip("folded"), true);
+
+      // ---- Zip cracks up -- and, as Archie reaches for the Core, whips the remote out of sight ----
+      Z.perform("laugh");
+      Z.say("Hee hee hee!", 1.4);
+      await s.after(0.6);
+      if (!s.alive) return;
+      s.after(0.9).then(() => s.alive && Z.perform("bootleg-archie/hide")
+        .then(() => s.alive && Z.play("bootleg-archie/innocent", {loop: true})));
+
+      // ---- shut ----
+      const shut = A.perform("bootleg-archie/shut");
+      await s.after(PRESS);
+      if (!s.alive) return;
+      const cut = tinyHead();
+      holoSay("Ahem, I am--", 0.5, () => cut);                 // cut off as the world goes
+      proj.hide(0.3);
+      await s.after(0.3);
+      bubAt = null;
+      bub.classList.remove("on");
+      follow();
+      tiny.root.removeFromParent();
+      lights(true);
+      core.play("fold");
+      await shut;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      A.say("Hmph.", 1.0);
+      await s.after(0.3);
+      if (!s.alive) return;
+      const gone = A.walkTo(-0.7 * ppm);
+      await s.until(() => A.x < 0.12 * innerWidth);
+      if (!s.alive) return;
+
+      // ---- alone (nearly): once more ----
+      const ag = Z.perform("bootleg-archie/again");
+      await s.after(AGAIN);
+      if (!s.alive) return;
+      remote.play("click");
+      // from off the window's edge, where he went: the Core again, and him (his bubble brought in to the edge)
+      holoSay("Ahem! I am ARCH--", 1.0, () => ({x: 110, y: floor - 1.9 * ppm}));
+      await s.after(0.8);
+      bub.classList.remove("on");
+      await gone;
+      A.headAt = () => ({x: 60, y: floor - 2.3 * ppm});
+      s.page.undo(() => { delete A.headAt; });
+      A.say("ZIP!", 1.2);
+      await s.after(0.3);
+      if (!s.alive) return;
+      await Z.walkTo(innerWidth + 0.7 * ppm, {clip: "run", mps: RUN});
+    },
+  }),
+
+  "contraband-inspection":
+  // Contraband inspection. Archie takes out the Atlas Core, proudly. Brick, arms folded, unfolds them and holds
+  // out one enormous hand for it: inspection. Archie hands it over, reluctantly. Brick turns it upside down
+  // and shakes it like a salt cellar -- out falls the stolen spotlight, three decorative stars and the missing
+  // light-switch remote. Brick looks at the pile, then at Archie. Archie whistles, hands behind his back,
+  // looking anywhere else. Clips: contraband_inspection.py (and _corekit.py's take/hold).
+  ({
+    cast: ["archie", "brick"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections"],
+    ppm: 110,
+    ready(s) {
+      return document.documentElement.clientWidth >= 900 && innerHeight >= 3.3 * 110;
+    },
+
+    // The Atlas Core: its glow drawn additively (as archie-core.js does), its clips on a mixer the stage runs,
+    // kept on a pal's bone: Archie's `core` (docked), a palm (`on`).
+    glow(T, root) {
+      root.traverse(m => {
+        if (!m.isMesh) return;
+        const swap = mat => {
+          if (!mat || !/^holo/i.test(mat.name) || mat.isMeshBasicMaterial) return mat;
+          const c = mat.emissive && mat.emissive.getHex() ? mat.emissive.clone() : mat.color.clone();
+          c.multiplyScalar(Math.min(1.6, Math.max(1, mat.emissiveIntensity || 1)));
+          return new T.MeshBasicMaterial({color: c, transparent: true, opacity: mat.opacity < 1 ? mat.opacity : 0.85,
+            blending: T.AdditiveBlending, depthWrite: false, side: T.DoubleSide, name: mat.name});
+        };
+        m.material = Array.isArray(m.material) ? m.material.map(swap) : swap(m.material);
+      });
+    },
+    async core(s, pal) {
+      const T = s.T, g = await s.glb("pals/core.glb");
+      this.glow(T, g.scene);
+      const root = new T.Group(), v = new T.Vector3();
+      root.add(g.scene);
+      const mixer = s.mixer(g.scene), clips = Object.fromEntries(g.animations.map(c => [c.name, c]));
+      let off = null;
+      const c = {
+        root, scene: g.scene,
+        play(name) {
+          mixer.stopAllAction();
+          const a = mixer.clipAction(clips[name]);
+          a.reset().setLoop(T.LoopOnce, 1);
+          a.clampWhenFinished = true;
+          a.play();
+        },
+        on(who, bone, offset) { if (off) off(); root.scale.setScalar(1); off = s.attach(root, who, bone, {offset}); },
+        world() { root.getWorldPosition(v); return v.clone(); },
+      };
+      s.page.undo(() => { mixer.stopAllAction(); if (off) off(); root.removeFromParent(); });
+      c.play("closed");
+      c.on(pal, "core", [0, 0.018, 0]);
+      return c;
+    },
+
+    async play(s) {
+      const A = s.archie, B = s.brick, T = s.T, ppm = 110;
+      const W = document.documentElement.clientWidth, floor = innerHeight - 8;
+      // contraband_inspection.py: BRICK_X 1.95, HAND_AT 1.7, TAKE_AT 1.3, BRICK_PALM 0, FLIP, SPAWN
+      const ax = Math.round(W * 0.36), bx = ax + 1.95 * ppm;
+      const HAND_AT = 1.7, TAKE_AT = 1.3, FLIP = [1.9, 4.9], SPAWN = [2.4, 3.2, 3.32, 3.44, 4.25];
+      const core = await this.core(s, A);
+      const [spot, starG, remote] = await Promise.all([s.prop("spotlight"), s.glb("pals/props/star.glb"),
+                                                       s.prop("remote")]);
+      if (!s.alive) return;
+      spot.model.traverse(n => { if (/beam/i.test(n.name)) n.visible = false; });     // switched off
+
+      // What falls out: each a thing on the page, dropped from the Core with a little sideways kick, bouncing
+      // to rest on the floor in front of them.
+      const things = [spot.root, ...[0, 1, 2].map(() => { const r = new T.Group(); r.add(starG.scene.clone()); return r; }),
+                      remote.root];
+      const front = 0.9 * ppm;
+      const drop = (obj, i) => {
+        const p = core.world();
+        s.add(obj);
+        obj.scale.setScalar(ppm);
+        obj.position.set(p.x, p.y, front);
+        let vx = [-0.9, 0.5, -0.3, 0.9, -0.6][i] * ppm, spin = [2.5, -6, 5, -4, 3][i], vy = 0, rz = 0, settled = false;
+        const ground = -floor + (i === 0 ? 0.1 : 0.06) * ppm;
+        const stop = s.tick(dt => {
+          if (settled) return;
+          vy -= 9.8 * ppm * dt;
+          obj.position.x += vx * dt;
+          obj.position.y += vy * dt;
+          rz += spin * dt;
+          if (obj.position.y <= ground) {
+            obj.position.y = ground;
+            if (Math.abs(vy) < 0.8 * ppm) { settled = true; rz = Math.round(rz / Math.PI) * Math.PI + (i === 0 ? Math.PI / 2 : 0); stop(); }
+            vy = -vy * 0.32; vx *= 0.5; spin *= 0.4;
+          }
+          obj.rotation.z = rz;
+        });
+        s.page.undo(() => obj.removeFromParent());
+      };
+
+      A.at(ax, floor, ppm).show(true);
+      B.at(bx, floor, ppm).show(true);
+      B.turn.position.z = -0.3;
+      A.play("idle", {loop: true});
+      B.play("guard-hold", {loop: true});
+      await s.after(0.6);
+      if (!s.alive) return;
+      const take = A.perform("contraband-inspection/take");
+      await s.after(0.62);                                  // _corekit.GRAB
+      core.on(A, "grip_L", [0, 0, 0.085]);
+      await take;
+      if (!s.alive) return;
+      A.play("contraband-inspection/hold", {loop: true});
+      A.say("My Atlas Core.", 1.6);
+      await s.after(1.4);
+      if (!s.alive) return;
+      await B.perform("guard-off");
+      if (!s.alive) return;
+      B.say("Inspection.", 1.5);
+      // Archie's hand-over and Brick's inspect, started so the Core is at OFFER as Brick's palm gets there
+      A.perform("contraband-inspection/hand-over");
+      await s.after(HAND_AT - TAKE_AT);
+      if (!s.alive) return;
+      const insp = B.perform("contraband-inspection/inspect");
+      await s.until(() => B.time() >= TAKE_AT || !s.alive);
+      if (!s.alive) return;
+      core.on(B, "grip_R", [0, 0, 0]);
+      // upside down for the shaking, and things falling out of it
+      await s.until(() => B.time() >= FLIP[0] - 0.25 || !s.alive);
+      const turnTo = (to, secs) => {
+        const from = core.scene.rotation.x, t0 = s.clock();
+        const stop = s.tick(() => {
+          const u = Math.min(1, (s.clock() - t0) / secs);
+          core.scene.rotation.x = from + (to - from) * u * u * (3 - 2 * u);
+          if (u >= 1) stop();
+        });
+      };
+      turnTo(Math.PI, 0.35);
+      for (let i = 0; i < SPAWN.length; i++) {
+        await s.until(() => B.time() >= SPAWN[i] || !s.alive);
+        if (!s.alive) return;
+        drop(things[i], i);
+        if (i === SPAWN.length - 1) {
+          A.play("contraband-inspection/whistle", {loop: true, fade: 0.4});
+        }
+      }
+      await s.until(() => B.time() >= FLIP[1] || !s.alive);
+      turnTo(0, 0.35);
+      await s.after(0.6);
+      A.say("♪ ~ ♪", 1.8);
+      await insp;
+      if (!s.alive) return;
+      B.play("contraband-inspection/inspect-hold", {loop: true});
+      await s.after(0.4);
+      A.say("♪ ♪ ~", 1.8);
+      await s.after(2.4);
+    },
+  }),
+
+  "cursor-fishing":
+  // Cursor fishing. Zip, up on the top edge of the home page's spotlight, spots the reader's pointer below him
+  // on the card, gets out a fishing rod and lowers a horseshoe magnet towards it. It snaps onto the pointer,
+  // and the pointer is stronger than he is: he is dragged along the edge, heels skidding, until he heaves;
+  // the magnet springs free and clangs onto his own horn, and he sits down hard. The reader's pointer is never
+  // touched: the bit only reads where it is (and follows it, if it moves), from the stage's `pointer()`; the
+  // line and the magnet are drawn over the page. Clips: cursor_fishing.py.
+  ({
+    cast: ["zip"],
+    pages: ["home"],
+    ppm: 72,
+    _side(r, p, ppm) {
+      const need = 3.9 * ppm;
+      if (p.x - r.left > need) return 1;
+      if (r.right - p.x > need) return -1;
+      return 0;
+    },
+    ready(s) {
+      const r = s.page.rect("article.hero"), p = s.pointer();
+      if (!r || !p.seen || r.width < 800 || r.top < 140 || r.top > innerHeight - 260) return false;
+      if (p.y < r.top + 60 || p.y > innerHeight - 30 || p.x < r.left || p.x > r.right) return false;
+      return !!this._side(r, p, this.ppm);
+    },
+    async play(s) {
+      // where the reader's mouse pointer is, followed as it moves: read, never moved, never drawn
+      const Z = s.zip, ppm = Z.ppm, T = s.T, P = {};
+      const look = () => Object.assign(P, s.pointer());
+      look();
+      s.tick(look);
+      const ROD = 0.75, FREE = 0.42, CLANG = 0.95;            // cursor_fishing.py
+      const H = () => s.page.rect("article.hero");
+      const edge = H().top, dir = this._side(H(), P, ppm) || 1;
+      const x0 = P.x - dir * 3.4 * ppm;
+      const rod = await s.prop("fishing-rod");
+      if (!s.alive) return;
+      s.page.undo(() => rod.remove());
+      // the rod's own line and magnet are folded away: the page draws a line that reaches
+      const line1 = rod.model.getObjectByName("line_1");
+      if (line1) line1.scale.setScalar(1e-4);
+      const v = new T.Vector3();
+      const tip = () => { if (!line1) return Z.pageAt("grip_R"); line1.getWorldPosition(v); return {x: v.x, y: -v.y}; };
+
+      // ---- the line and the magnet, drawn over the page ----
+      const NS = "http://www.w3.org/2000/svg";
+      const el = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const [k, a] of Object.entries(attrs)) e.setAttribute(k, a); return e; };
+      const svg = s.svg.path({stroke: "none", width: 0}).el.ownerSVGElement;
+      const line = el("path", {fill: "none", stroke: "#2b2a29", "stroke-width": 1.6, "stroke-linecap": "round", opacity: 0});
+      const m = 0.11 * ppm;                                  // the magnet's half-width
+      const magnet = el("g", {opacity: 0});
+      // drawn with the top of its bend at its origin, where the line ties on, and its poles POLE below
+      const POLE = m * 2.85;
+      magnet.append(
+        el("path", {d: `M ${-m} ${m * 2.3} L ${-m} ${m} A ${m} ${m} 0 0 1 ${m} ${m} L ${m} ${m * 2.3}`, fill: "none",
+                    stroke: "#d8322a", "stroke-width": m * 0.62, "stroke-linecap": "butt"}),
+        el("rect", {x: -m * 1.31, y: m * 2.1, width: m * 0.62, height: m * 0.75, fill: "#c9ccd2"}),
+        el("rect", {x: m * 0.69, y: m * 2.1, width: m * 0.62, height: m * 0.75, fill: "#c9ccd2"}),
+        el("path", {d: `M ${-m * 0.55} ${m * 0.38} q ${m * 0.55} ${-m * 0.3} ${m * 1.1} 0`, fill: "none", stroke: "#fff",
+                    "stroke-width": 1.2, opacity: 0.6}));
+      svg.append(line, magnet);
+      s.page.undo(() => { line.remove(); magnet.remove(); });
+      // the magnet: where its bend is (the line ties on there), the way its poles point (radians, 0 = down)
+      const mag = {x: 0, y: 0, ang: 0, slack: 0.3, line: false};
+      let stuck = null, onHorn = false;
+      const draw = s.tick(() => {
+        if (stuck) { mag.x = stuck().x; mag.y = stuck().y; }
+        const t = tip();
+        magnet.setAttribute("transform", `translate(${mag.x.toFixed(1)} ${mag.y.toFixed(1)}) rotate(${(-mag.ang * 180 / Math.PI).toFixed(1)})`);
+        if (!mag.line) { line.setAttribute("opacity", 0); return; }
+        const mx = (t.x + mag.x) / 2, my = (t.y + mag.y) / 2 + mag.slack * Math.hypot(mag.x - t.x, mag.y - t.y) * 0.25;
+        line.setAttribute("d", `M ${t.x.toFixed(1)} ${t.y.toFixed(1)} Q ${mx.toFixed(1)} ${my.toFixed(1)} ${mag.x.toFixed(1)} ${mag.y.toFixed(1)}`);
+        line.setAttribute("opacity", 1);
+      });
+      // the magnet's bend, for its poles touching the pointer's tip
+      const onPointer = () => ({x: P.x - Math.sin(mag.ang) * POLE, y: P.y - Math.cos(mag.ang) * POLE});
+
+      // ---- along the edge, and there it is ----
+      Z.at(dir > 0 ? Math.max(H().left - 0.6 * ppm, x0 - 4 * ppm) : Math.min(H().right + 0.6 * ppm, x0 + 4 * ppm), edge).show(true);
+      Z.play("idle", {loop: true});
+      await Z.walkTo(x0);
+      if (!s.alive) return;
+      await Z.face(dir);
+      await Z.perform("cursor-fishing/spot");
+      if (!s.alive) return;
+
+      // ---- the cast ----
+      const cast = Z.perform("cursor-fishing/cast");
+      await s.after(ROD);
+      rod.hold(Z, "grip_R");
+      await cast;
+      if (!s.alive) return;
+      Z.play("cursor-fishing/fish", {loop: true});
+      let t0 = tip();
+      mag.x = t0.x; mag.y = t0.y + 0.3 * ppm; mag.line = true;
+      magnet.setAttribute("opacity", 1);
+      // lowered, swinging a little, down to the pointer's height
+      let depth = 0.3 * ppm;
+      const target = () => P.y - 0.15 * ppm - tip().y;
+      const swing = s.tick(() => {
+        const t = tip(), k = s.clock();
+        mag.x = t.x + 0.12 * ppm * Math.sin(k * 2.4);
+        mag.y = t.y + depth;
+        mag.ang = 0.12 * Math.sin(k * 2.4 + 0.6);
+      });
+      await s.tween(2.6, u => { depth = 0.3 * ppm + (target() - 0.3 * ppm) * u; }, u => u);
+      if (!s.alive) return;
+      await s.after(0.9);
+      // it feels the pull: leans, creeps ... SNAP
+      swing();
+      const from = {x: mag.x, y: mag.y};
+      const aim = Math.atan2(P.x - from.x, P.y - from.y);
+      await s.tween(0.6, u => { mag.ang = aim * u * 0.6; mag.x = from.x + dir * 0.1 * ppm * u; });
+      const at0 = {x: mag.x, y: mag.y, a: mag.ang};
+      await s.tween(0.16, u => {
+        mag.ang = at0.a + (aim - at0.a) * u;
+        const q = onPointer();
+        mag.x = at0.x + (q.x - at0.x) * u; mag.y = at0.y + (q.y - at0.y) * u;
+        mag.slack = 0.3 * (1 - u);
+      }, u => u * u);
+      stuck = onPointer;
+      if (!s.alive) return;
+
+      // ---- the pull: he is dragged along the edge towards it ----
+      Z.say("!!", 0.8);
+      await Z.perform("cursor-fishing/bite");
+      if (!s.alive) return;
+      Z.play("cursor-fishing/drag", {loop: true});
+      const reel = s.tick(() => { mag.ang = Math.atan2(P.x - tip().x, P.y - tip().y); });
+      const stop = P.x - dir * 1.25 * ppm;
+      let speed = 0;
+      await new Promise(res => {
+        const off = s.tick(dt => {
+          speed = Math.min(1.6, speed + dt * 1.2);
+          const jerk = 1 + 0.6 * Math.sin(s.clock() * 14);
+          Z.x += dir * speed * jerk * ppm * dt;
+          if (dir * (stop - Z.x) <= 0 || !s.alive) { Z.x = stop; off(); res(); }
+        });
+      });
+      if (!s.alive) return;
+      await s.after(0.4);
+
+      // ---- the heave: the magnet lets go, flies back, clang ----
+      const yank = Z.perform("cursor-fishing/yank");
+      await s.after(FREE);
+      if (!s.alive) return;
+      reel();
+      stuck = null;
+      // the rod goes flying out of his hands, back over his shoulder and off the edge
+      const rp = tip();
+      rod.detach();
+      rod.at(rp.x, rp.y, ppm);
+      const r0 = {x: rp.x, y: rp.y};
+      mag.line = false;
+      s.tween(1.0, u => {
+        rod.root.position.set(r0.x - dir * 2.2 * ppm * u, -(r0.y - 1.2 * ppm * Math.sin(Math.PI * u * 0.8) + 3.2 * ppm * u * u), 0);
+        rod.root.rotation.z = dir * 6 * u;
+      }, u => u).then(() => rod.remove());
+      const f0 = {x: mag.x, y: mag.y};
+      // on top of his left horn's tip (past horn_2's head by most of the way again), poles down on it
+      const horn = () => {
+        const a = Z.pageAt("horn_1_L"), b = Z.pageAt("horn_2_L");
+        return {x: b.x + 0.8 * (b.x - a.x), y: b.y + 0.8 * (b.y - a.y) - POLE};
+      };
+      await s.tween(CLANG - FREE, u => {
+        const h = horn();
+        mag.x = f0.x + (h.x - f0.x) * u;
+        mag.y = f0.y + (h.y - f0.y) * u - 0.8 * ppm * Math.sin(Math.PI * u);
+        mag.ang = Math.PI * 2 * u;                           // a turn in the air, and down poles first
+      }, u => u);
+      stuck = horn;
+      onHorn = true;
+      await yank;
+      if (!s.alive) return;
+      Z.say("clang.", 1.0);
+      await Z.perform("cursor-fishing/up");
+      if (!s.alive) return;
+      // off, the magnet still stuck to his horn, the way he came
+      await Z.walkTo(dir > 0 ? -1.0 * ppm : innerWidth + 1.0 * ppm);
+      draw();
+    },
+  }),
+
+  "dramatic-entrance":
+  // The dramatic entrance. On the hero's top edge a smoke machine fills the stage with smoke and a spotlight
+  // snaps on. The smoke clears on Archie in his grandest pose -- with his back to the reader. He looks over
+  // his shoulder. Zip walks in and turns him round, and he does it again the right way, with a wink. The
+  // smoke, the machine and the light are props over the page. Clips: dramatic_entrance.py.
+  ({
+    cast: ["archie", "zip"],
+    pages: ["home"],
+    ppm: 60,
+    ready(s) {
+      const r = s.page.rect("article.hero");
+      return !!r && r.width > 700 && r.top > 170 && r.top < innerHeight - 220;
+    },
+    // Aim a spotlight-stand's beam at a page point: its `pan` bone turns about the vertical, `tilt` about the
+    // bone's own length (props_hand.py).
+    _aim(s, sp, target) {
+      const pan = sp.model.getObjectByName("pan"), tilt = sp.model.getObjectByName("tilt");
+      if (!pan || !tilt) return;
+      // their rest turns, the first time (each s.prop() is a fresh copy, at rest)
+      pan.__q0 = pan.__q0 || pan.quaternion.clone();
+      tilt.__q0 = tilt.__q0 || tilt.quaternion.clone();
+      const head = new s.T.Vector3();
+      tilt.getWorldPosition(head);
+      const dx = target.x - head.x, dy = -target.y - head.y;
+      const Y = new s.T.Vector3(0, 1, 0);
+      pan.quaternion.copy(pan.__q0).multiply(new s.T.Quaternion().setFromAxisAngle(Y, dx < 0 ? -Math.PI / 2 : Math.PI / 2));
+      tilt.quaternion.copy(tilt.__q0).multiply(new s.T.Quaternion().setFromAxisAngle(Y, Math.atan2(-dy, Math.abs(dx))));
+    },
+    // A beam the page can see through on a light theme or a dark one: soft, warm, normally blended.
+    _softBeam(s, sp, opacity = 0.3) {
+      const b = [];
+      sp.model.traverse(n => {
+        if (!n.isMesh || !/beam/.test(n.name)) return;
+        n.material = new s.T.MeshBasicMaterial({color: 0xffe9a8, transparent: true, opacity, depthWrite: false,
+                                                side: s.T.DoubleSide, name: "holo-beam"});
+        b.push(n);
+      });
+      return b;
+    },
+    async play(s) {
+      const A = s.archie, ppm = A.ppm, T = s.T;
+      const H = () => s.page.rect("article.hero");
+      const edge = H().top, left = H().left, width = H().width;
+      const x0 = left + width * 0.42;
+      const [machine, spot] = await Promise.all([s.prop("smoke-machine"), s.prop("spotlight-stand")]);
+      if (!s.alive) return;
+      machine.at(x0 - 3.6 * ppm, edge, ppm * 1.6);
+      machine.root.position.z = 20;
+      const sx = x0 + 4.2 * ppm;
+      spot.at(sx, edge, ppm * 1.3);
+      const beam = this._softBeam(s, spot);
+      beam.forEach(b => { b.visible = false; });
+      spot.model.updateMatrixWorld(true);
+      this._aim(s, spot, {x: x0, y: edge - 1.2 * ppm});
+      // Archie turns his back on the reader while he's still out of sight, before the smoke.
+      A.at(x0, edge);
+      A.face(0, Math.PI);
+
+      // Smoke: puffs from the nozzle, rolling out across the stage and piling up in front of where he'll be.
+      const puffs = [];
+      const nozzle = {x: x0 - 3.6 * ppm + 0.33 * 1.6 * ppm, y: edge - 0.17 * 1.6 * ppm};
+      const spots = [[-1.6, 0.2, 1.6], [-0.6, 0.4, 2.0], [0.4, 0.3, 2.2], [1.3, 0.2, 1.8], [-0.2, 1.3, 2.3],
+                     [0.9, 1.4, 1.9], [-1.1, 1.2, 1.7], [0.2, 2.2, 1.8]];
+      const smoke = async () => {
+        for (const [i, [dx, up, k]] of spots.entries()) {
+          if (!s.alive) return;
+          const puff = await s.prop("smoke-puff");
+          if (!s.alive) return;
+          const g = puff.at(nozzle.x, nozzle.y, ppm * k * 0.25).root;
+          g.traverse(n => { if (n.isMesh) { n.material.transparent = true; n.material.opacity = 0; n.material.depthWrite = false; } });
+          puffs.push(puff);
+          const to = {x: x0 + dx * ppm, y: edge - up * ppm};
+          s.tween(1.1, u => {
+            g.position.set(nozzle.x + (to.x - nozzle.x) * u, -(nozzle.y + (to.y - nozzle.y) * u), 120 + i);
+            g.scale.setScalar(ppm * k * (0.25 + 0.75 * u));
+            g.traverse(n => { if (n.isMesh) n.material.opacity = 0.92 * Math.min(1, u * 1.6); });
+          });
+          await s.after(0.22);
+        }
+      };
+      await s.after(0.4);
+      if (!s.alive) return;
+      await smoke();
+      if (!s.alive) return;
+      await s.after(0.6);
+      if (!s.alive) return;
+
+      // Behind the smoke: Archie, facing into the page, strikes the pose; the light snaps on.
+      A.show(true);
+      A.play("dramatic-entrance/pose", {fade: 0});
+      await s.after(0.9);
+      if (!s.alive) return;
+      beam.forEach(b => { b.visible = true; });
+      A.play("dramatic-entrance/hold", {loop: true});
+      await s.after(0.6);
+      if (!s.alive) return;
+      // The smoke clears, up and away.
+      await Promise.all(puffs.map(({root: g}, i) => {
+        const y0 = g.position.y, x = g.position.x;
+        return s.tween(1.6 + i * 0.05, u => {
+          g.position.set(x + (i % 2 ? 1 : -1) * 0.6 * ppm * u, y0 + 1.6 * ppm * u, g.position.z);
+          g.traverse(n => { if (n.isMesh) n.material.opacity = 0.92 * (1 - u); });
+        }, u => u);
+      }));
+      puffs.forEach(p => p.remove());
+      if (!s.alive) return;
+      await s.after(1.2);                                  // ...ta-da? (his back to the reader)
+      await A.perform("dramatic-entrance/oops");
+      if (!s.alive) return;
+
+      // Zip turns him round (or, without Zip, he works it out himself).
+      // dramatic_entrance.py: ZIP_X, ZIP_PUSH
+      const Z = s.zip, ZX = 0.9, PUSH = 1.0;
+      const turned = !!Z && Z.has("dramatic-entrance/turn");
+      if (turned) {
+        Z.at(H().left - 0.5 * ppm, edge).show(true);
+        await Z.walkTo(x0 - ZX * ppm, {clip: "run", mps: 3.75});
+        if (!s.alive) return;
+        await Z.face(1);
+        if (!s.alive) return;
+        Z.play("dramatic-entrance/turn");
+        await s.until(() => Z.time() >= PUSH || !s.alive);
+      } else {
+        A.play("idle", {loop: true});
+        await s.after(0.3);
+      }
+      await A.face(0);
+      if (!s.alive) return;
+      this._aim(s, spot, {x: x0, y: edge - 1.2 * ppm});
+      if (turned) { await s.until(() => Z.time() >= 2.1 || !s.alive); Z.play("laugh"); }
+      await A.perform("dramatic-entrance/front");
+      if (!s.alive) return;
+      await s.after(0.5);
+    },
+  }),
+
+  "emergency-backup":
+  // The emergency backup. Archie steps up to show the reader the atlas and reaches for the Atlas Core -- and it
+  // isn't there. While he pats himself down, Zip runs up with a backup: a potato with continents drawn on it.
+  // Archie stares at it, and takes it. Brick, who has been waiting behind Zip with his arms folded, plugs a cable
+  // into it. It lights up: the continents glow and it projects the page's world, a little crooked. It works.
+  // Archie is furious. The potato and the cable are props, passed from hand to hand at the points
+  // emergency_backup.py's pieces put the hands on; the continents' light comes on in three steps, a third of a
+  // second apart. Clips: emergency_backup.py, and Brick's everyday guard (arms folded, while he waits).
+  ({
+    cast: ["archie", "zip", "brick"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1100 && innerHeight >= 640;       // the world up to his right, Zip and Brick to his left
+    },
+
+    async play(s) {
+      const INOUT = u => u * u * (3 - 2 * u);                // s.tween's easings (its own is an ease-out)
+      const A = s.archie, Z = s.zip, B = s.brick, T = s.T, ppm = A.ppm;
+      const P = n => `emergency-backup/${n}`;
+      // emergency_backup.py: where Zip and Brick stand (metres to Archie's left, and nearer the reader), the
+      // hand-offs' moments, the props' sizes, the potato over a palm-up grip and along from Archie's, the plug
+      // ahead of Brick's grip, and the plug in the socket, from the potato's middle
+      const ZIP_X = 1.0, ZIP_Y = -0.5, BRICK_X = 1.75, BRICK_Y = -0.35, TAKE_AT = 0.75, PLUG_IN = 1.05, GLOW = 0.25;
+      const POTATO = 2.4, CABLE = 1.8, LIFT = 0.07, ARCHIE_DX = 0.08, PLUG_OUT = 0.05;
+      const PLUGGED = 0.08 * POTATO + 0.035 * CABLE;
+      const SIZE = 440, floor = innerHeight - 8;
+      const x0 = Math.round(Math.max(innerWidth * 0.42, 1.25 * SIZE + 30));   // room on his right for the world
+      const [potato, cable] = await Promise.all([s.prop("potato"), s.prop("cable")]);
+      if (!s.alive) return;
+      s.page.undo(() => { potato.remove(); cable.remove(); });
+      potato.model.scale.setScalar(POTATO);
+      cable.model.scale.setScalar(CABLE);
+
+      // The continents: drawn on in green marker, until the cable goes in; then lit, as the Core's holograms are.
+      const lands = [];
+      potato.model.traverse(m => { if (m.isMesh && /^holo/i.test([].concat(m.material)[0].name)) lands.push(m); });
+      const dim = lands.map(m => m.material);
+      s.glow(potato.model);
+      s.tone(potato.model);
+      const lit = lands.map(m => m.material);
+      for (const mat of dim.flat()) {                       // (glow() has read their colours: now the marker's)
+        if (mat.emissiveIntensity !== undefined) mat.emissiveIntensity = 0;
+        mat.color.multiplyScalar(0.6);
+      }
+      const light = on => lands.forEach((m, i) => { m.material = on ? lit[i] : dim[i]; });
+      light(false);
+      // The cable's chain, for hanging it from the socket once it's in.
+      const chain = [1, 2, 3, 4].map(i => cable.model.getObjectByName(`cable_${i}`)).filter(Boolean);
+      const rest = chain.map(b => b.quaternion.clone());
+      const droop = () => {
+        cable.mixer.stopAllAction();
+        const pq = new T.Quaternion(), ax = new T.Vector3(), q = new T.Quaternion();
+        chain.forEach((b, i) => {
+          b.quaternion.copy(rest[i]);
+          b.parent.updateWorldMatrix(true, false);
+          b.parent.getWorldQuaternion(pq);
+          ax.set(0, 0, 1).applyQuaternion(pq.invert());              // the reader's line of sight, in its parent
+          b.quaternion.premultiply(q.setFromAxisAngle(ax, -[0.95, 0.4, 0.2, 0.1][i]));
+        });
+      };
+
+      // In he walks, to show the reader the atlas, and reaches for the Core. It isn't there.
+      A.at(-0.45 * ppm, floor).show(true);
+      Z.at(innerWidth + 0.6 * ppm, floor).depth(-ZIP_Y * ppm);     // Zip in front, Brick behind him, Archie behind
+      B.at(innerWidth + 1.4 * ppm, floor).depth(-BRICK_Y * ppm);   // them both
+      let offPotato = s.attach(potato.root, Z, "grip_R");
+      const holder = new T.Group();                          // the plug, in Brick's hand: prongs up, the cable hanging
+      holder.add(cable.root);
+      let offCable = s.attach(holder, B, "grip_R");
+      cable.play("dangle", {loop: true});
+      A.play("idle", {loop: true});
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      if (!s.alive) return;
+      const search = A.perform(P("search"));
+      A.say("Behold: the—", 1.0);
+      // Brick on his way in behind, with a cable
+      B.show(true);
+      // (and waiting with his arms folded, out of the way of the potato)
+      const fold = () => B.perform("guard").then(() => { if (s.alive) B.play("guard-hold", {loop: true}); });
+      const brickIn = B.walkTo(x0 + BRICK_X * ppm).then(() => s.alive && B.face(0)).then(() => s.alive && fold());
+      await s.after(2.0);
+      if (!s.alive) return;
+      A.say("The Core! It's GONE!", 1.8);
+
+      // Zip, at a run, with the backup.
+      Z.show(true);
+      await Z.walkTo(x0 + ZIP_X * ppm, {clip: "run", mps: 3.75});
+      if (!s.alive) return;
+      await Z.face(0);
+      if (!s.alive) return;
+      Z.say("Backup!", 1.3);
+      const offer = Z.perform(P("offer"));
+      s.tween(0.8, k => potato.model.position.set(0, LIFT * k, 0), INOUT);   // from his fist to his palm
+      await offer;
+      if (!s.alive) return;
+      Z.play(P("offer-hold"), {loop: true});
+      await search;
+      if (!s.alive) return;
+
+      // Archie looks at what he's being handed.
+      const stare = A.perform(P("stare"));
+      await s.after(0.8);
+      if (!s.alive) return;
+      A.say("...That's a potato.", 1.6);
+      await stare;
+      if (!s.alive) return;
+      Z.say("It has CONTINENTS.", 1.6);
+      await s.after(1.1);
+      if (!s.alive) return;
+
+      // He takes it, as he would the Core. (Zip's hand and his meet at the potato.)
+      const take = A.perform(P("take"));
+      await s.after(TAKE_AT);
+      if (!s.alive) return;
+      offPotato();
+      offPotato = s.attach(potato.root, A, "grip_L");
+      potato.model.position.set(ARCHIE_DX, LIFT, 0);         // he holds it by its right half
+      // and Zip out of Brick's way: in front of him, where he can see
+      const aside = Z.perform(P("let-go"))
+        .then(() => s.alive && Z.walkTo(x0 + 2.0 * ppm))
+        .then(() => s.alive && Z.face(0))
+        .then(() => { if (s.alive) Z.play("idle", {loop: true}); });
+      await take;
+      if (!s.alive) return;
+      A.play(P("hold"), {loop: true});
+      await brickIn;
+      if (!s.alive) return;
+      const unfold = B.perform("guard-off");
+      await aside;
+      if (!s.alive) return;
+      await unfold;
+      if (!s.alive) return;
+
+      // Brick plugs it in: the plug turned to the socket as his hand comes up, and left in it.
+      const plug = B.perform(P("plug"));
+      s.after(0.1).then(() => s.tween(0.7, k => {
+        cable.root.rotation.z = k * Math.PI / 2;             // prongs to screen left, the cable trailing back
+        cable.root.position.x = -PLUG_OUT * k;
+      }, INOUT));
+      await s.after(PLUG_IN);
+      if (!s.alive) return;
+      offCable();
+      potato.root.add(cable.root);
+      cable.root.position.set(ARCHIE_DX + PLUGGED, LIFT, 0);
+      cable.root.rotation.set(0, 0, Math.PI / 2);
+      droop();
+      holder.removeFromParent();
+
+      // It lights up.
+      await s.after(GLOW);
+      if (!s.alive) return;
+      light(true);
+      await s.after(0.34);
+      if (!s.alive) return;
+      light(false);
+      await s.after(0.34);
+      if (!s.alive) return;
+      light(true);
+      s.tween(0.5, k => potato.model.scale.setScalar(POTATO * (1 + 0.12 * Math.sin(Math.PI * k))));   // a little jolt
+      await plug;
+      if (!s.alive) return;
+      fold();
+      const proj = await s.project(s.where().world);
+      if (!s.alive) return;
+      if (proj) {
+        const v = new T.Vector3();
+        s.tick(() => { potato.root.getWorldPosition(v); proj.at(v.x, -v.y - 0.06 * ppm, SIZE, -1); });
+        proj.idle();
+      }
+      Z.say("Ta-da!", 1.3);
+      const cheer = Z.perform("cheer");
+      await s.after(0.9);
+      if (!s.alive) return;
+      // a little crooked: a lurch, and it stays tipped
+      if (proj) s.tween(0.6, k => { proj.root.rotation.z = 0.11 * k; }, u => 1 - Math.pow(1 - u, 3) * Math.cos(9 * u));
+      await cheer;
+      if (!s.alive) return;
+      Z.play("idle", {loop: true});
+
+      // It works. On a potato.
+      const fury = A.perform(P("furious"));
+      await s.after(0.3);
+      if (!s.alive) return;
+      A.say("It runs on a POTATO?!", 2.2);
+      await fury;
+      if (!s.alive) return;
+      A.play(P("hold"), {loop: true});
+      B.say("It's a backup.", 1.6);
+      await s.after(2.2);
+    },
+  }),
+
+  "exit-fake-out":
+  // The exit fake-out. On the index, Archie (taken over where he stands in the masthead, at his size there)
+  // moonwalks off the right edge of the window. One eye peeks back round the edge. His hand creeps out
+  // towards the light switch -- the Settings button there -- and freezes: the reader is watching. He takes it
+  // back, ducks out of sight, and a moment later the lights flicker twice anyway, and come back as they were.
+  // Clips: exit_fake_out.py.
+  ({
+    cast: ["archie"],
+    pages: ["home"],
+    ready(s) {
+      const slot = s.page.slot(), at = slot && this.spot(s.page, slot);
+      return !!at && slot.rect.top > -40 && slot.rect.bottom < innerHeight && at.y - 2.3 * at.ppm > 0;
+    },
+    // Where he stands for the peek, and at what size, so that his index fingertip at the full stretch lands on the
+    // switch with the window's edge EDGE to his right; null if the switch is not near enough the edge for it.
+    spot(page, slot) {
+      const EDGE = 0.56, POINT = [-1.22, 1.22];               // exit_fake_out.py
+      const b = [page.rect("#setbtn"), page.rect("#theme")].find(r => r && r.width > 0);
+      if (!b || b.top < 0 || b.bottom > innerHeight) return null;
+      const W = document.documentElement.clientWidth;
+      const tx = b.left + b.width * 0.45, ty = b.top + b.height / 2;
+      const ppm = (W - tx) / (-POINT[0] - EDGE);
+      // nearer the glass than he was in the masthead: up to nearly twice the size, so the peek reads
+      if (ppm < slot.ppm * 1.1 || ppm > slot.ppm * 1.9) return null;
+      return {x: W + EDGE * ppm, y: ty + POINT[1] * ppm, ppm};
+    },
+    async play(s) {
+      const A = s.archie;
+      const slot = s.page.slot(), peek = this.spot(s.page, slot);
+      if (!peek) return;
+      const W = document.documentElement.clientWidth;
+      A.at(slot.x, slot.y, slot.ppm).show(true);
+      A.play("idle", {loop: true});
+      await s.after(0.4);
+      A.say("Well, I'll be off then.", 1.6);
+      await s.after(0.8);
+      if (!s.alive) return;
+      await A.walkTo(W + 0.7 * A.ppm, {clip: "moonwalk", mps: 0.6 / 0.5, backwards: true});
+      if (!s.alive) return;
+      A.show(false);
+      await s.after(1.6);
+      if (!s.alive) return;
+      // back, just past the edge, facing in, at the size and height that put his fingertip on the switch
+      A.at(peek.x, peek.y, peek.ppm);
+      await A.face(0);
+      A.show(true);
+      await A.perform("exit-fake-out/peek");
+      if (!s.alive) return;
+      await A.perform("exit-fake-out/reach");
+      if (!s.alive) return;
+      await A.perform("exit-fake-out/duck");
+      A.show(false);
+      await s.after(1.1);
+      if (!s.alive) return;
+      await s.page.flicker(4);                           // dark, light, dark, light: 1.25 flashes a second
+      await s.after(0.3);
+    },
+  }),
+
+  "fake-crash":
+  // The fake crash. Archie walks on and waves -- and freezes mid-wave, a blue screen on his face (the
+  // error-face prop). Brick ambles over, peers at him, knocks on his head, and flicks his crest: he spins round to
+  // face away. Brick steps up and opens the door in his back. In the bay behind it tiny Zip is working two levers
+  // (the control-box prop), and Archie's raised arm is going with them. Zip freezes, looks round, waves a very
+  // small wave. Brick looks at the reader and shuts the door. Archie turns back round on his own, the screen goes
+  // off -- "Rebooted! Good as new." -- and he walks off a little too stiffly. Brick raises a brow at the reader.
+  // Clips: fake_crash.py (the layout and timings below are its constants).
+  ({
+    cast: ["archie", "brick", "zip"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ready(s) {
+      return innerWidth >= 1100 && innerHeight >= 640;
+    },
+    async play(s) {
+      const {archie: A, brick: B, zip: Z} = s;
+      const D1 = 1.7, D2 = 1.6, K = 0.09, BOX = 2.6, SPAN = 0.44, ZIP_DX = 0.018;
+      const CRASH = 1.5, FLICK = 1.1, SPIN = -Math.PI, SPIN_SECS = 0.9, ZIP_SHOW = 1.0, ZIP_HIDE = 0.85;
+      const WALK = 0.6 / (0.62 * 0.8);                             // archie_base WALK_SPEED: the puppet's stride
+      const W = s.W(), P = Math.min(230, (innerHeight - 150) / 2.75), floor = innerHeight - 8;
+      const xA = Math.round(W * 0.4);
+      for (const a of [A, B]) a.ppm = P;
+
+      // ---- on, and hello ----
+      A.at(-0.8 * P, floor).show(true);
+      await A.walkTo(xA);
+      if (!s.alive) return;
+      await A.face(0);
+      const screen = await s.prop("error-face");
+      if (!s.alive) return;
+      const hello = A.perform("fake-crash/hello");
+      A.say("Hello! Welcome to th—", 3);
+      await s.until(() => A.time() >= CRASH || !s.alive);
+      A.hush();
+      s.attach(screen.root, A, "head", {offset: [0, 0.178, 0.305], upright: false});
+      screen.play("on");
+      await hello;
+      if (!s.alive) return;
+      A.play("fake-crash/frozen", {loop: true, fade: 0});
+
+      // ---- Brick: over, a peer, two knocks ----
+      await s.after(0.8);
+      B.at(W + 1.6 * P, floor).show(true);
+      await B.walkTo(xA + D1 * P);
+      if (!s.alive) return;
+      await B.face(0);
+      await B.perform("fake-crash/peer");
+      if (!s.alive) return;
+      A.play("fake-crash/knocked", {fade: 0.05});
+      await B.perform("fake-crash/knock");
+      if (!s.alive) return;
+      A.play("fake-crash/frozen", {loop: true, fade: 0.05});
+
+      // ---- the flick: he spins round to face away ----
+      const flick = B.perform("fake-crash/flick");
+      await s.until(() => B.time() >= FLICK || !s.alive);
+      A.play("fake-crash/spun", {fade: 0.05});
+      const overshoot = u => { const c = 1.6; return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); };
+      await s.tween(SPIN_SECS, e => { A.turnTo = A.turn.rotation.y = SPIN * e; }, overshoot);
+      A.facing = 2;
+      await flick;
+      if (!s.alive) return;
+      A.play("fake-crash/frozen", {loop: true, fade: 0.1});
+
+      // ---- the door ----
+      await B.walkTo(xA + D2 * P);
+      if (!s.alive) return;
+      await B.face(0);
+      const box = await s.prop("control-box");
+      if (!s.alive) return;
+      // tiny Zip and his box stand on the bay's ledge, wherever Archie's chest is
+      const inBay = () => {
+        const b = A.pageAt("bay");
+        const zx = b.x + ZIP_DX * P;
+        Z.at(zx, b.y, K * P).depth(b.z + 2);
+        box.at(zx - SPAN * K * P, b.y, K * BOX * P);
+        box.root.position.z = b.z + 3;
+        box.root.rotation.y = -Math.PI / 2;                    // its levers swing across the page
+      };
+      const opening = B.perform("fake-crash/open");
+      const door = A.perform("fake-crash/door");
+      await s.until(() => A.time() >= ZIP_SHOW || !s.alive);
+      inBay();
+      const following = s.tick(inBay);
+      await Z.face(-1);
+      Z.play("fake-crash/levers", {loop: true, fade: 0});
+      box.play("operate", {loop: true});
+      Z.show(true);
+      await Promise.all([opening, door]);
+      if (!s.alive) return;
+      // the levers have him: his arm and head go with them, in step
+      const driven = A.play("fake-crash/driven", {loop: true, fade: 0.1});
+      if (driven) driven.time = Z.time();
+      await s.after(1.9);
+      if (!s.alive) return;
+
+      // ---- caught ----
+      let last = Z.time();
+      await s.until(() => { const t = Z.time(), wrapped = t < last; last = t; return wrapped || !s.alive; });
+      box.mixer.stopAllAction();                               // its levers at rest: where his hands are
+      A.play("fake-crash/held", {loop: true, fade: 0.1});
+      const caught = Z.perform("fake-crash/caught");
+      const stare = B.perform("fake-crash/stare");
+      await s.after(1.4);
+      Z.say("...hi.", 1.6);
+      await Promise.all([caught, stare]);
+      if (!s.alive) return;
+
+      // ---- shut ----
+      const closing = B.perform("fake-crash/close");
+      const shut = A.perform("fake-crash/shut");
+      await s.until(() => A.time() >= ZIP_HIDE || !s.alive);
+      Z.show(false);
+      following();
+      box.remove();
+      await Promise.all([closing, shut]);
+      if (!s.alive) return;
+      A.play("fake-crash/frozen", {loop: true, fade: 0.1});
+      await s.after(0.7);
+      if (!s.alive) return;
+
+      // ---- reboot: round on his own, the screen off ----
+      const reboot = A.perform("fake-crash/reboot");
+      await s.tween(0.9, e => { A.turnTo = A.turn.rotation.y = SPIN * (1 - e); }, u => u < 0.5 ? 2 * u * u : 1 - 2 * (1 - u) * (1 - u));
+      A.facing = 0;
+      screen.play("off");
+      await s.after(0.35);
+      screen.root.visible = false;
+      await s.until(() => A.time() >= 1.95 || !s.alive);
+      A.say("Rebooted! Good as new.", 1.8);
+      await reboot;
+      if (!s.alive) return;
+      await s.after(0.4);
+      const off = A.walkTo(-0.9 * P, {clip: "fake-crash/puppet", mps: WALK});
+      await s.after(1.2);
+      if (!s.alive) return;
+      await B.face(0);
+      await B.perform("raise-brow");
+      await off;
+      if (!s.alive) return;
+      await B.walkTo(W + 1.6 * P);
+    },
+  }),
+
+  "fake-cursor":
+  // The fake cursor. Archie and Zip walk on along the bottom of the window. Zip produces a remote and, with a
+  // click, a pointer: a big, obviously theatrical prop (the reader's own cursor is never touched). He flies
+  // it over and pokes Archie in the shoulder; Archie jumps. It pokes his head; he swats and misses. It hovers
+  // in front of his face, wobbling. He snatches it, looks at Zip (who has hidden the remote and is
+  // whistling), and twists it, squeaking, into a balloon dog, which he hands to Zip. Zip hugs it.
+  // Clips: fake_cursor.py.
+  ({
+    cast: ["archie", "zip"],
+    pages: ["home", "topic", "repos", "catalog", "discover", "collections"],
+    ppm: 70,
+    ready(s) {
+      return innerWidth >= 1000 && innerHeight >= 600;
+    },
+    async play(s) {
+      const A = s.archie, Z = s.zip, ppm = A.ppm;
+      const ZIP_X = 3.4, GIVE_X = 1.3, GRAB_AT = [0.55, 1.95], GRAB = 0.62, POP = 2.85, HANDOFF = 0.95;
+      const REMOTE = 0.7, CLICK = 1.35;                       // fake_cursor.py
+      const RUN = 0.6 / (0.4 * 0.4);                           // clips/zip_base.py
+      const CS = 1.3;                                          // the pointer prop (0.55 m) a size up
+      const floor = innerHeight - 8;
+      const ax = Math.round(innerWidth * 0.2), zx = ax + ZIP_X * ppm, gx = ax + GIVE_X * ppm;
+      const [cursor, dog, remote] = await Promise.all(["fake-cursor", "balloon-dog", "remote-zip"].map(n => s.prop(n)));
+      if (!s.alive) return;
+      s.page.undo(() => [cursor, dog, remote].forEach(p => p.remove()));
+
+      // ---- on: Archie walking in from the left, Zip at a run from the right ----
+      A.at(-0.6 * ppm, floor).show(true);
+      A.play("idle", {loop: true});
+      Z.at(innerWidth + 0.7 * ppm, floor).show(true);
+      Z.play("idle", {loop: true});
+      await Promise.all([A.walkTo(ax), (async () => { await s.after(0.3); await Z.walkTo(zx, {clip: "run", mps: RUN}); })()]);
+      if (!s.alive) return;
+      await Promise.all([A.face(0), Z.face(0)]);
+      A.play("idle", {loop: true});
+      Z.play("idle", {loop: true});
+      await s.after(0.2);
+      if (!s.alive) return;
+
+      // ---- the remote, and the pointer ----
+      const dep = Z.perform("fake-cursor/deploy");
+      await s.after(REMOTE);
+      remote.hold(Z, "grip_R", [0, 0, 0], [0, Math.PI, 0]);
+      await s.after(CLICK - REMOTE);
+      if (!s.alive) return;
+      // where the pointer's tip is (it is its origin), moved by tweens; every frame onto the page
+      const at = {x: zx - 0.7 * ppm, y: floor - 1.5 * ppm};
+      let free = true;
+      cursor.at(at.x, at.y, ppm * CS);
+      cursor.root.position.z = 60;
+      cursor.play("wobble", {loop: true});
+      const fly = s.tick(() => { if (free) cursor.root.position.set(at.x, -at.y, 60); });
+      await s.tween(0.3, u => cursor.root.scale.setScalar(Math.max(1e-3, ppm * CS * (u + 0.25 * Math.sin(Math.PI * u)))));
+      await dep;
+      if (!s.alive) return;
+      Z.play("fake-cursor/drive", {loop: true});
+      const go = (x, y, secs, ease) => { const fx = at.x, fy = at.y; return s.tween(secs, u => { at.x = fx + (x - fx) * u; at.y = fy + (y - fy) * u; }, ease); };
+      const poke = async (tx, ty) => {
+        const hx = at.x, hy = at.y;
+        cursor.play("poke");
+        await go(tx, ty, 0.12, u => u * u);
+        await go(hx, hy, 0.3);
+        cursor.play("wobble", {loop: true});
+      };
+
+      // ---- poke one: his shoulder ----
+      let sh = A.pageAt("upper_arm_L");
+      await go(sh.x + 0.6 * ppm, sh.y - 0.4 * ppm, 0.9, u => u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2);
+      await s.after(0.3);
+      if (!s.alive) return;
+      sh = A.pageAt("upper_arm_L");
+      const p1 = poke(sh.x + 0.08 * ppm, sh.y);
+      await s.after(0.12);
+      A.perform("fake-cursor/poked");
+      A.say("Hey!", 1.0);
+      await p1;
+      await go(at.x + 0.4 * ppm, at.y - 0.5 * ppm, 0.5);
+      await s.after(0.6);
+      if (!s.alive) return;
+
+      // ---- poke two: his head; he swats and misses ----
+      const hd = () => { const h = A.pageAt("head"); return {x: h.x + 0.15 * ppm, y: h.y - 0.42 * ppm}; };
+      await go(hd().x + 0.5 * ppm, hd().y - 0.45 * ppm, 0.6);
+      if (!s.alive) return;
+      const p2 = poke(hd().x, hd().y);
+      await s.after(0.12);
+      const swat = A.perform("fake-cursor/swat");
+      await p2;
+      await go(at.x + 0.8 * ppm, at.y - 0.4 * ppm, 0.25);                // dodged
+      await swat;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(0.2);
+      if (!s.alive) return;
+
+      // ---- it hovers in front of his face, taunting; he grabs it ----
+      const gp = {x: ax + GRAB_AT[0] * ppm, y: floor - GRAB_AT[1] * ppm};
+      await go(gp.x + 0.1 * ppm, gp.y - 0.05 * ppm, 0.7);
+      const taunt = s.tick(() => { at.x = gp.x + 0.1 * ppm + 0.12 * ppm * Math.sin(s.clock() * 7); at.y = gp.y - 0.05 * ppm + 0.06 * ppm * Math.cos(s.clock() * 5); });
+      await s.after(0.9);
+      if (!s.alive) return;
+      const grab = A.perform("fake-cursor/grab");
+      await s.after(GRAB - 0.08);
+      taunt();
+      await go(gp.x, gp.y, 0.08);
+      free = false;
+      fly();
+      const offCursor = s.attach(cursor.root, A, "grip_L", {offset: [0, 0, 0.02]});
+      cursor.root.scale.setScalar(CS);
+      Z.perform("fake-cursor/caught").then(() => s.alive && Z.play("fake-cursor/innocent", {loop: true}));
+      await grab;
+      if (!s.alive) return;
+
+      // ---- a look at Zip; twisted into a balloon dog ----
+      const twist = A.perform("fake-cursor/twist");
+      await s.after(1.25);
+      cursor.play("bend");
+      A.say("*squeak squeak*", 1.4);
+      await s.after(POP - 1.25);
+      if (!s.alive) return;
+      offCursor();
+      cursor.remove();
+      const offDog = s.attach(dog.root, A, "grip_L", {offset: [0, 0, 0.04]});
+      await s.tween(0.25, u => dog.root.scale.setScalar(Math.max(1e-3, 1.8 * (u + 0.3 * Math.sin(Math.PI * u)))));
+      await twist;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+
+      // ---- the hand-over: Zip skips over for it ----
+      await Z.walkTo(gx, {clip: "run", mps: RUN});
+      if (!s.alive) return;
+      await Z.face(0);
+      Z.play("fake-cursor/innocent", {loop: true});
+      const give = A.perform("fake-cursor/give"), take = Z.perform("fake-cursor/take");
+      await s.after(HANDOFF);
+      if (!s.alive) return;
+      offDog();
+      s.attach(dog.root, Z, "grip_R", {offset: [0, 0, 0.04]});
+      await Promise.all([give, take]);
+      if (!s.alive) return;
+      Z.play("fake-cursor/hug", {loop: true});
+      A.play("idle", {loop: true});
+      Z.say("♥", 1.4);
+      await s.after(1.4);
+      if (!s.alive) return;
+      // off: Zip skipping away with it, Archie the way he came
+      await Promise.all([A.walkTo(-0.8 * ppm), Z.walkTo(innerWidth + 0.8 * ppm, {clip: "run", mps: RUN})]);
+    },
+  }),
+
+  "forbidden-button":
+  // The forbidden button. Zip runs on and a pedestal rises out of the floor beside him: a big red button, DO NOT
+  // PRESS (a prop: nothing real is behind it). He lunges for it; Archie arrives and holds him off by the dome,
+  // a finger short. "It says DO NOT PRESS." Zip sulks off, back turned; Archie nods, responsibly. Then, alone
+  // with it: a look at it, a long look at the reader, a glance at Zip -- and he presses it. Confetti, over
+  // Archie only. Zip spins round: "HE PRESSED IT!" -- and clicks a remote at it from where he stands: the
+  // confetti goes off over Archie again. Clips: forbidden_button.py.
+  ({
+    cast: ["archie", "zip"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1000 && innerHeight >= 620;
+    },
+    async play(s) {
+      const A = s.archie, Z = s.zip, ppm = A.ppm;
+      const PS = 1.35, ZIP_REACH = 0.8, HOLD_GAP = 0.95, ARCHIE_PRESS = 0.65, ZIP_SULK = 0.9;  // forbidden_button.py
+      const PRESS = 3.6, REMOTE = 0.35, CLICK = 0.8;
+      const RUN = 0.6 / (0.4 * 0.4);                                                           // clips/zip_base.py
+      const floor = innerHeight - 8, px = Math.round(innerWidth * 0.62);
+      const z0 = px + ZIP_REACH * ppm, a0 = z0 + HOLD_GAP * ppm, a1 = px + ARCHIE_PRESS * ppm, z1 = a0 + ZIP_SULK * ppm;
+      const [ped, remote, ...conf] = await Promise.all([s.prop("do-not-press"), s.prop("remote-zip"),
+                                                        ...[0, 1, 2, 3, 4, 5].map(() => s.prop("confetti"))]);
+      if (!s.alive) return;
+      s.page.undo(() => [ped, remote, ...conf].forEach(p => p.remove()));
+
+      // Confetti over Archie, only Archie: six bursts at once from just over his head, turned about, which
+      // rain down round him and fade.
+      const mats = conf.map(c => { const m = []; c.model.traverse(n => n.isMesh && m.push(...[].concat(n.material))); return m; });
+      // (the prop's pieces fly up most of a metre before they fall: they start at his face, to rain on his head)
+      const burst = () => {
+        const x = A.x, y = floor - 2.0 * ppm, ys = [];
+        conf.forEach((c, i) => {
+          c.at(x + (i - 2.5) * 0.05 * ppm, y - (i % 2) * 0.08 * ppm, ppm * 1.3);
+          c.root.rotation.y = i * Math.PI / 3 + 0.4;
+          c.root.position.z = 30;
+          ys.push(c.root.position.y);
+          mats[i].forEach(m => { m.transparent = true; m.opacity = 1; });
+          c.play("burst");
+        });
+        // where the clip leaves them, still falling, and gone
+        s.after(1.9).then(() => s.tween(0.6, u => {
+          conf.forEach((c, i) => { c.root.position.y = ys[i] - 0.7 * ppm * u; });
+          mats.forEach(ms => ms.forEach(m => { m.opacity = 1 - u; }));
+        }, u => u)).then(() => conf.forEach(c => c.detach()));
+      };
+
+      // ---- Zip runs on; the pedestal rises out of the floor beside him; Archie on his way ----
+      Z.at(innerWidth + 0.5 * ppm, floor).show(true);
+      Z.play("idle", {loop: true});
+      await Z.walkTo(z0, {clip: "run", mps: RUN});
+      if (!s.alive) return;
+      await Z.face(0);
+      const low = PS * 1.1 * ppm;
+      ped.at(px, floor + low, ppm * PS);
+      const delight = Z.perform("forbidden-button/delight");
+      s.tween(0.5, u => { ped.root.position.y = -(floor + low * (1 - u)); }, u => 1 + 2.2 * Math.pow(u - 1, 3) + 1.2 * Math.pow(u - 1, 2));
+      await s.after(0.6);
+      if (!s.alive) return;
+      A.at(innerWidth + 0.6 * ppm, floor).show(true);
+      const walkIn = A.walkTo(a0, {speed: 1.6});
+      s.after(0.3).then(() => s.alive && A.say("Whoa whoa whoa!", 1.3));
+      await delight;
+      if (!s.alive) return;
+
+      // ---- the lunge; held off by the dome ----
+      Z.perform("forbidden-button/reach").then(() => s.alive && Z.play("forbidden-button/strain", {loop: true}));
+      await walkIn;
+      if (!s.alive) return;
+      await A.face(0);
+      await A.perform("forbidden-button/restrain");
+      if (!s.alive) return;
+      A.play("forbidden-button/holding", {loop: true});
+      A.say("Ah-ah-ah. It says DO NOT PRESS.", 2.0);
+      await s.after(2.0);
+      if (!s.alive) return;
+
+      // ---- Zip sulks off past him, his back turned; a responsible nod ----
+      A.perform("forbidden-button/release");
+      await Z.perform("forbidden-button/deflate");
+      if (!s.alive) return;
+      Z.say("Hmph.", 0.9);
+      Z.depth(-100);                                       // behind Archie, on his way past
+      const off = Z.walkTo(z1);
+      const nod = A.perform("forbidden-button/nod");
+      s.after(0.5).then(() => s.alive && A.say("Responsible.", 1.2));
+      await off;
+      if (!s.alive) return;
+      await Z.face(0, Math.PI);                            // his back to the lot of them
+      Z.play("forbidden-button/sulk", {loop: true});
+      await nod;
+      if (!s.alive) return;
+
+      // ---- alone with it ----
+      await A.walkTo(a1);
+      if (!s.alive) return;
+      await A.face(0);
+      A.perform("forbidden-button/tempt");
+      await s.after(PRESS);
+      if (!s.alive) return;
+      ped.play("press");
+      burst();
+      const cf = A.perform("forbidden-button/confettied", {fade: 0.05});
+      await s.after(0.5);
+      if (!s.alive) return;
+
+      // ---- sold out, and Zip's own press, by remote, from where he stands ----
+      await Z.face(0);
+      Z.perform("forbidden-button/snitch");
+      Z.say("HE PRESSED IT!", 1.6);
+      await cf;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      A.say("It was very tempting.", 1.5);
+      await s.after(0.4);
+      if (!s.alive) return;
+      const ck = Z.perform("forbidden-button/click");
+      await s.after(REMOTE);
+      remote.hold(Z, "grip_R", [0, 0, 0], [0, Math.PI, 0]);
+      remote.root.scale.setScalar(1.6);
+      await s.after(CLICK - REMOTE);
+      if (!s.alive) return;
+      remote.play("click");
+      ped.play("press");
+      burst();
+      const dp = A.perform("forbidden-button/deadpan", {fade: 0.1});
+      await ck;
+      if (!s.alive) return;
+
+      // ---- Zip off at a run, Archie after him, the pedestal back down ----
+      const away = Z.walkTo(innerWidth + 0.7 * ppm, {clip: "run", mps: RUN});
+      await s.after(1.4);                                  // the flat look, and after him
+      if (!s.alive) return;
+      await Promise.all([away, A.walkTo(innerWidth + 0.7 * ppm, {speed: 1.8}),
+                         s.after(0.6).then(() => s.tween(0.6, u => { ped.root.position.y = -(floor + low * u); }, u => u * u))]);
+    },
+  }),
+
   "glass-door":
   // The glass door. Archie walks along the bottom of the window (or of the README viewer, if it ends first)
   // into the viewer's left edge. Bonk. He feels for the invisible wall, turns to the reader, draws a door on
@@ -71,6 +1750,4051 @@ export const BITS = {
       pen.fade(0.8);
       door.fade(0.8);
       await s.after(0.9);
+    },
+  }),
+
+  "heavy-readme":
+  // Heavy README. Along the bottom of the window, below the README viewer, lies the README itself: a long
+  // slab of it. Archie squats, takes one end and heaves -- nothing. He bellows for Brick, who comes in from the
+  // edge of the window, looks at it, slides one finger under its middle and lifts it over his head like a plate
+  // on a stick. Archie stretches, dusts his hands and puts them on his hips as if he had done the work. Brick
+  // looks at him. Clips: heavy_readme.py.
+  ({
+    cast: ["archie", "brick"],
+    pages: ["repo"],
+    ppm: 62,
+    ready(s) {
+      const r = s.page.rect(".source-preview .reader");
+      // the README viewer on screen above them, and room over Brick's head for the slab on his finger (3.7 m)
+      return !!r && r.top > 0 && r.top < innerHeight - 4.2 * 62 && innerHeight > 4.2 * 62 &&
+        document.documentElement.clientWidth > 7 * 62;
+    },
+    async play(s) {
+      const A = s.archie, B = s.brick, ppm = 62;
+      const W = document.documentElement.clientWidth, floor = innerHeight - 6;
+      // heavy_readme.py: SLAB_Y -0.4, ARCHIE_X -1.35, BRICK_X 1.05, GRAB_AT 1.55, TIP_OFF 0.12
+      const xs = W - 3.4 * ppm, ax = xs - 1.35 * ppm, bx = xs + 1.05 * ppm;
+      const slab = await s.prop("readme-slab");
+      if (!s.alive) return;
+      slab.at(xs, floor, ppm);
+      slab.root.position.z = 0.4 * ppm;                // in front of them
+      A.at(ax, floor, ppm).show(true);
+      A.play("idle", {loop: true});
+      await s.after(0.6);
+      if (!s.alive) return;
+      const strain = A.perform("heavy-readme/strain");
+      await s.after(1.2);
+      A.say("Hnnngh!", 1.6);
+      await strain;
+      if (!s.alive) return;
+      A.say("BRICK!", 1.4);
+      await A.perform("heavy-readme/call");
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      B.at(W + 1.3 * ppm, floor, ppm).show(true);
+      await B.walkTo(bx, {speed: 1.3});
+      if (!s.alive) return;
+      await B.face(0);
+      const lift = B.perform("heavy-readme/lift");
+      await s.after(1.55);
+      if (!s.alive) return;
+      // from here the slab rides his fingertip, level
+      slab.detach();
+      slab.root.scale.setScalar(1);
+      s.attach(slab.root, B, "index_3_R", {offset: [0, 0.12, 0], upright: true});
+      await s.after(1.7);
+      if (!s.alive) return;
+      const stretch = A.perform("heavy-readme/stretch");
+      await lift;
+      if (!s.alive) return;
+      B.play("finger-hold", {loop: true});
+      await s.after(2.4);
+      A.say("Teamwork.", 1.8);
+      await stretch;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await B.perform("heavy-readme/look");
+      if (!s.alive) return;
+      B.play("finger-hold", {loop: true});
+      await s.after(0.8);
+    },
+  }),
+
+  "hostile-takeover":
+  // The hostile takeover. Archie opens the Atlas Core to show the reader the atlas -- and the miniature agents
+  // have fortified it (the no-archies world). Two of them heave a NO ARCHIES sign up out of the ground in front
+  // of the gate while a third marches out to stand guard. He leans in and reads it, and protests: it's HIS core.
+  // Stop right there, says the guard. Then Zip strolls up and waves, and the agents cheer, step aside, swing the
+  // gate open and wave him straight through: he hops into the projection and struts in. Archie turns to the
+  // reader. Clips: hostile_takeover.py (Archie's pieces and the agents'), Zip's everyday clips, holo-zip's own.
+  ({
+    cast: ["archie", "zip"],
+    packs: {archie: "pals/bits/hostile-takeover@archie.glb", zip: null},     // Zip has no pieces of his own
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1100 && innerHeight >= 640;       // the projection up to his left, Zip beside it
+    },
+
+    async play(s) {
+      const INOUT = u => u * u * (3 - 2 * u);                        // s.tween's easings (its own is an ease-out)
+      const BACK = u => { const c = 1.9, v = u - 1; return 1 + (c + 1) * v * v * v + c * v * v; };
+      const A = s.archie, Z = s.zip, T = s.T;
+      const P = n => `hostile-takeover/${n}`;
+      const floor = innerHeight - 8, x0 = Math.round(innerWidth * 0.15);
+      const SIZE = 600, M = 0.07;                 // the world's width on the page (CSS px); figures' metres -> world
+      const core = await s.core(A);
+      if (!s.alive) return;
+      const sign = await s.prop("no-archies-sign");
+      if (!s.alive) return;
+      s.page.undo(() => sign.remove());
+
+      // He walks on and takes the Core out: behold, the atlas.
+      A.at(-0.45 * A.ppm, floor).show(true);
+      A.play("idle", {loop: true});
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      if (!s.alive) return;
+      const take = A.perform(P("take"));
+      await s.after(0.62);                        // _corekit.GRAB
+      core.hold();
+      await take;
+      if (!s.alive) return;
+      A.play(P("hold"), {loop: true});
+      const present = A.perform(P("present"));
+      A.say("Behold: the atlas!", 1.8);
+      core.play("unfold");
+      await s.after(0.9);
+      if (!s.alive) return;
+      core.play("open-idle", {loop: true});
+
+      // The no-archies fortress, where the atlas should be. Its own sign comes down: the agents put up theirs.
+      const proj = await s.project("no-archies");
+      if (!s.alive || !proj) return;
+      const follow = s.tick(() => { const p = core.page(); proj.at(p.x, p.y, SIZE, 1); });
+      const w = proj.world, node = n => w.getObjectByName(n);
+      const own = node("sign"), gate = node("gate");
+      const gate0 = gate ? gate.rotation.y : 0;
+      if (own) own.visible = false;
+      s.page.undo(() => { if (own) own.visible = true; if (gate) gate.rotation.y = gate0; });
+      // world points: Blender's (x, y, z) is three's (x, z, -y); the island's grass is at z 0.3
+      const at = (x, y, z = 0.302) => new T.Vector3(x, z, -y);
+      const agents = await s.figures("holo-agent", 3);
+      if (!s.alive) return;
+      const [zipFig] = await s.figures("holo-zip", 1);
+      if (!s.alive) return;
+      const spots = [at(-0.3, -0.33), at(-0.1, -0.33), at(0.0, -0.07)];
+      agents.forEach((a, i) => { w.add(a.root); a.root.position.copy(spots[i]); a.root.scale.setScalar(1e-4); });
+      w.add(sign.root);
+      sign.root.position.copy(at(-0.2, -0.22));
+      sign.root.scale.set(1, 1e-3, 1);
+      await present;
+      if (!s.alive) return;
+      proj.idle();
+
+      // What? Two agents heave the sign up out of the ground; the third marches out of the gate to guard it.
+      const look = A.perform(P("double-take"));
+      const grown = s.tween(0.4, k => agents.forEach(a => a.root.scale.setScalar(M * k + 1e-4)), BACK);
+      agents[0].play(A.clips[P("agent-heave")]);
+      agents[1].play(A.clips[P("agent-heave")]);
+      agents[2].root.rotation.y = Math.PI;        // facing in, then out of the gate
+      await grown;
+      if (!s.alive) return;
+      await s.tween(0.9, k => sign.root.scale.set(1, Math.max(1e-3, k), 1), BACK);
+      if (!s.alive) return;
+      agents[0].play(agents[0].clips.cheer);
+      agents[1].play(agents[1].clips.cheer);
+      agents[2].root.rotation.y = 0;
+      agents[2].play(A.clips.walk).timeScale = 1.6;
+      await s.tween(0.9, k => agents[2].root.position.copy(at(0.0, -0.07 - 0.13 * k)), INOUT);
+      if (!s.alive) return;
+      agents.forEach(a => a.play(a.clips.fold_arms, false));
+      await look;
+      if (!s.alive) return;
+
+      // He leans in and reads it. No ARCHIES? Stop right there. It's MY core.
+      const lean = A.perform(P("lean-in"));
+      await s.after(0.6);
+      if (!s.alive) return;
+      A.say("No ARCHIES?!", 1.5);
+      await s.after(0.5);
+      if (!s.alive) return;
+      agents[2].play(A.clips[P("agent-stop")], false);
+      await lean;
+      if (!s.alive) return;
+      const protest = A.perform(P("protest"));
+      A.say("It's MY core!", 1.6);
+      // Meanwhile, Zip.
+      const zx = Math.min(innerWidth - 0.45 * A.ppm, proj.root.position.x + SIZE / 2 + 0.45 * A.ppm);
+      Z.at(innerWidth + 0.5 * A.ppm, floor).show(true);
+      const zipIn = Z.walkTo(zx);
+      await protest;
+      if (!s.alive) return;
+      A.play(P("hold"), {loop: true});
+      agents[2].play(agents[2].clips.fold_arms, false);
+      await zipIn;
+      if (!s.alive) return;
+
+      // Zip waves; the agents light up, the guard steps aside, the gate swings open, and he's waved through.
+      await Z.face(-1);
+      if (!s.alive) return;
+      Z.play("wave");
+      await s.after(0.5);
+      if (!s.alive) return;
+      agents[0].play(agents[0].clips.cheer);
+      agents[1].play(agents[1].clips.cheer);
+      agents[2].root.rotation.y = Math.PI / 2;    // a step to the side, out of the way
+      agents[2].play(A.clips.walk).timeScale = 1.6;
+      await s.tween(0.6, k => agents[2].root.position.copy(at(0.16 * k, -0.2)), INOUT);
+      if (!s.alive) return;
+      agents[2].root.rotation.y = 0;
+      agents[2].play(A.clips[P("agent-marshal")]);
+      if (gate) await s.tween(0.6, k => { gate.rotation.y = gate0 + 1.75 * k; }, BACK);
+      if (!s.alive) return;
+
+      // In he goes: a hop off the floor, smaller and smaller, into the projection, and through the gate.
+      Z.depth(300);
+      const v = new T.Vector3();
+      const land = at(0.03, -0.36);
+      const pageOf = p => { v.copy(p); w.localToWorld(v); return {x: v.x, y: -v.y}; };
+      Z.play("jump");
+      await s.after(0.42);
+      if (!s.alive) return;
+      const from = {x: Z.x, y: Z.y, ppm: Z.ppm}, tiny = M * SIZE / 2;
+      await s.tween(0.6, k => {
+        const to = pageOf(land);
+        Z.at(from.x + (to.x - from.x) * k, from.y + (to.y - from.y) * k - 110 * Math.sin(Math.PI * k),
+             from.ppm + (tiny - from.ppm) * k);
+      }, INOUT);
+      if (!s.alive) return;
+      Z.show(false);
+      w.add(zipFig.root);
+      zipFig.root.position.copy(land);
+      zipFig.root.scale.setScalar(M);
+      zipFig.play(zipFig.clips.cheer, false);
+      await s.after(0.9);
+      if (!s.alive) return;
+      zipFig.root.rotation.y = Math.PI;           // away from us, through the gate
+      zipFig.play(zipFig.clips.walk).timeScale = 2;
+      await s.tween(2.0, k => zipFig.root.position.copy(at(0.03 - 0.03 * k, -0.36 + 0.43 * k)), INOUT);
+      if (!s.alive) return;
+      zipFig.root.visible = false;
+      if (gate) s.tween(0.4, k => { gate.rotation.y = gate0 + 1.75 * (1 - k); });
+      agents.forEach((a, i) => { a.root.rotation.y = 0; a.play(a.clips.fold_arms, false); });
+
+      // He looks at the reader. Folded away.
+      await A.perform(P("deadpan"));
+      if (!s.alive) return;
+      A.say("Unbelievable.", 1.4);
+      await s.after(1.0);
+      if (!s.alive) return;
+      proj.hide(0.3);
+      await s.after(0.3);
+      if (!s.alive) return;
+      follow();
+      core.play("fold");
+      await s.after(0.9);
+      if (!s.alive) return;
+      const back = A.perform(P("back"));
+      await s.after(0.86);                        // _corekit.DOCK
+      core.dock();
+      await back;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(0.8);
+    },
+  }),
+
+  "inspection-scam":
+  // The inspection scam. Archie pops up onto a project's card with a rubber stamp half his size, beams at the
+  // reader and brings it down on the card without a glance -- "Quality checked!" -- and leaves it standing
+  // there while he takes the credit. Brick picks it up and turns its face to the reader: I LICKED THIS. So,
+  // it turns out, does the ink. The stamp and the ink are props over the card, gone when the bit ends; the
+  // card itself is untouched. Clips: inspection_scam.py.
+  ({
+    cast: ["archie", "brick"],
+    pages: ["home", "topic", "discover", "collections"],
+    ppm: 60,
+    _card() {
+      for (const e of document.querySelectorAll("article.cx")) {
+        const r = e.getBoundingClientRect();
+        if (r.width > 200 && r.left > 60 && r.right < innerWidth - 60 && r.top > 200 && r.bottom < innerHeight + 40) return e;
+      }
+      return null;
+    },
+    ready(s) { return !!this._card(); },
+    // A prop's materials faded to `to` opacity over `secs`.
+    _fade(s, prop, to, secs) {
+      const mats = [];
+      prop.model.traverse(n => { if (n.isMesh) for (const m of [].concat(n.material)) { m.transparent = true; mats.push(m); } });
+      const from = mats.map(m => m.opacity);
+      return s.tween(secs, u => mats.forEach((m, i) => { m.opacity = from[i] + (to - from[i]) * u; }));
+    },
+    async play(s) {
+      const A = s.archie, ppm = A.ppm, T = s.T;
+      const card = this._card();
+      if (!card) return;
+      const C = () => card.getBoundingClientRect();
+      const edge = C().top;
+      const x0 = C().left + C().width * 0.32;
+      // inspection_scam.py: STAMP_SCALE, STAMP_HOLD, INK_SCALE, STAMP_SHOW, STAMP_HIT, STAMP_LET; the stamp's
+      // pad is 0.065 m below its origin (props_hand.py)
+      const SC = 8.0, HOLD = 0.055, INK = 3.5, SHOW = 0.25, HIT = 1.35, LET = 2.1, PAD = 0.065;
+      const [stamp, ink] = await Promise.all([s.prop("rubber-stamp"), s.prop("stamp-mark-licked")]);
+      if (!s.alive) return;
+      // flipped beforehand, the way its `flip` clip ends: the head half a turn about its own length (the bone's
+      // Y), so the face it prints says I LICKED THIS
+      const head = stamp.model.getObjectByName("head");
+      if (head) head.quaternion.multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0, 1, 0), Math.PI));
+
+      A.clipBelow(edge);
+      A.at(x0, edge + 2.6 * ppm).show(true);
+      A.play("inspection-scam/hop", {fade: 0});
+      await s.tween(0.45, u => A.at(x0, edge + 2.6 * ppm * (1 - u)));
+      await s.until(() => A.time() > 1.1 || !s.alive);
+      if (!s.alive) return;
+      A.clipBelow(null);
+
+      // The stamp, upright in his left hand, held by its shaft.
+      const hold = new T.Group();
+      hold.add(stamp.root);
+      stamp.root.scale.setScalar(SC);
+      stamp.root.position.set(0, -HOLD * SC, 0.25);
+      const go = A.perform("inspection-scam/stamp");
+      await s.until(() => A.time() >= SHOW || !s.alive);
+      if (!s.alive) return;
+      const off = s.attach(hold, A, "grip_L", {upright: true});
+      A.say("Quality checked!", 1.8);
+      await s.until(() => A.time() >= LET || !s.alive);
+      if (!s.alive) return;
+      // Stuck to the card where it came down.
+      const w = new T.Vector3();
+      stamp.root.getWorldPosition(w);
+      off();
+      hold.removeFromParent();
+      stamp.at(w.x, -w.y, ppm * SC);
+      stamp.root.position.z = 60;
+      const pad = {x: w.x, y: -w.y + PAD * SC * ppm};
+      await go;
+      if (!s.alive) return;
+      await A.perform("inspection-scam/present");
+      if (!s.alive) return;
+
+      // The other side of the story: the stamp's face, turned to the reader.
+      // The ink, where the pad was, once the stamp comes off the card.
+      const inked = () => { ink.at(pad.x, pad.y + 0.08 * INK * ppm, ppm * INK); ink.root.position.z = 30; };
+      // Its pad turned to face the reader, the words the right way up, held by a pal facing `facing`: the
+      // stamp's own axes (pad down its -Y, the words' up along its +Z) in that pal's model frame.
+      const turnFace = async (secs, facing = 0) => {
+        const m = new T.Matrix4();
+        if (facing < 0) m.set(0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0, 0, 0, 1);
+        else if (facing > 0) m.set(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1);
+        else m.set(1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1);
+        const q1 = new T.Quaternion().setFromRotationMatrix(m), q0 = new T.Quaternion();
+        await s.tween(secs, u => { stamp.root.quaternion.slerpQuaternions(q0, q1, u); });
+      };
+      // inspection_scam.py: BRICK_X, TURN_TAKE, TURN_FACE; Brick's hand meets the shaft 1.05 m ahead of him
+      const B = s.brick, TAKE = 0.8, FACE = 1.6;
+      if (B && B.has("inspection-scam/turn")) {
+        // up from behind the row of cards, right beside the stamp
+        const bx = w.x + 1.05 * ppm;
+        B.clipBelow(edge);
+        B.at(bx, edge + 3 * ppm).show(true);
+        B.play("idle", {loop: true});
+        await s.tween(0.6, u => B.at(bx, edge + 3 * ppm * (1 - u)));
+        if (!s.alive) return;
+        B.clipBelow(null);
+        await B.face(-1);
+        if (!s.alive) return;
+        B.play("inspection-scam/turn");
+        await s.until(() => B.time() >= TAKE || !s.alive);
+        if (!s.alive) return;
+        const h2 = new T.Group();
+        stamp.detach();
+        h2.add(stamp.root);
+        stamp.root.scale.setScalar(SC);
+        stamp.root.position.set(0, -HOLD * SC, 0.25);
+        s.attach(h2, B, "grip_L", {upright: true});
+        inked();
+        await s.until(() => B.time() >= FACE || !s.alive);
+        if (!s.alive) return;
+        await turnFace(0.4, -1);
+        if (!s.alive) return;
+        A.say("...", 1.0);
+      } else {
+        const chk = A.perform("inspection-scam/check");
+        await s.until(() => A.time() >= 0.3 || !s.alive);
+        if (!s.alive) return;
+        const h2 = new T.Group();
+        stamp.detach();
+        h2.add(stamp.root);
+        stamp.root.scale.setScalar(SC);
+        stamp.root.position.set(0, -HOLD * SC, 0.25);
+        s.attach(h2, A, "grip_L", {upright: true});
+        await s.until(() => A.time() >= 0.55 || !s.alive);
+        if (!s.alive) return;
+        inked();
+        await s.until(() => A.time() >= 0.75 || !s.alive);
+        if (!s.alive) return;
+        await turnFace(0.35);
+        if (!s.alive) return;
+        await chk;
+      }
+      if (!s.alive) return;
+      await A.perform("inspection-scam/stare");
+      if (!s.alive) return;
+      await this._fade(s, ink, 0, 0.6);
+    },
+  }),
+
+  "invisible-tug-of-war":
+  // The invisible tug-of-war. Up on the home page's spotlight, Archie hauls on a cable that runs off the right
+  // edge of the window. Zip joins in. Brick takes hold and gives it one gentle tug -- and Archie is yanked off
+  // his feet from behind: the cable is his own tether, from the port low on his back, along the floor under
+  // their feet and round. The cable and tether are drawn lines over the page. Clips: invisible_tug_of_war.py.
+  ({
+    cast: ["archie", "zip", "brick"],
+    pages: ["home"],
+    ppm: 58,
+    ready(s) {
+      const r = s.page.rect("article.hero");
+      return !!r && r.width > 800 && r.top > 170 && r.top < innerHeight - 220;
+    },
+    // Up from behind the element whose top edge is `edge`, to stand at x (clipped at the edge on the way).
+    async _rise(s, a, x, edge, clip = "idle") {
+      a.clipBelow(edge);
+      a.at(x, edge + 3 * a.ppm).show(true);
+      a.play(clip, {fade: 0, loop: true});
+      await s.tween(0.55, u => a.at(x, edge + 3 * a.ppm * (1 - u)));
+      if (!s.alive) return;
+      a.clipBelow(null);
+    },
+    async play(s) {
+      const A = s.archie, ppm = A.ppm;
+      const H = () => s.page.rect("article.hero");
+      const edge = H().top;
+      const x0 = H().left + H().width * 0.3;
+      // invisible_tug_of_war.py: ZIP_AHEAD, BRICK_AHEAD, TUG_AT
+      const ZA = 1.3, BA = 2.8, TUG = 0.6;
+      const W = s.W();
+      const cable = s.svg.path({stroke: "#2b2a29", width: 4});
+      const tether = s.svg.path({stroke: "#2b2a29", width: 4});
+      const stripe = s.svg.path({stroke: "#a4c812", width: 1.6});
+      stripe.el.setAttribute("stroke-dasharray", "6 10");
+      let sag = 0.25, taut = 0, holders = [() => A];
+      // the cable: through every holder's hands, out past the window's right edge; the tether: from his port,
+      // down to the floor, along it, out the same side
+      const draw = s.tick(() => {
+        const pts = holders.map(h => h().handsAt());
+        const end = {x: W + 20, y: pts[pts.length - 1].y - 10};
+        let d = `M${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`, prev = pts[0];
+        for (const p of [...pts.slice(1), end]) {
+          d += ` Q${((prev.x + p.x) / 2).toFixed(1)} ${((prev.y + p.y) / 2 + sag * 40).toFixed(1)} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
+          prev = p;
+        }
+        cable.el.setAttribute("d", d);
+        const port = A.pageAt("tether");
+        const floor = edge - 3;
+        const mid = port.x + (1 - taut) * 0.6 * ppm;
+        const t = `M${port.x.toFixed(1)} ${port.y.toFixed(1)} Q${(port.x - 0.2 * ppm * (1 - taut)).toFixed(1)} ${floor} ` +
+                  `${mid.toFixed(1)} ${floor} L${W + 20} ${floor}`;
+        tether.el.setAttribute("d", t);
+        stripe.el.setAttribute("d", t);
+        stripe.el.setAttribute("stroke-dashoffset", String((s.clock() * 30) % 16));
+      });
+
+      A.at(x0, edge).show(true);
+      await A.face(1);
+      if (!s.alive) return;
+      A.play("invisible-tug-of-war/pull", {loop: true});
+      A.say("Nngh!", 1.4);
+      await s.after(2.4);
+      if (!s.alive) return;
+
+      const Z = s.zip, B = s.brick;
+      if (Z) {
+        await this._rise(s, Z, x0 + ZA * ppm, edge);
+        if (!s.alive) return;
+        await Z.face(1);
+        if (!s.alive) return;
+        Z.play("pull", {loop: true});
+        holders.push(() => Z);
+        await s.after(1.8);
+      }
+      if (!s.alive) return;
+      if (B) {
+        await this._rise(s, B, x0 + BA * ppm, edge);
+        if (!s.alive) return;
+        await B.face(1);
+        if (!s.alive) return;
+        holders.push(() => B);
+        if (B.has("invisible-tug-of-war/tug")) {
+          B.play("invisible-tug-of-war/tug");
+          await s.until(() => B.time() >= TUG || !s.alive);
+        }
+      } else {
+        await s.after(1.2);
+      }
+      if (!s.alive) return;
+
+      // The slack runs out: the tether snaps taut and pulls him over from behind.
+      await s.tween(0.12, u => { taut = u; sag = 0.25 * (1 - u); });
+      if (!s.alive) return;
+      A.play("invisible-tug-of-war/yank");
+      holders = holders.filter(h => h() !== A);
+      if (!holders.length) holders = [() => A];
+      const ax = A.x;
+      await s.tween(0.35, u => A.at(ax + 0.5 * ppm * u, edge));
+      if (!s.alive) return;
+      if (Z) Z.play("idle", {loop: true});
+      await s.after(1.4);
+      if (!s.alive) return;
+      await A.perform("invisible-tug-of-war/up");
+      if (!s.alive) return;
+      sag = 0.6;
+      await A.perform("invisible-tug-of-war/look");
+      if (!s.alive) return;
+      A.say("...oh.", 1.4);
+      await s.after(1.4);
+      if (!s.alive) return;
+      draw();
+    },
+  }),
+
+  "leveling-dispute":
+  // The leveling dispute. Archie pops up onto the README viewer's top edge, lays a spirit level along it and
+  // squints at the bubble: off. Two firm taps and it's true. Then the bubble wanders again -- Zip, hidden behind
+  // the viewer under the level's far end, is lifting it with his head: only the tips of his horns show -- and
+  // again. The third time Archie follows the level along to its end, and Zip rises into view. Who, me?
+  // Clips: leveling_dispute.py.
+  ({
+    cast: ["archie", "zip"],
+    pages: ["repo"],
+    ppm: 64,
+    ready(s) {
+      const r = s.page.rect(".source-preview .reader");
+      return !!r && r.width > 640 && r.left > 0 && r.top > 170 && r.top < innerHeight - 160;
+    },
+    async play(s) {
+      const A = s.archie, Z = s.zip, ppm = A.ppm;
+      const R = () => s.page.rect(".source-preview .reader");
+      const edge = R().top;
+      const x0 = R().left + Math.min(0.22 * R().width, 240);
+      // leveling_dispute.py: LEVEL_SCALE, LEVEL_NEAR, LEVEL_LEN, HOP_RISE, SET_GRAB, SET_DROP, FIX_TAPS, ZIP_Z,
+      // NUDGE_RISE
+      const SC = 2.0, NEAR = 0.32, LEN = 2.0, HOP = 0.45, GRAB = 0.35, DROP = 1.25, TAPS = [0.75, 1.25];
+      const ZZ = 1.74, RISE = 0.07;
+
+      const lv = await s.prop("level");
+      if (!s.alive) return;
+      const bub = lv.model.getObjectByName("bubble");
+      const b0 = bub ? bub.position.x : 0;
+      let tilt = 0;
+      const xL = x0 + NEAR * ppm;
+      // The level pivots on its near end, on the edge; the bubble runs to the high end.
+      const lay = () => {
+        lv.root.rotation.set(0, 0, tilt);
+        lv.root.position.set(xL + Math.cos(tilt) * LEN / 2 * ppm, -edge + Math.sin(tilt) * LEN / 2 * ppm, 4);
+        if (bub) bub.position.x = b0 + Math.max(-0.05, Math.min(0.05, tilt * 1.7));
+      };
+      const tiltTo = (to, secs) => { const from = tilt; return s.tween(secs, u => { tilt = from + (to - from) * u; lay(); }); };
+      const UP = RISE / LEN;                                         // Zip on his toes: the far end lifted
+
+      // Zip is already in place, under where the far end will be: nothing of him above the edge but his horns.
+      const zx = x0 + (NEAR + LEN) * ppm;
+      Z.clipBelow(edge);
+      Z.at(zx, edge + ZZ * ppm).show(true);
+      Z.play("leveling-dispute/hold", {loop: true});
+
+      // Up from behind the viewer onto its edge.
+      A.clipBelow(edge);
+      A.at(x0, edge + 2.6 * ppm).show(true);
+      A.play("leveling-dispute/hop", {fade: 0});
+      await s.tween(HOP, u => A.at(x0, edge + 2.6 * ppm * (1 - u)));
+      if (!s.alive) return;
+      await s.until(() => A.time() > 1.0 || !s.alive);
+      if (!s.alive) return;
+      A.clipBelow(null);
+
+      // The level from behind his back (in his left hand, upright), then down on the edge: on Zip's head.
+      const hold = new s.T.Group();
+      hold.add(lv.root);
+      lv.root.scale.setScalar(SC);
+      lv.root.position.set(0.7, -0.08, 0.15);
+      const set = A.perform("leveling-dispute/set");
+      await s.until(() => A.time() >= GRAB || !s.alive);
+      if (!s.alive) return;
+      const off = s.attach(hold, A, "grip_L", {upright: true});
+      await s.until(() => A.time() >= DROP || !s.alive);
+      if (!s.alive) return;
+      const w = new s.T.Vector3();
+      lv.root.getWorldPosition(w);
+      off();
+      hold.removeFromParent();
+      lv.at(w.x, -w.y, ppm * SC);
+      Z.play("leveling-dispute/nudge");
+      tilt = UP;
+      await s.tween(0.3, u => {
+        lay();
+        lv.root.position.x = w.x + (lv.root.position.x - w.x) * u;
+        lv.root.position.y = w.y + (lv.root.position.y - w.y) * u;
+      });
+      lay();
+      await set;
+      if (!s.alive) return;
+
+      // He squints: off. Two taps on his end, and Zip ducks back down under it: true.
+      const fix = async () => {
+        const f = A.perform("leveling-dispute/fix");
+        await s.until(() => A.time() >= TAPS[0] || !s.alive);
+        if (!s.alive) return;
+        tiltTo(tilt * 0.45, 0.12);
+        await s.until(() => A.time() >= TAPS[1] || !s.alive);
+        if (!s.alive) return;
+        Z.play("leveling-dispute/duck");
+        tiltTo(0, 0.25);
+        await f;
+        if (!s.alive) return;
+        Z.play("leveling-dispute/hold", {loop: true});
+      };
+      await A.perform("leveling-dispute/peer");
+      if (!s.alive) return;
+      await fix();
+      if (!s.alive) return;
+      A.say("Perfect.", 1.4);
+      await A.perform("leveling-dispute/pleased");
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+
+      // Rounds two and three: up on his toes again.
+      const nudge = async () => {
+        Z.play("leveling-dispute/nudge");
+        await s.after(0.15);
+        if (!s.alive) return;
+        await tiltTo(UP, 0.3);
+      };
+      await s.after(0.9);
+      if (!s.alive) return;
+      await nudge();
+      if (!s.alive) return;
+      await A.perform("leveling-dispute/again");
+      if (!s.alive) return;
+      await fix();
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(1.0);
+      if (!s.alive) return;
+      await nudge();
+      if (!s.alive) return;
+      await A.perform("leveling-dispute/again");
+      if (!s.alive) return;
+
+      // Along the level to its far end... and up comes Zip. The level drops back true.
+      const follow = A.perform("leveling-dispute/follow");
+      await s.until(() => A.time() >= 1.45 || !s.alive);
+      if (!s.alive) return;
+      Z.play("leveling-dispute/caught");
+      tiltTo(0, 0.2);
+      await s.tween(0.45, u => Z.at(zx, edge + (ZZ - 0.95 * u) * ppm));
+      if (!s.alive) return;
+      await follow;
+      if (!s.alive) return;
+      A.say("...", 1.2);
+      await s.after(1.5);
+    },
+  }),
+
+  "light-switch-stakeout":
+  // The light-switch stakeout. Archie, under the theme switch (the Settings button on home and the catalogue,
+  // the theme chip elsewhere), slaps it on the hop, and the theme flips each time. Brick has been standing a
+  // little way off with his arms folded, watching. He walks over and lays one enormous finger on the switch.
+  // Archie jumps back, then tries to get at it round the finger -- under it, in front of it, on the hop -- and
+  // can't. Brick looks down at him and raises an eyebrow. Archie gives up and slinks off; Brick's finger stays
+  // where it is, and the brow goes up at the reader. The switch itself is never touched: the finger is a picture
+  // on the bit's layer, and clicks go through it (and end the bit). Clips: light_switch_stakeout.py.
+  ({
+    cast: ["archie", "brick"],
+    pages: ["home", "topic", "catalog"],
+    ppm: 44,
+    // The switch, the floor under it (the spotlight's top edge on home, else the header's bottom) and the
+    // size that puts the switch SWITCH_Z (2.9 m) above that floor.
+    layout(s) {
+      const vis = q => { const r = s.page.rect(q); return r && r.width > 0 && r.height > 0 ? r : null; };
+      const sw = vis("#setbtn") || vis("#theme");
+      if (!sw) return null;
+      const hero = vis("article.hero"), head = vis("header");
+      const below = r => r && r.top > sw.bottom + 50 ? r.top : null;
+      const floor = below(hero) || (head && head.bottom > sw.bottom + 50 ? head.bottom : null);
+      if (!floor) return null;
+      const ppm = (floor - (sw.top + sw.height / 2)) / 2.9;
+      return ppm >= 32 && ppm <= 60 ? {sw, floor, ppm, cx: sw.left + sw.width / 2} : null;
+    },
+    ready(s) {
+      const L = this.layout(s);
+      if (!L) return false;
+      const right = L.cx + (0.55 + 0.35 + 0.5) * L.ppm;      // Archie, hopped back, and half his width
+      return L.sw.top > 0 && L.floor < innerHeight - 4 && right < document.documentElement.clientWidth &&
+        L.cx - 4.2 * L.ppm > 0;
+    },
+    async play(s) {
+      const A = s.archie, B = s.brick;
+      const L = this.layout(s);
+      if (!L) return;
+      // light_switch_stakeout.py: SWITCH_Z, SLAP (x -0.55), SLAP_AT 0.5, STEP 0.35, COVER (x 1.3)
+      const {floor, ppm, cx} = L;
+      const ax = cx + 0.55 * ppm, bx = cx - 1.3 * ppm, post = bx - 2.2 * ppm;
+      const slide = (who, to, secs) => {
+        const from = who.x, at = s.clock();
+        const off = s.tick(() => {
+          const u = Math.min(1, (s.clock() - at) / secs), e = 1 - Math.pow(1 - u, 3);
+          who.x = from + (to - from) * e;
+          if (u >= 1) off();
+        });
+        return s.after(secs);
+      };
+      const slap = async () => {
+        const done = A.perform("light-switch-stakeout/slap", {fade: 0.1});
+        await s.after(0.5);
+        if (s.alive) s.page.flicker(1, 520);
+        await done;
+      };
+      A.at(ax, floor, ppm).show(true);
+      B.at(post, floor, ppm).show(true);
+      B.turn.position.z = -1;                          // Archie a little nearer the reader
+      A.play("idle", {loop: true});
+      B.play("guard-hold", {loop: true});
+      await s.after(0.5);
+      for (let i = 0; i < 2 && s.alive; i++) { await slap(); A.play("idle", {loop: true}); await s.after(0.25); }
+      if (!s.alive) return;
+      // the stakeout is over: he unfolds his arms and walks over, while Archie keeps at it
+      await B.perform("guard-off");
+      if (!s.alive) return;
+      let there = false;
+      const walk = B.walkTo(bx).then(() => { there = true; });
+      while (!there && s.alive) { await slap(); A.play("idle", {loop: true}); await s.after(0.2); }
+      await walk;
+      if (!s.alive) return;
+      await B.face(0);
+      const cover = B.perform("light-switch-stakeout/cover");
+      await s.after(1.2);
+      if (!s.alive) return;
+      A.play("light-switch-stakeout/startle", {fade: 0.08});
+      await slide(A, ax + 0.35 * ppm, 0.6);
+      await cover;
+      if (!s.alive) return;
+      B.play("light-switch-stakeout/cover-hold", {loop: true});
+      A.play("idle", {loop: true});
+      await s.after(0.4);
+      A.say("Hey!", 1.2);
+      await A.perform("light-switch-stakeout/reach-round");
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await B.perform("light-switch-stakeout/brow");
+      if (!s.alive) return;
+      B.play("light-switch-stakeout/cover-hold", {loop: true});
+      await A.perform("light-switch-stakeout/give-up");
+      if (!s.alive) return;
+      await A.walkTo(document.documentElement.clientWidth + 0.8 * ppm, {speed: 0.8});
+      if (!s.alive) return;
+      // and the finger stays where it is
+      await B.perform("light-switch-stakeout/brow-reader");
+      if (!s.alive) return;
+      B.play("light-switch-stakeout/cover-hold", {loop: true});
+      await s.after(0.6);
+    },
+  }),
+
+  "loading-bar-tow-truck":
+  // The loading-bar tow truck. While the README viewer is fetching a file, Archie pops up onto its edge,
+  // hooks a rope onto a loading bar (a picture of one, on wheels) and hauls. Nothing. Zip pushes from behind.
+  // Brick wanders over, looks at the bar, and lets off its hand brake: it shoots forward, filling up as it
+  // rolls, and bowls Archie over. The bar is a prop over the page: it never reports on the real wait.
+  // Clips: loading_bar_tow_truck.py.
+  ({
+    cast: ["archie", "zip", "brick"],
+    pages: ["repo"],
+    ppm: 56,
+    ready(s) {
+      const e = document.querySelector(".source-preview .reader");
+      if (!e || e.dataset.state !== "loading") return false;
+      const r = e.getBoundingClientRect();
+      return r.width > 600 && r.top > 170 && r.top < innerHeight - 200;
+    },
+    async _rise2(s, a, x, edge) {
+      a.clipBelow(edge);
+      a.at(x, edge + 3 * a.ppm).show(true);
+      a.play("idle", {fade: 0, loop: true});
+      await s.tween(0.55, u => a.at(x, edge + 3 * a.ppm * (1 - u)));
+      if (!s.alive) return;
+      a.clipBelow(null);
+    },
+    async play(s) {
+      const A = s.archie, ppm = A.ppm, T = s.T;
+      const R = () => s.page.rect(".source-preview .reader");
+      const edge = R().top;
+      const bx0 = R().left + R().width * 0.3;
+      // loading_bar_tow_truck.py: ARCHIE_X, ZIP_X, BRAKE_AT; the bar's tow ring is 0.75 m ahead of its origin
+      // and 0.27 m up, drawn BS times over (props_set.py)
+      const AX = 2.1, ZX = -1.3, BRAKE = 0.7, BS = 1.25;
+      const bar = await s.prop("loading-bar");
+      if (!s.alive) return;
+      bar.at(bx0, edge, ppm * BS);
+      bar.root.position.z = 10;
+      const fill = bar.play("fill");
+      if (fill) fill.paused = true;                         // empty until the brake comes off
+      let bx = bx0;
+      const ring = () => ({x: bx + 0.75 * BS * ppm, y: edge - 0.27 * BS * ppm});
+
+      const ax = bx0 + AX * ppm;
+      A.clipBelow(edge);
+      A.at(ax, edge + 2.6 * ppm).show(true);
+      A.play("idle", {loop: true});
+      await s.tween(0.5, u => A.at(ax, edge + 2.6 * ppm * (1 - u)));
+      if (!s.alive) return;
+      A.clipBelow(null);
+      await A.walkTo(ring().x + 0.5 * ppm);
+      if (!s.alive) return;
+      await A.face(-1);
+      if (!s.alive) return;
+      await A.perform("loading-bar-tow-truck/hook");
+      if (!s.alive) return;
+      // The rope: from the ring to his hands.
+      const rope = s.svg.path({stroke: "#b8925a", width: 4});
+      let slack = 0.4;
+      const drawRope = s.tick(() => {
+        const r = ring(), h = A.handsAt();
+        rope.el.setAttribute("d", `M${r.x.toFixed(1)} ${r.y.toFixed(1)} Q${((r.x + h.x) / 2).toFixed(1)} ` +
+                                  `${((r.y + h.y) / 2 + slack * 30).toFixed(1)} ${h.x.toFixed(1)} ${h.y.toFixed(1)}`);
+      });
+      await A.walkTo(ax, {speed: 0.6});
+      if (!s.alive) return;
+      await A.face(-1);
+      if (!s.alive) return;
+      slack = 0;
+      A.play("loading-bar-tow-truck/pull", {loop: true});
+      A.say("Hnngh!", 1.4);
+      await s.after(2.2);
+      if (!s.alive) return;
+
+      const Z = s.zip, B = s.brick;
+      if (Z) {
+        await this._rise2(s, Z, bx0 + ZX * ppm, edge);
+        if (!s.alive) return;
+        await Z.face(1);
+        if (!s.alive) return;
+        Z.play("push", {loop: true});
+        await s.after(1.8);
+      }
+      if (!s.alive) return;
+      if (B) {
+        // beyond the bar, facing back along it: his left hand reaches the lever on its back end
+        await this._rise2(s, B, bx0 + 0.25 * ppm, edge);
+        if (!s.alive) return;
+        await B.face(-1);
+        if (!s.alive) return;
+        if (B.has("loading-bar-tow-truck/release")) {
+          B.play("loading-bar-tow-truck/release");
+          await s.until(() => B.time() >= BRAKE || !s.alive);
+        }
+      } else {
+        await s.after(0.8);
+      }
+      if (!s.alive) return;
+
+      // Off comes the brake: it shoots forward, filling as it rolls, and he goes over.
+      bar.play("brake_release");
+      bar.play("roll", {loop: true});
+      if (fill) fill.paused = false;
+      const run = s.tween(0.9, u => { bx = bx0 + 1.1 * ppm * u; bar.root.position.x = bx; });
+      await s.after(0.25);
+      if (!s.alive) return;
+      A.play("loading-bar-tow-truck/fall");
+      const ax2 = A.x;
+      s.tween(0.4, u => A.at(ax2 + 0.35 * ppm * u, edge));
+      if (Z) Z.play("idle", {loop: true});
+      await run;
+      if (!s.alive) return;
+      bar.mixer.stopAllAction();
+      const done = bar.play("fill");
+      if (done) done.time = done.getClip().duration;
+      slack = 0.6;
+      await s.after(1.6);
+      if (!s.alive) return;
+      await A.perform("loading-bar-tow-truck/up");
+      if (!s.alive) return;
+      await s.after(0.6);
+      if (!s.alive) return;
+      drawRope();
+    },
+  }),
+
+  "mic-drop":
+  // The mic drop. On top of the spotlight, Archie presents its project into a tiny microphone (a FRAGILE
+  // sticker on it), holds the mic out at arm's length, lets go and turns away. Brick, beside him, lunges with
+  // surprising speed and catches it a hand's breadth off the card, looks it over and hands it back -- then taps
+  // the sticker with one enormous finger, twice. Archie looks at it, and at the reader. Clips: mic_drop.py.
+  ({
+    cast: ["archie", "brick"],
+    pages: ["home"],
+    ppm: 80,
+    ready(s) {
+      const h = s.page.rect("article.hero");
+      return !!h && h.top > 3.0 * 80 && h.top < innerHeight - 60 && h.width > 6 * 80;
+    },
+    async play(s) {
+      const A = s.archie, B = s.brick, T = s.T, ppm = 80;
+      const h = s.page.rect("article.hero");
+      const floor = h.top, ax = h.left + h.width * 0.55, bx = ax - 2.6 * ppm;     // mic_drop.py BRICK_X
+      // mic_drop.py: DROP_AT, CATCH_AT (also the fall's length), HAND_AT, TAKE_LEAD, TAPS
+      const DROP_AT = 0.95, FALL = 0.6, HAND_AT = 3.6, TAKE_AT = HAND_AT - 1.2, TAPS = [4.65, 5.2];
+      const title = ((document.querySelector("article.hero h2") || {}).textContent || "").trim().slice(0, 24);
+      const [mic, tag] = await Promise.all([s.prop("microphone"), s.prop("fragile-label")]);
+      if (!s.alive) return;
+      // the mic and its sticker, one upright thing held by a grip bone
+      const held = new T.Group();
+      held.add(mic.root, tag.root);
+      tag.root.scale.setScalar(2.1);
+      tag.root.position.set(0.0, -0.01, 0.03);
+      tag.root.rotation.z = -0.14;
+      let off = s.attach(held, A, "grip_R", {upright: true});
+      const take = (pal, bone) => { off(); held.scale.setScalar(1); off = s.attach(held, pal, bone, {upright: true}); };
+      A.at(ax, floor, ppm).show(true);
+      B.at(bx, floor, ppm).show(true);
+      B.turn.position.z = -0.6;
+      A.play("idle", {loop: true});
+      B.play("idle", {loop: true});
+      await s.after(0.5);
+      if (!s.alive) return;
+      const pres = A.perform("mic-drop/present");
+      await s.after(0.6);
+      A.say(title ? `${title}!` : "Ta-da!", 1.8);
+      await pres;
+      if (!s.alive) return;
+      const drop = A.perform("mic-drop/drop");
+      await s.until(() => A.time() >= DROP_AT || !s.alive);
+      if (!s.alive) return;
+      // let go: the mic falls (gravity's ease) into Brick's left hand, wherever it has got to
+      off();
+      const w = new T.Vector3();
+      held.getWorldPosition(w);
+      s.add(held);
+      held.position.copy(w);
+      held.scale.setScalar(ppm);
+      held.quaternion.identity();
+      const save = B.perform("mic-drop/save", {fade: 0.06});
+      const t0 = s.clock(), from = {x: w.x, y: -w.y};
+      await new Promise(res => {
+        const stop = s.tick(() => {
+          // straight down under gravity, sliding into his palm only at the very end
+          const u = Math.min(1, (s.clock() - t0) / FALL), g = B.pageAt("grip_L");
+          const k = u < 0.75 ? 0 : (u - 0.75) / 0.25;
+          held.position.set(from.x + (g.x - from.x) * k * k, -(from.y + (g.y - from.y) * u * u), w.z);
+          if (u >= 1 || !s.alive) { stop(); res(); }
+        });
+      });
+      if (!s.alive) return;
+      take(B, "grip_L");
+      A.say("Boom.", 1.0);
+      await s.until(() => B.time() >= TAKE_AT || !s.alive);
+      if (!s.alive) return;
+      const back = A.perform("mic-drop/take", {fade: 0.15});
+      await s.until(() => B.time() >= HAND_AT || !s.alive);
+      if (!s.alive) return;
+      take(A, "grip_R");
+      // each tap of the finger makes the sticker jump
+      for (const at of TAPS) {
+        await s.until(() => B.time() >= at || !s.alive);
+        if (!s.alive) return;
+        if (at === TAPS[0]) B.say("Fragile.", 1.6);
+        const t1 = s.clock();
+        const stop = s.tick(() => {
+          const u = Math.min(1, (s.clock() - t1) / 0.25);
+          tag.root.scale.setScalar(2.1 * (1 + 0.25 * Math.sin(Math.PI * u)));
+          if (u >= 1) stop();
+        });
+      }
+      await back;
+      if (!s.alive) return;
+      const sheep = A.perform("mic-drop/sheepish");
+      A.say("...oh.", 1.4);
+      await save;
+      if (!s.alive) return;
+      B.play("idle", {loop: true});
+      await sheep;
+      await s.after(0.4);
+    },
+  }),
+
+  "miniature-rebellion":
+  // The miniature rebellion. Archie opens the Atlas Core on the page's own world, and three tiny hologram
+  // agents appear on its front edge. Whatever he does, they do, a beat behind: a hand up, a wave, a flex. He
+  // loves it. Then he tries a little dance -- and stops, mortified. They don't. He folds them away mid-wiggle
+  // and leaves. The agents are holo-agent props on Archie's own skeleton, playing his clips from this bit's
+  // pack. Clips: miniature_rebellion.py (and _corekit.py's take/back).
+  ({
+    cast: ["archie"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 900 && innerHeight >= 600;
+    },
+
+    async play(s) {
+      const A = s.archie, T = s.T;
+      const floor = innerHeight - 8, x0 = Math.round(innerWidth * 0.3);
+      const core = await s.core(A);
+      if (!s.alive) return;
+      const clip = n => A.clips[`miniature-rebellion/${n}`];
+      A.at(-0.45 * A.ppm, floor).show(true);
+      A.play("idle", {loop: true});
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      const take = A.perform("miniature-rebellion/take");
+      await s.after(0.62);                                  // _corekit.GRAB
+      core.hold();
+      await take;
+      if (!s.alive) return;
+      A.play("miniature-rebellion/hold", {loop: true});
+      core.play("unfold");
+      await s.after(0.9);
+      if (!s.alive) return;
+      core.play("open-idle", {loop: true});
+
+      // The page's own world, up to his left; three little agents on its front edge.
+      const SIZE = 300;
+      const proj = await s.project(s.where().world);
+      if (!s.alive || !proj) return;
+      const follow = s.tick(() => { const p = core.page(); proj.at(p.x, p.y, SIZE, 1); });
+      const agents = await s.figures("holo-agent", 3);
+      if (!s.alive) return;
+      agents.forEach((a, i) => {
+        proj.world.add(a.root);
+        a.root.position.set((i - 1) * 0.42, 0.03, 0.6);
+        a.root.scale.setScalar(1e-4);
+        a.play(clip("hold"));
+      });
+      const born = s.clock();
+      const grow = s.tick(() => {
+        const k = Math.min(1, (s.clock() - born) / 0.45);
+        agents.forEach(a => a.root.scale.setScalar(0.18 * (1 - Math.pow(1 - k, 3)) + 1e-4));
+      });
+      await s.after(0.8);
+      proj.idle();
+      await s.after(0.7);
+      if (!s.alive) return;
+
+      // Whatever he does, they do, a beat behind (each a hair after the last).
+      const copy = (name, delay = 0.35, loop = false) => agents.forEach((a, i) =>
+        s.after(delay + 0.07 * i).then(() => { if (s.alive) a.play(clip(name), loop); }));
+      for (const [move, line] of [["raise", null], ["wave", "Ha!"], ["flex", "Ha! Yes!"]]) {
+        copy(move);
+        const done = A.perform(`miniature-rebellion/${move}`);
+        if (line) s.after(0.9).then(() => s.alive && A.say(line, 1.1));
+        await done;
+        if (!s.alive) return;
+        await s.after(0.35);
+        if (!s.alive) return;
+      }
+
+      // A little dance. They copy that too -- and once he stops, they keep going.
+      copy("awkward");
+      agents.forEach((a, i) => s.after(0.35 + 0.07 * i + 3.0).then(() => { if (s.alive) a.play(clip("awkward-loop"), true); }));
+      await A.perform("miniature-rebellion/awkward");
+      if (!s.alive) return;
+      const caught = A.perform("miniature-rebellion/caught", {fade: 0.05});
+      await s.after(1.2);
+      A.say("Nobody saw that.", 1.6);
+      await caught;
+      if (!s.alive) return;
+      A.play("miniature-rebellion/hold", {loop: true});
+      await s.after(0.8);
+      if (!s.alive) return;
+
+      // Folded, mid-wiggle.
+      proj.hide(0.3);
+      await s.after(0.3);
+      follow(); grow();
+      core.play("fold");
+      await s.after(0.9);
+      const back = A.perform("miniature-rebellion/back");
+      await s.after(0.86);                                  // _corekit.DOCK
+      core.dock();
+      await back;
+      if (!s.alive) return;
+      await A.walkTo(-0.6 * A.ppm, {speed: 1.25});
+    },
+  }),
+
+  "missing-screw":
+  // The missing screw. In front of a card on the page, Archie finds a screw on the floor, looks at it, shrugs
+  // and pockets it. The card behind him swings down on its one remaining screw (its top-left corner: the
+  // card itself, turned for a moment through s.page and put back exactly). He freezes and slowly looks at the
+  // reader. Then the screw back out, a jump, a slap, and the card swings back level; he leaves whistling.
+  // Clips: missing_screw.py.
+  ({
+    cast: ["archie"],
+    pages: ["home", "catalog", "discover", "collections", "topic"],
+    ppm: 56,
+    ready(s) {
+      return !!this.card();
+    },
+    // A card on screen with room round it: tall enough to swing, clear of the window's edges.
+    card() {
+      return [...document.querySelectorAll("article.cx, article.card")].find(c => {
+        const r = c.getBoundingClientRect();
+        return r.width >= 200 && r.height >= 260 && r.left > 70 && r.right < innerWidth - 150 &&
+          r.top > 70 && r.bottom < innerHeight - 10;
+      });
+    },
+    async play(s) {
+      const A = s.archie;
+      const card = this.card();
+      if (!card) return;
+      const r = () => card.getBoundingClientRect();
+      const floor = r().bottom - 4, spot = r().left + r().width * 0.3;     // clear of the card's buttons
+      const GRAB = 1.2, POCKET = 0.8, SLAP = 1.3;          // missing_screw.py
+      // the screw, lying on the floor at his feet (SCREW: 0.12 m to his right)
+      const screw = await s.prop("screw");
+      screw.at(spot - 0.12 * A.ppm, floor - 2, A.ppm);
+      screw.root.rotation.z = Math.PI / 2;
+      A.at(r().left - 0.5 * A.ppm, floor).show(true);
+      await A.walkTo(spot);
+      if (!s.alive) return;
+      await A.face(0);
+      // picks it up: into his right hand at GRAB
+      const spotted = A.perform("missing-screw/spot");
+      await s.until(() => A.time() >= GRAB || !s.alive);
+      screw.hold(A, "grip_R");
+      await spotted;
+      if (!s.alive) return;
+      await A.perform("missing-screw/inspect");
+      if (!s.alive) return;
+      A.say("Huh. A spare.", 1.4);
+      const pocketed = A.perform("missing-screw/pocket");
+      await s.until(() => A.time() >= POCKET || !s.alive);
+      screw.root.visible = false;
+      await pocketed;
+      if (!s.alive) return;
+      await s.after(0.35);
+      // the card goes: a creaking swing down on its top-left corner
+      const back = s.page.nudge(card, {rotate: 3.5, origin: "0% 0%", secs: 1.1, ease: "cubic-bezier(.45,0,.3,1.35)"});
+      await A.perform("missing-screw/take");
+      if (!s.alive) return;
+      // the fix
+      const fixing = A.perform("missing-screw/fix");
+      await s.after(0.25);
+      screw.root.visible = true;
+      await s.until(() => A.time() >= SLAP || !s.alive);
+      screw.root.visible = false;
+      back(0.35);
+      await fixing;
+      if (!s.alive) return;
+      A.say("♪ ♫", 1.8);
+      await A.walkTo(innerWidth + 0.6 * A.ppm, {speed: 1.1});
+    },
+  }),
+
+  "percussive-maintenance":
+  // Percussive maintenance. Archie takes out the Atlas Core and it won't open: it judders and clamps shut. He
+  // taps it. Nothing. He whacks it. Nothing. Brick, who has been watching with his arms folded, ambles over and
+  // gives it one delicate fingertip tap -- and it springs open perfectly, the page's world above it. Archie
+  // looks at Brick, then at the reader, personally offended. The Core's clips are wont-open and pop-open.
+  // Clips: percussive_maintenance.py (and _corekit.py's take/back).
+  ({
+    cast: ["archie", "brick"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1000 && innerHeight >= 620;     // room for Brick (2.75 m) beside him
+    },
+
+    async play(s) {
+      const A = s.archie, B = s.brick;
+      const floor = innerHeight - 8, x0 = Math.round(innerWidth * 0.34);
+      const core = await s.core(A);
+      if (!s.alive) return;
+      // percussive_maintenance.py: BRICK (2.0 to Archie's left, 0.25 behind), TAPS, WHACK_AT, TAP_AT
+      const bx = x0 + 2.0 * A.ppm, post = Math.min(innerWidth - 1.2 * A.ppm, x0 + 4.4 * A.ppm);
+      A.at(-0.45 * A.ppm, floor).show(true);
+      B.at(post, floor).show(true);
+      B.depth(-0.25 * B.ppm);                               // a little behind Archie
+      A.play("idle", {loop: true});
+      B.play("guard-hold", {loop: true});
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      const take = A.perform("percussive-maintenance/take");
+      await s.after(0.62);                                  // _corekit.GRAB
+      core.hold();
+      await take;
+      if (!s.alive) return;
+      A.play("percussive-maintenance/hold", {loop: true});
+      A.say("Open up.", 1.0);
+      await s.after(0.3);
+      await s.after(core.play("wont-open"));
+      if (!s.alive) return;
+
+      // A careful tap or two; nothing. A whack; nothing.
+      const tap = A.perform("percussive-maintenance/tap");
+      await s.after(0.95);
+      core.play("wont-open");
+      await tap;
+      if (!s.alive) return;
+      A.play("percussive-maintenance/hold", {loop: true});
+      await s.after(0.9);
+      if (!s.alive) return;
+      A.say("Come on...", 1.1);
+      const whack = A.perform("percussive-maintenance/whack");
+      await s.after(0.62);
+      core.play("wont-open");
+      await whack;
+      if (!s.alive) return;
+      A.play("percussive-maintenance/hold", {loop: true});
+      A.say("Ugh.", 1.0);
+      await s.after(0.7);
+      if (!s.alive) return;
+
+      // Brick ambles over. One fingertip.
+      await B.perform("guard-off");
+      if (!s.alive) return;
+      await B.walkTo(bx);
+      if (!s.alive) return;
+      await B.face(0);
+      const tc = B.perform("percussive-maintenance/tap-core");
+      await s.after(1.25);                                  // TAP_AT
+      if (!s.alive) return;
+      core.play("pop-open");
+      await s.after(0.5);
+      core.play("open-idle", {loop: true});
+      const proj = await s.project(s.where().world);
+      if (!s.alive || !proj) return;
+      // on his right this time (screen left): Brick is on his left
+      const follow = s.tick(() => { const p = core.page(); proj.at(p.x, p.y, 280, -1); });
+      s.after(0.8).then(() => s.alive && proj.idle());
+      await tc;
+      if (!s.alive) return;
+      B.play("idle", {loop: true});
+
+      // Archie looks at Brick. Then at you.
+      const off = A.perform("percussive-maintenance/offended");
+      await s.after(2.1);
+      A.say("I loosened it.", 1.6);
+      await off;
+      if (!s.alive) return;
+      A.play("percussive-maintenance/hold", {loop: true});
+      await s.after(0.6);
+      if (!s.alive) return;
+
+      proj.hide(0.3);
+      await s.after(0.3);
+      follow();
+      core.play("fold");
+      await s.after(0.9);
+      const back = A.perform("percussive-maintenance/back");
+      await s.after(0.86);                                  // _corekit.DOCK
+      core.dock();
+      const away = B.walkTo(post);
+      await back;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await away;
+      if (!s.alive) return;
+      B.play("guard-hold", {loop: true});
+      await s.after(0.8);
+    },
+  }),
+
+  "pocket-rave":
+  // The pocket rave. Archie clears his throat and opens the Atlas Core to present a serious project -- and it is
+  // a nightclub (the rave world): the floor flashing, lasers fanning, a disco ball, Zip on the decks, three
+  // little agents dancing, and Brick on the door behind the velvet rope. Archie leans in for a closer look and
+  // the tiny bouncer shakes his head and folds his arms. It's HIS core. Not on the list. He folds it away -- and
+  // the bass keeps thumping in his hand, and in his belly. The DJ and the bouncer are holo-zip and holo-brick
+  // playing their own pals' clips; the dancers are holo-agents doing Archie's own dances. The floor's tiles
+  // flash at 2 Hz in two sets that take turns, a small part of a small picture. Clips: pocket_rave.py.
+  ({
+    cast: ["archie"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1000 && innerHeight >= 620;       // the projection up to his left
+    },
+
+    async play(s) {
+      const BACK = u => { const c = 1.9, v = u - 1; return 1 + (c + 1) * v * v * v + c * v * v; };   // an overshoot, for s.tween
+      const A = s.archie;
+      const P = n => `pocket-rave/${n}`;
+      const floor = innerHeight - 8, x0 = Math.round(innerWidth * 0.15);
+      const SIZE = 600, M = 0.07, BEAT = 0.5;     // the world's width (CSS px); figures' metres -> world; pocket_rave.py
+      const core = await s.core(A);
+      if (!s.alive) return;
+
+      // In he walks, and clears his throat. This one is serious.
+      A.at(-0.45 * A.ppm, floor).show(true);
+      A.play("idle", {loop: true});
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      if (!s.alive) return;
+      const ahem = A.perform(P("serious"));
+      await s.after(0.6);
+      if (!s.alive) return;
+      A.say("And now: a serious project.", 2.2);
+      await ahem;
+      if (!s.alive) return;
+      const take = A.perform(P("take"));
+      await s.after(0.62);                        // _corekit.GRAB
+      core.hold();
+      await take;
+      if (!s.alive) return;
+      A.play(P("hold"), {loop: true});
+      const present = A.perform(P("present"));
+      core.play("unfold");
+      await s.after(0.9);
+      if (!s.alive) return;
+      core.play("open-idle", {loop: true});
+
+      // The club. Zip on the decks, three agents on the floor, Brick on the door.
+      const proj = await s.project("rave");
+      if (!s.alive || !proj) return;
+      const follow = s.tick(() => { const p = core.page(); proj.at(p.x, p.y, SIZE, 1); });
+      const w = proj.world, node = n => w.getObjectByName(n) || w;
+      const [dj] = await s.figures("holo-zip", 1);
+      if (!s.alive) return;
+      const [bouncer] = await s.figures("holo-brick", 1);
+      if (!s.alive) return;
+      const dancers = await s.figures("holo-agent", 3);
+      if (!s.alive) return;
+      const all = [dj, bouncer, ...dancers];
+      node("anchor_dj").add(dj.root);
+      dj.root.position.set(0, 0.075, 0.03);       // up on a riser behind the decks, where the floor can see him
+      node("anchor_bouncer").add(bouncer.root);
+      bouncer.root.rotation.y = -0.35;            // turned a little towards the rope
+      dancers.forEach((d, i) => { node("anchor_dancefloor").add(d.root); d.root.position.set((i - 1) * 0.09, 0, 0.05 + 0.02 * (i % 2)); });
+      all.forEach(f => f.root.scale.setScalar(1e-4));
+      dj.play(dj.clips.dance);
+      bouncer.play(bouncer.clips.bouncer);
+      ["billy-bounce", "floss", "hype"].forEach((d, i) => { if (A.clips[d]) dancers[i].play(A.clips[d]); });
+      await s.after(0.5);
+      if (!s.alive) return;
+      s.tween(0.4, k => all.forEach(f => f.root.scale.setScalar(M * k + 1e-4)), BACK);
+      proj.idle();
+      await present;
+      if (!s.alive) return;
+
+      // That is not the serious project.
+      const look = A.perform(P("double-take"));
+      await s.after(0.9);
+      if (!s.alive) return;
+      A.say("...That is not the project.", 1.8);
+      await look;
+      if (!s.alive) return;
+
+      // A closer look at the door. Not on the list.
+      const lean = A.perform(P("lean-in"));
+      await s.after(0.7);
+      if (!s.alive) return;
+      bouncer.root.rotation.y = 0;
+      bouncer.play(bouncer.clips["shake-head"], false);
+      await lean;
+      if (!s.alive) return;
+      const protest = A.perform(P("protest"));
+      A.say("It's MY core!", 1.6);
+      await s.after(0.5);
+      if (!s.alive) return;
+      bouncer.play(bouncer.clips.guard, false);
+      await s.after(0.9);
+      if (!s.alive) return;
+      bouncer.play(bouncer.clips["guard-hold"]);
+      await protest;
+      if (!s.alive) return;
+
+      // He folds it away. The bass carries on.
+      await A.perform(P("deadpan"));
+      if (!s.alive) return;
+      A.say("Moving on.", 1.3);
+      proj.hide(0.3);
+      await s.after(0.3);
+      if (!s.alive) return;
+      follow();
+      core.play("fold");
+      await s.after(0.9);
+      if (!s.alive) return;
+      const t0 = s.clock();
+      const thump = s.tick(() => {              // a bump on every beat: motion, not light
+        const u = ((s.clock() - t0) / BEAT) % 1;
+        core.root.scale.setScalar(1 + 0.16 * Math.pow(Math.max(0, Math.cos(Math.PI * u)), 6));
+      });
+      s.page.undo(() => { thump(); core.root.scale.setScalar(1); });
+      A.play(P("hold"), {loop: true});
+      await s.after(1.5);
+      if (!s.alive) return;
+      const back = A.perform(P("back"));
+      await s.after(0.86);                        // _corekit.DOCK
+      core.dock();
+      await back;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(1.6);
+    },
+  }),
+
+  "pocket-universe":
+  // Pocket universe, wrong pocket. Archie can't find the Atlas Core. He pats himself down, then digs behind his
+  // back: a rubber duck (over his shoulder with it), a cable (dropped), a tiny traffic cone (set down,
+  // carefully). Zip wanders over and points at his tummy, where it's docked, as always. "...oh." Archie takes it
+  // out and shows the world anyway: as planned. Clips: pocket_universe.py (and _corekit.py's take/back).
+  ({
+    cast: ["archie", "zip"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1000 && innerHeight >= 620;
+    },
+
+    async play(s) {
+      const A = s.archie, Z = s.zip, T = s.T;
+      const W = innerWidth, floor = innerHeight - 8, x0 = Math.round(W * 0.38);
+      const core = await s.core(A);
+      const [duck, cable, cone] = await Promise.all(["rubber-duck", "cable", "tiny-traffic-cone"].map(n => s.prop(n)));
+      if (!s.alive) return;
+      s.page.undo(() => [duck, cable, cone].forEach(p => p.remove()));
+      // drawn a little bigger than life, to read at this size: SIZE times the prop's metres
+      const SIZE = new Map([[duck, 1.6], [cable, 1.0], [cone, 2.5]]);
+      // pocket_universe.py: ZIP (0.95, -0.1), PULL_AT 0.75, TOSS_AT 0.32, DROP_AT 0.45, SET_AT 0.95
+      const zx = x0 + 0.95 * A.ppm;
+      // What he digs out: in his right hand, upright, from PULL_AT, and let go of onto the page.
+      let held = null;
+      const out = async (prop, offset) => {
+        const d = A.perform("pocket-universe/dig");
+        await s.after(0.75);                                // PULL_AT
+        if (!s.alive) return;
+        held = s.attach(prop.root, A, "grip_R", {offset});
+        prop.root.scale.setScalar(SIZE.get(prop));
+        await d;
+      };
+      const free = prop => {                                // off his hand and onto the page, where it is now
+        if (held) { held(); held = null; }
+        s.scene.attach(prop.root);
+        prop.root.rotation.set(0, 0, 0);
+        prop.root.scale.setScalar(A.ppm * SIZE.get(prop));
+        return prop.root;
+      };
+      const fall = (o, vx, vy, spin, rest = 0) => {        // under gravity to the floor (page px a second)
+        let x = o.position.x, y = -o.position.y, last = s.clock();
+        return s.until(() => {
+          const dt = s.clock() - last; last = s.clock();
+          vy += 1500 * dt;
+          x += vx * dt; y += vy * dt;
+          o.rotation.z += spin * dt;
+          const done = y >= floor - rest;
+          if (done) { y = floor - rest; o.rotation.z = Math.round(o.rotation.z / Math.PI) * Math.PI; }
+          o.position.set(x, -y, o.position.z);
+          return done;
+        });
+      };
+
+      A.at(-0.45 * A.ppm, floor).show(true);
+      A.play("idle", {loop: true});
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      A.say("Where's my Core?", 1.6);
+      await A.perform("pocket-universe/search");
+      if (!s.alive) return;
+
+      // A rubber duck: over the shoulder.
+      await out(duck, [0, 0, 0.03]);
+      if (!s.alive) return;
+      A.say("...a duck?", 1.1);
+      await s.after(1.0);
+      const toss = A.perform("pocket-universe/toss");
+      await s.after(0.32);                                  // TOSS_AT
+      if (!s.alive) return;
+      const d = free(duck);
+      d.position.z = -60;                                   // behind him
+      fall(d, -260, -520, 9);
+      await toss;
+      if (!s.alive) return;
+
+      // A cable: dropped.
+      await out(cable, [0, 0, 0]);
+      if (!s.alive) return;
+      cable.play("dangle", {loop: true});
+      A.say("Cable.", 0.9);
+      await s.after(1.1);
+      const drop = A.perform("pocket-universe/drop");
+      await s.after(0.45);                                  // DROP_AT
+      if (!s.alive) return;
+      const cb = free(cable);
+      cb.position.z = 60;
+      fall(cb, 0, 0, 0, 0.9 * A.ppm).then(() => {           // it lands on its loose end and flops over
+        if (!s.alive) return;
+        const t0 = s.clock(), y0 = cb.position.y;
+        s.until(() => {
+          const u = Math.min(1, (s.clock() - t0) / 0.35);
+          cb.rotation.z = -Math.PI / 2 * u * u;
+          cb.position.y = y0 - 0.85 * A.ppm * u * u;
+          return u >= 1;
+        });
+      });
+      await drop;
+      if (!s.alive) return;
+
+      // A tiny traffic cone: set down, carefully. Zip has wandered over.
+      Z.at(W + 0.5 * Z.ppm, floor).show(true);
+      const zipIn = Z.walkTo(zx);
+      await out(cone, [0, 0, 0.02]);
+      if (!s.alive) return;
+      A.say("...?", 0.8);
+      await s.after(0.9);
+      const set = A.perform("pocket-universe/set");
+      await s.after(0.95);                                  // SET_AT
+      if (!s.alive) return;
+      const cn = free(cone);
+      cn.position.set(cn.position.x, -floor, 60);
+      await set;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+
+      // Zip, pointing at his tummy.
+      await zipIn;
+      if (!s.alive) return;
+      await Z.face(0);
+      const pt = Z.perform("pocket-universe/point-belly");
+      await s.after(0.7);
+      Z.say("Tummy.", 1.2);
+      await s.after(0.4);
+      const re = A.perform("pocket-universe/realize");
+      await s.after(1.0);
+      A.say("...oh.", 1.0);
+      await Promise.all([pt, re]);
+      if (!s.alive) return;
+      Z.perform("laugh");
+
+      // As planned.
+      const take = A.perform("pocket-universe/take");
+      await s.after(0.62);                                  // _corekit.GRAB
+      core.hold();
+      await take;
+      if (!s.alive) return;
+      A.play("pocket-universe/hold", {loop: true});
+      core.play("unfold");
+      await s.after(0.9);
+      if (!s.alive) return;
+      core.play("open-idle", {loop: true});
+      const proj = await s.project(s.where().world);
+      if (!s.alive || !proj) return;
+      // up on his right, this time: Zip is on his left
+      const follow = s.tick(() => { const p = core.page(); proj.at(p.x, p.y, 260, -1); });
+      s.after(0.8).then(() => s.alive && proj.idle());
+      const pr = A.perform("pocket-universe/present");
+      await s.after(0.5);
+      A.say("As planned.", 1.5);
+      await pr;
+      if (!s.alive) return;
+      A.play("pocket-universe/hold", {loop: true});
+      await s.after(1.2);
+      if (!s.alive) return;
+      proj.hide(0.3);
+      await s.after(0.3);
+      follow();
+      core.play("fold");
+      await s.after(0.9);
+      const back = A.perform("pocket-universe/back");
+      await s.after(0.86);                                  // _corekit.DOCK
+      core.dock();
+      await back;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(0.8);
+    },
+  }),
+
+  "readme-hostage":
+  // The README hostage situation. Archie pops up onto the README viewer's edge and holds a sign up over it --
+  // BACK IN 5 MINUTES -- so big there is nothing left of him but his shoes and the tip of his crest. Brick
+  // comes up behind the viewer, takes hold of the sign's edge and hauls it away like a curtain. Underneath,
+  // Archie is holding a smaller one: BACK IN 4 MINUTES. The signs are props, pictures over the page; the viewer
+  // underneath is never covered for more than a few seconds. Clips: readme_hostage.py.
+  ({
+    cast: ["archie", "brick"],
+    pages: ["repo"],
+    ppm: 56,
+    ready(s) {
+      const r = s.page.rect(".source-preview .reader");
+      return !!r && r.width > 640 && r.left > 0 && r.top > 200 && r.top < innerHeight - 200;
+    },
+    // Keep a prop's origin at fn() (page px) every frame, `z` px towards the reader; returns its remover.
+    _follow(s, prop, fn, z) {
+      return s.tick(() => { const p = fn(); prop.root.position.set(p.x, -p.y, z); });
+    },
+    // Up from behind the viewer onto its edge, at x.
+    async _rise(s, a, x, edge, clip) {
+      a.clipBelow(edge);
+      a.at(x, edge + 3 * a.ppm).show(true);
+      a.play(clip || "idle", {fade: 0, loop: !clip});
+      await s.tween(0.5, u => a.at(x, edge + 3 * a.ppm * (1 - u)));
+      if (!s.alive) return;
+      a.clipBelow(null);
+    },
+    async play(s) {
+      const A = s.archie, B = s.brick, ppm = A.ppm;
+      const R = () => s.page.rect(".source-preview .reader");
+      const edge = R().top;
+      const x0 = R().left + R().width * 0.45;
+      // readme_hostage.py: BIG_SCALE, SMALL_SCALE, RAISE_SHOW, REVEAL_SNAP, BRICK_X, LIFT_GRAB; a sign's hook
+      // sits 0.55 of its board's height above the board's top edge, the boards 0.72 x 0.4 and 0.44 x 0.25 m
+      // before scaling (props_paper.py)
+      const BIG = 5.0, SMALL = 3.6, SHOW = 0.85, SNAP = 0.18, BX = -2.5, GRAB = 0.7;
+      const bigDrop = 0.55 * 0.4 * BIG * ppm, smallDrop = 0.55 * 0.25 * SMALL * ppm;
+      const [big, small] = await Promise.all([s.prop("sign-back-in-5"), s.prop("sign-back-in-4")]);
+      if (!s.alive) return;
+
+      this._rise(s, A, x0, edge, "readme-hostage/hop");
+      await s.after(0.5);
+      await s.until(() => A.time() > 1.1 || !s.alive);
+      if (!s.alive) return;
+
+      // Up goes the big sign, its board's top edge in his hands.
+      const raise = A.perform("readme-hostage/raise");
+      await s.until(() => A.time() >= SHOW || !s.alive);
+      if (!s.alive) return;
+      big.at(0, 0, ppm * BIG);
+      const followBig = this._follow(s, big, () => { const h = A.handsAt(); return {x: h.x, y: h.y - bigDrop}; }, 80);
+      await raise;
+      if (!s.alive) return;
+      A.play("readme-hostage/hold", {loop: true});
+
+      // Brick, up from behind the viewer beside him; a big hand on the sign's near edge.
+      const bx = x0 + BX * ppm;
+      await this._rise(s, B, bx, edge);
+      if (!s.alive) return;
+      await B.face(1);
+      if (!s.alive) return;
+      await s.after(0.6);
+      if (!s.alive) return;
+      B.play("readme-hostage/lift");
+      await s.until(() => B.time() >= GRAB || !s.alive);
+      if (!s.alive) return;
+      followBig();
+      const hook0 = {x: big.root.position.x, y: -big.root.position.y};
+      const grip0 = B.pageAt("grip_R");
+      // Hauled away to his left like a curtain: he backs off with it, the sign sliding with his hand.
+      this._follow(s, big, () => { const g = B.pageAt("grip_R"); return {x: hook0.x + (g.x - grip0.x), y: hook0.y}; }, 80);
+      B.play("pull", {loop: true});
+      const back = s.tween(2.6, u => B.at(bx - 3.6 * ppm * u, edge));
+      // ...and as it clears him, Archie, deadpan, with the small one.
+      await s.after(0.35);
+      if (!s.alive) return;
+      A.play("readme-hostage/reveal");
+      await s.until(() => A.time() >= SNAP * 0.7 || !s.alive);
+      if (!s.alive) return;
+      small.at(0, 0, ppm * SMALL);
+      this._follow(s, small, () => { const h = A.handsAt(); return {x: h.x, y: h.y - smallDrop}; }, 40);
+      await back;
+      if (!s.alive) return;
+      // ...and holds it up at his side, still in his hand, for a long look at the small one.
+      B.play("readme-hostage/look", {loop: true, fade: 0.4});
+      await s.until(() => A.time() >= 2.9 || !s.alive);
+      if (!s.alive) return;
+      A.play("readme-hostage/small", {loop: true});
+      await s.after(4.4);
+    },
+  }),
+
+  "scroll-treadmill":
+  // The scroll treadmill. On the index's shelves of cards (the `.rowscroll` rows the reader scrolls sideways,
+  // with the arrows or a swipe), Archie drops onto the top edge of a row. When the reader scrolls it, the cards
+  // run under his feet and he jogs to keep up -- flat out, the faster they go, and carried along when they
+  // outrun him. When they stop he puffs, and eggs the reader on. Carried near the row's end, he grabs the card
+  // passing under him, sits on it, and rides it out of sight, waving. It waits for its moment: the reader
+  // scrolling a row (`cue`), or, picked like any other bit, a row on screen, and then he asks for it.
+  // Clips: scroll_treadmill.py. The row is only ever read (its position and scrollLeft), never scrolled.
+  ({
+    cast: ["archie"],
+    pages: ["home"],
+    ppm: 48,
+    // The moment: a row scrolled by the reader, a good way (a card's width or more within a second and a half).
+    cue(page, go) {
+      let row = null, from = 0, at = 0;
+      document.addEventListener("scroll", e => {
+        const el = e.target;
+        if (!(el instanceof Element) || !el.matches(".rowscroll")) return;
+        if (el !== row || e.timeStamp - at > 1500) { row = el; from = el.scrollLeft; at = e.timeStamp; }
+        if (Math.abs(el.scrollLeft - from) > 280) {
+          this.row = el;
+          this.dir = Math.sign(el.scrollLeft - from);        // +1: the cards running left
+          row = null;
+          go();
+        }
+      }, {capture: true, passive: true});
+    },
+    ready(s) {
+      return !!this.pick();
+    },
+    // The row he stands on: the one the reader scrolled, if it's still in view with room above it for him; else
+    // any that is.
+    pick() {
+      const fits = el => {
+        const r = el.getBoundingClientRect();
+        return r.width >= 700 && r.top >= 2.6 * this.ppm + 70 && r.top <= innerHeight - 120 && el.scrollWidth > r.width;
+      };
+      if (this.row && this.row.isConnected && fits(this.row)) return this.row;
+      return [...document.querySelectorAll(".rowscroll")].find(fits) || null;
+    },
+    async play(s) {
+      const A = s.archie, ppm = A.ppm;
+      const row = this.pick();
+      if (!row) return;
+      const JOG = 0.55 / (0.42 * 0.48), FAST = 4, LAND = 0.35;   // scroll_treadmill.py
+      const R = () => row.getBoundingClientRect();
+      const sec = row.closest("[data-sh]");
+      const nav = sec && sec.querySelector(".nav");
+      // the cards' top edge, and how far along he may stand: clear of the row's ends, and of its arrows
+      const floor = () => R().top + 4;
+      const lo = () => R().left + 0.6 * ppm;
+      const hi = () => Math.min(R().right - 0.6 * ppm, nav ? nav.getBoundingClientRect().left - 0.7 * ppm : 1e9);
+      let dir = this.dir || 1;
+      let x = dir > 0 ? lo() + (hi() - lo()) * 0.8 : lo() + (hi() - lo()) * 0.2;
+
+      // ---- the belt: how fast the cards are running under him, px a second (+: to the right) ----
+      let last = row.scrollLeft, v = 0, belt = 0, quiet = 0;
+      s.tick(dt => {
+        const sl = row.scrollLeft;
+        if (dt > 0) v = -(sl - last) / dt;
+        last = sl;
+        belt += (v - belt) * Math.min(1, dt * 14);             // smoothed a little: a scroll comes in uneven steps
+        quiet = Math.abs(belt) < 25 ? quiet + dt : 0;
+      });
+
+      // ---- down onto the row ----
+      A.at(x, floor() - 3 * ppm).show(true);
+      await A.face(0);
+      const landing = A.perform("scroll-treadmill/land");
+      const y0 = floor() - 3 * ppm;
+      await s.tween(LAND, e => A.at(x, y0 + (floor() - y0) * e), u => u * u);
+      s.tick(() => A.at(x, floor()));                          // and on it, wherever the page puts the row
+      await landing;
+      if (!s.alive) return;
+
+      // ---- the treadmill ----
+      let runs = 0, riding = false, egged = false;
+      // egging the reader on: not waited for, so the cards moving cut it short
+      const egg = text => {
+        A.face(0);
+        A.say(text, 1.6);
+        A.perform("scroll-treadmill/egg");
+      };
+      if (Math.abs(belt) < 25) egg("Go on — scroll it.");
+      for (let waited = 0; s.alive && !riding;) {
+        if (Math.abs(belt) < 25) {
+          // standing: wait for the cards to move; ask once more; then give up
+          if (waited > 8) break;
+          await s.after(0.25);
+          waited += 0.25;
+          if (runs && waited > 2.6 && !egged) { egged = true; egg("Again!"); }
+          continue;
+        }
+        A.hush();
+        waited = 0;
+        runs++;
+        // jog against the cards, as fast as they run; when they outrun him, they carry him
+        dir = -Math.sign(belt);
+        A.face(dir);                                           // (not waited for: he turns as he goes)
+        const jog = A.play("scroll-treadmill/jog", {loop: true, fade: 0.1});
+        const off = s.tick(dt => {
+          const want = Math.abs(belt) / (JOG * ppm);
+          if (jog) jog.timeScale = Math.max(0.6, Math.min(FAST, want));
+          const keep = Math.min(Math.abs(belt), FAST * JOG * ppm);
+          x += (belt + dir * keep) * dt;
+          x = Math.max(lo() - 0.3 * ppm, Math.min(hi() + 0.3 * ppm, x));
+          if (x <= lo() || x >= hi()) riding = true;           // at the row's end: the next card that passes
+        });
+        await s.until(() => quiet > 0.35 || riding || !s.alive);
+        off();
+        if (jog) jog.timeScale = 1;
+        if (!s.alive) return;
+        if (riding) break;
+        if (runs >= 2) { riding = true; break; }               // twice is enough: next time, he hitches a ride
+        await A.face(0);
+        A.play("scroll-treadmill/pant", {loop: true, fade: 0.25});
+        await s.after(1.8);
+        if (!s.alive) return;
+        A.play("idle", {loop: true, fade: 0.3});
+      }
+      if (!s.alive) return;
+
+      if (!riding) {
+        // nobody scrolled: a shrug, and he walks off the nearer end of the row, out of sight behind it
+        await A.face(0);
+        await A.perform("shrug");
+        if (!s.alive) return;
+        const toLeft = x - R().left < R().right - x;
+        toLeft ? A.clipLeft(R().left) : A.clipRight(R().right);
+        await A.walkTo(toLeft ? R().left - 0.8 * ppm : R().right + 0.8 * ppm);
+        return;
+      }
+
+      // ---- the ride: onto the card under him, and off the end of the row with it ----
+      const card = [...row.children].find(c => { const r = c.getBoundingClientRect(); return r.left <= x && r.right >= x; });
+      if (!card) return;
+      const dx = x - card.getBoundingClientRect().left;
+      await A.face(0);
+      s.tick(() => { x = card.getBoundingClientRect().left + dx; });
+      await A.perform("scroll-treadmill/hop-on");
+      if (!s.alive) return;
+      A.play("scroll-treadmill/ride", {loop: true, fade: 0.1});
+      A.clipLeft(R().left);
+      A.clipRight(R().right);
+      A.say("Wheee!", 1.4);
+      // until the card has carried him out of the row; if the reader stops, a wave, and he rides on with the
+      // next scroll -- or, left long enough, he waves goodbye where he sits and the bit ends there
+      await s.until(() => x < R().left - 0.5 * ppm || x > R().right + 0.5 * ppm || quiet > 6 || !s.alive);
+      if (!s.alive) return;
+      if (x >= R().left - 0.5 * ppm && x <= R().right + 0.5 * ppm) {
+        await A.perform("scroll-treadmill/bye");
+      }
+    },
+  }),
+
+  "sleepy-atlas":
+  // The sleepy atlas. In an idle moment Archie takes out the Atlas Core, hugs it like a teddy bear, sits down on
+  // the floor and nods off. Its lights pulse gently, and a little hologram of him (holo-archie) floats over it,
+  // holding forth in his sleep. Zip tiptoes in with a marker and very carefully draws a mustache on it (the
+  // mustache prop, on the hologram's head), then tiptoes off, shaking with silent laughter. Archie stirs, gets
+  // up, docks the Core and wanders off, none the wiser. Clips: sleepy_atlas.py (and _corekit.py's take).
+  ({
+    cast: ["archie", "zip"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1000 && innerHeight >= 600;
+    },
+
+    async play(s) {
+      const A = s.archie, Z = s.zip, T = s.T;
+      const W = innerWidth, floor = innerHeight - 8, x0 = Math.round(W * 0.6);
+      const core = await s.core(A);
+      const [marker, mustache] = await Promise.all([s.prop("marker"), s.prop("mustache")]);
+      const [holo] = await s.figures("holo-archie", 1);
+      if (!s.alive) return;
+      s.page.undo(() => { marker.remove(); mustache.remove(); });
+      // sleepy_atlas.py: ZIP (0.85, -0.3), HUG_AT 0.7, DOCK_AT 2.0, HOLO_SCALE 0.3, HOLO_AT (0.42, 0.15),
+      // DRAW (1.15, 2.05)
+      const zx = x0 + 0.85 * A.ppm, v = new T.Vector3();
+      const SNEAK = 0.32 / (0.62 * 1.2);                     // zip_base SNEAK_SPEED
+
+      A.at(x0, floor).show(true);
+      A.play("idle", {loop: true});
+      await s.after(0.8);
+      if (!s.alive) return;
+      const take = A.perform("sleepy-atlas/take");
+      await s.after(0.62);                                  // _corekit.GRAB
+      core.hold();
+      await take;
+      if (!s.alive) return;
+
+      // A hug, a yawn, down onto the floor, asleep. The Core rides his chest from HUG_AT.
+      const hs = A.perform("sleepy-atlas/hug-sit");
+      await s.after(0.7);                                   // HUG_AT
+      if (!s.alive) return;
+      const chest = A.bone("chest");
+      chest.updateWorldMatrix(true, false);
+      core.root.getWorldPosition(v);
+      const at = chest.worldToLocal(v.clone());
+      // (laid over hold(): an attachment made later wins, and it goes before the Core is docked)
+      const onChest = s.attach(core.root, A, "chest", {offset: [at.x, at.y, at.z]});
+      await hs;
+      if (!s.alive) return;
+      A.play("sleepy-atlas/doze", {loop: true});
+
+      // Its light, pulsing gently (the Core is shared: its glow is put back after).
+      const lights = [];
+      core.scene.traverse(m => { if (m.isMesh && m.material && /^holo/.test(m.material.name)) lights.push([m.material, m.material.color.clone()]); });
+      s.page.undo(() => lights.forEach(([m, c]) => m.color.copy(c)));
+      const t0 = s.clock();
+      const pulse = s.tick(() => {
+        const k = 0.5 + 0.5 * Math.sin((s.clock() - t0) * Math.PI * 2 / 2.6);
+        lights.forEach(([m, c]) => m.color.copy(c).multiplyScalar(0.35 + 0.75 * k));
+      });
+      await s.after(1.0);
+      if (!s.alive) return;
+
+      // A little hologram of him over it, holding forth in his sleep.
+      s.scene.add(holo.root);
+      let shown = 0, showTo = 1, showAt = s.clock();
+      const float = s.tick(() => {
+        const u = Math.min(1, (s.clock() - showAt) / 0.5), e = 1 - Math.pow(1 - u, 3);
+        shown = showTo ? e : 1 - e;
+        const p = core.page(0), t = s.clock();
+        holo.root.position.set(p.x + 0.42 * A.ppm, -(p.y - 0.15 * A.ppm - 4 * Math.sin(t * 2)), 200);
+        holo.root.scale.setScalar(Math.max(1e-4, 0.3 * A.ppm * shown));
+      });
+      if (holo.clips.pompous) holo.play(holo.clips.pompous);
+      await s.after(2.0);
+      if (!s.alive) return;
+
+      // Zip, on tiptoe, with a marker.
+      marker.hold(Z, "grip_R");
+      Z.at(W + 0.5 * Z.ppm, floor).show(true);
+      Z.depth(0.3 * Z.ppm);                                 // in front of Archie, sat on the floor
+      await Z.walkTo(zx, {clip: "sneak", mps: SNEAK, speed: 1.6});   // a brisk tiptoe
+      if (!s.alive) return;
+      await Z.face(0);
+      const head = holo.model.getObjectByName("head");
+      // on the bootleg's upper lip (its head is half as big again as his: props_holo.holo_archie), drawn big
+      if (head) { head.add(mustache.root); mustache.root.position.set(0, 0.333, 0.45); mustache.root.scale.setScalar(2.6); }
+      mustache.root.visible = false;
+      const dr = Z.perform("sleepy-atlas/draw");
+      await s.after(1.15);                                  // DRAW
+      if (!s.alive) return;
+      mustache.root.visible = true;
+      mustache.play("draw");
+      await dr;
+      if (!s.alive) return;
+      const off = Z.walkTo(W + 0.6 * Z.ppm, {clip: "sneak", mps: SNEAK, speed: 1.6});
+      await s.after(2.4);
+      if (!s.alive) return;
+
+      // He stirs; the hologram goes; up, the Core back home, and off, none the wiser.
+      const wake = A.perform("sleepy-atlas/wake");
+      await s.after(0.3);
+      showTo = 0; showAt = s.clock();
+      await s.after(1.7);                                   // DOCK_AT
+      if (!s.alive) return;
+      pulse();
+      lights.forEach(([m, c]) => m.color.copy(c));
+      onChest();
+      core.dock();
+      await wake;
+      if (!s.alive) return;
+      float();
+      A.play("idle", {loop: true});
+      await off;
+      await s.after(0.5);
+      if (!s.alive) return;
+      await A.walkTo(-0.6 * A.ppm);
+    },
+  }),
+
+  "souvenir-theft":
+  // The souvenir theft. Zip tiptoes along the top of the home page's spotlight to its star rating, checks
+  // nobody is looking, plucks a star out of it -- a copy, a prop: the rating itself is never touched -- and
+  // hides it behind his back. He whistles. A star drops out from behind him, then another; he stuffs them back
+  // and they pour out faster than he can; he shows two empty hands and runs for it, still shedding stars.
+  // The stars pile up on the card's edge and fade. Clips: souvenir_theft.py.
+  ({
+    cast: ["zip"],
+    pages: ["home"],
+    ppm: 75,
+    ready(s) {
+      const r = s.page.rect("article.hero"), st = s.page.rect("article.hero .stz");
+      return !!r && !!st && st.width > 0 && r.width > 700 && r.top > 170 && r.top < innerHeight - 260 &&
+        st.left - r.left > 160 && r.right - st.left > 300;
+    },
+    async play(s) {
+      const Z = s.zip, ppm = Z.ppm, T = s.T;
+      const H = () => s.page.rect("article.hero");
+      const glyph = () => { const c = s.page.rect("article.hero .stz"); return {x: c.left + 11, y: c.top + c.height / 2}; };
+      const STAND = 0.2, GRAB = 1.85;                       // souvenir_theft.py
+      const SNEAK = 0.32 / (0.62 * 1.2), RUN = 0.6 / (0.4 * 0.4);   // zip_base.py SNEAK_SPEED, RUN_SPEED
+      const SIZE = 2.0;                                     // the star prop (0.22 m) two sizes up, in his metres
+      const g = await s.glb("pals/props/star.glb");
+      if (!s.alive) return;
+
+      // The stars: copies of the prop over the page, falling, bouncing on the card's top edge and coming to
+      // rest there (or off its ends and away down the window).
+      const stars = [];
+      s.page.undo(() => stars.forEach(st => st.root.removeFromParent()));
+      const make = () => {
+        const root = new T.Group();
+        root.add(g.scene.clone(true));
+        root.scale.setScalar(ppm * SIZE);
+        s.add(root);
+        return root;
+      };
+      const edge = H().top, R = 0.11 * SIZE * ppm;
+      let h = H();
+      const fall = s.tick(dt => {
+        h = H() || h;                                       // the card's last place, should it go
+        for (const st of stars) {
+          if (st.rest) {
+            // settled: turning to face the reader, as a dropped star would land face up
+            const r = st.root.rotation, face = Math.round(r.y / Math.PI) * Math.PI;
+            r.y += (face - r.y) * Math.min(1, dt * 6);
+            continue;
+          }
+          st.vy += 1500 * dt;
+          st.x += st.vx * dt; st.y += st.vy * dt;
+          st.root.rotation.y += st.spin * dt;
+          st.root.rotation.z += st.tumble * dt;
+          const over = st.x > h.left + 4 && st.x < h.right - 4;
+          // the floor is the card's edge, or the heap of stars already there
+          const under = stars.filter(o => o.rest && Math.abs(o.x - st.x) < R * 1.1).length;
+          const top = edge - R - Math.min(3, under) * R * 0.7;
+          if (over && st.y > top && st.vy > 0 && st.y < edge + R) {
+            st.y = top;
+            if (st.vy < 160 || under) { st.rest = true; st.vy = 0; }
+            else { st.vy *= -0.38; st.vx *= 0.6; st.tumble *= 0.5; }
+          }
+          st.root.position.set(st.x, -st.y, st.z);
+        }
+      });
+      // One out from behind his back, to one side or the other, up and away.
+      const spill = (n = 1) => {
+        for (let i = 0; i < n; i++) {
+          const hip = Z.pageAt("hips"), side = Math.random() < 0.5 ? -1 : 1;
+          const root = make();
+          stars.push({root, x: hip.x + side * 0.12 * ppm, y: hip.y + 0.05 * ppm, z: -20,
+                      vx: side * (90 + Math.random() * 190), vy: -(180 + Math.random() * 260),
+                      spin: (Math.random() - 0.5) * 18, tumble: (Math.random() - 0.5) * 8, rest: false});
+        }
+      };
+
+      // In along the card's top edge from its right-hand end, at a run, then the last few steps on tiptoe.
+      const x0 = glyph().x + STAND * ppm, near = Math.min(H().right - 0.4 * ppm, x0 + 1.6 * ppm);
+      Z.at(H().right + 0.6 * ppm, edge).show(true);
+      await Z.walkTo(near, {clip: "run", mps: RUN});
+      if (!s.alive) return;
+      await Z.walkTo(x0, {clip: "sneak", mps: SNEAK});
+      if (!s.alive) return;
+      await Z.face(0);
+
+      // The pinch: the star out of the rating and into his hand.
+      const pinch = Z.perform("souvenir-theft/pinch");
+      await s.after(GRAB);
+      if (!s.alive) return;
+      const held = make(), from = glyph();
+      held.position.set(from.x, -from.y, 10);
+      await s.tween(0.22, u => {
+        const to = Z.pageAt("grip_R");
+        held.position.set(from.x + (to.x - from.x) * u, -(from.y + (to.y - from.y) * u) + 18 * Math.sin(Math.PI * u), 10);
+        held.rotation.y = u * Math.PI * 2;
+      });
+      held.scale.setScalar(SIZE);
+      const unhold = s.attach(held, Z, "grip_R", {offset: [0, 0, 0.02]});
+      await pinch;
+      if (!s.alive) return;
+
+      // Innocence. Then the first one falls out.
+      Z.play("souvenir-theft/innocent", {loop: true});
+      Z.say("♪", 1.6);
+      await s.after(2.4);
+      if (!s.alive) return;
+      spill(1);
+      await s.after(0.2);
+      await Z.perform("souvenir-theft/oops");
+      if (!s.alive) return;
+      Z.play("souvenir-theft/innocent", {loop: true});
+      await s.after(0.9);
+      spill(1);
+      await s.after(0.6);
+      spill(1);
+      await s.after(0.45);
+      spill(2);
+      if (!s.alive) return;
+
+      // He stuffs them back; they pour out.
+      Z.play("souvenir-theft/stuff", {loop: true});
+      unhold();
+      held.removeFromParent();
+      for (let i = 0; i < 30 && s.alive; i++) {
+        spill(i > 18 ? 2 : 1);
+        await s.after(Math.max(0.05, 0.2 - i * 0.008));
+      }
+      if (!s.alive) return;
+      const busted = Z.perform("souvenir-theft/busted");
+      await s.after(0.4);
+      Z.say("...souvenirs?", 1.6);
+      await busted;
+      if (!s.alive) return;
+
+      // And away, still shedding them.
+      // ... at SHED stars a second, on the stage's clock
+      const SHED = 6;
+      let next = s.clock();
+      const trickle = s.tick(() => { while (s.clock() >= next) { spill(1); next += (0.6 + 0.8 * Math.random()) / SHED; } });
+      await Z.walkTo(innerWidth + 1.2 * ppm, {clip: "run", mps: RUN});
+      trickle();
+      if (!s.alive) return;
+      await s.until(() => stars.every(st => st.rest || st.y > innerHeight + 60) || !s.alive);
+      await s.after(0.8);
+      // gone: the pile fades
+      const mats = new Set();
+      for (const st of stars) st.root.traverse(m => { if (m.isMesh) { m.material = m.material.clone(); m.material.transparent = true; mats.add(m.material); } });
+      await s.tween(0.8, u => mats.forEach(m => { m.opacity = 1 - u; }), u => u);
+      fall();
+    },
+  }),
+
+  "stolen-spotlight":
+  // The stolen spotlight. Up on the home page's spotlight, Archie introduces its project in the beam of a stage
+  // light. Zip swings the light round onto himself and starts dancing; Archie wrestles it back. Then Brick
+  // switches on a third spotlight, twice the size, and dances them both off the stage. The lights are props
+  // over the page; the project's own card is never touched. Clips: stolen_spotlight.py.
+  ({
+    cast: ["archie", "zip", "brick"],
+    pages: ["home"],
+    ppm: 58,
+    ready(s) {
+      const r = s.page.rect("article.hero");
+      return !!r && r.width > 900 && r.top > 170 && r.top < innerHeight - 220;
+    },
+    // A spotlight-stand's beam at a page point: `pan` turns about the vertical, `tilt` about its own length.
+    _aim(s, sp, target) {
+      const pan = sp.model.getObjectByName("pan"), tilt = sp.model.getObjectByName("tilt");
+      if (!pan || !tilt) return;
+      // their rest turns, the first time (each s.prop() is a fresh copy, at rest)
+      pan.__q0 = pan.__q0 || pan.quaternion.clone();
+      tilt.__q0 = tilt.__q0 || tilt.quaternion.clone();
+      const head = new s.T.Vector3();
+      sp.root.updateMatrixWorld(true);
+      tilt.getWorldPosition(head);
+      const dx = target.x - head.x, dy = -target.y - head.y;
+      const Y = new s.T.Vector3(0, 1, 0);
+      pan.quaternion.copy(pan.__q0).multiply(new s.T.Quaternion().setFromAxisAngle(Y, Math.sign(dx || 1) * Math.PI / 2));
+      tilt.quaternion.copy(tilt.__q0).multiply(new s.T.Quaternion().setFromAxisAngle(Y, Math.atan2(-dy, Math.abs(dx))));
+    },
+    // A beam the page can see through on a light theme or a dark one: soft, warm, normally blended.
+    _softBeam(s, sp, opacity = 0.3) {
+      const b = [];
+      sp.model.traverse(n => {
+        if (!n.isMesh || !/beam/.test(n.name)) return;
+        n.material = new s.T.MeshBasicMaterial({color: 0xffe9a8, transparent: true, opacity, depthWrite: false,
+                                                side: s.T.DoubleSide, name: "holo-beam"});
+        b.push(n);
+      });
+      return b;
+    },
+    async play(s) {
+      const A = s.archie, ppm = A.ppm;
+      const H = () => s.page.rect("article.hero");
+      const edge = H().top;
+      const x0 = H().left + H().width * 0.3;
+      // stolen_spotlight.py: LAMP_X, ZIP_X, BRICK_X, BRICK_LAMP_X, BIG_SCALE, GRAB_TURN
+      const LAMP = 3.6, ZX = 1.9, BX = -3.0, BLAMP = -4.6, BIG = 2.0, TURN = 0.9;
+      // his lamp, and Brick's (the same prop, twice the size, kept back till he switches it on)
+      const [lamp, big] = await Promise.all([s.prop("spotlight-stand"), s.prop("spotlight-stand")]);
+      if (!s.alive) return;
+      const lx = Math.min(x0 + LAMP * ppm, H().right - 0.6 * ppm);
+      lamp.at(lx, edge, ppm);
+      lamp.root.position.z = -30;                                   // behind the cast
+      this._softBeam(s, lamp);
+      let target = {x: x0, y: edge - 1.3 * ppm};
+      const steer = s.tick(() => this._aim(s, lamp, target));
+      const swingTo = (to, secs) => { const from = {...target}; return s.tween(secs, u => {
+        target = {x: from.x + (to.x - from.x) * u, y: from.y + (to.y - from.y) * u}; }); };
+
+      A.at(x0 - 3 * ppm, edge).show(true);
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      if (!s.alive) return;
+      A.say("Ladies and gentlemen...", 2.2);
+      await A.perform("stolen-spotlight/present");
+      if (!s.alive) return;
+
+      // The light leaves him: Zip has it (or it wanders off on its own).
+      // stolen_spotlight.py: SWING_TURN; Zip's hands meet the lamp's head 0.42 m ahead of him
+      const Z = s.zip, zx = x0 + ZX * ppm, SWING = 0.8;
+      if (Z) {
+        Z.at(lx + 2.2 * ppm, edge).show(true);
+        await Z.walkTo(lx + 0.42 * ppm);
+        if (!s.alive) return;
+        await Z.face(-1);
+        if (!s.alive) return;
+        const sw = Z.perform("stolen-spotlight/swing");
+        await s.until(() => Z.time() >= SWING || !s.alive);
+        if (!s.alive) return;
+        await swingTo({x: zx, y: edge - 0.8 * ppm}, 0.5);
+        if (!s.alive) return;
+        await sw;
+        if (!s.alive) return;
+        await Z.walkTo(zx);
+        if (!s.alive) return;
+        await Z.face(0);
+        if (!s.alive) return;
+        Z.play("dance", {loop: true});
+      } else {
+        await swingTo({x: zx, y: edge - 0.9 * ppm}, 0.6);
+      }
+      A.play("idle", {loop: true});
+      await A.perform("stolen-spotlight/huh");
+      if (!s.alive) return;
+
+      // He hauls it back.
+      await A.walkTo(lx - 0.62 * ppm);
+      if (!s.alive) return;
+      await A.face(0);
+      if (!s.alive) return;
+      const grab = A.perform("stolen-spotlight/grab");
+      await s.until(() => A.time() >= TURN || !s.alive);
+      if (!s.alive) return;
+      await swingTo({x: x0, y: edge - 1.3 * ppm}, 0.5);
+      if (!s.alive) return;
+      await grab;
+      if (!s.alive) return;
+      if (Z) { Z.play("hands-on-hips"); }
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(0.6);
+      if (!s.alive) return;
+
+      // Brick's light: twice the size, and Brick dancing in it.
+      const B = s.brick;
+      if (B) {
+        big.at(Math.max(H().left + 0.6 * ppm, x0 + BLAMP * ppm), edge, ppm * BIG);
+        big.root.position.z = -40;
+        const beam = this._softBeam(s, big, 0.38);
+        beam.forEach(b => { b.visible = false; });
+        // up from behind the hero, by his lamp
+        const bxp = x0 + BX * ppm;
+        B.clipBelow(edge);
+        B.at(bxp, edge + 3 * ppm).show(true);
+        B.play("idle", {loop: true});
+        await s.tween(0.55, u => B.at(bxp, edge + 3 * ppm * (1 - u)));
+        B.clipBelow(null);
+        if (!s.alive) return;
+        await B.face(0);
+        if (!s.alive) return;
+        this._aim(s, big, {x: x0 + BX * ppm, y: edge - 1.6 * ppm});
+        await B.perform("finger-point");
+        if (!s.alive) return;
+        beam.forEach(b => { b.visible = true; });
+        B.play("much-better", {loop: true});
+        await s.after(0.6);
+      }
+      A.play("stolen-spotlight/jaw");
+      if (Z && Z.has("stolen-spotlight/stare")) Z.play("stolen-spotlight/stare");
+      await s.after(B ? 3.4 : 1.2);
+      if (!s.alive) return;
+      steer();
+    },
+  }),
+
+  "the-escapee":
+  // The escapee. Archie opens the Atlas Core on the page's own world, and one tiny hologram bot on its front
+  // edge waves at the reader -- then climbs out, jumps down to the floor by his foot, waves at him and runs off.
+  // He gets an app card out from behind his back and creeps after it, lays the card on the floor in front of
+  // it, and when the curious little thing walks on, lifts it and tips it back into the world, where it folds
+  // its arms and sulks. The bot is the holo-agent prop (Archie's skeleton: it runs with his walk). Clips:
+  // the_escapee.py (and _corekit.py's take/back).
+  ({
+    cast: ["archie"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1000 && innerHeight >= 600;     // room on his left to run
+    },
+
+    async play(s) {
+      const A = s.archie, T = s.T;
+      const floor = innerHeight - 8, x0 = Math.round(innerWidth * 0.26);
+      const core = await s.core(A);
+      const card = await s.prop("app-card");
+      if (!s.alive) return;
+      s.page.undo(() => card.remove());
+      const v = new T.Vector3();
+      const pageOf = o => { o.getWorldPosition(v); return {x: v.x, y: -v.y}; };
+      // `fn(dt)` every frame of the stage's clock until it returns true
+      const step = fn => { let last = s.clock(); return s.until(() => { const t = s.clock(), dt = t - last; last = t; return fn(dt); }); };
+      A.at(-0.45 * A.ppm, floor).show(true);
+      A.play("idle", {loop: true});
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      const take = A.perform("the-escapee/take");
+      await s.after(0.62);                                  // _corekit.GRAB
+      core.hold();
+      await take;
+      if (!s.alive) return;
+      A.play("the-escapee/hold", {loop: true});
+      core.play("unfold");
+      await s.after(0.9);
+      if (!s.alive) return;
+      core.play("open-idle", {loop: true});
+
+      // The page's world, and one little bot on its front edge, waving at the reader.
+      const SIZE = 300, BOT = 0.18, BOT_PPM = SIZE / 2 * BOT;    // the bot's metres in world units, in page px
+      const proj = await s.project(s.where().world);
+      if (!s.alive || !proj) return;
+      const follow = s.tick(() => { const p = core.page(); proj.at(p.x, p.y, SIZE, 1); });
+      const [bot] = await s.figures("holo-agent", 1);
+      if (!s.alive) return;
+      proj.world.add(bot.root);
+      bot.root.position.set(0.3, 0.03, 0.6);
+      bot.root.scale.setScalar(1e-4);
+      const born = s.clock();
+      const grow = s.tick(() => {
+        if (bot.root.parent !== proj.world) return;
+        const k = Math.min(1, (s.clock() - born) / 0.45);
+        bot.root.scale.setScalar(BOT * (1 - Math.pow(1 - k, 3)) + 1e-4);
+      });
+      await s.after(0.8);
+      proj.idle();
+      bot.play(bot.clips.wave, false);
+      await s.after(2.0);
+      if (!s.alive) return;
+
+      // Out it climbs: off the world's edge and down to the floor by his left foot.
+      const jumpTo = async (to, secs, height) => {
+        const from = pageOf(bot.root), t0 = s.clock();
+        bot.play(bot.clips.cheer);
+        await s.until(() => {
+          const u = Math.min(1, (s.clock() - t0) / secs);
+          const x = from.x + (to.x - from.x) * u, y = from.y + (to.y - from.y) * u - height * Math.sin(Math.PI * u);
+          bot.root.position.set(x, -y, 120);              // in front of him
+          return u >= 1;
+        });
+      };
+      grow();
+      s.scene.attach(bot.root);                             // into the page, where it is now, upright
+      bot.root.rotation.set(0, 0, 0);
+      bot.root.scale.setScalar(BOT_PPM);
+      const land = {x: A.x + 1.0 * A.ppm, y: floor};
+      const spot = A.perform("the-escapee/spot");
+      await jumpTo(land, 0.75, 70);
+      if (!s.alive) return;
+      A.say("Hey!", 1.2);
+      bot.play(bot.clips.wave, false);
+      await spot;
+      if (!s.alive) return;
+
+      // It runs off; he gets a card out and creeps after it.
+      const run = (dir, dist, speed) => {
+        bot.root.rotation.y = dir * Math.PI / 2;
+        const a = bot.play(A.clips.walk);
+        a.timeScale = speed;
+        const x1 = bot.root.position.x + dir * dist;
+        return step(dt => {
+          bot.root.position.x += dir * 1.21 * speed * BOT_PPM * dt;
+          if (dir * (x1 - bot.root.position.x) <= 0) { bot.root.position.x = x1; return true; }
+          return false;
+        });
+      };
+      const ran = run(1, 0.95 * A.ppm, 2.2);
+      const getCard = A.perform("the-escapee/card");
+      await s.after(0.62);                                  // the_escapee.py CARD_ON
+      card.hold(A, "grip_R", [0, 0.05, 0.015], [-Math.PI / 2, 0, 0]);
+      card.root.scale.setScalar(0.5);
+      await Promise.all([ran, getCard]);
+      if (!s.alive) return;
+      bot.root.rotation.y = 0;
+      bot.play(bot.clips.wave, false);                      // cheeky
+      A.play("the-escapee/creep", {loop: true});
+      const CREEP = 0.24 / (0.6 * 1.0);                     // the_escapee.py CREEP_SPEED, metres a second
+      const stopAt = bot.root.position.x - 0.85 * A.ppm;    // the card will lie just short of the bot
+      await step(dt => { A.x = Math.min(stopAt, A.x + CREEP * A.ppm * dt); return A.x >= stopAt; });
+      if (!s.alive) return;
+
+      // The card on the floor; the bot can't resist it; up it goes, and back in.
+      await A.perform("the-escapee/offer");
+      if (!s.alive) return;
+      await s.after(0.4);
+      const pad = pageOf(card.root);
+      bot.root.rotation.y = -Math.PI / 2;
+      const a = bot.play(A.clips.walk);
+      a.timeScale = 1.2;
+      await step(dt => { bot.root.position.x -= 1.21 * 1.2 * BOT_PPM * dt; return bot.root.position.x <= pad.x + 0.45 * A.ppm; });
+      if (!s.alive) return;
+      bot.root.rotation.y = 0;
+      await jumpTo({x: pad.x + 4, y: pad.y - 6}, 0.5, 34);  // hop, onto the card
+      if (!s.alive) return;
+      bot.play(A.clips.idle);
+      card.root.attach(bot.root);                           // it rides the card now
+      await s.after(0.35);
+      const lift = A.perform("the-escapee/lift");
+      await s.after(1.2);                                   // the_escapee.py TIP
+      if (!s.alive) return;
+      proj.world.attach(bot.root);                          // tipped back into the world
+      const hop0 = bot.root.position.clone(), q0 = bot.root.quaternion.clone(), s0 = bot.root.scale.x, h0 = s.clock();
+      const home = new T.Vector3(0.3, 0.03, 0.6), up = new T.Quaternion();
+      s.until(() => {
+        const u = Math.min(1, (s.clock() - h0) / 0.5);
+        bot.root.position.lerpVectors(hop0, home, u);
+        bot.root.position.y += 0.25 * Math.sin(Math.PI * u);
+        bot.root.quaternion.slerpQuaternions(q0, up, u);
+        bot.root.scale.setScalar(s0 + (BOT - s0) * u);
+        return u >= 1;
+      }).then(() => { if (s.alive) bot.play(bot.clips.fold_arms, false); });
+      await s.after(0.85);                                  // CARD_OFF
+      card.root.visible = false;
+      await lift;
+      if (!s.alive) return;
+      A.play("the-escapee/hold", {loop: true});
+      A.say("And stay.", 1.4);
+      await s.after(1.6);
+      if (!s.alive) return;
+
+      // Folded away, sulking bot and all.
+      proj.hide(0.3);
+      await s.after(0.3);
+      follow();
+      core.play("fold");
+      await s.after(0.9);
+      const back = A.perform("the-escapee/back");
+      await s.after(0.86);                                  // _corekit.DOCK
+      core.dock();
+      await back;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(0.8);
+    },
+  }),
+
+  "the-handoff":
+  // The handoff. Brick -- the responsible one, who guards the switches and confiscates the remotes -- stands on
+  // the window's floor with his arms folded. Zip sneaks up beside him and holds out a hand. Brick doesn't look.
+  // His eyes go left, right; his hand comes out from under his folded arms with the remote in it, and Zip takes
+  // it. Then Brick's eyes come round to the reader, and stay there. A finger to his lips. Zip sneaks off with
+  // the remote; Brick folds his arms as if nothing happened -- and as Zip goes, the lights flicker.
+  // Clips: the_handoff.py (ZIP_AT, SHOW, TAKE are its constants).
+  ({
+    cast: ["brick", "zip"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ready(s) {
+      return document.documentElement.clientWidth >= 900 && innerHeight >= 560;
+    },
+    async play(s) {
+      const {brick: B, zip: Z} = s;
+      const ZIP_AT = 1.44, SHOW = 0.55, TAKE = 1.75, TAKE_ZIP = 1.0;
+      const SNEAK = 0.32 / (0.62 * 1.2);                          // zip_base SNEAK_SPEED
+      const W = s.W(), floor = innerHeight - 8, ppm = Math.min(110, (innerHeight - 140) / 2.9);
+      const bx = Math.round(Math.max(W * 0.32, 2.4 * ppm)), zx = bx - ZIP_AT * ppm;
+      B.at(bx, floor, ppm).show(true);
+      B.play("guard-hold", {loop: true, fade: 0});
+      Z.at(-0.8 * ppm, floor, ppm).show(true);
+      const remote = await s.prop("remote");
+      if (!s.alive) return;
+      await s.after(0.6);
+      if (!s.alive) return;
+
+      // Zip, on tiptoe, to Brick's side; a hand out
+      await Z.walkTo(zx, {clip: "sneak", mps: SNEAK, speed: 1.6});
+      if (!s.alive) return;
+      await Z.face(0);
+      Z.play("the-handoff/ask", {loop: true, fade: 0.2});
+      await s.after(1.6);
+      if (!s.alive) return;
+
+      // the slip: out from under the folded arms, down at his side, and into Zip's hand
+      const slip = B.perform("the-handoff/slip", {fade: 0.25});
+      await s.until(() => B.time() >= SHOW || !s.alive);
+      remote.hold(B, "grip_R", [0, 0, 0], [Math.PI / 2, 0, 0]);
+      await s.until(() => B.time() >= TAKE - TAKE_ZIP || !s.alive);
+      const take = Z.perform("the-handoff/take", {fade: 0.15});
+      await s.until(() => Z.time() >= TAKE_ZIP || !s.alive);
+      remote.hold(Z, "grip_L", [0, 0, 0], [Math.PI / 2, 0, 0]);
+      await Promise.all([slip, take]);
+      if (!s.alive) return;
+      B.play("guard-hold", {loop: true, fade: 0.25});
+
+      // caught: his eyes come round to the reader
+      await s.after(0.5);
+      if (!s.alive) return;
+      await B.perform("the-handoff/caught", {fade: 0.1});
+      if (!s.alive) return;
+      B.play("guard-hold", {loop: true, fade: 0.3});
+
+      // Zip slips away with it, and, from the edge of the window, uses it
+      const off = Z.walkTo(-0.5 * ppm, {clip: "sneak", mps: SNEAK, speed: 1.6});
+      await s.until(() => Z.x < 0.6 * ppm || !s.alive);
+      if (!s.alive) return;
+      remote.play("click");
+      await s.page.flicker(2, 380);                                // one dark beat and back: 1.3 flashes a second
+      await off;
+      if (!s.alive) return;
+      await s.after(0.8);
+      if (!s.alive) return;
+      await B.perform("raise-brow");
+    },
+  }),
+
+  "the-sneeze":
+  // The sneeze. Archie unfolds the Atlas Core's world; his nose twitches -- ah... ah... CHOO -- and the
+  // world's islands blow apart (the world's scatter clip). The main one sails over his head into Brick's hands;
+  // a little one floats off like a runaway balloon, Zip jumping for it and racing off after it. Brick lobs the
+  // main one back and the world gathers itself; Zip comes back towing the stray on a string and lets it go
+  // home. The flying islands are clones on the page; the islands themselves wait, hidden, in the world.
+  // Clips: the_sneeze.py (and _corekit.py's take/back); Zip plays his everyday jump, run, walk and cheer.
+  ({
+    cast: ["archie", "brick", "zip"],
+    packs: {archie: "pals/bits/the-sneeze@archie.glb", brick: "pals/bits/the-sneeze@brick.glb"},  // Zip: everyday clips
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 120,
+    ready(s) {
+      return innerWidth >= 1100 && innerHeight >= 620;     // Brick on his right, Zip on his left
+    },
+
+    async play(s) {
+      const A = s.archie, B = s.brick, Z = s.zip, T = s.T;
+      const W = innerWidth, floor = innerHeight - 8, x0 = Math.round(W * 0.42);
+      const core = await s.core(A);
+      if (!s.alive) return;
+      // the_sneeze.py: BRICK (-2.4, 0.2), ZIP (2.3, 0), CHOO_AT 0.16, CATCH_AT 0.42, TOSS_AT 0.72
+      const bx = x0 - 2.4 * A.ppm, zx = x0 + 2.3 * A.ppm;
+      const v = new T.Vector3();
+      const pageOf = o => { o.getWorldPosition(v); return {x: v.x, y: -v.y}; };
+      // A clone of one of the world's islands, out on the page where the island is (the island itself stays
+      // put, hidden, so the world's own clips keep it), and back again.
+      const lifted = [];
+      s.page.undo(() => lifted.forEach(([o, c]) => { o.visible = true; c.removeFromParent(); }));
+      const lift = node => {
+        const c = node.clone(true);
+        s.scene.add(c);
+        node.updateWorldMatrix(true, true);
+        node.matrixWorld.decompose(c.position, c.quaternion, c.scale);
+        c.position.z = 300;
+        node.visible = false;
+        lifted.push([node, c]);
+        return c;
+      };
+      const fly = (c, to, secs, height, spin = 0) => {
+        const from = c.position.clone(), q0 = c.quaternion.clone(), t0 = s.clock();
+        const axis = new T.Vector3(0.3, 0.2, 1).normalize(), dq = new T.Quaternion();
+        return s.until(() => {
+          const u = Math.min(1, (s.clock() - t0) / secs);
+          c.position.set(from.x + (to.x - from.x) * u, from.y + (-to.y - from.y) * u + height * Math.sin(Math.PI * u), 300);
+          c.quaternion.copy(q0).premultiply(dq.setFromAxisAngle(axis, spin * u));
+          return u >= 1;
+        });
+      };
+      const home = (node, c, secs) => {                     // a clone back to its island, and the island shown
+        node.updateWorldMatrix(true, true);
+        const p = new T.Vector3(), q = new T.Quaternion(), sc = new T.Vector3();
+        node.matrixWorld.decompose(p, q, sc);
+        const from = c.position.clone(), q0 = c.quaternion.clone(), s0 = c.scale.clone(), t0 = s.clock();
+        return s.until(() => {
+          const u = Math.min(1, (s.clock() - t0) / secs), e = 1 - Math.pow(1 - u, 3);
+          c.position.lerpVectors(from, p, e);
+          c.position.z = 300 * (1 - e);
+          c.quaternion.slerpQuaternions(q0, q, e);
+          c.scale.lerpVectors(s0, sc, e);
+          return u >= 1;
+        }).then(() => { node.visible = true; c.removeFromParent(); });
+      };
+
+      A.at(x0, floor).show(true);
+      B.at(bx, floor).show(true);
+      Z.at(zx, floor).show(true);
+      B.depth(-0.2 * B.ppm);                                // a little behind Archie
+      A.play("idle", {loop: true});
+      B.play("idle", {loop: true});
+      Z.play("idle", {loop: true});
+      await s.after(0.6);
+      const take = A.perform("the-sneeze/take");
+      await s.after(0.62);                                  // _corekit.GRAB
+      core.hold();
+      await take;
+      if (!s.alive) return;
+      A.play("the-sneeze/hold", {loop: true});
+      core.play("unfold");
+      await s.after(0.9);
+      if (!s.alive) return;
+      core.play("open-idle", {loop: true});
+      const SIZE = 280;
+      const proj = await s.project(s.where().world);
+      if (!s.alive || !proj) return;
+      const follow = s.tick(() => { const p = core.page(); proj.at(p.x, p.y, SIZE, 1); });
+      s.after(0.8).then(() => s.alive && proj.idle());
+      await s.after(1.6);
+      if (!s.alive) return;
+
+      // Ah... ah... CHOO.
+      A.say("Ah... ah...", 1.8);
+      await A.perform("the-sneeze/ah");
+      if (!s.alive) return;
+      const choo = A.perform("the-sneeze/choo", {fade: 0.04});
+      await s.after(0.16);                                  // CHOO_AT
+      A.say("CHOO!", 0.9);
+      core.play("sneeze");
+      proj.play("scatter");
+      await s.after(0.35);
+      if (!s.alive) return;
+
+      // The main island over his head into Brick's hands; a little one off like a balloon, Zip after it.
+      const w = proj.world;
+      const main = w.getObjectByName("island_main") || w.getObjectByName("island_1");
+      const stray = w.getObjectByName("island_1") !== main ? w.getObjectByName("island_1") : w.getObjectByName("island_2");
+      const mc = main && lift(main), sc = stray && lift(stray);
+      let offHands = null, drift = null;
+      const catchAt = {x: bx + 0.1 * A.ppm, y: floor - 0.85 * A.ppm};
+      const caught = (async () => {
+        if (!mc) return;
+        const b = B.perform("the-sneeze/catch");
+        await fly(mc, catchAt, 0.42, 300, 5);               // lands at CATCH_AT
+        if (!s.alive) return;
+        mc.scale.setScalar(SIZE / 2 / B.ppm);
+        mc.position.z = 0;
+        offHands = s.attach(mc, B, "grip_R", {offset: [0, 0.05, 0.16]});
+        await b;
+        if (s.alive) B.play("the-sneeze/holding", {loop: true});
+      })();
+      const chased = (async () => {
+        if (!sc) return;
+        const p0 = {x: sc.position.x, y: -sc.position.y}, t0 = s.clock();
+        drift = s.tick(() => {                              // up and away, bobbing
+          const t = s.clock() - t0;
+          sc.position.set(p0.x + 70 * t + 12 * Math.sin(t * 3), -(p0.y - 55 * t - 10 * Math.sin(t * 4.2)), 300);
+          sc.rotation.z = 0.25 * Math.sin(t * 2.1);
+        });
+        await s.after(0.25);
+        await Z.face(1);
+        Z.say("Mine!", 0.9);
+        await Z.perform("jump");
+        if (!s.alive) return;
+        await Z.walkTo(W + 0.6 * Z.ppm, {clip: "run", mps: 0.6 / (0.4 * 0.4)});            // zip_base RUN_SPEED
+        Z.show(false);
+      })();
+      await choo;
+      if (!s.alive) return;
+      A.play("the-sneeze/hold", {loop: true});
+      await s.after(0.3);
+      A.say("Bless me.", 1.2);
+      await A.perform("the-sneeze/sheepish");
+      if (!s.alive) return;
+      await caught;
+      if (!s.alive) return;
+      A.play("the-sneeze/hold", {loop: true});
+
+      // Brick lobs it back; the world pulls itself together.
+      await s.after(0.3);
+      const toss = B.perform("the-sneeze/toss");
+      await s.after(0.72);                                  // TOSS_AT
+      if (!s.alive) return;
+      if (mc) {
+        if (offHands) offHands();
+        s.scene.attach(mc);
+        mc.position.z = 300;
+        await home(main, mc, 0.8);
+      }
+      if (!s.alive) return;
+      proj.play("gather");
+      await toss;
+      if (!s.alive) return;
+      B.play("idle", {loop: true});
+      await s.after(1.0);
+      if (!s.alive) return;
+
+      // Zip back, towing the stray on a string.
+      if (sc) {
+        if (drift) drift();
+        Z.show(true);
+        Z.at(W + 0.5 * Z.ppm, floor);
+        const string = s.svg.path({stroke: "#7a7f8c", width: 1.5});
+        const tow = s.tick(() => {
+          const h = Z.pageAt("grip_R"), t = s.clock();
+          const top = {x: h.x + 8 * Math.sin(t * 2), y: h.y - 1.0 * Z.ppm + 6 * Math.sin(t * 3)};
+          sc.position.set(top.x, -(top.y - 30), 300);
+          sc.rotation.z = 0.15 * Math.sin(t * 2.2);
+          string.el.setAttribute("d", `M${h.x.toFixed(1)} ${h.y.toFixed(1)} L${top.x.toFixed(1)} ${top.y.toFixed(1)}`);
+        });
+        await Z.walkTo(zx - 0.6 * A.ppm);
+        if (!s.alive) return;
+        await Z.face(0);
+        tow();
+        string.el.remove();
+        Z.perform("cheer");
+        await home(stray, sc, 0.9);
+        if (!s.alive) return;
+      }
+      A.say("Thanks, both.", 1.4);
+      await s.after(1.6);
+      if (!s.alive) return;
+
+      proj.hide(0.3);
+      await s.after(0.3);
+      follow();
+      core.play("fold");
+      await s.after(0.9);
+      const back = A.perform("the-sneeze/back");
+      await s.after(0.86);                                  // _corekit.DOCK
+      core.dock();
+      await back;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(1.0);
+    },
+  }),
+
+  "tiny-inspection":
+  // The tiny inspection. An access panel on the page's glass, low down by the bottom of the window. Zip runs
+  // past it, stops, comes back and knocks: hollow. He kits up -- a violet hard hat, a flashlight -- heaves the panel up and
+  // duck-walks in under it, and it drops shut behind him. His inspection light moves about inside: it leaks
+  // round the panel's dark seams, glints through its empty screw holes, fans out under it across the floor; a
+  // thump, a "hmm". Then the panel lifts in a puff of dust and he comes out wearing an enormous dust bunny,
+  // which looks at the reader. He looks up at it, sneezes, and runs off in it. Clips: tiny_inspection.py.
+  ({
+    cast: ["zip"],
+    pages: ["topic", "repos", "catalog", "collections"],
+    ppm: 80,
+    ready(s) {
+      return innerWidth >= 900 && innerHeight >= 560;
+    },
+    // A prop's clip run forwards (dir 1) or back to its start (dir -1), and held there.
+    _run(s, prop, name, dir = 1) {
+      const T = s.T, c = prop.clips[name];
+      if (!c) return;
+      const a = prop.mixer.clipAction(c);
+      a.setLoop(T.LoopOnce, 1);
+      a.clampWhenFinished = true;
+      a.paused = false;
+      a.timeScale = dir;
+      if (!a.isRunning()) { a.reset(); a.timeScale = dir; if (dir < 0) a.time = c.duration; }
+      a.play();
+    },
+    async play(s) {
+      const Z = s.zip, ppm = Z.ppm, T = s.T;
+      const GAP = 0.42, TORCH = 0.75, HAT = 1.45, LIFT = 0.45, SNEEZE = 1.05;    // tiny_inspection.py
+      const DUCK = 0.24 / (0.6 * 0.6);                                             // DUCK_SPEED
+      const RUN = 0.6 / (0.4 * 0.4);                                               // clips/zip_base.py
+      const floor = innerHeight - 8;
+      const PS = ppm * 2.3;                                  // the panel (0.9 x 0.6 m as built) at Zip's scale
+      const pw = 0.9 * PS, ph = 0.6 * PS;
+      const left = Math.round(innerWidth * 0.62), right = left + pw, bottom = floor - 0.1 * ppm, top = bottom - ph;
+      const [panel, torch, hat, bunny, puff] = await Promise.all(
+        ["wall-panel", "flashlight", "hard-hat-orange", "dust-bunny", "smoke-puff"].map(n => s.prop(n)));
+      if (!s.alive) return;
+      s.page.undo(() => [panel, torch, hat, bunny, puff].forEach(p => p.remove()));
+      panel.at(left + pw / 2, top + ph / 2, PS);
+      panel.root.position.z = -40;                           // on the wall, behind him
+      // the hole in the wall behind it, dark, shown as the panel swings up
+      const hole = new T.Mesh(new T.PlaneGeometry(0.86, 0.56), new T.MeshBasicMaterial({color: 0x0b0c10}));
+      hole.position.z = -0.02;
+      panel.root.add(hole);
+      const flap = panel.model.getObjectByName("panel");
+      const flap0 = flap ? flap.quaternion.clone() : null;
+      let jolt = 0;
+      const rattle = s.tick(dt => {
+        if (!flap || jolt < 0.001) return;
+        const k = jolt * Math.sin(s.clock() * 70);
+        jolt *= Math.exp(-9 * dt);                           // dying away over a third of a second, at any fps
+        flap.quaternion.copy(flap.userData.held || flap0).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0, 0, 1), 0.035 * k));
+      });
+      const thump = (k = 1) => { if (flap) flap.userData.held = flap.quaternion.clone(); jolt = k; };
+      s.holo(torch.root);
+      const beam = torch.model.getObjectByName("beam");
+      if (beam) beam.visible = false;
+
+      // ---- past it at a run, back to it, and the knock ----
+      Z.at(innerWidth + 0.6 * ppm, floor).show(true);
+      Z.play("idle", {loop: true});
+      await Z.walkTo(left - GAP * ppm, {clip: "run", mps: RUN});
+      if (!s.alive) return;
+      await Z.face(1);
+      await Z.perform("tiny-inspection/knock");
+      if (!s.alive) return;
+      Z.say("hollow!", 1.2);
+
+      // ---- kit up: the torch from behind his back, the hat on ----
+      await Z.face(0);
+      const kit = Z.perform("tiny-inspection/kit-up");
+      await s.after(TORCH);
+      torch.hold(Z, "grip_R", [0, 0, 0]);                  // its beam along grip_R's Y: where his fingers point
+      await s.after(HAT - TORCH - 0.25);
+      if (!s.alive) return;
+      hat.hold(Z, "head", [0, 1.4, 0.02]);
+      await s.tween(0.25, u => { hat.root.position.y = 1.4 - (1.4 - 0.33) * u; }, u => u * u);
+      await s.after(0.35);
+      if (!s.alive) return;
+      if (beam) beam.visible = true;                         // click: on
+      await kit;
+      if (!s.alive) return;
+
+      // ---- in under the panel ----
+      await Z.face(1);
+      const lift = Z.perform("tiny-inspection/lift");
+      await s.after(LIFT);
+      this._run(s, panel, "lift", 1);
+      await lift;
+      if (!s.alive) return;
+      Z.clipRight(left + 2);
+      await Z.walkTo(left + 0.75 * ppm, {clip: "tiny-inspection/duck", mps: DUCK});   // all of him past the edge
+      if (!s.alive) return;
+      Z.show(false);
+      if (beam) beam.visible = false;
+      this._run(s, panel, "lift", -1);
+      await s.after(0.7);
+      if (!s.alive) return;
+      thump(1);
+
+      // ---- the inspection: his light moving about inside, leaking out ----
+      const el = (tag, attrs) => { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; };
+      const svg = s.svg.path({stroke: "none", width: 0}).el.ownerSVGElement;
+      const g = el("g", {});
+      const defs = el("defs", {});
+      const grad = el("linearGradient", {id: "zip-fan", x1: "0", y1: "0", x2: "0", y2: "1"});
+      grad.append(el("stop", {offset: "0", "stop-color": "#ffd23a", "stop-opacity": "0.9"}),
+                  el("stop", {offset: "1", "stop-color": "#ffd23a", "stop-opacity": "0"}));
+      const blur = el("filter", {id: "zip-glow", x: "-50%", y: "-50%", width: "200%", height: "200%"});
+      blur.append(el("feGaussianBlur", {stdDeviation: "2.5"}));
+      defs.append(grad, blur);
+      // the panel's seams, dark (so the light in them reads on a light page as well as a dark one), and the
+      // light in each
+      const seam = [[left, top - 1.5, pw, 3], [left, bottom - 1.5, pw, 3], [left - 1.5, top, 3, ph], [right - 1.5, top, 3, ph]];
+      const seams = seam.map(([x, y, w, h]) => el("rect", {x: x - 0.5, y: y - 0.5, width: w + 1, height: h + 1, fill: "#15161b", opacity: 0.8, rx: 2}));
+      const edges = seam.map(([x, y, w, h]) => el("rect", {x: x - 1, y: y - 1, width: w + 2, height: h + 2, fill: "#ffd84a",
+                                                       opacity: 0, rx: 2, filter: "url(#zip-glow)"}));
+      const holes = [[right - 0.06 * PS, top + 0.06 * PS], [left + 0.06 * PS, bottom - 0.06 * PS], [right - 0.06 * PS, bottom - 0.06 * PS]]
+        .map(([cx, cy]) => el("circle", {cx, cy, r: 5, fill: "#ffe66b", opacity: 0, filter: "url(#zip-glow)"}));
+      const dark = holes.map(h => el("circle", {cx: h.getAttribute("cx"), cy: h.getAttribute("cy"), r: 3.8, fill: "#15161b", opacity: 0.85}));
+      const fan = el("polygon", {fill: "url(#zip-fan)", opacity: 0});
+      g.append(defs, fan, ...seams, ...edges, ...dark, ...holes);
+      svg.appendChild(g);
+      s.page.undo(() => g.remove());
+      const t0 = s.clock();
+      let on = 1;
+      const light = s.tick(() => {
+        const t = s.clock() - t0;
+        // where the light is inside, roaming
+        const lx = left + pw * (0.5 + 0.42 * Math.sin(t * 1.3) * Math.cos(t * 0.37));
+        const ly = top + ph * (0.55 + 0.35 * Math.sin(t * 2.1 + 1));
+        const near = (x, y) => Math.max(0, 1 - Math.hypot(x - lx, y - ly) / (0.55 * pw));
+        const flick = 0.88 + 0.12 * Math.sin(t * 2.3);       // a slow drift: no flashing
+        edges[0].setAttribute("opacity", (on * flick * near(lx, top) * 0.9).toFixed(3));
+        edges[1].setAttribute("opacity", (on * flick * near(lx, bottom)).toFixed(3));
+        edges[2].setAttribute("opacity", (on * flick * near(left, ly) * 0.8).toFixed(3));
+        edges[3].setAttribute("opacity", (on * flick * near(right, ly) * 0.8).toFixed(3));
+        holes.forEach(h => h.setAttribute("opacity", (on * flick * Math.pow(near(+h.getAttribute("cx"), +h.getAttribute("cy")), 0.6)).toFixed(3)));
+        const fw = 0.3 * pw, spread = 1.3 * ppm;
+        fan.setAttribute("points", `${lx - fw / 2},${bottom} ${lx + fw / 2},${bottom} ${lx + fw / 2 + spread},${floor + 6} ${lx - fw / 2 - spread},${floor + 6}`);
+        fan.setAttribute("opacity", (on * flick * (0.5 + 0.5 * (ly - top) / ph)).toFixed(3));
+      });
+      await s.after(0.6);
+      if (!s.alive) return;
+      Z.say("hmm...", 1.1);
+      await s.after(0.8);
+      if (!s.alive) return;
+      thump(1);
+      await s.after(0.35);
+      if (!s.alive) return;
+      thump(0.7);
+      await s.after(0.5);
+      if (!s.alive) return;
+      Z.say("ooh!", 0.9);
+      await s.after(0.5);
+      if (!s.alive) return;
+      thump(1.4);
+      await s.after(0.3);
+      if (!s.alive) return;
+
+      // ---- out, in a cloud of dust, wearing what he found ----
+      on = 0;
+      light();
+      g.remove();
+      this._run(s, panel, "lift", 1);
+      puff.at(left + 0.25 * ppm, floor, ppm * 1.4);
+      puff.root.position.z = 30;
+      puff.play("billow");
+      const puffMats = [];
+      puff.root.traverse(m => { if (m.isMesh) { m.material = m.material.clone(); m.material.transparent = true; puffMats.push(m.material); } });
+      s.tween(1.8, u => puffMats.forEach(m => { m.opacity = 1 - u; }), u => u * u);
+      bunny.hold(Z, "head", [0, 0.5, 0.0]);
+      bunny.root.scale.setScalar(1.15);
+      bunny.play("jiggle", {loop: true});
+      Z.clipRight(left + 2);                                 // again: the hat, the torch and now the bunny too
+      Z.at(left + 0.55 * ppm, floor).show(true);
+      await s.after(0.2);
+      if (!s.alive) return;
+      await Z.walkTo(left - 0.7 * ppm, {clip: "tiny-inspection/duck", mps: DUCK});
+      if (!s.alive) return;
+      Z.clipRight(null);
+      this._run(s, panel, "lift", -1);
+      await Z.face(0);
+      await Z.perform("tiny-inspection/emerge");
+      if (!s.alive) return;
+      Z.play("idle", {loop: true});
+      await s.after(0.3);
+      if (!s.alive) return;
+      const sneeze = Z.perform("tiny-inspection/sneeze");
+      await s.after(SNEEZE);
+      if (!s.alive) return;
+      // the bunny jumps on the sneeze
+      s.tween(0.5, u => { bunny.root.position.y = 0.5 + 0.18 * Math.sin(Math.PI * u); }, u => u);
+      Z.say("achoo!", 1.0);
+      await sneeze;
+      if (!s.alive) return;
+      await Z.walkTo(innerWidth + 1.0 * ppm, {clip: "run", mps: RUN});
+      rattle();
+      if (!s.alive) return;
+      // the panel, done with, fades from the glass
+      const mats = [];
+      panel.root.traverse(m => { if (m.isMesh) { m.material = m.material.clone(); m.material.transparent = true; mats.push(m.material); } });
+      await s.tween(0.6, u => mats.forEach(m => { m.opacity = 1 - u; }), u => u);
+    },
+  }),
+
+  "unauthorized-renovation":
+  // The unauthorized renovation. Archie (and, when they're here, Zip and Brick) climbs onto the README viewer
+  // in a hard hat and hammers away at its corner, and a tiny balcony grows out of the viewer's right edge. A
+  // deck chair appears on it; Archie strolls out and settles in. Brick hands him an eviction notice. The
+  // balcony, chair, hats and notice are props beside the viewer; the viewer itself is untouched.
+  // Clips: unauthorized_renovation.py.
+  ({
+    cast: ["archie", "zip", "brick"],
+    pages: ["repo"],
+    ppm: 56,
+    ready(s) {
+      const r = s.page.rect(".source-preview .reader");
+      // room for a balcony beside it
+      return !!r && r.top > 180 && r.top < innerHeight - 200 && innerWidth - r.right > 160;
+    },
+    async play(s) {
+      const A = s.archie, ppm = A.ppm, T = s.T;
+      const R = () => s.page.rect(".source-preview .reader");
+      const edge = R().top, right = R().right;
+      const x0 = right - 1.2 * ppm;
+      // unauthorized_renovation.py: BALCONY_DEPTH, READ_TAKE; Archie's hard hat sits 0.37 m up his head bone
+      const DEPTH = 2.4, TAKE = 0.7;
+      const [hat, hammer, balcony, chair, notice, zhat, bhat, zhammer] = await Promise.all(["hard-hat-lime",
+        "hammer", "balcony", "deck-chair", "eviction-notice", "hard-hat-violet", "hard-hat-orange", "hammer"]
+        .map(n => s.prop(n)));
+      if (!s.alive) return;
+      const Z = s.zip, B = s.brick;
+      // hats on: each sits this far up its pal's head bone (the bone starts at the neck's top)
+      hat.hold(A, "head", [0, 0.37, 0.05]);
+      if (Z) zhat.hold(Z, "head", [0, 0.33, 0.02]);
+      if (B) bhat.hold(B, "head", [0, 0.26, -0.03]);
+      // the hammer upright in his right fist, its head forward
+      hammer.hold(A, "grip_R", [0, 0, 0], [0, 0, 0]);
+
+      A.clipBelow(edge);
+      A.at(x0, edge + 2.6 * ppm).show(true);
+      A.play("idle", {loop: true});
+      await s.tween(0.5, u => A.at(x0, edge + 2.6 * ppm * (1 - u)));
+      if (!s.alive) return;
+      A.clipBelow(null);
+      await A.face(1);
+      if (!s.alive) return;
+
+      if (Z) {
+        zhammer.hold(Z, "grip_R");
+        Z.clipBelow(edge);
+        Z.at(x0 - 1.4 * ppm, edge + 2.4 * ppm).show(true);
+        await s.tween(0.5, u => Z.at(x0 - 1.4 * ppm, edge + 2.4 * ppm * (1 - u)));
+        if (!s.alive) return;
+        Z.clipBelow(null);
+        await Z.face(1);
+        if (!s.alive) return;
+        Z.play("unauthorized-renovation/hammer", {loop: true});
+      }
+      // Hammering at the corner while the balcony grows out of the viewer's side: platform level with the
+      // viewer's top edge, side on (turned to stick out to the right) and stretched out DEPTH deep.
+      A.play("unauthorized-renovation/hammer", {loop: true});
+      balcony.at(right, edge, ppm);
+      balcony.root.rotation.y = Math.PI / 2;
+      balcony.root.scale.set(ppm, ppm, ppm * DEPTH);
+      balcony.root.position.z = -10;
+      balcony.play("build");
+      await s.after(2.2);
+      if (!s.alive) return;
+      const cx = right + 0.6 * 0.5 * DEPTH * ppm;
+      chair.at(cx, edge, ppm);
+      chair.root.position.z = -25;                          // behind him: he sits in it
+      await s.tween(0.3, u => chair.root.scale.setScalar(ppm * Math.max(0.01, u)));
+      if (!s.alive) return;
+
+      // Out onto it, and into the chair.
+      hammer.detach();
+      A.play("idle", {loop: true});
+      await A.walkTo(cx, {speed: 0.8});
+      if (!s.alive) return;
+      await A.face(0);
+      if (!s.alive) return;
+      await A.perform("unauthorized-renovation/sit");
+      if (!s.alive) return;
+      A.say("Ahh.", 1.2);
+      A.play("unauthorized-renovation/lounge", {loop: true});
+      await s.after(1.8);
+      if (!s.alive) return;
+
+      // The eviction notice: handed over by Brick, or, without him, floating down from above into his hand.
+      if (Z) { Z.play("idle", {loop: true}); }
+      if (B && B.has("unauthorized-renovation/present")) {
+        notice.hold(B, "grip_R");
+        notice.root.scale.setScalar(1.4);
+        B.clipBelow(edge);
+        B.at(right - 2.2 * ppm, edge + 3 * ppm).show(true);
+        await s.tween(0.6, u => B.at(right - 2.2 * ppm, edge + 3 * ppm * (1 - u)));
+        if (!s.alive) return;
+        B.clipBelow(null);
+        await B.walkTo(right - 0.6 * ppm);
+        if (!s.alive) return;
+        await B.face(1);
+        if (!s.alive) return;
+        await B.perform("unauthorized-renovation/present");
+      } else {
+        notice.at(cx - 0.2 * ppm, edge - 4 * ppm, ppm * 1.4);
+        notice.root.position.z = 40;
+        notice.play("flutter", {loop: true});
+        await s.tween(1.6, u => notice.root.position.set(cx - 0.3 * ppm + Math.sin(u * 7) * 0.2 * ppm,
+                                                                   -(edge - (4 - 2.6 * u) * ppm), 40), u => u);
+      }
+      if (!s.alive) return;
+      const read = A.perform("unauthorized-renovation/read");
+      await s.until(() => A.time() >= TAKE || !s.alive);
+      if (!s.alive) return;
+      notice.hold(A, "grip_R", [0, -0.1, 0.05]);
+      notice.root.scale.setScalar(1.4);
+      if (B) B.play("idle", {loop: true});
+      if (Z) Z.play("laugh");
+      await read;
+      if (!s.alive) return;
+      await s.after(0.8);
+    },
+  }),
+
+  "union-break":
+  // The union break. Along the bottom of the window, an app card is stuck fast in the floor at a tilt, and Archie,
+  // behind it, heaves at it: it shudders, and stays. He wipes his brow and whistles for help. In stroll Zip, with
+  // a picket sign, and Brick, lugging two folding chairs. Zip plants the sign -- YOUR POOR PLANNING IS NOT OUR
+  // EMERGENCY -- Brick unfolds the chairs beside it, and they sit down, arms folded. Archie stares. He gives up,
+  // and slumps over the card. The card, the sign and the chairs are props; the page is not touched.
+  // Clips: union_break.py.
+  ({
+    cast: ["archie", "zip", "brick"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 120,
+    ready(s) {
+      return innerWidth >= 1000 && innerHeight >= 480;       // Brick standing, and the six metres of them
+    },
+
+    async play(s) {
+      const INOUT = u => u * u * (3 - 2 * u);                // s.tween's easings (its own is an ease-out)
+      const A = s.archie, Z = s.zip, B = s.brick, T = s.T, ppm = A.ppm;
+      const P = n => `union-break/${n}`;
+      // union_break.py: the card; the sign and where Zip plants it from; the chairs, how Brick holds them and
+      // sets them down; how far in front of his chair each pal sits; Zip's and Brick's depths, walking in
+      const CARD_S = 1.5, CARD_Y = -0.45, CARD_Z = 0.35, TILT = 9 * Math.PI / 180;
+      const PULLS = [[0.9, 1.7], [2.0, 2.9]];
+      const SIGN_S = 1.3, STICK_GRIP = 0.7 * SIGN_S, PLANT_AT = 0.75, ZIP_PLANT_X = 2.2;
+      const CHAIR_S = {zip: 1.0, brick: 1.4}, CHAIR_TOP = {y: 0.18, z: 0.89}, SET_AT = 1.1, BRICK_SET_X = 3.65;
+      const SEAT_FROM = {zip: 0.27, brick: 0.5}, ZIP_Y = -0.3, BRICK_Y = -0.25;
+      const YAW = -0.6;                                      // chairs and sitters turned towards Archie: the chairs show
+      const W = innerWidth, floor = innerHeight - 8;
+      const x0 = Math.round(Math.max(ppm + 20, Math.min(W - 5.6 * ppm - 20, 0.3 * W)));   // Archie, behind the card
+
+      const [card, sign, zc, bc] = await Promise.all(["app-card", "picket-sign", "folding-chair", "folding-chair"].map(n => s.prop(n)));
+      if (!s.alive) return;
+      s.page.undo(() => [card, sign, zc, bc].forEach(p => p.remove()));
+
+      // The card, stuck in the floor: tipped, and cut off at the floor's line.
+      card.at(x0, floor - CARD_Z * ppm, ppm * CARD_S);
+      card.root.position.z = -CARD_Y * ppm;
+      card.root.rotation.z = -TILT;
+      const cut = [new T.Plane(new T.Vector3(0, 1, 0), floor)];
+      card.model.traverse(m => { if (m.isMesh) [].concat(m.material).forEach(mat => { mat.clippingPlanes = cut; mat.needsUpdate = true; }); });
+
+      // The chairs, folded, each hanging from one of Brick's hands by the middle of its back, turned YAW.
+      const v = new T.Vector3();
+      const folded = c => { const a = c.play("fold"); if (a) a.time = c.clips.fold.duration; };
+      folded(zc);
+      folded(bc);
+      const hang = (c, sc, bone) => {
+        c.at(-1e4, 0, ppm * sc);
+        c.root.rotation.y = YAW;
+        const back = CHAIR_TOP.y * sc * ppm;                 // the origin, in front of the back's rail
+        return s.tick(() => {
+          const b = B.bone(bone);
+          if (!b) return;
+          b.getWorldPosition(v);
+          c.root.position.set(v.x + back * Math.sin(YAW), v.y - CHAIR_TOP.z * sc * ppm, v.z + back * Math.cos(YAW));
+        });
+      };
+      // The sign, in Zip's right hand by its stick: turned with him (edge on, as he walks).
+      const holder = new T.Group();
+      holder.add(sign.root);
+      sign.root.position.set(0, -STICK_GRIP, 0);
+      sign.root.scale.setScalar(SIGN_S);
+
+      // In he walks, behind the card, and heaves at it. Twice.
+      A.at(-0.5 * ppm, floor).show(true);
+      A.play("idle", {loop: true});
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      if (!s.alive) return;
+      const t0 = s.clock();
+      const shudder = s.tick(() => {                          // the card shudders, while he heaves (motion, not light)
+        const t = s.clock() - t0;
+        const e = PULLS.reduce((m, [a, b]) => Math.max(m, Math.min(1, (t - a) / 0.25, (b - t) / 0.2)), 0);
+        card.root.rotation.z = -TILT + 0.012 * Math.max(0, e) * Math.sin(2 * Math.PI * 7 * t);
+      });
+      const heave = A.perform(P("heave"));
+      await s.after(1.0);
+      if (!s.alive) return;
+      A.say("Hnnngh!", 0.9);
+      await s.after(1.1);
+      if (!s.alive) return;
+      A.say("HNNNGH!", 0.9);
+      await heave;
+      if (!s.alive) return;
+      shudder();
+      card.root.rotation.z = -TILT;
+      const wipe = A.perform(P("wipe"));
+      await s.after(0.5);
+      if (!s.alive) return;
+      A.say("It's stuck.", 1.2);
+      await wipe;
+      if (!s.alive) return;
+
+      // He whistles for help. Help arrives, at its own pace.
+      const whistle = A.perform(P("whistle"));
+      await s.after(0.3);
+      if (!s.alive) return;
+      Z.at(W + 0.5 * ppm, floor).depth(-ZIP_Y * ppm).show(true);
+      B.at(W + 1.4 * ppm, floor).depth(-BRICK_Y * ppm).show(true);
+      const offSign = s.attach(holder, Z, "grip_R");
+      const offZc = hang(zc, CHAIR_S.zip, "grip_R"), offBc = hang(bc, CHAIR_S.brick, "grip_L");
+      const zipIn = Z.walkTo(x0 + ZIP_PLANT_X * ppm, {clip: P("carry-sign")}).then(() => s.alive && Z.face(0));
+      const brickIn = B.walkTo(x0 + BRICK_SET_X * ppm, {clip: P("lug"), speed: 1.3}).then(() => s.alive && B.face(0));
+      await whistle;
+      if (!s.alive) return;
+      A.say("Over here!", 1.2);
+      await zipIn;
+      if (!s.alive) return;
+
+      // Zip plants the sign, and Brick sets the chairs down, and unfolds them.
+      const plant = Z.perform(P("plant-sign"));
+      await s.after(PLANT_AT);
+      if (!s.alive) return;
+      sign.root.getWorldPosition(v);
+      offSign();
+      sign.at(v.x, -v.y, ppm * SIGN_S);                      // standing on its own now
+      sign.root.position.z = v.z;
+      holder.removeFromParent();
+      await brickIn;
+      if (!s.alive) return;
+      A.say("Great! Grab that end and—", 1.8);
+      const set = B.perform(P("set-chairs"));
+      await s.after(SET_AT);
+      if (!s.alive) return;
+      offZc();
+      offBc();
+      for (const c of [zc, bc]) { c.mixer.stopAllAction(); c.play("unfold"); }
+      await plant;
+      if (!s.alive) return;
+
+      // They sit down beside it.
+      const sit = async (pal, c) => {
+        // over to it, and (unseen, in depth) to just in front of it
+        const f = SEAT_FROM[pal.name] * ppm;
+        const from = pal.x, x1 = c.root.position.x + f * Math.sin(YAW), z0 = pal.z, z1 = c.root.position.z + f * Math.cos(YAW);
+        const off = s.tick(() => pal.depth(z0 + (z1 - z0) * INOUT(Math.min(1, Math.abs((pal.x - from) / (x1 - from || 1))))));
+        await pal.walkTo(x1, pal === B ? {speed: 1.3} : {});
+        if (!s.alive) return;
+        off();
+        pal.depth(z1);
+        await pal.face(0, YAW);
+        if (!s.alive) return;
+        await pal.perform(P("sit-down"));
+        if (s.alive) pal.play(P("seated"), {loop: true});
+      };
+      const zipSat = sit(Z, zc);
+      await s.after(0.5);
+      if (!s.alive) return;
+      await set;
+      if (!s.alive) return;
+      const brickSat = sit(B, bc);
+      await zipSat;
+      if (!s.alive) return;
+      Z.say("Union break.", 1.6);
+      await brickSat;
+      if (!s.alive) return;
+
+      // Archie looks at them. They look back.
+      const stare = A.perform(P("stare"));
+      await s.after(0.9);
+      if (!s.alive) return;
+      A.say("...Seriously?", 1.4);
+      await stare;
+      if (!s.alive) return;
+      B.say("Read the sign.", 1.6);
+      await s.after(1.8);
+      if (!s.alive) return;
+
+      // He gives up.
+      await A.perform(P("slump"));
+      if (!s.alive) return;
+      A.play(P("slump-hold"), {loop: true});
+      A.say("...Fine.", 1.3);
+      await s.after(1.9);
+    },
+  }),
+
+  "unnecessary-crew":
+  // The unnecessary crew. Up on the home page's spotlight, Archie tries to shift one tiny button with a
+  // fingertip and can't. He whistles for help. Brick and Zip turn up with a row of traffic cones, and a lifting
+  // harness built for a car comes down out of the sky; they rig the button into it and up it goes, Archie
+  // waving it away like a banksman. The button, cones and harness are props: none of the page's own buttons is
+  // touched. Clips: unnecessary_crew.py.
+  ({
+    cast: ["archie", "zip", "brick"],
+    pages: ["home"],
+    ppm: 58,
+    ready(s) {
+      const r = s.page.rect("article.hero");
+      return !!r && r.width > 800 && r.top > 170 && r.top < innerHeight - 220;
+    },
+    // Up from behind the element whose top edge is `edge`, to stand at x (clipped at the edge on the way).
+    async _rise(s, a, x, edge, clip = "idle") {
+      a.clipBelow(edge);
+      a.at(x, edge + 3 * a.ppm).show(true);
+      a.play(clip, {fade: 0, loop: true});
+      await s.tween(0.55, u => a.at(x, edge + 3 * a.ppm * (1 - u)));
+      if (!s.alive) return;
+      a.clipBelow(null);
+    },
+    async play(s) {
+      const A = s.archie, ppm = A.ppm, T = s.T;
+      const H = () => s.page.rect("article.hero");
+      const edge = H().top;
+      const x0 = H().left + H().width * 0.32;
+      // unnecessary_crew.py: BUTTON_SCALE, BUTTON_X, CONES, BRICK_X, ZIP_X; the harness's cradle hangs 1.95 m
+      // below its origin (props_set.py), here drawn HS times over
+      const BS = 1.6, BXp = 0.5, CONES = [-0.2, 1.2, 1.9], BRX = 2.8, ZPX = -1.4, HS = 1.3;
+      const [btn, harness, ...cones] = await Promise.all([s.prop("tiny-button"), s.prop("lifting-harness"),
+                                                         ...CONES.map(() => s.prop("traffic-cone"))]);
+      if (!s.alive) return;
+      const bx = x0 + BXp * ppm;
+      btn.at(bx, edge, ppm * BS);
+      btn.root.position.z = 30;
+
+      A.at(x0 - 3.5 * ppm, edge).show(true);
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      if (!s.alive) return;
+      await A.perform("unnecessary-crew/push");
+      if (!s.alive) return;
+      A.say("Fweeet!", 1.2);
+      await A.perform("unnecessary-crew/whistle");
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+
+      // The crew: Brick and Zip (when they're here) and their cones, set out round the button.
+      // Brick carries the cones in, a stack between his hands; Zip runs in after him.
+      const Z = s.zip, B = s.brick;
+      cones.forEach(c => c.at(0, 0, ppm));
+      let carried = !!B;
+      const stack = s.tick(() => {
+        if (!carried) return;
+        const h = B.handsAt();
+        cones.forEach((c, i) => c.root.position.set(h.x, -(h.y - 0.1 * ppm * i + 0.25 * ppm), 60 + i));
+      });
+      if (B) {
+        await this._rise(s, B, x0 + BRX * ppm, edge, "lift-hold");
+        if (!s.alive) return;
+        await B.perform("set-down");
+      }
+      carried = false;
+      stack();
+      for (const [i, cxm] of CONES.entries()) {
+        const g = cones[i].root;
+        const x = x0 + cxm * ppm;
+        if (!B) g.position.set(x, -(edge - 1.2 * ppm), 10 + i);
+        const f0 = {x: g.position.x, y: g.position.y};
+        s.tween(0.4, u => g.position.set(f0.x + (x - f0.x) * u, f0.y + (-edge - f0.y) * u, 10 + i), u => u * u);
+        await s.after(0.25);
+      }
+      if (!s.alive) return;
+      if (Z) {
+        Z.at(H().left - 1 * ppm, edge).show(true);
+        await Z.walkTo(x0 + ZPX * ppm, {clip: "run", mps: 3.75});
+        if (!s.alive) return;
+        await Z.face(0);
+        if (!s.alive) return;
+        Z.play("point");
+      }
+
+      // The harness, down out of the sky until its cradle is on the edge round the button.
+      const drop = 1.95 * HS * ppm;
+      const hx = bx;
+      harness.at(hx, -40 - drop, ppm * HS);
+      harness.root.position.z = -20;
+      harness.play("sway", {loop: true});
+      A.play("unnecessary-crew/direct", {loop: true});
+      const yDown = edge - drop;
+      await s.tween(2.4, u => harness.root.position.set(hx, -(-40 - drop + (yDown + drop + 40) * u), -20), u => u * (2 - u));
+      if (!s.alive) return;
+      // In it goes -- Brick lifts it in with both hands, as if it weighed a ton -- and up.
+      if (B) {
+        await B.walkTo(hx + 1.3 * ppm);
+        if (!s.alive) return;
+        await B.face(-1);
+        if (!s.alive) return;
+        const lift = B.perform("lift");
+        await s.after(0.9);
+        if (!s.alive) return;
+        const carry = s.tick(() => { const h = B.handsAt(); btn.root.position.set(h.x, -(h.y + 0.05 * ppm), 70); });
+        await lift;
+        if (!s.alive) return;
+        carry();
+        B.play("set-down");
+        await s.after(1.0);
+      } else {
+        await s.after(0.6);
+      }
+      const off = s.tick(() => { btn.root.position.set(hx, harness.root.position.y - drop + 0.06 * ppm, 30); });
+      await s.after(0.4);
+      if (!s.alive) return;
+      await s.tween(2.2, u => harness.root.position.y = -(yDown - (yDown + drop + 60) * u), u => u * u);
+      if (!s.alive) return;
+      off();
+      btn.detach();
+      if (Z) Z.play("cheer");
+      if (B) B.play("nod");
+      await A.perform("unnecessary-crew/thumbs");
+      if (!s.alive) return;
+      await s.after(0.4);
+    },
+  }),
+
+  "victory-dance-theft":
+  // The victory dance theft. Along the bottom of the window: Archie, "Watch this!", starts his big dance. Brick,
+  // standing by and unimpressed, casually does his own move -- smooth as anything, ending in a lean no one
+  // should be able to do, and a point at the reader. Archie has stopped dead and is staring. He slides quietly
+  // out of the window. Brick raises an eyebrow. Clips: victory_dance_theft.py, and Brick's `much-better`.
+  ({
+    cast: ["archie", "brick"],
+    pages: ["home", "topic", "catalog", "discover", "collections", "repo"],
+    ppm: 62,
+    ready(s) {
+      return document.documentElement.clientWidth > 7 * 62 && innerHeight > 3.4 * 62;
+    },
+    async play(s) {
+      const A = s.archie, B = s.brick, ppm = 62;
+      const W = document.documentElement.clientWidth, floor = innerHeight - 6;
+      // victory_dance_theft.py: BRICK_X -3.0, SLINK_SPEED (0.5 / (0.6 * 0.9) m/s, to his left)
+      const ax = W - 2.6 * ppm, bx = ax - 3.0 * ppm, SLINK = 0.5 / (0.6 * 0.9);
+      A.at(ax, floor, ppm).show(true);
+      B.at(bx, floor, ppm).show(true);
+      B.turn.position.z = -0.5;
+      A.play("idle", {loop: true});
+      B.play("victory-dance-theft/watch", {loop: true});
+      await s.after(0.7);
+      if (!s.alive) return;
+      A.say("Watch this!", 1.4);
+      await s.after(0.9);
+      if (!s.alive) return;
+      A.play(A.has("default-dance") ? "default-dance" : "idle", {fade: 0.3});
+      await s.after(4.4);
+      if (!s.alive) return;
+      // Brick's move; a second in, Archie stops dead
+      const move = B.perform("much-better", {fade: 0.3});
+      await s.after(0.9);
+      if (!s.alive) return;
+      A.play("victory-dance-theft/stare", {fade: 0.12});
+      // side on for the lean (brick_base.py much-better: 5.0-6.7 s), leaning in at Archie, and back
+      await s.until(() => B.time() >= 4.75 || !s.alive);
+      B.face(1);
+      await s.until(() => B.time() >= 6.75 || !s.alive);
+      B.face(0);
+      await move;
+      if (!s.alive) return;
+      B.play("idle", {loop: true});
+      await s.after(0.5);
+      if (!s.alive) return;
+      // and away he goes, sideways, quietly
+      A.play("victory-dance-theft/slink", {loop: true, fade: 0.3});
+      const to = W + 0.9 * ppm, v = SLINK * ppm;
+      await new Promise(res => {
+        const stop = s.tick(dt => { A.x = Math.min(to, A.x + v * dt); if (A.x >= to || !s.alive) { stop(); res(); } });
+      });
+      if (!s.alive) return;
+      await B.perform("raise-brow");
+      B.play("idle", {loop: true});
+      await s.after(0.4);
+    },
+  }),
+
+  "world-needs-leveling":
+  // The world needs leveling. Archie opens the Atlas Core and its world comes up crooked (its tilt clip). He
+  // gets out a spirit level and sets it on the main island -- the world sits beside him, the island under his
+  // hand -- and fiddles: the stage comes level (its level clip), and every other island tips. He fiddles again;
+  // they tip further. Brick strolls over and gently takes the level away, and once it has gone everything
+  // settles level on its own. "But I..." Clips: world_needs_leveling.py (and _corekit.py's take/back).
+  ({
+    cast: ["archie", "brick"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1050 && innerHeight >= 620;     // the world and Brick on his right
+    },
+
+    async play(s) {
+      const A = s.archie, B = s.brick, T = s.T;
+      const W = innerWidth, floor = innerHeight - 8, x0 = Math.round(W * 0.56);
+      const core = await s.core(A);
+      const level = await s.prop("level");
+      if (!s.alive) return;
+      s.page.undo(() => level.remove());
+      // world_needs_leveling.py: BRICK (-2.3, 0.2), LEVEL_AT (-0.84, ., 1.69), LEVEL_GRIP 0.1, LEVEL_ON 0.6,
+      // LET_GO 0.55, TAKE_AT 1.1
+      const bx = x0 - 2.3 * A.ppm;
+      const v = new T.Vector3();
+      const pageOf = o => { o.getWorldPosition(v); return {x: v.x, y: -v.y}; };
+      A.at(x0, floor).show(true);
+      A.play("idle", {loop: true});
+      await s.after(0.5);
+      if (!s.alive) return;
+      const take = A.perform("world-needs-leveling/take");
+      await s.after(0.62);                                  // _corekit.GRAB
+      core.hold();
+      await take;
+      if (!s.alive) return;
+      A.play("world-needs-leveling/hold", {loop: true});
+      core.play("unfold");
+      await s.after(0.9);
+      if (!s.alive) return;
+      core.play("open-idle", {loop: true});
+
+      // The world, beside him on his right, its main island just where his level will go; a beam to it.
+      const SIZE = 250, r = SIZE / 2;
+      const proj = await s.project(s.where().world);
+      if (!s.alive || !proj) return;
+      // the island he levels: the one on the world's right, nearest him (the rest of the world clear of him)
+      const w = proj.world;
+      proj.free(0, 0, SIZE);
+      proj.root.updateMatrixWorld(true);
+      let main = null, best = -Infinity;
+      w.traverse(n => { if (/^island_/.test(n.name)) { const x = pageOf(n).x; if (x > best) { best = x; main = n; } } });
+      const spot = {x: x0 - 0.84 * A.ppm, y: floor - 1.69 * A.ppm};
+      // where its main island sits from the world's middle, at full size (measured again once it has risen)
+      const measure = () => {
+        proj.free(0, 0, SIZE);
+        proj.root.updateMatrixWorld(true);
+        const m = main ? pageOf(main) : {x: 0, y: -r * 0.3}, c = pageOf(proj.root);
+        return {x: m.x - c.x, y: m.y - c.y};
+      };
+      let off = measure(), offFrom = off, offTo = off, offAt = 0, grow = 0;
+      const beam = s.svg.path({stroke: "none", width: 0});
+      beam.el.setAttribute("fill", "url(#pals-beam)");
+      beam.el.setAttribute("opacity", "0.55");
+      const t0 = s.clock();
+      const place = s.tick(() => {
+        grow = 1 - Math.pow(1 - Math.min(1, (s.clock() - t0) / 0.5), 3);
+        const u = offAt ? Math.min(1, (s.clock() - offAt) / 0.4) : 1;
+        off = {x: offFrom.x + (offTo.x - offFrom.x) * u, y: offFrom.y + (offTo.y - offFrom.y) * u};
+        const cx = spot.x - off.x, cy = spot.y - off.y + 4;
+        proj.free(cx, cy, Math.max(1e-3, SIZE * grow));
+        const p = core.page(), dx = r * 0.85 * grow, dy = r * 0.32 * grow;
+        beam.el.setAttribute("d", `M${p.x - 2} ${p.y} L${p.x + 2} ${p.y} L${cx + dx} ${cy + dy} L${cx - dx} ${cy + dy} Z`);
+      });
+      s.after(0.85).then(() => { if (!s.alive) return; offFrom = off; offTo = measure(); offAt = s.clock(); });
+      await s.after(0.8);
+      if (!s.alive) return;
+      proj.play("tilt");
+      await s.after(1.0);
+      A.say("Hm. Crooked.", 1.3);
+      await s.after(0.6);
+      if (!s.alive) return;
+
+      // The level out and onto it.
+      const lo = A.perform("world-needs-leveling/level-out");
+      await s.after(0.6);                                   // LEVEL_ON
+      const inHand = s.attach(level.root, A, "grip_R", {offset: [0, 0, 0.1]});
+      await lo;
+      if (!s.alive) return;
+      level.play("measure");
+
+      // Every island but the one he's levelling tips a little further each time he fiddles with it.
+      const isles = [];
+      w.traverse(n => { if (/^island_/.test(n.name) && n !== main) isles.push(n); });
+      const tips = isles.map((n, i) => ({n, q0: null,
+        axis: new T.Vector3(Math.cos(i * 2.4), 0, Math.sin(i * 2.4)).normalize(), sign: i % 2 ? 1 : -1}));
+      let tipNow = 0, tipFrom = 0, tipTo = 0, tipAt = 0, tipSecs = 0.5, tipping = null;
+      const dq = new T.Quaternion();
+      const tipBy = (deg, secs = 0.5) => {
+        tips.forEach(t => { if (!t.q0) t.q0 = t.n.quaternion.clone(); });
+        tipFrom = tipNow; tipTo = deg; tipAt = s.clock(); tipSecs = secs;
+        if (!tipping) tipping = s.tick(() => {
+          const u = Math.min(1, (s.clock() - tipAt) / tipSecs), e = 1 - Math.pow(1 - u, 3);
+          tipNow = tipFrom + (tipTo - tipFrom) * e;
+          tips.forEach(t => t.n.quaternion.copy(t.q0).multiply(dq.setFromAxisAngle(t.axis, tipNow * t.sign * Math.PI / 180)));
+        });
+      };
+      s.page.undo(() => tips.forEach(t => { if (t.q0) t.n.quaternion.copy(t.q0); }));
+      const fiddle = async (deg, line) => {
+        const f = A.perform("world-needs-leveling/fiddle");
+        await s.after(0.8);
+        if (!s.alive) return;
+        if (deg === 12) proj.play("level");
+        level.play(deg === 12 ? "tip_left" : "tip_right");
+        await s.after(0.7);
+        if (!s.alive) return;
+        if (line) A.say(line, 1.1);
+        await s.after(0.3);
+        tipBy(deg);
+        await f;
+      };
+      await fiddle(12, "There.");
+      if (!s.alive) return;
+      // Brick has seen enough, and sets off.
+      B.at(-1.2 * A.ppm, floor).show(true);
+      B.depth(-0.2 * B.ppm);                                // a little behind Archie
+      const comes = B.walkTo(bx);
+      await A.perform("world-needs-leveling/huh");
+      if (!s.alive) return;
+      A.say("Hold still...", 1.2);
+      await fiddle(24, null);
+      if (!s.alive) return;
+      A.play("world-needs-leveling/huh", {loop: true});
+
+      // Brick, gently, takes the level away. It all settles, on its own.
+      await comes;
+      if (!s.alive) return;
+      await B.face(0);
+      const tk = B.perform("world-needs-leveling/take-level");
+      await s.after(1.1 - 0.55);                            // TAKE_AT - LET_GO
+      const lg = A.perform("world-needs-leveling/let-go");
+      await s.after(0.55);
+      if (!s.alive) return;
+      inHand();
+      s.attach(level.root, B, "grip_L", {offset: [0, 0, 0.1]});
+      await tk;
+      if (!s.alive) return;
+      const gone = B.walkTo(-1.4 * A.ppm);
+      await s.after(0.6);
+      tipBy(0, 1.0);
+      await lg;
+      if (!s.alive) return;
+      A.say("But I...", 1.0);
+      await A.perform("world-needs-leveling/protest");
+      if (!s.alive) return;
+      if (tipping) { tipping(); tipping = null; }           // the world's own idle has them again
+      proj.idle();
+      A.play("world-needs-leveling/hold", {loop: true});
+      await gone;
+      await s.after(0.4);
+      if (!s.alive) return;
+
+      proj.hide(0.3);
+      beam.fade(0.3);
+      await s.after(0.3);
+      place();
+      core.play("fold");
+      await s.after(0.9);
+      const back = A.perform("world-needs-leveling/back");
+      await s.after(0.86);                                  // _corekit.DOCK
+      core.dock();
+      await back;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(0.8);
+    },
+  }),
+
+  "world-sized-flex":
+  // The world-sized flex. Archie opens the Atlas Core on the page's world and presents it with enormous
+  // theatrical effort -- heave, heave, HEAVE -- and the projection swells to tower over the page. Zip strolls
+  // over, reaches up and turns the Core's size dial down: the world shrinks to a speck on the Core. Archie
+  // deflates. "...thanks." Clips: world_sized_flex.py (and _corekit.py's take/back).
+  ({
+    cast: ["archie", "zip"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1000 && innerHeight >= 620;
+    },
+
+    async play(s) {
+      const A = s.archie, Z = s.zip, T = s.T;
+      const W = innerWidth, H = innerHeight, floor = H - 8, x0 = Math.round(W * 0.36);
+      const core = await s.core(A);
+      if (!s.alive) return;
+      const ease = u => 1 - Math.pow(1 - Math.min(1, Math.max(0, u)), 3);
+      A.at(-0.45 * A.ppm, floor).show(true);
+      A.play("idle", {loop: true});
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      const take = A.perform("world-sized-flex/take");
+      await s.after(0.62);                                  // _corekit.GRAB
+      core.hold();
+      await take;
+      if (!s.alive) return;
+      A.play("world-sized-flex/hold", {loop: true});
+      core.play("unfold");
+      await s.after(0.9);
+      if (!s.alive) return;
+      core.play("open-idle", {loop: true});
+
+      // The world, where the Core puts it; then wherever and however big this bit says.
+      // at its biggest the world stands about 70% of the window high (it draws about 0.85 of its width tall),
+      // so the page still shows round it; and it is that big for little more than a second
+      const SIZE = 260, BIG = Math.min(W * 0.62, H * 0.82), TINY = 54;
+      const proj = await s.project(s.where().world);
+      if (!s.alive || !proj) return;
+      const usual = () => {                                 // archie-stage.js project()'s own placement
+        const p = core.page(), r = SIZE / 2, side = p.x + r * 2.5 < W - 8 ? 1 : -1;
+        return {x: p.x + side * r * 1.35, y: Math.max(r * 1.3 + 6, p.y - r * 1.1), size: SIZE};
+      };
+      const big = {x: W * 0.52, y: H * 0.46, size: BIG};
+      let k = 0, kTo = 0, kAt = 0, kFrom = 0, mode = "at", shrink = 0;
+      const follow = s.tick(() => {
+        const p = core.page();
+        if (mode === "at") { proj.at(p.x, p.y, SIZE, 1); return; }
+        k = kFrom + (kTo - kFrom) * ease((s.clock() - kAt) / 0.4);
+        const a = usual(), tiny = {x: p.x, y: p.y - 42, size: TINY};
+        const at = (u, from, to) => from + (to - from) * u;
+        let x = at(k, a.x, big.x), y = at(k, a.y, big.y), size = at(k, a.size, big.size);
+        x = at(shrink, x, tiny.x); y = at(shrink, y, tiny.y); size = at(shrink, size, tiny.size);
+        proj.free(x, y, size);
+        proj.root.position.z = 400;                         // in front of the cast, however small it gets
+      });
+      s.after(0.8).then(() => s.alive && proj.idle());
+      // Zip has seen it and is on his way over.
+      Z.at(W + 0.5 * Z.ppm, floor).show(true);
+      Z.depth(0.15 * Z.ppm);                                // a little in front of Archie
+      const zipIn = Z.walkTo(x0 + 0.85 * A.ppm).then(() => s.alive && Z.face(0));   // world_sized_flex.py ZIP
+      await s.after(1.0);
+      if (!s.alive) return;
+
+      // Behold. Heave. HEAVE.
+      A.say("Behold!", 1.0);
+      await s.after(0.6);
+      const heave = A.perform("world-sized-flex/heave");
+      for (const [i, at] of [0.7, 1.7, 2.7].entries()) {    // HEAVES
+        await s.after(at - (i ? [0.7, 1.7, 2.7][i - 1] : 0));
+        if (!s.alive) return;
+        mode = "free"; kFrom = k; kTo = (i + 1) / 3; kAt = s.clock();
+      }
+      await heave;
+      if (!s.alive) return;
+      A.play("world-sized-flex/strain", {loop: true});
+      await zipIn;
+      if (!s.alive) return;
+
+      // Zip turns it down.
+      const dial = core.scene.getObjectByName("dial"), q0 = dial ? dial.quaternion.clone() : null;
+      if (dial) s.page.undo(() => dial.quaternion.copy(q0));
+      const yq = new T.Quaternion(), Y = new T.Vector3(0, 1, 0);
+      const turn = Z.perform("world-sized-flex/dial");
+      await s.after(1.05);                                  // TURN
+      if (!s.alive) return;
+      const t0 = s.clock();
+      const twist = s.tick(() => {
+        const u = Math.min(1, (s.clock() - t0) / 0.8);
+        shrink = ease(u);
+        if (dial) dial.quaternion.copy(q0).multiply(yq.setFromAxisAngle(Y, -2.6 * ease(u)));
+        if (u >= 1) twist();
+      });
+      await s.after(0.8);
+      if (!s.alive) return;
+      A.perform("world-sized-flex/deflate");
+      await turn;
+      if (!s.alive) return;
+      Z.play("idle", {loop: true});
+      await s.after(1.0);
+      A.say("...thanks.", 1.2);
+      await s.after(1.4);
+      if (!s.alive) return;
+      const off = Z.walkTo(W + 0.6 * Z.ppm);
+
+      proj.hide(0.3);
+      await s.after(0.3);
+      follow();
+      core.play("fold");
+      await s.after(0.9);
+      const back = A.perform("world-sized-flex/back");
+      await s.after(0.86);                                  // _corekit.DOCK
+      core.dock();
+      await back;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await off;
+      await s.after(0.5);
+    },
+  }),
+
+  "wrong-category":
+  // Wrong category. Archie walks in, takes the Atlas Core out of his belly and announces the coding workshop.
+  // It unfolds onto the creative-media world instead -- a tiny stage, its disco ball turning, its spotlights
+  // swinging, two little hologram dancers flossing -- whatever page this is. A double take; he holds the Core
+  // up to his face and taps it; still dancing. He shrugs and joins in, then folds it away. Clips:
+  // wrong_category.py (and _corekit.py's take/back).
+  ({
+    cast: ["archie"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      if (innerWidth < 900 || innerHeight < 600) return false;
+      // on the creative-media pages it would be the right category
+      const canon = document.querySelector('link[rel="canonical"]');
+      return !/creative-voice-media/.test((canon && canon.href) || location.pathname);
+    },
+
+    async play(s) {
+      const A = s.archie, T = s.T;
+      const floor = innerHeight - 8, x0 = Math.round(innerWidth * 0.3);
+      const core = await s.core(A);
+      if (!s.alive) return;
+      A.at(-0.45 * A.ppm, floor).show(true);
+      A.play("idle", {loop: true});
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      const take = A.perform("wrong-category/take");
+      await s.after(0.62);                                  // _corekit.GRAB
+      core.hold();
+      await take;
+      if (!s.alive) return;
+      A.play("wrong-category/hold", {loop: true});
+      A.say("Behold: the coding workshop!", 2.4);
+      await s.after(0.5);
+      core.play("unfold");
+      const present = A.perform("wrong-category/present");
+      await s.after(0.9);
+      if (!s.alive) return;
+      core.play("open-idle", {loop: true});
+
+      // The projection: the creative-media world, whatever page this is, up to his left over the Core.
+      const SIZE = 270;
+      const proj = await s.project("creative-voice-media");
+      if (!s.alive || !proj) return;
+      const follow = s.tick(() => { const p = core.page(); proj.at(p.x, p.y, SIZE, 1); });
+      const w = proj.world, node = n => w.getObjectByName(n);
+      const disco = node("disco"), spots = [node("spot_1"), node("spot_2")], stage = node("anchor_stage");
+      // the world is shared with every other showing of it: put back what this bit turns and adds
+      const turned = [disco, ...spots].filter(Boolean).map(n => [n, n.rotation.clone()]);
+      s.page.undo(() => turned.forEach(([n, r]) => n.rotation.copy(r)));
+      // Its dance number: the ball turning, the spots swinging, two little hologram dancers flossing.
+      const t0 = s.clock();
+      const show = s.tick(() => {
+        const t = s.clock() - t0;
+        if (disco) disco.rotation.y = t * 2.2;
+        spots.forEach((sp, i) => { if (sp) sp.rotation.z = 0.45 * Math.sin(t * 2.4 + i * Math.PI); });
+      });
+      const dances = await s.glb("archie-dances.glb");
+      const floss = dances.animations.find(c => c.name === "floss");
+      const dancers = await s.figures("holo-agent", 2);
+      if (!s.alive) return;
+      dancers.forEach((d, i) => {
+        (stage || w).add(d.root);
+        d.root.position.set(i ? 0.16 : -0.16, 0, 0.02);
+        d.root.scale.setScalar(1e-4);
+        if (floss) d.play(floss);
+      });
+      proj.idle();
+      const born = s.clock();
+      const grow = s.tick(() => {
+        const k = Math.min(1, (s.clock() - born) / 0.4);
+        for (const d of dancers) d.root.scale.setScalar(0.1 * (1 - Math.pow(1 - k, 3)) + 1e-4);
+      });
+      await present;
+      if (!s.alive) return;
+      A.play("wrong-category/hold", {loop: true});
+      await s.after(0.6);
+      if (!s.alive) return;
+
+      // A double take; the Core up to his face, tapped; still dancing.
+      const huh = A.perform("wrong-category/huh");
+      await s.after(1.0);
+      A.say("...huh?", 1.2);
+      await huh;
+      if (!s.alive) return;
+      A.say("Okay then.", 1.2);
+      await A.perform("wrong-category/disco");
+      if (!s.alive) return;
+
+      // Folded away.
+      proj.hide(0.35);
+      await s.after(0.35);
+      follow(); show(); grow();
+      core.play("fold");
+      await s.after(0.9);
+      const back = A.perform("wrong-category/back");
+      await s.after(0.86);                                  // _corekit.DOCK
+      core.dock();
+      await back;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(0.8);
+    },
+  }),
+
+  "wrong-way-up":
+  // Wrong way up. Along the bottom of the window, Archie leads the way in and Brick follows, carrying a big app
+  // card (a picture of the spotlight's, drawn here; edge on while he walks). They turn to the reader: the card is
+  // upside down. Archie presents it, grandly. Brick, without a word, turns it the right way up. Archie carries on
+  // presenting as if nothing had happened. Clips: wrong_way_up.py.
+  ({
+    cast: ["archie", "brick"],
+    pages: ["home", "topic", "catalog", "discover", "collections"],
+    ppm: 60,
+    ready(s) {
+      const W = document.documentElement.clientWidth;
+      return W > 7.5 * 60 && innerHeight > 3.6 * 60;
+    },
+    // The card's face: the spotlight's project (or the page's title), as an atlas card.
+    face(T) {
+      const pick = q => ((document.querySelector(q) || {}).textContent || "").trim();
+      const title = (pick("article.hero h2") || pick("h1") || "Atlas").slice(0, 22);
+      const own = (pick("article.hero .own") || "awesome-agentic-atlas").slice(0, 32);
+      const stars = (pick("article.hero .stz") || "★ 10k").replace(/\s+/g, "").replace(/^(?!★)/, "★ ");
+      const c = document.createElement("canvas");
+      c.width = 1024; c.height = 683;
+      const g = c.getContext("2d");
+      const rr = (x, y, w, h, r) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
+      g.fillStyle = "#ffffff"; g.fillRect(0, 0, 1024, 683);
+      g.fillStyle = "#26262b"; rr(0, 0, 1024, 150, 0); g.fill();
+      g.fillStyle = "#a4c812"; rr(52, 40, 170, 70, 35); g.fill();
+      g.fillStyle = "#16160f"; g.font = "800 42px system-ui, sans-serif"; g.fillText("SPOTLIGHT", 66, 88);
+      g.fillStyle = "#ffd34d"; g.font = "800 58px system-ui, sans-serif";
+      g.textAlign = "right"; g.fillText(stars, 970, 96); g.textAlign = "left";
+      g.fillStyle = "#121216"; g.font = "800 120px system-ui, sans-serif"; g.fillText(title, 56, 300);
+      g.fillStyle = "#6b6b76"; g.font = "500 50px ui-monospace, monospace"; g.fillText(own, 60, 375);
+      g.fillStyle = "#d9d9df";
+      for (const [y, w] of [[440, 880], [495, 760], [550, 520]]) { rr(60, y, w, 26, 13); g.fill(); }
+      g.fillStyle = "#a4c812"; rr(0, 650, 1024, 33, 0); g.fill();
+      const tex = new T.CanvasTexture(c);
+      tex.colorSpace = T.SRGBColorSpace;
+      tex.flipY = false;                               // glTF UVs: v runs down the image
+      tex.anisotropy = 4;
+      return tex;
+    },
+    async play(s) {
+      const A = s.archie, B = s.brick, T = s.T, ppm = 60;
+      const W = document.documentElement.clientWidth, floor = innerHeight - 6;
+      // wrong_way_up.py: ARCHIE_X -1.95, CARD_SCALE 1.8, TURN (0.35, 2.05)
+      const bx = W - 2.9 * ppm, ax = bx - 1.95 * ppm, start = W + 1.9 * ppm;
+      const card = await s.prop("app-card");
+      if (!s.alive) return;
+      const tex = this.face(T);
+      card.model.traverse(n => {
+        if (!n.isMesh) return;
+        for (const m of Array.isArray(n.material) ? n.material : [n.material]) {
+          if (m && /card-face/.test(m.name)) { m.map = tex; m.color.set(0xffffff); m.needsUpdate = true; }
+        }
+      });
+      // the card between Brick's hands every frame: facing as he faces, turned in its own plane by `spin`
+      const wrap = new T.Group(), facing = new T.Group(), spinner = new T.Group();
+      wrap.add(facing); facing.add(spinner); spinner.add(card.root);
+      card.root.scale.setScalar(1);
+      wrap.scale.setScalar(ppm * 1.8);
+      s.add(wrap);
+      let spin = Math.PI;                              // upside down
+      const gl = new T.Vector3(), gr = new T.Vector3();
+      const sm = (a, b, x) => { const u = Math.min(1, Math.max(0, (x - a) / (b - a))); return u * u * (3 - 2 * u); };
+      s.tick(() => {
+        B.bone("grip_L").getWorldPosition(gl);
+        B.bone("grip_R").getWorldPosition(gr);
+        wrap.position.copy(gl).add(gr).multiplyScalar(0.5);
+        // its depth is his, 0.62 m in front (wrong_way_up.py CARD), not his hands' (they go behind it to regrip)
+        wrap.position.z = (B.turn.position.z + 0.62 * Math.cos(B.turn.rotation.y)) * ppm;
+        facing.rotation.y = B.turn.rotation.y;
+        spinner.rotation.z = spin;
+      });
+      A.at(start - 1.95 * ppm, floor, ppm).show(true);
+      B.at(start, floor, ppm).show(true);
+      B.turn.position.z = -0.4;
+      B.play("wrong-way-up/carry", {loop: true});
+      A.play("walk", {loop: true});
+      await Promise.all([A.walkTo(ax, {speed: B.spec.speed / A.spec.speed}),
+                         B.walkTo(bx, {clip: "wrong-way-up/carry"})]);
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      B.play("wrong-way-up/hold", {loop: true});
+      await Promise.all([A.face(0), B.face(0)]);
+      if (!s.alive) return;
+      await s.after(0.4);
+      const pres = A.perform("wrong-way-up/present");
+      await s.after(0.5);
+      A.say("Behold!", 1.6);
+      await s.until(() => A.time() >= 2.85 || !s.alive);
+      if (!s.alive) return;
+      A.say("Our finest work.", 2.2);
+      const turn = B.perform("wrong-way-up/turn", {fade: 0.1});
+      const t0 = s.clock();
+      const stop = s.tick(() => {
+        const t = s.clock() - t0, k = sm(0, 1, sm(0.35, 2.05, t));
+        spin = Math.PI * (1 + k);
+        if (t > 2.1) stop();
+      });
+      await turn;
+      if (!s.alive) return;
+      spin = 2 * Math.PI;
+      B.play("wrong-way-up/hold", {loop: true});
+      await s.until(() => A.time() >= 6.1 || !s.alive);
+      A.say("Stunning.", 1.6);
+      await pres;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(1.2);
+    },
+  }),
+
+  "zip-moved-in":
+  // Zip moved in. Archie walks on, takes out the Atlas Core and shows the reader this page's world -- and in
+  // the middle of it, tiny, in a lounge chair, a drink with an umbrella in his hand, is Zip. He raises it to
+  // Archie: cheers. Archie protests; Zip sips. Archie produces the lease, reads it, and turns it to the
+  // reader: TENANT: ZIP. A flat look. Zip waves him off; Archie folds the Core shut on him and docks it, and
+  // from his belly comes a slurp. Clips: zip_moved_in.py (and _corekit.py's take/hold/back, _core_gags.py's
+  // reactions).
+  ({
+    cast: ["archie", "zip"],
+    pages: ["home", "topic", "repo", "repos", "catalog", "discover", "collections", "target", "lost"],
+    ppm: 140,
+    ready(s) {
+      return innerWidth >= 1000 && innerHeight >= 620;
+    },
+    async play(s) {
+      const A = s.archie, Z = s.zip, T = s.T, ppm = A.ppm;
+      const GRAB = 0.62, DOCK = 0.86;                         // _corekit.py
+      const LEASE = 0.75, SHOW = 2.6, STOW = 4.6;              // zip_moved_in.py
+      const SIZE = 360;                                        // the projection's width, CSS px
+      const SC = 0.22;                                         // Zip and his chair in the world: its units (the
+                                                               // disc's radius) to the metre
+      const floor = innerHeight - 8, x0 = Math.round(innerWidth * 0.3);
+      const [core, chair, drink, lease] = await Promise.all([s.core(A), s.prop("lounge-chair"), s.prop("drink"),
+                                                             s.prop("lease")]);
+      if (!s.alive) return;
+      s.page.undo(() => [chair, drink, lease].forEach(p => p.remove()));
+
+      // ---- on, and the Core out ----
+      A.at(-0.45 * ppm, floor).show(true);
+      A.play("idle", {loop: true});
+      await A.walkTo(x0);
+      if (!s.alive) return;
+      await A.face(0);
+      const take = A.perform("zip-moved-in/take");
+      await s.after(GRAB);
+      core.hold();
+      await take;
+      if (!s.alive) return;
+      A.play("zip-moved-in/hold", {loop: true});
+      A.say("Behold: the world of this page!", 2.2);
+      await s.after(0.5);
+      core.play("unfold");
+      const present = A.perform("zip-moved-in/present");
+      await s.after(0.9);
+      if (!s.alive) return;
+      core.play("open-idle", {loop: true});
+
+      // ---- the world, and Zip in it ----
+      const proj = await s.project(s.where().world);
+      if (!s.alive || !proj) return;
+      const follow = s.tick(() => { const p = core.page(); proj.at(p.x, p.y, SIZE, 1); });
+      const w = proj.world, anchor = w.getObjectByName("anchor_centre") || w;
+      // Zip -- his `turn`, and so all of him -- moved from his place on the page to a spot at the front of the
+      // world's middle, with his chair, turned towards Archie; put back when the bit ends. The world is shared
+      // with every other showing of it, so the spot comes out of it again too.
+      const spot = new T.Group();
+      spot.scale.setScalar(SC);
+      spot.rotation.y = -0.8;
+      anchor.add(spot);
+      // to the front of it, clear of the world's own sights in its middle (the disc's radius is 1, the reader
+      // at +Z): at least 0.3 out from the middle towards the reader
+      const ap = w.worldToLocal(anchor.getWorldPosition(new T.Vector3()));
+      spot.position.set(-0.04, 0, Math.max(0, 0.3 - ap.z));
+      chair.detach();
+      spot.add(chair.root);
+      chair.root.position.set(0, 0, 0);
+      chair.root.rotation.set(0, 0, 0);
+      chair.root.scale.setScalar(1);
+      spot.add(Z.turn);
+      Z.show(true);
+      Z.play("zip-moved-in/lounge", {loop: true});
+      drink.hold(Z, "grip_L", [0, 0, 0], [0, 0, Math.PI / 2]);   // upright, along the grip's -X
+      drink.root.scale.setScalar(1.6);
+      // his speech bubble over his head in the world (the page's own sits a pal's head-height above his head)
+      Z.headAt = () => { const p = Z.pageAt("head"); return {x: p.x, y: p.y - 0.8 * SC * SIZE / 2}; };
+      s.page.undo(() => {
+        spot.removeFromParent();
+        Z.root.add(Z.turn);
+        Z.turn.position.set(0, 0, 0);
+        Z.turn.scale.setScalar(1);
+        delete Z.headAt;
+      });
+      // he pops up with the islands, as they finish rising (the world's appear clip is 0.8 s)
+      spot.scale.setScalar(1e-4);
+      await s.after(0.55);
+      if (!s.alive) return;
+      s.tween(0.3, u => spot.scale.setScalar(Math.max(1e-4, SC * u)), u => 1 + 2.7 * Math.pow(u - 1, 3) + 1.7 * Math.pow(u - 1, 2));
+      await s.after(0.25);
+      proj.idle();
+      await present;
+      if (!s.alive) return;
+      A.play("zip-moved-in/hold", {loop: true});
+      await s.after(0.3);
+
+      // ---- a double take; cheers ----
+      const dbl = A.perform("zip-moved-in/double-take");
+      await s.after(0.8);
+      if (!s.alive) return;
+      Z.perform("zip-moved-in/cheers").then(() => s.alive && Z.play("zip-moved-in/lounge", {loop: true}));
+      await s.after(0.3);
+      Z.say("Oh, hey! Cheers.", 1.6);
+      await dbl;
+      if (!s.alive) return;
+
+      // ---- MY Core; a sip ----
+      const prot = A.perform("zip-moved-in/protest");
+      A.say("Hey! That's MY Core!", 1.8);
+      await s.after(1.6);
+      if (!s.alive) return;
+      Z.perform("zip-moved-in/sip").then(() => s.alive && Z.play("zip-moved-in/lounge", {loop: true}));
+      await s.after(0.4);
+      Z.say("*slurrrp*", 1.2);
+      await prot;
+      if (!s.alive) return;
+      A.play("zip-moved-in/hold", {loop: true});
+      await s.after(0.6);
+
+      // ---- the lease ----
+      const ls = A.perform("zip-moved-in/lease");
+      A.say("Hold on.", 0.9);
+      await s.after(LEASE);
+      if (!s.alive) return;
+      lease.hold(A, "grip_R");
+      lease.root.scale.setScalar(1.3);
+      await s.after(1.1 - LEASE);
+      A.say("Let's see... \"Tenant:\"", 1.3);
+      await s.after(SHOW - 1.1);
+      if (!s.alive) return;
+      A.say("\"ZIP\"?!", 1.6);
+      await s.after(STOW - SHOW);
+      lease.detach();
+      await ls;
+      if (!s.alive) return;
+      await A.perform("zip-moved-in/deadpan");
+      if (!s.alive) return;
+      A.play("zip-moved-in/hold", {loop: true});
+
+      // ---- bye; folded shut on him ----
+      Z.perform("zip-moved-in/bye").then(() => s.alive && Z.play("zip-moved-in/lounge", {loop: true}));
+      await s.after(0.3);
+      Z.say("Mind the door on your way out.", 1.8);
+      await s.after(2.0);
+      if (!s.alive) return;
+      proj.hide(0.35);
+      await s.after(0.35);
+      follow();
+      spot.removeFromParent();
+      core.play("fold");
+      await s.after(0.9);
+      const back = A.perform("zip-moved-in/back");
+      await s.after(DOCK);
+      core.dock();
+      await back;
+      if (!s.alive) return;
+
+      // ---- from his belly: a slurp ----
+      Z.headAt = () => core.page(0.1);
+      const belly = A.perform("zip-moved-in/belly");
+      Z.say("*slurrrp*", 1.2);
+      await belly;
+      if (!s.alive) return;
+      A.play("idle", {loop: true});
+      await s.after(0.3);
+      await A.walkTo(-0.6 * ppm);
     },
   }),
 };
