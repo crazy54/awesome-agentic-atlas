@@ -218,7 +218,7 @@ export function stage(o) {
       if (!done) { try { done = waits[i].pred(); } catch (e) { console.warn("pals: a wait failed:", e); done = aborted = true; } }
       if (done) { const w = waits[i]; waits.splice(i, 1); w.res(); }
     }
-    for (const a of Object.values(actors)) a.place();
+    for (const a of Object.values(actors)) a.place(dt);
     for (const a of attachments) a.update();
     if (renderer) renderer.render(scene, camera);
   };
@@ -259,12 +259,13 @@ export function stage(o) {
     at(x, y, ppm = this.ppm) { this.x = x; this.y = y; this.ppm = ppm; this.place(); return this; }
     // Who is in front, when two pals overlap: the larger `z` (CSS px towards the reader) is drawn in front.
     depth(z) { this.z = z; this.place(); return this; }
-    place() {
+    place(dt = 0) {
       this.root.position.set(this.x, -this.y, this.z);
       this.root.scale.setScalar(this.ppm);
-      // turn, eased: a quarter turn in about a fifth of a second
+      // turn, eased: a quarter turn in about a fifth of a second -- by the clock, so a recording stepped at
+      // 15 frames a second turns as fast as a page drawn at 60
       const d = this.turnTo - this.turn.rotation.y;
-      this.turn.rotation.y += Math.abs(d) < 0.01 ? d : d * 0.25;
+      if (dt > 0) this.turn.rotation.y += Math.abs(d) < 0.01 ? d : d * (1 - Math.exp(-17 * dt));
       if (this.bubble.classList.contains("on")) {
         const h = this.headAt();
         this.bubble.style.left = h.x + "px";
@@ -574,6 +575,9 @@ export function stage(o) {
         el: g,
       };
     },
+    // Any SVG element (a line, a glow filter, a gradient in a `defs`), its attributes set, into `parent` or
+    // the stage's SVG layer; gone when the bit ends, with everything else in the layer.
+    el(tag, attrs = {}, parent = null) { const e = svgEl(tag, attrs); (parent || svgLayer).appendChild(e); return e; },
     clear() { while (svgLayer && svgLayer.firstChild) svgLayer.firstChild.remove(); },
   };
 
@@ -843,7 +847,12 @@ export function stage(o) {
 
   // Whether a bit could start now: its page, and its own `ready()` against the page as it is.
   const can = (bit, here = where()) => !running && (!bit.pages || bit.pages.includes(here.page)) &&
-    (!bit.ready || !!bit.ready({page, pointer: pointerAt}));
+    (!bit.ready || ready(bit));
+  // A bit's ready() that throws (an element it expects, gone) is a bit that can't play now, not an error for
+  // whoever asked -- the director, or the admin panel greying its buttons.
+  const ready = bit => {
+    try { return !!bit.ready({page, pointer: pointerAt}); } catch (e) { console.warn(`pals: ${bit.name}'s ready()`, e); return false; }
+  };
 
   // What is on, for the admin panel and the browser checks (window.archieStage, set by archie.js).
   const status = () => ({bit: running, clock: +clock.toFixed(2), aborted,

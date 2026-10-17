@@ -21,9 +21,10 @@ const V = new URL(import.meta.url).search;
 
 const NAMES = {
   idle: "Idle", watch: "Watch", sit: "Sit", sleep: "Sleep", press: "Press", shrug: "Shrug",
-  "walk-off": "Walk off / moonwalk", show: "Light show", chatter: "Chatter", poke: "Poke", quiet: "Stop everything",
+  "walk-off": "Walk off / moonwalk", show: "Light show", core: "Atlas Core", chatter: "Chatter", poke: "Poke",
+  quiet: "Stop everything",
 };
-const label = cmd => NAMES[cmd] || cmd.split(":")[1].replace(/-/g, " ");
+const label = cmd => NAMES[cmd] || (cmd.split(":")[1] || cmd).replace(/-/g, " ");
 
 const CSS = `
 #archiepanel{position:fixed;right:16px;bottom:16px;z-index:60;width:min(560px,calc(100vw - 32px));
@@ -61,6 +62,7 @@ const groups = async () => {
     ["Dances", pick(c => c.startsWith("dance:"))],
     ["Acts", pick(c => !c.includes(":") && !["chatter", "poke", "quiet"].includes(c))],
     ["Pranks", pick(c => c.startsWith("prank:"))],
+    ["Bits", pick(c => c.startsWith("bit:"))],
     ["Friends", friends],
     ["Talk", pick(c => c === "chatter" || c === "poke")],
     ["Rig", pick(c => c.startsWith("cue:"))],

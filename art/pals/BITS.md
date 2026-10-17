@@ -83,7 +83,8 @@ A staging file is one object expression in parentheses; the bit's name is the fi
   `s.page.nudge(el, {rotate, x, y, origin, secs})` (turn or shift a page element for a moment; returns
   `back(secs)`), `s.page.flicker(n, ms)`, `s.page.undo(fn)`; `s.where()` (`{page, topic, world}`);
   `s.pointer()` (`{x, y, seen}`: where the reader's mouse last was, read only -- `ready(s)` has it too).
-* **Drawing**: `s.svg.path()`, `s.svg.door(box)`; `s.add(obj)` (into the scene, page px units).
+* **Drawing**: `s.svg.path()`, `s.svg.door(box)`, `s.svg.el(tag, attrs, parent)` (any SVG element, defs and
+  filters too, in the stage's layer); `s.add(obj)` (into the scene, page px units).
 * **Props**: `s.prop(name)` (a prop from `pals/props/`, each call its own copy, materials and all: `.at(x, y,
   ppm)`, `.hold(pal, bone)`, `.play(clip)`, `.remove()`), `s.attach(obj, pal, bone, {offset, upright})` (keep
   an object on a pal's bone every frame; returns its remover; `offset` is in the bone's own frame: Y along the
