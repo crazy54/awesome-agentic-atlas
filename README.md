@@ -226,7 +226,7 @@ Aggregating other people's lists introduces failure modes worth naming:
 
 ## Staying current
 
-Two GitHub Actions workflows keep the three surfaces from going stale, and neither needs a hand on it.
+Three GitHub Actions workflows keep the three surfaces from going stale, and none of them needs a hand on it.
 
 **Daily** ([`daily.yml`](.github/workflows/daily.yml), 11:12 UTC) asks each of the thirty-nine source lists
 for its newest commit. If none of them has moved, the job stops there — a rebuild would produce byte-identical
@@ -239,6 +239,13 @@ run did not finish its screenshots, so a green daily is not proof that anything 
 part the daily run skips: capturing a screenshot for each new project, rebuilding both workbooks, and
 publishing them as a dated release. That's why the [download links][dark] never rot — they point at
 `releases/latest`, and each Sunday's release becomes the latest.
+
+**Dead repos** ([`dead-repos.yml`](.github/workflows/dead-repos.yml), Saturdays) asks GitHub about every
+repo the atlas lists and records the ones it no longer serves — deleted, made private, taken down or
+disabled — in [`state/dead-repos.json`](state/dead-repos.json). The build leaves every one of them out of
+the site, the Markdown edition and the workbooks, so a dead project stops appearing as a card with no
+picture and a page whose README never loads. Renamed and archived repos are alive and stay. A repo that
+comes back is listed again after the next scan ([details](handbook/ci-cd.md#the-dead-repo-scan)).
 
 The split is about cost, not caution. Metadata for the whole atlas is a few hundred GraphQL queries,
 twenty repos to a query. Screenshots are a headless-browser render per project. So a project added on
