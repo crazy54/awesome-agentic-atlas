@@ -78,8 +78,8 @@ for name in names:
         sc = bpy.context.scene
         sc.render.fps = c.fps
         if hasattr(sc.render.image_settings, "media_type"):
-    sc.render.image_settings.media_type = "VIDEO"         # Blender 5: video is a media type, then FFMPEG
-sc.render.image_settings.file_format = "FFMPEG"
+            sc.render.image_settings.media_type = "VIDEO"     # Blender 5: video is a media type, then FFMPEG
+        sc.render.image_settings.file_format = "FFMPEG"
         sc.render.ffmpeg.format = "MPEG4"
         sc.render.ffmpeg.codec = "H264"
         sc.render.ffmpeg.constant_rate_factor = "MEDIUM"

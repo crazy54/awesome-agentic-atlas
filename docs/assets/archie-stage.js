@@ -445,6 +445,94 @@ export function stage(o) {
     clear() { while (svgLayer && svgLayer.firstChild) svgLayer.firstChild.remove(); },
   };
 
+  // ---- the Atlas Core's projection ---------------------------------------------------------------------
+  // The world the Core shows (art/pals/worlds.py), drawn on this stage at a size the reader can read --
+  // the Core itself is a few pixels across in the banner -- floating over wherever the Core is on the page,
+  // with a beam of light down to it. archie-core.js calls `project(name)` when the Core opens and moves the
+  // handle every frame; the projection never runs during a bit, and a bit ends it.
+  const holoMats = root => root.traverse(m => {
+    if (!m.isMesh) return;
+    const swap = mat => {
+      if (!mat || !/^holo/i.test(mat.name)) return mat;
+      const c = mat.emissive && mat.emissive.getHex() ? mat.emissive.clone() : mat.color.clone();
+      return new T.MeshBasicMaterial({color: c, transparent: true, opacity: 0.85, blending: T.AdditiveBlending,
+                                      depthWrite: false, side: T.DoubleSide, name: mat.name});
+    };
+    m.material = Array.isArray(m.material) ? m.material.map(swap) : swap(m.material);
+  });
+  let projection = null;
+  async function project(name) {
+    if (running) return null;
+    let g;
+    try { g = await fetchGLB(`pals/worlds/${name}.glb`); }
+    catch { if (name === "home") return null; return project("home"); }
+    if (running) return null;
+    open();
+    const root = new T.Group(), tilt = new T.Group();
+    root.add(tilt);
+    tilt.add(g.scene);
+    tilt.rotation.x = 0.42;                          // seen from a little above, as on the sheet
+    holoMats(g.scene);
+    scene.add(root);
+    const mixer = new T.AnimationMixer(g.scene);
+    mixers.add(mixer);
+    const clips = Object.fromEntries(g.animations.map(c => [c.name, c]));
+    const play = (c, loop) => {
+      if (!clips[c]) return;
+      mixer.stopAllAction();
+      const a = mixer.clipAction(clips[c]);
+      a.reset().setLoop(loop ? T.LoopRepeat : T.LoopOnce, loop ? Infinity : 1);
+      a.clampWhenFinished = true;
+      a.play();
+    };
+    const beam = svgEl("polygon", {fill: "url(#pals-beam)", opacity: "0.55"});
+    if (!svgLayer.querySelector("#pals-beam")) {
+      const defs = svgEl("defs");
+      const grad = svgEl("linearGradient", {id: "pals-beam", x1: "0", y1: "1", x2: "0", y2: "0"});
+      grad.append(svgEl("stop", {offset: "0", "stop-color": "#2fe3f1", "stop-opacity": "0.75"}),
+                  svgEl("stop", {offset: "1", "stop-color": "#2fe3f1", "stop-opacity": "0"}));
+      defs.append(grad);
+      svgLayer.prepend(defs);
+    }
+    svgLayer.appendChild(beam);
+    play("appear");
+    let born = clock, k = 0, gone = false, last = null;
+    // Up and out to one side of the Core (the hand's side, `side`, unless the window's edge is too close),
+    // so the beam and the world clear his face; the beam runs from the Core to the world's disc.
+    const draw = () => {
+      if (!last) return;
+      const [x, y, size, want] = last, r = size / 2;
+      const side = want > 0 ? (x + r * 2.5 < W - 8 ? 1 : -1) : (x - r * 2.5 > 8 ? -1 : 1);
+      // kept on screen: beside his head, if there is no room above it
+      const cx = x + side * r * 1.35 * k, cy = Math.max(r * 1.3 + 6, y - r * 1.1 * k);
+      root.position.set(cx, -cy, 0);
+      root.scale.setScalar(Math.max(1e-4, r * k));
+      const dx = r * 0.85 * k, dy = r * 0.32 * k;
+      beam.setAttribute("points", `${x - 2},${y} ${x + 2},${y} ${cx + dx},${cy + dy} ${cx - dx},${cy + dy}`);
+    };
+    const grow = tick(() => { if (!gone) k = 1 - Math.pow(1 - Math.min(1, (clock - born) / 0.5), 3); draw(); });
+    const h = {
+      // the Core's point on the page, the world's width there (CSS px), and the side of him it is held on
+      // (+1 screen right); called every frame
+      at(x, y, size, side = 1) { last = [x, y, size, side]; },
+      idle() { play("idle", true); },
+      async hide(secs = 0.3) {
+        if (gone) return;
+        gone = true;
+        const from = k, t0 = clock;
+        await until(() => { k = from * Math.max(0, 1 - (clock - t0) / secs); return clock - t0 >= secs; });
+        grow();
+        if (scene) scene.remove(root);
+        mixers.delete(mixer);
+        beam.remove();
+        projection = null;
+        if (!running) close();
+      },
+    };
+    projection = h;
+    return h;
+  }
+
   // ---- running a bit ---------------------------------------------------------------------------------
   const stop = () => { aborted = true; };
   const onKey = e => { if (e.key === "Escape" || e.key === "Tab") stop(); };
@@ -453,6 +541,7 @@ export function stage(o) {
 
   async function run(bit, ctx = {}) {
     if (running) return false;
+    if (projection) await projection.hide(0.15);
     running = bit.name;
     aborted = false;
     open();
@@ -511,6 +600,6 @@ export function stage(o) {
     stepped.push(res);
   });
 
-  return {run, stop, can, load, where, status, capture, step,
+  return {run, stop, can, load, where, status, capture, step, project,
           get busy() { return !!running; }, get playing() { return running; }};
 }

@@ -583,7 +583,7 @@ RIG = ("rig-show.js", "rig/rig.glb") + tuple(f"rig/wall-{w}.{ext}" for w in "abc
 # So do the pals' stage and bits (`archie-stage.js`, `archie-bits.js`) and everything under `assets/pals/`
 # (Zip, Brick, the Atlas Core and its worlds, the props and each bit's clips): see PALS below.
 OPTIONAL = ("archie-friends.js", "archie-friends-data.js", "archie-admin.js", "archie-dances.glb",
-            "archie-stage.js", "archie-bits.js") + RIG
+            "archie-stage.js", "archie-bits.js", "archie-core.js") + RIG
 VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb") + OPTIONAL
 
 

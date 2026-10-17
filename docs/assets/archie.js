@@ -83,7 +83,9 @@
   const DANCES = Object.keys(BEATS);
   // The rave dances are for the music's heavy parts, not for any time: see `heavy()` and `building()`.
   const RAVE = ["headbang", "the-drop"];
-  const OTHERS = ["watch", "sit", "sleep", "walk-off"];
+  // `core`: he takes the Atlas Core out of his belly and shows the world of the page the reader is on
+  // (archie-core.js); only once the Core has loaded.
+  const OTHERS = ["watch", "sit", "sleep", "walk-off", "core"];
   // A number in [0, 1) that looks random but is the same every time for the same n: the lights' marks.
   const hash = n => { const s = Math.sin(n * 12.9898) * 43758.5453; return s - Math.floor(s); };
   const smooth = x => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
@@ -157,7 +159,7 @@
   // Every command is something the director already does on its own; the panel only saves waiting for it.
   const RIG_CUES = ["beams-chase", "beams-fan", "beams-cross", "ballyhoo", "gobo", "laser-symbol", "blinder",
                     "wash", "pods", "video-wall", "all-off", "co2", "flames", "sparks", "haze"];
-  const CALM_ACTS = ["idle", "watch", "sit", "sleep", "press", "shrug", "walk-off", "show"];
+  const CALM_ACTS = ["idle", "watch", "sit", "sleep", "press", "shrug", "walk-off", "show", "core"];
   let live = null;                           // start()'s side, {can, run}, while the model is up
   const parse = cmd => (cmd.includes(":") ? cmd.split(/:(.*)/).slice(0, 2) : [cmd, ""]);
   const rigCues = () => {
@@ -308,6 +310,21 @@
     // ---- Clips ----------------------------------------------------------------------------------------
     const mixer = new T.AnimationMixer(gltf.scene);
     const clip = Object.fromEntries(gltf.animations.map(a => [a.name, a]));
+    // ---- The Atlas Core (archie-core.js): docked in his belly from the start, shown by the `core` act --
+    let atlas = null, atlasUp = false;
+    Promise.all([import(`./archie-core.js${V}`), import(`./archie-stage.js${V}`)]).then(([C, S]) => {
+      const cv = new T.Vector3();
+      atlas = C.atlas({T, V, base: new URL("./", import.meta.url), loader, model: gltf.scene, where: () => S.where(),
+        project: name => staged().then(m => m.st.project(name)),
+        // a point of his scene to the page, through the banner's camera (or the dock's, or a visit's)
+        toPage: p => {
+          cv.copy(p).project(camera);
+          const r = canvas.getBoundingClientRect();
+          return {x: r.left + (cv.x + 1) / 2 * r.width, y: r.top + (1 - cv.y) / 2 * r.height};
+        },
+        size: () => view.sh * 0.72});
+      return atlas.ready.then(() => { atlasUp = true; });
+    }).catch(e => { console.warn("Archie's Atlas Core stayed home:", e); atlas = null; });
     // The dances come second: about half a megabyte the first screen does not need, fetched once he is up
     // (which is after the page's own load already). A dance asked for before they land waits for them, and
     // if they never land he idles instead. Their clips drive the same skeleton and face by name, so they
@@ -409,10 +426,17 @@
     // own choices come back when music mode goes off.
     const grooving = () => music.on && seen && mode === "home" && performance.now() - music.at < 2000;
     let walking = false;                   // out on a walk-off, which a command must not cut in half
+    const coreAct = async () => {
+      if (!atlasUp) return perform("idle");
+      await atlas.begin();
+      talk.say("core");
+      try { await perform("core-show"); } finally { atlas.end(); }
+    };
     const act = async name => {
       last = name;
       talk.act(name);
       if (name === "walk-off") { walking = true; try { return await walkOff(); } finally { walking = false; } }
+      if (name === "core") return coreAct();
       rig.on = DANCES.includes(name);
       await perform(name);
       rig.on = false;
@@ -518,7 +542,7 @@
         // the music did.
         if (grooving() && (heavy() || building())) { wish = null; await act(heavy() ? "headbang" : "the-drop"); continue; }
         let pool = (wish || grooving() || Math.random() < 0.5 ? DANCES : OTHERS)
-          .filter(n => n !== last && (!RAVE.includes(n) || n === wish));
+          .filter(n => n !== last && (!RAVE.includes(n) || n === wish) && (n !== "core" || atlasUp));
         if (grooving() && pool.some(fits)) pool = pool.filter(fits);
         wish = null;
         await act(pool[Math.floor(Math.random() * pool.length)]);
@@ -883,6 +907,7 @@
       grooved = g;
       if (n) current.timeScale = g && music.bpm ? tempo(c, n) : 1;
       mixer.update(dt);
+      if (atlas) atlas.tick(dt, current);
       music.kick *= Math.exp(-6 * dt);
       const kick = g ? music.kick : null, loud = g ? loudness() : null;
       // A dance's beat, or, between dances, a cue's own (see `rig.cue`), which the lights and lasers play
@@ -1200,6 +1225,10 @@
     forgive: [["...okay, fine, I forgive you. Instantly. I'm weak."], ["You poked me! All is forgiven!"],
               ["I knew you cared!"]],
     revenge: [["This is for ignoring me."], ["Payback time."], ["You should have poked me."]],
+    // The Atlas Core: the world of wherever the reader is, out of his pocket
+    core: [["Behold. The whole atlas, in my pocket."], ["Ta-da! A world for every shelf."],
+           ["Pocket universe. Please don't touch."], ["This is where we are. Roughly."],
+           ["I keep it in my tummy. It's a long story.", 1]],
     // Tired of the reader: trying to get rid of them, and failing
     "tired-close": [["You know what? I'll close the tab for you."], ["Right. Closing time."]],
     "tired-close-after": [["Why won't it close?!"], ["...that button is decorative too, isn't it."]],

@@ -1026,11 +1026,99 @@ def dances(body):
     return {k: v.clip() for k, v in D.items()}
 
 
-EVERYDAY = ["idle", "watch", "sit", "sleep", "press", "shrug", "walk", "moonwalk"]
+EVERYDAY = ["idle", "watch", "sit", "sleep", "press", "shrug", "walk", "moonwalk", "core-show"]
 DANCES = ["floss", "take-the-l", "default-dance", "orange-justice", "robot", "electro-shuffle", "hype",
           "boogie-down", "get-griddy", "billy-bounce", "fresh", "scenario", "groove-jam", "headbang", "the-drop"]
 # archie.glb carries the model and the everyday clips; archie-dances.glb the dances, fetched in idle time.
 PACKS = {"archie": EVERYDAY, "archie-dances": DANCES}
+
+# -------------------------------------------------------------------------------------------- core
+# The Atlas Core act: he takes the Core out of the dock in his belly, holds it up palm up, it unfolds and
+# projects the world of the page the reader is on, he presents it, and it folds and goes back. The page
+# moves the Core between his `core` bone and his `grip_L` at the two hand-offs, and plays the Core's own
+# clips (art/pals/core.py) at these times:
+CORE_GRAB, CORE_UNFOLD, CORE_FOLD, CORE_DOCK, CORE_SECS = 0.62, 1.35, 6.05, 7.5, 8.6
+CORE_HOLD = (0.14, -0.46, 1.42)         # his left wrist while he holds it up
+
+
+def core_show(body):
+    T = CORE_SECS
+    c = Clip("core-show", T, frames=int(round(T * 30)))
+    c.key(0.0, REST)
+    look_down = REST.copy()
+    look_down.set("head", 18, 6, -4)
+    look_down.set("chest", 6, 4, 0)
+    proud = REST.copy()
+    proud.set("head", -4, 10, 4)
+    proud.set("chest", -6, 6, 0)
+    proud.face = {"grin": 1.0}
+    c.key(0.45, look_down, "inout")
+    c.key(1.1, proud, "back")
+    c.key(5.9, proud, "linear")
+    c.key(6.6, look_down, "inout")
+    c.key(7.7, look_down, "linear")
+    c.key(T, REST, "inout")
+    dock = V(0.0, -0.2, 1.225)              # in front of the dock (art/pals/archie.py dock_c)
+    hold = V(*CORE_HOLD)
+    palm_up = hand_world((-0.35, -0.9, 0.05), (0, 0, 1))
+    palm_in = hand_world((-0.3, -0.2, -1), (-1, 0, 0))
+
+    def solve(t, p, skel):
+        rw = wrist_of(body, REST, 1)
+        # left hand: to the dock (0.15-0.6), out and up holding it (0.62-1.1), held, back down (6.9-7.5),
+        # away (7.5-8.2)
+        if t < CORE_GRAB:
+            k = smooth(0.15, CORE_GRAB, t)
+            tgt, hr = rw.lerp(dock + V(0.12, -0.02, -0.02), k), palm_in if k > 0.5 else None
+        elif t < 6.9:
+            k = ease("back", min(1.0, (t - CORE_GRAB) / 0.5))
+            bob = 0.012 * math.sin(math.tau * (t - 1.2) / 2.2) * smooth(1.2, 1.8, t)
+            tgt, hr = (dock + V(0.12, -0.02, -0.02)).lerp(hold, k) + V(0, 0, bob), palm_up if k > 0.3 else palm_in
+        elif t < CORE_DOCK:
+            k = smooth(6.9, CORE_DOCK, t)
+            tgt, hr = hold.lerp(dock + V(0.12, -0.02, -0.02), k), palm_in if k > 0.6 else palm_up
+        else:
+            k = smooth(CORE_DOCK, CORE_DOCK + 0.7, t)
+            tgt, hr = (dock + V(0.12, -0.02, -0.02)).lerp(rw, k), palm_in if k < 0.5 else None
+        body.hand_to(p, 1, tgt, elbow=(0.55, 0.35, -0.5), hand_rot=hr)
+        p.fingers(1, 30 if t > CORE_GRAB else 55 * smooth(0.4, CORE_GRAB, t), spread=6, thumb=20)
+        # right hand: the presenter's sweep, palm up towards it, on the unfold, and a point at the reader
+        ta = pulse(t, CORE_UNFOLD + 0.1, 0.45, 2.1, 0.5)
+        if ta > 0.01:
+            tgt_r = rw_r.lerp(V(-0.36, -0.5, 1.4), ta)
+            body.hand_to(p, -1, tgt_r, elbow=(0.5, 0.3, -0.5),
+                         hand_rot=hand_world((0.7, -0.6, 0.2), (0, 0, 1)) if ta > 0.5 else None)
+            open_hand(p, -1, 10 * ta)
+        pt = pulse(t, 4.3, 0.25, 0.9, 0.35)
+        if pt > 0.01:
+            cur = wrist_of(body, p, -1)
+            body.hand_to(p, -1, cur.lerp(V(-0.3, -0.62, 1.55), pt), elbow=(0.5, 0.3, -0.5),
+                         hand_rot=hand_world((0.1, -1, 0.15), (0, 0, 1)) if pt > 0.5 else None)
+            point(p, -1)
+        body.plant(p, 1)
+        body.plant(p, -1)
+        return p
+
+    rw_r = wrist_of(body, REST, -1)
+
+    def face(t):
+        p = Pose()
+        at_core = pulse(t, 1.2, 0.3, 1.6, 0.3) + pulse(t, 6.0, 0.3, 0.8, 0.3)
+        p = p + look((-18 * at_core, 14 * at_core))
+        w = pulse(t, 1.5, 0.2, 0.5, 0.4)
+        brows(p, 1.4 * w, 1.6 * w, 1.0 * w)
+        p.face["wide"] = 0.6 * w
+        p.face["grin"] = -0.6 * w
+        sm = pulse(t, 4.2, 0.2, 1.1, 0.3)
+        brows(p, 0.0, 1.4 * sm, 1.0 * sm, side=1)
+        p.face["smirk_L"] = 0.7 * sm
+        return p
+
+    c.layer(face)
+    c.layer(blink_layer([0.9, 3.4, 5.6, 7.9]))
+    c.solve(solve)
+    return c
+
 
 BEATS = {"floss": 48, "take-the-l": 32, "default-dance": 48, "orange-justice": 48, "robot": 32,
          "electro-shuffle": 30, "hype": 32, "boogie-down": 30, "get-griddy": 32, "billy-bounce": 32,
@@ -1047,6 +1135,7 @@ def clips(body: Body):
         "shrug": shrug(body),
         "walk": walk(body),
         "moonwalk": walk(body, "moonwalk", back=True),
+        "core-show": core_show(body),
     }
     out.update(dances(body))
     out["calibrate"] = calibrate(body)
