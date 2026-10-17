@@ -6,12 +6,15 @@ that share a name:
 | half | where | what it does |
 |---|---|---|
 | the clips | `art/pals/bits/<bit_name>.py` | each pal's pieces of the bit, as `kit.anim.Clip`s named `<bit>/<piece>` |
-| the staging | `docs/assets/archie-bits.js`, `BITS["<bit>"]` | where on the page it happens, and the order the pieces play in |
+| the staging | `art/pals/bits/<bit_name>.js` | where on the page it happens, and the order the pieces play in |
+
+`art/pals/bits_js.py` joins every staging file into `docs/assets/archie-bits.js` (generated: never edit it),
+checking each with Node first and leaving out, with a warning, any that does not parse.
 
 `art/pals/build_bits.py` bakes the clips into `docs/assets/pals/bits/<bit>@<pal>.glb` (each pal's skeleton,
 a stand-in face, and that bit's clips only); the page fetches those when the bit is about to play and plays
 them on the models it already has, by bone name. `docs/assets/archie-stage.js` is the stage the staging
-runs on. `glass_door.py` and `BITS["glass-door"]` are the worked example: read both before writing one.
+runs on. `glass_door.py` and `glass_door.js` are the worked example: read both before writing one.
 
 ## The clips
 
@@ -49,15 +52,17 @@ tools/sheet_clips.sh archie side glass-door/bonk:0,0.1,0.3,0.6,1.0,1.5      # fr
 
 ## The staging
 
+A staging file is one object expression in parentheses; the bit's name is the file's, with dashes:
+
 ```js
-"glass-door": bit({
-  cast: ["archie"],
-  packs: {archie: "pals/bits/glass-door@archie.glb"},
+// The glass door: ...
+({
+  cast: ["archie"],                  // its clip files are pals/bits/<bit>@<pal>.glb for each of them
   pages: ["repo"],                   // archie-stage.js where(): home, repo, topic, catalog, discover, collections, ...
   ppm: 56,                           // CSS px per metre for this bit (62.5 is a visit's size)
   ready(s) { ... },                  // its element on screen, with room: true or false, cheaply
   async play(s) { ... },
-}),
+})
 ```
 
 `s` is the stage: `s.archie` / `s.zip` / `s.brick` (each `.at(x, y)`, `.show(on)`, `.walkTo(x, {speed})`,
@@ -77,10 +82,10 @@ remover), `s.page.rect(sel)`, `s.page.flicker(n)`, `s.page.undo(fn)`, `s.svg.pat
 
 ## Checking it
 
-Bake, re-stamp, record:
+Bake (always `--only` your bit: others are building theirs), re-stamp, record:
 
 ```
-blender -b --factory-startup --python art/pals/build_bits.py -- --only <bit>
+blender -b --factory-startup --python art/pals/build_bits.py -- --only <bit>     # also runs bits_js.py
 python scripts/31_home.py && python scripts/24_pwa.py
 # with tests/lib/serve.mjs serving docs/ on 54006, from E:/Development Workspaces/Archie and Pals/:
 node tools/capture-bit.mjs --bit <bit> --page <path/> --scroll "<selector>" --size 1400x900

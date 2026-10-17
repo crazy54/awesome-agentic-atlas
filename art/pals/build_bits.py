@@ -84,6 +84,8 @@ def main():
             if "--keep-raw" not in ARGS:
                 raw.unlink()
             print(f"BIT {name}@{pal}: {len(made)} clips, {dest.stat().st_size:,} bytes")
+    import bits_js
+    bits_js.main()
     print(f"done in {time.time() - t0:.0f}s")
 
 

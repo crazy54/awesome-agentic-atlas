@@ -553,7 +553,10 @@ export function stage(o) {
       for (const n of bit.cast) {
         const a = await load(n);
         a.ppm = bit.ppm || PPM;
-        for (const f of bit.packs && bit.packs[n] ? [bit.packs[n]] : []) {
+        // its clips for this bit: `packs` if the bit names them, else pals/bits/<bit>@<pal>.glb (a pal with
+        // no pieces of his own in a bit has no file, which is fine: he plays his everyday clips)
+        const pack = bit.packs ? bit.packs[n] : `pals/bits/${bit.name}@${n}.glb`;
+        for (const f of pack ? [pack] : []) {
           try { a.add((await fetchGLB(f)).animations); } catch (e) { console.warn(`pals: ${f}`, e); }
         }
         mixers.add(a.mixer);
