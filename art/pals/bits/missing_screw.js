@@ -8,23 +8,19 @@
   pages: ["home", "catalog", "discover", "collections", "topic"],
   ppm: 56,
   ready(s) {
-    return !!pick();
-    function pick() {
-      for (const c of document.querySelectorAll("article.cx, article.card")) {
-        const r = c.getBoundingClientRect();
-        if (r.width >= 200 && r.height >= 260 && r.left > 70 && r.right < innerWidth - 150 &&
-            r.top > 70 && r.bottom < innerHeight - 10) return c;
-      }
-      return null;
-    }
+    return !!this.card();
   },
-  async play(s) {
-    const A = s.archie;
-    const card = [...document.querySelectorAll("article.cx, article.card")].find(c => {
+  // A card on screen with room round it: tall enough to swing, clear of the window's edges.
+  card() {
+    return [...document.querySelectorAll("article.cx, article.card")].find(c => {
       const r = c.getBoundingClientRect();
       return r.width >= 200 && r.height >= 260 && r.left > 70 && r.right < innerWidth - 150 &&
         r.top > 70 && r.bottom < innerHeight - 10;
     });
+  },
+  async play(s) {
+    const A = s.archie;
+    const card = this.card();
     if (!card) return;
     const r = () => card.getBoundingClientRect();
     const floor = r().bottom - 4, spot = r().left + r().width * 0.3;     // clear of the card's buttons

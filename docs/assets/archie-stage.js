@@ -74,6 +74,33 @@ export function where(doc = document, loc = location) {
   return {page: seg[0], topic: null, world: "home"};
 }
 
+// Light added to a light page is white on white: there a hologram vanishes. So the glowing materials (the
+// unlit `holo*` swaps, added as light) are drawn added on a dark page and laid over a light one, a shade
+// deeper -- decided by the page's own background each time a world or the Core is shown, since the reader can
+// change the theme in between. `root` is a scene whose holo materials have been swapped already.
+export function lightPage(doc = document) {
+  const rgb = el => (getComputedStyle(el).backgroundColor.match(/[\d.]+/g) || []).map(Number);
+  let c = rgb(doc.body);
+  if (c.length < 3 || c[3] === 0) c = rgb(doc.documentElement);
+  return c.length < 3 || c[3] === 0 || (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255 > 0.5;
+}
+export function tone(T, root, light = lightPage()) {
+  root.traverse(m => {
+    if (!m.isMesh) return;
+    for (const mat of [].concat(m.material)) {
+      if (!mat || !mat.isMeshBasicMaterial || !/^holo/i.test(mat.name)) continue;
+      const u = mat.userData;
+      if (!u.tone) u.tone = {color: mat.color.clone(), opacity: mat.opacity, blending: mat.blending};
+      if (u.tone.blending !== T.AdditiveBlending) continue;      // drawn over the page already
+      mat.blending = light ? T.NormalBlending : T.AdditiveBlending;
+      mat.color.copy(u.tone.color).multiplyScalar(light ? 0.8 : 1);
+      mat.opacity = light ? Math.min(0.9, u.tone.opacity + 0.1) : u.tone.opacity;
+      mat.needsUpdate = true;
+    }
+  });
+  return root;
+}
+
 export function stage(o) {
   const {T, V, base} = o;                           // three, the release's `?v=` query, assets/ URL
   const url = f => new URL(f + V, base).href;
@@ -172,9 +199,15 @@ export function stage(o) {
   const advance = dt => {
     clock += dt;
     for (const m of mixers) m.update(dt);
-    for (const f of [...tickers]) f(dt);
+    // a ticker or a wait that throws (its element gone from the page, say) ends the bit rather than
+    // stalling the clock with its waits unresolved
+    for (const f of [...tickers]) {
+      try { f(dt); } catch (e) { console.warn("pals: a ticker failed:", e); tickers.delete(f); aborted = true; }
+    }
     for (let i = waits.length - 1; i >= 0; i--) {
-      if (aborted || waits[i].pred()) { const w = waits[i]; waits.splice(i, 1); w.res(); }
+      let done = aborted;
+      if (!done) { try { done = waits[i].pred(); } catch (e) { console.warn("pals: a wait failed:", e); done = aborted = true; } }
+      if (done) { const w = waits[i]; waits.splice(i, 1); w.res(); }
     }
     for (const a of Object.values(actors)) a.place();
     for (const a of attachments) a.update();
@@ -192,7 +225,7 @@ export function stage(o) {
       this.root.add(this.turn);
       this.turn.add(gltf.scene);
       this.model = gltf.scene;
-      this.mixer = new T.AnimationMixer(gltf.scene);
+      this.mixer = new T.AnimationMixer(this.model);
       this.clips = {};
       for (const c of gltf.animations) this.clips[c.name] = c;
       this.x = 0; this.y = 0; this.z = 0; this.ppm = PPM; this.facing = 0; this.turnTo = 0; this.current = null;
@@ -208,6 +241,10 @@ export function stage(o) {
       // A skinned mesh is culled by its bounds in the bind pose, which don't follow the clip: his eyes, small
       // meshes of their own, would vanish whenever he stands off the window's edge and leans back into it.
       gltf.scene.traverse(n => { if (n.isSkinnedMesh) n.frustumCulled = false; });
+      // What is his own: anything a bit hangs on him (a prop in his hand, a hat, a sign) comes off when it ends.
+      this.own = new Set();
+      gltf.scene.traverse(n => this.own.add(n));
+      this.cuts = {right: null, left: null, below: null};
     }
     add(clips) { for (const c of clips) this.clips[c.name] = c; }
     at(x, y, ppm = this.ppm) { this.x = x; this.y = y; this.ppm = ppm; this.place(); return this; }
@@ -266,9 +303,17 @@ export function stage(o) {
     }
     // Seconds into the clip he is playing.
     time() { return this.current ? this.current.time : 0; }
-    // Hide everything of him right of page x (CSS px): walking through a doorway. `null` to stop.
-    clipRight(x) {
-      const planes = x === null ? [] : [new T.Plane(new T.Vector3(-1, 0, 0), x)];
+    // Hide everything of him right (or left) of page x (CSS px), as walking through a doorway or riding off
+    // the end of a row; or below page y, as standing behind the top edge of something. `null` to stop. They
+    // can be on together; what he holds is cut with him.
+    clipRight(x) { this.cuts.right = x; this.cut(); }
+    clipLeft(x) { this.cuts.left = x; this.cut(); }
+    clipBelow(y) { this.cuts.below = y; this.cut(); }
+    cut() {
+      const planes = [];
+      if (this.cuts.right !== null) planes.push(new T.Plane(new T.Vector3(-1, 0, 0), this.cuts.right));
+      if (this.cuts.left !== null) planes.push(new T.Plane(new T.Vector3(1, 0, 0), -this.cuts.left));
+      if (this.cuts.below !== null) planes.push(new T.Plane(new T.Vector3(0, 1, 0), this.cuts.below));
       this.model.traverse(n => {
         if (!n.isMesh) return;
         for (const m of Array.isArray(n.material) ? n.material : [n.material]) {
@@ -277,17 +322,32 @@ export function stage(o) {
         }
       });
     }
+    // Take off whatever a bit hung on him, and turn him to face the reader again.
+    strip() {
+      const extra = [];
+      this.model.traverse(n => { if (!this.own.has(n) && this.own.has(n.parent)) extra.push(n); });
+      for (const n of extra) n.removeFromParent();
+      this.cuts.right = this.cuts.left = this.cuts.below = null;
+      this.cut();
+      this.facing = 0; this.turnTo = 0; this.turn.rotation.y = 0;
+      this.z = 0; this.turn.position.z = 0;
+    }
     bone(name) { return this.bones[name] || null; }
     // Where a bone is on the page, in CSS px (x across, y down).
     pageAt(name) {
       const b = this.bone(name);
       if (!b) return {x: this.x, y: this.y};
       b.getWorldPosition(v3);
-      return {x: v3.x, y: -v3.y};
+      return {x: v3.x, y: -v3.y, z: v3.z};
     }
     headAt() {
       const p = this.pageAt("head");
       return {x: p.x, y: p.y - this.ppm * 0.62};
+    }
+    // Between his hands, on the page: where something he carries in both is.
+    handsAt() {
+      const l = this.pageAt("grip_L"), r = this.pageAt("grip_R");
+      return {x: (l.x + r.x) / 2, y: (l.y + r.y) / 2};
     }
     say(text, secs) {
       this.bubble.textContent = text;
@@ -318,9 +378,16 @@ export function stage(o) {
     constructor(name, gltf) {
       this.name = name;
       this.root = new T.Group();
-      this.model = gltf.scene;
+      // its own copy, materials and all: what one bit does to a prop (fades it, hides a part of it, poses it)
+      // doesn't follow it into the next, and two of the same prop are two
+      this.model = T.cloneSkinned(gltf.scene);
+      this.model.traverse(n => {
+        if (!n.isMesh) return;
+        n.material = Array.isArray(n.material) ? n.material.map(m => m.clone()) : n.material.clone();
+        if (n.isSkinnedMesh) n.frustumCulled = false;
+      });
       this.root.add(this.model);
-      this.mixer = new T.AnimationMixer(gltf.scene);
+      this.mixer = new T.AnimationMixer(this.model);
       this.clips = Object.fromEntries(gltf.animations.map(c => [c.name, c]));
       mixers.add(this.mixer);
       this.holder = null;
@@ -415,6 +482,16 @@ export function stage(o) {
     return e;
   };
   const tick = f => { tickers.add(f); return () => tickers.delete(f); };
+  // `f(e)` every frame for `secs` on the stage's clock, e eased from 0 to 1 (`ease`, of u in 0..1: an ease-out
+  // cubic unless given); resolves at the end, or as soon as the bit is stopped.
+  const tween = (secs, f, ease = u => 1 - Math.pow(1 - u, 3)) => new Promise(res => {
+    const at = clock;
+    const off = tick(() => {
+      const u = secs > 0 ? Math.min(1, (clock - at) / secs) : 1;
+      f(ease(u));
+      if (u >= 1 || aborted) { off(); res(); }
+    });
+  });
   const fading = (el, secs) => {
     const at = clock;
     const off = tick(() => {
@@ -496,7 +573,7 @@ export function stage(o) {
   const holoMats = root => root.traverse(m => {
     if (!m.isMesh) return;
     const swap = mat => {
-      if (!mat || !/^holo/i.test(mat.name)) return mat;
+      if (!mat || !/^holo/i.test(mat.name) || mat.isMeshBasicMaterial) return mat;
       const c = mat.emissive && mat.emissive.getHex() ? mat.emissive.clone() : mat.color.clone();
       return new T.MeshBasicMaterial({color: c, transparent: true, opacity: 0.85, blending: T.AdditiveBlending,
                                       depthWrite: false, side: T.DoubleSide, name: mat.name});
@@ -516,6 +593,7 @@ export function stage(o) {
     tilt.add(g.scene);
     tilt.rotation.x = 0.42;                          // seen from a little above, as on the sheet
     holoMats(g.scene);
+    tone(T, g.scene);
     scene.add(root);
     const mixer = new T.AnimationMixer(g.scene);
     mixers.add(mixer);
@@ -629,6 +707,7 @@ export function stage(o) {
   async function core(pal) {
     const g = await fetchGLB("pals/core.glb");
     glow(g.scene);
+    tone(T, g.scene);
     const root = new T.Group(), v = new T.Vector3();
     root.add(g.scene);
     const mixer = new T.AnimationMixer(g.scene), clips = Object.fromEntries(g.animations.map(c => [c.name, c]));
@@ -723,7 +802,7 @@ export function stage(o) {
       }
       const s = {cast, ...cast, after, until, page, prop, svg, glb, attach, holo: holoMats, glow,
                  project: name => project(name, true), add: o => scene.add(o),
-                 where: () => where(), core, figures,
+                 where: () => where(), core, figures, tween, tone: root => tone(T, root),
                  mixer: root => { const m = new T.AnimationMixer(root); mixers.add(m); return m; },
                  W: () => W, H: () => H, clock: () => clock,
                  get alive() { return !aborted; }, tick,
@@ -734,7 +813,7 @@ export function stage(o) {
     } finally {
       for (const u of undos.splice(0).reverse()) { try { u(); } catch {} }
       for (const a of Object.values(cast)) {
-        a.hush(); a.mixer.stopAllAction(); mixers.delete(a.mixer); a.current = null; a.clipRight(null); a.z = 0; a.turn.position.z = 0;
+        a.hush(); a.mixer.stopAllAction(); mixers.delete(a.mixer); a.current = null; a.strip();
       }
       svg.clear();
       tickers.clear();

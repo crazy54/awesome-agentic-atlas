@@ -12,7 +12,8 @@
 // read, floating over wherever the Core is on the page, a beam of light down to it.
 //
 // Glow is drawn additively: every material whose name starts `holo` (the Core's lights, the worlds'
-// holograms) is swapped for an unlit one that adds its colour, so it reads as light on any page colour.
+// holograms) is swapped for an unlit one that adds its colour, so it reads as light -- on a dark page; on a
+// light one, laid over it a shade deeper instead (archie-stage.js tone(), each time it opens).
 //
 // The `core-show` clip (art/pals/clips/archie_base.py) says when the hand-offs happen: CORE below.
 const CORE = {grab: 0.62, unfold: 1.35, fold: 6.05, dock: 7.5};   // archie_base.py CORE_GRAB .. CORE_DOCK
@@ -21,7 +22,7 @@ const DOCK_OUT = 0.018;      // the ball's centre ahead of his `core` bone, dock
 const PALM = 0.085;          // ... and above `grip_L`, along the palm's normal, held
 
 export function atlas(o) {
-  const {T, V, base, loader, model, where, project, toPage, size} = o;
+  const {T, V, base, loader, model, where, project, toPage, size, tone = null} = o;
   const url = f => new URL(f + V, base).href;
   const grip = model.getObjectByName("grip_L"), dock = model.getObjectByName("core");
   const v = new T.Vector3(), n = new T.Vector3(), sc = new T.Vector3(), q = new T.Quaternion();
@@ -89,6 +90,7 @@ export function atlas(o) {
   async function begin() {
     await ready;
     const here = where();
+    if (tone && core) tone(core.scene);              // its glow, for the page as it is now
     show = {stage: 0, here, proj: null};
     return here;
   }

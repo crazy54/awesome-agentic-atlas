@@ -121,9 +121,8 @@ def build():
     for s, sx in rig.SIDES:
         R.bone(f"ear{s}", (sx * 0.27, SY(722), Z(180)), (sx * 0.34, SY(722), Z(180)), "head", z=(0, -1, 0))
     R.bone("core", (0, -0.11, Z(342)), (0, -0.23, Z(342)), "spine", z=(0, 0, 1))
-    # The back hatch (hinged along its top edge, swings up and out: Brick opens it in "the fake crash")
-    # and the tether port low on his back (the end of his own tether, in "the invisible tug-of-war").
-    R.bone("hatch", (0, 0.205, Z(262)), (0, 0.205, Z(318)), "chest", z=(0, 1, 0))
+    # The tether port low on his back (the end of his own tether, in "the invisible tug-of-war"). (The
+    # back door's `hatch` bone is made with the door, below: it hangs on the plate's own edge.)
     R.bone("tether", (0, 0.17, Z(380)), (0, 0.27, Z(380)), "hips", z=(0, 0, 1))
     for s, sx in rig.SIDES:
         R.bone(f"shoulder{s}", (sx * 0.08, 0, Z(262)), (sx * SHOULDER.x, 0, SHOULDER.z), "chest")
@@ -292,6 +291,8 @@ def build():
 
     # ---- torso -------------------------------------------------------------------------------------
     CH_C = V(0, -0.025, Z(279))
+    BAY_FLOOR = Z(318)                    # the ledge in the bay behind his back door (the fake crash)
+    DOOR = 1                              # which back plate is the door: his left (+1), clear of a raised right arm
 
     def chest_shape(p, q):
         # Wide at the shoulders, tapering to the waist; pecs forward, the back flatter.
@@ -306,9 +307,18 @@ def build():
 
     # The torso is white plates over a graphite body, as on the sheet: the black shows at the V of the
     # collar, under the arms, down the spine and at the waist.
-    add(geo.superquad("torso-core", (0.235, 0.175, 0.19), M["graphite"], CH_C + V(0, 0.015, -0.02), n=(2.5, 2.4, 2.6),
-                      shape=lambda p, q: Vector((p.x * lerp(0.78, 1.0, smooth(-1, 0.6, q.z)), p.y, p.z)), res=10),
-        "chest")
+    TC = CH_C + V(0, 0.015, -0.02)
+
+    def torso_shape(p, q):
+        x = p.x * lerp(0.78, 1.0, smooth(-1, 0.6, q.z))
+        # the bay behind his back door: the core's back pressed in there, out of sight while the door is shut
+        z = TC.z + p.z
+        bay = (smooth(0.07, 0.11, DOOR * x) * smooth(BAY_FLOOR - 0.03, BAY_FLOOR + 0.01, z) *
+               (1 - smooth(Z(256) - 0.05, Z(256) - 0.01, z)) * smooth(0.15, 0.55, q.y))
+        return Vector((x, p.y - 0.065 * bay, p.z))
+
+    torso_core = add(geo.superquad("torso-core", (0.235, 0.175, 0.19), M["graphite"], TC, n=(2.5, 2.4, 2.6), res=14,
+                                   shape=torso_shape), "chest")
     chest_base = geo.superquad("chest-base", (0.282, 0.226, 0.188), M["ceramic"], CH_C, n=(2.6, 2.4, 3.3),
                                shape=chest_shape, res=13)
 
@@ -324,14 +334,25 @@ def build():
     add(chest, "chest")
     add(rims, "chest")
 
-    def chest_back(co):
-        return min(co.y - (CH_C.y + 0.1), abs(co.x) - 0.065, Z(256) - co.z, 0.258 - abs(co.x))
+    # The two back plates either side of the spine. One of them (DOOR's side) is a door, as nothing on the
+    # sheet shows: it hangs on a hinge down its outer edge (the `hatch` bone runs up the hinge; turning it by
+    # -DOOR about its Y swings the door open), and behind it is a little bay -- where, in "the fake crash",
+    # Brick finds Zip at the controls.
+    def chest_back(sx):
+        return lambda co: min(co.y - (CH_C.y + 0.1), sx * co.x - 0.065, Z(256) - co.z, 0.258 - abs(co.x))
 
-    back, brims = geo.plate("back-plate", chest_base, chest_back, M["ceramic"], thickness=0.03, rim=M["lime"],
-                            rim_r=0.007)
-    geo.box_uv(back, 0.5)
-    add(back, "chest")
-    add(brims, "chest")
+    for s, sx in rig.SIDES:
+        back, brims = geo.plate(f"back-plate{s}", chest_base, chest_back(sx), M["ceramic"], thickness=0.03,
+                                rim=M["lime"], rim_r=0.007)
+        geo.box_uv(back, 0.5)
+        door = sx == DOOR
+        if door:
+            edge = [back.matrix_world @ v.co for v in back.data.vertices if DOOR * v.co.x > 0.245]
+            hinge = V(DOOR * (max(DOOR * v.x for v in edge) - 0.004), sum(v.y for v in edge) / len(edge) - 0.012, 0)
+            R.bone("hatch", (hinge.x, hinge.y, min(v.z for v in edge)), (hinge.x, hinge.y, max(v.z for v in edge)),
+                   "chest", z=(0, 1, 0))
+        add(back, "hatch" if door else "chest")
+        add(brims, "hatch" if door else "chest")
     csurf = geo.Surface(chest_base)
     bpy.data.objects.remove(chest_base)
 
@@ -354,19 +375,29 @@ def build():
         add(geo.superquad(f"spine-plate{i}", (0.062, 0.024, 0.015), M["graphite"], (0, 0.166, z), n=2.6, res=3),
             "chest")
 
-    # The hatch: a ceramic door over the upper back with a lime rim, a graphite cavity behind it.
-    hz0, hz1 = Z(262), Z(312)
-    hatch_c = V(0, 0.0, (hz0 + hz1) / 2)
-    back_y = csurf.back(0.0, hatch_c.z).y
-    hb = geo.superquad("hatch-door", (0.1, 0.03, (hz0 - hz1) / 2), M["ceramic"], (0, back_y + 0.012, hatch_c.z),
-                       n=(3.2, 2.2, 3.2), res=6)
-    geo.box_uv(hb, 0.5)
-    add(hb, "hatch")
-    rim = [V(0.094 * math.cos(a), back_y + 0.036, hatch_c.z + ((hz0 - hz1) / 2 - 0.006) * math.sin(a))
-           for a in (math.tau * i / 28 for i in range(28))]
-    add(geo.tube("hatch-rim", rim, 0.007, M["lime"], segs=6, caps=False, closed=True), "hatch")
-    add(geo.superquad("hatch-cavity", (0.088, 0.02, (hz0 - hz1) / 2 - 0.01), M["rubber"], (0, back_y - 0.006, hatch_c.z),
-                      n=3.0, res=4), "chest")
+    # The bay behind the door: a matt back wall on the graphite core, a ledge along its foot (BAY_FLOOR: what
+    # stands in it stands there), a column of status lights and two cable runs.
+    tsurf = geo.Surface(torso_core)
+    wall = tsurf.back(DOOR * 0.165, BAY_FLOOR + 0.12)
+    add(geo.superquad("bay-wall", (0.075, 0.006, 0.105), M["rubber"], (DOOR * 0.165, wall.y, BAY_FLOOR + 0.12),
+                      n=(3.4, 2.0, 3.4), res=5), "chest")
+    add(geo.superquad("bay-ledge", (0.08, 0.024, 0.007), M["graphite"], (DOOR * 0.165, wall.y + 0.024, BAY_FLOOR + 0.004),
+                      n=(3.0, 3.0, 2.4), res=4), "chest")
+    # `bay`: the middle of the ledge's top, for the page to stand things on (a bone of its own, so it is wherever
+    # the chest is; a joint, as every bone is, or the exporter would drop it)
+    R.bone("bay", (DOOR * 0.165, wall.y + 0.024, BAY_FLOOR + 0.011), (DOOR * 0.165, wall.y + 0.024, BAY_FLOOR + 0.06), "chest",
+           z=(0, 1, 0))
+    # status lights up the spine side (the hinge side is behind the open door), two lime bars under them
+    for i in range(3):
+        add(geo.sphere(f"bay-light{i}", 0.006, M["lime"], (DOOR * 0.1, wall.y + 0.007, BAY_FLOOR + 0.15 + 0.022 * i),
+                       res=3), "chest")
+    for i in range(2):
+        add(geo.superquad(f"bay-bar{i}", (0.022, 0.004, 0.0035), M["lime"],
+                          (DOOR * 0.135, wall.y + 0.006, BAY_FLOOR + 0.1 + 0.016 * i), n=(3.0, 2.0, 2.4), res=3), "chest")
+    for k, x in enumerate((DOOR * 0.12, DOOR * 0.205)):
+        add(geo.tube(f"bay-cable{k}", [V(x, wall.y + 0.006, BAY_FLOOR + 0.22), V(x + DOOR * 0.01, wall.y + 0.01, BAY_FLOOR + 0.12),
+                                         V(x - DOOR * 0.004, wall.y + 0.007, BAY_FLOOR + 0.02)], 0.005, M["graphite"], segs=5),
+            "chest")
     # The tether port: a graphite socket with a lime ring, low on the back.
     tp = V(0, 0.16, Z(382))
     add([geo.disc("tether-port", 0.04, 0.04, M["graphite"], tp, (0, 1, 0), bevel_r=0.01, segs=20),

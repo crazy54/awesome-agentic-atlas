@@ -335,7 +335,7 @@
           const r = canvas.getBoundingClientRect();
           return {x: r.left + (cv.x + 1) / 2 * r.width, y: r.top + (1 - cv.y) / 2 * r.height};
         },
-        size: () => view.sh * 0.72});
+        size: () => view.sh * 0.72, tone: root => S.tone(T, root)});
       return atlas.ready.then(() => { atlasUp = true; });
     }).catch(e => { console.warn("Archie's Atlas Core stayed home:", e); atlas = null; });
     // The dances come second: about half a megabyte the first screen does not need, fetched once he is up
@@ -374,7 +374,7 @@
         return {S, B, st};
       }));
     let bitsReady = null;
-    later(6, () => staged().then(m => { bitsReady = m; }))
+    later(6, () => staged().then(m => { bitsReady = m; cues(m); }))
       .catch(e => console.warn("Archie's stage is closed:", e));
     let bitting = false;
     const bitNames = () => (bitsReady ? Object.keys(bitsReady.B.BITS) : []);
@@ -391,6 +391,23 @@
     const pickBit = () => {
       const pool = bitNames().filter(n => !playedBits.has(n) && bitsReady.st.can({name: n, ...bitsReady.B.BITS[n]}));
       return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
+    };
+    // A bit with a `cue` waits for its moment rather than its turn: something the reader does (scrolls a row
+    // of cards, say). Its `cue(page, go)` is called once, when the bits load, to listen (passively: it only
+    // ever reads), and calls `go()` when the moment comes; the bit then plays if Archie could play a bit now,
+    // and is between acts -- a minute since the last bit is enough, as the reader asked for this one.
+    const CUE_GAP = 60000;
+    const cues = m => {
+      for (const [name, b] of Object.entries(m.B.BITS)) {
+        if (typeof b.cue !== "function") continue;
+        try {
+          b.cue(m.st.page, () => {
+            if (asked || talk.quiet || music.on || pranking || bitting || (pals && pals.busy) || mode === "visit") return;
+            if (!idling || !done || playedBits.has(name) || Date.now() - lastBit < CUE_GAP) return;
+            if (m.st.can({name, ...b})) bitVisit(name);
+          });
+        } catch (e) { console.warn(`pals: ${name}'s cue`, e); }
+      }
     };
     const playBit = async name => {
       const m = bitsReady || await staged();

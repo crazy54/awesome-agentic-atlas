@@ -65,17 +65,38 @@ A staging file is one object expression in parentheses; the bit's name is the fi
 })
 ```
 
-`s` is the stage: `s.archie` / `s.zip` / `s.brick` (each `.at(x, y)`, `.show(on)`, `.walkTo(x, {speed, clip, mps})` (`mps`: a clip's own ground speed, from its module),
-`.face(-1|0|1)`, `.play(clip, {loop})`, `.perform(clip)` (resolves at its end), `.say(text, secs)`,
-`.pageAt(bone)`, `.time()`, `.clipRight(x)`), `s.after(secs)`, `s.until(pred)`, `s.tick(fn)` (returns its
-remover), `s.page.rect(sel)`, `s.page.flicker(n)`, `s.page.undo(fn)`, `s.svg.path()`, `s.svg.door(box)`,
-`s.prop(name)` (a prop GLB from `pals/props/`: `.at(x, y)`, `.hold(pal, bone)`, `.play(clip)`),
-`s.glb(path)` (any assets-relative GLB, cached: the Core is `pals/core.glb`), `s.holo(root)` (swap its
-`holo*` materials for additive glow), `s.attach(obj, pal, bone, {offset, upright})` (keep an object on a
-pal's bone every frame; returns its remover), `s.project(world)` (the Core's projection of a world, as in
-archie-core.js: `.at(x, y, width, side)` every frame, `.idle()`, `.play(clip)`, `.free(x, y, width)`,
-`.hide(secs)`), `s.add(obj)` (into the scene, page px units), `s.mixer(root)` (an AnimationMixer the stage
-updates), `s.T` (three.js), and `s.alive`. Positions are CSS pixels in the window, x across and y down; a pal's `y` is his floor.
+`s` is the stage. Positions are CSS pixels in the window, x across and y down; a pal's `y` is his floor.
+
+* **The cast**, `s.archie` / `s.zip` / `s.brick`: `.at(x, y, ppm)`, `.show(on)`, `.walkTo(x, {speed, clip, mps,
+  backwards})` (`mps`: a clip's own ground speed, from its module; `backwards`: facing away from where he goes),
+  `.face(-1|0|1)` (or `.face(dir, radians)`), `.depth(z)` (who is drawn in front where two overlap: larger is
+  nearer the reader), `.play(clip, {loop})`, `.perform(clip)` (resolves at its end), `.time()`,
+  `.say(text, secs)`, `.pageAt(bone)` (`{x, y, z}`), `.headAt()`, `.handsAt()` (between his grips),
+  `.clipRight(x)` / `.clipBelow(y)` (hide him right of x, or below y: through a doorway, behind an edge;
+  `null` to stop).
+* **Time**, all on the stage's clock (never `setTimeout`, `requestAnimationFrame` or `performance.now`: a
+  recording steps the clock, and a hidden tab pauses it): `s.after(secs)`, `s.until(pred)`, `s.tick(fn)`
+  (every frame; returns its remover), `s.tween(secs, f, ease)` (`f(e)` with e eased 0..1; ends early if the
+  bit is stopped), `s.clock()`.
+* **The page**: `s.page.rect(sel)`, `s.page.slot()` (where the masthead's Archie stands, and his size there),
+  `s.page.nudge(el, {rotate, x, y, origin, secs})` (turn or shift a page element for a moment; returns
+  `back(secs)`), `s.page.flicker(n, ms)`, `s.page.undo(fn)`; `s.where()` (`{page, topic, world}`).
+* **Drawing**: `s.svg.path()`, `s.svg.door(box)`; `s.add(obj)` (into the scene, page px units).
+* **Props**: `s.prop(name)` (a prop from `pals/props/`, each call its own copy, materials and all: `.at(x, y,
+  ppm)`, `.hold(pal, bone)`, `.play(clip)`, `.remove()`), `s.attach(obj, pal, bone, {offset, upright})` (keep
+  an object on a pal's bone every frame; returns its remover; `offset` is in the bone's own frame: Y along the
+  bone), `s.glb(path)` (any assets-relative GLB: cached and shared, so copy what you change), `s.mixer(root)`.
+* **The Atlas Core**: `s.core(archie)` (the Core on him, docked: `.play(clip)` returns its length, `.dock()`,
+  `.hold()`, `.page(above)`), `s.project(world)` (its projection of a world: `.at(x, y, width, side)` every
+  frame, `.idle()`, `.play(clip)` (appear, idle, scatter, gather, tilt, level), `.free(x, y, width)`,
+  `.hide(secs)`), `s.figures(prop, n)` (little hologram copies of a skinned prop, each with `.root`, `.mixer`
+  and `.play(clip)`), `s.glow(root)` / `s.holo(root)` (its `holo*` materials drawn as light).
+* `s.T` (three.js), and `s.alive`.
+
+When a bit ends, however it ends, the stage takes back everything it lent: whatever the bit hung on a pal
+(props in hands, hats, the Core) comes off, his cuts and depth are reset and he faces the reader, its
+tickers, mixers, SVG and scene go, and `s.page.undo` puts the page back. So a bit needn't clean up after
+itself -- but it mustn't change what it didn't make (the cached `s.glb` scenes, the page) except through these.
 
 * After every `await`, `if (!s.alive) return;`. A click, Escape, Tab or a hidden tab ends the bit; the stage
   then puts the page back (anything registered with `s.page.undo`) and takes the cast away.
