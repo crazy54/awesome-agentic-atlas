@@ -111,9 +111,10 @@ Node process on the machine, including other sessions' tools and test runs.
 | `rig-check.mjs` | browser | The light show: the flash rate of every fixture, the blinders' swell, the cues | 43 | 40 |
 | `admin-check.mjs` | browser | Archie's admin panel: hidden, one button per command, each dispatching its own, why a button is greyed | 69 | 60 |
 | `stage-check.mjs` | browser | The stage by its pixels: the LED wall moving; pyro, CO2, haze and blinders visible | 51 | 45 |
+| `bits-check.mjs` | browser | Every one of the pals' bits, played where it can play: the page put back exactly, nothing saved, no focus taken, no more than three flashes a second, nothing outside the stage's layer, and Escape and a click stopping it. Slow: about 30 min (`AAA_BITS=name,…` for one) | 696 | 450 |
 
-The Assertions column counts passed plus failed. The five Archie browser harnesses (`prank`, `friends`, `rig`, `admin` and
-`stage`) render the real model through swiftshader's software WebGL. They add the needed flags
+The Assertions column counts passed plus failed. The six Archie browser harnesses (`prank`, `friends`, `rig`, `admin`,
+`stage` and `bits`) render the real model through swiftshader's software WebGL. They add the needed flags
 themselves.
 
 ## Known-red and environment-sensitive checks
