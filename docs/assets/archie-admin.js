@@ -8,9 +8,9 @@
 //
 // Every button is one command of `window.archie` (see "Commands" at the top of `archie.js`), the same path the
 // `?archie=` flags take, and nothing here reaches into the model. A button whose command cannot run now --
-// the model is a poster under reduced motion or on a narrow screen, the rig is not up, a friend is already
-// over -- is disabled, and says why in its title and in the panel's status line. The states are asked
-// again twice a second while the panel is open, because most of them change as he moves.
+// the model is a poster under reduced motion or on a narrow screen, a friend is already over -- is
+// disabled, and says why in its title and in the panel's status line. The states are asked again twice a
+// second while the panel is open, because most of them change as he moves.
 //
 // The friends are `friend:<id>` for each id in `archie-friends-data.js`'s ORDER, read here rather than by
 // `archie.js`, so that their data loads with the panel and not for every reader.
@@ -21,7 +21,7 @@ const V = new URL(import.meta.url).search;
 
 const NAMES = {
   idle: "Idle", watch: "Watch", sit: "Sit", sleep: "Sleep", press: "Press", shrug: "Shrug",
-  "walk-off": "Walk off / moonwalk", show: "Light show", core: "Atlas Core", chatter: "Chatter", poke: "Poke",
+  "walk-off": "Walk off / moonwalk", core: "Atlas Core", chatter: "Chatter", poke: "Poke",
   quiet: "Stop everything",
 };
 const label = cmd => NAMES[cmd] || (cmd.split(":")[1] || cmd).replace(/-/g, " ");
@@ -65,7 +65,6 @@ const groups = async () => {
     ["Bits", pick(c => c.startsWith("bit:"))],
     ["Friends", friends],
     ["Talk", pick(c => c === "chatter" || c === "poke")],
-    ["Rig", pick(c => c.startsWith("cue:"))],
     ["Stop", pick(c => c === "quiet")],
   ].filter(([, cmds]) => cmds.length);
 };

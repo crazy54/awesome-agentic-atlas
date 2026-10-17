@@ -333,7 +333,7 @@ jobs:
               # `docs/assets/*` IS now in the list, whole, and the paragraph above still holds: the four
               # generated PNGs are at `docs/` root, not under `docs/assets/`, so this pattern cannot reach
               # them. Everything under `docs/assets/` is checked in by hand -- Archie's model, scripts and
-              # posters, the rig's clips and gobos, the masthead art (`scripts/masthead_art.py`, run by
+              # posters, the pals' models and clips, the masthead art (`scripts/masthead_art.py`, run by
               # hand), `daily-lines.json` (which `31_home` *reads*) -- and between 23 and 25 September that
               # directory went from one file to thirty-six. Naming them one by one broke the daily build
               # on the first of them (every run from 24 September died here with nine "missing

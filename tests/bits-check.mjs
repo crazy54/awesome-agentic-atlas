@@ -148,9 +148,9 @@ async function github(tab, p) {
 // ---- the recorder, in every document before the page's own scripts ------------------------------------
 // Archie's own furniture runs on his own clock, so it is left out of the page's picture: his slot and dock,
 // his bubble (it follows his head), the live region he speaks through, the poke target and its hearts, and
-// anything else his director's scripts make -- the rig's laser canvas, say, which is shown while he dances
-// and hidden when a bit cuts the dance short. That last is told by who called createElement: archie.js or
-// one of its fellows, with neither archie-stage.js nor archie-bits.js on the stack. Everything a bit or the
+// anything else his director's scripts make -- the layer a visit or a friend draws in, say, which comes and
+// goes on his clock and not the bit's. That last is told by who called createElement: archie.js or one of
+// its fellows, with neither archie-stage.js nor archie-bits.js on the stack. Everything a bit or the
 // stage makes, and everything of the page's own, is in the picture.
 const RECORDER = `(() => {
   const OWN = ".mhmascot, .archie-dock, .archie-say, .archie-sr, .archie-poke, .archie-heart";
@@ -159,7 +159,7 @@ const RECORDER = `(() => {
                             row: null, rowLeft: null, snaps: {}};
   const name = e => !e || e.nodeType !== 1 ? String(e && e.nodeName) : e.tagName.toLowerCase() +
     (e.id ? "#" + e.id : "") + (e.classList.length ? "." + [...e.classList].slice(0, 3).join(".") : "");
-  const DIRECTOR = /[/]assets[/](archie|archie-fx|archie-core|archie-friends|archie-dance|archie-admin|rig-show)[.]js/;
+  const DIRECTOR = /[/]assets[/](archie|archie-core|archie-friends|archie-dance|archie-admin)[.]js/;
   const BIT = /[/]assets[/]archie-(stage|bits)[.]js/;
   const own = new WeakSet();
   for (const k of ["createElement", "createElementNS"]) {

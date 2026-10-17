@@ -18,7 +18,7 @@ publishes and no generator touches.
 | [CI/CD and deployment](ci-cd.md) | Which branch deploys, the daily and weekly builds, the test, Lighthouse and OG-preview workflows, caches, releases and secrets |
 | [The test suite](testing.md) | `node tests/run.mjs`, each harness and what it guards, how to run one alone, and the checks known to be flaky or environment-sensitive |
 | [The website front end](frontend.md) | The page families, which generator owns each, themes and skins, feature flags, and the PWA and its service-worker versioning rule |
-| [Archie, the mascot](archie.md) | The 3D model and its Blender source, animation clips, "Dance with me", the stage rig and effects, the admin panel, `?archie=` flags, and what to regenerate after an edit |
+| [Archie, the mascot](archie.md) | The 3D model and its Blender source, animation clips, "Dance with me", the pals and their bits, the admin panel, `?archie=` flags, and what to regenerate after an edit |
 | [Contributor guide](contributing.md) | Branching, pull requests against `latest_branch`, generated vs hand-written files, and the Windows and Git Bash pitfalls |
 | [Troubleshooting](troubleshooting.md) | Symptoms and their usual causes: red suites, skipped dailies, stale service workers, broken checkouts |
 | [Keeping these docs current](keeping-docs-current.md) | Which page to update when which code changes, and the rules for numbers in prose |

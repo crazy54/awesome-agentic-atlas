@@ -108,13 +108,11 @@ Node process on the machine, including other sessions' tools and test runs.
 | `spotlight-check.mjs` | browser | The spotlight on a pinned clock: per day, all day, local time, no layout shift, no-JS | 117 | 100 |
 | `prank-check.mjs` | browser | Archie's pranks: each undone, nothing saved, the flicker rate | 33 | 28 |
 | `friends-check.mjs` | browser | Archie's friends: each arrives, leaves, restores the page and keeps off the controls | 109 | 80 |
-| `rig-check.mjs` | browser | The light show: the flash rate of every fixture, the blinders' swell, the cues | 43 | 40 |
-| `admin-check.mjs` | browser | Archie's admin panel: hidden, one button per command, each dispatching its own, why a button is greyed | 69 | 60 |
-| `stage-check.mjs` | browser | The stage by its pixels: the LED wall moving; pyro, CO2, haze and blinders visible | 51 | 45 |
+| `admin-check.mjs` | browser | Archie's admin panel: hidden, one button per command, each dispatching its own, why a button is greyed | 69 | 55 |
 | `bits-check.mjs` | browser | Every one of the pals' bits, played where it can play: the page put back exactly, nothing saved, no focus taken, no more than three flashes a second, nothing outside the stage's layer, and Escape and a click stopping it. Slow: about 30 min (`AAA_BITS=name,…` for one) | 696 | 450 |
 
-The Assertions column counts passed plus failed. The six Archie browser harnesses (`prank`, `friends`, `rig`, `admin`,
-`stage` and `bits`) render the real model through swiftshader's software WebGL. They add the needed flags
+The Assertions column counts passed plus failed. The four Archie browser harnesses (`prank`, `friends`, `admin` and
+`bits`) render the real model through swiftshader's software WebGL. They add the needed flags
 themselves.
 
 ## Known-red and environment-sensitive checks
@@ -130,7 +128,7 @@ A PR is judged on adding no new failures. For each of the nine:
 | `detail-preview-check` (1) | README, skill, agent and docs Markdown are discoverable in the picker | Not investigated |
 | `dance-check` (2) | beats timed by the audio clock; the poster hops on the beat | Timing-sensitive: intervals ranged from 396 to 3,498 ms against a 500 ms beat on a loaded machine |
 | `friends-check` (1) | "and so does Escape" | Load. In-page, Escape takes 0.42-0.46 s against the 1 s budget (2026-10-14), and every CI run with a tally from 2026-09-26 to 2026-10-14 passed it. With another suite running on the same machine, Tab missed once; pinned to one core, Tab and the poke did |
-| `rig-check` (1) | the blinder cue plays | **Fixed 2026-10-14.** The waits were in wall-clock seconds, and a cue is timed in the rig's, which CI's software WebGL, at under two frames a second, runs at a fifth of real time or less. They are bounded in the rig's seconds now |
+| `rig-check` (1) | the blinder cue plays | **Fixed 2026-10-14.** The waits were in wall-clock seconds, and a cue is timed in the rig's, which CI's software WebGL, at under two frames a second, runs at a fifth of real time or less. They are bounded in the rig's seconds now. The harness was removed on 2026-10-17, with the light show |
 
 Other known sensitivities:
 
@@ -138,9 +136,9 @@ Other known sensitivities:
   4 minutes earlier. Re-run before debugging it.
 - **`cards-check` name-tag line count** depends on whether Segoe UI is installed. There is 2.4 px of
   slack in an 82 px pill, so it can pass on Windows and fail on Linux CI.
-- **Archie's frame rate.** The Archie harnesses render through swiftshader, which on CI draws a frame or two
-  a second once the rig is lit. Wait for anything Archie times in his frames by the rig's clock, as
-  `rig-check`'s `untilRig` does. The friends' dismissals are a 350 ms fade, held to a wall-clock second
+- **Archie's frame rate.** The Archie harnesses render through swiftshader, which on CI can draw only a few
+  frames a second. Wait for anything Archie times in his frames by his own clock, as `bits-check` steps the
+  stage's, never in wall-clock milliseconds. The friends' dismissals are a 350 ms fade, held to a wall-clock second
   (three for a poke); a run on one core shared with other work can miss them. See
   [troubleshooting.md](troubleshooting.md#the-suite-is-red).
 - **Hover styles:** CI's headless Chromium reports `(hover: hover)` as false, while a desktop run reports

@@ -5,8 +5,8 @@ them; the first Archie's script made the first set), re-made for this skeleton, 
     floss  take-the-l  default-dance  orange-justice  robot  electro-shuffle  hype  boogie-down
     get-griddy  billy-bounce  fresh  scenario  groove-jam  headbang  the-drop
 
-Durations and beat counts are the old ones, because the page's light show counts beats (`BEATS` in
-archie.js). Every clip but `idle`, `walk` and `moonwalk` starts and ends on the idle's first pose, `REST`, so
+Durations and beat counts are the old ones, because the page counts beats to keep a dance on the reader's
+music (`BEATS` in archie.js). Every clip but `idle`, `walk` and `moonwalk` starts and ends on the idle's first pose, `REST`, so
 the page can drop any of them between two idles without a jump.
 
 THE WALK. `walk` is a stride in place: each foot slides back at WALK_SPEED while it is down, and the page

@@ -55,9 +55,7 @@ node tests/dance-check.mjs          <chrome-binary> <origin>
 node tests/spotlight-check.mjs      <chrome-binary> <origin>
 node tests/prank-check.mjs          <chrome-binary> <origin>
 node tests/friends-check.mjs        <chrome-binary> <origin>
-node tests/rig-check.mjs            <chrome-binary> <origin>
 node tests/admin-check.mjs          <chrome-binary> <origin>
-node tests/stage-check.mjs          <chrome-binary> <origin>
 node tests/bits-check.mjs           <chrome-binary> <origin>
 ```
 
@@ -66,7 +64,7 @@ left out of the suite and CI by accident.
 
 ## What each one covers, and what it deliberately does not
 
-There are twenty-six files rather than one because they are twenty-six instruments, and the overlap between them is the
+There are twenty-nine files rather than one because they are twenty-nine instruments, and the overlap between them is the
 reason to keep them apart rather than the reason to merge them. Each file's header says at length what it
 cannot see; this is the summary. Assertion counts are passed plus failed from the 2026-09-25 run on
 `latest_branch` `a77b46eb`; they drift, and the floors in `run.mjs` are what is enforced.
@@ -100,9 +98,7 @@ cannot see; this is the summary. Assertion counts are passed plus failed from th
 | `spotlight-check.mjs` | The homepage's spotlight and line of the day in a real browser, on a clock the harness sets: a different pick on different days and the same one all day, keyed to the reader's *local* date, no layout shift, and a `<noscript>` card for readers without script. 117 assertions. | A real midnight passing on an open tab, and whether the pool is any good. |
 | `prank-check.mjs` | Archie's pranks, played on the live model through `?archie=prank:<name>`: the page is put back exactly, nothing is saved, and the light flicker is timed against WCAG 2.3.1. 107 assertions. | Whether a prank is funny, and when he picks one unasked. |
 | `friends-check.mjs` | Archie's visiting friends: each arrives, leaves, restores the page it touched, and keeps clear of the page's controls. 109 assertions. | Their art. |
-| `rig-check.mjs` | The stage rig: the flash rate of every fixture against WCAG 2.3.1, the blinders' swell, and that each cue plays. 43 assertions. | How the show looks. |
-| `admin-check.mjs` | Archie's admin panel: hidden until asked for, one button for every command, cue and friend the page names, each button dispatching its own command, and a greyed button saying why. | Whether the commands look right once they run. That is the other Archie harnesses' job. |
-| `stage-check.mjs` | The stage by its pixels, read off rendered frames: the LED wall's picture moving, and pyro, CO2, flames, sparks, haze and the blinders each changing what the camera sees when cued. | Whether the show is any good. It asserts that each effect is visible, not how it looks. |
+| `admin-check.mjs` | Archie's admin panel: hidden until asked for, one button for every command and friend the page names, each button dispatching its own command, and a greyed button saying why. | Whether the commands look right once they run. That is the other Archie harnesses' job. |
 | `bits-check.mjs` | The pals' bits, every one in `archie-bits.js`'s `BITS`, each on a fresh page view: placed on the first family in its `pages` where `archie.can()` says it can play (the top, then each element bits stand on scrolled 250 px down, with a mouse pointer brought onto the page, or the README's request held open, for a bit whose `ready()` wants one), then played in capture mode with the stage's clock stepped 0.2 s at a time, and required to end inside 120 stage seconds. Before and after: every element's tag, id, class and style, `<main>`'s text, `<html>`'s attributes and every scroll position; storage byte-identical and no cookie; focus never moved, sampled every step; the theme's flashes counted per second of stage time against WCAG 2.3.1; the stage's layer aria-hidden, without pointer events and with nothing focusable in it, and nothing added to the document outside it; no console error, and none of the stage's "pals: ..." warnings for an exception it swallowed or a clip a bit lacks. Then Escape on the three longest bits and a pointerdown on an empty spot for a fourth, each gone within a stage second with the page put back. 696 assertions on 2026-10-17, 42 bits, 29 minutes: every bit is a fresh page view, the stage loads six seconds after the model, and swiftshader draws every step. | What a bit looks like; the director choosing one unasked, or a `cue` firing on its own. The 404 page, which has no Archie on it. A bit whose moment it cannot make is reported as skipped, not passed. |
 
 Between them, 4,377 assertions on 2026-09-25 (4,368 passed, 9 failed, all 26 harnesses ran), from a real run
@@ -110,7 +106,7 @@ rather than by adding up the figures above. The number only matters in one direc
 The nine red ones were red on `latest_branch` `a77b46eb` before any documentation change, and each is named
 with its cause, where known, in [the handbook](../handbook/testing.md#known-red-and-environment-sensitive-checks):
 one in `probe.mjs`, one in `semantic_test.py`, one in `detail-preview-check.mjs`, two in `pwa-check.mjs` (the
-worker's `VERSION` is stale), two in `dance-check.mjs`, one in `friends-check.mjs` and one in `rig-check.mjs`.
+worker's `VERSION` is stale), two in `dance-check.mjs`, one in `friends-check.mjs` and one in `rig-check.mjs` (since removed, with the light show).
 Re-run the suite to update this paragraph; do not adjust the numbers by hand.
 
 One blind spot is structural. `probe.mjs` reads the committed `docs/catalog/index.html`, which only

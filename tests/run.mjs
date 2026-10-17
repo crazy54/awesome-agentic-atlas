@@ -2,13 +2,13 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty-one harnesses in turn --
-// eighteen Python, eleven in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the twenty-nine harnesses in turn --
+// eighteen Python, nine in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
 //
-// WHY THIRTY-ONE HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
+// WHY TWENTY-NINE HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
 //   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces, and
 //                     the one channel on the page that is not colour: the five platform verdict marks,
@@ -67,20 +67,11 @@
 //                     click, Escape, Tab, a poke or reduced motion sends them off, and Quiet mode, reduced
 //                     motion, a narrow screen and no WebGL each keep them away. Cannot see the dice -- a
 //                     quarter of page views, 20 to 60 s in -- beyond nobody coming in the first twenty.
-//   rig-check.mjs     Archie's light show on the live model: every moving head, wash par and blinder read on
-//                     every frame of a dance and held under WCAG's three flashes a second, the blinders held to
-//                     a swell, and each of the admin panel's named cues taken and played, refused in Quiet mode
-//                     and absent under reduced motion. Cannot see what the show looks like, only what it asks for.
 //   admin-check.mjs   Archie's hidden admin panel on the live model: hidden and never fetched on a plain view, a
 //                     faint but focusable trigger, opened by keyboard and from `=admin1337` via the site panel, one button per
-//                     command and friend that dispatches exactly its own, a reason on every disabled one (a cue
-//                     the rig lacks, no rig, reduced motion), and Escape handing focus back. Cannot see what an
-//                     act looks like; the other Archie harnesses do.
-//   stage-check.mjs   what it looks like, as far as pixels can say: the video wall, each stage effect and the
-//                     blinders drawn on their own, fired by their cues and screenshotted, in both themes -- the
-//                     wall's picture must move and have contrast, CO2 read white, flames and sparks fire-coloured,
-//                     the haze light up where the beams go through it -- and pyro fired by simulated music.
-//                     Cannot see whether it looks good, nor a real browser that will not decode the clip.
+//                     command and friend that dispatches exactly its own, a reason on every disabled one (the
+//                     masthead off screen, a friend already over, reduced motion), and Escape handing focus back.
+//                     Cannot see what an act looks like; the other Archie harnesses do.
 //   bits-check.mjs    the pals' bits, every one in BITS placed where its `pages` and `ready()` let it play and
 //                     run to the end on the stage's frozen, stepped clock: inside 120 stage seconds, the page's
 //                     DOM, text, <html> and scroll put back exactly, nothing saved, focused or added outside
@@ -191,7 +182,7 @@
 // static server needs. This site has no build step and nothing from npm is ever served to a reader; a
 // devDependency here would be the first `package.json` in the repository, would need a lockfile, would need
 // renovating, and would make "can I run the tests" a question with a network answer. The cost is that these
-// thirty-one files own their own plumbing. It is 200 lines of plumbing.
+// twenty-nine files own their own plumbing. It is 200 lines of plumbing.
 import {mkdtempSync, rmSync, existsSync, mkdirSync, readdirSync} from "node:fs";
 import {spawn} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -238,9 +229,7 @@ const HARNESSES = [
   {file: "spotlight-check.mjs", label: "the daily spotlight and line on a pinned clock: per day, all day, local, no shift, no script", needs: "browser", floor: 100},
   {file: "prank-check.mjs", label: "Archie's pranks: each undone, nothing saved, the flicker's rate", needs: "browser", floor: 28},
   {file: "friends-check.mjs", label: "Archie's friends: each comes, leaves, restores the page, and keeps off the controls", needs: "browser", floor: 80},
-  {file: "rig-check.mjs", label: "Archie's light show: the flash rate of every fixture, the blinders' swell, and the cues", needs: "browser", floor: 40},
-  {file: "admin-check.mjs", label: "Archie's admin panel: hidden, one button per command, each dispatching its own, and why a button is greyed", needs: "browser", floor: 60},
-  {file: "stage-check.mjs", label: "Archie's stage by its pixels: the wall's picture moving, and pyro, CO2, haze and blinders seen", needs: "browser", floor: 45},
+  {file: "admin-check.mjs", label: "Archie's admin panel: hidden, one button per command, each dispatching its own, and why a button is greyed", needs: "browser", floor: 55},
   {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450},
 ];
 
@@ -270,7 +259,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and eleven of the thirty-one harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and nine of the twenty-nine harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -283,7 +272,7 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Eighteen of the thirty-one need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Eighteen of the twenty-nine need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
 // entries it holds, one decides which repos a crawl would ask about, one drives a fake `gh` through the
 // batch fetch's failure handling, one drives the IndexNow client and
@@ -295,7 +284,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and eighteen of the thirty-one harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and eighteen of the twenty-nine harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

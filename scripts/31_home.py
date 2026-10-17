@@ -381,9 +381,8 @@ header h1,header .sub,header .blurb,header .top nav{text-shadow:0 0 14px var(--s
    bottom edge, on the fading half of the picture. Hidden where the navigation wraps under the title and
    there is no room between them.
    Three layers inside the header, bottom to top: the mascot, the words, the Settings menu. The loader grows
-   its canvas from this slot to the whole header's width, and a dance adds light over it, so at the words'
-   level it would wash out the title and the navigation -- worst in light mode, where adding light to dark
-   ink on a pale field is what lowers contrast. The words are lifted over it rather than the mascot sunk under
+   its canvas from this slot to the whole header's width, and he walks out across it, so at the words' level
+   he would cover the title and the navigation. The words are lifted over it rather than the mascot sunk under
    the art: the art is `.mhart`, outside the header, and the header is z 2 above it, so a mascot at 0 here is
    still drawn on the picture. The menu is given its own place above the words, rather than winning a tie
    with the mascot on source order, which it did until now and would stop doing if either moved. */
@@ -562,29 +561,24 @@ def spot_art(f: dict) -> str:
 # poster are committed separately from this page, so they are wired only when all three are there: a page
 # that names a script it does not have 404s it on every visit, and pwa-check counts that as a console error.
 # Whichever lands second, the next run of this stage turns it on.
-MASCOT = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb", "archie-3d.webp")
-# The loader's query is its version: archie.js hands its own `?v=` on to the effects, the renderer and the
-# model, and none of the four is in the service worker's precache, so without it a replaced file can meet a stale sibling
-# from the HTTP cache and the mascot stays a poster. The scripts are hashed with LF endings, because the
-# checkout is CRLF on Windows and LF on CI; the model is binary and hashed as it is.
+MASCOT = ("archie.js", "three-archie.js", "archie.glb", "archie-3d.webp")
+# The loader's query is its version: archie.js hands its own `?v=` on to the renderer and the model, and
+# none of the three is in the service worker's precache, so without it a replaced file can meet a stale
+# sibling from the HTTP cache and the mascot stays a poster. The scripts are hashed with LF endings, because
+# the checkout is CRLF on Windows and LF on CI; the model is binary and hashed as it is.
 # His friends (`archie-friends.js`, the art and choreography, and `archie-friends-data.js`, who they are and
 # every line) are imported the same way, so they are hashed in too. They are not in MASCOT: without them
-# he loses his visitors, not his model.
-# The light show's look book, fixture models, gobos and wall clips (`rig-show.js`, `rig/`, `rig-gobos/`)
-# are fetched under the same query, so they are hashed in as well. They and the friends are OPTIONAL: the
-# loader plays without any of them, so a checkout or a scratch directory that lacks one versions what it
-# has instead of failing, while the four the model cannot do without must be there.
-RIG = ("rig-show.js", "rig/rig.glb") + tuple(f"rig/wall-{w}.{ext}" for w in "abcd" for ext in (
-       "webm", "mp4", "webp")) + tuple(f"rig-gobos/{g}.svg" for g in (
-       "breakup", "dots", "star", "spiral", "archie", "braces", "iris", "prism"))
+# he loses his visitors, not his model. They and the rest below are OPTIONAL: the loader plays without any
+# of them, so a checkout or a scratch directory that lacks one versions what it has instead of failing,
+# while the three the model cannot do without must be there.
 # The admin panel is imported under the same query (see ADMIN_JS), so it is hashed in too: without it, an
 # edit to the panel alone would leave its URL, and a reader's cached copy, where they were.
 # The dances (`archie-dances.glb`) come under the same query too; without them he idles where he would dance.
 # So do the pals' stage and bits (`archie-stage.js`, `archie-bits.js`) and everything under `assets/pals/`
 # (Zip, Brick, the Atlas Core and its worlds, the props and each bit's clips): see PALS below.
 OPTIONAL = ("archie-friends.js", "archie-friends-data.js", "archie-admin.js", "archie-dances.glb",
-            "archie-stage.js", "archie-bits.js", "archie-core.js") + RIG
-VERSIONED = ("archie.js", "archie-fx.js", "three-archie.js", "archie.glb") + OPTIONAL
+            "archie-stage.js", "archie-bits.js", "archie-core.js")
+VERSIONED = ("archie.js", "three-archie.js", "archie.glb") + OPTIONAL
 
 
 # Every file under assets/pals/, by name, in a fixed order: the stage fetches them under the loader's query
@@ -598,7 +592,7 @@ def mascot_version(files: tuple[str, ...] = VERSIONED) -> str:
         if f in OPTIONAL and not (OUT / "assets" / f).is_file():
             continue
         b = (OUT / "assets" / f).read_bytes()
-        h.update(b.replace(b"\r\n", b"\n") if f.endswith((".js", ".svg")) else b)
+        h.update(b.replace(b"\r\n", b"\n") if f.endswith(".js") else b)
     pals = OUT / "assets" / PALS
     if files is VERSIONED and pals.is_dir():
         for f in sorted(p for p in pals.rglob("*") if p.is_file() and not p.name.endswith(".raw.glb")):

@@ -93,7 +93,7 @@ four caches:
 | `atlas-pages` | pages the reader has visited | Network first, capped at 30 entries |
 | `atlas-assets` | detail-page CSS/JS and the semantic index files | Network first, created on first use |
 
-Everything under `docs/assets/` (Archie and the rig) is deliberately **not** handled by the worker. It is
+Everything under `docs/assets/` (Archie and his pals) is deliberately **not** handled by the worker. It is
 versioned by a `?v=` query string instead; see [archie.md](archie.md#after-editing-archie).
 
 ### The versioning rule
