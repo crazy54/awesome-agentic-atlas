@@ -211,8 +211,9 @@ def build():
         for j in range(ring_n):
             f = bm.faces.new((r0[j], r0[(j + 1) % ring_n], r1[(j + 1) % ring_n], r1[j]))
             a = math.tau * (j + 0.5) / ring_n
-            # lime: the front edge and the character's-left flank; graphite behind and on the right
-            f.material_index = 1 if (a < 1.75 or a > math.tau - 0.35) else 0
+            # lime: a streak down the character's-left flank, just off the front edge (seen from the front, the
+            # sheet's graphite crest with a lime stripe on its left); graphite elsewhere
+            f.material_index = 1 if 0.3 < a < 1.8 else 0
     tipv = bm.verts.new(rings[-1][0] + rings[-1][1] * 0.002 + V(0, 0, 0.004))
     for j in range(ring_n):
         f = bm.faces.new((vrows[-1][j], vrows[-1][(j + 1) % ring_n], tipv))
@@ -511,8 +512,8 @@ def leg(M, both):
     ankle = V(sx * ANKLE_X, 0.03, ANKLE_Z)
     # The thigh's sleeve: cut on a slant at the top (higher outside, round the hip joint), square above
     # the knee; lime at both ends.
-    for ob in sleeve(f"thigh{s}", hip + V(sx * 0.016, 0, 0.02), knee + V(0, 0, 0.06), 0.13, 0.1, M,
-                     cut=(0.08, 0.06), tilt=(V(-sx * 0.35, 0.0, 1.0), None), bulge=0.07, front=0.07, flat=0.93):
+    for ob in sleeve(f"thigh{s}", hip + V(sx * 0.016, 0, 0.02), knee + V(0, 0, 0.06), 0.14, 0.086, M,
+                     cut=(0.08, 0.06), tilt=(V(-sx * 0.35, 0.0, 1.0), None), bulge=0.09, front=0.07, flat=0.93):
         both(ob, f"thigh{s}")
     # knee: a graphite hinge, lime rings either side, and a ceramic shield of a kneecap edged in lime
     both(geo.disc(f"knee-joint{s}", 0.078, 0.19, M["graphite"], knee, (1, 0, 0), bevel_r=0.03, segs=28), f"shin{s}")
@@ -529,9 +530,9 @@ def leg(M, both):
     for tb in crims:
         both(tb, f"shin{s}")
     # the shin's sleeve: a calf behind, lime at the top under the knee and at the ankle
-    for ob in sleeve(f"shin{s}", knee + V(0, 0, -0.05), ankle + V(0, 0, 0.035), 0.106, 0.08, M, cut=(0.06, 0.05),
-                     bulge=0.06, flat=0.95,
-                     shape=lambda p, q: Vector((p.x, p.y + (0.03 * (1 - q.z * q.z) if q.y > 0 else 0), p.z))):
+    for ob in sleeve(f"shin{s}", knee + V(0, 0, -0.05), ankle + V(0, 0, 0.035), 0.102, 0.066, M, cut=(0.06, 0.05),
+                     bulge=0.07, flat=0.95,
+                     shape=lambda p, q: Vector((p.x, p.y + (0.045 * (1 - q.z * q.z) if q.y > 0 else 0), p.z))):
         both(ob, f"shin{s}")
     both(geo.disc(f"ankle-joint{s}", 0.066, 0.16, M["graphite"], ankle, (1, 0, 0), bevel_r=0.026, segs=24), f"foot{s}")
     both(geo.disc(f"ankle-disc{s}", 0.056, 0.03, M["graphite"], ankle + V(sx * 0.082, 0, 0), (sx, 0, 0),
@@ -572,14 +573,14 @@ def arm(M, R, both):
     both(pad, f"upper_arm{s}")
     for tb in pr:
         both(tb, f"upper_arm{s}")
-    for ob in sleeve(f"upper-arm{s}", sh_ + up * 0.05, el - up * 0.02, 0.09, 0.077, M, cut=(0.08, 0.1),
+    for ob in sleeve(f"upper-arm{s}", sh_ + up * 0.05, el - up * 0.02, 0.082, 0.068, M, cut=(0.08, 0.1),
                      rims=(False, True), bulge=0.08, y_hint=(0, 0, 1)):
         both(ob, f"upper_arm{s}")
     both(geo.disc(f"elbow-joint{s}", 0.068, 0.14, M["graphite"], el, (0, 1, 0), bevel_r=0.024, segs=24), f"forearm{s}")
     for k, off in enumerate((-1, 1)):
         both(geo.ring(f"elbow-ring{k}{s}", 0.058, 0.0075, M["lime"], el + V(0, off * 0.07, 0), (0, 1, 0), segs=24,
                       sides=6), f"forearm{s}")
-    for ob in sleeve(f"forearm{s}", el + fw * 0.035, wr - fw * 0.02, 0.09, 0.07, M, cut=(0.1, 0.1), bulge=0.06,
+    for ob in sleeve(f"forearm{s}", el + fw * 0.035, wr - fw * 0.02, 0.095, 0.074, M, cut=(0.1, 0.1), bulge=0.07,
                      flat=0.93, y_hint=(0, 0, 1),
                      shape=lambda p, q: Vector((p.x * (1 + 0.08 * max(0.0, -q.z)), p.y, p.z))):
         both(ob, f"forearm{s}")
