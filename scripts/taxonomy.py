@@ -215,6 +215,12 @@ SECTIONS: dict[tuple[str, str], str] = {
     # AI into everyday browsing" and its entry is a Chrome extension -- something a reader installs into a
     # client they already have, which is what that category means.
     ("llmapps", "AI Browser Tools"): "Plugins, Themes & Clients",
+    # New upstream (2026-10), and the next section a red build died on, two days of dailies in a row.
+    # "Standalone web apps, creative tools, and browser extensions for everyday workflows": a sketching
+    # canvas, a Chrome extension that searches a page by meaning, and a helper inside Google Docs. Two of
+    # the three install into a client the reader already has, and the third is a client of its own, so
+    # it goes where `AI Browser Tools` went and for the same reason.
+    ("llmapps", "Standalone Apps & Tools"): "Plugins, Themes & Clients",
     ("llmapps", "LLM Optimization Tools"): "Harnesses & Runtime Infra",
     ("llmapps", "LLM Fine-tuning"): "Harnesses & Runtime Infra",
     ("llmapps", "Voice AI Agents"): "Creative, Voice & Media",
@@ -257,6 +263,11 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("skills", "Claude and Anthropic"): "Agent Skills",
     ("skills", "Model Context Protocol (MCP)"): "MCP Servers",
     ("skills", "GitHub Copilot"): "Agent Skills",
+    # New upstream (2026-10). One entry, agentskills/agentskills, "the open SKILL.md format specification
+    # and reference docs": the spec a skill is written to rather than a skill, which is the reading
+    # ('skills_security', 'Agent Skill Specifications') already gets -- so the same shelf, and one repo
+    # listed by both lists does not land in two places.
+    ("skills", "Agent Skills Specification"): "Frameworks & SDKs",
     ("skills_aas", "Official Sources"): "Agent Skills",
     ("skills_aas", "Community Contributors"): "Agent Skills",
     ("skills_aas", "Community"): "Agent Skills",
