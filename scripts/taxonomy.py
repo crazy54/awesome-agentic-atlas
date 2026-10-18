@@ -109,6 +109,9 @@ SECTIONS: dict[tuple[str, str], str] = {
     # names no shelf in this taxonomy and "Open Source Software" describes almost every row in the atlas.
     ("claudecode", "Multi-Purpose"): "Agent Skills",
     ("claudecode", "Open Source Software"): "Agent Skills",
+    # The same section renamed upstream (2026-10), its two marketplaces unchanged. Both spellings are
+    # kept, as the agents list's renamed memory section is, so a cached copy of the old README still files.
+    ("claudecode", "Open Source Contribution & Maintenance"): "Agent Skills",
     ("claudecode", "Memory & Context Persistence"): "Context, Memory & RAG",
     ("claudecode", "Observability & Monitoring"): "Observability & Evals",
     # Hook-driven checks on what the agent just wrote, so they belong with the other verification
@@ -130,6 +133,10 @@ SECTIONS: dict[tuple[str, str], str] = {
     # client's voice. That is the same shelf Status Lines and Design & UI/UX are on: changing how the
     # client behaves for you, not adding a capability to it.
     ("claudecode", "Configuration"): "Plugins, Themes & Clients",
+    # New upstream (2026-10). Its one entry, prismantis, re-themes the client's replies -- tables, code,
+    # diagrams and tool rows in a dozen themes -- which is Configuration's reading exactly: changing how
+    # the client looks to you, not what it can do.
+    ("claudecode", "Mods"): "Plugins, Themes & Clients",
     ("claudecode", "Creative Media"): "Creative, Voice & Media",
     ("claudecode", "Writing & Prose Quality"): "Creative, Voice & Media",
     ("claudecode", "Research & Scientific Inquiry"): "Research & Data Agents",

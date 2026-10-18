@@ -57,7 +57,8 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
         # is already what this bucket groups. Neither names a technique any other bucket carries.
         ("Docs, Knowledge & Research", [
             "Documentation, Knowledge & Learning", "Research & Scientific Inquiry",
-            "Multi-Purpose", "Open Source Software", "Lists & Collections"]),
+            "Multi-Purpose", "Open Source Software", "Open Source Contribution & Maintenance",
+            "Lists & Collections"]),
         ("Security", ["Security"]),
         ("Orchestration", ["Agent Orchestration"]),
         ("Memory & Context", ["Memory & Context Persistence"]),
@@ -65,11 +66,12 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
             "Alternative Clients", "Providers, Runtime & Integration Infrastructure",
             "Infrastructure & DevOps"]),
         # Configuration sits with Status Lines and Design & UI/UX: this is already the bucket for reshaping
-        # the client you have, which is what tweakcc's themes and Rulesync's generated configs do.
+        # the client you have, which is what tweakcc's themes and Rulesync's generated configs do. Mods
+        # (2026-10; prismantis's reply themes) is the same thing, and would otherwise have been a ninth hue.
         ("Workflow, UI & Media", [
             "Remote Control, Notifications & Voice I/O", "Design & UI/UX", "Linting",
             "Status Lines", "Skills", "Creative Media", "Writing & Prose Quality",
-            "Configuration"]),
+            "Configuration", "Mods"]),
     ],
     "harness": [
         ("Foundations & Tutorials", ["Foundations", "Tutorials & Educational"]),
