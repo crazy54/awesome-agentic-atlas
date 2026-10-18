@@ -20,8 +20,8 @@ sentence. This page lists which document to update when you change which code. U
 | A page family, its URL, or its owning generator | [frontend.md](frontend.md) page table; [overview.md](overview.md) surfaces table |
 | Themes or skins | [frontend.md](frontend.md#themes-and-skins) |
 | `24_pwa.py` caches or precache list | [frontend.md](frontend.md#the-pwa-and-the-service-worker) |
-| Anything in `docs/assets/archie*.js`, `rig-show.js`, `art/` | [archie.md](archie.md): the files, clips, cues, commands, flags and storage tables |
-| `mascot_version()`, `VERSIONED`, `RIG` in `31_home.py` | [archie.md](archie.md#after-editing-archie) |
+| Anything in `docs/assets/archie*.js`, `art/` | [archie.md](archie.md): the files, clips, commands, flags and storage tables |
+| `mascot_version()`, `VERSIONED`, `OPTIONAL` in `31_home.py` | [archie.md](archie.md#after-editing-archie) |
 | A new Windows or Git Bash trap | [contributing.md](contributing.md#windows-and-git-bash) |
 | A new failure mode you had to debug | [troubleshooting.md](troubleshooting.md) |
 

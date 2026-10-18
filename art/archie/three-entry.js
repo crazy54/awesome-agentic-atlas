@@ -15,6 +15,12 @@ export {
   CylinderGeometry, CustomBlending, OneFactor, ZeroFactor, SrcAlphaFactor,
   OneMinusSrcAlphaFactor, DoubleSide, MeshStandardMaterial, MeshBasicMaterial, BoxGeometry, CircleGeometry,
   PlaneGeometry, Points, BufferGeometry, BufferAttribute, PointLight,
+  OrthographicCamera, AdditiveBlending, NormalBlending, Line, LineBasicMaterial, LineSegments, Quaternion,
+  Matrix4, Euler, Box3, Object3D, MathUtils, AgXToneMapping, NeutralToneMapping, AnimationClip, Raycaster,
+  Vector2, SphereGeometry, TorusGeometry, CanvasTexture, Sprite, SpriteMaterial, LoopPingPong, Plane,
 } from "three";
 export { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 export { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+// The pals' GLBs are meshopt-compressed (art/pals/kit/export.py); this is the decoder, a small WASM module.
+export { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+export { clone as cloneSkinned } from "three/addons/utils/SkeletonUtils.js";
