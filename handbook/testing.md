@@ -11,6 +11,9 @@ node tests/run.mjs
 
 The runner takes no arguments. It runs every harness in the `HARNESSES` list in `tests/run.mjs`: on 2026-09-25 that was
 **29 harnesses, 17 Python and 12 Node**. Ten of the Node harnesses drive a headless Chromium and two do not.
+Two environment variables run a part of it, each a comma-separated list of file names: `AAA_ONLY` runs just those,
+`AAA_SKIP` all but those, and a name that is not a harness stops the run. CI uses them to run `bits-check.mjs` in a
+job of its own (see [ci-cd.md](ci-cd.md#testsyml)).
 
 **Before a PR, run the whole suite.** A full local run took about 24 minutes on the 2026-09-25 baseline.
 The runner prints each harness's time in its closing table.

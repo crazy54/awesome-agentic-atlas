@@ -131,6 +131,18 @@ concurrency:
 
 jobs:
   suite:
+    # Two jobs side by side: `suite`, every harness but one, and `bits`, that one. `bits-check.mjs` plays all
+    # 44 of the pals' bits to their ends, which on a runner here is over an hour -- longer than the rest of
+    # the suite together -- so in one job it pushed everything past any sensible limit, and both of
+    # latest_branch's first runs with it (2026-10-18 and 19) were cancelled at 80 minutes inside it. Apart,
+    # each has a limit that fits it, and a red bits run no longer hides whether the rest is green.
+    name: ${{ matrix.part }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {part: suite, only: "", skip: "bits-check.mjs", minutes: 45}
+          - {part: bits, only: "bits-check.mjs", skip: "", minutes: 120}
     runs-on: ubuntu-latest
     # The whole suite is about two minutes on a laptop, of which `detail-churn.mjs` is 20 seconds and the
     # three browser harnesses are 20 more. Twenty minutes is roughly eight times the expected worst case,
@@ -142,10 +154,10 @@ jobs:
     # rather than hangs.
     # By 2026-10-14 the job took 23 to 29 minutes on branches, and a branch run was cancelled at 30 with its
     # suite still running. 45 minutes restores the headroom; a hung harness still ends the job.
-    # On 2026-10-17 `bits-check.mjs`, which plays every one of the pals' 44 bits to its end, made the suite
-    # about 47 minutes on a workstation; its first run here passed everything up to that harness in 17
-    # minutes and was cancelled 28 minutes into it. 80 minutes covers it with room to spare.
-    timeout-minutes: 80
+    # On 2026-10-17 `bits-check.mjs` made the suite about 47 minutes on a workstation, and 80 here was not
+    # enough for it (see the matrix above). The rest of the suite is back to its 17 to 29 minutes, so `suite`
+    # keeps 45; `bits` gets 120, about twice what it needs.
+    timeout-minutes: ${{ matrix.minutes }}
 
     steps:
       # `indexnow_test.py` asserts against the *tracked* paths under `docs/` rather than a walk of the
@@ -209,6 +221,9 @@ jobs:
           # `chromeFlags`, for the same reason: a container has no user namespace to sandbox into and a
           # 64 MB `/dev/shm`, and Chrome crashes on both rather than degrading.
           AAA_CHROME_FLAGS: "--no-sandbox --disable-dev-shm-usage"
+          # This job's part of the suite: see the matrix at the top of the job.
+          AAA_ONLY: ${{ matrix.only }}
+          AAA_SKIP: ${{ matrix.skip }}
         run: |
           set -uo pipefail
           status=0
@@ -241,7 +256,8 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-screenshots
+          # one name per job of the matrix: two uploads may not share one
+          name: test-screenshots-${{ matrix.part }}
           path: build-tmp
           retention-days: 14
           if-no-files-found: warn

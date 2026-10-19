@@ -249,6 +249,23 @@ const UNREGISTERED = readdirSync(HERE, {withFileTypes: true})
 if (UNREGISTERED.length)
   console.log(`not in HARNESSES, so never run: ${UNREGISTERED.join(", ")} -- add each, with a floor`);
 
+// A part of the suite, for CI: `AAA_ONLY=bits-check.mjs` runs just the files named, `AAA_SKIP=bits-check.mjs`
+// all but them (comma-separated, either or both). bits-check plays every one of the pals' 44 bits to its end,
+// which on a GitHub runner is longer than everything else here together, so tests.yml gives it a job of its
+// own beside the rest, and the daily and weekly builds -- which change the data, not the bits -- leave it to
+// tests.yml. A name that is not a harness stops the run: a typo must not quietly test less.
+const names = (v) => (process.env[v] || "").split(",").map((s) => s.trim()).filter(Boolean);
+const ONLY = names("AAA_ONLY"), SKIP = names("AAA_SKIP");
+const unknown = [...ONLY, ...SKIP].filter((f) => !HARNESSES.some((h) => h.file === f));
+if (unknown.length) {
+  console.error(`AAA_ONLY/AAA_SKIP name no harness: ${unknown.join(", ")}`);
+  process.exit(2);
+}
+const SELECTED = HARNESSES.filter((h) => (!ONLY.length || ONLY.includes(h.file)) && !SKIP.includes(h.file));
+if (SELECTED.length < HARNESSES.length)
+  console.log(`running ${SELECTED.length} of ${HARNESSES.length} harnesses; left out by AAA_ONLY/AAA_SKIP: ` +
+              HARNESSES.filter((h) => !SELECTED.includes(h)).map((h) => h.file).join(", "));
+
 // Both entry points, because the site has two and either one missing is a different broken build:
 // `index.html` is the shelves homepage from `31_home.py`, `catalog/index.html` the catalogue from
 // `19_pages.py`. Two checks rather than one, so the message can name the stage that did not run.
@@ -365,7 +382,7 @@ try {
   console.log(`scratch   ${scratch}`);
   console.log(`artifacts ${artifacts}`);
 
-  for (const h of HARNESSES) {
+  for (const h of SELECTED) {
     if (interrupted) break;
     console.log(`\n── ${h.file}  ·  ${h.label} ` + "─".repeat(
       Math.max(3, 96 - h.file.length - h.label.length)));
@@ -414,10 +431,11 @@ for (const r of results) {
               (r.code !== 0 && r.failed === 0 && !r.quiet
                  ? `  (exited ${r.code} with nothing failing -- read its output)` : ""));
 }
-if (results.length < HARNESSES.length)
-  console.log(`  ${HARNESSES.length - results.length} harness(es) never ran`);
-console.log(`  ${results.length} of ${HARNESSES.length} harnesses · ${passed} passed, ${failed} failed`);
-if (results.length < HARNESSES.length) exit = exit || 1;
+if (results.length < SELECTED.length)
+  console.log(`  ${SELECTED.length - results.length} harness(es) never ran`);
+console.log(`  ${results.length} of ${SELECTED.length} harnesses · ${passed} passed, ${failed} failed` +
+            (SELECTED.length < HARNESSES.length ? `  (${HARNESSES.length - SELECTED.length} left out by AAA_ONLY/AAA_SKIP)` : ""));
+if (results.length < SELECTED.length) exit = exit || 1;
 if (UNREGISTERED.length) {
   console.log(`  ${UNREGISTERED.length} harness file(s) not registered, and not run: ${UNREGISTERED.join(", ")}`);
   exit = exit || 1;

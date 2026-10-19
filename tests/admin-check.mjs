@@ -128,7 +128,14 @@ ok("...it is a labelled dialog", await ev(`(() => { const p = document.getElemen
   return p.getAttribute("role") === "dialog" && !!document.getElementById(p.getAttribute("aria-labelledby")); })()`));
 ok("...and focus moved into it", await ev(`document.getElementById("archiepanel").contains(document.activeElement)`));
 
-// One button per command
+// One button per command. The bits join the dispatcher's list a few seconds after the page settles, and on a
+// slow runner the panel opens first: CI read the list with the bits in it and the panel without them, 36
+// buttons of 80. So this waits for them, and then for the open panel's poll to add their buttons -- which is
+// itself the check that a panel opened early does not stay without them.
+const BITS_IN = `window.archie.list().some(c => c.startsWith("bit:"))`;
+const ALL_SHOWN = `window.archie.list().every(c => !!document.querySelector('#archiepanel button[data-cmd="' + c + '"]'))`;
+ok("...the bits join the list once they have loaded", await until(BITS_IN, 30000));
+ok("...and the open panel gains a button for each", await until(ALL_SHOWN, 5000));
 const list = await ev(`window.archie.list()`);
 const want = [...list, ...ORDER.map(i => "friend:" + i)];
 const have = await ev(`[...document.querySelectorAll("#archiepanel button[data-cmd]")].map(b => b.dataset.cmd)`);
@@ -220,9 +227,14 @@ ok("reduced motion: the model stays a poster", !(await ev(`!!document.querySelec
 await until(`!!document.getElementById("atlasadmin")`, 5000);
 await ev(`document.querySelector('#atlasadmin [data-act="archie"]').click()`);
 ok("...the address still reaches the panel", await until(PANEL, 5000));
+// Against this page's own commands, not the first page's: under reduced motion the bits are never loaded --
+// none could play -- so there is no Bits group to grey out. (Compared with the first page's list, this passed
+// only when that list happened to be read before the bits arrived there.)
 await sleep(700);
+const rmWant = [...await ev(`window.archie.list()`), ...ORDER.map(i => "friend:" + i)];
+ok("...with no bits listed, since none can play", !rmWant.some(c => c.startsWith("bit:")));
 const rm = await ev(`[...document.querySelectorAll("#archiepanel button[data-cmd]")].map(b => [b.dataset.cmd, b.disabled, b.title])`);
-ok("...with every button disabled", rm.length === want.length && rm.every(([, d]) => d), `${rm.length} of ${want.length}; enabled: ` + rm.filter(([, d]) => !d).map(x => x[0]).join(","));
+ok("...with every button disabled", rm.length === rmWant.length && rm.every(([, d]) => d), `${rm.length} of ${rmWant.length}; enabled: ` + rm.filter(([, d]) => !d).map(x => x[0]).join(","));
 ok("...each saying reduced motion is why", rm.every(([, , t]) => /reduced motion/.test(t)), JSON.stringify(rm[0]));
 ok("...and the close button still works", await ev(`document.querySelector("#archiepanel [data-close]").click(), !document.getElementById("archiepanel")`));
 ok("...giving focus back to the trigger", (await focused()) === "archieadmin");

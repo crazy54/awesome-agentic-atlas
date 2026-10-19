@@ -278,11 +278,15 @@ for (const name of ["close", "sign", "shoo", "sulk"]) {
   await goto(`?archie=tired:${name}`, 0);
   const href = await ev(`location.href`);
   ok(`tired, ${name}: announced`, await saying(`tired-${name}`), await last());
+  // The prop and the shove come after his "press", which plays on his own clock: under swiftshader on CI the
+  // frames are slow enough that ten seconds ran out before it ended, in two of the three runs on 2026-10-17/19,
+  // with everything else here passing. Twenty-five, the same ceiling as `over()`'s, since what is asserted is that
+  // they happen and how, not how soon.
   if (name === "close" || name === "sign")
     ok("...its prop drawn, hidden from assistive technology and taking no clicks",
        await until(`(() => { const p = document.querySelector(".archie-prop"); return !!p &&
-         p.getAttribute("aria-hidden") === "true" && getComputedStyle(p).pointerEvents === "none"; })()`, 10000));
-  if (name === "shoo") ok("...<main> shoved aside", await until(`!!parseFloat(document.querySelector("main").style.translate)`, 10000));
+         p.getAttribute("aria-hidden") === "true" && getComputedStyle(p).pointerEvents === "none"; })()`, 25000));
+  if (name === "shoo") ok("...<main> shoved aside", await until(`!!parseFloat(document.querySelector("main").style.translate)`, 25000));
   ok("...and failing, with an excuse", await over(`tired-${name}-after`), await last());
   ok("...leaving the page as it was", await ev(`!document.querySelector(".archie-prop") &&
     document.querySelector("main").style.translate === "" && document.querySelector("main").style.transition === ""`) &&
