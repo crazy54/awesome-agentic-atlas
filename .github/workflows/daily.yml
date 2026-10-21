@@ -867,8 +867,13 @@ jobs:
       # weekly run's list is the larger one, because it carries a detail page per repo: ~1,452 when this
       # was written, on the order of 8,000 at the atlas's size now. Still one batch, but no longer with
       # much room -- this is the figure that decides whether `BATCH` ever has to mean something.
+      #
+      # And only on latest_branch, the one branch Pages serves. A run dispatched on a feature branch (the
+      # handbook's way to see a build's real output before merging) commits to that branch only, so the live
+      # URLs have not changed, and telling an engine to come and fetch them would be telling it something
+      # untrue.
       - name: Tell IndexNow which URLs changed
-        if: steps.gate.outputs.go == 'true'
+        if: steps.gate.outputs.go == 'true' && github.ref_name == 'latest_branch'
         run: python scripts/26_indexnow.py --changed "$RUNNER_TEMP/changed-docs.txt"
 
       - name: What is new
