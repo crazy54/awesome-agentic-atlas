@@ -112,7 +112,11 @@ This workflow runs on ubuntu-latest with Node 22 and Python 3.12.
 - It installs `openpyxl` and `pillow`.
 - It sets `AAA_CHROME_FLAGS="--no-sandbox --disable-dev-shm-usage"`, because a container has no user
   namespace to sandbox into.
-- On failure it uploads `build-tmp/` as the `test-screenshots` artifact.
+- It runs as two parallel jobs: `suite`, every harness but `bits-check.mjs` (`AAA_SKIP`, 45-minute limit), and
+  `bits`, that one alone (`AAA_ONLY`, 120 minutes). `bits-check` plays all 44 of the pals' bits and is over an
+  hour on a runner on its own. The daily and weekly builds' own suites leave it out (`AAA_SKIP`): the bits
+  are code, which this workflow checks on every push and pull request, not the data those builds change.
+- On failure each job uploads `build-tmp/` as `test-screenshots-<job>`.
 - It has no `paths` filter, on purpose: a change anywhere can break a generated page.
 - A PR with merge conflicts has no merge ref, so `pull_request` CI is **never created**. "Zero checks" on a
   PR usually means it conflicts, not that CI is queued.

@@ -454,6 +454,10 @@ jobs:
         continue-on-error: true
         env:
           AAA_CHROME_FLAGS: "--no-sandbox --disable-dev-shm-usage"
+          # All but `bits-check.mjs`, as in daily.yml and for the same reason: the bits are code that
+          # tests.yml checks on every push, and an hour of them here, where a red suite stops the deploy, would
+          # put this week's workbooks behind a check of nothing this job changed.
+          AAA_SKIP: bits-check.mjs
         run: |
           set -uo pipefail
           # The daily's and tests.yml's browser, not the Playwright build installed above. See the note at

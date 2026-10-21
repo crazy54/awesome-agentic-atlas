@@ -54,11 +54,9 @@ jobs:
     # off at the timeout is the quietest possible failure: it commits nothing and records nothing, so the
     # published site simply stops moving and there is no diff anywhere that says why. 180 is about twice the
     # projection, which is the room the atlas needs to double again before this number is what breaks, and
-    # still half of weekly.yml's.
-    # 240 since 2026-10-17: the suite this job runs before it publishes gained `bits-check.mjs`, about half an
-    # hour of playing every one of the pals' bits, on top of runs that already took up to 2 h 11 min. At 180
-    # the slowest of those would have been cut off before the commit -- the quiet failure described above.
-    timeout-minutes: 240
+    # still half of weekly.yml's. (The suite this job runs before it publishes leaves out `bits-check.mjs`,
+    # over an hour here on its own: see the verify step.)
+    timeout-minutes: 180
     env:
       # Every fetch stage shells out to `gh`, which reads this. The Actions token is enough -- the pipeline
       # only ever reads public repositories -- but the limit it grants, 1,000 requests per hour per repo, is
@@ -761,6 +759,10 @@ jobs:
           # has no user namespace to sandbox into and a 64 MB `/dev/shm`, and Chrome crashes on both rather
           # than degrading. `lib/browser.mjs` appends these to every launch.
           AAA_CHROME_FLAGS: "--no-sandbox --disable-dev-shm-usage"
+          # Every harness but `bits-check.mjs`, which plays all 44 of the pals' bits and is over an hour on a
+          # runner. The bits are code, not the data this job rebuilds, and tests.yml runs them on every push and
+          # pull request; here they would only put the publish behind an hour's wait.
+          AAA_SKIP: bits-check.mjs
         run: |
           set -uo pipefail
           status=0

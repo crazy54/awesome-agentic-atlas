@@ -162,9 +162,13 @@ ok("...the theme swapped four times", flips.length === 4, JSON.stringify(flips.m
 ok("...at most 3 flashes a second: every swap at least 333 ms after the last (WCAG 2.3.1)",
    gaps.every(g => g >= 333), JSON.stringify(gaps.map(Math.round)));
 // The upper bound is loose: a timer runs late on a busy main thread (618 ms once, on a cold first load),
-// and late is the safe direction. It is here so that a swap on some other clock cannot pass.
+// and late is the safe direction. It is here so that a swap on some other clock cannot pass. It bounds the
+// median gap, not every gap: each swap restyles the whole page, and on a CI runner one timer then fired 914
+// ms after the last ([666, 728, 914], 2026-10-19). A swap on another clock -- his render clock, say -- would
+// stretch every gap, which is what a median still catches.
+const median = [...gaps].sort((a, b) => a - b)[Math.floor(gaps.length / 2)];
 ok("...and near the 400 ms it is meant to take, so this is the rate asserted",
-   gaps.every(g => g <= 800), JSON.stringify(gaps.map(Math.round)));
+   gaps.length > 0 && median <= 800, JSON.stringify(gaps.map(Math.round)));
 ok("...ending on the theme it started on", await ev(`document.documentElement.dataset.theme`) === start.theme);
 ok("...with nothing saved", !r.writes.includes("theme") &&
    await ev(`localStorage.getItem("theme")`) === start.stored, JSON.stringify(r.writes));
@@ -278,11 +282,15 @@ for (const name of ["close", "sign", "shoo", "sulk"]) {
   await goto(`?archie=tired:${name}`, 0);
   const href = await ev(`location.href`);
   ok(`tired, ${name}: announced`, await saying(`tired-${name}`), await last());
+  // The prop and the shove come after his "press", which plays on his own clock: under swiftshader on CI the
+  // frames are slow enough that ten seconds ran out before it ended, in two of the three runs on 2026-10-17/19,
+  // with everything else here passing. Twenty-five, the same ceiling as `over()`'s, since what is asserted is that
+  // they happen and how, not how soon.
   if (name === "close" || name === "sign")
     ok("...its prop drawn, hidden from assistive technology and taking no clicks",
        await until(`(() => { const p = document.querySelector(".archie-prop"); return !!p &&
-         p.getAttribute("aria-hidden") === "true" && getComputedStyle(p).pointerEvents === "none"; })()`, 10000));
-  if (name === "shoo") ok("...<main> shoved aside", await until(`!!parseFloat(document.querySelector("main").style.translate)`, 10000));
+         p.getAttribute("aria-hidden") === "true" && getComputedStyle(p).pointerEvents === "none"; })()`, 25000));
+  if (name === "shoo") ok("...<main> shoved aside", await until(`!!parseFloat(document.querySelector("main").style.translate)`, 25000));
   ok("...and failing, with an excuse", await over(`tired-${name}-after`), await last());
   ok("...leaving the page as it was", await ev(`!document.querySelector(".archie-prop") &&
     document.querySelector("main").style.translate === "" && document.querySelector("main").style.transition === ""`) &&

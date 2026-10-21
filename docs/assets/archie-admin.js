@@ -47,7 +47,7 @@ const CSS = `
 #archiepanel output{display:block;margin-top:8px;color:var(--muted,#999);font:12px/1.3 var(--mono,monospace)}
 `;
 
-let panel = null, opener = null, poll = 0;
+let panel = null, opener = null, poll = 0, filling = null;
 
 const groups = async () => {
   // The site's admin panel can press the trigger before archie.js, a module script and so deferred, has run; every
@@ -117,19 +117,10 @@ export async function open(trigger) {
   panel.setAttribute("aria-labelledby", "archiepaneltitle");
   panel.innerHTML = `<div class="top"><div><h2 id="archiepaneltitle">Archie, by hand</h2>
     <p class="why" aria-live="polite"></p></div><button type="button" data-close aria-label="Close">&times;</button></div>`;
-  const built = panel;
-  for (const [title, cmds] of await groups()) {
-    if (built !== panel) return null;              // closed while the friends' names loaded
-    const fs = document.createElement("fieldset"), lg = document.createElement("legend"), row = document.createElement("div");
-    lg.textContent = title; row.className = "row";
-    for (const cmd of cmds) {
-      const b = document.createElement("button");
-      b.type = "button"; b.dataset.cmd = cmd; b.textContent = label(cmd);
-      row.append(b);
-    }
-    fs.append(lg, row); panel.append(fs);
-  }
   panel.append(document.createElement("output"));
+  const built = panel;
+  await fill();
+  if (built !== panel) return null;                // closed while the friends' names loaded
   panel.addEventListener("click", e => {
     const b = e.target.closest("button");
     if (!b || b.disabled) return;
@@ -139,7 +130,38 @@ export async function open(trigger) {
   addEventListener("keydown", onKey, true);
   if (opener) opener.setAttribute("aria-expanded", "true");
   refresh();
-  poll = setInterval(refresh, 500);
+  poll = setInterval(tick, 500);
   panel.querySelector("[data-close]").focus();
   return panel;
+}
+
+// One fieldset of buttons per group, rebuilt in place. The bits are not in the dispatcher's list until
+// archie.js has loaded them, a few seconds after the page settles, and on a slow machine a reader can open
+// the panel before that: so the half-second poll compares the list with the buttons and builds again when a
+// command has turned up since, keeping focus on the button that had it.
+async function fill() {
+  const built = panel, gs = await groups();
+  if (built !== panel) return;
+  const had = document.activeElement && panel.contains(document.activeElement) && document.activeElement.dataset.cmd;
+  panel.querySelectorAll("fieldset").forEach(f => f.remove());
+  const out = panel.querySelector("output");
+  for (const [title, cmds] of gs) {
+    const fs = document.createElement("fieldset"), lg = document.createElement("legend"), row = document.createElement("div");
+    lg.textContent = title; row.className = "row";
+    for (const cmd of cmds) {
+      const b = document.createElement("button");
+      b.type = "button"; b.dataset.cmd = cmd; b.textContent = label(cmd);
+      row.append(b);
+    }
+    fs.append(lg, row); panel.insertBefore(fs, out);
+  }
+  if (had) panel.querySelector(`button[data-cmd="${window.CSS.escape(had)}"]`)?.focus();
+}
+
+function tick() {
+  if (!panel) return;
+  const shown = new Set([...panel.querySelectorAll("button[data-cmd]")].map(b => b.dataset.cmd));
+  if (!filling && window.archie && window.archie.list().some(c => !shown.has(c)))
+    filling = fill().then(refresh).finally(() => { filling = null; });
+  refresh();
 }
