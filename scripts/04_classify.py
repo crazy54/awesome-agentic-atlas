@@ -150,7 +150,12 @@ def pick_install(md: str, entry: dict) -> tuple[str, str, str]:
             continue
         for prio, method, os_hint, rx in INSTALLERS:
             for m in rx.finditer(code):
-                cmd = norm_ws(m.group(0))
+                # A README that shows its command in a table cell has to write a pipe as `\|` there, so
+                # `curl -fsSL .../install.sh \| bash` is the bytes and `| bash` the command. Un-escaped
+                # here, as 10_parse_sources.clean does for a list's own descriptions: no install line wants
+                # a literal backslash-pipe, and carried through it printed one on a bullet line of the
+                # Markdown edition, which check_markdown refuses (daily of 2026-10-21, openagents' CLI).
+                cmd = norm_ws(m.group(0)).replace("\\|", "|")
                 if len(cmd) > 160 or len(cmd) < 5:
                     continue
                 # A bare `pip install .` / `npx .` is not a usable install line.
