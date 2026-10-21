@@ -1296,7 +1296,7 @@ Curated by **[tensorchord/Awesome-LLMOps](https://github.com/tensorchord/Awesome
 - **[AgentCost](https://agentcost.tech)** — Track and optimize LLM API costs across OpenAI, Anthropic, and LangChain
   <sub>website</sub>
   <sub>`https://agentcost.tech`</sub>
-- **[ClevAgent](https://clevagent.io)** — Runtime monitoring for AI agents — heartbeat watchdog, loop detection, cost tracking, auto-restart. Python SDK or HTTP API
+- **[ClevAgent](https://clevagent.io)** — Run and guide your AI agents in one workspace. ClevAgent quietly handles efficiency and safety in the background.
   <sub>website</sub>
   <sub>`https://clevagent.io`</sub>
 - **[Fiddler AI](https://github.com/fiddler-labs/fiddler-auditor)** — Evaluate, monitor, analyze, and improve machine learning and generative models from pre-production to production. Ship more ML and LLMs into production, and monitor ML and LLM metrics like hallucination, PII, and toxicity
