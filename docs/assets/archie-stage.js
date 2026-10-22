@@ -188,6 +188,11 @@ export function stage(o) {
     if (renderer) { renderer.dispose(); renderer.forceContextLoss(); }
     if (layer) layer.remove();
     layer = renderer = scene = camera = null;
+    // A `step()` asked for is answered on the next frame, and there is no next frame now: answered here,
+    // or a bit stopped between the ask and the frame (Escape, a click) left whoever asked waiting for good.
+    // bits-check's Escape run on CI did exactly that, once (2026-10-22).
+    pending = 0;
+    for (const r of stepped.splice(0)) r();
   };
   // Capture mode (for recording a bit frame by frame, art/pals/README.md): the window's own frames do
   // nothing and `step(dt)` advances the stage instead, so a recording is the same however slowly it is
