@@ -76,7 +76,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>Python · GPL-3.0 · uv · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx bosch-flow-mcp`</sub>
 - **[Propertyscout001/puntersedge-mcp](https://github.com/Propertyscout001/puntersedge-mcp)** — Live Australian racing and sports odds from 14 AU bookmakers for AI assistants: next races with every bookmaker's price per runner, best price, settled results and market movers, each price stamped with its age
-  <sub>TypeScript · MIT · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>TypeScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y github:Propertyscout001/puntersedge-mcp`</sub>
 - **[slaat/garmin-connect-workouts-mcp](https://github.com/slaat/garmin-connect-workouts-mcp)** — Create structured Garmin Connect workouts from natural language: pace, HR, power and cadence targets, repeat blocks, swim strokes and pool lengths
   <sub>TypeScript · MIT · source · pushed 2026-09-02 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -115,7 +115,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · JavaScript · npm · pushed 2026-09-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g mythsensus-mcp`</sub>
 - **[socraticsurge/telugu-calendar-utilities](https://github.com/socraticsurge/telugu-calendar-utilities)** — Telugu Panchangam (Hindu almanac): tithi, nakshatra, muhurta windows, festivals, good-day finder, gochara transits and daily rasi phalalu
-  <sub>★ 1 · Python · AGPL-3.0 · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1 · Python · AGPL-3.0 · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx mcp-server-panchangam`</sub>
 - **[alexsu1212/freebazi-mcp](https://github.com/alexsu1212/freebazi-mcp)** — Offline Bazi (Four Pillars) charts with True Solar Time: Day Master, Ten Gods, hidden stems, Na Yin, Shen Sha, branch relations and Da Yun luck pillars
   <sub>TypeScript · MIT · npx · pushed 2026-09-02 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -145,7 +145,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 5 · TypeScript · MIT · npx · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add tribeunal/mcp-server # the entry skill alone`</sub>
 - **[CNSLabs/agreements-api-sdk](https://github.com/CNSLabs/agreements-api-sdk)** — Define, validate, deploy and operate machine-readable agreements, with EIP-712 permit preparation, signed participant inputs, state reads and input history
-  <sub>★ 2 · TypeScript · Apache-2.0 · source · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · TypeScript · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/CNSLabs/agreements-api-sdk.git`</sub>
 - **[cogdepot/mcp-server](https://github.com/cogdepot/mcp-server)** — Access cogDepot, an anonymous broker where agents publish capability listings, negotiate terms and form escrow-backed deals with two-sided reputation
   <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -277,7 +277,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 8 · JavaScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y health-export-mcp --demo`</sub>
 - **[Thecimal/quantified-self-mcp](https://github.com/Thecimal/quantified-self-mcp)** — Query personal health and finance data stored in local SQLite files, without any cloud service
-  <sub>★ 6 · Python · MIT · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6 · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install quantified-self-mcp`</sub>
 - **[littlenew117/mibly-apple-health-mcp](https://github.com/littlenew117/mibly-apple-health-mcp)** — Apple Health data (sleep, steps, heart rate, HRV, workouts, body measurements) pushed from the Mibly iPhone app, stored encrypted on your own machine. Local-first, no cloud or telemetry
   <sub>★ 3 · TypeScript · MIT · source · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -314,6 +314,6 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-10-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

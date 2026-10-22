@@ -188,7 +188,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Business, Productivity &amp; Marketing
 
 - **[garrytan/gstack](https://github.com/garrytan/gstack)** — Full gstack collection: YC founder stack for planning, review, QA, and shipping
-  <sub>★ 137.2k · TypeScript · MIT · source · pushed 2026-10-21 · macOS</sub>
+  <sub>★ 137.2k · TypeScript · MIT · source · pushed 2026-10-22 · macOS</sub>
   <sub>`git clone https://github.com/garrytan/gstack.git`</sub>
 - **[coreyhaines31/email-sequence](https://github.com/coreyhaines31/marketingskills)** — Build email sequences and drip campaigns
   <sub>★ 55.8k · JavaScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -314,19 +314,19 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>MIT · in-repo · pushed 2026-10-16</sub>
   <sub>`git clone https://github.com/phuryn/pm-skills.git && cd pm-skills/pm-market-research/skills/market-sizing`</sub>
 - **[garrytan/office-hours](https://github.com/garrytan/gstack/tree/main/office-hours)** — YC Office Hours: reframing product before code
-  <sub>TypeScript · MIT · in-repo · pushed 2026-10-21</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/garrytan/gstack.git && cd gstack/office-hours`</sub>
 - **[garrytan/plan-ceo-review](https://github.com/garrytan/gstack/tree/main/plan-ceo-review)** — CEO/Founder plan review modes
-  <sub>TypeScript · MIT · in-repo · pushed 2026-10-21</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/garrytan/gstack.git && cd gstack/plan-ceo-review`</sub>
 - **[garrytan/design-review](https://github.com/garrytan/gstack/tree/main/design-review)** — Visual audit and atomic fixes with screenshots
-  <sub>TypeScript · MIT · in-repo · pushed 2026-10-21</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/garrytan/gstack.git && cd gstack/design-review`</sub>
 - **[garrytan/qa](https://github.com/garrytan/gstack/tree/main/qa)** — QA Lead: find bugs and generate regression tests
-  <sub>TypeScript · MIT · in-repo · pushed 2026-10-21</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/garrytan/gstack.git && cd gstack/qa`</sub>
 - **[garrytan/ship](https://github.com/garrytan/gstack/tree/main/ship)** — Release Engineer: sync, test, audit, and push
-  <sub>TypeScript · MIT · in-repo · pushed 2026-10-21</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/garrytan/gstack.git && cd gstack/ship`</sub>
 
 ## Cloud &amp; Infrastructure
@@ -593,10 +593,10 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Community Skills
 
 - **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)** — High-agency frontend skill to eliminate generic UI slop
-  <sub>★ 100.5k · JavaScript · MIT · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 100.6k · JavaScript · MIT · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/Leonxlnx/taste-skill --skill "design-taste-frontend"`</sub>
 - **[ComposioHQ/composio](https://github.com/ComposioHQ/composio)** — Connect AI agents to 1000+ external apps with managed authentication
-  <sub>★ 30.7k · TypeScript · MIT · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 30.7k · TypeScript · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install composio composio-openai-agents openai-agents`</sub>
 - **[AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo)** — Universal SEO skill for website analysis
   <sub>★ 19.6k · Python · MIT · script · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
@@ -634,14 +634,14 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 - **[vostride/agent-qa](https://github.com/vostride/agent-qa)** — Three skills for authoring natural-language web and mobile tests, triaging failures, and debugging fixes with MCP evidence
   <sub>★ 914 · TypeScript · npx · pushed 2026-08-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx agent-qa init`</sub>
-- **[Qiuner/birdview](https://github.com/Qiuner/birdview)** — Treat architecture and constraints as the enduring work of programming, with reviewable scope, evidence, and verification in standalone HTML
-  <sub>★ 689 · TypeScript · MIT · npx · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx skills add Qiuner/birdview --skill birdview`</sub>
 - **[mhattingpete/claude-skills-marketplace](https://github.com/mhattingpete/claude-skills-marketplace)** — Digital forensics analysis and investigation
   <sub>★ 687 · HTML · Apache-2.0 · source · pushed 2026-07-25</sub>
   <sub>`git clone https://github.com/mhattingpete/claude-skills-marketplace.git`</sub>
+- **[Qiuner/birdview](https://github.com/Qiuner/birdview)** — Treat architecture and constraints as the enduring work of programming, with reviewable scope, evidence, and verification in standalone HTML
+  <sub>★ 668 · TypeScript · MIT · npx · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx skills add Qiuner/birdview --skill birdview`</sub>
 - **[karanb192/awesome-claude-skills](https://github.com/karanb192/awesome-claude-skills)** — 50+ verified skills for Claude Code and Claude.ai
-  <sub>★ 554 · MIT · source · pushed 2026-10-02</sub>
+  <sub>★ 555 · MIT · source · pushed 2026-10-02</sub>
   <sub>`git clone https://github.com/karanb192/awesome-claude-skills.git`</sub>
 - **[NoizAI/skills](https://github.com/NoizAI/skills)** — Human-like TTS skills with tested speaking styles, emotional tone, and local or cloud voice backends
   <sub>★ 530 · Python · npx · pushed 2026-09-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1024,6 +1024,6 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 
 ---
 
-Snapshot 2026-10-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

@@ -4,7 +4,7 @@
 
 Most agentic tooling is written on a Mac and tested on Linux, and "it's Python, it'll be fine" is how a Windows afternoon disappears. The atlas records a per-platform verdict for every project, and it distinguishes stated support from support merely inferred from the language. Every project below has documented Windows support -- the build refuses to publish this page if one of them stops.
 
-7 picks · 933,929 combined stars · snapshot 2026-09-26
+7 picks · 952,013 combined stars · snapshot 2026-10-22
 
 [Open all 7 in the atlas](https://aaa.jeremyfhall.com/#list=openclaw/openclaw,earendil-works/pi,continuedev/continue,ollama/ollama,ggml-org/llama.cpp,headroomlabs-ai/headroom,nearai/ironclaw) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -24,7 +24,7 @@ The most-starred project in the atlas, and it puts Windows in the same sentence 
 npm install -g openclaw@latest --allow-scripts=openclaw
 ```
 
-**390,557** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-26
+**392,696** stars · 6 of 39 lists · TypeScript · MIT · pushed 2026-10-22
 
 Platforms: Win Y WSL Y mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -41,10 +41,10 @@ A deliberately small terminal harness built around skills loaded on demand. Smal
 > Minimal terminal coding harness built around "lazy skills": each capability keeps only a one-line description in active context, loading full instructions and tool schemas only when invoked. Keeps the system prompt under 1,000 tokens versus 7,000–10,000 for typical agents, making it a concrete reference for context-minimal harness design
 
 ```sh
-git clone https://github.com/earendil-works/pi.git
+npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 ```
 
-**109,511** stars · 1 list · TypeScript · MIT · pushed 2026-09-26
+**116,957** stars · 1 list · TypeScript · MIT · pushed 2026-10-21
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -64,7 +64,7 @@ Ships as an editor extension, which is why it works on Windows without a WSL det
 git clone https://github.com/continuedev/continue.git
 ```
 
-**36,030** stars · 7 of 39 lists · TypeScript · Apache-2.0 · pushed 2026-09-26
+**36,290** stars · 7 of 39 lists · TypeScript · Apache-2.0 · pushed 2026-10-20
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -84,7 +84,7 @@ A native Windows build, a one-line pull, and no Python environment to get wrong.
 irm https://ollama.com/install.ps1 | iex
 ```
 
-**181,762** stars · 4 of 39 lists · Go · MIT · pushed 2026-09-26
+**184,208** stars · 4 of 39 lists · Go · MIT · pushed 2026-10-22
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -101,10 +101,10 @@ The C++ layer under most of local AI, with first-class Windows builds and no run
 > C/C++ inference. CPU, GPU, Apple Silicon. Foundation of local AI
 
 ```sh
-git clone https://github.com/ggml-org/llama.cpp.git
+irm https://llama.app/install.ps1 | iex
 ```
 
-**129,580** stars · 3 of 39 lists · C++ · MIT · pushed 2026-09-26
+**131,944** stars · 3 of 39 lists · C++ · MIT · pushed 2026-10-21
 
 Platforms: Win Y WSL N mac Y Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -124,7 +124,7 @@ Compresses tool output, logs and files before they reach the window. Windows and
 uv tool install --python 3.13 "headroom-ai[all]" # CLI in a self-contained env
 ```
 
-**73,859** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-09-26
+**77,253** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-10-22
 
 Platforms: Win Y WSL L mac Y Lin Y Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -144,7 +144,7 @@ Treats agent execution as a privacy and isolation problem rather than a convenie
 irm "https://github.com/nearai/ironclaw/releases/download/$IronClawReleaseTag/ironclaw-installer.ps1" | iex
 ```
 
-**12,630** stars · 3 of 39 lists · Rust · Apache-2.0 · pushed 2026-09-26
+**12,665** stars · 3 of 39 lists · Rust · Apache-2.0 · pushed 2026-10-20
 
 Platforms: Win Y WSL Y mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

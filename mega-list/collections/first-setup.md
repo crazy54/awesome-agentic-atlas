@@ -4,7 +4,7 @@
 
 The atlas has 1,294 projects in it, which is the wrong number to start from. This is one working setup instead: an agent, the things it loads, the place it runs, and the two tools that tell you afterwards whether it did what you asked. Every slot is filled once. Swap any of them later -- the point of the set is that you can start today and still know what each piece is for.
 
-7 picks · 843,078 combined stars · snapshot 2026-09-26
+7 picks · 868,499 combined stars · snapshot 2026-10-22
 
 [Open all 7 in the atlas](https://aaa.jeremyfhall.com/#list=anomalyco/opencode,obra/superpowers,mem0ai/mem0,modelcontextprotocol/servers,daytonaio/daytona,langfuse/langfuse,shareAI-lab/learn-claude-code) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -19,10 +19,10 @@ Terminal-native, MIT, and the one coding agent here that three separate source l
 > Open-source terminal-native AI coding agent with 131K+ stars and 2.5M+ monthly active developers. Provider-agnostic architecture supports 75+ LLM providers plus native LSP auto-configuration, multi-session parallel agents, and MCP extensibility. The build/plan agent split and client/server architecture make it the most complete open-source reference for a terminal-first coding harness
 
 ```sh
-scoop install opencode # Windows
+npm i -g @opencode/cli@latest # or bun/pnpm/yarn
 ```
 
-**210,173** stars · 4 of 39 lists · TypeScript · MIT · pushed 2026-09-26
+**219,674** stars · 4 of 39 lists · TypeScript · MIT · pushed 2026-10-22
 
 Platforms: Win N WSL N mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -42,7 +42,7 @@ The most-starred skills bundle in the atlas and, unusually, one that spans seven
 git clone https://github.com/obra/superpowers.git
 ```
 
-**291,864** stars · 7 of 39 lists · Shell · MIT · pushed 2026-09-25
+**303,157** stars · 7 of 39 lists · Shell · MIT · pushed 2026-10-21
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -62,7 +62,7 @@ A memory layer you drop in rather than a database you design. Apache-2.0, and it
 npm install -g @mem0/cli # or: pip install mem0-cli
 ```
 
-**66,017** stars · 8 of 39 lists · Python · Apache-2.0 · pushed 2026-09-25
+**67,600** stars · 8 of 39 lists · Python · Apache-2.0 · pushed 2026-10-21
 
 Platforms: Win Y WSL L mac Y Lin Y Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -82,7 +82,7 @@ The reference MCP servers, from the people who wrote the protocol. Start here an
 npx -y @modelcontextprotocol/server-memory
 ```
 
-**90,604** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-22
+**91,453** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-10-19
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -102,7 +102,7 @@ Container sandboxes that start in under a tenth of a second, which is the differ
 pip install daytona
 ```
 
-**71,713** stars · 2 of 39 lists · language not detected · no licence stated · pushed 2026-07-24
+**71,510** stars · 2 of 39 lists · language not detected · no licence stated · pushed 2026-07-24
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -122,7 +122,7 @@ Self-hostable tracing, so the record of what the agent sent and got back stays o
 pip install langfuse openai
 ```
 
-**35,071** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-09-26
+**36,148** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-10-21
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -142,7 +142,7 @@ A read-through of how a real coding agent is built rather than a tutorial for us
 npm i -g @shareai-lab/kode
 ```
 
-**77,636** stars · 3 of 39 lists · Python · MIT · pushed 2026-08-26
+**78,957** stars · 3 of 39 lists · Python · MIT · pushed 2026-09-28
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

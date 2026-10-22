@@ -11,7 +11,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/anomalyco/opencode"><img src="https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/assets/lander/screenshot.png" width="260"></a> | <a href="https://github.com/anomalyco/opencode-sdk-python"><img src="https://opengraph.githubassets.com/1/anomalyco/opencode-sdk-python" width="260"></a> | <a href="https://github.com/anomalyco/opencode-sdk-go"><img src="https://opengraph.githubassets.com/1/anomalyco/opencode-sdk-go" width="260"></a> |
-| **[opencode](https://github.com/anomalyco/opencode)**<br>★ 219.6k | **[opencode-sdk-python](https://github.com/anomalyco/opencode-sdk-python)**<br>★ 287 | **[opencode-sdk-go](https://github.com/anomalyco/opencode-sdk-go)**<br>★ 165 |
+| **[opencode](https://github.com/anomalyco/opencode)**<br>★ 219.7k | **[opencode-sdk-python](https://github.com/anomalyco/opencode-sdk-python)**<br>★ 287 | **[opencode-sdk-go](https://github.com/anomalyco/opencode-sdk-go)**<br>★ 165 |
 | <a href="https://github.com/anomalyco/opencode-sdk-js"><img src="https://opengraph.githubassets.com/1/anomalyco/opencode-sdk-js" width="260"></a> | <a href="https://github.com/code-yeongyu/oh-my-openagent"><img src="https://opengraph.githubassets.com/1/code-yeongyu/oh-my-opencode" width="260"></a> | <a href="https://github.com/NoeFabris/opencode-antigravity-auth"><img src="https://opengraph.githubassets.com/1/NoeFabris/opencode-antigravity-auth" width="260"></a> |
 | **[opencode-sdk-js](https://github.com/anomalyco/opencode-sdk-js)**<br>★ 95 | **[Oh My Opencode](https://github.com/code-yeongyu/oh-my-openagent)**<br>★ 70.2k | **[Antigravity Auth](https://github.com/NoeFabris/opencode-antigravity-auth)**<br>★ 10.9k |
 
@@ -27,7 +27,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
 ## Official Repositories
 
 - **[opencode](https://github.com/anomalyco/opencode)** — The official opencode AI coding agent
-  <sub>★ 219.6k · TypeScript · MIT · npm · pushed 2026-10-21 · macOS · Linux</sub>
+  <sub>★ 219.7k · TypeScript · MIT · npm · pushed 2026-10-22 · macOS · Linux</sub>
   <sub>`npm i -g @opencode/cli@latest # or bun/pnpm/yarn`</sub>
 - **[opencode-sdk-python](https://github.com/anomalyco/opencode-sdk-python)** — Official Python SDK for opencode
   <sub>★ 287 · Python · MIT · source · pushed 2026-01-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -42,7 +42,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
 ## PLUGINS
 
 - **[Oh My Opencode](https://github.com/code-yeongyu/oh-my-openagent)** — Agents &amp; Pre-built tools
-  <sub>★ 70.2k · TypeScript · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 70.2k · TypeScript · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/code-yeongyu/oh-my-opencode.git`</sub>
 - **[Antigravity Auth](https://github.com/NoeFabris/opencode-antigravity-auth)** — Google Antigravity models
   <sub>★ 10.9k · TypeScript · MIT · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -54,13 +54,13 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 9.7k · TypeScript · MIT · npx · pushed 2026-10-21 · WSL2 · macOS? · Linux</sub>
   <sub>`bunx oh-my-opencode-slim@latest install`</sub>
 - **[Plannotator](https://github.com/backnotprop/plannotator)** — Interactive plan review UI
-  <sub>★ 9.6k · TypeScript · Apache-2.0 · psh · pushed 2026-10-21 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 9.6k · TypeScript · Apache-2.0 · psh · pushed 2026-10-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`irm https://plannotator.ai/install.ps1 | iex`</sub>
 - **[Dynamic Context Pruning](https://github.com/Tarquinen/opencode-dynamic-context-pruning)** — Optimize token usage
   <sub>★ 4.4k · TypeScript · AGPL-3.0 · source · pushed 2026-09-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Tarquinen/opencode-dynamic-context-pruning.git`</sub>
 - **[Magic Context](https://github.com/cortexkit/magic-context)** — Lossless context management with background compression
-  <sub>★ 2.4k · TypeScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2.4k · TypeScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @cortexkit/magic-context@latest setup`</sub>
 - **[OpenAI Codex Auth](https://github.com/numman-ali/opencode-openai-codex-auth)** — ChatGPT Plus/Pro OAuth
   <sub>★ 2.2k · TypeScript · npx · pushed 2026-01-09 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -93,7 +93,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 586 · TypeScript · MIT · source · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kdcokenny/opencode-workspace.git`</sub>
 - **[OpenCode Swarm](https://github.com/ZaxbyHub/opencode-swarm)** — Verification-gated swarm with architect, review, test, and security agents
-  <sub>★ 510 · TypeScript · MIT · npm · pushed 2026-10-21 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 510 · TypeScript · MIT · npm · pushed 2026-10-22 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install -g opencode-swarm`</sub>
 - **[Micode](https://github.com/vtemian/micode)** — Brainstorm-Plan-Implement workflow
   <sub>★ 501 · TypeScript · MIT · clone · pushed 2026-10-19 · WSL2 · Linux</sub>
@@ -114,7 +114,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 282 · TypeScript · MIT · npm · pushed 2026-07-29 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @ramtinj95/opencode-tokenscope`</sub>
 - **[Beads Plugin](https://github.com/joshuadavidthomas/opencode-beads)** — Beads issue tracker integration
-  <sub>★ 265 · TypeScript · MIT · script · pushed 2026-10-17 · Win? · WSL2 · macOS · Linux</sub>
+  <sub>★ 265 · TypeScript · MIT · script · pushed 2026-10-21 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash`</sub>
 - **[opencode-mystatus](https://github.com/vbgate/opencode-mystatus)** — Check AI subscription quotas
   <sub>★ 259 · TypeScript · MIT · source · pushed 2026-01-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -183,7 +183,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 109 · TypeScript · MIT · source · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/smartfrog/opencode-froggy.git`</sub>
 - **[GPT Imagegen](https://github.com/yuji-hatakeyama/opencode-gpt-imagegen)** — gpt-image-2 in OpenCode — no API cost when using your ChatGPT subscription
-  <sub>★ 109 · TypeScript · MIT · source · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 109 · TypeScript · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/yuji-hatakeyama/opencode-gpt-imagegen.git`</sub>
 - **[open-plan-annotator](https://github.com/ndom91/open-plan-annotator)** — Annotate LLM plans like a Google Doc!
   <sub>★ 98 · TypeScript · MIT · npm · pushed 2026-10-17 · Win? · WSL2? · macOS · Linux</sub>
@@ -438,7 +438,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 4.9k · TypeScript · MIT · script · pushed 2026-10-19 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/darrenhinde/OpenAgentsControl/main/install.sh | bash -s developer`</sub>
 - **[Agentic](https://github.com/Cluster444/agentic)** — Modular AI agents
-  <sub>★ 655 · TypeScript · MIT · npm · pushed 2025-09-02 · Win? · WSL2? · macOS · Linux</sub>
+  <sub>★ 656 · TypeScript · MIT · npm · pushed 2025-09-02 · Win? · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g agentic-cli`</sub>
 - **[Gem Team](https://github.com/mubaidr/gem-team)** — Self-Learning Multi-agent orchestration harness for spec-driven development and automated verification
   <sub>★ 227 · Apache-2.0 · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -489,7 +489,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 72.7k · TypeScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @fission-ai/openspec@latest`</sub>
 - **[CLI Proxy API](https://github.com/router-for-me/CLIProxyAPI)** — Multi-model proxy
-  <sub>★ 55.9k · Go · MIT · source · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 55.9k · Go · MIT · source · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/router-for-me/CLIProxyAPI.git`</sub>
 - **[Handy](https://github.com/cjpais/Handy)** — Speech to Text
   <sub>★ 34.3k · Rust · MIT · winget · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
@@ -501,13 +501,13 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 28.1k · Go · MIT · npm · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @beads/bd # Node.js users`</sub>
 - **[OpenWork](https://github.com/different-ai/openwork)** — Desktop GUI for OpenCode workflows
-  <sub>★ 24.2k · TypeScript · clone · pushed 2026-10-21 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 24.2k · TypeScript · clone · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`git clone https://github.com/different-ai/openwork.git`</sub>
 - **[OpenChamber](https://github.com/openchamber/openchamber)** — GUI for OpenCode
   <sub>★ 12k · TypeScript · MIT · script · pushed 2026-10-21 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/openchamber/openchamber/main/scripts/install.sh | bash`</sub>
 - **[Tokscale](https://github.com/junhoyeo/tokscale)** — Token usage tracking CLI
-  <sub>★ 5.7k · Rust · MIT · npx · pushed 2026-10-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 5.7k · Rust · MIT · npx · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npx tokscale@latest`</sub>
 - **[Opencode Neovim](https://github.com/nickjvandyke/opencode.nvim)** — Neovim plugin
   <sub>★ 3.9k · Lua · MIT · source · pushed 2026-10-19</sub>
@@ -519,7 +519,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 1.4k · TypeScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g kimaki@latest`</sub>
 - **[Opencode Telegram Bot](https://github.com/grinev/opencode-telegram-bot)** — Telegram bot client for OpenCode CLI
-  <sub>★ 1.3k · TypeScript · MIT · npm · pushed 2026-10-17 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1.3k · TypeScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @grinev/opencode-telegram-bot`</sub>
 - **[OCX](https://github.com/kdcokenny/ocx)** — OpenCode package manager
   <sub>★ 978 · TypeScript · MIT · source · pushed 2026-09-28 · Win · WSL2? · macOS · Linux</sub>
@@ -528,7 +528,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 728 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @swarmvaultai/cli`</sub>
 - **[SwarmClaw](https://github.com/swarmclawai/swarmclaw)** — Self-hosted multi-agent runtime with first-class OpenCode delegation
-  <sub>★ 697 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 696 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g @swarmclawai/swarmclaw`</sub>
 - **[Vestige](https://github.com/samvallad33/vestige)** — Local persistent memory for OpenCode agents
   <sub>★ 655 · Rust · AGPL-3.0 · npx · pushed 2026-10-20 · Win · WSL2? · macOS · Linux</sub>
@@ -537,7 +537,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 591 · Python · MIT · source · pushed 2025-12-17 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/gzzhongqi/geminicli2api.git`</sub>
 - **[hcom](https://github.com/aannoo/hcom)** — Let AI agents message, watch, and spawn each other across terminals
-  <sub>★ 585 · Rust · MIT · psh · pushed 2026-10-21 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 586 · Rust · MIT · psh · pushed 2026-10-21 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`irm https://github.com/aannoo/hcom/releases/latest/download/hcom-installer.ps1 | iex`</sub>
 - **[Universal LLM API Proxy](https://github.com/Mirrowel/LLM-API-Key-Proxy)** — Universal multi-model proxy and library - made with Opencode community
   <sub>★ 557 · Python · clone · pushed 2026-09-23 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -561,7 +561,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 297 · Rust · Apache-2.0 · source · pushed 2026-03-02 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/eqtylab/cupcake.git`</sub>
 - **[OpenCode Mobile](https://github.com/dzianisv/opencode-mobile)** — Android client for OpenCode — drive your self-hosted agent from your phone
-  <sub>★ 239 · TypeScript · MIT · source · pushed 2026-08-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 238 · TypeScript · MIT · source · pushed 2026-08-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/dzianisv/opencode-mobile.git`</sub>
 - **[CodeWalk](https://github.com/verseles/codewalk)** — Native cross-platform Flutter client for OpenCode server mode
   <sub>★ 188 · Dart · psh · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
@@ -606,7 +606,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 36 · Rust · MIT · clone · pushed 2025-08-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/unluckyjori/Codex-Proxy-Server.git`</sub>
 - **[Opencode A2A](https://github.com/Intelligent-Internet/opencode-a2a)** — Full A2A Protocol support for OpenCode
-  <sub>★ 35 · Python · Apache-2.0 · uv · pushed 2026-10-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 36 · Python · Apache-2.0 · uv · pushed 2026-10-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install opencode-a2a`</sub>
 - **[jailoc](https://github.com/seznam/jailoc)** — Sandboxed Docker environments for OpenCode agents
   <sub>★ 33 · Go · MIT · go · pushed 2026-10-15 · Win? · WSL2? · macOS · Linux · Docker</sub>
@@ -621,7 +621,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 25 · TypeScript · Apache-2.0 · npm · pushed 2026-09-30 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install -g opencode-sidebar`</sub>
 - **[AgentDeals](https://github.com/robhunter/agentdeals)** — MCP server aggregating free tiers, credits, and referral codes across 1,500+ developer tools
-  <sub>★ 23 · TypeScript · MIT · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 23 · TypeScript · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/robhunter/agentdeals.git`</sub>
 - **[Unship](https://github.com/mbenhard/unship)** — Compare AI-made UI variants locally
   <sub>★ 23 · JavaScript · MIT · npm · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -701,6 +701,6 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
 
 ---
 
-Snapshot 2026-10-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

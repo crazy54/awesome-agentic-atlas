@@ -35,7 +35,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
   <sub>★ 6.7k · TypeScript · Apache-2.0 · pip · pushed 2026-10-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install x402`</sub>
 - **[Coinbase x402 development fork](https://github.com/coinbase/x402)** — A payments protocol for the internet. Built on HTTP.
-  <sub>★ 172 · TypeScript · Apache-2.0 · pip · pushed 2026-10-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 172 · TypeScript · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install x402`</sub>
 - **[x402 Official Website](https://www.x402.org)** — 
   <sub>website</sub>
@@ -254,7 +254,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
   <sub>website</sub>
   <sub>`https://pinata.cloud/blog/using-x402-to-monetize-ai-hardware/`</sub>
 - **[x402 Example Gallery (GitHub)](https://github.com/coinbase/x402/tree/main/examples)** — A payments protocol for the internet. Built on HTTP.
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-15</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-21</sub>
   <sub>`git clone https://github.com/coinbase/x402.git && cd x402/examples`</sub>
 - **[Cloudflare Agents x402 Example](https://github.com/cloudflare/agents/tree/main/examples/x402)** — Official example showing how to gate Cloudflare Agents endpoints with x402 payments
   <sub>TypeScript · MIT · in-repo · pushed 2026-10-21</sub>
@@ -393,6 +393,6 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 
 ---
 
-Snapshot 2026-10-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

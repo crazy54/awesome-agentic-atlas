@@ -10,12 +10,10 @@ Page **10** of 10, because this list is longer than the 512 KB GitHub will rende
 
 ## The list (6,957)
 
-<sub>Projects 6,914–6,957 of 6,957. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 6,916–6,957 of 6,957. The rest are on this page's other parts, linked above and below.</sub>
 
 | # | Project | ★ | Lists | Support | Language | Install / Run | What it does | Why |
 |--:|---|--:|--:|---|---|---|---|---|
-| 6914 | **[vaemail/vaemail-mcp](https://github.com/vaemail/vaemail-mcp)**<br><sub>vaemail/vaemail-mcp</sub> | — | 1 | Win? · WSL2? · macOS? · Linux? | JavaScript | `npx -y vaemail mcp` | Send transactional email, authenticate sending domains, track delivery and diagnose deliverability, with scoped API keys and dry-run mode | <sub>install via npx; portable runtime (node)</sub> |
-| 6915 | **[Val7h/dados-b3-mcp](https://github.com/Val7h/dados-b3-mcp)**<br><sub>Val7h/dados-b3-mcp</sub> | — | 1 | Win? · WSL2? · macOS? · Linux? · Docker | Python | `pip install dadosb3` | Auditable fundamentals for Brazilian B3 stocks (ROE, P/E, dividends, Piotroski, Graham, restatements) and real-estate funds (FIIs), traceable to CVM sources | <sub>install via pip; portable runtime (python); Docker supported</sub> |
 | 6916 | **[verax-ai/verax](https://github.com/verax-ai/verax)**<br><sub>verax-ai/verax</sub> | — | 1 | Win? · WSL2? · macOS? · Linux? | TypeScript | `npm install -g --prefix "$env:ProgramFiles\verax-cli" @verax-ai/body` | Sits between an agent and its tools: every call passes a policy gate and leaves a signed decision record before it runs, a refusal is recorded like an approval, payments wait for an operator on the same machine, and the… | <sub>install via npm; portable runtime (node)</sub> |
 | 6917 | **[Vercel_Ai_Test](https://github.com/pixelknit/vercel_ai_test)**<br><sub>pixelknit/vercel_ai_test</sub> | — | 1 | Win? · WSL2? · macOS? · Linux? | JavaScript | `git clone https://github.com/pixelknit/vercel_ai_test.git` | Test for webgl ai agent | <sub>inferred from language (JavaScript)</sub> |
 | 6918 | **[vibecodebeast/swath-mcp](https://github.com/vibecodebeast/swath-mcp)**<br><sub>vibecodebeast/swath-mcp</sub> | — | 1 | Win? · WSL2? · macOS? · Linux? | JavaScript | `git clone https://github.com/vibecodebeast/swath-mcp.git` | Radar-verified hail and wind storm detection for the continental US: NOAA MRMS swaths, per-address storm history, area alerts, reports and maps | <sub>inferred from language (JavaScript)</sub> |
@@ -63,6 +61,6 @@ Page **10** of 10, because this list is longer than the 512 KB GitHub will rende
 
 ---
 
-Snapshot 2026-10-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

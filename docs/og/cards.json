@@ -12,7 +12,7 @@
   "head": "#f7f8fa"
  },
  "font": "DejaVu Sans",
- "chromium": "153",
+ "chromium": "156",
  "size": [
   1200,
   630
@@ -20,21 +20,21 @@
  "cards": {
   "root.png": {
    "title": "Every agentic AI tool, one index",
-   "count": "8,850+",
+   "count": "10,900+",
    "scope": "39 source lists · 14 topics",
    "blurb": "Merged, deduplicated, and filterable by topic, harness and operating system.",
    "names": [
-    "mattpocock/skills",
+    "morluto/rea",
     "openclaw",
     "Superpowers"
    ],
-   "note": " · snapshot 2026-09-21",
-   "sig": "80cbdd7b33720a28",
-   "bytes": 29450
+   "note": " · snapshot 2026-10-22",
+   "sig": "a5e904f8fcaea12d",
+   "bytes": 27321
   },
   "topic-orchestrators-multi-agent.png": {
    "title": "Orchestrators & Multi-Agent",
-   "count": "330+",
+   "count": "460+",
    "scope": "every harness",
    "blurb": "Running several agents at once, or one agent for a long time: swarms, loop runners, task…",
    "names": [
@@ -42,12 +42,12 @@
     "Langflow",
     "n8n"
    ],
-   "sig": "ebb59394b45d4f8b",
-   "bytes": 25857
+   "sig": "71786bfee5e034bd",
+   "bytes": 24525
   },
   "topic-coding-agents.png": {
    "title": "Coding Agents",
-   "count": "280+",
+   "count": "460+",
    "scope": "every harness",
    "blurb": "The agent you point at a repository. Terminal, desktop and web, plus the parallel-agent…",
    "names": [
@@ -55,51 +55,51 @@
     "Gemini CLI",
     "OpenCode"
    ],
-   "sig": "fc35333f4f23c1cf",
-   "bytes": 22729
+   "sig": "61b03463ab76f852",
+   "bytes": 21177
   },
   "topic-agent-skills.png": {
    "title": "Agent Skills",
-   "count": "820+",
+   "count": "1,360+",
    "scope": "every harness",
    "blurb": "Capability bundles an agent loads on demand — SKILL.md packages, subagents, slash…",
    "names": [
-    "Everything Claude Code…",
     "mattpocock/skills",
+    "morluto/rea",
     "Superpowers"
    ],
-   "sig": "a532767e61fef8cb",
-   "bytes": 23705
+   "sig": "e39552b8882a32c3",
+   "bytes": 21750
   },
   "topic-mcp-servers.png": {
    "title": "MCP Servers",
-   "count": "4,530+",
+   "count": "4,950+",
    "scope": "every harness",
    "blurb": "The Model Context Protocol ecosystem: reference and third-party servers, inspectors…",
    "names": [
-    "Chrome DevTools MCP",
     "Context7",
+    "crawl4ai",
     "modelcontextprotocol/se…"
    ],
-   "sig": "4d93df885f55de99",
-   "bytes": 23768
+   "sig": "ec74a2bc7c795039",
+   "bytes": 21955
   },
   "topic-frameworks-sdks.png": {
    "title": "Frameworks & SDKs",
-   "count": "460+",
+   "count": "500+",
    "scope": "every harness",
    "blurb": "Libraries you build an agent out of, and the tool-calling interfaces it reaches the…",
    "names": [
     "AutoGPT",
-    "Dify",
+    "Firecrawl",
     "openclaw"
    ],
-   "sig": "7d9a491cf9159a46",
-   "bytes": 24021
+   "sig": "e617208ba6a0cd30",
+   "bytes": 22706
   },
   "topic-harnesses-runtime-infra.png": {
    "title": "Harnesses & Runtime Infra",
-   "count": "660+",
+   "count": "710+",
    "scope": "every harness",
    "blurb": "The scaffolding around the model rather than the model or the agent: runtimes…",
    "names": [
@@ -107,51 +107,51 @@
     "Ollama",
     "TensorFlow"
    ],
-   "sig": "f3d6ccd4360c7bfa",
-   "bytes": 24832
+   "sig": "dcfd002176f5a719",
+   "bytes": 23345
   },
   "topic-context-memory-rag.png": {
    "title": "Context, Memory & RAG",
-   "count": "90+",
+   "count": "150+",
    "scope": "every harness",
    "blurb": "Everything that decides what the model actually sees: retrieval, memory stores…",
    "names": [
+    "ai-agent-book",
     "MemPalace",
-    "Milvus",
     "RAGFlow"
    ],
-   "sig": "70062d0c4dc9c919",
-   "bytes": 25678
+   "sig": "c1a8e93d7df7f668",
+   "bytes": 24569
   },
   "topic-sandbox-security-governance.png": {
    "title": "Sandbox, Security & Governance",
-   "count": "150+",
+   "count": "180+",
    "scope": "every harness",
    "blurb": "Isolation, permissions, approval gates, guardrails, compliance and audit — plus the…",
    "names": [
-    "Alibaba OpenSandbox",
     "Daytona",
+    "iFixAi",
     "Strix"
    ],
-   "sig": "b1d80affb946d050",
-   "bytes": 28523
+   "sig": "db12aa68be43ce67",
+   "bytes": 26351
   },
   "topic-observability-evals.png": {
    "title": "Observability & Evals",
-   "count": "420+",
+   "count": "470+",
    "scope": "every harness",
    "blurb": "Traces, benchmarks, graders, linting and CI feedback: how you find out whether the agent…",
    "names": [
+    "FreeLLMAPI",
     "Langfuse",
-    "LLMApp",
-    "PostHog"
+    "LLMApp"
    ],
-   "sig": "4e1c183db802a91b",
-   "bytes": 24100
+   "sig": "395cd7af27982311",
+   "bytes": 22765
   },
   "topic-plugins-themes-clients.png": {
    "title": "Plugins, Themes & Clients",
-   "count": "610+",
+   "count": "760+",
    "scope": "every harness",
    "blurb": "Attaches to an agent you already run — plugins, themes, status lines, alternative…",
    "names": [
@@ -159,8 +159,8 @@
     "claude-mem",
     "NextChat"
    ],
-   "sig": "94214f7a3e57e46b",
-   "bytes": 25175
+   "sig": "45942e524ebf2218",
+   "bytes": 23819
   },
   "topic-research-data-agents.png": {
    "title": "Research & Data Agents",
@@ -172,12 +172,12 @@
     "Pathway",
     "Storm"
    ],
-   "sig": "d3a929e5ade6adb5",
-   "bytes": 25590
+   "sig": "ece9f6eab84fbd1e",
+   "bytes": 24037
   },
   "topic-creative-voice-media.png": {
    "title": "Creative, Voice & Media",
-   "count": "20+",
+   "count": "30+",
    "scope": "every harness",
    "blurb": "Image, audio, video, voice and prose agents, and the ones that play games.",
    "names": [
@@ -185,21 +185,21 @@
     "stable-diffusion",
     "whisper"
    ],
-   "sig": "fbf4b067e134fd00",
-   "bytes": 25654
+   "sig": "e2fa331e5ae89202",
+   "bytes": 24234
   },
   "topic-assistants-domain-agents.png": {
    "title": "Assistants & Domain Agents",
-   "count": "250+",
+   "count": "630+",
    "scope": "every harness",
    "blurb": "One agent doing one job in one domain: support, sales, finance, health, travel, browser…",
    "names": [
     "awesome-llm-apps",
     "hermes-agent",
-    "Private GPT"
+    "OpenMontage"
    ],
-   "sig": "3f904c079d02852d",
-   "bytes": 26642
+   "sig": "f99fa5b767099ef8",
+   "bytes": 25482
   },
   "topic-docs-learning-lists.png": {
    "title": "Docs, Learning & Lists",
@@ -211,12 +211,12 @@
     "f/awesome-chatgpt-promp…",
     "Prompt Engineering Guid…"
    ],
-   "sig": "c2831294d4402fda",
-   "bytes": 25503
+   "sig": "044c2eb37a3f48df",
+   "bytes": 24173
   },
   "target-claude-code.png": {
    "title": "Tools for Claude Code",
-   "count": "2,390+",
+   "count": "3,190+",
    "scope": "every topic",
    "blurb": "Built for Anthropic's terminal coding agent — skills, hooks, commands, status lines, MCP…",
    "names": [
@@ -224,51 +224,51 @@
     "mattpocock/skills",
     "Superpowers"
    ],
-   "sig": "70a9045ced237b6a",
-   "bytes": 25638
+   "sig": "a44330bec58312a4",
+   "bytes": 24137
   },
   "target-claude-anthropic.png": {
    "title": "Tools for Claude / Anthropic",
-   "count": "3,940+",
+   "count": "4,990+",
    "scope": "every topic",
    "blurb": "Targets Claude or the Anthropic API, whether or not it goes through Claude Code.",
    "names": [
-    "Everything Claude Code…",
     "mattpocock/skills",
+    "morluto/rea",
     "Superpowers"
    ],
-   "sig": "c7f291594df48c83",
-   "bytes": 27678
+   "sig": "b02d30595a665e2a",
+   "bytes": 25426
   },
   "target-opencode.png": {
    "title": "Tools for opencode",
-   "count": "400+",
+   "count": "510+",
    "scope": "every topic",
    "blurb": "Built for the opencode agent: its plugins, themes, agents and surrounding projects.",
    "names": [
-    "cc-switch",
     "Everything Claude Code…",
+    "mattpocock/skills",
     "OpenCode"
    ],
-   "sig": "339aa8af4f755282",
-   "bytes": 24373
+   "sig": "30ebcc4f1b5d88bd",
+   "bytes": 23285
   },
   "target-mcp.png": {
    "title": "Tools for MCP",
-   "count": "5,100+",
+   "count": "5,770+",
    "scope": "every topic",
    "blurb": "Speaks the Model Context Protocol — as a server, as a client, or as a gateway between.",
    "names": [
-    "Everything Claude Code…",
+    "morluto/rea",
     "openclaw",
     "Superpowers"
    ],
-   "sig": "f592aaadf392bd40",
-   "bytes": 23324
+   "sig": "d185d928bf59be5c",
+   "bytes": 21161
   },
   "target-codex-openai.png": {
    "title": "Tools for Codex / OpenAI",
-   "count": "1,570+",
+   "count": "2,260+",
    "scope": "every topic",
    "blurb": "Targets Codex, the OpenAI API, or the OpenAI Agents SDK.",
    "names": [
@@ -276,12 +276,12 @@
     "hermes-agent",
     "Superpowers"
    ],
-   "sig": "7aa8ffeb17544eaa",
-   "bytes": 25835
+   "sig": "b791a0c2db6e5c42",
+   "bytes": 24636
   },
   "target-gemini-google.png": {
    "title": "Tools for Gemini / Google",
-   "count": "650+",
+   "count": "840+",
    "scope": "every topic",
    "blurb": "Targets Gemini, Vertex AI, or Google's agent stack.",
    "names": [
@@ -289,12 +289,12 @@
     "LangChain",
     "Superpowers"
    ],
-   "sig": "9c7dd0b95649da80",
-   "bytes": 24584
+   "sig": "ac8b8162117450aa",
+   "bytes": 23104
   },
   "target-github-copilot.png": {
    "title": "Tools for GitHub Copilot",
-   "count": "240+",
+   "count": "290+",
    "scope": "every topic",
    "blurb": "Targets Copilot: its coding agent, its CLI, or its extension surface.",
    "names": [
@@ -302,12 +302,12 @@
     "Superpowers",
     "ui-ux-pro-max-skill"
    ],
-   "sig": "efecf32b336811b7",
-   "bytes": 23700
+   "sig": "cda0bcc306b3d6cb",
+   "bytes": 22384
   },
   "target-cursor.png": {
    "title": "Tools for Cursor",
-   "count": "1,120+",
+   "count": "1,300+",
    "scope": "every topic",
    "blurb": "Targets the Cursor editor — rules, agents and composer workflows.",
    "names": [
@@ -315,12 +315,12 @@
     "mattpocock/skills",
     "Superpowers"
    ],
-   "sig": "956bd8a165f12952",
-   "bytes": 23672
+   "sig": "ef2f85f135a6874f",
+   "bytes": 22205
   },
   "target-cline-roo.png": {
    "title": "Tools for Cline / Roo",
-   "count": "80+",
+   "count": "110+",
    "scope": "every topic",
    "blurb": "Targets Cline or Roo Code.",
    "names": [
@@ -328,25 +328,25 @@
     "OmniRoute: Multi-Provid…",
     "zhaoxuya520/reverse-ski…"
    ],
-   "sig": "5ddb89ce78383de4",
-   "bytes": 21972
+   "sig": "4109763c08789596",
+   "bytes": 20370
   },
   "target-aider.png": {
    "title": "Tools for Aider",
-   "count": "30+",
+   "count": "40+",
    "scope": "every topic",
    "blurb": "Targets aider.",
    "names": [
     "Aider",
     "claude-squad",
-    "Rapid-MLX"
+    "html-anything"
    ],
-   "sig": "dd9883f9309dff94",
-   "bytes": 18926
+   "sig": "ef4eba469d161f14",
+   "bytes": 17419
   },
   "target-langchain-langgraph.png": {
    "title": "Tools for LangChain / LangGraph",
-   "count": "170+",
+   "count": "210+",
    "scope": "every topic",
    "blurb": "Built on LangChain, LangGraph or LangSmith.",
    "names": [
@@ -354,12 +354,12 @@
     "LangChain",
     "Langflow"
    ],
-   "sig": "21e330973b8fd879",
-   "bytes": 25084
+   "sig": "51cfa3a05759f1f4",
+   "bytes": 23656
   },
   "target-local-ollama.png": {
    "title": "Tools for Local / Ollama",
-   "count": "140+",
+   "count": "180+",
    "scope": "every topic",
    "blurb": "Runs against a named local runtime: Ollama, llama.cpp, vLLM, LM Studio, llamafile or…",
    "names": [
@@ -367,8 +367,8 @@
     "Ollama",
     "Open WebUI"
    ],
-   "sig": "e5878a835e8b6bb5",
-   "bytes": 23780
+   "sig": "5edfa33d36311de9",
+   "bytes": 22480
   }
  }
 }

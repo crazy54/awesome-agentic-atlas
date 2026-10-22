@@ -285,22 +285,22 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
 ## Context Delivery &amp; Compaction
 
 - **[headroom](https://github.com/headroomlabs-ai/headroom)** — Compresses tool outputs, logs, files, and RAG chunks before they enter the context window, cutting active tokens by 60–95% without changing answers. Ships as a library, proxy, and MCP server — the right drop-in layer for any harness where bulky tool returns are the primary context pressure source
-  <sub>★ 77.2k · Python · Apache-2.0 · uv · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 77.2k · Python · Apache-2.0 · uv · pushed 2026-10-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`uv tool install --python 3.13 "headroom-ai[all]" # CLI in a self-contained env`</sub>
 - **[Context7](https://github.com/upstash/context7)** — MCP server and CLI that injects up-to-date, version-specific library documentation directly into agent context, eliminating hallucinated APIs and outdated code examples caused by stale training data. Ships as both a ctx7 command-line tool and an MCP server with resolve-library-id and query-docs tools
-  <sub>★ 63.4k · TypeScript · MIT · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 63.5k · TypeScript · MIT · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/upstash/context7.git`</sub>
 - **[codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp)** — High-performance code intelligence MCP server that full-indexes repositories into a persistent knowledge graph via tree-sitter AST analysis across 66 languages. Replaces dozens of file-read/grep cycles with sub-millisecond structured queries, cutting active tokens by 120× and turning codebase navigation from a context-pressure problem into a pointer-chasing problem
-  <sub>★ 47.1k · C · MIT · psh · pushed 2026-10-21 · macOS</sub>
+  <sub>★ 47.1k · C · MIT · psh · pushed 2026-10-22 · macOS</sub>
   <sub>`irm https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/scripts/setup-windows.ps1 | iex`</sub>
 - **[OpenViking](https://github.com/volcengine/OpenViking)** — ByteDance's context database for AI agents that unifies memory, resources, and skills through a filesystem paradigm, enabling hierarchical context delivery where agents pull only the paths they need instead of receiving bloated monolithic prompts. The self-evolving layer that restructures context based on usage patterns makes it a rare example of context infrastructure that improves autonomously r
   <sub>★ 40.5k · Python · AGPL-3.0 · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install openviking --upgrade`</sub>
 - **[context-mode](https://github.com/mksglu/context-mode)** — MCP server that intercepts raw tool output before it enters the context window, sandboxing bulky data (Playwright snapshots, GitHub issues, logs) outside the LLM and retrieving only relevant fragments via BM25 when needed. The "think in code" paradigm — replacing ten file-read tool calls with one script execution — is a concrete harness pattern for turning context pressure into a programming probl
-  <sub>★ 31.6k · TypeScript · npm · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 31.7k · TypeScript · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g context-mode`</sub>
 - **[DESIGN.md](https://github.com/google-labs-code/design.md)** — Google Labs' specification for describing visual identity systems to coding agents: machine-readable design tokens (YAML front matter) combined with human-readable design rationale (markdown prose) give agents a persistent, structured understanding of design constraints without requiring custom tool chains
-  <sub>★ 28.4k · TypeScript · Apache-2.0 · npx · pushed 2026-10-16 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 28.5k · TypeScript · Apache-2.0 · npx · pushed 2026-10-16 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx @google/design.md lint DESIGN.md`</sub>
 - **[OpenWiki](https://github.com/langchain-ai/openwiki)** — LangChain's CLI that writes and maintains agent-readable wikis for codebases or purpose memory, turning documentation drift into a versioned, automatable harness artifact. Emits Google Open Knowledge Format bundles so curated context stays portable across agents and can be kept fresh via CI
   <sub>★ 17.3k · TypeScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -318,7 +318,7 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 6.3k · Python · MIT · uv · pushed 2026-10-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install semble`</sub>
 - **[Mirage](https://github.com/strukto-ai/mirage)** — Mounts S3, Slack, Gmail, GitHub, and Redis side-by-side as a single virtual filesystem so agents interact with every backend through familiar bash commands instead of learning N distinct APIs. The key harness insight: LLMs are already fluent in grep, cat, and cp — leveraging that vocabulary eliminates tool-schema bloat and makes cross-service pipelines compose as naturally as local shell scripts
-  <sub>★ 3.7k · TypeScript · Apache-2.0 · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.7k · TypeScript · Apache-2.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @struktoai/mirage-cli`</sub>
 - **[SoL-Pi](https://github.com/NVlabs/SoL-Pi)** — NVIDIA's September 2026 extension for the Pi harness that packages four efficiency mechanisms discovered by running 152 candidate ideas through auto-research loops: Action Fusion (an edit runs its follow-up validation in the same tool call), ObservationPack (repeated large tool results become stable handles with exact paged recall), an Evidence-Preserving Reducer (long logs compact to receipts onl
   <sub>★ 3.6k · TypeScript · MIT · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -384,10 +384,10 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 67.6k · Python · Apache-2.0 · npm · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm install -g @mem0/cli # or: pip install mem0-cli`</sub>
 - **[MemPalace](https://github.com/MemPalace/mempalace)** — Local-first AI memory system that stores conversation history verbatim and retrieves it with semantic search through a structured palace architecture (wings, rooms, drawers). Achieves 96.6% R@5 on LongMemEval with zero LLM calls, making it the best-benchmarked open-source memory layer for agents that need cross-session persistence without cloud dependencies
-  <sub>★ 59.7k · Python · MIT · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 59.7k · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add MemPalace/mempalace`</sub>
 - **[Hindsight](https://github.com/vectorize-io/hindsight)** — Agent memory system organized around three explicit operations—retain, recall, and reflect—with semantic, keyword, graph, and temporal retrieval plus an MCP server. The June 2026 release and production usage make it a concrete reference for turning cross-session persistence from passive storage into an active learning layer inside the harness
-  <sub>★ 52.3k · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 52.4k · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx @vectorize-io/hindsight-coding-agents install all # every detected agent, wired natively`</sub>
 - **[cognee](https://github.com/topoteretes/cognee)** — Open-source memory platform with a hybrid graph-vector-relational poly-store that lets agents recall facts through both semantic similarity and structured graph traversal — the practical middle ground between flat vector stores and full multi-graph research systems. The self-improving pipeline reweights edges from agent feedback, and the 14-tool MCP server makes it a drop-in memory primitive for p
   <sub>★ 32.6k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -396,7 +396,7 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 29.8k · TypeScript · Apache-2.0 · npm · pushed 2026-10-21 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @agentmemory/agentmemory@latest`</sub>
 - **[TencentDB-Agent-Memory](https://github.com/TencentCloud/TencentDB-Agent-Memory)** — Tencent's fully local agent memory system with a 4-tier progressive pipeline (Conversation → Atom → Scenario → Persona) and symbolic short-term memory via Mermaid canvases. The benchmark data is striking: 61% token reduction and 51% relative pass-rate improvement on long-horizon tasks, demonstrating that hierarchical memory architecture outperforms flat vector stores for coding agents
-  <sub>★ 29.7k · TypeScript · clone · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 29.8k · TypeScript · clone · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/TencentCloud/TencentDB-Agent-Memory.git`</sub>
 - **[Letta (MemGPT)](https://github.com/letta-ai/letta)** — The reference architecture for stateful agents: three-tier memory (core / archival / recall) maps directly to harness state management design. Their agent loop redesign post is the most thorough public analysis of how memory structure shapes the harness
   <sub>★ 25.2k · Apache-2.0 · npm · pushed 2026-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -414,7 +414,7 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 1.3k · Python · source · pushed 2026-04-06 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/coleam00/claude-memory-compiler.git`</sub>
 - **[deja-vu](https://github.com/vshulcz/deja-vu)** — Indexes coding-agent sessions already written to disk and serves them back over MCP with no LLM calls, embeddings, or API keys. The zero-dependency binary solves the memory cold-start problem for cross-session persistence and demonstrates that agent memory can be built on existing filesystem traces rather than a separate learning pipeline
-  <sub>★ 1.3k · Go · MIT · winget · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 1.3k · Go · MIT · winget · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`winget install vshulcz.deja-vu`</sub>
 - **[Stash](https://github.com/alash3al/stash)** — Self-hosted persistent memory layer with an 8-stage consolidation pipeline (episodes → facts → relationships → patterns) and built-in MCP server. The critical gap it fills: production-grade cross-session memory without cloud dependencies or complex infrastructure — a single Docker Compose gives you Postgres, pgvector, and background consolidation
   <sub>★ 769 · Go · Apache-2.0 · clone · pushed 2026-06-14 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -465,10 +465,10 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
 ## Skills &amp; MCP
 
 - **[superpowers](https://github.com/obra/superpowers)** — Agentic skills framework and software-development methodology with automatically-triggered, mandatory skills that work across Claude Code, Cursor, Codex, Gemini CLI, and Copilot CLI. Demonstrates how to package cross-harness workflows — TDD, subagent-driven development, review gates — as reusable skills with an eval harness
-  <sub>★ 303.1k · Shell · MIT · clone · pushed 2026-10-21</sub>
+  <sub>★ 303.2k · Shell · MIT · clone · pushed 2026-10-21</sub>
   <sub>`git clone https://github.com/obra/superpowers.git`</sub>
 - **[Ponytail](https://github.com/DietrichGebert/ponytail)** — Skill that makes coding agents behave like a "lazy senior dev": prefer built-in solutions, avoid new dependencies, and write the minimum code that works. Benchmarked on real Claude Code sessions with ~54% fewer lines, ~20% lower cost, and preserved safety guards — a rare harness-level incentive that fights over-engineering rather than just adding capability
-  <sub>★ 171.4k · JavaScript · MIT · source · pushed 2026-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 171.6k · JavaScript · MIT · source · pushed 2026-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/DietrichGebert/ponytail.git`</sub>
 - **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)** — Production-grade engineering skills for AI coding agents, packaged as 24 reusable skills covering the full development lifecycle from /spec to /ship. The slash-command interface and context-aware auto-activation make it a concrete reference for turning senior-engineering judgment into agent-executable harness artifacts
   <sub>★ 109.3k · JavaScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -477,7 +477,7 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 91.5k · TypeScript · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @modelcontextprotocol/server-memory`</sub>
 - **[Chrome DevTools MCP](https://github.com/ChromeDevTools/chrome-devtools-mcp)** — Official Google MCP server that exposes live Chrome debugging surfaces — network analysis, performance profiling, console messages, memory snapshots, and Lighthouse audits — as structured agent tools. The clearest reference for turning browser inspection into a first-class tool interface rather than relying solely on screenshot-driven automation
-  <sub>★ 53.9k · TypeScript · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 54k · TypeScript · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ChromeDevTools/chrome-devtools-mcp.git`</sub>
 - **[Antigravity Awesome Skills](https://github.com/sickn33/agentic-awesome-skills)** — Installable library of 1,400+ agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, and more. The largest community-driven skill catalog with an npm installer and role-based bundles — a concrete reference for treating skills as versioned harness artifacts rather than ad-hoc prompts
   <sub>★ 48.3k · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -486,10 +486,10 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 41.5k · Python · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add wshobson/agents --skill python-testing-patterns`</sub>
 - **[microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp)** — Browser automation via accessibility tree snapshots rather than screenshots, dramatically reducing token cost. The canonical example of structured tool output design in an MCP server
-  <sub>★ 38.5k · TypeScript · Apache-2.0 · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 38.5k · TypeScript · Apache-2.0 · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @playwright/mcp@latest --config path/to/config.json`</sub>
 - **[Composio](https://github.com/ComposioHQ/composio)** — Wraps 250+ SaaS APIs (GitHub, Slack, Linear, Notion, etc.) as agent-ready actions with managed OAuth, so tool integration becomes a one-line import rather than a custom harness component per service. The fastest path from "the agent needs to call an external API" to a production-grade, authenticated tool
-  <sub>★ 30.7k · TypeScript · MIT · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 30.7k · TypeScript · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install composio composio-openai-agents openai-agents`</sub>
 - **[A2A Protocol](https://github.com/a2aproject/A2A)** — Google's open Agent-to-Agent protocol: JSON-RPC over HTTP(S)/SSE with Agent Card service discovery and a task/message/artifact communication model. The emerging standard for cross-framework agent interoperability in multi-agent harnesses
   <sub>★ 26.2k · Shell · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -534,7 +534,7 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 727 · TypeScript · MIT · npm · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g skillgrade`</sub>
 - **[SkillNet &amp; SkillsBench: Infrastructure for AI Agent Skills at Scale](https://github.com/skillmatic-ai/awesome-agent-skills)** — Comprehensive framework for creating, evaluating, and sharing agent skills with 86-task benchmark across 11 domains. Demonstrates the harness problem of skill fragmentation and provides infrastructure for standardized skill evaluation across frameworks
-  <sub>★ 685 · CC0-1.0 · source · pushed 2026-05-14</sub>
+  <sub>★ 686 · CC0-1.0 · source · pushed 2026-05-14</sub>
   <sub>`git clone https://github.com/skillmatic-ai/awesome-agent-skills.git`</sub>
 - **[vurb.ts](https://github.com/vinkius-labs/mcpfusion)** — TypeScript framework for building production MCP servers with a "Presenter" perception layer that strips undeclared fields, redacts PII, and gates tool visibility by workflow state. Fills a critical gap in the MCP ecosystem: most tooling focuses on consuming servers, while vurb.ts addresses the harness engineering of authoring servers that are safe, governable, and context-aware by default
   <sub>★ 255 · TypeScript · Apache-2.0 · source · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -642,7 +642,7 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 71.5k · pip · pushed 2026-07-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install daytona`</sub>
 - **[NVIDIA OpenShell](https://github.com/NVIDIA/OpenShell)** — Open-source policy-driven sandbox runtime for autonomous AI agents, announced at GTC 2026. Enforces security constraints at the kernel level via Landlock LSM (filesystem), seccomp BPF (syscalls), and an OPA/Rego-evaluated HTTP CONNECT proxy (network) — constraints are enforced on the environment itself, so even a compromised agent cannot override them. Supports Claude Code, Codex, Cursor, and Open
-  <sub>★ 17k · Rust · Apache-2.0 · npx · pushed 2026-10-21 · Win? · WSL2 · macOS · Linux</sub>
+  <sub>★ 17k · Rust · Apache-2.0 · npx · pushed 2026-10-22 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`npx skills add NVIDIA/OpenShell`</sub>
 - **[Alibaba OpenSandbox](https://github.com/opensandbox-group/OpenSandbox)** — General-purpose sandbox platform for AI agents (8.7K+ stars, March 2026) with multi-language SDKs (Python, Java, TypeScript, Go, C#), unified APIs across Docker/Kubernetes runtimes, and support for secure container runtimes (gVisor, Kata Containers, Firecracker). Covers coding agents, GUI agents, agent evaluation, and RL training in a single abstraction layer — the most runtime-flexible sandbox op
   <sub>★ 16k · Python · Apache-2.0 · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -773,7 +773,7 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 543 · TypeScript · MIT · pip · pushed 2026-10-09 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`pip install agentguard-aegis`</sub>
 - **[nah](https://github.com/manuelschipper/nah)** — Deterministic permission guard that maps tool calls to an intent taxonomy (filesystem_delete, network_outbound, lang_exec, etc.) rather than relying on command-name allow/deny lists. The key insight for harness design: the same binary can be benign or destructive depending on its arguments, so intent-level enforcement is the only reproducible safety layer
-  <sub>★ 490 · Rust · MIT · psh · pushed 2026-10-20 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 491 · Rust · MIT · psh · pushed 2026-10-20 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://nahguard.ai/install.ps1 | iex`</sub>
 - **[OWASP LLM06:2025 — Excessive Agency](https://genai.owasp.org/llmrisk/llm062025-excessive-agency/)** — OWASP's authoritative definition of the "excessive agency" risk: over-provisioned functions, unnecessary permissions, and missing approval mechanisms. The standard checklist for auditing harness permission scope against principle of least privilege
   <sub>website</sub>
@@ -809,13 +809,13 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
 ## Task Runners &amp; Orchestration
 
 - **[Orca](https://github.com/stablyai/orca)** — The AI orchestrator for running Codex, Claude Code, OpenCode, and Pi side-by-side in isolated git worktrees. It turns fleet-of-agents execution into a polished desktop IDE with a mobile companion, making parallel agent harness design accessible beyond shell-scripting teams
-  <sub>★ 101.1k · TypeScript · MIT · brew · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 101.2k · TypeScript · MIT · brew · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`brew install --cask stablyai/orca/orca`</sub>
 - **[OmniRoute: Multi-Provider LLM Gateway](https://github.com/cheaper-inference/OmniRoute)** — Intelligent routing across multiple LLM providers with load balancing, intelligent fallbacks, rate limiting, and response caching. Achieves 40–60% token cost reduction through smart model routing (cheap models for simple tasks, capable models for complex reasoning). Essential infrastructure for harnesses operating under strict cost budgets where model selection is a per-turn decision
-  <sub>★ 79.4k · TypeScript · MIT · npm · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 79.4k · TypeScript · MIT · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm install -g omniroute`</sub>
 - **[LiteLLM](https://github.com/BerriAI/litellm)** — Unified proxy and SDK that routes to 100+ LLM providers behind a single OpenAI-compatible interface, with a Router handling retry/fallback across deployments, per-project cost and rate-limit tracking, and OTEL callback integrations. The right infrastructure layer when your harness needs provider resilience (automatic failover on 429/500 errors), budget guardrails, or the ability to swap models wit
-  <sub>★ 61.7k · Python · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 61.8k · Python · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install 'litellm[proxy]'`</sub>
 - **[AutoGen](https://github.com/microsoft/autogen)** — Microsoft's multi-agent conversation framework with a complete AgentChat layer covering agent loop, tool integration, termination conditions, and human-in-the-loop. The most comprehensive open-source reference for large-scale multi-agent harness design
   <sub>★ 61.5k · Python · CC-BY-4.0 · pip · pushed 2026-10-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -830,19 +830,19 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 30.2k · Python · MIT · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install openai-agents`</sub>
 - **[Mastra](https://github.com/mastra-ai/mastra)** — TypeScript-native agent framework (from the Gatsby team) with 22K+ stars and 300K+ weekly npm downloads. Connects to 40+ providers through one standard interface, with built-in workflows, RAG pipelines, and agent orchestration. The @mastra/deployer handles serverless deployment, and the eval system supports LLM-as-judge out of the box. The strongest alternative to Vercel AI SDK for teams that need
-  <sub>★ 29k · TypeScript · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 29k · TypeScript · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mastra-ai/mastra.git`</sub>
 - **[Symphony](https://github.com/openai/symphony)** — OpenAI's orchestration layer for moving from supervising coding agents to managing work: it monitors an issue tracker, creates isolated per-issue workspaces, and surfaces proof-of-work artifacts (CI status, review feedback, walkthrough videos) as the handoff signal. The spec deliberately leaves sandbox and approval policies implementation-defined so teams can match trust posture to environment, an
   <sub>★ 27.8k · Elixir · Apache-2.0 · source · pushed 2026-09-15 · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/openai/symphony.git`</sub>
 - **[Vercel AI SDK](https://github.com/vercel/ai)** — The leading TypeScript toolkit for building AI agents (20M+ monthly downloads, 25+ provider integrations). AI SDK 6 introduced a first-class Agent abstraction with ToolLoopAgent for production-ready tool execution loops, DevTools for local debugging, full MCP support, and type-safe UI streaming. The unified API across OpenAI, Anthropic, Google, and AWS Bedrock makes it the default choice for TypeS
-  <sub>★ 27.4k · TypeScript · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 27.4k · TypeScript · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/vercel/ai.git`</sub>
 - **[Google ADK](https://github.com/google/adk-python)** — Google's code-first agent framework with built-in multi-agent orchestration, tool registration, session state, and eval pipeline. Its Runner and AgentTool patterns are the reference implementation for wrapping sub-agents as tools in a larger harness
-  <sub>★ 21.9k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 21.9k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install google-adk`</sub>
 - **[Pydantic AI v2](https://github.com/pydantic/pydantic-ai)** — June 2026 harness-first redesign built around the Capability primitive: a single composable unit bundling instructions, tools, lifecycle hooks, and model settings. The split between a small stable core and a fast-moving pydantic-ai-harness lets capabilities graduate as they prove essential, while deferred loading keeps unused tools out of the context window
-  <sub>★ 20.8k · Python · MIT · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 20.8k · Python · MIT · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx --with pydantic-ai-harness clai -a pydantic_ai_harness.coder:coder_agent -m anthropic:claude-fable-5-1`</sub>
 - **[Hive](https://github.com/aden-hive/hive)** — YC-backed production harness that compiles multi-agent objectives into deterministic execution DAGs with state persistence, crash recovery, cost enforcement, and human-in-the-loop oversight. The most complete open-source reference for running agent workloads in production rather than demos
   <sub>★ 11.1k · Python · Apache-2.0 · clone · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -863,13 +863,13 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 7k · TypeScript · MIT · source · pushed 2026-10-20 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/JackChen-me/open-multi-agent.git`</sub>
 - **[LoopX](https://github.com/loopx-project/loopx)** — Provider-neutral control plane that sits above existing harnesses (Codex, Claude Code, Cursor) and keeps long-horizon objectives, gates, todos, evidence, and quota stable across bounded agent turns. The local-first state kernel makes multi-day work reviewable, restartable, and handoff-safe without replacing the runtime underneath
-  <sub>★ 6.4k · Python · Apache-2.0 · clone · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6.4k · Python · Apache-2.0 · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/loopx-project/loopx`</sub>
 - **[AgentScope Java](https://github.com/agentscope-ai/agentscope-java)** — Production-ready Java framework for distributed, enterprise-grade agents with workspace sandboxing, permission-gated tool calls, AOP-style middleware, and cross-replica session recovery. The Java complement to AgentScope Runtime for teams that need a typed, JVM-native harness stack
   <sub>★ 6.1k · Java · Apache-2.0 · source · pushed 2026-10-21</sub>
   <sub>`git clone https://github.com/agentscope-ai/agentscope-java.git`</sub>
 - **[eve](https://github.com/vercel/eve)** — Vercel's filesystem-first framework for durable AI agents: instructions, typed tools, on-demand skills, message channels, and cron schedules live in conventional directories, making the harness inspectable and version-controlled by default. A concrete reference for treating the project filesystem as the agent authoring interface rather than burying configuration in framework internals
-  <sub>★ 5.6k · TypeScript · Apache-2.0 · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5.6k · TypeScript · Apache-2.0 · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx eve@latest init my-agent`</sub>
 - **[HarnessRouter](https://github.com/HarnessRouter/harnessrouter)** — Self-hosted unified API for running Codex, Claude Code, DeepSeek Harness, Pi, and other terminal agents through the open Unified Harness Protocol (UHP), with sessions, streaming, file access, cancellation, and failure handling. Worth including because harness fragmentation is becoming a real operations problem — this is the clearest open-source attempt to make agent runtimes interchangeable behind
   <sub>★ 3.2k · Python · Apache-2.0 · docker · pushed 2026-10-21 · WSL2 · Linux · Docker</sub>
@@ -887,7 +887,7 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 1.3k · Ruby · MIT · source · pushed 2026-10-21</sub>
   <sub>`git clone https://github.com/Shopify/roast.git`</sub>
 - **[thClaws](https://github.com/thClaws/thClaws)** — Native-Rust agent harness platform with four surfaces (GUI, CLI, web, one-shot), multi-provider routing, and sovereign-by-design architecture. The most complete open-source reference for a locally-run, offline-capable harness that unifies MCP, skills, AGENTS.md, hooks, and session resumption in a single binary
-  <sub>★ 1.2k · Rust · Apache-2.0 · clone · pushed 2026-10-20 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 1.2k · Rust · Apache-2.0 · clone · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/thClaws/thClaws.git`</sub>
 - **[AgentScope Runtime](https://github.com/agentscope-ai/agentscope-runtime)** — Production-ready open-source runtime focused on two pieces many agent frameworks leave underspecified: secure sandbox execution and durable agent serving. The "Agent as API" model, async sandbox types, and built-in state/sandbox lifecycle management make it one of the few 2026 projects tackling runtime concerns directly instead of stopping at orchestration abstractions
   <sub>★ 877 · Python · Apache-2.0 · pip · pushed 2026-06-04 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -968,7 +968,7 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 36.1k · TypeScript · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install langfuse openai`</sub>
 - **[Opik](https://github.com/comet-ml/opik)** — Comet's open-source AI observability and evaluation platform: deep tracing of LLM calls, conversation logging, and agent activity, plus built-in eval metrics, prompt versioning, guardrails, and the Opik Agent Optimizer. Worth including because it unifies observability, verification, and optimization in one self-hostable stack rather than stitching together separate tools
-  <sub>★ 22.8k · Python · Apache-2.0 · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 22.8k · Python · Apache-2.0 · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx add-mcp https://www.comet.com/opik/api/v1/mcp --name opik-mcp`</sub>
 - **[Arize Phoenix](https://github.com/Arize-ai/phoenix)** — Self-hostable trace UI and eval runtime for agent workflows. Lets harness engineers audit and replay every reasoning step and tool call offline, without sending data to a third-party cloud
   <sub>★ 11.9k · Python · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -980,13 +980,13 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 6.2k · TypeScript · Apache-2.0 · clone · pushed 2026-10-20 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/Helicone/helicone.git`</sub>
 - **[Pydantic Logfire](https://github.com/pydantic/logfire)** — AI observability platform from the Pydantic team with a unique angle: all trace data is SQL-queryable (PostgreSQL-compatible), so coding agents can query production observability data directly via the Logfire MCP server. Full-stack OTEL tracing covers both the AI layer and backend — letting you determine whether a failure is in agent logic or infrastructure. The natural observability choice for Py
-  <sub>★ 4.5k · Python · MIT · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4.5k · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install logfire`</sub>
 - **[Future AGI](https://github.com/future-agi/future-agi)** — Open-source, self-hostable platform unifying tracing, evals, simulations, guardrails, and gateway into a single feedback loop. Worth including because it demonstrates what a unified observability-and-improvement plane looks like rather than stitching together five separate vendor tools
-  <sub>★ 2.2k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 2.2k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install futureagi`</sub>
 - **[Weights &amp; Biases Weave](https://github.com/wandb/weave)** — W&amp;B's tracing and eval layer purpose-built for agent workflows: automatic call graph capture, dataset versioning, and LLM-as-judge evals that integrate directly with the wandb experiment tracking ecosystem
-  <sub>★ 1.1k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.1k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install weave openai-agents requests`</sub>
 - **[agentacct](https://github.com/mikehasa/agentacct)** — Local-first Agent Work Intelligence for coding agents: ingests existing Claude Code, Codex, and OpenCode session logs, attributes tokens and estimated cost to recorded work steps with confidence labels, and surfaces the evidence on a private dashboard with no cloud sync or API keys
   <sub>★ 769 · Python · MIT · pipx · pushed 2026-10-03 · Win? · WSL2 · macOS? · Linux?</sub>
@@ -1157,16 +1157,16 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
 ## Generators &amp; Meta-Harnesses
 
 - **[everything-claude-code](https://github.com/affaan-m/ECC)** — Anthropic Hackathon Winner (140K+ stars). The agent harness performance optimization system: skills, instincts, memory optimization, continuous learning, security scanning, and research-first development. Production-ready agents, skills, hooks, rules, and MCP configurations evolved over 10+ months of intensive daily use building real products. Works across Claude Code, Codex, Cursor, OpenCode, and
-  <sub>★ 285.6k · JavaScript · MIT · clone · pushed 2026-10-20 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 285.7k · JavaScript · MIT · clone · pushed 2026-10-20 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/affaan-m/ECC.git`</sub>
 - **[ECC](https://github.com/affaan-m/ECC)** — Affaan Momin's agent-harness operating system: 68 specialized agents, 286 skills, hooks, memory, continuous learning, and AgentShield security scanning across Claude Code, Codex, Cursor, OpenCode, and other harnesses. The clearest open-source example of packaging an end-to-end engineering workflow — plan, test, implement, review, verify, remember, improve — as installable harness infrastructure
-  <sub>★ 285.6k · JavaScript · MIT · npm · pushed 2026-10-20 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 285.7k · JavaScript · MIT · npm · pushed 2026-10-20 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npm install -g ecc-universal@2.2.3`</sub>
 - **[oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode)** — Claude Code plugin that externalizes multi-agent orchestration as installable skills and staged team pipelines, with cross-provider advisor routing and built-in requirement-clarification interviews. The most widely adopted example of turning a single-agent CLI into a team-ready meta-harness without rewriting the underlying loop
-  <sub>★ 40.2k · TypeScript · MIT · source · pushed 2026-10-21 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 40.2k · TypeScript · MIT · source · pushed 2026-10-22 · WSL2 · macOS? · Linux</sub>
   <sub>`git clone https://github.com/Yeachan-Heo/oh-my-claudecode.git`</sub>
 - **[Omnigent](https://github.com/omnigent-ai/omnigent)** — Databricks' open-source meta-harness (June 2026) that sits above Claude Code, Codex, Pi, and custom agents to compose, govern, and share live agent sessions from one control plane. The key harness insight is that enterprises don't need another agent framework — they need a portability and governance layer above the agents they already run, with policy-driven sandboxing and cost caps enforced outsi
-  <sub>★ 11k · Python · Apache-2.0 · uv · pushed 2026-10-21 · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 11k · Python · Apache-2.0 · uv · pushed 2026-10-22 · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`uv tool install omnigent # or: pip install "omnigent"`</sub>
 - **[revfactory/harness](https://github.com/revfactory/harness)** — A meta-skill that generates domain-specific agent teams and the skills they use. Good example of harness-as-code, where the harness itself is produced by an agent
   <sub>★ 9.2k · Apache-2.0 · source · pushed 2026-09-28</sub>
@@ -1241,28 +1241,28 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
 ## Demo Harnesses
 
 - **[DeepSeek Harness (dsh)](https://github.com/deepseek-ai/deepseek-harness)** — DeepSeek's official open-source agent harness (August 2026) built on an "everything is a plugin" architecture powered by Cordis: models, tools, skills, UI surfaces, and even the desktop shell are plugins composed through dependency injection rather than a monolith with extension points, with an accompanying paper on spatiotemporal composability. The clearest first-party reference for treating harn
-  <sub>★ 256.9k · TypeScript · MIT · npx · pushed 2026-10-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 257k · TypeScript · MIT · npx · pushed 2026-10-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @deepseek-ai/dsh web`</sub>
 - **[OpenCode](https://github.com/anomalyco/opencode)** — Open-source terminal-native AI coding agent with 131K+ stars and 2.5M+ monthly active developers. Provider-agnostic architecture supports 75+ LLM providers plus native LSP auto-configuration, multi-session parallel agents, and MCP extensibility. The build/plan agent split and client/server architecture make it the most complete open-source reference for a terminal-first coding harness
-  <sub>★ 219.6k · TypeScript · MIT · npm · pushed 2026-10-21 · macOS · Linux</sub>
+  <sub>★ 219.7k · TypeScript · MIT · npm · pushed 2026-10-22 · macOS · Linux</sub>
   <sub>`npm i -g @opencode/cli@latest # or bun/pnpm/yarn`</sub>
 - **[Codex CLI](https://github.com/openai/codex)** — OpenAI's official autonomous coding agent CLI — the open-source reference implementation of the Codex harness with sandboxed tool execution, multi-file editing, and a streaming agent loop. Worth studying because it is the most widely adopted terminal-native coding agent harness and exposes the same loop architecture that OpenAI documents in its harness engineering posts
-  <sub>★ 130.3k · Rust · Apache-2.0 · npm · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 130.3k · Rust · Apache-2.0 · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @openai/codex`</sub>
 - **[browser-use](https://github.com/browser-use/browser-use)** — Minimal browser-automation agent harness with clean separation of tool registration, DOM state injection, action loop, and error recovery. Small codebase, clear structure — the best "minimal viable harness" reference for understanding core loop mechanics
   <sub>★ 118.8k · Python · MIT · source · pushed 2026-10-20 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/browser-use/browser-use.git`</sub>
 - **[Pi](https://github.com/earendil-works/pi)** — Minimal terminal coding harness built around "lazy skills": each capability keeps only a one-line description in active context, loading full instructions and tool schemas only when invoked. Keeps the system prompt under 1,000 tokens versus 7,000–10,000 for typical agents, making it a concrete reference for context-minimal harness design
-  <sub>★ 116.9k · TypeScript · MIT · npm · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 117k · TypeScript · MIT · npm · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g --ignore-scripts @earendil-works/pi-coding-agent`</sub>
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** — The most architecturally complete open-source coding agent: Runtime/Sandbox isolation, EventStream message bus, and Agent Controller are a three-layer harness design worth studying for production deployments
-  <sub>★ 91.5k · TypeScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 91.5k · TypeScript · MIT · npm · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[DeerFlow](https://github.com/bytedance/deer-flow)** — ByteDance's open-source SuperAgent harness built on LangGraph: orchestrates sub-agents with isolated contexts, persistent multi-tier memory, Docker/K8s sandbox execution, and on-demand skill loading for long-horizon tasks that span minutes to hours. A concrete reference for composing supervisor coordination, scoped delegation, and real execution environments into a single deployable harness
-  <sub>★ 84.3k · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 84.3k · Python · MIT · npx · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add https://github.com/bytedance/deer-flow --skill claude-to-deerflow`</sub>
 - **[Goose](https://github.com/aaif-goose/goose)** — Block's open-source, extensible AI agent donated to the Linux Foundation's Agentic AI Foundation in April 2026. Its MCP-native architecture treats every capability as an MCP server, making it a practical reference for building vendor-neutral, extensible harnesses where tool integration is the primary extension mechanism rather than framework-specific plugins
-  <sub>★ 55.5k · Rust · Apache-2.0 · script · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 55.5k · Rust · Apache-2.0 · script · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | bash`</sub>
 - **[Aider](https://github.com/Aider-AI/aider)** — AI pair-programmer harness with an Architect mode that splits planning (one LLM) from coding (another), and git-aware tooling that uses version control as the undo mechanism instead of custom state rollback. The best reference for multi-file editing tool design and planner/coder layer separation
   <sub>★ 49.7k · Python · Apache-2.0 · source · pushed 2026-05-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1274,13 +1274,13 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 47.9k · Go · Apache-2.0 · npm · pushed 2026-10-20 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @alibaba-group/open-code-review`</sub>
 - **[CodeWhale](https://github.com/codewhale-hq/Codewhale)** — Open-source, community-driven terminal coding agent harness written in Rust with a model-agnostic runtime, OS-level sandbox (Seatbelt/Landlock/seccomp/bwrap), resumable fleets via an append-only ledger, and a /model command that lets you switch providers mid-task. A strong example of treating the harness — not the model — as the product surface, with clear separation between interactive TUI, headl
-  <sub>★ 41.1k · Rust · MIT · winget · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 41.1k · Rust · MIT · winget · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`winget install HunterBown.CodeWhale # Windows x64 (or Scoop, or the installer from GitHub Releases)`</sub>
 - **[DeepSeek-Reasonix](https://github.com/esengine/DeepSeek-Reasonix)** — DeepSeek-native coding agent harness engineered around prefix-cache stability as a loop invariant: immutable-prefix / append-only-log / volatile-scratch partitioning achieves 99.82% cache-hit rates and ~5× cost reduction on long sessions. The most detailed public case study of designing an entire agent loop to preserve a provider-specific economic property rather than treating caching as an aftert
   <sub>★ 35.9k · Go · MIT · npm · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm i -g reasonix # any OS`</sub>
 - **[cua](https://github.com/trycua/cua)** — Open-source infrastructure for Computer-Use Agents: sandboxed full-desktop control across macOS, Linux, and Windows, a background-native macOS driver that operates without stealing cursor focus, plus SDKs and benchmarks. The most complete reference for building harnesses around screen-based agent loops that need real OS interaction rather than browser-only surfaces
-  <sub>★ 30.6k · Rust · MIT · psh · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 30.6k · Rust · MIT · psh · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://cua.ai/driver/install.ps1 | iex`</sub>
 - **[langchain-ai/deepagents](https://github.com/langchain-ai/deepagents)** — LangChain's batteries-included agent harness (released April 2026) with built-in planning, filesystem tools, shell access, sub-agents, and auto-summarization. The clearest open-source demonstration of how a general-purpose coding agent harness can be made ready-to-run out of the box while remaining fully extensible
   <sub>★ 30.5k · Python · MIT · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1298,13 +1298,13 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
   <sub>★ 16.7k · Python · MIT · uv · pushed 2026-10-21 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`uv tool install --python 3.12 deepcode-hku`</sub>
 - **[Pipecat: Python Framework for Real-Time Voice Agent Pipelines](https://github.com/pipecat-ai/pipecat)** — Handles frame management, streaming media coordination, and pipeline orchestration between ASR/LLM/TTS services for sub-800ms Total Turn-Around Time voice interactions. The missing harness primitive for voice agents: manages backpressure, handles frame queueing, and exposes a simple async interface for real-time constraints. Critical infrastructure for building responsive voice-first agents
-  <sub>★ 16.7k · Python · BSD-2-Clause · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 16.7k · Python · BSD-2-Clause · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install "pipecat-ai[cli]"`</sub>
 - **[HKUDS/OpenHarness](https://github.com/HKUDS/OpenHarness)** — A compact, inspectable open-source agent harness from HKUDS (April 2026) featuring a built-in personal agent (ohmo), auto-compaction with session preservation, MCP HTTP transport, and multimodal gateway support. Excellent reference for understanding how a small, modular harness can support multi-day sessions without manual context management
   <sub>★ 16k · Python · MIT · pip · pushed 2026-06-04 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`pip install openharness-ai`</sub>
 - **[qm](https://github.com/yc-software/qm)** — Y Combinator's open-source multiplayer agent harness for startups: isolated per-person workspaces plus shared Slack channels and projects, with pluggable harness backends (Claude Code, Codex, OpenCode, Pi) and scope-owned skills. The clearest reference for building team-wide agent deployments where personal customization and collaborative context coexist without vendor lock-in
-  <sub>★ 15.5k · TypeScript · MIT · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 15.5k · TypeScript · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/yc-software/qm.git`</sub>
 - **[OpenSRE](https://github.com/Tracer-Cloud/opensre)** — Open-source framework for building AI SRE agents with 60+ observability and remediation tool integrations plus a synthetic incident evaluation environment. The clearest open-source reference for turning infrastructure incident response into a trainable, evaluable agent harness rather than a one-off chatbot
   <sub>★ 12.4k · Python · Apache-2.0 · script · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -1373,10 +1373,10 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
 ## Related Awesome Lists
 
 - **[awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps)** — Collection of production LLM applications with source code across RAG, multi-agent, and tool-use patterns. Good reference for how harness primitives combine in real applications
-  <sub>★ 142.5k · Python · Apache-2.0 · npx · pushed 2026-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 142.5k · Python · Apache-2.0 · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/agent_skills/project-graveyard`</sub>
 - **[awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code)** — Curated resources, tools, and workflows specifically for Claude Code users
-  <sub>★ 56.2k · Python · source · pushed 2026-10-21 · macOS</sub>
+  <sub>★ 56.2k · Python · source · pushed 2026-10-22 · macOS</sub>
   <sub>`git clone https://github.com/hesreallyhim/awesome-claude-code.git`</sub>
 - **[awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents)** — Curated list of AI agents and agent frameworks, organized by use case. Useful for surveying the landscape of what harnesses are being built around
   <sub>★ 30.6k · source · pushed 2026-08-21 · Win? · WSL2? · Linux?</sub>
@@ -1496,6 +1496,6 @@ Curated by **[ai-boost/awesome-harness-engineering](https://github.com/ai-boost/
 
 ---
 
-Snapshot 2026-10-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

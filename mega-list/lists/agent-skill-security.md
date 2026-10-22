@@ -25,7 +25,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 ## Agent Skill Specifications
 
 - **[AutoGPT Plugins](https://github.com/Significant-Gravitas/AutoGPT)** — Plugin system for autonomous agents
-  <sub>★ 187.7k · Python · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 187.7k · Python · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Significant-Gravitas/AutoGPT.git`</sub>
 - **[AgentSkills.io](https://agentskills.io/specification)** — Agent skill definition and security requirements
   <sub>website</sub>
@@ -97,10 +97,10 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 1.5k · TypeScript · Apache-2.0 · pip · pushed 2024-08-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install rebuff`</sub>
 - **[HOL Guard](https://github.com/hashgraph-online/hol-guard)** — Local-first runtime firewall for AI coding agents: intercepts shell, secrets, MCP config changes, and package installs before execution
-  <sub>★ 962 · Python · Apache-2.0 · pipx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 963 · Python · Apache-2.0 · pipx · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pipx install hol-guard`</sub>
 - **[Pipelock](https://github.com/pipelab-org/pipelock)** — Open-source AI agent firewall and MCP-aware egress proxy with DLP, prompt injection scanning, process sandboxing, and mediator-signed action receipts
-  <sub>★ 951 · Go · Apache-2.0 · brew · pushed 2026-10-21 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 951 · Go · Apache-2.0 · brew · pushed 2026-10-22 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`brew install luckyPipewrench/tap/pipelock`</sub>
 - **[Vestige](https://github.com/samvallad33/vestige)** — Local safety and memory layer for AI agents: Operator Lite, a hook-based gate whose deterministic rules block destructive agent shell commands (force-push, destructive SQL, reverse shells, cloud-metadata access) before they run, and Strata, an append-only hash-chained memory log that traces poisoned memory back to the write that introduced it
   <sub>★ 655 · Rust · AGPL-3.0 · npx · pushed 2026-10-20 · Win · WSL2? · macOS · Linux</sub>
@@ -151,7 +151,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 11 · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install ziran`</sub>
 - **[Sunglasses](https://github.com/sunglasses-dev/sunglasses)** — Runtime trust scanner for agent skills and tool use: a tested pattern library across 100+ attack categories (prompt injection, tool poisoning, MCP attacks, skill compromise; current counts in the README) plus a mechanism layer, shipped as a pip package, GitHub Action, and free web scanner with a published, reproducible precision/recall benchmark
-  <sub>★ 10 · Python · MIT · pip · pushed 2026-10-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 10 · Python · MIT · pip · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`pip install sunglasses # text scanning — zero dependencies`</sub>
 - **[SkillCI](https://github.com/kabirnarang39/skillci)** — Regression testing + OWASP Agentic Skills Top 10-mapped static security lint for Claude Skills. Adds a self-growing eval loop (an uncovered regression or successful redteam attack writes its own permanent test case) and git-native bisect to find the exact commit that broke a skill
   <sub>★ 8 · Go · Apache-2.0 · scoop · pushed 2026-08-13 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -233,7 +233,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 319 · Python · MIT · clone · pushed 2026-09-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Zhang-Henry/ASB.git`</sub>
 - **[InjecAgent](https://github.com/uiuc-kang-lab/InjecAgent)** — Indirect prompt injection
-  <sub>★ 178 · Python · MIT · clone · pushed 2024-07-02 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 180 · Python · MIT · clone · pushed 2024-07-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/uiuc-kang-lab/InjecAgent.git`</sub>
 - **[R-Judge](https://github.com/Lordog/R-Judge)** — 162 records, 27 scenarios
   <sub>★ 116 · Python · source · pushed 2026-01-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -377,6 +377,6 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 
 ---
 
-Snapshot 2026-10-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

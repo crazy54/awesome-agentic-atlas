@@ -11,7 +11,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> | <a href="https://github.com/usestrix/strix"><img src="https://raw.githubusercontent.com/usestrix/.github/main/imgs/cover.png" width="260"></a> | <a href="https://github.com/BerriAI/litellm"><img src="https://github.com/user-attachments/assets/c5ee0412-6fb5-4fb6-ab5b-bafae4209ca6" width="260"></a> |
-| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 91.5k | **[Strix](https://github.com/usestrix/strix)**<br>★ 70.8k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 61.7k |
+| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 91.5k | **[Strix](https://github.com/usestrix/strix)**<br>★ 70.8k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 61.8k |
 | <a href="https://github.com/NVIDIA/garak"><img src="https://opengraph.githubassets.com/1/leondz/garak" width="260"></a> | <a href="https://github.com/bridgecrewio/checkov"><img src="https://raw.githubusercontent.com/bridgecrewio/checkov/main/docs/checkov-jenkins.png" width="260"></a> | <a href="https://github.com/guardrails-ai/guardrails"><img src="https://opengraph.githubassets.com/1/guardrails-ai/guardrails" width="260"></a> |
 | **[Garak](https://github.com/NVIDIA/garak)**<br>★ 9.6k | **[Checkov](https://github.com/bridgecrewio/checkov)**<br>★ 9.1k | **[Guardrails](https://github.com/guardrails-ai/guardrails)**<br>★ 7.6k |
 
@@ -28,7 +28,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Sandboxing &amp; Isolation Environments
 
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** — Formerly OpenDevin, this platform includes a secure runtime environment for autonomous coding agents to operate without accessing the host machine's sensitive files
-  <sub>★ 91.5k · TypeScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 91.5k · TypeScript · MIT · npm · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[Agent-Infra Sandbox](https://github.com/agent-infra/sandbox)** — An "All-In-One" sandbox combining Browser, Shell, VSCode, and File System access in a single Docker container, optimized for agentic tasks
   <sub>★ 6.2k · Python · Apache-2.0 · pip · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -43,7 +43,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Red Teaming &amp; Vulnerability Scanners
 
 - **[Strix](https://github.com/usestrix/strix)** — An autonomous AI agent designed for penetration testing. It runs inside a docker sandbox to actively probe applications and generate verified exploit capabilities
-  <sub>★ 70.8k · Python · Apache-2.0 · npx · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 70.8k · Python · Apache-2.0 · npx · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add usestrix/strix`</sub>
 - **[Garak](https://github.com/NVIDIA/garak)** — The "Nmap for LLMs." A vulnerability scanner that probes models for hallucination, data leakage, and prompt injection susceptibilities
   <sub>★ 9.6k · Python · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -64,7 +64,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Guardrails &amp; Compliance
 
 - **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)** — While known for model proxying, LiteLLM includes built-in guardrail features to filter requests and responses across multiple LLM providers
-  <sub>★ 61.7k · Python · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 61.8k · Python · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install 'litellm[proxy]'`</sub>
 - **[Guardrails](https://github.com/guardrails-ai/guardrails)** — A Python framework for validating LLM outputs against structural and semantic rules (e.g., "must return valid JSON," "must not contain PII")
   <sub>★ 7.6k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -123,6 +123,6 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 
 ---
 
-Snapshot 2026-10-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

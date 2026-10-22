@@ -1,8 +1,8 @@
 {
   "dims": 96,
-  "doc_scale": 0.9102093577384949,
-  "fingerprint": "60015c2e8017d8fd",
-  "indexed_from_readme": 10096,
+  "doc_scale": 0.910193145275116,
+  "fingerprint": "7f2ea052a6200571",
+  "indexed_from_readme": 10097,
   "model": "minishlab/potion-base-8M",
   "near": 8,
   "probe": [
@@ -16,7 +16,7 @@
     [
       "orchestration",
       [
-        349,
+        350,
         492
       ]
     ],
@@ -34,7 +34,7 @@
     [
       "caf\u00e9",
       [
-        7230
+        7231
       ]
     ],
     [
@@ -74,9 +74,9 @@
       ]
     ]
   ],
-  "rows": 10908,
+  "rows": 10909,
   "schema": 1,
-  "snapshot": "2026-10-21",
+  "snapshot": "2026-10-22",
   "stop": [
     "a",
     "about",
@@ -316,6 +316,6 @@
     "your"
   ],
   "vocab": 12960,
-  "vocab_scale": 126.35831451416016,
-  "xy_scale": 110.43096923828125
+  "vocab_scale": 126.35044860839844,
+  "xy_scale": 93.93856048583984
 }

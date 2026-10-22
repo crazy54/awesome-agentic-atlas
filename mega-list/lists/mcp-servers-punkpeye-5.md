@@ -158,7 +158,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-08-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx solvegate-mcp`</sub>
 - **[sylin-org/ghostlight](https://github.com/sylin-org/ghostlight)** — Visible local browser automation in your signed-in Chromium profile, with recovery and optional policy and audit controls
-  <sub>★ 1 · Rust · Apache-2.0 · winget · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 1 · Rust · Apache-2.0 · winget · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`winget install Sylin.Ghostlight`</sub>
 - **[agent-infra/mcp-server-browser](https://github.com/bytedance/UI-TARS-desktop/tree/main/packages/agent-infra/mcp-servers/browser)** — Browser automation using Puppeteer, supporting local and remote browser connections
   <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-09</sub>
@@ -224,7 +224,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.8k · TypeScript · MIT · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jau123/MeiGen-AI-Design-MCP.git`</sub>
 - **[diivi/aseprite-mcp](https://github.com/diivi/aseprite-mcp)** — Create pixel art using the Aseprite API
-  <sub>★ 722 · Python · MIT · docker · pushed 2026-10-21 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 723 · Python · MIT · docker · pushed 2026-10-21 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`docker run -it --rm aseprite-mcp:latest`</sub>
 - **[abhiemj/manim-mcp-server](https://github.com/abhiemj/manim-mcp-server)** — Generate animations locally using Manim
   <sub>★ 653 · Python · MIT · pip · pushed 2025-05-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -236,7 +236,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 294 · Python · npx · pushed 2025-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli install video-editor-mcp --client claude`</sub>
 - **[ConstantineB6/comfy-pilot](https://github.com/ConstantineB6/comfy-pilot)** — View, edit and run ComfyUI node-based image generation workflows, with an embedded terminal
-  <sub>★ 232 · Python · MIT · source · pushed 2026-02-16 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 233 · Python · MIT · source · pushed 2026-02-16 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ConstantineB6/comfy-pilot.git`</sub>
 - **[omni-mcp/isaac-sim-mcp](https://github.com/omni-mcp/isaac-sim-mcp)** — Natural-language control of NVIDIA Isaac Sim, Isaac Lab, OpenUSD and more, via a server and an extension
   <sub>★ 196 · Python · MIT · clone · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -254,7 +254,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 99 · Python · MIT · clone · pushed 2026-10-15 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/rosasynthesiz/flstudio-mcp`</sub>
 - **[8enSmith/mcp-open-library](https://github.com/8enSmith/mcp-open-library)** — Search for book information via the Open Library API
-  <sub>★ 96 · TypeScript · MIT · docker · pushed 2026-10-20 · WSL2 · Linux · Docker</sub>
+  <sub>★ 96 · TypeScript · MIT · docker · pushed 2026-10-21 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -p 8080:8080 mcp-open-library`</sub>
 - **[yuna0x0/anilist-mcp](https://github.com/yuna0x0/anilist-mcp)** — Anime and manga information from the AniList API
   <sub>★ 91 · TypeScript · MIT · npx · pushed 2026-07-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -287,7 +287,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 38 · Apache-2.0 · source · pushed 2025-07-03</sub>
   <sub>`git clone https://github.com/OctoEverywhere/mcp.git`</sub>
 - **[flamexnreal/davinci-resolve-ai-bridge-mcp](https://github.com/flamexnreal/davinci-resolve-ai-bridge-mcp)** — Local bridge for DaVinci Resolve (Free and Studio): timeline inspection, zoom animation, color adjustments and duplicate-timeline review
-  <sub>★ 35 · Python · MIT · psh · pushed 2026-10-17 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 37 · Python · MIT · psh · pushed 2026-10-17 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`irm https://raw.githubusercontent.com/flamexnreal/davinci-resolve-ai-bridge-mcp/main/install.ps1 | iex`</sub>
 - **[mikechao/metmuseum-mcp](https://github.com/mikechao/metmuseum-mcp)** — Search and display artworks via the Metropolitan Museum of Art Collection API
   <sub>★ 35 · TypeScript · MIT · npx · pushed 2026-04-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -308,7 +308,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 15 · TypeScript · MIT · clone · pushed 2025-05-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/r-huijts/oorlogsbronnen-mcp.git`</sub>
 - **[cfpramod/open-museum-mcp](https://github.com/cfpramod/open-museum-mcp)** — License-verified search across The Met, Cleveland, AIC, Wikimedia Commons and Europeana, limited to CC0 and public-domain works, with citations
-  <sub>★ 14 · TypeScript · MIT · clone · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 14 · TypeScript · MIT · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/cfpramod/open-museum-mcp`</sub>
 - **[gchen19/AnkusDrive](https://github.com/gchen19/AnkusDrive)** — Drive a local FreeCAD from an agent: parametric CAD, TechDraw drawings with GD&amp;T, CalculiX FEM, and CFD, thermal, EM and multiphysics simulation
   <sub>★ 13 · Python · Apache-2.0 · pipx · pushed 2026-10-15 · Win · WSL2 · macOS · Linux · Docker</sub>
@@ -316,15 +316,15 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
 - **[BluesPrince/thiri-mcp](https://github.com/BluesPrince/thiri-mcp)** — Deterministic music theory: chord and Roman numeral analysis, voicing and reharmonization
   <sub>★ 11 · JavaScript · source · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/BluesPrince/thiri-mcp.git`</sub>
+- **[leonardoca1/aesthetics-wiki-mcp](https://github.com/leonardoca1/aesthetics-wiki-mcp)** — Search, read and discover visual aesthetics such as cottagecore, dark academia, Y2K and goblincore from the Aesthetics Wiki
+  <sub>★ 11 · Python · MIT · npx · pushed 2026-04-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx @modelcontextprotocol/inspector uv run aesthetics-wiki-mcp`</sub>
 - **[shunshi-ai/bazi-reader-mcp](https://github.com/shunshi-ai/bazi-reader-mcp)** — Bazi (Four Pillars) charting with true solar time correction and output in Chinese, English, Japanese and Korean
   <sub>★ 11 · TypeScript · MIT · npx · pushed 2026-05-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y shunshi-bazi-mcp`</sub>
 - **[gupta-kush/spotify-mcp](https://github.com/gupta-kush/spotify-mcp)** — Spotify tools: smart shuffle, natural-language song search, vibe analysis, artist network mapping, taste evolution and playlist management
   <sub>★ 10 · Python · MIT · uv · pushed 2026-03-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx spotify-mcp`</sub>
-- **[leonardoca1/aesthetics-wiki-mcp](https://github.com/leonardoca1/aesthetics-wiki-mcp)** — Search, read and discover visual aesthetics such as cottagecore, dark academia, Y2K and goblincore from the Aesthetics Wiki
-  <sub>★ 10 · Python · MIT · npx · pushed 2026-04-21 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx @modelcontextprotocol/inspector uv run aesthetics-wiki-mcp`</sub>
 - **[molanojustin/smithsonian-mcp](https://github.com/molanojustin/smithsonian-mcp)** — Access the Smithsonian Institution's Open Access collections
   <sub>★ 10 · Python · MIT · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @molanojustin/smithsonian-mcp`</sub>
@@ -344,7 +344,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 7 · Python · MIT · docker · pushed 2026-10-16 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -p 8080:8080 studiomcphub`</sub>
 - **[sharafutdinovdi/revit-model-mcp](https://github.com/sharafutdinovdi/revit-model-mcp)** — #️⃣ 🏠 🪟 - Read a live Autodesk Revit model (elements, parameters, views, warnings, PNG exports); model changes are opt-in, with dry runs and post-commit verification
-  <sub>★ 7 · C# · MIT · winget · pushed 2026-10-20 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 7 · C# · MIT · winget · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`winget install Sharafutdinov.RevitModelMcp`</sub>
 - **[j-east/pixel-surgeon-mcp](https://github.com/j-east/pixel-surgeon-mcp)** — Image and video generation, editing and region repair via Gemini 3.1 Flash Image, GPT Image 2, Grok Imagine and Veo 3, with style presets
   <sub>★ 5 · JavaScript · MIT · npx · pushed 2026-06-04 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -521,7 +521,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 246 · TypeScript · MIT · source · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/WeftCut/WeftCut.git`</sub>
 - **[BeatAPI/BeatDesign](https://github.com/BeatAPI/BeatDesign)** — Local-first AI media workbench with a canvas, short-form timeline editor and shared assets, controllable by agents
-  <sub>★ 235 · TypeScript · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 236 · TypeScript · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/BeatAPI/BeatDesign.git`</sub>
 - **[KyaniteLabs/kinocut](https://github.com/KyaniteLabs/kinocut)** — Local, guardrailed video editing: FFmpeg edits, captions, audio, effects, Hyperframes, repurposing, resumable workflows, quality gates and provenance receipts
   <sub>★ 217 · Python · Apache-2.0 · uv · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
@@ -536,7 +536,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 122 · Python · MIT · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx oh-my-cassette==0.5.1 check --url http://127.0.0.1:8790/mcp --upload \`</sub>
 - **[xDarkzx/Reaper-MCP](https://github.com/xDarkzx/Reaper-MCP)** — Music production in REAPER: transport, tracks, MIDI editing, mixing and FX, tempo maps, markers and regions, and ReaScript execution
-  <sub>★ 103 · Python · Apache-2.0 · pip · pushed 2026-10-20 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 103 · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install xdarkzx-reaper-mcp`</sub>
 - **[guimatheus92/mcp-video-analyzer](https://github.com/guimatheus92/mcp-video-analyzer)** — Video analysis: extract transcripts, key frames, OCR text and annotated timelines from Loom links and direct MP4 or WebM files
   <sub>★ 100 · TypeScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -650,7 +650,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · Python · MIT · pip · pushed 2026-04-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install deckrun-mcp`</sub>
 - **[davidmosiah/short-video-agent-kit](https://github.com/davidmosiah/short-video-agent-kit)** — Provider-neutral short-form AI video toolkit: dry-run payload validation and optional live generation via Sora, Veo, xAI and Seedance-style providers
-  <sub>★ 2 · JavaScript · MIT · npm · pushed 2026-10-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · JavaScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g short-video-agent-kit`</sub>
 - **[denisok-ai/magicmaster-mcp](https://github.com/denisok-ai/magicmaster-mcp)** — Audio mastering with LUFS and true peak targets for Spotify and podcasts, Suno/Udio AI-fingerprint removal and a mastering passport in chat
   <sub>★ 2 · Dockerfile · MIT · docker · pushed 2026-10-14 · WSL2 · Linux · Docker</sub>
@@ -713,7 +713,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>TypeScript · MIT · source · pushed 2026-09-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/musevate/MCP.git`</sub>
 - **[SHARProduction/production-metadata-mcp](https://github.com/SHARProduction/production-metadata-mcp)** — Read-only SHAR Production metadata gate that validates rights-aware video-production manifests and returns a releasability result
-  <sub>JavaScript · MIT · clone · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>JavaScript · MIT · clone · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/SHARProduction/production-metadata-mcp.git`</sub>
 - **[transloadit/node-sdk](https://github.com/transloadit/node-sdk/tree/main/packages/mcp-server)** — Media processing via Transloadit Robots: video encoding (HLS, H.264, VP9), image resizing and watermarks, document conversion, OCR and transcription
   <sub>TypeScript · MIT · in-repo · pushed 2026-10-21</sub>
@@ -734,7 +734,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 6.3k · JavaScript · MIT · npx · pushed 2026-04-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @coding-solo/godot-mcp`</sub>
 - **[IvanMurzak/Unity-MCP](https://github.com/IvanMurzak/Unity-MCP)** — #️⃣ 🏠 🍎 🪟 🐧 - Integration for the Unity Editor and for games built with Unity
-  <sub>★ 4.5k · C# · Apache-2.0 · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 4.5k · C# · Apache-2.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g unity-mcp-cli`</sub>
 - **[CoderGamester/mcp-unity](https://github.com/CoderGamester/mcp-unity)** — #️⃣ 🏠 - Unity game engine integration for game development
   <sub>★ 2k · C# · MIT · source · pushed 2026-10-11 · Win? · WSL2 · macOS? · Linux?</sub>
@@ -755,7 +755,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 80 · Python · MIT · pip · pushed 2026-08-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install git+https://github.com/rishijatia/fantasy-pl-mcp.git`</sub>
 - **[hope1026/weppy-roblox-mcp](https://github.com/hope1026/weppy-roblox-mcp)** — Control a live Roblox Studio session via a plugin: create scripts, instances, terrain, lighting and assets, with bidirectional sync and automated playtests
-  <sub>★ 67 · PowerShell · AGPL-3.0 · psh · pushed 2026-10-20 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 67 · PowerShell · AGPL-3.0 · psh · pushed 2026-10-22 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`irm https://raw.githubusercontent.com/hope1026/weppy-roblox-mcp/main/install.ps1 | iex`</sub>
 - **[kkjdaniel/bgg-mcp](https://github.com/kkjdaniel/bgg-mcp)** — Board game data via the BoardGameGeek XML API2
   <sub>★ 54 · Go · MIT · source · pushed 2026-10-15 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -830,7 +830,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 5 · TypeScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y mcp-dolphin --print-bridge > mcp_bridge.py`</sub>
 - **[dmang-dev/mcp-retroarch](https://github.com/dmang-dev/mcp-retroarch)** — Control libretro cores via RetroArch's Network Control Interface: memory read/write, save states, screenshots, pause, frame advance and on-screen messages
-  <sub>★ 5 · TypeScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5 · TypeScript · MIT · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g mcp-retroarch`</sub>
 - **[hkaanengin/opendota-mcp-server](https://github.com/hkaanengin/opendota-mcp-server)** — Dota 2 statistics via the OpenDota API: player stats, hero data and match analysis
   <sub>★ 5 · Python · clone · pushed 2026-10-06 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -845,7 +845,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 4 · TypeScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g mcp-mgba`</sub>
 - **[gripforgeai/mcp](https://github.com/gripforgeai/mcp)** — Attach weapons and props to rigged 3D characters: finds the hand bone, scales the prop, closes the fist and exports three.js, Unity or Godot binds and GLBs
-  <sub>★ 4 · TypeScript · MIT · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4 · TypeScript · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/gripforgeai/mcp.git`</sub>
 - **[gregario/lorcana-oracle](https://github.com/gregario/lorcana-oracle)** — Disney Lorcana TCG card search, deck analysis, ink curves, lore generation and franchise browsing
   <sub>★ 4 · TypeScript · MIT · npx · pushed 2026-06-15 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -953,7 +953,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.1k · TypeScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g @figwright/mcp`</sub>
 - **[Kentucky-ai/opentakeoff](https://github.com/Kentucky-ai/opentakeoff)** — Construction plan takeoff: load plan PDFs, read title blocks, set drawing scale, trace rooms and export quantities like square footage and linear feet
-  <sub>★ 641 · TypeScript · AGPL-3.0 · npx · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 642 · TypeScript · AGPL-3.0 · npx · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx -y opentakeoff-mcp`</sub>
 - **[cisco-open/network-sketcher](https://github.com/cisco-open/network-sketcher)** — Local-first network design: create Cisco-style network master files, L1/L2/L3 topology diagrams, HTML viewers, device tables and AI context files
   <sub>★ 411 · Python · Apache-2.0 · clone · pushed 2026-10-05 · Win · WSL2? · macOS · Linux</sub>
@@ -1109,13 +1109,13 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
 ## Other Tools and Integrations
 
 - **[mediar-ai/screenpipe](https://github.com/screenpipe/screenpipe)** — Local screen and audio capture with timestamped indexing, SQL and embedding storage, semantic search, history analysis and event-triggered actions
-  <sub>★ 22k · Rust · npx · pushed 2026-10-21 · Win · WSL2? · macOS · Linux?</sub>
+  <sub>★ 22k · Rust · npx · pushed 2026-10-22 · Win · WSL2? · macOS · Linux?</sub>
   <sub>`npx screenpipe record`</sub>
 - **[apify/actors-mcp-server](https://github.com/apify/apify-mcp-server)** — Use Apify Actors, pre-built cloud tools, to extract data from websites, e-commerce, social media, search engines, maps and more
   <sub>★ 12.5k · TypeScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @apify/actors-mcp-server --tools actors,docs,apify/rag-web-browser,apify/web-fetch`</sub>
 - **[zerx-lab/FluxDown](https://github.com/zerx-lab/FluxDown)** — Control the FluxDown multi-protocol download manager (HTTP, FTP, BitTorrent, HLS): add, list, pause, resume and remove downloads and manage queues
-  <sub>★ 4.9k · Rust · AGPL-3.0 · source · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 4.9k · Rust · AGPL-3.0 · source · pushed 2026-10-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/zerx-lab/FluxDown.git`</sub>
 - **[MarkusPfundstein/mcp-obsidian](https://github.com/MarkusPfundstein/mcp-obsidian)** — Interact with Obsidian via a REST API
   <sub>★ 4.5k · Python · MIT · npx · pushed 2026-08-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -1484,7 +1484,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 5 · TypeScript · MIT · npm · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @r-huijts/ethics-vibe-check`</sub>
 - **[UnitVectorY-Labs/mcp-graphql-forge](https://github.com/UnitVectorY-Labs/mcp-graphql-forge)** — Expose curated GraphQL queries as modular tools via configuration
-  <sub>★ 5 · Go · MIT · go · pushed 2026-10-18 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 5 · Go · MIT · go · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`go install github.com/UnitVectorY-Labs/mcp-graphql-forge@latest`</sub>
 - **[megberts/mcp-websitepublisher-ai](https://github.com/megberts/mcp-websitepublisher-ai)** — Build and publish websites through conversation: manage pages, assets, entities, records and integrations
   <sub>★ 5 · source · pushed 2026-09-25</sub>
@@ -1529,7 +1529,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · TypeScript · MIT · npm · pushed 2026-06-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @asktian/mcp-server`</sub>
 - **[cnghockey/sats4ai-mcp-server](https://github.com/cnghockey/sats4ai-mcp-server)** — Phone calls, SMS, fax, translation, text-to-speech, audiobooks, image, video, music and text generation, and document extraction, paid via Lightning (L402)
-  <sub>★ 2 · JavaScript · MIT · npx · pushed 2026-10-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · JavaScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx sats4ai-mcp`</sub>
 - **[kimtth/mcp-remote-call-ping-pong](https://github.com/kimtth/mcp-remote-call-ping-pong)** — Experimental, educational ping-pong server demonstrating remote MCP calls
   <sub>★ 2 · HTML · source · pushed 2025-04-08</sub>
@@ -1679,7 +1679,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
 ## Workplace &amp; Productivity
 
 - **[taylorwilsdon/google_workspace_mcp](https://github.com/taylorwilsdon/google_workspace_mcp)** — Google Workspace integration covering Calendar, Drive, Gmail, Docs, Forms, Chat, Slides and Sheets
-  <sub>★ 3.4k · Python · MIT · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 3.4k · Python · MIT · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx workspace-mcp --tool-tier core # essential tools`</sub>
 - **[CrossPaste/crosspaste-desktop](https://github.com/CrossPaste/crosspaste-desktop)** — Cross-device clipboard manager: search synced clipboard history, read OCR text from copied images and add new clipboard items
   <sub>★ 2.7k · Kotlin · AGPL-3.0 · clone · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
@@ -2053,7 +2053,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>Swift · MIT · in-repo · pushed 2026-04-23</sub>
   <sub>`git clone https://github.com/KuvopLLC/better-bear.git && cd better-bear/mcp-server`</sub>
 - **[vinayvobbili/jobwatch](https://github.com/vinayvobbili/jobwatch)** — Watch company job boards (Greenhouse, Lever, Ashby, Workable, Workday, Eightfold, Jibe, Rippling) for new roles, rank them for you, and track applications, follow-ups and interview prep. Never applies on its own
-  <sub>Python · MIT · pipx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>Python · MIT · pipx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install jobwatch # or: pip install jobwatch`</sub>
 - **[vrijsinghani/Artifactsmith](https://github.com/vrijsinghani/Artifactsmith)** — Self-hosted artifact server: turns agent output into versioned web pages, PDFs, Word docs and spreadsheets in six styles, private until shared with a revocable link
   <sub>Python · MIT · source · pushed 2026-10-21 · Win? · WSL2 · Linux · Docker</sub>
@@ -2235,7 +2235,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>JavaScript · MIT · docker · pushed 2026-09-08 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -p 8896:8896 filmmap-mcp # → http://localhost:8896/mcp`</sub>
 - **[geolens-io/geolens](https://github.com/geolens-io/geolens/tree/main/mcp)** — Read-only access to a self-hosted GeoLens geospatial catalog: dataset search, schemas, GeoJSON features, saved maps and sandboxed SQL over PostGIS
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-21</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/geolens-io/geolens.git && cd geolens/mcp`</sub>
 - **[Off-Nadir-Lab/offnadir-delta-mcp](https://github.com/Off-Nadir-Lab/offnadir-delta-mcp)** — Live geolocated world-event intelligence and a daily world brief: event signals, hotspots, Sentinel satellite imagery and an OSINT/GEOINT analyst
   <sub>TypeScript · Apache-2.0 · docker · pushed 2026-10-21 · WSL2 · Linux · Docker</sub>
@@ -2253,7 +2253,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
 ## Biology, Medicine and Bioinformatics
 
 - **[genomoncology/biomcp](https://github.com/genomoncology/biomcp)** — Access biomedical research data from PubMed, ClinicalTrials.gov and MyVariant.info
-  <sub>★ 661 · Rust · MIT · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 662 · Rust · MIT · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install biomcp-cli`</sub>
 - **[the-momentum/apple-health-mcp-server](https://github.com/the-momentum/apple-health-mcp-server)** — Access and analyze exported Apple Health data
   <sub>★ 280 · Python · MIT · source · pushed 2026-07-09 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2306,17 +2306,17 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
 - **[neptun2000/heor-agent-mcp](https://github.com/neptun2000/heor-agent-mcp)** — Health economics and outcomes research: literature search across PubMed, NICE, CADTH, ICER and more, cost-effectiveness modeling and HTA dossier preparation
   <sub>★ 10 · TypeScript · MIT · npx · pushed 2026-06-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx heor-agent-mcp`</sub>
+- **[musharna/plant-genomics-mcp](https://github.com/musharna/plant-genomics-mcp)** — Plant genomics locus lookup across Ensembl Plants, Phytozome, UniProtKB, KEGG, STRING-DB, NCBI BLAST and more, with batch and cross-source queries
+  <sub>★ 8 · Python · MIT · pipx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>`pipx install plant-genomics-mcp`</sub>
 - **[openreadout/openreadout](https://github.com/openreadout/openreadout)** — Lets agents read raw lab-instrument files without vendor software: microscopy, mass spectrometry, chromatography, flow cytometry, NMR, electrophysiology, plate readers and qPCR. Returns metadata, images, spectra and traces as JSON, checks files for damage, and converts them to open formats (OME-TIFF, OME-Zarr, mzML, Parquet)
   <sub>★ 7 · Rust · Apache-2.0 · psh · pushed 2026-10-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://raw.githubusercontent.com/openreadout/openreadout/main/scripts/install.ps1 | iex`</sub>
-- **[musharna/plant-genomics-mcp](https://github.com/musharna/plant-genomics-mcp)** — Plant genomics locus lookup across Ensembl Plants, Phytozome, UniProtKB, KEGG, STRING-DB, NCBI BLAST and more, with batch and cross-source queries
-  <sub>★ 7 · Python · MIT · pipx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
-  <sub>`pipx install plant-genomics-mcp`</sub>
 - **[hlydecker/ucsc-genome-mcp](https://github.com/hlydecker/ucsc-genome-mcp)** — Interact with the UCSC Genome Browser API to find genomes, chromosomes and more
   <sub>★ 6 · Python · MIT · source · pushed 2025-11-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/hlydecker/ucsc-genome-mcp.git`</sub>
 - **[salwks/mcp-techTrend](https://github.com/salwks/mcp-techTrend)** — Academic, code and medical-regulatory trend monitoring across arXiv, PubMed, GitHub, Hugging Face and openFDA, with newspaper-style briefings
-  <sub>★ 6 · Python · MIT · clone · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6 · Python · MIT · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/salwks/mcp-techTrend.git`</sub>
 - **[NyxToolsDev/dicom-hl7-mcp-server](https://github.com/NyxToolsDev/dicom-hl7-mcp-server)** — Bridge DICOM, HL7v2 and FHIR: cross-standard mapping, Mirth Connect channel generation, vendor private tag decoding and integration patterns
   <sub>★ 5 · Python · MIT · pip · pushed 2026-07-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2499,7 +2499,7 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · TypeScript · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx airtreks-mcp`</sub>
 - **[alcylu/nightlife-mcp](https://github.com/alcylu/nightlife-mcp)** — Tokyo nightlife: event discovery, venue search, performer info, recommendations and VIP table booking
-  <sub>★ 2 · TypeScript · MIT · source · pushed 2026-10-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · TypeScript · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/alcylu/nightlife-mcp.git`</sub>
 - **[Autonomad1/autonomad-travel](https://github.com/Autonomad1/autonomad-travel)** — Travel agent: search live flights, hotels, activities and events worldwide and complete bookings on Autonomad
   <sub>★ 2 · JavaScript · MIT · npm · pushed 2026-06-05 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2678,6 +2678,6 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-10-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

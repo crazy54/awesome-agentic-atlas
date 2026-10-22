@@ -12,11 +12,10 @@ Page **5** of 5, because this list is longer than the 512 KB GitHub will render 
 
 A release asset for this platform, or the README saying so outright.
 
-<sub>Projects 2,737–2,817 of 2,817. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 2,738–2,817 of 2,817. The rest are on this page's other parts, linked above and below.</sub>
 
 | # | Project | ★ | Lists | Support | Language | Install / Run | What it does | Why |
 |--:|---|--:|--:|---|---|---|---|---|
-| 2737 | **[andrewbabu/loggly-mcp](https://github.com/andrewbabu/loggly-mcp)**<br><sub>andrewbabu/loggly-mcp</sub> | — | 1 | WSL2 · Linux · Docker | JavaScript | `docker run -d --name loggly-mcp -p 8787:8787 --env-file .env loggly-mcp` | Read-only Loggly search and analytics with aggregation-first traffic tools and IP intelligence (RDAP, GreyNoise, AbuseIPDB) | <sub>install via docker; Docker supported</sub> |
 | 2738 | **[ankitkapur1992-hlido/hlido-mcp](https://github.com/ankitkapur1992-hlido/hlido-mcp)**<br><sub>ankitkapur1992-hlido/hlido-mcp</sub> | — | 1 | WSL2 · Linux · Docker | JavaScript | `docker run -p 8080:8080 hlido-mcp` | Hlido trust scores, claim audits and comparisons for reviewed AI agents: tier verdicts, per-claim pass/fail audits and signed evidence | <sub>install via docker; Docker supported</sub> |
 | 2739 | **[asterwise/asterwise-mcp](https://github.com/asterwise/asterwise-mcp)**<br><sub>asterwise/asterwise-mcp</sub> | — | 1 | WSL2 · Linux · Docker | Python | `git clone https://github.com/asterwise/asterwise-mcp.git` | Vedic and Western astrology: natal and divisional charts, Vimshottari dasha, panchanga, muhurta, compatibility matching, KP, Lal Kitab, numerology and tarot | <sub>Docker supported</sub> |
 | 2740 | **[bodyegypt/lobbyvoices-mcp](https://github.com/bodyegypt/lobbyvoices-mcp)**<br><sub>bodyegypt/lobbyvoices-mcp</sub> | — | 1 | WSL2 · Linux · Docker | JavaScript | `git clone https://github.com/bodyegypt/lobbyvoices-mcp.git` | Tools from Lobby, an AI receptionist for small businesses: write phone scripts and IVR menus, generate ElevenLabs agent prompts and role-play calls | <sub>Docker supported</sub> |
@@ -106,6 +105,6 @@ Page **5** of 5, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-10-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

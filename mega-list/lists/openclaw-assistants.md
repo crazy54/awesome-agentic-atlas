@@ -22,10 +22,10 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
 ## Main Projects
 
 - **[OpenClaw](https://github.com/openclaw/openclaw)** — TypeScript - The original full-featured personal AI assistant with multi-agent routing, voice wake, live canvas, companion apps, and 15+ messaging channels
-  <sub>★ 392.7k · TypeScript · MIT · npm · pushed 2026-10-21 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 392.7k · TypeScript · MIT · npm · pushed 2026-10-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g openclaw@latest --allow-scripts=openclaw`</sub>
 - **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** — Python / TypeScript - Self-improving AI agent with autonomous skill creation, persistent memory, multi-platform messaging, and subagent delegation
-  <sub>★ 255.9k · Python · MIT · script · pushed 2026-10-21 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 255.9k · Python · MIT · script · pushed 2026-10-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`</sub>
 - **[nanobot](https://github.com/HKUDS/nanobot)** — Python - Ultra-lightweight OpenClaw-style assistant focused on research workflows, one-click deploy, MCP support, and agent social networking
   <sub>★ 49.3k · Python · MIT · psh · pushed 2026-10-21 · Win · WSL2? · macOS? · Linux · Docker</sub>
@@ -34,7 +34,7 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
   <sub>★ 42.6k · Python · AGPL-3.0 · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install astrbot --python 3.12`</sub>
 - **[ZeroClaw](https://github.com/zeroclaw-labs/zeroclaw)** — Rust - Trait-driven, zero-overhead AI infrastructure with a fully swappable core that deploys across environments
-  <sub>★ 33k · Rust · Apache-2.0 · script · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 33k · Rust · Apache-2.0 · script · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/zeroclaw-labs/zeroclaw/master/install.sh | sh`</sub>
 - **[NanoClaw](https://github.com/nanocoai/nanoclaw)** — TypeScript - Lightweight container-sandboxed assistant designed to be simple to understand and extend via skills
   <sub>★ 31k · TypeScript · MIT · clone · pushed 2026-10-21 · Win · WSL2 · macOS · Linux</sub>
@@ -58,7 +58,7 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
   <sub>★ 3.6k · TypeScript · MIT · npx · pushed 2026-03-30 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npx tinyagi start`</sub>
 - **[Moltis](https://github.com/moltis-org/moltis)** — Rust - Personal AI gateway with single-binary deployment, multi-provider LLM support, long-term memory, sandboxed execution, voice, MCP tools, and multi-channel
-  <sub>★ 2.9k · Rust · MIT · cargo · pushed 2026-10-20 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 2.9k · Rust · MIT · cargo · pushed 2026-10-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`cargo install moltis --git https://github.com/moltis-org/moltis`</sub>
 - **[zclaw](https://github.com/tnm/zclaw)** — C - The smallest possible AI personal assistant for ESP32
   <sub>★ 2.2k · C · MIT · source · pushed 2026-05-17 · WSL2? · macOS? · Linux?</sub>
@@ -121,7 +121,7 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
   <sub>★ 7 · Python · Apache-2.0 · source · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Abdur-rahmaanJ/angel-claw.git`</sub>
 - **[moxxy](https://github.com/moxxy-ai/moxxy)** — Rust - A self-hosted multi-agent AI framework built in Rust
-  <sub>★ 4 · TypeScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4 · TypeScript · MIT · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @moxxy/cli`</sub>
 - **[troublemaker](https://github.com/tinyfatco/troublemaker)** — TypeScript - Mom, liberated. Multi-platform AI agent runtime
   <sub>★ 1 · TypeScript · MIT · clone · pushed 2026-10-18 · WSL2 · Linux · Docker</sub>
@@ -132,6 +132,6 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
 
 ---
 
-Snapshot 2026-10-21. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-10-22. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).
