@@ -162,13 +162,14 @@ ok("...the theme swapped four times", flips.length === 4, JSON.stringify(flips.m
 ok("...at most 3 flashes a second: every swap at least 333 ms after the last (WCAG 2.3.1)",
    gaps.every(g => g >= 333), JSON.stringify(gaps.map(Math.round)));
 // The upper bound is loose: a timer runs late on a busy main thread (618 ms once, on a cold first load),
-// and late is the safe direction. It is here so that a swap on some other clock cannot pass. It bounds the
-// median gap, not every gap: each swap restyles the whole page, and on a CI runner one timer then fired 914
-// ms after the last ([666, 728, 914], 2026-10-19). A swap on another clock -- his render clock, say -- would
-// stretch every gap, which is what a median still catches.
+// and late is the safe direction -- the safety property is the lower bound above, which stays exact. This
+// one is here so that a swap on some other, much slower clock cannot pass. It bounds the median gap, not
+// every gap, and it is 1.5 s rather than 800 ms, because each swap restyles the whole page and a CI runner
+// stretches every 400 ms timer: one gap of 914 ms ([666, 728, 914], 2026-10-19), then all of them
+// ([845, 903, 826], 2026-10-22). A swap waiting on something counted in seconds still fails it.
 const median = [...gaps].sort((a, b) => a - b)[Math.floor(gaps.length / 2)];
 ok("...and near the 400 ms it is meant to take, so this is the rate asserted",
-   gaps.length > 0 && median <= 800, JSON.stringify(gaps.map(Math.round)));
+   gaps.length > 0 && median <= 1500, JSON.stringify(gaps.map(Math.round)));
 ok("...ending on the theme it started on", await ev(`document.documentElement.dataset.theme`) === start.theme);
 ok("...with nothing saved", !r.writes.includes("theme") &&
    await ev(`localStorage.getItem("theme")`) === start.stored, JSON.stringify(r.writes));
