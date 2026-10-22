@@ -13,6 +13,7 @@ list's entries do.
   12_scout.py --dry-run   search and report, write nothing
   12_scout.py --reset     as the default, but keep only the scouted repos that qualify today
   12_scout.py --status    what the ledgers hold; no network, no writes
+  12_scout.py --follow-renames   after the fetch: rename scouted repos to what GitHub calls them now
 
 Two outputs, for two readers:
 
@@ -87,6 +88,7 @@ HERE = Path(__file__).resolve().parent
 STATE = ROOT / "state"
 REPOS = STATE / "scout-repos.json"
 LISTS = STATE / "scout-lists.json"
+META = ROOT / "cache" / "meta.json"                  # the fetch's answers, for --follow-renames
 
 _spec = importlib.util.spec_from_file_location("b10_for_scout", HERE / "10_parse_sources.py")
 b10 = importlib.util.module_from_spec(_spec)
@@ -539,6 +541,38 @@ def merge_repos(ledger: dict, items: list[dict], today: date, curated: set[str],
     return report
 
 
+def follow_renames(ledger: dict, meta: dict) -> list[tuple[str, str]]:
+    """Rename the scouted repos GitHub now serves under another name, from the fetch's own answers.
+
+    `merge` follows a rename when today's search returns the repo, by id. A sticky entry today's search
+    did not return keeps the name it was scouted under, while the fetch -- which asks for it by that name
+    and is told what it is called now -- has the build publish it under the new one. The ledger and the
+    published row then disagree, and refresh_test's provenance invariant fails, rightly: the row names no
+    list and no scouted repo. `devswha/herdr-web-ui`, renamed `devswha/ovis`, did that to the daily of
+    2026-10-22. So after the fetch, each such entry is renamed with its `id`, `section` and `since` carried
+    over, as `merge` does. Through one more hop at most, as `16_build_all.canonicalise_nwo` resolves, so
+    the two agree; a change of case only is left alone, since every reader compares names lower-cased. If
+    the new name is scouted as well, the two become one entry with the earlier `since`.
+    """
+    repos = ledger["repos"]
+    answers = {str(k).lower(): v for k, v in meta.items() if isinstance(v, dict)}
+    now_of = lambda name: str((answers.get(name.lower()) or {}).get("nameWithOwner") or "").strip()
+    renamed = []
+    for old in sorted(list(repos), key=str.lower):
+        now = now_of(old)
+        now = now_of(now) or now if now else ""
+        if not now or "/" not in now or now.lower() == old.lower():
+            continue
+        entry = repos.pop(old)
+        twin = next((k for k in repos if k.lower() == now.lower()), None)
+        if twin is None:
+            repos[now] = entry
+        elif entry.get("since") and (not repos[twin].get("since") or entry["since"] < repos[twin]["since"]):
+            repos[twin]["since"] = entry["since"]
+        renamed.append((old, now))
+    return renamed
+
+
 def merge_lists(ledger: dict, items: list[dict], today: date, curated: set[str]) -> dict:
     """The next candidate-list set. Not sticky: this is a to-do list, so it is today's answer, with
     each survivor's `first_seen` carried over from the last one."""
@@ -714,10 +748,27 @@ def main() -> None:
     ap.add_argument("--reset", action="store_true",
                     help="keep only the scouted repos that qualify today -- how a tightened rule reaches "
                          "repos already scouted, since the ledger is otherwise sticky")
+    ap.add_argument("--follow-renames", action="store_true",
+                    help="after the fetch: rename scouted repos GitHub now serves under another name, from "
+                         "cache/meta.json; no network")
     args = ap.parse_args()
 
     if args.status:
         status()
+        return
+    if args.follow_renames:
+        if not META.exists():
+            print(f"{META.relative_to(ROOT).as_posix()} is not here, so there is nothing to follow; "
+                  f"run this after the fetch")
+            return
+        repos = load(REPOS, "repos")
+        moved = follow_renames(repos, json.loads(META.read_text(encoding="utf-8")))
+        for old, new in moved:
+            print(f"  renamed {old} -> {new}")
+        if moved:
+            save(REPOS, repos)
+            write_doc(repos)
+        print(f"{len(moved)} scouted repo(s) renamed to the name GitHub serves them under")
         return
     if args.offline:
         repos = load(REPOS, "repos")

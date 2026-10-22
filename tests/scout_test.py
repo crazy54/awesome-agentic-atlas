@@ -748,6 +748,42 @@ eq("pull_sources leaves the synthetic source alone, even forced", (line["status"
    ("synthetic", {"version": 1, "sources": {}}))
 eq("...without asking GitHub for its head commit", probed, [])
 
+# ========================================================================================== renames
+# A sticky entry today's search did not return keeps its scouted name while the fetch learns the new one
+# (devswha/herdr-web-ui -> devswha/ovis, the daily of 2026-10-22); `--follow-renames` closes that gap
+# from meta.json after the fetch, so the ledger names what the build publishes.
+group("renames")
+led = {"version": 1, "repos": {
+    "devswha/herdr-web-ui": {"id": 1374928133, "section": "Coding Agents", "since": "2026-10-11"},
+    "acme/old": {"id": 2, "section": "Agent Skills", "since": "2026-09-01"},
+    "acme/new": {"id": 2, "section": "Agent Skills", "since": "2026-10-01"},
+    "acme/Case": {"id": 3, "section": "MCP Servers", "since": "2026-09-05"},
+    "acme/hop": {"id": 4, "section": "MCP Servers", "since": "2026-09-06"},
+    "acme/same": {"id": 5, "section": "MCP Servers", "since": "2026-09-07"},
+    "acme/gone": {"id": 6, "section": "MCP Servers", "since": "2026-09-08"},
+}}
+meta = {"devswha/herdr-web-ui": {"nameWithOwner": "devswha/ovis"},
+        "acme/old": {"nameWithOwner": "acme/new"},
+        "acme/case": {"nameWithOwner": "acme/case"},
+        "acme/hop": {"nameWithOwner": "acme/hop2"}, "acme/hop2": {"nameWithOwner": "acme/hop3"},
+        "acme/same": {"nameWithOwner": "acme/same"},
+        "acme/gone": {"error": "Not Found", "readme_bytes": 0}}
+moved = s.follow_renames(led, meta)
+eq("a scouted repo GitHub now calls something else is renamed", led["repos"].get("devswha/ovis"),
+   {"id": 1374928133, "section": "Coding Agents", "since": "2026-10-11"})
+true("...and its old name leaves the ledger", "devswha/herdr-web-ui" not in led["repos"])
+eq("...one already scouted under its new name too becomes one entry, with the earlier since",
+   (led["repos"].get("acme/new") or {}).get("since"), "2026-09-01")
+true("...and the old name of it goes", "acme/old" not in led["repos"])
+true("a change of case alone is left as it is", "acme/Case" in led["repos"] and "acme/case" not in led["repos"])
+true("a rename of a rename is followed one hop further, as canonicalise_nwo does",
+     "acme/hop3" in led["repos"] and "acme/hop" not in led["repos"])
+true("a repo the fetch answered under its own name, or with an error, is untouched",
+     "acme/same" in led["repos"] and "acme/gone" in led["repos"])
+eq("...and the report names each rename", sorted(moved),
+   [("acme/hop", "acme/hop3"), ("acme/old", "acme/new"), ("devswha/herdr-web-ui", "devswha/ovis")])
+eq("following again changes nothing", s.follow_renames(led, meta), [])
+
 # ======================================================================================== downstream
 group("downstream")
 cur_row = {"source": "agents", "nwo": "acme/taxbot", "section": "Research", "kind": "repo"}

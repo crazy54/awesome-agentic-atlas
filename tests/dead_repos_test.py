@@ -249,5 +249,29 @@ with tempfile.TemporaryDirectory() as tmp:
     true("...and says how many it left out", "left out 2 rows of 2 dead repos" in log.getvalue(),
          log.getvalue()[:200])
 
+# The original list (Orchestrators) reaches the site through 04_classify.py and records.json, not
+# records_all.json -- the first scan left francescoalemanno/dex listed because only 14 filtered.
+spec = importlib.util.spec_from_file_location("cls04_test", SCRIPTS / "04_classify.py")
+c04 = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(c04)
+with tempfile.TemporaryDirectory() as tmp:
+    cache = Path(tmp)
+    ents = [{"name": "Dex", "nwo": "Francescoalemanno/Dex", "url": "https://github.com/francescoalemanno/dex",
+             "owner": "francescoalemanno", "repo": "dex", "category": "Orchestrators", "description": "x"},
+            {"name": "Kept", "nwo": "alive/kept", "url": "https://github.com/alive/kept", "owner": "alive",
+             "repo": "kept", "category": "Orchestrators", "description": "y"}]
+    gone = {"error": "Not Found", "readme_bytes": 0}
+    for name, value in [("entries.json", ents), ("meta.json", {e["nwo"]: gone for e in ents}),
+                        ("releases.json", {}), ("actions.json", {})]:
+        (cache / name).write_text(json.dumps(value), encoding="utf-8")
+    c04.CACHE, c04.READMES = cache, cache / "readmes"
+    c04.dead_set = lambda: {"francescoalemanno/dex"}
+    log = StringIO()
+    with redirect_stdout(log):
+        c04.main()
+    kept = [r["name"] for r in json.loads((cache / "records.json").read_text(encoding="utf-8"))]
+    true("the original list's path leaves a ledger repo out too, whatever its case", kept == ["Kept"], str(kept))
+    true("...and says so", "left out 1 of 1 dead repos" in log.getvalue(), log.getvalue()[:200])
+
 print(f"\n{ok} passed, {bad} failed")
 sys.exit(1 if bad else 0)

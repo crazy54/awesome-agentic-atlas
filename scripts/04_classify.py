@@ -16,6 +16,7 @@ from urllib.parse import quote, urljoin
 
 sys.path.insert(0, str(Path(__file__).parent))
 import signals as sig  # noqa: E402
+from dead_repos import dead_set  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
@@ -384,8 +385,16 @@ def main() -> None:
     rel = json.loads((CACHE / "releases.json").read_text(encoding="utf-8"))
     acts = json.loads((CACHE / "actions.json").read_text(encoding="utf-8"))
 
-    records = []
+    # Repos the weekly scan found gone from GitHub (scripts/dead_repos.py, state/dead-repos.json) are left
+    # out here as 14_classify_all.py leaves them out of the other lists: this list reaches the site through
+    # records.json, not records_all.json, so a filter there alone left francescoalemanno/dex listed after
+    # the first scan (2026-10-22).
+    dead = dead_set()
+    records, dropped = [], 0
     for e in entries:
+        if (e.get("nwo") or "").lower() in dead:
+            dropped += 1
+            continue
         m = meta.get(e["nwo"], {})
         safe = e["nwo"].replace("/", "__")
         p = READMES / f"{safe}.md"
@@ -432,7 +441,7 @@ def main() -> None:
     def cnt(field, val=YES):
         return sum(1 for r in records if r.get(field) == val)
 
-    print(f"classified {len(records)} records -> {out}\n")
+    print(f"classified {len(records)} records -> {out}; left out {dropped} of {len(dead)} dead repos\n")
     print(f"{'':22} {'Yes':>5} {'Likely':>7}")
     for f, lbl in (("win_native", "Windows native"), ("win_wsl2", "WSL2"), ("macos", "macOS"),
                    ("linux", "Linux"), ("docker", "Docker"), ("cloud", "Cloud/CI")):
