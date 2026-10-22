@@ -1,10 +1,10 @@
 <div align="center">
 
 <a href="https://aaa.jeremyfhall.com/">
-  <img src="docs/favicon.svg" width="64" height="64" alt="Awesome Agentic Atlas logo: a gold globe in pixel sunglasses">
+  <img src="docs/assets/archie-icon.png" width="64" height="64" alt="Awesome Agentic Atlas icon: Archie's head, white ceramic with a graphite and lime crest">
 </a>
 <a href="https://aaa.jeremyfhall.com/">
-  <img src="docs/assets/atlas-byte.png" width="132" alt="Archie 'Atlas' Algorithm, the Awesome Agentic Atlas robot mascot, wearing pixel sunglasses and holding a globe">
+  <img src="docs/assets/archie-readme.png" width="125" alt="Archie 'Atlas' Algorithm, the Awesome Agentic Atlas robot mascot: white ceramic and graphite with lime trim, big lime eyes, a lopsided smirk and a swept-up crest">
 </a>
 
 # Awesome Agentic Atlas
@@ -13,20 +13,20 @@
 
 14,914 entries · 8,858 repos · 24.1M combined stars · one spreadsheet · zero tab-hopping
 
-[![entries](https://shieldcn.dev/badge/entries-14%2C914-6557C8.svg?logo=ri%3ALuDatabase&size=sm&font=geist&split=true)](mega-list/README.md)
-[![repos](https://shieldcn.dev/badge/repos-8%2C858-1D5E9E.svg?logo=ri%3ALuGithub&size=sm&font=geist&split=true)](mega-list/leaderboard.md)
-[![stars](https://shieldcn.dev/badge/combined_stars-24.1M-875A19.svg?logo=ri%3AGoStarFill&size=sm&font=geist&split=true)](mega-list/leaderboard.md)
-[![lists merged](https://shieldcn.dev/badge/lists_merged-39-187557.svg?logo=ri%3ALuListChecks&size=sm&font=geist&split=true)](#the-source-lists)
-[![license](https://shieldcn.dev/badge/license-MIT-596574.svg?logo=ri%3ALuScale&size=sm&font=geist&split=true)](LICENSE)
+[![entries](https://shieldcn.dev/badge/entries-14%2C914-6557C8.svg?logo=ri%3ALuDatabase&size=xs&font=geist&split=true)](mega-list/README.md)
+[![repos](https://shieldcn.dev/badge/repos-8%2C858-1D5E9E.svg?logo=ri%3ALuGithub&size=xs&font=geist&split=true)](mega-list/leaderboard.md)
+[![stars](https://shieldcn.dev/badge/combined_stars-24.1M-875A19.svg?logo=ri%3AGoStarFill&size=xs&font=geist&split=true)](mega-list/leaderboard.md)
+[![lists merged](https://shieldcn.dev/badge/lists_merged-39-187557.svg?logo=ri%3ALuListChecks&size=xs&font=geist&split=true)](#the-source-lists)
+[![license](https://shieldcn.dev/badge/license-MIT-596574.svg?logo=ri%3ALuScale&size=xs&font=geist&split=true)](LICENSE)
 
 ### [🔎 Browse it in your browser][site] · [⬇ Download the workbook — dark][dark] · [⬇ light][light]
 
-[![Atlas Leaderboard](https://shieldcn.dev/badge/Atlas-Leaderboard-875A19.svg?logo=ri%3ALuTrophy&size=sm&font=geist&split=true)](mega-list/leaderboard.md)
+[![Atlas Leaderboard](https://shieldcn.dev/badge/Atlas-Leaderboard-875A19.svg?logo=ri%3ALuTrophy&size=xs&font=geist&split=true)](mega-list/leaderboard.md)
 
-[![daily build](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=sm&split=true&labelColor=101217&workflow=daily.yml&label=daily%20build&logo=ri%3ALuWorkflow)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml)
-[![screenshots & workbooks](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=sm&split=true&labelColor=101217&workflow=weekly.yml&label=screenshots%20%26%20workbooks&logo=ri%3ALuPackage)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml)
-[![tests](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=sm&split=true&labelColor=101217&workflow=tests.yml&label=tests&logo=ri%3ALuFlaskConical)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml)
-[![lighthouse](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=sm&split=true&labelColor=101217&workflow=lighthouse.yml&label=lighthouse&logo=ri%3ALuGauge)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/lighthouse.yml)
+[![daily build](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=xs&split=true&labelColor=101217&workflow=daily.yml&label=daily%20build&logo=ri%3ALuWorkflow)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml)
+[![screenshots & workbooks](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=xs&split=true&labelColor=101217&workflow=weekly.yml&label=screenshots%20%26%20workbooks&logo=ri%3ALuPackage)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml)
+[![tests](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=xs&split=true&labelColor=101217&workflow=tests.yml&label=tests&logo=ri%3ALuFlaskConical)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml)
+[![lighthouse](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=xs&split=true&labelColor=101217&workflow=lighthouse.yml&label=lighthouse&logo=ri%3ALuGauge)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/lighthouse.yml)
 
 </div>
 
