@@ -291,6 +291,10 @@ jobs:
           python scripts/04_classify.py
           python scripts/10_parse_sources.py
           python scripts/11_fetch_all.py
+          # The fetch has just learned what every repo is called now; a scouted one renamed since it was
+          # scouted is renamed in the scout's ledger too, so the ledger names what this build publishes
+          # (refresh_test asserts that every row naming no list is a scouted one).
+          python scripts/12_scout.py --follow-renames
           python scripts/13_signals_all.py
           python scripts/14_classify_all.py
 
