@@ -4,7 +4,7 @@ Community-contributed instructions, agents, skills, and configurations to help y
 
 Curated by **[github/awesome-copilot](https://github.com/github/awesome-copilot)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-979 entries · 1 distinct repos · 7 sections
+981 entries · 1 distinct repos · 7 sections
 
 [← back to the mega list](../README.md)
 
@@ -22,7 +22,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 - [Additional Resources](#additional-resources) (3)
 - [How to Use Custom Agents](#how-to-use-custom-agents) (222)
 - [How to Use Custom Instructions](#how-to-use-custom-instructions) (191)
-- [How to Use Agent Skills](#how-to-use-agent-skills) (441)
+- [How to Use Agent Skills](#how-to-use-agent-skills) (442)
 
 ## Additional Resources
 
@@ -1283,7 +1283,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ## How to Use Agent Skills
 
-<sub>Entries 1–218 of 441. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Entries 1–218 of 442. The rest are on this page's other parts, linked above and below.</sub>
 
 - **[GitHub CLI v2.90.0+](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/)** — )
   <sub>website</sub>
@@ -1546,7 +1546,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
 - **[context-map](https://github.com/github/awesome-copilot/tree/HEAD/skills/context-map/SKILL.md)** — Generate a map of all files relevant to a task before making changes
   <sub>JavaScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/github/awesome-copilot.git && cd awesome-copilot/skills/context-map/SKILL.md`</sub>
-- **[conventional-branch](https://github.com/github/awesome-copilot/tree/HEAD/skills/conventional-branch/SKILL.md)** — Create Git branches following the Conventional Branch specification (feature/, bugfix/, hotfix/, release/, chore/). Use when creating a new branch, naming a branch, or checking whether a branch name complies with the spec
+- **[conventional-branch](https://github.com/github/awesome-copilot/tree/HEAD/skills/conventional-branch/SKILL.md)** — Create Git branches following the Conventional Branch specification (feature/, bugfix/, hotfix/, release/, chore/, plus AI agent prefixes ai/, copilot/, cursor/, claude/, codex/). Use when creating a new branch, naming a branch, or checking whether a branch name complies with the spec
   <sub>JavaScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/github/awesome-copilot.git && cd awesome-copilot/skills/conventional-branch/SKILL.md`</sub>
 - **[conventional-commit](https://github.com/github/awesome-copilot/tree/HEAD/skills/conventional-commit/SKILL.md)** — Prompt and workflow for generating conventional commit messages using a structured XML format. Guides users to create standardized, descriptive commit messages in line with the Conventional Commits specification, including instructions, examples, and validation

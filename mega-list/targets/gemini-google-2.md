@@ -2,9 +2,11 @@
 
 Targets Gemini, Vertex AI, or Google's agent stack.
 
-**849 projects** · 801 with stars to rank by · 4,036,187 combined stars
+**841 projects** · 801 with stars to rank by · 4,042,593 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=gemini-google)
+
+✨ **1 new to the atlas** in the 10/22/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=gemini-google&new=1).
 
 Page **2** of 2, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](gemini-google.md) · **2**.
 
@@ -29,7 +31,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 | 800 | **[wwewtech/chatexport-need-miner](https://github.com/wwewtech/chatexport-need-miner)**<br><sub>wwewtech/chatexport-need-miner</sub> | 1 | 1 | <sub>Agent Skills</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx skills add wwewtech/chatexport-need-miner` | Source for the chatexport-need-miner skill — community guidance and examples under MIT |
 | 801 | **[zyli5313/dochost-mcp](https://github.com/zyli5313/dochost-mcp)**<br><sub>zyli5313/dochost-mcp</sub> | 1 | 1 | <sub>MCP Servers</sub> | <sub>WSL2 · Linux · Docker</sub> | `docker run --rm -i dochost-mcp` | Publish Markdown or HTML to a public shareable link, served script-free from a separate cookieless origin |
 
-## Also here, unranked (48)
+## Also here, unranked (40)
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
@@ -48,21 +50,17 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[Citlyze/citlyze-mcp](https://github.com/Citlyze/citlyze-mcp)** — Track brand visibility in AI search with Citlyze: scores, tracked prompts, citations, competitor comparison, recommendations and AI crawler analytics
 - **[Citlyze/citlyze-skills](https://github.com/Citlyze/citlyze-skills)** — AI search visibility skills from the Citlyze team: window-over-window visibility reports, citation gap analysis, prompt audits, and action plans via the Citlyze MCP server, plus a standalone AEO page…
 - **[Cohesivity](https://github.com/cohesivity-org/cohesivity-plugin/tree/main/packages/gemini)** — cohesivity.ai offers free agent native backend services. Anonymous account (no-signup) to get started through MCP or API. Hosting, postgres, email, storage, containers, LLMs, voice and third-party AP…
-- **[CueAPI](https://github.com/cueapi/cueapi-core)** — Open-source scheduler and verification gate for AI coding agents. Cues trigger agent runs on a schedule, and each execution must return evidence (external ID, result URL, or artifact) before the cycl…
 - **[davidmosiah/delx-mcp-server](https://github.com/davidmosiah/delx-mcp-server)** — Local stdio bridge to the hosted Delx Protocol MCP endpoint, with client install, doctor checks and live tool discovery
-- **[EchoCoding](https://github.com/launsion-boop/EchoCoding)** — Audio layer for coding agents with hook-triggered SFX, ambient soundscape, and optional cloud TTS/ASR voice interaction. Works with Claude Code hooks and also supports Cursor/Windsurf, Codex CLI, and…
 - **[epistemedeus/ai-readiness](https://github.com/epistemedeus/ai-readiness)** — Check a website's visibility to AI search: scores AI crawler access, JSON-LD, title and meta tags, Open Graph, sitemap and llms.txt, with a fix for each gap
 - **[Gcp_Ai_Assistant](https://github.com/gabrielpreda/gcp_ai_assistant)** — Conversational AI Agent using Gemini, with Streamlit UI and deployed on GCP Cloud Run
 - **[Gemini CLI Logs Prettifier](https://github.com/Manamama/Puzzles_for_AIs/tree/main/code/Gemini%20CLI%20logs%20prettifier)** — Renders the logs human readable (prettifies them) and browsable as interlinked HTML, with thoughtful explanations and clickable links
 - **[Google Hotels MCP](https://github.com/huynhtanan/google-hotels-mcp?utm_source=awesome-gemini-cli&utm_medium=referral)** — Search Google Hotels and Google Vacation Rentals from Gemini CLI: per-OTA nightly rates (Booking.com, Expedia, Agoda, Vrbo, Airbnb, Hotels.com and 10+ other providers), 3-month daily price calendars…
 - **[jakzaizzat/cukaimax-agent](https://github.com/jakzaizzat/cukaimax-agent)** — Read-only, source-linked Malaysian individual and sole-proprietor tax reference: YA2025 Form BE drafts, Form B preparation readiness and YA2026 planning
 - **[jmshinhwa/readystack-mcp](https://github.com/jmshinhwa/rulestamp-mcp)** — Regulation and deadline linters for EU CRA, DORA, NIS2, the EU AI Act, PCI DSS, WCAG, e-invoicing and more, reporting file, line and fix for each finding
-- **[Knowledge Delta Skills](https://github.com/sergeyizmailov/knowledge-delta-skills)** — Portable SKILL.md skills for media buying, frontend, security, research, and skill authoring, each kept to what a frontier model does not already reliably know. Copy any skill directory into ~/.gemin…
 - **[layergen/eodly-mcp](https://github.com/layergen/eodly-mcp)** — Read your team's end-of-day reports in Eodly: who shipped with GitHub and Linear proof, who is silent, who is slipping, plus the team roster
 - **[Luminc/peil-mcp](https://github.com/Luminc/peil-mcp)** — Peil for Dutch freelancers (ZZP'ers): log hours, draft invoices from unbilled time, and track outstanding and overdue invoices and effective hourly rate
 - **[mrmaciej1/justfill-mcp](https://github.com/mrmaciej1/justfill-mcp)** — Fill AcroForm, flat and scanned PDF forms: detect and review fields, save templates, map JSON values and preview filled output before export
 - **[Oathra](https://github.com/FORIFOR/oathra)** — Apache-2.0 TypeScript runtime for phone agents with a standalone evidence-verification engine; anchors result fields to callee utterances and applies deterministic completion rules, with a simulator…
-- **[OpenFiles](https://github.com/devgiordane/openfiles)** — VS Code extension (also on Open VSX for Cursor, Windsurf and VSCodium) that opens every file Gemini CLI edits so ESLint, TypeScript and other language servers check it, then returns the problems to G…
 - **[PostEverywhere](https://github.com/posteverywhere/gemini-cli-extension)** — Social media scheduler for Gemini CLI. Write, schedule and publish posts to Instagram, TikTok, YouTube, LinkedIn, X, Threads, Pinterest and Bluesky, and plan a content calendar. Install with gemini e…
 - **[pubship/pubship](https://github.com/pubship/pubship)** — Inspect Google Play releases, reviews, Android vitals and reports, and prepare explicitly authorized release and store-listing changes. Runs locally with your own service account
 - **[rafim-dev/mcp-context-condenser](https://github.com/rafim-dev/mcp-context-condenser)** — AST-based code outliner, log compressor and context budget analyzer to reduce LLM token usage
@@ -73,10 +71,6 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[sounny/sounnyforms-mcp](https://github.com/sounny/sounnyforms-mcp)** — Serverless form backend, lead triage and contact form generator for static sites, React and JAMstack apps
 - **[spanlens/Spanlens](https://github.com/spanlens/Spanlens/tree/main/packages/mcp-server)** — Read-only access to Spanlens LLM observability: request logs, costs, agent traces, anomalies, model savings and per-user analytics
 - **[stefanautomateed/shipvela-codex](https://github.com/stefanautomateed/shipvela-codex)** — MIT source for shipvela-publish — owner-confirmed website publishing and exact deployment tracking through an already connected Shipvela account. The hosted service is proprietary and plan-limited
-- **[tokentab](https://github.com/crwdla/tokentab)** — (1.1k ⭐) - Local CLI that reads Claude Code, Codex, and Gemini CLI session logs to calculate token usage and cost by model, project, and day
-- **[tokentab](https://github.com/damejan80/tokentab)** — (288 ⭐) - A local CLI that reads Claude Code, Codex, Cursor, and Gemini CLI session logs and calculates token usage and cost by model, project, and day
-- **[tokentab](https://github.com/wzchav/tokentab)** — (225 ⭐) - A CLI that reads Claude Code, Codex, and Gemini CLI session logs and works out how much they cost, by model, project, and day
-- **[tokentab](https://github.com/sequilade/tokentab)** — (122 ⭐) - CLI for calculating Claude Code, Codex, and Gemini CLI session costs by model, project, and day
 - **[TokRepo](https://github.com/henu-wang/tokrepo)** — Cross-agent registry and CLI for discovering and installing 220+ AI assets including skills, prompts, MCP configs, and workflows
 - **[TokRepo MCP Server](https://github.com/henu-wang/tokrepo-mcp-server)** — Search and install AI skills, prompts, MCP configs, and workflows from TokRepo from Gemini CLI and other MCP clients
 - **[work0r-ai/agent-kit](https://github.com/work0r-ai/agent-kit)** — Source for the workorai skill — agent kit workflows (MIT)

@@ -4,36 +4,36 @@ Curated list of AI-powered developer tools.
 
 Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/awesome-ai-devtools)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-278 entries · 87 distinct repos · 20 sections
+265 entries · 74 distinct repos · 20 sections
 
 [← back to the mega list](../README.md)
 
 |   |   |   |
 |---|---|---|
-| <a href="https://github.com/cafeTechne/antigravity-link-extension"><img src="https://opengraph.githubassets.com/1/cafeTechne/antigravity-link-extension" width="260"></a> | <a href="https://github.com/onllm-dev/onUI"><img src="https://raw.githubusercontent.com/onllm-dev/onUI/main/landing-page/assets/onui-demo-preview.gif" width="260"></a> | <a href="https://github.com/mutableai/monitors4codegen"><img src="https://opengraph.githubassets.com/1/mutableai/monitors4codegen" width="260"></a> |
-| **[Antigravity Link](https://github.com/cafeTechne/antigravity-link-extension)**<br>★ 219 | **[onUI](https://github.com/onllm-dev/onUI)**<br>★ 105 | **[Mutable](https://github.com/mutableai/monitors4codegen)**<br>★ — |
-| <a href="https://ui-pilot.com/"><img src="https://ui-pilot.com/assets/static/og_screenshot.a555395e.png" width="260"></a> | <a href="https://gitwit.dev/"><img src="https://gitwit-dev-one.vercel.app/opengraph-image.png?opengraph-image.9c7d636c.png" width="260"></a> | <a href="https://builderstudio.dev"><img src="https://builderstudio.dev/assets/banner.png" width="260"></a> |
-| **[UI Pilot](https://ui-pilot.com/)**<br>★ — | **[GitWit](https://gitwit.dev/)**<br>★ — | **[BuilderStudio](https://builderstudio.dev)**<br>★ — |
+| <a href="https://github.com/cafeTechne/antigravity-link-extension"><img src="https://opengraph.githubassets.com/1/cafeTechne/antigravity-link-extension" width="260"></a> | <a href="https://github.com/onllm-dev/onUI"><img src="https://raw.githubusercontent.com/onllm-dev/onUI/main/landing-page/assets/onui-demo-preview.gif" width="260"></a> | <a href="https://ui-pilot.com/"><img src="https://ui-pilot.com/assets/static/og_screenshot.a555395e.png" width="260"></a> |
+| **[Antigravity Link](https://github.com/cafeTechne/antigravity-link-extension)**<br>★ 219 | **[onUI](https://github.com/onllm-dev/onUI)**<br>★ 105 | **[UI Pilot](https://ui-pilot.com/)**<br>★ — |
+| <a href="https://gitwit.dev/"><img src="https://gitwit-dev-one.vercel.app/opengraph-image.png?opengraph-image.9c7d636c.png" width="260"></a> | <a href="https://builderstudio.dev"><img src="https://builderstudio.dev/assets/banner.png" width="260"></a> | <a href="https://supermaven.com/"><img src="https://supermaven.com/desc-image.png" width="260"></a> |
+| **[GitWit](https://gitwit.dev/)**<br>★ — | **[BuilderStudio](https://builderstudio.dev)**<br>★ — | **[Supermaven](https://supermaven.com/)**<br>★ — |
 
 ## Contents
 
 - [IDE Extensions](#ide-extensions) (32)
-- [AI-Native IDEs](#ai-native-ides) (12)
-- [Terminal Agents](#terminal-agents) (17)
-- [CLI Utilities](#cli-utilities) (15)
+- [AI-Native IDEs](#ai-native-ides) (11)
+- [Terminal Agents](#terminal-agents) (16)
+- [CLI Utilities](#cli-utilities) (14)
 - [Codebase Intelligence](#codebase-intelligence) (13)
-- [App Builders](#app-builders) (22)
+- [App Builders](#app-builders) (21)
 - [UI Generators](#ui-generators) (12)
 - [Coding Agents](#coding-agents) (3)
 - [Database &amp; SQL](#database--sql) (3)
 - [Snippet &amp; Utility Tools](#snippet--utility-tools) (8)
-- [Desktop &amp; Mobile Applications](#desktop--mobile-applications) (17)
-- [PR &amp; Code Review Bots](#pr--code-review-bots) (24)
+- [Desktop &amp; Mobile Applications](#desktop--mobile-applications) (15)
+- [PR &amp; Code Review Bots](#pr--code-review-bots) (23)
 - [CI/CD &amp; Testing Automation](#cicd--testing-automation) (15)
-- [Multi-Agent Orchestration](#multi-agent-orchestration) (21)
-- [Usage Analytics &amp; Cost Tracking](#usage-analytics--cost-tracking) (14)
+- [Multi-Agent Orchestration](#multi-agent-orchestration) (19)
+- [Usage Analytics &amp; Cost Tracking](#usage-analytics--cost-tracking) (12)
 - [Sandboxing &amp; Isolation](#sandboxing--isolation) (6)
-- [Configuration &amp; Context Management](#configuration--context-management) (28)
+- [Configuration &amp; Context Management](#configuration--context-management) (26)
 - [Git &amp; Commit Helpers](#git--commit-helpers) (3)
 - [Documentation Generation](#documentation-generation) (5)
 - [Resources](#resources) (8)
@@ -160,8 +160,6 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 - **[Theia IDE](https://theia-ide.org/#theiaide)** — An extensible open-source IDE (web and desktop) providing AI-powered features like chat, code completion, terminal assistance and custom agents using arbitrary LLMs. Built on Theia AI, a platform designed to enable the creation of custom, AI-powered tools and IDEs
   <sub>website</sub>
   <sub>`https://theia-ide.org/#theiaide`</sub>
-- **[Mutable](https://github.com/mutableai/monitors4codegen)** — Web-based IDE, integrated with a chatbot and GitHub
-  <sub>unavailable</sub>
 - **[UI Pilot](https://ui-pilot.com/)** — Chat-based AI code editor that creates forms using Material UI, using GPT-4
   <sub>website</sub>
   <sub>`https://ui-pilot.com/`</sub>
@@ -216,8 +214,6 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 - **[AdaL](https://sylph.ai/)** — Self-evolving AI coding agent that lets models collaborate (Claude, GPT, Gemini). Runs locally, learns your codebase patterns
   <sub>website</sub>
   <sub>`https://sylph.ai/`</sub>
-- **[Axon](https://github.com/kill136/axon)** — Open-source AI coding assistant with Web IDE, multi-agent system, 37+ tools, and MCP protocol support. Features Monaco editor, self-modification capabilities, and multiple AI provider integrations
-  <sub>unavailable</sub>
 - **[Mini SWE-Agent](https://mini-swe-agent.com/latest/)** — A minimal, hackable software engineering agent built for learning and experimentation. Lightweight implementation demonstrating core SWE-agent concepts with a focus on simplicity and extensibility
   <sub>website</sub>
   <sub>`https://mini-swe-agent.com/latest/`</sub>
@@ -243,7 +239,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 516 · Rust · MIT · scoop · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`scoop install extras/models`</sub>
 - **[Octomind](https://github.com/Muvon/octomind)** — Session-based AI development assistant with MCP support, 7 LLM providers, and extensible architecture. Features plan-first workflow, semantic code search, and persistent memory
-  <sub>★ 175 · Rust · Apache-2.0 · scoop · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 175 · Rust · Apache-2.0 · scoop · pushed 2026-10-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`scoop bucket add muvon https://github.com/Muvon/scoop-bucket scoop install muvon/octomind`</sub>
 - **[ORCH](https://github.com/oxgeneral/ORCH)** — CLI runtime that coordinates Claude Code, OpenCode, Codex, and Cursor as a typed AI team. State machine (todo→review→done), auto-retry, inter-agent messaging, TUI dashboard
   <sub>★ 173 · TypeScript · MIT · npm · pushed 2026-08-01 · Win? · WSL2 · macOS? · Linux?</sub>
@@ -269,8 +265,6 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 - **[CLIRank](https://clirank.dev)** — API directory scoring 387 APIs on agent-friendliness across 11 signals. Available as an MCP server (clirank-mcp-server) and REST API
   <sub>website</sub>
   <sub>`https://clirank.dev`</sub>
-- **[prpack](https://github.com/Lucas2944/prpack)** — Zero-dep CLI that packs a pull request (diff + commits + full post-change file contents) into one markdown file optimized for LLM code review. Drop the file into Claude / Cursor / your model. MIT
-  <sub>unavailable</sub>
 - **[Marmot](https://marmot.sh)** — Shell-native CLI that gives agents one command shape for AI, web search, scraping, and data enrichment across many providers. Designed for Claude Code, Codex, OpenCode, and similar harnesses; composes via shell pipes
   <sub>website</sub>
   <sub>`https://marmot.sh`</sub>
@@ -382,8 +376,6 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 - **[Fastshot](https://fastshot.ai/)** — AI driven no-code platform for building and deploying mobile apps
   <sub>website</sub>
   <sub>`https://fastshot.ai/`</sub>
-- **[ai-vertical-saas-gen](https://github.com/kurtnebiev-elvis4/ai-vertical-saas-gen)** — CLI that generates complete vertical SaaS apps (Next.js 14 + Supabase) with industry-specific data models for 20+ niches. Zero dependencies, offline, outputs 20 deployable files in one command
-  <sub>unavailable</sub>
 
 ## UI Generators
 
@@ -478,10 +470,10 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 ## Desktop &amp; Mobile Applications
 
 - **[Parallel Code](https://github.com/johannesjo/parallel-code)** — Desktop app that runs multiple AI coding agents (Claude Code, Codex CLI, Gemini CLI) in parallel with automatic git worktree isolation, a unified GUI, and remote monitoring
-  <sub>★ 1.1k · TypeScript · MIT · clone · pushed 2026-10-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 1.1k · TypeScript · MIT · clone · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/johannesjo/parallel-code.git`</sub>
 - **[IM.codes](https://github.com/im4codes/imcodes)** — Mobile/web control layer for Claude Code, Codex, Gemini CLI, and other terminal-based coding agents, built for away-from-desk continuation with terminal access, file browsing, git views, localhost preview, notifications, and multi-agent workflows
-  <sub>★ 971 · TypeScript · MIT · npm · pushed 2026-10-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 965 · TypeScript · MIT · npm · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npm install -g imcodes`</sub>
 - **[Dorothy](https://github.com/Charlie85270/Dorothy)** — Open-source desktop app to orchestrate multiple AI coding agents (Claude Code, Codex, Gemini) simultaneously with automations, Kanban management, and remote control
   <sub>★ 351 · TypeScript · MIT · clone · pushed 2026-10-21 · WSL2? · macOS · Linux?</sub>
@@ -493,7 +485,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 52 · Swift · MIT · brew · pushed 2026-10-19 · macOS</sub>
   <sub>`brew tap larryxiao/openquack https://github.com/larryxiao/openquack`</sub>
 - **[Clave](https://github.com/antasphere/clave)** — Native macOS app for managing multiple Claude Code sessions in parallel, with split/grid layouts, session groups, SSH remote sessions, a git panel, conversation history, and usage analytics. Free, open-source (MIT), local-first
-  <sub>★ 51 · TypeScript · MIT · npx · pushed 2026-10-21 · macOS</sub>
+  <sub>★ 51 · TypeScript · MIT · npx · pushed 2026-10-22 · macOS</sub>
   <sub>`npx plugins add antasphere/clave`</sub>
 - **[Anima](https://github.com/btangonan/anima)** — Native macOS companion for Claude Code with per-project ASCII familiars, nim token economy, and cross-session watcher. Tauri v2 + Rust, 4MB
   <sub>★ 18 · JavaScript · MIT · clone · pushed 2026-06-16 · macOS</sub>
@@ -507,10 +499,6 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 - **[Memex](https://memex.tech/)** — Build anything in any stack, with just natural language, on your desktop
   <sub>website</sub>
   <sub>`https://memex.tech/`</sub>
-- **[Agent FM](https://github.com/agentfm-ai/agent-fm)** — Local, open-source macOS app that turns Claude Code and Codex sessions into narrated stations, surfacing progress, blockers, decisions, errors, and attention requests
-  <sub>unavailable</sub>
-- **[CCHub](https://github.com/Moresl/cchub)** — Claude Code ecosystem management platform with visual GUI for MCP server management, skill management, multi-config switching, custom slash commands, and JSON config editing. Built with Tauri v2
-  <sub>unavailable</sub>
 - **[Mantra](https://mantra.gonewx.com)** — Desktop session time machine for AI coding tools. Captures and restores full conversation state for Claude Code, Cursor, and Windsurf — like quicksave for your AI sessions. Free for macOS
   <sub>website</sub>
   <sub>`https://mantra.gonewx.com`</sub>
@@ -530,7 +518,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 ## PR &amp; Code Review Bots
 
 - **[Qodo PR Agent](https://github.com/The-PR-Agent/pr-agent)** — Open source tool for automated code reviews. Qodo was formerly known as Codium (not to be confused with Codeium with an "E")
-  <sub>★ 13.5k · Python · MIT · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 13.6k · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install "pr-agent[github]"`</sub>
 - **[Gito](https://github.com/Nayjest/Gito)** — AI code reviewer that works with any language model, locally or in GitHub Actions
   <sub>★ 450 · Python · MIT · uv · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -598,8 +586,6 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 - **[PR Triage](https://pr-triage-web.vercel.app)** — Open source PR evaluation tool that scores pull requests on six quality dimensions with diff evidence. BYOK, MIT licensed
   <sub>website</sub>
   <sub>`https://pr-triage-web.vercel.app`</sub>
-- **[prpack-action](https://github.com/Lucas2944/prpack-action)** — GitHub Action that runs prpack on every PR, uploads the packed markdown as an artifact, and posts a summary comment. MIT
-  <sub>unavailable</sub>
 
 ## CI/CD &amp; Testing Automation
 
@@ -661,7 +647,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 1.1k · Go · MIT · brew · pushed 2026-10-08 · WSL2 · macOS · Linux</sub>
   <sub>`brew install marcus/tap/sidecar`</sub>
 - **[SwarmClaw](https://github.com/swarmclawai/swarmclaw)** — Self-hosted AI runtime that orchestrates Claude Code, Codex, Gemini CLI, OpenCode, Copilot CLI, Cursor Agent, Goose, Qwen Code, and Droid with heartbeats, schedules, delegation, runtime skills, and an org chart view. Ships as a desktop app (Electron) and CLI. MIT licensed, TypeScript
-  <sub>★ 696 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 697 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g @swarmclawai/swarmclaw`</sub>
 - **[GolemBot](https://github.com/0xranx/golembot)** — Unified framework wrapping Claude Code, Cursor, OpenCode, and Codex CLIs behind a single streaming API. Adds IM adapters (Slack, Telegram, Discord, Feishu), Skill system, fleet mode, and HTTP embedding
   <sub>★ 323 · TypeScript · MIT · npm · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -670,13 +656,13 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 267 · TypeScript · MIT · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g @shepai/cli # or install globally`</sub>
 - **[LoopTroop](https://github.com/looptroop-ai/LoopTroop)** — Local GUI orchestrator for AI coding agents with multi-model planning (LLM councils), iterative retry loops, and isolated git worktrees for long-running, correctness-first multi-file work
-  <sub>★ 165 · TypeScript · MIT · winget · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 165 · TypeScript · MIT · winget · pushed 2026-10-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`winget install LoopTroopAI.LoopTroop`</sub>
 - **[osModa](https://github.com/bolivian-peru/os-moda)** — NixOS-based AI operating system with multi-agent routing (Opus agent for full system access, Sonnet agent for mobile/concise). Modular runtime swaps Claude Code and OpenClaw drivers per-agent via SIGHUP — no SSH or rebuild. 91 typed MCP tools across 9 Rust daemons, hash-chained audit ledger, atomic NixOS rollback, P2P encrypted mesh (Noise_XX + ML-KEM-768 hybrid PQ), encrypted credential store (AE
   <sub>★ 119 · Rust · Apache-2.0 · script · pushed 2026-06-24 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/bolivian-peru/os-moda/main/scripts/install.sh | sudo bash`</sub>
 - **[GreatCTO](https://github.com/avelikiy/great_cto)** — Multi-agent SDLC orchestrator running above Claude Code, Cursor, Codex, Aider, and Continue. 34 specialist agents (architect → reviewers → devops), 25 archetype overlays (fintech, healthcare, agent-product, voice-AI), and 10 compliance packs (PCI/HIPAA/EU AI Act/TCPA) auto-wired by repo detection. Two human gates per feature
-  <sub>★ 105 · JavaScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 105 · JavaScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx great-cto init`</sub>
 - **[Forge](https://github.com/LucasDuys/forge)** — Autonomous spec-driven development loop for Claude Code. Three-command pipeline (brainstorm, plan, execute) that turns ideas into shipped code with context survival, backpropagation, and Claude-on-Claude code review
   <sub>★ 56 · JavaScript · MIT · source · pushed 2026-07-15 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -702,13 +688,9 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 - **[Stoneforge](https://stoneforge.ai)** — Open-source orchestration for AI coding agents. Run multiple agents in parallel with automatic dispatch, merge, and recovery
   <sub>website</sub>
   <sub>`https://stoneforge.ai`</sub>
-- **[Kagan](https://github.com/kagan-sh/kagan)** — Open-source AI orchestration board with a VS Code extension for planning, running, and reviewing coding agent tasks
-  <sub>unavailable</sub>
 - **[MartinLoop](https://martinloop.com/)** — Open-source control plane for AI coding agents. Adds hard budget stops, verifier gates, and inspectable audit records so autonomous loops stop cleanly
   <sub>website</sub>
   <sub>`https://martinloop.com/`</sub>
-- **[CueAPI](https://github.com/cueapi/cueapi-core)** — Open-source scheduler and verification gate for AI coding agents. Cues trigger agent runs on a schedule, and each execution must return evidence (external ID, result URL, or artifact) before the cycle closes. Works with Claude Code, Codex, and Gemini CLI via SDK. Self-hosted, Apache-2.0
-  <sub>unavailable</sub>
 - **[AgentsMesh](https://agentsmesh.ai)** — Self-hostable AI Agent Workforce Platform. Remote AI workstations (AgentPods) with PTY sandbox + git worktree isolation, multi-agent collaboration via channels and pod bindings, built-in Kanban with ticket-pod binding and MR/PR integration, per-pod MCP server. Supports Claude Code, Codex CLI, Gemini CLI, Aider, OpenCode. Multi-Git (GitHub/GitLab/Gitee), multi-tenant (Org > Team > User), SSO/RBAC/a
   <sub>website</sub>
   <sub>`https://agentsmesh.ai`</sub>
@@ -719,7 +701,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 5.7k · Rust · MIT · npx · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npx tokscale@latest`</sub>
 - **[onWatch](https://github.com/onllm-dev/onWatch)** — Open-source Go CLI that tracks AI API quota usage across 7 providers (Anthropic, OpenAI Codex, GitHub Copilot, Synthetic, Z.ai, MiniMax, Antigravity). Background daemon with Material Design 3 web dashboard, ~15MB binary, &lt;50MB RAM, zero telemetry
-  <sub>★ 756 · Go · GPL-3.0 · psh · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 757 · Go · GPL-3.0 · psh · pushed 2026-10-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/onllm-dev/onwatch/main/install.ps1 | iex`</sub>
 - **[claude-lens](https://github.com/Astro-Han/claude-pace)** — Lightweight Bash + jq statusline for Claude Code with rate limit pace tracking. Compares burn rate to time remaining in 5h/7d windows, showing whether usage is ahead or behind sustainable pace. Single file, zero dependencies beyond jq
   <sub>★ 240 · Shell · MIT · source · pushed 2026-09-24 · Win? · macOS?</sub>
@@ -742,16 +724,12 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 - **[BurnRate](https://getburnrate.io)** — Local-first AI coding cost analytics. Tracks Claude Code, Cursor, Codex, Copilot, Windsurf, Cline, and Aider. Cost breakdowns, 23 optimization rules, rate limit monitoring, provider comparison, and PDF reports
   <sub>website</sub>
   <sub>`https://getburnrate.io`</sub>
-- **[ai-coding-tools-pricing](https://github.com/lunacompsia-oss/ai-coding-tools-pricing)** — Open JSON dataset of pricing for 8 AI coding tools (Copilot, Cursor, Claude Code, Windsurf, etc.). 30+ tiers, TypeScript types, JSON Schema. CC-BY-4.0. Updated monthly
-  <sub>unavailable</sub>
 - **[CodeCosts](https://codecosts.pages.dev)** — Interactive cost calculator and comparison tool for AI coding tools. Uses the ai-coding-tools-pricing dataset to help developers pick the right plan
   <sub>website</sub>
   <sub>`https://codecosts.pages.dev`</sub>
 - **[CostPilot](https://nova-labs.dev/cost-dashboard/analyze)** — Free web-based Claude Code cost analyzer. Parses JSONL usage logs to show per-session token breakdown, cost tracking, and waste detection. Client-side processing, no data uploaded
   <sub>website</sub>
   <sub>`https://nova-labs.dev/cost-dashboard/analyze`</sub>
-- **[aicost](https://github.com/dwylq/aicost)** — Universal AI coding cost analyzer CLI. Scans Claude Code, Cursor, and GitHub Copilot usage with cache-aware pricing, HTML dashboard, and cost alerting. No API key required
-  <sub>unavailable</sub>
 - **[CostGoat](https://costgoat.com)** — Privacy-first menubar app for tracking AI agent quotas (Claude Code, Codex, Kimi, Z.ai) and LLM API costs (OpenAI, OpenRouter, Anthropic, ElevenLabs) in real-time. Also covers cloud spend and SaaS subscriptions
   <sub>website</sub>
   <sub>`https://costgoat.com`</sub>
@@ -762,13 +740,13 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 5.4k · Rust · MIT · choco · pushed 2026-10-22 · Win · WSL2? · Linux</sub>
   <sub>`choco install --pre mirrord`</sub>
 - **[Open Agent](https://github.com/Th0rgal/orb)** — Self-hosted control plane for Claude Code with isolated container workspaces and real-time mission streaming
-  <sub>★ 533 · Rust · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 534 · Rust · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Th0rgal/openagent.git`</sub>
 - **[brood-box](https://github.com/stacklok/brood-box)** — Run coding agents (Claude Code, Codex, OpenCode) inside hardware-isolated microVMs with snapshot isolation and egress control
-  <sub>★ 78 · Go · Apache-2.0 · source · pushed 2026-10-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 78 · Go · Apache-2.0 · source · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/stacklok/brood-box.git`</sub>
 - **[AgentTier](https://github.com/agenttier/agenttier)** — Open-source, Kubernetes-native sandbox runtime for AI coding agents (Claude Code, LangGraph, OpenHands). Each sandbox is a Pod + PVC + default-deny NetworkPolicy with optional gVisor isolation; runs in interactive mode: code (browser terminal) or mode: agent (REST /configure + SSE-streaming /invoke). Apache-2.0
-  <sub>★ 55 · Go · Apache-2.0 · pip · pushed 2026-10-18 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 52 · Go · Apache-2.0 · pip · pushed 2026-10-18 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pip install agenttier # from PyPI`</sub>
 - **[VibeBox](https://vibebox.robcholz.com)** — Open-source, per-project micro-VM sandbox for running AI coding agents safely on macOS
   <sub>website</sub>
@@ -786,13 +764,13 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
   <sub>★ 728 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @swarmvaultai/cli`</sub>
 - **[Entroly](https://github.com/juyterman1000/entroly)** — Open-source context optimization engine that cuts AI token costs by 70-95%. Uses submodular knapsack selection and PRISM reinforcement learning to provide the exact context needed to 65+ supported AI coding agents. Features a built-in MCP server, semantic caching, and SimHash deduplication. Apache-2.0
-  <sub>★ 478 · Python · Apache-2.0 · npm · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 479 · Python · Apache-2.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g entroly`</sub>
 - **[GAAI Framework](https://github.com/digipulse-engineering/GAAI-framework)** — Drop-in governance layer for AI coding tools. Backlog-first delivery, cross-session memory, decision tracking, QA gates, and autonomous delivery daemon. Works with Claude Code, Cursor, Codex CLI, Gemini CLI, Windsurf. Markdown + YAML + bash, zero dependencies
   <sub>★ 163 · Shell · clone · pushed 2026-10-19 · macOS</sub>
   <sub>`git clone https://github.com/Fr-e-d/GAAI-framework.git`</sub>
 - **[KubeStellar Console kc-agent](https://github.com/kubestellar/console)** — MCP server that bridges AI coding agents (Claude Code, Copilot, Codex) to multi-cluster Kubernetes APIs. Enables natural language queries across clusters, workload placement, policy enforcement, and real-time observability. CNCF Sandbox project
-  <sub>★ 148 · TypeScript · Apache-2.0 · brew · pushed 2026-10-21 · Win? · WSL2 · macOS · Linux?</sub>
+  <sub>★ 148 · TypeScript · Apache-2.0 · brew · pushed 2026-10-22 · Win? · WSL2 · macOS · Linux?</sub>
   <sub>`brew tap kubestellar/tap`</sub>
 - **[Spartan AI Toolkit](https://github.com/c0x12c/ai-toolkit)** — Engineering discipline layer for AI coding agents. 67 slash commands with quality gates enforce TDD, code review, and atomic commits. Configurable rules for any stack. Works with Claude Code, Codex, Cursor, Windsurf, Copilot
   <sub>★ 109 · JavaScript · npx · pushed 2026-06-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -833,8 +811,6 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 - **[lean-ctx](https://leanctx.com)** — Open-source context runtime for AI coding agents. MCP server (optional shell hook) that compresses file reads, shell output, and codebase search to reduce token usage, often 60–99% on supported workflows. 46 tools, session caching, AST-aware compression for 18 languages, 90+ shell patterns. Apache-2.0
   <sub>website</sub>
   <sub>`https://leanctx.com`</sub>
-- **[Conduit8](https://github.com/conduit8/conduit8)** — CLI registry for discovering, installing, and managing Claude Code skills. Search 20+ curated skills by keyword or category, install directly to ~/.claude/skills/ with one command
-  <sub>unavailable</sub>
 - **[TokRepo](https://github.com/henu-wang/tokrepo)** — Cross-agent registry and CLI for discovering and installing 220+ AI assets including skills, prompts, MCP configs, and workflows
   <sub>MIT · npm · pushed 2026-05-18 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g tokrepo`</sub>
@@ -853,8 +829,6 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 - **[Zenable](https://zenable.io/)** — AI guardrails that learn your team's standards and enforce them on coding agents
   <sub>website</sub>
   <sub>`https://zenable.io/`</sub>
-- **[Nex](https://github.com/nex-crm/nex-as-a-skill)** — Organizational context and memory for AI agents. Connects email, Slack, CRM, and 100+ tools into one knowledge graph with a 60-tool MCP server and persistent memory across agent sessions
-  <sub>unavailable</sub>
 - **[ContextKit](https://nova-labs.dev/contextkit/generate)** — Free web-based generator for AI coding config files. Creates CLAUDE.md, .cursorrules, codex.md, and GEMINI.md from a single form with framework-specific rules. Client-side, no data sent to servers
   <sub>website</sub>
   <sub>`https://nova-labs.dev/contextkit/generate`</sub>
@@ -895,7 +869,7 @@ Curated by **[jamesmurdza/awesome-ai-devtools](https://github.com/jamesmurdza/aw
 ## Resources
 
 - **[AI Coding Guide (中文)](https://github.com/jnMetaCode/ai-coding-guide)** — Chinese best practices for 8 AI coding tools (Claude Code, Cursor, Copilot, Windsurf, Gemini CLI, Kiro, Aider, Trae) with copy-paste config templates and multi-tool collaboration workflows
-  <sub>★ 546 · CSS · Apache-2.0 · source · pushed 2026-10-19</sub>
+  <sub>★ 547 · CSS · Apache-2.0 · source · pushed 2026-10-19</sub>
   <sub>`git clone https://github.com/jnMetaCode/ai-coding-guide.git`</sub>
 - **[Awesome Code Docs](https://github.com/johnxie/awesome-code-docs)** — Curated deep-dive tutorials for open-source AI and developer tooling projects
   <sub>★ 66 · Python · MIT · source · pushed 2026-10-19 · WSL2 · macOS · Linux</sub>

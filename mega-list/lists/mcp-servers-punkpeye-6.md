@@ -4,7 +4,7 @@ A collection of MCP servers.
 
 Curated by **[punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-4,381 entries · 4,372 distinct repos · 59 sections
+4,350 entries · 4,341 distinct repos · 59 sections
 
 [← back to the mega list](../README.md)
 
@@ -12,7 +12,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
 
 ## Contents
 
-- [Sports](#sports) (47)
+- [Sports](#sports) (46)
 - [Spirituality &amp; Esoterica](#spirituality--esoterica) (13)
 - [Agreements &amp; Coordination](#agreements--coordination) (16)
 - [Product Management](#product-management) (18)
@@ -23,70 +23,8 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
 
 ## Sports
 
-<sub>Entries 26–47 of 47. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Entries 46–46 of 46. The rest are on this page's other parts, linked above and below.</sub>
 
-- **[NasserAlbusaidi/macrofactor-mcp](https://github.com/NasserAlbusaidi/macrofactor-mcp)** — Combines MacroFactor nutrition data with Garmin training data for recovery checks, daily briefings, weekly reports and nutrition-performance correlations
-  <sub>★ 2 · Python · MIT · uv · pushed 2026-07-10 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`uvx macrofactor-mcp`</sub>
-- **[odds-api-io/odds-api-mcp-server](https://github.com/odds-api-io/odds-api-mcp-server)** — Official Odds-API.io server: real-time and historical sports betting odds from 365+ bookmakers across 34 sports, with events, value bets, arbitrage and dropping odds
-  <sub>★ 2 · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npm install -g odds-api-mcp-server`</sub>
-- **[partymola/fitbit-mcp](https://github.com/partymola/fitbit-mcp)** — Fitbit Web API access with a local SQLite cache and trend analysis for heart rate, activity, exercises, sleep, weight, SpO2 and HRV
-  <sub>★ 2 · Python · GPL-3.0 · uv · pushed 2026-08-31 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`uvx fitbit-mcp`</sub>
-- **[rajdeepmondaldotcom/whoop-mcp-server](https://github.com/rajdeepmondaldotcom/whoop-mcp-server)** — WHOOP recovery, sleep, strain and workouts with trend analysis, lag-aware correlations, training load and full-history export, plus a demo mode
-  <sub>★ 2 · Python · MIT · npx · pushed 2026-06-12 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
-  <sub>`npx @modelcontextprotocol/inspector whoop-mcp-server serve`</sub>
-- **[turnnoblindeye/wellness-project-mcp](https://github.com/turnnoblindeye/wellness-project-mcp)** — Read workouts, sleep, nutrition and recovery data from Apple Health, Fitbit, Oura and Google Health Connect, with inline chart widgets
-  <sub>★ 2 · Python · MIT · source · pushed 2026-10-17 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/turnnoblindeye/wellness-project-mcp.git`</sub>
-- **[wmmg101/kilter-mcp](https://github.com/wmmg101/kilter-mcp)** — Unofficial, read-only access to your Kilter Board climbing logbook: sessions, sends, projects, grade pyramid, progression and wall-angle comparison
-  <sub>★ 2 · Python · MIT · uv · pushed 2026-10-16 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`uvx kilter-mcp --check`</sub>
-- **[partymola/google-health-mcp](https://github.com/partymola/google-health-mcp)** — Google Health API with a local SQLite cache, offline mode and trend analysis for heart rate, activity, sleep, weight, SpO2, HRV, ECG and irregular rhythms
-  <sub>★ 1 · Python · GPL-3.0 · uv · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`uvx google-health-mcp --version`</sub>
-- **[partymola/withings-mcp](https://github.com/partymola/withings-mcp)** — Withings Health API with a local SQLite cache and trend analysis for body composition, sleep, activity, workouts and ECG
-  <sub>★ 1 · Python · GPL-3.0 · uv · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`uvx withings-mcp`</sub>
-- **[proplineapi/propline-mcp](https://github.com/proplineapi/propline-mcp)** — Live sports betting odds, cross-book +EV and graded prop resolution against box scores for MLB, NBA, NHL, NFL, soccer and UFC
-  <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx -y propline-mcp`</sub>
-- **[rajanshxrma/cadence](https://github.com/rajanshxrma/cadence)** — Local-first health context from WHOOP and Apple Health: sleep, recovery, workouts and personal baselines in a local SQLite store
-  <sub>★ 1 · Python · MIT · pip · pushed 2026-08-06 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pip install cadence[narrate]`</sub>
-- **[XWeaponX7/rundida-mcp](https://github.com/XWeaponX7/rundida-mcp)** — Running calculators: pace, time and distance, race time predictions (Riegel formula), heart rate training zones (Karvonen method) and marathon event data
-  <sub>★ 1 · JavaScript · MIT · source · pushed 2026-07-11 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/XWeaponX7/rundida-mcp.git`</sub>
-- **[persistmcp/aim](https://github.com/persistmcp/aim)** — Workout memory: logs sets, weights, estimated 1RM, per-muscle volume and recovery so the next session is planned from your training history
-  <sub>Python · MIT · source · pushed 2026-10-03 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/persistmcp/aim.git`</sub>
-- **[bartokulus/openfoot-mcp](https://github.com/bartokulus/openfoot-mcp)** — Football fixtures, results, standings, lineups, live timelines, shot-level xG and match context (form, Elo, rest, head-to-head) via the OpenFoot API
-  <sub>JavaScript · MIT · npx · pushed 2026-09-07 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx openfoot-mcp`</sub>
-- **[evanatpizzarobot/draftcall-mcp](https://github.com/evanatpizzarobot/draftcall-mcp)** — NFL fantasy football: head-to-head player comparisons, PPR, half-PPR and standard rankings, positional scarcity and bye-week conflicts, with cited sources
-  <sub>JavaScript · MIT · docker · pushed 2026-08-25 · WSL2 · Linux · Docker</sub>
-  <sub>`docker run --rm -i draftcall-mcp`</sub>
-- **[iFan6oy/flash-props-mcp](https://github.com/iFan6oy/flash-props-mcp)** — Live sports betting player props for NBA, MLB, NFL, NHL, NCAA and soccer, unified from sportsbooks with American odds, pre-game and live
-  <sub>JavaScript · MIT · source · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/iFan6oy/flash-props-mcp.git`</sub>
-- **[livetennisapi/livetennisapi-mcp](https://github.com/livetennisapi/livetennisapi-mcp)** — Real-time ATP, WTA, Challenger and ITF tennis data: live scores, players, fixtures, model win probability and match-winner market prices
-  <sub>unavailable</sub>
-- **[partymola/bosch-flow-mcp](https://github.com/partymola/bosch-flow-mcp)** — Read-only Bosch eBike Flow (Smart System) data: battery health and charge cycles, components and firmware, live charge level and per-ride activity
-  <sub>Python · GPL-3.0 · uv · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`uvx bosch-flow-mcp`</sub>
-- **[Propertyscout001/puntersedge-mcp](https://github.com/Propertyscout001/puntersedge-mcp)** — Live Australian racing and sports odds from 14 AU bookmakers for AI assistants: next races with every bookmaker's price per runner, best price, settled results and market movers, each price stamped with its age
-  <sub>TypeScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx -y github:Propertyscout001/puntersedge-mcp`</sub>
-- **[slaat/garmin-connect-workouts-mcp](https://github.com/slaat/garmin-connect-workouts-mcp)** — Create structured Garmin Connect workouts from natural language: pace, HR, power and cadence targets, repeat blocks, swim strokes and pool lengths
-  <sub>TypeScript · MIT · source · pushed 2026-09-02 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/slaat/garmin-connect-workouts-mcp.git`</sub>
-- **[TheRundown/data-mcp](https://github.com/TheRundown/data-mcp)** — Read-only TheRundown data for sports, markets, affiliates, events, futures and open main-line odds
-  <sub>JavaScript · source · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/TheRundown/data-mcp.git`</sub>
-- **[Trainzilla/tzilla-mcp](https://github.com/Trainzilla/tzilla-mcp)** — Trainzilla for personal trainers: manage clients, workout and diet plans, check-ins, habits, sessions and billing (hosted OAuth endpoint or local)
-  <sub>TypeScript · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/Trainzilla/tzilla-mcp.git`</sub>
 - **[Zsadigzade/trainbud](https://github.com/Zsadigzade/trainbud)** — Local analysis of Garmin Connect activities, sleep, recovery, body composition, stress and VO2 max against 28-day baselines, with memory for goals and races
   <sub>TypeScript · MIT · npm · pushed 2026-10-19 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm install -g trainbud`</sub>
@@ -94,7 +32,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
 ## Spirituality &amp; Esoterica
 
 - **[openfate-ai/bazi-mcp](https://github.com/openfate-ai/openfate-mcp)** — Deterministic Bazi (Four Pillars) calculations with True Solar Time, lunar/solar conversion, Da Yun luck cycles, branch interactions and reverse Bazi lookup
-  <sub>★ 159 · TypeScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 160 · TypeScript · MIT · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @openfate/bazi-mcp`</sub>
 - **[nmhaaa3218/TuViMCP](https://github.com/nmhaaa3218/TuViMCP)** — Vietnamese Tử Vi horoscope calculation: traditional pattern evaluations, transit charts, auspicious date checking and chart rendering
   <sub>★ 7 · Python · Apache-2.0 · pip · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -121,7 +59,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>TypeScript · MIT · npx · pushed 2026-09-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx freebazi-mcp`</sub>
 - **[asterwise/asterwise-mcp](https://github.com/asterwise/asterwise-mcp)** — Vedic and Western astrology: natal and divisional charts, Vimshottari dasha, panchanga, muhurta, compatibility matching, KP, Lal Kitab, numerology and tarot
-  <sub>Python · MIT · source · pushed 2026-10-20 · WSL2 · Linux · Docker</sub>
+  <sub>Python · MIT · source · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/asterwise/asterwise-mcp.git`</sub>
 - **[dangamsoft/cafe-mcp](https://github.com/dangamsoft/cafe-mcp)** — Korean Saju and Chinese BaZi (Four Pillars) computed by the CAFE engine: natal chart, Five Elements, chart structure (格局), yin-yang and climate, favorable-element candidates, and a manseryeok calendar with exact solar-term times. Structured output. Remote: https://mcp.24plus.ai.kr/mcp, or npx -y @dangamsoft/cafe-mcp
   <sub>JavaScript · Apache-2.0 · source · pushed 2026-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -145,7 +83,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 5 · TypeScript · MIT · npx · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add tribeunal/mcp-server # the entry skill alone`</sub>
 - **[CNSLabs/agreements-api-sdk](https://github.com/CNSLabs/agreements-api-sdk)** — Define, validate, deploy and operate machine-readable agreements, with EIP-712 permit preparation, signed participant inputs, state reads and input history
-  <sub>★ 2 · TypeScript · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · TypeScript · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/CNSLabs/agreements-api-sdk.git`</sub>
 - **[cogdepot/mcp-server](https://github.com/cogdepot/mcp-server)** — Access cogDepot, an anonymous broker where agents publish capability listings, negotiate terms and form escrow-backed deals with two-sided reputation
   <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -163,7 +101,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>JavaScript · Apache-2.0 · source · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/decision-anchor/mcp-server.git`</sub>
 - **[ianewsfr-a11y/ergonia](https://github.com/ianewsfr-a11y/ergonia)** — Marketplace of verifiable tasks for AI agents: publish independently checkable tasks, submit work and build reputation, with actions in a hash-chained register
-  <sub>TypeScript · AGPL-3.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>TypeScript · AGPL-3.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ianewsfr-a11y/ergonia.git`</sub>
 - **[inamprotocol/inam-protocol](https://github.com/inamprotocol/inam-protocol/tree/main/mcp)** — Look up AI agents' evidence-based reputation and record two-party signed work receipts, with operator-authorized verification and a Merkle transparency log
   <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-18</sub>
@@ -172,7 +110,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>TypeScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y frantic-mcp`</sub>
 - **[lanekingsbery/open-task-relay-public](https://github.com/lanekingsbery/open-task-relay-public)** — Open Task Relay: bounded public-good tasks that AI agents can discover, complete, submit and independently verify
-  <sub>TypeScript · MIT · clone · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>TypeScript · MIT · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/lanekingsbery/open-task-relay-public.git`</sub>
 - **[t3ratech/market-pulse-mcp](https://github.com/t3ratech/market-pulse-mcp)** — Evidence-graded index of where AI agents can earn: agent-work lanes graded A/B/C/F from recorded payouts, should-I-bid advice, a hash-chained evidence ledger and live agent job listings. Read-only, free without a key
   <sub>JavaScript · Apache-2.0 · npx · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -244,7 +182,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
 ## Environment &amp; Nature
 
 - **[Zhonghao1995/agentic-swmm-workflow](https://github.com/Zhonghao1995/agentic-swmm-workflow)** — EPA SWMM stormwater modelling workflow: model building, simulation runs, calibration, QGIS integration, climate scenarios and uncertainty analysis
-  <sub>★ 30 · Python · MIT · npx · pushed 2026-09-26 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 30 · Python · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add Zhonghao1995/agentic-swmm-workflow`</sub>
 - **[Zhonghao1995/Agentic-MIKE-Plus](https://github.com/Zhonghao1995/Agentic-MIKE-Plus)** — Headless DHI MIKE+ urban-water modelling: model inspection, parameter editing, simulation runs with QA status, .res1d results reading and plotting
   <sub>★ 8 · Python · MIT · npx · pushed 2026-08-16 · Win · WSL2? · macOS · Linux</sub>

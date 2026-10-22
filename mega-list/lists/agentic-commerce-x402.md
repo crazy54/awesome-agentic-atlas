@@ -4,24 +4,24 @@ Curated resources for the agentic commerce ecosystem
 
 Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-Systems/awesome-agentic-commerce)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-114 entries · 40 distinct repos · 8 sections
+112 entries · 38 distinct repos · 8 sections
 
 [← back to the mega list](../README.md)
 
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/x402-foundation/x402"><img src="https://raw.githubusercontent.com/x402-foundation/x402/main/static/flow.png" width="260"></a> | <a href="https://github.com/x402-foundation/x402/issues"><img src="https://raw.githubusercontent.com/x402-foundation/x402/main/static/flow.png" width="260"></a> | <a href="https://github.com/solana-foundation/pay"><img src="https://raw.githubusercontent.com/solana-foundation/pay/main/docs/assets/banner-main-light.png" width="260"></a> |
-| **[x402 Foundation GitHub repo](https://github.com/x402-foundation/x402)**<br>★ 6.7k | **[Issues](https://github.com/x402-foundation/x402/issues)**<br>★ 6.7k | **[Solana Foundation Pay (x402/MPP CLI and MCP)](https://github.com/solana-foundation/pay)**<br>★ 1.8k |
+| **[x402 Foundation GitHub repo](https://github.com/x402-foundation/x402)**<br>★ 6.8k | **[Issues](https://github.com/x402-foundation/x402/issues)**<br>★ 6.8k | **[Solana Foundation Pay (x402/MPP CLI and MCP)](https://github.com/solana-foundation/pay)**<br>★ 1.8k |
 | <a href="https://github.com/google-agentic-commerce/a2a-x402"><img src="https://opengraph.githubassets.com/1/google-agentic-commerce/a2a-x402" width="260"></a> | <a href="https://github.com/x402-rs/x402-rs"><img src="https://opengraph.githubassets.com/1/x402-rs/x402-rs" width="260"></a> | <a href="https://github.com/dabit3/x402-starter-kit"><img src="https://raw.githubusercontent.com/dabit3/x402-starter-kit/main/header.jpg" width="260"></a> |
-| **[A2A x402 Extension](https://github.com/google-agentic-commerce/a2a-x402)**<br>★ 565 | **[x402-rs (Rust Facilitator &amp; SDK)](https://github.com/x402-rs/x402-rs)**<br>★ 292 | **[x402 Starter Kit – by Nader Dabit](https://github.com/dabit3/x402-starter-kit)**<br>★ 181 |
+| **[A2A x402 Extension](https://github.com/google-agentic-commerce/a2a-x402)**<br>★ 566 | **[x402-rs (Rust Facilitator &amp; SDK)](https://github.com/x402-rs/x402-rs)**<br>★ 292 | **[x402 Starter Kit – by Nader Dabit](https://github.com/dabit3/x402-starter-kit)**<br>★ 181 |
 
 ## Contents
 
 - [Official Resources](#official-resources) (13)
 - [Open Source &amp; SDKs](#open-source--sdks) (37)
 - [Standards and EIPs](#standards-and-eips) (11)
-- [Example Apps](#example-apps) (16)
-- [Ecosystem](#ecosystem) (11)
+- [Example Apps](#example-apps) (15)
+- [Ecosystem](#ecosystem) (10)
 - [Facilitators &amp; Networks](#facilitators--networks) (8)
 - [Tutorials &amp; Guides](#tutorials--guides) (16)
 - [Security &amp; Ops](#security--ops) (2)
@@ -29,10 +29,10 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 ## Official Resources
 
 - **[x402 Foundation GitHub repo](https://github.com/x402-foundation/x402)** — canonical spec, SDKs, issues, proposals, and reference materials
-  <sub>★ 6.7k · TypeScript · Apache-2.0 · pip · pushed 2026-10-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6.8k · TypeScript · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install x402`</sub>
 - **[Issues](https://github.com/x402-foundation/x402/issues)** — A payments protocol for the internet. Built on HTTP.
-  <sub>★ 6.7k · TypeScript · Apache-2.0 · pip · pushed 2026-10-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6.8k · TypeScript · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install x402`</sub>
 - **[Coinbase x402 development fork](https://github.com/coinbase/x402)** — A payments protocol for the internet. Built on HTTP.
   <sub>★ 172 · TypeScript · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -71,7 +71,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 ## Open Source &amp; SDKs
 
 - **[Solana Foundation Pay (x402/MPP CLI and MCP)](https://github.com/solana-foundation/pay)** — Local payment layer for handling x402 payment challenges with wallet-authorized stablecoin signing
-  <sub>★ 1.8k · Rust · MIT · npm · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 1.8k · Rust · MIT · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @solana/pay`</sub>
 - **[x402-rs (Rust Facilitator &amp; SDK)](https://github.com/x402-rs/x402-rs)** — x402 payments in Rust: verify, settle, and monitor payments over HTTP 402 flows
   <sub>★ 292 · Rust · Apache-2.0 · docker · pushed 2026-07-13 · WSL2 · Linux · Docker</sub>
@@ -134,19 +134,19 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
   <sub>★ 1 · JavaScript · source · pushed 2026-05-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/umangbuilds/moltpe-agent-payments.git`</sub>
 - **[x402 TypeScript SDKs](https://github.com/x402-foundation/x402/tree/main/typescript)** — A payments protocol for the internet. Built on HTTP.
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-15</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/typescript`</sub>
 - **[x402 Python SDK](https://github.com/x402-foundation/x402/tree/main/python/x402)** — Official Python client/server, facilitator, and MCP helpers
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-15</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/python/x402`</sub>
 - **[x402 Python SDK (PyPI)](https://pypi.org/project/x402/)** — Official Python package for client, server, facilitator, and framework integrations
   <sub>website</sub>
   <sub>`https://pypi.org/project/x402/`</sub>
 - **[x402 Go SDK](https://github.com/x402-foundation/x402/tree/main/go)** — Official Go client/server, facilitator, and MCP package
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-15</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/go`</sub>
 - **[x402 Java SDK](https://github.com/x402-foundation/x402/tree/main/java)** — Official Java implementation for JVM services
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-15</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/java`</sub>
 - **[x402-analytics (NPM)](https://www.npmjs.com/package/x402-analytics)** — Analytics wrapper for x402 payments with monitoring and insights
   <sub>website</sub>
@@ -185,7 +185,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 ## Standards and EIPs
 
 - **[A2A x402 Extension](https://github.com/google-agentic-commerce/a2a-x402)** — specification, libraries, and examples for adding on-chain x402 payments to Agent-to-Agent services
-  <sub>★ 565 · Python · Apache-2.0 · source · pushed 2026-08-04 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 566 · Python · Apache-2.0 · source · pushed 2026-08-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/google-agentic-commerce/a2a-x402.git`</sub>
 - **[ERC-3009 Forwarding](https://github.com/TheGreatAxios/eip3009-forwarder)** — forwarding contract extending meta-transactions with EIP-721 signatures to any ERC-20 on any network
   <sub>★ 5 · Solidity · MIT · source · pushed 2026-01-23</sub>
@@ -257,7 +257,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
   <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-10-21</sub>
   <sub>`git clone https://github.com/coinbase/x402.git && cd x402/examples`</sub>
 - **[Cloudflare Agents x402 Example](https://github.com/cloudflare/agents/tree/main/examples/x402)** — Official example showing how to gate Cloudflare Agents endpoints with x402 payments
-  <sub>TypeScript · MIT · in-repo · pushed 2026-10-21</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/cloudflare/agents.git && cd agents/examples/x402`</sub>
 - **[x402 Analytics Examples](https://github.com/RemsLabs/x402-analytics-examples)** — Practical examples demonstrating x402-analytics usage with buyer and seller implementations
   <sub>TypeScript · MIT · source · pushed 2025-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -265,13 +265,11 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 - **[Vercel x402 AI Starter](https://vercel.com/templates/ai/x402-ai-starter)** — Full-stack Next.js template combining x402, MCP, AI SDK, AI Gateway, and Coinbase CDP wallets
   <sub>website</sub>
   <sub>`https://vercel.com/templates/ai/x402-ai-starter`</sub>
-- **[agent-marketplace-proxy](https://github.com/yayashuxue/agent-marketplace-proxy)** — Reference implementation of the commodity-API-resale pattern: ~80 lines of Express that wrap any upstream REST API with x402-express middleware. Demoed with DataForSEO Google SERP at $0.001 USDC/call on Base. Live
-  <sub>unavailable</sub>
 
 ## Ecosystem
 
 - **[gold-402](https://github.com/Haustorium12/gold-402)** — Curated x402 directory by 24K Labs. 300+ handpicked entries across facilitators, SDKs, MCP servers, APIs, and tools, with editorial writeups and verified badges for production-confirmed services. Backed by a 29,000+ entry full catalog sourced from CDP Bazaar and Agentic.market
-  <sub>★ 12 · Python · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 12 · Python · source · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Haustorium12/gold-402.git`</sub>
 - **[x402Scan](https://x402scan.com/)** — Analytics and overview of the x402 ecosystem
   <sub>website</sub>
@@ -279,8 +277,6 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 - **[AgentZone](https://agentzone.fun/)** — Unified explorer for trustless AI agents, combining ERC-8004 identity, x402 payment history, reputation signals, and live service status across Base and Arbitrum
   <sub>website</sub>
   <sub>`https://agentzone.fun/`</sub>
-- **[AgentStatus](https://github.com/EvanRMora/agentstatus)** — Heartbeat and cron monitoring API for AI agents with x402 micropayments, MCP tools, and multi-channel alerts
-  <sub>unavailable</sub>
 - **[Pyrimid](https://pyrimid.ai/)** — Agent-to-agent commerce infrastructure for x402 and ERC-8004, with MCP-native service discovery and onchain payment splitting through PyrimidRouter. (Proof)
   <sub>website</sub>
   <sub>`https://pyrimid.ai/`</sub>

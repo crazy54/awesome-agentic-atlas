@@ -2,22 +2,20 @@
 
 The Model Context Protocol ecosystem: reference and third-party servers, inspectors, gateways, transports, and the sibling agent-to-agent protocols.
 
-**4,959 projects** · 4,142 with stars to rank by · 2,335,607 combined stars
+**4,893 projects** · 4,142 with stars to rank by · 2,337,512 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers)
 
-✨ **1 new to the atlas** in the 10/22/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers&new=1).
+✨ **4 new to the atlas** in the 10/22/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers&new=1).
 
 Page **5** of 6, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp-servers.md) · [2](mcp-servers-2.md) · [3](mcp-servers-3.md) · [4](mcp-servers-4.md) · **5** · [6](mcp-servers-6.md) — [continue on page 6 →](mcp-servers-6.md)
 
 ## Ranked by stars (4,142)
 
-<sub>Projects 3,321–4,128 of 4,142. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 3,323–4,130 of 4,142. The rest are on this page's other parts, linked above and below.</sub>
 
 | # | Project | ★ | Lists | Plugs into | Runs on | Install / Run | What it does |
 |--:|---|--:|--:|---|---|---|---|
-| 3321 | **[Jobicy/remote-jobs-mcp-server](https://github.com/Jobicy/remote-jobs-mcp-server)**<br><sub>Jobicy/remote-jobs-mcp-server</sub> | 2 | 1 | <sub>Claude Code, Claude / Anthropic, MCP, Cursor, Cline / Roo</sub> | <sub>WSL2 · Linux · Docker</sub> | `git clone https://github.com/Jobicy/remote-jobs-mcp-server.git` | Search, filter and retrieve live remote job listings from Jobicy |
-| 3322 | **[JoeyBrar/agentseal-mcp](https://github.com/JoeyBrar/agentseal-mcp)**<br><sub>JoeyBrar/agentseal-mcp</sub> | 2 | 2 | <sub>MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `pip install agentseal-sdk` | Action logs for AI agents. Records every action in a SHA-256 hash chain, for verifiable audit trails. Install via npx agentseal-mcp |
 | 3323 | **[jstibal/openterms-mcp](https://github.com/jstibal/openterms-mcp)**<br><sub>jstibal/openterms-mcp</sub> | 2 | 1 | <sub>MCP</sub> | <sub>WSL2 · Linux · Docker</sub> | `git clone https://github.com/jstibal/openterms-mcp.git` | Ed25519-signed consent receipts and a policy engine for agents: spending caps, action allowlists, escalation thresholds and JWKS-backed provider verification |
 | 3324 | **[juergenkoller-software/distill-mcp](https://github.com/juergenkoller-software/distill-mcp)**<br><sub>juergenkoller-software/distill-mcp</sub> | 2 | 1 | <sub>Claude Code, Claude / Anthropic, MCP, Codex / OpenAI, Gemini / Google, Cursor, Local / Ollama</sub> | <sub>macOS · Linux</sub> | `git clone https://github.com/juergenkoller-software/distill-mcp.git` | Rename files with descriptive names via Distill, which analyzes PDF, OCR, Office, email and media content, with folder monitoring |
 | 3325 | **[keel-trade/keel-trade](https://github.com/keel-trade/keel-trade)**<br><sub>keel-trade/keel-trade</sub> | 2 | 1 | <sub>Claude / Anthropic, MCP</sub> | <sub>Win · WSL2? · macOS · Linux</sub> | `uv tool install keel-trade` | Build, backtest and automate Hyperliquid trading strategies: typed strategy composition, deterministic backtests on historical data and opt-in live execution |
@@ -824,6 +822,8 @@ Page **5** of 6, because this list is longer than the 512 KB GitHub will render 
 | 4126 | **[x402node/x402-mcp](https://github.com/x402node/x402-mcp)**<br><sub>x402node/x402-mcp</sub> | 1 | 1 | <sub>Claude / Anthropic, MCP, Cursor</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/x402node/x402-mcp` | Exposes x402-paid APIs discovered from Coinbase Bazaar, handling USDC micropayments on Base |
 | 4127 | **[XavierFabregat/spotify-mcp](https://github.com/XavierFabregat/spotify-mcp)**<br><sub>XavierFabregat/spotify-mcp</sub> | 1 | 1 | <sub>Claude / Anthropic, MCP, Cursor</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx -y @xavifabregat/spotify-mcp init` | Conversational Spotify control: play by description and manage the queue, devices, playlists and library, with a guided setup wizard |
 | 4128 | **[xcsimctl](https://github.com/nzrsky/simctl-mcp-server)**<br><sub>nzrsky/simctl-mcp-server</sub> | 1 | 1 | <sub>MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `uvx simctl-mcp-server` | Manage Xcode simulators |
+| 4129 | **[XJTLUmedia/AI-HR-Management-Toolkit](https://github.com/XJTLUmedia/AI-HR-Management-Toolkit)**<br><sub>XJTLUmedia/AI-HR-Management-Toolkit</sub> | 1 | 1 | <sub>MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npm install -g mcp-ai-hr-management-toolkit` | Resume parser and applicant tracking system: parse resumes into JSON, extract skills, score and rank candidates, and manage jobs, interviews and offers |
+| 4130 | **[XWeaponX7/rundida-mcp](https://github.com/XWeaponX7/rundida-mcp)**<br><sub>XWeaponX7/rundida-mcp</sub> | 1 | 1 | <sub>Claude / Anthropic, MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/XWeaponX7/rundida-mcp.git` | Running calculators: pace, time and distance, race time predictions (Riegel formula), heart rate training zones (Karvonen method) and marathon event data |
 
 Page **5** of 6, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp-servers.md) · [2](mcp-servers-2.md) · [3](mcp-servers-3.md) · [4](mcp-servers-4.md) · **5** · [6](mcp-servers-6.md) — [continue on page 6 →](mcp-servers-6.md)
 

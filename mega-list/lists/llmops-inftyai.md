@@ -4,14 +4,14 @@
 
 Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-245 entries · 243 distinct repos · 26 sections
+243 entries · 241 distinct repos · 26 sections
 
 [← back to the mega list](../README.md)
 
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/ollama/ollama"><img src="https://opengraph.githubassets.com/1/ollama/ollama" width="260"></a> | <a href="https://github.com/ggml-org/llama.cpp"><img src="https://github.com/user-attachments/assets/88726b48-1713-48aa-a525-95a02e78afc4" width="260"></a> | <a href="https://github.com/vllm-project/vllm"><img src="https://opengraph.githubassets.com/1/vllm-project/vllm" width="260"></a> |
-| **[Ollama](https://github.com/ollama/ollama)**<br>★ 184.2k | **[llama.cpp](https://github.com/ggml-org/llama.cpp)**<br>★ 131.9k | **[vLLM](https://github.com/vllm-project/vllm)**<br>★ 94.9k |
+| **[Ollama](https://github.com/ollama/ollama)**<br>★ 184.3k | **[llama.cpp](https://github.com/ggml-org/llama.cpp)**<br>★ 132k | **[vLLM](https://github.com/vllm-project/vllm)**<br>★ 95.1k |
 | <a href="https://github.com/sgl-project/sglang"><img src="https://raw.githubusercontent.com/sgl-project/sgl-learning-materials/refs/heads/main/slides/adoption.png" width="260"></a> | <a href="https://github.com/tinygrad/tinygrad"><img src="https://opengraph.githubassets.com/1/tinygrad/tinygrad" width="260"></a> | <a href="https://github.com/modular/modular"><img src="https://opengraph.githubassets.com/1/modular/modular" width="260"></a> |
 | **[SGLang](https://github.com/sgl-project/sglang)**<br>★ 37.6k | **[TinyGrad](https://github.com/tinygrad/tinygrad)**<br>★ 33.8k | **[Modular](https://github.com/modular/modular)**<br>★ 30k |
 
@@ -23,12 +23,12 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 - [Simulator](#simulator) (1)
 - [LLM Router](#llm-router) (15)
 - [AI Gateway](#ai-gateway) (9)
-- [Agent Framework](#agent-framework) (20)
+- [Agent Framework](#agent-framework) (19)
 - [Tool](#tool) (12)
 - [Output](#output) (4)
 - [AI Terminal](#ai-terminal) (8)
 - [AI Agent](#ai-agent) (6)
-- [Code Agent](#code-agent) (5)
+- [Code Agent](#code-agent) (6)
 - [Workflow](#workflow) (17)
 - [Evolutionary Framework](#evolutionary-framework) (7)
 - [Evolve Agent](#evolve-agent) (2)
@@ -40,26 +40,26 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 - [RLHF](#rlhf) (2)
 - [Chatbot](#chatbot) (14)
 - [Sandbox](#sandbox) (8)
-- [Application Framework](#application-framework) (14)
+- [Application Framework](#application-framework) (12)
 - [Benchmark](#benchmark) (14)
 - [Observation](#observation) (10)
 
 ## Inference Engine
 
 - **[Ollama](https://github.com/ollama/ollama)** — Get up and running with Llama 3.3, DeepSeek-R1, Phi-4, Gemma 3, and other large language models
-  <sub>★ 184.2k · Go · MIT · psh · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 184.3k · Go · MIT · psh · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://ollama.com/install.ps1 | iex`</sub>
 - **[llama.cpp](https://github.com/ggml-org/llama.cpp)** — LLM inference in C/C++
-  <sub>★ 131.9k · C++ · MIT · psh · pushed 2026-10-21 · Win · macOS</sub>
+  <sub>★ 132k · C++ · MIT · psh · pushed 2026-10-22 · Win · macOS</sub>
   <sub>`irm https://llama.app/install.ps1 | iex`</sub>
 - **[vLLM](https://github.com/vllm-project/vllm)** — A high-throughput and memory-efficient inference and serving engine for LLMs
-  <sub>★ 94.9k · Python · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 95.1k · Python · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/vllm-project/vllm.git`</sub>
 - **[SGLang](https://github.com/sgl-project/sglang)** — SGLang is a fast serving framework for large language models and vision language models
   <sub>★ 37.6k · Python · Apache-2.0 · source · pushed 2026-10-22 · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/sgl-project/sglang.git`</sub>
 - **[TinyGrad](https://github.com/tinygrad/tinygrad)** — You like pytorch? You like micrograd? You love tinygrad! ❤️
-  <sub>★ 33.8k · Python · MIT · clone · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 33.8k · Python · MIT · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/tinygrad/tinygrad.git`</sub>
 - **[MLC LLM](https://github.com/mlc-ai/mlc-llm)** — Universal LLM Deployment Engine with ML Compilation
   <sub>★ 23.3k · Python · Apache-2.0 · source · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -68,13 +68,13 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 19.3k · TypeScript · Apache-2.0 · clone · pushed 2026-10-11 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mlc-ai/relax`</sub>
 - **[transformers.js](https://github.com/huggingface/transformers.js)** — State-of-the-art Machine Learning for the web. Run 🤗 Transformers directly in your browser, with no need for a server!
-  <sub>★ 16.4k · JavaScript · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 16.4k · JavaScript · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/huggingface/transformers.js.git`</sub>
 - **[OpenLLM](https://github.com/bentoml/OpenLLM)** — Run any open-source LLMs, such as DeepSeek and Llama, as OpenAI compatible API endpoint in the cloud
   <sub>★ 12.6k · Python · Apache-2.0 · pip · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install openllm # or pip3 install openllm`</sub>
 - **[Triton Inference Server](https://github.com/triton-inference-server/server)** — The Triton Inference Server provides an optimized cloud and edge inferencing solution
-  <sub>★ 11.1k · Python · BSD-3-Clause · source · pushed 2026-10-21 · WSL2 · Linux · Docker</sub>
+  <sub>★ 11.1k · Python · BSD-3-Clause · source · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/triton-inference-server/server.git`</sub>
 - **[OpenVINO](https://github.com/openvinotoolkit/openvino)** — OpenVINO™ is an open source toolkit for optimizing and deploying AI inference
   <sub>★ 11k · C++ · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -86,7 +86,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 10.7k · Python · MIT · pip · pushed 2024-09-07 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`pip install git+https://github.com/bigscience-workshop/petals`</sub>
 - **[Xinference](https://github.com/xorbitsai/inference)** — Replace OpenAI GPT with another LLM in your app by changing a single line of code. Xinference gives you the freedom to use any LLM you need. With Xinference, you're empowered to run inference with any open-source language models, speech recognition models, and multimodal models, whether in the cloud, on-premises, or even on your laptop
-  <sub>★ 9.6k · Python · Apache-2.0 · psh · pushed 2026-10-21 · Win · WSL2? · macOS? · Linux · Docker</sub>
+  <sub>★ 9.6k · Python · Apache-2.0 · psh · pushed 2026-10-22 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/xorbitsai/inference/main/scripts/install.ps1 | iex`</sub>
 - **[ipex-llm](https://github.com/intel/ipex-llm)** — Accelerate local LLM inference and finetuning (LLaMA, Mistral, ChatGLM, Qwen, DeepSeek, Mixtral, Gemma, Phi, MiniCPM, Qwen-VL, MiniCPM-V, etc.) on Intel XPU (e.g., local PC with iGPU and NPU, discrete GPU such as Arc, Flex and Max); seamlessly integrate with llama.cpp, Ollama, HuggingFace, LangChain, LlamaIndex, vLLM, DeepSpeed, Axolotl, etc
   <sub>★ 8.8k · Python · Apache-2.0 · source · pushed 2026-01-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -95,10 +95,10 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 8.4k · Rust · docker · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`docker run --gpus all --network host --rm -it nvcr.io/nvidia/ai-dynamo/vllm-runtime:1.5.1`</sub>
 - **[LMDeploy](https://github.com/InternLM/lmdeploy)** — LMDeploy is a toolkit for compressing, deploying, and serving LLMs
-  <sub>★ 8.1k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux</sub>
+  <sub>★ 8.1k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux</sub>
   <sub>`pip install lmdeploy`</sub>
 - **[zml](https://github.com/zml/zml)** — Any model. Any hardware. Zero compromise. Built with @ziglang / @openxla / MLIR / @bazelbuild
-  <sub>★ 4.2k · Zig · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4.2k · Zig · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/zml/zml.git`</sub>
 - **[LoRAX](https://github.com/predibase/lorax)** — Multi-LoRA inference server that scales to 1000s of fine-tuned LLMs
   <sub>★ 3.8k · Python · Apache-2.0 · pip · pushed 2026-05-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -128,28 +128,28 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## Inference Platform
 
 - **[Modular](https://github.com/modular/modular)** — The Modular Platform (includes MAX &amp; Mojo)
-  <sub>★ 30k · Mojo · source · pushed 2026-10-21</sub>
+  <sub>★ 30k · Mojo · source · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/modular/modular.git`</sub>
 - **[BentoML](https://github.com/bentoml/BentoML)** — The easiest way to serve AI apps and models - Build Model Inference APIs, Job queues, LLM apps, Multi-model pipelines, and more!
   <sub>★ 8.9k · Python · Apache-2.0 · pip · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install -U bentoml`</sub>
 - **[Mooncake](https://github.com/kvcache-ai/Mooncake)** — Mooncake is the serving platform for Kimi, a leading LLM service provided by Moonshot AI
-  <sub>★ 6.9k · C++ · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux</sub>
+  <sub>★ 6.9k · C++ · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux</sub>
   <sub>`pip install mooncake-transfer-engine`</sub>
 - **[Kserve](https://github.com/kserve/kserve)** — Standardized Serverless ML Inference Platform on Kubernetes
   <sub>★ 6.1k · Go · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kserve/kserve.git`</sub>
 - **[AIBrix](https://github.com/vllm-project/aibrix)** — Cost-efficient and pluggable Infrastructure components for GenAI inference
-  <sub>★ 5.2k · Go · Apache-2.0 · clone · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5.2k · Go · Apache-2.0 · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/vllm-project/aibrix.git`</sub>
 - **[llm-d](https://github.com/llm-d/llm-d)** — llm-d is a Kubernetes-native high-performance distributed LLM inference framework
-  <sub>★ 4.9k · Python · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5k · Python · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/llm-d/llm-d.git`</sub>
 - **[beta9](https://github.com/beam-cloud/beta9)** — Ultrafast serverless GPU inference, sandboxes, and background jobs
   <sub>★ 1.8k · Go · AGPL-3.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install beam-client`</sub>
 - **[KubeAI](https://github.com/kubeai-project/kubeai)** — AI Inference Operator for Kubernetes. The easiest way to serve ML models in production. Supports VLMs, LLMs, embeddings, and speech-to-text
-  <sub>★ 1.3k · Go · Apache-2.0 · helm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.3k · Go · Apache-2.0 · helm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`helm install kubeai kubeai/kubeai --wait --timeout 10m`</sub>
 - **[OME](https://github.com/ome-projects/ome)** — OME is a Kubernetes operator for enterprise-grade management and serving of Large Language Models (LLMs)
   <sub>★ 518 · Go · Apache-2.0 · helm · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
@@ -170,10 +170,10 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 12.1k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install lmcache`</sub>
 - **[kvcached](https://github.com/ovg-project/kvcached)** — Virtualized Elastic KV Cache for Dynamic GPU Sharing and Beyond
-  <sub>★ 1.9k · Python · Apache-2.0 · pip · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1.9k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install kvcached --no-build-isolation`</sub>
 - **[Checkpoint Engine](https://github.com/MoonshotAI/checkpoint-engine)** — Checkpoint-engine is a simple middleware to update model weights in LLM inference engines
-  <sub>★ 1k · Python · MIT · pip · pushed 2026-09-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1k · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install checkpoint-engine`</sub>
 - **[KV Cache Store](https://kvcachestore.com/)** — Hosted KV-cache artifact registry plus an open-source Rust CLI. Precompute, verify, quantize, and share attention states across RAG and long-context prompts to cut prefill cost and latency. (CLI source)
   <sub>website</sub>
@@ -182,19 +182,19 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## Simulator
 
 - **[Vidur](https://github.com/microsoft/vidur)** — A large-scale simulation framework for LLM inference
-  <sub>★ 705 · Python · MIT · source · pushed 2026-08-24 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 706 · Python · MIT · source · pushed 2026-08-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/microsoft/vidur.git`</sub>
 
 ## LLM Router
 
 - **[LiteLLM](https://github.com/BerriAI/litellm)** — Python SDK, Proxy Server (LLM Gateway) to call 100+ LLM APIs in OpenAI format - [Bedrock, Azure, OpenAI, VertexAI, Cohere, Anthropic, Sagemaker, HuggingFace, Replicate, Groq]
-  <sub>★ 61.8k · Python · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 61.8k · Python · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install 'litellm[proxy]'`</sub>
 - **[AI Gateway](https://github.com/Portkey-AI/gateway)** — A blazing fast AI Gateway with integrated guardrails. Route to 200+ LLMs, 50+ AI Guardrails with 1 fast &amp; friendly API
-  <sub>★ 13.2k · TypeScript · MIT · npx · pushed 2026-05-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 13.3k · TypeScript · MIT · npx · pushed 2026-05-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @portkey-ai/gateway`</sub>
 - **[bifrost](https://github.com/maximhq/bifrost)** — Fastest LLM gateway (50x faster than LiteLLM) with adaptive load balancer, cluster mode, guardrails, 1000+ models support &amp; &lt;100 µs overhead at 5k RPS
-  <sub>★ 9k · Go · Apache-2.0 · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 9k · Go · Apache-2.0 · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @maximhq/bifrost`</sub>
 - **[vLLM Semantic Router](https://github.com/vllm-project/semantic-router)** — Intelligent Mixture-of-Models Router for Efficient LLM Inference
   <sub>★ 6.2k · Go · Apache-2.0 · script · pushed 2026-10-22 · WSL2 · macOS · Linux</sub>
@@ -206,19 +206,19 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 3k · Python · MIT · pip · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llmrouter-lib`</sub>
 - **[Otari](https://github.com/mozilla-ai/otari)** — Open-source, OpenAI-compatible LLM gateway you run yourself. One endpoint for 40+ providers, with virtual keys, budgets, and usage tracking
-  <sub>★ 719 · Python · Apache-2.0 · brew · pushed 2026-10-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 726 · Python · Apache-2.0 · brew · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`brew install mozilla-ai/tap/otari`</sub>
 - **[Ferro Labs AI Gateway](https://github.com/ferro-labs/ai-gateway)** — One API for 25+ LLMs, OpenAI, Anthropic, Bedrock, Azure. Caching, guardrails &amp; cost controls. Go-native LiteLLM &amp; Kong AI Gateway alternative
   <sub>★ 272 · Go · Apache-2.0 · scoop · pushed 2026-10-19 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`scoop bucket add ferrolabs https://github.com/ferro-labs/homebrew-tap scoop install ferrogw`</sub>
 - **[Doubleword Control Layer](https://github.com/doublewordai/control-layer)** — The world’s fastest AI model gateway (450x less overhead than LiteLLM). Unified access to LLMs across endpoints (openAI, self-hosted, etc.) behind a single authentication layer - with API key generation, user management, request logging, and more
-  <sub>★ 96 · Rust · Apache-2.0 · source · pushed 2026-10-21 · WSL2 · Linux · Docker</sub>
+  <sub>★ 96 · Rust · Apache-2.0 · source · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/doublewordai/control-layer.git`</sub>
 - **[Hebo AI Gateway](https://github.com/8monkey-ai/hebo-gateway/)** — OpenAI-compatible /chat/completions, /embeddings &amp; /models endpoints
   <sub>★ 27 · TypeScript · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/8monkey-ai/hebo-gateway/.git`</sub>
 - **[Ollama Herd](https://github.com/geeks-accelerator/ollama-herd)** — Routes LLM, image, speech-to-text and embedding requests across a fleet of machines you own. Auto-discovers nodes over mDNS and scores each on memory fit, thermal state, queue depth and already-loaded models. OpenAI-, Ollama- and Anthropic-compatible
-  <sub>★ 27 · Python · MIT · pip · pushed 2026-10-19 · macOS</sub>
+  <sub>★ 27 · Python · MIT · pip · pushed 2026-10-22 · macOS</sub>
   <sub>`pip install ollama-herd`</sub>
 - **[llm-swarm-router](https://github.com/matthewdcage/llm-swarm-router)** — Self-hosted mesh router for local LLM backends — OpenAI /v1 + Anthropic Messages on :11400, mDNS LAN peers. Complements cloud gateways with local LAN mesh for Cursor, Claude Code, Codex, and Honcho
   <sub>★ 26 · Python · MIT · brew · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
@@ -227,7 +227,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 20 · Go · AGPL-3.0 · psh · pushed 2026-10-11 · Win · WSL2 · macOS · Linux</sub>
   <sub>`irm https://swobu.com/install.ps1 | iex`</sub>
 - **[OpenPaths](https://github.com/lee101/openpaths)** — Open-source, OpenAI-compatible model router/AI gateway routing chat, image, video, music, speech, transcription, embeddings and reasoning models to the lowest-latency provider via a unified API
-  <sub>★ 3 · TypeScript · clone · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3 · TypeScript · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/lee101/openpaths.git`</sub>
 - **[llm-cache-router](https://github.com/svalench/llm-cache-router)** — A lightweight, async-first Python library combining semantic caching, multi-provider routing (OpenAI, Anthropic, Gemini, Ollama, MiniMax, Qwen) and cost tracking. Cuts LLM spend 30-70% via vector-similarity cache with in-memory/Redis/Qdrant backends
   <sub>★ 2 · Python · MIT · pip · pushed 2026-10-18 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -239,28 +239,28 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 44.3k · Lua · Apache-2.0 · source · pushed 2026-10-19 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/Kong/kong.git`</sub>
 - **[APISIX](https://github.com/apache/apisix)** — The Cloud-Native API Gateway and AI Gateway with extensive plugin system and AI capabilities
-  <sub>★ 17.2k · Lua · Apache-2.0 · script · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 17.2k · Lua · Apache-2.0 · script · pushed 2026-10-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`curl -sL https://run.api7.ai/apisix/quickstart | sh`</sub>
 - **[Higress](https://github.com/higress-group/higress)** — AI Gateway | AI Native API Gateway
-  <sub>★ 9.6k · Go · Apache-2.0 · docker · pushed 2026-10-21 · WSL2 · Linux · Docker</sub>
+  <sub>★ 9.6k · Go · Apache-2.0 · docker · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -d --rm --name higress-ai -v ${PWD}:/data \`</sub>
 - **[kgateway](https://github.com/kgateway-dev/kgateway)** — The Cloud-Native API Gateway and AI Gateway
   <sub>★ 5.7k · Go · Apache-2.0 · source · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/kgateway-dev/kgateway.git`</sub>
 - **[agentgateway](https://github.com/agentgateway/agentgateway)** — Next Generation Agentic Proxy for AI Agents and MCP servers
-  <sub>★ 5.5k · Rust · Apache-2.0 · source · pushed 2026-10-21 · WSL2? · macOS · Linux</sub>
+  <sub>★ 5.5k · Rust · Apache-2.0 · source · pushed 2026-10-22 · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/agentgateway/agentgateway.git`</sub>
 - **[Envoy AI Gateway](https://github.com/theagentrouter/agent-router)** — Envoy AI Gateway is an open source project for using Envoy Gateway to handle request traffic from application clients to Generative AI services
-  <sub>★ 2.3k · Go · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2.3k · Go · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/envoyproxy/ai-gateway.git`</sub>
 - **[gateway-api-inference-extension](https://github.com/kubernetes-sigs/gateway-api-inference-extension)** — Gateway API Inference Extension
-  <sub>★ 791 · Go · Apache-2.0 · source · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 792 · Go · Apache-2.0 · source · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kubernetes-sigs/gateway-api-inference-extension.git`</sub>
 - **[Gram](https://github.com/speakeasy-api/gram)** — Open-source AI control plane for connecting agents to MCPs with role-scoped access, policy enforcement, threat detection, and observability
   <sub>★ 274 · Go · AGPL-3.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/speakeasy-api/gram.git`</sub>
 - **[TrustGate](https://github.com/NeuralTrust/TrustGate)** — Self-hosted Go Agent Gateway (Apache-2.0) — OpenAI-compatible LLM proxy + MCP aggregation with per-consumer auth/audit
-  <sub>★ 15 · Go · Apache-2.0 · script · pushed 2026-10-21 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 16 · Go · Apache-2.0 · script · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/NeuralTrust/TrustGate/main/scripts/install.sh | bash`</sub>
 
 ## Agent Framework
@@ -275,28 +275,28 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 61.5k · Python · CC-BY-4.0 · pip · pushed 2026-10-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U "autogen-agentchat" "autogen-ext[openai]"`</sub>
 - **[crewAI](https://github.com/crewAIInc/crewAI)** — Framework for orchestrating role-playing, autonomous AI agents. By fostering collaborative intelligence, CrewAI empowers agents to work together seamlessly, tackling complex tasks
-  <sub>★ 60k · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 60k · Python · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add crewaiinc/skills`</sub>
 - **[Flowise](https://github.com/FlowiseAI/Flowise)** — Build AI Agents, Visually
   <sub>★ 55.5k · TypeScript · npm · pushed 2026-08-13 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g flowise`</sub>
 - **[LangGraph](https://github.com/langchain-ai/langgraph)** — Build resilient language agents as graphs
-  <sub>★ 43.7k · Python · MIT · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 43.7k · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U langgraph`</sub>
 - **[Agno](https://github.com/agno-agi/agno)** — Open-source framework for building multi-agent systems with memory, knowledge and reasoning
-  <sub>★ 42.9k · Python · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 42.9k · Python · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/agno-agi/agno.git`</sub>
 - **[OpenAI Agents SDK](https://github.com/openai/openai-agents-python)** — A lightweight, powerful framework for multi-agent workflows
-  <sub>★ 30.2k · Python · MIT · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 30.2k · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install openai-agents`</sub>
 - **[Semantic Kernel](https://github.com/microsoft/semantic-kernel)** — Integrate cutting-edge LLM technology quickly and easily into your apps
-  <sub>★ 28.7k · C# · MIT · pip · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 28.7k · C# · MIT · pip · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install semantic-kernel`</sub>
 - **[Swarm](https://github.com/openai/swarm)** — Educational framework exploring ergonomic, lightweight multi-agent orchestration. Managed by OpenAI Solution team
   <sub>★ 22.1k · Python · MIT · pip · pushed 2026-04-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install git+ssh://git@github.com/openai/swarm.git`</sub>
 - **[Agent Development Kit (ADK)](https://github.com/google/adk-python)** — An open-source, code-first Python toolkit for building, evaluating, and deploying sophisticated AI agents with flexibility and control
-  <sub>★ 21.9k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 22k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install git+https://github.com/google/adk-python.git@main`</sub>
 - **[PydanticAI](https://github.com/pydantic/pydantic-ai)** — GenAI Agent Framework, the Pydantic way
   <sub>★ 20.8k · Python · MIT · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -305,7 +305,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 20.3k · TypeScript · script · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://kortix.com/install | bash`</sub>
 - **[CAMEL](https://github.com/camel-ai/camel)** — CAMEL: The first and the best multi-agent framework. Finding the Scaling Law of Agents
-  <sub>★ 17.9k · Python · Apache-2.0 · pip · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 18k · Python · Apache-2.0 · pip · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install camel-ai`</sub>
 - **[Qwen-Agent](https://github.com/QwenLM/Qwen-Agent)** — Agent framework and applications built upon Qwen>=3.0, featuring Function Calling, MCP, Code Interpreter, RAG, Chrome extension, etc
   <sub>★ 17.2k · Python · Apache-2.0 · pip · pushed 2026-03-04 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -320,15 +320,13 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 2.6k · Go · Apache-2.0 · script · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://agentfield.ai/install.sh | bash`</sub>
 - **[CUGA](https://github.com/cuga-project/cuga-agent)** — CUGA is an open-source generalist agent harness for the enterprise, supporting complex task execution on web and APIs, OpenAPI/MCP integrations, composable architecture, reasoning modes, and policy-aware features
-  <sub>★ 1k · Python · Apache-2.0 · clone · pushed 2026-10-21 · WSL2 · Linux · Docker</sub>
+  <sub>★ 1k · Python · Apache-2.0 · clone · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/cuga-project/cuga-agent.git`</sub>
-- **[Agent Shadow Brain](https://github.com/theihtisham/agent-shadow-brain)** — Self-evolving AI coding intelligence with infinite memory (TurboQuant), genetic algorithm evolution, predictive bug detection, PageRank knowledge graphs, and swarm intelligence. The world's first autonomous coding brain
-  <sub>unavailable</sub>
 
 ## Tool
 
 - **[Browser Use](https://github.com/browser-use/browser-use)** — Make websites accessible for AI agents
-  <sub>★ 118.8k · Python · MIT · source · pushed 2026-10-20 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 118.9k · Python · MIT · source · pushed 2026-10-20 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/browser-use/browser-use.git`</sub>
 - **[Mem0](https://github.com/mem0ai/mem0)** — The Memory layer for AI Agents
   <sub>★ 67.6k · Python · Apache-2.0 · npm · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -337,7 +335,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 32.1k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install graphiti-core`</sub>
 - **[Beads](https://github.com/gastownhall/beads)** — Beads - A memory upgrade for your coding agent
-  <sub>★ 28.1k · Go · MIT · npm · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 28.1k · Go · MIT · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @beads/bd # Node.js users`</sub>
 - **[Webcmd](https://github.com/agentrhq/webcmd)** — Self-learning browser infrastructure for AI agents that compiles a site's navigation into deterministic per-site CLI commands
   <sub>★ 2.7k · TypeScript · Apache-2.0 · npm · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -382,13 +380,13 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## AI Terminal
 
 - **[OpenCode](https://github.com/anomalyco/opencode)** — The AI coding agent built for the terminal
-  <sub>★ 219.7k · TypeScript · MIT · npm · pushed 2026-10-22 · macOS · Linux</sub>
+  <sub>★ 220k · TypeScript · MIT · npm · pushed 2026-10-22 · macOS · Linux</sub>
   <sub>`npm i -g @opencode/cli@latest # or bun/pnpm/yarn`</sub>
 - **[Codex](https://github.com/openai/codex)** — Lightweight coding agent that runs in your terminal
-  <sub>★ 130.3k · Rust · Apache-2.0 · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 130.4k · Rust · Apache-2.0 · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @openai/codex`</sub>
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — An open-source AI agent that brings the power of Gemini directly into your terminal
-  <sub>★ 107.5k · TypeScript · Apache-2.0 · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 107.5k · TypeScript · Apache-2.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @google/gemini-cli`</sub>
 - **[aider](https://github.com/Aider-AI/aider)** — aider is AI pair programming in your terminal
   <sub>★ 49.7k · Python · Apache-2.0 · source · pushed 2026-05-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -421,10 +419,10 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 10.1k · Python · MIT · source · pushed 2026-09-23 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/microsoft/magentic-ui.git`</sub>
 - **[Agent QA](https://github.com/vostride/agent-qa)** — Open-source self-improving QA agent for software teams. A test harness with memory. Write tests in natural language for web and mobile. agent-qa learns from every run, adapts to UI changes, and catches regressions before you ship
-  <sub>★ 914 · TypeScript · npx · pushed 2026-08-03 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 897 · TypeScript · npx · pushed 2026-08-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx agent-qa init`</sub>
 - **[Tholos](https://github.com/mertkayacs/tholos)** — Local AI assistants that run on a schedule and share tables, notes and a task board, with rules that allow, ask about or deny each action. Works with llama.cpp, Ollama and OpenAI-compatible servers
-  <sub>★ 1 · Python · Apache-2.0 · docker · pushed 2026-10-17 · WSL2 · Linux · Docker</sub>
+  <sub>★ 1 · Python · Apache-2.0 · docker · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -d --name tholos -p 127.0.0.1:7070:7070 -v tholos:/data \`</sub>
 
 ## Code Agent
@@ -441,17 +439,20 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 - **[Open SWE](https://github.com/langchain-ai/open-swe)** — An Open-Source Asynchronous Coding Agent
   <sub>★ 11.1k · Python · MIT · source · pushed 2026-10-22 · WSL2? · macOS · Linux?</sub>
   <sub>`git clone https://github.com/langchain-ai/open-swe.git`</sub>
+- **[Orbi](https://github.com/orbi-build/orbi)** — Open-source (AGPL-3.0), self-hostable coding agent for GitHub: label an Issue ai-ready and it implements the change, runs tests, opens a PR, and merges once a separate AI review and CI pass
+  <sub>★ 225 · Python · AGPL-3.0 · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>`uv tool install orbi-cli`</sub>
 - **[Kolega Code](https://github.com/kolega-ai/kolega-code)** — Terminal coding agent where the model writes its own multi-agent workflows (Gigacode); provider-agnostic with MCP support and journaled resume
-  <sub>★ 21 · Python · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 21 · Python · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install kolega-code`</sub>
 
 ## Workflow
 
 - **[Dify](https://github.com/langgenius/dify)** — Production-ready platform for agentic workflow development
-  <sub>★ 159.2k · Python · source · pushed 2026-10-21 · WSL2 · Linux · Docker</sub>
+  <sub>★ 159.2k · Python · source · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/langgenius/dify.git`</sub>
 - **[LangChain](https://github.com/langchain-ai/langchain)** — Build context-aware reasoning applications
-  <sub>★ 148.2k · Python · MIT · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 148.3k · Python · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/langchain-ai/langchain.git`</sub>
 - **[LlamaIndex](https://github.com/run-llama/llama_index)** — LlamaIndex is the leading framework for building LLM-powered agents over your data
   <sub>★ 52.6k · Python · MIT · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -460,13 +461,13 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 44.1k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install ray`</sub>
 - **[FastGPT](https://github.com/labring/FastGPT)** — FastGPT is a knowledge-based platform built on the LLMs, offers a comprehensive suite of out-of-the-box capabilities such as data processing, RAG retrieval, and visual AI workflow orchestration, letting you easily develop and deploy complex question-answering systems without the need for extensive setup or configuration
-  <sub>★ 29.9k · TypeScript · source · pushed 2026-10-21 · WSL2 · Linux · Docker</sub>
+  <sub>★ 29.9k · TypeScript · source · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/labring/FastGPT.git`</sub>
 - **[MLflow](https://github.com/mlflow/mlflow)** — Open source platform for the machine learning lifecycle
   <sub>★ 28.5k · Python · Apache-2.0 · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx mlflow server`</sub>
 - **[Haystack](https://github.com/deepset-ai/haystack)** — AI orchestration framework to build customizable, production-ready LLM applications. Connect components (models, vector DBs, file converters) to pipelines or agents that can interact with your data. With advanced retrieval methods, it's best suited for building RAG, question answering, semantic search or conversational agent chatbots
-  <sub>★ 26.8k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 26.8k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install haystack-ai`</sub>
 - **[Kubeflow](https://github.com/kubeflow/kubeflow)** — Machine Learning Toolkit for Kubernetes
   <sub>★ 15.9k · Apache-2.0 · source · pushed 2026-09-30</sub>
@@ -475,10 +476,10 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 10.3k · Python · Apache-2.0 · pip · pushed 2026-10-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install metaflow`</sub>
 - **[Flyte](https://github.com/flyteorg/flyte)** — Scalable and flexible workflow orchestration platform that seamlessly unifies data, ML and analytics stacks
-  <sub>★ 7.7k · Go · Apache-2.0 · source · pushed 2026-10-21 · WSL2 · Linux · Docker</sub>
+  <sub>★ 7.7k · Go · Apache-2.0 · source · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/flyteorg/flyte.git`</sub>
 - **[ZenML](https://github.com/zenml-io/zenml)** — ZenML 🙏: The bridge between ML and Ops. https://zenml.io
-  <sub>★ 5.6k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5.6k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install "zenml[server]" # pip install zenml will install a slimmer client`</sub>
 - **[Seldon-Core](https://github.com/SeldonIO/seldon-core)** — An MLOps framework to package, deploy, monitor and manage thousands of production machine learning models
   <sub>★ 4.8k · Go · source · pushed 2026-03-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -487,10 +488,10 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 3.7k · MDX · Apache-2.0 · source · pushed 2026-10-21</sub>
   <sub>`git clone https://github.com/polyaxon/polyaxon.git`</sub>
 - **[Inference](https://github.com/roboflow/inference)** — Turn any computer or edge device into a command center for your computer vision projects
-  <sub>★ 2.5k · Python · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 2.5k · Python · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install inference-cli`</sub>
 - **[Heym](https://github.com/heymrun/heym)** — Source-available, self-hosted visual platform for building, running, evaluating, and observing AI workflows with agents, RAG, and MCP
-  <sub>★ 1.3k · Python · clone · pushed 2026-10-21 · Win? · WSL2 · Linux · Docker</sub>
+  <sub>★ 1.3k · Python · clone · pushed 2026-10-22 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/heymrun/heym.git`</sub>
 - **[Nika](https://github.com/supernovae-st/nika)** — Intent-as-code AI workflow engine in a single Rust binary — reviewable YAML DAGs statically checked (schema, permits, honest cost floor) before any token is spent, tamper-evident traces after
   <sub>★ 95 · Rust · AGPL-3.0 · brew · pushed 2026-10-21 · Win? · WSL2 · macOS</sub>
@@ -502,7 +503,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## Evolutionary Framework
 
 - **[OpenEvolve](https://github.com/algorithmicsuperintelligence/openevolve)** — Open-source implementation of AlphaEvolve
-  <sub>★ 7.6k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 7.6k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install openevolve`</sub>
 - **[AI-Researcher](https://github.com/HKUDS/AI-Researcher)** — [NeurIPS2025] "AI-Researcher: Autonomous Scientific Innovation" -- A production-ready version: https://novix.science/chat
   <sub>★ 5.8k · Python · clone · pushed 2025-10-16 · WSL2 · Linux · Docker</sub>
@@ -526,7 +527,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## Evolve Agent
 
 - **[EvoAgentX](https://github.com/ANative-Lab/EvoAgentX)** — EvoAgentX: Building a Self-Evolving Ecosystem of AI Agents
-  <sub>★ 3.4k · Python · pip · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.4k · Python · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install evoagentx`</sub>
 - **[AgentEvolver](https://github.com/modelscope/AgentEvolver)** — AgentEvolver: Towards Efficient Self-Evolving Agent System
   <sub>★ 1.6k · Python · Apache-2.0 · source · pushed 2026-04-01 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -535,7 +536,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## RAG
 
 - **[RAGFlow](https://github.com/infiniflow/ragflow)** — RAGFlow is an open-source RAG (Retrieval-Augmented Generation) engine based on deep document understanding
-  <sub>★ 92.6k · Go · Apache-2.0 · clone · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 92.7k · Go · Apache-2.0 · clone · pushed 2026-10-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/infiniflow/ragflow.git`</sub>
 - **[LightRAG](https://github.com/HKUDS/LightRAG)** — "LightRAG: Simple and Fast Retrieval-Augmented Generation"
   <sub>★ 40.3k · Python · MIT · uv · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -559,19 +560,19 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## Database
 
 - **[Hindsight](https://github.com/vectorize-io/hindsight)** — Hindsight: Agent Memory That Learns
-  <sub>★ 52.4k · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 52.6k · Python · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx @vectorize-io/hindsight-coding-agents install all # every detected agent, wired natively`</sub>
 - **[milvus](https://github.com/milvus-io/milvus)** — Milvus is a high-performance, cloud-native vector database built for scalable vector ANN search
-  <sub>★ 46.5k · Go · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 46.4k · Go · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/milvus-io/milvus.git`</sub>
 - **[Faiss](https://github.com/facebookresearch/faiss)** — A library for efficient similarity search and clustering of dense vectors
-  <sub>★ 41.2k · C++ · MIT · source · pushed 2026-10-21</sub>
+  <sub>★ 41.2k · C++ · MIT · source · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/facebookresearch/faiss.git`</sub>
 - **[chroma](https://github.com/chroma-core/chroma)** — the AI-native open-source embedding database
-  <sub>★ 29.5k · Rust · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 29.6k · Rust · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install chromadb # python client`</sub>
 - **[weaviate](https://github.com/weaviate/weaviate)** — Weaviate is an open-source vector database that stores both objects and vectors, allowing for the combination of vector search with structured filtering with the fault tolerance and scalability of a cloud-native database​
-  <sub>★ 16.9k · Go · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 16.9k · Go · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add weaviate/agent-skills`</sub>
 - **[deeplake](https://github.com/activeloopai/deeplake)** — Database for AI. Store Vectors, Images, Texts, Videos, etc. Use with LLMs/LangChain. Store, query, version, &amp; visualize any AI data. Stream data in real-time to PyTorch/TensorFlow
   <sub>★ 9.3k · C++ · Apache-2.0 · pip · pushed 2026-05-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -583,13 +584,13 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 78.4k · Python · Apache-2.0 · winget · pushed 2026-10-22 · Win · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`winget install --id UnslothAI.Unsloth -e`</sub>
 - **[LLaMa-Factory](https://github.com/hiyouga/LlamaFactory)** — Unified Efficient Fine-Tuning of 100+ LLMs &amp; VLMs (ACL 2024)
-  <sub>★ 75.6k · Python · Apache-2.0 · docker · pushed 2026-10-21 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 75.7k · Python · Apache-2.0 · docker · pushed 2026-10-21 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`docker run -it --rm --gpus=all --ipc=host hiyouga/llamafactory:latest`</sub>
 - **[Swift](https://github.com/modelscope/ms-swift)** — Use PEFT or Full-parameter to finetune 450+ LLMs (Qwen2.5, InternLM3, GLM4, Llama3.3, Mistral, Yi1.5, Baichuan2, DeepSeek-R1, ...) and 150+ MLLMs (Qwen2.5-VL, Qwen2-Audio, Llama3.2-Vision, Llava, InternVL2.5, MiniCPM-V-2.6, GLM4v, Xcomposer2.5, Yi-VL, DeepSeek-VL2, Phi3.5-Vision, GOT-OCR2, ...)
-  <sub>★ 15.9k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 15.9k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install ms-swift -U`</sub>
 - **[Axolotl](https://github.com/axolotl-ai-cloud/axolotl)** — Go ahead and axolotl questions
-  <sub>★ 12.6k · Python · Apache-2.0 · docker · pushed 2026-10-21 · WSL2 · Linux · Docker</sub>
+  <sub>★ 12.6k · Python · Apache-2.0 · docker · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`docker run --gpus '"all"' --ipc=host --rm -it axolotlai/axolotl:main-latest`</sub>
 - **[LMFlow](https://github.com/OptimalScale/LMFlow)** — An Extensible Toolkit for Finetuning and Inference of Large Foundation Models. Large Models for All
   <sub>★ 8.5k · Python · Apache-2.0 · pip · pushed 2026-08-10 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -598,7 +599,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 5.8k · Python · BSD-3-Clause · pip · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install torchtune`</sub>
 - **[MLX-VLM](https://github.com/Blaizzy/mlx-vlm)** — MLX-VLM is a package for inference and fine-tuning of Vision Language Models (VLMs) on your Mac using MLX
-  <sub>★ 5.6k · Python · MIT · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5.6k · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U mlx-vlm`</sub>
 - **[Transformer Lab](https://github.com/transformerlab/transformerlab-app)** — Open Source Application for Advanced LLM Engineering: interact, train, fine-tune, and evaluate large language models on your own computer
   <sub>★ 5.2k · Python · AGPL-3.0 · pip · pushed 2026-10-21 · Win · WSL2 · macOS · Linux</sub>
@@ -610,13 +611,13 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 2.5k · Python · Apache-2.0 · clone · pushed 2024-08-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/young-geng/EasyLM.git`</sub>
 - **[Overmind](https://github.com/overmind-core/overmind)** — Turn production traces into specialised models you own: curate datasets from traces, evaluate, LoRA fine-tune open-weight models and serve them behind an OpenAI-compatible API
-  <sub>★ 674 · Python · AGPL-3.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 675 · Python · AGPL-3.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install "overmind[tracing]"`</sub>
 
 ## Framework
 
 - **[ColossalAI](https://github.com/hpcaitech/ColossalAI)** — Making large AI models cheaper, faster and more accessible
-  <sub>★ 41.4k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 41.4k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install colossalai`</sub>
 - **[MLX](https://github.com/ml-explore/mlx)** — MLX: An array framework for Apple silicon
   <sub>★ 28.9k · C++ · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -634,22 +635,22 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 2.4k · Python · Apache-2.0 · source · pushed 2026-07-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/apple/axlearn.git`</sub>
 - **[DLRover](https://github.com/intelligent-machine-learning/dlrover)** — DLRover: An Automatic Distributed Deep Learning System
-  <sub>★ 1.7k · Python · pip · pushed 2026-10-15 · Win? · WSL2? · macOS? · Linux</sub>
+  <sub>★ 1.7k · Python · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux</sub>
   <sub>`pip install dlrover[k8s, torch]`</sub>
 
 ## Agentic RL
 
 - **[verl](https://github.com/verl-project/verl)** — verl: Volcano Engine Reinforcement Learning for LLMs
-  <sub>★ 24k · Python · Apache-2.0 · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 24k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install verl@git+…@<sha>`</sub>
 - **[slime](https://github.com/THUDM/slime)** — slime is an LLM post-training framework for RL Scaling
-  <sub>★ 8.7k · Python · Apache-2.0 · source · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 8.7k · Python · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/THUDM/slime.git`</sub>
 - **[rLLM](https://github.com/rllm-org/rllm)** — Democratizing Reinforcement Learning for LLMs
   <sub>★ 5.9k · Python · Apache-2.0 · source · pushed 2026-10-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/rllm-org/rllm.git`</sub>
 - **[AReaL](https://github.com/areal-project/AReaL)** — Lightning-Fast RL for LLM Reasoning and Agents. Made Simple &amp; Flexible
-  <sub>★ 5.9k · Python · Apache-2.0 · clone · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5.9k · Python · Apache-2.0 · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/areal-project/AReaL`</sub>
 
 ## RLHF
@@ -664,7 +665,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## Chatbot
 
 - **[Open WebUI](https://github.com/open-webui/open-webui)** — User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
-  <sub>★ 156.4k · Python · pip · pushed 2026-10-21 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 156.4k · Python · pip · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`pip install open-webui`</sub>
 - **[NextChat](https://github.com/ChatGPTNextWeb/NextChat)** — Light and Fast AI Assistant. Support: Web | iOS | MacOS | Android | Linux | Windows
   <sub>★ 88.9k · TypeScript · MIT · source · pushed 2026-10-20 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -679,10 +680,10 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 57.6k · Python · Apache-2.0 · brew · pushed 2026-10-20 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`brew install private-gpt`</sub>
 - **[Cherry Studio](https://github.com/CherryHQ/cherry-studio)** — Cherry Studio is a desktop client that supports for multiple LLM providers. Support deepseek-r1
-  <sub>★ 52.8k · TypeScript · AGPL-3.0 · source · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 52.9k · TypeScript · AGPL-3.0 · source · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/CherryHQ/cherry-studio.git`</sub>
 - **[Jan](https://github.com/janhq/jan)** — Jan is an open source alternative to ChatGPT that runs 100% offline on your computer
-  <sub>★ 45k · Rust · clone · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 45k · Rust · clone · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/janhq/jan`</sub>
 - **[Gradio](https://github.com/gradio-app/gradio)** — Build and share delightful machine learning apps, all in Python. 🌟 Star to support our work!
   <sub>★ 43.8k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -700,7 +701,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 21k · TypeScript · npm · pushed 2026-07-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g vercel`</sub>
 - **[LLM](https://github.com/simonw/llm)** — Access large language models from the command-line
-  <sub>★ 12.6k · Python · Apache-2.0 · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 12.7k · Python · Apache-2.0 · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install llm`</sub>
 - **[5ire](https://github.com/nanbingxyz/5ire)** — 5ire is a cross-platform desktop AI assistant, MCP client. It compatible with major service providers, supports local knowledge base and tools via model context protocol servers
   <sub>★ 5.4k · TypeScript · source · pushed 2026-09-14 · Win · WSL2? · macOS · Linux</sub>
@@ -712,10 +713,10 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 71.5k · pip · pushed 2026-07-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install daytona`</sub>
 - **[OpenSandbox](https://github.com/opensandbox-group/OpenSandbox)** — Secure, Fast, and Extensible Sandbox runtime for AI agents
-  <sub>★ 16k · Python · Apache-2.0 · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 16k · Python · Apache-2.0 · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx opensandbox-server init-config ~/.sandbox.toml --example docker`</sub>
 - **[CubeSandbox](https://github.com/TencentCloud/CubeSandbox)** — Instant, Concurrent, Secure &amp; Lightweight Sandbox for AI Agents
-  <sub>★ 13k · Go · source · pushed 2026-10-21 · WSL2? · Linux</sub>
+  <sub>★ 13k · Go · source · pushed 2026-10-22 · WSL2? · Linux</sub>
   <sub>`git clone https://github.com/TencentCloud/CubeSandbox.git`</sub>
 - **[microsandbox](https://github.com/superradcompany/microsandbox)** — Easy, fast, programmable and local-first microVM runtime and library
   <sub>★ 8.8k · Rust · Apache-2.0 · source · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
@@ -724,10 +725,10 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 3k · Rust · MIT · source · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/microsoft/mxc.git`</sub>
 - **[BoxLite](https://github.com/boxlite-ai/boxlite)** — The micro-VM for AI agents — light enough to embed on your laptop, elastic enough to power an agentic cloud
-  <sub>★ 2.6k · TypeScript · Apache-2.0 · cargo · pushed 2026-10-21 · Win? · WSL2 · macOS · Linux</sub>
+  <sub>★ 2.6k · TypeScript · Apache-2.0 · cargo · pushed 2026-10-22 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`cargo install boxlite-cli`</sub>
 - **[SPACE](https://github.com/perplexityai/SPACE)** — Sandboxed Platform for Agentic Code Execution: pluggable-runtime sandboxes for running agent and user code in isolation
-  <sub>★ 1.8k · Rust · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.9k · Rust · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/perplexityai/SPACE.git`</sub>
 - **[E2B](https://github.com/e2b-dev/E2B)** — Secure open source cloud runtime for AI apps &amp; AI agents
   <sub>source</sub>
@@ -739,7 +740,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 40.4k · Python · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @posthog/wizard mcp add`</sub>
 - **[Langfuse](https://github.com/langfuse/langfuse)** — Open source LLM engineering platform: LLM Observability, metrics, evals, prompt management, playground, datasets. Integrates with OpenTelemetry, Langchain, OpenAI SDK, LiteLLM, and more. 🍊YC W23
-  <sub>★ 36.1k · TypeScript · pip · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 36.2k · TypeScript · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install langfuse openai`</sub>
 - **[DeepEval](https://github.com/confident-ai/deepeval)** — The LLM Evaluation Framework
   <sub>★ 19k · Python · Apache-2.0 · pip · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -751,7 +752,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 8k · Jupyter Notebook · Apache-2.0 · pip · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install evidently`</sub>
 - **[OpenLIT](https://github.com/openlit/openlit)** — Open source platform for AI Engineering: OpenTelemetry-native LLM Observability, GPU Monitoring, Guardrails, Evaluations, Prompt Management, Vault, Playground. 🚀💻 Integrates with 50+ LLM Providers, VectorDBs, Agent Frameworks and GPUs
-  <sub>★ 2.9k · TypeScript · Apache-2.0 · pip · pushed 2026-10-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 2.9k · TypeScript · Apache-2.0 · pip · pushed 2026-10-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pip install openlit`</sub>
 - **[Future AGI](https://github.com/future-agi/future-agi)** — Open-source, end-to-end platform for evaluating, observing, and improving LLM and AI agent applications. Tracing · Evals · Simulations · Datasets · Gateway · Guardrails. Self-hostable. Apache 2.0
   <sub>★ 2.2k · Python · Apache-2.0 · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -763,15 +764,11 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 511 · Go · helm · pushed 2026-10-21 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`helm install cordum oci://ghcr.io/cordum-io/cordum/charts/cordum \`</sub>
 - **[Neurolink](https://github.com/juspay/neurolink)** — Universal AI Development Platform with MCP server integration, multi-provider support, and professional CLI. Build, test, and deploy AI applications with multiple ai providers
-  <sub>★ 157 · TypeScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 157 · TypeScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @juspay/neurolink --help`</sub>
-- **[AgentMark](https://github.com/agentmark-ai/agentmark)** — Open-source, Git-native platform for building and observing reliable AI agents. Prompts and datasets in your repo, evals in CI, and OpenTelemetry tracing
-  <sub>unavailable</sub>
 - **[Helicone](https://github.com/Helicone/helicone)** — Open source LLM observability platform. One line of code to monitor, evaluate, and experiment. YC W23 🍓
   <sub>source</sub>
   <sub>`git clone https://github.com/helicone/helicone.git`</sub>
-- **[lunaary](https://github.com/lunary-ai/lunary)** — The production toolkit for LLMs. Observability, prompt management and evaluations
-  <sub>unavailable</sub>
 - **[phoenix](https://github.com/Arize-ai/phoenix)** — AI Observability &amp; Evaluation
   <sub>source</sub>
   <sub>`git clone https://github.com/arize-ai/phoenix.git`</sub>
@@ -830,16 +827,16 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 7.5k · Python · Apache-2.0 · pip · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install traceloop-sdk`</sub>
 - **[Failproof](https://github.com/FailproofAI/failproofai)** — Observability and enforcement for AI agent harnesses. Capture every run and runtime reliability with policy enforcement. 40 built-in policies, a local dashboard, no account required with a generous free cloud plan
-  <sub>★ 6k · TypeScript · npm · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6k · TypeScript · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g failproofai`</sub>
 - **[Latitude](https://github.com/latitude-dev/latitude-llm)** — Latitude is the open-source ai monitoring platform
-  <sub>★ 4.7k · TypeScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 4.7k · TypeScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @latitude-data/claude-code-telemetry install`</sub>
 - **[ClawMetry](https://github.com/vivekchand/clawmetry)** — Self-hosted observability for coding agents. Reads the session logs runtimes already write on disk, so there is no SDK and nothing in the request path
   <sub>★ 436 · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add vivekchand/clawmetry --skill agent-kill-switch`</sub>
 - **[OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)** — Record, replay and fork debugger for AI agents. Records a run below the harness, replays it offline with the network off, and forks it from any checkpoint onto another model
-  <sub>★ 287 · TypeScript · Apache-2.0 · npm · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 280 · TypeScript · Apache-2.0 · npm · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g orcareplay # the package is orcareplay`</sub>
 - **[Observatory](https://github.com/The-Context-Company/observatory)** — Open-source TypeScript and Python SDKs for instrumenting AI agents and analyzing production runs, traces, sessions, feedback, and recurring patterns
   <sub>★ 124 · TypeScript · MIT · source · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -850,8 +847,9 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 - **[Vobo](https://github.com/getbeton/vobo)** — Open-source human review for AI output. Anchored comments and a hashed evidence chain
   <sub>★ 6 · TypeScript · Apache-2.0 · clone · pushed 2026-09-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/getbeton/vobo.git`</sub>
-- **[Gait](https://github.com/davidahmann/gait)** — OSS Go CLI for signed runpacks (verify, deterministic stub replay, diff), CI regressions, and policy-gated high-risk tool calls for agent workflows
-  <sub>unavailable</sub>
+- **[Rius](https://github.com/glassflow/rius-sdk-python)** — OpenTelemetry-native agent observability by GlassFlow: trace every LLM call, tool call and agent step, with cost per call, alerts, and Claude Code session tracing (Codex and Cursor in beta). MIT Python SDK for a managed backend
+  <sub>★ 3 · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`pip install glassflow-rius`</sub>
 
 
 ---

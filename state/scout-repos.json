@@ -370,7 +370,7 @@
    "section": "MCP Servers",
    "since": "2026-10-15"
   },
-  "Anil-matcha/open-dots": {
+  "Anil-matcha/open-duet": {
    "id": 645381450,
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
@@ -1409,6 +1409,11 @@
    "id": 1390867091,
    "section": "Orchestrators & Multi-Agent",
    "since": "2026-10-11"
+  },
+  "Jakeschincariol/day-trader-skill": {
+   "id": 1427126014,
+   "section": "Agent Skills",
+   "since": "2026-10-22"
   },
   "Jakeschincariol/founder-skill": {
    "id": 1408082051,
@@ -2674,6 +2679,11 @@
    "id": 1129437678,
    "section": "Plugins, Themes & Clients",
    "since": "2026-10-11"
+  },
+  "SolaceLabs/solace-agent-mesh": {
+   "id": 914964527,
+   "section": "Orchestrators & Multi-Agent",
+   "since": "2026-10-22"
   },
   "Soodok/Deepseek-Harness-Local-Android": {
    "id": 1347366175,
@@ -4560,6 +4570,16 @@
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
   },
+  "dagoSte/squadra": {
+   "id": 1391814933,
+   "section": "Orchestrators & Multi-Agent",
+   "since": "2026-10-22"
+  },
+  "daha1216/dsh-adult-tension": {
+   "id": 1339714338,
+   "section": "Agent Skills",
+   "since": "2026-10-22"
+  },
   "danilo-znamerovszkij/draw-your-font": {
    "id": 1308648534,
    "section": "Plugins, Themes & Clients",
@@ -4775,6 +4795,11 @@
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
   },
+  "dshplugin/dsh-plugin-hub": {
+   "id": 1340244547,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-10-22"
+  },
   "dsphper/lanhu-mcp": {
    "id": 1117927632,
    "section": "Coding Agents",
@@ -4944,6 +4969,11 @@
    "id": 1373993338,
    "section": "Orchestrators & Multi-Agent",
    "since": "2026-10-11"
+  },
+  "ethanplusai/harvey": {
+   "id": 1179388779,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-10-22"
   },
   "eugene1g/agent-safehouse": {
    "id": 1153806672,
@@ -7105,6 +7135,11 @@
    "section": "Context, Memory & RAG",
    "since": "2026-10-11"
   },
+  "notinferred/keypaste": {
+   "id": 1358644975,
+   "section": "MCP Servers",
+   "since": "2026-10-22"
+  },
   "nowork-studio/notfair-plugin": {
    "id": 1193374549,
    "section": "Agent Skills",
@@ -7504,6 +7539,11 @@
    "id": 1313966068,
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
+  },
+  "pgrundev/pgx": {
+   "id": 1410916694,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-10-22"
   },
   "pguso/ai-agents-from-scratch": {
    "id": 1082137380,
@@ -7959,6 +7999,11 @@
    "id": 1338470635,
    "section": "Plugins, Themes & Clients",
    "since": "2026-10-11"
+  },
+  "sahibzada-allahyar/Formal-Verification-RSI": {
+   "id": 937280308,
+   "section": "Coding Agents",
+   "since": "2026-10-22"
   },
   "samanhappy/mcphub": {
    "id": 957825149,

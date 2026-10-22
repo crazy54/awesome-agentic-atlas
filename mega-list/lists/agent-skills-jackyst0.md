@@ -11,9 +11,9 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/obra/superpowers"><img src="https://opengraph.githubassets.com/1/obra/superpowers" width="260"></a> | <a href="https://github.com/affaan-m/ECC"><img src="https://raw.githubusercontent.com/affaan-m/everything-claude-code/main/assets/hero.png" width="260"></a> | <a href="https://github.com/anthropics/skills"><img src="https://opengraph.githubassets.com/1/anthropics/skills" width="260"></a> |
-| **[obra/superpowers](https://github.com/obra/superpowers)**<br>★ 303.2k | **[everything-claude-code](https://github.com/affaan-m/ECC)**<br>★ 285.7k | **[anthropics/skills](https://github.com/anthropics/skills)**<br>★ 182.8k |
+| **[obra/superpowers](https://github.com/obra/superpowers)**<br>★ 303.5k | **[everything-claude-code](https://github.com/affaan-m/ECC)**<br>★ 286.1k | **[anthropics/skills](https://github.com/anthropics/skills)**<br>★ 182.9k |
 | <a href="https://github.com/browser-use/browser-use"><img src="https://github.com/user-attachments/assets/135885e8-1141-4e10-b719-bf690ae7d260" width="260"></a> | <a href="https://github.com/addyosmani/agent-skills"><img src="https://addyosmani.com/assets/images/addys-agent-skills.jpg" width="260"></a> | <a href="https://github.com/ComposioHQ/awesome-claude-skills"><img src="https://github.com/user-attachments/assets/e91255af-e4ba-4d71-b1a8-bd081e8a234a" width="260"></a> |
-| **[browser-use/browser-use](https://github.com/browser-use/browser-use)**<br>★ 118.8k | **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)**<br>★ 109.3k | **[ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)**<br>★ 77.6k |
+| **[browser-use/browser-use](https://github.com/browser-use/browser-use)**<br>★ 118.9k | **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)**<br>★ 109.5k | **[ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)**<br>★ 77.7k |
 
 ## Contents
 
@@ -29,13 +29,13 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Productivity
 
 - **[obra/superpowers](https://github.com/obra/superpowers)** — Complete dev workflow (Debug/TDD/Code Review/Planning)
-  <sub>★ 303.2k · Shell · MIT · clone · pushed 2026-10-21</sub>
+  <sub>★ 303.5k · Shell · MIT · clone · pushed 2026-10-21</sub>
   <sub>`git clone https://github.com/obra/superpowers.git`</sub>
 - **[coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills)** — Marketing Skills (SEO/Copywriting/CRO/Ads)
-  <sub>★ 55.8k · JavaScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 55.9k · JavaScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add coreyhaines31/marketingskills`</sub>
 - **[alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills)** — 20+ productivity tools with 8 expert Agents
-  <sub>★ 28.5k · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 28.5k · Python · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx agent-skills-cli add alirezarezvani/claude-skills --agent codex`</sub>
 - **[planning-with-files](https://github.com/OthmanAdi/planning-with-files)** — Persistent file-based planning with task plans, findings, progress tracking, and session recovery for long-running agent work
   <sub>★ 27.6k · Python · MIT · npx · pushed 2026-10-20 · Win · WSL2 · macOS · Linux</sub>
@@ -44,31 +44,31 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>★ 4k · Python · MIT · clone · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/nowork-studio/notfair-plugin.git`</sub>
 - **[claude-code-skill-factory](https://github.com/alirezarezvani/claude-code-skill-factory)** — Skills factory for batch generation and deployment
-  <sub>★ 892 · Python · MIT · source · pushed 2025-11-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 893 · Python · MIT · source · pushed 2025-11-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/alirezarezvani/claude-code-skill-factory.git`</sub>
 - **[claude-code-workflows](https://github.com/shinpr/claude-code-workflows)** — Production-grade dev workflows with quality checks
-  <sub>★ 704 · JavaScript · MIT · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 704 · JavaScript · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/shinpr/claude-code-workflows.git`</sub>
 - **[universal-exam-cram-coach](https://github.com/ZeKaiNie/universal-examprep-skill)** — Exam-prep tutor that teaches from your own slides, notes and past papers with page citations, figure crops, homework-only quizzes and cross-session progress
-  <sub>★ 312 · Python · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 313 · Python · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ZeKaiNie/universal-examprep-skill`</sub>
 - **[gingiris-opensource](https://github.com/Gingiris/gingiris-opensource)** — Open source marketing playbook focused on GitHub growth and launch strategy
-  <sub>★ 262 · MIT · source · pushed 2026-05-07 · Win?</sub>
+  <sub>★ 263 · MIT · source · pushed 2026-05-07 · Win?</sub>
   <sub>`git clone https://github.com/Gingiris/gingiris-opensource.git`</sub>
 - **[gingiris-launch](https://github.com/Gingiris/gingiris-launch)** — Product Hunt launch playbook for AI products, startups, and open source GTM
-  <sub>★ 212 · MIT · source · pushed 2026-05-07</sub>
+  <sub>★ 213 · MIT · source · pushed 2026-05-07</sub>
   <sub>`git clone https://github.com/Gingiris/gingiris-launch.git`</sub>
 - **[job-application-agent](https://github.com/vaibhavarora14/job-application-agent)** — Skill + CLI to discover, qualify, complete, and track your own job applications. Data sharing: usage analytics and name/email sharing with private PostHog analytics, plus community-registry sharing of confirmed-application and discovery-source metadata, are enabled by default (opt-out). Optional cloud mode stores and syncs profile, résumé, application, and outcome state
-  <sub>★ 161 · JavaScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 161 · JavaScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx job-application-agent@latest install`</sub>
 - **[cognyai/claude-code-marketing-skills](https://github.com/cognyai/claude-code-marketing-skills)** — AI marketing skills (SEO Audit/Landing Page Review/Competitor Analysis/Ad Copywriting/Lead Qualification) with MCP server integration
   <sub>★ 107 · HTML · script · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -sSL https://raw.githubusercontent.com/cognyai/claude-code-marketing-skills/main/install.sh | bash`</sub>
 - **[gingiris-b2b-growth](https://github.com/Gingiris/gingiris-b2b-growth)** — B2B SaaS growth playbook covering PLG, SLG, and go-to-market strategy
-  <sub>★ 103 · MIT · source · pushed 2026-05-07</sub>
+  <sub>★ 104 · MIT · source · pushed 2026-05-07</sub>
   <sub>`git clone https://github.com/Gingiris/gingiris-b2b-growth.git`</sub>
 - **[alpha-insights](https://github.com/Ericyoung-183/alpha-insights)** — Harness-enforced business research skill with consulting frameworks, evidence grading, stage gates, and HTML reports
-  <sub>★ 70 · Python · MIT · clone · pushed 2026-06-29 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 71 · Python · MIT · clone · pushed 2026-06-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Ericyoung-183/alpha-insights.git`</sub>
 - **[salespeak-ai/buyer-eval-skill](https://github.com/salespeak-ai/buyer-eval-skill)** — B2B vendor evaluation skill: 7-dimension scoring and evidence-tracked scorecards for procurement and build-vs-buy decisions
   <sub>★ 66 · Python · MIT · clone · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -80,16 +80,16 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-18</sub>
   <sub>`git clone https://github.com/plasma-ai/wiki.git && cd wiki/wiki/skills/wiki/SKILL.md`</sub>
 - **[tlgr](https://github.com/tlgrcli/tlgr/tree/main/plugin/skills/tlgr)** — Read, search and send Telegram messages from your own account and manage chats and contacts through the tlgr CLI, with JSON output
-  <sub>Python · MIT · in-repo · pushed 2026-10-14</sub>
+  <sub>Python · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/tlgrcli/tlgr.git && cd tlgr/plugin/skills/tlgr`</sub>
 
 ## Skills Collections
 
 - **[everything-claude-code](https://github.com/affaan-m/ECC)** — Complete Claude Code configs (agents/skills/hooks)
-  <sub>★ 285.7k · JavaScript · MIT · clone · pushed 2026-10-20 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 286.1k · JavaScript · MIT · clone · pushed 2026-10-20 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/affaan-m/ECC.git`</sub>
 - **[ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)** — Claude Skills collection by Composio
-  <sub>★ 77.6k · Python · npx · pushed 2026-09-18 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 77.7k · Python · npx · pushed 2026-09-18 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add chrome-relay`</sub>
 - **[awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code)** — Claude Code skills/hooks/plugins collection
   <sub>★ 56.2k · Python · source · pushed 2026-10-22 · macOS</sub>
@@ -98,7 +98,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>★ 41k · JavaScript · CC0-1.0 · source · pushed 2026-05-30 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/PatrickJS/awesome-cursorrules.git`</sub>
 - **[VoltAgent/awesome-claude-skills](https://github.com/VoltAgent/awesome-agent-skills)** — Claude Skills collection by VoltAgent
-  <sub>★ 36.1k · MIT · npx · pushed 2026-10-20 · macOS</sub>
+  <sub>★ 36.2k · MIT · npx · pushed 2026-10-20 · macOS</sub>
   <sub>`npx skills add mblode/agent-skills`</sub>
 - **[openskills](https://github.com/numman-ali/openskills)** — Universal Skills loader (npm install)
   <sub>★ 10.8k · TypeScript · npx · pushed 2026-01-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -134,16 +134,16 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>★ 249 · Shell · source · pushed 2026-08-09</sub>
   <sub>`git clone https://github.com/thehimel/cursor-rules-and-prompts.git`</sub>
 - **[kasetto](https://github.com/pivoshenko/kasetto)** — An extremely fast AI skills manager, written in Rust
-  <sub>★ 212 · Rust · scoop · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 212 · Rust · scoop · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`scoop bucket add kasetto https://github.com/pivoshenko/scoop-bucket scoop install kasetto`</sub>
 - **[Skywork-Skills](https://github.com/SkyworkAI/Skywork-Skills)** — Officially maintained Skywork agent skills for AI office workflows, including PPT, documents, Excel, design, search, and music
   <sub>★ 205 · Python · MIT · npx · pushed 2026-04-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add git@github.com:SkyworkAI/Skywork-Skills.git`</sub>
 - **[mblode/agent-skills](https://github.com/mblode/agent-skills)** — Open-source agent skills for UI audits, typography, documentation, PR review, and releases
-  <sub>★ 151 · Python · MIT · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 152 · Python · MIT · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add mblode/agent-skills -g --agent codex claude-code -y`</sub>
 - **[suede-creator-skills](https://github.com/JasonColapietro/suede-creator-skills)** — Skills pack for Claude Code and Codex covering code review and grading, design, marketing and SEO, agent workflows, and mobile app shipping
-  <sub>★ 128 · JavaScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 125 · JavaScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add JasonColapietro/suede-creator-skills`</sub>
 - **[claude-code-kit](https://github.com/blencorp/claude-code-kit)** — Claude Code toolkit with auto-activating skills
   <sub>★ 110 · Shell · MIT · npx · pushed 2025-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -155,22 +155,22 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Official Resources
 
 - **[anthropics/skills](https://github.com/anthropics/skills)** — Official Anthropic Agent Skills repository
-  <sub>★ 182.8k · Python · source · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 182.9k · Python · source · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/anthropics/skills.git`</sub>
 - **[GitHub Awesome Copilot](https://github.com/github/awesome-copilot)** — Official Copilot resources collection
   <sub>★ 40.3k · JavaScript · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/github/awesome-copilot.git`</sub>
 - **[vercel-labs/skills](https://github.com/vercel-labs/skills)** — Vercel official Skills CLI tool
-  <sub>★ 36k · TypeScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 36.1k · TypeScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add vercel-labs/agent-skills`</sub>
 - **[agentskills/agentskills](https://github.com/agentskills/agentskills)** — Official Agent Skills specification and documentation repository
   <sub>★ 26.4k · Python · Apache-2.0 · source · pushed 2026-08-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/agentskills/agentskills.git`</sub>
 - **[microsoft/skills](https://github.com/microsoft/skills)** — Microsoft official 131 Azure SDK Skills
-  <sub>★ 3.1k · TypeScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.1k · TypeScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add microsoft/skills`</sub>
 - **[microsoft/azure-skills](https://github.com/microsoft/azure-skills)** — Official Azure skills plugin with MCP server configurations and 20 curated Azure skills
-  <sub>★ 1.6k · Shell · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.6k · Shell · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/microsoft/azure-skills/tree/main/.github/plugins/azure-skills/skills -a github-copilot -g -y`</sub>
 - **[Agent Skills Open Standard](https://skill.md/)** — Official Agent Skills specification
   <sub>website</sub>
@@ -209,16 +209,16 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Development Tools
 
 - **[browser-use/browser-use](https://github.com/browser-use/browser-use)** — Browser automation Skill
-  <sub>★ 118.8k · Python · MIT · source · pushed 2026-10-20 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 118.9k · Python · MIT · source · pushed 2026-10-20 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/browser-use/browser-use.git`</sub>
 - **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)** — Production-grade engineering skills and slash-command workflows for AI coding agents
-  <sub>★ 109.3k · JavaScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 109.5k · JavaScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add addyosmani/agent-skills # install all 25 skills`</sub>
 - **[vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)** — Vercel React/Web design best practices Skills
   <sub>★ 32.8k · JavaScript · npx · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add vercel-labs/agent-skills`</sub>
 - **[trailofbits/skills](https://github.com/trailofbits/skills)** — Trail of Bits security research and audit Skills
-  <sub>★ 7.7k · Python · CC-BY-SA-4.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 7.7k · Python · CC-BY-SA-4.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/trailofbits/skills.git`</sub>
 - **[claude-code-security-review](https://github.com/anthropics/claude-code-security-review)** — AI security review GitHub Action (Official)
   <sub>★ 6.5k · Python · MIT · gh-action · pushed 2026-02-11</sub>
@@ -233,25 +233,25 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>★ 3.2k · JavaScript · MIT · npx · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add lackeyjb/playwright-skill --skill playwright-skill --global --yes`</sub>
 - **[Expo Skills](https://github.com/expo/skills)** — Expo/React Native development Skills
-  <sub>★ 3k · Shell · MIT · npx · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 3k · Shell · MIT · npx · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills@latest add expo/skills --skill '*'`</sub>
 - **[Supabase Agent Skills](https://github.com/supabase/agent-skills)** — PostgreSQL best practices Skill by Supabase
   <sub>★ 2.9k · TypeScript · MIT · npx · pushed 2026-10-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add supabase/agent-skills`</sub>
 - **[claude-code-skills](https://github.com/daymade/claude-code-skills)** — Professional Skills marketplace
-  <sub>★ 1.5k · Python · MIT · npx · pushed 2026-10-21 · macOS</sub>
+  <sub>★ 1.5k · Python · MIT · npx · pushed 2026-10-22 · macOS</sub>
   <sub>`npx skills add`</sub>
 - **[skill-codex](https://github.com/skills-directory/skill-codex)** — Delegate tasks to Codex Skill
   <sub>★ 1.5k · MIT · source · pushed 2026-10-21</sub>
   <sub>`git clone https://github.com/skills-directory/skill-codex.git`</sub>
 - **[birdview](https://github.com/Qiuner/birdview)** — Generate evidence-linked architecture and constraint maps, review planned change scope before implementation, and record verification results
-  <sub>★ 668 · TypeScript · MIT · npx · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 653 · TypeScript · MIT · npx · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add Qiuner/birdview --skill birdview`</sub>
 - **[elastic/agent-skills](https://github.com/elastic/agent-skills)** — Official Elastic skills for Elasticsearch, Kibana, Observability, and Security workflows
-  <sub>★ 596 · JavaScript · Apache-2.0 · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 599 · JavaScript · Apache-2.0 · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add elastic/agent-skills`</sub>
 - **[Xquik x-twitter-scraper](https://github.com/Xquik-dev/x-twitter-scraper)** — X (Twitter) data Skill with REST endpoints, MCP tools, webhooks, SDKs, and automation workflows
-  <sub>★ 217 · JavaScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 218 · JavaScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`bunx skills@1.5.3 add Xquik-dev/x-twitter-scraper`</sub>
 - **[authsome](https://github.com/agentrhq/authsome)** — Local credential broker for AI agents with encrypted local vault storage and proxy-based credential injection
   <sub>★ 97 · Python · MIT · npx · pushed 2026-07-24 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -260,7 +260,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>★ 82 · TypeScript · MIT · npm · pushed 2026-08-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g sverklo`</sub>
 - **[Prisma Agent Skills](https://github.com/prisma/skills)** — Prisma Postgres, Prisma ORM and Prisma Compute Skills by Prisma
-  <sub>★ 74 · MIT · npx · pushed 2026-10-16 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 74 · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add prisma/skills`</sub>
 - **[skillset-example](https://github.com/copilot-extensions/skillset-example)** — GitHub Copilot extension example
   <sub>★ 64 · Go · MIT · clone · pushed 2025-06-24 · Win? · WSL2? · macOS? · Linux?</sub>

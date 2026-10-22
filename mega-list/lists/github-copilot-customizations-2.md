@@ -4,7 +4,7 @@ Community-contributed instructions, agents, skills, and configurations to help y
 
 Curated by **[github/awesome-copilot](https://github.com/github/awesome-copilot)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-979 entries · 1 distinct repos · 7 sections
+981 entries · 1 distinct repos · 7 sections
 
 [← back to the mega list](../README.md)
 
@@ -12,14 +12,14 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ## Contents
 
-- [How to Use Agent Skills](#how-to-use-agent-skills) (441)
-- [How to Use Plugins](#how-to-use-plugins) (104)
+- [How to Use Agent Skills](#how-to-use-agent-skills) (442)
+- [How to Use Plugins](#how-to-use-plugins) (105)
 - [How to Use Hooks](#how-to-use-hooks) (9)
 - [How to Use Agentic Workflows](#how-to-use-agentic-workflows) (9)
 
 ## How to Use Agent Skills
 
-<sub>Entries 219–441 of 441. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Entries 219–442 of 442. The rest are on this page's other parts, linked above and below.</sub>
 
 - **[integrate-context-matic](https://github.com/github/awesome-copilot/tree/HEAD/skills/integrate-context-matic/SKILL.md)** — Discovers and integrates third-party APIs using the context-matic MCP server. Uses fetch_api to find available API SDKs, ask for integration guidance, model_search and endpoint_search for SDK details. Use when the user asks to integrate a third-party API, add an API client, implement features with an external API, or work with any third-party API or SDK
   <sub>JavaScript · MIT · in-repo · pushed 2026-10-22</sub>
@@ -306,6 +306,9 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 - **[powerbi-modeling](https://github.com/github/awesome-copilot/tree/HEAD/skills/powerbi-modeling/SKILL.md)** — Power BI semantic modeling assistant for building optimized data models. Use when working with Power BI semantic models, creating measures, designing star schemas, configuring relationships, implementing RLS, or optimizing model performance. Triggers on queries about DAX calculations, table relationships, dimension/fact table design, naming conventions, model documentation, cardinality, cross-filt
   <sub>JavaScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/github/awesome-copilot.git && cd awesome-copilot/skills/powerbi-modeling/SKILL.md`</sub>
+- **[pr-address-feedback](https://github.com/github/awesome-copilot/tree/HEAD/skills/pr-address-feedback/SKILL.md)** — Walk through PR review comments one-by-one, deciding for each whether to act on the feedback or reply with reasoning, and build an approvable resolution plan before changing anything. Use when the user wants to address, respond to, or triage PR review feedback
+  <sub>JavaScript · MIT · in-repo · pushed 2026-10-22</sub>
+  <sub>`git clone https://github.com/github/awesome-copilot.git && cd awesome-copilot/skills/pr-address-feedback/SKILL.md`</sub>
 - **[pr-dashboard](https://github.com/github/awesome-copilot/tree/HEAD/skills/pr-dashboard/SKILL.md)** — Open a GitHub PR dashboard in the browser. Use when the user asks to see their pull requests, open the PR dashboard, show PRs for a date range, or check PR status. Trigger phrases include "show my PRs", "open PR dashboard", "pull request dashboard"
   <sub>JavaScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/github/awesome-copilot.git && cd awesome-copilot/skills/pr-dashboard/SKILL.md`</sub>
@@ -699,6 +702,9 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 - **[acreadiness-cockpit](https://github.com/github/awesome-copilot/tree/HEAD/plugins/acreadiness-cockpit/README.md)** — Drive Microsoft AgentRC from Copilot chat: assess AI readiness, generate Copilot instructions (flat or nested with applyTo globs for monorepos), and manage policies. Produces a self-contained static HTML dashboard at reports/index.html
   <sub>JavaScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/github/awesome-copilot.git && cd awesome-copilot/plugins/acreadiness-cockpit/README.md`</sub>
+- **[agent-radar](https://github.com/github/awesome-copilot/tree/HEAD/plugins/agent-radar/README.md)** — See a live map of the Copilot agents on your computer, their sub-agents, their commands, and where their data goes
+  <sub>JavaScript · MIT · in-repo · pushed 2026-10-22</sub>
+  <sub>`git clone https://github.com/github/awesome-copilot.git && cd awesome-copilot/plugins/agent-radar/README.md`</sub>
 - **[ai-team-orchestration](https://github.com/github/awesome-copilot/tree/HEAD/plugins/ai-team-orchestration/README.md)** — Run a lightweight, role-separated AI development team with flexible tools, developer-selected models, proportionate planning, and optional QA
   <sub>JavaScript · MIT · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/github/awesome-copilot.git && cd awesome-copilot/plugins/ai-team-orchestration/README.md`</sub>
