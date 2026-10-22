@@ -106,7 +106,14 @@ jobs:
       VERIFY_GATES_DEPLOY: "false"
 
     steps:
+      # The branch as it stands when this job starts, not the commit it was triggered on. This job and
+      # weekly.yml queue behind each other in `atlas-build`, and a run checks out its trigger's commit by
+      # default -- so one queued behind the other built on the commit from before the other's push, and
+      # then could not rebase its own generated files onto it (weekly of 2026-10-21, conflicts in every
+      # topic page and in state/). From the branch's head, each build starts from the last one's commit.
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
 
       - uses: actions/setup-python@v5
         with:

@@ -46,7 +46,12 @@ jobs:
       VERIFY_GATES_DEPLOY: "true"
 
     steps:
+      # The branch's head when this job starts, not its trigger's commit: see the same step in daily.yml.
+      # Queued behind a daily that pushed, this job built on the commit before that push and then failed
+      # to rebase onto it, after three hours of screenshots and workbooks (2026-10-21).
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
 
       - uses: actions/setup-python@v5
         with:
