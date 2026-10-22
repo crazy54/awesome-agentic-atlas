@@ -1,10 +1,10 @@
 <div align="center">
 
 <a href="https://aaa.jeremyfhall.com/">
-  <img src="docs/assets/archie-icon.png" width="64" height="64" alt="Awesome Agentic Atlas icon: Archie's head, white ceramic with a graphite and lime crest">
+  <img src=".github/readme/icon.png" width="64" height="64" alt="Awesome Agentic Atlas icon: Archie's head, white ceramic with a graphite and lime crest">
 </a>
 <a href="https://aaa.jeremyfhall.com/">
-  <img src="docs/assets/archie-readme.png" width="125" alt="Archie 'Atlas' Algorithm, the Awesome Agentic Atlas robot mascot: white ceramic and graphite with lime trim, big lime eyes, a lopsided smirk and a swept-up crest">
+  <img src=".github/readme/archie.png" width="125" alt="Archie 'Atlas' Algorithm, the Awesome Agentic Atlas robot mascot: white ceramic and graphite with lime trim, big lime eyes, a lopsided smirk and a swept-up crest">
 </a>
 
 # Awesome Agentic Atlas
