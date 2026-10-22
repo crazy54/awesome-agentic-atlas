@@ -2,11 +2,11 @@
 
 Targets the Cursor editor — rules, agents and composer workflows.
 
-**1,298 projects** · 1,148 with stars to rank by · 4,134,311 combined stars
+**1,299 projects** · 1,148 with stars to rank by · 4,136,428 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=cursor)
 
-✨ **3 new to the atlas** in the 10/22/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=cursor&new=1).
+✨ **4 new to the atlas** in the 10/22/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=cursor&new=1).
 
 Page **2** of 2, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](cursor.md) · **2**.
 
@@ -191,7 +191,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 | 975 | **[djtellado/nexus-legal-mcp](https://github.com/djtellado/nexus-legal-mcp)**<br><sub>djtellado/nexus-legal-mcp</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/djtellado/nexus-legal-mcp.git` | Legal analysis (ISO 31000) for Spanish, Latin American and European law: drafting, audits, case law, tax doctrine and cross-border comparison |
 | 976 | **[dokaNc/illugen-mcp](https://github.com/dokaNc/illugen-mcp)**<br><sub>dokaNc/illugen-mcp</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `uvx --from git+https://github.com/dokaNc/illugen-mcp python -m illugen_mcp.build_catalog` | Build, edit and render JangaFX IlluGen node graphs (procedural textures, VFX flipbooks): 157 node types, typed pin checks, curves, gradients, subgraphs, and invisible rendering th… |
 | 977 | **[douglasborthwick-crypto/mcp-server-insumer](https://github.com/insumerapi/mcp-server-insumer)**<br><sub>insumerapi/mcp-server-insumer</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `pip install insumer-verify` | On-chain attestation across many blockchains: ECDSA-signed verification, wallet trust profiles, compliance templates, merchant onboarding and ACP/UCP support |
-| 978 | **[eli-alvarado/us-watchlist-alerts](https://github.com/eli-alvarado/us-watchlist-alerts)**<br><sub>eli-alvarado/us-watchlist-alerts</sub> | 2 | 2 | <sub>Agent Skills</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx skills add eli-alvarado/us-watchlist-alerts -y -a claude-code` | Agent Skills (SKILL.md) for a US stock watchlist: NYSE-aware, de-duplicated price alerts (levels, % moves, gaps, 52-week highs/lows, MA crosses, RSI, earnings) and morning/close b… |
+| 978 | **[eli-alvarado/us-watchlist-alerts](https://github.com/eli-alvarado/us-watchlist-alerts)**<br><sub>eli-alvarado/us-watchlist-alerts</sub> | 2 | 2 | <sub>Agent Skills</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `npx skills add eli-alvarado/us-watchlist-alerts -y -a claude-code` | Agent Skills (SKILL.md) for a US stock watchlist: NYSE-aware, de-duplicated price alerts (levels, % moves, gaps, 52-week highs/lows, MA crosses, RSI, earnings) and morning/close b… |
 | 979 | **[extentos/mcp-server](https://github.com/extentos/mcp-server)**<br><sub>extentos/mcp-server</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>—</sub> | `git clone https://github.com/extentos/mcp-server.git` | Build smart-glasses apps: scaffold, validate and simulate Meta smart glasses integrations (camera capture, voice, audio) in Android and iOS apps |
 | 980 | **[gambot-ai/gambot-mcp](https://github.com/gambot-ai/gambot-mcp)**<br><sub>gambot-ai/gambot-mcp</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx -y gambot-mcp` | Gambot WhatsApp Business API: send WhatsApp messages and templates, and manage CRM contacts, leads, cases, tasks, quotes, invoices, orders and campaigns |
 | 981 | **[gate.cat](https://github.com/BGMLAI/gate.cat)**<br><sub>BGMLAI/gate.cat</sub> | 2 | 1 | <sub>Sandbox, Security &amp; Governance</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `pip install gate.cat # core (inside a venv)` | Deterministic, fail-closed action veto for AI coding agents that blocks irreversible shell commands (rm -rf, DROP TABLE, terraform destroy) and secret exfiltration before they run… |
@@ -363,7 +363,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 | 1147 | **[yubinkim444/repo-memory](https://github.com/yubinkim444/repo-memory)**<br><sub>yubinkim444/repo-memory</sub> | 1 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `uvx repo-memory-mcp --help` | Shared, git-tracked memory for AI agents on the same codebase: facts, decisions and gotchas stored in a committed repo directory and synced via git |
 | 1148 | **[zyli5313/dochost-mcp](https://github.com/zyli5313/dochost-mcp)**<br><sub>zyli5313/dochost-mcp</sub> | 1 | 1 | <sub>MCP Servers</sub> | <sub>WSL2 · Linux · Docker</sub> | `docker run --rm -i dochost-mcp` | Publish Markdown or HTML to a public shareable link, served script-free from a separate cookieless origin |
 
-## Also here, unranked (150)
+## Also here, unranked (151)
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
@@ -402,6 +402,7 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[bluetieroperations-create/blackwall-mcp](https://github.com/bluetieroperations-create/blackwall-mcp)** — Risk gate that agents call before irreversible actions, returning a risk score, reversibility class, red flags and a proceed/confirm/human-required decision
 - **[bosmdavid-gif/dropthehassle-skill](https://github.com/bosmdavid-gif/dropthehassle-skill)** — Official DropTheHassle source for the dropthehassle-publish skill - check that a folder is a finished static build, publish it to a free HTTPS link, hand the human the claim link and verify it is liv…
 - **[canopy-labs/featureflip-mcp](https://github.com/canopy-labs/featureflip-mcp)** — Manage Featureflip feature flags: create and toggle flags, edit targeting rules and find stale flags
+- **[ces107/agent-forge](https://github.com/Ces107/agent-forge)** ✨ <sub>Added 10/22/26</sub> — Source for launch-check
 - **[chatmaid/mcp](https://github.com/chatmaid/mcp)** — Chatmaid WhatsApp API: send messages to contacts and groups from a linked WhatsApp number, read replies, check delivery status and usage
 - **[Citlyze/citlyze-skills](https://github.com/Citlyze/citlyze-skills)** — AI search visibility skills from the Citlyze team: window-over-window visibility reports, citation gap analysis, prompt audits, and action plans via the Citlyze MCP server, plus a standalone AEO page…
 - **[claude-code-notifier](https://github.com/saiso/claude-code-notifier)** — Native macOS notifier for Claude Code. Swift + UserNotifications, custom Heroicons-derived icon (SF Symbols–free), click-through to your IDE (VS Code, Cursor, Windsurf, JetBrains, iTerm2, Terminal) v…

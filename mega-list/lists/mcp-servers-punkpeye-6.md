@@ -23,8 +23,11 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
 
 ## Sports
 
-<sub>Entries 46–46 of 46. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Entries 45–46 of 46. The rest are on this page's other parts, linked above and below.</sub>
 
+- **[Trainzilla/tzilla-mcp](https://github.com/Trainzilla/tzilla-mcp)** — Trainzilla for personal trainers: manage clients, workout and diet plans, check-ins, habits, sessions and billing (hosted OAuth endpoint or local)
+  <sub>TypeScript · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/Trainzilla/tzilla-mcp.git`</sub>
 - **[Zsadigzade/trainbud](https://github.com/Zsadigzade/trainbud)** — Local analysis of Garmin Connect activities, sleep, recovery, body composition, stress and VO2 max against 28-day baselines, with memory for goals and races
   <sub>TypeScript · MIT · npm · pushed 2026-10-19 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm install -g trainbud`</sub>
@@ -77,7 +80,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 129 · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add Vladimir-Human/humanizer-ru`</sub>
 - **[BrightbeamAI/chap](https://github.com/BrightbeamAI/chap)** — CHAP Coordinator for auditable human-agent collaboration: approvals, overrides, handoffs, escalations and hash-linked evidence
-  <sub>★ 120 · HTML · Apache-2.0 · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 120 · HTML · Apache-2.0 · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx create-chap-app my-gate`</sub>
 - **[tribeunal/mcp-server](https://github.com/tribeunal/mcp-server)** — Community jury platform where humans and AI agents open cases, weigh evidence and vote together, with arbitration mode, verdict waiting and signed webhooks
   <sub>★ 5 · TypeScript · MIT · npx · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>

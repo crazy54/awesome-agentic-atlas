@@ -11,7 +11,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/0-AI-UG/cate"><img src="https://raw.githubusercontent.com/0-AI-UG/cate/main/assets/demo-canvas.gif" width="260"></a> | <a href="https://github.com/bbarit/terminal"><img src="https://raw.githubusercontent.com/bbarit/terminal/main/images/demo-thumb.png" width="260"></a> | <a href="https://github.com/baiyuscc13724-max/deepseek-harness-desktop"><img src="https://raw.githubusercontent.com/baiyuscc13724-max/deepseek-harness-desktop/main/docs/assets/harness-desktop-hero.jpg" width="260"></a> |
-| **[Cate](https://github.com/0-AI-UG/cate)**<br>★ 2.2k | **[BBARIT](https://github.com/bbarit/terminal)**<br>★ 40 | **[Harness Desktop](https://github.com/baiyuscc13724-max/deepseek-harness-desktop)**<br>★ 12 |
+| **[Cate](https://github.com/0-AI-UG/cate)**<br>★ 2.2k | **[BBARIT](https://github.com/bbarit/terminal)**<br>★ 40 | **[Harness Desktop](https://github.com/baiyuscc13724-max/deepseek-harness-desktop)**<br>★ 13 |
 | <a href="https://github.com/leonjackman/coworker"><img src="https://raw.githubusercontent.com/leonjackman/coworker/dev/docs/screenshots/main_dark.png" width="260"></a> | <a href="https://about.sourcegraph.com/cody"><img src="https://sourcegraph.com/docs/api/og/cody" width="260"></a> | <a href="https://kiro.dev/"><img src="https://kiro.dev/images/opengraph/home.png" width="260"></a> |
 | **[Coworker](https://github.com/leonjackman/coworker)**<br>★ 2 | **[Cody (Sourcegraph)](https://about.sourcegraph.com/cody)**<br>★ — | **[Kiro](https://kiro.dev/)**<br>★ — |
 
@@ -46,7 +46,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 40 · source · pushed 2026-10-18 · Win? · macOS?</sub>
   <sub>`git clone https://github.com/bbarit/terminal.git`</sub>
 - **[Harness Desktop](https://github.com/baiyuscc13724-max/deepseek-harness-desktop)** — Open-source Windows client for the official DeepSeek Harness Web UI, with a Simplified Chinese installer, portable build, verified updates, and persistent themes
-  <sub>★ 12 · JavaScript · MIT · scoop · pushed 2026-10-14 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 13 · JavaScript · MIT · scoop · pushed 2026-10-14 · Win · WSL2 · macOS · Linux</sub>
   <sub>`scoop bucket add harness-desktop https://github.com/baiyuscc13724-max/scoop-harness-desktop scoop install harness-desktop/harness-desktop`</sub>
 - **[Coworker](https://github.com/leonjackman/coworker)** — Local-first AI coding assistant desktop app with MCP integration, multi-provider AI support, and skills marketplace. Built with Electron, React, and LangGraph. MIT licensed
   <sub>★ 2 · Python · MIT · source · pushed 2026-10-19 · Win · WSL2? · macOS · Linux</sub>
@@ -202,7 +202,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 3.5k · TypeScript · AGPL-3.0 · clone · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/RunMaestro/Maestro.git`</sub>
 - **[Atomic Agent](https://github.com/AtomicBot-ai/atomic-agent)** — Local-first coding agent that runs open-weight models entirely on your machine via a llama.cpp fork. 56 built-in tools (browser, filesystem, git, memory, vision), MCP support, and a five-layer memory system. No account or API key required
-  <sub>★ 3.4k · TypeScript · MIT · psh · pushed 2026-10-21 · macOS</sub>
+  <sub>★ 3.4k · TypeScript · MIT · psh · pushed 2026-10-22 · macOS</sub>
   <sub>`irm https://atomicagent.io/install.ps1 | iex`</sub>
 - **[BitFun](https://github.com/GCWing/OpenBitFun)** — Cross-platform desktop coding agent built on a Rust runtime, with Git-aware workflows, Deep Review, MCP/Skills/Hooks, remote workspaces, and state-bound Mini Apps
   <sub>★ 3k · Rust · MIT · source · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
@@ -211,7 +211,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 2.1k · JavaScript · MIT · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Orkas-AI/Orkas.git`</sub>
 - **[SwarmClaw](https://github.com/swarmclawai/swarmclaw)** — Self-hosted multi-agent runtime with MCP client and server support, 23+ LLM providers, persistent memory, skills, schedules, and messaging connectors. Electron desktop app, CLI, and Docker
-  <sub>★ 697 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 698 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g @swarmclawai/swarmclaw`</sub>
 - **[agentty](https://github.com/agentty-org/agentty)** — Native C++26 terminal coding agent and drop-in claude-code alternative. Single static binary, sub-millisecond cold start, sandboxed by default, and model-agnostic (Claude, OpenAI, Groq, OpenRouter, Ollama). Runs inside Zed over ACP and drives air-gapped hosts over SSH. MIT
   <sub>★ 623 · C++ · MIT · winget · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
@@ -244,7 +244,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 105 · JavaScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx great-cto init`</sub>
 - **[Garcon](https://github.com/cfal/garcon)** — Self-hosted browser and mobile workspace for running and steering parallel Claude Code, Codex, Cursor Agent, OpenCode, Amp, Droid, and Pi sessions, with integrated terminal, files, diff review, Git/PR workflows, mobile approvals, and cross-agent transfers
-  <sub>★ 95 · TypeScript · clone · pushed 2026-10-22 · Win · WSL2? · macOS? · Linux · Docker</sub>
+  <sub>★ 95 · TypeScript · clone · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/cfal/garcon.git`</sub>
 - **[NarraNexus](https://github.com/NetMindAI-Open/NarraNexus)** — Open-source AI agent team workspace with a ready-to-run team of agents that remember, collaborate, and use tools, supporting multi-agent coding workflows
   <sub>★ 92 · Python · Apache-2.0 · clone · pushed 2026-10-19 · Win · WSL2? · macOS · Linux</sub>
@@ -427,7 +427,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 95 · JavaScript · MIT · npm · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g rolecraft`</sub>
 - **[AI Badger](https://github.com/PVRLabs/aibadger)** — Local-first CLI for extracting clean, relevant codebase context to paste into any AI coding assistant
-  <sub>★ 76 · Go · MIT · brew · pushed 2026-10-21 · Win? · WSL2? · macOS · Linux</sub>
+  <sub>★ 76 · Go · MIT · brew · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux</sub>
   <sub>`brew install pvrlabs/tap/badger`</sub>
 - **[Crab Code](https://github.com/lingcoder/crab-code)** — Rust-native agentic coding CLI supporting any LLM provider with multi-entry-point architecture (CLI/IDE/Web/Desktop). Apache-2.0
   <sub>★ 76 · Rust · MIT · clone · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -871,7 +871,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 991 · TypeScript · Apache-2.0 · uv · pushed 2026-07-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install codealmanac@latest`</sub>
 - **[SwarmVault](https://github.com/swarmclawai/swarmvault)** — Local-first RAG knowledge vault. Compiles raw sources into a durable markdown wiki with a knowledge graph and hybrid SQLite FTS plus embeddings. Built-in MCP server for Claude Code, Codex, and OpenCode
-  <sub>★ 728 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 729 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @swarmvaultai/cli`</sub>
 - **[notabene](https://github.com/z29k/notabene)** — Self-hosted docs viewer with Google-Docs-style comments and a human-agent review loop that turns comments into source edits
   <sub>★ 5 · TypeScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1018,7 +1018,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 26.3k · TypeScript · MIT · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g promptfoo`</sub>
 - **[AIWG](https://github.com/jmagly/aiwg)** — Deploys reusable agents, skills, and governed workflows across multiple AI coding platforms
-  <sub>★ 224 · TypeScript · MIT · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 225 · TypeScript · MIT · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm i -g aiwg`</sub>
 - **[LangChain](https://www.langchain.com/)** — The most popular framework for building LLM-powered applications with chains, agents, and retrieval
   <sub>website</sub>
@@ -1057,7 +1057,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## Database and API Tools
 
 - **[Omnigraph](https://github.com/ModernRelay/omnigraph)** — Typed graph database where agents branch and merge like Git. S3-native, Rust, traversal + vector + BM25 in one runtime
-  <sub>★ 1.7k · Rust · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux</sub>
+  <sub>★ 1.7k · Rust · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ModernRelay/omnigraph@omnigraph`</sub>
 - **[Supabase AI](https://supabase.com/ai)** — AI for database schema generation, query optimization, and API development
   <sub>website</sub>
@@ -1207,7 +1207,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 161 · Python · MIT · pipx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install unslop`</sub>
 - **[agenttrace](https://github.com/luoyuctl/agenttrace)** — Local-first TUI and report generator for AI coding-agent session logs. Tracks cost, tokens, latency, tool failures, health, diffs, and CI gates across Claude Code, Codex CLI, Gemini CLI, Qwen Code, Cline, Cursor exports, Aider, OpenCode/OpenClaw, Kimi CLI, and generic JSON/JSONL traces
-  <sub>★ 148 · Rust · MIT · psh · pushed 2026-10-19 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 149 · Rust · MIT · psh · pushed 2026-10-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://raw.githubusercontent.com/luoyuctl/agenttrace/master/install.ps1 | iex`</sub>
 - **[DSH Studio](https://github.com/Moresyl/dsh-studio)** — Open-source cross-platform desktop host for installing, running, health-checking, and supervising DeepSeek Harness locally
   <sub>★ 128 · Rust · MIT · scoop · pushed 2026-10-05 · Win · WSL2? · macOS · Linux</sub>
@@ -1216,7 +1216,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 114 · Python · MIT · source · pushed 2026-06-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/baskduf/harness-starter-kit.git`</sub>
 - **[AgentPlane](https://github.com/basilisk-labs/agentplane)** — Local-first, Git-native CLI harness for repo-local coding-agent work, recording task state, accepted plans, verification evidence, and finish records inside the repository
-  <sub>★ 88 · TypeScript · MIT · npm · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 88 · TypeScript · MIT · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g agentplane`</sub>
 - **[Brigade](https://github.com/escoffier-labs/brigade)** — Local-first CLI (MIT) that keeps one reviewed source of the MCP servers, tools, skills, and memory your AI coding agents share, synced into each tool's native config (Claude Code, Codex, Cursor, VS Code, OpenCode, and more) with a review gate before every write and a rollback receipt. No daemon, no lock-in
   <sub>★ 80 · Python · MIT · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1237,7 +1237,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 52 · Swift · MIT · brew · pushed 2026-10-19 · macOS</sub>
   <sub>`brew tap larryxiao/openquack https://github.com/larryxiao/openquack`</sub>
 - **[Wolfpack](https://github.com/almogdepaz/wolfpack)** — Self-hosted browser and mobile control center for persistent AI coding-agent and shell sessions across machines, with direct private access over Tailscale
-  <sub>★ 49 · TypeScript · MIT · npx · pushed 2026-10-22 · WSL2 · macOS · Linux</sub>
+  <sub>★ 49 · TypeScript · MIT · npx · pushed 2026-10-22 · WSL2 · macOS? · Linux</sub>
   <sub>`bunx --bun wolfpack-bridge@latest`</sub>
 - **[Harness for Codex](https://github.com/ganimjeong/Harness-for-codex)** — Language-agnostic repository template for consistent Codex and AI-assisted development workflows with AGENTS.md, standard scripts, CI, hooks, and docs
   <sub>★ 49 · Shell · MIT · source · pushed 2026-05-30</sub>

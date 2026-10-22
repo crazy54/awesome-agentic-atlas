@@ -11,7 +11,7 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/openclaw/openclaw"><img src="https://opengraph.githubassets.com/1/openclaw/openclaw" width="260"></a> | <a href="https://github.com/NousResearch/hermes-agent"><img src="https://opengraph.githubassets.com/1/NousResearch/hermes-agent" width="260"></a> | <a href="https://github.com/HKUDS/nanobot"><img src="https://opengraph.githubassets.com/1/HKUDS/nanobot" width="260"></a> |
-| **[OpenClaw](https://github.com/openclaw/openclaw)**<br>★ 392.8k | **[Hermes Agent](https://github.com/NousResearch/hermes-agent)**<br>★ 256.1k | **[nanobot](https://github.com/HKUDS/nanobot)**<br>★ 49.3k |
+| **[OpenClaw](https://github.com/openclaw/openclaw)**<br>★ 392.8k | **[Hermes Agent](https://github.com/NousResearch/hermes-agent)**<br>★ 256.2k | **[nanobot](https://github.com/HKUDS/nanobot)**<br>★ 49.3k |
 | <a href="https://github.com/AstrBotDevs/AstrBot"><img src="https://github.com/user-attachments/assets/f17cdb90-52d7-4773-be2e-ff64b566af6b" width="260"></a> | <a href="https://github.com/zeroclaw-labs/zeroclaw"><img src="https://opengraph.githubassets.com/1/zeroclaw-labs/zeroclaw" width="260"></a> | <a href="https://github.com/nanocoai/nanoclaw"><img src="https://opengraph.githubassets.com/1/qwibitai/nanoclaw" width="260"></a> |
 | **[AstrBot](https://github.com/AstrBotDevs/AstrBot)**<br>★ 42.8k | **[ZeroClaw](https://github.com/zeroclaw-labs/zeroclaw)**<br>★ 33k | **[NanoClaw](https://github.com/nanocoai/nanoclaw)**<br>★ 31k |
 
@@ -25,7 +25,7 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
   <sub>★ 392.8k · TypeScript · MIT · npm · pushed 2026-10-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g openclaw@latest --allow-scripts=openclaw`</sub>
 - **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** — Python / TypeScript - Self-improving AI agent with autonomous skill creation, persistent memory, multi-platform messaging, and subagent delegation
-  <sub>★ 256.1k · Python · MIT · script · pushed 2026-10-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 256.2k · Python · MIT · script · pushed 2026-10-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`</sub>
 - **[nanobot](https://github.com/HKUDS/nanobot)** — Python - Ultra-lightweight OpenClaw-style assistant focused on research workflows, one-click deploy, MCP support, and agent social networking
   <sub>★ 49.3k · Python · MIT · psh · pushed 2026-10-22 · Win · WSL2? · macOS? · Linux · Docker</sub>
@@ -46,7 +46,7 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
   <sub>★ 18.2k · Rust · Apache-2.0 · psh · pushed 2026-07-02 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`irm https://openfang.sh/install.ps1 | iex`</sub>
 - **[IronClaw](https://github.com/nearai/ironclaw)** — Rust - OpenClaw-inspired personal assistant focused on privacy and security with local encrypted data and layered defenses
-  <sub>★ 12.7k · Rust · Apache-2.0 · psh · pushed 2026-10-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 12.7k · Rust · Apache-2.0 · psh · pushed 2026-10-22 · Win · WSL2 · macOS? · Linux?</sub>
   <sub>`irm "https://github.com/nearai/ironclaw/releases/download/$IronClawReleaseTag/ironclaw-installer.ps1" | iex`</sub>
 - **[NullClaw](https://github.com/nullclaw/nullclaw)** — Zig - Fully autonomous assistant infrastructure designed for tiny binaries, low memory usage, and highly portable deployment
   <sub>★ 8.1k · Zig · MIT · brew · pushed 2026-10-08 · Win · WSL2? · macOS · Linux · Docker</sub>

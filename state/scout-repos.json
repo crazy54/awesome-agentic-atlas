@@ -55,11 +55,6 @@
    "section": "MCP Servers",
    "since": "2026-10-11"
   },
-  "1ay1/agentty": {
-   "id": 1213491458,
-   "section": "Coding Agents",
-   "since": "2026-10-11"
-  },
   "1jehuang/jcode": {
    "id": 1128204614,
    "section": "Coding Agents",
@@ -3423,6 +3418,11 @@
   "agentsope/SkillAlchemy": {
    "id": 1244431440,
    "section": "Agent Skills",
+   "since": "2026-10-11"
+  },
+  "agentty-org/agentty": {
+   "id": 1213491458,
+   "section": "Coding Agents",
    "since": "2026-10-11"
   },
   "agentuniverse-ai/agentUniverse": {

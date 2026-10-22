@@ -11,9 +11,9 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> | <a href="https://github.com/usestrix/strix"><img src="https://raw.githubusercontent.com/usestrix/.github/main/imgs/cover.png" width="260"></a> | <a href="https://github.com/BerriAI/litellm"><img src="https://github.com/user-attachments/assets/c5ee0412-6fb5-4fb6-ab5b-bafae4209ca6" width="260"></a> |
-| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 91.6k | **[Strix](https://github.com/usestrix/strix)**<br>★ 71k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 61.8k |
+| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 91.6k | **[Strix](https://github.com/usestrix/strix)**<br>★ 71.1k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 61.8k |
 | <a href="https://github.com/NVIDIA/garak"><img src="https://opengraph.githubassets.com/1/leondz/garak" width="260"></a> | <a href="https://github.com/bridgecrewio/checkov"><img src="https://raw.githubusercontent.com/bridgecrewio/checkov/main/docs/checkov-jenkins.png" width="260"></a> | <a href="https://github.com/guardrails-ai/guardrails"><img src="https://opengraph.githubassets.com/1/guardrails-ai/guardrails" width="260"></a> |
-| **[Garak](https://github.com/NVIDIA/garak)**<br>★ 9.6k | **[Checkov](https://github.com/bridgecrewio/checkov)**<br>★ 9.1k | **[Guardrails](https://github.com/guardrails-ai/guardrails)**<br>★ 7.6k |
+| **[Garak](https://github.com/NVIDIA/garak)**<br>★ 9.7k | **[Checkov](https://github.com/bridgecrewio/checkov)**<br>★ 9.1k | **[Guardrails](https://github.com/guardrails-ai/guardrails)**<br>★ 7.6k |
 
 ## Contents
 
@@ -43,10 +43,10 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Red Teaming &amp; Vulnerability Scanners
 
 - **[Strix](https://github.com/usestrix/strix)** — An autonomous AI agent designed for penetration testing. It runs inside a docker sandbox to actively probe applications and generate verified exploit capabilities
-  <sub>★ 71k · Python · Apache-2.0 · npx · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 71.1k · Python · Apache-2.0 · npx · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add usestrix/strix`</sub>
 - **[Garak](https://github.com/NVIDIA/garak)** — The "Nmap for LLMs." A vulnerability scanner that probes models for hallucination, data leakage, and prompt injection susceptibilities
-  <sub>★ 9.6k · Python · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 9.7k · Python · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/leondz/garak.git`</sub>
 - **[Agentic Security](https://github.com/msoedov/agentic_security)** — A dedicated vulnerability scanner for agent workflows and LLMs capable of running multi-step jailbreaks and fuzzing attacks against agent logic
   <sub>★ 2k · Python · Apache-2.0 · pip · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>

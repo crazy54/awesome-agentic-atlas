@@ -2,7 +2,7 @@
 
 Targets Gemini, Vertex AI, or Google's agent stack.
 
-**841 projects** · 801 with stars to rank by · 4,042,593 combined stars
+**841 projects** · 801 with stars to rank by · 4,043,971 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=gemini-google)
 

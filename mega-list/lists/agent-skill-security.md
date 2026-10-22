@@ -11,7 +11,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/Significant-Gravitas/AutoGPT"><img src="https://raw.githubusercontent.com/Significant-Gravitas/AutoGPT/master/docs/home/.gitbook/assets/Banner_image.png" width="260"></a> | <a href="https://github.com/f/prompts.chat"><img src="https://raw.githubusercontent.com/f/prompts.chat/main/public/sponsors/clemta.webp" width="260"></a> | <a href="https://github.com/punkpeye/awesome-mcp-servers"><img src="https://opengraph.githubassets.com/1/punkpeye/awesome-mcp-servers" width="260"></a> |
-| **[AutoGPT Plugins](https://github.com/Significant-Gravitas/AutoGPT)**<br>★ 187.7k | **[awesome-chatgpt-prompts](https://github.com/f/prompts.chat)**<br>★ 173.9k | **[awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)**<br>★ 96.7k |
+| **[AutoGPT Plugins](https://github.com/Significant-Gravitas/AutoGPT)**<br>★ 187.7k | **[awesome-chatgpt-prompts](https://github.com/f/prompts.chat)**<br>★ 174k | **[awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)**<br>★ 96.7k |
 | <a href="https://github.com/e2b-dev/awesome-ai-agents"><img src="https://opengraph.githubassets.com/1/e2b-dev/awesome-ai-agents" width="260"></a> | <a href="https://github.com/promptfoo/promptfoo"><img src="https://raw.githubusercontent.com/promptfoo/promptfoo/main/site/static/img/claude-vs-gpt-example%402x.png" width="260"></a> | <a href="https://github.com/NVIDIA/NemoClaw"><img src="https://opengraph.githubassets.com/1/NVIDIA/NemoClaw" width="260"></a> |
 | **[awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents)**<br>★ 30.6k | **[Promptfoo](https://github.com/promptfoo/promptfoo)**<br>★ 26.3k | **[NemoClaw](https://github.com/NVIDIA/NemoClaw)**<br>★ 22.8k |
 
@@ -49,7 +49,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 ## Related Awesome Lists
 
 - **[awesome-chatgpt-prompts](https://github.com/f/prompts.chat)** — Prompt engineering (includes adversarial examples)
-  <sub>★ 173.9k · HTML · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 174k · HTML · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx prompts.chat new my-prompt-library`</sub>
 - **[awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)** — MCP server ecosystem (attack surface reference)
   <sub>★ 96.7k · MIT · source · pushed 2026-10-18 · Win · WSL2 · macOS · Linux · Docker</sub>
@@ -76,10 +76,10 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 22.8k · TypeScript · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/NVIDIA/NemoClaw.git`</sub>
 - **[CubeSandbox](https://github.com/TencentCloud/CubeSandbox)** — Hardware-isolated (per-kernel) sub-60ms sandbox for secure AI agent code execution, with an out-of-sandbox credential vault, eBPF network isolation, and domain-allowlisted egress controls with audit logging
-  <sub>★ 13k · Go · source · pushed 2026-10-22 · WSL2? · Linux</sub>
+  <sub>★ 13k · Go · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/TencentCloud/CubeSandbox.git`</sub>
 - **[Garak](https://github.com/NVIDIA/garak)** — LLM vulnerability scanner
-  <sub>★ 9.6k · Python · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 9.7k · Python · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/leondz/garak.git`</sub>
 - **[NeMo Guardrails](https://github.com/NVIDIA-NeMo/Guardrails)** — NVIDIA's toolkit for adding guardrails to LLM-based applications
   <sub>★ 7.3k · Python · source · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -97,7 +97,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 1.5k · TypeScript · Apache-2.0 · pip · pushed 2024-08-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install rebuff`</sub>
 - **[HOL Guard](https://github.com/hashgraph-online/hol-guard)** — Local-first runtime firewall for AI coding agents: intercepts shell, secrets, MCP config changes, and package installs before execution
-  <sub>★ 965 · Python · Apache-2.0 · pipx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 966 · Python · Apache-2.0 · pipx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pipx install hol-guard`</sub>
 - **[Pipelock](https://github.com/pipelab-org/pipelock)** — Open-source AI agent firewall and MCP-aware egress proxy with DLP, prompt injection scanning, process sandboxing, and mediator-signed action receipts
   <sub>★ 951 · Go · Apache-2.0 · brew · pushed 2026-10-22 · Win? · WSL2 · macOS · Linux · Docker</sub>

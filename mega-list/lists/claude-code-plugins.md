@@ -11,7 +11,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/JuliusBrussee/cavekit"><img src="https://opengraph.githubassets.com/1/JuliusBrussee/blueprint" width="260"></a> | <a href="https://github.com/qualixar/superlocalmemory"><img src="https://img.youtube.com/vi/PMWW_ypsL60/hqdefault.jpg" width="260"></a> | <a href="https://github.com/ofershap/tailwind-best-practices"><img src="https://opengraph.githubassets.com/1/ofershap/tailwind-best-practices" width="260"></a> |
-| **[blueprint](https://github.com/JuliusBrussee/cavekit)**<br>★ 1.2k | **[superlocalmemory](https://github.com/qualixar/superlocalmemory)**<br>★ 254 | **[tailwind-best-practices](https://github.com/ofershap/tailwind-best-practices)**<br>★ 13 |
+| **[blueprint](https://github.com/JuliusBrussee/cavekit)**<br>★ 1.2k | **[superlocalmemory](https://github.com/qualixar/superlocalmemory)**<br>★ 255 | **[tailwind-best-practices](https://github.com/ofershap/tailwind-best-practices)**<br>★ 13 |
 | <a href="https://github.com/ofershap/sveltekit-best-practices"><img src="https://opengraph.githubassets.com/1/ofershap/sveltekit-best-practices" width="260"></a> | <a href="https://github.com/ofershap/typescript-best-practices"><img src="https://opengraph.githubassets.com/1/ofershap/typescript-best-practices" width="260"></a> | <a href="https://github.com/WaterTian/cc-hud"><img src="https://raw.githubusercontent.com/WaterTian/cc-hud/main/cc-hud-preview.png?v=0.7.0" width="260"></a> |
 | **[sveltekit-best-practices](https://github.com/ofershap/sveltekit-best-practices)**<br>★ 13 | **[typescript-best-practices](https://github.com/ofershap/typescript-best-practices)**<br>★ 9 | **[cc-hud](https://github.com/WaterTian/cc-hud)**<br>★ 9 |
 
@@ -49,7 +49,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 1.2k · MIT · npx · pushed 2026-08-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add JuliusBrussee/cavekit`</sub>
 - **[superlocalmemory](https://github.com/qualixar/superlocalmemory)** — External: Persistent memory + learning MCP server for Claude Code. Zero-cloud, 6-channel retrieval, 16K+ monthly downloads. Backed by 3 arXiv papers
-  <sub>★ 254 · Python · AGPL-3.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 255 · Python · AGPL-3.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g superlocalmemory # add --media to also turn on pictures and documents`</sub>
 - **[tailwind-best-practices](https://github.com/ofershap/tailwind-best-practices)** — Tailwind CSS v4 patterns — stop agents from generating v3 code
   <sub>★ 13 · JavaScript · MIT · npx · pushed 2026-02-20 · Win? · WSL2? · macOS? · Linux?</sub>

@@ -191,7 +191,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>★ 137.3k · TypeScript · MIT · source · pushed 2026-10-22 · macOS</sub>
   <sub>`git clone https://github.com/garrytan/gstack.git`</sub>
 - **[coreyhaines31/email-sequence](https://github.com/coreyhaines31/marketingskills)** — Build email sequences and drip campaigns
-  <sub>★ 55.9k · JavaScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 56k · JavaScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add coreyhaines31/marketingskills`</sub>
 - **[phuryn/pm-skills](https://github.com/phuryn/pm-skills)** — Full collection: advanced product management frameworks, OKRs, and strategy skills
   <sub>★ 27.3k · MIT · source · pushed 2026-10-16 · Win?</sub>
@@ -212,7 +212,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>★ 87 · Python · Apache-2.0 · clone · pushed 2026-08-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/humanpen/humanpen-skill`</sub>
 - **[javimosch/supercli](https://github.com/javimosch/supercli)** — Universal CLI router with 4,795+ agent skills (SKILL.md). Agents discover CLI tools by intent via sc skills search, inspect schemas via sc inspect, and execute with deterministic JSON output. Each plugin ships with its own skills/quickstart/SKILL.md — instant agent onboarding for 7,000+ CLI tools
-  <sub>★ 55 · JavaScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux</sub>
+  <sub>★ 56 · JavaScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux</sub>
   <sub>`npx supercli skills search "deploy"`</sub>
 - **[surendranb/writing-skills](https://github.com/surendranb/writing-skills)** — 15 writing-style skills: 8 measurable frameworks (plain language, ASD-STE100, AP journalism, GOV.UK, business BLUF) and 7 character voices, each with a verify checklist
   <sub>★ 49 · Python · MIT · npx · pushed 2026-09-02 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -422,7 +422,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Model Context Protocol (MCP)
 
 - **[MCP Server Examples](https://github.com/modelcontextprotocol/servers)** — Official server implementations
-  <sub>★ 91.5k · TypeScript · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 91.5k · TypeScript · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @modelcontextprotocol/server-memory`</sub>
 - **[MCP Official Documentation](https://modelcontextprotocol.io/)** — The open standard
   <sub>website</sub>
@@ -440,7 +440,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Developer Tools &amp; Frameworks
 
 - **[remotion-dev/remotion](https://github.com/remotion-dev/skills)** — Programmatic video creation with React
-  <sub>★ 5.5k · TypeScript · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5.5k · TypeScript · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add remotion-dev/skills`</sub>
 - **[callstackincubator/github](https://github.com/callstackincubator/agent-skills)** — GitHub workflow patterns for PRs, code review, branching
   <sub>★ 1.7k · Shell · MIT · npx · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -533,7 +533,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>★ 3.1k · TypeScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add microsoft/skills`</sub>
 - **[getsentry/skills](https://github.com/getsentry/skills)** — Full collection: debug errors, performance issues, and traces with Sentry
-  <sub>★ 1.1k · Python · Apache-2.0 · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.1k · Python · Apache-2.0 · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add getsentry/skills`</sub>
 - **[firecrawl/firecrawl-browser](https://github.com/firecrawl/cli)** — Browser-based web scraping and interaction
   <sub>★ 661 · TypeScript · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
@@ -545,13 +545,13 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>Python · CC-BY-SA-4.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/trailofbits/skills.git && cd skills/plugins/modern-python/skills/modern-python`</sub>
 - **[getsentry/agents-md](https://github.com/getsentry/skills/tree/main/skills/agents-md)** — Generate and manage AGENTS.md files
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-19</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/skills/agents-md`</sub>
 - **[getsentry/code-review](https://github.com/getsentry/skills/tree/main/skills/code-review)** — Perform structured code reviews
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-19</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/skills/code-review`</sub>
 - **[getsentry/find-bugs](https://github.com/getsentry/skills/tree/main/skills/find-bugs)** — Find and identify bugs in code
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-19</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/skills/find-bugs`</sub>
 - **[firecrawl/firecrawl-cli](https://github.com/firecrawl/cli/tree/main/skills/firecrawl)** — Scrape, crawl, search, and map the web via CLI
   <sub>TypeScript · in-repo · pushed 2026-10-22</sub>
@@ -593,14 +593,14 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 ## Community Skills
 
 - **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)** — High-agency frontend skill to eliminate generic UI slop
-  <sub>★ 100.9k · JavaScript · MIT · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 101k · JavaScript · MIT · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/Leonxlnx/taste-skill --skill "design-taste-frontend"`</sub>
 - **[ComposioHQ/composio](https://github.com/ComposioHQ/composio)** — Connect AI agents to 1000+ external apps with managed authentication
   <sub>★ 30.7k · TypeScript · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install composio composio-openai-agents openai-agents`</sub>
 - **[AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo)** — Universal SEO skill for website analysis
-  <sub>★ 19.7k · Python · MIT · script · pushed 2026-10-21 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/claude-seo/main/uninstall.sh | bash`</sub>
+  <sub>★ 19.7k · Python · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/AgriciDaniel/claude-seo.git`</sub>
 - **[SawyerHood/dev-browser](https://github.com/SawyerHood/dev-browser)** — Web browser capability for agents
   <sub>★ 6.7k · TypeScript · MIT · npm · pushed 2026-10-18 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g dev-browser`</sub>
@@ -680,7 +680,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>★ 261 · Python · Apache-2.0 · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add qdrant/skills/meta/qdrant-advisor`</sub>
 - **[qualixar/superlocalmemory](https://github.com/qualixar/superlocalmemory)** — Local-first persistent memory for coding agents via MCP, with governed recall
-  <sub>★ 254 · Python · AGPL-3.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 255 · Python · AGPL-3.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g superlocalmemory # add --media to also turn on pictures and documents`</sub>
 - **[chrisvoncsefalvay/claude-d3js-skill](https://github.com/chrisvoncsefalvay/claude-d3js-skill)** — D3 charts and interactive data visualizations
   <sub>★ 246 · JavaScript · source · pushed 2025-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -737,7 +737,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>★ 123 · TypeScript · MIT · npx · pushed 2026-07-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ameyalambat128/swiftui-skills`</sub>
 - **[glacierphonk/naming](https://github.com/glacierphonk/naming)** — Metaphor-driven naming for products, SaaS, brands, and open source projects
-  <sub>★ 120 · Shell · MIT · clone · pushed 2026-04-19</sub>
+  <sub>★ 121 · Shell · MIT · clone · pushed 2026-04-19</sub>
   <sub>`git clone https://github.com/glacierphonk/naming.git`</sub>
 - **[cognyai/claude-code-marketing-skills](https://github.com/cognyai/claude-code-marketing-skills)** — AI marketing skills: SEO Audit, Landing Page Review, Competitor Analysis, Ad Copy Writer, Lead Qualification. 5 free skills + premium via Cogny MCP
   <sub>★ 107 · HTML · script · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
@@ -751,12 +751,12 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
 - **[frmoretto/stream-coding](https://github.com/frmoretto/stream-coding)** — Stream Coding methodology
   <sub>★ 96 · clone · pushed 2026-02-26</sub>
   <sub>`git clone https://github.com/frmoretto/stream-coding`</sub>
+- **[xianyu110/ecommerce-video-skills](https://github.com/xianyu110/ecommerce-video-skills)** — 12 skills for ecommerce short videos with local ffmpeg rendering
+  <sub>★ 95 · Python · MIT · npx · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx skills add xianyu110/ecommerce-video-skills`</sub>
 - **[sametcelikbicak/rolecraft](https://github.com/rolecraft-sh/rolecraft)** — Zero-dependency CLI to install AI agent skills as roles &amp; behaviors from any source. Works with opencode, claude-code, cursor, and all spec-compliant agents
   <sub>★ 95 · JavaScript · MIT · npm · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g rolecraft`</sub>
-- **[xianyu110/ecommerce-video-skills](https://github.com/xianyu110/ecommerce-video-skills)** — 12 skills for ecommerce short videos with local ffmpeg rendering
-  <sub>★ 93 · Python · MIT · npx · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx skills add xianyu110/ecommerce-video-skills`</sub>
 - **[chadboyda/agent-gtm-skills](https://github.com/chadboyda/agent-gtm-skills)** — 18 go-to-market skills: pricing, outbound, SEO, ads, retention, and ops
   <sub>★ 81 · HTML · npx · pushed 2026-02-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx add-skill chadboyda/agent-gtm-skills`</sub>

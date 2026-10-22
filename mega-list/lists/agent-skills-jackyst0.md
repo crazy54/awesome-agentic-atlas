@@ -11,9 +11,9 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/obra/superpowers"><img src="https://opengraph.githubassets.com/1/obra/superpowers" width="260"></a> | <a href="https://github.com/affaan-m/ECC"><img src="https://raw.githubusercontent.com/affaan-m/everything-claude-code/main/assets/hero.png" width="260"></a> | <a href="https://github.com/anthropics/skills"><img src="https://opengraph.githubassets.com/1/anthropics/skills" width="260"></a> |
-| **[obra/superpowers](https://github.com/obra/superpowers)**<br>★ 303.5k | **[everything-claude-code](https://github.com/affaan-m/ECC)**<br>★ 286.1k | **[anthropics/skills](https://github.com/anthropics/skills)**<br>★ 182.9k |
+| **[obra/superpowers](https://github.com/obra/superpowers)**<br>★ 303.6k | **[everything-claude-code](https://github.com/affaan-m/ECC)**<br>★ 286.2k | **[anthropics/skills](https://github.com/anthropics/skills)**<br>★ 183k |
 | <a href="https://github.com/browser-use/browser-use"><img src="https://github.com/user-attachments/assets/135885e8-1141-4e10-b719-bf690ae7d260" width="260"></a> | <a href="https://github.com/addyosmani/agent-skills"><img src="https://addyosmani.com/assets/images/addys-agent-skills.jpg" width="260"></a> | <a href="https://github.com/ComposioHQ/awesome-claude-skills"><img src="https://github.com/user-attachments/assets/e91255af-e4ba-4d71-b1a8-bd081e8a234a" width="260"></a> |
-| **[browser-use/browser-use](https://github.com/browser-use/browser-use)**<br>★ 118.9k | **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)**<br>★ 109.5k | **[ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)**<br>★ 77.7k |
+| **[browser-use/browser-use](https://github.com/browser-use/browser-use)**<br>★ 118.9k | **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)**<br>★ 109.6k | **[ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)**<br>★ 77.7k |
 
 ## Contents
 
@@ -29,10 +29,10 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Productivity
 
 - **[obra/superpowers](https://github.com/obra/superpowers)** — Complete dev workflow (Debug/TDD/Code Review/Planning)
-  <sub>★ 303.5k · Shell · MIT · clone · pushed 2026-10-21</sub>
+  <sub>★ 303.6k · Shell · MIT · clone · pushed 2026-10-21</sub>
   <sub>`git clone https://github.com/obra/superpowers.git`</sub>
 - **[coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills)** — Marketing Skills (SEO/Copywriting/CRO/Ads)
-  <sub>★ 55.9k · JavaScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 56k · JavaScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add coreyhaines31/marketingskills`</sub>
 - **[alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills)** — 20+ productivity tools with 8 expert Agents
   <sub>★ 28.5k · Python · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -86,7 +86,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Skills Collections
 
 - **[everything-claude-code](https://github.com/affaan-m/ECC)** — Complete Claude Code configs (agents/skills/hooks)
-  <sub>★ 286.1k · JavaScript · MIT · clone · pushed 2026-10-20 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 286.2k · JavaScript · MIT · clone · pushed 2026-10-20 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/affaan-m/ECC.git`</sub>
 - **[ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)** — Claude Skills collection by Composio
   <sub>★ 77.7k · Python · npx · pushed 2026-09-18 · Win · WSL2? · macOS · Linux</sub>
@@ -115,12 +115,12 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 - **[Ai-Agent-Skills](https://github.com/MoizIbnYousaf/ai-agent-skills)** — Universal AI Skills installer (Homebrew for Skills)
   <sub>★ 1.2k · JavaScript · MIT · npx · pushed 2026-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx ai-agent-skills install install-from-remote-library`</sub>
-- **[claude-skills-collection](https://github.com/abubakarsiddik31/claude-skills-collection)** — Curated official and community Skills
-  <sub>★ 1.1k · npx · pushed 2026-09-12 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`npx skills add https://github.com/anthropics/skills --list`</sub>
 - **[youtube-skills](https://github.com/ZeroPointRepo/youtube-skills)** — YouTube transcript, video search, channel and playlist skills for Claude Code, OpenClaw, Hermes Agent, and other agent runtimes
   <sub>★ 1.1k · MIT · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx clawhub@latest install youtube-full`</sub>
+- **[claude-skills-collection](https://github.com/abubakarsiddik31/claude-skills-collection)** — Curated official and community Skills
+  <sub>★ 1.1k · npx · pushed 2026-09-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>`npx skills add https://github.com/anthropics/skills --list`</sub>
 - **[simonw/claude-skills](https://github.com/simonw/claude-skills)** — Claude Skills documentation by Simon Willison
   <sub>★ 929 · source · pushed 2025-12-12</sub>
   <sub>`git clone https://github.com/simonw/claude-skills.git`</sub>
@@ -128,7 +128,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>★ 597 · JavaScript · MIT · npx · pushed 2026-09-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add unifapi-agent/agents`</sub>
 - **[OrkasVideoStudio](https://github.com/Orkas-AI/Orkas-VideoStudio)** — Agent video-production skill pack with CLI and MCP runtime
-  <sub>★ 331 · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 326 · TypeScript · MIT · npm · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g @orkas/video-studio # provides the `ovs` command`</sub>
 - **[cursor-rules-and-prompts](https://github.com/thehimel/cursor-rules-and-prompts)** — Cursor rules and prompts collection
   <sub>★ 249 · Shell · source · pushed 2026-08-09</sub>
@@ -155,7 +155,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Official Resources
 
 - **[anthropics/skills](https://github.com/anthropics/skills)** — Official Anthropic Agent Skills repository
-  <sub>★ 182.9k · Python · source · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 183k · Python · source · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/anthropics/skills.git`</sub>
 - **[GitHub Awesome Copilot](https://github.com/github/awesome-copilot)** — Official Copilot resources collection
   <sub>★ 40.3k · JavaScript · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -212,7 +212,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>★ 118.9k · Python · MIT · source · pushed 2026-10-20 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/browser-use/browser-use.git`</sub>
 - **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)** — Production-grade engineering skills and slash-command workflows for AI coding agents
-  <sub>★ 109.5k · JavaScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 109.6k · JavaScript · MIT · npx · pushed 2026-10-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add addyosmani/agent-skills # install all 25 skills`</sub>
 - **[vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)** — Vercel React/Web design best practices Skills
   <sub>★ 32.8k · JavaScript · npx · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux?</sub>

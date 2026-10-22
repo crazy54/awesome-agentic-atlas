@@ -2,7 +2,7 @@
 
 The Model Context Protocol ecosystem: reference and third-party servers, inspectors, gateways, transports, and the sibling agent-to-agent protocols.
 
-**4,893 projects** · 4,142 with stars to rank by · 2,337,512 combined stars
+**4,893 projects** · 4,143 with stars to rank by · 2,338,297 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers)
 
@@ -10,12 +10,13 @@ The Model Context Protocol ecosystem: reference and third-party servers, inspect
 
 Page **4** of 6, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp-servers.md) · [2](mcp-servers-2.md) · [3](mcp-servers-3.md) · **4** · [5](mcp-servers-5.md) · [6](mcp-servers-6.md) — [continue on page 5 →](mcp-servers-5.md)
 
-## Ranked by stars (4,142)
+## Ranked by stars (4,143)
 
-<sub>Projects 2,508–3,322 of 4,142. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 2,507–3,321 of 4,143. The rest are on this page's other parts, linked above and below.</sub>
 
 | # | Project | ★ | Lists | Plugs into | Runs on | Install / Run | What it does |
 |--:|---|--:|--:|---|---|---|---|
+| 2507 | **[@agentfund/mcp](https://github.com/agentIgris/AgentFund)**<br><sub>agentIgris/AgentFund</sub> | 5 | 1 | <sub>MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/agentIgris/agentfund.git` | Fundraising for AI agents on Solana: register agents, create campaigns, donate via x402 and track on-chain reputation |
 | 2508 | **[Adityaaery20/media-mcp](https://github.com/Adityaaery20/media-mcp)**<br><sub>Adityaaery20/media-mcp</sub> | 5 | 1 | <sub>MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx @modelcontextprotocol/inspector uvx media-mcp-server` | Local image and video processing: resize, convert, compress, crop, thumbnails, metadata extraction, rotate, flip, filters and ffmpeg-based video operations |
 | 2509 | **[Aganium/agenium](https://github.com/Aganium/agenium)**<br><sub>Aganium/agenium</sub> | 5 | 1 | <sub>MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx @agenium/create-agent my-agent` | Bridge MCP servers to the agent:// network so other agents can discover and call their tools, with DNS-like identity, mTLS, trust scores and capability search |
 | 2510 | **[AgentAvow/AgentAvow](https://github.com/AgentAvow/AgentAvow)**<br><sub>AgentAvow/AgentAvow</sub> | 5 | 1 | <sub>MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `pip install agentavow-trust` | Signed, recomputable safety scores for MCP servers, packages and tools, with offline-verifiable attestations and a GitHub Action to gate CI merges |
@@ -830,7 +831,6 @@ Page **4** of 6, because this list is longer than the 512 KB GitHub will render 
 | 3319 | **[jaydubya818/Agentic-KB](https://github.com/jaydubya818/Agentic-KB)**<br><sub>jaydubya818/Agentic-KB</sub> | 2 | 1 | <sub>MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/jaydubya818/Agentic-KB.git` | Persistent engineering knowledge base with source-backed wiki, agent-runtime and repository-context tools, contradiction and staleness checks, and PIN-gated private scopes and wri… |
 | 3320 | **[Jira MCP Server](https://github.com/ahmetbarut/jira-mcp)**<br><sub>ahmetbarut/jira-mcp</sub> | 2 | 1 | <sub>MCP, Cursor</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npm install -g @ahmetbarut/jira-mcp-server` | A modular and extensible MCP server designed to interact with Jira Cloud, providing tools to query boards, issues, and user data — ideal for integrating Jira with AI agents, bots… |
 | 3321 | **[Jobicy/remote-jobs-mcp-server](https://github.com/Jobicy/remote-jobs-mcp-server)**<br><sub>Jobicy/remote-jobs-mcp-server</sub> | 2 | 1 | <sub>Claude Code, Claude / Anthropic, MCP, Cursor, Cline / Roo</sub> | <sub>WSL2 · Linux · Docker</sub> | `git clone https://github.com/Jobicy/remote-jobs-mcp-server.git` | Search, filter and retrieve live remote job listings from Jobicy |
-| 3322 | **[JoeyBrar/agentseal-mcp](https://github.com/JoeyBrar/agentseal-mcp)**<br><sub>JoeyBrar/agentseal-mcp</sub> | 2 | 2 | <sub>MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `pip install agentseal-sdk` | Action logs for AI agents. Records every action in a SHA-256 hash chain, for verifiable audit trails. Install via npx agentseal-mcp |
 
 Page **4** of 6, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp-servers.md) · [2](mcp-servers-2.md) · [3](mcp-servers-3.md) · **4** · [5](mcp-servers-5.md) · [6](mcp-servers-6.md) — [continue on page 5 →](mcp-servers-5.md)
 

@@ -252,7 +252,7 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
 ## Code Quality &amp; Security
 
 - **[HOL Guard](https://github.com/hashgraph-online/hol-guard)** — Security harness that intercepts tool calls in AI coding agents before files change or network is contacted
-  <sub>★ 965 · Python · Apache-2.0 · pipx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 966 · Python · Apache-2.0 · pipx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pipx install hol-guard`</sub>
 - **[reviewing-code](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/reviewing-code/SKILL.md)** — Thorough code review focused on correctness, maintainability, performance, and best practices
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
@@ -264,22 +264,22 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/auditing-performance/SKILL.md`</sub>
 - **[sentry-code-simplifier](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/code-simplifier)** — Refactor for clarity, consistency, and maintainability — eliminates dead code, fixes naming, and reduces complexity
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-19</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/code-simplifier`</sub>
 - **[sentry-find-bugs](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/find-bugs)** — Scan local branch changes for bugs, security vulnerabilities, and code quality issues
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-19</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/find-bugs`</sub>
 - **[sentry-code-review](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/code-review)** — Code review following Sentry's engineering practices
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-19</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/code-review`</sub>
 - **[sentry-security-review](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/security-review)** — Security code review for injection, XSS, auth bypass, and IDOR vulnerabilities
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-19</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/security-review`</sub>
 - **[sentry-django-perf-review](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/django-perf-review)** — Django-specific performance review — N+1 queries, select_related, caching, and serialization
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-19</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/django-perf-review`</sub>
 - **[sentry-skill-scanner](https://github.com/getsentry/skills/tree/main/plugins/sentry-skills/skills/skill-scanner)** — Scan agent skills for security issues — prompt injection, exfiltration, and unsafe tool use
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-19</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/getsentry/skills.git && cd skills/plugins/sentry-skills/skills/skill-scanner`</sub>
 - **[verifying-markdown-formatting](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/verifying-markdown-formatting/SKILL.md)** — Verify headings, lists, links, code blocks, spacing, and style consistency in Markdown files
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>

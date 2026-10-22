@@ -51,7 +51,7 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
   <sub>★ 9.8k · Python · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/awslabs/mcp.git`</sub>
 - **[cloudflare/mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare)** — Integration with Cloudflare services including Workers, KV, R2, and D1
-  <sub>★ 4.4k · TypeScript · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4.4k · TypeScript · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/cloudflare/mcp-server-cloudflare.git`</sub>
 - **[Tiberriver256/mcp-server-azure-devops](https://github.com/Tiberriver256/mcp-server-azure-devops)** — Azure DevOps integration for repository management, work items, and pipelines
   <sub>★ 396 · TypeScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -171,13 +171,13 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
 ## Database Management
 
 - **[haymon-ai/database](https://github.com/haymon-ai/dbmcp)** — Single-binary MCP server for MySQL, MariaDB, PostgreSQL &amp; SQLite with zero runtime dependencies
-  <sub>★ 33 · Rust · MIT · psh · pushed 2026-10-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 33 · Rust · MIT · psh · pushed 2026-10-22 · Win · WSL2 · macOS? · Linux?</sub>
   <sub>`irm https://dbmcp.haymon.ai/install.ps1 | iex`</sub>
 
 ## Version Control
 
 - **[github/github-mcp-server](https://github.com/github/github-mcp-server)** — Official GitHub server for integration with repository management, PRs, issues, and more
-  <sub>★ 33.9k · Go · MIT · source · pushed 2026-10-22 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 33.9k · Go · MIT · source · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/github/github-mcp-server.git`</sub>
 - **[adhikasp/mcp-git-ingest](https://github.com/adhikasp/mcp-git-ingest)** — Read and analyze GitHub repositories with your LLM
   <sub>★ 314 · Python · MIT · source · pushed 2025-01-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -195,10 +195,10 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
   <sub>website</sub>
   <sub>`https://gitea.com/gitea/gitea-mcp`</sub>
 - **[modelcontextprotocol/server-git](https://github.com/modelcontextprotocol/servers/tree/main/server-git)** — Direct Git repository operations including reading, searching, and analyzing local repositories
-  <sub>TypeScript · in-repo · pushed 2026-10-19</sub>
+  <sub>TypeScript · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/modelcontextprotocol/servers.git && cd servers/server-git`</sub>
 - **[modelcontextprotocol/server-gitlab](https://github.com/modelcontextprotocol/servers/tree/main/server-gitlab)** — GitLab platform integration for project management and CI/CD operations
-  <sub>TypeScript · in-repo · pushed 2026-10-19</sub>
+  <sub>TypeScript · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/modelcontextprotocol/servers.git && cd servers/server-gitlab`</sub>
 - **[rog0x/mcp-git-tools](https://github.com/rog0x/mcp-git-tools)** — Git log analysis, blame, diff viewer, branch management, and repository statistics
   <sub>TypeScript · MIT · source · pushed 2026-03-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -450,7 +450,7 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
   <sub>★ 55 · TypeScript · MIT · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @mcp-browser-kit/server@latest --transport http`</sub>
 - **[mcpware/pagecast](https://github.com/mcpware/pagecast)** — MCP server that records browser sessions as GIF/video using Playwright and ffmpeg — AI-driven QA evidence and demo recording
-  <sub>★ 50 · JavaScript · MIT · npx · pushed 2026-03-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 52 · JavaScript · MIT · npx · pushed 2026-03-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @mcpware/pagecast`</sub>
 - **[kimtth/mcp-aoai-web-browsing](https://github.com/kimtth/mcp-aoai-web-browsing)** — A minimal server/client MCP implementation using Azure OpenAI and Playwright
   <sub>★ 35 · Python · MIT · source · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -468,7 +468,7 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
   <sub>★ 4 · JavaScript · MIT · source · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Custodia-Admin/pagebolt-mcp.git`</sub>
 - **[modelcontextprotocol/server-puppeteer](https://github.com/modelcontextprotocol/servers/tree/main/server-puppeteer)** — Browser automation for web scraping and interaction
-  <sub>TypeScript · in-repo · pushed 2026-10-19</sub>
+  <sub>TypeScript · in-repo · pushed 2026-10-22</sub>
   <sub>`git clone https://github.com/modelcontextprotocol/servers.git && cd servers/server-puppeteer`</sub>
 - **[plasmate-labs/plasmate-mcp](https://github.com/plasmate-labs/plasmate-mcp)** — MCP server for Plasmate web-content capture and processing workflows in AI coding assistants
   <sub>JavaScript · Apache-2.0 · npm · pushed 2026-08-17 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -483,7 +483,7 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
   <sub>★ 1.6k · Python · Apache-2.0 · uv · pushed 2025-12-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx --from git+https://github.com/ezyang/codemcp@prod codemcp serve`</sub>
 - **[sipyourdrink-ltd/bernstein](https://github.com/sipyourdrink-ltd/bernstein)** — Multi-agent CLI coding orchestrator with worktree isolation, model routing, quality gates, and audit logging
-  <sub>★ 1.4k · Python · Apache-2.0 · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1.4k · Python · Apache-2.0 · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install bernstein # or: pipx install bernstein`</sub>
 - **[bgauryy/octocode-mcp](https://github.com/bgauryy/octocode)** — AI-powered developer assistant that enables advanced research, analysis and discovery across GitHub ecosystem
   <sub>★ 955 · TypeScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -681,13 +681,13 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
 ## Memory &amp; Context
 
 - **[vectorize-io/hindsight](https://github.com/vectorize-io/hindsight)** — Long-term memory for AI agents with semantic search, auto-capture, and framework integrations
-  <sub>★ 52.6k · Python · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 52.7k · Python · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npx @vectorize-io/hindsight-coding-agents install all # every detected agent, wired natively`</sub>
 - **[mcpware/claude-code-organizer](https://github.com/mcpware/cross-code-organizer)** — MCP server to organize Claude Code configurations — scan, move, delete memories, skills, MCP servers, and hooks across project and user scopes
   <sub>★ 383 · JavaScript · MIT · npx · pushed 2026-10-20 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx @mcpware/cross-code-organizer --distill <session.jsonl>`</sub>
 - **[qualixar/superlocalmemory](https://github.com/qualixar/superlocalmemory)** — Local-first persistent agent memory with hybrid retrieval across semantic, lexical, temporal, and graph signals
-  <sub>★ 254 · Python · AGPL-3.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 255 · Python · AGPL-3.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g superlocalmemory # add --media to also turn on pictures and documents`</sub>
 - **[omega-memory/omega-memory](https://github.com/omega-memory/omega-memory)** — Local-first persistent memory for AI agents. SQLite + ONNX embeddings, semantic search, auto-capture, checkpoint/resume. #1 on LongMemEval benchmark
   <sub>★ 225 · Python · Apache-2.0 · uv · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>

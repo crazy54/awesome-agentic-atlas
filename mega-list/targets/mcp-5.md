@@ -2,7 +2,7 @@
 
 Speaks the Model Context Protocol — as a server, as a client, or as a gateway between.
 
-**5,698 projects** · 4,895 with stars to rank by · 8,298,821 combined stars
+**5,698 projects** · 4,896 with stars to rank by · 8,302,459 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=mcp)
 
@@ -10,9 +10,9 @@ Speaks the Model Context Protocol — as a server, as a client, or as a gateway 
 
 Page **5** of 7, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp.md) · [2](mcp-2.md) · [3](mcp-3.md) · [4](mcp-4.md) · **5** · [6](mcp-6.md) · [7](mcp-7.md) — [continue on page 6 →](mcp-6.md)
 
-## Ranked by stars (4,895)
+## Ranked by stars (4,896)
 
-<sub>Projects 3,340–4,161 of 4,895. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 3,340–4,161 of 4,896. The rest are on this page's other parts, linked above and below.</sub>
 
 | # | Project | ★ | Lists | Category | Runs on | Install / Run | What it does |
 |--:|---|--:|--:|---|---|---|---|
@@ -785,7 +785,7 @@ Page **5** of 7, because this list is longer than the 512 KB GitHub will render 
 | 4106 | **[multimail-dev/mcp-server](https://github.com/multimail-dev/mcp-server)**<br><sub>multimail-dev/mcp-server</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx -y @mvanhorn/printing-press install multimail` | Email for AI agents: send and receive as Markdown with configurable human oversight (monitor, gate or fully autonomous) |
 | 4107 | **[murzin-ml/mcp-ps-store](https://github.com/murzin-ml/mcp-ps-store)**<br><sub>murzin-ml/mcp-ps-store</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/murzin-ml/mcp-ps-store.git` | PlayStation Network gaming history (playtime, trophies, purchased library) for game recommendations based on what you played |
 | 4108 | **[n8daniels/RulesetMCP](https://github.com/n8daniels/RulesetMCP)**<br><sub>n8daniels/RulesetMCP</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npm install -g rulesetmcp` | Keeps agents grounded in project rules: query coding standards, validate snippets and get task-specific guidance from version-controlled rule files |
-| 4109 | **[nagameTW/mcp-server-malcolm](https://github.com/nagameTW/mcp-server-malcolm)**<br><sub>nagameTW/mcp-server-malcolm</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `uvx --from /path/to/mcp-server-malcolm mcp-server-malcolm` | Malcolm threat hunting: search and aggregate network traffic, query Suricata alerts, browse Arkime sessions and resolve NetBox assets. Read-only by default |
+| 4109 | **[nagameTW/mcp-server-malcolm](https://github.com/nagameTW/mcp-server-malcolm)**<br><sub>nagameTW/mcp-server-malcolm</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `pip install mcp-server-malcolm` | Malcolm threat hunting: search and aggregate network traffic, query Suricata alerts, browse Arkime sessions and resolve NetBox assets. Read-only by default |
 | 4110 | **[nalediym/touch-grass](https://github.com/nalediym/touch-grass)**<br><sub>nalediym/touch-grass</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/nalediym/touch-grass` | Nudges you to take outdoor breaks based on local weather, sunset timing and session streaks, with activity suggestions and stats |
 | 4111 | **[namixai/funding-mcp](https://github.com/namixai/funding-mcp)**<br><sub>namixai/funding-mcp</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/namixai/funding-mcp.git` | Perpetual funding-rate data and cross-exchange funding arbitrage across many venues, including HIP-3 sub-DEXes, with x402-paid signals |
 | 4112 | **[namixai/signer-mcp](https://github.com/namixai/signer-mcp)**<br><sub>namixai/signer-mcp</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/namixai/signer-mcp.git` | Keyless CEX/DEX signing for trading agents: keys stay in an AWS Nitro Enclave and agents get policy-bounded signatures for Binance, OKX, Bybit and others |
@@ -818,7 +818,7 @@ Page **5** of 7, because this list is longer than the 512 KB GitHub will render 
 | 4139 | **[payclaw/mcp-server](https://github.com/kyalabs-Io/mcp-server)**<br><sub>kyalabs-Io/mcp-server</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx @kyalabs/mcp-server` | Virtual Visa cards for AI agents: just-in-time card issuance per transaction with human-approved spend authorization |
 | 4140 | **[Perufitlife/aviation-mcp](https://github.com/Perufitlife/aviation-mcp)**<br><sub>Perufitlife/aviation-mcp</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/Perufitlife/aviation-mcp.git` | Aviation data: decoded METAR weather by ICAO code, airport and aircraft specs, an aviation glossary and FAA-style practice questions |
 | 4141 | **[pghdma/callrail-mcp](https://github.com/pghdma/callrail-mcp)**<br><sub>pghdma/callrail-mcp</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `pipx install callrail-mcp` | CallRail API: call tracking, form submissions, transcripts, tag, tracker, company and user management, plus agency tools such as per-client cost attribution |
-| 4142 | **[PGSandbox MCP](https://github.com/LVTD-LLC/pgsandbox)**<br><sub>LVTD-LLC/pgsandbox</sub> | 2 | 1 | <sub>Sandbox, Security &amp; Governance</sub> | <sub>Win? · WSL2? · macOS · Linux? · Docker</sub> | `cargo install --git https://github.com/LVTD-LLC/pgsandbox --tag v0.5.0 --force` | Local-first MCP server that gives coding agents disposable PostgreSQL databases with scoped roles, TTL cleanup, and bounded SQL/schema tools. It fills a narrower but important san… |
+| 4142 | **[PGSandbox MCP](https://github.com/LVTD-LLC/pgsandbox)**<br><sub>LVTD-LLC/pgsandbox</sub> | 2 | 1 | <sub>Sandbox, Security &amp; Governance</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `cargo install --git https://github.com/LVTD-LLC/pgsandbox --tag v0.5.0 --force` | Local-first MCP server that gives coding agents disposable PostgreSQL databases with scoped roles, TTL cleanup, and bounded SQL/schema tools. It fills a narrower but important san… |
 | 4143 | **[phuryn/askone](https://github.com/phuryn/askone)**<br><sub>phuryn/askone</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx -y askone-mcp` | Run live audience Q&amp;A and polls with AskOne, with free AI moderation: start rooms, launch polls, moderate and answer questions, and draft a FAQ from the Q&amp;A. Also hosted at https… |
 | 4144 | **[pjpoulose/PIL](https://github.com/pjpoulose/PIL)**<br><sub>pjpoulose/PIL</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win · WSL2? · macOS · Linux</sub> | `irm https://raw.githubusercontent.com/pjpoulose/PIL/master/bootstrap.ps1 \| iex` | Turns your Instagram saved posts into a local, searchable knowledge base, with AI-extracted summaries, key points, how-tos, links and tags in SQLite |
 | 4145 | **[polymatx/dibs](https://github.com/polymatx/dibs)**<br><sub>polymatx/dibs</sub> | 2 | 1 | <sub>MCP Servers</sub> | <sub>Win · WSL2? · macOS · Linux · Docker</sub> | `npx dibs` | Coordinate parallel coding agents: TTL file claims across git worktrees, hooks blocking colliding edits, presence, handoff notes and searchable lessons |

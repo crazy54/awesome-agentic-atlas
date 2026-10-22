@@ -32,7 +32,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 152.9k · TypeScript · winget · pushed 2026-10-22 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`winget install Anthropic.ClaudeCode`</sub>
 - **[OpenAI Codex CLI](https://github.com/openai/codex)** — OpenAI's coding agent in the terminal with Codex Cloud, IDE extension, and multi-model support
-  <sub>★ 130.4k · Rust · Apache-2.0 · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 130.4k · Rust · Apache-2.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @openai/codex`</sub>
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — An open-source AI agent from Google that brings the power of Gemini directly into your terminal. Generous free tier (60 req/min, 1000/day)
   <sub>★ 107.5k · TypeScript · Apache-2.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -41,10 +41,10 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 91.6k · TypeScript · MIT · npm · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[charmbracelet/crush](https://github.com/charmbracelet/crush)** — "The glamorous AI coding agent for your favourite terminal", multi-model with beautiful TUI
-  <sub>★ 28.7k · Go · winget · pushed 2026-10-22 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 28.8k · Go · winget · pushed 2026-10-22 · Win · WSL2 · macOS · Linux</sub>
   <sub>`winget install charmbracelet.crush`</sub>
 - **[QwenLM/qwen-code](https://github.com/QwenLM/qwen-code)** — "qwen-code is a coding agent that lives in digital world"
-  <sub>★ 28.6k · TypeScript · Apache-2.0 · psh · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 28.7k · TypeScript · Apache-2.0 · psh · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://qwen-code-assets.oss-cn-hangzhou.aliyuncs.com/installation/install-qwen-standalone.ps1 | iex`</sub>
 - **[HKUDS/DeepCode](https://github.com/HKUDS/DeepCode)** — Deep learning for code analysis and generation. Achieves SOTA on PaperBench
   <sub>★ 16.7k · Python · MIT · uv · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux?</sub>
@@ -239,7 +239,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 15.5k · TypeScript · brew · pushed 2026-10-22 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`brew install superset-sh/tap/superset`</sub>
 - **[Parallel Code](https://github.com/johannesjo/parallel-code)** — Desktop app for running multiple AI coding agents (Claude Code, Codex CLI, Gemini CLI) simultaneously in isolated git worktrees
-  <sub>★ 1.1k · TypeScript · MIT · clone · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 1.1k · TypeScript · MIT · clone · pushed 2026-10-22 · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/johannesjo/parallel-code.git`</sub>
 - **[Dyad](https://www.dyad.sh/)** — Free, local, open-source AI app builder. Model-agnostic, supports cloud models and local via Ollama
   <sub>website</sub>

@@ -13,7 +13,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 | <a href="https://github.com/x402-foundation/x402"><img src="https://raw.githubusercontent.com/x402-foundation/x402/main/static/flow.png" width="260"></a> | <a href="https://github.com/x402-foundation/x402/issues"><img src="https://raw.githubusercontent.com/x402-foundation/x402/main/static/flow.png" width="260"></a> | <a href="https://github.com/solana-foundation/pay"><img src="https://raw.githubusercontent.com/solana-foundation/pay/main/docs/assets/banner-main-light.png" width="260"></a> |
 | **[x402 Foundation GitHub repo](https://github.com/x402-foundation/x402)**<br>★ 6.8k | **[Issues](https://github.com/x402-foundation/x402/issues)**<br>★ 6.8k | **[Solana Foundation Pay (x402/MPP CLI and MCP)](https://github.com/solana-foundation/pay)**<br>★ 1.8k |
 | <a href="https://github.com/google-agentic-commerce/a2a-x402"><img src="https://opengraph.githubassets.com/1/google-agentic-commerce/a2a-x402" width="260"></a> | <a href="https://github.com/x402-rs/x402-rs"><img src="https://opengraph.githubassets.com/1/x402-rs/x402-rs" width="260"></a> | <a href="https://github.com/dabit3/x402-starter-kit"><img src="https://raw.githubusercontent.com/dabit3/x402-starter-kit/main/header.jpg" width="260"></a> |
-| **[A2A x402 Extension](https://github.com/google-agentic-commerce/a2a-x402)**<br>★ 566 | **[x402-rs (Rust Facilitator &amp; SDK)](https://github.com/x402-rs/x402-rs)**<br>★ 292 | **[x402 Starter Kit – by Nader Dabit](https://github.com/dabit3/x402-starter-kit)**<br>★ 181 |
+| **[A2A x402 Extension](https://github.com/google-agentic-commerce/a2a-x402)**<br>★ 567 | **[x402-rs (Rust Facilitator &amp; SDK)](https://github.com/x402-rs/x402-rs)**<br>★ 292 | **[x402 Starter Kit – by Nader Dabit](https://github.com/dabit3/x402-starter-kit)**<br>★ 181 |
 
 ## Contents
 
@@ -125,7 +125,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
   <sub>★ 2 · TypeScript · MIT · npx · pushed 2026-05-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @gatefare/mcp`</sub>
 - **[@zkproofport-ai/mcp](https://github.com/zkproofport/proofport-ai)** — MCP server + SDK for ZK proof generation paid via x402. Generate Coinbase KYC, Country, OIDC domain, or Google Workspace proofs from any AI agent
-  <sub>★ 2 · TypeScript · MIT · npx · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 2 · TypeScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx zkproofport-mcp # Starts stdio MCP server`</sub>
 - **[x402-kit (TypeScript)](https://github.com/kite-builds/x402-kit)** — MIT-licensed Express middleware + slug-routed multi-tenant data plane that powers x402-saas. 38 tests, real x402.rs facilitator wired in
   <sub>★ 1 · TypeScript · MIT · npx · pushed 2026-06-02 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -185,7 +185,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 ## Standards and EIPs
 
 - **[A2A x402 Extension](https://github.com/google-agentic-commerce/a2a-x402)** — specification, libraries, and examples for adding on-chain x402 payments to Agent-to-Agent services
-  <sub>★ 566 · Python · Apache-2.0 · source · pushed 2026-08-04 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 567 · Python · Apache-2.0 · source · pushed 2026-08-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/google-agentic-commerce/a2a-x402.git`</sub>
 - **[ERC-3009 Forwarding](https://github.com/TheGreatAxios/eip3009-forwarder)** — forwarding contract extending meta-transactions with EIP-721 signatures to any ERC-20 on any network
   <sub>★ 5 · Solidity · MIT · source · pushed 2026-01-23</sub>

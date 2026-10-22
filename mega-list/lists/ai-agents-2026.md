@@ -38,7 +38,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
 ## Coding Agents
 
 - **[OpenAI Codex CLI](https://github.com/openai/codex)** — OpenAI terminal agent. Agents SDK. Multi-agent
-  <sub>★ 130.4k · Rust · Apache-2.0 · npm · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 130.4k · Rust · Apache-2.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @openai/codex`</sub>
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — NEW (Apr 2026) Google's official open-source terminal agent. ReAct loop. MCP support. 1M context. Apache 2.0
   <sub>★ 107.5k · TypeScript · Apache-2.0 · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -65,7 +65,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 13.8k · Go · MIT · go · pushed 2025-09-18 · Win? · WSL2? · macOS? · Linux</sub>
   <sub>`go install github.com/opencode-ai/opencode@latest`</sub>
 - **[PR-Agent](https://github.com/The-PR-Agent/pr-agent)** — OSS AI PR reviewer. Auto-describe, review, improve
-  <sub>★ 13.5k · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 13.6k · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install "pr-agent[github]"`</sub>
 - **[Caliber](https://github.com/caliber-ai-org/ai-setup)** — CLI that fingerprints projects and generates/syncs AI agent configs (CLAUDE.md, .cursor/rules/, AGENTS.md). Scores quality
   <sub>★ 1.3k · TypeScript · MIT · npx · pushed 2026-09-24 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -170,7 +170,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 38.7k · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install dspy`</sub>
 - **[AgentScope](https://github.com/agentscope-ai/agentscope)** — Alibaba multi-agent framework
-  <sub>★ 33.6k · Python · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 33.7k · Python · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/modelscope/agentscope.git`</sub>
 - **[OpenAI Agents SDK](https://github.com/openai/openai-agents-python)** — Official. Multi-step agents with handoffs
   <sub>★ 30.2k · Python · MIT · pip · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -209,7 +209,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 4k · Python · Apache-2.0 · source · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/anthropics/anthropic-sdk-python.git`</sub>
 - **[Bernstein](https://github.com/sipyourdrink-ltd/bernstein)** — Deterministic orchestrator. Parallel coding agents, test-driven verification. Zero LLM tokens on coordination
-  <sub>★ 1.4k · Python · Apache-2.0 · uv · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1.4k · Python · Apache-2.0 · uv · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install bernstein # or: pipx install bernstein`</sub>
 - **[MicroAgent](https://github.com/aymenfurter/microagents)** — Self-editing prompts and code
   <sub>★ 823 · Python · MIT · clone · pushed 2024-03-15 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -245,7 +245,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 208.3k · TypeScript · script · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://get.n8n.io | sh`</sub>
 - **[Dify](https://github.com/langgenius/dify)** — OSS LLMOps. Visual agent builder. RAG. 130k+ stars
-  <sub>★ 159.2k · Python · source · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
+  <sub>★ 159.3k · Python · source · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/langgenius/dify.git`</sub>
 - **[Langflow](https://github.com/langflow-ai/langflow)** — Visual multi-agent and RAG builder
   <sub>★ 155.9k · Python · MIT · docker · pushed 2026-10-22 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -488,7 +488,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 62.1k · Python · pip · pushed 2026-10-20 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pip install -U pathway`</sub>
 - **[Milvus](https://github.com/milvus-io/milvus)** — Cloud-native vector DB. Billion-scale
-  <sub>★ 46.4k · Go · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 46.5k · Go · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/milvus-io/milvus.git`</sub>
 - **[Qdrant](https://github.com/qdrant/qdrant)** — High-performance vector DB in Rust
   <sub>★ 35.2k · Rust · Apache-2.0 · docker · pushed 2026-10-22 · WSL2 · Linux · Docker</sub>
@@ -680,10 +680,10 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 184.3k · Go · MIT · psh · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://ollama.com/install.ps1 | iex`</sub>
 - **[Open WebUI](https://github.com/open-webui/open-webui)** — Self-hosted ChatGPT UI. Access control. Extensions
-  <sub>★ 156.4k · Python · pip · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 156.5k · Python · pip · pushed 2026-10-22 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`pip install open-webui`</sub>
 - **[llama.cpp](https://github.com/ggml-org/llama.cpp)** — C/C++ inference. CPU, GPU, Apple Silicon. Foundation of local AI
-  <sub>★ 132k · C++ · MIT · psh · pushed 2026-10-22 · Win · macOS</sub>
+  <sub>★ 132k · C++ · MIT · psh · pushed 2026-10-22 · Win · macOS?</sub>
   <sub>`irm https://llama.app/install.ps1 | iex`</sub>
 - **[vLLM](https://github.com/vllm-project/vllm)** — High-throughput serving. PagedAttention. Production-grade
   <sub>★ 95.1k · Python · Apache-2.0 · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -698,13 +698,13 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 67.4k · JavaScript · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Mintplex-Labs/anything-llm.git`</sub>
 - **[LocalAI](https://github.com/mudler/LocalAI)** — Drop-in OpenAI API replacement. No GPU required
-  <sub>★ 49.8k · Go · MIT · docker · pushed 2026-10-22 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 49.8k · Go · MIT · docker · pushed 2026-10-22 · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`docker run -ti --name local-ai -p 8080:8080 localai/localai:latest`</sub>
 - **[LibreChat](https://github.com/LibreChat-AI/LibreChat)** — Self-hosted multi-model chat. All major providers
   <sub>★ 46.1k · TypeScript · MIT · source · pushed 2026-10-22 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/danny-avila/LibreChat.git`</sub>
 - **[Jan](https://github.com/janhq/jan)** — OSS ChatGPT alternative. 100% offline
-  <sub>★ 45k · Rust · clone · pushed 2026-10-22 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 45k · Rust · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/janhq/jan`</sub>
 - **[Llamafile](https://github.com/mozilla-ai/llamafile)** — LLMs as single files. Zero setup. Mozilla
   <sub>★ 26.5k · C++ · source · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>

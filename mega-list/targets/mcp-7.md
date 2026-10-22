@@ -2,7 +2,7 @@
 
 Speaks the Model Context Protocol — as a server, as a client, or as a gateway between.
 
-**5,698 projects** · 4,895 with stars to rank by · 8,298,821 combined stars
+**5,698 projects** · 4,896 with stars to rank by · 8,302,459 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=mcp)
 
@@ -10,12 +10,14 @@ Speaks the Model Context Protocol — as a server, as a client, or as a gateway 
 
 Page **7** of 7, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp.md) · [2](mcp-2.md) · [3](mcp-3.md) · [4](mcp-4.md) · [5](mcp-5.md) · [6](mcp-6.md) · **7**.
 
-## Also here, unranked (803)
+## Also here, unranked (802)
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 145–803 of 803. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 143–802 of 802. The rest are on this page's other parts, linked above and below.</sub>
 
+- **[canopy-labs/featureflip-mcp](https://github.com/canopy-labs/featureflip-mcp)** — Manage Featureflip feature flags: create and toggle flags, edit targeting rules and find stale flags
+- **[CHANGCHINFU/mcp-gauge](https://github.com/CHANGCHINFU/mcp-gauge)** — Data signals with hash provenance from USGS, NOAA, ERA5, FRED and SEC EDGAR: floods, air quality, drought, crops, power grid, shipping and SEC filings
 - **[Chargebee](https://github.com/chargebee/agentkit/tree/main/modelcontextprotocol)** — MCP Server that connects AI agents to Chargebee platform
 - **[chasdaddy/basescope](https://github.com/chasdaddy/basescope)** — Read-only safety checks for Base and EVM: honeypot and rug-pull detection, risky approvals, verified source, balances, ENS and Basenames, gas and prices
 - **[chatmaid/mcp](https://github.com/chatmaid/mcp)** — Chatmaid WhatsApp API: send messages to contacts and groups from a linked WhatsApp number, read replies, check delivery status and usage
@@ -376,7 +378,6 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[ni-c/caldav-mcp](https://github.com/ni-c/caldav-mcp)** — Events, tasks and journal entries on any CalDAV server (Radicale, Nextcloud, Fastmail, iCloud), with a calendar allowlist and approval for series changes
 - **[ni-c/calibreweb-mcp](https://github.com/ni-c/calibreweb-mcp)** — Read-only access to a self-hosted Calibre-Web or Calibre-Web Automated ebook library via OPDS: search, shelves, covers and per-format download links
 - **[ni-c/carddav-mcp](https://github.com/ni-c/carddav-mcp)** — Contacts, groups and photos on any CardDAV server (Radicale, Baikal, Nextcloud, Fastmail, iCloud), with ETag-guarded writes and an address book allowlist
-- **[ni-c/google-search-console-mcp](https://github.com/ni-c/google-search-console-mcp)** — Google Search Console: create and verify properties, manage sitemaps, inspect URLs and pull the Performance report, with confirmation for irreversible calls
 - **[ni-c/healthchecks-mcp](https://github.com/ni-c/healthchecks-mcp)** — Healthchecks cron and uptime monitoring: see which scheduled jobs are late or down, read the output a failing job reported with its ping, and create, pause or adjust checks. Works against healthcheck…
 - **[ni-c/hetzner-dns-mcp](https://github.com/ni-c/hetzner-dns-mcp)** — Manage Hetzner DNS zones and records via the Hetzner Cloud API: RRSet CRUD, zonefile import/export, TTL and protection changes, and nameservers
 - **[ni-c/ntfy-mcp](https://github.com/ni-c/ntfy-mcp)** — Send push notifications through ntfy, read back sent messages, update a notification in place while a job runs, and administer users and topic access

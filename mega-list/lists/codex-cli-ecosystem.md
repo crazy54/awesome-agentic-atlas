@@ -127,10 +127,10 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
 ## Skills
 
 - **[affaan-m/ECC](https://github.com/affaan-m/ECC)** — Skills, memory, security checks, and workflow configuration for Codex and other coding agents
-  <sub>★ 286.1k · JavaScript · MIT · npm · pushed 2026-10-20 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 286.2k · JavaScript · MIT · npm · pushed 2026-10-20 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npm install -g ecc-universal@2.2.3`</sub>
 - **[Egonex-AI/Understand-Anything](https://github.com/Egonex-AI/Understand-Anything)** — Turn any codebase into an interactive knowledge graph you can explore, search, and query. Multi-platform including Codex
-  <sub>★ 87.6k · TypeScript · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 87.7k · TypeScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx https://github.com/Egonex-AI/Understand-Anything/releases/latest/download/understand-anything-viewer.tgz /path/to/analyzed/project`</sub>
 - **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills)** — Searchable agent skills catalog with CLI, local MCP, and plugin integrations for Codex and other coding agents
   <sub>★ 48.3k · Python · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -211,7 +211,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 764 · Python · Apache-2.0 · uv · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx upskill`</sub>
 - **[skillmatic-ai/awesome-agent-skills](https://github.com/skillmatic-ai/awesome-agent-skills)** — Community-driven skill marketplace with quality ratings
-  <sub>★ 686 · CC0-1.0 · source · pushed 2026-05-14</sub>
+  <sub>★ 687 · CC0-1.0 · source · pushed 2026-05-14</sub>
   <sub>`git clone https://github.com/skillmatic-ai/awesome-agent-skills.git`</sub>
 - **[aldefy/compose-skill](https://github.com/aldefy/compose-skill)** — Jetpack Compose agent skill with actual androidx source code receipts. Works with Codex CLI, Claude Code, Gemini CLI
   <sub>★ 596 · Kotlin · clone · pushed 2026-07-23</sub>
@@ -223,7 +223,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 504 · HTML · Apache-2.0 · clone · pushed 2026-10-18</sub>
   <sub>`git clone https://github.com/mxyhi/ok-skills.git`</sub>
 - **[aiskillstore/marketplace](https://github.com/aiskillstore/marketplace)** — Security-audited skills marketplace. One-click install with automated security analysis
-  <sub>★ 442 · Python · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 443 · Python · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skillstore add author/skill-name`</sub>
 - **[nicepkg/ai-workflow](https://github.com/nicepkg/ai-workflow)** — Workflow automation skills - chained multi-step tasks with conditional logic
   <sub>★ 288 · HTML · MIT · npx · pushed 2026-01-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -307,7 +307,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 1.4k · TypeScript · Apache-2.0 · clone · pushed 2026-03-16 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/GreenSheep01201/claw-empire.git`</sub>
 - **[aannoo/hcom](https://github.com/aannoo/hcom)** — Hierarchical agent communication framework. Agents delegate subtasks with context preservation
-  <sub>★ 590 · Rust · MIT · psh · pushed 2026-10-21 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 592 · Rust · MIT · psh · pushed 2026-10-21 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`irm https://github.com/aannoo/hcom/releases/latest/download/hcom-installer.ps1 | iex`</sub>
 - **[mco-org/mco](https://github.com/mco-org/mco)** — Neutral orchestration layer for Claude Code, Codex CLI, Gemini CLI, OpenCode, Qwen Code. Works from any IDE or shell
   <sub>★ 541 · Python · MIT · npx · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -328,7 +328,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 50 · Shell · MIT · clone · pushed 2025-11-07 · macOS?</sub>
   <sub>`git clone https://github.com/CoderMageFox/claudecode-codex-subagents.git`</sub>
 - **[sehoon787/my-codex](https://github.com/sehoon787/my-codex)** — All-in-one agent harness for Codex CLI - Boss meta-orchestrator, 400+ agents, 200+ skills, 3 MCP servers
-  <sub>★ 29 · JavaScript · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 29 · JavaScript · MIT · npx · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add sehoon787/my-codex -y -g`</sub>
 - **[obra/external-subagents](https://github.com/obra/external-subagents)** — Run subagents as external processes with custom sandboxing
   <sub>★ 24 · JavaScript · clone · pushed 2025-12-24 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -562,7 +562,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
 ## Plugins
 
 - **[EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin)** — Compound Engineering plugin for Claude Code, Codex, and more. Structured multi-agent workflows
-  <sub>★ 25.6k · TypeScript · MIT · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 25.7k · TypeScript · MIT · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/EveryInc/compound-engineering-plugin`</sub>
 - **[hashgraph-online/awesome-codex-plugins](https://github.com/hashgraph-online/awesome-codex-plugins)** — The first plugin directory. Lists 12 official + ~20 community plugins with install instructions
   <sub>★ 1.4k · JavaScript · Apache-2.0 · source · pushed 2026-10-22 · macOS</sub>

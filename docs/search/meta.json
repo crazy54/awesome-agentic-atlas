@@ -1,16 +1,16 @@
 {
   "dims": 96,
-  "doc_scale": 0.9097854495048523,
-  "fingerprint": "8456bc50328caa4e",
-  "indexed_from_readme": 10057,
+  "doc_scale": 0.9097421169281006,
+  "fingerprint": "821f32dd7610971a",
+  "indexed_from_readme": 10060,
   "model": "minishlab/potion-base-8M",
   "near": 8,
   "probe": [
     [
       "sandbox",
       [
-        637,
-        496
+        639,
+        499
       ]
     ],
     [
@@ -26,7 +26,7 @@
         334,
         473,
         257,
-        67,
+        65,
         414,
         51
       ]
@@ -34,7 +34,7 @@
     [
       "caf\u00e9",
       [
-        7212
+        7211
       ]
     ],
     [
@@ -58,9 +58,9 @@
       "Observability Dashboards",
       [
         467,
-        405,
+        406,
         455,
-        480,
+        483,
         432,
         0
       ]
@@ -70,11 +70,11 @@
       [
         22,
         17,
-        773
+        778
       ]
     ]
   ],
-  "rows": 10697,
+  "rows": 10700,
   "schema": 1,
   "snapshot": "2026-10-22",
   "stop": [
@@ -316,6 +316,6 @@
     "your"
   ],
   "vocab": 12960,
-  "vocab_scale": 126.28641510009766,
-  "xy_scale": 100.16963958740234
+  "vocab_scale": 126.50665283203125,
+  "xy_scale": 46.22831344604492
 }
