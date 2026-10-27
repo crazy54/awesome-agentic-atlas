@@ -1471,6 +1471,7 @@ def render() -> str:
 {sitewide.font_preload("")}<link rel="manifest" href="manifest.webmanifest">
 {b20.HEAD_THEME}<link rel="stylesheet" href="pages.css">
 <style>__HOMECSS__</style>
+{sitewide.SITE_KIT}
 </head>"""
 
     body = [

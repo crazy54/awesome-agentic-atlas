@@ -560,6 +560,7 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
 <link rel="icon" href="{repo.rel(ICON)}" type="image/svg+xml">
 {sitewide.font_preload(repo.rel())}{HEAD_THEME}<link rel="stylesheet" href="../../detail.css">
 <script type="application/ld+json">{breadcrumb(repo)}</script>
+{sitewide.SITE_KIT}
 </head>
 <body>
 {sprite}<header><div class="wrap">
@@ -677,6 +678,7 @@ def directory(repos: list[Repo], data: dict) -> str:
 <meta property="og:image" content="https://opengraph.githubassets.com/1/{esc(REPO)}">
 <link rel="icon" href="../{ICON}" type="image/svg+xml">
 {sitewide.font_preload("../")}{HEAD_THEME}<link rel="stylesheet" href="detail.css">
+{sitewide.SITE_KIT}
 </head>
 <body>
 <header><div class="wrap">

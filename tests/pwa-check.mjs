@@ -424,7 +424,7 @@ const consoleErrs = () => events.filter(e => e.method === "Log.entryAdded" &&
   // 429s. Neither the worker nor the page caches or depends on them -- the check above pins that. Nor
   // do the repository's own counts on the homepage (NUMBERS_JS in 31_home.py): unauthenticated, 60 an
   // hour an address, which a shared CI runner can have spent, and a refusal leaves the page as built.
-  !/cloudflareinsights|beacon|opengraph\.githubassets\.com|api\.github\.com\/repos\/crazy54\/awesome-agentic-atlas/.test(e.params.entry.text + " " + (e.params.entry.url || "")));
+  !/cloudflareinsights|beacon|jeremyfhall\.com\/(kit|api\/banners)|opengraph\.githubassets\.com|api\.github\.com\/repos\/crazy54\/awesome-agentic-atlas/.test(e.params.entry.text + " " + (e.params.entry.url || "")));
 const online = consoleErrs();
 ok("no console errors from the page or the worker while online", online.length === 0,
    online.map(e => e.params.entry.text).join(" | "));

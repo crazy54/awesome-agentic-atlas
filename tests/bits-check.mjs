@@ -91,7 +91,7 @@ const send = (method, params = {}, sid) => new Promise((res, rej) => {
 // The network noise prank-check.mjs excuses, for its reasons: the Cloudflare beacon cannot pass CORS
 // against localhost, and GitHub turns down the page's anonymous API calls with a 403 or a 429 once an
 // address has spent its sixty an hour.
-const excused = e => /cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(e.text + " " + (e.url || "")) ||
+const excused = e => /cloudflareinsights|beacon|jeremyfhall\.com\/(kit|api\/banners)|opengraph\.githubassets\.com/.test(e.text + " " + (e.url || "")) ||
   (/^https:\/\/api\.github\.com\//.test(e.url || "") && /status of (403|429)\b/.test(e.text));
 const words = args => (args || []).map(a => a.value !== undefined ? String(a.value) : a.description || "").join(" ");
 ws.addEventListener("message", ev => {

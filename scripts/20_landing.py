@@ -1184,6 +1184,7 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
 <link rel="icon" href="{page.rel(ICON)}" type="image/svg+xml">
 {sitewide.font_preload(page.rel())}{HEAD_THEME}<link rel="stylesheet" href="{page.rel('pages.css')}">
 <script type="application/ld+json">{itemlist(page, shown)}</script>
+{sitewide.SITE_KIT}
 </head>
 <body>
 {osicons.SPRITE}
