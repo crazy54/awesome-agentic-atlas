@@ -532,6 +532,7 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             .replace("__SITECSS__", pagemin.strip_css(sitewide.font_faces(UP) + sitewide.BUILDTAGS_CSS))
             .replace("__BUILDTAGS__", sitewide.buildtags(repo))
             .replace("__SITEJS__", sitewide.site_script(UP))
+            .replace("__SITEKIT__", sitewide.SITE_KIT)
             # Substituted here rather than at the two call sites for exactly the reason in this function's
             # docstring: `19b_refresh.py` renders the same shell, and a placeholder it does not know about
             # would ship to readers as the literal text `__SETTINGS__` where the theme picker should be.
@@ -2745,6 +2746,7 @@ main a[href],main button,main select,main summary,
 }
 __SITECSS__
 </style>
+__SITEKIT__
 </head>
 <body>
 <!-- The five platform marks, defined once for the whole document. The geometry lives in

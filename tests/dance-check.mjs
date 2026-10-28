@@ -68,7 +68,7 @@ const send = (method, params = {}, sid) => new Promise((res, rej) => {
 // tags, sixty an hour to an address, which every suite run from the same machine shares -- is a 403 or a 429
 // that both take silently and that Chrome logs all the same. Only those two: any other answer from the API is
 // still an error. Each run here spends four calls, so a busy afternoon of runs is enough to use the hour up.
-const excused = e => /cloudflareinsights|beacon|opengraph\.githubassets\.com/.test(e.text + " " + (e.url || "")) ||
+const excused = e => /cloudflareinsights|beacon|jeremyfhall\.com\/(kit|api\/banners)|opengraph\.githubassets\.com/.test(e.text + " " + (e.url || "")) ||
   (/^https:\/\/api\.github\.com\//.test(e.url || "") && /status of (403|429)\b/.test(e.text));
 ws.addEventListener("message", ev => {
   const m = JSON.parse(ev.data);

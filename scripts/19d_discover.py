@@ -304,6 +304,7 @@ def head(title: str, desc: str, url: str) -> str:
 <meta name="twitter:image" content="{card}">
 <link rel="icon" href="{esc(rel(ICON))}" type="image/svg+xml">
 {sitewide.font_preload(rel())}{HEAD_THEME}<link rel="stylesheet" href="{esc(rel('pages.css'))}">
+{sitewide.SITE_KIT}
 </head>
 """
 

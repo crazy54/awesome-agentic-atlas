@@ -44,6 +44,14 @@ ICONS = ("Atlas Icons", "geist-mono.woff2", "U+F400-F5FF")
 SITE_JS = "atlas-site.js"
 ADMIN_JS = "atlas-admin.js"
 
+# THE SITE KIT. Jeremy's banners, scheduled in his blog admin, drawn by one script from his own host
+# (https://jeremyfhall.com/kit/). Last in every page family's `<head>`, deferred and with no slot, so a banner
+# only ever floats (a toast or a footer bar) and nothing a reader is looking at moves -- the same promise
+# `font-display:optional` keeps above. The URL is versioned and never changes; the `integrity` hash pins the
+# bytes, so a new kit version is a new URL and a new hash here, and every page moves with it. Absolute, so it
+# takes no `up`. Same bytes on every page and every day, so the detail pages stay byte-identical week to week.
+SITE_KIT = ('<script src="https://jeremyfhall.com/kit/site-kit.v1.js" integrity="sha384-XSpQk1dubcVV4dWVZL3B8R6EsmEa4vwZ8PlVTkEmE+RY28H8OP2Y36BpTK7vCJI2" crossorigin="anonymous" data-site="atlas" defer></script>')
+
 
 def font_faces(up: str) -> str:
     """The @font-face rules, for a stylesheet that sits `up` away from `docs/`."""
@@ -165,6 +173,7 @@ def not_found(repo: str, head_theme: str) -> str:
 {font_preload("/")}{head_theme}<link rel="stylesheet" href="/pages.css">
 <style>.nf{{max-width:640px;margin:12vh auto 8vh;padding:0 20px}}.nf h1{{margin:0 0 .4em;font-size:28px;letter-spacing:-.01em}}
 .nf p{{color:var(--ink2)}}.nf code{{font:13px/1.5 var(--mono);color:var(--muted)}}</style>
+{SITE_KIT}
 </head>
 <body>
 <main class="nf">

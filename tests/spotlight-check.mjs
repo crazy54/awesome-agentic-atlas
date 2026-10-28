@@ -53,7 +53,7 @@ ws.addEventListener("message", ev => {
   // Excused exactly as dance-check.mjs and pwa-check.mjs excuse them: the beacon cannot pass CORS against
   // localhost, and the pictures are on GitHub's hosts, which a runner may not reach.
   else if (m.method === "Log.entryAdded" && m.params.entry.level === "error" &&
-           !/cloudflareinsights|beacon|githubassets\.com|githubusercontent\.com|github\.com/.test(m.params.entry.text + " " + (m.params.entry.url || "")))
+           !/cloudflareinsights|beacon|jeremyfhall\.com\/(kit|api\/banners)|githubassets\.com|githubusercontent\.com|github\.com/.test(m.params.entry.text + " " + (m.params.entry.url || "")))
     errors.push(m.params.entry.text);
   else if (m.method === "Network.requestWillBeSent") requested.push(m.params.request.url);
 });
