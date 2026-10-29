@@ -233,12 +233,13 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
         ("Browser, Media & Creative", [
             "Browser Automation", "Art & Culture", "Gaming", "Multimedia Process",
             "Architecture & Design", "Text-to-Speech", "Podcasts", "Speech-to-Text"]),
+        # `Jobs` (2026-10, job-search servers) would have been the ninth hue; it is a working-life domain, so here.
         ("Workplace & Other Domains", [
             "Other Tools and Integrations", "Workplace & Productivity", "Travel & Transportation",
             "Location Services", "Biology, Medicine and Bioinformatics", "Sports",
             "Product Management", "Spirituality & Esoterica", "Environment & Nature",
             "Aerospace & Astrodynamics", "Agreements & Coordination", "Health & Wellness",
-            "Accessibility"]),
+            "Accessibility", "Jobs"]),
     ],
     "aiagents_jenqyang": [
         ("Frameworks", ["Frameworks"]),

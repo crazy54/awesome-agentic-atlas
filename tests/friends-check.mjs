@@ -224,7 +224,9 @@ for (const f of ORDER) {
      `first difference at ${at0}: ${JSON.stringify(page0.slice(at0 - 120, at0 + 80))} became ${JSON.stringify(page1.slice(at0 - 120, at0 + 80))}`);
   ok(`${f}: ...no style left behind`, await ev(`![...document.querySelectorAll("style")].some(s => s.textContent.includes(".archie-pals"))`));
   // The page caches its GitHub star count (`atlas-gh-*`) on a first visit; that one is not ours.
-  const writes = r.writes.filter(k => !k.startsWith("atlas-gh-"));
+  // `atlas-gh-*` is the site's own GitHub cache and `jfhkit:*` the site kit's (jeremyfhall.com/kit, loaded on
+  // every page since #102): neither is the friend's doing, which is what this asks about.
+  const writes = r.writes.filter(k => !k.startsWith("atlas-gh-") && !k.startsWith("jfhkit:"));
   ok(`${f}: ...nothing saved`, writes.length === 0, JSON.stringify(writes));
   ok(`${f}: ...and focus never moved`, await ev(`document.activeElement === document.body`));
   ok(`${f}: no control on screen under a friend for more than 1.5 s`, r.covered <= 1500,
