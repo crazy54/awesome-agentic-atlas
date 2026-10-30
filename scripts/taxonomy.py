@@ -432,6 +432,9 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("mcp_punkpeye", "Travel & Transportation"): "MCP Servers",
     ("mcp_punkpeye", "Version Control"): "MCP Servers",
     ("mcp_punkpeye", "Workplace & Productivity"): "MCP Servers",
+    # New upstream (2026-10): "MCP servers for job search and career platforms" -- one entry so far, a
+    # Work at a Startup server. A server, like every other section of this list but Frameworks.
+    ("mcp_punkpeye", "Jobs"): "MCP Servers",
     ("mcp_punkpeye", "end to end RAG platforms"): "MCP Servers",
     ("mcp_punkpeye", "Frameworks"): "Frameworks & SDKs",
 
