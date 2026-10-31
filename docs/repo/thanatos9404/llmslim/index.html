@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LLMSlim (Thanatos9404/llmslim) — Harnesses &amp; Runtime Infra — Awesome Agentic Atlas</title>
-<meta name="description" content="Open-source context compression for RAG and agents: selects query-relevant units under a hard token budget (lexical, or an optional 22M cross-encoder), with…">
+<title>LLMSlim (Thanatos9404/llmslim) — MCP Servers — Awesome Agentic Atlas</title>
+<meta name="description" content="Long-term memory for Gemini CLI and other MCP clients over a local stdio MCP server. Five tools (remember, recall, list_memories, forget, fit_context)…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/thanatos9404/llmslim/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="LLMSlim — Awesome Agentic Atlas">
-<meta property="og:description" content="Open-source context compression for RAG and agents: selects query-relevant units under a hard token budget (lexical, or an optional 22M cross-encoder), with…">
+<meta property="og:description" content="Long-term memory for Gemini CLI and other MCP clients over a local stdio MCP server. Five tools (remember, recall, list_memories, forget, fit_context)…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/thanatos9404/llmslim/">
 <meta property="og:image" content="https://raw.githubusercontent.com/Thanatos9404/llmslim/main/assets/screenshot-hero.png">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
@@ -52,20 +52,20 @@ try {
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Harnesses & Runtime Infra","item":"https://aaa.jeremyfhall.com/topic/harnesses-runtime-infra/"},{"@type":"ListItem","position":3,"name":"LLMSlim","item":"https://aaa.jeremyfhall.com/repo/thanatos9404/llmslim/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"MCP Servers","item":"https://aaa.jeremyfhall.com/topic/mcp-servers/"},{"@type":"ListItem","position":3,"name":"LLMSlim","item":"https://aaa.jeremyfhall.com/repo/thanatos9404/llmslim/"}]}</script>
 <script src="https://jeremyfhall.com/kit/site-kit.v1.js" integrity="sha384-XSpQk1dubcVV4dWVZL3B8R6EsmEa4vwZ8PlVTkEmE+RY28H8OP2Y36BpTK7vCJI2" crossorigin="anonymous" data-site="atlas" defer></script>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
 <header><div class="wrap">
   <nav class="crumb"><a class="brand" href="../../../"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="#D6A034" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="#F7F8FA" stroke="#D6A034" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="#D6A034"/><path d="M12 31h40M32 11v40" fill="none" stroke="#20242D" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="#090A0D"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="#F7F8FA"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="#090A0D" stroke-width="2.5" stroke-linecap="round"/></g></svg></span><span>Atlas</span></a> ›
-    <a href="../../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> ›
+    <a href="../../../topic/mcp-servers/">MCP Servers</a> ›
     <a href="../../../repo/">All projects</a></nav>
   <div class="top">
     <div>
       <h1>LLMSlim</h1>
       <p class="nwo"><a href="https://github.com/Thanatos9404/llmslim">Thanatos9404/llmslim</a></p>
-      <p class="lead">Open-source context compression for RAG and agents: selects query-relevant units under a hard token budget (lexical, or an optional 22M cross-encoder), with a reproducible benchmark against LLMLingua-2 and LongLLMLingua</p>
+      <p class="lead">Long-term memory for Gemini CLI and other MCP clients over a local stdio MCP server. Five tools (remember, recall, list_memories, forget, fit_context): messages are stored word for word in local SQLite or your own Postgres, and recall returns the stored messages that answer a question within a token budget, with no LLM call inside. MIT. Install: pip install &quot;llmslim[mcp]&quot;, then gemini mcp add --sc</p>
       <p class="facts">
         <span>Python</span>
         <span>MIT</span>
@@ -90,7 +90,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">uvx --from &quot;llmslim[mcp]==0.11.1&quot; llmslim mcp</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for LLMSlim">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">uvx --from &quot;llmslim[mcp]&quot; llmslim mcp --help</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for LLMSlim">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -147,22 +147,22 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li>LLMOps (tensorchord)</li></ul>
+  <p class="lead">Named by <b>3</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li>AI Agents (Jenqyang)</li><li>Gemini CLI Ecosystem</li><li>LLMOps (tensorchord)</li></ul>
 </section>
 
 <section>
   <h2>How it is classified</h2>
-  <p class="lead">One topic, 1
-    harness. Each link is a prerendered page of
+  <p class="lead">One topic, 4
+    harnesses. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/mcp/">MCP</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/mcp-servers/">MCP Servers</a><a class="chip" href="../../../topic/mcp-servers/target/claude-code/">Claude Code</a><a class="chip" href="../../../topic/mcp-servers/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/mcp-servers/target/mcp/">MCP</a><a class="chip" href="../../../topic/mcp-servers/target/gemini-google/">Gemini / Google</a></div>
 </section>
 
 <section class="kin">
-  <h2>Related in Harnesses &amp; Runtime Infra</h2>
+  <h2>Related in MCP Servers</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../maximhq/bifrost/">Bifrost</a><span class="nwo">maximhq/bifrost</span><span class="desc">High-performance AI gateway written in Go. Unifies 23+ providers behind one OpenAI-compatible endpoint with automatic failover, adaptive load…</span></li><li><a href="../../mishanefedov/agentwatch/">AgentWatch</a><span class="nwo">mishanefedov/agentwatch</span><span class="desc">Local-only TUI + web dashboard that tails Gemini CLI sessions alongside Claude Code, Codex, Cursor, Hermes, and OpenClaw on one unified timeline…</span></li><li><a href="../../adhenawer/claude-snapshot/">claude-snapshot</a><span class="nwo">adhenawer/claude-snapshot</span><span class="desc">Portable Claude Code setup snapshots — export your settings, plugins, hooks, CLAUDE.md, and MCP configs as a .tar.gz, diff before applying, and…</span></li><li><a href="../../agent-sh/agnix/">agnix</a><span class="nwo">agent-sh/agnix</span><span class="desc">Linter for AI agent configurations. Validates GEMINI.md, SKILL.md, hooks, MCP, and more with 156 rules, auto-fix, and LSP server for real-time…</span></li><li><a href="../../agent-infra/sandbox/">AIO Sandbox</a><span class="nwo">agent-infra/sandbox</span><span class="desc">All-in-one agent sandbox combining browser, shell, filesystem, MCP servers, and VSCode Server in a single Docker container. Native MCP support…</span></li><li><a href="../../mintplex-labs/anything-llm/">Anything LLM</a><span class="nwo">Mintplex-Labs/anything-llm</span><span class="desc">The all-in-one Desktop &amp; Docker AI application with built-in RAG, AI agents, No-code agent builder, MCP compatibility, and more</span></li><li><a href="../../steipete/claude-code-mcp/">claude-code-mcp</a><span class="nwo">steipete/claude-code-mcp</span><span class="desc">Run Claude Code as a one-shot MCP server -- an agent in your agent. Permissions bypassed automatically. By Peter Steinberger. 1,100+ stars</span></li><li><a href="../../zenml-io/kitaru/">Kitaru</a><span class="nwo">zenml-io/kitaru</span><span class="desc">Durable execution layer for AI agents. Checkpoints, replay, resume, and observability primitives that make agent workflows persistent and replayable…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../samvallad33/vestige/">Vestige</a><span class="nwo">samvallad33/vestige</span><span class="desc">Memory system for coding agents: backfill ranks earlier records as candidate causes of a fresh failure even when they share no vocabulary with it…</span></li><li><a href="../../vshulcz/deja-vu/">deja-vu</a><span class="nwo">vshulcz/deja-vu</span><span class="desc">Indexes coding-agent sessions already written to disk and serves them back over MCP with no LLM calls, embeddings, or API keys. The zero-dependency…</span></li><li><a href="../../runapi-ai/mcp/">RunAPI MCP</a><span class="nwo">runapi-ai/mcp</span><span class="desc">Remote MCP server for browsing model catalogs, checking pricing, and creating image, video, music, audio, and other model API tasks through RunAPI…</span></li><li><a href="../../hjqcan/goodmemory/">hjqcan/GoodMemory</a><span class="nwo">hjqcan/GoodMemory</span><span class="desc">Local-first durable memory for Gemini CLI through standalone MCP, with scoped recall, provenance and trace inspection, and explicit forgetting…</span></li><li><a href="../../lians-ai/lians/">Lians-ai/Lians</a><span class="nwo">Lians-ai/Lians</span><span class="desc">Open-source, local-first memory for Gemini CLI and other AI agents. Durable cross-session recall through a two-tool MCP extension, with no account…</span></li><li><a href="../../mohamedabdallah-14/prompt-to-asset/">MohamedAbdallah-14/prompt-to-asset</a><span class="nwo">MohamedAbdallah-14/prompt-to-asset</span><span class="desc">MCP server that generates production-ready visual assets (app icons, favicons, OG images, logos, wordmarks) by routing requests across 30+ image…</span></li><li><a href="../../yylo-dev/roundtable/">Roundtable</a><span class="nwo">yylo-dev/roundtable</span><span class="desc">Zero-configuration unified AI assistant management built on the FastMCP framework. Provides seamless integration with Claude, ChatGPT, and other AI…</span></li><li><a href="../../masondelan/selvedge/">Selvedge</a><span class="nwo">masondelan/selvedge</span><span class="desc">by masondelan - Long-term memory for AI-coded codebases. A git blame for AI agents — but for the why. MCP server that captures the agent&#x27;s reasoning…</span></li></ul>
 </section>
 </div></main>
 

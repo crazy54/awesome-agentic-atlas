@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ironheights (Frank-Masciopinto/ironheights) — Frameworks &amp; SDKs — Awesome Agentic Atlas</title>
-<meta name="description" content="Apache-2.0 local-first CLI that scans OpenClaw agent skills before install for prompt injection, credential reads, remote-exec installs and persistence…">
+<meta name="description" content="Offline security scanner that protects any AI bot&#x27;s skills: scans any skill folder with a SKILL.md (including Gemini CLI skills in ~/.gemini/skills/) for…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/frank-masciopinto/ironheights/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Ironheights — Awesome Agentic Atlas">
-<meta property="og:description" content="Apache-2.0 local-first CLI that scans OpenClaw agent skills before install for prompt injection, credential reads, remote-exec installs and persistence…">
+<meta property="og:description" content="Offline security scanner that protects any AI bot&#x27;s skills: scans any skill folder with a SKILL.md (including Gemini CLI skills in ~/.gemini/skills/) for…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/frank-masciopinto/ironheights/">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/Frank-Masciopinto/ironheights">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
@@ -65,7 +65,7 @@ try {
     <div>
       <h1>Ironheights</h1>
       <p class="nwo"><a href="https://github.com/Frank-Masciopinto/ironheights">Frank-Masciopinto/ironheights</a></p>
-      <p class="lead">Apache-2.0 local-first CLI that scans OpenClaw agent skills before install for prompt injection, credential reads, remote-exec installs and persistence; also keeps a sha256 integrity baseline and can quarantine a skill</p>
+      <p class="lead">Offline security scanner that protects any AI bot&#x27;s skills: scans any skill folder with a SKILL.md (including Gemini CLI skills in ~/.gemini/skills/) for prompt injection, credential theft, and other risky patterns before you install it, with findings tagged by OWASP LLM Top 10 and OpenCRE ID. Reads files as data, never runs them, no telemetry. Run npx ironheights scan ./path/to/skill. Apache-2.0</p>
       <p class="facts">
         <span>TypeScript</span>
         <span>Apache-2.0</span>
@@ -147,22 +147,22 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li>AI Agents (Jenqyang)</li></ul>
+  <p class="lead">Named by <b>2</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li>AI Agents (Jenqyang)</li><li>Gemini CLI Ecosystem</li></ul>
 </section>
 
 <section>
   <h2>How it is classified</h2>
-  <p class="lead">One topic, no
+  <p class="lead">One topic, 5
     harnesses. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/frameworks-sdks/">Frameworks &amp; SDKs</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/frameworks-sdks/">Frameworks &amp; SDKs</a><a class="chip" href="../../../topic/frameworks-sdks/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/frameworks-sdks/target/mcp/">MCP</a><a class="chip" href="../../../topic/frameworks-sdks/target/codex-openai/">Codex / OpenAI</a><a class="chip" href="../../../topic/frameworks-sdks/target/gemini-google/">Gemini / Google</a><a class="chip" href="../../../topic/frameworks-sdks/target/cursor/">Cursor</a></div>
 </section>
 
 <section class="kin">
   <h2>Related in Frameworks &amp; SDKs</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../microsoft/autogen/">Autogen</a><span class="nwo">microsoft/autogen</span><span class="desc">Microsoft&#x27;s multi-agent conversation framework with a complete AgentChat layer covering agent loop, tool integration, termination conditions, and…</span></li><li><a href="../../crewaiinc/crewai/">crewAI</a><span class="nwo">crewAIInc/crewAI</span><span class="desc">Dual-layer harness orchestration: Crew handles autonomous agent delegation, Flow provides event-driven deterministic control (branching + shared…</span></li><li><a href="../../langchain-ai/langchain/">LangChain</a><span class="nwo">langchain-ai/langchain</span><span class="desc">Langchain integrates various providers like Anthropic, AWS, and OpenAI, and offers tools for components such as LLMs, chat models, and data…</span></li><li><a href="../../run-llama/llama_index/">LlamaIndex</a><span class="nwo">run-llama/llama_index</span><span class="desc">LlamaIndex offers a variety of tools for building data agents, with top downloads including IonicShoppingToolSpec, OpenAPIToolSpec…</span></li><li><a href="../../mastra-ai/mastra/">Mastra</a><span class="nwo">mastra-ai/mastra</span><span class="desc">TypeScript-native agent framework (from the Gatsby team) with 22K+ stars and 300K+ weekly npm downloads. Connects to 40+ providers through one…</span></li><li><a href="../../mem0ai/mem0/">mem0</a><span class="nwo">mem0ai/mem0</span><span class="desc">Mem0 is an intelligent memory layer for Large Language Models that enhances personalized AI experiences by retaining and utilizing contextual…</span></li><li><a href="../../significant-gravitas/autogpt/">AutoGPT</a><span class="nwo">Significant-Gravitas/AutoGPT</span><span class="desc">AutoGPT provides accessible AI tools for building and using AI agents, offering a comprehensive framework including Forge for agent creation…</span></li><li><a href="../../deepset-ai/haystack/">Haystack</a><span class="nwo">deepset-ai/haystack</span><span class="desc">Haystack is an end-to-end LLM framework facilitating the construction of applications powered by LLMs, Transformer models, vector search, and more…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../fmarzochi/egc/">EGC</a><span class="nwo">Fmarzochi/EGC</span><span class="desc">Persistent cross-session memory MCP server for 13+ AI coding tools. SQLite-backed state survives context resets and keeps Claude Code, Cursor…</span></li><li><a href="../../strands-agents/harness-sdk/">Strands Agents SDK</a><span class="nwo">strands-agents/harness-sdk</span><span class="desc">AWS&#x27;s open-source, model-driven agent SDK that treats the loop, tool binding, and guardrails as first-class primitives. Supports Bedrock, Anthropic…</span></li><li><a href="../../jmagly/aiwg/">AIWG</a><span class="nwo">jmagly/aiwg</span><span class="desc">Deploys versioned agents, skills, rules, and governed workflows into the native project paths used by Claude Code, Codex, Copilot, Cursor, and other…</span></li><li><a href="../../speakeasy-api/gram/">Speakeasy control plane</a><span class="nwo">speakeasy-api/gram</span><span class="desc">MCP gateway that scopes agent tool access by identity, team, and role, with security policy enforced on each action and an audit trail. Useful as a…</span></li><li><a href="../../monadworks/agentify/">Agentify</a><span class="nwo">MonadWorks/agentify</span><span class="desc">CLI tool that transforms any OpenAPI spec into 9 agent interface formats (MCP server, AGENTS.md, CLAUDE.md, .cursorrules, Skills, llms.txt…</span></li><li><a href="../../browser-use/browser-harness/">browser-harness</a><span class="nwo">browser-use/browser-harness</span><span class="desc">Self-healing browser harness that connects an LLM directly to your real Chrome via CDP. The critical design decision: the agent itself writes…</span></li><li><a href="../../razzant/claudexor/">Claudexor</a><span class="nwo">razzant/claudexor</span><span class="desc">Routes one coding thread across harnesses with quota-aware rotation between subscription profiles, Best-of-N runs, and cross-family review.</span></li><li><a href="../../glassflow/rius-sdk-python/">Rius</a><span class="nwo">glassflow/rius-sdk-python</span><span class="desc">MIT Python SDK that traces LLM calls, tool calls and agent steps as OpenTelemetry GenAI spans, with auto-instrumentation for OpenAI, Anthropic…</span></li></ul>
 </section>
 </div></main>
 

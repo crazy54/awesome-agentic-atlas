@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AgentLeak (yagobski/agentleak) — Observability &amp; Evals — Awesome Agentic Atlas</title>
-<meta name="description" content="Python toolkit for evaluating privacy leakage across agent traces, including tool calls, inter-agent messages, shared memory, and logs, with redacted…">
+<title>yagobski/agentleak — MCP Servers — Awesome Agentic Atlas</title>
+<meta name="description" content="Local privacy testing for AI agents: scan code for PII and secrets, score execution traces across internal channels, redact text, and track new or fixed…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/yagobski/agentleak/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="AgentLeak — Awesome Agentic Atlas">
-<meta property="og:description" content="Python toolkit for evaluating privacy leakage across agent traces, including tool calls, inter-agent messages, shared memory, and logs, with redacted…">
+<meta property="og:title" content="yagobski/agentleak — Awesome Agentic Atlas">
+<meta property="og:description" content="Local privacy testing for AI agents: scan code for PII and secrets, score execution traces across internal channels, redact text, and track new or fixed…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/yagobski/agentleak/">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/yagobski/agentleak">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
@@ -52,20 +52,20 @@ try {
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Observability & Evals","item":"https://aaa.jeremyfhall.com/topic/observability-evals/"},{"@type":"ListItem","position":3,"name":"AgentLeak","item":"https://aaa.jeremyfhall.com/repo/yagobski/agentleak/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"MCP Servers","item":"https://aaa.jeremyfhall.com/topic/mcp-servers/"},{"@type":"ListItem","position":3,"name":"yagobski/agentleak","item":"https://aaa.jeremyfhall.com/repo/yagobski/agentleak/"}]}</script>
 <script src="https://jeremyfhall.com/kit/site-kit.v1.js" integrity="sha384-XSpQk1dubcVV4dWVZL3B8R6EsmEa4vwZ8PlVTkEmE+RY28H8OP2Y36BpTK7vCJI2" crossorigin="anonymous" data-site="atlas" defer></script>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
 <header><div class="wrap">
   <nav class="crumb"><a class="brand" href="../../../"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="#D6A034" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="#F7F8FA" stroke="#D6A034" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="#D6A034"/><path d="M12 31h40M32 11v40" fill="none" stroke="#20242D" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="#090A0D"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="#F7F8FA"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="#090A0D" stroke-width="2.5" stroke-linecap="round"/></g></svg></span><span>Atlas</span></a> ›
-    <a href="../../../topic/observability-evals/">Observability &amp; Evals</a> ›
+    <a href="../../../topic/mcp-servers/">MCP Servers</a> ›
     <a href="../../../repo/">All projects</a></nav>
   <div class="top">
     <div>
-      <h1>AgentLeak</h1>
+      <h1>yagobski/agentleak</h1>
       <p class="nwo"><a href="https://github.com/yagobski/agentleak">yagobski/agentleak</a></p>
-      <p class="lead">Python toolkit for evaluating privacy leakage across agent traces, including tool calls, inter-agent messages, shared memory, and logs, with redacted reports and CI gates</p>
+      <p class="lead">Local privacy testing for AI agents: scan code for PII and secrets, score execution traces across internal channels, redact text, and track new or fixed findings through MCP tools</p>
       <p class="facts">
         <span>Python</span>
         <span>MIT</span>
@@ -74,7 +74,7 @@ try {
         <span id="snap" class="live"></span>
       </p>
       <p class="acts"><a class="cta" href="https://github.com/yagobski/agentleak">View on GitHub &rarr;</a>
-        <a class="alt" href="../../../catalog/#q=AgentLeak">Find it in the atlas</a></p>
+        <a class="alt" href="../../../catalog/#q=yagobski%2Fagentleak">Find it in the atlas</a></p>
     </div>
     <nav class="util">
       <a href="../../../discover/">Discover</a> ·
@@ -90,7 +90,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">pip install agentleak # core</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for AgentLeak">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">pip install agentleak # core</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for yagobski/agentleak">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -134,7 +134,7 @@ try {
   <h2>Screenshot</h2>
   <figure class="shot">
     <img loading="lazy" decoding="async" src="https://opengraph.githubassets.com/1/yagobski/agentleak"
-         alt="Screenshot or social card for AgentLeak">
+         alt="Screenshot or social card for yagobski/agentleak">
     <figcaption>GitHub's social card — no screenshot was found for this project, fetched from
       source rather than copied into this repository.</figcaption>
   </figure>
@@ -147,7 +147,7 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li>AI Agents (Jenqyang)</li></ul>
+  <p class="lead">Named by <b>2</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li>AI Agents (Jenqyang)</li><li>MCP Servers (punkpeye)</li></ul>
 </section>
 
 <section>
@@ -155,14 +155,14 @@ try {
   <p class="lead">One topic, 2
     harnesses. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/observability-evals/">Observability &amp; Evals</a><a class="chip" href="../../../topic/observability-evals/target/mcp/">MCP</a><a class="chip" href="../../../topic/observability-evals/target/langchain-langgraph/">LangChain / LangGraph</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/mcp-servers/">MCP Servers</a><a class="chip" href="../../../topic/mcp-servers/target/mcp/">MCP</a><a class="chip" href="../../../topic/mcp-servers/target/langchain-langgraph/">LangChain / LangGraph</a></div>
 </section>
 
 <section class="kin">
-  <h2>Related in Observability &amp; Evals</h2>
+  <h2>Related in MCP Servers</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../comet-ml/opik/">Opik</a><span class="nwo">comet-ml/opik</span><span class="desc">Comet&#x27;s open-source AI observability and evaluation platform: deep tracing of LLM calls, conversation logging, and agent activity, plus built-in…</span></li><li><a href="../../hidai25/eval-view/">EvalView</a><span class="nwo">hidai25/eval-view</span><span class="desc">Regression testing for AI agents. Snapshot behavior, detect tool-call and output regressions, with golden-baseline diffing and LLM-as-judge scoring…</span></li><li><a href="../../cognicore-dev/cognicore-env/">CogniCore</a><span class="nwo">cognicore-dev/cognicore-env</span><span class="desc">Structured experience memory and learning infrastructure for AI agents, providing verified experience reuse, failure learning, environment-aware…</span></li><li><a href="../../rehanmohammed985/runtape/">runtape</a><span class="nwo">RehanMohammed985/runtape</span><span class="desc">Finds which part of an agent&#x27;s context caused a bad decision by rerunning it with pieces removed, checks candidate fixes the same way, and writes a…</span></li><li><a href="../../langfuse/langfuse/">Langfuse</a><span class="nwo">langfuse/langfuse</span><span class="desc">The most widely adopted self-hostable LLM observability platform: traces every agent step, manages prompt versions, and runs evals in one tool…</span></li><li><a href="../../getagentseal/codeburn/">Codeburn</a><span class="nwo">getagentseal/codeburn</span><span class="desc">Free, local tool that tracks AI coding token usage and cost across 31 tools and agents by model, project, and task. Worth including because…</span></li><li><a href="../../helicone/helicone/">Helicone</a><span class="nwo">Helicone/helicone</span><span class="desc">Open-source LLM observability proxy (YC W23) with the largest open-source pricing database (300+ models). One-line proxy integration provides cost…</span></li><li><a href="../../agentops-ai/agentops/">AgentOps</a><span class="nwo">AgentOps-AI/agentops</span><span class="desc">Open-source agent engineering platform (YC W24) with session replay, cost tracking, and failure detection across 10+ frameworks including CrewAI…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../microsoft/agent-governance-toolkit/">Microsoft Agent Governance Toolkit</a><span class="nwo">microsoft/agent-governance-toolkit</span><span class="desc">Seven-package, multi-language (Python, Rust, TypeScript, Go, .NET) runtime security toolkit that addresses all 10 OWASP Agentic AI risks with…</span></li><li><a href="../../sidclawhq/platform/">sidclawhq/platform</a><span class="nwo">sidclawhq/platform</span><span class="desc">The approval and accountability layer for AI agents. Identity → Policy → Approval → Trace. 13 framework integrations. Free during early access</span></li><li><a href="../../alibaizhanov/mengram/">Mengram</a><span class="nwo">alibaizhanov/mengram</span><span class="desc">Open-source memory infrastructure for AI agents. Provides semantic (entities/facts), episodic (conversations), and procedural (learned behaviors)…</span></li><li><a href="../../34892002/bilibili-mcp-js/">34892002/bilibili-mcp-js</a><span class="nwo">34892002/bilibili-mcp-js</span><span class="desc">Search Bilibili content, with LangChain integration examples</span></li><li><a href="../../acacian/aegis/">Acacian/aegis</a><span class="nwo">Acacian/aegis</span><span class="desc">Policy-based governance for agent tool calls across LangChain, OpenAI, Anthropic and MCP: YAML policies, approval gates, risk assessment and audit…</span></li><li><a href="../../aegis-dq/aegis-dq/">aegis-dq/aegis-dq</a><span class="nwo">aegis-dq/aegis-dq</span><span class="desc">Data quality checks on DuckDB, BigQuery, Athena, Databricks and Postgres, with LLM root-cause analysis of failures and proposed SQL remediations</span></li><li><a href="../../agnuxo1/benchclaw-integrations/">Agnuxo1/benchclaw-integrations</a><span class="nwo">Agnuxo1/benchclaw-integrations</span><span class="desc">Register LLMs and agents and submit Markdown research papers to the BenchClaw leaderboard, where a panel of judges scores them with deception…</span></li><li><a href="../../airblackbox/air-blackbox-mcp/">airblackbox/air-blackbox-mcp</a><span class="nwo">airblackbox/air-blackbox-mcp</span><span class="desc">EU AI Act compliance scanner for Python AI agents (LangChain, CrewAI, AutoGen, OpenAI) with prompt injection detection, risk classification and fix…</span></li></ul>
 </section>
 </div></main>
 

@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>nautilus-compass (chunxiaoxx/nautilus-compass) — Context, Memory &amp; RAG — Awesome Agentic Atlas</title>
-<meta name="description" content="Open memory &amp; reliability layer for AI agents + independent judging/verification (NACRE judge, caliber-bench meta-benchmark, preregistered criteria) — by…">
+<title>Nautilus Compass (chunxiaoxx/nautilus-compass) — Observability &amp; Evals — Awesome Agentic Atlas</title>
+<meta name="description" content="Independent verification &amp; judging service for AI-agent claims: preregistered gates, third-party recomputation with per-case evidence, and a public…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/chunxiaoxx/nautilus-compass/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="nautilus-compass — Awesome Agentic Atlas">
-<meta property="og:description" content="Open memory &amp; reliability layer for AI agents + independent judging/verification (NACRE judge, caliber-bench meta-benchmark, preregistered criteria) — by…">
+<meta property="og:title" content="Nautilus Compass — Awesome Agentic Atlas">
+<meta property="og:description" content="Independent verification &amp; judging service for AI-agent claims: preregistered gates, third-party recomputation with per-case evidence, and a public…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/chunxiaoxx/nautilus-compass/">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/chunxiaoxx/nautilus-compass">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
@@ -52,20 +52,20 @@ try {
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Context, Memory & RAG","item":"https://aaa.jeremyfhall.com/topic/context-memory-rag/"},{"@type":"ListItem","position":3,"name":"nautilus-compass","item":"https://aaa.jeremyfhall.com/repo/chunxiaoxx/nautilus-compass/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Observability & Evals","item":"https://aaa.jeremyfhall.com/topic/observability-evals/"},{"@type":"ListItem","position":3,"name":"Nautilus Compass","item":"https://aaa.jeremyfhall.com/repo/chunxiaoxx/nautilus-compass/"}]}</script>
 <script src="https://jeremyfhall.com/kit/site-kit.v1.js" integrity="sha384-XSpQk1dubcVV4dWVZL3B8R6EsmEa4vwZ8PlVTkEmE+RY28H8OP2Y36BpTK7vCJI2" crossorigin="anonymous" data-site="atlas" defer></script>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
 <header><div class="wrap">
   <nav class="crumb"><a class="brand" href="../../../"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="#D6A034" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="#F7F8FA" stroke="#D6A034" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="#D6A034"/><path d="M12 31h40M32 11v40" fill="none" stroke="#20242D" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="#090A0D"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="#F7F8FA"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="#090A0D" stroke-width="2.5" stroke-linecap="round"/></g></svg></span><span>Atlas</span></a> ›
-    <a href="../../../topic/context-memory-rag/">Context, Memory &amp; RAG</a> ›
+    <a href="../../../topic/observability-evals/">Observability &amp; Evals</a> ›
     <a href="../../../repo/">All projects</a></nav>
   <div class="top">
     <div>
-      <h1>nautilus-compass</h1>
+      <h1>Nautilus Compass</h1>
       <p class="nwo"><a href="https://github.com/chunxiaoxx/nautilus-compass">chunxiaoxx/nautilus-compass</a></p>
-      <p class="lead">Open memory &amp; reliability layer for AI agents + independent judging/verification (NACRE judge, caliber-bench meta-benchmark, preregistered criteria) — by Nautilus Platform</p>
+      <p class="lead">Independent verification &amp; judging service for AI-agent claims: preregistered gates, third-party recomputation with per-case evidence, and a public errata/ledger of its own published mistakes. Runs LongMemEval-based memory evals and the PRECOR study on quantization-induced judge degradation</p>
       <p class="facts">
         <span>Python</span>
         <span>No licence declared</span>
@@ -74,7 +74,7 @@ try {
         <span id="snap" class="live"></span>
       </p>
       <p class="acts"><a class="cta" href="https://github.com/chunxiaoxx/nautilus-compass">View on GitHub &rarr;</a>
-        <a class="alt" href="../../../catalog/#q=nautilus-compass">Find it in the atlas</a></p>
+        <a class="alt" href="../../../catalog/#q=Nautilus%20Compass">Find it in the atlas</a></p>
     </div>
     <nav class="util">
       <a href="../../../discover/">Discover</a> ·
@@ -90,7 +90,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">pip install nautilus-compass</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for nautilus-compass">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">pip install nautilus-compass</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for Nautilus Compass">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -134,7 +134,7 @@ try {
   <h2>Screenshot</h2>
   <figure class="shot">
     <img loading="lazy" decoding="async" src="https://opengraph.githubassets.com/1/chunxiaoxx/nautilus-compass"
-         alt="Screenshot or social card for nautilus-compass">
+         alt="Screenshot or social card for Nautilus Compass">
     <figcaption>GitHub's social card — no screenshot was found for this project, fetched from
       source rather than copied into this repository.</figcaption>
   </figure>
@@ -147,7 +147,7 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">No curated list names this project yet: the atlas found it through its own GitHub search, which adds fast-rising agentic repositories before a list catches up.</p>
+  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/ai-boost/awesome-harness-engineering">Harness Engineering</a></li></ul>
 </section>
 
 <section>
@@ -155,14 +155,14 @@ try {
   <p class="lead">One topic, 3
     harnesses. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/context-memory-rag/">Context, Memory &amp; RAG</a><a class="chip" href="../../../topic/context-memory-rag/target/claude-code/">Claude Code</a><a class="chip" href="../../../topic/context-memory-rag/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/context-memory-rag/target/mcp/">MCP</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/observability-evals/">Observability &amp; Evals</a><a class="chip" href="../../../topic/observability-evals/target/claude-code/">Claude Code</a><a class="chip" href="../../../topic/observability-evals/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/observability-evals/target/mcp/">MCP</a></div>
 </section>
 
 <section class="kin">
-  <h2>Related in Context, Memory &amp; RAG</h2>
+  <h2>Related in Observability &amp; Evals</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../vectorize-io/hindsight/">Hindsight</a><span class="nwo">vectorize-io/hindsight</span><span class="desc">Agent memory system organized around three explicit operations—retain, recall, and reflect—with semantic, keyword, graph, and temporal retrieval…</span></li><li><a href="../../wolfe-jam/faf-cli/">faf-cli</a><span class="nwo">Wolfe-Jam/faf-cli</span><span class="desc">by Wolfe-Jam - Authors and versions CLAUDE.md and AGENTS.md from a repository&#x27;s actual detected stack, so Claude Code&#x27;s project context stays in…</span></li><li><a href="../../mzmmoazam/claude-overlay/">claude-overlay</a><span class="nwo">mzmmoazam/claude-overlay</span><span class="desc">CLI for managing Claude Code project configs across custom providers (Databricks, Bedrock, OpenRouter, LiteLLM, Cloudflare). Overlay merge/remove…</span></li><li><a href="../../rohitg00/agentmemory/">agentmemory</a><span class="nwo">rohitg00/agentmemory</span><span class="desc">Persistent memory layer purpose-built for coding agents with 95.2% retrieval accuracy and 92% token reduction, backed by real-world benchmarks. Its…</span></li><li><a href="../../serpro69/capy/">capy</a><span class="nwo">serpro69/capy</span><span class="desc">by serpro69 - 🦫 Privacy-first virtualization layer for LLM context with MCP protocol for tool access</span></li><li><a href="../../yawlabs/ctxlint/">ctxlint</a><span class="nwo">YawLabs/ctxlint</span><span class="desc">Open-source linter for AI context files (CLAUDE.md, .cursorrules, copilot-instructions.md) that catches stale paths, wrong commands, and token waste…</span></li><li><a href="../../huggingface/funes/">funes</a><span class="nwo">huggingface/funes</span><span class="desc">by David Corvoysier - Durable cross-agent memory for Claude Code, Codex, pi, and Hermes. Your memory is a Hugging Face dataset you own: recall it…</span></li><li><a href="../../kaelio/ktx/">ktx</a><span class="nwo">Kaelio/ktx</span><span class="desc">Self-improving executable context layer for data and analytics agents: it ingests warehouses, BI tools, and wikis to build a semantic layer with…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../getagentseal/codeburn/">Codeburn</a><span class="nwo">getagentseal/codeburn</span><span class="desc">Free, local tool that tracks AI coding token usage and cost across 31 tools and agents by model, project, and task. Worth including because…</span></li><li><a href="../../avansaber/tailtest/">tailtest</a><span class="nwo">avansaber/tailtest</span><span class="desc">Automatically generates and runs tests for every file Claude Code creates or modifies. PostToolUse hook detects changes, generates test scenarios…</span></li><li><a href="../../antropos17/aegis/">AEGIS</a><span class="nwo">antropos17/Aegis</span><span class="desc">Windows-first desktop monitor for local agent processes, configured file activity, TCP endpoints and audit exports. Useful for inspecting a…</span></li><li><a href="../../lookfree/cc-harness/">CC Harness</a><span class="nwo">lookfree/cc-harness</span><span class="desc">by lookfree - Desktop workbench that reads Claude Code session files locally and renders the subagent and workflow topology as a live graph, with…</span></li><li><a href="../../hoangsonww/claude-code-agent-monitor/">Claude Code Agent Monitor</a><span class="nwo">hoangsonww/Claude-Code-Agent-Monitor</span><span class="desc">by hoangsonww - A self-hosted real-time dashboard that monitors Claude Code agent activity via its native hooks — live sessions, subagent…</span></li><li><a href="../../pcjansen09-max/cloneproof/">cloneproof</a><span class="nwo">pcjansen09-max/cloneproof</span><span class="desc">Measures how closely an agent-built website clone matches the original and returns per-element differences plus a fix prompt for the agent&#x27;s next…</span></li><li><a href="../../gethrbr/context-tax/">context-tax</a><span class="nwo">gethrbr/context-tax</span><span class="desc">by Harbor - A zero-dependency CLI (npx context-tax) that reads Claude Code session transcripts to measure what is sent on every turn before the…</span></li><li><a href="../../qualixar/slm-mcp-hub/">slm-mcp-hub</a><span class="nwo">qualixar/slm-mcp-hub</span><span class="desc">External: Universal MCP gateway federating 430+ tools from 37 servers through one endpoint. 75% RAM reduction</span></li></ul>
 </section>
 </div></main>
 
