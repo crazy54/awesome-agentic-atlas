@@ -2,7 +2,7 @@
 
 Agents pointed at literature, the web and datasets: deep research, analysis, business intelligence and science.
 
-**42 projects** · 41 with stars to rank by · 205,929 combined stars
+**42 projects** · 41 with stars to rank by · 205,943 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#topic=research-data-agents)
 
@@ -36,7 +36,7 @@ Agents pointed at literature, the web and datasets: deep research, analysis, bus
 | 17 | **[ChemCrow](https://github.com/ur-whitelab/chemcrow-public)**<br><sub>ur-whitelab/chemcrow-public</sub> | 970 | 1 | <sub>—</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `pip install chemcrow` | Chemcrow |
 | 18 | **[BambooAI](https://github.com/pgalko/BambooAI)**<br><sub>pgalko/BambooAI</sub> | 834 | 1 | <sub>Local / Ollama</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `pip install bambooai` | AI-powered data analysis workbench built for transparency, reproducibility and user control. Inspect the code and evidence behind results, verify calculations through replay, and… |
 | 19 | **[data-to-paper](https://github.com/Technion-Kishony-lab/data-to-paper)**<br><sub>Technion-Kishony-lab/data-to-paper</sub> | 834 | 3 | <sub>—</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `pip install data-to-paper` | data-to-paper: AI-driven research from data to human-verifiable research papers. github |
-| 20 | **[AI Research Skills](https://github.com/WenyuChiou/ai-research-skills)**<br><sub>WenyuChiou/ai-research-skills</sub> | 482 | 1 | <sub>Claude Code, Claude / Anthropic, Codex / OpenAI, Gemini / Google, Cursor</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `pip install research-hub-pipeline` | by Wenyu Chiou - A catalog of 15 Claude Code skills mapped to 8 research-workflow stages (literature → gap analysis → design → drafting → reviewer response), where each stage emit… |
+| 20 | **[AI Research Skills](https://github.com/WenyuChiou/ai-research-skills)**<br><sub>WenyuChiou/ai-research-skills</sub> | 490 | 1 | <sub>Claude Code, Claude / Anthropic, Codex / OpenAI, Gemini / Google, Cursor</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `pip install research-hub-pipeline` | by Wenyu Chiou - A catalog of 15 Claude Code skills mapped to 8 research-workflow stages (literature → gap analysis → design → drafting → reviewer response), where each stage emit… |
 | 21 | **[eimenhmdt/autoresearcher](https://github.com/eimenhmdt/autoresearcher)**<br><sub>eimenhmdt/autoresearcher</sub> | 446 | 1 | <sub>—</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `pip install autoresearcher` | Early open-source package for automating scientific workflows, currently centered on literature-review generation with an ambition toward broader autonomous research |
 | 22 | **[GPT Runner](https://github.com/nicepkg/gpt-runner)**<br><sub>nicepkg/gpt-runner</sub> | 383 | 1 | <sub>Claude / Anthropic, Codex / OpenAI, LangChain / LangGraph</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/nicepkg/gpt-runner.git` | Conversations with your files! Manage and run your AI presets! |
 | 23 | **[BlockAGI](https://github.com/orgexyz/BlockAGI)**<br><sub>orgexyz/BlockAGI</sub> | 325 | 2 | <sub>Codex / OpenAI</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/orgexyz/BlockAGI.git` | BlockAGI conducts iterative, domain-specific research, and outputs detailed narrative reports to showcase its findings. github |

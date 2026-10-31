@@ -136,7 +136,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 20 · Rust · Apache-2.0 · source · pushed 2026-09-04 · Win? · WSL2? · Linux</sub>
   <sub>`git clone https://github.com/TraceFold/tracefold.git`</sub>
 - **[agent-airlock](https://github.com/sattyamjjain/agent-airlock)** — Deny-by-default contract layer for agent tool calls that adds Pydantic strict validation, ghost-argument stripping and retryable fix hints through one decorator, for any agent framework or MCP server
-  <sub>★ 17 · Python · Apache-2.0 · pip · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 17 · Python · Apache-2.0 · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install "agent-airlock>=0.10.3"`</sub>
 - **[SkillTotal](https://github.com/pezhik/skilltotal)** — Static, offline scanner for AI components (MCP servers, agent skills, npm/PyPI packages, repos): supply-chain risk, dangerous capabilities, prompt-injection, exfiltration; deterministic, evidence-anchored, SARIF + pre-commit/GitHub Action
   <sub>★ 16 · Python · Apache-2.0 · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -235,7 +235,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 115 · Python · source · pushed 2026-01-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Lordog/R-Judge.git`</sub>
 - **[Orca AI Incident Archive](https://github.com/Continuum-AI-Corp/Orca-AI-Incident-Archive)** — Real-world agent security incidents (MCP, tool/skill supply chain, indirect prompt injection, rogue tool actions), each flagged confirmed victim vs. research demo
-  <sub>★ 28 · HTML · source · pushed 2026-10-28</sub>
+  <sub>★ 29 · HTML · source · pushed 2026-10-28</sub>
   <sub>`git clone https://github.com/Continuum-AI-Corp/Orca-AI-Incident-Archive.git`</sub>
 - **[ToolSword](https://github.com/Junjie-Ye/ToolSword)** — 6 scenarios, 3 stages
   <sub>★ 15 · Apache-2.0 · source · pushed 2024-09-12</sub>

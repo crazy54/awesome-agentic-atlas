@@ -285,7 +285,7 @@ Curated by **[e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-a
   <sub>★ 18k · Python · Apache-2.0 · pip · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install camel-ai`</sub>
 - **[XAgent](https://github.com/OpenBMB/XAgent)** — An Autonomous LLM Agent for Complex Task Solving
-  <sub>★ 8.5k · Python · Apache-2.0 · source · pushed 2026-07-31 · WSL2 · Linux · Docker</sub>
+  <sub>★ 8.6k · Python · Apache-2.0 · source · pushed 2026-07-31 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/OpenBMB/XAgent.git`</sub>
 - **[Voyager](https://github.com/MineDojo/Voyager)** — An Open-Ended Embodied Agent with Large Language Models
   <sub>★ 7.3k · JavaScript · MIT · clone · pushed 2024-04-03 · Win? · WSL2? · macOS? · Linux?</sub>

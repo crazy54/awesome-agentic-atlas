@@ -11,7 +11,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/anthropics/claude-code"><img src="https://raw.githubusercontent.com/anthropics/claude-code/main/demo.gif" width="260"></a> | <a href="https://github.com/openai/codex"><img src="https://raw.githubusercontent.com/openai/codex/main/.github/codex-cli-splash.png" width="260"></a> | <a href="https://github.com/google-gemini/gemini-cli"><img src="https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/assets/gemini-screenshot.png" width="260"></a> |
-| **[anthropics/claude-code](https://github.com/anthropics/claude-code)**<br>★ 154k | **[OpenAI Codex CLI](https://github.com/openai/codex)**<br>★ 132.4k | **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 108.6k |
+| **[anthropics/claude-code](https://github.com/anthropics/claude-code)**<br>★ 154.1k | **[OpenAI Codex CLI](https://github.com/openai/codex)**<br>★ 132.4k | **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 108.7k |
 | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> | <a href="https://github.com/upstash/context7"><img src="https://raw.githubusercontent.com/upstash/context7/master/public/cover.png?raw=true" width="260"></a> | <a href="https://github.com/PatrickJS/awesome-cursorrules"><img src="https://opengraph.githubassets.com/1/PatrickJS/awesome-cursorrules" width="260"></a> |
 | **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 92.3k | **[Context7](https://github.com/upstash/context7)**<br>★ 64k | **[awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules)**<br>★ 41.1k |
 
@@ -29,13 +29,13 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
 ## Command Line Tools
 
 - **[anthropics/claude-code](https://github.com/anthropics/claude-code)** — Coding agent that understands your codebase, automates tasks, explains code, and manages Git, all via natural language
-  <sub>★ 154k · TypeScript · winget · pushed 2026-10-31 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 154.1k · TypeScript · winget · pushed 2026-10-31 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`winget install Anthropic.ClaudeCode`</sub>
 - **[OpenAI Codex CLI](https://github.com/openai/codex)** — OpenAI's coding agent in the terminal with Codex Cloud, IDE extension, and multi-model support
   <sub>★ 132.4k · Rust · Apache-2.0 · npm · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @openai/codex`</sub>
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — An open-source AI agent from Google that brings the power of Gemini directly into your terminal. Generous free tier (60 req/min, 1000/day)
-  <sub>★ 108.6k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 108.7k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @google/gemini-cli`</sub>
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** — Open-source AI-driven development agent with CLI, GUI, and cloud modes, supporting Claude, GPT, and other models
   <sub>★ 92.3k · TypeScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
@@ -44,7 +44,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 28.9k · Go · winget · pushed 2026-10-31 · Win · WSL2 · macOS · Linux</sub>
   <sub>`winget install charmbracelet.crush`</sub>
 - **[QwenLM/qwen-code](https://github.com/QwenLM/qwen-code)** — "qwen-code is a coding agent that lives in digital world"
-  <sub>★ 28.8k · TypeScript · Apache-2.0 · psh · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 28.9k · TypeScript · Apache-2.0 · psh · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://qwen-code-assets.oss-cn-hangzhou.aliyuncs.com/installation/install-qwen-standalone.ps1 | iex`</sub>
 - **[HKUDS/DeepCode](https://github.com/HKUDS/DeepCode)** — Deep learning for code analysis and generation. Achieves SOTA on PaperBench
   <sub>★ 16.8k · Python · MIT · uv · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
@@ -95,7 +95,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 566 · TypeScript · MIT · npm · pushed 2026-01-07 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g mycoder`</sub>
 - **[langchain-code](https://github.com/zamalali/langchain-code)** — LangChain-based coding agent for AI-assisted development. Supports Gemini, Anthropic, OpenAI, and Ollama
-  <sub>★ 438 · Python · Apache-2.0 · pip · pushed 2025-11-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 439 · Python · Apache-2.0 · pip · pushed 2025-11-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install langchain-code`</sub>
 - **[CodeSelect](https://github.com/maynetee/codeselect)** — A Python-based command-line tool that efficiently communicates project source code to AIs
   <sub>★ 236 · Python · GPL-3.0 · script · pushed 2026-09-24 · Win? · WSL2 · macOS · Linux</sub>

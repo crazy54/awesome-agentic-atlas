@@ -11,7 +11,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> | <a href="https://github.com/usestrix/strix"><img src="https://raw.githubusercontent.com/usestrix/.github/main/imgs/cover.png" width="260"></a> | <a href="https://github.com/BerriAI/litellm"><img src="https://github.com/user-attachments/assets/c5ee0412-6fb5-4fb6-ab5b-bafae4209ca6" width="260"></a> |
-| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 92.3k | **[Strix](https://github.com/usestrix/strix)**<br>★ 73k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 62.4k |
+| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 92.3k | **[Strix](https://github.com/usestrix/strix)**<br>★ 73.1k | **[LiteLLM Guardrails](https://github.com/BerriAI/litellm)**<br>★ 62.4k |
 | <a href="https://github.com/NVIDIA/garak"><img src="https://opengraph.githubassets.com/1/leondz/garak" width="260"></a> | <a href="https://github.com/bridgecrewio/checkov"><img src="https://raw.githubusercontent.com/bridgecrewio/checkov/main/docs/checkov-jenkins.png" width="260"></a> | <a href="https://github.com/guardrails-ai/guardrails"><img src="https://opengraph.githubassets.com/1/guardrails-ai/guardrails" width="260"></a> |
 | **[Garak](https://github.com/NVIDIA/garak)**<br>★ 9.8k | **[Checkov](https://github.com/bridgecrewio/checkov)**<br>★ 9.1k | **[Guardrails](https://github.com/guardrails-ai/guardrails)**<br>★ 7.6k |
 
@@ -43,7 +43,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
 ## Red Teaming &amp; Vulnerability Scanners
 
 - **[Strix](https://github.com/usestrix/strix)** — An autonomous AI agent designed for penetration testing. It runs inside a docker sandbox to actively probe applications and generate verified exploit capabilities
-  <sub>★ 73k · Python · Apache-2.0 · npx · pushed 2026-10-30 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 73.1k · Python · Apache-2.0 · npx · pushed 2026-10-30 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add usestrix/strix`</sub>
 - **[Garak](https://github.com/NVIDIA/garak)** — The "Nmap for LLMs." A vulnerability scanner that probes models for hallucination, data leakage, and prompt injection susceptibilities
   <sub>★ 9.8k · Python · Apache-2.0 · source · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux?</sub>

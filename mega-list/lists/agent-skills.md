@@ -776,7 +776,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>★ 84 · Shell · MIT · npx · pushed 2026-10-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add eduardo-sl/go-agent-skills`</sub>
 - **[KalarisLabs/research-agent-skills](https://github.com/KalarisLabs/research-agent-skills)** — 280+ skills covering the full academic research lifecycle, from literature review to peer review
-  <sub>★ 81 · Python · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 83 · Python · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add KalarisLabs/research-agent-skills`</sub>
 - **[tubeagentkit/youtube-transcript-skills](https://github.com/tubeagentkit/youtube-transcript-skills)** — Fetch YouTube transcripts, search videos/channels, browse channels, and extract playlists via getyoutubetranscript.com's free-tier API
   <sub>★ 80 · Shell · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -794,7 +794,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>★ 68 · Python · Apache-2.0 · psh · pushed 2026-08-10 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/k-kolomeitsev/data-structure-protocol/main/install.ps1 | iex`</sub>
 - **[arifszn/slide-wright](https://github.com/arifszn/slide-wright)** — Turns a topic into a themed HTML slide deck; exports to PowerPoint and PDF
-  <sub>★ 65 · JavaScript · MIT · npx · pushed 2026-10-24 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 66 · JavaScript · MIT · npx · pushed 2026-10-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add arifszn/slide-wright`</sub>
 - **[SHADOWPR0/beautiful_prose](https://github.com/SHADOWPR0/beautiful_prose)** — Hard-edged writing style contract for forceful English prose
   <sub>★ 61 · source · pushed 2026-10-26</sub>
@@ -839,7 +839,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>★ 43 · Python · MIT · clone · pushed 2026-08-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/0xheycat/isometric-game-skills.git`</sub>
 - **[YujxZJCN/teaching-skills](https://github.com/YujxZJCN/teaching-skills)** — University teaching lifecycle for professors: course design, lessons, exams, grading (Codex: YujxZJCN/teaching-skills-codex)
-  <sub>★ 42 · Python · MIT · source · pushed 2026-10-03 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 43 · Python · MIT · source · pushed 2026-10-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/YujxZJCN/teaching-skills.git`</sub>
 - **[lukstei/slop-grader](https://github.com/lukstei/slop-grader)** — Rule-based CLI tool evaluating custom rulesets to guide auto-fixing with an AI agent
   <sub>★ 37 · TypeScript · MIT · npx · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -950,7 +950,7 @@ Curated by **[heilcheng/awesome-agent-skills](https://github.com/heilcheng/aweso
   <sub>Python · MIT · in-repo · pushed 2026-10-01</sub>
   <sub>`git clone https://github.com/KKKKhazix/khazix-skills.git && cd khazix-skills/aihot`</sub>
 - **[kklimuk/docx-cli](https://github.com/kklimuk/docx-cli/tree/main/skills/docx-cli)** — Work on Word .docx files in place: tracked changes, comments, forms, tables, styles
-  <sub>TypeScript · MIT · in-repo · pushed 2026-10-30</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-10-31</sub>
   <sub>`git clone https://github.com/kklimuk/docx-cli.git && cd docx-cli/skills/docx-cli`</sub>
 - **[stevyhacker/lokalbot-cli](https://github.com/stevyhacker/lokalbot/tree/master/.agents/skills/lokalbot-cli)** — Retrieve recorded meetings and separately authorized screen memory on macOS
   <sub>Swift · GPL-3.0 · in-repo · pushed 2026-10-31</sub>

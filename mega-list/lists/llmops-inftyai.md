@@ -212,7 +212,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 782 · Python · Apache-2.0 · brew · pushed 2026-10-31 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`brew install mozilla-ai/tap/otari`</sub>
 - **[Respan Gateway](https://github.com/respanai/respan-gateway)** — One endpoint for every LLM vendor. Any SDK, any model, any tool. One Rust binary
-  <sub>★ 427 · Rust · Apache-2.0 · cargo · pushed 2026-10-31 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 428 · Rust · Apache-2.0 · cargo · pushed 2026-10-31 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`cargo install respan-gateway`</sub>
 - **[Ferro Labs AI Gateway](https://github.com/ferro-labs/ai-gateway)** — One API for 25+ LLMs, OpenAI, Anthropic, Bedrock, Azure. Caching, guardrails &amp; cost controls. Go-native LiteLLM &amp; Kong AI Gateway alternative
   <sub>★ 274 · Go · Apache-2.0 · scoop · pushed 2026-10-30 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -323,7 +323,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 4.1k · Go · Apache-2.0 · source · pushed 2026-10-30 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/kagent-dev/kagent.git`</sub>
 - **[fast-agent](https://github.com/evalstate/fast-agent)** — Define, Prompt and Test MCP enabled Agents and Workflows
-  <sub>★ 4k · Python · Apache-2.0 · uv · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4k · Python · Apache-2.0 · uv · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx fast-agent-mcp@latest -x`</sub>
 - **[AgentField](https://github.com/Agent-Field/agentfield)** — Framework for AI Backend. Build and run AI agents like microservices - scalable, observable, and identity-aware from day one
   <sub>★ 2.6k · Go · Apache-2.0 · script · pushed 2026-10-31 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -335,7 +335,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## Tool
 
 - **[Browser Use](https://github.com/browser-use/browser-use)** — Make websites accessible for AI agents
-  <sub>★ 119.6k · Python · MIT · source · pushed 2026-10-31 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 119.7k · Python · MIT · source · pushed 2026-10-31 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/browser-use/browser-use.git`</sub>
 - **[Mem0](https://github.com/mem0ai/mem0)** — The Memory layer for AI Agents
   <sub>★ 68.2k · Python · Apache-2.0 · npm · pushed 2026-10-30 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -395,7 +395,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 132.4k · Rust · Apache-2.0 · npm · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @openai/codex`</sub>
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — An open-source AI agent that brings the power of Gemini directly into your terminal
-  <sub>★ 108.6k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 108.7k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @google/gemini-cli`</sub>
 - **[aider](https://github.com/Aider-AI/aider)** — aider is AI pair programming in your terminal
   <sub>★ 49.8k · Python · Apache-2.0 · source · pushed 2026-05-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -596,7 +596,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 75.8k · Python · Apache-2.0 · docker · pushed 2026-10-31 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`docker run -it --rm --gpus=all --ipc=host hiyouga/llamafactory:latest`</sub>
 - **[Swift](https://github.com/modelscope/ms-swift)** — Use PEFT or Full-parameter to finetune 450+ LLMs (Qwen2.5, InternLM3, GLM4, Llama3.3, Mistral, Yi1.5, Baichuan2, DeepSeek-R1, ...) and 150+ MLLMs (Qwen2.5-VL, Qwen2-Audio, Llama3.2-Vision, Llava, InternVL2.5, MiniCPM-V-2.6, GLM4v, Xcomposer2.5, Yi-VL, DeepSeek-VL2, Phi3.5-Vision, GOT-OCR2, ...)
-  <sub>★ 16k · Python · Apache-2.0 · pip · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 16k · Python · Apache-2.0 · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install ms-swift -U`</sub>
 - **[Axolotl](https://github.com/axolotl-ai-cloud/axolotl)** — Go ahead and axolotl questions
   <sub>★ 12.7k · Python · Apache-2.0 · docker · pushed 2026-10-30 · WSL2 · Linux · Docker</sub>
@@ -620,7 +620,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 2.5k · Python · Apache-2.0 · clone · pushed 2024-08-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/young-geng/EasyLM.git`</sub>
 - **[Overmind](https://github.com/overmind-core/overmind)** — Turn production traces into specialised models you own: curate datasets from traces, evaluate, LoRA fine-tune open-weight models and serve them behind an OpenAI-compatible API
-  <sub>★ 735 · Python · AGPL-3.0 · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 736 · Python · AGPL-3.0 · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install "overmind[tracing]"`</sub>
 
 ## Framework
@@ -749,7 +749,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
 ## Application Framework
 
 - **[PostHog](https://github.com/PostHog/posthog)** — PostHog provides open-source web &amp; product analytics, session recording, feature flagging and A/B testing that you can self-host. Get started - free
-  <sub>★ 40.5k · Python · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 40.6k · Python · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @posthog/wizard mcp add`</sub>
 - **[Langfuse](https://github.com/langfuse/langfuse)** — Open source LLM engineering platform: LLM Observability, metrics, evals, prompt management, playground, datasets. Integrates with OpenTelemetry, Langchain, OpenAI SDK, LiteLLM, and more. 🍊YC W23
   <sub>★ 36.8k · TypeScript · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -851,7 +851,7 @@ Curated by **[InftyAI/Awesome-LLMOps](https://github.com/InftyAI/Awesome-LLMOps)
   <sub>★ 358 · Python · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @cygnuxlabs/tracekit up`</sub>
 - **[OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)** — Record, replay and fork debugger for AI agents. Records a run below the harness, replays it offline with the network off, and forks it from any checkpoint onto another model
-  <sub>★ 289 · TypeScript · Apache-2.0 · npm · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 291 · TypeScript · Apache-2.0 · npm · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g orcareplay # the package is orcareplay`</sub>
 - **[Observatory](https://github.com/The-Context-Company/observatory)** — Open-source TypeScript and Python SDKs for instrumenting AI agents and analyzing production runs, traces, sessions, feedback, and recurring patterns
   <sub>★ 124 · TypeScript · MIT · source · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>

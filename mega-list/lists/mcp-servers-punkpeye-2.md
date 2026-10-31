@@ -287,7 +287,7 @@ Page **2** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 239 · Python · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli@latest install @hellokaton/unsplash-mcp-server --client cursor --key 7558c683-****-****`</sub>
 - **[MarcellM01/TinySearch](https://github.com/TinySuiteHQ/TinySearch)** — Self-hosted web research: SearXNG search with DuckDuckGo fallback, crawling, dense and BM25 reranking and deduplication into a cited, source-grounded prompt
-  <sub>★ 235 · Python · MIT · uv · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 236 · Python · MIT · uv · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx --from "tinysuite-search[server]" tinysearch setup`</sub>
 - **[reading-plus-ai/mcp-server-deep-research](https://github.com/reading-plus-ai/mcp-server-deep-research)** — Autonomous deep research with structured query elaboration and concise reporting
   <sub>★ 215 · Python · MIT · source · pushed 2025-03-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1535,7 +1535,7 @@ Page **2** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 163 · TypeScript · MIT · npm · pushed 2025-02-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g mcp-zotero`</sub>
 - **[dcostenco/prism-mcp](https://github.com/dcostenco/prism-coder)** — Local SQLite agent memory with a web dashboard, session rewind/replay, cross-client memory sharing, morning briefings and progressive context loading
-  <sub>★ 156 · TypeScript · Apache-2.0 · npm · pushed 2026-10-28 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 156 · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm install -g prism-mcp-server`</sub>
 - **[redleaves/context-keeper](https://github.com/redleaves/context-keeper)** — LLM-driven context and memory management: short- and long-term memory with vector, timeline and knowledge graph retrieval plus reranking
   <sub>★ 156 · Go · MIT · clone · pushed 2026-01-13 · WSL2 · Linux · Docker</sub>
@@ -1706,7 +1706,7 @@ Page **2** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 31 · TypeScript · Apache-2.0 · clone · pushed 2026-09-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://codeberg.org/doobidoo/MCP-Context-Provider.git`</sub>
 - **[knaisoma/data-olympus](https://github.com/knaisoma/data-olympus)** — Git-native Markdown knowledge base for coding agents with proposed vs. accepted guidance, validity windows, supersession chains and status-aware retrieval
-  <sub>★ 31 · Python · Apache-2.0 · uv · pushed 2026-10-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 31 · Python · Apache-2.0 · uv · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx --from data-olympus data-olympus --help`</sub>
 - **[nicholasglazer/gnosis-mcp](https://github.com/nicholasglazer/gnosis-mcp)** — Make Markdown documentation searchable: loads it into SQLite or PostgreSQL with keyword search and optional pgvector hybrid semantic search
   <sub>★ 30 · Python · MIT · uv · pushed 2026-10-15 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -1844,7 +1844,7 @@ Page **2** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 16 · TypeScript · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y linksee-memory map where README.md # this file belongs to the README node — and what it touches`</sub>
 - **[remembra-ai/remembra](https://github.com/remembra-ai/remembra)** — Self-hosted persistent agent memory with entity resolution, PII detection, AES-256-GCM encryption at rest and hybrid search
-  <sub>★ 16 · Python · MIT · pipx · pushed 2026-10-25 · macOS</sub>
+  <sub>★ 16 · Python · MIT · pipx · pushed 2026-10-31 · macOS</sub>
   <sub>`pipx install --force 'remembra[mcp]>=0.16'`</sub>
 - **[TyKolt/kremis](https://github.com/TyKolt/kremis)** — Local deterministic knowledge graph on redb with no LLM or embedding calls, BLAKE3 state hashing and canonical export for byte-identical audits
   <sub>★ 16 · Rust · Apache-2.0 · docker · pushed 2026-10-26 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -1994,7 +1994,7 @@ Page **2** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 7 · Python · MIT · uv · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install gingugu`</sub>
 - **[hifriendbot/cogmemai-mcp](https://github.com/hifriendbot/cogmemai-mcp)** — Cloud-based persistent memory for Claude Code with semantic search, AI extraction and project scoping
-  <sub>★ 7 · TypeScript · MIT · npx · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 7 · TypeScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx cogmemai-mcp setup`</sub>
 - **[krimto-labs/krimto](https://github.com/krimto-labs/krimto)** — Team memory for coding agents stored as Markdown in git, with user, team and org access levels and hybrid SQLite/sqlite-vec retrieval
   <sub>★ 7 · TypeScript · Apache-2.0 · npx · pushed 2026-06-02 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -2405,7 +2405,7 @@ Page **2** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · Python · pip · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U bilinc`</sub>
 - **[kaaustubh/project-memory-mcp](https://github.com/kaaustubh/project-memory-mcp)** — Persistent memory for coding agents in plain repo files (AGENTS.md, issues.jsonl): captures bugs, fixes, decisions and corrections and recalls them later
-  <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @kaaustubh/project-memory-mcp install`</sub>
 - **[drexthealpha/Knos](https://github.com/drexthealpha/Knos)** — Local memory shared by all coding agents on a machine, built from sessions, commits, CLAUDE.md/AGENTS.md and ADRs, with claims that lock in-progress work
   <sub>★ 1 · Python · MIT · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2417,7 +2417,7 @@ Page **2** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>JavaScript · MIT · npx · pushed 2026-09-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @subctx/connector`</sub>
 - **[forgemeshlabs/library-mcp](https://github.com/forgemeshlabs/library-mcp)** — Public-domain book knowledge base paid via x402: full-text search, metadata, chapters, quotes, ask-a-book Q&amp;A and curated subject shelves
-  <sub>JavaScript · MIT · source · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>JavaScript · MIT · source · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/forgemeshlabs/library-mcp.git`</sub>
 - **[AIStorageDepot/aistoragedepot-mcp](https://github.com/AIStorageDepot/aistoragedepot-mcp)** — Shared, versioned team library of prompts, rules, skills and docs, searchable by agents, with items exposable as slash commands
   <sub>JavaScript · MIT · npx · pushed 2026-07-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2539,7 +2539,7 @@ Page **2** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 19 · Python · MIT · pip · pushed 2026-10-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install viznoir`</sub>
 - **[Scormave/gramps-web-mcp](https://github.com/Scormave/gramps-web-mcp)** — #️⃣ 🏠 🍎 🪟 🐧 - Gramps Web genealogy: search and edit family tree records, explore ancestors, descendants, relationships and timelines, and read media with privacy-aware previews. Includes a read-only mode and Claude Desktop bundles
-  <sub>★ 18 · C# · AGPL-3.0 · source · pushed 2026-10-30 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 19 · C# · AGPL-3.0 · source · pushed 2026-10-30 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/Scormave/gramps-web-mcp.git`</sub>
 - **[yusong652/yade-mcp](https://github.com/yusong652/yade-mcp)** — YADE discrete element method (DEM) simulation: search API docs, run code via a REPL or background tasks, monitor progress and review task history
   <sub>★ 15 · Python · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>

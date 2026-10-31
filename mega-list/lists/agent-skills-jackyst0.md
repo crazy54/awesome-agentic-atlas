@@ -11,9 +11,9 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/obra/superpowers"><img src="https://opengraph.githubassets.com/1/obra/superpowers" width="260"></a> | <a href="https://github.com/affaan-m/ECC"><img src="https://raw.githubusercontent.com/affaan-m/everything-claude-code/main/assets/hero.png" width="260"></a> | <a href="https://github.com/anthropics/skills"><img src="https://opengraph.githubassets.com/1/anthropics/skills" width="260"></a> |
-| **[obra/superpowers](https://github.com/obra/superpowers)**<br>★ 309.8k | **[everything-claude-code](https://github.com/affaan-m/ECC)**<br>★ 293.8k | **[anthropics/skills](https://github.com/anthropics/skills)**<br>★ 185.8k |
+| **[obra/superpowers](https://github.com/obra/superpowers)**<br>★ 309.9k | **[everything-claude-code](https://github.com/affaan-m/ECC)**<br>★ 293.8k | **[anthropics/skills](https://github.com/anthropics/skills)**<br>★ 185.8k |
 | <a href="https://github.com/browser-use/browser-use"><img src="https://github.com/user-attachments/assets/135885e8-1141-4e10-b719-bf690ae7d260" width="260"></a> | <a href="https://github.com/addyosmani/agent-skills"><img src="https://addyosmani.com/assets/images/addys-agent-skills.jpg" width="260"></a> | <a href="https://github.com/ComposioHQ/awesome-claude-skills"><img src="https://github.com/user-attachments/assets/e91255af-e4ba-4d71-b1a8-bd081e8a234a" width="260"></a> |
-| **[browser-use/browser-use](https://github.com/browser-use/browser-use)**<br>★ 119.6k | **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)**<br>★ 112.1k | **[ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)**<br>★ 78.4k |
+| **[browser-use/browser-use](https://github.com/browser-use/browser-use)**<br>★ 119.7k | **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)**<br>★ 112.1k | **[ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)**<br>★ 78.4k |
 
 ## Contents
 
@@ -29,7 +29,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Productivity
 
 - **[obra/superpowers](https://github.com/obra/superpowers)** — Complete dev workflow (Debug/TDD/Code Review/Planning)
-  <sub>★ 309.8k · Shell · MIT · clone · pushed 2026-10-29</sub>
+  <sub>★ 309.9k · Shell · MIT · clone · pushed 2026-10-29</sub>
   <sub>`git clone https://github.com/obra/superpowers.git`</sub>
 - **[coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills)** — Marketing Skills (SEO/Copywriting/CRO/Ads)
   <sub>★ 57.6k · JavaScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -230,7 +230,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Development Tools
 
 - **[browser-use/browser-use](https://github.com/browser-use/browser-use)** — Browser automation Skill
-  <sub>★ 119.6k · Python · MIT · source · pushed 2026-10-31 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 119.7k · Python · MIT · source · pushed 2026-10-31 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/browser-use/browser-use.git`</sub>
 - **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)** — Production-grade engineering skills and slash-command workflows for AI coding agents
   <sub>★ 112.1k · JavaScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>

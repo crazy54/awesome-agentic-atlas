@@ -166,7 +166,7 @@ Page **1** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 300 · Rust · MIT · clone · pushed 2025-11-24 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Govcraft/rust-docs-mcp-server.git`</sub>
 - **[public-ui/kolibri](https://github.com/public-ui/kolibri)** — Accessible KoliBri web component samples, specs, docs and scenarios
-  <sub>★ 290 · TypeScript · EUPL-1.2 · source · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 290 · TypeScript · EUPL-1.2 · source · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/public-ui/kolibri.git`</sub>
 - **[scarletkc/vexor](https://github.com/scarletkc/vexor)** — Semantic file and code search by description, with local indexes, AST-aware chunking, optional reranking and API-based or fully offline embedding models
   <sub>★ 247 · Python · MIT · pip · pushed 2026-10-31 · Win · WSL2? · macOS? · Linux</sub>
@@ -415,7 +415,7 @@ Page **1** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 49 · TypeScript · MIT · npm · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm i -g @memi-design/cli`</sub>
 - **[zenml-io/mcp-zenml](https://github.com/zenml-io/mcp-zenml)** — Connect to ZenML MLOps and LLMOps pipelines
-  <sub>★ 49 · Python · MIT · docker · pushed 2026-10-27 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 49 · Python · MIT · docker · pushed 2026-10-31 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`docker run --rm -d --name mcp-zenml-apps -p 127.0.0.1:8001:8001 \`</sub>
 - **[CSCSoftware/AiDex](https://github.com/CSCSoftware/AiDex)** — Persistent Tree-sitter code index for precise, compact code search in languages including C#, TypeScript, Python, Rust and Go
   <sub>★ 47 · TypeScript · MIT · npm · pushed 2026-10-29 · Win · WSL2? · macOS · Linux</sub>
@@ -495,12 +495,12 @@ Page **1** of 6, because this list is longer than the 512 KB GitHub will render 
 - **[kao273183/mk-qa-master](https://github.com/kao273183/mk-qa-master)** — End-to-end QA loop: analyzes web pages or mobile screens, generates and runs pytest or Maestro tests with auto-retry, and writes an optimization plan
   <sub>★ 37 · Python · MIT · uv · pushed 2026-06-04 · Win · WSL2? · macOS · Linux</sub>
   <sub>`uvx mk-qa-master@0.4.1 ...`</sub>
+- **[kirich1409/maven-mcp](https://github.com/kirich1409/maven-mcp)** — MCP server / agent plugin for Maven and Gradle dependency intelligence: latest versions, outdated deps, CVEs, changelogs, licenses and project audits
+  <sub>★ 37 · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx plugins add kirich1409/maven-mcp`</sub>
 - **[paramount-engineering/roku-dev-studio](https://github.com/paramount-engineering/roku-dev-studio)** — Roku development: ECP device control, automated channel sideloading, BrightScript debugging and real-time log monitoring
   <sub>★ 36 · TypeScript · MIT · npm · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g roku-dev-studio-remote-server`</sub>
-- **[kirich1409/maven-mcp](https://github.com/kirich1409/maven-mcp)** — MCP server / agent plugin for Maven and Gradle dependency intelligence: latest versions, outdated deps, CVEs, changelogs, licenses and project audits
-  <sub>★ 36 · Python · MIT · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx plugins add kirich1409/maven-mcp`</sub>
 - **[selvage-lab/selvage](https://github.com/selvage-lab/selvage)** — LLM-based code review with AST-based context extraction, supporting Claude, GPT, Gemini and other models via OpenRouter
   <sub>★ 36 · Python · uv · pushed 2026-07-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install selvage`</sub>
@@ -625,7 +625,7 @@ Page **1** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 22 · Rust · Apache-2.0 · psh · pushed 2026-07-10 · Win · WSL2? · macOS? · Linux</sub>
   <sub>`irm https://raw.githubusercontent.com/tooluse-labs/perfetto-mcp-rs/main/install.ps1 | iex`</sub>
 - **[maple-kit/maple](https://github.com/maple-kit/maple)** — Frontend review on deployed previews. Your agent reads reviewers' comments over MCP and resolves them, and a CI check holds the merge until they are
-  <sub>★ 21 · TypeScript · Apache-2.0 · npx · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 21 · TypeScript · Apache-2.0 · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add maple-kit/maple`</sub>
 - **[AI-by-design/primitiv](https://github.com/AI-by-design/primitiv)** — Local-first design contract layer: scans Figma, code, Storybook and token files, reconciles conflicts and serves a single source of truth for design rules
   <sub>★ 21 · TypeScript · npx · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1222,7 +1222,7 @@ Page **1** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · TypeScript · MIT · clone · pushed 2026-09-07 · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/apatureai/bastion.git`</sub>
 - **[forgemeshlabs/aso-audit-mcp](https://github.com/forgemeshlabs/aso-audit-mcp)** — Audits website and API agent readiness: robots.txt AI rules, llms.txt, agent cards, MCP server cards and OAuth metadata, with maturity scores and fix plans
-  <sub>★ 2 · TypeScript · MIT · npm · pushed 2026-10-23 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 2 · TypeScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @forgemeshlabs/aso-audit-mcp`</sub>
 - **[Nishant-Chaudhary5338/mcp-code-indexer](https://github.com/Nishant-Chaudhary5338/mcp-code-indexer)** — Index TypeScript/React repos into a code graph: who-renders and who-calls queries, blast radius, dependency cycles, dead code and symbol signatures
   <sub>★ 2 · TypeScript · MIT · npx · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2436,7 +2436,7 @@ Page **1** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 989 · Python · MIT · source · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/neo4j-contrib/mcp-neo4j.git`</sub>
 - **[ClickHouse/mcp-clickhouse](https://github.com/ClickHouse/mcp-clickhouse)** — ClickHouse database integration with schema inspection and query capabilities
-  <sub>★ 899 · Python · Apache-2.0 · pip · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 900 · Python · Apache-2.0 · pip · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install 'mcp-clickhouse[chdb]'`</sub>
 - **[alexanderzuev/supabase-mcp-server](https://github.com/alexander-zuev/supabase-mcp-server)** — Execute SQL queries and explore Supabase databases
   <sub>★ 835 · Python · Apache-2.0 · pipx · pushed 2026-08-21 · Win? · WSL2? · macOS? · Linux?</sub>

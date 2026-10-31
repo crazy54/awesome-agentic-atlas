@@ -2,11 +2,11 @@
 
 Built for Anthropic's terminal coding agent — skills, hooks, commands, status lines, MCP servers and the clients that wrap it.
 
-**3,361 projects** · 3,169 with stars to rank by · 11,840,642 combined stars
+**3,364 projects** · 3,172 with stars to rank by · 11,846,647 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=claude-code)
 
-✨ **205 new to the atlas** in the 10/31/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=claude-code&new=1).
+✨ **208 new to the atlas** in the 10/31/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=claude-code&new=1).
 
 Page **5** of 5, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](claude-code.md) · [2](claude-code-2.md) · [3](claude-code-3.md) · [4](claude-code-4.md) · **5**.
 
@@ -14,8 +14,15 @@ Page **5** of 5, because this list is longer than the 512 KB GitHub will render 
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 14–192 of 192. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 7–192 of 192. The rest are on this page's other parts, linked above and below.</sub>
 
+- **[AAR-Labs/snapdeploy-mcp](https://github.com/AAR-Labs/snapdeploy-mcp)** — Deploy and manage SnapDeploy apps (Docker containers on AWS) from Claude Code, Cursor, Codex or Gemini CLI: builds, logs, env vars, add-ons, domains
+- **[AceDataCloud/fish-audio](https://github.com/AceDataCloud/Skills/tree/main/skills/fish-audio)** — Generate speech and clone voices with Fish Audio
+- **[active-listening](https://github.com/josharsh/active-listening)** — Detect developer preferences during conversation ("never push without asking", "always use const") and remember them across sessions. Auto-saves to disk and re-applies in every future conversation
+- **[adanb13/cirdan](https://github.com/adanb13/cirdan)** — Fingerprints, graphs and watches the live infrastructure an agent can reach (Docker, Kubernetes, cloud, IaC) and detects incidents
+- **[Adashuai5/quota-autopilot](https://github.com/Adashuai5/quota-autopilot)** — Schedule background Codex and Claude Code tasks around subscription quota, reset windows, and recent human activity
+- **[agent-chain-doctor](https://github.com/elfovo/agent-chain-doctor)** ✨ <sub>Added 10/31/26</sub> — Read-only shell diagnostic for scheduled AI-agent chains; checks launchd, cron and systemd state and logs for the ways an unattended agent stops silently
+- **[agent-diff-guard](https://github.com/cubxxw/agent-diff-guard)** — Pre-push guardrail that flags high-risk coding-agent diffs such as CI/CD changes, dependency edits, test deletions, hardcoded secrets, and task-scope drift before merge
 - **[Agent-Ready Repository Auditor](https://github.com/wrightops-ai/agent-ready-repo-auditor)** — Free GitHub Action that scores public repositories for Codex, Claude Code, Copilot, and Cursor readiness—without cloning or executing code
 - **[agent-sdk-dev](https://github.com/ccplugins/awesome-claude-code-plugins/tree/HEAD/plugins/agent-sdk-dev)** — photo-led short-form vertical reels (Instagram/TikTok/YouTube Shorts/Facebook) via MCP, $0.06/render, 50 free seeds, no subscription
 - **[agent-trace](https://github.com/Serennity007/agent-trace)** — Post-session analysis for AI coding agents. Track costs, tokens, tool health, and every conversation. Supports Kimi Code, Claude Code, Codex, OpenCode

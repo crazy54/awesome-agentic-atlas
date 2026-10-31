@@ -129,7 +129,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 30.4k · Python · Apache-2.0 · npx · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add assafelovic/gpt-researcher`</sub>
 - **[Pydantic](https://github.com/pydantic/pydantic)** — Pydantic is a Python library facilitating data validation through type hints, particularly useful for AI agents, offering fast validation capabilities and compatibility with various development tools github | website
-  <sub>★ 29.2k · Python · MIT · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 29.3k · Python · MIT · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U pydantic`</sub>
 - **[Haystack](https://github.com/deepset-ai/haystack)** — Haystack is an end-to-end LLM framework facilitating the construction of applications powered by LLMs, Transformer models, vector search, and more, offering flexibility, transparency, and extensibility, with features including retrieval-augmented generation, document search, question answering, and semantic search, along with a diverse user base including companies like Airbus, Apple, and Netflix
   <sub>★ 26.9k · Python · Apache-2.0 · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -198,7 +198,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 8.7k · TypeScript · MIT · source · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/microsoft/TypeChat.git`</sub>
 - **[XAgent](https://github.com/OpenBMB/XAgent)** — XAgent is an open-source, experimental Large Language Model-driven autonomous agent designed to autonomously solve a wide range of tasks with features like autonomy, safety, extensibility, a GUI for easy interaction, and the ability to cooperate with humans github | demo | docs | blog
-  <sub>★ 8.5k · Python · Apache-2.0 · source · pushed 2026-07-31 · WSL2 · Linux · Docker</sub>
+  <sub>★ 8.6k · Python · Apache-2.0 · source · pushed 2026-07-31 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/OpenBMB/XAgent.git`</sub>
 - **[ShortGPT by RayVentura](https://github.com/RayVentura/ShortGPT)** — ShortGPT is an AI-powered framework for automating content creation, including video editing, voiceover synthesis, caption generation, and asset sourcing, with support for multiple languages and seamless integration with Google Colab and Docker for easy deployment github | github profile
   <sub>★ 8.1k · Python · MIT · docker · pushed 2025-02-10 · WSL2 · Linux · Docker</sub>
@@ -381,7 +381,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 971 · Python · MIT · source · pushed 2024-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mikekelly/AgentK.git`</sub>
 - **[AI Researcher](https://github.com/mshumer/ai-researcher)** — The AI Researcher is an AI agent leveraging Claude 3 and SERPAPI for in-depth topic research, refining subtopic analyses into a comprehensive report, customizable and requiring API keys for functionality github | announcement | website
-  <sub>★ 954 · Jupyter Notebook · MIT · source · pushed 2024-04-29</sub>
+  <sub>★ 955 · Jupyter Notebook · MIT · source · pushed 2024-04-29</sub>
   <sub>`git clone https://github.com/mshumer/ai-researcher.git`</sub>
 - **[data-to-paper](https://github.com/Technion-Kishony-lab/data-to-paper)** — data-to-paper: AI-driven research from data to human-verifiable research papers. github
   <sub>★ 834 · Python · MIT · pip · pushed 2025-07-19 · Win? · WSL2? · macOS? · Linux?</sub>

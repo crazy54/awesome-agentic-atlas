@@ -2,7 +2,7 @@
 
 Targets Cline or Roo Code.
 
-**111 projects** · 102 with stars to rank by · 285,366 combined stars
+**111 projects** · 102 with stars to rank by · 285,435 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=cline-roo)
 
@@ -13,7 +13,7 @@ Targets Cline or Roo Code.
 | <a href="https://github.com/cheaper-inference/OmniRoute"><img src="https://raw.githubusercontent.com/diegosouzapw/OmniRoute/release/v3.8.51/docs/screenshots/MainOmniRoute.png" width="260"></a> | <a href="https://github.com/cline/cline"><img src="https://opengraph.githubassets.com/1/cline/cline" width="260"></a> | <a href="https://github.com/zhaoxuya520/reverse-skill"><img src="https://opengraph.githubassets.com/1/zhaoxuya520/reverse-skill" width="260"></a> |
 | **[OmniRoute: Multi-Provider LLM Gateway](https://github.com/cheaper-inference/OmniRoute)**<br>★ 83.1k | **[Cline](https://github.com/cline/cline)**<br>★ 71.1k | **[zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)**<br>★ 43.9k |
 | <a href="https://github.com/decolua/9router"><img src="https://img.youtube.com/vi/X69n5Lm06Yw/maxresdefault.jpg" width="260"></a> | <a href="https://github.com/RooCodeInc/Roo-Code"><img src="https://opengraph.githubassets.com/1/RooVetGit/Roo-Code" width="260"></a> | <a href="https://github.com/Orkas-AI/Orkas"><img src="https://opengraph.githubassets.com/1/Orkas-AI/Orkas" width="260"></a> |
-| **[9router](https://github.com/decolua/9router)**<br>★ 31.7k | **[RooCode](https://github.com/RooCodeInc/Roo-Code)**<br>★ 24.3k | **[Orkas](https://github.com/Orkas-AI/Orkas)**<br>★ 6k |
+| **[9router](https://github.com/decolua/9router)**<br>★ 31.8k | **[RooCode](https://github.com/RooCodeInc/Roo-Code)**<br>★ 24.3k | **[Orkas](https://github.com/Orkas-AI/Orkas)**<br>★ 6k |
 
 ## Ranked by stars (102)
 
@@ -22,7 +22,7 @@ Targets Cline or Roo Code.
 | 1 | **[OmniRoute: Multi-Provider LLM Gateway](https://github.com/cheaper-inference/OmniRoute)**<br><sub>cheaper-inference/OmniRoute</sub> | 83.1k | 1 | <sub>Orchestrators &amp; Multi-Agent</sub> | <sub>Win · WSL2? · macOS · Linux · Docker</sub> | `npm install -g omniroute` | Intelligent routing across multiple LLM providers with load balancing, intelligent fallbacks, rate limiting, and response caching. Achieves 40–60% token cost reduction through sma… |
 | 2 | **[Cline](https://github.com/cline/cline)**<br><sub>cline/cline</sub> | 71.1k | 6 | <sub>Coding Agents</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npm i -g cline` | Autonomous coding agent in VS Code with human-in-the-loop approvals; file editing, terminal commands, and browser use. ~59K+ ⭐ |
 | 3 | **[zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)**<br><sub>zhaoxuya520/reverse-skill</sub> | 43.9k | 2 | <sub>Agent Skills</sub> | <sub>Win · WSL2? · macOS · Linux</sub> | `git clone https://github.com/zhaoxuya520/reverse-skill.git` | Source for 43 security skills covering reverse engineering, binary analysis, offensive assessment orchestration, and threat-intelligence workflows, adapted with English metadata a… |
-| 4 | **[9router](https://github.com/decolua/9router)**<br><sub>decolua/9router</sub> | 31.7k | 1 | <sub>Harnesses &amp; Runtime Infra</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `npm install -g 9router` | (23.7k ⭐) - Routes Claude Code, Codex, Cursor, Cline, and other coding agents to dozens of model providers with automatic fallback |
+| 4 | **[9router](https://github.com/decolua/9router)**<br><sub>decolua/9router</sub> | 31.8k | 1 | <sub>Harnesses &amp; Runtime Infra</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `npm install -g 9router` | (23.7k ⭐) - Routes Claude Code, Codex, Cursor, Cline, and other coding agents to dozens of model providers with automatic fallback |
 | 5 | **[RooCode](https://github.com/RooCodeInc/Roo-Code)**<br><sub>RooCodeInc/Roo-Code</sub> | 24.3k | 1 | <sub>Coding Agents</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/RooVetGit/Roo-Code.git` | Cline fork. Structured modes. Reduced hallucinations |
 | 6 | **[Orkas](https://github.com/Orkas-AI/Orkas)**<br><sub>Orkas-AI/Orkas</sub> | 6k | 4 | <sub>Orchestrators &amp; Multi-Agent</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/Orkas-AI/Orkas.git` | Local-first multi-agent desktop application where a Commander coordinates specialist agents for research, coding, data analysis, documents, and media; MIT-licensed with bring-your… |
 | 7 | **[executeautomation/playwright-mcp-server](https://github.com/executeautomation/mcp-playwright)**<br><sub>executeautomation/mcp-playwright</sub> | 5.7k | 2 | <sub>MCP Servers</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npm install -g @executeautomation/playwright-mcp-server` | An MCP server using Playwright for browser automation and webscrapping |

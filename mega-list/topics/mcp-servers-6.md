@@ -2,7 +2,7 @@
 
 The Model Context Protocol ecosystem: reference and third-party servers, inspectors, gateways, transports, and the sibling agent-to-agent protocols.
 
-**5,178 projects** · 4,343 with stars to rank by · 2,440,340 combined stars
+**5,178 projects** · 4,343 with stars to rank by · 2,440,982 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers)
 
@@ -12,11 +12,10 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
 
 ## Ranked by stars (4,343)
 
-<sub>Projects 4,100–4,343 of 4,343. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 4,101–4,343 of 4,343. The rest are on this page's other parts, linked above and below.</sub>
 
 | # | Project | ★ | Lists | Plugs into | Runs on | Install / Run | What it does |
 |--:|---|--:|--:|---|---|---|---|
-| 4100 | **[Odrin/rhizome-mcp](https://github.com/Odrin/rhizome-mcp)**<br><sub>Odrin/rhizome-mcp</sub> | 1 | 1 | <sub>Claude Code, Claude / Anthropic, MCP</sub> | <sub>Win · WSL2? · macOS · Linux</sub> | `irm https://raw.githubusercontent.com/Odrin/rhizome-mcp/main/scripts/install.ps1 \| iex` | Local-first task tracking and coordination for coding agents: durable issues, leases, checkpoints, decisions, dependency graphs and review workflows |
 | 4101 | **[oerc-s/primordia](https://github.com/oerc-s/primordia)**<br><sub>oerc-s/primordia</sub> | 1 | 1 | <sub>MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx @primordia1/mcp-server` | Economic settlement for AI agents: receipt verification, metering, net settlements, credit lines and balance sheets |
 | 4102 | **[ofershap/mcp-server-npm-plus](https://github.com/ofershap/mcp-server-npm-plus)**<br><sub>ofershap/mcp-server-npm-plus</sub> | 1 | 1 | <sub>Claude / Anthropic, MCP, Cursor</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx mcp-server-npm-plus` | npm package search, bundle size checks, vulnerability scans and download comparisons |
 | 4103 | **[OFODevelopment/cerebrochain-mcp-server](https://github.com/CerebroChain/cerebrochain-mcp-server)**<br><sub>CerebroChain/cerebrochain-mcp-server</sub> | 1 | 1 | <sub>Claude / Anthropic, MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npm install -g @cerebrochain/mcp-server` | Supply chain and logistics tools: carrier rate shopping, inventory management, order tracking, fleet logistics and demand forecasting |

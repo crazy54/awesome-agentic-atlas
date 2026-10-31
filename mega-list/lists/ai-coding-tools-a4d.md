@@ -163,7 +163,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## Coding Agents
 
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — Google's terminal coding agent powered by Gemini
-  <sub>★ 108.6k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 108.7k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @google/gemini-cli`</sub>
 - **[Cline (Claude Dev)](https://github.com/cline/cline)** — VS Code extension with full file system access and autonomous coding
   <sub>★ 71.1k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -985,7 +985,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 7k · MIT · source · pushed 2025-11-11</sub>
   <sub>`git clone https://github.com/deepseek-ai/DeepSeek-Coder-V2.git`</sub>
 - **[outsourcerer](https://github.com/alexgreensh/outsourcerer)** — Delegates coding grunt-work to other harnesses and models from the terminal while your main session stays the orchestrator
-  <sub>★ 189 · Shell · source · pushed 2026-10-29 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 190 · Shell · source · pushed 2026-10-29 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/alexgreensh/outsourcerer.git`</sub>
 - **[Claude (Anthropic)](https://www.anthropic.com/claude)** — Opus and Sonnet models dominate coding benchmarks in 2026; Claude Code is built on them
   <sub>website</sub>
@@ -1219,7 +1219,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 87 · TypeScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g agentplane`</sub>
 - **[Brigade](https://github.com/escoffier-labs/brigade)** — Local-first CLI (MIT) that keeps one reviewed source of the MCP servers, tools, skills, and memory your AI coding agents share, synced into each tool's native config (Claude Code, Codex, Cursor, VS Code, OpenCode, and more) with a review gate before every write and a rollback receipt. No daemon, no lock-in
-  <sub>★ 81 · Python · MIT · npm · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 81 · Python · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install --global brigadestack@0.30.0`</sub>
 - **[LWC](https://github.com/JanYork/llm-wiki-cli)** — Open-source proactive project-memory CLI for AI coding agents, with source-grounded durable knowledge, SQLite/FTS5 retrieval, atomic updates, optional document/code graphs, and MCP/Skill/Hook integration across supported tools
   <sub>★ 70 · Rust · Apache-2.0 · source · pushed 2026-10-07 · Win · WSL2? · macOS · Linux</sub>
@@ -1249,7 +1249,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 36 · Python · MIT · pipx · pushed 2026-09-30 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pipx install forgeo-cli # Python 3.11+`</sub>
 - **[Data Olympus](https://github.com/knaisoma/data-olympus)** — Governed project knowledge for AI coding agents via MCP. Agents can propose learnings, humans promote accepted guidance, and retrieval filters out expired or superseded rules before they enter future coding sessions
-  <sub>★ 31 · Python · Apache-2.0 · uv · pushed 2026-10-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 31 · Python · Apache-2.0 · uv · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx --from data-olympus data-olympus --help`</sub>
 - **[trailhead](https://github.com/ToRvaLDz/trailhead)** — Runs a large project as a map of decision tickets on GitHub Issues, resolved one at a time via a discuss→plan→execute→verify engine with atomic commits, an optional cross-AI plan review, and throwaway UI prototypes. Works with Claude Code and Codex; needs only an authenticated gh CLI. Open source, free
   <sub>★ 30 · JavaScript · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>

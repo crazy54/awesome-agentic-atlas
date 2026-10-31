@@ -172,7 +172,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>Swift · MIT · in-repo · pushed 2026-04-23</sub>
   <sub>`git clone https://github.com/KuvopLLC/better-bear.git && cd better-bear/mcp-server`</sub>
 - **[vinayvobbili/jobwatch](https://github.com/vinayvobbili/jobwatch)** — Watch company job boards (Greenhouse, Lever, Ashby, Workable, Workday, Eightfold, Jibe, Rippling) for new roles, rank them for you, and track applications, follow-ups and interview prep. Never applies on its own
-  <sub>Python · MIT · pipx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>Python · MIT · pipx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install jobwatch # or: pip install jobwatch`</sub>
 - **[vitofico/galley](https://github.com/vitofico/galley/blob/main/docs/mcp.md)** — MCP bridge for Galley, a local-first Typst editor. Agents read a live project, check real Typst diagnostics and propose diffs a human accepts or rejects
   <sub>TypeScript · AGPL-3.0 · in-repo · pushed 2026-10-31</sub>
@@ -580,7 +580,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 668 · Rust · MIT · uv · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install biomcp-cli`</sub>
 - **[the-momentum/apple-health-mcp-server](https://github.com/the-momentum/apple-health-mcp-server)** — Access and analyze exported Apple Health data
-  <sub>★ 281 · Python · MIT · source · pushed 2026-07-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 282 · Python · MIT · source · pushed 2026-07-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/the-momentum/apple-health-mcp-server.git`</sub>
 - **[healthchainai/HealthChain](https://github.com/healthchainai/HealthChain)** — Typed FHIR tools: build, read, validate and code FHIR resources from a patient bundle, with terminology lookup and machine-readable validation reports
   <sub>★ 230 · Python · Apache-2.0 · pip · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -595,7 +595,7 @@ Page **6** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 102 · Python · MIT · source · pushed 2025-10-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/the-momentum/fhir-mcp-server.git`</sub>
 - **[davidmosiah/google-health-mcp](https://github.com/davidmosiah/google-health-mcp)** — Local-first access to the Google Health API for Fitbit and Pixel Watch activity, sleep, heart, nutrition and reconciled health data
-  <sub>★ 77 · TypeScript · MIT · npx · pushed 2026-10-23 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 78 · TypeScript · MIT · npx · pushed 2026-10-23 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx -y google-health-mcp-unofficial coverage --live --json`</sub>
 - **[cafferychen777/ChatSpatial](https://github.com/cafferychen777/ChatSpatial)** — Spatial transcriptomics analysis: cell annotation, deconvolution, spatial statistics and visualization
   <sub>★ 45 · Python · MIT · uv · pushed 2026-10-20 · Win · WSL2? · macOS · Linux · Docker</sub>

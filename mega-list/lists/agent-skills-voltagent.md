@@ -11,9 +11,9 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/mattpocock/skills"><img src="https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skill-repo-light_2x.png" width="260"></a> | <a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"><img src="https://raw.githubusercontent.com/nextlevelbuilder/ui-ux-pro-max-skill/main/screenshots/website.png" width="260"></a> | <a href="https://github.com/thedotmack/claude-mem"><img src="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/cm-preview.gif" width="260"></a> |
-| **[mattpocock/skills](https://github.com/mattpocock/skills)**<br>★ 308k | **[nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)**<br>★ 143.3k | **[thedotmack/claude-mem](https://github.com/thedotmack/claude-mem)**<br>★ 107.3k |
+| **[mattpocock/skills](https://github.com/mattpocock/skills)**<br>★ 308.1k | **[nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)**<br>★ 143.3k | **[thedotmack/claude-mem](https://github.com/thedotmack/claude-mem)**<br>★ 107.4k |
 | <a href="https://github.com/Panniantong/Agent-Reach"><img src="https://raw.githubusercontent.com/Panniantong/Agent-Reach/main/docs/assets/sponsors/coreclaw.png" width="260"></a> | <a href="https://github.com/Leonxlnx/taste-skill"><img src="https://raw.githubusercontent.com/Leonxlnx/taste-skill/main/assets/readme-banner.webp" width="260"></a> | <a href="https://github.com/Egonex-AI/Understand-Anything"><img src="https://raw.githubusercontent.com/Egonex-AI/Understand-Anything/main/assets/hero.png" width="260"></a> |
-| **[Panniantong/Agent-Reach](https://github.com/Panniantong/Agent-Reach)**<br>★ 107.1k | **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)**<br>★ 106.8k | **[Lum1104/understand-anything](https://github.com/Egonex-AI/Understand-Anything)**<br>★ 89.3k |
+| **[Panniantong/Agent-Reach](https://github.com/Panniantong/Agent-Reach)**<br>★ 107.2k | **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)**<br>★ 106.8k | **[Lum1104/understand-anything](https://github.com/Egonex-AI/Understand-Anything)**<br>★ 89.4k |
 
 ## Contents
 
@@ -22,28 +22,28 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
 ## Community Skills
 
 - **[mattpocock/skills](https://github.com/mattpocock/skills)** — 17 dev workflow skills: PRD writing, TDD, codebase architecture, git guardrails, issue triage, refactoring plans, and more
-  <sub>★ 308k · Shell · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 308.1k · Shell · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills@latest add mattpocock/skills -a <agent> # cursor, opencode, devin, windsurf, amp, pi`</sub>
 - **[nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)** — UI/UX design patterns and best practices
-  <sub>★ 143.3k · Python · MIT · clone · pushed 2026-10-30 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 143.3k · Python · MIT · clone · pushed 2026-10-31 · Win · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git`</sub>
 - **[thedotmack/claude-mem](https://github.com/thedotmack/claude-mem)** — Compresses and persists agent memory across sessions
-  <sub>★ 107.3k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 107.4k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g claude-mem`</sub>
 - **[Panniantong/Agent-Reach](https://github.com/Panniantong/Agent-Reach)** — Multi-platform search CLI for 17 sites including Chinese platforms
-  <sub>★ 107.1k · Python · MIT · source · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 107.2k · Python · MIT · source · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Panniantong/Agent-Reach.git`</sub>
 - **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)** — High-agency frontend skill that gives AI good taste with tunable design variance, motion intensity, and visual density to stop generic UI slop
   <sub>★ 106.8k · JavaScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/Leonxlnx/taste-skill --skill "design-taste-frontend"`</sub>
 - **[Lum1104/understand-anything](https://github.com/Egonex-AI/Understand-Anything)** — Interactive codebase knowledge graphs via multi-agent LLM analysis
-  <sub>★ 89.3k · TypeScript · MIT · npx · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 89.4k · TypeScript · MIT · npx · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx https://github.com/Egonex-AI/Understand-Anything/releases/latest/download/understand-anything-viewer.tgz /path/to/analyzed/project`</sub>
 - **[career-ops-hq/career-ops](https://github.com/career-ops-hq/career-ops)** — Scores jobs against your CV, tailors resumes, tracks applications
   <sub>★ 79k · JavaScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g @santifer/career-ops`</sub>
 - **[heygen-com/hyperframes](https://github.com/heygen-com/hyperframes)** — Write videos as HTML and render them to MP4: launch films, explainers, captions, charts and 450+ ready-made blocks, by HeyGen
-  <sub>★ 76.4k · TypeScript · Apache-2.0 · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 76.5k · TypeScript · Apache-2.0 · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add heygen-com/hyperframes`</sub>
 - **[mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill)** — Research any topic across Reddit, X, YouTube, HN, Polymarket, and the web, ranked by upvotes, likes, and real money instead of editors
   <sub>★ 66.1k · Python · MIT · npx · pushed 2026-10-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -64,7 +64,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 24.9k · Python · MIT · source · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/AgriciDaniel/claude-seo.git`</sub>
 - **[wanshuiyin/Auto-claude-code-research-in-sleep](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep)** — Autonomous ML research with cross-model review loops and GPU deployment
-  <sub>★ 18.4k · Python · MIT · clone · pushed 2026-10-30 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 18.4k · Python · MIT · clone · pushed 2026-10-31 · Win · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep.git`</sub>
 - **[Skill_Seekers](https://github.com/yusufkaraaslan/Skill_Seekers)** — Automatically convert documentation websites, GitHub repositories, and PDFs into Claude AI skills in minutes
   <sub>★ 15.3k · Python · MIT · pip · pushed 2026-09-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -118,7 +118,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 3k · MIT · npx · pushed 2026-06-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add Paramchoudhary/ResumeSkills -g -y`</sub>
 - **[oil-oil/oil-ui](https://github.com/oil-oil/oil-ui)** — Unlock AI design potential through UI exploration and visual review
-  <sub>★ 2.5k · Python · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2.6k · Python · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add oil-oil/oil-ui`</sub>
 - **[cbrock84/headcount](https://github.com/cbrock84/headcount)** — Company departments as installable skills, each citing its sources
   <sub>★ 2.5k · Markdown · MIT · source · pushed 2026-10-18</sub>
@@ -217,7 +217,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 801 · Python · MIT · clone · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/yuwen-cool/yuwen-publish-precheck.git`</sub>
 - **[Optim-Agent/optim-agent](https://github.com/Optim-Agent/optim-agent)** — Agent-guided optimization for measurable system tuning
-  <sub>★ 798 · Python · MIT · source · pushed 2026-08-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 799 · Python · MIT · source · pushed 2026-08-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Optim-Agent/optim-agent.git`</sub>
 - **[aeonfun/aeon](https://github.com/aeonfun/aeon)** — 70+ Claude Code skills + autonomous GitHub Actions agent framework
   <sub>★ 785 · JavaScript · MIT · clone · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -238,7 +238,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 652 · JavaScript · MIT · npx · pushed 2026-05-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/ognjengt/founder-skills`</sub>
 - **[ehmo/platform-design-skills](https://github.com/ehmo/platform-design-skills)** — 300+ design rules from Apple HIG, Material Design 3, and WCAG 2.2 for cross-platform apps
-  <sub>★ 635 · MIT · npx · pushed 2026-03-19 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 636 · MIT · npx · pushed 2026-03-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add ehmo/platform-design-skills`</sub>
 - **[meodai/skill.color-expert](https://github.com/meodai/skill.color-expert)** — Color science expert skill with 286K words of reference material covering OKLCH/OKLAB, palette generation, accessibility/contrast, color naming, pigment mixing, and historical color theory
   <sub>★ 630 · Shell · CC-BY-4.0 · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -289,7 +289,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 373 · Python · MIT · npx · pushed 2026-06-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/zxkane/aws-skills --skill aws-cdk-development`</sub>
 - **[EricJujianZou/rederive](https://github.com/EricJujianZou/rederive)** — Understand any codebase by re-designing its decisions from first principles
-  <sub>★ 368 · Python · MIT · npx · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 369 · Python · MIT · npx · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add EricJujianZou/rederive`</sub>
 - **[ZeKaiNie/universal-examprep-skill](https://github.com/ZeKaiNie/universal-examprep-skill)** — Multimodal grounded active-learning tutor for college textbooks (PDF/PPTX/DOCX). Features native PDF vector diagram cropping (pypdfium2), real homework quiz banks, hard exit-code anti-hallucination, and persistent cross-session state. Tested on 1,000+ pages of real college courseware on small cheap models
   <sub>★ 364 · Python · MIT · npx · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -325,7 +325,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 281 · Shell · MIT · npx · pushed 2026-10-25 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add talkstream/ru-text`</sub>
 - **[SupercmoHQ/superCMO-skills](https://github.com/SupercmoHQ/superCMO-skills)** — Open-source skills + local MCP server for marketing video &amp; image production: UGC videos, ad videos, product photography, and image ads from a product photo and a brief; casts AI actors, picks the best image/video models, edits any-length clips with consistent actor and product, and researches competitor ads. BYO or managed keys, Apache-2.0
-  <sub>★ 277 · Python · Apache-2.0 · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 278 · Python · Apache-2.0 · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx --yes @supercmo/skills@0.1.27 --all`</sub>
 - **[qdrant/skills](https://github.com/qdrant/skills)** — Agent skills for Qdrant vector search, covering scaling, performance optimization, search quality, monitoring, deployment, model migration, version upgrades, and SDK usage across Python, TypeScript, Rust, Go, .NET, and Java
   <sub>★ 267 · Python · Apache-2.0 · npx · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -337,7 +337,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 247 · Python · MIT · pip · pushed 2026-10-31 · Win · WSL2? · macOS? · Linux</sub>
   <sub>`pip install vexor # also works with pipx, uv`</sub>
 - **[kklimuk/docx-cli](https://github.com/kklimuk/docx-cli)** — Work on .docx files at ~1/2 cost of other skills
-  <sub>★ 237 · TypeScript · MIT · npx · pushed 2026-10-30 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 237 · TypeScript · MIT · npx · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add kklimuk/docx-cli`</sub>
 - **[oliver-zehentleitner/keep-the-why](https://github.com/oliver-zehentleitner/keep-the-why)** — Preserves the reasoning behind a codebase — decisions, workarounds, rejected alternatives
   <sub>★ 233 · Python · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -433,7 +433,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 99 · TypeScript · MIT · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Kevin7Qi/codex-collab.git`</sub>
 - **[jgsystemsconsulting/jgs-se-knowledge-packs](https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs)** — 71 licence-vetted systems-engineering reference packs for coding agents
-  <sub>★ 98 · Python · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 99 · Python · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add jgsystemsconsulting/jgs-se-knowledge-packs -l # list available packs`</sub>
 - **[Xquik-dev/tweetclaw](https://github.com/Xquik-dev/tweetclaw)** — Post tweets, replies, DMs; search, monitor, run giveaways
   <sub>★ 96 · TypeScript · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -456,12 +456,12 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
 - **[materials-simulation-skills](https://github.com/HeshamFS/materials-simulation-skills)** — Agent skills for computational materials science: numerical stability, time-stepping, linear solvers, mesh generation, simulation validation, parameter optimization, and post-processing
   <sub>★ 83 · Python · Apache-2.0 · npx · pushed 2026-10-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add HeshamFS/materials-simulation-skills # any agent → ~/.agents/skills/`</sub>
+- **[KalarisLabs/research-agent-skills](https://github.com/KalarisLabs/research-agent-skills)** — 280+ skills for literature review, analysis, and paper writing
+  <sub>★ 83 · Python · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx skills add KalarisLabs/research-agent-skills`</sub>
 - **[vmware-skills/VMware-AIops](https://github.com/vmware-skills/VMware-AIops)** — AI-powered VMware vCenter/ESXi monitoring and operations: inventory queries, health/alarms, VM lifecycle (create, delete, snapshot, clone, migrate), vSAN management, Aria Operations analytics, and scheduled log scanning. Supports Claude Code, Gemini CLI, Codex, Aider, Trae, Kimi, and MCP
   <sub>★ 82 · Python · MIT · npx · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add vmware-skills/VMware-AIops`</sub>
-- **[KalarisLabs/research-agent-skills](https://github.com/KalarisLabs/research-agent-skills)** — 280+ skills for literature review, analysis, and paper writing
-  <sub>★ 81 · Python · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx skills add KalarisLabs/research-agent-skills`</sub>
 - **[prisma/skills](https://github.com/prisma/skills)** — Official Prisma skills: ORM, Postgres, Compute and migrations
   <sub>★ 77 · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add prisma/skills`</sub>
@@ -484,7 +484,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>★ 68 · Python · Apache-2.0 · psh · pushed 2026-08-10 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/k-kolomeitsev/data-structure-protocol/main/install.ps1 | iex`</sub>
 - **[arifszn/slide-wright](https://github.com/arifszn/slide-wright)** — Generate themed HTML slide decks, export to PowerPoint or PDF
-  <sub>★ 65 · JavaScript · MIT · npx · pushed 2026-10-24 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 66 · JavaScript · MIT · npx · pushed 2026-10-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add arifszn/slide-wright`</sub>
 - **[publora/skills](https://github.com/publora/skills)** — Draft, schedule and publish posts to ten social networks
   <sub>★ 62 · Python · MIT · npx · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -946,7 +946,7 @@ Curated by **[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/aweso
   <sub>Python · MIT · in-repo · pushed 2026-10-27</sub>
   <sub>`git clone https://github.com/edonadei/caliper.git && cd caliper/skills/evaluate-skill`</sub>
 - **[moxno/privacyscrubber-guard](https://github.com/moxno/privacyscrubber-mcp/tree/main/skills/privacyscrubber-guard)** — Sanitize PII and secrets in RAM before agent calls
-  <sub>JavaScript · in-repo · pushed 2026-10-30</sub>
+  <sub>JavaScript · in-repo · pushed 2026-10-31</sub>
   <sub>`git clone https://github.com/moxno/privacyscrubber-mcp.git && cd privacyscrubber-mcp/skills/privacyscrubber-guard`</sub>
 - **[fullselfbrowsing/fsb](https://github.com/fullselfbrowsing/FSB/tree/main/skills/fsb)** — Drive your signed-in Chromium browser through FSB's MCP tools
   <sub>JavaScript · MIT · in-repo · pushed 2026-10-28</sub>

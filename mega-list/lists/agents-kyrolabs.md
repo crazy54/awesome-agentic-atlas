@@ -53,7 +53,7 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 49.7k · Python · MIT · psh · pushed 2026-10-31 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/HKUDS/nanobot/main/scripts/install.ps1 | iex`</sub>
 - **[OpenHuman](https://github.com/tinyhumansai/openhuman)** — Local-first personal AI agent for the desktop: agents, workflows, MCP client, local models via Ollama
-  <sub>★ 42.5k · Rust · GPL-3.0 · psh · pushed 2026-10-30 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 42.5k · Rust · GPL-3.0 · psh · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://raw.githubusercontent.com/tinyhumansai/openhuman/main/scripts/install.ps1 | iex`</sub>
 - **[AgentScope](https://github.com/agentscope-ai/agentscope)** — Start building LLM-empowered multi-agent applications in an easier way
   <sub>★ 35k · Python · Apache-2.0 · source · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -164,7 +164,7 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 1.1k · Python · Apache-2.0 · clone · pushed 2026-10-30 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/cuga-project/cuga-agent.git`</sub>
 - **[Agent Swarm](https://github.com/desplega-ai/agent-swarm)** — Self-hosted multi-agent system where a lead agent delegates tasks to specialized workers with shared memory, tools, schedules, and review gates
-  <sub>★ 977 · TypeScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 978 · TypeScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add desplega-ai/agent-swarm`</sub>
 - **[Aeon](https://github.com/aeonfun/aeon)** — Autonomous agent framework that runs unattended via GitHub Actions, with self-healing skills, output quality scoring, persistent memory, and reactive triggers
   <sub>★ 785 · JavaScript · MIT · clone · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -329,16 +329,16 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 788 · Python · Apache-2.0 · uv · pushed 2026-10-30 · WSL2 · macOS? · Linux</sub>
   <sub>`uv tool install plasma-fractal --with-executables-from plasma-wiki`</sub>
 - **[Frontman](https://www.github.com/frontman-ai/frontman)** — Coding agent that lives in your browser, hooks into your dev server, sees the live DOM, component tree, CSS, routes, and logs, then edits the actual source files with instant hot reload
-  <sub>★ 720 · ReScript · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 720 · ReScript · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @frontman-ai/nextjs install`</sub>
 - **[Tura](https://github.com/Tura-AI/tura)** — A local, open-source coding agent for developers who are tired of vague skill claims, token-saving extensions with no evidence, and agents that change a repository before understanding it
   <sub>★ 658 · Rust · AGPL-3.0 · npm · pushed 2026-10-07 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g tura-ai`</sub>
 - **[agent-manager](https://github.com/YoanWai/agent-manager)** — Terminal UI that runs coding-agent CLIs side by side, each in its own persistent tmux session, with live status, quick prompts, git worktrees and diff review
-  <sub>★ 628 · Go · Apache-2.0 · scoop · pushed 2026-10-31 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 629 · Go · Apache-2.0 · scoop · pushed 2026-10-31 · Win · WSL2 · macOS · Linux</sub>
   <sub>`scoop bucket add yoanwai https://github.com/YoanWai/scoop-bucket scoop install yoanwai/agent-manager`</sub>
 - **[mu](https://github.com/qybaihe/mu)** — Coding agent built on Pi, with a CLI and a desktop app, where a small, fast judge model (Jev, a local judge or any LLM) makes the routine calls at more than 30 decision points, such as which chunks of a long tool output enter the context, whether a rule-flagged command was asked for, and whether a fetched page or MCP result carries instructions aimed at the model; every verdict is logged locally
-  <sub>★ 563 · TypeScript · MIT · npm · pushed 2026-10-30 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 563 · TypeScript · MIT · npm · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm i -g mu-agent # Node.js 22.19 or newer`</sub>
 - **[amux](https://github.com/mixpeek/amux)** — Agent multiplexer for running dozens of parallel Claude Code sessions with a web dashboard, self-healing watchdog, kanban board, agent-to-agent REST API, and mobile PWA. Python 3 + tmux
   <sub>★ 548 · Rust · script · pushed 2026-10-31 · WSL2 · macOS · Linux</sub>
@@ -491,7 +491,7 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 197.3k · TypeScript · AGPL-3.0 · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y firecrawl-cli@latest init --all --browser`</sub>
 - **[Browser Use](https://github.com/browser-use/browser-use)** — Open-source Python library that lets LLM agents control a browser to navigate, click, type and extract data, on local Chrome or Browser Use cloud browsers
-  <sub>★ 119.6k · Python · MIT · source · pushed 2026-10-31 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 119.7k · Python · MIT · source · pushed 2026-10-31 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/browser-use/browser-use.git`</sub>
 - **[Agno](https://github.com/agno-agi/agno)** — Build, run, and manage agent platforms
   <sub>★ 43k · Python · Apache-2.0 · source · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
@@ -503,13 +503,13 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 14.2k · TypeScript · Apache-2.0 · clone · pushed 2026-10-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/nanobrowser/nanobrowser.git`</sub>
 - **[XAgent](https://github.com/OpenBMB/XAgent)** — An Autonomous LLM Agent for Complex Task Solving
-  <sub>★ 8.5k · Python · Apache-2.0 · source · pushed 2026-07-31 · WSL2 · Linux · Docker</sub>
+  <sub>★ 8.6k · Python · Apache-2.0 · source · pushed 2026-07-31 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/OpenBMB/XAgent.git`</sub>
 - **[Steel Browser](https://github.com/steel-dev/steel-browser)** — Open-source browser infrastructure for AI agents with session-backed automation, extraction, screenshots/PDFs, an AI-native CLI, and a reusable steel-browser skill
   <sub>★ 7.9k · TypeScript · Apache-2.0 · docker · pushed 2026-10-30 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`docker run -p 3000:3000 -p 9223:9223 ghcr.io/steel-dev/steel-browser`</sub>
 - **[OpenConnector](https://github.com/oomol-lab/open-connector)** — Open-source connector gateway for agents to discover and execute SaaS actions through MCP, HTTP, and OpenAPI, with OAuth/API-key credential management and scoped runtime tokens
-  <sub>★ 6.1k · TypeScript · source · pushed 2026-10-31 · WSL2 · Linux · Docker</sub>
+  <sub>★ 6.2k · TypeScript · source · pushed 2026-10-31 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/oomol-lab/open-connector.git`</sub>
 - **[OpenAgents](https://github.com/xlang-ai/OpenAgents)** — An Open Platform for Language Agents in the Wild
   <sub>★ 4.9k · Python · Apache-2.0 · source · pushed 2026-10-27 · WSL2 · Linux · Docker</sub>
@@ -545,7 +545,7 @@ Curated by **[kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agent
   <sub>★ 558 · TypeScript · Apache-2.0 · clone · pushed 2026-10-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/giselles-ai/giselle.git`</sub>
 - **[LazyMind](https://github.com/LazyAGI/LazyMind)** — Open-source AI Skill Runtime combining reusable knowledge, executable skills, and observable workflows with human review checkpoints and editable artifacts for multi-step tasks
-  <sub>★ 510 · Go · Apache-2.0 · source · pushed 2026-10-30 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 512 · Go · Apache-2.0 · source · pushed 2026-10-30 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/LazyAGI/LazyMind.git`</sub>
 - **[llama-agents](https://github.com/run-llama/llama-agents)** — llama-agents is an async-first framework for building, iterating, and productionizing multi-agent systems, including multi-agent communication, distributed tool execution, human-in-the-loop, and more
   <sub>★ 464 · Python · MIT · uv · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>

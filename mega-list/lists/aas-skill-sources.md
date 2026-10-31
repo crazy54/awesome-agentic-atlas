@@ -360,7 +360,7 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>MIT · npx · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add f-o-x11/perq-skill`</sub>
 - **[faberlang/faber](https://github.com/faberlang/faber)** — Source for faber-language
-  <sub>Rust · Apache-2.0 · script · pushed 2026-10-29 · macOS</sub>
+  <sub>Rust · Apache-2.0 · script · pushed 2026-10-31 · macOS</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/faberlang/faber/main/install.sh | sh`</sub>
 - **[kasovy/neverapply-mcp](https://github.com/kasovy/neverapply-mcp)** — Source for neverapply
   <sub>Python · MIT · source · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -378,13 +378,13 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
 ## Community Contributors
 
 - **[morluto/rea](https://github.com/morluto/rea)** — MIT source for the reverse-engineer-anything skill - evidence-led native, managed, JavaScript/Electron, packaged, and browser investigations with explicit provider limits
-  <sub>★ 414.5k · TypeScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 414.8k · TypeScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install --global rea-agents`</sub>
 - **[obra/superpowers](https://github.com/obra/superpowers)** — The original "Superpowers" by Jesse Vincent
-  <sub>★ 309.8k · Shell · MIT · clone · pushed 2026-10-29</sub>
+  <sub>★ 309.9k · Shell · MIT · clone · pushed 2026-10-29</sub>
   <sub>`git clone https://github.com/obra/superpowers.git`</sub>
 - **[mattpocock/skills](https://github.com/mattpocock/skills)** — Source for 17 Matt Pocock workflow skills - codebase design, TDD, bug diagnosis, triage, PRDs, issues, prototyping, handoff, teaching, and skill-writing guidance (MIT)
-  <sub>★ 308k · Shell · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 308.1k · Shell · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills@latest add mattpocock/skills -a <agent> # cursor, opencode, devin, windsurf, amp, pi`</sub>
 - **[affaan-m/everything-claude-code](https://github.com/affaan-m/ECC)** — Large Claude Code configuration and workflow collection from an Anthropic hackathon winner (MIT)
   <sub>★ 293.8k · JavaScript · MIT · clone · pushed 2026-10-30 · WSL2 · macOS · Linux · Docker</sub>
@@ -414,7 +414,7 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 55.5k · Python · MIT · npx · pushed 2026-10-26 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx skills add K-Dense-AI/scientific-agent-skills`</sub>
 - **[cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill)** — Cloudflare Web Security Audit Skill (by Cloudflare)
-  <sub>★ 54.9k · JavaScript · MIT · npx · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 55k · JavaScript · MIT · npx · pushed 2026-09-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/cloudflare/security-audit-skill \`</sub>
 - **[emilkowalski/skills](https://github.com/emilkowalski/skills)** — Source for Emil Kowalski design engineering skills - UI polish, motion review, animation standards, component craft, and high-taste frontend guidance (MIT)
   <sub>★ 52.3k · Markdown · MIT · npx · pushed 2026-10-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -522,7 +522,7 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 884 · JavaScript · npx · pushed 2026-01-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx github:vibeforge1111/vibeship-spawner-skills install --mcp`</sub>
 - **[Optim-Agent/optim-agent](https://github.com/Optim-Agent/optim-agent)** — Source for the optim-agent skill - agent-guided optimization of configurable systems against measurable objectives (MIT)
-  <sub>★ 798 · Python · MIT · source · pushed 2026-08-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 799 · Python · MIT · source · pushed 2026-08-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Optim-Agent/optim-agent.git`</sub>
 - **[ZhangHanDong/makepad-skills](https://github.com/ZhangHanDong/makepad-skills)** — Makepad app-development skills and references (MIT)
   <sub>★ 752 · source · pushed 2026-04-07 · Win · WSL2? · macOS · Linux</sub>
@@ -549,7 +549,7 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 302 · HTML · MIT · npx · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add ohad6k/emulo@emulo`</sub>
 - **[Continuum-AI-Corp/OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)** — Source for the orca-replay skill - reading, replaying, and forking recorded coding-agent runs, so a question about what a past run did is answered from its trace rather than from memory (Apache-2.0)
-  <sub>★ 289 · TypeScript · Apache-2.0 · npm · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 291 · TypeScript · Apache-2.0 · npm · pushed 2026-10-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g orcareplay # the package is orcareplay`</sub>
 - **[drogers0/gh-image](https://github.com/drogers0/gh-image)** — Source for the gh-image skill - GitHub CLI image uploads that return canonical user-attachments embed URLs for PRs, issues, comments, and README screenshots (MIT)
   <sub>★ 281 · Go · MIT · gh-ext · pushed 2026-10-27 · Win · WSL2? · macOS · Linux</sub>
@@ -612,7 +612,7 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 103 · JavaScript · MIT · npm · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g socialclaw`</sub>
 - **[jgsystemsconsulting/jgs-se-knowledge-packs](https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs)** — Source for requirements-writing
-  <sub>★ 98 · Python · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 99 · Python · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add jgsystemsconsulting/jgs-se-knowledge-packs -l # list available packs`</sub>
 - **[monte-carlo-data/mc-agent-toolkit](https://github.com/monte-carlo-data/mc-agent-toolkit)** — Monte Carlo data observability skills — table health checks, change impact assessment, monitor creation, push ingestion, and SQL validation notebooks for dbt changes
   <sub>★ 93 · Python · Apache-2.0 · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -624,7 +624,7 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 87 · MIT · npx · pushed 2026-03-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx add-skill jonathimer/devmarketing-skills`</sub>
 - **[Continuum-AI-Corp/OrcaPromptVault](https://github.com/Continuum-AI-Corp/OrcaPromptVault)** — Source for the system-prompt-lookup skill - a dated archive of shipped AI products' system prompts and tool schemas, each labelled captured off the wire or reported by the model itself, so a claim about what an agent was instructed to do is answered from the artifact rather than from memory (AGPL-3.0)
-  <sub>★ 82 · AGPL-3.0 · clone · pushed 2026-10-01</sub>
+  <sub>★ 83 · AGPL-3.0 · clone · pushed 2026-10-01</sub>
   <sub>`git clone https://github.com/Continuum-AI-Corp/OrcaReplay`</sub>
 - **[tubeagentkit/youtube-transcript-skills](https://github.com/tubeagentkit/youtube-transcript-skills)** — Source for the youtube-transcript-skills skill - YouTube transcript fetching, video/channel search, channel browsing, and playlist extraction via the getyoutubetranscript.com API, free tier with no card required (MIT)
   <sub>★ 80 · Shell · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -888,7 +888,7 @@ Curated by **[sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic
   <sub>★ 4 · npx · pushed 2026-05-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add lewiswigmore/agent-skills --skill vscode-extension-guide-en`</sub>
 - **[Wolfe-Jam/faf-skills](https://github.com/Wolfe-Jam/faf-skills)** — AI-context and project DNA skills — .faf format management, AI-readiness scoring, bi-sync, MCP server building, and championship-grade testing (7 skills, MIT)
-  <sub>★ 4 · JavaScript · MIT · npm · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4 · JavaScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g faf-cli # required (or: brew install wolfe-jam/faf/faf-cli)`</sub>
 - **[eli-alvarado/us-watchlist-alerts](https://github.com/eli-alvarado/us-watchlist-alerts)** — Source for us-watchlist-alerts
   <sub>★ 4 · Python · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>

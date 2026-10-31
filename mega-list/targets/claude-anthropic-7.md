@@ -2,11 +2,11 @@
 
 Targets Claude or the Anthropic API, whether or not it goes through Claude Code.
 
-**5,238 projects** · 4,743 with stars to rank by · 14,833,408 combined stars
+**5,241 projects** · 4,746 with stars to rank by · 14,839,708 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic)
 
-✨ **316 new to the atlas** in the 10/31/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic&new=1).
+✨ **319 new to the atlas** in the 10/31/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=claude-anthropic&new=1).
 
 Page **7** of 7, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](claude-anthropic.md) · [2](claude-anthropic-2.md) · [3](claude-anthropic-3.md) · [4](claude-anthropic-4.md) · [5](claude-anthropic-5.md) · [6](claude-anthropic-6.md) · **7**.
 
@@ -14,8 +14,13 @@ Page **7** of 7, because this list is longer than the 512 KB GitHub will render 
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 139–495 of 495. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 134–495 of 495. The rest are on this page's other parts, linked above and below.</sub>
 
+- **[dependabot-triage](https://github.com/akshayrao14/git-practices/tree/main/skills/dependabot-triage)** — Defensive Dependabot triage for JS/TS repos (npm, pnpm, yarn, bun) — picks the *minimal* patched version that supersets every CVE in the cluster, maps every import site into Public/API · Client-Bundl…
+- **[Developyn/laver-mcp](https://github.com/Developyn/laver-mcp)** — Laver project management: kanban boards, sprints, tickets, comments, attachments and a team wiki, with versioned writes to prevent concurrent overwrites
+- **[dfrancislyondflabc-tech/agentic-recall](https://github.com/dfrancislyondflabc-tech/agentic-recall)** — Long-term memory over a folder of Markdown files: local hybrid retrieval (BM25F, dense vectors, phrase proximity) that reports when an answer is absent
+- **[dhawalshah/tiktok-ads-mcp](https://github.com/dhawalshah/tiktok-ads-mcp)** — TikTok Ads: video performance metrics, creative fatigue scoring, industry benchmarks and Smart+ campaign support
+- **[dirtcubeinteractive/specter-skills](https://github.com/dirtcubeinteractive/specter-skills)** — Configure a Specter game backend: players, economy, progression, leaderboards, tournaments, battle passes and real-time multiplayer
 - **[dizpers/polystrike-examples](https://github.com/dizpers/polystrike-examples)** — Live Elon Musk and Ted Cruz tweet feeds and counters for Polymarket tweet-count markets, comparing real, XTracker oracle and UI counts
 - **[DmytroRybka/jobctl](https://github.com/DmytroRybka/jobctl-claude)** — Job application tracker: agents record applications, interviews, statuses, salaries and next actions, and humans review them in a dashboard
 - **[docsor1212/aesthete-agent](https://github.com/docsor1212/aesthete-agent)** — Mechanically validated frontend aesthetics for coding agents: an evidence-ranked palette library, OKLCH harmony generation, WCAG 2.2 + APCA contrast gates, color-blind simulation and AI-slop detectio…

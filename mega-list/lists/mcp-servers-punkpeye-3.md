@@ -295,7 +295,7 @@ Page **3** of 6, because this list is longer than the 512 KB GitHub will render 
 ## Education
 
 - **[RohanMuppa/brightspace-mcp-server](https://github.com/RohanMuppa/brightspace-mcp-server)** — Check D2L Brightspace grades, due dates, assignments, announcements, syllabus, rosters, discussions and course content
-  <sub>★ 61 · TypeScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 62 · TypeScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx -y brightspace-mcp-server@latest setup`</sub>
 - **[anzy-renlab-ai/pronounce](https://github.com/anzy-renlab-ai/pronounce)** — Community pronunciation dictionary for developer and product names (kubectl, nginx, GIF) with IPA, respellings, alternate readings and cited sources
   <sub>★ 47 · Python · MIT · brew · pushed 2026-09-01 · WSL2 · macOS · Linux</sub>
@@ -352,7 +352,7 @@ Page **3** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.4k · Python · MIT · pip · pushed 2026-10-23 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install tradememory-protocol`</sub>
 - **[rootSunc/CNEquity](https://github.com/rootSunc/CNEquity)** — Local China A-share data lake: daily and minute bars, financial statements with point-in-time cutoffs, capital flows, corporate events and futures/options, with read-only DuckDB SQL. No API token
-  <sub>★ 909 · Python · Apache-2.0 · pip · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 909 · Python · Apache-2.0 · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install cnequity`</sub>
 - **[ariadng/metatrader-mcp-server](https://github.com/ariadng/metatrader-mcp-server)** — Execute trades on the MetaTrader 5 platform
   <sub>★ 844 · Python · MIT · pip · pushed 2026-03-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -394,7 +394,7 @@ Page **3** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 149 · Python · MIT · pip · pushed 2025-12-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install freqtrade-client mcp[cli]`</sub>
 - **[OctagonAI/octagon-mcp-server](https://github.com/OctagonAI/octagon-mcp-server)** — Integrate private and public market data via Octagon AI agents
-  <sub>★ 147 · TypeScript · MIT · npm · pushed 2026-07-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 148 · TypeScript · MIT · npm · pushed 2026-07-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g octagon-mcp`</sub>
 - **[doggybee/mcp-server-ccxt](https://github.com/doggybee/mcp-server-ccxt)** — Real-time crypto market data and trading across many exchanges via CCXT: spot, futures, OHLCV, balances and orders
   <sub>★ 145 · TypeScript · MIT · npm · pushed 2025-06-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1144,7 +1144,7 @@ Page **3** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · TypeScript · MIT · source · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/andresdefi/zerodust.git`</sub>
 - **[forgemeshlabs/kronos-forgemesh-mcp](https://github.com/forgemeshlabs/kronos-forgemesh-mcp)** — Kronos market intelligence with calibrated price ranges, forecast audits, and automatic x402 USDC payments on Base. npx -y @forgemeshlabs/kronos-forgemesh-mcp
-  <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @forgemeshlabs/kronos-forgemesh-mcp`</sub>
 - **[eamwhite1/xrpl-referee](https://github.com/eamwhite1/xrpl-referee)** — 40+-tool MCP server for agent-to-agent payments on the XRP Ledger — job marketplace, crypto-condition escrow, AI-verified work delivery, and trust scoring
   <sub>★ 1 · Python · MIT · source · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1549,7 +1549,7 @@ Page **3** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>Python · MIT · pip · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install dadosb3`</sub>
 - **[forgemeshlabs/crypto-signals-mcp](https://github.com/forgemeshlabs/crypto-signals-mcp)** — Paid crypto market signals, risk state, calibrated forecasts, whale flows, decision journals, and outcome audits via x402 USDC micropayments on Base. npx -y @forgemeshlabs/crypto-signals-mcp
-  <sub>JavaScript · MIT · npx · pushed 2026-10-08 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>JavaScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @forgemeshlabs/crypto-signals-mcp`</sub>
 - **[bartosz-kuc/honest-vies-mcp](https://github.com/bartosz-kuc/honest-vies-mcp)** — Validates EU VAT numbers against the European Commission's VIES API, locally with no API key or third-party middleman. check_vat returns validity, name and address where available, and a consultation number as audit proof when you pass your own VAT; list_supported_countries lists the 27 EU states plus XI (Northern Ireland)
   <sub>Python · MIT · clone · pushed 2026-09-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2083,7 +2083,7 @@ Page **3** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · Python · MIT · cargo · pushed 2026-10-29 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`cargo install --path crates/fyi-cli`</sub>
 - **[forgemeshlabs/gov-transparency-mcp](https://github.com/forgemeshlabs/gov-transparency-mcp)** — Congressional stock trades, federal contracts, campaign finance, lobbying and new regulations from US government data, paid per call with x402 USDC on Base
-  <sub>★ 1 · JavaScript · MIT · source · pushed 2026-10-23 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1 · JavaScript · MIT · source · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/forgemeshlabs/gov-transparency-mcp.git`</sub>
 - **[gavelin-ai/mcp](https://github.com/gavelin-ai/mcp)** — US state legislative data: speaker-attributed hearing transcripts, bills, votes and AI-generated reports
   <sub>★ 1 · JavaScript · MIT · source · pushed 2026-09-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2214,7 +2214,7 @@ Page **3** of 6, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 800 · Java · MIT · source · pushed 2026-10-09 · Win? · WSL2? · Linux?</sub>
   <sub>`git clone https://github.com/jtang613/GhidrAssistMCP.git`</sub>
 - **[zinja-coder/apktool-mcp-server](https://github.com/zinja-coder/apktool-mcp-server)** — Automate reverse engineering of Android APKs with Apktool
-  <sub>★ 700 · Python · Apache-2.0 · source · pushed 2026-07-02 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 701 · Python · Apache-2.0 · source · pushed 2026-07-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/zinja-coder/apktool-mcp-server.git`</sub>
 - **[emiliaprotocol/emilia-protocol](https://github.com/emiliaprotocol/emilia-protocol)** — Requires a named human's approval before irreversible agent actions such as payments or deploys, then issues an offline-verifiable Ed25519 trust receipt
   <sub>★ 601 · TypeScript · Apache-2.0 · npx · pushed 2026-10-28 · Win? · WSL2? · macOS? · Linux?</sub>

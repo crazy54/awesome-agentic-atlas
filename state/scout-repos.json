@@ -1895,7 +1895,7 @@
    "section": "Agent Skills",
    "since": "2026-10-11"
   },
-  "LeoYeAI/openclaw-master-skills": {
+  "LeoYeAI/agent-master-skills": {
    "id": 1170326509,
    "section": "Agent Skills",
    "since": "2026-10-11"
@@ -4910,6 +4910,11 @@
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
   },
+  "cynicalight/NeoRead": {
+   "id": 1403317270,
+   "section": "Plugins, Themes & Clients",
+   "since": "2026-10-31"
+  },
   "cytostack/openwolf": {
    "id": 1182594286,
    "section": "Context, Memory & RAG",
@@ -6254,6 +6259,11 @@
    "id": 1281005910,
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
+  },
+  "jacke-pp/ai-wallet-binance": {
+   "id": 1433047628,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-10-31"
   },
   "jackwener/DSH-Android": {
    "id": 1436184001,

@@ -113,7 +113,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 661 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentlab`</sub>
 - **[Appworld](https://github.com/StonyBrookNLP/appworld)** — Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL'24 Best Resource Paper
-  <sub>★ 543 · Python · Apache-2.0 · pip · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 544 · Python · Apache-2.0 · pip · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install appworld`</sub>
 - **[Bigcodebench](https://github.com/bigcode-project/bigcodebench)** — BigCodeBench - Benchmarking Code Generation Towards AGI
   <sub>★ 517 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>

@@ -262,7 +262,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 25 · JavaScript · MIT · clone · pushed 2026-10-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mirkobozzetto/espresso.git`</sub>
 - **[nexus-agents](https://github.com/nexus-substrate/nexus-agents)** — Multi-CLI orchestration with 30 MCP tools, 12 expert agents, 17 skills, and Budget→TOPSIS→LinUCB routing. Coordinates Claude, Gemini, Codex, and OpenCode via consensus voting
-  <sub>★ 23 · TypeScript · MIT · npm · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 23 · TypeScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g nexus-agents`</sub>
 - **[artel](https://github.com/NicolasPrimeau/artel)** — Infrastructure for AI teams: shared semantic memory, tasks, agent-to-agent messages, and session handoffs across machines and LLM providers
   <sub>★ 9 · Python · MIT · source · pushed 2026-10-20 · Win? · WSL2 · Linux · Docker</sub>

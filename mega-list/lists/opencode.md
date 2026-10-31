@@ -57,7 +57,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 9.8k · TypeScript · Apache-2.0 · psh · pushed 2026-10-31 · Win · WSL2 · macOS · Linux</sub>
   <sub>`irm https://plannotator.ai/install.ps1 | iex`</sub>
 - **[Dynamic Context Pruning](https://github.com/Tarquinen/opencode-dynamic-context-pruning)** — Optimize token usage
-  <sub>★ 4.4k · TypeScript · AGPL-3.0 · source · pushed 2026-09-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4.5k · TypeScript · AGPL-3.0 · source · pushed 2026-09-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Tarquinen/opencode-dynamic-context-pruning.git`</sub>
 - **[Magic Context](https://github.com/cortexkit/magic-context)** — Lossless context management with background compression
   <sub>★ 2.4k · TypeScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -267,7 +267,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 39 · TypeScript · MIT · npm · pushed 2026-02-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g opencode-token-monitor`</sub>
 - **[OpenHax Codex](https://github.com/open-hax/codex)** — OAuth authentication
-  <sub>★ 37 · TypeScript · GPL-3.0 · source · pushed 2026-06-01 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 38 · TypeScript · GPL-3.0 · source · pushed 2026-06-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/open-hax/codex.git`</sub>
 - **[opencode-personality](https://github.com/joostvanwollingen/opencode-personality)** — A configurable personality and mood system plugin for OpenCode
   <sub>★ 36 · TypeScript · MIT · source · pushed 2026-02-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -564,7 +564,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 273 · TypeScript · MIT · source · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/dzianisv/opencode-mobile.git`</sub>
 - **[CodeWalk](https://github.com/verseles/codewalk)** — Native cross-platform Flutter client for OpenCode server mode
-  <sub>★ 192 · Dart · psh · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 191 · Dart · psh · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm install.cat/verseles/codewalk | iex`</sub>
 - **[Qwen Code OAI Proxy](https://github.com/aptdnfapt/qwen-code-oai-proxy)** — Qwen model proxy
   <sub>★ 172 · TypeScript · npm · pushed 2026-04-16 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -579,7 +579,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 109 · TypeScript · MIT · npm · pushed 2026-10-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm i -g @leohenon/ocv@ocv-v2`</sub>
 - **[bx](https://github.com/holtwick/bx-mac)** — macOS file-system sandbox for AI coding agents
-  <sub>★ 106 · TypeScript · MIT · npm · pushed 2026-10-14 · macOS</sub>
+  <sub>★ 107 · TypeScript · MIT · npm · pushed 2026-10-14 · macOS</sub>
   <sub>`npm install -g bx-mac`</sub>
 - **[OpenTab](https://github.com/hamidi-dev/opentab)** — Terminal UI for browsing your OpenCode spend by month, day, project, session, and model
   <sub>★ 95 · Python · MIT · pipx · pushed 2026-10-30 · Win? · WSL2 · macOS? · Linux?</sub>

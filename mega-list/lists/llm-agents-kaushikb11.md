@@ -144,7 +144,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 22.4k · Python · pip · pushed 2026-01-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install babyagi`</sub>
 - **[XAgent](https://github.com/OpenBMB/XAgent)** — Autonomous agent with planning and tool learning
-  <sub>★ 8.5k · Python · Apache-2.0 · source · pushed 2026-07-31 · WSL2 · Linux · Docker</sub>
+  <sub>★ 8.6k · Python · Apache-2.0 · source · pushed 2026-07-31 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/OpenBMB/XAgent.git`</sub>
 
 ## Multi-Agent Orchestration
@@ -330,7 +330,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 134 · Python · MIT · source · pushed 2026-10-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Liu-Hy/GenoMAS.git`</sub>
 - **[wechat-mac-rpa](https://github.com/wq19901103wq/wechat-mac-rpa)** — Visual agent automating WeChat on macOS
-  <sub>★ 132 · Python · MIT · source · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 133 · Python · MIT · source · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/wq19901103wq/wechat-mac-rpa.git`</sub>
 - **[DNA Claude Analysis](https://github.com/shmlkv/dna-claude-analysis)** — Explore your genome in natural language
   <sub>★ 58 · Python · MIT · source · pushed 2026-03-04 · Win? · WSL2? · macOS? · Linux?</sub>
