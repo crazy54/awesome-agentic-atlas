@@ -1,10 +1,10 @@
 # Linux
 
-Every project across all 39 lists that runs on Linux — **10,053** of 11,050 distinct repos, deduplicated to one row per repo.
+Every project across all 39 lists that runs on Linux — **10,030** of 11,022 distinct repos, deduplicated to one row per repo.
 
 Confirmed first, then inferred, each block by stars. Nearly every container and CI path implies Linux, so this is the widest of the four — filter on Conf. to tighten it.
 
-[← back to the mega list](../README.md) · [7,307 inferred →](linux-inferred.md)
+[← back to the mega list](../README.md) · [7,284 inferred →](linux-inferred.md)
 
 Page **5** of 5, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](linux.md) · [2](linux-2.md) · [3](linux-3.md) · [4](linux-4.md) · **5**.
 
@@ -12,10 +12,13 @@ Page **5** of 5, because this list is longer than the 512 KB GitHub will render 
 
 A release asset for this platform, or the README saying so outright.
 
-<sub>Projects 2,725–2,746 of 2,746. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 2,722–2,746 of 2,746. The rest are on this page's other parts, linked above and below.</sub>
 
 | # | Project | ★ | Lists | Support | Language | Install / Run | What it does | Why |
 |--:|---|--:|--:|---|---|---|---|---|
+| 2722 | **[smeet666/mcp-recipes](https://github.com/smeet666/mcp-recipes)**<br><sub>smeet666/mcp-recipes</sub> | — | 1 | WSL2 · Linux · Docker | TypeScript | `git clone https://github.com/smeet666/mcp-recipes.git` | Query Marmiton and the Wikibooks Cookbook together to compare recipes, and scale French and English ingredient lists, flagging what cannot be scaled | <sub>Docker supported</sub> |
+| 2723 | **[smeet666/mcp-supertoinette](https://github.com/smeet666/mcp-supertoinette)**<br><sub>smeet666/mcp-supertoinette</sub> | — | 1 | WSL2 · Linux · Docker | TypeScript | `git clone https://github.com/smeet666/mcp-supertoinette.git` | Read Supertoinette's French recipes: ingredients, steps, difficulty, cost, resting time and wine pairings, and rescale to any number of people | <sub>Docker supported</sub> |
+| 2724 | **[smeet666/mcp-wikibooks-cookbook](https://github.com/smeet666/mcp-wikibooks-cookbook)**<br><sub>smeet666/mcp-wikibooks-cookbook</sub> | — | 1 | WSL2 · Linux · Docker | TypeScript | `git clone https://github.com/smeet666/mcp-wikibooks-cookbook.git` | Search recipes in the English Wikibooks Cookbook, read ingredients and steps, and rescale quantities | <sub>Docker supported</sub> |
 | 2725 | **[sparrow84001/mcp-seo](https://github.com/sparrow84001/mcp-seo)**<br><sub>sparrow84001/mcp-seo</sub> | — | 1 | Win · WSL2? · macOS · Linux | TypeScript | `npm install -g @sparrow84001/mcp-seo` | SEO, AEO, GEO, local SEO and CRO auditor with framework-aware code fixes, sitemap crawling and HTTP security header inspection | <sub>ships Windows build (mcp-seo-windows-x64.exe); ships macOS build (mcp-seo-darwin-arm64); ships Linux build (mcp-seo-linux-x64); install via npm; portable runti…</sub> |
 | 2726 | **[srezai-team/srezai-mcp](https://github.com/srezai-team/srezai-mcp-web-search)**<br><sub>srezai-team/srezai-mcp-web-search</sub> | — | 1 | Win? · WSL2 · Linux · Docker | TypeScript | `git clone https://github.com/srezai-team/srezai-mcp.git` | Web and image search, page reading as Markdown, browser-rendered screenshots, schema-based extraction and deep research, with strong Russian web coverage | <sub>Docker supported; README mentions Windows</sub> |
 | 2727 | **[sturs49/cryptotaxedge-mcp](https://github.com/sturs49/cryptotaxedge-mcp)**<br><sub>sturs49/cryptotaxedge-mcp</sub> | — | 1 | WSL2 · Linux · Docker | JavaScript | `docker run --rm -p 8080:8080 cryptotaxedge-mcp` | US tax classification for on-chain transactions: submit a transaction hash to get its category, tax treatment, a confidence score and a review flag | <sub>install via docker; Docker supported</sub> |
@@ -39,14 +42,14 @@ A release asset for this platform, or the README saying so outright.
 | 2745 | **[Zenidp/solinkify-mcp](https://github.com/Zenidp/solinkify-mcp)**<br><sub>Zenidp/solinkify-mcp</sub> | — | 1 | WSL2 · Linux · Docker | TypeScript | `docker run -i --rm solinkify-mcp # starts, tools listed` | Agentic payments on Solana: discover x402-priced endpoints, pay HTTP 402 paywalls in USDC, manage balances and subscriptions, with spending caps and escrow | <sub>install via docker; Docker supported</sub> |
 | 2746 | **[Zsadigzade/trainbud](https://github.com/Zsadigzade/trainbud)**<br><sub>Zsadigzade/trainbud</sub> | — | 1 | Win · WSL2? · macOS · Linux · Docker | TypeScript | `npm install -g trainbud` | Local analysis of Garmin Connect activities, sleep, recovery, body composition, stress and VO2 max against 28-day baselines, with memory for goals and races | <sub>README states cross-platform; install via npm; portable runtime (node); Docker supported</sub> |
 
-## Inferred (7,307)
+## Inferred (7,284)
 
-No direct statement, but the install route or the language runtime implies it. On its own page so this one stays scannable: **[all 7,307 inferred Linux projects →](linux-inferred.md)**
+No direct statement, but the install route or the language runtime implies it. On its own page so this one stays scannable: **[all 7,284 inferred Linux projects →](linux-inferred.md)**
 
 Page **5** of 5, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](linux.md) · [2](linux-2.md) · [3](linux-3.md) · [4](linux-4.md) · **5**.
 
 ---
 
-Snapshot 2026-10-31. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-01. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

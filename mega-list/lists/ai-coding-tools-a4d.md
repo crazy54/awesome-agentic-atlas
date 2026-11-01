@@ -40,7 +40,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## Code Editors and Assistants
 
 - **[Cate](https://github.com/0-AI-UG/cate)** — Infinite zoomable canvas IDE where editor, terminal, browser, and Claude Code agent panels float spatially, like Figma or Miro but for coding
-  <sub>★ 2.2k · TypeScript · MIT · brew · pushed 2026-10-31 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 2.2k · TypeScript · MIT · brew · pushed 2026-11-01 · Win · WSL2 · macOS · Linux</sub>
   <sub>`brew install --cask cate`</sub>
 - **[BBARIT](https://github.com/bbarit/terminal)** — Free native all-in-one AI coding IDE (Tauri/Rust) with multi-agent terminals, office editing, and an embedded agent-driven browser; bring any model or run locally with Ollama
   <sub>★ 40 · source · pushed 2026-10-18 · Win? · macOS?</sub>
@@ -163,28 +163,28 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## Coding Agents
 
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — Google's terminal coding agent powered by Gemini
-  <sub>★ 108.7k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 108.7k · TypeScript · Apache-2.0 · npm · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @google/gemini-cli`</sub>
 - **[Cline (Claude Dev)](https://github.com/cline/cline)** — VS Code extension with full file system access and autonomous coding
-  <sub>★ 71.1k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 71.2k · TypeScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g cline`</sub>
 - **[Open Interpreter](https://github.com/openinterpreter/openinterpreter)** — Open-source agent that runs code locally in response to natural language, supporting Python, JS, shell, and more
-  <sub>★ 68.8k · Rust · Apache-2.0 · psh · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 68.8k · Rust · Apache-2.0 · psh · pushed 2026-11-01 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://www.openinterpreter.com/install.ps1 | iex`</sub>
 - **[AutoGen](https://github.com/microsoft/autogen)** — Microsoft's multi-agent framework for building AI agent teams that collaborate on coding tasks
-  <sub>★ 61.6k · Python · CC-BY-4.0 · pip · pushed 2026-10-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 61.7k · Python · CC-BY-4.0 · pip · pushed 2026-10-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U "autogen-agentchat" "autogen-ext[openai]"`</sub>
 - **[Codename Goose](https://github.com/aaif-goose/goose)** — Desktop and CLI agent by Block for automating tasks using LLMs and extensions
-  <sub>★ 56k · Rust · Apache-2.0 · script · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 56.1k · Rust · Apache-2.0 · script · pushed 2026-11-01 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | bash`</sub>
 - **[GPT Engineer](https://github.com/AntonOsika/gpt-engineer)** — AI agent for building full applications from natural language
   <sub>★ 55k · Python · MIT · clone · pushed 2025-05-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/gpt-engineer-org/gpt-engineer.git`</sub>
 - **[Aider](https://github.com/Aider-AI/aider)** — AI coding agent for collaborative editing and code generation via CLI
-  <sub>★ 49.8k · Python · Apache-2.0 · source · pushed 2026-05-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 49.9k · Python · Apache-2.0 · source · pushed 2026-05-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/paul-gauthier/aider.git`</sub>
 - **[Dcode](https://github.com/langchain-ai/deepagents)** — The coding agent you own. Open-source, model-agnostic, and built by LangChain to give you maximum control over your software development lifecycle
-  <sub>★ 30.8k · Python · MIT · script · pushed 2026-10-31 · Win? · WSL2 · macOS · Linux</sub>
+  <sub>★ 30.9k · Python · MIT · script · pushed 2026-11-01 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -LsSf https://langch.in/dcode | bash`</sub>
 - **[SWE-agent](https://github.com/SWE-agent/SWE-agent)** — Princeton's autonomous agent that resolves real GitHub issues by navigating repos, editing files, and running tests
   <sub>★ 20.7k · Python · MIT · source · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -196,40 +196,40 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 12.2k · Python · MIT · clone · pushed 2024-04-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/smol-ai/developer.git`</sub>
 - **[PraisonAI](https://github.com/MervinPraison/PraisonAI)** — Multi-agent framework with 100+ LLM support and MCP integration
-  <sub>★ 9.3k · Python · MIT · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 9.3k · Python · MIT · pip · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install praisonai`</sub>
 - **[Orkas](https://github.com/Orkas-AI/Orkas)** — Open-source local-first desktop workspace that runs Claude Code, Codex CLI, OpenCode, Cline, and built-in agents in parallel with shared files and approval controls. Website
-  <sub>★ 6k · JavaScript · MIT · clone · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 7.1k · JavaScript · MIT · clone · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Orkas-AI/Orkas.git`</sub>
 - **[Maestro](https://github.com/RunMaestro/Maestro)** — Open-source desktop command center for running multiple AI coding agents (Claude Code, Codex, Gemini CLI, etc.) in parallel, with Cue event automation, Auto Run playbooks, Group Chat across local and remote agents, and a maestro-cli that agents can drive themselves
-  <sub>★ 3.5k · TypeScript · AGPL-3.0 · clone · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 3.5k · TypeScript · AGPL-3.0 · clone · pushed 2026-11-01 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/RunMaestro/Maestro.git`</sub>
 - **[Atomic Agent](https://github.com/AtomicBot-ai/atomic-agent)** — Local-first coding agent that runs open-weight models entirely on your machine via a llama.cpp fork. 56 built-in tools (browser, filesystem, git, memory, vision), MCP support, and a five-layer memory system. No account or API key required
   <sub>★ 3.5k · TypeScript · MIT · psh · pushed 2026-10-29 · macOS</sub>
   <sub>`irm https://atomicagent.io/install.ps1 | iex`</sub>
 - **[BitFun](https://github.com/GCWing/OpenBitFun)** — Cross-platform desktop coding agent built on a Rust runtime, with Git-aware workflows, Deep Review, MCP/Skills/Hooks, remote workspaces, and state-bound Mini Apps
-  <sub>★ 3.4k · Rust · MIT · source · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 3.4k · Rust · MIT · source · pushed 2026-11-01 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/GCWing/BitFun.git`</sub>
 - **[SwarmClaw](https://github.com/swarmclawai/swarmclaw)** — Self-hosted multi-agent runtime with MCP client and server support, 23+ LLM providers, persistent memory, skills, schedules, and messaging connectors. Electron desktop app, CLI, and Docker
-  <sub>★ 704 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 703 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm i -g @swarmclawai/swarmclaw`</sub>
 - **[agentty](https://github.com/agentty-org/agentty)** — Native C++26 terminal coding agent and drop-in claude-code alternative. Single static binary, sub-millisecond cold start, sandboxed by default, and model-agnostic (Claude, OpenAI, Groq, OpenRouter, Ollama). Runs inside Zed over ACP and drives air-gapped hosts over SSH. MIT
-  <sub>★ 619 · C++ · MIT · winget · pushed 2026-10-29 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 619 · C++ · MIT · winget · pushed 2026-11-01 · Win · WSL2? · macOS · Linux</sub>
   <sub>`winget install agentty.agentty`</sub>
 - **[OpenCode Mobile](https://github.com/dzianisv/opencode-mobile)** — Open-source (MIT) Android client for the OpenCode coding agent; run AI coding sessions from your phone against your own self-hosted server with bring-your-own keys
-  <sub>★ 273 · TypeScript · MIT · source · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 275 · TypeScript · MIT · source · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/dzianisv/opencode-mobile.git`</sub>
 - **[OpenASE](https://github.com/PacificStudio/openase)** — Open-source, ticket-driven software engineering platform that orchestrates Claude Code, Codex, and Gemini CLI agents across your machines with workflows, skills, and full traceability
   <sub>★ 270 · Go · Apache-2.0 · script · pushed 2026-08-09 · Win · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/pacificstudio/openase/main/scripts/install.sh | sh`</sub>
 - **[Ordewell](https://github.com/ordewell/ordewell)** — Plan-first CLI/TUI orchestrator that turns one goal into an ordered plan of coding-agent tasks, each with its own runner (Claude Code, Codex, OpenCode), model, thinking effort and mode — editable before execution, run as one agent session per task, and marked done only when its own completion marker appears in the output. Apache-2.0, free, no paid tier
-  <sub>★ 208 · TypeScript · Apache-2.0 · npm · pushed 2026-10-30 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 208 · TypeScript · Apache-2.0 · npm · pushed 2026-11-01 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npm install -g ordewell`</sub>
 - **[Ivy Tendril](https://github.com/Ivy-Interactive/Ivy-Tendril)** — Open-source agentic software factory with an amazing UI that handles parallel Git worktrees for you, complete with programmatic verifications and fast review loops
   <sub>★ 204 · C# · psh · pushed 2026-09-15 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://cdn.ivy.app/install-tendril.ps1 | iex`</sub>
 - **[LoopTroop](https://github.com/looptroop-ai/LoopTroop)** — Local GUI orchestrator for long-running, high-correctness AI software delivery — LLM councils plan it, Ralph loops perfect it, OpenCode worktrees ship it
-  <sub>★ 167 · TypeScript · MIT · winget · pushed 2026-10-31 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 167 · TypeScript · MIT · winget · pushed 2026-11-01 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`winget install LoopTroopAI.LoopTroop`</sub>
 - **[Weco (weco-cli)](https://github.com/WecoAI/weco-cli)** — Autoresearch CLI that optimizes code (GPU kernels, ML models, prompts) by editing a file, running your eval, and keeping changes only when the metric improves
   <sub>★ 119 · Python · Apache-2.0 · psh · pushed 2026-10-30 · Win · WSL2? · macOS? · Linux?</sub>
@@ -238,22 +238,22 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 118 · TypeScript · MIT · npx · pushed 2026-10-29 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx dvalincode mcp-install cursor # .cursor/mcp.json`</sub>
 - **[great_cto](https://github.com/avelikiy/great_cto)** — Engineering management layer for 34 specialist AI agents covering the full SDLC (architect, pm, senior-dev, code-reviewer, qa, security, devops, l3-support + 18 archetype-specific reviewers). 25 archetypes auto-detected with compliance gates (PCI-DSS, HIPAA, FedRAMP, GDPR, EU AI Act). Multi-platform — Claude Code, Cursor, Codex CLI, Aider, Continue. Local kanban board, OWASP LLM Top 10 scanner, MI
-  <sub>★ 113 · JavaScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 113 · JavaScript · MIT · npx · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx great-cto init`</sub>
 - **[Gokin](https://github.com/ginkida/gokin)** — Open-source terminal AI coding agent that works with local models via Ollama or providers like DeepSeek and Kimi, with no telemetry and secret redaction
-  <sub>★ 107 · Go · MIT · script · pushed 2026-10-30 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 108 · Go · MIT · script · pushed 2026-10-30 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/ginkida/gokin/main/install.sh | sh`</sub>
 - **[Garcon](https://github.com/cfal/garcon)** — Self-hosted browser and mobile workspace for running and steering parallel Claude Code, Codex, Cursor Agent, OpenCode, Amp, Droid, and Pi sessions, with integrated terminal, files, diff review, Git/PR workflows, mobile approvals, and cross-agent transfers
-  <sub>★ 98 · TypeScript · clone · pushed 2026-10-31 · Win · WSL2? · macOS? · Linux · Docker</sub>
+  <sub>★ 99 · TypeScript · clone · pushed 2026-11-01 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/cfal/garcon.git`</sub>
 - **[NarraNexus](https://github.com/NetMindAI-Open/NarraNexus)** — Open-source AI agent team workspace with a ready-to-run team of agents that remember, collaborate, and use tools, supporting multi-agent coding workflows
-  <sub>★ 92 · Python · Apache-2.0 · clone · pushed 2026-10-28 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 93 · Python · Apache-2.0 · clone · pushed 2026-10-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/NetMindAI-Open/NarraNexus.git`</sub>
 - **[intentic](https://github.com/intentic/intentic)** — Self-hosted workspace that runs Claude Code, Codex, OpenCode, and Gemini CLI agents in parallel, each in its own Docker container and git worktree on hardware you own. Browser and mobile UI, terminals that survive disconnects, an editable sandbox Dockerfile, and per-file, per-hunk diff review before changes land. MIT, TypeScript
-  <sub>★ 87 · TypeScript · MIT · script · pushed 2026-10-31 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 87 · TypeScript · MIT · script · pushed 2026-11-01 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://intentic.dev/connect | sh -s -- <SETUP_CODE>`</sub>
 - **[Keen Code](https://github.com/mochow13/keen-code)** — An open-source, context-aware terminal-based coding agent written in Go. Supports multiple providers, MCPs, subagents, Agent Skills, controllable tool output retention, hashline edits, and more
-  <sub>★ 84 · Go · MIT · npm · pushed 2026-10-30 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 85 · Go · MIT · npm · pushed 2026-10-30 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g keen-code`</sub>
 - **[brood-box](https://github.com/stacklok/brood-box)** — Run coding agents (Claude Code, Codex, OpenCode) inside hardware-isolated microVMs with snapshot isolation, egress control, and MCP authorization
   <sub>★ 79 · Go · Apache-2.0 · source · pushed 2026-10-30 · WSL2 · macOS · Linux · Docker</sub>
@@ -268,13 +268,13 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 49 · Rust · Apache-2.0 · script · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://auravcs.com/install.sh | bash # macOS · Linux · Windows`</sub>
 - **[Superagent](https://github.com/pungme/superagent-desktop)** — Open-source macOS desktop app giving Claude Code and Codex a real browser to drive, an iOS Simulator to install and screenshot apps in, and a phone companion app for remote monitoring
-  <sub>★ 33 · TypeScript · MIT · source · pushed 2026-10-31 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 34 · TypeScript · MIT · source · pushed 2026-11-01 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`git clone https://github.com/pungme/superagent-desktop.git`</sub>
 - **[Emdash Skills](https://github.com/heymegabyte/agent-skills)** — 14-category autonomous product-building OS with 18 specialized agents that turn one-line prompts into deployed products on Cloudflare Workers
-  <sub>★ 26 · TypeScript · npx · pushed 2026-10-30 · macOS</sub>
+  <sub>★ 26 · TypeScript · npx · pushed 2026-10-31 · macOS</sub>
   <sub>`npx jsr add @heymegabyte/agent-skills`</sub>
 - **[Claude Skills](https://github.com/heymegabyte/agent-skills)** — 14-category autonomous product-building OS bundling 18 specialized agents (architect, test-writer, deploy-verifier, security-reviewer, visual-qa, performance-profiler, accessibility-auditor, content-writer, completeness-checker, dependency-auditor, migration-agent, incident-responder, computer-use-operator, meta-orchestrator, seo-auditor, cost-estimator, changelog-generator, code-simplifier). One
-  <sub>★ 26 · TypeScript · npx · pushed 2026-10-30 · macOS</sub>
+  <sub>★ 26 · TypeScript · npx · pushed 2026-10-31 · macOS</sub>
   <sub>`npx jsr add @heymegabyte/agent-skills`</sub>
 - **[octomux](https://github.com/ShreyPaharia/octomux)** — Local dashboard for orchestrating parallel Claude Code and Cursor agents in isolated git worktrees, with a unified permission inbox, a live monitor grid, and in-app diff review. MIT
   <sub>★ 25 · TypeScript · MIT · npm · pushed 2026-09-18 · macOS</sub>
@@ -283,7 +283,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 22 · TypeScript · MIT · npm · pushed 2026-09-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g openmagic # install once`</sub>
 - **[Kolega Code](https://github.com/kolega-ai/kolega-code)** — Open-source terminal coding agent where the model writes its own multi-agent workflows (Gigacode), with 15+ providers and MCP support
-  <sub>★ 21 · Python · uv · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 21 · Python · uv · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install kolega-code`</sub>
 - **[Mirafold](https://github.com/mirafold/mirafold)** — Browser UI for Claude Code, Codex, and Gemini CLI where the agent renders live charts, diffs, and task lists as it works, with mission control across multiple sessions and E2E-encrypted phone pairing (self-hostable relay). Open source, local-first
   <sub>★ 19 · TypeScript · MIT · npm · pushed 2026-10-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -294,15 +294,15 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 - **[LingShu](https://github.com/RoyZhao1991/LingShu)** — Native Apache-2.0 macOS execution agent with a replaceable model backend and an open runtime for code, documents, presentations, and authorized computer actions
   <sub>★ 11 · Rust · Apache-2.0 · brew · pushed 2026-10-08 · macOS</sub>
   <sub>`brew install --cask RoyZhao1991/tap/lingshu`</sub>
+- **[Sillage](https://github.com/MarlBurroW/sillage)** — Self-hosted, MIT-licensed, mobile-first web UI that drives the native Claude Code and Codex CLIs on your own machine, with server-side sessions, full-text search, an IDE panel, an MCP board the agents read, and an installable PWA. Single Docker container
+  <sub>★ 11 · TypeScript · MIT · script · pushed 2026-11-01 · Win? · WSL2 · macOS · Linux</sub>
+  <sub>`curl -fsSL https://raw.githubusercontent.com/MarlBurroW/sillage/main/install.sh | bash`</sub>
 - **[WithVibe](https://github.com/withvibe/withvibe)** — Self-hostable shared AI development environment for teams. Spin up an isolated, code-seeded env, build with AI, and share the live session; an agent gate (security, code review, tests, policy) plus human approval reviews every change before it ships
   <sub>★ 10 · TypeScript · AGPL-3.0 · npm · pushed 2026-10-24 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g withvibe # Node 20+, Docker 24+ required`</sub>
 - **[issue-orchestrator](https://github.com/issue-orchestrator/issue-orchestrator)** — Open-source orchestrator that runs Claude, Codex, and Gemini agents on GitHub issues in isolated worktrees, treating agent output as a claim, not authority: nothing advances until validation and a reviewer agent pass, with crash recovery and human merge authority
-  <sub>★ 10 · Python · Apache-2.0 · source · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 10 · Python · Apache-2.0 · source · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/BruceBGordon/issue-orchestrator.git`</sub>
-- **[Sillage](https://github.com/MarlBurroW/sillage)** — Self-hosted, MIT-licensed, mobile-first web UI that drives the native Claude Code and Codex CLIs on your own machine, with server-side sessions, full-text search, an IDE panel, an MCP board the agents read, and an installable PWA. Single Docker container
-  <sub>★ 10 · TypeScript · MIT · script · pushed 2026-10-30 · Win? · WSL2 · macOS · Linux</sub>
-  <sub>`curl -fsSL https://raw.githubusercontent.com/MarlBurroW/sillage/main/install.sh | bash`</sub>
 - **[cc-code](https://github.com/cc-claws/cc-code)** — Open-source Rust terminal coding agent, Claude Code compatible. Runs DeepSeek, MiMo, GLM with ~50MB memory and 95-99% prompt cache hit rate
   <sub>★ 9 · Rust · Apache-2.0 · psh · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://raw.githubusercontent.com/cc-claws/cc-code/main/scripts/install.ps1 | iex`</sub>
@@ -400,16 +400,16 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 9.1k · TypeScript · MIT · npm · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g aicommits`</sub>
 - **[fx](https://github.com/vercel-labs/fx)** — Tiny, open-source coding agent harness by Vercel Labs, written in Zig; model-agnostic, Unix-shell-like output, and embeddable in agent sandboxes
-  <sub>★ 3.7k · Zig · Apache-2.0 · script · pushed 2026-10-31 · WSL2 · macOS · Linux</sub>
+  <sub>★ 3.7k · Zig · Apache-2.0 · script · pushed 2026-11-01 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://fx.sh/setup.sh | bash`</sub>
 - **[Webcmd](https://github.com/agentrhq/webcmd)** — Self-learning browser infrastructure CLI for coding agents; learns a site once, then reuses it as deterministic per-site commands
   <sub>★ 2.8k · TypeScript · Apache-2.0 · npm · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @agentrhq/webcmd`</sub>
 - **[Vox Director](https://github.com/Alisa0808/vox-director)** — Agent skill that turns one topic into a finished Vox-style paper-collage explainer/ad video (script, collage art, motion, voice-over, music, captions); runs on Atlas Cloud + ffmpeg. Works with Claude Code, Codex &amp; any SKILL.md agent
-  <sub>★ 2.5k · Python · MIT · clone · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2.6k · Python · MIT · clone · pushed 2026-10-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Alisa0808/vox-director.git`</sub>
 - **[AgentBridge](https://github.com/raysonmeng/agent-bridge)** — Local MIT CLI that keeps Claude Code and Codex as live peers in one session for mid-turn review and quota-boundary handoff
-  <sub>★ 416 · TypeScript · MIT · npm · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 419 · TypeScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @raysonmeng/agentbridge`</sub>
 - **[patina](https://github.com/devswha/patina)** — Multilingual CLI and agent skill that audits and rewrites AI-sounding writing patterns while preserving claims, numbers, polarity, and causation
   <sub>★ 382 · JavaScript · MIT · npx · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -421,10 +421,10 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 154 · JavaScript · npx · pushed 2026-06-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx github:Alisa0808/vibe-creating-skill`</sub>
 - **[oh-my-kimi](https://github.com/dmae97/omk)** — Multi-agent orchestration harness for Kimi K2.6. Parallel coding teams in git worktrees, DAG scheduling, live quality gates, terminal HUD, and MCP skill-hooks
-  <sub>★ 152 · TypeScript · MIT · script · pushed 2026-10-30 · Win? · WSL2 · macOS · Linux</sub>
+  <sub>★ 152 · TypeScript · MIT · script · pushed 2026-11-01 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://github.com/dmae97/omk/releases/latest/download/install.sh | sh`</sub>
 - **[RoleCraft](https://github.com/rolecraft-sh/rolecraft)** — Zero-dependency CLI to install AI agent skills as roles &amp; behaviors from any source. Works with 86 coding agents
-  <sub>★ 96 · JavaScript · MIT · npm · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 95 · JavaScript · MIT · npm · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g rolecraft`</sub>
 - **[AI Badger](https://github.com/PVRLabs/aibadger)** — Local-first CLI for extracting clean, relevant codebase context to paste into any AI coding assistant
   <sub>★ 79 · Go · MIT · brew · pushed 2026-10-31 · Win? · WSL2? · macOS · Linux</sub>
@@ -445,7 +445,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 23 · Python · Apache-2.0 · clone · pushed 2026-09-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/legoambarish/portable-handoff`</sub>
 - **[CommitLore](https://github.com/MongLong0214/commitlore)** — Git-native decision memory that stores constraints and ruled-out alternatives as git trailers and notes, giving coding agents only the guidance still in force for the file being edited
-  <sub>★ 18 · TypeScript · MIT · script · pushed 2026-10-18 · Win? · WSL2 · macOS · Linux</sub>
+  <sub>★ 18 · TypeScript · MIT · script · pushed 2026-11-01 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/MongLong0214/commitlore/v1.7.5/install.sh | sh -s v1.7.5`</sub>
 - **[codachi](https://github.com/vincent-k2026/codachi)** — Context window monitor for Claude Code that shows burn rate and time remaining, with an ASCII pet that reacts to your workflow
   <sub>★ 14 · TypeScript · MIT · npm · pushed 2026-04-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -457,8 +457,8 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 10 · JavaScript · MIT · npm · pushed 2026-06-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g runcap # exposes `runcap` (and `aim` as a legacy alias)`</sub>
 - **[dotdog](https://github.com/specdog/dotdog)** — CLI for structured software specs. Write .dog files, compile to .dag graphs, query via MCP server. Validates completeness, detects drift
-  <sub>★ 7 · TypeScript · MIT · npm · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npm install -g dotdog # npm`</sub>
+  <sub>★ 7 · TypeScript · MIT · npm · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npm install -g dotdog`</sub>
 - **[OpenAgentRelay](https://github.com/ShakespeareLabs/open-agent-relay)** — Open-source CLI that exposes a restricted local Claude Code, Codex, or automation as a keyed trusted-LAN capability, with JSON output and meaningful exit codes for agent workflows
   <sub>★ 2 · Python · Apache-2.0 · pipx · pushed 2026-07-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install open-agent-relay`</sub>
@@ -526,7 +526,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## App Builders
 
 - **[Screenshot-to-Code](https://github.com/abi/screenshot-to-code)** — Convert screenshots and designs into clean HTML/React/Vue code using AI
-  <sub>★ 80.9k · Python · MIT · source · pushed 2026-10-27 · Win? · WSL2 · Linux · Docker</sub>
+  <sub>★ 81k · Python · MIT · source · pushed 2026-10-27 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/abi/screenshot-to-code.git`</sub>
 - **[Bolt.diy](https://github.com/stackblitz-labs/bolt.diy)** — Open-source fork of Bolt.new supporting any LLM (local or cloud) for building full-stack apps in the browser
   <sub>★ 20k · TypeScript · MIT · clone · pushed 2026-10-14 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -634,10 +634,10 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## UI Generators
 
 - **[CopilotKit](https://github.com/CopilotKit/CopilotKit)** — Open-source framework for building custom AI copilots, chatbots, and text areas into React apps
-  <sub>★ 38.4k · TypeScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 38.5k · TypeScript · MIT · npx · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx --yes copilotkit@latest onboard start`</sub>
 - **[StyleSeed](https://github.com/bitjaru/styleseed)** — Design engine that makes Claude Code &amp; Cursor produce professional UI — 33 components, 69 design rules, 8 brand skins, and a named framer-motion motion system
-  <sub>★ 996 · JavaScript · MIT · npx · pushed 2026-10-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 997 · JavaScript · MIT · npx · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y skills add bitjaru/styleseed -a codex claude-code -y --copy`</sub>
 - **[Stitch (Google)](https://stitch.withgoogle.com/)** — Google Labs tool using Gemini to generate multi-screen UI designs and front-end code from text or images
   <sub>website</sub>
@@ -670,7 +670,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## Code Review and Refactoring
 
 - **[Qodo PR Agent](https://github.com/The-PR-Agent/pr-agent)** — Open-source AI agent for PR reviews with actionable insights
-  <sub>★ 13.8k · Python · MIT · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 13.9k · Python · MIT · pip · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install "pr-agent[github]"`</sub>
 - **[Sweep](https://github.com/sweepai/sweep)** — AI agent for automating PR reviews and fixes
   <sub>★ 7.7k · Jupyter Notebook · source · pushed 2025-09-18</sub>
@@ -679,13 +679,13 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 1.6k · HTML · MIT · npx · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx brooks-lint install <platform>`</sub>
 - **[OrcaCode Review](https://github.com/Continuum-AI-Corp/Orca-Code-Review)** — GitHub Action for AI pull request review that posts findings inline on the affected lines and blocks merges on critical severity
-  <sub>★ 180 · JavaScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 183 · JavaScript · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @orcarouter/code-review`</sub>
 - **[Swarm Orchestrator](https://github.com/moonrunnerkc/swarm-orchestrator)** — Audits AI-generated pull requests for eleven cheat patterns (relaxed tests, swallowed errors, fake renames). Advisory by default, opt-in merge gate
-  <sub>★ 111 · TypeScript · ISC · clone · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/moonrunnerkc/swarm-orchestrator`</sub>
+  <sub>★ 111 · TypeScript · ISC · npm · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npm install -g swarm-orchestrator`</sub>
 - **[argot](https://github.com/get-tmonier/argot)** — Guardrail that flags AI-written code foreign to a repo's own patterns (unfamiliar deps and APIs, reinvented functions, misplaced code, layering breaks, tests gamed to pass CI), learned statistically from git history. Runs 100% local as a single Rust binary, no second LLM
-  <sub>★ 51 · Rust · MIT · npm · pushed 2026-10-01 · Win? · WSL2? · macOS · Linux</sub>
+  <sub>★ 52 · Rust · MIT · npm · pushed 2026-10-01 · Win? · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @tmonier/argot`</sub>
 - **[Z.ai Code Review](https://github.com/tarmojussila/zai-code-review)** — AI-powered GitHub Pull Request code review using Z.ai models
   <sub>★ 43 · JavaScript · MIT · gh-action · pushed 2026-09-16</sub>
@@ -778,7 +778,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## Testing and QA
 
 - **[agent-qa](https://github.com/vostride/agent-qa)** — Self-improving QA agent for web and mobile apps with natural-language tests, run memory, UI-change adaptation, and regression detection
-  <sub>★ 912 · TypeScript · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 915 · TypeScript · npx · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx agent-qa init`</sub>
 - **[Playwright](https://playwright.dev/)** — Microsoft's end-to-end testing framework (often used with AI-powered test generation)
   <sub>website</sub>
@@ -862,7 +862,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## Documentation
 
 - **[Repowise](https://github.com/repowise-dev/repowise)** — Open-source codebase intelligence tool that indexes repos into dependency graphs, git history, auto-generated docs, and architectural decisions via 7 MCP tools
-  <sub>★ 8.1k · Python · AGPL-3.0 · uv · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 8.1k · Python · AGPL-3.0 · uv · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install repowise # or: pipx install repowise / pip install repowise`</sub>
 - **[README-AI](https://github.com/eli64s/readme-ai)** — AI tool for creating professional README files automatically
   <sub>★ 3k · Python · MIT · source · pushed 2026-10-28 · Win? · WSL2 · Linux · Docker</sub>
@@ -871,7 +871,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 994 · TypeScript · Apache-2.0 · uv · pushed 2026-07-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install codealmanac@latest`</sub>
 - **[SwarmVault](https://github.com/swarmclawai/swarmvault)** — Local-first RAG knowledge vault. Compiles raw sources into a durable markdown wiki with a knowledge graph and hybrid SQLite FTS plus embeddings. Built-in MCP server for Claude Code, Codex, and OpenCode
-  <sub>★ 732 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 733 · TypeScript · MIT · npm · pushed 2026-06-30 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @swarmvaultai/cli`</sub>
 - **[notabene](https://github.com/z29k/notabene)** — Self-hosted docs viewer with Google-Docs-style comments and a human-agent review loop that turns comments into source edits
   <sub>★ 5 · TypeScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -934,7 +934,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 3k · Python · Apache-2.0 · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add cocoindex-io/cocoindex-code`</sub>
 - **[Reflex](https://github.com/reflex-search/reflex)** — Local-first full-text code search engine with MCP server and JSON output built for AI coding agents
-  <sub>★ 76 · Rust · MIT · npm · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 76 · Rust · MIT · npm · pushed 2026-11-01 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g reflex-search`</sub>
 - **[codebase-recon](https://github.com/yujiachen-y/codebase-recon-skill)** — AI coding agent skill that analyzes git history to reveal hotspots, bug magnets, bus factor risks, and development momentum before reading any code
   <sub>★ 41 · MIT · npx · pushed 2026-04-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1009,13 +1009,13 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## AI Frameworks and SDKs
 
 - **[LiteLLM](https://github.com/BerriAI/litellm)** — Unified API proxy for 100+ LLM providers with load balancing, spend tracking, and rate limiting
-  <sub>★ 62.4k · Python · uv · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 62.5k · Python · uv · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install 'litellm[proxy]'`</sub>
 - **[Semantic Kernel](https://github.com/microsoft/semantic-kernel)** — Microsoft's SDK for integrating LLMs into C#, Python, and Java applications
   <sub>★ 28.7k · C# · MIT · pip · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install semantic-kernel`</sub>
 - **[Promptfoo](https://github.com/promptfoo/promptfoo)** — Open-source tool for testing, evaluating, and red-teaming LLM prompts and applications
-  <sub>★ 26.7k · TypeScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 26.7k · TypeScript · MIT · npm · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g promptfoo`</sub>
 - **[AIWG](https://github.com/jmagly/aiwg)** — Deploys reusable agents, skills, and governed workflows across multiple AI coding platforms
   <sub>★ 227 · TypeScript · MIT · npm · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
@@ -1057,7 +1057,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## Database and API Tools
 
 - **[Omnigraph](https://github.com/ModernRelay/omnigraph)** — Typed graph database where agents branch and merge like Git. S3-native, Rust, traversal + vector + BM25 in one runtime
-  <sub>★ 1.8k · Rust · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS · Linux</sub>
+  <sub>★ 1.9k · Rust · MIT · npx · pushed 2026-11-01 · Win? · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add ModernRelay/omnigraph@omnigraph`</sub>
 - **[Supabase AI](https://supabase.com/ai)** — AI for database schema generation, query optimization, and API development
   <sub>website</sub>
@@ -1075,13 +1075,13 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## MCP Servers and Directories
 
 - **[Entroly](https://github.com/juyterman1000/entroly)** — Local-first MCP server for explicit-budget context selection, content-addressed exact recovery, and auditable Context Receipts. Apache-2.0
-  <sub>★ 480 · Python · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 483 · Python · Apache-2.0 · npm · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g entroly`</sub>
 - **[agent-lsp](https://github.com/blackwell-systems/agent-lsp)** — MCP server that gives AI coding agents language server intelligence (go-to-definition, find-references, diagnostics, refactoring, speculative execution) across 30 languages. 56 tools, 22 agent skills, single Go binary
-  <sub>★ 166 · Go · MIT · winget · pushed 2026-10-31 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 166 · Go · MIT · winget · pushed 2026-11-01 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`winget install BlackwellSystems.agent-lsp`</sub>
 - **[piia-engram](https://github.com/Patdolitse/piia-engram)** — Cross-tool persistent memory MCP server. Stores preferences, standards, and lessons locally across Claude Code, Cursor, Codex, and any MCP client
-  <sub>★ 165 · Python · AGPL-3.0 · pip · pushed 2026-10-23 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 165 · Python · AGPL-3.0 · pip · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install piia-engram`</sub>
 - **[terminal-mcp](https://github.com/elleryfamilia/terminal-mcp)** — MCP server that gives AI assistants a shared view of your terminal session. Debug CLIs and TUI apps in real-time or let agents drive terminal-based tools autonomously. Works with Claude Code, Codex, Cursor, opencode, and Copilot
   <sub>★ 147 · TypeScript · MIT · npm · pushed 2026-08-21 · Win · WSL2? · macOS · Linux</sub>
@@ -1177,13 +1177,13 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 2.9k · Rust · Apache-2.0 · script · pushed 2026-10-31 · Win · WSL2 · macOS · Linux</sub>
   <sub>`curl -sSL https://usegitai.com/install.sh | bash`</sub>
 - **[PM Skills](https://github.com/mohitagw15856/pm-claude-skills)** — Open-source (MIT) library of 1,153 Agent Skills as plain-markdown SKILL.md files, covering PRDs, incident postmortems, code review checklists, RFCs, and 35 professions. Installs into Claude Code, Cursor, Windsurf, Zed and 10 more tools with one command, ships an MCP server, and runs free in a browser playground. Install: npx pm-claude-skills add
-  <sub>★ 1.5k · HTML · MIT · npx · pushed 2026-10-23 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.5k · HTML · MIT · npx · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx pm-claude-skills add # any tool: Cursor, Codex, Windsurf, Cline, Zed…`</sub>
 - **[Vestige](https://github.com/samvallad33/vestige)** — Local-first MCP memory server for AI coding agents, with SQLite storage, retention-aware retrieval, provenance/correction tools, and a 3D dashboard
-  <sub>★ 658 · Rust · AGPL-3.0 · npx · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 659 · Rust · AGPL-3.0 · npx · pushed 2026-11-01 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx @vestige/init`</sub>
 - **[Claudexor](https://github.com/razzant/claudexor)** — Local-first control plane for Claude Code, Codex, Cursor, and OpenCode with quota-aware profiles, cross-model review, and best-of-N runs
-  <sub>★ 520 · TypeScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 520 · TypeScript · MIT · npm · pushed 2026-11-01 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`npm install -g claudexor`</sub>
 - **[ClawMetry](https://github.com/vivekchand/clawmetry)** — Self-hosted dashboard that reads the session logs coding agents already write on disk (Claude Code, Codex, Cursor, Aider, Goose, OpenClaw and others), so there is no SDK and nothing sits in the request path. Shows sessions, tool calls, tokens and cache-aware cost per session and per model. MIT core, pip install clawmetry. Website
   <sub>★ 436 · Python · MIT · npx · pushed 2026-10-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1192,22 +1192,22 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 394 · TypeScript · Apache-2.0 · npm · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g martin-loop`</sub>
 - **[harmony-next.skills](https://github.com/linhay/harmony-next.skills)** — Open-source HarmonyOS NEXT workflow toolkit for AI coding agents. Provides offline ArkTS/ArkUI/API references, DevEco/HDC/Emulator automation, UI/UX audit helpers, and smoke-test templates for mobile app development
-  <sub>★ 366 · Python · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 365 · Python · npx · pushed 2026-09-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add linhay/harmony-next.skills --skill harmony-next`</sub>
 - **[ditto](https://github.com/ohad6k/emulo)** — Mines your local Claude Code, Codex, and Cursor session logs into a you.md working profile your agent loads before every task: what you reject, what "done" means to you, when you ask for proof, how you actually work. Local-first, MIT, one command: npx skills add ohad6k/ditto
-  <sub>★ 302 · HTML · MIT · npx · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 303 · HTML · MIT · npx · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add ohad6k/emulo@emulo`</sub>
 - **[app-it](https://github.com/Christian-Katzmann/app-it)** — Open-source (MIT) Claude Code / Codex skill that turns a local web project into an installed, Dock-launchable macOS desktop app — native WebKit window, app icon, and clean start/stop — without Electron or Tauri. Local-only, no telemetry; Windows in beta
   <sub>★ 215 · Shell · MIT · source · pushed 2026-09-30 · macOS</sub>
   <sub>`git clone https://github.com/Christian-Katzmann/app-it.git`</sub>
 - **[codex-profiles](https://github.com/Ducksss/codex-profiles)** — Open-source helper for switching OpenAI Codex CLI and Desktop accounts with isolated CODEX_HOME profiles instead of copying auth files
-  <sub>★ 192 · Shell · MIT · brew · pushed 2026-10-30 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 193 · Shell · MIT · brew · pushed 2026-10-30 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`brew install Ducksss/tap/codex-profile`</sub>
 - **[unslop](https://github.com/MohamedAbdallah-14/unslop)** — CLI and MCP server (Claude Code plugin) that removes named AI writing patterns from text. Targets tricolons, em-dash overuse, hedging stacks, sycophancy openers, and overused vocabulary. Lint-only audit mode and five intensity levels. Useful for cleaning commit messages, PR descriptions, and documentation drafts
-  <sub>★ 166 · Python · MIT · pipx · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 169 · Python · MIT · pipx · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install unslop`</sub>
 - **[agenttrace](https://github.com/luoyuctl/agenttrace)** — Local-first TUI and report generator for AI coding-agent session logs. Tracks cost, tokens, latency, tool failures, health, diffs, and CI gates across Claude Code, Codex CLI, Gemini CLI, Qwen Code, Cline, Cursor exports, Aider, OpenCode/OpenClaw, Kimi CLI, and generic JSON/JSONL traces
-  <sub>★ 152 · Rust · MIT · psh · pushed 2026-10-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 153 · Rust · MIT · psh · pushed 2026-10-26 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://raw.githubusercontent.com/luoyuctl/agenttrace/master/install.ps1 | iex`</sub>
 - **[DSH Studio](https://github.com/Moresyl/dsh-studio)** — Open-source cross-platform desktop host for installing, running, health-checking, and supervising DeepSeek Harness locally
   <sub>★ 128 · Rust · MIT · scoop · pushed 2026-10-05 · Win · WSL2? · macOS · Linux</sub>
@@ -1216,16 +1216,16 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 116 · Python · MIT · source · pushed 2026-06-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/baskduf/harness-starter-kit.git`</sub>
 - **[AgentPlane](https://github.com/basilisk-labs/agentplane)** — Local-first, Git-native CLI harness for repo-local coding-agent work, recording task state, accepted plans, verification evidence, and finish records inside the repository
-  <sub>★ 87 · TypeScript · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 87 · TypeScript · MIT · npm · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g agentplane`</sub>
 - **[Brigade](https://github.com/escoffier-labs/brigade)** — Local-first CLI (MIT) that keeps one reviewed source of the MCP servers, tools, skills, and memory your AI coding agents share, synced into each tool's native config (Claude Code, Codex, Cursor, VS Code, OpenCode, and more) with a review gate before every write and a rollback receipt. No daemon, no lock-in
-  <sub>★ 81 · Python · MIT · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 81 · Python · MIT · npm · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install --global brigadestack@0.30.0`</sub>
 - **[LWC](https://github.com/JanYork/llm-wiki-cli)** — Open-source proactive project-memory CLI for AI coding agents, with source-grounded durable knowledge, SQLite/FTS5 retrieval, atomic updates, optional document/code graphs, and MCP/Skill/Hook integration across supported tools
-  <sub>★ 70 · Rust · Apache-2.0 · source · pushed 2026-10-07 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 71 · Rust · Apache-2.0 · source · pushed 2026-10-07 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/JanYork/llm-wiki-cli.git`</sub>
 - **[EGC](https://github.com/Fmarzochi/EGC)** — Persistent cross-session memory MCP server for 13+ AI coding tools. SQLite-backed state survives context resets and keeps Claude Code, Cursor, Gemini CLI, Codex, Windsurf, Amp, Kiro, VS Code Copilot, Trae, and more in sync. Install: npm install -g @egchq/egc
-  <sub>★ 68 · JavaScript · Apache-2.0 · npm · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 68 · JavaScript · Apache-2.0 · npm · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @egchq/egc`</sub>
 - **[dltHub AI Workbench](https://github.com/dlt-hub/dlthub-ai-harness)** — Toolkit that gives Claude Code, Cursor, and Codex structured, step-by-step workflows and an MCP server for building, exploring, and deploying data pipelines with dlt
   <sub>★ 64 · Python · uv · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1237,7 +1237,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 54 · Swift · MIT · brew · pushed 2026-10-19 · macOS</sub>
   <sub>`brew tap larryxiao/openquack https://github.com/larryxiao/openquack`</sub>
 - **[Wolfpack](https://github.com/almogdepaz/wolfpack)** — Self-hosted browser and mobile control center for persistent AI coding-agent and shell sessions across machines, with direct private access over Tailscale
-  <sub>★ 49 · TypeScript · MIT · npx · pushed 2026-10-29 · WSL2 · macOS · Linux</sub>
+  <sub>★ 49 · TypeScript · MIT · npx · pushed 2026-11-01 · WSL2 · macOS · Linux</sub>
   <sub>`bunx --bun wolfpack-bridge@latest`</sub>
 - **[Harness for Codex](https://github.com/ganimjeong/Harness-for-codex)** — Language-agnostic repository template for consistent Codex and AI-assisted development workflows with AGENTS.md, standard scripts, CI, hooks, and docs
   <sub>★ 49 · Shell · MIT · source · pushed 2026-05-30</sub>
@@ -1246,17 +1246,17 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 47 · Rust · Apache-2.0 · script · pushed 2026-06-08 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://agentdiff.site/install | sh`</sub>
 - **[Forgeo](https://github.com/lucaGazzola/forgeo)** — Scheduled, agent-driven software factory that works a JSON backlog with your coding agent (Claude Code, Codex, opencode), committing each result to the default branch and running a refactoring pass when the backlog is empty
-  <sub>★ 36 · Python · MIT · pipx · pushed 2026-09-30 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 36 · Python · MIT · pipx · pushed 2026-11-01 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pipx install forgeo-cli # Python 3.11+`</sub>
 - **[Data Olympus](https://github.com/knaisoma/data-olympus)** — Governed project knowledge for AI coding agents via MCP. Agents can propose learnings, humans promote accepted guidance, and retrieval filters out expired or superseded rules before they enter future coding sessions
-  <sub>★ 31 · Python · Apache-2.0 · uv · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 31 · Python · Apache-2.0 · uv · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx --from data-olympus data-olympus --help`</sub>
+- **[Mneme HQ](https://github.com/MnemeHQ/mneme)** — Enforce architectural decisions on every AI coding assistant call. Deterministic retrieval and pre-flight governance for Claude Code, Cursor, and agent workflows
+  <sub>★ 30 · Python · MIT · pip · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`pip install mneme-hq`</sub>
 - **[trailhead](https://github.com/ToRvaLDz/trailhead)** — Runs a large project as a map of decision tickets on GitHub Issues, resolved one at a time via a discuss→plan→execute→verify engine with atomic commits, an optional cross-AI plan review, and throwaway UI prototypes. Works with Claude Code and Codex; needs only an authenticated gh CLI. Open source, free
   <sub>★ 30 · JavaScript · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @marcomigozzi/trailhead # auto-detect the host (defaults to ~/.claude)`</sub>
-- **[Mneme HQ](https://github.com/MnemeHQ/mneme)** — Enforce architectural decisions on every AI coding assistant call. Deterministic retrieval and pre-flight governance for Claude Code, Cursor, and agent workflows
-  <sub>★ 29 · Python · MIT · pip · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pip install mneme-hq`</sub>
 - **[harness-ai-kit](https://github.com/seed-forge/harness-ai-kit)** — Package manager for AI agent assets (skills/CLIs/MCPs/loops). Install, lock, and sync skills across Codex, Claude Code, Cursor, Kiro with SAT-based dependency resolution and SHA-256 lockfile. 23 curated enterprise skills included. Available on PyPI
   <sub>★ 25 · Python · Apache-2.0 · source · pushed 2026-08-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/seed-forge/harness-ai-kit.git`</sub>
@@ -1306,7 +1306,7 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 11 · TypeScript · MIT · clone · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/labmimors/dsh-mcp-lens.git`</sub>
 - **[ControlKeel](https://github.com/aryaminus/controlkeel)** — Governance/control plane for AI coding agents. Validates risky actions, records findings, gates approvals, tracks budgets/providers, and creates proof bundles across Claude Code, Codex CLI, OpenCode, Cursor, and other hosts
-  <sub>★ 10 · Elixir · psh · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 10 · Elixir · psh · pushed 2026-11-01 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://github.com/aryaminus/controlkeel/releases/latest/download/install.ps1 | iex`</sub>
 - **[PinkCode](https://github.com/3xian/PinkCode)** — Open-source desktop GUI for Grok Build with parallel agent sessions, live activity timelines, usage visualizations, file-change review, and permission controls over ACP
   <sub>★ 9 · TypeScript · Apache-2.0 · source · pushed 2026-09-25 · Win · WSL2 · macOS · Linux?</sub>
@@ -1492,10 +1492,10 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 ## DevOps and Infrastructure
 
 - **[token-optimizer](https://github.com/alexgreensh/token-optimizer)** — Context and token-cost optimizer for AI coding agents. Finds wasted "ghost tokens," survives compaction, and reduces context-quality decay, with native plugins for Claude Code, Codex, OpenCode, and OpenClaw
-  <sub>★ 2.8k · Python · clone · pushed 2026-10-31 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 2.8k · Python · clone · pushed 2026-11-01 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/alexgreensh/token-optimizer.git`</sub>
 - **[KubeStellar Console](https://github.com/kubestellar/console)** — Open-source multi-cluster Kubernetes dashboard with an MCP server (kc-agent) enabling AI coding agents to query and manage clusters via natural language
-  <sub>★ 152 · TypeScript · Apache-2.0 · brew · pushed 2026-10-31 · Win? · WSL2 · macOS · Linux?</sub>
+  <sub>★ 152 · TypeScript · Apache-2.0 · brew · pushed 2026-11-01 · Win? · WSL2 · macOS · Linux?</sub>
   <sub>`brew tap kubestellar/tap`</sub>
 - **[Datadog](https://www.datadoghq.com/)** — Monitoring and observability with AI-powered insights
   <sub>website</sub>
@@ -1552,10 +1552,10 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
   <sub>★ 2.8k · Go · brew · pushed 2026-10-30 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`brew install bearer/tap/bearer`</sub>
 - **[repo-forensics](https://github.com/alexgreensh/repo-forensics)** — Offline security scanner for AI-agent repos, skills, plugins, and MCP servers; detects prompt injection, credential theft, and manifest drift
-  <sub>★ 201 · Python · gh-action · pushed 2026-10-23</sub>
+  <sub>★ 202 · Python · gh-action · pushed 2026-11-01</sub>
   <sub>`uses: alexgreensh/repo-forensics@main # in .github/workflows/*.yml`</sub>
 - **[gate.cat](https://github.com/BGMLAI/gate.cat)** — Deterministic, fail-closed action veto for AI coding agents that blocks irreversible shell commands (rm -rf, DROP TABLE, terraform destroy) and secret exfiltration before they run, with no LLM in the veto path. Works as a Claude Code hook, a gated shell for any CLI agent, or a local OpenAI-API proxy
-  <sub>★ 2 · Python · Apache-2.0 · pip · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 2 · Python · Apache-2.0 · pip · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install gate.cat # core (inside a venv)`</sub>
 - **[Checkmarx](https://checkmarx.com/)** — AI-enhanced SAST with comprehensive vulnerability detection
   <sub>website</sub>
@@ -1603,6 +1603,6 @@ Curated by **[ai-for-developers/awesome-ai-coding-tools](https://github.com/ai-f
 
 ---
 
-Snapshot 2026-10-31. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-01. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

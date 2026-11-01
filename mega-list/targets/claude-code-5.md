@@ -2,26 +2,25 @@
 
 Built for Anthropic's terminal coding agent — skills, hooks, commands, status lines, MCP servers and the clients that wrap it.
 
-**3,364 projects** · 3,172 with stars to rank by · 11,846,647 combined stars
+**3,374 projects** · 3,185 with stars to rank by · 11,901,728 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=claude-code)
 
-✨ **208 new to the atlas** in the 10/31/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=claude-code&new=1).
+✨ **15 new to the atlas** in the 11/01/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=claude-code&new=1).
 
 Page **5** of 5, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](claude-code.md) · [2](claude-code-2.md) · [3](claude-code-3.md) · [4](claude-code-4.md) · **5**.
 
-## Also here, unranked (192)
+## Also here, unranked (189)
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 7–192 of 192. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 8–189 of 189. The rest are on this page's other parts, linked above and below.</sub>
 
-- **[AAR-Labs/snapdeploy-mcp](https://github.com/AAR-Labs/snapdeploy-mcp)** — Deploy and manage SnapDeploy apps (Docker containers on AWS) from Claude Code, Cursor, Codex or Gemini CLI: builds, logs, env vars, add-ons, domains
 - **[AceDataCloud/fish-audio](https://github.com/AceDataCloud/Skills/tree/main/skills/fish-audio)** — Generate speech and clone voices with Fish Audio
 - **[active-listening](https://github.com/josharsh/active-listening)** — Detect developer preferences during conversation ("never push without asking", "always use const") and remember them across sessions. Auto-saves to disk and re-applies in every future conversation
 - **[adanb13/cirdan](https://github.com/adanb13/cirdan)** — Fingerprints, graphs and watches the live infrastructure an agent can reach (Docker, Kubernetes, cloud, IaC) and detects incidents
 - **[Adashuai5/quota-autopilot](https://github.com/Adashuai5/quota-autopilot)** — Schedule background Codex and Claude Code tasks around subscription quota, reset windows, and recent human activity
-- **[agent-chain-doctor](https://github.com/elfovo/agent-chain-doctor)** ✨ <sub>Added 10/31/26</sub> — Read-only shell diagnostic for scheduled AI-agent chains; checks launchd, cron and systemd state and logs for the ways an unattended agent stops silently
+- **[agent-chain-doctor](https://github.com/elfovo/agent-chain-doctor)** — Read-only shell diagnostic for scheduled AI-agent chains; checks launchd, cron and systemd state and logs for the ways an unattended agent stops silently
 - **[agent-diff-guard](https://github.com/cubxxw/agent-diff-guard)** — Pre-push guardrail that flags high-risk coding-agent diffs such as CI/CD changes, dependency edits, test deletions, hardcoded secrets, and task-scope drift before merge
 - **[Agent-Ready Repository Auditor](https://github.com/wrightops-ai/agent-ready-repo-auditor)** — Free GitHub Action that scores public repositories for Codex, Claude Code, Copilot, and Cursor readiness—without cloning or executing code
 - **[agent-sdk-dev](https://github.com/ccplugins/awesome-claude-code-plugins/tree/HEAD/plugins/agent-sdk-dev)** — photo-led short-form vertical reels (Instagram/TikTok/YouTube Shorts/Facebook) via MCP, $0.06/render, 50 free seeds, no subscription
@@ -35,23 +34,23 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[alebgl77/ftp-deploy-mcp](https://github.com/alebgl77/ftp-deploy-mcp)** — Deploy files to FTP, FTPS or SFTP servers: multi-server config, recursive deploys with dry-run and excludes, path jails, read-only mode and FileZilla import
 - **[Antheurus/sshepherd](https://github.com/Antheurus/sshepherd)** — Source for the sshepherd skill - credential-isolated SSH operations, service control, logs, configuration changes, Postgres introspection, and declarative deploys through preconfigured aliases (MIT)
 - **[apitube/news-api-skills](https://github.com/apitube/news-api-skills)** — Search worldwide news by keyword, entity, sentiment, source, date
-- **[arif-js/agentsensor](https://github.com/arif-js/agentsensor)** ✨ <sub>Added 10/31/26</sub> — Zero-config runtime and browser error sensor for AI coding agents: intercepts dev server crashes and in-browser exceptions with source-mapped stack traces for Claude Code, Cursor and Codex
+- **[arif-js/agentsensor](https://github.com/arif-js/agentsensor)** — Zero-config runtime and browser error sensor for AI coding agents: intercepts dev server crashes and in-browser exceptions with source-mapped stack traces for Claude Code, Cursor and Codex
 - **[arsentev-ai/contextburn](https://github.com/arsentev-ai/contextburn)** — Measures Claude Code session efficiency: the share of tokens that became output versus re-read context, by tokens and cost, from local transcripts
 - **[asinha07/spoor](https://github.com/asinha07/spoor)** — Tells AI agents what changed across VictoriaMetrics, VictoriaLogs and VictoriaTraces, and where it started: a ranked, token-budgeted digest that separates root causes from echoes using trace structure
 - **[assaylabdesk-sudo/assay-lite](https://github.com/assaylabdesk-sudo/assay-lite)** — Source for calibrate-first
-- **[AugustusW/audio-tldr](https://github.com/AugustusW/audio-tldr-skill/tree/main/skills/audio-tldr)** ✨ <sub>Added 10/31/26</sub> — Summarize videos and podcasts with local, cached transcription
-- **[avikchakraborty060-create/The-top-innovation](https://github.com/avikchakraborty060-create/The-top-innovation)** ✨ <sub>Added 10/31/26</sub> — Lossless context guard for coding agents: outlines large files with line ranges and digests noisy command output (tests, builds, installs), with full output always retrievable. pipx install skimread
+- **[AugustusW/audio-tldr](https://github.com/AugustusW/audio-tldr-skill/tree/main/skills/audio-tldr)** — Summarize videos and podcasts with local, cached transcription
+- **[avikchakraborty060-create/The-top-innovation](https://github.com/avikchakraborty060-create/The-top-innovation)** — Lossless context guard for coding agents: outlines large files with line ranges and digests noisy command output (tests, builds, installs), with full output always retrievable. pipx install skimread
 - **[background-timer](https://github.com/culminationAI/background-timer)** — Background timer with task notifications -- set delayed checks without blocking conversation
-- **[bartdudzic/keepmacawake](https://github.com/bartdudzic/keepmacawake)** ✨ <sub>Added 10/31/26</sub> — Source for keepmacawake
-- **[beastlabai/multi-llm](https://github.com/beastlabai/multi-llm-plugin/tree/master/skills/multi-llm)** ✨ <sub>Added 10/31/26</sub> — Reviews plans, code, and commits with multiple coding CLIs
+- **[bartdudzic/keepmacawake](https://github.com/bartdudzic/keepmacawake)** — Source for keepmacawake
+- **[beastlabai/multi-llm](https://github.com/beastlabai/multi-llm-plugin/tree/master/skills/multi-llm)** — Reviews plans, code, and commits with multiple coding CLIs
 - **[BlogBurst](https://github.com/shensi8312/blogburst-claude-skill)** — Autonomous social media manager for Twitter/Bluesky/Telegram/Discord — writes posts, replies, learns what works. Replaces a $500-1,500/mo freelance SMM for $29-99/mo. Public endpoints demo content be…
 - **[bobaba99/motionlint](https://github.com/bobaba99/motionlint)** — Lint web animations with deterministic checks on the live page (duration, easing, stagger, exits, reduced motion, hover) plus optional vision-LLM UX review
 - **[bobusang](https://github.com/jun0-ds/bobusang)** — Multi-device memory system for Claude Code. Syncs context across Windows, WSL2, and Linux with git-based auto-sync
 - **[bosmdavid-gif/dropthehassle-skill](https://github.com/bosmdavid-gif/dropthehassle-skill)** — Official DropTheHassle source for the dropthehassle-publish skill - check that a folder is a finished static build, publish it to a free HTTPS link, hand the human the claim link and verify it is liv…
 - **[Bria-AI/bria-ai](https://github.com/Bria-AI/bria-skill/tree/main/skills/bria-ai)** — Remove video backgrounds for transparent, alpha-channel clips
-- **[brodesigns/gsc-readonly-mcp](https://github.com/brodesigns/gsc-readonly-mcp)** ✨ <sub>Added 10/31/26</sub> — Read-only Google Search Console MCP server: search analytics, sitemap status, URL inspection, property listing. No write scope requested from Google at all, not even gated. npx -y @brodesigns/gsc-rea…
+- **[brodesigns/gsc-readonly-mcp](https://github.com/brodesigns/gsc-readonly-mcp)** — Read-only Google Search Console MCP server: search analytics, sitemap status, URL inspection, property listing. No write scope requested from Google at all, not even gated. npx -y @brodesigns/gsc-rea…
 - **[Brunovncs/texel-mcp](https://github.com/Brunovncs/texel-mcp)** — Minecraft skins and textures as code: JSON specs compiled to PNG, with a review an agent can act on. Skins, 57 mob textures, blocks, items, GUI and particles, animated or glowing, and resource packs…
-- **[CanvasKeep/canvaskeep-mcp](https://github.com/CanvasKeep/canvaskeep-mcp)** ✨ <sub>Added 10/31/26</sub> — Create and edit Excalidraw diagrams in a CanvasKeep workspace: generate diagrams from nodes and edges with auto-layout, organize them into folders, and read or save full scenes, with local decryption…
+- **[CanvasKeep/canvaskeep-mcp](https://github.com/CanvasKeep/canvaskeep-mcp)** — Create and edit Excalidraw diagrams in a CanvasKeep workspace: generate diagrams from nodes and edges with auto-layout, organize them into folders, and read or save full scenes, with local decryption…
 - **[cc-audit](https://github.com/sisyphusse1-ops/cc-audit)** — Single-file Python linter that scores any CLAUDE.md / AGENTS.md against a 12-rule baseline. Flags leaked secrets (GitHub PATs, AWS keys, PayPal links), the 200-line compliance cliff, and missing proj…
 - **[ces107/agent-forge](https://github.com/Ces107/agent-forge)** — Source for launch-check
 - **[chrono-meta/context-doctor](https://github.com/chrono-meta/forge-harness/tree/main/plugins/fh-meta/skills/context-doctor)** — Generates .claudeignore and flags context bloat before it costs tokens
@@ -66,10 +65,10 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[Cohesivity](https://github.com/cohesivity-org/cohesivity-plugin/tree/main/packages/gemini)** — cohesivity.ai offers free agent native backend services. Anonymous account (no-signup) to get started through MCP or API. Hosting, postgres, email, storage, containers, LLMs, voice and third-party AP…
 - **[cohesivity-org/cohesivity-skill](https://github.com/cohesivity-org/cohesivity-skill)** — Official Cohesivity skill - agent provisioned backend infrastructure covering Postgres, hosting, auth, realtime, storage, cron, email, and AI model APIs over one HTTP API (MIT)
 - **[coinpaprika/coinpaprika-api](https://github.com/coinpaprika/skills/tree/main/coinpaprika-api)** — Crypto market data for 12,000+ coins and 350+ exchanges
-- **[commentkeyword/agent-toolkit](https://github.com/commentkeyword/instagram-mcp-server)** ✨ <sub>Added 10/31/26</sub> — Source for comment-to-dm-cta
-- **[csanadymiklos/lauther-js](https://github.com/csanadymiklos/lauther-js/tree/main/packages/lauther-mcp)** ✨ <sub>Added 10/31/26</sub> — Let an agent ask its owner first, on their phone, before doing something irreversible. ask_approval blocks until a person answers and distinguishes DENIED from NO ANSWER, so a timeout is never read a…
+- **[commentkeyword/agent-toolkit](https://github.com/commentkeyword/instagram-mcp-server)** — Source for comment-to-dm-cta
+- **[csanadymiklos/lauther-js](https://github.com/csanadymiklos/lauther-js/tree/main/packages/lauther-mcp)** — Let an agent ask its owner first, on their phone, before doing something irreversible. ask_approval blocks until a person answers and distinguishes DENIED from NO ANSWER, so a timeout is never read a…
 - **[cuqu-net/cuqu-skill](https://github.com/cuqu-net/cuqu-skill)** — Find, book, and pay for local offline social activities (board games, badminton, hiking, frisbee and 100+ hobby categories) across cities in China via natural language. Hosted MCP gateway (agent.cuqu…
-- **[cyberdroid2077/opsecforge-tools](https://github.com/cyberdroid2077/opsecforge-tools/tree/main/packages/opsecforge-mcp)** ✨ <sub>Added 10/31/26</sub> — Local stdio server that keeps secrets out of coding-agent context: redact_file takes a path and returns only redacted content, scan_secrets checks staged changes before commit, plus offline webhook s…
+- **[cyberdroid2077/opsecforge-tools](https://github.com/cyberdroid2077/opsecforge-tools/tree/main/packages/opsecforge-mcp)** — Local stdio server that keeps secrets out of coding-agent context: redact_file takes a path and returns only redacted content, scan_secrets checks staged changes before commit, plus offline webhook s…
 - **[daniloneto/bitbucket-mcp](https://github.com/daniloneto/bitbucket-mcp)** — Bitbucket Cloud pull-request review: read PRs, diffs, comments, commits and files, post inline or general comments, approve or request changes
 - **[dbhq-uk/heliograph](https://github.com/heliograph-io/heliograph)** — Run commands on machines you cannot SSH into, such as air-gapped or bastion-only hosts, via git, file shares or S3, with timestamped run logs
 - **[dependabot-triage](https://github.com/akshayrao14/git-practices/tree/main/skills/dependabot-triage)** — Defensive Dependabot triage for JS/TS repos (npm, pnpm, yarn, bun) — picks the *minimal* patched version that supersets every CVE in the cluster, maps every import site into Public/API · Client-Bundl…
@@ -80,25 +79,24 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[EngMarchG/agent-bridge](https://github.com/MarchGho/agent-bridge)** — Lets Claude Code and Codex steer each other's live desktop chats through Windows UI Automation: list and read chats, send messages or mid-turn steers, and pause, resume or edit Codex goals
 - **[epistemedeus/skillguard](https://github.com/epistemedeus/skillguard)** — Static scanner that checks Claude Code skills, plugins and MCP servers for exfiltration, install hooks and prompt injection before you install them
 - **[expert-dispatch](https://github.com/simonsysun/expert-dispatch)** — Specialist Dispatch Pattern -- let cheap AI assistants delegate complex tasks to Claude Code CLI. Bash adapter with run/resume/review workflow, session continuity, per-project directories, and struct…
-- **[f-o-x11/perq-skill](https://github.com/f-o-x11/perq-skill)** ✨ <sub>Added 10/31/26</sub> — Source for perq
+- **[f-o-x11/perq-skill](https://github.com/f-o-x11/perq-skill)** — Source for perq
 - **[fclairamb/solidping-plugin](https://github.com/fclairamb/solidping-plugin/tree/main/skills/solidping-monitoring)** — MIT official source for the solidping skill - uptime checks across 40+ types, results, incidents, diagnosis and status pages through the hosted SolidPing MCP server, with every write confirmed by the…
 - **[fredyee/hallucc-mcp](https://github.com/fredyee/hallucc-mcp)** — Claim-level hallucination detection with sources, agent trajectory verification, risk gating for computer-use actions and prompt-injection defense
 - **[gambadio/apple-productivity-mcp](https://github.com/gambadio/apple-productivity-mcp)** — 133 tools for local Apple apps, iWork documents, files and media, plus optional allowlisted Shortcuts
 - **[GiaSip/giasip-research](https://github.com/GiaSip/giasip-skills/tree/main/skills/giasip-research)** — Source-linked research reports with explicit unresolved checks
 - **[glennprime/synthnet-mcp](https://github.com/glennprime/synthnet-mcp)** — SynthNet, a social network for AI agents: join with a keypair, paint a daily self-portrait, reply to humans and agents, and keep a persistent reputation
 - **[gridhra/port-keeper-mcp](https://github.com/gridhra/port-keeper-mcp)** — Leases development port blocks to each clone or git worktree, writes .env files and resolves service names to URLs so parallel agents get their own ports
-- **[Grit-77/checking-delivery](https://github.com/Grit-77/done-is-a-claim/tree/main/skills/checking-delivery)** ✨ <sub>Added 10/31/26</sub> — Check delivery at its destination and separate acknowledgements from verified consumer results
+- **[Grit-77/checking-delivery](https://github.com/Grit-77/done-is-a-claim/tree/main/skills/checking-delivery)** — Check delivery at its destination and separate acknowledgements from verified consumer results
 - **[grokpack](https://github.com/Rennlabs/grokpack)** — Unofficial Grok Build companion suite for Claude Code: observe (orientation card), drive (Grok executes / Claude orchestrates + gate), display (tmux HUD). MIT
 - **[GT-dinuo/server-ops-mcp](https://github.com/GT-dinuo/server-ops-mcp)** — Server operations locally or over SSH: log troubleshooting, CPU, memory and disk monitoring, code edits, and Nginx and certificate management
 - **[hahahahahahahahah6/browser-buddy](https://github.com/hahahahahahahahah6/browser-buddy)** — MCP server + Chrome extension (MV3) that lets coding agents read pages through the user's real, logged-in Chrome; stdlib-only, local
-- **[haison8x/geogebra-mcp](https://github.com/haison8x/geogebra-mcp)** ✨ <sub>Added 10/31/26</sub> — Draw and edit plane-geometry figures live in GeoGebra Calculator: run constructions, inspect objects, verify properties (angles, collinearity, midpoints) and take screenshots so the AI can fix its ow…
+- **[haison8x/geogebra-mcp](https://github.com/haison8x/geogebra-mcp)** — Draw and edit plane-geometry figures live in GeoGebra Calculator: run constructions, inspect objects, verify properties (angles, collinearity, midpoints) and take screenshots so the AI can fix its ow…
 - **[haljishi/vidwords-mcp](https://github.com/haljishi/vidwords-mcp)** — Search YouTube video transcripts and frames (slides, charts, on-screen text) and get matching moments with timestamped links and verified citations
 - **[harshmaur/apify-linkedin-jobs-scraper](https://github.com/harshmaur/apify-linkedin-jobs-scraper)** — Source for apify-linkedin-jobs-scraper
 - **[harshmaur/apify-tiktok-scraper](https://github.com/harshmaur/apify-tiktok-scraper)** — Source for apify-tiktok-scraper
 - **[hashicorp/new-terraform-provider](https://github.com/hashicorp/agent-skills/tree/main/plugins/terraform/skills/new-terraform-provider)** — Manage infrastructure across multiple environments, regions, and cloud accounts
 - **[hone-skills](https://github.com/ckorhonen/hone-skills)** — 8 hone: skills that run on a cadence (daily/weekly/per-PR) to fight code entropy: method brevity, naming clarity, duplication, magic numbers, broken-windows, naming specificity, test naming, automati…
 - **[hypawave/mcp](https://github.com/hypawave/mcp)** — Non-custodial Bitcoin Lightning commerce: agents buy and sell files, data, APIs and compute on a public marketplace, plus encrypted agent-to-agent messaging
-- **[icohangar-ops/codesentinel](https://github.com/icohangar-ops/codesentinel)** — Detect dead code, circular dependencies, coupling and architectural drift
 - **[igamingsychov/second-deposit-igaming](https://github.com/igamingsychov/second-deposit-igaming)** — Source for second-deposit-igaming
 - **[igamingsychov/watch-igaming](https://github.com/igamingsychov/watch-igaming)** — Source for watch-igaming
 - **[igorolv/loki-mcp-server](https://github.com/igorolv/loki-mcp-server)** — Read-only Grafana Loki (2.6.1 and 3.x) for agents: label and stream discovery, bounded LogQL pages, counts by label or time bucket, and log export; several stands per server
@@ -112,16 +110,15 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[jamalofski/mailprobe-mcp](https://github.com/Jamalofski/mailprobe-mcp)** — Email verification in real time, without sending anything: a valid, risky, invalid or unknown status with a score, disposable, role-based and catch-all detection, and typo suggestions. Remote server…
 - **[jamjet-labs/jamjet-policy](https://github.com/jamjet-labs/jamjet-policy/tree/main/packages/mcp-shim)** — MCP interceptor that applies one YAML policy (block, require approval, audit, budget cap) to tool calls, also usable in Claude Code hooks and agent SDKs
 - **[josifb/whichlib](https://github.com/josifb/whichlib)** — Dependency picker for coding agents: recommends and compares GitHub repos for a need, scored 0-100 on momentum, maintenance, npm/PyPI downloads and license, with a one-line verdict
-- **[justinscott12/modrinth-mcp](https://github.com/justinscott12/modrinth-mcp)** — Search Modrinth and publish Minecraft mods via the Modrinth API: create projects, upload new versions and read project and version metadata
 - **[Kadajett/cockney](https://github.com/Kadajett/cockney)** — MIT source for the cockney skill - terse Cockney-voiced replies and the smallest correct change (reuse, stdlib before dependencies, no speculative abstraction), switching to plain English for securit…
 - **[KasayoDotCom/identityforge-mcp](https://github.com/KasayoDotCom/identityforge-mcp)** — Design kits and brand workflows: browse and apply design systems, create shareable brand projects, and research names, domains and EUIPO trademarks
 - **[kenzotp/mcp-server-zuuna](https://github.com/kenzotp/mcp-server-zuuna)** — Zuuna developer project management: read and update boards, cards and comments, with cards moved automatically by git activity when PRs merge
 - **[kevinmmiddleton/unpaid-intern](https://github.com/kevinmmiddleton/unpaid-intern)** — Source for unpaid-intern
 - **[khwanlabs/khwan-mcp](https://github.com/khwanlabs/khwan-mcp)** — Memory for coding agents built around corrections: distills your corrections into standing rules for later sessions, with isolated memory per project
-- **[kochetkov-ma/brewpage-publish](https://github.com/kochetkov-ma/claude-brewcode/tree/main/skills/brewpage-publish)** ✨ <sub>Added 10/31/26</sub> — Publish pages, files or folder sites to shareable brewpage.app links
+- **[kochetkov-ma/brewpage-publish](https://github.com/kochetkov-ma/claude-brewcode/tree/main/skills/brewpage-publish)** — Publish pages, files or folder sites to shareable brewpage.app links
 - **[kotobuki09/instructree](https://github.com/kotobuki09/instructree)** — Source for the instructree skill - local instruction-scope mapping, metadata and link validation, recursive Copilot import audits, and SARIF reports (MIT)
 - **[lazymac/k-mcp](https://github.com/lazymac2x/lazymac-k-mcp)** — Korea-focused MCP utilities for privacy compliance, KRW/BOK rates, business registration lookup, geocoding, and NLP
-- **[LevelBench-100](https://github.com/levelcfo/levelbench-100)** ✨ <sub>Added 10/31/26</sub> — Empirical benchmark isolating base model capability vs. CLI harness architecture (Claude Code, Codex CLI, Gemini CLI, Antigravity CLI) and deterministic verification playbooks across 100 multi-file a…
+- **[LevelBench-100](https://github.com/levelcfo/levelbench-100)** — Empirical benchmark isolating base model capability vs. CLI harness architecture (Claude Code, Codex CLI, Gemini CLI, Antigravity CLI) and deterministic verification playbooks across 100 multi-file a…
 - **[Lifeboat](https://github.com/noah-thing/lifeboat)** — Failover for coding agents: when Claude Code hits a rate limit, ban, or outage, hands the task to Aider, OpenCode, or a local Ollama model, carrying context. Multi-provider and local resilience, not…
 - **[lildaddyo/braintube-mcp](https://github.com/lildaddyo/braintube-mcp)** — Compiles saved YouTube videos, podcasts, articles, PDFs and Notion/Obsidian notes into a persistent, semantically searchable knowledge base
 - **[Linked-API/linkedin](https://github.com/Linked-API/linkedin-skills/tree/main/linkedin)** — Fetch LinkedIn profiles, search people and companies, send messages, manage connections, create posts, react, comment, and run custom LinkedIn workflows from Claude Code, Codex, Cursor, and Windsurf
@@ -153,16 +150,15 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[Project Workflow System](https://github.com/harperreed/dotfiles/tree/master/.claude/commands)** — by harperreed - A set of commands that provide a comprehensive workflow system for managing projects, including task management, code review, and deployment processes
 - **[prompt-chime](https://github.com/pick/prompt-chime)** — Cross-platform notification plugin with meme sound presets, toast notifications, profiles, quiet hours, and per-project overrides
 - **[protonium](https://github.com/protonium-labs/protonium-marketplace)** — AI agents and productivity tools. Includes AxiomCore, a project &amp; routine management agent: enforced structure (numbered folders, task IDs, wiki memory), plan → approve → execute workflow, agile or W…
-- **[radres/call-me](https://github.com/radres/call-me/tree/main/skill)** ✨ <sub>Added 10/31/26</sub> — Agent phones your iPhone and returns your spoken answer
 - **[readme-best-practices](https://github.com/ofershap/readme-best-practices)** — Stop agents from writing dry API-doc READMEs
 - **[repo-agent-scan](https://github.com/sunxiayi/repo-agent-instruction-security-scan)** — Local deterministic scanner for agent skills and repository instruction files (SKILL.md, AGENTS.md, CLAUDE.md, and IDE rules), with evidence-anchored findings, SARIF, pre-commit, and GitHub Action su…
 - **[repo-visuals](https://github.com/livlign/claude-skills/tree/main/plugins/repo-visuals)** — Designs bespoke GitHub README hero visuals — animated GIF or static PNG — through a structured discovery dialog. Retina capture via Puppeteer + ffmpeg. Heroes merged into HTMLHint, Terminal.Gui, ast-…
 - **[Rheopyrin/db-access-mcp](https://github.com/Rheopyrin/db-access-mcp)** — Query PostgreSQL, MySQL, Redshift and SQL Server over SSH or AWS SSM tunnels, with read-only enforcement, confined exports and pluggable secret providers
-- **[rillsoft/rillsoft-project-mcp](https://github.com/rillsoft/rillsoft-project-mcp)** ✨ <sub>Added 10/31/26</sub> — MCP server built into Rillsoft Project 10 for multi-project resource planning (local, Windows)
-- **[robinfaraj/postel-mcp](https://github.com/robinfaraj/postel-mcp)** ✨ <sub>Added 10/31/26</sub> — Source for postel-writing
+- **[rillsoft/rillsoft-project-mcp](https://github.com/rillsoft/rillsoft-project-mcp)** — MCP server built into Rillsoft Project 10 for multi-project resource planning (local, Windows)
+- **[robinfaraj/postel-mcp](https://github.com/robinfaraj/postel-mcp)** — Source for postel-writing
 - **[ruslanlap/cavemenko](https://github.com/ruslanlap/cavemenko/tree/main/skills/cavemenko)** — Ukrainian pro-drop reply style, measured -49% tokens
 - **[sadayamuthu/mergelock](https://github.com/sadayamuthu/mergelock)** — Merge gate for parallel coding agents: reports conflicts git can't see between two branches (changed signatures vs new call sites, deleted-but-still-used symbols, duplicate functions) for TypeScript…
-- **[Scarwise](https://github.com/DomitorAI/scarwise)** ✨ <sub>Added 10/31/26</sub> — Gemini CLI hooks (BeforeTool/AfterTool) that learn from failed tool calls by themselves and stop a known mistake before it runs; what one agent learns protects your other agents (Claude Code, Codex…
+- **[Scarwise](https://github.com/DomitorAI/scarwise)** — Gemini CLI hooks (BeforeTool/AfterTool) that learn from failed tool calls by themselves and stop a known mistake before it runs; what one agent learns protects your other agents (Claude Code, Codex…
 - **[scoretracker4321/json-mcp-lite](https://github.com/scoretracker4321/json-mcp-lite)** — Serve any JSON file (catalogue, FAQ, price list) as read-only list, keyword search and get-by-id tools over stdio, configured with CLI flags
 - **[sekera-radim/briefgate-mcp](https://github.com/sekera-radim/briefgate-mcp)** — Client intake for AI agents: request files, texts and credentials from clients, follow up automatically and retrieve results when complete
 - **[servelink-swyftlabs/serve-mcp](https://github.com/servelink-swyftlabs/serve-mcp)** — Public HTTPS links for local files, directories or dev servers, via a live tunnel or published copy, with password protection, TTLs and named subdomains
@@ -179,14 +175,14 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[syk8015/claudeusage](https://github.com/syk8015/claudeusage)** — Measure whether a Claude subscription pays off from local Claude Code logs: surviving Claude-written code, rate-limit drivers and chat usage
 - **[SynderAccounting/gl-importer-plugin](https://github.com/SynderAccounting/gl-importer-plugin)** — Official Synder plugin. Import CSV/XLSX accounting data into QuickBooks Online or Xero via the Synder Importer API. 19 MCP tools covering imports, field mapping rules, post-import rules, and entity d…
 - **[t3ratech/market-pulse-mcp](https://github.com/t3ratech/market-pulse-mcp)** — Evidence-graded index of where AI agents can earn: agent-work lanes graded A/B/C/F from recorded payouts, should-I-bid advice, a hash-chained evidence ledger and live agent job listings. Read-only, f…
-- **[target1m/footval-mcp](https://github.com/target1m/footval-mcp)** ✨ <sub>Added 10/31/26</sub> — Source for footval-follow-matches-and-tables, footval-scout-and-rank-players, footval-stats-and-transfer-news, footval-value-and-compare-players
+- **[target1m/footval-mcp](https://github.com/target1m/footval-mcp)** — Source for footval-follow-matches-and-tables, footval-scout-and-rank-players, footval-stats-and-transfer-news, footval-value-and-compare-players
 - **[temporal-core](https://github.com/Evanyuan-builder/temporal-core)** — Make Claude Code agents feel time pass — research-backed temporal awareness via 3 hooks (SessionStart + UserPromptSubmit + PreToolUse) that inject session elapsed and since last action signals into c…
 - **[TensorLink-AI/ephemeris-mcp](https://github.com/TensorLink-AI/ephemeris-mcp)** — Probabilistic time-series forecasting: quantile forecasts from Chronos-2, TimesFM 2.5, Toto 2, TiRex-2 and IBM Granite foundation models, routed to one model, named explicitly, or ensembled. Remote s…
 - **[thecsdoctor/brendangregg-use-tsa-skill](https://github.com/thecsdoctor/brendangregg-use-tsa-skill)** — Source for the brendangregg-use-tsa skill - methodical performance troubleshooting and root-cause analysis with Brendan Gregg's USE and TSA methods, plus evidence-backed RCA and postmortem reporting…
-- **[theluckystrike/mcp-statement-of-account](https://github.com/zovo-one/mcp-statement-of-account)** ✨ <sub>Added 10/31/26</sub> — Client statements of account built from a local invoice, credit-note and deposit ledger: opening balance, every invoice, payment and credit note in date order, closing balance, and receivables aged i…
+- **[theluckystrike/mcp-statement-of-account](https://github.com/zovo-one/mcp-statement-of-account)** — Client statements of account built from a local invoice, credit-note and deposit ledger: opening balance, every invoice, payment and credit note in date order, closing balance, and receivables aged i…
 - **[think-first](https://github.com/ofershap/think-first)** — Plan-before-code behavior modifier for agents
 - **[timini/agentic-verification](https://github.com/timini/agentic-verification)** — MIT source for the agentic-verify and agentic-test-audit skills - check a Python change by running every mutant of the changed lines and writing tests until they catch them, and audit a pytest suite…
-- **[toby7979/sealmyapp-tools](https://github.com/toby7979/sealmyapp-tools)** ✨ <sub>Added 10/31/26</sub> — Offline security helpers for AI-built (vibe-coded) apps: classify whether a key is safe to expose, generate Supabase RLS audit SQL and owner-only policy templates, and pre-launch checklists for Lovab…
+- **[toby7979/sealmyapp-tools](https://github.com/toby7979/sealmyapp-tools)** — Offline security helpers for AI-built (vibe-coded) apps: classify whether a key is safe to expose, generate Supabase RLS audit SQL and owner-only policy templates, and pre-launch checklists for Lovab…
 - **[TokRepo](https://github.com/henu-wang/tokrepo)** — Cross-agent registry and CLI for discovering and installing 220+ AI assets including skills, prompts, MCP configs, and workflows
 - **[TokRepo MCP Server](https://github.com/henu-wang/tokrepo-mcp-server)** — Search and install AI skills, prompts, MCP configs, and workflows from TokRepo from Gemini CLI and other MCP clients
 - **[TrainJudge](https://github.com/Himanshukurrey/trainjudge)** — Diagnoses whether fine-tuning fits, then verifies fine-tunes on held-out task metrics and a regression suite, not training loss
@@ -196,7 +192,7 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 - **[WhichModel](https://github.com/Which-Model/whichmodel-mcp)** — AI model pricing &amp; recommendation MCP server for Claude Code. Helps choose the right model for every task at the best price. Cross-verified data updated every 4 hours. MCP endpoint: https://whichmode…
 - **[work0r-ai/agent-kit](https://github.com/work0r-ai/agent-kit)** — Source for the workorai skill — agent kit workflows (MIT)
 - **[xarl3z/magzdown-agent-tools](https://github.com/xarl3z/magzdown-agent-tools)** — Turn Markdown into a shareable link rendered as a typeset document (tables, Mermaid, math, pagination); content is stored in the URL, not uploaded
-- **[yanniskiefer/harvey-specter](https://github.com/YannisKiefer/harvey-specter)** ✨ <sub>Added 10/31/26</sub> — Source for harvey-specter
+- **[yanniskiefer/harvey-specter](https://github.com/YannisKiefer/harvey-specter)** — Source for harvey-specter
 - **[yonlandwu/chinese-almanac-mcp](https://github.com/yonlandwu/chinese-almanac-mcp)** — Chinese almanac (Tung Shing): daily readings, hour-pillar luck ratings, NASA JPL-based solar terms, auspicious dates, zodiac horoscopes and lucky hours
 - **[yuluo688/gen-image-mcp](https://github.com/yuluo688/gen-image-mcp)** — Generate and edit images via your own OpenAI-compatible or Gemini image APIs and save them into the project directory, with optional model fallback
 - **[zapxlabs/veyra-mcp](https://github.com/zapxlabs/veyra-mcp)** — Give AI agents a wallet with a spending limit. Non-custodial USDC payments on Base with per-payment caps, daily caps, human approval bands and a recipient allowlist, all enforced server-side rather t…
@@ -207,6 +203,6 @@ Page **5** of 5, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-10-31. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-01. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

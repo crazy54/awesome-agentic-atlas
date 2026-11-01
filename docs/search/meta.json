@@ -1,47 +1,47 @@
 {
   "dims": 96,
-  "doc_scale": 0.9097017645835876,
-  "fingerprint": "03336272e16c12bb",
-  "indexed_from_readme": 10560,
+  "doc_scale": 0.9096518754959106,
+  "fingerprint": "47ec4f5f9329f6e7",
+  "indexed_from_readme": 10541,
   "model": "minishlab/potion-base-8M",
   "near": 8,
   "probe": [
     [
       "sandbox",
       [
-        644,
-        498
+        649,
+        499
       ]
     ],
     [
       "orchestration",
       [
-        361,
-        499
+        364,
+        506
       ]
     ],
     [
       "zzqxwv",
       [
-        334,
-        477,
+        333,
+        476,
         259,
         64,
-        409,
+        410,
         52
       ]
     ],
     [
       "caf\u00e9",
       [
-        7375
+        7362
       ]
     ],
     [
       "chat with my pdfs.",
       [
-        163,
-        739,
+        162,
+        733,
         0
       ]
     ],
@@ -50,18 +50,18 @@
       [
         398,
         18,
-        116,
-        91
+        117,
+        90
       ]
     ],
     [
       "Observability Dashboards",
       [
-        481,
-        412,
-        461,
-        496,
-        437,
+        480,
+        411,
+        475,
+        494,
+        436,
         0
       ]
     ],
@@ -70,13 +70,13 @@
       [
         22,
         17,
-        799
+        811
       ]
     ]
   ],
-  "rows": 11229,
+  "rows": 11207,
   "schema": 1,
-  "snapshot": "2026-10-31",
+  "snapshot": "2026-11-01",
   "stop": [
     "a",
     "about",
@@ -316,6 +316,6 @@
     "your"
   ],
   "vocab": 12960,
-  "vocab_scale": 129.4790496826172,
-  "xy_scale": 198.56068420410156
+  "vocab_scale": 129.81289672851562,
+  "xy_scale": 81.93891143798828
 }

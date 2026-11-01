@@ -515,6 +515,11 @@
    "section": "MCP Servers",
    "since": "2026-10-11"
   },
+  "BeatAPI/BeatDesign": {
+   "id": 1340707757,
+   "section": "MCP Servers",
+   "since": "2026-11-01"
+  },
   "Beever-AI/beever-atlas": {
    "id": 1217456816,
    "section": "MCP Servers",
@@ -1049,6 +1054,11 @@
    "id": 1202410617,
    "section": "Observability & Evals",
    "since": "2026-10-11"
+  },
+  "Fanch-hui/codex-bridge": {
+   "id": 1341958316,
+   "section": "MCP Servers",
+   "since": "2026-11-01"
   },
   "Fangx-AI/geo-doctor": {
    "id": 1418204947,
@@ -2350,6 +2360,11 @@
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
   },
+  "NeuralNomadsAI/CodeNomad": {
+   "id": 1087925615,
+   "section": "Coding Agents",
+   "since": "2026-11-01"
+  },
   "NevaMind-AI/memU": {
    "id": 1028070615,
    "section": "Agent Skills",
@@ -2879,6 +2894,16 @@
    "id": 1296471449,
    "section": "Observability & Evals",
    "since": "2026-10-11"
+  },
+  "ShineStormEnhance/Capri-AI": {
+   "id": 1341931908,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-11-01"
+  },
+  "Shyboy0499/precondition-library": {
+   "id": 1368259610,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-11-01"
   },
   "Sidiora-Labs/hyperfide": {
    "id": 1332840481,
@@ -5310,6 +5335,11 @@
    "section": "Agent Skills",
    "since": "2026-10-11"
   },
+  "emanuele-em/kanzo": {
+   "id": 1433111563,
+   "section": "MCP Servers",
+   "since": "2026-11-01"
+  },
   "embabel/embabel-agent": {
    "id": 963665823,
    "section": "Assistants & Domain Agents",
@@ -6380,6 +6410,11 @@
    "section": "Plugins, Themes & Clients",
    "since": "2026-10-11"
   },
+  "jmanico/grim-prompter": {
+   "id": 1437033043,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-11-01"
+  },
   "jmerelnyc/Photo-agents": {
    "id": 1228687488,
    "section": "Context, Memory & RAG",
@@ -7199,6 +7234,11 @@
    "id": 1232669890,
    "section": "Agent Skills",
    "since": "2026-10-11"
+  },
+  "microsoft/TokenEconomizer": {
+   "id": 1416442720,
+   "section": "Coding Agents",
+   "since": "2026-11-01"
   },
   "microsoft/agent-framework": {
    "id": 974445592,
@@ -8282,7 +8322,7 @@
   },
   "pullboard-dev/pullboard": {
    "id": 1408228998,
-   "section": "Orchestrators & Multi-Agent",
+   "section": "Coding Agents",
    "since": "2026-10-31"
   },
   "pulseaiclub/phi": {
@@ -9310,6 +9350,11 @@
    "section": "Agent Skills",
    "since": "2026-10-15"
   },
+  "tettethu/VibeGame": {
+   "id": 1332104789,
+   "section": "Orchestrators & Multi-Agent",
+   "since": "2026-11-01"
+  },
   "text2future/flowix": {
    "id": 1248774202,
    "section": "Context, Memory & RAG",
@@ -9754,6 +9799,11 @@
    "id": 1245591132,
    "section": "Assistants & Domain Agents",
    "since": "2026-10-31"
+  },
+  "wanghao-SunSky/cs329z-chinese": {
+   "id": 1437467754,
+   "section": "Context, Memory & RAG",
+   "since": "2026-11-01"
   },
   "wangmiaozero/pi-harness": {
    "id": 1340676550,
