@@ -118,8 +118,8 @@ import sitewide  # noqa: E402
 # The same dynamic load `19b_refresh.py` and `20_landing.py` use, and for the same reason: the module is
 # named `19_pages`, which is not an identifier, so `import` cannot reach it. Three things are wanted --
 # `beacon()` and `telemetry()`, so those tags live in one file; `b17.SITE`, so the absolute URL in every
-# canonical is the one string the rest of the project links to; and `b16.SHEETS`, so the eleven list
-# labels in `data.json`'s `listed_by` can be turned back into links to the lists themselves.
+# canonical is the one string the rest of the project links to; and the source registry, so the
+# display labels in `data.json` can link back to their curated lists.
 spec = importlib.util.spec_from_file_location("b19", HERE / "19_pages.py")
 b19 = importlib.util.module_from_spec(spec)
 sys.modules["b19"] = b19
@@ -170,25 +170,11 @@ def clip(text: str, limit: int) -> str:
     return text[: limit - 1].rsplit(" ", 1)[0].rstrip(" ,;:.—-") + "…"
 
 
-# ------------------------------------------------------------------ the eleven lists
+# ------------------------------------------------------------------ source lists
 def source_links() -> dict[str, str]:
-    """`listed_by` label -> the repository that list lives in.
-
-    `data.json` stores provenance as a comma-joined string of display labels, which is the right shape
-    for a table cell and useless as a link. Ten of the eleven labels are `16_build_all.SHEETS`, whose
-    rows are `(key, label, nwo, blurb)`; the eleventh is the original orchestrators list, which predates
-    that table and is labelled from `10_parse_sources.SOURCES`. Both are static configuration rather
-    than build cache, so this stays a pure function of the checkout.
-
-    Any label that does not resolve is rendered as plain text rather than dropped, and `main()` says so
-    on stdout -- a list that quietly stopped being clickable on 1,294 pages is not a failure anyone
-    would notice from the output.
-    """
-    links = {label: nwo for _key, label, nwo, *_ in b19.b17.b16.SHEETS}
-    # The orchestrators list by name, because it is the one source with no `SHEETS` row: the whole
-    # collection grew out of it, so it is the original sheet rather than one of "the ten added lists".
-    links.setdefault("Orchestrators", "andyrewlee/awesome-agent-orchestrators")
-    return links
+    """Map each credited display label to the repository of its curated list."""
+    return {b19.b17.LIST_TITLE[source["key"]]: source["nwo"]
+            for source in b19.b17.SOURCES if not source.get("synthetic")}
 
 
 # ------------------------------------------------------------------ the page set
