@@ -1,1180 +1,1290 @@
 {
- "checked": "2026-10-31",
+ "checked": "2026-11-07",
  "repos": {
   "20alexl/claude-engram": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "402signalhq/402signal": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Acqusys/taskeract-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "AdelElo13/claude-harness": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "AgentsMesh/AgentsMesh": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "AlgorithmicResearchGroup/ML-Research-Agent-Public": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "AlgorithmicResearchGroup/ML-Research-Agent-Tasks": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "BerriAI/reliableGPT": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Bloodrock-AI/baseline-agent": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "Calera-Labs/finsec-mcp": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "Cehha79/aka-recht": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Cheapaifun/Cheap_ai": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Connectry-io/connectrylab-architect-cert-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "CorexAI/CorexAI": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "Cubiczan/chp-mcp": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
+  },
+  "Cubiczan/governed-mcp-gateway": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
+  },
+  "Cubiczan/trust-ledger-os": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "CuriousBox-AI/ProdE-mc": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "CyberAlbSecOP/Awesome_GPT_Super_Prompting": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "CyberAlbSecOP/KEVLAR-Anti-Leak-System-Prompts": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "CyberAlbSecOP/MINOTAUR_Impossible_GPT_Security_Challenge": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "DevAgentForge/claude-code-webui": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Dicklesworthstone/meta_skilld": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "DnaFin/claudex": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "ElPaisano/agent-bound": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Elkidogz/technical-change-skill": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "Eugeene1337/LunaAI": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "EvanRMora/agentstatus": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Fzkuji/OpenProgram": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "GraphTechnologyDevelopers/rag-architect": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Guipetris/axiom": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "HEOJUNFO/ai-film-crew": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Hams-Ollo/Project-S.O.C.R.A.T.E.S.": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "IBM/mcp-cli": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
+  },
+  "IBM/wxflows": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "JDDavenport/context-kit": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "JohnBreth/LangChainTest": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Kzino/vorim-mcp-server": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Leutenegger/book-to-skill": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "LiCinCan/blender-ai-mcp-addon": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "LockedinLabs-AI/agent-console": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Lucas2944/prpack": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Lucas2944/prpack-action": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "LuniaKunal/mcp-twitter": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "MetaMindFramework/MetaMind": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Michael-WhiteCapData/ollama-handoff": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "Moha2005269/agentgo-mcp": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "MongLong0214/agent-operator-score": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Moresl/cchub": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Nocetic/flowlyai": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Perseus-Computing-LLC/perseus": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "PierrunoYT/claude-3-artifacts": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "PolicyLayer/Intercept": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "PolicyLayer/PolicyLayer": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "RaheesAhmed/devstream": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "SLP-DEV1/qwen-dap-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Sentinel-Gate/Sentinelgate": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "SergiuPogor/curlshot-mcp": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "Shaisolaris/solaris-dev-shop": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
+  },
+  "ShineStormEnhance/Capri-AI": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "Shpigford/skills": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "ShunsukeHayashi/Miyabi": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "SkatAI/crewai": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Spicy-API/nsfw-ai-skill": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Styro13/Synnex_Symphony": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "Syenzzz/mcd-coupon-strategist": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "TechHU-GS/cc-discipline": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "ThePlugJumbo/openops": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Tiberriver256/mcp-server-github-actions": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "To3akaRin/mac-computer-use": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Turbo-Puffin/measure-mcp-server": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "TwilledWave/Tago": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Unka-Malloc/DAVID": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Verodat/verodat-mcp-server": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "VinciGit00/Scrapegraph-ai": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
-  },
-  "WayneJin0918/Omni-Rewriter": {
-   "status": "404",
-   "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "YasinOnline/AgenticAI": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "ZENG3LD/dig2crawl": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "ZENG3LD/gate4agent": {
    "status": "404",
    "since": "2026-10-24",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "Zamr77/LLM-Deployment-Tools-LLMOps": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "ZelunGlenn/TheAgentsGameAI": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "ZeroDayEvil/ai-security-tool": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "Zydanny/x402-intel-engine": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "adacreativeco/ada-turbo-ai-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "adexbn/walk-kcal": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "agentfm-ai/agent-fm": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "agentmark-ai/agentmark": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "alexcsh0/swarmnode-cpp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "almagashi/friendship_meter": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "amenti-labs/opendivination": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "andyliszewski/grounding-ai": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "anomalyco/ai-skill": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "anpekesen/namegender-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "anthropics/ai-harness-scorecard": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "anvevoice/anvevoice": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "aptratcn/skill-audit": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "arian-gogani/nobulex": {
    "status": "451",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "astafford8488/agentaegis-mcp": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "avabuildsdata/mcp-us-business-data": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "aws-samples/Intelli-Agent": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "axelfreeman/marketing-mindset": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "aydinfer/ai-agents-tool-dev": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "baba786/phabricator-mcp-server": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "bawadou/ai-data-extractor": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "bborota/cairn-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "bjoernzosel/ai-agent-test": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "bonk1t/agentic-platform": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "bottobot/defense-mcp-server": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "breakstageaxe61/genspark-claw": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "cbrock84/headcount": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "cerebrixos-org/tuning-engines-cli": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "cerredz/vidbyte-memory": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "clarvia-project/scanner": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "cloudsealed/cloudsealed-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "composiohq/rube": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "conduit8/conduit8": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "connerlambden/bgpt-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "connerlambden/helium-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "crwdla/tokentab": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "cueapi/cueapi-core": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "damejan80/tokentab": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "dangoddard-trilogy/agent-smith-e2e-test": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "dat999zx/knowl": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "datastax/astra-assistants-api": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "davidahmann/gait": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "dean/HAL": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "devgiordane/openfiles": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "dhiraj-inti/TestAI": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "doomsday-network/doom-pay": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
+  },
+  "doomsday-network/doomsday": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "drewbloom/multiAgentWorkflow": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "dust-tt/dust": {
    "status": "404",
    "since": "2026-10-24",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "dwylq/aicost": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "elder-plinius/BasiliskToken": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "emaarco/agento-patronum": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "enterwiz/ai-anime-art-generator": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "executeautomation/playwright-mcp-server": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "faddy19/AgentProcessingUnit": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "fetchSERP/fetchserp-mcp-server-node": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "fiddler-labs/fiddler-auditor": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "foomprep/toolla": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "fractalmind-ai/agent-manager-skill": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "francescoalemanno/dex": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "garvitsurana/burnd": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "gbatistuta0/appfactory": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "geolabel/geolabel-mcp": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "getrupt/ashra-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "graygnatconsole/mcp-audit-tool": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "gregoriofraile/gasolineras-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "half144/cutaway": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "hashgraph-online/registry-broker": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "hkqr/my-free-code": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "hshintelligence/agent-scrape": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "hustvl/DiVLA": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "hustvl/RoboMamba": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "iamzhihuix/happy-claude-skills": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "iamzhihuix/skills-manage": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "icohangar-ops/codesentinel": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "ilyautov/hh-mcp-ru": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "imnotdev25/crewai-web-render": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "infai-tech/vulnfeed-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "ingero-io/ingero": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "ipythoning/aicfg": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "jatechan/ai-data-extractor": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "jdubois/azure-cli-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "jthack/threat-hunting-with-sigma-rules-skill": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "ker0olos/ignite": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "kill136/axon": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "kilnside/edison": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "krrishdholakia/betterprompt": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "kruzovic7/ai-data-extractor": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "kuri-sun/cc-config-viewer": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "kurtnebiev-elvis4/ai-vertical-saas-gen": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "kyisaiah47/compound-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "lab101-ai/agentictrust": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "langgpt/LangGPT": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "launsion-boop/EchoCoding": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
-  },
-  "libukai/awesome-agent-skills": {
-   "status": "404",
-   "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "loginmqv/mcp-server-prometheus": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "loulanyue/dream-xi-ai": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "lume-cory/eng-security-review-agent": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "lunacompsia-oss/ai-coding-tools-pricing": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "lunacompsia-oss/mcp-server-changelog": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "lunacompsia-oss/mcp-server-deps": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "lunacompsia-oss/mcp-server-license": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "lunary-ai/lunary": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "marykovziridze/screaming-frog-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "matthiastjong/shellgate": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "mavihsrr/LLM_tools": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "metawake/ragtune": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "microsoft/phi-4": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "milisp/codexia": {
    "status": "404",
    "since": "2026-10-24",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "milisp/mcp-linker": {
    "status": "404",
    "since": "2026-10-24",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "milkomida77/guardian-agent-prompts": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "morsechimwai/lemmaly": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "mrprewsh/seo-aeo-engine": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "mturac/recsys-pipeline-architect": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "mutableai/monitors4codegen": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "nex-crm/nex-as-a-skill": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "nickdesi/ZipAI": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "openclaw/skills": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "oschina/gitee": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "particlefuture/MCPDiscovery": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "pathrule/mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "pollinations/chucknorris-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "pollinations/model-context-protocol": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "portia-ai/portia-sdk-python": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "portiaAI/portia-sdk-python": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "prajapatimehul/aws-cost-saver": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "proofofwork-agency/reporecall": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "pulumi/mcp-server": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "pumanitro/global-chat": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "puzzlet-ai/agentmark": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "puzzlet-ai/promptdx": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "realityinspector/simple-llm-exporter": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "reefapi/reefapi-mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "rokbenko/crew-news": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "sascharo/gxtract": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "saurav61091/mcp-openapi": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "sequilade/tokentab": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "sergeyizmailov/knowledge-delta-skills": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "shwetd19/SmartCall-Ai": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "simonweniger/agentkit-sdk": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "sourcegraph/sourcegraph": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "stefantsezarov/SaveSaveSaveSave": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "sunnja69/akephalos": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "swarmnode-ai/swarmnode-dotnet": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "swarmnode-ai/swarmnode-go": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "swarmnode-ai/swarmnode-node": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "swarmnode-ai/swarmnode-python": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "swarmnode-ai/swarmnode-rust": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "tcconnally/perseus": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "theihtisham/agent-shadow-brain": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "theihtisham/omni-skills-forge": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "thenest-hub/nest-ai": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "thirdweb-dev/ai": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "thrash888/terraform-mcp-server": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "tigranbs/mcgravity": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "tldraw/tldraw-llm-starter": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "token-metrics/mcp": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "tom2tomtomtom/redbaez-agent-builder-complete": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "tradecatlabs/vibe-coding-cn": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "trhhubsd/ARTEX": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "trilogy-group/aws-pricing-mcp": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "voidborne-d/behuman": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "voidborne-d/humanize-chinese": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "voidborne-d/lambda-lang": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "voidborne-d/sober-coding": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "voidly-ai/mcp-server": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "vpuna/vpuna-ai-search": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "wack/canary": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "wartzar-bee/enclave": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "wd041216-bit/ironclaw-agent-guard": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "whoisabhishekadhikari/lovable-cleanup": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "woaiys3/deepseek-harness-android-app": {
    "status": "404",
    "since": "2026-10-31",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "wzchav/tokentab": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
+  },
+  "xfloukiex-lab/road-poneglyph": {
+   "status": "404",
+   "since": "2026-11-07",
+   "seen": "2026-11-07"
   },
   "yakuikai/tokentab": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   },
   "yayashuxue/agent-marketplace-proxy": {
    "status": "404",
    "since": "2026-10-22",
-   "seen": "2026-10-31"
+   "seen": "2026-11-07"
   }
  }
 }
