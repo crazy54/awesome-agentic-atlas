@@ -665,6 +665,39 @@ eq("...and a list's key is its nwo", ws.ledger_id({"key": "agents", "nwo": "kyro
 eq("indexed_repos: GitHub rows, lower-cased to their spelling", g.indexed_repos(TMP / "data.json"),
    {"openai/codex": "OpenAI/Codex"})
 
+# The GitHub fetch never asks GitHub about a GitLab row, so its mass-failure guard never counts one.
+b11 = load("fetch_all_for_gitlab_test", "11_fetch_all.py")
+c11 = TMP / "c11"
+c11.mkdir()
+(c11 / "entries_all.json").write_text(json.dumps(
+    [{"nwo": f"gitlab.com/g/p{i}", "owner": f"gitlab.com/g", "repo": f"p{i}", "source_nwo": "openai/codex"}
+     for i in range(80)] + [{"nwo": "openai/codex", "owner": "openai", "repo": "codex", "source_nwo": "openai/codex"}]),
+    encoding="utf-8")
+asked = []
+b11.CACHE, b11.READMES = c11, c11 / "readmes"
+real_fetch, real_recover = b11.fetch, b11.recover
+b11.fetch = lambda want, meta, save: asked.extend(w["nwo"] for w in want)
+b11.recover = lambda want, meta, again: b11.mass_failure(want, meta)
+try:
+    import contextlib
+    import io
+    with contextlib.redirect_stdout(io.StringIO()):
+        b11.main()
+finally:
+    b11.fetch, b11.recover = real_fetch, real_recover
+eq("11_fetch_all asks GitHub about GitHub rows only", asked, ["openai/codex"])
+eq("...so eighty unreadable GitLab rows cannot trip its mass-failure guard",
+   b11.mass_failure([{"nwo": "openai/codex"}], {f"gitlab.com/g/p{i}": {"error": "HTTP 429"} for i in range(80)}), None)
+
+# Upstream drift treats the GitLab scout like any source: a section the taxonomy does not name goes provisional.
+drift = load("drift_for_gitlab_test", "drift.py")
+recs = drift.place([{"source": "gitlab", "category": "MCP Servers"}, {"source": "gitlab", "category": "MCP Servers"},
+                    {"source": "gitlab", "category": "Brand New Shelf"}],
+                   taxonomy.SECTIONS, buckets.BUCKETS if "buckets" in dir() else __import__("buckets").BUCKETS,
+                   {}, list(taxonomy.CATEGORIES))
+eq("drift: an unmapped GitLab section is placed for the run, the mapped one is not",
+   [(r["source"], r["section"]) for r in recs if r.get("category")], [("gitlab", "Brand New Shelf")])
+
 # ======================================================================================== the wiring
 group("the wiring")
 flags = json.loads((ROOT / "config" / "app-flags.json").read_text(encoding="utf-8"))
