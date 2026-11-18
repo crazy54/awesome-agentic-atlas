@@ -292,23 +292,30 @@ html:not(.lxjs) #s1,html:not(.lxjs) #s2,html:not(.lxjs) #s3{display:none}
   <h2 id="learnh">The three ideas that explain everything</h2>
   <details id="q-quant"><summary>What&rsquo;s a quantisation (Q4, Q8)?</summary>
     <p>A model is billions of numbers. Quantising stores each one with fewer digits, the way a JPEG shrinks a
-      photo. <b>Q4</b> keeps about 4 bits a number: roughly a quarter of the original size, and still very
-      good. <b>Q8</b> is closer to the original and twice as big. Below about 3 bits, answers get
-      noticeably worse. We pick Q4 unless your machine needs smaller, and we say when it does.</p></details>
+      photo. <b>Q8</b> keeps 8 bits a number, about half the original size, and most people can&rsquo;t tell
+      it from the original. <b>Q4</b> is under a third of the size and slightly worse. Below about 3 bits,
+      answers get noticeably worse. We pick the best version that runs well on your machine, and we say when
+      we had to squeeze one.</p></details>
   <details id="q-ctx"><summary>Why does context length cost memory?</summary>
     <p>Context is how much the model can keep in mind at once: your conversation so far, or a document you
-      paste in. It sets aside memory for that up front, a little for every word it might hold. We assume
-      about 8,000 tokens (around 12 pages), which is plenty for a chat. Pasting in a whole book needs much
-      more, and on a small machine that can be the difference between fitting and not.</p></details>
+      paste in. It sets aside memory for that up front, a little for every word it might hold, and how much
+      varies a lot between models: Llama 3.1 8B needs about 130 MB per 1,000 tokens, while Qwen3.5 9B needs
+      about 33 MB, because most of its layers keep no such memory. We assume about 8,000 tokens (around 12
+      pages), which is plenty for a chat. Pasting in a whole book needs much more, and on a small machine
+      that can be the difference between fitting and not. &ldquo;Show the numbers&rdquo; gives each
+      model&rsquo;s own figure.</p></details>
   <details id="q-offload"><summary>What does &ldquo;offload&rdquo; mean?</summary>
     <p>A graphics card has its own fast memory. If a model doesn&rsquo;t fit in it, part can live in your
-      ordinary RAM instead and run on the main processor. It still works, but every word waits for the slow
-      part, so it&rsquo;s much slower than a model that fits on the card.</p></details>
+      ordinary RAM instead and run on the main processor. For most models that is much slower, because every
+      word waits for the slow part: a big 70B model split this way writes about 2 words a second. Models
+      called &ldquo;mixture of experts&rdquo; (names with A3B or A4B in them) are the exception. They only
+      use a small part of themselves for each word, so the part kept in RAM is touched lightly, and they
+      often still run well.</p></details>
   <details id="q-unified"><summary>Why does my Mac or handheld say less than its memory?</summary>
     <p>Macs, Steam Decks and similar machines share one pool of memory between the processor and the
       graphics. That&rsquo;s great for AI, because the graphics can use most of it, but the system keeps
-      some for itself. On a Mac, macOS lets the graphics use about two-thirds of the memory by default (three
-      quarters on bigger Macs).</p></details>
+      some for itself. On a Mac, macOS lets the graphics use two-thirds of the memory by default on Macs up to
+      32 GB, and three-quarters on bigger ones.</p></details>
   <details id="q-tokens"><summary>What&rsquo;s a token?</summary>
     <p>The piece of text a model reads and writes at a time: usually part of a word. One English word is
       about 1.3 tokens, so 10 tokens a second is about 7 or 8 words a second, faster than most people
@@ -1019,15 +1026,22 @@ const LOCALUI = ((D, FIT) => {
     const w = wps < 10 ? (Math.round(wps * 10) / 10).toFixed(1) : String(Math.round(wps));
     return `<span data-tps="${tps.toFixed(2)}">Speed: ${esc(FIT.speedWords(tps))} (about ${w} words a second)</span>`;
   };
+  const THINK_TOKENS = 1000;
   const catches = (r, m) => {
-    const out = [];
-    if (r.verdict === "slow" && m && m.reasoning && r.speed.decodeTps >= FIT.THRESHOLDS.great)
-      out.push("It thinks before it answers, writing a lot it doesn’t show you, so at this speed expect a wait of a minute or so before a hard answer starts.");
-    else if (r.verdict === "slow") out.push("Slow here: fine for a short question, tiring for a long chat.");
+    const out = [], tps = r.speed ? r.speed.decodeTps : 0;
+    if (m && m.reasoning && tps) {
+      const wait = Math.round(THINK_TOKENS / tps / 5) * 5;
+      out.push(wait >= 15 ? `It thinks before it answers: on a hard question, expect the first words after about ${wait} seconds.`
+        : "It thinks before it answers, and here that takes only a few seconds.");
+    }
+    if (r.verdict === "slow" && !(m && m.reasoning && tps >= FIT.THRESHOLDS.great))
+      out.push("Slow here: fine for a short question, tiring for a long chat.");
     if (r.verdict === "tight" || r.belowFloor)
       out.push(`Squeezed to fit: this is a smaller version (<a class="lxwhat" href="#q-quant" data-open="q-quant">${esc(r.quant)}</a>), noticeably less sharp. A smaller model may answer better.`);
     if (r.offload)
-      out.push('Part of it runs on the processor (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>), which is what slows it down.');
+      out.push(r.verdict === "great"
+        ? 'Part of it sits in ordinary memory (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>). That&rsquo;s normal for this model, and it still runs well.'
+        : 'Part of it runs from ordinary memory (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>), which is what slows it down.');
     return out.concat(r.notes.filter((n) => !/below the quality we recommend|^Reading images adds/.test(n)).map(esc));
   };
 

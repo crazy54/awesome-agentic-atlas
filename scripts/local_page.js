@@ -179,20 +179,29 @@ const LOCALUI = ((D, FIT) => {
     const w = wps < 10 ? (Math.round(wps * 10) / 10).toFixed(1) : String(Math.round(wps));
     return `<span data-tps="${tps.toFixed(2)}">Speed: ${esc(FIT.speedWords(tps))} (about ${w} words a second)</span>`;
   };
-  // The catch lines: ours first, for the three things a beginner needs named, then the fit method's own
-  // notes verbatim, which are written in plain English for exactly this (fit.md section 6).
-  // A reasoning model is held to twice the speed (fit.md section 6), so one can read "about as fast as you
-  // read" and still be slow: it writes its thinking first. That case gets its own line rather than a
-  // contradiction.
+  // The catch lines: ours first, for the things a beginner needs named, then the fit method's own notes
+  // verbatim, which are written in plain English for exactly this (fit.md section 6).
+  //
+  // A reasoning model writes its thinking before its answer, so its wait is the thinking (about 1,000
+  // tokens, ds-models' figure) at this machine's speed -- said as seconds, because "slow" alone reads as a
+  // contradiction next to "about as fast as you read". Offload is worded by verdict: on a model that still
+  // runs great (a mixture-of-experts model, or a Deck's shared memory) it is a fact, not a warning.
+  const THINK_TOKENS = 1000;
   const catches = (r, m) => {
-    const out = [];
-    if (r.verdict === "slow" && m && m.reasoning && r.speed.decodeTps >= FIT.THRESHOLDS.great)
-      out.push("It thinks before it answers, writing a lot it doesn’t show you, so at this speed expect a wait of a minute or so before a hard answer starts.");
-    else if (r.verdict === "slow") out.push("Slow here: fine for a short question, tiring for a long chat.");
+    const out = [], tps = r.speed ? r.speed.decodeTps : 0;
+    if (m && m.reasoning && tps) {
+      const wait = Math.round(THINK_TOKENS / tps / 5) * 5;
+      out.push(wait >= 15 ? `It thinks before it answers: on a hard question, expect the first words after about ${wait} seconds.`
+        : "It thinks before it answers, and here that takes only a few seconds.");
+    }
+    if (r.verdict === "slow" && !(m && m.reasoning && tps >= FIT.THRESHOLDS.great))
+      out.push("Slow here: fine for a short question, tiring for a long chat.");
     if (r.verdict === "tight" || r.belowFloor)
       out.push(`Squeezed to fit: this is a smaller version (<a class="lxwhat" href="#q-quant" data-open="q-quant">${esc(r.quant)}</a>), noticeably less sharp. A smaller model may answer better.`);
     if (r.offload)
-      out.push('Part of it runs on the processor (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>), which is what slows it down.');
+      out.push(r.verdict === "great"
+        ? 'Part of it sits in ordinary memory (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>). That&rsquo;s normal for this model, and it still runs well.'
+        : 'Part of it runs from ordinary memory (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>), which is what slows it down.');
     // Two of the method's notes are left out: the below-floor one, which the "squeezed" line above already
     // says, and "reading images adds", which is noise to a reader who did not ask about pictures (one who
     // did has the projector counted already, and the note is not written).
