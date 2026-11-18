@@ -33,6 +33,7 @@ python tests/theme_test.py
 python tests/signals_test.py
 python tests/fetch_test.py
 python tests/dead_repos_test.py
+python tests/models_test.py
 python tests/indexnow_test.py
 python tests/newness_test.py
 python tests/discover_test.py

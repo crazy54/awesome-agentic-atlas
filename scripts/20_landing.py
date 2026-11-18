@@ -1289,6 +1289,18 @@ def discover_urls() -> list[str]:
     return b19d.urls()
 
 
+def models_urls() -> list[str]:
+    """The one URL `41_models_page.py` publishes, asked of that stage for the reason `discover_urls` gives:
+    `docs/models/index.html` is in no sitemap otherwise, and `tests/indexnow_test.py` makes that a red build.
+    That stage imports `25_collections.py`, which imports this module, so it is loaded the same way."""
+    sys.modules.setdefault("b20", sys.modules[__name__])
+    mspec = importlib.util.spec_from_file_location("b41", HERE / "41_models_page.py")
+    b41 = importlib.util.module_from_spec(mspec)
+    sys.modules["b41"] = b41
+    mspec.loader.exec_module(b41)
+    return b41.urls()
+
+
 def sitemap(pages: list[Page], snapshot: str, extra: list[str] = ()) -> str:
     """Sitemap 0.9, the root first.
 
@@ -1478,7 +1490,8 @@ def main() -> None:
     (OUT / "pages.css").write_text(CSS + sitewide.font_faces("") + sitewide.BUILDTAGS_CSS, encoding="utf-8")
     colls = collection_urls(data)
     disc = discover_urls()
-    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc), encoding="utf-8")
+    mods = models_urls()
+    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc + mods), encoding="utf-8")
     (OUT / "robots.txt").write_text(robots(), encoding="utf-8")
     keyfile = b19.indexnow_key_file()
     (OUT / keyfile).write_text(key_text(b19.indexnow_key()), encoding="utf-8")
@@ -1495,7 +1508,7 @@ def main() -> None:
     print(f"{tops} topic · {tgt_n} target · {written - tops - tgt_n} crossing "
           f"= {written} pages · {kb(total)}")
     print(f"pages.css + sitemap.xml + robots.txt + {keyfile} · {kb(shells)} · "
-          f"{len(pages) + 1 + len(colls) + len(disc)} URLs, lastmod {data['snapshot']} "
+          f"{len(pages) + 1 + len(colls) + len(disc) + len(mods)} URLs, lastmod {data['snapshot']} "
           f"({len(colls)} of them curated collections, from scripts/25_collections.py; "
           f"{len(disc)} Discover, from scripts/19d_discover.py)")
     print(f"IndexNow key hosted at {SITE}{keyfile}"

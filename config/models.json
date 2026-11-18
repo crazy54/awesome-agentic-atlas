@@ -1,0 +1,29 @@
+{
+  "_comment": "Inputs to scripts/40_models.py, the models index. quantisers: the repos whose GGUF/MLX/AWQ/GPTQ/FP8 re-packagings are attached to a model (its own author's always are). labs: authors whose releases count as official even before they reach 200k monthly downloads. exclude: model ids never listed. ollama: Ollama library name:tag for a model the name heuristic cannot match; each is still size-checked, see handbook/pipeline.md#the-models-index.",
+  "quantisers": ["bartowski", "unsloth", "lmstudio-community", "ggml-org", "mlx-community", "RedHatAI", "hugging-quants"],
+  "labs": [
+    "Qwen", "meta-llama", "google", "mistralai", "microsoft", "deepseek-ai", "nvidia", "ibm-granite", "allenai",
+    "HuggingFaceTB", "openai", "zai-org", "THUDM", "moonshotai", "MiniMaxAI", "XiaomiMiMo", "baidu", "tencent",
+    "LiquidAI", "CohereLabs", "ServiceNow-AI", "stepfun-ai", "inclusionAI", "NousResearch", "apple", "BAAI",
+    "Alibaba-NLP", "jinaai", "nomic-ai", "intfloat", "sentence-transformers", "mixedbread-ai", "Snowflake",
+    "openbmb", "internlm", "tiiuae", "ai21labs", "swiss-ai", "arcee-ai", "PrimeIntellect", "Salesforce",
+    "facebook", "kyutai", "hexgrad", "canopylabs", "ResembleAI", "nari-labs", "fishaudio", "Systran",
+    "distil-whisper", "ByteDance-Seed", "meituan-longcat", "Kwai-Klear", "rednote-hilab", "essentialai",
+    "OpenGVLab", "lmms-lab", "mistral-community", "bigcode", "upstage", "LGAI-EXAONE",
+    "naver-hyperclovax", "sarvamai", "utter-project", "CohereForAI", "speakleash", "Motif-Technologies"
+  ],
+  "exclude": [],
+  "ollama": {
+    "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": "deepseek-r1:1.5b",
+    "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": "deepseek-r1:7b",
+    "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B": "deepseek-r1:14b",
+    "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B": "deepseek-r1:32b",
+    "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": "deepseek-r1:70b",
+    "microsoft/phi-4": "phi4:14b",
+    "microsoft/Phi-4-mini-instruct": "phi4-mini:3.8b",
+    "nomic-ai/nomic-embed-text-v1.5": "nomic-embed-text:v1.5",
+    "BAAI/bge-m3": "bge-m3:latest",
+    "mixedbread-ai/mxbai-embed-large-v1": "mxbai-embed-large:latest",
+    "sentence-transformers/all-MiniLM-L6-v2": "all-minilm:latest"
+  }
+}
