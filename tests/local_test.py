@@ -75,31 +75,27 @@ def refuses(name, mutate, needle):
     true(f"refuses {name}", False, "it was accepted")
 
 
-def dev(c, **kw):
-    c["devices"][0] = dict(c["devices"][0], **kw)
-
-
 def mod(p, **kw):
     p["models"][0] = dict(p["models"][0], **kw)
 
 
 b32.validate(CAT, PICKS)
 true("the committed catalogue and picks validate", True)
-refuses("a device naming a GPU the catalogue lacks", lambda c, p: dev(c, gpu="rtx-9999", igpu=None), "rtx-9999")
-refuses("a device with a graphics card and no VRAM",
-        lambda c, p: dev(c, gpu=c["gpus"][0]["id"], vram_gb=0, igpu=None), "no memory")
-refuses("a device with both a graphics card and a shared-memory GPU",
-        lambda c, p: dev(c, gpu=c["gpus"][0]["id"], vram_gb=8, igpu={"vendor": "apple"}), "both")
-refuses("a shared-memory GPU on a machine that is not unified",
-        lambda c, p: dev(c, unified=False, igpu={"vendor": "amd"}), "not unified")
+refuses("a preset naming a device the catalogue lacks",
+        lambda c, p: c["presets"].__setitem__(0, dict(c["presets"][0], device="nokia-3310")), "nokia-3310")
+refuses("a tile the page has no icon for",
+        lambda c, p: c["tiles"].append({"id": "fridge", "label": "Smart fridge", "hint": ""}), "icon")
 refuses("a duplicate device id", lambda c, p: c["devices"].append(dict(c["devices"][0])), "twice")
-refuses("a duplicate GPU id", lambda c, p: c["gpus"].append(dict(c["gpus"][0])), "twice")
-refuses("a GPU from an unknown vendor", lambda c, p: c["gpus"].__setitem__(0, dict(c["gpus"][0], vendor="3dfx")), "3dfx")
-refuses("a device of an unknown kind", lambda c, p: dev(c, kind="toaster"), "toaster")
-refuses("a device with an unknown OS", lambda c, p: dev(c, os=["beos"]), "beos")
-refuses("a device missing a contract field", lambda c, p: c["devices"][0].pop("ram_bandwidth_gbs"), "ram_bandwidth_gbs")
-refuses("a device with no RAM sizes", lambda c, p: dev(c, ram_gb_options=[]), "no RAM")
-refuses("an OS with no find-out steps", lambda c, p: c["find_out"].pop("steamos"), "steamos")
+refuses("a device on an unknown tile", lambda c, p: c["devices"].__setitem__(0, dict(c["devices"][0], tiles=["fridge"])), "fridge")
+refuses("a device missing a contract field", lambda c, p: c["devices"][0].pop("confidence"), "confidence")
+refuses("a device with no memory size",
+        lambda c, p: c["devices"].__setitem__(0, dict(c["devices"][0], memory={"options_gb": []})), "no memory size")
+refuses("a catalogue without the processor-only entry the 'No graphics card' button picks",
+        lambda c, p: c.__setitem__("devices", [d for d in c["devices"] if d["id"] != b32.NO_GPU]), b32.NO_GPU)
+refuses("a tile with no preset", lambda c, p: c.__setitem__("presets", [x for x in c["presets"] if x["tile"] != "handheld"]), "handheld")
+refuses("an OS with no help steps", lambda c, p: c["help"].pop("chromeos"), "chromeos")
+refuses("a cheat-sheet preset the catalogue dropped",
+        lambda c, p: c.__setitem__("presets", [x for x in c["presets"] if x["id"] != b32.CHEAT[0]]), b32.CHEAT[0])
 CHAT0 = next(i for i, m in enumerate(PICKS["picks"]) if not b32.embed_only(m))
 
 
@@ -129,18 +125,22 @@ refuses("a duplicate pick id", lambda c, p: p["picks"].append(dict(p["picks"][0]
 refuses("a picks file with nothing to chat with",
         lambda c, p: p.__setitem__("picks", [m for m in p["picks"] if b32.embed_only(m)]), "nothing" if False else "no model to chat")
 
-kinds = {k["id"] for k in CAT["kinds"]}
-check("the six tiles the UX plan names", kinds, {"laptop", "mac", "gaming", "desktop", "handheld", "minipc"})
-for k in kinds - {"gaming"}:
-    true(f"the {k} tile has at least one device to pick", any(d["kind"] == k for d in CAT["devices"]))
-true("every kind with devices has a popular one to offer as a chip",
-     all(any(d.get("popular") and d["kind"] == k for d in CAT["devices"])
-         for k in kinds if any(d["kind"] == k for d in CAT["devices"])))
+tiles = {t["id"] for t in CAT["tiles"]}
+check("the six tiles the UX plan names, in ds-hardware's ids", tiles,
+      {"laptop", "mac", "gaming-pc", "desktop", "handheld", "mini-pc"})
+check("...each with an icon", tiles, set(b32.TILE_ICONS))
 for t, _ in b32.TASKS:
     true(f"the task {t!r} has at least one pick", any(t in m["uses"] for m in PICKS["picks"]))
 check("the task buttons are ds-models' uses, so a pick's `uses` is the filter with no mapping",
       [t for t, _ in b32.TASKS], PICKS["uses"])
-true("every device names an OS the how-to has steps for", all(d["os"][0] in b32.OSES for d in CAT["devices"]))
+true("every device's first OS has how-to steps (ChromeOS through its Linux steps)",
+     all(d["os"][0] in b32.HELP_OSES for d in CAT["devices"]), str({d["os"][0] for d in CAT["devices"]} - set(b32.HELP_OSES)))
+KEPT = b32.slim_catalogue(CAT)
+true("the slimmed catalogue drops only fields localhw.mjs never reads",
+     # A catalogue record is `d`, `d0`, `e` or `entry` in that module; `out.sources` is detectHints' own output.
+     not any(re.search(rf"\b(?:d|d0|e|entry|cat)\??\.{f}\b", b32.HW_MJS.read_text(encoding="utf-8")) for f in b32.DROP))
+check("...and keeps every device and preset", (len(KEPT["devices"]), len(KEPT["presets"])),
+      (len(CAT["devices"]), len(CAT["presets"])))
 
 
 # ---------------------------------------------------------------- the maths: the vendored module and its wrapper
@@ -155,6 +155,16 @@ wrapped = b32.fit_js()
 check("the wrapper drops every export keyword", re.findall(r"^export ", wrapped, re.M), [])
 true("...and returns every exported name on LOCALFIT",
      all(re.search(rf"return \{{[^}}]*\b{n}\b", wrapped) for n in exports))
+hsrc = b32.HW_MJS.read_text(encoding="utf-8")
+hexports = re.findall(r"^export (?:const|function|let|async function) (\w+)", hsrc, re.M)
+true("localhw.mjs exports the API hardware.md names",
+     {"search", "popular", "memoryChoices", "toMachine", "detectHints", "osFromUA"} <= set(hexports), str(hexports))
+check("...and has no import or export form the inliner would miss",
+      re.findall(r"^\s*(?:import\b|export\s+(?:default|\{|\*|class))", hsrc, re.M), [])
+hwrapped = b32.hw_js()
+check("its wrapper drops every export keyword", re.findall(r"^export ", hwrapped, re.M), [])
+true("...and returns every exported name on LOCALHW",
+     all(re.search(rf"return \{{[^}}]*\b{n}\b", hwrapped) for n in hexports))
 
 answers = b32.cheat_answers(PICKS, {}) if node else None
 true("node is on PATH, which the cheat sheet needs", node)
@@ -163,12 +173,18 @@ if node and answers:
           [len(r) for r in answers], [len(PICKS["picks"])] * len(b32.CHEAT))
     with tempfile.TemporaryDirectory() as tmp:
         t = Path(tmp)
-        (t / "in.json").write_text(json.dumps({"machines": [m for _, m in b32.CHEAT], "models": PICKS["picks"],
+        (t / "in.json").write_text(json.dumps({"presets": b32.CHEAT, "models": PICKS["picks"], "cat": KEPT,
                                                "ctx": b32.DEFAULT_CTX}), encoding="utf-8")
-        # The wrapped classic script, run as the browser runs it, against the module the build imported.
-        (t / "wrapped.js").write_text(wrapped + r"""
+        # Both wrapped classic scripts, run as the browser runs them -- over the slimmed catalogue the page
+        # carries -- against the modules and the full catalogue the build imported.
+        (t / "wrapped.js").write_text(wrapped + hwrapped + r"""
 const I = JSON.parse(require("fs").readFileSync(process.argv[2], "utf8"));
-const out = I.machines.map((hw) => I.models.map((p) => {
+const machines = I.presets.map((id) => {
+  const p = I.cat.presets.find((x) => x.id === id);
+  return LOCALHW.toMachine(I.cat, {device: p.device, memory_gb: p.memory_gb ?? undefined, ram_gb: p.ram_gb ?? undefined,
+                                   ram_kind: p.ram_kind ?? undefined, os: p.os ?? undefined});
+});
+const out = machines.map((hw) => I.models.map((p) => {
   const b = LOCALFIT.bestQuant(p.model, hw, {context: I.ctx});
   return b ? {id: p.id, verdict: b.verdict, quant: b.quant, tps: b.speed.decodeTps, snag: !!(b.offload || b.nearlyFull)}
     : {id: p.id, verdict: "too-big"};
@@ -176,27 +192,27 @@ const out = I.machines.map((hw) => I.models.map((p) => {
 process.stdout.write(JSON.stringify(out));
 """, encoding="utf-8")
         res = subprocess.run([node, str(t / "wrapped.js"), str(t / "in.json")], capture_output=True, text=True)
-    true("the inlined LOCALFIT runs as a classic script", res.returncode == 0, res.stderr[:400])
+    true("the inlined LOCALFIT and LOCALHW run as classic scripts", res.returncode == 0, res.stderr[:400])
     if res.returncode == 0:
-        check("...and answers exactly what the module answers, on every pick and cheat-sheet machine",
+        check("...and answer exactly what the modules answer, on every pick and cheat-sheet machine",
               json.loads(res.stdout), answers)
 
     V = {"great": 3, "slow": 2, "tight": 1, "too-big": 0}
-    by = {label: {a["id"]: a for a in row} for (label, _), row in zip(b32.CHEAT, answers)}
-    L = [label for label, _ in b32.CHEAT]
+    by = {pid: {a["id"]: a for a in row} for pid, row in zip(b32.CHEAT, answers)}
     big = "openai/gpt-oss-120b"
-    check("a 120B model is too big for an 8 GB laptop", by[L[0]][big]["verdict"], "too-big")
-    check("...and runs great on a 128 GB Mac", by[L[-1]][big]["verdict"], "great")
+    check("a 120B model is too big for an 8 GB MacBook Air", by["mba-m1-8"][big]["verdict"], "too-big")
+    check("...and runs great on a 128 GB Mac Studio", by["mac-studio-m4max-128"][big]["verdict"], "great")
     small = [m["id"] for m in PICKS["picks"] if m["tier"] == "small" and not b32.embed_only(m)]
-    true("a small-tier pick runs great on a 16 GB Mac", any(by[L[3]][i]["verdict"] == "great" for i in small))
+    true("a small-tier pick runs great on a 16 GB MacBook Air", any(by["mba-m3-16"][i]["verdict"] == "great" for i in small))
     tiny = [m["id"] for m in PICKS["picks"] if m["tier"] == "tiny" and not b32.embed_only(m)]
-    true("a tiny-tier pick runs on an 8 GB laptop with no graphics card",
-         any(by[L[0]][i]["verdict"] in ("great", "slow") for i in tiny))
-    worse = [(m, a, b) for a, b in ((L[0], L[1]), (L[3], L[4]), (L[4], L[-1]), (L[5], L[6]), (L[6], L[7]), (L[7], L[8]))
+    true("a tiny-tier pick runs on an everyday laptop",
+         any(by["laptop-office-intel"][i]["verdict"] in ("great", "slow") for i in tiny))
+    worse = [(m, a, b) for a, b in (("mba-m1-8", "mba-m3-16"), ("mba-m3-16", "mbp-m4-pro-24"),
+                                    ("mbp-m4-pro-24", "mac-studio-m4max-128"), ("pc-3060", "pc-4090"))
              for m in by[a] if V[by[b][m]["verdict"]] < V[by[a][m]["verdict"]]]
-    check("more memory never gives a worse verdict, across the cheat sheet's ladders", worse, [])
-    rows = b32.cheat_rows(PICKS, answers)
-    true("every cheat-sheet row above 8 GB names a model that runs great", all(g for _, g, _ in rows[1:]))
+    check("a bigger machine of the same kind never gives a worse verdict", worse, [])
+    rows = b32.cheat_rows(CAT, PICKS, answers)
+    true("every cheat-sheet row names a model that runs at all", all(g or o for _, g, o in rows))
     true("...and no row names an embedding model, which nobody chats with",
          not any(b32.embed_only(m) for _, g, o in rows for m, _ in g + o))
 
@@ -211,8 +227,9 @@ m = re.search(r'<script type="application/json" id="lxdata">(.*?)</script>', htm
 true("the data is inlined as one JSON block", m)
 if m:
     data = json.loads(m.group(1))
-    check("...carrying every device, card and pick", (len(data["devices"]), len(data["gpus"]), len(data["models"])),
-          (len(CAT["devices"]), len(CAT["gpus"]), len(PICKS["picks"])))
+    check("...carrying every device, preset and pick",
+          (len(data["cat"]["devices"]), len(data["cat"]["presets"]), len(data["models"])),
+          (len(CAT["devices"]), len(CAT["presets"]), len(PICKS["picks"])))
     check("...and no Hugging Face slice when there is no index", data["hf"], None)
     check("...and ds-models' runtime notes", data["runtimes"], PICKS["runtimes"])
     check("...and the runners' own default context, below which no context step is shown", data["runner_ctx"], 4096)
@@ -220,7 +237,7 @@ if m:
           [sorted(data["howto"][k]["steps"]) for k in ("lmstudio", "ollama")],
           [sorted(b32.OSES)] * 2)
 true("the fit maths is inlined", "const LOCALFIT = (() => {" in html)
-true("the page script is inlined", "const LOCALUI = ((D, FIT) => {" in html)
+true("the page script is inlined", "const LOCALUI = ((D, FIT, HW) => {" in html)
 true("no `</script>` inside the JSON can close it early", "</" not in (m.group(1) if m else "x"))
 style = re.search(r"<style>(.*?)</style>", html, re.S).group(1)
 check("the page's own CSS writes no colour literal: every colour is a site token",
@@ -234,12 +251,18 @@ true("every explainer the cards link to exists",
      all(f'id="{x}"' in html for x in ("q-quant", "q-ctx", "q-offload", "q-unified", "q-tokens")))
 true("the picker is an ARIA combobox with a listbox", 'role="combobox"' in html and 'role="listbox"' in html)
 true("results are announced politely", 'aria-live="polite"' in html)
-true("the preview banner shows while the hardware is a fixture", ("lxfix" in html) == bool(CAT.get("fixture")))
+true("the preview banner shows exactly while PREVIEW is on", ("lxfix" in html) == b32.PREVIEW)
+true("the inlined hardware module is there", "const LOCALHW = (() => {" in html)
 TEAM = ROOT.parent / "Archie and Pals" / "team" / "local-ai"
 if (TEAM / "picks.json").exists():
     # Only on a machine with the team's working folder beside the repository; CI has neither, by design.
     check("config/local-ai/picks.json is ds-models' file, verbatim",
           json.loads((TEAM / "picks.json").read_text(encoding="utf-8")), PICKS)
+    true("config/local-ai/hardware.json is ds-hardware's file, verbatim (re-copy it if this fails)",
+         (TEAM / "hardware" / "hardware.json").read_bytes().replace(b"\r\n", b"\n")
+         == (b32.CONFIG / "hardware.json").read_bytes().replace(b"\r\n", b"\n"))
+    true("scripts/localhw.mjs is ds-hardware's hardware.mjs, verbatim (re-copy it if this fails)",
+         (TEAM / "hardware" / "hardware.mjs").read_bytes().replace(b"\r\n", b"\n") == hsrc.encode("utf-8").replace(b"\r\n", b"\n"))
     true("scripts/localfit.mjs is ds-models' fit.mjs, verbatim (re-copy it if this fails)",
          (TEAM / "fit" / "fit.mjs").read_bytes().replace(b"\r\n", b"\n") == src.encode("utf-8").replace(b"\r\n", b"\n"))
 true("the page links the site stylesheet and the shared tail", "../pages.css" in html and "btags" in html)

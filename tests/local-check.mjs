@@ -89,12 +89,12 @@ ok("the search waits for a tile", await ev("document.getElementById('pick').hidd
 // ---- a Mac, by keyboard alone through the combobox
 await click("input[name=kind][value=mac]");
 ok("a tile opens the search", !(await ev("document.getElementById('pick').hidden")));
-ok("...with popular Macs offered as chips", await ev("document.querySelectorAll('#pop [data-dev]').length") >= 3);
+ok("...with ds-hardware's popular Macs offered as chips", await ev("document.querySelectorAll('#pop [data-preset]').length") >= 3);
 ok("...and the choice is in the hash", (await hash()).includes("k=mac"));
 await ev("document.getElementById('q').focus()");
 await type("air m3");
 ok("typing opens the listbox", await ev("document.getElementById('q').getAttribute('aria-expanded')") === "true");
-ok("...and finds the MacBook Air (M3) first", await ev("document.querySelector('#qlist li').textContent").then(t => t.startsWith("MacBook Air (M3)")));
+ok("...and finds the MacBook Air M3 first", await ev("document.querySelector('#qlist li').textContent").then(t => t.startsWith("MacBook Air M3")));
 await key("ArrowDown");
 ok("ArrowDown makes an option active by aria-activedescendant, focus staying in the box",
    await ev("document.activeElement.id === 'q' && document.getElementById('q').getAttribute('aria-activedescendant') === 'qlist-0'"));
@@ -102,21 +102,24 @@ ok("...and marks it selected", await ev("document.getElementById('qlist-0').getA
 await key("Enter", "Enter", "\r");
 ok("Enter picks it", (await hash()).includes("d=macbook-air-m3"));
 ok("...closes the listbox", await ev("document.getElementById('qlist').hidden && document.getElementById('q').getAttribute('aria-expanded') === 'false'"));
-ok("...and the box names the machine", await ev("document.getElementById('q').value") === "MacBook Air (M3)");
-ok("a machine sold in three sizes asks which, with chips", await ev("document.querySelectorAll('#ramo input[name=ram]').length") === 3);
-ok("...assuming the smallest until told", await ev("document.querySelector('#ramo input:checked').value") === "8");
-await click("#ramo input[value='16']");
-ok("a memory chip is in the hash", (await hash()).includes("r=16"));
+ok("...and the box names the machine", /^MacBook Air M3/.test(await ev("document.getElementById('q').value")));
+ok("a machine sold in three sizes asks which, with chips", await ev("document.querySelectorAll('#memo input[name=mem]').length") === 3);
+ok("...assuming the smallest until told", await ev("document.querySelector('#memo input:checked').value") === "8");
+ok("...and asks nothing about sticks, because a Mac's memory is built in", await ev("document.getElementById('stickf').hidden"));
+await click("#memo input[value='16']");
+ok("a memory chip is in the hash", (await hash()).includes("mem=16"));
 ok("the machine is explained in one sentence, with its AI budget", /16 GB.*macOS lets AI use about/.test(await ev("document.getElementById('mach').textContent")));
+ok("...with ds-hardware's notes about it, folded", await ev("!!document.querySelector('#mach details.lxhwnotes li')"));
 ok("the live region announces the result", /run great/.test(await live()), await live());
 ok("there is one pick", await ev("document.querySelectorAll('#best .lxcard').length") === 1);
 ok("...that runs great on a 16 GB Mac", await ev("document.querySelector('#best .lxcard').dataset.verdict") === "great");
 ok("...with its reason in the reader's units", /Needs [\d.]+ GB(, you have [\d.]+ GB for AI| of your [\d.]+ GB)/.test(await ev("document.querySelector('#best .lxwhy').textContent")),
    await ev("document.querySelector('#best .lxwhy').textContent"));
 // The picker and the no-script cheat sheet are one method run in two places (the browser, and Node at build
-// time); the 16 GB M3 Air is the cheat sheet's "Mac with 16 GB" row, so the two must name the same three.
+// time) over one machine object (ds-hardware's toMachine, in both places); the 16 GB M3 Air is the cheat
+// sheet's "MacBook Air M3, 16 GB" row, so the two must name the same three.
 const top3 = await ev("[...document.querySelectorAll('[data-verdict=great] h4')].map(h => h.textContent).slice(0, 3).sort().join()");
-const row = await ev("[...document.querySelectorAll('.lxcheat tbody tr')].find(r => /Mac with 16 GB/.test(r.textContent)).querySelector('td').textContent.split(', ').sort().join()");
+const row = await ev("[...document.querySelectorAll('.lxcheat tbody tr')].find(r => /MacBook Air M3, 16 GB/.test(r.textContent)).querySelector('td').textContent.split(', ').sort().join()");
 ok("the picker's best three agree with the cheat sheet's row for the same machine", top3 === row, `${top3} vs ${row}`);
 ok("...and its speed in words", /Speed: .*(read|typing|instant|slow).*words a second/.test(await ev("document.querySelector('#best .lxwhy').textContent")));
 ok("...and the verdict as a word and a shape, not colour alone", await ev("document.querySelector('#best .lxv').textContent") === "●Runs great");
@@ -143,7 +146,7 @@ const shared = await hash();
 const pickName = await ev("document.querySelector('#best h4').textContent");
 await goto(shared);
 ok("a reload of the shared link gives the same pick", await ev("document.querySelector('#best h4')?.textContent") === pickName);
-ok("...with the same memory chip", await ev("document.querySelector('#ramo input:checked')?.value") === "16");
+ok("...with the same memory chip", await ev("document.querySelector('#memo input:checked')?.value") === "16");
 
 // ---- tasks, numbers, context, quant
 await click("input[name=task][value=coding]");
@@ -180,36 +183,56 @@ ok("a handheld's how-to defaults to its own OS", await ev("document.querySelecto
 ok("...and starts with Desktop Mode", /Desktop/.test(await ev("document.querySelector('#best .lxhowb ol li')?.textContent || ''")));
 ok("...and offers no MLX", !(await ev("!!document.querySelector('#best [data-route=mlx]')")));
 
-// ---- enter it myself: a graphics card and RAM
-await goto("#k=gaming");
-ok("Gaming PC goes straight to the graphics-card picker", !(await ev("document.getElementById('customb').hidden")) && await ev("document.getElementById('devf').hidden"));
-await ev("document.getElementById('gq').focus()");
+// ---- a gaming PC: a graphics card, then the PC's own RAM and sticks
+await goto("#k=gaming-pc");
+ok("Gaming PC asks for the graphics card", /graphics card/.test(await ev("document.getElementById('qlab').textContent")));
+ok("...and offers 'No graphics card'", !(await ev("document.getElementById('nogpu').hidden")));
+await ev("document.getElementById('q').focus()");
 await type("4070 ti super");
-ok("a phrase match outranks a looser one", await ev("document.querySelector('#gqlist li').textContent").then(t => t.startsWith("GeForce RTX 4070 Ti Super")));
+ok("ds-hardware's search ranks the exact card first", await ev("document.querySelector('#qlist li').textContent").then(t => /RTX 4070 Ti Super/.test(t)),
+   await ev("document.querySelector('#qlist li').textContent"));
 await key("Escape");
-ok("Escape closes the listbox and keeps focus in the box", await ev("document.getElementById('gqlist').hidden && document.activeElement.id === 'gq'"));
-await goto("#k=gaming&g=rtx-3060&v=12&r=32");
-ok("a custom rig is explained by its card's memory", /12 GB.*of its own memory/.test(await ev("document.getElementById('mach').textContent")));
+ok("Escape closes the listbox and keeps focus in the box", await ev("document.getElementById('qlist').hidden && document.activeElement.id === 'q'"));
+await ev("document.getElementById('q').select()");
+await type("thinkpad");
+ok("a laptop brand, which names no chip, gets the way forward rather than an empty list",
+   /graphics card|Help me find out/.test(await ev("document.querySelector('#qlist li').textContent")));
+await key("Escape");
+await goto("#k=gaming-pc&d=nvidia-rtx-3060&ram=32");
+ok("a card is explained by its own memory", /12 GB.*of its own memory/.test(await ev("document.getElementById('mach').textContent")));
+ok("...asks for the PC's RAM", !(await ev("document.getElementById('ramf').hidden")) && await ev("document.querySelector('#ramo input:checked')?.value") === "32");
+ok("...and offers the optional sticks question", !(await ev("document.getElementById('stickf').hidden")));
 ok("...and a model too big for the card but within card + RAM says it is offloaded",
    await ev("[...document.querySelectorAll('.lxcatch')].some(u => /offload/.test(u.textContent))"));
-ok("VRAM chips appear for a card sold in two sizes", await ev("document.querySelectorAll('#vramo input').length") === 2);
-await goto("#k=desktop&g=none&r=8");
-ok("no graphics card and 8 GB still gets an answer", await ev("document.querySelectorAll('.lxcard').length") > 0);
+const two = await ev("document.querySelector('[data-tps]') && Number(document.querySelector('#best [data-tps]').dataset.tps)");
+await click("#sticko input[value='1']");
+ok("one stick is remembered in the hash", (await hash()).includes("rs=1"));
+ok("...and slows anything that touches RAM, never speeds it",
+   await ev("Number(document.querySelector('#best [data-tps]').dataset.tps)") <= two);
+await goto("#k=desktop");
+await click("#nogpu");
+ok("No graphics card picks ds-hardware's processor-only machine", (await hash()).includes("d=cpu-only"));
+ok("...and still gets an answer", await ev("document.querySelectorAll('.lxcard').length") > 0);
+await goto("#k=gaming-pc");
+await click("#pop [data-preset]");
+ok("a preset chip sets the whole machine, memory kind included", /d=[^&]+/.test(await hash()) && await ev("document.querySelectorAll('.lxcard').length") > 0,
+   await hash());
+await goto("#k=handheld&d=legion-go");
+ok("a device whose numbers are estimates says so", await ev("!!document.querySelector('#mach .lxapprox')"));
 
-// ---- the pure half
-ok("guess: a desktop RTX string finds that card",
-   await ev(`LOCALUI.guess("ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Ti SUPER (0x00002705) Direct3D11 vs_5_0 ps_5_0, D3D11)").map(x => x[1].id).join()`) === "rtx-4070-ti-super");
-ok("guess: Apple M4 is ambiguous, and every M4 machine is offered",
-   await ev(`LOCALUI.guess("ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)").length`) >= 2);
-ok("guess: an unknown string finds nothing rather than something wrong", await ev(`LOCALUI.guess("Apple GPU").length`) === 0);
-ok("the hash round-trips", await ev(`(() => { const h = "#k=mac&d=macbook-air-m3&r=16&t=code,chat&n=1&c=32768&w=ollama&o=linux";
+// ---- the pure half, and what is ds-hardware's
+ok("the hash round-trips", await ev(`(() => { const h = "#k=mac&d=macbook-air-m3&mem=16&rs=1&t=coding,chat&n=1&c=32768&w=ollama&o=linux";
   return LOCALUI.hashOf(LOCALUI.parseHash(h)) === h; })()`));
-ok("a hash with junk numbers is ignored, not obeyed", await ev(`LOCALUI.parseHash("#r=lots").r === undefined`));
-ok("search folds case, spacing and the word apple", await ev(`LOCALUI.search("APPLE mba m2", ${"window.__d = JSON.parse(document.getElementById('lxdata').textContent)"}.devices, "mac")[0].id`) === "macbook-air-m2");
+ok("a hash with junk numbers is ignored, not obeyed", await ev(`LOCALUI.parseHash("#mem=lots").mem === undefined`));
+ok("a memory size the device does not have is dropped, not obeyed",
+   await ev(`LOCALUI.machineOf(LOCALUI.parseHash("#d=macbook-air-m3&mem=999")).mem`) === 8);
+ok("the browser hint never selects anything: it returns candidates for the reader",
+   await ev(`(async () => { const before = location.hash; const h = await LOCALUI.guess(); return location.hash === before && Array.isArray(h.gpu.candidates); })()`));
+ok("search is ds-hardware's, and forgives a typo", await ev(`LOCALUI.search("macbok air m2", "mac")[0].id`) === "macbook-air-m2");
 
 // ---- the phone, the themes, motion, no script
 await size(375, 812, true);
-await goto("#k=mac&d=macbook-air-m3&r=16&n=1");
+await goto("#k=mac&d=macbook-air-m3&mem=16&n=1");
 ok("no sideways scroll on a 375px phone, numbers and how-to open",
    await ev("document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1"),
    String(await ev("document.documentElement.scrollWidth")));
@@ -224,7 +247,7 @@ ok("the panels repaint between themes", dark[0] !== light[0], `${dark[0]} vs ${l
 ok("...from the site's --plane token", dark[1] && light[1] && dark[1] !== light[1]);
 await S("Emulation.setEmulatedMedia", {features: [{name: "prefers-reduced-motion", value: "reduce"}]});
 await goto("#k=mac&d=macbook-air-m3");
-await click("#ramo input[value='24']");
+await click("#memo input[value='24']");
 ok("no animation under reduced motion", await ev("document.getAnimations().filter(a => a.effect && a.effect.target && a.effect.target.closest && a.effect.target.closest('main')).length") === 0);
 await S("Emulation.setEmulatedMedia", {features: [{name: "forced-colors", value: "active"}]});
 await goto("#k=mac&d=macbook-air-m3");

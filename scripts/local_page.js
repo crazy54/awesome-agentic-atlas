@@ -1,20 +1,23 @@
 /* The local-AI page's behaviour. Written into docs/local/index.html by scripts/32_local.py, after the
-   `lxdata` JSON block and the LOCAL FIT script (ds-models' scripts/localfit.mjs, wrapped) it reads.
+   `lxdata` JSON block and the two vendored modules it reads: LOCALFIT (ds-models' scripts/localfit.mjs) and
+   LOCALHW (ds-hardware's scripts/localhw.mjs), both wrapped by that stage.
 
    Two halves. `LOCALUI` is pure: search, the machine a set of answers describes, the model the fit method
    is handed, the verdicts, the words a reader is shown, the commands, and the URL hash. Each is a function of
    its arguments and the inlined data, which is what lets tests/local-check.mjs assert them directly as well
    as through the DOM. The bottom half wires them to the page and owns all the state.
 
-   No arithmetic about memory or speed lives in this file. Every number on a card comes from LOCALFIT --
-   `bestQuant()`, `assess()`, `fit()`, `budgets()` -- and this file only decides which words go round it.
+   No arithmetic about memory or speed lives in this file, and no knowledge of hardware either. Every number
+   on a card comes from LOCALFIT -- `bestQuant()`, `assess()`, `fit()`, `budgets()` -- and every machine from
+   LOCALHW -- `search()`, `popular()`, `memoryChoices()`, `toMachine()`, `detectHints()`. This file only
+   decides which words go round them.
 
    Every answer lives in the hash (`#d=steam-deck-oled&t=code`), so a result can be sent to a friend and
    reproduces exactly, and a reload keeps your place. `history.replaceState` rather than push: each click
    is a refinement of one question, not a new page, and twenty back presses to leave would be a trap. */
-const LOCALUI = ((D, FIT) => {
+const LOCALUI = ((D, FIT, HW) => {
   const byId = (xs) => Object.fromEntries(xs.map((x) => [x.id, x]));
-  const DEV = byId(D.devices), GPU = byId(D.gpus), PICK = byId(D.models);
+  const CAT = D.cat, DEV = byId(CAT.devices), PICK = byId(D.models), TILE = byId(CAT.tiles);
   const GB = 1e9;
   const esc = (s) => String(s === null || s === undefined ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -22,66 +25,38 @@ const LOCALUI = ((D, FIT) => {
   // One decimal under ten, whole numbers above: "5.6 GB", "19 GB". The precision a reader can use.
   const gb = (x) => (x < 10 ? (Math.round(x * 10) / 10).toFixed(1) : String(Math.round(x)));
 
-  // Search. "mba m2", "MacBook Air M2", "deck oled" and "4070" should all find what a person means, so both
-  // sides are folded to lowercase words, the word "apple" and trademark marks are dropped, and a query token
-  // matches if it appears in the record's words or in the same words run together ("macbookair").
-  const norm = (s) => String(s || "").toLowerCase().replace(/\(tm\)|\(r\)|[®™]|\bapple\b/g, " ")
-    .replace(/[^a-z0-9]+/g, " ").trim();
-  const hits = (q, rec) => {
-    const toks = norm(q).split(" ").filter(Boolean);
-    const hay = norm([rec.name].concat(rec.aliases || []).join(" "));
-    const run = hay.replace(/ /g, "");
-    return toks.every((t) => hay.includes(t) || run.includes(t));
-  };
-  // Devices of the chosen kind first, then popular ones, then by name. Other kinds are still offered,
-  // labelled, because a reader who picked "Laptop" for their MacBook should still find it.
-  const search = (q, list, kind, limit = 8) => list
-    .filter((r) => hits(q, r))
-    // A query that appears whole in one field ("4070 ti super" in that card's name) outranks one whose words
-    // are merely all somewhere in the record (the plain 4070, which is also sold as a "Super" and a "Ti").
-    .map((r) => [r, (kind && r.kind !== kind ? 8 : 0) +
-                    ([r.name].concat(r.aliases || []).some((f) => norm(f).includes(norm(q))) ? 0 : 4) +
-                    (norm(r.name).startsWith(norm(q)) ? 0 : 1) + (r.popular ? 0 : 2)])
-    .sort((a, b) => a[1] - b[1] || a[0].name.localeCompare(b[0].name))
-    .slice(0, limit).map((x) => x[0]);
+  // Search is ds-hardware's (`search()`: aliases, one forgiven typo, memory sizes read out of the query,
+  // laptop words, popularity), so nothing here second-guesses it. A query that finds nothing -- a laptop
+  // brand like "ThinkPad", which names no chip -- is answered with the way forward, not an empty list.
+  const search = (q, tile) => HW.search(CAT, q, {tile, limit: 8});
 
   // The operating system the browser is running on, as the catalogue spells it. A guess for defaults only;
   // the how-to panel always lets the reader pick another.
-  const uaOS = (ua) => /Mac OS X|Macintosh/.test(ua) && !/iPhone|iPad/.test(ua) ? "macos"
-    : /Linux|X11|CrOS/.test(ua) && !/Android/.test(ua) ? "linux" : "windows";
+  const uaOS = (ua) => HW.osFromUA(ua) || "windows";
 
-  // The machine a set of answers describes, or null if there is not one yet. `hw` is in the field names
-  // `normalizeHardware()` reads (team/contracts/hardware.md), so the fit method sees a catalogue entry as the
-  // catalogue wrote it; this is the only place catalogue records are assembled into one.
-  const cardOf = (g, vram) => ({vendor: g.vendor, name: g.name, vram_gb: vram, vram_bandwidth_gbs: g.vram_bandwidth_gbs,
-                                fp16_tflops: g.fp16_tflops, arch: g.arch, backends: g.backends});
-  const machineOf = (s, ua) => {
-    if (s.d && DEV[s.d]) {
-      const d = DEV[s.d], g = d.gpu ? GPU[d.gpu] : null;
-      const ram = d.ram_gb_options.includes(s.r) ? s.r : d.ram_gb_options[0];
-      const gpu = g ? cardOf(g, d.vram_gb)
-        : d.igpu ? Object.assign({integrated: true, vram_bandwidth_gbs: d.ram_bandwidth_gbs}, d.igpu) : null;
-      return {name: d.name, kind: d.kind, os: d.os[0], ram_opts: d.ram_gb_options, device: d,
-              hw: {id: d.id, name: d.name, ram_gb: ram, ram_bandwidth_gbs: d.ram_bandwidth_gbs, unified: d.unified,
-                   os: d.os[0], gpu, gpu_usable_gb: d.gpu_usable_gb, cpu: d.cpu}};
-    }
-    if (s.g && (s.g === "none" || GPU[s.g])) {
-      const g = GPU[s.g] || null, opts = D.custom.ram_gb_options;
-      const ram = opts.includes(s.r) ? s.r : 16;
-      const vram = g ? (g.vram_gb_options.includes(s.v) ? s.v : g.vram_gb_options[0]) : 0;
-      const os = uaOS(ua) === "macos" ? "windows" : uaOS(ua);
-      return {name: g ? `PC with ${g.name} ${vram} GB` : "PC with no graphics card", kind: s.k || "gaming",
-              os, ram_opts: opts, custom: true,
-              hw: {name: "custom", ram_gb: ram, ram_bandwidth_gbs: D.custom.cpu_bw_gbs, unified: false, os,
-                   gpu: g ? cardOf(g, vram) : null}};
-    }
-    return null;
+  // The machine a set of answers describes, or null if there is not one yet: ds-hardware's `toMachine()`,
+  // which is exactly what fit.mjs reads, plus its label, notes and confidence for the page. A memory option
+  // the device does not have is dropped rather than obeyed, so a hand-edited link cannot invent a machine.
+  const choices = (id) => (DEV[id] ? HW.memoryChoices(CAT, id) : null);
+  const machineOf = (s) => {
+    if (!s.d || !DEV[s.d]) return null;
+    const c = choices(s.d), d = DEV[s.d];
+    const mem = c.options_gb.includes(s.mem) ? s.mem : c.default_gb;
+    const sys = c.system_ram || null;
+    const ram = sys && sys.options_gb.includes(s.ram) ? s.ram : undefined;
+    const hw = HW.toMachine(CAT, {device: s.d, memory_gb: mem, ram_gb: ram, ram_kind: s.rk || undefined,
+                                  ram_sticks: s.rs || undefined});
+    return {name: hw.label, device: d, tile: s.k, os: hw.os, hw, choices: c, mem,
+            approx: hw.confidence !== "high", sticks: d.kind === "gpu" || d.kind === "cpu"};
   };
   const apple = (mc) => !!(mc.hw.gpu && mc.hw.gpu.vendor === "apple");
+  // The how-to steps' OS for a machine: its own, except ChromeOS, whose Linux container is Linux to every
+  // runner the page names.
+  const howtoOS = (os) => (os === "chromeos" ? "linux" : os);
 
   // One sentence on what this machine offers, so every "you have X GB" below has been explained once.
   const machineWords = (mc) => {
-    const h = FIT.normalizeHardware(mc.hw), b = FIT.budgets(h), name = esc(mc.name);
+    const h = FIT.normalizeHardware(mc.hw), b = FIT.budgets(h), name = esc(mc.device.short || mc.device.name);
     const g = b.gpu / GB, r = b.ram / GB;
     if (apple(mc))
       return `Your ${name} has <b>${h.ramGB} GB</b> of memory, shared by the processor and graphics. ` +
@@ -141,32 +116,41 @@ const LOCALUI = ((D, FIT) => {
     : f.placement === "gpu" ? f.gpuBudgetGB : f.gpuBudgetGB + f.ramBudgetGB);
 
   // What would make a model that does not fit, fit: the smallest common size of this kind of machine on which
-  // ds-models' policy finds a quant that runs. Asked of the fit method, not worked out here.
+  // ds-models' policy finds a quant that runs. Asked of the fit method, never worked out here. A shared-memory
+  // machine is rebuilt by `toMachine()` at the larger size, so its GPU share follows the platform rule; a
+  // graphics card or RAM is changed on the machine object in both its GB and its bytes fields.
+  const GIB = 2 ** 30;
   const SIZES = {unified: [8, 16, 24, 32, 36, 48, 64, 96, 128, 192, 256, 512], vram: [8, 12, 16, 24, 32, 48, 80, 96],
                  ram: [8, 16, 32, 64, 96, 128, 192, 256]};
   const runsOn = (p, hw, ctx) => { const b = FIT.bestQuant(modelOf(p), hw, {context: ctx}); return b && b.verdict !== "too-big" && !b.belowFloor; };
-  const suggest = (p, hw, ctx) => {
-    const g = hw.gpu;
+  const withRam = (hw, gb) => Object.assign({}, hw, {ram_gb: gb, ram_bytes: gb * GIB});
+  const withVram = (hw, gb) => {
+    const g = Object.assign({}, hw.gpu, {vram_gb: gb, vram_bytes: gb * GIB});
+    return Object.assign({}, hw, {gpu: g, gpus: [g].concat((hw.gpus || []).slice(1))});
+  };
+  const suggest = (p, mc, ctx) => {
+    const hw = mc.hw;
     if (hw.unified) {
-      const n = SIZES.unified.find((x) => x > hw.ram_gb && runsOn(p, Object.assign({}, hw, {ram_gb: x, gpu_usable_gb: undefined}), ctx));
+      const n = SIZES.unified.find((x) => x > hw.ram_gb &&
+        runsOn(p, HW.toMachine(CAT, {device: mc.device.id, memory_gb: x}), ctx));
       return n ? `It would fit on a machine like this with ${n} GB.` : "It's too big for any single home machine.";
     }
-    if (g) {
-      const n = SIZES.vram.find((x) => x > g.vram_gb && runsOn(p, Object.assign({}, hw, {gpu: Object.assign({}, g, {vram_gb: x})}), ctx));
-      const r = SIZES.ram.find((x) => x > hw.ram_gb && runsOn(p, Object.assign({}, hw, {ram_gb: x}), ctx));
+    if (hw.gpu) {
+      const n = SIZES.vram.find((x) => x > hw.gpu.vram_gb && runsOn(p, withVram(hw, x), ctx));
+      const r = SIZES.ram.find((x) => x > hw.ram_gb && runsOn(p, withRam(hw, x), ctx));
       return n ? `It would fit on a graphics card with ${n} GB` + (r ? `, or run with ${r} GB of RAM.` : ".")
         : (r ? `It would only run with ${r} GB of RAM.` : "It's too big for any single home machine.");
     }
-    const r = SIZES.ram.find((x) => x > hw.ram_gb && runsOn(p, Object.assign({}, hw, {ram_gb: x}), ctx));
+    const r = SIZES.ram.find((x) => x > hw.ram_gb && runsOn(p, withRam(hw, x), ctx));
     return r ? `It would fit with ${r} GB of RAM, but a graphics card or a Mac would run it far faster.`
       : "It's too big for any single home machine.";
   };
 
   // The plain-language lines on a card. HTML, because some of them link to an explainer.
-  const reason = (row, hw, ctx) => {
-    const f = row.r.fit;
+  const reason = (row, mc, ctx) => {
+    const f = row.r.fit, hw = mc.hw;
     if (row.r.verdict === "too-big")
-      return `Needs about <b>${gb(f.totalGB)} GB</b>; you have ${gb(have(f, hw))} GB for AI. ` + suggest(row.model, hw, ctx);
+      return `Needs about <b>${gb(f.totalGB)} GB</b>; you have ${gb(have(f, hw))} GB for AI. ` + suggest(row.model, mc, ctx);
     if (f.placement === "partial" && hw.gpu && !hw.gpu.integrated && !hw.unified)
       return `Needs <b>${gb(f.totalGB)} GB</b>: about ${gb((f.gpuBytes / GB) + f.kvGB + f.bufferGB)} GB on your graphics card, the rest in RAM.`;
     if (f.placement === "partial")
@@ -274,28 +258,17 @@ const LOCALUI = ((D, FIT) => {
     return [[st[0] === "ctx" ? "li" : "cmd", fill(st[1], p, r, ctx)]];
   });
 
-  // GPU guess from the WebGL renderer string, matched on the catalogue's `webgl` tokens. The longest
-  // matching token wins, so "rtx 4070 ti super" beats "rtx 4070"; ties are all returned, because "Apple M4"
-  // is an Air, a Pro and a mini, and that is the reader's to say.
-  const guess = (renderer) => {
-    const s = String(renderer || "").toLowerCase();
-    let best = 0, out = [];
-    for (const rec of D.devices.map((d) => ["device", d]).concat(D.gpus.map((g) => ["gpu", g]))) {
-      for (const t of rec[1].webgl || []) {
-        if (!s.includes(t)) continue;
-        if (t.length > best) { best = t.length; out = []; }
-        if (t.length === best && !out.some((o) => o[1].id === rec[1].id)) out.push(rec);
-      }
-    }
-    return out;
-  };
+  // What the browser lets us guess is ds-hardware's `detectHints()`: candidates, never a choice (contract
+  // section 7). Only a confirmed pick reaches the hash; a detected string never does.
+  const guess = () => HW.detectHints(CAT);
 
   // The hash. Short keys, because people paste these.
-  const KEYS = ["k", "d", "g", "v", "r", "t", "n", "c", "w", "o"];
+  // `d`, `mem`, `ram` and `rk` are ds-hardware's (contract section 8); `rs` is the RAM-sticks answer.
+  const KEYS = ["k", "d", "mem", "ram", "rk", "rs", "t", "n", "c", "w", "o"];
   const parseHash = (h) => {
     const p = new URLSearchParams(String(h || "").replace(/^#/, "")), s = {};
     for (const k of KEYS) if (p.has(k)) s[k] = p.get(k);
-    for (const k of ["v", "r", "c"]) if (s[k] !== undefined) { s[k] = Number(s[k]); if (!isFinite(s[k])) delete s[k]; }
+    for (const k of ["mem", "ram", "rs", "c"]) if (s[k] !== undefined) { s[k] = Number(s[k]); if (!isFinite(s[k])) delete s[k]; }
     s.t = s.t ? s.t.split(",").filter(Boolean) : [];
     s.n = s.n === "1";
     return s;
@@ -312,18 +285,18 @@ const LOCALUI = ((D, FIT) => {
     return out ? "#" + out : "";
   };
 
-  return {esc, gb, norm, hits, search, uaOS, machineOf, machineWords, modelOf, judge, assess, have, suggest,
+  return {esc, gb, search, uaOS, choices, machineOf, machineWords, modelOf, judge, assess, have, suggest, howtoOS,
           reason, speedLine, catches, groups, rank, embedOnly, commands, fill, routes, defaultRoute, steps, guess,
           parseHash, hashOf, apple,
-          ggufs, DEV, GPU, PICK};
-})(JSON.parse(document.getElementById("lxdata").textContent), LOCALFIT);
+          ggufs, DEV, PICK, TILE, CAT};
+})(JSON.parse(document.getElementById("lxdata").textContent), LOCALFIT, LOCALHW);
 
 (() => {
   const D = JSON.parse(document.getElementById("lxdata").textContent);
   const U = LOCALUI, esc = U.esc, $ = (id) => document.getElementById(id);
   const UA = navigator.userAgent;
   const TASKS = Object.fromEntries(D.tasks.map((t) => [t.id, t.label]));
-  const OSN = {windows: "Windows", macos: "macOS", linux: "Linux", steamos: "Steam Deck"};
+  const OSN = {windows: "Windows", macos: "macOS", linux: "Linux", steamos: "Steam Deck", chromeos: "Chromebook"};
   let S = U.parseHash(location.hash);
   let showAll = false, moreGreat = false;
   const qover = {};
@@ -342,7 +315,8 @@ const LOCALUI = ((D, FIT) => {
       list.innerHTML = items.length ? items.map((it, i) =>
         `<li role="option" id="${list.id}-${i}" data-i="${i}" aria-selected="${i === active}">` +
         `<span>${esc(it.label)}</span>${it.sub ? `<small>${esc(it.sub)}</small>` : ""}</li>`).join("")
-        : '<li role="option" aria-disabled="true" aria-selected="false"><span>No match. Try fewer words, or enter it yourself below.</span></li>';
+        // innerHTML for the no-match line only, which is this file's own copy and carries entities.
+        : '<li role="option" aria-disabled="true" aria-selected="false"><span>Not in our list. A laptop&rsquo;s brand name doesn&rsquo;t tell us its chip: try its graphics card (for example &ldquo;RTX 4060&rdquo;), choose &ldquo;No graphics card&rdquo;, or open &ldquo;Help me find out&rdquo; below.</span></li>';
       list.hidden = false; input.setAttribute("aria-expanded", "true");
       if (active >= 0) { input.setAttribute("aria-activedescendant", `${list.id}-${active}`); list.children[active].scrollIntoView({block: "nearest"}); }
       else input.removeAttribute("aria-activedescendant");
@@ -365,33 +339,38 @@ const LOCALUI = ((D, FIT) => {
     return {close};
   };
 
-  const kindLabel = (k) => (D.kinds.find((x) => x.id === k) || {}).label || "";
-  combo($("q"), $("qlist"), (q) => U.search(q, D.devices, S.k).map((d) =>
-    ({id: d.id, label: d.name, sub: d.kind !== S.k ? kindLabel(d.kind) : (d.year ? String(d.year) : "")})),
-    (it) => chooseDevice(it.id));
-  combo($("gq"), $("gqlist"), (q) => U.search(q, D.gpus, null).map((g) =>
-    ({id: g.id, label: g.name, sub: g.vram_gb_options.join(" / ") + " GB"})), (it) => chooseGPU(it.id));
+  const tileLabel = (k) => (U.TILE[k] || {}).label || "";
+  const WHAT = {gpu: "graphics card", cpu: "", soc: "chip", system: ""};
+  combo($("q"), $("qlist"), (q) => U.search(q, S.k).map((r) =>
+    ({id: r.id, label: r.name, mem: r.memory_gb,
+      sub: r.tiles && !r.tiles.includes(S.k) ? tileLabel(r.tiles[0]) : WHAT[r.kind] || ""})),
+    (it) => chooseDevice(it.id, it.mem));
 
   // ---- choices
   const chooseKind = (k) => {
     S.k = k;
     const d = S.d && U.DEV[S.d];
-    if (d && d.kind !== k) { delete S.d; delete S.r; $("q").value = ""; }
+    if (d && !d.tiles.includes(k)) { delete S.d; delete S.mem; delete S.ram; delete S.rk; delete S.rs; }
     paintStep1();
     update();
   };
-  const chooseDevice = (id) => {
-    S.d = id; delete S.g; delete S.v; S.k = U.DEV[id].kind;
-    if (!U.DEV[id].ram_gb_options.includes(S.r)) delete S.r;
-    $("q").value = U.DEV[id].name; setCustom(false);
+  // A choice resets the memory answers that belonged to the previous machine, keeping a typed size
+  // ("m3 max 36gb") when search read one out of the query.
+  const chooseDevice = (id, mem, ram, rk) => {
+    S.d = id; delete S.mem; delete S.ram; delete S.rk; delete S.rs;
+    if (mem) S.mem = mem;
+    if (ram) S.ram = ram;
+    // A preset's memory kind is part of the machine it names ("Desktop, RTX 3060 + 32 GB" is DDR4), so it
+    // travels in the hash with it and the picker builds exactly the machine the cheat sheet does.
+    if (rk) S.rk = rk;
+    const t = U.DEV[id].tiles;
+    if (!S.k || !t.includes(S.k)) S.k = t.includes("gaming-pc") && U.DEV[id].kind === "gpu" ? "gaming-pc" : t[0];
     paintStep1(); update();
   };
-  const chooseGPU = (id) => {
-    S.g = id; delete S.d; if (!D.custom.ram_gb_options.includes(S.r)) delete S.r;
-    $("gq").value = id === "none" ? "" : U.GPU[id].name;
-    paintStep1(); update();
+  const choosePreset = (id) => {
+    const p = U.CAT.presets.find((x) => x.id === id);
+    if (p) chooseDevice(p.device, p.memory_gb || undefined, p.ram_gb || undefined, p.ram_kind || undefined);
   };
-  const setCustom = (on) => { $("customb").hidden = !on; $("custom").setAttribute("aria-expanded", String(on)); };
 
   // Chip rows built as radio groups, so arrow keys move within them the way they do in any OS dialog.
   const radios = (box, name, opts, cur, label, onPick) => {
@@ -404,33 +383,41 @@ const LOCALUI = ((D, FIT) => {
     document.querySelectorAll("input[name=kind]").forEach((i) => { i.checked = i.value === S.k; });
     $("pick").hidden = !S.k;
     if (!S.k) return;
-    const devs = D.devices.filter((d) => d.kind === S.k);
-    $("devf").hidden = !devs.length;
-    $("qlab").textContent = `Which ${kindLabel(S.k).toLowerCase()}? Start typing its name`;
-    const pop = devs.filter((d) => d.popular).slice(0, 8);
-    $("pop").innerHTML = pop.length ? '<span class="lxpl">Popular:</span>' + pop.map((d) =>
-      `<button class="chip" type="button" data-dev="${esc(d.id)}" aria-pressed="${S.d === d.id}">${esc(d.name)}</button>`).join("") : "";
-    if (!devs.length || S.g) setCustom(true);
-    const mc = U.machineOf(S, UA);
-    $("nogpu").setAttribute("aria-pressed", String(S.g === "none"));
-    // VRAM, only for a card sold in more than one size.
-    const g = S.g && U.GPU[S.g];
-    $("vramf").hidden = !(g && g.vram_gb_options.length > 1);
-    if (g && g.vram_gb_options.length > 1)
-      radios($("vramo"), "vram", g.vram_gb_options, mc.hw.gpu ? mc.hw.gpu.vram_gb : 0, (o) => `${o} GB`, (v) => { S.v = v; paintStep1(); update(); refocus("input[name=vram]:checked"); });
-    // RAM, for anything resolved that has a choice.
-    $("ramf").hidden = !(mc && mc.ram_opts.length > 1);
-    if (mc && mc.ram_opts.length > 1)
-      radios($("ramo"), "ram", mc.ram_opts, mc.hw.ram_gb, (o) => `${o} GB`, (r) => { S.r = r; paintStep1(); update(); refocus("input[name=ram]:checked"); });
+    const gaming = S.k === "gaming-pc";
+    $("qlab").textContent = gaming ? "Which graphics card? Start typing its name"
+      : `Which ${tileLabel(S.k).toLowerCase()}? Start typing its name`;
+    $("q").placeholder = gaming ? "e.g. RTX 4060, RX 7800 XT" : S.k === "mac" ? "e.g. MacBook Air M2"
+      : S.k === "handheld" ? "e.g. Steam Deck OLED" : "e.g. RTX 4060 laptop, Ryzen AI Max";
+    $("pop").innerHTML = '<span class="lxpl">Popular:</span>' + HWpop(S.k).map((p) =>
+      `<button class="chip" type="button" data-preset="${esc(p.id)}" aria-pressed="${presetOn(p)}">${esc(p.label)}</button>`).join("");
+    $("nogpu").hidden = !["laptop", "desktop", "gaming-pc", "mini-pc"].includes(S.k);
+    $("nogpu").setAttribute("aria-pressed", String(S.d === D.no_gpu));
+    const mc = U.machineOf(S);
+    const c = mc && mc.choices;
+    // The device's own memory: VRAM for a card, the one pool for a Mac or handheld, RAM for no card.
+    $("memf").hidden = !(c && c.ask);
+    if (c && c.ask) {
+      $("meml").textContent = c.label;
+      radios($("memo"), "mem", c.options_gb, mc.mem, (o) => `${o} GB`, (v) => { S.mem = v; paintStep1(); update(); refocus("input[name=mem]:checked"); });
+    }
+    // A graphics card also needs the PC's own RAM, for what does not fit on the card.
+    const sys = c && c.system_ram && mc.device.kind === "gpu" ? c.system_ram : null;
+    $("ramf").hidden = !sys;
+    if (sys) radios($("ramo"), "ram", sys.options_gb, mc.hw.ram_gb, (o) => `${o} GB`, (r) => { S.ram = r; paintStep1(); update(); refocus("input[name=ram]:checked"); });
+    // Sticks, only where the RAM is socketed and separate: a desktop's or a gaming laptop's, never a Mac's.
+    $("stickf").hidden = !(mc && mc.sticks);
+    if (mc && mc.sticks) radios($("sticko"), "rs", [1, 2], S.rs || 2, (o) => (o === 1 ? "One" : "Two or more"),
+      (v) => { S.rs = v === 2 ? undefined : 1; paintStep1(); update(); refocus("input[name=rs]:checked"); });
     // Always from the state, so a hash change (a shared link opened in this tab) cannot leave the box
     // naming the previous machine. Typing never reaches here, so nothing a reader is typing is overwritten.
-    $("q").value = S.d && U.DEV[S.d] ? U.DEV[S.d].name : "";
-    $("gq").value = S.g && U.GPU[S.g] ? U.GPU[S.g].name : "";
+    $("q").value = mc && mc.device.id !== D.no_gpu ? mc.device.name : "";
     $("gores").hidden = !mc;
     const sum = $("s1sum");
     sum.hidden = !mc;
-    if (mc) sum.textContent = mc.custom ? `${mc.name} · ${mc.hw.ram_gb} GB RAM` : `${mc.name} · ${mc.hw.ram_gb} GB`;
+    if (mc) sum.textContent = mc.name;
   };
+  const HWpop = (tile) => LOCALHW.popular(U.CAT, tile).filter((p) => p.tile === tile).slice(0, 10);
+  const presetOn = (p) => p.device === S.d && (!p.memory_gb || p.memory_gb === (U.machineOf(S) || {}).mem);
 
   // ---- results
   // Verdicts, as a shape and a word, so colour never carries the meaning alone. The four answers the fit
@@ -444,7 +431,7 @@ const LOCALUI = ((D, FIT) => {
     return `<li class="lxcard" data-model="${esc(model.id)}" data-verdict="${r.verdict}">` +
       `<div class="lxch"><h4>${esc(model.name)}</h4><span class="lxv" data-v="${r.verdict}"><i aria-hidden="true">${SHAPE[r.verdict]}</i>${WORD[r.verdict]}</span></div>` +
       `<p class="lxblurb">${esc(model.why)}</p>` +
-      `<p class="lxwhy"><span>${U.reason(row, mc.hw, ctx)}</span>${r.speed ? U.speedLine(r) : ""}</p>` +
+      `<p class="lxwhy"><span>${U.reason(row, mc, ctx)}</span>${r.speed ? U.speedLine(r) : ""}</p>` +
       (lines.length ? `<ul class="lxcatch">${lines.map((l) => `<li>${l}</li>`).join("")}</ul>` : "") +
       `<p class="lxmeta">Good for: ${esc(tasks)} · Licence: <span title="${esc(model.license.note || "")}">${esc(model.license.name)}</span></p>` +
       (S.n ? numbers(row, mc) : "") +
@@ -481,7 +468,7 @@ const LOCALUI = ((D, FIT) => {
 
   const howto = (row, mc, ctx) => {
     const {model, r} = row;
-    const os = S.o && D.howto.ollama.steps[S.o] ? S.o : mc.os;
+    const os = S.o && D.howto.ollama.steps[S.o] ? S.o : U.howtoOS(mc.os);
     const rs = U.routes(model, r, os, U.apple(mc));
     const route = rs.includes(S.w) ? S.w : (rs.includes(U.defaultRoute(os)) ? U.defaultRoute(os) : rs[0]);
     const h = D.howto[route];
@@ -515,9 +502,13 @@ const LOCALUI = ((D, FIT) => {
     $("expert").hidden = !S.n;
     const ctx = S.c || D.default_ctx;
     $("ctx").value = String(ctx);
-    const mc = U.machineOf(S, UA), out = $("results");
+    const mc = U.machineOf(S), out = $("results");
     if (!mc) { $("mach").textContent = "Pick your computer above and the answers appear here."; out.innerHTML = ""; return; }
-    $("mach").innerHTML = U.machineWords(mc);
+    // The machine sentence, then ds-hardware's notes about it, and a plain flag on the few entries whose
+    // numbers are estimates rather than published specs.
+    $("mach").innerHTML = U.machineWords(mc) +
+      (mc.approx ? ` <span class="lxapprox">Some of this machine&rsquo;s numbers are estimates, so treat its speeds as approximate.</span>` : "") +
+      (mc.hw.notes.length ? `<details class="lxhwnotes"><summary>Good to know about this machine</summary><ul>${mc.hw.notes.map((n) => `<li>${esc(n)}</li>`).join("")}</ul></details>` : "");
     const g = U.groups(U.assess(mc.hw, ctx, qover, S.t.includes("vision")), S.t, showAll);
     // The pick's how-to opens by itself, because most readers should stop there. When the pick changes, the
     // old one's panel closes with it, unless the reader opened it themselves.
@@ -540,7 +531,7 @@ const LOCALUI = ((D, FIT) => {
     const wasOpen = $("nofit") && $("nofit").open;
     out.innerHTML = html;
     if (wasOpen && $("nofit")) $("nofit").open = true;
-    $("live").textContent = `For ${mc.name} with ${mc.hw.ram_gb} GB: ${g.great.length} run great, ${g.ok.length} with a catch, ${g.no.length} won’t fit.` +
+    $("live").textContent = `For ${mc.name}: ${g.great.length} run great, ${g.ok.length} with a catch, ${g.no.length} won’t fit.` +
       (g.best ? ` Our pick is ${g.best.model.name}.` : "");
   };
 
@@ -550,9 +541,8 @@ const LOCALUI = ((D, FIT) => {
   // tab order anyway.
   document.querySelectorAll("input[name=kind]").forEach((i) => i.addEventListener("change", () => chooseKind(i.value)));
   $("gobtn").addEventListener("click", () => { $("s3").scrollIntoView({block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); $("s3h").focus({preventScroll: true}); });
-  $("pick").addEventListener("click", (e) => { const b = e.target.closest("[data-dev]"); if (b) chooseDevice(b.dataset.dev); });
-  $("custom").addEventListener("click", () => { const on = $("customb").hidden; setCustom(on); if (on) $("gq").focus(); });
-  $("nogpu").addEventListener("click", () => chooseGPU("none"));
+  $("pick").addEventListener("click", (e) => { const b = e.target.closest("[data-preset]"); if (b) choosePreset(b.dataset.preset); });
+  $("nogpu").addEventListener("click", () => chooseDevice(D.no_gpu));
   document.querySelectorAll("input[name=task]").forEach((i) => i.addEventListener("change", () => {
     S.t = [...document.querySelectorAll("input[name=task]:checked")].map((x) => x.value); showAll = false; update();
   }));
@@ -567,7 +557,7 @@ const LOCALUI = ((D, FIT) => {
       how.setAttribute("aria-expanded", String(open));
       if (open) {
         opened.add(id);
-        const mc = U.machineOf(S, UA), ctx = S.c || D.default_ctx;
+        const mc = U.machineOf(S), ctx = S.c || D.default_ctx;
         panel.innerHTML = howto({model: U.PICK[id], r: U.judge(U.PICK[id], mc.hw, ctx, qover[id], S.t.includes("vision"))}, mc, ctx);
       }
       else opened.delete(id);
@@ -608,36 +598,36 @@ const LOCALUI = ((D, FIT) => {
     box.querySelector("summary").focus();
   });
 
-  // ---- help me find out
+  // ---- help me find out: ds-hardware's steps per OS, each with a description of the screen it shows, and
+  // its fallback advice; then its browser hints, offered as buttons to confirm, never applied by themselves.
   const findOS = (os) => {
-    $("fos").innerHTML = ["windows", "macos", "linux", "steamos"].map((o) =>
+    const h = U.CAT.help;
+    $("fos").innerHTML = ["windows", "macos", "linux", "steamos", "chromeos"].map((o) =>
       `<button class="chip" type="button" data-fos="${o}" aria-pressed="${o === os}">${OSN[o]}</button>`).join("");
-    $("fsteps").innerHTML = D.find_out[os].map((s) => `<li>${esc(s)}</li>`).join("");
+    $("fsteps").innerHTML = h[os].steps.map((st) => `<li>${esc(st.text)}` +
+      (st.caption ? `<span class="lxcap">What you&rsquo;ll see: ${esc(st.caption)}</span>` : "") + "</li>").join("");
+    const fb = h.fallback && (h.fallback.steps || [])[0];
+    $("ffall").textContent = fb ? fb.text : "";
   };
-  $("fos").addEventListener("click", (e) => { const b = e.target.closest("[data-fos]"); if (b) { findOS(b.dataset.fos); b.focus(); refocus(`[data-fos="${b.dataset.fos}"]`); } });
+  $("fos").addEventListener("click", (e) => { const b = e.target.closest("[data-fos]"); if (b) { findOS(b.dataset.fos); refocus(`[data-fos="${b.dataset.fos}"]`); } });
   findOS(U.uaOS(UA));
-  $("guess").addEventListener("click", () => {
-    let renderer = "";
-    try {
-      const gl = document.createElement("canvas").getContext("webgl");
-      const ext = gl && gl.getExtension("WEBGL_debug_renderer_info");
-      renderer = gl ? gl.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER) : "";
-    } catch (e) {}
-    const found = U.guess(renderer), out = $("guessout");
-    const mem = navigator.deviceMemory ? ` Your browser also says you have at least ${navigator.deviceMemory} GB of memory (it never reports more than 8).` : "";
-    if (!found.length) {
-      out.innerHTML = `Your browser didn’t name a graphics chip we know${renderer ? ` (it said “${esc(renderer)}”)` : ""}. The steps below will tell you.${esc(mem)}`;
-      return;
-    }
-    out.innerHTML = `Looks like: ` + found.map(([t, r]) => `<button class="chip" type="button" data-guess="${t}:${esc(r.id)}">${esc(r.name)}</button>`).join("") +
-      ` Tap the right one to use it.${esc(mem)}`;
+  $("guess").addEventListener("click", async () => {
+    const out = $("guessout");
+    out.textContent = "Looking…";
+    const h = await U.guess();
+    const cands = (h.gpu && h.gpu.candidates) || [];
+    const name = (id) => (U.DEV[id] || {}).name || id;
+    out.innerHTML = (cands.length
+      ? `<p>Looks like: ${cands.map((c) => `<button class="chip" type="button" data-guess="${esc(c.id)}">${esc(name(c.id))}${c.confidence === "maybe" ? " (maybe)" : ""}</button>`).join("")} Tap the right one to use it.</p>`
+      : `<p>Your browser didn&rsquo;t name a graphics chip we know. The steps below will tell you.</p>`) +
+      (h.ram && h.ram.meaning ? `<p class="lxquiet">Memory: your browser says ${esc(h.ram.meaning)}.</p>` : "") +
+      (h.notes || []).map((n) => `<p class="lxquiet">${esc(n)}</p>`).join("");
+    if (h.os && U.CAT.help[h.os]) findOS(h.os);
   });
   $("guessout").addEventListener("click", (e) => {
     const b = e.target.closest("[data-guess]");
     if (!b) return;
-    const [t, id] = b.dataset.guess.split(":");
-    if (t === "device") { S.k = U.DEV[id].kind; chooseDevice(id); }
-    else { if (!S.k || S.k === "mac" || S.k === "handheld") S.k = "gaming"; setCustom(true); chooseGPU(id); }
+    chooseDevice(b.dataset.guess);
     refocus("#s3h");
   });
 

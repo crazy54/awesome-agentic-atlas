@@ -22,11 +22,14 @@ the one-line pitch live in `sitewide.LOCAL_PAGE` and nowhere else. This stage an
 stages carry all read it, so renaming is one edit there and a rebuild. The slug is the directory under `docs/`
 and the URL; changing it moves the page, and the old URL then 404s, so do it before launch or not at all.
 
-THREE INPUTS, ALL JOINED HERE AND NOWHERE ELSE
-----------------------------------------------
-  config/local-ai/catalogue.json   the hardware: device kinds, devices, GPUs, the usable-memory rules, and
-                                   the "how to find out what you have" steps. ds-hardware's, to
-                                   `team/contracts/hardware.md`.
+THE INPUTS, ALL JOINED HERE AND NOWHERE ELSE
+--------------------------------------------
+  config/local-ai/hardware.json    the hardware: ds-hardware's catalogue (`team/contracts/hardware.md`),
+                                   copied verbatim -- 316 devices, the presets, the per-platform memory
+                                   rules, and the "how to find out what you have" steps for six OSes.
+  scripts/localhw.mjs              ds-hardware's module over it, vendored verbatim: search, presets,
+                                   memory choices, `toMachine()` (the machine object fit.mjs reads) and
+                                   the browser hints. Inlined as `LOCALHW` the way the fit method is.
   config/local-ai/picks.json       the models the page recommends: ds-models' `team/local-ai/picks.json`,
                                    copied verbatim (`team/contracts/fit.md` section 11). Each pick carries
                                    its tier, uses, one-line why, licence, every quant file's exact size, the
@@ -36,14 +39,15 @@ THREE INPUTS, ALL JOINED HERE AND NOWHERE ELSE
                                    sizes follow re-uploads; without it, the pick's own `model` is used.
 
 Both config files are checked by `validate()` before anything is written, and a bad one stops the build
-with the reason. That is deliberate: the page's whole claim is "this will run on your machine", and a
-catalogue entry pointing at a GPU that is not there, or a model with no size for its default quant, is a
-wrong answer delivered confidently -- worse than no page.
+with the reason. That is deliberate: the page's whole claim is "this will run on your machine", and a preset
+pointing at a device that is not there, or a model with no size for its default quant, is a wrong answer
+delivered confidently -- worse than no page. The catalogue's own correctness is ds-hardware's, held by its
+2,700-odd checks in `team/local-ai/hardware/test.mjs`; this stage checks only what the page leans on.
 
 WHY EVERYTHING IS INLINED RATHER THAN FETCHED
 ---------------------------------------------
 The catalogue, the picks and `scripts/localfit.mjs` are written into the page itself, as one JSON block
-and one script: about 155 KB on disk and 39 KB over the wire with ds-models' picks, because Pages
+and two scripts: about 490 KB on disk and 73 KB over the wire with the full catalogue, because Pages
 gzips and the JSON is repetitive. Three things follow:
 
   * Offline for free. `scripts/24_pwa.py`'s worker caches every page a reader visits and serves it when the
@@ -110,6 +114,7 @@ def _load(name: str, alias: str):
 
 
 FIT_MJS = HERE / "localfit.mjs"
+HW_MJS = HERE / "localhw.mjs"
 HF_MODELS = OUT / "models.json"
 
 
@@ -130,18 +135,15 @@ class Bad(ValueError):
 
 
 def load(config: Path = CONFIG) -> tuple[dict, dict]:
-    cat = json.loads((config / "catalogue.json").read_text(encoding="utf-8"))
+    cat = json.loads((config / "hardware.json").read_text(encoding="utf-8"))
     picks = json.loads((config / "picks.json").read_text(encoding="utf-8"))
     validate(cat, picks)
     return cat, picks
 
 
 # The fields each record must carry, by the contract. Checked by name so a renamed field upstream is a
-# build that says which field, rather than a page that silently shows "undefined GB". The hardware names are
-# the ones `normalizeHardware()` in `localfit.mjs` reads, so the page passes a catalogue entry straight in.
-DEVICE_FIELDS = ("id", "kind", "name", "os", "ram_gb_options", "unified", "gpu", "vram_gb", "ram_bandwidth_gbs",
-                 "igpu")
-GPU_FIELDS = ("id", "name", "vendor", "vram_gb_options", "vram_bandwidth_gbs", "backends")
+# build that says which field, rather than a page that silently shows "undefined GB".
+DEVICE_FIELDS = ("id", "name", "kind", "tiles", "memory", "os", "confidence")
 PICK_FIELDS = ("id", "name", "tier", "uses", "why", "license", "gated", "default_quant", "run", "model")
 # The geometry the fit method cannot work without. The rest of `model` (sliding windows, experts, MLA) is
 # optional and only sharpens the answer.
@@ -175,8 +177,12 @@ def embed_only(p: dict) -> bool:
     return p["uses"] == ["embeddings"]
 
 
+# The OSes the how-to steps are written for. The catalogue's help also covers ChromeOS, whose Linux
+# container is Linux to every runner here, so a Chromebook gets the Linux steps.
 OSES = ("windows", "macos", "linux", "steamos")
-VENDORS = ("nvidia", "amd", "intel", "apple")
+HELP_OSES = OSES + ("chromeos",)
+# The device a reader with no graphics card picks: the catalogue's processor-only entry.
+NO_GPU = "cpu-only"
 
 
 def validate(cat: dict, picks: dict) -> None:
@@ -186,40 +192,35 @@ def validate(cat: dict, picks: dict) -> None:
         if missing:
             raise Bad(f"{what} {rid or rec.get('id', '?')!r} is missing {', '.join(missing)}")
 
-    kinds = {k["id"] for k in cat["kinds"]}
-    gpus = {}
-    for g in cat["gpus"]:
-        need(g, GPU_FIELDS, "gpu")
-        if g["id"] in gpus:
-            raise Bad(f"gpu {g['id']!r} appears twice")
-        if not g["vram_gb_options"] or g["vram_bandwidth_gbs"] <= 0:
-            raise Bad(f"gpu {g['id']!r} has no memory size or no bandwidth")
-        if g["vendor"] not in VENDORS:
-            raise Bad(f"gpu {g['id']!r} has vendor {g['vendor']!r}, not one of {VENDORS}")
-        gpus[g["id"]] = g
-    seen = set()
+    tiles = {t["id"] for t in cat["tiles"]}
+    if tiles != set(TILE_ICONS):
+        raise Bad(f"the catalogue's tiles {sorted(tiles)} are not the page's {sorted(TILE_ICONS)}; draw an icon "
+                  "for a new one in TILE_ICONS")
+    devices = {}
     for d in cat["devices"]:
         need(d, DEVICE_FIELDS, "device")
-        if d["id"] in seen:
+        if d["id"] in devices:
             raise Bad(f"device {d['id']!r} appears twice")
-        seen.add(d["id"])
-        if d["kind"] not in kinds:
-            raise Bad(f"device {d['id']!r} has kind {d['kind']!r}, which is not one of {sorted(kinds)}")
-        if d["gpu"] is not None and d["gpu"] not in gpus:
-            raise Bad(f"device {d['id']!r} names gpu {d['gpu']!r}, which the catalogue does not have")
-        if d["gpu"] is not None and d["vram_gb"] <= 0:
-            raise Bad(f"device {d['id']!r} has a graphics card with no memory")
-        if d["gpu"] is not None and d["igpu"]:
-            raise Bad(f"device {d['id']!r} has both a graphics card and a shared-memory GPU; pick the one AI uses")
-        if d["igpu"] and (not d["unified"] or d["igpu"].get("vendor") not in VENDORS):
-            raise Bad(f"device {d['id']!r} has a shared-memory GPU but is not unified, or names no vendor")
-        if not d["ram_gb_options"] or min(d["ram_gb_options"]) <= 0 or d["ram_bandwidth_gbs"] <= 0:
-            raise Bad(f"device {d['id']!r} has no RAM size or no bandwidth")
-        if not set(d["os"]) <= set(OSES) or not d["os"]:
-            raise Bad(f"device {d['id']!r} lists an OS outside {OSES}: {d['os']}")
-    for os_ in OSES:
-        if not cat["find_out"].get(os_):
-            raise Bad(f"find_out has no steps for {os_}")
+        devices[d["id"]] = d
+        if not set(d["tiles"]) <= tiles:
+            raise Bad(f"device {d['id']!r} is on tiles outside {sorted(tiles)}: {d['tiles']}")
+        if not d["memory"].get("options_gb"):
+            raise Bad(f"device {d['id']!r} has no memory size to offer")
+    if NO_GPU not in devices:
+        raise Bad(f"the catalogue has no {NO_GPU!r} entry, which the 'No graphics card' button picks")
+    for pr in cat["presets"]:
+        if pr["device"] not in devices:
+            raise Bad(f"preset {pr['id']!r} names device {pr['device']!r}, which the catalogue does not have")
+    for t in tiles:
+        if not any(pr["tile"] == t for pr in cat["presets"]):
+            raise Bad(f"the {t} tile has no preset to offer as a chip")
+    for os_ in HELP_OSES:
+        if not (cat["help"].get(os_) or {}).get("steps"):
+            raise Bad(f"the catalogue's help has no steps for {os_}")
+    presets = {pr["id"] for pr in cat["presets"]}
+    missing = [c for c in CHEAT if c not in presets]
+    if missing:
+        raise Bad(f"the cheat sheet names presets the catalogue no longer has: {missing}")
 
     uses = {t for t, _ in TASKS}
     seen = set()
@@ -403,44 +404,31 @@ HOWTO = {
 RUNNER_CTX = 4096
 # The context every estimate assumes unless the reader changes it: fit.md section 2.2's default.
 DEFAULT_CTX = 8192
+# The preview banner. Off once the Steam Deck's GPU share is settled; see `render()`.
+PREVIEW = True
 
 
 # ------------------------------------------------------------------ the cheat sheet
-# Machines most readers will recognise themselves in, for the table a reader without script gets. Each is a
-# hardware object in the catalogue's field names, which `normalizeHardware()` reads exactly as it reads the
-# page's machines.
-def _apple(ram, bw):
-    return {"ram_gb": ram, "ram_bandwidth_gbs": bw, "unified": True, "os": "macos",
-            "gpu": {"vendor": "apple", "integrated": True, "vram_bandwidth_gbs": bw, "backends": ["metal", "mlx"]}}
-
-
-def _card(vram, bw, ram, ram_bw=80):
-    return {"ram_gb": ram, "ram_bandwidth_gbs": ram_bw, "os": "windows",
-            "gpu": {"vendor": "nvidia", "vram_gb": vram, "vram_bandwidth_gbs": bw, "backends": ["cuda", "vulkan"]}}
-
-
-CHEAT = [
-    ("A laptop with 8 GB and no graphics card", {"ram_gb": 8, "ram_bandwidth_gbs": 51.2, "os": "windows", "gpu": None}),
-    ("A laptop with 16 GB and no graphics card", {"ram_gb": 16, "ram_bandwidth_gbs": 68, "os": "windows", "gpu": None}),
-    ("A Steam Deck (16 GB shared)", {"ram_gb": 16, "ram_bandwidth_gbs": 102.4, "unified": True, "os": "steamos",
-                                     "gpu": {"vendor": "amd", "integrated": True, "vram_bandwidth_gbs": 102.4,
-                                             "backends": ["vulkan"]}}),
-    ("A Mac with 16 GB (M-series)", _apple(16, 100)),
-    ("A Mac with 36 GB (M-series Pro or Max)", _apple(36, 273)),
-    ("A PC with an 8 GB graphics card and 32 GB RAM", _card(8, 272, 32)),
-    ("A PC with a 12 GB graphics card and 32 GB RAM", _card(12, 504, 32)),
-    ("A PC with a 16 GB graphics card and 32 GB RAM", _card(16, 717, 32)),
-    ("A PC with a 24 GB graphics card and 64 GB RAM", _card(24, 1008, 64, 96)),
-    ("A Mac with 128 GB (M-series Max)", _apple(128, 546)),
-]
+# Machines most readers will recognise themselves in, for the table a reader without script gets: ds-hardware's
+# presets, by id, so each row is the machine the picker builds for the same chip -- `toMachine()` in both
+# places -- and the browser check can hold one row to what the picker says.
+CHEAT = ["mba-m1-8", "laptop-office-intel", "steam-deck-oled", "mba-m3-16", "laptop-4060", "mbp-m4-pro-24",
+         "pc-3060", "pc-5060-ti-16", "pc-4090", "framework-desktop-128", "mac-studio-m4max-128"]
 
 # The cheat sheet's runner: the same `localfit.mjs` the page inlines, imported as the module it is, and the
 # same model assembly the page does (`modelOf` is `LOCALUI.modelOf`'s rule restated in a few lines; the
 # browser check holds the page's answer for a cheat-sheet machine to this table's).
 CHEAT_JS = r"""
 import * as F from %(fit)s;
+import * as H from %(hw)s;
 import {readFileSync} from "node:fs";
 const I = JSON.parse(readFileSync(process.argv[2], "utf8"));
+const CAT = JSON.parse(readFileSync(%(cat)s, "utf8"));
+const machines = I.presets.map((id) => {
+  const p = CAT.presets.find((x) => x.id === id);
+  return H.toMachine(CAT, {device: p.device, memory_gb: p.memory_gb ?? undefined, ram_gb: p.ram_gb ?? undefined,
+                           ram_kind: p.ram_kind ?? undefined, os: p.os ?? undefined});
+});
 const hf = I.hf && I.hf.rows ? Object.fromEntries(I.hf.rows.map((r) => {
   const o = Object.fromEntries(I.hf.cols.map((c, i) => [c, r[i]])); return [o.id, o]; })) : {};
 const modelOf = (p) => {
@@ -448,7 +436,7 @@ const modelOf = (p) => {
   const base = row ? F.normalizeModel(row, I.hf.variant_cols, I.hf.file_cols) : null;
   return base && base.quants.length ? Object.assign(base, {id: p.id}) : p.model;
 };
-const out = I.machines.map((hw) => I.models.map((p) => {
+const out = machines.map((hw) => I.models.map((p) => {
   const b = F.bestQuant(modelOf(p), hw, {context: I.ctx});
   return b ? {id: p.id, verdict: b.verdict, quant: b.quant, tps: b.speed.decodeTps, snag: !!(b.offload || b.nearlyFull)}
     : {id: p.id, verdict: "too-big"};
@@ -472,9 +460,10 @@ def cheat_answers(picks: dict, hf: dict) -> list[list[dict]]:
     import tempfile
     with tempfile.TemporaryDirectory() as tmp:
         t = Path(tmp)
-        (t / "in.json").write_text(json.dumps({"machines": [m for _, m in CHEAT], "models": picks["picks"],
+        (t / "in.json").write_text(json.dumps({"presets": CHEAT, "models": picks["picks"],
                                                "hf": hf, "ctx": DEFAULT_CTX}), encoding="utf-8")
-        (t / "cheat.mjs").write_text(CHEAT_JS % {"fit": json.dumps(FIT_MJS.as_uri())}, encoding="utf-8")
+        (t / "cheat.mjs").write_text(CHEAT_JS % {"fit": json.dumps(FIT_MJS.as_uri()), "hw": json.dumps(HW_MJS.as_uri()),
+                                                 "cat": json.dumps(str(CONFIG / "hardware.json"))}, encoding="utf-8")
         res = subprocess.run([node_bin(), str(t / "cheat.mjs"), str(t / "in.json")],
                              capture_output=True, text=True, encoding="utf-8")
     if res.returncode:
@@ -482,34 +471,58 @@ def cheat_answers(picks: dict, hf: dict) -> list[list[dict]]:
     return json.loads(res.stdout)
 
 
-def cheat_rows(picks: dict, answers: list[list[dict]]) -> list[tuple[str, list, list]]:
+def cheat_rows(cat: dict, picks: dict, answers: list[list[dict]]) -> list[tuple[str, list, list]]:
     """For each cheat-sheet machine: the three best picks that run great, and the two best that only run."""
     by = {m["id"]: m for m in picks["picks"]}
+    label = {pr["id"]: pr["label"] for pr in cat["presets"]}
     out = []
-    for (label, _), row in zip(CHEAT, answers):
+    for pid, row in zip(CHEAT, answers):
+        name = label[pid]
         row = [a for a in row if not embed_only(by[a["id"]])]
         # Clean fits first, as the picker orders them (see `groups` in local_page.js).
         great = sorted((a for a in row if a["verdict"] == "great"), key=lambda a: (a["snag"], -rank(by[a["id"]])))
         ok = sorted((a for a in row if a["verdict"] in ("slow", "tight")), key=lambda a: -rank(by[a["id"]]))
-        out.append((label, [(by[a["id"]], a) for a in great[:3]], [(by[a["id"]], a) for a in ok[:2]]))
+        out.append((name, [(by[a["id"]], a) for a in great[:3]], [(by[a["id"]], a) for a in ok[:2]]))
     return out
 
 
-def fit_js() -> str:
-    """`localfit.mjs` as a classic script defining `LOCALFIT`, for inlining.
+def module_js(path: Path, name: str, owner: str) -> str:
+    """A vendored ES module as a classic script defining `name`, for inlining.
 
-    The module is vendored verbatim from ds-models, so it is adapted here rather than edited: every top-level
-    `export ` is dropped and the names it exported are returned from a wrapper. The list is read off the
-    source, so an export added upstream arrives on `LOCALFIT` with no edit here; `tests/local_test.py` asserts
-    the wrapped script exposes every one of them and that the file has no import or other export form this
-    rewrite would miss.
+    Both modules are vendored verbatim from their owners, so they are adapted here rather than edited: every
+    top-level `export ` is dropped and the names it exported are returned from a wrapper. The list is read off
+    the source, so an export added upstream arrives with no edit here; `tests/local_test.py` asserts the
+    wrapped script exposes every one of them and that the file has no import or other export form this
+    rewrite would miss. Each module gets its own function scope, so a name both define (`GIB`,
+    `appleGpuShareGB`) cannot collide.
     """
-    src = FIT_MJS.read_text(encoding="utf-8")
-    names = re.findall(r"^export (?:const|function|let) (\w+)", src, re.M)
-    body = re.sub(r"^export (?=const|function|let)", "", src, flags=re.M)
-    return ("/* LOCAL FIT. scripts/localfit.mjs, ds-models' fit method (team/contracts/fit.md), wrapped by\n"
-            "   scripts/32_local.py. Edit the module, not this. */\n"
-            f"const LOCALFIT = (() => {{\n{body}\nreturn {{{', '.join(names)}}};\n}})();\n")
+    src = path.read_text(encoding="utf-8")
+    names = re.findall(r"^export (?:const|function|let|async function) (\w+)", src, re.M)
+    body = re.sub(r"^export (?=const|function|let|async function)", "", src, flags=re.M)
+    return (f"/* {name}. scripts/{path.name}, {owner}'s module, wrapped by scripts/32_local.py. Edit the module,\n"
+            "   not this. */\n"
+            f"const {name} = (() => {{\n{body}\nreturn {{{', '.join(names)}}};\n}})();\n")
+
+
+def fit_js() -> str:
+    return module_js(FIT_MJS, "LOCALFIT", "ds-models")
+
+
+def hw_js() -> str:
+    return module_js(HW_MJS, "LOCALHW", "ds-hardware")
+
+
+# Device fields no function in `localhw.mjs` reads and the page never shows: each device's source ids and its
+# review flags. They are for whoever checks a number, who has the committed file. `tests/local_test.py` holds
+# this to the module, so a field ds-hardware starts reading cannot be stripped by mistake.
+DROP = ("sources", "flags")
+
+
+def slim_catalogue(cat: dict) -> dict:
+    """The catalogue as the page needs it: without the 179-entry source list and the `DROP` fields. About
+    70 KB of the page."""
+    devices = [{k: v for k, v in d.items() if k not in DROP} for d in cat["devices"]]
+    return {k: v for k, v in dict(cat, devices=devices).items() if k != "sources"}
 
 
 # ------------------------------------------------------------------ the page
@@ -554,13 +567,12 @@ def payload(cat: dict, picks: dict, hf: dict) -> dict:
     `hf` is the joined slice of eng-hf's index (see `hf_join`), carried in its own column-list shape."""
     return {
         "page": PAGE,
-        "kinds": cat["kinds"], "devices": cat["devices"], "gpus": cat["gpus"], "custom": cat["custom"],
-        "find_out": cat["find_out"],
+        "cat": slim_catalogue(cat), "no_gpu": NO_GPU,
         "tasks": [{"id": t, "label": l} for t, l in TASKS], "models": [slim(p) for p in picks["picks"]], "hf": hf or None,
         "runtimes": picks.get("runtimes"),
         "default_ctx": DEFAULT_CTX, "runner_ctx": RUNNER_CTX,
         "howto": HOWTO,
-        "fixture": bool(cat.get("fixture")),
+        "fixture": False,
     }
 
 
@@ -618,10 +630,10 @@ def nav() -> str:
 TILE_ICONS = {
     "laptop": '<path d="M4 6h16v10H4zM2 19h20"/>',
     "mac": '<path d="M3 5h18v11H3zM9 20h6M12 16v4"/>',
-    "gaming": '<path d="M7 3h10v18H7zM10 7h4M10 11h4M12 16v1"/>',
+    "gaming-pc": '<path d="M7 3h10v18H7zM10 7h4M10 11h4M12 16v1"/>',
     "desktop": '<path d="M3 4h18v12H3zM8 20h8M12 16v4"/>',
     "handheld": '<path d="M2 8a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3zM8 9v6M5 12h6M8 5v0M9 9h6v6H9z" fill="none"/><circle cx="18" cy="11" r="1"/><circle cx="18" cy="14" r="1"/>',
-    "minipc": '<path d="M5 8h14v8H5zM8 12h3"/>',
+    "mini-pc": '<path d="M5 8h14v8H5zM8 12h3"/>',
 }
 
 
@@ -653,9 +665,10 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
     url = SITE + PAGE["slug"] + "/"
     tasks = "".join(f'<label class="chip lxchip"><input type="checkbox" name="task" value="{esc(t)}">'
                     f'<span>{esc(label)}</span></label>' for t, label in TASKS)
-    fixture = ('<p class="lxfix" role="note">Preview data: the hardware list is a placeholder while the '
-               'catalogue is finished, so a machine&rsquo;s numbers may be off. Treat every answer as a rough guide.</p>'
-               if cat.get("fixture") else "")
+    # The preview banner stays until the Steam Deck's GPU share is settled between ds-hardware and
+    # ds-models (the lead's condition): its headline picks hang on that one number.
+    fixture = ('<p class="lxfix" role="note">Preview: this page is new and its numbers are still being '
+               'checked. Treat every answer as a good guide rather than a promise.</p>' if PREVIEW else "")
     return f"""{head(title, desc, url)}<body>
 <header><div class="wrap">
   <nav class="brandbar">{mark.brand(rel())}</nav><div class="top">
@@ -678,7 +691,7 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
     <p class="lxsum" id="s1sum" hidden></p></div>
   <div class="lxbody" id="s1b">
     <fieldset class="lxtiles"><legend class="sr">What kind of computer</legend>
-      {"".join(tile(k) for k in cat["kinds"])}
+      {"".join(tile(k) for k in cat["tiles"])}
     </fieldset>
     <div class="lxpick" id="pick" hidden>
       <div class="lxfield" id="devf">
@@ -690,34 +703,27 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
         </div>
         <p class="lxpop" id="pop"></p>
       </div>
-      <p class="lxalt"><button class="lxlink" id="custom" type="button" aria-expanded="false"
-        aria-controls="customb">I&rsquo;ll enter my graphics card and memory myself</button></p>
-      <div class="lxcustom" id="customb" hidden>
-        <div class="lxfield">
-          <label for="gq" id="gqlab">Graphics card</label>
-          <div class="lxcombo">
-            <input id="gq" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false"
-                   aria-controls="gqlist" autocomplete="off" spellcheck="false" placeholder="e.g. RTX 4060, RX 7800 XT">
-            <ul id="gqlist" role="listbox" aria-labelledby="gqlab" hidden></ul>
-          </div>
-          <p class="lxpop"><button class="chip" type="button" id="nogpu">{esc(cat["custom"]["no_gpu_label"])}</button></p>
-        </div>
-        <fieldset class="lxramf" id="vramf" hidden><legend>Its memory (VRAM)</legend><div id="vramo"></div></fieldset>
-      </div>
-      <fieldset class="lxramf" id="ramf" hidden><legend>How much memory (RAM)?
+      <p class="lxpop"><button class="chip" type="button" id="nogpu" aria-pressed="false">No graphics card
+        (or I&rsquo;m not sure)</button></p>
+      <fieldset class="lxramf" id="memf" hidden><legend id="meml">Memory</legend><div id="memo"></div></fieldset>
+      <fieldset class="lxramf" id="ramf" hidden><legend>How much main memory (RAM)?
         <a class="lxwhat" href="#findout" data-open="findout">Not sure?</a></legend><div id="ramo"></div></fieldset>
+      <fieldset class="lxramf" id="stickf" hidden><legend>How many memory sticks? <small>Optional</small></legend>
+        <div id="sticko"></div>
+        <p class="lxquiet">One stick is half as fast as two. Windows shows it in Task Manager, under Memory, as
+          &ldquo;Slots used&rdquo;.</p></fieldset>
       <p class="lxgores" id="gores" hidden><button class="cta" type="button" id="gobtn">See what you can run &darr;</button></p>
     </div>
     <details class="lxfind" id="findout">
       <summary>Help me find out what I have</summary>
       <div class="lxfindb">
         <p><button class="chip lxgo" type="button" id="guess">Guess from this browser</button>
-          <span class="lxquiet">Reads the graphics name your browser reports. Nothing is sent anywhere.</span></p>
-        <p id="guessout" role="status"></p>
+          <span class="lxquiet">Detected in your browser; nothing leaves your computer. Chrome and Edge name the
+          graphics chip; Safari and Firefox don&rsquo;t, so there the steps below are the way.</span></p>
+        <div id="guessout" role="status"></div>
         <div class="lxos" role="group" aria-label="Your operating system" id="fos"></div>
         <ol id="fsteps"></ol>
-        <p class="lxquiet">Still not sure? Pick the smaller option. Too cautious beats too hopeful: a model
-          that fits with room to spare is a model that works.</p>
+        <p class="lxquiet" id="ffall"></p>
       </div>
     </details>
   </div>
@@ -746,7 +752,7 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
 <section class="lxs" id="cheat" aria-labelledby="cheath">
   <h2 id="cheath">Quick answer by machine</h2>
   <p class="lxquiet">The same maths as the picker, for some common machines, at an {DEFAULT_CTX // 1024}k context.</p>
-  {cheat_html(cheat_rows(picks, cheat_answers(picks, hf)))}
+  {cheat_html(cheat_rows(cat, picks, cheat_answers(picks, hf)))}
 </section>
 
 <section class="lxs" id="learn" aria-labelledby="learnh">
@@ -801,7 +807,7 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
 </div></footer>
 <script type="application/json" id="lxdata">{json_script(payload(cat, picks, hf))}</script>
 <script>
-{fit_js()}</script>
+{fit_js()}{hw_js()}</script>
 {PAGE_JS}{sitewide.site_script(rel())}{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(rel())}</body>
 </html>
 """
@@ -874,6 +880,11 @@ legend{padding:0;font-weight:600;margin:0 0 8px}
 .lxos{display:flex;flex-wrap:wrap;margin:10px 0 0}
 .lxwhat{font-weight:400;font-size:13px;margin-left:6px}
 .lxmach{margin:14px 0 0;font-size:16px;color:var(--ink);max-width:70ch}
+.lxapprox{display:block;margin:6px 0 0;font-size:13.5px;color:var(--ink2)}
+.lxhwnotes{margin:8px 0 0;font-size:13.5px;color:var(--ink2)}
+.lxhwnotes summary{color:var(--link);cursor:pointer;min-height:32px;padding:4px 0}
+.lxhwnotes ul{margin:4px 0 0;padding-left:20px}
+.lxcap{display:block;margin:3px 0 0;font-size:12.5px;color:var(--muted)}
 .lxexpert{margin:12px 0 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .lxexpert label{font-weight:600;font-size:14px}
 .lxbest{margin:16px 0 0;padding:16px;border:2px solid var(--bar);border-radius:14px;background:var(--band)}
@@ -972,9 +983,9 @@ def main() -> None:
     # whoever edits this stage, `local_page.js` and ds-models' module, and every one stays in the source.
     page.write_text(pagemin.strip_page(render(cat, picks, hf)), encoding="utf-8")
     print(f"{PAGE['slug']}/index.html · {b20.kb(page.stat().st_size)} · {len(cat['devices'])} devices, "
-          f"{len(cat['gpus'])} graphics cards, {len(picks['picks'])} picks"
+          f"{len(cat['presets'])} presets, {len(picks['picks'])} picks"
           + (f", {len(hf)} joined to the Hugging Face index" if hf else ", no Hugging Face index yet")
-          + (" · FIXTURE hardware" if cat.get("fixture") else ""))
+          + (" · preview banner on" if PREVIEW else ""))
     print("sitemap.xml carries this URL via scripts/20_landing.py")
 
 

@@ -111,7 +111,7 @@ export const CAL = {
   metal:          { eta: 0.90, layerMs: 0.150, kv: 0.54, ppEta: 0.63, spread: 0.25 },
   cuda:           { eta: 0.91, layerMs: 0.060, kv: 0.81, ppEta: 1.00, spread: 0.20 },
   vulkan:         { eta: 0.81, layerMs: 0.025, kv: 0.87, ppEta: 0.37, spread: 0.25 }, // kv: no deep rows; CUDA's
-  'vulkan-intel': { eta: 0.48, layerMs: 0.025, kv: 0.87, ppEta: 0.08, spread: 0.40 }, // Intel Arc (driver-limited)
+  'vulkan-intel': { eta: 0.48, layerMs: 0.025, kv: 0.87, ppEta: 0.086, spread: 0.40 }, // Intel Arc (driver-limited)
   rocm:           { eta: 0.76, layerMs: 0.060, kv: 0.87, ppEta: 0.37, spread: 0.25 },
   sycl:           { eta: 0.55, layerMs: 0.040, kv: 0.87, ppEta: 0.25, spread: 0.40 }, // not calibrated: see fit.md
   cpu:            { eta: 0.58, layerMs: 0.000, kv: 1.00, ppEta: 1.00, spread: 0.50 },
@@ -494,7 +494,7 @@ export function fit(model, quant, hardware, opts = {}) {
   if (b.shared) {
     // Unified memory: spilling past the GPU's share onto CPU threads uses the same RAM, so the ceiling is RAM.
     if (total > b.ram) return { ...base, placement: 'none', fits: false, gpuLayers: 0, gpuBytes: 0, cpuBytes: 0, notes };
-    if (hw.gpu.vendor === 'apple') notes.push(`Over macOS's default GPU memory limit (${(b.gpu / GB).toFixed(0)} GB). It can be raised until the next restart: sudo sysctl iogpu.wired_limit_mb=${Math.floor(b.ram / 2 ** 20)}`); // value in MiB
+    if (hw.gpu.vendor === 'apple') notes.push(`Over macOS's GPU memory limit (${(b.gpu / GB).toFixed(0)} GB). It can be raised until the next restart: sudo sysctl iogpu.wired_limit_mb=${Math.floor(b.ram / 2 ** 20)}`); // value in MiB
     else notes.push('Over the GPU memory share; raising it in the BIOS (UMA / dedicated graphics memory) lets it all run on the GPU.');
   }
 

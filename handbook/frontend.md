@@ -20,7 +20,7 @@ Counts were measured on 2026-09-25 with `find docs/<dir> -name index.html | wc -
 | `/repo/<owner>/<name>/` | 8,858 pages, plus `/repo/` | `22_detail.py` | One per project, with the in-page README reader. Names are slugged so every path is legal on Windows |
 | `/collections/…` | 6 pages | `25_collections.py` | Curated picks from `config/collections.json`. Rebuilt weekly only |
 | `/discover/` | `docs/discover/index.html`, `discover/cards/*.json` | `19d_discover.py`; `31_home.py` writes the cards | Fifty a day |
-| `/local/` | `docs/local/index.html` | `32_local.py` | The local-AI page (working title "Run It Local"): pick your machine, see which models run on it and how to run them. Data from `config/local-ai/`, maths in `localfit.mjs` (ds-models' fit method, vendored), all inlined so it works offline once visited. The name and slug are `sitewide.LOCAL_PAGE` |
+| `/local/` | `docs/local/index.html` | `32_local.py` | The local-AI page (working title "Run It Local"): pick your machine, see which models run on it and how to run them. Data from `config/local-ai/` (ds-hardware's catalogue, ds-models' picks), with `localhw.mjs` and `localfit.mjs` vendored from them, all inlined so it works offline once visited. The name and slug are `sitewide.LOCAL_PAGE` |
 | `/v2/…` | prototype pages | `30_v2.py` | The redesign lab. On demand only, and not linked from the nav |
 | feeds, sitemaps | `feed.xml`, `feed.json`, `sitemap*.xml`, `robots.txt` | `21_feeds.py`, `20_landing.py`, `22_detail.py` | |
 | data | `data.json`, `live.json`, `discover.json`, `search/*`, `build.json` | `19`/`25_velocity`, `19c`, `19d`, `27`, `31` | `data.json` is a public API; its schema is in the root README |
