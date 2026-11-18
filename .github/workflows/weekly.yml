@@ -171,6 +171,32 @@ jobs:
       # gets a fresh image at all: a key already in shots_all.json is otherwise never rebuilt, which is
       # the right rule for a banner that has not moved and the wrong one for an entry the list rewrote.
       # The daily job fills the queue and never captures, so this is the only run that empties it.
+      # The models index (eng-hf): `docs/models.json` from the Hugging Face Hub, and the catalogue page drawn
+      # from it. See handbook/pipeline.md#the-models-index. Placed here, after the fetch and before the
+      # screenshots, by agreement with eng-ci: the screenshot step's deadline is computed from the time
+      # left in the job, so whatever this step uses comes out of the screenshots' budget and never out of
+      # the workbooks'. Allowed to fail, and capped, for the same reason: it is the one stage here that
+      # reads a third party other than GitHub, and a Hub outage must cost this week's models refresh only.
+      #
+      # Resumable. Every Hub answer is written to `cache/hf/` the moment it arrives, keyed on the repo's
+      # sha, and `cache/` is banked by the `always()` save below even when this step times out. So a cold
+      # build that does not finish in one run (about 100 minutes of anonymous API time from nothing)
+      # carries on next week from where it stopped. `--deadline-minutes` makes the stage stop asking a
+      # few minutes before the step's cap and exit 3, rather than be killed mid-request; it writes the
+      # dataset only when the whole index is built and validated, so a stopped run publishes nothing.
+      #
+      # `models-start` is this step's own marker for the rewrite check below, because the site step's
+      # `build-start` is touched after this one runs.
+      - name: Models index
+        id: models
+        continue-on-error: true
+        timeout-minutes: 100
+        run: |
+          set -euo pipefail
+          touch "$RUNNER_TEMP/models-start"
+          python scripts/40_models.py --deadline-minutes 92
+          python scripts/41_models_page.py
+
       - name: Capture screenshots
         run: |
           set -euo pipefail
@@ -296,23 +322,6 @@ jobs:
           # answer" is still the feature gone -- so it is rebuilt wherever the corpus is.
           python scripts/27_semantic.py
 
-      # The models index (eng-hf): `docs/models.json` from the Hugging Face Hub, and the catalogue page
-      # drawn from it. Its own step, after the site build and before the rewrite check, and allowed to fail:
-      # it is the one stage here that reads a third party other than GitHub, and a Hub outage or a page
-      # change at ollama.com should cost this week's models refresh, not this week's screenshots and
-      # workbooks. A failure leaves the committed file as it was (the stage writes nothing unless the
-      # whole index validated and passed its 70% guard) and is reported by the `models` arm of the check
-      # below. Anonymous reads, no secret; `cache/hf/` rides in the same rolling cache as everything else,
-      # so only repos whose sha moved are re-read. 24_pwa does not precache either file, so its position
-      # relative to that stage does not matter. See handbook/pipeline.md#the-models-index.
-      - name: Models index
-        id: models
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          python scripts/40_models.py
-          python scripts/41_models_page.py
-
       # The same assertion daily.yml carries -- see there for why it is mtime against a marker rather than
       # a manifest, and why an unwritten facet page is a warning while an unwritten fixed path is an error.
       #
@@ -346,6 +355,14 @@ jobs:
             # exactly once and is the correct outcome, and a warning that is right every time it appears
             # is a warning people learn to scroll past.
             if [ ! -e "$f" ]; then printf '%s\n' "$f" >> "$RUNNER_TEMP/deleted"; continue; fi
+            # The models index, judged against its own step's marker (see that step), and a warning
+            # rather than the strict arm's error when unwritten: the stage is in this workflow, it
+            # failed, timed out or declined to publish, and the committed index stays as it was.
+            case "$f" in
+              docs/models.json|docs/models/*)
+                if [ -e "$RUNNER_TEMP/models-start" ] && [ "$f" -nt "$RUNNER_TEMP/models-start" ]; then continue; fi
+                printf '%s\n' "$f" >> "$RUNNER_TEMP/models"; continue ;;
+            esac
             if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
             case "$f" in
               # Three files under `docs/` are checked in by hand and no generator has ever written them:
@@ -389,10 +406,6 @@ jobs:
               # is no fixed-path file here that needs to stay under the strict arm.
               docs/v2/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/beta" ;;
-              # The models index, whose step above may fail on purpose (see there). Unwritten is a warning
-              # here, not the strict arm's error: the stage exists in this workflow, it declined to publish.
-              docs/models.json|docs/models/*)
-                printf '%s\n' "$f" >> "$RUNNER_TEMP/models" ;;
               # `docs/og/*.png` and not `docs/og/*`: a card whose content did not change is deliberately
               # not rewritten -- that skip is the whole reason the cards cost ~84 KB a week instead of
               # 527 -- so an unwritten PNG is expected. `cards.json` is written unconditionally, so it
@@ -422,7 +435,7 @@ jobs:
           fi
           nm="$(wc -l < "$RUNNER_TEMP/models" | tr -d ' ')"
           if [ "$nm" -gt 0 ]; then
-            echo "::warning title=Models index not refreshed::${nm} models file(s) were not rewritten; the Models index step failed or refused (see its log). The committed index stays as it was."
+            echo "::warning title=Models index not refreshed::${nm} models file(s) were not rewritten: the Models index step failed, timed out or refused (see its log). The committed index stays as it was, and a timed-out build resumes from cache/hf/ next week."
           fi
           if [ "$nd" -gt 0 ]; then
             echo "Tracked files this build deleted, whose removal the commit below carries:"
