@@ -251,7 +251,7 @@ true("every explainer the cards link to exists",
      all(f'id="{x}"' in html for x in ("q-quant", "q-ctx", "q-offload", "q-unified", "q-tokens")))
 true("the picker is an ARIA combobox with a listbox", 'role="combobox"' in html and 'role="listbox"' in html)
 true("results are announced politely", 'aria-live="polite"' in html)
-true("the preview banner shows exactly while PREVIEW is on", ("lxfix" in html) == b32.PREVIEW)
+true("the preview banner shows exactly while PREVIEW is on", ('class="lxfix"' in html) == b32.PREVIEW)
 true("the inlined hardware module is there", "const LOCALHW = (() => {" in html)
 true("the page states the hardware list's own date", f"Hardware list updated {b32.long_date(CAT['updated'])}" in html)
 check("...written out in words", b32.long_date("2026-11-08"), "8 November 2026")

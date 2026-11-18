@@ -404,8 +404,10 @@ HOWTO = {
 RUNNER_CTX = 4096
 # The context every estimate assumes unless the reader changes it: fit.md section 2.2's default.
 DEFAULT_CTX = 8192
-# The preview banner. Off once the Steam Deck's GPU share is settled; see `render()`.
-PREVIEW = True
+# The preview banner. Off as of 2026-11-18, when ds-hardware and ds-models settled the Steam Deck's GPU share
+# at 6 GiB (the measured, cautious end of 6 to 7.4). Turn it back on with any data that has not been checked
+# end to end; `render()` draws it.
+PREVIEW = False
 
 
 # ------------------------------------------------------------------ the cheat sheet
@@ -685,8 +687,7 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
     url = SITE + PAGE["slug"] + "/"
     tasks = "".join(f'<label class="chip lxchip"><input type="checkbox" name="task" value="{esc(t)}">'
                     f'<span>{esc(label)}</span></label>' for t, label in TASKS)
-    # The preview banner stays until the Steam Deck's GPU share is settled between ds-hardware and
-    # ds-models (the lead's condition): its headline picks hang on that one number.
+    # The preview banner, for data not yet checked end to end. See `PREVIEW`.
     fixture = ('<p class="lxfix" role="note">Preview: this page is new and its numbers are still being '
                'checked. Treat every answer as a good guide rather than a promise.</p>' if PREVIEW else "")
     return f"""{head(title, desc, url)}<body>
