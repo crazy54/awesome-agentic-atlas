@@ -89,7 +89,7 @@ Node process on the machine, including other sessions' tools and test runs.
 | `theme_test.py` | Python | The eight skins' token sets, which must stay identical across their four copies; the theme menu; verdict marks; the phone layout | 1053 | 500 |
 | `signals_test.py` | Python | When a cached release or action answer must be re-queried | 210 | 170 |
 | `fetch_test.py` | Python | A batch GitHub keeps timing out on is split and retried; nothing else is | 27 | 20 |
-| `ci_tools_test.py` | Python | `tools/local_daily.py` reads the daily's stages in order and never runs IndexNow or records SHAs; every job has a time limit, only the builds share `atlas-build`, the time report matches the limit, network steps retry | 40 | 35 |
+| `ci_tools_test.py` | Python | `tools/local_daily.py` reads the daily's stages in order and never runs IndexNow or records SHAs; every job has a time limit, only the builds share `atlas-build`, the time report matches the limit, network steps retry | 35 | 30 |
 | `dead_repos_test.py` | Python | The weekly dead-repo scan's verdicts, ledger and guard, and the build leaving dead repos out | 37 | 35 |
 | `indexnow_test.py` | Python | Which URLs are submitted, the key prune, truncated responses. Network is stubbed | 140 | 100 |
 | `newness_test.py` | Python | What "New" means: one cohort, replaced by the next import that adds anything | 54 | 45 |

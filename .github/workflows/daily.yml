@@ -317,6 +317,17 @@ jobs:
           python scripts/13_signals_all.py
           python scripts/14_classify_all.py
 
+      # Node, before the first stage that can shell out to it, not only before the suite. A page stage that
+      # runs node at build time (the local-AI page's no-script cheat sheet, 32_local.py) would otherwise get
+      # whatever node the runner image happens to carry, which is not a version anyone chose and changes
+      # under us with the image. Version 22, matching `tests.yml` exactly: the point of running the suite here
+      # is that green there and green here mean the same thing, and a different major would make that an
+      # assumption rather than a fact. After the gate, so a skipped build does not pay for it.
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.go == 'true'
+        with:
+          node-version: "22"
+
       - name: Build the Markdown edition and the site
         if: steps.gate.outputs.go == 'true'
         # Under three minutes green; 27_semantic's first run on a cold cache downloads a 30 MB model.
@@ -694,14 +705,7 @@ jobs:
       # facet pages -- all four of which the suite asserts on. Pages serves `latest_branch` verbatim, so
       # landing is publishing, and the canary was catching a regression up to seven days after readers did.
       #
-      # Node is set up here rather than at the top of the job because nothing above needs it and a skipped
-      # build should not pay for it. Version 22, matching `tests.yml` exactly: the point of running the
-      # suite here is that green there and green here mean the same thing, and a different major would make
-      # that an assumption rather than a fact.
-      - uses: actions/setup-node@v4
-        if: steps.gate.outputs.go == 'true'
-        with:
-          node-version: "22"
+      # Node is set up once, just before the site build (see there), and is the same Node the suite runs on.
 
       # Staged before the suite runs rather than only at the commit step, because one harness reads the
       # *index* and would otherwise be handed two different days at once. `indexnow_test.py:124` is the only

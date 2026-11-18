@@ -208,6 +208,12 @@ jobs:
         timeout-minutes: 30
         run: python scripts/16_build_all.py
 
+      # Node 22, before the site rebuild rather than only before the suite, so a page stage that shells out to
+      # node (32_local.py) runs on the version tests.yml pins and not on the image's. See daily.yml.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
       - name: Rebuild the Markdown edition and the site
         timeout-minutes: 30
         run: |
@@ -464,9 +470,8 @@ jobs:
       #     off PATH. `cards-check.mjs` has assertions that depend on the browser build, such as the
       #     `(hover:hover)` query and font fallback. Pinning it means green here and green there are the
       #     same claim.
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
+      #
+      # Node itself is set up earlier, before the site rebuild: see that step.
 
       # See daily.yml: `indexnow_test.py` compares `git ls-files docs` against the sitemaps on disk. This
       # job rewrites `docs/sitemap-repos.xml` and prunes detail pages, so the index has to match the tree

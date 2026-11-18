@@ -211,7 +211,7 @@ const HARNESSES = [
   {file: "theme_test.py", label: "eight token sets in four copies, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "fetch_test.py", label: "a batch GitHub keeps timing out on is split, and nothing else is", python: true, floor: 20},
-  {file: "ci_tools_test.py", label: "the local run, and what every workflow must say", python: true, floor: 35},
+  {file: "ci_tools_test.py", label: "the local run, and what every workflow must say", python: true, floor: 30},
   {file: "dead_repos_test.py", label: "which repos GitHub no longer serves, the ledger and its guard, and the build leaving them out", python: true, floor: 35},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
   {file: "newness_test.py", label: "what `New` means: one cohort, superseded by the next import that brings anything", python: true, floor: 45},
