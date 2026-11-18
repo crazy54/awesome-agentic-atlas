@@ -4,7 +4,7 @@ Runnable example apps. Each row is a folder inside the one repo.
 
 Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awesome-llm-apps)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-122 entries · 3 distinct repos · 16 sections
+124 entries · 3 distinct repos · 16 sections
 
 [← back to the mega list](../README.md)
 
@@ -26,10 +26,10 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - [LLM Apps with Memory](#llm-apps-with-memory) (6)
 - [Chat with X](#chat-with-x) (6)
 - [Agent Skills](#agent-skills) (8)
-- [MCP AI Agents](#mcp-ai-agents) (6)
+- [MCP AI Agents](#mcp-ai-agents) (7)
 - [Voice AI Agents](#voice-ai-agents) (5)
 - [Generative UI and Agentic Frontends](#generative-ui-and-agentic-frontends) (7)
-- [Standalone Apps &amp; Tools](#standalone-apps--tools) (3)
+- [Standalone Apps &amp; Tools](#standalone-apps--tools) (4)
 - [LLM Optimization Tools](#llm-optimization-tools) (2)
 - [LLM Fine-tuning](#llm-fine-tuning) (2)
 - [AI Agent Framework Crash Courses](#ai-agent-framework-crash-courses) (2)
@@ -366,11 +366,14 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - **[🔌 OpenAI Remote MCP Tool Bridge](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/mcp_ai_agents/openai_remote_mcp_bridge)** — Connect OpenAI function calling directly to a remote MCP server
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/mcp_ai_agents/openai_remote_mcp_bridge`</sub>
+- **[📦 Dependency Upgrade Advisor](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/mcp_ai_agents/dependency_upgrade_advisor)** — See what an upgrade breaks, from library docs and GitHub repos over MCP
+  <sub>in-repo</sub>
+  <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/mcp_ai_agents/dependency_upgrade_advisor`</sub>
 
 ## Voice AI Agents
 
 - **[🎙️ OpenSource Voice Dictation Agent (Wispr Flow clone)](https://github.com/akshayaggarwal99/jarvis-ai-assistant)** — external - Open-source dictation that types where you talk
-  <sub>★ 668 · TypeScript · MIT · clone · pushed 2026-09-23 · Win? · macOS</sub>
+  <sub>★ 677 · TypeScript · MIT · clone · pushed 2026-09-23 · Win? · macOS</sub>
   <sub>`git clone https://github.com/akshayaggarwal99/jarvis-ai-assistant.git`</sub>
 - **[🗣️ AI Audio Tour Agent](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/voice_ai_agents/ai_audio_tour_agent)** — Self-guided audio tours from your location, interests, and pace
   <sub>in-repo</sub>
@@ -420,6 +423,9 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 - **[🌀 Ripple - Change One Thing, Find What Else Needs to Change](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/advanced_llm_apps/ripple)** — Find related inconsistencies and suggested fixes as you edit a Google Doc, using TypeSafe Jev and Gemini
   <sub>in-repo</sub>
   <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/advanced_llm_apps/ripple`</sub>
+- **[📺 Take Back Your TV](https://github.com/shubhamsaboo/awesome-llm-apps/tree/HEAD/advanced_llm_apps/take-back-your-tv)** — Give a coding agent one file and it swaps your smart TV's ad-filled home screen for your own photos
+  <sub>in-repo</sub>
+  <sub>`git clone https://github.com/shubhamsaboo/awesome-llm-apps.git && cd awesome-llm-apps/advanced_llm_apps/take-back-your-tv`</sub>
 
 ## LLM Optimization Tools
 
@@ -451,6 +457,6 @@ Curated by **[shubhamsaboo/awesome-llm-apps](https://github.com/shubhamsaboo/awe
 
 ---
 
-Snapshot 2026-11-01. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-18. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).

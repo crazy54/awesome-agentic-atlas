@@ -4,7 +4,7 @@
 
 Curated by **[jim-schwoebel/awesome_ai_agents](https://github.com/jim-schwoebel/awesome_ai_agents)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-955 entries · 829 distinct repos · 8 sections
+953 entries · 827 distinct repos · 8 sections
 
 [← back to the mega list](../README.md)
 
@@ -17,14 +17,8 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ## Security
 
-<sub>Entries 13–38 of 38. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Entries 15–38 of 38. The rest are on this page's other parts, linked above and below.</sub>
 
-- **[Aip-Identity](https://github.com/The-Nexus-Guard/aip)** — Agent Identity Protocol (AIP) provides cryptographic identity (Ed25519/DID), vouch-based trust graphs, and end-to-end encrypted messaging for AI agents. CLI and Python SDK available on PyPI (pip install aip-identity) github | website | docs
-  <sub>★ 15 · Python · MIT · pip · pushed 2026-03-22 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pip install aip-identity`</sub>
-- **[Ai-Agent-Solving-Security-Challenges](https://github.com/theowni/AI-Agent-Solving-Security-Challenges)** — No description available
-  <sub>★ 11 · Python · clone · pushed 2024-12-29 · WSL2 · Linux · Docker</sub>
-  <sub>`git clone https://github.com/theowni/AI-Agent-Solving-Security-Challenges.git`</sub>
 - **[Airmageddon](https://github.com/RamonBeast/airmageddon)** — AIrmageddon is a home security AI Agent
   <sub>★ 11 · Python · GPL-3.0 · clone · pushed 2024-08-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/RamonBeast/airmageddon.git`</sub>
@@ -101,43 +95,43 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 ## Benchmarks
 
 - **[Osworld](https://github.com/xlang-ai/OSWorld)** — [NeurIPS 2024] OSWorld - Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments
-  <sub>★ 3.2k · Python · Apache-2.0 · clone · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.3k · Python · Apache-2.0 · clone · pushed 2026-11-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/xlang-ai/OSWorld`</sub>
 - **[Awesome-Llm-Long-Context-Modeling](https://github.com/Xnhyacinth/Awesome-LLM-Long-Context-Modeling)** — Must-read papers and blogs on LLM based Long Context Modeling 🔥
-  <sub>★ 2.2k · MIT · source · pushed 2026-10-26</sub>
+  <sub>★ 2.2k · MIT · source · pushed 2026-11-13 · Win?</sub>
   <sub>`git clone https://github.com/Xnhyacinth/Awesome-LLM-Long-Context-Modeling.git`</sub>
 - **[Theagentcompany](https://github.com/TheAgentCompany/TheAgentCompany)** — An agent benchmark with tasks in a simulated software company
-  <sub>★ 808 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 822 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://github.com/TheAgentCompany/the-agent-company-backup-data/releases/download/setup-script-20241208/setup.sh | sh`</sub>
 - **[Agentlab](https://github.com/ServiceNow/AgentLab)** — AgentLab - An open-source framework for developing, testing, and benchmarking web agents on diverse tasks, designed for scalability and re…
-  <sub>★ 661 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 667 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentlab`</sub>
 - **[Appworld](https://github.com/StonyBrookNLP/appworld)** — Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL'24 Best Resource Paper
-  <sub>★ 544 · Python · Apache-2.0 · pip · pushed 2026-09-04 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 558 · Python · Apache-2.0 · pip · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install appworld`</sub>
 - **[Bigcodebench](https://github.com/bigcode-project/bigcodebench)** — BigCodeBench - Benchmarking Code Generation Towards AGI
-  <sub>★ 517 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 518 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install bigcodebench --upgrade`</sub>
 - **[Visualwebarena](https://github.com/web-arena-x/visualwebarena)** — VisualWebArena is a benchmark for multimodal agents
-  <sub>★ 490 · Python · MIT · source · pushed 2024-11-09 · WSL2 · Linux · Docker</sub>
+  <sub>★ 489 · Python · MIT · source · pushed 2024-11-09 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/web-arena-x/visualwebarena.git`</sub>
 - **[Balrog](https://github.com/balrog-ai/BALROG)** — Benchmarking Agentic LLM and VLM Reasoning On Games
   <sub>★ 276 · Python · MIT · clone · pushed 2026-04-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/balrog-ai/BALROG.git`</sub>
 - **[Comfybench](https://github.com/xxyQwQ/ComfyBench)** — Implementation for the paper "ComfyBench - Benchmarking LLM-based Agents in ComfyUI for Autonomously Designing Collaborative AI Systems"
-  <sub>★ 205 · Python · clone · pushed 2025-12-24 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 206 · Python · clone · pushed 2025-12-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/xxyQwQ/ComfyBench`</sub>
 - **[Llm-Agent-Benchmark-List](https://github.com/zhangxjohn/LLM-Agent-Benchmark-List)** — A banchmark list for evaluation of large language models
-  <sub>★ 173 · Apache-2.0 · source · pushed 2026-10-27</sub>
+  <sub>★ 175 · Apache-2.0 · source · pushed 2026-11-18</sub>
   <sub>`git clone https://github.com/zhangxjohn/LLM-Agent-Benchmark-List.git`</sub>
 - **[Weblinx](https://github.com/McGill-NLP/weblinx)** — WebLINX is a benchmark for building web navigation agents with conversational capabilities
-  <sub>★ 164 · Python · Apache-2.0 · pip · pushed 2026-08-16 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 165 · Python · Apache-2.0 · pip · pushed 2026-08-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install weblinx`</sub>
 - **[Smartplay](https://github.com/microsoft/SmartPlay)** — SmartPlay is a benchmark for Large Language Models (LLMs). Uses a variety of games to test various important LLM capabilities as agents. …
   <sub>★ 145 · Python · CC-BY-4.0 · source · pushed 2024-04-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/microsoft/SmartPlay.git`</sub>
 - **[R-Judge](https://github.com/Lordog/R-Judge)** — R-Judge - Benchmarking Safety Risk Awareness for LLM Agents (EMNLP Findings 2024)
-  <sub>★ 115 · Python · source · pushed 2026-01-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 117 · Python · source · pushed 2026-01-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Lordog/R-Judge.git`</sub>
 - **[Shortcutsbench](https://github.com/EachSheep/ShortcutsBench)** — ShortcutsBench - A Large-Scale Real-World Benchmark for API-Based Agents
   <sub>★ 113 · Python · Apache-2.0 · source · pushed 2025-06-24 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -161,10 +155,10 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 81 · Python · clone · pushed 2026-08-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/chuanruihu/Level-Navi-Agent-Search.git`</sub>
 - **[Safeagentbench](https://github.com/shengyin1224/SafeAgentBench)** — Codes for paper "SafeAgentBench - A Benchmark for Safe Task Planning of \\ Embodied LLM Agents"
-  <sub>★ 79 · Python · source · pushed 2025-02-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 80 · Python · source · pushed 2025-02-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/shengyin1224/SafeAgentBench.git`</sub>
 - **[Debatellm](https://github.com/instadeepai/DebateLLM)** — Benchmarking Multi-Agent Debate between Language Models for Truthfulness in Q&amp;A
-  <sub>★ 63 · Jupyter Notebook · Apache-2.0 · source · pushed 2026-03-26</sub>
+  <sub>★ 64 · Jupyter Notebook · Apache-2.0 · source · pushed 2026-03-26</sub>
   <sub>`git clone https://github.com/instadeepai/DebateLLM.git`</sub>
 - **[Mobilebench](https://github.com/XiaoMi/MobileBench)** — Mobile-Bench - An Evaluation Benchmark for LLM-based Mobile Agents
   <sub>★ 33 · Python · source · pushed 2024-12-06 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -179,7 +173,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 19 · Python · MIT-0 · source · pushed 2024-12-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/aws-samples/multiagent-collab-scenario-benchmark.git`</sub>
 - **[Appworld-Leaderboard](https://github.com/StonyBrookNLP/appworld-leaderboard)** — Leaderboard Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL2024
-  <sub>★ 7 · Python · pip · pushed 2026-09-02 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 7 · Python · pip · pushed 2026-11-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install appworld`</sub>
 - **[Llm_Scavengerhunt](https://github.com/Kyunnilee/llm_scavengerhunt)** — A New Benchmark made for tasks for Large Language Model Agents - UC Berkeley Scavenger Hunt
   <sub>★ 6 · Python · source · pushed 2024-12-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -188,9 +182,9 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 6 · Jupyter Notebook · source · pushed 2024-12-23</sub>
   <sub>`git clone https://github.com/Miracle-2001/Sim-Court.git`</sub>
 - **[Embodied-Agent-Interface.Github.Io](https://github.com/embodied-agent-interface/embodied-agent-interface.github.io)** — This is the project website for the paper "Embodied Agent Interface - Benchmarking LLMs for Embodied Decision Making"
-  <sub>★ 4 · HTML · source · pushed 2026-08-23</sub>
+  <sub>★ 4 · HTML · source · pushed 2026-11-15</sub>
   <sub>`git clone https://github.com/embodied-agent-interface/embodied-agent-interface.github.io.git`</sub>
-- **[Sop-Bench](https://github.com/Norditech-AB/SOP-bench)** — Benchmark for evaluating llm agents to solve real-world standard operating procedures
+- **[Sop-Bench](https://github.com/incredible-one/SOP-bench)** — Benchmark for evaluating llm agents to solve real-world standard operating procedures
   <sub>★ 4 · source · pushed 2024-03-24</sub>
   <sub>`git clone https://github.com/Norditech-AB/SOP-bench.git`</sub>
 - **[Sphnx](https://github.com/haailabs/SPHNX)** — SPHNX is a modular benchmark suite designed to evaluate and enhance the privacy management capabilities of Large Language Models (LLM)-ba…
@@ -249,6 +243,6 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-11-01. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-18. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).
