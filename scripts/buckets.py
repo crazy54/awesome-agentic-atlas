@@ -431,6 +431,8 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
         ("Plugins & Clients", ["Plugins, Themes & Clients"]),
     ],
 }
+# The GitLab scout's sections are the GitHub scout's, so it folds the same way.
+BUCKETS["gitlab"] = BUCKETS["scout"]
 
 
 def bucket_map(source: str) -> dict[str, str]:

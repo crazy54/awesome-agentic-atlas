@@ -20,6 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import signals as sig  # noqa: E402
+import hosts  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
@@ -48,7 +49,9 @@ def main() -> None:
     seen: set[str] = set()
     for r in rows:
         nwo = r.get("nwo") or ""
-        if not nwo or nwo.lower() in seen or "error" in meta.get(nwo, {"error": 1}):
+        # GitHub-only: releases and Actions are asked of GitHub's GraphQL, and a GitLab project (a
+        # host-qualified nwo, see hosts.py) has neither there. Its platform verdict reads its README.
+        if not nwo or nwo.lower() in seen or "error" in meta.get(nwo, {"error": 1})                 or not hosts.is_github(nwo):
             continue
         seen.add(nwo.lower())
         repos.append({"nwo": nwo, "owner": r["owner"], "repo": r["repo"]})

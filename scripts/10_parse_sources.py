@@ -17,6 +17,9 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import hosts  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 SRC = CACHE / "sources"
@@ -324,6 +327,17 @@ SOURCES = [
     dict(key="scout", nwo="crazy54/awesome-agentic-atlas",
          title="Scouted on GitHub", short="Scout", file="scout.md",
          mode={"bullet"}, cat_at=2, synthetic=True),
+    # The GitLab scout, scripts/12b_gitlab.py: the same idea as the one above, asked of gitlab.com, from
+    # the committed ledger state/gitlab-repos.json. Synthetic for exactly the same reasons, after the
+    # GitHub scout so a project both scouts saw is met as a GitHub row first (a GitLab project that is
+    # a mirror of a GitHub repo is left out by the GitLab scout's own rules anyway). Present only while
+    # the `intake.gitlab` flag is on: with it off SOURCES is exactly what it was before GitLab, so no
+    # surface that walks SOURCES -- the Sources sheet, mega-list/lists/, the list counts -- grows an
+    # empty source. Its `nwo` is this repository's, like the scout's; watch_sources.ledger_id is what
+    # keeps the two synthetic sources apart in state/first-seen.json.
+    *([dict(key="gitlab", nwo="crazy54/awesome-agentic-atlas",
+            title="Scouted on GitLab", short="GitLab", file="gitlab.md",
+            mode={"bullet"}, cat_at=2, synthetic=True)] if hosts.enabled() else []),
 ]
 
 MD_H = re.compile(r"^(#{2,4})\s+(?P<txt>.+?)\s*#*$")
@@ -424,9 +438,18 @@ def clean(s: str) -> str:
 
 
 def repo_of(url: str) -> tuple[str, str, str] | None:
-    """(owner, repo, subpath) for a GitHub URL, or None if it isn't a repo."""
+    """(owner, repo, subpath) for a repository URL, or None if it isn't a repo.
+
+    GitHub, and -- while the `intake.gitlab` flag is on -- gitlab.com, whose "owner" is the host and
+    the namespace (`gitlab.com/group/subgroup`) so that `owner/repo` comes out as the host-qualified
+    `nwo` `hosts.py` defines and can never equal a GitHub one. With the flag off `hosts.from_url` says
+    None and a gitlab.com link stays the website it always was."""
     m = GH.match(url.rstrip("/"))
     if not m:
+        gl = hosts.from_url(url)
+        if gl:
+            nwo, rest = gl
+            return hosts.owner_of(nwo), hosts.name_of(nwo), rest
         return None
     owner, repo = m.group("owner"), m.group("repo")
     if owner.lower() in GH_RESERVED or not repo or repo in (".", ".."):

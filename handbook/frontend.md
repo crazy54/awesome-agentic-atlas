@@ -59,8 +59,12 @@ fails if the copies drift, so change the source in `19_pages.py`, then regenerat
 
 ## Feature flags
 
-`config/app-flags.json` holds 16 on/off switches, every one `1` on 2026-09-25. The `index.*` flags are read
-by `19_pages.py` for the catalogue, and the `detail.*` flags by `22_detail.py`. Flags are fixed at build time:
+`config/app-flags.json` holds 17 on/off switches. The 16 `index.*` and `detail.*` ones were all `1` on
+2026-09-25; the `index.*` flags are read by `19_pages.py` for the catalogue, and the `detail.*` flags by
+`22_detail.py`. The 17th, `intake.gitlab`, is a data switch rather than a page one: read by `scripts/hosts.py`,
+it decides whether gitlab.com projects are indexed at all, and it shipped `0` (see
+[gitlab.md](gitlab.md)). Turning it on changes what the *next build* reads,
+not just how a page renders, so it takes a daily or weekly run to show. Flags are fixed at build time:
 
 - `22_detail.py` omits a disabled section from the HTML.
 - `19_pages.py` bakes some flags into the markup and embeds all of them as JSON, which the catalogue's

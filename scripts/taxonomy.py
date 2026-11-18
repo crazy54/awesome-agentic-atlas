@@ -839,6 +839,18 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("scout", "Observability & Evals"): "Observability & Evals",
     ("scout", "Assistants & Domain Agents"): "Assistants & Domain Agents",
     ("scout", "Plugins, Themes & Clients"): "Plugins, Themes & Clients",
+    # The GitLab scout (scripts/12b_gitlab.py) files by the GitHub scout's own `section_of`, so it has
+    # the same ten sections, each again the category it is named after.
+    ("gitlab", "Orchestrators & Multi-Agent"): "Orchestrators & Multi-Agent",
+    ("gitlab", "Coding Agents"): "Coding Agents",
+    ("gitlab", "Agent Skills"): "Agent Skills",
+    ("gitlab", "MCP Servers"): "MCP Servers",
+    ("gitlab", "Frameworks & SDKs"): "Frameworks & SDKs",
+    ("gitlab", "Context, Memory & RAG"): "Context, Memory & RAG",
+    ("gitlab", "Sandbox, Security & Governance"): "Sandbox, Security & Governance",
+    ("gitlab", "Observability & Evals"): "Observability & Evals",
+    ("gitlab", "Assistants & Domain Agents"): "Assistants & Domain Agents",
+    ("gitlab", "Plugins, Themes & Clients"): "Plugins, Themes & Clients",
 }
 
 # The second axis: what a thing plugs into. Matched on text because no curator has a column for it --
@@ -916,8 +928,9 @@ RANK = {c: i for i, c in enumerate(CATEGORIES)}
 # a vote beside them. Without that, one scouted listing ties any repo a single list carries, and the tie
 # goes to whichever category is earlier in CATEGORIES -- a topic heuristic quietly re-filing a curator's
 # choice for every such repo. Spelled out rather than read off `10_parse_sources.SOURCES` (this module
-# imports no stage); tests/scout_test.py asserts it is exactly the set of keys SOURCES marks `synthetic`.
-ADVISORY = {"scout"}
+# imports no stage); tests/scout_test.py asserts it is exactly the set of keys SOURCES marks `synthetic`,
+# plus "gitlab", which is synthetic too but in SOURCES only while the `intake.gitlab` flag is on.
+ADVISORY = {"scout", "gitlab"}
 
 # One key in `SECTIONS` is both shelves at once and too big to file wholesale on either:
 # `harness / Skills & MCP` is 41 entries holding the MCP specification, `modelcontextprotocol/servers`,

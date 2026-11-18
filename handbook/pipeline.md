@@ -34,6 +34,7 @@ The module docstrings are the detailed documentation. Read the one at the top of
 |---|---|---|---|---|
 | `pull_sources.py` | Downloads each source list from `raw.githubusercontent.com`, but only if its head commit moved. Diffs old and new copies *by parsed entry*, not by line. Keeps the previous copy, and records nothing, when a pull fails, shrank to under a quarter of its bytes, or parses to under a quarter of its entries (`--force` accepts). Records which old section each new one came from, for drift placement. Reports a renamed list repo | GitHub; `cache/sources/index.json` | `cache/README.md`, `cache/sources/*.md`, `cache/sources/index.json`, `cache/pull-report.json`, `cache/collect-queue.json`, `cache/section-moves.json`; sets `pulled`/`changed`/`failed` outputs | Yes; this is how a cache is started. `--status` makes no network calls |
 | `12_scout.py` | The one source nobody curates. GitHub search for rising agentic repos (created in the last 180 days with 300+ stars, or 2,000+ stars since 2023 on core topics), filtered for forks, mirrors, spam and off-topic SEO, filed by topic into atlas categories. Sticky: a scouted repo leaves only when search returns it failing a quality rule. Also lists awesome-lists not yet in `SOURCES`. A failed search changes nothing | GitHub search; `state/scout-repos.json`, `state/scout-lists.json` | `state/scout-repos.json`, `state/scout-lists.json`, `cache/sources/scout.md`; `$GITHUB_STEP_SUMMARY` | Yes; `--offline` renders the document from the committed ledger with no network |
+| `12b_gitlab.py` | The GitLab scout: gitlab.com's public API asked for agentic projects by topic and by word, judged by rules modelled on the scout's (5+ stars and activity in the last year, or 25+ stars since 2023; forks, archives, spam, off-topic and above all **mirrors** of GitHub repos left out), filed by the scout's own `section_of`. Sticky like the scout. Without `GITLAB_TOKEN` it runs one rotation slice a day, because anonymous gitlab.com allows about 60 requests an hour per IP; a refused query adds nothing. Behind the `intake.gitlab` flag: off, it makes no request and writes an empty document. See [gitlab.md](gitlab.md) | gitlab.com REST and GraphQL; `state/gitlab-repos.json`, `docs/data.json` (for the mirror rule) | `state/gitlab-repos.json`, `cache/sources/gitlab.md`; `$GITHUB_STEP_SUMMARY` | Yes; `--offline` renders from the committed ledger, `--status` reads it |
 | `watch_sources.py` | Asks each list for its newest commit and compares it with the ledger in `state/first-seen.json`. For the scout, which has no commit, it compares the document's SHA-256 instead | `gh api repos/{nwo}/commits`; `cache/sources/scout.md` | `GITHUB_OUTPUT` `changed`, `moved`. With `--update` it also writes `state/first-seen.json` | Yes |
 | `01_parse.py` | Parses the original list (andyrewlee/awesome-agent-orchestrators) | `cache/README.md` | `cache/entries.json` | No |
 | `02_fetch.py` | Batched GraphQL for stars, language, licence and README, with a REST fallback | `cache/entries.json`; `gh api` | `cache/meta.json`, `cache/readmes/` | No |
@@ -41,6 +42,7 @@ The module docstrings are the detailed documentation. Read the one at the top of
 | `04_classify.py` | OS verdicts, install command and screenshot candidates for the original list | the four files above plus `cache/readmes/` | `cache/records.json` | No |
 | `10_parse_sources.py` | **Defines `SOURCES`**, the list of source lists. Parses every list except `orchestrators` (which goes through `01`/`04`). On a section heading it cannot map to a topic, or a list wanting a ninth colour: strict (the default) exits 1; provisional (`AAA_PROVISIONAL=1`, set by both workflows) files it for the run and warns. See [Upstream drift](#upstream-drift) | `cache/sources/*.md`, `cache/section-moves.json`, `cache/pull-report.json` | `cache/entries_all.json`, `cache/drift-proposal.json` and `.md`; `cache/provisional.json` on a provisional run with drift; annotations and `$GITHUB_STEP_SUMMARY` | No; it says to run `pull_sources.py` first |
 | `11_fetch_all.py` | Runs 02's batching over every distinct repo. If more than max(50, 10%) of the repos it asked about failed for a reason other than the repo being gone, it retries the rate-limited and transient ones (after 1, 4 and 15 minutes, or at GitHub's reported reset, capped at 15) and stops only if they still fail. An auth failure (401, bad credentials) stops at once, because no wait fixes a token | `cache/entries_all.json`, `cache/meta.json` | `cache/meta.json`, `cache/readmes/` | No |
+| `11b_fetch_gitlab.py` | The GitLab rows `11` skips: one anonymous GraphQL request per 25 projects, written into `meta.json` under GitHub's field names (`stargazerCount`, `pushedAt` = `lastActivityAt`, `licenseInfo` recognised from the LICENSE text) so every later stage reads them unchanged. Keeps the last good answer per project in `cache/gitlab/meta.json` and uses it for a project this run could not read; one never read is left out of the build by `14` | `cache/entries_all.json`; gitlab.com GraphQL | `cache/meta.json`, `cache/readmes/`, `cache/gitlab/meta.json` | No |
 | `13_signals_all.py` | Releases and actions for every repo in one pass. The staleness rule is in `signals.py` | as above | `cache/releases.json`, `cache/actions.json` | No |
 | `14_classify_all.py` | The final record per listed item, of kind `repo`, `subpath` or `site`. Leaves out every row whose repo is in the dead-repo ledger, so a repo GitHub no longer serves is on no surface | everything above; `state/dead-repos.json` | `cache/records_all.json` | No |
 | `dead_repos.py` | **Not a build stage**: run weekly by `dead-repos.yml`. Asks GitHub about every repo in `docs/data.json` and every repo already in the ledger, and records the ones that are gone: GraphQL `NOT_FOUND` and then REST 404, 451 or a 403 `block`, or `isDisabled`. Renamed and archived repos are alive. A repo that answers again leaves the ledger. Writes nothing if any request fails for a reason that is not about the repo, or if the scan would newly mark more than 10% of the atlas (at least 25) dead | `docs/data.json`, `state/dead-repos.json`; `gh api` | `state/dead-repos.json`; `$GITHUB_STEP_SUMMARY` | Yes; `--status` reads the ledger with no network, `--dry-run` scans and writes nothing |
@@ -81,6 +83,8 @@ The module docstrings are the detailed documentation. Read the one at the top of
 
 | Module | Role |
 |---|---|
+| `hosts.py` | **Which forge a row lives on.** A GitHub `nwo` is `owner/repo`; any other is host-qualified, `gitlab.com/group/sub/project`, which no GitHub nwo can equal (GitHub owners cannot contain a dot). Every URL a stage builds for a row -- page, clone, raw file, social card -- comes from here, and `enabled()` is the `intake.gitlab` flag |
+| `gitlab_api.py` | The paced, retried client every GitLab read goes through. Fails fast on the hourly anonymous cap rather than sleeping an hour; caches responses under `cache/gitlab/http/` only when given a `ttl` (local tuning) |
 | `taxonomy.py` | The 14 topics and 12 targets, and the rules that assign them. `python scripts/taxonomy.py --why OWNER/REPO` explains an assignment (needs the cache) |
 | `buckets.py` | Folds a list's sections into at most eight colour groups for the workbook |
 | `drift.py` | Upstream drift: where a provisional build files an unmapped section, and the warnings, summary and proposal that say so. See below |
@@ -174,7 +178,14 @@ Upstream failures that stay hard stops, each for a reason written beside it in t
 
 ## Order matters
 
-The workflows run the site stages in this order. Some stages read the output of earlier ones, so keep the order:
+The workflows run the intake and fetch stages in this order (the two scouts first, because the watch step digests their documents; each GitLab stage straight after its GitHub counterpart):
+
+```
+12_scout → 12b_gitlab → [watch] → pull_sources → … → 10_parse_sources → 11_fetch_all → 11b_fetch_gitlab
+  → 12_scout --follow-renames → 13_signals_all → 14_classify_all
+```
+
+and then the site stages:
 
 ```
 17_markdown → check_markdown → 19_pages → 25_velocity → 19c_live → 19d_discover → 20_landing

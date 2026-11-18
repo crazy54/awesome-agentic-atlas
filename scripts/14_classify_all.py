@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from buckets import bucket_map, bucket_order  # noqa: E402
 import signals as sig  # noqa: E402
 from dead_repos import dead_set  # noqa: E402
+import hosts  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
@@ -59,6 +60,14 @@ def main() -> None:
         nwo = r.get("nwo") or ""
         m = meta.get(nwo, {}) if nwo else {}
         has_meta = bool(nwo) and "error" not in m
+        # A GitLab project this run could not read -- the anonymous hourly cap spent, or the project
+        # gone -- is left out of this build rather than published as an "unavailable" card. It stays in
+        # the GitLab scout's sticky ledger, so the next run that can read it brings it straight back.
+        # A GitHub repo is different: its fetch failing stops the build, so reaching here without
+        # metadata means GitHub really said it is gone, which is worth showing.
+        if nwo and not has_meta and not hosts.is_github(nwo):
+            dropped += 1
+            continue
 
         # --- fields that exist for anything backed by a repo -------------
         if has_meta:
@@ -106,9 +115,9 @@ def main() -> None:
             path = r.get("subpath", "")
             # tree/HEAD/<dir> -> the directory a user actually needs
             inner = path.split("/", 2)[-1] if path.startswith(("tree/", "blob/")) else path
-            rec["install_cmd"] = (f"git clone https://github.com/{nwo}.git && cd "
-                                  f"{nwo.split('/')[-1]}/{inner}" if inner else
-                                  f"git clone https://github.com/{nwo}.git")
+            rec["install_cmd"] = (f"git clone {hosts.clone_url(nwo)} && cd "
+                                  f"{hosts.name_of(nwo)}/{inner}" if inner else
+                                  f"git clone {hosts.clone_url(nwo)}")
             rec["install_method"] = "in-repo"
             rec["shots"] = []
             rec["parent_stars"] = m.get("stargazerCount") or 0

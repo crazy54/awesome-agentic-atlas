@@ -60,6 +60,7 @@ OUT = ROOT / "docs" / "v2"
 # demo is wrong in a way that matters, so it is not guarded.
 sys.path.insert(0, str(ROOT / "scripts"))
 import discover  # noqa: E402
+import hosts  # noqa: E402
 DATA = json.loads((ROOT / "docs" / "data.json").read_text(encoding="utf-8"))
 COL = {name: i for i, name in enumerate(DATA["cols"])}
 ROWS = DATA["rows"]
@@ -2026,12 +2027,12 @@ def detail_page(row) -> str:
     hs = [HARNESSES[i] for i in g(row, "targets")]
     lang, lic = g(row, "lang") or "", g(row, "license") or ""
     cmd = g(row, "install") or ""
-    url = g(row, "url") or f"https://github.com/{nwo}"
+    url = g(row, "url") or hosts.web_url(nwo)
     # `data.json` stores "" for two thirds of these rows rather than 55 bytes x 1,294 of a string it can
     # rebuild from the `nwo`, so rebuild it -- and then say which one the reader is looking at, because a
     # social card is a fact about GitHub and a screenshot is a fact about the project.
     own_shot = bool(g(row, "img"))
-    img = g(row, "img") or f"https://opengraph.githubassets.com/1/{nwo}"
+    img = g(row, "img") or hosts.social_card(nwo)
     n_lists = g(row, "lists") or 0
     listed = [s.strip() for s in (g(row, "listed_by") or "").split(",") if s.strip()]
     ac = accent_for(row)
@@ -2370,8 +2371,10 @@ def art(f: dict, fallback: str = "portrait", ratio: str = "16/9") -> str:
     images, from 13 lazy-loaded pictures -- one README GIF (`amux.gif`) was 11,955 KB on its own. A row
     with a screenshot gets the social card instead, a fixed ~100 KB; animated demos stop moving, which is
     the trade. The detail page still shows the real one, where a single image is nobody's budget."""
-    if f["img"] or fallback == "social":
-        return (f'<img src="https://opengraph.githubassets.com/1/{esc(f["nwo"])}" alt=""'
+    # A GitLab project has no social card (hosts.social_card is ""), so it always gets the fallback.
+    card = hosts.social_card(f["nwo"])
+    if card and (f["img"] or fallback == "social"):
+        return (f'<img src="{esc(card)}" alt=""'
                 f' loading="lazy" decoding="async" style="aspect-ratio:{ratio}">')
     return portrait(f, ratio)
 

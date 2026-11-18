@@ -62,6 +62,7 @@ OUT = ROOT / "docs"
 # `spec_from_file_location` ceremony below -- only `scripts/` on the path, which `python
 # scripts/20_landing.py` already provides and a test that loads this module by file path does not.
 sys.path.insert(0, str(HERE))
+import hosts  # noqa: E402
 import mark  # noqa: E402
 import osicons  # noqa: E402
 import sitewide  # noqa: E402
@@ -135,8 +136,10 @@ def repo_path(nwo: str) -> str:
     *before* `22_detail.py`, so a project added this week has no page on disk at the moment this runs and
     would be handed a fallback link that then outlived the commit by a week.
     """
-    owner, name = nwo.split("/", 1)
-    return f"repo/{b22.segment(owner.lower())}/{b22.segment(name.lower())}/"
+    # Every segment, not two: a GitLab `nwo` is host-qualified and can be any depth
+    # (`gitlab.com/group/subgroup/project`, see hosts.py), and its page sits that many directories down.
+    # For a GitHub `owner/name` this is exactly the two-segment path it always was.
+    return "repo/" + "/".join(b22.segment(part.lower()) for part in nwo.split("/")) + "/"
 
 
 # ------------------------------------------------------------------ the shared shell
@@ -478,6 +481,9 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
    link colour would make it shout. Hover promotes it to full ink, which with the underline `a:hover`
    already adds is enough to say "this is a link" at the moment somebody asks. */
 a.nwo:hover{color:var(--ink)}
+/* The forge a non-GitHub project lives on, inside its `.nwo` link. 19_pages.py's rule, tokens only. */
+.forge{display:inline-block;border:1px solid var(--grid);border-radius:5px;padding:0 5px;background:var(--band);
+  font-size:10.5px;font-weight:600;color:var(--ink2);white-space:nowrap;vertical-align:1px}
 .st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
@@ -996,8 +1002,13 @@ def row_html(page: Page, r: dict, i: int, os_labels: list[str]) -> str:
     # The same one-line change is in the index's row normaliser, for the same reason. `22_detail.py` is
     # deliberately *not* in step: one image on a page nobody's budget notices is exactly where a project's
     # own screenshot belongs, and it is the surface that keeps the column honest.
-    img = esc(f"https://opengraph.githubassets.com/1/{r['nwo']}")
+    #
+    # Not for a GitLab project, which has no social card: it shows its own picture if it has one and an
+    # empty cell if not (hosts.social_card). Bounded by how few GitLab rows there are.
+    img = esc(hosts.social_card(r["nwo"]) or r.get("img") or "")
     url = esc(r["url"])
+    forge = "" if hosts.is_github(r["nwo"]) else f' <span class="forge">{esc(hosts.label(r["nwo"]))}</span>'
+
     # The name goes to this site's own page for the project and the `nwo` underneath it goes to GitHub,
     # which is the split the index table uses too. It matters more here than there: these 156 pages are
     # the only *crawlable* path into the atlas -- `docs/index.html` builds its table in JavaScript, so a
@@ -1011,9 +1022,9 @@ def row_html(page: Page, r: dict, i: int, os_labels: list[str]) -> str:
         "<tr>"
         f'<td class="n rk">{i}</td>'
         f'<td class="shot"><a href="{page_url}" tabindex="-1" aria-hidden="true">'
-        f'<img loading="lazy" alt="" src="{img}"></a></td>'
+        + (f'<img loading="lazy" alt="" src="{img}">' if img else "") + "</a></td>"
         f'<td class="pj"><a class="nm" href="{page_url}">{esc(r["name"])}</a>'
-        f'<a class="nwo" href="{url}">{esc(r["nwo"])}</a>'
+        f'<a class="nwo" href="{url}">{esc(hosts.path_of(r["nwo"]))}{forge}</a>'
         f'<div class="meta os" role="img" aria-label="{os_name}">{os}</div></td>'
         f'<td class="n st-c"><span class="st{"" if r["stars"] else " none"}">{stars}</span>'
         f'<div class="meta">{lists_label(r["lists"])}</div></td>'

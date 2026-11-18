@@ -239,8 +239,8 @@ true("...and each is a real category", set(s.SECTIONS) <= set(tax.CATEGORIES))
 fold = buckets.bucket_map(s.SCOUT["key"])
 eq("buckets fold every section", set(fold), set(s.SECTIONS))
 true("...into at most eight buckets", len(set(fold.values())) <= 8, str(set(fold.values())))
-eq("taxonomy.ADVISORY is exactly the synthetic sources",
-   tax.ADVISORY, {x["key"] for x in s.b10.SOURCES if x.get("synthetic")})
+eq("taxonomy.ADVISORY is exactly the synthetic sources (GitLab's whether or not its flag is on)",
+   tax.ADVISORY, {x["key"] for x in s.b10.SOURCES if x.get("synthetic")} | {"gitlab"})
 
 # ======================================================================================== the ledger
 group("the ledger")
@@ -833,8 +833,8 @@ eq("...and is still named by exactly the one list that cited it", (row["list_cou
 
 group("every surface counts curated lists only")
 curated_n = sum(1 for src in s.b10.SOURCES if not src.get("synthetic"))
-true("(fixture: the scout is configured, so SOURCES is one longer than the curated lists)",
-     len(s.b10.SOURCES) == curated_n + 1)
+true("(fixture: the scout is configured, so SOURCES is one longer than the curated lists -- two with the "
+     "GitLab scout's flag on)", len(s.b10.SOURCES) == curated_n + (2 if s.b10.hosts.enabled() else 1))
 for stage, text in (("19_pages.py", "LISTS = sum(1 for s in b16.b10.SOURCES if not s.get(\"synthetic\"))"),
                     ("17_markdown.py", "lists=len(per_source) - sum(1 for s in SOURCES if s.get(\"synthetic\")),")):
     true(f"{stage}'s list count leaves the scout out", text in (SCRIPTS / stage).read_text(encoding="utf-8"))
@@ -876,10 +876,14 @@ for name, lines in (("daily", daily), ("weekly", weekly)):
 true("daily: the scout runs before the watch step that gates the build on its digest",
      0 <= at(daily, "python scripts/12_scout.py") < at(daily, "run: python scripts/watch_sources.py"))
 synth = [x for x in s.b10.SOURCES if x.get("synthetic")]
-eq("SOURCES has exactly one synthetic source, the scout", [x["key"] for x in synth], ["scout"])
-eq("...and it is last, so a curated listing of the same repo is always met first",
-   s.b10.SOURCES[-1]["key"], "scout")
-eq("...and its file is the document the stage writes", s.b10.source_path(synth[0]).name, s.DOC.name)
+# The GitLab scout (12b_gitlab.py, tests/gitlab_test.py) is the second synthetic source, present only while
+# the `intake.gitlab` flag is on, and after this one -- so a curated listing still comes first, then this.
+gl_on = s.b10.hosts.enabled()
+eq("SOURCES's synthetic sources are the scout, then GitLab's while its flag is on",
+   [x["key"] for x in synth], ["scout"] + (["gitlab"] if gl_on else []))
+eq("...and they are last, so a curated listing of the same repo is always met first",
+   [x["key"] for x in s.b10.SOURCES[-len(synth):]], [x["key"] for x in synth])
+eq("...and the scout's file is the document the stage writes", s.b10.source_path(synth[0]).name, s.DOC.name)
 
 committed = ROOT / "state" / "scout-repos.json"
 if committed.exists():
