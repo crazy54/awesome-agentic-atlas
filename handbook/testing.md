@@ -89,7 +89,7 @@ Node process on the machine, including other sessions' tools and test runs.
 | `theme_test.py` | Python | The eight skins' token sets, which must stay identical across their four copies; the theme menu; verdict marks; the phone layout | 1053 | 500 |
 | `signals_test.py` | Python | When a cached release or action answer must be re-queried | 210 | 170 |
 | `fetch_test.py` | Python | A batch GitHub keeps timing out on is split and retried; nothing else is | 27 | 20 |
-| `drift_test.py` | Python | Upstream drift (`scripts/drift.py`): what a provisional build files and on what evidence, the proposal it writes, and that a strict build still stops | 115 | 110 |
+| `drift_test.py` | Python | Upstream drift (`scripts/drift.py`): what a provisional build files and on what evidence, the proposal it writes, and that a strict build still stops | 128 | 110 |
 | `ci_alert_test.py` | Python | The build-red issue (`tools/ci_alert.py`): which log lines it quotes, the fix it suggests for each known failure shape, and when it opens, comments, edits and closes. No `gh` call | 35 | 25 |
 | `ci_tools_test.py` | Python | `tools/local_daily.py` reads the daily's stages in order and never runs IndexNow or records SHAs; `tools/drift_report.py` reads drift.py's proposal and names `bot/drift-<fingerprint>`; `tools/bot_branch.py` pushes `bot/...` only; every job has a time limit, only the builds share `atlas-build`, the canary saves no cache, the alert watches real workflow names, network steps retry | 62 | 45 |
 | `dead_repos_test.py` | Python | The weekly dead-repo scan's verdicts, ledger and guard, and the build leaving dead repos out | 37 | 35 |
