@@ -28,6 +28,10 @@
 //                     taken down, blocked and disabled told apart from renamed and from a rate limit, the
 //                     ledger's comings and goings, the guard against an outage burying the atlas, and
 //                     14_classify_all.py leaving every ledger repo out of the build.
+//   drift_test.py     upstream drift, scripts/drift.py: a renamed, translated or added section filed for one
+//                     provisional run on its evidence (the libukai translation is the fixture), a ninth hue
+//                     folded, the placements honoured only under AAA_PROVISIONAL, a strict run still stopping,
+//                     and the pull refusing a copy that parses to almost nothing. Pure; GitHub is a fake.
 //   newness_test.py  the cohort model in scripts/newness.py: that `New` is the most recent import that
 //                     brought anything, that the next one to bring anything takes the mark off the last,
 //                     and that an import bringing nothing moves neither. Pure, and the only harness that
@@ -211,6 +215,7 @@ const HARNESSES = [
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "fetch_test.py", label: "a batch GitHub keeps timing out on is split, and nothing else is", python: true, floor: 20},
   {file: "dead_repos_test.py", label: "which repos GitHub no longer serves, the ledger and its guard, and the build leaving them out", python: true, floor: 35},
+  {file: "drift_test.py", label: "upstream drift: what a provisional build files, the evidence for it, and that a strict one still stops", python: true, floor: 90},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
   {file: "newness_test.py", label: "what `New` means: one cohort, superseded by the next import that brings anything", python: true, floor: 45},
   {file: "discover_test.py", label: "fifty a day for seven days, every category in each, and the queue that rotates them", python: true, floor: 75},

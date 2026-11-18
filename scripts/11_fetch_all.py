@@ -19,6 +19,11 @@ f2 = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(f2)
 
 BATCH = 20
+# See the end of `main`. Fifty repos, or a tenth of what this run asked about, whichever is more.
+MASS_FAILURE_FLOOR = 50
+MASS_FAILURE_SHARE = 0.10
+# What GitHub says about a repo that is really gone (02_fetch.gh's message carries gh's stderr).
+GONE = ("not found", "http 404", "http 451", "repository access blocked", "could not resolve")
 
 
 def main() -> None:
@@ -84,6 +89,33 @@ def main() -> None:
     meta_path.write_text(json.dumps(meta, indent=1, ensure_ascii=False), encoding="utf-8")
     ok = [v for v in meta.values() if "error" not in v]
     print(f"\ndone: {len(meta)} records, {len(ok)} ok, {len(meta) - len(ok)} errors", flush=True)
+
+    # A repo that errors is tolerated one at a time, and has to be: a few percent of any list points at
+    # something deleted, renamed past following, or private, and each of those is a row with no stars,
+    # not a reason to stop. But the same tolerance turns an outage into a publish. A token that lapsed,
+    # a rate limit that outlasted the retries, or GitHub having a bad hour comes back as an error on
+    # *every* repo, each one individually acceptable, so the build carried on and would have published
+    # thousands of rows with no stars, no README and no platform verdicts -- the atlas emptied out on a
+    # green run. A repo that is really gone says so (GONE); anything else is about the request, not the
+    # repo. Past the floor, a run where those are a tenth of what it asked about stops here. Safe for the
+    # same reason as `13_signals_all`'s stop: nothing is committed or recorded as built until every stage
+    # passes, so the next run re-reads the lists and asks again. This one is a guard, not drift: no edit
+    # to a list can cause it, and no provisional placement could make the published result right.
+    refusal = mass_failure(want, meta)
+    if refusal:
+        sys.exit(refusal)
+
+
+def mass_failure(want: list[dict], meta: dict) -> str | None:
+    """Why this run must not publish, or None. See the end of `main`."""
+    failing = [w["nwo"] for w in want if "error" in meta.get(w["nwo"], {})
+               and not any(g in meta[w["nwo"]]["error"].lower() for g in GONE)]
+    if len(failing) <= max(MASS_FAILURE_FLOOR, MASS_FAILURE_SHARE * len(want)):
+        return None
+    return (f"{len(failing)} of the {len(want)} repos asked about failed for a reason that is not "
+            f"about the repo (first: {meta[failing[0]]['error'][:160]!r}). That is GitHub or the "
+            f"token, not the lists, and publishing would strip their metadata from the atlas. "
+            f"Stopping, so the next run asks again.")
 
 
 if __name__ == "__main__":

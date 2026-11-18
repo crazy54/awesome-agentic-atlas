@@ -4,6 +4,8 @@ import re
 import sys
 from pathlib import Path
 
+import drift
+
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "cache" / "README.md"
 
@@ -97,6 +99,31 @@ def main() -> None:
     for cat, key in CAT_KEYS.items():
         n = sum(1 for e in unique if e["cat_key"] == key)
         print(f"  {n:4d}  {cat}")
+    for head, n in unlisted(SRC.read_text(encoding="utf-8")).items():
+        drift.warn(f"Orchestrators heading not in CAT_KEYS: {head}",
+                   f"{n} entry line(s) under '## {head}' in the orchestrators README were skipped. A new "
+                   f"or renamed section: add it to CAT_KEYS in scripts/01_parse.py and to "
+                   f"taxonomy.SECTIONS as ('orchestrators', {head!r}).")
+
+
+def unlisted(text: str) -> dict[str, int]:
+    """Headings this parser skips that have entries under them: `{heading: entry lines}`.
+
+    `CAT_KEYS` is an allowlist, which is the right shape -- an unknown heading is not taken, so a
+    renamed section cannot crash anything -- but it is silent, and a rename here takes that section's
+    rows off the atlas without a word. Not fatal, because the safe default is already in force; loud,
+    because nobody would otherwise know. Not run inside `parse_text`, which `pull_sources.py` also calls
+    on the previous copy, where the same warning would be about yesterday.
+    """
+    out: dict[str, int] = {}
+    head = None
+    for line in text.splitlines():
+        if line.startswith("## "):
+            head = line[3:].strip()
+            continue
+        if head and head not in CAT_KEYS and ENTRY_RE.match(line.strip()):
+            out[head] = out.get(head, 0) + 1
+    return out
 
 
 if __name__ == "__main__":
