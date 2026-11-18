@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ESP32 iPhone Agent (onehumanbeing/esp32-iphone-agent) — Orchestrators &amp; Multi-Agent — Awesome Agentic Atlas</title>
-<meta name="description" content="Lets any OpenAI-compatible vision model operate a real iPhone, seeing it via AirPlay mirroring and tapping via an ESP32-S3 acting as a USB mouse and keyboard">
+<meta name="description" content="Lets AI agents see and operate a real iPhone through an ESP32-S3 board that mirrors the screen over AirPlay and acts as a USB mouse and keyboard, with a…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/onehumanbeing/esp32-iphone-agent/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="ESP32 iPhone Agent — Awesome Agentic Atlas">
-<meta property="og:description" content="Lets any OpenAI-compatible vision model operate a real iPhone, seeing it via AirPlay mirroring and tapping via an ESP32-S3 acting as a USB mouse and keyboard">
+<meta property="og:description" content="Lets AI agents see and operate a real iPhone through an ESP32-S3 board that mirrors the screen over AirPlay and acts as a USB mouse and keyboard, with a…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/onehumanbeing/esp32-iphone-agent/">
 <meta property="og:image" content="https://raw.githubusercontent.com/onehumanbeing/esp32-iphone-agent/main/docs/images/demo.png">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
@@ -65,9 +65,9 @@ try {
     <div>
       <h1>ESP32 iPhone Agent</h1>
       <p class="nwo"><a href="https://github.com/onehumanbeing/esp32-iphone-agent">onehumanbeing/esp32-iphone-agent</a></p>
-      <p class="lead">Lets any OpenAI-compatible vision model operate a real iPhone, seeing it via AirPlay mirroring and tapping via an ESP32-S3 acting as a USB mouse and keyboard</p>
+      <p class="lead">Lets AI agents see and operate a real iPhone through an ESP32-S3 board that mirrors the screen over AirPlay and acts as a USB mouse and keyboard, with a CLI, MCP server and agent skill. No jailbreak</p>
       <p class="facts">
-        <span>C</span>
+        <span>Swift</span>
         <span>MIT</span>
         <span id="stars" class="live"></span>
         <span id="pushed" class="live"></span>
@@ -90,7 +90,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">git clone https://github.com/onehumanbeing/esp32-iphone-agent.git</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for ESP32 iPhone Agent">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">npx -y esp32agent mcp</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for ESP32 iPhone Agent">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -142,27 +142,27 @@ try {
 
 <section>
   <h2>Platform support</h2>
-  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr></tbody></table>
+  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr></tbody></table>
 </section>
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li>AI Agents (Jenqyang)</li></ul>
+  <p class="lead">Named by <b>2</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li><a href="https://github.com/Jenqyang/Awesome-AI-Agents">AI Agents (Jenqyang)</a></li><li><a href="https://github.com/kyrolabs/awesome-agents">Agents (kyrolabs)</a></li></ul>
 </section>
 
 <section>
   <h2>How it is classified</h2>
-  <p class="lead">One topic, 1
-    harness. Each link is a prerendered page of
+  <p class="lead">One topic, 2
+    harnesses. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a><a class="chip" href="../../../topic/orchestrators-multi-agent/target/codex-openai/">Codex / OpenAI</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a><a class="chip" href="../../../topic/orchestrators-multi-agent/target/mcp/">MCP</a><a class="chip" href="../../../topic/orchestrators-multi-agent/target/codex-openai/">Codex / OpenAI</a></div>
 </section>
 
 <section class="kin">
   <h2>Related in Orchestrators &amp; Multi-Agent</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../sipyourdrink-ltd/bernstein/">bernstein</a><span class="nwo">sipyourdrink-ltd/bernstein</span><span class="desc">Deterministic scheduler for 40+ CLI coding agents running in parallel git worktrees with an HMAC-signed audit chain, signed agent cards, and…</span></li><li><a href="../../aannoo/hcom/">hcom</a><span class="nwo">aannoo/hcom</span><span class="desc">by aannoo - Lightweight CLI tool for real-time communication between Claude Code sub agents using hooks. Enables multi-agent collaboration with…</span></li><li><a href="../../berriai/litellm/">LiteLLM</a><span class="nwo">BerriAI/litellm</span><span class="desc">Unified proxy and SDK that routes to 100+ LLM providers behind a single OpenAI-compatible interface, with a Router handling retry/fallback across…</span></li><li><a href="../../777genius/agent-teams-ai/">Agent Teams</a><span class="nwo">777genius/agent-teams-ai</span><span class="desc">Desktop app where you give high-level commands to autonomous coding-agent teams across Claude Code, Codex, OpenCode, Cursor, Grok, GitHub Copilot…</span></li><li><a href="../../wecoai/aideml/">AIDE</a><span class="nwo">WecoAI/aideml</span><span class="desc">Open-source ML engineering agent that uses tree search to explore solution spaces. Automates machine learning experimentation from data analysis to…</span></li><li><a href="../../orkas-ai/orkas/">Orkas</a><span class="nwo">Orkas-AI/Orkas</span><span class="desc">Local-first multi-agent desktop application where a Commander coordinates specialist agents for research, coding, data analysis, documents, and…</span></li><li><a href="../../5dive-ai/5dive/">5dive</a><span class="nwo">5dive-ai/5dive</span><span class="desc">Self-hosted CLI that runs a team of coding agents on one Linux host: each agent is its own Linux user running claude, codex, opencode, hermes or…</span></li><li><a href="../../rustykuntz/clideck/">clideck</a><span class="nwo">rustykuntz/clideck</span><span class="desc">WhatsApp-like dashboard for managing multiple AI coding agents (including Gemini CLI) in one browser window. Live status, session resume, autopilot…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../sipyourdrink-ltd/bernstein/">bernstein</a><span class="nwo">sipyourdrink-ltd/bernstein</span><span class="desc">Deterministic scheduler for 40+ CLI coding agents running in parallel git worktrees with an HMAC-signed audit chain, signed agent cards, and…</span></li><li><a href="../../itsomidkarami/kraft/">Kraft</a><span class="nwo">itsOmidKarami/kraft</span><span class="desc">Local orchestrator that takes each task from spec to pull request in its own git worktree: steps run in order from a YAML chain file, tests and CI…</span></li><li><a href="../../sandbaseai/cli/">sandbaseai/cli</a><span class="nwo">sandbaseai/cli</span><span class="desc">Official source for the sandbase-mcp skill - discover, inspect, and invoke 2,000+ AI models and APIs through a local MCP bridge with explicit schema…</span></li><li><a href="../../keesan12/martin-loop/">MartinLoop</a><span class="nwo">Keesan12/martin-loop</span><span class="desc">Open-source control layer for AI coding agents. Adds hard budget caps, verifier gates, explicit stop reasons, and run receipts around Claude Code…</span></li><li><a href="../../the-open-agent/openagent/">OpenAgent</a><span class="nwo">the-open-agent/openagent</span><span class="desc">Next-generation personal AI assistant powered by LLM, RAG and agent loops. Supports computer-use, browser-use, coding agent, 30+ model providers…</span></li><li><a href="../../nexus-substrate/nexus-agents/">williamzujkowski/nexus-agents</a><span class="nwo">nexus-substrate/nexus-agents</span><span class="desc">Intelligent orchestration platform routing tasks to Claude, Gemini, Codex, and OpenCode via Budget→TOPSIS→LinUCB composite router. 30 MCP tools…</span></li><li><a href="../../wshobson/agents/">wshobson/agents</a><span class="nwo">wshobson/agents</span><span class="desc">Cross-harness plugin marketplace that maintains one source-of-truth plugins/ directory and generates harness-native artifacts for Claude Code, Codex…</span></li><li><a href="../../abnegate/magents/">abnegate/magents</a><span class="nwo">abnegate/magents</span><span class="desc">Gemini CLI extension, MCP server and CLI over the session transcripts Gemini CLI, Claude Code, Codex, Copilot CLI, Cursor, Grok and OpenCode already…</span></li></ul>
 </section>
 </div></main>
 
