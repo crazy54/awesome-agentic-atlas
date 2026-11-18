@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Models: open weights for agents, with every quantisation — Awesome Agentic Atlas</title>
+<meta name="description" content="2097 open models for agents -- chat, reasoning, code, tool calling, vision, embeddings and speech -- with 29,107 quantisations and their exact sizes…">
+<link rel="canonical" href="https://aaa.jeremyfhall.com/models/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Models: open weights for agents, with every quantisation — Awesome Agentic Atlas">
+<meta property="og:description" content="2097 open models for agents -- chat, reasoning, code, tool calling, vision, embeddings and speech -- with 29,107 quantisations and their exact sizes…">
+<meta property="og:url" content="https://aaa.jeremyfhall.com/models/">
+<meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<meta property="og:image:alt" content="The Awesome Agentic Atlas repository on GitHub.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="theme-color" id="tc" content="#101217">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  // The sixteen literals track --plane in the sixteen blocks at the top of pages.css. After paint `label()`
+  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
+  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
+  // blocking the paint on a stylesheet.
+  //
+  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
+  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
+  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a topic page
+  // would otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to
+  // graphite for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
+  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
+               glass: {dark: "#12141D", light: "#F8FAFF"},
+               terminal: {dark: "#0A1315", light: "#F9FCF9"},
+               prism: {dark: "#17112C", light: "#FDFBFF"},
+               sherbet: {dark: "#272040", light: "#FFFCF8"},
+               riso: {dark: "#1E1E29", light: "#FBF8F1"},
+               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
+               aurora: {dark: "#101936", light: "#FBFCFF"},
+               holo: {dark: "#0D1018", light: "#FCFDFF"}};
+  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
+  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
+  var LOCKED = {holo: 1};
+  var s = localStorage.getItem("atlas-skin");
+  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
+      .indexOf("," + s + ",") < 0)) s = "graphite";
+  document.documentElement.dataset.skin = s;
+  document.getElementById("tc").content = PLANE[s][t];
+} catch (e) {}
+</script>
+<link rel="stylesheet" href="../pages.css">
+<script src="https://jeremyfhall.com/kit/site-kit.v1.js" integrity="sha384-XSpQk1dubcVV4dWVZL3B8R6EsmEa4vwZ8PlVTkEmE+RY28H8OP2Y36BpTK7vCJI2" crossorigin="anonymous" data-site="atlas" defer></script>
+</head>
+<style>
+/* The models page. Tokens only -- the thirteen every theme declares -- so every theme repaints it. */
+.mtools{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end;margin:18px 0 6px}
+.mtools label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 4px}
+.mtools input,.mtools select{font:14px var(--ui);color:var(--ink);background:var(--plane);border:1px solid var(--grid);
+  border-radius:7px;padding:7px 10px;min-height:36px}
+.mtools input{min-width:min(340px,80vw)}
+.mtools input:focus-visible,.mtools select:focus-visible,.mgrp button:focus-visible,.mcard a:focus-visible,
+.mq summary:focus-visible,#mmore:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.mgrp{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.mgrp .gl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);align-self:center;min-width:64px}
+.mgrp button{font:13px var(--ui);color:var(--ink2);background:var(--band);border:1px solid var(--grid);border-radius:999px;
+  padding:5px 11px;min-height:32px;cursor:pointer}
+.mgrp button[aria-pressed=true]{background:var(--bar);color:var(--onbar);border-color:var(--bar)}
+#mcount{color:var(--muted);font-size:13px;margin:14px 0 8px}
+.mlist{list-style:none;margin:0;padding:0;display:grid;align-items:start;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:12px}
+.mcard{background:var(--panel);border:1px solid var(--grid);border-radius:10px;padding:14px 16px;min-width:0}
+.mhd{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.mcard h2{font-size:16px;margin:0;overflow-wrap:anywhere}
+.mcard h2 a{color:var(--ink)}
+.mby{color:var(--muted);font-size:12.5px}
+.mfacts{margin:6px 0 0;font-size:13.5px;color:var(--ink2)}
+.mfacts b{color:var(--ink)}
+.mlic,.mtags,.mrun{margin:7px 0 0;font-size:13px;color:var(--ink2)}
+.mrun b{color:var(--ink)}
+.mrun code.cmd{white-space:nowrap;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
+.lic{font-weight:600}
+.lic-permissive{color:var(--good)}
+.lic-copyleft{color:var(--link)}
+.lic-custom{color:var(--bar)}
+.lic-non-commercial{color:var(--warn)}
+.lick{color:var(--muted);font-size:12px}
+.gate{font:600 11px var(--mono);color:var(--warn);border:1px solid var(--warn);border-radius:5px;padding:1px 6px}
+.tag.flag{color:var(--muted)}
+.mq{margin-top:9px}
+.mq summary{cursor:pointer;color:var(--link);font-size:13px}
+.mqb{overflow-x:auto}
+.mqb table{font-size:12.5px;margin-top:8px}
+.mqb td,.mqb th{padding:4px 8px 4px 0;text-align:left;vertical-align:top;border-bottom:1px solid var(--grid)}
+.mqb .qs{display:flex;flex-wrap:wrap;gap:4px}
+.mqb .q{font:12px var(--mono);background:var(--band);border:1px solid var(--grid);border-radius:5px;padding:1px 6px;white-space:nowrap}
+.mqb code.cmd{font-size:12px;white-space:normal;overflow-wrap:anywhere}
+#mmore{margin:16px 0}
+.mfam{display:flex;flex-wrap:wrap;gap:6px}
+@media (max-width:640px){.mgrp .gl{min-width:100%}}
+</style>
+<body>
+<header><div class="wrap">
+  <nav class="brandbar"><a class="brand" href="../"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="#D6A034" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="#F7F8FA" stroke="#D6A034" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="#D6A034"/><path d="M12 31h40M32 11v40" fill="none" stroke="#20242D" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="#090A0D"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="#F7F8FA"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="#090A0D" stroke-width="2.5" stroke-linecap="round"/></g></svg></span><span>Atlas</span></a></nav><div class="top">
+  <div>
+    <p class="kick">The weights</p>
+    <h1>Models</h1>
+    <p class="sub"><b>2,097</b> models · <b>1,399</b> families · <b>6,591</b> runnable
+      copies · <b>29,107</b> quantisations · snapshot 2026-11-18</p>
+    <p class="intro">The open models people build agents on, from Hugging Face: chat and reasoning models, coders,
+      tool callers, vision-language models, embeddings, rerankers and speech. Each one is gathered with every
+      re-packaging a trusted quantiser publishes &mdash; GGUF for llama.cpp, Ollama and LM Studio, MLX for Apple
+      silicon, AWQ, GPTQ and FP8 for vLLM &mdash; and every quantisation's exact download size. 1,129 of them run
+      locally from one of those.</p>
+  </div>
+  <nav>
+    <a href="../discover/">Discover</a> ·
+    <a href="../collections/">Collections</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
+    <a href="../repo/">All projects</a> ·
+    <a href="../#browse">Topics &amp; harnesses</a><br>
+    <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/HEAD/mega-list">Markdown</a><br>
+    <button class="chip" id="theme" aria-pressed="false">Light theme</button>
+  </nav>
+</div></div></header>
+
+<main><div class="wrap">
+<div class="mtools">
+  <div><label for="mq">Search</label><input id="mq" type="search" placeholder="Model, family, author or quantiser" autocomplete="off"></div>
+  <div><label for="msort">Sort</label><select id="msort">
+    <option value="pop">Most used (all variants)</option><option value="trend">Trending</option>
+    <option value="new">Newest</option><option value="small">Smallest first</option><option value="big">Largest first</option>
+    <option value="ctx">Longest context</option></select></div>
+</div>
+<div class="mgrp" role="group" aria-label="Use"><span class="gl">Use</span><button type="button" data-f="use" data-v="chat" aria-pressed="false">Chat</button><button type="button" data-f="use" data-v="reasoning" aria-pressed="false">Reasoning</button><button type="button" data-f="use" data-v="code" aria-pressed="false">Code</button><button type="button" data-f="use" data-v="tools" aria-pressed="false">Tool calling</button><button type="button" data-f="use" data-v="vision" aria-pressed="false">Vision</button><button type="button" data-f="use" data-v="embed" aria-pressed="false">Embeddings</button><button type="button" data-f="use" data-v="rerank" aria-pressed="false">Reranker</button><button type="button" data-f="use" data-v="asr" aria-pressed="false">Speech to text</button><button type="button" data-f="use" data-v="tts" aria-pressed="false">Text to speech</button><button type="button" data-f="use" data-v="base" aria-pressed="false">Base model</button></div>
+<div class="mgrp" role="group" aria-label="Size"><span class="gl">Size</span><button type="button" data-f="size" data-v="xs" aria-pressed="false">up to 4B</button><button type="button" data-f="size" data-v="s" aria-pressed="false">4–10B</button><button type="button" data-f="size" data-v="m" aria-pressed="false">10–20B</button><button type="button" data-f="size" data-v="l" aria-pressed="false">20–40B</button><button type="button" data-f="size" data-v="xl" aria-pressed="false">40–80B</button><button type="button" data-f="size" data-v="xxl" aria-pressed="false">80B+</button></div>
+<div class="mgrp" role="group" aria-label="Format"><span class="gl">Format</span><button type="button" data-f="fmt" data-v="gguf" aria-pressed="false">GGUF</button><button type="button" data-f="fmt" data-v="mlx" aria-pressed="false">MLX</button><button type="button" data-f="fmt" data-v="awq" aria-pressed="false">AWQ / GPTQ</button><button type="button" data-f="fmt" data-v="fp8" aria-pressed="false">FP8</button></div>
+<div class="mgrp" role="group" aria-label="Licence"><span class="gl">Licence</span><button type="button" data-f="lic" data-v="permissive" aria-pressed="false">Permissive</button><button type="button" data-f="lic" data-v="copyleft" aria-pressed="false">Copyleft</button><button type="button" data-f="lic" data-v="custom" aria-pressed="false">Custom terms</button><button type="button" data-f="lic" data-v="non-commercial" aria-pressed="false">Non-commercial</button></div>
+<p id="mcount" aria-live="polite">The 60 most used of 2,097. Filters load with the data.</p>
+<ol class="mlist" id="mlist">
+<li class="mcard" data-id="sentence-transformers/all-MiniLM-L6-v2"><div class="mhd"><h2><a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2" rel="noopener">all-MiniLM-L6-v2</a></h2><span class="mby">sentence-transformers · all-MiniLM-L6-v2</span></div><p class="mfacts"><b>23M</b> params · <b>512</b> context · bert</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">MLX 4bit <b>13 MB</b> · 5 variants · 5 files · <code class="cmd">ollama run all-minilm:latest</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="argmaxinc/whisperkit-coreml"><div class="mhd"><h2><a href="https://huggingface.co/argmaxinc/whisperkit-coreml" rel="noopener">whisperkit-coreml</a></h2><span class="mby">argmaxinc · whisperkit-coreml</span></div><p class="mfacts"></p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Speech to text</span></p><p class="mrun">0 variants · 0 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="cross-encoder/ms-marco-MiniLM-L6-v2"><div class="mhd"><h2><a href="https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2" rel="noopener">ms-marco-MiniLM-L6-v2</a></h2><span class="mby">cross-encoder · ms-marco-MiniLM-L6-v2</span></div><p class="mfacts"><b>23M</b> params · <b>512</b> context · bert</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Reranker</span><span class="tag flag">community</span></p><p class="mrun">1 variant · 1 file</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="BAAI/bge-small-en-v1.5"><div class="mhd"><h2><a href="https://huggingface.co/BAAI/bge-small-en-v1.5" rel="noopener">bge-small-en-v1.5</a></h2><span class="mby">BAAI · bge-small-en-v1.5</span></div><p class="mfacts"><b>33M</b> params · <b>512</b> context · bert</p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">GGUF F16 <b>68 MB</b> · 7 variants · 7 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3.8-27B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3.8-27B" rel="noopener">Qwen3.8-27B</a></h2><span class="mby">Qwen · Qwen3.8</span></div><p class="mfacts"><b>28B</b> params · <b>256K</b> context · qwen3_5</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>16.8 GB</b> · 22 variants · 75 files · <code class="cmd">ollama run qwen3.8:27b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="BAAI/bge-m3"><div class="mhd"><h2><a href="https://huggingface.co/BAAI/bge-m3" rel="noopener">bge-m3</a></h2><span class="mby">BAAI · bge-m3</span></div><p class="mfacts"><b>8.2K</b> context · xlm-roberta</p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">GGUF Q8_0 <b>635 MB</b> · 5 variants · 5 files · <code class="cmd">ollama run bge-m3:latest</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"><div class="mhd"><h2><a href="https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2" rel="noopener">paraphrase-multilingual-MiniLM-L12-v2</a></h2><span class="mby">sentence-transformers · paraphrase-multilingual-MiniLM-L12-v2</span></div><p class="mfacts"><b>118M</b> params · <b>512</b> context · bert</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">1 variant · 1 file</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="sentence-transformers/all-mpnet-base-v2"><div class="mhd"><h2><a href="https://huggingface.co/sentence-transformers/all-mpnet-base-v2" rel="noopener">all-mpnet-base-v2</a></h2><span class="mby">sentence-transformers · all-mpnet-v2</span></div><p class="mfacts"><b>109M</b> params · <b>514</b> context · mpnet</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">1 variant · 1 file</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3-0.6B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3-0.6B" rel="noopener">Qwen3-0.6B</a></h2><span class="mby">Qwen · Qwen3</span></div><p class="mfacts"><b>752M</b> params · <b>40K</b> context · qwen3</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen3-0.6B/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Reasoning</span><span class="tag">Tool calling</span></p><p class="mrun">GGUF Q4_K_M <b>484 MB</b> · 25 variants · 79 files · <code class="cmd">ollama run qwen3:0.6b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3-14B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3-14B" rel="noopener">Qwen3-14B</a></h2><span class="mby">Qwen · Qwen3</span></div><p class="mfacts"><b>15B</b> params · <b>40K</b> context · qwen3</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen3-14B/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Reasoning</span><span class="tag">Tool calling</span></p><p class="mrun">GGUF Q4_K_M <b>9.0 GB</b> · 25 variants · 84 files · <code class="cmd">ollama run qwen3:14b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="jonatasgrosman/wav2vec2-large-xlsr-53-japanese"><div class="mhd"><h2><a href="https://huggingface.co/jonatasgrosman/wav2vec2-large-xlsr-53-japanese" rel="noopener">wav2vec2-large-xlsr-53-japanese</a></h2><span class="mby">jonatasgrosman · wav2vec2-large-xlsr-53-japanese</span></div><p class="mfacts">wav2vec2</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Speech to text</span></p><p class="mrun">0 variants · 0 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3.6-35B-A3B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3.6-35B-A3B" rel="noopener">Qwen3.6-35B-A3B</a></h2><span class="mby">Qwen · Qwen3.6</span></div><p class="mfacts"><b>36B</b> params · <b>3B</b> active · <b>256K</b> context · qwen3_5_moe</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen3.6-35B-A3B/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>22.3 GB</b> · 25 variants · 99 files · <code class="cmd">ollama run qwen3.6:35b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="hexgrad/Kokoro-82M"><div class="mhd"><h2><a href="https://huggingface.co/hexgrad/Kokoro-82M" rel="noopener">Kokoro-82M</a></h2><span class="mby">hexgrad · Kokoro</span></div><p class="mfacts"><b>82M</b> params</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Text to speech</span></p><p class="mrun">GGUF F32 <b>62 MB</b> · 5 variants · 5 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="nomic-ai/nomic-embed-text-v1.5"><div class="mhd"><h2><a href="https://huggingface.co/nomic-ai/nomic-embed-text-v1.5" rel="noopener">nomic-embed-text-v1.5</a></h2><span class="mby">nomic-ai · nomic-embed-text-v1.5</span></div><p class="mfacts"><b>137M</b> params · <b>2K</b> context · nomic_bert</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">GGUF Q4_K_M <b>84 MB</b> · 2 variants · 15 files · <code class="cmd">ollama run nomic-embed-text:v1.5</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3.5-9B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3.5-9B" rel="noopener">Qwen3.5-9B</a></h2><span class="mby">Qwen · Qwen3.5</span></div><p class="mfacts"><b>9.7B</b> params · <b>256K</b> context · qwen3_5</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen3.5-9B/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Reasoning</span><span class="tag">Tool calling</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>5.7 GB</b> · 17 variants · 84 files · <code class="cmd">ollama run qwen3.5:9b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="google/gemma-4-E4B-it"><div class="mhd"><h2><a href="https://huggingface.co/google/gemma-4-E4B-it" rel="noopener">gemma-4-E4B-it</a></h2><span class="mby">google · gemma-4</span></div><p class="mfacts"><b>8B</b> params · <b>128K</b> context · gemma4</p><p class="mlic"><a class="lic lic-permissive" href="https://ai.google.dev/gemma/docs/gemma_4_license" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>5.0 GB</b> · 23 variants · 69 files · <code class="cmd">ollama run gemma4:e4b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3-VL-8B-Instruct"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" rel="noopener">Qwen3-VL-8B-Instruct</a></h2><span class="mby">Qwen · Qwen3-VL</span></div><p class="mfacts"><b>8.8B</b> params · <b>256K</b> context · qwen3_vl</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Tool calling</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>5.0 GB</b> · 19 variants · 71 files · <code class="cmd">ollama run qwen3-vl:8b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="google/gemma-4-26B-A4B-it"><div class="mhd"><h2><a href="https://huggingface.co/google/gemma-4-26B-A4B-it" rel="noopener">gemma-4-26B-A4B-it</a></h2><span class="mby">google · gemma-4</span></div><p class="mfacts"><b>26B</b> params · <b>256K</b> context · gemma4</p><p class="mlic"><a class="lic lic-permissive" href="https://ai.google.dev/gemma/docs/gemma_4_license" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>17.0 GB</b> · 29 variants · 79 files · <code class="cmd">ollama run gemma4:26b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="deepseek-ai/DeepSeek-V3.2"><div class="mhd"><h2><a href="https://huggingface.co/deepseek-ai/DeepSeek-V3.2" rel="noopener">DeepSeek-V3.2</a></h2><span class="mby">deepseek-ai · DeepSeek-V3.2</span></div><p class="mfacts"><b>685B</b> params · <b>52B</b> active · <b>160K</b> context · deepseek_v32</p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Base model</span></p><p class="mrun">GGUF Q4_K_M <b>405.4 GB</b> · 6 variants · 32 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="intfloat/multilingual-e5-small"><div class="mhd"><h2><a href="https://huggingface.co/intfloat/multilingual-e5-small" rel="noopener">multilingual-e5-small</a></h2><span class="mby">intfloat · multilingual-e5-small</span></div><p class="mfacts"><b>118M</b> params · <b>512</b> context · bert</p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">2 variants · 2 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen2.5-7B-Instruct"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct" rel="noopener">Qwen2.5-7B-Instruct</a></h2><span class="mby">Qwen · Qwen2.5</span></div><p class="mfacts"><b>7.6B</b> params · <b>32K</b> context · qwen2</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Tool calling</span></p><p class="mrun">GGUF Q4_K_M <b>4.7 GB</b> · 16 variants · 50 files · <code class="cmd">ollama run qwen2.5:7b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="sentence-transformers/paraphrase-multilingual-mpnet-base-v2"><div class="mhd"><h2><a href="https://huggingface.co/sentence-transformers/paraphrase-multilingual-mpnet-base-v2" rel="noopener">paraphrase-multilingual-mpnet-base-v2</a></h2><span class="mby">sentence-transformers · paraphrase-multilingual-mpnet-v2</span></div><p class="mfacts"><b>278M</b> params · <b>514</b> context · xlm-roberta</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">1 variant · 1 file</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3-8B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3-8B" rel="noopener">Qwen3-8B</a></h2><span class="mby">Qwen · Qwen3</span></div><p class="mfacts"><b>8.2B</b> params · <b>40K</b> context · qwen3</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen3-8B/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Reasoning</span><span class="tag">Tool calling</span></p><p class="mrun">GGUF Q4_K_M <b>5.0 GB</b> · 25 variants · 80 files · <code class="cmd">ollama run qwen3:8b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="ornith-ai/Ornith-1.5-9B"><div class="mhd"><h2><a href="https://huggingface.co/ornith-ai/Ornith-1.5-9B" rel="noopener">Ornith-1.5-9B</a></h2><span class="mby">ornith-ai · Ornith-1.5</span></div><p class="mfacts"><b>9.7B</b> params · <b>256K</b> context · qwen3_5</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/ornith-ai/Ornith-1.5-9B/blob/main/LICENSE" rel="noopener">MIT</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Reasoning</span><span class="tag">Tool calling</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>5.8 GB</b> · 8 variants · 35 files · <code class="cmd">ollama run ornith-1.5:9b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="BAAI/bge-base-en-v1.5"><div class="mhd"><h2><a href="https://huggingface.co/BAAI/bge-base-en-v1.5" rel="noopener">bge-base-en-v1.5</a></h2><span class="mby">BAAI · bge-en-v1.5</span></div><p class="mfacts"><b>109M</b> params · <b>512</b> context · bert</p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">1 variant · 1 file</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="google/gemma-4-31B-it"><div class="mhd"><h2><a href="https://huggingface.co/google/gemma-4-31B-it" rel="noopener">gemma-4-31B-it</a></h2><span class="mby">google · gemma-4</span></div><p class="mfacts"><b>31B</b> params · <b>256K</b> context · gemma4</p><p class="mlic"><a class="lic lic-permissive" href="https://ai.google.dev/gemma/docs/gemma_4_license" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>18.3 GB</b> · 31 variants · 83 files · <code class="cmd">ollama run gemma4:31b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3-Embedding-0.6B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3-Embedding-0.6B" rel="noopener">Qwen3-Embedding-0.6B</a></h2><span class="mby">Qwen · Qwen3-Embedding</span></div><p class="mfacts"><b>596M</b> params · <b>32K</b> context · qwen3</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">GGUF Q8_0 <b>639 MB</b> · 5 variants · 6 files · <code class="cmd">ollama run qwen3-embedding:0.6b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="intfloat/multilingual-e5-large"><div class="mhd"><h2><a href="https://huggingface.co/intfloat/multilingual-e5-large" rel="noopener">multilingual-e5-large</a></h2><span class="mby">intfloat · multilingual-e5-large</span></div><p class="mfacts"><b>560M</b> params · <b>514</b> context · xlm-roberta</p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">3 variants · 3 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="ornith-ai/Ornith-1.5-35B-A3B"><div class="mhd"><h2><a href="https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B" rel="noopener">Ornith-1.5-35B-A3B</a></h2><span class="mby">ornith-ai · Ornith-1.5</span></div><p class="mfacts"><b>36B</b> params · <b>3B</b> active · <b>256K</b> context · qwen3_5_moe</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B/blob/main/LICENSE" rel="noopener">MIT</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Reasoning</span><span class="tag">Tool calling</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>21.7 GB</b> · 10 variants · 40 files · <code class="cmd">ollama run ornith-1.5:35b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="zai-org/GLM-5.3-Flash"><div class="mhd"><h2><a href="https://huggingface.co/zai-org/GLM-5.3-Flash" rel="noopener">GLM-5.3-Flash</a></h2><span class="mby">zai-org · GLM-5.3-Flash</span></div><p class="mfacts"><b>321B</b> params · <b>25B</b> active · <b>1024K</b> context · glm5_next</p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">GGUF UD-Q4_K_XL <b>199.7 GB</b> · 5 variants · 16 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="BAAI/bge-large-en-v1.5"><div class="mhd"><h2><a href="https://huggingface.co/BAAI/bge-large-en-v1.5" rel="noopener">bge-large-en-v1.5</a></h2><span class="mby">BAAI · bge-large-en-v1.5</span></div><p class="mfacts"><b>335M</b> params · <b>512</b> context · bert</p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">1 variant · 1 file</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="openai/gpt-oss-20b"><div class="mhd"><h2><a href="https://huggingface.co/openai/gpt-oss-20b" rel="noopener">gpt-oss-20b</a></h2><span class="mby">openai · gpt-oss</span></div><p class="mfacts"><b>21B</b> params · <b>4.2B</b> active · <b>128K</b> context · gpt_oss</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span></p><p class="mrun">GGUF Q4_K_M <b>11.6 GB</b> · 11 variants · 53 files · <code class="cmd">ollama run gpt-oss:20b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3.5-4B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3.5-4B" rel="noopener">Qwen3.5-4B</a></h2><span class="mby">Qwen · Qwen3.5</span></div><p class="mfacts"><b>4.7B</b> params · <b>256K</b> context · qwen3_5</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen3.5-4B/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Reasoning</span><span class="tag">Tool calling</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>2.7 GB</b> · 13 variants · 81 files · <code class="cmd">ollama run qwen3.5:4b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen2.5-VL-7B-Instruct"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct" rel="noopener">Qwen2.5-VL-7B-Instruct</a></h2><span class="mby">Qwen · Qwen2.5-VL</span></div><p class="mfacts"><b>8.3B</b> params · <b>125K</b> context · qwen2_5_vl</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>4.7 GB</b> · 14 variants · 67 files · <code class="cmd">ollama run qwen2.5vl:7b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="ibm-granite/granite-embedding-small-english-r2"><div class="mhd"><h2><a href="https://huggingface.co/ibm-granite/granite-embedding-small-english-r2" rel="noopener">granite-embedding-small-english-r2</a></h2><span class="mby">ibm-granite · granite-embedding-small-english-r2</span></div><p class="mfacts"><b>48M</b> params · <b>8K</b> context · modernbert</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">1 variant · 1 file</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Systran/faster-whisper-small"><div class="mhd"><h2><a href="https://huggingface.co/Systran/faster-whisper-small" rel="noopener">faster-whisper-small</a></h2><span class="mby">Systran · faster-whisper-small</span></div><p class="mfacts"></p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Speech to text</span></p><p class="mrun">0 variants · 0 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3.8-Flash-Next"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3.8-Flash-Next" rel="noopener">Qwen3.8-Flash-Next</a></h2><span class="mby">Qwen · Qwen3.8-Flash-Next</span></div><p class="mfacts"><b>180B</b> params · <b>62B</b> active · <b>256K</b> context · qwen4_exp</p><p class="mlic"><a class="lic lic-custom" href="https://huggingface.co/Qwen/Qwen3.8-Flash-Next/blob/main/LICENSE" rel="noopener">qwen-community-1.0</a> <span class="lick">Custom terms</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>119.6 GB</b> · 10 variants · 52 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="pyannote/speaker-diarization-3.1"><div class="mhd"><h2><a href="https://huggingface.co/pyannote/speaker-diarization-3.1" rel="noopener">speaker-diarization-3.1</a></h2><span class="mby">pyannote · speaker-diarization-3.1</span></div><p class="mfacts"></p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span> <span class="gate" title="The original repository asks you to accept its licence before downloading">gated</span></p><p class="mtags"><span class="tag">Speech to text</span></p><p class="mrun">0 variants · 0 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3.5-2B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3.5-2B" rel="noopener">Qwen3.5-2B</a></h2><span class="mby">Qwen · Qwen3.5</span></div><p class="mfacts"><b>2.3B</b> params · <b>256K</b> context · qwen3_5</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen3.5-2B/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Reasoning</span><span class="tag">Tool calling</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>1.3 GB</b> · 16 variants · 82 files · <code class="cmd">ollama run qwen3.5:2b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3-4B-Instruct-2507"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507" rel="noopener">Qwen3-4B-Instruct-2507</a></h2><span class="mby">Qwen · Qwen3</span></div><p class="mfacts"><b>4B</b> params · <b>256K</b> context · qwen3</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Tool calling</span></p><p class="mrun">GGUF Q4_K_M <b>2.5 GB</b> · 21 variants · 72 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="google/gemma-4-12B-it"><div class="mhd"><h2><a href="https://huggingface.co/google/gemma-4-12B-it" rel="noopener">gemma-4-12B-it</a></h2><span class="mby">google · gemma-4</span></div><p class="mfacts"><b>12B</b> params · <b>256K</b> context · gemma4_unified</p><p class="mlic"><a class="lic lic-permissive" href="https://ai.google.dev/gemma/docs/gemma_4_license" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>7.1 GB</b> · 28 variants · 76 files · <code class="cmd">ollama run gemma4:12b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="openai/whisper-base"><div class="mhd"><h2><a href="https://huggingface.co/openai/whisper-base" rel="noopener">whisper-base</a></h2><span class="mby">openai · whisper</span></div><p class="mfacts"><b>73M</b> params · whisper</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Speech to text</span></p><p class="mrun">MLX 4bit <b>42 MB</b> · 2 variants · 2 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen2.5-1.5B-Instruct"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct" rel="noopener">Qwen2.5-1.5B-Instruct</a></h2><span class="mby">Qwen · Qwen2.5</span></div><p class="mfacts"><b>1.5B</b> params · <b>32K</b> context · qwen2</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Tool calling</span></p><p class="mrun">GGUF Q4_K_M <b>1.1 GB</b> · 15 variants · 49 files · <code class="cmd">ollama run qwen2.5:1.5b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3.6-27B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3.6-27B" rel="noopener">Qwen3.6-27B</a></h2><span class="mby">Qwen · Qwen3.6</span></div><p class="mfacts"><b>28B</b> params · <b>256K</b> context · qwen3_5</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>16.8 GB</b> · 22 variants · 94 files · <code class="cmd">ollama run qwen3.6:27b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="baidu/Unlimited-OCR"><div class="mhd"><h2><a href="https://huggingface.co/baidu/Unlimited-OCR" rel="noopener">Unlimited-OCR</a></h2><span class="mby">baidu · Unlimited-OCR</span></div><p class="mfacts"><b>3.3B</b> params · <b>1.1B</b> active · <b>32K</b> context · unlimited_ocr</p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">MLX 4bit <b>2.5 GB</b> · 6 variants · 6 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="openai/whisper-large-v3-turbo"><div class="mhd"><h2><a href="https://huggingface.co/openai/whisper-large-v3-turbo" rel="noopener">whisper-large-v3-turbo</a></h2><span class="mby">openai · whisper-large-v3-turbo</span></div><p class="mfacts"><b>809M</b> params · whisper</p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Speech to text</span></p><p class="mrun">MLX 4bit <b>463 MB</b> · 6 variants · 6 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="google/gemma-4-E2B-it"><div class="mhd"><h2><a href="https://huggingface.co/google/gemma-4-E2B-it" rel="noopener">gemma-4-E2B-it</a></h2><span class="mby">google · gemma-4</span></div><p class="mfacts"><b>5.1B</b> params · <b>128K</b> context · gemma4</p><p class="mlic"><a class="lic lic-permissive" href="https://ai.google.dev/gemma/docs/gemma_4_license" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>3.1 GB</b> · 24 variants · 70 files · <code class="cmd">ollama run gemma4:e2b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="coqui/XTTS-v2"><div class="mhd"><h2><a href="https://huggingface.co/coqui/XTTS-v2" rel="noopener">XTTS-v2</a></h2><span class="mby">coqui · XTTS-v2</span></div><p class="mfacts"></p><p class="mlic"><a class="lic lic-custom" href="https://coqui.ai/cpml" rel="noopener">coqui-public-model-license</a> <span class="lick">Custom terms</span></p><p class="mtags"><span class="tag">Text to speech</span></p><p class="mrun">0 variants · 0 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="pyannote/speaker-diarization-community-1"><div class="mhd"><h2><a href="https://huggingface.co/pyannote/speaker-diarization-community-1" rel="noopener">speaker-diarization-community-1</a></h2><span class="mby">pyannote · speaker-diarization-community-1</span></div><p class="mfacts"></p><p class="mlic"><span class="lic lic-permissive">CC BY 4.0</span> <span class="lick">Permissive</span> <span class="gate" title="The original repository asks you to accept its licence before downloading">gated</span></p><p class="mtags"><span class="tag">Speech to text</span></p><p class="mrun">0 variants · 0 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="dphn/dolphin-2.9.1-yi-1.5-34b"><div class="mhd"><h2><a href="https://huggingface.co/dphn/dolphin-2.9.1-yi-1.5-34b" rel="noopener">dolphin-2.9.1-yi-1.5-34b</a></h2><span class="mby">dphn · dolphin-2.9.1-yi-1.5</span></div><p class="mfacts"><b>34B</b> params · <b>8K</b> context · llama</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag flag">community</span></p><p class="mrun">GGUF Q4_K_M <b>20.7 GB</b> · 2 variants · 24 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen2.5-0.5B-Instruct"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct" rel="noopener">Qwen2.5-0.5B-Instruct</a></h2><span class="mby">Qwen · Qwen2.5</span></div><p class="mfacts"><b>494M</b> params · <b>32K</b> context · qwen2</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Tool calling</span></p><p class="mrun">GGUF Q4_K_M <b>491 MB</b> · 16 variants · 50 files · <code class="cmd">ollama run qwen2.5:0.5b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="meta-llama/Llama-3.1-8B-Instruct"><div class="mhd"><h2><a href="https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct" rel="noopener">Llama-3.1-8B-Instruct</a></h2><span class="mby">meta-llama · Llama-3.1</span></div><p class="mfacts"><b>8B</b> params · <b>128K</b> context · llama</p><p class="mlic"><span class="lic lic-custom">Llama 3.1 Community</span> <span class="lick">Custom terms</span> <span class="gate" title="The original repository asks you to accept its licence before downloading">gated</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Tool calling</span></p><p class="mrun">GGUF Q4_K_M <b>4.9 GB</b> · 20 variants · 72 files · <code class="cmd">ollama run llama3.1:8b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3-4B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3-4B" rel="noopener">Qwen3-4B</a></h2><span class="mby">Qwen · Qwen3</span></div><p class="mfacts"><b>4B</b> params · <b>40K</b> context · qwen3</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen3-4B/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Reasoning</span><span class="tag">Tool calling</span></p><p class="mrun">GGUF Q4_K_M <b>2.5 GB</b> · 22 variants · 79 files · <code class="cmd">ollama run qwen3:4b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="intfloat/multilingual-e5-base"><div class="mhd"><h2><a href="https://huggingface.co/intfloat/multilingual-e5-base" rel="noopener">multilingual-e5-base</a></h2><span class="mby">intfloat · multilingual-e5</span></div><p class="mfacts"><b>278M</b> params · <b>514</b> context · xlm-roberta</p><p class="mlic"><span class="lic lic-permissive">MIT</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">2 variants · 2 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Xenova/all-MiniLM-L6-v2"><div class="mhd"><h2><a href="https://huggingface.co/Xenova/all-MiniLM-L6-v2" rel="noopener">all-MiniLM-L6-v2</a></h2><span class="mby">Xenova · all-MiniLM-L6-v2</span></div><p class="mfacts"><b>512</b> context · bert</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span><span class="tag flag">community</span></p><p class="mrun">0 variants · 0 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Snowflake/snowflake-arctic-embed-l-v2.0"><div class="mhd"><h2><a href="https://huggingface.co/Snowflake/snowflake-arctic-embed-l-v2.0" rel="noopener">snowflake-arctic-embed-l-v2.0</a></h2><span class="mby">Snowflake · snowflake-arctic-embed-l-v2.0</span></div><p class="mfacts"><b>568M</b> params · <b>8.2K</b> context · xlm-roberta</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Embeddings</span></p><p class="mrun">MLX 4bit <b>320 MB</b> · 5 variants · 5 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3-VL-4B-Instruct"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct" rel="noopener">Qwen3-VL-4B-Instruct</a></h2><span class="mby">Qwen · Qwen3-VL</span></div><p class="mfacts"><b>4.4B</b> params · <b>256K</b> context · qwen3_vl</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Tool calling</span><span class="tag">Vision</span></p><p class="mrun">GGUF Q4_K_M <b>2.5 GB</b> · 18 variants · 70 files · <code class="cmd">ollama run qwen3-vl:4b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="Qwen/Qwen3-32B"><div class="mhd"><h2><a href="https://huggingface.co/Qwen/Qwen3-32B" rel="noopener">Qwen3-32B</a></h2><span class="mby">Qwen · Qwen3</span></div><p class="mfacts"><b>33B</b> params · <b>40K</b> context · qwen3</p><p class="mlic"><a class="lic lic-permissive" href="https://huggingface.co/Qwen/Qwen3-32B/blob/main/LICENSE" rel="noopener">Apache 2.0</a> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Reasoning</span><span class="tag">Tool calling</span></p><p class="mrun">GGUF Q4_K_M <b>19.8 GB</b> · 21 variants · 81 files · <code class="cmd">ollama run qwen3:32b</code></p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="huihui-ai/Huihui-Qwen3.8-27B-abliterated"><div class="mhd"><h2><a href="https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated" rel="noopener">Huihui-Qwen3.8-27B-abliterated</a></h2><span class="mby">huihui-ai · Huihui-Qwen3.8</span></div><p class="mfacts"><b>28B</b> params · <b>256K</b> context · qwen3_5</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Chat</span><span class="tag">Reasoning</span><span class="tag">Tool calling</span><span class="tag">Vision</span><span class="tag flag">uncensored</span><span class="tag flag">community</span></p><p class="mrun">GGUF Q4_K_M <b>16.6 GB</b> · 2 variants · 27 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+<li class="mcard" data-id="openai/whisper-small"><div class="mhd"><h2><a href="https://huggingface.co/openai/whisper-small" rel="noopener">whisper-small</a></h2><span class="mby">openai · whisper-small</span></div><p class="mfacts"><b>242M</b> params · whisper</p><p class="mlic"><span class="lic lic-permissive">Apache 2.0</span> <span class="lick">Permissive</span></p><p class="mtags"><span class="tag">Speech to text</span></p><p class="mrun">MLX 4bit <b>139 MB</b> · 4 variants · 4 files</p><details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>
+</ol>
+<button class="chip" id="mmore" type="button" hidden>Show more</button>
+
+<section class="allin">
+  <h2>Families</h2>
+  <p>The 48 most used. A family is read off the model's name, so it groups releases rather than
+    vouching for lineage.</p>
+  <div class="mfam"><a class="chip" href="#fam=all-minilm-l6-v2">all-MiniLM-L6-v2 <span class="ct">2</span></a><a class="chip" href="#fam=whisperkit-coreml">whisperkit-coreml <span class="ct">1</span></a><a class="chip" href="#fam=qwen3">Qwen3 <span class="ct">31</span></a><a class="chip" href="#fam=ms-marco-minilm-l6-v2">ms-marco-MiniLM-L6-v2 <span class="ct">1</span></a><a class="chip" href="#fam=gemma-4">gemma-4 <span class="ct">41</span></a><a class="chip" href="#fam=bge-small-en-v1.5">bge-small-en-v1.5 <span class="ct">3</span></a><a class="chip" href="#fam=qwen3.5">Qwen3.5 <span class="ct">20</span></a><a class="chip" href="#fam=qwen3.8">Qwen3.8 <span class="ct">17</span></a><a class="chip" href="#fam=bge-m3">bge-m3 <span class="ct">2</span></a><a class="chip" href="#fam=qwen2.5">Qwen2.5 <span class="ct">15</span></a><a class="chip" href="#fam=paraphrase-multilingual-minilm-l12-v2">paraphrase-multilingual-MiniLM-L12-v2 <span class="ct">2</span></a><a class="chip" href="#fam=qwen3.6">Qwen3.6 <span class="ct">13</span></a><a class="chip" href="#fam=ornith-1.5">Ornith-1.5 <span class="ct">5</span></a><a class="chip" href="#fam=all-mpnet-v2">all-mpnet-v2 <span class="ct">1</span></a><a class="chip" href="#fam=qwen3-vl">Qwen3-VL <span class="ct">13</span></a><a class="chip" href="#fam=wav2vec2-large-xlsr-53-japanese">wav2vec2-large-xlsr-53-japanese <span class="ct">1</span></a><a class="chip" href="#fam=kokoro">Kokoro <span class="ct">4</span></a><a class="chip" href="#fam=qwen3-embedding">Qwen3-Embedding <span class="ct">4</span></a><a class="chip" href="#fam=nomic-embed-text-v1.5">nomic-embed-text-v1.5 <span class="ct">1</span></a><a class="chip" href="#fam=bge-en-v1.5">bge-en-v1.5 <span class="ct">2</span></a><a class="chip" href="#fam=qwen2.5-vl">Qwen2.5-VL <span class="ct">6</span></a><a class="chip" href="#fam=gpt-oss">gpt-oss <span class="ct">3</span></a><a class="chip" href="#fam=multilingual-e5-small">multilingual-e5-small <span class="ct">2</span></a><a class="chip" href="#fam=deepseek-v3.2">DeepSeek-V3.2 <span class="ct">1</span></a><a class="chip" href="#fam=qwen2.5-coder">Qwen2.5-Coder <span class="ct">13</span></a><a class="chip" href="#fam=paraphrase-multilingual-mpnet-v2">paraphrase-multilingual-mpnet-v2 <span class="ct">1</span></a><a class="chip" href="#fam=multilingual-e5-large">multilingual-e5-large <span class="ct">2</span></a><a class="chip" href="#fam=glm-5.3-flash">GLM-5.3-Flash <span class="ct">2</span></a><a class="chip" href="#fam=bge-large-en-v1.5">bge-large-en-v1.5 <span class="ct">1</span></a><a class="chip" href="#fam=granite-embedding-small-english-r2">granite-embedding-small-english-r2 <span class="ct">1</span></a><a class="chip" href="#fam=faster-whisper-small">faster-whisper-small <span class="ct">1</span></a><a class="chip" href="#fam=qwen3.8-flash-next">Qwen3.8-Flash-Next <span class="ct">1</span></a><a class="chip" href="#fam=speaker-diarization-3.1">speaker-diarization-3.1 <span class="ct">1</span></a><a class="chip" href="#fam=llama-3.1">Llama-3.1 <span class="ct">10</span></a><a class="chip" href="#fam=whisper">whisper <span class="ct">2</span></a><a class="chip" href="#fam=unlimited-ocr">Unlimited-OCR <span class="ct">1</span></a><a class="chip" href="#fam=whisper-large-v3-turbo">whisper-large-v3-turbo <span class="ct">1</span></a><a class="chip" href="#fam=xtts-v2">XTTS-v2 <span class="ct">1</span></a><a class="chip" href="#fam=speaker-diarization-community-1">speaker-diarization-community-1 <span class="ct">1</span></a><a class="chip" href="#fam=dolphin-2.9.1-yi-1.5">dolphin-2.9.1-yi-1.5 <span class="ct">1</span></a><a class="chip" href="#fam=multilingual-e5">multilingual-e5 <span class="ct">1</span></a><a class="chip" href="#fam=snowflake-arctic-embed-l-v2.0">snowflake-arctic-embed-l-v2.0 <span class="ct">1</span></a><a class="chip" href="#fam=whisper-small">whisper-small <span class="ct">2</span></a><a class="chip" href="#fam=gemma-3">gemma-3 <span class="ct">16</span></a><a class="chip" href="#fam=huihui-qwen3.8">Huihui-Qwen3.8 <span class="ct">2</span></a><a class="chip" href="#fam=parakeet-tdt">parakeet-tdt <span class="ct">4</span></a><a class="chip" href="#fam=llama-3.2">Llama-3.2 <span class="ct">8</span></a><a class="chip" href="#fam=qwen3-reranker">Qwen3-Reranker <span class="ct">3</span></a></div>
+</section>
+
+<section class="allin">
+  <h2>How this is made</h2>
+  <p>A weekly read of the Hugging Face Hub's public API. A model is kept when it is popular in its own right or
+    can be run locally from a trusted re-packaging, and every re-packaging of it &mdash; from its own lab, or from
+    bartowski, unsloth, lmstudio-community, ggml-org, mlx-community, RedHatAI or hugging-quants &mdash; is one
+    entry under it rather than a model of its own. Sizes are the files' own byte counts, split parts summed, in
+    decimal gigabytes. NSFW-tagged repos, adapters, empty cards, small merges and long-abandoned forks are left
+    out. The whole index is <a href="../models.json">one JSON file</a>, documented in the
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/handbook/pipeline.md#the-models-index">handbook</a>.</p>
+  <p>Licences are as each model's card states them. <span class="lic lic-custom">Custom terms</span> means the
+    model has its own licence (Llama, Gemma, OpenRAIL and others) that you should read before shipping it;
+    <span class="gate">gated</span> means the original repository asks you to accept that licence first.</p>
+</section>
+</div></main>
+
+<footer><div class="wrap">
+  <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and workbooks"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
+  Part of the <a href="../">Awesome Agentic Atlas</a>. Model data from the
+  <a href="https://huggingface.co/models">Hugging Face Hub</a> on 2026-11-18; downloads are the Hub's
+  thirty-day counts and drift daily. Ollama tags are matched by name and checked against the GGUF sizes where
+  possible; <code>ollama run hf.co/&lt;repo&gt;:&lt;quant&gt;</code> works for every GGUF here regardless.
+</div></footer>
+<script>
+(function () {
+  "use strict";
+  /* CARD CORE: no DOM below this line until END CARD CORE. tests/models_test.py runs exactly this block
+     under Node and requires its card() to print what card() in scripts/41_models_page.py prints. */
+  var USE = {chat:"Chat",reasoning:"Reasoning",code:"Code",tools:"Tool calling",vision:"Vision",embed:"Embeddings",
+             rerank:"Reranker",asr:"Speech to text",tts:"Text to speech",base:"Base model"};
+  var FMT = {gguf:"GGUF",mlx:"MLX",awq:"AWQ",gptq:"GPTQ",bnb:"bitsandbytes",fp8:"FP8",safetensors:"Safetensors"};
+  var KIND = {permissive:"Permissive",copyleft:"Copyleft",custom:"Custom terms","non-commercial":"Non-commercial"};
+  var SIZES = [["xs",0,4.5e9],["s",4.5e9,10.5e9],["m",10.5e9,20.5e9],["l",20.5e9,40.5e9],["xl",40.5e9,80.5e9],["xxl",80.5e9,1e15]];
+  var lic = {};
+
+  function h(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;"}[c]; }); }  // html.escape's spelling, so both copies agree
+  function num(n) {
+    if (!n) return "?";
+    var u = [[1e12,"T"],[1e9,"B"],[1e6,"M"],[1e3,"K"]];
+    for (var i = 0; i < u.length; i++) if (n >= u[i][0]) {
+      var v = n / u[i][0], s = v < 10 ? v.toFixed(1) : v.toFixed(0);
+      if (s.indexOf(".") >= 0) s = s.replace(/0+$/, "").replace(/\.$/, "");
+      return s + u[i][1];
+    }
+    return String(n);
+  }
+  function ctxs(n) { return !n ? "?" : (n >= 1024 && n % 1024 === 0 ? (n / 1024 | 0) + "K" : num(n)); }
+  function gb(n) { return n >= 1e9 ? (n / 1e9).toFixed(1) + " GB" : Math.round(n / 1e6) + " MB"; }
+  function obj(cols, r) { var o = {}; for (var i = 0; i < cols.length; i++) o[cols[i]] = r[i]; return o; }
+  function pick(m) {
+    var i, v, f;
+    for (i = 0; i < m.variants.length; i++) { v = m.variants[i];
+      if (v.fmt === "gguf") for (var j = 0; j < v.files.length; j++) if (v.files[j].q === "Q4_K_M") return [v, v.files[j]]; }
+    for (i = 0; i < m.variants.length; i++) { v = m.variants[i];
+      if (v.fmt === "gguf" && v.files.length) {
+        f = v.files.slice().sort(function (a, b) { return Math.abs((a.bpw || 4.8) - 4.8) - Math.abs((b.bpw || 4.8) - 4.8); })[0];
+        return [v, f]; } }
+    for (i = 0; i < m.variants.length; i++) { v = m.variants[i];
+      if (v.fmt === "mlx" && v.files.length && v.files[0].q.indexOf("4bit") === 0) return [v, v.files[0]]; }
+    return null;
+  }
+  // The same card as card() in scripts/41_models_page.py. tests/models_test.py compares the two.
+  function card(m) {
+    var facts = m.params ? ["<b>" + num(m.params) + "</b> params"] : [];
+    if (m.active) facts.push("<b>" + num(m.active) + "</b> active");
+    if (m.ctx) facts.push("<b>" + ctxs(m.ctx) + "</b> context");
+    if (m.arch) facts.push(h(m.arch));
+    var L = lic[m.license || ""] || {}, kind = L.kind || "custom", lname = L.name || "No licence stated";
+    if (m.license === "other" && m.license_name) lname = m.license_name;
+    var l = m.license_url ? '<a class="lic lic-' + kind + '" href="' + h(m.license_url) + '" rel="noopener">' + h(lname) + "</a>"
+                          : '<span class="lic lic-' + kind + '">' + h(lname) + "</span>";
+    l += ' <span class="lick">' + KIND[kind] + "</span>";
+    if (m.gated) l += ' <span class="gate" title="The original repository asks you to accept its licence before downloading">gated</span>';
+    var tags = m.uses.map(function (u) { return '<span class="tag">' + USE[u] + "</span>"; }).join("");
+    if (m.flags.indexOf("uncensored") >= 0) tags += '<span class="tag flag">uncensored</span>';
+    if (m.flags.indexOf("community") >= 0) tags += '<span class="tag flag">community</span>';
+    var nq = 0; m.variants.forEach(function (v) { nq += v.files.length; });
+    var run = [], p = pick(m);
+    if (p) run.push(FMT[p[0].fmt] + " " + h(p[1].q) + " <b>" + gb(p[1].bytes) + "</b>");
+    run.push(m.variants.length + " variant" + (m.variants.length !== 1 ? "s" : "") + " · " + nq + " file" + (nq !== 1 ? "s" : ""));
+    if (m.ollama) run.push('<code class="cmd">ollama run ' + h(m.ollama.name) + ":" + h(m.ollama.tag) + "</code>");
+    return '<li class="mcard" data-id="' + h(m.id) + '"><div class="mhd"><h2><a href="https://huggingface.co/' + h(m.id) +
+      '" rel="noopener">' + h(m.name) + '</a></h2><span class="mby">' + h(m.author) + " · " + h(m.family) + "</span></div>" +
+      '<p class="mfacts">' + facts.join(" · ") + '</p><p class="mlic">' + l + '</p><p class="mtags">' + tags + "</p>" +
+      '<p class="mrun">' + run.join(" · ") + "</p>" +
+      '<details class="mq"><summary>Every quantisation and how to run it</summary><div class="mqb"></div></details></li>';
+  }
+  /* END CARD CORE */
+  var PAGE = 60;
+  var list = document.getElementById("mlist"), count = document.getElementById("mcount"),
+      more = document.getElementById("mmore"), q = document.getElementById("mq"), sort = document.getElementById("msort");
+  var all = [], shown = PAGE, state = {use: [], size: [], fmt: [], lic: [], fam: "", q: "", sort: "pop"};
+  function runs(v, f) {
+    if (v.fmt === "gguf") return "llama-server -hf " + v.repo + ":" + f.q + "\nollama run hf.co/" + v.repo + ":" + f.q;
+    if (v.fmt === "mlx") return "mlx_lm.generate --model " + v.repo + ' --prompt "hello"';
+    if (v.fmt === "awq" || v.fmt === "gptq" || v.fmt === "fp8" || v.fmt === "safetensors") return "vllm serve " + v.repo;
+    return "";
+  }
+  function quants(m) {
+    var rows = m.variants.map(function (v) {
+      var fs = v.files.map(function (f) {
+        return '<span class="q" title="' + f.parts + " file" + (f.parts > 1 ? "s" : "") + (f.bpw ? ", " + f.bpw + " bits per weight" : "") +
+          '">' + h(f.q) + " " + gb(f.bytes) + "</span>"; }).join("");
+      // The command names Q4_K_M where there is one -- the quant most guides start from -- else the middle.
+      var mid = v.files.filter(function (f) { return f.q === "Q4_K_M"; })[0] || v.files[Math.floor((v.files.length - 1) / 2)] || {};
+      var mm = v.mmproj ? " + " + gb(v.mmproj) + " vision projector" : "";
+      return "<tr><td><a href=\"https://huggingface.co/" + h(v.repo) + '" rel="noopener">' + h(v.repo) + "</a><br>" + FMT[v.fmt] +
+        " · " + h(v.by) + " · " + num(v.downloads) + " downloads" + h(mm) + '</td><td><div class="qs">' + fs + "</div>" +
+        (runs(v, mid) ? '<code class="cmd">' + h(runs(v, mid)).replace(/\n/g, "<br>") + "</code>" : "") + "</td></tr>";
+    }).join("");
+    return "<table><thead><tr><th>Repository</th><th>Quantisations (exact sizes) and a command</th></tr></thead><tbody>" + rows + "</tbody></table>";
+  }
+  function bucket(p) { for (var i = 0; i < SIZES.length; i++) if (p >= SIZES[i][1] && p < SIZES[i][2]) return SIZES[i][0]; return ""; }
+  function passes(m) {
+    if (state.use.length && !state.use.some(function (u) { return m.uses.indexOf(u) >= 0; })) return false;
+    if (state.size.length && state.size.indexOf(bucket(m.params || 0)) < 0) return false;
+    if (state.fmt.length && !m.variants.some(function (v) {
+      return state.fmt.indexOf(v.fmt) >= 0 || (state.fmt.indexOf("awq") >= 0 && v.fmt === "gptq"); })) return false;
+    if (state.lic.length && state.lic.indexOf((lic[m.license || ""] || {}).kind || "custom") < 0) return false;
+    if (state.fam && m.family.toLowerCase() !== state.fam) return false;
+    if (state.q) {
+      var hay = (m.id + " " + m.family + " " + m.arch + " " + m.variants.map(function (v) { return v.repo; }).join(" ")).toLowerCase();
+      if (!state.q.split(/\s+/).every(function (w) { return hay.indexOf(w) >= 0; })) return false;
+    }
+    return true;
+  }
+  var SORTS = {
+    pop: function (a, b) { return b.downloads_all - a.downloads_all; },
+    trend: function (a, b) { return (b.trending || 0) - (a.trending || 0); },
+    "new": function (a, b) { return (b.created || "").localeCompare(a.created || ""); },
+    small: function (a, b) { return (a.params || 1e18) - (b.params || 1e18); },
+    big: function (a, b) { return (b.params || 0) - (a.params || 0); },
+    ctx: function (a, b) { return (b.ctx || 0) - (a.ctx || 0); }
+  };
+  function readHash() {
+    var p = new URLSearchParams(location.hash.slice(1));
+    ["use", "size", "fmt", "lic"].forEach(function (k) { state[k] = (p.get(k) || "").split(",").filter(Boolean); });
+    state.fam = (p.get("fam") || "").toLowerCase(); state.q = (p.get("q") || "").toLowerCase().trim();
+    state.sort = SORTS[p.get("sort")] ? p.get("sort") : "pop";
+  }
+  function writeHash() {
+    var p = new URLSearchParams();
+    ["use", "size", "fmt", "lic"].forEach(function (k) { if (state[k].length) p.set(k, state[k].join(",")); });
+    if (state.fam) p.set("fam", state.fam); if (state.q) p.set("q", state.q); if (state.sort !== "pop") p.set("sort", state.sort);
+    var s = p.toString(); history.replaceState(null, "", s ? "#" + s : location.pathname + location.search);
+  }
+  function sync() {
+    document.querySelectorAll(".mgrp button").forEach(function (b) {
+      b.setAttribute("aria-pressed", state[b.dataset.f].indexOf(b.dataset.v) >= 0 ? "true" : "false"); });
+    q.value = state.q; sort.value = state.sort;
+  }
+  function draw() {
+    var hit = all.filter(passes).sort(SORTS[state.sort]);
+    list.innerHTML = hit.slice(0, shown).map(card).join("");
+    more.hidden = hit.length <= shown;
+    count.textContent = hit.length === all.length ? "All " + all.length.toLocaleString() + " models" + (hit.length > shown ? ", the first " + shown + " shown." : ".")
+      : hit.length.toLocaleString() + " of " + all.length.toLocaleString() + " models" + (state.fam ? " in " + state.fam : "") + (hit.length > shown ? ", the first " + shown + " shown." : ".");
+  }
+  list.addEventListener("toggle", function (e) {
+    var d = e.target; if (!d.open || !all.length) return;
+    var li = d.closest(".mcard"), box = d.querySelector(".mqb");
+    if (box.childNodes.length) return;
+    var m = all.filter(function (x) { return x.id === li.dataset.id; })[0];
+    if (m) box.innerHTML = quants(m);
+  }, true);
+  document.querySelectorAll(".mgrp button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var a = state[b.dataset.f], i = a.indexOf(b.dataset.v);
+      if (i >= 0) a.splice(i, 1); else a.push(b.dataset.v);
+      shown = PAGE; writeHash(); sync(); if (all.length) draw();
+    });
+  });
+  var t; q.addEventListener("input", function () { clearTimeout(t); t = setTimeout(function () {
+    state.q = q.value.toLowerCase().trim(); shown = PAGE; writeHash(); if (all.length) draw(); }, 150); });
+  sort.addEventListener("change", function () { state.sort = sort.value; writeHash(); if (all.length) draw(); });
+  more.addEventListener("click", function () { shown += PAGE * 2; draw(); });
+  window.addEventListener("hashchange", function () { readHash(); sync(); shown = PAGE; if (all.length) draw(); });
+  readHash(); sync();
+  fetch("../models.json").then(function (r) { return r.json(); }).then(function (d) {
+    lic = d.licenses;
+    all = d.models.map(function (r) {
+      var m = obj(d.cols, r);
+      m.variants = m.variants.map(function (v) { v = obj(d.variant_cols, v);
+        v.files = v.files.map(function (f) { return obj(d.file_cols, f); }); return v; });
+      return m;
+    });
+    draw();
+  }).catch(function () { count.textContent = "The full index could not be loaded; the most used models are shown."; });
+})();
+</script>
+<script type="module" src="../assets/atlas-site.js?v=4b089da430"></script><script>
+const btn = document.getElementById("theme");
+const label = () => {
+  const light = document.documentElement.dataset.theme === "light";
+  btn.textContent = light ? "Dark theme" : "Light theme";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
+  if (plane) document.getElementById("tc").content = plane;
+};
+btn.onclick = () => {
+  const light = document.documentElement.dataset.theme !== "light";
+  document.documentElement.dataset.theme = light ? "light" : "dark";
+  // The choice is the point: it used to last until the next navigation, so a reader who needs light
+  // re-picked it on every facet page, every detail page and every trip back to the index.
+  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+  label();
+};
+// The head script already resolved the theme; this only has to agree with it, since the markup's
+// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
+label();
+// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
+// they explicitly chose because the sun went down is worse than not following at all.
+try {
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
+    if (localStorage.getItem("theme")) return;
+    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+    label();
+  });
+} catch (e) {}
+</script>
+<script>(function(){try{var u=sessionStorage.getItem("archie-src");if(u&&new URL(u).origin===location.origin&&localStorage.getItem("atlas-byte-quiet")!=="1"){var s=document.createElement("script");s.type="module";s.src=u;document.head.appendChild(s)}}catch(e){}})()</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
+<script defer src="../assets/traceway-1.2.1.js"></script><script defer src="../assets/web-vitals-6.2.3.js"></script><script defer src="../assets/traceway-loader.js"></script>
+</body>
+</html>
