@@ -18,40 +18,18 @@
 <link rel="preload" href="../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of pages.css. After paint `label()`
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a topic page
-  // would otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to
-  // graphite for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../pages.css">
@@ -66,8 +44,8 @@ try {
     <p class="kick">Collection · Traces, tests and scans</p>
     <h1>Find out what the agent actually did</h1>
     <p class="sub"><b>6</b> picks · <b>2</b> of the atlas's
-      14 topics · <b>121,678</b> combined stars ·
-      snapshot 2026-10-22</p>
+      14 topics · <b>126,184</b> combined stars ·
+      snapshot 2026-11-01</p>
     <p class="intro">An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put in front of a customer. Traces first, then tests, then the thing people leave until after the incident.</p>
     <a class="cta" href="../../#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector">Open all 6 in the atlas &rarr;</a>
     <p class="meta take">From there: save them to your own projects, or export the set as Markdown,
@@ -95,7 +73,7 @@ try {
   <p class="why">Self-hostable, which matters here more than anywhere: the traces contain your prompts and your customers&#x27; data. The most widely adopted of the open options, and two source lists agree.</p>
   <p class="desc">The most widely adopted self-hostable LLM observability platform: traces every agent step, manages prompt versions, and runs evals in one tool. Preferred over cloud-only alternatives when data residency or cost control is a constraint</p>
   <code class="cmd">pip install langfuse openai</code>
-  <p class="meta ev"><b>36,148</b> stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-10-21</p>
+  <p class="meta ev"><b>36,835</b> stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-11-01</p>
   <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vY" title="Docker: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
   <p class="meta tp"><a href="../../topic/observability-evals/">Observability &amp; Evals</a> <span class="tag">Codex / OpenAI</span><span class="tag">LangChain / LangGraph</span></p>
 </li>
@@ -106,7 +84,7 @@ try {
   <p class="why">Three source lists carry it -- the strongest agreement in this category -- and it pairs a trace UI with an eval runtime, so you can grade the runs you are looking at.</p>
   <p class="desc">Self-hostable trace UI and eval runtime for agent workflows. Lets harness engineers audit and replay every reasoning step and tool call offline, without sending data to a third-party cloud</p>
   <code class="cmd">npx @arizeai/phoenix-cli setup</code>
-  <p class="meta ev"><b>11,942</b> stars · 7 of 39 lists · Python · no licence stated · pushed 2026-10-21</p>
+  <p class="meta ev"><b>12,094</b> stars · 7 of 39 lists · Python · no licence stated · pushed 2026-11-01</p>
   <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vY" title="Docker: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
   <p class="meta tp"><a href="../../topic/observability-evals/">Observability &amp; Evals</a> </p>
 </li>
@@ -117,7 +95,7 @@ try {
   <p class="why">Tests as YAML, with assertions and LLM-as-judge. It is the lowest-ceremony way to turn &quot;it seemed better&quot; into something a pull request can fail on.</p>
   <p class="desc">YAML-driven LLM testing framework with LLM-as-judge, assertion DSL, and native CI integration. The most practical tool for adding agent output regression tests to a PR pipeline without writing a test harness from scratch</p>
   <code class="cmd">npm install -g promptfoo</code>
-  <p class="meta ev"><b>26,245</b> stars · 5 of 39 lists · TypeScript · MIT · pushed 2026-10-21</p>
+  <p class="meta ev"><b>26,692</b> stars · 5 of 39 lists · TypeScript · MIT · pushed 2026-11-01</p>
   <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vN" title="Docker: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
   <p class="meta tp"><a href="../../topic/observability-evals/">Observability &amp; Evals</a> <span class="tag">Claude / Anthropic</span><span class="tag">Codex / OpenAI</span><span class="tag">Gemini / Google</span></p>
 </li>
@@ -128,7 +106,7 @@ try {
   <p class="why">Twenty-plus built-in metrics for LLM and agent evaluation. Use it when you have stopped arguing about whether output is good and started arguing about which axis.</p>
   <p class="desc">The most complete open-source LLM/agent eval framework: 20+ built-in metrics (hallucination, answer relevancy, RAGAs, tool correctness), pytest integration, and a CI-friendly runner. Removes the need to hand-roll eval infrastructure when you need structured, repeatable agent quality gates</p>
   <code class="cmd">pip install -U deepeval</code>
-  <p class="meta ev"><b>19,020</b> stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-10-19</p>
+  <p class="meta ev"><b>19,227</b> stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-10-29</p>
   <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vN" title="Docker: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
   <p class="meta tp"><a href="../../topic/observability-evals/">Observability &amp; Evals</a> </p>
 </li>
@@ -139,7 +117,7 @@ try {
   <p class="why">OpenTelemetry instrumentation for LLM calls and agent steps. The one pick here that does not lock you in: the traces go wherever your existing observability already goes.</p>
   <p class="desc">OpenTelemetry-based instrumentation for LLM calls and agent steps: adds trace spans to every inference and tool call without modifying business logic. The cleanest way to bring the existing OTEL ecosystem (Grafana, Datadog, Jaeger) to a harness</p>
   <code class="cmd">pip install traceloop-sdk</code>
-  <p class="meta ev"><b>7,499</b> stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-10-19</p>
+  <p class="meta ev"><b>7,517</b> stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-10-19</p>
   <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vN" title="Docker: No evidence of support anywhere in the project."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
   <p class="meta tp"><a href="../../topic/observability-evals/">Observability &amp; Evals</a> </p>
 </li>
@@ -150,7 +128,7 @@ try {
   <p class="why">Scans agent skills for vulnerabilities. Every other page on this site encourages you to install other people&#x27;s instructions; this is the tool that reads them first.</p>
   <p class="desc">by NVIDIA - Security scanner for AI agent skills. Detect vulnerabilities, malicious patterns, and security risks</p>
   <code class="cmd">uv tool install git+https://github.com/NVIDIA/skillspector.git</code>
-  <p class="meta ev"><b>20,824</b> stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-10-21</p>
+  <p class="meta ev"><b>23,819</b> stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-10-31</p>
   <p class="meta os"><span class="vL" title="Windows: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg><span class="sr">Windows</span></span> <span class="vL" title="WSL2 — Windows Subsystem for Linux 2: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg><span class="sr">WSL2</span></span> <span class="vL" title="macOS: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg><span class="sr">macOS</span></span> <span class="vL" title="Linux: Inferred from the language or runtime. Nothing in the project says so."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg><span class="sr">Linux</span></span> <span class="vY" title="Docker: Stated in the project&#x27;s own README, install route, CI config or release assets."><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg><span class="sr">Docker</span></span></p>
   <p class="meta tp"><a href="../../topic/agent-skills/">Agent Skills</a> <span class="tag">Claude Code</span><span class="tag">Claude / Anthropic</span><span class="tag">MCP</span><span class="tag">Codex / OpenAI</span></p>
 </li>
@@ -172,7 +150,7 @@ uv tool install git+https://github.com/NVIDIA/skillspector.git</pre>
   <p>Same idea, different question. Each one fills every slot once.</p>
   <a class="chip" href="../../collections/first-setup/">A first agentic setup <span class="ct">7</span></a><a class="chip" href="../../collections/windows-first/">Runs on Windows, and says so <span class="ct">7</span></a><a class="chip" href="../../collections/claude-code-kit/">The Claude Code power kit <span class="ct">7</span></a><a class="chip" href="../../collections/local-only/">Nothing leaves the laptop <span class="ct">7</span></a>
   <h2>Or browse the whole atlas</h2>
-  <p>10,909 projects, no opinions, every filter in the URL.</p>
+  <p>11,207 projects, no opinions, every filter in the URL.</p>
   <a class="chip" href="../../catalog/">The interactive index</a>
   <a class="chip" href="../../collections/">All collections</a>
 </nav>
@@ -186,40 +164,67 @@ uv tool install git+https://github.com/NVIDIA/skillspector.git</pre>
   printed beside each pick, and the curation is a
   <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/config/collections.json">reviewable file</a> you can
   open an issue against. Stars, language, licence and last-push come from the GitHub API on
-  2026-10-22 and drift daily. Platform verdicts are derived from each project's own README, install
+  2026-11-01 and drift daily. Platform verdicts are derived from each project's own README, install
   route, CI config and release assets &mdash; <span class="vY">green</span> is stated evidence,
   <span class="vL">amber</span> is inferred from the language. A build here fails rather than publish a
   pick whose evidence has stopped supporting the claim above it.
 </div></footer>
-<script type="module" src="../../assets/atlas-site.js?v=4b089da430"></script><script>
-const btn = document.getElementById("theme");
-const label = () => {
-  const light = document.documentElement.dataset.theme === "light";
-  btn.textContent = light ? "Dark theme" : "Light theme";
-  btn.setAttribute("aria-pressed", light ? "true" : "false");
-  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
-  if (plane) document.getElementById("tc").content = plane;
-};
-btn.onclick = () => {
-  const light = document.documentElement.dataset.theme !== "light";
-  document.documentElement.dataset.theme = light ? "light" : "dark";
-  // The choice is the point: it used to last until the next navigation, so a reader who needs light
-  // re-picked it on every facet page, every detail page and every trip back to the index.
-  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
-  label();
-};
-// The head script already resolved the theme; this only has to agree with it, since the markup's
-// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
-label();
-// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
-// they explicitly chose because the sun went down is worse than not following at all.
-try {
-  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
-    if (localStorage.getItem("theme")) return;
-    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+<script type="module" src="../../assets/atlas-site.js?v=a4837d4f4b"></script><script>
+function atlasTheme() {
+  if (atlasTheme.api) return atlasTheme.api;
+  var root = document.documentElement;
+  var stored = function () { try { return localStorage.getItem("theme"); } catch (e) { return null; } };
+  var valid = function (t) { return t === "light" || t === "dark" || t === "contrast"; };
+  var system = function () {
+    try {
+      return matchMedia("(prefers-contrast: more)").matches ? "contrast"
+        : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    } catch (e) { return "dark"; }
+  };
+  var apply = function () {
+    var t = stored();
+    root.dataset.theme = valid(t) ? t : system();
+    delete root.dataset.skin;
+    var plane = getComputedStyle(root).getPropertyValue("--plane").trim(), tc = document.getElementById("tc");
+    if (plane && tc) tc.content = plane;
+  };
+  var api = {
+    choice: function () { var t = stored(); return valid(t) ? t : "system"; },
+    refresh: apply,
+    set: function (c) {
+      try { if (c === "system") localStorage.removeItem("theme"); else localStorage.setItem("theme", c); } catch (e) {}
+      apply();
+    },
+    follow: function (f) {
+      var on = function () { if (api.choice() === "system") { apply(); if (f) f(); } };
+      try {
+        matchMedia("(prefers-color-scheme: light)").addEventListener("change", on);
+        matchMedia("(prefers-contrast: more)").addEventListener("change", on);
+      } catch (e) {}
+    }
+  };
+  apply();
+  return (atlasTheme.api = api);
+}
+atlasTheme();
+(function () {
+  var btn = document.getElementById("theme");
+  if (!btn) return;
+  var label = function () {
+    var light = document.documentElement.dataset.theme === "light";
+    btn.textContent = light ? "Dark theme" : "Light theme";
+    btn.setAttribute("aria-pressed", light ? "true" : "false");
+  };
+  btn.onclick = function () {
+    atlasTheme().set(document.documentElement.dataset.theme === "light" ? "dark" : "light");
     label();
-  });
-} catch (e) {}
+  };
+  // The head script already resolved the theme; this only has to agree with it, since the markup's
+  // "Light theme" is wrong for every reader it resolved to light.
+  label();
+  // Follow the OS live, but only for a reader on System -- see `atlasTheme().follow`.
+  atlasTheme().follow(label);
+})();
 </script>
 <script>(function(){try{var u=sessionStorage.getItem("archie-src");if(u&&new URL(u).origin===location.origin&&localStorage.getItem("atlas-byte-quiet")!=="1"){var s=document.createElement("script");s.type="module";s.src=u;document.head.appendChild(s)}}catch(e){}})()</script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->

@@ -10,7 +10,7 @@
 //
 // WHY THIRTY HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
-//   theme_test.py     verifies both palettes' contrast and the copies used by generated surfaces, and
+//   theme_test.py     verifies the three themes' contrast (AAA in high contrast), their one shared copy, and
 //                     the one channel on the page that is not colour: the five platform verdict marks,
 //                     which three places in 19_pages.py describe with no generator keeping them in step.
 //                     It also holds the phone's above-the-fold budget and the comparison panel's layout,
@@ -54,7 +54,7 @@
 //   probe.mjs         runs the page's own JavaScript against a stub DOM, and reads the stylesheet and the
 //                     page text. Sees every branch of the ranking, the hash and the palette. Cannot see
 //                     computed layout -- there is none in Node.
-//   cards-check.mjs   measures real layout in a real browser at three widths in both themes. Cannot see a
+//   cards-check.mjs   measures real layout in a real browser at three widths in every theme. Cannot see a
 //                     prefixed property this browser has an unprefixed implementation of.
 //   pwa-check.mjs     manifest, service worker, precache, offline, and a 404 that must not be cached.
 //                     Needs an origin, so it cannot be done from a file:// page at all.
@@ -207,7 +207,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // only a harness that has lost assertions trips it.
 const HARNESSES = [
   {file: "app_flags_test.py", label: "the 0/1 schema, atomic editor writes, and every kill switch", python: true, floor: 28},
-  {file: "theme_test.py", label: "eight token sets in four copies, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
+  {file: "theme_test.py", label: "three themes in one copy, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "fetch_test.py", label: "a batch GitHub keeps timing out on is split, and nothing else is", python: true, floor: 20},
   {file: "dead_repos_test.py", label: "which repos GitHub no longer serves, the ledger and its guard, and the build leaving them out", python: true, floor: 35},

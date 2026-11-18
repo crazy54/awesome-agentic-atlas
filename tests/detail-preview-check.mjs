@@ -235,7 +235,10 @@ const light = await evalIn(`({
 })`);
 ok("the light reader uses the site's darker grey band instead of its near-white panel",
    light.theme === "light" && light.accent === light.siteAccent && light.panel === light.siteBand &&
-   light.panel !== light.sitePanel && light.bg === "rgb(231, 234, 240)",
+   // The painted colour is the site's own light --band, converted rather than typed in: a literal here was the
+   // old palette's band, and a palette change is not what this assertion is about.
+   light.panel !== light.sitePanel &&
+   light.bg === "rgb(" + [1, 3, 5].map(i => parseInt(light.siteBand.slice(i, i + 2), 16)).join(", ") + ")",
    JSON.stringify(light));
 await evalIn("document.getElementById('source-preview').scrollIntoView({block: 'start'})");
 await shot("detail-reader-light");

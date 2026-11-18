@@ -165,7 +165,11 @@ if (adminAsked()) {
   openAdmin().catch((e) => console.warn("The admin panel did not load:", e));
 }
 
-// A theme unlocked in another tab shows up in this one's Settings menu without a reload.
+// A theme chosen in another tab is worn in this one without a reload. `atlasTheme` is the page's own (see
+// `THEME_JS` in scripts/sitewide.py): it re-reads the stored choice and repaints the browser chrome, and the
+// Settings menu, where there is one, re-marks the pressed choice.
 addEventListener("storage", (ev) => {
-  if (ev.key === "atlas-unlock" && typeof window.atlasPaintSettings === "function") window.atlasPaintSettings();
+  if (ev.key !== "theme" && ev.key !== null) return;
+  if (typeof window.atlasTheme === "function") window.atlasTheme().refresh();
+  if (typeof window.atlasPaintSettings === "function") window.atlasPaintSettings();
 });

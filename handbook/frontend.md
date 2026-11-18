@@ -41,21 +41,40 @@ five generators:
 
 Then re-run each of them and `24_pwa.py`, or `detail-churn` and the page probes go red.
 
-## Themes and skins
+## Themes
 
-Two independent attributes on `<html>` control appearance:
+Three themes, chosen in the Settings menu (on the catalogue and the homepage) and worn on every page. The
+palette is the mascot's: Archie's warm ceramic, graphite, lime, steel and brass.
 
-| Attribute | Values | Stored in | Default |
-|---|---|---|---|
-| `data-theme` | `light`, `dark` | `localStorage["theme"]` | follows `prefers-color-scheme` until the reader picks one |
-| `data-skin` | `graphite`, `glass`, `terminal`, `prism`, `sherbet`, `riso`, `blueprint`, `aurora` | `localStorage["atlas-skin"]` | `graphite` |
+| `data-theme` | What it is | Notes |
+|---|---|---|
+| `dark` | Graphite: lens-black page, graphite panels, ceramic ink, lime accent | on `:root`, so it is the JavaScript-off floor |
+| `light` | Ceramic: warm glaze page, graphite ink, a deepened lime for text | the bright lime appears only as a fill (`--act`) |
+| `contrast` | High contrast: black, white, iris lime | text 7:1 (AAA), every line 3:1, links underlined, 3px focus ring, no art behind text |
 
-A small script in `<head>` sets both **before first paint**, so a returning reader never sees a flash of the
-wrong theme.
+The reader's choice is `localStorage["theme"]`: `light`, `dark` or `contrast`. **System**, the default,
+stores nothing; then `prefers-contrast: more` picks `contrast`, otherwise `prefers-color-scheme` picks light
+or dark, and the page follows the OS live. A small script in `<head>` (`sitewide.HEAD_THEME`) settles it
+**before first paint**, so a returning reader never sees a flash of the wrong theme. `forced-colors: active`
+(Windows High Contrast) hands every colour to the system palette; the shared rules keep focus rings, pressed
+states and button edges visible there.
 
-The skins' colour tokens are defined in `scripts/19_pages.py` and copied **byte for byte** into the page
-families that do not import it: `pages.css` from `20_landing.py`, and `22_detail.py`. `theme_test.py`
-fails if the copies drift, so change the source in `19_pages.py`, then regenerate every copy.
+There used to be a second axis, eight colour "skins" (`data-skin`, `localStorage["atlas-skin"]`). It is gone.
+The head script deletes `atlas-skin` and `atlas-unlock` on a reader's first visit; their light or dark half is
+already in `theme`, so they land on the nearest new theme without anything being mapped.
+
+**One copy.** Every token, the pre-paint script and the paint-only shared rules (focus ring, the lime button,
+high contrast, forced colours) are `THEME_CSS`, `HEAD_THEME` and `THEME_JS` in `scripts/sitewide.py`. The
+catalogue (`19_pages.py`), `pages.css` (`20_landing.py`) and `detail.css` (`22_detail.py`) drop them in;
+nothing else declares a colour token. The token names, values and ratios for other streams are in the team's
+`tokens.md`, and `theme_test.py` checks every pairing the stylesheets use. Two rules for new UI:
+
+- Use the tokens, never a hard-coded colour, so all three themes apply automatically. A primary filled
+  control is `--act` with `--onact` ink and a `--act-edge` inset edge; status is `--good` / `--warn` with a
+  word or a mark beside it, never colour alone.
+- **Theme rules change paint, not layout.** `THEME_CSS` may set colours, backgrounds, outlines, shadows and
+  text decoration, and never a size, a padding, a weight or a position. `theme_test.py` enforces that for the
+  shared rules; `cards-check.mjs` measures real layout in every theme.
 
 ## Feature flags
 

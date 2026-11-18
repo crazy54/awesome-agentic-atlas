@@ -40,15 +40,20 @@ SEED = 5417
 FONTS = ["DejaVuSansMono.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
          "C:/Windows/Fonts/consola.ttf", "Menlo.ttc"]
 
-# Two palettes, one per mode. `bg` is close to the page's own surface in that mode, so the fade meets a
-# colour it nearly already is. The rest is the syntax palette: the accent family the site's cards use.
+# Two palettes, one per mode, drawn from Archie rather than from the old accent family: the screen is the
+# robot's own colours lit up. `bg` is the page's own --surface in that mode, so the fade meets a colour it
+# already is. Keywords are his lime, strings his brass, names his ceramic, plain code his steel. `wash` is
+# the two soft pools of light `glow()` lays behind the glyphs -- a lime-dark one on the left, where the title
+# is, and a warm graphite one under the mascot -- and it is per palette because light mode has no glow. There
+# is no high-contrast art: that theme draws no picture behind text at all (see `.mhart` in 31_home.py).
 PALETTES = {
-    "dark": {"bg": (9, 13, 24), "plain": (150, 170, 205), "dim": (70, 86, 118), "kw": (179, 166, 255),
-             "str": (242, 184, 75), "fn": (111, 227, 196), "num": (255, 155, 210), "cmd": (124, 196, 255),
-             "prompt": (111, 227, 196), "hash": (242, 184, 75), "glow": 0.85},
-    "light": {"bg": (238, 242, 249), "plain": (74, 88, 118), "dim": (160, 172, 196), "kw": (86, 70, 190),
-              "str": (160, 98, 0), "fn": (11, 110, 122), "num": (154, 44, 126), "cmd": (29, 94, 158),
-              "prompt": (11, 110, 122), "hash": (160, 98, 0), "glow": 0.0},
+    "dark": {"bg": (18, 19, 20), "plain": (171, 166, 159), "dim": (82, 80, 76), "kw": (164, 200, 18),
+             "str": (221, 179, 106), "fn": (235, 229, 218), "num": (242, 148, 132), "cmd": (140, 198, 222),
+             "prompt": (164, 200, 18), "hash": (221, 179, 106), "glow": 0.8,
+             "wash": ((26, 40, 4), (44, 38, 28))},
+    "light": {"bg": (241, 237, 230), "plain": (94, 90, 84), "dim": (196, 189, 178), "kw": (69, 106, 0),
+              "str": (128, 86, 15), "fn": (31, 95, 122), "num": (162, 59, 42), "cmd": (31, 95, 122),
+              "prompt": (69, 106, 0), "hash": (128, 86, 15), "glow": 0.0, "wash": None},
 }
 
 KEYWORDS = {"def", "return", "for", "in", "if", "else", "elif", "import", "from", "const", "let", "await",
@@ -206,14 +211,14 @@ def depth_of_field(img: Image.Image) -> Image.Image:
     return Image.composite(softer, out, far)
 
 
-def glow(img: Image.Image, strength: float) -> Image.Image:
+def glow(img: Image.Image, strength: float, pools=None) -> Image.Image:
     """The screen's own light: a halo off the glyphs, and two soft washes of the accent colours."""
     if not strength:
         return img
     halo = img.filter(ImageFilter.GaussianBlur(14)).point(lambda v: int(v * strength))
     wash = Image.new("RGB", (W, H))
     d = ImageDraw.Draw(wash)
-    for (cx, cy, r, c) in [(W * 0.30, H * 0.25, 560, (20, 70, 90)), (W * 0.78, H * 0.35, 640, (48, 30, 92))]:
+    for (cx, cy, r), c in zip([(W * 0.30, H * 0.25, 560), (W * 0.78, H * 0.35, 640)], pools):
         d.ellipse([cx - r, cy - r * 0.6, cx + r, cy + r * 0.6], fill=c)
     wash = wash.filter(ImageFilter.GaussianBlur(160))
     return ImageChops.add(ImageChops.add(img, halo), wash)
@@ -243,7 +248,7 @@ def main() -> None:
     mask = fade_mask()
     for mode, pal in PALETTES.items():
         rng = random.Random(SEED)
-        art = glow(depth_of_field(perspective(sheet(pal, rng), pal["bg"])), pal["glow"])
+        art = glow(depth_of_field(perspective(sheet(pal, rng), pal["bg"])), pal["glow"], pal["wash"])
         art = art.convert("RGBA")
         art.putalpha(mask)
         dest = OUT / f"masthead-{mode}.webp"

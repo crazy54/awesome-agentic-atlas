@@ -86,7 +86,7 @@ Node process on the machine, including other sessions' tools and test runs.
 | Harness | Kind | Guards | Assertions | Floor |
 |---|---|---|---|---|
 | `app_flags_test.py` | Python | Feature-flag schema, the editor's atomic writes, every kill switch | 39 | 28 |
-| `theme_test.py` | Python | The eight skins' token sets, which must stay identical across their four copies; the theme menu; verdict marks; the phone layout | 1053 | 500 |
+| `theme_test.py` | Python | The three themes' contrast (AAA for high contrast), the one shared copy, the migration, paint-only shared rules, the theme menu; verdict marks; the phone layout | 516 | 500 |
 | `signals_test.py` | Python | When a cached release or action answer must be re-queried | 210 | 170 |
 | `fetch_test.py` | Python | A batch GitHub keeps timing out on is split and retried; nothing else is | 27 | 20 |
 | `dead_repos_test.py` | Python | The weekly dead-repo scan's verdicts, ledger and guard, and the build leaving dead repos out | 37 | 35 |
@@ -106,7 +106,7 @@ Node process on the machine, including other sessions' tools and test runs.
 | `osicons_test.py` | Python | The five platform icons, resolved over every built page. Slow: about 3 min | 251 | 200 |
 | `detail-churn.mjs` | Node | Re-runs `22_detail.py` four times and hashes every output file, so unchanged data must mean unchanged bytes. Slow: about 7 min | 13 | 7 |
 | `detail-preview-check.mjs` | browser | The in-page README/source reader on detail pages. The GitHub API is stubbed | 16 | 12 |
-| `cards-check.mjs` | browser | Real layout at 1440, 900 and 375 px in both themes; the pinned filter bar | 202 | 86 |
+| `cards-check.mjs` | browser | Real layout at 1440, 900 and 375 px in every theme, and the same card boxes in all three; the pinned filter bar | 206 | 86 |
 | `pwa-check.mjs` | browser | Manifest, service worker, precache, offline, freshness, 404; **the `VERSION` hash** | 62 | 25 |
 | `dance-check.mjs` | browser | "Dance with me": the beat detector against a known tempo. WebGL2 is stubbed out | 37 | 30 |
 | `spotlight-check.mjs` | browser | The spotlight on a pinned clock: per day, all day, local time, no layout shift, no-JS | 117 | 100 |

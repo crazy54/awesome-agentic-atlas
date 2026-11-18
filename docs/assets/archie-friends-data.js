@@ -35,7 +35,8 @@
 //  - `<trick>-archie`: ARCHIE's reply, in his bubble, not the friend's;
 //  - `<trick>-after`: the friend's excuse, as it is put back;
 //  - `poke`: if the reader pokes Archie while a friend is over, Archie answers with one of these instead;
-//  - `skin`: the friend's remark when the reader is on their favourite skin (`likes`).
+//  - `theme`: the friend's remark when the reader is on their favourite theme (`likes`: light, dark or
+//    contrast).
 //
 // `{n}` in a line is the friend's own name, so the same line reads right if a name ever changes. The
 // looks are written for drawing as a small flat SVG: a silhouette, two or three colours, and the one
@@ -48,7 +49,7 @@ export const ORDER = ["nib", "posy", "lumen", "oh-four", "quack"];
 export const FRIENDS = {
   nib: {
     name: "Nib",
-    likes: "sherbet",
+    likes: "light",
     look: "The arrow cursor from Archie's prank, escaped and grown legs. A standard pointer-arrow " +
       "silhouette about 28 px tall, filled #FFFFFF with a 2 px #FF2BD6 outline (Archie's cursor " +
       "magenta). Two black dot eyes near the tip, a tiny curved smile, two 2 px #FF2BD6 stick legs with " +
@@ -74,13 +75,13 @@ export const FRIENDS = {
                        ["It was a loan. With zero interest.", 1], ["Nobody saw that. Right?"]],
       leave: [["Bye! Your font is safe. For now."], ["Gotta click."], ["See you around. Literally."]],
       poke: [["Not now, I'm keeping an eye on Nib."], ["Hang on, Nib's got that look again."]],
-      skin: [["Sherbet! Everything tastes like strawberry."], ["This skin matches my outline. Coincidence?", 1]],
+      theme: [["Light mode! I can see my own outline for once."], ["Bright page, white arrow. Camouflage!", 1]],
     },
   },
 
   posy: {
     name: "Posy",
-    likes: "riso",
+    likes: "contrast",
     look: "A sentient sticky note. A 44 px square, #FFD84D, the bottom-right corner curled up as a " +
       "triangle of #E8B92E, and a soft drop shadow. Two short vertical-oval eyes and a small round " +
       "mouth in #2B2140. A tiny pencil tucked behind the top edge: #FF8C42 body, pink eraser.",
@@ -112,13 +113,13 @@ export const FRIENDS = {
       leave: [["Bye! Have a noteworthy day."], ["Off to the next page. So many pages."],
               ["Remember what I wrote!"]],
       poke: [["Shh, Posy's writing."], ["Careful, you'll get a note too."]],
-      skin: [["Riso! It's like being printed in a zine."], ["I've never felt so fluorescent.", 1]],
+      theme: [["High contrast! Finally I can read my own handwriting."], ["Bold. Like a highlighter. I love it.", 1]],
     },
   },
 
   lumen: {
     name: "Lumen",
-    likes: "aurora",
+    likes: "light",
     look: "A small moth with a 36 px wingspan. A round, fuzzy body in #C9B8FF; four rounded wings in " +
       "#EDE6FF, a #22E1FF eye-spot on each fore-wing; feathery antennae in #8A5BFF; big black eyes with " +
       "a white glint. The wings beat slowly, under two beats a second, and nothing about her flashes.",
@@ -143,13 +144,13 @@ export const FRIENDS = {
                           ["I just wanted to be featured too."], ["Oh! Another light! Over there!"]],
       leave: [["Goodnight, bright things."], ["Off to find the moon. Again."], ["Stay luminous, Archie."]],
       poke: [["Sorry, Lumen's using my visor as a nightlight."], ["Mind the moth."]],
-      skin: [["Aurora! The whole sky came indoors."], ["So many lights. I can't choose.", 1]],
+      theme: [["The lights are on! Don't mind me, I'm a moth."], ["So bright in here. I may never leave.", 1]],
     },
   },
 
   "oh-four": {
     name: "Oh-Four",
-    likes: "blueprint",
+    likes: "dark",
     look: "A shy little sheet ghost, 32 px tall. Filled #F4F7FF with a 1.5 px outline in #9AA3B8, a hem " +
       "of three scallops, two oval eyes in #1A1A2E, and \"404\" in tiny faint #B8C0D0 across the " +
       "forehead. Bobs up and down by two pixels.",
@@ -177,13 +178,13 @@ export const FRIENDS = {
       leave: [["I'll just... not be found now."], ["Page not found. That's me. Bye."],
               ["Going back behind the button. It's cosy."]],
       poke: [["Shh, you'll scare Oh-Four."], ["Gently. We have a guest."]],
-      skin: [["Blueprint! Finally, a map. Now I know where I am.", 1], ["I'm on the plans! Look, there I am!"]],
+      theme: [["It's dark in here. Perfect for haunting.", 1], ["Dark mode! Nobody can see I'm lost."]],
     },
   },
 
   quack: {
     name: "Quack",
-    likes: "graphite",
+    likes: "dark",
     look: "A classic rubber duck, 34 px. Body #FFD23F, beak #FF8C42, one black dot eye with a white " +
       "glint and a small wing line. A tiny lanyard with a badge reading DEBUG in #22E1FF.",
     personality: "Says almost nothing. Asks one-word questions, which makes Archie explain himself out " +
@@ -218,13 +219,12 @@ export const FRIENDS = {
       "debug-after": [["Quack."], ["*satisfied squeak*"], ["...quack."]],
       leave: [["Quack."], ["*squeak* (goodbye)"]],
       poke: [["Busy. Explaining things to a duck."], ["Shh. Quack's thinking."]],
-      skin: [["Quack. (Graphite. Classic. Approved.)"]],
+      theme: [["Quack. (Dark mode. Classic. Approved.)"]],
     },
   },
 };
 
-// Archie on the friends, for his own idle chatter on a day a friend is expected, and his remarks about
-// the new skins. Same shape as `LINES` in `archie.js`; the runtime can merge these in under the same keys.
+// Archie on the friends, for his own idle chatter on a day a friend is expected. Same shape as `LINES` in `archie.js`; the runtime can merge these in under the same keys.
 export const ARCHIE = {
   // An idle thought on the day `{n}` is friend of the day
   expecting: [["{n} said they might drop by today.", 1], ["If you see {n}, act natural."],
@@ -232,9 +232,4 @@ export const ARCHIE = {
   // After a visit, the next idle line
   missed: [["You just missed {n}. Well, you didn't. You saw everything."],
            ["{n} says hi. {n} always says hi.", 1], ["Nothing happened. {n} was never here."]],
-  // The new skins, one reaction each, in the shape of `glass`, `terminal`, `prism` in `LINES`
-  sherbet: [["Sherbet! My visor feels fizzy."]],
-  riso: [["Riso! Everything's slightly misaligned. On purpose."]],
-  blueprint: [["Blueprint. Finally, I can see how I was built."]],
-  aurora: [["Aurora! Okay, this one's pretty."]],
 };
