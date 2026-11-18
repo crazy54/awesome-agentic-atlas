@@ -1,15 +1,18 @@
-"""The CI tooling's rules: what a local run may do, and what every workflow must say.
+"""The CI tooling's rules: what a local run may do, what the canary may push, and what every workflow must say.
 
-The files in `tools/` and `.github/workflows/` carry promises that nothing else in the suite can
+Three files in `tools/` and four in `.github/workflows/` carry promises that nothing else in the suite can
 see, because each one is about a runner, a branch or a schedule rather than about a page. They were written
 after the 45-day audit of 2026-11-18, and each group below is a failure that audit found or a rule written so
 that a fix for one cannot quietly undo another.
 
   the local run    -- `tools/local_daily.py` reads its stages out of `daily.yml` itself, in the workflow's
                       order; never runs IndexNow or records the SHAs; and --from/--to/--only pick what they say.
+  the bot branch   -- `tools/bot_branch.py` pushes and deletes `bot/...` branches and nothing else, whatever
+                      it is passed.
   the workflows    -- every job has a `timeout-minutes`; only the builds share `atlas-build` (a group holds one
-                      pending run, so anything else queued there can knock a waiting build out); the time
-                      report is against the job's own limit; the builds' network steps retry.
+                      pending run, so anything else queued there can knock a waiting build out); the canary
+                      saves no cache and pushes only through bot_branch; the alert watches workflows by names
+                      that exist; the builds' network steps retry.
 
 Run: python tests/ci_tools_test.py
 """
@@ -33,7 +36,7 @@ def load(name: str):
     return mod
 
 
-ld = load("local_daily")
+ld, bb, ca = load("local_daily"), load("bot_branch"), load("ci_alert")
 ok = bad = 0
 
 
@@ -104,6 +107,16 @@ with tempfile.TemporaryDirectory() as d:
     true("block, inline and unnamed steps are read; comments, ifs and env are not",
          got == [("aa", ""), ("bb--flag", "Block"), ("cc", "Inline")], str(got))
 
+print("the bot branch")
+for b in ["bot/taxonomy", "bot/regenerate", "refs/heads/bot/x"]:
+    true(f"{b} may be pushed", bb.guard(b).startswith("bot/"))
+for b in ["latest_branch", "main", "bot/", "bot/../latest_branch", "refs/heads/latest_branch", "jfh-eng-ci", "bots/x"]:
+    try:
+        bb.guard(b)
+        true(f"{b} is refused", False)
+    except SystemExit:
+        true(f"{b} is refused", True)
+
 print("the workflows")
 files = sorted(WF.glob("*.yml"))
 for f in files:
@@ -117,6 +130,18 @@ for f in files:
         true(f"{f.name} is in atlas-build", groups == ["atlas-build"], str(groups))
     else:
         true(f"{f.name} stays out of atlas-build", "atlas-build" not in groups, str(groups))
+canary = (WF / "canary.yml").read_text(encoding="utf-8")
+true("the canary saves no cache and restores none", "actions/cache" not in canary)
+true("the canary pushes only through bot_branch",
+     not re.search(r"^\s+git push", canary, re.M) and "tools/bot_branch.py propose --branch bot/" in canary)
+true("the canary's bot branches are the ones the alert links", all(v in canary for v in ca.PROPOSALS.values()))
+alert = (WF / "alert.yml").read_text(encoding="utf-8")
+watched = re.findall(r'^      - "(.+)"$', alert.split("workflow_run:", 1)[1].split("types:", 1)[0], re.M)
+named = {re.search(r"^name: (.+)$", f.read_text(encoding="utf-8"), re.M).group(1): f.name for f in files}
+true("the alert watches workflows by names that exist", watched and all(w in named for w in watched),
+     f"{watched} vs {sorted(named)}")
+true("...and the same ones the alert script reads", sorted(named[w] for w in watched) == sorted(w for w, _ in ca.WORKFLOWS),
+     str(sorted(named.get(w, w) for w in watched)))
 for name in ("daily.yml", "weekly.yml", "tests.yml"):
     text = (WF / name).read_text(encoding="utf-8")
     limit = re.search(r"^    timeout-minutes: (.+)$", text, re.M).group(1).strip()

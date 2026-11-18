@@ -1,0 +1,88 @@
+# Build red: one issue the owner can see, kept in step with the daily, the weekly, the tests and the canary
+# on latest_branch, and closed when all of them are green again. The logic, and the argument for it, are in
+# `tools/ci_alert.py`'s docstring; this file only decides when it runs and what it may touch.
+#
+# WHY
+#
+# From 2026-10-04 to 2026-11-18 the daily published on six days of forty-five, and every red run sat
+# unnoticed for days: upstream drift for up to sixteen, a detail-churn failure on a push run for fourteen,
+# with its one-line fix printed in its own log. GitHub's notification is one email per failed run, worded
+# the same for every cause. One issue, which says what failed, quotes the error, links the run and names the
+# fix, and is commented on only when a new failure arrives, is the alert those failures did not have.
+#
+# WHEN IT RUNS
+#
+# On `workflow_run`, when any of the four finishes on latest_branch -- the prompt path. And on a schedule,
+# because `workflow_run` is not something to rely on for runs a `GITHUB_TOKEN` started (`dead-repos.yml`
+# dispatches the daily that way) and an alert that misses exactly the unwatched runs would be worse than
+# none: it would be believed. Both do the same thing, a full sweep of the four states, so the schedule
+# costs a handful of API reads when nothing has changed and an event that does not arrive costs at most two
+# hours. By hand, `workflow_dispatch` with `dry_run` prints the decision and touches nothing.
+#
+# `workflow_run` only fires for workflow files on the default branch, so none of this does anything until it
+# is merged -- which is the point: a branch cannot open issues on the real repository by being pushed.
+#
+# WHAT IT MAY TOUCH
+#
+# Issues, and only the one labelled `build-red`. It reads runs, jobs, logs and artifacts. It does not
+# check out anything but its own script, does not need the build cache, and never runs a build stage.
+name: Alert — build red
+
+on:
+  workflow_run:
+    workflows:
+      - "Daily — site & Markdown"
+      - "Weekly — screenshots & workbooks"
+      - "Tests — the eighteen-harness verification suite"
+      - "Canary — source drift and stale pages"
+    types: [completed]
+    branches: [latest_branch]
+  schedule:
+    # Every two hours at :47, off the hour for the same reason daily.yml's cron is.
+    - cron: "47 */2 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Print what would be done, and change nothing
+        type: boolean
+        default: true
+
+permissions:
+  actions: read      # runs, jobs, logs, the parse-proposal artifact
+  checks: read       # annotations, which are the only place a timeout is named
+  contents: read     # this checkout
+  issues: write      # the one issue
+
+# Its own group, never `atlas-build`. A concurrency group holds one pending run and cancels any older pending
+# one, so an alert queued in `atlas-build` would knock a waiting daily or weekly out of the queue. Two sweeps
+# at once would converge on the same issue anyway; queueing them only saves the duplicate API reads.
+concurrency:
+  group: ci-alert
+  cancel-in-progress: false
+
+jobs:
+  alert:
+    # A pull request's run is reported on its PR, and a fork's run on `latest_branch` of the fork is not ours.
+    if: >-
+      github.repository == 'crazy54/awesome-agentic-atlas' &&
+      (github.event_name != 'workflow_run' || github.event.workflow_run.event != 'pull_request')
+    runs-on: ubuntu-latest
+    # A sweep is about thirty API calls and a few job logs. Ten minutes is twenty times that; anything longer is
+    # the API hanging, and the next sweep is two hours away regardless.
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools
+          ref: latest_branch
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Reconcile the build-red issue
+        env:
+          DRY: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '--dry-run' || '' }}
+        run: python tools/ci_alert.py $DRY

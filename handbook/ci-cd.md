@@ -26,12 +26,14 @@ true: work that is only on a feature branch is not live, however green its PR.
 | `dead-repos.yml` | cron `30 9 * * 6` (Saturday 09:30 UTC), and dispatch | Asks GitHub which listed repos are gone and records them in `state/dead-repos.json`; dispatches `daily.yml` with `force` when that changed | Yes: commits "Dead-repo scan YYYY-MM-DD" to `latest_branch` |
 | `og-preview.yml` | dispatch only | Renders the OG cards to a temp directory with `23_og.py --out` and diffs them against the committed cards | No |
 | `traceway-live.yml` | each Pages build, cron `25 18 * * *`, dispatch | Loads the live homepage and checks the monitoring fetch and first report return 200 | No |
+| `canary.yml` | cron `23 1-23/4 * * *` (every 4 hours), dispatch | Pulls every source list and parses it; regenerates the pages that are pure functions of committed files. Proposes a fix on a `bot/` branch | Only `bot/taxonomy` and `bot/regenerate` |
+| `alert.yml` | when the daily, weekly, tests or canary finish on `latest_branch`; cron `47 */2 * * *`; dispatch (dry run by default) | Keeps one `build-red` issue in step with those four | No (issues only) |
 
 `daily.yml` and `weekly.yml` share the concurrency group `atlas-build`, so they never run at once. **Nothing else
 may join it.** A concurrency group holds one running and one *pending* run, and a newly queued run cancels the
 pending one. So a short job queued in `atlas-build` behind a running weekly cancels the daily waiting there.
 `dead-repos.yml` left the group on 2026-11-18 for that reason. The builds never write its ledger, so its push
-rebases cleanly, and it retries.
+rebases cleanly, and it retries. The canary and the alert have groups of their own.
 
 Scheduled start times lag. In September 2026 the 11:12 daily usually started around 15:30 UTC, and in November
 between 15:00 and 21:00 UTC.
@@ -109,8 +111,8 @@ goes dead fails the weekly at `25_collections`, by design; remove or replace the
 ### Time limits, retries and the budget line
 
 - **Every job has a `timeout-minutes`, and every long step has its own.** Each step limit is two to three times
-  that step's longest green run in the 45 days to 2026-11-18. A hang fails the step it is in, and the run names
-  that step. Before this, a hang ran to the job limit, and the log stopped mid-line.
+  that step's longest green run in the 45 days to 2026-11-18. A hang fails the step it is in, and the step is
+  named in the build-red issue. Before this, a hang ran to the job limit, and the log stopped mid-line.
   `ci_tools_test.py` fails a job that has no `timeout-minutes`.
 - **The weekly's screenshots have no fixed limit.** They get whatever the job has left, minus 90 minutes kept
   back for the steps after them and for the cache bank. A cold run stops, banks its screenshots, and the next
@@ -126,6 +128,74 @@ goes dead fails the weekly at `25_collections`, by design; remove or replace the
   `This job used N of its M minutes`, and from 75% it is also a warning. Raise the limit, or split the job,
   when that warning starts appearing, not after the first timeout. Headroom on 2026-11-18: daily 68 to 96 of
   180, weekly 86 to 126 of 350, suite 17 to 28 of 45, bits 40 to 70 of 120.
+
+## When a build goes red
+
+**One issue, labelled `build-red`, is the place to look.** `alert.yml` keeps it in step with the newest relevant
+run of the daily, the weekly, the tests and the canary on `latest_branch`. Pull-request runs and cancelled runs
+don't count, except a cancellation by timeout, which does. For each red workflow, the issue gives:
+
+- the failing step;
+- the first error lines (every `FAIL` line, the parser's drift block, or what led up to the error);
+- a link to the run;
+- the suggested fix, when the failure is one the 2026-11-18 audit found;
+- the canary's proposal, when one exists.
+
+The issue is commented on only when a *new* failure arrives, which is what sends a notification. A failure
+counts as new when its job, its kind or its quoted lines change, ignoring numbers. Every sweep rewrites the
+body. When all four are green, the issue gets a comment and closes. The logic is `tools/ci_alert.py`. Run
+`python tools/ci_alert.py --dry-run` to see what it would do now; it only reads. Add `--run <id>` to see how one
+run would be reported.
+
+The suggested fixes, by kind:
+
+| Kind | What it printed | What to do |
+|---|---|---|
+| drift | `N sections no category is named for` | Merge the canary's `bot/taxonomy` PR, or add the lines to `taxonomy.SECTIONS` by hand |
+| regenerate | a `FAIL` ending `-- run: python scripts/<stage>.py` | Merge the canary's `bot/regenerate` PR, or run that command and commit |
+| conflict | `CONFLICT` | Re-run: the builds check out the branch head |
+| timeout | `exceeded the maximum execution time` | See the budget line; raise the limit or split the job |
+| quiet | `no tally printed` | A harness crashed before reporting, usually a page lost mid-call. Re-run once; harden it if it repeats |
+| assertion | any other `FAIL` | Read it. A browser check that passed last time may be runner timing ([testing.md](testing.md)) |
+
+### The canary
+
+`canary.yml` runs every four hours, so drift is usually found before the 11:12 daily trips on it. It has two jobs.
+
+- **drift** pulls every list fresh, with no cache: about 40 REST calls, plus the lists from
+  raw.githubusercontent.com. It renders the scout's document offline and runs `10_parse_sources.py`. When the
+  parser supports `--proposal` (eng-pipeline's provisional mode), it writes `proposal/proposal.json` and
+  `proposal/proposal.md`, uploads them as the `parse-proposal` artifact, applies the mapping and pushes it to
+  `bot/taxonomy`. Exit status 0 means no drift, and 3 means drift with a proposal; anything else is red with
+  the parser's message.
+- **regenerate** runs the stages listed in its `STAGES` (today only `22_detail`). They are the stages whose
+  output depends only on committed files. If the output differs from what is committed, it pushes the result
+  to `bot/regenerate`. This catches a generator change that was merged without its pages, as PR #104 was.
+
+Both are rolling branches. Each run rebuilds the proposal from `latest_branch`, pushes it only if it changed,
+and deletes the branch (closing its PR) once nothing is left to propose. A job goes red while it has something
+for a human to merge, which is what puts it in the build-red issue. `tools/bot_branch.py` does all the pushing
+and refuses any branch that is not `bot/...`.
+
+Opening the pull request needs the repository setting **"Allow GitHub Actions to create and approve pull
+requests"**. When it is off, the branch is still pushed, and the job summary and the build-red issue carry a
+one-click compare link instead. A PR opened by the Actions token runs no checks on itself. The checks run on
+`latest_branch` once it is merged.
+
+The canary stays out of `atlas-build` and never restores or saves the build cache. That cache holds every
+screenshot and is gigabytes; one more entry would also count against the repository's 10 GB allowance.
+
+### Why PR #104 merged unverified, and what stops it now
+
+PR #104 came from a fork, from a first-time contributor. Its `tests.yml` run waited for approval and was closed
+with **no jobs** when the PR merged. With no required checks, nothing stopped the merge. Three things now stand
+in the way:
+
+1. The push run after a merge is in the build-red issue within two hours.
+2. The canary's regenerate job proposes the missing pages within four.
+3. Two settings only the owner can change: a branch ruleset that requires the `suite` check on pull requests
+   (the daily and weekly push directly, so GitHub Actions has to be allowed to bypass it), and a habit of not
+   merging a PR that shows "workflows awaiting approval".
 
 ## Reproducing a build on a laptop
 
@@ -172,7 +242,8 @@ The workflows are owned by `eng-ci`. Other streams add stages to them like this:
 3. **If it calls a network,** give it its own retries (look at `graphql_batch` in `02_fetch.py`) or wrap it in
    `bash tools/retry.sh 3`, but only if it can safely run twice. Raise the step's `timeout-minutes` if it adds
    more than a few minutes, and watch the budget line on the next runs.
-4. **If its output depends only on committed files,** give it a churn assertion like `detail-churn.mjs`.
+4. **If its output depends only on committed files,** add it to `canary.yml`'s `STAGES`, and give it a churn
+   assertion like `detail-churn.mjs`.
 5. **Say in your PR** that it changes a workflow, and tell `eng-ci`. `ci_tools_test.py` asserts the daily's
    stage order, so add the stage's name to its `order` list.
 
