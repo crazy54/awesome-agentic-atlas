@@ -61,6 +61,7 @@ import argparse
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import sys
 import time
@@ -163,11 +164,17 @@ def plan(all_: list[Stage], start: str | None, stop: str | None, only: list[str]
 
 
 def link_cache(target: str) -> None:
-    """Point `cache/` at `target`, once. Refuses to replace a real cache directory."""
+    """Point `cache/` at `target`, once. Refuses to replace a real cache directory -- one with any file in it.
+
+    An empty one is replaced: running the tests in a fresh worktree leaves a `cache/` holding nothing but empty
+    directories (a harness that imports a stage creates `cache/readmes/`), and refusing that would make
+    `--cache` fail in exactly the fresh worktree it is for."""
     cache, dest = ROOT / "cache", Path(target).resolve()
     dest.mkdir(parents=True, exist_ok=True)
-    if cache.is_symlink() or (cache.exists() and cache.resolve() == dest):
+    if cache.is_symlink() or cache.is_junction() or (cache.exists() and cache.resolve() == dest):
         return
+    if cache.is_dir() and not any(p.is_file() for p in cache.rglob("*")):
+        shutil.rmtree(cache)
     if cache.exists():
         raise SystemExit(f"cache/ already exists here and is not a link to {dest}; move it aside first")
     if os.name == "nt":
