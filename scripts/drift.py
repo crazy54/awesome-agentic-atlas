@@ -206,19 +206,35 @@ _CURATED = re.compile(r"Curated by \*\*\[(?P<nwo>[^\]]+)\]\(")
 _ENTRY = re.compile(r"^- \*\*\[.*?\]\((?P<url>[^)\s]+)\)\*\*")
 
 
-def published_pairs(nwo: str, key, folder: Path | None = None) -> list[tuple[str, str]]:
-    """`(entry key, section)` for one list as the atlas last published it, from its committed pages."""
+def published_pairs(nwo: str, key, folder: Path | None = None,
+                    title: str | None = None) -> list[tuple[str, str]]:
+    """`(entry key, section)` for one list as the atlas last published it, from its committed pages.
+
+    Found by the repository its pages credit, and -- where more than one list credits the same one --
+    by the page title too. Two synthetic sources do: the GitHub scout and the GitLab intake both name
+    this repository, deliberately, because it is where their documents come from. The title alone is
+    not the key because a list with a workbook sheet publishes under the sheet's name (16_build_all's
+    SHEETS: "Agents (kyrolabs)", not SOURCES' "AI Agents (kyrolabs)"), and that table lives in a module
+    this one does not import. So: a unique repository decides on its own; a shared one needs the title
+    to match a page's `# title` exactly; and a shared one with no matching title gives no evidence,
+    rather than another list's.
+    """
     def part(p: Path) -> tuple[str, int]:
         # `paginate` names a list's parts `x.md`, `x-2.md`, `x-3.md`; plain sorting puts `-2` first.
         m = re.fullmatch(r"(.*)-(\d+)", p.stem)
         return (m[1], int(m[2])) if m else (p.stem, 1)
 
-    pages = []
+    groups: dict[str, list[str]] = defaultdict(list)
     for p in sorted((folder or MEGA_LISTS).glob("*.md"), key=part):
         text = p.read_text(encoding="utf-8")
         m = _CURATED.search(text[:4000])
         if m and m["nwo"].lower() == nwo.lower():
-            pages.append(text)
+            # Every part of a paginated list repeats the list's `# title` as its first line.
+            groups[text.split("\n", 1)[0].removeprefix("# ").strip()].append(text)
+    if len(groups) == 1:
+        pages = next(iter(groups.values()))
+    else:
+        pages = groups.get(title or "", [])
     out = []
     for text in pages:
         sec = None  # each part restates the heading of the section it opens with
@@ -232,18 +248,19 @@ def published_pairs(nwo: str, key, folder: Path | None = None) -> list[tuple[str
     return out
 
 
-def published_moves(rows: list[dict], sources: dict[str, str], sections: dict, moves: dict, key,
-                    folder: Path | None = None) -> dict[str, dict[str, dict]]:
+def published_moves(rows: list[dict], sources: dict[str, tuple[str, str]], sections: dict, moves: dict,
+                    key, folder: Path | None = None) -> dict[str, dict[str, dict]]:
     """`moves`, with membership evidence from the published pages added for sections it has none for.
 
-    Only lists with a section the taxonomy does not name are read, and the ledger's own observations
-    always win: they were made against the actual previous copy, the pages against the last *build*.
+    `sources` is `{source key: (nwo, title)}`. Only lists with a section the taxonomy does not name are
+    read -- on a day with no drift this reads no file at all -- and the ledger's own observations always
+    win: they were made against the actual previous copy, the pages against the last *build*.
     """
     want = {r["source"] for r in rows if (r["source"], r["category"]) not in sections}
     out = {k: dict(v) for k, v in moves.items()}
     for src in sorted(want):
-        nwo = sources.get(src)
-        old = published_pairs(nwo, key, folder) if nwo else []
+        nwo, title = sources.get(src) or (None, None)
+        old = published_pairs(nwo, key, folder, title) if nwo else []
         if not old:
             continue
         new = [(key(r["url"]), r["category"]) for r in rows if r["source"] == src and r.get("url")]

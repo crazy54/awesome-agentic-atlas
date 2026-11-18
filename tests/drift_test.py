@@ -231,7 +231,7 @@ pages.mkdir()
     "- **[b](https://github.com/x/b/)** — two\n\n"
     "## Docs &amp; Videos\n\n- **[c](https://example.com/c)** — three\n", encoding="utf-8")
 (pages / "agent-skills-libukai-2.md").write_text(
-    "# Agent Skills (libukai), page 2\n\nCurated by **[libukai/awesome-agent-skills](https://x)** — \n\n"
+    "# Agent Skills (libukai)\n\nPage **2** of 2.\n\nCurated by **[libukai/awesome-agent-skills](https://x)** — \n\n"
     "## 测试与评测\n\n- **[d](https://github.com/x/d)** — four\n", encoding="utf-8")
 (pages / "other.md").write_text("Curated by **[someone/else](https://x)**\n\n## 编程开发\n\n"
                                 "- **[z](https://github.com/x/z)** — not this list\n", encoding="utf-8")
@@ -240,13 +240,33 @@ pp = drift.published_pairs("libukai/awesome-agent-skills", uk, pages)
 eq("the published pages are read back into (entry, section): every part of the list, no other list",
    pp, [("https://github.com/x/a", "编程开发"), ("https://github.com/x/b", "编程开发"),
         ("https://example.com/c", "Docs & Videos"), ("https://github.com/x/d", "测试与评测")])
+eq("...and a list whose page title differs from its SOURCES title (a workbook sheet's) is still found by "
+   "its unique repository", drift.published_pairs("libukai/awesome-agent-skills", uk, pages, "AI Skills (CN)"),
+   pp)
+
+# Two lists crediting one repository -- the GitHub scout and the GitLab intake both name this one.
+shared = TMP / "mega-shared"
+shared.mkdir()
+for fname, title, url in (("scouted-on-github.md", "Scouted on GitHub", "https://github.com/s/one"),
+                          ("scouted-on-github-2.md", "Scouted on GitHub", "https://github.com/s/two"),
+                          ("scouted-on-gitlab.md", "Scouted on GitLab", "https://gitlab.com/g/one")):
+    (shared / fname).write_text(f"# {title}\n\nCurated by **[crazy54/awesome-agentic-atlas](https://x)**\n\n"
+                                f"## MCP Servers\n\n- **[x]({url})** — y\n", encoding="utf-8")
+eq("a shared repository is told apart by the page title: the scout gets both its parts and nothing else",
+   [k for k, _ in drift.published_pairs("crazy54/awesome-agentic-atlas", uk, shared, "Scouted on GitHub")],
+   ["https://github.com/s/one", "https://github.com/s/two"])
+eq("...and the GitLab intake gets only its own",
+   [k for k, _ in drift.published_pairs("crazy54/awesome-agentic-atlas", uk, shared, "Scouted on GitLab")],
+   ["https://gitlab.com/g/one"])
+eq("...and a shared repository with no matching title gives no evidence rather than another list's",
+   drift.published_pairs("crazy54/awesome-agentic-atlas", uk, shared, "Something Else"), [])
 cur = [{"source": "skills_libukai", "category": s, "url": u} for s, u in
        (("Programming & Development", "https://github.com/x/a"),
         ("Programming & Development", "https://github.com/x/B"),
         ("Testing and Evaluation", "https://github.com/x/d"), ("Docs and Videos", "https://example.com/c"))]
 psecs = {("skills_libukai", "编程开发"): "Agent Skills", ("skills_libukai", "测试与评测"): "Observability & Evals",
          ("skills_libukai", "Docs & Videos"): "Docs, Learning & Lists"}
-SRCS = {"skills_libukai": "libukai/awesome-agent-skills"}
+SRCS = {"skills_libukai": ("libukai/awesome-agent-skills", "Agent Skills (libukai)")}
 pm = drift.published_moves(cur, SRCS, psecs, {}, uk, pages)
 eq("with no ledger, the pages supply membership evidence for each renamed section",
    {k: (v["from"], v["via"]) for k, v in pm["skills_libukai"].items()},
