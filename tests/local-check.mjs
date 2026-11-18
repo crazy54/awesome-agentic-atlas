@@ -111,7 +111,13 @@ ok("the machine is explained in one sentence, with its AI budget", /16 GB.*macOS
 ok("the live region announces the result", /run great/.test(await live()), await live());
 ok("there is one pick", await ev("document.querySelectorAll('#best .lxcard').length") === 1);
 ok("...that runs great on a 16 GB Mac", await ev("document.querySelector('#best .lxcard').dataset.verdict") === "great");
-ok("...with its reason in the reader's units", /Needs [\d.]+ GB, you have [\d.]+ GB for AI/.test(await ev("document.querySelector('#best .lxwhy').textContent")));
+ok("...with its reason in the reader's units", /Needs [\d.]+ GB(, you have [\d.]+ GB for AI| of your [\d.]+ GB)/.test(await ev("document.querySelector('#best .lxwhy').textContent")),
+   await ev("document.querySelector('#best .lxwhy').textContent"));
+// The picker and the no-script cheat sheet are one method run in two places (the browser, and Node at build
+// time); the 16 GB M3 Air is the cheat sheet's "Mac with 16 GB" row, so the two must name the same three.
+const top3 = await ev("[...document.querySelectorAll('[data-verdict=great] h4')].map(h => h.textContent).slice(0, 3).sort().join()");
+const row = await ev("[...document.querySelectorAll('.lxcheat tbody tr')].find(r => /Mac with 16 GB/.test(r.textContent)).querySelector('td').textContent.split(', ').sort().join()");
+ok("the picker's best three agree with the cheat sheet's row for the same machine", top3 === row, `${top3} vs ${row}`);
 ok("...and its speed in words", /Speed: .*(read|typing|instant|slow).*words a second/.test(await ev("document.querySelector('#best .lxwhy').textContent")));
 ok("...and the verdict as a word and a shape, not colour alone", await ev("document.querySelector('#best .lxv').textContent") === "●Runs great");
 ok("the pick's how-to is open by default", await ev("document.querySelector('#best .lxhow').getAttribute('aria-expanded')") === "true" &&

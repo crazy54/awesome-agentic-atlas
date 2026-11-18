@@ -41,9 +41,9 @@ wrong answer delivered confidently -- worse than no page.
 
 WHY EVERYTHING IS INLINED RATHER THAN FETCHED
 ---------------------------------------------
-The catalogue, the picks and `scripts/localfit.js` are written into the page itself, as one JSON block
-and one script. About 60 KB on disk and a fraction of that over the wire, because Pages gzips and the JSON
-is repetitive. Three things follow:
+The catalogue, the picks and `scripts/localfit.mjs` are written into the page itself, as one JSON block
+and one script: about 130 KB on disk and 34 KB over the wire, measured with the fixture data, because Pages
+gzips and the JSON is repetitive. Three things follow:
 
   * Offline for free. `scripts/24_pwa.py`'s worker caches every page a reader visits and serves it when the
     network fails. A page whose data is in the page needs nothing more from that worker -- no new route, no
@@ -53,12 +53,18 @@ is repetitive. Three things follow:
     picker, and the first answer is one click after that.
   * One version. The page and its data were built by one run and cannot be a mismatched pair.
 
-WHY THERE IS A PYTHON COPY OF THE MATHS
+ONE COPY OF THE MATHS, RUN IN TWO PLACES
 ---------------------------------------
-`scripts/localfit.py` is the same arithmetic as `scripts/localfit.js`, and this stage uses it for one thing:
-the cheat sheet, a server-rendered table of what runs on common machines. That is the page for a reader with
-no script and for a crawler, and it is a useful summary for everyone else. `tests/local_test.py` runs both
-copies over a grid and fails on the first number where they disagree.
+`scripts/localfit.mjs` is ds-models' fit method (`team/contracts/fit.md`): memory need against memory
+available, offload, and a decode speed calibrated against 144 published llama.cpp measurements. It is
+vendored verbatim, so a refresh is a copy and the diff is theirs. The page runs it in the browser. This stage
+also runs it, under Node, for one thing: the cheat sheet, a server-rendered table of what runs on common
+machines. That table is the page for a reader with no script and for a crawler.
+
+There used to be a Python port for the cheat sheet. It went the moment the real method landed: a calibrated
+model with sliding-window caches, MoE expert offload and per-backend constants is exactly the code that two
+copies would let drift, and Node is already on every machine that runs this repository's tests. A build with
+no `node` on PATH stops here and says so, rather than publishing a page whose two halves disagree.
 
 WHERE IT GOES IN A BUILD
 ------------------------
@@ -73,6 +79,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -101,10 +108,7 @@ def _load(name: str, alias: str):
     return mod
 
 
-sys.path.insert(0, str(HERE))
-import localfit  # noqa: E402
-
-FIT_JS = HERE / "localfit.js"
+FIT_MJS = HERE / "localfit.mjs"
 HF_MODELS = OUT / "models.json"
 
 
@@ -132,23 +136,26 @@ def load(config: Path = CONFIG) -> tuple[dict, dict]:
 
 
 # The fields each record must carry, by the contract. Checked by name so a renamed field upstream is a
-# build that says which field, rather than a page that silently shows "undefined GB".
-DEVICE_FIELDS = ("id", "kind", "name", "os", "ram_gb_options", "unified", "gpu", "vram_gb", "bw_gbs",
-                 "backend")
-GPU_FIELDS = ("id", "name", "vendor", "vram_gb_options", "bw_gbs", "backend")
-MODEL_FIELDS = ("id", "name", "tasks", "params_b", "active_b", "layers", "kv_heads", "head_dim",
-                "default_q", "quants", "run", "blurb", "score", "license")
-RULE_FIELDS = ("apple_small_frac", "apple_big_frac", "apple_big_from_gb", "unified_reserve_gb",
-               "unified_max_frac", "system_reserve_gb", "system_min_frac", "vram_reserve_gb")
+# build that says which field, rather than a page that silently shows "undefined GB". The hardware names are
+# the ones `normalizeHardware()` in `localfit.mjs` reads, so the page passes a catalogue entry straight in.
+DEVICE_FIELDS = ("id", "kind", "name", "os", "ram_gb_options", "unified", "gpu", "vram_gb", "ram_bandwidth_gbs",
+                 "igpu")
+GPU_FIELDS = ("id", "name", "vendor", "vram_gb_options", "vram_bandwidth_gbs", "backends")
+MODEL_FIELDS = ("id", "name", "tasks", "score", "license", "blurb", "run", "config", "quants")
+# The geometry the fit method cannot work without. The rest of `config` (sliding windows, experts, MLA) is
+# optional and only sharpens the answer.
+CONFIG_FIELDS = ("params_total", "num_hidden_layers", "hidden_size", "num_attention_heads",
+                 "num_key_value_heads", "head_dim", "vocab_size")
 OSES = ("windows", "macos", "linux", "steamos")
+VENDORS = ("nvidia", "amd", "intel", "apple")
 
 
 def validate(cat: dict, picks: dict) -> None:
     """Every reference resolves, every number is a positive number, every id is unique. Raises `Bad`."""
-    def need(rec, fields, what):
+    def need(rec, fields, what, rid=None):
         missing = [f for f in fields if f not in rec]
         if missing:
-            raise Bad(f"{what} {rec.get('id', '?')!r} is missing {', '.join(missing)}")
+            raise Bad(f"{what} {rid or rec.get('id', '?')!r} is missing {', '.join(missing)}")
 
     kinds = {k["id"] for k in cat["kinds"]}
     gpus = {}
@@ -156,8 +163,10 @@ def validate(cat: dict, picks: dict) -> None:
         need(g, GPU_FIELDS, "gpu")
         if g["id"] in gpus:
             raise Bad(f"gpu {g['id']!r} appears twice")
-        if not g["vram_gb_options"] or g["bw_gbs"] <= 0:
+        if not g["vram_gb_options"] or g["vram_bandwidth_gbs"] <= 0:
             raise Bad(f"gpu {g['id']!r} has no memory size or no bandwidth")
+        if g["vendor"] not in VENDORS:
+            raise Bad(f"gpu {g['id']!r} has vendor {g['vendor']!r}, not one of {VENDORS}")
         gpus[g["id"]] = g
     seen = set()
     for d in cat["devices"]:
@@ -171,11 +180,14 @@ def validate(cat: dict, picks: dict) -> None:
             raise Bad(f"device {d['id']!r} names gpu {d['gpu']!r}, which the catalogue does not have")
         if d["gpu"] is not None and d["vram_gb"] <= 0:
             raise Bad(f"device {d['id']!r} has a graphics card with no memory")
-        if not d["ram_gb_options"] or min(d["ram_gb_options"]) <= 0 or d["bw_gbs"] <= 0:
+        if d["gpu"] is not None and d["igpu"]:
+            raise Bad(f"device {d['id']!r} has both a graphics card and a shared-memory GPU; pick the one AI uses")
+        if d["igpu"] and (not d["unified"] or d["igpu"].get("vendor") not in VENDORS):
+            raise Bad(f"device {d['id']!r} has a shared-memory GPU but is not unified, or names no vendor")
+        if not d["ram_gb_options"] or min(d["ram_gb_options"]) <= 0 or d["ram_bandwidth_gbs"] <= 0:
             raise Bad(f"device {d['id']!r} has no RAM size or no bandwidth")
-        if not set(d["os"]) <= set(OSES):
+        if not set(d["os"]) <= set(OSES) or not d["os"]:
             raise Bad(f"device {d['id']!r} lists an OS outside {OSES}: {d['os']}")
-    need(cat["usable"], RULE_FIELDS, "usable rules")
     for os_ in OSES:
         if not cat["find_out"].get(os_):
             raise Bad(f"find_out has no steps for {os_}")
@@ -187,157 +199,273 @@ def validate(cat: dict, picks: dict) -> None:
         if m["id"] in seen:
             raise Bad(f"model {m['id']!r} appears twice")
         seen.add(m["id"])
-        if not set(m["tasks"]) <= tasks:
+        need(m["config"], CONFIG_FIELDS, "model config", m["id"])
+        if not set(m["tasks"]) <= tasks or not m["tasks"]:
             raise Bad(f"model {m['id']!r} has tasks outside {sorted(tasks)}: {m['tasks']}")
-        if not any(q["q"] == m["default_q"] for q in m["quants"]):
-            raise Bad(f"model {m['id']!r} has no size for its default quant {m['default_q']}")
-        if any(q["gb"] <= 0 or q["bits"] <= 0 for q in m["quants"]):
-            raise Bad(f"model {m['id']!r} has a quant with no size")
-        if not 0 < m["active_b"] <= m["params_b"]:
-            raise Bad(f"model {m['id']!r} has active_b {m['active_b']} outside (0, params_b]")
+        if not m["quants"]:
+            raise Bad(f"model {m['id']!r} lists no quant files")
+        for q in m["quants"]:
+            if not (isinstance(q.get("bytes"), int) and q["bytes"] > 0) or not q.get("repo") or not q.get("label"):
+                raise Bad(f"model {m['id']!r} has a quant without a size, a repo or a label: {q}")
+        if not m["run"].get("ollama_q") or not any(q["quant"] == m["run"]["ollama_q"] for q in m["quants"]):
+            raise Bad(f"model {m['id']!r} has no size for the quant its Ollama tag ships "
+                      f"({m['run'].get('ollama_q')})")
+        c = m["config"]
+        if c.get("params_active") is not None and not 0 < c["params_active"] <= c["params_total"]:
+            raise Bad(f"model {m['id']!r} has params_active outside (0, params_total]")
         # Ollama and LM Studio are the two routes a beginner is offered, so both are required. The
         # llama.cpp and MLX routes are for the curious and are shown only where the pick has them.
         if not m["run"].get("ollama") or not m["run"].get("lmstudio"):
             raise Bad(f"model {m['id']!r} has no Ollama tag or no LM Studio name")
 
 
-def hf_join(picks: dict, path: Path = HF_MODELS) -> dict[str, dict]:
-    """`hf_id` -> the three freshness facts from eng-hf's index, or {} when there is no index yet.
+def hf_join(picks: dict, path: Path = HF_MODELS) -> dict:
+    """The rows of eng-hf's index (`team/contracts/models.md`) that the picks name, or {} with no index yet.
 
-    Tolerant of the file's absence and of rows it does not recognise, and of nothing else: a file that is
-    there but is not JSON is a broken build upstream, and swallowing it would hide that.
+    Returned with the file's own column lists, untouched: the page turns a row into what the fit method reads
+    with `normalizeModel()` from `localfit.mjs`, which is ds-models' mapping and the only one. Rows are
+    joined on `hf_id`, and a pick the index does not have keeps its own `config` and `quants`.
+
+    Tolerant of the file's absence and of rows it does not name, and of nothing else: a file that is there
+    but is not JSON is a broken build upstream, and swallowing it would hide that.
     """
     if not path.exists():
         return {}
     data = json.loads(path.read_text(encoding="utf-8"))
-    rows = data.get("models", data) if isinstance(data, dict) else data
+    cols = data["cols"]
     want = {m.get("hf_id") for m in picks["models"] if m.get("hf_id")}
-    out = {}
-    for r in rows if isinstance(rows, list) else []:
-        if isinstance(r, dict) and r.get("id") in want:
-            out[r["id"]] = {k: r[k] for k in ("likes", "downloads", "last_modified") if k in r}
-    return out
+    rows = [r for r in data.get("models", []) if dict(zip(cols, r)).get("id") in want]
+    if not rows:
+        return {}
+    return {"cols": cols, "variant_cols": data.get("variant_cols"), "file_cols": data.get("file_cols"),
+            "snapshot": data.get("snapshot"), "rows": rows}
 
 
 # ------------------------------------------------------------------ how to run it
-# The steps, per route and per OS, as data the page fills in. `{ollama}`, `{hf_gguf}`, `{quant}`, `{mlx}`
-# and `{lmstudio}` are a pick's own `run` fields and its chosen quant; nothing here invents a model name.
-# A step is either plain words or `["cmd", "<command>"]`, which the page draws with a copy button.
+# The steps, per route and per OS, as data the page fills in. The placeholders are a pick's own names and the
+# quant the fit chose for this machine: `{ollama_tag}` (the library tag, or `hf.co/<repo>:<quant>` for any
+# other quant), `{hf_repo}` and `{qlabel}` (the GGUF file the fit sized), `{mlx}`, `{lmstudio}`, and `{ctx}`,
+# the context the estimate assumed. Nothing here invents a model name. A step is plain words, or
+# `["cmd", "<command>"]`, which the page draws with a copy button, or `["ctx", ...]` / `["ctxcmd", ...]`, a
+# step and a command shown only when the estimate assumed more context than the runner's own default --
+# fit.md's warning that Ollama and LM Studio pick a smaller one, so the answer on the card is only true if the
+# reader sets it.
 #
 # The Steam Deck is its own OS here because the advice differs: SteamOS's system partition is read-only, so
 # Ollama's install script (which writes to /usr/local) fails there, and LM Studio's AppImage -- one file in
 # the home directory -- is the route that works without unlocking anything.
+LMS_CTX = ["ctx", "Before you load it, open the settings beside the model name and set <b>Context Length</b> "
+                  "to <b>{ctx}</b>, the amount we sized it for."]
+OLLAMA_CTX = ["ctx", "Ollama starts with a shorter memory than we sized this for. Once it&rsquo;s running, "
+                     "type this to give it <b>{ctx}</b> tokens:"]
+OLLAMA_CTX_CMD = ["ctxcmd", "/set parameter num_ctx {ctx}"]
+LMS_GET = "<a href=\"https://lmstudio.ai/download\">lmstudio.ai</a>"
 HOWTO = {
     "lmstudio": {
         "label": "LM Studio", "pitch": "An app. No typing.",
         "steps": {
-            "windows": ["Download LM Studio from <a href=\"https://lmstudio.ai/download\">lmstudio.ai</a> and run the installer.",
+            "windows": [f"Download LM Studio from {LMS_GET} and run the installer.",
                         "Open it and click the magnifying glass (Discover) on the left.",
-                        "Search for <b>{lmstudio}</b> and click Download. Pick <b>{quant}</b> if it asks.",
+                        "Search for <b>{lmstudio}</b> and click Download. Pick <b>{qlabel}</b> if it asks.", LMS_CTX,
                         "When it finishes, click Chat, choose the model at the top, and start typing."],
-            "macos": ["Download LM Studio from <a href=\"https://lmstudio.ai/download\">lmstudio.ai</a> and drag it to Applications.",
+            "macos": [f"Download LM Studio from {LMS_GET} and drag it to Applications.",
                       "Open it and click the magnifying glass (Discover) on the left.",
-                      "Search for <b>{lmstudio}</b> and click Download. On a Mac it may offer an MLX version: that one is faster.",
+                      "Search for <b>{lmstudio}</b> and click Download. On a Mac it may offer an MLX version: "
+                      "that one is often faster.", LMS_CTX,
                       "When it finishes, click Chat, choose the model at the top, and start typing."],
-            "linux": ["Download the LM Studio AppImage from <a href=\"https://lmstudio.ai/download\">lmstudio.ai</a>.",
-                      "Make it runnable, then open it:", ["cmd", "chmod +x ~/Downloads/LM-Studio-*.AppImage && ~/Downloads/LM-Studio-*.AppImage"],
-                      "Click the magnifying glass (Discover), search for <b>{lmstudio}</b>, and download <b>{quant}</b>.",
+            "linux": [f"Download the LM Studio AppImage from {LMS_GET}.",
+                      "Make it runnable, then open it:",
+                      ["cmd", "chmod +x ~/Downloads/LM-Studio-*.AppImage && ~/Downloads/LM-Studio-*.AppImage"],
+                      "Click the magnifying glass (Discover), search for <b>{lmstudio}</b>, and download "
+                      "<b>{qlabel}</b>.", LMS_CTX,
                       "Click Chat, choose the model at the top, and start typing."],
             "steamos": ["Hold the power button and choose <b>Switch to Desktop</b>.",
-                        "Open the browser, go to <a href=\"https://lmstudio.ai/download\">lmstudio.ai</a>, and download the Linux AppImage.",
-                        "In the Dolphin file manager, right-click the file, choose Properties, then Permissions, and tick <b>Is executable</b>. Double-click it to open.",
-                        "Click the magnifying glass (Discover), search for <b>{lmstudio}</b>, and download <b>{quant}</b>. Then click Chat."],
+                        f"Open the browser, go to {LMS_GET}, and download the Linux AppImage.",
+                        "In the Dolphin file manager, right-click the file, choose Properties, then Permissions, "
+                        "and tick <b>Is executable</b>. Double-click it to open.",
+                        "Click the magnifying glass (Discover), search for <b>{lmstudio}</b>, and download "
+                        "<b>{qlabel}</b>.", LMS_CTX,
+                        "Click Chat, choose the model at the top, and start typing."],
         },
     },
     "ollama": {
         "label": "Ollama", "pitch": "One command.",
         "steps": {
-            "windows": ["Download Ollama from <a href=\"https://ollama.com/download/windows\">ollama.com</a> and run the installer.",
+            "windows": ["Download Ollama from <a href=\"https://ollama.com/download/windows\">ollama.com</a> and "
+                        "run the installer.",
                         "Open Terminal: press the Windows key, type <b>Terminal</b>, press Enter.",
-                        "Paste this and press Enter. The first time, it downloads the model.", ["cmd", "ollama run {ollama_tag}"],
+                        "Paste this and press Enter. The first time, it downloads the model.",
+                        ["cmd", "ollama run {ollama_tag}"], OLLAMA_CTX, OLLAMA_CTX_CMD,
                         "Type a question when you see <b>&gt;&gt;&gt;</b>. Type <b>/bye</b> to leave."],
-            "macos": ["Download Ollama from <a href=\"https://ollama.com/download/mac\">ollama.com</a>, open it, and drag it to Applications.",
+            "macos": ["Download Ollama from <a href=\"https://ollama.com/download/mac\">ollama.com</a>, open it, "
+                      "and drag it to Applications.",
                       "Open Terminal: press Cmd + Space, type <b>Terminal</b>, press Enter.",
-                      "Paste this and press Enter. The first time, it downloads the model.", ["cmd", "ollama run {ollama_tag}"],
+                      "Paste this and press Enter. The first time, it downloads the model.",
+                      ["cmd", "ollama run {ollama_tag}"], OLLAMA_CTX, OLLAMA_CTX_CMD,
                       "Type a question when you see <b>&gt;&gt;&gt;</b>. Type <b>/bye</b> to leave."],
-            "linux": ["Install Ollama. This downloads and runs its official install script, which asks for your password:",
+            "linux": ["Install Ollama. This downloads and runs its official install script, which asks for your "
+                      "password:",
                       ["cmd", "curl -fsSL https://ollama.com/install.sh | sh"],
-                      "Then run the model. The first time, it downloads it.", ["cmd", "ollama run {ollama_tag}"],
+                      "Then run the model. The first time, it downloads it.",
+                      ["cmd", "ollama run {ollama_tag}"], OLLAMA_CTX, OLLAMA_CTX_CMD,
                       "Type a question when you see <b>&gt;&gt;&gt;</b>. Type <b>/bye</b> to leave."],
-            "steamos": ["Ollama's installer can't write to SteamOS's locked system folders, so <b>LM Studio is the easier route on a Deck</b>. If you'd still like Ollama: switch to Desktop Mode and open Konsole.",
+            "steamos": ["Ollama&rsquo;s installer can&rsquo;t write to SteamOS&rsquo;s locked system folders, so "
+                        "<b>LM Studio is the easier route on a Deck</b>. If you&rsquo;d still like Ollama: switch "
+                        "to Desktop Mode and open Konsole.",
                         "Download Ollama into your home folder and start it:",
-                        ["cmd", "mkdir -p ~/ollama && curl -fsSL https://ollama.com/download/ollama-linux-amd64.tgz | tar -xz -C ~/ollama && ~/ollama/bin/ollama serve &"],
-                        "Then run the model:", ["cmd", "~/ollama/bin/ollama run {ollama_tag}"]],
+                        ["cmd", "mkdir -p ~/ollama && curl -fsSL https://ollama.com/download/ollama-linux-amd64.tgz"
+                                " | tar -xz -C ~/ollama && ~/ollama/bin/ollama serve &"],
+                        "Then run the model:", ["cmd", "~/ollama/bin/ollama run {ollama_tag}"],
+                        OLLAMA_CTX, OLLAMA_CTX_CMD],
         },
     },
     "llamacpp": {
         "label": "llama.cpp", "pitch": "For the curious: the engine under most of the others.",
         "steps": {
             "windows": ["Install it with winget, in Terminal:", ["cmd", "winget install llama.cpp"],
-                        "Start a chat server. It downloads the model the first time:", ["cmd", "llama-server -hf {hf_gguf}:{quant}"],
+                        "Start a chat server. It downloads the model the first time:",
+                        ["cmd", "llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],
                         "Open <b>http://localhost:8080</b> in your browser."],
             "macos": ["Install it with Homebrew:", ["cmd", "brew install llama.cpp"],
-                      "Start a chat server. It downloads the model the first time:", ["cmd", "llama-server -hf {hf_gguf}:{quant}"],
+                      "Start a chat server. It downloads the model the first time:",
+                      ["cmd", "llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],
                       "Open <b>http://localhost:8080</b> in your browser."],
-            "linux": ["Install it with Homebrew, or download a build from <a href=\"https://github.com/ggml-org/llama.cpp/releases\">the releases page</a>:",
+            "linux": ["Install it with Homebrew, or download a build from "
+                      "<a href=\"https://github.com/ggml-org/llama.cpp/releases\">the releases page</a>:",
                       ["cmd", "brew install llama.cpp"],
-                      "Start a chat server. It downloads the model the first time:", ["cmd", "llama-server -hf {hf_gguf}:{quant}"],
+                      "Start a chat server. It downloads the model the first time:",
+                      ["cmd", "llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],
                       "Open <b>http://localhost:8080</b> in your browser."],
-            "steamos": ["In Desktop Mode, download the Vulkan build for Linux from <a href=\"https://github.com/ggml-org/llama.cpp/releases\">the releases page</a> and unpack it in your home folder.",
-                        "In Konsole, from the unpacked folder:", ["cmd", "./llama-server -hf {hf_gguf}:{quant}"],
+            "steamos": ["In Desktop Mode, download the Vulkan build for Linux from "
+                        "<a href=\"https://github.com/ggml-org/llama.cpp/releases\">the releases page</a> and unpack "
+                        "it in your home folder.",
+                        "In Konsole, from the unpacked folder:", ["cmd", "./llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],
                         "Open <b>http://localhost:8080</b> in the browser."],
         },
     },
     "mlx": {
-        "label": "MLX", "pitch": "For the curious, Apple Silicon only: Apple's own engine, often the fastest on a Mac.",
+        "label": "MLX", "pitch": "For the curious, Apple Silicon only: Apple's own engine, often faster on a Mac "
+                                 "than our estimate.",
         "steps": {
             "macos": ["Install it with Python's package manager (Python 3.10 or newer):", ["cmd", "pip install mlx-lm"],
                       "Chat with the model. It downloads it the first time:", ["cmd", "mlx_lm.chat --model {mlx}"]],
         },
     },
 }
+# Ollama's and LM Studio's own default context, at or below which the `ctx` steps above are left out.
+# Ollama's is 4,096 tokens as of its 0.6 releases; LM Studio's is set per model and is commonly 4,096 too.
+RUNNER_CTX = 4096
 
 
 # ------------------------------------------------------------------ the cheat sheet
-# Machines most readers will recognise themselves in, for the table a reader without script gets. Each is
-# a machine dict exactly as the page builds one from a catalogue entry, so the Python fit sees what the JS
-# fit would.
+# Machines most readers will recognise themselves in, for the table a reader without script gets. Each is a
+# hardware object in the catalogue's field names, which `normalizeHardware()` reads exactly as it reads the
+# page's machines.
+def _apple(ram, bw):
+    return {"ram_gb": ram, "ram_bandwidth_gbs": bw, "unified": True, "os": "macos",
+            "gpu": {"vendor": "apple", "integrated": True, "vram_bandwidth_gbs": bw, "backends": ["metal", "mlx"]}}
+
+
+def _card(vram, bw, ram, ram_bw=80):
+    return {"ram_gb": ram, "ram_bandwidth_gbs": ram_bw, "os": "windows",
+            "gpu": {"vendor": "nvidia", "vram_gb": vram, "vram_bandwidth_gbs": bw, "backends": ["cuda", "vulkan"]}}
+
+
 CHEAT = [
-    ("A laptop with 8 GB and no graphics card", {"ram_gb": 8, "vram_gb": 0, "unified": False, "backend": "cpu", "gpu_bw_gbs": 0, "cpu_bw_gbs": 70}),
-    ("A laptop with 16 GB and no graphics card", {"ram_gb": 16, "vram_gb": 0, "unified": False, "backend": "cpu", "gpu_bw_gbs": 0, "cpu_bw_gbs": 70}),
-    ("A Steam Deck or ROG Ally (16 GB shared)", {"ram_gb": 16, "vram_gb": 0, "unified": True, "backend": "vulkan", "gpu_bw_gbs": 100, "cpu_bw_gbs": 100}),
-    ("A Mac with 16 GB", {"ram_gb": 16, "vram_gb": 0, "unified": True, "backend": "metal", "gpu_bw_gbs": 100, "cpu_bw_gbs": 100}),
-    ("A Mac with 32 GB (M-series Pro)", {"ram_gb": 32, "vram_gb": 0, "unified": True, "backend": "metal", "gpu_bw_gbs": 200, "cpu_bw_gbs": 200}),
-    ("A PC with an 8 GB graphics card and 32 GB RAM", {"ram_gb": 32, "vram_gb": 8, "unified": False, "backend": "cuda", "gpu_bw_gbs": 272, "cpu_bw_gbs": 70}),
-    ("A PC with a 12 GB graphics card and 32 GB RAM", {"ram_gb": 32, "vram_gb": 12, "unified": False, "backend": "cuda", "gpu_bw_gbs": 504, "cpu_bw_gbs": 70}),
-    ("A PC with a 16 GB graphics card and 32 GB RAM", {"ram_gb": 32, "vram_gb": 16, "unified": False, "backend": "cuda", "gpu_bw_gbs": 717, "cpu_bw_gbs": 70}),
-    ("A PC with a 24 GB graphics card and 64 GB RAM", {"ram_gb": 64, "vram_gb": 24, "unified": False, "backend": "cuda", "gpu_bw_gbs": 1008, "cpu_bw_gbs": 80}),
-    ("A Mac or mini PC with 128 GB unified memory", {"ram_gb": 128, "vram_gb": 0, "unified": True, "backend": "metal", "gpu_bw_gbs": 546, "cpu_bw_gbs": 546}),
+    ("A laptop with 8 GB and no graphics card", {"ram_gb": 8, "ram_bandwidth_gbs": 51.2, "os": "windows", "gpu": None}),
+    ("A laptop with 16 GB and no graphics card", {"ram_gb": 16, "ram_bandwidth_gbs": 68, "os": "windows", "gpu": None}),
+    ("A Steam Deck (16 GB shared)", {"ram_gb": 16, "ram_bandwidth_gbs": 102.4, "unified": True, "os": "steamos",
+                                     "gpu": {"vendor": "amd", "integrated": True, "vram_bandwidth_gbs": 102.4,
+                                             "backends": ["vulkan"]}}),
+    ("A Mac with 16 GB (M-series)", _apple(16, 100)),
+    ("A Mac with 36 GB (M-series Pro or Max)", _apple(36, 273)),
+    ("A PC with an 8 GB graphics card and 32 GB RAM", _card(8, 272, 32)),
+    ("A PC with a 12 GB graphics card and 32 GB RAM", _card(12, 504, 32)),
+    ("A PC with a 16 GB graphics card and 32 GB RAM", _card(16, 717, 32)),
+    ("A PC with a 24 GB graphics card and 64 GB RAM", _card(24, 1008, 64, 96)),
+    ("A Mac with 128 GB (M-series Max)", _apple(128, 546)),
 ]
 
+# The cheat sheet's runner: the same `localfit.mjs` the page inlines, imported as the module it is, and the
+# same model assembly the page does (`modelOf` is `LOCALUI.modelOf`'s rule restated in a few lines; the
+# browser check holds the page's answer for a cheat-sheet machine to this table's).
+CHEAT_JS = r"""
+import * as F from %(fit)s;
+import {readFileSync} from "node:fs";
+const I = JSON.parse(readFileSync(process.argv[2], "utf8"));
+const hf = I.hf && I.hf.rows ? Object.fromEntries(I.hf.rows.map((r) => {
+  const o = Object.fromEntries(I.hf.cols.map((c, i) => [c, r[i]])); return [o.id, o]; })) : {};
+const modelOf = (p) => {
+  const row = p.hf_id && hf[p.hf_id];
+  const base = row ? F.normalizeModel(row, I.hf.variant_cols, I.hf.file_cols) : null;
+  return base && base.quants.length ? Object.assign(base, {id: p.id}) : Object.assign({id: p.id}, p.config, {quants: p.quants});
+};
+const out = I.machines.map((hw) => I.models.map((p) => {
+  const b = F.bestQuant(modelOf(p), hw, {context: I.ctx});
+  return b ? {id: p.id, verdict: b.verdict, quant: b.quant, tps: b.speed.decodeTps} : {id: p.id, verdict: "too-big"};
+}));
+process.stdout.write(JSON.stringify(out));
+"""
 
-def cheat_rows(cat: dict, picks: dict) -> list[tuple[str, list[dict], list[dict]]]:
-    """For each cheat-sheet machine: the three best picks that run great, and the best that only run."""
+
+def node_bin() -> str:
+    import shutil
+    n = shutil.which("node")
+    if not n:
+        raise SystemExit("32_local.py needs Node on PATH: the cheat sheet runs scripts/localfit.mjs, the same "
+                         "fit method the page runs, so the two cannot disagree. Install Node 18+ and re-run.")
+    return n
+
+
+def cheat_answers(picks: dict, hf: dict) -> list[list[dict]]:
+    """`bestQuant()` for every pick on every cheat-sheet machine, from `localfit.mjs` under Node."""
+    import subprocess
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        t = Path(tmp)
+        (t / "in.json").write_text(json.dumps({"machines": [m for _, m in CHEAT], "models": picks["models"],
+                                               "hf": hf, "ctx": picks.get("default_ctx", 8192)}), encoding="utf-8")
+        (t / "cheat.mjs").write_text(CHEAT_JS % {"fit": json.dumps(FIT_MJS.as_uri())}, encoding="utf-8")
+        res = subprocess.run([node_bin(), str(t / "cheat.mjs"), str(t / "in.json")],
+                             capture_output=True, text=True, encoding="utf-8")
+    if res.returncode:
+        raise SystemExit(f"the cheat sheet's run of localfit.mjs failed:\n{res.stderr}")
+    return json.loads(res.stdout)
+
+
+def cheat_rows(picks: dict, answers: list[list[dict]]) -> list[tuple[str, list, list]]:
+    """For each cheat-sheet machine: the three best picks that run great, and the two best that only run."""
+    by = {m["id"]: m for m in picks["models"]}
     out = []
-    ctx = picks.get("default_ctx", 8192)
-    for label, m in CHEAT:
-        great, ok = [], []
-        for model in picks["models"]:
-            r = localfit.fit(m, model, {"ctx": ctx}, cat["usable"])
-            if r["verdict"] == "great":
-                great.append((model, r))
-            elif r["verdict"] == "ok":
-                ok.append((model, r))
-        great.sort(key=lambda x: -x[0]["score"])
-        ok.sort(key=lambda x: -x[0]["score"])
-        out.append((label, great[:3], ok[:2]))
+    for (label, _), row in zip(CHEAT, answers):
+        great = sorted((a for a in row if a["verdict"] == "great"), key=lambda a: -by[a["id"]]["score"])
+        ok = sorted((a for a in row if a["verdict"] in ("slow", "tight")), key=lambda a: -by[a["id"]]["score"])
+        out.append((label, [(by[a["id"]], a) for a in great[:3]], [(by[a["id"]], a) for a in ok[:2]]))
     return out
+
+
+def fit_js() -> str:
+    """`localfit.mjs` as a classic script defining `LOCALFIT`, for inlining.
+
+    The module is vendored verbatim from ds-models, so it is adapted here rather than edited: every top-level
+    `export ` is dropped and the names it exported are returned from a wrapper. The list is read off the
+    source, so an export added upstream arrives on `LOCALFIT` with no edit here; `tests/local_test.py` asserts
+    the wrapped script exposes every one of them and that the file has no import or other export form this
+    rewrite would miss.
+    """
+    src = FIT_MJS.read_text(encoding="utf-8")
+    names = re.findall(r"^export (?:const|function|let) (\w+)", src, re.M)
+    body = re.sub(r"^export (?=const|function|let)", "", src, flags=re.M)
+    return ("/* LOCAL FIT. scripts/localfit.mjs, ds-models' fit method (team/contracts/fit.md), wrapped by\n"
+            "   scripts/32_local.py. Edit the module, not this. */\n"
+            f"const LOCALFIT = (() => {{\n{body}\nreturn {{{', '.join(names)}}};\n}})();\n")
 
 
 # ------------------------------------------------------------------ the page
 b19 = _load("19_pages.py", "b19")
 b20 = _load("20_landing.py", "b20")
 import mark  # noqa: E402
+import pagemin  # noqa: E402
 
 SITE = b19.b17.SITE
 REPO = b19.REPO
@@ -352,18 +480,14 @@ def rel(tail: str = "") -> str:
 
 def payload(cat: dict, picks: dict, hf: dict) -> dict:
     """Everything the page script reads, in one object. Compact keys are not worth it: gzip already
-    collapses the repetition, and readable keys are what lets a reader of the page source check a number."""
-    models = []
-    for m in picks["models"]:
-        row = {k: m[k] for k in MODEL_FIELDS + ("family", "ctx_max", "gated", "hf_id") if k in m}
-        if m.get("hf_id") in hf:
-            row["hf"] = hf[m["hf_id"]]
-        models.append(row)
+    collapses the repetition, and readable keys are what lets a reader of the page source check a number.
+    `hf` is the joined slice of eng-hf's index (see `hf_join`), carried in its own column-list shape."""
     return {
         "page": PAGE,
         "kinds": cat["kinds"], "devices": cat["devices"], "gpus": cat["gpus"], "custom": cat["custom"],
-        "find_out": cat["find_out"], "usable": cat["usable"],
-        "tasks": picks["tasks"], "models": models, "default_ctx": picks.get("default_ctx", 8192),
+        "find_out": cat["find_out"],
+        "tasks": picks["tasks"], "models": picks["models"], "hf": hf or None,
+        "default_ctx": picks.get("default_ctx", 8192), "runner_ctx": RUNNER_CTX,
         "howto": HOWTO,
         "fixture": bool(cat.get("fixture") or picks.get("fixture")),
     }
@@ -446,7 +570,7 @@ def cheat_html(rows) -> str:
         for label, great, ok in rows)
     return ('<table class="lxcheat"><caption class="sr">What runs on common machines</caption>'
             '<thead><tr><th scope="col">If you have</th><th scope="col">Runs great</th>'
-            '<th scope="col">Also runs, more slowly or snugly</th></tr></thead>'
+            '<th scope="col">Also runs, more slowly or squeezed</th></tr></thead>'
             f'<tbody>{body}</tbody></table>')
 
 
@@ -551,7 +675,7 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
 <section class="lxs" id="cheat" aria-labelledby="cheath">
   <h2 id="cheath">Quick answer by machine</h2>
   <p class="lxquiet">The same maths as the picker, for some common machines, at an {picks.get("default_ctx", 8192) // 1024}k context.</p>
-  {cheat_html(cheat_rows(cat, picks))}
+  {cheat_html(cheat_rows(picks, cheat_answers(picks, hf)))}
 </section>
 
 <section class="lxs" id="learn" aria-labelledby="learnh">
@@ -580,13 +704,15 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
       about 1.3 tokens, so 10 tokens a second is about 7 or 8 words a second, faster than most people
       read.</p></details>
   <details id="q-how"><summary>How we worked these numbers out</summary>
-    <p>A model needs its download size, plus memory for its context, plus about {localfit.OVERHEAD_GB} GB to work
-      in. Your machine offers a share of its memory, by a rule for each kind of machine. Speed comes from how
-      fast your memory can be read, because every word means reading the whole active model once. We
-      assume about {int(localfit.EFF_GPU * 100)}% of the datasheet speed on a graphics card, and show a range of
-      &minus;{round((1 - localfit.SPREAD[0]) * 100)}% to +{round((localfit.SPREAD[1] - 1) * 100)}%. Real speed
-      depends on the app, drivers and settings, so treat it as a guide. The code is
-      <a href="https://github.com/{esc(REPO)}/blob/HEAD/scripts/localfit.js">open</a>.</p></details>
+    <p>A model needs its download size, plus memory for its context, plus a little working space. Your
+      machine offers a share of its memory, by one rule for each kind of machine: what a graphics card keeps
+      for its driver and the screen, what macOS lets the graphics use, what Windows keeps for itself. Speed
+      comes from how fast that memory can be read, because writing each word means reading the active part of
+      the model once. The method is fitted to 144 published speed measurements across Macs, NVIDIA, AMD and
+      Intel graphics, handhelds and processors, and lands within about 5% of them typically and 17% at worst
+      for nine in ten. Real speed also depends on the app, drivers and settings, so every speed is shown as a
+      range. The method is written up
+      <a href="https://github.com/{esc(REPO)}/blob/HEAD/scripts/localfit.mjs">with its sources</a>.</p></details>
 </section>
 </div></main>
 <footer><div class="wrap">
@@ -597,7 +723,7 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
 </div></footer>
 <script type="application/json" id="lxdata">{json_script(payload(cat, picks, hf))}</script>
 <script>
-{FIT_JS.read_text(encoding="utf-8")}</script>
+{fit_js()}</script>
 {PAGE_JS}{sitewide.site_script(rel())}{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(rel())}</body>
 </html>
 """
@@ -764,7 +890,9 @@ def main() -> None:
     out = Path(args.out) if args.out else OUT
     page = out / PAGE["slug"] / "index.html"
     page.parent.mkdir(parents=True, exist_ok=True)
-    page.write_text(render(cat, picks, hf), encoding="utf-8")
+    # Comments stripped on the way out, the way `19_pages.py` and `31_home.py` ship theirs: they are for
+    # whoever edits this stage, `local_page.js` and ds-models' module, and every one stays in the source.
+    page.write_text(pagemin.strip_page(render(cat, picks, hf)), encoding="utf-8")
     print(f"{PAGE['slug']}/index.html · {b20.kb(page.stat().st_size)} · {len(cat['devices'])} devices, "
           f"{len(cat['gpus'])} graphics cards, {len(picks['models'])} models"
           + (f", {len(hf)} joined to the Hugging Face index" if hf else ", no Hugging Face index yet")

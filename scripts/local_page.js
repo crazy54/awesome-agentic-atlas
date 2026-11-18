@@ -1,17 +1,21 @@
 /* The local-AI page's behaviour. Written into docs/local/index.html by scripts/32_local.py, after the
-   `lxdata` JSON block and the LOCAL FIT script it reads.
+   `lxdata` JSON block and the LOCAL FIT script (ds-models' scripts/localfit.mjs, wrapped) it reads.
 
-   Two halves. `LOCALUI` is pure: search, the machine a set of answers describes, the verdicts, the words a
-   reader is shown, the commands, and the URL hash. Each is a function of its arguments and nothing else,
-   which is what lets tests/local-check.mjs assert them directly as well as through the DOM. The bottom half
-   wires them to the page and owns all the state.
+   Two halves. `LOCALUI` is pure: search, the machine a set of answers describes, the model the fit method
+   is handed, the verdicts, the words a reader is shown, the commands, and the URL hash. Each is a function of
+   its arguments and the inlined data, which is what lets tests/local-check.mjs assert them directly as well
+   as through the DOM. The bottom half wires them to the page and owns all the state.
+
+   No arithmetic about memory or speed lives in this file. Every number on a card comes from LOCALFIT --
+   `bestQuant()`, `assess()`, `fit()`, `budgets()` -- and this file only decides which words go round it.
 
    Every answer lives in the hash (`#d=steam-deck-oled&t=code`), so a result can be sent to a friend and
    reproduces exactly, and a reload keeps your place. `history.replaceState` rather than push: each click
    is a refinement of one question, not a new page, and twenty back presses to leave would be a trap. */
 const LOCALUI = ((D, FIT) => {
   const byId = (xs) => Object.fromEntries(xs.map((x) => [x.id, x]));
-  const DEV = byId(D.devices), GPU = byId(D.gpus);
+  const DEV = byId(D.devices), GPU = byId(D.gpus), PICK = byId(D.models);
+  const GB = 1e9;
   const esc = (s) => String(s === null || s === undefined ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
@@ -46,14 +50,20 @@ const LOCALUI = ((D, FIT) => {
   const uaOS = (ua) => /Mac OS X|Macintosh/.test(ua) && !/iPhone|iPad/.test(ua) ? "macos"
     : /Linux|X11|CrOS/.test(ua) && !/Android/.test(ua) ? "linux" : "windows";
 
-  // The machine a set of answers describes, as the fit maths wants it, or null if there is not one yet.
+  // The machine a set of answers describes, or null if there is not one yet. `hw` is in the field names
+  // `normalizeHardware()` reads (team/contracts/hardware.md), so the fit method sees a catalogue entry as the
+  // catalogue wrote it; this is the only place catalogue records are assembled into one.
+  const cardOf = (g, vram) => ({vendor: g.vendor, name: g.name, vram_gb: vram, vram_bandwidth_gbs: g.vram_bandwidth_gbs,
+                                fp16_tflops: g.fp16_tflops, arch: g.arch, backends: g.backends});
   const machineOf = (s, ua) => {
     if (s.d && DEV[s.d]) {
       const d = DEV[s.d], g = d.gpu ? GPU[d.gpu] : null;
       const ram = d.ram_gb_options.includes(s.r) ? s.r : d.ram_gb_options[0];
-      return {name: d.name, kind: d.kind, os: d.os[0], ram_opts: d.ram_gb_options, gpu: g, device: d,
-              m: {ram_gb: ram, vram_gb: d.vram_gb, unified: d.unified, backend: g ? g.backend : d.backend,
-                  gpu_bw_gbs: g ? g.bw_gbs : d.bw_gbs, cpu_bw_gbs: d.bw_gbs}};
+      const gpu = g ? cardOf(g, d.vram_gb)
+        : d.igpu ? Object.assign({integrated: true, vram_bandwidth_gbs: d.ram_bandwidth_gbs}, d.igpu) : null;
+      return {name: d.name, kind: d.kind, os: d.os[0], ram_opts: d.ram_gb_options, device: d,
+              hw: {id: d.id, name: d.name, ram_gb: ram, ram_bandwidth_gbs: d.ram_bandwidth_gbs, unified: d.unified,
+                   os: d.os[0], gpu, gpu_usable_gb: d.gpu_usable_gb, cpu: d.cpu}};
     }
     if (s.g && (s.g === "none" || GPU[s.g])) {
       const g = GPU[s.g] || null, opts = D.custom.ram_gb_options;
@@ -61,107 +71,171 @@ const LOCALUI = ((D, FIT) => {
       const vram = g ? (g.vram_gb_options.includes(s.v) ? s.v : g.vram_gb_options[0]) : 0;
       const os = uaOS(ua) === "macos" ? "windows" : uaOS(ua);
       return {name: g ? `PC with ${g.name} ${vram} GB` : "PC with no graphics card", kind: s.k || "gaming",
-              os, ram_opts: opts, gpu: g, custom: true,
-              m: {ram_gb: ram, vram_gb: vram, unified: false, backend: g ? g.backend : "cpu",
-                  gpu_bw_gbs: g ? g.bw_gbs : 0, cpu_bw_gbs: D.custom.cpu_bw_gbs}};
+              os, ram_opts: opts, custom: true,
+              hw: {name: "custom", ram_gb: ram, ram_bandwidth_gbs: D.custom.cpu_bw_gbs, unified: false, os,
+                   gpu: g ? cardOf(g, vram) : null}};
     }
     return null;
   };
+  const apple = (mc) => !!(mc.hw.gpu && mc.hw.gpu.vendor === "apple");
 
   // One sentence on what this machine offers, so every "you have X GB" below has been explained once.
   const machineWords = (mc) => {
-    const m = mc.m, b = FIT.budget(m, D.usable), name = esc(mc.name);
-    if (m.unified && m.backend === "metal")
-      return `Your ${name} has <b>${m.ram_gb} GB</b> of memory, shared by the processor and graphics. ` +
-        `macOS lets AI use about <b>${gb(b.gpu)} GB</b> of it and keeps the rest for itself and your apps.`;
-    if (m.unified)
-      return `Your ${name} shares <b>${m.ram_gb} GB</b> between the processor and graphics. About ` +
-        `<b>${gb(b.gpu)} GB</b> can go to AI once the system has its share.`;
-    if (m.vram_gb > 0)
-      return `Your graphics card has <b>${m.vram_gb} GB</b> of its own memory (about <b>${gb(b.gpu)} GB</b> ` +
-        `usable), and that's where AI runs fast. Your <b>${m.ram_gb} GB</b> of RAM can hold overflow ` +
-        `(about ${gb(b.cpu)} GB), but much more slowly.`;
-    return `No separate graphics card, so AI runs on the processor using your <b>${m.ram_gb} GB</b> of RAM. ` +
-      `About <b>${gb(b.cpu)} GB</b> is free for it. It works, just more slowly than on a graphics card.`;
+    const h = FIT.normalizeHardware(mc.hw), b = FIT.budgets(h), name = esc(mc.name);
+    const g = b.gpu / GB, r = b.ram / GB;
+    if (apple(mc))
+      return `Your ${name} has <b>${h.ramGB} GB</b> of memory, shared by the processor and graphics. ` +
+        `macOS lets AI use about <b>${gb(g)} GB</b> of it on the graphics and keeps the rest for itself and your apps.`;
+    if (h.gpu && h.gpu.integrated)
+      return `Your ${name} shares <b>${h.ramGB} GB</b> between the processor and graphics. About ` +
+        `<b>${gb(g)} GB</b> can go to the graphics, where AI runs fastest, once the system has its share.`;
+    if (h.gpu)
+      return `Your graphics card has <b>${h.gpu.vram_gb} GB</b> of its own memory (about <b>${gb(g)} GB</b> ` +
+        `usable), and that's where AI runs fast. Your <b>${h.ramGB} GB</b> of RAM can hold overflow ` +
+        `(about ${gb(r)} GB), but much more slowly.`;
+    return `No separate graphics card, so AI runs on the processor using your <b>${h.ramGB} GB</b> of RAM. ` +
+      `About <b>${gb(r)} GB</b> is free for it. It works, just more slowly than on a graphics card.`;
   };
 
-  // Every model against one machine.
-  const assess = (m, ctx, qover) => D.models.map((model) =>
-    ({model, r: FIT.fit(m, model, {ctx, quant: (qover || {})[model.id]}, D.usable)}));
+  // The model the fit method is handed for a pick: eng-hf's index row when it has one (real file sizes, read
+  // by ds-models' `normalizeModel()`), otherwise the pick's own `config` and `quants`. Cached: a model is the
+  // same object for every machine.
+  const HF = D.hf && D.hf.rows ? Object.fromEntries(D.hf.rows.map((r) => {
+    const o = Object.fromEntries(D.hf.cols.map((c, i) => [c, r[i]])); return [o.id, o]; })) : {};
+  const models = {};
+  const modelOf = (p) => {
+    if (models[p.id]) return models[p.id];
+    const row = p.hf_id && HF[p.hf_id];
+    const base = row ? FIT.normalizeModel(row, D.hf.variant_cols, D.hf.file_cols) : null;
+    return (models[p.id] = base && base.quants.length ? Object.assign(base, {id: p.id})
+      : Object.assign({id: p.id}, p.config, {quants: p.quants}));
+  };
+  const ggufs = (m) => m.quants.filter((q) => !q.format || q.format === "gguf");
 
-  // What would make a model that does not fit, fit: the smallest common size that would hold it.
+  // One pick on one machine: the quant ds-models' policy recommends (or the one the reader forced), and
+  // everything the card prints about it. `file` is the quant's own entry, for its label, repo and size.
+  const judge = (p, hw, ctx, forced) => {
+    const m = modelOf(p), opts = {context: ctx};
+    let r = null;
+    if (forced) {
+      const q = ggufs(m).find((x) => x.quant === forced);
+      if (q) r = Object.assign(FIT.assess(m, q, hw, opts), {quant: q.quant, bytes: q.bytes, belowFloor: false});
+    }
+    if (!r) r = FIT.bestQuant(m, hw, opts);
+    if (!r || r.verdict === "too-big") {
+      // Too big at any quant. Sized at the quant Ollama ships, the one a reader would most likely try.
+      const q = ggufs(m).find((x) => x.quant === p.run.ollama_q) || ggufs(m)[0];
+      return {verdict: "too-big", quant: q.quant, file: q, fit: FIT.fit(m, q, hw, opts), speed: null, notes: []};
+    }
+    const file = m.quants.find((x) => x.quant === r.quant) || {label: r.quant, repo: (ggufs(m)[0] || {}).repo};
+    return {verdict: r.verdict, quant: r.quant, file, fit: r.fit, speed: r.speed, offload: r.offload,
+            nearlyFull: r.nearlyFull, belowFloor: r.belowFloor, notes: r.fit.notes || []};
+  };
+  const assess = (hw, ctx, qover) => D.models.map((p) => ({model: p, r: judge(p, hw, ctx, (qover || {})[p.id])}));
+
+  // The memory a card says the reader has. One figure per machine, so two cards never quote two different
+  // budgets: on shared memory it is everything the system leaves free (the graphics' default share is the
+  // smaller figure the machine sentence names, and a card that goes past it says so); with a graphics card it
+  // is the card for a model that fits on the card, and card plus RAM for one that does not.
+  const have = (f, hw) => (hw.unified || !hw.gpu ? f.ramBudgetGB
+    : f.placement === "gpu" ? f.gpuBudgetGB : f.gpuBudgetGB + f.ramBudgetGB);
+
+  // What would make a model that does not fit, fit: the smallest common size of this kind of machine on which
+  // ds-models' policy finds a quant that runs. Asked of the fit method, not worked out here.
   const SIZES = {unified: [8, 16, 24, 32, 36, 48, 64, 96, 128, 192, 256, 512], vram: [8, 12, 16, 24, 32, 48, 80, 96],
                  ram: [8, 16, 32, 64, 96, 128, 192, 256]};
-  const suggest = (m, total) => {
-    const fits = (mm) => { const b = FIT.budget(mm, D.usable); return total <= Math.max(b.gpu, b.cpu, b.gpu + (b.gpu ? b.cpu : 0)); };
-    if (m.unified) {
-      const n = SIZES.unified.find((x) => fits(Object.assign({}, m, {ram_gb: x})));
+  const runsOn = (p, hw, ctx) => { const b = FIT.bestQuant(modelOf(p), hw, {context: ctx}); return b && b.verdict !== "too-big" && !b.belowFloor; };
+  const suggest = (p, hw, ctx) => {
+    const g = hw.gpu;
+    if (hw.unified) {
+      const n = SIZES.unified.find((x) => x > hw.ram_gb && runsOn(p, Object.assign({}, hw, {ram_gb: x, gpu_usable_gb: undefined}), ctx));
       return n ? `It would fit on a machine like this with ${n} GB.` : "It's too big for any single home machine.";
     }
-    if (m.vram_gb > 0) {
-      const n = SIZES.vram.find((x) => x - D.usable.vram_reserve_gb >= total);
-      const r = SIZES.ram.find((x) => fits(Object.assign({}, m, {ram_gb: x})));
-      return n ? `It would fit on a graphics card with ${n} GB` + (r ? `, or run slowly with ${r} GB of RAM.` : ".")
-        : (r ? `It would only run, slowly, with ${r} GB of RAM.` : "It's too big for any single home machine.");
+    if (g) {
+      const n = SIZES.vram.find((x) => x > g.vram_gb && runsOn(p, Object.assign({}, hw, {gpu: Object.assign({}, g, {vram_gb: x})}), ctx));
+      const r = SIZES.ram.find((x) => x > hw.ram_gb && runsOn(p, Object.assign({}, hw, {ram_gb: x}), ctx));
+      return n ? `It would fit on a graphics card with ${n} GB` + (r ? `, or run with ${r} GB of RAM.` : ".")
+        : (r ? `It would only run with ${r} GB of RAM.` : "It's too big for any single home machine.");
     }
-    const r = SIZES.ram.find((x) => fits(Object.assign({}, m, {ram_gb: x})));
+    const r = SIZES.ram.find((x) => x > hw.ram_gb && runsOn(p, Object.assign({}, hw, {ram_gb: x}), ctx));
     return r ? `It would fit with ${r} GB of RAM, but a graphics card or a Mac would run it far faster.`
       : "It's too big for any single home machine.";
   };
 
-  // The plain-language lines on a card. HTML, because two of them link to an explainer.
-  const reason = (m, r) => {
-    if (r.verdict === "no")
-      return `Needs about <b>${gb(r.need.total)} GB</b>; you have ${gb(r.have)} GB for AI. ` + suggest(m, r.need.total);
-    const where = r.place === "split"
-      ? `Needs <b>${gb(r.need.total)} GB</b>: about ${gb(r.need.total * r.gpu_frac)} GB on your graphics card, the rest in RAM.`
-      : `Needs <b>${gb(r.need.total)} GB</b>, you have <b>${gb(r.have)} GB</b> for AI.`;
-    return where;
+  // The plain-language lines on a card. HTML, because some of them link to an explainer.
+  const reason = (row, hw, ctx) => {
+    const f = row.r.fit;
+    if (row.r.verdict === "too-big")
+      return `Needs about <b>${gb(f.totalGB)} GB</b>; you have ${gb(have(f, hw))} GB for AI. ` + suggest(row.model, hw, ctx);
+    if (f.placement === "partial" && hw.gpu && !hw.gpu.integrated && !hw.unified)
+      return `Needs <b>${gb(f.totalGB)} GB</b>: about ${gb((f.gpuBytes / GB) + f.kvGB + f.bufferGB)} GB on your graphics card, the rest in RAM.`;
+    if (f.placement === "partial")
+      return `Needs <b>${gb(f.totalGB)} GB</b> of your ${gb(have(f, hw))} GB: more than the graphics may use by default (${gb(f.gpuBudgetGB)} GB), so the processor takes part of it.`;
+    return `Needs <b>${gb(f.totalGB)} GB</b>, you have <b>${gb(have(f, hw))} GB</b> for AI` +
+      (f.placement === "gpu" && hw.gpu && !hw.gpu.integrated && !hw.unified ? " on your graphics card." : ".");
   };
   const speedLine = (r) => {
-    const w = FIT.speedWords(r.tps[1]);
-    const wps = w.wps < 10 ? (Math.round(w.wps * 10) / 10).toFixed(1) : String(Math.round(w.wps));
-    return `<span data-speed="${w.key}">Speed: ${esc(w.words)} (about ${wps} words a second)</span>`;
+    const tps = r.speed.decodeTps, wps = tps * 0.75;
+    const w = wps < 10 ? (Math.round(wps * 10) / 10).toFixed(1) : String(Math.round(wps));
+    return `<span data-tps="${tps.toFixed(2)}">Speed: ${esc(FIT.speedWords(tps))} (about ${w} words a second)</span>`;
   };
-  const CATCH = {
-    slow: "Slow here: fine for a short question, tiring for a long chat.",
-    snug: "A snug fit: close other apps and browser tabs before you start it.",
-    split: 'Part of it runs on the processor (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>), which is what slows it down.',
-    smaller: 'Squeezed to fit: this is a smaller version (<a class="lxwhat" href="#q-quant" data-open="q-quant">__Q__</a>), a little less sharp than usual.',
+  // The catch lines: ours first, for the three things a beginner needs named, then the fit method's own
+  // notes verbatim, which are written in plain English for exactly this (fit.md section 6).
+  // A reasoning model is held to twice the speed (fit.md section 6), so one can read "about as fast as you
+  // read" and still be slow: it writes its thinking first. That case gets its own line rather than a
+  // contradiction.
+  const catches = (r, m) => {
+    const out = [];
+    if (r.verdict === "slow" && m && m.reasoning && r.speed.decodeTps >= 10)
+      out.push("It thinks before it answers, writing a lot it doesn’t show you, so at this speed expect a wait of a minute or so before a hard answer starts.");
+    else if (r.verdict === "slow") out.push("Slow here: fine for a short question, tiring for a long chat.");
+    if (r.verdict === "tight" || r.belowFloor)
+      out.push(`Squeezed to fit: this is a smaller version (<a class="lxwhat" href="#q-quant" data-open="q-quant">${esc(r.quant)}</a>), noticeably less sharp. A smaller model may answer better.`);
+    if (r.offload)
+      out.push('Part of it runs on the processor (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>), which is what slows it down.');
+    return out.concat(r.notes.filter((n) => !/below the quality we recommend/.test(n)).map(esc));
   };
-  const catches = (r) => r.catches.map((c) => CATCH[c]).concat(r.smaller ? [CATCH.smaller.replace("__Q__", esc(r.quant))] : []);
 
   // Groups, in the order the page shows them, already filtered by task. `all` lifts the filter.
   const groups = (rows, tasks, all) => {
     const want = (row) => all || !tasks.length || row.model.tasks.some((t) => tasks.includes(t));
     const shown = rows.filter(want), hidden = rows.length - shown.length;
-    const by = (v) => shown.filter((x) => x.r.verdict === v);
-    const great = by("great").sort((a, b) => b.model.score - a.model.score);
-    const ok = by("ok").sort((a, b) => b.model.score - a.model.score);
-    const no = by("no").sort((a, b) => a.r.need.total - b.r.need.total);
-    // The pick: the best that runs great; failing that, the best that runs without being slow; failing
-    // that, the best that runs at all. Never one that does not fit.
-    const best = great[0] || ok.find((x) => !x.r.catches.includes("slow")) || ok[0] || null;
+    const by = (vs) => shown.filter((x) => vs.includes(x.r.verdict));
+    const great = by(["great"]).sort((a, b) => b.model.score - a.model.score);
+    const ok = by(["slow", "tight"]).sort((a, b) => (a.r.verdict === "tight") - (b.r.verdict === "tight") || b.model.score - a.model.score);
+    const no = by(["too-big"]).sort((a, b) => a.r.fit.totalGB - b.r.fit.totalGB);
+    // The pick: the best that runs great; failing that, the best that runs slowly; failing that, nothing --
+    // a model that only fits squeezed is never what we tell a beginner to start with.
+    const best = great[0] || ok.find((x) => x.r.verdict === "slow") || null;
     return {great, ok, no, best, hidden};
   };
 
-  // The command for a route, with a pick's own names filled in. Ollama's library tag for the default
-  // quant; any other quant goes through Ollama's Hugging Face route, which takes the GGUF repo and quant.
-  const fill = (text, model, quant) => {
-    const run = model.run, tag = quant === model.default_q || !run.hf_gguf ? run.ollama : `hf.co/${run.hf_gguf}:${quant}`;
-    return text.replace(/\{ollama_tag\}/g, esc(tag)).replace(/\{quant\}/g, esc(quant))
-      .replace(/\{hf_gguf\}/g, esc(run.hf_gguf || "")).replace(/\{mlx\}/g, esc(run.mlx || ""))
-      .replace(/\{lmstudio\}/g, esc(run.lmstudio));
+  // The command for a route, with a pick's own names and the fitted quant filled in. Ollama's library tag
+  // when the fit chose the quant that tag ships; any other quant goes through Ollama's Hugging Face route,
+  // which takes the GGUF repo and quant (team/contracts/models.md, "Runnable straight from a variant").
+  const fill = (text, p, r, ctx) => {
+    const run = p.run, f = r.file || {};
+    const tag = r.quant === run.ollama_q || !f.repo ? run.ollama : `hf.co/${f.repo}:${f.label || r.quant}`;
+    return text.replace(/\{ollama_tag\}/g, esc(tag)).replace(/\{qlabel\}/g, esc(f.label || r.quant))
+      .replace(/\{hf_repo\}/g, esc(f.repo || "")).replace(/\{mlx\}/g, esc(run.mlx || ""))
+      .replace(/\{lmstudio\}/g, esc(run.lmstudio)).replace(/\{ctx\}/g, String(ctx));
   };
   // The routes a pick can be run by on an OS, beginner's first. MLX only on a Mac with Apple Silicon.
-  const routes = (model, os, apple) => ["lmstudio", "ollama", "llamacpp", "mlx"].filter((k) => {
+  const routes = (p, r, os, isApple) => ["lmstudio", "ollama", "llamacpp", "mlx"].filter((k) => {
     const h = D.howto[k];
     if (!h.steps[os]) return false;
-    if (k === "llamacpp" && !model.run.hf_gguf) return false;
-    if (k === "mlx" && (!apple || !model.run.mlx)) return false;
+    if (k === "llamacpp" && !(r.file && r.file.repo)) return false;
+    if (k === "mlx" && (!isApple || !p.run.mlx)) return false;
     return true;
   });
   const defaultRoute = (os) => (os === "linux" ? "ollama" : "lmstudio");
+  // A route's steps for an OS, as [kind, html]: "li" for a step, "cmd" for a command under it. The context
+  // steps appear only when the estimate assumed more context than the runner gives by default.
+  const steps = (route, os, p, r, ctx) => D.howto[route].steps[os].flatMap((st) => {
+    if (!Array.isArray(st)) return [["li", fill(st, p, r, ctx)]];
+    if ((st[0] === "ctx" || st[0] === "ctxcmd") && ctx <= D.runner_ctx) return [];
+    return [[st[0] === "ctx" ? "li" : "cmd", fill(st[1], p, r, ctx)]];
+  });
 
   // GPU guess from the WebGL renderer string, matched on the catalogue's `webgl` tokens. The longest
   // matching token wins, so "rtx 4070 ti super" beats "rtx 4070"; ties are all returned, because "Apple M4"
@@ -176,8 +250,6 @@ const LOCALUI = ((D, FIT) => {
         if (t.length === best && !out.some((o) => o[1].id === rec[1].id)) out.push(rec);
       }
     }
-    // A graphics card is a better answer than "an everyday laptop" when both match, which they do on a
-    // laptop with a discrete card reporting its integrated GPU's name too.
     return out;
   };
 
@@ -203,15 +275,15 @@ const LOCALUI = ((D, FIT) => {
     return out ? "#" + out : "";
   };
 
-  return {esc, gb, norm, hits, search, uaOS, machineOf, machineWords, assess, suggest, reason, speedLine,
-          catches, groups, fill, routes, defaultRoute, guess, parseHash, hashOf, DEV, GPU};
+  return {esc, gb, norm, hits, search, uaOS, machineOf, machineWords, modelOf, judge, assess, have, suggest,
+          reason, speedLine, catches, groups, fill, routes, defaultRoute, steps, guess, parseHash, hashOf, apple,
+          ggufs, DEV, GPU, PICK};
 })(JSON.parse(document.getElementById("lxdata").textContent), LOCALFIT);
 
 (() => {
   const D = JSON.parse(document.getElementById("lxdata").textContent);
   const U = LOCALUI, esc = U.esc, $ = (id) => document.getElementById(id);
   const UA = navigator.userAgent;
-  const VERDICT = {great: ["●", "Runs great"], ok: ["◐", "Runs, with a catch"], no: ["○", "Won’t fit"]};
   const TASKS = Object.fromEntries(D.tasks.map((t) => [t.id, t.label]));
   const OSN = {windows: "Windows", macos: "macOS", linux: "Linux", steamos: "Steam Deck"};
   let S = U.parseHash(location.hash);
@@ -307,11 +379,11 @@ const LOCALUI = ((D, FIT) => {
     const g = S.g && U.GPU[S.g];
     $("vramf").hidden = !(g && g.vram_gb_options.length > 1);
     if (g && g.vram_gb_options.length > 1)
-      radios($("vramo"), "vram", g.vram_gb_options, mc.m.vram_gb, (o) => `${o} GB`, (v) => { S.v = v; paintStep1(); update(); refocus("input[name=vram]:checked"); });
+      radios($("vramo"), "vram", g.vram_gb_options, mc.hw.gpu ? mc.hw.gpu.vram_gb : 0, (o) => `${o} GB`, (v) => { S.v = v; paintStep1(); update(); refocus("input[name=vram]:checked"); });
     // RAM, for anything resolved that has a choice.
     $("ramf").hidden = !(mc && mc.ram_opts.length > 1);
     if (mc && mc.ram_opts.length > 1)
-      radios($("ramo"), "ram", mc.ram_opts, mc.m.ram_gb, (o) => `${o} GB`, (r) => { S.r = r; paintStep1(); update(); refocus("input[name=ram]:checked"); });
+      radios($("ramo"), "ram", mc.ram_opts, mc.hw.ram_gb, (o) => `${o} GB`, (r) => { S.r = r; paintStep1(); update(); refocus("input[name=ram]:checked"); });
     // Always from the state, so a hash change (a shared link opened in this tab) cannot leave the box
     // naming the previous machine. Typing never reaches here, so nothing a reader is typing is overwritten.
     $("q").value = S.d && U.DEV[S.d] ? U.DEV[S.d].name : "";
@@ -319,60 +391,72 @@ const LOCALUI = ((D, FIT) => {
     $("gores").hidden = !mc;
     const sum = $("s1sum");
     sum.hidden = !mc;
-    if (mc) sum.textContent = mc.custom ? `${mc.name} · ${mc.m.ram_gb} GB RAM` : `${mc.name} · ${mc.m.ram_gb} GB`;
+    if (mc) sum.textContent = mc.custom ? `${mc.name} · ${mc.hw.ram_gb} GB RAM` : `${mc.name} · ${mc.hw.ram_gb} GB`;
   };
 
   // ---- results
-  const card = (row, mc, open) => {
-    const {model, r} = row, v = VERDICT[r.verdict];
-    const lines = r.verdict === "no" ? [] : U.catches(r);
+  // Verdicts, as a shape and a word, so colour never carries the meaning alone. The four answers the fit
+  // method gives fold into the three groups the page shows: `slow` and `tight` are both "a catch".
+  const SHAPE = {great: "●", slow: "◐", tight: "◐", "too-big": "○"};
+  const WORD = {great: "Runs great", slow: "Runs, slowly", tight: "Only fits squeezed", "too-big": "Won’t fit"};
+  const card = (row, mc, ctx, open) => {
+    const {model, r} = row, no = r.verdict === "too-big";
+    const lines = no ? [] : U.catches(r, U.modelOf(model));
     const tasks = model.tasks.map((t) => TASKS[t]).filter(Boolean).join(", ");
-    const hf = model.hf ? ` · ${Number(model.hf.downloads || 0).toLocaleString("en")} downloads` : "";
     return `<li class="lxcard" data-model="${esc(model.id)}" data-verdict="${r.verdict}">` +
-      `<div class="lxch"><h4>${esc(model.name)}</h4><span class="lxv" data-v="${r.verdict}"><i aria-hidden="true">${v[0]}</i>${v[1]}</span></div>` +
+      `<div class="lxch"><h4>${esc(model.name)}</h4><span class="lxv" data-v="${r.verdict}"><i aria-hidden="true">${SHAPE[r.verdict]}</i>${WORD[r.verdict]}</span></div>` +
       `<p class="lxblurb">${esc(model.blurb)}</p>` +
-      `<p class="lxwhy"><span>${U.reason(mc.m, r)}</span>${r.tps ? U.speedLine(r) : ""}</p>` +
+      `<p class="lxwhy"><span>${U.reason(row, mc.hw, ctx)}</span>${r.speed ? U.speedLine(r) : ""}</p>` +
       (lines.length ? `<ul class="lxcatch">${lines.map((l) => `<li>${l}</li>`).join("")}</ul>` : "") +
-      `<p class="lxmeta">Good for: ${esc(tasks)} · Licence: ${esc(model.license)}${hf}</p>` +
+      `<p class="lxmeta">Good for: ${esc(tasks)} · Licence: ${esc(model.license)}</p>` +
       (S.n ? numbers(row, mc) : "") +
-      (r.verdict === "no" ? "" :
+      (no ? "" :
         `<button class="lxhow" type="button" aria-expanded="${open ? "true" : "false"}" aria-controls="how-${esc(model.id)}" data-how="${esc(model.id)}">How to run it</button>` +
-        `<div class="lxhowb" id="how-${esc(model.id)}"${open ? "" : " hidden"}>${open ? howto(model, r, mc) : ""}</div>`) +
+        `<div class="lxhowb" id="how-${esc(model.id)}"${open ? "" : " hidden"}>${open ? howto(row, mc, ctx) : ""}</div>`) +
       "</li>";
   };
 
+  // The expert view: the fit method's own numbers, unrounded except for display.
   const numbers = (row, mc) => {
-    const {model, r} = row, n = r.need, gb = U.gb;
-    const where = {gpu: mc.m.unified ? "all in shared memory" : "all on the graphics card", cpu: "on the processor",
-                   split: `split: ${Math.round(r.gpu_frac * 100)}% on the graphics card, the rest on the processor`}[r.place] || "doesn't fit";
-    const qs = model.quants.map((q) => `<option value="${esc(q.q)}"${q.q === r.quant ? " selected" : ""}>${esc(q.q)} (${gb(q.gb)} GB)</option>`).join("");
+    const {model, r} = row, f = r.fit, gb = U.gb, m = U.modelOf(model);
+    const shared = mc.hw.unified;
+    const where = {gpu: shared ? "all on the graphics, in shared memory" : "all on the graphics card",
+                   cpu: "on the processor, from RAM",
+                   partial: shared ? "graphics and processor, sharing memory"
+                     : `${f.gpuLayers} of ${f.layers} layers on the graphics card, the rest from RAM`}[f.placement] || "doesn’t fit";
+    const qs = U.ggufs(m).map((q) => `<option value="${esc(q.quant)}"${q.quant === r.quant ? " selected" : ""}>${esc(q.label || q.quant)} (${gb(q.bytes / 1e9)} GB)</option>`).join("");
+    const active = m.params_active && m.params_active < m.params_total ? `, ${(m.params_active / 1e9).toFixed(1)}B active per word` : "";
+    const sp = r.speed;
     return `<dl class="lxnums">` +
       `<dt>Version</dt><dd><label class="sr" for="qv-${esc(model.id)}">Quantisation for ${esc(model.name)}</label>` +
       `<select id="qv-${esc(model.id)}" data-quant="${esc(model.id)}">${qs}</select></dd>` +
-      `<dt>Weights</dt><dd>${gb(n.weights)} GB</dd>` +
-      `<dt>Context cache</dt><dd>${gb(n.kv)} GB at ${(r.ctx / 1024) | 0}k tokens</dd>` +
-      `<dt>Working memory</dt><dd>${gb(n.overhead)} GB</dd>` +
-      `<dt>Total</dt><dd>${gb(n.total)} GB of ${gb(r.have)} GB${r.tps ? ` (${Math.round(r.headroom * 100)}% to spare)` : ""}</dd>` +
+      `<dt>Weights</dt><dd>${gb(f.weightsGB)} GB</dd>` +
+      `<dt>Context cache</dt><dd>${gb(f.kvGB)} GB at ${(f.context / 1024) | 0}k tokens</dd>` +
+      `<dt>Working memory</dt><dd>${gb(f.bufferGB)} GB</dd>` +
+      `<dt>Total</dt><dd>${gb(f.totalGB)} GB of ${gb(U.have(f, mc.hw))} GB` + (f.fits && f.headroomGB != null ? ` (${gb(f.headroomGB)} GB to spare)` : "") + `</dd>` +
       `<dt>Runs</dt><dd>${where}</dd>` +
-      (r.tps ? `<dt>Speed</dt><dd>${r.tps[0].toFixed(0)}–${r.tps[2].toFixed(0)} tokens/s (estimate)</dd>` : "") +
-      `<dt>Size</dt><dd>${model.params_b}B parameters${model.active_b < model.params_b ? `, ${model.active_b}B active per token` : ""}</dd>` +
+      (sp ? `<dt>Writing</dt><dd>${sp.decodeRange[0].toFixed(0)}–${sp.decodeRange[1].toFixed(0)} tokens/s (${esc(sp.backend)}, estimate)</dd>` +
+            `<dt>Reading</dt><dd>a 20-page document (10k tokens) in about ${Math.max(1, Math.round(10000 / sp.prefillTps))} s</dd>` : "") +
+      `<dt>Size</dt><dd>${(m.params_total / 1e9).toFixed(1)}B parameters${active}</dd>` +
       `</dl>`;
   };
 
-  const howto = (model, r, mc) => {
-    const apple = mc.m.unified && mc.m.backend === "metal";
+  const howto = (row, mc, ctx) => {
+    const {model, r} = row;
     const os = S.o && D.howto.ollama.steps[S.o] ? S.o : mc.os;
-    const rs = U.routes(model, os, apple);
+    const rs = U.routes(model, r, os, U.apple(mc));
     const route = rs.includes(S.w) ? S.w : (rs.includes(U.defaultRoute(os)) ? U.defaultRoute(os) : rs[0]);
     const h = D.howto[route];
     const oses = ["windows", "macos", "linux", "steamos"];
-    const steps = h.steps[os].map((st) => Array.isArray(st)
-      ? `<div class="lxcmd"><code>${U.fill(st[1], model, r.quant)}</code><button class="lxcopy" type="button" data-copy>Copy</button></div>`
-      : `<li>${U.fill(st, model, r.quant)}</li>`);
     // Commands sit inside the step before them, so the list numbers stay the steps a person does.
     const ol = [];
-    for (const s of steps) { if (s.startsWith("<li>")) ol.push(s); else if (ol.length) ol[ol.length - 1] = ol[ol.length - 1].replace(/<\/li>$/, s + "</li>"); else ol.push(`<li>${s}</li>`); }
-    const size = model.quants.find((q) => q.q === r.quant).gb, mins = Math.max(1, Math.round(size * 8000 / 50 / 60));
+    for (const [kind, html] of U.steps(route, os, model, r, ctx)) {
+      if (kind === "li") { ol.push(`<li>${html}</li>`); continue; }
+      const cmd = `<div class="lxcmd"><code>${html}</code><button class="lxcopy" type="button" data-copy>Copy</button></div>`;
+      if (ol.length) ol[ol.length - 1] = ol[ol.length - 1].replace(/<\/li>$/, cmd + "</li>"); else ol.push(`<li>${cmd}</li>`);
+    }
+    const size = (r.file && r.file.bytes ? r.file.bytes : r.fit.weightsGB * 1e9) / 1e9;
+    const mins = Math.max(1, Math.round(size * 8000 / 50 / 60));
     return `<div class="lxroutes" role="group" aria-label="How to run it"><span class="lxpl">Use</span>` +
       rs.map((k) => `<button class="chip" type="button" data-route="${k}" aria-pressed="${k === route}">${esc(D.howto[k].label)}</button>`).join("") + `</div>` +
       `<p class="lxpitch">${esc(h.pitch)}</p>` +
@@ -395,29 +479,29 @@ const LOCALUI = ((D, FIT) => {
     const mc = U.machineOf(S, UA), out = $("results");
     if (!mc) { $("mach").textContent = "Pick your computer above and the answers appear here."; out.innerHTML = ""; return; }
     $("mach").innerHTML = U.machineWords(mc);
-    const g = U.groups(U.assess(mc.m, ctx, qover), S.t, showAll);
+    const g = U.groups(U.assess(mc.hw, ctx, qover), S.t, showAll);
     // The pick's how-to opens by itself, because most readers should stop there. When the pick changes, the
     // old one's panel closes with it, unless the reader opened it themselves.
     const bestId = g.best && g.best.model.id;
     if (bestId !== autoBest) { if (autoBest) opened.delete(autoBest); if (bestId) opened.add(bestId); autoBest = bestId; }
-    const list = (rows) => `<ul class="lxcards">${rows.map((x) => card(x, mc, opened.has(x.model.id) && x.model.id !== bestId)).join("")}</ul>`;
+    const list = (rows) => `<ul class="lxcards">${rows.map((x) => card(x, mc, ctx, opened.has(x.model.id) && x.model.id !== bestId)).join("")}</ul>`;
     const greatRest = g.great.filter((x) => x.model.id !== bestId);
     const cap = moreGreat ? greatRest.length : 5;
     let html = "";
-    if (g.best) html += `<div class="lxbest" id="best"><p>Our pick for you</p><ul class="lxcards">${card(g.best, mc, opened.has(bestId))}</ul></div>`;
-    else html += `<p class="lxnote">Nothing we recommend fits on this machine as it is. The smallest models need about 1.5 GB free; see what would make one fit below.</p>`;
+    if (g.best) html += `<div class="lxbest" id="best"><p>Our pick for you</p><ul class="lxcards">${card(g.best, mc, ctx, opened.has(bestId))}</ul></div>`;
+    else html += `<p class="lxnote">Nothing we recommend runs well on this machine as it is. Anything that only fits squeezed is below; so is what would make the rest fit.</p>`;
     if (S.t.length || g.hidden) html += `<p class="lxnote">` + (S.t.length && !showAll
       ? `Showing models good for ${esc(S.t.map((t) => TASKS[t].toLowerCase()).join(" or "))}. ${g.hidden} others hidden. <button class="lxlink" type="button" id="showall">Show all models</button>`
       : `Showing every model. <button class="lxlink" type="button" id="showall">Only ${esc(S.t.map((t) => TASKS[t].toLowerCase()).join(" or "))}</button>`) + "</p>";
-    if (greatRest.length) html += `<section class="lxgroup" aria-labelledby="hg"><h3 id="hg"><span aria-hidden="true">${VERDICT.great[0]}</span> ${g.best && g.best.r.verdict === "great" ? "Also runs great" : "Runs great"} <span class="ct">${greatRest.length}</span></h3>${list(greatRest.slice(0, cap))}` +
+    if (greatRest.length) html += `<section class="lxgroup" aria-labelledby="hg"><h3 id="hg"><span aria-hidden="true">${SHAPE.great}</span> ${g.best && g.best.r.verdict === "great" ? "Also runs great" : "Runs great"} <span class="ct">${greatRest.length}</span></h3>${list(greatRest.slice(0, cap))}` +
       (greatRest.length > cap ? `<p class="lxmore"><button class="chip" type="button" id="moregreat">Show ${greatRest.length - cap} more</button></p>` : "") + "</section>";
     const okRest = g.ok.filter((x) => x.model.id !== bestId);
-    if (okRest.length) html += `<section class="lxgroup" aria-labelledby="ho"><h3 id="ho"><span aria-hidden="true">${VERDICT.ok[0]}</span> Runs, with a catch <span class="ct">${okRest.length}</span></h3>${list(okRest)}</section>`;
-    if (g.no.length) html += `<details class="lxgroup lxnofit" id="nofit"><summary><span aria-hidden="true">${VERDICT.no[0]}</span> ${g.no.length} bigger model${g.no.length === 1 ? "" : "s"} won’t fit</summary>${list(g.no)}</details>`;
+    if (okRest.length) html += `<section class="lxgroup" aria-labelledby="ho"><h3 id="ho"><span aria-hidden="true">${SHAPE.slow}</span> Runs, with a catch <span class="ct">${okRest.length}</span></h3>${list(okRest)}</section>`;
+    if (g.no.length) html += `<details class="lxgroup lxnofit" id="nofit"><summary><span aria-hidden="true">${SHAPE["too-big"]}</span> ${g.no.length} bigger model${g.no.length === 1 ? "" : "s"} won’t fit</summary>${list(g.no)}</details>`;
     const wasOpen = $("nofit") && $("nofit").open;
     out.innerHTML = html;
     if (wasOpen && $("nofit")) $("nofit").open = true;
-    $("live").textContent = `For ${mc.name} with ${mc.m.ram_gb} GB: ${g.great.length} run great, ${g.ok.length} with a catch, ${g.no.length} won’t fit.` +
+    $("live").textContent = `For ${mc.name} with ${mc.hw.ram_gb} GB: ${g.great.length} run great, ${g.ok.length} with a catch, ${g.no.length} won’t fit.` +
       (g.best ? ` Our pick is ${g.best.model.name}.` : "");
   };
 
@@ -442,7 +526,11 @@ const LOCALUI = ((D, FIT) => {
     if (how) {
       const id = how.dataset.how, panel = $("how-" + id), open = how.getAttribute("aria-expanded") !== "true";
       how.setAttribute("aria-expanded", String(open));
-      if (open) { opened.add(id); const mc = U.machineOf(S, UA); const row = U.assess(mc.m, S.c || D.default_ctx, qover).find((x) => x.model.id === id); panel.innerHTML = howto(row.model, row.r, mc); }
+      if (open) {
+        opened.add(id);
+        const mc = U.machineOf(S, UA), ctx = S.c || D.default_ctx;
+        panel.innerHTML = howto({model: U.PICK[id], r: U.judge(U.PICK[id], mc.hw, ctx, qover[id])}, mc, ctx);
+      }
       else opened.delete(id);
       panel.hidden = !open;
       return;

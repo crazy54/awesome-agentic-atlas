@@ -225,7 +225,7 @@ const HARNESSES = [
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
   {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, the host in docs/CNAME, and the monitoring tags", python: true, floor: 34},
   {file: "spotlight_test.py", label: "the daily spotlight and line: one rule in Python and in the page, the pool, the refusals", python: true, floor: 300},
-  {file: "local_test.py", label: "the local-AI page: catalogue and picks refused when wrong, the fit maths identical in Python and JS, the page and its wiring", python: true, floor: 85},
+  {file: "local_test.py", label: "the local-AI page: catalogue and picks refused when wrong, the vendored fit method inlined faithfully, the page and its wiring", python: true, floor: 85},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
   {file: "detail-churn.mjs", label: "every detail page, regenerated and hashed", floor: 7},
   {file: "detail-preview-check.mjs", label: "rendered repository reader, source and phone layout", needs: "browser", floor: 12},

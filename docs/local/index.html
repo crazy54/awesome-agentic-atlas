@@ -25,16 +25,6 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of pages.css. After paint `label()`
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a topic page
-  // would otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to
-  // graphite for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
   var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
                glass: {dark: "#12141D", light: "#F8FAFF"},
                terminal: {dark: "#0A1315", light: "#F9FCF9"},
@@ -44,8 +34,6 @@ try {
                blueprint: {dark: "#0D4399", light: "#FBFDFF"},
                aurora: {dark: "#101936", light: "#FBFCFF"},
                holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
   var LOCKED = {holo: 1};
   var s = localStorage.getItem("atlas-skin");
   if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
@@ -57,7 +45,6 @@ try {
 <link rel="stylesheet" href="../pages.css">
 <style>
 .lx .wrap{max-width:980px}
-/* Several rules below set `display`, which outranks the UA's `[hidden]{display:none}`; this puts it back. */
 .lx [hidden]{display:none!important}
 .kick{margin:0 0 4px;color:var(--muted);font:600 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase}
 .lxs{margin:26px 0 0;padding:20px;border:1px solid var(--grid);border-radius:14px;background:var(--plane)}
@@ -298,7 +285,7 @@ html:not(.lxjs) #s1,html:not(.lxjs) #s2,html:not(.lxjs) #s3{display:none}
 <section class="lxs" id="cheat" aria-labelledby="cheath">
   <h2 id="cheath">Quick answer by machine</h2>
   <p class="lxquiet">The same maths as the picker, for some common machines, at an 8k context.</p>
-  <table class="lxcheat"><caption class="sr">What runs on common machines</caption><thead><tr><th scope="col">If you have</th><th scope="col">Runs great</th><th scope="col">Also runs, more slowly or snugly</th></tr></thead><tbody><tr><th scope="row">A laptop with 8 GB and no graphics card</th><td>Llama 3.2 1B</td><td>&mdash;</td></tr><tr><th scope="row">A laptop with 16 GB and no graphics card</th><td>Qwen3 8B, Qwen2.5 Coder 7B, Llama 3.1 8B</td><td>Qwen3 14B, Gemma 3 12B</td></tr><tr><th scope="row">A Steam Deck or ROG Ally (16 GB shared)</th><td>Qwen3 8B, Qwen2.5 Coder 7B, Qwen2.5 VL 7B</td><td>Qwen3 14B, Gemma 3 12B</td></tr><tr><th scope="row">A Mac with 16 GB</th><td>Qwen3 8B, Qwen2.5 Coder 7B, Qwen2.5 VL 7B</td><td>Qwen3 14B, Gemma 3 12B</td></tr><tr><th scope="row">A Mac with 32 GB (M-series Pro)</th><td>Mistral Small 3.2 24B, gpt-oss 20B, Qwen3 14B</td><td>Qwen3 32B, Qwen3 Coder 30B-A3B</td></tr><tr><th scope="row">A PC with an 8 GB graphics card and 32 GB RAM</th><td>Qwen3 Coder 30B-A3B, Qwen3 30B-A3B, gpt-oss 20B</td><td>Qwen3 32B, Gemma 3 27B</td></tr><tr><th scope="row">A PC with a 12 GB graphics card and 32 GB RAM</th><td>Qwen3 Coder 30B-A3B, Qwen3 30B-A3B, Mistral Small 3.2 24B</td><td>Llama 3.3 70B, Qwen3 32B</td></tr><tr><th scope="row">A PC with a 16 GB graphics card and 32 GB RAM</th><td>Qwen3 Coder 30B-A3B, Qwen3 30B-A3B, Gemma 3 27B</td><td>Llama 3.3 70B, Qwen3 32B</td></tr><tr><th scope="row">A PC with a 24 GB graphics card and 64 GB RAM</th><td>gpt-oss 120B, Mistral Small 3.2 24B, gpt-oss 20B</td><td>Llama 3.3 70B, Qwen3 32B</td></tr><tr><th scope="row">A Mac or mini PC with 128 GB unified memory</th><td>gpt-oss 120B, Llama 3.3 70B, Qwen3 32B</td><td>&mdash;</td></tr></tbody></table>
+  <table class="lxcheat"><caption class="sr">What runs on common machines</caption><thead><tr><th scope="col">If you have</th><th scope="col">Runs great</th><th scope="col">Also runs, more slowly or squeezed</th></tr></thead><tbody><tr><th scope="row">A laptop with 8 GB and no graphics card</th><td>Llama 3.2 3B, Llama 3.2 1B</td><td>Qwen3 4B</td></tr><tr><th scope="row">A laptop with 16 GB and no graphics card</th><td>Llama 3.2 3B, Llama 3.2 1B</td><td>Qwen3 14B, Gemma 3 12B</td></tr><tr><th scope="row">A Steam Deck (16 GB shared)</th><td>gpt-oss 20B, Qwen2.5 Coder 7B, Qwen2.5 VL 7B</td><td>Qwen3 14B, Gemma 3 12B</td></tr><tr><th scope="row">A Mac with 16 GB (M-series)</th><td>gpt-oss 20B, Qwen2.5 Coder 7B, Qwen2.5 VL 7B</td><td>Qwen3 14B, Gemma 3 12B</td></tr><tr><th scope="row">A Mac with 36 GB (M-series Pro or Max)</th><td>Qwen3 Coder 30B-A3B, Qwen3 30B-A3B, Gemma 3 27B</td><td>Qwen3 32B, Qwen3 14B</td></tr><tr><th scope="row">A PC with an 8 GB graphics card and 32 GB RAM</th><td>Qwen3 Coder 30B-A3B, Qwen3 30B-A3B, gpt-oss 20B</td><td>Qwen3 32B, Gemma 3 27B</td></tr><tr><th scope="row">A PC with a 12 GB graphics card and 32 GB RAM</th><td>Qwen3 Coder 30B-A3B, Qwen3 30B-A3B, gpt-oss 20B</td><td>Qwen3 32B, Gemma 3 27B</td></tr><tr><th scope="row">A PC with a 16 GB graphics card and 32 GB RAM</th><td>Qwen3 Coder 30B-A3B, Qwen3 30B-A3B, Gemma 3 27B</td><td>Qwen3 32B</td></tr><tr><th scope="row">A PC with a 24 GB graphics card and 64 GB RAM</th><td>gpt-oss 120B, Qwen3 32B, Qwen3 Coder 30B-A3B</td><td>Llama 3.3 70B</td></tr><tr><th scope="row">A Mac with 128 GB (M-series Max)</th><td>gpt-oss 120B, Qwen3 Coder 30B-A3B, Qwen3 30B-A3B</td><td>Llama 3.3 70B, Qwen3 32B</td></tr></tbody></table>
 </section>
 
 <section class="lxs" id="learn" aria-labelledby="learnh">
@@ -327,13 +314,15 @@ html:not(.lxjs) #s1,html:not(.lxjs) #s2,html:not(.lxjs) #s3{display:none}
       about 1.3 tokens, so 10 tokens a second is about 7 or 8 words a second, faster than most people
       read.</p></details>
   <details id="q-how"><summary>How we worked these numbers out</summary>
-    <p>A model needs its download size, plus memory for its context, plus about 0.6 GB to work
-      in. Your machine offers a share of its memory, by a rule for each kind of machine. Speed comes from how
-      fast your memory can be read, because every word means reading the whole active model once. We
-      assume about 60% of the datasheet speed on a graphics card, and show a range of
-      &minus;30% to +30%. Real speed
-      depends on the app, drivers and settings, so treat it as a guide. The code is
-      <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/scripts/localfit.js">open</a>.</p></details>
+    <p>A model needs its download size, plus memory for its context, plus a little working space. Your
+      machine offers a share of its memory, by one rule for each kind of machine: what a graphics card keeps
+      for its driver and the screen, what macOS lets the graphics use, what Windows keeps for itself. Speed
+      comes from how fast that memory can be read, because writing each word means reading the active part of
+      the model once. The method is fitted to 144 published speed measurements across Macs, NVIDIA, AMD and
+      Intel graphics, handhelds and processors, and lands within about 5% of them typically and 17% at worst
+      for nine in ten. Real speed also depends on the app, drivers and settings, so every speed is shown as a
+      range. The method is written up
+      <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/scripts/localfit.mjs">with its sources</a>.</p></details>
 </section>
 </div></main>
 <footer><div class="wrap">
@@ -342,158 +331,554 @@ html:not(.lxjs) #s1,html:not(.lxjs) #s2,html:not(.lxjs) #s3{display:none}
   download sizes come from each model&rsquo;s own release; speeds are estimates. Everything runs in your
   browser. Nothing you pick is sent anywhere.
 </div></footer>
-<script type="application/json" id="lxdata">{"page":{"title":"Run It Local","slug":"local","pitch":"What AI can your computer run? Find out in a minute, then copy two lines to run it."},"kinds":[{"id":"laptop","label":"Laptop","hint":"Windows or Linux"},{"id":"mac","label":"Mac","hint":"MacBook, iMac, Mac mini, Studio"},{"id":"gaming","label":"Gaming PC","hint":"a desktop with a graphics card"},{"id":"desktop","label":"Desktop","hint":"office or home PC"},{"id":"handheld","label":"Handheld","hint":"Steam Deck, ROG Ally, Legion Go"},{"id":"minipc","label":"Mini PC","hint":"small box, AI workstation"}],"devices":[{"id":"macbook-air-m1","kind":"mac","name":"MacBook Air (M1)","aliases":["mba m1","air m1"],"year":2020,"os":["macos"],"ram_gb_options":[8,16],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":68,"backend":"metal","webgl":["apple m1"],"popular":true},{"id":"macbook-air-m2","kind":"mac","name":"MacBook Air (M2)","aliases":["mba m2","air m2"],"year":2022,"os":["macos"],"ram_gb_options":[8,16,24],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":100,"backend":"metal","webgl":["apple m2"],"popular":true},{"id":"macbook-air-m3","kind":"mac","name":"MacBook Air (M3)","aliases":["mba m3","air m3"],"year":2024,"os":["macos"],"ram_gb_options":[8,16,24],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":100,"backend":"metal","webgl":["apple m3"],"popular":true},{"id":"macbook-air-m4","kind":"mac","name":"MacBook Air (M4)","aliases":["mba m4","air m4"],"year":2025,"os":["macos"],"ram_gb_options":[16,24,32],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":120,"backend":"metal","webgl":["apple m4"],"popular":true},{"id":"macbook-pro-m1-pro","kind":"mac","name":"MacBook Pro (M1 Pro)","aliases":["mbp m1 pro"],"year":2021,"os":["macos"],"ram_gb_options":[16,32],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":200,"backend":"metal","webgl":["apple m1 pro"]},{"id":"macbook-pro-m1-max","kind":"mac","name":"MacBook Pro (M1 Max)","aliases":["mbp m1 max"],"year":2021,"os":["macos"],"ram_gb_options":[32,64],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":400,"backend":"metal","webgl":["apple m1 max"]},{"id":"macbook-pro-m3-pro","kind":"mac","name":"MacBook Pro (M3 Pro)","aliases":["mbp m3 pro"],"year":2023,"os":["macos"],"ram_gb_options":[18,36],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":150,"backend":"metal","webgl":["apple m3 pro"]},{"id":"macbook-pro-m4","kind":"mac","name":"MacBook Pro 14 (M4)","aliases":["mbp m4"],"year":2024,"os":["macos"],"ram_gb_options":[16,24,32],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":120,"backend":"metal","webgl":["apple m4"]},{"id":"macbook-pro-m4-pro","kind":"mac","name":"MacBook Pro (M4 Pro)","aliases":["mbp m4 pro"],"year":2024,"os":["macos"],"ram_gb_options":[24,48],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":273,"backend":"metal","webgl":["apple m4 pro"],"popular":true},{"id":"macbook-pro-m4-max","kind":"mac","name":"MacBook Pro (M4 Max)","aliases":["mbp m4 max"],"year":2024,"os":["macos"],"ram_gb_options":[36,48,64,128],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":546,"backend":"metal","webgl":["apple m4 max"]},{"id":"mac-mini-m4","kind":"mac","name":"Mac mini (M4)","aliases":["mini m4"],"year":2024,"os":["macos"],"ram_gb_options":[16,24,32],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":120,"backend":"metal","webgl":["apple m4"],"popular":true},{"id":"mac-mini-m4-pro","kind":"mac","name":"Mac mini (M4 Pro)","aliases":["mini m4 pro"],"year":2024,"os":["macos"],"ram_gb_options":[24,48,64],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":273,"backend":"metal","webgl":["apple m4 pro"]},{"id":"mac-studio-m2-ultra","kind":"mac","name":"Mac Studio (M2 Ultra)","aliases":["studio m2 ultra"],"year":2023,"os":["macos"],"ram_gb_options":[64,128,192],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":800,"backend":"metal","webgl":["apple m2 ultra"]},{"id":"mac-studio-m3-ultra","kind":"mac","name":"Mac Studio (M3 Ultra)","aliases":["studio m3 ultra"],"year":2025,"os":["macos"],"ram_gb_options":[96,256,512],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":819,"backend":"metal","webgl":["apple m3 ultra"]},{"id":"steam-deck-lcd","kind":"handheld","name":"Steam Deck (LCD)","aliases":["deck","steamdeck"],"year":2022,"os":["steamos"],"ram_gb_options":[16],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":88,"backend":"vulkan","webgl":["vangogh","custom gpu 0405"],"popular":true},{"id":"steam-deck-oled","kind":"handheld","name":"Steam Deck OLED","aliases":["deck oled"],"year":2023,"os":["steamos"],"ram_gb_options":[16],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":102,"backend":"vulkan","webgl":["custom gpu 0932","sephiroth"],"popular":true},{"id":"rog-ally","kind":"handheld","name":"ROG Ally (Z1 Extreme)","aliases":["ally","asus ally"],"year":2023,"os":["windows"],"ram_gb_options":[16],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":120,"backend":"vulkan","webgl":["z1 extreme"],"popular":true},{"id":"rog-ally-x","kind":"handheld","name":"ROG Ally X","aliases":["ally x"],"year":2024,"os":["windows"],"ram_gb_options":[24],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":128,"backend":"vulkan","webgl":["z1 extreme"],"popular":true},{"id":"legion-go","kind":"handheld","name":"Lenovo Legion Go","aliases":["legion go"],"year":2023,"os":["windows"],"ram_gb_options":[16],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":120,"backend":"vulkan","webgl":["z1 extreme"],"popular":true},{"id":"msi-claw-8","kind":"handheld","name":"MSI Claw 8 AI+","aliases":["claw","claw 8"],"year":2025,"os":["windows"],"ram_gb_options":[32],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":136,"backend":"vulkan","webgl":["arc(tm) 140v","arc 140v"]},{"id":"laptop-office-8","kind":"laptop","name":"Everyday laptop, no graphics card","aliases":["office laptop","integrated graphics","intel iris","ultrabook"],"year":2022,"os":["windows","linux"],"ram_gb_options":[8,16,32],"unified":false,"gpu":null,"vram_gb":0,"bw_gbs":70,"backend":"cpu","webgl":["iris","uhd graphics","radeon(tm) graphics"],"popular":true},{"id":"laptop-copilot-x-elite","kind":"laptop","name":"Copilot+ laptop (Snapdragon X Elite)","aliases":["snapdragon","x elite","surface laptop 7"],"year":2024,"os":["windows"],"ram_gb_options":[16,32],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":135,"backend":"cpu","webgl":["adreno"]},{"id":"laptop-lunar-lake","kind":"laptop","name":"Intel Core Ultra 200V laptop (Lunar Lake)","aliases":["lunar lake","core ultra 7 258v"],"year":2024,"os":["windows"],"ram_gb_options":[16,32],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":136,"backend":"vulkan","webgl":["arc(tm) 140v","arc 140v","arc(tm) 130v"]},{"id":"laptop-rtx-4050","kind":"laptop","name":"Gaming laptop with RTX 4050","aliases":["4050 laptop"],"year":2023,"os":["windows","linux"],"ram_gb_options":[16,32],"unified":false,"gpu":"rtx-4050-laptop","vram_gb":6,"bw_gbs":80,"backend":"cuda","webgl":["rtx 4050"]},{"id":"laptop-rtx-4060","kind":"laptop","name":"Gaming laptop with RTX 4060","aliases":["4060 laptop","legion 5","rog strix g16"],"year":2023,"os":["windows","linux"],"ram_gb_options":[16,32],"unified":false,"gpu":"rtx-4060-laptop","vram_gb":8,"bw_gbs":80,"backend":"cuda","webgl":["rtx 4060 laptop"],"popular":true},{"id":"laptop-rtx-4070","kind":"laptop","name":"Gaming laptop with RTX 4070","aliases":["4070 laptop"],"year":2023,"os":["windows","linux"],"ram_gb_options":[16,32],"unified":false,"gpu":"rtx-4070-laptop","vram_gb":8,"bw_gbs":80,"backend":"cuda","webgl":["rtx 4070 laptop"]},{"id":"laptop-rtx-4090","kind":"laptop","name":"Gaming laptop with RTX 4090","aliases":["4090 laptop"],"year":2023,"os":["windows","linux"],"ram_gb_options":[32,64],"unified":false,"gpu":"rtx-4090-laptop","vram_gb":16,"bw_gbs":85,"backend":"cuda","webgl":["rtx 4090 laptop"]},{"id":"rog-flow-z13-395","kind":"laptop","name":"ROG Flow Z13 (Ryzen AI Max+ 395)","aliases":["strix halo","flow z13","ai max"],"year":2025,"os":["windows","linux"],"ram_gb_options":[32,64,128],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":256,"backend":"vulkan","webgl":["8060s"]},{"id":"desktop-office","kind":"desktop","name":"Office or family PC, no graphics card","aliases":["dell optiplex","hp desktop","integrated"],"year":2021,"os":["windows","linux"],"ram_gb_options":[8,16,32],"unified":false,"gpu":null,"vram_gb":0,"bw_gbs":50,"backend":"cpu","webgl":["uhd graphics","radeon(tm) graphics"],"popular":true},{"id":"framework-desktop-395","kind":"minipc","name":"Framework Desktop (Ryzen AI Max+ 395)","aliases":["framework desktop","strix halo"],"year":2025,"os":["windows","linux"],"ram_gb_options":[64,128],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":256,"backend":"vulkan","webgl":["8060s"],"popular":true},{"id":"dgx-spark","kind":"minipc","name":"NVIDIA DGX Spark","aliases":["spark","gb10"],"year":2025,"os":["linux"],"ram_gb_options":[128],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":273,"backend":"cuda","webgl":["gb10"],"popular":true},{"id":"minipc-780m","kind":"minipc","name":"Mini PC with Ryzen 7 8845HS (780M)","aliases":["beelink","minisforum","780m"],"year":2024,"os":["windows","linux"],"ram_gb_options":[16,32,64],"unified":true,"gpu":null,"vram_gb":0,"bw_gbs":90,"backend":"vulkan","webgl":["780m"]},{"id":"raspberry-pi-5","kind":"minipc","name":"Raspberry Pi 5","aliases":["pi 5","rpi"],"year":2023,"os":["linux"],"ram_gb_options":[4,8,16],"unified":false,"gpu":null,"vram_gb":0,"bw_gbs":17,"backend":"cpu","webgl":["v3d"]}],"gpus":[{"id":"rtx-5090","name":"GeForce RTX 5090","vendor":"nvidia","vram_gb_options":[32],"bw_gbs":1792,"backend":"cuda","aliases":["5090"],"webgl":["rtx 5090"]},{"id":"rtx-5080","name":"GeForce RTX 5080","vendor":"nvidia","vram_gb_options":[16],"bw_gbs":960,"backend":"cuda","aliases":["5080"],"webgl":["rtx 5080"]},{"id":"rtx-5070-ti","name":"GeForce RTX 5070 Ti","vendor":"nvidia","vram_gb_options":[16],"bw_gbs":896,"backend":"cuda","aliases":["5070 ti"],"webgl":["rtx 5070 ti"]},{"id":"rtx-5070","name":"GeForce RTX 5070","vendor":"nvidia","vram_gb_options":[12],"bw_gbs":672,"backend":"cuda","aliases":["5070"],"webgl":["rtx 5070"]},{"id":"rtx-5060-ti","name":"GeForce RTX 5060 Ti","vendor":"nvidia","vram_gb_options":[8,16],"bw_gbs":448,"backend":"cuda","aliases":["5060 ti"],"webgl":["rtx 5060 ti"]},{"id":"rtx-4090","name":"GeForce RTX 4090","vendor":"nvidia","vram_gb_options":[24],"bw_gbs":1008,"backend":"cuda","aliases":["4090"],"webgl":["rtx 4090"]},{"id":"rtx-4080","name":"GeForce RTX 4080 / 4080 Super","vendor":"nvidia","vram_gb_options":[16],"bw_gbs":717,"backend":"cuda","aliases":["4080","4080 super"],"webgl":["rtx 4080"]},{"id":"rtx-4070-ti-super","name":"GeForce RTX 4070 Ti Super","vendor":"nvidia","vram_gb_options":[16],"bw_gbs":672,"backend":"cuda","aliases":["4070 ti super"],"webgl":["rtx 4070 ti super"]},{"id":"rtx-4070","name":"GeForce RTX 4070 / 4070 Super / 4070 Ti","vendor":"nvidia","vram_gb_options":[12],"bw_gbs":504,"backend":"cuda","aliases":["4070","4070 super","4070 ti"],"webgl":["rtx 4070"]},{"id":"rtx-4060-ti","name":"GeForce RTX 4060 Ti","vendor":"nvidia","vram_gb_options":[8,16],"bw_gbs":288,"backend":"cuda","aliases":["4060 ti"],"webgl":["rtx 4060 ti"]},{"id":"rtx-4060","name":"GeForce RTX 4060","vendor":"nvidia","vram_gb_options":[8],"bw_gbs":272,"backend":"cuda","aliases":["4060"],"webgl":["rtx 4060"]},{"id":"rtx-3090","name":"GeForce RTX 3090 / 3090 Ti","vendor":"nvidia","vram_gb_options":[24],"bw_gbs":936,"backend":"cuda","aliases":["3090"],"webgl":["rtx 3090"]},{"id":"rtx-3080","name":"GeForce RTX 3080","vendor":"nvidia","vram_gb_options":[10,12],"bw_gbs":760,"backend":"cuda","aliases":["3080"],"webgl":["rtx 3080"]},{"id":"rtx-3070","name":"GeForce RTX 3070 / 3070 Ti","vendor":"nvidia","vram_gb_options":[8],"bw_gbs":448,"backend":"cuda","aliases":["3070"],"webgl":["rtx 3070"]},{"id":"rtx-3060","name":"GeForce RTX 3060","vendor":"nvidia","vram_gb_options":[12,8],"bw_gbs":360,"backend":"cuda","aliases":["3060"],"webgl":["rtx 3060"]},{"id":"gtx-1660","name":"GeForce GTX 1660 / 1660 Super","vendor":"nvidia","vram_gb_options":[6],"bw_gbs":336,"backend":"cuda","aliases":["1660"],"webgl":["gtx 1660"]},{"id":"rx-9070-xt","name":"Radeon RX 9070 XT","vendor":"amd","vram_gb_options":[16],"bw_gbs":640,"backend":"vulkan","aliases":["9070 xt","9070"],"webgl":["rx 9070"]},{"id":"rx-7900-xtx","name":"Radeon RX 7900 XTX","vendor":"amd","vram_gb_options":[24],"bw_gbs":960,"backend":"rocm","aliases":["7900 xtx"],"webgl":["rx 7900 xtx"]},{"id":"rx-7800-xt","name":"Radeon RX 7800 XT","vendor":"amd","vram_gb_options":[16],"bw_gbs":624,"backend":"vulkan","aliases":["7800 xt"],"webgl":["rx 7800 xt"]},{"id":"rx-7600","name":"Radeon RX 7600","vendor":"amd","vram_gb_options":[8],"bw_gbs":288,"backend":"vulkan","aliases":["7600"],"webgl":["rx 7600"]},{"id":"rx-6700-xt","name":"Radeon RX 6700 XT","vendor":"amd","vram_gb_options":[12],"bw_gbs":384,"backend":"vulkan","aliases":["6700 xt"],"webgl":["rx 6700 xt"]},{"id":"arc-b580","name":"Intel Arc B580","vendor":"intel","vram_gb_options":[12],"bw_gbs":456,"backend":"vulkan","aliases":["b580"],"webgl":["arc(tm) b580","arc b580"]},{"id":"rtx-4090-laptop","name":"GeForce RTX 4090 Laptop","vendor":"nvidia","vram_gb_options":[16],"bw_gbs":576,"backend":"cuda","aliases":["4090 laptop","4090 mobile"],"webgl":["rtx 4090 laptop"]},{"id":"rtx-4080-laptop","name":"GeForce RTX 4080 Laptop","vendor":"nvidia","vram_gb_options":[12],"bw_gbs":432,"backend":"cuda","aliases":["4080 laptop"],"webgl":["rtx 4080 laptop"]},{"id":"rtx-4070-laptop","name":"GeForce RTX 4070 Laptop","vendor":"nvidia","vram_gb_options":[8],"bw_gbs":256,"backend":"cuda","aliases":["4070 laptop"],"webgl":["rtx 4070 laptop"]},{"id":"rtx-4060-laptop","name":"GeForce RTX 4060 Laptop","vendor":"nvidia","vram_gb_options":[8],"bw_gbs":256,"backend":"cuda","aliases":["4060 laptop"],"webgl":["rtx 4060 laptop"]},{"id":"rtx-4050-laptop","name":"GeForce RTX 4050 Laptop","vendor":"nvidia","vram_gb_options":[6],"bw_gbs":192,"backend":"cuda","aliases":["4050 laptop"],"webgl":["rtx 4050"]},{"id":"rtx-3060-laptop","name":"GeForce RTX 3060 Laptop","vendor":"nvidia","vram_gb_options":[6],"bw_gbs":336,"backend":"cuda","aliases":["3060 laptop"],"webgl":["rtx 3060 laptop"]}],"custom":{"ram_gb_options":[8,16,32,64,96,128],"cpu_bw_gbs":70,"no_gpu_label":"No graphics card (or not sure)"},"find_out":{"windows":["Press Ctrl + Shift + Esc to open Task Manager.","Click Performance (the second icon down on the left).","Click Memory: the big number at the top right is your RAM, for example \"16.0 GB\".","Click GPU 0 (and GPU 1, if there is one). The name is at the top right. \"Dedicated GPU memory\" is the graphics card's own memory. If it says 0.5 GB or less, you have no separate graphics card."],"macos":["Click the Apple menu in the top-left corner of the screen.","Choose About This Mac.","\"Chip\" is the processor (for example Apple M2), and \"Memory\" is the number we need (for example 16 GB). On a Mac, the graphics share this memory, so that's all there is to find."],"linux":["Open a terminal.","Type free -h and press Enter. The number under \"total\" on the Mem line is your RAM.","Type lspci | grep -i vga and press Enter to see your graphics card. With an NVIDIA card, nvidia-smi shows its memory."],"steamos":["Every Steam Deck has 16 GB of memory, so pick the LCD or OLED model and you're done.","Not sure which one you have? The OLED has an orange power button. The LCD's is grey."]},"usable":{"note":"FIXTURE rules until ds-hardware's contract settles them; one rule per platform.","apple_small_frac":0.67,"apple_big_frac":0.75,"apple_big_from_gb":48,"unified_reserve_gb":6,"unified_max_frac":0.75,"system_reserve_gb":5,"system_min_frac":0.4,"vram_reserve_gb":0.7},"tasks":[{"id":"chat","label":"Chat and ask questions"},{"id":"code","label":"Write code"},{"id":"write","label":"Write and edit text"},{"id":"vision","label":"Understand pictures"},{"id":"agents","label":"Build agents (tools)"},{"id":"reason","label":"Think hard (maths, logic)"}],"models":[{"id":"llama-3.2-1b","name":"Llama 3.2 1B","tasks":["chat"],"params_b":1.2,"active_b":1.2,"layers":16,"kv_heads":8,"head_dim":64,"default_q":"Q4_K_M","quants":[{"q":"Q4_K_M","gb":0.81,"bits":4.8},{"q":"Q8_0","gb":1.32,"bits":8.5}],"run":{"ollama":"llama3.2:1b","lmstudio":"Llama 3.2 1B Instruct","hf_gguf":"bartowski/Llama-3.2-1B-Instruct-GGUF","mlx":"mlx-community/Llama-3.2-1B-Instruct-4bit"},"blurb":"Tiny and quick. Fine for simple questions, easily confused by hard ones.","score":18,"license":"Llama 3.2 Community","family":"Llama","ctx_max":131072,"gated":true,"hf_id":"meta-llama/Llama-3.2-1B-Instruct"},{"id":"llama-3.2-3b","name":"Llama 3.2 3B","tasks":["chat","write"],"params_b":3.2,"active_b":3.2,"layers":28,"kv_heads":8,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":1.69,"bits":3.9},{"q":"Q4_K_M","gb":2.02,"bits":4.8},{"q":"Q8_0","gb":3.42,"bits":8.5}],"run":{"ollama":"llama3.2:3b","lmstudio":"Llama 3.2 3B Instruct","hf_gguf":"bartowski/Llama-3.2-3B-Instruct-GGUF","mlx":"mlx-community/Llama-3.2-3B-Instruct-4bit"},"blurb":"A small all-rounder that runs on almost anything.","score":30,"license":"Llama 3.2 Community","family":"Llama","ctx_max":131072,"gated":true,"hf_id":"meta-llama/Llama-3.2-3B-Instruct"},{"id":"qwen3-4b","name":"Qwen3 4B","tasks":["chat","reason","agents"],"params_b":4.0,"active_b":4.0,"layers":36,"kv_heads":8,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":2.08,"bits":3.9},{"q":"Q4_K_M","gb":2.5,"bits":4.8},{"q":"Q8_0","gb":4.28,"bits":8.5}],"run":{"ollama":"qwen3:4b","lmstudio":"Qwen3 4B","hf_gguf":"unsloth/Qwen3-4B-GGUF","mlx":"mlx-community/Qwen3-4B-4bit"},"blurb":"Small but sharp. Can stop and think before it answers.","score":40,"license":"Apache 2.0","family":"Qwen","ctx_max":32768,"gated":false,"hf_id":"Qwen/Qwen3-4B"},{"id":"gemma-3-4b","name":"Gemma 3 4B","tasks":["chat","write","vision"],"params_b":4.3,"active_b":4.3,"layers":34,"kv_heads":4,"head_dim":256,"default_q":"Q4_K_M","quants":[{"q":"Q4_K_M","gb":3.3,"bits":4.8},{"q":"Q8_0","gb":5.0,"bits":8.5}],"run":{"ollama":"gemma3:4b","lmstudio":"Gemma 3 4B","hf_gguf":"ggml-org/gemma-3-4b-it-GGUF","mlx":"mlx-community/gemma-3-4b-it-4bit"},"blurb":"Friendly writer that can also look at a photo and describe it.","score":38,"license":"Gemma","family":"Gemma","ctx_max":131072,"gated":true,"hf_id":"google/gemma-3-4b-it"},{"id":"qwen3-8b","name":"Qwen3 8B","tasks":["chat","code","write","reason","agents"],"params_b":8.2,"active_b":8.2,"layers":36,"kv_heads":8,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":4.12,"bits":3.9},{"q":"Q4_K_M","gb":5.03,"bits":4.8},{"q":"Q6_K","gb":6.73,"bits":6.6},{"q":"Q8_0","gb":8.71,"bits":8.5}],"run":{"ollama":"qwen3:8b","lmstudio":"Qwen3 8B","hf_gguf":"unsloth/Qwen3-8B-GGUF","mlx":"mlx-community/Qwen3-8B-4bit"},"blurb":"The best all-rounder for an ordinary laptop: chat, code and tools.","score":55,"license":"Apache 2.0","family":"Qwen","ctx_max":32768,"gated":false,"hf_id":"Qwen/Qwen3-8B"},{"id":"llama-3.1-8b","name":"Llama 3.1 8B","tasks":["chat","write"],"params_b":8.0,"active_b":8.0,"layers":32,"kv_heads":8,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":4.02,"bits":3.9},{"q":"Q4_K_M","gb":4.92,"bits":4.8},{"q":"Q8_0","gb":8.54,"bits":8.5}],"run":{"ollama":"llama3.1:8b","lmstudio":"Meta Llama 3.1 8B Instruct","hf_gguf":"bartowski/Meta-Llama-3.1-8B-Instruct-GGUF","mlx":"mlx-community/Meta-Llama-3.1-8B-Instruct-4bit"},"blurb":"Well known and widely supported. A safe, steady writer.","score":46,"license":"Llama 3.1 Community","family":"Llama","ctx_max":131072,"gated":true,"hf_id":"meta-llama/Llama-3.1-8B-Instruct"},{"id":"qwen2.5-coder-7b","name":"Qwen2.5 Coder 7B","tasks":["code"],"params_b":7.6,"active_b":7.6,"layers":28,"kv_heads":4,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q4_K_M","gb":4.68,"bits":4.8},{"q":"Q8_0","gb":8.1,"bits":8.5}],"run":{"ollama":"qwen2.5-coder:7b","lmstudio":"Qwen2.5 Coder 7B Instruct","hf_gguf":"Qwen/Qwen2.5-Coder-7B-Instruct-GGUF","mlx":"mlx-community/Qwen2.5-Coder-7B-Instruct-4bit"},"blurb":"A coding helper small enough for a laptop. Good at completing code.","score":50,"license":"Apache 2.0","family":"Qwen","ctx_max":32768,"gated":false,"hf_id":"Qwen/Qwen2.5-Coder-7B-Instruct"},{"id":"qwen2.5-vl-7b","name":"Qwen2.5 VL 7B","tasks":["vision","chat"],"params_b":8.3,"active_b":8.3,"layers":28,"kv_heads":4,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q4_K_M","gb":6.0,"bits":4.8}],"run":{"ollama":"qwen2.5vl:7b","lmstudio":"Qwen2.5 VL 7B Instruct","hf_gguf":"ggml-org/Qwen2.5-VL-7B-Instruct-GGUF","mlx":"mlx-community/Qwen2.5-VL-7B-Instruct-4bit"},"blurb":"Reads screenshots, documents and photos, and answers questions about them.","score":48,"license":"Apache 2.0","family":"Qwen","ctx_max":32768,"gated":false,"hf_id":"Qwen/Qwen2.5-VL-7B-Instruct"},{"id":"gemma-3-12b","name":"Gemma 3 12B","tasks":["chat","write","vision"],"params_b":12.2,"active_b":12.2,"layers":48,"kv_heads":8,"head_dim":256,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":6.0,"bits":3.9},{"q":"Q4_K_M","gb":8.1,"bits":4.8},{"q":"Q8_0","gb":12.5,"bits":8.5}],"run":{"ollama":"gemma3:12b","lmstudio":"Gemma 3 12B","hf_gguf":"ggml-org/gemma-3-12b-it-GGUF","mlx":"mlx-community/gemma-3-12b-it-4bit"},"blurb":"A polished writer with good manners, and it can see pictures.","score":62,"license":"Gemma","family":"Gemma","ctx_max":131072,"gated":true,"hf_id":"google/gemma-3-12b-it"},{"id":"qwen3-14b","name":"Qwen3 14B","tasks":["chat","code","write","reason","agents"],"params_b":14.8,"active_b":14.8,"layers":40,"kv_heads":8,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":7.32,"bits":3.9},{"q":"Q4_K_M","gb":9.0,"bits":4.8},{"q":"Q8_0","gb":15.7,"bits":8.5}],"run":{"ollama":"qwen3:14b","lmstudio":"Qwen3 14B","hf_gguf":"unsloth/Qwen3-14B-GGUF","mlx":"mlx-community/Qwen3-14B-4bit"},"blurb":"A noticeable step up from the 8B models, if you have the room.","score":66,"license":"Apache 2.0","family":"Qwen","ctx_max":32768,"gated":false,"hf_id":"Qwen/Qwen3-14B"},{"id":"phi-4","name":"Phi-4 14B","tasks":["reason","chat"],"params_b":14.7,"active_b":14.7,"layers":40,"kv_heads":10,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q4_K_M","gb":9.05,"bits":4.8},{"q":"Q8_0","gb":15.6,"bits":8.5}],"run":{"ollama":"phi4","lmstudio":"Phi 4","hf_gguf":"bartowski/phi-4-GGUF","mlx":"mlx-community/phi-4-4bit"},"blurb":"Strong at maths and step-by-step problems for its size.","score":60,"license":"MIT","family":"Phi","ctx_max":16384,"gated":false,"hf_id":"microsoft/phi-4"},{"id":"gpt-oss-20b","name":"gpt-oss 20B","tasks":["chat","code","reason","agents"],"params_b":21,"active_b":3.6,"layers":24,"kv_heads":8,"head_dim":64,"default_q":"MXFP4","quants":[{"q":"MXFP4","gb":12.1,"bits":4.25}],"run":{"ollama":"gpt-oss:20b","lmstudio":"gpt-oss 20b","hf_gguf":"ggml-org/gpt-oss-20b-GGUF","mlx":"mlx-community/gpt-oss-20b-MXFP4-Q8"},"blurb":"OpenAI's open model. Quick for its size because only part of it works on each word.","score":70,"license":"Apache 2.0","family":"gpt-oss","ctx_max":131072,"gated":false,"hf_id":"openai/gpt-oss-20b"},{"id":"mistral-small-3.2","name":"Mistral Small 3.2 24B","tasks":["chat","write","vision","agents"],"params_b":24,"active_b":24,"layers":40,"kv_heads":8,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":11.5,"bits":3.9},{"q":"Q4_K_M","gb":14.3,"bits":4.8},{"q":"Q8_0","gb":25.1,"bits":8.5}],"run":{"ollama":"mistral-small3.2","lmstudio":"Mistral Small 3.2 24B Instruct","hf_gguf":"unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF","mlx":"mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit"},"blurb":"A capable writer that follows instructions closely and can see images.","score":72,"license":"Apache 2.0","family":"Mistral","ctx_max":131072,"gated":false,"hf_id":"mistralai/Mistral-Small-3.2-24B-Instruct-2506"},{"id":"gemma-3-27b","name":"Gemma 3 27B","tasks":["chat","write","vision"],"params_b":27.4,"active_b":27.4,"layers":62,"kv_heads":16,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":13.4,"bits":3.9},{"q":"Q4_K_M","gb":16.5,"bits":4.8},{"q":"Q8_0","gb":28.7,"bits":8.5}],"run":{"ollama":"gemma3:27b","lmstudio":"Gemma 3 27B","hf_gguf":"ggml-org/gemma-3-27b-it-GGUF","mlx":"mlx-community/gemma-3-27b-it-4bit"},"blurb":"Google's biggest open Gemma 3. A lovely writer, and it sees images.","score":76,"license":"Gemma","family":"Gemma","ctx_max":131072,"gated":true,"hf_id":"google/gemma-3-27b-it"},{"id":"qwen3-30b-a3b","name":"Qwen3 30B-A3B","tasks":["chat","code","write","reason","agents"],"params_b":30.5,"active_b":3.3,"layers":48,"kv_heads":4,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":14.7,"bits":3.9},{"q":"Q4_K_M","gb":18.6,"bits":4.8},{"q":"Q8_0","gb":32.5,"bits":8.5}],"run":{"ollama":"qwen3:30b","lmstudio":"Qwen3 30B A3B","hf_gguf":"unsloth/Qwen3-30B-A3B-GGUF","mlx":"mlx-community/Qwen3-30B-A3B-4bit"},"blurb":"Big-model brains at small-model speed. Only a tenth of it works on each word.","score":78,"license":"Apache 2.0","family":"Qwen","ctx_max":131072,"gated":false,"hf_id":"Qwen/Qwen3-30B-A3B"},{"id":"qwen3-coder-30b","name":"Qwen3 Coder 30B-A3B","tasks":["code","agents"],"params_b":30.5,"active_b":3.3,"layers":48,"kv_heads":4,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":14.7,"bits":3.9},{"q":"Q4_K_M","gb":18.6,"bits":4.8},{"q":"Q8_0","gb":32.5,"bits":8.5}],"run":{"ollama":"qwen3-coder:30b","lmstudio":"Qwen3 Coder 30B A3B Instruct","hf_gguf":"unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF","mlx":"mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit"},"blurb":"A strong coding agent that's fast because it's a mixture of experts.","score":80,"license":"Apache 2.0","family":"Qwen","ctx_max":262144,"gated":false,"hf_id":"Qwen/Qwen3-Coder-30B-A3B-Instruct"},{"id":"qwen3-32b","name":"Qwen3 32B","tasks":["chat","code","write","reason","agents"],"params_b":32.8,"active_b":32.8,"layers":64,"kv_heads":8,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":16.0,"bits":3.9},{"q":"Q4_K_M","gb":19.8,"bits":4.8},{"q":"Q8_0","gb":34.8,"bits":8.5}],"run":{"ollama":"qwen3:32b","lmstudio":"Qwen3 32B","hf_gguf":"unsloth/Qwen3-32B-GGUF","mlx":"mlx-community/Qwen3-32B-4bit"},"blurb":"The best dense model a 24 GB graphics card can hold. Slower, but deep.","score":82,"license":"Apache 2.0","family":"Qwen","ctx_max":32768,"gated":false,"hf_id":"Qwen/Qwen3-32B"},{"id":"llama-3.3-70b","name":"Llama 3.3 70B","tasks":["chat","write"],"params_b":70.6,"active_b":70.6,"layers":80,"kv_heads":8,"head_dim":128,"default_q":"Q4_K_M","quants":[{"q":"Q3_K_M","gb":34.3,"bits":3.9},{"q":"Q4_K_M","gb":42.5,"bits":4.8},{"q":"Q8_0","gb":75.0,"bits":8.5}],"run":{"ollama":"llama3.3:70b","lmstudio":"Llama 3.3 70B Instruct","hf_gguf":"bartowski/Llama-3.3-70B-Instruct-GGUF","mlx":"mlx-community/Llama-3.3-70B-Instruct-4bit"},"blurb":"A heavyweight writer. Needs a big Mac or a serious workstation.","score":84,"license":"Llama 3.3 Community","family":"Llama","ctx_max":131072,"gated":true,"hf_id":"meta-llama/Llama-3.3-70B-Instruct"},{"id":"gpt-oss-120b","name":"gpt-oss 120B","tasks":["chat","code","reason","agents"],"params_b":117,"active_b":5.1,"layers":36,"kv_heads":8,"head_dim":64,"default_q":"MXFP4","quants":[{"q":"MXFP4","gb":63.4,"bits":4.25}],"run":{"ollama":"gpt-oss:120b","lmstudio":"gpt-oss 120b","hf_gguf":"ggml-org/gpt-oss-120b-GGUF","mlx":"mlx-community/gpt-oss-120b-MXFP4-Q8"},"blurb":"Frontier-class reasoning at home, if you have about 64 GB to spare.","score":90,"license":"Apache 2.0","family":"gpt-oss","ctx_max":131072,"gated":false,"hf_id":"openai/gpt-oss-120b"}],"default_ctx":8192,"howto":{"lmstudio":{"label":"LM Studio","pitch":"An app. No typing.","steps":{"windows":["Download LM Studio from <a href=\"https://lmstudio.ai/download\">lmstudio.ai<\/a> and run the installer.","Open it and click the magnifying glass (Discover) on the left.","Search for <b>{lmstudio}<\/b> and click Download. Pick <b>{quant}<\/b> if it asks.","When it finishes, click Chat, choose the model at the top, and start typing."],"macos":["Download LM Studio from <a href=\"https://lmstudio.ai/download\">lmstudio.ai<\/a> and drag it to Applications.","Open it and click the magnifying glass (Discover) on the left.","Search for <b>{lmstudio}<\/b> and click Download. On a Mac it may offer an MLX version: that one is faster.","When it finishes, click Chat, choose the model at the top, and start typing."],"linux":["Download the LM Studio AppImage from <a href=\"https://lmstudio.ai/download\">lmstudio.ai<\/a>.","Make it runnable, then open it:",["cmd","chmod +x ~/Downloads/LM-Studio-*.AppImage && ~/Downloads/LM-Studio-*.AppImage"],"Click the magnifying glass (Discover), search for <b>{lmstudio}<\/b>, and download <b>{quant}<\/b>.","Click Chat, choose the model at the top, and start typing."],"steamos":["Hold the power button and choose <b>Switch to Desktop<\/b>.","Open the browser, go to <a href=\"https://lmstudio.ai/download\">lmstudio.ai<\/a>, and download the Linux AppImage.","In the Dolphin file manager, right-click the file, choose Properties, then Permissions, and tick <b>Is executable<\/b>. Double-click it to open.","Click the magnifying glass (Discover), search for <b>{lmstudio}<\/b>, and download <b>{quant}<\/b>. Then click Chat."]}},"ollama":{"label":"Ollama","pitch":"One command.","steps":{"windows":["Download Ollama from <a href=\"https://ollama.com/download/windows\">ollama.com<\/a> and run the installer.","Open Terminal: press the Windows key, type <b>Terminal<\/b>, press Enter.","Paste this and press Enter. The first time, it downloads the model.",["cmd","ollama run {ollama_tag}"],"Type a question when you see <b>&gt;&gt;&gt;<\/b>. Type <b>/bye<\/b> to leave."],"macos":["Download Ollama from <a href=\"https://ollama.com/download/mac\">ollama.com<\/a>, open it, and drag it to Applications.","Open Terminal: press Cmd + Space, type <b>Terminal<\/b>, press Enter.","Paste this and press Enter. The first time, it downloads the model.",["cmd","ollama run {ollama_tag}"],"Type a question when you see <b>&gt;&gt;&gt;<\/b>. Type <b>/bye<\/b> to leave."],"linux":["Install Ollama. This downloads and runs its official install script, which asks for your password:",["cmd","curl -fsSL https://ollama.com/install.sh | sh"],"Then run the model. The first time, it downloads it.",["cmd","ollama run {ollama_tag}"],"Type a question when you see <b>&gt;&gt;&gt;<\/b>. Type <b>/bye<\/b> to leave."],"steamos":["Ollama's installer can't write to SteamOS's locked system folders, so <b>LM Studio is the easier route on a Deck<\/b>. If you'd still like Ollama: switch to Desktop Mode and open Konsole.","Download Ollama into your home folder and start it:",["cmd","mkdir -p ~/ollama && curl -fsSL https://ollama.com/download/ollama-linux-amd64.tgz | tar -xz -C ~/ollama && ~/ollama/bin/ollama serve &"],"Then run the model:",["cmd","~/ollama/bin/ollama run {ollama_tag}"]]}},"llamacpp":{"label":"llama.cpp","pitch":"For the curious: the engine under most of the others.","steps":{"windows":["Install it with winget, in Terminal:",["cmd","winget install llama.cpp"],"Start a chat server. It downloads the model the first time:",["cmd","llama-server -hf {hf_gguf}:{quant}"],"Open <b>http://localhost:8080<\/b> in your browser."],"macos":["Install it with Homebrew:",["cmd","brew install llama.cpp"],"Start a chat server. It downloads the model the first time:",["cmd","llama-server -hf {hf_gguf}:{quant}"],"Open <b>http://localhost:8080<\/b> in your browser."],"linux":["Install it with Homebrew, or download a build from <a href=\"https://github.com/ggml-org/llama.cpp/releases\">the releases page<\/a>:",["cmd","brew install llama.cpp"],"Start a chat server. It downloads the model the first time:",["cmd","llama-server -hf {hf_gguf}:{quant}"],"Open <b>http://localhost:8080<\/b> in your browser."],"steamos":["In Desktop Mode, download the Vulkan build for Linux from <a href=\"https://github.com/ggml-org/llama.cpp/releases\">the releases page<\/a> and unpack it in your home folder.","In Konsole, from the unpacked folder:",["cmd","./llama-server -hf {hf_gguf}:{quant}"],"Open <b>http://localhost:8080<\/b> in the browser."]}},"mlx":{"label":"MLX","pitch":"For the curious, Apple Silicon only: Apple's own engine, often the fastest on a Mac.","steps":{"macos":["Install it with Python's package manager (Python 3.10 or newer):",["cmd","pip install mlx-lm"],"Chat with the model. It downloads it the first time:",["cmd","mlx_lm.chat --model {mlx}"]]}}},"fixture":true}</script>
+<script type="application/json" id="lxdata">{"page":{"title":"Run It Local","slug":"local","pitch":"What AI can your computer run? Find out in a minute, then copy two lines to run it."},"kinds":[{"id":"laptop","label":"Laptop","hint":"Windows or Linux"},{"id":"mac","label":"Mac","hint":"MacBook, iMac, Mac mini, Studio"},{"id":"gaming","label":"Gaming PC","hint":"a desktop with a graphics card"},{"id":"desktop","label":"Desktop","hint":"office or home PC"},{"id":"handheld","label":"Handheld","hint":"Steam Deck, ROG Ally, Legion Go"},{"id":"minipc","label":"Mini PC","hint":"small box, AI workstation"}],"devices":[{"id":"macbook-air-m1","kind":"mac","name":"MacBook Air (M1)","aliases":["mba m1","air m1"],"year":2020,"os":["macos"],"ram_gb_options":[8,16],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m1"],"popular":true,"ram_bandwidth_gbs":68,"igpu":{"vendor":"apple"}},{"id":"macbook-air-m2","kind":"mac","name":"MacBook Air (M2)","aliases":["mba m2","air m2"],"year":2022,"os":["macos"],"ram_gb_options":[8,16,24],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m2"],"popular":true,"ram_bandwidth_gbs":100,"igpu":{"vendor":"apple"}},{"id":"macbook-air-m3","kind":"mac","name":"MacBook Air (M3)","aliases":["mba m3","air m3"],"year":2024,"os":["macos"],"ram_gb_options":[8,16,24],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m3"],"popular":true,"ram_bandwidth_gbs":100,"igpu":{"vendor":"apple"}},{"id":"macbook-air-m4","kind":"mac","name":"MacBook Air (M4)","aliases":["mba m4","air m4"],"year":2025,"os":["macos"],"ram_gb_options":[16,24,32],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m4"],"popular":true,"ram_bandwidth_gbs":120,"igpu":{"vendor":"apple"}},{"id":"macbook-pro-m1-pro","kind":"mac","name":"MacBook Pro (M1 Pro)","aliases":["mbp m1 pro"],"year":2021,"os":["macos"],"ram_gb_options":[16,32],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m1 pro"],"ram_bandwidth_gbs":200,"igpu":{"vendor":"apple"}},{"id":"macbook-pro-m1-max","kind":"mac","name":"MacBook Pro (M1 Max)","aliases":["mbp m1 max"],"year":2021,"os":["macos"],"ram_gb_options":[32,64],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m1 max"],"ram_bandwidth_gbs":400,"igpu":{"vendor":"apple"}},{"id":"macbook-pro-m3-pro","kind":"mac","name":"MacBook Pro (M3 Pro)","aliases":["mbp m3 pro"],"year":2023,"os":["macos"],"ram_gb_options":[18,36],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m3 pro"],"ram_bandwidth_gbs":150,"igpu":{"vendor":"apple"}},{"id":"macbook-pro-m4","kind":"mac","name":"MacBook Pro 14 (M4)","aliases":["mbp m4"],"year":2024,"os":["macos"],"ram_gb_options":[16,24,32],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m4"],"ram_bandwidth_gbs":120,"igpu":{"vendor":"apple"}},{"id":"macbook-pro-m4-pro","kind":"mac","name":"MacBook Pro (M4 Pro)","aliases":["mbp m4 pro"],"year":2024,"os":["macos"],"ram_gb_options":[24,48],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m4 pro"],"popular":true,"ram_bandwidth_gbs":273,"igpu":{"vendor":"apple"}},{"id":"macbook-pro-m4-max","kind":"mac","name":"MacBook Pro (M4 Max)","aliases":["mbp m4 max"],"year":2024,"os":["macos"],"ram_gb_options":[36,48,64,128],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m4 max"],"ram_bandwidth_gbs":546,"igpu":{"vendor":"apple"}},{"id":"mac-mini-m4","kind":"mac","name":"Mac mini (M4)","aliases":["mini m4"],"year":2024,"os":["macos"],"ram_gb_options":[16,24,32],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m4"],"popular":true,"ram_bandwidth_gbs":120,"igpu":{"vendor":"apple"}},{"id":"mac-mini-m4-pro","kind":"mac","name":"Mac mini (M4 Pro)","aliases":["mini m4 pro"],"year":2024,"os":["macos"],"ram_gb_options":[24,48,64],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m4 pro"],"ram_bandwidth_gbs":273,"igpu":{"vendor":"apple"}},{"id":"mac-studio-m2-ultra","kind":"mac","name":"Mac Studio (M2 Ultra)","aliases":["studio m2 ultra"],"year":2023,"os":["macos"],"ram_gb_options":[64,128,192],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m2 ultra"],"ram_bandwidth_gbs":800,"igpu":{"vendor":"apple"}},{"id":"mac-studio-m3-ultra","kind":"mac","name":"Mac Studio (M3 Ultra)","aliases":["studio m3 ultra"],"year":2025,"os":["macos"],"ram_gb_options":[96,256,512],"unified":true,"gpu":null,"vram_gb":0,"webgl":["apple m3 ultra"],"ram_bandwidth_gbs":819,"igpu":{"vendor":"apple"}},{"id":"steam-deck-lcd","kind":"handheld","name":"Steam Deck (LCD)","aliases":["deck","steamdeck"],"year":2022,"os":["steamos"],"ram_gb_options":[16],"unified":true,"gpu":null,"vram_gb":0,"webgl":["vangogh","custom gpu 0405"],"popular":true,"ram_bandwidth_gbs":88,"igpu":{"vendor":"amd"}},{"id":"steam-deck-oled","kind":"handheld","name":"Steam Deck OLED","aliases":["deck oled"],"year":2023,"os":["steamos"],"ram_gb_options":[16],"unified":true,"gpu":null,"vram_gb":0,"webgl":["custom gpu 0932","sephiroth"],"popular":true,"ram_bandwidth_gbs":102,"igpu":{"vendor":"amd"}},{"id":"rog-ally","kind":"handheld","name":"ROG Ally (Z1 Extreme)","aliases":["ally","asus ally"],"year":2023,"os":["windows"],"ram_gb_options":[16],"unified":true,"gpu":null,"vram_gb":0,"webgl":["z1 extreme"],"popular":true,"ram_bandwidth_gbs":120,"igpu":{"vendor":"amd"}},{"id":"rog-ally-x","kind":"handheld","name":"ROG Ally X","aliases":["ally x"],"year":2024,"os":["windows"],"ram_gb_options":[24],"unified":true,"gpu":null,"vram_gb":0,"webgl":["z1 extreme"],"popular":true,"ram_bandwidth_gbs":128,"igpu":{"vendor":"amd"}},{"id":"legion-go","kind":"handheld","name":"Lenovo Legion Go","aliases":["legion go"],"year":2023,"os":["windows"],"ram_gb_options":[16],"unified":true,"gpu":null,"vram_gb":0,"webgl":["z1 extreme"],"popular":true,"ram_bandwidth_gbs":120,"igpu":{"vendor":"amd"}},{"id":"msi-claw-8","kind":"handheld","name":"MSI Claw 8 AI+","aliases":["claw","claw 8"],"year":2025,"os":["windows"],"ram_gb_options":[32],"unified":true,"gpu":null,"vram_gb":0,"webgl":["arc(tm) 140v","arc 140v"],"ram_bandwidth_gbs":136,"igpu":{"vendor":"intel"}},{"id":"laptop-office-8","kind":"laptop","name":"Everyday laptop, no graphics card","aliases":["office laptop","integrated graphics","intel iris","ultrabook"],"year":2022,"os":["windows","linux"],"ram_gb_options":[8,16,32],"unified":false,"gpu":null,"vram_gb":0,"webgl":["iris","uhd graphics","radeon(tm) graphics"],"popular":true,"ram_bandwidth_gbs":70,"igpu":null},{"id":"laptop-copilot-x-elite","kind":"laptop","name":"Copilot+ laptop (Snapdragon X Elite)","aliases":["snapdragon","x elite","surface laptop 7"],"year":2024,"os":["windows"],"ram_gb_options":[16,32],"unified":false,"gpu":null,"vram_gb":0,"webgl":["adreno"],"ram_bandwidth_gbs":135,"igpu":null},{"id":"laptop-lunar-lake","kind":"laptop","name":"Intel Core Ultra 200V laptop (Lunar Lake)","aliases":["lunar lake","core ultra 7 258v"],"year":2024,"os":["windows"],"ram_gb_options":[16,32],"unified":true,"gpu":null,"vram_gb":0,"webgl":["arc(tm) 140v","arc 140v","arc(tm) 130v"],"ram_bandwidth_gbs":136,"igpu":{"vendor":"intel"}},{"id":"laptop-rtx-4050","kind":"laptop","name":"Gaming laptop with RTX 4050","aliases":["4050 laptop"],"year":2023,"os":["windows","linux"],"ram_gb_options":[16,32],"unified":false,"gpu":"rtx-4050-laptop","vram_gb":6,"webgl":["rtx 4050"],"ram_bandwidth_gbs":80,"igpu":null},{"id":"laptop-rtx-4060","kind":"laptop","name":"Gaming laptop with RTX 4060","aliases":["4060 laptop","legion 5","rog strix g16"],"year":2023,"os":["windows","linux"],"ram_gb_options":[16,32],"unified":false,"gpu":"rtx-4060-laptop","vram_gb":8,"webgl":["rtx 4060 laptop"],"popular":true,"ram_bandwidth_gbs":80,"igpu":null},{"id":"laptop-rtx-4070","kind":"laptop","name":"Gaming laptop with RTX 4070","aliases":["4070 laptop"],"year":2023,"os":["windows","linux"],"ram_gb_options":[16,32],"unified":false,"gpu":"rtx-4070-laptop","vram_gb":8,"webgl":["rtx 4070 laptop"],"ram_bandwidth_gbs":80,"igpu":null},{"id":"laptop-rtx-4090","kind":"laptop","name":"Gaming laptop with RTX 4090","aliases":["4090 laptop"],"year":2023,"os":["windows","linux"],"ram_gb_options":[32,64],"unified":false,"gpu":"rtx-4090-laptop","vram_gb":16,"webgl":["rtx 4090 laptop"],"ram_bandwidth_gbs":85,"igpu":null},{"id":"rog-flow-z13-395","kind":"laptop","name":"ROG Flow Z13 (Ryzen AI Max+ 395)","aliases":["strix halo","flow z13","ai max"],"year":2025,"os":["windows","linux"],"ram_gb_options":[32,64,128],"unified":true,"gpu":null,"vram_gb":0,"webgl":["8060s"],"ram_bandwidth_gbs":256,"igpu":{"vendor":"amd"}},{"id":"desktop-office","kind":"desktop","name":"Office or family PC, no graphics card","aliases":["dell optiplex","hp desktop","integrated"],"year":2021,"os":["windows","linux"],"ram_gb_options":[8,16,32],"unified":false,"gpu":null,"vram_gb":0,"webgl":["uhd graphics","radeon(tm) graphics"],"popular":true,"ram_bandwidth_gbs":50,"igpu":null},{"id":"framework-desktop-395","kind":"minipc","name":"Framework Desktop (Ryzen AI Max+ 395)","aliases":["framework desktop","strix halo"],"year":2025,"os":["windows","linux"],"ram_gb_options":[64,128],"unified":true,"gpu":null,"vram_gb":0,"webgl":["8060s"],"popular":true,"ram_bandwidth_gbs":256,"igpu":{"vendor":"amd"}},{"id":"dgx-spark","kind":"minipc","name":"NVIDIA DGX Spark","aliases":["spark","gb10"],"year":2025,"os":["linux"],"ram_gb_options":[128],"unified":true,"gpu":null,"vram_gb":0,"webgl":["gb10"],"popular":true,"ram_bandwidth_gbs":273,"igpu":{"vendor":"nvidia"}},{"id":"minipc-780m","kind":"minipc","name":"Mini PC with Ryzen 7 8845HS (780M)","aliases":["beelink","minisforum","780m"],"year":2024,"os":["windows","linux"],"ram_gb_options":[16,32,64],"unified":true,"gpu":null,"vram_gb":0,"webgl":["780m"],"ram_bandwidth_gbs":90,"igpu":{"vendor":"amd"}},{"id":"raspberry-pi-5","kind":"minipc","name":"Raspberry Pi 5","aliases":["pi 5","rpi"],"year":2023,"os":["linux"],"ram_gb_options":[4,8,16],"unified":false,"gpu":null,"vram_gb":0,"webgl":["v3d"],"ram_bandwidth_gbs":17,"igpu":null}],"gpus":[{"id":"rtx-5090","name":"GeForce RTX 5090","vendor":"nvidia","vram_gb_options":[32],"aliases":["5090"],"webgl":["rtx 5090"],"vram_bandwidth_gbs":1792,"fp16_tflops":209,"backends":["cuda","vulkan"]},{"id":"rtx-5080","name":"GeForce RTX 5080","vendor":"nvidia","vram_gb_options":[16],"aliases":["5080"],"webgl":["rtx 5080"],"vram_bandwidth_gbs":960,"fp16_tflops":113,"backends":["cuda","vulkan"]},{"id":"rtx-5070-ti","name":"GeForce RTX 5070 Ti","vendor":"nvidia","vram_gb_options":[16],"aliases":["5070 ti"],"webgl":["rtx 5070 ti"],"vram_bandwidth_gbs":896,"fp16_tflops":88,"backends":["cuda","vulkan"]},{"id":"rtx-5070","name":"GeForce RTX 5070","vendor":"nvidia","vram_gb_options":[12],"aliases":["5070"],"webgl":["rtx 5070"],"vram_bandwidth_gbs":672,"fp16_tflops":62,"backends":["cuda","vulkan"]},{"id":"rtx-5060-ti","name":"GeForce RTX 5060 Ti","vendor":"nvidia","vram_gb_options":[8,16],"aliases":["5060 ti"],"webgl":["rtx 5060 ti"],"vram_bandwidth_gbs":448,"fp16_tflops":47,"backends":["cuda","vulkan"]},{"id":"rtx-4090","name":"GeForce RTX 4090","vendor":"nvidia","vram_gb_options":[24],"aliases":["4090"],"webgl":["rtx 4090"],"vram_bandwidth_gbs":1008,"fp16_tflops":165,"backends":["cuda","vulkan"]},{"id":"rtx-4080","name":"GeForce RTX 4080 / 4080 Super","vendor":"nvidia","vram_gb_options":[16],"aliases":["4080","4080 super"],"webgl":["rtx 4080"],"vram_bandwidth_gbs":717,"fp16_tflops":97,"backends":["cuda","vulkan"]},{"id":"rtx-4070-ti-super","name":"GeForce RTX 4070 Ti Super","vendor":"nvidia","vram_gb_options":[16],"aliases":["4070 ti super"],"webgl":["rtx 4070 ti super"],"vram_bandwidth_gbs":672,"fp16_tflops":88,"backends":["cuda","vulkan"]},{"id":"rtx-4070","name":"GeForce RTX 4070 / 4070 Super / 4070 Ti","vendor":"nvidia","vram_gb_options":[12],"aliases":["4070","4070 super","4070 ti"],"webgl":["rtx 4070"],"vram_bandwidth_gbs":504,"fp16_tflops":58,"backends":["cuda","vulkan"]},{"id":"rtx-4060-ti","name":"GeForce RTX 4060 Ti","vendor":"nvidia","vram_gb_options":[8,16],"aliases":["4060 ti"],"webgl":["rtx 4060 ti"],"vram_bandwidth_gbs":288,"fp16_tflops":44,"backends":["cuda","vulkan"]},{"id":"rtx-4060","name":"GeForce RTX 4060","vendor":"nvidia","vram_gb_options":[8],"aliases":["4060"],"webgl":["rtx 4060"],"vram_bandwidth_gbs":272,"fp16_tflops":30,"backends":["cuda","vulkan"]},{"id":"rtx-3090","name":"GeForce RTX 3090 / 3090 Ti","vendor":"nvidia","vram_gb_options":[24],"aliases":["3090"],"webgl":["rtx 3090"],"vram_bandwidth_gbs":936,"fp16_tflops":71,"backends":["cuda","vulkan"]},{"id":"rtx-3080","name":"GeForce RTX 3080","vendor":"nvidia","vram_gb_options":[10,12],"aliases":["3080"],"webgl":["rtx 3080"],"vram_bandwidth_gbs":760,"fp16_tflops":59,"backends":["cuda","vulkan"]},{"id":"rtx-3070","name":"GeForce RTX 3070 / 3070 Ti","vendor":"nvidia","vram_gb_options":[8],"aliases":["3070"],"webgl":["rtx 3070"],"vram_bandwidth_gbs":448,"fp16_tflops":40,"backends":["cuda","vulkan"]},{"id":"rtx-3060","name":"GeForce RTX 3060","vendor":"nvidia","vram_gb_options":[12,8],"aliases":["3060"],"webgl":["rtx 3060"],"vram_bandwidth_gbs":360,"fp16_tflops":25,"backends":["cuda","vulkan"]},{"id":"gtx-1660","name":"GeForce GTX 1660 / 1660 Super","vendor":"nvidia","vram_gb_options":[6],"aliases":["1660"],"webgl":["gtx 1660"],"vram_bandwidth_gbs":336,"fp16_tflops":10,"backends":["cuda","vulkan"],"arch":"turing"},{"id":"rx-9070-xt","name":"Radeon RX 9070 XT","vendor":"amd","vram_gb_options":[16],"aliases":["9070 xt","9070"],"webgl":["rx 9070"],"vram_bandwidth_gbs":640,"fp16_tflops":97,"backends":["vulkan"]},{"id":"rx-7900-xtx","name":"Radeon RX 7900 XTX","vendor":"amd","vram_gb_options":[24],"aliases":["7900 xtx"],"webgl":["rx 7900 xtx"],"vram_bandwidth_gbs":960,"fp16_tflops":123,"backends":["rocm","vulkan"]},{"id":"rx-7800-xt","name":"Radeon RX 7800 XT","vendor":"amd","vram_gb_options":[16],"aliases":["7800 xt"],"webgl":["rx 7800 xt"],"vram_bandwidth_gbs":624,"fp16_tflops":75,"backends":["vulkan"]},{"id":"rx-7600","name":"Radeon RX 7600","vendor":"amd","vram_gb_options":[8],"aliases":["7600"],"webgl":["rx 7600"],"vram_bandwidth_gbs":288,"fp16_tflops":43,"backends":["vulkan"]},{"id":"rx-6700-xt","name":"Radeon RX 6700 XT","vendor":"amd","vram_gb_options":[12],"aliases":["6700 xt"],"webgl":["rx 6700 xt"],"vram_bandwidth_gbs":384,"fp16_tflops":26,"backends":["vulkan"]},{"id":"arc-b580","name":"Intel Arc B580","vendor":"intel","vram_gb_options":[12],"aliases":["b580"],"webgl":["arc(tm) b580","arc b580"],"vram_bandwidth_gbs":456,"fp16_tflops":55,"backends":["vulkan"]},{"id":"rtx-4090-laptop","name":"GeForce RTX 4090 Laptop","vendor":"nvidia","vram_gb_options":[16],"aliases":["4090 laptop","4090 mobile"],"webgl":["rtx 4090 laptop"],"vram_bandwidth_gbs":576,"fp16_tflops":120,"backends":["cuda","vulkan"]},{"id":"rtx-4080-laptop","name":"GeForce RTX 4080 Laptop","vendor":"nvidia","vram_gb_options":[12],"aliases":["4080 laptop"],"webgl":["rtx 4080 laptop"],"vram_bandwidth_gbs":432,"fp16_tflops":80,"backends":["cuda","vulkan"]},{"id":"rtx-4070-laptop","name":"GeForce RTX 4070 Laptop","vendor":"nvidia","vram_gb_options":[8],"aliases":["4070 laptop"],"webgl":["rtx 4070 laptop"],"vram_bandwidth_gbs":256,"fp16_tflops":47,"backends":["cuda","vulkan"]},{"id":"rtx-4060-laptop","name":"GeForce RTX 4060 Laptop","vendor":"nvidia","vram_gb_options":[8],"aliases":["4060 laptop"],"webgl":["rtx 4060 laptop"],"vram_bandwidth_gbs":256,"fp16_tflops":30,"backends":["cuda","vulkan"]},{"id":"rtx-4050-laptop","name":"GeForce RTX 4050 Laptop","vendor":"nvidia","vram_gb_options":[6],"aliases":["4050 laptop"],"webgl":["rtx 4050"],"vram_bandwidth_gbs":192,"fp16_tflops":23,"backends":["cuda","vulkan"]},{"id":"rtx-3060-laptop","name":"GeForce RTX 3060 Laptop","vendor":"nvidia","vram_gb_options":[6],"aliases":["3060 laptop"],"webgl":["rtx 3060 laptop"],"vram_bandwidth_gbs":336,"fp16_tflops":20,"backends":["cuda","vulkan"]}],"custom":{"ram_gb_options":[8,16,32,64,96,128],"cpu_bw_gbs":70,"no_gpu_label":"No graphics card (or not sure)"},"find_out":{"windows":["Press Ctrl + Shift + Esc to open Task Manager.","Click Performance (the second icon down on the left).","Click Memory: the big number at the top right is your RAM, for example \"16.0 GB\".","Click GPU 0 (and GPU 1, if there is one). The name is at the top right. \"Dedicated GPU memory\" is the graphics card's own memory. If it says 0.5 GB or less, you have no separate graphics card."],"macos":["Click the Apple menu in the top-left corner of the screen.","Choose About This Mac.","\"Chip\" is the processor (for example Apple M2), and \"Memory\" is the number we need (for example 16 GB). On a Mac, the graphics share this memory, so that's all there is to find."],"linux":["Open a terminal.","Type free -h and press Enter. The number under \"total\" on the Mem line is your RAM.","Type lspci | grep -i vga and press Enter to see your graphics card. With an NVIDIA card, nvidia-smi shows its memory."],"steamos":["Every Steam Deck has 16 GB of memory, so pick the LCD or OLED model and you're done.","Not sure which one you have? The OLED has an orange power button. The LCD's is grey."]},"tasks":[{"id":"chat","label":"Chat and ask questions"},{"id":"code","label":"Write code"},{"id":"write","label":"Write and edit text"},{"id":"vision","label":"Understand pictures"},{"id":"agents","label":"Build agents (tools)"},{"id":"reason","label":"Think hard (maths, logic)"}],"models":[{"id":"llama-3.2-1b","hf_id":"meta-llama/Llama-3.2-1B-Instruct","name":"Llama 3.2 1B","family":"Llama","tasks":["chat"],"score":18,"license":"Llama 3.2 Community","gated":true,"blurb":"Tiny and quick. Fine for simple questions, easily confused by hard ones.","run":{"ollama":"llama3.2:1b","ollama_q":"Q4_K_M","lmstudio":"Llama 3.2 1B Instruct","mlx":"mlx-community/Llama-3.2-1B-Instruct-4bit"},"config":{"params_total":1240000000.0,"num_hidden_layers":16,"hidden_size":2048,"num_attention_heads":32,"num_key_value_heads":8,"head_dim":64,"vocab_size":128256,"tie_word_embeddings":true,"max_context":131072,"vision":false,"reasoning":false},"quants":[{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"bartowski/Llama-3.2-1B-Instruct-GGUF","bytes":810000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"bartowski/Llama-3.2-1B-Instruct-GGUF","bytes":1320000000}]},{"id":"llama-3.2-3b","hf_id":"meta-llama/Llama-3.2-3B-Instruct","name":"Llama 3.2 3B","family":"Llama","tasks":["chat","write"],"score":30,"license":"Llama 3.2 Community","gated":true,"blurb":"A small all-rounder that runs on almost anything.","run":{"ollama":"llama3.2:3b","ollama_q":"Q4_K_M","lmstudio":"Llama 3.2 3B Instruct","mlx":"mlx-community/Llama-3.2-3B-Instruct-4bit"},"config":{"params_total":3210000000.0,"num_hidden_layers":28,"hidden_size":3072,"num_attention_heads":24,"num_key_value_heads":8,"head_dim":128,"vocab_size":128256,"tie_word_embeddings":true,"max_context":131072,"vision":false,"reasoning":false},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"bartowski/Llama-3.2-3B-Instruct-GGUF","bytes":1690000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"bartowski/Llama-3.2-3B-Instruct-GGUF","bytes":2020000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"bartowski/Llama-3.2-3B-Instruct-GGUF","bytes":3420000000}]},{"id":"qwen3-4b","hf_id":"Qwen/Qwen3-4B","name":"Qwen3 4B","family":"Qwen","tasks":["chat","reason","agents"],"score":40,"license":"Apache 2.0","gated":false,"blurb":"Small but sharp. Can stop and think before it answers.","run":{"ollama":"qwen3:4b","ollama_q":"Q4_K_M","lmstudio":"Qwen3 4B","mlx":"mlx-community/Qwen3-4B-4bit"},"config":{"params_total":4020000000.0,"num_hidden_layers":36,"hidden_size":2560,"num_attention_heads":32,"num_key_value_heads":8,"head_dim":128,"vocab_size":151936,"tie_word_embeddings":true,"max_context":32768,"vision":false,"reasoning":true},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"unsloth/Qwen3-4B-GGUF","bytes":2080000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"unsloth/Qwen3-4B-GGUF","bytes":2500000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"unsloth/Qwen3-4B-GGUF","bytes":4280000000}]},{"id":"gemma-3-4b","hf_id":"google/gemma-3-4b-it","name":"Gemma 3 4B","family":"Gemma","tasks":["chat","write","vision"],"score":38,"license":"Gemma","gated":true,"blurb":"Friendly writer that can also look at a photo and describe it.","run":{"ollama":"gemma3:4b","ollama_q":"Q4_K_M","lmstudio":"Gemma 3 4B","mlx":"mlx-community/gemma-3-4b-it-4bit"},"config":{"params_total":3880000000.0,"num_hidden_layers":34,"hidden_size":2560,"num_attention_heads":8,"num_key_value_heads":4,"head_dim":256,"vocab_size":262208,"tie_word_embeddings":true,"max_context":131072,"vision":true,"reasoning":false,"sliding_window":1024,"sliding_window_pattern":6},"quants":[{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"ggml-org/gemma-3-4b-it-GGUF","bytes":3300000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"ggml-org/gemma-3-4b-it-GGUF","bytes":5000000000}]},{"id":"qwen3-8b","hf_id":"Qwen/Qwen3-8B","name":"Qwen3 8B","family":"Qwen","tasks":["chat","code","write","reason","agents"],"score":55,"license":"Apache 2.0","gated":false,"blurb":"The best all-rounder for an ordinary laptop: chat, code and tools.","run":{"ollama":"qwen3:8b","ollama_q":"Q4_K_M","lmstudio":"Qwen3 8B","mlx":"mlx-community/Qwen3-8B-4bit"},"config":{"params_total":8190000000.0,"num_hidden_layers":36,"hidden_size":4096,"num_attention_heads":32,"num_key_value_heads":8,"head_dim":128,"vocab_size":151936,"tie_word_embeddings":false,"max_context":32768,"vision":false,"reasoning":true},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"unsloth/Qwen3-8B-GGUF","bytes":4120000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"unsloth/Qwen3-8B-GGUF","bytes":5030000000},{"format":"gguf","quant":"Q6_K","label":"Q6_K","repo":"unsloth/Qwen3-8B-GGUF","bytes":6730000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"unsloth/Qwen3-8B-GGUF","bytes":8710000000}]},{"id":"llama-3.1-8b","hf_id":"meta-llama/Llama-3.1-8B-Instruct","name":"Llama 3.1 8B","family":"Llama","tasks":["chat","write"],"score":46,"license":"Llama 3.1 Community","gated":true,"blurb":"Well known and widely supported. A safe, steady writer.","run":{"ollama":"llama3.1:8b","ollama_q":"Q4_K_M","lmstudio":"Meta Llama 3.1 8B Instruct","mlx":"mlx-community/Meta-Llama-3.1-8B-Instruct-4bit"},"config":{"params_total":8030000000.0,"num_hidden_layers":32,"hidden_size":4096,"num_attention_heads":32,"num_key_value_heads":8,"head_dim":128,"vocab_size":128256,"tie_word_embeddings":false,"max_context":131072,"vision":false,"reasoning":false},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"bartowski/Meta-Llama-3.1-8B-Instruct-GGUF","bytes":4020000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"bartowski/Meta-Llama-3.1-8B-Instruct-GGUF","bytes":4920000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"bartowski/Meta-Llama-3.1-8B-Instruct-GGUF","bytes":8540000000}]},{"id":"qwen2.5-coder-7b","hf_id":"Qwen/Qwen2.5-Coder-7B-Instruct","name":"Qwen2.5 Coder 7B","family":"Qwen","tasks":["code"],"score":50,"license":"Apache 2.0","gated":false,"blurb":"A coding helper small enough for a laptop. Good at completing code.","run":{"ollama":"qwen2.5-coder:7b","ollama_q":"Q4_K_M","lmstudio":"Qwen2.5 Coder 7B Instruct","mlx":"mlx-community/Qwen2.5-Coder-7B-Instruct-4bit"},"config":{"params_total":7620000000.0,"num_hidden_layers":28,"hidden_size":3584,"num_attention_heads":28,"num_key_value_heads":4,"head_dim":128,"vocab_size":152064,"tie_word_embeddings":false,"max_context":32768,"vision":false,"reasoning":false},"quants":[{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"Qwen/Qwen2.5-Coder-7B-Instruct-GGUF","bytes":4680000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"Qwen/Qwen2.5-Coder-7B-Instruct-GGUF","bytes":8100000000}]},{"id":"qwen2.5-vl-7b","hf_id":"Qwen/Qwen2.5-VL-7B-Instruct","name":"Qwen2.5 VL 7B","family":"Qwen","tasks":["vision","chat"],"score":48,"license":"Apache 2.0","gated":false,"blurb":"Reads screenshots, documents and photos, and answers questions about them.","run":{"ollama":"qwen2.5vl:7b","ollama_q":"Q4_K_M","lmstudio":"Qwen2.5 VL 7B Instruct","mlx":"mlx-community/Qwen2.5-VL-7B-Instruct-4bit"},"config":{"params_total":8290000000.0,"num_hidden_layers":28,"hidden_size":3584,"num_attention_heads":28,"num_key_value_heads":4,"head_dim":128,"vocab_size":152064,"tie_word_embeddings":false,"max_context":32768,"vision":true,"reasoning":false},"quants":[{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"ggml-org/Qwen2.5-VL-7B-Instruct-GGUF","bytes":6000000000}]},{"id":"gemma-3-12b","hf_id":"google/gemma-3-12b-it","name":"Gemma 3 12B","family":"Gemma","tasks":["chat","write","vision"],"score":62,"license":"Gemma","gated":true,"blurb":"A polished writer with good manners, and it can see pictures.","run":{"ollama":"gemma3:12b","ollama_q":"Q4_K_M","lmstudio":"Gemma 3 12B","mlx":"mlx-community/gemma-3-12b-it-4bit"},"config":{"params_total":12200000000.0,"num_hidden_layers":48,"hidden_size":3840,"num_attention_heads":16,"num_key_value_heads":8,"head_dim":256,"vocab_size":262208,"tie_word_embeddings":true,"max_context":131072,"vision":true,"reasoning":false,"sliding_window":1024,"sliding_window_pattern":6},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"ggml-org/gemma-3-12b-it-GGUF","bytes":6000000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"ggml-org/gemma-3-12b-it-GGUF","bytes":8100000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"ggml-org/gemma-3-12b-it-GGUF","bytes":12500000000}]},{"id":"qwen3-14b","hf_id":"Qwen/Qwen3-14B","name":"Qwen3 14B","family":"Qwen","tasks":["chat","code","write","reason","agents"],"score":66,"license":"Apache 2.0","gated":false,"blurb":"A noticeable step up from the 8B models, if you have the room.","run":{"ollama":"qwen3:14b","ollama_q":"Q4_K_M","lmstudio":"Qwen3 14B","mlx":"mlx-community/Qwen3-14B-4bit"},"config":{"params_total":14800000000.0,"num_hidden_layers":40,"hidden_size":5120,"num_attention_heads":40,"num_key_value_heads":8,"head_dim":128,"vocab_size":151936,"tie_word_embeddings":false,"max_context":32768,"vision":false,"reasoning":true},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"unsloth/Qwen3-14B-GGUF","bytes":7320000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"unsloth/Qwen3-14B-GGUF","bytes":9000000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"unsloth/Qwen3-14B-GGUF","bytes":15700000000}]},{"id":"phi-4","hf_id":"microsoft/phi-4","name":"Phi-4 14B","family":"Phi","tasks":["reason","chat"],"score":60,"license":"MIT","gated":false,"blurb":"Strong at maths and step-by-step problems for its size.","run":{"ollama":"phi4","ollama_q":"Q4_K_M","lmstudio":"Phi 4","mlx":"mlx-community/phi-4-4bit"},"config":{"params_total":14700000000.0,"num_hidden_layers":40,"hidden_size":5120,"num_attention_heads":40,"num_key_value_heads":10,"head_dim":128,"vocab_size":100352,"tie_word_embeddings":false,"max_context":16384,"vision":false,"reasoning":false},"quants":[{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"bartowski/phi-4-GGUF","bytes":9050000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"bartowski/phi-4-GGUF","bytes":15600000000}]},{"id":"gpt-oss-20b","hf_id":"openai/gpt-oss-20b","name":"gpt-oss 20B","family":"gpt-oss","tasks":["chat","code","reason","agents"],"score":70,"license":"Apache 2.0","gated":false,"blurb":"OpenAI's open model. Quick for its size because only part of it works on each word.","run":{"ollama":"gpt-oss:20b","ollama_q":"MXFP4","lmstudio":"gpt-oss 20b","mlx":"mlx-community/gpt-oss-20b-MXFP4-Q8"},"config":{"params_total":20910000000.0,"num_hidden_layers":24,"hidden_size":2880,"num_attention_heads":64,"num_key_value_heads":8,"head_dim":64,"vocab_size":201088,"tie_word_embeddings":false,"max_context":131072,"vision":false,"reasoning":true,"params_active":3610000000.0,"sliding_window":128,"sliding_window_pattern":2,"num_experts":32,"num_experts_per_tok":4,"moe_intermediate_size":2880},"quants":[{"format":"gguf","quant":"MXFP4","label":"MXFP4","repo":"ggml-org/gpt-oss-20b-GGUF","bytes":12100000000}]},{"id":"mistral-small-3.2","hf_id":"mistralai/Mistral-Small-3.2-24B-Instruct-2506","name":"Mistral Small 3.2 24B","family":"Mistral","tasks":["chat","write","vision","agents"],"score":72,"license":"Apache 2.0","gated":false,"blurb":"A capable writer that follows instructions closely and can see images.","run":{"ollama":"mistral-small3.2","ollama_q":"Q4_K_M","lmstudio":"Mistral Small 3.2 24B Instruct","mlx":"mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit"},"config":{"params_total":24000000000.0,"num_hidden_layers":40,"hidden_size":5120,"num_attention_heads":32,"num_key_value_heads":8,"head_dim":128,"vocab_size":131072,"tie_word_embeddings":false,"max_context":131072,"vision":true,"reasoning":false},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF","bytes":11500000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF","bytes":14300000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF","bytes":25100000000}]},{"id":"gemma-3-27b","hf_id":"google/gemma-3-27b-it","name":"Gemma 3 27B","family":"Gemma","tasks":["chat","write","vision"],"score":76,"license":"Gemma","gated":true,"blurb":"Google's biggest open Gemma 3. A lovely writer, and it sees images.","run":{"ollama":"gemma3:27b","ollama_q":"Q4_K_M","lmstudio":"Gemma 3 27B","mlx":"mlx-community/gemma-3-27b-it-4bit"},"config":{"params_total":27400000000.0,"num_hidden_layers":62,"hidden_size":5376,"num_attention_heads":32,"num_key_value_heads":16,"head_dim":128,"vocab_size":262208,"tie_word_embeddings":true,"max_context":131072,"vision":true,"reasoning":false,"sliding_window":1024,"sliding_window_pattern":6},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"ggml-org/gemma-3-27b-it-GGUF","bytes":13400000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"ggml-org/gemma-3-27b-it-GGUF","bytes":16500000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"ggml-org/gemma-3-27b-it-GGUF","bytes":28700000000}]},{"id":"qwen3-30b-a3b","hf_id":"Qwen/Qwen3-30B-A3B","name":"Qwen3 30B-A3B","family":"Qwen","tasks":["chat","code","write","reason","agents"],"score":78,"license":"Apache 2.0","gated":false,"blurb":"Big-model brains at small-model speed. Only a tenth of it works on each word.","run":{"ollama":"qwen3:30b","ollama_q":"Q4_K_M","lmstudio":"Qwen3 30B A3B","mlx":"mlx-community/Qwen3-30B-A3B-4bit"},"config":{"params_total":30530000000.0,"num_hidden_layers":48,"hidden_size":2048,"num_attention_heads":32,"num_key_value_heads":4,"head_dim":128,"vocab_size":151936,"tie_word_embeddings":false,"max_context":131072,"vision":false,"reasoning":true,"params_active":3350000000.0,"num_experts":128,"num_experts_per_tok":8,"moe_intermediate_size":768},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"unsloth/Qwen3-30B-A3B-GGUF","bytes":14700000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"unsloth/Qwen3-30B-A3B-GGUF","bytes":18600000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"unsloth/Qwen3-30B-A3B-GGUF","bytes":32500000000}]},{"id":"qwen3-coder-30b","hf_id":"Qwen/Qwen3-Coder-30B-A3B-Instruct","name":"Qwen3 Coder 30B-A3B","family":"Qwen","tasks":["code","agents"],"score":80,"license":"Apache 2.0","gated":false,"blurb":"A strong coding agent that's fast because it's a mixture of experts.","run":{"ollama":"qwen3-coder:30b","ollama_q":"Q4_K_M","lmstudio":"Qwen3 Coder 30B A3B Instruct","mlx":"mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit"},"config":{"params_total":30530000000.0,"num_hidden_layers":48,"hidden_size":2048,"num_attention_heads":32,"num_key_value_heads":4,"head_dim":128,"vocab_size":151936,"tie_word_embeddings":false,"max_context":262144,"vision":false,"reasoning":false,"params_active":3350000000.0,"num_experts":128,"num_experts_per_tok":8,"moe_intermediate_size":768},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF","bytes":14700000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF","bytes":18600000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF","bytes":32500000000}]},{"id":"qwen3-32b","hf_id":"Qwen/Qwen3-32B","name":"Qwen3 32B","family":"Qwen","tasks":["chat","code","write","reason","agents"],"score":82,"license":"Apache 2.0","gated":false,"blurb":"The best dense model a 24 GB graphics card can hold. Slower, but deep.","run":{"ollama":"qwen3:32b","ollama_q":"Q4_K_M","lmstudio":"Qwen3 32B","mlx":"mlx-community/Qwen3-32B-4bit"},"config":{"params_total":32800000000.0,"num_hidden_layers":64,"hidden_size":5120,"num_attention_heads":64,"num_key_value_heads":8,"head_dim":128,"vocab_size":151936,"tie_word_embeddings":false,"max_context":32768,"vision":false,"reasoning":true},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"unsloth/Qwen3-32B-GGUF","bytes":16000000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"unsloth/Qwen3-32B-GGUF","bytes":19800000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"unsloth/Qwen3-32B-GGUF","bytes":34800000000}]},{"id":"llama-3.3-70b","hf_id":"meta-llama/Llama-3.3-70B-Instruct","name":"Llama 3.3 70B","family":"Llama","tasks":["chat","write"],"score":84,"license":"Llama 3.3 Community","gated":true,"blurb":"A heavyweight writer. Needs a big Mac or a serious workstation.","run":{"ollama":"llama3.3:70b","ollama_q":"Q4_K_M","lmstudio":"Llama 3.3 70B Instruct","mlx":"mlx-community/Llama-3.3-70B-Instruct-4bit"},"config":{"params_total":70600000000.0,"num_hidden_layers":80,"hidden_size":8192,"num_attention_heads":64,"num_key_value_heads":8,"head_dim":128,"vocab_size":128256,"tie_word_embeddings":false,"max_context":131072,"vision":false,"reasoning":false},"quants":[{"format":"gguf","quant":"Q3_K_M","label":"Q3_K_M","repo":"bartowski/Llama-3.3-70B-Instruct-GGUF","bytes":34300000000},{"format":"gguf","quant":"Q4_K_M","label":"Q4_K_M","repo":"bartowski/Llama-3.3-70B-Instruct-GGUF","bytes":42500000000},{"format":"gguf","quant":"Q8_0","label":"Q8_0","repo":"bartowski/Llama-3.3-70B-Instruct-GGUF","bytes":75000000000}]},{"id":"gpt-oss-120b","hf_id":"openai/gpt-oss-120b","name":"gpt-oss 120B","family":"gpt-oss","tasks":["chat","code","reason","agents"],"score":90,"license":"Apache 2.0","gated":false,"blurb":"Frontier-class reasoning at home, if you have about 64 GB to spare.","run":{"ollama":"gpt-oss:120b","ollama_q":"MXFP4","lmstudio":"gpt-oss 120b","mlx":"mlx-community/gpt-oss-120b-MXFP4-Q8"},"config":{"params_total":116830000000.0,"num_hidden_layers":36,"hidden_size":2880,"num_attention_heads":64,"num_key_value_heads":8,"head_dim":64,"vocab_size":201088,"tie_word_embeddings":false,"max_context":131072,"vision":false,"reasoning":true,"params_active":5130000000.0,"sliding_window":128,"sliding_window_pattern":2,"num_experts":128,"num_experts_per_tok":4,"moe_intermediate_size":2880},"quants":[{"format":"gguf","quant":"MXFP4","label":"MXFP4","repo":"ggml-org/gpt-oss-120b-GGUF","bytes":63400000000}]}],"hf":null,"default_ctx":8192,"runner_ctx":4096,"howto":{"lmstudio":{"label":"LM Studio","pitch":"An app. No typing.","steps":{"windows":["Download LM Studio from <a href=\"https://lmstudio.ai/download\">lmstudio.ai<\/a> and run the installer.","Open it and click the magnifying glass (Discover) on the left.","Search for <b>{lmstudio}<\/b> and click Download. Pick <b>{qlabel}<\/b> if it asks.",["ctx","Before you load it, open the settings beside the model name and set <b>Context Length<\/b> to <b>{ctx}<\/b>, the amount we sized it for."],"When it finishes, click Chat, choose the model at the top, and start typing."],"macos":["Download LM Studio from <a href=\"https://lmstudio.ai/download\">lmstudio.ai<\/a> and drag it to Applications.","Open it and click the magnifying glass (Discover) on the left.","Search for <b>{lmstudio}<\/b> and click Download. On a Mac it may offer an MLX version: that one is often faster.",["ctx","Before you load it, open the settings beside the model name and set <b>Context Length<\/b> to <b>{ctx}<\/b>, the amount we sized it for."],"When it finishes, click Chat, choose the model at the top, and start typing."],"linux":["Download the LM Studio AppImage from <a href=\"https://lmstudio.ai/download\">lmstudio.ai<\/a>.","Make it runnable, then open it:",["cmd","chmod +x ~/Downloads/LM-Studio-*.AppImage && ~/Downloads/LM-Studio-*.AppImage"],"Click the magnifying glass (Discover), search for <b>{lmstudio}<\/b>, and download <b>{qlabel}<\/b>.",["ctx","Before you load it, open the settings beside the model name and set <b>Context Length<\/b> to <b>{ctx}<\/b>, the amount we sized it for."],"Click Chat, choose the model at the top, and start typing."],"steamos":["Hold the power button and choose <b>Switch to Desktop<\/b>.","Open the browser, go to <a href=\"https://lmstudio.ai/download\">lmstudio.ai<\/a>, and download the Linux AppImage.","In the Dolphin file manager, right-click the file, choose Properties, then Permissions, and tick <b>Is executable<\/b>. Double-click it to open.","Click the magnifying glass (Discover), search for <b>{lmstudio}<\/b>, and download <b>{qlabel}<\/b>.",["ctx","Before you load it, open the settings beside the model name and set <b>Context Length<\/b> to <b>{ctx}<\/b>, the amount we sized it for."],"Click Chat, choose the model at the top, and start typing."]}},"ollama":{"label":"Ollama","pitch":"One command.","steps":{"windows":["Download Ollama from <a href=\"https://ollama.com/download/windows\">ollama.com<\/a> and run the installer.","Open Terminal: press the Windows key, type <b>Terminal<\/b>, press Enter.","Paste this and press Enter. The first time, it downloads the model.",["cmd","ollama run {ollama_tag}"],["ctx","Ollama starts with a shorter memory than we sized this for. Once it&rsquo;s running, type this to give it <b>{ctx}<\/b> tokens:"],["ctxcmd","/set parameter num_ctx {ctx}"],"Type a question when you see <b>&gt;&gt;&gt;<\/b>. Type <b>/bye<\/b> to leave."],"macos":["Download Ollama from <a href=\"https://ollama.com/download/mac\">ollama.com<\/a>, open it, and drag it to Applications.","Open Terminal: press Cmd + Space, type <b>Terminal<\/b>, press Enter.","Paste this and press Enter. The first time, it downloads the model.",["cmd","ollama run {ollama_tag}"],["ctx","Ollama starts with a shorter memory than we sized this for. Once it&rsquo;s running, type this to give it <b>{ctx}<\/b> tokens:"],["ctxcmd","/set parameter num_ctx {ctx}"],"Type a question when you see <b>&gt;&gt;&gt;<\/b>. Type <b>/bye<\/b> to leave."],"linux":["Install Ollama. This downloads and runs its official install script, which asks for your password:",["cmd","curl -fsSL https://ollama.com/install.sh | sh"],"Then run the model. The first time, it downloads it.",["cmd","ollama run {ollama_tag}"],["ctx","Ollama starts with a shorter memory than we sized this for. Once it&rsquo;s running, type this to give it <b>{ctx}<\/b> tokens:"],["ctxcmd","/set parameter num_ctx {ctx}"],"Type a question when you see <b>&gt;&gt;&gt;<\/b>. Type <b>/bye<\/b> to leave."],"steamos":["Ollama&rsquo;s installer can&rsquo;t write to SteamOS&rsquo;s locked system folders, so <b>LM Studio is the easier route on a Deck<\/b>. If you&rsquo;d still like Ollama: switch to Desktop Mode and open Konsole.","Download Ollama into your home folder and start it:",["cmd","mkdir -p ~/ollama && curl -fsSL https://ollama.com/download/ollama-linux-amd64.tgz | tar -xz -C ~/ollama && ~/ollama/bin/ollama serve &"],"Then run the model:",["cmd","~/ollama/bin/ollama run {ollama_tag}"],["ctx","Ollama starts with a shorter memory than we sized this for. Once it&rsquo;s running, type this to give it <b>{ctx}<\/b> tokens:"],["ctxcmd","/set parameter num_ctx {ctx}"]]}},"llamacpp":{"label":"llama.cpp","pitch":"For the curious: the engine under most of the others.","steps":{"windows":["Install it with winget, in Terminal:",["cmd","winget install llama.cpp"],"Start a chat server. It downloads the model the first time:",["cmd","llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],"Open <b>http://localhost:8080<\/b> in your browser."],"macos":["Install it with Homebrew:",["cmd","brew install llama.cpp"],"Start a chat server. It downloads the model the first time:",["cmd","llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],"Open <b>http://localhost:8080<\/b> in your browser."],"linux":["Install it with Homebrew, or download a build from <a href=\"https://github.com/ggml-org/llama.cpp/releases\">the releases page<\/a>:",["cmd","brew install llama.cpp"],"Start a chat server. It downloads the model the first time:",["cmd","llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],"Open <b>http://localhost:8080<\/b> in your browser."],"steamos":["In Desktop Mode, download the Vulkan build for Linux from <a href=\"https://github.com/ggml-org/llama.cpp/releases\">the releases page<\/a> and unpack it in your home folder.","In Konsole, from the unpacked folder:",["cmd","./llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],"Open <b>http://localhost:8080<\/b> in the browser."]}},"mlx":{"label":"MLX","pitch":"For the curious, Apple Silicon only: Apple's own engine, often faster on a Mac than our estimate.","steps":{"macos":["Install it with Python's package manager (Python 3.10 or newer):",["cmd","pip install mlx-lm"],"Chat with the model. It downloads it the first time:",["cmd","mlx_lm.chat --model {mlx}"]]}}},"fixture":true}</script>
 <script>
-/* LOCAL FIT. Will this model run on this machine, and how fast? Pure functions, no DOM, no fetch.
-
-   The browser half of the maths behind docs/local/. `scripts/localfit.py` is the same arithmetic in Python,
-   which the generator uses for the no-script cheat sheet, and `tests/local_test.py` runs both over a grid of
-   machines and models and fails on the first number where they disagree. Two copies is the cost of a page
-   that answers with no server, and a copy nobody compares is how two answers to one question appear.
-
-   PLACEHOLDER MATHS. This is ds-app's first cut, written to the interface agreed with ds-models
-   (`team/contracts/fit.md`), so the page could be built before the real method landed. ds-models' module
-   replaces this file's body. The exports and the shapes they return are the contract and stay put.
-
-   The model, in one paragraph. A model needs its weights (the file you download) plus a cache that grows
-   with the context it is asked to hold, plus a fixed working buffer. A machine offers a budget: a share of
-   its graphics memory, or of its unified memory on a Mac or an APU, and on a PC with a graphics card,
-   ordinary RAM as an overflow at a much slower speed. Generating one token reads every active weight once,
-   so the speed is memory bandwidth divided by the bytes read per token, at an efficiency well short of the
-   datasheet. That last step is why a mixture-of-experts model, which reads a tenth of itself per token, is
-   fast for its size. */
 const LOCALFIT = (() => {
-  // How much of the datasheet bandwidth a real decode loop gets. 0.6 is the middle of what llama.cpp
-  // measures across CUDA, Metal and Vulkan for a Q4 model; CPU decode is worse, because the cores share the
-  // memory controller with everything else the machine is doing.
-  const EFF_GPU = 0.6, EFF_CPU = 0.5;
-  // The working buffer: compute scratch, the tokenizer, the runtime itself. Fixed, not a share of the
-  // weights, because it barely moves between a 1B and a 30B model.
-  const OVERHEAD_GB = 0.6;
-  // The stated error on a speed estimate. Shown as a range, never as one number.
-  const SPREAD = [0.7, 1.3];
-  // "Great" means it runs at reading speed or faster and leaves room for the rest of the machine.
-  const GREAT_TPS = 6, GREAT_HEADROOM = 0.15;
 
-  // The memory this machine can give a model. `rules` is the catalogue's `usable` block: one rule per
-  // platform, not per device, so a new laptop added to the catalogue needs no new arithmetic.
-  const budget = (m, rules) => {
-    const r = rules, ram = m.ram_gb;
-    const sys = Math.max(ram * r.system_min_frac, ram - r.system_reserve_gb);
-    if (m.unified && m.backend === "metal") {
-      // macOS lets the GPU wire about two-thirds of memory on smaller Macs and three-quarters on bigger
-      // ones, by default. It can be raised, and the numbers view says so; the default is what a beginner has.
-      return {gpu: ram * (ram >= r.apple_big_from_gb ? r.apple_big_frac : r.apple_small_frac), cpu: 0};
+const GB = 1e9;
+
+const QUANTS = {
+  F16:     { bpw: 16.00, kernel: 1.00, quality: 100, format: 'gguf' },
+  BF16:    { bpw: 16.00, kernel: 1.00, quality: 100, format: 'gguf' },
+  Q8_0:    { bpw: 8.50,  kernel: 1.00, quality: 95,  format: 'gguf' },
+  Q6_K:    { bpw: 6.56,  kernel: 1.10, quality: 90,  format: 'gguf' },
+  Q5_K_M:  { bpw: 5.70,  kernel: 1.07, quality: 85,  format: 'gguf' },
+  Q5_K_S:  { bpw: 5.57,  kernel: 1.05, quality: 83,  format: 'gguf' },
+  Q4_K_M:  { bpw: 4.89,  kernel: 1.14, quality: 78,  format: 'gguf' },
+  MXFP4:   { bpw: 4.25,  kernel: 1.14, quality: 78,  format: 'gguf' },
+  Q4_K_S:  { bpw: 4.67,  kernel: 1.10, quality: 75,  format: 'gguf' },
+  Q4_0:    { bpw: 4.55,  kernel: 1.00, quality: 72,  format: 'gguf' },
+  IQ4_NL:  { bpw: 4.68,  kernel: 1.10, quality: 75,  format: 'gguf' },
+  IQ4_XS:  { bpw: 4.46,  kernel: 1.14, quality: 74,  format: 'gguf' },
+  Q3_K_L:  { bpw: 4.30,  kernel: 1.36, quality: 66,  format: 'gguf' },
+  Q3_K_M:  { bpw: 4.00,  kernel: 1.40, quality: 62,  format: 'gguf', floor: true },
+  IQ3_M:   { bpw: 3.76,  kernel: 1.53, quality: 62,  format: 'gguf', floor: true },
+  Q3_K_S:  { bpw: 3.64,  kernel: 1.59, quality: 55,  format: 'gguf' },
+  IQ3_XXS: { bpw: 3.25,  kernel: 1.66, quality: 52,  format: 'gguf' },
+  Q2_K:    { bpw: 3.16,  kernel: 1.55, quality: 40,  format: 'gguf' },
+  IQ2_M:   { bpw: 2.93,  kernel: 1.83, quality: 38,  format: 'gguf' },
+  IQ2_XXS: { bpw: 2.38,  kernel: 2.05, quality: 30,  format: 'gguf' },
+  IQ1_M:   { bpw: 2.15,  kernel: 2.55, quality: 15,  format: 'gguf' },
+  'mlx-bf16':  { bpw: 16.0, kernel: 1.00, quality: 100, format: 'mlx' },
+  'mlx-8bit':  { bpw: 8.5,  kernel: 1.00, quality: 95,  format: 'mlx' },
+  'mlx-6bit':  { bpw: 6.5,  kernel: 1.05, quality: 88,  format: 'mlx' },
+  'mlx-4bit':  { bpw: 4.5,  kernel: 1.05, quality: 74,  format: 'mlx' },
+  'mlx-3bit':  { bpw: 3.5,  kernel: 1.10, quality: 55,  format: 'mlx' },
+};
+
+function quantSpec(label) {
+  if (!label) return null;
+  if (QUANTS[label]) return QUANTS[label];
+  let l = String(label).toUpperCase().replace(/^UD-/, '');
+  const mlx = /^(\d+)BIT/.exec(l) || (l === 'MXFP4-MLX' ? ['', '4'] : null);
+  if (mlx) return QUANTS[`mlx-${mlx[1]}bit`] ?? QUANTS['mlx-4bit'];
+  if (l === 'BF16' || l === 'F16' || l === 'FP16') return QUANTS.F16;
+  l = l.replace(/^(Q[2-6]_K)_XL$/, '$1_L').replace(/^(Q[2-6]_K)_L$/, (m, b) => ({ Q3_K: 'Q3_K_L', Q6_K: 'Q6_K', Q2_K: 'Q2_K' })[b] ?? `${b}_M`)
+    .replace(/^Q8_K_XL$/, 'Q8_0');
+  return QUANTS[l] ?? { bpw: null, kernel: 1.15, quality: 60, format: 'gguf' };
+}
+
+const GGUF_LADDER = ['Q8_0', 'Q6_K', 'Q5_K_M', 'MXFP4', 'Q4_K_M', 'IQ4_XS', 'Q3_K_M', 'IQ3_M', 'IQ3_XXS', 'Q2_K'];
+const MLX_LADDER = ['mlx-8bit', 'mlx-6bit', 'mlx-4bit', 'mlx-3bit'];
+
+const KV_BYTES = { f16: 2, bf16: 2, q8_0: 34 / 32, q4_0: 18 / 32 };
+
+const CAL = {
+  metal:          { eta: 0.90, layerMs: 0.150, kv: 0.54, ppEta: 0.63, spread: 0.25 },
+  cuda:           { eta: 0.91, layerMs: 0.060, kv: 0.81, ppEta: 1.00, spread: 0.20 },
+  vulkan:         { eta: 0.81, layerMs: 0.025, kv: 0.87, ppEta: 0.37, spread: 0.25 },
+  'vulkan-intel': { eta: 0.48, layerMs: 0.025, kv: 0.87, ppEta: 0.08, spread: 0.40 },
+  rocm:           { eta: 0.76, layerMs: 0.060, kv: 0.87, ppEta: 0.37, spread: 0.25 },
+  sycl:           { eta: 0.55, layerMs: 0.040, kv: 0.87, ppEta: 0.25, spread: 0.40 },
+  cpu:            { eta: 0.58, layerMs: 0.000, kv: 1.00, ppEta: 1.00, spread: 0.50 },
+  mlx:            { eta: 0.90, layerMs: 0.150, kv: 0.54, ppEta: 0.63, spread: 0.30 },
+  q4_0Kernel: 0.97,
+  hybridCpu: 0.83,
+  legacyArch: 0.62,
+};
+const LEGACY_ARCH = new Set(['pascal', 'volta', 'maxwell', 'kepler']);
+
+const THRESHOLDS = { great: 10, greatReasoning: 20, usable: 1.5, minContext: 4096, headroomNote: 0.05 };
+
+const SPEED_WORDS = [
+  { below: 2, words: 'very slow: a word every second or so' },
+  { below: 6, words: 'slow: like someone typing' },
+  { below: 15, words: 'about as fast as you read' },
+  { below: 40, words: 'faster than you can read' },
+  { below: Infinity, words: 'near-instant' },
+];
+const WORDS_PER_TOKEN = 0.75;
+function speedWords(tps) {
+  return SPEED_WORDS.find((b) => tps < b.below).words;
+}
+
+const VERDICT_LABELS = {
+  great: 'Runs great',
+  slow: 'Runs, slowly',
+  tight: 'Fits only with a smaller quant or a shorter context',
+  'too-big': 'Too big',
+};
+function verdictLabel(v) { return VERDICT_LABELS[v] ?? v; }
+
+
+const num = (x) => (typeof x === 'number' && Number.isFinite(x) ? x : null);
+
+function expertParams(m) {
+  const E = num(m.num_experts), k = num(m.num_experts_per_tok);
+  if (!E || !k || E <= 1) return 0;
+  const H = num(m.hidden_size), I = num(m.moe_intermediate_size), L = num(m.num_hidden_layers);
+  if (H && I && L) {
+    const moeLayers = L - (num(m.first_k_dense_replace) ?? 0);
+    return moeLayers * E * 3 * H * I;
+  }
+  const total = num(m.params_total), active = num(m.params_active);
+  if (total && active && active < total) return (total - active) / (1 - k / E);
+  return 0;
+}
+
+function activeParams(m) {
+  const total = num(m.params_total) ?? 0;
+  const ex = expertParams(m);
+  if (!ex) return num(m.params_active) ?? total;
+  return total - ex + ex * (m.num_experts_per_tok / m.num_experts);
+}
+
+function embeddingParams(m) {
+  if (m.tie_word_embeddings) return 0;
+  const V = num(m.vocab_size), H = num(m.hidden_size);
+  return V && H ? V * H : 0;
+}
+
+function weightBytes(m, quant) {
+  const q = typeof quant === 'string' ? { quant } : quant;
+  if (num(q.bytes)) return q.bytes;
+  const hit = (m.quants ?? []).find((x) => x.quant === q.quant && num(x.bytes));
+  if (hit) return hit.bytes;
+  const spec = quantSpec(q.quant);
+  if (!spec || !spec.bpw) throw new Error(`unknown quant ${q.quant}`);
+  const total = num(m.params_total);
+  if (!total) throw new Error(`model ${m.id ?? '?'} has no params_total`);
+  if (q.quant === 'MXFP4') {
+    const ex = expertParams(m);
+    return (ex * 4.25 + (total - ex) * 8.5) / 8;
+  }
+  return (total * spec.bpw) / 8;
+}
+
+function bytesReadPerToken(m, quant) {
+  const W = weightBytes(m, quant);
+  const qn = typeof quant === 'string' ? quant : quant.quant;
+  const total = num(m.params_total);
+  const ex = expertParams(m);
+  const emb = embeddingParams(m);
+  if (!total) return W;
+  if (!ex) return W * (1 - emb / total);
+  let expBytes, restBytes;
+  if (qn === 'MXFP4') {
+    expBytes = (ex * 4.25) / 8;
+    restBytes = W - expBytes;
+  } else {
+    expBytes = (W * ex) / total;
+    restBytes = W - expBytes;
+  }
+  const restParams = total - ex;
+  const restRead = restBytes * (1 - emb / restParams);
+  return restRead + expBytes * (m.num_experts_per_tok / m.num_experts);
+}
+
+function layerKinds(m) {
+  const L = num(m.num_hidden_layers) ?? 0;
+  if (num(m.swa_layers) != null || num(m.linear_layers) != null) {
+    const sw = num(m.swa_layers) ?? 0, lin = num(m.linear_layers) ?? 0;
+    return Array.from({ length: L }, (_, i) => (i < sw ? 'swa' : i < sw + lin ? 'linear' : 'full'));
+  }
+  if (Array.isArray(m.layer_types) && m.layer_types.length) {
+    return m.layer_types.map((t) => (/sliding/.test(t) ? 'swa' : /linear|mamba|recurrent|delta|ssm/.test(t) ? 'linear' : 'full'));
+  }
+  const pat = num(m.sliding_window_pattern);
+  if (num(m.sliding_window) && pat && pat > 1) {
+    return Array.from({ length: L }, (_, i) => ((i + 1) % pat === 0 ? 'full' : 'swa'));
+  }
+  if (num(m.sliding_window) && m.use_sliding_window === true) return Array(L).fill('swa');
+  return Array(L).fill('full');
+}
+
+function kvBytes(m, context, kvQuant = 'f16') {
+  const el = KV_BYTES[kvQuant] ?? 2;
+  const kinds = layerKinds(m);
+  if (num(m.kv_lora_rank)) {
+    const per = (m.kv_lora_rank + (num(m.qk_rope_head_dim) ?? 64)) * el;
+    return kinds.length * per * context;
+  }
+  const kvh = num(m.num_key_value_heads) ?? num(m.num_attention_heads) ?? 0;
+  const hd = num(m.head_dim) ?? (num(m.hidden_size) && num(m.num_attention_heads) ? m.hidden_size / m.num_attention_heads : 0);
+  const perTokLayer = 2 * kvh * hd * el;
+  const win = num(m.sliding_window) ?? context;
+  let bytes = 0;
+  for (const k of kinds) {
+    if (k === 'full') bytes += perTokLayer * context;
+    else if (k === 'swa') bytes += perTokLayer * Math.min(context, win + 512);
+  }
+  if (kinds.includes('linear')) bytes += 0.1 * GB;
+  return bytes;
+}
+
+function computeBufferBytes(m) {
+  const V = num(m.vocab_size) ?? 32000, H = num(m.hidden_size) ?? 4096;
+  const proj = m.vision ? (num(m.mmproj_bytes) ?? 0.6 * GB) + 0.2 * GB : 0;
+  return 512 * (V * 4 + H * 64) + 0.05 * GB + proj;
+}
+
+function normalizeModel(row, variantCols, fileCols) {
+  const d = row.dims ?? {};
+  const asObj = (cols, r) => (Array.isArray(r) && cols ? Object.fromEntries(cols.map((c, i) => [c, r[i]])) : r);
+  const variants = (row.variants ?? []).map((v) => asObj(variantCols, v));
+  const quants = [];
+  let mmproj = null;
+  for (const v of variants) {
+    if (v.fmt !== 'gguf' && v.fmt !== 'mlx') continue;
+    if (v.fmt === 'gguf' && num(v.mmproj) && (mmproj == null || v.mmproj < mmproj)) mmproj = v.mmproj;
+    for (const f0 of v.files ?? []) {
+      const f = asObj(fileCols, f0);
+      if (!num(f.bytes)) continue;
+      const label = f.q;
+      let quant = label;
+      if (v.fmt === 'mlx') {
+        const bits = /(\d+)bit/i.exec(label)?.[1] ?? (/mxfp4/i.test(label) ? '4' : /bf16|fp16/i.test(label) ? 'bf16' : null);
+        if (!bits) continue;
+        quant = bits === 'bf16' ? 'mlx-bf16' : `mlx-${bits}bit`;
+      } else if (!QUANTS[label]) {
+        quant = label;
+      }
+      if (!quants.some((q) => q.quant === quant && q.format === v.fmt)) {
+        quants.push({ format: v.fmt, quant, label, repo: v.repo, by: v.by, bytes: f.bytes });
+      }
     }
-    if (m.unified) return {gpu: Math.max(0, Math.min(ram * r.unified_max_frac, ram - r.unified_reserve_gb)), cpu: 0};
-    if (m.vram_gb > 0) return {gpu: Math.max(0, m.vram_gb - r.vram_reserve_gb), cpu: sys};
-    return {gpu: 0, cpu: sys};
+  }
+  const moe = row.moe ?? null;
+  return {
+    id: row.id, name: row.name, family: row.family, license: row.license, uses: row.uses ?? [],
+    params_total: num(row.params), params_active: num(row.active),
+    num_hidden_layers: num(d.layers), hidden_size: num(d.hidden), num_attention_heads: num(d.heads),
+    num_key_value_heads: num(d.kv_heads), head_dim: num(d.head_dim), vocab_size: num(d.vocab),
+    sliding_window: num(d.swa), swa_layers: num(d.swa_layers), linear_layers: num(d.linear_layers),
+    kv_lora_rank: num(d.kv_lora_rank), qk_rope_head_dim: num(d.rope_dim),
+    moe_intermediate_size: num(d.moe_ffn), first_k_dense_replace: num(d.dense_layers),
+    tie_word_embeddings: d.tied ?? false,
+    num_experts: num(moe?.experts), num_experts_per_tok: num(moe?.per_tok),
+    max_context: num(row.ctx),
+    vision: (row.uses ?? []).includes('vision'), reasoning: (row.uses ?? []).includes('reasoning'),
+    mmproj_bytes: mmproj, ollama: row.ollama ?? null, gated: row.gated ?? false,
+    quants,
   };
+}
 
-  // The context cache: keys and values, for every layer, for every token held, at two bytes a number.
-  const kvGB = (model, ctx) => 2 * model.layers * model.kv_heads * model.head_dim * ctx * 2 / 1e9;
 
-  const need = (model, quant, ctx) => {
-    const kv = kvGB(model, ctx);
-    return {weights: quant.gb, kv, overhead: OVERHEAD_GB, total: quant.gb + kv + OVERHEAD_GB};
+function osReserveGB(os, ramGB) {
+  switch (os) {
+    case 'windows': return 3.5 + 0.08 * ramGB;
+    case 'macos': return 2.0 + 0.03 * ramGB;
+    default: return 1.5 + 0.05 * ramGB;
+  }
+}
+
+function appleGpuShareGB(ramGB) {
+  if (ramGB <= 36) return ramGB * (2 / 3);
+  if (ramGB <= 128) return ramGB * 0.75;
+  return ramGB * 0.8;
+}
+
+function normalizeHardware(h) {
+  const mem = h.memory ?? {};
+  const ramGB = num(h.ram_gb) ?? num(mem.ram_gb) ?? 16;
+  const ramBW = num(h.ram_bandwidth_gbs) ?? num(mem.ram_bandwidth_gbs) ?? 60;
+  const unified = Boolean(h.unified ?? mem.unified);
+  const os = h.os ?? (Array.isArray(h.os_options) ? h.os_options[0] : undefined) ?? (h.gpu?.vendor === 'apple' ? 'macos' : 'windows');
+  const gpus = (Array.isArray(h.gpus) ? h.gpus : h.gpu ? [h.gpu] : []).filter(Boolean);
+  let gpu = null;
+  if (gpus.length) {
+    const g0 = gpus[0];
+    const integrated = Boolean(g0.integrated ?? unified);
+    const vram = gpus.reduce((s, g) => s + (num(g.vram_gb) ?? 0), 0);
+    gpu = {
+      vendor: g0.vendor,
+      name: g0.name,
+      count: gpus.length,
+      integrated,
+      vram_gb: integrated ? null : vram,
+      bandwidth_gbs: Math.min(...gpus.map((g) => num(g.vram_bandwidth_gbs) ?? num(g.bandwidth_gbs) ?? (integrated ? ramBW : 300))),
+      fp16_tflops: num(g0.fp16_tflops) ?? null,
+      arch: typeof g0.arch === 'string' ? g0.arch.toLowerCase() : null,
+      backends: g0.backends ?? defaultBackends(g0.vendor, os),
+    };
+  }
+  let gpuUsableGB = num(h.gpu_usable_gb) ?? num(mem.gpu_usable_gb);
+  if (gpu && gpu.integrated && gpuUsableGB == null) {
+    if (gpu.vendor === 'apple') gpuUsableGB = appleGpuShareGB(ramGB);
+    else gpuUsableGB = ramGB * 0.5;
+  }
+  return {
+    id: h.id, name: h.name, os, ramGB, ramBW, unified, gpu, gpuUsableGB,
+    cpuCores: num(h.cpu?.cores_perf) ?? num(h.cpu?.cores) ?? 6,
+    cpuTflops: num(h.cpu?.fp32_tflops) ?? null,
   };
+}
 
-  // Tokens a second, as [low, mid, high]. `gpuFrac` is the share of the model on the fast memory.
-  const speed = (m, model, quant, place, gpuFrac) => {
-    const bytes = quant.gb * (model.active_b / model.params_b);
-    const gpuBW = (m.gpu_bw_gbs || 0) * EFF_GPU, cpuBW = (m.cpu_bw_gbs || 0) * EFF_CPU;
-    let secs;
-    if (place === "gpu") secs = bytes / gpuBW;
-    else if (place === "cpu") secs = bytes / cpuBW;
-    else secs = gpuFrac * bytes / gpuBW + (1 - gpuFrac) * bytes / cpuBW;
-    const mid = 1 / secs;
-    return [mid * SPREAD[0], mid, mid * SPREAD[1]];
-  };
+function defaultBackends(vendor, os) {
+  switch (vendor) {
+    case 'nvidia': return ['cuda', 'vulkan'];
+    case 'amd': return os === 'linux' ? ['vulkan', 'rocm'] : ['vulkan', 'rocm'];
+    case 'intel': return ['vulkan', 'sycl'];
+    case 'apple': return ['metal', 'mlx'];
+    default: return ['vulkan'];
+  }
+}
 
-  // The whole answer for one model at one quant. `place` is where it runs: all on the accelerator ("gpu",
-  // which on a Mac or a handheld is the shared memory), on the processor alone ("cpu"), or "split" between
-  // a graphics card and RAM, which is what offload means.
-  const fitQuant = (m, model, quant, ctx, rules) => {
-    const b = budget(m, rules), n = need(model, quant, ctx);
-    let place = null, space = 0, gpuFrac = 0;
-    if (b.gpu > 0 && n.total <= b.gpu) { place = "gpu"; space = b.gpu; gpuFrac = 1; }
-    else if (b.gpu === 0 && n.total <= b.cpu) { place = "cpu"; space = b.cpu; }
-    else if (b.gpu > 0 && b.cpu > 0 && n.total <= b.gpu + b.cpu) {
-      place = "split"; space = b.gpu + b.cpu; gpuFrac = b.gpu / n.total;
+function pickBackend(hw, quantName, forced) {
+  const fmt = quantSpec(quantName)?.format ?? 'gguf';
+  if (!hw.gpu) return 'cpu';
+  const list = hw.gpu.backends ?? [];
+  if (forced && list.includes(forced)) return forced;
+  if (fmt === 'mlx') return list.includes('mlx') ? 'mlx' : null;
+  return list.find((b) => b !== 'mlx') ?? 'cpu';
+}
+
+function budgets(hw) {
+  const ramFree = Math.max(0, hw.ramGB - osReserveGB(hw.os, hw.ramGB)) * GB;
+  if (!hw.gpu) return { gpu: 0, ram: ramFree, shared: false };
+  if (hw.gpu.integrated) {
+    const gpu = Math.min(hw.gpuUsableGB * GB, ramFree);
+    return { gpu, ram: ramFree, shared: true };
+  }
+  const gpu = Math.max(0, hw.gpu.vram_gb * GB - (0.5 * GB + 0.05 * hw.gpu.vram_gb * GB));
+  return { gpu, ram: ramFree, shared: false };
+}
+
+
+function fit(model, quant, hardware, opts = {}) {
+  const hw = hardware.ramGB != null ? hardware : normalizeHardware(hardware);
+  const qn = typeof quant === 'string' ? quant : quant.quant;
+  const context = Math.min(opts.context ?? 8192, num(model.max_context) ?? Infinity);
+  const kvQuant = opts.kvQuant ?? 'f16';
+  const backend = pickBackend(hw, qn, opts.backend);
+  const W = weightBytes(model, quant);
+  const KV = kvBytes(model, context, kvQuant);
+  const BUF = computeBufferBytes(model);
+  const total = W + KV + BUF;
+  const b = budgets(hw);
+  const L = num(model.num_hidden_layers) ?? 32;
+  const notes = [];
+  const base = { quant: qn, context, kvQuant, backend, weightsGB: W / GB, kvGB: KV / GB, bufferGB: BUF / GB, totalGB: total / GB,
+    gpuBudgetGB: b.gpu / GB, ramBudgetGB: b.ram / GB, layers: L };
+
+  if (backend === null) return { ...base, placement: 'none', fits: false, gpuLayers: 0, cpuBytes: 0, gpuBytes: 0,
+    notes: ['MLX models run only on Apple Silicon Macs.'] };
+
+  if (b.gpu > 0 && total <= b.gpu) {
+    return { ...base, placement: 'gpu', fits: true, gpuLayers: L, gpuBytes: W, cpuBytes: 0, headroomGB: (b.gpu - total) / GB, notes };
+  }
+
+  if (b.gpu <= 0 || backend === 'cpu') {
+    const fits = total <= b.ram;
+    return { ...base, placement: fits ? 'cpu' : 'none', fits, gpuLayers: 0, gpuBytes: 0, cpuBytes: W,
+      headroomGB: (b.ram - total) / GB, notes };
+  }
+
+  if (b.shared) {
+    if (total > b.ram) return { ...base, placement: 'none', fits: false, gpuLayers: 0, gpuBytes: 0, cpuBytes: 0, notes };
+    if (hw.gpu.vendor === 'apple') notes.push(`Over macOS's default GPU memory limit (${(b.gpu / GB).toFixed(0)} GB). It can be raised: sudo sysctl iogpu.wired_limit_mb=${Math.floor((b.ram / GB) * 1000)}`);
+    else notes.push('Over the GPU memory share; raising it in the BIOS (UMA / dedicated graphics memory) lets it all run on the GPU.');
+  }
+
+  const ex = expertParams(model);
+  const gpuFixed = KV + BUF;
+  const avail = b.gpu - gpuFixed;
+  if (avail <= 0) {
+    const fits = total <= b.ram;
+    return { ...base, placement: fits ? 'cpu' : 'none', fits, gpuLayers: 0, gpuBytes: 0, cpuBytes: W, notes };
+  }
+  let gpuBytes, cpuBytes, gpuLayers;
+  if (ex) {
+    const expBytes = qn === 'MXFP4' ? (ex * 4.25) / 8 : (W * ex) / model.params_total;
+    const rest = W - expBytes;
+    if (rest <= avail) {
+      gpuBytes = Math.min(W, avail);
+      cpuBytes = W - gpuBytes;
+      gpuLayers = L;
+      notes.push('Keeps attention on the GPU and moves some experts to system RAM (MoE offload).');
     }
-    const have = place ? space : b.gpu + b.cpu;
-    if (!place) return {verdict: "no", quant: quant.q, ctx, need: n, have, place: null, gpu_frac: 0,
-                        tps: null, headroom: 1 - n.total / Math.max(have, 1e-9), catches: []};
-    const tps = speed(m, model, quant, place, gpuFrac);
-    const headroom = 1 - n.total / space;
-    const catches = [];
-    if (tps[1] < GREAT_TPS) catches.push("slow");
-    if (headroom < GREAT_HEADROOM) catches.push("snug");
-    if (place === "split") catches.push("split");
-    const verdict = tps[1] >= GREAT_TPS && headroom >= GREAT_HEADROOM ? "great" : "ok";
-    return {verdict, quant: quant.q, ctx, need: n, have, place, gpu_frac: gpuFrac, tps, headroom, catches};
-  };
+  }
+  if (gpuBytes == null) {
+    const perLayer = W / L;
+    gpuLayers = Math.max(0, Math.min(L, Math.floor(avail / perLayer)));
+    gpuBytes = gpuLayers * perLayer;
+    cpuBytes = W - gpuBytes;
+    notes.push(`${gpuLayers} of ${L} layers on the GPU; the rest run from system RAM.`);
+  }
+  const ramNeed = b.shared ? total : cpuBytes;
+  const fits = ramNeed <= b.ram;
+  return { ...base, placement: fits ? 'partial' : 'none', fits, gpuLayers, gpuBytes, cpuBytes,
+    headroomGB: ((b.shared ? b.ram : b.ram) - ramNeed) / GB, notes };
+}
 
-  // The quant to recommend. The model's default (almost always Q4_K_M, the sweet spot) if it fits at all;
-  // otherwise the largest smaller one that does, marked, because below four bits a model gets noticeably
-  // worse and the reader should know they are getting the squeezed version. `opts.quant` forces one.
-  const fit = (m, model, opts, rules) => {
-    const ctx = (opts && opts.ctx) || 8192;
-    const qs = model.quants.slice().sort((a, b) => a.bits - b.bits);
-    if (opts && opts.quant) {
-      const q = qs.find((x) => x.q === opts.quant);
-      if (q) return Object.assign(fitQuant(m, model, q, ctx, rules), {smaller: false});
+
+function kernelFactor(qn) {
+  if (qn === 'Q4_0') return CAL.q4_0Kernel;
+  return quantSpec(qn)?.kernel ?? 1.1;
+}
+
+function speed(model, quant, hardware, opts = {}) {
+  const hw = hardware.ramGB != null ? hardware : normalizeHardware(hardware);
+  const f = opts.fit ?? fit(model, quant, hw, opts);
+  const qn = f.quant;
+  if (!f.fits) return { decodeTps: 0, decodeRange: [0, 0], prefillTps: 0, bound: 'none' };
+  const depth = opts.depth ?? Math.floor(f.context / 2);
+  const read = bytesReadPerToken(model, quant);
+  const W = weightBytes(model, quant);
+  const kvRead = kvBytes(model, depth, f.kvQuant);
+  const k = kernelFactor(qn);
+  const L = f.layers;
+  const calKey = f.backend === 'vulkan' && hw.gpu?.vendor === 'intel' ? 'vulkan-intel' : f.backend;
+  const gcal0 = CAL[calKey] ?? CAL.vulkan;
+  const gcal = LEGACY_ARCH.has(hw.gpu?.arch) ? { ...gcal0, eta: gcal0.eta * CAL.legacyArch } : gcal0;
+  const ccal = CAL.cpu;
+  const cpuBW = hw.ramBW;
+  const gpuBW = hw.gpu?.bandwidth_gbs ?? cpuBW;
+  let gFrac = 0;
+  if (f.placement === 'gpu') gFrac = 1;
+  else if (f.placement === 'partial') {
+    const ex = expertParams(model);
+    if (ex && f.gpuLayers === L) {
+      const expBytes = qn === 'MXFP4' ? (ex * 4.25) / 8 : (W * ex) / model.params_total;
+      const cpuExpRead = (f.cpuBytes / expBytes) * (expBytes * model.num_experts_per_tok / model.num_experts);
+      gFrac = Math.max(0, 1 - cpuExpRead / read);
+    } else gFrac = f.gpuBytes / W;
+  }
+  const readG = read * gFrac, readC = read * (1 - gFrac);
+  const kvG = f.placement === 'cpu' ? 0 : kvRead, kvC = f.placement === 'cpu' ? kvRead : 0;
+  const tG = gFrac > 0 ? (readG * k + kvG / (gcal.kv ?? 1)) / (gcal.eta * gpuBW * GB) + (L * (f.placement === 'gpu' ? 1 : f.gpuLayers / L) * gcal.layerMs) / 1000 : 0;
+  const cpuLayers = f.placement === 'cpu' ? L : f.placement === 'partial' && f.gpuLayers < L ? L - f.gpuLayers : 0;
+  const cEta = ccal.eta * (f.placement === 'partial' ? CAL.hybridCpu : 1);
+  const tC = readC + kvC > 0 ? (readC * k + kvC) / (cEta * cpuBW * GB) + (cpuLayers * ccal.layerMs) / 1000 : 0;
+  let tX = 0;
+  if (f.placement === 'partial' && !hw.gpu?.integrated) {
+    if (f.gpuLayers < L) tX = 0.0005;
+    else {
+      const ex = expertParams(model);
+      const expBytes = qn === 'MXFP4' ? (ex * 4.25) / 8 : (W * ex) / model.params_total;
+      const moeLayers = L - (num(model.first_k_dense_replace) ?? 0);
+      tX = 0.0002 * Math.min(moeLayers, Math.ceil(f.cpuBytes / (expBytes / moeLayers)));
     }
-    const def = qs.find((x) => x.q === model.default_q) || qs[qs.length - 1];
-    const first = fitQuant(m, model, def, ctx, rules);
-    if (first.verdict !== "no") return Object.assign(first, {smaller: false});
-    for (const q of qs.filter((x) => x.bits < def.bits && x.bits >= 3).reverse()) {
-      const r = fitQuant(m, model, q, ctx, rules);
-      if (r.verdict !== "no") return Object.assign(r, {smaller: true});
+  }
+  const t = tG + tC + tX;
+  const tps = 1 / t;
+  const spread = f.placement === 'gpu' ? gcal.spread : Math.max(gcal.spread, ccal.spread) + 0.1;
+  const bound = f.placement === 'gpu' ? 'gpu' : f.placement === 'cpu' ? 'cpu' : 'mixed';
+
+  const P = activeParams(model);
+  let pp;
+  if (bound === 'cpu' || !hw.gpu) {
+    const tf = hw.cpuTflops ?? hw.cpuCores * 0.25;
+    pp = (ccal.ppEta * tf * 1e12) / (2 * P);
+  } else {
+    const tf = hw.gpu.fp16_tflops ?? gpuBW / 25;
+    pp = (gcal.ppEta * tf * 1e12) / (2 * P);
+    if (bound === 'mixed' && !hw.gpu.integrated) pp = 1 / (1 / pp + f.cpuBytes / (25 * GB) / 512);
+  }
+  return { decodeTps: tps, decodeRange: [tps / (1 + spread), tps * (1 + spread)], prefillTps: pp, bound,
+    backend: f.backend, msPerToken: t * 1000 };
+}
+
+
+function ladderFor(model, hw, opts) {
+  const isMlx = opts.format === 'mlx';
+  const ladder = isMlx ? MLX_LADDER : GGUF_LADDER;
+  const have = (model.quants ?? []).filter((q) => (isMlx ? q.format === 'mlx' : q.format === 'gguf' || !q.format));
+  if (have.length) {
+    const byName = new Map(have.map((q) => [q.quant, q]));
+    const listed = ladder.filter((n) => byName.has(n)).map((n) => byName.get(n));
+    if (listed.length) return listed;
+  }
+  return ladder.filter((n) => n !== 'MXFP4').map((n) => ({ quant: n }));
+}
+
+function assess(model, quant, hardware, opts = {}) {
+  const hw = hardware.ramGB != null ? hardware : normalizeHardware(hardware);
+  const f = fit(model, quant, hw, opts);
+  const s = speed(model, quant, hw, { ...opts, fit: f });
+  let verdict;
+  const great = opts.reasoning ?? model.reasoning ? THRESHOLDS.greatReasoning : THRESHOLDS.great;
+  if (f.fits && s.decodeTps >= great) verdict = 'great';
+  else if (f.fits && s.decodeTps >= THRESHOLDS.usable) verdict = 'slow';
+  else {
+    const ladder = ladderFor(model, hw, { format: quantSpec(f.quant)?.format });
+    const q0 = quantSpec(f.quant)?.quality ?? 0;
+    const floorQ = Math.min(...Object.values(QUANTS).filter((q) => q.floor).map((q) => q.quality));
+    const ctxs = [opts.context ?? 8192, THRESHOLDS.minContext].filter((c, i, a) => a.indexOf(c) === i);
+    const rescue = [];
+    for (const q of ladder) {
+      const qq = quantSpec(q.quant)?.quality ?? 0;
+      if (qq > q0 || qq < floorQ) continue;
+      for (const c of ctxs) {
+        if (q.quant === f.quant && c === (opts.context ?? 8192)) continue;
+        const f2 = fit(model, q, hw, { ...opts, context: c });
+        const s2 = speed(model, q, hw, { ...opts, context: c, fit: f2 });
+        if (f2.fits && s2.decodeTps >= THRESHOLDS.usable) rescue.push({ quant: q.quant, context: c, decodeTps: s2.decodeTps });
+      }
     }
-    return Object.assign(first, {smaller: false});
-  };
+    verdict = rescue.length ? 'tight' : 'too-big';
+    if (rescue.length) f.notes.push(`Try ${rescue[0].quant} at ${rescue[0].context.toLocaleString('en')} tokens of context.`);
+    else if (f.fits) f.notes.push('Fits, but would generate under 1.5 tokens a second.');
+    return { verdict, label: verdictLabel(verdict), fit: f, speed: s, rescue, ...flags(f) };
+  }
+  return { verdict, label: verdictLabel(verdict), fit: f, speed: s, rescue: [], ...flags(f) };
+}
 
-  // Speed in words a reader can picture. About 0.75 English words a token; people read 4 to 5 words a
-  // second, so reading speed is about 6 tokens a second.
-  const BANDS = [[2, "crawl", "very slow: a word every second or so"],
-                 [6, "type", "slow: like someone typing"],
-                 [15, "read", "about as fast as you read"],
-                 [40, "fast", "faster than you can read"],
-                 [Infinity, "instant", "near-instant"]];
-  const speedWords = (tps) => {
-    for (const [top, key, words] of BANDS) if (tps < top) return {key, words, wps: tps * 0.75};
-    return null;
-  };
+function flags(f) {
+  const budget = f.placement === 'gpu' ? f.gpuBudgetGB : f.ramBudgetGB;
+  const nearlyFull = f.fits && budget > 0 && (f.headroomGB ?? 0) < THRESHOLDS.headroomNote * budget;
+  if (nearlyFull) f.notes.push('Only just fits: close other apps (browsers especially) before loading it.');
+  return { offload: f.placement === 'partial' || f.placement === 'cpu', nearlyFull };
+}
 
-  return {budget, kvGB, need, speed, fitQuant, fit, speedWords,
-          consts: {EFF_GPU, EFF_CPU, OVERHEAD_GB, SPREAD, GREAT_TPS, GREAT_HEADROOM}};
+function bestQuant(model, hardware, opts = {}) {
+  const hw = hardware.ramGB != null ? hardware : normalizeHardware(hardware);
+  const ladder = ladderFor(model, hw, opts);
+  const big = (num(model.params_total) ?? 0) >= 10e9;
+  const results = ladder.map((q) => ({ q, a: assess(model, q, hw, opts) }));
+  const ok = (r) => {
+    if (big && (r.q.quant === 'Q8_0' || r.q.quant === 'mlx-8bit')) return false;
+    return r.a.verdict === 'great' && r.a.fit.placement === 'gpu' && r.a.fit.headroomGB >= 0.1 * r.a.fit.totalGB;
+  };
+  const capped = (r) => !(big && (r.q.quant === 'Q8_0' || r.q.quant === 'mlx-8bit'));
+  const floorQ = Math.min(...Object.values(QUANTS).filter((q) => q.floor).map((q) => q.quality));
+  const quality = (r) => quantSpec(r.q.quant)?.quality ?? 0;
+  const aboveFloor = (r) => quality(r) >= floorQ;
+  const q4 = QUANTS.Q4_K_M.quality;
+  const pick = results.find(ok)
+    ?? results.find((r) => r.a.verdict === 'great' && capped(r) && aboveFloor(r))
+    ?? results.find((r) => r.a.verdict === 'slow' && quality(r) <= q4 && aboveFloor(r))
+    ?? results.find((r) => (r.a.verdict === 'great' || r.a.verdict === 'slow'));
+  if (!pick) return null;
+  const belowFloor = !aboveFloor(pick);
+  const verdict = belowFloor ? 'tight' : pick.a.verdict;
+  if (belowFloor) pick.a.fit.notes.push(`Only fits at ${pick.q.quant}, below the quality we recommend; a smaller model will answer better.`);
+  return { quant: pick.q.quant, bytes: weightBytes(model, pick.q), belowFloor, ...pick.a, verdict, label: verdictLabel(verdict) };
+}
+
+return {GB, QUANTS, quantSpec, GGUF_LADDER, MLX_LADDER, KV_BYTES, CAL, THRESHOLDS, SPEED_WORDS, WORDS_PER_TOKEN, speedWords, VERDICT_LABELS, verdictLabel, expertParams, activeParams, weightBytes, bytesReadPerToken, kvBytes, computeBufferBytes, normalizeModel, osReserveGB, appleGpuShareGB, normalizeHardware, pickBackend, budgets, fit, speed, assess, bestQuant};
 })();
 </script>
 <script>
-/* The local-AI page's behaviour. Written into docs/local/index.html by scripts/32_local.py, after the
-   `lxdata` JSON block and the LOCAL FIT script it reads.
-
-   Two halves. `LOCALUI` is pure: search, the machine a set of answers describes, the verdicts, the words a
-   reader is shown, the commands, and the URL hash. Each is a function of its arguments and nothing else,
-   which is what lets tests/local-check.mjs assert them directly as well as through the DOM. The bottom half
-   wires them to the page and owns all the state.
-
-   Every answer lives in the hash (`#d=steam-deck-oled&t=code`), so a result can be sent to a friend and
-   reproduces exactly, and a reload keeps your place. `history.replaceState` rather than push: each click
-   is a refinement of one question, not a new page, and twenty back presses to leave would be a trap. */
 const LOCALUI = ((D, FIT) => {
   const byId = (xs) => Object.fromEntries(xs.map((x) => [x.id, x]));
-  const DEV = byId(D.devices), GPU = byId(D.gpus);
+  const DEV = byId(D.devices), GPU = byId(D.gpus), PICK = byId(D.models);
+  const GB = 1e9;
   const esc = (s) => String(s === null || s === undefined ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
-  // One decimal under ten, whole numbers above: "5.6 GB", "19 GB". The precision a reader can use.
   const gb = (x) => (x < 10 ? (Math.round(x * 10) / 10).toFixed(1) : String(Math.round(x)));
 
-  // Search. "mba m2", "MacBook Air M2", "deck oled" and "4070" should all find what a person means, so both
-  // sides are folded to lowercase words, the word "apple" and trademark marks are dropped, and a query token
-  // matches if it appears in the record's words or in the same words run together ("macbookair").
   const norm = (s) => String(s || "").toLowerCase().replace(/\(tm\)|\(r\)|[®™]|\bapple\b/g, " ")
     .replace(/[^a-z0-9]+/g, " ").trim();
   const hits = (q, rec) => {
@@ -502,31 +887,28 @@ const LOCALUI = ((D, FIT) => {
     const run = hay.replace(/ /g, "");
     return toks.every((t) => hay.includes(t) || run.includes(t));
   };
-  // Devices of the chosen kind first, then popular ones, then by name. Other kinds are still offered,
-  // labelled, because a reader who picked "Laptop" for their MacBook should still find it.
   const search = (q, list, kind, limit = 8) => list
     .filter((r) => hits(q, r))
-    // A query that appears whole in one field ("4070 ti super" in that card's name) outranks one whose words
-    // are merely all somewhere in the record (the plain 4070, which is also sold as a "Super" and a "Ti").
     .map((r) => [r, (kind && r.kind !== kind ? 8 : 0) +
                     ([r.name].concat(r.aliases || []).some((f) => norm(f).includes(norm(q))) ? 0 : 4) +
                     (norm(r.name).startsWith(norm(q)) ? 0 : 1) + (r.popular ? 0 : 2)])
     .sort((a, b) => a[1] - b[1] || a[0].name.localeCompare(b[0].name))
     .slice(0, limit).map((x) => x[0]);
 
-  // The operating system the browser is running on, as the catalogue spells it. A guess for defaults only;
-  // the how-to panel always lets the reader pick another.
   const uaOS = (ua) => /Mac OS X|Macintosh/.test(ua) && !/iPhone|iPad/.test(ua) ? "macos"
     : /Linux|X11|CrOS/.test(ua) && !/Android/.test(ua) ? "linux" : "windows";
 
-  // The machine a set of answers describes, as the fit maths wants it, or null if there is not one yet.
+  const cardOf = (g, vram) => ({vendor: g.vendor, name: g.name, vram_gb: vram, vram_bandwidth_gbs: g.vram_bandwidth_gbs,
+                                fp16_tflops: g.fp16_tflops, arch: g.arch, backends: g.backends});
   const machineOf = (s, ua) => {
     if (s.d && DEV[s.d]) {
       const d = DEV[s.d], g = d.gpu ? GPU[d.gpu] : null;
       const ram = d.ram_gb_options.includes(s.r) ? s.r : d.ram_gb_options[0];
-      return {name: d.name, kind: d.kind, os: d.os[0], ram_opts: d.ram_gb_options, gpu: g, device: d,
-              m: {ram_gb: ram, vram_gb: d.vram_gb, unified: d.unified, backend: g ? g.backend : d.backend,
-                  gpu_bw_gbs: g ? g.bw_gbs : d.bw_gbs, cpu_bw_gbs: d.bw_gbs}};
+      const gpu = g ? cardOf(g, d.vram_gb)
+        : d.igpu ? Object.assign({integrated: true, vram_bandwidth_gbs: d.ram_bandwidth_gbs}, d.igpu) : null;
+      return {name: d.name, kind: d.kind, os: d.os[0], ram_opts: d.ram_gb_options, device: d,
+              hw: {id: d.id, name: d.name, ram_gb: ram, ram_bandwidth_gbs: d.ram_bandwidth_gbs, unified: d.unified,
+                   os: d.os[0], gpu, gpu_usable_gb: d.gpu_usable_gb, cpu: d.cpu}};
     }
     if (s.g && (s.g === "none" || GPU[s.g])) {
       const g = GPU[s.g] || null, opts = D.custom.ram_gb_options;
@@ -534,111 +916,144 @@ const LOCALUI = ((D, FIT) => {
       const vram = g ? (g.vram_gb_options.includes(s.v) ? s.v : g.vram_gb_options[0]) : 0;
       const os = uaOS(ua) === "macos" ? "windows" : uaOS(ua);
       return {name: g ? `PC with ${g.name} ${vram} GB` : "PC with no graphics card", kind: s.k || "gaming",
-              os, ram_opts: opts, gpu: g, custom: true,
-              m: {ram_gb: ram, vram_gb: vram, unified: false, backend: g ? g.backend : "cpu",
-                  gpu_bw_gbs: g ? g.bw_gbs : 0, cpu_bw_gbs: D.custom.cpu_bw_gbs}};
+              os, ram_opts: opts, custom: true,
+              hw: {name: "custom", ram_gb: ram, ram_bandwidth_gbs: D.custom.cpu_bw_gbs, unified: false, os,
+                   gpu: g ? cardOf(g, vram) : null}};
     }
     return null;
   };
+  const apple = (mc) => !!(mc.hw.gpu && mc.hw.gpu.vendor === "apple");
 
-  // One sentence on what this machine offers, so every "you have X GB" below has been explained once.
   const machineWords = (mc) => {
-    const m = mc.m, b = FIT.budget(m, D.usable), name = esc(mc.name);
-    if (m.unified && m.backend === "metal")
-      return `Your ${name} has <b>${m.ram_gb} GB</b> of memory, shared by the processor and graphics. ` +
-        `macOS lets AI use about <b>${gb(b.gpu)} GB</b> of it and keeps the rest for itself and your apps.`;
-    if (m.unified)
-      return `Your ${name} shares <b>${m.ram_gb} GB</b> between the processor and graphics. About ` +
-        `<b>${gb(b.gpu)} GB</b> can go to AI once the system has its share.`;
-    if (m.vram_gb > 0)
-      return `Your graphics card has <b>${m.vram_gb} GB</b> of its own memory (about <b>${gb(b.gpu)} GB</b> ` +
-        `usable), and that's where AI runs fast. Your <b>${m.ram_gb} GB</b> of RAM can hold overflow ` +
-        `(about ${gb(b.cpu)} GB), but much more slowly.`;
-    return `No separate graphics card, so AI runs on the processor using your <b>${m.ram_gb} GB</b> of RAM. ` +
-      `About <b>${gb(b.cpu)} GB</b> is free for it. It works, just more slowly than on a graphics card.`;
+    const h = FIT.normalizeHardware(mc.hw), b = FIT.budgets(h), name = esc(mc.name);
+    const g = b.gpu / GB, r = b.ram / GB;
+    if (apple(mc))
+      return `Your ${name} has <b>${h.ramGB} GB</b> of memory, shared by the processor and graphics. ` +
+        `macOS lets AI use about <b>${gb(g)} GB</b> of it on the graphics and keeps the rest for itself and your apps.`;
+    if (h.gpu && h.gpu.integrated)
+      return `Your ${name} shares <b>${h.ramGB} GB</b> between the processor and graphics. About ` +
+        `<b>${gb(g)} GB</b> can go to the graphics, where AI runs fastest, once the system has its share.`;
+    if (h.gpu)
+      return `Your graphics card has <b>${h.gpu.vram_gb} GB</b> of its own memory (about <b>${gb(g)} GB</b> ` +
+        `usable), and that's where AI runs fast. Your <b>${h.ramGB} GB</b> of RAM can hold overflow ` +
+        `(about ${gb(r)} GB), but much more slowly.`;
+    return `No separate graphics card, so AI runs on the processor using your <b>${h.ramGB} GB</b> of RAM. ` +
+      `About <b>${gb(r)} GB</b> is free for it. It works, just more slowly than on a graphics card.`;
   };
 
-  // Every model against one machine.
-  const assess = (m, ctx, qover) => D.models.map((model) =>
-    ({model, r: FIT.fit(m, model, {ctx, quant: (qover || {})[model.id]}, D.usable)}));
+  const HF = D.hf && D.hf.rows ? Object.fromEntries(D.hf.rows.map((r) => {
+    const o = Object.fromEntries(D.hf.cols.map((c, i) => [c, r[i]])); return [o.id, o]; })) : {};
+  const models = {};
+  const modelOf = (p) => {
+    if (models[p.id]) return models[p.id];
+    const row = p.hf_id && HF[p.hf_id];
+    const base = row ? FIT.normalizeModel(row, D.hf.variant_cols, D.hf.file_cols) : null;
+    return (models[p.id] = base && base.quants.length ? Object.assign(base, {id: p.id})
+      : Object.assign({id: p.id}, p.config, {quants: p.quants}));
+  };
+  const ggufs = (m) => m.quants.filter((q) => !q.format || q.format === "gguf");
 
-  // What would make a model that does not fit, fit: the smallest common size that would hold it.
+  const judge = (p, hw, ctx, forced) => {
+    const m = modelOf(p), opts = {context: ctx};
+    let r = null;
+    if (forced) {
+      const q = ggufs(m).find((x) => x.quant === forced);
+      if (q) r = Object.assign(FIT.assess(m, q, hw, opts), {quant: q.quant, bytes: q.bytes, belowFloor: false});
+    }
+    if (!r) r = FIT.bestQuant(m, hw, opts);
+    if (!r || r.verdict === "too-big") {
+      const q = ggufs(m).find((x) => x.quant === p.run.ollama_q) || ggufs(m)[0];
+      return {verdict: "too-big", quant: q.quant, file: q, fit: FIT.fit(m, q, hw, opts), speed: null, notes: []};
+    }
+    const file = m.quants.find((x) => x.quant === r.quant) || {label: r.quant, repo: (ggufs(m)[0] || {}).repo};
+    return {verdict: r.verdict, quant: r.quant, file, fit: r.fit, speed: r.speed, offload: r.offload,
+            nearlyFull: r.nearlyFull, belowFloor: r.belowFloor, notes: r.fit.notes || []};
+  };
+  const assess = (hw, ctx, qover) => D.models.map((p) => ({model: p, r: judge(p, hw, ctx, (qover || {})[p.id])}));
+
+  const have = (f, hw) => (hw.unified || !hw.gpu ? f.ramBudgetGB
+    : f.placement === "gpu" ? f.gpuBudgetGB : f.gpuBudgetGB + f.ramBudgetGB);
+
   const SIZES = {unified: [8, 16, 24, 32, 36, 48, 64, 96, 128, 192, 256, 512], vram: [8, 12, 16, 24, 32, 48, 80, 96],
                  ram: [8, 16, 32, 64, 96, 128, 192, 256]};
-  const suggest = (m, total) => {
-    const fits = (mm) => { const b = FIT.budget(mm, D.usable); return total <= Math.max(b.gpu, b.cpu, b.gpu + (b.gpu ? b.cpu : 0)); };
-    if (m.unified) {
-      const n = SIZES.unified.find((x) => fits(Object.assign({}, m, {ram_gb: x})));
+  const runsOn = (p, hw, ctx) => { const b = FIT.bestQuant(modelOf(p), hw, {context: ctx}); return b && b.verdict !== "too-big" && !b.belowFloor; };
+  const suggest = (p, hw, ctx) => {
+    const g = hw.gpu;
+    if (hw.unified) {
+      const n = SIZES.unified.find((x) => x > hw.ram_gb && runsOn(p, Object.assign({}, hw, {ram_gb: x, gpu_usable_gb: undefined}), ctx));
       return n ? `It would fit on a machine like this with ${n} GB.` : "It's too big for any single home machine.";
     }
-    if (m.vram_gb > 0) {
-      const n = SIZES.vram.find((x) => x - D.usable.vram_reserve_gb >= total);
-      const r = SIZES.ram.find((x) => fits(Object.assign({}, m, {ram_gb: x})));
-      return n ? `It would fit on a graphics card with ${n} GB` + (r ? `, or run slowly with ${r} GB of RAM.` : ".")
-        : (r ? `It would only run, slowly, with ${r} GB of RAM.` : "It's too big for any single home machine.");
+    if (g) {
+      const n = SIZES.vram.find((x) => x > g.vram_gb && runsOn(p, Object.assign({}, hw, {gpu: Object.assign({}, g, {vram_gb: x})}), ctx));
+      const r = SIZES.ram.find((x) => x > hw.ram_gb && runsOn(p, Object.assign({}, hw, {ram_gb: x}), ctx));
+      return n ? `It would fit on a graphics card with ${n} GB` + (r ? `, or run with ${r} GB of RAM.` : ".")
+        : (r ? `It would only run with ${r} GB of RAM.` : "It's too big for any single home machine.");
     }
-    const r = SIZES.ram.find((x) => fits(Object.assign({}, m, {ram_gb: x})));
+    const r = SIZES.ram.find((x) => x > hw.ram_gb && runsOn(p, Object.assign({}, hw, {ram_gb: x}), ctx));
     return r ? `It would fit with ${r} GB of RAM, but a graphics card or a Mac would run it far faster.`
       : "It's too big for any single home machine.";
   };
 
-  // The plain-language lines on a card. HTML, because two of them link to an explainer.
-  const reason = (m, r) => {
-    if (r.verdict === "no")
-      return `Needs about <b>${gb(r.need.total)} GB</b>; you have ${gb(r.have)} GB for AI. ` + suggest(m, r.need.total);
-    const where = r.place === "split"
-      ? `Needs <b>${gb(r.need.total)} GB</b>: about ${gb(r.need.total * r.gpu_frac)} GB on your graphics card, the rest in RAM.`
-      : `Needs <b>${gb(r.need.total)} GB</b>, you have <b>${gb(r.have)} GB</b> for AI.`;
-    return where;
+  const reason = (row, hw, ctx) => {
+    const f = row.r.fit;
+    if (row.r.verdict === "too-big")
+      return `Needs about <b>${gb(f.totalGB)} GB</b>; you have ${gb(have(f, hw))} GB for AI. ` + suggest(row.model, hw, ctx);
+    if (f.placement === "partial" && hw.gpu && !hw.gpu.integrated && !hw.unified)
+      return `Needs <b>${gb(f.totalGB)} GB</b>: about ${gb((f.gpuBytes / GB) + f.kvGB + f.bufferGB)} GB on your graphics card, the rest in RAM.`;
+    if (f.placement === "partial")
+      return `Needs <b>${gb(f.totalGB)} GB</b> of your ${gb(have(f, hw))} GB: more than the graphics may use by default (${gb(f.gpuBudgetGB)} GB), so the processor takes part of it.`;
+    return `Needs <b>${gb(f.totalGB)} GB</b>, you have <b>${gb(have(f, hw))} GB</b> for AI` +
+      (f.placement === "gpu" && hw.gpu && !hw.gpu.integrated && !hw.unified ? " on your graphics card." : ".");
   };
   const speedLine = (r) => {
-    const w = FIT.speedWords(r.tps[1]);
-    const wps = w.wps < 10 ? (Math.round(w.wps * 10) / 10).toFixed(1) : String(Math.round(w.wps));
-    return `<span data-speed="${w.key}">Speed: ${esc(w.words)} (about ${wps} words a second)</span>`;
+    const tps = r.speed.decodeTps, wps = tps * 0.75;
+    const w = wps < 10 ? (Math.round(wps * 10) / 10).toFixed(1) : String(Math.round(wps));
+    return `<span data-tps="${tps.toFixed(2)}">Speed: ${esc(FIT.speedWords(tps))} (about ${w} words a second)</span>`;
   };
-  const CATCH = {
-    slow: "Slow here: fine for a short question, tiring for a long chat.",
-    snug: "A snug fit: close other apps and browser tabs before you start it.",
-    split: 'Part of it runs on the processor (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>), which is what slows it down.',
-    smaller: 'Squeezed to fit: this is a smaller version (<a class="lxwhat" href="#q-quant" data-open="q-quant">__Q__</a>), a little less sharp than usual.',
+  const catches = (r, m) => {
+    const out = [];
+    if (r.verdict === "slow" && m && m.reasoning && r.speed.decodeTps >= 10)
+      out.push("It thinks before it answers, writing a lot it doesn’t show you, so at this speed expect a wait of a minute or so before a hard answer starts.");
+    else if (r.verdict === "slow") out.push("Slow here: fine for a short question, tiring for a long chat.");
+    if (r.verdict === "tight" || r.belowFloor)
+      out.push(`Squeezed to fit: this is a smaller version (<a class="lxwhat" href="#q-quant" data-open="q-quant">${esc(r.quant)}</a>), noticeably less sharp. A smaller model may answer better.`);
+    if (r.offload)
+      out.push('Part of it runs on the processor (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>), which is what slows it down.');
+    return out.concat(r.notes.filter((n) => !/below the quality we recommend/.test(n)).map(esc));
   };
-  const catches = (r) => r.catches.map((c) => CATCH[c]).concat(r.smaller ? [CATCH.smaller.replace("__Q__", esc(r.quant))] : []);
 
-  // Groups, in the order the page shows them, already filtered by task. `all` lifts the filter.
   const groups = (rows, tasks, all) => {
     const want = (row) => all || !tasks.length || row.model.tasks.some((t) => tasks.includes(t));
     const shown = rows.filter(want), hidden = rows.length - shown.length;
-    const by = (v) => shown.filter((x) => x.r.verdict === v);
-    const great = by("great").sort((a, b) => b.model.score - a.model.score);
-    const ok = by("ok").sort((a, b) => b.model.score - a.model.score);
-    const no = by("no").sort((a, b) => a.r.need.total - b.r.need.total);
-    // The pick: the best that runs great; failing that, the best that runs without being slow; failing
-    // that, the best that runs at all. Never one that does not fit.
-    const best = great[0] || ok.find((x) => !x.r.catches.includes("slow")) || ok[0] || null;
+    const by = (vs) => shown.filter((x) => vs.includes(x.r.verdict));
+    const great = by(["great"]).sort((a, b) => b.model.score - a.model.score);
+    const ok = by(["slow", "tight"]).sort((a, b) => (a.r.verdict === "tight") - (b.r.verdict === "tight") || b.model.score - a.model.score);
+    const no = by(["too-big"]).sort((a, b) => a.r.fit.totalGB - b.r.fit.totalGB);
+    const best = great[0] || ok.find((x) => x.r.verdict === "slow") || null;
     return {great, ok, no, best, hidden};
   };
 
-  // The command for a route, with a pick's own names filled in. Ollama's library tag for the default
-  // quant; any other quant goes through Ollama's Hugging Face route, which takes the GGUF repo and quant.
-  const fill = (text, model, quant) => {
-    const run = model.run, tag = quant === model.default_q || !run.hf_gguf ? run.ollama : `hf.co/${run.hf_gguf}:${quant}`;
-    return text.replace(/\{ollama_tag\}/g, esc(tag)).replace(/\{quant\}/g, esc(quant))
-      .replace(/\{hf_gguf\}/g, esc(run.hf_gguf || "")).replace(/\{mlx\}/g, esc(run.mlx || ""))
-      .replace(/\{lmstudio\}/g, esc(run.lmstudio));
+  const fill = (text, p, r, ctx) => {
+    const run = p.run, f = r.file || {};
+    const tag = r.quant === run.ollama_q || !f.repo ? run.ollama : `hf.co/${f.repo}:${f.label || r.quant}`;
+    return text.replace(/\{ollama_tag\}/g, esc(tag)).replace(/\{qlabel\}/g, esc(f.label || r.quant))
+      .replace(/\{hf_repo\}/g, esc(f.repo || "")).replace(/\{mlx\}/g, esc(run.mlx || ""))
+      .replace(/\{lmstudio\}/g, esc(run.lmstudio)).replace(/\{ctx\}/g, String(ctx));
   };
-  // The routes a pick can be run by on an OS, beginner's first. MLX only on a Mac with Apple Silicon.
-  const routes = (model, os, apple) => ["lmstudio", "ollama", "llamacpp", "mlx"].filter((k) => {
+  const routes = (p, r, os, isApple) => ["lmstudio", "ollama", "llamacpp", "mlx"].filter((k) => {
     const h = D.howto[k];
     if (!h.steps[os]) return false;
-    if (k === "llamacpp" && !model.run.hf_gguf) return false;
-    if (k === "mlx" && (!apple || !model.run.mlx)) return false;
+    if (k === "llamacpp" && !(r.file && r.file.repo)) return false;
+    if (k === "mlx" && (!isApple || !p.run.mlx)) return false;
     return true;
   });
   const defaultRoute = (os) => (os === "linux" ? "ollama" : "lmstudio");
+  const steps = (route, os, p, r, ctx) => D.howto[route].steps[os].flatMap((st) => {
+    if (!Array.isArray(st)) return [["li", fill(st, p, r, ctx)]];
+    if ((st[0] === "ctx" || st[0] === "ctxcmd") && ctx <= D.runner_ctx) return [];
+    return [[st[0] === "ctx" ? "li" : "cmd", fill(st[1], p, r, ctx)]];
+  });
 
-  // GPU guess from the WebGL renderer string, matched on the catalogue's `webgl` tokens. The longest
-  // matching token wins, so "rtx 4070 ti super" beats "rtx 4070"; ties are all returned, because "Apple M4"
-  // is an Air, a Pro and a mini, and that is the reader's to say.
   const guess = (renderer) => {
     const s = String(renderer || "").toLowerCase();
     let best = 0, out = [];
@@ -649,12 +1064,9 @@ const LOCALUI = ((D, FIT) => {
         if (t.length === best && !out.some((o) => o[1].id === rec[1].id)) out.push(rec);
       }
     }
-    // A graphics card is a better answer than "an everyday laptop" when both match, which they do on a
-    // laptop with a discrete card reporting its integrated GPU's name too.
     return out;
   };
 
-  // The hash. Short keys, because people paste these.
   const KEYS = ["k", "d", "g", "v", "r", "t", "n", "c", "w", "o"];
   const parseHash = (h) => {
     const p = new URLSearchParams(String(h || "").replace(/^#/, "")), s = {};
@@ -676,15 +1088,15 @@ const LOCALUI = ((D, FIT) => {
     return out ? "#" + out : "";
   };
 
-  return {esc, gb, norm, hits, search, uaOS, machineOf, machineWords, assess, suggest, reason, speedLine,
-          catches, groups, fill, routes, defaultRoute, guess, parseHash, hashOf, DEV, GPU};
+  return {esc, gb, norm, hits, search, uaOS, machineOf, machineWords, modelOf, judge, assess, have, suggest,
+          reason, speedLine, catches, groups, fill, routes, defaultRoute, steps, guess, parseHash, hashOf, apple,
+          ggufs, DEV, GPU, PICK};
 })(JSON.parse(document.getElementById("lxdata").textContent), LOCALFIT);
 
 (() => {
   const D = JSON.parse(document.getElementById("lxdata").textContent);
   const U = LOCALUI, esc = U.esc, $ = (id) => document.getElementById(id);
   const UA = navigator.userAgent;
-  const VERDICT = {great: ["●", "Runs great"], ok: ["◐", "Runs, with a catch"], no: ["○", "Won’t fit"]};
   const TASKS = Object.fromEntries(D.tasks.map((t) => [t.id, t.label]));
   const OSN = {windows: "Windows", macos: "macOS", linux: "Linux", steamos: "Steam Deck"};
   let S = U.parseHash(location.hash);
@@ -697,7 +1109,6 @@ const LOCALUI = ((D, FIT) => {
       history.replaceState(null, "", h || location.pathname + location.search);
   };
 
-  // ---- a combobox, ARIA 1.2 pattern: focus stays in the input, the active option is aria-activedescendant.
   const combo = (input, list, source, onPick) => {
     let items = [], active = -1;
     const close = () => { list.hidden = true; input.setAttribute("aria-expanded", "false"); input.removeAttribute("aria-activedescendant"); active = -1; };
@@ -713,8 +1124,6 @@ const LOCALUI = ((D, FIT) => {
     const open = () => { items = source(input.value); active = -1; paint(); };
     const pick = (i) => { const it = items[i]; if (!it) return; input.value = it.label; close(); onPick(it); };
     input.addEventListener("input", open);
-    // A box that already names the chosen machine is selected on focus, so typing replaces it rather than
-    // appending to "MacBook Air (M3)" and finding nothing.
     input.addEventListener("focus", () => { if (!input.value) open(); else input.select(); });
     input.addEventListener("keydown", (e) => {
       if (e.key === "ArrowDown") { e.preventDefault(); if (list.hidden) open(); active = Math.min(items.length - 1, active + 1); paint(); }
@@ -735,7 +1144,6 @@ const LOCALUI = ((D, FIT) => {
   combo($("gq"), $("gqlist"), (q) => U.search(q, D.gpus, null).map((g) =>
     ({id: g.id, label: g.name, sub: g.vram_gb_options.join(" / ") + " GB"})), (it) => chooseGPU(it.id));
 
-  // ---- choices
   const chooseKind = (k) => {
     S.k = k;
     const d = S.d && U.DEV[S.d];
@@ -756,7 +1164,6 @@ const LOCALUI = ((D, FIT) => {
   };
   const setCustom = (on) => { $("customb").hidden = !on; $("custom").setAttribute("aria-expanded", String(on)); };
 
-  // Chip rows built as radio groups, so arrow keys move within them the way they do in any OS dialog.
   const radios = (box, name, opts, cur, label, onPick) => {
     box.innerHTML = opts.map((o) => `<label class="chip lxchip"><input type="radio" name="${name}" value="${o}"` +
       `${o === cur ? " checked" : ""}><span>${esc(label(o))}</span></label>`).join("");
@@ -776,76 +1183,79 @@ const LOCALUI = ((D, FIT) => {
     if (!devs.length || S.g) setCustom(true);
     const mc = U.machineOf(S, UA);
     $("nogpu").setAttribute("aria-pressed", String(S.g === "none"));
-    // VRAM, only for a card sold in more than one size.
     const g = S.g && U.GPU[S.g];
     $("vramf").hidden = !(g && g.vram_gb_options.length > 1);
     if (g && g.vram_gb_options.length > 1)
-      radios($("vramo"), "vram", g.vram_gb_options, mc.m.vram_gb, (o) => `${o} GB`, (v) => { S.v = v; paintStep1(); update(); refocus("input[name=vram]:checked"); });
-    // RAM, for anything resolved that has a choice.
+      radios($("vramo"), "vram", g.vram_gb_options, mc.hw.gpu ? mc.hw.gpu.vram_gb : 0, (o) => `${o} GB`, (v) => { S.v = v; paintStep1(); update(); refocus("input[name=vram]:checked"); });
     $("ramf").hidden = !(mc && mc.ram_opts.length > 1);
     if (mc && mc.ram_opts.length > 1)
-      radios($("ramo"), "ram", mc.ram_opts, mc.m.ram_gb, (o) => `${o} GB`, (r) => { S.r = r; paintStep1(); update(); refocus("input[name=ram]:checked"); });
-    // Always from the state, so a hash change (a shared link opened in this tab) cannot leave the box
-    // naming the previous machine. Typing never reaches here, so nothing a reader is typing is overwritten.
+      radios($("ramo"), "ram", mc.ram_opts, mc.hw.ram_gb, (o) => `${o} GB`, (r) => { S.r = r; paintStep1(); update(); refocus("input[name=ram]:checked"); });
     $("q").value = S.d && U.DEV[S.d] ? U.DEV[S.d].name : "";
     $("gq").value = S.g && U.GPU[S.g] ? U.GPU[S.g].name : "";
     $("gores").hidden = !mc;
     const sum = $("s1sum");
     sum.hidden = !mc;
-    if (mc) sum.textContent = mc.custom ? `${mc.name} · ${mc.m.ram_gb} GB RAM` : `${mc.name} · ${mc.m.ram_gb} GB`;
+    if (mc) sum.textContent = mc.custom ? `${mc.name} · ${mc.hw.ram_gb} GB RAM` : `${mc.name} · ${mc.hw.ram_gb} GB`;
   };
 
-  // ---- results
-  const card = (row, mc, open) => {
-    const {model, r} = row, v = VERDICT[r.verdict];
-    const lines = r.verdict === "no" ? [] : U.catches(r);
+  const SHAPE = {great: "●", slow: "◐", tight: "◐", "too-big": "○"};
+  const WORD = {great: "Runs great", slow: "Runs, slowly", tight: "Only fits squeezed", "too-big": "Won’t fit"};
+  const card = (row, mc, ctx, open) => {
+    const {model, r} = row, no = r.verdict === "too-big";
+    const lines = no ? [] : U.catches(r, U.modelOf(model));
     const tasks = model.tasks.map((t) => TASKS[t]).filter(Boolean).join(", ");
-    const hf = model.hf ? ` · ${Number(model.hf.downloads || 0).toLocaleString("en")} downloads` : "";
     return `<li class="lxcard" data-model="${esc(model.id)}" data-verdict="${r.verdict}">` +
-      `<div class="lxch"><h4>${esc(model.name)}</h4><span class="lxv" data-v="${r.verdict}"><i aria-hidden="true">${v[0]}</i>${v[1]}</span></div>` +
+      `<div class="lxch"><h4>${esc(model.name)}</h4><span class="lxv" data-v="${r.verdict}"><i aria-hidden="true">${SHAPE[r.verdict]}</i>${WORD[r.verdict]}</span></div>` +
       `<p class="lxblurb">${esc(model.blurb)}</p>` +
-      `<p class="lxwhy"><span>${U.reason(mc.m, r)}</span>${r.tps ? U.speedLine(r) : ""}</p>` +
+      `<p class="lxwhy"><span>${U.reason(row, mc.hw, ctx)}</span>${r.speed ? U.speedLine(r) : ""}</p>` +
       (lines.length ? `<ul class="lxcatch">${lines.map((l) => `<li>${l}</li>`).join("")}</ul>` : "") +
-      `<p class="lxmeta">Good for: ${esc(tasks)} · Licence: ${esc(model.license)}${hf}</p>` +
+      `<p class="lxmeta">Good for: ${esc(tasks)} · Licence: ${esc(model.license)}</p>` +
       (S.n ? numbers(row, mc) : "") +
-      (r.verdict === "no" ? "" :
+      (no ? "" :
         `<button class="lxhow" type="button" aria-expanded="${open ? "true" : "false"}" aria-controls="how-${esc(model.id)}" data-how="${esc(model.id)}">How to run it</button>` +
-        `<div class="lxhowb" id="how-${esc(model.id)}"${open ? "" : " hidden"}>${open ? howto(model, r, mc) : ""}</div>`) +
+        `<div class="lxhowb" id="how-${esc(model.id)}"${open ? "" : " hidden"}>${open ? howto(row, mc, ctx) : ""}</div>`) +
       "</li>";
   };
 
   const numbers = (row, mc) => {
-    const {model, r} = row, n = r.need, gb = U.gb;
-    const where = {gpu: mc.m.unified ? "all in shared memory" : "all on the graphics card", cpu: "on the processor",
-                   split: `split: ${Math.round(r.gpu_frac * 100)}% on the graphics card, the rest on the processor`}[r.place] || "doesn't fit";
-    const qs = model.quants.map((q) => `<option value="${esc(q.q)}"${q.q === r.quant ? " selected" : ""}>${esc(q.q)} (${gb(q.gb)} GB)</option>`).join("");
+    const {model, r} = row, f = r.fit, gb = U.gb, m = U.modelOf(model);
+    const shared = mc.hw.unified;
+    const where = {gpu: shared ? "all on the graphics, in shared memory" : "all on the graphics card",
+                   cpu: "on the processor, from RAM",
+                   partial: shared ? "graphics and processor, sharing memory"
+                     : `${f.gpuLayers} of ${f.layers} layers on the graphics card, the rest from RAM`}[f.placement] || "doesn’t fit";
+    const qs = U.ggufs(m).map((q) => `<option value="${esc(q.quant)}"${q.quant === r.quant ? " selected" : ""}>${esc(q.label || q.quant)} (${gb(q.bytes / 1e9)} GB)</option>`).join("");
+    const active = m.params_active && m.params_active < m.params_total ? `, ${(m.params_active / 1e9).toFixed(1)}B active per word` : "";
+    const sp = r.speed;
     return `<dl class="lxnums">` +
       `<dt>Version</dt><dd><label class="sr" for="qv-${esc(model.id)}">Quantisation for ${esc(model.name)}</label>` +
       `<select id="qv-${esc(model.id)}" data-quant="${esc(model.id)}">${qs}</select></dd>` +
-      `<dt>Weights</dt><dd>${gb(n.weights)} GB</dd>` +
-      `<dt>Context cache</dt><dd>${gb(n.kv)} GB at ${(r.ctx / 1024) | 0}k tokens</dd>` +
-      `<dt>Working memory</dt><dd>${gb(n.overhead)} GB</dd>` +
-      `<dt>Total</dt><dd>${gb(n.total)} GB of ${gb(r.have)} GB${r.tps ? ` (${Math.round(r.headroom * 100)}% to spare)` : ""}</dd>` +
+      `<dt>Weights</dt><dd>${gb(f.weightsGB)} GB</dd>` +
+      `<dt>Context cache</dt><dd>${gb(f.kvGB)} GB at ${(f.context / 1024) | 0}k tokens</dd>` +
+      `<dt>Working memory</dt><dd>${gb(f.bufferGB)} GB</dd>` +
+      `<dt>Total</dt><dd>${gb(f.totalGB)} GB of ${gb(U.have(f, mc.hw))} GB` + (f.fits && f.headroomGB != null ? ` (${gb(f.headroomGB)} GB to spare)` : "") + `</dd>` +
       `<dt>Runs</dt><dd>${where}</dd>` +
-      (r.tps ? `<dt>Speed</dt><dd>${r.tps[0].toFixed(0)}–${r.tps[2].toFixed(0)} tokens/s (estimate)</dd>` : "") +
-      `<dt>Size</dt><dd>${model.params_b}B parameters${model.active_b < model.params_b ? `, ${model.active_b}B active per token` : ""}</dd>` +
+      (sp ? `<dt>Writing</dt><dd>${sp.decodeRange[0].toFixed(0)}–${sp.decodeRange[1].toFixed(0)} tokens/s (${esc(sp.backend)}, estimate)</dd>` +
+            `<dt>Reading</dt><dd>a 20-page document (10k tokens) in about ${Math.max(1, Math.round(10000 / sp.prefillTps))} s</dd>` : "") +
+      `<dt>Size</dt><dd>${(m.params_total / 1e9).toFixed(1)}B parameters${active}</dd>` +
       `</dl>`;
   };
 
-  const howto = (model, r, mc) => {
-    const apple = mc.m.unified && mc.m.backend === "metal";
+  const howto = (row, mc, ctx) => {
+    const {model, r} = row;
     const os = S.o && D.howto.ollama.steps[S.o] ? S.o : mc.os;
-    const rs = U.routes(model, os, apple);
+    const rs = U.routes(model, r, os, U.apple(mc));
     const route = rs.includes(S.w) ? S.w : (rs.includes(U.defaultRoute(os)) ? U.defaultRoute(os) : rs[0]);
     const h = D.howto[route];
     const oses = ["windows", "macos", "linux", "steamos"];
-    const steps = h.steps[os].map((st) => Array.isArray(st)
-      ? `<div class="lxcmd"><code>${U.fill(st[1], model, r.quant)}</code><button class="lxcopy" type="button" data-copy>Copy</button></div>`
-      : `<li>${U.fill(st, model, r.quant)}</li>`);
-    // Commands sit inside the step before them, so the list numbers stay the steps a person does.
     const ol = [];
-    for (const s of steps) { if (s.startsWith("<li>")) ol.push(s); else if (ol.length) ol[ol.length - 1] = ol[ol.length - 1].replace(/<\/li>$/, s + "</li>"); else ol.push(`<li>${s}</li>`); }
-    const size = model.quants.find((q) => q.q === r.quant).gb, mins = Math.max(1, Math.round(size * 8000 / 50 / 60));
+    for (const [kind, html] of U.steps(route, os, model, r, ctx)) {
+      if (kind === "li") { ol.push(`<li>${html}</li>`); continue; }
+      const cmd = `<div class="lxcmd"><code>${html}</code><button class="lxcopy" type="button" data-copy>Copy</button></div>`;
+      if (ol.length) ol[ol.length - 1] = ol[ol.length - 1].replace(/<\/li>$/, cmd + "</li>"); else ol.push(`<li>${cmd}</li>`);
+    }
+    const size = (r.file && r.file.bytes ? r.file.bytes : r.fit.weightsGB * 1e9) / 1e9;
+    const mins = Math.max(1, Math.round(size * 8000 / 50 / 60));
     return `<div class="lxroutes" role="group" aria-label="How to run it"><span class="lxpl">Use</span>` +
       rs.map((k) => `<button class="chip" type="button" data-route="${k}" aria-pressed="${k === route}">${esc(D.howto[k].label)}</button>`).join("") + `</div>` +
       `<p class="lxpitch">${esc(h.pitch)}</p>` +
@@ -868,36 +1278,30 @@ const LOCALUI = ((D, FIT) => {
     const mc = U.machineOf(S, UA), out = $("results");
     if (!mc) { $("mach").textContent = "Pick your computer above and the answers appear here."; out.innerHTML = ""; return; }
     $("mach").innerHTML = U.machineWords(mc);
-    const g = U.groups(U.assess(mc.m, ctx, qover), S.t, showAll);
-    // The pick's how-to opens by itself, because most readers should stop there. When the pick changes, the
-    // old one's panel closes with it, unless the reader opened it themselves.
+    const g = U.groups(U.assess(mc.hw, ctx, qover), S.t, showAll);
     const bestId = g.best && g.best.model.id;
     if (bestId !== autoBest) { if (autoBest) opened.delete(autoBest); if (bestId) opened.add(bestId); autoBest = bestId; }
-    const list = (rows) => `<ul class="lxcards">${rows.map((x) => card(x, mc, opened.has(x.model.id) && x.model.id !== bestId)).join("")}</ul>`;
+    const list = (rows) => `<ul class="lxcards">${rows.map((x) => card(x, mc, ctx, opened.has(x.model.id) && x.model.id !== bestId)).join("")}</ul>`;
     const greatRest = g.great.filter((x) => x.model.id !== bestId);
     const cap = moreGreat ? greatRest.length : 5;
     let html = "";
-    if (g.best) html += `<div class="lxbest" id="best"><p>Our pick for you</p><ul class="lxcards">${card(g.best, mc, opened.has(bestId))}</ul></div>`;
-    else html += `<p class="lxnote">Nothing we recommend fits on this machine as it is. The smallest models need about 1.5 GB free; see what would make one fit below.</p>`;
+    if (g.best) html += `<div class="lxbest" id="best"><p>Our pick for you</p><ul class="lxcards">${card(g.best, mc, ctx, opened.has(bestId))}</ul></div>`;
+    else html += `<p class="lxnote">Nothing we recommend runs well on this machine as it is. Anything that only fits squeezed is below; so is what would make the rest fit.</p>`;
     if (S.t.length || g.hidden) html += `<p class="lxnote">` + (S.t.length && !showAll
       ? `Showing models good for ${esc(S.t.map((t) => TASKS[t].toLowerCase()).join(" or "))}. ${g.hidden} others hidden. <button class="lxlink" type="button" id="showall">Show all models</button>`
       : `Showing every model. <button class="lxlink" type="button" id="showall">Only ${esc(S.t.map((t) => TASKS[t].toLowerCase()).join(" or "))}</button>`) + "</p>";
-    if (greatRest.length) html += `<section class="lxgroup" aria-labelledby="hg"><h3 id="hg"><span aria-hidden="true">${VERDICT.great[0]}</span> ${g.best && g.best.r.verdict === "great" ? "Also runs great" : "Runs great"} <span class="ct">${greatRest.length}</span></h3>${list(greatRest.slice(0, cap))}` +
+    if (greatRest.length) html += `<section class="lxgroup" aria-labelledby="hg"><h3 id="hg"><span aria-hidden="true">${SHAPE.great}</span> ${g.best && g.best.r.verdict === "great" ? "Also runs great" : "Runs great"} <span class="ct">${greatRest.length}</span></h3>${list(greatRest.slice(0, cap))}` +
       (greatRest.length > cap ? `<p class="lxmore"><button class="chip" type="button" id="moregreat">Show ${greatRest.length - cap} more</button></p>` : "") + "</section>";
     const okRest = g.ok.filter((x) => x.model.id !== bestId);
-    if (okRest.length) html += `<section class="lxgroup" aria-labelledby="ho"><h3 id="ho"><span aria-hidden="true">${VERDICT.ok[0]}</span> Runs, with a catch <span class="ct">${okRest.length}</span></h3>${list(okRest)}</section>`;
-    if (g.no.length) html += `<details class="lxgroup lxnofit" id="nofit"><summary><span aria-hidden="true">${VERDICT.no[0]}</span> ${g.no.length} bigger model${g.no.length === 1 ? "" : "s"} won’t fit</summary>${list(g.no)}</details>`;
+    if (okRest.length) html += `<section class="lxgroup" aria-labelledby="ho"><h3 id="ho"><span aria-hidden="true">${SHAPE.slow}</span> Runs, with a catch <span class="ct">${okRest.length}</span></h3>${list(okRest)}</section>`;
+    if (g.no.length) html += `<details class="lxgroup lxnofit" id="nofit"><summary><span aria-hidden="true">${SHAPE["too-big"]}</span> ${g.no.length} bigger model${g.no.length === 1 ? "" : "s"} won’t fit</summary>${list(g.no)}</details>`;
     const wasOpen = $("nofit") && $("nofit").open;
     out.innerHTML = html;
     if (wasOpen && $("nofit")) $("nofit").open = true;
-    $("live").textContent = `For ${mc.name} with ${mc.m.ram_gb} GB: ${g.great.length} run great, ${g.ok.length} with a catch, ${g.no.length} won’t fit.` +
+    $("live").textContent = `For ${mc.name} with ${mc.hw.ram_gb} GB: ${g.great.length} run great, ${g.ok.length} with a catch, ${g.no.length} won’t fit.` +
       (g.best ? ` Our pick is ${g.best.model.name}.` : "");
   };
 
-  // ---- events, delegated, so re-rendered cards need no re-wiring
-  // No focus move on change: arrow keys walk a radio group by changing it, and stealing focus to the search
-  // box on every arrow press would make the tiles impossible to browse by keyboard. The search is next in
-  // tab order anyway.
   document.querySelectorAll("input[name=kind]").forEach((i) => i.addEventListener("change", () => chooseKind(i.value)));
   $("gobtn").addEventListener("click", () => { $("s3").scrollIntoView({block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); $("s3h").focus({preventScroll: true}); });
   $("pick").addEventListener("click", (e) => { const b = e.target.closest("[data-dev]"); if (b) chooseDevice(b.dataset.dev); });
@@ -915,7 +1319,11 @@ const LOCALUI = ((D, FIT) => {
     if (how) {
       const id = how.dataset.how, panel = $("how-" + id), open = how.getAttribute("aria-expanded") !== "true";
       how.setAttribute("aria-expanded", String(open));
-      if (open) { opened.add(id); const mc = U.machineOf(S, UA); const row = U.assess(mc.m, S.c || D.default_ctx, qover).find((x) => x.model.id === id); panel.innerHTML = howto(row.model, row.r, mc); }
+      if (open) {
+        opened.add(id);
+        const mc = U.machineOf(S, UA), ctx = S.c || D.default_ctx;
+        panel.innerHTML = howto({model: U.PICK[id], r: U.judge(U.PICK[id], mc.hw, ctx, qover[id])}, mc, ctx);
+      }
       else opened.delete(id);
       panel.hidden = !open;
       return;
@@ -943,7 +1351,6 @@ const LOCALUI = ((D, FIT) => {
     if (q) { qover[q.dataset.quant] = q.value; opened.add(q.dataset.quant); update(); refocus(`[data-quant="${q.dataset.quant}"]`); }
   });
 
-  // "What's that?" links open their explainer and move focus to it, rather than jumping to a closed box.
   document.addEventListener("click", (e) => {
     const a = e.target.closest("a[data-open]");
     if (!a) return;
@@ -954,7 +1361,6 @@ const LOCALUI = ((D, FIT) => {
     box.querySelector("summary").focus();
   });
 
-  // ---- help me find out
   const findOS = (os) => {
     $("fos").innerHTML = ["windows", "macos", "linux", "steamos"].map((o) =>
       `<button class="chip" type="button" data-fos="${o}" aria-pressed="${o === os}">${OSN[o]}</button>`).join("");
@@ -1003,16 +1409,10 @@ const label = () => {
 btn.onclick = () => {
   const light = document.documentElement.dataset.theme !== "light";
   document.documentElement.dataset.theme = light ? "light" : "dark";
-  // The choice is the point: it used to last until the next navigation, so a reader who needs light
-  // re-picked it on every facet page, every detail page and every trip back to the index.
   try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
   label();
 };
-// The head script already resolved the theme; this only has to agree with it, since the markup's
-// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
 label();
-// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
-// they explicitly chose because the sun went down is worse than not following at all.
 try {
   matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
     if (localStorage.getItem("theme")) return;
@@ -1022,7 +1422,6 @@ try {
 } catch (e) {}
 </script>
 <script>(function(){try{var u=sessionStorage.getItem("archie-src");if(u&&new URL(u).origin===location.origin&&localStorage.getItem("atlas-byte-quiet")!=="1"){var s=document.createElement("script");s.type="module";s.src=u;document.head.appendChild(s)}}catch(e){}})()</script>
-<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
-<script defer src="../assets/traceway-1.2.1.js"></script><script defer src="../assets/web-vitals-6.2.3.js"></script><script defer src="../assets/traceway-loader.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><script defer src="../assets/traceway-1.2.1.js"></script><script defer src="../assets/web-vitals-6.2.3.js"></script><script defer src="../assets/traceway-loader.js"></script>
 </body>
 </html>

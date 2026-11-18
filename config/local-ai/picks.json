@@ -1,34 +1,1080 @@
 {
-  "fixture": true,
-  "note": "FIXTURE written by ds-app to the shape proposed to ds-models on 2026-11-18. Replaced wholesale by team/local-ai/models/picks.json when it lands. File sizes are rounded; `score` is a placeholder ordering, not a benchmark.",
-  "default_ctx": 8192,
-  "tasks": [
-    {"id": "chat", "label": "Chat and ask questions"},
-    {"id": "code", "label": "Write code"},
-    {"id": "write", "label": "Write and edit text"},
-    {"id": "vision", "label": "Understand pictures"},
-    {"id": "agents", "label": "Build agents (tools)"},
-    {"id": "reason", "label": "Think hard (maths, logic)"}
-  ],
-  "models": [
-    {"id": "llama-3.2-1b", "name": "Llama 3.2 1B", "family": "Llama", "tasks": ["chat"], "params_b": 1.2, "active_b": 1.2, "layers": 16, "kv_heads": 8, "head_dim": 64, "ctx_max": 131072, "license": "Llama 3.2 Community", "gated": true, "score": 18, "blurb": "Tiny and quick. Fine for simple questions, easily confused by hard ones.", "default_q": "Q4_K_M", "quants": [{"q": "Q4_K_M", "gb": 0.81, "bits": 4.8}, {"q": "Q8_0", "gb": 1.32, "bits": 8.5}], "run": {"ollama": "llama3.2:1b", "lmstudio": "Llama 3.2 1B Instruct", "hf_gguf": "bartowski/Llama-3.2-1B-Instruct-GGUF", "mlx": "mlx-community/Llama-3.2-1B-Instruct-4bit"}, "hf_id": "meta-llama/Llama-3.2-1B-Instruct"},
-    {"id": "llama-3.2-3b", "name": "Llama 3.2 3B", "family": "Llama", "tasks": ["chat", "write"], "params_b": 3.2, "active_b": 3.2, "layers": 28, "kv_heads": 8, "head_dim": 128, "ctx_max": 131072, "license": "Llama 3.2 Community", "gated": true, "score": 30, "blurb": "A small all-rounder that runs on almost anything.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 1.69, "bits": 3.9}, {"q": "Q4_K_M", "gb": 2.02, "bits": 4.8}, {"q": "Q8_0", "gb": 3.42, "bits": 8.5}], "run": {"ollama": "llama3.2:3b", "lmstudio": "Llama 3.2 3B Instruct", "hf_gguf": "bartowski/Llama-3.2-3B-Instruct-GGUF", "mlx": "mlx-community/Llama-3.2-3B-Instruct-4bit"}, "hf_id": "meta-llama/Llama-3.2-3B-Instruct"},
-    {"id": "qwen3-4b", "name": "Qwen3 4B", "family": "Qwen", "tasks": ["chat", "reason", "agents"], "params_b": 4.0, "active_b": 4.0, "layers": 36, "kv_heads": 8, "head_dim": 128, "ctx_max": 32768, "license": "Apache 2.0", "gated": false, "score": 40, "blurb": "Small but sharp. Can stop and think before it answers.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 2.08, "bits": 3.9}, {"q": "Q4_K_M", "gb": 2.5, "bits": 4.8}, {"q": "Q8_0", "gb": 4.28, "bits": 8.5}], "run": {"ollama": "qwen3:4b", "lmstudio": "Qwen3 4B", "hf_gguf": "unsloth/Qwen3-4B-GGUF", "mlx": "mlx-community/Qwen3-4B-4bit"}, "hf_id": "Qwen/Qwen3-4B"},
-    {"id": "gemma-3-4b", "name": "Gemma 3 4B", "family": "Gemma", "tasks": ["chat", "write", "vision"], "params_b": 4.3, "active_b": 4.3, "layers": 34, "kv_heads": 4, "head_dim": 256, "ctx_max": 131072, "license": "Gemma", "gated": true, "score": 38, "blurb": "Friendly writer that can also look at a photo and describe it.", "default_q": "Q4_K_M", "quants": [{"q": "Q4_K_M", "gb": 3.3, "bits": 4.8}, {"q": "Q8_0", "gb": 5.0, "bits": 8.5}], "run": {"ollama": "gemma3:4b", "lmstudio": "Gemma 3 4B", "hf_gguf": "ggml-org/gemma-3-4b-it-GGUF", "mlx": "mlx-community/gemma-3-4b-it-4bit"}, "hf_id": "google/gemma-3-4b-it"},
-    {"id": "qwen3-8b", "name": "Qwen3 8B", "family": "Qwen", "tasks": ["chat", "code", "write", "reason", "agents"], "params_b": 8.2, "active_b": 8.2, "layers": 36, "kv_heads": 8, "head_dim": 128, "ctx_max": 32768, "license": "Apache 2.0", "gated": false, "score": 55, "blurb": "The best all-rounder for an ordinary laptop: chat, code and tools.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 4.12, "bits": 3.9}, {"q": "Q4_K_M", "gb": 5.03, "bits": 4.8}, {"q": "Q6_K", "gb": 6.73, "bits": 6.6}, {"q": "Q8_0", "gb": 8.71, "bits": 8.5}], "run": {"ollama": "qwen3:8b", "lmstudio": "Qwen3 8B", "hf_gguf": "unsloth/Qwen3-8B-GGUF", "mlx": "mlx-community/Qwen3-8B-4bit"}, "hf_id": "Qwen/Qwen3-8B"},
-    {"id": "llama-3.1-8b", "name": "Llama 3.1 8B", "family": "Llama", "tasks": ["chat", "write"], "params_b": 8.0, "active_b": 8.0, "layers": 32, "kv_heads": 8, "head_dim": 128, "ctx_max": 131072, "license": "Llama 3.1 Community", "gated": true, "score": 46, "blurb": "Well known and widely supported. A safe, steady writer.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 4.02, "bits": 3.9}, {"q": "Q4_K_M", "gb": 4.92, "bits": 4.8}, {"q": "Q8_0", "gb": 8.54, "bits": 8.5}], "run": {"ollama": "llama3.1:8b", "lmstudio": "Meta Llama 3.1 8B Instruct", "hf_gguf": "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF", "mlx": "mlx-community/Meta-Llama-3.1-8B-Instruct-4bit"}, "hf_id": "meta-llama/Llama-3.1-8B-Instruct"},
-    {"id": "qwen2.5-coder-7b", "name": "Qwen2.5 Coder 7B", "family": "Qwen", "tasks": ["code"], "params_b": 7.6, "active_b": 7.6, "layers": 28, "kv_heads": 4, "head_dim": 128, "ctx_max": 32768, "license": "Apache 2.0", "gated": false, "score": 50, "blurb": "A coding helper small enough for a laptop. Good at completing code.", "default_q": "Q4_K_M", "quants": [{"q": "Q4_K_M", "gb": 4.68, "bits": 4.8}, {"q": "Q8_0", "gb": 8.1, "bits": 8.5}], "run": {"ollama": "qwen2.5-coder:7b", "lmstudio": "Qwen2.5 Coder 7B Instruct", "hf_gguf": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF", "mlx": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit"}, "hf_id": "Qwen/Qwen2.5-Coder-7B-Instruct"},
-    {"id": "qwen2.5-vl-7b", "name": "Qwen2.5 VL 7B", "family": "Qwen", "tasks": ["vision", "chat"], "params_b": 8.3, "active_b": 8.3, "layers": 28, "kv_heads": 4, "head_dim": 128, "ctx_max": 32768, "license": "Apache 2.0", "gated": false, "score": 48, "blurb": "Reads screenshots, documents and photos, and answers questions about them.", "default_q": "Q4_K_M", "quants": [{"q": "Q4_K_M", "gb": 6.0, "bits": 4.8}], "run": {"ollama": "qwen2.5vl:7b", "lmstudio": "Qwen2.5 VL 7B Instruct", "hf_gguf": "ggml-org/Qwen2.5-VL-7B-Instruct-GGUF", "mlx": "mlx-community/Qwen2.5-VL-7B-Instruct-4bit"}, "hf_id": "Qwen/Qwen2.5-VL-7B-Instruct"},
-    {"id": "gemma-3-12b", "name": "Gemma 3 12B", "family": "Gemma", "tasks": ["chat", "write", "vision"], "params_b": 12.2, "active_b": 12.2, "layers": 48, "kv_heads": 8, "head_dim": 256, "ctx_max": 131072, "license": "Gemma", "gated": true, "score": 62, "blurb": "A polished writer with good manners, and it can see pictures.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 6.0, "bits": 3.9}, {"q": "Q4_K_M", "gb": 8.1, "bits": 4.8}, {"q": "Q8_0", "gb": 12.5, "bits": 8.5}], "run": {"ollama": "gemma3:12b", "lmstudio": "Gemma 3 12B", "hf_gguf": "ggml-org/gemma-3-12b-it-GGUF", "mlx": "mlx-community/gemma-3-12b-it-4bit"}, "hf_id": "google/gemma-3-12b-it"},
-    {"id": "qwen3-14b", "name": "Qwen3 14B", "family": "Qwen", "tasks": ["chat", "code", "write", "reason", "agents"], "params_b": 14.8, "active_b": 14.8, "layers": 40, "kv_heads": 8, "head_dim": 128, "ctx_max": 32768, "license": "Apache 2.0", "gated": false, "score": 66, "blurb": "A noticeable step up from the 8B models, if you have the room.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 7.32, "bits": 3.9}, {"q": "Q4_K_M", "gb": 9.0, "bits": 4.8}, {"q": "Q8_0", "gb": 15.7, "bits": 8.5}], "run": {"ollama": "qwen3:14b", "lmstudio": "Qwen3 14B", "hf_gguf": "unsloth/Qwen3-14B-GGUF", "mlx": "mlx-community/Qwen3-14B-4bit"}, "hf_id": "Qwen/Qwen3-14B"},
-    {"id": "phi-4", "name": "Phi-4 14B", "family": "Phi", "tasks": ["reason", "chat"], "params_b": 14.7, "active_b": 14.7, "layers": 40, "kv_heads": 10, "head_dim": 128, "ctx_max": 16384, "license": "MIT", "gated": false, "score": 60, "blurb": "Strong at maths and step-by-step problems for its size.", "default_q": "Q4_K_M", "quants": [{"q": "Q4_K_M", "gb": 9.05, "bits": 4.8}, {"q": "Q8_0", "gb": 15.6, "bits": 8.5}], "run": {"ollama": "phi4", "lmstudio": "Phi 4", "hf_gguf": "bartowski/phi-4-GGUF", "mlx": "mlx-community/phi-4-4bit"}, "hf_id": "microsoft/phi-4"},
-    {"id": "gpt-oss-20b", "name": "gpt-oss 20B", "family": "gpt-oss", "tasks": ["chat", "code", "reason", "agents"], "params_b": 21, "active_b": 3.6, "layers": 24, "kv_heads": 8, "head_dim": 64, "ctx_max": 131072, "license": "Apache 2.0", "gated": false, "score": 70, "blurb": "OpenAI's open model. Quick for its size because only part of it works on each word.", "default_q": "MXFP4", "quants": [{"q": "MXFP4", "gb": 12.1, "bits": 4.25}], "run": {"ollama": "gpt-oss:20b", "lmstudio": "gpt-oss 20b", "hf_gguf": "ggml-org/gpt-oss-20b-GGUF", "mlx": "mlx-community/gpt-oss-20b-MXFP4-Q8"}, "hf_id": "openai/gpt-oss-20b"},
-    {"id": "mistral-small-3.2", "name": "Mistral Small 3.2 24B", "family": "Mistral", "tasks": ["chat", "write", "vision", "agents"], "params_b": 24, "active_b": 24, "layers": 40, "kv_heads": 8, "head_dim": 128, "ctx_max": 131072, "license": "Apache 2.0", "gated": false, "score": 72, "blurb": "A capable writer that follows instructions closely and can see images.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 11.5, "bits": 3.9}, {"q": "Q4_K_M", "gb": 14.3, "bits": 4.8}, {"q": "Q8_0", "gb": 25.1, "bits": 8.5}], "run": {"ollama": "mistral-small3.2", "lmstudio": "Mistral Small 3.2 24B Instruct", "hf_gguf": "unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF", "mlx": "mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit"}, "hf_id": "mistralai/Mistral-Small-3.2-24B-Instruct-2506"},
-    {"id": "gemma-3-27b", "name": "Gemma 3 27B", "family": "Gemma", "tasks": ["chat", "write", "vision"], "params_b": 27.4, "active_b": 27.4, "layers": 62, "kv_heads": 16, "head_dim": 128, "ctx_max": 131072, "license": "Gemma", "gated": true, "score": 76, "blurb": "Google's biggest open Gemma 3. A lovely writer, and it sees images.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 13.4, "bits": 3.9}, {"q": "Q4_K_M", "gb": 16.5, "bits": 4.8}, {"q": "Q8_0", "gb": 28.7, "bits": 8.5}], "run": {"ollama": "gemma3:27b", "lmstudio": "Gemma 3 27B", "hf_gguf": "ggml-org/gemma-3-27b-it-GGUF", "mlx": "mlx-community/gemma-3-27b-it-4bit"}, "hf_id": "google/gemma-3-27b-it"},
-    {"id": "qwen3-30b-a3b", "name": "Qwen3 30B-A3B", "family": "Qwen", "tasks": ["chat", "code", "write", "reason", "agents"], "params_b": 30.5, "active_b": 3.3, "layers": 48, "kv_heads": 4, "head_dim": 128, "ctx_max": 131072, "license": "Apache 2.0", "gated": false, "score": 78, "blurb": "Big-model brains at small-model speed. Only a tenth of it works on each word.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 14.7, "bits": 3.9}, {"q": "Q4_K_M", "gb": 18.6, "bits": 4.8}, {"q": "Q8_0", "gb": 32.5, "bits": 8.5}], "run": {"ollama": "qwen3:30b", "lmstudio": "Qwen3 30B A3B", "hf_gguf": "unsloth/Qwen3-30B-A3B-GGUF", "mlx": "mlx-community/Qwen3-30B-A3B-4bit"}, "hf_id": "Qwen/Qwen3-30B-A3B"},
-    {"id": "qwen3-coder-30b", "name": "Qwen3 Coder 30B-A3B", "family": "Qwen", "tasks": ["code", "agents"], "params_b": 30.5, "active_b": 3.3, "layers": 48, "kv_heads": 4, "head_dim": 128, "ctx_max": 262144, "license": "Apache 2.0", "gated": false, "score": 80, "blurb": "A strong coding agent that's fast because it's a mixture of experts.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 14.7, "bits": 3.9}, {"q": "Q4_K_M", "gb": 18.6, "bits": 4.8}, {"q": "Q8_0", "gb": 32.5, "bits": 8.5}], "run": {"ollama": "qwen3-coder:30b", "lmstudio": "Qwen3 Coder 30B A3B Instruct", "hf_gguf": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF", "mlx": "mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit"}, "hf_id": "Qwen/Qwen3-Coder-30B-A3B-Instruct"},
-    {"id": "qwen3-32b", "name": "Qwen3 32B", "family": "Qwen", "tasks": ["chat", "code", "write", "reason", "agents"], "params_b": 32.8, "active_b": 32.8, "layers": 64, "kv_heads": 8, "head_dim": 128, "ctx_max": 32768, "license": "Apache 2.0", "gated": false, "score": 82, "blurb": "The best dense model a 24 GB graphics card can hold. Slower, but deep.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 16.0, "bits": 3.9}, {"q": "Q4_K_M", "gb": 19.8, "bits": 4.8}, {"q": "Q8_0", "gb": 34.8, "bits": 8.5}], "run": {"ollama": "qwen3:32b", "lmstudio": "Qwen3 32B", "hf_gguf": "unsloth/Qwen3-32B-GGUF", "mlx": "mlx-community/Qwen3-32B-4bit"}, "hf_id": "Qwen/Qwen3-32B"},
-    {"id": "llama-3.3-70b", "name": "Llama 3.3 70B", "family": "Llama", "tasks": ["chat", "write"], "params_b": 70.6, "active_b": 70.6, "layers": 80, "kv_heads": 8, "head_dim": 128, "ctx_max": 131072, "license": "Llama 3.3 Community", "gated": true, "score": 84, "blurb": "A heavyweight writer. Needs a big Mac or a serious workstation.", "default_q": "Q4_K_M", "quants": [{"q": "Q3_K_M", "gb": 34.3, "bits": 3.9}, {"q": "Q4_K_M", "gb": 42.5, "bits": 4.8}, {"q": "Q8_0", "gb": 75.0, "bits": 8.5}], "run": {"ollama": "llama3.3:70b", "lmstudio": "Llama 3.3 70B Instruct", "hf_gguf": "bartowski/Llama-3.3-70B-Instruct-GGUF", "mlx": "mlx-community/Llama-3.3-70B-Instruct-4bit"}, "hf_id": "meta-llama/Llama-3.3-70B-Instruct"},
-    {"id": "gpt-oss-120b", "name": "gpt-oss 120B", "family": "gpt-oss", "tasks": ["chat", "code", "reason", "agents"], "params_b": 117, "active_b": 5.1, "layers": 36, "kv_heads": 8, "head_dim": 64, "ctx_max": 131072, "license": "Apache 2.0", "gated": false, "score": 90, "blurb": "Frontier-class reasoning at home, if you have about 64 GB to spare.", "default_q": "MXFP4", "quants": [{"q": "MXFP4", "gb": 63.4, "bits": 4.25}], "run": {"ollama": "gpt-oss:120b", "lmstudio": "gpt-oss 120b", "hf_gguf": "ggml-org/gpt-oss-120b-GGUF", "mlx": "mlx-community/gpt-oss-120b-MXFP4-Q8"}, "hf_id": "openai/gpt-oss-120b"}
-  ]
+ "fixture": true,
+ "note": "FIXTURE written by ds-app on 2026-11-18. Model geometry is in ds-models' fit.mjs field names (`config`), quant sizes are rounded file sizes; when eng-hf's docs/models.json has a pick's `hf_id`, the page uses that row (normalizeModel) instead of `config` and `quants`. Replaced wholesale by ds-models' picks when they land; `score` is a placeholder ordering, not a benchmark.",
+ "default_ctx": 8192,
+ "tasks": [
+  {
+   "id": "chat",
+   "label": "Chat and ask questions"
+  },
+  {
+   "id": "code",
+   "label": "Write code"
+  },
+  {
+   "id": "write",
+   "label": "Write and edit text"
+  },
+  {
+   "id": "vision",
+   "label": "Understand pictures"
+  },
+  {
+   "id": "agents",
+   "label": "Build agents (tools)"
+  },
+  {
+   "id": "reason",
+   "label": "Think hard (maths, logic)"
+  }
+ ],
+ "models": [
+  {
+   "id": "llama-3.2-1b",
+   "hf_id": "meta-llama/Llama-3.2-1B-Instruct",
+   "name": "Llama 3.2 1B",
+   "family": "Llama",
+   "tasks": [
+    "chat"
+   ],
+   "score": 18,
+   "license": "Llama 3.2 Community",
+   "gated": true,
+   "blurb": "Tiny and quick. Fine for simple questions, easily confused by hard ones.",
+   "run": {
+    "ollama": "llama3.2:1b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Llama 3.2 1B Instruct",
+    "mlx": "mlx-community/Llama-3.2-1B-Instruct-4bit"
+   },
+   "config": {
+    "params_total": 1240000000.0,
+    "num_hidden_layers": 16,
+    "hidden_size": 2048,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 8,
+    "head_dim": 64,
+    "vocab_size": 128256,
+    "tie_word_embeddings": true,
+    "max_context": 131072,
+    "vision": false,
+    "reasoning": false
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "bartowski/Llama-3.2-1B-Instruct-GGUF",
+     "bytes": 810000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "bartowski/Llama-3.2-1B-Instruct-GGUF",
+     "bytes": 1320000000
+    }
+   ]
+  },
+  {
+   "id": "llama-3.2-3b",
+   "hf_id": "meta-llama/Llama-3.2-3B-Instruct",
+   "name": "Llama 3.2 3B",
+   "family": "Llama",
+   "tasks": [
+    "chat",
+    "write"
+   ],
+   "score": 30,
+   "license": "Llama 3.2 Community",
+   "gated": true,
+   "blurb": "A small all-rounder that runs on almost anything.",
+   "run": {
+    "ollama": "llama3.2:3b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Llama 3.2 3B Instruct",
+    "mlx": "mlx-community/Llama-3.2-3B-Instruct-4bit"
+   },
+   "config": {
+    "params_total": 3210000000.0,
+    "num_hidden_layers": 28,
+    "hidden_size": 3072,
+    "num_attention_heads": 24,
+    "num_key_value_heads": 8,
+    "head_dim": 128,
+    "vocab_size": 128256,
+    "tie_word_embeddings": true,
+    "max_context": 131072,
+    "vision": false,
+    "reasoning": false
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "bartowski/Llama-3.2-3B-Instruct-GGUF",
+     "bytes": 1690000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "bartowski/Llama-3.2-3B-Instruct-GGUF",
+     "bytes": 2020000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "bartowski/Llama-3.2-3B-Instruct-GGUF",
+     "bytes": 3420000000
+    }
+   ]
+  },
+  {
+   "id": "qwen3-4b",
+   "hf_id": "Qwen/Qwen3-4B",
+   "name": "Qwen3 4B",
+   "family": "Qwen",
+   "tasks": [
+    "chat",
+    "reason",
+    "agents"
+   ],
+   "score": 40,
+   "license": "Apache 2.0",
+   "gated": false,
+   "blurb": "Small but sharp. Can stop and think before it answers.",
+   "run": {
+    "ollama": "qwen3:4b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Qwen3 4B",
+    "mlx": "mlx-community/Qwen3-4B-4bit"
+   },
+   "config": {
+    "params_total": 4020000000.0,
+    "num_hidden_layers": 36,
+    "hidden_size": 2560,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 8,
+    "head_dim": 128,
+    "vocab_size": 151936,
+    "tie_word_embeddings": true,
+    "max_context": 32768,
+    "vision": false,
+    "reasoning": true
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "unsloth/Qwen3-4B-GGUF",
+     "bytes": 2080000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "unsloth/Qwen3-4B-GGUF",
+     "bytes": 2500000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "unsloth/Qwen3-4B-GGUF",
+     "bytes": 4280000000
+    }
+   ]
+  },
+  {
+   "id": "gemma-3-4b",
+   "hf_id": "google/gemma-3-4b-it",
+   "name": "Gemma 3 4B",
+   "family": "Gemma",
+   "tasks": [
+    "chat",
+    "write",
+    "vision"
+   ],
+   "score": 38,
+   "license": "Gemma",
+   "gated": true,
+   "blurb": "Friendly writer that can also look at a photo and describe it.",
+   "run": {
+    "ollama": "gemma3:4b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Gemma 3 4B",
+    "mlx": "mlx-community/gemma-3-4b-it-4bit"
+   },
+   "config": {
+    "params_total": 3880000000.0,
+    "num_hidden_layers": 34,
+    "hidden_size": 2560,
+    "num_attention_heads": 8,
+    "num_key_value_heads": 4,
+    "head_dim": 256,
+    "vocab_size": 262208,
+    "tie_word_embeddings": true,
+    "max_context": 131072,
+    "vision": true,
+    "reasoning": false,
+    "sliding_window": 1024,
+    "sliding_window_pattern": 6
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "ggml-org/gemma-3-4b-it-GGUF",
+     "bytes": 3300000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "ggml-org/gemma-3-4b-it-GGUF",
+     "bytes": 5000000000
+    }
+   ]
+  },
+  {
+   "id": "qwen3-8b",
+   "hf_id": "Qwen/Qwen3-8B",
+   "name": "Qwen3 8B",
+   "family": "Qwen",
+   "tasks": [
+    "chat",
+    "code",
+    "write",
+    "reason",
+    "agents"
+   ],
+   "score": 55,
+   "license": "Apache 2.0",
+   "gated": false,
+   "blurb": "The best all-rounder for an ordinary laptop: chat, code and tools.",
+   "run": {
+    "ollama": "qwen3:8b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Qwen3 8B",
+    "mlx": "mlx-community/Qwen3-8B-4bit"
+   },
+   "config": {
+    "params_total": 8190000000.0,
+    "num_hidden_layers": 36,
+    "hidden_size": 4096,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 8,
+    "head_dim": 128,
+    "vocab_size": 151936,
+    "tie_word_embeddings": false,
+    "max_context": 32768,
+    "vision": false,
+    "reasoning": true
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "unsloth/Qwen3-8B-GGUF",
+     "bytes": 4120000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "unsloth/Qwen3-8B-GGUF",
+     "bytes": 5030000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q6_K",
+     "label": "Q6_K",
+     "repo": "unsloth/Qwen3-8B-GGUF",
+     "bytes": 6730000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "unsloth/Qwen3-8B-GGUF",
+     "bytes": 8710000000
+    }
+   ]
+  },
+  {
+   "id": "llama-3.1-8b",
+   "hf_id": "meta-llama/Llama-3.1-8B-Instruct",
+   "name": "Llama 3.1 8B",
+   "family": "Llama",
+   "tasks": [
+    "chat",
+    "write"
+   ],
+   "score": 46,
+   "license": "Llama 3.1 Community",
+   "gated": true,
+   "blurb": "Well known and widely supported. A safe, steady writer.",
+   "run": {
+    "ollama": "llama3.1:8b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Meta Llama 3.1 8B Instruct",
+    "mlx": "mlx-community/Meta-Llama-3.1-8B-Instruct-4bit"
+   },
+   "config": {
+    "params_total": 8030000000.0,
+    "num_hidden_layers": 32,
+    "hidden_size": 4096,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 8,
+    "head_dim": 128,
+    "vocab_size": 128256,
+    "tie_word_embeddings": false,
+    "max_context": 131072,
+    "vision": false,
+    "reasoning": false
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF",
+     "bytes": 4020000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF",
+     "bytes": 4920000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF",
+     "bytes": 8540000000
+    }
+   ]
+  },
+  {
+   "id": "qwen2.5-coder-7b",
+   "hf_id": "Qwen/Qwen2.5-Coder-7B-Instruct",
+   "name": "Qwen2.5 Coder 7B",
+   "family": "Qwen",
+   "tasks": [
+    "code"
+   ],
+   "score": 50,
+   "license": "Apache 2.0",
+   "gated": false,
+   "blurb": "A coding helper small enough for a laptop. Good at completing code.",
+   "run": {
+    "ollama": "qwen2.5-coder:7b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Qwen2.5 Coder 7B Instruct",
+    "mlx": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit"
+   },
+   "config": {
+    "params_total": 7620000000.0,
+    "num_hidden_layers": 28,
+    "hidden_size": 3584,
+    "num_attention_heads": 28,
+    "num_key_value_heads": 4,
+    "head_dim": 128,
+    "vocab_size": 152064,
+    "tie_word_embeddings": false,
+    "max_context": 32768,
+    "vision": false,
+    "reasoning": false
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
+     "bytes": 4680000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
+     "bytes": 8100000000
+    }
+   ]
+  },
+  {
+   "id": "qwen2.5-vl-7b",
+   "hf_id": "Qwen/Qwen2.5-VL-7B-Instruct",
+   "name": "Qwen2.5 VL 7B",
+   "family": "Qwen",
+   "tasks": [
+    "vision",
+    "chat"
+   ],
+   "score": 48,
+   "license": "Apache 2.0",
+   "gated": false,
+   "blurb": "Reads screenshots, documents and photos, and answers questions about them.",
+   "run": {
+    "ollama": "qwen2.5vl:7b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Qwen2.5 VL 7B Instruct",
+    "mlx": "mlx-community/Qwen2.5-VL-7B-Instruct-4bit"
+   },
+   "config": {
+    "params_total": 8290000000.0,
+    "num_hidden_layers": 28,
+    "hidden_size": 3584,
+    "num_attention_heads": 28,
+    "num_key_value_heads": 4,
+    "head_dim": 128,
+    "vocab_size": 152064,
+    "tie_word_embeddings": false,
+    "max_context": 32768,
+    "vision": true,
+    "reasoning": false
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "ggml-org/Qwen2.5-VL-7B-Instruct-GGUF",
+     "bytes": 6000000000
+    }
+   ]
+  },
+  {
+   "id": "gemma-3-12b",
+   "hf_id": "google/gemma-3-12b-it",
+   "name": "Gemma 3 12B",
+   "family": "Gemma",
+   "tasks": [
+    "chat",
+    "write",
+    "vision"
+   ],
+   "score": 62,
+   "license": "Gemma",
+   "gated": true,
+   "blurb": "A polished writer with good manners, and it can see pictures.",
+   "run": {
+    "ollama": "gemma3:12b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Gemma 3 12B",
+    "mlx": "mlx-community/gemma-3-12b-it-4bit"
+   },
+   "config": {
+    "params_total": 12200000000.0,
+    "num_hidden_layers": 48,
+    "hidden_size": 3840,
+    "num_attention_heads": 16,
+    "num_key_value_heads": 8,
+    "head_dim": 256,
+    "vocab_size": 262208,
+    "tie_word_embeddings": true,
+    "max_context": 131072,
+    "vision": true,
+    "reasoning": false,
+    "sliding_window": 1024,
+    "sliding_window_pattern": 6
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "ggml-org/gemma-3-12b-it-GGUF",
+     "bytes": 6000000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "ggml-org/gemma-3-12b-it-GGUF",
+     "bytes": 8100000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "ggml-org/gemma-3-12b-it-GGUF",
+     "bytes": 12500000000
+    }
+   ]
+  },
+  {
+   "id": "qwen3-14b",
+   "hf_id": "Qwen/Qwen3-14B",
+   "name": "Qwen3 14B",
+   "family": "Qwen",
+   "tasks": [
+    "chat",
+    "code",
+    "write",
+    "reason",
+    "agents"
+   ],
+   "score": 66,
+   "license": "Apache 2.0",
+   "gated": false,
+   "blurb": "A noticeable step up from the 8B models, if you have the room.",
+   "run": {
+    "ollama": "qwen3:14b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Qwen3 14B",
+    "mlx": "mlx-community/Qwen3-14B-4bit"
+   },
+   "config": {
+    "params_total": 14800000000.0,
+    "num_hidden_layers": 40,
+    "hidden_size": 5120,
+    "num_attention_heads": 40,
+    "num_key_value_heads": 8,
+    "head_dim": 128,
+    "vocab_size": 151936,
+    "tie_word_embeddings": false,
+    "max_context": 32768,
+    "vision": false,
+    "reasoning": true
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "unsloth/Qwen3-14B-GGUF",
+     "bytes": 7320000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "unsloth/Qwen3-14B-GGUF",
+     "bytes": 9000000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "unsloth/Qwen3-14B-GGUF",
+     "bytes": 15700000000
+    }
+   ]
+  },
+  {
+   "id": "phi-4",
+   "hf_id": "microsoft/phi-4",
+   "name": "Phi-4 14B",
+   "family": "Phi",
+   "tasks": [
+    "reason",
+    "chat"
+   ],
+   "score": 60,
+   "license": "MIT",
+   "gated": false,
+   "blurb": "Strong at maths and step-by-step problems for its size.",
+   "run": {
+    "ollama": "phi4",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Phi 4",
+    "mlx": "mlx-community/phi-4-4bit"
+   },
+   "config": {
+    "params_total": 14700000000.0,
+    "num_hidden_layers": 40,
+    "hidden_size": 5120,
+    "num_attention_heads": 40,
+    "num_key_value_heads": 10,
+    "head_dim": 128,
+    "vocab_size": 100352,
+    "tie_word_embeddings": false,
+    "max_context": 16384,
+    "vision": false,
+    "reasoning": false
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "bartowski/phi-4-GGUF",
+     "bytes": 9050000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "bartowski/phi-4-GGUF",
+     "bytes": 15600000000
+    }
+   ]
+  },
+  {
+   "id": "gpt-oss-20b",
+   "hf_id": "openai/gpt-oss-20b",
+   "name": "gpt-oss 20B",
+   "family": "gpt-oss",
+   "tasks": [
+    "chat",
+    "code",
+    "reason",
+    "agents"
+   ],
+   "score": 70,
+   "license": "Apache 2.0",
+   "gated": false,
+   "blurb": "OpenAI's open model. Quick for its size because only part of it works on each word.",
+   "run": {
+    "ollama": "gpt-oss:20b",
+    "ollama_q": "MXFP4",
+    "lmstudio": "gpt-oss 20b",
+    "mlx": "mlx-community/gpt-oss-20b-MXFP4-Q8"
+   },
+   "config": {
+    "params_total": 20910000000.0,
+    "num_hidden_layers": 24,
+    "hidden_size": 2880,
+    "num_attention_heads": 64,
+    "num_key_value_heads": 8,
+    "head_dim": 64,
+    "vocab_size": 201088,
+    "tie_word_embeddings": false,
+    "max_context": 131072,
+    "vision": false,
+    "reasoning": true,
+    "params_active": 3610000000.0,
+    "sliding_window": 128,
+    "sliding_window_pattern": 2,
+    "num_experts": 32,
+    "num_experts_per_tok": 4,
+    "moe_intermediate_size": 2880
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "MXFP4",
+     "label": "MXFP4",
+     "repo": "ggml-org/gpt-oss-20b-GGUF",
+     "bytes": 12100000000
+    }
+   ]
+  },
+  {
+   "id": "mistral-small-3.2",
+   "hf_id": "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
+   "name": "Mistral Small 3.2 24B",
+   "family": "Mistral",
+   "tasks": [
+    "chat",
+    "write",
+    "vision",
+    "agents"
+   ],
+   "score": 72,
+   "license": "Apache 2.0",
+   "gated": false,
+   "blurb": "A capable writer that follows instructions closely and can see images.",
+   "run": {
+    "ollama": "mistral-small3.2",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Mistral Small 3.2 24B Instruct",
+    "mlx": "mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit"
+   },
+   "config": {
+    "params_total": 24000000000.0,
+    "num_hidden_layers": 40,
+    "hidden_size": 5120,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 8,
+    "head_dim": 128,
+    "vocab_size": 131072,
+    "tie_word_embeddings": false,
+    "max_context": 131072,
+    "vision": true,
+    "reasoning": false
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF",
+     "bytes": 11500000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF",
+     "bytes": 14300000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF",
+     "bytes": 25100000000
+    }
+   ]
+  },
+  {
+   "id": "gemma-3-27b",
+   "hf_id": "google/gemma-3-27b-it",
+   "name": "Gemma 3 27B",
+   "family": "Gemma",
+   "tasks": [
+    "chat",
+    "write",
+    "vision"
+   ],
+   "score": 76,
+   "license": "Gemma",
+   "gated": true,
+   "blurb": "Google's biggest open Gemma 3. A lovely writer, and it sees images.",
+   "run": {
+    "ollama": "gemma3:27b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Gemma 3 27B",
+    "mlx": "mlx-community/gemma-3-27b-it-4bit"
+   },
+   "config": {
+    "params_total": 27400000000.0,
+    "num_hidden_layers": 62,
+    "hidden_size": 5376,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 16,
+    "head_dim": 128,
+    "vocab_size": 262208,
+    "tie_word_embeddings": true,
+    "max_context": 131072,
+    "vision": true,
+    "reasoning": false,
+    "sliding_window": 1024,
+    "sliding_window_pattern": 6
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "ggml-org/gemma-3-27b-it-GGUF",
+     "bytes": 13400000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "ggml-org/gemma-3-27b-it-GGUF",
+     "bytes": 16500000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "ggml-org/gemma-3-27b-it-GGUF",
+     "bytes": 28700000000
+    }
+   ]
+  },
+  {
+   "id": "qwen3-30b-a3b",
+   "hf_id": "Qwen/Qwen3-30B-A3B",
+   "name": "Qwen3 30B-A3B",
+   "family": "Qwen",
+   "tasks": [
+    "chat",
+    "code",
+    "write",
+    "reason",
+    "agents"
+   ],
+   "score": 78,
+   "license": "Apache 2.0",
+   "gated": false,
+   "blurb": "Big-model brains at small-model speed. Only a tenth of it works on each word.",
+   "run": {
+    "ollama": "qwen3:30b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Qwen3 30B A3B",
+    "mlx": "mlx-community/Qwen3-30B-A3B-4bit"
+   },
+   "config": {
+    "params_total": 30530000000.0,
+    "num_hidden_layers": 48,
+    "hidden_size": 2048,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 4,
+    "head_dim": 128,
+    "vocab_size": 151936,
+    "tie_word_embeddings": false,
+    "max_context": 131072,
+    "vision": false,
+    "reasoning": true,
+    "params_active": 3350000000.0,
+    "num_experts": 128,
+    "num_experts_per_tok": 8,
+    "moe_intermediate_size": 768
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "unsloth/Qwen3-30B-A3B-GGUF",
+     "bytes": 14700000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "unsloth/Qwen3-30B-A3B-GGUF",
+     "bytes": 18600000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "unsloth/Qwen3-30B-A3B-GGUF",
+     "bytes": 32500000000
+    }
+   ]
+  },
+  {
+   "id": "qwen3-coder-30b",
+   "hf_id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+   "name": "Qwen3 Coder 30B-A3B",
+   "family": "Qwen",
+   "tasks": [
+    "code",
+    "agents"
+   ],
+   "score": 80,
+   "license": "Apache 2.0",
+   "gated": false,
+   "blurb": "A strong coding agent that's fast because it's a mixture of experts.",
+   "run": {
+    "ollama": "qwen3-coder:30b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Qwen3 Coder 30B A3B Instruct",
+    "mlx": "mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit"
+   },
+   "config": {
+    "params_total": 30530000000.0,
+    "num_hidden_layers": 48,
+    "hidden_size": 2048,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 4,
+    "head_dim": 128,
+    "vocab_size": 151936,
+    "tie_word_embeddings": false,
+    "max_context": 262144,
+    "vision": false,
+    "reasoning": false,
+    "params_active": 3350000000.0,
+    "num_experts": 128,
+    "num_experts_per_tok": 8,
+    "moe_intermediate_size": 768
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+     "bytes": 14700000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+     "bytes": 18600000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+     "bytes": 32500000000
+    }
+   ]
+  },
+  {
+   "id": "qwen3-32b",
+   "hf_id": "Qwen/Qwen3-32B",
+   "name": "Qwen3 32B",
+   "family": "Qwen",
+   "tasks": [
+    "chat",
+    "code",
+    "write",
+    "reason",
+    "agents"
+   ],
+   "score": 82,
+   "license": "Apache 2.0",
+   "gated": false,
+   "blurb": "The best dense model a 24 GB graphics card can hold. Slower, but deep.",
+   "run": {
+    "ollama": "qwen3:32b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Qwen3 32B",
+    "mlx": "mlx-community/Qwen3-32B-4bit"
+   },
+   "config": {
+    "params_total": 32800000000.0,
+    "num_hidden_layers": 64,
+    "hidden_size": 5120,
+    "num_attention_heads": 64,
+    "num_key_value_heads": 8,
+    "head_dim": 128,
+    "vocab_size": 151936,
+    "tie_word_embeddings": false,
+    "max_context": 32768,
+    "vision": false,
+    "reasoning": true
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "unsloth/Qwen3-32B-GGUF",
+     "bytes": 16000000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "unsloth/Qwen3-32B-GGUF",
+     "bytes": 19800000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "unsloth/Qwen3-32B-GGUF",
+     "bytes": 34800000000
+    }
+   ]
+  },
+  {
+   "id": "llama-3.3-70b",
+   "hf_id": "meta-llama/Llama-3.3-70B-Instruct",
+   "name": "Llama 3.3 70B",
+   "family": "Llama",
+   "tasks": [
+    "chat",
+    "write"
+   ],
+   "score": 84,
+   "license": "Llama 3.3 Community",
+   "gated": true,
+   "blurb": "A heavyweight writer. Needs a big Mac or a serious workstation.",
+   "run": {
+    "ollama": "llama3.3:70b",
+    "ollama_q": "Q4_K_M",
+    "lmstudio": "Llama 3.3 70B Instruct",
+    "mlx": "mlx-community/Llama-3.3-70B-Instruct-4bit"
+   },
+   "config": {
+    "params_total": 70600000000.0,
+    "num_hidden_layers": 80,
+    "hidden_size": 8192,
+    "num_attention_heads": 64,
+    "num_key_value_heads": 8,
+    "head_dim": 128,
+    "vocab_size": 128256,
+    "tie_word_embeddings": false,
+    "max_context": 131072,
+    "vision": false,
+    "reasoning": false
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "Q3_K_M",
+     "label": "Q3_K_M",
+     "repo": "bartowski/Llama-3.3-70B-Instruct-GGUF",
+     "bytes": 34300000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q4_K_M",
+     "label": "Q4_K_M",
+     "repo": "bartowski/Llama-3.3-70B-Instruct-GGUF",
+     "bytes": 42500000000
+    },
+    {
+     "format": "gguf",
+     "quant": "Q8_0",
+     "label": "Q8_0",
+     "repo": "bartowski/Llama-3.3-70B-Instruct-GGUF",
+     "bytes": 75000000000
+    }
+   ]
+  },
+  {
+   "id": "gpt-oss-120b",
+   "hf_id": "openai/gpt-oss-120b",
+   "name": "gpt-oss 120B",
+   "family": "gpt-oss",
+   "tasks": [
+    "chat",
+    "code",
+    "reason",
+    "agents"
+   ],
+   "score": 90,
+   "license": "Apache 2.0",
+   "gated": false,
+   "blurb": "Frontier-class reasoning at home, if you have about 64 GB to spare.",
+   "run": {
+    "ollama": "gpt-oss:120b",
+    "ollama_q": "MXFP4",
+    "lmstudio": "gpt-oss 120b",
+    "mlx": "mlx-community/gpt-oss-120b-MXFP4-Q8"
+   },
+   "config": {
+    "params_total": 116830000000.0,
+    "num_hidden_layers": 36,
+    "hidden_size": 2880,
+    "num_attention_heads": 64,
+    "num_key_value_heads": 8,
+    "head_dim": 64,
+    "vocab_size": 201088,
+    "tie_word_embeddings": false,
+    "max_context": 131072,
+    "vision": false,
+    "reasoning": true,
+    "params_active": 5130000000.0,
+    "sliding_window": 128,
+    "sliding_window_pattern": 2,
+    "num_experts": 128,
+    "num_experts_per_tok": 4,
+    "moe_intermediate_size": 2880
+   },
+   "quants": [
+    {
+     "format": "gguf",
+     "quant": "MXFP4",
+     "label": "MXFP4",
+     "repo": "ggml-org/gpt-oss-120b-GGUF",
+     "bytes": 63400000000
+    }
+   ]
+  }
+ ]
 }
