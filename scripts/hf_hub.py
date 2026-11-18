@@ -61,6 +61,11 @@ class HubError(Exception):
     stage stops on it rather than publish an index with holes it cannot see."""
 
 
+class DeadlineReached(Exception):
+    """The run's time budget is spent. Not a failure of anything: everything fetched so far is in the cache,
+    and the next run starts from there. See `Hub.deadline` and `40_models.py --deadline-minutes`."""
+
+
 def utcnow() -> dt.datetime:
     return dt.datetime.now(dt.timezone.utc)
 
@@ -93,6 +98,11 @@ class Hub:
         self.calls = {"api": 0, "resolvers": 0, "other": 0, "cached": 0}
         self._last = 0.0
         self._left: dict[str, tuple[int, float]] = {}   # bucket -> (calls left, monotonic time it resets)
+        # A monotonic time after which no request is made: `request()` raises DeadlineReached instead, and
+        # never starts a rate-limit wait that would end past it. Cached reads are unaffected, which is what
+        # makes a stopped run resumable -- the next one replays the cache at disk speed and asks the
+        # network only for what this one did not reach.
+        self.deadline: float | None = None
 
     # -------------------------------------------------------------- the cache
     def _path(self, kind: str, name: str) -> Path:
@@ -134,7 +144,12 @@ class Hub:
         return (utcnow() - when).total_seconds() < max_age
 
     # -------------------------------------------------------------- the wire
+    def _check_deadline(self, after: float = 0.0) -> None:
+        if self.deadline is not None and time.monotonic() + after > self.deadline:
+            raise DeadlineReached(f"time budget spent; {self.calls}")
+
     def _wait(self, bucket: str) -> None:
+        self._check_deadline()
         gap = time.monotonic() - self._last
         if gap < MIN_GAP:
             time.sleep(MIN_GAP - gap)
@@ -142,6 +157,7 @@ class Hub:
         if left and left[0] <= RESERVE:
             pause = left[1] - time.monotonic()
             if pause > 0:
+                self._check_deadline(pause)
                 self.log(f"  hub: {left[0]} {bucket} calls left in this window; waiting {pause:.0f}s for the next")
                 time.sleep(pause + 1)
             self._left.pop(bucket, None)

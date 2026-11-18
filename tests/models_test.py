@@ -141,6 +141,21 @@ with tempfile.TemporaryDirectory() as tmp:
     hub.store("config", "g/gated", 401, None, key="s")
     eq("cache: a 401 is remembered", hub2.get("config", "g/gated", "https://x", key="s"), (401, None))
     raises("offline: a miss raises Offline", lambda: hub.tree("never/fetched", "s"), hf_hub.Offline)
+    # The deadline: a spent budget stops the network, never the cache, so a stopped run resumes.
+    import time as _time
+    hub3 = hf_hub.Hub(Path(tmp), token="", offline=False)
+    hub3.request = lambda *a, **k: (_ for _ in ()).throw(AssertionError("asked the network"))
+    hub3.deadline = _time.monotonic() - 1
+    eq("deadline: a cached tree is still served after the deadline", hub3.tree("a/b", "sha1"), [("x.gguf", 5)])
+    hub4 = hf_hub.Hub(Path(tmp), token="", offline=False)
+    hub4.deadline = _time.monotonic() - 1
+    raises("deadline: a request past it raises DeadlineReached", lambda: hub4.request("https://huggingface.co/api/x"),
+           hf_hub.DeadlineReached)
+    hub5 = hf_hub.Hub(Path(tmp), token="", offline=False, log=lambda *a: None)
+    hub5.deadline = _time.monotonic() + 30
+    hub5._left["api"] = (3, _time.monotonic() + 600)
+    raises("deadline: a rate-limit wait that would end past it is not started", lambda: hub5._wait("api"),
+           hf_hub.DeadlineReached)
     true("cache: long ids make short, distinct paths",
          hub._path("tree", "a/" + "x" * 300) != hub._path("tree", "a/" + "x" * 299 + "y")
          and len(hub._path("tree", "a/" + "x" * 300).name) < 140)
@@ -244,18 +259,30 @@ gemma = {"model_type": "gemma3", "text_config": {"num_hidden_layers": 48, "hidde
          "num_key_value_heads": 8, "head_dim": 256, "sliding_window": 1024, "sliding_window_pattern": 6,
          "max_position_embeddings": 131072}, "vision_config": {"hidden_size": 1152}}
 d, ctx, src, _ = M.dims_from_config(gemma)
+true("dims: a vision tower is recorded", d.get("vision") is True)
 eq("dims: a vision model's text_config is read", (d["layers"], ctx, src), (48, 131072, "text_config"))
 eq("dims: sliding window and its share of layers", (d["swa"], d["swa_layers"]), (1024, 40))
 eq("dims: the plain KV formula refuses SWA", d["kv_f16_per_token"], None)
 d, _, _, _ = M.dims_from_config({"num_hidden_layers": 61, "hidden_size": 7168, "num_attention_heads": 128,
                                  "num_key_value_heads": 128, "kv_lora_rank": 512, "qk_rope_head_dim": 64,
-                                 "max_position_embeddings": 163840, "n_routed_experts": 256, "num_experts_per_tok": 8})
+                                 "max_position_embeddings": 163840, "n_routed_experts": 256, "num_experts_per_tok": 8,
+                                 "moe_intermediate_size": 2048, "first_k_dense_replace": 3, "tie_word_embeddings": False})
 eq("dims: MLA rank and rope dim", (d["kv_lora_rank"], d["rope_dim"], d["kv_f16_per_token"]), (512, 64, None))
+eq("dims: no head_dim is invented for MLA", "head_dim" in d, False)
+eq("dims: expert width, leading dense layers, untied embeddings", (d["moe_ffn"], d["dense_layers"], d["tied"]), (2048, 3, False))
+d, _, _, _ = M.dims_from_config({"num_hidden_layers": 24, "hidden_size": 2880, "num_attention_heads": 64,
+                                 "num_key_value_heads": 8, "head_dim": 64, "num_local_experts": 32,
+                                 "experts_per_token": 4, "intermediate_size": 2880})
+eq("dims: gpt-oss sizes its experts with the plain intermediate_size", d["moe_ffn"], 2880)
+d, _, _, _ = M.dims_from_config({"num_hidden_layers": 4, "hidden_size": 1024, "num_attention_heads": 8,
+                                 "hybrid_override_pattern": "M-M*", "max_position_embeddings": 8192})
+eq("dims: Nemotron-H's pattern counts its Mamba layers", (d.get("hybrid"), d.get("linear_layers")), (True, 2))
+eq("dims: a dense config has no expert width", "moe_ffn" in M.dims_from_config({"num_hidden_layers": 32, "hidden_size": 4096, "num_attention_heads": 32, "intermediate_size": 14336})[0], False)
 d, _, _, _ = M.dims_from_config({"num_hidden_layers": 4, "hidden_size": 2048, "num_attention_heads": 16,
                                  "num_key_value_heads": 2, "head_dim": 256, "max_position_embeddings": 262144,
                                  "layer_types": ["linear_attention"] * 3 + ["full_attention"]})
-eq("dims: hybrid linear attention counts the full layers and refuses the formula",
-   (d.get("hybrid"), d.get("attn_layers"), d["kv_f16_per_token"]), (True, 1, None))
+eq("dims: hybrid linear attention counts both kinds of layer and refuses the formula",
+   (d.get("hybrid"), d.get("attn_layers"), d.get("linear_layers"), d["kv_f16_per_token"]), (True, 1, 3, None))
 d, ctx, moe, _ = M.dims_from_gguf(h)
 eq("dims from a GGUF header", (d["layers"], d["kv_heads"], d["head_dim"], ctx), (36, 8, 128, 32768))
 eq("dims from a GGUF header: KV formula", d["kv_f16_per_token"], 2 * 36 * 8 * 128 * 2)
@@ -455,6 +482,10 @@ raises("schema: an unknown format fails", broken(lambda d: d["models"][0][ix["va
 raises("schema: a duplicate model fails", broken(lambda d: d["models"].append(d["models"][0])), M.SchemaError)
 raises("schema: a licence missing from the table fails", broken(lambda d: d["licenses"].clear()), M.SchemaError)
 raises("schema: counts that disagree fail", broken(lambda d: d["counts"].__setitem__("files", 1)), M.SchemaError)
+_ok = json.loads(json.dumps(good))
+_ok["models"][0][ix["dims"]].update({"tied": False, "vision": True})
+true("schema: false and true flags in dims are valid", (M.validate(_ok) is None))
+raises("schema: a string in dims fails", broken(lambda d: d["models"][0][ix["dims"]].__setitem__("layers", "36")), M.SchemaError)
 raises("schema: active above total fails",
        broken(lambda d: d["models"][0].__setitem__(ix["active"], 10**12)), M.SchemaError)
 

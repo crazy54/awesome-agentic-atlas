@@ -440,7 +440,10 @@ def dims_from_config(cfg: dict) -> tuple[dict, int | None, str | None, dict | No
     if kv is None:
         kv = heads
     head_dim = c.get("head_dim")
-    if head_dim is None and isinstance(hidden, int) and isinstance(heads, int) and heads:
+    # Derived as transformers derives it when the config is silent -- except for MLA (DeepSeek, Kimi), where
+    # hidden / heads is no dimension the model has: its cache is `kv_lora_rank + rope_dim` wide per layer.
+    if (head_dim is None and isinstance(hidden, int) and isinstance(heads, int) and heads
+            and not isinstance(c.get("kv_lora_rank"), int)):
         head_dim = hidden // heads
     d: dict = {}
     for k, v in (("layers", layers), ("hidden", hidden), ("heads", heads), ("kv_heads", kv),
@@ -471,6 +474,33 @@ def dims_from_config(cfg: dict) -> tuple[dict, int | None, str | None, dict | No
             d["rope_dim"] = c["qk_rope_head_dim"]
     if hybrid:
         d["hybrid"] = True
+    # The layers that keep no KV cache: linear attention, Mamba/SSM, short convolutions. From `layer_types`
+    # (Qwen3-Next), `layers_block_type` (Jamba, Granite 4) or `hybrid_override_pattern` (Nemotron-H, where
+    # `M` is a Mamba layer and `*` attention). Raw counts; null when the config does not say.
+    lin = None
+    if isinstance(lt, list) and lt and hybrid:
+        lin = sum(1 for x in lt if x not in ("full_attention", "sliding_attention", "attention"))
+    elif isinstance(c.get("layers_block_type"), list):
+        lin = sum(1 for x in c["layers_block_type"] if str(x).lower() not in ("attention", "full_attention"))
+    elif isinstance(c.get("hybrid_override_pattern"), str):
+        lin = c["hybrid_override_pattern"].count("M")
+    if lin is not None:
+        d["linear_layers"] = lin
+    # For the fit maths' split of expert and shared weights (ds-models, team/contracts/fit.md): the expert
+    # FFN width, the leading dense layers before the MoE ones, and whether the embedding table is tied.
+    E0 = _first(c, "num_experts", "num_local_experts", "n_routed_experts", "moe_num_experts")
+    ffn = c.get("moe_intermediate_size")
+    if ffn is None and isinstance(E0, int) and E0 > 1:
+        ffn = c.get("intermediate_size")   # Mixtral and gpt-oss size their experts with the plain key
+    if isinstance(ffn, int) and not isinstance(ffn, bool):
+        d["moe_ffn"] = ffn
+    if isinstance(c.get("first_k_dense_replace"), int):
+        d["dense_layers"] = c["first_k_dense_replace"]
+    tied = cfg.get("tie_word_embeddings", c.get("tie_word_embeddings"))
+    if isinstance(tied, bool):
+        d["tied"] = tied
+    if isinstance(cfg.get("vision_config"), dict) or isinstance(cfg.get("vision_tower"), (dict, str)):
+        d["vision"] = True
     d["kv_f16_per_token"] = kv_f16(d)
     ctx = _first(c, "max_position_embeddings", "max_sequence_length", "seq_length", "n_positions",
                  "n_ctx", "max_seq_len")
@@ -524,6 +554,10 @@ def dims_from_gguf(h: dict) -> tuple[dict, int | None, dict | None, int | None]:
             d["rope_dim"] = g("rope.dimension_count")
     if any(isinstance(g(k), int) for k in ("ssm.state_size", "ssm.conv_kernel", "shortconv.l_cache")):
         d["hybrid"] = True
+    if isinstance(g("expert_feed_forward_length"), int):
+        d["moe_ffn"] = g("expert_feed_forward_length")
+    if isinstance(g("leading_dense_block_count"), int):
+        d["dense_layers"] = g("leading_dense_block_count")
     d["kv_f16_per_token"] = kv_f16(d)
     moe = None
     if isinstance(g("expert_count"), int) and g("expert_count") > 1:
@@ -828,8 +862,9 @@ def validate(doc: dict) -> None:
         if r[ix["active"]] is not None and r[ix["params"]] is not None and r[ix["active"]] > r[ix["params"]]:
             fail(f"{mid}: active > params")
         dims = r[ix["dims"]]
-        if dims is not None and (not isinstance(dims, dict) or not all(_t(v, (int, bool), null=True) or v is True
-                                                                       for v in dims.values())):
+        # Every dims value is a count (int), a flag (bool: `hybrid`, `vision`, `tied`), or null.
+        if dims is not None and (not isinstance(dims, dict) or not all(
+                v is None or isinstance(v, bool) or (isinstance(v, int) and v >= 0) for v in dims.values())):
             fail(f"{mid}: dims {dims!r}")
         ol = r[ix["ollama"]]
         if ol is not None and (set(ol) != {"name", "tag", "bytes", "q", "match"} or ol["match"] not in OLLAMA_MATCH):

@@ -200,7 +200,14 @@ or 50 likes. Uncensored fine-tunes that pass are kept with the `uncensored` flag
 
 Anonymous reads allow 500 API calls and 3,000 file resolves per five minutes per IP. A cold cache costs
 about 9,800 API calls and 2,300 resolves, about 100 minutes (measured 2026-11-18: 7,593 trees, 2,230 model
-infos, 936 base-model fetches, 46 listing pages). A warm one re-reads a tree or config only when
+infos, 936 base-model fetches, 46 listing pages). That is the weekly step's whole cap (`timeout-minutes: 100`), so the
+build is **resumable**: every answer is written to `cache/hf/` as it arrives, keyed on the repo's `sha`,
+and `cache/` is banked even when the step fails. `--deadline-minutes 92` makes the stage stop asking
+before the cap and exit 3 without writing anything. The next run replays the cache at disk speed and
+fetches only what the last one did not reach (checked 2026-11-18: 20 deleted trees, a stopped run, then
+a full run that made 24 API calls). In weekly.yml the step sits after "Fetch and classify" and before
+"Capture screenshots", whose deadline is computed from the time left, so the models step's time
+comes out of the screenshots' budget and never the workbooks'. A warm one re-reads a tree or config only when
 the repo's `sha` moved, so a weekly run is the ~45 listing pages, the base-model infos (kept for six days),
 and whatever changed. An `HF_TOKEN` secret would raise the API quota, and would let configs be read from
 gated repos whose licence that account has accepted. Without one, those models' `dims` come from an

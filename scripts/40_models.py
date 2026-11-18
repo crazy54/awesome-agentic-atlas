@@ -11,6 +11,7 @@ models catalogue page (`41_models_page.py`) is drawn from the same file.
     python scripts/40_models.py --dry-run    # ...and write nothing
     python scripts/40_models.py --offline    # build from cache/hf/ alone: no network, stale is fine
     python scripts/40_models.py --status     # report on the committed file: no network
+    python scripts/40_models.py --deadline-minutes 92   # stop asking at 92 minutes, exit 3, resume next run
 
 HOW IT ASKS. In four rounds, cheapest first, so that a weekly run is mostly cache hits:
 
@@ -48,6 +49,7 @@ import datetime as dt
 import json
 import os
 import sys
+import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -306,6 +308,9 @@ def main(argv=None) -> int:
     ap.add_argument("--status", action="store_true", help="report on the committed file and stop")
     ap.add_argument("--force", action="store_true", help="write even if the guard refuses")
     ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--deadline-minutes", type=float, default=None,
+                    help="stop asking the network after this long and exit 3, writing nothing; the next run "
+                         "resumes from cache/hf/")
     a = ap.parse_args(argv)
 
     if a.status:
@@ -317,8 +322,24 @@ def main(argv=None) -> int:
     conf = json.loads(CONF.read_text(encoding="utf-8"))
     now = hf_hub.utcnow()
     hub = hf_hub.Hub(CACHE, offline=a.offline)
+    if a.deadline_minutes:
+        hub.deadline = time.monotonic() + a.deadline_minutes * 60
     print(f"models index: {'offline, ' if a.offline else ''}{'token' if hub.token else 'anonymous'} reads, cache {CACHE}")
-    doc, sel = build(hub, conf, now.strftime("%Y-%m-%d"), now.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    try:
+        doc, sel = build(hub, conf, now.strftime("%Y-%m-%d"), now.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    except hf_hub.DeadlineReached:
+        # A cold cache does not fit in one capped CI step (about 100 minutes of anonymous API time from
+        # nothing). Everything fetched is already in cache/hf/, keyed on each repo's sha, so the next run
+        # replays it at disk speed and carries on. Nothing is written: a partial index would trip the
+        # guard, or worse, pass it.
+        print(f"STOPPED at the {a.deadline_minutes:g}-minute deadline after {hub.calls}; nothing written. "
+              "The cache keeps every answer so far, and the next run resumes from it.")
+        summary = os.environ.get("GITHUB_STEP_SUMMARY")
+        if summary:
+            with open(summary, "a", encoding="utf-8") as f:
+                f.write(f"### Models index\n\nStopped at the {a.deadline_minutes:g}-minute deadline; "
+                        f"resumes from cache next run. Calls: `{hub.calls}`\n")
+        return 3
     text = compact(doc)
     print(report(doc))
     print(f"  {len(text.encode('utf-8')):,} bytes; hub calls {hub.calls}")
