@@ -32,15 +32,15 @@ The module docstrings are the detailed documentation. Read the one at the top of
 
 | Script | What it does | Reads | Writes | Fresh clone? |
 |---|---|---|---|---|
-| `pull_sources.py` | Downloads each source list from `raw.githubusercontent.com`, but only if its head commit moved. Diffs old and new copies *by parsed entry*, not by line. Refuses a pull that shrank drastically | GitHub; `cache/sources/index.json` | `cache/README.md`, `cache/sources/*.md`, `cache/sources/index.json`, `cache/pull-report.json`, `cache/collect-queue.json`; sets `pulled`/`changed`/`failed` outputs | Yes; this is how a cache is started. `--status` makes no network calls |
+| `pull_sources.py` | Downloads each source list from `raw.githubusercontent.com`, but only if its head commit moved. Diffs old and new copies *by parsed entry*, not by line. Keeps the previous copy, and records nothing, when a pull fails, shrank to under a quarter of its bytes, or parses to under a quarter of its entries (`--force` accepts). Records which old section each new one came from, for drift placement. Reports a renamed list repo | GitHub; `cache/sources/index.json` | `cache/README.md`, `cache/sources/*.md`, `cache/sources/index.json`, `cache/pull-report.json`, `cache/collect-queue.json`, `cache/section-moves.json`; sets `pulled`/`changed`/`failed` outputs | Yes; this is how a cache is started. `--status` makes no network calls |
 | `12_scout.py` | The one source nobody curates. GitHub search for rising agentic repos (created in the last 180 days with 300+ stars, or 2,000+ stars since 2023 on core topics), filtered for forks, mirrors, spam and off-topic SEO, filed by topic into atlas categories. Sticky: a scouted repo leaves only when search returns it failing a quality rule. Also lists awesome-lists not yet in `SOURCES`. A failed search changes nothing | GitHub search; `state/scout-repos.json`, `state/scout-lists.json` | `state/scout-repos.json`, `state/scout-lists.json`, `cache/sources/scout.md`; `$GITHUB_STEP_SUMMARY` | Yes; `--offline` renders the document from the committed ledger with no network |
 | `watch_sources.py` | Asks each list for its newest commit and compares it with the ledger in `state/first-seen.json`. For the scout, which has no commit, it compares the document's SHA-256 instead | `gh api repos/{nwo}/commits`; `cache/sources/scout.md` | `GITHUB_OUTPUT` `changed`, `moved`. With `--update` it also writes `state/first-seen.json` | Yes |
 | `01_parse.py` | Parses the original list (andyrewlee/awesome-agent-orchestrators) | `cache/README.md` | `cache/entries.json` | No |
 | `02_fetch.py` | Batched GraphQL for stars, language, licence and README, with a REST fallback | `cache/entries.json`; `gh api` | `cache/meta.json`, `cache/readmes/` | No |
 | `03_releases.py`, `03b_actions.py` | Release asset names; whether the repo is a GitHub Action | `cache/entries.json`, `cache/meta.json`; `gh api` | `cache/releases.json`, `cache/actions.json` | No |
 | `04_classify.py` | OS verdicts, install command and screenshot candidates for the original list | the four files above plus `cache/readmes/` | `cache/records.json` | No |
-| `10_parse_sources.py` | **Defines `SOURCES`**, the list of source lists. Parses every list except `orchestrators` (which goes through `01`/`04`). Fails on a section heading it cannot map to a topic | `cache/sources/*.md` | `cache/entries_all.json` | No; it says to run `pull_sources.py` first |
-| `11_fetch_all.py` | Runs 02's batching over every distinct repo | `cache/entries_all.json`, `cache/meta.json` | `cache/meta.json`, `cache/readmes/` | No |
+| `10_parse_sources.py` | **Defines `SOURCES`**, the list of source lists. Parses every list except `orchestrators` (which goes through `01`/`04`). On a section heading it cannot map to a topic, or a list wanting a ninth colour: strict (the default) exits 1; provisional (`AAA_PROVISIONAL=1`, set by both workflows) files it for the run and warns. See [Upstream drift](#upstream-drift) | `cache/sources/*.md`, `cache/section-moves.json`, `cache/pull-report.json` | `cache/entries_all.json`, `cache/drift-proposal.json` and `.md`; `cache/provisional.json` on a provisional run with drift; annotations and `$GITHUB_STEP_SUMMARY` | No; it says to run `pull_sources.py` first |
+| `11_fetch_all.py` | Runs 02's batching over every distinct repo. If more than max(50, 10%) of the repos it asked about failed for a reason other than the repo being gone, it retries the rate-limited and transient ones (after 1, 4 and 15 minutes, or at GitHub's reported reset, capped at 15) and stops only if they still fail. An auth failure (401, bad credentials) stops at once, because no wait fixes a token | `cache/entries_all.json`, `cache/meta.json` | `cache/meta.json`, `cache/readmes/` | No |
 | `13_signals_all.py` | Releases and actions for every repo in one pass. The staleness rule is in `signals.py` | as above | `cache/releases.json`, `cache/actions.json` | No |
 | `14_classify_all.py` | The final record per listed item, of kind `repo`, `subpath` or `site`. Leaves out every row whose repo is in the dead-repo ledger, so a repo GitHub no longer serves is on no surface | everything above; `state/dead-repos.json` | `cache/records_all.json` | No |
 | `dead_repos.py` | **Not a build stage**: run weekly by `dead-repos.yml`. Asks GitHub about every repo in `docs/data.json` and every repo already in the ledger, and records the ones that are gone: GraphQL `NOT_FOUND` and then REST 404, 451 or a 403 `block`, or `isDisabled`. Renamed and archived repos are alive. A repo that answers again leaves the ledger. Writes nothing if any request fails for a reason that is not about the repo, or if the scan would newly mark more than 10% of the atlas (at least 25) dead | `docs/data.json`, `state/dead-repos.json`; `gh api` | `state/dead-repos.json`; `$GITHUB_STEP_SUMMARY` | Yes; `--status` reads the ledger with no network, `--dry-run` scans and writes nothing |
@@ -83,6 +83,8 @@ The module docstrings are the detailed documentation. Read the one at the top of
 |---|---|
 | `taxonomy.py` | The 14 topics and 12 targets, and the rules that assign them. `python scripts/taxonomy.py --why OWNER/REPO` explains an assignment (needs the cache) |
 | `buckets.py` | Folds a list's sections into at most eight colour groups for the workbook |
+| `drift.py` | Upstream drift: where a provisional build files an unmapped section, and the warnings, summary and proposal that say so. See below |
+| `apply_drift_proposal.py` | Writes a provisional build's placements into `taxonomy.py` and `buckets.py`, each in its own list's block, then re-imports both to check. `--check` writes nothing |
 | `signals.py` | Decides when a cached release or action answer must be re-queried |
 | `newness.py` | The first-seen ledger and the "New" cohort rule. Running it with no arguments prints a read-only report |
 | `discover.py` | Discover's selection rule and rotation ledger. `python scripts/discover.py [DAY]` prints a plan and writes nothing |
@@ -117,6 +119,57 @@ three ways round that.
 - **`scripts/19b_refresh.py`** re-renders the page shell over the committed rows, and refuses when those
   rows disagree with the checkout's `SOURCES`. It writes the catalogue at `docs/catalog/index.html`
   (`19_pages.CATALOG`), not `docs/index.html`, which is the homepage.
+
+## Upstream drift
+
+The 39 lists change without notice. A curator renames a heading, translates the README, adds a shelf or
+restructures the list. `taxonomy.py` refuses to guess at a section it does not name, and `buckets.py`
+will not give a ninth colour to an eight-colour palette. Both refusals are deliberate. Until 2026-11,
+`10_parse_sources.py` turned them into a red build, and the site stalled until someone wrote one line.
+
+There are now two modes. `AAA_PROVISIONAL` chooses between them.
+
+- **Strict**, with the variable unset. Every local run and every test is strict. An unmapped section or a
+  ninth colour exits 1 and prints what to add, as before.
+- **Provisional**, with `AAA_PROVISIONAL=1`, which `daily.yml` and `weekly.yml` set for the whole build
+  job. The parse files each unmapped section for this run only and the build publishes. Every later
+  stage honours the placements through `taxonomy.category_of` and `buckets.bucket_map`, but only under
+  the variable. A `cache/provisional.json` left on disk is ignored by strict runs, and a strict parse
+  deletes it.
+
+Where a provisional section goes. The strongest evidence wins:
+
+| Basis | Evidence |
+|---|---|
+| `membership` | At least half its entries were under one mapped section in the list's previous copy. `pull_sources.py` records this in `cache/section-moves.json`, because it is the one stage that holds both copies. Renames and translations keep their entries, so this evidence covers both. |
+| `position` | The list kept the same number of sections, and this one took a mapped section's slot. |
+| `similar` | Its name is more than 75% similar (difflib) to a mapped section of the same list. Sections the list no longer has are checked first. |
+| `modal` | No evidence. The section goes to the category most of the list's rows already use. This placement most needs a reviewer's eye. |
+
+A section that takes over an old section's mapping also takes its bucket. If a list goes over eight
+colours, newcomers fold into the sheet's last bucket. Slots are counted the way `16_build_all` hands them
+out.
+
+Nothing becomes permanent until a person makes it so. Each provisional run produces:
+
+- a `::warning` annotation per placement, saying where the section went, the evidence, and the line to paste;
+- a block in the step summary with every `taxonomy.py` and `buckets.py` line;
+- `cache/drift-proposal.json`. Its fields are `placements`, `degraded` (lists held at their previous copy)
+  and a `fingerprint`, which stays the same when the same drift recurs on later days;
+- `cache/drift-proposal.md`, which is the same summary as Markdown.
+
+To make a run's placements permanent, take the proposal from the run's cache or step summary, run
+`python scripts/apply_drift_proposal.py PROPOSAL.json`, review the diff (a `modal` placement especially),
+and commit it.
+
+Upstream failures that stay hard stops, each for a reason written beside it in the code:
+
+- **A cold cache plus a list that cannot be pulled** (`10_parse_sources.main`). There is no previous copy,
+  and publishing without the list would remove its rows from the site.
+- **The fetch's mass-failure guard** (`11_fetch_all.mass_failure`).
+- **`13_signals_all.py`'s failed batches.**
+- **`17_markdown.py`'s page ceiling and `check_markdown.py`'s lint.** No list edit should be able to trip
+  these. `prose()` now unescapes an upstream `\|` so that a GitHub description cannot trip them either.
 
 ## Order matters
 

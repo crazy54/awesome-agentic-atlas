@@ -104,8 +104,19 @@ jobs:
       # before it: today not one of this job's ~30 commits a month runs the suite at all. Turning it up
       # is this one word, and the two steps that read it are named for what they do in each mode.
       VERIFY_GATES_DEPLOY: "false"
+      # Upstream drift is a warning on this job, not a stop (scripts/drift.py). A list that renames,
+      # translates or adds a section gets it filed for this run only -- a ::warning per placement, the
+      # lines to paste in the step summary, and cache/drift-proposal.json for a person or a PR -- so a
+      # curator's edit no longer freezes the site until somebody writes a taxonomy line. Every stage of
+      # the job reads it, which is why it is here and not a flag on one step. Local runs and the tests
+      # leave it unset and stay strict.
+      AAA_PROVISIONAL: "1"
 
     steps:
+      # For `tools/budget.sh` at the end: how much of `timeout-minutes` this run used.
+      - name: Note when the job started
+        run: echo "JOB_START=$(date +%s)" >> "$GITHUB_ENV"
+
       # The branch as it stands when this job starts, not the commit it was triggered on. This job and
       # weekly.yml queue behind each other in `atlas-build`, and a run checks out its trigger's commit by
       # default -- so one queued behind the other built on the commit from before the other's push, and
@@ -122,7 +133,8 @@ jobs:
       # numpy is here for `27_semantic.py` and for nothing else in this job. It is the only stage that
       # needs it, and it needs it for a one-off: a 29,528 x 256 float32 table, an SVD, and a quantisation
       # pass. Doing that in the standard library would be a day of arithmetic to save a wheel.
-      - run: python -m pip install --upgrade pip openpyxl pillow numpy
+      # Retried: PyPI answering 503 for a minute is not a reason to lose a day's build.
+      - run: bash tools/retry.sh 3 python -m pip install --upgrade pip openpyxl pillow numpy
 
       # `19_pages.py` reads CF_BEACON_TOKEN and treats an empty value as "no analytics", which is right for
       # a fork and for a local `python -m http.server` -- and wrong here. Declaring it in `env:` would set
@@ -200,7 +212,12 @@ jobs:
       #
       # On a day the gate below says no, what this wrote under `state/` is not committed. That is safe:
       # the ledger only grows by observation, so tomorrow's run finds the same repos again.
+      #
+      # Every long step below has its own `timeout-minutes`, at two to three times its longest green run in
+      # the 45 days to 2026-11-18, so a hang fails the step it is in -- named, in the build-red issue -- and
+      # not the job at 180 minutes with a log that stops mid-line. Scout: 4.5 minutes at most.
       - name: Scout GitHub for rising repos and lists not yet in SOURCES
+        timeout-minutes: 15
         run: python scripts/12_scout.py
 
       - name: Has any source list moved?
@@ -254,6 +271,8 @@ jobs:
       # COM and so cannot run on a Linux runner at all).
       - name: Fetch and classify
         if: steps.gate.outputs.go == 'true'
+        # 41 to 59 minutes green. 120 leaves the atlas room to double before this is what breaks.
+        timeout-minutes: 120
         run: |
           set -euo pipefail
           mkdir -p cache
@@ -305,8 +324,21 @@ jobs:
           python scripts/13_signals_all.py
           python scripts/14_classify_all.py
 
+      # Node, before the first stage that can shell out to it, not only before the suite. A page stage that
+      # runs node at build time (the local-AI page's no-script cheat sheet, 32_local.py) would otherwise get
+      # whatever node the runner image happens to carry, which is not a version anyone chose and changes
+      # under us with the image. Version 22, matching `tests.yml` exactly: the point of running the suite here
+      # is that green there and green here mean the same thing, and a different major would make that an
+      # assumption rather than a fact. After the gate, so a skipped build does not pay for it.
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.go == 'true'
+        with:
+          node-version: "22"
+
       - name: Build the Markdown edition and the site
         if: steps.gate.outputs.go == 'true'
+        # Under three minutes green; 27_semantic's first run on a cold cache downloads a 30 MB model.
+        timeout-minutes: 20
         run: |
           set -euo pipefail
           # Dropped before the first generator writes anything, so the assertion below has something
@@ -680,14 +712,7 @@ jobs:
       # facet pages -- all four of which the suite asserts on. Pages serves `latest_branch` verbatim, so
       # landing is publishing, and the canary was catching a regression up to seven days after readers did.
       #
-      # Node is set up here rather than at the top of the job because nothing above needs it and a skipped
-      # build should not pay for it. Version 22, matching `tests.yml` exactly: the point of running the
-      # suite here is that green there and green here mean the same thing, and a different major would make
-      # that an assumption rather than a fact.
-      - uses: actions/setup-node@v4
-        if: steps.gate.outputs.go == 'true'
-        with:
-          node-version: "22"
+      # Node is set up once, just before the site build (see there), and is the same Node the suite runs on.
 
       # Staged before the suite runs rather than only at the commit step, because one harness reads the
       # *index* and would otherwise be handed two different days at once. `indexnow_test.py:124` is the only
@@ -765,6 +790,9 @@ jobs:
         id: verify
         if: steps.gate.outputs.go == 'true'
         continue-on-error: true
+        # 19 to 28 minutes green. A step that times out sets no `status`, which the steps below read as
+        # red: the deploy follows VERIFY_GATES_DEPLOY and the run ends red, as for any red suite.
+        timeout-minutes: 60
         env:
           # The two flags `tests.yml` and `lighthouse.yml` both pass, for the reason both state: a container
           # has no user namespace to sandbox into and a 64 MB `/dev/shm`, and Chrome crashes on both rather
@@ -855,8 +883,10 @@ jobs:
           summary="$(python scripts/newness.py | sed -n '2p')"
           git commit -m "Daily refresh $(date -u +%Y-%m-%d)" -m "${summary}"
           # Rebase rather than force-push: a commit someone pushed by hand while this ran should survive.
-          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          # Three tries, because the push can lose a race to another push between the rebase and itself,
+          # and that is a reason to rebase again, not to throw the build away. A real conflict fails all
+          # three the same way; each try first abandons a rebase the last one left half-done.
+          bash tools/retry.sh 3 sh -c 'git rebase --abort 2>/dev/null; git pull --rebase --autostash origin "$1" && git push origin "HEAD:$1"' _ "${GITHUB_REF_NAME}"
 
       # After the push, and that ordering is the whole design. IndexNow tells an engine to come and fetch a
       # URL, so the URL has to be live first -- submitting before the push would point Bing at the previous
@@ -905,3 +935,9 @@ jobs:
         run: |
           echo "::error title=Published, and red::The site was published and the verification suite was not green on it (run.mjs exited ${{ steps.verify.outputs.status }}). Read the suite's own step above for which harness and which assertion. To stop a red suite publishing at all, set VERIFY_GATES_DEPLOY to \"true\" at the top of this file."
           exit 1
+
+      # Last, and `always()`: how much of the 180 minutes this run used, and a warning from 75%. See
+      # tools/budget.sh for why the trend matters more than the run that hits the limit.
+      - name: How close this run came to its time limit
+        if: always()
+        run: bash tools/budget.sh 180
