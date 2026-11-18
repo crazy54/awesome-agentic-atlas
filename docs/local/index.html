@@ -292,7 +292,7 @@ html:not(.lxjs) #s1,html:not(.lxjs) #s2,html:not(.lxjs) #s3{display:none}
 <section class="lxs" id="cheat" aria-labelledby="cheath">
   <h2 id="cheath">Quick answer by machine</h2>
   <p class="lxquiet">The same maths as the picker, for some common machines, at an 8k context.</p>
-  <table class="lxcheat"><caption class="sr">What runs on common machines</caption><thead><tr><th scope="col">If you have</th><th scope="col">Runs great</th><th scope="col">Also runs, more slowly or squeezed</th></tr></thead><tbody><tr><th scope="row">MacBook Air M1, 8 GB</th><td>Gemma 4 E2B, Qwen3.5 2B, Gemma 4 E4B</td><td>Qwen3.5 9B, Qwen3.5 4B</td></tr><tr><th scope="row">Everyday laptop, Intel, 16 GB</th><td>&mdash;</td><td>Qwen3.8 27B, Qwen3.5 9B</td></tr><tr><th scope="row">Steam Deck OLED</th><td>Gemma 4 E4B, Gemma 4 E2B, Qwen3.5 4B</td><td>Qwen3.6 35B-A3B, Qwen3.8 27B</td></tr><tr><th scope="row">MacBook Air M3, 16 GB</th><td>Gemma 4 E4B, Gemma 4 E2B, Qwen3.5 4B</td><td>Qwen3.6 35B-A3B, Qwen3.8 27B</td></tr><tr><th scope="row">Gaming laptop, RTX 4060 + 16 GB</th><td>Qwen3.5 9B, Gemma 4 E4B, Gemma 4 E2B</td><td>Qwen3.8 27B</td></tr><tr><th scope="row">MacBook Pro M4 Pro, 24 GB</th><td>Gemma 4 26B-A4B, gpt-oss 20B, Qwen3.5 9B</td><td>Qwen3.8 27B</td></tr><tr><th scope="row">Desktop, RTX 3060 12 GB + 32 GB</th><td>Qwen3.5 9B, Gemma 4 E4B, Gemma 4 12B</td><td>Qwen3.8 27B</td></tr><tr><th scope="row">Desktop, RTX 5060 Ti 16 GB + 32 GB</th><td>Gemma 4 26B-A4B, gpt-oss 20B, Qwen3.5 9B</td><td>&mdash;</td></tr><tr><th scope="row">Desktop, RTX 4090 + 64 GB</th><td>Qwen3.6 35B-A3B, Qwen3.8 27B, Qwen3 Coder 30B-A3B</td><td>&mdash;</td></tr><tr><th scope="row">Framework Desktop, 128 GB</th><td>Qwen3.5 122B-A10B, gpt-oss 120B, Qwen3.6 35B-A3B</td><td>Qwen3.8 27B</td></tr><tr><th scope="row">Mac Studio M4 Max, 128 GB</th><td>Qwen3.5 122B-A10B, gpt-oss 120B, Qwen3.6 35B-A3B</td><td>&mdash;</td></tr></tbody></table>
+  <table class="lxcheat"><caption class="sr">What runs on common machines</caption><thead><tr><th scope="col">If you have</th><th scope="col">Runs great</th><th scope="col">Also runs, more slowly or squeezed</th></tr></thead><tbody><tr><th scope="row">MacBook Air M1, 8 GB</th><td>Gemma 4 E2B, Qwen3.5 2B, Gemma 4 E4B</td><td>Qwen3.5 9B, Qwen3.5 4B</td></tr><tr><th scope="row">Everyday laptop, Intel, 16 GB</th><td>&mdash;</td><td>Qwen3.8 27B, gpt-oss 20B</td></tr><tr><th scope="row">Steam Deck OLED</th><td>Gemma 4 E4B, Gemma 4 E2B, Qwen3.5 4B</td><td>Qwen3.6 35B-A3B, Qwen3.8 27B</td></tr><tr><th scope="row">MacBook Air M3, 16 GB</th><td>Gemma 4 E4B, Gemma 4 E2B, Qwen3.5 4B</td><td>Qwen3.6 35B-A3B, Qwen3.8 27B</td></tr><tr><th scope="row">Gaming laptop, RTX 4060 + 16 GB</th><td>Qwen3.5 9B, Gemma 4 E4B, Gemma 4 E2B</td><td>Qwen3.8 27B</td></tr><tr><th scope="row">MacBook Pro M4 Pro, 24 GB</th><td>Gemma 4 26B-A4B, gpt-oss 20B, Qwen3.5 9B</td><td>Qwen3.8 27B</td></tr><tr><th scope="row">Desktop, RTX 3060 12 GB + 32 GB</th><td>Qwen3.5 9B, Gemma 4 E4B, Gemma 4 12B</td><td>Qwen3.8 27B</td></tr><tr><th scope="row">Desktop, RTX 5060 Ti 16 GB + 32 GB</th><td>Gemma 4 26B-A4B, gpt-oss 20B, Qwen3.5 9B</td><td>&mdash;</td></tr><tr><th scope="row">Desktop, RTX 4090 + 64 GB</th><td>Qwen3.6 35B-A3B, Qwen3.8 27B, Qwen3 Coder 30B-A3B</td><td>&mdash;</td></tr><tr><th scope="row">Framework Desktop, 128 GB</th><td>Qwen3.5 122B-A10B, gpt-oss 120B, Qwen3.6 35B-A3B</td><td>Qwen3.8 27B</td></tr><tr><th scope="row">Mac Studio M4 Max, 128 GB</th><td>Qwen3.5 122B-A10B, gpt-oss 120B, Qwen3.6 35B-A3B</td><td>&mdash;</td></tr></tbody></table>
 </section>
 
 <section class="lxs" id="learn" aria-labelledby="learnh">
@@ -563,12 +563,13 @@ function normalizeModel(row, variantCols, fileCols) {
         const bits = /(\d+)bit/i.exec(label)?.[1] ?? (/mxfp4/i.test(label) ? '4' : /bf16|fp16/i.test(label) ? 'bf16' : null);
         if (!bits) continue;
         quant = bits === 'bf16' ? 'mlx-bf16' : `mlx-${bits}bit`;
-      } else if (!QUANTS[label]) {
-        quant = label;
+      } else {
+        quant = String(label).toUpperCase().replace(/^UD-/, '').replace(/^MXFP4_MOE$/, 'MXFP4');
       }
-      if (!quants.some((q) => q.quant === quant && q.format === v.fmt)) {
-        quants.push({ format: v.fmt, quant, label, repo: v.repo, by: v.by, bytes: f.bytes });
-      }
+      const at = quants.findIndex((q) => q.quant === quant && q.format === v.fmt);
+      const entry = { format: v.fmt, quant, label, repo: v.repo, by: v.by, bytes: f.bytes };
+      if (at < 0) quants.push(entry);
+      else if (/^UD-/i.test(quants[at].label) && !/^UD-/i.test(label)) quants[at] = entry;
     }
   }
   const moe = row.moe ?? null;
@@ -587,6 +588,37 @@ function normalizeModel(row, variantCols, fileCols) {
     mmproj_bytes: mmproj, ollama: row.ollama ?? null, gated: row.gated ?? false,
     quants,
   };
+}
+
+function mergePickModel(pickModel, row, variantCols, fileCols) {
+  if (!row) return { ...pickModel, quants: pickModel.quants.map((q) => ({ ...q })) };
+  const asObj = (cols, r) => (Array.isArray(r) && cols ? Object.fromEntries(cols.map((c, i) => [c, r[i]])) : r);
+  const files = new Map();
+  let mmproj = null;
+  for (const v0 of row.variants ?? []) {
+    const v = asObj(variantCols, v0);
+    if (v.fmt === 'gguf' && num(v.mmproj)) mmproj = Math.min(mmproj ?? Infinity, v.mmproj);
+    for (const f0 of v.files ?? []) {
+      const f = asObj(fileCols, f0);
+      if (!num(f.bytes)) continue;
+      files.set(`${v.repo}\u0000${String(f.q).toUpperCase()}`, f.bytes);
+      const bits = v.fmt === 'mlx' ? (/(\d+)bit/i.exec(f.q)?.[1] ?? (/mxfp4/i.test(f.q) ? '4' : null)) : null;
+      if (bits) files.set(`${v.repo}\u0000MLX-${bits}BIT`, f.bytes);
+    }
+  }
+  const sizeConflicts = [];
+  const quants = pickModel.quants.map((q) => {
+    const label = q.label ?? q.quant;
+    const hit = files.get(`${q.repo}\u0000${String(label).toUpperCase()}`);
+    if (!hit) return { ...q };
+    if (num(q.bytes) && Math.abs(hit / q.bytes - 1) > 0.03) {
+      sizeConflicts.push({ repo: q.repo, label, pick: q.bytes, index: hit });
+      return { ...q };
+    }
+    return { ...q, bytes: hit };
+  });
+  const mm = [pickModel.mmproj_bytes, mmproj].filter((x) => num(x));
+  return { ...pickModel, mmproj_bytes: mm.length ? Math.min(...mm) : null, quants, sizeConflicts };
 }
 
 function visionBytes(m) {
@@ -665,8 +697,9 @@ function pickBackend(hw, quantName, forced) {
   return list.find((b) => b !== 'mlx') ?? 'cpu';
 }
 
-function budgets(hw) {
-  const ramFree = Math.max(0, hw.ramBytes - osReserveGB(hw.os, hw.ramGB) * GB);
+function squeezeBytes(hw) { return Math.min(1 * GB, 0.06 * hw.ramBytes); }
+function budgets(hw, { squeeze = false } = {}) {
+  const ramFree = Math.max(0, hw.ramBytes - osReserveGB(hw.os, hw.ramGB) * GB + (squeeze ? squeezeBytes(hw) : 0));
   if (!hw.gpu) return { gpu: 0, ram: ramFree, shared: false };
   if (hw.gpu.integrated) {
     const gpu = Math.min(hw.gpuUsableBytes, ramFree);
@@ -679,6 +712,17 @@ function budgets(hw) {
 
 function fit(model, quant, hardware, opts = {}) {
   const hw = hardware.ramGB != null ? hardware : normalizeHardware(hardware);
+  const f = fitWith(model, quant, hw, opts, false);
+  if (f.fits || f.placement === 'none' && f.backend === null) return f;
+  const g = fitWith(model, quant, hw, opts, true);
+  if (!g.fits) return f;
+  const osGB = osReserveGB(hw.os, hw.ramGB);
+  g.squeezed = true;
+  g.notes.push(`Only fits if you close other apps first: it needs about ${(squeezeBytes(hw) / GB).toFixed(1)} GB of the ${osGB.toFixed(1)} GB we normally leave for ${hw.os === 'macos' ? 'macOS' : hw.os === 'windows' ? 'Windows' : 'the system'} and everyday apps.`);
+  return g;
+}
+
+function fitWith(model, quant, hw, opts, squeeze) {
   const qn = typeof quant === 'string' ? quant : quant.quant;
   const context = Math.min(opts.context ?? 8192, num(model.max_context) ?? Infinity);
   const kvQuant = opts.kvQuant ?? 'f16';
@@ -687,7 +731,7 @@ function fit(model, quant, hardware, opts = {}) {
   const KV = kvBytes(model, context, kvQuant);
   const BUF = computeBufferBytes(model, opts);
   const total = W + KV + BUF;
-  const b = budgets(hw);
+  const b = budgets(hw, { squeeze });
   const L = num(model.num_hidden_layers) ?? 32;
   const notes = [];
   if (model.vision && !opts.images) notes.push(`Reading images adds about ${(visionBytes(model) / GB).toFixed(1)} GB.`);
@@ -832,6 +876,9 @@ function assess(model, quant, hardware, opts = {}) {
   const s = speed(model, quant, hw, { ...opts, fit: f });
   let verdict;
   const great = opts.reasoning ?? model.reasoning ? THRESHOLDS.greatReasoning : THRESHOLDS.great;
+  if (f.squeezed && s.decodeTps >= THRESHOLDS.usable) {
+    return { verdict: 'tight', label: verdictLabel('tight'), fit: f, speed: s, rescue: [], squeezed: true, ...flags(f) };
+  }
   if (f.fits && s.decodeTps >= great) verdict = 'great';
   else if (f.fits && s.decodeTps >= THRESHOLDS.usable) verdict = 'slow';
   else {
@@ -861,7 +908,7 @@ function assess(model, quant, hardware, opts = {}) {
 function flags(f) {
   const budget = f.placement === 'gpu' ? f.gpuBudgetGB : f.ramBudgetGB;
   const nearlyFull = f.fits && budget > 0 && (f.headroomGB ?? 0) < THRESHOLDS.headroomNote * budget;
-  if (nearlyFull) f.notes.push('Only just fits: close other apps (browsers especially) before loading it.');
+  if (nearlyFull && !f.squeezed) f.notes.push('Only just fits: close other apps (browsers especially) before loading it.');
   return { offload: f.placement === 'partial' || f.placement === 'cpu', nearlyFull };
 }
 
@@ -883,7 +930,8 @@ function bestQuant(model, hardware, opts = {}) {
   const pick = results.find(ok)
     ?? results.find((r) => r.a.verdict === 'great' && capped(r) && aboveFloor(r))
     ?? results.find((r) => r.a.verdict === 'slow' && quality(r) <= q4 && aboveFloor(r))
-    ?? results.find((r) => (r.a.verdict === 'great' || r.a.verdict === 'slow'));
+    ?? results.find((r) => (r.a.verdict === 'great' || r.a.verdict === 'slow'))
+    ?? results.find((r) => r.a.squeezed && aboveFloor(r));
   if (!pick) return null;
   const belowFloor = !aboveFloor(pick);
   const verdict = belowFloor ? 'tight' : pick.a.verdict;
@@ -891,7 +939,7 @@ function bestQuant(model, hardware, opts = {}) {
   return { quant: pick.q.quant, bytes: weightBytes(model, pick.q), belowFloor, ...pick.a, verdict, label: verdictLabel(verdict) };
 }
 
-return {GB, GIB, QUANTS, quantSpec, GGUF_LADDER, MLX_LADDER, KV_BYTES, CAL, THRESHOLDS, SPEED_WORDS, WORDS_PER_TOKEN, speedWords, VERDICT_LABELS, verdictLabel, expertParams, activeParams, weightBytes, bytesReadPerToken, kvBytes, computeBufferBytes, normalizeModel, visionBytes, osReserveGB, appleGpuShareGB, normalizeHardware, pickBackend, budgets, fit, speed, assess, bestQuant};
+return {GB, GIB, QUANTS, quantSpec, GGUF_LADDER, MLX_LADDER, KV_BYTES, CAL, THRESHOLDS, SPEED_WORDS, WORDS_PER_TOKEN, speedWords, VERDICT_LABELS, verdictLabel, expertParams, activeParams, weightBytes, bytesReadPerToken, kvBytes, computeBufferBytes, normalizeModel, mergePickModel, visionBytes, osReserveGB, appleGpuShareGB, normalizeHardware, pickBackend, squeezeBytes, budgets, fit, speed, assess, bestQuant};
 })();
 const LOCALHW = (() => {
 
@@ -1321,8 +1369,7 @@ const LOCALUI = ((D, FIT, HW) => {
   const modelOf = (p) => {
     if (models[p.id]) return models[p.id];
     const row = HF[p.id];
-    const base = row ? FIT.normalizeModel(row, D.hf.variant_cols, D.hf.file_cols) : null;
-    return (models[p.id] = base && base.quants.length ? Object.assign(base, {id: p.id}) : p.model);
+    return (models[p.id] = row ? FIT.mergePickModel(p.model, row, D.hf.variant_cols, D.hf.file_cols) : p.model);
   };
   const ggufs = (m) => m.quants.filter((q) => !q.format || q.format === "gguf");
 
@@ -1340,7 +1387,7 @@ const LOCALUI = ((D, FIT, HW) => {
     }
     const file = m.quants.find((x) => x.quant === r.quant) || {label: r.quant, repo: (ggufs(m)[0] || {}).repo};
     return {verdict: r.verdict, quant: r.quant, file, fit: r.fit, speed: r.speed, offload: r.offload,
-            nearlyFull: r.nearlyFull, belowFloor: r.belowFloor, notes: r.fit.notes || []};
+            nearlyFull: r.nearlyFull, belowFloor: r.belowFloor, squeezed: !!r.squeezed, notes: r.fit.notes || []};
   };
   const assess = (hw, ctx, qover, images) => D.models.map((p) => ({model: p, r: judge(p, hw, ctx, (qover || {})[p.id], images)}));
 
@@ -1378,6 +1425,8 @@ const LOCALUI = ((D, FIT, HW) => {
     const f = row.r.fit, hw = mc.hw;
     if (row.r.verdict === "too-big")
       return `Needs about <b>${gb(f.totalGB)} GB</b>; you have ${gb(have(f, hw))} GB for AI. ` + suggest(row.model, mc, ctx);
+    if (row.r.squeezed)
+      return `Needs about <b>${gb(f.totalGB)} GB</b>, a little more than the memory we normally leave free for it.`;
     if (f.placement === "partial" && hw.gpu && !hw.gpu.integrated && !hw.unified)
       return `Needs <b>${gb(f.totalGB)} GB</b>: about ${gb((f.gpuBytes / GB) + f.kvGB + f.bufferGB)} GB on your graphics card, the rest in RAM.`;
     if (f.placement === "partial")
@@ -1400,9 +1449,9 @@ const LOCALUI = ((D, FIT, HW) => {
     }
     if (r.verdict === "slow" && !(m && m.reasoning && tps >= FIT.THRESHOLDS.great))
       out.push("Slow here: fine for a short question, tiring for a long chat.");
-    if (r.verdict === "tight" || r.belowFloor)
+    if ((r.verdict === "tight" && !r.squeezed) || r.belowFloor)
       out.push(`Squeezed to fit: this is a smaller version (<a class="lxwhat" href="#q-quant" data-open="q-quant">${esc(r.quant)}</a>), noticeably less sharp. A smaller model may answer better.`);
-    if (r.offload)
+    if (r.offload && r.fit.placement === "partial")
       out.push(r.verdict === "great"
         ? 'Part of it sits in ordinary memory (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>). That&rsquo;s normal for this model, and it still runs well.'
         : 'Part of it runs from ordinary memory (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>), which is what slows it down.');

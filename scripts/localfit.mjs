@@ -308,14 +308,17 @@ export function normalizeModel(row, variantCols, fileCols) {
         const bits = /(\d+)bit/i.exec(label)?.[1] ?? (/mxfp4/i.test(label) ? '4' : /bf16|fp16/i.test(label) ? 'bf16' : null);
         if (!bits) continue;
         quant = bits === 'bf16' ? 'mlx-bf16' : `mlx-${bits}bit`;
-      } else if (!QUANTS[label]) {
-        // Keep the label (it is the download name) but make sure quantSpec can read it.
-        quant = label;
+      } else {
+        // The canonical type drives the maths and the quant ladder (UD-Q4_K_M → Q4_K_M, MXFP4_MOE → MXFP4); the
+        // label stays as the download name.
+        quant = String(label).toUpperCase().replace(/^UD-/, '').replace(/^MXFP4_MOE$/, 'MXFP4');
       }
-      // First listed variant wins for a given quant: variants are ordered biggest audience first.
-      if (!quants.some((q) => q.quant === quant && q.format === v.fmt)) {
-        quants.push({ format: v.fmt, quant, label, repo: v.repo, by: v.by, bytes: f.bytes });
-      }
+      // One entry per canonical type. Variants are ordered biggest audience first, so the first listed wins, except
+      // that a plain file beats an Unsloth dynamic (UD-) one of the same type.
+      const at = quants.findIndex((q) => q.quant === quant && q.format === v.fmt);
+      const entry = { format: v.fmt, quant, label, repo: v.repo, by: v.by, bytes: f.bytes };
+      if (at < 0) quants.push(entry);
+      else if (/^UD-/i.test(quants[at].label) && !/^UD-/i.test(label)) quants[at] = entry;
     }
   }
   const moe = row.moe ?? null;
@@ -334,6 +337,50 @@ export function normalizeModel(row, variantCols, fileCols) {
     mmproj_bytes: mmproj, ollama: row.ollama ?? null, gated: row.gated ?? false,
     quants,
   };
+}
+
+// The merge rule for a curated pick and its row in the weekly index (fit.md §11). pick.model is authoritative for
+// everything that decides a verdict: geometry, MoE layout, the reasoning flag, and *which* quant files are on offer
+// (the ones the pick's run commands point at). The index contributes only facts that are about the same file:
+//   1. bytes: a pick quant whose repo and label appear in the index takes the index's exact bytes (quantisers
+//      re-upload; the index refreshes weekly). A pick quant the index doesn't list keeps its own bytes;
+//      check-picks.mjs reports it.
+//   2. mmproj_bytes: the smaller of the two non-null values (the index looks across every variant's projectors).
+// It never adds quants from other repos or labels (gpt-oss's "Q4_K_M" files, for one, are MXFP4 experts under a
+// K-quant name, and the ladder would mis-rank them), and never replaces geometry or flags (the index can miss MoE
+// fields its config reader doesn't know, and derives uses heuristically). Returns a new object; inputs untouched.
+export function mergePickModel(pickModel, row, variantCols, fileCols) {
+  if (!row) return { ...pickModel, quants: pickModel.quants.map((q) => ({ ...q })) };
+  const asObj = (cols, r) => (Array.isArray(r) && cols ? Object.fromEntries(cols.map((c, i) => [c, r[i]])) : r);
+  const files = new Map();
+  let mmproj = null;
+  for (const v0 of row.variants ?? []) {
+    const v = asObj(variantCols, v0);
+    if (v.fmt === 'gguf' && num(v.mmproj)) mmproj = Math.min(mmproj ?? Infinity, v.mmproj);
+    for (const f0 of v.files ?? []) {
+      const f = asObj(fileCols, f0);
+      if (!num(f.bytes)) continue;
+      files.set(`${v.repo}\u0000${String(f.q).toUpperCase()}`, f.bytes);
+      // MLX picks carry the canonical name (mlx-4bit); the index labels MLX files 4bit, mxfp4, bf16 …
+      const bits = v.fmt === 'mlx' ? (/(\d+)bit/i.exec(f.q)?.[1] ?? (/mxfp4/i.test(f.q) ? '4' : null)) : null;
+      if (bits) files.set(`${v.repo}\u0000MLX-${bits}BIT`, f.bytes);
+    }
+  }
+  // A same-label size more than 3% off is not a re-upload but a different file under the same name (the index once
+  // folded UD-IQ4_NL_XL into UD-IQ4_NL). Keep the pick's bytes and report it in sizeConflicts.
+  const sizeConflicts = [];
+  const quants = pickModel.quants.map((q) => {
+    const label = q.label ?? q.quant;
+    const hit = files.get(`${q.repo}\u0000${String(label).toUpperCase()}`);
+    if (!hit) return { ...q };
+    if (num(q.bytes) && Math.abs(hit / q.bytes - 1) > 0.03) {
+      sizeConflicts.push({ repo: q.repo, label, pick: q.bytes, index: hit });
+      return { ...q };
+    }
+    return { ...q, bytes: hit };
+  });
+  const mm = [pickModel.mmproj_bytes, mmproj].filter((x) => num(x));
+  return { ...pickModel, mmproj_bytes: mm.length ? Math.min(...mm) : null, quants, sizeConflicts };
 }
 
 export function visionBytes(m) {
@@ -438,8 +485,11 @@ export function pickBackend(hw, quantName, forced) {
 }
 
 // Memory budgets in bytes: what a model may occupy on the GPU (fast pool) and in system RAM (slow pool).
-export function budgets(hw) {
-  const ramFree = Math.max(0, hw.ramBytes - osReserveGB(hw.os, hw.ramGB) * GB);
+// squeeze: the "close other apps" allowance, min(1 GB, 6% of RAM), handed back from the OS reserve when a model
+// misses by less than that (see fit() and fit.md §2.3).
+export function squeezeBytes(hw) { return Math.min(1 * GB, 0.06 * hw.ramBytes); }
+export function budgets(hw, { squeeze = false } = {}) {
+  const ramFree = Math.max(0, hw.ramBytes - osReserveGB(hw.os, hw.ramGB) * GB + (squeeze ? squeezeBytes(hw) : 0));
   if (!hw.gpu) return { gpu: 0, ram: ramFree, shared: false };
   if (hw.gpu.integrated) {
     // One pool. The GPU may use its share, but never more than RAM minus the OS's share.
@@ -460,6 +510,19 @@ export function budgets(hw) {
 // placement: 'gpu' (all on the fast pool), 'partial' (some layers or experts in system RAM), 'cpu', or 'none'.
 export function fit(model, quant, hardware, opts = {}) {
   const hw = hardware.ramGB != null ? hardware : normalizeHardware(hardware);
+  const f = fitWith(model, quant, hw, opts, false);
+  if (f.fits || f.placement === 'none' && f.backend === null) return f;
+  // A miss smaller than the squeeze allowance is a borderline, not "too big": it fits if the visitor closes other
+  // apps. Report it as fitting with squeezed: true; assess() turns that into 'tight' with a plain note.
+  const g = fitWith(model, quant, hw, opts, true);
+  if (!g.fits) return f;
+  const osGB = osReserveGB(hw.os, hw.ramGB);
+  g.squeezed = true;
+  g.notes.push(`Only fits if you close other apps first: it needs about ${(squeezeBytes(hw) / GB).toFixed(1)} GB of the ${osGB.toFixed(1)} GB we normally leave for ${hw.os === 'macos' ? 'macOS' : hw.os === 'windows' ? 'Windows' : 'the system'} and everyday apps.`);
+  return g;
+}
+
+function fitWith(model, quant, hw, opts, squeeze) {
   const qn = typeof quant === 'string' ? quant : quant.quant;
   // A model can't use more context than it was trained for; asking for 32k on a 4k model means 4k.
   const context = Math.min(opts.context ?? 8192, num(model.max_context) ?? Infinity);
@@ -469,7 +532,7 @@ export function fit(model, quant, hardware, opts = {}) {
   const KV = kvBytes(model, context, kvQuant);
   const BUF = computeBufferBytes(model, opts);
   const total = W + KV + BUF;
-  const b = budgets(hw);
+  const b = budgets(hw, { squeeze });
   const L = num(model.num_hidden_layers) ?? 32;
   const notes = [];
   if (model.vision && !opts.images) notes.push(`Reading images adds about ${(visionBytes(model) / GB).toFixed(1)} GB.`);
@@ -637,6 +700,10 @@ export function assess(model, quant, hardware, opts = {}) {
   let verdict;
   const great = opts.reasoning ?? model.reasoning ? THRESHOLDS.greatReasoning : THRESHOLDS.great;
   // An offloaded model can still be "great" (MoE offload often is); `offload` lets the page add "with a catch".
+  if (f.squeezed && s.decodeTps >= THRESHOLDS.usable) {
+    // Fits only with other apps closed: an honest borderline, shown with the catch rather than as "too big".
+    return { verdict: 'tight', label: verdictLabel('tight'), fit: f, speed: s, rescue: [], squeezed: true, ...flags(f) };
+  }
   if (f.fits && s.decodeTps >= great) verdict = 'great';
   else if (f.fits && s.decodeTps >= THRESHOLDS.usable) verdict = 'slow';
   else {
@@ -668,7 +735,7 @@ export function assess(model, quant, hardware, opts = {}) {
 function flags(f) {
   const budget = f.placement === 'gpu' ? f.gpuBudgetGB : f.ramBudgetGB;
   const nearlyFull = f.fits && budget > 0 && (f.headroomGB ?? 0) < THRESHOLDS.headroomNote * budget;
-  if (nearlyFull) f.notes.push('Only just fits: close other apps (browsers especially) before loading it.');
+  if (nearlyFull && !f.squeezed) f.notes.push('Only just fits: close other apps (browsers especially) before loading it.');
   return { offload: f.placement === 'partial' || f.placement === 'cpu', nearlyFull };
 }
 
@@ -696,7 +763,11 @@ export function bestQuant(model, hardware, opts = {}) {
   const pick = results.find(ok)
     ?? results.find((r) => r.a.verdict === 'great' && capped(r) && aboveFloor(r))
     ?? results.find((r) => r.a.verdict === 'slow' && quality(r) <= q4 && aboveFloor(r))
-    ?? results.find((r) => (r.a.verdict === 'great' || r.a.verdict === 'slow'));
+    ?? results.find((r) => (r.a.verdict === 'great' || r.a.verdict === 'slow'))
+    // Last resort: the squeeze band ("close other apps") only when no listed quant fits the honest budget at all.
+    // It never upgrades a pick to a bigger quant that needs the reader to close apps.
+    // Below the quality floor *and* needing apps closed is two catches at once: we call that too big.
+    ?? results.find((r) => r.a.squeezed && aboveFloor(r));
   if (!pick) return null;
   // belowFloor: the only thing that runs is under the beginner floor (Q3_K_M / IQ3_M), where quality drops
   // noticeably. We still return it (the expert view can show it) but the verdict becomes 'tight': it "fits only

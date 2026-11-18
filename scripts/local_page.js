@@ -77,17 +77,18 @@ const LOCALUI = ((D, FIT, HW) => {
       `About <b>${gb(r)} GB</b> is free for it. It works, just more slowly than on a graphics card.`;
   };
 
-  // The model the fit method is handed for a pick: eng-hf's index row when it has one (real file sizes, read
-  // by ds-models' `normalizeModel()`), otherwise the pick's own fit-ready `model`. Cached: a model is the same
-  // object for every machine.
+  // The model the fit method is handed for a pick: its own fit-ready `model`, with eng-hf's index row merged in
+  // by ds-models' `mergePickModel()` when the index has it (fit.md section 11). The pick wins on everything that
+  // decides a verdict -- geometry, flags and the list of files the run commands download -- and the index only
+  // refreshes the size of those same files and the vision projector's. Cached: a model is the same object for
+  // every machine.
   const HF = D.hf && D.hf.rows ? Object.fromEntries(D.hf.rows.map((r) => {
     const o = Object.fromEntries(D.hf.cols.map((c, i) => [c, r[i]])); return [o.id, o]; })) : {};
   const models = {};
   const modelOf = (p) => {
     if (models[p.id]) return models[p.id];
     const row = HF[p.id];
-    const base = row ? FIT.normalizeModel(row, D.hf.variant_cols, D.hf.file_cols) : null;
-    return (models[p.id] = base && base.quants.length ? Object.assign(base, {id: p.id}) : p.model);
+    return (models[p.id] = row ? FIT.mergePickModel(p.model, row, D.hf.variant_cols, D.hf.file_cols) : p.model);
   };
   const ggufs = (m) => m.quants.filter((q) => !q.format || q.format === "gguf");
 
@@ -109,7 +110,7 @@ const LOCALUI = ((D, FIT, HW) => {
     }
     const file = m.quants.find((x) => x.quant === r.quant) || {label: r.quant, repo: (ggufs(m)[0] || {}).repo};
     return {verdict: r.verdict, quant: r.quant, file, fit: r.fit, speed: r.speed, offload: r.offload,
-            nearlyFull: r.nearlyFull, belowFloor: r.belowFloor, notes: r.fit.notes || []};
+            nearlyFull: r.nearlyFull, belowFloor: r.belowFloor, squeezed: !!r.squeezed, notes: r.fit.notes || []};
   };
   const assess = (hw, ctx, qover, images) => D.models.map((p) => ({model: p, r: judge(p, hw, ctx, (qover || {})[p.id], images)}));
 
@@ -156,6 +157,10 @@ const LOCALUI = ((D, FIT, HW) => {
     const f = row.r.fit, hw = mc.hw;
     if (row.r.verdict === "too-big")
       return `Needs about <b>${gb(f.totalGB)} GB</b>; you have ${gb(have(f, hw))} GB for AI. ` + suggest(row.model, mc, ctx);
+    // ds-models' squeeze band (fit.md section 6): a miss of at most a gigabyte or so, which fits once the
+    // reader closes other apps. Said as that, not as a contradiction between "needs" and "have".
+    if (row.r.squeezed)
+      return `Needs about <b>${gb(f.totalGB)} GB</b>, a little more than the memory we normally leave free for it.`;
     if (f.placement === "partial" && hw.gpu && !hw.gpu.integrated && !hw.unified)
       return `Needs <b>${gb(f.totalGB)} GB</b>: about ${gb((f.gpuBytes / GB) + f.kvGB + f.bufferGB)} GB on your graphics card, the rest in RAM.`;
     if (f.placement === "partial")
@@ -185,9 +190,12 @@ const LOCALUI = ((D, FIT, HW) => {
     }
     if (r.verdict === "slow" && !(m && m.reasoning && tps >= FIT.THRESHOLDS.great))
       out.push("Slow here: fine for a short question, tiring for a long chat.");
-    if (r.verdict === "tight" || r.belowFloor)
+    // "Squeezed to fit" here means a smaller quant; a memory squeeze is the fit method's own note below.
+    if ((r.verdict === "tight" && !r.squeezed) || r.belowFloor)
       out.push(`Squeezed to fit: this is a smaller version (<a class="lxwhat" href="#q-quant" data-open="q-quant">${esc(r.quant)}</a>), noticeably less sharp. A smaller model may answer better.`);
-    if (r.offload)
+    // Only a split between graphics and RAM is offload. A machine with no graphics card runs everything from
+    // RAM by design, and telling its owner "part of it" moved would describe a machine they do not have.
+    if (r.offload && r.fit.placement === "partial")
       out.push(r.verdict === "great"
         ? 'Part of it sits in ordinary memory (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>). That&rsquo;s normal for this model, and it still runs well.'
         : 'Part of it runs from ordinary memory (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>), which is what slows it down.');

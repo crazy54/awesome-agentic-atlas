@@ -123,14 +123,18 @@ FIT_MJS = HERE / "localfit.mjs"
 CATALOGUE = "hardware.slim.json"
 HW_MJS = HERE / "localhw.mjs"
 HF_MODELS = OUT / "models.json"
-# Whether the page sizes picks from eng-hf's index. OFF, deliberately, until ds-models has reviewed the join.
-# A dry run on 2026-11-18 against eng-hf's real `docs/models.json` (PR #112, all 16 picks matched) changed 35
-# answers across the 11 cheat-sheet machines -- gpt-oss 20B went from "too big" to "runs great" on an everyday
-# 16 GB laptop, and from MXFP4 to Q6_K on a Mac -- because `normalizeModel()` replaces a pick's curated quant
-# list with every file the index lists, where ds-models' guidance is to keep the pick's own files (they are
-# what the run commands download). Left on, the first daily after #112 merged would have changed the page's
-# answers with no review. The join code and its test stay; turning it on is this constant plus a review.
-HF_JOIN = False
+# Whether the page sizes picks from eng-hf's index. On, through ds-models' `mergePickModel()` (fit.md section 11):
+# the pick keeps its geometry, flags and file list, and the index only refreshes the sizes of those same files
+# (a >3% disagreement keeps the pick's size and is reported by check-picks.mjs) and the vision projector's.
+#
+# The history is the reason for the rule. The first version of this join used `normalizeModel()` whole, and a
+# dry run on 2026-11-18 against #112's real `docs/models.json` changed 35 of the cheat sheet's answers: the
+# index lists gpt-oss files under K-quant names that are really MXFP4 (all 11.5-12.1 GB), a Gemma MoE whose
+# config the index read as dense, and unsloth UD-* labels the quant ladder skipped. Measured by ds-models over
+# 16 picks x 44 presets, the merge changes 0 answers and the whole-row read changed 129. `tests/local_test.py`
+# holds the cheat sheet to the same answers with and without the index wherever that file is on disk. Turning
+# this off makes the page use the picks' own sizes and nothing else.
+HF_JOIN = True
 
 
 def urls(site: str | None = None) -> list[str]:
@@ -450,12 +454,11 @@ const hf = I.hf && I.hf.rows ? Object.fromEntries(I.hf.rows.map((r) => {
   const o = Object.fromEntries(I.hf.cols.map((c, i) => [c, r[i]])); return [o.id, o]; })) : {};
 const modelOf = (p) => {
   const row = hf[p.id];
-  const base = row ? F.normalizeModel(row, I.hf.variant_cols, I.hf.file_cols) : null;
-  return base && base.quants.length ? Object.assign(base, {id: p.id}) : p.model;
+  return row ? F.mergePickModel(p.model, row, I.hf.variant_cols, I.hf.file_cols) : p.model;
 };
 const out = machines.map((hw) => I.models.map((p) => {
   const b = F.bestQuant(modelOf(p), hw, {context: I.ctx});
-  return b ? {id: p.id, verdict: b.verdict, quant: b.quant, tps: b.speed.decodeTps, snag: !!(b.offload || b.nearlyFull)}
+  return b ? {id: p.id, verdict: b.verdict, quant: b.quant, tps: b.speed.decodeTps, snag: !!(b.offload || b.nearlyFull || b.squeezed)}
     : {id: p.id, verdict: "too-big"};
 }));
 process.stdout.write(JSON.stringify(out));

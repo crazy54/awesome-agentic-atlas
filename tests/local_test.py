@@ -186,7 +186,7 @@ const machines = I.presets.map((id) => {
 });
 const out = machines.map((hw) => I.models.map((p) => {
   const b = LOCALFIT.bestQuant(p.model, hw, {context: I.ctx});
-  return b ? {id: p.id, verdict: b.verdict, quant: b.quant, tps: b.speed.decodeTps, snag: !!(b.offload || b.nearlyFull)}
+  return b ? {id: p.id, verdict: b.verdict, quant: b.quant, tps: b.speed.decodeTps, snag: !!(b.offload || b.nearlyFull || b.squeezed)}
     : {id: p.id, verdict: "too-big"};
 }));
 process.stdout.write(JSON.stringify(out));
@@ -251,7 +251,23 @@ true("every explainer the cards link to exists",
      all(f'id="{x}"' in html for x in ("q-quant", "q-ctx", "q-offload", "q-unified", "q-tokens")))
 true("the picker is an ARIA combobox with a listbox", 'role="combobox"' in html and 'role="listbox"' in html)
 true("results are announced politely", 'aria-live="polite"' in html)
-check("the Hugging Face join stays off until ds-models has reviewed it", b32.HF_JOIN, False)
+check("the Hugging Face join is on, through ds-models' merge rule", b32.HF_JOIN, True)
+true("...which the page and the cheat sheet both call, and nothing calls the whole-row reader for a pick",
+     "FIT.mergePickModel(" in (SCRIPTS / "local_page.js").read_text(encoding="utf-8")
+     and "F.mergePickModel(" in b32.CHEAT_JS
+     and "normalizeModel(row" not in (SCRIPTS / "local_page.js").read_text(encoding="utf-8") + b32.CHEAT_JS)
+# The merge's whole promise is that the index refreshes facts and never changes an answer, so wherever the
+# real index is on disk -- eng-hf's worktree, or docs/ once #112 has merged -- the cheat sheet is computed both
+# ways and must agree. CI has neither until #112 lands; ds-models' check-picks.mjs guards it weekly after.
+for index in (b32.HF_MODELS, ROOT.parent / "aaa-huggingface" / "docs" / "models.json"):
+    if node and index.exists():
+        joined = b32.hf_join(PICKS, index)
+        true(f"the index at {index.parent.parent.name}/docs joins every pick", joined and len(joined["rows"]) == len(PICKS["picks"]),
+             str(len(joined["rows"]) if joined else 0))
+        strip = lambda rows: [[(a["id"], a["verdict"], a.get("quant")) for a in r] for r in rows]
+        check("...and changes none of the cheat sheet's answers", strip(b32.cheat_answers(PICKS, joined)),
+              strip(b32.cheat_answers(PICKS, {})))
+        break
 true("the preview banner shows exactly while PREVIEW is on", ('class="lxfix"' in html) == b32.PREVIEW)
 true("the inlined hardware module is there", "const LOCALHW = (() => {" in html)
 true("the page states the hardware list's own date", f"Hardware list updated {b32.long_date(CAT['updated'])}" in html)
@@ -288,6 +304,14 @@ hf_rows = {"cols": ["id", "name"], "variant_cols": ["repo", "fmt"], "file_cols":
 with tempfile.TemporaryDirectory() as tmp:
     p = Path(tmp) / "models.json"
     check("with no Hugging Face index the join is empty, not an error", b32.hf_join(PICKS, p), {})
+    # #107 merges before #112, so the first builds have no docs/models.json at all. The page must build from the
+    # picks as they are, carry no index slice, and give the cheat sheet the answers it gives with the join off.
+    bare = b32.render(CAT, PICKS, b32.hf_join(PICKS, p))
+    m0 = re.search(r'<script type="application/json" id="lxdata">(.*?)</script>', bare, re.S)
+    check("...and the page still builds, falling back to the picks' own sizes", json.loads(m0.group(1))["hf"], None)
+    if node:
+        check("...with the cheat sheet the picks alone give", b32.cheat_answers(PICKS, b32.hf_join(PICKS, p)),
+              b32.cheat_answers(PICKS, {}))
     p.write_text(json.dumps(hf_rows), encoding="utf-8")
     check("with one, only the rows the picks name are carried, in the index's own column shape",
           b32.hf_join(PICKS, p), {"cols": ["id", "name"], "variant_cols": ["repo", "fmt"], "file_cols": ["q", "bytes"],

@@ -231,6 +231,14 @@ await goto("#k=desktop");
 await click("#nogpu");
 ok("No graphics card picks ds-hardware's processor-only machine", (await hash()).includes("d=cpu-only"));
 ok("...and still gets an answer", await ev("document.querySelectorAll('.lxcard').length") > 0);
+// ds-models' squeeze band: gpt-oss 20B misses a 16 GB Windows laptop by under a gigabyte, so it is "only fits
+// squeezed" with the close-other-apps note -- not "won't fit", and not "runs great".
+await goto("#k=laptop&d=intel-iris-xe&mem=16");
+ok("a sub-gigabyte miss is a catch, not a won't-fit",
+   await ev(`document.querySelector('.lxcard[data-model="openai/gpt-oss-20b"]')?.dataset.verdict`) === "tight");
+ok("...that says to close other apps", /close other apps/.test(await ev(`document.querySelector('.lxcard[data-model="openai/gpt-oss-20b"] .lxcatch')?.textContent || ""`)));
+ok("...and does not call a no-graphics-card machine's RAM 'offload'",
+   !/offload/.test(await ev(`document.querySelector('.lxcard[data-model="openai/gpt-oss-20b"] .lxcatch')?.textContent || ""`)));
 await goto("#k=gaming-pc");
 await click("#pop [data-preset]");
 ok("a preset chip sets the whole machine, memory kind included", /d=[^&]+/.test(await hash()) && await ev("document.querySelectorAll('.lxcard').length") > 0,
