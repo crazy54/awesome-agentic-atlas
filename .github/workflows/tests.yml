@@ -141,8 +141,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {part: suite, only: "", skip: "bits-check.mjs", minutes: 45}
-          - {part: bits, only: "bits-check.mjs", skip: "", minutes: 120}
+          - {part: suite, only: "", skip: "bits-check.mjs", minutes: 45, run_minutes: 40}
+          - {part: bits, only: "bits-check.mjs", skip: "", minutes: 120, run_minutes: 112}
     runs-on: ubuntu-latest
     # The whole suite is about two minutes on a laptop, of which `detail-churn.mjs` is 20 seconds and the
     # three browser harnesses are 20 more. Twenty minutes is roughly eight times the expected worst case,
@@ -158,8 +158,17 @@ jobs:
     # enough for it (see the matrix above). The rest of the suite is back to its 17 to 29 minutes, so `suite`
     # keeps 45; `bits` gets 120, about twice what it needs.
     timeout-minutes: ${{ matrix.minutes }}
+    # The suite step's own limit (`run_minutes`) sits a few minutes inside the job's, so a run that reaches it
+    # fails that step rather than having the job cancelled: the screenshots step below then still runs, and
+    # the total block is still printed for every harness that finished. `run.mjs` also has a watchdog per
+    # harness (twenty minutes, a hundred for bits-check), so a single hung harness is killed and named long
+    # before either. Measured headroom on 2026-11-18: suite 17 to 28 of 45, bits 40 to 70 of 120.
 
     steps:
+      # For `tools/budget.sh` at the end: how much of `timeout-minutes` this run used.
+      - name: Note when the job started
+        run: echo "JOB_START=$(date +%s)" >> "$GITHUB_ENV"
+
       # `indexnow_test.py` asserts against the *tracked* paths under `docs/` rather than a walk of the
       # working tree, so that a local build's leftovers cannot change what it thinks the site contains.
       # That needs `git` and the index, both of which a default depth-1 checkout provides -- it runs
@@ -174,7 +183,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - run: python -m pip install --upgrade pip openpyxl pillow
+      # Retried: a PyPI hiccup is not a red suite.
+      - run: bash tools/retry.sh 3 python -m pip install --upgrade pip openpyxl pillow
 
       # Recorded before anything runs, so a failure months from now can be read off the log without
       # guessing what the environment was. The browser lines are the ones that matter: not installing one is
@@ -216,6 +226,7 @@ jobs:
       # explains what happened, which is the whole point of the step. The status is captured explicitly and
       # the step ends with `exit "$status"`, so nothing is softened -- a red suite is still a red job.
       - name: Run the suite
+        timeout-minutes: ${{ matrix.run_minutes }}
         env:
           # `lib/browser.mjs` appends these to every launch. The same two flags `lighthouse.yml` passes as
           # `chromeFlags`, for the same reason: a container has no user namespace to sandbox into and a
@@ -261,3 +272,8 @@ jobs:
           path: build-tmp
           retention-days: 14
           if-no-files-found: warn
+
+      # Last, and `always()`: how much of the job's limit this run used, and a warning from 75%.
+      - name: How close this run came to its time limit
+        if: always()
+        run: bash tools/budget.sh ${{ matrix.minutes }}
