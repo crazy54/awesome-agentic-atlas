@@ -104,6 +104,13 @@ jobs:
       # before it: today not one of this job's ~30 commits a month runs the suite at all. Turning it up
       # is this one word, and the two steps that read it are named for what they do in each mode.
       VERIFY_GATES_DEPLOY: "false"
+      # Upstream drift is a warning on this job, not a stop (scripts/drift.py). A list that renames,
+      # translates or adds a section gets it filed for this run only -- a ::warning per placement, the
+      # lines to paste in the step summary, and cache/drift-proposal.json for a person or a PR -- so a
+      # curator's edit no longer freezes the site until somebody writes a taxonomy line. Every stage of
+      # the job reads it, which is why it is here and not a flag on one step. Local runs and the tests
+      # leave it unset and stay strict.
+      AAA_PROVISIONAL: "1"
 
     steps:
       # For `tools/budget.sh` at the end: how much of `timeout-minutes` this run used.

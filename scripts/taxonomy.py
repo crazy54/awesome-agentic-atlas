@@ -23,6 +23,12 @@ module does not name, and its message says what to do about it. `check()` asks t
 whole record set and reads better, but be clear about its standing: nothing calls it. It runs when
 somebody types `python scripts/taxonomy.py`, so it is a thing to reach for while curating, not a guard.
 The guard is the raise.
+
+With one exception, and it is a run-scoped one. On CI the workflows set `AAA_PROVISIONAL`, and under it
+`10_parse_sources` files a section this module does not name somewhere defensible for that run only,
+announces it, and hands a person the line to add here -- see `drift.py`. `category_of` honours those
+placements, so a curator's edit no longer freezes the site; it does not learn from them, so nothing is
+re-filed for good until the key is written below by hand.
 """
 from __future__ import annotations
 
@@ -31,6 +37,8 @@ import json
 import re
 from collections import Counter, defaultdict
 from pathlib import Path
+
+import drift
 
 CACHE = Path(__file__).resolve().parent.parent / "cache"
 
@@ -960,6 +968,12 @@ def category_of(rec: dict) -> str:
     try:
         return SECTIONS[key]
     except KeyError:
+        # A provisional build (`drift.py`) has already filed this section for the run, said so in an
+        # annotation, and written the line to paste. Honoured only under AAA_PROVISIONAL, so everywhere
+        # else -- every local run, every test -- the raise below is still the guard it always was.
+        provisional = drift.category(*key)
+        if provisional:
+            return provisional
         near = difflib.get_close_matches(key[1], [s for (m, s) in SECTIONS if m == key[0]], n=3, cutoff=0.4)
         raise KeyError(
             f"{key[0]} / {key[1]!r} is not named in SECTIONS -- a curator renamed or added a section "
