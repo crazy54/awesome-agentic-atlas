@@ -488,6 +488,77 @@ true("a tenth of the run failing for a reason not about the repo stops it",
 few = {f"o/r{i}": {"error": "HTTP 502"} for i in range(40)}
 eq("...but not under the floor", f11.mass_failure(want[:100], few), None)
 
+# The threshold, at both edges of both numbers: max(50, 10% of the run).
+eq("the threshold is the floor for a small run", f11.threshold(100), 50)
+eq("...and a tenth of a large one", f11.threshold(1000), 100)
+err = lambda n: {f"o/r{i}": {"error": "HTTP 502"} for i in range(n)}  # noqa: E731
+eq("100 of 1000 is at the threshold, not over it", f11.mass_failure(want, err(100)), None)
+true("101 of 1000 is over it", f11.mass_failure(want, err(101)) is not None)
+eq("50 of 200 is at the floor", f11.mass_failure(want[:200], err(50)), None)
+true("51 of 200 is over it", f11.mass_failure(want[:200], err(51)) is not None)
+
+eq("each failure is told apart by kind",
+   [f11.kind(e) for e in ("gh: Not Found (HTTP 404)", "gh: Bad credentials (HTTP 401)",
+                          "API rate limit exceeded for installation", "You have exceeded a secondary rate limit",
+                          "HTTP 502: Bad Gateway", "To get started with GitHub CLI, please run: gh auth login")],
+   ["gone", "auth", "rate", "rate", "other", "auth"])
+
+
+class Crawl:
+    """`fetch` for `recover`: a GitHub that refuses the first `bad_rounds` retries the way `say` does."""
+
+    def __init__(self, say: str, bad_rounds: int):
+        self.say, self.bad_rounds, self.calls = say, bad_rounds, []
+
+    def __call__(self, w, m):
+        self.calls.append(len(w))
+        for x in w:
+            m[x["nwo"]] = {"error": self.say} if len(self.calls) <= self.bad_rounds else {"stargazerCount": 1}
+
+
+def run_recover(meta, crawl, reset=None):
+    slept: list[float] = []
+    out = f11.recover(want, meta, crawl, sleep=slept.append, wait_for_reset=lambda: reset,
+                      log=lambda *a, **k: None)
+    return out, slept
+
+
+auth = {f"o/r{i}": {"error": "gh: Bad credentials (HTTP 401)"} for i in range(400)}
+crawl = Crawl("gh: Bad credentials (HTTP 401)", 99)
+out, slept = run_recover(dict(auth), crawl)
+true("an auth failure stops at once, saying it is the token", out and "GH_TOKEN" in out, str(out))
+eq("...without waiting or retrying: no wait fixes a token", (slept, crawl.calls), ([], []))
+
+rl = {f"o/r{i}": {"error": "API rate limit exceeded"} for i in range(400)}
+crawl = Crawl("API rate limit exceeded", 1)
+meta = dict(rl)
+out, slept = run_recover(meta, crawl)
+eq("a rate limit that clears on the second retry does not stop the run", out, None)
+eq("...after backing off on the schedule", slept, list(f11.RETRY_WAITS[:2]))
+eq("...asking again about the failing repos only", crawl.calls, [400, 400])
+true("...whose metadata is then real", all("error" not in meta[f"o/r{i}"] for i in range(400)))
+
+crawl = Crawl("API rate limit exceeded", 1)
+out, slept = run_recover(dict(rl), crawl, reset=600)
+eq("a reset GitHub reports is waited for, when it is longer than the backoff", slept[0], 600)
+crawl = Crawl("API rate limit exceeded", 1)
+out, slept = run_recover(dict(rl), crawl, reset=99999)
+eq("...but never past MAX_WAIT", slept[0], f11.MAX_WAIT)
+
+crawl = Crawl("API rate limit exceeded", 99)
+out, slept = run_recover(dict(rl), crawl)
+true("a rate limit that outlasts every retry stops the run, and says so",
+     out and "outlasted every retry" in out, str(out))
+eq("...after every wait in the schedule, and no more", slept, list(f11.RETRY_WAITS))
+true("...in under the daily job's timeout", sum(f11.RETRY_WAITS) <= 30 * 60)
+
+mixed = {**{f"o/r{i}": {"error": "gh: Not Found (HTTP 404)"} for i in range(300)},
+         **{f"o/r{i}": {"error": "HTTP 502"} for i in range(300, 330)}}
+crawl = Crawl("HTTP 502", 99)
+out, slept = run_recover(dict(mixed), crawl)
+eq("under the threshold nothing is retried at all: the run proceeds as it always did",
+   (out, slept, crawl.calls), (None, [], []))
+
 for wf in ("daily.yml", "weekly.yml"):
     text = (ROOT / ".github" / "workflows" / wf).read_text(encoding="utf-8")
     job_env = text.split("\n    env:\n", 1)[1].split("\n    steps:", 1)[0] if "\n    env:\n" in text else ""
