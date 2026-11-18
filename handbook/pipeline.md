@@ -141,9 +141,10 @@ Where a provisional section goes. The strongest evidence wins:
 
 | Basis | Evidence |
 |---|---|
-| `membership` | At least half its entries were under one mapped section in the list's previous copy. `pull_sources.py` records this in `cache/section-moves.json`, because it is the one stage that holds both copies. Renames and translations keep their entries, so this evidence covers both. |
+| `membership` | At least half its entries were under one mapped section in the list's previous copy. `pull_sources.py` records this in `cache/section-moves.json`, because it is the one stage that holds both copies. Renames and translations keep their entries, so this evidence covers both. If the ledger missed the change (because the cache already held the new copy), the same evidence is read from the list's committed `mega-list/lists/*.md` pages. |
 | `position` | The list kept the same number of sections, and this one took a mapped section's slot. |
 | `similar` | Its name is more than 75% similar (difflib) to a mapped section of the same list. Sections the list no longer has are checked first. |
+| `leftover` | Every other new section in the list was traced. Exactly one new section and one vanished mapped section remain, so they are paired. |
 | `modal` | No evidence. The section goes to the category most of the list's rows already use. This placement most needs a reviewer's eye. |
 
 A section that takes over an old section's mapping also takes its bucket. If a list goes over eight

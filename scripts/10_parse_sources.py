@@ -806,7 +806,9 @@ def unmapped(rows: list[dict], provisional: bool | None = None) -> list[dict]:
     import taxonomy as tax  # noqa: E402
 
     provisional = drift.enabled() if provisional is None else provisional
-    recs = drift.place(rows, tax.SECTIONS, buck.BUCKETS, drift.load_moves(), tax.CATEGORIES)
+    moves = drift.published_moves(rows, {s["key"]: (s["nwo"], s["title"]) for s in SOURCES}, tax.SECTIONS,
+                                  drift.load_moves(), url_key)
+    recs = drift.place(rows, tax.SECTIONS, buck.BUCKETS, moves, tax.CATEGORIES)
     drift.publish(recs, drift.degraded_from_pull(), provisional)
 
     missing = [r for r in recs if r["category"]]

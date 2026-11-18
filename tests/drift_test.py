@@ -220,6 +220,82 @@ eq("a tie goes to the earlier category, as in taxonomy.by_repo",
                 {("s", "A"): "MCP Servers", ("s", "B"): "Coding Agents"}, tax.CATEGORIES,
                 __import__("collections").Counter())[0], "Coding Agents")
 
+# The published pages: yesterday's membership, committed, for drift the cache ledger never saw. This is
+# the case the first trial (run 44348469978) hit: the restored cache already held the translated README.
+pages = TMP / "mega-lists"
+pages.mkdir()
+(pages / "agent-skills-libukai.md").write_text(
+    "# Agent Skills (libukai)\n\nCurated by **[libukai/awesome-agent-skills](https://github.com/libukai/"
+    "awesome-agent-skills)** — all credit.\n\n## Contents\n\n- [编程开发](#编程开发) (2)\n\n"
+    "## 编程开发\n\n- **[a](https://github.com/x/A)** — one\n  <sub>★ 1</sub>\n"
+    "- **[b](https://github.com/x/b/)** — two\n\n"
+    "## Docs &amp; Videos\n\n- **[c](https://example.com/c)** — three\n", encoding="utf-8")
+(pages / "agent-skills-libukai-2.md").write_text(
+    "# Agent Skills (libukai)\n\nPage **2** of 2.\n\nCurated by **[libukai/awesome-agent-skills](https://x)** — \n\n"
+    "## 测试与评测\n\n- **[d](https://github.com/x/d)** — four\n", encoding="utf-8")
+(pages / "other.md").write_text("Curated by **[someone/else](https://x)**\n\n## 编程开发\n\n"
+                                "- **[z](https://github.com/x/z)** — not this list\n", encoding="utf-8")
+uk = b10_url_key = lambda u: u.strip().lower().rstrip("/")  # noqa: E731  -- 10_parse_sources.url_key
+pp = drift.published_pairs("libukai/awesome-agent-skills", uk, pages)
+eq("the published pages are read back into (entry, section): every part of the list, no other list",
+   pp, [("https://github.com/x/a", "编程开发"), ("https://github.com/x/b", "编程开发"),
+        ("https://example.com/c", "Docs & Videos"), ("https://github.com/x/d", "测试与评测")])
+eq("...and a list whose page title differs from its SOURCES title (a workbook sheet's) is still found by "
+   "its unique repository", drift.published_pairs("libukai/awesome-agent-skills", uk, pages, "AI Skills (CN)"),
+   pp)
+
+# Two lists crediting one repository -- the GitHub scout and the GitLab intake both name this one.
+shared = TMP / "mega-shared"
+shared.mkdir()
+for fname, title, url in (("scouted-on-github.md", "Scouted on GitHub", "https://github.com/s/one"),
+                          ("scouted-on-github-2.md", "Scouted on GitHub", "https://github.com/s/two"),
+                          ("scouted-on-gitlab.md", "Scouted on GitLab", "https://gitlab.com/g/one")):
+    (shared / fname).write_text(f"# {title}\n\nCurated by **[crazy54/awesome-agentic-atlas](https://x)**\n\n"
+                                f"## MCP Servers\n\n- **[x]({url})** — y\n", encoding="utf-8")
+eq("a shared repository is told apart by the page title: the scout gets both its parts and nothing else",
+   [k for k, _ in drift.published_pairs("crazy54/awesome-agentic-atlas", uk, shared, "Scouted on GitHub")],
+   ["https://github.com/s/one", "https://github.com/s/two"])
+eq("...and the GitLab intake gets only its own",
+   [k for k, _ in drift.published_pairs("crazy54/awesome-agentic-atlas", uk, shared, "Scouted on GitLab")],
+   ["https://gitlab.com/g/one"])
+eq("...and a shared repository with no matching title gives no evidence rather than another list's",
+   drift.published_pairs("crazy54/awesome-agentic-atlas", uk, shared, "Something Else"), [])
+cur = [{"source": "skills_libukai", "category": s, "url": u} for s, u in
+       (("Programming & Development", "https://github.com/x/a"),
+        ("Programming & Development", "https://github.com/x/B"),
+        ("Testing and Evaluation", "https://github.com/x/d"), ("Docs and Videos", "https://example.com/c"))]
+psecs = {("skills_libukai", "编程开发"): "Agent Skills", ("skills_libukai", "测试与评测"): "Observability & Evals",
+         ("skills_libukai", "Docs & Videos"): "Docs, Learning & Lists"}
+SRCS = {"skills_libukai": ("libukai/awesome-agent-skills", "Agent Skills (libukai)")}
+pm = drift.published_moves(cur, SRCS, psecs, {}, uk, pages)
+eq("with no ledger, the pages supply membership evidence for each renamed section",
+   {k: (v["from"], v["via"]) for k, v in pm["skills_libukai"].items()},
+   {"Programming & Development": ("编程开发", "published"), "Testing and Evaluation": ("测试与评测", "published"),
+    "Docs and Videos": ("Docs & Videos", "published")})
+ledger = {"skills_libukai": {"Testing and Evaluation": {"from": "other", "basis": "position"}}}
+pm2 = drift.published_moves(cur, SRCS, psecs, ledger, uk, pages)
+eq("...but the ledger's own observation wins where it has one", pm2["skills_libukai"]["Testing and Evaluation"],
+   {"from": "other", "basis": "position"})
+eq("...and the ledger passed in is not modified", list(ledger["skills_libukai"]), ["Testing and Evaluation"])
+eq("...and a list with nothing unmapped is not read at all",
+   drift.published_moves([dict(cur[0], category="编程开发")], SRCS, psecs, {}, uk, pages), {})
+r = drift.place(cur, psecs, {}, pm, tax.CATEGORIES)
+true("...and describe() says the evidence came from the published page",
+     "last published page" in drift.describe(next(x for x in r if x["section"] == "Docs and Videos")))
+
+# The one left over: libukai's Video Tutorials, which neither membership nor (in the trial) slots could see.
+no_video = {"skills_libukai": {k: v for k, v in lin.items() if k != "Video Tutorials"}}
+r = {x["section"]: x for x in drift.place(rows_of(new_pairs), SECTIONS_CN, {}, no_video, tax.CATEGORIES)}
+eq("the last unresolved newcomer pairs with the last unclaimed orphan",
+   (r["Video Tutorials"]["basis"], r["Video Tutorials"]["category"], r["Video Tutorials"]["evidence"]["was"]),
+   ("leftover", "Docs, Learning & Lists", "视频教程"))
+eq("...so all eight libukai sections match PR #105 with no position evidence at all",
+   {k: v["category"] for k, v in r.items()}, dict(zip(EN, CAT)))
+two_left = {"skills_libukai": {k: v for k, v in lin.items() if k not in ("Video Tutorials", "Other Types")}}
+r = {x["section"]: x for x in drift.place(rows_of(new_pairs), SECTIONS_CN, {}, two_left, tax.CATEGORIES)}
+eq("...but two of each is not a pairing: both stay modal",
+   (r["Video Tutorials"]["basis"], r["Other Types"]["basis"]), ("modal", "modal"))
+
 # ── the palette ───────────────────────────────────────────────────────────────────────────────────
 section("the palette")
 eight = [(f"B{i}", [f"s{i}"]) for i in range(1, 9)]
