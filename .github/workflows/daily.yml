@@ -598,7 +598,9 @@ jobs:
               # deploys the site every night -- wiring it in here would let one repository's verdict
               # dropping take the whole daily deploy down, which is a much larger blast radius than a stale
               # star count on five curated pages. Weekly owns them, same as `docs/og/*`.
-              docs/og/*|docs/collections/*|mega-list/collections/*)
+              # `docs/models.json` and `docs/models/*` are weekly.yml's too: the models index reads the Hugging
+              # Face Hub, and its downloads figures are thirty-day counts that a day does not move.
+              docs/og/*|docs/collections/*|mega-list/collections/*|docs/models.json|docs/models/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/skipped"; continue ;;
             esac
             # Existence before mtime, and the arm is here for the same reason weekly.yml grew it in

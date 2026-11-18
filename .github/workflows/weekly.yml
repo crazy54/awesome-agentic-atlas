@@ -296,6 +296,23 @@ jobs:
           # answer" is still the feature gone -- so it is rebuilt wherever the corpus is.
           python scripts/27_semantic.py
 
+      # The models index (eng-hf): `docs/models.json` from the Hugging Face Hub, and the catalogue page
+      # drawn from it. Its own step, after the site build and before the rewrite check, and allowed to fail:
+      # it is the one stage here that reads a third party other than GitHub, and a Hub outage or a page
+      # change at ollama.com should cost this week's models refresh, not this week's screenshots and
+      # workbooks. A failure leaves the committed file as it was (the stage writes nothing unless the
+      # whole index validated and passed its 70% guard) and is reported by the `models` arm of the check
+      # below. Anonymous reads, no secret; `cache/hf/` rides in the same rolling cache as everything else,
+      # so only repos whose sha moved are re-read. 24_pwa does not precache either file, so its position
+      # relative to that stage does not matter. See handbook/pipeline.md#the-models-index.
+      - name: Models index
+        id: models
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          python scripts/40_models.py
+          python scripts/41_models_page.py
+
       # The same assertion daily.yml carries -- see there for why it is mtime against a marker rather than
       # a manifest, and why an unwritten facet page is a warning while an unwritten fixed path is an error.
       #
@@ -311,6 +328,7 @@ jobs:
           : > "$RUNNER_TEMP/deleted"
           : > "$RUNNER_TEMP/static"
           : > "$RUNNER_TEMP/beta"
+          : > "$RUNNER_TEMP/models"
           git ls-files docs mega-list | while IFS= read -r f; do
             # Existence before mtime, and that order is the whole of this arm. `git ls-files` reads the
             # *index*, so a file a generator deliberately deleted from the working tree is still listed
@@ -371,6 +389,10 @@ jobs:
               # is no fixed-path file here that needs to stay under the strict arm.
               docs/v2/*)
                 printf '%s\n' "$f" >> "$RUNNER_TEMP/beta" ;;
+              # The models index, whose step above may fail on purpose (see there). Unwritten is a warning
+              # here, not the strict arm's error: the stage exists in this workflow, it declined to publish.
+              docs/models.json|docs/models/*)
+                printf '%s\n' "$f" >> "$RUNNER_TEMP/models" ;;
               # `docs/og/*.png` and not `docs/og/*`: a card whose content did not change is deliberately
               # not rewritten -- that skip is the whole reason the cards cost ~84 KB a week instead of
               # 527 -- so an unwritten PNG is expected. `cards.json` is written unconditionally, so it
@@ -397,6 +419,10 @@ jobs:
           fi
           if [ "$nb" -gt 0 ]; then
             echo "Redesign beta under docs/v2/, owned by scripts/30_v2.py and rebuilt on demand: ${nb} file(s)."
+          fi
+          nm="$(wc -l < "$RUNNER_TEMP/models" | tr -d ' ')"
+          if [ "$nm" -gt 0 ]; then
+            echo "::warning title=Models index not refreshed::${nm} models file(s) were not rewritten; the Models index step failed or refused (see its log). The committed index stays as it was."
           fi
           if [ "$nd" -gt 0 ]; then
             echo "Tracked files this build deleted, whose removal the commit below carries:"
