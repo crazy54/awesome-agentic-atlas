@@ -24,9 +24,10 @@ and the URL; changing it moves the page, and the old URL then 404s, so do it bef
 
 THE INPUTS, ALL JOINED HERE AND NOWHERE ELSE
 --------------------------------------------
-  config/local-ai/hardware.json    the hardware: ds-hardware's catalogue (`team/contracts/hardware.md`),
+  config/local-ai/hardware.slim.json  the hardware: ds-hardware's catalogue (`team/contracts/hardware.md`),
                                    copied verbatim -- 316 devices, the presets, the per-platform memory
                                    rules, and the "how to find out what you have" steps for six OSes.
+                                   `hardware.json` beside it is the same catalogue with its sources.
   scripts/localhw.mjs              ds-hardware's module over it, vendored verbatim: search, presets,
                                    memory choices, `toMachine()` (the machine object fit.mjs reads) and
                                    the browser hints. Inlined as `LOCALHW` the way the fit method is.
@@ -47,7 +48,7 @@ delivered confidently -- worse than no page. The catalogue's own correctness is 
 WHY EVERYTHING IS INLINED RATHER THAN FETCHED
 ---------------------------------------------
 The catalogue, the picks and `scripts/localfit.mjs` are written into the page itself, as one JSON block
-and two scripts: about 490 KB on disk and 73 KB over the wire with the full catalogue, because Pages
+and two scripts: about 440 KB on disk and 69 KB over the wire with the slim catalogue, because Pages
 gzips and the JSON is repetitive. Three things follow:
 
   * Offline for free. `scripts/24_pwa.py`'s worker caches every page a reader visits and serves it when the
@@ -114,6 +115,12 @@ def _load(name: str, alias: str):
 
 
 FIT_MJS = HERE / "localfit.mjs"
+# The catalogue the page reads: ds-hardware's slim build, which `build_catalogue.py` writes beside the full
+# `hardware.json` on every build. It keeps every device, preset, rule and help step, and every field
+# `localhw.mjs` reads or the page shows, and drops only the research record (sources, flags, datapoint
+# tables): 27 KB gzipped against 46. ds-hardware's own test asserts every function in the module answers
+# identically on both files. The full file stays committed beside it, for whoever checks a number.
+CATALOGUE = "hardware.slim.json"
 HW_MJS = HERE / "localhw.mjs"
 HF_MODELS = OUT / "models.json"
 
@@ -135,7 +142,7 @@ class Bad(ValueError):
 
 
 def load(config: Path = CONFIG) -> tuple[dict, dict]:
-    cat = json.loads((config / "hardware.json").read_text(encoding="utf-8"))
+    cat = json.loads((config / CATALOGUE).read_text(encoding="utf-8"))
     picks = json.loads((config / "picks.json").read_text(encoding="utf-8"))
     validate(cat, picks)
     return cat, picks
@@ -465,7 +472,7 @@ def cheat_answers(picks: dict, hf: dict) -> list[list[dict]]:
         (t / "in.json").write_text(json.dumps({"presets": CHEAT, "models": picks["picks"],
                                                "hf": hf, "ctx": DEFAULT_CTX}), encoding="utf-8")
         (t / "cheat.mjs").write_text(CHEAT_JS % {"fit": json.dumps(FIT_MJS.as_uri()), "hw": json.dumps(HW_MJS.as_uri()),
-                                                 "cat": json.dumps(str(CONFIG / "hardware.json"))}, encoding="utf-8")
+                                                 "cat": json.dumps(str(CONFIG / CATALOGUE))}, encoding="utf-8")
         res = subprocess.run([node_bin(), str(t / "cheat.mjs"), str(t / "in.json")],
                              capture_output=True, text=True, encoding="utf-8")
     if res.returncode:
@@ -514,19 +521,6 @@ def hw_js() -> str:
     return module_js(HW_MJS, "LOCALHW", "ds-hardware")
 
 
-# Device fields no function in `localhw.mjs` reads and the page never shows: each device's source ids and its
-# review flags. They are for whoever checks a number, who has the committed file. `tests/local_test.py` holds
-# this to the module, so a field ds-hardware starts reading cannot be stripped by mistake.
-DROP = ("sources", "flags")
-
-
-def slim_catalogue(cat: dict) -> dict:
-    """The catalogue as the page needs it: without the 179-entry source list and the `DROP` fields. About
-    70 KB of the page."""
-    devices = [{k: v for k, v in d.items() if k not in DROP} for d in cat["devices"]]
-    return {k: v for k, v in dict(cat, devices=devices).items() if k != "sources"}
-
-
 # ------------------------------------------------------------------ the page
 b19 = _load("19_pages.py", "b19")
 b20 = _load("20_landing.py", "b20")
@@ -569,7 +563,7 @@ def payload(cat: dict, picks: dict, hf: dict) -> dict:
     `hf` is the joined slice of eng-hf's index (see `hf_join`), carried in its own column-list shape."""
     return {
         "page": PAGE,
-        "cat": slim_catalogue(cat), "no_gpu": NO_GPU,
+        "cat": cat, "no_gpu": NO_GPU,
         "tasks": [{"id": t, "label": l} for t, l in TASKS], "models": [slim(p) for p in picks["picks"]], "hf": hf or None,
         "runtimes": picks.get("runtimes"),
         "default_ctx": DEFAULT_CTX, "runner_ctx": RUNNER_CTX,

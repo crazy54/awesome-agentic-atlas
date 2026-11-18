@@ -135,12 +135,12 @@ check("the task buttons are ds-models' uses, so a pick's `uses` is the filter wi
       [t for t, _ in b32.TASKS], PICKS["uses"])
 true("every device's first OS has how-to steps (ChromeOS through its Linux steps)",
      all(d["os"][0] in b32.HELP_OSES for d in CAT["devices"]), str({d["os"][0] for d in CAT["devices"]} - set(b32.HELP_OSES)))
-KEPT = b32.slim_catalogue(CAT)
-true("the slimmed catalogue drops only fields localhw.mjs never reads",
-     # A catalogue record is `d`, `d0`, `e` or `entry` in that module; `out.sources` is detectHints' own output.
-     not any(re.search(rf"\b(?:d|d0|e|entry|cat)\??\.{f}\b", b32.HW_MJS.read_text(encoding="utf-8")) for f in b32.DROP))
-check("...and keeps every device and preset", (len(KEPT["devices"]), len(KEPT["presets"])),
-      (len(CAT["devices"]), len(CAT["presets"])))
+FULL = json.loads((b32.CONFIG / "hardware.json").read_text(encoding="utf-8"))
+check("the page reads ds-hardware's slim catalogue", (b32.CATALOGUE, CAT.get("slim")), ("hardware.slim.json", True))
+check("...which has every device and preset the full one has",
+      ([d["id"] for d in CAT["devices"]], [p["id"] for p in CAT["presets"]]),
+      ([d["id"] for d in FULL["devices"]], [p["id"] for p in FULL["presets"]]))
+check("...from the same build", CAT["updated"], FULL["updated"])
 
 
 # ---------------------------------------------------------------- the maths: the vendored module and its wrapper
@@ -173,7 +173,7 @@ if node and answers:
           [len(r) for r in answers], [len(PICKS["picks"])] * len(b32.CHEAT))
     with tempfile.TemporaryDirectory() as tmp:
         t = Path(tmp)
-        (t / "in.json").write_text(json.dumps({"presets": b32.CHEAT, "models": PICKS["picks"], "cat": KEPT,
+        (t / "in.json").write_text(json.dumps({"presets": b32.CHEAT, "models": PICKS["picks"], "cat": CAT,
                                                "ctx": b32.DEFAULT_CTX}), encoding="utf-8")
         # Both wrapped classic scripts, run as the browser runs them -- over the slimmed catalogue the page
         # carries -- against the modules and the full catalogue the build imported.
@@ -262,6 +262,9 @@ if (TEAM / "picks.json").exists():
     # Only on a machine with the team's working folder beside the repository; CI has neither, by design.
     check("config/local-ai/picks.json is ds-models' file, verbatim",
           json.loads((TEAM / "picks.json").read_text(encoding="utf-8")), PICKS)
+    true("config/local-ai/hardware.slim.json is ds-hardware's file, verbatim (re-copy it if this fails)",
+         (TEAM / "hardware" / "hardware.slim.json").read_bytes().replace(b"\r\n", b"\n")
+         == (b32.CONFIG / "hardware.slim.json").read_bytes().replace(b"\r\n", b"\n"))
     true("config/local-ai/hardware.json is ds-hardware's file, verbatim (re-copy it if this fails)",
          (TEAM / "hardware" / "hardware.json").read_bytes().replace(b"\r\n", b"\n")
          == (b32.CONFIG / "hardware.json").read_bytes().replace(b"\r\n", b"\n"))
