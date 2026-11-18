@@ -48,6 +48,20 @@
   "Heavily used, and out long enough that the runtimes handle its chat template and tool calls.",
   "Then quality. Novelty alone never earns a slot."
  ],
+ "reviewed_challengers": [
+  {
+   "id": "ornith-ai/Ornith-1.5-122B",
+   "for": [
+    "large/chat",
+    "large/reasoning",
+    "large/agents",
+    "large/vision"
+   ],
+   "on": "2026-11-18",
+   "decision": "keep gpt-oss 120B and Qwen3.5 122B-A10B for now",
+   "why": "Passes every rule (MIT, ungated, verified Ollama tag, GGUF + MLX) and has 3.3M 30-day downloads, but it is 33 days old from a new publisher with no track record in our sources. Its runtimes support and tool-call parsing have not had time to settle. Re-review at the next weekly check; if it still leads, look for independent evals and a llama.cpp/Ollama tool-calling report before swapping."
+  }
+ ],
  "refresh": {
   "cadence": "weekly, after eng-hf's models.json refresh",
   "check": "node team/local-ai/fit/tools/check-picks.mjs <models.json>: verifies every pick and file still exists, and lists challengers",
@@ -2882,8 +2896,8 @@
      },
      {
       "format": "gguf",
-      "quant": "Q1_0",
-      "label": "Q1_0",
+      "quant": "TQ1_0",
+      "label": "UD-TQ1_0",
       "bytes": 8005213344,
       "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
      },

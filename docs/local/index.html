@@ -583,7 +583,7 @@ function normalizeModel(row, variantCols, fileCols) {
     tie_word_embeddings: d.tied ?? false,
     num_experts: num(moe?.experts), num_experts_per_tok: num(moe?.per_tok),
     max_context: num(row.ctx),
-    vision: (row.uses ?? []).includes('vision'), reasoning: (row.uses ?? []).includes('reasoning'),
+    vision: Boolean(d.vision) || (row.uses ?? []).includes('vision'), reasoning: (row.uses ?? []).includes('reasoning'),
     mmproj_bytes: mmproj, ollama: row.ollama ?? null, gated: row.gated ?? false,
     quants,
   };

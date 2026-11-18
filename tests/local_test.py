@@ -251,6 +251,7 @@ true("every explainer the cards link to exists",
      all(f'id="{x}"' in html for x in ("q-quant", "q-ctx", "q-offload", "q-unified", "q-tokens")))
 true("the picker is an ARIA combobox with a listbox", 'role="combobox"' in html and 'role="listbox"' in html)
 true("results are announced politely", 'aria-live="polite"' in html)
+check("the Hugging Face join stays off until ds-models has reviewed it", b32.HF_JOIN, False)
 true("the preview banner shows exactly while PREVIEW is on", ('class="lxfix"' in html) == b32.PREVIEW)
 true("the inlined hardware module is there", "const LOCALHW = (() => {" in html)
 true("the page states the hardware list's own date", f"Hardware list updated {b32.long_date(CAT['updated'])}" in html)
@@ -260,8 +261,8 @@ true("the raised-limit toggle ships hidden, inside the numbers panel",
 TEAM = ROOT.parent / "Archie and Pals" / "team" / "local-ai"
 if (TEAM / "picks.json").exists():
     # Only on a machine with the team's working folder beside the repository; CI has neither, by design.
-    check("config/local-ai/picks.json is ds-models' file, verbatim",
-          json.loads((TEAM / "picks.json").read_text(encoding="utf-8")), PICKS)
+    true("config/local-ai/picks.json is ds-models' file, verbatim (re-copy it if this fails)",
+         json.loads((TEAM / "picks.json").read_text(encoding="utf-8")) == PICKS)
     true("config/local-ai/hardware.slim.json is ds-hardware's file, verbatim (re-copy it if this fails)",
          (TEAM / "hardware" / "hardware.slim.json").read_bytes().replace(b"\r\n", b"\n")
          == (b32.CONFIG / "hardware.slim.json").read_bytes().replace(b"\r\n", b"\n"))

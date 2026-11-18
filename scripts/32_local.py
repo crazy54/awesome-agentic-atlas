@@ -123,6 +123,14 @@ FIT_MJS = HERE / "localfit.mjs"
 CATALOGUE = "hardware.slim.json"
 HW_MJS = HERE / "localhw.mjs"
 HF_MODELS = OUT / "models.json"
+# Whether the page sizes picks from eng-hf's index. OFF, deliberately, until ds-models has reviewed the join.
+# A dry run on 2026-11-18 against eng-hf's real `docs/models.json` (PR #112, all 16 picks matched) changed 35
+# answers across the 11 cheat-sheet machines -- gpt-oss 20B went from "too big" to "runs great" on an everyday
+# 16 GB laptop, and from MXFP4 to Q6_K on a Mac -- because `normalizeModel()` replaces a pick's curated quant
+# list with every file the index lists, where ds-models' guidance is to keep the pick's own files (they are
+# what the run commands download). Left on, the first daily after #112 merged would have changed the page's
+# answers with no review. The join code and its test stay; turning it on is this constant plus a review.
+HF_JOIN = False
 
 
 def urls(site: str | None = None) -> list[str]:
@@ -1000,7 +1008,7 @@ def main() -> None:
     ap.add_argument("--out", help="write under this directory instead of docs/ (a dry run)")
     args = ap.parse_args()
     cat, picks = load()
-    hf = hf_join(picks)
+    hf = hf_join(picks) if HF_JOIN else {}
     out = Path(args.out) if args.out else OUT
     page = out / PAGE["slug"] / "index.html"
     page.parent.mkdir(parents=True, exist_ok=True)
@@ -1009,7 +1017,8 @@ def main() -> None:
     page.write_text(pagemin.strip_page(render(cat, picks, hf)), encoding="utf-8")
     print(f"{PAGE['slug']}/index.html · {b20.kb(page.stat().st_size)} · {len(cat['devices'])} devices, "
           f"{len(cat['presets'])} presets, {len(picks['picks'])} picks"
-          + (f", {len(hf)} joined to the Hugging Face index" if hf else ", no Hugging Face index yet")
+          + (f", {len(hf['rows'])} joined to the Hugging Face index" if hf else
+             (", Hugging Face join off (HF_JOIN)" if not HF_JOIN else ", no Hugging Face index yet"))
           + (" · preview banner on" if PREVIEW else ""))
     print("sitemap.xml carries this URL via scripts/20_landing.py")
 
