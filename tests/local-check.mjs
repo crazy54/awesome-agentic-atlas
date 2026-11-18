@@ -177,6 +177,24 @@ if (qsel.length > 1) {
      await ev(`[...document.querySelectorAll('[data-quant]')].some(s => s.value === ${JSON.stringify(pick)})`));
 } else ok("a quant override is fitted (the pick has one quant; nothing to switch)", true);
 
+// ---- the advanced raised-limit toggle: in the numbers only, off by default, only where it changes something
+await goto("#k=mac&d=macbook-air-m3&mem=16");
+ok("the raised-limit toggle is not offered outside 'Show the numbers'", await ev("document.getElementById('expert').hidden"));
+await goto("#k=mac&d=macbook-air-m3&mem=16&n=1");
+ok("...is offered there on a Mac, unticked", !(await ev("document.getElementById('raisef').hidden")) && !(await ev("document.getElementById('raised').checked")));
+const budget = () => ev("parseFloat(document.getElementById('mach').textContent.match(/use about ([0-9.]+) GB/)[1])");
+const stock = await budget();
+await click("#raised");
+ok("ticking it is remembered in the hash", (await hash()).includes("up=1"));
+ok("...gives the graphics more memory", (await budget()) > stock, `${stock} -> ${await budget()}`);
+ok("...says so on the machine", /raised graphics memory limit/.test(await ev("document.getElementById('mach').textContent")));
+ok("...and shows how to raise it, with the cost stated", /sysctl/.test(await ev("document.getElementById('raiseinfo').textContent")) &&
+   /sluggish/.test(await ev("document.getElementById('raiseinfo').textContent")));
+await goto("#k=handheld&d=steam-deck-oled&n=1&up=1");
+ok("a machine whose limit cannot be raised offers no toggle, and ignores one in the link",
+   await ev("document.getElementById('raisef').hidden") && !/raised graphics/.test(await ev("document.getElementById('mach').textContent")));
+ok("the page says how old its hardware list is", /Hardware list updated \d+ \w+ 20\d\d/.test(await ev("document.getElementById('dates').textContent")));
+
 // ---- a Steam Deck: the how-to knows SteamOS
 await goto("#k=handheld&d=steam-deck-oled");
 ok("a handheld's how-to defaults to its own OS", await ev("document.querySelector('#best [data-os][aria-pressed=true]')?.dataset.os") === "steamos");

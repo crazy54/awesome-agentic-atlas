@@ -44,9 +44,14 @@ const LOCALUI = ((D, FIT, HW) => {
     const mem = c.options_gb.includes(s.mem) ? s.mem : c.default_gb;
     const sys = c.system_ram || null;
     const ram = sys && sys.options_gb.includes(s.ram) ? s.ram : undefined;
-    const hw = HW.toMachine(CAT, {device: s.d, memory_gb: mem, ram_gb: ram, ram_kind: s.rk || undefined,
-                                  ram_sticks: s.rs || undefined});
-    return {name: hw.label, device: d, tile: s.k, os: hw.os, hw, choices: c, mem,
+    const sel = {device: s.d, memory_gb: mem, ram_gb: ram, ram_kind: s.rk || undefined, ram_sticks: s.rs || undefined};
+    // The raised-limit answer is obeyed only where raising changes something (`can_raise`). The stock
+    // machine is kept beside it, because its notes are the how-to the toggle links to -- a machine built
+    // already raised has no reason to say how to raise it.
+    const stock = HW.toMachine(CAT, sel);
+    const raised = !!(s.up && stock.can_raise);
+    const hw = raised ? HW.toMachine(CAT, Object.assign({}, sel, {raised: true})) : stock;
+    return {name: hw.label, device: d, tile: s.k, os: hw.os, hw, stock, raised, choices: c, mem,
             approx: hw.confidence !== "high", sticks: d.kind === "gpu" || d.kind === "cpu"};
   };
   const apple = (mc) => !!(mc.hw.gpu && mc.hw.gpu.vendor === "apple");
@@ -264,13 +269,15 @@ const LOCALUI = ((D, FIT, HW) => {
 
   // The hash. Short keys, because people paste these.
   // `d`, `mem`, `ram` and `rk` are ds-hardware's (contract section 8); `rs` is the RAM-sticks answer.
-  const KEYS = ["k", "d", "mem", "ram", "rk", "rs", "t", "n", "c", "w", "o"];
+  // `up` is the advanced "I've raised the graphics memory limit" answer, off unless set.
+  const KEYS = ["k", "d", "mem", "ram", "rk", "rs", "up", "t", "n", "c", "w", "o"];
   const parseHash = (h) => {
     const p = new URLSearchParams(String(h || "").replace(/^#/, "")), s = {};
     for (const k of KEYS) if (p.has(k)) s[k] = p.get(k);
     for (const k of ["mem", "ram", "rs", "c"]) if (s[k] !== undefined) { s[k] = Number(s[k]); if (!isFinite(s[k])) delete s[k]; }
     s.t = s.t ? s.t.split(",").filter(Boolean) : [];
     s.n = s.n === "1";
+    s.up = s.up === "1";
     return s;
   };
   const hashOf = (s) => {
@@ -278,7 +285,7 @@ const LOCALUI = ((D, FIT, HW) => {
     for (const k of KEYS) {
       const v = s[k];
       if (k === "t") { if (v && v.length) p.set("t", v.join(",")); }
-      else if (k === "n") { if (v) p.set("n", "1"); }
+      else if (k === "n" || k === "up") { if (v) p.set(k, "1"); }
       else if (v !== undefined && v !== null && v !== "") p.set(k, String(v));
     }
     const out = p.toString().replace(/%2C/g, ",");
@@ -492,6 +499,21 @@ const LOCALUI = ((D, FIT, HW) => {
       `<p class="lxdl">The first download is about ${U.gb(size)} GB, roughly ${mins} minute${mins === 1 ? "" : "s"} on a 50 Mbit/s connection. After that it works with no internet.</p>`;
   };
 
+  // The advanced toggle, in "Show the numbers" only and only where the platform lets the limit be raised.
+  // Defaults always assume the OS's stock behaviour. Its how-to is the platform's own note from
+  // ds-hardware (the macOS command, the AMD BIOS setting, Linux's ttm limit), with the cost stated plainly.
+  const paintRaise = (mc) => {
+    const can = !!(mc && mc.stock.can_raise);
+    $("raisef").hidden = !can;
+    if (!can) return;
+    $("raised").checked = mc.raised;
+    const how = mc.stock.notes.filter((n) => /give it more|raise|wired_limit|UMA|VGM|pages_limit/i.test(n));
+    $("raiseinfo").hidden = !mc.raised;
+    $("raiseinfo").innerHTML = `<p>We now assume the graphics can use about <b>${U.gb(mc.hw.gpu_usable_gb)} GB</b> ` +
+      `instead of ${U.gb(mc.stock.gpu_usable_gb)} GB.</p>` + how.map((n) => `<p><code>${esc(n)}</code></p>`).join("") +
+      `<p>Giving the graphics more memory leaves less for everything else, so with a big model loaded the rest of ` +
+      `the machine can get sluggish. Close other apps first. On a Mac the setting resets when you restart.</p>`;
+  };
   const opened = new Set();
   let autoBest = null;
   const update = () => {
@@ -506,7 +528,9 @@ const LOCALUI = ((D, FIT, HW) => {
     if (!mc) { $("mach").textContent = "Pick your computer above and the answers appear here."; out.innerHTML = ""; return; }
     // The machine sentence, then ds-hardware's notes about it, and a plain flag on the few entries whose
     // numbers are estimates rather than published specs.
+    paintRaise(mc);
     $("mach").innerHTML = U.machineWords(mc) +
+      (mc.raised ? ` <span class="lxapprox">Using your raised graphics memory limit.</span>` : "") +
       (mc.approx ? ` <span class="lxapprox">Some of this machine&rsquo;s numbers are estimates, so treat its speeds as approximate.</span>` : "") +
       (mc.hw.notes.length ? `<details class="lxhwnotes"><summary>Good to know about this machine</summary><ul>${mc.hw.notes.map((n) => `<li>${esc(n)}</li>`).join("")}</ul></details>` : "");
     const g = U.groups(U.assess(mc.hw, ctx, qover, S.t.includes("vision")), S.t, showAll);
@@ -547,6 +571,7 @@ const LOCALUI = ((D, FIT, HW) => {
     S.t = [...document.querySelectorAll("input[name=task]:checked")].map((x) => x.value); showAll = false; update();
   }));
   $("nums").addEventListener("click", () => { S.n = !S.n; update(); });
+  $("raised").addEventListener("change", () => { S.up = $("raised").checked; update(); refocus("#raised"); });
   $("ctx").addEventListener("change", () => { S.c = Number($("ctx").value); if (S.c === D.default_ctx) delete S.c; update(); });
 
   const refocus = (sel) => { const el = document.querySelector(sel); if (el) el.focus(); };

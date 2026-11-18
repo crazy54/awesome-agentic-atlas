@@ -644,6 +644,26 @@ def tile(k: dict) -> str:
             f'<b>{esc(k["label"])}</b><small>{esc(k["hint"])}</small></label>')
 
 
+def long_date(iso: str) -> str:
+    """`2026-11-18` as `18 November 2026`. Assembled from parts rather than `strftime("%-d")`, which is a
+    glibc extension and this runs on Windows too -- the same reason `19d_discover.long_date` gives."""
+    from datetime import date
+    d = date.fromisoformat(iso)
+    return f"{d.day} {d.strftime('%B')} {d.year}"
+
+
+def freshness(cat: dict, picks: dict) -> str:
+    """How old the page's two lists are, from each file's own date. The catalogue is refreshed by hand every
+    quarter and after major launches (ds-hardware's contract, section 11), and the picks after each weekly
+    check, so these are dates a reader can hold the page to. Nothing here reads the clock."""
+    parts = []
+    if cat.get("updated"):
+        parts.append(f"Hardware list updated {long_date(cat['updated'])}")
+    if picks.get("reviewed"):
+        parts.append(f"model picks reviewed {long_date(picks['reviewed'])}")
+    return esc(" · ".join(parts)) if parts else ""
+
+
 def cheat_html(rows) -> str:
     """The cheat sheet: a real table, so a screen reader can move by column and a crawler sees text."""
     def names(items):
@@ -743,6 +763,10 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
     <label for="ctx">Context length <a class="lxwhat" href="#q-ctx" data-open="q-ctx">What&rsquo;s that?</a></label>
     <select id="ctx"><option value="4096">4k tokens (~6 pages)</option><option value="8192">8k tokens (~12 pages)</option>
       <option value="32768">32k tokens (~50 pages)</option><option value="131072">128k tokens (a book)</option></select>
+    <div class="lxraise" id="raisef" hidden>
+      <label><input type="checkbox" id="raised"> I&rsquo;ve raised my graphics memory limit</label>
+      <div id="raiseinfo" hidden></div>
+    </div>
   </div>
   <p class="lxmach" id="mach">Pick your computer above and the answers appear here.</p>
   <div id="results"></div>
@@ -804,6 +828,7 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
   {esc(PAGE['title'])} is part of the <a href="{esc(rel())}">Awesome Agentic Atlas</a>. Model names and
   download sizes come from each model&rsquo;s own release; speeds are estimates. Everything runs in your
   browser. Nothing you pick is sent anywhere.
+  <p class="lxdates" id="dates">{freshness(cat, picks)}</p>
 </div></footer>
 <script type="application/json" id="lxdata">{json_script(payload(cat, picks, hf))}</script>
 <script>
@@ -880,6 +905,11 @@ legend{padding:0;font-weight:600;margin:0 0 8px}
 .lxos{display:flex;flex-wrap:wrap;margin:10px 0 0}
 .lxwhat{font-weight:400;font-size:13px;margin-left:6px}
 .lxmach{margin:14px 0 0;font-size:16px;color:var(--ink);max-width:70ch}
+.lxraise{flex-basis:100%;margin:6px 0 0;font-size:14px}
+.lxraise label{font-weight:400;display:inline-flex;gap:8px;align-items:center;min-height:32px}
+.lxraise #raiseinfo{margin:6px 0 0;padding:10px 12px;border:1px solid var(--grid);border-radius:10px;color:var(--ink2);max-width:72ch}
+.lxraise #raiseinfo code{font:12.5px/1.5 var(--mono);overflow-wrap:anywhere}
+.lxdates{margin:10px 0 0;color:var(--muted);font-size:12.5px}
 .lxapprox{display:block;margin:6px 0 0;font-size:13.5px;color:var(--ink2)}
 .lxhwnotes{margin:8px 0 0;font-size:13.5px;color:var(--ink2)}
 .lxhwnotes summary{color:var(--link);cursor:pointer;min-height:32px;padding:4px 0}

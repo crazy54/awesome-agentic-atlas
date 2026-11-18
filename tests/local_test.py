@@ -253,6 +253,10 @@ true("the picker is an ARIA combobox with a listbox", 'role="combobox"' in html 
 true("results are announced politely", 'aria-live="polite"' in html)
 true("the preview banner shows exactly while PREVIEW is on", ("lxfix" in html) == b32.PREVIEW)
 true("the inlined hardware module is there", "const LOCALHW = (() => {" in html)
+true("the page states the hardware list's own date", f"Hardware list updated {b32.long_date(CAT['updated'])}" in html)
+check("...written out in words", b32.long_date("2026-11-08"), "8 November 2026")
+true("the raised-limit toggle ships hidden, inside the numbers panel",
+     re.search(r'id="expert"[^>]*hidden>.*?id="raisef" hidden', html, re.S) is not None)
 TEAM = ROOT.parent / "Archie and Pals" / "team" / "local-ai"
 if (TEAM / "picks.json").exists():
     # Only on a machine with the team's working folder beside the repository; CI has neither, by design.
