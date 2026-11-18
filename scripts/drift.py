@@ -39,12 +39,16 @@ WHERE A PROVISIONAL SECTION GOES, strongest evidence first:
                 and that old section is mapped. A rename or a translation keeps the entries and changes
                 the heading, so the entries are the evidence. `pull_sources.py` is the only stage that
                 holds both copies at once -- it parses the old and the new to diff them anyway -- so it
-                records which old section each new one came from, in `cache/section-moves.json`.
+                records which old section each new one came from, in `cache/section-moves.json`. Where
+                that ledger has nothing -- the change reached the cache before the ledger saw it -- the
+                same evidence is read off the atlas's own committed pages, `mega-list/lists/*.md`.
   position   -- the list has the same number of sections in the same slots, and the one this replaced
                 is mapped. The fallback for a renamed section whose entries all changed too.
   similar    -- its name is close (difflib, >= SIMILAR) to a section of the same list the taxonomy maps.
                 Orphans first -- a mapped section the list no longer produces is what a rename leaves
                 behind -- then the list's current mapped sections.
+  leftover   -- every other newcomer in the list was traced, and exactly one newcomer and one vanished
+                mapped section remain, so they are paired.
   modal      -- none of the above: the category most of the list's rows already land in. This is the
                 guess the taxonomy refuses to make permanently, made for one run and labelled as such.
 
@@ -54,8 +58,10 @@ from __future__ import annotations
 
 import difflib
 import hashlib
+import html
 import json
 import os
+import re
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -185,6 +191,68 @@ def record_moves(source: str, sha: str | None, found: dict[str, dict], path: Pat
                                ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+# The second "before" picture, and the one that survives anything that happens to the cache. The first
+# trial of this module (run 44348469978, 2026-11-18) placed libukai's eight headings by the mode, not by
+# membership, because the copy it pulled that day was not the change: an earlier run had already pulled
+# the translated README into the rolling cache, before `section-moves.json` existed to record what it
+# replaced. Any drift that lands on a day the ledger misses -- a cache that did not restore, a run that
+# died after the pull -- would be the same. But the build commits its own record of every list it
+# publishes: `mega-list/lists/*.md` is one page per list, each entry a `- **[name](url)**` line under the
+# `## section` it was published in. That is yesterday's membership, in the repository, so it is read as
+# membership evidence whenever the ledger has none. Membership only: the page orders its sections by
+# where their rows first fall in the build, not by the list's own order, so it says nothing about slots.
+MEGA_LISTS = ROOT / "mega-list" / "lists"
+_CURATED = re.compile(r"Curated by \*\*\[(?P<nwo>[^\]]+)\]\(")
+_ENTRY = re.compile(r"^- \*\*\[.*?\]\((?P<url>[^)\s]+)\)\*\*")
+
+
+def published_pairs(nwo: str, key, folder: Path | None = None) -> list[tuple[str, str]]:
+    """`(entry key, section)` for one list as the atlas last published it, from its committed pages."""
+    def part(p: Path) -> tuple[str, int]:
+        # `paginate` names a list's parts `x.md`, `x-2.md`, `x-3.md`; plain sorting puts `-2` first.
+        m = re.fullmatch(r"(.*)-(\d+)", p.stem)
+        return (m[1], int(m[2])) if m else (p.stem, 1)
+
+    pages = []
+    for p in sorted((folder or MEGA_LISTS).glob("*.md"), key=part):
+        text = p.read_text(encoding="utf-8")
+        m = _CURATED.search(text[:4000])
+        if m and m["nwo"].lower() == nwo.lower():
+            pages.append(text)
+    out = []
+    for text in pages:
+        sec = None  # each part restates the heading of the section it opens with
+        for line in text.splitlines():
+            if line.startswith("## "):
+                sec = html.unescape(line[3:].strip())
+            elif sec and sec != "Contents":
+                m = _ENTRY.match(line)
+                if m:
+                    out.append((key(m["url"]), sec))
+    return out
+
+
+def published_moves(rows: list[dict], sources: dict[str, str], sections: dict, moves: dict, key,
+                    folder: Path | None = None) -> dict[str, dict[str, dict]]:
+    """`moves`, with membership evidence from the published pages added for sections it has none for.
+
+    Only lists with a section the taxonomy does not name are read, and the ledger's own observations
+    always win: they were made against the actual previous copy, the pages against the last *build*.
+    """
+    want = {r["source"] for r in rows if (r["source"], r["category"]) not in sections}
+    out = {k: dict(v) for k, v in moves.items()}
+    for src in sorted(want):
+        nwo = sources.get(src)
+        old = published_pairs(nwo, key, folder) if nwo else []
+        if not old:
+            continue
+        new = [(key(r["url"]), r["category"]) for r in rows if r["source"] == src and r.get("url")]
+        for sec, ev in lineage(old, new).items():
+            if ev["basis"] == "membership" and sec not in out.get(src, {}):
+                out.setdefault(src, {})[sec] = dict(ev, via="published")
+    return out
+
+
 # --- placing --------------------------------------------------------------------------------------
 def _chain(source: str, section: str, sections: dict, moves: dict) -> tuple[str, dict, list[str]] | None:
     """Follow recorded renames back to a mapped section: (category, first hop's evidence, the path).
@@ -289,10 +357,24 @@ def place(rows: list[dict], sections: dict[tuple[str, str], str],
                     rec["category"], rec["evidence"] = _modal(src, counts[src], sections, categories,
                                                               everything)
                     rec["basis"] = "modal"
+            placed[sec] = rec
+
+        # The one left over. When every other newcomer has been traced to the section it replaced, and
+        # exactly one newcomer and exactly one vanished mapped section remain, they are each other: the
+        # list lost one shelf and gained one. That is how libukai's "Video Tutorials" is found -- two of
+        # its three entries are new, so membership cannot see it, and the trial's restored cache had no
+        # slot order to read -- and it is still only a pairing, labelled as such, for a person to confirm.
+        claimed = {r["evidence"].get("was") for r in placed.values()}
+        guessed = [r for r in placed.values() if r["basis"] == "modal"]
+        spare = [s for s in orphans if s not in claimed]
+        if len(guessed) == 1 and len(spare) == 1:
+            rec = guessed[0]
+            rec["category"], rec["basis"] = sections[(src, spare[0])], "leftover"
+            rec["evidence"] = {"was": spare[0], "traced": len(placed) - 1}
+        for rec in placed.values():
             was = rec["evidence"].get("was")
             if was in fold:
                 rec["bucket"], rec["bucket_basis"] = fold[was], "inherited"
-            placed[sec] = rec
 
         # The palette, counted the way `16_build_all.group_styles` hands out slots: every bucket the map
         # names, present today or not, then each other bucket in the order its rows first appear.
@@ -352,10 +434,15 @@ def describe(rec: dict) -> str:
     if b == "membership":
         hops = " -> ".join(reversed(ev.get("path", [])))
         return (f"{ev['shared']} of its {ev['of']} entries were listed under {ev['was']!r} "
-                f"in the previous copy" + (f" ({hops})" if len(ev.get("path", [])) > 2 else ""))
+                + ("on the atlas's last published page for this list" if ev.get("via") == "published"
+                   else "in the previous copy")
+                + (f" ({hops})" if len(ev.get("path", [])) > 2 else ""))
     if b == "position":
         return (f"it took slot {ev['slot']} of {ev['of']}, which was {ev['was']!r}; the list kept "
                 f"its shape")
+    if b == "leftover":
+        return (f"the other {ev['traced']} new section(s) were traced to what they replaced, and "
+                f"{ev['was']!r} is the one mapped section the list no longer has")
     if b == "similar":
         return f"its name is {ev['ratio']:.0%} similar to {ev['was']!r}"
     if b == "modal":
