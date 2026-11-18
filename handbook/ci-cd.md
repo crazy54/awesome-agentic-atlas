@@ -26,7 +26,7 @@ true: work that is only on a feature branch is not live, however green its PR.
 | `dead-repos.yml` | cron `30 9 * * 6` (Saturday 09:30 UTC), and dispatch | Asks GitHub which listed repos are gone and records them in `state/dead-repos.json`; dispatches `daily.yml` with `force` when that changed | Yes: commits "Dead-repo scan YYYY-MM-DD" to `latest_branch` |
 | `og-preview.yml` | dispatch only | Renders the OG cards to a temp directory with `23_og.py --out` and diffs them against the committed cards | No |
 | `traceway-live.yml` | each Pages build, cron `25 18 * * *`, dispatch | Loads the live homepage and checks the monitoring fetch and first report return 200 | No |
-| `canary.yml` | cron `23 1-23/4 * * *` (every 4 hours), dispatch | Pulls every source list and parses it; regenerates the pages that are pure functions of committed files. Proposes a fix on a `bot/` branch | Only `bot/taxonomy` and `bot/regenerate` |
+| `canary.yml` | cron `23 1-23/4 * * *` (every 4 hours), dispatch | Pulls every source list and parses it; regenerates the pages that are pure functions of committed files. Proposes a fix on a `bot/` branch | Only `bot/drift-<fingerprint>` and `bot/regenerate` |
 | `alert.yml` | when the daily, weekly, tests or canary finish on `latest_branch`; cron `47 */2 * * *`; dispatch (dry run by default) | Keeps one `build-red` issue in step with those four | No (issues only) |
 
 `daily.yml` and `weekly.yml` share the concurrency group `atlas-build`, so they never run at once. **Nothing else
@@ -151,7 +151,8 @@ The suggested fixes, by kind:
 
 | Kind | What it printed | What to do |
 |---|---|---|
-| drift | `N sections no category is named for` | Merge the canary's `bot/taxonomy` PR, or add the lines to `taxonomy.SECTIONS` by hand |
+| drift | `drift: placed ...` (the canary), or `N sections no category is named for` (a strict run) | Merge the canary's `bot/drift-<fingerprint>` PR, or add the lines to `taxonomy.SECTIONS` by hand. Until then the daily files them provisionally and still publishes |
+| degraded | `drift: degraded ...` | A list could not be read properly: a failed pull, a shrink, a collapsed parse, a rename. No mapping fixes it; look at the list upstream |
 | regenerate | a `FAIL` ending `-- run: python scripts/<stage>.py` | Merge the canary's `bot/regenerate` PR, or run that command and commit |
 | conflict | `CONFLICT` | Re-run: the builds check out the branch head |
 | timeout | `exceeded the maximum execution time` | See the budget line; raise the limit or split the job |
@@ -163,24 +164,31 @@ The suggested fixes, by kind:
 `canary.yml` runs every four hours, so drift is usually found before the 11:12 daily trips on it. It has two jobs.
 
 - **drift** pulls every list fresh, with no cache: about 40 REST calls, plus the lists from
-  raw.githubusercontent.com. It renders the scout's document offline and runs `10_parse_sources.py`. When the
-  parser supports `--proposal` (eng-pipeline's provisional mode), it writes `proposal/proposal.json` and
-  `proposal/proposal.md`, uploads them as the `parse-proposal` artifact, applies the mapping and pushes it to
-  `bot/taxonomy`. Exit status 0 means no drift, and 3 means drift with a proposal; anything else is red with
-  the parser's message.
+  raw.githubusercontent.com. It renders the scout's document offline and runs `10_parse_sources.py` with
+  `AAA_PROVISIONAL=1`, as the daily does (see [pipeline.md](pipeline.md) for the provisional mode).
+  - The parse writes `cache/drift-proposal.json` and `.md` (`drift.PROPOSAL`), and the job uploads them as the
+    `drift-proposal` artifact.
+  - `tools/drift_report.py` reads the proposal and prints one `drift:` line per placement and per degraded
+    list; those are the lines the build-red issue quotes.
+  - Placements are written in with `scripts/apply_drift_proposal.py` and pushed to `bot/drift-<fingerprint[:8]>`.
+  - The job is red while there are placements or degraded lists.
 - **regenerate** runs the stages listed in its `STAGES` (today only `22_detail`). They are the stages whose
   output depends only on committed files. If the output differs from what is committed, it pushes the result
   to `bot/regenerate`. This catches a generator change that was merged without its pages, as PR #104 was.
 
-Both are rolling branches. Each run rebuilds the proposal from `latest_branch`, pushes it only if it changed,
-and deletes the branch (closing its PR) once nothing is left to propose. A job goes red while it has something
+Each run rebuilds its proposal from `latest_branch`. It pushes only when the proposed files changed, and it
+deletes the branch (closing its PR) once nothing is left to propose. A drift branch is named for `drift.py`'s
+fingerprint, which stays the same for the same drift, so six runs a day over one unmerged drift make one branch
+and one PR. A different drift opens a new branch and withdraws the old one. A job goes red while it has something
 for a human to merge, which is what puts it in the build-red issue. `tools/bot_branch.py` does all the pushing
 and refuses any branch that is not `bot/...`.
 
 Opening the pull request needs the repository setting **"Allow GitHub Actions to create and approve pull
 requests"**. When it is off, the branch is still pushed, and the job summary and the build-red issue carry a
-one-click compare link instead. A PR opened by the Actions token runs no checks on itself. The checks run on
-`latest_branch` once it is merged.
+one-click compare link instead. A PR opened by the Actions token runs no checks on itself. To see them before
+merging, either run `gh workflow run tests.yml --ref bot/drift-<fingerprint>` (the run shows under Actions on that
+branch, not as a check on the PR), or have a person close and reopen the PR, which does attach the checks to it.
+Merging runs them on `latest_branch` regardless.
 
 The canary stays out of `atlas-build` and never restores or saves the build cache. That cache holds every
 screenshot and is gigabytes; one more entry would also count against the repository's 10 GB allowance.

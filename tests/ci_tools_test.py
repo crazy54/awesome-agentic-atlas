@@ -36,7 +36,7 @@ def load(name: str):
     return mod
 
 
-ld, bb, ca = load("local_daily"), load("bot_branch"), load("ci_alert")
+ld, bb, ca, dr = load("local_daily"), load("bot_branch"), load("ci_alert"), load("drift_report")
 ok = bad = 0
 
 
@@ -108,7 +108,7 @@ with tempfile.TemporaryDirectory() as d:
          got == [("aa", ""), ("bb--flag", "Block"), ("cc", "Inline")], str(got))
 
 print("the bot branch")
-for b in ["bot/taxonomy", "bot/regenerate", "refs/heads/bot/x"]:
+for b in ["bot/drift-1a2b3c4d", "bot/regenerate", "refs/heads/bot/x"]:
     true(f"{b} may be pushed", bb.guard(b).startswith("bot/"))
 for b in ["latest_branch", "main", "bot/", "bot/../latest_branch", "refs/heads/latest_branch", "jfh-eng-ci", "bots/x"]:
     try:
@@ -116,6 +116,27 @@ for b in ["latest_branch", "main", "bot/", "bot/../latest_branch", "refs/heads/l
         true(f"{b} is refused", False)
     except SystemExit:
         true(f"{b} is refused", True)
+
+print("the drift report")
+# The shape scripts/drift.py writes (cache/drift-proposal.json, version 1).
+doc = {"version": 1, "fingerprint": "1a2b3c4d5e6f" + "0" * 52,
+       "placements": [{"source": "skills_libukai", "section": "Content Creation", "rows": 12,
+                       "category": "Skills", "bucket": None, "basis": "position"}],
+       "degraded": [{"source": "mcp_punkpeye", "nwo": "punkpeye/x", "kind": "shrink", "detail": "412 of 980"}]}
+out, lines = dr.report(doc)
+true("placements, degraded and fingerprint are counted and passed on",
+     out["placements"] == 1 and out["degraded"] == 1 and out["fingerprint"] == doc["fingerprint"], str(out))
+true("the branch is bot/drift-<fingerprint[:8]>, and passes the bot-branch guard",
+     out["branch"] == "bot/drift-1a2b3c4d" and bb.guard(out["branch"]) == out["branch"], out["branch"])
+true("one drift: line per placement and per degraded list",
+     len(lines) == 2 and all(l.startswith("drift: ") for l in lines) and "Content Creation" in lines[0]
+     and "shrink" in lines[1], str(lines))
+out, lines = dr.report({})
+true("no proposal is no drift, and no branch", out == {"placements": 0, "degraded": 0, "fingerprint": "", "branch": ""}
+     and lines == [], str(out))
+out, _ = dr.report({**doc, "placements": []})
+true("degraded alone names no branch: there is nothing to merge", out["branch"] == "" and out["degraded"] == 1)
+true("the proposal path is drift.py's own", dr.proposal_path().name == "drift-proposal.json")
 
 print("the workflows")
 files = sorted(WF.glob("*.yml"))
@@ -132,6 +153,8 @@ for f in files:
         true(f"{f.name} stays out of atlas-build", "atlas-build" not in groups, str(groups))
 canary = (WF / "canary.yml").read_text(encoding="utf-8")
 true("the canary saves no cache and restores none", "actions/cache" not in canary)
+true("the canary parses provisionally, as the daily does, and applies with eng-pipeline's script",
+     'AAA_PROVISIONAL: "1"' in canary and "tools/drift_report.py" in canary and "scripts/apply_drift_proposal.py" in canary)
 true("the canary pushes only through bot_branch",
      not re.search(r"^\s+git push", canary, re.M) and "tools/bot_branch.py propose --branch bot/" in canary)
 true("the canary's bot branches are the ones the alert links", all(v in canary for v in ca.PROPOSALS.values()))

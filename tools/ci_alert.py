@@ -43,12 +43,13 @@ the runs nobody watched being started is the failure this file exists to end.
 
 THE SUGGESTED FIX
 
-`suggest()` knows the shapes of failure the audit found, by the text they print: upstream drift (the parser's
-"sections no category is named for"), a harness whose FAIL line names the command that fixes it ("-- run:
-python scripts/22_detail.py"), a rebase conflict, a timeout, the suite refusing to start. For drift it also
-reads the parse proposal, if the failing run uploaded one (artifact `parse-proposal`, written by
-`10_parse_sources.py --proposal`): the proposal's own Markdown is the fix, and the canary may already have
-opened a PR with it. Anything it does not recognise gets the error lines and the link and no guess.
+`suggest()` knows the shapes of failure the audit found, by the text they print: upstream drift (the strict
+parser's "sections no category is named for", or the canary's `drift: placed ...` lines from
+`tools/drift_report.py`), a list that degraded (`drift: degraded ...`, which no taxonomy line fixes), a harness
+whose FAIL line names the command that fixes it ("-- run: python scripts/22_detail.py"), a rebase conflict, a
+timeout, the suite refusing to start. For drift it also reads the run's `drift-proposal` artifact
+(`cache/drift-proposal.md`, written by scripts/drift.py), whose Markdown is the fix, and links the canary's
+`bot/drift-*` branch or PR. Anything it does not recognise gets the error lines and the link and no guess.
 
   python tools/ci_alert.py --dry-run          read the real state, print what it would do, change nothing
   python tools/ci_alert.py                    reconcile the issue (what alert.yml runs)
@@ -84,7 +85,8 @@ WORKFLOWS = [
     ("canary.yml", "Canary"),
 ]
 # The canary's proposals (`tools/bot_branch.py`), by the kind of failure they answer.
-PROPOSALS = {"drift": "bot/taxonomy", "regenerate": "bot/regenerate"}
+# `bot/drift-` is a prefix: one branch per drift fingerprint (tools/drift_report.py names it).
+PROPOSALS = {"drift": "bot/drift-", "regenerate": "bot/regenerate"}
 # Events that say something about the branch itself. `pull_request` runs report on their PR.
 EVENTS = {"push", "schedule", "workflow_dispatch"}
 STATE_MARK = "<!-- ci-alert:state "
@@ -203,6 +205,7 @@ def excerpt(lines: list[str]) -> list[str]:
     keep: list[str] = []
     fails = [l for l in lines if l.startswith("FAIL ")]
     keep += [short(l) for l in fails[:8]]
+    keep += [short(l.strip()) for l in lines if l.strip().startswith("drift: ")][:12]
     keep += [l.strip() for l in lines
              if re.search(r"no tally printed|went quiet --", l) and not l.startswith("##[error]") and "::error" not in l][:4]
     for i, l in enumerate(lines):
@@ -227,10 +230,17 @@ def excerpt(lines: list[str]) -> list[str]:
 def suggest(lines: list[str], proposal: str = "") -> tuple[str, str]:
     """(kind, suggested fix) for the shapes of failure we know, by the words they print. ("unknown", "") else."""
     text = "\n".join(lines)
-    if "no category is named for" in text:
-        fix = ("**Upstream drift.** A source list added or renamed a section, and `scripts/10_parse_sources.py` "
-               "refuses rows it cannot file. Add each section above to `taxonomy.SECTIONS` (and `buckets.py` "
-               "if it needs a bucket), or merge the canary's proposal.")
+    if "drift: degraded" in text and "drift: placed" not in text:
+        return "degraded", ("**A source list is not being read properly.** The `drift: degraded` lines say which "
+                            "and how (a pull that failed, a list that shrank or collapsed, a repository renamed or "
+                            "unreachable). No taxonomy line fixes this: check the list upstream, and if it moved "
+                            "or was renamed, update its entry in `scripts/10_parse_sources.py` SOURCES.")
+    if "no category is named for" in text or "drift: placed" in text:
+        fix = ("**Upstream drift.** A source list added, renamed or translated a section. The daily files it "
+               "provisionally for one run at a time; merge the canary's proposal to make that permanent, or add "
+               "each section above to `taxonomy.SECTIONS` (and `buckets.py` if it needs a bucket) by hand.")
+        if "drift: degraded" in text:
+            fix += " Some lists also degraded (the `drift: degraded` lines): those need a look upstream, not a mapping."
         if proposal:
             fix += "\n\nThe parse proposal from this run:\n\n" + proposal.strip()
         return "drift", fix
@@ -264,10 +274,10 @@ def proposal_for(run_id: int) -> str:
     """The parse proposal's Markdown, if the run uploaded one. Empty when it did not, or cannot be read."""
     with tempfile.TemporaryDirectory() as d:
         try:
-            gh("run", "download", str(run_id), "-R", REPO, "-n", "parse-proposal", "-D", d)
+            gh("run", "download", str(run_id), "-R", REPO, "-n", "drift-proposal", "-D", d)
         except RuntimeError:
             return ""
-        md = Path(d) / "proposal.md"
+        md = Path(d) / "drift-proposal.md"
         return md.read_text(encoding="utf-8")[:6000] if md.exists() else ""
 
 
@@ -298,12 +308,18 @@ def failure(workflow: str, title: str, run: dict, jobs: list[dict]) -> Failure:
 
 
 def proposal_link(branch: str) -> str:
-    """Where the canary's proposal for this is: its open PR, else its branch's compare page, else nothing."""
+    """Where the canary's proposal for this is: its open PR, else its branch's compare page, else nothing.
+    A `branch` ending in `-` is a prefix (`bot/drift-`), and the newest branch under it is the one."""
     try:
-        prs = json.loads(gh("pr", "list", "-R", REPO, "--head", branch, "--state", "open", "--json", "url"))
+        prs = json.loads(gh("pr", "list", "-R", REPO, "--state", "open", "--json", "url,headRefName"))
+        prs = [p for p in prs if p["headRefName"] == branch or (branch.endswith("-") and p["headRefName"].startswith(branch))]
         if prs:
             return f"\n\nThe canary's proposal is open: {prs[0]['url']}"
-        api(f"repos/{REPO}/branches/{branch.replace('/', '%2F')}")
+        refs = api(f"repos/{REPO}/git/matching-refs/heads/{branch}")
+        names = [r["ref"].removeprefix("refs/heads/") for r in refs]
+        if not names:
+            return ""
+        branch = names[-1]
     except RuntimeError:
         return ""
     return (f"\n\nThe canary pushed a proposal to `{branch}` but could not open a PR for it; open one in one "

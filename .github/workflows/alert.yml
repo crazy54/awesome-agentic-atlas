@@ -48,7 +48,7 @@ on:
         default: true
 
 permissions:
-  actions: read      # runs, jobs, logs, the parse-proposal artifact
+  actions: read      # runs, jobs, logs, the drift-proposal artifact
   checks: read       # annotations, which are the only place a timeout is named
   contents: read     # this checkout
   issues: write      # the one issue

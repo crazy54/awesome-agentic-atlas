@@ -1,10 +1,13 @@
 # The canary: every four hours, ask the two questions whose answer turned the daily red for 51 of the 72
 # failed builds between 2026-10-04 and 2026-11-18 -- and answer them with something the owner can merge.
 #
-#   drift       Has a source list added or renamed a section `10_parse_sources.py` cannot file? Pull every
-#               list fresh, parse, and if it has, propose the `taxonomy.py`/`buckets.py` lines on
-#               `bot/taxonomy`. Five such episodes in that window, one every nine days, each red for two to
-#               sixteen days because the first anyone heard of it was the daily failing.
+#   drift       Has a source list added, renamed or translated a section, or stopped reading properly? Pull
+#               every list fresh and parse it the way the daily does (`AAA_PROVISIONAL=1`, scripts/drift.py).
+#               A section the build had to file provisionally is proposed as a `taxonomy.py`/`buckets.py`
+#               edit on `bot/drift-<fingerprint>`; a list that degraded goes to the build-red issue. Five
+#               drift episodes in that window, one every nine days, each red for two to sixteen days because
+#               the first anyone heard of it was the daily failing. Provisional mode keeps the daily
+#               publishing now; this is what turns its one-run placement into a mapping someone has merged.
 #   regenerate  Are the committed pages what the committed generators would write? Run the stages that are
 #               pure functions of committed files and, if the output moved, propose it on `bot/regenerate`.
 #               PR #104 changed `22_detail.py` without its 8,638 pages; nothing regenerated them for two
@@ -71,55 +74,54 @@ jobs:
           # Three tries: a list host answering 502 once is not drift, and should not page anyone.
           bash tools/retry.sh 3 python scripts/pull_sources.py --force
 
-      # The parse, as the daily runs it -- and, once `10_parse_sources.py` has its provisional mode, with a
-      # proposal: what it would file each unmapped section under, written to `proposal/` as `proposal.json`
-      # and a ready PR body in `proposal.md`. The mode is detected rather than assumed, so this file works on
-      # both sides of that change and needs no edit when it lands.
-      #
-      # Exit status, by the contract agreed with eng-pipeline: 0 no drift; 3 drift, with a proposal; anything
-      # else a failure the proposal could not cover, which is red with the parser's own message.
-      - name: Parse, and propose a mapping for anything new
-        id: parse
-        run: |
-          set -uo pipefail
-          mkdir -p proposal
-          status=0
-          if grep -q -- '--proposal' scripts/10_parse_sources.py; then
-            python scripts/10_parse_sources.py --provisional --proposal proposal || status=$?
-          else
-            python scripts/10_parse_sources.py || status=$?
-          fi
-          echo "status=${status}" >> "$GITHUB_OUTPUT"
-          case "$status" in
-            0) echo "every section of every list is filed" ;;
-            3) echo "::warning title=Upstream drift::A source list has sections no category is named for. A mapping is proposed on bot/taxonomy." ;;
-            *) echo "::error title=Upstream drift::The parse failed (exit ${status}); its message is above." ;;
-          esac
+      # The parse exactly as the daily runs it: provisional, so drift is filed for this run and written to
+      # `drift.PROPOSAL` (cache/drift-proposal.json, with its PR body beside it) instead of stopping. The
+      # parse still exits non-zero for what provisional mode does not cover -- a list it cannot read at all
+      # -- and that is red with the parser's own message, like any failed step.
+      - name: Parse, as the daily does
+        env:
+          AAA_PROVISIONAL: "1"
+        run: python scripts/10_parse_sources.py
+
+      # What the proposal holds, as step outputs, and one `drift:` line per placement and per degraded list,
+      # which is what the build-red issue quotes. `tools/drift_report.py` takes the file's path from
+      # scripts/drift.py, so the canary and the parser cannot disagree about where it is.
+      - name: Read the drift proposal
+        id: drift
+        run: python tools/drift_report.py
 
       - name: Keep the proposal with the run
-        if: always() && hashFiles('proposal/*') != ''
+        if: always() && hashFiles('cache/drift-proposal.*') != ''
         uses: actions/upload-artifact@v4
         with:
-          name: parse-proposal
-          path: proposal
+          name: drift-proposal
+          path: cache/drift-proposal.*
           retention-days: 14
 
-      - name: Propose the mapping on bot/taxonomy
-        if: steps.parse.outputs.status == '3'
+      # One branch per drift, named for drift.py's fingerprint of the placements, which is the same for the
+      # same drift on every run: six canaries a day over one unmerged drift are one branch and one PR, and
+      # bot_branch.py does not even re-push it. A different drift supersedes the last one's branch.
+      - name: Propose the mapping on bot/drift-<fingerprint>
+        if: steps.drift.outputs.placements != '0'
         run: |
           set -euo pipefail
-          python scripts/10_parse_sources.py --apply-proposal proposal
-          python tools/bot_branch.py propose --branch bot/taxonomy \
-            --title "Taxonomy: file the sections upstream lists added" \
-            --body-file proposal/proposal.md --paths scripts/taxonomy.py scripts/buckets.py
+          python scripts/apply_drift_proposal.py
+          python tools/bot_branch.py propose --branch "${{ steps.drift.outputs.branch }}" \
+            --superseding bot/drift- \
+            --title "Taxonomy: file the sections upstream lists added (drift ${{ steps.drift.outputs.fingerprint }})" \
+            --body-file cache/drift-proposal.md --paths scripts/taxonomy.py scripts/buckets.py
 
-      - name: Withdraw bot/taxonomy if nothing has drifted
-        if: steps.parse.outputs.status == '0'
-        run: python tools/bot_branch.py withdraw --branch bot/taxonomy
+      - name: Withdraw any drift branch once nothing is left to file
+        if: steps.drift.outputs.placements == '0'
+        run: python tools/bot_branch.py withdraw --superseding bot/drift-
 
-      - name: End red if a list drifted
-        if: steps.parse.outputs.status != '0'
-        run: exit 1
+      # Red while there is something for a person to do: a mapping to merge, or a list that is not being
+      # read properly, which has no code fix and so is reported only through the build-red issue.
+      - name: End red if a list drifted or degraded
+        if: steps.drift.outputs.placements != '0' || steps.drift.outputs.degraded != '0'
+        run: |
+          echo "::error title=Upstream drift::${{ steps.drift.outputs.placements }} section(s) filed provisionally, ${{ steps.drift.outputs.degraded }} list(s) degraded. The drift: lines above say which."
+          exit 1
 
   regenerate:
     runs-on: ubuntu-latest

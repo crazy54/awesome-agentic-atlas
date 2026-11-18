@@ -111,6 +111,18 @@ true("an assertion", ca.suggest(["FAIL nib: ...nothing saved -- [\"jfhkit:v\"]"]
 true("'timed out' inside a FAIL line is still an assertion, not a job timeout",
      ca.suggest(["FAIL the bubble timed out after 8 s"])[0] == "assertion")
 true("an unknown failure gets no guess", ca.suggest(p) == ("unknown", ""))
+CANARY = log(
+    "drift: placed ('skills_libukai', 'Content Creation'), 12 rows, under Skills / Writing by position",
+    "drift: degraded mcp_punkpeye (punkpeye/awesome-mcp-servers): shrink -- 412 rows, was 980",
+    "drift: 1 placement(s), 1 degraded list(s), fingerprint 1a2b3c4d",
+    "##[error]1 section(s) filed provisionally, 1 list(s) degraded. The drift: lines above say which.",
+)
+cx = ca.excerpt(ca.clean(CANARY))
+true("the canary's drift: lines are quoted", sum(l.startswith("drift: ") for l in cx) == 3, str(cx))
+kind, fix = ca.suggest(cx)
+true("a provisional placement is drift, and the degraded list is mentioned", kind == "drift" and "degraded" in fix, fix)
+true("a degraded list alone is its own kind, with no mapping offered",
+     ca.suggest([l for l in cx if "placed" not in l])[0] == "degraded")
 
 
 def F(wf: str, rid: int, lines: list[str] | None = None) -> "ca.Failure":
