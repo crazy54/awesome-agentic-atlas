@@ -1,1080 +1,3590 @@
 {
- "fixture": true,
- "note": "FIXTURE written by ds-app on 2026-11-18. Model geometry is in ds-models' fit.mjs field names (`config`), quant sizes are rounded file sizes; when eng-hf's docs/models.json has a pick's `hf_id`, the page uses that row (normalizeModel) instead of `config` and `quants`. Replaced wholesale by ds-models' picks when they land; `score` is a placeholder ordering, not a benchmark.",
- "default_ctx": 8192,
- "tasks": [
-  {
-   "id": "chat",
-   "label": "Chat and ask questions"
+ "schema_version": 1,
+ "reviewed": "2026-11-18",
+ "by": "ds-models",
+ "method": "team/contracts/fit.md",
+ "tiers": {
+  "tiny": {
+   "fast_memory_gb": [
+    0,
+    5
+   ],
+   "examples": "8 GB laptops without a graphics card, phones, older 8 GB Macs"
   },
-  {
-   "id": "code",
-   "label": "Write code"
+  "small": {
+   "fast_memory_gb": [
+    5,
+    12
+   ],
+   "examples": "8–12 GB graphics cards, 16 GB Macs and laptops, Steam Deck, ROG Ally"
   },
-  {
-   "id": "write",
-   "label": "Write and edit text"
+  "medium": {
+   "fast_memory_gb": [
+    12,
+    32
+   ],
+   "examples": "16–24 GB graphics cards, 32 GB Macs"
   },
-  {
-   "id": "vision",
-   "label": "Understand pictures"
-  },
-  {
-   "id": "agents",
-   "label": "Build agents (tools)"
-  },
-  {
-   "id": "reason",
-   "label": "Think hard (maths, logic)"
+  "large": {
+   "fast_memory_gb": [
+    32,
+    null
+   ],
+   "examples": "64 GB+ Macs, Ryzen AI Max (Strix Halo), DGX Spark, a 24 GB card with 64 GB+ RAM"
   }
+ },
+ "uses": [
+  "chat",
+  "coding",
+  "reasoning",
+  "vision",
+  "agents",
+  "embeddings"
  ],
- "models": [
-  {
-   "id": "llama-3.2-1b",
-   "hf_id": "meta-llama/Llama-3.2-1B-Instruct",
-   "name": "Llama 3.2 1B",
-   "family": "Llama",
-   "tasks": [
-    "chat"
+ "selection_rules": [
+  "From the lab that made it, not a community fine-tune.",
+  "A licence anyone can use (Apache 2.0 or MIT) and no access gate.",
+  "In the Ollama library and LM Studio, with GGUF and MLX builds from trusted quantisers, so every route on the page works.",
+  "Heavily used, and out long enough that the runtimes handle its chat template and tool calls.",
+  "Then quality. Novelty alone never earns a slot."
+ ],
+ "refresh": {
+  "cadence": "weekly, after eng-hf's models.json refresh",
+  "check": "node team/local-ai/fit/tools/check-picks.mjs <models.json>: verifies every pick and file still exists, and lists challengers",
+  "challenger": "a model from a listed lab, licence Apache/MIT, ungated, with GGUF + MLX variants from trusted quantisers and an Ollama library tag, whose 30-day downloads (all variants) beat the current pick in the same tier and use, and which is at least 21 days old",
+  "swap": "a human (ds-models, or the owner) reads the challenger list and edits PICKS in tools/build-picks.mjs; nothing swaps automatically, because download counts reward novelty and a beginner needs things that work"
+ },
+ "runtimes": {
+  "lmstudio": {
+   "name": "LM Studio",
+   "kind": "app",
+   "os": [
+    "windows",
+    "macos",
+    "linux"
    ],
-   "score": 18,
-   "license": "Llama 3.2 Community",
-   "gated": true,
-   "blurb": "Tiny and quick. Fine for simple questions, easily confused by hard ones.",
-   "run": {
-    "ollama": "llama3.2:1b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Llama 3.2 1B Instruct",
-    "mlx": "mlx-community/Llama-3.2-1B-Instruct-4bit"
+   "backends": {
+    "windows": [
+     "cuda",
+     "vulkan",
+     "cpu"
+    ],
+    "linux": [
+     "cuda",
+     "vulkan",
+     "cpu"
+    ],
+    "macos": [
+     "metal",
+     "mlx"
+    ]
    },
-   "config": {
-    "params_total": 1240000000.0,
-    "num_hidden_layers": 16,
-    "hidden_size": 2048,
-    "num_attention_heads": 32,
-    "num_key_value_heads": 8,
-    "head_dim": 64,
-    "vocab_size": 128256,
-    "tie_word_embeddings": true,
-    "max_context": 131072,
-    "vision": false,
-    "reasoning": false
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "bartowski/Llama-3.2-1B-Instruct-GGUF",
-     "bytes": 810000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "bartowski/Llama-3.2-1B-Instruct-GGUF",
-     "bytes": 1320000000
-    }
-   ]
+   "notes": "The easiest start: a desktop app with a model browser. Apple Silicon only on Mac (macOS 14+); x64 with AVX2 or Snapdragon on Windows; AppImage on Linux (works on a Steam Deck in Desktop Mode).",
+   "source": "https://lmstudio.ai/docs/app/system-requirements"
   },
-  {
-   "id": "llama-3.2-3b",
-   "hf_id": "meta-llama/Llama-3.2-3B-Instruct",
-   "name": "Llama 3.2 3B",
-   "family": "Llama",
-   "tasks": [
-    "chat",
-    "write"
+  "ollama": {
+   "name": "Ollama",
+   "kind": "app + command line",
+   "os": [
+    "windows",
+    "macos",
+    "linux"
    ],
-   "score": 30,
-   "license": "Llama 3.2 Community",
-   "gated": true,
-   "blurb": "A small all-rounder that runs on almost anything.",
-   "run": {
-    "ollama": "llama3.2:3b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Llama 3.2 3B Instruct",
-    "mlx": "mlx-community/Llama-3.2-3B-Instruct-4bit"
+   "backends": {
+    "windows": [
+     "cuda",
+     "rocm (RX 7000/9000)",
+     "vulkan"
+    ],
+    "linux": [
+     "cuda",
+     "rocm",
+     "vulkan"
+    ],
+    "macos": [
+     "metal",
+     "mlx"
+    ]
    },
-   "config": {
-    "params_total": 3210000000.0,
-    "num_hidden_layers": 28,
-    "hidden_size": 3072,
-    "num_attention_heads": 24,
-    "num_key_value_heads": 8,
-    "head_dim": 128,
-    "vocab_size": 128256,
-    "tie_word_embeddings": true,
-    "max_context": 131072,
-    "vision": false,
-    "reasoning": false
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "bartowski/Llama-3.2-3B-Instruct-GGUF",
-     "bytes": 1690000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "bartowski/Llama-3.2-3B-Instruct-GGUF",
-     "bytes": 2020000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "bartowski/Llama-3.2-3B-Instruct-GGUF",
-     "bytes": 3420000000
-    }
-   ]
+   "notes": "One command per model, and a local API other apps can use. Intel GPUs only through Vulkan.",
+   "source": "https://docs.ollama.com/gpu"
   },
+  "llamacpp": {
+   "name": "llama.cpp",
+   "kind": "command line",
+   "os": [
+    "windows",
+    "macos",
+    "linux"
+   ],
+   "backends": {
+    "windows": [
+     "cuda",
+     "vulkan",
+     "sycl",
+     "cpu"
+    ],
+    "linux": [
+     "cuda",
+     "rocm",
+     "vulkan",
+     "sycl",
+     "cpu"
+    ],
+    "macos": [
+     "metal"
+    ]
+   },
+   "notes": "The engine under LM Studio and Ollama, with every option exposed. `llama-server -hf <repo>:<quant>` downloads the model (and its vision projector) and serves a chat page at http://localhost:8080.",
+   "source": "https://github.com/ggml-org/llama.cpp"
+  },
+  "mlx": {
+   "name": "MLX",
+   "kind": "command line (Python)",
+   "os": [
+    "macos"
+   ],
+   "backends": {
+    "macos": [
+     "mlx"
+    ]
+   },
+   "notes": "Apple's own framework, Apple Silicon only. Install with `pip install mlx-lm`; chat with `mlx_lm.chat --model <id>`.",
+   "source": "https://github.com/ml-explore/mlx-lm"
+  }
+ },
+ "picks": [
   {
-   "id": "qwen3-4b",
-   "hf_id": "Qwen/Qwen3-4B",
-   "name": "Qwen3 4B",
-   "family": "Qwen",
-   "tasks": [
+   "id": "Qwen/Qwen3.5-4B",
+   "name": "Qwen3.5 4B",
+   "tier": "tiny",
+   "uses": [
     "chat",
-    "reason",
+    "coding",
+    "reasoning",
+    "vision",
     "agents"
    ],
-   "score": 40,
-   "license": "Apache 2.0",
-   "gated": false,
-   "blurb": "Small but sharp. Can stop and think before it answers.",
-   "run": {
-    "ollama": "qwen3:4b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Qwen3 4B",
-    "mlx": "mlx-community/Qwen3-4B-4bit"
-   },
-   "config": {
-    "params_total": 4020000000.0,
-    "num_hidden_layers": 36,
-    "hidden_size": 2560,
-    "num_attention_heads": 32,
-    "num_key_value_heads": 8,
-    "head_dim": 128,
-    "vocab_size": 151936,
-    "tie_word_embeddings": true,
-    "max_context": 32768,
-    "vision": false,
-    "reasoning": true
-   },
-   "quants": [
+   "primary_for": [
     {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "unsloth/Qwen3-4B-GGUF",
-     "bytes": 2080000000
+     "tier": "tiny",
+     "use": "chat"
     },
     {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "unsloth/Qwen3-4B-GGUF",
-     "bytes": 2500000000
+     "tier": "tiny",
+     "use": "coding"
     },
     {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "unsloth/Qwen3-4B-GGUF",
-     "bytes": 4280000000
+     "tier": "tiny",
+     "use": "reasoning"
+    },
+    {
+     "tier": "tiny",
+     "use": "agents"
     }
-   ]
-  },
-  {
-   "id": "gemma-3-4b",
-   "hf_id": "google/gemma-3-4b-it",
-   "name": "Gemma 3 4B",
-   "family": "Gemma",
-   "tasks": [
-    "chat",
-    "write",
-    "vision"
    ],
-   "score": 38,
-   "license": "Gemma",
-   "gated": true,
-   "blurb": "Friendly writer that can also look at a photo and describe it.",
-   "run": {
-    "ollama": "gemma3:4b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Gemma 3 4B",
-    "mlx": "mlx-community/gemma-3-4b-it-4bit"
+   "why": "The strongest all-rounder that fits in under 3 GB: chats, codes, reads images, calls tools, and can think step by step.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/Qwen/Qwen3.5-4B"
    },
-   "config": {
-    "params_total": 3880000000.0,
-    "num_hidden_layers": 34,
+   "gated": false,
+   "released": "2026-02-27",
+   "params": 4659865088,
+   "active": null,
+   "context": 262144,
+   "vision": true,
+   "reasoning": true,
+   "default_quant": "Q4_K_M",
+   "default_bytes": 2740937888,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": "Q6_K",
+    "8": "Q8_0",
+    "12": "Q8_0",
+    "16": "Q8_0",
+    "24": "Q8_0",
+    "32": "Q8_0",
+    "48": "Q8_0",
+    "64": "Q8_0",
+    "96": "Q8_0",
+    "128": "Q8_0"
+   },
+   "run": {
+    "ollama": {
+     "pull": "ollama run qwen3.5:4b",
+     "tag": "qwen3.5:4b",
+     "q8_tag": "qwen3.5:4b-q8_0",
+     "hf": "ollama run hf.co/unsloth/Qwen3.5-4B-GGUF:Q4_K_M",
+     "any_quant": "ollama run hf.co/unsloth/Qwen3.5-4B-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": "qwen/qwen3.5-4b",
+     "search": "lmstudio-community/Qwen3.5-4B-GGUF",
+     "quant": "Q4_K_M",
+     "mlx": "lmstudio-community/Qwen3.5-4B-MLX-4bit",
+     "cli": "lms get qwen/qwen3.5-4b"
+    },
+    "llamacpp": {
+     "hf": "unsloth/Qwen3.5-4B-GGUF:Q4_K_M",
+     "cmd": "llama-server -hf unsloth/Qwen3.5-4B-GGUF:Q4_K_M --jinja",
+     "any_quant": "unsloth/Qwen3.5-4B-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "lmstudio-community/Qwen3.5-4B-MLX-4bit",
+     "cmd": "mlx_lm.chat --model lmstudio-community/Qwen3.5-4B-MLX-4bit"
+    }
+   },
+   "model": {
+    "id": "Qwen/Qwen3.5-4B",
+    "params_total": 4659865088,
+    "num_hidden_layers": 32,
     "hidden_size": 2560,
-    "num_attention_heads": 8,
+    "num_attention_heads": 16,
     "num_key_value_heads": 4,
     "head_dim": 256,
-    "vocab_size": 262208,
+    "vocab_size": 248320,
+    "sliding_window": null,
+    "swa_layers": 0,
+    "linear_layers": 24,
     "tie_word_embeddings": true,
-    "max_context": 131072,
+    "num_experts": null,
+    "num_experts_per_tok": null,
+    "moe_intermediate_size": null,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
+    "max_context": 262144,
     "vision": true,
-    "reasoning": false,
-    "sliding_window": 1024,
-    "sliding_window_pattern": 6
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "ggml-org/gemma-3-4b-it-GGUF",
-     "bytes": 3300000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "ggml-org/gemma-3-4b-it-GGUF",
-     "bytes": 5000000000
-    }
-   ]
+    "mmproj_bytes": 672423616,
+    "reasoning": true,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "BF16",
+      "label": "BF16",
+      "bytes": 8424393632,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_NL",
+      "label": "IQ4_NL",
+      "bytes": 2579944608,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_XS",
+      "label": "IQ4_XS",
+      "bytes": 2477053088,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_M",
+      "label": "Q3_K_M",
+      "bytes": 2293388448,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_S",
+      "label": "Q3_K_S",
+      "bytes": 2105791648,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_0",
+      "label": "Q4_0",
+      "bytes": 2583221408,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_1",
+      "label": "Q4_1",
+      "bytes": 2784416928,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "Q4_K_M",
+      "bytes": 2740937888,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "Q4_K_S",
+      "bytes": 2590430368,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "Q5_K_M",
+      "bytes": 3143656608,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "Q5_K_S",
+      "bytes": 3024934048,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "Q6_K",
+      "bytes": 3525956768,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 4482403488,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_M",
+      "label": "UD-IQ2_M",
+      "bytes": 1759997088,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_XXS",
+      "label": "UD-IQ2_XXS",
+      "bytes": 1520217248,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_XXS",
+      "label": "UD-IQ3_XXS",
+      "bytes": 1949047968,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_XL",
+      "label": "UD-Q2_K_XL",
+      "bytes": 1940825248,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_XL",
+      "label": "UD-Q3_K_XL",
+      "bytes": 2436420768,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_XL",
+      "label": "UD-Q4_K_XL",
+      "bytes": 2912109728,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_XL",
+      "label": "UD-Q5_K_XL",
+      "bytes": 3250869408,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_XL",
+      "label": "UD-Q6_K_XL",
+      "bytes": 4145548448,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_XL",
+      "label": "UD-Q8_K_XL",
+      "bytes": 5952048288,
+      "repo": "unsloth/Qwen3.5-4B-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 3034301037,
+      "repo": "lmstudio-community/Qwen3.5-4B-MLX-4bit"
+     }
+    ]
+   }
   },
   {
-   "id": "qwen3-8b",
-   "hf_id": "Qwen/Qwen3-8B",
-   "name": "Qwen3 8B",
-   "family": "Qwen",
-   "tasks": [
+   "id": "google/gemma-4-E2B-it",
+   "name": "Gemma 4 E2B",
+   "tier": "tiny",
+   "uses": [
     "chat",
-    "code",
-    "write",
-    "reason",
-    "agents"
-   ],
-   "score": 55,
-   "license": "Apache 2.0",
-   "gated": false,
-   "blurb": "The best all-rounder for an ordinary laptop: chat, code and tools.",
-   "run": {
-    "ollama": "qwen3:8b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Qwen3 8B",
-    "mlx": "mlx-community/Qwen3-8B-4bit"
-   },
-   "config": {
-    "params_total": 8190000000.0,
-    "num_hidden_layers": 36,
-    "hidden_size": 4096,
-    "num_attention_heads": 32,
-    "num_key_value_heads": 8,
-    "head_dim": 128,
-    "vocab_size": 151936,
-    "tie_word_embeddings": false,
-    "max_context": 32768,
-    "vision": false,
-    "reasoning": true
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "unsloth/Qwen3-8B-GGUF",
-     "bytes": 4120000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "unsloth/Qwen3-8B-GGUF",
-     "bytes": 5030000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q6_K",
-     "label": "Q6_K",
-     "repo": "unsloth/Qwen3-8B-GGUF",
-     "bytes": 6730000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "unsloth/Qwen3-8B-GGUF",
-     "bytes": 8710000000
-    }
-   ]
-  },
-  {
-   "id": "llama-3.1-8b",
-   "hf_id": "meta-llama/Llama-3.1-8B-Instruct",
-   "name": "Llama 3.1 8B",
-   "family": "Llama",
-   "tasks": [
-    "chat",
-    "write"
-   ],
-   "score": 46,
-   "license": "Llama 3.1 Community",
-   "gated": true,
-   "blurb": "Well known and widely supported. A safe, steady writer.",
-   "run": {
-    "ollama": "llama3.1:8b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Meta Llama 3.1 8B Instruct",
-    "mlx": "mlx-community/Meta-Llama-3.1-8B-Instruct-4bit"
-   },
-   "config": {
-    "params_total": 8030000000.0,
-    "num_hidden_layers": 32,
-    "hidden_size": 4096,
-    "num_attention_heads": 32,
-    "num_key_value_heads": 8,
-    "head_dim": 128,
-    "vocab_size": 128256,
-    "tie_word_embeddings": false,
-    "max_context": 131072,
-    "vision": false,
-    "reasoning": false
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF",
-     "bytes": 4020000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF",
-     "bytes": 4920000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF",
-     "bytes": 8540000000
-    }
-   ]
-  },
-  {
-   "id": "qwen2.5-coder-7b",
-   "hf_id": "Qwen/Qwen2.5-Coder-7B-Instruct",
-   "name": "Qwen2.5 Coder 7B",
-   "family": "Qwen",
-   "tasks": [
-    "code"
-   ],
-   "score": 50,
-   "license": "Apache 2.0",
-   "gated": false,
-   "blurb": "A coding helper small enough for a laptop. Good at completing code.",
-   "run": {
-    "ollama": "qwen2.5-coder:7b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Qwen2.5 Coder 7B Instruct",
-    "mlx": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit"
-   },
-   "config": {
-    "params_total": 7620000000.0,
-    "num_hidden_layers": 28,
-    "hidden_size": 3584,
-    "num_attention_heads": 28,
-    "num_key_value_heads": 4,
-    "head_dim": 128,
-    "vocab_size": 152064,
-    "tie_word_embeddings": false,
-    "max_context": 32768,
-    "vision": false,
-    "reasoning": false
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
-     "bytes": 4680000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
-     "bytes": 8100000000
-    }
-   ]
-  },
-  {
-   "id": "qwen2.5-vl-7b",
-   "hf_id": "Qwen/Qwen2.5-VL-7B-Instruct",
-   "name": "Qwen2.5 VL 7B",
-   "family": "Qwen",
-   "tasks": [
-    "vision",
-    "chat"
-   ],
-   "score": 48,
-   "license": "Apache 2.0",
-   "gated": false,
-   "blurb": "Reads screenshots, documents and photos, and answers questions about them.",
-   "run": {
-    "ollama": "qwen2.5vl:7b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Qwen2.5 VL 7B Instruct",
-    "mlx": "mlx-community/Qwen2.5-VL-7B-Instruct-4bit"
-   },
-   "config": {
-    "params_total": 8290000000.0,
-    "num_hidden_layers": 28,
-    "hidden_size": 3584,
-    "num_attention_heads": 28,
-    "num_key_value_heads": 4,
-    "head_dim": 128,
-    "vocab_size": 152064,
-    "tie_word_embeddings": false,
-    "max_context": 32768,
-    "vision": true,
-    "reasoning": false
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "ggml-org/Qwen2.5-VL-7B-Instruct-GGUF",
-     "bytes": 6000000000
-    }
-   ]
-  },
-  {
-   "id": "gemma-3-12b",
-   "hf_id": "google/gemma-3-12b-it",
-   "name": "Gemma 3 12B",
-   "family": "Gemma",
-   "tasks": [
-    "chat",
-    "write",
     "vision"
    ],
-   "score": 62,
-   "license": "Gemma",
-   "gated": true,
-   "blurb": "A polished writer with good manners, and it can see pictures.",
-   "run": {
-    "ollama": "gemma3:12b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Gemma 3 12B",
-    "mlx": "mlx-community/gemma-3-12b-it-4bit"
+   "primary_for": [
+    {
+     "tier": "tiny",
+     "use": "vision"
+    }
+   ],
+   "why": "Google's smallest Gemma 4: friendly, multilingual, understands photos, and runs on almost anything.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/google/gemma-4-E2B-it"
    },
-   "config": {
-    "params_total": 12200000000.0,
+   "gated": false,
+   "released": "2026-03-02",
+   "params": 5123178051,
+   "active": null,
+   "context": 131072,
+   "vision": true,
+   "reasoning": false,
+   "default_quant": "Q4_K_M",
+   "default_bytes": 3106738272,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": "Q5_K_M",
+    "8": "Q8_0",
+    "12": "Q8_0",
+    "16": "Q8_0",
+    "24": "Q8_0",
+    "32": "Q8_0",
+    "48": "Q8_0",
+    "64": "Q8_0",
+    "96": "Q8_0",
+    "128": "Q8_0"
+   },
+   "run": {
+    "ollama": {
+     "pull": "ollama run gemma4:e2b",
+     "tag": "gemma4:e2b",
+     "q8_tag": "gemma4:e2b-it-q8_0",
+     "hf": "ollama run hf.co/unsloth/gemma-4-E2B-it-GGUF:Q4_K_M",
+     "any_quant": "ollama run hf.co/unsloth/gemma-4-E2B-it-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": "google/gemma-4-e2b",
+     "search": "lmstudio-community/gemma-4-E2B-it-GGUF",
+     "quant": "Q4_K_M",
+     "mlx": "lmstudio-community/gemma-4-E2B-it-MLX-4bit",
+     "cli": "lms get google/gemma-4-e2b"
+    },
+    "llamacpp": {
+     "hf": "unsloth/gemma-4-E2B-it-GGUF:Q4_K_M",
+     "cmd": "llama-server -hf unsloth/gemma-4-E2B-it-GGUF:Q4_K_M --jinja",
+     "any_quant": "unsloth/gemma-4-E2B-it-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "lmstudio-community/gemma-4-E2B-it-MLX-4bit",
+     "cmd": "mlx_lm.chat --model lmstudio-community/gemma-4-E2B-it-MLX-4bit"
+    }
+   },
+   "model": {
+    "id": "google/gemma-4-E2B-it",
+    "params_total": 5123178051,
+    "num_hidden_layers": 35,
+    "hidden_size": 1536,
+    "num_attention_heads": 8,
+    "num_key_value_heads": 1,
+    "head_dim": 256,
+    "vocab_size": 262144,
+    "sliding_window": 512,
+    "swa_layers": 28,
+    "linear_layers": 0,
+    "tie_word_embeddings": true,
+    "num_experts": null,
+    "num_experts_per_tok": null,
+    "moe_intermediate_size": null,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
+    "max_context": 131072,
+    "vision": true,
+    "mmproj_bytes": 985654080,
+    "reasoning": false,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "BF16",
+      "label": "BF16",
+      "bytes": 9311305568,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_NL",
+      "label": "IQ4_NL",
+      "bytes": 3041083488,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_XS",
+      "label": "IQ4_XS",
+      "bytes": 2983944288,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_M",
+      "label": "Q3_K_M",
+      "bytes": 2536786016,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_S",
+      "label": "Q3_K_S",
+      "bytes": 2445652064,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_0",
+      "label": "Q4_0",
+      "bytes": 3041378400,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_1",
+      "label": "Q4_1",
+      "bytes": 3154919520,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "Q4_K_M",
+      "bytes": 3106738272,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "Q4_K_S",
+      "bytes": 3043934304,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "Q5_K_M",
+      "bytes": 3356037216,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "Q5_K_S",
+      "bytes": 3321151584,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "Q6_K",
+      "bytes": 4501721184,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 5048352864,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_M",
+      "label": "UD-IQ2_M",
+      "bytes": 2290860128,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_XXS",
+      "label": "UD-IQ3_XXS",
+      "bytes": 2372993120,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_XL",
+      "label": "UD-Q2_K_XL",
+      "bytes": 2403614816,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_XL",
+      "label": "UD-Q3_K_XL",
+      "bytes": 2923782240,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_XL",
+      "label": "UD-Q4_K_XL",
+      "bytes": 3184496736,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_XL",
+      "label": "UD-Q5_K_XL",
+      "bytes": 4294176864,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_XL",
+      "label": "UD-Q6_K_XL",
+      "bytes": 4710088800,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_XL",
+      "label": "UD-Q8_K_XL",
+      "bytes": 5282807904,
+      "repo": "unsloth/gemma-4-E2B-it-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 4339886573,
+      "repo": "lmstudio-community/gemma-4-E2B-it-MLX-4bit"
+     }
+    ]
+   }
+  },
+  {
+   "id": "Qwen/Qwen3.5-2B",
+   "name": "Qwen3.5 2B",
+   "tier": "tiny",
+   "uses": [
+    "chat"
+   ],
+   "primary_for": [],
+   "why": "For 4 GB machines and single-board computers: small enough to stay quick on a CPU, still useful for short tasks.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/Qwen/Qwen3.5-2B"
+   },
+   "gated": false,
+   "released": "2026-02-28",
+   "params": 2274069824,
+   "active": null,
+   "context": 262144,
+   "vision": true,
+   "reasoning": true,
+   "default_quant": "Q4_K_M",
+   "default_bytes": 1280835840,
+   "quant_by_budget_gb": {
+    "4": "Q8_0",
+    "6": "Q8_0",
+    "8": "Q8_0",
+    "12": "Q8_0",
+    "16": "Q8_0",
+    "24": "Q8_0",
+    "32": "Q8_0",
+    "48": "Q8_0",
+    "64": "Q8_0",
+    "96": "Q8_0",
+    "128": "Q8_0"
+   },
+   "run": {
+    "ollama": {
+     "pull": "ollama run qwen3.5:2b",
+     "tag": "qwen3.5:2b",
+     "q8_tag": "qwen3.5:2b-q8_0",
+     "hf": "ollama run hf.co/unsloth/Qwen3.5-2B-GGUF:Q4_K_M",
+     "any_quant": "ollama run hf.co/unsloth/Qwen3.5-2B-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": "qwen/qwen3.5-2b",
+     "search": "lmstudio-community/Qwen3.5-2B-GGUF",
+     "quant": "Q4_K_M",
+     "mlx": "lmstudio-community/Qwen3.5-2B-MLX-4bit",
+     "cli": "lms get qwen/qwen3.5-2b"
+    },
+    "llamacpp": {
+     "hf": "unsloth/Qwen3.5-2B-GGUF:Q4_K_M",
+     "cmd": "llama-server -hf unsloth/Qwen3.5-2B-GGUF:Q4_K_M --jinja",
+     "any_quant": "unsloth/Qwen3.5-2B-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "lmstudio-community/Qwen3.5-2B-MLX-4bit",
+     "cmd": "mlx_lm.chat --model lmstudio-community/Qwen3.5-2B-MLX-4bit"
+    }
+   },
+   "model": {
+    "id": "Qwen/Qwen3.5-2B",
+    "params_total": 2274069824,
+    "num_hidden_layers": 24,
+    "hidden_size": 2048,
+    "num_attention_heads": 8,
+    "num_key_value_heads": 2,
+    "head_dim": 256,
+    "vocab_size": 248320,
+    "sliding_window": null,
+    "swa_layers": 0,
+    "linear_layers": 18,
+    "tie_word_embeddings": true,
+    "num_experts": null,
+    "num_experts_per_tok": null,
+    "moe_intermediate_size": null,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
+    "max_context": 262144,
+    "vision": true,
+    "mmproj_bytes": 668227264,
+    "reasoning": true,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "BF16",
+      "label": "BF16",
+      "bytes": 3775709216,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_NL",
+      "label": "IQ4_NL",
+      "bytes": 1213300992,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_XS",
+      "label": "IQ4_XS",
+      "bytes": 1172996352,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_M",
+      "label": "Q3_K_M",
+      "bytes": 1107149056,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_S",
+      "label": "Q3_K_S",
+      "bytes": 1030947072,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_0",
+      "label": "Q4_0",
+      "bytes": 1214873856,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_1",
+      "label": "Q4_1",
+      "bytes": 1293517056,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "Q4_K_M",
+      "bytes": 1280835840,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "Q4_K_S",
+      "bytes": 1217757440,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "Q5_K_M",
+      "bytes": 1435238656,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "Q5_K_S",
+      "bytes": 1384546560,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "Q6_K",
+      "bytes": 1574961408,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 2012012800,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_M",
+      "label": "UD-IQ2_M",
+      "bytes": 859857152,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_XXS",
+      "label": "UD-IQ2_XXS",
+      "bytes": 768270592,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_XXS",
+      "label": "UD-IQ3_XXS",
+      "bytes": 931823872,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_XL",
+      "label": "UD-Q2_K_XL",
+      "bytes": 966533376,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_XL",
+      "label": "UD-Q3_K_XL",
+      "bytes": 1159274752,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_XL",
+      "label": "UD-Q4_K_XL",
+      "bytes": 1339752704,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_XL",
+      "label": "UD-Q5_K_XL",
+      "bytes": 1466687744,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_XL",
+      "label": "UD-Q6_K_XL",
+      "bytes": 1864483072,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_XL",
+      "label": "UD-Q8_K_XL",
+      "bytes": 2834940160,
+      "repo": "unsloth/Qwen3.5-2B-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 1722271715,
+      "repo": "lmstudio-community/Qwen3.5-2B-MLX-4bit"
+     }
+    ]
+   }
+  },
+  {
+   "id": "Qwen/Qwen3.5-9B",
+   "name": "Qwen3.5 9B",
+   "tier": "small",
+   "uses": [
+    "chat",
+    "coding",
+    "reasoning",
+    "vision",
+    "agents"
+   ],
+   "primary_for": [
+    {
+     "tier": "small",
+     "use": "chat"
+    },
+    {
+     "tier": "small",
+     "use": "coding"
+    },
+    {
+     "tier": "small",
+     "use": "reasoning"
+    },
+    {
+     "tier": "small",
+     "use": "agents"
+    }
+   ],
+   "why": "The most-downloaded small model of the year: a clear step up from 4B in every task, and still fits an 8 GB graphics card.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/Qwen/Qwen3.5-9B"
+   },
+   "gated": false,
+   "released": "2026-02-27",
+   "params": 9653104368,
+   "active": null,
+   "context": 262144,
+   "vision": true,
+   "reasoning": true,
+   "default_quant": "Q4_K_M",
+   "default_bytes": 5680522464,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": null,
+    "8": "Q4_K_M",
+    "12": "Q8_0",
+    "16": "Q8_0",
+    "24": "Q8_0",
+    "32": "Q8_0",
+    "48": "Q8_0",
+    "64": "Q8_0",
+    "96": "Q8_0",
+    "128": "Q8_0"
+   },
+   "run": {
+    "ollama": {
+     "pull": "ollama run qwen3.5:9b",
+     "tag": "qwen3.5:9b",
+     "q8_tag": "qwen3.5:9b-q8_0",
+     "hf": "ollama run hf.co/unsloth/Qwen3.5-9B-GGUF:Q4_K_M",
+     "any_quant": "ollama run hf.co/unsloth/Qwen3.5-9B-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": "qwen/qwen3.5-9b",
+     "search": "lmstudio-community/Qwen3.5-9B-GGUF",
+     "quant": "Q4_K_M",
+     "mlx": "lmstudio-community/Qwen3.5-9B-MLX-4bit",
+     "cli": "lms get qwen/qwen3.5-9b"
+    },
+    "llamacpp": {
+     "hf": "unsloth/Qwen3.5-9B-GGUF:Q4_K_M",
+     "cmd": "llama-server -hf unsloth/Qwen3.5-9B-GGUF:Q4_K_M --jinja",
+     "any_quant": "unsloth/Qwen3.5-9B-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "lmstudio-community/Qwen3.5-9B-MLX-4bit",
+     "cmd": "mlx_lm.chat --model lmstudio-community/Qwen3.5-9B-MLX-4bit"
+    }
+   },
+   "model": {
+    "id": "Qwen/Qwen3.5-9B",
+    "params_total": 9653104368,
+    "num_hidden_layers": 32,
+    "hidden_size": 4096,
+    "num_attention_heads": 16,
+    "num_key_value_heads": 4,
+    "head_dim": 256,
+    "vocab_size": 248320,
+    "sliding_window": null,
+    "swa_layers": 0,
+    "linear_layers": 24,
+    "tie_word_embeddings": false,
+    "num_experts": null,
+    "num_experts_per_tok": null,
+    "moe_intermediate_size": null,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
+    "max_context": 262144,
+    "vision": true,
+    "mmproj_bytes": 918166080,
+    "reasoning": true,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "BF16",
+      "label": "BF16",
+      "bytes": 17920697312,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_NL",
+      "label": "IQ4_NL",
+      "bytes": 5371028704,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_XS",
+      "label": "IQ4_XS",
+      "bytes": 5168653536,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_M",
+      "label": "Q3_K_M",
+      "bytes": 4673643744,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_S",
+      "label": "Q3_K_S",
+      "bytes": 4316865760,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_0",
+      "label": "Q4_0",
+      "bytes": 5379417312,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_1",
+      "label": "Q4_1",
+      "bytes": 5837251808,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "Q4_K_M",
+      "bytes": 5680522464,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "Q4_K_S",
+      "bytes": 5394097376,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "Q5_K_M",
+      "bytes": 6577841376,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "Q5_K_S",
+      "bytes": 6361146592,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "Q6_K",
+      "bytes": 7458301152,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 9527502048,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_M",
+      "label": "UD-IQ2_M",
+      "bytes": 3649365216,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_XXS",
+      "label": "UD-IQ2_XXS",
+      "bytes": 3190613216,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_XXS",
+      "label": "UD-IQ3_XXS",
+      "bytes": 4016235744,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_XL",
+      "label": "UD-Q2_K_XL",
+      "bytes": 4121781472,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_XL",
+      "label": "UD-Q3_K_XL",
+      "bytes": 5053834464,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_XL",
+      "label": "UD-Q4_K_XL",
+      "bytes": 5966095584,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_XL",
+      "label": "UD-Q5_K_XL",
+      "bytes": 6743680224,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_XL",
+      "label": "UD-Q6_K_XL",
+      "bytes": 8756929760,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_XL",
+      "label": "UD-Q8_K_XL",
+      "bytes": 12974040288,
+      "repo": "unsloth/Qwen3.5-9B-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 5950221142,
+      "repo": "lmstudio-community/Qwen3.5-9B-MLX-4bit"
+     }
+    ]
+   }
+  },
+  {
+   "id": "google/gemma-4-E4B-it",
+   "name": "Gemma 4 E4B",
+   "tier": "small",
+   "uses": [
+    "chat",
+    "vision"
+   ],
+   "primary_for": [
+    {
+     "tier": "small",
+     "use": "vision"
+    }
+   ],
+   "why": "Warm, well-written answers in many languages, good with photos and documents, and quick on laptops and handhelds.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/google/gemma-4-E4B-it"
+   },
+   "gated": false,
+   "released": "2026-03-02",
+   "params": 7996156490,
+   "active": null,
+   "context": 131072,
+   "vision": true,
+   "reasoning": false,
+   "default_quant": "Q4_K_M",
+   "default_bytes": 4977171584,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": "Q3_K_M",
+    "8": "Q5_K_M",
+    "12": "Q8_0",
+    "16": "Q8_0",
+    "24": "Q8_0",
+    "32": "Q8_0",
+    "48": "Q8_0",
+    "64": "Q8_0",
+    "96": "Q8_0",
+    "128": "Q8_0"
+   },
+   "run": {
+    "ollama": {
+     "pull": "ollama run gemma4:e4b",
+     "tag": "gemma4:e4b",
+     "q8_tag": "gemma4:e4b-it-q8_0",
+     "hf": "ollama run hf.co/unsloth/gemma-4-E4B-it-GGUF:Q4_K_M",
+     "any_quant": "ollama run hf.co/unsloth/gemma-4-E4B-it-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": "google/gemma-4-e4b",
+     "search": "lmstudio-community/gemma-4-E4B-it-GGUF",
+     "quant": "Q4_K_M",
+     "mlx": "lmstudio-community/gemma-4-E4B-it-MLX-4bit",
+     "cli": "lms get google/gemma-4-e4b"
+    },
+    "llamacpp": {
+     "hf": "unsloth/gemma-4-E4B-it-GGUF:Q4_K_M",
+     "cmd": "llama-server -hf unsloth/gemma-4-E4B-it-GGUF:Q4_K_M --jinja",
+     "any_quant": "unsloth/gemma-4-E4B-it-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "lmstudio-community/gemma-4-E4B-it-MLX-4bit",
+     "cmd": "mlx_lm.chat --model lmstudio-community/gemma-4-E4B-it-MLX-4bit"
+    }
+   },
+   "model": {
+    "id": "google/gemma-4-E4B-it",
+    "params_total": 7996156490,
+    "num_hidden_layers": 42,
+    "hidden_size": 2560,
+    "num_attention_heads": 8,
+    "num_key_value_heads": 2,
+    "head_dim": 256,
+    "vocab_size": 262144,
+    "sliding_window": 512,
+    "swa_layers": 35,
+    "linear_layers": 0,
+    "tie_word_embeddings": true,
+    "num_experts": null,
+    "num_experts_per_tok": null,
+    "moe_intermediate_size": null,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
+    "max_context": 131072,
+    "vision": true,
+    "mmproj_bytes": 990372672,
+    "reasoning": false,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "BF16",
+      "label": "BF16",
+      "bytes": 15053097856,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_NL",
+      "label": "IQ4_NL",
+      "bytes": 4835839104,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_XS",
+      "label": "IQ4_XS",
+      "bytes": 4715416704,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_M",
+      "label": "Q3_K_M",
+      "bytes": 4058137728,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_S",
+      "label": "Q3_K_S",
+      "bytes": 3862379648,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_0",
+      "label": "Q4_0",
+      "bytes": 4836002944,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_1",
+      "label": "Q4_1",
+      "bytes": 5074390144,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "Q4_K_M",
+      "bytes": 4977171584,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "Q4_K_S",
+      "bytes": 4844850304,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "Q5_K_M",
+      "bytes": 5481798784,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "Q5_K_S",
+      "bytes": 5404855424,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "Q6_K",
+      "bytes": 7074929792,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 8192953472,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_M",
+      "label": "UD-IQ2_M",
+      "bytes": 3545083008,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_XXS",
+      "label": "UD-IQ3_XXS",
+      "bytes": 3717115008,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_XL",
+      "label": "UD-Q2_K_XL",
+      "bytes": 3757419648,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_XL",
+      "label": "UD-Q3_K_XL",
+      "bytes": 4588440704,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_XL",
+      "label": "UD-Q4_K_XL",
+      "bytes": 5126306944,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_XL",
+      "label": "UD-Q5_K_XL",
+      "bytes": 6656154752,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_XL",
+      "label": "UD-Q6_K_XL",
+      "bytes": 7457762432,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_XL",
+      "label": "UD-Q8_K_XL",
+      "bytes": 8711507072,
+      "repo": "unsloth/gemma-4-E4B-it-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 6829300498,
+      "repo": "lmstudio-community/gemma-4-E4B-it-MLX-4bit"
+     }
+    ]
+   }
+  },
+  {
+   "id": "google/gemma-4-12B-it",
+   "name": "Gemma 4 12B",
+   "tier": "small",
+   "uses": [
+    "chat",
+    "vision"
+   ],
+   "primary_for": [],
+   "why": "For 12 GB graphics cards and 16–24 GB Macs: noticeably better writing and image understanding than E4B.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/google/gemma-4-12B-it"
+   },
+   "gated": false,
+   "released": "2026-05-23",
+   "params": 11959730224,
+   "active": null,
+   "context": 262144,
+   "vision": true,
+   "reasoning": false,
+   "default_quant": "Q4_K_M",
+   "default_bytes": 7121861440,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": null,
+    "8": null,
+    "12": "Q5_K_M",
+    "16": "Q6_K",
+    "24": "Q6_K",
+    "32": "Q6_K",
+    "48": "Q6_K",
+    "64": "Q6_K",
+    "96": "Q6_K",
+    "128": "Q6_K"
+   },
+   "run": {
+    "ollama": {
+     "pull": "ollama run gemma4:12b",
+     "tag": "gemma4:12b",
+     "q8_tag": "gemma4:12b-it-q8_0",
+     "hf": "ollama run hf.co/unsloth/gemma-4-12b-it-GGUF:Q4_K_M",
+     "any_quant": "ollama run hf.co/unsloth/gemma-4-12b-it-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": "google/gemma-4-12b",
+     "search": "lmstudio-community/gemma-4-12B-it-GGUF",
+     "quant": "Q4_K_M",
+     "mlx": "lmstudio-community/gemma-4-12B-it-MLX-4bit",
+     "cli": "lms get google/gemma-4-12b"
+    },
+    "llamacpp": {
+     "hf": "unsloth/gemma-4-12b-it-GGUF:Q4_K_M",
+     "cmd": "llama-server -hf unsloth/gemma-4-12b-it-GGUF:Q4_K_M --jinja",
+     "any_quant": "unsloth/gemma-4-12b-it-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "lmstudio-community/gemma-4-12B-it-MLX-4bit",
+     "cmd": "mlx_lm.chat --model lmstudio-community/gemma-4-12B-it-MLX-4bit"
+    }
+   },
+   "model": {
+    "id": "google/gemma-4-12B-it",
+    "params_total": 11959730224,
     "num_hidden_layers": 48,
     "hidden_size": 3840,
     "num_attention_heads": 16,
     "num_key_value_heads": 8,
     "head_dim": 256,
-    "vocab_size": 262208,
-    "tie_word_embeddings": true,
-    "max_context": 131072,
-    "vision": true,
-    "reasoning": false,
+    "vocab_size": 262144,
     "sliding_window": 1024,
-    "sliding_window_pattern": 6
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "ggml-org/gemma-3-12b-it-GGUF",
-     "bytes": 6000000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "ggml-org/gemma-3-12b-it-GGUF",
-     "bytes": 8100000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "ggml-org/gemma-3-12b-it-GGUF",
-     "bytes": 12500000000
-    }
-   ]
+    "swa_layers": 40,
+    "linear_layers": 0,
+    "tie_word_embeddings": true,
+    "num_experts": null,
+    "num_experts_per_tok": null,
+    "moe_intermediate_size": null,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
+    "max_context": 262144,
+    "vision": true,
+    "mmproj_bytes": 175115840,
+    "reasoning": false,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "BF16",
+      "label": "BF16",
+      "bytes": 23832066656,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_NL",
+      "label": "IQ4_NL",
+      "bytes": 6716357440,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_XS",
+      "label": "IQ4_XS",
+      "bytes": 6375734080,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_M",
+      "label": "Q3_K_M",
+      "bytes": 5693872960,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_S",
+      "label": "Q3_K_S",
+      "bytes": 5135014720,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_0",
+      "label": "Q4_0",
+      "bytes": 6738475840,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_1",
+      "label": "Q4_1",
+      "bytes": 7397604160,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "Q4_K_M",
+      "bytes": 7121861440,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "Q4_K_S",
+      "bytes": 6764526400,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "Q5_K_M",
+      "bytes": 8413576000,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "Q5_K_S",
+      "bytes": 8204680000,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "Q6_K",
+      "bytes": 9786022720,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 12669647680,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_M",
+      "label": "UD-IQ2_M",
+      "bytes": 4213353280,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_XXS",
+      "label": "UD-IQ3_XXS",
+      "bytes": 4639716160,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_XL",
+      "label": "UD-Q2_K_XL",
+      "bytes": 4661419840,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_XL",
+      "label": "UD-Q3_K_XL",
+      "bytes": 6022684480,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_XL",
+      "label": "UD-Q4_K_XL",
+      "bytes": 7366423360,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_XL",
+      "label": "UD-Q5_K_XL",
+      "bytes": 8606021440,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_XL",
+      "label": "UD-Q6_K_XL",
+      "bytes": 10685012800,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_XL",
+      "label": "UD-Q8_K_XL",
+      "bytes": 13637327680,
+      "repo": "unsloth/gemma-4-12b-it-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 6741039479,
+      "repo": "lmstudio-community/gemma-4-12B-it-MLX-4bit"
+     }
+    ]
+   }
   },
   {
-   "id": "qwen3-14b",
-   "hf_id": "Qwen/Qwen3-14B",
-   "name": "Qwen3 14B",
-   "family": "Qwen",
-   "tasks": [
+   "id": "Qwen/Qwen3.6-35B-A3B",
+   "name": "Qwen3.6 35B-A3B",
+   "tier": "medium",
+   "uses": [
     "chat",
-    "code",
-    "write",
-    "reason",
+    "coding",
+    "reasoning",
+    "vision",
     "agents"
    ],
-   "score": 66,
-   "license": "Apache 2.0",
-   "gated": false,
-   "blurb": "A noticeable step up from the 8B models, if you have the room.",
-   "run": {
-    "ollama": "qwen3:14b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Qwen3 14B",
-    "mlx": "mlx-community/Qwen3-14B-4bit"
-   },
-   "config": {
-    "params_total": 14800000000.0,
-    "num_hidden_layers": 40,
-    "hidden_size": 5120,
-    "num_attention_heads": 40,
-    "num_key_value_heads": 8,
-    "head_dim": 128,
-    "vocab_size": 151936,
-    "tie_word_embeddings": false,
-    "max_context": 32768,
-    "vision": false,
-    "reasoning": true
-   },
-   "quants": [
+   "primary_for": [
     {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "unsloth/Qwen3-14B-GGUF",
-     "bytes": 7320000000
+     "tier": "medium",
+     "use": "chat"
     },
     {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "unsloth/Qwen3-14B-GGUF",
-     "bytes": 9000000000
+     "tier": "medium",
+     "use": "agents"
     },
     {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "unsloth/Qwen3-14B-GGUF",
-     "bytes": 15700000000
+     "tier": "medium",
+     "use": "vision"
     }
-   ]
-  },
-  {
-   "id": "phi-4",
-   "hf_id": "microsoft/phi-4",
-   "name": "Phi-4 14B",
-   "family": "Phi",
-   "tasks": [
-    "reason",
-    "chat"
    ],
-   "score": 60,
-   "license": "MIT",
+   "why": "A mixture-of-experts model: the knowledge of a 35B model at the speed of a 3B one. Fast even when part of it sits in system RAM.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B"
+   },
    "gated": false,
-   "blurb": "Strong at maths and step-by-step problems for its size.",
+   "released": "2026-04-15",
+   "params": 35951822704,
+   "active": 4237641584,
+   "context": 262144,
+   "vision": true,
+   "reasoning": true,
+   "default_quant": "Q4_K_M",
+   "default_bytes": 22134528992,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": null,
+    "8": null,
+    "12": null,
+    "16": null,
+    "24": "IQ4_XS",
+    "32": "Q5_K_M",
+    "48": "Q6_K",
+    "64": "Q6_K",
+    "96": "Q6_K",
+    "128": "Q6_K"
+   },
    "run": {
-    "ollama": "phi4",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Phi 4",
-    "mlx": "mlx-community/phi-4-4bit"
-   },
-   "config": {
-    "params_total": 14700000000.0,
-    "num_hidden_layers": 40,
-    "hidden_size": 5120,
-    "num_attention_heads": 40,
-    "num_key_value_heads": 10,
-    "head_dim": 128,
-    "vocab_size": 100352,
-    "tie_word_embeddings": false,
-    "max_context": 16384,
-    "vision": false,
-    "reasoning": false
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "bartowski/phi-4-GGUF",
-     "bytes": 9050000000
+    "ollama": {
+     "pull": "ollama run qwen3.6:35b",
+     "tag": "qwen3.6:35b",
+     "q8_tag": "qwen3.6:35b-a3b-q8_0",
+     "hf": "ollama run hf.co/unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M",
+     "any_quant": "ollama run hf.co/unsloth/Qwen3.6-35B-A3B-GGUF:{LABEL}"
     },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "bartowski/phi-4-GGUF",
-     "bytes": 15600000000
+    "lmstudio": {
+     "catalog": "qwen/qwen3.6-35b-a3b",
+     "search": "lmstudio-community/Qwen3.6-35B-A3B-GGUF",
+     "quant": "Q4_K_M",
+     "mlx": "lmstudio-community/Qwen3.6-35B-A3B-MLX-4bit",
+     "cli": "lms get qwen/qwen3.6-35b-a3b"
+    },
+    "llamacpp": {
+     "hf": "ggml-org/Qwen3.6-35B-A3B-GGUF:Q4_K_M",
+     "cmd": "llama-server -hf ggml-org/Qwen3.6-35B-A3B-GGUF:Q4_K_M --jinja",
+     "any_quant": "unsloth/Qwen3.6-35B-A3B-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "lmstudio-community/Qwen3.6-35B-A3B-MLX-4bit",
+     "cmd": "mlx_lm.chat --model lmstudio-community/Qwen3.6-35B-A3B-MLX-4bit"
     }
-   ]
+   },
+   "model": {
+    "id": "Qwen/Qwen3.6-35B-A3B",
+    "params_total": 35951822704,
+    "num_hidden_layers": 40,
+    "hidden_size": 2048,
+    "num_attention_heads": 16,
+    "num_key_value_heads": 2,
+    "head_dim": 256,
+    "vocab_size": 248320,
+    "sliding_window": null,
+    "swa_layers": 0,
+    "linear_layers": 30,
+    "tie_word_embeddings": false,
+    "num_experts": 256,
+    "num_experts_per_tok": 8,
+    "moe_intermediate_size": 512,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
+    "max_context": 262144,
+    "vision": true,
+    "mmproj_bytes": 899283680,
+    "reasoning": true,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "BF16",
+      "label": "BF16",
+      "bytes": 69376638176,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "MXFP4",
+      "label": "MXFP4_MOE",
+      "bytes": 21706144736,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 36903140320,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ1_M",
+      "label": "UD-IQ1_M",
+      "bytes": 10047749088,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_M",
+      "label": "UD-IQ2_M",
+      "bytes": 11522702304,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_XXS",
+      "label": "UD-IQ2_XXS",
+      "bytes": 10756586464,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_S",
+      "label": "UD-IQ3_S",
+      "bytes": 13676723168,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_XXS",
+      "label": "UD-IQ3_XXS",
+      "bytes": 13211155424,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_NL",
+      "label": "UD-IQ4_NL",
+      "bytes": 18040888288,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_NL_XL",
+      "label": "UD-IQ4_NL_XL",
+      "bytes": 19500506080,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_XS",
+      "label": "UD-IQ4_XS",
+      "bytes": 17730509792,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_XL",
+      "label": "UD-Q2_K_XL",
+      "bytes": 12290628576,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_M",
+      "label": "UD-Q3_K_M",
+      "bytes": 16600710112,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_S",
+      "label": "UD-Q3_K_S",
+      "bytes": 15359196128,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_XL",
+      "label": "UD-Q3_K_XL",
+      "bytes": 16845511648,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "UD-Q4_K_M",
+      "bytes": 22134528992,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "UD-Q4_K_S",
+      "bytes": 20893015008,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_XL",
+      "label": "UD-Q4_K_XL",
+      "bytes": 22360456160,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "UD-Q5_K_M",
+      "bytes": 26456194016,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "UD-Q5_K_S",
+      "bytes": 24942050272,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_XL",
+      "label": "UD-Q5_K_XL",
+      "bytes": 26592508896,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "UD-Q6_K",
+      "bytes": 29308320736,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_XL",
+      "label": "UD-Q6_K_XL",
+      "bytes": 31843777504,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_XL",
+      "label": "UD-Q8_K_XL",
+      "bytes": 38451182560,
+      "repo": "unsloth/Qwen3.6-35B-A3B-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 20402204271,
+      "repo": "lmstudio-community/Qwen3.6-35B-A3B-MLX-4bit"
+     }
+    ]
+   }
   },
   {
-   "id": "gpt-oss-20b",
-   "hf_id": "openai/gpt-oss-20b",
+   "id": "Qwen/Qwen3.8-27B",
+   "name": "Qwen3.8 27B",
+   "tier": "medium",
+   "uses": [
+    "chat",
+    "coding",
+    "reasoning",
+    "vision",
+    "agents"
+   ],
+   "primary_for": [
+    {
+     "tier": "medium",
+     "use": "coding"
+    },
+    {
+     "tier": "medium",
+     "use": "reasoning"
+    }
+   ],
+   "why": "The best model that fits a 24 GB graphics card: a dense 27B that is especially strong at code and careful reasoning.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+   },
+   "gated": false,
+   "released": "2026-08-05",
+   "params": 27781427952,
+   "active": null,
+   "context": 262144,
+   "vision": true,
+   "reasoning": true,
+   "default_quant": "Q4_K_M",
+   "default_bytes": 16564259744,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": null,
+    "8": null,
+    "12": null,
+    "16": "IQ4_XS",
+    "24": "Q4_K_M",
+    "32": "Q4_K_M",
+    "48": "Q4_K_M",
+    "64": "Q4_K_M",
+    "96": "Q4_K_M",
+    "128": "Q4_K_M"
+   },
+   "run": {
+    "ollama": {
+     "pull": "ollama run qwen3.8:27b",
+     "tag": "qwen3.8:27b",
+     "q8_tag": "qwen3.8:27b-q8_0",
+     "hf": "ollama run hf.co/unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_M",
+     "any_quant": "ollama run hf.co/unsloth/Qwen3.8-27B-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": "qwen/qwen3.8-27b",
+     "search": "lmstudio-community/Qwen3.8-27B-GGUF",
+     "quant": "Q4_K_M",
+     "mlx": "lmstudio-community/Qwen3.8-27B-MLX-4bit",
+     "cli": "lms get qwen/qwen3.8-27b"
+    },
+    "llamacpp": {
+     "hf": "ggml-org/Qwen3.8-27B-GGUF:Q4_K_M",
+     "cmd": "llama-server -hf ggml-org/Qwen3.8-27B-GGUF:Q4_K_M --jinja",
+     "any_quant": "unsloth/Qwen3.8-27B-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "lmstudio-community/Qwen3.8-27B-MLX-4bit",
+     "cmd": "mlx_lm.chat --model lmstudio-community/Qwen3.8-27B-MLX-4bit"
+    }
+   },
+   "model": {
+    "id": "Qwen/Qwen3.8-27B",
+    "params_total": 27781427952,
+    "num_hidden_layers": 64,
+    "hidden_size": 5120,
+    "num_attention_heads": 24,
+    "num_key_value_heads": 4,
+    "head_dim": 256,
+    "vocab_size": 248320,
+    "sliding_window": null,
+    "swa_layers": 0,
+    "linear_layers": 48,
+    "tie_word_embeddings": false,
+    "num_experts": null,
+    "num_experts_per_tok": null,
+    "moe_intermediate_size": null,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
+    "max_context": 262144,
+    "vision": true,
+    "mmproj_bytes": 927607488,
+    "reasoning": true,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "BF16",
+      "label": "BF16",
+      "bytes": 54657735616,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_0",
+      "label": "Q4_0",
+      "bytes": 16056478688,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_1",
+      "label": "Q4_1",
+      "bytes": 17540705248,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 29047086048,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ1_M",
+      "label": "UD-IQ1_M",
+      "bytes": 6729166848,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ1_S",
+      "label": "UD-IQ1_S",
+      "bytes": 6192222208,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_S",
+      "label": "UD-IQ2_S",
+      "bytes": 8422719488,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_XS",
+      "label": "UD-IQ2_XS",
+      "bytes": 7625883648,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_XXS",
+      "label": "UD-IQ2_XXS",
+      "bytes": 7206043648,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_S",
+      "label": "UD-IQ3_S",
+      "bytes": 12040883104,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_XXS",
+      "label": "UD-IQ3_XXS",
+      "bytes": 10934860704,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_XS",
+      "label": "UD-IQ4_XS",
+      "bytes": 14352911264,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_XL",
+      "label": "UD-Q2_K_XL",
+      "bytes": 9948666784,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_XL",
+      "label": "UD-Q3_K_XL",
+      "bytes": 13146393504,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "UD-Q4_K_M",
+      "bytes": 16564259744,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "UD-Q4_K_S",
+      "bytes": 15358213024,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_XL",
+      "label": "UD-Q4_K_XL",
+      "bytes": 17659407264,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "UD-Q5_K_M",
+      "bytes": 19870878624,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "UD-Q5_K_S",
+      "bytes": 18764794784,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_XL",
+      "label": "UD-Q5_K_XL",
+      "bytes": 20976962464,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "UD-Q6_K",
+      "bytes": 21980441504,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_L",
+      "label": "UD-Q6_K_L",
+      "bytes": 24181549984,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_M",
+      "label": "UD-Q6_K_M",
+      "bytes": 23087180704,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_XL",
+      "label": "UD-Q6_K_XL",
+      "bytes": 25299061664,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_L",
+      "label": "UD-Q8_K_L",
+      "bytes": 28045695904,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_XL",
+      "label": "UD-Q8_K_XL",
+      "bytes": 31457991680,
+      "repo": "unsloth/Qwen3.8-27B-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 16054541599,
+      "repo": "lmstudio-community/Qwen3.8-27B-MLX-4bit"
+     }
+    ]
+   }
+  },
+  {
+   "id": "openai/gpt-oss-20b",
    "name": "gpt-oss 20B",
-   "family": "gpt-oss",
-   "tasks": [
+   "tier": "medium",
+   "uses": [
     "chat",
-    "code",
-    "reason",
-    "agents"
+    "reasoning",
+    "agents",
+    "coding"
    ],
-   "score": 70,
-   "license": "Apache 2.0",
-   "gated": false,
-   "blurb": "OpenAI's open model. Quick for its size because only part of it works on each word.",
-   "run": {
-    "ollama": "gpt-oss:20b",
-    "ollama_q": "MXFP4",
-    "lmstudio": "gpt-oss 20b",
-    "mlx": "mlx-community/gpt-oss-20b-MXFP4-Q8"
+   "primary_for": [],
+   "why": "OpenAI's open model: shows its reasoning, very good at tool use, and runs in about 13 GB, so a 16 GB card or Mac can hold it.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/openai/gpt-oss-20b"
    },
-   "config": {
-    "params_total": 20910000000.0,
+   "gated": false,
+   "released": "2025-08-04",
+   "params": 20914757184,
+   "active": 3614113344,
+   "context": 131072,
+   "vision": false,
+   "reasoning": true,
+   "default_quant": "MXFP4",
+   "default_bytes": 12109566624,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": null,
+    "8": null,
+    "12": null,
+    "16": "MXFP4",
+    "24": "MXFP4",
+    "32": "MXFP4",
+    "48": "MXFP4",
+    "64": "MXFP4",
+    "96": "MXFP4",
+    "128": "MXFP4"
+   },
+   "run": {
+    "ollama": {
+     "pull": "ollama run gpt-oss:20b",
+     "tag": "gpt-oss:20b",
+     "q8_tag": null,
+     "hf": "ollama run hf.co/ggml-org/gpt-oss-20b-GGUF:MXFP4",
+     "any_quant": "ollama run hf.co/ggml-org/gpt-oss-20b-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": "openai/gpt-oss-20b",
+     "search": "lmstudio-community/gpt-oss-20b-GGUF",
+     "quant": "MXFP4",
+     "mlx": "mlx-community/gpt-oss-20b-MXFP4-Q8",
+     "cli": "lms get openai/gpt-oss-20b"
+    },
+    "llamacpp": {
+     "hf": "ggml-org/gpt-oss-20b-GGUF:MXFP4",
+     "cmd": "llama-server -hf ggml-org/gpt-oss-20b-GGUF --jinja",
+     "any_quant": "ggml-org/gpt-oss-20b-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "mlx-community/gpt-oss-20b-MXFP4-Q8",
+     "cmd": "mlx_lm.chat --model mlx-community/gpt-oss-20b-MXFP4-Q8"
+    }
+   },
+   "model": {
+    "id": "openai/gpt-oss-20b",
+    "params_total": 20914757184,
     "num_hidden_layers": 24,
     "hidden_size": 2880,
     "num_attention_heads": 64,
     "num_key_value_heads": 8,
     "head_dim": 64,
     "vocab_size": 201088,
-    "tie_word_embeddings": false,
-    "max_context": 131072,
-    "vision": false,
-    "reasoning": true,
-    "params_active": 3610000000.0,
     "sliding_window": 128,
-    "sliding_window_pattern": 2,
+    "swa_layers": 12,
+    "linear_layers": 0,
+    "tie_word_embeddings": false,
     "num_experts": 32,
     "num_experts_per_tok": 4,
-    "moe_intermediate_size": 2880
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "MXFP4",
-     "label": "MXFP4",
-     "repo": "ggml-org/gpt-oss-20b-GGUF",
-     "bytes": 12100000000
-    }
-   ]
-  },
-  {
-   "id": "mistral-small-3.2",
-   "hf_id": "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
-   "name": "Mistral Small 3.2 24B",
-   "family": "Mistral",
-   "tasks": [
-    "chat",
-    "write",
-    "vision",
-    "agents"
-   ],
-   "score": 72,
-   "license": "Apache 2.0",
-   "gated": false,
-   "blurb": "A capable writer that follows instructions closely and can see images.",
-   "run": {
-    "ollama": "mistral-small3.2",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Mistral Small 3.2 24B Instruct",
-    "mlx": "mlx-community/Mistral-Small-3.2-24B-Instruct-2506-4bit"
-   },
-   "config": {
-    "params_total": 24000000000.0,
-    "num_hidden_layers": 40,
-    "hidden_size": 5120,
-    "num_attention_heads": 32,
-    "num_key_value_heads": 8,
-    "head_dim": 128,
-    "vocab_size": 131072,
-    "tie_word_embeddings": false,
+    "moe_intermediate_size": 2880,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
     "max_context": 131072,
-    "vision": true,
-    "reasoning": false
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF",
-     "bytes": 11500000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF",
-     "bytes": 14300000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF",
-     "bytes": 25100000000
-    }
-   ]
+    "vision": false,
+    "mmproj_bytes": null,
+    "reasoning": true,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "MXFP4",
+      "label": "MXFP4",
+      "bytes": 12109566624,
+      "repo": "ggml-org/gpt-oss-20b-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 12076207568,
+      "repo": "mlx-community/gpt-oss-20b-MXFP4-Q8"
+     }
+    ]
+   }
   },
   {
-   "id": "gemma-3-27b",
-   "hf_id": "google/gemma-3-27b-it",
-   "name": "Gemma 3 27B",
-   "family": "Gemma",
-   "tasks": [
+   "id": "google/gemma-4-26B-A4B-it",
+   "name": "Gemma 4 26B-A4B",
+   "tier": "medium",
+   "uses": [
     "chat",
-    "write",
     "vision"
    ],
-   "score": 76,
-   "license": "Gemma",
-   "gated": true,
-   "blurb": "Google's biggest open Gemma 3. A lovely writer, and it sees images.",
-   "run": {
-    "ollama": "gemma3:27b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Gemma 3 27B",
-    "mlx": "mlx-community/gemma-3-27b-it-4bit"
+   "primary_for": [],
+   "why": "Gemma's fast mixture-of-experts model: lovely writing and strong image understanding at the speed of a 4B model.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/google/gemma-4-26B-A4B-it"
    },
-   "config": {
-    "params_total": 27400000000.0,
-    "num_hidden_layers": 62,
-    "hidden_size": 5376,
-    "num_attention_heads": 32,
-    "num_key_value_heads": 16,
-    "head_dim": 128,
-    "vocab_size": 262208,
-    "tie_word_embeddings": true,
-    "max_context": 131072,
-    "vision": true,
-    "reasoning": false,
-    "sliding_window": 1024,
-    "sliding_window_pattern": 6
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "ggml-org/gemma-3-27b-it-GGUF",
-     "bytes": 13400000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "ggml-org/gemma-3-27b-it-GGUF",
-     "bytes": 16500000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "ggml-org/gemma-3-27b-it-GGUF",
-     "bytes": 28700000000
-    }
-   ]
-  },
-  {
-   "id": "qwen3-30b-a3b",
-   "hf_id": "Qwen/Qwen3-30B-A3B",
-   "name": "Qwen3 30B-A3B",
-   "family": "Qwen",
-   "tasks": [
-    "chat",
-    "code",
-    "write",
-    "reason",
-    "agents"
-   ],
-   "score": 78,
-   "license": "Apache 2.0",
    "gated": false,
-   "blurb": "Big-model brains at small-model speed. Only a tenth of it works on each word.",
-   "run": {
-    "ollama": "qwen3:30b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Qwen3 30B A3B",
-    "mlx": "mlx-community/Qwen3-30B-A3B-4bit"
+   "released": "2026-03-11",
+   "params": 25805936206,
+   "active": 4395325006,
+   "context": 262144,
+   "vision": true,
+   "reasoning": false,
+   "default_quant": "Q4_K_M",
+   "default_bytes": 16947541728,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": null,
+    "8": null,
+    "12": null,
+    "16": "Q3_K_M",
+    "24": "MXFP4",
+    "32": "Q6_K",
+    "48": "Q6_K",
+    "64": "Q6_K",
+    "96": "Q6_K",
+    "128": "Q6_K"
    },
-   "config": {
-    "params_total": 30530000000.0,
-    "num_hidden_layers": 48,
-    "hidden_size": 2048,
-    "num_attention_heads": 32,
-    "num_key_value_heads": 4,
-    "head_dim": 128,
-    "vocab_size": 151936,
-    "tie_word_embeddings": false,
-    "max_context": 131072,
-    "vision": false,
-    "reasoning": true,
-    "params_active": 3350000000.0,
+   "run": {
+    "ollama": {
+     "pull": "ollama run gemma4:26b",
+     "tag": "gemma4:26b",
+     "q8_tag": "gemma4:26b-a4b-it-q8_0",
+     "hf": "ollama run hf.co/unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_M",
+     "any_quant": "ollama run hf.co/unsloth/gemma-4-26B-A4B-it-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": "google/gemma-4-26b-a4b",
+     "search": "lmstudio-community/gemma-4-26B-A4B-it-GGUF",
+     "quant": "Q4_K_M",
+     "mlx": "lmstudio-community/gemma-4-26B-A4B-it-MLX-4bit",
+     "cli": "lms get google/gemma-4-26b-a4b"
+    },
+    "llamacpp": {
+     "hf": "unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_M",
+     "cmd": "llama-server -hf unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_M --jinja",
+     "any_quant": "unsloth/gemma-4-26B-A4B-it-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "lmstudio-community/gemma-4-26B-A4B-it-MLX-4bit",
+     "cmd": "mlx_lm.chat --model lmstudio-community/gemma-4-26B-A4B-it-MLX-4bit"
+    }
+   },
+   "model": {
+    "id": "google/gemma-4-26B-A4B-it",
+    "params_total": 25805936206,
+    "num_hidden_layers": 30,
+    "hidden_size": 2816,
+    "num_attention_heads": 16,
+    "num_key_value_heads": 8,
+    "head_dim": 256,
+    "vocab_size": 262144,
+    "sliding_window": 1024,
+    "swa_layers": 25,
+    "linear_layers": 0,
+    "tie_word_embeddings": true,
     "num_experts": 128,
     "num_experts_per_tok": 8,
-    "moe_intermediate_size": 768
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "unsloth/Qwen3-30B-A3B-GGUF",
-     "bytes": 14700000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "unsloth/Qwen3-30B-A3B-GGUF",
-     "bytes": 18600000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "unsloth/Qwen3-30B-A3B-GGUF",
-     "bytes": 32500000000
-    }
-   ]
+    "moe_intermediate_size": 704,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
+    "max_context": 262144,
+    "vision": true,
+    "mmproj_bytes": 1193058784,
+    "reasoning": false,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "BF16",
+      "label": "BF16",
+      "bytes": 50505137824,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "MXFP4",
+      "label": "MXFP4_MOE",
+      "bytes": 16551048928,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 26859861728,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_M",
+      "label": "UD-IQ2_M",
+      "bytes": 10014755296,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_XXS",
+      "label": "UD-IQ2_XXS",
+      "bytes": 9922480608,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_S",
+      "label": "UD-IQ3_S",
+      "bytes": 11289671136,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_XXS",
+      "label": "UD-IQ3_XXS",
+      "bytes": 11416548832,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_NL",
+      "label": "UD-IQ4_NL",
+      "bytes": 13613037280,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_XS",
+      "label": "UD-IQ4_XS",
+      "bytes": 13597177568,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_XL",
+      "label": "UD-Q2_K_XL",
+      "bytes": 10546934240,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_M",
+      "label": "UD-Q3_K_M",
+      "bytes": 12728497888,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_XL",
+      "label": "UD-Q3_K_XL",
+      "bytes": 12907280096,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "UD-Q4_K_M",
+      "bytes": 16947541728,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "UD-Q4_K_S",
+      "bytes": 16487610080,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_XL",
+      "label": "UD-Q4_K_XL",
+      "bytes": 17010980576,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "UD-Q5_K_M",
+      "bytes": 21150365408,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "UD-Q5_K_S",
+      "bytes": 18850707168,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_XL",
+      "label": "UD-Q5_K_XL",
+      "bytes": 21217769184,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "UD-Q6_K",
+      "bytes": 23172478688,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_XL",
+      "label": "UD-Q6_K_XL",
+      "bytes": 23295391456,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_XL",
+      "label": "UD-Q8_K_XL",
+      "bytes": 27636232928,
+      "repo": "unsloth/gemma-4-26B-A4B-it-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 15608838574,
+      "repo": "lmstudio-community/gemma-4-26B-A4B-it-MLX-4bit"
+     }
+    ]
+   }
   },
   {
-   "id": "qwen3-coder-30b",
-   "hf_id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+   "id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
    "name": "Qwen3 Coder 30B-A3B",
-   "family": "Qwen",
-   "tasks": [
-    "code",
+   "tier": "medium",
+   "uses": [
+    "coding",
     "agents"
    ],
-   "score": 80,
-   "license": "Apache 2.0",
-   "gated": false,
-   "blurb": "A strong coding agent that's fast because it's a mixture of experts.",
-   "run": {
-    "ollama": "qwen3-coder:30b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Qwen3 Coder 30B A3B Instruct",
-    "mlx": "mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit"
+   "primary_for": [],
+   "why": "A coding specialist that every editor plug-in knows how to talk to; fast because only 3B of its 30B are active per word.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct"
    },
-   "config": {
-    "params_total": 30530000000.0,
+   "gated": false,
+   "released": "2025-07-31",
+   "params": 30532122624,
+   "active": 3041867776,
+   "context": 262144,
+   "vision": false,
+   "reasoning": false,
+   "default_quant": "Q4_K_M",
+   "default_bytes": 18556689568,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": null,
+    "8": null,
+    "12": null,
+    "16": null,
+    "24": "Q4_K_M",
+    "32": "Q6_K",
+    "48": "Q6_K",
+    "64": "Q6_K",
+    "96": "Q6_K",
+    "128": "Q6_K"
+   },
+   "run": {
+    "ollama": {
+     "pull": "ollama run qwen3-coder:30b",
+     "tag": "qwen3-coder:30b",
+     "q8_tag": "qwen3-coder:30b-a3b-q8_0",
+     "hf": "ollama run hf.co/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q4_K_M",
+     "any_quant": "ollama run hf.co/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": "qwen/qwen3-coder-30b",
+     "search": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+     "quant": "Q4_K_M",
+     "mlx": "lmstudio-community/Qwen3-Coder-30B-A3B-Instruct-MLX-4bit",
+     "cli": "lms get qwen/qwen3-coder-30b"
+    },
+    "llamacpp": {
+     "hf": "ggml-org/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q4_K_M",
+     "cmd": "llama-server -hf ggml-org/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q4_K_M --jinja",
+     "any_quant": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "lmstudio-community/Qwen3-Coder-30B-A3B-Instruct-MLX-4bit",
+     "cmd": "mlx_lm.chat --model lmstudio-community/Qwen3-Coder-30B-A3B-Instruct-MLX-4bit"
+    }
+   },
+   "model": {
+    "id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+    "params_total": 30532122624,
     "num_hidden_layers": 48,
     "hidden_size": 2048,
     "num_attention_heads": 32,
     "num_key_value_heads": 4,
     "head_dim": 128,
     "vocab_size": 151936,
+    "sliding_window": null,
+    "swa_layers": null,
+    "linear_layers": null,
     "tie_word_embeddings": false,
+    "num_experts": 128,
+    "num_experts_per_tok": 8,
+    "moe_intermediate_size": 768,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
     "max_context": 262144,
     "vision": false,
+    "mmproj_bytes": null,
     "reasoning": false,
-    "params_active": 3350000000.0,
-    "num_experts": 128,
-    "num_experts_per_tok": 8,
-    "moe_intermediate_size": 768
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
-     "bytes": 14700000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
-     "bytes": 18600000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
-     "bytes": 32500000000
-    }
-   ]
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "BF16",
+      "label": "BF16",
+      "bytes": 61095806048,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_NL",
+      "label": "IQ4_NL",
+      "bytes": 17310784672,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_XS",
+      "label": "IQ4_XS",
+      "bytes": 16378076320,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K",
+      "label": "Q2_K",
+      "bytes": 11258612896,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_L",
+      "label": "Q2_K_L",
+      "bytes": 11331542176,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_M",
+      "label": "Q3_K_M",
+      "bytes": 14711850144,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_S",
+      "label": "Q3_K_S",
+      "bytes": 13292471456,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_0",
+      "label": "Q4_0",
+      "bytes": 17379990688,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_1",
+      "label": "Q4_1",
+      "bytes": 19192503456,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "Q4_K_M",
+      "bytes": 18556689568,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "Q4_K_S",
+      "bytes": 17456012448,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "Q5_K_M",
+      "bytes": 21725584544,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "Q5_K_S",
+      "bytes": 21080513696,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "Q6_K",
+      "bytes": 25092535456,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 32483935392,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ1_M",
+      "label": "UD-IQ1_M",
+      "bytes": 9627540640,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ1_S",
+      "label": "UD-IQ1_S",
+      "bytes": 8914328736,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_M",
+      "label": "UD-IQ2_M",
+      "bytes": 10837007520,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_XXS",
+      "label": "UD-IQ2_XXS",
+      "bytes": 10333691040,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_XXS",
+      "label": "UD-IQ3_XXS",
+      "bytes": 12848766112,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_XL",
+      "label": "UD-Q2_K_XL",
+      "bytes": 11788590240,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_XL",
+      "label": "UD-Q3_K_XL",
+      "bytes": 13806312608,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_XL",
+      "label": "UD-Q4_K_XL",
+      "bytes": 17665334432,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_XL",
+      "label": "UD-Q5_K_XL",
+      "bytes": 21740305568,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_XL",
+      "label": "UD-Q6_K_XL",
+      "bytes": 26340328608,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_XL",
+      "label": "UD-Q8_K_XL",
+      "bytes": 35989947552,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q1_0",
+      "label": "Q1_0",
+      "bytes": 8005213344,
+      "repo": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 17174780668,
+      "repo": "lmstudio-community/Qwen3-Coder-30B-A3B-Instruct-MLX-4bit"
+     }
+    ]
+   }
   },
   {
-   "id": "qwen3-32b",
-   "hf_id": "Qwen/Qwen3-32B",
-   "name": "Qwen3 32B",
-   "family": "Qwen",
-   "tasks": [
-    "chat",
-    "code",
-    "write",
-    "reason",
-    "agents"
-   ],
-   "score": 82,
-   "license": "Apache 2.0",
-   "gated": false,
-   "blurb": "The best dense model a 24 GB graphics card can hold. Slower, but deep.",
-   "run": {
-    "ollama": "qwen3:32b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Qwen3 32B",
-    "mlx": "mlx-community/Qwen3-32B-4bit"
-   },
-   "config": {
-    "params_total": 32800000000.0,
-    "num_hidden_layers": 64,
-    "hidden_size": 5120,
-    "num_attention_heads": 64,
-    "num_key_value_heads": 8,
-    "head_dim": 128,
-    "vocab_size": 151936,
-    "tie_word_embeddings": false,
-    "max_context": 32768,
-    "vision": false,
-    "reasoning": true
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "unsloth/Qwen3-32B-GGUF",
-     "bytes": 16000000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "unsloth/Qwen3-32B-GGUF",
-     "bytes": 19800000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "unsloth/Qwen3-32B-GGUF",
-     "bytes": 34800000000
-    }
-   ]
-  },
-  {
-   "id": "llama-3.3-70b",
-   "hf_id": "meta-llama/Llama-3.3-70B-Instruct",
-   "name": "Llama 3.3 70B",
-   "family": "Llama",
-   "tasks": [
-    "chat",
-    "write"
-   ],
-   "score": 84,
-   "license": "Llama 3.3 Community",
-   "gated": true,
-   "blurb": "A heavyweight writer. Needs a big Mac or a serious workstation.",
-   "run": {
-    "ollama": "llama3.3:70b",
-    "ollama_q": "Q4_K_M",
-    "lmstudio": "Llama 3.3 70B Instruct",
-    "mlx": "mlx-community/Llama-3.3-70B-Instruct-4bit"
-   },
-   "config": {
-    "params_total": 70600000000.0,
-    "num_hidden_layers": 80,
-    "hidden_size": 8192,
-    "num_attention_heads": 64,
-    "num_key_value_heads": 8,
-    "head_dim": 128,
-    "vocab_size": 128256,
-    "tie_word_embeddings": false,
-    "max_context": 131072,
-    "vision": false,
-    "reasoning": false
-   },
-   "quants": [
-    {
-     "format": "gguf",
-     "quant": "Q3_K_M",
-     "label": "Q3_K_M",
-     "repo": "bartowski/Llama-3.3-70B-Instruct-GGUF",
-     "bytes": 34300000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q4_K_M",
-     "label": "Q4_K_M",
-     "repo": "bartowski/Llama-3.3-70B-Instruct-GGUF",
-     "bytes": 42500000000
-    },
-    {
-     "format": "gguf",
-     "quant": "Q8_0",
-     "label": "Q8_0",
-     "repo": "bartowski/Llama-3.3-70B-Instruct-GGUF",
-     "bytes": 75000000000
-    }
-   ]
-  },
-  {
-   "id": "gpt-oss-120b",
-   "hf_id": "openai/gpt-oss-120b",
+   "id": "openai/gpt-oss-120b",
    "name": "gpt-oss 120B",
-   "family": "gpt-oss",
-   "tasks": [
+   "tier": "large",
+   "uses": [
     "chat",
-    "code",
-    "reason",
-    "agents"
+    "reasoning",
+    "agents",
+    "coding"
    ],
-   "score": 90,
-   "license": "Apache 2.0",
-   "gated": false,
-   "blurb": "Frontier-class reasoning at home, if you have about 64 GB to spare.",
-   "run": {
-    "ollama": "gpt-oss:120b",
-    "ollama_q": "MXFP4",
-    "lmstudio": "gpt-oss 120b",
-    "mlx": "mlx-community/gpt-oss-120b-MXFP4-Q8"
+   "primary_for": [
+    {
+     "tier": "large",
+     "use": "chat"
+    },
+    {
+     "tier": "large",
+     "use": "reasoning"
+    },
+    {
+     "tier": "large",
+     "use": "agents"
+    },
+    {
+     "tier": "large",
+     "use": "coding"
+    }
+   ],
+   "why": "Near the top of open models for reasoning and tool use, yet only 5B parameters work per word, so it is fast on a 64 GB+ Mac, a Strix Halo or a big graphics card with RAM.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/openai/gpt-oss-120b"
    },
-   "config": {
-    "params_total": 116830000000.0,
+   "gated": false,
+   "released": "2025-08-04",
+   "params": 116829156672,
+   "active": 5171418432,
+   "context": 131072,
+   "vision": false,
+   "reasoning": true,
+   "default_quant": "MXFP4",
+   "default_bytes": 63387346208,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": null,
+    "8": null,
+    "12": null,
+    "16": null,
+    "24": null,
+    "32": null,
+    "48": null,
+    "64": "MXFP4",
+    "96": "MXFP4",
+    "128": "MXFP4"
+   },
+   "run": {
+    "ollama": {
+     "pull": "ollama run gpt-oss:120b",
+     "tag": "gpt-oss:120b",
+     "q8_tag": null,
+     "hf": "ollama run hf.co/ggml-org/gpt-oss-120b-GGUF:MXFP4",
+     "any_quant": "ollama run hf.co/ggml-org/gpt-oss-120b-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": "openai/gpt-oss-120b",
+     "search": "lmstudio-community/gpt-oss-120b-GGUF",
+     "quant": "MXFP4",
+     "mlx": "mlx-community/gpt-oss-120b-MXFP4-Q8",
+     "cli": "lms get openai/gpt-oss-120b"
+    },
+    "llamacpp": {
+     "hf": "ggml-org/gpt-oss-120b-GGUF:MXFP4",
+     "cmd": "llama-server -hf ggml-org/gpt-oss-120b-GGUF --jinja",
+     "any_quant": "ggml-org/gpt-oss-120b-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "mlx-community/gpt-oss-120b-MXFP4-Q8",
+     "cmd": "mlx_lm.chat --model mlx-community/gpt-oss-120b-MXFP4-Q8"
+    }
+   },
+   "model": {
+    "id": "openai/gpt-oss-120b",
+    "params_total": 116829156672,
     "num_hidden_layers": 36,
     "hidden_size": 2880,
     "num_attention_heads": 64,
     "num_key_value_heads": 8,
     "head_dim": 64,
     "vocab_size": 201088,
-    "tie_word_embeddings": false,
-    "max_context": 131072,
-    "vision": false,
-    "reasoning": true,
-    "params_active": 5130000000.0,
     "sliding_window": 128,
-    "sliding_window_pattern": 2,
+    "swa_layers": 18,
+    "linear_layers": 0,
+    "tie_word_embeddings": false,
     "num_experts": 128,
     "num_experts_per_tok": 4,
-    "moe_intermediate_size": 2880
-   },
-   "quants": [
+    "moe_intermediate_size": 2880,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
+    "max_context": 131072,
+    "vision": false,
+    "mmproj_bytes": null,
+    "reasoning": true,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "MXFP4",
+      "label": "MXFP4",
+      "bytes": 63387346208,
+      "repo": "ggml-org/gpt-oss-120b-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 63386948506,
+      "repo": "mlx-community/gpt-oss-120b-MXFP4-Q8"
+     }
+    ]
+   }
+  },
+  {
+   "id": "Qwen/Qwen3.5-122B-A10B",
+   "name": "Qwen3.5 122B-A10B",
+   "tier": "large",
+   "uses": [
+    "chat",
+    "coding",
+    "reasoning",
+    "vision",
+    "agents"
+   ],
+   "primary_for": [
     {
-     "format": "gguf",
-     "quant": "MXFP4",
-     "label": "MXFP4",
-     "repo": "ggml-org/gpt-oss-120b-GGUF",
-     "bytes": 63400000000
+     "tier": "large",
+     "use": "vision"
     }
-   ]
+   ],
+   "why": "The biggest model most home machines can hold (128 GB class): sees images, codes, and reasons, with 10B active for speed.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B"
+   },
+   "gated": false,
+   "released": "2026-02-24",
+   "params": 125086497008,
+   "active": 11983419632,
+   "context": 262144,
+   "vision": true,
+   "reasoning": true,
+   "default_quant": "Q4_K_M",
+   "default_bytes": 76536964608,
+   "quant_by_budget_gb": {
+    "4": null,
+    "6": null,
+    "8": null,
+    "12": null,
+    "16": null,
+    "24": null,
+    "32": null,
+    "48": null,
+    "64": "Q3_K_M",
+    "96": "MXFP4",
+    "128": "Q6_K"
+   },
+   "run": {
+    "ollama": {
+     "pull": "ollama run qwen3.5:122b",
+     "tag": "qwen3.5:122b",
+     "q8_tag": null,
+     "hf": "ollama run hf.co/unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M",
+     "any_quant": "ollama run hf.co/unsloth/Qwen3.5-122B-A10B-GGUF:{LABEL}"
+    },
+    "lmstudio": {
+     "catalog": null,
+     "search": "lmstudio-community/Qwen3.5-122B-A10B-GGUF",
+     "quant": "Q4_K_M",
+     "mlx": "mlx-community/Qwen3.5-122B-A10B-4bit",
+     "cli": "lms get lmstudio-community/Qwen3.5-122B-A10B-GGUF"
+    },
+    "llamacpp": {
+     "hf": "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M",
+     "cmd": "llama-server -hf unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M --jinja",
+     "any_quant": "unsloth/Qwen3.5-122B-A10B-GGUF:{LABEL}"
+    },
+    "mlx": {
+     "id": "mlx-community/Qwen3.5-122B-A10B-4bit",
+     "cmd": "mlx_lm.chat --model mlx-community/Qwen3.5-122B-A10B-4bit"
+    }
+   },
+   "model": {
+    "id": "Qwen/Qwen3.5-122B-A10B",
+    "params_total": 125086497008,
+    "num_hidden_layers": 48,
+    "hidden_size": 3072,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 2,
+    "head_dim": 256,
+    "vocab_size": 248320,
+    "sliding_window": null,
+    "swa_layers": 0,
+    "linear_layers": 36,
+    "tie_word_embeddings": false,
+    "num_experts": 256,
+    "num_experts_per_tok": 8,
+    "moe_intermediate_size": 1024,
+    "first_k_dense_replace": null,
+    "kv_lora_rank": null,
+    "qk_rope_head_dim": null,
+    "max_context": 262144,
+    "vision": true,
+    "mmproj_bytes": 908724960,
+    "reasoning": true,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "BF16",
+      "label": "BF16",
+      "bytes": 244314011488,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "MXFP4",
+      "label": "MXFP4_MOE",
+      "bytes": 74664408608,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_M",
+      "label": "Q3_K_M",
+      "bytes": 56420881952,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_S",
+      "label": "Q3_K_S",
+      "bytes": 52495013376,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "Q4_K_M",
+      "bytes": 76536964608,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "Q4_K_S",
+      "bytes": 71705126400,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "Q5_K_M",
+      "bytes": 91519219200,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "Q5_K_S",
+      "bytes": 86385391136,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "Q6_K",
+      "bytes": 101009782432,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 129871935104,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ1_M",
+      "label": "UD-IQ1_M",
+      "bytes": 34221749440,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_M",
+      "label": "UD-IQ2_M",
+      "bytes": 39148942528,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ2_XXS",
+      "label": "UD-IQ2_XXS",
+      "bytes": 36637668544,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_S",
+      "label": "UD-IQ3_S",
+      "bytes": 46556959936,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ3_XXS",
+      "label": "UD-IQ3_XXS",
+      "bytes": 44745020608,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q2_K_XL",
+      "label": "UD-Q2_K_XL",
+      "bytes": 41845347520,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_NL",
+      "label": "UD-IQ4_NL",
+      "bytes": 61437470208,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "IQ4_XS",
+      "label": "UD-IQ4_XS",
+      "bytes": 60229510656,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_XL",
+      "label": "UD-Q3_K_XL",
+      "bytes": 56970536480,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_XL",
+      "label": "UD-Q4_K_XL",
+      "bytes": 77029996032,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_XL",
+      "label": "UD-Q5_K_XL",
+      "bytes": 91928163840,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K_XL",
+      "label": "UD-Q6_K_XL",
+      "bytes": 112401249920,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_K_XL",
+      "label": "UD-Q8_K_XL",
+      "bytes": 170838161152,
+      "repo": "unsloth/Qwen3.5-122B-A10B-GGUF"
+     },
+     {
+      "format": "mlx",
+      "quant": "mlx-4bit",
+      "bytes": 69593636939,
+      "repo": "mlx-community/Qwen3.5-122B-A10B-4bit"
+     }
+    ]
+   }
+  },
+  {
+   "id": "nomic-ai/nomic-embed-text-v1.5",
+   "name": "Nomic Embed Text v1.5",
+   "tier": "tiny",
+   "uses": [
+    "embeddings"
+   ],
+   "primary_for": [
+    {
+     "tier": "tiny",
+     "use": "embeddings"
+    },
+    {
+     "tier": "small",
+     "use": "embeddings"
+    }
+   ],
+   "why": "The default embedding model in most local RAG tutorials: tiny (under 300 MB), fast on any CPU, solid for English.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/nomic-ai/nomic-embed-text-v1.5"
+   },
+   "gated": false,
+   "released": "2024-02-10",
+   "params": 136731648,
+   "active": null,
+   "context": null,
+   "vision": false,
+   "reasoning": false,
+   "default_quant": "F16",
+   "default_bytes": 274290560,
+   "quant_by_budget_gb": {},
+   "run": {
+    "ollama": {
+     "pull": "ollama pull nomic-embed-text:v1.5",
+     "tag": "nomic-embed-text:v1.5",
+     "q8_tag": null,
+     "hf": null,
+     "any_quant": null
+    },
+    "lmstudio": {
+     "catalog": "nomic-ai/nomic-embed-text-v1.5",
+     "search": "nomic-ai/nomic-embed-text-v1.5-GGUF",
+     "quant": "F16",
+     "mlx": null,
+     "cli": "lms get nomic-ai/nomic-embed-text-v1.5"
+    },
+    "llamacpp": {
+     "hf": "nomic-ai/nomic-embed-text-v1.5-GGUF",
+     "cmd": "llama-server -hf nomic-ai/nomic-embed-text-v1.5-GGUF --embeddings"
+    },
+    "mlx": null
+   },
+   "model": {
+    "id": "nomic-ai/nomic-embed-text-v1.5",
+    "params_total": 136731648,
+    "vision": false,
+    "mmproj_bytes": null,
+    "reasoning": false,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "Q2_K",
+      "label": "Q2_K",
+      "bytes": 49361088,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_L",
+      "label": "Q3_K_L",
+      "bytes": 71593088,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_M",
+      "label": "Q3_K_M",
+      "bytes": 67169408,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q3_K_S",
+      "label": "Q3_K_S",
+      "bytes": 59649152,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_0",
+      "label": "Q4_0",
+      "bytes": 77802880,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_M",
+      "label": "Q4_K_M",
+      "bytes": 84106624,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q4_K_S",
+      "label": "Q4_K_S",
+      "bytes": 78097792,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_0",
+      "label": "Q5_0",
+      "bytes": 94888768,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_M",
+      "label": "Q5_K_M",
+      "bytes": 99588928,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q5_K_S",
+      "label": "Q5_K_S",
+      "bytes": 94888768,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q6_K",
+      "label": "Q6_K",
+      "bytes": 113042528,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 146146432,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "F16",
+      "label": "f16",
+      "bytes": 274290560,
+      "repo": "nomic-ai/nomic-embed-text-v1.5-GGUF"
+     }
+    ]
+   }
+  },
+  {
+   "id": "Qwen/Qwen3-Embedding-0.6B",
+   "name": "Qwen3 Embedding 0.6B",
+   "tier": "tiny",
+   "uses": [
+    "embeddings"
+   ],
+   "primary_for": [
+    {
+     "tier": "medium",
+     "use": "embeddings"
+    },
+    {
+     "tier": "large",
+     "use": "embeddings"
+    }
+   ],
+   "why": "Better search quality than Nomic, in over 100 languages and for code, at about 640 MB.",
+   "license": {
+    "id": "apache-2.0",
+    "name": "Apache 2.0",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/Qwen/Qwen3-Embedding-0.6B"
+   },
+   "gated": false,
+   "released": "2025-06-03",
+   "params": 595776512,
+   "active": null,
+   "context": null,
+   "vision": false,
+   "reasoning": false,
+   "default_quant": "Q8_0",
+   "default_bytes": 639150592,
+   "quant_by_budget_gb": {},
+   "run": {
+    "ollama": {
+     "pull": "ollama pull qwen3-embedding:0.6b",
+     "tag": "qwen3-embedding:0.6b",
+     "q8_tag": null,
+     "hf": null,
+     "any_quant": null
+    },
+    "lmstudio": {
+     "catalog": null,
+     "search": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+     "quant": "Q8_0",
+     "mlx": null,
+     "cli": "lms get Qwen/Qwen3-Embedding-0.6B-GGUF"
+    },
+    "llamacpp": {
+     "hf": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+     "cmd": "llama-server -hf Qwen/Qwen3-Embedding-0.6B-GGUF --embeddings"
+    },
+    "mlx": null
+   },
+   "model": {
+    "id": "Qwen/Qwen3-Embedding-0.6B",
+    "params_total": 595776512,
+    "vision": false,
+    "mmproj_bytes": null,
+    "reasoning": false,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "Q8_0",
+      "bytes": 639150592,
+      "repo": "Qwen/Qwen3-Embedding-0.6B-GGUF"
+     },
+     {
+      "format": "gguf",
+      "quant": "F16",
+      "label": "f16",
+      "bytes": 1197629632,
+      "repo": "Qwen/Qwen3-Embedding-0.6B-GGUF"
+     }
+    ]
+   }
+  },
+  {
+   "id": "BAAI/bge-m3",
+   "name": "BGE-M3",
+   "tier": "tiny",
+   "uses": [
+    "embeddings"
+   ],
+   "primary_for": [],
+   "why": "A long-standing multilingual favourite (8k-token inputs); pick it if a tool or tutorial asks for it by name.",
+   "license": {
+    "id": "mit",
+    "name": "MIT",
+    "open": true,
+    "note": "Use, change and sell freely; keep the notice.",
+    "url": "https://huggingface.co/BAAI/bge-m3"
+   },
+   "gated": false,
+   "released": "2024-01-27",
+   "params": null,
+   "active": null,
+   "context": null,
+   "vision": false,
+   "reasoning": false,
+   "default_quant": "Q8_0",
+   "default_bytes": 634553760,
+   "quant_by_budget_gb": {},
+   "run": {
+    "ollama": {
+     "pull": "ollama pull bge-m3:567m",
+     "tag": "bge-m3:567m",
+     "q8_tag": null,
+     "hf": null,
+     "any_quant": null
+    },
+    "lmstudio": {
+     "catalog": null,
+     "search": "ggml-org/bge-m3-Q8_0-GGUF",
+     "quant": "Q8_0",
+     "mlx": null,
+     "cli": "lms get ggml-org/bge-m3-Q8_0-GGUF"
+    },
+    "llamacpp": {
+     "hf": "ggml-org/bge-m3-Q8_0-GGUF",
+     "cmd": "llama-server -hf ggml-org/bge-m3-Q8_0-GGUF --embeddings"
+    },
+    "mlx": null
+   },
+   "model": {
+    "id": "BAAI/bge-m3",
+    "params_total": null,
+    "vision": false,
+    "mmproj_bytes": null,
+    "reasoning": false,
+    "quants": [
+     {
+      "format": "gguf",
+      "quant": "Q8_0",
+      "label": "q8_0",
+      "bytes": 634553760,
+      "repo": "ggml-org/bge-m3-Q8_0-GGUF"
+     }
+    ]
+   }
   }
  ]
 }

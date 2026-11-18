@@ -98,24 +98,24 @@ const LOCALUI = ((D, FIT) => {
   };
 
   // The model the fit method is handed for a pick: eng-hf's index row when it has one (real file sizes, read
-  // by ds-models' `normalizeModel()`), otherwise the pick's own `config` and `quants`. Cached: a model is the
-  // same object for every machine.
+  // by ds-models' `normalizeModel()`), otherwise the pick's own fit-ready `model`. Cached: a model is the same
+  // object for every machine.
   const HF = D.hf && D.hf.rows ? Object.fromEntries(D.hf.rows.map((r) => {
     const o = Object.fromEntries(D.hf.cols.map((c, i) => [c, r[i]])); return [o.id, o]; })) : {};
   const models = {};
   const modelOf = (p) => {
     if (models[p.id]) return models[p.id];
-    const row = p.hf_id && HF[p.hf_id];
+    const row = HF[p.id];
     const base = row ? FIT.normalizeModel(row, D.hf.variant_cols, D.hf.file_cols) : null;
-    return (models[p.id] = base && base.quants.length ? Object.assign(base, {id: p.id})
-      : Object.assign({id: p.id}, p.config, {quants: p.quants}));
+    return (models[p.id] = base && base.quants.length ? Object.assign(base, {id: p.id}) : p.model);
   };
   const ggufs = (m) => m.quants.filter((q) => !q.format || q.format === "gguf");
 
   // One pick on one machine: the quant ds-models' policy recommends (or the one the reader forced), and
   // everything the card prints about it. `file` is the quant's own entry, for its label, repo and size.
-  const judge = (p, hw, ctx, forced) => {
-    const m = modelOf(p), opts = {context: ctx};
+  // `images` counts the vision projector, which a reader who picked "Understand pictures" will load.
+  const judge = (p, hw, ctx, forced, images) => {
+    const m = modelOf(p), opts = {context: ctx, images: !!images};
     let r = null;
     if (forced) {
       const q = ggufs(m).find((x) => x.quant === forced);
@@ -124,14 +124,14 @@ const LOCALUI = ((D, FIT) => {
     if (!r) r = FIT.bestQuant(m, hw, opts);
     if (!r || r.verdict === "too-big") {
       // Too big at any quant. Sized at the quant Ollama ships, the one a reader would most likely try.
-      const q = ggufs(m).find((x) => x.quant === p.run.ollama_q) || ggufs(m)[0];
+      const q = ggufs(m).find((x) => x.quant === p.default_quant) || ggufs(m)[0];
       return {verdict: "too-big", quant: q.quant, file: q, fit: FIT.fit(m, q, hw, opts), speed: null, notes: []};
     }
     const file = m.quants.find((x) => x.quant === r.quant) || {label: r.quant, repo: (ggufs(m)[0] || {}).repo};
     return {verdict: r.verdict, quant: r.quant, file, fit: r.fit, speed: r.speed, offload: r.offload,
             nearlyFull: r.nearlyFull, belowFloor: r.belowFloor, notes: r.fit.notes || []};
   };
-  const assess = (hw, ctx, qover) => D.models.map((p) => ({model: p, r: judge(p, hw, ctx, (qover || {})[p.id])}));
+  const assess = (hw, ctx, qover, images) => D.models.map((p) => ({model: p, r: judge(p, hw, ctx, (qover || {})[p.id], images)}));
 
   // The memory a card says the reader has. One figure per machine, so two cards never quote two different
   // budgets: on shared memory it is everything the system leaves free (the graphics' default share is the
@@ -186,23 +186,39 @@ const LOCALUI = ((D, FIT) => {
   // contradiction.
   const catches = (r, m) => {
     const out = [];
-    if (r.verdict === "slow" && m && m.reasoning && r.speed.decodeTps >= 10)
+    if (r.verdict === "slow" && m && m.reasoning && r.speed.decodeTps >= FIT.THRESHOLDS.great)
       out.push("It thinks before it answers, writing a lot it doesn’t show you, so at this speed expect a wait of a minute or so before a hard answer starts.");
     else if (r.verdict === "slow") out.push("Slow here: fine for a short question, tiring for a long chat.");
     if (r.verdict === "tight" || r.belowFloor)
       out.push(`Squeezed to fit: this is a smaller version (<a class="lxwhat" href="#q-quant" data-open="q-quant">${esc(r.quant)}</a>), noticeably less sharp. A smaller model may answer better.`);
     if (r.offload)
       out.push('Part of it runs on the processor (<a class="lxwhat" href="#q-offload" data-open="q-offload">offload</a>), which is what slows it down.');
-    return out.concat(r.notes.filter((n) => !/below the quality we recommend/.test(n)).map(esc));
+    // Two of the method's notes are left out: the below-floor one, which the "squeezed" line above already
+    // says, and "reading images adds", which is noise to a reader who did not ask about pictures (one who
+    // did has the projector counted already, and the note is not written).
+    return out.concat(r.notes.filter((n) => !/below the quality we recommend|^Reading images adds/.test(n)).map(esc));
   };
 
-  // Groups, in the order the page shows them, already filtered by task. `all` lifts the filter.
+  // How strongly a pick that runs is recommended: `rank()` in scripts/32_local.py, which orders the cheat
+  // sheet the same way. The bigger tier first, then ds-models' primary choice for one of the reader's tasks.
+  const TIERS = ["tiny", "small", "medium", "large"];
+  const rank = (p, tasks) => TIERS.indexOf(p.tier) * 10 +
+    ((p.primary_for || []).some((c) => !tasks.length || tasks.includes(c.use)) ? 5 : 0) + p.model.params_total / 1e12;
+  const embedOnly = (p) => p.uses.length === 1 && p.uses[0] === "embeddings";
+
+  // Groups, in the order the page shows them, already filtered by task. `all` lifts the filter. Embedding
+  // models answer no questions, so they appear only for the reader who asked to search their documents.
   const groups = (rows, tasks, all) => {
-    const want = (row) => all || !tasks.length || row.model.tasks.some((t) => tasks.includes(t));
+    rows = rows.filter((x) => !embedOnly(x.model) || tasks.includes("embeddings"));
+    const want = (row) => all || !tasks.length || row.model.uses.some((t) => tasks.includes(t));
     const shown = rows.filter(want), hidden = rows.length - shown.length;
     const by = (vs) => shown.filter((x) => vs.includes(x.r.verdict));
-    const great = by(["great"]).sort((a, b) => b.model.score - a.model.score);
-    const ok = by(["slow", "tight"]).sort((a, b) => (a.r.verdict === "tight") - (b.r.verdict === "tight") || b.model.score - a.model.score);
+    const r = (x) => rank(x.model, tasks);
+    // Among the great, the ones that fit cleanly come first: a model that only runs great by spilling into
+    // RAM, or with under 5% to spare, is a fine second choice and a poor first one for a beginner.
+    const snag = (x) => (x.r.offload || x.r.nearlyFull ? 1 : 0);
+    const great = by(["great"]).sort((a, b) => snag(a) - snag(b) || r(b) - r(a));
+    const ok = by(["slow", "tight"]).sort((a, b) => (a.r.verdict === "tight") - (b.r.verdict === "tight") || r(b) - r(a));
     const no = by(["too-big"]).sort((a, b) => a.r.fit.totalGB - b.r.fit.totalGB);
     // The pick: the best that runs great; failing that, the best that runs slowly; failing that, nothing --
     // a model that only fits squeezed is never what we tell a beginner to start with.
@@ -210,30 +226,42 @@ const LOCALUI = ((D, FIT) => {
     return {great, ok, no, best, hidden};
   };
 
-  // The command for a route, with a pick's own names and the fitted quant filled in. Ollama's library tag
-  // when the fit chose the quant that tag ships; any other quant goes through Ollama's Hugging Face route,
-  // which takes the GGUF repo and quant (team/contracts/models.md, "Runnable straight from a variant").
+  // The commands for a pick at the fitted quant, from ds-models' `run` fields and never composed from a model
+  // name: Ollama's library tag when the fit chose the quant that tag ships (or its Q8 tag), otherwise the
+  // `hf.co/<repo>:<quant>` route the pick gives for any quant; llama.cpp's `-hf` route the same way, with the
+  // context the estimate assumed; MLX's own command.
+  const commands = (p, r, ctx) => {
+    const run = p.run, label = (r.file && r.file.label) || r.quant, o = run.ollama || {}, l = run.llamacpp || {};
+    const ollama = r.quant === p.default_quant || !o.any_quant ? (r.quant === "Q8_0" && o.q8_tag ? `ollama run ${o.q8_tag}` : o.pull)
+      : r.quant === "Q8_0" && o.q8_tag ? `ollama run ${o.q8_tag}` : o.any_quant.replace("{LABEL}", label);
+    const llama = l.any_quant ? `llama-server -hf ${l.any_quant.replace("{LABEL}", label)} --jinja` : l.cmd;
+    return {ollama, ollamaHome: ollama.replace(/^ollama /, "~/ollama/bin/ollama "),
+            llama: llama ? `${llama} -c ${ctx}` : null, llamaHere: llama ? `./${llama} -c ${ctx}` : null,
+            mlx: run.mlx ? run.mlx.cmd : null,
+            lmstudio: (run.lmstudio || {}).catalog || (run.lmstudio || {}).search, label};
+  };
   const fill = (text, p, r, ctx) => {
-    const run = p.run, f = r.file || {};
-    const tag = r.quant === run.ollama_q || !f.repo ? run.ollama : `hf.co/${f.repo}:${f.label || r.quant}`;
-    return text.replace(/\{ollama_tag\}/g, esc(tag)).replace(/\{qlabel\}/g, esc(f.label || r.quant))
-      .replace(/\{hf_repo\}/g, esc(f.repo || "")).replace(/\{mlx\}/g, esc(run.mlx || ""))
-      .replace(/\{lmstudio\}/g, esc(run.lmstudio)).replace(/\{ctx\}/g, String(ctx));
+    const c = commands(p, r, ctx);
+    return text.replace(/\{ollama_cmd\}/g, esc(c.ollama)).replace(/\{ollama_cmd_home\}/g, esc(c.ollamaHome))
+      .replace(/\{llama_cmd\}/g, esc(c.llama || "")).replace(/\{llama_cmd_here\}/g, esc(c.llamaHere || ""))
+      .replace(/\{mlx_cmd\}/g, esc(c.mlx || "")).replace(/\{lmstudio\}/g, esc(c.lmstudio))
+      .replace(/\{qlabel\}/g, esc(c.label)).replace(/\{ctx\}/g, String(ctx));
   };
   // The routes a pick can be run by on an OS, beginner's first. MLX only on a Mac with Apple Silicon.
   const routes = (p, r, os, isApple) => ["lmstudio", "ollama", "llamacpp", "mlx"].filter((k) => {
-    const h = D.howto[k];
-    if (!h.steps[os]) return false;
-    if (k === "llamacpp" && !(r.file && r.file.repo)) return false;
+    if (!D.howto[k].steps[os]) return false;
+    if (k === "llamacpp" && !p.run.llamacpp) return false;
     if (k === "mlx" && (!isApple || !p.run.mlx)) return false;
     return true;
   });
   const defaultRoute = (os) => (os === "linux" ? "ollama" : "lmstudio");
   // A route's steps for an OS, as [kind, html]: "li" for a step, "cmd" for a command under it. The context
-  // steps appear only when the estimate assumed more context than the runner gives by default.
+  // steps appear only when the estimate assumed more context than the runner gives by default. An embedding
+  // model has no chat to open, so the steps about chatting are left out and the card says what uses it.
+  const CHATTY = /&gt;&gt;&gt;|click Chat|open <b>http/;
   const steps = (route, os, p, r, ctx) => D.howto[route].steps[os].flatMap((st) => {
-    if (!Array.isArray(st)) return [["li", fill(st, p, r, ctx)]];
-    if ((st[0] === "ctx" || st[0] === "ctxcmd") && ctx <= D.runner_ctx) return [];
+    if (!Array.isArray(st)) return embedOnly(p) && CHATTY.test(st) ? [] : [["li", fill(st, p, r, ctx)]];
+    if ((st[0] === "ctx" || st[0] === "ctxcmd") && (ctx <= D.runner_ctx || embedOnly(p))) return [];
     return [[st[0] === "ctx" ? "li" : "cmd", fill(st[1], p, r, ctx)]];
   });
 
@@ -276,7 +304,8 @@ const LOCALUI = ((D, FIT) => {
   };
 
   return {esc, gb, norm, hits, search, uaOS, machineOf, machineWords, modelOf, judge, assess, have, suggest,
-          reason, speedLine, catches, groups, fill, routes, defaultRoute, steps, guess, parseHash, hashOf, apple,
+          reason, speedLine, catches, groups, rank, embedOnly, commands, fill, routes, defaultRoute, steps, guess,
+          parseHash, hashOf, apple,
           ggufs, DEV, GPU, PICK};
 })(JSON.parse(document.getElementById("lxdata").textContent), LOCALFIT);
 
@@ -402,13 +431,13 @@ const LOCALUI = ((D, FIT) => {
   const card = (row, mc, ctx, open) => {
     const {model, r} = row, no = r.verdict === "too-big";
     const lines = no ? [] : U.catches(r, U.modelOf(model));
-    const tasks = model.tasks.map((t) => TASKS[t]).filter(Boolean).join(", ");
+    const tasks = model.uses.map((t) => TASKS[t]).filter(Boolean).join(", ");
     return `<li class="lxcard" data-model="${esc(model.id)}" data-verdict="${r.verdict}">` +
       `<div class="lxch"><h4>${esc(model.name)}</h4><span class="lxv" data-v="${r.verdict}"><i aria-hidden="true">${SHAPE[r.verdict]}</i>${WORD[r.verdict]}</span></div>` +
-      `<p class="lxblurb">${esc(model.blurb)}</p>` +
+      `<p class="lxblurb">${esc(model.why)}</p>` +
       `<p class="lxwhy"><span>${U.reason(row, mc.hw, ctx)}</span>${r.speed ? U.speedLine(r) : ""}</p>` +
       (lines.length ? `<ul class="lxcatch">${lines.map((l) => `<li>${l}</li>`).join("")}</ul>` : "") +
-      `<p class="lxmeta">Good for: ${esc(tasks)} · Licence: ${esc(model.license)}</p>` +
+      `<p class="lxmeta">Good for: ${esc(tasks)} · Licence: <span title="${esc(model.license.note || "")}">${esc(model.license.name)}</span></p>` +
       (S.n ? numbers(row, mc) : "") +
       (no ? "" :
         `<button class="lxhow" type="button" aria-expanded="${open ? "true" : "false"}" aria-controls="how-${esc(model.id)}" data-how="${esc(model.id)}">How to run it</button>` +
@@ -462,6 +491,7 @@ const LOCALUI = ((D, FIT) => {
       `<p class="lxpitch">${esc(h.pitch)}</p>` +
       `<div class="lxroutes" role="group" aria-label="Your operating system"><span class="lxpl">On</span>` +
       oses.filter((o) => h.steps[o]).map((o) => `<button class="chip" type="button" data-os="${o}" aria-pressed="${o === os}">${OSN[o]}</button>`).join("") + `</div>` +
+      (U.embedOnly(model) ? `<p class="lxpitch">This model doesn’t chat. It turns your documents into something searchable, for apps such as AnythingLLM or Open WebUI to use once it’s downloaded.</p>` : "") +
       `<ol>${ol.join("")}</ol>` +
       `<p class="lxdl">The first download is about ${U.gb(size)} GB, roughly ${mins} minute${mins === 1 ? "" : "s"} on a 50 Mbit/s connection. After that it works with no internet.</p>`;
   };
@@ -479,7 +509,7 @@ const LOCALUI = ((D, FIT) => {
     const mc = U.machineOf(S, UA), out = $("results");
     if (!mc) { $("mach").textContent = "Pick your computer above and the answers appear here."; out.innerHTML = ""; return; }
     $("mach").innerHTML = U.machineWords(mc);
-    const g = U.groups(U.assess(mc.hw, ctx, qover), S.t, showAll);
+    const g = U.groups(U.assess(mc.hw, ctx, qover, S.t.includes("vision")), S.t, showAll);
     // The pick's how-to opens by itself, because most readers should stop there. When the pick changes, the
     // old one's panel closes with it, unless the reader opened it themselves.
     const bestId = g.best && g.best.model.id;
@@ -491,8 +521,8 @@ const LOCALUI = ((D, FIT) => {
     if (g.best) html += `<div class="lxbest" id="best"><p>Our pick for you</p><ul class="lxcards">${card(g.best, mc, ctx, opened.has(bestId))}</ul></div>`;
     else html += `<p class="lxnote">Nothing we recommend runs well on this machine as it is. Anything that only fits squeezed is below; so is what would make the rest fit.</p>`;
     if (S.t.length || g.hidden) html += `<p class="lxnote">` + (S.t.length && !showAll
-      ? `Showing models good for ${esc(S.t.map((t) => TASKS[t].toLowerCase()).join(" or "))}. ${g.hidden} others hidden. <button class="lxlink" type="button" id="showall">Show all models</button>`
-      : `Showing every model. <button class="lxlink" type="button" id="showall">Only ${esc(S.t.map((t) => TASKS[t].toLowerCase()).join(" or "))}</button>`) + "</p>";
+      ? `Showing models for: ${esc(S.t.map((t) => TASKS[t]).join(", "))}. ${g.hidden} others hidden. <button class="lxlink" type="button" id="showall">Show all models</button>`
+      : `Showing every model. <button class="lxlink" type="button" id="showall">Only the ones for: ${esc(S.t.map((t) => TASKS[t]).join(", "))}</button>`) + "</p>";
     if (greatRest.length) html += `<section class="lxgroup" aria-labelledby="hg"><h3 id="hg"><span aria-hidden="true">${SHAPE.great}</span> ${g.best && g.best.r.verdict === "great" ? "Also runs great" : "Runs great"} <span class="ct">${greatRest.length}</span></h3>${list(greatRest.slice(0, cap))}` +
       (greatRest.length > cap ? `<p class="lxmore"><button class="chip" type="button" id="moregreat">Show ${greatRest.length - cap} more</button></p>` : "") + "</section>";
     const okRest = g.ok.filter((x) => x.model.id !== bestId);
@@ -529,7 +559,7 @@ const LOCALUI = ((D, FIT) => {
       if (open) {
         opened.add(id);
         const mc = U.machineOf(S, UA), ctx = S.c || D.default_ctx;
-        panel.innerHTML = howto({model: U.PICK[id], r: U.judge(U.PICK[id], mc.hw, ctx, qover[id])}, mc, ctx);
+        panel.innerHTML = howto({model: U.PICK[id], r: U.judge(U.PICK[id], mc.hw, ctx, qover[id], S.t.includes("vision"))}, mc, ctx);
       }
       else opened.delete(id);
       panel.hidden = !open;

@@ -127,7 +127,9 @@ ok("...with LM Studio, the no-typing route, chosen first", await ev("document.qu
 ok("...and MLX offered, because this is Apple Silicon", await ev("!!document.querySelector('#best [data-route=mlx]')"));
 await click("#best [data-route=ollama]");
 const cmd = await ev("[...document.querySelectorAll('#best .lxcmd code')].map(c => c.textContent)");
-ok("Ollama's steps carry the pick's own tag as a command", cmd.some(c => /^ollama run [a-z0-9.\-]+:[a-z0-9.]+$/.test(c)), JSON.stringify(cmd));
+// The pick's own command from ds-models' `run` fields: its library tag, or the hf.co route for another quant.
+ok("Ollama's steps carry the pick's own command", cmd.some(c => /^ollama run (hf\.co\/[\w.-]+\/[\w.-]+:[\w.]+|[a-z0-9.\-]+:[a-z0-9.\-]+)$/.test(c)), JSON.stringify(cmd));
+ok("...and the context step, because the estimate assumed more than Ollama's default", cmd.includes("/set parameter num_ctx 8192"), JSON.stringify(cmd));
 ok("...each with a copy button", await ev("document.querySelectorAll('#best .lxcmd .lxcopy').length") === cmd.length);
 ok("...and focus stays on the route the reader chose", await ev("document.activeElement.dataset.route") === "ollama");
 ok("the route is remembered in the hash", (await hash()).includes("w=ollama"));
@@ -144,8 +146,8 @@ ok("a reload of the shared link gives the same pick", await ev("document.querySe
 ok("...with the same memory chip", await ev("document.querySelector('#ramo input:checked')?.value") === "16");
 
 // ---- tasks, numbers, context, quant
-await click("input[name=task][value=code]");
-ok("a task is in the hash", (await hash()).includes("t=code"));
+await click("input[name=task][value=coding]");
+ok("a task is in the hash", (await hash()).includes("t=coding"));
 ok("with a task, every card shown is good for it",
    await ev("[...document.querySelectorAll('#results .lxcard')].every(c => /Write code/.test(c.querySelector('.lxmeta').textContent))"));
 ok("...and the hidden ones are counted, with a way to show them", /\d+ others hidden/.test(await ev("document.getElementById('results').textContent")));
@@ -232,7 +234,7 @@ await S("Emulation.setScriptExecutionDisabled", {value: true});
 await goto();
 ok("without script the picker is not shown as a dead control", await ev("getComputedStyle(document.getElementById('s1')).display") === "none");
 ok("...the cheat sheet is", await ev("document.querySelectorAll('.lxcheat tbody tr').length") >= 8);
-ok("...with an answer in every row", await ev("[...document.querySelectorAll('.lxcheat tbody td:first-of-type')].every(td => td.textContent.trim().length > 1)"));
+ok("...with an answer in every row, great or not", await ev("[...document.querySelectorAll('.lxcheat tbody tr')].every(tr => [...tr.querySelectorAll('td')].some(td => td.textContent.trim().length > 1))"));
 await S("Emulation.setScriptExecutionDisabled", {value: false});
 
 ok("no uncaught exception or console error on any visit", errors.length === 0, errors.slice(0, 3).join(" | "));

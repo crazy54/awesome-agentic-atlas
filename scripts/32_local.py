@@ -27,12 +27,13 @@ THREE INPUTS, ALL JOINED HERE AND NOWHERE ELSE
   config/local-ai/catalogue.json   the hardware: device kinds, devices, GPUs, the usable-memory rules, and
                                    the "how to find out what you have" steps. ds-hardware's, to
                                    `team/contracts/hardware.md`.
-  config/local-ai/picks.json       the models the page recommends, with file sizes per quant, the shape
-                                   numbers the context cache needs, and the exact name each runner knows
-                                   them by. ds-models', to `team/contracts/fit.md`.
-  docs/models.json (optional)      eng-hf's Hugging Face index (`team/contracts/models.md`). Joined on
-                                   `hf_id` for freshness only: likes, downloads, last-modified. A build
-                                   without it is a page without those three facts and nothing else.
+  config/local-ai/picks.json       the models the page recommends: ds-models' `team/local-ai/picks.json`,
+                                   copied verbatim (`team/contracts/fit.md` section 11). Each pick carries
+                                   its tier, uses, one-line why, licence, every quant file's exact size, the
+                                   exact command each runner takes, and a fit-ready `model`.
+  docs/models.json (optional)      eng-hf's Hugging Face index (`team/contracts/models.md`). A pick whose
+                                   id the index has is sized from that row (`normalizeModel()`), so file
+                                   sizes follow re-uploads; without it, the pick's own `model` is used.
 
 Both config files are checked by `validate()` before anything is written, and a bad one stops the build
 with the reason. That is deliberate: the page's whole claim is "this will run on your machine", and a
@@ -42,7 +43,7 @@ wrong answer delivered confidently -- worse than no page.
 WHY EVERYTHING IS INLINED RATHER THAN FETCHED
 ---------------------------------------------
 The catalogue, the picks and `scripts/localfit.mjs` are written into the page itself, as one JSON block
-and one script: about 130 KB on disk and 34 KB over the wire, measured with the fixture data, because Pages
+and one script: about 155 KB on disk and 39 KB over the wire with ds-models' picks, because Pages
 gzips and the JSON is repetitive. Three things follow:
 
   * Offline for free. `scripts/24_pwa.py`'s worker caches every page a reader visits and serves it when the
@@ -141,11 +142,39 @@ def load(config: Path = CONFIG) -> tuple[dict, dict]:
 DEVICE_FIELDS = ("id", "kind", "name", "os", "ram_gb_options", "unified", "gpu", "vram_gb", "ram_bandwidth_gbs",
                  "igpu")
 GPU_FIELDS = ("id", "name", "vendor", "vram_gb_options", "vram_bandwidth_gbs", "backends")
-MODEL_FIELDS = ("id", "name", "tasks", "score", "license", "blurb", "run", "config", "quants")
-# The geometry the fit method cannot work without. The rest of `config` (sliding windows, experts, MLA) is
+PICK_FIELDS = ("id", "name", "tier", "uses", "why", "license", "gated", "default_quant", "run", "model")
+# The geometry the fit method cannot work without. The rest of `model` (sliding windows, experts, MLA) is
 # optional and only sharpens the answer.
 CONFIG_FIELDS = ("params_total", "num_hidden_layers", "hidden_size", "num_attention_heads",
                  "num_key_value_heads", "head_dim", "vocab_size")
+TIERS = ("tiny", "small", "medium", "large")
+
+# The task buttons: ds-models' `uses`, in the reader's words. The ids are theirs, so a pick's `uses` is the
+# filter with no mapping; the labels are the page's copy and live here. "Search my own documents" is the
+# embeddings use: those models are not chatted with, so they are shown only when that button is pressed.
+TASKS = [
+    ("chat", "Chat, write and ask questions"),
+    ("coding", "Write code"),
+    ("reasoning", "Think hard (maths, logic)"),
+    ("vision", "Understand pictures"),
+    ("agents", "Build agents (tools)"),
+    ("embeddings", "Search my own documents"),
+]
+
+
+def rank(p: dict, tasks: list[str] = ()) -> float:
+    """How strongly the page recommends a pick that runs, higher first: the bigger tier (bigger runs better
+    when it runs at all), then being ds-models' primary choice for one of the reader's tasks (or for anything,
+    with no task chosen), then size. `LOCALUI.rank` is the same rule; the browser check holds the picker's
+    first three to the cheat sheet's for one machine, which is where the two would disagree."""
+    prim = any(not tasks or c["use"] in tasks for c in p.get("primary_for", []))
+    return TIERS.index(p["tier"]) * 10 + (5 if prim else 0) + p["model"]["params_total"] / 1e12
+
+
+def embed_only(p: dict) -> bool:
+    return p["uses"] == ["embeddings"]
+
+
 OSES = ("windows", "macos", "linux", "steamos")
 VENDORS = ("nvidia", "amd", "intel", "apple")
 
@@ -192,31 +221,47 @@ def validate(cat: dict, picks: dict) -> None:
         if not cat["find_out"].get(os_):
             raise Bad(f"find_out has no steps for {os_}")
 
-    tasks = {t["id"] for t in picks["tasks"]}
+    uses = {t for t, _ in TASKS}
     seen = set()
-    for m in picks["models"]:
-        need(m, MODEL_FIELDS, "model")
+    for m in picks["picks"]:
+        need(m, PICK_FIELDS, "pick")
         if m["id"] in seen:
-            raise Bad(f"model {m['id']!r} appears twice")
+            raise Bad(f"pick {m['id']!r} appears twice")
         seen.add(m["id"])
-        need(m["config"], CONFIG_FIELDS, "model config", m["id"])
-        if not set(m["tasks"]) <= tasks or not m["tasks"]:
-            raise Bad(f"model {m['id']!r} has tasks outside {sorted(tasks)}: {m['tasks']}")
-        if not m["quants"]:
-            raise Bad(f"model {m['id']!r} lists no quant files")
-        for q in m["quants"]:
-            if not (isinstance(q.get("bytes"), int) and q["bytes"] > 0) or not q.get("repo") or not q.get("label"):
-                raise Bad(f"model {m['id']!r} has a quant without a size, a repo or a label: {q}")
-        if not m["run"].get("ollama_q") or not any(q["quant"] == m["run"]["ollama_q"] for q in m["quants"]):
-            raise Bad(f"model {m['id']!r} has no size for the quant its Ollama tag ships "
-                      f"({m['run'].get('ollama_q')})")
-        c = m["config"]
-        if c.get("params_active") is not None and not 0 < c["params_active"] <= c["params_total"]:
-            raise Bad(f"model {m['id']!r} has params_active outside (0, params_total]")
-        # Ollama and LM Studio are the two routes a beginner is offered, so both are required. The
-        # llama.cpp and MLX routes are for the curious and are shown only where the pick has them.
-        if not m["run"].get("ollama") or not m["run"].get("lmstudio"):
-            raise Bad(f"model {m['id']!r} has no Ollama tag or no LM Studio name")
+        if m["tier"] not in TIERS:
+            raise Bad(f"pick {m['id']!r} has tier {m['tier']!r}, not one of {TIERS}")
+        if not m["uses"] or not set(m["uses"]) <= uses:
+            raise Bad(f"pick {m['id']!r} has uses outside {sorted(uses)}: {m['uses']}")
+        mod = m["model"]
+        # An embedding model is small and context-light, and fit.mjs sizes it from its file alone, so only a
+        # model people chat with must carry the geometry the context cache is computed from.
+        need(mod, (("params_total",) if embed_only(m) else CONFIG_FIELDS) + ("quants",), "pick model", m["id"])
+        gg = [q for q in mod["quants"] if q.get("format", "gguf") == "gguf"]
+        if not gg:
+            raise Bad(f"pick {m['id']!r} lists no GGUF quant files")
+        # A GGUF file needs its label too: it is the `:<quant>` in the download command. MLX entries are a
+        # repo each, downloaded whole, so a size and a repo are all they need.
+        for q in mod["quants"]:
+            gguf = q.get("format", "gguf") == "gguf"
+            if not (isinstance(q.get("bytes"), int) and q["bytes"] > 0) or not q.get("repo") or (gguf and not q.get("label")):
+                raise Bad(f"pick {m['id']!r} has a quant without a size, a repo or a label: {q}")
+        if not any(q["quant"] == m["default_quant"] for q in gg):
+            raise Bad(f"pick {m['id']!r} has no file for its default quant {m['default_quant']}")
+        if mod.get("params_active") is not None and not 0 < mod["params_active"] <= mod["params_total"]:
+            raise Bad(f"pick {m['id']!r} has params_active outside (0, params_total]")
+        # Ollama and LM Studio are the two routes a beginner is offered, so both are required: an Ollama
+        # command, and either an LM Studio catalogue id or a search string. llama.cpp and MLX are for the
+        # curious and are shown only where the pick has them.
+        run = m["run"]
+        if not (run.get("ollama") or {}).get("pull"):
+            raise Bad(f"pick {m['id']!r} has no Ollama command")
+        lms = run.get("lmstudio") or {}
+        if not (lms.get("catalog") or lms.get("search")):
+            raise Bad(f"pick {m['id']!r} has neither an LM Studio catalogue id nor a search string")
+        if not m["license"].get("name"):
+            raise Bad(f"pick {m['id']!r} has no licence name")
+    if not any(not embed_only(m) for m in picks["picks"]):
+        raise Bad("picks.json has no model to chat with")
 
 
 def hf_join(picks: dict, path: Path = HF_MODELS) -> dict:
@@ -224,7 +269,8 @@ def hf_join(picks: dict, path: Path = HF_MODELS) -> dict:
 
     Returned with the file's own column lists, untouched: the page turns a row into what the fit method reads
     with `normalizeModel()` from `localfit.mjs`, which is ds-models' mapping and the only one. Rows are
-    joined on `hf_id`, and a pick the index does not have keeps its own `config` and `quants`.
+    joined on the pick's `id`, which is the Hugging Face repo id; a pick the index does not have keeps its own
+    `model`.
 
     Tolerant of the file's absence and of rows it does not name, and of nothing else: a file that is there
     but is not JSON is a broken build upstream, and swallowing it would hide that.
@@ -233,7 +279,7 @@ def hf_join(picks: dict, path: Path = HF_MODELS) -> dict:
         return {}
     data = json.loads(path.read_text(encoding="utf-8"))
     cols = data["cols"]
-    want = {m.get("hf_id") for m in picks["models"] if m.get("hf_id")}
+    want = {m["id"] for m in picks["picks"]}
     rows = [r for r in data.get("models", []) if dict(zip(cols, r)).get("id") in want]
     if not rows:
         return {}
@@ -242,10 +288,10 @@ def hf_join(picks: dict, path: Path = HF_MODELS) -> dict:
 
 
 # ------------------------------------------------------------------ how to run it
-# The steps, per route and per OS, as data the page fills in. The placeholders are a pick's own names and the
-# quant the fit chose for this machine: `{ollama_tag}` (the library tag, or `hf.co/<repo>:<quant>` for any
-# other quant), `{hf_repo}` and `{qlabel}` (the GGUF file the fit sized), `{mlx}`, `{lmstudio}`, and `{ctx}`,
-# the context the estimate assumed. Nothing here invents a model name. A step is plain words, or
+# The steps, per route and per OS, as data the page fills in. The placeholders are filled from the pick's own
+# `run` commands at the quant the fit chose for this machine (`LOCALUI.commands`): `{ollama_cmd}`,
+# `{llama_cmd}`, `{mlx_cmd}`, `{lmstudio}` (its catalogue id, or the search string where it has none),
+# `{qlabel}`, and `{ctx}`, the context the estimate assumed. Nothing here invents a model name or a command. A step is plain words, or
 # `["cmd", "<command>"]`, which the page draws with a copy button, or `["ctx", ...]` / `["ctxcmd", ...]`, a
 # step and a command shown only when the estimate assumed more context than the runner's own default --
 # fit.md's warning that Ollama and LM Studio pick a smaller one, so the answer on the card is only true if the
@@ -295,19 +341,19 @@ HOWTO = {
                         "run the installer.",
                         "Open Terminal: press the Windows key, type <b>Terminal</b>, press Enter.",
                         "Paste this and press Enter. The first time, it downloads the model.",
-                        ["cmd", "ollama run {ollama_tag}"], OLLAMA_CTX, OLLAMA_CTX_CMD,
+                        ["cmd", "{ollama_cmd}"], OLLAMA_CTX, OLLAMA_CTX_CMD,
                         "Type a question when you see <b>&gt;&gt;&gt;</b>. Type <b>/bye</b> to leave."],
             "macos": ["Download Ollama from <a href=\"https://ollama.com/download/mac\">ollama.com</a>, open it, "
                       "and drag it to Applications.",
                       "Open Terminal: press Cmd + Space, type <b>Terminal</b>, press Enter.",
                       "Paste this and press Enter. The first time, it downloads the model.",
-                      ["cmd", "ollama run {ollama_tag}"], OLLAMA_CTX, OLLAMA_CTX_CMD,
+                      ["cmd", "{ollama_cmd}"], OLLAMA_CTX, OLLAMA_CTX_CMD,
                       "Type a question when you see <b>&gt;&gt;&gt;</b>. Type <b>/bye</b> to leave."],
             "linux": ["Install Ollama. This downloads and runs its official install script, which asks for your "
                       "password:",
                       ["cmd", "curl -fsSL https://ollama.com/install.sh | sh"],
                       "Then run the model. The first time, it downloads it.",
-                      ["cmd", "ollama run {ollama_tag}"], OLLAMA_CTX, OLLAMA_CTX_CMD,
+                      ["cmd", "{ollama_cmd}"], OLLAMA_CTX, OLLAMA_CTX_CMD,
                       "Type a question when you see <b>&gt;&gt;&gt;</b>. Type <b>/bye</b> to leave."],
             "steamos": ["Ollama&rsquo;s installer can&rsquo;t write to SteamOS&rsquo;s locked system folders, so "
                         "<b>LM Studio is the easier route on a Deck</b>. If you&rsquo;d still like Ollama: switch "
@@ -315,7 +361,7 @@ HOWTO = {
                         "Download Ollama into your home folder and start it:",
                         ["cmd", "mkdir -p ~/ollama && curl -fsSL https://ollama.com/download/ollama-linux-amd64.tgz"
                                 " | tar -xz -C ~/ollama && ~/ollama/bin/ollama serve &"],
-                        "Then run the model:", ["cmd", "~/ollama/bin/ollama run {ollama_tag}"],
+                        "Then run the model:", ["cmd", "{ollama_cmd_home}"],
                         OLLAMA_CTX, OLLAMA_CTX_CMD],
         },
     },
@@ -324,22 +370,22 @@ HOWTO = {
         "steps": {
             "windows": ["Install it with winget, in Terminal:", ["cmd", "winget install llama.cpp"],
                         "Start a chat server. It downloads the model the first time:",
-                        ["cmd", "llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],
+                        ["cmd", "{llama_cmd}"],
                         "Open <b>http://localhost:8080</b> in your browser."],
             "macos": ["Install it with Homebrew:", ["cmd", "brew install llama.cpp"],
                       "Start a chat server. It downloads the model the first time:",
-                      ["cmd", "llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],
+                      ["cmd", "{llama_cmd}"],
                       "Open <b>http://localhost:8080</b> in your browser."],
             "linux": ["Install it with Homebrew, or download a build from "
                       "<a href=\"https://github.com/ggml-org/llama.cpp/releases\">the releases page</a>:",
                       ["cmd", "brew install llama.cpp"],
                       "Start a chat server. It downloads the model the first time:",
-                      ["cmd", "llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],
+                      ["cmd", "{llama_cmd}"],
                       "Open <b>http://localhost:8080</b> in your browser."],
             "steamos": ["In Desktop Mode, download the Vulkan build for Linux from "
                         "<a href=\"https://github.com/ggml-org/llama.cpp/releases\">the releases page</a> and unpack "
                         "it in your home folder.",
-                        "In Konsole, from the unpacked folder:", ["cmd", "./llama-server -hf {hf_repo}:{qlabel} -c {ctx}"],
+                        "In Konsole, from the unpacked folder:", ["cmd", "{llama_cmd_here}"],
                         "Open <b>http://localhost:8080</b> in the browser."],
         },
     },
@@ -348,13 +394,15 @@ HOWTO = {
                                  "than our estimate.",
         "steps": {
             "macos": ["Install it with Python's package manager (Python 3.10 or newer):", ["cmd", "pip install mlx-lm"],
-                      "Chat with the model. It downloads it the first time:", ["cmd", "mlx_lm.chat --model {mlx}"]],
+                      "Chat with the model. It downloads it the first time:", ["cmd", "{mlx_cmd}"]],
         },
     },
 }
 # Ollama's and LM Studio's own default context, at or below which the `ctx` steps above are left out.
 # Ollama's is 4,096 tokens as of its 0.6 releases; LM Studio's is set per model and is commonly 4,096 too.
 RUNNER_CTX = 4096
+# The context every estimate assumes unless the reader changes it: fit.md section 2.2's default.
+DEFAULT_CTX = 8192
 
 
 # ------------------------------------------------------------------ the cheat sheet
@@ -396,13 +444,14 @@ const I = JSON.parse(readFileSync(process.argv[2], "utf8"));
 const hf = I.hf && I.hf.rows ? Object.fromEntries(I.hf.rows.map((r) => {
   const o = Object.fromEntries(I.hf.cols.map((c, i) => [c, r[i]])); return [o.id, o]; })) : {};
 const modelOf = (p) => {
-  const row = p.hf_id && hf[p.hf_id];
+  const row = hf[p.id];
   const base = row ? F.normalizeModel(row, I.hf.variant_cols, I.hf.file_cols) : null;
-  return base && base.quants.length ? Object.assign(base, {id: p.id}) : Object.assign({id: p.id}, p.config, {quants: p.quants});
+  return base && base.quants.length ? Object.assign(base, {id: p.id}) : p.model;
 };
 const out = I.machines.map((hw) => I.models.map((p) => {
   const b = F.bestQuant(modelOf(p), hw, {context: I.ctx});
-  return b ? {id: p.id, verdict: b.verdict, quant: b.quant, tps: b.speed.decodeTps} : {id: p.id, verdict: "too-big"};
+  return b ? {id: p.id, verdict: b.verdict, quant: b.quant, tps: b.speed.decodeTps, snag: !!(b.offload || b.nearlyFull)}
+    : {id: p.id, verdict: "too-big"};
 }));
 process.stdout.write(JSON.stringify(out));
 """
@@ -423,8 +472,8 @@ def cheat_answers(picks: dict, hf: dict) -> list[list[dict]]:
     import tempfile
     with tempfile.TemporaryDirectory() as tmp:
         t = Path(tmp)
-        (t / "in.json").write_text(json.dumps({"machines": [m for _, m in CHEAT], "models": picks["models"],
-                                               "hf": hf, "ctx": picks.get("default_ctx", 8192)}), encoding="utf-8")
+        (t / "in.json").write_text(json.dumps({"machines": [m for _, m in CHEAT], "models": picks["picks"],
+                                               "hf": hf, "ctx": DEFAULT_CTX}), encoding="utf-8")
         (t / "cheat.mjs").write_text(CHEAT_JS % {"fit": json.dumps(FIT_MJS.as_uri())}, encoding="utf-8")
         res = subprocess.run([node_bin(), str(t / "cheat.mjs"), str(t / "in.json")],
                              capture_output=True, text=True, encoding="utf-8")
@@ -435,11 +484,13 @@ def cheat_answers(picks: dict, hf: dict) -> list[list[dict]]:
 
 def cheat_rows(picks: dict, answers: list[list[dict]]) -> list[tuple[str, list, list]]:
     """For each cheat-sheet machine: the three best picks that run great, and the two best that only run."""
-    by = {m["id"]: m for m in picks["models"]}
+    by = {m["id"]: m for m in picks["picks"]}
     out = []
     for (label, _), row in zip(CHEAT, answers):
-        great = sorted((a for a in row if a["verdict"] == "great"), key=lambda a: -by[a["id"]]["score"])
-        ok = sorted((a for a in row if a["verdict"] in ("slow", "tight")), key=lambda a: -by[a["id"]]["score"])
+        row = [a for a in row if not embed_only(by[a["id"]])]
+        # Clean fits first, as the picker orders them (see `groups` in local_page.js).
+        great = sorted((a for a in row if a["verdict"] == "great"), key=lambda a: (a["snag"], -rank(by[a["id"]])))
+        ok = sorted((a for a in row if a["verdict"] in ("slow", "tight")), key=lambda a: -rank(by[a["id"]]))
         out.append((label, [(by[a["id"]], a) for a in great[:3]], [(by[a["id"]], a) for a in ok[:2]]))
     return out
 
@@ -478,6 +529,25 @@ def rel(tail: str = "") -> str:
     return "../" + tail
 
 
+# The quants `bestQuant()` can choose: fit.mjs's GGUF and MLX ladders. Read off the module rather than
+# restated, so a quant ds-models adds to a ladder reaches the page without an edit here.
+def ladder() -> set[str]:
+    src = FIT_MJS.read_text(encoding="utf-8")
+    return {q for name in ("GGUF_LADDER", "MLX_LADDER")
+            for q in re.findall(r"'([^']+)'", re.search(rf"{name} = \[([^\]]*)\]", src).group(1))}
+
+
+def slim(p: dict) -> dict:
+    """A pick as the page needs it. Files no ladder reaches (BF16, Q4_1 and the like) are dropped, about 20 KB of
+    the page: `bestQuant()` never chooses them, so no answer changes -- the browser check
+    holds the picker to the cheat sheet, which is computed from the full file -- and the expert view's quant
+    menu offers what the method can rate. `quant_by_budget_gb` is ds-models' static guide for pages without
+    the method; this one has the method."""
+    keep = ladder() | {p["default_quant"]}
+    model = dict(p["model"], quants=[q for q in p["model"]["quants"] if q["quant"] in keep])
+    return {k: v for k, v in dict(p, model=model).items() if k != "quant_by_budget_gb"}
+
+
 def payload(cat: dict, picks: dict, hf: dict) -> dict:
     """Everything the page script reads, in one object. Compact keys are not worth it: gzip already
     collapses the repetition, and readable keys are what lets a reader of the page source check a number.
@@ -486,10 +556,11 @@ def payload(cat: dict, picks: dict, hf: dict) -> dict:
         "page": PAGE,
         "kinds": cat["kinds"], "devices": cat["devices"], "gpus": cat["gpus"], "custom": cat["custom"],
         "find_out": cat["find_out"],
-        "tasks": picks["tasks"], "models": picks["models"], "hf": hf or None,
-        "default_ctx": picks.get("default_ctx", 8192), "runner_ctx": RUNNER_CTX,
+        "tasks": [{"id": t, "label": l} for t, l in TASKS], "models": [slim(p) for p in picks["picks"]], "hf": hf or None,
+        "runtimes": picks.get("runtimes"),
+        "default_ctx": DEFAULT_CTX, "runner_ctx": RUNNER_CTX,
         "howto": HOWTO,
-        "fixture": bool(cat.get("fixture") or picks.get("fixture")),
+        "fixture": bool(cat.get("fixture")),
     }
 
 
@@ -576,15 +647,15 @@ def cheat_html(rows) -> str:
 
 def render(cat: dict, picks: dict, hf: dict) -> str:
     title = f"{PAGE['title']}: what AI can your computer run? | Awesome Agentic Atlas"
-    n = len(picks["models"])
+    n = sum(1 for p in picks["picks"] if not embed_only(p))
     desc = (f"Pick your laptop, Mac, gaming PC or handheld and see which of {n} open AI models will run on it, "
             "how fast, and the exact steps to run them with LM Studio or Ollama. Free, private, works offline.")
     url = SITE + PAGE["slug"] + "/"
-    tasks = "".join(f'<label class="chip lxchip"><input type="checkbox" name="task" value="{esc(t["id"])}">'
-                    f'<span>{esc(t["label"])}</span></label>' for t in picks["tasks"])
-    fixture = ('<p class="lxfix" role="note">Preview data: these hardware and model numbers are placeholders '
-               'while the catalogue is finished. Treat every answer as a rough guide.</p>'
-               if cat.get("fixture") or picks.get("fixture") else "")
+    tasks = "".join(f'<label class="chip lxchip"><input type="checkbox" name="task" value="{esc(t)}">'
+                    f'<span>{esc(label)}</span></label>' for t, label in TASKS)
+    fixture = ('<p class="lxfix" role="note">Preview data: the hardware list is a placeholder while the '
+               'catalogue is finished, so a machine&rsquo;s numbers may be off. Treat every answer as a rough guide.</p>'
+               if cat.get("fixture") else "")
     return f"""{head(title, desc, url)}<body>
 <header><div class="wrap">
   <nav class="brandbar">{mark.brand(rel())}</nav><div class="top">
@@ -674,7 +745,7 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
 
 <section class="lxs" id="cheat" aria-labelledby="cheath">
   <h2 id="cheath">Quick answer by machine</h2>
-  <p class="lxquiet">The same maths as the picker, for some common machines, at an {picks.get("default_ctx", 8192) // 1024}k context.</p>
+  <p class="lxquiet">The same maths as the picker, for some common machines, at an {DEFAULT_CTX // 1024}k context.</p>
   {cheat_html(cheat_rows(picks, cheat_answers(picks, hf)))}
 </section>
 
@@ -894,9 +965,9 @@ def main() -> None:
     # whoever edits this stage, `local_page.js` and ds-models' module, and every one stays in the source.
     page.write_text(pagemin.strip_page(render(cat, picks, hf)), encoding="utf-8")
     print(f"{PAGE['slug']}/index.html · {b20.kb(page.stat().st_size)} · {len(cat['devices'])} devices, "
-          f"{len(cat['gpus'])} graphics cards, {len(picks['models'])} models"
+          f"{len(cat['gpus'])} graphics cards, {len(picks['picks'])} picks"
           + (f", {len(hf)} joined to the Hugging Face index" if hf else ", no Hugging Face index yet")
-          + (" · FIXTURE data" if cat.get("fixture") or picks.get("fixture") else ""))
+          + (" · FIXTURE hardware" if cat.get("fixture") else ""))
     print("sitemap.xml carries this URL via scripts/20_landing.py")
 
 

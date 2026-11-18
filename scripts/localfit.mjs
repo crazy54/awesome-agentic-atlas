@@ -16,14 +16,18 @@
 //   prefill speed: reading the prompt is a big matrix multiply, so it is compute-bound: tokens/s ≈ efficiency ×
 //                 FLOPS ÷ (2 × active parameters).
 //
-// Units: GB means 1e9 bytes everywhere (vendors' convention for VRAM and bandwidth; llama.cpp prints GiB, and the
-// calibration converts). Bandwidth is GB/s, compute is TFLOPS.
+// Units: GB means 1e9 bytes for files, bandwidth and every *GB output; memory *sizes* from the catalogue (ram_gb,
+// vram_gb, gpu_usable_gb) are marketed binary GiB and converted with GIB (see below). Bandwidth is GB/s, compute is TFLOPS.
 //
 // Inputs are plain objects. `model` follows eng-hf's team/contracts/models.md (config fields flattened), `hardware`
 // follows ds-hardware's team/contracts/hardware.md; `normalizeHardware()` is the one place that maps catalogue field
 // names onto what this module reads, so a schema change there touches one function here.
 
 export const GB = 1e9;
+// Marketed RAM, VRAM and unified-memory sizes are binary: a "24 GB" card has 24 GiB, a "16 GB" Mac 16 GiB
+// (ds-hardware, hardware.md). Catalogue fields ending _gb keep the marketed number; budgets convert with GIB.
+// Model files and bandwidth are decimal (1e9).
+export const GIB = 1024 ** 3;
 
 // ── Quantisation types ───────────────────────────────────────────────────────────────────────────────────────────
 //
@@ -273,11 +277,12 @@ export function kvBytes(m, context, kvQuant = 'f16') {
 // Scratch memory the runtime needs on top of weights and KV: llama.cpp's compute buffer, sized for the worst case of
 // one micro-batch (512 tokens) with all-token logits (n_vocab floats each) plus activations. Measured compute buffers
 // for 7–8B models with flash attention are 0.25–0.5 GB; this formula gives 0.45 GB for Llama 3.1 8B.
-export function computeBufferBytes(m) {
+export function computeBufferBytes(m, opts = {}) {
   const V = num(m.vocab_size) ?? 32000, H = num(m.hidden_size) ?? 4096;
-  // Vision models also load a projector (mmproj): its real size when the index has it, else 0.6 GB (typical for
-  // the SigLIP-class encoders in Gemma 3 and Qwen-VL), plus its own activations.
-  const proj = m.vision ? (num(m.mmproj_bytes) ?? 0.6 * GB) + 0.2 * GB : 0;
+  // Vision models load a projector (mmproj) only when you use images: its real size when the index has it, else
+  // 0.6 GB (typical for SigLIP-class encoders), plus its own activations. Counted when opts.images is true (the
+  // visitor picked "Images"); otherwise left out, and fit() notes what images would add.
+  const proj = m.vision && opts.images ? visionBytes(m) : 0;
   return 512 * (V * 4 + H * 64) + 0.05 * GB + proj;
 }
 
@@ -331,6 +336,10 @@ export function normalizeModel(row, variantCols, fileCols) {
   };
 }
 
+export function visionBytes(m) {
+  return m.vision ? (num(m.mmproj_bytes) ?? 0.6 * GB) + 0.2 * GB : 0;
+}
+
 // ── Hardware ─────────────────────────────────────────────────────────────────────────────────────────────────────
 
 // What the OS and everyday apps keep for themselves out of system RAM. Judgment, not measurement: a fresh Windows 11
@@ -345,14 +354,17 @@ export function osReserveGB(os, ramGB) {
   }
 }
 
-// Apple's default GPU wired limit (Metal's recommendedMaxWorkingSetSize, which llama.cpp prints at start-up): two-
-// thirds of RAM up to 36 GB (10.67 GB on a 16 GB Mac), three-quarters up to 128 GB (96 GB of 128), and about 80%
-// above (154 GB of 192, per llama.cpp's gpt-oss guide, https://github.com/ggml-org/llama.cpp/discussions/15396).
-// It can be raised with `sudo sysctl iogpu.wired_limit_mb=<MB>` (macOS 14+); the setting resets on reboot.
+// Apple's default GPU wired limit (Metal's recommendedMaxWorkingSetSize, which llama.cpp prints at start-up), the
+// classic macOS 13–15 rule: two-thirds of RAM up to and including 32 GiB, three-quarters above 32 GiB (so every
+// 36 GB-and-up Mac). The boundary is the decompiled `unifiedMemoryBytes > 0x800000000` (32 GiB) quoted in
+// https://github.com/ggml-org/llama.cpp/discussions/2182 (reverse-engineered, so unverified on its own), and every
+// logged datapoint agrees: 16 GB → 10922 MiB (#11228), 36 GB → 27647 MiB (#12357), 192 GB → 147455 MiB (#12013),
+// all llama.cpp issues, i.e. 10.67 / 27 / 144 GiB. Full table: team/local-ai/hardware/research/apple.md.
+// macOS 26 logs show larger shares (74–91%); a browser can't detect the macOS version, so this conservative rule is
+// the default and the catalogue may override gpu_usable_gb. Raise it with `sudo sysctl iogpu.wired_limit_mb=<MiB>`
+// (macOS 14+); it resets on reboot.
 export function appleGpuShareGB(ramGB) {
-  if (ramGB <= 36) return ramGB * (2 / 3);
-  if (ramGB <= 128) return ramGB * 0.75;
-  return ramGB * 0.8;
+  return ramGB > 32 ? ramGB * 0.75 : ramGB * (2 / 3); // GiB in, GiB out
 }
 
 // Maps a catalogue entry (team/contracts/hardware.md) onto the fields this module reads. Accepts either the
@@ -394,6 +406,12 @@ export function normalizeHardware(h) {
   return {
     id: h.id, name: h.name, os, ramGB, ramBW, unified, gpu, gpuUsableGB,
     cpuCores: num(h.cpu?.cores_perf) ?? num(h.cpu?.cores) ?? 6,
+    // What the CPU cores can actually read (AM5 single-CCD parts ~64 GB/s through Infinity Fabric, Strix Halo's CPU
+    // ~110 of 256), when the catalogue knows it.
+    cpuReadCap: num(h.cpu?.read_cap_gbs) ?? null,
+    ramBytes: num(h.ram_bytes) ?? num(mem.ram_bytes) ?? ramGB * GIB,
+    vramBytes: gpu && !gpu.integrated ? (gpus.reduce((s, g) => s + (num(g.vram_bytes) ?? (num(g.vram_gb) ?? 0) * GIB), 0)) : null,
+    gpuUsableBytes: num(h.gpu_usable_bytes) ?? num(mem.gpu_usable_bytes) ?? (gpuUsableGB != null ? gpuUsableGB * GIB : null),
     cpuTflops: num(h.cpu?.fp32_tflops) ?? null,
   };
 }
@@ -421,16 +439,16 @@ export function pickBackend(hw, quantName, forced) {
 
 // Memory budgets in bytes: what a model may occupy on the GPU (fast pool) and in system RAM (slow pool).
 export function budgets(hw) {
-  const ramFree = Math.max(0, hw.ramGB - osReserveGB(hw.os, hw.ramGB)) * GB;
+  const ramFree = Math.max(0, hw.ramBytes - osReserveGB(hw.os, hw.ramGB) * GB);
   if (!hw.gpu) return { gpu: 0, ram: ramFree, shared: false };
   if (hw.gpu.integrated) {
     // One pool. The GPU may use its share, but never more than RAM minus the OS's share.
-    const gpu = Math.min(hw.gpuUsableGB * GB, ramFree);
+    const gpu = Math.min(hw.gpuUsableBytes, ramFree);
     return { gpu, ram: ramFree, shared: true };
   }
   // Discrete card: the CUDA/ROCm/Vulkan context takes ~0.3–0.5 GB, and on the card driving the display the desktop
   // compositor and browsers hold more (0.3–1.5 GB on Windows). 0.5 GB + 5% covers the common case.
-  const gpu = Math.max(0, hw.gpu.vram_gb * GB - (0.5 * GB + 0.05 * hw.gpu.vram_gb * GB));
+  const gpu = Math.max(0, hw.vramBytes - (0.5 * GB + 0.05 * hw.vramBytes));
   return { gpu, ram: ramFree, shared: false };
 }
 
@@ -449,11 +467,12 @@ export function fit(model, quant, hardware, opts = {}) {
   const backend = pickBackend(hw, qn, opts.backend);
   const W = weightBytes(model, quant);
   const KV = kvBytes(model, context, kvQuant);
-  const BUF = computeBufferBytes(model);
+  const BUF = computeBufferBytes(model, opts);
   const total = W + KV + BUF;
   const b = budgets(hw);
   const L = num(model.num_hidden_layers) ?? 32;
   const notes = [];
+  if (model.vision && !opts.images) notes.push(`Reading images adds about ${(visionBytes(model) / GB).toFixed(1)} GB.`);
   const base = { quant: qn, context, kvQuant, backend, weightsGB: W / GB, kvGB: KV / GB, bufferGB: BUF / GB, totalGB: total / GB,
     gpuBudgetGB: b.gpu / GB, ramBudgetGB: b.ram / GB, layers: L };
 
@@ -475,7 +494,7 @@ export function fit(model, quant, hardware, opts = {}) {
   if (b.shared) {
     // Unified memory: spilling past the GPU's share onto CPU threads uses the same RAM, so the ceiling is RAM.
     if (total > b.ram) return { ...base, placement: 'none', fits: false, gpuLayers: 0, gpuBytes: 0, cpuBytes: 0, notes };
-    if (hw.gpu.vendor === 'apple') notes.push(`Over macOS's default GPU memory limit (${(b.gpu / GB).toFixed(0)} GB). It can be raised: sudo sysctl iogpu.wired_limit_mb=${Math.floor((b.ram / GB) * 1000)}`);
+    if (hw.gpu.vendor === 'apple') notes.push(`Over macOS's default GPU memory limit (${(b.gpu / GB).toFixed(0)} GB). It can be raised until the next restart: sudo sysctl iogpu.wired_limit_mb=${Math.floor(b.ram / 2 ** 20)}`); // value in MiB
     else notes.push('Over the GPU memory share; raising it in the BIOS (UMA / dedicated graphics memory) lets it all run on the GPU.');
   }
 
@@ -540,6 +559,9 @@ export function speed(model, quant, hardware, opts = {}) {
   const gcal = LEGACY_ARCH.has(hw.gpu?.arch) ? { ...gcal0, eta: gcal0.eta * CAL.legacyArch } : gcal0;
   const ccal = CAL.cpu;
   const cpuBW = hw.ramBW;
+  // CPU pool efficiency. Calibrated against theoretical DIMM bandwidth (η 0.58); where the catalogue knows the cores'
+  // read cap, the pool is also limited to 0.88 × cap, which reproduces the 9950X rows with a 64 GB/s cap.
+  const cpuEffBW = (eta) => Math.min(eta * cpuBW, hw.cpuReadCap ? 0.88 * hw.cpuReadCap * (eta / ccal.eta) : Infinity);
   const gpuBW = hw.gpu?.bandwidth_gbs ?? cpuBW;
   // Share of the per-token read that lives in each pool. Experts are read k/E as often as dense weights, so a byte
   // of expert in RAM costs less than a byte of attention would.
@@ -558,7 +580,7 @@ export function speed(model, quant, hardware, opts = {}) {
   const tG = gFrac > 0 ? (readG * k + kvG / (gcal.kv ?? 1)) / (gcal.eta * gpuBW * GB) + (L * (f.placement === 'gpu' ? 1 : f.gpuLayers / L) * gcal.layerMs) / 1000 : 0;
   const cpuLayers = f.placement === 'cpu' ? L : f.placement === 'partial' && f.gpuLayers < L ? L - f.gpuLayers : 0;
   const cEta = ccal.eta * (f.placement === 'partial' ? CAL.hybridCpu : 1);
-  const tC = readC + kvC > 0 ? (readC * k + kvC) / (cEta * cpuBW * GB) + (cpuLayers * ccal.layerMs) / 1000 : 0;
+  const tC = readC + kvC > 0 ? (readC * k + kvC) / (cpuEffBW(cEta) * GB) + (cpuLayers * ccal.layerMs) / 1000 : 0;
   // Each pool-to-pool hand-off syncs the devices over PCIe. A dense layer split hands off once per token (~0.5 ms);
   // MoE expert offload hands off twice in every layer whose experts sit in RAM (~0.2 ms per such layer).
   let tX = 0;
@@ -660,12 +682,13 @@ export function bestQuant(model, hardware, opts = {}) {
   const ladder = ladderFor(model, hw, opts);
   const big = (num(model.params_total) ?? 0) >= 10e9;
   const results = ladder.map((q) => ({ q, a: assess(model, q, hw, opts) }));
+  const floorQ = Math.min(...Object.values(QUANTS).filter((q) => q.floor).map((q) => q.quality));
   const ok = (r) => {
     if (big && (r.q.quant === 'Q8_0' || r.q.quant === 'mlx-8bit')) return false;
+    if ((quantSpec(r.q.quant)?.quality ?? 0) < floorQ) return false;
     return r.a.verdict === 'great' && r.a.fit.placement === 'gpu' && r.a.fit.headroomGB >= 0.1 * r.a.fit.totalGB;
   };
   const capped = (r) => !(big && (r.q.quant === 'Q8_0' || r.q.quant === 'mlx-8bit'));
-  const floorQ = Math.min(...Object.values(QUANTS).filter((q) => q.floor).map((q) => q.quality));
   const quality = (r) => quantSpec(r.q.quant)?.quality ?? 0;
   const aboveFloor = (r) => quality(r) >= floorQ;
   // When nothing runs great, speed matters more than the last few points of quality: stay at Q4_K_M or below.

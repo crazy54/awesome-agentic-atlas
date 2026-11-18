@@ -100,18 +100,34 @@ refuses("a device with an unknown OS", lambda c, p: dev(c, os=["beos"]), "beos")
 refuses("a device missing a contract field", lambda c, p: c["devices"][0].pop("ram_bandwidth_gbs"), "ram_bandwidth_gbs")
 refuses("a device with no RAM sizes", lambda c, p: dev(c, ram_gb_options=[]), "no RAM")
 refuses("an OS with no find-out steps", lambda c, p: c["find_out"].pop("steamos"), "steamos")
-refuses("a model with no size for the quant its Ollama tag ships",
-        lambda c, p: mod(p, run=dict(p["models"][0]["run"], ollama_q="Q9_X")), "Q9_X")
-refuses("a quant with no size", lambda c, p: p["models"][0]["quants"][0].__setitem__("bytes", 0), "without a size")
-refuses("a quant with no repo", lambda c, p: p["models"][0]["quants"][0].pop("repo"), "without a size, a repo")
-refuses("a model with no quants", lambda c, p: mod(p, quants=[]), "no quant")
-refuses("a model missing the geometry the fit needs",
-        lambda c, p: p["models"][0]["config"].pop("num_key_value_heads"), "num_key_value_heads")
+CHAT0 = next(i for i, m in enumerate(PICKS["picks"]) if not b32.embed_only(m))
+
+
+def pick(p, **kw):
+    p["picks"][CHAT0] = dict(p["picks"][CHAT0], **kw)
+
+
+def model(p):
+    return p["picks"][CHAT0]["model"]
+
+
+refuses("a pick with no file for its default quant", lambda c, p: pick(p, default_quant="Q9_X"), "Q9_X")
+refuses("a quant with no size", lambda c, p: model(p)["quants"][0].__setitem__("bytes", 0), "without a size")
+refuses("a quant with no repo", lambda c, p: model(p)["quants"][0].pop("repo"), "without a size, a repo")
+refuses("a GGUF file with no label", lambda c, p: next(q for q in model(p)["quants"] if q.get("format", "gguf") == "gguf").pop("label"), "label")
+refuses("a pick with no GGUF files", lambda c, p: model(p).__setitem__("quants", [q for q in model(p)["quants"] if q.get("format") == "mlx"]), "no GGUF")
+refuses("a chat model missing the geometry the context cache needs",
+        lambda c, p: model(p).pop("num_key_value_heads"), "num_key_value_heads")
 refuses("a model with more active parameters than parameters",
-        lambda c, p: p["models"][0]["config"].__setitem__("params_active", 1e15), "params_active")
-refuses("a model with no Ollama tag", lambda c, p: p["models"][0]["run"].pop("ollama"), "Ollama")
-refuses("a model with an unknown task", lambda c, p: mod(p, tasks=["juggle"]), "juggle")
-refuses("a duplicate model id", lambda c, p: p["models"].append(dict(p["models"][0])), "twice")
+        lambda c, p: model(p).__setitem__("params_active", 1e15), "params_active")
+refuses("a pick with no Ollama command", lambda c, p: pick(p, run=dict(p["picks"][CHAT0]["run"], ollama={})), "Ollama")
+refuses("a pick with no way into LM Studio",
+        lambda c, p: pick(p, run=dict(p["picks"][CHAT0]["run"], lmstudio={"catalog": None, "search": None})), "LM Studio")
+refuses("a pick with an unknown use", lambda c, p: pick(p, uses=["juggle"]), "juggle")
+refuses("a pick of an unknown tier", lambda c, p: pick(p, tier="huge"), "huge")
+refuses("a duplicate pick id", lambda c, p: p["picks"].append(dict(p["picks"][0])), "twice")
+refuses("a picks file with nothing to chat with",
+        lambda c, p: p.__setitem__("picks", [m for m in p["picks"] if b32.embed_only(m)]), "nothing" if False else "no model to chat")
 
 kinds = {k["id"] for k in CAT["kinds"]}
 check("the six tiles the UX plan names", kinds, {"laptop", "mac", "gaming", "desktop", "handheld", "minipc"})
@@ -120,8 +136,10 @@ for k in kinds - {"gaming"}:
 true("every kind with devices has a popular one to offer as a chip",
      all(any(d.get("popular") and d["kind"] == k for d in CAT["devices"])
          for k in kinds if any(d["kind"] == k for d in CAT["devices"])))
-for t in PICKS["tasks"]:
-    true(f"the task {t['id']!r} has at least one model", any(t["id"] in m["tasks"] for m in PICKS["models"]))
+for t, _ in b32.TASKS:
+    true(f"the task {t!r} has at least one pick", any(t in m["uses"] for m in PICKS["picks"]))
+check("the task buttons are ds-models' uses, so a pick's `uses` is the filter with no mapping",
+      [t for t, _ in b32.TASKS], PICKS["uses"])
 true("every device names an OS the how-to has steps for", all(d["os"][0] in b32.OSES for d in CAT["devices"]))
 
 
@@ -142,17 +160,18 @@ answers = b32.cheat_answers(PICKS, {}) if node else None
 true("node is on PATH, which the cheat sheet needs", node)
 if node and answers:
     check("the cheat sheet has an answer for every pick on every machine",
-          [len(r) for r in answers], [len(PICKS["models"])] * len(b32.CHEAT))
+          [len(r) for r in answers], [len(PICKS["picks"])] * len(b32.CHEAT))
     with tempfile.TemporaryDirectory() as tmp:
         t = Path(tmp)
-        (t / "in.json").write_text(json.dumps({"machines": [m for _, m in b32.CHEAT], "models": PICKS["models"],
-                                               "ctx": PICKS.get("default_ctx", 8192)}), encoding="utf-8")
+        (t / "in.json").write_text(json.dumps({"machines": [m for _, m in b32.CHEAT], "models": PICKS["picks"],
+                                               "ctx": b32.DEFAULT_CTX}), encoding="utf-8")
         # The wrapped classic script, run as the browser runs it, against the module the build imported.
         (t / "wrapped.js").write_text(wrapped + r"""
 const I = JSON.parse(require("fs").readFileSync(process.argv[2], "utf8"));
 const out = I.machines.map((hw) => I.models.map((p) => {
-  const b = LOCALFIT.bestQuant(Object.assign({id: p.id}, p.config, {quants: p.quants}), hw, {context: I.ctx});
-  return b ? {id: p.id, verdict: b.verdict, quant: b.quant, tps: b.speed.decodeTps} : {id: p.id, verdict: "too-big"};
+  const b = LOCALFIT.bestQuant(p.model, hw, {context: I.ctx});
+  return b ? {id: p.id, verdict: b.verdict, quant: b.quant, tps: b.speed.decodeTps, snag: !!(b.offload || b.nearlyFull)}
+    : {id: p.id, verdict: "too-big"};
 }));
 process.stdout.write(JSON.stringify(out));
 """, encoding="utf-8")
@@ -165,16 +184,21 @@ process.stdout.write(JSON.stringify(out));
     V = {"great": 3, "slow": 2, "tight": 1, "too-big": 0}
     by = {label: {a["id"]: a for a in row} for (label, _), row in zip(b32.CHEAT, answers)}
     L = [label for label, _ in b32.CHEAT]
-    check("a 70B model is too big for an 8 GB laptop", by[L[0]]["llama-3.3-70b"]["verdict"], "too-big")
-    true("...and runs on a 128 GB Mac", by[L[-1]]["llama-3.3-70b"]["verdict"] in ("great", "slow"))
-    true("an 8B model runs on a 16 GB Mac", by[L[3]]["llama-3.1-8b"]["verdict"] == "great")
-    true("something runs great on an 8 GB laptop with no graphics card",
-         any(a["verdict"] == "great" for a in by[L[0]].values()))
+    big = "openai/gpt-oss-120b"
+    check("a 120B model is too big for an 8 GB laptop", by[L[0]][big]["verdict"], "too-big")
+    check("...and runs great on a 128 GB Mac", by[L[-1]][big]["verdict"], "great")
+    small = [m["id"] for m in PICKS["picks"] if m["tier"] == "small" and not b32.embed_only(m)]
+    true("a small-tier pick runs great on a 16 GB Mac", any(by[L[3]][i]["verdict"] == "great" for i in small))
+    tiny = [m["id"] for m in PICKS["picks"] if m["tier"] == "tiny" and not b32.embed_only(m)]
+    true("a tiny-tier pick runs on an 8 GB laptop with no graphics card",
+         any(by[L[0]][i]["verdict"] in ("great", "slow") for i in tiny))
     worse = [(m, a, b) for a, b in ((L[0], L[1]), (L[3], L[4]), (L[4], L[-1]), (L[5], L[6]), (L[6], L[7]), (L[7], L[8]))
              for m in by[a] if V[by[b][m]["verdict"]] < V[by[a][m]["verdict"]]]
     check("more memory never gives a worse verdict, across the cheat sheet's ladders", worse, [])
     rows = b32.cheat_rows(PICKS, answers)
-    true("every cheat-sheet row names at least one model that runs great", all(g for _, g, _ in rows))
+    true("every cheat-sheet row above 8 GB names a model that runs great", all(g for _, g, _ in rows[1:]))
+    true("...and no row names an embedding model, which nobody chats with",
+         not any(b32.embed_only(m) for _, g, o in rows for m, _ in g + o))
 
 
 # ---------------------------------------------------------------- the page
@@ -187,9 +211,10 @@ m = re.search(r'<script type="application/json" id="lxdata">(.*?)</script>', htm
 true("the data is inlined as one JSON block", m)
 if m:
     data = json.loads(m.group(1))
-    check("...carrying every device, card and model", (len(data["devices"]), len(data["gpus"]), len(data["models"])),
-          (len(CAT["devices"]), len(CAT["gpus"]), len(PICKS["models"])))
+    check("...carrying every device, card and pick", (len(data["devices"]), len(data["gpus"]), len(data["models"])),
+          (len(CAT["devices"]), len(CAT["gpus"]), len(PICKS["picks"])))
     check("...and no Hugging Face slice when there is no index", data["hf"], None)
+    check("...and ds-models' runtime notes", data["runtimes"], PICKS["runtimes"])
     check("...and the runners' own default context, below which no context step is shown", data["runner_ctx"], 4096)
     check("...and how-to steps for both beginner routes on all four OSes",
           [sorted(data["howto"][k]["steps"]) for k in ("lmstudio", "ollama")],
@@ -209,8 +234,14 @@ true("every explainer the cards link to exists",
      all(f'id="{x}"' in html for x in ("q-quant", "q-ctx", "q-offload", "q-unified", "q-tokens")))
 true("the picker is an ARIA combobox with a listbox", 'role="combobox"' in html and 'role="listbox"' in html)
 true("results are announced politely", 'aria-live="polite"' in html)
-true("the fixture banner shows while the data is a fixture",
-     ("lxfix" in html) == bool(CAT.get("fixture") or PICKS.get("fixture")))
+true("the preview banner shows while the hardware is a fixture", ("lxfix" in html) == bool(CAT.get("fixture")))
+TEAM = ROOT.parent / "Archie and Pals" / "team" / "local-ai"
+if (TEAM / "picks.json").exists():
+    # Only on a machine with the team's working folder beside the repository; CI has neither, by design.
+    check("config/local-ai/picks.json is ds-models' file, verbatim",
+          json.loads((TEAM / "picks.json").read_text(encoding="utf-8")), PICKS)
+    true("scripts/localfit.mjs is ds-models' fit.mjs, verbatim (re-copy it if this fails)",
+         (TEAM / "fit" / "fit.mjs").read_bytes().replace(b"\r\n", b"\n") == src.encode("utf-8").replace(b"\r\n", b"\n"))
 true("the page links the site stylesheet and the shared tail", "../pages.css" in html and "btags" in html)
 
 js = (SCRIPTS / "local_page.js").read_text(encoding="utf-8")
@@ -222,14 +253,14 @@ true("...and does no memory or speed arithmetic of its own: every number comes f
      not re.search(r"bandwidth_gbs\s*\*|\* *0\.6\b|kv_heads \*", js))
 
 hf_rows = {"cols": ["id", "name"], "variant_cols": ["repo", "fmt"], "file_cols": ["q", "bytes"], "snapshot": "2026-11-18",
-           "models": [["Qwen/Qwen3-8B", "Qwen3-8B"], ["nobody/else", "else"]]}
+           "models": [["Qwen/Qwen3.5-4B", "Qwen3.5-4B"], ["nobody/else", "else"]]}
 with tempfile.TemporaryDirectory() as tmp:
     p = Path(tmp) / "models.json"
     check("with no Hugging Face index the join is empty, not an error", b32.hf_join(PICKS, p), {})
     p.write_text(json.dumps(hf_rows), encoding="utf-8")
     check("with one, only the rows the picks name are carried, in the index's own column shape",
           b32.hf_join(PICKS, p), {"cols": ["id", "name"], "variant_cols": ["repo", "fmt"], "file_cols": ["q", "bytes"],
-                                  "snapshot": "2026-11-18", "rows": [["Qwen/Qwen3-8B", "Qwen3-8B"]]})
+                                  "snapshot": "2026-11-18", "rows": [["Qwen/Qwen3.5-4B", "Qwen3.5-4B"]]})
     p.write_text("not json", encoding="utf-8")
     try:
         b32.hf_join(PICKS, p)
