@@ -23,6 +23,15 @@ problem, not a week of deletions.
 COMING BACK. Every repo in the ledger is asked about again each week; one that answers is removed from
 it, and the next build lists it again.
 
+GITLAB. A GitLab project (a host-qualified `gitlab.com/...` nwo, see hosts.py) is asked of gitlab.com
+instead, by `scan_gitlab`, with the same two-step shape: gitlab.com's GraphQL is asked for every project
+by full path, and one it does not return is asked of the REST API directly, where 404 is gone and 200 is
+alive (GitLab redirects a moved project's old path). An archived GitLab project is alive, as an archived
+GitHub repo is. The one difference is what a failed read means. Anonymous gitlab.com allows about sixty
+requests an hour, so a GitLab answer that does not come is far likelier than a GitHub one to be the
+limit and not the projects; it must not cost the GitHub half its scan. So a failed GitLab scan keeps
+every GitLab entry in the ledger exactly as it was, adds none, and the GitHub result is written as usual.
+
     python scripts/dead_repos.py              # scan, update the ledger, print a report
     python scripts/dead_repos.py --dry-run    # scan and report, write nothing
     python scripts/dead_repos.py --status     # read the ledger only: no network
@@ -37,6 +46,9 @@ import json
 import os
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import hosts  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "docs" / "data.json"
@@ -69,10 +81,45 @@ def load_ledger(path: Path | None = None) -> dict:
 
 
 def listed_repos(data_path: Path | None = None) -> list[str]:
-    """Every distinct owner/name the published site lists, in a stable order."""
+    """Every distinct owner/name the published site lists, in a stable order. GitHub only, as it always
+    was: `r[i].count("/") == 1` is exactly `hosts.is_github` for every nwo the build can produce."""
     d = json.loads((data_path or DATA).read_text(encoding="utf-8"))
     i = d["cols"].index("nwo")
     return sorted({r[i] for r in d["rows"] if r[i] and r[i].count("/") == 1})
+
+
+def listed_gitlab(data_path: Path | None = None) -> list[str]:
+    """Every distinct GitLab project the published site lists."""
+    d = json.loads((data_path or DATA).read_text(encoding="utf-8"))
+    i = d["cols"].index("nwo")
+    return sorted({r[i] for r in d["rows"] if r[i] and hosts.host_of(r[i]) == hosts.GITLAB})
+
+
+GL_QUERY = """query($paths: [String!]) {
+  projects(fullPaths: $paths, first: 100) { nodes { fullPath } }
+}"""
+
+
+def scan_gitlab(nwos: list[str], client=None) -> dict[str, dict]:
+    """{nwo: {"status": "404"}} for every one of `nwos` gitlab.com no longer serves. Raises
+    `gitlab_api.GitLabError` on any read that is not a statement about a project."""
+    import gitlab_api as gl
+    client = client or gl.Client()
+    dead: dict[str, dict] = {}
+    for start in range(0, len(nwos), 100):
+        part = nwos[start:start + 100]
+        data = client.graphql(GL_QUERY, {"paths": [hosts.path_of(n) for n in part]})
+        found = {n["fullPath"].lower() for n in ((data.get("projects") or {}).get("nodes") or ())}
+        for nwo in part:
+            if hosts.path_of(nwo).lower() in found:
+                continue
+            try:
+                client.get(f"/projects/{hosts.quote_path(nwo)}")
+            except gl.GitLabError as exc:
+                if "HTTP 404" not in str(exc):
+                    raise
+                dead[nwo] = {"status": "404"}
+    return dead
 
 
 def rest_status(fetch, nwo: str) -> tuple[str, str]:
@@ -151,10 +198,10 @@ def report(doc: dict, new: list, revived: list, listed_n: int) -> str:
              f"edition and the workbooks.", ""]
     if new:
         lines += [f"**Newly gone ({len(new)}):**", ""] + [
-            f"- [{n}](https://github.com/{n}) ({doc['repos'][n]['status']})" for n in new] + [""]
+            f"- [{n}]({hosts.web_url(n)}) ({doc['repos'][n]['status']})" for n in new] + [""]
     if revived:
         lines += [f"**Back again ({len(revived)}), listed from the next build:**", ""] + [
-            f"- [{n}](https://github.com/{n})" for n in revived] + [""]
+            f"- [{n}]({hosts.web_url(n)})" for n in revived] + [""]
     if not new and not revived:
         lines += ["No change since the last scan.", ""]
     return "\n".join(lines)
@@ -173,10 +220,22 @@ def main(argv: list[str]) -> int:
             print(f"  {n}  {v['status']}  since {v['since']}")
         return 0
     listed = listed_repos()
-    nwos = sorted(set(listed) | set(ledger["repos"]))
+    nwos = sorted(set(listed) | {n for n in ledger["repos"] if hosts.is_github(n)})
     print(f"asking GitHub about {len(nwos):,} repos ({len(listed):,} listed, {len(ledger['repos'])} in the ledger)")
     dead = scan(nwos)
+    gl_listed = listed_gitlab()
+    gl_old = {n for n in ledger["repos"] if not hosts.is_github(n)}
+    gl_nwos = sorted(set(gl_listed) | gl_old)
+    if gl_nwos:
+        print(f"asking gitlab.com about {len(gl_nwos):,} projects")
+        try:
+            dead.update(scan_gitlab(gl_nwos))
+        except Exception as exc:  # noqa: BLE001 -- gitlab_api.GitLabError, or a transport surprise
+            # Keep every GitLab entry as it was: still dead until a scan that can read says otherwise.
+            print(f"::warning title=GitLab dead-repo scan failed::{exc} -- GitLab entries kept as they were")
+            dead.update({n: ledger["repos"][n] for n in gl_old})
     today = dt.datetime.now(dt.timezone.utc).date().isoformat()
+    listed = listed + gl_listed
     doc, new, revived = update(ledger, listed, dead, today)
     guard(new, listed)
     text = report(doc, new, revived, len(listed))

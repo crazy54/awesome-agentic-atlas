@@ -91,15 +91,22 @@ const ev = async expr => {
   if (r.exceptionDetails) throw new Error(expr.slice(0, 60) + " threw: " + (r.exceptionDetails.exception?.description || r.exceptionDetails.text));
   return r.result.value;
 };
+// A poll that lands while the page is navigating is answered with a CDP error, not a value -- "Inspected
+// target navigated or closed", "Execution context was destroyed", "Cannot find context" -- and that means
+// "not yet", so it is polled again, as admin-check.mjs does. Only those messages are swallowed, and `ev`
+// itself still throws, so a wrong expression still fails. The same race took friends-check.mjs down
+// in the weekly of 2026-11-01 (run 41334790158), in the same `goto()` readyState poll this file has.
+const soft = expr => ev(expr).catch(e => (/context|navigat/i.test(e.message) ? false : Promise.reject(e)));
 const size = (w, h) => S("Emulation.setDeviceMetricsOverride", {width: w, height: h, deviceScaleFactor: 1, mobile: w < 600});
 const goto = async () => {
   await S("Page.navigate", {url: ORIGIN});
-  for (let i = 0; i < 80 && !(await ev("document.readyState === 'complete'")); i++) await sleep(150);
+  for (let i = 0; i < 80 && !(await soft("document.readyState === 'complete'")); i++) await sleep(150);
   await sleep(300);                                // module scripts run after load's microtasks
 };
 // Until a condition on the page holds, or `ms` passes; returns whether it did.
 const until = async (expr, ms) => {
-  for (const end = Date.now() + ms; Date.now() < end; await sleep(100)) if (await ev(expr)) return true;
+  for (const end = Date.now() + ms; Date.now() < end; await sleep(100))
+    if (await soft(expr)) return true;
   return false;
 };
 let pass = 0, fail = 0;

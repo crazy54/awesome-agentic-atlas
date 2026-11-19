@@ -20,6 +20,7 @@ Counts were measured on 2026-09-25 with `find docs/<dir> -name index.html | wc -
 | `/repo/<owner>/<name>/` | 8,858 pages, plus `/repo/` | `22_detail.py` | One per project, with the in-page README reader. Names are slugged so every path is legal on Windows |
 | `/collections/…` | 6 pages | `25_collections.py` | Curated picks from `config/collections.json`. Rebuilt weekly only |
 | `/discover/` | `docs/discover/index.html`, `discover/cards/*.json` | `19d_discover.py`; `31_home.py` writes the cards | Fifty a day |
+| `/local/` | `docs/local/index.html` | `32_local.py` | The local-AI page (working title "Run It Local"): pick your machine, see which models run on it and how to run them. Data from `config/local-ai/` (ds-hardware's catalogue, ds-models' picks), with `localhw.mjs` and `localfit.mjs` vendored from them, all inlined so it works offline once visited. The name and slug are `sitewide.LOCAL_PAGE` |
 | `/v2/…` | prototype pages | `30_v2.py` | The redesign lab. On demand only, and not linked from the nav |
 | feeds, sitemaps | `feed.xml`, `feed.json`, `sitemap*.xml`, `robots.txt` | `21_feeds.py`, `20_landing.py`, `22_detail.py` | |
 | data | `data.json`, `live.json`, `discover.json`, `search/*`, `build.json` | `19`/`25_velocity`, `19c`, `19d`, `27`, `31` | `data.json` is a public API; its schema is in the root README |
@@ -38,6 +39,10 @@ five generators:
 - `22_detail.py`
 - `25_collections.py`
 - `31_home.py`
+
+`19d_discover.py` writes a nav too. The local-AI link is in all of these except `22_detail.py`, whose
+nine thousand pages are held byte-identical week to week; it reads its label and slug from
+`sitewide.LOCAL_PAGE`, so a rename is one edit.
 
 Then re-run each of them and `24_pwa.py`, or `detail-churn` and the page probes go red.
 
@@ -78,8 +83,12 @@ nothing else declares a colour token. The token names, values and ratios for oth
 
 ## Feature flags
 
-`config/app-flags.json` holds 16 on/off switches, every one `1` on 2026-09-25. The `index.*` flags are read
-by `19_pages.py` for the catalogue, and the `detail.*` flags by `22_detail.py`. Flags are fixed at build time:
+`config/app-flags.json` holds 17 on/off switches. The 16 `index.*` and `detail.*` ones were all `1` on
+2026-09-25; the `index.*` flags are read by `19_pages.py` for the catalogue, and the `detail.*` flags by
+`22_detail.py`. The 17th, `intake.gitlab`, is a data switch rather than a page one: read by `scripts/hosts.py`,
+it decides whether gitlab.com projects are indexed at all, and it shipped `0` (see
+[gitlab.md](gitlab.md)). Turning it on changes what the *next build* reads,
+not just how a page renders, so it takes a daily or weekly run to show. Flags are fixed at build time:
 
 - `22_detail.py` omits a disabled section from the HTML.
 - `19_pages.py` bakes some flags into the markup and embeds all of them as JSON, which the catalogue's

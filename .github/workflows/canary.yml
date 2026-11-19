@@ -1,0 +1,186 @@
+# The canary: every four hours, ask the two questions whose answer turned the daily red for 51 of the 72
+# failed builds between 2026-10-04 and 2026-11-18 -- and answer them with something the owner can merge.
+#
+#   drift       Has a source list added, renamed or translated a section, or stopped reading properly? Pull
+#               every list fresh and parse it the way the daily does (`AAA_PROVISIONAL=1`, scripts/drift.py).
+#               A section the build had to file provisionally is proposed as a `taxonomy.py`/`buckets.py`
+#               edit on `bot/drift-<fingerprint>`; a list that degraded goes to the build-red issue. Five
+#               drift episodes in that window, one every nine days, each red for two to sixteen days because
+#               the first anyone heard of it was the daily failing. Provisional mode keeps the daily
+#               publishing now; this is what turns its one-run placement into a mapping someone has merged.
+#   regenerate  Are the committed pages what the committed generators would write? Run the stages that are
+#               pure functions of committed files and, if the output moved, propose it on `bot/regenerate`.
+#               PR #104 changed `22_detail.py` without its 8,638 pages; nothing regenerated them for two
+#               weeks because the daily, the one job that would have, was red on drift.
+#
+# A job here goes red when it has found something a human should merge, which is what puts it in the
+# build-red issue (`alert.yml` watches this workflow too). It goes green, and withdraws its branch, the run
+# after the thing is fixed -- by its own PR, by a hand edit, or by the daily.
+#
+# STAYING OUT OF THE BUILD'S WAY
+#
+# Its own concurrency group, deliberately not `atlas-build`. A group holds at most one pending run and
+# cancels the older pending one when a newer run queues, so a canary queued in `atlas-build` behind a running
+# weekly would knock the waiting daily out of the queue -- the opposite of what a canary is for. It does not
+# need the group's protection either: it reads `latest_branch` and writes nothing but its own `bot/` branches.
+# It does not touch the build cache at all (not even to restore it -- that cache carries every screenshot and
+# is gigabytes, four-hourly, for a job that needs 40 Markdown files), and it saves none, so it cannot evict
+# the daily's entry from the repository's 10 GB allowance either.
+#
+# WHAT IT COSTS
+#
+# drift: ~40 REST calls to probe each list's head commit, then the lists themselves from
+# raw.githubusercontent.com, which needs no token. The scout's document is rendered from the committed ledger
+# (`12_scout.py --offline`), not searched for. regenerate: no network at all. A few minutes of runner per run.
+name: Canary — source drift and stale pages
+
+on:
+  schedule:
+    # 01:23, 05:23, 09:23, 13:23, 17:23, 21:23 UTC. The 09:23 run is the one that matters most: it lands
+    # before the 11:12 daily, so drift that arrived overnight has a proposal waiting before the build fails.
+    - cron: "23 1-23/4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write        # push bot/... branches only -- tools/bot_branch.py refuses anything else
+  pull-requests: write   # open or edit the proposal's PR, where the repository allows it
+
+concurrency:
+  group: canary
+  cancel-in-progress: false
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    # The pull is a minute or two and the parse under one. Twenty is ten times that, and a hang is a hang.
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: latest_branch
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Pull every source list
+        run: |
+          set -euo pipefail
+          python scripts/12_scout.py --offline
+          # --force because there is no cache to compare against: see the header.
+          # Three tries: a list host answering 502 once is not drift, and should not page anyone.
+          bash tools/retry.sh 3 python scripts/pull_sources.py --force
+
+      # The parse exactly as the daily runs it: provisional, so drift is filed for this run and written to
+      # `drift.PROPOSAL` (cache/drift-proposal.json, with its PR body beside it) instead of stopping. The
+      # parse still exits non-zero for what provisional mode does not cover -- a list it cannot read at all
+      # -- and that is red with the parser's own message, like any failed step.
+      - name: Parse, as the daily does
+        env:
+          AAA_PROVISIONAL: "1"
+        run: python scripts/10_parse_sources.py
+
+      # What the proposal holds, as step outputs, and one `drift:` line per placement and per degraded list,
+      # which is what the build-red issue quotes. `tools/drift_report.py` takes the file's path from
+      # scripts/drift.py, so the canary and the parser cannot disagree about where it is.
+      - name: Read the drift proposal
+        id: drift
+        run: python tools/drift_report.py
+
+      - name: Keep the proposal with the run
+        if: always() && hashFiles('cache/drift-proposal.*') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-proposal
+          path: cache/drift-proposal.*
+          retention-days: 14
+
+      # One branch per drift, named for drift.py's fingerprint of the placements, which is the same for the
+      # same drift on every run: six canaries a day over one unmerged drift are one branch and one PR, and
+      # bot_branch.py does not even re-push it. A different drift supersedes the last one's branch.
+      - name: Propose the mapping on bot/drift-<fingerprint>
+        if: steps.drift.outputs.placements != '0'
+        run: |
+          set -euo pipefail
+          python scripts/apply_drift_proposal.py
+          python tools/bot_branch.py propose --branch "${{ steps.drift.outputs.branch }}" \
+            --superseding bot/drift- \
+            --title "Taxonomy: file the sections upstream lists added (drift ${{ steps.drift.outputs.fingerprint }})" \
+            --body-file cache/drift-proposal.md --paths scripts/taxonomy.py scripts/buckets.py
+
+      - name: Withdraw any drift branch once nothing is left to file
+        if: steps.drift.outputs.placements == '0'
+        run: python tools/bot_branch.py withdraw --superseding bot/drift-
+
+      # Red while there is something for a person to do: a mapping to merge, or a list that is not being
+      # read properly, which has no code fix and so is reported only through the build-red issue.
+      - name: End red if a list drifted or degraded
+        if: steps.drift.outputs.placements != '0' || steps.drift.outputs.degraded != '0'
+        run: |
+          echo "::error title=Upstream drift::${{ steps.drift.outputs.placements }} section(s) filed provisionally, ${{ steps.drift.outputs.degraded }} list(s) degraded. The drift: lines above say which."
+          exit 1
+
+  regenerate:
+    runs-on: ubuntu-latest
+    # 22_detail is under a minute on a laptop. Twenty leaves room for every stage this list will grow to.
+    timeout-minutes: 20
+    env:
+      # The stages whose output is a pure function of files committed in this repository -- no cache, no
+      # network -- so that what they write here is exactly what the next daily would write from the same
+      # data. That is the whole test for joining this list, and it is why 19_pages and most of the rest are
+      # not on it: they read the fetch stages' cache. `tests/detail-churn.mjs` is the assertion for
+      # 22_detail; a stage added here should have one like it, so the pull request CI catches the change
+      # and this only catches the merge that went around it.
+      STAGES: "22_detail"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: latest_branch
+          # enough history to name the commits that changed a generator since its pages were last written
+          fetch-depth: 200
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # 22_detail imports 19_pages, which imports the workbook builder at module scope: see tests.yml.
+      - run: bash tools/retry.sh 3 python -m pip install --upgrade pip openpyxl pillow
+
+      - name: Regenerate
+        id: regen
+        run: |
+          set -euo pipefail
+          for s in $STAGES; do python "scripts/${s}.py"; done
+          git add -N docs
+          n="$(git diff --name-only -- docs | wc -l | tr -d ' ')"
+          echo "changed=${n}" >> "$GITHUB_OUTPUT"
+          if [ "$n" -eq 0 ]; then echo "the committed pages are what the generators write"; exit 0; fi
+          {
+            echo "The committed pages under \`docs/\` are not what the committed generators write: **${n} file(s)** differ."
+            echo "This is exactly what \`python scripts/<stage>.py\` writes for: \`${STAGES}\`, from the data already on \`latest_branch\`. No fetch, no cache."
+            echo
+            echo "The usual cause is a generator change merged without its regenerated output. The latest commits to those generators:"
+            echo
+            for s in $STAGES; do git log -3 --format="- %h %s (%an, %ad)" --date=short -- "scripts/${s}.py"; done
+            echo
+            echo "A green daily regenerates these pages too, so if the daily is green by the time this is read, this PR withdraws itself."
+          } > "$RUNNER_TEMP/body.md"
+          cat "$RUNNER_TEMP/body.md"
+
+      - name: Propose the pages on bot/regenerate
+        if: steps.regen.outputs.changed != '0'
+        run: |
+          python tools/bot_branch.py propose --branch bot/regenerate \
+            --title "Regenerate the pages a generator change left stale" \
+            --body-file "$RUNNER_TEMP/body.md" --paths docs
+
+      - name: Withdraw bot/regenerate if the pages are current
+        if: steps.regen.outputs.changed == '0'
+        run: python tools/bot_branch.py withdraw --branch bot/regenerate
+
+      - name: End red if the pages were stale
+        if: steps.regen.outputs.changed != '0'
+        run: exit 1

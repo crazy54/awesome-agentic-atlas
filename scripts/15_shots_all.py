@@ -30,6 +30,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import chrome  # noqa: E402
+import hosts  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
@@ -184,7 +185,7 @@ def cards_pair(key: str, name: str, sub: str) -> dict:
 
 def readme_images(nwo: str, branch: str, inner: str) -> list[str]:
     """Images referenced by a folder's own README, absolutised."""
-    base = f"https://raw.githubusercontent.com/{nwo}/{branch}/{inner}".rstrip("/")
+    base = f"{hosts.raw_base(nwo, branch)}{inner}".rstrip("/")
     data = fetch(f"{base}/README.md", MAX_HTML)
     if not data:
         return []
@@ -263,12 +264,16 @@ def tier_image(rec: dict) -> tuple[Image.Image | None, str, str]:
                 if im and wide_enough(im):
                     return im, u, "readme-sub"
 
-    # 2. the repo card GitHub generates, for anything with a repo
-    if rec.get("nwo") and rec["kind"] == "repo" and not rec.get("unavailable"):
-        data = fetch(f"https://opengraph.githubassets.com/1/{rec['nwo']}")
+    # 2. the repo card GitHub generates, for anything with a repo. GitHub only: GitLab has no social
+    # card (a project's og:image is its avatar), so a GitLab project with no README picture falls
+    # through to the generated title card, which names it properly, rather than to a GitHub card of a
+    # repository GitHub has never heard of.
+    card = hosts.social_card(rec.get("nwo") or "")
+    if card and rec["kind"] == "repo" and not rec.get("unavailable"):
+        data = fetch(card)
         im = open_image(data) if data else None
         if im:
-            return im, f"opengraph.githubassets.com/1/{rec['nwo']}", "repo-card"
+            return im, card.split("://", 1)[1], "repo-card"
 
     # 3. what a hosted product publishes about itself, then a live render
     if rec["kind"] == "site":

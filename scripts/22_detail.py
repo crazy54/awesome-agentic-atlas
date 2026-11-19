@@ -111,6 +111,7 @@ HERE = Path(__file__).resolve().parent
 # `spec_from_file_location` ceremony below -- only `scripts/` on the path, which a plain
 # `python scripts/22_detail.py` already provides and a test that loads this module by file path does not.
 sys.path.insert(0, str(HERE))
+import hosts  # noqa: E402
 import mark  # noqa: E402
 import osicons  # noqa: E402
 import sitewide  # noqa: E402
@@ -232,22 +233,29 @@ class Repo:
 
     def __init__(self, row: dict, out: Path):
         self.row = row
-        owner, name = row["nwo"].split("/", 1)
-        self.parts = ["repo", segment(owner.lower()), segment(name.lower())]
+        # One segment per segment of the `nwo`: two for a GitHub `owner/name`, and as many as a GitLab
+        # path has after its host for a host-qualified one (`repo/gitlab.com/group/sub/project/`; see
+        # hosts.py). The same rule as `20_landing.repo_path` and the pages' `detailURL`.
+        self.parts = ["repo"] + [segment(part.lower()) for part in row["nwo"].split("/")]
         self.path = out.joinpath(*self.parts, "index.html")
         self.url = SITE + "/".join(self.parts) + "/"
+        self.forge = hosts.label(row["nwo"])
+        self.github = hosts.is_github(row["nwo"])
 
-    # Every detail page sits exactly three directories below `docs/`, so this is a constant rather than
-    # a computed depth. Relative rather than absolute so the tree serves identically from a
-    # `python -m http.server` in `docs/`, from the custom domain's root, and from the `/<repo>/` path
-    # prefix Pages adds when there is no custom domain.
+    # A GitHub page sits exactly three directories below `docs/`; a GitLab one sits deeper, by as many
+    # segments as its path has, so the depth is the page's own rather than a constant. Relative rather
+    # than absolute so the tree serves identically from a `python -m http.server` in `docs/`, from the
+    # custom domain's root, and from the `/<repo>/` path prefix Pages adds when there is no custom domain.
     def rel(self, tail: str = "") -> str:
-        return "../../../" + tail
+        return "../" * len(self.parts) + tail
+
+    def up(self, tail: str = "") -> str:
+        """`docs/repo/` from this page, which is where `detail.css` and `detail.js` live."""
+        return "../" * (len(self.parts) - 1) + tail
 
     def kin_href(self, other: "Repo") -> str:
-        """A link to another detail page, from this one. Both are at depth three, so the two owner and
-        name segments are all that differ."""
-        return "../../" + "/".join(other.parts[1:]) + "/"
+        """A link to another detail page, from this one: up to `docs/repo/`, then down its segments."""
+        return self.up("/".join(other.parts[1:]) + "/")
 
     @property
     def name(self) -> str:
@@ -281,7 +289,7 @@ class Repo:
     def shot(self) -> str:
         """The screenshot, or the social card. `data.json` stores "" for two thirds of these rows rather
         than 55 bytes x 1,294 of a string it can rebuild from the `nwo`, so rebuild it."""
-        return self.row["img"] or f"https://opengraph.githubassets.com/1/{self.row['nwo']}"
+        return self.row["img"] or hosts.social_card(self.row["nwo"])
 
 
 def plan(data: dict, out: Path) -> tuple[list[Repo], dict[int, list[Repo]]]:
@@ -381,6 +389,10 @@ def provenance(repo: Repo, lists: dict[str, str]) -> str:
                      else f"<li>{esc(n)}</li>")
     n = repo.row["lists"]
     if not n:
+        if not repo.github:
+            return (f'<p class="lead">No curated list names this project yet: the atlas found it through '
+                    f'its own search of {esc(repo.forge)}, which adds agentic projects hosted there — most of '
+                    f'which no list links, the lists being written on GitHub.</p>')
         return ('<p class="lead">No curated list names this project yet: the atlas found it through its '
                 'own GitHub search, which adds fast-rising agentic repositories before a list catches up.</p>')
     return (f'<p class="lead">Named by <b>{n}</b> of the {b19.LISTS} lists the atlas merges'
@@ -486,9 +498,18 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
   </div>
   <p class="reader-note" id="reader-note">Public files are loaded on demand from the repository. The
     atlas does not copy or modify them.</p>
-</section>''' if APP_FLAGS["detail.repository_reader"] else ""
+</section>''' if APP_FLAGS["detail.repository_reader"] and repo.github else ""
+    # The reader drives GitHub's Contents and Trees APIs from the browser, which render Markdown the way
+    # the repository page does. GitLab's equivalent renderer needs a signed-in user on gitlab.com, so a
+    # GitLab project gets a plain way out to its README instead of a reader that would show raw text.
+    if APP_FLAGS["detail.repository_reader"] and not repo.github:
+        reader_section = f'''<section>
+  <h2>README</h2>
+  <p class="lead">This project lives on {esc(repo.forge)}, where its README, files and history are:
+    <a href="{esc(row["url"])}">{esc(hosts.path_of(row["nwo"]))} on {esc(repo.forge)} &rarr;</a></p>
+</section>'''
 
-    screenshot_section = f'''<section>
+    screenshot_section = "" if not repo.shot else f'''<section>
   <h2>Screenshot</h2>
   <figure class="shot">
     <img loading="lazy" decoding="async" src="{esc(repo.shot)}"
@@ -542,9 +563,9 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
 <meta property="og:title" content="{esc(repo.name)} — Awesome Agentic Atlas">
 <meta property="og:description" content="{esc(repo.summary)}">
 <meta property="og:url" content="{esc(repo.url)}">
-<meta property="og:image" content="{esc(repo.shot)}">
+{f'<meta property="og:image" content="{esc(repo.shot)}">' if repo.shot else ""}
 <link rel="icon" href="{repo.rel(ICON)}" type="image/svg+xml">
-{sitewide.font_preload(repo.rel())}{HEAD_THEME}<link rel="stylesheet" href="../../detail.css">
+{sitewide.font_preload(repo.rel())}{HEAD_THEME}<link rel="stylesheet" href="{repo.up("detail.css")}">
 <script type="application/ld+json">{breadcrumb(repo)}</script>
 {sitewide.SITE_KIT}
 </head>
@@ -556,7 +577,8 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
   <div class="top">
     <div>
       <h1>{esc(repo.name)}</h1>
-      <p class="nwo"><a href="{esc(row["url"])}">{esc(row["nwo"])}</a></p>
+      <p class="nwo"><a href="{esc(row["url"])}">{esc(hosts.path_of(row["nwo"]))}{"" if repo.github else
+        f' <span class="forge">{esc(repo.forge)}</span>'}</a></p>
       {f'<p class="lead">{esc(row["blurb"])}</p>' if row["blurb"]
        else '<p class="lead none">No description in any of the lists that named this project.</p>'}
       <p class="facts">
@@ -566,7 +588,7 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
         <span id="pushed" class="live"></span>
         <span id="snap" class="live"></span>
       </p>
-      <p class="acts"><a class="cta" href="{esc(row["url"])}">View on GitHub &rarr;</a>
+      <p class="acts"><a class="cta" href="{esc(row["url"])}">View on {esc(repo.forge)} &rarr;</a>
         <a class="alt" href="{esc(live)}">Find it in the atlas</a></p>
     </div>
     <nav class="util">
@@ -603,10 +625,10 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
   <a href="https://github.com/{esc(REPO)}#the-source-lists">repository</a>. The description, install
   command and platform verdicts are derived from this project's own README, install route, CI
   configuration and release assets. Star count and last push are read from the atlas dataset, which is
-  a dated snapshot rather than a live figure — <a href="{esc(row["url"])}">GitHub</a> is authoritative
+  a dated snapshot rather than a live figure — <a href="{esc(row["url"])}">{esc(repo.forge)}</a> is authoritative
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
-<script src="../../detail.js"></script>
+<script src="{repo.up("detail.js")}"></script>
 {sitewide.site_script(repo.rel())}
 {b19.beacon()}{b19.telemetry(repo.rel())}</body>
 </html>
@@ -845,6 +867,9 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
 /* word-break rather than overflow-wrap, because an owner/name pair breaks nowhere: a slash is not a
    break opportunity in Chrome or Safari, so a 52-character nwo would otherwise widen the document. */
 .nwo{margin:0 0 12px;color:var(--muted);font-size:13px;word-break:break-all}
+/* The forge a non-GitHub project lives on, inside its `.nwo` link: 19_pages.py's pill, tokens only. */
+.forge{display:inline-block;border:1px solid var(--grid);border-radius:5px;padding:0 5px;background:var(--band);
+  font-size:11px;font-weight:600;color:var(--ink2);white-space:nowrap;vertical-align:1px}
 .lead{margin:0 0 14px;color:var(--ink2);font-size:16px;max-width:68ch}
 .lead.none,.none{color:var(--muted);font-style:italic}
 /* Each fact its own element rather than text separated by dots, so that when the row wraps on a phone

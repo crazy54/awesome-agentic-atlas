@@ -47,8 +47,22 @@ spec.loader.exec_module(b10)
 
 # The parser is the single definition of which lists this project is built from, so the watcher reads
 # it rather than keeping a second copy that could drift out of step with it.
-SOURCES = [(s["key"], s["nwo"]) for s in b10.SOURCES]
-SYNTHETIC = {s["nwo"]: s for s in b10.SOURCES if s.get("synthetic")}
+def ledger_id(src: dict) -> str:
+    """The key a source's last-seen id is recorded under in state/first-seen.json.
+
+    A list's own `nwo`, which is what it always was. Not enough for a synthetic source: both scouts --
+    GitHub's and GitLab's -- are documents this repository writes, so both have this repository's
+    `nwo`, and keyed on that alone the second would overwrite the first and each would see the other's
+    digest as a move every day. The GitHub scout keeps the bare `nwo` it has been recorded under since
+    it shipped, so adding the second costs it no spurious move; any later synthetic source is
+    `nwo#key`."""
+    if src.get("synthetic") and src["key"] != "scout":
+        return f"{src['nwo']}#{src['key']}"
+    return src["nwo"]
+
+
+SOURCES = [(s["key"], ledger_id(s)) for s in b10.SOURCES]
+SYNTHETIC = {ledger_id(s): s for s in b10.SOURCES if s.get("synthetic")}
 
 
 def head(nwo: str) -> str | None:
@@ -72,7 +86,8 @@ def digest(nwo: str) -> str | None:
     """A synthetic source's stand-in for `head()`: the digest of the document it wrote, or None."""
     d = b10.content_digest(SYNTHETIC[nwo])
     if d is None:
-        print(f"  ?? {nwo}: no {SYNTHETIC[nwo]['key']} document in cache/sources/ -- scripts/12_scout.py "
+        stage = "12b_gitlab.py" if SYNTHETIC[nwo]["key"] == "gitlab" else "12_scout.py"
+        print(f"  ?? {nwo}: no {SYNTHETIC[nwo]['key']} document in cache/sources/ -- scripts/{stage} "
               f"writes it and runs before this step", file=sys.stderr)
     return d
 

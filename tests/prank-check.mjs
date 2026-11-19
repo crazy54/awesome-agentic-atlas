@@ -104,6 +104,12 @@ const ev = async expr => {
   if (r.exceptionDetails) throw new Error(expr.slice(0, 60) + " threw: " + (r.exceptionDetails.exception?.description || r.exceptionDetails.text));
   return r.result.value;
 };
+// A poll that lands while the page is navigating is answered with a CDP error, not a value -- "Inspected
+// target navigated or closed", "Execution context was destroyed", "Cannot find context" -- and that means
+// "not yet", so it is polled again, as admin-check.mjs does. Only those messages are swallowed, and `ev`
+// itself still throws, so a wrong expression still fails. The same race took friends-check.mjs down
+// in the weekly of 2026-11-01 (run 41334790158), in the same `goto()` readyState poll this file has.
+const soft = expr => ev(expr).catch(e => (/context|navigat/i.test(e.message) ? false : Promise.reject(e)));
 // `mood` is his mood on arrival, as though the tab had met him just now; null keeps whatever it was. It is
 // set from robots.txt, on the same origin, because a page with him on it saves his own mood every two
 // seconds and would write over it before the navigation. Chrome asks the origin root for /favicon.ico when it
@@ -115,18 +121,19 @@ const atRobots = `location.pathname.endsWith("/robots.txt") && document.readySta
 const goto = async (q = "", mood = 0) => {
   if (mood !== null) {
     await S("Page.navigate", {url: ORIGIN + "robots.txt"});
-    for (let i = 0; i < 40 && !(await ev(atRobots)); i++)
+    for (let i = 0; i < 40 && !(await soft(atRobots)); i++)
       await sleep(100);
     await ev(`sessionStorage.setItem("archie-mood", JSON.stringify({v: ${mood}, since: Date.now()}))`);
   }
   await S("Page.navigate", {url: ORIGIN + q});
-  for (let i = 0; i < 80 && !(await ev("document.readyState === 'complete'")); i++) await sleep(150);
-  for (let i = 0; i < 200 && !(await ev(`!!document.querySelector(".mhmascot[data-live]")`)); i++) await sleep(150);
+  for (let i = 0; i < 80 && !(await soft("document.readyState === 'complete'")); i++) await sleep(150);
+  for (let i = 0; i < 200 && !(await soft(`!!document.querySelector(".mhmascot[data-live]")`)); i++) await sleep(150);
   return ev(`!!document.querySelector(".mhmascot[data-live]")`);
 };
 // Until a condition on the page holds, or `ms` passes; returns whether it did.
 const until = async (expr, ms) => {
-  for (const end = Date.now() + ms; Date.now() < end; await sleep(100)) if (await ev(expr)) return true;
+  for (const end = Date.now() + ms; Date.now() < end; await sleep(100))
+    if (await soft(expr)) return true;
   return false;
 };
 const rec = () => ev(`window.__rec`);
@@ -181,15 +188,19 @@ ok("...and not remarked on as if the reader had done it: no light, dark or flip 
 await goto("?archie=prank:lights");
 ok("mid-flicker, a reader's own choice of theme can be made",
    await until(`__rec.attr.filter(a => a.name === "data-theme").length >= 3`, 25000));
-// Through the Settings menu's own button for the other brightness, which is how a reader makes the choice.
-await ev(`document.querySelector('.thb[data-choice="' + (document.documentElement.dataset.theme === "light" ? "dark" : "light") + '"]').click()`);
+// The moment of the choice is stamped in the page, in the same task as the click. The property is that no
+// swap of the prank's lands after it. This used to count every swap since the set-up line and allow three, on
+// the reasoning that the poll above clicks after the second; but between the poll seeing it and the click
+// arriving, a runner whose main thread is restyling the page for each swap can let one more through -- PR #109's
+// run on 2026-11-18 saw light, graphite, dark, light, dark, light, with the reader's choice last and correct.
+const choseAt = await ev(`(window.__choseAt = performance.now(), document.getElementById("theme").click(), window.__choseAt)`);
 const chose = await ev(`localStorage.getItem("theme")`);
 await done("lights");
 ok("...and is still standing after the prank", await ev(`document.documentElement.dataset.theme`) === chose &&
    await ev(`localStorage.getItem("theme")`) === chose, `chose ${chose}`);
 r = await rec();
-ok("...which stopped flickering when they chose", changes(r, "data-theme", setup(r, "lights")).length <= 3,
-   JSON.stringify(r.attr.map(a => a.v)));
+ok("...which stopped flickering when they chose", changes(r, "data-theme", choseAt).length <= 1,
+   JSON.stringify(r.attr.map(a => [a.v, Math.round(a.t - choseAt)])));
 await ev(`localStorage.removeItem("theme")`);
 
 // ---- contrast: high contrast for a moment, and the reader's own theme back
@@ -360,8 +371,10 @@ const heavyFrom = async (bass, pin) => {
      [...seen].join(" "));
   const was = await act();
   await ev(`window.__bass = 0.95`);
+  // "There and then" is the design; the six seconds are a runner's, whose frames under swiftshader can each
+  // pass a second (see the quiet cut above), and the music is read once a frame.
   ok("the bass coming in hard: he cuts to the headbang, there and then",
-     await until(`document.querySelector(".mhmascot").dataset.act === "headbang"`, 3000), `${was} -> ${await act()}`);
+     await until(`document.querySelector(".mhmascot").dataset.act === "headbang"`, 6000), `${was} -> ${await act()}`);
   await beats(false);
 }
 {
@@ -370,7 +383,7 @@ const heavyFrom = async (bass, pin) => {
   const was = await act();
   await ev(`window.__bass = 0.05`);
   ok("the bass going out while it stays loud, a build: he cuts to the drop, and prays",
-     !RAVE.includes(was) && await until(`document.querySelector(".mhmascot").dataset.act === "the-drop"`, 3000),
+     !RAVE.includes(was) && await until(`document.querySelector(".mhmascot").dataset.act === "the-drop"`, 6000),
      `${was} -> ${await act()}`);
   await beats(false);
   await ev(`delete window.archieMusic;

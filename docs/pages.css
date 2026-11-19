@@ -96,6 +96,9 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
    link colour would make it shout. Hover promotes it to full ink, which with the underline `a:hover`
    already adds is enough to say "this is a link" at the moment somebody asks. */
 a.nwo:hover{color:var(--ink)}
+/* The forge a non-GitHub project lives on, inside its `.nwo` link. 19_pages.py's rule, tokens only. */
+.forge{display:inline-block;border:1px solid var(--grid);border-radius:5px;padding:0 5px;background:var(--band);
+  font-size:10.5px;font-weight:600;color:var(--ink2);white-space:nowrap;vertical-align:1px}
 .st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}

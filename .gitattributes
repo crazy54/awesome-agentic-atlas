@@ -32,3 +32,7 @@ docs/favicon.ico binary
 # The pals' models and clips (art/pals/build.py) are binary glTF, which carries NUL bytes today; pinned anyway, as
 # every binary format here is: autocrlf rewriting a 0x0D 0x0A in an accessor would corrupt a mesh silently.
 *.glb binary
+
+# The CI helpers under tools/ are run by bash on Linux runners and in Git Bash here. A CR at the end of a line
+# is a syntax error to bash (`$'\r': command not found`), so they are LF on every checkout, not only in the index.
+*.sh text eol=lf

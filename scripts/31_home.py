@@ -1472,6 +1472,7 @@ def render() -> str:
         '  </div>',
         '  <nav>',
         '    <a href="discover/">Discover</a> ·',
+        f'    <a href="{sitewide.LOCAL_PAGE["slug"]}/">{esc(sitewide.LOCAL_PAGE["title"])}</a> ·',
         '    <a href="collections/">Collections</a> ·',
         f'    <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·',
         '    <a href="catalog/">Catalogue</a> ·',

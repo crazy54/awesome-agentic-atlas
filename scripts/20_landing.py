@@ -62,6 +62,7 @@ OUT = ROOT / "docs"
 # `spec_from_file_location` ceremony below -- only `scripts/` on the path, which `python
 # scripts/20_landing.py` already provides and a test that loads this module by file path does not.
 sys.path.insert(0, str(HERE))
+import hosts  # noqa: E402
 import mark  # noqa: E402
 import osicons  # noqa: E402
 import sitewide  # noqa: E402
@@ -135,8 +136,10 @@ def repo_path(nwo: str) -> str:
     *before* `22_detail.py`, so a project added this week has no page on disk at the moment this runs and
     would be handed a fallback link that then outlived the commit by a week.
     """
-    owner, name = nwo.split("/", 1)
-    return f"repo/{b22.segment(owner.lower())}/{b22.segment(name.lower())}/"
+    # Every segment, not two: a GitLab `nwo` is host-qualified and can be any depth
+    # (`gitlab.com/group/subgroup/project`, see hosts.py), and its page sits that many directories down.
+    # For a GitHub `owner/name` this is exactly the two-segment path it always was.
+    return "repo/" + "/".join(b22.segment(part.lower()) for part in nwo.split("/")) + "/"
 
 
 # ------------------------------------------------------------------ the shared shell
@@ -202,6 +205,9 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
    link colour would make it shout. Hover promotes it to full ink, which with the underline `a:hover`
    already adds is enough to say "this is a link" at the moment somebody asks. */
 a.nwo:hover{color:var(--ink)}
+/* The forge a non-GitHub project lives on, inside its `.nwo` link. 19_pages.py's rule, tokens only. */
+.forge{display:inline-block;border:1px solid var(--grid);border-radius:5px;padding:0 5px;background:var(--band);
+  font-size:10.5px;font-weight:600;color:var(--ink2);white-space:nowrap;vertical-align:1px}
 .st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
@@ -648,8 +654,13 @@ def row_html(page: Page, r: dict, i: int, os_labels: list[str]) -> str:
     # The same one-line change is in the index's row normaliser, for the same reason. `22_detail.py` is
     # deliberately *not* in step: one image on a page nobody's budget notices is exactly where a project's
     # own screenshot belongs, and it is the surface that keeps the column honest.
-    img = esc(f"https://opengraph.githubassets.com/1/{r['nwo']}")
+    #
+    # Not for a GitLab project, which has no social card: it shows its own picture if it has one and an
+    # empty cell if not (hosts.social_card). Bounded by how few GitLab rows there are.
+    img = esc(hosts.social_card(r["nwo"]) or r.get("img") or "")
     url = esc(r["url"])
+    forge = "" if hosts.is_github(r["nwo"]) else f' <span class="forge">{esc(hosts.label(r["nwo"]))}</span>'
+
     # The name goes to this site's own page for the project and the `nwo` underneath it goes to GitHub,
     # which is the split the index table uses too. It matters more here than there: these 156 pages are
     # the only *crawlable* path into the atlas -- `docs/index.html` builds its table in JavaScript, so a
@@ -663,9 +674,9 @@ def row_html(page: Page, r: dict, i: int, os_labels: list[str]) -> str:
         "<tr>"
         f'<td class="n rk">{i}</td>'
         f'<td class="shot"><a href="{page_url}" tabindex="-1" aria-hidden="true">'
-        f'<img loading="lazy" alt="" src="{img}"></a></td>'
+        + (f'<img loading="lazy" alt="" src="{img}">' if img else "") + "</a></td>"
         f'<td class="pj"><a class="nm" href="{page_url}">{esc(r["name"])}</a>'
-        f'<a class="nwo" href="{url}">{esc(r["nwo"])}</a>'
+        f'<a class="nwo" href="{url}">{esc(hosts.path_of(r["nwo"]))}{forge}</a>'
         f'<div class="meta os" role="img" aria-label="{os_name}">{os}</div></td>'
         f'<td class="n st-c"><span class="st{"" if r["stars"] else " none"}">{stars}</span>'
         f'<div class="meta">{lists_label(r["lists"])}</div></td>'
@@ -851,6 +862,7 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
   </div>
   <nav>
     <a href="{page.rel('discover/')}">Discover</a> ·
+    <a href="{page.rel(sitewide.LOCAL_PAGE['slug'] + '/')}">{esc(sitewide.LOCAL_PAGE['title'])}</a> ·
     <a href="{page.rel('collections/')}">Collections</a> ·
     <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="{page.rel('repo/')}">All projects</a> ·
@@ -939,6 +951,21 @@ def discover_urls() -> list[str]:
     sys.modules["b19d"] = b19d
     dspec.loader.exec_module(b19d)
     return b19d.urls()
+
+
+def local_urls() -> list[str]:
+    """The one URL `32_local.py` publishes -- the local-AI page -- asked of that stage for the reason above.
+
+    Passed the site root, so that stage does not import `19_pages.py` a second time to learn it. The slug is
+    that stage's `PAGE` constant, the one place the page's name lives while the owner chooses it; a rename
+    there moves this URL with it and `tests/indexnow_test.py` holds the sitemap to the directory either way.
+    """
+    sys.modules.setdefault("b20", sys.modules[__name__])
+    lspec = importlib.util.spec_from_file_location("b32", HERE / "32_local.py")
+    b32 = importlib.util.module_from_spec(lspec)
+    sys.modules["b32"] = b32
+    lspec.loader.exec_module(b32)
+    return b32.urls(SITE)
 
 
 def sitemap(pages: list[Page], snapshot: str, extra: list[str] = ()) -> str:
@@ -1130,7 +1157,8 @@ def main() -> None:
     (OUT / "pages.css").write_text(CSS + sitewide.font_faces("") + sitewide.BUILDTAGS_CSS, encoding="utf-8")
     colls = collection_urls(data)
     disc = discover_urls()
-    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc), encoding="utf-8")
+    local = local_urls()
+    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc + local), encoding="utf-8")
     (OUT / "robots.txt").write_text(robots(), encoding="utf-8")
     keyfile = b19.indexnow_key_file()
     (OUT / keyfile).write_text(key_text(b19.indexnow_key()), encoding="utf-8")
@@ -1147,9 +1175,9 @@ def main() -> None:
     print(f"{tops} topic · {tgt_n} target · {written - tops - tgt_n} crossing "
           f"= {written} pages · {kb(total)}")
     print(f"pages.css + sitemap.xml + robots.txt + {keyfile} · {kb(shells)} · "
-          f"{len(pages) + 1 + len(colls) + len(disc)} URLs, lastmod {data['snapshot']} "
+          f"{len(pages) + 1 + len(colls) + len(disc) + len(local)} URLs, lastmod {data['snapshot']} "
           f"({len(colls)} of them curated collections, from scripts/25_collections.py; "
-          f"{len(disc)} Discover, from scripts/19d_discover.py)")
+          f"{len(disc)} Discover, from scripts/19d_discover.py; {len(local)} local-AI, from scripts/32_local.py)")
     print(f"IndexNow key hosted at {SITE}{keyfile}"
           + (f" · {len(stale_keys)} stale key file(s) removed: "
              + ", ".join(p.name for p in stale_keys) if stale_keys else ""))
