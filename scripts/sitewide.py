@@ -90,6 +90,19 @@ def site_script(up: str) -> str:
     return f'<script type="module" src="{up}assets/{SITE_JS}?v={version()}"></script>'
 
 
+# THE LOCAL-AI PAGE'S NAME. The owner is choosing it from a shortlist, so the title, the slug and the pitch
+# live here, once, and every stage that writes the page or a link to it reads them: `32_local.py` for the page
+# itself, and the nav of the homepage, the catalogue, the topic pages, Discover and the collections. Renaming
+# is this one edit and a rebuild. Changing `slug` moves the URL, and the old one 404s -- so do it before launch.
+# Here rather than in `32_local.py` because importing a numbered stage for a nav label would drag the page
+# stack in behind it; this module is already imported by every page family.
+LOCAL_PAGE = {
+    "title": "Run It Local",
+    "slug": "local",
+    "pitch": "What AI can your computer run? Find out in a minute, then copy two lines to run it.",
+}
+
+
 # THE BUILD TAGS. One pill per workflow plus the Pages deployment, in the footer of every page, painted live
 # from the GitHub API by the site script. The markup is deliberately the same bytes on every page and every
 # day: `22_detail.py`'s pages are held byte-identical week to week (see `tests/detail-churn.mjs`), so nothing

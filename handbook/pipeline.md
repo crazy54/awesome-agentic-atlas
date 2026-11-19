@@ -66,6 +66,7 @@ The module docstrings are the detailed documentation. Read the one at the top of
 | `25_velocity.py` | Star-velocity ledger. Appends a sample on a 7-day grid and patches `d7`, `d30` and `velocity` into `data.json` | `state/star-history.json`, `docs/data.json` | both, in place | Yes (`--status`, `--dry-run`) |
 | `19c_live.py` | `live.json`, the small star/push sidecar that detail pages fetch instead of the full dataset | `docs/data.json` | `docs/live.json` | Yes |
 | `19d_discover.py` | Discover: fifty projects a day for seven days, chosen from every category and blind to stars. Selection rules are in `discover.py` | `docs/data.json`, `state/discover.json` | `docs/discover.json`, `docs/discover/index.html`, `state/discover.json` | Yes (`--out`, `--day`) |
+| `32_local.py` | The local-AI page. **Fails the build** if `config/local-ai/` has a dangling reference or a model with no size for its default quant. Joins `docs/models.json` (eng-hf's Hugging Face index) when present | `config/local-ai/hardware.json`, `config/local-ai/picks.json`, `scripts/localfit.mjs`, `scripts/localhw.mjs`, `scripts/local_page.js`, optional `docs/models.json`; needs `node` for the cheat sheet | `docs/local/index.html` | Yes (`--out`) |
 | `20_landing.py` | The topic, target and topic×target facet pages. Also writes the shared stylesheet and the sitemap. Prunes pages that no longer exist | `docs/data.json`, `docs/og/*.png` | `docs/topic/**`, `docs/target/**`, `docs/pages.css`, `docs/sitemap.xml`, `docs/robots.txt`, the IndexNow key file | Yes |
 | `21_feeds.py` | Atom and JSON feeds of arrivals | `docs/data.json`, `state/first-seen.json` | `docs/feed.xml`, `docs/feed.json` | Yes |
 | `22_detail.py` | One page per repo, plus the directory page. Slugs names so that Windows can check them out | `docs/data.json` | `docs/repo/**`, `docs/sitemap-repos.xml` | Yes (`--out`, `--data`) |
@@ -177,13 +178,14 @@ Upstream failures that stay hard stops, each for a reason written beside it in t
 The workflows run the site stages in this order. Some stages read the output of earlier ones, so keep the order:
 
 ```
-17_markdown → check_markdown → 19_pages → 25_velocity → 19c_live → 19d_discover → 20_landing
+17_markdown → check_markdown → 19_pages → 25_velocity → 19c_live → 19d_discover → 32_local → 20_landing
   → 21_feeds → 22_detail → [25_collections → 23_og, weekly only] → 31_home → 24_pwa → 27_semantic
 ```
 
 The dependencies behind that order:
 
 - `25_velocity` patches `data.json` after `19_pages` writes it.
+- `32_local` runs before `20_landing`, which imports its `urls()` into the sitemap.
 - `31_home` reads `discover.json` and `pages.css`, so it runs after `19d_discover` and `20_landing`.
 - `24_pwa` hashes `index.html` and `pages.css`, so it runs **after** everything that writes them.
 

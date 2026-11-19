@@ -418,6 +418,10 @@ jobs:
           # that stage puts this one's `urls()` in the sitemap. tests/discover_test.py asserts the stage is in
           # this workflow as well as in weekly.yml; dropping it here would leave no error anywhere.
           python scripts/19d_discover.py
+          # The local-AI page (docs/local/). Reads only config/local-ai/ and, when eng-hf's index is there,
+          # docs/models.json; before 20_landing, which imports its `urls()` into the sitemap. In both
+          # workflows so a picks or catalogue edit ships with the next daily. See scripts/32_local.py.
+          python scripts/32_local.py
           # Here as of JFH-215, in the same position weekly.yml already runs it in: after 19_pages and
           # 25_velocity, because it reads `docs/data.json` and nothing else, and before 24_pwa, because
           # it writes `docs/pages.css`, which that stage precaches and hashes. The note above 24_pwa is

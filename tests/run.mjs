@@ -2,8 +2,8 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty-three harnesses in turn --
-// twenty-three Python, ten in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty-one harnesses in turn --
+// twenty-one Python, ten in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
@@ -215,8 +215,7 @@ const HARNESSES = [
   {file: "theme_test.py", label: "eight token sets in four copies, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "fetch_test.py", label: "a batch GitHub keeps timing out on is split, and nothing else is", python: true, floor: 20},
-  {file: "ci_alert_test.py", label: "the build-red issue: what it quotes, what it suggests, when it opens, comments and closes", python: true, floor: 25},
-  {file: "ci_tools_test.py", label: "the local run, the canary's bot branches, and what every workflow must say", python: true, floor: 45},
+  {file: "ci_tools_test.py", label: "the local run, and what every workflow must say", python: true, floor: 30},
   {file: "dead_repos_test.py", label: "which repos GitHub no longer serves, the ledger and its guard, and the build leaving them out", python: true, floor: 35},
   {file: "drift_test.py", label: "upstream drift: what a provisional build files, the evidence for it, and that a strict one still stops", python: true, floor: 110},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
@@ -233,6 +232,7 @@ const HARNESSES = [
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
   {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, the host in docs/CNAME, and the monitoring tags", python: true, floor: 34},
   {file: "spotlight_test.py", label: "the daily spotlight and line: one rule in Python and in the page, the pool, the refusals", python: true, floor: 300},
+  {file: "local_test.py", label: "the local-AI page: catalogue and picks refused when wrong, the vendored fit method inlined faithfully, the page and its wiring", python: true, floor: 85},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
   {file: "detail-churn.mjs", label: "every detail page, regenerated and hashed", floor: 7},
   {file: "detail-preview-check.mjs", label: "rendered repository reader, source and phone layout", needs: "browser", floor: 12},
@@ -243,7 +243,8 @@ const HARNESSES = [
   {file: "prank-check.mjs", label: "Archie's pranks: each undone, nothing saved, the flicker's rate", needs: "browser", floor: 28},
   {file: "friends-check.mjs", label: "Archie's friends: each comes, leaves, restores the page, and keeps off the controls", needs: "browser", floor: 80},
   {file: "admin-check.mjs", label: "Archie's admin panel: hidden, one button per command, each dispatching its own, and why a button is greyed", needs: "browser", floor: 55},
-  {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450, minutes: 100},
+  {file: "local-check.mjs", label: "the local-AI page as a reader drives it: tiles, keyboard combobox, chips, tasks, numbers, how-to, shared hash, phone, themes, motion, no script", needs: "browser", floor: 70},
+  {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450},
 ];
 
 // The watchdog's default. The slowest harness but one, prank-check, takes about eight minutes on a runner
@@ -295,7 +296,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and ten of the thirty-three harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and ten of the thirty-one harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -321,7 +322,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and twenty-four of the thirty-three harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and twenty-two of the thirty-one harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

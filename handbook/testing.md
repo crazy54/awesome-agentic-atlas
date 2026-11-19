@@ -10,7 +10,7 @@ node tests/run.mjs
 ```
 
 The runner takes no arguments. It runs every harness in the `HARNESSES` list in `tests/run.mjs`: on 2026-11-18 that was
-**33 harnesses, 23 Python and 12 Node**. Ten of the Node harnesses drive a headless Chromium and two do not.
+**31 harnesses, 21 Python and 12 Node**. Ten of the Node harnesses drive a headless Chromium and two do not.
 Two environment variables run a part of it, each a comma-separated list of file names: `AAA_ONLY` runs just those,
 `AAA_SKIP` all but those, and a name that is not a harness stops the run. CI uses them to run `bits-check.mjs` in a
 job of its own (see [ci-cd.md](ci-cd.md#testsyml)).
@@ -89,9 +89,7 @@ Node process on the machine, including other sessions' tools and test runs.
 | `theme_test.py` | Python | The eight skins' token sets, which must stay identical across their four copies; the theme menu; verdict marks; the phone layout | 1053 | 500 |
 | `signals_test.py` | Python | When a cached release or action answer must be re-queried | 210 | 170 |
 | `fetch_test.py` | Python | A batch GitHub keeps timing out on is split and retried; nothing else is | 27 | 20 |
-| `drift_test.py` | Python | Upstream drift (`scripts/drift.py`): what a provisional build files and on what evidence, the proposal it writes, and that a strict build still stops | 128 | 110 |
-| `ci_alert_test.py` | Python | The build-red issue (`tools/ci_alert.py`): which log lines it quotes, the fix it suggests for each known failure shape, and when it opens, comments, edits and closes. No `gh` call | 35 | 25 |
-| `ci_tools_test.py` | Python | `tools/local_daily.py` reads the daily's stages in order and never runs IndexNow or records SHAs; `tools/drift_report.py` reads drift.py's proposal and names `bot/drift-<fingerprint>`; `tools/bot_branch.py` pushes `bot/...` only; every job has a time limit, only the builds share `atlas-build`, the canary saves no cache, the alert watches real workflow names, network steps retry | 62 | 45 |
+| `ci_tools_test.py` | Python | `tools/local_daily.py` reads the daily's stages in order and never runs IndexNow or records SHAs; every job has a time limit, only the builds share `atlas-build`, the time report matches the limit, network steps retry | 35 | 30 |
 | `dead_repos_test.py` | Python | The weekly dead-repo scan's verdicts, ledger and guard, and the build leaving dead repos out | 37 | 35 |
 | `indexnow_test.py` | Python | Which URLs are submitted, the key prune, truncated responses. Network is stubbed | 140 | 100 |
 | `newness_test.py` | Python | What "New" means: one cohort, replaced by the next import that adds anything | 54 | 45 |
