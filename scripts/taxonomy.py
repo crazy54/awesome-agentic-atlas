@@ -970,6 +970,21 @@ REPO_CATEGORY: dict[str, tuple[str, str]] = {
         "Agent Skills", "a HarmonyOS skill library; its one root listing files it under domain agents"),
     "nowork-studio/toprank": (
         "Agent Skills", "SEO and marketing skills for agents; its root listings split across four shelves"),
+    "kranz-org/kranz": (
+        "Harnesses & Runtime Infra", "a local process manager with a terminal UI; listed as a skill and an "
+                                     "MCP server"),
+    "wiltodelta/remove-ai-watermarks": (
+        "Creative, Voice & Media", "strips AI watermarks from images, video and audio; listed as a skill "
+                                   "and an MCP server"),
+    "zengliangyi/chatcrystal": (
+        "Context, Memory & RAG", "a personal knowledge base and memory for coding conversations; listed as "
+                                 "a skill and an MCP server"),
+    "drdroidlab/open-index": (
+        "Context, Memory & RAG", "a deterministic memory layer for agents; listed as a skill and a "
+                                 "framework"),
+    "deanchensj/jiangshan-map": (
+        "Research & Data Agents", "an interactive historical atlas of China served to agents; listed as a "
+                                  "skill and an MCP server"),
 }
 
 # One key in `SECTIONS` is both shelves at once and too big to file wholesale on either:
@@ -1107,7 +1122,8 @@ def by_repo(records: list[dict]) -> dict[str, dict]:
         if not nwo:
             continue
         cat = category_of(r)
-        if source_of(r) in ADVISORY or (source_of(r), r.get("section") or r.get("category")) in ADVISORY_SECTIONS:
+        key = (source_of(r), r.get("section") or r.get("category"))
+        if source_of(r) in ADVISORY or key in ADVISORY_SECTIONS:
             hints[nwo][cat] += 1
         elif r.get("kind") == "subpath":
             folders[nwo][cat] += 1
