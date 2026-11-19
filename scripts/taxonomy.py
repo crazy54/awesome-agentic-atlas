@@ -940,6 +940,17 @@ RANK = {c: i for i, c in enumerate(CATEGORIES)}
 # plus "gitlab", which is synthetic too but in SOURCES only while the `intake.gitlab` flag is on.
 ADVISORY = {"scout", "gitlab"}
 
+# Sections that say who published a thing, not what it is. claudecode_jq files Anthropic's own repos --
+# claude-code, the skills repository, the SDKs, the security-review Action -- under "Official
+# Resources", and its SECTIONS key has to name one category for all of them, so whatever it names is
+# wrong for most. Mapped to Frameworks & SDKs, it was one vote of three that left `anthropics/claude-code`
+# a three-way tie; remapped to Docs, it would out-vote the skills repository's own shelf. The other three
+# lists with the heading map it to Docs, Learning & Lists, which filed coinbase's x402 payments protocol
+# as documentation. So every such section votes the way an advisory listing does: only for a repo
+# nothing else has filed. Measured on 2026-11-18, all four together moved fewer rows the wrong way than
+# claudecode_jq's alone.
+ADVISORY_SECTIONS = {k for k in SECTIONS if k[1] == "Official Resources"}
+
 # One key in `SECTIONS` is both shelves at once and too big to file wholesale on either:
 # `harness / Skills & MCP` is 41 entries holding the MCP specification, `modelcontextprotocol/servers`,
 # MCP Inspector and the transport write-ups right next to `superpowers`, `addyosmani/agent-skills` and
@@ -1054,27 +1065,42 @@ def by_repo(records: list[dict]) -> dict[str, dict]:
     instead would quietly shrink the category pages, and a browsable page has every reason to list a
     skill that lives in a folder even though a leaderboard has no way to rank it.
 
-    A listing from an `ADVISORY` source votes only for a repo no curated listing has filed: see there.
+    A listing from an `ADVISORY` source, or in an `ADVISORY_SECTIONS` section, votes only for a repo no
+    curated listing has filed: see there.
+
+    A listing that links a *folder* inside the repo (`kind: subpath`) is about the folder -- one plugin,
+    one skill -- and not about the repository around it. awesome-claude-code files the Ralph Wiggum
+    plugin inside `anthropics/claude-code` under Agent Orchestration, and as an ordinary vote that made
+    Claude Code an orchestrator. So the listings that link the repository itself decide; a folder
+    listing breaks a tie between them, and decides alone only when no listing links the root, which is
+    the right answer for a monorepo of skills that every list links folder by folder.
     """
     votes: dict[str, Counter] = defaultdict(Counter)
+    folders: dict[str, Counter] = defaultdict(Counter)
     hints: dict[str, Counter] = defaultdict(Counter)
     agg: dict[str, dict] = {}
     for r in records:
         nwo = r.get("nwo")
         if not nwo:
             continue
-        (hints if source_of(r) in ADVISORY else votes)[nwo][category_of(r)] += 1
+        cat = category_of(r)
+        if source_of(r) in ADVISORY or (source_of(r), r.get("section") or r.get("category")) in ADVISORY_SECTIONS:
+            hints[nwo][cat] += 1
+        elif r.get("kind") == "subpath":
+            folders[nwo][cat] += 1
+        else:
+            votes[nwo][cat] += 1
         a = agg.setdefault(nwo, {"targets": set(), "sources": set(), "stars": 0, "rank": False})
         a["targets"].update(targets_of(r))
         a["sources"].add(source_of(r))
         a["stars"] = max(a["stars"], stars_of(r))
         a["rank"] = a["rank"] or rankable(r)
     for nwo, a in agg.items():
-        v = votes[nwo] or hints[nwo]
-        a["category"] = min(v, key=lambda c: (-v[c], RANK[c]))
+        v, f = votes[nwo] or folders[nwo] or hints[nwo], folders[nwo]
+        a["category"] = min(v, key=lambda c: (-v[c], -f[c], RANK[c]))
         a["targets"] = [t for t, _ in TARGETS if t in a["targets"]]
         a["sources"] = sorted(a["sources"])
-        a["listings"] = sum(votes[nwo].values()) + sum(hints[nwo].values())
+        a["listings"] = sum(votes[nwo].values()) + sum(folders[nwo].values()) + sum(hints[nwo].values())
     return agg
 
 
