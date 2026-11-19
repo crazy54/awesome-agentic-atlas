@@ -53,6 +53,10 @@ jobs:
       AAA_PROVISIONAL: "1"
 
     steps:
+      # For `tools/budget.sh` at the end: how much of `timeout-minutes` this run used.
+      - name: Note when the job started
+        run: echo "JOB_START=$(date +%s)" >> "$GITHUB_ENV"
+
       # The branch's head when this job starts, not its trigger's commit: see the same step in daily.yml.
       # Queued behind a daily that pushed, this job built on the commit before that push and then failed
       # to rebase onto it, after three hours of screenshots and workbooks (2026-10-21).
@@ -65,7 +69,8 @@ jobs:
           python-version: "3.12"
 
       # See daily.yml for why numpy is here: one stage, one build-time linear algebra pass.
-      - run: python -m pip install --upgrade pip openpyxl pillow playwright numpy
+      # Retried, as in daily.yml: a minute of PyPI 503s should not cost a week's workbooks.
+      - run: bash tools/retry.sh 3 python -m pip install --upgrade pip openpyxl pillow playwright numpy
 
       # See daily.yml: declaring this in `env:` would set it to "" whenever the secret is absent, and an
       # empty CF_BEACON_TOKEN is how you turn the beacon off.
@@ -138,7 +143,11 @@ jobs:
           key: atlas-cache-${{ github.run_id }}
           restore-keys: atlas-cache-
 
+      # Step limits, as in daily.yml: two to three times the longest green run, so a hang fails the step it is
+      # in and is named in the build-red issue. The screenshots, which have no fixed length, get whatever the
+      # job has left instead: see that step.
       - name: Fetch and classify
+        timeout-minutes: 120
         run: |
           set -euo pipefail
           mkdir -p cache
@@ -178,18 +187,42 @@ jobs:
       # gets a fresh image at all: a key already in shots_all.json is otherwise never rebuilt, which is
       # the right rule for a banner that has not moved and the wrong one for an entry the list rewrote.
       # The daily job fills the queue and never captures, so this is the only run that empties it.
+      # The one long step with no green figure to scale from: warm it is under two minutes, while a cold
+      # cache is hours. So its limit is not a number but what the job has left, less 90 minutes kept back for
+      # what follows -- the workbooks, the rebuild and the suite (about 35 minutes together when green) and
+      # the two cache steps, which bank a failed run's screenshots so the next run resumes rather than
+      # starting cold. Without that reserve a cold run could reach the job's own 350-minute limit inside
+      # this step, and whether the bank still ran after a job-level timeout would be left to GitHub. With it, a cold
+      # run stops here, the step fails, the bank runs, and the next weekly picks up from the checkpoint
+      # (15_shots_all saves every 50 images; a file cut mid-write is dropped by the sweep below).
       - name: Capture screenshots
         run: |
           set -euo pipefail
-          python scripts/05_shots.py
-          python scripts/06_web_shots.py
-          python scripts/15_shots_all.py
-          python scripts/15b_shots_sources.py
+          # One deadline for all four: each stage gets what is left of it, and never less than ten minutes.
+          deadline=$(( JOB_START + (350 - 90) * 60 ))
+          within() {
+            local s=$(( deadline - $(date +%s) ))
+            if [ "$s" -lt 600 ]; then s=600; fi
+            timeout --signal=TERM --kill-after=60 "${s}s" "$@"
+          }
+          echo "screenshots may run until $(date -u -d "@${deadline}" +%H:%M) UTC"
+          within python scripts/05_shots.py
+          within python scripts/06_web_shots.py
+          within python scripts/15_shots_all.py
+          within python scripts/15b_shots_sources.py
 
       - name: Build the workbooks
+        timeout-minutes: 30
         run: python scripts/16_build_all.py
 
+      # Node 22, before the site rebuild rather than only before the suite, so a page stage that shells out to
+      # node (32_local.py) runs on the version tests.yml pins and not on the image's. See daily.yml.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
       - name: Rebuild the Markdown edition and the site
+        timeout-minutes: 30
         run: |
           set -euo pipefail
           # See daily.yml: the marker is what the assertion below compares every tracked file against.
@@ -448,9 +481,8 @@ jobs:
       #     off PATH. `cards-check.mjs` has assertions that depend on the browser build, such as the
       #     `(hover:hover)` query and font fallback. Pinning it means green here and green there are the
       #     same claim.
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
+      #
+      # Node itself is set up earlier, before the site rebuild: see that step.
 
       # See daily.yml: `indexnow_test.py` compares `git ls-files docs` against the sitemaps on disk. This
       # job rewrites `docs/sitemap-repos.xml` and prunes detail pages, so the index has to match the tree
@@ -472,6 +504,8 @@ jobs:
       - name: Verify the site this build is about to publish
         id: verify
         continue-on-error: true
+        # 25 minutes green. Timed out, it sets no `status`, which the gate below treats as red.
+        timeout-minutes: 60
         env:
           AAA_CHROME_FLAGS: "--no-sandbox --disable-dev-shm-usage"
           # All but `bits-check.mjs`, as in daily.yml and for the same reason: the bits are code that
@@ -572,8 +606,8 @@ jobs:
             # worth of new and changed URLs is submitted from here and a day's from there.
             git diff --cached --name-status --no-renames -- docs > "$RUNNER_TEMP/changed-docs.txt"
             git commit -m "Weekly rebuild $(date -u +%Y-%m-%d)"
-            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
+            # Three tries: see the same line in daily.yml.
+            bash tools/retry.sh 3 sh -c 'git rebase --abort 2>/dev/null; git pull --rebase --autostash origin "$1" && git push origin "HEAD:$1"' _ "${GITHUB_REF_NAME}"
           fi
 
       # After the push, so the URLs are live before an engine is told to fetch them, and before the release
@@ -645,3 +679,8 @@ jobs:
         run: |
           echo "::error title=Published, and red::The site and workbooks were published and the verification suite was not green on them (run.mjs exited ${{ steps.verify.outputs.status }}). Read the suite's own step above for which harness and which assertion."
           exit 1
+
+      # Last, and `always()`: how much of the 350 minutes this run used. See tools/budget.sh.
+      - name: How close this run came to its time limit
+        if: always()
+        run: bash tools/budget.sh 350

@@ -2,8 +2,8 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty harnesses in turn --
-// nineteen Python, nine in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty-one harnesses in turn --
+// twenty-one Python, ten in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
@@ -208,12 +208,14 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // work. `needs: "browser"` gets the binary and the origin as arguments; `python: true` is run by the
 // interpreter instead of by node. `floor` is the number of assertions below which the harness is presumed
 // broken rather than passing -- see the note at the top, and set generously below the real count so that
-// only a harness that has lost assertions trips it.
+// only a harness that has lost assertions trips it. `minutes` is how long one may run before it is presumed
+// hung and killed (default DEFAULT_MINUTES, below the table): see the watchdog in `run()`.
 const HARNESSES = [
   {file: "app_flags_test.py", label: "the 0/1 schema, atomic editor writes, and every kill switch", python: true, floor: 28},
   {file: "theme_test.py", label: "eight token sets in four copies, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "fetch_test.py", label: "a batch GitHub keeps timing out on is split, and nothing else is", python: true, floor: 20},
+  {file: "ci_tools_test.py", label: "the local run, and what every workflow must say", python: true, floor: 30},
   {file: "dead_repos_test.py", label: "which repos GitHub no longer serves, the ledger and its guard, and the build leaving them out", python: true, floor: 35},
   {file: "drift_test.py", label: "upstream drift: what a provisional build files, the evidence for it, and that a strict one still stops", python: true, floor: 110},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
@@ -244,6 +246,12 @@ const HARNESSES = [
   {file: "local-check.mjs", label: "the local-AI page as a reader drives it: tiles, keyboard combobox, chips, tasks, numbers, how-to, shared hash, phone, themes, motion, no script", needs: "browser", floor: 70},
   {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450},
 ];
+
+// The watchdog's default. The slowest harness but one, prank-check, takes about eight minutes on a runner
+// (471.7 s on 2026-11-16) and under two on a laptop, so twenty is more than twice the worst seen. bits-check
+// is the exception and says so in its row: 40 to 70 minutes on a runner, against the `bits` job's 120.
+// `AAA_HARNESS_MINUTES` overrides the default, for a machine slower than both.
+const DEFAULT_MINUTES = Number(process.env.AAA_HARNESS_MINUTES) || 20;
 
 // Every harness in this directory is in the list above. `admin-check.mjs` sat here unregistered, so
 // neither this runner nor CI ever ran it, and by the time it was found three of its assertions described a
@@ -288,7 +296,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and nine of the thirty harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and ten of the thirty-one harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -314,7 +322,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and nineteen of the thirty harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and twenty-two of the thirty-one harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +
@@ -355,19 +363,45 @@ const cleanup = async () => {
 
 for (const sig of ["SIGINT", "SIGTERM"]) process.on(sig, async () => {
   interrupted = true;
-  if (current) current.kill();
+  if (current) killTree(current, "SIGTERM");
   await cleanup();
   process.exit(130);
 });
 
+// The watchdog. Before it, one harness that hung -- a page that stopped answering, a browser that never
+// launched -- ran until the *job's* `timeout-minutes`, and GitHub killed everything: no total block, no tally
+// for the harnesses after it, and a log whose last line was whatever the hung one printed last. Twice in
+// October the suite job was cancelled that way (at 30 minutes, then at 80), and the cancellation looked like
+// a slow suite rather than one stuck harness. Now a harness past its `minutes` is killed and reported as
+// hung, the run goes on to the next one, and the total says which it was. SIGTERM first so its own exit hook
+// can close its browser; SIGKILL ten seconds later if it would not go; and the browser sweep that otherwise
+// runs at the end runs straight away, so a killed harness's Chromium is not still drawing under the next.
+const killTree = (child, sig) => {
+  try {
+    if (process.platform === "win32")
+      spawn("taskkill", ["/pid", String(child.pid), "/T", "/F"], {stdio: "ignore"});
+    else process.kill(-child.pid, sig);
+  } catch { child.kill(sig); }
+};
 const run = (h, args, env) => new Promise((resolve) => {
   const started = Date.now();
+  const limit = (h.minutes || DEFAULT_MINUTES) * 60000;
+  let hung = false, hard;
   // `PYTHONIOENCODING` for the same reason `detail-churn.mjs` sets it: the stages print a `·` and the
   // default encoding on a Windows pipe is cp1252, which cannot encode it. A test that dies on its own
   // summary line is a confusing way to learn about a code page.
+  // `detached` on POSIX makes the harness the leader of its own process group, so the watchdog can kill
+  // what it started too -- `detail-churn.mjs` runs 22_detail.py under it, the browser harnesses a Chromium.
   const child = spawn(h.python ? python : process.execPath, [join(HERE, h.file), ...args],
-    {cwd: ROOT, env: {...process.env, PYTHONIOENCODING: "utf-8", ...env}, stdio: ["ignore", "pipe", "pipe"]});
+    {cwd: ROOT, env: {...process.env, PYTHONIOENCODING: "utf-8", ...env}, stdio: ["ignore", "pipe", "pipe"],
+     detached: process.platform !== "win32"});
   current = child;
+  const dog = setTimeout(() => {
+    hung = true;
+    console.log(`\n${h.file} is still running after ${limit / 60000} minutes: killing it as hung`);
+    killTree(child, "SIGTERM");
+    hard = setTimeout(() => killTree(child, "SIGKILL"), 10000);
+  }, limit);
   // Streamed and buffered at once: streamed so a harness that hangs still shows what it got through, and
   // buffered so the tally can be read back off the end of it.
   let out = "";
@@ -376,8 +410,10 @@ const run = (h, args, env) => new Promise((resolve) => {
   tap(child.stderr, process.stderr);
   child.on("error", (e) => { out += "\nfailed to start: " + e.message; });
   child.on("close", (code) => {
+    clearTimeout(dog); clearTimeout(hard);
     current = null;
-    resolve({code, out, ms: Date.now() - started});
+    if (hung) sweep(scratch);
+    resolve({code, out, ms: Date.now() - started, hung});
   });
 });
 
@@ -394,7 +430,7 @@ try {
     console.log(`\n── ${h.file}  ·  ${h.label} ` + "─".repeat(
       Math.max(3, 96 - h.file.length - h.label.length)));
     const args = h.needs === "browser" ? [bin, server.origin] : [];
-    const {code, out, ms} = await run(h, args, {AAA_TMP: scratch, AAA_ARTIFACTS: artifacts});
+    const {code, out, ms, hung} = await run(h, args, {AAA_TMP: scratch, AAA_ARTIFACTS: artifacts});
     // The tally is the last one printed, because a harness may print others in passing. A harness that
     // crashed before printing one counts as failed with no assertions, which is louder than reporting it as
     // zero of zero.
@@ -408,7 +444,9 @@ try {
     // is visible from outside, so it is caught here: no tally, an empty tally, or fewer assertions than the
     // file is known to contain are each a failure of the run regardless of what the child thought.
     let quiet = null;
-    if (last === undefined) quiet = `printed no tally at all, and exited ${code}`;
+    if (hung) quiet = `killed after ${h.minutes || DEFAULT_MINUTES} minutes without finishing -- hung, not slow; ` +
+                      "its last output above says where";
+    else if (last === undefined) quiet = `printed no tally at all, and exited ${code}`;
     else if (passed + failed === 0) quiet = "ran and asserted nothing";
     else if (h.floor && passed + failed < h.floor)
       quiet = `made ${passed + failed} assertions, fewer than the ${h.floor} this file is known to ` +
