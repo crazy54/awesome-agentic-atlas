@@ -31,7 +31,7 @@ const VERSION = new URL(import.meta.url).searchParams.get("v") || "";
 // for the full set the font file carries; a code point not in that list draws as an empty box.
 export const ICON = {
   "daily.yml": "\uF52E",   // workflow
-  "weekly.yml": "\uF487",  // package: the workbooks
+  "weekly.yml": "\uF487",  // package: the weekly build
   "tests.yml": "\uF499",   // beaker
   pages: "\uF427",         // rocket
 };

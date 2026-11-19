@@ -23,10 +23,10 @@ python -c "import importlib.util as u; s=u.spec_from_file_location('m','scripts/
 | The JSON dataset | `docs/data.json` (documented in the root [README](../README.md#the-data-as-an-api)) | `19_pages.py`, patched by `25_velocity.py` | daily and weekly |
 | The Markdown edition | `mega-list/` | `17_markdown.py` (plus `25_collections.py` for `mega-list/collections/`) | daily and weekly |
 | The models index | `docs/models.json` and the catalogue at `docs/models/`: open models from the Hugging Face Hub with every quantisation's exact size (see [pipeline.md](pipeline.md#the-models-index)) | `40_models.py`, `41_models_page.py` | weekly |
-| The Excel workbooks, dark and light | GitHub release assets, never committed | `16_build_all.py` | weekly only |
+| The Excel workbooks, dark and light (**retired**) | Release `v2026.10.22`, never committed. Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. | nothing | never |
 
 All of these come from the same in-memory records, and every topic and target assignment comes from
-the single vocabulary in `scripts/taxonomy.py`. That is why the three surfaces cannot disagree about
+the single vocabulary in `scripts/taxonomy.py`. That is why the surfaces cannot disagree about
 which topic a project is filed under.
 
 ## How data flows
@@ -42,8 +42,7 @@ source lists on GitHub, and GitHub search
    │  15_shots_all.py        screenshots (weekly only)                          → cache/shots/
    ▼
 cache/  (untracked; restored from the GitHub Actions cache on CI)
-   │  16_build_all.py        workbooks (weekly only)                            → *.xlsx, released
-   │  17_markdown.py         Markdown edition                                   → mega-list/
+   │  17_markdown.py         Markdown edition (rows from the 16_build_all library) → mega-list/
    │  19_pages.py            catalogue page + dataset                           → docs/catalog/, docs/data.json
    ▼
 docs/data.json  (committed)
@@ -99,12 +98,12 @@ Hand-written inputs that are not generated:
 | `art/` | Blender and Python sources for `archie.glb`, the pals, the Atlas Core and the bits |
 | `.github/workflows/` | `daily.yml`, `weekly.yml`, `tests.yml`, `lighthouse.yml`, `og-preview.yml`. See [ci-cd.md](ci-cd.md) |
 | `handbook/` | This documentation |
-| `cache/`, `build-tmp/`, `preview/` | Untracked: the build cache, test scratch, and Excel PDF previews |
+| `cache/`, `build-tmp/`, `preview/` | Untracked: the build cache, test scratch, and (`preview/`) the retired workbooks' Excel PDF previews |
 
 ## Technology
 
 - **Python 3** for the whole pipeline. CI uses 3.12. Most stages are standard library only.
-  - `openpyxl` and `pillow` are needed by the workbook stages and two harnesses.
+  - `pillow` is needed by the screenshot stages (`05`, `06`, `15`), `masthead_art.py` and the OG preview workflow.
   - `numpy` is needed by `27_semantic.py`.
   - `playwright` is installed on the weekly run for screenshot capture.
 - **The GitHub CLI (`gh`)** for every GitHub API call. The fetch stages shell out to `gh api graphql`.

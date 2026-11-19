@@ -119,9 +119,6 @@ when its fix merges.
 
 Also found, and lower priority:
 
-- `18_slicers.py` runs in no workflow, so released workbooks have no slicers. `18_slicers.py --probe` writes
-  `slicer-probe.xlsx` at the repo root, and that file is not gitignored.
-- `08_verify.py`'s docstring says the merged workbook "has twenty sheets". `16_build_all.py`'s sheet plan has 21, counted from the source, not from a built workbook.
 - The `25_collections.py` docstring says "Five sets, seven picks each", but `keep-it-honest` has six in `config/collections.json`.
 - The committed `mega-list/` still links `crazy54.github.io/awesome-agentic-atlas/` and the pre-`/catalog/`
   URLs. It is generated, so it corrects itself on the next successful `17_markdown.py` run.

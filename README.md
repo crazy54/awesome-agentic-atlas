@@ -11,7 +11,7 @@
 
 **Thirty-nine of the best agentic awesome-lists, merged into one searchable atlas.**
 
-14,914 entries · 8,858 repos · 24.1M combined stars · one spreadsheet · zero tab-hopping
+14,914 entries · 8,858 repos · 24.1M combined stars · one searchable site · zero tab-hopping
 
 [![entries](https://shieldcn.dev/badge/entries-14%2C914-6557C8.svg?logo=ri%3ALuDatabase&size=xs&font=geist&split=true)](mega-list/README.md)
 [![repos](https://shieldcn.dev/badge/repos-8%2C858-1D5E9E.svg?logo=ri%3ALuGithub&size=xs&font=geist&split=true)](mega-list/leaderboard.md)
@@ -19,12 +19,14 @@
 [![lists merged](https://shieldcn.dev/badge/lists_merged-39-187557.svg?logo=ri%3ALuListChecks&size=xs&font=geist&split=true)](#the-source-lists)
 [![license](https://shieldcn.dev/badge/license-MIT-596574.svg?logo=ri%3ALuScale&size=xs&font=geist&split=true)](LICENSE)
 
-### [🔎 Browse it in your browser][site] · [⬇ Download the workbook — dark][dark] · [⬇ light][light]
+### [🔎 Browse it in your browser][site]
+
+**Spreadsheet edition: retired.** The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Last workbooks: [dark][dark] · [light][light].
 
 [![Atlas Leaderboard](https://shieldcn.dev/badge/Atlas-Leaderboard-875A19.svg?logo=ri%3ALuTrophy&size=xs&font=geist&split=true)](mega-list/leaderboard.md)
 
 [![daily build](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=xs&split=true&labelColor=101217&workflow=daily.yml&label=daily%20build&logo=ri%3ALuWorkflow)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml)
-[![screenshots & workbooks](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=xs&split=true&labelColor=101217&workflow=weekly.yml&label=screenshots%20%26%20workbooks&logo=ri%3ALuPackage)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml)
+[![weekly screenshots](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=xs&split=true&labelColor=101217&workflow=weekly.yml&label=weekly%20screenshots&logo=ri%3ALuPackage)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml)
 [![tests](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=xs&split=true&labelColor=101217&workflow=tests.yml&label=tests&logo=ri%3ALuFlaskConical)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml)
 [![lighthouse](https://shieldcn.dev/github/ci/crazy54/awesome-agentic-atlas.svg?branch=latest_branch&font=geist-mono&size=xs&split=true&labelColor=101217&workflow=lighthouse.yml&label=lighthouse&logo=ri%3ALuGauge)](https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/lighthouse.yml)
 
@@ -55,7 +57,7 @@ with every rebuild. Working on the project itself? Start with the [handbook](han
 |---|---|---|
 | 🔎 **The Atlas site** | Live search and filtering with no download. Pick a topic, pick a harness, pick an OS, cross all three. Every view is a link. | [aaa.jeremyfhall.com][site] |
 | 🎲 **Discover** | Not knowing what you are looking for. Fifty projects a day, dated, drawn from every category so a small one gets the same billing as a crowded one, rotated so what appeared this week goes to the back of the queue. Nothing here is ranked by stars. A new fifty at midnight Central, seven days picked each Sunday. | [discover][discover] |
-| 📊 **Excel workbook** | Filtering, sorting, "show me every Rust tool with >1k stars that runs native on Windows". 21 sheets, a screenshot embedded on every row, autofilter on every column. Two themes. | [dark][dark] · [light][light] |
+| 📊 **Excel workbook (retired)** | Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. [More](#the-spreadsheet-edition-retired) | [dark][dark] · [light][light] |
 | 📄 **Markdown edition** | Reading in the browser, linking to, quoting. Same data, same ordering, split so no page hits GitHub's rendering limit. | [mega-list/](mega-list/README.md) |
 | 🏆 **Leaderboard** | The most-starred projects across every list at once, with how many lists name each one — a rough consensus score. | [leaderboard](mega-list/leaderboard.md) |
 | 🧰 **Curated collections** | Five recommended sets rather than a ranking — a first setup, a Windows-native one, a Claude Code kit, a local-only one. Each pick says what job it does and why it, and carries its own evidence. | [collections](mega-list/collections/README.md) |
@@ -138,7 +140,7 @@ these, because plenty of them serve Claude Code and opencode and Codex at once.
 [Cline / Roo](mega-list/targets/cline-roo.md) 89 ·
 [Aider](mega-list/targets/aider.md) 39
 
-**The two axes cross.** That's what the site and the workbook's *By Category* sheet are for — pick a
+**The two axes cross.** That's what the site's catalog is for — pick a
 topic and a harness at once and you get the answer the individual lists can't give you:
 
 - [the best Claude Code observability tools](https://aaa.jeremyfhall.com/catalog/#topic=observability-evals&target=claude-code), ranked
@@ -165,9 +167,9 @@ it is filed as one. The Docker page has no inferred half: either there's a Docke
 
 ## The source lists
 
-Every entry here came from someone else's curation work. All thirty-nine are credited on the workbook's
-**Sources** sheet with their own star count and a screenshot, and each has its own page in the
-[Markdown edition](mega-list/README.md). The eleven that also get a workbook sheet of their own:
+Every entry here came from someone else's curation work. All thirty-nine are credited in the
+[Markdown edition](mega-list/README.md) with their own star count, and each has its own page there.
+The eleven with the most to read one at a time:
 
 | List | Curator | Entries | Page |
 |---|---|---:|---|
@@ -185,25 +187,17 @@ Every entry here came from someone else's curation work. All thirty-nine are cre
 
 If you maintain one of these: thank you, and please tell me if anything here misrepresents your list.
 
-## What's in the workbook that isn't in the lists
+## The spreadsheet edition (retired)
 
-Twenty-one sheets. Eleven of the source lists get one each, keeping the section headings their curator
-published, so you can still read it the way they wrote it; every row of the other twenty-eight is on
-the cross-list sheets. Then:
+> **Spreadsheet edition: retired.** The last copy, built 2026-10-22, stays available but is no longer updated.
+> The website is the maintained edition.
 
-- **Sources** — all thirty-nine lists side by side: entries, distinct repos, total and median stars, how
-  many entries are Windows-capable, screenshot coverage.
-- **Leaderboard** — one row per repo across all thirty-nine, ranked, with a consensus count.
-- **By Category** — the same repos grouped into the 14 topics and ranked *inside* each one, as a
-  real Excel table. Filter Category to one topic and the filter *is* that topic's leaderboard; add
-  Plugs Into and you're asking both questions at once.
-- **Windows / macOS / Linux / Docker** — the platform pools, ordered by evidence strength.
-- **Category Stats** and **List Stats** — where the mass actually is, with charts.
-- **Start Here** — a cover that explains every column and links to every sheet.
-
-Every row carries a screenshot: the project's README banner where it has one, GitHub's social card
-where it doesn't. The images are anchored two-cell, which means they **hide and reappear with their row
-when you filter** — the thing embedded pictures in Excel normally refuse to do.
+Until November 2026 the weekly build also wrote the atlas out as two Excel workbooks, one dark and one
+light: twenty-one sheets, a screenshot on every row, a sheet per major list, a cross-list leaderboard, a
+*By Category* table and one sheet per platform. They took several minutes of every weekly build and a
+release of 170 MB each time, and every question they answered the [site][site] answers live, so they are
+no longer built. The last pair is still downloadable, frozen at that date: **[dark][dark] · [light][light]**
+(release [`v2026.10.22`][release]). Their numbers will drift further from the site's every day.
 
 ## Honest notes on the data
 
@@ -236,14 +230,14 @@ run did not finish its screenshots, so a green daily is not proof that anything 
 `snapshot` in `data.json` is ([details](handbook/ci-cd.md#the-daily-build)).
 
 **Weekly** ([`weekly.yml`](.github/workflows/weekly.yml), Sundays) does all of that and then the expensive
-part the daily run skips: capturing a screenshot for each new project, rebuilding both workbooks, and
-publishing them as a dated release. That's why the [download links][dark] never rot — they point at
-`releases/latest`, and each Sunday's release becomes the latest.
+part the daily run skips: capturing a screenshot for each new project and re-reading every README. It
+used to rebuild the two workbooks and publish them as a dated release as well; that stopped when the
+[spreadsheet edition was retired](#the-spreadsheet-edition-retired).
 
 **Dead repos** ([`dead-repos.yml`](.github/workflows/dead-repos.yml), Saturdays) asks GitHub about every
 repo the atlas lists and records the ones it no longer serves — deleted, made private, taken down or
 disabled — in [`state/dead-repos.json`](state/dead-repos.json). The build leaves every one of them out of
-the site, the Markdown edition and the workbooks, so a dead project stops appearing as a card with no
+the site and the Markdown edition, so a dead project stops appearing as a card with no
 picture and a page whose README never loads. Renamed and archived repos are alive and stay. A repo that
 comes back is listed again after the next scan ([details](handbook/ci-cd.md#the-dead-repo-scan)).
 
@@ -495,10 +489,10 @@ column, a topic or four hundred repos.
 
 A Python pipeline of numbered stages in [`scripts/`](scripts/): pull each source list that has moved, parse its Markdown, resolve and fetch every repo
 through the GitHub API, pull release and Actions metadata, classify OS support from README and CI
-evidence, capture a screenshot per project, then render the workbooks with `openpyxl`, the Markdown
-edition, and the site's dataset from the same in-memory records — so the three surfaces cannot
-disagree. The topic and target assignments come from one taxonomy module all three read, which is why
-`topics/agent-skills.md`, `#topic=agent-skills` and `Category = Agent Skills` are the same rows.
+evidence, capture a screenshot per project, then render the Markdown edition and the site's dataset
+from the same in-memory records — so the two surfaces cannot disagree. The topic and target
+assignments come from one taxonomy module both read, which is why `topics/agent-skills.md` and
+`#topic=agent-skills` are the same rows.
 
 The [handbook](handbook/README.md) documents every stage (what it reads, what it writes, and which
 ones need the CI-only cache), the two build workflows, the test suite and the front end.
@@ -555,7 +549,7 @@ If you think something here should be attributed differently, open an issue and 
 
 **[Filter it live][site]** · **[Browse the mega list](mega-list/README.md)** ·
 **[By topic](mega-list/topics/README.md)** · **[Leaderboard](mega-list/leaderboard.md)** ·
-**[Download: dark][dark] / [light][light]**
+**[Spreadsheet edition (retired)](#the-spreadsheet-edition-retired)**
 
 </div>
 
@@ -563,5 +557,6 @@ If you think something here should be attributed differently, open an issue and 
 [new]: https://aaa.jeremyfhall.com/catalog/#new=1
 [discover]: https://aaa.jeremyfhall.com/discover/
 [data]: https://aaa.jeremyfhall.com/data.json
-[dark]: https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx
-[light]: https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx
+[dark]: https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx
+[light]: https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx
+[release]: https://github.com/crazy54/awesome-agentic-atlas/releases/tag/v2026.10.22

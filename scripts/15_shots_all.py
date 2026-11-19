@@ -8,8 +8,10 @@
                     folder inside a repo, and for sites that refuse all of the
                     above. Clearly a label rather than a fake screenshot.
 
-Every image is letterboxed onto the exact same canvas so Excel can anchor it to
-one cell without distortion, and so filtered rows collapse cleanly.
+Every image is letterboxed onto the exact same canvas. That was for the Excel workbooks, which anchored
+it to one cell; they were retired in November 2026. The site and the Markdown edition read only the
+`tier` and `shot_url` this stage records (`17_markdown.image`), never the local files, so the
+canvases and tiers 3 and 4 now serve nothing that is published.
 """
 import concurrent.futures as cf
 import hashlib

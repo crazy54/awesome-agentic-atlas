@@ -28,8 +28,8 @@ FOUR DECISIONS, because each one is a thing a reader could lose:
   The wrapper is `display:none`, which is the ordinary way to do this: a `<symbol>` is never drawn where
   it is defined, so hiding its container costs nothing and keeps it out of the layout.
 
-Markdown and the workbook keep the words. GitHub strips `<svg>` from rendered Markdown, and a spreadsheet
-cell has no document to reference a symbol in -- so `mega-list/**` and the xlsx stay textual, and so does
+Markdown keeps the words. GitHub strips `<svg>` from rendered Markdown -- so `mega-list/**` stays
+textual (as the retired spreadsheet edition did, for the same reason), and so does
 the index's own Markdown export. That is not an omission; it is the same reason those surfaces print the
 verdict as a glyph rather than as a colour.
 """

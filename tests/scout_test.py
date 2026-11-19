@@ -45,7 +45,8 @@ Nine groups:
                     the scout has keeps both. And the wiring: the stage runs before the parser in both
                     workflows and before the watch in the daily, and the committed ledger parses.
 
-Needs openpyxl for the last group, as `media_test.py` does; everything else is standard library.
+Standard library only. The last group loads `16_build_all.py`, which needed openpyxl until the workbook
+writer in it was retired (November 2026); it is a standard-library row library now.
 
 Run: python tests/scout_test.py
 """

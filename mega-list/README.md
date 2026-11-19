@@ -4,7 +4,7 @@
 
 Every list below was made by someone else. This is not a new selection: it is their selections in one place, with the facts filled in and the overlap made visible.
 
-Also here as spreadsheets, screenshots embedded and every column filterable: **[dark theme](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx)** · **[light theme](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx)**. And as a page you can filter in the browser, no download: **[the Atlas site](https://aaa.jeremyfhall.com/catalog/)**.
+Also here as a page you can filter in the browser, no download: **[the Atlas site](https://aaa.jeremyfhall.com/catalog/)**. Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark theme](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light theme](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).
 
 ## Pick your platform
 
@@ -73,7 +73,7 @@ A project can be on several of these pages, because plenty serve Claude Code and
 
 | Awesome list | ★ | Entries | Repos | What it covers | Page |
 |---|--:|--:|--:|---|---|
-| [andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) | — | 297 | 297 | The original list this workbook grew from: tools that run several coding agents at once. | [Orchestrators](lists/orchestrators.md) |
+| [andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) | — | 297 | 297 | The original list this atlas grew from: tools that run several coding agents at once. | [Orchestrators](lists/orchestrators.md) |
 | [kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agents) | 2,981 | 214 | 213 | Frameworks, dev tools and agent products, as curated by kyrolabs. | [Agents (kyrolabs)](lists/agents-kyrolabs.md) |
 | [e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) | 30,741 | 214 | 104 | e2b's catalogue of AI agents and the frameworks behind them. | [Agents (e2b)](lists/agents-e2b.md) |
 | [caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschiHG/awesome-ai-agents-2026) | 2,065 | 260 | 116 | A 2026 market survey — commercial products alongside open source. | [AI Agents 2026](lists/ai-agents-2026.md) |
@@ -190,4 +190,4 @@ Lists overlap heavily — 1310 projects are named by two or more of them. [**Lea
 
 Snapshot 2026-11-01. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
-The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).
+Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).
