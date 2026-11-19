@@ -40,7 +40,7 @@ The module docstrings are the detailed documentation. Read the one at the top of
 | `02_fetch.py` | Batched GraphQL for stars, language, licence and README, with a REST fallback | `cache/entries.json`; `gh api` | `cache/meta.json`, `cache/readmes/` | No |
 | `03_releases.py`, `03b_actions.py` | Release asset names; whether the repo is a GitHub Action | `cache/entries.json`, `cache/meta.json`; `gh api` | `cache/releases.json`, `cache/actions.json` | No |
 | `04_classify.py` | OS verdicts, install command and screenshot candidates for the original list | the four files above plus `cache/readmes/` | `cache/records.json` | No |
-| `10_parse_sources.py` | **Defines `SOURCES`**, the list of source lists. Parses every list except `orchestrators` (which goes through `01`/`04`). On a section heading it cannot map to a topic, or a list wanting a ninth colour: strict (the default) exits 1; provisional (`AAA_PROVISIONAL=1`, set by both workflows) files it for the run and warns. See [Upstream drift](#upstream-drift) | `cache/sources/*.md`, `cache/section-moves.json`, `cache/pull-report.json` | `cache/entries_all.json`, `cache/drift-proposal.json` and `.md`; `cache/provisional.json` on a provisional run with drift; annotations and `$GITHUB_STEP_SUMMARY` | No; it says to run `pull_sources.py` first |
+| `10_parse_sources.py` | **Defines `SOURCES`**, the list of source lists. Parses every list except `orchestrators` (which goes through `01`/`04`). On a section heading it cannot map to a topic: strict (the default) exits 1; provisional (`AAA_PROVISIONAL=1`, set by both workflows) files it for the run and warns. See [Upstream drift](#upstream-drift) | `cache/sources/*.md`, `cache/section-moves.json`, `cache/pull-report.json` | `cache/entries_all.json`, `cache/drift-proposal.json` and `.md`; `cache/provisional.json` on a provisional run with drift; annotations and `$GITHUB_STEP_SUMMARY` | No; it says to run `pull_sources.py` first |
 | `11_fetch_all.py` | Runs 02's batching over every distinct repo. If more than max(50, 10%) of the repos it asked about failed for a reason other than the repo being gone, it retries the rate-limited and transient ones (after 1, 4 and 15 minutes, or at GitHub's reported reset, capped at 15) and stops only if they still fail. An auth failure (401, bad credentials) stops at once, because no wait fixes a token | `cache/entries_all.json`, `cache/meta.json` | `cache/meta.json`, `cache/readmes/` | No |
 | `11b_fetch_gitlab.py` | The GitLab rows `11` skips: one anonymous GraphQL request per 25 projects, written into `meta.json` under GitHub's field names (`stargazerCount`, `pushedAt` = `lastActivityAt`, `licenseInfo` recognised from the LICENSE text) so every later stage reads them unchanged. Keeps the last good answer per project in `cache/gitlab/meta.json` and uses it for a project this run could not read; one never read is left out of the build by `14` | `cache/entries_all.json`; gitlab.com GraphQL | `cache/meta.json`, `cache/readmes/`, `cache/gitlab/meta.json` | No |
 | `13_signals_all.py` | Releases and actions for every repo in one pass. The staleness rule is in `signals.py` | as above | `cache/releases.json`, `cache/actions.json` | No |
@@ -94,7 +94,7 @@ below.
 | `gitlab_api.py` | The paced, retried client every GitLab read goes through. Fails fast on the hourly anonymous cap rather than sleeping an hour; caches responses under `cache/gitlab/http/` only when given a `ttl` (local tuning) |
 | `taxonomy.py` | The 14 topics and 12 targets, and the rules that assign them. `python scripts/taxonomy.py --why OWNER/REPO` explains an assignment (needs the cache) |
 | `16_build_all.py` | **Not a stage.** The rows every surface shares: `prepare`, `canonicalise_nwo`, `repo_pool`, `platform_pool`/`platform_rows`, `star_map`, `order_rows`, `SHEETS` and `LIST_TITLE`. `17_markdown`, `19_pages`, `taxonomy.load` and `devfixture` import it. It wrote the retired workbooks until November 2026 |
-| `buckets.py` | Folds a list's sections into at most eight groups. It was sized for the retired workbook's eight colours; `order_rows` still orders each list's rows by these groups |
+| `buckets.py` | Groups a list's sections into buckets; `16_build_all.order_rows` orders each list's rows by them. The maps were written for the retired workbook's eight colours, and the eight-bucket cap went with it |
 | `drift.py` | Upstream drift: where a provisional build files an unmapped section, and the warnings, summary and proposal that say so. See below |
 | `apply_drift_proposal.py` | Writes a provisional build's placements into `taxonomy.py` and `buckets.py`, each in its own list's block, then re-imports both to check. `--check` writes nothing |
 | `signals.py` | Decides when a cached release or action answer must be re-queried |
@@ -134,14 +134,14 @@ three ways round that.
 ## Upstream drift
 
 The 39 lists change without notice. A curator renames a heading, translates the README, adds a shelf or
-restructures the list. `taxonomy.py` refuses to guess at a section it does not name, and `buckets.py`
-will not give a ninth colour to an eight-colour palette. Both refusals are deliberate. Until 2026-11,
-`10_parse_sources.py` turned them into a red build, and the site stalled until someone wrote one line.
+restructures the list. `taxonomy.py` refuses to guess at a section it does not name, deliberately. (`buckets.py` used to
+refuse a ninth colour as well, for the Excel workbooks' palette; that went with them in November 2026.)
+Until 2026-11, `10_parse_sources.py` turned a refusal into a red build, and the site stalled until someone wrote one line.
 
 There are now two modes. `AAA_PROVISIONAL` chooses between them.
 
-- **Strict**, with the variable unset. Every local run and every test is strict. An unmapped section or a
-  ninth colour exits 1 and prints what to add, as before.
+- **Strict**, with the variable unset. Every local run and every test is strict. An unmapped section exits 1
+  and prints what to add, as before.
 - **Provisional**, with `AAA_PROVISIONAL=1`, which `daily.yml` and `weekly.yml` set for the whole build
   job. The parse files each unmapped section for this run only and the build publishes. Every later
   stage honours the placements through `taxonomy.category_of` and `buckets.bucket_map`, but only under
@@ -158,9 +158,9 @@ Where a provisional section goes. The strongest evidence wins:
 | `leftover` | Every other new section in the list was traced. Exactly one new section and one vanished mapped section remain, so they are paired. |
 | `modal` | No evidence. The section goes to the category most of the list's rows already use. This placement most needs a reviewer's eye. |
 
-A section that takes over an old section's mapping also takes its bucket. If a list goes over eight
-colours, newcomers fold into the list's last bucket. Slots are counted the way the retired workbook writer
-(`16_build_all.group_styles`) handed them out; the eight-colour cap outlived it, see `buckets.py`.
+A section that takes over an old section's mapping also takes its bucket, so its rows keep their place in
+the list's order. A newcomer with no predecessor gets no bucket: it keeps its own name as one and sorts
+after the named buckets. Nothing is folded to fit a palette any more.
 
 Nothing becomes permanent until a person makes it so. Each provisional run produces:
 
