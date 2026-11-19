@@ -112,6 +112,7 @@ b20 = _load("20_landing.py", "b20")
 # picked is decided in this file.
 sys.path.insert(0, str(HERE))
 import discover  # noqa: E402
+import hosts  # noqa: E402
 import sitewide  # noqa: E402
 
 SITE = b19.b17.SITE
@@ -262,7 +263,9 @@ def card_html(nwo: str, row: list, i: int, cats: list[str], cohort: str) -> str:
         f'<p class="dtag"><span class="tag cat">{esc(label)}</span>'
         f'{"<span class=\"dnew\">New</span>" if isnew else ""}</p>'
         f'<h2><a href="{esc(rel(repo_path(nwo)))}">{esc(name)}</a></h2>'
-        f'<a class="nwo" href="https://github.com/{esc(nwo)}">{esc(nwo)}</a>'
+        f'<a class="nwo" href="{esc(hosts.web_url(nwo))}">{esc(hosts.path_of(nwo))}'
+        + ("" if hosts.is_github(nwo) else f' <span class="forge">{esc(hosts.label(nwo))}</span>')
+        + "</a>"
         f'<p class="dmeta">{" · ".join(meta)}</p>'
         f'<p class="desc">{esc(blurb)}</p>'
         f'<p class="dn">{i + 1} of __TOTAL__</p>'
@@ -641,6 +644,7 @@ PAGE_JS = r"""<script>
 def nav() -> str:
     """The header navigation, matching `20_landing.py`'s so the page families feel like one site."""
     return f"""  <nav>
+    <a href="{esc(rel(sitewide.LOCAL_PAGE['slug'] + '/'))}">{esc(sitewide.LOCAL_PAGE['title'])}</a> &middot;
     <a href="{esc(rel('collections/'))}">Collections</a> &middot;
     <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> &middot;
     <a href="{esc(rel('repo/'))}">All projects</a> &middot;

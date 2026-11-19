@@ -23,6 +23,12 @@ module does not name, and its message says what to do about it. `check()` asks t
 whole record set and reads better, but be clear about its standing: nothing calls it. It runs when
 somebody types `python scripts/taxonomy.py`, so it is a thing to reach for while curating, not a guard.
 The guard is the raise.
+
+With one exception, and it is a run-scoped one. On CI the workflows set `AAA_PROVISIONAL`, and under it
+`10_parse_sources` files a section this module does not name somewhere defensible for that run only,
+announces it, and hands a person the line to add here -- see `drift.py`. `category_of` honours those
+placements, so a curator's edit no longer freezes the site; it does not learn from them, so nothing is
+re-filed for good until the key is written below by hand.
 """
 from __future__ import annotations
 
@@ -31,6 +37,8 @@ import json
 import re
 from collections import Counter, defaultdict
 from pathlib import Path
+
+import drift
 
 CACHE = Path(__file__).resolve().parent.parent / "cache"
 
@@ -752,6 +760,14 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("skills_jackyst0", "Official Resources"): "Docs, Learning & Lists",
 
     # libukai/awesome-agent-skills
+    ("skills_libukai", "Content Creation"): "Agent Skills",
+    ("skills_libukai", "Other Types"): "Agent Skills",
+    ("skills_libukai", "Product Usage"): "Agent Skills",
+    ("skills_libukai", "Programming & Development"): "Agent Skills",
+    ("skills_libukai", "Testing and Evaluation"): "Observability & Evals",
+    ("skills_libukai", "Official Documentation"): "Docs, Learning & Lists",
+    ("skills_libukai", "Video Tutorials"): "Docs, Learning & Lists",
+    ("skills_libukai", "Written Tutorials"): "Docs, Learning & Lists",
     ("skills_libukai", "产品使用"): "Agent Skills",
     ("skills_libukai", "其他类型"): "Agent Skills",
     ("skills_libukai", "内容创作"): "Agent Skills",
@@ -831,6 +847,18 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("scout", "Observability & Evals"): "Observability & Evals",
     ("scout", "Assistants & Domain Agents"): "Assistants & Domain Agents",
     ("scout", "Plugins, Themes & Clients"): "Plugins, Themes & Clients",
+    # The GitLab scout (scripts/12b_gitlab.py) files by the GitHub scout's own `section_of`, so it has
+    # the same ten sections, each again the category it is named after.
+    ("gitlab", "Orchestrators & Multi-Agent"): "Orchestrators & Multi-Agent",
+    ("gitlab", "Coding Agents"): "Coding Agents",
+    ("gitlab", "Agent Skills"): "Agent Skills",
+    ("gitlab", "MCP Servers"): "MCP Servers",
+    ("gitlab", "Frameworks & SDKs"): "Frameworks & SDKs",
+    ("gitlab", "Context, Memory & RAG"): "Context, Memory & RAG",
+    ("gitlab", "Sandbox, Security & Governance"): "Sandbox, Security & Governance",
+    ("gitlab", "Observability & Evals"): "Observability & Evals",
+    ("gitlab", "Assistants & Domain Agents"): "Assistants & Domain Agents",
+    ("gitlab", "Plugins, Themes & Clients"): "Plugins, Themes & Clients",
 }
 
 # The second axis: what a thing plugs into. Matched on text because no curator has a column for it --
@@ -908,8 +936,9 @@ RANK = {c: i for i, c in enumerate(CATEGORIES)}
 # a vote beside them. Without that, one scouted listing ties any repo a single list carries, and the tie
 # goes to whichever category is earlier in CATEGORIES -- a topic heuristic quietly re-filing a curator's
 # choice for every such repo. Spelled out rather than read off `10_parse_sources.SOURCES` (this module
-# imports no stage); tests/scout_test.py asserts it is exactly the set of keys SOURCES marks `synthetic`.
-ADVISORY = {"scout"}
+# imports no stage); tests/scout_test.py asserts it is exactly the set of keys SOURCES marks `synthetic`,
+# plus "gitlab", which is synthetic too but in SOURCES only while the `intake.gitlab` flag is on.
+ADVISORY = {"scout", "gitlab"}
 
 # One key in `SECTIONS` is both shelves at once and too big to file wholesale on either:
 # `harness / Skills & MCP` is 41 entries holding the MCP specification, `modelcontextprotocol/servers`,
@@ -960,6 +989,12 @@ def category_of(rec: dict) -> str:
     try:
         return SECTIONS[key]
     except KeyError:
+        # A provisional build (`drift.py`) has already filed this section for the run, said so in an
+        # annotation, and written the line to paste. Honoured only under AAA_PROVISIONAL, so everywhere
+        # else -- every local run, every test -- the raise below is still the guard it always was.
+        provisional = drift.category(*key)
+        if provisional:
+            return provisional
         near = difflib.get_close_matches(key[1], [s for (m, s) in SECTIONS if m == key[0]], n=3, cutoff=0.4)
         raise KeyError(
             f"{key[0]} / {key[1]!r} is not named in SECTIONS -- a curator renamed or added a section "

@@ -16,6 +16,7 @@ from urllib.parse import quote, urljoin
 
 sys.path.insert(0, str(Path(__file__).parent))
 import signals as sig  # noqa: E402
+import hosts  # noqa: E402
 from dead_repos import dead_set  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -178,7 +179,8 @@ def pick_install(md: str, entry: dict) -> tuple[str, str, str]:
 
 
 def shot_candidates(md: str, entry: dict, branch: str) -> list[str]:
-    raw_base = f"https://raw.githubusercontent.com/{entry['nwo']}/{branch or 'HEAD'}/"
+    raw_base = hosts.raw_base(entry["nwo"], branch)
+    gitlab = not hosts.is_github(entry["nwo"])
     found, seen = [], set()
 
     for m in list(MD_IMG.finditer(md)) + list(HTML_IMG.finditer(md)):
@@ -191,12 +193,18 @@ def shot_candidates(md: str, entry: dict, branch: str) -> list[str]:
 
         if url.startswith("//"):
             url = "https:" + url
+        elif gitlab and url.startswith("/uploads/"):
+            # GitLab's drag-and-drop attachments: rooted at the project, not at the repository.
+            url = hosts.web_url(entry["nwo"]) + url
         elif not url.startswith("http"):
             url = urljoin(raw_base, quote(url.lstrip("./"), safe="/._-~%"))
         # Point blob/raw URLs at the raw host.
         url = re.sub(r"https://github\.com/([^/]+/[^/]+)/(?:blob|raw)/", r"https://raw.githubusercontent.com/\1/", url)
 
-        is_attachment = "user-attachments/assets" in url or "githubusercontent.com" in url
+        url = re.sub(r"(https://gitlab\.com/.+?)/-/blob/", r"\1/-/raw/", url)
+
+        is_attachment = ("user-attachments/assets" in url or "githubusercontent.com" in url
+                         or (gitlab and "/uploads/" in url))
         if not RASTER.search(url) and not is_attachment:
             continue  # skip SVG/unknown: badges mostly, and not embeddable
         if url in seen:

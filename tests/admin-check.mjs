@@ -180,25 +180,29 @@ ok("a queued act waits its turn, then plays", (await press("sit")) === "ok" && a
 ok("quiet empties the queue", (await press("quiet")) === "ok" && (await ev(`window.archie.status().queued.length`)) === 0);
 const said = await ev(`(document.querySelector(".archie-sr") || {}).textContent || ""`);
 ok("a poke is answered, in his live region", (await press("poke")) === "ok" &&
-   await until(`((document.querySelector(".archie-sr") || {}).textContent || "") !== ${JSON.stringify(said)}`, 3000));
+   await until(`((document.querySelector(".archie-sr") || {}).textContent || "") !== ${JSON.stringify(said)}`, 8000));
 const fq = await press("friend:quack");
 ok("a friend button sends that friend", fq === "ok" && await until(`!!document.querySelector(".archie-pals")`, 8000),
    fq + " " + await ev(`document.querySelector("#archiepanel output").textContent`));
 ok("...then the other friends say one is over", await until(`(() => { const b = document.querySelector('#archiepanel button[data-cmd="friend:nib"]');
-  return b.disabled && /friend/.test(b.title); })()`, 2000));
+  return b.disabled && /friend/.test(b.title); })()`, 8000));
 await ev(`document.querySelector('#archiepanel button[data-cmd="quiet"]').click()`);
-ok("...and quiet sends it home", await until(`!document.querySelector(".archie-pals")`, 4000));
+ok("...and quiet sends it home", await until(`!document.querySelector(".archie-pals")`, 8000));
 
-// Escape closes it, and focus goes back to the trigger
+// Escape closes it, and focus goes back to the trigger. The waits in this file are "it happens" and their
+// ceilings are a runner's: a page dancing under software WebGL runs long tasks past a second, and a poll
+// cannot ask until they end. So two, three and four seconds became eight -- the same reasoning as
+// friends-check's dismissals and prank-check's lights gap. A wait that asserts something does NOT happen
+// (`!(await until(PANEL, 1500))` below) keeps its short window: a slow runner can only make it pass.
 await ev(`document.querySelector('#archiepanel button[data-cmd="dance:floss"]').focus()`);
 await key("Escape", "Escape", 27);
-ok("Escape closes the panel", await until(`!${PANEL}`, 2000));
+ok("Escape closes the panel", await until(`!${PANEL}`, 8000));
 ok("...focus is back on the trigger", (await focused()) === "archieadmin", String(await focused()));
 ok("...which says it is collapsed", await ev(`document.getElementById("archieadmin").getAttribute("aria-expanded") === "false"`));
 await ev(`document.getElementById("archieadmin").click()`);
-ok("a click opens it again", await until(PANEL, 3000));
+ok("a click opens it again", await until(PANEL, 8000));
 await ev(`document.getElementById("archieadmin").click()`);
-ok("...and a second click closes it", await until(`!${PANEL}`, 3000));
+ok("...and a second click closes it", await until(`!${PANEL}`, 8000));
 
 // ---- The flags: the same path ---------------------------------------------------------------------------
 ok("?=admin1337?: the model goes live", await goto("?=admin1337?"));
@@ -215,7 +219,7 @@ await until(`!!document.getElementById("atlasadmin")`, 5000);
 await ev(`document.querySelector('#atlasadmin [data-act="archie"]').click()`);
 await until(PANEL, 5000);
 await key("Escape", "Escape", 27);
-ok("...Escape closes it, and focus lands on the trigger", await until(`!${PANEL}`, 2000) && (await focused()) === "archieadmin",
+ok("...Escape closes it, and focus lands on the trigger", await until(`!${PANEL}`, 8000) && (await focused()) === "archieadmin",
    String(await focused()));
 ok("?archie=robot goes through the dispatcher", await goto("?archie=robot") && await actIs("robot", 5000),
    JSON.stringify(await ev(`window.archie.status()`)));

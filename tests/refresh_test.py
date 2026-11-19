@@ -344,7 +344,12 @@ true("state/scout-repos.json is committed, so a row naming no list has a ledger 
      SCOUT_LEDGER.exists())
 SCOUTED = ({n.lower() for n in json.loads(SCOUT_LEDGER.read_text(encoding="utf-8"))["repos"]}
            if SCOUT_LEDGER.exists() else set())
-eq("every committed row names at least one list, or is one the scout found",
+# The GitLab scout (12b_gitlab.py) is the other search, and a project only it found names no list either.
+# Its ledger holds GitLab full paths; the rows carry them host-qualified (scripts/hosts.py).
+GITLAB_LEDGER = ROOT / "state" / "gitlab-repos.json"
+SCOUTED |= ({f"gitlab.com/{n}".lower() for n in json.loads(GITLAB_LEDGER.read_text(encoding="utf-8"))["repos"]}
+            if GITLAB_LEDGER.exists() else set())
+eq("every committed row names at least one list, or is one a scout found",
    [r[1] for r in REAL["rows"] if not r[lb_at].strip() and r[1].lower() not in SCOUTED], [])
 SCOUT_TITLES = {b19b.b19.b16.LIST_TITLE[s["key"]] for s in b19b.b10.SOURCES if s.get("synthetic")}
 true("(the scout is configured, so the next assertion has a title to look for)", bool(SCOUT_TITLES))

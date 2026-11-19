@@ -52,6 +52,7 @@ spec.loader.exec_module(b17)
 # effect of somebody else's import is how this breaks the day the import order changes. Stated here.
 sys.path.insert(0, str(Path(__file__).parent))
 import app_flags  # noqa: E402
+import hosts  # noqa: E402
 import mark  # noqa: E402
 import osicons  # noqa: E402
 import pagemin  # noqa: E402
@@ -90,7 +91,9 @@ COLS = ["name", "nwo", "cat", "targets", "stars", "lists", "listed_by", "os",
 
 
 def og(nwo: str) -> str:
-    return f"https://opengraph.githubassets.com/1/{nwo}"
+    """The card a row's picture defaults to: GitHub's social card, or "" for a GitLab project, which
+    has none (`hosts.social_card`). Either way a row whose `img` equals it stores "" in `data.json`."""
+    return hosts.social_card(nwo)
 
 
 # Where `23_og.py` writes the cards, relative to `docs/`, and the name it gives the one for the root
@@ -567,6 +570,8 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             # as an f-string. The function stays here because this is where the token, the alphabet
             # assertion and the prose explaining both already live.
             # Last, so a constant injected above carrying its own relative URLs is prefixed too.
+            .replace("__LOCALSLUG__", sitewide.LOCAL_PAGE["slug"])
+            .replace("__LOCALTITLE__", escape(sitewide.LOCAL_PAGE["title"]))
             .replace("__UP__", UP)
             .replace("__ANALYTICS__", follow() + beacon() + telemetry(UP)))
     relative_urls_prefixed(out)
@@ -1444,6 +1449,11 @@ __SETCSS__
 .sincechip.on{display:inline-block}
 .nm .ni{margin-right:.34em}
 .newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
+/* The forge a non-GitHub project lives on ("GitLab"), beside its path. A `.tag`'s neutral pill, because it
+   is a plain fact about the project and none of the accents' questions -- new, rising, by meaning -- and
+   only tokens, so the theme work recolours it with everything else. */
+.forge{display:inline-block;border:1px solid var(--grid);border-radius:5px;padding:0 5px;background:var(--band);
+  font-size:10.5px;font-weight:600;color:var(--ink2);white-space:nowrap;vertical-align:1px}
 /* "by meaning", on a row the semantic pass added. Built like a `.tag` rather than like `.newon`, because
    it is a statement about *this search* and not a property of the project -- the pill reads as a badge the
    row is wearing today, where bare coloured text beside the title reads as a fact about the repository.
@@ -1657,6 +1667,10 @@ html[data-view=table][data-density=expanded] .cmdrow{max-width:56em}
   background:var(--band);border:1px solid var(--grid);display:block}
 .shot-fallback{display:grid;place-items:center;min-height:100px;padding:12px;background:var(--band);
   border:1px solid var(--grid);border-radius:6px;color:var(--muted);font-size:12px;text-align:center}
+/* `artLoad` hides a picture that failed (or a GitLab row's, which never had one) and adds the fallback
+   beside it. The `display:block` rules on `.shot img` beat the UA's `[hidden]`, so without this the
+   hidden picture kept its box and the fallback stacked underneath it, doubling the cell. */
+.shot img[hidden]{display:none!important}
 /* These two set the table's width. Auto table layout takes the widest unbreakable run in the column
    across every row on the page, and neither a slash nor a comma is a break opportunity in Chrome or
    Safari -- so `muratcankoylan/Agent-` and a blurb naming
@@ -2805,6 +2819,7 @@ __OSSPRITE__
          with no opinion at all -- fifty a day, every category, rotated so the whole corpus comes round --
          and Collections answers it with one. -->
     <a href="__UP__discover/">Discover</a> ·
+    <a href="__UP____LOCALSLUG__/">__LOCALTITLE__</a> ·
     <a href="__UP__collections/">Collections</a> ·
     <a href="https://github.com/__REPO__/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="__UP__repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
@@ -3431,6 +3446,11 @@ const segment = s => {
   return s;
 };
 const detailURL = nwo => "__UP__repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
+// Which forge a row lives on, by scripts/hosts.py's rule: a GitHub `nwo` is `owner/repo`, any other is
+// host-qualified (`gitlab.com/group/project`), and a GitHub owner can never contain a dot. `path` is the
+// project's path on its own forge, which is what the row shows under its title.
+const hostOf = nwo => { const h = nwo.split("/")[0]; return h.includes(".") ? h.toLowerCase() : "github.com"; };
+const FORGES = {"github.com": "GitHub", "gitlab.com": "GitLab"};
 
 // The rescue buttons drawn on an empty table, in the order render() drew them. Kept out of the markup
 // because a filter patch is an object -- serialising it into a data- attribute and parsing it back would
@@ -3565,7 +3585,14 @@ fetch("__UP__data.json").then(r => {
     // still renders `img`, and the outward `nwo` link under every title.
     //
     // `data.json` keeps the column. Only the render path changed -- see the note beside the writer.
-    r.img = "https://opengraph.githubassets.com/1/" + r.nwo;
+    //
+    // A GitLab row is the exception: GitLab has no social card, so it keeps its own picture, and one with
+    // none keeps "" and gets the no-preview fallback in `artLoad`. Bounded by the number of GitLab rows,
+    // which is small, rather than by what any one URL serves -- see handbook/gitlab.md.
+    r.host = hostOf(r.nwo);
+    r.forge = FORGES[r.host] || r.host;
+    r.path = r.host === "github.com" ? r.nwo : r.nwo.slice(r.host.length + 1);
+    r.img = r.host === "github.com" ? "https://opengraph.githubassets.com/1/" + r.nwo : (r.img || "");
     // NEW IS COHORT MEMBERSHIP, NOT AN AGE.
     //
     // `d.cohort` is the import that brought the current arrivals. A row is new because it came in on that
@@ -4625,7 +4652,7 @@ function initDiscovery() {
     const category = (D.cats[r.cat] || {}).name || "the atlas";
     const targets = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
     const name = clipWords(r.name, NAME_MAX);
-    const owner = r.nwo.split("/")[0];
+    const owner = r.path.split("/")[0];
     // `r.name` is the full `owner/name` for 267 of the committed rows, which made the old "comes from"
     // sentence name the same string twice. The owner alone is the fact that sentence was reaching for, and
     // it is dropped rather than repeated when the project is named after whoever publishes it.
@@ -4638,7 +4665,9 @@ function initDiscovery() {
     const facts = [
       name + " is listed under " + category + ".",
       r.lists ? name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")
-              : name + " was found by GitHub search."
+              // Same length on either forge ("GitHub" and "GitLab" are both six letters), so the fit
+              // against SAY_MAX that cards-check.mjs measures holds for both.
+              : name + (r.host === "github.com" ? " was found by GitHub search." : " was found by GitLab search.")
     ];
     if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
     // WHICH FACT A PROJECT SAYS USED TO DEPEND ON THE LENGTH OF A COLOUR NAME. It was
@@ -6808,6 +6837,7 @@ function expWire() {
 let ARTIO = null;
 
 function artLoad(i) {
+  const empty = !i.dataset.src;
   i.onerror = () => {
     i.hidden = true;
     const fallback = document.createElement("span");
@@ -6816,6 +6846,9 @@ function artLoad(i) {
     i.parentElement.appendChild(fallback);
     i.onerror = null;
   };
+  // A row with no picture at all -- a GitLab project whose README has none -- goes straight to the
+  // fallback rather than asking the browser to load "", which some fire `error` for and some do not.
+  if (empty) { i.removeAttribute("data-src"); i.onerror(); return; }
   i.src = i.dataset.src;
   i.removeAttribute("data-src");
 }
@@ -7074,7 +7107,11 @@ function render() {
         // making it the outward link costs no new text and needs no new label -- "openclaw/openclaw" is a
         // better accessible name than "GitHub" repeated 120 times. It does add one tab stop per row,
         // which is the price of the title no longer being the way out.
-        '<a class="nwo" href="' + url + '">' + esc(r.nwo) + "</a>" +
+        // A project on another forge says which, in a pill beside its path: the path alone
+        // (`group/project`) reads exactly like a GitHub one, and the link leaves for a different site.
+        // Inside the link, because `.nwo` is a block: outside, the pill would wrap onto a line of its own.
+        '<a class="nwo" href="' + url + '">' + esc(r.path) +
+        (r.host !== "github.com" ? ' <span class="forge">' + esc(r.forge) + "</span>" : "") + "</a>" +
         // In the project cell rather than in a cell of its own, which is not a layout preference: the
         // headings and the body cells of this table have to stay the same length, and a mismatch here has
         // already once produced five headings over four columns with an invented fifth column to hang the
@@ -7108,7 +7145,8 @@ function render() {
       '<td class="c hide lc"><div class="meta"><span>' + esc(r.lang || "—") + "</span><br>" +
         "<span>" + esc(r.license || "—") + "</span><br><span>" + since(r.pushed) +
         '</span></div><div class="project-actions"><a href="' + page + '" aria-label="Explore ' + esc(r.name) + '">Explore project <span aria-hidden="true">↗</span></a>' +
-        '<a href="' + url + '" aria-label="' + esc(r.nwo) + ' on GitHub">GitHub</a></div></td>' +
+        '<a href="' + url + '" aria-label="' + esc(r.path) + ' on ' + esc(r.forge) + '">' + esc(r.forge) +
+        "</a></div></td>" +
       "</tr>";
   }).join("");
   // Every th carries the same class as the td beneath it. The Shot heading used not to, and since the

@@ -11,6 +11,7 @@ Buckets are listed in the order they take palette slots. A section absent from
 a map keeps its own name as its bucket, which is why the <= 8 lists need no
 entry here.
 """
+import drift
 
 # source key -> [(bucket name, [section names folded into it]), ...]
 BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
@@ -430,11 +431,19 @@ BUCKETS: dict[str, list[tuple[str, list[str]]]] = {
         ("Plugins & Clients", ["Plugins, Themes & Clients"]),
     ],
 }
+# The GitLab scout's sections are the GitHub scout's, so it folds the same way.
+BUCKETS["gitlab"] = BUCKETS["scout"]
 
 
 def bucket_map(source: str) -> dict[str, str]:
-    """section name -> bucket name for one source."""
-    out: dict[str, str] = {}
+    """section name -> bucket name for one source.
+
+    Under AAA_PROVISIONAL this also carries the run's folds from `drift.py`: a section that arrived
+    upstream today and would have been a ninth hue takes the sheet's last bucket instead, for this run,
+    with an annotation saying so. The curated map wins where both name a section. Without the env var
+    there are no folds, so a local run sees exactly the map written here.
+    """
+    out: dict[str, str] = {s: b for s, b in drift.bucket_overrides(source).items()}
     for bucket, sections in BUCKETS.get(source, []):
         for s in sections:
             out[s] = bucket

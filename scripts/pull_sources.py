@@ -11,7 +11,7 @@ both the missing fetch stage and the cache that makes re-running it cheap.
   pull_sources.py --status     report what is cached; no network
   pull_sources.py --only KEY   one list, by its key in 10_parse_sources.SOURCES
 
-Four decisions worth knowing about:
+Five decisions worth knowing about:
 
 * **The commit id lives with the bytes, in `cache/sources/index.json`.** `state/first-seen.json`
   already records a SHA per source and is committed, but it means "this commit has been *built*".
@@ -31,6 +31,14 @@ Four decisions worth knowing about:
 * **A failed pull records nothing.** Same reasoning as `watch_sources.py --update` running only after
   a successful build: if the id were recorded first, a truncated or unreachable pull would count as
   done for ever and that list's new entries would be lost rather than retried tomorrow.
+
+* **A pull the atlas cannot trust is refused, never fatal.** Three kinds: a transfer that failed, one
+  that came back under a quarter of the cached size, and one that arrived whole but *parses* to under
+  a quarter of the cached copy's entries -- a list restructured out from under its strategy. Each
+  keeps yesterday's copy on disk and records nothing, so the build publishes yesterday's rows for that
+  list and tries again tomorrow, and `drift.py` puts each one in the run's annotations and summary.
+  Losing a day of one list's freshness is the right price; losing the list's rows from the site on a
+  green build, which is what taking such a copy does, is not. `--force` accepts all three.
 
 The diff is over parsed *entries*, not over lines, and it runs the real parsers -- `01_parse.py` for
 the orchestrators README, `10_parse_sources.py` for the other ten -- across the cached copy and the
@@ -64,6 +72,7 @@ HERE = Path(__file__).resolve().parent
 CACHE = ROOT / "cache"
 
 sys.path.insert(0, str(HERE))
+import drift  # noqa: E402
 import watch_sources  # noqa: E402  -- reused for head(), the one definition of "latest commit id"
 
 # watch_sources has already loaded 10_parse_sources for its own source list. Borrowing its module
@@ -142,10 +151,25 @@ def readme_path(nwo: str) -> str:
     fine, so this asks. `content` in the same response is the field that lies about big files;
     `path` is reliable at any size.
     """
-    out = subprocess.run(["gh", "api", f"repos/{nwo}/readme", "--jq", ".path"],
+    return readme_info(nwo)[0]
+
+
+def readme_info(nwo: str) -> tuple[str, str | None]:
+    """(README path, the owner/repo GitHub serves it from) -- the second only when it can tell.
+
+    The same call as ever, read for one more field. A list repo that is renamed or transferred keeps
+    answering under its old name, because GitHub redirects, so nothing breaks the day it happens and
+    nothing says so either; the redirect is then one squatted or recreated old name away from a list
+    that is unreachable, or worse, somebody else's. `html_url` names the repo as it is now, so the
+    rename is caught on the first pull after it, with the new name to put in SOURCES.
+    """
+    out = subprocess.run(["gh", "api", f"repos/{nwo}/readme", "--jq", '.path + "\\t" + .html_url'],
                          capture_output=True, text=True, encoding="utf-8", errors="replace")
-    path = out.stdout.strip()
-    return path if out.returncode == 0 and path and "\n" not in path else "README.md"
+    path, _, html = out.stdout.strip().partition("\t")
+    if out.returncode != 0 or not path or "\n" in path:
+        return "README.md", None
+    parts = urllib.parse.urlparse(html).path.strip("/").split("/")
+    return path, "/".join(parts[:2]) if len(parts) >= 2 else None
 
 
 def raw_bytes(nwo: str, sha: str, path: str) -> tuple[bytes | None, str]:
@@ -165,7 +189,7 @@ def raw_bytes(nwo: str, sha: str, path: str) -> tuple[bytes | None, str]:
     return data, ""
 
 
-def files_to_pull(src: dict) -> list[tuple[str, Path]]:
+def files_to_pull(src: dict, readme: str | None = None) -> list[tuple[str, Path]]:
     """(repo path, destination) for everything this source's content lives in.
 
     A list is usually one README. Not always: `github/awesome-copilot` keeps its ~415 items in four
@@ -176,7 +200,7 @@ def files_to_pull(src: dict) -> list[tuple[str, Path]]:
     the parsers read first.
     """
     dests = b10.source_paths(src)
-    return list(zip([readme_path(src["nwo"])] + list(src.get("paths") or []), dests))
+    return list(zip([readme or readme_path(src["nwo"])] + list(src.get("paths") or []), dests))
 
 
 # --- the diff --------------------------------------------------------------------------------
@@ -193,7 +217,10 @@ def entries_of(src: dict, text: str) -> dict[str, dict]:
         # The orchestrators README is the collection's own origin and has its own parser.
         rows = b01.dedupe(b01.parse_text(text), report=False)
         keys = ("name", "description", "category", "status_note")
-    return {b10.url_key(r["url"]): {"url": r["url"], "shape": [r[k] for k in keys]} for r in rows}
+    # `section` rides alongside `shape` rather than inside it -- it is in there already, as `category` --
+    # so that `drift.lineage` can ask which section an entry sat under without knowing the key order.
+    return {b10.url_key(r["url"]): {"url": r["url"], "shape": [r[k] for k in keys],
+                                    "section": r["category"]} for r in rows}
 
 
 def diff_entries(old: dict[str, dict], new: dict[str, dict]) -> dict[str, list[str]]:
@@ -282,9 +309,17 @@ def pull_one(src: dict, state: dict, force: bool) -> dict:
     # Right id, missing bytes. Pull to restore what the cache lost; expect the diff to be empty.
     preset = "refill" if sha == have and not intact else ""
 
+    readme, served = readme_info(nwo)
+    if served and served.lower() != nwo.lower():
+        # Fetched from the name GitHub uses now, so the pull does not lean on a redirect, and reported:
+        # SOURCES still says the old name, and that is a one-line edit for a person (`drift.py` puts it
+        # in the run's summary). Not fatal -- the content is the same repository's.
+        line["renamed_to"] = served
+    fetch_as = line.get("renamed_to") or nwo
+
     pulled: list[tuple[Path, bytes]] = []
-    for path, target in files_to_pull(src):
-        data, why = raw_bytes(nwo, sha, path)
+    for path, target in files_to_pull(src, readme):
+        data, why = raw_bytes(fetch_as, sha, path)
         if data is None:
             line["status"] = f"failed: {path} ({why})"
             return line
@@ -301,6 +336,8 @@ def pull_one(src: dict, state: dict, force: bool) -> dict:
 
     # Everything arrived, so write it all. Content first, ledger last: content on disk without a
     # ledger entry is a wasted pull next run, a ledger entry without content is a silent skip.
+    # The bytes being replaced are kept in hand until the new copy has been parsed, for the refusal below.
+    before = {target: target.read_bytes() for target, _ in pulled if target.exists()}
     for target, data in pulled:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
@@ -317,6 +354,30 @@ def pull_one(src: dict, state: dict, force: bool) -> dict:
         line["status"] = f"pulled, undiffable ({type(exc).__name__})"
         state["sources"][nwo] = record(key, sha, line["entries"], pulled)
         return line
+
+    # The byte floor above, applied to what the parser makes of the bytes. A list restructured into a
+    # shape its strategy no longer fits -- headings demoted a level, bullets turned into a table, the
+    # entries moved to another file -- arrives at full size and parses to almost nothing, and before
+    # this it was taken: the list's rows vanished from the atlas on a green build, and the only trace
+    # was a row count in a log. Refused the same way and for the same reason as a truncated transfer:
+    # yesterday's copy goes back on disk, nothing is recorded, the run warns (via `drift.py`'s summary)
+    # and carries on with yesterday's rows, and tomorrow tries again. `--force` accepts it, which is
+    # what a person does after deciding the list really did shrink -- or after fixing its strategy.
+    if old and not force and len(new) < len(old) * SHRINK_FLOOR:
+        for target, _ in pulled:
+            if target in before:
+                target.write_bytes(before[target])
+            else:
+                target.unlink(missing_ok=True)
+        line["status"] = (f"failed: parsed {len(new):,} entries, was {len(old):,} -- restructured "
+                          f"upstream? (--force to accept)")
+        line["files"] = []
+        return line
+
+    # Which old section each new one came from. The only moment both copies are in hand, so the only
+    # moment a rename or a translation can be told from a new shelf; `drift.py` reads this later.
+    drift.record_moves(key, sha, drift.lineage([(k, v["section"]) for k, v in old.items()],
+                                               [(k, v["section"]) for k, v in new.items()]))
 
     d = diff_entries(old, new)
     line["status"] = preset or ("first pull" if not old_text else "changed")

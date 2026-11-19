@@ -9,8 +9,8 @@ many small harnesses, and why each one asserts what it does. This page is the wo
 node tests/run.mjs
 ```
 
-The runner takes no arguments. It runs every harness in the `HARNESSES` list in `tests/run.mjs`: on 2026-09-25 that was
-**29 harnesses, 17 Python and 12 Node**. Ten of the Node harnesses drive a headless Chromium and two do not.
+The runner takes no arguments. It runs every harness in the `HARNESSES` list in `tests/run.mjs`: on 2026-11-18 that was
+**31 harnesses, 21 Python and 12 Node**. Ten of the Node harnesses drive a headless Chromium and two do not.
 Two environment variables run a part of it, each a comma-separated list of file names: `AAA_ONLY` runs just those,
 `AAA_SKIP` all but those, and a name that is not a harness stops the run. CI uses them to run `bits-check.mjs` in a
 job of its own (see [ci-cd.md](ci-cd.md#testsyml)).
@@ -89,6 +89,7 @@ Node process on the machine, including other sessions' tools and test runs.
 | `theme_test.py` | Python | The eight skins' token sets, which must stay identical across their four copies; the theme menu; verdict marks; the phone layout | 1053 | 500 |
 | `signals_test.py` | Python | When a cached release or action answer must be re-queried | 210 | 170 |
 | `fetch_test.py` | Python | A batch GitHub keeps timing out on is split and retried; nothing else is | 27 | 20 |
+| `ci_tools_test.py` | Python | `tools/local_daily.py` reads the daily's stages in order and never runs IndexNow or records SHAs; every job has a time limit, only the builds share `atlas-build`, the time report matches the limit, network steps retry | 35 | 30 |
 | `dead_repos_test.py` | Python | The weekly dead-repo scan's verdicts, ledger and guard, and the build leaving dead repos out | 37 | 35 |
 | `indexnow_test.py` | Python | Which URLs are submitted, the key prune, truncated responses. Network is stubbed | 140 | 100 |
 | `newness_test.py` | Python | What "New" means: one cohort, replaced by the next import that adds anything | 54 | 45 |
@@ -142,8 +143,9 @@ Other known sensitivities:
   slack in an 82 px pill, so it can pass on Windows and fail on Linux CI.
 - **Archie's frame rate.** The Archie harnesses render through swiftshader, which on CI can draw only a few
   frames a second. Wait for anything Archie times in his frames by his own clock, as `bits-check` steps the
-  stage's, never in wall-clock milliseconds. The friends' dismissals are a 350 ms fade, held to a wall-clock second
-  (three for a poke); a run on one core shared with other work can miss them. See
+  stage's, never in wall-clock milliseconds. The friends' dismissals are a 350 ms fade. Until 2026-11-18 they were held to
+  a wall-clock second (three for a poke), and a run on one core shared with other work could miss them. They
+  are now held to five seconds (eight for a poke), as are admin-check's panel waits. See
   [troubleshooting.md](troubleshooting.md#the-suite-is-red).
 - **Hover styles:** CI's headless Chromium reports `(hover: hover)` as false, while a desktop run reports
   true. The harnesses assert hover CSS from the stylesheet (CSSOM), not by hovering.
@@ -161,6 +163,20 @@ Other known sensitivities:
   that is used up, each refused call is a 403 that the page ignores and Chrome logs as a console error.
   `prank-check` and `dance-check` excuse a 403 or 429 from `api.github.com`. The other harnesses that count
   console errors don't yet.
+- **Runner timing: the rule.** A wait for something that *happens* (a friend leaves, a panel opens, an act
+  starts) gets a ceiling that is generous for the slowest runner, several seconds and not one, because under
+  software WebGL a single long task can run past a second and a poll can't ask until it ends. An exact bound is
+  kept only where it protects a reader: the WCAG 2.3.1 flash rate, the 1.5 s a friend may cover a control, the
+  hard stop. A wait that asserts something does *not* happen keeps its short window, since a slow runner can only
+  make it pass. This is how the October fixes were made (prank's lights gap, friends' hard stop, the bits'
+  Escape), and it is the first thing to check when a browser harness goes red once and green on a re-run.
+- **A poll during a navigation gets a CDP error, not a value.** "Inspected target navigated or closed",
+  "Execution context was destroyed" and "Cannot find context" mean "not yet". The `soft()` helper in
+  friends, prank and dance (and `until()` in admin) polls again. A plain `ev()` would crash the harness with no
+  tally, which is what cost the weekly of 2026-11-01 its publish. Use the tolerant poll in any new wait loop, and
+  keep `ev()` for assertions.
+- **A harness that hangs is killed after 20 minutes** (100 for bits-check, `AAA_HARNESS_MINUTES` to change it)
+  and reported as hung. The rest of the suite still runs. Give a new slow harness a `minutes` in `HARNESSES`.
 - **Wait for state; don't sleep for it.** With the CPU throttled four times, a matchMedia `change` event took
   a second to arrive, and a poll read Archie's quiet cut 300 to 600 ms after the page made it. Wait with
   `until()`, or stamp the moment in the page, and keep the bound on the thing being measured.
