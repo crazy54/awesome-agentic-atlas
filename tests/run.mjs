@@ -28,6 +28,10 @@
 //                     taken down, blocked and disabled told apart from renamed and from a rate limit, the
 //                     ledger's comings and goings, the guard against an outage burying the atlas, and
 //                     14_classify_all.py leaving every ledger repo out of the build.
+//   drift_test.py     upstream drift, scripts/drift.py: a renamed, translated or added section filed for one
+//                     provisional run on its evidence (the libukai translation is the fixture), a ninth hue
+//                     folded, the placements honoured only under AAA_PROVISIONAL, a strict run still stopping,
+//                     and the pull refusing a copy that parses to almost nothing. Pure; GitHub is a fake.
 //   newness_test.py  the cohort model in scripts/newness.py: that `New` is the most recent import that
 //                     brought anything, that the next one to bring anything takes the mark off the last,
 //                     and that an import bringing nothing moves neither. Pure, and the only harness that
@@ -213,6 +217,7 @@ const HARNESSES = [
   {file: "fetch_test.py", label: "a batch GitHub keeps timing out on is split, and nothing else is", python: true, floor: 20},
   {file: "ci_tools_test.py", label: "the local run, and what every workflow must say", python: true, floor: 30},
   {file: "dead_repos_test.py", label: "which repos GitHub no longer serves, the ledger and its guard, and the build leaving them out", python: true, floor: 35},
+  {file: "drift_test.py", label: "upstream drift: what a provisional build files, the evidence for it, and that a strict one still stops", python: true, floor: 110},
   {file: "indexnow_test.py", label: "which URLs are submitted, the key prune, a truncated response", python: true, floor: 100},
   {file: "newness_test.py", label: "what `New` means: one cohort, superseded by the next import that brings anything", python: true, floor: 45},
   {file: "discover_test.py", label: "fifty a day for seven days, every category in each, and the queue that rotates them", python: true, floor: 75},
@@ -227,6 +232,7 @@ const HARNESSES = [
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
   {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, the host in docs/CNAME, and the monitoring tags", python: true, floor: 34},
   {file: "spotlight_test.py", label: "the daily spotlight and line: one rule in Python and in the page, the pool, the refusals", python: true, floor: 300},
+  {file: "local_test.py", label: "the local-AI page: catalogue and picks refused when wrong, the vendored fit method inlined faithfully, the page and its wiring", python: true, floor: 85},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
   {file: "detail-churn.mjs", label: "every detail page, regenerated and hashed", floor: 7},
   {file: "detail-preview-check.mjs", label: "rendered repository reader, source and phone layout", needs: "browser", floor: 12},
@@ -237,7 +243,8 @@ const HARNESSES = [
   {file: "prank-check.mjs", label: "Archie's pranks: each undone, nothing saved, the flicker's rate", needs: "browser", floor: 28},
   {file: "friends-check.mjs", label: "Archie's friends: each comes, leaves, restores the page, and keeps off the controls", needs: "browser", floor: 80},
   {file: "admin-check.mjs", label: "Archie's admin panel: hidden, one button per command, each dispatching its own, and why a button is greyed", needs: "browser", floor: 55},
-  {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450, minutes: 100},
+  {file: "local-check.mjs", label: "the local-AI page as a reader drives it: tiles, keyboard combobox, chips, tasks, numbers, how-to, shared hash, phone, themes, motion, no script", needs: "browser", floor: 70},
+  {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450},
 ];
 
 // The watchdog's default. The slowest harness but one, prank-check, takes about eight minutes on a runner

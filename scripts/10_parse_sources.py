@@ -717,11 +717,21 @@ def finalise(src: dict, rows: list[dict]) -> list[dict]:
 
 
 def main() -> None:
+    sys.path.insert(0, str(Path(__file__).parent))
+    import drift  # noqa: E402
+    drift.utf8_console()
     # This stage reads the lists, it does not fetch them. Missing content used to surface as a bare
     # FileNotFoundError on whichever source happened to be first, which says nothing about the cause:
     # cache/ is not committed, so a cold clone or an Actions cache that did not restore has none of it.
     # Every file, not just the primary: read_source concatenates whatever is present, so a source
     # whose sub-documents did not restore would otherwise parse quietly as a much shorter list.
+    #
+    # Fatal in provisional mode too, deliberately. Every other upstream failure has a previous copy
+    # to fall back on -- `pull_sources.py` keeps yesterday's bytes for a list it cannot pull, cannot
+    # trust, or cannot parse -- and this is the one case where there is none. Publishing without the
+    # list would not be a stale atlas but a smaller one: every row it alone carries would leave every
+    # page, and `newness.py` would date their return as new arrivals. It takes a cold cache *and* an
+    # unreachable list on the same run, which is rare enough that stopping is the cheaper mistake.
     absent = [src for src in SOURCES
               if src.get("file") and not all(p.exists() for p in source_paths(src))]
     if absent:
@@ -741,6 +751,15 @@ def main() -> None:
         if not src["file"]:
             continue
         rows = parse(src)
+        if not rows:
+            # Possible only on a list's first pull or a forced one: otherwise `pull_sources.py` refuses
+            # a copy that parses to under a quarter of the last, and the last is still here. Not fatal,
+            # because no row of this list was published from this copy to lose; loud, because a list
+            # contributing nothing is a strategy that no longer fits it.
+            drift.warn(f"{src['key']} parsed to nothing",
+                       f"{src['nwo']}: 0 entries from {source_path(src).name}. Its strategy in SOURCES "
+                       f"(mode, cat_at, drop/keep) no longer fits the list; `python scripts/try_source.py` "
+                       f"helps work out a new one.")
         for i, r in enumerate(rows, start=1):
             r["src_order"] = i
         all_rows += rows
@@ -761,8 +780,8 @@ def main() -> None:
     unmapped(all_rows)
 
 
-def unmapped(rows: list[dict]) -> None:
-    """Fail here, on the section names, rather than thousands of repo fetches later.
+def unmapped(rows: list[dict], provisional: bool | None = None) -> list[dict]:
+    """Fail here, on the section names, rather than thousands of repo fetches later -- or, on CI, don't.
 
     Two things every later stage assumes and neither checks while checking is still cheap.
     `taxonomy.category_of` is a hard `SECTIONS[...]` lookup, so one heading a curator renamed
@@ -770,37 +789,56 @@ def unmapped(rows: list[dict]) -> None:
     counts the map it was handed, so a source with nine sections and no map at all passes it and
     then asks an eight-hue palette for nine hues. Both are decisions a person has to make by hand,
     so the useful thing to print is exactly which ones are outstanding.
+
+    What happens next depends on the mode (`drift.py` has the whole argument). Strict, the default
+    and every local run: exit 1, as this always has. Provisional, which the workflows set: file each
+    one for this run, annotate it, write the proposal, and let the build publish. Either way the
+    decisions are the same records from the same `drift.place`, so the list a strict run refuses on
+    is exactly the list a provisional run warns about.
+
+    The palette is counted the way `16_build_all.group_styles` hands slots out: every bucket a map
+    names, present today or not, plus each other bucket the rows bring. Counting only the buckets
+    present, as this did, passed a sheet that the workbook stage then refused for a ninth hue.
     """
     sys.path.insert(0, str(Path(__file__).parent))
     import buckets as buck  # noqa: E402
+    import drift  # noqa: E402
     import taxonomy as tax  # noqa: E402
 
-    pairs = {(r["source"], r["category"]) for r in rows}
-    missing = sorted(f"({k!r}, {sec!r})" for k, sec in pairs - set(tax.SECTIONS))
+    provisional = drift.enabled() if provisional is None else provisional
+    moves = drift.published_moves(rows, {s["key"]: (s["nwo"], s["title"]) for s in SOURCES}, tax.SECTIONS,
+                                  drift.load_moves(), url_key)
+    recs = drift.place(rows, tax.SECTIONS, buck.BUCKETS, moves, tax.CATEGORIES)
+    drift.publish(recs, drift.degraded_from_pull(), provisional)
 
-    over = []
-    for src in SOURCES:
-        secs = {sec for k, sec in pairs if k == src["key"]}
-        if not secs:
-            continue
-        fold = buck.bucket_map(src["key"])
-        slots = {fold.get(s, s) for s in secs}
-        if len(slots) > 8:
-            over.append(f"{src['key']}: {len(secs)} sections fold to {len(slots)} buckets")
+    missing = [r for r in recs if r["category"]]
+    over = sorted({r["source"] for r in recs if r["bucket_basis"] == "fold"})
 
     if missing:
         print(f"\n{len(missing)} sections no category is named for -- add each to "
               f"taxonomy.SECTIONS:", file=sys.stderr)
-        for m in missing:
-            print(f"  {m}: ...", file=sys.stderr)
+        for r in missing:
+            print(f"  ({r['source']!r}, {r['section']!r}): ...   "
+                  f"[{'filed for this run under ' + repr(r['category']) if provisional else 'evidence'}: "
+                  f"{drift.describe(r)}]", file=sys.stderr)
     if over:
         print(f"\n{len(over)} sources want more than the eight palette hues -- give each a "
-              f"buckets.BUCKETS map:", file=sys.stderr)
-        for o in over:
-            print(f"  {o}", file=sys.stderr)
-    if missing or over:
+              f"buckets.BUCKETS map, or fold the new section into one:", file=sys.stderr)
+        for k in over:
+            folds = [r for r in recs if r["source"] == k and r["bucket_basis"] == "fold"]
+            print(f"  {k}: {', '.join(repr(r['section']) for r in folds)}"
+                  + (f" -> {folds[0]['bucket']!r} for this run" if provisional else ""), file=sys.stderr)
+    if (missing or over) and not provisional:
+        print(f"\n(A provisional build, {drift.ENV}=1, would file them as shown and publish; the "
+              f"proposal is in {drift.PROPOSAL.relative_to(ROOT).as_posix()} either way.)", file=sys.stderr)
         sys.exit(1)
-    print("every section is named by taxonomy.SECTIONS and folds into <= 8 buckets")
+    if recs:
+        print(f"\nPROVISIONAL: {len(recs)} placement(s) for this run only -- "
+              f"{drift.PLACEMENTS.relative_to(ROOT).as_posix()}; lines to paste in "
+              f"{drift.PROPOSAL_MD.relative_to(ROOT).as_posix()}")
+    else:
+        print("every section is named by taxonomy.SECTIONS and folds into <= 8 buckets")
+    return recs
 
 
 if __name__ == "__main__":
