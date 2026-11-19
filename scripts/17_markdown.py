@@ -37,6 +37,7 @@ spec.loader.exec_module(b16)
 # records in this module have been through `prepare`, so only the classifiers are wanted.
 sys.path.insert(0, str(Path(__file__).parent))
 import taxonomy as tax  # noqa: E402
+import hosts  # noqa: E402
 import newness  # noqa: E402
 
 SHEETS, PLATFORMS, DASH = b16.SHEETS, b16.PLATFORMS, b16.DASH
@@ -210,9 +211,9 @@ def image(rec, shots) -> str:
             url = "https://" + url
         if url.startswith("http"):
             return url
-    if rec.get("nwo"):
-        return f"https://opengraph.githubassets.com/1/{rec['nwo']}"
-    return ""
+    # GitHub's social card, which exists for every GitHub repo; "" for a GitLab project, which has
+    # none (hosts.social_card), so a GitLab row with no picture of its own shows no picture.
+    return hosts.social_card(rec["nwo"]) if rec.get("nwo") else ""
 
 
 def gallery(rows, shots, cols: int = 3) -> list[str]:

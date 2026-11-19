@@ -49,7 +49,11 @@ jobs:
       # Writes nothing if GitHub could not be asked properly (an outage, a rate limit, a bad token) or if
       # the scan would bury implausibly much of the atlas at once; either way the step fails and the
       # ledger is untouched. The report goes to the run's summary page.
+      # GitLab projects are asked of gitlab.com; a GitLab read that fails keeps the GitLab entries as
+      # they were and does not fail the step (see scripts/dead_repos.py). GITLAB_TOKEN is optional.
       - name: Ask GitHub about every listed repo
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         run: python scripts/dead_repos.py
 
       - name: Commit the ledger

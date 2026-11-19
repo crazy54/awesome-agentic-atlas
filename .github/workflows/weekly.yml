@@ -158,6 +158,8 @@ jobs:
           # ledger and re-renders the same document from it, and exits 0. Its digest is recorded by the
           # "Record the source commits as built" step below, alongside the lists' commit ids.
           python scripts/12_scout.py
+          # And the GitLab scout, ahead of the parser for the same reason; see daily.yml.
+          python scripts/12b_gitlab.py
           # Unlike the daily job this one is not gated on the lists having moved, so it is also the run
           # that repairs a cache that came back partially restored: pull_sources re-pulls any list whose
           # cached content has gone missing even when its commit id still matches.
@@ -173,6 +175,7 @@ jobs:
           python scripts/04_classify.py
           python scripts/10_parse_sources.py
           python scripts/11_fetch_all.py
+          python scripts/11b_fetch_gitlab.py
           # The fetch has just learned what every repo is called now; a scouted one renamed since it was
           # scouted is renamed in the scout's ledger too, so the ledger names what this build publishes
           # (refresh_test asserts that every row naming no list is a scouted one).

@@ -55,6 +55,11 @@
 //                     failed search leaving every byte as it was, candidate lists keeping their first-seen
 //                     date, and the gate: watch_sources.py treating a changed scouted set as a list that
 //                     moved. Pure -- the search transport, the clock and every output path are replaced.
+//   gitlab_test.py    the GitLab index: hosts.py's host-qualified nwo and every URL built from it, gitlab.com
+//                     links read as repos only while the intake.gitlab flag is on, the GitLab scout's rules
+//                     (mirrors above all) and sticky ledger, the rotation an anonymous hourly cap forces, the
+//                     paced client, the GitLab fetch in GitHub's field names with its last-good fallback, and
+//                     the downstream seams: page depth, README images, the dead-repo scan, the watch key.
 //   probe.mjs         runs the page's own JavaScript against a stub DOM, and reads the stylesheet and the
 //                     page text. Sees every branch of the ranking, the hash and the palette. Cannot see
 //                     computed layout -- there is none in Node.
@@ -222,6 +227,7 @@ const HARNESSES = [
   {file: "newness_test.py", label: "what `New` means: one cohort, superseded by the next import that brings anything", python: true, floor: 45},
   {file: "discover_test.py", label: "fifty a day for seven days, every category in each, and the queue that rotates them", python: true, floor: 75},
   {file: "scout_test.py", label: "the scout: what GitHub search may add, the sticky ledger, a failed search, and the gate", python: true, floor: 180},
+  {file: "gitlab_test.py", label: "the GitLab index: host-qualified rows, the GitLab scout and fetch, and every seam they cross", python: true, floor: 140},
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
   {file: "media_test.py", label: "one embedded part per screenshot, the entry ceiling, and the unpooled cover", python: true, floor: 45},

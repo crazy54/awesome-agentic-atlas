@@ -14,6 +14,9 @@ import sys
 import time
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent))
+import hosts  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "cache"
 READMES = CACHE / "readmes"
@@ -204,6 +207,11 @@ def main() -> None:
         if not nwo or nwo.lower() in seen:
             continue
         seen.add(nwo.lower())
+        # GitHub's GraphQL knows nothing about a GitLab project; 11b_fetch_gitlab.py fetches those. Left out
+        # of `want` here, so they are never asked of GitHub and so never count towards `mass_failure`:
+        # an anonymous gitlab.com refusing a run must not stop the GitHub crawl, and vice versa.
+        if not hosts.is_github(nwo):
+            continue
         if nwo in meta:
             continue
         want.append({"nwo": nwo, "owner": r["owner"], "repo": r["repo"]})

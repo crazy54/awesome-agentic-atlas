@@ -220,6 +220,18 @@ jobs:
         timeout-minutes: 15
         run: python scripts/12_scout.py
 
+      # The GitLab scout (scripts/12b_gitlab.py): the same idea asked of gitlab.com, written as
+      # `cache/sources/gitlab.md` from `state/gitlab-repos.json`. Here for the scout's reason -- its digest
+      # is one of the things the watch step compares. Behind the `intake.gitlab` flag: off, it makes no
+      # request and writes an empty document that no source reads. It cannot fail the run: anonymous
+      # gitlab.com allows about sixty requests an hour per IP, so without GITLAB_TOKEN it runs one slice of
+      # its query rotation, and any query refused just adds nothing. The secret is optional; unset, the
+      # expression is empty and the stage runs anonymously.
+      - name: Scout GitLab for agentic projects
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        run: python scripts/12b_gitlab.py
+
       - name: Has any source list moved?
         id: watch
         run: python scripts/watch_sources.py
@@ -317,6 +329,9 @@ jobs:
           python scripts/04_classify.py
           python scripts/10_parse_sources.py
           python scripts/11_fetch_all.py
+          # GitLab rows, which 11 skips: gitlab.com's answers in GitHub's field names, into the same
+          # meta.json. A refused read falls back to the last good answer and never fails the step.
+          python scripts/11b_fetch_gitlab.py
           # The fetch has just learned what every repo is called now; a scouted one renamed since it was
           # scouted is renamed in the scout's ledger too, so the ledger names what this build publishes
           # (refresh_test asserts that every row naming no list is a scouted one).

@@ -117,6 +117,13 @@
       "name": "Related projects",
       "description": "Shows up to eight nearby projects based on shared topic, harnesses and source-list agreement.",
       "off_effect": "The related-projects section is omitted."
+    },
+    {
+      "key": "intake.gitlab",
+      "group": "Data intake",
+      "name": "GitLab projects",
+      "description": "Indexes agentic projects hosted on gitlab.com beside the GitHub ones: the GitLab scout's document, GitLab links on curated lists read as projects, their metadata fetch, detail pages and the GitLab marker.",
+      "off_effect": "No GitLab project reaches any surface; the GitLab scout writes an empty document and gitlab.com links stay websites."
     }
   ]
 }

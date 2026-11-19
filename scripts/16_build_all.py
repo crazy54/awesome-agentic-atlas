@@ -55,6 +55,7 @@ CATEGORY_TABLE = "ByCategory"
 
 sys.path.insert(0, str(Path(__file__).parent))
 import media  # noqa: E402
+import hosts  # noqa: E402
 from buckets import BUCKETS, bucket_order  # noqa: E402
 # Safe to import at module scope: taxonomy only reaches back into this module inside `load()`, which
 # nothing here calls, so there is no cycle.
@@ -1706,11 +1707,13 @@ def canonicalise_nwo(records, orch, meta) -> int:
         now = canon[was.lower()]
         if now != was:
             r["nwo"] = now
-            r["owner"], _, r["repo"] = now.partition("/")
+            # owner_of/name_of rather than a split on the first slash: a GitLab nwo is host-qualified
+            # and its owner is everything before the project's own name (hosts.py).
+            r["owner"], r["repo"] = hosts.owner_of(now), hosts.name_of(now)
             # Only the plain repo URL. A link into a subpath or a release keeps its old spelling,
             # which still redirects, because rewriting just the prefix could invent a path.
-            if r.get("url") == f"https://github.com/{was}":
-                r["url"] = f"https://github.com/{now}"
+            if r.get("url") == hosts.web_url(was):
+                r["url"] = hosts.web_url(now)
             fixed += 1
     return fixed
 
