@@ -89,7 +89,7 @@ const CSS = String.raw`
 // (legs, wings, a pencil) are groups with a class, so the choreography can animate them without knowing the
 // drawing's insides. Colours are the brief's, as literals rather than theme tokens: a friend is a character,
 // and a character does not change colour with the reader's theme. Each has a 1.5-2 px dark or light outline
-// so it reads on both themes and on every skin.
+// so it reads on all three themes.
 const ART = {
   // The arrow is the prank cursor's own path, `M3 2v22l6-6 4 9 4-2-4-9h8z`, so the joke lands for anyone who
   // saw the prank. Legs hang from the arrow's lower edge, which is where its weight would be.
@@ -272,11 +272,11 @@ export function friends(o) {
   async function visit(id, target) {
     visited = busy = true;
     const F = FRIENDS[id], lines = F.lines || {}, trick = TRICKS[id];
-    // A friend on their favourite skin (`likes`) says so instead of their usual hello, half the time: Quack's
-    // favourite is Graphite, the default, and the joke would wear thin.
-    const fan = document.documentElement.dataset.skin === F.likes && Math.random() < 0.5;
+    // A friend on their favourite theme (`likes`) says so instead of their usual hello, half the time: two of
+    // them favour dark, which most readers are on, and the joke would wear thin.
+    const fan = document.documentElement.dataset.theme === F.likes && Math.random() < 0.5;
     const line = k => {
-      if (k === "arrive" && fan && lines.skin) k = "skin";
+      if (k === "arrive" && fan && lines.theme) k = "theme";
       return lines[k] && lines[k].length ? rnd(lines[k]) : null;
     };
     guest = () => line("poke");

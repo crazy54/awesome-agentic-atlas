@@ -121,7 +121,8 @@ globalThis.document = {
 // here: `wire()` writes this value into <meta name=theme-color> so the browser chrome matches the header,
 // and a harness carrying its own copy of the hex would happily pass a colour the CSS no longer sets.
 const planeOf = (theme) => {
-  const rule = theme === "light" ? /html\[data-theme=light\]\{([\s\S]*?)\}/ : /:root\{([\s\S]*?)\}/;
+  const rule = theme === "light" ? /html\[data-theme=light\]\{([\s\S]*?)\}/
+    : theme === "contrast" ? /html\[data-theme=contrast\]\{([\s\S]*?)\}/ : /:root\{([\s\S]*?)\}/;
   return html.match(rule)[1].match(/--plane:\s*([^;]+);/)[1].trim();
 };
 globalThis.getComputedStyle = (elt) => ({
@@ -162,6 +163,9 @@ const shim = [
   "export const api = {",
   "  get state(){return state}, get ROWS(){return ROWS}, get D(){return D},",
   "  render, match, relevance, hitScore, near, effSort, grams, SORTS, SORT_KEYS,",
+  // `atlasTheme` is what the Settings menu's four buttons call, so driving it is driving the menu without the
+  // buttons, which this fake document does not have.
+  "  atlasTheme,",
   // `semTokens` takes its vocabulary and its stoplist as arguments rather than reading `SEM`, which is the
   // only reason it can be called from here: `SEM` is null until `loadSemantic()` has fetched four files,
   // and there is no server in this harness. Exposed because it is the page's copy of an algorithm that
@@ -808,13 +812,21 @@ ok("its no-JS value is the dark theme's --plane, matching the data-theme=dark fl
 const tc = document.getElementById("tc");
 ok("wire() set the chrome from the stylesheet", tc.content === planeOf(undefined),
    tc.content + " vs " + planeOf(undefined));
-document.getElementById("theme").click();
-ok("toggling to light repaints the chrome", document.documentElement.dataset.theme === "light" &&
+// Through `atlasTheme`, which is what the Settings menu's buttons call: the menu's own light/dark toggle went
+// when the menu became four choices, and the choice is the thing that has to repaint the chrome.
+A.atlasTheme().set("light");
+ok("choosing light repaints the chrome", document.documentElement.dataset.theme === "light" &&
    tc.content === planeOf("light"), tc.content + " vs " + planeOf("light"));
-ok("the two themes do not share a --plane", planeOf("light") !== planeOf("dark"));
-document.getElementById("theme").click();
-ok("toggling back repaints it again", document.documentElement.dataset.theme === "dark" &&
+ok("...and is stored", localStorage.getItem("theme") === "light");
+ok("the themes do not share a --plane", new Set([planeOf("light"), planeOf("dark"), planeOf("contrast")]).size === 3);
+A.atlasTheme().set("contrast");
+ok("choosing high contrast repaints the chrome", document.documentElement.dataset.theme === "contrast" &&
+   tc.content === planeOf("contrast"), tc.content);
+A.atlasTheme().set("system");
+ok("choosing System stores nothing and falls back to the OS, which here asks for dark",
+   localStorage.getItem("theme") === null && document.documentElement.dataset.theme === "dark" &&
    tc.content === planeOf("dark"), tc.content);
+ok("...and System is the choice reported", A.atlasTheme().choice() === "system");
 
 // The registration, which the harness cannot execute -- there is no service worker in Node -- so this
 // asserts the guards that decide whether it ever runs.
@@ -2267,38 +2279,49 @@ if (discHTML && discPlan) {
 const holes = [...new Set(html.match(/__[A-Z][A-Z0-9_]*__/g) || [])];
 ok("every __PLACEHOLDER__ was resolved", holes.length === 0, holes.join(", "));
 
-// ---- The locked theme, behaviourally --------------------------------------------------------------------
-// theme_test.py reads the lock out of the generators as text, which cannot tell a gate that works from one
-// that is written down and never bites (`LOCKED[s] && false && ...` reads the same). So the head script of
-// every page family that wears a saved theme is run here, as published, against a fake storage: a saved
-// `holo` is refused until `atlas-unlock` names it, exactly, and every unlocked theme is worn as saved.
+// ---- The pre-paint script, behaviourally -----------------------------------------------------------------
+// theme_test.py reads the head script as text, which cannot tell a migration that works from one that is
+// written down and never runs. So the head script of every page family is run here, as published, against a
+// fake storage and a fake OS: a stored theme is worn, a stored nonsense value is not, the OS decides for a
+// reader who chose nothing (contrast first), and an old skin reader lands on the light or dark half they were
+// on with the two old keys gone.
 const {runInNewContext} = await import("node:vm");
 const prepaint = (page) => {
   const m = readFileSync(join(ROOT, "docs", page), "utf8").match(/<script>\s*(try \{\s*var t = localStorage[\s\S]*?)<\/script>/);
   return m ? m[1] : null;
 };
-const wears = (script, store) => {
+const wears = (script, init, os = {}) => {
+  const store = new Map(Object.entries(init));
   const el = {dataset: {}}, tc = {content: ""};
   runInNewContext(script, {
-    localStorage: {getItem: (k) => (k in store ? store[k] : null)},
-    matchMedia: () => ({matches: false}),
+    localStorage: {getItem: (k) => (store.has(k) ? store.get(k) : null), removeItem: (k) => store.delete(k),
+                   setItem: (k, v) => store.set(k, String(v))},
+    matchMedia: (q) => ({matches: !!os[q]}),
     document: {documentElement: el, getElementById: () => tc},
   });
-  return el.dataset.skin;
+  return {theme: el.dataset.theme, skin: el.dataset.skin, chrome: tc.content, keys: [...store.keys()].sort().join(",")};
 };
 const FAMILIES = {"catalog/index.html": "the catalog", "repo/index.html": "the project directory",
-                  "collections/index.html": "the collections", "index.html": "the homepage"};
+                  "collections/index.html": "the collections", "index.html": "the homepage",
+                  "topic/coding-agents/index.html": "a topic page"};
+const MORE = "(prefers-contrast: more)", LIGHTOS = "(prefers-color-scheme: light)";
 for (const [page, label] of Object.entries(FAMILIES)) {
   const script = prepaint(page);
   ok(`${label}'s pre-paint script was found`, !!script, page);
   if (!script) continue;
-  ok(`${label}: a saved holo is refused while locked`, wears(script, {"atlas-skin": "holo"}) === "graphite");
-  ok(`${label}: ...and worn once unlocked`, wears(script, {"atlas-skin": "holo", "atlas-unlock": "holo"}) === "holo");
-  ok(`${label}: ...by its exact id, not a substring of another`,
-     wears(script, {"atlas-skin": "holo", "atlas-unlock": "holographic,xholo"}) === "graphite");
-  ok(`${label}: ...or as one entry of several`,
-     wears(script, {"atlas-skin": "holo", "atlas-unlock": "other,holo"}) === "holo");
-  ok(`${label}: an unlocked theme needs no key`, wears(script, {"atlas-skin": "aurora"}) === "aurora");
+  for (const t of ["light", "dark", "contrast"]) {
+    const w = wears(script, {theme: t});
+    ok(`${label}: a stored ${t} is worn, with its own chrome`, w.theme === t && w.chrome === planeOf(t), JSON.stringify(w));
+  }
+  ok(`${label}: a stored nonsense value is not`, wears(script, {theme: "prism"}).theme === "dark");
+  ok(`${label}: with nothing stored, the OS's light preference is honoured`, wears(script, {}, {[LIGHTOS]: true}).theme === "light");
+  ok(`${label}: ...and its contrast preference outranks it`,
+     wears(script, {}, {[LIGHTOS]: true, [MORE]: true}).theme === "contrast");
+  const old = wears(script, {theme: "light", "atlas-skin": "prism", "atlas-unlock": "holo"});
+  ok(`${label}: an old skin reader lands on the half they were on, with the old keys gone`,
+     old.theme === "light" && old.keys === "theme" && old.skin === undefined, JSON.stringify(old));
+  ok(`${label}: an old skin reader who never chose a mode follows the OS`,
+     wears(script, {"atlas-skin": "aurora"}).keys === "" );
 }
 
 console.log("\n" + pass + " passed, " + fail + " failed");

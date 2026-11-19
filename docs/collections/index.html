@@ -18,40 +18,18 @@
 <link rel="preload" href="../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of pages.css. After paint `label()`
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a topic page
-  // would otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to
-  // graphite for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../pages.css">
@@ -65,12 +43,12 @@ try {
     <p class="kick">The opinionated corner</p>
     <h1>Collections</h1>
     <p class="sub"><b>5</b> sets · <b>34</b> picks · drawn from
-      <b>10,909</b> projects · snapshot 2026-10-22</p>
+      <b>11,207</b> projects · snapshot 2026-11-01</p>
     <p class="intro">The rest of this site tells you what 39 awesome-lists agreed on and sorts it by
       stars, which is the honest answer to "what exists" and no answer at all to "what should I install".
       These pages answer the second question. Each one is a working set with every slot filled once, the
       reasoning printed beside each pick, and the evidence it was made from printed under that.</p>
-    <a class="cta" href="../">Or browse all 10,909 projects &rarr;</a>
+    <a class="cta" href="../">Or browse all 11,207 projects &rarr;</a>
   </div>
   <nav>
     <a href="../discover/">Discover</a> ·
@@ -92,7 +70,7 @@ try {
   <p class="intro">The atlas has 1,294 projects in it, which is the wrong number to start from. This is one working setup instead: an agent, the things it loads, the place it runs, and the two tools that tell you afterwards whether it did what you asked…</p>
   <p class="meta"><span class="tag">The agent</span><span class="tag">What it knows how to do</span><span class="tag">What it remembers</span><span class="tag">How it reaches your tools</span><span class="tag">Where it runs</span><span class="tag">What it actually did</span><span class="tag">What to read while it runs</span></p>
   <p class="meta ev"><b>7</b> picks ·
-    <b>868,499</b> combined stars</p>
+    <b>882,137</b> combined stars</p>
 </li>
 <li class="coll">
   <p class="kick">Stated support, not inferred</p>
@@ -100,7 +78,7 @@ try {
   <p class="intro">Most agentic tooling is written on a Mac and tested on Linux, and &quot;it&#x27;s Python, it&#x27;ll be fine&quot; is how a Windows afternoon disappears. The atlas records a per-platform verdict for every project, and it distinguishes stated support from…</p>
   <p class="meta"><span class="tag">The framework</span><span class="tag">The harness</span><span class="tag">The coding agent</span><span class="tag">The model runner</span><span class="tag">The inference engine</span><span class="tag">The context budget</span><span class="tag">The sandbox</span></p>
   <p class="meta ev"><b>7</b> picks ·
-    <b>952,013</b> combined stars · every pick's os claim re-checked at build time</p>
+    <b>959,191</b> combined stars · every pick's os claim re-checked at build time</p>
 </li>
 <li class="coll">
   <p class="kick">What to install after the agent</p>
@@ -108,7 +86,7 @@ try {
   <p class="intro">Claude Code is the harness the largest single share of this atlas is built for. Installing it is ten seconds; the next hour is the part nobody writes down. These seven cover the format skills come in, three bundles worth reading before…</p>
   <p class="meta"><span class="tag">The format</span><span class="tag">The bundle</span><span class="tag">The instructions file</span><span class="tag">The engineering set</span><span class="tag">The token diet</span><span class="tag">The bill</span><span class="tag">Where to look next</span></p>
   <p class="meta ev"><b>7</b> picks ·
-    <b>1,006,642</b> combined stars · every pick's target claim re-checked at build time</p>
+    <b>1,030,013</b> combined stars · every pick's target claim re-checked at build time</p>
 </li>
 <li class="coll">
   <p class="kick">A local stack, top to bottom</p>
@@ -116,7 +94,7 @@ try {
   <p class="intro">Sometimes the requirement is not cost or latency but that the code, the documents and the prompts stay on hardware you own. That rules out most of the atlas. What is left is a genuine stack: an engine, a runner in front of it, a chat…</p>
   <p class="meta"><span class="tag">The runner</span><span class="tag">The engine</span><span class="tag">The zero-setup option</span><span class="tag">The chat surface</span><span class="tag">The consumer-hardware path</span><span class="tag">Your own documents</span><span class="tag">When one machine is not enough</span></p>
   <p class="meta ev"><b>7</b> picks ·
-    <b>693,386</b> combined stars · every pick's target claim re-checked at build time</p>
+    <b>698,222</b> combined stars · every pick's target claim re-checked at build time</p>
 </li>
 <li class="coll">
   <p class="kick">Traces, tests and scans</p>
@@ -124,7 +102,7 @@ try {
   <p class="intro">An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all…</p>
   <p class="meta"><span class="tag">The trace</span><span class="tag">The second opinion</span><span class="tag">The test suite</span><span class="tag">The metrics</span><span class="tag">The standard</span><span class="tag">The thing you install</span></p>
   <p class="meta ev"><b>6</b> picks ·
-    <b>121,678</b> combined stars</p>
+    <b>126,184</b> combined stars</p>
 </li>
 </ul>
 <section class="allin">
@@ -148,40 +126,67 @@ try {
   printed beside each pick, and the curation is a
   <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/config/collections.json">reviewable file</a> you can
   open an issue against. Stars, language, licence and last-push come from the GitHub API on
-  2026-10-22 and drift daily. Platform verdicts are derived from each project's own README, install
+  2026-11-01 and drift daily. Platform verdicts are derived from each project's own README, install
   route, CI config and release assets &mdash; <span class="vY">green</span> is stated evidence,
   <span class="vL">amber</span> is inferred from the language. A build here fails rather than publish a
   pick whose evidence has stopped supporting the claim above it.
 </div></footer>
-<script type="module" src="../assets/atlas-site.js?v=4b089da430"></script><script>
-const btn = document.getElementById("theme");
-const label = () => {
-  const light = document.documentElement.dataset.theme === "light";
-  btn.textContent = light ? "Dark theme" : "Light theme";
-  btn.setAttribute("aria-pressed", light ? "true" : "false");
-  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
-  if (plane) document.getElementById("tc").content = plane;
-};
-btn.onclick = () => {
-  const light = document.documentElement.dataset.theme !== "light";
-  document.documentElement.dataset.theme = light ? "light" : "dark";
-  // The choice is the point: it used to last until the next navigation, so a reader who needs light
-  // re-picked it on every facet page, every detail page and every trip back to the index.
-  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
-  label();
-};
-// The head script already resolved the theme; this only has to agree with it, since the markup's
-// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
-label();
-// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
-// they explicitly chose because the sun went down is worse than not following at all.
-try {
-  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
-    if (localStorage.getItem("theme")) return;
-    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+<script type="module" src="../assets/atlas-site.js?v=a4837d4f4b"></script><script>
+function atlasTheme() {
+  if (atlasTheme.api) return atlasTheme.api;
+  var root = document.documentElement;
+  var stored = function () { try { return localStorage.getItem("theme"); } catch (e) { return null; } };
+  var valid = function (t) { return t === "light" || t === "dark" || t === "contrast"; };
+  var system = function () {
+    try {
+      return matchMedia("(prefers-contrast: more)").matches ? "contrast"
+        : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    } catch (e) { return "dark"; }
+  };
+  var apply = function () {
+    var t = stored();
+    root.dataset.theme = valid(t) ? t : system();
+    delete root.dataset.skin;
+    var plane = getComputedStyle(root).getPropertyValue("--plane").trim(), tc = document.getElementById("tc");
+    if (plane && tc) tc.content = plane;
+  };
+  var api = {
+    choice: function () { var t = stored(); return valid(t) ? t : "system"; },
+    refresh: apply,
+    set: function (c) {
+      try { if (c === "system") localStorage.removeItem("theme"); else localStorage.setItem("theme", c); } catch (e) {}
+      apply();
+    },
+    follow: function (f) {
+      var on = function () { if (api.choice() === "system") { apply(); if (f) f(); } };
+      try {
+        matchMedia("(prefers-color-scheme: light)").addEventListener("change", on);
+        matchMedia("(prefers-contrast: more)").addEventListener("change", on);
+      } catch (e) {}
+    }
+  };
+  apply();
+  return (atlasTheme.api = api);
+}
+atlasTheme();
+(function () {
+  var btn = document.getElementById("theme");
+  if (!btn) return;
+  var label = function () {
+    var light = document.documentElement.dataset.theme === "light";
+    btn.textContent = light ? "Dark theme" : "Light theme";
+    btn.setAttribute("aria-pressed", light ? "true" : "false");
+  };
+  btn.onclick = function () {
+    atlasTheme().set(document.documentElement.dataset.theme === "light" ? "dark" : "light");
     label();
-  });
-} catch (e) {}
+  };
+  // The head script already resolved the theme; this only has to agree with it, since the markup's
+  // "Light theme" is wrong for every reader it resolved to light.
+  label();
+  // Follow the OS live, but only for a reader on System -- see `atlasTheme().follow`.
+  atlasTheme().follow(label);
+})();
 </script>
 <script>(function(){try{var u=sessionStorage.getItem("archie-src");if(u&&new URL(u).origin===location.origin&&localStorage.getItem("atlas-byte-quiet")!=="1"){var s=document.createElement("script");s.type="module";s.src=u;document.head.appendChild(s)}}catch(e){}})()</script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->

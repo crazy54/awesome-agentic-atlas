@@ -2,8 +2,9 @@
 footer, and the site script that paints them and opens the admin panel.
 
 Five stages write pages and each keeps its own template, so anything all of them need is a constant here that
-each one drops in, rather than five copies that drift. The palette is the exception and stays copied by hand,
-for the reason `tests/theme_test.py` gives beside `palette_text()`: that test compares the copies.
+each one drops in, rather than five copies that drift. The palette used to be the exception -- copied by hand
+into three generators and held together by a byte-for-byte comparison in `tests/theme_test.py` -- and it is
+not any more: `THEME_CSS` and `HEAD_THEME` below are the only copies, for the reason given beside them.
 
 THE TYPEFACES. Geist for text and Geist Mono for code and the build tags, both SIL OFL 1.1, served from
 `docs/assets/fonts/` so a reader who has never installed either sees them. The mono face is the Nerd Fonts
@@ -166,9 +167,9 @@ BUILDTAGS_CSS = """/* The build tags in the footer. See `buildtags()` in scripts
 # `/catalog/?=admin1337`, which is a page that exists with the tail where `atlas-site.js` looks for it. A path
 # with no tail is a plain 404 and stays one: `noindex`, the site's own theme and type, two ways home.
 def not_found(repo: str, head_theme: str) -> str:
-    """The whole of `docs/404.html`. `head_theme` is `20_landing.HEAD_THEME`, the shared pre-paint script."""
+    """The whole of `docs/404.html`. `head_theme` is `HEAD_THEME` above, the shared pre-paint script."""
     return f"""<!doctype html>
-<html lang="en" data-theme="dark" data-skin="graphite">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">

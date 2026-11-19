@@ -6,11 +6,8 @@
 // value in the reader's own localStorage, and the string that opens it is in plain sight in atlas-site.js.
 // It keeps these controls out of the way; it does not keep anybody out.
 //
-// Three sections:
-//   * Hidden themes. A theme in HIDDEN has a block in every stylesheet and an entry in every head script's
-//     map like any other, but the head scripts refuse to wear it, and the Settings menu does not show its
-//     button, until its id is in `atlas-unlock` (a comma list). Unlocking it here is the only way in.
-//     Locking it again takes it back off a reader who is wearing it.
+// Two sections. (There was a third, "Hidden themes", which unlocked a ninth colour skin; the skins went when
+// the site moved to three themes, and the head script now deletes the storage key it used.)
 //   * Build status: the same answer the footer tags paint, with the run times and links, and a refresh
 //     that skips the ten-minute cache.
 //   * Archie, on the homepage only: a button that opens his own panel (`archie-admin.js`), which has a
@@ -19,39 +16,8 @@
 // Non-modal, like Archie's: the page stays usable underneath. Escape closes it and focus goes back to
 // wherever it was when the panel opened.
 
-export const HIDDEN = [
-  {id: "holo", name: "Holo",
-   blurb: "Hairline grid, film grain and an iridescent light across the top. Clean lines, dark or light.",
-   swatch: ["#07090F", "#A99BFF", "#7AD7FF"]},
-];
-const UNLOCK = "atlas-unlock";
 
 let panel = null, back = null, timer = 0;
-
-function unlocked() {
-  try { return (localStorage.getItem(UNLOCK) || "").split(",").filter(Boolean); } catch (e) { return []; }
-}
-
-function setUnlocked(ids) {
-  try {
-    if (ids.length) localStorage.setItem(UNLOCK, ids.join(","));
-    else localStorage.removeItem(UNLOCK);
-  } catch (e) {}
-}
-
-function wear(skin) {
-  document.documentElement.dataset.skin = skin;
-  try { localStorage.setItem("atlas-skin", skin); } catch (e) {}
-  // The browser chrome follows the page, as the Settings menu's own paint does.
-  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
-  const tc = document.getElementById("tc");
-  if (plane && tc) tc.content = plane;
-  repaintSettings();
-}
-
-function repaintSettings() {
-  if (typeof window.atlasPaintSettings === "function") window.atlasPaintSettings();
-}
 
 const CSS = `
 #atlasadmin{position:fixed;right:12px;bottom:12px;z-index:60;width:min(360px,calc(100vw - 24px));
@@ -66,17 +32,11 @@ const CSS = `
 #atlasadmin .aa-x{min-width:32px;min-height:32px;border:1px solid transparent;border-radius:8px;
   background:none;color:var(--ink2);font:inherit;font-size:16px;letter-spacing:0;cursor:pointer}
 #atlasadmin .aa-x:hover{border-color:var(--grid);color:var(--ink)}
-#atlasadmin .aa-skin{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;
-  padding:10px;border:1px solid var(--grid);border-radius:10px;background:var(--band)}
-#atlasadmin .aa-sw{display:inline-flex;width:34px;height:16px;border-radius:999px;overflow:hidden;border:1px solid var(--grid)}
-#atlasadmin .aa-sw i{flex:1}
-#atlasadmin .aa-skin b{font-weight:600}
-#atlasadmin .aa-skin p{grid-column:1 / -1;margin:0;color:var(--ink2);font-size:12.5px}
 #atlasadmin .aa-row{grid-column:1 / -1;display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 #atlasadmin .aa-b{min-height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--grid);
   background:var(--plane);color:var(--ink);font:600 12px/1 var(--ui,system-ui,sans-serif);cursor:pointer}
 #atlasadmin .aa-b:hover{border-color:var(--link)}
-#atlasadmin .aa-b.aa-go{background:var(--bar);border-color:var(--bar);color:var(--onbar)}
+#atlasadmin .aa-b.aa-go{background:var(--act);border-color:var(--act-edge);color:var(--onact)}
 #atlasadmin .aa-b[disabled]{opacity:.5;cursor:default}
 #atlasadmin .aa-st{list-style:none;margin:0;padding:0;font:12px/1.3 var(--mono,ui-monospace,monospace)}
 #atlasadmin .aa-st li{display:grid;grid-template-columns:10px 72px 1fr auto;gap:8px;align-items:center;padding:5px 2px;
@@ -107,32 +67,6 @@ function say(msg) {
   if (m) m.textContent = msg;
 }
 
-function skinCard(t) {
-  const isOpen = unlocked().includes(t.id);
-  const wearing = document.documentElement.dataset.skin === t.id;
-  const sw = el("span", {class: "aa-sw", "aria-hidden": "true"}, ...t.swatch.map((c) => el("i", {style: `background:${c}`})));
-  const row = el("div", {class: "aa-row"});
-  if (!isOpen) {
-    row.append(el("button", {type: "button", class: "aa-b aa-go", "data-act": "unlock", on: {click: () => {
-      setUnlocked([...new Set([...unlocked(), t.id])]);
-      wear(t.id);
-      say(`${t.name} is unlocked and on. It is in the Settings menu now, on every page.`);
-      render();
-    }}, text: `Unlock ${t.name}`}));
-  } else {
-    row.append(el("button", {type: "button", class: "aa-b aa-go", "data-act": "wear", disabled: wearing,
-      on: {click: () => { wear(t.id); say(`Wearing ${t.name}.`); render(); }}, text: wearing ? "Wearing it" : `Wear ${t.name}`}));
-    row.append(el("button", {type: "button", class: "aa-b", "data-act": "lock", on: {click: () => {
-      setUnlocked(unlocked().filter((id) => id !== t.id));
-      if (document.documentElement.dataset.skin === t.id) wear("graphite");
-      say(`${t.name} is locked again and out of the Settings menu.`);
-      render();
-    }}, text: "Lock it away"}));
-  }
-  return el("div", {class: "aa-skin", "data-skin-card": t.id}, sw, el("b", {text: t.name}),
-            el("p", {text: t.blurb}), row);
-}
-
 function statusList(site, v) {
   const ul = el("ul", {class: "aa-st"});
   const names = {"daily.yml": "daily", "weekly.yml": "weekly", "tests.yml": "tests"};
@@ -156,8 +90,6 @@ async function render() {
   const body = panel.querySelector(".aa-body");
   const keep = document.activeElement && panel.contains(document.activeElement) ? document.activeElement.dataset.act : null;
   body.replaceChildren(
-    el("h3", {text: "Hidden themes"}),
-    ...HIDDEN.map(skinCard),
     el("h3", {text: "Build status"}),
     el("div", {class: "aa-stw"}, el("p", {class: "aa-t", text: "Asking GitHub…"})),
     el("div", {class: "aa-row"}, el("button", {type: "button", class: "aa-b", "data-act": "refresh", on: {click: async () => {

@@ -1283,7 +1283,8 @@ await goto(CATALOG);
 // assertion that would catch the swap being written as `max-width:641px` or applied at every width.
 await nametag("and the full name, two lines, on the desktop side of that boundary", 641, 2);
 
-// ---- both themes, because the card's background and border are both theme variables
+// ---- every theme, because the card's background and border are theme variables, and because a theme is
+// allowed to change paint and nothing else: the cards have to sit in the same boxes in all three
 //
 // Set through localStorage and a reload rather than by clicking the toggle. Headless Chrome reports a light
 // OS preference, so the page's own pre-paint script resolves to light and the first click of a toggle whose
@@ -1298,10 +1299,15 @@ const surfaceIn = async (theme) => {
   const bg = await evalIn("getComputedStyle(document.querySelector('#out tbody tr')).backgroundColor");
   ok("a card in the " + theme + " theme has a surface of its own", bg !== "rgba(0, 0, 0, 0)", bg);
   await shot("view-cards-" + theme);
-  return bg;
+  const boxes = await evalIn(`JSON.stringify([...document.querySelectorAll('#out tbody tr')].slice(0, 12)
+    .map(e => { const r = e.getBoundingClientRect(); return [r.x, r.y, r.width, r.height].map(Math.round); }))`);
+  return {bg, boxes};
 };
-const dark = await surfaceIn("dark"), light = await surfaceIn("light");
-ok("the two themes do not paint the card the same colour", dark !== light, dark + " vs " + light);
+const dark = await surfaceIn("dark"), light = await surfaceIn("light"), contrast = await surfaceIn("contrast");
+ok("the three themes do not paint the card the same colour", new Set([dark.bg, light.bg, contrast.bg]).size === 3,
+   [dark.bg, light.bg, contrast.bg].join(" vs "));
+ok("...and lay the first twelve cards out in exactly the same boxes", dark.boxes === light.boxes &&
+   dark.boxes === contrast.boxes && dark.boxes.length > 20, dark.boxes + " / " + light.boxes + " / " + contrast.boxes);
 
 // The clamp is what keeps a row of cards from being as tall as its wordiest member. Behavioural, and
 // deliberately not a check on the computed `display`: this Chrome implements the standard `line-clamp`,

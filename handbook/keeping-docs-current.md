@@ -18,7 +18,7 @@ sentence. This page lists which document to update when you change which code. U
 | `config/app-flags.json` or its schema | `config/README.md`; [frontend.md](frontend.md#feature-flags) if the count or the readers change |
 | `config/collections.json` | `config/README.md` if the rules change |
 | A page family, its URL, or its owning generator | [frontend.md](frontend.md) page table; [overview.md](overview.md) surfaces table |
-| Themes or skins | [frontend.md](frontend.md#themes-and-skins) |
+| Themes | [frontend.md](frontend.md#themes) |
 | `24_pwa.py` caches or precache list | [frontend.md](frontend.md#the-pwa-and-the-service-worker) |
 | Anything in `docs/assets/archie*.js`, `art/` | [archie.md](archie.md): the files, clips, commands, flags and storage tables |
 | `mascot_version()`, `VERSIONED`, `OPTIONAL` in `31_home.py` | [archie.md](archie.md#after-editing-archie) |

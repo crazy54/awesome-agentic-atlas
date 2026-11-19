@@ -228,18 +228,22 @@ FONT = "DejaVu Sans"
 # changed (fixed in `87250a1`). Same shape here, with a slower fuse and a wider blast radius, because
 # this artefact is what a stranger sees first.
 #
-# Roles and values come from `19_pages.py`'s dark custom properties. The body and chips use the page's
-# secondary ink while the heading and count lift to its white primary ink at thumbnail size.
+# Roles and values come from the dark theme in `sitewide.PALETTE` -- Archie's graphite, ceramic and lime,
+# which is what the site looks like to a reader who has chosen nothing. The body and chips use the page's
+# secondary ink while the heading and count lift to its primary ceramic ink at thumbnail size. Literals
+# rather than an import, because this dict is also the cache signature: a palette edit that is meant to
+# re-render the cards should be an edit to this file, and `tests/theme_test.py` holds every value to the
+# dark palette so the two cannot drift apart silently.
 PALETTE = {
-    "surface": "#090a0d",   # the card, and the backdrop Chromium paints under it -- see `shoot()`
-    "band":    "#20242d",   # chip fill
-    "ink":     "#d0d5dd",   # body text, and the chips'
-    "ink2":    "#9ba5b3",   # the count line
-    "muted":   "#9ba5b3",   # blurb, label, host line
-    "grid":    "#3a414d",   # chip border
-    "bar":     "#d6a034",   # the accent: the frame's top border, and the kicker
-    "warn":    "#f7f8fa",   # the count itself
-    "head":    "#f7f8fa",   # the heading -- the only colour here that is not a page variable
+    "surface": "#121314",   # the card, and the backdrop Chromium paints under it -- see `shoot()`
+    "band":    "#252423",   # chip fill
+    "ink":     "#d9d3c8",   # body text, and the chips'
+    "ink2":    "#aba69f",   # the count line
+    "muted":   "#aba69f",   # blurb, label, host line
+    "grid":    "#3e3c39",   # chip border
+    "bar":     "#a4c812",   # the accent: the frame's top border, and the kicker
+    "warn":    "#f3efe8",   # the count itself
+    "head":    "#f3efe8",   # the heading
 }
 
 # The root card's file name, and the one string `19_pages.py` has to agree with -- it is what the root

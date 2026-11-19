@@ -1,22 +1,23 @@
-"""Contrast tests for the two theme blocks in `scripts/19_pages.py`.
+"""Contrast and consistency tests for the site's three themes, which live in `scripts/sitewide.py`.
 
-The page's colours are thirteen CSS custom properties declared twice -- once on `:root` for dark and
-once on `html[data-theme=light]`. Every ratio the comment beside them quotes was measured by hand, and
-a comment is not a test: the previous palette's comments correctly recorded that its cyan measured
-2.53:1 on white, and nothing in the repository would have noticed if someone had used it there anyway.
+The page's colours are custom properties declared three times -- on `:root` for dark, on
+`html[data-theme=light]` and on `html[data-theme=contrast]` -- in one constant, `sitewide.THEME_CSS`, that
+every page family's stylesheet starts with. Every ratio the comments beside them quote is arithmetic on two
+hex values, and a comment is not a test: an earlier palette's comments correctly recorded that its cyan
+measured 2.53:1 on white, and nothing in the repository would have noticed if someone had used it there
+anyway. So this file does the arithmetic. There is no rendering, no browser and no cache involved, so the
+whole of it runs from a cold checkout in milliseconds.
 
-What makes this checkable rather than a matter of taste is that WCAG contrast is arithmetic on two hex
-values. There is no rendering, no browser and no cache involved, so the whole of it runs from a cold
-checkout in milliseconds.
+The part worth explaining is the role map. A token's minimum depends on how the CSS uses it -- 4.5:1 for
+text, 3:1 for a focus ring or an icon -- and the roles are not guessable from the names: `--warn` is text in
+four rules and a chip fill in a fifth. So the roles are read out of the stylesheets rather than hardcoded,
+by looking for `color:var(--x)`, `background:var(--x)` and the stroke properties. If a future edit starts
+filling with `--good`, the `--onbar` pair appears on its own. A hardcoded map would go stale exactly the way
+the prose did.
 
-The part worth explaining is the role map. A token's minimum depends on how the CSS uses it -- 4.5:1
-for text, 3:1 for a focus ring or an icon -- and the roles are not guessable from the names: `--warn`
-is text in four rules and a chip fill in a fifth, and `--bar` is never text on the page but IS text
-inside the filter button's count badge, which inverts to `--onbar` behind it. So the roles are read out
-of the stylesheet rather than hardcoded, by looking for `color:var(--x)` and `background:var(--x)`. If
-a future edit stops using `--warn` as text, this file stops requiring 4.5 of it, and if a new rule
-starts filling with `--good`, the `--onbar` pair appears on its own. A hardcoded map would have gone
-stale exactly the way the prose did.
+High contrast is held to a stricter arithmetic than the other two, because that is what it is for: every
+text pair 7:1 (WCAG AAA 1.4.6) rather than 4.5, and every hairline 3:1 (WCAG 1.4.11) rather than the 1.15
+"visible separator" floor the other two are held to.
 
 Run: python tests/theme_test.py
 """
@@ -30,6 +31,9 @@ from pathlib import Path
 
 PAGE = Path(__file__).resolve().parent.parent / "scripts" / "19_pages.py"
 SRC = PAGE.read_text(encoding="utf-8")
+SCRIPTS = PAGE.parent
+sys.path.insert(0, str(SCRIPTS))
+import sitewide  # noqa: E402  -- after the path insert, which is what makes it importable
 
 ok = bad = 0
 
@@ -78,429 +82,328 @@ def ratio(a: str, b: str) -> float:
 # WCAG's own examples give, and they bracket the range: identical, maximal, and one in between that is
 # easy to get wrong because both channels are mid-range.
 check("black on white is 21:1", round(ratio("#000000", "#FFFFFF"), 2), 21.0)
-check("a colour against itself is 1:1", round(ratio("#438BB1", "#438BB1"), 2), 1.0)
-check("#777 on white is 4.48:1", round(ratio("#777777", "#FFFFFF"), 2), 4.48)
-check("shorthand hex expands", ratio("#fff", "#000000"), ratio("#FFFFFF", "#000000"))
+check("a colour on itself is 1:1", round(ratio("#777777", "#777777"), 2), 1.0)
+check("#767676 on white is the 4.54:1 WCAG AA boundary", round(ratio("#767676", "#FFFFFF"), 2), 4.54)
 
-# ---------------------------------------------------------------- parse the two blocks
-TOKEN = re.compile(r"--([a-z0-9]+)\s*:\s*(#[0-9a-fA-F]{3,6})\s*;")
+# ---------------------------------------------------------------- parse the three blocks
+# Out of the CSS a reader is served, not out of `sitewide.PALETTE`: the dict is what the blocks are built
+# from, and the blocks are what the browser reads, so a bug in the builder is caught here as well. Hyphens
+# allowed in the name, so `--act-edge` and the accents are measured too -- the previous version of this
+# regex stopped at the first hyphen and silently never checked a single accent.
+TOKEN = re.compile(r"--([a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,6})\s*;")
+THEME_CSS = sitewide.THEME_CSS
+
+
+def raw(selector: str, src: str = THEME_CSS) -> str:
+    i = src.index(selector)
+    return src[i + len(selector):src.index("}", i)]
 
 
 def block(selector: str) -> dict[str, str]:
-    """The declarations of one rule, by selector, from the page template."""
-    i = SRC.index(selector)
-    body = SRC[i + len(selector):SRC.index("}", i)]
-    return {k: v.upper() for k, v in TOKEN.findall(body)}
+    """The colour declarations of one theme block in `THEME_CSS`, by selector."""
+    return {k: v.upper() for k, v in TOKEN.findall(raw(selector))}
 
 
-DARK = block(":root{")
-LIGHT = block("html[data-theme=light]{")
+SETS = {"dark": block(":root{"), "light": block("html[data-theme=light]{"),
+        "contrast": block("html[data-theme=contrast]{")}
+DARK, LIGHT, HC = SETS["dark"], SETS["light"], SETS["contrast"]
 
-check("dark declares 13 tokens", len(DARK), 13)
-check("light declares 13 tokens", len(LIGHT), 13)
-check("both modes declare the same tokens", sorted(DARK), sorted(LIGHT))
-# Not a style rule. `var(--x)` with no fallback resolves to nothing when the token is missing, so a
-# token present in one block and absent from the other renders as an unstyled element in that one mode
-# only -- the failure that is hardest to see, because the mode you are looking at is fine.
-for name in sorted(set(DARK) | set(LIGHT)):
-    true(f"--{name} is declared in both modes", name in DARK and name in LIGHT)
+# Pinned, because every assertion below iterates these and an empty dict passes all of them.
+check("there are exactly three themes", sorted(SETS), sorted(sitewide.THEMES))
+check("dark declares twenty-two colour tokens", len(DARK), 22)
+for name, T in SETS.items():
+    # Same names, not merely the same number. `var(--x)` with no fallback resolves to nothing when the token
+    # is missing, so a token absent from one block renders as an unstyled element in that theme only -- the
+    # failure that is hardest to see, because the theme you are looking at is fine.
+    check(f"{name} declares exactly dark's tokens", sorted(T), sorted(DARK))
+    check(f"{name}'s published block is sitewide.PALETTE, value for value",
+          T, {k: v.upper() for k, v in sitewide.PALETTE[name].items()})
 
 BACKDROPS = ("surface", "plane", "band")
-for mode, T in (("dark", DARK), ("light", LIGHT)):
-    for b in BACKDROPS:
-        true(f"{mode} declares --{b}", b in T)
-    true(f"{mode} declares --onbar", "onbar" in T)
 
 # ---------------------------------------------------------------- roles, read from the CSS
-# The template is one long string in this file, so the stylesheet is just text here. That is enough:
-# the question is only which tokens appear after `color:` and which after `background:`.
+# Every stylesheet a page family is served, as text: the catalogue's template, the two other generators'
+# stylesheets, the homepage's own rules, and the shared constants. The question is only which tokens appear
+# after `color:` and which after `background:`, so text is enough.
+STYLES = "\n".join([SRC, THEME_CSS, sitewide.BUILDTAGS_CSS]
+                   + [(SCRIPTS / f).read_text(encoding="utf-8")
+                      for f in ("20_landing.py", "22_detail.py", "31_home.py", "mark.py", "osicons.py")]
+                   + [(SCRIPTS.parent / "docs" / "assets" / f).read_text(encoding="utf-8")
+                      for f in ("archie.js", "atlas-admin.js")])
+
+
 def used_as(prop: str) -> set[str]:
-    return set(re.findall(rf"{prop}\s*:\s*var\(--([a-z0-9]+)\)", SRC))
+    return set(re.findall(rf"(?<![\w-]){prop}\s*:\s*var\(--([a-z0-9-]+)\)", STYLES))
 
 
 AS_TEXT = used_as("color")
-AS_FILL = used_as("background") | set(re.findall(r"background\s*:\s*var\(--([a-z0-9]+)\)", SRC))
-AS_STROKE = set(re.findall(r"(?:outline|border|border-color|box-shadow)[^;{}]*var\(--([a-z0-9]+)\)", SRC))
-AS_STROKE |= set(re.findall(r"fill\s*:\s*var\(--([a-z0-9]+)\)", SRC))
+AS_FILL = used_as("background") | used_as("background-color")
+# A translucent mix into `transparent` is a halo, not a boundary -- the lime glow under the primary button, a
+# 5% tint around the reader -- and it has no second colour to be a ratio against, so it is not a stroke. It is
+# stripped before the stroke roles are read; a solid `var(--x)` in the same declaration is still counted.
+HALOS = re.sub(r"color-mix\(in srgb,\s*var\(--[a-z0-9-]+\)\s*\d+%,\s*transparent\)", "", STYLES)
+AS_STROKE = set(re.findall(r"(?:outline|border|border-color|box-shadow)[^;{}]*var\(--([a-z0-9-]+)\)", HALOS))
+AS_STROKE |= set(re.findall(r"fill\s*:\s*var\(--([a-z0-9-]+)\)", HALOS))
 
-# The map has to have found something, or every assertion below vacuously passes -- the failure mode
-# this whole file exists to avoid. These four are the ones the stylesheet certainly uses each way.
+# The map has to have found something, or every assertion below vacuously passes -- the failure mode this
+# whole file exists to avoid. These are the ones the stylesheets certainly use each way.
 true("the role map found text tokens", {"ink", "muted", "link"} <= AS_TEXT)
-true("the role map found fill tokens", {"bar", "warn", "good"} <= AS_FILL)
-true("the role map found stroke tokens", "bar" in AS_STROKE)
-true("--onbar is only ever ink on a fill", "onbar" in AS_TEXT)
+true("the role map found fill tokens", {"act", "act-hi", "warn", "good"} <= AS_FILL)
+true("the role map found stroke tokens", {"bar", "act-edge"} <= AS_STROKE)
+true("--onbar and --onact are ink on a fill", {"onbar", "onact"} <= AS_TEXT)
 
-# The backdrops themselves are fills; excluded so we do not demand a surface contrast against itself.
-TEXT = sorted(AS_TEXT - set(BACKDROPS) - {"onbar", "grid"})
-FILL = sorted(AS_FILL - set(BACKDROPS) - {"onbar", "grid"})
+# The two fills that carry --onact, and the rest, which carry --onbar. --act is the lime, which is light in
+# every theme, so it takes dark ink; --bar, --good and --warn are deepened for text in light, so in light the
+# ink on them is white. Two pairs because one ink cannot be right on both.
+ACT_FILLS = {"act", "act-hi"}
+NOT_COLOURS = set(BACKDROPS) | {"onbar", "onact", "grid", "act-edge"}
+FILL = sorted((AS_FILL & set(DARK)) - NOT_COLOURS - ACT_FILLS)
+# Every colour token that is not a backdrop, an ink-on-a-fill, a hairline or a fill only is held to the text
+# floor whether or not a rule draws it as text today -- `team/theme/tokens.md` tells the other streams the
+# accents are usable as text, and this is what makes that true rather than hoped.
+TEXT = sorted(set(DARK) - NOT_COLOURS - ACT_FILLS)
+true("every token drawn as text is in the text set", (AS_TEXT & set(DARK)) - NOT_COLOURS - ACT_FILLS <= set(TEXT))
 
 # ---------------------------------------------------------------- the assertions
-BODY, LARGE = 4.5, 3.0
+FLOORS = {"dark": (4.5, 1.15), "light": (4.5, 1.15), "contrast": (7.0, 3.0)}
+NONTEXT = 3.0
 
 
-def audit(mode: str, T: dict[str, str]) -> None:
-    """Every ratio the page owes a reader, for one token set.
-
-    A function rather than the two-iteration loop this used to be, because there are sixteen token sets
-    now -- eight themes on the `data-skin` axis times light and dark -- and the whole argument for
-    offering sixteen is that not one of them gets to be the one nobody measured. `mode` is only ever a
-    label here; nothing below branches on it.
-    """
-    # Every token drawn as text, on every backdrop it can land on. Which backdrop a given rule actually
-    # uses is not tracked, and deliberately: rows are striped, cards sit on the plane, and the same
-    # `.stale` span appears in a table row and in a card. Requiring all three is the honest reading.
+def audit(name: str, T: dict[str, str]) -> None:
+    """Every ratio the site owes a reader, for one theme."""
+    body, line = FLOORS[name]
+    # Every text token, on every backdrop it can land on. Which backdrop a given rule uses is not tracked,
+    # and deliberately: rows are striped, cards sit on the plane, and the same span appears in a table row
+    # and in a card. Requiring all three is the honest reading.
     for tok in TEXT:
-        if tok not in T:
-            continue
         for b in BACKDROPS:
-            atleast(f"{mode}: --{tok} as text on --{b}", ratio(T[tok], T[b]), BODY)
-
-    # Every token used as a fill has to carry --onbar. This is the pair the previous theme got right
-    # for the wrong reason and the pair a re-theme is most likely to break, because it is the only one
+            atleast(f"{name}: --{tok} as text on --{b}", ratio(T[tok], T[b]), body)
+    # The inks on the fills. This is the pair a re-theme is most likely to break, because it is the only one
     # where making the accent *more* legible on the page makes the ink on it *less* legible.
     for tok in FILL:
-        if tok not in T:
-            continue
-        atleast(f"{mode}: --onbar as ink on filled --{tok}", ratio(T["onbar"], T[tok]), BODY)
-
-    # `#fbt.act #fbn` inverts: --onbar becomes the background and --bar the text on it. Asserted by
-    # name rather than derived, because it is the one rule in the stylesheet that swaps the pair, and a
-    # role map built from `color:`/`background:` counts both halves without noticing they are the same
-    # two colours changing places.
-    atleast(f"{mode}: --bar as text on --onbar (the count badge inverts)",
-            ratio(T["bar"], T["onbar"]), BODY)
-
-    # Rings, borders and the two-tone icon: not text, so 3:1 -- WCAG 1.4.11 for non-text contrast.
-    #
-    # --onbar is excluded, and not because it is inconvenient. It is in the stroke set legitimately --
-    # `.newchip[aria-pressed=true] .ni` fills the icon with it -- but that icon is inside a pressed chip,
-    # so its backdrop is the chip's fill and never the page. Measuring it against --surface asks whether
-    # black ink is visible on black, which it is not, and which nothing draws.
-    for tok in sorted(AS_STROKE - set(BACKDROPS) - {"grid", "ink", "onbar"}):
-        if tok not in T:
-            continue
+        atleast(f"{name}: --onbar as ink on filled --{tok}", ratio(T["onbar"], T[tok]), body)
+    for tok in sorted(ACT_FILLS):
+        atleast(f"{name}: --onact as ink on filled --{tok}", ratio(T["onact"], T[tok]), body)
+    # `#fbt.act #fbn` inverts: --onact becomes the badge and --act its text. Same two colours, so the same
+    # ratio -- asserted by name because a role map counts both halves without noticing they changed places.
+    atleast(f"{name}: --act as text on --onact (the count badge inverts)", ratio(T["act"], T["onact"]), body)
+    # Rings, borders and icons: not text, so 3:1 -- WCAG 1.4.11. --act-edge is the lime button's only edge in
+    # light, where the lime itself is 1.7:1 on the glaze, so it is the one that makes the button a shape.
+    for tok in sorted((AS_STROKE & set(T)) - set(BACKDROPS) - {"grid", "ink", "onbar", "onact"}):
         for b in BACKDROPS:
-            atleast(f"{mode}: --{tok} as a stroke on --{b}", ratio(T[tok], T[b]), LARGE)
-
-    # The backdrop --onbar actually has: each fill. 3:1 rather than 4.5 because this is the icon rather
-    # than the label, though every fill here clears the text floor anyway.
-    for tok in FILL:
-        if tok in T:
-            atleast(f"{mode}: --onbar as an icon on filled --{tok}", ratio(T["onbar"], T[tok]), LARGE)
-
-    # Borders that separate two panels rather than carrying meaning, so no WCAG minimum applies and the
-    # floor has to come from somewhere else. 1.15 is calibrated, not chosen: the palette this replaces
-    # shipped for months with its worst border pair at 1.168 (dark --grid on --band), and the episode
-    # recorded beside the palette -- a selected row that vanished into its own background -- measured
-    # 1.05. So 1.15 sits below what has demonstrably been acceptable and above what was demonstrably
-    # broken. Worth stating that this palette is the better of the two on this axis: its worst pair is
-    # 1.224 against the old theme's 1.168, and an earlier draft of this file failed it at a floor of
-    # 1.25 that nothing in the repository's history would have passed.
-    #
-    # This floor is also the one that decided the shape of the three opt-in themes. Flattening the v2
-    # prototype's `rgba(255,255,255,.13)` border onto its own surface gives #272931, which measures
-    # 1.146 on its band -- under this floor, by four thousandths. A translucent --grid would not have
-    # been measurable here at all, so the themes keep opaque borders and spend their translucency on
-    # --panel, which is checked a different way further down.
+            atleast(f"{name}: --{tok} as a stroke on --{b}", ratio(T[tok], T[b]), NONTEXT)
+    # Hairlines that separate two panels rather than carrying meaning. 1.15 in light and dark is calibrated,
+    # not chosen: an earlier palette shipped for months with its worst border pair at 1.168, and a selected row
+    # that vanished into its own background measured 1.05. In high contrast a hairline is not allowed to be a
+    # hint at all, so it is 3:1 like any other non-text mark.
     for b in BACKDROPS:
-        atleast(f"{mode}: --grid is visible on --{b}", ratio(T["grid"], T[b]), 1.15)
-    atleast(f"{mode}: --plane is distinguishable from --surface", ratio(T["plane"], T["surface"]), 1.03)
+        atleast(f"{name}: --grid is visible on --{b}", ratio(T["grid"], T[b]), line)
+    # Panels in light and dark are told from the page by a step in fill; in high contrast the plane IS the page
+    # (black on black) and every panel is told apart by its 3:1 border instead, which the grid line above holds.
+    if name != "contrast":
+        atleast(f"{name}: --plane is distinguishable from --surface", ratio(T["plane"], T["surface"]), 1.03)
 
 
-for mode, T in (("dark", DARK), ("light", LIGHT)):
-    audit(mode, T)
-    # The visual brief is graphite rather than absolute black and soft grey rather than absolute white.
-    # Pinning the two endpoints catches the real regression this pass is for: a reader that receives the
-    # old stark base while all the intermediate colours still happen to clear contrast.
-    #
-    # Graphite only, and that is now a statement about where graphite lives rather than about which
-    # theme is the default. It is declared on `:root`, so these four pins are also what holds `:root`
-    # to being the graphite dark palette -- which the two icon-pixel checks further down depend on
-    # without saying so, since they compare a generated PNG against `DARK`. Moving graphite off `:root`
-    # fails here first, which is the right place to find out.
-    want_surface = "#090A0D" if mode == "dark" else "#F2F4F7"
-    want_ink = "#F7F8FA" if mode == "dark" else "#14171C"
-    check(f"{mode}: --surface is the intended graphite/soft-grey base", T["surface"], want_surface)
-    check(f"{mode}: --ink is the intended softened foreground", T["ink"], want_ink)
-    check(f"{mode}: --bar is the approved action colour", T["bar"],
-          "#D6A034" if mode == "dark" else "#6557C8")
-    check(f"{mode}: --warn stays distinct from the action colour", T["warn"],
-          "#EF7D86" if mode == "dark" else "#875A19")
+for name, T in SETS.items():
+    audit(name, T)
 
-# ---------------------------------------------------------------- the sixteen opt-in theme blocks
-# Eight opt-in themes, each declared twice: `html[data-skin=X]` for its dark values and
-# `html[data-skin=X][data-theme=light]` for its light ones. Seven are in the Settings menu; Holo, last, is
-# in it too but hidden until the admin panel unlocks it -- see "the lock" below. Nothing here is checked
-# any more gently than graphite is -- `audit()` above is the same function, on the same role map, at the
-# same floors, and a theme nobody can see yet is held to it all the same. That is the whole warrant for
-# shipping nine themes rather than one: a theme is a set of thirteen colours that has been through this,
-# and a theme that has not been through this is a mood.
-SKINS = ("glass", "terminal", "prism", "sherbet", "riso", "blueprint", "aurora", "holo")
-SKIN = {}
-for skin in SKINS:
-    SKIN[(skin, "dark")] = block("html[data-skin=" + skin + "]{")
-    SKIN[(skin, "light")] = block("html[data-skin=" + skin + "][data-theme=light]{")
-
-# Pinned, because every assertion in this section iterates `SKIN` and an empty dict passes all of them.
-check("there are eighteen token sets in all", 2 + len(SKIN), 18)
-for (skin, mode), T in sorted(SKIN.items()):
-    # Same thirteen names, not merely thirteen of something. `var(--x)` with no fallback resolves to
-    # nothing, and the light block of a skin sits *after* its dark block on the same element -- so a
-    # token the light block forgets is not inherited from graphite, it is inherited from that skin's own
-    # dark value, and the result is one near-black cell in an otherwise pale page.
-    check(f"{skin} {mode} declares graphite's thirteen tokens and no others", sorted(T), sorted(DARK))
-    audit(f"{skin} {mode}", T)
-
-# And that the themes are actually different from each other, which no ratio above can ask. Without this
-# a copy-paste of graphite under seven new selectors passes every contrast assertion in this file.
-for skin in SKINS:
-    true(f"{skin} is not graphite repainted", SKIN[(skin, "dark")] != DARK)
-    true(f"{skin} light is not graphite light repainted", SKIN[(skin, "light")] != LIGHT)
-check("no two themes share a dark --surface",
-      len({T["surface"] for (s, m), T in SKIN.items() if m == "dark"} | {DARK["surface"]}), 1 + len(SKINS))
+# The brief, pinned. Archie is warm white ceramic, near-black graphite and a bright lime: the light page is a
+# warm glaze rather than stark white (red above blue), the dark page is near-black, and the lime the primary
+# button wears is his own lime in both. These catch the real regression a pass like this is for -- a palette
+# whose every ratio still clears while the colours have quietly stopped being his.
+r, g, b_ = (int(LIGHT["surface"][i:i + 2], 16) for i in (1, 3, 5))
+true("light's page is a warm glaze, not stark white", r > b_ and LIGHT["surface"] != "#FFFFFF")
+true("dark's page is near-black", luminance(DARK["surface"]) < 0.01)
+check("the primary button is Archie's lime in light and dark", (LIGHT["act"], DARK["act"]), ("#A4C812", "#A4C812"))
+check("dark's accent is Archie's lime", DARK["bar"], "#A4C812")
+check("high contrast is black and white underneath", (HC["surface"], HC["ink"]), ("#000000", "#FFFFFF"))
+# And that they are actually three themes, which no ratio above can ask.
+check("no two themes share a --surface", len({T["surface"] for T in SETS.values()}), 3)
 
 # ---------------------------------------------------------------- the structural tokens
-# The four tokens that are not colours: the font stack, the background wash, the panel fill and the
-# backdrop filter. They carry no contrast, which is exactly why they are where the frosted look lives --
-# see the note beside them in the generator.
-STRUCT = ("ui", "wash", "panel", "bdf")
-
-
-def raw(selector: str) -> str:
-    i = SRC.index(selector)
-    return SRC[i + len(selector):SRC.index("}", i)]
-
-
+# Not colours, and the same in every theme: one typeface, an opaque panel, no backdrop filter. They are on
+# `:root` and nowhere else, so no theme can change the layout through them -- a typeface is a layout change.
 ROOT_RAW = raw(":root{")
-for tok in STRUCT:
-    true(f"graphite declares --{tok} on :root, where it needs no attribute to be true",
-         f"--{tok}:" in ROOT_RAW)
-# The two that must not change under graphite, because graphite is what a reader who has chosen nothing
-# receives: the page's own font stack, and a panel that is opaque. `none` and not `blur(0px)`: a non-none
-# backdrop-filter makes the element a containing block and a stacking context, which would re-parent the
-# mascot's speech bubble and re-rank the pinned bar for every reader on the site.
-# The stack the page shipped with, behind the embedded Geist: a reader whose browser cannot fetch the
-# face gets exactly the page they used to.
-true("graphite's --ui is the embedded Geist, then the font stack the page shipped with",
+true("--ui is the embedded Geist, then the font stack the page shipped with",
      '--ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;' in ROOT_RAW)
-true("graphite declares --mono as the embedded Geist Mono, then the platform monospaces",
-     '--mono:"Geist Mono",ui-monospace,' in ROOT_RAW)
-# Every theme's stack reaches an embedded face before any platform face. Without this, a theme whose first
-# choice is a font few readers have installed -- riso's Space Grotesk, blueprint's IBM Plex Sans -- falls
-# straight through to Segoe UI, which is the platform lottery the embedding exists to end.
-FIRST_PLATFORM = ('"Segoe UI"', "system-ui", "ui-monospace", '"SF Mono"')
-for skin in SKINS:
-    stack = re.search(r"--ui:([^;]+);", raw("html[data-skin=" + skin + "]{")).group(1)
-    first_platform = min(stack.index(p) for p in FIRST_PLATFORM if p in stack)
-    true(f"{skin}'s font stack reaches an embedded face before a platform one",
-         any(0 <= stack.find(f) < first_platform for f in ('"Geist"', '"Geist Mono"')))
-true("graphite's --panel is the opaque plane, so the default page is unchanged",
-     "--panel:var(--plane)" in ROOT_RAW)
-true("graphite asks for no backdrop filter at all", "--bdf:none" in ROOT_RAW)
-true("--wash is off by default", "--wash:none" in ROOT_RAW)
+true("--mono is the embedded Geist Mono, then the platform monospaces", '--mono:"Geist Mono",ui-monospace,' in ROOT_RAW)
+true("--panel is the opaque plane", "--panel:var(--plane)" in ROOT_RAW)
+# `none` and not `blur(0px)`: a non-none backdrop-filter makes the element a containing block and a stacking
+# context, which would re-parent the mascot's speech bubble and re-rank the pinned bar for every reader.
+true("no backdrop filter", "--bdf:none" in ROOT_RAW)
+for name, sel in (("light", "html[data-theme=light]{"), ("contrast", "html[data-theme=contrast]{")):
+    for tok in ("--ui:", "--mono:", "--panel:", "--bdf:"):
+        true(f"{name} does not restate {tok[:-1]}, so it cannot change the layout", tok not in raw(sel))
+true("high contrast draws no wash behind the text", "--wash:none" in raw("html[data-theme=contrast]{"))
+true("high contrast casts no drop shadows", "--lift:none" in raw("html[data-theme=contrast]{"))
+true("every theme declares its colour-scheme, so native controls follow it",
+     all("color-scheme:" in raw(s) for s in (":root{", "html[data-theme=light]{", "html[data-theme=contrast]{")))
 
-# --panel is the one translucent token, and this is what keeps it checkable. Every panel on the page sits
-# on --surface and is filled from --plane, so a composite of the two lies between two backdrops that ARE
-# in the checked set above -- but only if the rgba really is --plane's own channels. A hand-typed rgba is
-# the exact kind of copy that drifts one digit and silently stops being a blend of anything on the page.
-PANEL = re.compile(r"--panel:\s*rgba\((\d+),(\d+),(\d+),\s*\.\d+\)")
-for (skin, mode), T in sorted(SKIN.items()):
-    body = raw("html[data-skin=" + skin + "]{" if mode == "dark"
-               else "html[data-skin=" + skin + "][data-theme=light]{")
-    m = PANEL.search(body)
-    true(f"{skin} {mode} fills its panels from a translucent --panel", bool(m))
-    if m:
-        got = "#%02X%02X%02X" % tuple(int(g) for g in m.groups())
-        check(f"{skin} {mode}: --panel is --plane's own channels, so the blend stays measurable",
-              got, T["plane"])
-# The structural tokens a skin may leave alone, and the two it may not. --ui and --bdf are mode-
-# independent, so the skin block declares them once and the light block inherits from it; --wash and
-# --panel are not, because an alpha that reads as frosted over near-black is a smear over near-white.
-for skin in SKINS:
-    true(f"{skin} declares its own font stack", "--ui:" in raw("html[data-skin=" + skin + "]{"))
-    true(f"{skin} declares its own backdrop filter", "--bdf:" in raw("html[data-skin=" + skin + "]{"))
-    true(f"{skin} restates --wash for light, where the same alpha would be a smear",
-         "--wash:" in raw("html[data-skin=" + skin + "][data-theme=light]{"))
+# ---------------------------------------------------------------- paint only
+# The redesign that made these themes was held to "the layout does not move", and the shared rules in
+# `THEME_CSS` are applied to every page of the site at once -- so a property that sizes or places a box,
+# written there, would move every page at once. Read the rules after the marker and refuse any declaration
+# that is not paint. `outline`, `box-shadow`, colours, `text-decoration`, `background` and the
+# `forced-color-adjust` switch are paint; a border width, a padding or a font weight are not.
+PAINT_ONLY = THEME_CSS[THEME_CSS.index("Paint only, below this line"):]
+DECLS = [d.split(":")[0].strip() for body in re.findall(r"\{([^{}]*)\}", re.sub(r"/\*.*?\*/", "", PAINT_ONLY, flags=re.S))
+         for d in body.split(";") if ":" in d]
+LAYOUT = re.compile(r"^(width|height|min-|max-|margin|padding|display|position|top|left|right|bottom|inset|"
+                    r"gap|grid|flex|font-size|font-weight|font$|line-height|letter-spacing|border(-width)?$|"
+                    r"border-(top|right|bottom|left)(-width)?$|float|transform|zoom|scale|translate)")
+check("THEME_CSS's shared rules change paint only, never a box",
+      sorted({d for d in DECLS if LAYOUT.match(d) and d not in ("forced-color-adjust",)}), [])
+true("...and the check found the rules it reads", {"outline", "box-shadow", "text-decoration"} <= set(DECLS))
+# The three things high contrast changes that are not colours, and forced colours' three.
+true("high contrast underlines links", "html[data-theme=contrast] a{text-decoration:underline" in THEME_CSS)
+true("high contrast's focus ring is 3px", "html[data-theme=contrast] :focus-visible{outline:3px solid" in THEME_CSS)
+true("high contrast marks a pressed control with an outline as well as a fill",
+     "html[data-theme=contrast] [aria-pressed=true]{outline:" in THEME_CSS)
+FORCED = THEME_CSS[THEME_CSS.index("@media (forced-colors:active){"):]
+true("forced colours keep a focus ring in the system's Highlight", ":focus-visible{outline:3px solid Highlight" in FORCED)
+true("forced colours keep a pressed control's state", "[aria-pressed=true]{outline:2px solid Highlight" in FORCED)
+true("forced colours keep the swatches as previews", ".thsw{forced-color-adjust:none}" in FORCED)
 
-# ---------------------------------------------------------------- the menu, and the two enumerations
-# `atlas-skin` is reader-writable storage that outlives the release that wrote it, so the head script
-# validates what it reads against a map of the themes that exist -- and that map is the second place the
-# list of themes is written down. Both directions are checked, because only one of them is the direction
-# that bites: a theme with a block and no map entry cannot be chosen, and a theme with a map entry and no
-# block is a name in the menu that paints graphite.
-HEADMAP = dict(re.findall(r"(\w+): \{dark: \"(#[0-9A-F]{6})\"", SRC))
-check("the head script's map names exactly the themes that have blocks",
-      sorted(HEADMAP), sorted(("graphite",) + SKINS))
-for skin, dark_plane in sorted(HEADMAP.items()):
-    T = DARK if skin == "graphite" else SKIN[(skin, "dark")]
-    check(f"the pre-paint literal for {skin} dark is its own --plane", dark_plane, T["plane"])
-LIGHTMAP = dict(re.findall(r"(\w+): \{dark: \"#[0-9A-F]{6}\", light: \"(#[0-9A-F]{6})\"", SRC))
-for skin, light_plane in sorted(LIGHTMAP.items()):
-    T = LIGHT if skin == "graphite" else SKIN[(skin, "light")]
-    check(f"the pre-paint literal for {skin} light is its own --plane", light_plane, T["plane"])
-check("every theme has a light literal too", sorted(LIGHTMAP), sorted(HEADMAP))
-
-# The third place, and the one that cannot be avoided: a swatch for a theme the page is not wearing
-# cannot read that theme's custom properties, because they are declared on <html> and one skin is on
-# <html> at a time. So the menu carries twenty-four literal hex values, and this is what makes them a copy of
-# something rather than a decision taken twice.
-MENU = re.findall(r'<button type="button" class="thb" data-skin="(\w+)"(.*?)</button>', SRC, re.S)
-check("the menu offers one button per theme", [s for s, _ in MENU], list(("graphite",) + SKINS))
-for skin, markup in MENU:
-    T = DARK if skin == "graphite" else SKIN[(skin, "dark")]
-    check(f"{skin}'s swatch is its own surface, action and link, in that order",
-          re.findall(r"background:(#[0-9A-F]{6})", markup),
-          [T["surface"], T["bar"], T["link"]])
-# Exactly one pressed in the markup, and it is the default: the floor a reader gets with JavaScript off,
-# where `paintSettings()` never runs and the menu is whatever the generator wrote.
-check("the markup presses exactly one theme",
-      [s for s, m in MENU if 'aria-pressed="true"' in m], ["graphite"])
-
-# ---------------------------------------------------------------- the lock
-# A locked theme is three promises kept in three files: the head script refuses to wear it (`LOCKED`), the
-# menu ships its button hidden and marked (`data-locked hidden`), and the admin panel is where it is
-# unlocked (`HIDDEN` in atlas-admin.js). Any one of them alone is a leak or a dead end -- a hidden button
-# for a theme the head script wears is a theme anyone can set by hand-editing storage and keep, and a theme
-# the panel does not list can never be unlocked at all -- so the three lists are held to each other.
-LOCKED = re.findall(r"(\w+): 1", (re.search(r"var LOCKED = \{([^}]*)\}", SRC) or [None, ""])[1])
-check("the head script locks exactly one theme, holo", LOCKED, ["holo"])
-true("...and the lock reads the panel's key", '"atlas-unlock"' in SRC[SRC.index("var LOCKED"):][:400])
-check("the locked themes' menu buttons ship hidden and marked, and no other button does",
-      sorted(s for s, m in MENU if m.lstrip().startswith("data-locked hidden")), sorted(LOCKED))
-check("no unlocked theme's button is hidden",
-      [s for s, m in MENU if " hidden" in m.split(">", 1)[0] and s not in LOCKED], [])
-ADMIN = (PAGE.parent.parent / "docs" / "assets" / "atlas-admin.js").read_text(encoding="utf-8")
-PANEL_IDS = re.findall(r'\{id: "(\w+)", name:', ADMIN)
-check("the admin panel offers exactly the locked themes", sorted(PANEL_IDS), sorted(LOCKED))
-for skin in LOCKED:
-    m = re.search(r'\{id: "' + skin + r'".*?swatch: \[("#[0-9A-F]{6}"), ("#[0-9A-F]{6}"), ("#[0-9A-F]{6}")\]',
-                  ADMIN, re.S)
-    true(f"the panel's {skin} card carries a swatch", bool(m))
-    if m:
-        T = SKIN[(skin, "dark")]
-        check(f"the panel's {skin} swatch is its own surface, action and link",
-              [g.strip('"') for g in m.groups()], [T["surface"], T["bar"], T["link"]])
-# `.thb{display:flex}` outranks the UA's `[hidden]{display:none}`, so without this rule `hidden` on a locked
-# button is an attribute the page ignores, and Holo sits in every reader's menu.
-true("a hidden theme button is actually not displayed", "\n.thb[hidden]{display:none}" in SRC)
-SETJS = SRC[SRC.index("SETTINGS_JS = r"):SRC.index('"""', SRC.index("SETTINGS_JS = r") + 20)]
-# The calls, not the words: the comment beside that code names both, and a check on the bare strings would
-# stay green with the code deleted under it.
-true("the settings script unhides a locked button only when its id is unlocked",
-     't.hasAttribute("data-locked")' in SETJS and 'localStorage.getItem("atlas-unlock")' in SETJS)
-true("...and exposes its repaint, so the admin panel can show a theme it just unlocked",
-     "window.atlasPaintSettings = paintSettings" in SETJS)
-# The command palette builds its Theme group from the same buttons, so it must skip a hidden one -- or Ctrl+K
-# offers Holo to every reader. `probe.mjs` cannot see this: its fake document has no buttons to query.
-true("the command palette does not offer a locked theme",
-     'for (const t of document.querySelectorAll(".thb"))\n    if (!t.hidden) add("Theme",' in SRC)
-# The facet and detail pages wear a saved theme too, so their head scripts carry the same lock. Not
-# covered by `palette_text()`, which stops at the last stylesheet block.
-LOCK_LINES = SRC[SRC.index("  var LOCKED = "):SRC.index('s = "graphite";', SRC.index("  var LOCKED = "))]
+# ---------------------------------------------------------------- one copy
+# The palette used to be copied by hand into three generators and compared byte for byte. It is one constant
+# now, and the claim to hold is that nothing has grown a copy back: each generator drops `THEME_CSS` in, and
+# none of them declares a colour token of its own.
+true("19_pages.py drops THEME_CSS into the catalogue",
+     '.replace("__THEMECSS__", pagemin.strip_css(sitewide.THEME_CSS))' in SRC and "__THEMECSS__\n" in SRC)
+true("19_pages.py drops HEAD_THEME into the catalogue's head",
+     '.replace("__HEADTHEME__", sitewide.HEAD_THEME)' in SRC and "__HEADTHEME__" in SRC[:SRC.index("<style>")])
 for follower in ("20_landing.py", "22_detail.py"):
-    true(f"{follower}'s head script carries the same lock",
-         LOCK_LINES in (PAGE.parent / follower).read_text(encoding="utf-8"))
-true("<html> carries the same theme as its floor, beside the dark-mode one",
-     'data-theme="dark" data-skin="graphite"' in SRC)
-# The panel is hidden by the attribute rather than by a class, so it leaves the accessibility tree with
-# the screen, and it is named in the print hide list in its own right. `header nav` already contains it,
-# which is the trap: a hide-list scoped by containment stops being one the moment the containment moves,
-# and this file has watched that happen twice -- to `.subbar` and to `.dstrip`.
+    text = (SCRIPTS / follower).read_text(encoding="utf-8")
+    true(f"{follower} starts its stylesheet with THEME_CSS", '""" + sitewide.THEME_CSS + """' in text)
+    true(f"{follower}'s HEAD_THEME is sitewide's", "HEAD_THEME = sitewide.HEAD_THEME" in text)
+for f in ("19_pages.py", "20_landing.py", "22_detail.py", "31_home.py", "25_collections.py", "19d_discover.py"):
+    text = (SCRIPTS / f).read_text(encoding="utf-8")
+    check(f"{f} declares no palette token of its own",
+          re.findall(r"--(?:surface|plane|band|ink|bar|link|act):#", text), [])
+# And nothing anywhere still names the skin axis, except the head script deleting its key.
+SKIN_WORDS = re.compile(r"data-skin|dataset\.skin|atlas-skin|atlas-unlock")
+# `30_v2.py` is the one exception, and it is not the site's theme: it is the `/v2/` design prototype, a beta
+# page outside the sitemap with its own self-contained skin picker, kept as the record of a layout study.
+for path in sorted(list(SCRIPTS.glob("*.py")) + list((SCRIPTS.parent / "docs" / "assets").glob("*.js"))):
+    if path.name == "30_v2.py":
+        continue
+    text = path.read_text(encoding="utf-8")
+    if path.name == "sitewide.py":
+        text = text.replace('localStorage.getItem("atlas-skin")', "").replace('localStorage.removeItem("atlas-skin")', "")
+        text = text.replace('localStorage.getItem("atlas-unlock")', "").replace('localStorage.removeItem("atlas-unlock")', "")
+        text = text.replace("delete root.dataset.skin", "")
+        text = re.sub(r"#[^\n]*", "", text)        # the comments that explain the migration
+    check(f"{path.name} names no skin", SKIN_WORDS.findall(text), [])
+
+# ---------------------------------------------------------------- the pre-paint script
+# The head script sets `theme-color` before any stylesheet is parsed, so it cannot read a computed value and
+# carries --plane as literals -- the one place a palette value is written twice, and a re-theme that misses it
+# leaves the browser chrome on the old palette for the first frame.
+HEAD = sitewide.HEAD_THEME
+for name, T in SETS.items():
+    true(f"the pre-paint script's {name} literal is its --plane", f'{name}: "{T["plane"]}"' in HEAD)
+true("the <meta> theme-color is dark's --plane, matching the data-theme=dark floor",
+     re.search(r'name="theme-color"[^>]*content="([^"]+)"', HEAD).group(1).upper() == DARK["plane"])
+true("the head script accepts the three themes and nothing else",
+     'if (t !== "light" && t !== "dark" && t !== "contrast")' in HEAD)
+# The operating system's contrast preference outranks its light/dark one: a reader who asked for more contrast
+# and happens to use light mode needs the contrast more than the brightness.
+true("prefers-contrast is asked before prefers-color-scheme",
+     0 < HEAD.index("prefers-contrast: more") < HEAD.index("prefers-color-scheme: light"))
+# THE MIGRATION. Both old keys removed, and the `theme` key -- which already records the light or dark half a
+# skin reader was wearing -- untouched, which is what lands every old reader on the nearest new theme.
+true("the migration removes the old skin key", 'localStorage.removeItem("atlas-skin")' in HEAD)
+true("...and the old unlock key", 'localStorage.removeItem("atlas-unlock")' in HEAD)
+true("...and does not touch the reader's light/dark choice", 'removeItem("theme")' not in HEAD)
+true("<html> carries data-theme=dark as its floor and no skin",
+     '<html lang="en" data-theme="dark" data-view=' in SRC)
+
+# ---------------------------------------------------------------- the after-paint resolution
+JS = sitewide.THEME_JS
+# A function declaration, not a `var` holding an IIFE: the catalogue calls `wireSettings()` from `wire()`
+# hundreds of lines above where this is inlined, and a `var` is hoisted as `undefined`. This shipped once as a
+# `var` and the catalogue's whole page script died on its first line of theme code.
+true("atlasTheme is a hoisted function declaration", JS.startswith("function atlasTheme() {"))
+true("...memoised, so every caller shares one", "if (atlasTheme.api) return atlasTheme.api;" in JS)
+true("System is stored as no value at all", 'if (c === "system") localStorage.removeItem("theme")' in JS)
+true("it follows both OS preferences, for a reader on System",
+     'matchMedia("(prefers-color-scheme: light)").addEventListener("change", on)' in JS
+     and 'matchMedia("(prefers-contrast: more)").addEventListener("change", on)' in JS
+     and 'if (api.choice() === "system")' in JS)
+true("it repaints the browser chrome from the computed --plane", 'getPropertyValue("--plane")' in JS)
+
+# ---------------------------------------------------------------- the menu
+# `SETTINGS_MENU` in 19_pages.py, which 31_home.py imports. Four buttons, in the order they are drawn.
+MENU = re.findall(r'<button type="button" class="thb" data-choice="(\w+)"(.*?)</button>', SRC, re.S)
+check("the menu offers System, Light, Dark and High contrast, in that order",
+      [c for c, _ in MENU], ["system", "light", "dark", "contrast"])
+check("their labels", [re.sub(r".*</span>", "", m, flags=re.S).strip() for _, m in MENU],
+      ["System", "Light", "Dark", "High contrast"])
+# A swatch for a theme the page is not wearing cannot read that theme's custom properties, so the menu carries
+# literal hex, and this is what makes them a copy of something rather than a decision taken twice.
+WANT_SWATCH = {"system": [LIGHT["surface"], DARK["surface"], DARK["act"]],
+               "light": [LIGHT["surface"], LIGHT["act"], LIGHT["link"]],
+               "dark": [DARK["surface"], DARK["act"], DARK["link"]],
+               "contrast": [HC["surface"], HC["act"], HC["ink"]]}
+for choice, markup in MENU:
+    check(f"{choice}'s swatch is its own colours", re.findall(r"background:(#[0-9A-F]{6})", markup), WANT_SWATCH[choice])
+# Exactly one pressed in the markup, and it is System: what a reader who has chosen nothing is on, and the
+# floor with JavaScript off, where `paintSettings()` never runs.
+check("the markup presses exactly one choice, System", [c for c, m in MENU if 'aria-pressed="true"' in m], ["system"])
+SETJS = SRC[SRC.index("SETTINGS_JS = "):SRC.index('}"""', SRC.index("SETTINGS_JS = "))]
+true("the settings script carries atlasTheme with it, for the homepage that inlines it",
+     SETJS.startswith("SETTINGS_JS = sitewide.THEME_JS + "))
+true("a button stores its choice", "atlasTheme().set(t.dataset.choice)" in SETJS)
+true("pressed marks the reader's choice, not the theme being worn",
+     't.setAttribute("aria-pressed", String(t.dataset.choice === choice))' in SETJS)
+true("...and exposes its repaint, for Archie's pranks and the other tabs", "window.atlasPaintSettings = paintSettings" in SETJS)
+true("the menu no longer carries a second light/dark toggle", 'id="theme"' not in SRC[SRC.index("SETTINGS_MENU = "):SRC.index("DEPLOYMENT_BADGE")])
+# The command palette builds its Theme group from the same buttons.
+true("the command palette reads its Theme group off the menu's buttons",
+     'for (const t of document.querySelectorAll(".thb"))\n    add("Theme",' in SRC)
+# The panel is hidden by the attribute rather than by a class, so it leaves the accessibility tree with the
+# screen.
 true("the menu is hidden by the attribute, which also takes it out of the a11y tree",
      '<div class="setmenu" id="setmenu" hidden>' in SRC)
+# The pressed tick is the same fact as the lime border, without colour (WCAG 1.4.1).
+true("a pressed theme carries a tick as well as a border", '.thb[aria-pressed=true]::after{content:"\\2713"' in SRC)
 
 # ---- AND THAT AN OPEN PANEL IS VISIBLE, which is not the same claim as being displayed -----------------
 #
 # The first version of this shipped with the panel painting under the pinned bar: `header` is a stacking
-# context at z-index 10, `.bar` is 20, and two thirds of a 236px panel lands in the bar's band, so the
-# Theme heading and the entire Graphite row were behind the search field. `display:block` and
-# `aria-expanded="true"` were both true of it. Neither is a claim about whether a reader can see the
-# control, and the assertion above would have gone on passing forever.
+# context at z-index 10, `.bar` is 20, and two thirds of the panel landed in the bar's band. `display:block`
+# and `aria-expanded="true"` were both true of it. Neither is a claim about whether a reader can see the
+# control, and an assertion on either would have gone on passing forever.
 #
-# So: the class exists, it beats the bar rather than merely differing from it, the base `header` rule is
-# NOT what moves -- probe.mjs asserts the pinned thing paints over the scrolling one off that rule, and
-# that is a different and also correct requirement -- and the page script is the only thing that toggles
-# it. The relationship rather than the number 30, for the reason probe.mjs gives about z-index:10: a pin
-# on the digit agrees with today's stylesheet and stops meaning anything the moment either is tuned.
-#
-# Anchored on a newline, because `.bar{` also appears inside the comment four hundred lines above that
-# explains why the bar is not offset below the masthead -- `.bar{top:var(--head-h)}`, the arrangement that
-# was measured and rejected. The unanchored lookup found the comment, sliced to its `}` and asked a rule
-# with no z-index in it for one. The three rules this needs are all written at column zero.
-zof = lambda sel: int(re.search(r"z-index:(-?\d+)", raw("\n" + sel)).group(1))
+# So: the class exists, it beats the bar rather than merely differing from it, the base `header` rule is NOT
+# what moves -- probe.mjs asserts the pinned thing paints over the scrolling one off that rule -- and the page
+# script is the only thing that toggles it. Anchored on a newline, because `.bar{` also appears inside a
+# comment that explains an arrangement that was measured and rejected.
+zof = lambda sel: int(re.search(r"z-index:(-?\d+)", raw("\n" + sel, SRC)).group(1))
 HDRZ, BARZ, SETZ = zof("header{"), zof(".bar{"), zof("header.setopen{")
-# `check` rather than `true` so a failure prints the three numbers instead of just False. The comparison is
-# the claim and the pair beside it is there to be read -- whoever tunes one of these needs to see all three.
 check("an open settings panel outranks the pinned bar, so it is visible and not merely displayed",
       (BARZ < SETZ, BARZ, SETZ), (True, BARZ, SETZ))
 check("...and the masthead's own rule is untouched, so a closed menu stacks exactly as it always did",
       (HDRZ < BARZ, HDRZ, BARZ), (True, HDRZ, BARZ))
-# `toggle(cls, open)` rather than `add` here and `remove` there: one statement that cannot leave the class
-# on a closed menu. Counted so that a later `add("setopen")` somewhere else has to come past this line.
 check("...and one rule declares it, toggled from one place, in step with the attribute",
       (SRC.count("header.setopen{"), SRC.count('classList.toggle("setopen", open)'),
        'add("setopen"' in SRC or 'remove("setopen"' in SRC),
       (1, 1, False))
 
-# ---------------------------------------------------------------- the two literals that duplicate --plane
-# The pre-paint script sets `theme-color` before the stylesheet is parsed, so it cannot read the
-# computed value and hardcodes both. They are the one place in the page where a colour is written twice,
-# and a re-theme that misses them leaves the browser chrome on the old palette for the first frame.
-head = SRC[:SRC.index(":root{")]
-for mode, T in (("dark", DARK), ("light", LIGHT)):
-    true(f"the pre-paint script's {mode} literal matches --plane", T["plane"] in head.upper())
-true("the <meta> theme-color matches dark --plane",
-     re.search(r'name="theme-color"[^>]*content="([^"]+)"', SRC).group(1).upper() == DARK["plane"])
-
 # ---------------------------------------------------------------- can this file go red
-# A harness that cannot fail is decoration. Perturb one value and confirm the same assertions reject
-# it: Plum at its supplied value, which is the specific thing the comment beside the palette says had
-# to be lifted because black ink on it measures only 4.22:1.
-supplied_plum = "#BE379C"
-atleast("sanity: the shipped --bar carries black ink", ratio(DARK["onbar"], DARK["bar"]), BODY)
-check("sanity: unlifted Plum would NOT carry black ink",
-      ratio("#000000", supplied_plum) >= BODY, False)
-check("sanity: unlifted Plum fails as text on --band too",
-      ratio(supplied_plum, DARK["band"]) >= BODY, False)
-# And the reverse: the value that would fail is genuinely close, so the test is measuring rather than
-# rejecting anything unfamiliar.
-check("sanity: unlifted Plum is close, not absurd", round(ratio("#000000", supplied_plum), 2), 4.22)
+# A harness that cannot fail is decoration. Perturb one value and confirm the same arithmetic rejects it:
+# Archie's own lime as light text, which is the specific thing the light theme had to deepen.
+check("sanity: the undeepened lime would NOT pass as text on light's glaze",
+      ratio("#A4C812", LIGHT["surface"]) >= 4.5, False)
+check("sanity: ...and is the 1.7:1 the comment in sitewide.py quotes",
+      round(ratio("#A4C812", LIGHT["surface"]), 1), 1.7)
+check("sanity: dark's steel captions would NOT pass high contrast's 7:1 on its band",
+      ratio(DARK["muted"], DARK["band"]) >= 7.0, False)
 
-# ---------------------------------------------------------------- the four copies of the palette
-# The palette is declared in one place and copied to three others, and every one of those copies is a
-# separate file a reader can land on. `20_landing.py` writes the facet pages, `22_detail.py` the 1,294
-# per-repo pages, and both carry a comment saying their two blocks are `19_pages.py`'s character for
-# character. That comment is the promise; this is the only thing that keeps it. The alternative -- one
-# shared stylesheet -- is a real option and was not taken, because these stages already write their CSS to
-# separate files that different pages link, and merging them is a bigger change than the re-theme that
-# surfaced the problem. Copies are acceptable only while something compares them.
-SCRIPTS = PAGE.parent
-
-
-def palette_text(name: str) -> str:
-    """Every theme block verbatim, from `:root{` to the close of the last one.
-
-    Sixteen rules now rather than two, and the slice deliberately runs to the end of the last skin block
-    instead of stopping at the light one. A copy that carried graphite faithfully and got glass wrong
-    would be a page whose facet and detail views revert to graphite's colours for a reader who chose
-    glass -- which is the same class of defect this check was written for, one theme further out.
-    """
-    src = (SCRIPTS / name).read_text(encoding="utf-8")
-    i = src.index(":root{")
-    j = src.index("}", src.index("html[data-skin=" + SKINS[-1] + "][data-theme=light]{")) + 1
-    return src[i:j]
-
-
-CANON = palette_text("19_pages.py")
-true("the canonical block is not empty", len(CANON) > 200)
-for follower in ("20_landing.py", "22_detail.py"):
-    check(f"{follower} declares the palette byte for byte as 19_pages.py does",
-          palette_text(follower), CANON)
-
-# `23_og.py` renders a social card as a standalone document with no stylesheet to inherit from. Its CSS
-# is formatted with the module's `PALETTE`, which is also included in the card cache signature; read that
-# source-of-truth object rather than looking for literals in the template that now contains placeholders.
-# A value outside the page palette is still the drift this checks for.
+# ---------------------------------------------------------------- the copies that are not CSS
+# `23_og.py` renders a social card as a standalone document with no stylesheet to inherit from, so its colours
+# are a dict -- which is also the card cache's signature, so a palette edit re-renders the cards. Every value
+# in it has to be a dark-theme value.
 OG = (SCRIPTS / "23_og.py").read_text(encoding="utf-8")
 palette_source = OG[OG.index("PALETTE = {"):OG.index("}\n", OG.index("PALETTE = {")) + 2]
 
@@ -513,37 +416,36 @@ def norm(h: str) -> str:
 og_hex = {norm(h) for h in re.findall(r'"(#[0-9a-fA-F]{3,6})"', palette_source)}
 true("the OG card's palette object was found", len(og_hex) >= 5)
 for h in sorted(og_hex):
-    true(f"the OG card's {h} is a dark-palette value", h in set(DARK.values()))
-# And that it is the *dark* palette, not the light one it would also parse against. Light `--ink` is
-# black, so a card that had picked up the light block would still be "all palette values" while rendering
-# black text on a black plate.
-true("the OG card is drawn in the dark palette",
-     DARK["surface"] in og_hex and DARK["surface"] == "#090A0D")
+    true(f"the OG card's {h} is a dark-theme value", h in set(DARK.values()))
+true("the OG card is drawn on dark's page colour", DARK["surface"] in og_hex)
 
-# `24_pwa.py` draws the installed-app icon and writes the manifest, and its colours are Python tuples
-# rather than CSS, so no amount of grepping for hex finds them. Asserted by name against the tokens they
-# are meant to be. The manifest pair is the one that had a real defect: it declared `--surface` while the
-# page's `<meta name="theme-color">` declares `--plane`, so an installed window's chrome changed colour
-# between the launch frame and first paint.
+# `24_pwa.py` draws the installed-app icon and writes the manifest. The manifest's two colours are dark's
+# --plane, the same value as the page's theme-color, so an installed window's chrome does not change colour
+# between the launch frame and first paint. The icon's three are the Atlas mark's own (`scripts/mark.py`),
+# because the installed icon and the tab's favicon are one drawing.
 PWA = (SCRIPTS / "24_pwa.py").read_text(encoding="utf-8")
+MARK = (SCRIPTS / "mark.py").read_text(encoding="utf-8")
 
 
 def tup(name: str) -> str:
-    m = re.search(rf"^{name} = \((0x[0-9A-Fa-f]{{2}}), (0x[0-9A-Fa-f]{{2}}), (0x[0-9A-Fa-f]{{2}})\)$",
-                  PWA, re.M)
+    m = re.search(rf"^{name} = \((0x[0-9A-Fa-f]{{2}}), (0x[0-9A-Fa-f]{{2}}), (0x[0-9A-Fa-f]{{2}})\)$", PWA, re.M)
     return "#%02X%02X%02X" % tuple(int(g, 16) for g in m.groups()) if m else "NOT FOUND"
 
 
-for const, token in (("SURFACE", "surface"), ("PLANE", "plane"), ("BAR", "bar"), ("RING", "ink")):
-    check(f"24_pwa.py's {const} is dark --{token}", tup(const), DARK[token])
+def mark_const(name: str) -> str:
+    m = re.search(rf'^{name} = "(#[0-9A-Fa-f]{{6}})"', MARK, re.M)
+    return m.group(1).upper() if m else "NOT FOUND"
+
+
+check("24_pwa.py's PLANE is dark --plane", tup("PLANE"), DARK["plane"])
+for const, mark in (("SURFACE", "PLATE"), ("BAR", "GLOBE"), ("RING", "LIGHT")):
+    check(f"24_pwa.py's {const} is the mark's {mark}", tup(const), mark_const(mark))
 true("the manifest's two colours are PLANE, so they match the page's theme-color",
      PWA.count('"#%02x%02x%02x" % PLANE') == 2)
-
-# The orbit sits outside the globe with a visible gap, so the boundary each shape actually shares is with
-# the plate, not with the other colour. Requiring ring-vs-globe contrast would reject a brighter accent for
-# a boundary the renderer never draws while failing to test the two boundaries it does draw.
-atleast("the icon's ring is visible on its plate", ratio(tup("RING"), tup("SURFACE")), LARGE)
-atleast("the icon's globe is visible on its plate", ratio(tup("BAR"), tup("SURFACE")), LARGE)
+# The orbit sits outside the globe with a visible gap, so the boundary each shape actually shares is with the
+# plate, not with the other colour.
+atleast("the icon's ring is visible on its plate", ratio(tup("RING"), tup("SURFACE")), NONTEXT)
+atleast("the icon's globe is visible on its plate", ratio(tup("BAR"), tup("SURFACE")), NONTEXT)
 
 
 def png_pixel(path: Path, x: int, y: int) -> str:
@@ -558,21 +460,19 @@ def png_pixel(path: Path, x: int, y: int) -> str:
         if kind == b"IDAT":
             compressed.extend(body)
         pos += length + 12
-    raw = zlib.decompress(compressed)
+    raw_ = zlib.decompress(compressed)
     stride = width * 4 + 1
-    assert width == height == 192 and raw[y * stride] == 0
+    assert width == height == 192 and raw_[y * stride] == 0
     start = y * stride + 1 + x * 4
-    return "#" + bytes(raw[start:start + 3]).hex().upper()
+    return "#" + bytes(raw_[start:start + 3]).hex().upper()
 
 
 # The old app icon was only a globe. These two pixels sit inside that globe but away from every grid line:
 # together they prove that Archie's black pixel shades and white checker glint made it into the actual
 # generated PNG a launcher installs, not merely into a source comment or the browser-tab SVG.
-ICON_192 = PAGE.parent.parent / "docs" / "icon-192.png"
-check("the installed icon wears Archie's dark pixel shades",
-      png_pixel(ICON_192, 115, 84), DARK["surface"])
-check("the installed icon carries the shades' white checker glint",
-      png_pixel(ICON_192, 58, 77), DARK["ink"])
+ICON_192 = SCRIPTS.parent / "docs" / "icon-192.png"
+check("the installed icon wears Archie's dark pixel shades", png_pixel(ICON_192, 115, 84), tup("SURFACE"))
+check("the installed icon carries the shades' white checker glint", png_pixel(ICON_192, 58, 77), tup("RING"))
 
 # THE OTHER CHANNEL
 #

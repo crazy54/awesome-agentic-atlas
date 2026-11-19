@@ -440,8 +440,13 @@
     };
     const prankOnce = async name => {
       trick = trick || pranks(talk, header);
+      const strict = document.documentElement.dataset.theme === "contrast";
       if (!tricks.length) tricks = PRANKS.filter(n => n !== "count" || header.querySelector(".sub b"))
         .sort(() => Math.random() - 0.5);
+      // A reader in high contrast keeps it -- see PRANKS. An asked-for prank (the admin panel, a flag) is
+      // still played, because that is somebody checking the prank rather than a reader being pranked.
+      if (strict && !name) tricks = tricks.filter(n => n !== "lights" && n !== "contrast");
+      if (!tricks.length) tricks = ["tilt"];
       name = name || tricks.pop();
       lastPrank = Date.now(); last = "prank";
       talk.say(payback() ? "revenge" : "prank-" + name);
@@ -816,7 +821,7 @@
     const onScroll = () => { scrolled = Date.now(); };
     addEventListener("scroll", onScroll, {passive: true});
 
-    // Asked for a dance (by poking, or by choosing the Prism skin): cut the idle short and dance next.
+    // Asked for a dance (by poking): cut the idle short and dance next.
     // Mid-act, it waits for the act to end.
     const talk = chatter(T, {host, slot, header, camera, view, actor, followed, head: gltf.scene.getObjectByName("head"),
       guest: () => (pals ? pals.poke() : null),
@@ -1021,7 +1026,7 @@
   // What he says, in speech bubbles and thought bubbles over the masthead. Three kinds of line:
   //
   //  - his own, at the start of an act or while he idles, one every 30 to 60 seconds at most;
-  //  - reactions to the reader: switching theme or skin, coming back to the tab or up to the masthead,
+  //  - reactions to the reader: switching theme, coming back to the tab or up to the masthead,
   //    going quiet for a while, hovering a masthead link, copying something;
   //  - replies when he is poked. A button over his body takes the click (and the keyboard), and a reader
   //    who pokes enough gets a dance.
@@ -1112,15 +1117,7 @@
     light: [["Light mode! My ceramic has never been so shiny."], ["Whoa, bright! Adjusting crest..."]],
     dark: [["Ahh, the dark side. Easier on the circuits."], ["Lights down. Now it's a party."]],
     flip: [["It's a theme switch, not a fidget toy! ...okay, it is a bit fun."]],
-    glass: [["Ooh, frosted glass. Very fancy."]],
-    terminal: [["Terminal mode. I feel like I should be hacking something."]],
-    prism: [["Prism?! Now THIS is a rave."]],
-    graphite: [["Back to Graphite. Classic, like a good README."]],
-    // The four newer skins; their copy is the designer's, from `ARCHIE` in `archie-friends-data.js`
-    sherbet: [["Sherbet! My crest feels fizzy."]],
-    riso: [["Riso! Everything's slightly misaligned. On purpose."]],
-    blueprint: [["Blueprint. Finally, I can see how I was built."]],
-    aurora: [["Aurora! Okay, this one's pretty."]],
+    contrast: [["High contrast. Crisp! I can see every seam on me."], ["Maximum contrast. Bold choice. I approve."]],
     welcome: [["Welcome back! I didn't touch anything. Probably."], ["Oh hi! I was definitely not napping."]],
     up: [["Oh hey, you came back up!"], ["A visitor from further down the page!"]],
     lonely: [["...is this thing on?", 1], ["*taps ear cup* ...hello?", 1]],
@@ -1155,8 +1152,8 @@
     "prank-lights": [["Ooh, what does this switch do?"], ["Watch this. Lights... OFF!"]],
     "prank-lights-after": [["Huh. It keeps coming back on."], ["You didn't see that. Nobody saw that."],
                            ["I was testing dark mode. For science.", 1]],
-    "prank-skin": [["This place needs a makeover."], ["Prism. Everybody loves Prism."]],
-    "prank-skin-after": [["Rejected. Tough crowd."], ["The page has taste, apparently.", 1]],
+    "prank-contrast": [["This place needs more contrast."], ["Let me just turn the contrast up to eleven..."]],
+    "prank-contrast-after": [["Too much? Too much.", 1], ["Back to normal. My eyes, though."]],
     "prank-tilt": [["Is the page crooked? Hang on..."], ["Let me just straighten this."]],
     "prank-tilt-after": [["There. Perfectly level. Don't check."], ["Close enough. Ship it."]],
     "prank-count": [["Let me just add myself to the count..."], ["One more project. Me. I'm the project."]],
@@ -1290,28 +1287,22 @@
     };
 
     // ---- The reader --------------------------------------------------------------------------------------
-    let theme = document.documentElement.dataset.theme, skin = document.documentElement.dataset.skin;
+    let theme = document.documentElement.dataset.theme;
     const flips = [];
-    // Hushed while a prank of his own switches theme or skin, so he does not remark on what he did himself,
-    // and does not take his Prism for the reader's and dance.
+    // Hushed while a prank of his own switches the theme, so he does not remark on what he did himself.
     let hushed = false;
     const mo = new MutationObserver(() => {
       const d = document.documentElement.dataset;
-      if (hushed) { theme = d.theme; skin = d.skin; return; }
+      if (hushed) { theme = d.theme; return; }
       if (d.theme !== theme) {
         theme = d.theme;
         flips.push(t);
         while (flips.length && flips[0] < t - 12) flips.shift();
         if (flips.length >= 3) { flips.length = 0; react("flip", 20); }
-        else react(theme === "light" ? "light" : "dark", 0);
-      }
-      if (d.skin !== skin) {
-        skin = d.skin;
-        if (LINES[skin]) react(skin, 0);
-        if (skin === "prism" && !quiet) o.wish();
+        else react(theme === "light" || theme === "contrast" ? theme : "dark", 0);
       }
     });
-    mo.observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme", "data-skin"]});
+    mo.observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
     let hid = 0, gone = 0, stirred = Date.now(), lonely = false;
     // Four seconds on another tab and he takes over this one's title. It is put back as it was, the exact
     // string, and only if it is still his: another script may have set the title since.
@@ -1473,15 +1464,20 @@
   }
 
   // What he does to the page when he plays a prank, and undoes. Each one returns a promise for when the page
-  // is back as it was. None of it is saved: the theme and skin are changed on <html> only, never in
-  // storage, and a reader who changes either while he is at it keeps their own, since their choice is
-  // saved and his undo checks storage first. Nothing is typed into anything, nothing takes focus, nothing
+  // is back as it was. None of it is saved: the theme is changed on <html> only, never in storage, and a
+  // reader who changes it while he is at it keeps their own, since their choice is saved and his undo
+  // checks storage first. Nothing is typed into anything, nothing takes focus, nothing
   // moves under the pointer but a tilt of under a degree, and the waits are real time rather than the
   // render clock, so a tab hidden mid-prank is still put back.
   //
   // The lights are the reader's theme, swapped four times 400 ms apart: 1.25 flashes a second, where WCAG
   // 2.3.1 draws the line at three. Faster would be a seizure risk and not a joke, however funny it looks.
-  const PRANKS = ["lights", "skin", "tilt", "count", "cursor"];
+  //
+  // The contrast prank is the one high contrast cannot have the other way round, and neither theme prank is
+  // played on a reader who is IN high contrast (see `prankOnce`): that reader chose it because they need it,
+  // and a joke that takes it away from them for two seconds -- or flashes the page between two other themes
+  // -- is not one they are in on.
+  const PRANKS = ["lights", "contrast", "tilt", "count", "cursor"];
   function pranks(talk, header) {
     const root = document.documentElement;
     const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -1499,12 +1495,12 @@
         if (stored("theme") === saved) root.dataset.theme = theme;
         unhush();
       },
-      async skin() {
-        const skin = root.dataset.skin, saved = stored("atlas-skin");
+      async contrast() {
+        const theme = root.dataset.theme, saved = stored("theme");
         talk.hush(true);
-        root.dataset.skin = skin === "prism" ? "terminal" : "prism";
+        root.dataset.theme = "contrast";
         await wait(1400);
-        if (stored("atlas-skin") === saved) root.dataset.skin = skin;
+        if (stored("theme") === saved) root.dataset.theme = theme;
         unhush();
       },
       // Crooked, then over-corrected, then level: the page's <main>, not <body>, so the header and anything

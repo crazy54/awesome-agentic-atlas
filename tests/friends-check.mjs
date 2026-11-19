@@ -32,7 +32,7 @@ const TRICKS = {nib: "borrow", posy: "note", lumen: "photobomb", "oh-four": "pee
 const texts = list => (list || []).map(l => l[0]);
 // A friend's own lines, and Archie's lines about it
 const own = id => { const L = FRIENDS[id].lines, t = TRICKS[id];
-  return [...texts(L.arrive), ...texts(L.skin), ...texts(L[t]), ...texts(L[`${t}-after`]), ...texts(L.leave)]; };
+  return [...texts(L.arrive), ...texts(L.theme), ...texts(L[t]), ...texts(L[`${t}-after`]), ...texts(L.leave)]; };
 const his = id => { const L = FRIENDS[id].lines, t = TRICKS[id];
   return [...texts(L[`${t}-archie`]), ...texts(L[`${t}-archie-2`]), ...texts(L.poke)]; };
 

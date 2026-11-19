@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-skin="graphite">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <script>
@@ -25,28 +25,18 @@
 <link rel="preload" href="assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="pages.css">
@@ -59,11 +49,6 @@ try {
   --kick-case:uppercase; --kick-track:.1em;
 }
 :root{--fx-glow:0; --fx-pulse:0; --fx-scan:0}
-html[data-skin=glass]{--fx-glow:1; --fx-pulse:1}
-html[data-skin=terminal]{--fx-glow:1; --fx-pulse:1; --fx-scan:1}
-html[data-skin=prism]{--fx-glow:1; --fx-pulse:1}
-html[data-skin=sherbet]{--fx-glow:1}
-html[data-skin=aurora]{--fx-glow:1}
 :root{
   --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
   --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
@@ -328,14 +313,7 @@ html[data-theme=light]{
   .hero .ph{min-height:190px}
   .hero .ph img,.hero .ph .pt{aspect-ratio:16/9!important;height:auto}
 }
-html[data-theme=light] .ph{--surface:#090A0D;--band:#20242D;--ink:#F7F8FA;--ink2:#D0D5DD;color:#F7F8FA}
-html[data-skin=glass][data-theme=light] .ph{--surface:#070912;--band:#1C1E26;--ink:#F4F7FF;--ink2:#CBD5E8;color:#F4F7FF}
-html[data-skin=terminal][data-theme=light] .ph{--surface:#050B0D;--band:#132220;--ink:#D8F5E6;--ink2:#A8D8C4;color:#D8F5E6}
-html[data-skin=prism][data-theme=light] .ph{--surface:#0B0718;--band:#241A3F;--ink:#FBF7FF;--ink2:#DCD2F0;color:#FBF7FF}
-html[data-skin=sherbet][data-theme=light] .ph{--surface:#1E1830;--band:#32294F;--ink:#FFF1E6;--ink2:#EEDCE6;color:#FFF1E6}
-html[data-skin=riso][data-theme=light] .ph{--surface:#16161F;--band:#282835;--ink:#F5F0E6;--ink2:#DCD6CA;color:#F5F0E6}
-html[data-skin=blueprint][data-theme=light] .ph{--surface:#0B3D91;--band:#104BA6;--ink:#F4F8FF;--ink2:#DCE8FF;color:#F4F8FF}
-html[data-skin=aurora][data-theme=light] .ph{--surface:#0A1128;--band:#172244;--ink:#F1F5FF;--ink2:#CFD7F0;color:#F1F5FF}
+html[data-theme=light] .ph{--surface:#121314;--band:#252423;--ink:#F3EFE8;--ink2:#D9D3C8;color:#F3EFE8}
 .setwrap{position:relative;display:inline-block}
 header.setopen{z-index:30}
 .setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:280px;text-align:left;
@@ -345,13 +323,16 @@ header.setopen{z-index:30}
 .setlab{margin:14px 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase;
   letter-spacing:.07em;font-weight:600}
 .setlab:first-child{margin-top:0}
-.setths{display:grid;grid-template-columns:1fr 1fr;gap:2px 4px;margin-top:2px}
+.setths{display:grid;grid-template-columns:1fr;gap:2px;margin-top:2px}
 .thb{display:flex;align-items:center;gap:7px;width:100%;min-height:36px;padding:0 7px;
   background:none;border:1px solid transparent;border-radius:8px;color:var(--ink2);font-size:13px;
   text-align:left}
 .thb:hover{border-color:var(--grid);color:var(--ink)}
-.thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600}
-.thb[hidden]{display:none}
+.thb{position:relative}
+.thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600;
+  background:color-mix(in srgb,var(--act) 12%,transparent)}
+.thb[aria-pressed=true]::after{content:"\2713";position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  color:var(--bar);font-weight:700}
 .thsw{display:inline-flex;flex:none;width:28px;height:14px;border-radius:999px;overflow:hidden;
   border:1px solid var(--grid)}
 .thsw i{flex:1}
@@ -383,6 +364,7 @@ header .top nav a.ghstar b{font-family:var(--num);font-variant-numeric:tabular-n
   color-mix(in srgb,var(--surface) 70%,transparent) 38%,transparent 62%);
   background:var(--scrim),url(assets/masthead-dark.webp) center bottom/cover no-repeat}
 html[data-theme=light] .mhart{background:var(--scrim),url(assets/masthead-light.webp) center bottom/cover no-repeat}
+html[data-theme=contrast] .mhart{background:none}
 @media (max-width:899px){.mhart{--scrim:linear-gradient(color-mix(in srgb,var(--surface) 72%,transparent),
   color-mix(in srgb,var(--surface) 72%,transparent))}}
 header{position:relative;z-index:2;background:transparent;border-bottom:0;
@@ -494,39 +476,20 @@ html{scrollbar-gutter:stable}
 <div class="setwrap">
       <button class="chip" id="setbtn" aria-expanded="false" aria-controls="setmenu">Settings</button>
       <div class="setmenu" id="setmenu" hidden>
-        <p class="setlab" id="setmodelab">Mode</p>
-        <div role="group" aria-labelledby="setmodelab">
-          <button class="chip" id="theme">Light theme</button>
-        </div>
         <p class="setlab" id="setthemelab">Theme</p>
         <div class="setths" role="group" aria-labelledby="setthemelab">
-          <button type="button" class="thb" data-skin="graphite" aria-pressed="true"><span
-            class="thsw" aria-hidden="true"><i style="background:#090A0D"></i><i
-            style="background:#D6A034"></i><i style="background:#78B7F4"></i></span>Graphite</button>
-          <button type="button" class="thb" data-skin="glass" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#070912"></i><i
-            style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span>Glass</button>
-          <button type="button" class="thb" data-skin="terminal" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#050B0D"></i><i
-            style="background:#FFB627"></i><i style="background:#6FD0FF"></i></span>Terminal</button>
-          <button type="button" class="thb" data-skin="prism" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#0B0718"></i><i
-            style="background:#FF9BD2"></i><i style="background:#8FD0FF"></i></span>Prism</button>
-          <button type="button" class="thb" data-skin="sherbet" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#1E1830"></i><i
-            style="background:#FF7AA2"></i><i style="background:#A8B4FF"></i></span>Sherbet</button>
-          <button type="button" class="thb" data-skin="riso" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#16161F"></i><i
-            style="background:#FF5CB8"></i><i style="background:#6FB4EA"></i></span>Riso</button>
-          <button type="button" class="thb" data-skin="blueprint" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#0B3D91"></i><i
-            style="background:#FFB27A"></i><i style="background:#B5ECFF"></i></span>Blueprint</button>
-          <button type="button" class="thb" data-skin="aurora" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#0A1128"></i><i
-            style="background:#2EC4B6"></i><i style="background:#8CC8FF"></i></span>Aurora</button>
-          <button type="button" class="thb" data-skin="holo" data-locked hidden aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#07090F"></i><i
-            style="background:#A99BFF"></i><i style="background:#7AD7FF"></i></span>Holo</button>
+          <button type="button" class="thb" data-choice="system" aria-pressed="true"><span
+            class="thsw" aria-hidden="true"><i style="background:#F1EDE6"></i><i
+            style="background:#121314"></i><i style="background:#A4C812"></i></span>System</button>
+          <button type="button" class="thb" data-choice="light" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#F1EDE6"></i><i
+            style="background:#A4C812"></i><i style="background:#3B5C00"></i></span>Light</button>
+          <button type="button" class="thb" data-choice="dark" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#121314"></i><i
+            style="background:#A4C812"></i><i style="background:#CBE46E"></i></span>Dark</button>
+          <button type="button" class="thb" data-choice="contrast" aria-pressed="false"><span
+            class="thsw" aria-hidden="true"><i style="background:#000000"></i><i
+            style="background:#DCF55E"></i><i style="background:#FFFFFF"></i></span>High contrast</button>
         </div>
       </div>
     </div>
@@ -590,36 +553,52 @@ const ATLASDAY = (() => {
 <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and workbooks"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
   The Awesome Agentic Atlas merges 39 awesome-lists into one index; all 39 are credited in the <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. Stars, language, licence and last-push come from the GitHub API on 2026-11-01 and drift daily. Card artwork is each project&rsquo;s own Open Graph image where it has one, and a gradient drawn from its facts where it does not.<button type="button" id="archieadmin" class="archieadmin" aria-label="Archie admin panel" aria-expanded="false" aria-controls="archiepanel">&middot;</button>
 </div></footer>
-<script>function wireSettings(onPaint) {
-  const btn = document.getElementById("theme");
+<script>function atlasTheme() {
+  if (atlasTheme.api) return atlasTheme.api;
+  var root = document.documentElement;
+  var stored = function () { try { return localStorage.getItem("theme"); } catch (e) { return null; } };
+  var valid = function (t) { return t === "light" || t === "dark" || t === "contrast"; };
+  var system = function () {
+    try {
+      return matchMedia("(prefers-contrast: more)").matches ? "contrast"
+        : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    } catch (e) { return "dark"; }
+  };
+  var apply = function () {
+    var t = stored();
+    root.dataset.theme = valid(t) ? t : system();
+    delete root.dataset.skin;
+    var plane = getComputedStyle(root).getPropertyValue("--plane").trim(), tc = document.getElementById("tc");
+    if (plane && tc) tc.content = plane;
+  };
+  var api = {
+    choice: function () { var t = stored(); return valid(t) ? t : "system"; },
+    refresh: apply,
+    set: function (c) {
+      try { if (c === "system") localStorage.removeItem("theme"); else localStorage.setItem("theme", c); } catch (e) {}
+      apply();
+    },
+    follow: function (f) {
+      var on = function () { if (api.choice() === "system") { apply(); if (f) f(); } };
+      try {
+        matchMedia("(prefers-color-scheme: light)").addEventListener("change", on);
+        matchMedia("(prefers-contrast: more)").addEventListener("change", on);
+      } catch (e) {}
+    }
+  };
+  apply();
+  return (atlasTheme.api = api);
+}
+function wireSettings(onPaint) {
   const menu = document.getElementById("setmenu");
   const setbtn = document.getElementById("setbtn");
   const ths = Array.from(document.querySelectorAll(".thb"));
   const paintSettings = () => {
-    const light = document.documentElement.dataset.theme === "light";
-    btn.textContent = light ? "Dark theme" : "Light theme";
-    btn.title = "Switch to the " + (light ? "dark" : "light") + " theme";
-    const skin = document.documentElement.dataset.skin;
-    for (const t of ths) t.setAttribute("aria-pressed", String(t.dataset.skin === skin));
-    let open = ",";
-    try { open = "," + (localStorage.getItem("atlas-unlock") || "") + ","; } catch (e) {}
-    for (const t of ths) if (t.hasAttribute("data-locked")) t.hidden = open.indexOf("," + t.dataset.skin + ",") < 0;
-    const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
-    if (plane) document.getElementById("tc").content = plane;
+    const choice = atlasTheme().choice();
+    for (const t of ths) t.setAttribute("aria-pressed", String(t.dataset.choice === choice));
     if (onPaint) onPaint();
   };
-  btn.onclick = () => {
-    const light = document.documentElement.dataset.theme !== "light";
-    document.documentElement.dataset.theme = light ? "light" : "dark";
-    try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
-    paintSettings();
-  };
-  const setSkin = (s) => {
-    document.documentElement.dataset.skin = s;
-    try { localStorage.setItem("atlas-skin", s); } catch (e) {}
-    paintSettings();
-  };
-  for (const t of ths) t.onclick = () => setSkin(t.dataset.skin);
+  for (const t of ths) t.onclick = () => { atlasTheme().set(t.dataset.choice); paintSettings(); };
   const setOpen = (open) => {
     menu.hidden = !open;
     setbtn.setAttribute("aria-expanded", String(open));
@@ -635,13 +614,7 @@ const ATLASDAY = (() => {
       if (!menu.hidden && !inside) setOpen(false);
     });
   paintSettings();
-  try {
-    matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
-      if (localStorage.getItem("theme")) return;
-      document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
-      paintSettings();
-    });
-  } catch (e) {}
+  atlasTheme().follow(paintSettings);
   window.atlasPaintSettings = paintSettings;
   return paintSettings;
 }</script>
@@ -823,17 +796,17 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 })();
 </script>
 
-<script type="module" src="assets/archie.js?v=3bec0d1e83"></script>
+<script type="module" src="assets/archie.js?v=9557360c5c"></script>
 <script type="module" src="assets/archie-dance.js?v=07eb812405"></script>
 <script>(() => {
   const b = document.getElementById("archieadmin");
   if (!b) return;
-  const go = () => import("./assets/archie-admin.js?v=3bec0d1e83")
+  const go = () => import("./assets/archie-admin.js?v=9557360c5c")
     .then((m) => (b.getAttribute("aria-expanded") === "true" ? m.close() : m.open(b)))
     .catch((e) => console.warn("Archie's admin panel did not load:", e));
   b.addEventListener("click", go);
 })();</script>
-<script type="module" src="assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="assets/atlas-site.js?v=a4837d4f4b"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script>
 <script defer src="assets/traceway-1.2.1.js"></script><script defer src="assets/web-vitals-6.2.3.js"></script><script defer src="assets/traceway-loader.js"></script>
 

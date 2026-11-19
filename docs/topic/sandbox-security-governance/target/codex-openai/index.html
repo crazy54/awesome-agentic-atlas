@@ -21,40 +21,18 @@
 <link rel="preload" href="../../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of pages.css. After paint `label()`
-  // re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a topic page
-  // would otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to
-  // graphite for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../../../pages.css">
@@ -144,35 +122,62 @@ try {
   language. A dash in the star column means the row is a folder inside someone else's repo, or a dead
   link, and has no count of its own.
 </div></footer>
-<script type="module" src="../../../../assets/atlas-site.js?v=4b089da430"></script><script>
-const btn = document.getElementById("theme");
-const label = () => {
-  const light = document.documentElement.dataset.theme === "light";
-  btn.textContent = light ? "Dark theme" : "Light theme";
-  btn.setAttribute("aria-pressed", light ? "true" : "false");
-  const plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
-  if (plane) document.getElementById("tc").content = plane;
-};
-btn.onclick = () => {
-  const light = document.documentElement.dataset.theme !== "light";
-  document.documentElement.dataset.theme = light ? "light" : "dark";
-  // The choice is the point: it used to last until the next navigation, so a reader who needs light
-  // re-picked it on every facet page, every detail page and every trip back to the index.
-  try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
-  label();
-};
-// The head script already resolved the theme; this only has to agree with it, since the markup's
-// hardcoded "Light theme" is wrong half the time now that the OS preference is honoured.
-label();
-// Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a theme
-// they explicitly chose because the sun went down is worse than not following at all.
-try {
-  matchMedia("(prefers-color-scheme: light)").addEventListener("change", ev => {
-    if (localStorage.getItem("theme")) return;
-    document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
+<script type="module" src="../../../../assets/atlas-site.js?v=a4837d4f4b"></script><script>
+function atlasTheme() {
+  if (atlasTheme.api) return atlasTheme.api;
+  var root = document.documentElement;
+  var stored = function () { try { return localStorage.getItem("theme"); } catch (e) { return null; } };
+  var valid = function (t) { return t === "light" || t === "dark" || t === "contrast"; };
+  var system = function () {
+    try {
+      return matchMedia("(prefers-contrast: more)").matches ? "contrast"
+        : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    } catch (e) { return "dark"; }
+  };
+  var apply = function () {
+    var t = stored();
+    root.dataset.theme = valid(t) ? t : system();
+    delete root.dataset.skin;
+    var plane = getComputedStyle(root).getPropertyValue("--plane").trim(), tc = document.getElementById("tc");
+    if (plane && tc) tc.content = plane;
+  };
+  var api = {
+    choice: function () { var t = stored(); return valid(t) ? t : "system"; },
+    refresh: apply,
+    set: function (c) {
+      try { if (c === "system") localStorage.removeItem("theme"); else localStorage.setItem("theme", c); } catch (e) {}
+      apply();
+    },
+    follow: function (f) {
+      var on = function () { if (api.choice() === "system") { apply(); if (f) f(); } };
+      try {
+        matchMedia("(prefers-color-scheme: light)").addEventListener("change", on);
+        matchMedia("(prefers-contrast: more)").addEventListener("change", on);
+      } catch (e) {}
+    }
+  };
+  apply();
+  return (atlasTheme.api = api);
+}
+atlasTheme();
+(function () {
+  var btn = document.getElementById("theme");
+  if (!btn) return;
+  var label = function () {
+    var light = document.documentElement.dataset.theme === "light";
+    btn.textContent = light ? "Dark theme" : "Light theme";
+    btn.setAttribute("aria-pressed", light ? "true" : "false");
+  };
+  btn.onclick = function () {
+    atlasTheme().set(document.documentElement.dataset.theme === "light" ? "dark" : "light");
     label();
-  });
-} catch (e) {}
+  };
+  // The head script already resolved the theme; this only has to agree with it, since the markup's
+  // "Light theme" is wrong for every reader it resolved to light.
+  label();
+  // Follow the OS live, but only for a reader on System -- see `atlasTheme().follow`.
+  atlasTheme().follow(label);
+})();
 </script>
 <script>(function(){try{var u=sessionStorage.getItem("archie-src");if(u&&new URL(u).origin===location.origin&&localStorage.getItem("atlas-byte-quiet")!=="1"){var s=document.createElement("script");s.type="module";s.src=u;document.head.appendChild(s)}}catch(e){}})()</script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->

@@ -4,53 +4,66 @@
    the repository reader, and the two figures that are deliberately not in the HTML. */
 "use strict";
 
+function atlasTheme() {
+  if (atlasTheme.api) return atlasTheme.api;
+  var root = document.documentElement;
+  var stored = function () { try { return localStorage.getItem("theme"); } catch (e) { return null; } };
+  var valid = function (t) { return t === "light" || t === "dark" || t === "contrast"; };
+  var system = function () {
+    try {
+      return matchMedia("(prefers-contrast: more)").matches ? "contrast"
+        : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    } catch (e) { return "dark"; }
+  };
+  var apply = function () {
+    var t = stored();
+    root.dataset.theme = valid(t) ? t : system();
+    delete root.dataset.skin;
+    var plane = getComputedStyle(root).getPropertyValue("--plane").trim(), tc = document.getElementById("tc");
+    if (plane && tc) tc.content = plane;
+  };
+  var api = {
+    choice: function () { var t = stored(); return valid(t) ? t : "system"; },
+    refresh: apply,
+    set: function (c) {
+      try { if (c === "system") localStorage.removeItem("theme"); else localStorage.setItem("theme", c); } catch (e) {}
+      apply();
+    },
+    follow: function (f) {
+      var on = function () { if (api.choice() === "system") { apply(); if (f) f(); } };
+      try {
+        matchMedia("(prefers-color-scheme: light)").addEventListener("change", on);
+        matchMedia("(prefers-contrast: more)").addEventListener("change", on);
+      } catch (e) {}
+    }
+  };
+  apply();
+  return (atlasTheme.api = api);
+}
+atlasTheme();
 var root = document.documentElement.dataset.root || "";
 var nwo = document.documentElement.dataset.nwo;
 
-/* Not a data fetch and not a framework: the light half of the theme is in detail.css and without a
-   switch nothing on these pages can ever reach it.
-
-   Three pieces, ported from `wire()` in 19_pages.py, because the toggle used to change nothing beyond
-   this tab's current document: the write on click, so the choice survives the next link; the agreement
-   with the head script on load; and the listener, so a reader who has expressed no choice follows their
-   OS the way the index does. The *read* is not here -- it is inline in every page's <head>, because by
-   the time this file has been fetched and run the wrong theme has already been painted.
-
-   label() is folded into every path that changes the theme, which is the index's arrangement and for its
-   reasons: the button's markup says "Light theme" and aria-pressed="false", which is wrong for every
-   reader the head script just resolved to light, and --plane is read off the stylesheet rather than
-   restated here so the browser chrome cannot drift from the page. There is a computed value to read by
-   now -- detail.css is a render-blocking link in the head, so it is parsed before this runs. The meta is
-   looked up defensively: this file is one shared request, and a page that ever ships without the head
-   block should lose the chrome colour, not the copy button and the two figures below. */
+/* The light/dark toggle. The resolution -- stored choice, then the OS, then dark -- and the browser-chrome
+   repaint are `atlasTheme`, from `sitewide.THEME_JS`, prepended to this file; this is only the button, and
+   it is `20_landing.THEME_JS`'s button for the reasons given there, high contrast included: in high
+   contrast it reads "Light theme", as in dark, and takes the reader to light. The *read* is not here -- it
+   is inline in every page's <head>, because by the time this file has been fetched and run the wrong theme
+   has already been painted. `atlasTheme` also re-applies the stored choice on load, which is what serves a
+   page whose inline head script is a release older than this shared file. */
 var toggle = document.getElementById("theme");
 if (toggle) {
   var label = function () {
     var light = document.documentElement.dataset.theme === "light";
     toggle.textContent = light ? "Dark theme" : "Light theme";
     toggle.setAttribute("aria-pressed", light ? "true" : "false");
-    var tc = document.getElementById("tc");
-    var plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
-    if (tc && plane) tc.content = plane;
   };
   toggle.onclick = function () {
-    var light = document.documentElement.dataset.theme !== "light";
-    document.documentElement.dataset.theme = light ? "light" : "dark";
-    /* The choice is the point: it used to last until the next navigation, so a reader who needs light
-       re-picked it on every one of these 1,295 pages and again on every trip back to the atlas. */
-    try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+    atlasTheme().set(document.documentElement.dataset.theme === "light" ? "dark" : "light");
     label();
   };
   label();
-  /* Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a
-     theme they explicitly chose because the sun went down is worse than not following at all. */
-  try {
-    matchMedia("(prefers-color-scheme: light)").addEventListener("change", function (ev) {
-      if (localStorage.getItem("theme")) return;
-      document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
-      label();
-    });
-  } catch (e) {}
+  atlasTheme().follow(label);
 }
 
 /* Feature-detected rather than assumed, and the button stays hidden when the answer is no -- a button

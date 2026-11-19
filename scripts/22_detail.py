@@ -834,295 +834,17 @@ def main() -> None:
 # add ~9 MB to the repository to save one cached request, and every byte of that 9 MB would be
 # re-committed the next time a colour changed.
 #
-# `19_pages.py`'s two custom-property blocks are copied in verbatim rather than imported, because that
-# template is one 25 KB string with the whole interactive page in it and there is no seam to import.
-# Everything after them is this surface's own layout: a detail page is a document, not a table, so it
+# The palette is `sitewide.THEME_CSS`, the one copy every page family's stylesheet starts with, so a reader
+# who follows a link from the index to one of these pages cannot see the palette change under them.
+# Everything after it is this surface's own layout: a detail page is a document, not a table, so it
 # shares the theme and none of the grid.
 CSS = """/* Written by scripts/22_detail.py. Shared by every page under docs/repo/.
 
    Deliberately not docs/pages.css, which scripts/20_landing.py writes: two stages writing one file
-   means the later run silently deletes the earlier one's rules.
-
-   The two blocks below are `19_pages.py`'s, character for character, and that is an invariant rather
-   than a coincidence: a reader who follows a link from the index to one of these pages must not see the
-   palette change under them. `tests/theme_test.py` asserts the three copies are byte-identical, which
-   is the only reason it is safe to keep them as copies instead of a shared file.
-
-   The reasoning behind the values -- which accents are lifted and why --onbar inverts between the two
-   modes -- is written out once, beside the blocks in `19_pages.py`. It is deliberately not repeated
-   here; three copies of a rationale is three things to go stale, and the previous palette's did. */
-:root{
-  --surface:#090A0D; --plane:#101217; --band:#20242D; --ink:#F7F8FA; --ink2:#D0D5DD;
-  --muted:#9BA5B3; --grid:#3A414D; --link:#78B7F4; --bar:#D6A034;
-  --good:#5BD5AA; --warn:#EF7D86; --off:#9BA5B3; --onbar:#090A0D;
-  --accent-sky:#78B7F4; --accent-mint:#5BD5AA; --accent-gold:#E7B64D;
-  --accent-coral:#EF7D86; --accent-violet:#A99AF7;
-  /* THE STRUCTURAL HALF OF A THEME. Not colours, so not contrast-bearing, and not declared per mode
-     either -- a typeface and a blur radius do not change when the lights go out. Graphite's values are
-     the page as it shipped, with one change since: the face is Geist, embedded from `assets/fonts/`
-     (see scripts/sitewide.py), so every reader gets the same type rather than whichever sans their
-     platform has. No wash, an opaque panel and no backdrop filter. --mono is Geist Mono, for code
-     and the build tags. A reader who never opens Settings cannot otherwise tell this block exists.
-     --bdf is `none` rather than `blur(0px)` on purpose: a non-none backdrop-filter makes the element a
-     containing block and a stacking context, which would quietly re-parent the mascot's speech bubble
-     and re-rank the pinned bar for every reader, including the ones who chose nothing. */
-  --ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
-  --mono:"Geist Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
-  --wash:none; --panel:var(--plane); --bdf:none;
-}
-html[data-theme=light]{
-  --surface:#F2F4F7; --plane:#FAFBFC; --band:#E7EAF0; --ink:#14171C; --ink2:#353C47;
-  --muted:#596574; --grid:#CAD1DB; --link:#1D5E9E; --bar:#6557C8;
-  --good:#187557; --warn:#875A19; --off:#596574; --onbar:#FFFFFF;
-  --accent-sky:#1D5E9E; --accent-mint:#187557; --accent-gold:#9A6718;
-  --accent-coral:#B6465E; --accent-violet:#6557C8;
-}
-/* THE THREE OPT-IN THEMES, six blocks, and the pattern is the same for each: `html[data-skin=X]` carries
-   the dark values and the structural tokens, `html[data-skin=X][data-theme=light]` carries the light
-   ones. Both selectors are one attribute stronger than nothing and the pair is stronger than the light
-   block above, so the cascade resolves skin-then-mode without a single `!important`.
-
-   The light block restates all thirteen colours and nothing else. It does not restate --ui or --bdf
-   because those are the same in both modes and the skin block above already applies at both, and it
-   does restate --panel and --wash because the alpha that reads as frosted over near-black is a smear
-   over near-white.
-
-   --panel IS translucent, and it is the one token that can be without giving up the measurement. Every
-   panel on this page sits on --surface and is filled from --plane, and the rgba below is --plane's own
-   channels: so whatever the compositor produces lies between two backdrops that ARE in the checked set,
-   and every text token clears 4.5:1 on both ends of that range. `theme_test.py` asserts the channels
-   match --plane rather than trusting this paragraph, because a hand-typed rgba is exactly the kind of
-   copy that drifts one digit and stops being a blend of anything. */
-html[data-skin=glass]{
-  --surface:#070912; --plane:#12141D; --band:#1C1E26; --ink:#F4F7FF; --ink2:#CBD5E8;
-  --muted:#95A2BE; --grid:#3D4152; --link:#7CC4FF; --bar:#6FE3C4;
-  --good:#86E0A0; --warn:#FF9BA8; --off:#95A2BE; --onbar:#04121A;
-  --accent-sky:#7CC4FF; --accent-mint:#6FE3C4; --accent-gold:#F3C46A;
-  --accent-coral:#FF9BA8; --accent-violet:#B3A6FF;
-  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
-  --wash:radial-gradient(1100px 520px at 12% -12%,rgba(80,140,255,.22),transparent 70%),
-         radial-gradient(900px 480px at 88% 0%,rgba(110,227,196,.14),transparent 72%);
-  --panel:rgba(18,20,29,.72); --bdf:blur(14px) saturate(1.25);
-}
-html[data-skin=glass][data-theme=light]{
-  --surface:#EEF2FA; --plane:#F8FAFF; --band:#E2E8F5; --ink:#111726; --ink2:#323B4F;
-  --muted:#56627A; --grid:#C3CCDE; --link:#0F5FA6; --bar:#0B6E7A;
-  --good:#136B4E; --warn:#8A4A2B; --off:#56627A; --onbar:#FFFFFF;
-  --accent-sky:#0F5FA6; --accent-mint:#0B6E7A; --accent-gold:#8A5A00;
-  --accent-coral:#A63F52; --accent-violet:#4B44B8;
-  --wash:radial-gradient(1100px 520px at 12% -12%,rgba(60,120,255,.14),transparent 70%),
-         radial-gradient(900px 480px at 88% 0%,rgba(0,150,130,.10),transparent 72%);
-  --panel:rgba(248,250,255,.74);
-}
-/* Terminal is the one theme that changes the typeface, and that is the whole of it: a monospace stack,
-   phosphor greens for the foreground and amber for the action. Amber rather than a brighter green
-   because --bar is drawn as text as well as as a fill, and a green action beside the green --good is two
-   meanings in one hue -- the mark of a verdict and the colour of a button should not be the same thing. */
-html[data-skin=terminal]{
-  --surface:#050B0D; --plane:#0A1315; --band:#132220; --ink:#D8F5E6; --ink2:#A8D8C4;
-  --muted:#84AC99; --grid:#2D4741; --link:#6FD0FF; --bar:#FFB627;
-  --good:#3FE08C; --warn:#FF8B7A; --off:#84AC99; --onbar:#05100B;
-  --accent-sky:#6FD0FF; --accent-mint:#3FE08C; --accent-gold:#FFB627;
-  --accent-coral:#FF8B7A; --accent-violet:#C2A6FF;
-  --ui:"Geist Mono","SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
-  --wash:radial-gradient(1200px 620px at 50% -20%,rgba(63,224,140,.12),transparent 70%);
-  --panel:rgba(10,19,21,.86); --bdf:blur(3px);
-}
-html[data-skin=terminal][data-theme=light]{
-  --surface:#EEF4EF; --plane:#F9FCF9; --band:#E0EBE3; --ink:#0D1A14; --ink2:#2B3E34;
-  --muted:#4F6659; --grid:#BFCFC4; --link:#0C5F8F; --bar:#7A5300;
-  --good:#166B45; --warn:#9A3D22; --off:#4F6659; --onbar:#FFFFFF;
-  --accent-sky:#0C5F8F; --accent-mint:#166B45; --accent-gold:#7A5300;
-  --accent-coral:#9A3D22; --accent-violet:#5A3FA8;
-  --wash:radial-gradient(1200px 620px at 50% -20%,rgba(20,140,90,.10),transparent 70%);
-  --panel:rgba(249,252,249,.86);
-}
-/* Prism is the maximal one: five washes at five positions so the page is never one colour, magenta for
-   the action, and the deepest blur of the four. It is also where the constraint above shows its teeth --
-   the hues are all in the accents and the wash, and the thirteen tokens underneath them are as plain and
-   as measured as graphite's. Colour on this page is allowed to be loud in the background and never in
-   the contract between ink and its backdrop. */
-html[data-skin=prism]{
-  --surface:#0B0718; --plane:#17112C; --band:#241A3F; --ink:#FBF7FF; --ink2:#DCD2F0;
-  --muted:#ADA0C8; --grid:#4A3A70; --link:#8FD0FF; --bar:#FF9BD2;
-  --good:#63E6B8; --warn:#FFB36B; --off:#ADA0C8; --onbar:#14061B;
-  --accent-sky:#8FD0FF; --accent-mint:#63E6B8; --accent-gold:#FFD166;
-  --accent-coral:#FF9BD2; --accent-violet:#C0A8FF;
-  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
-  --wash:radial-gradient(760px 430px at 6% -8%,rgba(255,155,210,.26),transparent 68%),
-         radial-gradient(680px 400px at 96% 2%,rgba(143,208,255,.22),transparent 68%),
-         radial-gradient(900px 520px at 50% 108%,rgba(99,230,184,.18),transparent 70%),
-         radial-gradient(520px 320px at 78% 54%,rgba(255,209,102,.15),transparent 70%),
-         radial-gradient(560px 340px at 18% 62%,rgba(192,168,255,.20),transparent 70%);
-  --panel:rgba(23,17,44,.70); --bdf:blur(18px) saturate(1.4);
-}
-html[data-skin=prism][data-theme=light]{
-  --surface:#F3EFFC; --plane:#FDFBFF; --band:#E8E0F8; --ink:#170B26; --ink2:#3A2B52;
-  --muted:#5E4F7A; --grid:#C7B9E4; --link:#1A4FB0; --bar:#9A2C7E;
-  --good:#0F6B52; --warn:#8A4410; --off:#5E4F7A; --onbar:#FFFFFF;
-  --accent-sky:#1A4FB0; --accent-mint:#0F6B52; --accent-gold:#8A4410;
-  --accent-coral:#9A2C7E; --accent-violet:#6A3FB8;
-  --wash:radial-gradient(760px 430px at 6% -8%,rgba(214,60,150,.16),transparent 68%),
-         radial-gradient(680px 400px at 96% 2%,rgba(40,120,220,.14),transparent 68%),
-         radial-gradient(900px 520px at 50% 108%,rgba(0,170,120,.12),transparent 70%),
-         radial-gradient(520px 320px at 78% 54%,rgba(230,160,20,.10),transparent 70%),
-         radial-gradient(560px 340px at 18% 62%,rgba(130,90,230,.13),transparent 70%);
-  --panel:rgba(253,251,255,.72);
-}
-/* THE FOUR LIGHTER-HEARTED ONES, eight more blocks in exactly the pattern above, and held to exactly the
-   same arithmetic -- `theme_test.py` runs `audit()` over all sixteen sets. The fun is spent where it is
-   free: the wash, the typeface and the accents. None of them moves. Every --wash here is a static
-   gradient, so a reader who asked the OS for reduced motion has nothing to ask these to stop doing, and
-   none of them sets an --fx-* token on the homepage, which is the only place a theme can animate.
-
-   Sherbet is an ice-cream parlour: blackcurrant and cream, strawberry for the action, and a rounded face
-   where the platform has one. `ui-rounded` resolves on Apple platforms only; everywhere else the stack
-   falls through to Nunito if installed and then to the page's own Segoe UI, so the shape of the page is
-   never at the mercy of a font nobody has. */
-html[data-skin=sherbet]{
-  --surface:#1E1830; --plane:#272040; --band:#32294F; --ink:#FFF1E6; --ink2:#EEDCE6;
-  --muted:#C4B3D0; --grid:#554872; --link:#A8B4FF; --bar:#FF7AA2;
-  --good:#5FE0B4; --warn:#FFB36B; --off:#C4B3D0; --onbar:#1A1026;
-  --accent-sky:#A8B4FF; --accent-mint:#5FE0B4; --accent-gold:#FFD166;
-  --accent-coral:#FF9A8B; --accent-violet:#D0B3FF;
-  --ui:ui-rounded,"SF Pro Rounded","Nunito","Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
-  --wash:radial-gradient(900px 480px at 8% -10%,rgba(255,122,162,.16),transparent 70%),
-         radial-gradient(820px 460px at 94% 104%,rgba(95,224,180,.12),transparent 70%),
-         radial-gradient(520px 300px at 70% 8%,rgba(255,209,102,.08),transparent 70%);
-  --panel:rgba(39,32,64,.80); --bdf:blur(12px) saturate(1.2);
-}
-html[data-skin=sherbet][data-theme=light]{
-  --surface:#FFF7EE; --plane:#FFFCF8; --band:#FBEADF; --ink:#2B2140; --ink2:#4A3D5E;
-  --muted:#6A5A78; --grid:#E8CFC3; --link:#3A48C9; --bar:#C22D62;
-  --good:#11704F; --warn:#8E4E00; --off:#6A5A78; --onbar:#FFFFFF;
-  --accent-sky:#3A48C9; --accent-mint:#11704F; --accent-gold:#8A5A00;
-  --accent-coral:#B23A3A; --accent-violet:#6B42C2;
-  --wash:radial-gradient(900px 480px at 8% -10%,rgba(232,70,124,.10),transparent 70%),
-         radial-gradient(820px 460px at 94% 104%,rgba(60,207,160,.10),transparent 70%),
-         radial-gradient(520px 300px at 70% 8%,rgba(255,209,102,.14),transparent 70%);
-  --panel:rgba(255,252,248,.82);
-}
-/* Riso is a risograph zine: two inks on off-white paper, and the second one printed a hair off register.
-   That is the wash -- a pink and a blue blob that overlap without lining up. Fluoro yellow is the third
-   drum and appears only as --accent-gold in dark, where it is ink on black; on paper it is a mustard,
-   because yellow on cream is 1.1:1 and a zine you cannot read is not a zine. Paper is nearly opaque, so
-   the panel is too, with just enough blur that a line of text behind the open Settings menu reads as a
-   smudge rather than as a second sentence. */
-html[data-skin=riso]{
-  --surface:#16161F; --plane:#1E1E29; --band:#282835; --ink:#F5F0E6; --ink2:#DCD6CA;
-  --muted:#AAA59C; --grid:#46465A; --link:#6FB4EA; --bar:#FF5CB8;
-  --good:#3FD08A; --warn:#FFB84D; --off:#AAA59C; --onbar:#16161F;
-  --accent-sky:#6FB4EA; --accent-mint:#3FD08A; --accent-gold:#FFE800;
-  --accent-coral:#FF7F7F; --accent-violet:#B9A2FF;
-  --ui:"Space Grotesk","Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
-  --wash:radial-gradient(700px 420px at 14% -6%,rgba(255,72,176,.16),transparent 70%),
-         radial-gradient(700px 420px at 17% -3%,rgba(0,120,191,.14),transparent 70%),
-         radial-gradient(640px 380px at 92% 100%,rgba(255,232,0,.07),transparent 70%);
-  --panel:rgba(30,30,41,.96); --bdf:blur(6px);
-}
-html[data-skin=riso][data-theme=light]{
-  --surface:#F5F0E6; --plane:#FBF8F1; --band:#ECE5D6; --ink:#1A1A2E; --ink2:#34344A;
-  --muted:#5A5864; --grid:#CFC6B3; --link:#B0126E; --bar:#0066A6;
-  --good:#00703F; --warn:#A33A1F; --off:#5A5864; --onbar:#FFFFFF;
-  --accent-sky:#0066A6; --accent-mint:#00703F; --accent-gold:#7A6100;
-  --accent-coral:#B0126E; --accent-violet:#5B3FB0;
-  --wash:radial-gradient(700px 420px at 14% -6%,rgba(255,72,176,.14),transparent 70%),
-         radial-gradient(700px 420px at 17% -3%,rgba(0,120,191,.12),transparent 70%),
-         radial-gradient(640px 380px at 92% 100%,rgba(255,232,0,.16),transparent 70%);
-  --panel:rgba(251,248,241,.96);
-}
-/* Blueprint is a drafting sheet, and dark is the one it was drawn for: chalk on cyanotype blue with a
-   24px ruled grid and safety orange for the action. The blue is far lighter than any other dark surface
-   here, which is what the theme is and also what it costs -- every foreground had to be lifted to clear
-   the band, and the plane and band sit closer to the surface than the other themes' do so the orange can
-   still reach 4.5:1 on the lightest of the three. The grid is two `repeating-linear-gradient`s rather
-   than an image, so it needs no request and no `background-size`. */
-html[data-skin=blueprint]{
-  --surface:#0B3D91; --plane:#0D4399; --band:#104BA6; --ink:#F4F8FF; --ink2:#DCE8FF;
-  --muted:#C0D4F7; --grid:#4677D2; --link:#B5ECFF; --bar:#FFB27A;
-  --good:#9CF2C4; --warn:#FFB3C1; --off:#C0D4F7; --onbar:#0A2352;
-  --accent-sky:#B5ECFF; --accent-mint:#9CF2C4; --accent-gold:#FFE066;
-  --accent-coral:#FFB8B0; --accent-violet:#D8CCFF;
-  --ui:"IBM Plex Sans","Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
-  --wash:repeating-linear-gradient(0deg,rgba(234,242,255,.07) 0 1px,transparent 1px 24px),
-         repeating-linear-gradient(90deg,rgba(234,242,255,.07) 0 1px,transparent 1px 24px);
-  --panel:rgba(13,67,153,.96); --bdf:blur(6px);
-}
-html[data-skin=blueprint][data-theme=light]{
-  --surface:#F3F7FF; --plane:#FBFDFF; --band:#E4ECFA; --ink:#0B2A5C; --ink2:#233F72;
-  --muted:#4A6290; --grid:#BFCDE8; --link:#1650B8; --bar:#B5470F;
-  --good:#0F6B4A; --warn:#A3245A; --off:#4A6290; --onbar:#FFFFFF;
-  --accent-sky:#1650B8; --accent-mint:#0F6B4A; --accent-gold:#7D5A00;
-  --accent-coral:#B5470F; --accent-violet:#5A3FB8;
-  --wash:repeating-linear-gradient(0deg,rgba(31,95,209,.07) 0 1px,transparent 1px 24px),
-         repeating-linear-gradient(90deg,rgba(31,95,209,.07) 0 1px,transparent 1px 24px);
-  --panel:rgba(251,253,255,.96);
-}
-/* Aurora is the northern lights over a midnight sky: one teal-to-violet curtain across the top of the
-   window and nothing else. Teal is the action, so the verdict green is pushed toward lime to keep "this
-   is a button" and "this runs here" in two different hues, the same separation terminal makes with
-   amber. The curtain is `fixed` like every wash, so it hangs in the window rather than scrolling away. */
-html[data-skin=aurora]{
-  --surface:#0A1128; --plane:#101936; --band:#172244; --ink:#F1F5FF; --ink2:#CFD7F0;
-  --muted:#9DA8CC; --grid:#35416B; --link:#8CC8FF; --bar:#2EC4B6;
-  --good:#A8EF7A; --warn:#FFB5E8; --off:#9DA8CC; --onbar:#06121F;
-  --accent-sky:#8CC8FF; --accent-mint:#A8EF7A; --accent-gold:#FFD98A;
-  --accent-coral:#FFB5E8; --accent-violet:#C39BF0;
-  --ui:"Geist",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
-  --wash:linear-gradient(172deg,rgba(46,196,182,.20),rgba(114,242,165,.10) 14%,rgba(157,78,221,.16) 26%,
-         transparent 40%),radial-gradient(900px 420px at 80% -10%,rgba(255,181,232,.12),transparent 70%);
-  --panel:rgba(16,25,54,.78); --bdf:blur(16px) saturate(1.3);
-}
-html[data-skin=aurora][data-theme=light]{
-  --surface:#F4F6FF; --plane:#FBFCFF; --band:#E6EAF8; --ink:#1B1F3B; --ink2:#373C5E;
-  --muted:#595F82; --grid:#C6CCE4; --link:#2447B0; --bar:#0E6E68;
-  --good:#3D6A0F; --warn:#A3316E; --off:#595F82; --onbar:#FFFFFF;
-  --accent-sky:#2447B0; --accent-mint:#3D6A0F; --accent-gold:#805A00;
-  --accent-coral:#A3316E; --accent-violet:#6A2CB0;
-  --wash:linear-gradient(172deg,rgba(18,122,115,.14),rgba(60,160,90,.07) 14%,rgba(123,44,191,.11) 26%,
-         transparent 40%),radial-gradient(900px 420px at 80% -10%,rgba(220,90,170,.08),transparent 70%);
-  --panel:rgba(251,252,255,.80);
-}
-/* Holo is the one theme the Settings menu does not offer until it is unlocked from the admin panel (see
-   `docs/assets/atlas-admin.js`), and the head script will not wear it before then either. Clean lines,
-   texture and light, in three layers of --wash, top first: a film-grain tile -- an SVG fractal-noise
-   filter in a data URI, so it costs no request -- then a 32px hairline grid, then an iridescent violet,
-   cyan and rose light falling from the top of the window. Violet is the action and cyan the link, so a
-   button and a link are never one hue, and the thirteen tokens underneath are as plain and as measured as
-   graphite's: all the colour is in the wash and the accents, where it costs no contrast. */
-html[data-skin=holo]{
-  --surface:#07090F; --plane:#0D1018; --band:#161A25; --ink:#F2F5FB; --ink2:#C8D0DF;
-  --muted:#939EB5; --grid:#353D52; --link:#7AD7FF; --bar:#A99BFF;
-  --good:#5FE3B1; --warn:#FF93A6; --off:#939EB5; --onbar:#0B0820;
-  --accent-sky:#7AD7FF; --accent-mint:#5FE3B1; --accent-gold:#FFD38A;
-  --accent-coral:#FF93A6; --accent-violet:#C6B8FF;
-  --ui:"Geist",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
-  --wash:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
-         repeating-linear-gradient(0deg,rgba(122,215,255,.05) 0 1px,transparent 1px 32px),
-         repeating-linear-gradient(90deg,rgba(122,215,255,.05) 0 1px,transparent 1px 32px),
-         radial-gradient(900px 460px at 88% -10%,rgba(169,155,255,.24),transparent 70%),
-         radial-gradient(760px 420px at 4% -8%,rgba(122,215,255,.18),transparent 70%),
-         radial-gradient(640px 360px at 50% -14%,rgba(255,147,166,.10),transparent 70%);
-  --panel:rgba(13,16,24,.74); --bdf:blur(16px) saturate(1.5);
-}
-html[data-skin=holo][data-theme=light]{
-  --surface:#F3F5FA; --plane:#FCFDFF; --band:#E7EBF3; --ink:#0D1220; --ink2:#2C3446;
-  --muted:#525D73; --grid:#C0C7D6; --link:#0B57C2; --bar:#5A3FD1;
-  --good:#0E6B4C; --warn:#A32F4F; --off:#525D73; --onbar:#FFFFFF;
-  --accent-sky:#0B57C2; --accent-mint:#0E6B4C; --accent-gold:#7A5600;
-  --accent-coral:#A32F4F; --accent-violet:#5A3FD1;
-  --wash:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .055 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
-         repeating-linear-gradient(0deg,rgba(90,63,209,.055) 0 1px,transparent 1px 32px),
-         repeating-linear-gradient(90deg,rgba(90,63,209,.055) 0 1px,transparent 1px 32px),
-         radial-gradient(900px 460px at 88% -10%,rgba(90,63,209,.13),transparent 70%),
-         radial-gradient(760px 420px at 4% -8%,rgba(11,87,194,.10),transparent 70%),
-         radial-gradient(640px 360px at 50% -14%,rgba(163,47,79,.07),transparent 70%);
-  --panel:rgba(252,253,255,.78);
-}
-*{box-sizing:border-box}
-/* --ui and --wash are the structural tokens declared in the block above; graphite resolves them to this
-   file's own font stack and to `none`, so a reader who has chosen no theme gets what was written here
-   before. The 1.6 line height is this page's own and stays -- it is prose, not a table. */
+   means the later run silently deletes the earlier one's rules. */
+""" + sitewide.THEME_CSS + """*{box-sizing:border-box}
+/* --ui and --wash are the structural tokens `THEME_CSS` declares above: the page's own font stack in every
+   theme, and the soft light behind the layout (see scripts/sitewide.py). The 1.6 line height is this page's own and stays -- it is prose, not a table. */
 body{margin:0;background:var(--surface);background-image:var(--wash);
   background-attachment:fixed;color:var(--ink);font:15px/1.6 var(--ui)}
 a{color:var(--link);text-decoration:none}
@@ -1161,10 +883,11 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
 .facts .live.on{display:inline;color:var(--ink2)}
 .facts .live b{color:var(--ink);font-variant-numeric:tabular-nums}
 .acts{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:0}
-/* The one link that has to be found. Filled with the accent, which is why it needs --onbar for ink. */
-.cta{display:inline-block;background:var(--bar);color:var(--onbar);font-weight:600;
+/* The one link that has to be found. Filled with the lime, `--act`, which is why it needs --onact for ink;
+   its edge and hover are in `THEME_CSS`, shared with every primary button on the site. */
+.cta{display:inline-block;background:var(--act);color:var(--onact);font-weight:600;
   border-radius:8px;padding:10px 18px}
-.cta:hover{text-decoration:none;filter:brightness(1.08)}
+.cta:hover{text-decoration:none}
 .alt{font-size:14px}
 .chip{display:inline-block;background:var(--band);color:var(--ink2);border:1px solid var(--grid);
   border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap;margin:0 5px 5px 0}
@@ -1380,64 +1103,10 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
 # This one *is* inlined into all 1,295 pages, against the argument the stylesheet and the script above
 # make, and the exception is the whole reason it exists: it has to have finished before first paint, and
 # `detail.js` is a separate request that by definition has not. A reader who chose light would otherwise
-# get a frame of near-black on every page they open -- the flash the inline form prevents. It is ~700
-# bytes x 1,295, and unlike the star count it is a constant, so it is committed once and never rewritten
-# by a rebuild; the churn argument in the module docstring is about volatile *values*, not about size.
-#
-# Copied out of `19_pages.py`'s head rather than shared with it, on the same argument the two palette
-# blocks in `CSS` above are copied: that template is one 25 KB string and there is no seam to import.
-#
-# One `theme-color`, written by script, rather than the two `media` variants that would be the obvious way
-# to do it: the HTML spec picks the *first* such element whose media matches, so a pair keyed on
-# `prefers-color-scheme` cannot be overridden by anything appended later -- and these pages now honour a
-# choice made *against* the OS preference, so the pair would paint the chrome the opposite colour to the
-# page for exactly the readers who made one. The value is `--plane` in dark, because `--plane` is the
-# header's background and the header is what sits under the chrome. It is a literal because `detail.css`
-# has not been fetched, let alone parsed, at the moment the script below runs; with JavaScript off it
-# stays this value, which agrees with the `data-theme="dark"` floor on <html>.
-#
-# Precedence is explicit choice, then the operating system, then dark. Dark stays the fallback because it
-# is the designed mode -- the one whose accent contrast ratios were actually measured. The markup's
-# `data-theme="dark"` is the floor if this throws, which `localStorage` does in some private modes. The
-# key is `theme`, the same string the index writes, so a choice made on the index is honoured here
-# immediately and there is nothing to migrate.
-HEAD_THEME = """<meta name="theme-color" id="tc" content="#101217">
-<script>
-try {
-  var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-  document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
-} catch (e) {}
-</script>
-"""
+# get a frame of near-black on every page they open -- the flash the inline form prevents. It is a constant,
+# so it is committed once and not rewritten by a rebuild; the churn argument in the module docstring is about
+# volatile *values*, not about size. It is `sitewide.HEAD_THEME`, which every page family's head carries.
+HEAD_THEME = sitewide.HEAD_THEME
 
 # One script for 1,295 pages, for the same reason as the stylesheet: inlining it would multiply every
 # reader improvement across the whole repository. The Markdown preview is intentionally runtime-only:
@@ -1449,53 +1118,30 @@ JS = r"""/* Written by scripts/22_detail.py. Shared by every page under docs/rep
    the repository reader, and the two figures that are deliberately not in the HTML. */
 "use strict";
 
+""" + sitewide.THEME_JS + r"""atlasTheme();
 var root = document.documentElement.dataset.root || "";
 var nwo = document.documentElement.dataset.nwo;
 
-/* Not a data fetch and not a framework: the light half of the theme is in detail.css and without a
-   switch nothing on these pages can ever reach it.
-
-   Three pieces, ported from `wire()` in 19_pages.py, because the toggle used to change nothing beyond
-   this tab's current document: the write on click, so the choice survives the next link; the agreement
-   with the head script on load; and the listener, so a reader who has expressed no choice follows their
-   OS the way the index does. The *read* is not here -- it is inline in every page's <head>, because by
-   the time this file has been fetched and run the wrong theme has already been painted.
-
-   label() is folded into every path that changes the theme, which is the index's arrangement and for its
-   reasons: the button's markup says "Light theme" and aria-pressed="false", which is wrong for every
-   reader the head script just resolved to light, and --plane is read off the stylesheet rather than
-   restated here so the browser chrome cannot drift from the page. There is a computed value to read by
-   now -- detail.css is a render-blocking link in the head, so it is parsed before this runs. The meta is
-   looked up defensively: this file is one shared request, and a page that ever ships without the head
-   block should lose the chrome colour, not the copy button and the two figures below. */
+/* The light/dark toggle. The resolution -- stored choice, then the OS, then dark -- and the browser-chrome
+   repaint are `atlasTheme`, from `sitewide.THEME_JS`, prepended to this file; this is only the button, and
+   it is `20_landing.THEME_JS`'s button for the reasons given there, high contrast included: in high
+   contrast it reads "Light theme", as in dark, and takes the reader to light. The *read* is not here -- it
+   is inline in every page's <head>, because by the time this file has been fetched and run the wrong theme
+   has already been painted. `atlasTheme` also re-applies the stored choice on load, which is what serves a
+   page whose inline head script is a release older than this shared file. */
 var toggle = document.getElementById("theme");
 if (toggle) {
   var label = function () {
     var light = document.documentElement.dataset.theme === "light";
     toggle.textContent = light ? "Dark theme" : "Light theme";
     toggle.setAttribute("aria-pressed", light ? "true" : "false");
-    var tc = document.getElementById("tc");
-    var plane = getComputedStyle(document.documentElement).getPropertyValue("--plane").trim();
-    if (tc && plane) tc.content = plane;
   };
   toggle.onclick = function () {
-    var light = document.documentElement.dataset.theme !== "light";
-    document.documentElement.dataset.theme = light ? "light" : "dark";
-    /* The choice is the point: it used to last until the next navigation, so a reader who needs light
-       re-picked it on every one of these 1,295 pages and again on every trip back to the atlas. */
-    try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+    atlasTheme().set(document.documentElement.dataset.theme === "light" ? "dark" : "light");
     label();
   };
   label();
-  /* Follow the OS live, but only for a reader who has not overridden it -- flipping someone out of a
-     theme they explicitly chose because the sun went down is worse than not following at all. */
-  try {
-    matchMedia("(prefers-color-scheme: light)").addEventListener("change", function (ev) {
-      if (localStorage.getItem("theme")) return;
-      document.documentElement.dataset.theme = ev.matches ? "light" : "dark";
-      label();
-    });
-  } catch (e) {}
+  atlasTheme().follow(label);
 }
 
 /* Feature-detected rather than assumed, and the button stays hidden when the answer is no -- a button

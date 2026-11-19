@@ -50,7 +50,7 @@ THE THREE THINGS THAT CHANGE
      Discover picks, then the shelves, then the coverage arithmetic. Discover sits in the first shelf slot
      because that is where it was asked for, and the prototype has no opinion about it -- it predates the
      feature.
-  3. The palette is the site's eight token sets out of `pages.css`, not the prototype's three skins. That
+  3. The palette is the site's three themes out of `pages.css`, not the prototype's three skins. That
      is what `BRIDGE_CSS` is for, and it is the only CSS in this file that is not either imported or a
      handful of rules for a band the prototype does not have.
 """
@@ -143,7 +143,7 @@ PLAN = json.loads((OUT / "discover.json").read_text(encoding="utf-8"))
 # The prototype names 41 palette tokens; `pages.css` names 22, and 19 of those are the same name for the
 # same thing, because the site's four themes were built out of the prototype's vocabulary. This block is
 # the other 22, and it is the whole of the palette work -- with it in place, 141 imported selectors draw
-# in graphite, glass, terminal and prism, light and dark, without one of them knowing a theme exists.
+# in all three themes without one of them knowing a theme exists.
 #
 # Three kinds of token, and the kind decides where the value comes from:
 #
@@ -183,39 +183,21 @@ BRIDGE_CSS = r"""/* THE PROTOTYPE'S TOKENS, IN THE SITE'S. See BRIDGE_CSS in scr
   --mono:"Geist Mono",ui-monospace,"SF Mono","Cascadia Mono",Consolas,"Liberation Mono",monospace;
   --kick-case:uppercase; --kick-track:.1em;
 }
-/* The effects axis. Four themes, and the values are the argument each theme already makes about itself:
-   graphite is the flat drawing with no light on it, which is what `--wash:none` and `--bdf:none` say in
-   `pages.css`, so it gets zeroes and the animations never enter the compositor at all. Terminal is the
-   only one that wants a scanline, because it is the only one pretending to be a tube. Prism is the
-   maximal one and says so. Gated as numbers rather than as `display` switches so that a rule can multiply
-   by them -- `calc(2.4s * var(--fx-pulse))` is 0s in graphite, which is an animation that does not exist
-   rather than one animating between two identical frames.
+/* The effects axis: glow, pulse and scan, numbers so a rule can multiply by them -- `calc(2.4s *
+   var(--fx-pulse))` is 0s, which is an animation that does not exist rather than one animating between two
+   identical frames. All three are zero in every theme. They were the old colour skins' to switch on (a
+   scanline for the one pretending to be a tube, a pulse for the loud ones), and the three themes that
+   replaced them are clean on purpose: the movement on this page is Archie and his friends, and a theme that
+   pulsed would be a second thing moving that nobody asked for. The rules that read them stay, because they
+   are imported from `30_v2.py` and cost nothing at zero.
 
-   Three of the prototype's five and not five: `--fx-sheen` and `--fx-lift` are read by nothing this page
-   loads, so the axis is glow, pulse and scan. The `:root` line below is the one that matters most and the
-   easiest to lose -- it is the only declaration of all three, so every skin rule that does not mention a
-   token is relying on inheriting a zero from it. It was lost twice while this file was being written, and
-   the second time is worth a warning: DO NOT WRITE A CLOSE-COMMENT SEQUENCE INSIDE THIS COMMENT. CSS
-   comments do not nest and the stripper is not confused about that -- it ends the comment at the first
-   close it meets, which was one I had typed inside a sentence explaining the first bug. Everything after
-   it became loose text at the top of the stylesheet, the text swallowed the `:root` rule that followed,
-   and all three tokens resolved to nothing.
-
-   Neither loss changed one byte of markup, and the symptom of both was a pulse ring animating in graphite,
-   where the whole point of the axis is that nothing animates: `opacity:var(--fx-pulse)` with nothing to
-   resolve is an invalid declaration, and an invalid opacity is 1. That is why this block is verified by
-   reading computed values out of a browser in all eight sets rather than by looking at the page. */
+   The `:root` line below is the only declaration of all three, and it was lost twice while this file was
+   being written. The second time is worth a warning: DO NOT WRITE A CLOSE-COMMENT SEQUENCE INSIDE THIS
+   COMMENT. CSS comments do not nest, the stripper ends the comment at the first close it meets, and the
+   text after it swallowed the `:root` rule that followed, so all three tokens resolved to nothing -- and
+   `opacity:var(--fx-pulse)` with nothing to resolve is an invalid declaration, and an invalid opacity is 1:
+   a pulse ring animating where nothing should. */
 :root{--fx-glow:0; --fx-pulse:0; --fx-scan:0}
-html[data-skin=glass]{--fx-glow:1; --fx-pulse:1}
-html[data-skin=terminal]{--fx-glow:1; --fx-pulse:1; --fx-scan:1}
-html[data-skin=prism]{--fx-glow:1; --fx-pulse:1}
-/* The four lighter-hearted themes are all still, by design: the fun on this page comes from Archie and
-   his friends, and a theme that pulsed would be a second thing moving that a reader did not ask for. So
-   no --fx-pulse and no --fx-scan for any of them. Sherbet and Aurora take the static glow, because a
-   soft halo is what an ice-cream sign and a night sky are; Riso and Blueprint are ink on paper and
-   inherit the zeroes, which is why they have no line here. */
-html[data-skin=sherbet]{--fx-glow:1}
-html[data-skin=aurora]{--fx-glow:1}
 /* The depth shadows and the poster scrim, per mode. Dark first because dark is the default and lives at
    `:root` everywhere else in this codebase. The scrim is what a poster's title sits on top of its artwork
    in, so it is doing contrast work in a sense -- but against a photograph, which no ratio can be computed
@@ -252,22 +234,20 @@ html[data-theme=light]{
 #
 # Four tokens re-declared on `.ph` rather than a rewrite of the rules that read them, which is the whole
 # point: one selector re-points `.pt`'s gradient, `.ttl`'s inherited colour, `.own`'s explicit colour and
-# anything the prototype adds inside the stage later, with no duplicated selectors and no `!important`. Per
-# theme, because each theme's stage should keep its own hue -- terminal's is green-black and prism's is
-# purple-black, and flattening all four to one grey would be a worse answer than the bug.
+# anything the prototype adds inside the stage later, with no duplicated selectors and no `!important`. Light
+# takes dark's stage, which is graphite under the artwork; high contrast keeps its own, black and white, which
+# is already a dark stage and needs no rule.
 #
 # The values are not typed in. They are read out of `docs/pages.css`, which is the file that owns them, and
 # `stage_css()` fails the build if the shape it parses stops matching. Sixteen hex values copied into a
 # second file would be correct on the day they were copied and silently wrong after the first palette edit.
+# (`sitewide.PALETTE` is where they are written, and `pages.css` is where they are published; reading the
+# published file keeps this stage honest about what a reader is actually served.)
 STAGE_TOKENS = ("--surface", "--band", "--ink", "--ink2")
 
-# `:root` is graphite; the other seven are `html[data-skin=X]`. Both forms are the *dark* declaration in
-# `pages.css` -- the light halves live behind `[data-theme=light]`, which is exactly what this block is
-# cancelling, so matching on a selector without it is what picks the right side.
-STAGE_SKINS = (("graphite", r":root\{"), ("glass", r"html\[data-skin=glass\]\{"),
-               ("terminal", r"html\[data-skin=terminal\]\{"), ("prism", r"html\[data-skin=prism\]\{"),
-               ("sherbet", r"html\[data-skin=sherbet\]\{"), ("riso", r"html\[data-skin=riso\]\{"),
-               ("blueprint", r"html\[data-skin=blueprint\]\{"), ("aurora", r"html\[data-skin=aurora\]\{"))
+# `:root` is the dark declaration in `pages.css` -- the light one is behind `[data-theme=light]`, which is
+# exactly what this block is cancelling, so matching `:root` is what picks the right side.
+STAGE_SKINS = (("dark", r":root\{"),)
 
 
 def stage_css() -> str:
@@ -290,10 +270,7 @@ def stage_css() -> str:
             hit = re.search(re.escape(token) + r"\s*:\s*(#[0-9A-Fa-f]{3,8})", block)
             assert hit, f"pages.css's dark {skin} block no longer declares {token}"
             vals[token] = hit.group(1)
-        # One attribute stronger for the three opt-in skins than for graphite, which is the same cascade
-        # ordering `pages.css` relies on for the skins themselves -- so the pair resolves skin-then-mode.
-        sel = ("html[data-theme=light] .ph" if skin == "graphite"
-               else f"html[data-skin={skin}][data-theme=light] .ph")
+        sel = "html[data-theme=light] .ph"
         # `color` as well as the four tokens, and it is not redundant. Re-declaring a token only reaches
         # rules that *read* it inside the stage; an element with no colour of its own inherits a colour that
         # was already resolved outside, where `--ink` is still the light mode's near-black. `.ttl` is exactly
@@ -369,6 +346,9 @@ header .top nav a.ghstar b{font-family:var(--num);font-variant-numeric:tabular-n
   color-mix(in srgb,var(--surface) 70%,transparent) 38%,transparent 62%);
   background:var(--scrim),url(assets/masthead-dark.webp) center bottom/cover no-repeat}
 html[data-theme=light] .mhart{background:var(--scrim),url(assets/masthead-light.webp) center bottom/cover no-repeat}
+/* High contrast draws nothing behind text, so it has no art: the masthead is its own black. The box stays
+   where it is -- it is absolutely positioned and was never part of the flow -- it just paints nothing. */
+html[data-theme=contrast] .mhart{background:none}
 @media (max-width:899px){.mhart{--scrim:linear-gradient(color-mix(in srgb,var(--surface) 72%,transparent),
   color-mix(in srgb,var(--surface) 72%,transparent))}}
 header{position:relative;z-index:2;background:transparent;border-bottom:0;
@@ -392,7 +372,7 @@ header .brandbar,header .top{position:relative;z-index:1}
 header .setwrap,header .dancewrap{z-index:2}
 @media (max-width:899px){.mhmascot{display:none}}
 /* The lit field the frosted panels frost, for the themes that declare one. Fixed rather than scrolled so
-   it does not slide out from under them, and behind everything. `none` in graphite, which costs nothing.
+   it does not slide out from under them, and behind everything. `none` in high contrast, which costs nothing.
    On `body::before` rather than `body` because the shelves need a background of their own to sit on. */
 body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-events:none;z-index:0}
 /* The scanline, for the one theme that wants to be a tube. At --fx-scan:0 this is a zero-opacity element
@@ -521,9 +501,9 @@ html{scrollbar-gutter:stable}
 # the platform pills -- and both carry a literal `backdrop-filter:blur(6px)` over a fixed
 # `rgba(8,10,18,.62)` plate. The reflex is to point them at `--bdf` so they follow the theme, and that would
 # be wrong for the same reason `--scrim` above is per mode rather than per theme: both of those elements sit
-# on top of a project's own Open Graph image, which is an arbitrary photograph. `--bdf` is `none` in
-# graphite, deliberately, and a pill that separated itself from artwork only in three themes out of four
-# would be unreadable in the fourth against whatever happened to be behind it. The plate is fixed dark
+# on top of a project's own Open Graph image, which is an arbitrary photograph. `--bdf` is `none` in every
+# theme, deliberately, and a pill that separated itself from artwork only in some themes would be unreadable
+# in the others against whatever happened to be behind it. The plate is fixed dark
 # because what it is separating from is not the page.
 #
 # An earlier draft of this file did rewrite them, under a floor that asserted at least eight such
@@ -1454,7 +1434,7 @@ def render() -> str:
     # token is set, so that line is then just the icon link, with no blank line and no byte of difference
     # from a page built before any of this was wired up.
     head = f"""<!doctype html>
-<html lang="en" data-theme="dark" data-skin="graphite">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 {FORWARD_JS}

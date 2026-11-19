@@ -85,7 +85,7 @@ const {sessionId} = await send("Target.attachToTarget", {targetId, flatten: true
 const S = (m, p) => send(m, p, sessionId);
 await S("Page.enable"); await S("Runtime.enable"); await S("Log.enable");
 await S("Emulation.setDeviceMetricsOverride", {width: 1440, height: 900, deviceScaleFactor: 1, mobile: false});
-// The recorder, in every document before the page's own scripts: every change to the theme and skin on
+// The recorder, in every document before the page's own scripts: every change to the theme on
 // <html>, with when it happened; every write to localStorage; every line in his bubble.
 await S("Page.addScriptToEvaluateOnNewDocument", {source: `(() => {
   const rec = window.__rec = {attr: [], writes: [], said: []};
@@ -97,7 +97,7 @@ await S("Page.addScriptToEvaluateOnNewDocument", {source: `(() => {
     const b = (m.target.closest ? m.target : m.target.parentElement)?.closest?.(".archie-say");
     if (b && m.type === "childList" && b.textContent && rec.said.at(-1)?.text !== b.textContent)
       rec.said.push({t: performance.now(), text: b.textContent});
-  } }).observe(document, {subtree: true, childList: true, attributes: true, attributeFilter: ["data-theme", "data-skin"]});
+  } }).observe(document, {subtree: true, childList: true, attributes: true, attributeFilter: ["data-theme"]});
 })()`});
 const ev = async expr => {
   const r = await S("Runtime.evaluate", {expression: expr, awaitPromise: true, returnByValue: true, userGesture: true});
@@ -203,18 +203,18 @@ ok("...which stopped flickering when they chose", changes(r, "data-theme", chose
    JSON.stringify(r.attr.map(a => [a.v, Math.round(a.t - choseAt)])));
 await ev(`localStorage.removeItem("theme")`);
 
-// ---- skin
-await goto("?archie=prank:skin");
-const skin0 = await ev(`document.documentElement.dataset.skin || ""`);
-ok("skin: finished with one of its excuses", await done("skin"));
+// ---- contrast: high contrast for a moment, and the reader's own theme back
+await goto("?archie=prank:contrast");
+const theme0 = await ev(`document.documentElement.dataset.theme`);
+ok("contrast: finished with one of its excuses", await done("contrast"));
 r = await rec();
-const skins = changes(r, "data-skin", setup(r, "skin")).map(a => a.v);
-ok("...Prism for a moment", skins[0] === (skin0 === "prism" ? "terminal" : "prism"), JSON.stringify(skins));
-ok("...then the reader's skin back", (await ev(`document.documentElement.dataset.skin || ""`)) === skin0 &&
-   (skins.at(-1) || "") === skin0, JSON.stringify(skins));
-ok("...with nothing saved", !r.writes.includes("atlas-skin"), JSON.stringify(r.writes));
-ok("...and not taken for the reader's Prism: no 'rave' line", saidOnly(r, "skin", setup(r, "skin") - 50),
-   JSON.stringify(r.said.map(s => s.text)));
+const cs = changes(r, "data-theme", setup(r, "contrast")).map(a => a.v);
+ok("...high contrast for a moment", cs[0] === "contrast", JSON.stringify(cs));
+ok("...then the reader's theme back", (await ev(`document.documentElement.dataset.theme`)) === theme0 &&
+   cs.at(-1) === theme0, JSON.stringify(cs));
+ok("...with nothing saved", !r.writes.includes("theme"), JSON.stringify(r.writes));
+ok("...and not remarked on as if the reader had chosen it: no 'High contrast' line",
+   saidOnly(r, "contrast", setup(r, "contrast") - 50), JSON.stringify(r.said.map(s => s.text)));
 
 // ---- tilt
 await goto("?archie=prank:tilt");
@@ -445,7 +445,7 @@ await ev(`localStorage.setItem("atlas-byte-quiet", "1")`);
 await goto("?archie=prank:lights");
 await sleep(9000);
 r = await rec();
-ok("quiet mode: no prank", !changes(r, "data-theme", 1000).length && !changes(r, "data-skin", 1000).length &&
+ok("quiet mode: no prank", !changes(r, "data-theme", 1000).length &&
    r.said.length === 0, JSON.stringify(r));
 await away(true); await sleep(4600);
 ok("...and no tab title", await ev(`document.title`) === title0);

@@ -234,15 +234,24 @@ DESCRIPTION = (f"Every agentic AI project from {b19.LISTS} awesome-lists, merged
 # `--surface`, so an installed window's chrome was one colour at launch and a different one the moment the
 # document parsed. They are now the same value and there is nothing to see.
 #
-# `SURFACE` stays the plate the icon is drawn on -- there, the darkest value is the right one, because the
+# `PLANE` is dark's `--plane` from `sitewide.PALETTE`, the same value as the page's theme-color meta.
+#
+# The icon's three colours are NOT the page's tokens any more, and that is deliberate. They are the Atlas
+# mark's own -- `PLATE`, `GLOBE` and `LIGHT` in `scripts/mark.py`, the favicon every tab shows -- because the
+# installed icon and the tab icon are the same object and should be one drawing. They used to be the page's
+# dark --surface, --bar and --ink as well, because those were the same three values; when the palette moved
+# to Archie's colours the mark stayed what it is, a near-black plate and a brass-gold globe, which is already
+# in his palette (his brass details). `tests/theme_test.py` holds the four to these sources.
+#
+# `SURFACE` is the plate the icon is drawn on -- there, the darkest value is the right one, because the
 # mark reads against a launcher's own wallpaper rather than against the page.
 SURFACE = (0x09, 0x0A, 0x0D)
-PLANE = (0x10, 0x12, 0x17)
-# `--bar`, the brand accent, at the value `19_pages.py` declares it.
+PLANE = (0x1A, 0x1A, 0x1A)
+# The globe, the mark's gold.
 BAR = (0xD6, 0xA0, 0x34)
-# The orbit ring is `--ink`, not a second accent. It sits outside the globe with a visible plate-coloured
-# gap, so each shape needs contrast against `SURFACE`; they do not share a boundary with one another.
-# `tests/theme_test.py` measures those two rendered boundaries independently.
+# The orbit ring is the mark's light, not a second accent. It sits outside the globe with a visible
+# plate-coloured gap, so each shape needs contrast against `SURFACE`; they do not share a boundary with one
+# another. `tests/theme_test.py` measures those two rendered boundaries independently.
 RING = (0xF7, 0xF8, 0xFA)
 
 CACHE_PREFIX = "atlas-shell-"
