@@ -333,7 +333,7 @@ for wf in ("daily.yml", "weekly.yml"):
         true(f"...before 20_landing in {wf}, which puts its URL in the sitemap",
              lines.index(STAGE) < lines.index("python scripts/20_landing.py"))
 landing = (SCRIPTS / "20_landing.py").read_text(encoding="utf-8")
-true("20_landing.py asks this stage for its URLs", "def local_urls()" in landing and "+ local)" in landing)
+true("20_landing.py asks this stage for its URLs", "def local_urls()" in landing and "+ local" in landing)
 sitemap = (ROOT / "docs" / "sitemap.xml").read_text(encoding="utf-8")
 url = b32.urls(b32.SITE)[0]
 true("the committed sitemap names the page", f"<loc>{url}</loc>" in sitemap)

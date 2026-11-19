@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-up="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lookalikes: find projects that do the same thing | Awesome Agentic Atlas</title>
+<meta name="description" content="Paste a GitHub or GitLab link, or type a project&#x27;s name, and see the projects that do the same thing. Ranked across every project in the Awesome Agentic Atlas, with the reason each one is similar. Works for projects the atlas doesn&#x27;t list, too.">
+<link rel="canonical" href="https://aaa.jeremyfhall.com/alike/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lookalikes: find projects that do the same thing | Awesome Agentic Atlas">
+<meta property="og:description" content="Paste a GitHub or GitLab link, or type a project&#x27;s name, and see the projects that do the same thing. Ranked across every project in the Awesome Agentic Atlas, with the reason each one is similar. Works for projects the atlas doesn&#x27;t list, too.">
+<meta property="og:url" content="https://aaa.jeremyfhall.com/alike/">
+<meta property="og:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<meta property="og:image:alt" content="The Awesome Agentic Atlas repository on GitHub.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://opengraph.githubassets.com/1/crazy54/awesome-agentic-atlas">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="theme-color" id="tc" content="#1A1A1A">
+<script>
+try {
+  var t = localStorage.getItem("theme");
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
+} catch (e) {}
+</script>
+<link rel="stylesheet" href="../pages.css">
+<style>
+.lk .wrap{max-width:980px}
+.lk [hidden]{display:none!important}
+.kick{margin:0 0 4px;color:var(--muted);font:600 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.lks{margin:26px 0 0;padding:20px;border:1px solid var(--grid);border-radius:14px;background:var(--plane)}
+.lks h2{margin:0;font-size:19px}
+.lkform label{display:block;font-weight:600;margin:0 0 6px}
+.lkrow{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.lkrow input{flex:1 1 280px;min-width:0;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--grid);border-radius:10px;padding:11px 12px;min-height:44px}
+.lkrow .cta{border:0;font:inherit;font-weight:600;min-height:44px;padding:0 18px;cursor:pointer}
+.lkrow input:focus-visible,.lkrow .cta:focus-visible,.lks a:focus-visible,.lks button:focus-visible,
+.lks select:focus-visible,.lkcheck:has(input:focus-visible),.lkdesc summary:focus-visible,
+.lks h2:focus-visible,.lks [tabindex="-1"]:focus{outline:2px solid var(--link);outline-offset:2px}
+.lkquiet{color:var(--muted);font-size:13px;margin:8px 0 0}
+.lkquiet .chip{margin:4px 4px 0 0}
+.lkdesc{margin:16px 0 0;border-top:1px solid var(--grid);padding-top:12px}
+.lkdesc summary{cursor:pointer;color:var(--link);font-weight:600;min-height:32px;padding:4px 0}
+.lkdesc .lkform{margin:8px 0 0}
+.lkstatus{margin:14px 0 0;padding:10px 14px;border:1px solid var(--grid);border-radius:10px;color:var(--ink2);
+  font-size:14.5px;background:var(--band)}
+.lkstatus[data-kind=error]{border-color:var(--accent-gold);color:var(--ink)}
+.lkstatus code{font:13px var(--mono)}
+.lklink{background:none;border:0;padding:4px 0;color:var(--link);text-decoration:underline;font:inherit;cursor:pointer}
+.lkpick{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+.lkopt{width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--grid);
+  border-radius:10px;padding:10px 12px;min-height:44px;cursor:pointer}
+.lkopt:hover{border-color:var(--link)}
+.lkopt small{color:var(--muted)}
+.lksrc h2{font-size:22px;margin:0}
+.lksrc h2 a{color:var(--ink)}
+.lknwo{color:var(--muted);font:12.5px/1.5 var(--mono);overflow-wrap:anywhere}
+.lksrc .lknwo{margin:2px 0 0}
+.lkblurb{margin:6px 0 0;color:var(--ink2);font-size:14px;max-width:75ch;overflow-wrap:anywhere}
+.lkmeta{margin:8px 0 0;font-size:12.5px;color:var(--muted)}
+.lknot{margin:12px 0 0;padding:10px 12px;border:1px dashed var(--accent-gold);border-radius:10px;color:var(--ink2);font-size:14px}
+.lkfilters{border:0;margin:18px 0 0;padding:12px 0 0;border-top:1px solid var(--grid);min-width:0;
+  display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;font-size:14px}
+.lkfilters label{font-weight:600}
+.lkfilters select{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--grid);
+  border-radius:8px;padding:6px 8px;min-height:36px;max-width:100%}
+.lkcheck{font-weight:400!important;display:inline-flex;gap:6px;align-items:center;min-height:36px}
+.lkh{margin:20px 0 10px!important;font-size:16px!important}
+.lklist{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lkcard{padding:14px 16px;border:1px solid var(--grid);border-radius:12px;background:var(--surface)}
+.lkch{display:flex;justify-content:space-between;align-items:baseline;gap:4px 12px;flex-wrap:wrap}
+.lkch h3{margin:0;font-size:16px}
+.lkwhy{margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px;font-size:12.5px}
+.lkwhy span:not(.sr){border:1px solid var(--grid);border-radius:999px;padding:2px 9px;color:var(--ink2);background:var(--band)}
+.lkwhy i{font-style:normal;color:var(--ink)}
+.lkwhy .lkwhy-alt{border-color:var(--good);color:var(--ink)}
+.lkaround{margin:22px 0 0}
+.lkeco{margin:8px 0 0;padding-left:20px;font-size:14px}
+.lkeco li{margin:4px 0}
+.lkempty{margin:16px 0 0;color:var(--ink2)}
+.lkhow p{margin:10px 0 0;color:var(--ink2);max-width:75ch;font-size:14.5px}
+.lknojs{margin:18px 0 0;padding:10px 14px;border:1px solid var(--grid);border-radius:10px}
+html:not(.lkjs) .lks{display:none}
+@media (max-width:640px){
+  .lks{padding:16px 14px;border-radius:12px}
+  .lkrow .cta{flex:1 1 100%}
+  .lkch{display:block}
+}
+@media (forced-colors:active){
+  .lks,.lkcard,.lkopt,.lkstatus,.lkwhy span:not(.sr){border:1px solid CanvasText}
+}
+@media print{.lkform,.lkdesc,.lkfilters{display:none}}
+</style>
+<script>document.documentElement.classList.add("lkjs");</script>
+<script src="https://jeremyfhall.com/kit/site-kit.v1.js" integrity="sha384-XSpQk1dubcVV4dWVZL3B8R6EsmEa4vwZ8PlVTkEmE+RY28H8OP2Y36BpTK7vCJI2" crossorigin="anonymous" data-site="atlas" defer></script>
+</head>
+<body>
+<header><div class="wrap">
+  <nav class="brandbar"><a class="brand" href="../"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="#D6A034" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="#F7F8FA" stroke="#D6A034" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="#D6A034"/><path d="M12 31h40M32 11v40" fill="none" stroke="#20242D" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="#090A0D"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="#F7F8FA"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="#090A0D" stroke-width="2.5" stroke-linecap="round"/></g></svg></span><span>Atlas</span></a></nav><div class="top">
+  <div>
+    <p class="kick">Lookalikes</p>
+    <h1>Find projects that do the same thing</h1>
+    <p class="sub">Paste a GitHub or GitLab link, or type a project&#x27;s name, and see the projects that do the same thing.</p>
+  </div>
+  <nav>
+    <a href="../discover/">Discover</a> &middot;
+    <a href="../local/">Run It Local</a> &middot;
+    <a href="../collections/">Collections</a> &middot;
+    <a href="../catalog/">Catalogue</a> &middot;
+    <a href="../repo/">All projects</a><br>
+    <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> &middot;
+    <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/HEAD/mega-list">Markdown</a><br>
+    <button class="chip" id="theme" aria-pressed="false">Light theme</button>
+  </nav>
+  </div>
+</div></header>
+<main class="lk" id="lk"><div class="wrap">
+<noscript><p class="lknojs">Lookalikes ranks the atlas in your browser, so it needs JavaScript. Without it, every
+  project&rsquo;s page lists related projects in its own category: start from <a href="../repo/">All
+  projects</a> or the <a href="../catalog/">catalogue</a>.</p></noscript>
+
+<section class="lks" aria-labelledby="lkformh">
+  <h2 id="lkformh" class="sr">Search</h2>
+  <form id="lkform" class="lkform" role="search">
+    <label for="lkq">A GitHub or GitLab link, or a project&rsquo;s name</label>
+    <div class="lkrow">
+      <input id="lkq" name="repo" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
+             placeholder="e.g. github.com/langfuse/langfuse or claude code" aria-describedby="lkhint">
+      <button class="cta" type="submit">Find lookalikes</button>
+    </div>
+    <p class="lkquiet" id="lkhint">Paste any link to the repository, or type its name. Try <a class="chip" data-ex href="?repo=langfuse/langfuse">langfuse/langfuse</a> <a class="chip" data-ex href="?repo=upstash/context7">Context7</a> <a class="chip" data-ex href="?repo=e2b-dev/E2B">github.com/e2b-dev/E2B</a> <a class="chip" data-ex href="?q=a%20vector%20database%20for%20agent%20memory">a vector database for agent memory</a></p>
+  </form>
+  <details class="lkdesc" id="lkdescribe">
+    <summary>Or describe what it does</summary>
+    <form id="lkdform" class="lkform" role="search">
+      <label for="lkdq">What should it do?</label>
+      <div class="lkrow">
+        <input id="lkdq" name="q" type="text" autocomplete="off" placeholder="e.g. tracing and evals for LLM apps">
+        <button class="cta" type="submit">Find projects</button>
+      </div>
+    </form>
+  </details>
+  <div class="lkstatus" id="lkstatus" role="status" hidden></div>
+</section>
+
+<section class="lks lkchoose" id="lkchoose" hidden></section>
+
+<section class="lks lkres" aria-label="Results">
+  <div class="lksrc" id="lksrc" hidden></div>
+  <fieldset class="lkfilters" id="lkfilters" hidden><legend class="sr">Filter the lookalikes</legend>
+    <label for="lklang">Language</label> <select id="lklang"><option value="">Any language</option></select>
+    <label for="lkstars">Stars</label> <select id="lkstars"><option value="0">Any</option><option value="10">10+</option><option value="100">100+</option><option value="1000">1,000+</option><option value="10000">10,000+</option></select>
+    <label class="lkcheck"><input type="checkbox" id="lkactive"> Active in the last 6 months</label>
+  </fieldset>
+  <div id="lkout"></div>
+  <div class="lkaround" id="lkaround" hidden></div>
+  <p class="sr" id="lklive" aria-live="polite"></p>
+</section>
+
+<section class="lks lkhow" aria-labelledby="lkhowh">
+  <h2 id="lkhowh">How lookalikes are found</h2>
+  <p>Every project in the atlas has two short fingerprints of meaning: one of its README, one of the sentence
+    describing it. A lookalike is close on both, shares the project&rsquo;s category or the harnesses it is
+    built for, and shares the less common words in its description. Projects from the same maintainer, or
+    named after it, are listed separately, because an add-on for something is not an alternative to it.</p>
+  <p>For a project the atlas doesn&rsquo;t list, your browser asks GitHub or GitLab for its description,
+    topics and README, and compares those instead. GitHub allows 60 of those lookups an hour from one
+    connection. Nothing you type is sent anywhere else.</p>
+</section>
+</div></main>
+<footer><div class="wrap">
+  <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and workbooks"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
+  Lookalikes is part of the <a href="../">Awesome Agentic Atlas</a>. Similarity is computed in
+  your browser from the atlas&rsquo;s own index.
+</div></footer>
+<script>
+
+const SEM_DIMS_MAX = 512;
+const SEM_WORD = /[a-z0-9]+|[^\sa-z0-9]/g;
+
+function semTokens(text, slot, stop) {
+  const out = [];
+  for (const word of String(text).toLowerCase().match(SEM_WORD) || []) {
+    if (stop && stop.has(word)) continue;
+    let start = 0, ok = true;
+    const pieces = [];
+    while (start < word.length) {
+      let end = word.length;
+      for (; end > start; end--) {
+        const piece = start === 0 ? word.slice(start, end) : "##" + word.slice(start, end);
+        const id = slot.get(piece);
+        if (id !== undefined) { pieces.push(id); break; }
+      }
+      if (end === start) { ok = false; break; }
+      start = end;
+    }
+    if (ok) for (const p of pieces) out.push(p);
+  }
+  return out;
+}
+
+function semEncode(sem, text) {
+  const ids = semTokens(text, sem.slot, sem.stop);
+  if (!ids.length) return null;
+  const d = sem.dims, v = new Float32Array(d);
+  for (const id of ids) {
+    const base = id * d;
+    for (let k = 0; k < d; k++) v[k] += sem.table[base + k] * sem.vs;
+  }
+  let n = 0;
+  for (let k = 0; k < d; k++) n += v[k] * v[k];
+  n = Math.sqrt(n);
+  if (!n) return null;
+  for (let k = 0; k < d; k++) v[k] /= n;
+  return v;
+}
+
+async function semDecode(files, nwos) {
+  const {meta, vocab, table, docs} = files;
+  const dims = meta.dims | 0;
+  if (!(dims > 0 && dims <= SEM_DIMS_MAX)) throw new Error("meta.dims is " + meta.dims);
+  if (meta.rows !== nwos.length)
+    throw new Error("index has " + meta.rows + " rows, data.json has " + nwos.length);
+  if (globalThis.crypto && crypto.subtle) {
+    const body = new TextEncoder().encode(nwos.join("\n"));
+    const hash = [...new Uint8Array(await crypto.subtle.digest("SHA-256", body))]
+      .map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 16);
+    if (hash !== meta.fingerprint)
+      throw new Error("data.json is " + hash + ", index was built against " + meta.fingerprint);
+  }
+  if (docs.byteLength !== meta.rows * dims) throw new Error("docs.bin is " + docs.byteLength + " B");
+  if (table.byteLength !== vocab.tokens.length * dims)
+    throw new Error("vocab.bin is " + table.byteLength + " B");
+  for (const [k, v] of [["doc_scale", meta.doc_scale], ["vocab_scale", meta.vocab_scale]])
+    if (!(typeof v === "number" && isFinite(v) && v > 0)) throw new Error("meta." + k + " is " + v);
+  return {
+    dims,
+    slot: new Map(vocab.tokens.map((t, i) => [t, i])),
+    stop: new Set(meta.stop || []),
+    table: new Int8Array(table),
+    docs: new Int8Array(docs),
+    ds: meta.doc_scale / 127,
+    vs: meta.vocab_scale / 127,
+    rows: meta.rows, near: meta.near | 0, xys: meta.xy_scale,
+  };
+}
+
+const ALIKE = (() => {
+  const W = {doc: 0.5, blurb: 0.5, cat: 0.08, targets: 0.03, terms: 0.3, stars: 0.01, alt: 0.15};
+  const VOTE = 30;
+  const SHOW = 24;
+  const ECO = 6;
+  const TERMS = 3;
+  const TERM_DF = 0.02;
+  const NAME_DF = 0.02;
+  const ACTIVE_DAYS = 183;
+  const LINKS = "(?:github profile|github|website|docs|discord|twitter|x|linkedin|demo|blog|npm|youtube|paper|" +
+    "reddit|announcement|twitter announcement|reddit announcement|web|issue tracker|huggingface)";
+  const TAIL = new RegExp("(?:\\s+" + LINKS + "\\s*\\|)+\\s*" + LINKS + "\\s*$|\\s+" + LINKS + "\\s*\\|?\\s*$", "i");
+  const LINKWORDS = new Set(["github", "website", "docs", "discord", "twitter", "linkedin", "demo", "blog", "npm",
+    "youtube", "paper", "reddit", "announcement", "profile", "huggingface"]);
+  const TERM = /[a-z0-9][a-z0-9+#-]*[a-z0-9+#]|[a-z0-9]/g;
+  const VAGUE = new Set(("various applications application large enabling enables facilitating providing provides " +
+    "rather within without treating clearest seamless seamlessly practical built around single support supports state " +
+    "execution design reference official capability capabilities features feature mode layer leveraging designed " +
+    "offering offers easy including turns full interface efficient complex cutting-edge example examples format author " +
+    "software engineering structure building implementation multiple library streaming behaviors task tasks enhancing " +
+    "relevance collaboration development powerful simple lightweight modern based ready production-ready").split(" "));
+
+  const cleanBlurb = (b) => String(b || "").replace(TAIL, "").trim();
+  const norm = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  function parseInput(raw) {
+    let s = String(raw || "").trim();
+    if (!s) return {kind: "empty"};
+    const ssh = s.match(/^git@(github\.com|gitlab\.com):(.+)$/i);
+    if (ssh) s = "https://" + ssh[1] + "/" + ssh[2];
+    const m = s.match(/^(?:(?:https?:)?\/\/)?(?:www\.)?(github\.com|gitlab\.com)(?:\/(.*))?$/i);
+    if (m) {
+      const host = m[1].toLowerCase();
+      let path = (m[2] || "").split(/[?#]/)[0];
+      let parts = path.split("/").filter(Boolean);
+      if (host === "gitlab.com") {
+        const dash = parts.indexOf("-");
+        if (dash >= 0) parts = parts.slice(0, dash);
+      } else {
+        parts = parts.slice(0, 2);
+      }
+      if (parts.length) parts[parts.length - 1] = parts[parts.length - 1].replace(/\.git$/i, "");
+      parts = parts.filter(Boolean);
+      if (parts.length < 2) return {kind: "notrepo", host, path: parts.join("/")};
+      const p = parts.join("/");
+      return {kind: "repo", host, path: p, nwo: host === "github.com" ? p : host + "/" + p};
+    }
+    const bare = s.replace(/\.git$/i, "").replace(/\/+$/, "");
+    if (/^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/.test(bare) && !/^\.+$/.test(bare.split("/")[1]))
+      return {kind: "repo", host: "github.com", path: bare, nwo: bare, bare: true};
+    return {kind: "words", text: s};
+  }
+
+  function build(d, sem) {
+    const cols = d.cols, n = d.rows.length;
+    const at = Object.fromEntries(cols.map((c, i) => [c, i]));
+    const rows = d.rows.map((a, i) => ({
+      i, name: a[at.name], nwo: a[at.nwo], cat: a[at.cat], targets: a[at.targets] || [], stars: a[at.stars] || 0,
+      blurb: a[at.blurb] || "", lang: a[at.lang] || "", pushed: a[at.pushed] || "", url: a[at.url] || "",
+    }));
+    const stop = sem ? sem.stop : new Set();
+    const by = new Map(rows.map((r) => [r.nwo.toLowerCase(), r.i]));
+    const terms = rows.map((r) => termsOf(r.name + " " + cleanBlurb(r.blurb), stop));
+    const df = new Map();
+    for (const t of terms) for (const w of t) df.set(w, (df.get(w) || 0) + 1);
+    const wt = new Map();
+    for (const [w, c] of df) wt.set(w, Math.sqrt(Math.log(n / (1 + c))));
+    const lstars = new Float32Array(n);
+    rows.forEach((r, i) => { lstars[i] = Math.log10(r.stars + 1); });
+    const names = rows.map((r) => {
+      const repo = r.nwo.split("/").pop();
+      return {name: norm(r.name), repo: norm(repo), nwo: norm(r.nwo), owner: ownerOf(r.nwo)};
+    });
+    const ix = {d, sem, n, rows, by, terms, df, wt, lstars, names, stop,
+                cats: d.cats.map((c) => c.name), targets: d.targets.map((t) => t.name)};
+    if (sem) {
+      const dims = sem.dims;
+      ix.dims = dims;
+      const U = new Float32Array(n * dims);
+      for (let i = 0; i < n; i++) {
+        let s = 0;
+        for (let k = 0; k < dims; k++) { const v = sem.docs[i * dims + k]; s += v * v; }
+        const inv = s ? 1 / Math.sqrt(s) : 0;
+        for (let k = 0; k < dims; k++) U[i * dims + k] = sem.docs[i * dims + k] * inv;
+      }
+      const B = new Float32Array(n * dims);
+      rows.forEach((r, i) => {
+        const v = semEncode(sem, r.name + " " + cleanBlurb(r.blurb));
+        if (v) B.set(v, i * dims);
+      });
+      ix.U = U; ix.B = B;
+    }
+    return ix;
+  }
+
+  function ownerOf(nwo) {
+    const parts = String(nwo).toLowerCase().split("/");
+    return parts[0].includes(".") ? parts[0] + "/" + parts[1] : parts[0];
+  }
+
+  function termsOf(text, stop) {
+    const out = new Set();
+    for (const w of String(text).toLowerCase().match(TERM) || []) {
+      if (w.length < 3 || /^\d+$/.test(w) || stop.has(w) || LINKWORDS.has(w)) continue;
+      out.add(w);
+    }
+    return out;
+  }
+
+  function resolve(ix, raw) {
+    const p = parseInput(raw);
+    if (p.kind === "empty" || p.kind === "notrepo") return p;
+    if (p.kind === "repo") {
+      const i = ix.by.get(p.nwo.toLowerCase());
+      if (i !== undefined) return {kind: "hit", i, input: p};
+      return {kind: "external", host: p.host, path: p.path, nwo: p.nwo, bare: !!p.bare};
+    }
+    const q = norm(p.text);
+    if (!q) return {kind: "words", text: p.text};
+    const toks = q.split(" ");
+    const exact = [], prefix = [], loose = [];
+    for (let i = 0; i < ix.n; i++) {
+      const nm = ix.names[i];
+      if (nm.name === q || nm.repo === q || nm.nwo === q) exact.push(i);
+      else if (nm.name.startsWith(q + " ") || nm.repo.startsWith(q + " ") || nm.name.startsWith(q) && q.length >= 4)
+        prefix.push(i);
+      else if (toks.length > 1 && toks.every((t) => (" " + nm.name + " " + nm.nwo + " ").includes(" " + t)))
+        loose.push(i);
+    }
+    const byStars = (a, b) => ix.rows[b].stars - ix.rows[a].stars;
+    exact.sort(byStars); prefix.sort(byStars); loose.sort(byStars);
+    if (exact.length === 1 || (exact.length > 1 && ix.rows[exact[0]].stars >= 10 * Math.max(1, ix.rows[exact[1]].stars)))
+      return {kind: "hit", i: exact[0], input: p, also: exact.slice(1, 4)};
+    const choices = [...exact, ...prefix, ...loose].slice(0, 6);
+    if (choices.length) return {kind: "choose", choices, text: p.text};
+    return {kind: "words", text: p.text};
+  }
+
+  function sourceRow(ix, i) {
+    const r = ix.rows[i];
+    const src = {kind: "row", i, cat: r.cat, targets: new Set(r.targets), terms: ix.terms[i], label: r.name,
+                 owner: ix.names[i].owner, names: nameKeys(ix, [r.name, r.nwo.split("/").pop()])};
+    if (ix.sem) {
+      src.doc = ix.U.subarray(i * ix.dims, (i + 1) * ix.dims);
+      src.blurb = ix.B.subarray(i * ix.dims, (i + 1) * ix.dims);
+    }
+    src.altRe = altRe(src.names);
+    return src;
+  }
+
+  function sourceRepo(ix, info) {
+    const topics = (info.topics || []).join(" ");
+    const blurbText = info.name + " " + cleanBlurb(info.description) + " " + topics.replace(/-/g, " ");
+    const src = {kind: "external", i: -1, cat: null, targets: new Set(), label: info.name,
+                 terms: termsOf(blurbText, ix.stop), owner: ownerOf(info.nwo),
+                 names: nameKeys(ix, [info.name, info.nwo.split("/").pop()])};
+    if (ix.sem) {
+      src.blurb = semEncode(ix.sem, blurbText);
+      const body = info.readme ? readmeText(info.readme) : "";
+      src.doc = body ? semEncode(ix.sem, info.name + " " + (info.language || "") + " " + blurbText + " " + body) : src.blurb;
+    }
+    src.altRe = altRe(src.names);
+    return src;
+  }
+
+  function sourceText(ix, text) {
+    const src = {kind: "text", i: -1, cat: null, targets: new Set(), terms: termsOf(text, ix.stop), label: text,
+                 owner: null, names: [], altRe: null};
+    if (ix.sem) src.doc = src.blurb = semEncode(ix.sem, text);
+    return src;
+  }
+
+  function readmeText(md) {
+    return String(md).replace(/```[\s\S]*?```/g, " ").replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1")
+      .replace(/<[^>]+>/g, " ").replace(/[#>*_`|\-]+/g, " ").replace(/\s+/g, " ").slice(0, 2000);
+  }
+
+  function nameKeys(ix, list) {
+    const out = new Set();
+    for (const raw of list) {
+      const k = norm(raw);
+      if (k.length < 3) continue;
+      if (!k.includes(" ") && (ix.df.get(k) || 0) > ix.n * NAME_DF) continue;
+      out.add(k);
+    }
+    return [...out];
+  }
+
+  function altRe(names) {
+    if (!names.length) return null;
+    const alt = names.map((k) => escRe(k).replace(/ /g, "[\\s._-]+")).join("|");
+    return new RegExp("(?:alternative|replacement|substitute|clone)s?\\s+(?:to|for|of)\\s+(?:the\\s+)?(?:" + alt +
+      ")(?![a-z0-9])|(?:^|[^a-z0-9])(?:" + alt + ")[\\s-]+(?:alternative|clone|replacement)", "i");
+  }
+
+  function isEco(ix, src, j) {
+    if (src.kind === "text") return false;
+    const nm = ix.names[j];
+    if (src.owner && nm.owner === src.owner) return true;
+    for (const k of src.names) {
+      const hay = " " + nm.name + " " + nm.repo + " ";
+      if (hay.includes(" " + k + " ")) return true;
+    }
+    return false;
+  }
+
+  function rank(ix, src) {
+    const n = ix.n, s = new Float32Array(n), dims = ix.dims;
+    const useVec = !!(ix.sem && src.doc && src.blurb);
+    let tot = 0;
+    for (const w of src.terms) tot += ix.wt.get(w) || 0;
+    tot = tot || 1;
+    for (let j = 0; j < n; j++) {
+      let v = 0;
+      if (useVec) {
+        let a = 0, b = 0;
+        const base = j * dims;
+        for (let k = 0; k < dims; k++) { a += src.doc[k] * ix.U[base + k]; b += src.blurb[k] * ix.B[base + k]; }
+        v = W.doc * a + W.blurb * b;
+      }
+      let lex = 0;
+      const tj = ix.terms[j];
+      for (const w of src.terms) if (tj.has(w)) lex += ix.wt.get(w) || 0;
+      v += W.terms * lex / tot + W.stars * ix.lstars[j];
+      if (src.targets.size) {
+        const tg = ix.rows[j].targets;
+        let inter = 0;
+        for (const t of tg) if (src.targets.has(t)) inter++;
+        const uni = src.targets.size + tg.length - inter;
+        if (uni) v += W.targets * inter / uni;
+      }
+      s[j] = v;
+    }
+    if (src.i >= 0) s[src.i] = -Infinity;
+    const pref = new Float32Array(ix.cats.length);
+    if (src.cat !== null && src.cat !== undefined) pref[src.cat] = 1;
+    else {
+      const top = topK(s, VOTE);
+      for (const j of top) pref[ix.rows[j].cat] += 1 / top.length;
+    }
+    for (let j = 0; j < n; j++) s[j] += W.cat * pref[ix.rows[j].cat];
+    const alt = new Uint8Array(n), eco = new Uint8Array(n);
+    for (let j = 0; j < n; j++) {
+      if (j === src.i) continue;
+      if (src.altRe && src.altRe.test(ix.rows[j].blurb)) { alt[j] = 1; s[j] += W.alt; }
+      else if (isEco(ix, src, j)) eco[j] = 1;
+    }
+    const order = [...Array(n).keys()].filter((j) => j !== src.i && isFinite(s[j]))
+      .sort((a, b) => s[b] - s[a] || a - b);
+    const main = order.filter((j) => !eco[j]), around = order.filter((j) => eco[j]);
+    let lead = 0;
+    for (let c = 1; c < pref.length; c++) if (pref[c] > pref[lead]) lead = c;
+    return {score: s, main, around, alt, pref, lead, vectors: useVec};
+  }
+
+  function topK(s, k) {
+    const idx = [...Array(s.length).keys()].filter((j) => isFinite(s[j]));
+    idx.sort((a, b) => s[b] - s[a]);
+    return idx.slice(0, k);
+  }
+
+  function filter(ix, order, f, now) {
+    const since = now - ACTIVE_DAYS * 86400000;
+    return order.filter((j) => {
+      const r = ix.rows[j];
+      if (f.lang && r.lang !== f.lang) return false;
+      if (f.stars && r.stars < f.stars) return false;
+      if (f.active && !(r.pushed && Date.parse(r.pushed) >= since)) return false;
+      return true;
+    });
+  }
+
+  function why(ix, src, res, j) {
+    const r = ix.rows[j], out = {cat: null, targets: [], terms: [], alt: !!res.alt[j]};
+    const want = src.cat !== null && src.cat !== undefined ? src.cat : res.lead;
+    if (r.cat === want) out.cat = ix.cats[r.cat];
+    for (const t of r.targets) if (src.targets.has(t)) out.targets.push(ix.targets[t]);
+    const shared = [];
+    for (const w of src.terms) {
+      if (ix.terms[j].has(w) && !VAGUE.has(w) && (ix.df.get(w) || 0) <= ix.n * TERM_DF) shared.push(w);
+    }
+    shared.sort((a, b) => (ix.wt.get(b) || 0) - (ix.wt.get(a) || 0) || (a < b ? -1 : 1));
+    out.terms = shared.slice(0, TERMS);
+    return out;
+  }
+
+  function languages(ix, order) {
+    const c = new Map();
+    for (const j of order.slice(0, 100)) { const l = ix.rows[j].lang; if (l) c.set(l, (c.get(l) || 0) + 1); }
+    return [...c].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1)).map(([l]) => l);
+  }
+
+  function apiURL(host, path) {
+    return host === "gitlab.com"
+      ? "https://gitlab.com/api/v4/projects/" + encodeURIComponent(path)
+      : "https://api.github.com/repos/" + path.split("/").map(encodeURIComponent).join("/");
+  }
+  function readmeURL(host, info) {
+    return host === "gitlab.com"
+      ? "https://gitlab.com/api/v4/projects/" + encodeURIComponent(info.path) + "/repository/files/README.md/raw?ref=" +
+        encodeURIComponent(info.branch || "HEAD")
+      : "https://raw.githubusercontent.com/" + info.path + "/" + encodeURIComponent(info.branch || "HEAD") + "/README.md";
+  }
+  function fromAPI(host, j) {
+    if (host === "gitlab.com") {
+      const path = j.path_with_namespace;
+      return {host, path, nwo: "gitlab.com/" + path, name: j.name || path.split("/").pop(), description: j.description || "",
+              topics: j.topics || j.tag_list || [], language: "", stars: j.star_count || 0, pushed: (j.last_activity_at || "").slice(0, 10),
+              url: j.web_url, branch: j.default_branch, archived: !!j.archived};
+    }
+    return {host, path: j.full_name, nwo: j.full_name, name: j.name, description: j.description || "", topics: j.topics || [],
+            language: j.language || "", stars: j.stargazers_count || 0, pushed: (j.pushed_at || "").slice(0, 10),
+            url: j.html_url, branch: j.default_branch, archived: !!j.archived, fork: !!j.fork};
+  }
+  function failure(host, status, headers) {
+    const get = (k) => (headers && headers.get ? headers.get(k) : null);
+    if (status === 404) return {kind: "missing"};
+    if (status === 429 || (status === 403 && (get("x-ratelimit-remaining") === "0" || get("ratelimit-remaining") === "0" || host === "github.com"))) {
+      const reset = Number(get("x-ratelimit-reset") || get("ratelimit-reset")) || 0;
+      return {kind: "limited", reset: reset ? reset * 1000 : 0};
+    }
+    if (status === 401 || status === 403) return {kind: "private"};
+    return {kind: "error", status};
+  }
+
+  function readQuery(search) {
+    const p = new URLSearchParams(search || "");
+    const repo = (p.get("repo") || "").trim(), q = (p.get("q") || "").trim();
+    return repo ? {repo} : q ? {q} : {};
+  }
+  function writeQuery(state) {
+    return state.repo ? "?repo=" + encodeURIComponent(state.repo).replace(/%2F/gi, "/")
+      : state.q ? "?q=" + encodeURIComponent(state.q) : "";
+  }
+
+  const DEVICE_NAMES = ["con", "prn", "aux", "nul", "clock$", ...[1, 2, 3, 4, 5, 6, 7, 8, 9].flatMap((i) => ["com" + i, "lpt" + i])];
+  const segment = (s) => {
+    if (s.startsWith(".")) s = "dot-" + s.slice(1);
+    if (s.endsWith(".")) s = s.slice(0, -1) + "-dot";
+    if (DEVICE_NAMES.includes(s.split(".")[0])) s = "dev-" + s;
+    return s;
+  };
+  const detailPath = (nwo) => "repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
+
+  return {W, SHOW, ECO, ACTIVE_DAYS, parseInput, build, resolve, sourceRow, sourceRepo, sourceText, rank, filter, why,
+          languages, cleanBlurb, readmeText, apiURL, readmeURL, fromAPI, failure, readQuery, writeQuery, detailPath,
+          norm, termsOf, isEco};
+})();
+
+if (typeof document !== "undefined" && document.getElementById("lk")) (() => {
+  const $ = (id) => document.getElementById(id);
+  const UP = document.documentElement.dataset.up || "../";
+  const esc = (s) => String(s === null || s === undefined ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
+  const commas = (n) => Number(n || 0).toLocaleString("en-US");
+  const form = $("lkform"), box = $("lkq"), out = $("lkout"), live = $("lklive"), status = $("lkstatus");
+  const choose = $("lkchoose"), src = $("lksrc"), filters = $("lkfilters"), around = $("lkaround");
+  const describe = $("lkdescribe"), dbox = $("lkdq"), dform = $("lkdform");
+  let IX = null, CUR = null, RES = null;
+
+  let lastSaid = "";
+  const say = (t) => { live.textContent = t === lastSaid ? t + " " : t; lastSaid = live.textContent; };
+  const note = (html, kind) => {
+    status.hidden = !html;
+    status.innerHTML = html || "";
+    status.dataset.kind = kind || "";
+    status.setAttribute("role", kind === "error" ? "alert" : "status");
+  };
+
+  const grab = async (path, how) => {
+    const res = await fetch(UP + path);
+    if (!res.ok) throw new Error(path + " -> " + res.status);
+    return how === "json" ? res.json() : res.arrayBuffer();
+  };
+  let semNote = "";
+  const READY = (async () => {
+    const d = await grab("data.json", "json");
+    let sem = null;
+    try {
+      const [meta, vocab, table, docs] = await Promise.all([grab("search/meta.json", "json"),
+        grab("search/vocab.json", "json"), grab("search/vocab.bin", "buf"), grab("search/docs.bin", "buf")]);
+      sem = await semDecode({meta, vocab, table, docs}, d.rows.map((r) => r[d.cols.indexOf("nwo")]));
+    } catch (err) {
+      console.warn("lookalikes: similarity index unavailable:", err.message);
+      semNote = "The similarity index is out of step with today&rsquo;s data, so these are ranked by shared words and " +
+        "category only, which is rougher. It fixes itself at the next rebuild.";
+    }
+    IX = ALIKE.build(d, sem);
+    document.documentElement.classList.add("lkready");
+    return IX;
+  })();
+  READY.catch((err) => {
+    note("The atlas didn&rsquo;t load (" + esc(err.message) + "). Check your connection and reload the page.", "error");
+  });
+
+  function go(state, push) {
+    const qs = ALIKE.writeQuery(state);
+    if (push && location.search !== qs) history.pushState(state, "", location.pathname + qs);
+    else history.replaceState(state, "", location.pathname + qs);
+  }
+
+  async function run(state, how) {
+    if (!state.repo && !state.q) { clear(); return; }
+    note("Loading the atlas&hellip;", "busy");
+    let ix;
+    try { ix = await READY; } catch { return; }
+    note("");
+    if (state.q) { box.value = box.value || ""; dbox.value = state.q; return showText(ix, state.q, how); }
+    box.value = state.repo;
+    const r = ALIKE.resolve(ix, state.repo);
+    if (r.kind === "hit") return showRow(ix, r.i, how);
+    if (r.kind === "external") return lookUp(ix, r, how);
+    return submit(state.repo, how);
+  }
+
+  function clear() {
+    CUR = RES = null;
+    out.innerHTML = ""; src.innerHTML = ""; around.innerHTML = ""; choose.innerHTML = "";
+    src.hidden = filters.hidden = around.hidden = choose.hidden = true;
+    note("");
+  }
+
+  async function submit(text, how) {
+    let ix;
+    note("Loading the atlas&hellip;", "busy");
+    try { ix = await READY; } catch { return; }
+    note("");
+    const r = ALIKE.resolve(ix, text);
+    choose.hidden = true; choose.innerHTML = "";
+    if (r.kind === "empty") { note("Paste a GitHub or GitLab link, or type a project&rsquo;s name.", "error"); box.focus(); return; }
+    if (r.kind === "notrepo")
+      return fail("That&rsquo;s a link to " + esc(r.host + (r.path ? "/" + r.path : "")) + ", not to one repository. " +
+        "Paste a link to the project itself, like <code>" + esc(r.host) + "/owner/project</code>.", true);
+    if (r.kind === "hit") { go({repo: ix.rows[r.i].nwo}, how !== "load"); return showRow(ix, r.i, how); }
+    if (r.kind === "external") { go({repo: r.nwo}, how !== "load"); return lookUp(ix, r, how); }
+    if (r.kind === "choose") return offer(ix, r);
+    go({q: r.text}, how !== "load");
+    return showText(ix, r.text, how);
+  }
+
+  function offer(ix, r) {
+    clear();
+    choose.hidden = false;
+    choose.innerHTML = '<h2 id="lkchooseh" tabindex="-1">Which one did you mean?</h2><ul class="lkpick">' +
+      r.choices.map((i) => {
+        const row = ix.rows[i];
+        return '<li><button type="button" class="lkopt" data-nwo="' + esc(row.nwo) + '"><b>' + esc(row.name) + "</b> " +
+          '<span class="lknwo">' + esc(row.nwo) + "</span> <small>" + commas(row.stars) + " stars</small></button></li>";
+      }).join("") + "</ul>" +
+      '<p class="lkquiet"><button type="button" class="lklink" id="lkasq">Or find projects that do &ldquo;' + esc(r.text) +
+      "&rdquo;</button></p>";
+    say(r.choices.length + (r.choices.length === 1 ? " project matches" : " projects match") + " “" + r.text + "”. Choose one.");
+    $("lkchooseh").focus();
+  }
+
+  choose.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    if (b.id === "lkasq") { const t = box.value.trim(); go({q: t}, true); showText(IX, t, "user"); return; }
+    if (b.dataset.nwo) { box.value = b.dataset.nwo; go({repo: b.dataset.nwo}, true); showRow(IX, IX.by.get(b.dataset.nwo.toLowerCase()), "user"); }
+  });
+
+  async function lookUp(ix, r, how) {
+    clear();
+    const forge = r.host === "gitlab.com" ? "GitLab" : "GitHub";
+    note("Asking " + forge + " about " + esc(r.path) + "&hellip;", "busy");
+    let res;
+    try {
+      res = await fetch(ALIKE.apiURL(r.host, r.path), {headers: {Accept: "application/json"}});
+    } catch {
+      return fail(navigator.onLine === false
+        ? "You&rsquo;re offline, so we can&rsquo;t ask " + forge + " about a project that isn&rsquo;t in the atlas. " +
+          "Projects in the atlas still work offline once you&rsquo;ve opened this page."
+        : "We couldn&rsquo;t reach " + forge + " to look up " + esc(r.path) + ". It may be down, or blocked on this network.", true);
+    }
+    if (!res.ok) {
+      const f = ALIKE.failure(r.host, res.status, res.headers);
+      if (f.kind === "missing" && r.bare) {
+        go({q: r.path}, false);
+        return showText(ix, r.path, how);
+      }
+      if (f.kind === "missing" || f.kind === "private")
+        return fail(forge + " has no public repository at <b>" + esc(r.path) + "</b>. Check the link, or describe what it does.", true);
+      if (f.kind === "limited") {
+        const when = f.reset ? " It resets at " + new Date(f.reset).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"}) + "." : "";
+        return fail(forge + " only answers 60 anonymous lookups an hour from one connection, and this one has used them." + when +
+          " Projects in the atlas don&rsquo;t need a lookup, and describing what it does works now.", true);
+      }
+      return fail(forge + " answered " + esc(f.status) + " for " + esc(r.path) + ". Try again in a minute, or describe what it does.", true);
+    }
+    const info = ALIKE.fromAPI(r.host, await res.json());
+    const known = ix.by.get(info.nwo.toLowerCase());
+    if (known !== undefined) { go({repo: ix.rows[known].nwo}, false); return showRow(ix, known, how); }
+    try {
+      const rd = await fetch(ALIKE.readmeURL(r.host, info));
+      if (rd.ok) info.readme = (await rd.text()).slice(0, 20000);
+    } catch {   }
+    note("");
+    const s = ALIKE.sourceRepo(ix, info);
+    CUR = {src: s, info, title: info.name};
+    paintSource(ix, s, info);
+    results(ix, how);
+  }
+
+  function fail(html, offerDescribe) {
+    clear();
+    note(html + (offerDescribe ? ' <button type="button" class="lklink" id="lktodesc">Describe what it does instead</button>' : ""), "error");
+    say(status.textContent);
+    const b = $("lktodesc");
+    if (b) b.addEventListener("click", () => { describe.open = true; dbox.focus(); });
+  }
+
+  function showRow(ix, i, how) {
+    clear();
+    const s = ALIKE.sourceRow(ix, i), r = ix.rows[i];
+    CUR = {src: s, row: r, title: r.name};
+    paintSource(ix, s, null, r);
+    results(ix, how);
+  }
+
+  function showText(ix, text, how) {
+    clear();
+    const s = ALIKE.sourceText(ix, text);
+    if (!s.terms.size && !s.doc) {
+      return fail("There&rsquo;s nothing in &ldquo;" + esc(text) + "&rdquo; to search by. Try a few words about what the project does, " +
+        "like &ldquo;tracing for LLM apps&rdquo;.", false);
+    }
+    CUR = {src: s, text, title: "“" + text + "”"};
+    src.hidden = false;
+    src.innerHTML = '<p class="kick">Projects that do</p><h2 id="lksrch">&ldquo;' + esc(text) + "&rdquo;</h2>";
+    results(ix, how);
+  }
+
+  function paintSource(ix, s, info, row) {
+    src.hidden = false;
+    if (row) {
+      src.innerHTML = '<p class="kick">Lookalikes of</p><h2 id="lksrch"><a href="' + esc(UP + ALIKE.detailPath(row.nwo)) + '">' +
+        esc(row.name) + '</a></h2><p class="lknwo">' + esc(row.nwo) + "</p>" +
+        (row.blurb ? '<p class="lkblurb">' + esc(ALIKE.cleanBlurb(row.blurb)) + "</p>" : "") +
+        '<p class="lkmeta">' + esc(ix.cats[row.cat]) + (row.lang ? " &middot; " + esc(row.lang) : "") + " &middot; " +
+        commas(row.stars) + " stars</p>";
+    } else {
+      const forge = info.host === "gitlab.com" ? "GitLab" : "GitHub";
+      src.innerHTML = '<p class="kick">Lookalikes of</p><h2 id="lksrch"><a href="' + esc(info.url) + '">' + esc(info.name) +
+        '</a></h2><p class="lknwo">' + esc(info.path) + " on " + forge + "</p>" +
+        (info.description ? '<p class="lkblurb">' + esc(info.description) + "</p>" : "") +
+        '<p class="lknot" role="note"><b>This project isn&rsquo;t in the atlas.</b> We read its description' +
+        (info.topics.length ? ", topics" : "") + (info.readme ? " and README" : "") + " from " + forge +
+        " and compared that with every project we list.</p>";
+    }
+  }
+
+  function results(ix, how) {
+    RES = ALIKE.rank(ix, CUR.src);
+    const sel = $("lklang"), keep = sel.value;
+    const langs = ALIKE.languages(ix, RES.main);
+    sel.innerHTML = '<option value="">Any language</option>' + langs.map((l) => '<option>' + esc(l) + "</option>").join("");
+    sel.value = langs.includes(keep) ? keep : "";
+    filters.hidden = false;
+    paint(ix, how);
+  }
+
+  function current() {
+    return {lang: $("lklang").value, stars: Number($("lkstars").value) || 0, active: $("lkactive").checked};
+  }
+
+  function paint(ix, how) {
+    const f = current();
+    const list = ALIKE.filter(ix, RES.main, f, Date.now()).slice(0, ALIKE.SHOW);
+    const any = f.lang || f.stars || f.active;
+    if (!list.length) {
+      out.innerHTML = '<p class="lkempty">Nothing matches those filters. <button type="button" class="lklink" id="lkreset">Clear the filters</button></p>';
+      $("lkreset").addEventListener("click", () => { $("lklang").value = ""; $("lkstars").value = "0"; $("lkactive").checked = false; paint(ix, "user"); });
+    } else {
+      out.innerHTML = '<h2 class="lkh" id="lkresh" tabindex="-1">' + list.length + (list.length === 1 ? " lookalike" : " lookalikes") +
+        (any ? ", filtered" : "") + "</h2>" +
+        '<ol class="lklist">' + list.map((j) => card(ix, j)).join("") + "</ol>" +
+        (RES.vectors ? "" : '<p class="lkquiet">' + semNote + "</p>");
+    }
+    const eco = CUR.src.kind === "text" ? [] : RES.around.slice(0, ALIKE.ECO);
+    around.hidden = !eco.length;
+    around.innerHTML = eco.length ? '<h2 class="lkh">Built on or around ' + esc(CUR.title) + "</h2>" +
+      '<p class="lkquiet">From the same maintainer, or named after it: add-ons, ports and integrations rather than alternatives.</p>' +
+      '<ul class="lkeco">' + eco.map((j) => {
+        const r = ix.rows[j];
+        return '<li><a href="' + esc(UP + ALIKE.detailPath(r.nwo)) + '">' + esc(r.name) + '</a> <span class="lknwo">' + esc(r.nwo) + "</span></li>";
+      }).join("") + "</ul>" : "";
+    const top = list.slice(0, 3).map((j) => ix.rows[j].name).join(", ");
+    say(list.length ? list.length + " lookalikes of " + CUR.title + (any ? ", filtered" : "") + ". First: " + top + "."
+      : "No lookalikes match those filters.");
+    if (how === "user" && list.length) $("lkresh").focus({preventScroll: false});
+  }
+
+  function card(ix, j) {
+    const r = ix.rows[j], w = ALIKE.why(ix, CUR.src, RES, j);
+    const reasons = [];
+    if (w.alt) reasons.push('<span class="lkwhy-alt">Calls itself an alternative</span>');
+    if (w.cat) reasons.push("<span>Also in " + esc(w.cat) + "</span>");
+    if (w.targets.length) reasons.push("<span>Both for " + esc(w.targets.join(", ")) + "</span>");
+    if (w.terms.length) reasons.push("<span>Shared: " + w.terms.map((t) => "<i>" + esc(t) + "</i>").join(", ") + "</span>");
+    const days = r.pushed ? Math.floor((Date.now() - Date.parse(r.pushed)) / 86400000) : null;
+    const age = days === null ? "" : days < 1 ? "pushed today" : days < 60 ? "pushed " + days + " days ago"
+      : days < 730 ? "pushed " + Math.round(days / 30) + " months ago" : "pushed " + Math.round(days / 365) + " years ago";
+    const host = r.nwo.split("/")[0].includes(".") ? "GitLab" : "GitHub";
+    return '<li class="lkcard"><div class="lkch"><h3><a href="' + esc(UP + ALIKE.detailPath(r.nwo)) + '">' + esc(r.name) + "</a></h3>" +
+      '<span class="lknwo">' + esc(r.nwo) + "</span></div>" +
+      (r.blurb ? '<p class="lkblurb">' + esc(ALIKE.cleanBlurb(r.blurb)) + "</p>" : "") +
+      (reasons.length ? '<p class="lkwhy"><span class="sr">Why it&rsquo;s here: </span>' + reasons.join("") + "</p>" : "") +
+      '<p class="lkmeta">' + commas(r.stars) + " stars" + (r.lang ? " &middot; " + esc(r.lang) : "") + (age ? " &middot; " + age : "") +
+      ' &middot; <a href="?repo=' + esc(encodeURIComponent(r.nwo).replace(/%2F/gi, "/")) + '" data-nwo="' + esc(r.nwo) +
+      '">Its lookalikes</a> &middot; <a href="' + esc(r.url) + '">' + host + ' <span aria-hidden="true">&nearr;</span></a></p></li>';
+  }
+
+  form.addEventListener("submit", (e) => { e.preventDefault(); submit(box.value, "user"); });
+  dform.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const t = dbox.value.trim();
+    if (!t) { dbox.focus(); return; }
+    go({q: t}, true);
+    READY.then((ix) => showText(ix, t, "user"));
+  });
+  for (const id of ["lklang", "lkstars", "lkactive"]) $(id).addEventListener("change", () => { if (RES) paint(IX, "filter"); });
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a[data-nwo], a[data-ex]");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+    e.preventDefault();
+    const st = ALIKE.readQuery(a.getAttribute("href"));
+    go(st, true);
+    if (st.repo) box.value = st.repo;
+    run(st, "user");
+    window.scrollTo({top: 0});
+  });
+  window.addEventListener("popstate", () => run(ALIKE.readQuery(location.search), "load"));
+  run(ALIKE.readQuery(location.search), "load");
+  window.LOOKALIKES = {ready: READY, get ix() { return IX; }, get res() { return RES; }, get cur() { return CUR; }};
+})();
+</script>
+<script type="module" src="../assets/atlas-site.js?v=a4837d4f4b"></script><script>
+function atlasTheme() {
+  if (atlasTheme.api) return atlasTheme.api;
+  var root = document.documentElement;
+  var stored = function () { try { return localStorage.getItem("theme"); } catch (e) { return null; } };
+  var valid = function (t) { return t === "light" || t === "dark" || t === "contrast"; };
+  var system = function () {
+    try {
+      return matchMedia("(prefers-contrast: more)").matches ? "contrast"
+        : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    } catch (e) { return "dark"; }
+  };
+  var apply = function () {
+    var t = stored();
+    root.dataset.theme = valid(t) ? t : system();
+    delete root.dataset.skin;
+    var plane = getComputedStyle(root).getPropertyValue("--plane").trim(), tc = document.getElementById("tc");
+    if (plane && tc) tc.content = plane;
+  };
+  var api = {
+    choice: function () { var t = stored(); return valid(t) ? t : "system"; },
+    refresh: apply,
+    set: function (c) {
+      try { if (c === "system") localStorage.removeItem("theme"); else localStorage.setItem("theme", c); } catch (e) {}
+      apply();
+    },
+    follow: function (f) {
+      var on = function () { if (api.choice() === "system") { apply(); if (f) f(); } };
+      try {
+        matchMedia("(prefers-color-scheme: light)").addEventListener("change", on);
+        matchMedia("(prefers-contrast: more)").addEventListener("change", on);
+      } catch (e) {}
+    }
+  };
+  apply();
+  return (atlasTheme.api = api);
+}
+atlasTheme();
+(function () {
+  var btn = document.getElementById("theme");
+  if (!btn) return;
+  var label = function () {
+    var light = document.documentElement.dataset.theme === "light";
+    btn.textContent = light ? "Dark theme" : "Light theme";
+    btn.setAttribute("aria-pressed", light ? "true" : "false");
+  };
+  btn.onclick = function () {
+    atlasTheme().set(document.documentElement.dataset.theme === "light" ? "dark" : "light");
+    label();
+  };
+  label();
+  atlasTheme().follow(label);
+})();
+</script>
+<script>(function(){try{var u=sessionStorage.getItem("archie-src");if(u&&new URL(u).origin===location.origin&&localStorage.getItem("atlas-byte-quiet")!=="1"){var s=document.createElement("script");s.type="module";s.src=u;document.head.appendChild(s)}}catch(e){}})()</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><script defer src="../assets/traceway-1.2.1.js"></script><script defer src="../assets/web-vitals-6.2.3.js"></script><script defer src="../assets/traceway-loader.js"></script>
+</body>
+</html>

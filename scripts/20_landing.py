@@ -863,6 +863,7 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
   <nav>
     <a href="{page.rel('discover/')}">Discover</a> ·
     <a href="{page.rel(sitewide.LOCAL_PAGE['slug'] + '/')}">{esc(sitewide.LOCAL_PAGE['title'])}</a> ·
+    <a href="{page.rel(sitewide.ALIKE_PAGE['slug'] + '/')}">{esc(sitewide.ALIKE_PAGE['title'])}</a> ·
     <a href="{page.rel('collections/')}">Collections</a> ·
     <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="{page.rel('repo/')}">All projects</a> ·
@@ -966,6 +967,18 @@ def local_urls() -> list[str]:
     sys.modules["b32"] = b32
     lspec.loader.exec_module(b32)
     return b32.urls(SITE)
+
+
+def alike_urls() -> list[str]:
+    """The one URL `33_alike.py` publishes -- Lookalikes -- asked of that stage for the reason above, and in the
+    same way as `local_urls`: passed the site root, with the slug read from `sitewide.ALIKE_PAGE` there.
+    """
+    sys.modules.setdefault("b20", sys.modules[__name__])
+    aspec = importlib.util.spec_from_file_location("b33", HERE / "33_alike.py")
+    b33 = importlib.util.module_from_spec(aspec)
+    sys.modules["b33"] = b33
+    aspec.loader.exec_module(b33)
+    return b33.urls(SITE)
 
 
 def sitemap(pages: list[Page], snapshot: str, extra: list[str] = ()) -> str:
@@ -1158,7 +1171,8 @@ def main() -> None:
     colls = collection_urls(data)
     disc = discover_urls()
     local = local_urls()
-    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc + local), encoding="utf-8")
+    alike = alike_urls()
+    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc + local + alike), encoding="utf-8")
     (OUT / "robots.txt").write_text(robots(), encoding="utf-8")
     keyfile = b19.indexnow_key_file()
     (OUT / keyfile).write_text(key_text(b19.indexnow_key()), encoding="utf-8")

@@ -437,6 +437,10 @@ jobs:
           # docs/models.json; before 20_landing, which imports its `urls()` into the sitemap. In both
           # workflows so a picks or catalogue edit ships with the next daily. See scripts/32_local.py.
           python scripts/32_local.py
+          # Lookalikes (docs/alike/). A static page -- it fetches data.json and docs/search/ in the reader's
+          # browser -- so a run only rewrites it when the stage, the page script or the shared encoder
+          # changed. Before 20_landing, which imports its `urls()` into the sitemap. See scripts/33_alike.py.
+          python scripts/33_alike.py
           # Here as of JFH-215, in the same position weekly.yml already runs it in: after 19_pages and
           # 25_velocity, because it reads `docs/data.json` and nothing else, and before 24_pwa, because
           # it writes `docs/pages.css`, which that stage precaches and hashes. The note above 24_pwa is
