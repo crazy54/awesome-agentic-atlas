@@ -819,6 +819,20 @@ eq("an \"Official Resources\" section says who made a thing, so it votes only wh
 eq("...and every list's heading of that name is one", sorted(k[0] for k in tax.ADVISORY_SECTIONS),
    sorted(k[0] for k in tax.SECTIONS if k[1] == "Official Resources"))
 
+# A pin wins over every vote, in any spelling of the repo, and names a real category with a reason.
+pinned = next(iter(tax.REPO_CATEGORY))
+want = tax.REPO_CATEGORY[pinned][0]
+others = [c for c in tax.CATEGORIES if c != want]
+eq("a pinned repo takes its pin over unanimous root votes",
+   tax.by_repo([dict(roots[0], nwo=pinned.upper()), dict(roots[0], nwo=pinned.upper(), source="agents",
+                                                           section="Research")])[pinned.upper()]["category"],
+   want)
+true("(fixture: the votes there name something else)", tax.category_of(roots[0]) != want)
+eq("every pin names a category and gives a reason",
+   [k for k, (c, why) in tax.REPO_CATEGORY.items() if c not in tax.CATEGORIES or len(why) < 20 or k != k.lower()],
+   [])
+true("(and there are others to choose from)", bool(others))
+
 spec16 = importlib.util.spec_from_file_location("b16_for_scout_test", SCRIPTS / "16_build_all.py")
 b16 = importlib.util.module_from_spec(spec16)
 sys.modules["b16_for_scout_test"] = b16

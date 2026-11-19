@@ -951,6 +951,27 @@ ADVISORY = {"scout", "gitlab"}
 # claudecode_jq's alone.
 ADVISORY_SECTIONS = {k for k in SECTIONS if k[1] == "Official Resources"}
 
+# Repos whose category no vote gets right, filed by hand. `by_repo` reads this before it counts anything.
+# The last resort, not a second taxonomy: every entry is a repo whose listings all sit in sections that
+# name something else -- fixing the section would re-file every other repo in it -- and each says why.
+# Keyed by lower-case `nwo`, so a repo a list spells in another case is still pinned. Keep it short; a
+# list that keeps needing entries here wants its SECTIONS mappings looked at instead.
+REPO_CATEGORY: dict[str, tuple[str, str]] = {
+    "anthropics/claude-code-security-review": (
+        "Sandbox, Security & Governance", "a GitHub Action that security-reviews a PR; listed only as "
+                                          "an official resource and as a skill"),
+    "luoyuctl/agenttrace": (
+        "Observability & Evals", "audits agent sessions for cost, tokens, latency and failures; its "
+                                 "lists file it as a client"),
+    "uipath/coder_eval": (
+        "Observability & Evals", "tests that skills, MCP servers and CLIs work under an agent; its one "
+                                 "root listing files it under coding agents"),
+    "linhay/harmony-next.skills": (
+        "Agent Skills", "a HarmonyOS skill library; its one root listing files it under domain agents"),
+    "nowork-studio/toprank": (
+        "Agent Skills", "SEO and marketing skills for agents; its root listings split across four shelves"),
+}
+
 # One key in `SECTIONS` is both shelves at once and too big to file wholesale on either:
 # `harness / Skills & MCP` is 41 entries holding the MCP specification, `modelcontextprotocol/servers`,
 # MCP Inspector and the transport write-ups right next to `superpowers`, `addyosmani/agent-skills` and
@@ -1065,6 +1086,8 @@ def by_repo(records: list[dict]) -> dict[str, dict]:
     instead would quietly shrink the category pages, and a browsable page has every reason to list a
     skill that lives in a folder even though a leaderboard has no way to rank it.
 
+    A repo in `REPO_CATEGORY` takes its pinned category whatever the votes say.
+
     A listing from an `ADVISORY` source, or in an `ADVISORY_SECTIONS` section, votes only for a repo no
     curated listing has filed: see there.
 
@@ -1097,7 +1120,8 @@ def by_repo(records: list[dict]) -> dict[str, dict]:
         a["rank"] = a["rank"] or rankable(r)
     for nwo, a in agg.items():
         v, f = votes[nwo] or folders[nwo] or hints[nwo], folders[nwo]
-        a["category"] = min(v, key=lambda c: (-v[c], -f[c], RANK[c]))
+        pin = REPO_CATEGORY.get(nwo.lower())
+        a["category"] = pin[0] if pin else min(v, key=lambda c: (-v[c], -f[c], RANK[c]))
         a["targets"] = [t for t, _ in TARGETS if t in a["targets"]]
         a["sources"] = sorted(a["sources"])
         a["listings"] = sum(votes[nwo].values()) + sum(folders[nwo].values()) + sum(hints[nwo].values())
