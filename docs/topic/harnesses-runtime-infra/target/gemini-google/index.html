@@ -21,18 +21,18 @@
 <link rel="preload" href="../../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#1A1A1A">
+<meta name="theme-color" id="tc" content="#2A2A27">
 <script>
 try {
   var t = localStorage.getItem("theme");
   if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
     localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
   }
-  if (t !== "light" && t !== "dark" && t !== "contrast")
-    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
-      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (t === "contrast") localStorage.setItem("theme", t = "dark");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
+  document.getElementById("tc").content = {light: "#F5F2EC", dark: "#2A2A27"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../../../pages.css">
@@ -52,6 +52,7 @@ try {
   </div>
   <nav>
     <a href="../../../../discover/">Discover</a> ·
+    <a href="../../../../local/">Run It Local</a> ·
     <a href="../../../../collections/">Collections</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="../../../../repo/">All projects</a> ·
@@ -184,15 +185,13 @@ function atlasTheme() {
   if (atlasTheme.api) return atlasTheme.api;
   var root = document.documentElement;
   var stored = function () { try { return localStorage.getItem("theme"); } catch (e) { return null; } };
-  var valid = function (t) { return t === "light" || t === "dark" || t === "contrast"; };
+  var valid = function (t) { return t === "light" || t === "dark"; };
   var system = function () {
-    try {
-      return matchMedia("(prefers-contrast: more)").matches ? "contrast"
-        : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-    } catch (e) { return "dark"; }
+    try { return matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"; } catch (e) { return "dark"; }
   };
   var apply = function () {
     var t = stored();
+    if (t === "contrast") { try { localStorage.setItem("theme", t = "dark"); } catch (e) {} }
     root.dataset.theme = valid(t) ? t : system();
     delete root.dataset.skin;
     var plane = getComputedStyle(root).getPropertyValue("--plane").trim(), tc = document.getElementById("tc");
@@ -207,10 +206,7 @@ function atlasTheme() {
     },
     follow: function (f) {
       var on = function () { if (api.choice() === "system") { apply(); if (f) f(); } };
-      try {
-        matchMedia("(prefers-color-scheme: light)").addEventListener("change", on);
-        matchMedia("(prefers-contrast: more)").addEventListener("change", on);
-      } catch (e) {}
+      try { matchMedia("(prefers-color-scheme: light)").addEventListener("change", on); } catch (e) {}
     }
   };
   apply();

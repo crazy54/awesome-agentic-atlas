@@ -4,7 +4,7 @@
 
 Most agentic tooling is written on a Mac and tested on Linux, and "it's Python, it'll be fine" is how a Windows afternoon disappears. The atlas records a per-platform verdict for every project, and it distinguishes stated support from support merely inferred from the language. Every project below has documented Windows support -- the build refuses to publish this page if one of them stops.
 
-7 picks · 952,013 combined stars · snapshot 2026-10-22
+7 picks · 959,191 combined stars · snapshot 2026-11-01
 
 [Open all 7 in the atlas](https://aaa.jeremyfhall.com/#list=openclaw/openclaw,earendil-works/pi,continuedev/continue,ollama/ollama,ggml-org/llama.cpp,headroomlabs-ai/headroom,nearai/ironclaw) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -24,7 +24,7 @@ The most-starred project in the atlas, and it puts Windows in the same sentence 
 npm install -g openclaw@latest --allow-scripts=openclaw
 ```
 
-**392,696** stars · 6 of 39 lists · TypeScript · MIT · pushed 2026-10-22
+**393,628** stars · 6 of 39 lists · TypeScript · MIT · pushed 2026-11-01
 
 Platforms: Win Y WSL Y mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -44,7 +44,7 @@ A deliberately small terminal harness built around skills loaded on demand. Smal
 npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 ```
 
-**116,957** stars · 1 list · TypeScript · MIT · pushed 2026-10-21
+**119,312** stars · 1 list · TypeScript · MIT · pushed 2026-11-01
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -64,7 +64,7 @@ Ships as an editor extension, which is why it works on Windows without a WSL det
 git clone https://github.com/continuedev/continue.git
 ```
 
-**36,290** stars · 7 of 39 lists · TypeScript · Apache-2.0 · pushed 2026-10-20
+**36,393** stars · 7 of 39 lists · TypeScript · Apache-2.0 · pushed 2026-11-01
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -84,7 +84,7 @@ A native Windows build, a one-line pull, and no Python environment to get wrong.
 irm https://ollama.com/install.ps1 | iex
 ```
 
-**184,208** stars · 4 of 39 lists · Go · MIT · pushed 2026-10-22
+**185,562** stars · 4 of 39 lists · Go · MIT · pushed 2026-10-31
 
 Platforms: Win Y WSL L mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -104,7 +104,7 @@ The C++ layer under most of local AI, with first-class Windows builds and no run
 irm https://llama.app/install.ps1 | iex
 ```
 
-**131,944** stars · 3 of 39 lists · C++ · MIT · pushed 2026-10-21
+**133,061** stars · 3 of 39 lists · C++ · MIT · pushed 2026-11-01
 
 Platforms: Win Y WSL N mac Y Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -124,7 +124,7 @@ Compresses tool output, logs and files before they reach the window. Windows and
 uv tool install --python 3.13 "headroom-ai[all]" # CLI in a self-contained env
 ```
 
-**77,253** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-10-22
+**78,533** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-11-01
 
 Platforms: Win Y WSL L mac Y Lin Y Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -144,7 +144,7 @@ Treats agent execution as a privacy and isolation problem rather than a convenie
 irm "https://github.com/nearai/ironclaw/releases/download/$IronClawReleaseTag/ironclaw-installer.ps1" | iex
 ```
 
-**12,665** stars · 3 of 39 lists · Rust · Apache-2.0 · pushed 2026-10-20
+**12,702** stars · 3 of 39 lists · Rust · Apache-2.0 · pushed 2026-10-30
 
 Platforms: Win Y WSL Y mac Y Lin Y Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

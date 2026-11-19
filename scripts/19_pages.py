@@ -609,15 +609,15 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
 # first time something does.
 #
 # ONE AXIS NOW. The menu used to carry a light/dark toggle (`#theme`) and, under it, eight colour themes on a
-# second axis. It is four buttons -- System, Light, Dark, High contrast -- and they are the whole choice, so
-# the toggle went: two controls for the same decision is one too many in a panel this small. The resolution
+# second axis. It is three buttons -- System, Light, Dark -- and they are the whole choice, so the toggle
+# went: two controls for the same decision is one too many in a panel this small. The resolution
 # itself (stored choice, then the OS, then dark) is `sitewide.THEME_JS`, which is prepended here so the
 # homepage, which inlines this constant, gets it too.
 SETTINGS_JS = sitewide.THEME_JS + r"""function wireSettings(onPaint) {
   const menu = document.getElementById("setmenu");
   const setbtn = document.getElementById("setbtn");
   const ths = Array.from(document.querySelectorAll(".thb"));
-  // One paint for every path that changes the theme: the four buttons, the OS-preference listener and the
+  // One paint for every path that changes the theme: the three buttons, the OS-preference listener and the
   // initial agreement with the head script. It marks the reader's *choice* as pressed, not the theme being
   // worn -- a reader on System who is seeing dark should see System pressed, because that is the setting
   // they would have to change. The browser chrome is repainted by `atlasTheme` itself.
@@ -659,8 +659,8 @@ SETTINGS_JS = sitewide.THEME_JS + r"""function wireSettings(onPaint) {
   // System is wrong for every reader who chose one.
   paintSettings();
   // Follow the OS live, but only for a reader on System -- flipping someone out of a theme they explicitly
-  // chose because the sun went down is worse than not following at all. Both preferences: a reader who
-  // turns on their OS's "increase contrast" gets High contrast without opening this menu.
+  // chose because the sun went down is worse than not following at all. (A reader who turns on their OS's
+  // "increase contrast" needs no listener here: the stylesheet's `prefers-contrast` rules follow it live.)
   atlasTheme().follow(paintSettings);
   // For anything outside the menu that changes the theme and wants the menu to agree -- Archie's pranks.
   window.atlasPaintSettings = paintSettings;
@@ -701,8 +701,8 @@ SETTINGS_CSS = r"""/* THE SETTINGS MENU. Absolutely positioned inside a relative
 .setwrap{position:relative;display:inline-block}
 header.setopen{z-index:30}
 .setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:280px;text-align:left;
-  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
-  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75)}
+  background:var(--panel-hi);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
+  border:1px solid var(--edge);border-radius:18px;padding:12px;box-shadow:var(--raise)}
 /* `hidden` is the state and this rule is what makes it stick: `display:inline-block` on the wrapper does
    not cascade to the child, but every UA default for [hidden] is `display:none`, and a later
    `display:` on the same element would beat it. Restating it here keeps the attribute authoritative,
@@ -711,9 +711,9 @@ header.setopen{z-index:30}
 .setlab{margin:14px 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase;
   letter-spacing:.07em;font-weight:600}
 .setlab:first-child{margin-top:0}
-/* One column of four. There were eight themes in two columns of four, sized so "Blueprint" fitted beside
-   a swatch; there are four choices now and "High contrast" is the longest, which two columns would wrap.
-   A single column is also the reading order a list of four mutually exclusive options should have. The
+/* One column of three. There were eight themes in two columns of four, sized so "Blueprint" fitted beside
+   a swatch, and then four choices in one column; there are three now, System, Light and Dark. A single
+   column is the reading order a list of mutually exclusive options should have. The
    panel keeps its 280px, which still fits a 320px viewport from a button at the right edge of the wrap. */
 .setths{display:grid;grid-template-columns:1fr;gap:2px;margin-top:2px}
 /* 36px rather than the 44 the mascot's buttons are held to. These are inside a panel a reader has already
@@ -721,17 +721,17 @@ header.setopen{z-index:30}
    254px by 36px is a larger area than any chip on the bar, and the 44px floor is about reaching a control
    in a crowded band rather than about the area of a menu item. */
 .thb{display:flex;align-items:center;gap:7px;width:100%;min-height:36px;padding:0 7px;
-  background:none;border:1px solid transparent;border-radius:8px;color:var(--ink2);font-size:13px;
+  background:none;border:1px solid transparent;border-radius:999px;color:var(--ink2);font-size:13px;
   text-align:left}
-.thb:hover{border-color:var(--grid);color:var(--ink)}
+.thb:hover{border-color:var(--ctl-edge);color:var(--ink);box-shadow:var(--raise-sm)}
 /* The border, a tint and the weight, not a solid fill. A solid fill is the lime the chips use for an active
-   filter, and the theme is not a filter -- it is always exactly one of four, so a reader reading this panel
+   filter, and the theme is not a filter -- it is always exactly one of three, so a reader reading this panel
    needs to see which, not to be told something is on. The tick is the same fact without colour, for a
    reader who cannot tell a lime border from a grey one; it is drawn in the padding the swatch already
    leaves, absolutely, so the row is the size it was. */
 .thb{position:relative}
 .thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600;
-  background:color-mix(in srgb,var(--act) 12%,transparent)}
+  background:color-mix(in srgb,var(--act) 12%,transparent);box-shadow:var(--press)}
 .thb[aria-pressed=true]::after{content:"\2713";position:absolute;right:10px;top:50%;transform:translateY(-50%);
   color:var(--bar);font-weight:700}
 .thsw{display:inline-flex;flex:none;width:28px;height:14px;border-radius:999px;overflow:hidden;
@@ -759,17 +759,14 @@ SETTINGS_MENU = r"""<div class="setwrap">
         <p class="setlab" id="setthemelab">Theme</p>
         <div class="setths" role="group" aria-labelledby="setthemelab">
           <button type="button" class="thb" data-choice="system" aria-pressed="true"><span
-            class="thsw" aria-hidden="true"><i style="background:#F1EDE6"></i><i
-            style="background:#121314"></i><i style="background:#A4C812"></i></span>System</button>
+            class="thsw" aria-hidden="true"><i style="background:#EAE5DA"></i><i
+            style="background:#1C1C1B"></i><i style="background:#A4C812"></i></span>System</button>
           <button type="button" class="thb" data-choice="light" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#F1EDE6"></i><i
+            class="thsw" aria-hidden="true"><i style="background:#EAE5DA"></i><i
             style="background:#A4C812"></i><i style="background:#3B5C00"></i></span>Light</button>
           <button type="button" class="thb" data-choice="dark" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#121314"></i><i
-            style="background:#A4C812"></i><i style="background:#CBE46E"></i></span>Dark</button>
-          <button type="button" class="thb" data-choice="contrast" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#000000"></i><i
-            style="background:#DCF55E"></i><i style="background:#FFFFFF"></i></span>High contrast</button>
+            class="thsw" aria-hidden="true"><i style="background:#1C1C1B"></i><i
+            style="background:#A4C812"></i><i style="background:#DCF55E"></i></span>Dark</button>
         </div>
       </div>
     </div>"""
@@ -777,7 +774,7 @@ SETTINGS_MENU = r"""<div class="setwrap">
 
 DEPLOYMENT_BADGE = r'''<a class="stamp" id="deployed" href="https://github.com/__REPO__/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-__BUILT_BADGE__-14704A.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        src="https://shieldcn.dev/badge/last_deployed-__BUILT_BADGE__-0F6741.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
         alt="" height="22"><time class="sr" datetime="__BUILT__">Last deployed __BUILT_UTC__</time></a>'''
 
 
@@ -826,19 +823,16 @@ __FONTPRELOAD__<!-- Installability, and the offline shell. Every href relative, 
 <!-- The theme-color meta and the pre-paint theme script: `HEAD_THEME` in scripts/sitewide.py, shared by
      every page family, which says why it is inline, ahead of the stylesheet, and why it is a literal. -->
 __HEADTHEME__<style>
-/* The three themes' tokens, and the paint-only rules every page family shares (focus ring, the
-   lime button, high contrast, forced colours): `THEME_CSS` in scripts/sitewide.py. */
+/* The two themes' tokens, and the paint-only rules every page family shares (the field, focus ring,
+   the controls, the strengthened modes, forced colours): `THEME_CSS` in scripts/sitewide.py. */
 __THEMECSS__
 *{box-sizing:border-box}
-/* The font stack and the wash are both tokens (see `THEME_CSS` in scripts/sitewide.py): --ui is this file's
-   own stack, character for character, in every theme, and --wash is the soft light behind the layout -- a
-   lime pool under the mascot and a ceramic one under the title, and nothing at all in high contrast.
-   `background-attachment:fixed` so a theme's wash is a property of the window rather
-   than of the document -- at 8,856 rows a scrolling gradient is a gradient nobody ever sees the end of.
-   Two declarations rather than the `background` shorthand: the shorthand would reset background-color
-   from --surface, and --surface is what the wash is translucent over. */
-body{margin:0;background:var(--surface);background-image:var(--wash);
-  background-attachment:fixed;color:var(--ink);font:15px/1.5 var(--ui)}
+/* The font stack is a token (see `THEME_CSS` in scripts/sitewide.py): --ui is this file's own stack,
+   character for character, in both themes. The field the glass frosts -- `--wash`, pools of Archie's
+   colours -- is not drawn here: it is `body::before` in THEME_CSS, fixed to the window for every page family,
+   because at 11,000 rows a field that scrolled with the document is a field nobody ever sees the end of.
+   This only sets --surface, the colour the field is translucent over. */
+body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.5 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
 /* Only #q had a focus ring, so every chip, the sort menu and both nav buttons were invisible to anyone
@@ -876,8 +870,11 @@ a:hover{text-decoration:underline}
    masthead is halfway off the top the bar is pinned across it. Whatever is pinned paints over whatever is
    scrolling, which is why 10 and not 30. The shadow moves to the bar for the same reason: it belongs to
    the element that floats over the results, and that is no longer this one. */
+/* The masthead is a pane of the glass: frosted over the field, with a hairline of light for its lower edge.
+   It is already `position:relative` with a z-index, so the backdrop filter neither makes it a stacking
+   context it was not nor a containing block for anything inside it that was not already contained. */
 header{position:relative;z-index:10;background:var(--panel);backdrop-filter:var(--bdf);
-  border-bottom:1px solid var(--grid);padding:22px 20px 16px}
+  -webkit-backdrop-filter:var(--bdf);border-bottom:1px solid var(--edge);padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
@@ -919,7 +916,8 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
    instead -- see the narrow-width rule at the bottom of this stylesheet. The radius drops from a 999px
    stadium, which reads as a lozenge once there are two lines, to a rounded rectangle that stays a name tag. */
 .atlas-name{display:block;margin:-11px auto 0;position:relative;z-index:2;padding:3px 9px;
-  border:1px solid var(--grid);border-radius:12px;background:var(--plane);color:var(--ink);
+  border:1px solid var(--ctl-edge);border-radius:12px;background:var(--plane);color:var(--ink);
+  box-shadow:var(--raise-sm);
   font-size:10px;font-weight:700;letter-spacing:.03em;line-height:1.35;text-align:center;
   text-wrap:balance}
 /* Full name here, one word at the narrow breakpoint; the swap is at the bottom of this stylesheet. Both are in
@@ -982,7 +980,7 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 #byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:220px;
   padding:9px 11px;border:1px solid var(--grid);border-left:3px solid var(--bar);border-radius:9px;
   background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;z-index:4;
-  box-shadow:0 12px 28px rgba(0,0,0,.2);
+  box-shadow:var(--raise-sm);
   display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
 #byte-speech[hidden]{display:none}
 #byte-speech::after{content:"";position:absolute;right:-6px;bottom:12px;width:11px;height:11px;
@@ -1001,9 +999,14 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
   .orbit-star{animation:none;opacity:1;transform:rotate(var(--orbit-angle)) translateY(-58px) rotate(45deg)}
 }
 button{font:inherit;cursor:pointer}
-/* The only pinned thing on the page, and therefore the only thing that carries the shadow. */
-.bar{position:sticky;top:0;z-index:20;background:var(--panel);backdrop-filter:var(--bdf);
-  border-bottom:1px solid var(--grid);padding:10px 20px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+/* The only pinned thing on the page, and therefore the only thing that carries a drop shadow. It is the
+   FLOATING glass, `--panel-hi`: results and their screenshots scroll under it, so its fill is dense enough
+   that text on it passes over pure black (light) or pure white (dark) -- see GLASS in scripts/sitewide.py.
+   Safe to blur: it is already sticky with a z-index, and nothing inside it is position:fixed (the filter
+   sheet, which is, lives in `.subbar` below for exactly that reason). */
+.bar{position:sticky;top:0;z-index:20;background:var(--panel-hi);backdrop-filter:var(--bdf);
+  -webkit-backdrop-filter:var(--bdf);border-bottom:1px solid var(--edge);padding:10px 20px;
+  box-shadow:0 14px 30px -16px rgba(0,0,0,.4)}
 .bar .wrap{display:flex;flex-direction:column;gap:8px}
 /* THE HALF OF THE BAR THAT DOES NOT STICK (JFH-354). The three facet rails are in `#sheet`, and they used
    to be inside `.bar` -- which meant the pinned band was 240px at 1440x900 and 403px at 768x900, most of
@@ -1017,18 +1020,24 @@ button{font:inherit;cursor:pointer}
 
    The border and the padding are the bar's old bottom edge, moved down here: the bar keeps its own so the
    pinned line has an edge of its own while scrolled, which is what makes the two read as one block at rest
-   and as chrome-over-content in motion. */
-.subbar{background:var(--panel);backdrop-filter:var(--bdf);border-bottom:1px solid var(--grid);
-  padding:0 20px 9px}
+   and as chrome-over-content in motion.
+
+   GLASS WITHOUT THE BLUR, and that is the one exception on this page. On a phone this wrapper holds
+   `#sheet`, which is `position:fixed` to the viewport -- and a backdrop filter makes an element the
+   containing block of its fixed descendants, so a blurred `.subbar` dragged the closed sheet 330px up into
+   the page (measured, box for box). The fill is the same translucent glass; it sits only on the field, where
+   a blur would have nothing sharp to soften anyway. */
+.subbar{background:var(--panel);border-bottom:1px solid var(--edge);padding:0 20px 9px}
 .subbar .wrap{display:flex;flex-direction:column;gap:8px}
 .line{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .line>label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
   min-width:74px}
-#q{flex:1;min-width:220px;background:var(--surface);color:var(--ink);
-  border:1px solid var(--grid);border-radius:7px;padding:9px 12px;font:inherit}
+/* The search field and the sort menu are wells: pressed into the glass, pill-shaped. */
+#q{flex:1;min-width:220px;background:var(--band);color:var(--ink);box-shadow:var(--press);
+  border:1px solid var(--ctl-edge);border-radius:999px;padding:9px 12px;font:inherit}
 #q:focus{outline:2px solid var(--bar);outline-offset:-1px}
-select{background:var(--surface);color:var(--ink);border:1px solid var(--grid);
-  border-radius:7px;padding:8px 10px;font:inherit;max-width:100%}
+select{background:var(--band);color:var(--ink);border:1px solid var(--ctl-edge);box-shadow:var(--press);
+  border-radius:999px;padding:8px 10px;font:inherit;max-width:100%}
 .chip{background:var(--band);color:var(--ink2);border:1px solid var(--grid);
   border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap}
 .chip:hover{border-color:var(--bar);color:var(--ink)}
@@ -1297,19 +1306,19 @@ a.nwo:hover{color:var(--ink)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
 .desc{color:var(--ink2);font-size:13.5px;max-width:44em;overflow-wrap:anywhere}
 .cmd{display:block;margin-top:7px;font:12px/1.5 var(--mono);
-  color:var(--ink2);background:var(--band);border:1px solid var(--grid);border-radius:5px;
-  padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
+  color:var(--ink2);background:var(--band);border:1px solid var(--ctl-edge);border-radius:10px;
+  box-shadow:var(--press);padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
 /* The install line is the one thing on a row a reader wants to take with them, and taking it meant
    selecting monospace text that wraps mid-flag without catching the surrounding cell. `align-items:
    stretch` so the button matches whatever height the command wrapped to, and `min-width:0` on the code
    so a long one shrinks rather than pushing the button out of the row. */
 .cmdrow{display:flex;align-items:stretch;gap:6px;max-width:44em;margin-top:7px}
 .cmdrow .cmd{margin-top:0;flex:1 1 auto;min-width:0}
-.copy{flex:none;background:var(--band);color:var(--ink2);border:1px solid var(--grid);
-  border-radius:5px;padding:0 10px;font-size:11.5px;letter-spacing:.03em;white-space:nowrap}
+.copy{flex:none;background:var(--band);color:var(--ink2);border:1px solid var(--ctl-edge);
+  border-radius:10px;box-shadow:var(--raise-sm);padding:0 10px;font-size:11.5px;letter-spacing:.03em;white-space:nowrap}
 .copy:hover{border-color:var(--bar);color:var(--ink)}
 .copy.ok{border-color:var(--good);color:var(--good)}
-.tag{display:inline-block;background:var(--band);border:1px solid var(--grid);border-radius:5px;
+.tag{display:inline-block;background:var(--band);border:1px solid var(--ctl-edge);border-radius:999px;
   padding:2px 7px;font-size:11.5px;color:var(--ink2);margin:0 4px 4px 0;white-space:nowrap}
 .tag.cat{border-color:var(--bar);color:var(--ink)}
 /* This rule was dead: the class was defined here but never put on an element, so the verdict row was
@@ -1380,9 +1389,10 @@ __MARKCSS__
 /* The command palette. Pinned near the top rather than centred, because the list grows downward and a
    centred dialog would slide the input up the screen every time the result count changed -- so the box
    you are typing into would move while you type. */
-dialog#pal{border:1px solid var(--grid);background:var(--plane);color:var(--ink);border-radius:12px;
+dialog#pal{border:1px solid var(--edge);background:var(--panel-hi);backdrop-filter:var(--bdf);
+  -webkit-backdrop-filter:var(--bdf);color:var(--ink);border-radius:20px;
   padding:0;width:min(620px,calc(100vw - 24px));margin:8vh auto auto;overflow:hidden;
-  box-shadow:0 18px 50px rgba(0,0,0,.45)}
+  box-shadow:var(--raise)}
 dialog#pal::backdrop{background:rgba(0,0,0,.55)}
 /* 16px is not a taste choice: iOS Safari zooms the whole page when a focused input's text is under 16px,
    and a modal that zooms on open cannot be read. */
@@ -1414,7 +1424,7 @@ dialog#pal::backdrop{background:rgba(0,0,0,.55)}
 .palnone{padding:26px 12px;color:var(--muted);text-align:center}
 .palfoot{display:flex;gap:14px;background:var(--surface);border-top:1px solid var(--grid);
   padding:7px 14px;color:var(--muted);font-size:12px}
-kbd{background:var(--band);border:1px solid var(--grid);border-bottom-width:2px;border-radius:4px;
+kbd{background:var(--band);border:1px solid var(--ctl-edge);border-bottom-width:2px;border-radius:6px;
   padding:1px 5px;color:var(--ink2);font:11px/1.6 var(--mono)}
 /* A shortcut nobody is told about is a shortcut nobody uses, and this hint is the only affordance for it.
    Hidden until `buildChips` confirms the browser has `showModal`, like the New chip: a control that opens
@@ -1429,8 +1439,9 @@ kbd{background:var(--band);border:1px solid var(--grid);border-bottom-width:2px;
    treatment for the same reasons: a real `<dialog>` opened with `showModal()`, so the focus trap, the Esc
    key, the backdrop, the inertness of the page behind it and the return of focus to the chip that opened it
    are all the browser's rather than five things to hand-roll and get wrong. */
-dialog#exp{border:1px solid var(--grid);background:var(--plane);color:var(--ink);border-radius:12px;
-  padding:0;width:min(560px,calc(100vw - 24px));overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.45)}
+dialog#exp{border:1px solid var(--edge);background:var(--panel-hi);backdrop-filter:var(--bdf);
+  -webkit-backdrop-filter:var(--bdf);color:var(--ink);border-radius:20px;
+  padding:0;width:min(560px,calc(100vw - 24px));overflow:hidden;box-shadow:var(--raise)}
 dialog#exp::backdrop{background:rgba(0,0,0,.55)}
 #exp h2{margin:0;padding:14px 16px 3px;font-size:16px}
 .expsub{margin:0;padding:0 16px 12px;color:var(--muted);font-size:13px}
@@ -1480,9 +1491,10 @@ dialog#exp::backdrop{background:rgba(0,0,0,.55)}
    `touch-action:none` so a drag pans the map instead of scrolling the dialog, and `overscroll-behavior`
    on the stage so a wheel that reaches the end of the zoom range does not start scrolling the page
    behind an inert modal. */
-dialog#mapdlg{border:1px solid var(--grid);background:var(--plane);color:var(--ink);border-radius:12px;
+dialog#mapdlg{border:1px solid var(--edge);background:var(--panel-hi);backdrop-filter:var(--bdf);
+  -webkit-backdrop-filter:var(--bdf);color:var(--ink);border-radius:20px;
   padding:0;width:min(1180px,calc(100vw - 20px));height:min(820px,calc(100vh - 20px));overflow:hidden;
-  box-shadow:0 18px 50px rgba(0,0,0,.45);display:flex;flex-direction:column}
+  box-shadow:var(--raise);display:flex;flex-direction:column}
 /* Darker than the other two backdrops. The whole point of what is behind this one is that it is a field of
    faint dots, and a 55% scrim leaves enough of the table showing to compete with them. */
 dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
@@ -1585,8 +1597,8 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
   scroll-snap-type:x mandatory;padding:8px 2px 12px;scrollbar-width:thin}
 .dsc{flex:0 0 min(212px,62vw);scroll-snap-align:start;display:flex;flex-direction:column;gap:5px;
   padding:9px 11px;text-decoration:none;font-size:12.5px;color:var(--ink2);
-  background:var(--band);border:1px solid var(--grid);border-top:3px solid var(--card-accent);
-  border-radius:7px}
+  background:var(--panel);border:1px solid var(--edge);border-top:3px solid var(--card-accent);
+  border-radius:14px;box-shadow:var(--raise-sm)}
 .dsc:hover{border-color:var(--card-accent);text-decoration:none}
 /* The category pill and the New badge on one line. `.tag` carries a bottom margin for the table cells it was
    written for, and it is undone here rather than removed there: a flex row spaces its own children. */
@@ -1622,9 +1634,12 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
 .empty .miss{color:var(--muted);font-size:13px;text-decoration:underline}
 .empty .miss:hover{color:var(--ink)}
 .more{display:block;margin:26px auto 0;background:var(--band);color:var(--ink);
-  border:1px solid var(--grid);border-radius:8px;padding:11px 22px;font-weight:600}
-.more:hover{border-color:var(--bar)}
-footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
+  border:1px solid var(--ctl-edge);border-radius:999px;box-shadow:var(--raise-sm);padding:11px 22px;
+  font-weight:600}
+.more:hover{border-color:var(--bar);box-shadow:var(--raise-hi)}
+.more:active{box-shadow:var(--press)}
+footer{border-top:1px solid var(--edge);background:var(--panel);backdrop-filter:var(--bdf);
+  -webkit-backdrop-filter:var(--bdf);padding:22px 20px;
   color:var(--muted);font-size:13px}
 .blurb{color:var(--muted);font-size:13px;margin:2px 0 0}
 /* Screen readers and screens both have the address bar; only paper does not. The `@media print` block at the
@@ -1938,8 +1953,8 @@ html[data-view=cards] :where(#out) tbody{display:grid;gap:14px;
    tool -- cannot put two of them side by side. `margin:0` is not tidiness: the block above gives every row
    a 9px bottom margin, which this view has a 14px grid gap for, and margins do not collapse in a grid. */
 html[data-view=cards] :where(#out) tr{display:grid;grid-template-columns:1fr auto;align-items:start;align-content:start;
-  gap:0 10px;margin:0;padding:0 0 12px;background:var(--band);
-  border:1px solid color-mix(in srgb,var(--card-accent) 35%,var(--grid));border-radius:12px;overflow:hidden;
+  gap:0 10px;margin:0;padding:0 0 12px;background:var(--panel);box-shadow:var(--raise-sm);
+  border:1px solid color-mix(in srgb,var(--card-accent) 35%,var(--edge));border-radius:20px;overflow:hidden;
   transition:border-color .14s ease,box-shadow .14s ease,transform .14s ease}
 html[data-view=cards] :where(#out) td{display:block;border-bottom:0;padding:0 13px;min-width:0}
 /* The screenshot is the whole argument for this view, so it comes back at the widths where the table drops
@@ -2434,9 +2449,10 @@ __OSSPRITE__
     <a href="https://github.com/__REPO__">Repository</a> ·
     <a href="https://github.com/__REPO__/tree/HEAD/mega-list">Markdown</a> ·
     <a href="https://github.com/__REPO__/releases/latest">Workbook</a><br>
-    <!-- SETTINGS: one group, Theme, of four buttons -- System, Light, Dark, High contrast. It used to be two
-         groups, a light/dark toggle and eight colour themes, and the toggle went with the second axis:
-         four mutually exclusive choices are one question, and a toggle beside them would be a second
+    <!-- SETTINGS: one group, Theme, of three buttons -- System, Light, Dark. It used to be two groups, a
+         light/dark toggle and eight colour themes, and the toggle went with the second axis; then a fourth
+         button, High contrast, which the system's own contrast setting now covers in either theme. Three
+         mutually exclusive choices are one question, and a toggle beside them would be a second
          control for the same decision. `role="group"` with the visible label it is named by. Not
          `role="radiogroup"`: that contract obliges arrow-key navigation and a roving tabindex, and getting
          either half wrong makes the control worse for exactly the reader the role was added for. Plain
@@ -4064,12 +4080,10 @@ function paintDeployBadge() {
     const message = shown.replace(/_/g, "__").replace(/-/g, "--").replace(/ /g, "_");
     // The badge's right half, in the theme's own status colours. It is an image from shieldcn, so these are
     // the one copy of a palette value in this script: --warn when the build is late, and a green dark enough
-    // to carry the badge's white text otherwise (light's --good, and deeper still in high contrast, where
-    // white on it has to clear 7:1).
+    // to carry the badge's white text otherwise (light's --good, white on it at 6.6:1).
     const theme = document.documentElement.dataset.theme;
     const mode = theme === "light" ? "light" : "dark";
-    const colour = el.classList.contains("late") ? (mode === "light" ? "A23B2A" : "F29484")
-      : theme === "contrast" ? "0A4A30" : "14704A";
+    const colour = el.classList.contains("late") ? (mode === "light" ? "A23B2A" : "F29484") : "0F6741";
     img.src = "https://shieldcn.dev/badge/last_deployed-" + message + "-" + colour
       + ".svg?logo=ri%3ALuClock3&size=xs&font=geist&split=true&mode=" + mode;
   } catch (e) {}
@@ -5054,11 +5068,12 @@ function mapPalette() {
   const light = document.documentElement.dataset.theme === "light";
   return {
     light,
-    back: pick("--surface", light ? "#fff" : "#090A0D"),
-    ink: pick("--ink", light ? "#111" : "#EDEFF3"),
-    sub: pick("--muted", "#8A8F98"),
-    grid: pick("--grid", light ? "#DDE1E6" : "#22262E"),
-    plane: pick("--plane", light ? "#F6F7F9" : "#101217"),
+    // The fallbacks are `sitewide.PALETTE`'s values, for a browser that hands back an empty custom property.
+    back: pick("--surface", light ? "#EAE5DA" : "#1C1C1B"),
+    ink: pick("--ink", light ? "#1C1B1B" : "#EBE5DA"),
+    sub: pick("--muted", light ? "#56524C" : "#AEAAA4"),
+    grid: pick("--grid", light ? "#CEC6B7" : "#3F4526"),
+    plane: pick("--plane", light ? "#F5F2EC" : "#2A2A27"),
     // Lit dots are lighter than the page on a dark theme and darker than it on a light one, which is the
     // only way one hue set can carry both. The dim ones are the same hue at a lightness that reads as
     // "present but not the answer" rather than as a second colour.

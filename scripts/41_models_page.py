@@ -178,19 +178,22 @@ CSS = """<style>
 /* The models page. Tokens only -- the thirteen every theme declares -- so every theme repaints it. */
 .mtools{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end;margin:18px 0 6px}
 .mtools label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 4px}
-.mtools input,.mtools select{font:14px var(--ui);color:var(--ink);background:var(--plane);border:1px solid var(--grid);
-  border-radius:7px;padding:7px 10px;min-height:36px}
+.mtools input,.mtools select{font:14px var(--ui);color:var(--ink);background:var(--band);border:1px solid var(--ctl-edge);
+  border-radius:999px;box-shadow:var(--press);padding:7px 10px;min-height:36px}
 .mtools input{min-width:min(340px,80vw)}
 .mtools input:focus-visible,.mtools select:focus-visible,.mgrp button:focus-visible,.mcard a:focus-visible,
 .mq summary:focus-visible,#mmore:focus-visible{outline:2px solid var(--link);outline-offset:2px}
 .mgrp{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
 .mgrp .gl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);align-self:center;min-width:64px}
-.mgrp button{font:13px var(--ui);color:var(--ink2);background:var(--band);border:1px solid var(--grid);border-radius:999px;
-  padding:5px 11px;min-height:32px;cursor:pointer}
-.mgrp button[aria-pressed=true]{background:var(--bar);color:var(--onbar);border-color:var(--bar)}
+.mgrp button{font:13px var(--ui);color:var(--ink2);background:var(--band);border:1px solid var(--ctl-edge);border-radius:999px;
+  box-shadow:var(--raise-sm);padding:5px 11px;min-height:32px;cursor:pointer}
+.mgrp button:hover{box-shadow:var(--raise-hi)}
+.mgrp button[aria-pressed=true]{background:var(--act);color:var(--onact);border-color:var(--act-edge);box-shadow:var(--press-act)}
 #mcount{color:var(--muted);font-size:13px;margin:14px 0 8px}
 .mlist{list-style:none;margin:0;padding:0;display:grid;align-items:start;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:12px}
-.mcard{background:var(--panel);border:1px solid var(--grid);border-radius:10px;padding:14px 16px;min-width:0}
+/* A pane of glass, translucent and raised but not blurred: there can be hundreds on the page. */
+.mcard{background:var(--panel);border:1px solid var(--edge);border-radius:20px;box-shadow:var(--raise-sm);
+  padding:14px 16px;min-width:0}
 .mhd{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
 .mcard h2{font-size:16px;margin:0;overflow-wrap:anywhere}
 .mcard h2 a{color:var(--ink)}

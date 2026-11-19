@@ -35,8 +35,7 @@
 //  - `<trick>-archie`: ARCHIE's reply, in his bubble, not the friend's;
 //  - `<trick>-after`: the friend's excuse, as it is put back;
 //  - `poke`: if the reader pokes Archie while a friend is over, Archie answers with one of these instead;
-//  - `theme`: the friend's remark when the reader is on their favourite theme (`likes`: light, dark or
-//    contrast).
+//  - `theme`: the friend's remark when the reader is on their favourite theme (`likes`: light or dark).
 //
 // `{n}` in a line is the friend's own name, so the same line reads right if a name ever changes. The
 // looks are written for drawing as a small flat SVG: a silhouette, two or three colours, and the one
@@ -81,7 +80,7 @@ export const FRIENDS = {
 
   posy: {
     name: "Posy",
-    likes: "contrast",
+    likes: "light",
     look: "A sentient sticky note. A 44 px square, #FFD84D, the bottom-right corner curled up as a " +
       "triangle of #E8B92E, and a soft drop shadow. Two short vertical-oval eyes and a small round " +
       "mouth in #2B2140. A tiny pencil tucked behind the top edge: #FF8C42 body, pink eraser.",
@@ -113,7 +112,7 @@ export const FRIENDS = {
       leave: [["Bye! Have a noteworthy day."], ["Off to the next page. So many pages."],
               ["Remember what I wrote!"]],
       poke: [["Shh, Posy's writing."], ["Careful, you'll get a note too."]],
-      theme: [["High contrast! Finally I can read my own handwriting."], ["Bold. Like a highlighter. I love it.", 1]],
+      theme: [["Frosted glass! Perfect for sticking notes on."], ["So bright. I can read my own handwriting.", 1]],
     },
   },
 

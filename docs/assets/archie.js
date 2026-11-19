@@ -440,12 +440,12 @@
     };
     const prankOnce = async name => {
       trick = trick || pranks(talk, header);
-      const strict = document.documentElement.dataset.theme === "contrast";
+      const strict = needsClarity();
       if (!tricks.length) tricks = PRANKS.filter(n => n !== "count" || header.querySelector(".sub b"))
         .sort(() => Math.random() - 0.5);
-      // A reader in high contrast keeps it -- see PRANKS. An asked-for prank (the admin panel, a flag) is
-      // still played, because that is somebody checking the prank rather than a reader being pranked.
-      if (strict && !name) tricks = tricks.filter(n => n !== "lights" && n !== "contrast");
+      // A reader whose system asks for clarity keeps it -- see PRANKS. An asked-for prank (the admin panel, a
+      // flag) is still played, because that is somebody checking the prank rather than a reader being pranked.
+      if (strict && !name) tricks = tricks.filter(n => n !== "lights" && n !== "fog");
       if (!tricks.length) tricks = ["tilt"];
       name = name || tricks.pop();
       lastPrank = Date.now(); last = "prank";
@@ -1117,7 +1117,6 @@
     light: [["Light mode! My ceramic has never been so shiny."], ["Whoa, bright! Adjusting crest..."]],
     dark: [["Ahh, the dark side. Easier on the circuits."], ["Lights down. Now it's a party."]],
     flip: [["It's a theme switch, not a fidget toy! ...okay, it is a bit fun."]],
-    contrast: [["High contrast. Crisp! I can see every seam on me."], ["Maximum contrast. Bold choice. I approve."]],
     welcome: [["Welcome back! I didn't touch anything. Probably."], ["Oh hi! I was definitely not napping."]],
     up: [["Oh hey, you came back up!"], ["A visitor from further down the page!"]],
     lonely: [["...is this thing on?", 1], ["*taps ear cup* ...hello?", 1]],
@@ -1152,8 +1151,8 @@
     "prank-lights": [["Ooh, what does this switch do?"], ["Watch this. Lights... OFF!"]],
     "prank-lights-after": [["Huh. It keeps coming back on."], ["You didn't see that. Nobody saw that."],
                            ["I was testing dark mode. For science.", 1]],
-    "prank-contrast": [["This place needs more contrast."], ["Let me just turn the contrast up to eleven..."]],
-    "prank-contrast-after": [["Too much? Too much.", 1], ["Back to normal. My eyes, though."]],
+    "prank-fog": [["Is this glass? *hhhaaa*"], ["Let me just breathe on the glass..."]],
+    "prank-fog-after": [["*wipe wipe* Good as new.", 1], ["There. Squeaky clean. Mostly."]],
     "prank-tilt": [["Is the page crooked? Hang on..."], ["Let me just straighten this."]],
     "prank-tilt-after": [["There. Perfectly level. Don't check."], ["Close enough. Ship it."]],
     "prank-count": [["Let me just add myself to the count..."], ["One more project. Me. I'm the project."]],
@@ -1299,7 +1298,7 @@
         flips.push(t);
         while (flips.length && flips[0] < t - 12) flips.shift();
         if (flips.length >= 3) { flips.length = 0; react("flip", 20); }
-        else react(theme === "light" || theme === "contrast" ? theme : "dark", 0);
+        else react(theme === "light" ? theme : "dark", 0);
       }
     });
     mo.observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
@@ -1473,11 +1472,18 @@
   // The lights are the reader's theme, swapped four times 400 ms apart: 1.25 flashes a second, where WCAG
   // 2.3.1 draws the line at three. Faster would be a seizure risk and not a joke, however funny it looks.
   //
-  // The contrast prank is the one high contrast cannot have the other way round, and neither theme prank is
-  // played on a reader who is IN high contrast (see `prankOnce`): that reader chose it because they need it,
-  // and a joke that takes it away from them for two seconds -- or flashes the page between two other themes
-  // -- is not one they are in on.
-  const PRANKS = ["lights", "contrast", "tilt", "count", "cursor"];
+  // The fog is the glass's own prank: he breathes on it, every pane of glass frosts over for a moment (a
+  // heavier blur and a denser fill -- `html[data-fog]` in THEME_CSS, sitewide.py, which keeps every text pair
+  // legible while it is up), and he wipes it clear. It replaced a contrast prank when High contrast stopped
+  // being a theme. Neither it nor the lights is played on a reader whose system asks for more contrast, less
+  // transparency or its own colours (`needsClarity`, see `prankOnce`): that reader set it because they need
+  // it, and a joke that fogs the page or flashes it between two themes is not one they are in on.
+  const PRANKS = ["lights", "fog", "tilt", "count", "cursor"];
+  function needsClarity() {
+    try {
+      return matchMedia("(prefers-contrast: more), (prefers-reduced-transparency: reduce), (forced-colors: active)").matches;
+    } catch { return false; }
+  }
   function pranks(talk, header) {
     const root = document.documentElement;
     const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -1495,13 +1501,12 @@
         if (stored("theme") === saved) root.dataset.theme = theme;
         unhush();
       },
-      async contrast() {
-        const theme = root.dataset.theme, saved = stored("theme");
-        talk.hush(true);
-        root.dataset.theme = "contrast";
-        await wait(1400);
-        if (stored("theme") === saved) root.dataset.theme = theme;
-        unhush();
+      // Paint only, on <html> only, and nothing stored: the attribute comes off after 1.6 s whatever else
+      // has happened, so there is no state a reader can be left in.
+      async fog() {
+        root.dataset.fog = "";
+        await wait(1600);
+        delete root.dataset.fog;
       },
       // Crooked, then over-corrected, then level: the page's <main>, not <body>, so the header and anything
       // pinned to the window stay where they are.

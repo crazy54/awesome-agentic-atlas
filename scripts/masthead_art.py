@@ -45,13 +45,13 @@ FONTS = ["DejaVuSansMono.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.
 # already is. Keywords are his lime, strings his brass, names his ceramic, plain code his steel. `wash` is
 # the two soft pools of light `glow()` lays behind the glyphs -- a lime-dark one on the left, where the title
 # is, and a warm graphite one under the mascot -- and it is per palette because light mode has no glow. There
-# is no high-contrast art: that theme draws no picture behind text at all (see `.mhart` in 31_home.py).
+# is no art for a reader whose system asks for more contrast: they get none behind text (see THEME_CSS).
 PALETTES = {
-    "dark": {"bg": (18, 19, 20), "plain": (171, 166, 159), "dim": (82, 80, 76), "kw": (164, 200, 18),
+    "dark": {"bg": (28, 28, 27), "plain": (171, 166, 159), "dim": (82, 80, 76), "kw": (164, 200, 18),
              "str": (221, 179, 106), "fn": (235, 229, 218), "num": (242, 148, 132), "cmd": (140, 198, 222),
              "prompt": (164, 200, 18), "hash": (221, 179, 106), "glow": 0.8,
              "wash": ((26, 40, 4), (44, 38, 28))},
-    "light": {"bg": (241, 237, 230), "plain": (94, 90, 84), "dim": (196, 189, 178), "kw": (69, 106, 0),
+    "light": {"bg": (234, 229, 218), "plain": (94, 90, 84), "dim": (196, 189, 178), "kw": (69, 106, 0),
               "str": (128, 86, 15), "fn": (31, 95, 122), "num": (162, 59, 42), "cmd": (31, 95, 122),
               "prompt": (69, 106, 0), "hash": (128, 86, 15), "glow": 0.0, "wash": None},
 }

@@ -852,7 +852,11 @@ CSS = """
 /* Several rules below set `display`, which outranks the UA's `[hidden]{display:none}`; this puts it back. */
 .lx [hidden]{display:none!important}
 .kick{margin:0 0 4px;color:var(--muted);font:600 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase}
-.lxs{margin:26px 0 0;padding:20px;border:1px solid var(--grid);border-radius:14px;background:var(--plane)}
+/* The five steps are panes of the glass: translucent over the field, raised out of it, with a hairline of
+   light for an edge. NOT blurred, and on purpose: a backdrop filter makes its box a stacking context, and
+   the machine search's suggestion list (`.lxcombo ul`, z-index 5) has to drop out over the next step down. */
+.lxs{margin:26px 0 0;padding:20px;border:1px solid var(--edge);border-radius:24px;background:var(--panel);
+  box-shadow:var(--raise)}
 .lxs h2{margin:0;font-size:19px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .lxs h2 small{font-weight:400;font-size:13px;color:var(--muted)}
 .lxsh{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -864,33 +868,34 @@ CSS = """
 fieldset{border:0;margin:0;padding:0;min-width:0}
 legend{padding:0;font-weight:600;margin:0 0 8px}
 .lxtiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:16px 0 0}
-.lxtile{position:relative;display:flex;flex-direction:column;gap:3px;padding:14px 12px;border:1px solid var(--grid);
-  border-radius:12px;background:var(--band);cursor:pointer;min-height:44px}
+.lxtile{position:relative;display:flex;flex-direction:column;gap:3px;padding:14px 12px;border:1px solid var(--ctl-edge);
+  border-radius:18px;background:var(--band);box-shadow:var(--raise-sm);cursor:pointer;min-height:44px}
 .lxtile input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
 .lxtile b{font-size:15px;color:var(--ink)}
 .lxtile small{font-size:12px;color:var(--muted)}
 .lxti{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;color:var(--ink2)}
 .lxtile:hover{border-color:var(--link)}
-.lxtile:has(input:checked){border-color:var(--bar);box-shadow:inset 0 0 0 2px var(--bar)}
+.lxtile:has(input:checked){border-color:var(--bar);box-shadow:inset 0 0 0 2px var(--bar),var(--press)}
 .lxtile:has(input:checked) .lxti{color:var(--bar)}
 .lxtile:has(input:focus-visible){outline:2px solid var(--link);outline-offset:2px}
 .lxpick{margin:18px 0 0}
 .lxfield label{display:block;font-weight:600;margin:0 0 6px}
 .lxcombo{position:relative;max-width:520px}
-.lxcombo input,.lxexpert select{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);
-  border:1px solid var(--grid);border-radius:10px;padding:11px 12px;min-height:44px}
+.lxcombo input,.lxexpert select{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--band);
+  border:1px solid var(--ctl-edge);border-radius:999px;box-shadow:var(--press);padding:11px 12px;min-height:44px}
 .lxexpert select{width:auto;font-size:14px;padding:6px 8px;min-height:36px}
 .lxcombo input:focus-visible,.lxexpert select:focus-visible{outline:2px solid var(--link);outline-offset:1px;border-color:var(--link)}
 .lxcombo ul{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 4px);margin:0;padding:4px;list-style:none;
-  background:var(--plane);border:1px solid var(--grid);border-radius:10px;max-height:320px;overflow:auto;
-  box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  background:var(--plane);border:1px solid var(--edge);border-radius:16px;max-height:320px;overflow:auto;
+  box-shadow:var(--raise)}
 .lxcombo li{padding:9px 10px;border-radius:7px;cursor:pointer;display:flex;justify-content:space-between;gap:10px}
 .lxcombo li small{color:var(--muted)}
 .lxcombo li[aria-selected=true]{background:var(--band);outline:2px solid var(--link);outline-offset:-2px}
 .lxpop{margin:10px 0 0;display:flex;flex-wrap:wrap;gap:0;align-items:center}
 .lxpop .lxpl{color:var(--muted);font-size:13px;margin:0 8px 5px 0}
 .chip{min-height:32px}
-.chip[aria-pressed=true],.lxchip:has(input:checked){background:var(--bar);color:var(--onbar);border-color:var(--bar)}
+.chip[aria-pressed=true],.lxchip:has(input:checked){background:var(--act);color:var(--onact);border-color:var(--act-edge);
+  box-shadow:var(--press-act)}
 .lxchip{position:relative;cursor:pointer;display:inline-flex;align-items:center;min-height:40px;font-size:14px;padding:8px 14px}
 .lxchip input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
 .lxchip:has(input:focus-visible),.chip:focus-visible,.lxlink:focus-visible,.lxs summary:focus-visible,
@@ -923,14 +928,16 @@ legend{padding:0;font-weight:600;margin:0 0 8px}
 .lxcap{display:block;margin:3px 0 0;font-size:12.5px;color:var(--muted)}
 .lxexpert{margin:12px 0 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .lxexpert label{font-weight:600;font-size:14px}
-.lxbest{margin:16px 0 0;padding:16px;border:2px solid var(--bar);border-radius:14px;background:var(--band)}
+.lxbest{margin:16px 0 0;padding:16px;border:2px solid var(--bar);border-radius:20px;background:var(--band);
+  box-shadow:var(--raise-sm)}
 .lxbest>p:first-child{margin:0 0 6px;font:600 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .lxbest .lxcard{border:0;padding:0;background:none}
 .lxgroup{margin:24px 0 0}
 .lxgroup h3{margin:0 0 10px;font-size:16px;display:flex;align-items:center;gap:8px}
 .lxgroup h3 .ct{font-weight:400;color:var(--muted);font-size:14px;opacity:1}
 .lxcards{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.lxcard{padding:14px 16px;border:1px solid var(--grid);border-radius:12px;background:var(--surface)}
+.lxcard{padding:14px 16px;border:1px solid var(--ctl-edge);border-radius:18px;background:var(--band);
+  box-shadow:var(--raise-sm)}
 .lxch{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .lxch h4{margin:0;font-size:16px}
 .lxv{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink);
@@ -947,21 +954,22 @@ legend{padding:0;font-weight:600;margin:0 0 8px}
 .lxmeta{margin:8px 0 0;font-size:12.5px;color:var(--muted)}
 .lxnums{margin:10px 0 0;display:grid;grid-template-columns:max-content 1fr;gap:2px 14px;font:12.5px/1.6 var(--mono);color:var(--ink2)}
 .lxnums dt{color:var(--muted)}.lxnums dd{margin:0}
-.lxnums select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--grid);border-radius:6px}
+.lxnums select{font:inherit;color:var(--ink);background:var(--band);border:1px solid var(--ctl-edge);border-radius:999px;
+  box-shadow:var(--press)}
 .lxhow{margin:10px 0 0;font:600 14px/1 var(--ui);color:var(--onbar);background:var(--bar);border:0;border-radius:9px;
   padding:10px 14px;min-height:40px}
 .lxhow[aria-expanded=true]{background:var(--band);color:var(--ink);border:1px solid var(--grid)}
-.lxhowb{margin:12px 0 0;padding:14px;border:1px solid var(--grid);border-radius:12px;background:var(--plane)}
+.lxhowb{margin:12px 0 0;padding:14px;border:1px solid var(--edge);border-radius:18px;background:var(--plane)}
 .lxroutes{display:flex;flex-wrap:wrap;align-items:center}
 .lxroutes .lxpl{color:var(--muted);font-size:13px;margin:0 8px 5px 0}
 .lxpitch{margin:6px 0 0;color:var(--muted);font-size:13px}
 .lxhowb ol{margin:10px 0 0;padding-left:22px}
 .lxhowb li{margin:6px 0;color:var(--ink2)}
 .lxhowb li b{color:var(--ink)}
-.lxcmd{display:flex;align-items:stretch;gap:0;margin:6px 0;border:1px solid var(--grid);border-radius:9px;
-  background:var(--band);overflow:hidden}
+.lxcmd{display:flex;align-items:stretch;gap:0;margin:6px 0;border:1px solid var(--ctl-edge);border-radius:14px;
+  background:var(--band);box-shadow:var(--press);overflow:hidden}
 .lxcmd code{flex:1;font:13px/1.5 var(--mono);color:var(--ink);padding:9px 11px;overflow-x:auto;white-space:pre}
-.lxcopy{flex:none;font:600 12px/1 var(--ui);background:var(--surface);color:var(--ink);border:0;
+.lxcopy{flex:none;font:600 12px/1 var(--ui);background:transparent;color:var(--ink);border:0;
   border-left:1px solid var(--grid);padding:0 14px;min-width:64px}
 .lxdl{margin:8px 0 0;font-size:13px;color:var(--muted)}
 .lxmore{margin:10px 0 0}

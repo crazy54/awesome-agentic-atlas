@@ -104,128 +104,236 @@ LOCAL_PAGE = {
 }
 
 
-# THE THEMES. Three, and one choice that is not a theme.
+# THE THEMES. Two, and one choice that is not a theme.
 #
-# Light, Dark and High contrast, and "System", which stores nothing and lets the operating system pick: high
-# contrast if it asks for more contrast (`prefers-contrast: more`), otherwise its light or dark preference. The
-# palette is the mascot's. Archie is warm white ceramic, near-black graphite and a bright lime with steel and
-# brass details, and he stands on the homepage masthead, so a page in other colours is a page he is visiting
-# rather than one he lives on:
-#   * Light is the ceramic. Warm glaze for the page and the panels rather than stark white, graphite ink, and
-#     the lime deepened to an olive (`--bar`, `--link`) wherever it is text, a ring or a hairline, because the
-#     lime itself is 1.7:1 on the glaze and cannot be read.
-#   * Dark is the graphite. His lens-black for the page, his graphite for the panels, ceramic ink, steel for
-#     the captions, and the lime at full brightness as the accent.
-#   * High contrast is for low-vision readers, and it is the one held to a stricter arithmetic: every text pair
-#     7:1 (WCAG AAA), every line, ring and icon 3:1, no hairline that is merely a hint. Black, white and his
-#     iris lime. It also changes things that are not colours, all of them paint rather than layout: links are
-#     underlined so they are not told apart by hue alone, the focus ring is 3px with a black halo, a pressed
-#     control carries an outline as well as a fill, and nothing is drawn behind text (no wash, no masthead
-#     art, no text halo, no drop shadows).
+# Light and Dark, and "System", which stores nothing and lets the operating system's light/dark preference
+# pick. The palette is the mascot's. Archie is warm white ceramic, near-black graphite and a bright lime with
+# steel and brass details, and he stands on the homepage masthead, so a page in other colours is a page he is
+# visiting rather than one he lives on. The design language is neumorphic glass: frosted, translucent panels
+# that blur a field of his colours behind them, soft surfaces extruded out of that field by a pair of
+# shadows (one light, one dark), and controls that are pushed *in* when they are pressed.
+#   * Light is glass on the ceramic. The field is his egg-shell with pools of his iris light and his lime;
+#     the panels are white glass over it, and the ink is his graphite. The lime is deepened to an olive
+#     (`--bar`, `--link`) wherever it is text or a ring, because the lime itself is 1.5:1 on the glaze.
+#   * Dark is the graphite. A dark, dark grey for the field with at most a faint lime glow; graphite glass;
+#     his egg-shell (`#EBE5DA`, the main colour of his body) for the text; and the lime for everything that
+#     is not body text -- titles (`--title`), the important words (`--bar`), and the lines (`--grid` and the
+#     glass edge are lime-tinted).
 #
-# The lime fill is its own pair of tokens, `--act` and `--onact`, and that is the one new idea in the token set.
-# `--bar` is drawn as text in a dozen rules -- eyebrows, counts, the inverted badge -- so in light it has to be
-# the deep olive, and an olive button is a drab one. The primary button and a pressed chip are not text, so
-# they take `--act`, which is the real lime in every theme, with graphite ink on it at 8.9:1 or better and a
-# 1px `--act-edge` drawn as an inset shadow so the lime has an edge on the glaze without the box growing.
-# `--act-hi` is its hover.
+# There used to be a third theme, High contrast. It is gone from the menu, and what it was for is not: a
+# reader whose system asks for more contrast (`prefers-contrast: more`), or forces its own colours
+# (`forced-colors: active`), or asks for less transparency (`prefers-reduced-transparency: reduce`), gets
+# the strengthening below automatically, in either theme -- solid panels, no blur, no field, no soft
+# shadows, and (for more contrast) stronger text, 3:1 lines, underlined links and a 3px focus ring. A rule
+# keyed on what the reader's system says reaches more of the readers who need it than a menu item they have
+# to find. A stored "contrast" is migrated silently to "dark" (see HEAD_THEME), which is the half it was:
+# high contrast was a black, dark-scheme theme.
+#
+# The lime fill is its own pair of tokens, `--act` and `--onact`. `--bar` is drawn as text in a dozen rules --
+# eyebrows, counts, the inverted badge -- so in light it has to be the deep olive, and an olive button is a
+# drab one. The primary button and a pressed chip are not text, so they take `--act`, which is the real lime
+# in both themes, with graphite ink on it at 8.9:1 or better and a 1px `--act-edge` drawn as an inset
+# shadow so the lime has an edge on the glaze without the box growing. `--act-hi` is its hover.
 #
 # ONE COPY, and why it is here. There used to be eight themes times two modes in four hand-kept copies --
 # `19_pages.py`, `20_landing.py`, `22_detail.py` and a set of literals in every head script -- held to each
-# other by a byte comparison. Three themes in one constant need no comparison: the three generators drop
+# other by a byte comparison. Two themes in one constant need no comparison: the three generators drop
 # `THEME_CSS` into their own stylesheets (the catalogue's inline `<style>`, `pages.css`, `detail.css`), every
 # page family's `<head>` takes `HEAD_THEME`, and `tests/theme_test.py` measures this file.
 #
-# What is NOT here: anything that sizes or places a box. The redesign that introduced this block was held to
-# "the layout does not move", and that is a property of this constant as much as of the values in it -- every
-# rule below changes paint only (colour, background, border colour, outline, shadow, text decoration), and
-# `tests/cards-check.mjs` measures the layout in every theme. A border *width*, a padding or a font weight
-# added here would be a layout change on every page of the site at once.
-THEMES = ("light", "dark", "contrast")
+# What is NOT here: anything that sizes or places a box. Both redesigns were held to "the layout does not
+# move", and that is a property of this constant as much as of the values in it -- every rule below changes
+# paint only (colour, background, border colour and radius, outline, shadow, backdrop filter, text
+# decoration), and `tests/cards-check.mjs` measures the layout in both themes. A border *width*, a padding or
+# a font weight added here would be a layout change on every page of the site at once. That is why every
+# glass edge and every neumorphic rim is a `box-shadow` or a border *colour*, never a new border.
+THEMES = ("light", "dark")
 
 # The colour tokens, per theme. Opaque hex, every one, because WCAG contrast is a ratio between two colours and
-# an rgba over an unknown backdrop has no second colour to be a ratio against. `theme_test.py` reads these out
-# of `THEME_CSS` and checks every pairing the stylesheets use -- a ratio written in a comment is not a test.
+# an rgba over an unknown backdrop has no second colour to be a ratio against. The glass is translucent, so
+# these are not all the colours a reader sees -- `GLASS` below is the rest -- and `theme_test.py` measures
+# text against what the glass actually composites to over its worst backdrop, not just against these.
+#   --surface  the field's base colour, and the page's colour wherever there is no glass
+#   --plane    an opaque stand-in for a glass panel (the panel over the bare field), and the panel itself
+#              wherever the glass is switched off
+#   --band     chips, inputs and raised rows: a step off the plane
+#   --title    headings: the ink in light, the lime in dark
 PALETTE = {
     "dark": {
-        "surface": "#121314", "plane": "#1A1A1A", "band": "#252423", "ink": "#F3EFE8", "ink2": "#D9D3C8",
-        "muted": "#ABA69F", "grid": "#3E3C39", "link": "#CBE46E", "bar": "#A4C812",
-        "good": "#6FD3A0", "warn": "#F29484", "off": "#ABA69F", "onbar": "#151614",
+        "surface": "#1C1C1B", "plane": "#2A2A27", "band": "#2F2E2C", "ink": "#EBE5DA", "ink2": "#D4CEC3",
+        "muted": "#AEAAA4", "title": "#A4C812", "grid": "#3F4526", "link": "#DCF55E", "bar": "#A4C812",
+        "good": "#6FD3A0", "warn": "#F29484", "off": "#AEAAA4", "onbar": "#151614",
         "act": "#A4C812", "act-hi": "#B9DD2E", "act-edge": "#C4E04A", "onact": "#151614",
         "accent-sky": "#8CC6DE", "accent-mint": "#6FD3A0", "accent-gold": "#DDB36A",
         "accent-coral": "#F29484", "accent-violet": "#B9AAF0"},
     "light": {
-        "surface": "#F1EDE6", "plane": "#FBFAF7", "band": "#E8E3D9", "ink": "#1C1B1B", "ink2": "#3A3835",
-        "muted": "#5E5A54", "grid": "#CBC3B5", "link": "#3B5C00", "bar": "#456A00",
-        "good": "#14704A", "warn": "#A23B2A", "off": "#5E5A54", "onbar": "#FFFFFF",
-        "act": "#A4C812", "act-hi": "#B6D93A", "act-edge": "#6B8A00", "onact": "#1C1B1B",
-        "accent-sky": "#1F5F7A", "accent-mint": "#14704A", "accent-gold": "#80560F",
+        "surface": "#EAE5DA", "plane": "#F5F2EC", "band": "#F1EEE7", "ink": "#1C1B1B", "ink2": "#3A3835",
+        "muted": "#56524C", "title": "#1C1B1B", "grid": "#CEC6B7", "link": "#3B5C00", "bar": "#3E6000",
+        "good": "#0F6741", "warn": "#A23B2A", "off": "#56524C", "onbar": "#FFFFFF",
+        "act": "#A4C812", "act-hi": "#B6D93A", "act-edge": "#5E7A00", "onact": "#1C1B1B",
+        "accent-sky": "#1F5F7A", "accent-mint": "#0F6741", "accent-gold": "#7A520E",
         "accent-coral": "#A23B2A", "accent-violet": "#5B4A9E"},
-    "contrast": {
-        "surface": "#000000", "plane": "#000000", "band": "#141414", "ink": "#FFFFFF", "ink2": "#F2F2F2",
-        "muted": "#D6D6D6", "grid": "#B5B5B5", "link": "#E1FA64", "bar": "#DCF55E",
-        "good": "#7DF0B0", "warn": "#FFB4A8", "off": "#D6D6D6", "onbar": "#000000",
-        "act": "#DCF55E", "act-hi": "#FFFFFF", "act-edge": "#FFFFFF", "onact": "#000000",
-        "accent-sky": "#A6E1FF", "accent-mint": "#7DF0B0", "accent-gold": "#FFD98A",
-        "accent-coral": "#FFB4A8", "accent-violet": "#D9CCFF"},
 }
 
-# The background behind the layout, per theme. Two soft pools of light, fixed to the window: the lime one high
-# on the right, where the mascot stands, and a ceramic one on the left under the title. Static gradients, so a
-# reader who asked for reduced motion has nothing to ask them to stop doing. High contrast has none.
-WASH = {
-    "dark": "radial-gradient(1100px 560px at 82% -14%,rgba(164,200,18,.09),transparent 68%),"
-            "radial-gradient(900px 520px at 0% -10%,rgba(235,229,218,.05),transparent 70%)",
-    "light": "radial-gradient(1100px 560px at 82% -14%,rgba(164,200,18,.12),transparent 68%),"
-             "radial-gradient(900px 520px at 0% -10%,rgba(255,255,255,.75),transparent 70%)",
-    "contrast": "none",
+# THE GLASS, per theme: everything that is translucent or a shadow, so none of it is a colour a ratio can be
+# taken against on its own. `theme_test.py` reads these and does the compositing.
+#   panel / panel-hi  the glass fill, as (colour, alpha). `panel` is a STATIC panel -- header, footer, the
+#                     spotlight, a card -- which only ever sits on the field, so its worst backdrop is the
+#                     field's darkest (light) or lightest (dark) point, every pool at its peak. `panel-hi` is a
+#                     FLOATING one -- the pinned search bar, a menu, a dialog -- which anything can scroll
+#                     under, a screenshot included, so its worst backdrop is pure black (light) or pure white
+#                     (dark). That is why it is denser.
+#   pools             the field's pools of colour, as (colour, peak alpha), for the same arithmetic. They must
+#                     agree with the gradients in `WASH`; the test parses `WASH` and checks they do.
+#   edge              the glass's hairline: a border *colour*, on borders the layout already has
+#   ctl-edge          a control's border colour (chips, inputs), a little firmer than the glass's
+#   raise / -sm / -hi the neumorphic extrusion: a light shadow up and left, a dark one down and right
+#   press             the same pair inset: a well (inputs, code) or a control being pressed
+#   press-act         a pressed lime control: the lime pushed in
+#   fog               Archie's fog prank (`html[data-fog]`, archie.js): the glass frosted over for 1.6 s, as
+#                     (colour, alpha). Denser than the panel, so every text pair still passes while it is up;
+#                     it is measured with the static panels, over the field's worst point.
+GLASS = {
+    "dark": {
+        "panel": ("#33322F", .62), "panel-hi": ("#2B2A29", .94),
+        "pools": (("#A4C812", .085), ("#EBE5DA", .035)),
+        "edge": "rgba(164,200,18,.20)", "ctl-edge": "rgba(164,200,18,.22)",
+        "raise": "-6px -6px 18px rgba(255,255,255,.035),10px 12px 28px rgba(0,0,0,.55)",
+        "raise-sm": "-2px -2px 6px rgba(255,255,255,.045),3px 4px 10px rgba(0,0,0,.5)",
+        "raise-hi": "-3px -3px 8px rgba(255,255,255,.06),5px 7px 16px rgba(0,0,0,.6)",
+        "press": "inset 3px 3px 7px rgba(0,0,0,.55),inset -2px -2px 6px rgba(255,255,255,.045)",
+        "press-act": "inset 2px 2px 5px rgba(0,0,0,.32),inset -2px -2px 5px rgba(255,255,255,.3)",
+        "fog": ("#3C3B38", .9), "bdf": "blur(20px) saturate(1.4)"},
+    "light": {
+        "panel": ("#FFFFFF", .52), "panel-hi": ("#FCFBF8", .86),
+        "pools": (("#DCF55E", .55), ("#A4C812", .34)),
+        "edge": "rgba(255,255,255,.9)", "ctl-edge": "rgba(120,108,86,.26)",
+        "raise": "-10px -10px 26px rgba(255,255,255,.75),12px 14px 34px rgba(98,88,60,.22),"
+                 "inset 0 1px 0 rgba(255,255,255,.95)",
+        "raise-sm": "-3px -3px 8px rgba(255,255,255,.9),3px 4px 10px rgba(104,92,66,.20)",
+        "raise-hi": "-4px -4px 10px rgba(255,255,255,.95),5px 7px 16px rgba(104,92,66,.26)",
+        "press": "inset 3px 3px 7px rgba(104,92,66,.20),inset -3px -3px 7px rgba(255,255,255,.85)",
+        "press-act": "inset 2px 2px 5px rgba(60,80,0,.35),inset -2px -2px 5px rgba(255,255,255,.4)",
+        "fog": ("#FFFFFF", .84), "bdf": "blur(22px) saturate(1.7)"},
 }
+
+# The field behind the glass, per theme: pools of Archie's colours, fixed to the window so the glass always has
+# something to frost, static so a reader who asked for reduced motion has nothing to ask them to stop doing.
+# Light: iris-light pools on the left and the bottom, lime ones at the top right (where the mascot stands)
+# and the right, and a white bloom in the middle so the glass does not read green all over. Dark: a lime glow
+# where the mascot stands, a fainter one opposite, and a breath of ceramic under the title -- nothing more.
+# Each pool's peak alpha is the one `GLASS[...]["pools"]` names; the white bloom only lightens, so it is not a
+# worst case and is not listed there.
+WASH = {
+    "dark": "radial-gradient(1000px 640px at 86% -12%,rgba(164,200,18,.085),transparent 66%),"
+            "radial-gradient(800px 600px at 0% 100%,rgba(164,200,18,.04),transparent 70%),"
+            "radial-gradient(900px 560px at 4% -6%,rgba(235,229,218,.035),transparent 70%)",
+    "light": "radial-gradient(820px 620px at 88% -6%,rgba(164,200,18,.30),transparent 66%),"
+             "radial-gradient(760px 600px at 6% 28%,rgba(220,245,94,.55),transparent 68%),"
+             "radial-gradient(900px 700px at 62% 108%,rgba(220,245,94,.42),transparent 70%),"
+             "radial-gradient(700px 520px at 100% 62%,rgba(164,200,18,.34),transparent 70%),"
+             "radial-gradient(900px 700px at 30% 70%,rgba(255,255,255,.65),transparent 70%)",
+}
+
+# What the strengthened modes lift the secondary inks and the lines to, per theme. Text 7:1 and lines 3:1
+# on the solid plane, which is what high contrast used to promise; `theme_test.py` measures them.
+STRONG = {
+    "dark": {"ink": "#FFFFFF", "ink2": "#F2EEE6", "muted": "#E0DBD2", "grid": "#8FA83A", "link": "#E8FA8A",
+             "edge": "#8FA83A", "ctl-edge": "#C9C4BB"},
+    "light": {"ink": "#000000", "ink2": "#1C1B1B", "muted": "#2E2C29", "grid": "#7E776B", "link": "#2C4500",
+              "edge": "#7E776B", "ctl-edge": "#56524C"},
+}
+
+
+def _rgba(colour: str, alpha: float) -> str:
+    h = colour.lstrip("#")
+    return f"rgba({int(h[0:2], 16)},{int(h[2:4], 16)},{int(h[4:6], 16)},{alpha:g})"
 
 
 def _tokens(theme: str) -> str:
-    return "".join(f"--{k}:{v};" for k, v in PALETTE[theme].items()) + f"--wash:{WASH[theme]};"
+    g = GLASS[theme]
+    glass = {"panel": _rgba(*g["panel"]), "panel-hi": _rgba(*g["panel-hi"]), "fog": _rgba(*g["fog"]),
+             "bdf": g["bdf"]}
+    glass |= {k: g[k] for k in ("edge", "ctl-edge", "raise", "raise-sm", "raise-hi", "press", "press-act")}
+    return ("".join(f"--{k}:{v};" for k, v in PALETTE[theme].items())
+            + "".join(f"--{k}:{v};" for k, v in glass.items()) + f"--wash:{WASH[theme]};")
 
+
+def _strong(theme: str) -> str:
+    return "".join(f"--{k}:{v};" for k, v in STRONG[theme].items())
+
+
+# The glass switched off: an opaque panel, no blur, no field. Shared by the three modes that ask for it.
+_SOLID = "--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;"
+_FLAT = "--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-act:none;"
 
 THEME_CSS = (
     "/* THE THEMES. Written by `THEME_CSS` in scripts/sitewide.py, which explains every value; do not edit the\n"
     "   copy in a generated file. Dark is on `:root`, so it needs no attribute to be true -- it is the floor a\n"
     "   reader with JavaScript off gets. */\n"
     ":root{color-scheme:dark;" + _tokens("dark")
-    # The structural half. Not colours, and not per theme: one typeface, an opaque panel, no backdrop filter.
-    # `--bdf:none` and not `blur(0px)`: a non-none backdrop-filter makes an element a containing block and a
-    # stacking context, which would re-parent the mascot's speech bubble and re-rank the pinned bar.
+    # The structural half: one typeface, the same in both themes.
     + '--ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;'
-    '--mono:"Geist Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;'
-    "--panel:var(--plane);--bdf:none}\n"
+    '--mono:"Geist Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace}\n'
     "html[data-theme=light]{color-scheme:light;" + _tokens("light") + "}\n"
-    "html[data-theme=contrast]{color-scheme:dark;" + _tokens("contrast") + "--lift:none;--lift-hi:none}\n"
+    # ARCHIE'S FOG PRANK: every pane frosts over. After the themes, so it wins over both at the same weight,
+    # and before the strengthened modes below, so a reader who asked for solid panels never sees it.
+    "html[data-fog]{--panel:var(--fog);--panel-hi:var(--fog);--bdf:blur(34px) saturate(.6)}\n"
+    # THE GLASS SWITCHED OFF, for the readers and browsers that need it. Each block restates both themes'
+    # selectors, `:root` and `html[data-theme]`, so it outranks the theme block above by coming after it at
+    # the same weight. A browser with no backdrop filter would show the translucent fill over the page with
+    # nothing frosting it, so it gets the opaque panel too.
+    "@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){"
+    ":root,html[data-theme]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none}}\n"
+    "@media (prefers-reduced-transparency:reduce){:root,html[data-theme]{" + _SOLID + "--edge:var(--grid)}}\n"
+    "@media (prefers-contrast:more){:root{" + _SOLID + _FLAT + _strong("dark") + "}"
+    "html[data-theme=light]{" + _SOLID + _FLAT + _strong("light") + "}}\n"
+    "@media (forced-colors:active){:root,html[data-theme]{" + _SOLID + _FLAT + "}}\n"
     + r"""/* Paint only, below this line: no rule here may size or place a box (see the note in sitewide.py). */
+/* THE FIELD, on every page family: fixed to the window and behind everything, so the glass always has it
+   to frost and it never scrolls out from under a panel. A pseudo-element of <body> at z-index -1 paints
+   over the canvas (which wears the body's --surface) and under every box on the page. */
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--wash);pointer-events:none}
 /* The focus ring, for every page family: the accent, 2px, clear of the control so it never sits on the
-   control's own border. `:focus-visible` so a click does not leave a ring on the chip that was pressed. */
+   control's own border or its shadows. `:focus-visible` so a click does not leave a ring on the chip that
+   was pressed. */
 :focus-visible{outline:2px solid var(--bar);outline-offset:2px;border-radius:4px}
 ::selection{background:color-mix(in srgb,var(--act) 42%,transparent);color:var(--ink)}
-/* The primary button, on every page family that has one: the lime fill and its edge. An inset shadow is the
-   edge rather than a border, so the box is the size it always was; the second inset is the glaze's own
-   highlight, and the soft drop under it is the only glow on the page. */
-.cta{box-shadow:inset 0 0 0 1px var(--act-edge),inset 0 1px 0 rgba(255,255,255,.28),
-  0 10px 24px -14px color-mix(in srgb,var(--act) 80%,transparent)}
+/* THE CONTROLS, on every page family: extruded pills, pushed in while pressed. `html` in front so these
+   outrank each family's own `.chip{...}`, which sets the fill and border these leave alone. A pressed chip
+   is the lime, pushed in: the fill says "on" and the inset says "held down", two cues rather than one. */
+html .chip{box-shadow:var(--raise-sm);border-color:var(--ctl-edge)}
+html .chip:hover{box-shadow:var(--raise-hi)}
+html .chip:active{box-shadow:var(--press)}
+html .chip[aria-pressed=true]{box-shadow:var(--press-act)}
+/* The primary button, on every page family that has one: the lime fill, its edge, and the extrusion. An
+   inset shadow is the edge rather than a border, so the box is the size it always was. */
+html .cta{border-radius:999px;box-shadow:inset 0 0 0 1px var(--act-edge),inset 0 1px 0 rgba(255,255,255,.3),
+  var(--raise-sm)}
 .cta:hover{background:var(--act-hi);filter:none}
-.cta:active{box-shadow:inset 0 0 0 1px var(--act-edge),inset 0 2px 4px rgba(0,0,0,.18)}
-/* HIGH CONTRAST: the things that are not colours. */
-/* Links are underlined, so a link is not told from text by its hue alone (WCAG 1.4.1) -- except the ones drawn
-   as a pill or a button, whose border already says "press me" in a shape rather than a colour. */
-html[data-theme=contrast] a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
-html[data-theme=contrast] a:hover{text-decoration-thickness:2px}
-html[data-theme=contrast] :is(.chip,.cta,.bychip,.btag,.stamp,.ghstar){text-decoration:none}
-html[data-theme=contrast] :focus-visible{outline:3px solid var(--bar);outline-offset:2px;box-shadow:0 0 0 7px #000}
-html[data-theme=contrast] .cta{box-shadow:inset 0 0 0 2px var(--act-edge)}
-html[data-theme=contrast] [aria-pressed=true]{outline:2px solid var(--ink);outline-offset:1px}
-html[data-theme=contrast] *{text-shadow:none!important}
-html[data-theme=contrast] ::selection{background:var(--bar);color:var(--onbar)}
-/* FORCED COLOURS (Windows High Contrast and its kin). The system palette replaces every colour, which is the
-   point, and three things would go with it: the state of a pressed control, the edge of a button whose only
-   edge was its fill, and the theme swatches, which are previews and mean nothing in system colours. Outlines
-   rather than borders, so nothing grows. */
+html .cta:active{box-shadow:inset 0 0 0 1px var(--act-edge),var(--press-act)}
+/* Titles, in the lime in dark. Page headings only: a heading inside a poster's artwork (`.ph`) sits on a
+   fixed dark stage of its own and keeps its own ink. Zero weight (`:where`), so any heading a page family
+   has already given a colour of its own keeps it; this only dresses the ones that inherit the ink. */
+:where(h1,h2):where(:not(.ph *)){color:var(--title)}
+/* MORE CONTRAST: the things that are not colours. Links are underlined, so a link is not told from text by
+   its hue alone (WCAG 1.4.1) -- except the ones drawn as a pill or a button, whose shape already says "press
+   me". A 3px ring with a halo of the page's own colour, a pressed control outlined as well as filled, and
+   nothing drawn behind text. */
+@media (prefers-contrast:more){
+  a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
+  a:hover{text-decoration-thickness:2px}
+  :is(.chip,.cta,.bychip,.btag,.stamp,.ghstar){text-decoration:none}
+  :focus-visible{outline:3px solid var(--bar);outline-offset:2px;box-shadow:0 0 0 7px var(--surface)}
+  [aria-pressed=true]{outline:2px solid var(--ink);outline-offset:1px}
+  *{text-shadow:none!important}
+  ::selection{background:var(--bar);color:var(--onbar)}
+  .mhart{background:none!important}
+}
+/* FORCED COLOURS (Windows High Contrast and its kin). The system palette replaces every colour and drops
+   every shadow, which is the point, and three things would go with it: the state of a pressed control, the
+   edge of a button whose only edge was its fill, and the theme swatches, which are previews and mean nothing
+   in system colours. Outlines rather than borders, so nothing grows. */
 @media (forced-colors:active){
   :focus-visible{outline:3px solid Highlight;outline-offset:2px}
   [aria-pressed=true]{outline:2px solid Highlight;outline-offset:1px}
@@ -241,16 +349,18 @@ html[data-theme=contrast] ::selection{background:var(--bar);color:var(--onbar)}
 # One `theme-color` meta, set by script, rather than two `media` variants: the HTML spec picks the *first* such
 # element whose media matches, so a pair keyed on `prefers-color-scheme` cannot be overridden by anything
 # appended later, and a reader who chose against their OS would see the chrome in the opposite colour to the
-# page. Its value is `--plane`, the header's own background, and it is a literal because no stylesheet has
+# page. Its value is `--plane`, the header's own opaque stand-in, and it is a literal because no stylesheet has
 # parsed yet when this runs; with JavaScript off it stays dark's, which agrees with the `data-theme="dark"`
 # floor on <html>. After paint the page scripts re-derive it from the computed value (`THEME_JS`).
 #
 # Precedence is the reader's choice, then the operating system, then dark. A stored value that is not one of
-# the three themes is not honoured -- `theme` is reader-writable storage that outlives the release that wrote
-# it. THE MIGRATION is the two keys this deletes. The old site had eight colour "skins" on a second axis,
-# `atlas-skin`, and every one of them had a light and a dark half; the half a reader was wearing is already in
-# `theme`, so the nearest new theme is the one they land on without anything being mapped, and the skin key,
-# and `atlas-unlock` (which only ever unlocked the hidden ninth skin), are removed.
+# the two themes is not honoured -- `theme` is reader-writable storage that outlives the release that wrote
+# it. THE MIGRATIONS. The old site had eight colour "skins" on a second axis, `atlas-skin`, and every one of
+# them had a light and a dark half; the half a reader was wearing is already in `theme`, so the skin key and
+# `atlas-unlock` (which only ever unlocked the hidden ninth skin) are removed and nothing is mapped. And the
+# third theme, High contrast, is rewritten to "dark", the half it was -- once, here, so every page family's
+# script after this one sees a theme it knows. Its accessibility is not lost with it: the stylesheet's
+# `prefers-contrast` rules apply in either theme.
 _PLANES = ", ".join(f'{t}: "{PALETTE[t]["plane"]}"' for t in THEMES)
 HEAD_THEME = f"""<meta name="theme-color" id="tc" content="{PALETTE['dark']['plane']}">
 <script>
@@ -259,9 +369,9 @@ try {{
   if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {{
     localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
   }}
-  if (t !== "light" && t !== "dark" && t !== "contrast")
-    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
-      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (t === "contrast") localStorage.setItem("theme", t = "dark");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
   document.getElementById("tc").content = {{{_PLANES}}}[t];
 }} catch (e) {{}}
@@ -269,31 +379,29 @@ try {{
 """
 
 # The same resolution, for scripts that run after paint: the Settings menu, the light/dark toggle on the facet
-# and project pages, and the OS-preference listeners. A string, so each page family inlines it beside its own
+# and project pages, and the OS-preference listener. A string, so each page family inlines it beside its own
 # controls without a second request.
-#   atlasTheme().choice()  -> "system" | "light" | "dark" | "contrast"   (what the reader picked)
+#   atlasTheme().choice()  -> "system" | "light" | "dark"   (what the reader picked)
 #   atlasTheme().set(c)    -> stores the choice (removing it for "system"), applies it, repaints the chrome
 #   atlasTheme().follow(f) -> calls f() after the OS preference changes, for a reader on "system"
 #   atlasTheme().refresh() -> re-reads the stored choice and applies it (another tab changed it)
 # A function declaration, memoised, rather than a `var` holding an IIFE, and that is load-bearing: the
 # catalogue's page script calls `wireSettings()` from `wire()` hundreds of lines *above* where this is
 # inlined, and a function declaration is hoisted with its body where a `var` is hoisted as `undefined`. The
-# first call also re-applies the stored choice, which is what catches up a page whose head script is a
-# release older than this one: the project pages are rewritten by the daily build, and until then theirs
-# knows only light and dark.
+# first call also re-applies the stored choice and repeats the head script's migration, which is what catches
+# up a page whose head script is a release older than this one: the project pages are rewritten by the daily
+# build, and until then theirs still knows "contrast".
 THEME_JS = r"""function atlasTheme() {
   if (atlasTheme.api) return atlasTheme.api;
   var root = document.documentElement;
   var stored = function () { try { return localStorage.getItem("theme"); } catch (e) { return null; } };
-  var valid = function (t) { return t === "light" || t === "dark" || t === "contrast"; };
+  var valid = function (t) { return t === "light" || t === "dark"; };
   var system = function () {
-    try {
-      return matchMedia("(prefers-contrast: more)").matches ? "contrast"
-        : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-    } catch (e) { return "dark"; }
+    try { return matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"; } catch (e) { return "dark"; }
   };
   var apply = function () {
     var t = stored();
+    if (t === "contrast") { try { localStorage.setItem("theme", t = "dark"); } catch (e) {} }
     root.dataset.theme = valid(t) ? t : system();
     delete root.dataset.skin;
     var plane = getComputedStyle(root).getPropertyValue("--plane").trim(), tc = document.getElementById("tc");
@@ -308,10 +416,7 @@ THEME_JS = r"""function atlasTheme() {
     },
     follow: function (f) {
       var on = function () { if (api.choice() === "system") { apply(); if (f) f(); } };
-      try {
-        matchMedia("(prefers-color-scheme: light)").addEventListener("change", on);
-        matchMedia("(prefers-contrast: more)").addEventListener("change", on);
-      } catch (e) {}
+      try { matchMedia("(prefers-color-scheme: light)").addEventListener("change", on); } catch (e) {}
     }
   };
   apply();

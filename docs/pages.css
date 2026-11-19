@@ -4,36 +4,58 @@
 /* THE THEMES. Written by `THEME_CSS` in scripts/sitewide.py, which explains every value; do not edit the
    copy in a generated file. Dark is on `:root`, so it needs no attribute to be true -- it is the floor a
    reader with JavaScript off gets. */
-:root{color-scheme:dark;--surface:#121314;--plane:#1A1A1A;--band:#252423;--ink:#F3EFE8;--ink2:#D9D3C8;--muted:#ABA69F;--grid:#3E3C39;--link:#CBE46E;--bar:#A4C812;--good:#6FD3A0;--warn:#F29484;--off:#ABA69F;--onbar:#151614;--act:#A4C812;--act-hi:#B9DD2E;--act-edge:#C4E04A;--onact:#151614;--accent-sky:#8CC6DE;--accent-mint:#6FD3A0;--accent-gold:#DDB36A;--accent-coral:#F29484;--accent-violet:#B9AAF0;--wash:radial-gradient(1100px 560px at 82% -14%,rgba(164,200,18,.09),transparent 68%),radial-gradient(900px 520px at 0% -10%,rgba(235,229,218,.05),transparent 70%);--ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;--mono:"Geist Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;--panel:var(--plane);--bdf:none}
-html[data-theme=light]{color-scheme:light;--surface:#F1EDE6;--plane:#FBFAF7;--band:#E8E3D9;--ink:#1C1B1B;--ink2:#3A3835;--muted:#5E5A54;--grid:#CBC3B5;--link:#3B5C00;--bar:#456A00;--good:#14704A;--warn:#A23B2A;--off:#5E5A54;--onbar:#FFFFFF;--act:#A4C812;--act-hi:#B6D93A;--act-edge:#6B8A00;--onact:#1C1B1B;--accent-sky:#1F5F7A;--accent-mint:#14704A;--accent-gold:#80560F;--accent-coral:#A23B2A;--accent-violet:#5B4A9E;--wash:radial-gradient(1100px 560px at 82% -14%,rgba(164,200,18,.12),transparent 68%),radial-gradient(900px 520px at 0% -10%,rgba(255,255,255,.75),transparent 70%);}
-html[data-theme=contrast]{color-scheme:dark;--surface:#000000;--plane:#000000;--band:#141414;--ink:#FFFFFF;--ink2:#F2F2F2;--muted:#D6D6D6;--grid:#B5B5B5;--link:#E1FA64;--bar:#DCF55E;--good:#7DF0B0;--warn:#FFB4A8;--off:#D6D6D6;--onbar:#000000;--act:#DCF55E;--act-hi:#FFFFFF;--act-edge:#FFFFFF;--onact:#000000;--accent-sky:#A6E1FF;--accent-mint:#7DF0B0;--accent-gold:#FFD98A;--accent-coral:#FFB4A8;--accent-violet:#D9CCFF;--wash:none;--lift:none;--lift-hi:none}
+:root{color-scheme:dark;--surface:#1C1C1B;--plane:#2A2A27;--band:#2F2E2C;--ink:#EBE5DA;--ink2:#D4CEC3;--muted:#AEAAA4;--title:#A4C812;--grid:#3F4526;--link:#DCF55E;--bar:#A4C812;--good:#6FD3A0;--warn:#F29484;--off:#AEAAA4;--onbar:#151614;--act:#A4C812;--act-hi:#B9DD2E;--act-edge:#C4E04A;--onact:#151614;--accent-sky:#8CC6DE;--accent-mint:#6FD3A0;--accent-gold:#DDB36A;--accent-coral:#F29484;--accent-violet:#B9AAF0;--panel:rgba(51,50,47,0.62);--panel-hi:rgba(43,42,41,0.94);--fog:rgba(60,59,56,0.9);--bdf:blur(20px) saturate(1.4);--edge:rgba(164,200,18,.20);--ctl-edge:rgba(164,200,18,.22);--raise:-6px -6px 18px rgba(255,255,255,.035),10px 12px 28px rgba(0,0,0,.55);--raise-sm:-2px -2px 6px rgba(255,255,255,.045),3px 4px 10px rgba(0,0,0,.5);--raise-hi:-3px -3px 8px rgba(255,255,255,.06),5px 7px 16px rgba(0,0,0,.6);--press:inset 3px 3px 7px rgba(0,0,0,.55),inset -2px -2px 6px rgba(255,255,255,.045);--press-act:inset 2px 2px 5px rgba(0,0,0,.32),inset -2px -2px 5px rgba(255,255,255,.3);--wash:radial-gradient(1000px 640px at 86% -12%,rgba(164,200,18,.085),transparent 66%),radial-gradient(800px 600px at 0% 100%,rgba(164,200,18,.04),transparent 70%),radial-gradient(900px 560px at 4% -6%,rgba(235,229,218,.035),transparent 70%);--ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;--mono:"Geist Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace}
+html[data-theme=light]{color-scheme:light;--surface:#EAE5DA;--plane:#F5F2EC;--band:#F1EEE7;--ink:#1C1B1B;--ink2:#3A3835;--muted:#56524C;--title:#1C1B1B;--grid:#CEC6B7;--link:#3B5C00;--bar:#3E6000;--good:#0F6741;--warn:#A23B2A;--off:#56524C;--onbar:#FFFFFF;--act:#A4C812;--act-hi:#B6D93A;--act-edge:#5E7A00;--onact:#1C1B1B;--accent-sky:#1F5F7A;--accent-mint:#0F6741;--accent-gold:#7A520E;--accent-coral:#A23B2A;--accent-violet:#5B4A9E;--panel:rgba(255,255,255,0.52);--panel-hi:rgba(252,251,248,0.86);--fog:rgba(255,255,255,0.84);--bdf:blur(22px) saturate(1.7);--edge:rgba(255,255,255,.9);--ctl-edge:rgba(120,108,86,.26);--raise:-10px -10px 26px rgba(255,255,255,.75),12px 14px 34px rgba(98,88,60,.22),inset 0 1px 0 rgba(255,255,255,.95);--raise-sm:-3px -3px 8px rgba(255,255,255,.9),3px 4px 10px rgba(104,92,66,.20);--raise-hi:-4px -4px 10px rgba(255,255,255,.95),5px 7px 16px rgba(104,92,66,.26);--press:inset 3px 3px 7px rgba(104,92,66,.20),inset -3px -3px 7px rgba(255,255,255,.85);--press-act:inset 2px 2px 5px rgba(60,80,0,.35),inset -2px -2px 5px rgba(255,255,255,.4);--wash:radial-gradient(820px 620px at 88% -6%,rgba(164,200,18,.30),transparent 66%),radial-gradient(760px 600px at 6% 28%,rgba(220,245,94,.55),transparent 68%),radial-gradient(900px 700px at 62% 108%,rgba(220,245,94,.42),transparent 70%),radial-gradient(700px 520px at 100% 62%,rgba(164,200,18,.34),transparent 70%),radial-gradient(900px 700px at 30% 70%,rgba(255,255,255,.65),transparent 70%);}
+html[data-fog]{--panel:var(--fog);--panel-hi:var(--fog);--bdf:blur(34px) saturate(.6)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){:root,html[data-theme]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none}}
+@media (prefers-reduced-transparency:reduce){:root,html[data-theme]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--edge:var(--grid)}}
+@media (prefers-contrast:more){:root{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-act:none;--ink:#FFFFFF;--ink2:#F2EEE6;--muted:#E0DBD2;--grid:#8FA83A;--link:#E8FA8A;--edge:#8FA83A;--ctl-edge:#C9C4BB;}html[data-theme=light]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-act:none;--ink:#000000;--ink2:#1C1B1B;--muted:#2E2C29;--grid:#7E776B;--link:#2C4500;--edge:#7E776B;--ctl-edge:#56524C;}}
+@media (forced-colors:active){:root,html[data-theme]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-act:none;}}
 /* Paint only, below this line: no rule here may size or place a box (see the note in sitewide.py). */
+/* THE FIELD, on every page family: fixed to the window and behind everything, so the glass always has it
+   to frost and it never scrolls out from under a panel. A pseudo-element of <body> at z-index -1 paints
+   over the canvas (which wears the body's --surface) and under every box on the page. */
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--wash);pointer-events:none}
 /* The focus ring, for every page family: the accent, 2px, clear of the control so it never sits on the
-   control's own border. `:focus-visible` so a click does not leave a ring on the chip that was pressed. */
+   control's own border or its shadows. `:focus-visible` so a click does not leave a ring on the chip that
+   was pressed. */
 :focus-visible{outline:2px solid var(--bar);outline-offset:2px;border-radius:4px}
 ::selection{background:color-mix(in srgb,var(--act) 42%,transparent);color:var(--ink)}
-/* The primary button, on every page family that has one: the lime fill and its edge. An inset shadow is the
-   edge rather than a border, so the box is the size it always was; the second inset is the glaze's own
-   highlight, and the soft drop under it is the only glow on the page. */
-.cta{box-shadow:inset 0 0 0 1px var(--act-edge),inset 0 1px 0 rgba(255,255,255,.28),
-  0 10px 24px -14px color-mix(in srgb,var(--act) 80%,transparent)}
+/* THE CONTROLS, on every page family: extruded pills, pushed in while pressed. `html` in front so these
+   outrank each family's own `.chip{...}`, which sets the fill and border these leave alone. A pressed chip
+   is the lime, pushed in: the fill says "on" and the inset says "held down", two cues rather than one. */
+html .chip{box-shadow:var(--raise-sm);border-color:var(--ctl-edge)}
+html .chip:hover{box-shadow:var(--raise-hi)}
+html .chip:active{box-shadow:var(--press)}
+html .chip[aria-pressed=true]{box-shadow:var(--press-act)}
+/* The primary button, on every page family that has one: the lime fill, its edge, and the extrusion. An
+   inset shadow is the edge rather than a border, so the box is the size it always was. */
+html .cta{border-radius:999px;box-shadow:inset 0 0 0 1px var(--act-edge),inset 0 1px 0 rgba(255,255,255,.3),
+  var(--raise-sm)}
 .cta:hover{background:var(--act-hi);filter:none}
-.cta:active{box-shadow:inset 0 0 0 1px var(--act-edge),inset 0 2px 4px rgba(0,0,0,.18)}
-/* HIGH CONTRAST: the things that are not colours. */
-/* Links are underlined, so a link is not told from text by its hue alone (WCAG 1.4.1) -- except the ones drawn
-   as a pill or a button, whose border already says "press me" in a shape rather than a colour. */
-html[data-theme=contrast] a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
-html[data-theme=contrast] a:hover{text-decoration-thickness:2px}
-html[data-theme=contrast] :is(.chip,.cta,.bychip,.btag,.stamp,.ghstar){text-decoration:none}
-html[data-theme=contrast] :focus-visible{outline:3px solid var(--bar);outline-offset:2px;box-shadow:0 0 0 7px #000}
-html[data-theme=contrast] .cta{box-shadow:inset 0 0 0 2px var(--act-edge)}
-html[data-theme=contrast] [aria-pressed=true]{outline:2px solid var(--ink);outline-offset:1px}
-html[data-theme=contrast] *{text-shadow:none!important}
-html[data-theme=contrast] ::selection{background:var(--bar);color:var(--onbar)}
-/* FORCED COLOURS (Windows High Contrast and its kin). The system palette replaces every colour, which is the
-   point, and three things would go with it: the state of a pressed control, the edge of a button whose only
-   edge was its fill, and the theme swatches, which are previews and mean nothing in system colours. Outlines
-   rather than borders, so nothing grows. */
+html .cta:active{box-shadow:inset 0 0 0 1px var(--act-edge),var(--press-act)}
+/* Titles, in the lime in dark. Page headings only: a heading inside a poster's artwork (`.ph`) sits on a
+   fixed dark stage of its own and keeps its own ink. Zero weight (`:where`), so any heading a page family
+   has already given a colour of its own keeps it; this only dresses the ones that inherit the ink. */
+:where(h1,h2):where(:not(.ph *)){color:var(--title)}
+/* MORE CONTRAST: the things that are not colours. Links are underlined, so a link is not told from text by
+   its hue alone (WCAG 1.4.1) -- except the ones drawn as a pill or a button, whose shape already says "press
+   me". A 3px ring with a halo of the page's own colour, a pressed control outlined as well as filled, and
+   nothing drawn behind text. */
+@media (prefers-contrast:more){
+  a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
+  a:hover{text-decoration-thickness:2px}
+  :is(.chip,.cta,.bychip,.btag,.stamp,.ghstar){text-decoration:none}
+  :focus-visible{outline:3px solid var(--bar);outline-offset:2px;box-shadow:0 0 0 7px var(--surface)}
+  [aria-pressed=true]{outline:2px solid var(--ink);outline-offset:1px}
+  *{text-shadow:none!important}
+  ::selection{background:var(--bar);color:var(--onbar)}
+  .mhart{background:none!important}
+}
+/* FORCED COLOURS (Windows High Contrast and its kin). The system palette replaces every colour and drops
+   every shadow, which is the point, and three things would go with it: the state of a pressed control, the
+   edge of a button whose only edge was its fill, and the theme swatches, which are previews and mean nothing
+   in system colours. Outlines rather than borders, so nothing grows. */
 @media (forced-colors:active){
   :focus-visible{outline:3px solid Highlight;outline-offset:2px}
   [aria-pressed=true]{outline:2px solid Highlight;outline-offset:1px}
@@ -42,14 +64,15 @@ html[data-theme=contrast] ::selection{background:var(--bar);color:var(--onbar)}
   .mhart{background:none!important}
 }
 *{box-sizing:border-box}
-/* --ui and --wash are the structural tokens `THEME_CSS` declares above: the page's own font stack in every
-   theme, and the soft light behind the layout. See the note beside them in scripts/sitewide.py. */
-body{margin:0;background:var(--surface);background-image:var(--wash);
-  background-attachment:fixed;color:var(--ink);font:15px/1.5 var(--ui)}
+/* --ui is the page's own font stack in both themes. The field behind the glass is `body::before` in
+   `THEME_CSS` above; this only sets --surface, the colour it is translucent over. */
+body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.5 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
-header{background:var(--panel);backdrop-filter:var(--bdf);border-bottom:1px solid var(--grid);
-  padding:22px 20px 16px}
+/* A pane of the glass. Static, and nothing inside it is positioned, so the backdrop filter changes no
+   containing block -- the layout diff in the theme work measured every box on these pages unmoved. */
+header{background:var(--panel);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
+  border-bottom:1px solid var(--edge);padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 6px;font-size:26px;letter-spacing:-.02em}
 h2{margin:34px 0 8px;font-size:16px;letter-spacing:-.01em}
@@ -69,12 +92,12 @@ button{font:inherit;cursor:pointer}
    Filled with the lime, `--act`, which is why it needs --onact for its ink; its edge and hover are in
    `THEME_CSS`, shared with every primary button on the site. */
 .cta{display:inline-block;background:var(--act);color:var(--onact);font-weight:600;
-  border-radius:8px;padding:9px 16px;margin:14px 0 0}
+  border-radius:999px;padding:9px 16px;margin:14px 0 0}
 .cta:hover{text-decoration:none}
 main{padding:0 20px 64px}
 table{width:100%;border-collapse:collapse;margin-top:14px}
 th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
-  padding:8px 10px;border-bottom:1px solid var(--grid);background:var(--surface)}
+  padding:8px 10px;border-bottom:1px solid var(--grid);background:transparent}
 th.n,td.n{text-align:right}
 th.c,td.c{text-align:center}
 td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
@@ -84,7 +107,7 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
 .rk{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .shot{width:200px}
 .shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:6px;
-  background:var(--band);border:1px solid var(--grid);display:block}
+  background:var(--band);border:1px solid var(--ctl-edge);display:block}
 /* These two set the table's width. Auto table layout takes the widest unbreakable run in the column
    across every row on the page, and neither a slash nor a comma is a break opportunity in Chrome or
    Safari, so a repo name and a blurb naming six agents between them demand more than the content box
@@ -104,9 +127,9 @@ a.nwo:hover{color:var(--ink)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
 .desc{color:var(--ink2);font-size:13.5px;max-width:44em;overflow-wrap:anywhere}
 .cmd{display:block;margin-top:7px;font:12px/1.5 var(--mono);
-  color:var(--ink2);background:var(--band);border:1px solid var(--grid);border-radius:5px;
-  padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
-.tag{display:inline-block;background:var(--band);border:1px solid var(--grid);border-radius:5px;
+  color:var(--ink2);background:var(--band);border:1px solid var(--ctl-edge);border-radius:10px;
+  box-shadow:var(--press);padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
+.tag{display:inline-block;background:var(--band);border:1px solid var(--ctl-edge);border-radius:999px;
   padding:2px 7px;font-size:11.5px;color:var(--ink2);margin:0 4px 4px 0;white-space:nowrap}
 .tag.cat{border-color:var(--bar);color:var(--ink)}
 .os{font-size:11.5px;letter-spacing:.02em;white-space:nowrap}
@@ -186,7 +209,7 @@ a.nwo:hover{color:var(--ink)}
    one line each; `minmax(0,1fr)` rather than `1fr` because a `code.cmd` with no break opportunity in
    it will otherwise push a grid track wider than its share and take the card with it. */
 .pick{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:4px 26px;align-items:start;
-  background:var(--plane);border:1px solid var(--grid);border-radius:10px;
+  background:var(--panel);border:1px solid var(--edge);border-radius:20px;box-shadow:var(--raise-sm);
   padding:16px 18px;margin:0 0 12px}
 .pick>*{grid-column:1;min-width:0}
 .pick .ev,.pick .os,.pick .tp{grid-column:2}
@@ -217,7 +240,8 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
    without a query for each step. */
 .colls{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:14px;
   grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
-.coll{background:var(--plane);border:1px solid var(--grid);border-radius:10px;padding:16px 18px}
+.coll{background:var(--panel);border:1px solid var(--edge);border-radius:20px;box-shadow:var(--raise-sm);
+  padding:16px 18px}
 .coll h2{margin:2px 0 0;font-size:18px;letter-spacing:-.02em}
 .coll .intro{font-size:13.5px;margin-top:8px}
 
@@ -243,8 +267,8 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
    phone, where a fixed 320 plus the padding leaves no sliver of the next card -- and that sliver is the
    only thing on screen saying the rail scrolls. */
 .dcard{flex:0 0 min(320px,78vw);scroll-snap-align:start;display:flex;flex-direction:column;
-  background:var(--plane);border:1px solid var(--grid);border-radius:10px;padding:14px 16px 12px;
-  border-top:3px solid var(--card-accent)}
+  background:var(--panel);border:1px solid var(--edge);border-radius:18px;padding:14px 16px 12px;
+  border-top:3px solid var(--card-accent);box-shadow:var(--raise-sm)}
 .dcard h2{margin:6px 0 0;font-size:17px;letter-spacing:-.02em}
 .dcard .nwo{margin-top:3px}
 /* Clamped for the reason the index's cards are: these blurbs are other people's table cells and run from
@@ -262,7 +286,7 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
   text-transform:uppercase;font-variant-numeric:tabular-nums}
 .dctl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:18px}
 .dpos{margin-left:6px;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
-.dnote{margin:12px 0 0;background:var(--band);border:1px solid var(--grid);
+.dnote{margin:12px 0 0;background:var(--panel);border:1px solid var(--edge);
   border-left:3px solid var(--bar);border-radius:6px;padding:10px 13px;color:var(--ink2);font-size:13.5px}
 /* The card a deep link from the homepage landed on. The same `--bar` the rest of the site uses for "this
    one", and it does not fade: a reader who followed a link to a particular project should still be able to
@@ -314,7 +338,8 @@ html[data-dmode=grid] #dprev,html[data-dmode=grid] #dnext{display:none}
   .dcard.nw{animation:none}
   .drail{scroll-behavior:auto}
 }
-footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
+footer{border-top:1px solid var(--edge);background:var(--panel);backdrop-filter:var(--bdf);
+  -webkit-backdrop-filter:var(--bdf);padding:22px 20px;
   color:var(--muted);font-size:13px}
 footer .wrap{max-width:1500px}
 /* Two queries, because the page fails in two places: at 900px the screenshot and the two detail
@@ -341,7 +366,8 @@ footer .wrap{max-width:1500px}
   table,tbody,tr,td{display:block}
   table{margin-top:12px}
   tr{display:grid;grid-template-columns:1fr auto;gap:1px 12px;align-items:start;
-    border:1px solid var(--grid);border-radius:10px;padding:11px 13px;margin:0 0 9px}
+    border:1px solid var(--edge);border-radius:18px;padding:11px 13px;margin:0 0 9px;
+    background:var(--panel);box-shadow:var(--raise-sm)}
   td{border-bottom:0;padding:0}
   td.rk{grid-column:1;grid-row:1;text-align:left}
   td.st-c{grid-column:2;grid-row:1}

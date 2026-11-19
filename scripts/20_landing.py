@@ -151,14 +151,15 @@ CSS = """/* Written by scripts/20_landing.py. Shared by every page under docs/to
    homepage, the collections and Discover. */
 
 """ + sitewide.THEME_CSS + """*{box-sizing:border-box}
-/* --ui and --wash are the structural tokens `THEME_CSS` declares above: the page's own font stack in every
-   theme, and the soft light behind the layout. See the note beside them in scripts/sitewide.py. */
-body{margin:0;background:var(--surface);background-image:var(--wash);
-  background-attachment:fixed;color:var(--ink);font:15px/1.5 var(--ui)}
+/* --ui is the page's own font stack in both themes. The field behind the glass is `body::before` in
+   `THEME_CSS` above; this only sets --surface, the colour it is translucent over. */
+body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.5 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
-header{background:var(--panel);backdrop-filter:var(--bdf);border-bottom:1px solid var(--grid);
-  padding:22px 20px 16px}
+/* A pane of the glass. Static, and nothing inside it is positioned, so the backdrop filter changes no
+   containing block -- the layout diff in the theme work measured every box on these pages unmoved. */
+header{background:var(--panel);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
+  border-bottom:1px solid var(--edge);padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 6px;font-size:26px;letter-spacing:-.02em}
 h2{margin:34px 0 8px;font-size:16px;letter-spacing:-.01em}
@@ -178,12 +179,12 @@ button{font:inherit;cursor:pointer}
    Filled with the lime, `--act`, which is why it needs --onact for its ink; its edge and hover are in
    `THEME_CSS`, shared with every primary button on the site. */
 .cta{display:inline-block;background:var(--act);color:var(--onact);font-weight:600;
-  border-radius:8px;padding:9px 16px;margin:14px 0 0}
+  border-radius:999px;padding:9px 16px;margin:14px 0 0}
 .cta:hover{text-decoration:none}
 main{padding:0 20px 64px}
 table{width:100%;border-collapse:collapse;margin-top:14px}
 th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
-  padding:8px 10px;border-bottom:1px solid var(--grid);background:var(--surface)}
+  padding:8px 10px;border-bottom:1px solid var(--grid);background:transparent}
 th.n,td.n{text-align:right}
 th.c,td.c{text-align:center}
 td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
@@ -193,7 +194,7 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
 .rk{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .shot{width:200px}
 .shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:6px;
-  background:var(--band);border:1px solid var(--grid);display:block}
+  background:var(--band);border:1px solid var(--ctl-edge);display:block}
 /* These two set the table's width. Auto table layout takes the widest unbreakable run in the column
    across every row on the page, and neither a slash nor a comma is a break opportunity in Chrome or
    Safari, so a repo name and a blurb naming six agents between them demand more than the content box
@@ -213,9 +214,9 @@ a.nwo:hover{color:var(--ink)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
 .desc{color:var(--ink2);font-size:13.5px;max-width:44em;overflow-wrap:anywhere}
 .cmd{display:block;margin-top:7px;font:12px/1.5 var(--mono);
-  color:var(--ink2);background:var(--band);border:1px solid var(--grid);border-radius:5px;
-  padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
-.tag{display:inline-block;background:var(--band);border:1px solid var(--grid);border-radius:5px;
+  color:var(--ink2);background:var(--band);border:1px solid var(--ctl-edge);border-radius:10px;
+  box-shadow:var(--press);padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
+.tag{display:inline-block;background:var(--band);border:1px solid var(--ctl-edge);border-radius:999px;
   padding:2px 7px;font-size:11.5px;color:var(--ink2);margin:0 4px 4px 0;white-space:nowrap}
 .tag.cat{border-color:var(--bar);color:var(--ink)}
 .os{font-size:11.5px;letter-spacing:.02em;white-space:nowrap}
@@ -268,7 +269,7 @@ a.nwo:hover{color:var(--ink)}
    one line each; `minmax(0,1fr)` rather than `1fr` because a `code.cmd` with no break opportunity in
    it will otherwise push a grid track wider than its share and take the card with it. */
 .pick{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:4px 26px;align-items:start;
-  background:var(--plane);border:1px solid var(--grid);border-radius:10px;
+  background:var(--panel);border:1px solid var(--edge);border-radius:20px;box-shadow:var(--raise-sm);
   padding:16px 18px;margin:0 0 12px}
 .pick>*{grid-column:1;min-width:0}
 .pick .ev,.pick .os,.pick .tp{grid-column:2}
@@ -299,7 +300,8 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
    without a query for each step. */
 .colls{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:14px;
   grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
-.coll{background:var(--plane);border:1px solid var(--grid);border-radius:10px;padding:16px 18px}
+.coll{background:var(--panel);border:1px solid var(--edge);border-radius:20px;box-shadow:var(--raise-sm);
+  padding:16px 18px}
 .coll h2{margin:2px 0 0;font-size:18px;letter-spacing:-.02em}
 .coll .intro{font-size:13.5px;margin-top:8px}
 
@@ -325,8 +327,8 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
    phone, where a fixed 320 plus the padding leaves no sliver of the next card -- and that sliver is the
    only thing on screen saying the rail scrolls. */
 .dcard{flex:0 0 min(320px,78vw);scroll-snap-align:start;display:flex;flex-direction:column;
-  background:var(--plane);border:1px solid var(--grid);border-radius:10px;padding:14px 16px 12px;
-  border-top:3px solid var(--card-accent)}
+  background:var(--panel);border:1px solid var(--edge);border-radius:18px;padding:14px 16px 12px;
+  border-top:3px solid var(--card-accent);box-shadow:var(--raise-sm)}
 .dcard h2{margin:6px 0 0;font-size:17px;letter-spacing:-.02em}
 .dcard .nwo{margin-top:3px}
 /* Clamped for the reason the index's cards are: these blurbs are other people's table cells and run from
@@ -344,7 +346,7 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
   text-transform:uppercase;font-variant-numeric:tabular-nums}
 .dctl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:18px}
 .dpos{margin-left:6px;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
-.dnote{margin:12px 0 0;background:var(--band);border:1px solid var(--grid);
+.dnote{margin:12px 0 0;background:var(--panel);border:1px solid var(--edge);
   border-left:3px solid var(--bar);border-radius:6px;padding:10px 13px;color:var(--ink2);font-size:13.5px}
 /* The card a deep link from the homepage landed on. The same `--bar` the rest of the site uses for "this
    one", and it does not fade: a reader who followed a link to a particular project should still be able to
@@ -396,7 +398,8 @@ html[data-dmode=grid] #dprev,html[data-dmode=grid] #dnext{display:none}
   .dcard.nw{animation:none}
   .drail{scroll-behavior:auto}
 }
-footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
+footer{border-top:1px solid var(--edge);background:var(--panel);backdrop-filter:var(--bdf);
+  -webkit-backdrop-filter:var(--bdf);padding:22px 20px;
   color:var(--muted);font-size:13px}
 footer .wrap{max-width:1500px}
 /* Two queries, because the page fails in two places: at 900px the screenshot and the two detail
@@ -423,7 +426,8 @@ footer .wrap{max-width:1500px}
   table,tbody,tr,td{display:block}
   table{margin-top:12px}
   tr{display:grid;grid-template-columns:1fr auto;gap:1px 12px;align-items:start;
-    border:1px solid var(--grid);border-radius:10px;padding:11px 13px;margin:0 0 9px}
+    border:1px solid var(--edge);border-radius:18px;padding:11px 13px;margin:0 0 9px;
+    background:var(--panel);box-shadow:var(--raise-sm)}
   td{border-bottom:0;padding:0}
   td.rk{grid-column:1;grid-row:1;text-align:left}
   td.st-c{grid-column:2;grid-row:1}
@@ -444,11 +448,10 @@ HEAD_THEME = sitewide.HEAD_THEME
 # file because it is under a kilobyte and a request costs more than that. The resolution -- stored choice,
 # then the OS, then dark -- and the chrome repaint are `sitewide.THEME_JS`; this is only the button.
 #
-# Two states, and high contrast is the first of them. A reader in high contrast has chosen it, or their OS
-# asked for it, and the button's job is still "the other brightness": it reads "Light theme" there exactly
-# as it does in dark, and takes them to light. A third label ("Standard contrast") would be a wider button in
-# one theme than in the others, which is the layout moving; the Settings menu on the index and the homepage
-# is where all four choices live. `aria-pressed` says light is on, because the label never changes meaning.
+# Two states, because there are two themes: the button's job is "the other brightness". A reader whose
+# system asks for more contrast keeps it in both, because that is the stylesheet's `prefers-contrast` rules
+# rather than a theme. The Settings menu on the index and the homepage is where System lives as well.
+# `aria-pressed` says light is on, because the label never changes meaning.
 THEME_JS = "<script>\n" + sitewide.THEME_JS + r"""atlasTheme();
 (function () {
   var btn = document.getElementById("theme");
