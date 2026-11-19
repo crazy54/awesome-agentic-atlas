@@ -209,3 +209,83 @@ The dependencies behind that order:
 3. The next CI run pulls the list, fetches its repos and publishes it. The count of lists shown on every
    surface is derived, so there is nothing else to edit. The root README's hand-written figures are the
    exception; see [keeping-docs-current.md](keeping-docs-current.md).
+
+## The models index
+
+The atlas's second dataset: open-weight models from the Hugging Face Hub, for the models catalogue
+(`docs/models/`) and the local-AI page. It is independent of the GitHub stages above. It reads no part of
+`cache/` except its own `cache/hf/`, and nothing else reads its output except those two pages.
+
+| Script | What it does | Reads | Writes | Fresh clone? |
+|---|---|---|---|---|
+| `40_models.py` | Lists the Hub (every trusted quantiser's repos, the top of each relevant pipeline by downloads, likes and trending, and the top GGUF/MLX/AWQ/GPTQ repos), fetches the base models the quant repos name, keeps the models worth listing, then reads each kept model's info, `config.json` and file tree, and every variant's tree. Matches Ollama library tags. Refuses to write a file with under 70% of the committed model count | Hub API; ollama.com; `config/models.json`; `cache/hf/` | `docs/models.json`; `cache/hf/**`; `$GITHUB_STEP_SUMMARY` | Yes, with network. `--offline` builds from `cache/hf/` only; `--status` validates and reports on the committed file; `--dry-run` writes nothing |
+| `41_models_page.py` | The models catalogue: the most used models as HTML for first paint, then the whole index with filters (use, size, format, licence kind, family, search) from `models.json`. Each card opens into every variant's quantisations, exact sizes and a run command. Its URL reaches `docs/sitemap.xml` through `20_landing.models_urls()`, as Discover's does | `docs/models.json` | `docs/models/index.html` | Yes |
+
+| Helper | Role |
+|---|---|
+| `hf_hub.py` | The Hub client: a cache under `cache/hf/` keyed on each repo's `sha`, a throttle that reads the `RateLimit` header and waits before the window runs out, retries on 429 and 5xx, and a GGUF header parser for gated models whose `config.json` cannot be read anonymously |
+| `models.py` | Every rule: what a repo is (`variant_format`), which model it belongs to (`resolve`), what is kept (`keep`), quant labels and summed split sizes (`gguf_files`), fit inputs (`dims_from_config`, `dims_from_gguf`, `active_from_config`), Ollama matching, and the schema with its validator (`validate`) |
+
+### What a row is
+
+One row per **model** (an official repo id), carrying its **variants** (repos that ship those weights in a
+runnable format), each carrying one **file** row per quantisation with its exact bytes. Ten quant repos of
+one model are one row with ten variants: every GGUF/MLX/AWQ/GPTQ/bitsandbytes/FP8 repo is attached through
+its card's `base_model`, walking through quantisers' plain re-uploads (`unsloth/Qwen3-8B`). Only the model's
+own author and the quantisers listed in `config/models.json` are attached.
+
+Cards are not always right, and the first real build found each of these (`tests/models_test.py` holds
+a fixture for every one):
+
+- **A fine-tune's quant whose card names the root model** (`bartowski/bagel-8b-v1.0-GGUF` says
+  `Meta-Llama-3-8B`). A variant attaches only if its own name, less format suffixes, is the model's name
+  (`models.same_weights`). If it is not, it is re-homed to the one model that does have its name, or left out.
+- **Renamed repos.** A card naming `Meta-Llama-3.1-8B-Instruct` is answered under `Llama-3.1-8B-Instruct`.
+  The row is filed under the new name only.
+- **Files that share a quant label with the model and are not it.** Speculative-decoding drafts
+  (`MTP/`, `mtp-`, `eagle3-`, `dflash-`, `dspark-`, and the pattern `{prefix}-{Model}-{quant}.gguf`),
+  projectors, imatrix data, and one quant shipped both whole and split. Of two file sets with one label,
+  the largest is kept, and the whole-file copy over the split one. A file row under 1 bit per weight is
+  dropped, whatever the cause.
+
+The schema is in `models.COLS`, `VARIANT_COLS` and `FILE_COLS`, and its full description for consumers is
+the team contract `team/contracts/models.md`. **Changing a column is a schema change.** Bump
+`SCHEMA_VERSION`, update the contract and this page, tell the local-AI page's authors, and update the
+frozen copy in `tests/models_test.py`, which fails until all of them agree. The stage validates before it
+writes, and the test validates the committed file, so a broken shape fails the build instead of the page.
+
+### The keep rule
+
+In order (`models.keep`): NSFW-tagged repos, adapters and off-topic pipelines are out; so are empty cards,
+merges with under 300 likes, text models under 50M parameters or with under a 4,096-token context, and
+repos idle for two years with under 20,000 downloads a month. What remains is kept if it is popular
+(100,000 monthly downloads across its variants, or 300 likes), from a lab (configured, or any author with a
+200,000-download root model) with some use, or a community model with a trusted quant and 10,000 downloads
+or 50 likes. Uncensored fine-tunes that pass are kept with the `uncensored` flag.
+
+### Cost, freshness and a token
+
+Anonymous reads allow 500 API calls and 3,000 file resolves per five minutes per IP. A cold cache costs
+about 9,800 API calls and 2,300 resolves, about 100 minutes (measured 2026-11-18: 7,593 trees, 2,230 model
+infos, 936 base-model fetches, 46 listing pages). That is the weekly step's whole cap (`timeout-minutes: 100`), so the
+build is **resumable**: every answer is written to `cache/hf/` as it arrives, keyed on the repo's `sha`,
+and `cache/` is banked even when the step fails. `--deadline-minutes 92` makes the stage stop asking
+before the cap and exit 3 without writing anything. The next run replays the cache at disk speed and
+fetches only what the last one did not reach (checked 2026-11-18: 20 deleted trees, a stopped run, then
+a full run that made 24 API calls). In weekly.yml the step sits after "Fetch and classify" and before
+"Capture screenshots", whose deadline is computed from the time left, so the models step's time
+comes out of the screenshots' budget and never the workbooks'. A warm one re-reads a tree or config only when
+the repo's `sha` moved, so a weekly run is the ~45 listing pages, the base-model infos (kept for six days),
+and whatever changed. An `HF_TOKEN` secret would raise the API quota, and would let configs be read from
+gated repos whose licence that account has accepted. Without one, those models' `dims` come from an
+ungated mirror or variant, or from a GGUF header (a 512 KB range read).
+
+### Ollama
+
+Ollama publishes no mapping from its library to Hugging Face, so `ollama` on a row is a match with a
+confidence. Library names and size tags come from `ollama.com/library` (HTML, the least stable input; a
+parse with under 50 models is treated as a broken page and the column is left empty for the run), and each
+matched tag's model layer size comes from the `registry.ollama.ai` manifest. `match` is `verified` when that
+size is within 3% of one of the row's GGUFs at the quant Ollama reports, `curated` for an override in
+`config/models.json`, and `likely` for a name-and-size match nothing confirmed. Every GGUF variant can be
+run with `ollama run hf.co/{repo}:{quant}` regardless.

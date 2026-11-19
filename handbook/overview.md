@@ -22,6 +22,7 @@ python -c "import importlib.util as u; s=u.spec_from_file_location('m','scripts/
 | The website | `docs/`, served at <https://aaa.jeremyfhall.com> | stages 19 to 31 | daily and weekly |
 | The JSON dataset | `docs/data.json` (documented in the root [README](../README.md#the-data-as-an-api)) | `19_pages.py`, patched by `25_velocity.py` | daily and weekly |
 | The Markdown edition | `mega-list/` | `17_markdown.py` (plus `25_collections.py` for `mega-list/collections/`) | daily and weekly |
+| The models index | `docs/models.json` and the catalogue at `docs/models/`: open models from the Hugging Face Hub with every quantisation's exact size (see [pipeline.md](pipeline.md#the-models-index)) | `40_models.py`, `41_models_page.py` | weekly |
 | The Excel workbooks, dark and light | GitHub release assets, never committed | `16_build_all.py` | weekly only |
 
 All of these come from the same in-memory records, and every topic and target assignment comes from

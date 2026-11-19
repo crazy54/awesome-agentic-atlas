@@ -358,6 +358,7 @@ jobs:
           : > "$RUNNER_TEMP/deleted"
           : > "$RUNNER_TEMP/static"
           : > "$RUNNER_TEMP/beta"
+          : > "$RUNNER_TEMP/models"
           git ls-files docs mega-list | while IFS= read -r f; do
             # Existence before mtime, and that order is the whole of this arm. `git ls-files` reads the
             # *index*, so a file a generator deliberately deleted from the working tree is still listed
@@ -375,6 +376,14 @@ jobs:
             # exactly once and is the correct outcome, and a warning that is right every time it appears
             # is a warning people learn to scroll past.
             if [ ! -e "$f" ]; then printf '%s\n' "$f" >> "$RUNNER_TEMP/deleted"; continue; fi
+            # The models index, judged against its own step's marker (see that step), and a warning
+            # rather than the strict arm's error when unwritten: the stage is in this workflow, it
+            # failed, timed out or declined to publish, and the committed index stays as it was.
+            case "$f" in
+              docs/models.json|docs/models/*)
+                if [ -e "$RUNNER_TEMP/models-start" ] && [ "$f" -nt "$RUNNER_TEMP/models-start" ]; then continue; fi
+                printf '%s\n' "$f" >> "$RUNNER_TEMP/models"; continue ;;
+            esac
             if [ "$f" -nt "$RUNNER_TEMP/build-start" ]; then continue; fi
             case "$f" in
               # Three files under `docs/` are checked in by hand and no generator has ever written them:
@@ -444,6 +453,10 @@ jobs:
           fi
           if [ "$nb" -gt 0 ]; then
             echo "Redesign beta under docs/v2/, owned by scripts/30_v2.py and rebuilt on demand: ${nb} file(s)."
+          fi
+          nm="$(wc -l < "$RUNNER_TEMP/models" | tr -d ' ')"
+          if [ "$nm" -gt 0 ]; then
+            echo "::warning title=Models index not refreshed::${nm} models file(s) were not rewritten: the Models index step failed, timed out or refused (see its log). The committed index stays as it was, and a timed-out build resumes from cache/hf/ next week."
           fi
           if [ "$nd" -gt 0 ]; then
             echo "Tracked files this build deleted, whose removal the commit below carries:"
