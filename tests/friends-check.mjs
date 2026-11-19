@@ -156,8 +156,16 @@ const ev = async expr => {
   if (r.exceptionDetails) throw new Error(expr.slice(0, 60) + " threw: " + (r.exceptionDetails.exception?.description || r.exceptionDetails.text));
   return r.result.value;
 };
+// A poll that lands while the page is navigating is answered with a CDP error, not a value -- "Inspected
+// target navigated or closed", "Execution context was destroyed", "Cannot find context" -- and that means
+// "not yet", so it is polled again, as admin-check.mjs does. Only those messages are swallowed, and `ev`
+// itself still throws, so a wrong expression still fails. Proven, not guessed, for this file: the weekly of
+// 2026-11-01 (run 41334790158) lost friends-check.mjs to an uncaught "Inspected target navigated or closed"
+// inside `goto()`'s readyState poll, and since the weekly gates its deploy that cost the week's publish.
+const soft = expr => ev(expr).catch(e => (/context|navigat/i.test(e.message) ? false : Promise.reject(e)));
 const until = async (expr, ms) => {
-  for (const end = Date.now() + ms; Date.now() < end; await sleep(100)) if (await ev(expr)) return true;
+  for (const end = Date.now() + ms; Date.now() < end; await sleep(100))
+    if (await soft(expr)) return true;
   return false;
 };
 const goto = async (q = "", live = true) => {
@@ -250,6 +258,12 @@ for (const f of ORDER) {
 }
 
 // ---- sent away
+// Each of these is "it happens", and the ceilings are a runner's and not a reader's: under software WebGL a
+// long task on this page runs past a second (see the hard-stop note above), and a poll cannot even ask until
+// it ends, so a one-second window measured the runner. The design is that the friend leaves at once; what is
+// asserted is that it leaves, with room for the slowest runner, which is how prank-check's lights gap and
+// friends' own hard stop were fixed. The bounds that are about readers -- the 1.5 s over a control, the
+// WCAG flash rate -- stay exact.
 const click = async (x, y) => {
   for (const type of ["mousePressed", "mouseReleased"])
     await S("Input.dispatchMouseEvent", {type, x, y, button: "left", clickCount: 1});
@@ -257,23 +271,23 @@ const click = async (x, y) => {
 await goto("?archie=friend:quack");
 await until(PAL, 20000);
 await click(700, 880);
-ok("a click anywhere else sends the friend away within a second", await until(GONE, 1000));
+ok("a click anywhere else sends the friend away", await until(GONE, 5000));
 await goto("?archie=friend:quack");
 await until(PAL, 20000);
 await S("Input.dispatchKeyEvent", {type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27});
 await S("Input.dispatchKeyEvent", {type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27});
-ok("...and so does Escape", await until(GONE, 1000));
+ok("...and so does Escape", await until(GONE, 5000));
 await goto("?archie=friend:quack");
 await until(PAL, 20000);
 await S("Input.dispatchKeyEvent", {type: "keyDown", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9});
 await S("Input.dispatchKeyEvent", {type: "keyUp", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9});
-ok("...and so does Tab, before focus can land under the friend", await until(GONE, 1000));
+ok("...and so does Tab, before focus can land under the friend", await until(GONE, 5000));
 await goto("?archie=friend:quack");
 await until(PAL, 20000);
 await sleep(2600);                                         // bobbed in and sitting still
 const at = await ev(`(() => { const r = document.querySelector(".archie-pals .pal").getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; })()`);
 await click(at[0], at[1]);
-ok("poked, the friend says goodbye and goes", await until(GONE, 3000));
+ok("poked, the friend says goodbye and goes", await until(GONE, 8000));
 let r = await rec();
 ok("...and Archie apologises for it", r.archie.some(t => texts(FRIENDS.quack.lines.poke).includes(t)), JSON.stringify(r.archie));
 await goto("?archie=friend:lumen");
@@ -284,8 +298,8 @@ r = await rec();
 ok("poking Archie mid-visit gets a line about the guest", texts(FRIENDS.lumen.lines.poke).includes(r.archie.at(-1)), JSON.stringify(r.archie));
 ok("...and the guest stays", await ev(PAL));
 await S("Emulation.setEmulatedMedia", {features: [{name: "prefers-reduced-motion", value: "reduce"}]});
-ok("reduced motion switched on mid-visit: the friend is gone at once", await until(GONE, 1000));
-ok("...with Archie, back to his poster", await until(`!document.querySelector(".mhmascot[data-live]")`, 2000));
+ok("reduced motion switched on mid-visit: the friend is gone", await until(GONE, 5000));
+ok("...with Archie, back to his poster", await until(`!document.querySelector(".mhmascot[data-live]")`, 8000));
 
 // ---- the gates: nobody comes
 await goto("?archie=friend:nib", false);

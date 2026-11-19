@@ -570,6 +570,8 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             # as an f-string. The function stays here because this is where the token, the alphabet
             # assertion and the prose explaining both already live.
             # Last, so a constant injected above carrying its own relative URLs is prefixed too.
+            .replace("__LOCALSLUG__", sitewide.LOCAL_PAGE["slug"])
+            .replace("__LOCALTITLE__", escape(sitewide.LOCAL_PAGE["title"]))
             .replace("__UP__", UP)
             .replace("__ANALYTICS__", follow() + beacon() + telemetry(UP)))
     relative_urls_prefixed(out)
@@ -2817,6 +2819,7 @@ __OSSPRITE__
          with no opinion at all -- fifty a day, every category, rotated so the whole corpus comes round --
          and Collections answers it with one. -->
     <a href="__UP__discover/">Discover</a> ·
+    <a href="__UP____LOCALSLUG__/">__LOCALTITLE__</a> ·
     <a href="__UP__collections/">Collections</a> ·
     <a href="https://github.com/__REPO__/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="__UP__repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>

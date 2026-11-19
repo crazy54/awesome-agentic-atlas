@@ -23,10 +23,14 @@ permissions:
   contents: write                # commit the ledger
   actions: write                 # dispatch the rebuild
 
-# Shared with daily.yml and weekly.yml: all three push to the same branch, and the ledger commit must not
-# race a build's push.
+# Its own group, and no longer `atlas-build`. It was there so its ledger commit could not race a build's push,
+# but a concurrency group holds only one *pending* run and cancels the older pending one when another queues:
+# a scan queued in `atlas-build` behind a running weekly would cancel the daily waiting there. The race it
+# guarded against is not a conflict -- the builds never write `state/dead-repos.json`, so a rebase onto a
+# build's push is always clean -- and the push below retries it. The rebuild it dispatches is a daily, in
+# `atlas-build` like every other.
 concurrency:
-  group: atlas-build
+  group: dead-repos
   cancel-in-progress: false
 
 jobs:
@@ -64,8 +68,7 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "Dead-repo scan $(date -u +%Y-%m-%d)"
-            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
+            bash tools/retry.sh 3 sh -c 'git rebase --abort 2>/dev/null; git pull --rebase --autostash origin "$1" && git push origin "HEAD:$1"' _ "${GITHUB_REF_NAME}"
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 

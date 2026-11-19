@@ -644,6 +644,7 @@ PAGE_JS = r"""<script>
 def nav() -> str:
     """The header navigation, matching `20_landing.py`'s so the page families feel like one site."""
     return f"""  <nav>
+    <a href="{esc(rel(sitewide.LOCAL_PAGE['slug'] + '/'))}">{esc(sitewide.LOCAL_PAGE['title'])}</a> &middot;
     <a href="{esc(rel('collections/'))}">Collections</a> &middot;
     <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> &middot;
     <a href="{esc(rel('repo/'))}">All projects</a> &middot;

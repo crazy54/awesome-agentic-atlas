@@ -1210,6 +1210,7 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
   </div>
   <nav>
     <a href="{page.rel('discover/')}">Discover</a> ·
+    <a href="{page.rel(sitewide.LOCAL_PAGE['slug'] + '/')}">{esc(sitewide.LOCAL_PAGE['title'])}</a> ·
     <a href="{page.rel('collections/')}">Collections</a> ·
     <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="{page.rel('repo/')}">All projects</a> ·
@@ -1298,6 +1299,21 @@ def discover_urls() -> list[str]:
     sys.modules["b19d"] = b19d
     dspec.loader.exec_module(b19d)
     return b19d.urls()
+
+
+def local_urls() -> list[str]:
+    """The one URL `32_local.py` publishes -- the local-AI page -- asked of that stage for the reason above.
+
+    Passed the site root, so that stage does not import `19_pages.py` a second time to learn it. The slug is
+    that stage's `PAGE` constant, the one place the page's name lives while the owner chooses it; a rename
+    there moves this URL with it and `tests/indexnow_test.py` holds the sitemap to the directory either way.
+    """
+    sys.modules.setdefault("b20", sys.modules[__name__])
+    lspec = importlib.util.spec_from_file_location("b32", HERE / "32_local.py")
+    b32 = importlib.util.module_from_spec(lspec)
+    sys.modules["b32"] = b32
+    lspec.loader.exec_module(b32)
+    return b32.urls(SITE)
 
 
 def sitemap(pages: list[Page], snapshot: str, extra: list[str] = ()) -> str:
@@ -1489,7 +1505,8 @@ def main() -> None:
     (OUT / "pages.css").write_text(CSS + sitewide.font_faces("") + sitewide.BUILDTAGS_CSS, encoding="utf-8")
     colls = collection_urls(data)
     disc = discover_urls()
-    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc), encoding="utf-8")
+    local = local_urls()
+    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc + local), encoding="utf-8")
     (OUT / "robots.txt").write_text(robots(), encoding="utf-8")
     keyfile = b19.indexnow_key_file()
     (OUT / keyfile).write_text(key_text(b19.indexnow_key()), encoding="utf-8")
@@ -1506,9 +1523,9 @@ def main() -> None:
     print(f"{tops} topic · {tgt_n} target · {written - tops - tgt_n} crossing "
           f"= {written} pages · {kb(total)}")
     print(f"pages.css + sitemap.xml + robots.txt + {keyfile} · {kb(shells)} · "
-          f"{len(pages) + 1 + len(colls) + len(disc)} URLs, lastmod {data['snapshot']} "
+          f"{len(pages) + 1 + len(colls) + len(disc) + len(local)} URLs, lastmod {data['snapshot']} "
           f"({len(colls)} of them curated collections, from scripts/25_collections.py; "
-          f"{len(disc)} Discover, from scripts/19d_discover.py)")
+          f"{len(disc)} Discover, from scripts/19d_discover.py; {len(local)} local-AI, from scripts/32_local.py)")
     print(f"IndexNow key hosted at {SITE}{keyfile}"
           + (f" · {len(stale_keys)} stale key file(s) removed: "
              + ", ".join(p.name for p in stale_keys) if stale_keys else ""))
