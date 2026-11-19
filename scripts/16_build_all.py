@@ -658,24 +658,45 @@ def _thin(rec) -> bool:
     return rec.get("kind") == "subpath" or bool(rec.get("unavailable"))
 
 
-def offer_blurb(a: dict, r: dict) -> None:
-    """Longest blurb wins, except that an advisory listing's never displaces one already there.
+# Where a repo's one blurb may come from, best first. A repo listed several times gets several
+# sentences, and they are not all about the repo:
+#
+#   0  a curated listing that links the repository itself. The curator's sentence about the project,
+#      which `14_classify_all` already prefers to GitHub's tagline. Longest of these wins.
+#   1  GitHub's own description of the repo (`gh_description`), and an advisory listing's blurb, which
+#      is the same thing: the scout writes no descriptions, so what it offers is GitHub's.
+#   2  a listing that links a *folder* inside the repo (`kind: subpath`), or a dead link. Its sentence is
+#      about the folder -- a plugin, a skill, one template -- and not about the repository around it.
+#      `anthropics/claude-code` read "The official Anthropic implementation of the Ralph Wiggum
+#      technique..." on its own row because awesome-claude-code links that one plugin inside it and the
+#      plugin's sentence was the longest. So a folder's sentence is the last resort: it stands only when
+#      nothing describes the repo itself, which is the right answer for a monorepo of skills that no list
+#      links at the root.
+BLURB_ROOT, BLURB_GITHUB, BLURB_FOLDER = 0, 1, 2
 
-    A scouted listing has no blurb of its own -- the scout writes no descriptions -- so what it offers
-    is GitHub's description of the repo, which is also what a curated listing falls back to when its
-    curator wrote nothing. Measured on length alone it would replace a curator's sentence with the
-    repo's own tagline whenever the tagline is longer, which is the opposite of the rule `14_classify_all`
-    states: the list's own blurb is usually the better-written one. So it only fills a gap.
+def blurb_tier(r: dict) -> int:
+    if _thin(r):
+        return BLURB_FOLDER
+    return BLURB_GITHUB if r.get("source") in tax.ADVISORY else BLURB_ROOT
+
+
+def offer_blurb(a: dict, r: dict) -> None:
+    """A better tier always wins; inside the curated tier, the longest sentence wins.
+
+    Inside the other two, the first one seen stays. An advisory listing's sentence is GitHub's, so it
+    never displaces a curator's however long it is -- the rule `14_classify_all` states: the list's own
+    blurb is usually the better-written one. A folder's sentence never displaces anything.
     """
-    blurb = r.get("blurb") or r.get("description") or ""
-    if r.get("source") in tax.ADVISORY and a.get("blurb"):
+    blurb = (r.get("blurb") or r.get("description") or "").strip()
+    if not blurb:
         return
-    if len(blurb) > len(a.get("blurb") or ""):
-        a["blurb"] = blurb
+    tier, have = blurb_tier(r), a.get("_blurb_tier", BLURB_FOLDER + 1)
+    if tier < have or (tier == have == BLURB_ROOT and len(blurb) > len(a.get("blurb") or "")):
+        a["blurb"], a["_blurb_tier"] = blurb, tier
 
 
 def repo_pool(records, orch, label, keep=None):
-    """One row per repo across every list, merged: earliest listing wins, longest blurb wins.
+    """One row per repo across every list, merged: earliest listing wins; the blurb is chosen by `offer_blurb`.
 
     `keep` decides which listings are eligible. Two callers want different answers to that and both
     are right: a platform sheet must drop the listings that have no OS support of their own, while a
@@ -689,21 +710,32 @@ def repo_pool(records, orch, label, keep=None):
             continue
         a = pool.get(nwo)
         if a is None:
-            a = pool[nwo] = dict(r, sources=set())
+            a = pool[nwo] = dict(r, sources=set(), blurb="")
         elif _thin(a) and not _thin(r):
             # Promote: the row this repo was first seen as cannot report its own stars or platforms,
             # and a later listing can. Never fires for `platform_pool`, whose `keep` makes every
-            # eligible listing a full one; it exists for the pools that keep the thin listings.
-            a = pool[nwo] = dict(r, sources=a["sources"], blurb=a.get("blurb") or "")
+            # eligible listing a full one; it exists for the pools that keep the thin listings. The
+            # blurb chosen so far comes along with its tier, so `offer_blurb` below can still replace
+            # a folder's sentence with this listing's.
+            a = pool[nwo] = dict(r, sources=a["sources"], blurb=a.get("blurb") or "",
+                                 _blurb_tier=a.get("_blurb_tier", BLURB_FOLDER + 1))
         if r["source"] not in SYNTHETIC:
             a["sources"].add(r["source"])
         offer_blurb(a, r)
+        # GitHub's description, from whichever listing carries one: every listing of a repo does,
+        # a folder's included (it is its parent's), so the first is as good as any.
+        if r.get("gh_description") and not a.get("_gh"):
+            a["_gh"] = r["gh_description"].strip()
     out = []
     for nwo, a in pool.items():
         a["list_count"] = len(a["sources"])
         a["listed_by"] = ", ".join(sorted(label.get(s, s) for s in a["sources"]))
         a["shot_key"] = a.get("shot_key") or nwo.replace("/", "__")
+        if a.get("_blurb_tier", BLURB_FOLDER + 1) > BLURB_GITHUB and a.get("_gh"):
+            a["blurb"] = a["_gh"]
         a["blurb"] = a["blurb"] or a.get("description") or ""
+        a.pop("_blurb_tier", None)
+        a.pop("_gh", None)
         for k in ("win_native", "win_wsl2", "macos", "linux", "docker", "cloud"):
             a[k] = a.get(k) or DASH
         out.append(a)

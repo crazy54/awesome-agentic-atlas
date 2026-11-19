@@ -826,8 +826,26 @@ sub = {"source": "skills_voltagent", "nwo": "morluto/rea", "kind": "subpath", "b
 full = {"source": "scout", "nwo": "morluto/rea", "kind": "repo", "description": "", "name": "rea",
         "blurb": "Reverse engineer anything with agents, from app behavior down to native binaries."}
 row = b16.repo_pool([sub, full], [], {})[0]
+# The blurb is the repo's, not the folder's: a sub-folder listing describes the folder (here one skill),
+# so GitHub's description of the repository -- which is what the scout offers -- outranks it. See
+# `16_build_all.BLURB_ROOT`; until 2026-11 the folder's sentence stood, which is how
+# `anthropics/claude-code` came to be described as one of its own plugins.
 eq("the motivating case: a curator's sub-folder row is promoted to the scout's full repo row",
-   (row["kind"], row["name"], row["blurb"]), ("repo", "rea", "RE skill"))
+   (row["kind"], row["name"], row["blurb"]), ("repo", "rea", full["blurb"]))
+eq("...but a folder's sentence still stands when nothing describes the repo itself",
+   b16.repo_pool([dict(sub)], [], {})[0]["blurb"], "RE skill")
+longer = dict(sub, blurb="A much longer sentence about one folder inside the repository")
+root = dict(curated_rec, nwo="morluto/rea")
+eq("...and a curated root listing beats a longer folder sentence, whichever comes first",
+   [b16.repo_pool([dict(x) for x in rs], [], {})[0]["blurb"] for rs in ([longer, root], [root, longer])],
+   ["Files expenses.", "Files expenses."])
+eq("...and GitHub's description replaces a folder's sentence when no listing links the root",
+   b16.repo_pool([dict(sub, gh_description="The repo, in its own words")], [], {})[0]["blurb"],
+   "The repo, in its own words")
+eq("a leading star count is not part of a listing's sentence",
+   [s.b10.clean(x) for x in ("(132.3k ⭐) - Claude Code is a tool", "195.5k ⭐ - Official skills",
+                             "Has 3k ⭐ users")],
+   ["Claude Code is a tool", "Official skills", "Has 3k ⭐ users"])
 eq("...and is still named by exactly the one list that cited it", (row["list_count"], row["listed_by"]),
    (1, "skills_voltagent"))
 
