@@ -250,6 +250,10 @@ jobs:
           # the sitemap would name `discover/` on the first build and the directory would not be there yet,
           # which `tests/indexnow_test.py` fails in both directions on purpose.
           python scripts/19d_discover.py
+          # The local-AI page (docs/local/). Reads only config/local-ai/ and, when eng-hf's index is there,
+          # docs/models.json; before 20_landing, which imports its `urls()` into the sitemap. In both
+          # workflows so a picks or catalogue edit ships with the next daily. See scripts/32_local.py.
+          python scripts/32_local.py
           # 20 and 21 must both follow 19_pages and never precede it: that stage is what stamps the
           # ledger and rewrites data.json, and both of these read data.json and nothing else. Run first,
           # the feeds would publish yesterday's arrivals and the landing pages would prerender
