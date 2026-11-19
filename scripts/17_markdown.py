@@ -155,8 +155,16 @@ def norm(text, limit: int = 0) -> str:
 
 
 def prose(text, limit: int = 0, table: bool = False) -> str:
-    """Human text. `<` and `&` become entities so a description cannot open an HTML tag."""
-    out = norm(text, limit).replace("&", "&amp;").replace("<", "&lt;")
+    """Human text. `<` and `&` become entities so a description cannot open an HTML tag.
+
+    An escaped pipe already in the text is unescaped first. It is upstream's table syntax, not prose --
+    a curator's `\\|` that leaked out of their table, or a GitHub description somebody wrote with one --
+    and `10_parse_sources.clean` removes it from what the lists say, but a repo's own description comes
+    from the API and never passes through there. Left alone it fails `check_markdown.py` outside a table
+    ("escaped pipe") and doubles to `\\\\|` inside one, so one repo owner's punctuation would stop the
+    daily build. Code spans are left verbatim, by `code` below: there `\\|` can be a real regex.
+    """
+    out = norm(text, limit).replace("\\|", "|").replace("&", "&amp;").replace("<", "&lt;")
     return out.replace("|", "\\|") if table else out
 
 
