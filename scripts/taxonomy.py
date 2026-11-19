@@ -752,6 +752,14 @@ SECTIONS: dict[tuple[str, str], str] = {
     ("skills_jackyst0", "Official Resources"): "Docs, Learning & Lists",
 
     # libukai/awesome-agent-skills
+    ("skills_libukai", "Content Creation"): "Agent Skills",
+    ("skills_libukai", "Other Types"): "Agent Skills",
+    ("skills_libukai", "Product Usage"): "Agent Skills",
+    ("skills_libukai", "Programming & Development"): "Agent Skills",
+    ("skills_libukai", "Testing and Evaluation"): "Observability & Evals",
+    ("skills_libukai", "Official Documentation"): "Docs, Learning & Lists",
+    ("skills_libukai", "Video Tutorials"): "Docs, Learning & Lists",
+    ("skills_libukai", "Written Tutorials"): "Docs, Learning & Lists",
     ("skills_libukai", "产品使用"): "Agent Skills",
     ("skills_libukai", "其他类型"): "Agent Skills",
     ("skills_libukai", "内容创作"): "Agent Skills",
