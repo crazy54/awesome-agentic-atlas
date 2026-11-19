@@ -42,11 +42,11 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Whether a red verification suite stops this run publishing. It is the same switch as daily.yml's, set
       # the other way on purpose. The daily ships "false" because a stalled site is the worse failure for a
-      # daily refresh. This job was set to "true" because it also cut a dated workbook release marked
-      # `--latest` that the README's download links resolved to. That step is gone (the spreadsheet
-      # edition was retired, see the top of this file), and the switch is left as it was rather than
-      # flipped as a side effect of the retirement: on "true" a red suite records, commits and submits
-      # nothing, the site keeps the last build, and the cache is still banked so a re-run resumes.
+      # daily refresh. A weekly is different: it re-reads every README and replaces the screenshots
+      # the site shows, so a red suite here stops the deploy rather than publishing a week of changes
+      # nobody has seen pass. On "true" a red suite records, commits and submits nothing, the site keeps
+      # the last build, and the cache is still banked so a re-run resumes. (It also used to hold back the
+      # workbook release; that step went with the spreadsheet edition, and this switch did not change.)
       VERIFY_GATES_DEPLOY: "true"
       # Upstream drift is a warning on this job, not a stop (scripts/drift.py). A list that renames,
       # translates or adds a section gets it filed for this run only -- a ::warning per placement, the
