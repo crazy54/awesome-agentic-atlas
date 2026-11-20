@@ -72,7 +72,12 @@ jobs:
           python scripts/12_scout.py --offline
           # --force because there is no cache to compare against: see the header.
           # Three tries: a list host answering 502 once is not drift, and should not page anyone.
-          bash tools/retry.sh 3 python scripts/pull_sources.py --force
+          # `--strict`, or the three tries never happen. pull_sources.py exits 0 when some of the lists
+          # fail, because the daily still has a cached copy of each one. This job starts with no cache,
+          # so a list that failed to pull just goes missing: retry.sh saw success, and the parse below
+          # died with "no cached content for 7/40 sources" (run 44827343810, 2026-11-20). All seven
+          # were raw.githubusercontent.com errors that a re-fetch a few minutes later answered with 200.
+          bash tools/retry.sh 3 python scripts/pull_sources.py --force --strict
 
       # The parse exactly as the daily runs it: provisional, so drift is filed for this run and written to
       # `drift.PROPOSAL` (cache/drift-proposal.json, with its PR body beside it) instead of stopping. The
