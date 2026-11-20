@@ -193,9 +193,9 @@ Three things about it are worth knowing before you read a green tick as a fact a
 
 - **The build bots' commits do not trigger it.** `daily.yml` and `weekly.yml` push with `secrets.GITHUB_TOKEN`,
   and GitHub starts no workflow runs for pushes made with that token. Both builds therefore run
-  `node tests/run.mjs` themselves, against the tree they are about to commit. The weekly's red suite blocks
-  its commit (`VERIFY_GATES_DEPLOY: "true"`); the daily's does not (`"false"`): it publishes and then ends
-  red. See [the handbook's CI page](../handbook/ci-cd.md).
+  `node tests/run.mjs` themselves, against the tree they are about to commit. A red suite blocks the
+  commit in both (`VERIFY_GATES_DEPLOY: "true"`, the daily's since 2026-11-20). The site keeps the last build,
+  and the run ends red. See [the handbook's CI page](../handbook/ci-cd.md).
 - **Exit 2 means the suite never ran.** The workflow annotates 1 and 2 differently on purpose. 1 is this
   suite doing its job — an assertion failed, or a harness went quiet. 2 is `run.mjs` refusing to start
   because it found no Chromium, no Python 3, or no built `docs/index.html` / `docs/catalog/index.html`, which is a fact about the runner and not about the code, and

@@ -100,10 +100,12 @@ jobs:
       #   "true"   nothing red publishes, at the cost of a site that stands still whenever an assertion
       #            fails for a reason unrelated to that day's data.
       #
-      # It ships as "false" because that is the option that cannot make anything worse than the state
-      # before it: today not one of this job's ~30 commits a month runs the suite at all. Turning it up
-      # is this one word, and the two steps that read it are named for what they do in each mode.
-      VERIFY_GATES_DEPLOY: "false"
+      # It shipped as "false" because that was the option that could not make anything worse than the
+      # state before it, when not one of this job's ~30 commits a month ran the suite at all. The owner
+      # turned it to "true" on 2026-11-20, after a day on which the daily published pages the suite had
+      # already called red. Turning it back down is this one word. The steps that read it are named for
+      # what they do in each mode.
+      VERIFY_GATES_DEPLOY: "true"
       # Upstream drift is a warning on this job, not a stop (scripts/drift.py). A list that renames,
       # translates or adds a section gets it filed for this run only -- a ::warning per placement, the
       # lines to paste in the step summary, and cache/drift-proposal.json for a person or a PR -- so a
@@ -946,8 +948,10 @@ jobs:
         if: steps.gate.outputs.go == 'true'
         run: python scripts/newness.py
 
-      # Last, and only reachable in the non-gating mode -- on "true" the decision step above already failed
-      # the job and nothing after it ran. This is what makes "report without blocking" a report rather than
+      # Last, and only in the non-gating mode. `always()` runs a step after an earlier one has failed, so
+      # this step would run on "true" too, after the decision step had already failed the job, and would
+      # announce "The site was published" about a run that published nothing. That is why the `env`
+      # clause is there, not just this comment. This is what makes "report without blocking" a report rather than
       # a shrug: the deploy is done, and the run still ends red, so it appears red in the Actions list and
       # GitHub emails the repository owner. Without this step a red suite would be a `continue-on-error`
       # annotation on a green run, which is the failure mode `tests.yml`'s header keeps returning to -- a
@@ -956,7 +960,7 @@ jobs:
       # `always()` so that this is still asked when a later step failed for its own reasons. The IndexNow
       # step cannot fail the job by design, but it should not be able to hide this either.
       - name: End red if the suite was red
-        if: always() && steps.gate.outputs.go == 'true' && steps.verify.outputs.status != '0'
+        if: always() && env.VERIFY_GATES_DEPLOY != 'true' && steps.gate.outputs.go == 'true' && steps.verify.outputs.status != '0'
         run: |
           echo "::error title=Published, and red::The site was published and the verification suite was not green on it (run.mjs exited ${{ steps.verify.outputs.status }}). Read the suite's own step above for which harness and which assertion. To stop a red suite publishing at all, set VERIFY_GATES_DEPLOY to \"true\" at the top of this file."
           exit 1
