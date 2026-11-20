@@ -972,6 +972,22 @@ def local_urls() -> list[str]:
     return b32.urls(SITE)
 
 
+def alike_urls() -> list[str]:
+    """The one URL `33_alike.py` publishes -- Lookalikes -- asked of that stage for the reason above, and in the
+    same way as `local_urls`: passed the site root, with the slug read from `sitewide.ALIKE_PAGE` there.
+
+    Dropped once, by the web-editor merge of `latest_branch` into the Lookalikes branch (35f8828d13), which kept
+    `models_urls` from the other side of the conflict and lost this. The page went on being written and the
+    sitemap stopped naming it; `tests/indexnow_test.py` and `tests/alike_test.py` both say so when it happens.
+    """
+    sys.modules.setdefault("b20", sys.modules[__name__])
+    aspec = importlib.util.spec_from_file_location("b33", HERE / "33_alike.py")
+    b33 = importlib.util.module_from_spec(aspec)
+    sys.modules["b33"] = b33
+    aspec.loader.exec_module(b33)
+    return b33.urls(SITE)
+
+
 def models_urls() -> list[str]:
     """The models page, `docs/models/`, which `41_models_page.py` writes in the weekly.
 
@@ -1173,7 +1189,8 @@ def main() -> None:
     disc = discover_urls()
     local = local_urls()
     models = models_urls()
-    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc + local + models),
+    alike = alike_urls()
+    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc + local + models + alike),
                                       encoding="utf-8")
     (OUT / "robots.txt").write_text(robots(), encoding="utf-8")
     keyfile = b19.indexnow_key_file()
@@ -1191,10 +1208,11 @@ def main() -> None:
     print(f"{tops} topic · {tgt_n} target · {written - tops - tgt_n} crossing "
           f"= {written} pages · {kb(total)}")
     print(f"pages.css + sitemap.xml + robots.txt + {keyfile} · {kb(shells)} · "
-          f"{len(pages) + 1 + len(colls) + len(disc) + len(local) + len(models)} URLs, lastmod {data['snapshot']} "
+          f"{len(pages) + 1 + len(colls) + len(disc) + len(local) + len(models) + len(alike)} URLs, "
+          f"lastmod {data['snapshot']} "
           f"({len(colls)} of them curated collections, from scripts/25_collections.py; "
           f"{len(disc)} Discover, from scripts/19d_discover.py; {len(local)} local-AI, from scripts/32_local.py; "
-          f"{len(models)} models, from scripts/41_models_page.py)")
+          f"{len(models)} models, from scripts/41_models_page.py; {len(alike)} Lookalikes, from scripts/33_alike.py)")
     print(f"IndexNow key hosted at {SITE}{keyfile}"
           + (f" · {len(stale_keys)} stale key file(s) removed: "
              + ", ".join(p.name for p in stale_keys) if stale_keys else ""))

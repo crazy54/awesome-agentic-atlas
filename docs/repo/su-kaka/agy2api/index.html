@@ -15,18 +15,18 @@
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#1A1A1A">
+<meta name="theme-color" id="tc" content="#2A2A27">
 <script>
 try {
   var t = localStorage.getItem("theme");
   if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
     localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
   }
-  if (t !== "light" && t !== "dark" && t !== "contrast")
-    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
-      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (t === "contrast") localStorage.setItem("theme", t = "dark");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
+  document.getElementById("tc").content = {light: "#F5F2EC", dark: "#2A2A27"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -52,7 +52,8 @@ try {
         <span id="snap" class="live"></span>
       </p>
       <p class="acts"><a class="cta" href="https://github.com/su-kaka/agy2api">View on GitHub &rarr;</a>
-        <a class="alt" href="../../../catalog/#q=agy2api">Find it in the atlas</a></p>
+        <a class="alt" href="../../../catalog/#q=agy2api">Find it in the atlas</a>
+        <a class="alt" href="../../../alike/?repo=su-kaka/agy2api">Find alternatives</a></p>
     </div>
     <nav class="util">
       <a href="../../../discover/">Discover</a> ·
@@ -145,7 +146,7 @@ try {
 </div></main>
 
 <footer><div class="wrap">
-  <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and workbooks"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
+  <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and a full refresh"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
   One project from the <a href="../../../">Awesome Agentic Atlas</a>, which merges 39
   awesome-lists into a single index; all 39 are credited in the
   <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. The description, install
@@ -155,8 +156,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=7d78bb9ba1"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
-<script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>
 </html>
