@@ -1514,7 +1514,6 @@ def render() -> str:
         *filter(None, [mascot()[1], dance()[1], admin()[2]]),
         sitewide.site_script(""),
         b19.beacon(),
-        b19.telemetry(""),
         '</body>',
         '</html>',
         '',

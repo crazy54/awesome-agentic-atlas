@@ -25,7 +25,6 @@ true: work that is only on a feature branch is not live, however green its PR.
 | `lighthouse.yml` | pull requests touching page generators or `docs/` (see its `paths:`), cron `40 13 * * 1`, dispatch | Lighthouse CI 0.15.1 against `/index.html` and `/catalog/index.html` | No |
 | `dead-repos.yml` | cron `30 9 * * 6` (Saturday 09:30 UTC), and dispatch | Asks GitHub which listed repos are gone and records them in `state/dead-repos.json`; dispatches `daily.yml` with `force` when that changed | Yes: commits "Dead-repo scan YYYY-MM-DD" to `latest_branch` |
 | `og-preview.yml` | dispatch only | Renders the OG cards to a temp directory with `23_og.py --out` and diffs them against the committed cards | No |
-| `traceway-live.yml` | each Pages build, cron `25 18 * * *`, dispatch | Loads the live homepage and checks the monitoring fetch and first report return 200 | No |
 | `canary.yml` | cron `23 1-23/4 * * *` (every 4 hours), dispatch | Pulls every source list and parses it; regenerates the pages that are pure functions of committed files. Proposes a fix on a `bot/` branch | Only `bot/drift-<fingerprint>` and `bot/regenerate` |
 | `alert.yml` | when the daily, weekly, tests or canary finish on `latest_branch`; cron `47 */2 * * *`; dispatch (dry run by default) | Keeps one `build-red` issue in step with those four | No (issues only) |
 

@@ -68,8 +68,8 @@ import osicons  # noqa: E402
 import sitewide  # noqa: E402
 
 # The same dynamic load `19b_refresh.py` uses, and for the same reason: the module is named `19_pages`,
-# which is not an identifier, so `import` cannot reach it. Two things are wanted from it -- `beacon()`
-# and `telemetry()`, so those tags live in exactly one file, and `b17.SITE`, so the absolute URL that
+# which is not an identifier, so `import` cannot reach it. Two things are wanted from it -- `beacon()`,
+# so the analytics tag lives in exactly one file, and `b17.SITE`, so the absolute URL that
 # goes in every canonical and every sitemap entry is the one string the Markdown edition already links to.
 spec = importlib.util.spec_from_file_location("b19", HERE / "19_pages.py")
 b19 = importlib.util.module_from_spec(spec)
@@ -897,7 +897,7 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
   language. A dash in the star column means the row is a folder inside someone else's repo, or a dead
   link, and has no count of its own.
 </div></footer>
-{sitewide.site_script(page.rel())}{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(page.rel())}</body>
+{sitewide.site_script(page.rel())}{THEME_JS}{b19.follow()}{b19.beacon()}</body>
 </html>
 """
 

@@ -368,7 +368,7 @@ def foot(depth: int, snapshot: str, lists: int) -> str:
   <span class="vL">amber</span> is inferred from the language. A build here fails rather than publish a
   pick whose evidence has stopped supporting the claim above it.
 </div></footer>
-{sitewide.site_script(rel(depth))}{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(rel(depth))}</body>
+{sitewide.site_script(rel(depth))}{THEME_JS}{b19.follow()}{b19.beacon()}</body>
 </html>
 """
 

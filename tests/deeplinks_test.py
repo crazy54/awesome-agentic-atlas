@@ -23,10 +23,10 @@ Four groups, and a fifth that is here only because this file already loads 31_ho
                     the ones already published in the committed `docs/feed.xml`, because an id that moved
                     with the host would show every subscriber fifty old entries as new. `robots.txt` says it
                     is read when there is a custom domain, and says it is inert when there is not.
-  the monitoring -- the three script tags `telemetry()` writes onto every page family, resolved
-                    against every committed page's own URL at all five depths, in order; the two vendored
-                    builds pinned to npm's bytes; and the loader, run under node, starting on the host in
-                    `docs/CNAME` and on no other.
+  no Traceway    -- the session recorder the site loaded from 2026-10-11 to 2026-11-20 is gone: no
+                    generator writes its tags, every page outside docs/repo/ is free of them, the three
+                    files left for the detail pages a daily has not yet rewritten are inert comments, and
+                    once one of those is deleted no page anywhere may name it.
   the spotlight  -- `spot_art()` gives the homepage's spotlight the project's own picture, and the social
                     card for a GIF or no picture. Fed both arms directly, since the committed page
                     shows only whichever one the day's row took.
@@ -37,7 +37,6 @@ Run: python tests/deeplinks_test.py
 """
 from __future__ import annotations
 
-import hashlib
 import importlib.util
 import json
 import re
@@ -219,91 +218,64 @@ finally:
     b17.CNAME = saved
 
 
-# =====================================================================  4. the monitoring tags
-# The three script tags `telemetry()` in 19_pages.py puts on every page, each with a src relative to the page
-# that carries it. A src with one `../` too few renders and runs nothing, and a reader sees no difference at
-# all, so every committed page is resolved, not a sample -- the pages sit at five depths, and each family
-# passes its own `up`. `docs/v2/` is `30_v2.py`'s beta, built on demand, and carries none of them.
-b19 = b20.b19
+# =====================================================================  4. no Traceway
+# The site loaded Traceway from 2026-10-11 to 2026-11-20: three deferred scripts on every page family, a
+# session recorder and two helpers, reporting to traceway.jeremyfhall.com. The owner had it removed, from the
+# generators and from every page. This group holds that line in three places.
+#
+# The generators. No page family may write the tags again. `19_pages.py` held them in one `telemetry()`
+# helper that every family called, so the helper's absence is checked; and since a family could just as
+# well paste the tag in by hand, every generator's source is read for the file names too.
+#
+# The three files. About 12,000 detail pages under docs/repo/ were committed with the tags, and a daily
+# rewrites those, so the PR that took Traceway out left them for the daily rather than churn twelve thousand
+# files against every other branch. Until then those pages still request the three URLs, so the files stay,
+# each reduced to one block comment: a file that is nothing but a comment defines nothing, starts nothing
+# and sends nothing. A real loader or SDK back in its place is a red here.
+#
+# The pages. Every committed page outside docs/repo/ is clean now, and must stay clean. Under docs/repo/
+# the same assertion switches itself on file by file: once a stub is deleted (the follow-up, after a daily
+# has rewritten every detail page), no page anywhere may name it, because a tag naming a deleted file is a
+# 404 on every view. While a stub is still committed, the pages that still name it are counted and printed,
+# so the log says when the follow-up can go.
 DOCS = ROOT / "docs"
-TW = DOCS / "assets"
-WANT = [SITE + "assets/" + f for f in b19.TELEMETRY]
-TAG = re.compile(r'<script defer src="([^"]*)"></script>')
-true("the three files the tags name are committed", all((TW / f).is_file() for f in b19.TELEMETRY),
-     [f for f in b19.TELEMETRY if not (TW / f).is_file()])
-true("...and the loader is last, since it reads what the other two define",
-     b19.TELEMETRY[-1] == "traceway-loader.js")
-for up, url in [("", SITE), ("../", CATALOG), ("../../../", SITE + "repo/o/n/"),
-                ("../../../../", SITE + "topic/t/target/h/")]:
-    eq(f"telemetry({up!r}) resolves from {url}", [urljoin(url, s) for s in TAG.findall(b19.telemetry(up))], WANT)
-wrong, walked = [], 0
-for p in sorted(DOCS.rglob("index.html")):
-    parts = p.relative_to(DOCS).parts[:-1]
-    if parts[:1] == ("v2",):
+GONE = ("traceway-1.2.1.js", "web-vitals-6.2.3.js", "traceway-loader.js")
+NAMES = re.compile(r'<script[^>]*\bsrc="[^"]*assets/(' + "|".join(re.escape(f) for f in GONE) + r')"')
+
+true("19_pages.py no longer has the telemetry() helper every family called",
+     not hasattr(b20.b19, "telemetry") and not hasattr(b20.b19, "TELEMETRY"))
+named = sorted(p.name for p in SCRIPTS.glob("*.py")
+               if any(f in p.read_text(encoding="utf-8").lower() for f in GONE + ("traceway",)))
+eq("no generator in scripts/ names Traceway or its files", named, [])
+
+COMMENT_ONLY = re.compile(r"\A\s*/\*(?:(?!\*/).)*\*/\s*\Z", re.S)
+stubs = [f for f in GONE if (DOCS / "assets" / f).is_file()]
+for f in stubs:
+    true(f"docs/assets/{f}, kept for the pages not yet rewritten, is one comment and nothing else",
+         COMMENT_ONLY.match((DOCS / "assets" / f).read_text(encoding="utf-8")),
+         (DOCS / "assets" / f).read_text(encoding="utf-8")[:200])
+
+outside, inside, walked = [], {f: 0 for f in GONE}, 0
+for p in sorted(DOCS.rglob("*.html")):
+    rel = p.relative_to(DOCS).as_posix()
+    if rel.startswith("v2/"):
         continue
     walked += 1
-    url = SITE + "".join(s + "/" for s in parts)
-    got = [urljoin(url, s) for s in TAG.findall(p.read_text(encoding="utf-8"))]
-    if got != WANT:
-        wrong.append(f"{'/'.join(parts) or '(root)'}: {got}")
-true(f"every one of the {walked:,} committed pages loads the three from docs/assets/, in order",
-     walked and not wrong, f"{len(wrong):,} do not, e.g.\n  " + "\n  ".join(wrong[:5]))
-
-# The two vendored builds are npm's published bytes, unmodified, and are pinned here so that an edit is a
-# red rather than a quietly different SDK. Hashed raw, against this repository's rule of normalising CRLF
-# first, because `.gitattributes` marks both files `-text`: every platform checks out the same bytes, and
-# a normalised hash would wave through the one change autocrlf could make to them.
-PINS = {
-    # @tracewayapp/frontend 1.2.1, dist/traceway.iife.global.js
-    "traceway-1.2.1.js": "e4855ae39209d50877a2872406d49380207714fb28ac9478f761efb9a0dec743",
-    # web-vitals 6.2.3, dist/web-vitals.iife.js
-    "web-vitals-6.2.3.js": "1e5e9b9af6b8d71cfef508e5a869c53b4cf2bbccad8c9b5ac664c34e93f6151a",
-}
-for f, pin in PINS.items():
-    eq(f"docs/assets/{f} is the published npm build, byte for byte",
-       hashlib.sha256((TW / f).read_bytes()).hexdigest() if (TW / f).is_file() else None, pin)
-eq("...and those are the two builds the tags load", sorted(PINS), sorted(b19.TELEMETRY[:-1]))
-
-# The loader, run rather than read, like the forwarder above: a stub `window` per case, and the calls it
-# made on it. It must start on the host docs/CNAME names and on nothing else -- not the test server, not
-# `localhost`, not a `file://` page (whose hostname is empty), not the github.io URL a fork is served at --
-# and not when the SDK did not load. A HOST that drifted from the CNAME would fail no other test. On the
-# live host it must mark every kind of form field `rr-block` before it asks for its settings.
-LOADER = (TW / "traceway-loader.js").read_text(encoding="utf-8") if (TW / "traceway-loader.js").is_file() else ""
-CONFIG = "fetch https://blog.jeremyfhall.com/api/telemetry-config?site=aaa"
-TW_CASES = [
-    ("the test server", "127.0.0.1", True, []),
-    ("a local http.server", "localhost", True, []),
-    ("a file:// page", "", True, []),
-    ("a fork's project URL", "crazy54.github.io", True, []),
-    ("the live host, with the SDK missing", cname, False, []),
-    ("the live host", cname, True, ['find input, textarea, select, [contenteditable="true"]',
-                                    "block rr-mask rr-ignore rr-block", CONFIG]),
-]
-if node and LOADER:
-    harness = r"""
-const vm = require("vm");
-const [src, cases] = [process.argv[1], JSON.parse(process.argv[2])];
-console.log(JSON.stringify(cases.map(([hostname, sdk]) => {
-  const calls = [];
-  const document = {documentElement: {}, addEventListener: () => calls.push("listen"),
-                    querySelectorAll: sel => { calls.push("find " + sel);
-                      return [{classList: {add: (...c) => calls.push("block " + c.join(" "))}}]; }};
-  const window = {location: {hostname, href: "https://" + hostname + "/"}, document,
-                  fetch: u => { calls.push("fetch " + u); return new Promise(() => {}); }};
-  if (sdk) window.Traceway = {init: () => calls.push("init")};
-  vm.runInNewContext(src, {window, document});
-  return calls;
-})));
-"""
-    run = subprocess.run([node, "-e", harness, LOADER, json.dumps([[c[1], c[2]] for c in TW_CASES])],
-                         capture_output=True, text=True)
-    true("the loader runs under node", run.returncode == 0, run.stderr)
-    if run.returncode == 0:
-        for (label, *_, want), calls in zip(TW_CASES, json.loads(run.stdout)):
-            eq(f"loader on {label}", calls, want)
-else:
-    true("the loader is committed and node is on PATH", False)
+    found = set(NAMES.findall(p.read_text(encoding="utf-8")))
+    if not found:
+        continue
+    if rel.startswith("repo/"):
+        for f in found:
+            inside[f] += 1
+    else:
+        outside.append(rel)
+true(f"none of the committed pages outside docs/repo/ loads a Traceway script ({walked:,} pages walked)",
+     walked and not outside, f"{len(outside):,} do, e.g. " + ", ".join(outside[:5]))
+for f in GONE:
+    if f in stubs:
+        print(f"  info: {inside[f]:,} pages under docs/repo/ still name {f}; its stub stays until that is 0")
+    else:
+        eq(f"no page under docs/repo/ names the deleted {f}", inside[f], 0)
 
 
 # =====================================================================  the spotlight's picture
