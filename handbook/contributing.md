@@ -110,10 +110,9 @@ editor rather than `cat <<'EOF'`.
 
 | Task | Needs |
 |---|---|
-| Run the suite | Node 22, Python 3, `pip install openpyxl pillow`, a Chromium |
+| Run the suite | Node 22, Python 3, a Chromium |
 | Run the data-only stages (19c to 31) | Python 3 |
 | Run `27_semantic.py` | numpy, and network access for the model |
 | Anything that fetches | `gh`, authenticated |
 | Rebuild Archie or his pals | Blender 5; Node with `@gltf-transform/cli` and `meshoptimizer` for the meshopt step (see [archie.md](archie.md)) |
 | Rebuild `three-archie.js` | Node, `npm i three@0.186.0 esbuild` in a scratch directory |
-| `08_verify.py`, `09_pdf.py` | Windows with Microsoft Excel |

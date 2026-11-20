@@ -591,7 +591,7 @@ def plan(data: dict) -> list[Page]:
             by_both.setdefault((r["cat"], t), []).append(r)
 
     # Stars descending, name as the tie-break -- `SORTS.stars` in the template, and the same order the
-    # Markdown facet pages and the workbook use. Sorted here rather than trusted from `data.json`,
+    # Markdown facet pages use. Sorted here rather than trusted from `data.json`,
     # which happens to arrive in this order today: a landing page that silently reordered itself
     # because an upstream stage changed its own sort would be a hard bug to see.
     def rank(group):
@@ -866,6 +866,7 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
   <nav>
     <a href="{page.rel('discover/')}">Discover</a> ·
     <a href="{page.rel(sitewide.LOCAL_PAGE['slug'] + '/')}">{esc(sitewide.LOCAL_PAGE['title'])}</a> ·
+    <a href="{page.rel(sitewide.ALIKE_PAGE['slug'] + '/')}">{esc(sitewide.ALIKE_PAGE['title'])}</a> ·
     <a href="{page.rel('collections/')}">Collections</a> ·
     <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="{page.rel('repo/')}">All projects</a> ·
@@ -969,6 +970,16 @@ def local_urls() -> list[str]:
     sys.modules["b32"] = b32
     lspec.loader.exec_module(b32)
     return b32.urls(SITE)
+
+
+def models_urls() -> list[str]:
+    """The models page, `docs/models/`, which `41_models_page.py` writes in the weekly.
+
+    Read off the directory rather than asked of that stage: it is weekly-owned and may not have run in a
+    fresh checkout, and a sitemap must not name a page that is not there (`tests/indexnow_test.py` holds
+    the two sets equal both ways -- the page shipped in #112 without this, and the suite said so).
+    """
+    return [SITE + "models/"] if (OUT / "models" / "index.html").exists() else []
 
 
 def sitemap(pages: list[Page], snapshot: str, extra: list[str] = ()) -> str:
@@ -1161,7 +1172,9 @@ def main() -> None:
     colls = collection_urls(data)
     disc = discover_urls()
     local = local_urls()
-    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc + local), encoding="utf-8")
+    models = models_urls()
+    (OUT / "sitemap.xml").write_text(sitemap(pages, data["snapshot"], colls + disc + local + models),
+                                      encoding="utf-8")
     (OUT / "robots.txt").write_text(robots(), encoding="utf-8")
     keyfile = b19.indexnow_key_file()
     (OUT / keyfile).write_text(key_text(b19.indexnow_key()), encoding="utf-8")
@@ -1178,9 +1191,10 @@ def main() -> None:
     print(f"{tops} topic · {tgt_n} target · {written - tops - tgt_n} crossing "
           f"= {written} pages · {kb(total)}")
     print(f"pages.css + sitemap.xml + robots.txt + {keyfile} · {kb(shells)} · "
-          f"{len(pages) + 1 + len(colls) + len(disc) + len(local)} URLs, lastmod {data['snapshot']} "
+          f"{len(pages) + 1 + len(colls) + len(disc) + len(local) + len(models)} URLs, lastmod {data['snapshot']} "
           f"({len(colls)} of them curated collections, from scripts/25_collections.py; "
-          f"{len(disc)} Discover, from scripts/19d_discover.py; {len(local)} local-AI, from scripts/32_local.py)")
+          f"{len(disc)} Discover, from scripts/19d_discover.py; {len(local)} local-AI, from scripts/32_local.py; "
+          f"{len(models)} models, from scripts/41_models_page.py)")
     print(f"IndexNow key hosted at {SITE}{keyfile}"
           + (f" · {len(stale_keys)} stale key file(s) removed: "
              + ", ".join(p.name for p in stale_keys) if stale_keys else ""))

@@ -15,7 +15,7 @@ name: Weekly — dead repos
 on:
   schedule:
     # Saturdays, 09:30 UTC: clear of the daily build (11:12) and a day ahead of the weekly one, so
-    # Sunday's workbooks are built without the dead repos too.
+    # Sunday's full refresh is built without the dead repos too.
     - cron: "30 9 * * 6"
   workflow_dispatch:
 

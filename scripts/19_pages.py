@@ -551,6 +551,7 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             .replace("__SETTINGS__", pagemin.strip_page(SETTINGS_MENU))
             .replace("__SETCSS__", pagemin.strip_css(SETTINGS_CSS))
             .replace("__SETJS__", pagemin.strip_js(SETTINGS_JS))
+            .replace("__SEMJS__", pagemin.strip_js(SEMANTIC_JS))
             .replace("__BUILT__", stamp_iso)
             .replace("__BUILT_UTC__", stamp_utc)
             .replace("__BUILT_BADGE__", shield_text(stamp_utc))
@@ -574,6 +575,8 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             # Last, so a constant injected above carrying its own relative URLs is prefixed too.
             .replace("__LOCALSLUG__", sitewide.LOCAL_PAGE["slug"])
             .replace("__LOCALTITLE__", escape(sitewide.LOCAL_PAGE["title"]))
+            .replace("__ALIKESLUG__", sitewide.ALIKE_PAGE["slug"])
+            .replace("__ALIKETITLE__", escape(sitewide.ALIKE_PAGE["title"]))
             .replace("__UP__", UP)
             .replace("__ANALYTICS__", follow() + beacon() + telemetry(UP)))
     relative_urls_prefixed(out)
@@ -608,6 +611,14 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
 # yet; it is returned rather than hidden because the alternative is a second copy of a four-line function the
 # first time something does.
 #
+# THE QUERY ENCODER FOR `docs/search/`, read from `scripts/semantic.js` and inlined at `__SEMJS__` in the page's
+# search-by-meaning section. A file of its own because Lookalikes (`33_alike.py`) inlines the same bytes: one
+# browser copy of the tokeniser, the forward pass and the staleness guard, rather than two that could drift.
+# Stripped with `strip_js` for the reason the settings script below is -- substitution runs after the page's
+# own comment strip, so a constant injected here would otherwise smuggle every one of its comments into the
+# bytes a reader downloads.
+SEMANTIC_JS = (Path(__file__).parent / "semantic.js").read_text(encoding="utf-8")
+
 # ONE AXIS NOW. The menu used to carry a light/dark toggle (`#theme`) and, under it, eight colour themes on a
 # second axis. It is three buttons -- System, Light, Dark -- and they are the whole choice, so the toggle
 # went: two controls for the same decision is one too many in a panel this small. The resolution
@@ -2443,16 +2454,16 @@ __OSSPRITE__
          and Collections answers it with one. -->
     <a href="__UP__discover/">Discover</a> ·
     <a href="__UP____LOCALSLUG__/">__LOCALTITLE__</a> ·
+    <a href="__UP____ALIKESLUG__/">__ALIKETITLE__</a> ·
     <a href="__UP__collections/">Collections</a> ·
     <a href="https://github.com/__REPO__/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="__UP__repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/__REPO__">Repository</a> ·
     <a href="https://github.com/__REPO__/tree/HEAD/mega-list">Markdown</a> ·
-    <a href="https://github.com/__REPO__/releases/latest">Workbook</a><br>
-    <!-- SETTINGS: one group, Theme, of three buttons -- System, Light, Dark. It used to be two groups, a
-         light/dark toggle and eight colour themes, and the toggle went with the second axis; then a fourth
-         button, High contrast, which the system's own contrast setting now covers in either theme. Three
-         mutually exclusive choices are one question, and a toggle beside them would be a second
+    <a href="https://github.com/__REPO__/releases/tag/v2026.10.22" title="Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition.">Workbook (retired)</a><br>
+    <!-- SETTINGS: one group, Theme, of four buttons -- System, Light, Dark, High contrast. It used to be two
+         groups, a light/dark toggle and eight colour themes, and the toggle went with the second axis:
+         four mutually exclusive choices are one question, and a toggle beside them would be a second
          control for the same decision. `role="group"` with the visible label it is named by. Not
          `role="radiogroup"`: that contract obliges arrow-key navigation and a roving tabindex, and getting
          either half wrong makes the control worse for exactly the reader the role was added for. Plain
@@ -4696,7 +4707,6 @@ function missLink() {
 // threshold either admits the nonsense or rejects the question. What *does* separate them is the corpus:
 // every real query above has at least one word that appears somewhere in these 1,294 rows, and every
 // nonsense one has none. That test costs an early-exiting scan of `hay` and no new bytes at all.
-const SEM_DIMS_MAX = 512;   // sanity bound on meta.dims before it is used as a stride
 const SEM_THIN = 12;        // exact matches at or above which meaning is not consulted
 const SEM_MAX = 12;         // most rows meaning may add
 const SEM_RATIO = 0.6;      // and only those within this fraction of the best cosine
@@ -4704,71 +4714,19 @@ const SEM_RATIO = 0.6;      // and only those within this fraction of the best c
 // scores 90 -- the same as a query word at the start of the project's name -- so meaning can outrank a
 // word found mid-name or in a blurb and can never outrank a row actually *called* what was typed.
 const SEM_LIFT = 90;
-// Its own regex object, and not the one `27_semantic.py` compiles, because this is a transcription
-// rather than a shared implementation and there is no way to share one across the two languages. The
-// stage has this pattern, `tests/semantic_test.py` has it a third time, and all three have to agree: a
-// query segmented one way against documents segmented another scores noise while looking healthy.
-const SEM_WORD = /[a-z0-9]+|[^\sa-z0-9]/g;
 let SEM = null, SEM_STATE = "cold";   // cold | loading | live | off
 
-// Greedy longest-match WordPiece, over the pruned vocabulary this page holds and not the model's full
-// one. `27_semantic.py` segments the corpus against exactly the tokens shipped in `vocab.json` for the
-// same reason: the stage shipped a subset, so it has to *build* against the subset too, or the same word
-// is two different token sequences on the two sides. A word no suffix of which is in the vocabulary is
-// dropped whole rather than partially, which is why the stage force-keeps every single-character token.
-//
-// `slot` is a parameter rather than a read of `SEM.slot`, which makes this the one function in the
-// semantic module with no dependency on module state -- and therefore the one a test can call. It is
-// also the function most worth calling: `meta.json` ships the stage's own segmentation of a handful of
-// texts, and `tests/probe.mjs` runs *this* code against those fixtures. Drift between the two
-// tokenisers is the failure that has no symptom -- no exception, no empty result, just a query pointing
-// somewhere the documents are not -- so it is checked by comparing token ids and nothing else.
-function semTokens(text, slot, stop) {
-  const out = [];
-  for (const word of String(text).toLowerCase().match(SEM_WORD) || []) {
-    // Before the lookup, never after, and never by leaving the token out of the vocabulary instead. A
-    // stopword whose token is missing does not disappear -- WordPiece re-spells it out of the longest
-    // surviving pieces, and those pieces are rare, so it comes back weighted *higher* than the content
-    // words. Measured on this corpus: "should" arrived as `sho` + `##uld` at row norms 172 and 152 against
-    // 179 for `pdf`. See the note on STOP in 27_semantic.py.
-    if (stop && stop.has(word)) continue;
-    let start = 0, ok = true;
-    const pieces = [];
-    while (start < word.length) {
-      let end = word.length;
-      for (; end > start; end--) {
-        const piece = start === 0 ? word.slice(start, end) : "##" + word.slice(start, end);
-        const id = slot.get(piece);
-        if (id !== undefined) { pieces.push(id); break; }
-      }
-      if (end === start) { ok = false; break; }
-      start = end;
-    }
-    if (ok) for (const p of pieces) out.push(p);
-  }
-  return out;
-}
+// The tokeniser, the forward pass and the staleness guard live in `scripts/semantic.js`, inlined just below,
+// because Lookalikes (`scripts/33_alike.py`) reads the same index with the same encoder and a second
+// transcription of it would be the fourth copy of an algorithm whose drift has no symptom. `semTokens`,
+// `semEncode`, `semDecode`, `SEM_WORD` and `SEM_DIMS_MAX` are all defined there; read that file's header
+// before changing any of them, and `tests/probe.mjs` still runs `semTokens` from this page against the
+// build stage's fixtures.
+__SEMJS__
 
-// The forward pass. Sum of the token rows, normalised -- the IDF weighting and the projection are already
-// baked into the shipped table, so there is nothing to weight here and nothing to project.
-function semVector(query) {
-  const ids = semTokens(query, SEM.slot, SEM.stop);
-  // Also how a topicless question declines. "please help me choose" is every word a stopword, so it
-  // produces no tokens at all and never reaches the corpus below -- which is a better answer than the
-  // twelve confident, unrelated projects it used to return.
-  if (!ids.length) return null;
-  const d = SEM.dims, v = new Float32Array(d);
-  for (const id of ids) {
-    const base = id * d;
-    for (let k = 0; k < d; k++) v[k] += SEM.table[base + k] * SEM.vs;
-  }
-  let n = 0;
-  for (let k = 0; k < d; k++) n += v[k] * v[k];
-  n = Math.sqrt(n);
-  if (!n) return null;
-  for (let k = 0; k < d; k++) v[k] /= n;
-  return v;
-}
+// The forward pass over this page's index. The function is the shared one; the name is kept because
+// `senseHits` below and the docstring in `27_semantic.py` both call it this.
+function semVector(query) { return semEncode(SEM, query); }
 
 // Does this word appear anywhere in the atlas? Disjunction across the corpus, where the search box is a
 // conjunction within one row -- which is why this is a different question and not a slower version of
@@ -4838,53 +4796,10 @@ async function loadSemantic() {
       grab("meta.json", "json"), grab("vocab.json", "json"),
       grab("vocab.bin", "buf"), grab("docs.bin", "buf"),
     ]);
-    const dims = meta.dims | 0;
-    if (!(dims > 0 && dims <= SEM_DIMS_MAX)) throw new Error("meta.dims is " + meta.dims);
-    // The guard. The row count first because it is free and catches the common case; the fingerprint
-    // second because it is the only test that catches a rebuild of the *same* size in a different order,
-    // which is the one that silently returns the wrong project for every query.
-    if (meta.rows !== ROWS.length)
-      throw new Error("index has " + meta.rows + " rows, data.json has " + ROWS.length);
-    if (crypto.subtle) {
-      const body = new TextEncoder().encode(ROWS.map(r => r.nwo).join("\n"));
-      const hash = [...new Uint8Array(await crypto.subtle.digest("SHA-256", body))]
-        .map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 16);
-      if (hash !== meta.fingerprint)
-        throw new Error("data.json is " + hash + ", index was built against " + meta.fingerprint);
-    }
-    if (docs.byteLength !== meta.rows * dims) throw new Error("docs.bin is " + docs.byteLength + " B");
-    if (table.byteLength !== vocab.tokens.length * dims)
-      throw new Error("vocab.bin is " + table.byteLength + " B");
-    // The two scales, checked because they are the one input that would otherwise reach the arithmetic
-    // unvalidated -- and NaN does not fail closed here, it fails *open* and silent. A missing scale makes
-    // every `r.sem` NaN; `r.sem < floor` is then false for every row, so the cutoff never fires and a full
-    // twelve arbitrary projects are admitted and labelled "by meaning". Worse, `relevance()` returns NaN
-    // too, the comparator returns NaN for every pair, and the whole table -- including the rows that did
-    // match the reader's words -- comes out in arbitrary order. No exception, no warning, nothing that
-    // looks degraded. Unreachable from `27_semantic.py`, which always writes both; reachable from a
-    // truncated or hand-edited meta.json, which is exactly what a guard is for.
-    for (const [k, v] of [["doc_scale", meta.doc_scale], ["vocab_scale", meta.vocab_scale]])
-      if (!(typeof v === "number" && isFinite(v) && v > 0)) throw new Error("meta." + k + " is " + v);
-    SEM = {
-      dims,
-      slot: new Map(vocab.tokens.map((t, i) => [t, i])),
-      // Shipped rather than transcribed a fourth time, and applied by `semTokens` before it looks anything
-      // up. Absent in a schema 1 index built before this existed, which degrades to the old behaviour
-      // rather than throwing -- an empty set simply strips nothing.
-      stop: new Set(meta.stop || []),
-      table: new Int8Array(table),
-      docs: new Int8Array(docs),
-      // int8 was quantised against two separate maxima -- one shared scale crushed every unit-length
-      // document component to 0 or +/-1 and collapsed 1,294 rows onto a handful of distinct vectors.
-      ds: meta.doc_scale / 127,
-      vs: meta.vocab_scale / 127,
-      // Kept for the map, which is the other reader of this directory and validates nothing of its own.
-      // `rows` and `near` are the two lengths `xy.bin` and `near.bin` have to have; `xy_scale` is the one
-      // number that turns their int16s back into positions. Stashed here rather than re-fetched there
-      // because `meta.json` is where the fingerprint lives, and a second fetch is a second chance for the
-      // two readers to be looking at different metadata.
-      rows: meta.rows, near: meta.near | 0, xys: meta.xy_scale,
-    };
+    // Every check -- dims, row count, the fingerprint against these rows, both lengths, both scales -- is
+    // in `semDecode` (`scripts/semantic.js`), shared with Lookalikes, which has the same reason to distrust
+    // these bytes. A throw from it lands in the catch below exactly as the inline checks used to.
+    SEM = await semDecode({meta, vocab, table, docs}, ROWS.map(r => r.nwo));
     SEM_STATE = "live";
     // Only if there is something on screen this changes. A reader who focused the box and typed nothing
     // gets no re-render, and one who has already typed gets their answer the moment the bytes land.

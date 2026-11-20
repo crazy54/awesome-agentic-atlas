@@ -20,7 +20,7 @@ true: work that is only on a feature branch is not live, however green its PR.
 | Workflow | Triggers | Job | Writes to the repo? |
 |---|---|---|---|
 | `daily.yml` | cron `12 11 * * *` (11:12 UTC), and dispatch with a `force` input | Incremental rebuild of the site and the Markdown edition from lists that moved | Yes: commits "Daily refresh YYYY-MM-DD" to `latest_branch` |
-| `weekly.yml` | cron `40 12 * * 0,3` (Sunday and Wednesday 12:40 UTC), and dispatch | Full rebuild including screenshots, OG cards, collections and both workbooks | Yes: commits "Weekly rebuild", then publishes a release |
+| `weekly.yml` | cron `40 12 * * 0,3` (Sunday and Wednesday 12:40 UTC), and dispatch | Full rebuild including screenshots, OG cards and collections | Yes: commits "Weekly rebuild" |
 | `tests.yml` | every pull request, pushes to `latest_branch`, cron `40 7 * * 1`, dispatch | `node tests/run.mjs` on ubuntu-latest | No |
 | `lighthouse.yml` | pull requests touching page generators or `docs/` (see its `paths:`), cron `40 13 * * 1`, dispatch | Lighthouse CI 0.15.1 against `/index.html` and `/catalog/index.html` | No |
 | `dead-repos.yml` | cron `30 9 * * 6` (Saturday 09:30 UTC), and dispatch | Asks GitHub which listed repos are gone and records them in `state/dead-repos.json`; dispatches `daily.yml` with `force` when that changed | Yes: commits "Dead-repo scan YYYY-MM-DD" to `latest_branch` |
@@ -70,19 +70,20 @@ returns 404), so a red check does not block a merge by itself.
 
 The weekly build runs the same fetch as the daily, then adds:
 
-- **Screenshots and workbooks:** `05`, `06`, `15`, `15b`, and `16`. The job installs `playwright` and
-  `numpy`, and runs `playwright install chromium`.
+- **Screenshots:** `05`, `06` and `15`. The job installs `pillow`, `playwright` and `numpy`, and runs
+  `playwright install chromium`.
 - **Weekly-only site stages:** `25_collections` and `23_og`, on top of the daily build.
 - **A cache split into `restore` and `save`.** The save step is `if: always()`, so a failed or timed-out
   weekly still banks its progress, and a re-run resumes. The timeout is 350 minutes.
-- **`VERIFY_GATES_DEPLOY: "true"`.** A red suite blocks the commit, the IndexNow submission and the release.
+- **`VERIFY_GATES_DEPLOY: "true"`.** A red suite blocks the commit and the IndexNow submission.
   The cache is still saved.
-- **A release.** It is tagged `vYYYY.MM.DD` and carries `Awesome-Agentic-Atlas-DARK.xlsx` and
-  `Awesome-Agentic-Atlas-LIGHT.xlsx`. If the tag already exists, the files are re-uploaded with `--clobber`.
-  The latest release on 2026-09-25 was `v2026.09.21`.
 
-**`18_slicers.py` runs in neither workflow**, so released workbooks have no slicers. Nothing in CI builds
-the legacy orchestrators workbook (`07`, `08`, `09`) either.
+**No release.** Until November 2026 the weekly also ran `16_build_all.py` to build two Excel workbooks and
+published them as a release tagged `vYYYY.MM.DD`. Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. That copy is release `v2026.10.22`; every
+link to it (the README, `mega-list/`, the catalogue's nav) is pinned to that tag rather than
+`releases/latest`, so nothing published later can move it. `16_build_all.py` is now a library of row
+functions that `17_markdown.py` and `19_pages.py` import, not a stage. The weekly step it ran took 4 to 7
+minutes. `15b_shots_sources.py`, which drew repo cards for the workbook's Sources sheet, went with it.
 
 ### The dead-repo scan
 
@@ -100,8 +101,8 @@ never loads. `dead-repos.yml` runs `scripts/dead_repos.py` every Saturday, a day
 3. **Commit.** If `state/dead-repos.json` changed, the job commits it to the branch it ran on. The run's
    summary page lists the repos newly gone and the ones that came back.
 4. **Rebuild.** Only when the ledger changed, it dispatches `daily.yml` with `force=true`. `14_classify_all.py`
-   leaves every ledger repo out, so that run drops them from the site and the Markdown edition, and
-   Sunday's weekly drops them from the workbooks. The daily's screenshot gate still applies.
+   leaves every ledger repo out, so that run drops them from the site and the Markdown edition. The daily's
+   screenshot gate still applies.
 
 A repo stays in the ledger while it is still gone, including after its list drops it. One that answers
 again is removed by the next scan and is listed again by the build after it. To look at the ledger without
@@ -265,7 +266,7 @@ build commit on `latest_branch` shows no `tests.yml` check.
 
 This workflow runs on ubuntu-latest with Node 22 and Python 3.12.
 
-- It installs `openpyxl` and `pillow`.
+- It installs no Python packages. The suite's Python harnesses are standard library only.
 - It sets `AAA_CHROME_FLAGS="--no-sandbox --disable-dev-shm-usage"`, because a container has no user
   namespace to sandbox into.
 - It runs as two parallel jobs: `suite`, every harness but `bits-check.mjs` (`AAA_SKIP`, 45-minute limit), and

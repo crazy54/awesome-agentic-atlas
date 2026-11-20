@@ -10,45 +10,23 @@
 <meta property="og:title" content="SuperPlane — Awesome Agentic Atlas">
 <meta property="og:description" content="Coordinates coding agents, source control, CI, review, approvals and feedback to turn routine backlog issues into review-ready pull requests. Supports…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/superplanehq/superplane/">
-<meta property="og:image" content="https://raw.githubusercontent.com/superplanehq/superplane/main/docs/images/board_image.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/superplanehq/superplane/main/docs/images/background_image.png">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -133,7 +111,7 @@ try {
 <section>
   <h2>Screenshot</h2>
   <figure class="shot">
-    <img loading="lazy" decoding="async" src="https://raw.githubusercontent.com/superplanehq/superplane/main/docs/images/board_image.png"
+    <img loading="lazy" decoding="async" src="https://raw.githubusercontent.com/superplanehq/superplane/main/docs/images/background_image.png"
          alt="Screenshot or social card for SuperPlane">
     <figcaption>The project's own screenshot, fetched from
       source rather than copied into this repository.</figcaption>
@@ -162,7 +140,7 @@ try {
   <h2>Related in Orchestrators &amp; Multi-Agent</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../sipyourdrink-ltd/bernstein/">bernstein</a><span class="nwo">sipyourdrink-ltd/bernstein</span><span class="desc">Deterministic scheduler for 40+ CLI coding agents running in parallel git worktrees with an HMAC-signed audit chain, signed agent cards, and…</span></li><li><a href="../../aannoo/hcom/">hcom</a><span class="nwo">aannoo/hcom</span><span class="desc">by aannoo - Lightweight CLI tool for real-time communication between Claude Code sub agents using hooks. Enables multi-agent collaboration with…</span></li><li><a href="../../777genius/agent-teams-ai/">Agent Teams</a><span class="nwo">777genius/agent-teams-ai</span><span class="desc">Desktop app where you give high-level commands to autonomous coding-agent teams across Claude Code, Codex, OpenCode, Cursor, Grok, GitHub Copilot…</span></li><li><a href="../../get-concord-ai/concord-mcp/">Concord MCP</a><span class="nwo">Get-Concord-AI/concord-mcp</span><span class="desc">Local-first shared work-state MCP server (npx -y @concord-ai/concord-mcp) that lets coding agents coordinate on one repo through presence, file…</span></li><li><a href="../../desplega-ai/agent-swarm/">agent-swarm</a><span class="nwo">desplega-ai/agent-swarm</span><span class="desc">Self-hosted AI company operating system where a lead agent delegates goals to workers in isolated containers, with persistent memory, schedules, and…</span></li><li><a href="../../agent-sh/agentsys/">AgentSys</a><span class="nwo">agent-sh/agentsys</span><span class="desc">by avifenesh - Workflow automation system for Claude with a group of useful plugins, agents, and skills. Automates task-to-production workflows, PR…</span></li><li><a href="../../seemseam/claude_codex_bridge/">claude_codex_bridge</a><span class="nwo">SeemSeam/claude_codex_bridge</span><span class="desc">(3.5k ⭐) - Visible multi-agent CLI workspace for mixing Codex, Claude, Gemini, Kimi, Qwen, Cursor, Copilot, Pi, OpenCode, and other AI coding agents</span></li><li><a href="../../avelikiy/great_cto/">great_cto</a><span class="nwo">avelikiy/great_cto</span><span class="desc">Engineering management layer for 34 specialist AI agents covering the full SDLC (architect, pm, senior-dev, code-reviewer, qa, security, devops…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../sipyourdrink-ltd/bernstein/">bernstein</a><span class="nwo">sipyourdrink-ltd/bernstein</span><span class="desc">Deterministic scheduler for 40+ CLI coding agents running in parallel git worktrees with an HMAC-signed audit chain, signed agent cards, and…</span></li><li><a href="../../aannoo/hcom/">hcom</a><span class="nwo">aannoo/hcom</span><span class="desc">by aannoo - Lightweight CLI tool for real-time communication between Claude Code sub agents using hooks. Enables multi-agent collaboration with…</span></li><li><a href="../../777genius/agent-teams-ai/">Agent Teams</a><span class="nwo">777genius/agent-teams-ai</span><span class="desc">Desktop app where you give high-level commands to autonomous coding-agent teams across Claude Code, Codex, OpenCode, Cursor, Grok, GitHub Copilot…</span></li><li><a href="../../orchestratorinc/agent-orchestrator/">Orchestrator.inc</a><span class="nwo">OrchestratorInc/agent-orchestrator</span><span class="desc">Open-source desktop app (macOS, Windows, Linux, with iPhone and Android companions) where an orchestrator agent splits work across workers, each in…</span></li><li><a href="../../itsomidkarami/kraft/">Kraft</a><span class="nwo">itsOmidKarami/kraft</span><span class="desc">Local orchestrator that takes each task from spec to pull request in its own git worktree: steps run in order from a YAML chain file, tests and CI…</span></li><li><a href="../../sandbaseai/cli/">sandbaseai/cli</a><span class="nwo">sandbaseai/cli</span><span class="desc">Official source for the sandbase-mcp skill - discover, inspect, and invoke 2,000+ AI models and APIs through a local MCP bridge with explicit schema…</span></li><li><a href="../../sno-ai/sno-station/">Sno Station</a><span class="nwo">sno-ai/sno-station</span><span class="desc">Local runtime with no daemon that makes Codex, Claude Code, Cursor, Hermes Agent and OpenClaw work as one team: sno reach pair puts a builder and a…</span></li><li><a href="../../desplega-ai/agent-swarm/">agent-swarm</a><span class="nwo">desplega-ai/agent-swarm</span><span class="desc">Self-hosted AI company operating system where a lead agent delegates goals to workers in isolated containers, with persistent memory, schedules, and…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

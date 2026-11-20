@@ -10,45 +10,23 @@
 <meta property="og:title" content="opencode-skills-tui — Awesome Agentic Atlas">
 <meta property="og:description" content="Browse skills, track loaded state, and preview SKILL.md">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/aihaipeng/opencode-skills-tui/">
-<meta property="og:image" content="https://opengraph.githubassets.com/1/aihaipeng/opencode-skills-tui">
+<meta property="og:image" content="https://raw.githubusercontent.com/aihaipeng/opencode-skills-tui/main/assets/demo.gif">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -133,9 +111,9 @@ try {
 <section>
   <h2>Screenshot</h2>
   <figure class="shot">
-    <img loading="lazy" decoding="async" src="https://opengraph.githubassets.com/1/aihaipeng/opencode-skills-tui"
+    <img loading="lazy" decoding="async" src="https://raw.githubusercontent.com/aihaipeng/opencode-skills-tui/main/assets/demo.gif"
          alt="Screenshot or social card for opencode-skills-tui">
-    <figcaption>GitHub's social card — no screenshot was found for this project, fetched from
+    <figcaption>The project's own screenshot, fetched from
       source rather than copied into this repository.</figcaption>
   </figure>
 </section>
@@ -162,7 +140,7 @@ try {
   <h2>Related in Plugins, Themes &amp; Clients</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../johannesjo/parallel-code/">parallel-code</a><span class="nwo">johannesjo/parallel-code</span><span class="desc">Desktop app that runs multiple AI coding agents (Claude Code, Codex CLI, Gemini CLI) in parallel with automatic git worktree isolation, a unified…</span></li><li><a href="../../bloopai/vibe-kanban/">vibe-kanban</a><span class="nwo">BloopAI/vibe-kanban</span><span class="desc">Kanban-based orchestration for 10+ coding agents (Claude Code, Codex, Gemini CLI, Copilot, Amp). Isolated git worktrees per agent, inline diff…</span></li><li><a href="../../777genius/agent-notifications/">Agent Notifications</a><span class="nwo">777genius/agent-notifications</span><span class="desc">Cross-platform desktop notifications and optional webhooks for Gemini CLI turn completion and tool permission requests. Also supports Claude Code…</span></li><li><a href="../../iofficeai/aionui/">AionUi</a><span class="nwo">iOfficeAI/AionUi</span><span class="desc">Open-source desktop client that runs multiple agent CLIs (Claude Code, Codex, Gemini CLI, Qwen Code) side by side, with multi-session chat, MCP and…</span></li><li><a href="../../qualixar/superlocalmemory/">SuperLocalMemory</a><span class="nwo">qualixar/superlocalmemory</span><span class="desc">External: Persistent memory + learning MCP server for Claude Code. Zero-cloud, 6-channel retrieval, 16K+ monthly downloads. Backed by 3 arXiv papers</span></li><li><a href="../../jazzyalex/agent-sessions/">Agent Sessions</a><span class="nwo">jazzyalex/agent-sessions</span><span class="desc">Local-first macOS app to search, browse, and resume Gemini CLI sessions alongside Codex CLI, Claude Code, OpenCode, and other agents, with live…</span></li><li><a href="../../agent-of-empires/agent-of-empires/">agent-of-empires</a><span class="nwo">agent-of-empires/agent-of-empires</span><span class="desc">Pairs a TUI with a matching web view, so the same sessions stay reachable from a phone. Claude Code, Codex, OpenCode, Gemini, Mistral Vibe.</span></li><li><a href="../../farion1231/cc-switch/">cc-switch</a><span class="nwo">farion1231/cc-switch</span><span class="desc">(132.1k ⭐) - Cross-platform desktop assistant for Claude Code, Codex, OpenCode, OpenClaw, Grok Build, and Hermes Agent</span></li></ul>
+  <ul class="kinlist"><li><a href="../../johannesjo/parallel-code/">parallel-code</a><span class="nwo">johannesjo/parallel-code</span><span class="desc">Desktop app that runs multiple AI coding agents (Claude Code, Codex CLI, Gemini CLI) in parallel with automatic git worktree isolation, a unified…</span></li><li><a href="../../iofficeai/aionui/">AionUi</a><span class="nwo">iOfficeAI/AionUi</span><span class="desc">Desktop app that runs several agent CLIs side by side in one window, each in its own session, with MCP and ACP support, file preview, scheduled…</span></li><li><a href="../../bloopai/vibe-kanban/">vibe-kanban</a><span class="nwo">BloopAI/vibe-kanban</span><span class="desc">Kanban-based orchestration for 10+ coding agents (Claude Code, Codex, Gemini CLI, Copilot, Amp). Isolated git worktrees per agent, inline diff…</span></li><li><a href="../../qualixar/superlocalmemory/">SuperLocalMemory</a><span class="nwo">qualixar/superlocalmemory</span><span class="desc">External: Persistent memory + learning MCP server for Claude Code. Zero-cloud, 6-channel retrieval, 16K+ monthly downloads. Backed by 3 arXiv papers</span></li><li><a href="../../jazzyalex/agent-sessions/">Agent Sessions</a><span class="nwo">jazzyalex/agent-sessions</span><span class="desc">Local-first macOS app to search, browse, and resume Gemini CLI sessions alongside Codex CLI, Claude Code, OpenCode, and other agents, with live…</span></li><li><a href="../../agent-of-empires/agent-of-empires/">agent-of-empires</a><span class="nwo">agent-of-empires/agent-of-empires</span><span class="desc">Pairs a TUI with a matching web view, so the same sessions stay reachable from a phone. Claude Code, Codex, OpenCode, Gemini, Mistral Vibe.</span></li><li><a href="../../farion1231/cc-switch/">cc-switch</a><span class="nwo">farion1231/cc-switch</span><span class="desc">(155.7k ⭐) - Cross-platform desktop assistant for Claude Code, Codex, OpenCode, OpenClaw, Grok Build, and Hermes Agent</span></li><li><a href="../../kenryu42/cc-safety-net/">Claude Code Safety Net</a><span class="nwo">kenryu42/cc-safety-net</span><span class="desc">by kenryu42 - A coding agent CLI hook that acts as a safety net, catching destructive git and filesystem commands before they execute. Supports…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

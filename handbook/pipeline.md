@@ -8,7 +8,7 @@ The pipeline is a set of Python scripts in `scripts/`:
 Numbers are not contiguous:
 
 - There is no 12, and nothing between 27 and 30.
-- Some stages carry letter suffixes: `03b`, `15b`, `19b`, `19c`, `19d`.
+- Some stages carry letter suffixes: `03b`, `19b`, `19c`, `19d`.
 - Two unrelated stages share the number 25.
 
 To count the numbered files:
@@ -40,23 +40,29 @@ The module docstrings are the detailed documentation. Read the one at the top of
 | `02_fetch.py` | Batched GraphQL for stars, language, licence and README, with a REST fallback | `cache/entries.json`; `gh api` | `cache/meta.json`, `cache/readmes/` | No |
 | `03_releases.py`, `03b_actions.py` | Release asset names; whether the repo is a GitHub Action | `cache/entries.json`, `cache/meta.json`; `gh api` | `cache/releases.json`, `cache/actions.json` | No |
 | `04_classify.py` | OS verdicts, install command and screenshot candidates for the original list | the four files above plus `cache/readmes/` | `cache/records.json` | No |
-| `10_parse_sources.py` | **Defines `SOURCES`**, the list of source lists. Parses every list except `orchestrators` (which goes through `01`/`04`). On a section heading it cannot map to a topic, or a list wanting a ninth colour: strict (the default) exits 1; provisional (`AAA_PROVISIONAL=1`, set by both workflows) files it for the run and warns. See [Upstream drift](#upstream-drift) | `cache/sources/*.md`, `cache/section-moves.json`, `cache/pull-report.json` | `cache/entries_all.json`, `cache/drift-proposal.json` and `.md`; `cache/provisional.json` on a provisional run with drift; annotations and `$GITHUB_STEP_SUMMARY` | No; it says to run `pull_sources.py` first |
+| `10_parse_sources.py` | **Defines `SOURCES`**, the list of source lists. Parses every list except `orchestrators` (which goes through `01`/`04`). On a section heading it cannot map to a topic: strict (the default) exits 1; provisional (`AAA_PROVISIONAL=1`, set by both workflows) files it for the run and warns. See [Upstream drift](#upstream-drift) | `cache/sources/*.md`, `cache/section-moves.json`, `cache/pull-report.json` | `cache/entries_all.json`, `cache/drift-proposal.json` and `.md`; `cache/provisional.json` on a provisional run with drift; annotations and `$GITHUB_STEP_SUMMARY` | No; it says to run `pull_sources.py` first |
 | `11_fetch_all.py` | Runs 02's batching over every distinct repo. If more than max(50, 10%) of the repos it asked about failed for a reason other than the repo being gone, it retries the rate-limited and transient ones (after 1, 4 and 15 minutes, or at GitHub's reported reset, capped at 15) and stops only if they still fail. An auth failure (401, bad credentials) stops at once, because no wait fixes a token | `cache/entries_all.json`, `cache/meta.json` | `cache/meta.json`, `cache/readmes/` | No |
 | `11b_fetch_gitlab.py` | The GitLab rows `11` skips: one anonymous GraphQL request per 25 projects, written into `meta.json` under GitHub's field names (`stargazerCount`, `pushedAt` = `lastActivityAt`, `licenseInfo` recognised from the LICENSE text) so every later stage reads them unchanged. Keeps the last good answer per project in `cache/gitlab/meta.json` and uses it for a project this run could not read; one never read is left out of the build by `14` | `cache/entries_all.json`; gitlab.com GraphQL | `cache/meta.json`, `cache/readmes/`, `cache/gitlab/meta.json` | No |
 | `13_signals_all.py` | Releases and actions for every repo in one pass. The staleness rule is in `signals.py` | as above | `cache/releases.json`, `cache/actions.json` | No |
 | `14_classify_all.py` | The final record per listed item, of kind `repo`, `subpath` or `site`. Leaves out every row whose repo is in the dead-repo ledger, so a repo GitHub no longer serves is on no surface | everything above; `state/dead-repos.json` | `cache/records_all.json` | No |
 | `dead_repos.py` | **Not a build stage**: run weekly by `dead-repos.yml`. Asks GitHub about every repo in `docs/data.json` and every repo already in the ledger, and records the ones that are gone: GraphQL `NOT_FOUND` and then REST 404, 451 or a 403 `block`, or `isDisabled`. Renamed and archived repos are alive. A repo that answers again leaves the ledger. Writes nothing if any request fails for a reason that is not about the repo, or if the scan would newly mark more than 10% of the atlas (at least 25) dead | `docs/data.json`, `state/dead-repos.json`; `gh api` | `state/dead-repos.json`; `$GITHUB_STEP_SUMMARY` | Yes; `--status` reads the ledger with no network, `--dry-run` scans and writes nothing |
 
-## Screenshots and workbooks (weekly only)
+## Screenshots (weekly only)
 
 | Script | What it does | Reads | Writes | Fresh clone? |
 |---|---|---|---|---|
 | `05_shots.py`, `06_web_shots.py` | Screenshots for the original list: first the README image, then a live capture in headless Chromium | `cache/records.json` | `cache/shots/`, `cache/shots.json` | No |
 | `15_shots_all.py` | Four-tier images for every record: README image, then `og:image`, then a live capture, then a generated card. Drains `cache/collect-queue.json` | `cache/records_all.json` | `cache/shots/`, `cache/shots_all.json`, and **`cache/shots_all.done.json`**, the completion marker that the daily gate checks | No |
-| `15b_shots_sources.py` | A repo card for each source list | `SOURCES` | `cache/shots_all.json` | No |
-| `16_build_all.py` | The combined workbook in two themes, with 21 sheets each (see its "Sheet plan" docstring and `main()`) | the whole cache; `docs/icon-192.png`, `docs/assets/atlas-byte.png` | `Awesome-Agentic-Atlas-{DARK,LIGHT}.xlsx` at the repo root (gitignored; published as release assets) | No. `--brand-existing` re-brands existing workbooks without the cache |
-| `18_slicers.py` | Injects Excel slicers into "By Category" | both workbooks | the workbooks in place; `--probe` writes `slicer-probe.xlsx`, which is **not** gitignored | Needs workbooks. **No workflow runs it** |
-| `07_build.py`, `08_verify.py`, `09_pdf.py` | The legacy orchestrators-only workbook, a check that opens it in real Excel, and a PDF preview | `cache/records.json` | `Awesome-Agent-Orchestrators-*.xlsx`, `preview/*.pdf` | No. 08 and 09 need Windows with Excel. No workflow runs them |
+
+The site and the Markdown edition read only each shot's `tier` and `shot_url` (`17_markdown.image`), never
+the image files under `cache/shots/`. The files, the letterboxing and `15_shots_all`'s live-capture and
+generated-card tiers were for the Excel workbooks.
+
+**The spreadsheet edition is retired.** Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. The last pair is release `v2026.10.22`. Everything
+that only built it was removed in November 2026: the writer half of `16_build_all.py`, `15b_shots_sources.py`
+(repo cards for its Sources sheet), `18_slicers.py`, the legacy orchestrators workbook (`07_build.py`,
+`08_verify.py`, `09_pdf.py`), `media.py`, and their tests. `16_build_all.py` is still here as a library; see
+below.
 
 ## Site and Markdown
 
@@ -87,7 +93,8 @@ The module docstrings are the detailed documentation. Read the one at the top of
 | `hosts.py` | **Which forge a row lives on.** A GitHub `nwo` is `owner/repo`; any other is host-qualified, `gitlab.com/group/sub/project`, which no GitHub nwo can equal (GitHub owners cannot contain a dot). Every URL a stage builds for a row -- page, clone, raw file, social card -- comes from here, and `enabled()` is the `intake.gitlab` flag |
 | `gitlab_api.py` | The paced, retried client every GitLab read goes through. Fails fast on the hourly anonymous cap rather than sleeping an hour; caches responses under `cache/gitlab/http/` only when given a `ttl` (local tuning) |
 | `taxonomy.py` | The 14 topics and 12 targets, and the rules that assign them. `python scripts/taxonomy.py --why OWNER/REPO` explains an assignment (needs the cache) |
-| `buckets.py` | Folds a list's sections into at most eight colour groups for the workbook |
+| `16_build_all.py` | **Not a stage.** The rows every surface shares: `prepare`, `canonicalise_nwo`, `repo_pool`, `platform_pool`/`platform_rows`, `star_map`, `order_rows`, `SHEETS` and `LIST_TITLE`. `17_markdown`, `19_pages`, `taxonomy.load` and `devfixture` import it. It wrote the retired workbooks until November 2026 |
+| `buckets.py` | Groups a list's sections into buckets; `16_build_all.order_rows` orders each list's rows by them. The maps were written for the retired workbook's eight colours, and the eight-bucket cap went with it |
 | `drift.py` | Upstream drift: where a provisional build files an unmapped section, and the warnings, summary and proposal that say so. See below |
 | `apply_drift_proposal.py` | Writes a provisional build's placements into `taxonomy.py` and `buckets.py`, each in its own list's block, then re-imports both to check. `--check` writes nothing |
 | `signals.py` | Decides when a cached release or action answer must be re-queried |
@@ -95,7 +102,6 @@ The module docstrings are the detailed documentation. Read the one at the top of
 | `discover.py` | Discover's selection rule and rotation ledger. `python scripts/discover.py [DAY]` prints a plan and writes nothing |
 | `app_flags.py`, `apply_flags.py`, `flags_app.py` | Feature flags: the validator, a re-render after an edit, and a local web editor. See [frontend.md](frontend.md#feature-flags) |
 | `chrome.py` | Finds a headless Chromium: `CHROME_PATH`, `CHROMIUM_PATH`, `PLAYWRIGHT_CHROMIUM`, then Playwright caches, then `PATH` |
-| `media.py` | Deduplicates workbook images so one picture is stored once |
 | `pagemin.py` | Strips comments from generated pages |
 | `mark.py`, `osicons.py` | Shared SVG marks: the Archie globe and the five platform icons |
 | `masthead_art.py` | Draws `docs/assets/masthead-{dark,light}.webp`. Run by hand only |
@@ -128,14 +134,14 @@ three ways round that.
 ## Upstream drift
 
 The 39 lists change without notice. A curator renames a heading, translates the README, adds a shelf or
-restructures the list. `taxonomy.py` refuses to guess at a section it does not name, and `buckets.py`
-will not give a ninth colour to an eight-colour palette. Both refusals are deliberate. Until 2026-11,
-`10_parse_sources.py` turned them into a red build, and the site stalled until someone wrote one line.
+restructures the list. `taxonomy.py` refuses to guess at a section it does not name, deliberately. (`buckets.py` used to
+refuse a ninth colour as well, for the Excel workbooks' palette; that went with them in November 2026.)
+Until 2026-11, `10_parse_sources.py` turned a refusal into a red build, and the site stalled until someone wrote one line.
 
 There are now two modes. `AAA_PROVISIONAL` chooses between them.
 
-- **Strict**, with the variable unset. Every local run and every test is strict. An unmapped section or a
-  ninth colour exits 1 and prints what to add, as before.
+- **Strict**, with the variable unset. Every local run and every test is strict. An unmapped section exits 1
+  and prints what to add, as before.
 - **Provisional**, with `AAA_PROVISIONAL=1`, which `daily.yml` and `weekly.yml` set for the whole build
   job. The parse files each unmapped section for this run only and the build publishes. Every later
   stage honours the placements through `taxonomy.category_of` and `buckets.bucket_map`, but only under
@@ -152,9 +158,9 @@ Where a provisional section goes. The strongest evidence wins:
 | `leftover` | Every other new section in the list was traced. Exactly one new section and one vanished mapped section remain, so they are paired. |
 | `modal` | No evidence. The section goes to the category most of the list's rows already use. This placement most needs a reviewer's eye. |
 
-A section that takes over an old section's mapping also takes its bucket. If a list goes over eight
-colours, newcomers fold into the sheet's last bucket. Slots are counted the way `16_build_all` hands them
-out.
+A section that takes over an old section's mapping also takes its bucket, so its rows keep their place in
+the list's order. A newcomer with no predecessor gets no bucket: it keeps its own name as one and sorts
+after the named buckets. Nothing is folded to fit a palette any more.
 
 Nothing becomes permanent until a person makes it so. Each provisional run produces:
 
@@ -274,7 +280,7 @@ before the cap and exit 3 without writing anything. The next run replays the cac
 fetches only what the last one did not reach (checked 2026-11-18: 20 deleted trees, a stopped run, then
 a full run that made 24 API calls). In weekly.yml the step sits after "Fetch and classify" and before
 "Capture screenshots", whose deadline is computed from the time left, so the models step's time
-comes out of the screenshots' budget and never the workbooks'. A warm one re-reads a tree or config only when
+comes out of the screenshots' budget and never the rebuild's. A warm one re-reads a tree or config only when
 the repo's `sha` moved, so a weekly run is the ~45 listing pages, the base-model infos (kept for six days),
 and whatever changed. An `HF_TOKEN` secret would raise the API quota, and would let configs be read from
 gated repos whose licence that account has accepted. Without one, those models' `dims` come from an

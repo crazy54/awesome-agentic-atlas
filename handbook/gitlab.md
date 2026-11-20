@@ -137,8 +137,8 @@ All of this uses existing theme tokens only (`--band`, `--grid`, `--ink2`):
   cards and the detail page header. Outward links say "GitLab" where a GitHub row's say "GitHub".
 - **Pictures.** GitLab has no social card. A project's `og:image` is its avatar, or GitLab's logo when
   it has none. So a GitLab row shows its own README picture if it has one. With none, it shows the
-  no-preview fallback on the catalogue, an empty cell on facet pages, the generated title card in the
-  workbook, and no Screenshot section on its detail page. It never shows a GitHub card for a repository
+  no-preview fallback on the catalogue, an empty cell on facet pages, and no Screenshot section on its
+  detail page. It never shows a GitHub card for a repository
   GitHub has never heard of. The catalogue renders a GitLab row's own picture even though GitHub rows
   use the bounded social card (JFH-218). There are few GitLab rows, so the cost stays bounded by their
   number.

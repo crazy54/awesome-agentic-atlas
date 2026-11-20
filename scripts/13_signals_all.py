@@ -144,8 +144,8 @@ def main() -> None:
 
     # Every batch that did come back is already on disk above, so the next run picks up precisely the
     # repos this one missed and nothing else. The non-zero exit is not about this stage, it is about the
-    # four after it: 04_classify turns these two files into the per-platform verdicts the site and both
-    # workbooks publish, and a run that quietly lost the signals for part of the atlas would demote
+    # four after it: 04_classify turns these two files into the per-platform verdicts the site and the
+    # Markdown edition publish, and a run that quietly lost the signals for part of the atlas would demote
     # those projects on a page that looks freshly built. Better the build stops and the lists get
     # re-read tomorrow -- nothing is committed and nothing is recorded as built until every stage
     # passes, which is what makes stopping here safe rather than lossy.

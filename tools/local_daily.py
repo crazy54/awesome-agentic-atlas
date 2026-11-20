@@ -27,7 +27,7 @@ What it leaves out, and why:
   - the verification suite (`node tests/run.mjs`), unless `--with-suite`, and then under `AAA_SKIP` as the
     workflow sets it. The team rule is not to run the whole browser suite on a shared machine; with
     `AAA_ONLY=a.mjs,b.py` set in your environment it runs just those.
-  - weekly's screenshots (`05_shots`, `06_web_shots`, `15_shots_all`, `15b_shots_sources`) need Playwright and
+  - weekly's screenshots (`05_shots`, `06_web_shots`, `15_shots_all`) need Playwright and
     hours. They are listed and run if you name them, but `--skip-shots` is the default for `--workflow weekly`.
 
 THE CACHE
@@ -72,7 +72,7 @@ ROOT = Path(__file__).resolve().parent.parent
 WORKFLOWS = ROOT / ".github" / "workflows"
 # Stages that talk to the outside world on the site's behalf, or record a build as done. Never run locally.
 NEVER = [re.compile(p) for p in (r"^python scripts/26_indexnow\.py", r"^python scripts/watch_sources\.py --update")]
-SHOTS = {"05_shots", "06_web_shots", "15_shots_all", "15b_shots_sources"}
+SHOTS = {"05_shots", "06_web_shots", "15_shots_all"}
 
 
 @dataclass

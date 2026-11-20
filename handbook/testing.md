@@ -9,8 +9,8 @@ many small harnesses, and why each one asserts what it does. This page is the wo
 node tests/run.mjs
 ```
 
-The runner takes no arguments. It runs every harness in the `HARNESSES` list in `tests/run.mjs`: on 2026-11-18 that was
-**31 harnesses, 21 Python and 12 Node**. Ten of the Node harnesses drive a headless Chromium and two do not.
+The runner takes no arguments. It runs every harness in the `HARNESSES` list in `tests/run.mjs`: on 2026-11-19 that was
+**35 harnesses, 23 Python and 12 Node**. Ten of the Node harnesses drive a headless Chromium and two do not.
 Two environment variables run a part of it, each a comma-separated list of file names: `AAA_ONLY` runs just those,
 `AAA_SKIP` all but those, and a name that is not a harness stops the run. CI uses them to run `bits-check.mjs` in a
 job of its own (see [ci-cd.md](ci-cd.md#testsyml)).
@@ -40,8 +40,8 @@ Exit codes:
 
 **Requirements:**
 
-- Node 22 and Python 3.
-- `openpyxl` and `pillow`, for `workbook_branding_test.py` and `media_test.py`.
+- Node 22 and Python 3. No Python packages: the two harnesses that needed `openpyxl` and `pillow`
+  (`media_test.py` and `workbook_branding_test.py`) were removed with the spreadsheet edition in November 2026.
 - A Chromium. `npx playwright install chromium` or `python -m playwright install chromium` provides one;
   so does an installed Chrome.
 
@@ -58,7 +58,7 @@ Exit codes:
 
 ## Running one harness
 
-A Python harness, or one of the two browserless Node harnesses, runs on its own from the repo root:
+A Python harness, or one of the three browserless Node harnesses, runs on its own from the repo root:
 
 ```bash
 python tests/theme_test.py
@@ -96,14 +96,14 @@ Node process on the machine, including other sessions' tools and test runs.
 | `discover_test.py` | Python | Discover's fifty-a-day selection, category fairness, rotation | 148 | 75 |
 | `probe.mjs` | Node | The catalogue's page script under a stub DOM; the page and root README as text | 456 | 140 |
 | `pagemin_test.py` | Python | The comment stripper | 47 | 40 |
-| `media_test.py` | Python | Workbook image dedup and the entry ceiling | 49 | 45 |
-| `workbook_branding_test.py` | Python | The mark and mascot on both workbook covers | 26 | 24 |
 | `refresh_test.py` | Python | `19b_refresh.py`'s cache-free render, and its refusal when the source count moved | 74 | 60 |
 | `live_test.py` | Python | `live.json`, the sidecar detail pages read | 106 | 90 |
 | `semantic_test.py` | Python | The semantic index, scored from the published bytes | 48 | 30 |
 | `collections_test.py` | Python | Curated picks and every refusal that keeps them honest | 652 | 500 |
 | `deeplinks_test.py` | Python | The homepage forwarding old `/#…` links into `catalog/`, and the host in `docs/CNAME`. Needs `node` on PATH | 66 | 34 |
 | `spotlight_test.py` | Python | The daily spotlight rule, which is written in both Python and JS and must agree. Needs `node` on PATH | 326 | 300 |
+| `alike_test.py` | Python | Lookalikes' stage: one shared encoder in the catalogue and the page, the page from `sitewide.ALIKE_PAGE`, byte-stable output, theme tokens only, the detail button, the nav, sitemap and workflows | 57 | 50 |
+| `alike-probe.mjs` | Node | Lookalikes' resolver and ranking: the page's own `ALIKE` under node against the committed `data.json` and `docs/search/` (URL shapes, names, did-you-mean, quality cases, the ecosystem split, filters, a fabricated forge answer, every detail link resolving) | 78 | 70 |
 | `osicons_test.py` | Python | The five platform icons, resolved over every built page. Slow: about 3 min | 251 | 200 |
 | `detail-churn.mjs` | Node | Re-runs `22_detail.py` four times and hashes every output file, so unchanged data must mean unchanged bytes. Slow: about 7 min | 13 | 7 |
 | `detail-preview-check.mjs` | browser | The in-page README/source reader on detail pages. The GitHub API is stubbed | 16 | 12 |
@@ -114,6 +114,7 @@ Node process on the machine, including other sessions' tools and test runs.
 | `prank-check.mjs` | browser | Archie's pranks: each undone, nothing saved, the flicker rate | 33 | 28 |
 | `friends-check.mjs` | browser | Archie's friends: each arrives, leaves, restores the page and keeps off the controls | 109 | 80 |
 | `admin-check.mjs` | browser | Archie's admin panel: hidden, one button per command, each dispatching its own, why a button is greyed | 69 | 55 |
+| `alike-check.mjs` | browser | Lookalikes driven by a reader: `?repo=`/`?q=`, names by keyboard, did-you-mean, filters, back, the forges' answers and failures (404, rate limit, unreachable, offline) via CDP Fetch, themes, phone, focus, no script. The forges are always stubbed | 59 | 55 |
 | `bits-check.mjs` | browser | Every one of the pals' bits, played where it can play: the page put back exactly, nothing saved, no focus taken, no more than three flashes a second, nothing outside the stage's layer, and Escape and a click stopping it. Slow: about 30 min (`AAA_BITS=name,…` for one) | 696 | 450 |
 
 The Assertions column counts passed plus failed. The four Archie browser harnesses (`prank`, `friends`, `admin` and

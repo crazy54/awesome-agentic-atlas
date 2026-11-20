@@ -42,7 +42,7 @@ import drift
 
 CACHE = Path(__file__).resolve().parent.parent / "cache"
 
-# Order is the display order everywhere -- workbook tab, topic hub, Pages site -- and it is also the
+# Order is the display order everywhere -- topic hub, Pages site -- and it is also the
 # tie-break when a repo's listings split evenly between two categories: the earlier one wins, so the
 # specific shelves are listed before the broad ones.
 CATEGORIES = [
@@ -940,6 +940,71 @@ RANK = {c: i for i, c in enumerate(CATEGORIES)}
 # plus "gitlab", which is synthetic too but in SOURCES only while the `intake.gitlab` flag is on.
 ADVISORY = {"scout", "gitlab"}
 
+# Sections that say who published a thing, not what it is. claudecode_jq files Anthropic's own repos --
+# claude-code, the skills repository, the SDKs, the security-review Action -- under "Official
+# Resources", and its SECTIONS key has to name one category for all of them, so whatever it names is
+# wrong for most. Mapped to Frameworks & SDKs, it was one vote of three that left `anthropics/claude-code`
+# a three-way tie; remapped to Docs, it would out-vote the skills repository's own shelf. The other three
+# lists with the heading map it to Docs, Learning & Lists, which filed coinbase's x402 payments protocol
+# as documentation. So every such section votes the way an advisory listing does: only for a repo
+# nothing else has filed. Measured on 2026-11-18, all four together moved fewer rows the wrong way than
+# claudecode_jq's alone.
+ADVISORY_SECTIONS = {k for k in SECTIONS if k[1] == "Official Resources"}
+
+# Repos whose category no vote gets right, filed by hand. `by_repo` reads this before it counts anything.
+# The last resort, not a second taxonomy: every entry is a repo whose listings all sit in sections that
+# name something else -- fixing the section would re-file every other repo in it -- and each says why.
+# Keyed by lower-case `nwo`, so a repo a list spells in another case is still pinned. Keep it short; a
+# list that keeps needing entries here wants its SECTIONS mappings looked at instead.
+REPO_CATEGORY: dict[str, tuple[str, str]] = {
+    "anthropics/claude-code-security-review": (
+        "Sandbox, Security & Governance", "a GitHub Action that security-reviews a PR; listed only as "
+                                          "an official resource and as a skill"),
+    "luoyuctl/agenttrace": (
+        "Observability & Evals", "audits agent sessions for cost, tokens, latency and failures; its "
+                                 "lists file it as a client"),
+    "uipath/coder_eval": (
+        "Observability & Evals", "tests that skills, MCP servers and CLIs work under an agent; its one "
+                                 "root listing files it under coding agents"),
+    "linhay/harmony-next.skills": (
+        "Agent Skills", "a HarmonyOS skill library; its one root listing files it under domain agents"),
+    "nowork-studio/toprank": (
+        "Agent Skills", "SEO and marketing skills for agents; its root listings split across four shelves"),
+    "kranz-org/kranz": (
+        "Harnesses & Runtime Infra", "a local process manager with a terminal UI; listed as a skill and an "
+                                     "MCP server"),
+    "wiltodelta/remove-ai-watermarks": (
+        "Creative, Voice & Media", "strips AI watermarks from images, video and audio; listed as a skill "
+                                   "and an MCP server"),
+    "zengliangyi/chatcrystal": (
+        "Context, Memory & RAG", "a personal knowledge base and memory for coding conversations; listed as "
+                                 "a skill and an MCP server"),
+    "drdroidlab/open-index": (
+        "Context, Memory & RAG", "a deterministic memory layer for agents; listed as a skill and a "
+                                 "framework"),
+    "deanchensj/jiangshan-map": (
+        "Research & Data Agents", "an interactive historical atlas of China served to agents; listed as a "
+                                  "skill and an MCP server"),
+    "777genius/agent-notifications": (
+        "Harnesses & Runtime Infra", "desktop notifications for every coding agent's runs (owner's call, "
+                                     "2026-11-20)"),
+    "awss1i/assay": (
+        "Observability & Evals", "an agent-native QA checker for web pages (owner's call, 2026-11-20)"),
+    "atomic-mail/atomic-mail-agentic": (
+        "MCP Servers", "email for agents, served as tools (owner's call, 2026-11-20)"),
+    "anzy-renlab-ai/pronounce": (
+        "MCP Servers", "a pronunciation dictionary agents query; MCP first (owner's call, 2026-11-20)"),
+    "garrytan/gstack": (
+        "Agent Skills", "a skills pack: 23 role tools for Claude Code (owner's call, 2026-11-20)"),
+    "gaurav-1313/codecall": (
+        "Assistants & Domain Agents", "quizzes you on the code your agent writes (owner's call, 2026-11-20)"),
+    "sarveshsea/memi": (
+        "Agent Skills", "design context and checks for coding agents, shipped as skills (owner's call, "
+                        "2026-11-20)"),
+    "voltagent/awesome-claude-code-subagents": (
+        "Docs, Learning & Lists", "an awesome-list of subagents (owner's call, 2026-11-20)"),
+}
+
 # One key in `SECTIONS` is both shelves at once and too big to file wholesale on either:
 # `harness / Skills & MCP` is 41 entries holding the MCP specification, `modelcontextprotocol/servers`,
 # MCP Inspector and the transport write-ups right next to `superpowers`, `addyosmani/agent-skills` and
@@ -999,11 +1064,10 @@ def category_of(rec: dict) -> str:
         raise KeyError(
             f"{key[0]} / {key[1]!r} is not named in SECTIONS -- a curator renamed or added a section "
             f"upstream. "
-            f"Closest already mapped: {near or 'nothing similar'}. Two files need it, and the second one "
-            f"fails quietly: add the key to SECTIONS in scripts/taxonomy.py, then fold the new spelling "
-            f"into that source's existing bucket in scripts/buckets.py. Skipping the second step leaves "
-            f"the section unmapped there, and an unmapped section keeps its own name as its bucket -- "
-            f"which asks the eight-hue palette for a ninth colour without buckets.check() objecting."
+            f"Closest already mapped: {near or 'nothing similar'}. Add the key to SECTIONS in scripts/taxonomy.py. "
+            f"If the section is a rename of one that scripts/buckets.py names, add the new spelling to "
+            f"that bucket too: an unnamed section keeps its own name as its bucket, so its rows move to "
+            f"the end of the list's page instead of staying where they were."
         ) from None
 
 
@@ -1054,27 +1118,46 @@ def by_repo(records: list[dict]) -> dict[str, dict]:
     instead would quietly shrink the category pages, and a browsable page has every reason to list a
     skill that lives in a folder even though a leaderboard has no way to rank it.
 
-    A listing from an `ADVISORY` source votes only for a repo no curated listing has filed: see there.
+    A repo in `REPO_CATEGORY` takes its pinned category whatever the votes say.
+
+    A listing from an `ADVISORY` source, or in an `ADVISORY_SECTIONS` section, votes only for a repo no
+    curated listing has filed: see there.
+
+    A listing that links a *folder* inside the repo (`kind: subpath`) is about the folder -- one plugin,
+    one skill -- and not about the repository around it. awesome-claude-code files the Ralph Wiggum
+    plugin inside `anthropics/claude-code` under Agent Orchestration, and as an ordinary vote that made
+    Claude Code an orchestrator. So the listings that link the repository itself decide; a folder
+    listing breaks a tie between them, and decides alone only when no listing links the root, which is
+    the right answer for a monorepo of skills that every list links folder by folder.
     """
     votes: dict[str, Counter] = defaultdict(Counter)
+    folders: dict[str, Counter] = defaultdict(Counter)
     hints: dict[str, Counter] = defaultdict(Counter)
     agg: dict[str, dict] = {}
     for r in records:
         nwo = r.get("nwo")
         if not nwo:
             continue
-        (hints if source_of(r) in ADVISORY else votes)[nwo][category_of(r)] += 1
+        cat = category_of(r)
+        key = (source_of(r), r.get("section") or r.get("category"))
+        if source_of(r) in ADVISORY or key in ADVISORY_SECTIONS:
+            hints[nwo][cat] += 1
+        elif r.get("kind") == "subpath":
+            folders[nwo][cat] += 1
+        else:
+            votes[nwo][cat] += 1
         a = agg.setdefault(nwo, {"targets": set(), "sources": set(), "stars": 0, "rank": False})
         a["targets"].update(targets_of(r))
         a["sources"].add(source_of(r))
         a["stars"] = max(a["stars"], stars_of(r))
         a["rank"] = a["rank"] or rankable(r)
     for nwo, a in agg.items():
-        v = votes[nwo] or hints[nwo]
-        a["category"] = min(v, key=lambda c: (-v[c], RANK[c]))
+        v, f = votes[nwo] or folders[nwo] or hints[nwo], folders[nwo]
+        pin = REPO_CATEGORY.get(nwo.lower())
+        a["category"] = pin[0] if pin else min(v, key=lambda c: (-v[c], -f[c], RANK[c]))
         a["targets"] = [t for t, _ in TARGETS if t in a["targets"]]
         a["sources"] = sorted(a["sources"])
-        a["listings"] = sum(votes[nwo].values()) + sum(hints[nwo].values())
+        a["listings"] = sum(votes[nwo].values()) + sum(folders[nwo].values()) + sum(hints[nwo].values())
     return agg
 
 

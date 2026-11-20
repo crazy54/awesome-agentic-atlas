@@ -445,6 +445,11 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
     # of which are structural inside a query string. `catalog/` because the root is the homepage now, and
     # the homepage reads no hash.
     live = repo.rel("catalog/") + "#q=" + urllib.parse.quote(repo.name, safe="")
+    # "Find alternatives": Lookalikes (`33_alike.py`), with this row as the thing to find lookalikes of. By
+    # `nwo` rather than by name, because the page resolves an `nwo` exactly and a name only loosely. The slash
+    # stays readable; everything else is quoted, so a GitLab path survives the query string. The name of the
+    # page lives in `sitewide.ALIKE_PAGE`, and the link is built from it so a rename moves every button.
+    alike = repo.rel(sitewide.ALIKE_PAGE["slug"] + "/") + "?repo=" + urllib.parse.quote(row["nwo"], safe="/")
     peers = kin(repo, by_cat) if APP_FLAGS["detail.related_projects"] else []
     install = (f'<div class="cmdrow"><code class="cmd" id="cmd">{esc(row["install"])}</code>'
                '<button class="copy" hidden data-for="cmd" '
@@ -589,7 +594,8 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
         <span id="snap" class="live"></span>
       </p>
       <p class="acts"><a class="cta" href="{esc(row["url"])}">View on {esc(repo.forge)} &rarr;</a>
-        <a class="alt" href="{esc(live)}">Find it in the atlas</a></p>
+        <a class="alt" href="{esc(live)}">Find it in the atlas</a>
+        <a class="alt" href="{esc(alike)}">Find alternatives</a></p>
     </div>
     <nav class="util">
       <a href="{repo.rel('discover/')}">Discover</a> ·

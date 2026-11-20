@@ -219,8 +219,7 @@ def report(src: dict, rows: list[dict], show_sections: bool) -> None:
 
     print("\nTaxonomy work this source still needs:")
     print(f"  taxonomy.SECTIONS: {len(cats)} keys, one per section above")
-    if len(cats) > 8:
-        print(f"  buckets.BUCKETS:   {len(cats)} sections must fold into <= 8 palette slots")
+    print(f"  buckets.BUCKETS:   optional; groups the {len(cats)} sections, in order, for the list's page")
     print(f"  every key spelled ('{src['key']}', '<section>') exactly as printed above")
 
 

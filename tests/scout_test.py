@@ -45,7 +45,8 @@ Nine groups:
                     the scout has keeps both. And the wiring: the stage runs before the parser in both
                     workflows and before the watch in the daily, and the committed ledger parses.
 
-Needs openpyxl for the last group, as `media_test.py` does; everything else is standard library.
+Standard library only. The last group loads `16_build_all.py`, which needed openpyxl until the workbook
+writer in it was retired (November 2026); it is a standard-library row library now.
 
 Run: python tests/scout_test.py
 """
@@ -797,6 +798,42 @@ eq("...though it is still a listing", agg["acme/taxbot"]["listings"], 2)
 agg = tax.by_repo([dict(scout_row, nwo="acme/only")])
 eq("a repo only the scout has takes the scout's section", agg["acme/only"]["category"], "Coding Agents")
 
+# A folder listing is about the folder. The fixture is anthropics/claude-code's: one list files a plugin
+# folder inside it under orchestration, two link the repo itself and disagree.
+folder = {"source": "claudecode", "nwo": "acme/cc", "section": "Agent Orchestration", "kind": "subpath"}
+roots = [{"source": "vibecoding", "nwo": "acme/cc", "section": "Command Line Tools", "kind": "repo"},
+         {"source": "claudecode_jq", "nwo": "acme/cc", "section": "Official Resources", "kind": "repo"}]
+true("(fixture: the folder's category is earliest in CATEGORIES, so a plain vote's tie went to it)",
+     tax.RANK[tax.category_of(folder)] < tax.RANK[tax.category_of(roots[0])])
+eq("a folder listing does not out-vote the listings that link the repository",
+   tax.by_repo([folder] + roots)["acme/cc"]["category"], tax.category_of(roots[0]))
+eq("...but files a repo no listing links at the root", tax.by_repo([folder])["acme/cc"]["category"],
+   tax.category_of(folder))
+two = [dict(roots[0]), {"source": "agents", "nwo": "acme/cc", "section": "Research", "kind": "repo"}]
+eq("...and breaks a tie between root listings in favour of what it says",
+   tax.by_repo(two + [dict(folder, source="agents", section="Research")])["acme/cc"]["category"],
+   "Research & Data Agents")
+eq("an \"Official Resources\" section says who made a thing, so it votes only when nothing else does",
+   (tax.by_repo([roots[1], dict(roots[0], source="agents", section="Research")])["acme/cc"]["category"],
+    tax.by_repo([roots[1]])["acme/cc"]["category"]),
+   ("Research & Data Agents", tax.category_of(roots[1])))
+eq("...and every list's heading of that name is one", sorted(k[0] for k in tax.ADVISORY_SECTIONS),
+   sorted(k[0] for k in tax.SECTIONS if k[1] == "Official Resources"))
+
+# A pin wins over every vote, in any spelling of the repo, and names a real category with a reason.
+pinned = next(iter(tax.REPO_CATEGORY))
+want = tax.REPO_CATEGORY[pinned][0]
+others = [c for c in tax.CATEGORIES if c != want]
+eq("a pinned repo takes its pin over unanimous root votes",
+   tax.by_repo([dict(roots[0], nwo=pinned.upper()), dict(roots[0], nwo=pinned.upper(), source="agents",
+                                                           section="Research")])[pinned.upper()]["category"],
+   want)
+true("(fixture: the votes there name something else)", tax.category_of(roots[0]) != want)
+eq("every pin names a category and gives a reason",
+   [k for k, (c, why) in tax.REPO_CATEGORY.items() if c not in tax.CATEGORIES or len(why) < 20 or k != k.lower()],
+   [])
+true("(and there are others to choose from)", bool(others))
+
 spec16 = importlib.util.spec_from_file_location("b16_for_scout_test", SCRIPTS / "16_build_all.py")
 b16 = importlib.util.module_from_spec(spec16)
 sys.modules["b16_for_scout_test"] = b16
@@ -826,8 +863,26 @@ sub = {"source": "skills_voltagent", "nwo": "morluto/rea", "kind": "subpath", "b
 full = {"source": "scout", "nwo": "morluto/rea", "kind": "repo", "description": "", "name": "rea",
         "blurb": "Reverse engineer anything with agents, from app behavior down to native binaries."}
 row = b16.repo_pool([sub, full], [], {})[0]
+# The blurb is the repo's, not the folder's: a sub-folder listing describes the folder (here one skill),
+# so GitHub's description of the repository -- which is what the scout offers -- outranks it. See
+# `16_build_all.BLURB_ROOT`; until 2026-11 the folder's sentence stood, which is how
+# `anthropics/claude-code` came to be described as one of its own plugins.
 eq("the motivating case: a curator's sub-folder row is promoted to the scout's full repo row",
-   (row["kind"], row["name"], row["blurb"]), ("repo", "rea", "RE skill"))
+   (row["kind"], row["name"], row["blurb"]), ("repo", "rea", full["blurb"]))
+eq("...but a folder's sentence still stands when nothing describes the repo itself",
+   b16.repo_pool([dict(sub)], [], {})[0]["blurb"], "RE skill")
+longer = dict(sub, blurb="A much longer sentence about one folder inside the repository")
+root = dict(curated_rec, nwo="morluto/rea")
+eq("...and a curated root listing beats a longer folder sentence, whichever comes first",
+   [b16.repo_pool([dict(x) for x in rs], [], {})[0]["blurb"] for rs in ([longer, root], [root, longer])],
+   ["Files expenses.", "Files expenses."])
+eq("...and GitHub's description replaces a folder's sentence when no listing links the root",
+   b16.repo_pool([dict(sub, gh_description="The repo, in its own words")], [], {})[0]["blurb"],
+   "The repo, in its own words")
+eq("a leading star count is not part of a listing's sentence",
+   [s.b10.clean(x) for x in ("(132.3k ⭐) - Claude Code is a tool", "195.5k ⭐ - Official skills",
+                             "Has 3k ⭐ users")],
+   ["Claude Code is a tool", "Official skills", "Has 3k ⭐ users"])
 eq("...and is still named by exactly the one list that cited it", (row["list_count"], row["listed_by"]),
    (1, "skills_voltagent"))
 

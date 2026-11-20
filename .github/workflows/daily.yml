@@ -1,6 +1,6 @@
 # Daily: notice what the 39 source lists added, and republish the site and the Markdown edition.
 #
-# What this job does NOT do is capture screenshots or build the workbooks. Screenshots are the only
+# What this job does NOT do is capture screenshots. Screenshots are the only
 # genuinely expensive stage -- 3,462 headless renders on a cold cache when the atlas was 1,294 repos,
 # so upward of 20,000 at the 7,980 it holds now -- and both the site and the Markdown fall back to
 # GitHub's Open Graph card for any repo without one, which 608 of the 1,294 rows already did when that
@@ -37,7 +37,7 @@ on:
 permissions:
   contents: write
 
-# One atlas build at a time. The weekly workbook job shares this group on purpose: both write `cache/`
+# One atlas build at a time. The weekly screenshot job shares this group on purpose: both write `cache/`
 # and both push to the same branch, so two at once would race on the first-seen ledger and then one of
 # them would fail to push. `cancel-in-progress: false` because a half-finished build that gets killed
 # has already recorded nothing -- letting it finish is cheaper than the retry.
@@ -134,7 +134,7 @@ jobs:
       # needs it, and it needs it for a one-off: a 29,528 x 256 float32 table, an SVD, and a quantisation
       # pass. Doing that in the standard library would be a day of arithmetic to save a wheel.
       # Retried: PyPI answering 503 for a minute is not a reason to lose a day's build.
-      - run: bash tools/retry.sh 3 python -m pip install --upgrade pip openpyxl pillow numpy
+      - run: bash tools/retry.sh 3 python -m pip install --upgrade pip pillow numpy
 
       # `19_pages.py` reads CF_BEACON_TOKEN and treats an empty value as "no analytics", which is right for
       # a fork and for a local `python -m http.server` -- and wrong here. Declaring it in `env:` would set
@@ -278,9 +278,9 @@ jobs:
             echo "No source list moved; a rebuild would produce the same bytes. Stopping."
           fi
 
-      # Numeric order is the pipeline order. Absent here, deliberately: 05/06 and 15/15b (screenshots,
-      # left to the weekly job), 07/08/09 and 16/18 (workbooks, and two stages that drive Excel through
-      # COM and so cannot run on a Linux runner at all).
+      # Numeric order is the pipeline order. Absent here, deliberately: 05/06 and 15 (screenshots, left to
+      # the weekly job). 16 is a library now, not a stage: the spreadsheet edition it used to write was
+      # retired in November 2026, and 17_markdown and 19_pages import its row functions.
       - name: Fetch and classify
         if: steps.gate.outputs.go == 'true'
         # 41 to 59 minutes green. 120 leaves the atlas room to double before this is what breaks.
@@ -437,6 +437,10 @@ jobs:
           # docs/models.json; before 20_landing, which imports its `urls()` into the sitemap. In both
           # workflows so a picks or catalogue edit ships with the next daily. See scripts/32_local.py.
           python scripts/32_local.py
+          # Lookalikes (docs/alike/). A static page -- it fetches data.json and docs/search/ in the reader's
+          # browser -- so a run only rewrites it when the stage, the page script or the shared encoder
+          # changed. Before 20_landing, which imports its `urls()` into the sitemap. See scripts/33_alike.py.
+          python scripts/33_alike.py
           # Here as of JFH-215, in the same position weekly.yml already runs it in: after 19_pages and
           # 25_velocity, because it reads `docs/data.json` and nothing else, and before 24_pwa, because
           # it writes `docs/pages.css`, which that stage precaches and hashes. The note above 24_pwa is

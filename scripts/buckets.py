@@ -1,15 +1,14 @@
-"""Fold each source list's sections into at most eight colour buckets.
+"""Group each source list's sections into buckets, in the order a list's rows are published.
 
-The validated categorical palette supplies exactly eight hues and the method
-forbids inventing a ninth or cycling the eight. Several lists carry far more
-sections than that (e2b tags 24, harness 21), so each sheet groups its sections
-into <= 8 buckets that take the hues, and every row still prints its own
-section name in a column of its own. Colour narrows the field; the label
-identifies the row -- identity is never carried by hue alone.
+`16_build_all.order_rows` sorts a list's rows by bucket, in the order a map below names them, then by
+stars; a section a map does not name keeps its own name as its bucket and sorts after the named ones.
+That order is what the Markdown edition's per-list pages and the site inherit.
 
-Buckets are listed in the order they take palette slots. A section absent from
-a map keeps its own name as its bucket, which is why the <= 8 lists need no
-entry here.
+The maps were written for the Excel workbooks, whose validated palette had exactly eight hues, so every
+map here has at most eight buckets and several fold a long list (e2b tags 24 sections, harness 21) into
+them. The spreadsheet edition was retired in November 2026 and the eight-bucket cap went with it: a map
+may now have as many buckets as reads well, and the comments below that talk about a "ninth hue" are
+the history of why two sections share a bucket, not a rule. Every row still prints its own section name.
 """
 import drift
 
@@ -438,10 +437,10 @@ BUCKETS["gitlab"] = BUCKETS["scout"]
 def bucket_map(source: str) -> dict[str, str]:
     """section name -> bucket name for one source.
 
-    Under AAA_PROVISIONAL this also carries the run's folds from `drift.py`: a section that arrived
-    upstream today and would have been a ninth hue takes the sheet's last bucket instead, for this run,
-    with an annotation saying so. The curated map wins where both name a section. Without the env var
-    there are no folds, so a local run sees exactly the map written here.
+    Under AAA_PROVISIONAL this also carries the run's placements from `drift.py`: a section that
+    replaced one a map names takes that section's bucket for this run, with an annotation saying so.
+    The curated map wins where both name a section. Without the env var there are no placements, so a
+    local run sees exactly the map written here.
     """
     out: dict[str, str] = {s: b for s, b in drift.bucket_overrides(source).items()}
     for bucket, sections in BUCKETS.get(source, []):
@@ -455,14 +454,11 @@ def bucket_order(source: str) -> list[str]:
 
 
 def check() -> None:
-    bad = [(k, len(v)) for k, v in BUCKETS.items() if len(v) > 8]
-    if bad:
-        raise SystemExit(f"more than eight palette slots requested: {bad}")
     for k, v in BUCKETS.items():
         names = [b for b, _ in v]
         if len(names) != len(set(names)):
             raise SystemExit(f"duplicate bucket in {k}")
-    print(f"{len(BUCKETS)} sources, buckets per sheet: "
+    print(f"{len(BUCKETS)} sources, buckets per list: "
           + ", ".join(f"{k}={len(v)}" for k, v in BUCKETS.items()))
 
 

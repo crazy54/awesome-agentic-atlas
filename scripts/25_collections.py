@@ -339,6 +339,7 @@ def nav(depth: int) -> str:
     return f"""  <nav>
     <a href="{rel(depth, 'discover/')}">Discover</a> ·
     <a href="{rel(depth, sitewide.LOCAL_PAGE['slug'] + '/')}">{esc(sitewide.LOCAL_PAGE['title'])}</a> ·
+    <a href="{rel(depth, sitewide.ALIKE_PAGE['slug'] + '/')}">{esc(sitewide.ALIKE_PAGE['title'])}</a> ·
     <a href="{rel(depth, 'collections/')}">Collections</a> ·
     <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="{rel(depth, 'repo/')}">All projects</a> ·

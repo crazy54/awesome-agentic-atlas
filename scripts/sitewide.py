@@ -103,6 +103,16 @@ LOCAL_PAGE = {
     "pitch": "What AI can your computer run? Find out in a minute, then copy two lines to run it.",
 }
 
+# LOOKALIKES' NAME, on the same terms and for the same reasons as LOCAL_PAGE above: the title, the slug and the
+# pitch, once. Read by `33_alike.py` for the page, by the nav of the homepage, the catalogue, the topic pages,
+# Discover and the collections for the link beside the local-AI page's, and by `22_detail.py` for the "Find
+# alternatives" button every detail page carries. Changing `slug` moves the URL and the old one 404s.
+ALIKE_PAGE = {
+    "title": "Lookalikes",
+    "slug": "alike",
+    "pitch": "Paste a GitHub or GitLab link, or type a project's name, and see the projects that do the same thing.",
+}
+
 
 # THE THEMES. Two, and one choice that is not a theme.
 #
@@ -433,7 +443,7 @@ THEME_JS = r"""function atlasTheme() {
 # the script or cannot reach the API. Shaped after Prism's "Version Pill" (callouts-version-pill): the face is
 # the mono, the state is a glowing dot, and the colours are the page's own tokens, so every theme repaints it.
 TAGS = (("daily", "daily.yml", "Daily build: the site and Markdown"),
-        ("weekly", "weekly.yml", "Weekly build: screenshots and workbooks"),
+        ("weekly", "weekly.yml", "Weekly build: screenshots and a full refresh"),
         ("tests", "tests.yml", "The test suite"))
 
 

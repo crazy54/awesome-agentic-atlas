@@ -21,6 +21,7 @@ Counts were measured on 2026-09-25 with `find docs/<dir> -name index.html | wc -
 | `/collections/…` | 6 pages | `25_collections.py` | Curated picks from `config/collections.json`. Rebuilt weekly only |
 | `/discover/` | `docs/discover/index.html`, `discover/cards/*.json` | `19d_discover.py`; `31_home.py` writes the cards | Fifty a day |
 | `/local/` | `docs/local/index.html` | `32_local.py` | The local-AI page (working title "Run It Local"): pick your machine, see which models run on it and how to run them. Data from `config/local-ai/` (ds-hardware's catalogue, ds-models' picks), with `localhw.mjs` and `localfit.mjs` vendored from them, all inlined so it works offline once visited. The name and slug are `sitewide.LOCAL_PAGE` |
+| `/alike/` | `docs/alike/index.html` | `33_alike.py` | Lookalikes: paste a GitHub or GitLab link, or type a project's name (or describe what it does), and see the projects that do the same thing, each with the reason it is there. Ranked in the browser from `data.json` and `docs/search/` with the shared encoder `scripts/semantic.js`; a project the atlas does not hold is looked up anonymously from the reader's browser (GitHub's REST API, 60 an hour; GitLab's v4 API) and its README read from `raw.githubusercontent.com`. `?repo=<nwo>` and `?q=<text>` are the shareable states; every detail page's **Find alternatives** links `?repo=`. Static bytes, so the daily rewrites it identically. Offline after one visit through the existing worker routes. The name and slug are `sitewide.ALIKE_PAGE`. The ranking's weights and the measurements behind them are at the top of `scripts/alike_page.js` |
 | `/v2/…` | prototype pages | `30_v2.py` | The redesign lab. On demand only, and not linked from the nav |
 | feeds, sitemaps | `feed.xml`, `feed.json`, `sitemap*.xml`, `robots.txt` | `21_feeds.py`, `20_landing.py`, `22_detail.py` | |
 | data | `data.json`, `live.json`, `discover.json`, `search/*`, `build.json` | `19`/`25_velocity`, `19c`, `19d`, `27`, `31` | `data.json` is a public API; its schema is in the root README |
@@ -42,7 +43,18 @@ five generators:
 
 `19d_discover.py` writes a nav too. The local-AI link is in all of these except `22_detail.py`, whose
 nine thousand pages are held byte-identical week to week; it reads its label and slug from
-`sitewide.LOCAL_PAGE`, so a rename is one edit.
+`sitewide.LOCAL_PAGE`, so a rename is one edit. The Lookalikes link sits beside it in the same five navs,
+from `sitewide.ALIKE_PAGE`; a detail page instead carries a **Find alternatives** link in its actions row
+(beside "Find it in the atlas", same `.alt` class), pointing at `alike/?repo=<nwo>` for that row.
+
+### One query encoder, two pages
+
+The tokeniser, forward pass and staleness guard for `docs/search/` are `scripts/semantic.js`. The catalogue
+(`19_pages.py`, at `__SEMJS__`) and Lookalikes (`33_alike.py`) both inline it, stripped, byte for byte;
+`tests/alike_test.py` asserts both generators carry exactly one copy and that neither keeps a private
+transcription. Change it there, and remember the other two copies of the algorithm are Python
+(`27_semantic.py`, the reference, and `tests/semantic_test.py`), held to it by the `probe` fixtures in
+`meta.json`.
 
 Then re-run each of them and `24_pwa.py`, or `detail-churn` and the page probes go red.
 

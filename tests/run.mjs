@@ -2,8 +2,8 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty-seven harnesses in turn --
-// twenty-five Python, ten in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty-five harnesses in turn --
+// twenty-three Python, ten in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
@@ -105,10 +105,6 @@
 //                     rendered/source switch, file discovery, sanitising, fonts, colours and phone layout.
 //   pagemin_test.py   the comment stripper against the cases the real page does not contain -- template
 //                     literals, regex literals, unterminated blocks. Python, because the stripper is.
-//   media_test.py     the workbook writer: one embedded part per screenshot however many rows point at it,
-//                     and the 65,535-entry ZIP ceiling that dedup exists to stay under. Also that an
-//                     image the pool never saw is allowed rather than a fault -- the cover branding is
-//                     two of them -- which this file asserted the opposite of until a weekly died on it.
 //   indexnow_test.py  which of the ~1,500 files under docs/ get submitted to a search engine, that the
 //                     key-file prune deletes a rotated key and nothing else, and that a truncated HTTP
 //                     response is a warning rather than a traceback. Touches no network, by a guard it
@@ -173,6 +169,14 @@
 //                     and the pages are the same set in both directions, that it resolves its three columns
 //                     by name rather than by position -- a later stage appends columns -- and that its
 //                     serialisation is byte-stable, which is what lets it be committed at all.
+//   alike_test.py     Lookalikes' stage and the query encoder it shares with the catalogue: one copy of
+//                     scripts/semantic.js in both generators' output and no private tokeniser in either, the page
+//                     from its constant and byte-stable, the detail page's button, the nav, sitemap and workflows.
+//   alike-probe.mjs   Lookalikes' resolver and ranking: the page's own ALIKE, in a node VM, against the committed
+//                     data.json and docs/search/. Every URL shape, names, quality floors relative to the README-
+//                     vector control, the ecosystem split, filters, a fabricated forge answer, every detail link.
+//   alike-check.mjs   Lookalikes in a browser, with GitHub and GitLab answered through CDP's Fetch domain: links,
+//                     keyboard, did-you-mean, filters, 404, rate limit, unreachable, offline, themes, phone.
 //
 // A HARNESS THAT SKIPS MUST NOT BE ABLE TO PASS, which is why there is no branch anywhere below that quietly
 // carries on. A missing browser or a missing interpreter exits 2 before anything runs; a harness that prints
@@ -220,7 +224,7 @@ const HARNESSES = [
   {file: "theme_test.py", label: "two glass themes in one copy, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "fetch_test.py", label: "a batch GitHub keeps timing out on is split, and nothing else is", python: true, floor: 20},
-  {file: "ci_tools_test.py", label: "the local run, and what every workflow must say", python: true, floor: 30},
+  {file: "ci_tools_test.py", label: "the local run, the canary's bot branches, and what every workflow must say", python: true, floor: 45},
   {file: "ci_alert_test.py", label: "the build-red issue: what it quotes, what it suggests, when it opens, comments and closes", python: true, floor: 25},
   {file: "dead_repos_test.py", label: "which repos GitHub no longer serves, the ledger and its guard, and the build leaving them out", python: true, floor: 35},
   {file: "drift_test.py", label: "upstream drift: what a provisional build files, the evidence for it, and that a strict one still stops", python: true, floor: 110},
@@ -231,14 +235,14 @@ const HARNESSES = [
   {file: "gitlab_test.py", label: "the GitLab index: host-qualified rows, the GitLab scout and fetch, and every seam they cross", python: true, floor: 140},
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
-  {file: "media_test.py", label: "one embedded part per screenshot, the entry ceiling, and the unpooled cover", python: true, floor: 45},
-  {file: "workbook_branding_test.py", label: "the Atlas mark and mascot on both workbook covers, saved as a weekly saves them", python: true, floor: 24},
   {file: "refresh_test.py", label: "the cache-free render, refused when the source count moved", python: true, floor: 60},
   {file: "live_test.py", label: "the star/push sidecar the detail pages read", python: true, floor: 90},
   {file: "semantic_test.py", label: "the semantic index, scored from the bytes a reader downloads", python: true, floor: 30},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
   {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, the host in docs/CNAME, and the monitoring tags", python: true, floor: 34},
   {file: "spotlight_test.py", label: "the daily spotlight and line: one rule in Python and in the page, the pool, the refusals", python: true, floor: 300},
+  {file: "alike_test.py", label: "Lookalikes: one shared encoder in both pages, the page from its constant, the button, the nav and the wiring", python: true, floor: 50},
+  {file: "alike-probe.mjs", label: "Lookalikes' resolver and ranking, the page's own code against the committed data", floor: 70},
   {file: "local_test.py", label: "the local-AI page: catalogue and picks refused when wrong, the vendored fit method inlined faithfully, the page and its wiring", python: true, floor: 85},
   {file: "models_test.py", label: "the models index: the schema frozen, every quant file and size, the Hub answers it refuses", python: true, floor: 150},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
@@ -252,7 +256,7 @@ const HARNESSES = [
   {file: "friends-check.mjs", label: "Archie's friends: each comes, leaves, restores the page, and keeps off the controls", needs: "browser", floor: 80},
   {file: "admin-check.mjs", label: "Archie's admin panel: hidden, one button per command, each dispatching its own, and why a button is greyed", needs: "browser", floor: 55},
   {file: "local-check.mjs", label: "the local-AI page as a reader drives it: tiles, keyboard combobox, chips, tasks, numbers, how-to, shared hash, phone, themes, motion, no script", needs: "browser", floor: 70},
-  {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450},
+  {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450, minutes: 100},
 ];
 
 // The watchdog's default. The slowest harness but one, prank-check, takes about eight minutes on a runner
@@ -304,7 +308,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and ten of the thirty-seven harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and ten of the thirty-five harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -317,9 +321,8 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Twenty-six of the thirty-seven need it -- one runs
-// `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
-// entries it holds, one decides which repos a crawl would ask about, one drives a fake `gh` through the
+// prerequisite that goes missing must stop the run, not reduce it. Twenty-four of the thirty-five need it -- one runs
+// `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one decides which repos a crawl would ask about, one drives a fake `gh` through the
 // batch fetch's failure handling, one drives the dead-repo scan against a fake GitHub, one drives the
 // IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar,
@@ -330,7 +333,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and twenty-six of the thirty-seven harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and twenty-four of the thirty-five harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

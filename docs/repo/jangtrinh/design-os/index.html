@@ -3,67 +3,45 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DESIGN:OS (jangtrinh/design-os) — Harnesses &amp; Runtime Infra — Awesome Agentic Atlas</title>
+<title>jangtrinh/design-os — Agent Skills — Awesome Agentic Atlas</title>
 <meta name="description" content="Free design CLI and skill pack for Gemini CLI, Claude Code and Codex. Describe a UI in plain words and get web, Figma and SwiftUI output checked by…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/jangtrinh/design-os/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="DESIGN:OS — Awesome Agentic Atlas">
+<meta property="og:title" content="jangtrinh/design-os — Awesome Agentic Atlas">
 <meta property="og:description" content="Free design CLI and skill pack for Gemini CLI, Claude Code and Codex. Describe a UI in plain words and get web, Figma and SwiftUI output checked by…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/jangtrinh/design-os/">
-<meta property="og:image" content="https://opengraph.githubassets.com/1/jangtrinh/design-os">
+<meta property="og:image" content="https://raw.githubusercontent.com/jangtrinh/design-os/main/assets/cover.png">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Harnesses & Runtime Infra","item":"https://aaa.jeremyfhall.com/topic/harnesses-runtime-infra/"},{"@type":"ListItem","position":3,"name":"DESIGN:OS","item":"https://aaa.jeremyfhall.com/repo/jangtrinh/design-os/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Agent Skills","item":"https://aaa.jeremyfhall.com/topic/agent-skills/"},{"@type":"ListItem","position":3,"name":"jangtrinh/design-os","item":"https://aaa.jeremyfhall.com/repo/jangtrinh/design-os/"}]}</script>
 <script src="https://jeremyfhall.com/kit/site-kit.v1.js" integrity="sha384-XSpQk1dubcVV4dWVZL3B8R6EsmEa4vwZ8PlVTkEmE+RY28H8OP2Y36BpTK7vCJI2" crossorigin="anonymous" data-site="atlas" defer></script>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
 <header><div class="wrap">
   <nav class="crumb"><a class="brand" href="../../../"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="#D6A034" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="#F7F8FA" stroke="#D6A034" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="#D6A034"/><path d="M12 31h40M32 11v40" fill="none" stroke="#20242D" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="#090A0D"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="#F7F8FA"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="#090A0D" stroke-width="2.5" stroke-linecap="round"/></g></svg></span><span>Atlas</span></a> ›
-    <a href="../../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> ›
+    <a href="../../../topic/agent-skills/">Agent Skills</a> ›
     <a href="../../../repo/">All projects</a></nav>
   <div class="top">
     <div>
-      <h1>DESIGN:OS</h1>
+      <h1>jangtrinh/design-os</h1>
       <p class="nwo"><a href="https://github.com/jangtrinh/design-os">jangtrinh/design-os</a></p>
       <p class="lead">Free design CLI and skill pack for Gemini CLI, Claude Code and Codex. Describe a UI in plain words and get web, Figma and SwiftUI output checked by deterministic taste gates; installs with npx @easestart/design-os init. Source-available (PolyForm Shield)</p>
       <p class="facts">
@@ -74,7 +52,7 @@ try {
         <span id="snap" class="live"></span>
       </p>
       <p class="acts"><a class="cta" href="https://github.com/jangtrinh/design-os">View on GitHub &rarr;</a>
-        <a class="alt" href="../../../catalog/#q=DESIGN%3AOS">Find it in the atlas</a></p>
+        <a class="alt" href="../../../catalog/#q=jangtrinh%2Fdesign-os">Find it in the atlas</a></p>
     </div>
     <nav class="util">
       <a href="../../../discover/">Discover</a> ·
@@ -90,7 +68,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">npx @easestart/design-os init</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for DESIGN:OS">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">npx ease-design scan # what design signals does this project have?</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for jangtrinh/design-os">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -133,9 +111,9 @@ try {
 <section>
   <h2>Screenshot</h2>
   <figure class="shot">
-    <img loading="lazy" decoding="async" src="https://opengraph.githubassets.com/1/jangtrinh/design-os"
-         alt="Screenshot or social card for DESIGN:OS">
-    <figcaption>GitHub's social card — no screenshot was found for this project, fetched from
+    <img loading="lazy" decoding="async" src="https://raw.githubusercontent.com/jangtrinh/design-os/main/assets/cover.png"
+         alt="Screenshot or social card for jangtrinh/design-os">
+    <figcaption>The project's own screenshot, fetched from
       source rather than copied into this repository.</figcaption>
   </figure>
 </section>
@@ -147,7 +125,7 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li>Gemini CLI Ecosystem</li></ul>
+  <p class="lead">Named by <b>2</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li><a href="https://github.com/heilcheng/awesome-agent-skills">Agent Skills</a></li><li><a href="https://github.com/Piebald-AI/awesome-gemini-cli">Gemini CLI Ecosystem</a></li></ul>
 </section>
 
 <section>
@@ -155,14 +133,14 @@ try {
   <p class="lead">One topic, 4
     harnesses. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/claude-code/">Claude Code</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/codex-openai/">Codex / OpenAI</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/gemini-google/">Gemini / Google</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/agent-skills/">Agent Skills</a><a class="chip" href="../../../topic/agent-skills/target/claude-code/">Claude Code</a><a class="chip" href="../../../topic/agent-skills/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/agent-skills/target/codex-openai/">Codex / OpenAI</a><a class="chip" href="../../../topic/agent-skills/target/gemini-google/">Gemini / Google</a></div>
 </section>
 
 <section class="kin">
-  <h2>Related in Harnesses &amp; Runtime Infra</h2>
+  <h2>Related in Agent Skills</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../kbwo/ccmanager/">ccmanager</a><span class="nwo">kbwo/ccmanager</span><span class="desc">Coding agent session manager supporting Claude Code, Gemini CLI, Codex, Cursor, Copilot, Cline, OpenCode, Kimi CLI. Smart auto-approval via Haiku…</span></li><li><a href="../../router-for-me/cliproxyapi/">CLI Proxy API</a><span class="nwo">router-for-me/CLIProxyAPI</span><span class="desc">(51.2k ⭐) - API service that wraps Antigravity, Codex, Claude Code, and Grok Build behind OpenAI-, Gemini-, Claude-, and Codex-compatible endpoints</span></li><li><a href="../../mishanefedov/agentwatch/">AgentWatch</a><span class="nwo">mishanefedov/agentwatch</span><span class="desc">Local-only TUI + web dashboard that tails Gemini CLI sessions alongside Claude Code, Codex, Cursor, Hermes, and OpenClaw on one unified timeline…</span></li><li><a href="../../es617/claude-replay/">claude-replay</a><span class="nwo">es617/claude-replay</span><span class="desc">by es617 - An outstanding, creative library that converts Claude Code session transcripts into self-contained, embeddable HTML replays - interactive…</span></li><li><a href="../../digipulse-engineering/gaai-framework/">GAAI Framework</a><span class="nwo">digipulse-engineering/GAAI-framework</span><span class="desc">Drop-in governance layer for AI coding tools. Backlog-first delivery, cross-session memory, decision tracking, QA gates, and autonomous delivery…</span></li><li><a href="../../agent-sh/agnix/">agnix</a><span class="nwo">agent-sh/agnix</span><span class="desc">Linter for AI agent configurations. Validates GEMINI.md, SKILL.md, hooks, MCP, and more with 156 rules, auto-fix, and LSP server for real-time…</span></li><li><a href="../../devinosolutions/anotifier-for-claude-codex-cursor/">anotifier</a><span class="nwo">DevinoSolutions/anotifier-for-claude-codex-cursor</span><span class="desc">by Amin Dhouib (Devino Solutions) - A zero-dependency, cross-platform notifier that fires a desktop toast and a free phone push (via ntfy) the…</span></li><li><a href="../../burakdede/aisw/">burakdede/aisw</a><span class="nwo">burakdede/aisw</span><span class="desc">Saves Gemini CLI logins and API keys as named profiles and switches the live ~/.gemini state in one command, alongside Claude Code, Codex CLI and…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../vshulcz/deja-vu/">deja-vu</a><span class="nwo">vshulcz/deja-vu</span><span class="desc">Indexes coding-agent sessions already written to disk and serves them back over MCP with no LLM calls, embeddings, or API keys. The zero-dependency…</span></li><li><a href="../../kubestellar/console/">KubeStellar Console</a><span class="nwo">kubestellar/console</span><span class="desc">MCP server that bridges AI coding agents (Claude Code, Copilot, Codex) to multi-cluster Kubernetes APIs. Enables natural language queries across…</span></li><li><a href="../../luoyuctl/agenttrace/">luoyuctl/agenttrace</a><span class="nwo">luoyuctl/agenttrace</span><span class="desc">Local-first TUI and report generator for AI coding-agent session logs. Tracks cost, tokens, latency, tool failures, health, diffs, and CI gates…</span></li><li><a href="../../obra/superpowers/">Superpowers</a><span class="nwo">obra/superpowers</span><span class="desc">by Jesse Vincent - A strong bundle of core competencies for software engineering, with good coverage of a large portion of the SDLC - from planning…</span></li><li><a href="../../vostride/agent-qa/">agent-qa</a><span class="nwo">vostride/agent-qa</span><span class="desc">Source-available (FSL-1.1-ALv2) QA agent for natural-language web and mobile tests. Run agent-qa mcp for authoring, execution, artifacts, and…</span></li><li><a href="../../k-dense-ai/scientific-agent-skills/">Claude Scientific Skills</a><span class="nwo">K-Dense-AI/scientific-agent-skills</span><span class="desc">K-Dense&#x27;s library of 177 research skills (bioinformatics, cheminformatics, clinical, physics, lab automation, and more) packaged to the open Agent…</span></li><li><a href="../../mohamedabdallah-14/unslop/">MohamedAbdallah-14/unslop</a><span class="nwo">MohamedAbdallah-14/unslop</span><span class="desc">CLI and MCP server that removes AI writing patterns from text: tricolons, em-dash overuse, hedging stacks, sycophancy openers, and overused…</span></li><li><a href="../../777genius/agent-notifications/">Agent Notifications</a><span class="nwo">777genius/agent-notifications</span><span class="desc">Cross-platform desktop notifications and optional webhooks for Gemini CLI turn completion and tool permission requests. Also supports Claude Code…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

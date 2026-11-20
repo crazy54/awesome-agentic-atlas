@@ -3,56 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>happy520ai/unified-ai-system — Agent Skills — Awesome Agentic Atlas</title>
-<meta name="description" content="Official source for the unified-ai-gateway skill - governed Codex MCP tools for provider-free prompt enhancement, credential-free gateway health, readiness…">
+<title>Unified AI System (happy520ai/unified-ai-system) — Agent Skills — Awesome Agentic Atlas</title>
+<meta name="description" content="Self-hosted gateway and agent control plane that puts prompt enhancement, virtual-key budgets, response caching and a hash-chained audit trail in front of…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/happy520ai/unified-ai-system/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="happy520ai/unified-ai-system — Awesome Agentic Atlas">
-<meta property="og:description" content="Official source for the unified-ai-gateway skill - governed Codex MCP tools for provider-free prompt enhancement, credential-free gateway health, readiness…">
+<meta property="og:title" content="Unified AI System — Awesome Agentic Atlas">
+<meta property="og:description" content="Self-hosted gateway and agent control plane that puts prompt enhancement, virtual-key budgets, response caching and a hash-chained audit trail in front of…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/happy520ai/unified-ai-system/">
 <meta property="og:image" content="https://raw.githubusercontent.com/happy520ai/unified-ai-system/master/docs/assets/readme-hero.png">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Agent Skills","item":"https://aaa.jeremyfhall.com/topic/agent-skills/"},{"@type":"ListItem","position":3,"name":"happy520ai/unified-ai-system","item":"https://aaa.jeremyfhall.com/repo/happy520ai/unified-ai-system/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Agent Skills","item":"https://aaa.jeremyfhall.com/topic/agent-skills/"},{"@type":"ListItem","position":3,"name":"Unified AI System","item":"https://aaa.jeremyfhall.com/repo/happy520ai/unified-ai-system/"}]}</script>
 <script src="https://jeremyfhall.com/kit/site-kit.v1.js" integrity="sha384-XSpQk1dubcVV4dWVZL3B8R6EsmEa4vwZ8PlVTkEmE+RY28H8OP2Y36BpTK7vCJI2" crossorigin="anonymous" data-site="atlas" defer></script>
 </head>
 <body>
@@ -63,9 +41,9 @@ try {
     <a href="../../../repo/">All projects</a></nav>
   <div class="top">
     <div>
-      <h1>happy520ai/unified-ai-system</h1>
+      <h1>Unified AI System</h1>
       <p class="nwo"><a href="https://github.com/happy520ai/unified-ai-system">happy520ai/unified-ai-system</a></p>
-      <p class="lead">Official source for the unified-ai-gateway skill - governed Codex MCP tools for provider-free prompt enhancement, credential-free gateway health, readiness, fake-provider chat, knowledge, workflow, and workforce evidence (Apache-2.0)</p>
+      <p class="lead">Self-hosted gateway and agent control plane that puts prompt enhancement, virtual-key budgets, response caching and a hash-chained audit trail in front of OpenAI-compatible, Anthropic and Gemini traffic, and re-exposes governed tools over MCP to Codex, Cursor and Cline.</p>
       <p class="facts">
         <span>JavaScript</span>
         <span>Apache-2.0</span>
@@ -74,7 +52,7 @@ try {
         <span id="snap" class="live"></span>
       </p>
       <p class="acts"><a class="cta" href="https://github.com/happy520ai/unified-ai-system">View on GitHub &rarr;</a>
-        <a class="alt" href="../../../catalog/#q=happy520ai%2Funified-ai-system">Find it in the atlas</a></p>
+        <a class="alt" href="../../../catalog/#q=Unified%20AI%20System">Find it in the atlas</a></p>
     </div>
     <nav class="util">
       <a href="../../../discover/">Discover</a> ·
@@ -90,7 +68,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">npx skills add happy520ai/unified-ai-system --skill unified-ai-gateway --agent codex --copy --yes</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for happy520ai/unified-ai-system">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">npx skills add happy520ai/unified-ai-system --skill unified-ai-gateway --agent codex --copy --yes</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for Unified AI System">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -134,7 +112,7 @@ try {
   <h2>Screenshot</h2>
   <figure class="shot">
     <img loading="lazy" decoding="async" src="https://raw.githubusercontent.com/happy520ai/unified-ai-system/master/docs/assets/readme-hero.png"
-         alt="Screenshot or social card for happy520ai/unified-ai-system">
+         alt="Screenshot or social card for Unified AI System">
     <figcaption>The project's own screenshot, fetched from
       source rather than copied into this repository.</figcaption>
   </figure>
@@ -147,22 +125,22 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/sickn33/agentic-awesome-skills">AAS Skill Sources</a></li></ul>
+  <p class="lead">Named by <b>2</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li><a href="https://github.com/sickn33/agentic-awesome-skills">AAS Skill Sources</a></li><li><a href="https://github.com/andyrewlee/awesome-agent-orchestrators">Orchestrators</a></li></ul>
 </section>
 
 <section>
   <h2>How it is classified</h2>
-  <p class="lead">One topic, 4
+  <p class="lead">One topic, 6
     harnesses. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/agent-skills/">Agent Skills</a><a class="chip" href="../../../topic/agent-skills/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/agent-skills/target/mcp/">MCP</a><a class="chip" href="../../../topic/agent-skills/target/codex-openai/">Codex / OpenAI</a><a class="chip" href="../../../topic/agent-skills/target/gemini-google/">Gemini / Google</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/agent-skills/">Agent Skills</a><a class="chip" href="../../../topic/agent-skills/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/agent-skills/target/mcp/">MCP</a><a class="chip" href="../../../topic/agent-skills/target/codex-openai/">Codex / OpenAI</a><a class="chip" href="../../../topic/agent-skills/target/gemini-google/">Gemini / Google</a><a class="chip" href="../../../topic/agent-skills/target/cursor/">Cursor</a><a class="chip" href="../../../topic/agent-skills/target/cline-roo/">Cline / Roo</a></div>
 </section>
 
 <section class="kin">
   <h2>Related in Agent Skills</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../kubestellar/console/">KubeStellar Console</a><span class="nwo">kubestellar/console</span><span class="desc">MCP server that bridges AI coding agents (Claude Code, Copilot, Codex) to multi-cluster Kubernetes APIs. Enables natural language queries across…</span></li><li><a href="../../obra/superpowers/">Superpowers</a><span class="nwo">obra/superpowers</span><span class="desc">by Jesse Vincent - A strong bundle of core competencies for software engineering, with good coverage of a large portion of the SDLC - from planning…</span></li><li><a href="../../vostride/agent-qa/">agent-qa</a><span class="nwo">vostride/agent-qa</span><span class="desc">Source-available (FSL-1.1-ALv2) QA agent for natural-language web and mobile tests. Run agent-qa mcp for authoring, execution, artifacts, and…</span></li><li><a href="../../agentrhq/authsome/">authsome</a><span class="nwo">agentrhq/authsome</span><span class="desc">Local credential broker for AI agents. OAuth2 and API key vault stored locally, a loopback HTTPS proxy injects credentials into outbound provider…</span></li><li><a href="../../mohamedabdallah-14/unslop/">MohamedAbdallah-14/unslop</a><span class="nwo">MohamedAbdallah-14/unslop</span><span class="desc">CLI and MCP server that removes AI writing patterns from text: tricolons, em-dash overuse, hedging stacks, sycophancy openers, and overused…</span></li><li><a href="../../sickn33/agentic-awesome-skills/">Antigravity Awesome Skills</a><span class="nwo">sickn33/agentic-awesome-skills</span><span class="desc">Installable library of 1,400+ agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, and more. The largest community-driven skill catalog…</span></li><li><a href="../../microsoft/skills/">Microsoft Skills Framework</a><span class="nwo">microsoft/skills</span><span class="desc">Standardized framework for defining, versioning, and distributing agent skills. Enables skill reuse across Claude Code, Copilot, VS Code, Gemini…</span></li><li><a href="../../addyosmani/agent-skills/">addyosmani/agent-skills</a><span class="nwo">addyosmani/agent-skills</span><span class="desc">Production-grade engineering skills for AI coding agents, packaged as 24 reusable skills covering the full development lifecycle from /spec to…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../mohamedabdallah-14/unslop/">MohamedAbdallah-14/unslop</a><span class="nwo">MohamedAbdallah-14/unslop</span><span class="desc">CLI and MCP server that removes AI writing patterns from text: tricolons, em-dash overuse, hedging stacks, sycophancy openers, and overused…</span></li><li><a href="../../frihet-io/frihet-mcp/">@frihet/mcp-server</a><span class="nwo">Frihet-io/frihet-mcp</span><span class="desc">Frihet business management: invoices, expenses, clients, products and quotes</span></li><li><a href="../../mohitagw15856/pm-claude-skills/">pm-claude-skills</a><span class="nwo">mohitagw15856/pm-claude-skills</span><span class="desc">Open-source (MIT) library of 1,153 Agent Skills as plain-markdown SKILL.md files, covering PRDs, incident postmortems, code review checklists, RFCs…</span></li><li><a href="../../stefanautomateed/shipvela-codex/">stefanautomateed/shipvela-codex</a><span class="nwo">stefanautomateed/shipvela-codex</span><span class="desc">MIT source for shipvela-publish — owner-confirmed website publishing and exact deployment tracking through an already connected Shipvela account…</span></li><li><a href="../../vshulcz/deja-vu/">deja-vu</a><span class="nwo">vshulcz/deja-vu</span><span class="desc">Indexes coding-agent sessions already written to disk and serves them back over MCP with no LLM calls, embeddings, or API keys. The zero-dependency…</span></li><li><a href="../../luoyuctl/agenttrace/">luoyuctl/agenttrace</a><span class="nwo">luoyuctl/agenttrace</span><span class="desc">Local-first TUI and report generator for AI coding-agent session logs. Tracks cost, tokens, latency, tool failures, health, diffs, and CI gates…</span></li><li><a href="../../obra/superpowers/">Superpowers</a><span class="nwo">obra/superpowers</span><span class="desc">by Jesse Vincent - A strong bundle of core competencies for software engineering, with good coverage of a large portion of the SDLC - from planning…</span></li><li><a href="../../k-dense-ai/scientific-agent-skills/">Claude Scientific Skills</a><span class="nwo">K-Dense-AI/scientific-agent-skills</span><span class="desc">K-Dense&#x27;s library of 177 research skills (bioinformatics, cheminformatics, clinical, physics, lab automation, and more) packaged to the open Agent…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>
