@@ -4,51 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Atomic Agent (AtomicBot-ai/atomic-agent) — Coding Agents — Awesome Agentic Atlas</title>
-<meta name="description" content="Local-first CLI and TUI coding agent that runs open-weight models entirely on your machine through a llama.cpp fork. No account or API key required. 56…">
+<meta name="description" content="Orchestrator and worker split inside an MIT local-first agent: the orchestrator only plans, writes a brief per part and reviews (write, edit and shell calls…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/atomicbot-ai/atomic-agent/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Atomic Agent — Awesome Agentic Atlas">
-<meta property="og:description" content="Local-first CLI and TUI coding agent that runs open-weight models entirely on your machine through a llama.cpp fork. No account or API key required. 56…">
+<meta property="og:description" content="Orchestrator and worker split inside an MIT local-first agent: the orchestrator only plans, writes a brief per part and reviews (write, edit and shell calls…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/atomicbot-ai/atomic-agent/">
 <meta property="og:image" content="https://raw.githubusercontent.com/AtomicBot-ai/atomic-agent/main/assets/demo.gif">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -65,7 +43,7 @@ try {
     <div>
       <h1>Atomic Agent</h1>
       <p class="nwo"><a href="https://github.com/AtomicBot-ai/atomic-agent">AtomicBot-ai/atomic-agent</a></p>
-      <p class="lead">Local-first CLI and TUI coding agent that runs open-weight models entirely on your machine through a llama.cpp fork. No account or API key required. 56 built-in tools (browser, filesystem, git, memory, vision), MCP support, five-layer local memory, macOS/Linux/Windows</p>
+      <p class="lead">Orchestrator and worker split inside an MIT local-first agent: the orchestrator only plans, writes a brief per part and reviews (write, edit and shell calls are refused for the whole turn), workers run as short-lived sessions that write files to disk, and either seat can be a local llama.cpp model or a cloud model. Worth studying for its stop rules: a per-turn spend and time cap, a worker handed b</p>
       <p class="facts">
         <span>TypeScript</span>
         <span>MIT</span>
@@ -90,7 +68,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">irm https://atomicagent.io/install.ps1 | iex</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for Atomic Agent">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">irm &quot;https://atomicagent.io/install.ps1?from=github&quot; | iex</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for Atomic Agent">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -142,27 +120,27 @@ try {
 
 <section>
   <h2>Platform support</h2>
-  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr></tbody></table>
+  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr></tbody></table>
 </section>
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>6</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li>AI Agents (Jenqyang)</li><li>AI Coding Tools (a4d)</li><li><a href="https://github.com/kyrolabs/awesome-agents">Agents (kyrolabs)</a></li><li>LLM Agents (kaushikb11)</li><li>LLMOps (InftyAI)</li><li>LLMOps (tensorchord)</li></ul>
+  <p class="lead">Named by <b>8</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li><a href="https://github.com/Jenqyang/Awesome-AI-Agents">AI Agents (Jenqyang)</a></li><li><a href="https://github.com/ai-for-developers/awesome-ai-coding-tools">AI Coding Tools (a4d)</a></li><li><a href="https://github.com/kyrolabs/awesome-agents">Agents (kyrolabs)</a></li><li><a href="https://github.com/ai-boost/awesome-harness-engineering">Harness Engineering</a></li><li><a href="https://github.com/kaushikb11/awesome-llm-agents">LLM Agents (kaushikb11)</a></li><li><a href="https://github.com/InftyAI/Awesome-LLMOps">LLMOps (InftyAI)</a></li><li><a href="https://github.com/tensorchord/Awesome-LLMOps">LLMOps (tensorchord)</a></li><li><a href="https://github.com/andyrewlee/awesome-agent-orchestrators">Orchestrators</a></li></ul>
 </section>
 
 <section>
   <h2>How it is classified</h2>
-  <p class="lead">One topic, 2
+  <p class="lead">One topic, 3
     harnesses. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/coding-agents/">Coding Agents</a><a class="chip" href="../../../topic/coding-agents/target/mcp/">MCP</a><a class="chip" href="../../../topic/coding-agents/target/local-ollama/">Local / Ollama</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/coding-agents/">Coding Agents</a><a class="chip" href="../../../topic/coding-agents/target/mcp/">MCP</a><a class="chip" href="../../../topic/coding-agents/target/codex-openai/">Codex / OpenAI</a><a class="chip" href="../../../topic/coding-agents/target/local-ollama/">Local / Ollama</a></div>
 </section>
 
 <section class="kin">
   <h2>Related in Coding Agents</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../swarmclawai/swarmclaw/">SwarmClaw</a><span class="nwo">swarmclawai/swarmclaw</span><span class="desc">Self-hosted AI runtime that orchestrates Claude Code, Codex, Gemini CLI, OpenCode, Copilot CLI, Cursor Agent, Goose, Qwen Code, and Droid with…</span></li><li><a href="../../leularia/volt/">Volt</a><span class="nwo">LeulAria/volt</span><span class="desc">Open-source agentic workspace on the VS Code core that runs agent chats side by side, each optionally in its own Git worktree, with subagents…</span></li><li><a href="../../arthurpanhku/dvalincode/">DvalinCode</a><span class="nwo">arthurpanhku/dvalincode</span><span class="desc">Provider-neutral, local-first CLI coding agent (Chat/Cowork/Code modes) built for governance: org policy engine, enforced network egress, and a…</span></li><li><a href="../../continuedev/continue/">Continue</a><span class="nwo">continuedev/continue</span><span class="desc">Continue is an open-source autopilot plugin for VS Code and JetBrains, enhancing coding with LLMs through features like task and tab autocomplete…</span></li><li><a href="../../yoanwai/agent-manager/">agent-manager</a><span class="nwo">YoanWai/agent-manager</span><span class="desc">Terminal UI that runs Gemini CLI alongside Claude Code, Codex, OpenCode and other coding-agent CLIs, each in its own persistent tmux session. One…</span></li><li><a href="../../google-gemini/gemini-cli/">Gemini CLI</a><span class="nwo">google-gemini/gemini-cli</span><span class="desc">The official open-source AI agent that brings the power of Gemini directly into your terminal. Features context-aware coding assistance, file…</span></li><li><a href="../../charlie85270/dorothy/">dorothy</a><span class="nwo">Charlie85270/Dorothy</span><span class="desc">Open-source desktop app to orchestrate multiple AI CLI agents (Claude Code, Codex, Gemini) simultaneously with automations, Kanban management…</span></li><li><a href="../../caliber-ai-org/ai-setup/">Caliber</a><span class="nwo">caliber-ai-org/ai-setup</span><span class="desc">Open-source CLI that scans your codebase and generates AI agent configs (CLAUDE.md, .cursorrules, skills, MCPs) for Claude Code, Cursor, and Codex…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../swarmclawai/swarmclaw/">SwarmClaw</a><span class="nwo">swarmclawai/swarmclaw</span><span class="desc">Self-hosted AI runtime that orchestrates Claude Code, Codex, Gemini CLI, OpenCode, Copilot CLI, Cursor Agent, Goose, Qwen Code, and Droid with…</span></li><li><a href="../../leularia/volt/">Volt</a><span class="nwo">LeulAria/volt</span><span class="desc">Open-source agentic workspace on the VS Code core that runs agent chats side by side, each optionally in its own Git worktree, with subagents…</span></li><li><a href="../../arthurpanhku/dvalincode/">DvalinCode</a><span class="nwo">arthurpanhku/dvalincode</span><span class="desc">Provider-neutral, local-first CLI coding agent (Chat/Cowork/Code modes) built for governance: org policy engine, enforced network egress, and a…</span></li><li><a href="../../continuedev/continue/">Continue</a><span class="nwo">continuedev/continue</span><span class="desc">Continue is an open-source autopilot plugin for VS Code and JetBrains, enhancing coding with LLMs through features like task and tab autocomplete…</span></li><li><a href="../../wainmann/agent-manager/">agent-manager</a><span class="nwo">wainmann/agent-manager</span><span class="desc">Terminal UI that runs Gemini CLI alongside Claude Code, Codex, OpenCode and other coding-agent CLIs, each in its own persistent tmux session. One…</span></li><li><a href="../../charlie85270/dorothy/">dorothy</a><span class="nwo">Charlie85270/Dorothy</span><span class="desc">Open-source desktop app to orchestrate multiple AI CLI agents (Claude Code, Codex, Gemini) simultaneously with automations, Kanban management…</span></li><li><a href="../../caliber-ai-org/ai-setup/">Caliber</a><span class="nwo">caliber-ai-org/ai-setup</span><span class="desc">Open-source CLI that scans your codebase and generates AI agent configs (CLAUDE.md, .cursorrules, skills, MCPs) for Claude Code, Cursor, and Codex…</span></li><li><a href="../../entropy-research/devon/">Devon</a><span class="nwo">entropy-research/Devon</span><span class="desc">Devon, not Devin, aims to perfect code correction for fill-in-the-middle, bug spotting, and completion tasks, using JSON for metadata in edits, and…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

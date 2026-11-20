@@ -15,40 +15,18 @@
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -162,7 +140,7 @@ try {
   <h2>Related in Orchestrators &amp; Multi-Agent</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../berriai/litellm/">LiteLLM</a><span class="nwo">BerriAI/litellm</span><span class="desc">Unified proxy and SDK that routes to 100+ LLM providers behind a single OpenAI-compatible interface, with a Router handling retry/fallback across…</span></li><li><a href="../../langflow-ai/langflow/">Langflow</a><span class="nwo">langflow-ai/langflow</span><span class="desc">An effortless way to experiment and prototype LangChain flows with drag-and-drop components and a chat interface</span></li><li><a href="../../the-open-agent/openagent/">OpenAgent</a><span class="nwo">the-open-agent/openagent</span><span class="desc">Next-generation personal AI assistant powered by LLM, RAG and agent loops. Supports computer-use, browser-use, coding agent, 30+ model providers…</span></li><li><a href="../../agentscope-ai/agentscope-runtime/">AgentScope Runtime</a><span class="nwo">agentscope-ai/agentscope-runtime</span><span class="desc">Production-ready open-source runtime focused on two pieces many agent frameworks leave underspecified: secure sandbox execution and durable agent…</span></li><li><a href="../../regnull/openbot/">OpenBot</a><span class="nwo">regnull/openbot</span><span class="desc">Self-hosted platform where persistent bots with tools, MCP servers, and long-term memory hand work to each other in shared threads and can stop to…</span></li><li><a href="../../wanikua/openbusiness/">OpenBusiness</a><span class="nwo">wanikua/OpenBusiness</span><span class="desc">Multi-agent pipeline that turns a company name + domain into an evidence-labeled business model report; runs JTBD, value proposition, GTM, unit…</span></li><li><a href="../../adongwanai/agentguide/">AgentGuide</a><span class="nwo">adongwanai/AgentGuide</span><span class="desc">https://adongwanai.github.io/AgentGuide | AI Agent开发指南 | LangGraph实战 | 高级RAG | 转行大模型 | 大模型面试 | 算法工程师 | 面试题库 | 强化学习｜数据合成</span></li><li><a href="../../didilili/deepsearch-agents/">deepsearch-agents</a><span class="nwo">didilili/deepsearch-agents</span><span class="desc">🔎 深度研搜对话式多智能体 AI Agents，最适合系统学习 DeepAgents 的实战项目｜AI Deep Research Agent 实战 · LangGraph + RAGFlow + Tavily + FastAPI + WebSocket…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../berriai/litellm/">LiteLLM</a><span class="nwo">BerriAI/litellm</span><span class="desc">Unified proxy and SDK that routes to 100+ LLM providers behind a single OpenAI-compatible interface, with a Router handling retry/fallback across…</span></li><li><a href="../../langflow-ai/langflow/">Langflow</a><span class="nwo">langflow-ai/langflow</span><span class="desc">An effortless way to experiment and prototype LangChain flows with drag-and-drop components and a chat interface</span></li><li><a href="../../the-open-agent/openagent/">OpenAgent</a><span class="nwo">the-open-agent/openagent</span><span class="desc">Next-generation personal AI assistant powered by LLM, RAG and agent loops. Supports computer-use, browser-use, coding agent, 30+ model providers…</span></li><li><a href="../../agentscope-ai/agentscope-runtime/">AgentScope Runtime</a><span class="nwo">agentscope-ai/agentscope-runtime</span><span class="desc">Production-ready open-source runtime focused on two pieces many agent frameworks leave underspecified: secure sandbox execution and durable agent…</span></li><li><a href="../../regnull/openbot/">OpenBot</a><span class="nwo">regnull/openbot</span><span class="desc">Self-hosted platform where persistent bots with tools, MCP servers, and long-term memory hand work to each other in shared threads and can stop to…</span></li><li><a href="../../wanikua/openbusiness/">OpenBusiness</a><span class="nwo">wanikua/OpenBusiness</span><span class="desc">Multi-agent pipeline that turns a company name + domain into an evidence-labeled business model report; runs JTBD, value proposition, GTM, unit…</span></li><li><a href="../../didilili/deepsearch-agents/">deepsearch-agents</a><span class="nwo">didilili/deepsearch-agents</span><span class="desc">🔎 深度研搜对话式多智能体 AI Agents，最适合系统学习 DeepAgents 的实战项目｜AI Deep Research Agent 实战 · LangGraph + RAGFlow + Tavily + FastAPI + WebSocket…</span></li><li><a href="../../nirdiamant/genai_agents/">GenAI_Agents</a><span class="nwo">NirDiamant/GenAI_Agents</span><span class="desc">50+ tutorials and implementations for Generative AI Agent techniques, from basic conversational bots to complex multi-agent systems.</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

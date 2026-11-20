@@ -15,40 +15,18 @@
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -67,8 +45,8 @@ try {
       <p class="nwo"><a href="https://github.com/doublewordai/control-layer">doublewordai/control-layer</a></p>
       <p class="lead">The world’s fastest AI model gateway (450x less overhead than LiteLLM). Unified access to LLMs across endpoints (openAI, self-hosted, etc.) behind a single authentication layer - with API key generation, user management, request logging, and more</p>
       <p class="facts">
-        <span>Rust</span>
-        <span>Apache-2.0</span>
+        <span>Language not detected</span>
+        <span>No licence declared</span>
         <span id="stars" class="live"></span>
         <span id="pushed" class="live"></span>
         <span id="snap" class="live"></span>
@@ -90,7 +68,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">git clone https://github.com/doublewordai/control-layer.git</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for Doubleword Control Layer">Copy</button></div>
+  <p class="none">No install command — this row is a write-up, a folder inside a larger repository, or a project that documents no one-line install.</p>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -142,12 +120,12 @@ try {
 
 <section>
   <h2>Platform support</h2>
-  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr></tbody></table>
+  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="voff">—</td><td class="why">Not established. Too little in the repository to call either way.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="voff">—</td><td class="why">Not established. Too little in the repository to call either way.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="voff">—</td><td class="why">Not established. Too little in the repository to call either way.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="voff">—</td><td class="why">Not established. Too little in the repository to call either way.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="voff">—</td><td class="why">Not established. Too little in the repository to call either way.</td></tr></tbody></table>
 </section>
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>2</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li>LLMOps (InftyAI)</li><li>LLMOps (tensorchord)</li></ul>
+  <p class="lead">Named by <b>2</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li><a href="https://github.com/InftyAI/Awesome-LLMOps">LLMOps (InftyAI)</a></li><li><a href="https://github.com/tensorchord/Awesome-LLMOps">LLMOps (tensorchord)</a></li></ul>
 </section>
 
 <section>
@@ -162,7 +140,7 @@ try {
   <h2>Related in Harnesses &amp; Runtime Infra</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../maximhq/bifrost/">Bifrost</a><span class="nwo">maximhq/bifrost</span><span class="desc">High-performance AI gateway written in Go. Unifies 23+ providers behind one OpenAI-compatible endpoint with automatic failover, adaptive load…</span></li><li><a href="../../kbwo/ccmanager/">ccmanager</a><span class="nwo">kbwo/ccmanager</span><span class="desc">Coding agent session manager supporting Claude Code, Gemini CLI, Codex, Cursor, Copilot, Cline, OpenCode, Kimi CLI. Smart auto-approval via Haiku…</span></li><li><a href="../../router-for-me/cliproxyapi/">CLI Proxy API</a><span class="nwo">router-for-me/CLIProxyAPI</span><span class="desc">(51.2k ⭐) - API service that wraps Antigravity, Codex, Claude Code, and Grok Build behind OpenAI-, Gemini-, Claude-, and Codex-compatible endpoints</span></li><li><a href="../../mishanefedov/agentwatch/">AgentWatch</a><span class="nwo">mishanefedov/agentwatch</span><span class="desc">Local-only TUI + web dashboard that tails Gemini CLI sessions alongside Claude Code, Codex, Cursor, Hermes, and OpenClaw on one unified timeline…</span></li><li><a href="../../es617/claude-replay/">claude-replay</a><span class="nwo">es617/claude-replay</span><span class="desc">by es617 - An outstanding, creative library that converts Claude Code session transcripts into self-contained, embeddable HTML replays - interactive…</span></li><li><a href="../../digipulse-engineering/gaai-framework/">GAAI Framework</a><span class="nwo">digipulse-engineering/GAAI-framework</span><span class="desc">Drop-in governance layer for AI coding tools. Backlog-first delivery, cross-session memory, decision tracking, QA gates, and autonomous delivery…</span></li><li><a href="../../janhq/jan/">Jan</a><span class="nwo">janhq/jan</span><span class="desc">Jan is an open-source, development-stage ChatGPT alternative that operates fully offline on diverse hardware platforms, supporting universal…</span></li><li><a href="../../lobehub/lobehub/">LobeChat</a><span class="nwo">lobehub/lobehub</span><span class="desc">Lobe Chat - an open-source, modern-design AI chat framework. Supports Multi AI Providers( OpenAI / Claude 3 / Gemini / Ollama / DeepSeek / Qwen)…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../maximhq/bifrost/">Bifrost</a><span class="nwo">maximhq/bifrost</span><span class="desc">High-performance AI gateway written in Go. Unifies 23+ providers behind one OpenAI-compatible endpoint with automatic failover, adaptive load…</span></li><li><a href="../../kbwo/ccmanager/">ccmanager</a><span class="nwo">kbwo/ccmanager</span><span class="desc">Coding agent session manager supporting Claude Code, Gemini CLI, Codex, Cursor, Copilot, Cline, OpenCode, Kimi CLI. Smart auto-approval via Haiku…</span></li><li><a href="../../router-for-me/cliproxyapi/">CLI Proxy API</a><span class="nwo">router-for-me/CLIProxyAPI</span><span class="desc">(59.0k ⭐) - API service that wraps Antigravity, Codex, Claude Code, and Grok Build behind OpenAI-, Gemini-, Claude-, and Codex-compatible endpoints</span></li><li><a href="../../mishanefedov/agentwatch/">AgentWatch</a><span class="nwo">mishanefedov/agentwatch</span><span class="desc">Local-only TUI + web dashboard that tails Gemini CLI sessions alongside Claude Code, Codex, Cursor, Hermes, and OpenClaw on one unified timeline…</span></li><li><a href="../../es617/claude-replay/">claude-replay</a><span class="nwo">es617/claude-replay</span><span class="desc">by es617 - An outstanding, creative library that converts Claude Code session transcripts into self-contained, embeddable HTML replays - interactive…</span></li><li><a href="../../digipulse-engineering/gaai-framework/">GAAI Framework</a><span class="nwo">digipulse-engineering/GAAI-framework</span><span class="desc">Drop-in governance layer for AI coding tools. Backlog-first delivery, cross-session memory, decision tracking, QA gates, and autonomous delivery…</span></li><li><a href="../../janhq/jan/">Jan</a><span class="nwo">janhq/jan</span><span class="desc">Jan is an open-source, development-stage ChatGPT alternative that operates fully offline on diverse hardware platforms, supporting universal…</span></li><li><a href="../../nace-ai/kapitsa/">Kapitsa</a><span class="nwo">nace-ai/kapitsa</span><span class="desc">Native C++ LLM inference engine for Apple silicon (Metal kernels and the Neural Engine) with OpenAI- and Anthropic-compatible APIs; kapitsa…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>
