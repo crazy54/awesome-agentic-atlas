@@ -910,12 +910,13 @@ ok("...and is fetched eagerly, at high priority",
    heroImg.length === 1 && !/\bloading=/.test(heroImg[0]) && /\bfetchpriority="high"/.test(heroImg[0]),
    heroImg[0]);
 
-// The masthead has no bar: the header is transparent and drawn over committed artwork, one file per mode. A
-// missing file would fail nothing else -- a CSS background that 404s is simply not drawn.
-ok("the masthead artwork is on the homepage", /<div class="mhart" aria-hidden="true"><\/div>/.test(homeHTML));
+// The masthead has no bar and no picture: soft UI draws it with light -- the base's highlight and the lime's
+// glow where Archie stands -- so nothing it paints can 404. The old code screenshots are gone, and stay gone.
+ok("the masthead's light is on the homepage", /<div class="mhart" aria-hidden="true"><\/div>/.test(homeHTML));
 for (const mode of ["dark", "light"])
-  ok(`...and its ${mode}-mode image is committed`,
-     existsSync(join(ROOT, "docs", "assets", `masthead-${mode}.webp`)), `docs/assets/masthead-${mode}.webp`);
+  ok(`...and the retired ${mode}-mode screenshot is not committed`,
+     !existsSync(join(ROOT, "docs", "assets", `masthead-${mode}.webp`)), `docs/assets/masthead-${mode}.webp`);
+ok("...and the masthead's CSS asks for no picture", !/\.mhart\{[^}]*url\(/.test(homeHTML));
 
 // ------------------------------------------------------------------------------- the cards view
 // The layout itself is a stylesheet, so it is asserted against the stylesheet -- there is no computed

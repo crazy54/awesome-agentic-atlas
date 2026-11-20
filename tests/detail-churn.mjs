@@ -149,7 +149,8 @@ ok("the reader ships distinct prose, heading, and code typography on the site's 
    detailCSS.includes(".markdown-body code,.markdown-body kbd{font:13px/1.55 var(--mono)}") &&
    detailCSS.includes('--mono:"Geist Mono",') &&
    detailCSS.includes('@font-face{font-family:"Geist Mono";src:url(../assets/fonts/geist-mono.woff2)') &&
-   detailCSS.includes("--read-panel:var(--plane)") &&
+   // Soft UI: the reader's panel is the base itself, raised by the site's shadows, not a second colour.
+   detailCSS.includes("--read-panel:var(--surface)") &&
    detailCSS.includes("--read-accent:var(--bar)") &&
    !detailCSS.includes("--read-violet"));
 ok("detail pages promote the existing leaderboard and project directory",

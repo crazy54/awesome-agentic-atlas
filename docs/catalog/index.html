@@ -630,12 +630,12 @@ html[data-view=cards][data-index-screenshots=off] :where(#out) td.lc{grid-row:5}
 html[data-view=cards] .desc,html[data-view=cards] .cmdrow,html[data-view=cards] .cmd{max-width:none}
 html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
   -webkit-line-clamp:4;line-clamp:4;overflow:hidden}
-html[data-view=cards] :where(#out) tr.nw{border-color:var(--warn);
-  box-shadow:0 0 0 2px var(--warn),0 0 12px color-mix(in srgb,var(--warn) 30%,transparent);
+html[data-view=cards] :where(#out) tr.nw{border-color:transparent;
+  box-shadow:var(--raise),0 0 0 2px var(--warn),0 0 12px color-mix(in srgb,var(--warn) 30%,transparent);
   animation:new-breathe 3s ease-in-out 5}
 @keyframes new-breathe{
-  0%,100%{box-shadow:0 0 0 2px var(--warn),0 0 10px color-mix(in srgb,var(--warn) 24%,transparent)}
-  50%{box-shadow:0 0 0 3px var(--warn),0 0 26px color-mix(in srgb,var(--warn) 58%,transparent)}}
+  0%,100%{box-shadow:var(--raise),0 0 0 2px var(--warn),0 0 10px color-mix(in srgb,var(--warn) 24%,transparent)}
+  50%{box-shadow:var(--raise),0 0 0 3px var(--warn),0 0 26px color-mix(in srgb,var(--warn) 58%,transparent)}}
 @media(hover:hover){
   html[data-view=cards] :where(#out) tr:hover td{background:transparent}
   html[data-view=cards] :where(#out) tr:hover{border-color:transparent;
@@ -643,7 +643,7 @@ html[data-view=cards] :where(#out) tr.nw{border-color:var(--warn);
   transform:translateY(-1px);animation:card-glow 1.5s ease-in-out infinite alternate}
 }
 html[data-view=cards] :where(#out) tr:focus-within{border-color:transparent;box-shadow:var(--raise-hi),0 0 0 2px var(--card-accent)}
-@keyframes card-glow{from{box-shadow:0 0 0 2px var(--card-accent),0 0 12px color-mix(in srgb,var(--card-accent) 30%,transparent),0 12px 28px rgba(0,0,0,.2)}to{box-shadow:0 0 0 2px var(--card-accent),0 0 28px color-mix(in srgb,var(--card-accent) 58%,transparent),0 16px 36px rgba(0,0,0,.28)}}
+@keyframes card-glow{from{box-shadow:var(--raise-hi),0 0 0 2px var(--card-accent),0 0 12px color-mix(in srgb,var(--card-accent) 30%,transparent)}to{box-shadow:var(--raise-hi),0 0 0 2px var(--card-accent),0 0 28px color-mix(in srgb,var(--card-accent) 58%,transparent)}}
 html[data-wave="1"] tbody tr.nw td,html[data-wave="1"] :where(#out) tr.nw,
 html[data-wave="1"] .dsc.nw{animation:none}
 
@@ -765,8 +765,8 @@ main a[href],main button,main select,main summary,
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--11--20_22:19_UTC-0F6741.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-11-20T22:19:00Z">Last deployed 2026-11-20 22:19 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--11--20_23:15_UTC-0F6741.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-11-20T23:15:00Z">Last deployed 2026-11-20 23:15 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
@@ -1035,7 +1035,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
 const SNAPSHOT = "2026-11-20";
-const BUILT = "2026-11-20T22:19:00Z";
+const BUILT = "2026-11-20T23:15:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],

@@ -311,11 +311,11 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
    No `data-wave` equivalent, because a day here is fifty cards drawn from a rotation rather than a filtered
    set, so the case that rule exists for -- most of what is on screen being new at once -- cannot arise. */
 .dcard.nw{border-color:transparent;
-  box-shadow:0 0 0 2px var(--warn),0 0 12px color-mix(in srgb,var(--warn) 30%,transparent);
+  box-shadow:var(--raise-sm),0 0 0 2px var(--warn),0 0 12px color-mix(in srgb,var(--warn) 30%,transparent);
   animation:new-breathe 3s ease-in-out 5}
 @keyframes new-breathe{
-  0%,100%{box-shadow:0 0 0 2px var(--warn),0 0 10px color-mix(in srgb,var(--warn) 24%,transparent)}
-  50%{box-shadow:0 0 0 3px var(--warn),0 0 26px color-mix(in srgb,var(--warn) 58%,transparent)}}
+  0%,100%{box-shadow:var(--raise-sm),0 0 0 2px var(--warn),0 0 10px color-mix(in srgb,var(--warn) 24%,transparent)}
+  50%{box-shadow:var(--raise-sm),0 0 0 3px var(--warn),0 0 26px color-mix(in srgb,var(--warn) 58%,transparent)}}
 .dnew{background:var(--warn);color:var(--onbar);border-radius:999px;padding:1px 8px;
   font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 /* All fifty at once. The rail and the grid are the same cards in the same order with the same markup and

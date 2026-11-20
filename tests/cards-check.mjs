@@ -144,6 +144,9 @@ const geom = `(() => {
     bodyBg: getComputedStyle(document.body).backgroundColor,
     stripeA: getComputedStyle(rows[0].querySelector('td')).backgroundColor,
     stripeB: getComputedStyle(rows[1].querySelector('td')).backgroundColor,
+    rowRule: getComputedStyle(rows[0].querySelector('td')).borderBottomStyle + " " +
+             getComputedStyle(rows[0].querySelector('td')).borderBottomWidth,
+    rowShadow: getComputedStyle(rows[0]).boxShadow,
     hscroll: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     rows: rows.length,
   };
@@ -1049,8 +1052,10 @@ ok("a #view=table link opens in the table",
    await evalIn("document.documentElement.dataset.view"));
 ok("one row per line in the table", tbl.across === 1, JSON.stringify(tbl));
 ok("the table shows its headings", tbl.theadShown);
-ok("adjacent table rows use different grey surfaces", tbl.stripeA !== tbl.stripeB,
-   tbl.stripeA + " vs " + tbl.stripeB);
+// Soft UI has one surface colour, so the table's rows are not striped: they are etched apart by a line, and
+// the rows are the base itself.
+ok("adjacent table rows are the base, etched apart by a rule rather than striped",
+   tbl.stripeA === tbl.stripeB && /^solid [1-9]/.test(tbl.rowRule), tbl.stripeA + " vs " + tbl.stripeB + " / " + tbl.rowRule);
 const tableHover = await hoverFirstRow();
 // Asserted to have been found before anything is read out of it, for the same reason the default-view check
 // below asserts both halves matched: on this runner the computed arm answers and an empty `declared` would
@@ -1143,8 +1148,11 @@ ok("the topic and target tags are on the card", c1440.tagsShown);
 ok("so are the language, licence and push date", c1440.langShown);
 ok("the rank carries a # now the column heading has gone", /#/.test(c1440.rankPrefix), c1440.rankPrefix);
 ok("nothing overflows sideways", c1440.hscroll <= 0, String(c1440.hscroll));
-ok("dark cards sit on a visible charcoal surface rather than merging into the page",
-   c1440.rowBg !== c1440.bodyBg, c1440.rowBg + " vs " + c1440.bodyBg);
+// Soft UI: a card is the page's own colour, raised out of it by two shadows -- a dark one down and right and a
+// light one up and left -- so it is told from the page by its shadows, not by a second fill.
+ok("cards are the base, raised out of the page by a pair of shadows",
+   c1440.rowBg === c1440.bodyBg && (c1440.rowShadow.match(/rgba?\(/g) || []).length >= 2 &&
+   /-\d+px -\d+px/.test(c1440.rowShadow), c1440.rowBg + " vs " + c1440.bodyBg + " / " + c1440.rowShadow);
 const cardHover = await hoverFirstRow();
 // Again, and not redundantly: this is a different document from the table pass above -- `hardGoto` reloaded
 // in between -- so it is a different stylesheet object and a different search of it.

@@ -2034,12 +2034,14 @@ html[data-view=cards] .desc{display:-webkit-box;-webkit-box-orient:vertical;
    win on source order: the pointer and the keyboard both need to be able to say "this one, now" over the
    top of a standing property of the row. The pulse itself outlives them either way, because an animated
    property beats the cascade. */
-html[data-view=cards] :where(#out) tr.nw{border-color:var(--warn);
-  box-shadow:0 0 0 2px var(--warn),0 0 12px color-mix(in srgb,var(--warn) 30%,transparent);
+html[data-view=cards] :where(#out) tr.nw{border-color:transparent;
+  box-shadow:var(--raise),0 0 0 2px var(--warn),0 0 12px color-mix(in srgb,var(--warn) 30%,transparent);
   animation:new-breathe 3s ease-in-out 5}
+/* Every frame keeps the raised pair under the ring, so a breathing card is still a raised one: an animated
+   box-shadow replaces the whole declaration, not just the part that moves. */
 @keyframes new-breathe{
-  0%,100%{box-shadow:0 0 0 2px var(--warn),0 0 10px color-mix(in srgb,var(--warn) 24%,transparent)}
-  50%{box-shadow:0 0 0 3px var(--warn),0 0 26px color-mix(in srgb,var(--warn) 58%,transparent)}}
+  0%,100%{box-shadow:var(--raise),0 0 0 2px var(--warn),0 0 10px color-mix(in srgb,var(--warn) 24%,transparent)}
+  50%{box-shadow:var(--raise),0 0 0 3px var(--warn),0 0 26px color-mix(in srgb,var(--warn) 58%,transparent)}}
 /* The table tints the row the pointer is over; a card is a box, so it takes the accent on its edge. The
    cell rule has to be undone explicitly or the tint lands as six full-width strips inside the card with
    the gaps between them showing through. Inside `hover:hover` like the rule it overrides, so a touch
@@ -2051,7 +2053,7 @@ html[data-view=cards] :where(#out) tr.nw{border-color:var(--warn);
   transform:translateY(-1px);animation:card-glow 1.5s ease-in-out infinite alternate}
 }
 html[data-view=cards] :where(#out) tr:focus-within{border-color:transparent;box-shadow:var(--raise-hi),0 0 0 2px var(--card-accent)}
-@keyframes card-glow{from{box-shadow:0 0 0 2px var(--card-accent),0 0 12px color-mix(in srgb,var(--card-accent) 30%,transparent),0 12px 28px rgba(0,0,0,.2)}to{box-shadow:0 0 0 2px var(--card-accent),0 0 28px color-mix(in srgb,var(--card-accent) 58%,transparent),0 16px 36px rgba(0,0,0,.28)}}
+@keyframes card-glow{from{box-shadow:var(--raise-hi),0 0 0 2px var(--card-accent),0 0 12px color-mix(in srgb,var(--card-accent) 30%,transparent)}to{box-shadow:var(--raise-hi),0 0 0 2px var(--card-accent),0 0 28px color-mix(in srgb,var(--card-accent) 58%,transparent)}}
 /* A pulse is a way of saying "look at this one", and it can only say that about a few. When an import brings
    most of the atlas at once -- which is not hypothetical: the run that first read twenty-eight source lists
    marked roughly 85% of the rows -- every visible row pulsing says nothing except that the page is busy.

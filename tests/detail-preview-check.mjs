@@ -233,11 +233,12 @@ const light = await evalIn(`({
   siteBand: getComputedStyle(document.documentElement).getPropertyValue('--band').trim(),
   bg: getComputedStyle(document.querySelector('.reader')).backgroundColor
 })`);
-ok("the light reader uses the site's darker grey band instead of its near-white panel",
+// Soft UI: every surface is the base, so the reader's panel, the site's --plane and its --band are one colour,
+// and the reader is told apart from the page by its shadows. Compared as values rather than typed in, because
+// a palette change is not what this assertion is about.
+ok("the light reader is the site's base, on the site's accent",
    light.theme === "light" && light.accent === light.siteAccent && light.panel === light.siteBand &&
-   // The painted colour is the site's own light --band, converted rather than typed in: a literal here was the
-   // old palette's band, and a palette change is not what this assertion is about.
-   light.panel !== light.sitePanel &&
+   light.panel === light.sitePanel &&
    light.bg === "rgb(" + [1, 3, 5].map(i => parseInt(light.siteBand.slice(i, i + 2), 16)).join(", ") + ")",
    JSON.stringify(light));
 await evalIn("document.getElementById('source-preview').scrollIntoView({block: 'start'})");
