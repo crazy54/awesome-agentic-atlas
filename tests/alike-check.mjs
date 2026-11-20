@@ -17,6 +17,7 @@
 // `pwa-check.mjs`'s -- this page needs nothing from the worker beyond being a page it caches.
 import {launch} from "./lib/browser.mjs";
 import {tmpdir} from "node:os";
+import {readFileSync} from "node:fs";
 
 const BIN = process.argv[2], ORIGIN = process.argv[3].replace(/\/?$/, "/");
 const PAGE = ORIGIN + "alike/";
@@ -239,16 +240,24 @@ const paint = () => ev(`(() => {
   const c = document.querySelector(".lkcard"), h = c.querySelector("h3 a");
   return [getComputedStyle(c).backgroundColor, w[0], getComputedStyle(document.querySelector(".lks")).backgroundColor, getComputedStyle(h).color];
 })()`);
+// The themes are read from `sitewide.THEMES`, the one list every generator draws from, rather than written out
+// here. This file was written with three ("dark", "light", "contrast"); #121 cut the site to two and migrates a
+// stored "contrast" to dark, and because a merge had left this harness unregistered nobody saw it still asking
+// for three. "contrast" is no longer a theme, so it painted as dark and the distinct count came out 2 of 3.
+const THEMES = [...(readFileSync(new URL("../scripts/sitewide.py", import.meta.url), "utf8")
+  .match(/^THEMES = \(([^)]*)\)/m)?.[1] ?? "").matchAll(/"([a-z]+)"/g)].map(m => m[1]);
+ok("the site's themes are read from sitewide.THEMES", THEMES.length >= 2, JSON.stringify(THEMES));
 await goto("?repo=langfuse/langfuse");
 const seen = {};
-for (const theme of ["dark", "light", "contrast"]) {
+for (const theme of THEMES) {
   await ev(`document.documentElement.dataset.theme = ${JSON.stringify(theme)}`);
   await sleep(50);
   const p = await paint();
   seen[theme] = p;
   ok(`${theme}: a card is painted with the theme's --surface`, p[0] === p[1], `${p[0]} vs ${p[1]}`);
 }
-ok("the three themes paint the page differently", new Set(Object.values(seen).map(p => p[2])).size === 3, JSON.stringify(seen));
+ok(`the ${THEMES.length} themes paint the page differently`,
+   new Set(Object.values(seen).map(p => p[2])).size === THEMES.length, JSON.stringify(seen));
 await ev("document.documentElement.dataset.theme = 'dark'");
 
 // ---- a phone
