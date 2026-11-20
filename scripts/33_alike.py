@@ -268,7 +268,7 @@ def render() -> str:
 <script>
 {SEMANTIC_JS}
 {PAGE_JS}</script>
-{sitewide.site_script(rel())}{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(rel())}</body>
+{sitewide.site_script(rel())}{THEME_JS}{b19.follow()}{b19.beacon()}</body>
 </html>
 """
 

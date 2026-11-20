@@ -9,8 +9,9 @@ many small harnesses, and why each one asserts what it does. This page is the wo
 node tests/run.mjs
 ```
 
-The runner takes no arguments. It runs every harness in the `HARNESSES` list in `tests/run.mjs`: on 2026-11-19 that was
-**35 harnesses, 23 Python and 12 Node**. Ten of the Node harnesses drive a headless Chromium and two do not.
+The runner takes no arguments. It runs every harness in the `HARNESSES` list in `tests/run.mjs`: on 2026-11-20 that was
+**38 harnesses, 24 Python and 14 Node**. Eleven of the Node harnesses drive a headless Chromium and three do not
+(`probe.mjs`, `alike-probe.mjs`, `detail-churn.mjs`).
 Two environment variables run a part of it, each a comma-separated list of file names: `AAA_ONLY` runs just those,
 `AAA_SKIP` all but those, and a name that is not a harness stops the run. CI uses them to run `bits-check.mjs` in a
 job of its own (see [ci-cd.md](ci-cd.md#testsyml)).

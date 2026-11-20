@@ -5,8 +5,8 @@ node tests/run.mjs
 ```
 
 That is the whole thing. It finds a Chromium the machine already has, serves `docs/` under the Pages path
-prefix `/awesome-agentic-atlas/` on a port the OS picks, runs thirty-five harnesses in turn (twenty-three Python,
-ten in a browser, two in plain Node), prints what each one asserted, and exits non-zero if anything failed.
+prefix `/awesome-agentic-atlas/` on a port the OS picks, runs thirty-eight harnesses in turn (twenty-four Python,
+eleven in a browser, three in plain Node), prints what each one asserted, and exits non-zero if anything failed.
 About 24 minutes on a Windows workstation (2026-09-25), most of it in `detail-churn.mjs` regenerating every
 detail page, `osicons_test.py` walking every built page, and the Archie browser checks; `bits-check.mjs`,
 added since, takes about half an hour more on its own (2026-10-17). No install step, no
@@ -66,7 +66,7 @@ left out of the suite and CI by accident.
 
 ## What each one covers, and what it deliberately does not
 
-There are thirty-five files rather than one because they are thirty-five instruments, and the overlap between them is the
+There are thirty-eight files rather than one because they are thirty-eight instruments, and the overlap between them is the
 reason to keep them apart rather than the reason to merge them. Each file's header says at length what it
 cannot see; this is the summary. Assertion counts are passed plus failed from the 2026-09-25 run on
 `latest_branch` `a77b46eb`; they drift, and the floors in `run.mjs` are what is enforced.

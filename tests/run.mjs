@@ -2,8 +2,9 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty-five harnesses in turn --
-// twenty-three Python, ten in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty-eight harnesses in turn --
+// twenty-four Python, eleven in a browser, and three in plain node (probe.mjs, alike-probe.mjs and
+// detail-churn.mjs) -- and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
@@ -256,6 +257,7 @@ const HARNESSES = [
   {file: "friends-check.mjs", label: "Archie's friends: each comes, leaves, restores the page, and keeps off the controls", needs: "browser", floor: 80},
   {file: "admin-check.mjs", label: "Archie's admin panel: hidden, one button per command, each dispatching its own, and why a button is greyed", needs: "browser", floor: 55},
   {file: "local-check.mjs", label: "the local-AI page as a reader drives it: tiles, keyboard combobox, chips, tasks, numbers, how-to, shared hash, phone, themes, motion, no script", needs: "browser", floor: 70},
+  {file: "alike-check.mjs", label: "Lookalikes as a reader drives it: links, names, did-you-mean, filters, the forges' answers and failures, offline, themes, phone, keyboard", needs: "browser", floor: 55},
   {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450, minutes: 100},
 ];
 
@@ -308,7 +310,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and ten of the thirty-five harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and eleven of the thirty-eight harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -321,7 +323,7 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Twenty-four of the thirty-five need it -- one runs
+// prerequisite that goes missing must stop the run, not reduce it. Twenty-five of the thirty-eight need it -- one runs
 // `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one decides which repos a crawl would ask about, one drives a fake `gh` through the
 // batch fetch's failure handling, one drives the dead-repo scan against a fake GitHub, one drives the
 // IndexNow client and
@@ -333,7 +335,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and twenty-four of the thirty-five harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and twenty-five of the thirty-eight harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +
