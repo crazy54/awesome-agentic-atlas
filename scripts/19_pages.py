@@ -506,7 +506,7 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             # `strip_page`, so a constant injected here would otherwise carry its own comments into the
             # published bytes, which is the one thing this function's comment strip exists to prevent. Its
             # input is still a constant, so the output is still a pure function of the source.
-            .replace("__MARK__", mark.svg())
+            .replace("__MARK__", mark.svg("__UP__"))
             .replace("__MARKCSS__", pagemin.strip_css(mark.CSS))
             .replace("__OSSPRITE__", osicons.SPRITE)
             .replace("__OSCSS__", pagemin.strip_css(osicons.CSS))
@@ -2469,8 +2469,8 @@ __OSSPRITE__
   </nav>
   <div class="atlas-byte-wrap">
     <button type="button" id="byte-tip" aria-label="Ask Archie 'Atlas' Algorithm for a browsing tip">
-    <img class="atlas-byte" src="__UP__assets/atlas-byte.png" width="512" height="532"
-         alt="Archie 'Atlas' Algorithm, the Atlas mascot, wearing pixel sunglasses">
+    <img class="atlas-byte" src="__UP__assets/archie-bust.webp" width="256" height="266"
+         alt="Archie 'Atlas' Algorithm, the Atlas mascot: a white ceramic robot with a graphite and lime crest and big lime eyes">
     </button>
     <!-- The accessible name is on `aria-label` so it stays the full name at every width, including the ones
          where only "Archie" is painted. WCAG 2.5.3 wants the visible label contained in the accessible name,

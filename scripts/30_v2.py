@@ -1568,7 +1568,7 @@ PLANES = plane_map()
 SKINS_JSON = json.dumps(PLANES, separators=(",", ":"))
 
 
-def rail(layout: str | None = None, back: str | None = None) -> str:
+def rail(layout: str | None = None, back: str | None = None, docs: str = "../") -> str:
     """The one sticky bar. On an index layout it carries the layout switch and the row count; on a project
     page there is nothing to switch and nothing to count, so it carries a way back instead. Same element,
     same 52px, same picker -- the rail adapts to the page rather than each page bringing its own.
@@ -1607,7 +1607,7 @@ def rail(layout: str | None = None, back: str | None = None) -> str:
 
     return (
         '<header class="rail">'
-        f'<span class="mark">{mark_svg()}<b>Atlas</b>'
+        f'<span class="mark">{mark_svg(docs)}<b>Atlas</b>'
         f'<span class="ver">v2 demo</span></span>'
         '<span class="qwrap"><span class="mag">&#9906;</span>'
         '<input id="q" type="search" placeholder="Search is inert in this demo" '
@@ -1620,86 +1620,21 @@ def rail(layout: str | None = None, back: str | None = None) -> str:
         '</header>')
 
 
-def mark_svg(cls: str = "glyph", compact: bool = True) -> str:
-    """The Atlas mark: Archie's shaded globe, tokenised so a skin recolours it.
+def mark_svg(docs: str, cls: str = "glyph") -> str:
+    """The Atlas mark: Archie's icon tile, the same file `scripts/mark.py` puts top-left on the live site.
 
-    This is deliberately not a new drawing. I drew one first -- a distilled robot head -- and then found
-    that the mark already exists twice in this repository and is better than mine: `docs/favicon.svg` is the
-    vector, and `scripts/24_pwa.py:icon()` rasterises the same object from primitives for the installed
-    icon, with a docstring saying in as many words that it is kept "the same character as the masthead
-    mascot and the browser-tab SVG". A site whose tab, whose installed icon and whose nav bar show three
-    different marks has no logo, it has three drawings. So the geometry here is `favicon.svg`'s, carried
-    over shape for shape: the plate, the antenna, the gold globe, the meridian grid, the blocky shades with
-    their two white glints, the smile.
+    This used to port the first Archie's globe-and-pixel-shades vector shape for shape, with every fill a
+    token so a skin recoloured it. That character is retired for the 3D Archie, whose mark is a render
+    (`docs/assets/archie-mark.webp`, cut by `art/brand/build.py` from the owner's `.github/readme/icon.png`),
+    so the tile is the same picture in every skin, as it is in the tab and the installed icon. It carries its
+    own dark plate, so it reads on every skin's bar; the skins still own its glow (`--bar`, `--fx-glow`).
 
-    What changed in the port, and it is the only reason this is code rather than a file. The favicon hard-
-    codes six hex values, which is right for a file the browser fetches before any CSS exists and wrong for
-    chrome inside a themed page -- a gold globe does not belong in Neon Terminal, and on Glass Console it is
-    the one thing on screen that did not get the memo. Every fill here is a token instead, so the mark is
-    phosphor in Terminal and mint on Glass without a second asset, and `--fx-glow` gates its halo the same
-    way it gates everything else: at Graphite's zero the halo is gone and the full silhouette remains,
-    because the silhouette was never the thing the light was carrying.
-
-    Two variants, and the compact one is the nav's, because the faithful port failed its size ladder. Shot at
-    16/20/26/32/48/96 the full drawing is superb from 48 up and unusable below 32: the plate's 4px inset and
-    16px corner radius leave the globe only 20 of 64 units of radius, and inside that the six-line meridian
-    grid lands at well under a device pixel per line, so the lines and the lens blocks fuse into one speckled
-    mass. The screenshot read as a carved pumpkin rather than as Archie, which is not a subtle failure.
-
-    `compact=True` fixes it by removing what the context already provides and enlarging what carries the
-    identity. The plate goes, because the nav bar *is* the plate -- drawing a second dark rounded rectangle
-    inside a dark rounded bar spends a third of the mark's area restating its background. That frees the
-    globe to scale 1.34x about its own centre, which puts the lens blocks back above a pixel each, and the
-    grid drops from six lines to the equator and one meridian at 55% so it still reads as a globe without
-    competing with the shades. The antenna is repositioned rather than scaled: scaling it about the globe's
-    centre threw the ball to y=-4.4, outside the viewBox entirely.
-
-    `compact=False` keeps the faithful drawing for anywhere it is rendered at 48px or more.
+    It stays an `<svg>` holding an `<image>` so the `.mark .glyph svg` rules -- the 30px box, the drop-shadow
+    and the breath -- apply unchanged. `docs` is the page's prefix to `docs/`, as `__DOCS__` is in the head.
     """
-    # `--onbar` for every dark part, and this is the one token choice worth explaining, because the obvious
-    # picks are both wrong. `--plane` and `--panel` are what a panel uses, and under Glass Console they are
-    # translucent *white* (`rgba(255,255,255,.045)`) -- so the grid, the shades and the smile would have come
-    # out lighter than the globe they are drawn on, inverting the mark. `--onbar` is defined as the ink that
-    # sits on top of `--bar`, which is literally what these shapes do, so it is dark in every skin by
-    # construction (#090A0D, #04121A, #04070A) and stays dark in any skin added later. The plate takes
-    # `--surface` rather than `--panel` for the same reason -- it is the page's floor colour, never a wash.
-    # Measured after the change: dark resolves to rgb(9,10,13) / rgb(4,18,26) / rgb(4,7,10) across the three.
-    plate, globe, dark, light = ("var(--mk-plate,var(--surface))", "var(--bar)",
-                                 "var(--mk-dark,var(--onbar))", "var(--ink)")
-    # The globe and everything drawn on it, verbatim from `favicon.svg`. Grouped rather than inlined so the
-    # compact variant can enlarge the whole face with one transform instead of restating nine coordinates --
-    # and so a future edit to the favicon can be pasted straight back in here without re-deriving anything.
-    grid = ("M12 31h40M32 11v40" if compact else
-            "M12 31h40M32 11v40M17 21h30M17 41h30M23 13c-6 11-6 25 0 36M41 13c6 11 6 25 0 36")
-    face = (
-        f'<circle cx="32" cy="31" r="20" fill="{globe}"/>'
-        f'<path d="{grid}" fill="none" stroke="{dark}" stroke-width="2" '
-        f'opacity="{".55" if compact else ".9"}"/>'
-        # The shades. The two stepped blocks at the outer ends are the 8-bit jaggedness of the original art,
-        # and they are the only intentionally unsmoothed edges on the mark.
-        f'<path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="{dark}"/>'
-        f'<path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="{light}"/>'
-        f'<path d="M25 47c4 3 10 3 14 0" fill="none" stroke="{dark}" stroke-width="2.5" '
-        f'stroke-linecap="round"/>')
-    if compact:
-        # 1.34 is the largest scale at which the enlarged globe still clears the antenna's ball: at 1.4 the
-        # gold rim and the gold stalk touch and the ball stops reading as a separate object on its stalk.
-        body = (f'<path d="M48 13.5l5.5-6.5" fill="none" stroke="{globe}" stroke-width="3.4" '
-                f'stroke-linecap="round"/>'
-                f'<circle cx="55" cy="5" r="3.4" fill="{light}" stroke="{globe}" stroke-width="2.2"/>'
-                f'<g transform="translate(32 31) scale(1.34) translate(-32 -31)">{face}</g>')
-    else:
-        body = (f'<rect x="4" y="5" width="56" height="55" rx="16" fill="{plate}" '
-                f'stroke="var(--grid)" stroke-width="2"/>'
-                # The antenna leaves the plate, and that overhang is why the full mark does not read as one
-                # more rounded tile in a row of rounded tiles. `overflow:visible` on the svg is what keeps it.
-                f'<path d="M42 10l5-6" fill="none" stroke="{globe}" stroke-width="3" '
-                f'stroke-linecap="round"/>'
-                f'<circle cx="49" cy="3.8" r="3" fill="{light}" stroke="{globe}" stroke-width="2"/>'
-                + face)
     return (f'<span class="{cls}" aria-hidden="true">'
             '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false">'
-            f'{body}</svg></span>')
+            f'<image href="{docs}assets/archie-mark.webp" width="64" height="64"/></svg></span>')
 
 
 # (letter, what it is, what is live on it, the word on the rail switch). The rail label is short and the
@@ -2199,7 +2134,7 @@ def detail_page(row) -> str:
              .replace("__BACK__", json.dumps(back)))
     tail = APP_JS.replace("__SKINS__", SKINS_JSON).replace("__EXTRA__", extra)
 
-    return (head + rail(back=back) + '<div class="dshell">' + crumb + hero + deck
+    return (head + rail(back=back, docs=DETAIL_UP + "../") + '<div class="dshell">' + crumb + hero + deck
             + '<div class="dgrid"><main>' + install + reader + plat + '</main>'
             + '<aside class="spec">' + facts + prov + rel + '</aside></div>'
             + foot_d + '</div>' + tail)

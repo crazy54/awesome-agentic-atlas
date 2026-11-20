@@ -40,7 +40,8 @@ Run `node tests/run.mjs` before opening it. Say in the description which failure
 | Hand-written, edit freely | Generated, edit the generator instead |
 |---|---|
 | `scripts/`, `tests/`, `config/`, `art/`, `.github/`, `handbook/`, READMEs | `docs/**/*.html`, `docs/*.json`, `docs/*.xml`, `docs/pages.css`, `docs/sw.js`, `docs/manifest.webmanifest`, `docs/search/`, `docs/og/`, `docs/repo/` |
-| `docs/assets/archie*.js`, `docs/CNAME`, `docs/favicon.svg`, `docs/assets/atlas-byte.png` | `mega-list/**` |
+| `docs/assets/archie*.js`, `docs/CNAME` | `mega-list/**` |
+| `docs/favicon.svg`, `docs/assets/archie-mark.webp`, `docs/assets/archie-bust.webp` and `art/brand/*.png`/`.ico`: rebuilt by `python art/brand/build.py` (Pillow) from `.github/readme/` | |
 | `docs/assets/three-archie.js` and the `.glb`/`.webp` art: not edited by hand, but rebuilt from `art/` (see [archie.md](archie.md)) | `state/*.json`: ledgers written by the pipeline. Never hand-edit them; on a merge conflict, keep both sides |
 
 Every generated HTML file carries its generator's name in the pipeline table in [pipeline.md](pipeline.md).

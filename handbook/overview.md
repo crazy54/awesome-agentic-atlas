@@ -81,7 +81,7 @@ Hand-written inputs that are not generated:
 - `config/app-flags.json` and its schema: the feature flags. See [frontend.md](frontend.md#feature-flags) and [`config/README.md`](../config/README.md).
 - `config/collections.json`: the curated collections.
 - `docs/CNAME`: the Pages custom domain. `17_markdown.py` reads it to build absolute URLs.
-- `docs/favicon.svg` and `docs/assets/atlas-byte.png`: hand-maintained art. `daily.yml` lists them as static.
+- `docs/favicon.svg`, `docs/assets/archie-mark.webp` (the logo every page shows top-left) and `docs/assets/archie-bust.webp` (the catalogue's mascot): Archie's brand art, cut by `art/brand/build.py` from the renders in `.github/readme/`. `daily.yml` lists them as static.
 - `docs/assets/archie*.js`: Archie's code, written by hand. See [archie.md](archie.md).
 - `art/`: Blender and Python sources for Archie and his pals.
 

@@ -150,7 +150,8 @@ Either way, editing the file changes nothing until the page is regenerated. The 
 
 ## The PWA and the service worker
 
-`24_pwa.py` writes `docs/sw.js`, `docs/manifest.webmanifest` and the icons. One of the icons is
+`24_pwa.py` writes `docs/sw.js` and `docs/manifest.webmanifest`, and copies the icons in from `art/brand/`
+(cut from Archie's tile by `art/brand/build.py`, which needs Pillow and is run by hand). One of the icons is
 `docs/favicon.ico`, which no page links but browsers and crawlers ask the domain root for. The worker keeps
 four caches:
 

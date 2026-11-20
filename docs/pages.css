@@ -160,11 +160,11 @@ a.nwo:hover{color:var(--ink)}
 .brandbar{margin:0 0 14px}
 .brand .mk{vertical-align:baseline;margin-right:0}
 .mk svg{width:30px;height:30px;display:block;overflow:visible;
-  filter:drop-shadow(0 0 calc(5px * var(--fx-glow,1)) rgba(214,160,52,.45));
+  filter:drop-shadow(0 0 calc(5px * var(--fx-glow,1)) rgba(164,200,18,.45));
   animation:mkbreath calc(6s * var(--fx-pulse,1)) ease-in-out infinite}
 @keyframes mkbreath{
-  0%,100%{filter:drop-shadow(0 0 calc(3px * var(--fx-glow,1)) rgba(214,160,52,.32))}
-  50%{filter:drop-shadow(0 0 calc(9px * var(--fx-glow,1)) rgba(214,160,52,.60))}}
+  0%,100%{filter:drop-shadow(0 0 calc(3px * var(--fx-glow,1)) rgba(164,200,18,.32))}
+  50%{filter:drop-shadow(0 0 calc(9px * var(--fx-glow,1)) rgba(164,200,18,.60))}}
 @media(prefers-reduced-motion:reduce){.mk svg{animation:none}}
 
 /* 14px rather than the shared 1.15em, which at this column's 11.5px would be 13.2px. A mark the same
