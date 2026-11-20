@@ -798,6 +798,42 @@ eq("...though it is still a listing", agg["acme/taxbot"]["listings"], 2)
 agg = tax.by_repo([dict(scout_row, nwo="acme/only")])
 eq("a repo only the scout has takes the scout's section", agg["acme/only"]["category"], "Coding Agents")
 
+# A folder listing is about the folder. The fixture is anthropics/claude-code's: one list files a plugin
+# folder inside it under orchestration, two link the repo itself and disagree.
+folder = {"source": "claudecode", "nwo": "acme/cc", "section": "Agent Orchestration", "kind": "subpath"}
+roots = [{"source": "vibecoding", "nwo": "acme/cc", "section": "Command Line Tools", "kind": "repo"},
+         {"source": "claudecode_jq", "nwo": "acme/cc", "section": "Official Resources", "kind": "repo"}]
+true("(fixture: the folder's category is earliest in CATEGORIES, so a plain vote's tie went to it)",
+     tax.RANK[tax.category_of(folder)] < tax.RANK[tax.category_of(roots[0])])
+eq("a folder listing does not out-vote the listings that link the repository",
+   tax.by_repo([folder] + roots)["acme/cc"]["category"], tax.category_of(roots[0]))
+eq("...but files a repo no listing links at the root", tax.by_repo([folder])["acme/cc"]["category"],
+   tax.category_of(folder))
+two = [dict(roots[0]), {"source": "agents", "nwo": "acme/cc", "section": "Research", "kind": "repo"}]
+eq("...and breaks a tie between root listings in favour of what it says",
+   tax.by_repo(two + [dict(folder, source="agents", section="Research")])["acme/cc"]["category"],
+   "Research & Data Agents")
+eq("an \"Official Resources\" section says who made a thing, so it votes only when nothing else does",
+   (tax.by_repo([roots[1], dict(roots[0], source="agents", section="Research")])["acme/cc"]["category"],
+    tax.by_repo([roots[1]])["acme/cc"]["category"]),
+   ("Research & Data Agents", tax.category_of(roots[1])))
+eq("...and every list's heading of that name is one", sorted(k[0] for k in tax.ADVISORY_SECTIONS),
+   sorted(k[0] for k in tax.SECTIONS if k[1] == "Official Resources"))
+
+# A pin wins over every vote, in any spelling of the repo, and names a real category with a reason.
+pinned = next(iter(tax.REPO_CATEGORY))
+want = tax.REPO_CATEGORY[pinned][0]
+others = [c for c in tax.CATEGORIES if c != want]
+eq("a pinned repo takes its pin over unanimous root votes",
+   tax.by_repo([dict(roots[0], nwo=pinned.upper()), dict(roots[0], nwo=pinned.upper(), source="agents",
+                                                           section="Research")])[pinned.upper()]["category"],
+   want)
+true("(fixture: the votes there name something else)", tax.category_of(roots[0]) != want)
+eq("every pin names a category and gives a reason",
+   [k for k, (c, why) in tax.REPO_CATEGORY.items() if c not in tax.CATEGORIES or len(why) < 20 or k != k.lower()],
+   [])
+true("(and there are others to choose from)", bool(others))
+
 spec16 = importlib.util.spec_from_file_location("b16_for_scout_test", SCRIPTS / "16_build_all.py")
 b16 = importlib.util.module_from_spec(spec16)
 sys.modules["b16_for_scout_test"] = b16
