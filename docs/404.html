@@ -17,7 +17,7 @@
 <link rel="preload" href="/assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#2A2A27">
+<meta name="theme-color" id="tc" content="#24272D">
 <script>
 try {
   var t = localStorage.getItem("theme");
@@ -28,7 +28,7 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  document.getElementById("tc").content = {light: "#F5F2EC", dark: "#2A2A27"}[t];
+  document.getElementById("tc").content = {light: "#E3E7ED", dark: "#24272D"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="/pages.css">
@@ -45,9 +45,9 @@ try {
   <a href="/repo/">Every project, one page each</a></p>
 </main>
 <footer><div class="wrap">
-  <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and workbooks"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
+  <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and a full refresh"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
 </div></footer>
 <script>document.getElementById("nfp").textContent = location.pathname;</script>
-<script type="module" src="/assets/atlas-site.js?v=a4837d4f4b"></script>
+<script type="module" src="/assets/atlas-site.js?v=88f90e5fe1"></script>
 </body>
 </html>

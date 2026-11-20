@@ -4,7 +4,7 @@
 
 An agent that fails loudly is a good afternoon. The expensive failures are the quiet ones: the run that looked fine, the change that passed review, the skill that did something you did not read. None of this category is exciting and all of it is what separates a demo from something you would put in front of a customer. Traces first, then tests, then the thing people leave until after the incident.
 
-6 picks · 126,184 combined stars · snapshot 2026-11-01
+6 picks · 131,644 combined stars · snapshot 2026-11-20
 
 [Open all 6 in the atlas](https://aaa.jeremyfhall.com/#list=langfuse/langfuse,Arize-ai/phoenix,promptfoo/promptfoo,confident-ai/deepeval,traceloop/openllmetry,NVIDIA/SkillSpector) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -19,10 +19,10 @@ Self-hostable, which matters here more than anywhere: the traces contain your pr
 > The most widely adopted self-hostable LLM observability platform: traces every agent step, manages prompt versions, and runs evals in one tool. Preferred over cloud-only alternatives when data residency or cost control is a constraint
 
 ```sh
-pip install langfuse openai
+npx skills add langfuse/skills --skill "langfuse"
 ```
 
-**36,835** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-11-01
+**37,667** stars · 6 of 39 lists · TypeScript · no licence stated · pushed 2026-11-20
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -42,7 +42,7 @@ Three source lists carry it -- the strongest agreement in this category -- and i
 npx @arizeai/phoenix-cli setup
 ```
 
-**12,094** stars · 7 of 39 lists · Python · no licence stated · pushed 2026-11-01
+**12,364** stars · 7 of 39 lists · Python · no licence stated · pushed 2026-11-20
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -62,7 +62,7 @@ Tests as YAML, with assertions and LLM-as-judge. It is the lowest-ceremony way t
 npm install -g promptfoo
 ```
 
-**26,692** stars · 5 of 39 lists · TypeScript · MIT · pushed 2026-11-01
+**27,485** stars · 5 of 39 lists · TypeScript · MIT · pushed 2026-11-20
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -82,7 +82,7 @@ Twenty-plus built-in metrics for LLM and agent evaluation. Use it when you have 
 pip install -U deepeval
 ```
 
-**19,227** stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-10-29
+**19,576** stars · 3 of 39 lists · Python · Apache-2.0 · pushed 2026-11-19
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -102,7 +102,7 @@ OpenTelemetry instrumentation for LLM calls and agent steps. The one pick here t
 pip install traceloop-sdk
 ```
 
-**7,517** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-10-19
+**7,543** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-11-19
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -119,10 +119,10 @@ Scans agent skills for vulnerabilities. Every other page on this site encourages
 > by NVIDIA - Security scanner for AI agent skills. Detect vulnerabilities, malicious patterns, and security risks
 
 ```sh
-uv tool install git+https://github.com/NVIDIA/skillspector.git
+uv tool install --python 3.13 git+https://github.com/NVIDIA/skillspector.git
 ```
 
-**23,819** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-10-31
+**27,009** stars · 2 of 39 lists · Python · Apache-2.0 · pushed 2026-11-19
 
 Platforms: Win L WSL L mac L Lin L Doc Y  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

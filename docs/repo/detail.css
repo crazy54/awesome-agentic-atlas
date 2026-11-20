@@ -5,45 +5,49 @@
 /* THE THEMES. Written by `THEME_CSS` in scripts/sitewide.py, which explains every value; do not edit the
    copy in a generated file. Dark is on `:root`, so it needs no attribute to be true -- it is the floor a
    reader with JavaScript off gets. */
-:root{color-scheme:dark;--surface:#1C1C1B;--plane:#2A2A27;--band:#2F2E2C;--ink:#EBE5DA;--ink2:#D4CEC3;--muted:#AEAAA4;--title:#A4C812;--grid:#3F4526;--link:#DCF55E;--bar:#A4C812;--good:#6FD3A0;--warn:#F29484;--off:#AEAAA4;--onbar:#151614;--act:#A4C812;--act-hi:#B9DD2E;--act-edge:#C4E04A;--onact:#151614;--accent-sky:#8CC6DE;--accent-mint:#6FD3A0;--accent-gold:#DDB36A;--accent-coral:#F29484;--accent-violet:#B9AAF0;--panel:rgba(51,50,47,0.62);--panel-hi:rgba(43,42,41,0.94);--fog:rgba(60,59,56,0.9);--bdf:blur(20px) saturate(1.4);--edge:rgba(164,200,18,.20);--ctl-edge:rgba(164,200,18,.22);--raise:-6px -6px 18px rgba(255,255,255,.035),10px 12px 28px rgba(0,0,0,.55);--raise-sm:-2px -2px 6px rgba(255,255,255,.045),3px 4px 10px rgba(0,0,0,.5);--raise-hi:-3px -3px 8px rgba(255,255,255,.06),5px 7px 16px rgba(0,0,0,.6);--press:inset 3px 3px 7px rgba(0,0,0,.55),inset -2px -2px 6px rgba(255,255,255,.045);--press-act:inset 2px 2px 5px rgba(0,0,0,.32),inset -2px -2px 5px rgba(255,255,255,.3);--wash:radial-gradient(1000px 640px at 86% -12%,rgba(164,200,18,.085),transparent 66%),radial-gradient(800px 600px at 0% 100%,rgba(164,200,18,.04),transparent 70%),radial-gradient(900px 560px at 4% -6%,rgba(235,229,218,.035),transparent 70%);--ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;--mono:"Geist Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace}
-html[data-theme=light]{color-scheme:light;--surface:#EAE5DA;--plane:#F5F2EC;--band:#F1EEE7;--ink:#1C1B1B;--ink2:#3A3835;--muted:#56524C;--title:#1C1B1B;--grid:#CEC6B7;--link:#3B5C00;--bar:#3E6000;--good:#0F6741;--warn:#A23B2A;--off:#56524C;--onbar:#FFFFFF;--act:#A4C812;--act-hi:#B6D93A;--act-edge:#5E7A00;--onact:#1C1B1B;--accent-sky:#1F5F7A;--accent-mint:#0F6741;--accent-gold:#7A520E;--accent-coral:#A23B2A;--accent-violet:#5B4A9E;--panel:rgba(255,255,255,0.52);--panel-hi:rgba(252,251,248,0.86);--fog:rgba(255,255,255,0.84);--bdf:blur(22px) saturate(1.7);--edge:rgba(255,255,255,.9);--ctl-edge:rgba(120,108,86,.26);--raise:-10px -10px 26px rgba(255,255,255,.75),12px 14px 34px rgba(98,88,60,.22),inset 0 1px 0 rgba(255,255,255,.95);--raise-sm:-3px -3px 8px rgba(255,255,255,.9),3px 4px 10px rgba(104,92,66,.20);--raise-hi:-4px -4px 10px rgba(255,255,255,.95),5px 7px 16px rgba(104,92,66,.26);--press:inset 3px 3px 7px rgba(104,92,66,.20),inset -3px -3px 7px rgba(255,255,255,.85);--press-act:inset 2px 2px 5px rgba(60,80,0,.35),inset -2px -2px 5px rgba(255,255,255,.4);--wash:radial-gradient(820px 620px at 88% -6%,rgba(164,200,18,.30),transparent 66%),radial-gradient(760px 600px at 6% 28%,rgba(220,245,94,.55),transparent 68%),radial-gradient(900px 700px at 62% 108%,rgba(220,245,94,.42),transparent 70%),radial-gradient(700px 520px at 100% 62%,rgba(164,200,18,.34),transparent 70%),radial-gradient(900px 700px at 30% 70%,rgba(255,255,255,.65),transparent 70%);}
-html[data-fog]{--panel:var(--fog);--panel-hi:var(--fog);--bdf:blur(34px) saturate(.6)}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){:root,html[data-theme]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none}}
-@media (prefers-reduced-transparency:reduce){:root,html[data-theme]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--edge:var(--grid)}}
-@media (prefers-contrast:more){:root{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-act:none;--ink:#FFFFFF;--ink2:#F2EEE6;--muted:#E0DBD2;--grid:#8FA83A;--link:#E8FA8A;--edge:#8FA83A;--ctl-edge:#C9C4BB;}html[data-theme=light]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-act:none;--ink:#000000;--ink2:#1C1B1B;--muted:#2E2C29;--grid:#7E776B;--link:#2C4500;--edge:#7E776B;--ctl-edge:#56524C;}}
-@media (forced-colors:active){:root,html[data-theme]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-act:none;}}
+:root{color-scheme:dark;--surface:#24272D;--plane:#24272D;--band:#24272D;--ink:#E8EAED;--ink2:#C9CDD3;--muted:#A3AAB4;--title:#E8EAED;--grid:#33373E;--link:#C9E46B;--bar:#B7D63C;--good:#72D6A3;--warn:#F49A8A;--off:#A3AAB4;--onbar:#15171A;--act:#A4C812;--act-hi:#B9DD2E;--act-edge:#C4E04A;--onact:#15171A;--accent-sky:#8DC8E0;--accent-mint:#72D6A3;--accent-gold:#DFB86E;--accent-coral:#F49A8A;--accent-violet:#BCAEF2;--panel:rgba(36,39,45,1);--panel-hi:rgba(36,39,45,1);--fog:rgba(58,62,69,0.9);--bdf:none;--edge:transparent;--ctl-edge:transparent;--raise:9px 9px 20px rgba(0,0,0,.55),-7px -7px 18px rgba(255,255,255,.045);--raise-sm:4px 4px 9px rgba(0,0,0,.5),-3px -3px 8px rgba(255,255,255,.05);--raise-hi:7px 7px 15px rgba(0,0,0,.58),-5px -5px 12px rgba(255,255,255,.065);--press:inset 4px 4px 9px rgba(0,0,0,.55),inset -3px -3px 8px rgba(255,255,255,.045);--press-sm:inset 2px 2px 4px rgba(0,0,0,.5),inset -1px -1px 3px rgba(255,255,255,.05);--press-act:inset 3px 3px 6px rgba(0,0,0,.38),inset -2px -2px 5px rgba(255,255,255,.28);--glow:0 0 18px rgba(164,200,18,.38);--wash:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.028),transparent 70%);--ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;--mono:"Geist Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;--r-card:20px;--r-ctl:14px}
+html[data-theme=light]{color-scheme:light;--surface:#E3E7ED;--plane:#E3E7ED;--band:#E3E7ED;--ink:#1C2431;--ink2:#323C4C;--muted:#4E5868;--title:#1C2431;--grid:#CDD3DC;--link:#3A5A00;--bar:#3B5C00;--good:#0E6340;--warn:#9E3726;--off:#4E5868;--onbar:#FFFFFF;--act:#A4C812;--act-hi:#B6D93A;--act-edge:#5E7A00;--onact:#1C1B1B;--accent-sky:#1C5C77;--accent-mint:#0E6340;--accent-gold:#74500C;--accent-coral:#9E3726;--accent-violet:#57479A;--panel:rgba(227,231,237,1);--panel-hi:rgba(227,231,237,1);--fog:rgba(255,255,255,0.84);--bdf:none;--edge:transparent;--ctl-edge:transparent;--raise:10px 10px 22px rgba(150,162,182,.55),-10px -10px 22px rgba(255,255,255,.9);--raise-sm:4px 4px 9px rgba(150,162,182,.55),-4px -4px 9px rgba(255,255,255,.95);--raise-hi:7px 7px 14px rgba(146,158,178,.6),-6px -6px 13px rgba(255,255,255,1);--press:inset 4px 4px 9px rgba(150,162,182,.55),inset -4px -4px 9px rgba(255,255,255,.9);--press-sm:inset 2px 2px 4px rgba(150,162,182,.55),inset -2px -2px 4px rgba(255,255,255,.95);--press-act:inset 3px 3px 6px rgba(60,80,0,.35),inset -2px -2px 5px rgba(255,255,255,.45);--glow:0 0 16px rgba(120,150,0,.32);--wash:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.5),transparent 70%);}
+html[data-fog]{--panel:var(--fog);--panel-hi:var(--fog);--surface:var(--fog);--bdf:blur(34px) saturate(.6)}
+@media (prefers-reduced-transparency:reduce){:root,html[data-theme]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;}}
+@media (prefers-contrast:more){:root{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-sm:none;--press-act:none;--glow:none;--ink:#FFFFFF;--ink2:#F2F3F5;--muted:#DADDE2;--grid:#8A919C;--link:#E3F59A;--edge:#8A919C;--ctl-edge:#C3C8CF;}html[data-theme=light]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-sm:none;--press-act:none;--glow:none;--ink:#000000;--ink2:#141A24;--muted:#262E3B;--grid:#69717E;--link:#2A4300;--edge:#69717E;--ctl-edge:#4E5868;}}
+@media (forced-colors:active){:root,html[data-theme]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-sm:none;--press-act:none;--glow:none;}}
 /* Paint only, below this line: no rule here may size or place a box (see the note in sitewide.py). */
-/* THE FIELD, on every page family: fixed to the window and behind everything, so the glass always has it
-   to frost and it never scrolls out from under a panel. A pseudo-element of <body> at z-index -1 paints
-   over the canvas (which wears the body's --surface) and under every box on the page. */
+/* THE FIELD, on every page family: fixed to the window and behind everything. A pseudo-element of <body>
+   at z-index -1 paints over the canvas (which wears the body's --surface) and under every box. */
 body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--wash);pointer-events:none}
-/* The focus ring, for every page family: the accent, 2px, clear of the control so it never sits on the
-   control's own border or its shadows. `:focus-visible` so a click does not leave a ring on the chip that
-   was pressed. */
-:focus-visible{outline:2px solid var(--bar);outline-offset:2px;border-radius:4px}
-::selection{background:color-mix(in srgb,var(--act) 42%,transparent);color:var(--ink)}
-/* THE CONTROLS, on every page family: extruded pills, pushed in while pressed. `html` in front so these
-   outrank each family's own `.chip{...}`, which sets the fill and border these leave alone. A pressed chip
-   is the lime, pushed in: the fill says "on" and the inset says "held down", two cues rather than one. */
-html .chip{box-shadow:var(--raise-sm);border-color:var(--ctl-edge)}
-html .chip:hover{box-shadow:var(--raise-hi)}
-html .chip:active{box-shadow:var(--press)}
-html .chip[aria-pressed=true]{box-shadow:var(--press-act)}
-/* The primary button, on every page family that has one: the lime fill, its edge, and the extrusion. An
-   inset shadow is the edge rather than a border, so the box is the size it always was. */
-html .cta{border-radius:999px;box-shadow:inset 0 0 0 1px var(--act-edge),inset 0 1px 0 rgba(255,255,255,.3),
-  var(--raise-sm)}
-.cta:hover{background:var(--act-hi);filter:none}
-html .cta:active{box-shadow:inset 0 0 0 1px var(--act-edge),var(--press-act)}
-/* Titles, in the lime in dark. Page headings only: a heading inside a poster's artwork (`.ph`) sits on a
-   fixed dark stage of its own and keeps its own ink. Zero weight (`:where`), so any heading a page family
-   has already given a colour of its own keeps it; this only dresses the ones that inherit the ink. */
+/* Type, on every page family: Geist, rendered greyscale so light-on-dark text does not bloom, and titles in
+   the neutral ink -- the accent is not spent on them any more. */
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 :where(h1,h2):where(:not(.ph *)){color:var(--title)}
-/* MORE CONTRAST: the things that are not colours. Links are underlined, so a link is not told from text by
-   its hue alone (WCAG 1.4.1) -- except the ones drawn as a pill or a button, whose shape already says "press
-   me". A 3px ring with a halo of the page's own colour, a pressed control outlined as well as filled, and
-   nothing drawn behind text. */
+/* The focus ring, for every page family: the accent, 2px, clear of the control so it never sits on the
+   control's own shadows. `:focus-visible` so a click does not leave a ring on the chip that was pressed. */
+:focus-visible{outline:2px solid var(--bar);outline-offset:3px;border-radius:6px}
+::selection{background:color-mix(in srgb,var(--act) 42%,transparent);color:var(--ink)}
+/* THE CONTROLS, on every page family. Raised at rest, lifted a little on hover, pressed into the surface
+   while held and while switched on. `html` in front so these outrank each family's own `.chip{...}`, which
+   sets the size these leave alone. Switched on is the lime ink plus the well: two cues rather than one. */
+html .chip{background:var(--surface);border-color:transparent;box-shadow:var(--raise-sm);
+  transition:box-shadow .16s ease,color .16s ease}
+html .chip:hover{box-shadow:var(--raise-hi);color:var(--ink)}
+html .chip:active{box-shadow:var(--press)}
+html .chip[aria-pressed=true],html .chip[aria-current]{background:var(--surface);box-shadow:var(--press)}
+:where(.chip[aria-pressed=true],.chip[aria-current]){color:var(--bar)}
+/* The primary button, on every page family that has one: the lime, extruded, with its light around it. An
+   inset shadow is its edge rather than a border, so the box is the size it always was. */
+html .cta{border-radius:999px;transition:box-shadow .16s ease,background .16s ease;
+  box-shadow:inset 0 0 0 1px var(--act-edge),inset 0 1px 0 rgba(255,255,255,.35),var(--raise-sm),var(--glow)}
+html .cta:hover{background:var(--act-hi);filter:none;
+  box-shadow:inset 0 0 0 1px var(--act-edge),inset 0 1px 0 rgba(255,255,255,.35),var(--raise-hi),var(--glow)}
+html .cta:active{box-shadow:inset 0 0 0 1px var(--act-edge),var(--press-act)}
+/* Every text field and select on the site is a well. */
+html :is(input[type=search],input[type=text],input:not([type]),textarea,select){background-color:var(--surface);
+  border-color:transparent;box-shadow:var(--press)}
+@media (prefers-reduced-motion:reduce){html :is(.chip,.cta){transition:none}}
+/* MORE CONTRAST: the soft light is off (it carries no contrast), so real edges go back where it was, and
+   the things that are not colours. Links are underlined, so a link is not told from text by its hue alone
+   (WCAG 1.4.1) -- except the ones drawn as a pill or a button, whose shape already says "press me". */
 @media (prefers-contrast:more){
+  html .chip,html .cta,html :is(input,textarea,select){outline:1px solid var(--ctl-edge);outline-offset:-1px}
   a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
   a:hover{text-decoration-thickness:2px}
   :is(.chip,.cta,.bychip,.btag,.stamp,.ghstar){text-decoration:none}
@@ -60,30 +64,26 @@ html .cta:active{box-shadow:inset 0 0 0 1px var(--act-edge),var(--press-act)}
 @media (forced-colors:active){
   :focus-visible{outline:3px solid Highlight;outline-offset:2px}
   [aria-pressed=true]{outline:2px solid Highlight;outline-offset:1px}
-  .cta{outline:1px solid ButtonText;outline-offset:-1px}
+  .cta,.chip{outline:1px solid ButtonText;outline-offset:-1px}
   .thsw{forced-color-adjust:none}
   .mhart{background:none!important}
 }
 *{box-sizing:border-box}
-/* --ui is the page's own font stack in both themes. The field behind the glass is `body::before` in
-   `THEME_CSS` above; this only sets --surface, the colour it is translucent over. The 1.6 line height is
-   this page's own and stays -- it is prose, not a table. */
+/* --ui is the page's own font stack in both themes. The field is `body::before` in `THEME_CSS` above;
+   this sets --surface, the base every surface on the page is made of. */
 body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.6 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
 button{font:inherit;cursor:pointer}
-/* A pane of the glass. Static, with nothing positioned inside it, so the backdrop filter changes no
-   containing block (measured box for box in both themes at 1440 and 375). */
-header{background:var(--panel);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
-  border-bottom:1px solid var(--edge);padding:18px 20px 22px}
+/* The header is the base, transparent over the field: soft UI draws no bar and no rule under it. */
+header{background:transparent;border-bottom:1px solid transparent;padding:18px 20px 22px}
 /* Narrower than the 1500px the table surfaces use. This one is prose, and a 44-character-per-line
    measure is what a blurb and a licence sentence want; 1500px would set the lead paragraph 180
    characters wide, which is unreadable for the one thing on the page a reader has to read. */
 .wrap{max-width:1000px;margin:0 auto}
 main{padding:0 20px 64px}
-footer{border-top:1px solid var(--edge);background:var(--panel);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);padding:22px 20px;
-  color:var(--muted);font-size:13px}
+footer{border-top:1px solid transparent;background:transparent;padding:22px 20px;color:var(--muted);
+  font-size:13px;box-shadow:inset 0 1px 0 var(--grid)}
 h1{margin:0 0 4px;font-size:30px;letter-spacing:-.02em;overflow-wrap:anywhere}
 h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;color:var(--title)}
 .crumb{font-size:13px;color:var(--muted);margin-bottom:14px}
@@ -93,8 +93,9 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
    break opportunity in Chrome or Safari, so a 52-character nwo would otherwise widen the document. */
 .nwo{margin:0 0 12px;color:var(--muted);font-size:13px;word-break:break-all}
 /* The forge a non-GitHub project lives on, inside its `.nwo` link: 19_pages.py's pill, tokens only. */
-.forge{display:inline-block;border:1px solid var(--grid);border-radius:5px;padding:0 5px;background:var(--band);
-  font-size:11px;font-weight:600;color:var(--ink2);white-space:nowrap;vertical-align:1px}
+.forge{display:inline-block;border:1px solid transparent;border-radius:5px;padding:0 5px;
+  background:var(--surface);font-size:11px;font-weight:600;color:var(--ink2);white-space:nowrap;
+  vertical-align:1px;box-shadow:var(--press-sm)}
 .lead{margin:0 0 14px;color:var(--ink2);font-size:16px;max-width:68ch}
 .lead.none,.none{color:var(--muted);font-style:italic}
 /* Each fact its own element rather than text separated by dots, so that when the row wraps on a phone
@@ -114,10 +115,10 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
   border-radius:999px;padding:10px 18px}
 .cta:hover{text-decoration:none}
 .alt{font-size:14px}
-.chip{display:inline-block;background:var(--band);color:var(--ink2);border:1px solid var(--grid);
+.chip{display:inline-block;background:var(--surface);color:var(--ink2);border:1px solid transparent;
   border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap;margin:0 5px 5px 0}
-.chip:hover{border-color:var(--bar);color:var(--ink);text-decoration:none}
-.chip.cat{border-color:var(--bar);color:var(--ink)}
+.chip:hover{border-color:transparent;color:var(--ink);text-decoration:none}
+.chip.cat{border-color:transparent;color:var(--bar)}
 .chips{margin-top:2px}
 .util{flex-shrink:0}
 section{margin:34px 0 0;border-top:1px solid var(--grid);padding-top:22px}
@@ -125,15 +126,13 @@ section{margin:34px 0 0;border-top:1px solid var(--grid);padding-top:22px}
   clip:rect(0,0,0,0);white-space:nowrap;border:0}
 /* The reader is a document surface inside the Atlas, not a separately themed application. Its aliases
    point directly at the shared product tokens so a theme change cannot leave the Markdown behind. */
-.reader{
-  --read-bg:var(--surface);--read-panel:var(--plane);--read-raised:var(--band);--read-ink:var(--ink);
+.reader{--read-bg:var(--surface);--read-panel:var(--surface);--read-raised:var(--surface);--read-ink:var(--ink);
   --read-muted:var(--muted);--read-line:var(--grid);--read-link:var(--link);--read-accent:var(--bar);
   --read-warn:var(--warn);--read-code:var(--surface);--read-good:var(--good);--read-quote:var(--band);
   overflow:hidden;border:1px solid var(--edge);border-radius:22px;background:var(--read-panel);
   color:var(--read-ink);box-shadow:var(--raise)}
 .reader [hidden]{display:none!important}
-html[data-theme=light] .reader{
-  --read-panel:var(--band);--read-raised:var(--plane);
+html[data-theme=light] .reader{--read-panel:var(--surface);--read-raised:var(--surface);
   --read-code:color-mix(in srgb,var(--band) 82%,var(--grid));--read-quote:var(--surface)}
 .preview-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:14px}
 .preview-intro h2{margin-bottom:6px;color:var(--title);font-size:19px;text-transform:none;letter-spacing:-.01em}
@@ -153,20 +152,18 @@ html[data-theme=light] .reader{
 .file-picker{min-width:0;flex:1;position:relative}
 .file-picker:after{content:"⌄";position:absolute;right:11px;top:50%;transform:translateY(-55%);
   color:var(--read-muted);pointer-events:none;font-size:15px}
-.file-picker select{width:100%;height:35px;appearance:none;border:1px solid var(--read-line);
-  border-radius:999px;background:var(--read-raised);color:var(--read-ink);padding:0 32px 0 11px;
-  box-shadow:var(--press);
-  font:12.5px/1 var(--mono);
-  text-overflow:ellipsis;cursor:pointer}
+.file-picker select{width:100%;height:35px;appearance:none;border:1px solid transparent;border-radius:999px;
+  background:var(--surface);color:var(--read-ink);padding:0 32px 0 11px;box-shadow:var(--press);
+  font:12.5px/1 var(--mono);text-overflow:ellipsis;cursor:pointer}
 .file-picker select:focus,.viewtab:focus-visible,.open-source:focus-visible{
   outline:2px solid var(--read-link);outline-offset:2px}
 .file-picker select:disabled{cursor:wait;color:var(--read-muted)}
-.reader-tabs{display:flex;padding:3px;border-radius:999px;background:var(--read-raised);flex:0 0 auto;
+.reader-tabs{display:flex;padding:3px;border-radius:999px;background:var(--surface);flex:0 0 auto;
   box-shadow:var(--press)}
 .viewtab{border:0;border-radius:999px;padding:6px 10px;background:transparent;color:var(--read-muted);
   font-size:12px;line-height:1.2}
 .viewtab:hover{color:var(--read-ink)}
-.viewtab.on{background:var(--read-panel);color:var(--read-ink);box-shadow:var(--raise-sm)}
+.viewtab.on{background:var(--surface);color:var(--bar);box-shadow:var(--raise-sm)}
 .open-source{color:var(--read-link);font-size:12px;white-space:nowrap}
 .reader-status{min-height:240px;display:flex;align-items:center;justify-content:center;gap:11px;
   padding:34px;text-align:center;color:var(--read-muted);font-size:14px}
@@ -196,15 +193,14 @@ html[data-theme=light] .reader{
   text-underline-offset:.17em}
 .markdown-body a:hover{color:var(--read-accent)}
 .markdown-body strong{color:var(--read-ink);font-weight:750}
-.markdown-body blockquote{margin:1.2em 0;padding:.7em 1.05em;border-left:4px solid var(--read-accent);
-  border-radius:0 8px 8px 0;background:var(--read-quote);color:var(--read-muted)}
+.markdown-body blockquote{margin:1.2em 0;padding:.7em 1.05em;border-left:4px solid transparent;border-radius:12px;
+  background:var(--read-quote);color:var(--read-muted);box-shadow:var(--press-sm)}
 .markdown-body blockquote>:last-child{margin-bottom:0}
 .markdown-body code,.markdown-body kbd{font:13px/1.55 var(--mono)}
-.markdown-body :not(pre)>code{padding:.16em .38em;border:1px solid var(--read-line);border-radius:5px;
-  background:var(--read-code);color:var(--read-warn);font-size:.84em}
-.markdown-body pre{overflow:auto;margin:1.15em 0;padding:16px 18px;border:1px solid var(--read-line);
-  border-radius:9px;background:var(--read-code);color:var(--read-ink);line-height:1.55;
-  box-shadow:inset 3px 0 0 var(--read-accent)}
+.markdown-body :not(pre)>code{padding:.16em .38em;border:1px solid transparent;border-radius:5px;background:var(--read-code);
+  color:var(--read-warn);font-size:.84em;box-shadow:var(--press-sm)}
+.markdown-body pre{overflow:auto;margin:1.15em 0;padding:16px 18px;border:1px solid transparent;border-radius:var(--r-ctl);
+  background:var(--read-code);color:var(--read-ink);line-height:1.55;box-shadow:var(--press)}
 .markdown-body pre code{display:block;min-width:max-content;color:inherit;background:transparent}
 /* GitHub's renderer emits Primer-compatible `pl-*` spans for highlighted fenced blocks. The source
    owns the tokenisation; this small palette supplies the colour without importing all of Primer. */
@@ -220,11 +216,11 @@ html[data-theme=light] .reader{
 .markdown-body th,.markdown-body td{padding:8px 11px;border:1px solid var(--read-line);text-align:left}
 .markdown-body th{background:var(--read-raised);color:var(--read-ink)}
 .markdown-body tr:nth-child(even) td{background:color-mix(in srgb,var(--read-raised) 42%,transparent)}
-.markdown-body details{margin:1em 0;padding:10px 13px;border:1px solid var(--read-line);
-  border-radius:8px;background:var(--read-bg)}
+.markdown-body details{margin:1em 0;padding:10px 13px;border:1px solid transparent;border-radius:12px;
+  background:var(--surface);box-shadow:var(--raise-sm)}
 .markdown-body summary{cursor:pointer;color:var(--read-link);font:600 14px/1.4 "Aptos","Segoe UI",sans-serif}
-.markdown-body kbd{display:inline-block;padding:1px 5px;border:1px solid var(--read-line);
-  border-bottom-width:2px;border-radius:4px;background:var(--read-raised);font-size:.75em}
+.markdown-body kbd{display:inline-block;padding:1px 5px;border:1px solid transparent;border-bottom-width:2px;
+  border-radius:4px;background:var(--surface);font-size:.75em;box-shadow:var(--raise-sm)}
 .source-code{max-height:760px;min-height:280px;overflow:auto;margin:0;padding:25px 28px 40px;
   border:0;background:var(--read-code);color:var(--read-ink);tab-size:2;white-space:pre;
   font:13px/1.65 var(--mono);
@@ -233,22 +229,22 @@ html[data-theme=light] .reader{
 /* The install command, and the button that takes it away. Selecting wrapped monospace text without
    catching the paragraph above it is the thing this replaces. */
 .cmdrow{display:flex;gap:10px;align-items:flex-start}
-.cmd{flex:1;min-width:0;font:13.5px/1.6 var(--mono);color:var(--ink);
-  background:var(--band);border:1px solid var(--ctl-edge);border-radius:14px;padding:10px 12px;
-  box-shadow:var(--press);overflow-wrap:anywhere;display:block}
-.copy{background:var(--band);color:var(--ink2);border:1px solid var(--ctl-edge);border-radius:999px;
-  box-shadow:var(--raise-sm);
-  padding:10px 14px;font-size:13px;white-space:nowrap}
-.copy:hover{border-color:var(--bar);color:var(--ink)}
+.cmd{flex:1;min-width:0;font:13.5px/1.6 var(--mono);color:var(--ink);background:var(--surface);
+  border:1px solid transparent;border-radius:var(--r-ctl);padding:10px 12px;box-shadow:var(--press);
+  overflow-wrap:anywhere;display:block}
+.copy{background:var(--surface);color:var(--ink2);border:1px solid transparent;border-radius:999px;
+  box-shadow:var(--raise-sm);padding:10px 14px;font-size:13px;white-space:nowrap}
+.copy:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-hi)}
 figure.shot{margin:0}
 /* A fixed 2:1 box with the image contained inside it. The src is somebody else's CDN and its
    dimensions are unknown at build time, so height cannot be declared on the img -- and without a box
    the whole page below would jump when it finally arrives. `contain` rather than `cover` because these
    are arbitrary images: cropping a social card to fill a frame cuts the repository name off it. */
-.shot img{width:100%;aspect-ratio:2/1;object-fit:contain;border-radius:10px;background:var(--band);
-  border:1px solid var(--grid);display:block}
+.shot img{width:100%;aspect-ratio:2/1;object-fit:contain;border-radius:var(--r-card);background:var(--surface);
+  border:1px solid transparent;display:block;box-shadow:var(--raise)}
 figcaption{color:var(--muted);font-size:12.5px;margin-top:8px;max-width:70ch}
-table.os{width:100%;border-collapse:collapse;font-size:14px}
+table.os{width:100%;border-collapse:separate;font-size:14px;border-spacing:0;background:var(--surface);
+  box-shadow:var(--raise);border-radius:var(--r-card);padding:6px 10px}
 table.os caption{text-align:left;color:var(--muted);font-size:12.5px;margin-bottom:10px;
   max-width:70ch}
 table.os th[scope=col]{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;
@@ -266,24 +262,27 @@ table.os .why{color:var(--ink2);font-size:13px}
 /* The legend -- see `legend()` for why a `title` is not enough. Sized and coloured like the caption it is,
    and it wraps, because five pairs do not fit on one line at 335px. */
 .oikey{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 12px;font-size:12.5px;color:var(--muted)}
-.mk{display:inline-grid;place-items:center;width:28px;height:28px;flex:none;
-  vertical-align:-7px;margin-right:2px}
-.brand{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:inherit;
-  font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.mk{display:inline-grid;place-items:center;width:30px;height:30px;flex:none;border-radius:50%;
+  vertical-align:-8px;margin-right:4px;background:var(--surface);box-shadow:var(--raise-sm);position:relative;
+  transition:box-shadow .16s ease}
+.mk::after{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  animation:mkbreath calc(6s * var(--fx-pulse,1)) ease-in-out infinite}
+.brand{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:inherit;
+  font-weight:650;letter-spacing:-.01em;white-space:nowrap}
 .brand:hover span{text-decoration:underline}
+.brand:hover .mk{box-shadow:var(--raise-hi)}
+.brand:active .mk{box-shadow:var(--press)}
 /* The brand's own line, on the page families that have no breadcrumb to sit in. Named rather than
    reusing `.crumb`, which is `22_detail.py`'s class and already carries a rule there: a shared
    stylesheet that redefines a generator's own selector wins or loses on source order, which is not a
    thing to leave to chance across four files. */
 .brandbar{margin:0 0 14px}
 .brand .mk{vertical-align:baseline;margin-right:0}
-.mk svg{width:30px;height:30px;display:block;overflow:visible;
-  filter:drop-shadow(0 0 calc(5px * var(--fx-glow,1)) rgba(164,200,18,.45));
-  animation:mkbreath calc(6s * var(--fx-pulse,1)) ease-in-out infinite}
+.mk svg{width:24px;height:24px;display:block;overflow:visible}
 @keyframes mkbreath{
-  0%,100%{filter:drop-shadow(0 0 calc(3px * var(--fx-glow,1)) rgba(164,200,18,.32))}
-  50%{filter:drop-shadow(0 0 calc(9px * var(--fx-glow,1)) rgba(164,200,18,.60))}}
-@media(prefers-reduced-motion:reduce){.mk svg{animation:none}}
+  0%,100%{box-shadow:0 0 0 rgba(164,200,18,0)}
+  50%{box-shadow:0 0 calc(10px * var(--fx-glow,1)) rgba(164,200,18,.35)}}
+@media(prefers-reduced-motion:reduce){.mk::after{animation:none}}
 
 /* Bigger than the shared 1.15em, because this is the one surface where the mark stands beside its own
    word rather than in place of one: at the table's 14px that is ~17px, which matches the cap height of
@@ -296,13 +295,13 @@ table.os th[scope=row] .oi{width:1.2em;height:1.2em;margin-right:.2em}
 .vwarn{color:var(--warn);white-space:nowrap}
 .voff{color:var(--off);white-space:nowrap}
 ul.lists{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
-ul.lists li{background:var(--band);border:1px solid var(--grid);border-radius:6px;padding:6px 12px;
-  font-size:13.5px}
+ul.lists li{background:var(--surface);border:1px solid transparent;border-radius:999px;padding:6px 12px;
+  font-size:13.5px;box-shadow:var(--raise-sm)}
 /* Two columns of cards on a desktop, one on a phone, without a media query: auto-fill collapses to a
    single track as soon as 320px stops fitting twice. */
 ul.kinlist{list-style:none;padding:0;margin:0;display:grid;gap:10px;
   grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
-ul.kinlist li{border:1px solid var(--edge);border-radius:18px;padding:12px 14px;background:var(--panel);
+ul.kinlist li{border:1px solid transparent;border-radius:var(--r-card);padding:12px 14px;background:var(--surface);
   box-shadow:var(--raise-sm)}
 ul.kinlist a{font-weight:600;overflow-wrap:anywhere}
 ul.kinlist .nwo{display:block;margin:2px 0 0;font-size:12px}
@@ -357,16 +356,17 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
 @font-face{font-family:"Atlas Icons";src:url(../assets/fonts/geist-mono.woff2) format("woff2");unicode-range:U+F400-F5FF;font-display:swap}
 /* The build tags in the footer. See `buildtags()` in scripts/sitewide.py. Two classes deep so that
    `footer a`, which every page family has, does not outrank them. */
-.btags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;font:600 11px/1 var(--mono)}
-.btags .btag{display:inline-flex;align-items:center;gap:6px;min-height:24px;padding:4px 9px;border-radius:7px;
-  color:var(--ink);background:var(--band);border:1px solid var(--grid);text-decoration:none;
-  letter-spacing:.01em}
-.btags .btag:hover{border-color:var(--link);text-decoration:none}
+.btags{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 14px;font:600 11px/1 var(--mono)}
+.btags .btag{display:inline-flex;align-items:center;gap:6px;min-height:24px;padding:4px 10px;border-radius:999px;
+  color:var(--ink);background:var(--surface);border:1px solid transparent;text-decoration:none;
+  letter-spacing:.01em;box-shadow:var(--raise-sm);transition:box-shadow .16s ease}
+.btags .btag:hover{box-shadow:var(--raise-hi);text-decoration:none}
+.btags .btag:active{box-shadow:var(--press)}
 .btags .btag b{font-weight:600}
 .btags .btag .bv{color:var(--muted);font-weight:500}
 .btags .btag .bico{color:var(--muted);font:400 12px/1 "Atlas Icons",var(--mono)}
 .btags .btag .bico:empty{display:none}
-.bdot{width:7px;height:7px;flex:none;border-radius:50%;background:var(--off)}
+.bdot{width:7px;height:7px;flex:none;border-radius:50%;background:var(--off);box-shadow:var(--press-sm)}
 .btags .btag[data-state=ok] .bdot{background:var(--good);box-shadow:0 0 8px var(--good)}
 .btags .btag[data-state=bad] .bdot{background:var(--warn);box-shadow:0 0 8px var(--warn)}
 .btags .btag[data-state=run] .bdot{background:var(--link);box-shadow:0 0 8px var(--link)}

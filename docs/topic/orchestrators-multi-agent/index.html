@@ -21,7 +21,7 @@
 <link rel="preload" href="../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#2A2A27">
+<meta name="theme-color" id="tc" content="#24272D">
 <script>
 try {
   var t = localStorage.getItem("theme");
@@ -32,7 +32,7 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  document.getElementById("tc").content = {light: "#F5F2EC", dark: "#2A2A27"}[t];
+  document.getElementById("tc").content = {light: "#E3E7ED", dark: "#24272D"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../pages.css">
@@ -42,7 +42,7 @@ try {
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="oi-windows" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol><symbol id="oi-wsl2" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M2 3.5h20v17H2zm2 2v13h16v-13zm3.4 3.7L8.8 7.9 12.6 12l-3.8 4.1-1.4-1.3L9.9 12zm6 5.4h4.2v1.6h-4.2z"/></symbol><symbol id="oi-macos" viewBox="0 0 24 24"><circle cx="8.8" cy="11.2" r="4.2"/><circle cx="15.2" cy="11.2" r="4.2"/><ellipse cx="12" cy="14.8" rx="7" ry="5.4"/><path d="M12.5 7.4c-.3-1.5.2-2.9 1.2-3.9 1-1 2.4-1.5 3.6-1.5.1 1.4-.4 2.8-1.4 3.8-1 1-2.3 1.5-3.4 1.6z"/></symbol><symbol id="oi-linux" viewBox="0 0 24 24"><circle cx="12" cy="6.2" r="3.7"/><ellipse cx="12" cy="14" rx="5.5" ry="6.3"/><ellipse cx="8.2" cy="20.2" rx="2.9" ry="1.5"/><ellipse cx="15.8" cy="20.2" rx="2.9" ry="1.5"/><path d="M6.6 10.3c-1.8 1-3 2.9-3 4.9 0 1.1.5 1.9 1.2 1.9.9 0 1.8-1.5 2.4-3.4z"/><path d="M17.4 10.3c1.8 1 3 2.9 3 4.9 0 1.1-.5 1.9-1.2 1.9-.9 0-1.8-1.5-2.4-3.4z"/></symbol><symbol id="oi-docker" viewBox="0 0 24 24"><rect x="6.4" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="14" y="9.6" width="3.2" height="3.2" rx=".5"/><rect x="10.2" y="5.8" width="3.2" height="3.2" rx=".5"/><path d="M2.4 13.6h19.2c.4 0 .7.4.6.8-.5 2.4-2 4.3-4.1 5.3-1.7.8-3.7 1.2-6 1.2-4.1 0-7.5-1.2-9.4-3.2-1-1.1-1.6-2.3-1.6-3.4 0-.4.3-.7.7-.7z"/></symbol></svg>
 <header><div class="wrap">
-  <nav class="brandbar"><a class="brand" href="../../"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><image href="../../assets/archie-mark.webp" width="64" height="64"/></svg></span><span>Atlas</span></a></nav><div class="top">
+  <nav class="brandbar"><a class="brand" href="../../"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><image href="../../assets/archie-head.webp" width="64" height="64"/></svg></span><span>Atlas</span></a></nav><div class="top">
   <div>
     <h1>Orchestrators &amp; Multi-Agent</h1>
     <p class="sub"><b>525</b> projects · <b>516</b> with stars to rank by ·
@@ -53,6 +53,7 @@ try {
   <nav>
     <a href="../../discover/">Discover</a> ·
     <a href="../../local/">Run It Local</a> ·
+    <a href="../../alike/">Lookalikes</a> ·
     <a href="../../collections/">Collections</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="../../repo/">All projects</a> ·
@@ -176,7 +177,7 @@ try {
 </div></main>
 
 <footer><div class="wrap">
-  <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and workbooks"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
+  <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and a full refresh"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
   This is a static slice of the <a href="../../">Awesome Agentic Atlas</a>, which merges 39
   awesome-lists into one index; all 39 are credited in the
   <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. Stars, language, licence
@@ -186,7 +187,7 @@ try {
   language. A dash in the star column means the row is a folder inside someone else's repo, or a dead
   link, and has no count of its own.
 </div></footer>
-<script type="module" src="../../assets/atlas-site.js?v=a4837d4f4b"></script><script>
+<script type="module" src="../../assets/atlas-site.js?v=88f90e5fe1"></script><script>
 function atlasTheme() {
   if (atlasTheme.api) return atlasTheme.api;
   var root = document.documentElement;
