@@ -77,6 +77,28 @@ def opaque(px: int, inset: float) -> Image.Image:
     return out
 
 
+def neck_row(render: Image.Image) -> int:
+    """The top of his neck: the first of the narrowest opaque rows between the head and the shoulders.
+
+    Read from the render rather than written in, so a re-render at another size or framing still cuts the
+    head where his head ends. Searched in the middle of the frame (35-75% of the height), where a
+    head-and-shoulders render has its neck; a row with nothing opaque is skipped, so a gap is not a neck.
+    """
+    alpha = render.getchannel("A")
+    best, best_w = None, None
+    for y in range(int(render.height * .35), int(render.height * .75)):
+        xs = [x for x in range(render.width) if alpha.getpixel((x, y)) > 40]
+        if not xs:
+            continue
+        w = xs[-1] - xs[0]
+        if best_w is None or w < best_w:
+            best, best_w = y, w
+    if best is None:
+        raise SystemExit(".github/readme/archie.png has nothing opaque in the middle of its frame; "
+                         "it is not the head-and-shoulders render this expects.")
+    return best
+
+
 def ico(images: list[bytes], sizes: list[int]) -> bytes:
     """An ICO of PNG entries (the same layout `24_pwa.ico()` used to write)."""
     import struct
@@ -98,15 +120,17 @@ def main() -> None:
     # The logo: his head alone, transparent, from the render. The site's soft UI seats it in a raised disc of
     # the page's own colour, so it needs no plate of its own. Cut square around the head, above the neck.
     render = Image.open(SRC / "archie.png").convert("RGBA")
-    head_box = render.getchannel("A").crop((0, 0, render.width, 207)).getbbox()
+    neck = neck_row(render)
+    head_box = render.getchannel("A").crop((0, 0, render.width, neck)).getbbox()
     if head_box is None:
-        raise SystemExit(".github/readme/archie.png has no opaque pixels; it is not the render this expects.")
+        raise SystemExit(f".github/readme/archie.png has nothing opaque above its neck (row {neck}); "
+                         "it is not the head-and-shoulders render this expects.")
     hl, ht, hr, hb = head_box
     side = max(hr - hl, hb - ht) + 8
     cx, cy = (hl + hr) // 2, (ht + hb) // 2
     x0, y0 = cx - side // 2, cy - side // 2
     head = Image.new("RGBA", (side, side), (0, 0, 0, 0))
-    part = render.crop((max(x0, 0), max(y0, 0), min(x0 + side, render.width), min(y0 + side, 207)))
+    part = render.crop((max(x0, 0), max(y0, 0), min(x0 + side, render.width), min(y0 + side, neck)))
     head.alpha_composite(part, (max(x0, 0) - x0, max(y0, 0) - y0))
     sized(head, 96).save(DOCS / "assets" / "archie-head.webp", "WEBP", quality=90, method=6)
 
