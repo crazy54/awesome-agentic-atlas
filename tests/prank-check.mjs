@@ -193,7 +193,11 @@ ok("mid-flicker, a reader's own choice of theme can be made",
 // the reasoning that the poll above clicks after the second; but between the poll seeing it and the click
 // arriving, a runner whose main thread is restyling the page for each swap can let one more through -- PR #109's
 // run on 2026-11-18 saw light, graphite, dark, light, dark, light, with the reader's choice last and correct.
-const choseAt = await ev(`(window.__choseAt = performance.now(), document.getElementById("theme").click(), window.__choseAt)`);
+// Through the Settings menu's own button for the other brightness, which is how a reader makes the choice
+// since #111 replaced the one `#theme` toggle with the menu's theme buttons.
+const choseAt = await ev(`(window.__choseAt = performance.now(),
+  document.querySelector('.thb[data-choice="' + (document.documentElement.dataset.theme === "light" ? "dark" : "light") + '"]').click(),
+  window.__choseAt)`);
 const chose = await ev(`localStorage.getItem("theme")`);
 await done("lights");
 ok("...and is still standing after the prank", await ev(`document.documentElement.dataset.theme`) === chose &&

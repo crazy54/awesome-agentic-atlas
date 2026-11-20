@@ -15,40 +15,18 @@
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -147,22 +125,22 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li>LLMOps (InftyAI)</li></ul>
+  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/InftyAI/Awesome-LLMOps">LLMOps (InftyAI)</a></li></ul>
 </section>
 
 <section>
   <h2>How it is classified</h2>
-  <p class="lead">One topic, no
-    harnesses. Each link is a prerendered page of
+  <p class="lead">One topic, 1
+    harness. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/observability-evals/">Observability &amp; Evals</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/observability-evals/">Observability &amp; Evals</a><a class="chip" href="../../../topic/observability-evals/target/mcp/">MCP</a></div>
 </section>
 
 <section class="kin">
   <h2>Related in Observability &amp; Evals</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../arize-ai/phoenix/">Arize-Phoenix</a><span class="nwo">Arize-ai/phoenix</span><span class="desc">Self-hostable trace UI and eval runtime for agent workflows. Lets harness engineers audit and replay every reasoning step and tool call offline…</span></li><li><a href="../../thudm/agentbench/">AgentBench</a><span class="nwo">THUDM/AgentBench</span><span class="desc">Multi-environment agent benchmark (OS, DB, web, code) with a structured eval pipeline. Worth studying for its environment isolation design and task…</span></li><li><a href="../../langfuse/langfuse/">Langfuse</a><span class="nwo">langfuse/langfuse</span><span class="desc">The most widely adopted self-hostable LLM observability platform: traces every agent step, manages prompt versions, and runs evals in one tool…</span></li><li><a href="../../vivekchand/clawmetry/">ClawMetry</a><span class="nwo">vivekchand/clawmetry</span><span class="desc">Self-hosted, local-first observability and kill switch for coding agents, reading Gemini CLI sessions alongside Claude Code, Codex, Cursor…</span></li><li><a href="../../future-agi/future-agi/">Future AGI</a><span class="nwo">future-agi/future-agi</span><span class="desc">Open-source, self-hostable platform unifying tracing, evals, simulations, guardrails, and gateway into a single feedback loop. Worth including…</span></li><li><a href="../../promptfoo/promptfoo/">promptfoo</a><span class="nwo">promptfoo/promptfoo</span><span class="desc">YAML-driven LLM testing framework with LLM-as-judge, assertion DSL, and native CI integration. The most practical tool for adding agent output…</span></li><li><a href="../../ccusage/ccusage/">ccusage</a><span class="nwo">ccusage/ccusage</span><span class="desc">by ryoppippi - A zero-install CLI (npx ccusage) that analyzes Claude Code token usage and cost from local JSONL logs — daily, monthly, per-session…</span></li><li><a href="../../getagentseal/codeburn/">Codeburn</a><span class="nwo">getagentseal/codeburn</span><span class="desc">Free, local tool that tracks AI coding token usage and cost across 31 tools and agents by model, project, and task. Worth including because…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../getagentseal/codeburn/">Codeburn</a><span class="nwo">getagentseal/codeburn</span><span class="desc">Free, local tool that tracks AI coding token usage and cost across 31 tools and agents by model, project, and task. Worth including because…</span></li><li><a href="../../comet-ml/opik/">Opik</a><span class="nwo">comet-ml/opik</span><span class="desc">Comet&#x27;s open-source AI observability and evaluation platform: deep tracing of LLM calls, conversation logging, and agent activity, plus built-in…</span></li><li><a href="../../gy15901580825/argus/">Argus</a><span class="nwo">gy15901580825/Argus</span><span class="desc">Red-team testing CLI for AI agents that attacks them through chat endpoints, browsers, MCP tools and a mock payment merchant and reports findings…</span></li><li><a href="../../hidai25/eval-view/">EvalView</a><span class="nwo">hidai25/eval-view</span><span class="desc">Regression testing for AI agents. Snapshot behavior, detect tool-call and output regressions, with golden-baseline diffing and LLM-as-judge scoring…</span></li><li><a href="../../cygnux-labs/tracekit/">Tracekit</a><span class="nwo">Cygnux-Labs/Tracekit</span><span class="desc">Tamper-evident tracing and policy checks for AI agent tool calls: each call is checked before it runs and signed with its decision into a hash…</span></li><li><a href="../../continuum-ai-corp/orca-ai-incident-archive/">Orca AI Incident Archive</a><span class="nwo">Continuum-AI-Corp/Orca-AI-Incident-Archive</span><span class="desc">Open database of publicly disclosed AI agent security incidents since January 2025 (prompt injection, exploited MCP servers, poisoned agent…</span></li><li><a href="../../avansaber/tailtest/">tailtest</a><span class="nwo">avansaber/tailtest</span><span class="desc">Automatically generates and runs tests for every file Claude Code creates or modifies. PostToolUse hook detects changes, generates test scenarios…</span></li><li><a href="../../accio-org/commerceagentbench/">Accio-org/RealReplicaBench</a><span class="nwo">Accio-org/CommerceAgentBench</span><span class="desc">Alibaba International&#x27;s benchmark for long-horizon agents in high-fidelity, stateful replicas of real online services: 107 tasks spanning CLI…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

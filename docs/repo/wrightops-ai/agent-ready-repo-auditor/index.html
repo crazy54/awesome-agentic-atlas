@@ -15,40 +15,18 @@
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -147,7 +125,7 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li>LLMOps (InftyAI)</li></ul>
+  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/InftyAI/Awesome-LLMOps">LLMOps (InftyAI)</a></li></ul>
 </section>
 
 <section>
@@ -162,7 +140,7 @@ try {
   <h2>Related in Frameworks &amp; SDKs</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../jmagly/aiwg/">AIWG</a><span class="nwo">jmagly/aiwg</span><span class="desc">Deploys versioned agents, skills, rules, and governed workflows into the native project paths used by Claude Code, Codex, Copilot, Cursor, and other…</span></li><li><a href="../../fmarzochi/egc/">EGC</a><span class="nwo">Fmarzochi/EGC</span><span class="desc">Persistent cross-session memory MCP server for 13+ AI coding tools. SQLite-backed state survives context resets and keeps Claude Code, Cursor…</span></li><li><a href="../../skullfire07/cortex-memory/">Cortex</a><span class="nwo">SKULLFIRE07/cortex-memory</span><span class="desc">Persistent AI memory for coding assistants. Auto-captures decisions, patterns, and context across sessions. VSCode extension + CLI + MCP server. MIT…</span></li><li><a href="../../speakeasy-api/gram/">Speakeasy control plane</a><span class="nwo">speakeasy-api/gram</span><span class="desc">MCP gateway that scopes agent tool access by identity, team, and role, with security policy enforced on each action and an audit trail. Useful as a…</span></li><li><a href="../../razzant/claudexor/">Claudexor</a><span class="nwo">razzant/claudexor</span><span class="desc">Routes one coding thread across harnesses with quota-aware rotation between subscription profiles, Best-of-N runs, and cross-family review.</span></li><li><a href="../../browser-use/browser-harness/">browser-harness</a><span class="nwo">browser-use/browser-harness</span><span class="desc">Self-healing browser harness that connects an LLM directly to your real Chrome via CDP. The critical design decision: the agent itself writes…</span></li><li><a href="../../glassflow/rius-sdk-python/">Rius</a><span class="nwo">glassflow/rius-sdk-python</span><span class="desc">MIT Python SDK that traces LLM calls, tool calls and agent steps as OpenTelemetry GenAI spans, with auto-instrumentation for OpenAI, Anthropic…</span></li><li><a href="../../automatosai/automatos-ai/">Automatos AI</a><span class="nwo">AutomatosAI/automatos-ai</span><span class="desc">Self-hosted AI agent platform (Apache-2.0): one chat routes work to a team of agents on any model or on your own Claude Code, Codex and GitHub…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../jmagly/aiwg/">AIWG</a><span class="nwo">jmagly/aiwg</span><span class="desc">Deploys versioned agents, skills, rules, and governed workflows into the native project paths used by Claude Code, Codex, Copilot, Cursor, and other…</span></li><li><a href="../../fmarzochi/egc/">EGC</a><span class="nwo">Fmarzochi/EGC</span><span class="desc">Persistent cross-session memory MCP server for 13+ AI coding tools. SQLite-backed state survives context resets and keeps Claude Code, Cursor…</span></li><li><a href="../../agentlas-ai/agentlas-os/">Agentlas OS</a><span class="nwo">agentlas-ai/Agentlas-OS</span><span class="desc">Local-first, model-agnostic Agent Operation Environment (AOE) for building, borrowing, and orchestrating specialist agents and teams across…</span></li><li><a href="../../get-concord-ai/concord-mcp/">Concord MCP</a><span class="nwo">Get-Concord-AI/concord-mcp</span><span class="desc">Local-first shared work-state MCP server (npx -y @concord-ai/concord-mcp) that lets coding agents coordinate on one repo through presence, file…</span></li><li><a href="../../skullfire07/cortex-memory/">Cortex</a><span class="nwo">SKULLFIRE07/cortex-memory</span><span class="desc">Persistent AI memory for coding assistants. Auto-captures decisions, patterns, and context across sessions. VSCode extension + CLI + MCP server. MIT…</span></li><li><a href="../../speakeasy-api/gram/">Speakeasy control plane</a><span class="nwo">speakeasy-api/gram</span><span class="desc">MCP gateway that scopes agent tool access by identity, team, and role, with security policy enforced on each action and an audit trail. Useful as a…</span></li><li><a href="../../razzant/claudexor/">Claudexor</a><span class="nwo">razzant/claudexor</span><span class="desc">Routes one coding thread across harnesses with quota-aware rotation between subscription profiles, Best-of-N runs, and cross-family review.</span></li><li><a href="../../browser-use/browser-harness/">browser-harness</a><span class="nwo">browser-use/browser-harness</span><span class="desc">Self-healing browser harness that connects an LLM directly to your real Chrome via CDP. The critical design decision: the agent itself writes…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

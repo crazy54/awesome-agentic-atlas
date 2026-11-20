@@ -216,7 +216,7 @@ const HARNESSES = [
   {file: "theme_test.py", label: "three themes in one copy, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "fetch_test.py", label: "a batch GitHub keeps timing out on is split, and nothing else is", python: true, floor: 20},
-  {file: "ci_tools_test.py", label: "the local run, and what every workflow must say", python: true, floor: 30},
+  {file: "ci_tools_test.py", label: "the local run, the canary's bot branches, and what every workflow must say", python: true, floor: 45},
   {file: "ci_alert_test.py", label: "the build-red issue: what it quotes, what it suggests, when it opens, comments and closes", python: true, floor: 25},
   {file: "dead_repos_test.py", label: "which repos GitHub no longer serves, the ledger and its guard, and the build leaving them out", python: true, floor: 35},
   {file: "drift_test.py", label: "upstream drift: what a provisional build files, the evidence for it, and that a strict one still stops", python: true, floor: 110},
@@ -246,7 +246,7 @@ const HARNESSES = [
   {file: "friends-check.mjs", label: "Archie's friends: each comes, leaves, restores the page, and keeps off the controls", needs: "browser", floor: 80},
   {file: "admin-check.mjs", label: "Archie's admin panel: hidden, one button per command, each dispatching its own, and why a button is greyed", needs: "browser", floor: 55},
   {file: "local-check.mjs", label: "the local-AI page as a reader drives it: tiles, keyboard combobox, chips, tasks, numbers, how-to, shared hash, phone, themes, motion, no script", needs: "browser", floor: 70},
-  {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450},
+  {file: "bits-check.mjs", label: "the pals' bits: each placed, played to its end, the page put back, nothing saved, flashed or left; Escape stops one", needs: "browser", floor: 450, minutes: 100},
 ];
 
 // The watchdog's default. The slowest harness but one, prank-check, takes about eight minutes on a runner

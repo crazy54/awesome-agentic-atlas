@@ -10,45 +10,23 @@
 <meta property="og:title" content="sena-labs/replicate-mcp-server — Awesome Agentic Atlas">
 <meta property="og:description" content="Full Replicate catalog for any MCP client: image, video, music and speech generation, voice cloning, 3D, upscaling, plus batch/DAG pipelines and fine-tuning">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/sena-labs/replicate-mcp-server/">
-<meta property="og:image" content="https://opengraph.githubassets.com/1/sena-labs/replicate-mcp-server">
+<meta property="og:image" content="https://raw.githubusercontent.com/sena-labs/replicate-mcp-server/main/assets/banner.png">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -133,9 +111,9 @@ try {
 <section>
   <h2>Screenshot</h2>
   <figure class="shot">
-    <img loading="lazy" decoding="async" src="https://opengraph.githubassets.com/1/sena-labs/replicate-mcp-server"
+    <img loading="lazy" decoding="async" src="https://raw.githubusercontent.com/sena-labs/replicate-mcp-server/main/assets/banner.png"
          alt="Screenshot or social card for sena-labs/replicate-mcp-server">
-    <figcaption>GitHub's social card — no screenshot was found for this project, fetched from
+    <figcaption>The project's own screenshot, fetched from
       source rather than copied into this repository.</figcaption>
   </figure>
 </section>
@@ -147,7 +125,7 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li>MCP Servers (punkpeye)</li></ul>
+  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/punkpeye/awesome-mcp-servers">MCP Servers (punkpeye)</a></li></ul>
 </section>
 
 <section>
@@ -162,7 +140,7 @@ try {
   <h2>Related in MCP Servers</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../executeautomation/mcp-playwright/">executeautomation/playwright-mcp-server</a><span class="nwo">executeautomation/mcp-playwright</span><span class="desc">An MCP server using Playwright for browser automation and webscrapping</span></li><li><a href="../../wolfe-jam/faf-mcp/">Wolfe-Jam/faf-mcp</a><span class="nwo">Wolfe-Jam/faf-mcp</span><span class="desc">Universal persistent project context for Cursor, Windsurf, Cline, VS Code, and all MCP-compatible platforms (including Claude Desktop)…</span></li><li><a href="../../frihet-io/frihet-mcp/">@frihet/mcp-server</a><span class="nwo">Frihet-io/frihet-mcp</span><span class="desc">Frihet business management: invoices, expenses, clients, products and quotes</span></li><li><a href="../../adw0rd/awesome-mcp-tools-mcp/">adw0rd/awesome-mcp-tools-mcp</a><span class="nwo">adw0rd/awesome-mcp-tools-mcp</span><span class="desc">Search the awesome-mcp.tools catalog of MCP servers from an MCP client or the terminal</span></li><li><a href="../../avotsai/avots-mcp/">avotsai/avots-mcp</a><span class="nwo">avotsai/avots-mcp</span><span class="desc">Multi-model AI media generation (image, video, audio, face swap, talking avatars) plus chat with models such as Claude, GPT, Gemini and DeepSeek</span></li><li><a href="../../catfish-1234/sessionmem/">catfish-1234/sessionmem</a><span class="nwo">catfish-1234/sessionmem</span><span class="desc">Local memory for coding assistants: watches sessions and injects a compact summary at the start of each new one, stored in a SQLite file</span></li><li><a href="../../clamp-sh/mcp/">clamp-sh/mcp</a><span class="nwo">clamp-sh/mcp</span><span class="desc">Web analytics: query pageviews, top pages, referrers, countries, devices and custom events, and create conversion funnels and alerts</span></li><li><a href="../../clayytsai/agent-discovery-mcp/">Claynsn/agent-discovery-mcp</a><span class="nwo">ClayYTsai/agent-discovery-mcp</span><span class="desc">ERC-8004 agent discovery and x402 payment: find agents by skill via 8004scan, fetch agent cards and call agents with USDC payments using direct EOA…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../executeautomation/mcp-playwright/">executeautomation/playwright-mcp-server</a><span class="nwo">executeautomation/mcp-playwright</span><span class="desc">An MCP server using Playwright for browser automation and webscrapping</span></li><li><a href="../../wolfe-jam/faf-mcp/">Wolfe-Jam/faf-mcp</a><span class="nwo">Wolfe-Jam/faf-mcp</span><span class="desc">Universal persistent project context for Cursor, Windsurf, Cline, VS Code, and all MCP-compatible platforms (including Claude Desktop)…</span></li><li><a href="../../adw0rd/awesome-mcp-tools-mcp/">adw0rd/awesome-mcp-tools-mcp</a><span class="nwo">adw0rd/awesome-mcp-tools-mcp</span><span class="desc">Search the awesome-mcp.tools catalog of MCP servers from an MCP client or the terminal</span></li><li><a href="../../avotsai/avots-mcp/">avotsai/avots-mcp</a><span class="nwo">avotsai/avots-mcp</span><span class="desc">Multi-model AI media generation (image, video, audio, face swap, talking avatars) plus chat with models such as Claude, GPT, Gemini and DeepSeek</span></li><li><a href="../../catfish-1234/sessionmem/">catfish-1234/sessionmem</a><span class="nwo">catfish-1234/sessionmem</span><span class="desc">Local memory for coding assistants: watches sessions and injects a compact summary at the start of each new one, stored in a SQLite file</span></li><li><a href="../../clamp-sh/mcp/">clamp-sh/mcp</a><span class="nwo">clamp-sh/mcp</span><span class="desc">Web analytics: query pageviews, top pages, referrers, countries, devices and custom events, and create conversion funnels and alerts</span></li><li><a href="../../clayytsai/agent-discovery-mcp/">Claynsn/agent-discovery-mcp</a><span class="nwo">ClayYTsai/agent-discovery-mcp</span><span class="desc">ERC-8004 agent discovery and x402 payment: find agents by skill via 8004scan, fetch agent cards and call agents with USDC payments using direct EOA…</span></li><li><a href="../../dan8oren/mcp-apple-notes/">Dan8Oren/mcp-apple-notes</a><span class="nwo">Dan8Oren/mcp-apple-notes</span><span class="desc">Local semantic search and RAG over Apple Notes with on-device embeddings, full CRUD, folder management and fuzzy title matching</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

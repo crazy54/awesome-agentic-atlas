@@ -3,56 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>microsandbox (superradcompany/microsandbox) — Sandbox, Security &amp; Governance — Awesome Agentic Atlas</title>
-<meta name="description" content="Easy, fast, programmable and local-first microVM runtime and library">
+<title>Microsandbox (superradcompany/microsandbox) — Sandbox, Security &amp; Governance — Awesome Agentic Atlas</title>
+<meta name="description" content="Rust/Apache-2.0 local-first microVM runtime for untrusted agent workloads: &lt;100ms boots, OCI-image compatible, fork-and-snapshot of live sandboxes, and an…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/superradcompany/microsandbox/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="microsandbox — Awesome Agentic Atlas">
-<meta property="og:description" content="Easy, fast, programmable and local-first microVM runtime and library">
+<meta property="og:title" content="Microsandbox — Awesome Agentic Atlas">
+<meta property="og:description" content="Rust/Apache-2.0 local-first microVM runtime for untrusted agent workloads: &lt;100ms boots, OCI-image compatible, fork-and-snapshot of live sandboxes, and an…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/superradcompany/microsandbox/">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/superradcompany/microsandbox">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Sandbox, Security & Governance","item":"https://aaa.jeremyfhall.com/topic/sandbox-security-governance/"},{"@type":"ListItem","position":3,"name":"microsandbox","item":"https://aaa.jeremyfhall.com/repo/superradcompany/microsandbox/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"Sandbox, Security & Governance","item":"https://aaa.jeremyfhall.com/topic/sandbox-security-governance/"},{"@type":"ListItem","position":3,"name":"Microsandbox","item":"https://aaa.jeremyfhall.com/repo/superradcompany/microsandbox/"}]}</script>
 <script src="https://jeremyfhall.com/kit/site-kit.v1.js" integrity="sha384-XSpQk1dubcVV4dWVZL3B8R6EsmEa4vwZ8PlVTkEmE+RY28H8OP2Y36BpTK7vCJI2" crossorigin="anonymous" data-site="atlas" defer></script>
 </head>
 <body>
@@ -63,9 +41,9 @@ try {
     <a href="../../../repo/">All projects</a></nav>
   <div class="top">
     <div>
-      <h1>microsandbox</h1>
+      <h1>Microsandbox</h1>
       <p class="nwo"><a href="https://github.com/superradcompany/microsandbox">superradcompany/microsandbox</a></p>
-      <p class="lead">Easy, fast, programmable and local-first microVM runtime and library</p>
+      <p class="lead">Rust/Apache-2.0 local-first microVM runtime for untrusted agent workloads: &lt;100ms boots, OCI-image compatible, fork-and-snapshot of live sandboxes, and an embeddable library API that spawns VMs in-process with no daemon. The distinguishing designs are secret handling — keys never enter the VM, so code running inside cannot read them directly — and an official MCP server plus Agent Skills that let</p>
       <p class="facts">
         <span>Rust</span>
         <span>Apache-2.0</span>
@@ -74,7 +52,7 @@ try {
         <span id="snap" class="live"></span>
       </p>
       <p class="acts"><a class="cta" href="https://github.com/superradcompany/microsandbox">View on GitHub &rarr;</a>
-        <a class="alt" href="../../../catalog/#q=microsandbox">Find it in the atlas</a></p>
+        <a class="alt" href="../../../catalog/#q=Microsandbox">Find it in the atlas</a></p>
     </div>
     <nav class="util">
       <a href="../../../discover/">Discover</a> ·
@@ -90,7 +68,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">git clone https://github.com/superradcompany/microsandbox.git</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for microsandbox">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">git clone https://github.com/superradcompany/microsandbox.git</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for Microsandbox">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -134,7 +112,7 @@ try {
   <h2>Screenshot</h2>
   <figure class="shot">
     <img loading="lazy" decoding="async" src="https://opengraph.githubassets.com/1/superradcompany/microsandbox"
-         alt="Screenshot or social card for microsandbox">
+         alt="Screenshot or social card for Microsandbox">
     <figcaption>GitHub's social card — no screenshot was found for this project, fetched from
       source rather than copied into this repository.</figcaption>
   </figure>
@@ -147,22 +125,22 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li>LLMOps (InftyAI)</li></ul>
+  <p class="lead">Named by <b>2</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li><a href="https://github.com/ai-boost/awesome-harness-engineering">Harness Engineering</a></li><li><a href="https://github.com/InftyAI/Awesome-LLMOps">LLMOps (InftyAI)</a></li></ul>
 </section>
 
 <section>
   <h2>How it is classified</h2>
-  <p class="lead">One topic, no
-    harnesses. Each link is a prerendered page of
+  <p class="lead">One topic, 1
+    harness. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/sandbox-security-governance/">Sandbox, Security &amp; Governance</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/sandbox-security-governance/">Sandbox, Security &amp; Governance</a><a class="chip" href="../../../topic/sandbox-security-governance/target/mcp/">MCP</a></div>
 </section>
 
 <section class="kin">
   <h2>Related in Sandbox, Security &amp; Governance</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../stacklok/brood-box/">Brood Box</a><span class="nwo">stacklok/brood-box</span><span class="desc">Run AI coding agents (Claude Code, Codex, OpenCode) inside hardware-isolated microVMs with snapshot isolation, egress control, and MCP authorization</span></li><li><a href="../../nvidia-nemo/guardrails/">NeMo Guardrails</a><span class="nwo">NVIDIA-NeMo/Guardrails</span><span class="desc">NVIDIA&#x27;s programmable guardrails toolkit: define input, dialog, retrieval, execution, and output rails that intercept the agent loop at five…</span></li><li><a href="../../cordum-io/cordum/">Cordum</a><span class="nwo">cordum-io/cordum</span><span class="desc">Cordum (cordum.io) is a platform-only control plane for autonomous AI Agents and external workers. It uses NATS for the bus, Redis for state and…</span></li><li><a href="../../e2b-dev/e2b/">e2b</a><span class="nwo">e2b-dev/E2B</span><span class="desc">Firecracker microVM sandboxes purpose-built for agent tool loops: ~150ms cold start, Python/JS SDKs, open source. The clearest reference…</span></li><li><a href="../../splx-ai/agentic-radar/">Agentic Radar</a><span class="nwo">splx-ai/agentic-radar</span><span class="desc">Open-source CLI security scanner for agentic workflows. Scans your workflow’s source code, detects vulnerabilities, and generates an interactive…</span></li><li><a href="../../tencentcloud/cubesandbox/">CubeSandbox</a><span class="nwo">TencentCloud/CubeSandbox</span><span class="desc">Tencent Cloud&#x27;s production-validated microVM sandbox for AI agents: sub-60ms cold start via snapshot cloning, &lt;5MB per-instance overhead, and true…</span></li><li><a href="../../nvidia/garak/">Garak</a><span class="nwo">NVIDIA/garak</span><span class="desc">The &quot;Nmap for LLMs.&quot; A vulnerability scanner that probes models for hallucination, data leakage, and prompt injection susceptibilities</span></li><li><a href="../../guardrails-ai/guardrails/">Guardrails AI</a><span class="nwo">guardrails-ai/guardrails</span><span class="desc">Guardrails is a Python framework for building reliable AI applications, offering Input/Output Guards to detect and mitigate risks, along with…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../stacklok/brood-box/">Brood Box</a><span class="nwo">stacklok/brood-box</span><span class="desc">Run AI coding agents (Claude Code, Codex, OpenCode) inside hardware-isolated microVMs with snapshot isolation, egress control, and MCP authorization</span></li><li><a href="../../cordum-io/cordum/">Cordum</a><span class="nwo">cordum-io/cordum</span><span class="desc">Cordum (cordum.io) is a platform-only control plane for autonomous AI Agents and external workers. It uses NATS for the bus, Redis for state and…</span></li><li><a href="../../hashgraph-online/hol-guard/">HOL Guard</a><span class="nwo">hashgraph-online/hol-guard</span><span class="desc">Apache-2.0 action-policy checks and human approvals for supported AI coding agents; helps harness maintainers gate shell, file, MCP, and package…</span></li><li><a href="../../node9-ai/node9-proxy/">Node9</a><span class="nwo">node9-ai/node9-proxy</span><span class="desc">Security and governance layer that checks every tool call from coding agents and MCP servers before it runs: credential jail, secret and PII…</span></li><li><a href="../../onecli/onecli/">OneCLI</a><span class="nwo">onecli/onecli</span><span class="desc">Open-source credential vault for AI agents. A Rust HTTP gateway intercepts agent requests and injects API credentials transparently, so agents never…</span></li><li><a href="../../th0rgal/orb/">Open Agent</a><span class="nwo">Th0rgal/orb</span><span class="desc">Self-hosted control plane for Claude Code with isolated container workspaces and real-time mission streaming</span></li><li><a href="../../justin0504/aegis/">Aegis</a><span class="nwo">Justin0504/Aegis</span><span class="desc">Pre-execution firewall that intercepts, classifies, and blocks agent tool calls before they execute, with a compliance cockpit for real-time…</span></li><li><a href="../../snyk/agent-scan/">Agent Scan</a><span class="nwo">snyk/agent-scan</span><span class="desc">Snyk&#x27;s scanner for local agent supply chains, covering MCP servers and skills with checks for prompt injection, tool poisoning, toxic flows, and…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

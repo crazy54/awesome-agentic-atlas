@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awesome Agentic Atlas — browse every agentic tool</title>
-<meta name="description" content="11,207 agentic AI projects from 39 awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
+<meta name="description" content="12,007 agentic AI projects from 39 awesome-lists, merged, deduplicated and filterable by topic, harness and operating system.">
 <meta property="og:title" content="Awesome Agentic Atlas">
-<meta property="og:description" content="11,207 projects from 39 awesome-lists, one filterable index.">
+<meta property="og:description" content="12,007 projects from 39 awesome-lists, one filterable index.">
 <meta property="og:image" content="https://aaa.jeremyfhall.com/og/root.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -185,6 +185,8 @@ header.setopen{z-index:30}
 .sincechip.on{display:inline-block}
 .nm .ni{margin-right:.34em}
 .newon{color:var(--warn);font-size:12px;font-weight:600;white-space:nowrap}
+.forge{display:inline-block;border:1px solid var(--grid);border-radius:5px;padding:0 5px;background:var(--band);
+  font-size:10.5px;font-weight:600;color:var(--ink2);white-space:nowrap;vertical-align:1px}
 .senseon{display:inline-block;border:1px solid var(--link);border-radius:5px;padding:1px 6px;
   font-size:11px;font-weight:600;color:var(--link);white-space:nowrap;vertical-align:1px}
 .risechip{display:none}
@@ -271,6 +273,7 @@ html[data-view=table][data-density=expanded] .cmdrow{max-width:56em}
   background:var(--band);border:1px solid var(--grid);display:block}
 .shot-fallback{display:grid;place-items:center;min-height:100px;padding:12px;background:var(--band);
   border:1px solid var(--grid);border-radius:6px;color:var(--muted);font-size:12px;text-align:center}
+.shot img[hidden]{display:none!important}
 .nm{font-weight:600;font-size:15px;overflow-wrap:anywhere}
 .nwo{display:block;color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
 a.nwo:hover{color:var(--ink)}
@@ -730,19 +733,20 @@ main a[href],main button,main select,main summary,
 <header><div class="wrap"><div class="top">
   <div>
     <h1><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M48 13.5l5.5-6.5" fill="none" stroke="#D6A034" stroke-width="3.4" stroke-linecap="round"/><circle cx="55" cy="5" r="3.4" fill="#F7F8FA" stroke="#D6A034" stroke-width="2.2"/><g transform="translate(32 31) scale(1.34) translate(-32 -31)"><circle cx="32" cy="31" r="20" fill="#D6A034"/><path d="M12 31h40M32 11v40" fill="none" stroke="#20242D" stroke-width="2" opacity=".55"/><path d="M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z" fill="#090A0D"/><path d="M16 25h4v4h4v4h-4v-4h-4zm22 0h4v4h4v4h-4v-4h-4z" fill="#F7F8FA"/><path d="M25 47c4 3 10 3 14 0" fill="none" stroke="#090A0D" stroke-width="2.5" stroke-linecap="round"/></g></svg></span>Awesome Agentic Atlas <span>· 39 awesome-lists, merged</span></h1>
-    <p class="sub"><b>11,207</b> projects · <b>14</b> topics · <b>32,031,579</b> combined
+    <p class="sub"><b>12,007</b> projects · <b>14</b> topics · <b>33,822,981</b> combined
       stars · <span id="snap" title="Rebuilt daily from the GitHub API">snapshot
-      2026-11-01</span></p>
+      2026-11-20</span></p>
     <p class="blurb" id="ctx"></p>
     <p id="printurl"></p>
     <a class="stamp" id="deployed" href="https://github.com/crazy54/awesome-agentic-atlas/deployments"
        title="When this copy of the site was published."><img class="deploy-badge" decoding="async"
-        src="https://shieldcn.dev/badge/last_deployed-2026--11--18_17:07_UTC-14704A.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
-        alt="" height="22"><time class="sr" datetime="2026-11-18T17:07:00Z">Last deployed 2026-11-18 17:07 UTC</time></a>
+        src="https://shieldcn.dev/badge/last_deployed-2026--11--20_12:44_UTC-14704A.svg?logo=ri%3ALuClock3&amp;size=xs&amp;font=geist&amp;split=true&amp;mode=dark"
+        alt="" height="22"><time class="sr" datetime="2026-11-20T12:44:00Z">Last deployed 2026-11-20 12:44 UTC</time></a>
   </div>
   <div class="headside">
   <nav>
     <a href="../discover/">Discover</a> ·
+    <a href="../local/">Run It Local</a> ·
     <a href="../collections/">Collections</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="../repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
@@ -824,7 +828,7 @@ main a[href],main button,main select,main summary,
     <button class="chip takechip" id="take" aria-haspopup="dialog"
             title="Take this view away as a link, a Markdown table, an HTML page or a PDF">Export</button>
     <button class="chip mapchip" id="mapbtn" aria-haspopup="dialog"
-            title="See all 11,207 projects at once, laid out by what they do">Map</button>
+            title="See all 12,007 projects at once, laid out by what they do">Map</button>
     <button class="chip" id="palhint"></button>
     <span class="count" id="count" role="status" aria-atomic="true"></span>
   </div>
@@ -932,7 +936,7 @@ main a[href],main button,main select,main summary,
   <div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and workbooks"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
   Every entry came from someone else's curation work; all 39 source lists are credited in the
   <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. Stars, language, licence and
-  last-push come from the GitHub API on 2026-11-01 and drift daily. Platform verdicts are derived
+  last-push come from the GitHub API on 2026-11-20 and drift daily. Platform verdicts are derived
   from each project's own README, install route, CI config and release assets &mdash;
   <span class="vY">green&#8201;&#10003;</span> is stated evidence,
   <span class="vL">amber&#8201;?</span> is inferred from the language, and
@@ -944,14 +948,14 @@ main a[href],main button,main select,main summary,
   <nav class="facets" id="browse" aria-label="Browse by topic or by what a project plugs into">
     <p><b>Every topic:</b> <a href="../topic/orchestrators-multi-agent/">Orchestrators &amp; Multi-Agent</a> · <a href="../topic/coding-agents/">Coding Agents</a> · <a href="../topic/agent-skills/">Agent Skills</a> · <a href="../topic/mcp-servers/">MCP Servers</a> · <a href="../topic/frameworks-sdks/">Frameworks &amp; SDKs</a> · <a href="../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a> · <a href="../topic/context-memory-rag/">Context, Memory &amp; RAG</a> · <a href="../topic/sandbox-security-governance/">Sandbox, Security &amp; Governance</a> · <a href="../topic/observability-evals/">Observability &amp; Evals</a> · <a href="../topic/plugins-themes-clients/">Plugins, Themes &amp; Clients</a> · <a href="../topic/research-data-agents/">Research &amp; Data Agents</a> · <a href="../topic/creative-voice-media/">Creative, Voice &amp; Media</a> · <a href="../topic/assistants-domain-agents/">Assistants &amp; Domain Agents</a> · <a href="../topic/docs-learning-lists/">Docs, Learning &amp; Lists</a></p>
     <p><b>Every integration:</b> <a href="../target/claude-code/">Claude Code</a> · <a href="../target/claude-anthropic/">Claude / Anthropic</a> · <a href="../target/opencode/">opencode</a> · <a href="../target/mcp/">MCP</a> · <a href="../target/codex-openai/">Codex / OpenAI</a> · <a href="../target/gemini-google/">Gemini / Google</a> · <a href="../target/github-copilot/">GitHub Copilot</a> · <a href="../target/cursor/">Cursor</a> · <a href="../target/cline-roo/">Cline / Roo</a> · <a href="../target/aider/">Aider</a> · <a href="../target/langchain-langgraph/">LangChain / LangGraph</a> · <a href="../target/local-ollama/">Local / Ollama</a></p>
-    <p><b>Every project:</b> <a href="../repo/">all 11,207 projects, one page each, grouped by topic</a></p>
+    <p><b>Every project:</b> <a href="../repo/">all 12,007 projects, one page each, grouped by topic</a></p>
   </nav>
 </div></footer>
 <script type="module" src="../assets/atlas-site.js?v=a4837d4f4b"></script>
 
 <script>
 const PAGE_SIZE = 120;
-const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"index.mascot_commentary":1,"index.export":1,"index.compare":1,"index.constellation":1,"index.discover_strip":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1};
+const FLAGS = {"index.card_view":1,"index.deployment_badge":1,"index.project_screenshots":1,"index.install_commands":1,"index.mascot_commentary":1,"index.export":1,"index.compare":1,"index.constellation":1,"index.discover_strip":1,"detail.install_command":1,"detail.repository_reader":1,"detail.screenshot":1,"detail.platform_support":1,"detail.provenance":1,"detail.classification":1,"detail.related_projects":1,"intake.gitlab":0};
 const state = {q: "", cat: "", tgt: "", os: [], strict: false, fresh: false, since: false, rising: false,
                saved: false, list: new Set(), cmp: new Set(), sort: "relevance", shown: PAGE_SIZE,
                view: "cards"};
@@ -1007,8 +1011,8 @@ let typing = 0;
 const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = iso => Math.round((Date.parse(TODAY) - Date.parse(iso)) / 86400000);
 const mmddyy = iso => iso.slice(5, 7) + "/" + iso.slice(8, 10) + "/" + iso.slice(2, 4);
-const SNAPSHOT = "2026-11-01";
-const BUILT = "2026-11-18T17:07:00Z";
+const SNAPSHOT = "2026-11-20";
+const BUILT = "2026-11-20T12:44:00Z";
 
 const VERDICT = {
   Y: ["✓", "stated support"],
@@ -1036,6 +1040,8 @@ const segment = s => {
   return s;
 };
 const detailURL = nwo => "../repo/" + nwo.toLowerCase().split("/").map(segment).join("/") + "/";
+const hostOf = nwo => { const h = nwo.split("/")[0]; return h.includes(".") ? h.toLowerCase() : "github.com"; };
+const FORGES = {"github.com": "GitHub", "gitlab.com": "GitLab"};
 
 let RESCUE = [];
 
@@ -1089,7 +1095,10 @@ fetch("../data.json").then(r => {
     r.lname = r.name.toLowerCase();
     r.lnwo = r.nwo.toLowerCase();
     r.lblurb = (r.blurb || "").toLowerCase();
-    r.img = "https://opengraph.githubassets.com/1/" + r.nwo;
+    r.host = hostOf(r.nwo);
+    r.forge = FORGES[r.host] || r.host;
+    r.path = r.host === "github.com" ? r.nwo : r.nwo.slice(r.host.length + 1);
+    r.img = r.host === "github.com" ? "https://opengraph.githubassets.com/1/" + r.nwo : (r.img || "");
     r.isnew = !!r.first_seen && r.first_seen === COHORT;
     r.issince = !!r.first_seen && !!SEEN_AT && r.first_seen > SEEN_AT;
   });
@@ -1718,11 +1727,11 @@ function initDiscovery() {
     const category = (D.cats[r.cat] || {}).name || "the atlas";
     const targets = r.targets.map(t => D.targets[t] && D.targets[t].name).filter(Boolean);
     const name = clipWords(r.name, NAME_MAX);
-    const owner = r.nwo.split("/")[0];
+    const owner = r.path.split("/")[0];
     const facts = [
       name + " is listed under " + category + ".",
       r.lists ? name + " is on " + r.lists + (r.lists === 1 ? " source list." : " source lists.")
-              : name + " was found by GitHub search."
+              : name + (r.host === "github.com" ? " was found by GitHub search." : " was found by GitLab search.")
     ];
     if (owner.toLowerCase() !== r.name.toLowerCase()) facts.push(name + " comes from " + owner + ".");
     let spread = 0;
@@ -2979,6 +2988,7 @@ function expWire() {
 let ARTIO = null;
 
 function artLoad(i) {
+  const empty = !i.dataset.src;
   i.onerror = () => {
     i.hidden = true;
     const fallback = document.createElement("span");
@@ -2987,6 +2997,7 @@ function artLoad(i) {
     i.parentElement.appendChild(fallback);
     i.onerror = null;
   };
+  if (empty) { i.removeAttribute("data-src"); i.onerror(); return; }
   i.src = i.dataset.src;
   i.removeAttribute("data-src");
 }
@@ -3126,7 +3137,8 @@ function render() {
       '<td class="n rk">' + (i + 1) + "</td>" +
       shot +
       '<td class="pj"><a class="nm" href="' + page + '">' + star + esc(r.name) + "</a>" + on + sensechip +
-        '<a class="nwo" href="' + url + '">' + esc(r.nwo) + "</a>" +
+        '<a class="nwo" href="' + url + '">' + esc(r.path) +
+        (r.host !== "github.com" ? ' <span class="forge">' + esc(r.forge) + "</span>" : "") + "</a>" +
         saveBtn(r) +
         pinBtn(r) +
         '<div class="meta os">' + os + "</div></td>" +
@@ -3140,7 +3152,8 @@ function render() {
       '<td class="c hide lc"><div class="meta"><span>' + esc(r.lang || "—") + "</span><br>" +
         "<span>" + esc(r.license || "—") + "</span><br><span>" + since(r.pushed) +
         '</span></div><div class="project-actions"><a href="' + page + '" aria-label="Explore ' + esc(r.name) + '">Explore project <span aria-hidden="true">↗</span></a>' +
-        '<a href="' + url + '" aria-label="' + esc(r.nwo) + ' on GitHub">GitHub</a></div></td>' +
+        '<a href="' + url + '" aria-label="' + esc(r.path) + ' on ' + esc(r.forge) + '">' + esc(r.forge) +
+        "</a></div></td>" +
       "</tr>";
   }).join("");
   const within = state.cat || state.tgt || state.os.length || state.strict || state.fresh || state.since

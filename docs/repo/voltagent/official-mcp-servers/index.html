@@ -15,40 +15,18 @@
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -162,7 +140,7 @@ try {
   <h2>Related in MCP Servers</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../vshulcz/deja-vu/">deja-vu</a><span class="nwo">vshulcz/deja-vu</span><span class="desc">Indexes coding-agent sessions already written to disk and serves them back over MCP with no LLM calls, embeddings, or API keys. The zero-dependency…</span></li><li><a href="../../lians-ai/lians/">Lians-ai/Lians</a><span class="nwo">Lians-ai/Lians</span><span class="desc">Open-source, local-first memory for Gemini CLI and other AI agents. Durable cross-session recall through a two-tool MCP extension, with no account…</span></li><li><a href="../../maxbaluev/accreted-intelligence/">maxbaluev/accreted-intelligence</a><span class="nwo">maxbaluev/accreted-intelligence</span><span class="desc">Local-first learning substrate + MCP server for Claude Code, Codex, OpenCode, and Cursor. Builds a Work Model from what actually worked (graded by…</span></li><li><a href="../../patdolitse/piia-engram/">piia-engram</a><span class="nwo">Patdolitse/piia-engram</span><span class="desc">Persistent user identity across AI tools: preferences, lessons and decisions in local JSON with staged verification, AES-256-GCM encryption and…</span></li><li><a href="../../yylo-dev/roundtable/">Roundtable</a><span class="nwo">yylo-dev/roundtable</span><span class="desc">Zero-configuration unified AI assistant management built on the FastMCP framework. Provides seamless integration with Claude, ChatGPT, and other AI…</span></li><li><a href="../../ccf/agentcairn/">agentcairn</a><span class="nwo">ccf/agentcairn</span><span class="desc">by ccf - Long-term, cross-project memory for AI coding agents. Your own Obsidian vault as the source of truth. Daemonless and without opaque…</span></li><li><a href="../../betabots-llc/callimachus/">Callimachus</a><span class="nwo">BetaBots-LLC/callimachus</span><span class="desc">by BetaBots-LLC - One local, searchable index of your AI coding-agent history Claude Code, Codex, Cursor, Gemini &amp;amp; more. Keyword + semantic…</span></li><li><a href="../../codergamester/mcp-unity/">CoderGamester/mcp-unity</a><span class="nwo">CoderGamester/mcp-unity</span><span class="desc">MCP Server to control and interact with Unity3d Game Engine for game development</span></li></ul>
+  <ul class="kinlist"><li><a href="../../lians-ai/lians/">Lians-ai/Lians</a><span class="nwo">Lians-ai/Lians</span><span class="desc">Open-source, local-first memory for Gemini CLI and other AI agents. Durable cross-session recall through a two-tool MCP extension, with no account…</span></li><li><a href="../../maxbaluev/accreted-intelligence/">maxbaluev/accreted-intelligence</a><span class="nwo">maxbaluev/accreted-intelligence</span><span class="desc">Local-first learning substrate + MCP server for Claude Code, Codex, OpenCode, and Cursor. Builds a Work Model from what actually worked (graded by…</span></li><li><a href="../../mnemoverse/mcp-memory-server/">Mnemoverse</a><span class="nwo">mnemoverse/mcp-memory-server</span><span class="desc">MIT-licensed MCP server for agent memory, backed by a hosted engine. For harness design it shows the recall loop closed with an explicit signal…</span></li><li><a href="../../ateymoori/oh-my-android/">Oh My Android</a><span class="nwo">ateymoori/oh-my-android</span><span class="desc">Native macOS control panel for the Android Emulator (dark mode, font scale, locale, TalkBack, network throttling, GPS mock, Layout Inspector in dp)…</span></li><li><a href="../../patdolitse/piia-engram/">piia-engram</a><span class="nwo">Patdolitse/piia-engram</span><span class="desc">Persistent user identity across AI tools: preferences, lessons and decisions in local JSON with staged verification, AES-256-GCM encryption and…</span></li><li><a href="../../yylo-dev/roundtable/">Roundtable</a><span class="nwo">yylo-dev/roundtable</span><span class="desc">Zero-configuration unified AI assistant management built on the FastMCP framework. Provides seamless integration with Claude, ChatGPT, and other AI…</span></li><li><a href="../../ccf/agentcairn/">agentcairn</a><span class="nwo">ccf/agentcairn</span><span class="desc">by ccf - Long-term, cross-project memory for AI coding agents. Your own Obsidian vault as the source of truth. Daemonless and without opaque…</span></li><li><a href="../../betabots-llc/callimachus/">Callimachus</a><span class="nwo">BetaBots-LLC/callimachus</span><span class="desc">by BetaBots-LLC - One local, searchable index of your AI coding-agent history Claude Code, Codex, Cursor, Gemini &amp;amp; more. Keyword + semantic…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>
