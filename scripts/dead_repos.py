@@ -5,8 +5,8 @@ publishing it: a card with no picture (its Open Graph image 404s), a detail page
 loads nothing, and "GitHub returned an error" where the platform verdicts should be. Readers noticed.
 This stage asks GitHub about every repository the site lists, once a week, and records the ones that
 are gone in `state/dead-repos.json`, a committed ledger. `14_classify_all.py` drops every row whose
-repo is in the ledger, so the next build publishes none of them -- on the site, in the Markdown
-edition and in the workbooks alike.
+repo is in the ledger, so the next build publishes none of them -- on the site and in the Markdown
+edition alike.
 
 WHAT COUNTS AS DEAD. GraphQL answers NOT_FOUND for the repo, and then the REST API, asked directly,
 answers 404 (gone or private), 451 (taken down) or 403 with a `block` (access blocked) -- REST is asked
@@ -194,8 +194,8 @@ def guard(new: list, listed: list[str]) -> None:
 
 def report(doc: dict, new: list, revived: list, listed_n: int) -> str:
     lines = [f"## Dead repos: {len(doc['repos'])} of {listed_n:,} listed repos are gone from GitHub",
-             "", f"Scanned {doc['checked']}. These are left out of the next build of the site, the Markdown "
-             f"edition and the workbooks.", ""]
+             "", f"Scanned {doc['checked']}. These are left out of the next build of the site and the "
+             f"Markdown edition.", ""]
     if new:
         lines += [f"**Newly gone ({len(new)}):**", ""] + [
             f"- [{n}]({hosts.web_url(n)}) ({doc['repos'][n]['status']})" for n in new] + [""]

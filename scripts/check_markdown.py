@@ -24,8 +24,8 @@ OUT = Path(__file__).resolve().parent.parent / "mega-list"
 
 # GitHub's own limit, and the backstop rather than the guardrail: `17_markdown.PAGE_CEILING` is well
 # below this and is what a build actually trips over. Restated here instead of imported because that
-# module pulls in the whole workbook builder and openpyxl with it, and a linter that needs Excel
-# installed to check a link is a linter nobody runs. So this catches what the generator cannot -- a
+# module pulls in the whole build chain (it used to pull in openpyxl too, through the workbook builder
+# retired in November 2026), and a linter should load nothing but itself. So this catches what the generator cannot -- a
 # page committed by an older build, a hand edit, a future generator that never called `paginate`.
 RENDER_LIMIT = 512 * 1024
 

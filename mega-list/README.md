@@ -4,7 +4,7 @@
 
 Every list below was made by someone else. This is not a new selection: it is their selections in one place, with the facts filled in and the overlap made visible.
 
-Also here as spreadsheets, screenshots embedded and every column filterable: **[dark theme](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx)** · **[light theme](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx)**. And as a page you can filter in the browser, no download: **[the Atlas site](https://aaa.jeremyfhall.com/catalog/)**.
+Also here as a page you can filter in the browser, no download: **[the Atlas site](https://aaa.jeremyfhall.com/catalog/)**. Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark theme](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light theme](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).
 
 ## Pick your platform
 
@@ -190,4 +190,4 @@ Lists overlap heavily — 1376 projects are named by two or more of them. [**Lea
 
 Snapshot 2026-11-20. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
-The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).
+Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

@@ -32,7 +32,7 @@ on:
   workflow_run:
     workflows:
       - "Daily — site & Markdown"
-      - "Weekly — screenshots & workbooks"
+      - "Weekly — screenshots & full refresh"
       - "Tests — the eighteen-harness verification suite"
       - "Canary — source drift and stale pages"
     types: [completed]

@@ -42,7 +42,7 @@ import drift
 
 CACHE = Path(__file__).resolve().parent.parent / "cache"
 
-# Order is the display order everywhere -- workbook tab, topic hub, Pages site -- and it is also the
+# Order is the display order everywhere -- topic hub, Pages site -- and it is also the
 # tie-break when a repo's listings split evenly between two categories: the earlier one wins, so the
 # specific shelves are listed before the broad ones.
 CATEGORIES = [

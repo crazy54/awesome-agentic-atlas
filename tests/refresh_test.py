@@ -35,9 +35,9 @@ implied source count is an inference from it -- see `check_sources` for exactly 
 it can be wrong. Nothing here writes to the real `docs/`: `main()` is only ever pointed at a scratch copy,
 with `reversion()` stubbed, so a broken guard cannot reach the deployable tree from inside this file.
 
-Standard library only. `19b_refresh` reaches `openpyxl` transitively -- it loads `19_pages`, which loads
-`17_markdown`, which loads `16_build_all` -- exactly as `pagemin_test.py` already does; nothing new is
-required by this file.
+Standard library only, and so is everything `19b_refresh` loads -- `19_pages`, which loads `17_markdown`,
+which loads `16_build_all`. That last one imported `openpyxl` until the workbook writer was retired
+(November 2026).
 
 Run: python tests/refresh_test.py
 """
@@ -423,8 +423,8 @@ says("...and the other one", doc, "__STARS__")
 says("...and says that side is the committed one", doc, "*committed*")
 says("...and says the template is the live one", doc, "*live*")
 says("...and names the escape hatch", doc, "--allow-stale")
-# `19b_refresh.py`'s own imports, not the ones it inherits: it loads `19_pages`, which reaches `openpyxl`
-# three modules down. Nothing new may be added *here* -- this stage is the one that has to run on a bare
+# `19b_refresh.py`'s own imports, not the ones it inherits from `19_pages` and below (which used to reach
+# `openpyxl` three modules down, through the retired workbook writer). Nothing new may be added *here* -- this stage is the one that has to run on a bare
 # clone with nothing installed and nothing fetched.
 THIRD_PARTY = ("requests", "httpx", "openpyxl", "PIL", "yaml", "dateutil", "numpy")
 eq("the stage imports nothing third-party of its own",

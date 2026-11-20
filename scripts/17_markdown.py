@@ -1,8 +1,9 @@
 """Write the GitHub-ready Markdown edition of the merged list.
 
-Same data as the workbooks, same ordering, same verdicts -- this module imports 16_build_all rather
-than re-deriving any of it, because a Markdown page that disagreed with the spreadsheet next to it
-would be worse than not having one.
+Same data as the site, same ordering, same verdicts -- this module imports 16_build_all rather than
+re-deriving any of it, because a Markdown page that disagreed with the site next to it would be worse
+than not having one. (16_build_all used to write the Excel workbooks too, from the same rows. The
+spreadsheet edition was retired in November 2026; see `WORKBOOK_TAG` below for what is left of it.)
 
 Layout, under mega-list/:
   README.md              the hub: counts, every source list credited, a gallery, how to read it
@@ -10,7 +11,7 @@ Layout, under mega-list/:
   lists/*.md             one file per source list, grouped by the section wording it publishes
   leaderboard.md         the most-starred projects across every list at once
 
-Two things are deliberately different from the workbook. Images are hotlinked rather than embedded
+Two things are deliberately different from the old workbook. Images are hotlinked rather than embedded
 -- a README banner where the pipeline found one, GitHub's own social card otherwise, which exists
 for every repo and costs this directory no bytes. And every long page is packed to a byte budget and
 continued onto `-2.md`, `-3.md` as far as it takes, because GitHub stops rendering a Markdown file
@@ -44,7 +45,7 @@ SHEETS, PLATFORMS, DASH = b16.SHEETS, b16.PLATFORMS, b16.DASH
 
 # Reached through b16 rather than loaded a second time: b16 has already executed 10_parse_sources, and
 # a second copy of SOURCES is the exact drift the docstring above promises this module will not create.
-# SHEETS is the ten lists the workbook gives a tab of its own; SOURCES is every list the atlas parses,
+# SHEETS is the ten lists the workbook gave a tab of its own; SOURCES is every list the atlas parses,
 # and on this surface those are not the same question -- a Markdown file per list costs nothing.
 SOURCES, SHEET_TITLE, LIST_TITLE = b16.b10.SOURCES, b16.SHEET_TITLE, b16.LIST_TITLE
 
@@ -98,26 +99,29 @@ def site(**filters) -> str:
     return SITE + "catalog/" + (f"#{q}" if q else "")
 
 
+# The spreadsheet edition, retired. The weekly job built a dark and a light Excel workbook from these same
+# rows and released them every Sunday until November 2026, when the owner retired them: they took too long
+# to build, and the website is the maintained edition. The last pair stays downloadable and is never
+# rebuilt. Pinned to its tag, not `releases/latest/`, because `latest` means "whatever release is newest",
+# and a frozen file should not depend on nothing else ever being released. These are facts about a release
+# that already exists, so they never change; `19_pages.py` carries the same tag in its one link.
+WORKBOOK = "Awesome-Agentic-Atlas"
+WORKBOOK_TAG = "v2026.10.22"
+WORKBOOK_BUILT = "2026-10-22"
+RETIRED = (f"Spreadsheet edition: retired. The last copy, built {WORKBOOK_BUILT}, stays available but is no "
+           f"longer updated. The website is the maintained edition.")
+
+
 def book(depth: int, theme: str) -> str:
-    """Where to download a workbook. Absolute, so `depth` no longer matters — kept for the call sites.
-
-    These used to be relative paths, because the workbooks sat one level above mega-list/. They are
-    release assets now: a pair is ~81 MB, every rebuild writes a new pair, and git keeps every version
-    for ever, so three rebuilds would mean a quarter-gigabyte clone for two files only the newest of
-    which anyone wants. `releases/latest/download/` resolves to the current release's asset by name,
-    so the link needs no version in it and never needs editing.
-
-    The cost is that these 404 until the first release is cut. That is `gh release create`, not a code
-    change, so it is the one link in the collection that publishing has to catch up with.
-    """
-    return f"https://github.com/{REPO}/releases/latest/download/{b16.WORKBOOK}-{theme}.xlsx"
+    """Where to download the last workbook. Absolute, so `depth` no longer matters — kept for the call sites."""
+    return f"https://github.com/{REPO}/releases/download/{WORKBOOK_TAG}/{WORKBOOK}-{theme}.xlsx"
 
 # tiers whose shot_url is a real image we can hotlink. "capture" holds the page URL, not an image,
 # and "card"/"cached" were rendered locally, so both fall through to the GitHub social card.
 LINKABLE = {"readme", "readme-loose", "readme-sub", "og", "repo-card"}
 
 ORCH_NWO = "andyrewlee/awesome-agent-orchestrators"
-ORCH_BLURB = ("The original list this workbook grew from: tools that run several coding agents at "
+ORCH_BLURB = ("The original list this atlas grew from: tools that run several coding agents at "
               "once.")
 
 
@@ -234,14 +238,18 @@ def gallery(rows, shots, cols: int = 3) -> list[str]:
 
 
 def footer(depth: int = 0) -> list[str]:
-    """`depth` is how many directories below mega-list/ the page lives, for the workbook links."""
+    """`depth` is how many directories below mega-list/ the page lives, for the workbook links.
+
+    The site is the line a reader should follow, so it comes first; the retired workbooks keep their
+    links, with the notice that says they are frozen.
+    """
     return ["", "---", "",
             f"Snapshot {date.today().isoformat()}. Stars, language, licence and last-push come from "
             "the GitHub API and drift daily.",
             "",
-            f"The same data with screenshots embedded, filterable, is in the workbooks: "
-            f"[dark]({book(depth, 'DARK')}) · [light]({book(depth, 'LIGHT')}). "
-            f"Or filter it in the browser on the [Atlas site]({site()}).", ""]
+            f"Filter the same data in the browser on the [Atlas site]({site()}). "
+            f"{RETIRED} Its last workbooks: "
+            f"[dark]({book(depth, 'DARK')}) · [light]({book(depth, 'LIGHT')}).", ""]
 
 
 def write(rel: str, lines: list[str]) -> Path:
@@ -763,9 +771,8 @@ def readme_page(stats, per_source, board, shots, files, by_topic, by_target) -> 
         "Every list below was made by someone else. This is not a new selection: it is their "
         "selections in one place, with the facts filled in and the overlap made visible.",
         "",
-        f"Also here as spreadsheets, screenshots embedded and every column filterable: "
-        f"**[dark theme]({book(0, 'DARK')})** · **[light theme]({book(0, 'LIGHT')})**. "
-        f"And as a page you can filter in the browser, no download: **[the Atlas site]({site()})**.",
+        f"Also here as a page you can filter in the browser, no download: **[the Atlas site]({site()})**. "
+        f"{RETIRED} Its last workbooks: [dark theme]({book(0, 'DARK')}) · [light theme]({book(0, 'LIGHT')}).",
         "",
         "## Pick your platform",
         "",

@@ -1,15 +1,18 @@
-# Weekly: everything the daily job skips. Screenshots, the two workbooks, and a dated release.
+# Weekly: everything the daily job skips. Screenshots, and a full re-fetch of every README.
 #
 # The split exists because the pipeline has one expensive stage and fifteen cheap ones. Capturing a
 # thumbnail per repo with headless Chromium is the expensive one, and it is also the one that almost
 # never needs redoing -- a repo's README banner is the same banner it had last Sunday. So the daily job
 # leaves the shot cache alone and lets new arrivals show their Open Graph card, and this job, once a
-# week, goes and gets the real image and rebuilds the workbooks on top of it.
+# week, goes and gets the real image and rebuilds the site on top of it.
 #
 # Unlike the daily job this one is not gated on the source lists having moved. Stars move every day even
-# when no list does, and the workbook is a download with a date on it -- a week-old one that claims to be
-# current is worse than no release.
-name: Weekly — screenshots & workbooks
+# when no list does, and the `--force` re-fetch below is the one place every README is read again.
+#
+# This job used to build the two Excel workbooks as well and publish them as a dated release. The
+# spreadsheet edition was retired in November 2026: the last pair, release v2026.10.22, stays up and is
+# never rebuilt, and the website is the maintained edition. Nothing here cuts a release any more.
+name: Weekly — screenshots & full refresh
 
 on:
   schedule:
@@ -39,10 +42,11 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Whether a red verification suite stops this run publishing. It is the same switch as daily.yml's, set
       # the other way on purpose. The daily ships "false" because a stalled site is the worse failure for a
-      # daily refresh. This job also cuts a dated workbook release marked `--latest`, and the README's
-      # permanent download links resolve to it, so on "true" a red suite records, commits, submits and
-      # releases nothing. The site keeps last week's build, the previous release stays latest, and the cache
-      # is still banked so a re-run resumes.
+      # daily refresh. A weekly is different: it re-reads every README and replaces the screenshots
+      # the site shows, so a red suite here stops the deploy rather than publishing a week of changes
+      # nobody has seen pass. On "true" a red suite records, commits and submits nothing, the site keeps
+      # the last build, and the cache is still banked so a re-run resumes. (It also used to hold back the
+      # workbook release; that step went with the spreadsheet edition, and this switch did not change.)
       VERIFY_GATES_DEPLOY: "true"
       # Upstream drift is a warning on this job, not a stop (scripts/drift.py). A list that renames,
       # translates or adds a section gets it filed for this run only -- a ::warning per placement, the
@@ -59,7 +63,7 @@ jobs:
 
       # The branch's head when this job starts, not its trigger's commit: see the same step in daily.yml.
       # Queued behind a daily that pushed, this job built on the commit before that push and then failed
-      # to rebase onto it, after three hours of screenshots and workbooks (2026-10-21).
+      # to rebase onto it, after three hours of screenshots and the workbooks it built then (2026-10-21).
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
@@ -69,8 +73,9 @@ jobs:
           python-version: "3.12"
 
       # See daily.yml for why numpy is here: one stage, one build-time linear algebra pass.
-      # Retried, as in daily.yml: a minute of PyPI 503s should not cost a week's workbooks.
-      - run: bash tools/retry.sh 3 python -m pip install --upgrade pip openpyxl pillow playwright numpy
+      # `pillow` for the screenshot stages and 23_og; `playwright` for the captures.
+      # Retried, as in daily.yml: a minute of PyPI 503s should not cost a week's screenshots.
+      - run: bash tools/retry.sh 3 python -m pip install --upgrade pip pillow playwright numpy
 
       # See daily.yml: declaring this in `env:` would set it to "" whenever the secret is absent, and an
       # empty CF_BEACON_TOKEN is how you turn the beacon off.
@@ -185,7 +190,7 @@ jobs:
           python scripts/13_signals_all.py
           python scripts/14_classify_all.py
 
-      # The four stages the daily job never runs. Each one skips what it already has, so a warm cache makes
+      # The three stages the daily job never runs. Each one skips what it already has, so a warm cache makes
       # this minutes rather than hours -- the work is proportional to new arrivals, not to the atlas.
       #
       # 15_shots_all also drains `cache/collect-queue.json` here. That queue is how a *changed* listing
@@ -194,7 +199,7 @@ jobs:
       # The daily job fills the queue and never captures, so this is the only run that empties it.
       # The one long step with no green figure to scale from: warm it is under two minutes, while a cold
       # cache is hours. So its limit is not a number but what the job has left, less 90 minutes kept back for
-      # what follows -- the workbooks, the rebuild and the suite (about 35 minutes together when green) and
+      # what follows -- the rebuild and the suite (about 28 minutes together when green) and
       # the two cache steps, which bank a failed run's screenshots so the next run resumes rather than
       # starting cold. Without that reserve a cold run could reach the job's own 350-minute limit inside
       # this step, and whether the bank still ran after a job-level timeout would be left to GitHub. With it, a cold
@@ -203,7 +208,7 @@ jobs:
       - name: Capture screenshots
         run: |
           set -euo pipefail
-          # One deadline for all four: each stage gets what is left of it, and never less than ten minutes.
+          # One deadline for all three: each stage gets what is left of it, and never less than ten minutes.
           deadline=$(( JOB_START + (350 - 90) * 60 ))
           within() {
             local s=$(( deadline - $(date +%s) ))
@@ -214,11 +219,6 @@ jobs:
           within python scripts/05_shots.py
           within python scripts/06_web_shots.py
           within python scripts/15_shots_all.py
-          within python scripts/15b_shots_sources.py
-
-      - name: Build the workbooks
-        timeout-minutes: 30
-        run: python scripts/16_build_all.py
 
       # Node 22, before the site rebuild rather than only before the suite, so a page stage that shells out to
       # node (32_local.py) runs on the version tests.yml pins and not on the image's. See daily.yml.
@@ -390,8 +390,7 @@ jobs:
             case "$f" in
               # Three files under `docs/` are checked in by hand and no generator has ever written them:
               # the custom domain, the site icon and the mascot. Every stage that mentions them *reads*
-              # them -- `19_pages` and `22_detail` link `favicon.svg`, `16_build_all` embeds the mascot in
-              # the workbooks -- so "not rewritten" is their steady state rather than a missing stage, and
+              # them -- `19_pages` and `22_detail` link `favicon.svg` -- so "not rewritten" is their steady state rather than a missing stage, and
               # the strict arm below was calling all three an error. It is deliberately this list and not
               # `docs/*.png` or a blanket `docs/assets/*`: `apple-touch-icon.png` and the three `icon-*`
               # PNGs sit beside them and *are* generated, so a wider pattern would stop 24_pwa's output
@@ -482,17 +481,16 @@ jobs:
       # These six steps are daily.yml's verification block (JFH-284), lifted here for JFH-286, and the
       # reasoning for each one is written out there. This job has the same hole: it pushes with
       # `secrets.GITHUB_TOKEN`, so its commits never trigger `tests.yml`. Here the hole is bigger. The pages
-      # only this job writes are the social cards from `23_og.py` and the workbook release, and
+      # only this job writes are the social cards from `23_og.py` and the refreshed screenshots, and
       # `detail-preview-check.mjs`, `cards-check.mjs` and `pwa-check.mjs` assert on what it publishes.
       #
       # Three things differ from the daily, and all three were worked out here rather than copied:
       #
       #   * No `if:`. This job has no gate step, so `steps.gate.outputs.go` does not exist here. As the
       #     prune step above explains, pasting that condition would skip every step it guards.
-      #   * The decision step sits ahead of the release as well as the commit. Each later step carries the
-      #     implicit `success()`, so on "true" a red suite skips the SHA record, the push, IndexNow and the
-      #     release together. A red tree cannot ship as a workbook when it cannot ship as a site. The cache
-      #     steps above are `always()` and still bank the run's progress.
+      #   * The decision step sits ahead of the commit. Each later step carries the implicit `success()`,
+      #     so on "true" a red suite skips the SHA record, the push and IndexNow together. The cache steps
+      #     above are `always()` and still bank the run's progress.
       #   * The browser is pinned. This job installs Playwright's Chromium for the screenshot stages, and
       #     `run.mjs` looks in the Playwright cache before PATH, so left alone the suite would run a different
       #     build here from the one `tests.yml` and the daily use. Those two get the runner's own `chromium`
@@ -528,7 +526,7 @@ jobs:
           AAA_CHROME_FLAGS: "--no-sandbox --disable-dev-shm-usage"
           # All but `bits-check.mjs`, as in daily.yml and for the same reason: the bits are code that
           # tests.yml checks on every push, and an hour of them here, where a red suite stops the deploy, would
-          # put this week's workbooks behind a check of nothing this job changed.
+          # put this week's screenshots behind a check of nothing this job changed.
           AAA_SKIP: bits-check.mjs
         run: |
           set -uo pipefail
@@ -565,10 +563,10 @@ jobs:
           set -euo pipefail
           if [ "${STATUS}" = "0" ]; then exit 0; fi
           if [ "${VERIFY_GATES_DEPLOY}" = "true" ]; then
-            echo "::error title=Deploy blocked by a red suite::VERIFY_GATES_DEPLOY is true, so nothing is recorded, committed, submitted or released. The site keeps serving the last build and the last release stays latest. The cache was still banked above, so a re-run resumes rather than starting cold."
+            echo "::error title=Deploy blocked by a red suite::VERIFY_GATES_DEPLOY is true, so nothing is recorded, committed or submitted. The site keeps serving the last build. The cache was still banked above, so a re-run resumes rather than starting cold."
             exit 1
           fi
-          echo "::warning title=Publishing over a red suite::VERIFY_GATES_DEPLOY is false, so this week's site and workbooks ship and the run will end red to say so."
+          echo "::warning title=Publishing over a red suite::VERIFY_GATES_DEPLOY is false, so this week's site ships and the run will end red to say so."
 
       - name: Record the source commits as built
         run: python scripts/watch_sources.py --update
@@ -607,8 +605,7 @@ jobs:
           path: cache
           key: atlas-cache-${{ github.run_id }}
 
-      # The workbooks are release assets, not repository files -- .gitignore already excludes them. Only
-      # the three generated surfaces get committed, and that commit is what redeploys Pages.
+      # Only the three generated surfaces get committed, and that commit is what redeploys Pages.
       - name: Commit and push the site and Markdown
         run: |
           set -euo pipefail
@@ -628,65 +625,18 @@ jobs:
             bash tools/retry.sh 3 sh -c 'git rebase --abort 2>/dev/null; git pull --rebase --autostash origin "$1" && git push origin "HEAD:$1"' _ "${GITHUB_REF_NAME}"
           fi
 
-      # After the push, so the URLs are live before an engine is told to fetch them, and before the release
-      # step so a failure publishing the workbooks cannot silently cost the submission. Deliberately no
+      # After the push, so the URLs are live before an engine is told to fetch them. Deliberately no
       # `if:` -- see the note on the token step above. A non-2xx here is a warning and exit 0; the file is
       # absent when nothing was committed, which the script reads as "nothing changed".
       #
-      # `continue-on-error` because the ordering that protects the submission from the release also coupled
-      # the release to the submission, and that direction is the expensive one. Every step carries an
-      # implicit `success()`, so any non-zero exit from the line below -- an unhandled exception in a
-      # module whose whole contract is that a bad response is a warning -- would skip the release step and
-      # cost a week's workbooks over a ping to Bing. Kept here rather than moved after the release because
-      # the argument above is still true and both couplings are now cut: this step cannot fail the job,
-      # and nothing after it depends on it. The step still goes red in the run summary, so a fault here is
-      # visible; it just is not fatal to a build whose actual job already succeeded.
+      # `continue-on-error` because a ping to Bing is not the job's work. The module's whole contract is
+      # that a bad response is a warning, so a non-zero exit is an unhandled exception, and it should not
+      # turn a build that already published into a failed run. (It also used to protect the workbook
+      # release that followed this step; that release was retired with the spreadsheet edition.) The step
+      # still goes red in the run summary, so a fault here is visible.
       - name: Tell IndexNow which URLs changed
         continue-on-error: true
         run: python scripts/26_indexnow.py --changed "$RUNNER_TEMP/changed-docs.txt"
-
-      # A dated tag, and `--latest` on every one of them, because the README links to
-      # `releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx` -- a permanent URL that resolves to
-      # whatever is newest. `--clobber` on the fallback path so re-running this workflow the same day
-      # replaces the assets instead of failing on a tag that already exists.
-      #
-      # Size note: LIGHT used to come out near 48 MB from here against about 16 MB for DARK, and the
-      # difference was never the theme -- the smaller LIGHT that had been published by hand went through
-      # an Excel COM round-trip, which re-deduplicates embedded media and cannot run on a Linux runner.
-      # `scripts/media.py` does that deduplication in the build now, so both files should land in the
-      # same size range; the build's own log line prints the placement and entry counts if they do not.
-      - name: Publish the workbooks as a release
-        run: |
-          set -euo pipefail
-          tag="v$(date -u +%Y.%m.%d)"
-          summary="$(python - <<'PY'
-          import json, pathlib
-          d = json.loads(pathlib.Path("docs/data.json").read_text(encoding="utf-8"))
-          print(f"{len(d['rows']):,} projects across {len(d['cats'])} topics · snapshot {d['snapshot']}")
-          PY
-          )"
-          notes="${summary}
-
-          Two workbooks, same data, different theme. Pick one:
-
-          - \`Awesome-Agentic-Atlas-DARK.xlsx\`
-          - \`Awesome-Agentic-Atlas-LIGHT.xlsx\`
-
-          Also published: the [site](https://aaa.jeremyfhall.com/) and the Markdown
-          edition in \`mega-list/\`, both rebuilt from this same snapshot.
-
-          Built by \`.github/workflows/weekly.yml\` (run ${{ github.run_id }})."
-
-          files=(Awesome-Agentic-Atlas-DARK.xlsx Awesome-Agentic-Atlas-LIGHT.xlsx)
-          ls -lh "${files[@]}"
-
-          if gh release view "$tag" >/dev/null 2>&1; then
-            gh release upload "$tag" "${files[@]}" --clobber
-            gh release edit "$tag" --latest --notes "$notes"
-          else
-            gh release create "$tag" "${files[@]}" \
-              --title "Awesome Agentic Atlas $tag" --notes "$notes" --latest
-          fi
 
       # Reachable only on "false". On "true" the decision step has already failed the run, and nothing
       # after it ran. See daily.yml for why this is `always()`. The empty-status clause is here and not in
@@ -695,7 +645,7 @@ jobs:
       - name: End red if the suite was red
         if: always() && steps.verify.outputs.status != '' && steps.verify.outputs.status != '0'
         run: |
-          echo "::error title=Published, and red::The site and workbooks were published and the verification suite was not green on them (run.mjs exited ${{ steps.verify.outputs.status }}). Read the suite's own step above for which harness and which assertion."
+          echo "::error title=Published, and red::The site was published and the verification suite was not green on them (run.mjs exited ${{ steps.verify.outputs.status }}). Read the suite's own step above for which harness and which assertion."
           exit 1
 
       # Last, and `always()`: how much of the 350 minutes this run used. See tools/budget.sh.

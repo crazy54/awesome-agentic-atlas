@@ -2,8 +2,8 @@
 //
 //   node tests/run.mjs
 //
-// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty-seven harnesses in turn --
-// twenty-five Python, ten in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
+// It finds a Chromium, serves `docs/` on a port the OS picks, runs the thirty-five harnesses in turn --
+// twenty-three Python, ten in a browser, and two in plain node (probe.mjs and detail-churn.mjs) -- and prints
 // what each one asserted and what the total was. It exits non-zero if anything failed, and it cleans up the
 // server, every browser any harness started and every scratch directory on the way out -- including when a
 // harness threw, including when it was interrupted.
@@ -105,10 +105,6 @@
 //                     rendered/source switch, file discovery, sanitising, fonts, colours and phone layout.
 //   pagemin_test.py   the comment stripper against the cases the real page does not contain -- template
 //                     literals, regex literals, unterminated blocks. Python, because the stripper is.
-//   media_test.py     the workbook writer: one embedded part per screenshot however many rows point at it,
-//                     and the 65,535-entry ZIP ceiling that dedup exists to stay under. Also that an
-//                     image the pool never saw is allowed rather than a fault -- the cover branding is
-//                     two of them -- which this file asserted the opposite of until a weekly died on it.
 //   indexnow_test.py  which of the ~1,500 files under docs/ get submitted to a search engine, that the
 //                     key-file prune deletes a rotated key and nothing else, and that a truncated HTTP
 //                     response is a warning rather than a traceback. Touches no network, by a guard it
@@ -231,8 +227,6 @@ const HARNESSES = [
   {file: "gitlab_test.py", label: "the GitLab index: host-qualified rows, the GitLab scout and fetch, and every seam they cross", python: true, floor: 140},
   {file: "probe.mjs", label: "the page script under a stub DOM, and the page as text", floor: 140},
   {file: "pagemin_test.py", label: "the comment stripper, on the cases the page lacks", python: true, floor: 40},
-  {file: "media_test.py", label: "one embedded part per screenshot, the entry ceiling, and the unpooled cover", python: true, floor: 45},
-  {file: "workbook_branding_test.py", label: "the Atlas mark and mascot on both workbook covers, saved as a weekly saves them", python: true, floor: 24},
   {file: "refresh_test.py", label: "the cache-free render, refused when the source count moved", python: true, floor: 60},
   {file: "live_test.py", label: "the star/push sidecar the detail pages read", python: true, floor: 90},
   {file: "semantic_test.py", label: "the semantic index, scored from the bytes a reader downloads", python: true, floor: 30},
@@ -304,7 +298,7 @@ for (const [rel, stage] of [[["docs", "index.html"], "scripts/31_home.py"],
 const bin = find();
 if (!bin) {
   console.error(
-    "No Chromium found, and ten of the thirty-seven harnesses drive one over CDP.\n\n" +
+    "No Chromium found, and ten of the thirty-five harnesses drive one over CDP.\n\n" +
     "Looked in, in this order:\n" +
     "  $CHROME_PATH, $CHROMIUM_PATH, $PLAYWRIGHT_CHROMIUM\n" +
     searched().map((p) => "  " + p).join("\n") + "\n\n" +
@@ -317,9 +311,8 @@ if (!bin) {
 }
 
 // Checked here rather than inside the two harnesses that need it, for the same reason the browser is: a
-// prerequisite that goes missing must stop the run, not reduce it. Twenty-six of the thirty-seven need it -- one runs
-// `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one builds a workbook and counts the ZIP
-// entries it holds, one decides which repos a crawl would ask about, one drives a fake `gh` through the
+// prerequisite that goes missing must stop the run, not reduce it. Twenty-four of the thirty-five need it -- one runs
+// `22_detail.py` 1,294 pages at a time, one tests `pagemin.py`, one decides which repos a crawl would ask about, one drives a fake `gh` through the
 // batch fetch's failure handling, one drives the dead-repo scan against a fake GitHub, one drives the
 // IndexNow client and
 // `20_landing.py`'s key-file prune, one guards the cache-free render path, one builds the star/push sidecar,
@@ -330,7 +323,7 @@ if (!bin) {
 const python = findPython();
 if (!python) {
   console.error(
-    "No Python 3 found, and twenty-six of the thirty-seven harnesses are Python or drive it.\n\n" +
+    "No Python 3 found, and twenty-four of the thirty-five harnesses are Python or drive it.\n\n" +
     "Tried: " + pythonsTried().join(", ") + "\n\n" +
     "Fixes:\n" +
     "  PYTHON=/path/to/python node tests/run.mjs\n" +

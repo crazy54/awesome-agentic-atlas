@@ -328,7 +328,7 @@ THEME_JS = r"""function atlasTheme() {
 # the script or cannot reach the API. Shaped after Prism's "Version Pill" (callouts-version-pill): the face is
 # the mono, the state is a glowing dot, and the colours are the page's own tokens, so every theme repaints it.
 TAGS = (("daily", "daily.yml", "Daily build: the site and Markdown"),
-        ("weekly", "weekly.yml", "Weekly build: screenshots and workbooks"),
+        ("weekly", "weekly.yml", "Weekly build: screenshots and a full refresh"),
         ("tests", "tests.yml", "The test suite"))
 
 

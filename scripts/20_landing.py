@@ -588,7 +588,7 @@ def plan(data: dict) -> list[Page]:
             by_both.setdefault((r["cat"], t), []).append(r)
 
     # Stars descending, name as the tie-break -- `SORTS.stars` in the template, and the same order the
-    # Markdown facet pages and the workbook use. Sorted here rather than trusted from `data.json`,
+    # Markdown facet pages use. Sorted here rather than trusted from `data.json`,
     # which happens to arrive in this order today: a landing page that silently reordered itself
     # because an upstream stage changed its own sort would be a hard bug to see.
     def rank(group):

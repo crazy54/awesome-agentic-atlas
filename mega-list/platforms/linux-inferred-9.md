@@ -762,4 +762,4 @@ Page **9** of 11, because this list is longer than the 512 KB GitHub will render
 
 Snapshot 2026-11-20. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
-The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).
+Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

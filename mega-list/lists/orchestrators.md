@@ -1,6 +1,6 @@
 # Orchestrators
 
-The original list this workbook grew from: tools that run several coding agents at once.
+The original list this atlas grew from: tools that run several coding agents at once.
 
 Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
@@ -1151,4 +1151,4 @@ Curated by **[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrew
 
 Snapshot 2026-11-20. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
-The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).
+Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).
