@@ -985,6 +985,24 @@ REPO_CATEGORY: dict[str, tuple[str, str]] = {
     "deanchensj/jiangshan-map": (
         "Research & Data Agents", "an interactive historical atlas of China served to agents; listed as a "
                                   "skill and an MCP server"),
+    "777genius/agent-notifications": (
+        "Harnesses & Runtime Infra", "desktop notifications for every coding agent's runs (owner's call, "
+                                     "2026-11-20)"),
+    "awss1i/assay": (
+        "Observability & Evals", "an agent-native QA checker for web pages (owner's call, 2026-11-20)"),
+    "atomic-mail/atomic-mail-agentic": (
+        "MCP Servers", "email for agents, served as tools (owner's call, 2026-11-20)"),
+    "anzy-renlab-ai/pronounce": (
+        "MCP Servers", "a pronunciation dictionary agents query; MCP first (owner's call, 2026-11-20)"),
+    "garrytan/gstack": (
+        "Agent Skills", "a skills pack: 23 role tools for Claude Code (owner's call, 2026-11-20)"),
+    "gaurav-1313/codecall": (
+        "Assistants & Domain Agents", "quizzes you on the code your agent writes (owner's call, 2026-11-20)"),
+    "sarveshsea/memi": (
+        "Agent Skills", "design context and checks for coding agents, shipped as skills (owner's call, "
+                        "2026-11-20)"),
+    "voltagent/awesome-claude-code-subagents": (
+        "Docs, Learning & Lists", "an awesome-list of subagents (owner's call, 2026-11-20)"),
 }
 
 # One key in `SECTIONS` is both shelves at once and too big to file wholesale on either:
