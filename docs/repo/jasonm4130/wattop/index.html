@@ -15,40 +15,18 @@
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -162,7 +140,7 @@ try {
   <h2>Related in Observability &amp; Evals</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../vivekchand/clawmetry/">ClawMetry</a><span class="nwo">vivekchand/clawmetry</span><span class="desc">Self-hosted, local-first observability and kill switch for coding agents, reading Gemini CLI sessions alongside Claude Code, Codex, Cursor…</span></li><li><a href="../../ccusage/ccusage/">ccusage</a><span class="nwo">ccusage/ccusage</span><span class="desc">by ryoppippi - A zero-install CLI (npx ccusage) that analyzes Claude Code token usage and cost from local JSONL logs — daily, monthly, per-session…</span></li><li><a href="../../getagentseal/codeburn/">Codeburn</a><span class="nwo">getagentseal/codeburn</span><span class="desc">Free, local tool that tracks AI coding token usage and cost across 31 tools and agents by model, project, and task. Worth including because…</span></li><li><a href="../../onllm-dev/onwatch/">onWatch</a><span class="nwo">onllm-dev/onWatch</span><span class="desc">Open-source Go CLI that tracks AI API quota usage across 7 providers (Anthropic, OpenAI, GitHub Copilot, MiniMax, and more). Works with Claude Code…</span></li><li><a href="../../junhoyeo/tokscale/">Tokscale</a><span class="nwo">junhoyeo/tokscale</span><span class="desc">CLI tool for tracking token usage from AI coding agents (OpenCode, Claude Code, OpenClaw, Codex, Gemini CLI, Cursor IDE, AmpCode, Factory Droid)…</span></li><li><a href="../../graykode/abtop/">abtop</a><span class="nwo">graykode/abtop</span><span class="desc">Like htop but for AI coding agents. Monitor Claude Code and Codex CLI sessions, tokens, context window, rate limits in real-time</span></li><li><a href="../../mikehasa/agentacct/">agentacct</a><span class="nwo">mikehasa/agentacct</span><span class="desc">Local-first Agent Work Intelligence for coding agents: ingests existing Claude Code, Codex, and OpenCode session logs, attributes tokens and…</span></li><li><a href="../../qoderai/better-harness/">Better Harness</a><span class="nwo">QoderAI/better-harness</span><span class="desc">Evaluates coding-agent workflows across five dimensions and turns project and session evidence into prioritized, evidence-bounded findings with…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../vivekchand/clawmetry/">ClawMetry</a><span class="nwo">vivekchand/clawmetry</span><span class="desc">Self-hosted, local-first observability and kill switch for coding agents, reading Gemini CLI sessions alongside Claude Code, Codex, Cursor…</span></li><li><a href="../../ccusage/ccusage/">ccusage</a><span class="nwo">ccusage/ccusage</span><span class="desc">by ryoppippi - A zero-install CLI (npx ccusage) that analyzes Claude Code token usage and cost from local JSONL logs — daily, monthly, per-session…</span></li><li><a href="../../getagentseal/codeburn/">Codeburn</a><span class="nwo">getagentseal/codeburn</span><span class="desc">Free, local tool that tracks AI coding token usage and cost across 31 tools and agents by model, project, and task. Worth including because…</span></li><li><a href="../../onllm-dev/onwatch/">onWatch</a><span class="nwo">onllm-dev/onWatch</span><span class="desc">Open-source Go CLI that tracks AI API quota usage across 7 providers (Anthropic, OpenAI, GitHub Copilot, MiniMax, and more). Works with Claude Code…</span></li><li><a href="../../junhoyeo/tokscale/">Tokscale</a><span class="nwo">junhoyeo/tokscale</span><span class="desc">CLI tool for tracking token usage from AI coding agents (OpenCode, Claude Code, OpenClaw, Codex, Gemini CLI, Cursor IDE, AmpCode, Factory Droid)…</span></li><li><a href="../../cygnux-labs/tracekit/">Tracekit</a><span class="nwo">Cygnux-Labs/Tracekit</span><span class="desc">Tamper-evident tracing and policy checks for AI agent tool calls: each call is checked before it runs and signed with its decision into a hash…</span></li><li><a href="../../graykode/abtop/">abtop</a><span class="nwo">graykode/abtop</span><span class="desc">Like htop but for AI coding agents. Monitor Claude Code and Codex CLI sessions, tokens, context window, rate limits in real-time</span></li><li><a href="../../mikehasa/agentacct/">agentacct</a><span class="nwo">mikehasa/agentacct</span><span class="desc">Local-first Agent Work Intelligence for coding agents: ingests existing Claude Code, Codex, and OpenCode session logs, attributes tokens and…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

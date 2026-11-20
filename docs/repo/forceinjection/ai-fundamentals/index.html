@@ -15,40 +15,18 @@
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -152,17 +130,17 @@ try {
 
 <section>
   <h2>How it is classified</h2>
-  <p class="lead">One topic, no
-    harnesses. Each link is a prerendered page of
+  <p class="lead">One topic, 1
+    harness. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/assistants-domain-agents/">Assistants &amp; Domain Agents</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/assistants-domain-agents/">Assistants &amp; Domain Agents</a><a class="chip" href="../../../topic/assistants-domain-agents/target/local-ollama/">Local / Ollama</a></div>
 </section>
 
 <section class="kin">
   <h2>Related in Assistants &amp; Domain Agents</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../xlang-ai/openagents/">OpenAgents</a><span class="nwo">xlang-ai/OpenAgents</span><span class="desc">[COLM 2024] OpenAgents: An Open Platform for Language Agents in the Wild</span></li><li><a href="../../skyvern-ai/skyvern/">Skyvern</a><span class="nwo">Skyvern-AI/skyvern</span><span class="desc">Official Skyvern browser automation skill — AI-powered browser control using Vision LLMs and computer vision for navigating sites, filling forms…</span></li><li><a href="../../openbmb/xagent/">XAgent</a><span class="nwo">OpenBMB/XAgent</span><span class="desc">XAgent is an open-source, experimental Large Language Model-driven autonomous agent designed to autonomously solve a wide range of tasks with…</span></li><li><a href="../../yoheinakajima/babyagi/">BabyAGI</a><span class="nwo">yoheinakajima/babyagi</span><span class="desc">BabyAGI exemplifies an AI-powered task management system utilizing OpenAI and vector databases like Chroma or Weaviate, creating, prioritizing, and…</span></li><li><a href="../../ruc-datalab/deepanalyze/">DeepAnalyze</a><span class="nwo">ruc-datalab/DeepAnalyze</span><span class="desc">first agentic LLM for autonomous data science, supporting specific data tasks (data preparation, analysis, modeling, visualization, and insight) and…</span></li><li><a href="../../hkuds/nanobot/">nanobot</a><span class="nwo">HKUDS/nanobot</span><span class="desc">HKUDS&#x27;s ultra-lightweight, self-hosted personal AI agent framework: a single readable Python core that combines WebUI/terminal/chat-app surfaces…</span></li><li><a href="../../razzant/ouroboros/">Ouroboros</a><span class="nwo">razzant/ouroboros</span><span class="desc">Self-hosted general-purpose agent with durable identity and memory, reviewed self-modification, specialist subagent swarms, and desktop or headless…</span></li><li><a href="../../zylon-ai/private-gpt/">Private GPT</a><span class="nwo">zylon-ai/private-gpt</span><span class="desc">PrivateGPT is a secure, offline-capable AI tool for querying documents with Large Language Models, offering high-level and low-level APIs for…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../dotcomjack/grux/">Grux</a><span class="nwo">dotcomjack/grux</span><span class="desc">Native macOS agent that runs agent swarms in parallel, opens terminal sessions it can undo, and reaches your mail, calendar and meetings; runs on a…</span></li><li><a href="../../smixs/iva-agent/">iva</a><span class="nwo">smixs/iva-agent</span><span class="desc">Telegram assistant that turns your messages, voice notes and photos into an Obsidian-compatible markdown vault it remembers across sessions. Crons…</span></li><li><a href="../../lucinate-ai/lucinate/">lucinate</a><span class="nwo">lucinate-ai/lucinate</span><span class="desc">Terminal-native chat client for OpenClaw, Hermes, Ollama, and OpenAI-compatible providers, with cron management and session browsing.</span></li><li><a href="../../andrewyng/openworker/">OpenWorker</a><span class="nwo">andrewyng/openworker</span><span class="desc">Open-source desktop AI coworker that delivers finished work — security review with re-scanned fixes, cloud posture audits, triaged inboxes — from…</span></li><li><a href="../../siddsachar/row-bot/">row-bot</a><span class="nwo">siddsachar/row-bot</span><span class="desc">Local-first desktop assistant that reasons through messy context, orchestrates tools and providers, and works inside your files, repos, and channels…</span></li><li><a href="../../rikyz90/shibaclaw/">ShibaClaw</a><span class="nwo">RikyZ90/ShibaClaw</span><span class="desc">Self-hosted personal AI agent with a built-in WebUI, persistent memory, MCP tools, sub-agent delegation, scheduled automations, and support for…</span></li><li><a href="../../mertkayacs/tholos/">Tholos</a><span class="nwo">mertkayacs/tholos</span><span class="desc">Local AI assistants that run on a schedule and share tables, notes and a task board, with rules that allow, ask about or deny each action. Works…</span></li><li><a href="../../bitcloud-ai/bittune/">Bittune</a><span class="nwo">bitcloud-ai/Bittune</span><span class="desc">Local-first engineering agent that deploys, benchmarks and tunes vLLM/SGLang inference services on your own GPUs, with auditable run evidence.</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

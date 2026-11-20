@@ -15,40 +15,18 @@
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -90,7 +68,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">git clone https://github.com/lobehub/lobe-chat.git</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for LobeChat">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">npx -y @lobehub/market-cli login</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for LobeChat">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -142,27 +120,27 @@ try {
 
 <section>
   <h2>Platform support</h2>
-  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="voff">No</td><td class="why">No evidence of support anywhere in the project.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr></tbody></table>
+  <table class="os"><caption>Derived from the project's own README, install route, CI configuration and release assets — not from running it.</caption><thead><tr><th scope="col">Platform</th><th scope="col">Runs here</th><th scope="col">On what evidence</th></tr></thead><tbody><tr><th scope="row"><span class="oiw" title="Windows"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-windows"></use></svg> Windows</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="WSL2 — Windows Subsystem for Linux 2"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-wsl2"></use></svg> WSL2</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr><tr><th scope="row"><span class="oiw" title="macOS"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-macos"></use></svg> macOS</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="Linux"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-linux"></use></svg> Linux</span></th><td class="vwarn">Likely</td><td class="why">Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><th scope="row"><span class="oiw" title="Docker"><svg class="oi" aria-hidden="true" focusable="false"><use href="#oi-docker"></use></svg> Docker</span></th><td class="vgood">Yes</td><td class="why">Stated in the project&#x27;s own README, install route, CI config or release assets.</td></tr></tbody></table>
 </section>
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>3</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li>AI Agents (Schwoebel)</li><li><a href="https://github.com/caramaschiHG/awesome-ai-agents-2026">AI Agents 2026</a></li><li>LLMOps (InftyAI)</li></ul>
+  <p class="lead">Named by <b>3</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li><a href="https://github.com/jim-schwoebel/awesome_ai_agents">AI Agents (Schwoebel)</a></li><li><a href="https://github.com/caramaschiHG/awesome-ai-agents-2026">AI Agents 2026</a></li><li><a href="https://github.com/InftyAI/Awesome-LLMOps">LLMOps (InftyAI)</a></li></ul>
 </section>
 
 <section>
   <h2>How it is classified</h2>
-  <p class="lead">One topic, 4
+  <p class="lead">One topic, 5
     harnesses. Each link is a prerendered page of
     everything else in that slice.</p>
-  <div class="chips"><a class="chip cat" href="../../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/codex-openai/">Codex / OpenAI</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/gemini-google/">Gemini / Google</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/local-ollama/">Local / Ollama</a></div>
+  <div class="chips"><a class="chip cat" href="../../../topic/harnesses-runtime-infra/">Harnesses &amp; Runtime Infra</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/claude-anthropic/">Claude / Anthropic</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/mcp/">MCP</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/codex-openai/">Codex / OpenAI</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/gemini-google/">Gemini / Google</a><a class="chip" href="../../../topic/harnesses-runtime-infra/target/local-ollama/">Local / Ollama</a></div>
 </section>
 
 <section class="kin">
   <h2>Related in Harnesses &amp; Runtime Infra</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../svalench/llm-cache-router/">llm-cache-router</a><span class="nwo">svalench/llm-cache-router</span><span class="desc">A lightweight, async-first Python library combining semantic caching, multi-provider routing (OpenAI, Anthropic, Gemini, Ollama, MiniMax, Qwen) and…</span></li><li><a href="../../samestrin/llm-interface/">Llm-Interface</a><span class="nwo">samestrin/llm-interface</span><span class="desc">A simple NPM interface for seamlessly interacting with 36 Large Language Model (LLM) providers, including OpenAI, Anthropic, Google Gemin…</span></li><li><a href="../../ontheia/ontheia/">Ontheia</a><span class="nwo">Ontheia/ontheia</span><span class="desc">Self-hosted AI agent platform with multi-provider LLM support (Claude, OpenAI, Gemini, Ollama), MCP-native tool integration, visual workflow…</span></li><li><a href="../../lidge-jun/opencodex/">opencodex</a><span class="nwo">lidge-jun/opencodex</span><span class="desc">(8.5k ⭐) - A local provider proxy and dashboard that routes Codex CLI, the Codex app, SDKs, and Claude Code to multiple LLM providers</span></li><li><a href="../../hassancs91/simplerllm/">Simplerllm</a><span class="nwo">hassancs91/SimplerLLM</span><span class="desc">Simplify interactions with Large Language Models</span></li><li><a href="../../beehiveinnovations/pal-mcp-server/">zen-mcp-server</a><span class="nwo">BeehiveInnovations/pal-mcp-server</span><span class="desc">(11.6k ⭐) - The power of Claude Code + Gemini / OpenAI / Grok / OpenRouter / Ollama / Custom Model working as one</span></li><li><a href="../../kbwo/ccmanager/">ccmanager</a><span class="nwo">kbwo/ccmanager</span><span class="desc">Coding agent session manager supporting Claude Code, Gemini CLI, Codex, Cursor, Copilot, Cline, OpenCode, Kimi CLI. Smart auto-approval via Haiku…</span></li><li><a href="../../router-for-me/cliproxyapi/">CLI Proxy API</a><span class="nwo">router-for-me/CLIProxyAPI</span><span class="desc">(51.2k ⭐) - API service that wraps Antigravity, Codex, Claude Code, and Grok Build behind OpenAI-, Gemini-, Claude-, and Codex-compatible endpoints</span></li></ul>
+  <ul class="kinlist"><li><a href="../../ontheia/ontheia/">Ontheia</a><span class="nwo">Ontheia/ontheia</span><span class="desc">Self-hosted AI agent platform with multi-provider LLM support (Claude, OpenAI, Gemini, Ollama), MCP-native tool integration, visual workflow…</span></li><li><a href="../../beehiveinnovations/pal-mcp-server/">zen-mcp-server</a><span class="nwo">BeehiveInnovations/pal-mcp-server</span><span class="desc">(11.8k ⭐) - The power of Claude Code + Gemini / OpenAI / Grok / OpenRouter / Ollama / Custom Model working as one</span></li><li><a href="../../mishanefedov/agentwatch/">AgentWatch</a><span class="nwo">mishanefedov/agentwatch</span><span class="desc">Local-only TUI + web dashboard that tails Gemini CLI sessions alongside Claude Code, Codex, Cursor, Hermes, and OpenClaw on one unified timeline…</span></li><li><a href="../../agent-sh/agnix/">agnix</a><span class="nwo">agent-sh/agnix</span><span class="desc">Linter for AI agent configurations. Validates GEMINI.md, SKILL.md, hooks, MCP, and more with 156 rules, auto-fix, and LSP server for real-time…</span></li><li><a href="../../dirmedmr-alt/ai-access-auditor/">AI Access Auditor</a><span class="nwo">dirmedmr-alt/ai-access-auditor</span><span class="desc">Desktop app (macOS, Windows, Linux) that lists what Gemini CLI and other coding agents are allowed to do (trusted folders, allowed tools, MCP…</span></li><li><a href="../../aligndottech/align-cli/">Align CLI</a><span class="nwo">aligndottech/align-cli</span><span class="desc">Local CLI and MCP server that gives Gemini CLI your team&#x27;s decisions from Jira, Confluence, Linear, Notion, Slack, Teams, Zoom, GitHub, GitLab, git…</span></li><li><a href="../../priberry-data/crumplelab/">Crumple</a><span class="nwo">priberry-data/crumplelab</span><span class="desc">Crash-tests Gemini CLI, Claude Code and Codex against 20 traps drawn from real attacks (prompt injection in issues, MCP tool poisoning, key-stealing…</span></li><li><a href="../../jenoyrex/ctx-receipt/">ctx-receipt</a><span class="nwo">Jenoyrex/ctx-receipt</span><span class="desc">Shows what Gemini CLI, Claude Code, Codex CLI, and Cursor pre-load into context before your first prompt: GEMINI.md and its imports, skills, and MCP…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

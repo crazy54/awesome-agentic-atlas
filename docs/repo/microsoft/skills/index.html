@@ -15,40 +15,18 @@
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -147,7 +125,7 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>5</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li><a href="https://github.com/sickn33/agentic-awesome-skills">AAS Skill Sources</a></li><li><a href="https://github.com/heilcheng/awesome-agent-skills">Agent Skills</a></li><li>Agent Skills (JackyST0)</li><li>Claude Code (jqueryscript)</li><li><a href="https://github.com/ai-boost/awesome-harness-engineering">Harness Engineering</a></li></ul>
+  <p class="lead">Named by <b>5</b> of the 39 lists the atlas merges, independently of each other.</p><ul class="lists"><li><a href="https://github.com/sickn33/agentic-awesome-skills">AAS Skill Sources</a></li><li><a href="https://github.com/heilcheng/awesome-agent-skills">Agent Skills</a></li><li><a href="https://github.com/JackyST0/awesome-agent-skills">Agent Skills (JackyST0)</a></li><li><a href="https://github.com/jqueryscript/awesome-claude-code">Claude Code (jqueryscript)</a></li><li><a href="https://github.com/ai-boost/awesome-harness-engineering">Harness Engineering</a></li></ul>
 </section>
 
 <section>
@@ -162,7 +140,7 @@ try {
   <h2>Related in Agent Skills</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../kubestellar/console/">KubeStellar Console</a><span class="nwo">kubestellar/console</span><span class="desc">MCP server that bridges AI coding agents (Claude Code, Copilot, Codex) to multi-cluster Kubernetes APIs. Enables natural language queries across…</span></li><li><a href="../../obra/superpowers/">Superpowers</a><span class="nwo">obra/superpowers</span><span class="desc">by Jesse Vincent - A strong bundle of core competencies for software engineering, with good coverage of a large portion of the SDLC - from planning…</span></li><li><a href="../../mohamedabdallah-14/unslop/">MohamedAbdallah-14/unslop</a><span class="nwo">MohamedAbdallah-14/unslop</span><span class="desc">CLI and MCP server that removes AI writing patterns from text: tricolons, em-dash overuse, hedging stacks, sycophancy openers, and overused…</span></li><li><a href="../../mukul975/anthropic-cybersecurity-skills/">Anthropic-Cybersecurity-Skills</a><span class="nwo">mukul975/Anthropic-Cybersecurity-Skills</span><span class="desc">753 cybersecurity skills across 38 domains: cloud security, pentesting, red teaming, DFIR, malware analysis, threat intel, and more (MITRE ATT&amp;CK…</span></li><li><a href="../../archcore-ai/archcore/">Archcore</a><span class="nwo">archcore-ai/archcore</span><span class="desc">Git-native context engineering CLI and MCP server for AI coding agents; archcore init --agent gemini-cli wires Gemini CLI hooks and MCP</span></li><li><a href="../../github/awesome-copilot/">GitHub Awesome Copilot</a><span class="nwo">github/awesome-copilot</span><span class="desc">Arm Cloud Migration Assistant accelerates moving x86 workloads to Arm infrastructure. It scans the repository for architecture assumptions…</span></li><li><a href="../../honeydew-ai/honeydew-ai-coding-agents-plugins/">honeydew-ai/honeydew-ai-coding-agents-plugins</a><span class="nwo">honeydew-ai/honeydew-ai-coding-agents-plugins</span><span class="desc">11 skills + MCP server for building and querying a governed semantic layer over Snowflake, Databricks, and BigQuery from coding agents (Claude Code…</span></li><li><a href="../../wolfe-jam/faf-skills/">Wolfe-Jam/faf-skills</a><span class="nwo">Wolfe-Jam/faf-skills</span><span class="desc">31 Claude Code skills for persistent project context (.faf, application/vnd.faf+yaml). Scoring, sync, testing, publishing, MCP server creation…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../kubestellar/console/">KubeStellar Console</a><span class="nwo">kubestellar/console</span><span class="desc">MCP server that bridges AI coding agents (Claude Code, Copilot, Codex) to multi-cluster Kubernetes APIs. Enables natural language queries across…</span></li><li><a href="../../obra/superpowers/">Superpowers</a><span class="nwo">obra/superpowers</span><span class="desc">by Jesse Vincent - A strong bundle of core competencies for software engineering, with good coverage of a large portion of the SDLC - from planning…</span></li><li><a href="../../mohamedabdallah-14/unslop/">MohamedAbdallah-14/unslop</a><span class="nwo">MohamedAbdallah-14/unslop</span><span class="desc">CLI and MCP server that removes AI writing patterns from text: tricolons, em-dash overuse, hedging stacks, sycophancy openers, and overused…</span></li><li><a href="../../mukul975/anthropic-cybersecurity-skills/">Anthropic Cybersecurity Skills</a><span class="nwo">mukul975/Anthropic-Cybersecurity-Skills</span><span class="desc">Community library (not affiliated with Anthropic) of 818 Agent Skills across 34 security domains, each mapped in frontmatter to MITRE ATT&amp;CK, NIST…</span></li><li><a href="../../jaypokale/chisle/">Chisle</a><span class="nwo">JayPokale/Chisle</span><span class="desc">Gemini CLI extension whose GEMINI.md makes answers shorter without dropping decisive facts: no filler or hedging, the smallest code that works…</span></li><li><a href="../../archcore-ai/archcore/">Archcore</a><span class="nwo">archcore-ai/archcore</span><span class="desc">Git-native context engineering CLI and MCP server for AI coding agents; archcore init --agent gemini-cli wires Gemini CLI hooks and MCP</span></li><li><a href="../../github/awesome-copilot/">GitHub Awesome Copilot</a><span class="nwo">github/awesome-copilot</span><span class="desc">Expert technical artist for Adobe Creative Cloud: picks the right app or combination of apps (Illustrator, Photoshop, InDesign, After Effects, and…</span></li><li><a href="../../honeydew-ai/honeydew-ai-coding-agents-plugins/">honeydew-ai/honeydew-ai-coding-agents-plugins</a><span class="nwo">honeydew-ai/honeydew-ai-coding-agents-plugins</span><span class="desc">11 skills + MCP server for building and querying a governed semantic layer over Snowflake, Databricks, and BigQuery from coding agents (Claude Code…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>
