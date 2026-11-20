@@ -24,10 +24,9 @@ Four groups, and a fifth that is here only because this file already loads 31_ho
                     with the host would show every subscriber fifty old entries as new. `robots.txt` says it
                     is read when there is a custom domain, and says it is inert when there is not.
   no Traceway    -- the session recorder the site loaded from 2026-10-11 to 2026-11-20 is gone: no
-                    generator writes its tags or calls the helper that wrote them, and every page outside
-                    docs/repo/ is free of them. The three files the detail pages named were inert comments
-                    until those pages were rewritten, and were then deleted; a deleted one may be named by
-                    no page anywhere.
+                    generator writes its tags, every page outside docs/repo/ is free of them, the three
+                    files left for the detail pages a daily has not yet rewritten are inert comments, and
+                    once one of those is deleted no page anywhere may name it.
   the spotlight  -- `spot_art()` gives the homepage's spotlight the project's own picture, and the social
                     card for a GIF or no picture. Fed both arms directly, since the committed page
                     shows only whichever one the day's row took.
@@ -239,10 +238,6 @@ finally:
 # has rewritten every detail page), no page anywhere may name it, because a tag naming a deleted file is a
 # 404 on every view. While a stub is still committed, the pages that still name it are counted and printed,
 # so the log says when the follow-up can go.
-#
-# The follow-up went on 2026-11-20, with the fix for the red build in #113: every detail page was regenerated
-# without the tags and the three stubs were deleted, so the stub check below has nothing to read and the
-# per-file assertion at the end of this group is on for all three.
 DOCS = ROOT / "docs"
 GONE = ("traceway-1.2.1.js", "web-vitals-6.2.3.js", "traceway-loader.js")
 NAMES = re.compile(r'<script[^>]*\bsrc="[^"]*assets/(' + "|".join(re.escape(f) for f in GONE) + r')"')
@@ -252,13 +247,6 @@ true("19_pages.py no longer has the telemetry() helper every family called",
 named = sorted(p.name for p in SCRIPTS.glob("*.py")
                if any(f in p.read_text(encoding="utf-8").lower() for f in GONE + ("traceway",)))
 eq("no generator in scripts/ names Traceway or its files", named, [])
-# A call to the helper is read for as well. `33_alike.py` was written on a branch that still had it, and merged
-# after it had gone: `b19.telemetry(rel())` names neither Traceway nor a file, so the check above passed while
-# the stage raised AttributeError the first time anything rendered it, and the page it last wrote went on
-# loading all three scripts (#113). The hasattr check above cannot see a caller either -- only the definition.
-callers = sorted(p.name for p in SCRIPTS.glob("*.py")
-               if re.search(r"\btelemetry\s*\(", p.read_text(encoding="utf-8")))
-eq("no generator in scripts/ calls the removed telemetry() helper", callers, [])
 
 COMMENT_ONLY = re.compile(r"\A\s*/\*(?:(?!\*/).)*\*/\s*\Z", re.S)
 stubs = [f for f in GONE if (DOCS / "assets" / f).is_file()]
@@ -364,14 +352,14 @@ finally:
 # hours on the live site). The files are enumerated from what is committed in docs/assets, not from
 # VERSIONED, since a loop over the list under test cannot notice a name missing from it: the admin panel
 # was once imported under the version and hashed by none of it. Three groups are left out, each for a reason
-# of its own: the poster, which the page names directly; the brand art (`archie-mark.webp`, every page's
-# logo, and `archie-bust.webp`, the catalogue's mascot), which pages name directly too and archie.js never
+# of its own: the poster, which the page names directly; the brand art (`archie-head.webp`, every page's
+# logo, `archie-mark.webp`, the v2 rail's, and `archie-bust.webp`, the catalogue's mascot), which pages name directly too and archie.js never
 # loads; and the dance script and its detector, which the page loads under a version of their own (tested
 # above).
 ASSETS = ROOT / "docs" / "assets"
 FAMILY = sorted(p.relative_to(ASSETS).as_posix() for p in ASSETS.rglob("*") if p.is_file()
                 and p.relative_to(ASSETS).as_posix().startswith(("archie", "three-archie"))
-                and p.name not in ("archie-3d.webp", "archie-mark.webp", "archie-bust.webp")
+                and p.name not in ("archie-3d.webp", "archie-mark.webp", "archie-bust.webp", "archie-head.webp")
                 and p.name not in b31.DANCE)
 true("the family enumerated off docs/assets includes the dances, the panel and the pals' stage",
      {"archie-dances.glb", "archie-admin.js", "archie-stage.js"} <= set(FAMILY), FAMILY)

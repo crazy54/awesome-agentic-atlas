@@ -21,22 +21,24 @@ let panel = null, back = null, timer = 0;
 
 const CSS = `
 #atlasadmin{position:fixed;right:12px;bottom:12px;z-index:60;width:min(360px,calc(100vw - 24px));
-  max-height:calc(100vh - 24px);overflow:auto;padding:14px 14px 12px;border-radius:12px;
-  background:var(--panel,var(--plane));backdrop-filter:var(--bdf,none);-webkit-backdrop-filter:var(--bdf,none);
-  border:1px solid var(--grid);color:var(--ink);font:13px/1.45 var(--ui,system-ui,sans-serif);
-  box-shadow:0 2px 6px rgba(0,0,0,.3),0 24px 56px -16px rgba(0,0,0,.7)}
+  max-height:calc(100vh - 24px);overflow:auto;padding:14px 14px 12px;border-radius:var(--r-card,20px);
+  background:var(--surface);border:1px solid transparent;color:var(--ink);
+  font:13px/1.45 var(--ui,system-ui,sans-serif);box-shadow:var(--raise)}
 #atlasadmin h2{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px;
   font:600 12px/1 var(--mono,ui-monospace,monospace);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 #atlasadmin h3{margin:14px 0 6px;font:600 11px/1 var(--mono,ui-monospace,monospace);letter-spacing:.08em;
   text-transform:uppercase;color:var(--muted)}
-#atlasadmin .aa-x{min-width:32px;min-height:32px;border:1px solid transparent;border-radius:8px;
-  background:none;color:var(--ink2);font:inherit;font-size:16px;letter-spacing:0;cursor:pointer}
-#atlasadmin .aa-x:hover{border-color:var(--grid);color:var(--ink)}
+#atlasadmin .aa-x{min-width:32px;min-height:32px;border:1px solid transparent;border-radius:50%;background:var(--surface);
+  color:var(--ink2);font:inherit;font-size:16px;letter-spacing:0;cursor:pointer;
+  box-shadow:var(--raise-sm)}
+#atlasadmin .aa-x:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-hi)}
 #atlasadmin .aa-row{grid-column:1 / -1;display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
-#atlasadmin .aa-b{min-height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--grid);
-  background:var(--plane);color:var(--ink);font:600 12px/1 var(--ui,system-ui,sans-serif);cursor:pointer}
-#atlasadmin .aa-b:hover{border-color:var(--link)}
-#atlasadmin .aa-b.aa-go{background:var(--act);border-color:var(--act-edge);color:var(--onact)}
+#atlasadmin .aa-b{min-height:32px;padding:0 12px;border-radius:999px;border:1px solid transparent;
+  background:var(--surface);color:var(--ink);font:600 12px/1 var(--ui,system-ui,sans-serif);
+  cursor:pointer;box-shadow:var(--raise-sm)}
+#atlasadmin .aa-b:hover{border-color:transparent;box-shadow:var(--raise-hi)}
+#atlasadmin .aa-b.aa-go{background:var(--act);border-color:transparent;color:var(--onact);
+  box-shadow:inset 0 0 0 1px var(--act-edge),var(--raise-sm),var(--glow)}
 #atlasadmin .aa-b[disabled]{opacity:.5;cursor:default}
 #atlasadmin .aa-st{list-style:none;margin:0;padding:0;font:12px/1.3 var(--mono,ui-monospace,monospace)}
 #atlasadmin .aa-st li{display:grid;grid-template-columns:10px 72px 1fr auto;gap:8px;align-items:center;padding:5px 2px;

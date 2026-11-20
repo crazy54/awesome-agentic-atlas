@@ -222,7 +222,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // hung and killed (default DEFAULT_MINUTES, below the table): see the watchdog in `run()`.
 const HARNESSES = [
   {file: "app_flags_test.py", label: "the 0/1 schema, atomic editor writes, and every kill switch", python: true, floor: 28},
-  {file: "theme_test.py", label: "two glass themes in one copy, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
+  {file: "theme_test.py", label: "two soft-UI themes in one copy, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "fetch_test.py", label: "a batch GitHub keeps timing out on is split, and nothing else is", python: true, floor: 20},
   {file: "ci_tools_test.py", label: "the local run, the canary's bot branches, and what every workflow must say", python: true, floor: 45},

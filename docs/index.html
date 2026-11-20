@@ -14,7 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awesome Agentic Atlas — browse and discover agentic AI projects</title>
 <meta name="description" content="12,007 agentic AI projects merged from 39 awesome-lists, on shelves with a stated reason for each one: named by three or more lists, shipped this week, hidden gems, runs on Windows. Snapshot 2026-11-20.">
-<meta name="atlas-build" content="4efe56c40059">
+<meta name="atlas-build" content="de8be8d60dcc">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Awesome Agentic Atlas — browse and discover agentic AI projects">
@@ -25,7 +25,7 @@
 <link rel="preload" href="assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" id="tc" content="#2A2A27">
+<meta name="theme-color" id="tc" content="#24272D">
 <script>
 try {
   var t = localStorage.getItem("theme");
@@ -36,7 +36,7 @@ try {
   if (t !== "light" && t !== "dark")
     t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  document.getElementById("tc").content = {light: "#F5F2EC", dark: "#2A2A27"}[t];
+  document.getElementById("tc").content = {light: "#E3E7ED", dark: "#24272D"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="pages.css">
@@ -68,15 +68,13 @@ html[data-theme=light]{
 @keyframes ping{0%{transform:scale(.6);opacity:calc(var(--fx-pulse) * .9)}
   70%{transform:scale(1.9);opacity:0}100%{transform:scale(1.9);opacity:0}}
 
-.cx{--ring:0 0 0 0 transparent;--ring2:0 0 0 0 transparent;
-  position:relative;display:block;border-radius:var(--radius);background:var(--panel);
-  border:var(--hair) solid var(--panel-b);box-shadow:var(--lift),var(--ring),var(--ring2);overflow:hidden;
-  isolation:isolate;
+.cx{--ring:0 0 0 0 transparent;--ring2:0 0 0 0 transparent;position:relative;display:block;
+  border-radius:var(--radius);background:var(--surface);border:var(--hair) solid transparent;
+  box-shadow:var(--lift),var(--ring),var(--ring2);overflow:hidden;isolation:isolate;
   transition:box-shadow .22s cubic-bezier(.22,1,.36,1),transform .22s cubic-bezier(.22,1,.36,1),
     border-color .22s ease}
 @media(hover:hover){
-  .cx:hover{box-shadow:var(--lift-hi),var(--ring),var(--ring2);transform:translateY(-3px);
-    border-color:color-mix(in srgb,var(--ac,var(--bar)) 45%,var(--panel-b))}
+  .cx:hover{box-shadow:var(--lift-hi),var(--ring),var(--ring2);transform:translateY(-3px);border-color:transparent}
   .cx:hover .ph img{transform:scale(1.035)}
 }
 .cx:focus-within{border-color:var(--bar)}
@@ -144,11 +142,12 @@ html[data-theme=light]{
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 .cw{position:relative;display:flex;align-items:stretch;gap:0;margin-top:10px;border-radius:var(--radius-sm);
-  border:var(--hair) solid var(--grid);background:var(--surface);overflow:hidden}
+  border:var(--hair) solid transparent;background:var(--surface);overflow:hidden;
+  box-shadow:var(--press)}
 .cw .cmd{flex:1 1 auto;min-width:0;margin:0;border:0;border-radius:0;background:transparent}
-.cw .cp{flex:none;border:0;border-left:var(--hair) solid var(--grid);background:var(--band);
+.cw .cp{flex:none;border:0;border-left:var(--hair) solid transparent;background:var(--surface);
   color:var(--muted);font-size:10.5px;padding:0 9px;text-transform:var(--kick-case);
-  letter-spacing:var(--kick-track);font-weight:600}
+  letter-spacing:var(--kick-track);font-weight:600;box-shadow:var(--raise-sm)}
 .cw .cp:hover{color:var(--bar)}
 .cw .cp.ok{color:var(--good)}
 .cw.none{padding:6px 9px;font-size:11px;color:var(--muted);font-style:italic;background:transparent;
@@ -249,8 +248,8 @@ html[data-theme=light]{
 
 .shwrap{max-width:1680px;margin:0 auto;padding:18px 20px 80px;position:relative;z-index:1}
 .hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0;margin:0 0 30px;
-  border-radius:var(--radius);overflow:hidden;background:var(--panel);
-  border:var(--hair) solid var(--panel-b);box-shadow:var(--lift-hi);isolation:isolate}
+  border-radius:var(--radius);overflow:hidden;background:var(--surface);
+  border:var(--hair) solid transparent;box-shadow:var(--raise);isolation:isolate}
 .hero .ph{height:100%;min-height:268px}
 .hero .ph img,.hero .ph .pt{height:100%;width:100%;aspect-ratio:auto!important;object-fit:cover}
 .hero .bd{padding:20px 22px 22px;display:flex;flex-direction:column;min-width:0}
@@ -269,10 +268,10 @@ html[data-theme=light]{
 
 .bystrip{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 30px}
 .bychip{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;
-  background:var(--panel);border:var(--hair) solid var(--panel-b);box-shadow:var(--lift);
+  background:var(--surface);border:var(--hair) solid transparent;box-shadow:var(--lift);
   font-size:12.5px;color:var(--ink2);transition:transform .16s ease,border-color .16s ease}
-.bychip:hover{color:var(--ink);border-color:var(--ac,var(--bar));transform:translateY(-2px);
-  text-decoration:none}
+.bychip:hover{color:var(--ink);border-color:transparent;transform:translateY(-2px);text-decoration:none;
+  box-shadow:var(--lift-hi)}
 .bychip i{width:8px;height:8px;border-radius:3px;background:var(--ac,var(--bar));display:block;
   box-shadow:0 0 calc(10px * var(--fx-glow)) var(--ac,var(--bar))}
 .bychip .ct{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11px;color:var(--muted)}
@@ -283,10 +282,10 @@ html[data-theme=light]{
 .shh .ct{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;color:var(--bar)}
 .shh .spring{flex:1 1 auto}
 .shh .nav{display:flex;gap:4px}
-.shh .nav button{width:28px;height:28px;border-radius:999px;background:var(--band);
-  border:var(--hair) solid var(--grid);color:var(--ink2);font-size:12px;line-height:1;
-  display:grid;place-items:center}
-.shh .nav button:hover{border-color:var(--bar);color:var(--ink)}
+.shh .nav button{width:28px;height:28px;border-radius:999px;background:var(--surface);
+  border:var(--hair) solid transparent;color:var(--ink2);font-size:12px;line-height:1;display:grid;
+  place-items:center;box-shadow:var(--raise-sm)}
+.shh .nav button:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-hi)}
 .shwhy{margin:0 0 11px;font-size:12px;color:var(--muted);max-width:110ch;line-height:1.5}
 .shwhy b{color:var(--ink2)}
 .rowscroll{display:grid;grid-auto-flow:column;grid-auto-columns:274px;gap:14px;overflow-x:auto;
@@ -298,12 +297,12 @@ html[data-theme=light]{
 .rowscroll>.cx>.bd>.cw{margin-top:auto}
 .rowscroll::-webkit-scrollbar{height:8px}
 .rowscroll::-webkit-scrollbar-thumb{background:var(--grid);border-radius:99px}
-.empty{border:var(--hair) dashed var(--grid);border-radius:var(--radius);padding:18px 20px;
-  color:var(--muted);font-size:12.5px;line-height:1.6;max-width:100ch}
+.empty{border:var(--hair) dashed transparent;border-radius:var(--radius);padding:18px 20px;color:var(--muted);
+  font-size:12.5px;line-height:1.6;max-width:100ch;background:var(--surface);box-shadow:var(--press)}
 .empty b{color:var(--accent-gold)}
 .empty code{font-family:var(--mono);font-size:11.5px;color:var(--bar)}
-.cover{margin:34px 0 0;padding:14px 16px;border-radius:var(--radius);background:var(--panel);
-  border:var(--hair) solid var(--panel-b);border-left:3px solid var(--bar);box-shadow:var(--lift);
+.cover{margin:34px 0 0;padding:14px 16px;border-radius:var(--radius);background:var(--surface);
+  border:var(--hair) solid transparent;border-left:3px solid transparent;box-shadow:var(--lift);
   font-size:12.5px;color:var(--ink2);line-height:1.6;max-width:110ch}
 .cover b{color:var(--ink);font-family:var(--num);font-variant-numeric:tabular-nums}
 @media(max-width:900px){
@@ -311,12 +310,12 @@ html[data-theme=light]{
   .hero .ph{min-height:190px}
   .hero .ph img,.hero .ph .pt{aspect-ratio:16/9!important;height:auto}
 }
-html[data-theme=light] .ph{--surface:#1C1C1B;--band:#2F2E2C;--ink:#EBE5DA;--ink2:#D4CEC3;color:#EBE5DA}
+html[data-theme=light] .ph{--surface:#24272D;--band:#24272D;--ink:#E8EAED;--ink2:#C9CDD3;color:#E8EAED}
 .setwrap{position:relative;display:inline-block}
 header.setopen{z-index:30}
 .setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:280px;text-align:left;
-  background:var(--panel-hi);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
-  border:1px solid var(--edge);border-radius:18px;padding:12px;box-shadow:var(--raise)}
+  background:var(--surface);border:1px solid transparent;border-radius:var(--r-card);padding:12px;
+  box-shadow:var(--raise)}
 .setmenu[hidden]{display:none}
 .setlab{margin:14px 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase;
   letter-spacing:.07em;font-weight:600}
@@ -325,22 +324,22 @@ header.setopen{z-index:30}
 .thb{display:flex;align-items:center;gap:7px;width:100%;min-height:36px;padding:0 7px;
   background:none;border:1px solid transparent;border-radius:999px;color:var(--ink2);font-size:13px;
   text-align:left}
-.thb:hover{border-color:var(--ctl-edge);color:var(--ink);box-shadow:var(--raise-sm)}
+.thb:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-sm)}
 .thb{position:relative}
-.thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600;
-  background:color-mix(in srgb,var(--act) 12%,transparent);box-shadow:var(--press)}
+.thb[aria-pressed=true]{border-color:transparent;color:var(--ink);font-weight:600;background:var(--surface);
+  box-shadow:var(--press)}
 .thb[aria-pressed=true]::after{content:"\2713";position:absolute;right:10px;top:50%;transform:translateY(-50%);
   color:var(--bar);font-weight:700}
 .thsw{display:inline-flex;flex:none;width:28px;height:14px;border-radius:999px;overflow:hidden;
   border:1px solid var(--grid)}
 .thsw i{flex:1}
-.hero{backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf)}
-.cw{background:var(--band);border-color:var(--ctl-edge);box-shadow:var(--press)}
+.hero{}
+.cw{background:var(--surface);border-color:transparent;box-shadow:var(--press)}
 .cw .cp{background:transparent}
-header .top nav a.ghstar{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:3px 10px;
-  border-radius:999px;border:var(--hair) solid var(--panel-b);background:var(--panel);color:var(--ink);
-  text-decoration:none;font-weight:600}
-header .top nav a.ghstar:hover,header .top nav a.ghstar:focus-visible{border-color:var(--accent-gold)}
+header .top nav a.ghstar{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:3px 10px;border-radius:999px;
+  border:var(--hair) solid transparent;background:var(--surface);color:var(--ink);text-decoration:none;
+  font-weight:600;box-shadow:var(--raise-sm)}
+header .top nav a.ghstar:hover,header .top nav a.ghstar:focus-visible{border-color:transparent;box-shadow:var(--raise-hi)}
 header .top nav a.ghstar span{color:var(--accent-gold)}
 header .top nav a.ghstar b{font-family:var(--num);font-variant-numeric:tabular-nums;font-weight:600;
   padding-left:7px;margin-left:2px;border-left:var(--hair) solid var(--panel-b)}
@@ -349,8 +348,9 @@ header .top nav a.ghstar b{font-family:var(--num);font-variant-numeric:tabular-n
 .numbers h3{margin:22px 0 10px;font-size:13px;font-weight:600;color:var(--ink2);letter-spacing:.02em}
 .numbers .nsub{margin:4px 0 14px;font-size:12.5px;color:var(--ink2)}
 .numbers .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
-.numbers .tile{padding:12px 14px;border-radius:var(--radius);background:var(--panel);
-  border:var(--hair) solid var(--panel-b);box-shadow:var(--lift);display:flex;flex-direction:column;gap:2px}
+.numbers .tile{padding:12px 14px;border-radius:var(--radius);background:var(--surface);
+  border:var(--hair) solid transparent;box-shadow:var(--lift);display:flex;flex-direction:column;
+  gap:2px}
 .numbers .tile b{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:24px;color:var(--ink)}
 .numbers .tile span{font-size:12.5px;color:var(--ink)}
 .numbers .tile small{font-size:11.5px;color:var(--ink2)}
@@ -361,12 +361,13 @@ header .top nav a.ghstar b{font-family:var(--num);font-variant-numeric:tabular-n
 .numbers .langs b{font-family:var(--num);font-variant-numeric:tabular-nums;font-weight:500;color:var(--ink2);
   text-align:right}
 .mhart{position:absolute;left:0;right:0;top:0;height:clamp(340px,31.67vw,560px);z-index:0;
-  pointer-events:none;--scrim:linear-gradient(90deg,color-mix(in srgb,var(--surface) 88%,transparent) 0%,
-  color-mix(in srgb,var(--surface) 70%,transparent) 38%,transparent 62%);
-  background:var(--scrim),url(assets/masthead-dark.webp) center bottom/cover no-repeat}
-html[data-theme=light] .mhart{background:var(--scrim),url(assets/masthead-light.webp) center bottom/cover no-repeat}
-@media (max-width:899px){.mhart{--scrim:linear-gradient(color-mix(in srgb,var(--surface) 72%,transparent),
-  color-mix(in srgb,var(--surface) 72%,transparent))}}
+  pointer-events:none;
+  background:radial-gradient(340px 300px at 60% 44%,rgba(164,200,18,.13),transparent 70%),
+    radial-gradient(1100px 520px at 18% 0%,rgba(255,255,255,.035),transparent 72%)}
+html[data-theme=light] .mhart{background:radial-gradient(340px 300px at 60% 44%,rgba(140,175,0,.16),transparent 70%),
+    radial-gradient(1100px 520px at 18% 0%,rgba(255,255,255,.6),transparent 72%)}
+@media (max-width:899px){.mhart{background:radial-gradient(900px 420px at 30% 0%,rgba(255,255,255,.03),transparent 72%)}
+  html[data-theme=light] .mhart{background:radial-gradient(900px 420px at 30% 0%,rgba(255,255,255,.55),transparent 72%)}}
 header{position:relative;z-index:2;background:transparent;border-bottom:0;
   backdrop-filter:none;-webkit-backdrop-filter:none}
 main{position:relative;z-index:1}
@@ -380,19 +381,19 @@ header .setwrap,header .dancewrap{z-index:2}
   background:repeating-linear-gradient(180deg,rgba(0,0,0,.34) 0 1px,transparent 1px 3px)}
 .bystrip{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 30px}
 .bychip{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;
-  border:var(--hair) solid var(--ctl-edge);background:var(--band);box-shadow:var(--raise-sm);
-  color:var(--ink2);font-size:12.5px;font-weight:550;
-  text-decoration:none;transition:border-color .16s,color .16s,transform .16s,box-shadow .16s}
+  border:var(--hair) solid transparent;background:var(--surface);box-shadow:var(--raise-sm);
+  color:var(--ink2);font-size:12.5px;font-weight:550;text-decoration:none;
+  transition:border-color .16s,color .16s,transform .16s,box-shadow .16s}
 .bychip i{width:7px;height:7px;border-radius:50%;background:var(--ac);flex:none}
 .bychip .ct{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;color:var(--muted)}
-.bychip:hover{border-color:var(--ac);color:var(--ink);text-decoration:none;transform:translateY(-1px);
+.bychip:hover{border-color:transparent;color:var(--ink);text-decoration:none;transform:translateY(-1px);
   box-shadow:var(--raise-hi)}
 .bychip:active{box-shadow:var(--press)}
 .bychip:hover .ct{color:var(--ink2)}
 .dsmore{font-size:12.5px;font-weight:600;color:var(--link);white-space:nowrap;margin-left:6px}
-.dsold{display:none;padding:18px 20px;border-radius:var(--radius);border:var(--hair) solid var(--grid);
-  background:var(--panel);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
-  color:var(--ink2);font-size:13.5px;line-height:1.6;max-width:70ch}
+.dsold{display:none;padding:18px 20px;border-radius:var(--radius);border:var(--hair) solid transparent;
+  background:var(--surface);color:var(--ink2);font-size:13.5px;line-height:1.6;max-width:70ch;
+  box-shadow:var(--lift)}
 .sh.rolled .rowscroll,.sh.rolled .shwhy,.sh.rolled .nav{display:none}
 .sh.swap .rowscroll{visibility:hidden}
 .sh.rolled .dsold{display:block}
@@ -400,9 +401,9 @@ header .setwrap,header .dancewrap{z-index:2}
 .ph .plat.tight i{padding:2px 3px;font-size:9px}
 .updbar{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);
   z-index:40;display:flex;align-items:center;gap:10px;box-sizing:border-box;width:max-content;
-  max-width:calc(100vw - 24px);padding:6px 6px 6px 16px;border:1px solid var(--accent-sky);
-  border-radius:var(--radius);background:var(--panel-hi);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);color:var(--ink);font-size:14px;line-height:1.35;box-shadow:var(--raise)}
+  max-width:calc(100vw - 24px);padding:6px 6px 6px 16px;border:1px solid transparent;
+  border-radius:var(--radius);background:var(--surface);color:var(--ink);font-size:14px;
+  line-height:1.35;box-shadow:var(--raise)}
 .updbar button{min-height:44px;min-width:44px;padding:0 16px;border:1px solid var(--accent-sky);
   border-radius:var(--radius-sm);background:var(--accent-sky);color:var(--surface);font:inherit;font-weight:600;
   cursor:pointer;flex:none}
@@ -412,15 +413,15 @@ header .setwrap,header .dancewrap{z-index:2}
 .dancewrap{position:relative;display:inline-block;margin-right:6px}
 header.danceopen{z-index:30}
 .dancemenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:264px;text-align:left;
-  background:var(--panel-hi);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
-  border:1px solid var(--edge);border-radius:18px;padding:12px;box-shadow:var(--raise);text-shadow:none}
+  background:var(--surface);border:1px solid transparent;border-radius:var(--r-card);padding:12px;
+  box-shadow:var(--raise);text-shadow:none}
 .dancemenu[hidden],.dsrc[hidden],#dancebtn[hidden]{display:none}
 .dancesrcs{display:flex;flex-direction:column;gap:4px}
 .dsrc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;min-height:44px;
-  padding:7px 10px;background:none;border:1px solid var(--ctl-edge);border-radius:12px;color:var(--ink);
-  font-size:13px;text-align:left}
+  padding:7px 10px;background:var(--surface);border:1px solid transparent;border-radius:12px;
+  color:var(--ink);font-size:13px;text-align:left;box-shadow:var(--raise-sm)}
 .dsrc span{color:var(--muted);font-size:12px}
-.dsrc:hover,.dsrc.dancelast{border-color:var(--accent-sky)}
+.dsrc:hover,.dsrc.dancelast{border-color:transparent;box-shadow:var(--raise-hi);color:var(--ink)}
 .dsrc:focus-visible{outline:2px solid var(--accent-sky);outline-offset:2px}
 .dancemsg{margin:8px 0 0;color:var(--ink2);font-size:12px}
 .dancemsg:empty{margin:0}
@@ -429,8 +430,8 @@ header.danceopen{z-index:30}
 @keyframes mhbeat{0%{transform:none}35%{transform:translateY(-9px) scale(1.03,.97)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.mhmascot.beat{animation:none}}
 .daily{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:-12px 0 26px;padding:10px 16px;
-  border-radius:var(--radius);border:var(--hair) solid var(--grid);background:var(--panel);
-  backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);font-size:13.5px;line-height:1.5}
+  border-radius:var(--radius);border:var(--hair) solid transparent;background:var(--surface);
+  font-size:13.5px;line-height:1.5;box-shadow:var(--raise-sm)}
 .daily .dkick{margin:0;display:inline-flex;align-items:center;gap:7px;flex:none;color:var(--muted);
   font-size:11px;font-weight:650;letter-spacing:.08em;text-transform:uppercase}
 .daily .dkick i{width:7px;height:7px;border-radius:50%;background:var(--accent-sky)}
@@ -445,7 +446,7 @@ html{scrollbar-gutter:stable}
 <div class="mhart" aria-hidden="true"></div>
 <header><div class="wrap">
   <div class="mhmascot" aria-hidden="true"></div>
-  <nav class="brandbar"><a class="brand" href="./"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><image href="./assets/archie-mark.webp" width="64" height="64"/></svg></span><span>Atlas</span></a></nav><div class="top">
+  <nav class="brandbar"><a class="brand" href="./"><span class="mk" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><image href="./assets/archie-head.webp" width="64" height="64"/></svg></span><span>Atlas</span></a></nav><div class="top">
   <div>
     <h1>Awesome Agentic Atlas</h1>
     <p class="sub"><b>12,007</b> projects · <b>14</b> topics · <b>33,822,981</b> combined stars · snapshot 2026-11-20</p>
@@ -455,6 +456,7 @@ html{scrollbar-gutter:stable}
   <nav>
     <a href="discover/">Discover</a> ·
     <a href="local/">Run It Local</a> ·
+    <a href="alike/">Lookalikes</a> ·
     <a href="collections/">Collections</a> ·
     <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="catalog/">Catalogue</a> ·
@@ -480,14 +482,14 @@ html{scrollbar-gutter:stable}
         <p class="setlab" id="setthemelab">Theme</p>
         <div class="setths" role="group" aria-labelledby="setthemelab">
           <button type="button" class="thb" data-choice="system" aria-pressed="true"><span
-            class="thsw" aria-hidden="true"><i style="background:#EAE5DA"></i><i
-            style="background:#1C1C1B"></i><i style="background:#A4C812"></i></span>System</button>
+            class="thsw" aria-hidden="true"><i style="background:#E3E7ED"></i><i
+            style="background:#24272D"></i><i style="background:#A4C812"></i></span>System</button>
           <button type="button" class="thb" data-choice="light" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#EAE5DA"></i><i
-            style="background:#A4C812"></i><i style="background:#3B5C00"></i></span>Light</button>
+            class="thsw" aria-hidden="true"><i style="background:#E3E7ED"></i><i
+            style="background:#A4C812"></i><i style="background:#3A5A00"></i></span>Light</button>
           <button type="button" class="thb" data-choice="dark" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#1C1C1B"></i><i
-            style="background:#A4C812"></i><i style="background:#DCF55E"></i></span>Dark</button>
+            class="thsw" aria-hidden="true"><i style="background:#24272D"></i><i
+            style="background:#A4C812"></i><i style="background:#C9E46B"></i></span>Dark</button>
         </div>
       </div>
     </div>
@@ -548,7 +550,7 @@ const ATLASDAY = (() => {
 <section class="numbers" aria-labelledby="numbers-h"><h2 id="numbers-h">The atlas in numbers</h2><p class="nsub">Counted from snapshot 2026-11-20.</p><div class="tiles"><div class="tile"><b>12,007</b><span>projects</span><small>from 39 awesome-lists</small></div><div class="tile"><b>14</b><span>topics</span><small>and 12 target tools</small></div><div class="tile"><b>33.8M</b><span>combined stars</span><small>median 43 a project</small></div><div class="tile"><b>480</b><span>named by 3+ lists</span><small>the consensus picks</small></div><div class="tile"><b>53%</b><span>pushed in the last 30 days</span><small>6,437 projects</small></div><div class="tile"><b>6,455</b><span>install in one command</span><small>npx, pip, brew, docker and the like</small></div><div class="tile"><b>1,791</b><span>state Windows support</span><small>in their own README or CI</small></div><div class="tile"><b>85%</b><span>carry a licence</span><small>10,265 projects</small></div></div><h3>Most common languages</h3><ol class="langs"><li><span>Python</span><i style="--w:100.0%"></i><b>4,165</b></li><li><span>TypeScript</span><i style="--w:82.1%"></i><b>3,421</b></li><li><span>JavaScript</span><i style="--w:37.3%"></i><b>1,553</b></li><li><span>Go</span><i style="--w:13.1%"></i><b>545</b></li><li><span>Rust</span><i style="--w:12.1%"></i><b>504</b></li><li><span>Shell</span><i style="--w:6.6%"></i><b>276</b></li></ol><div class="ghrow" data-ghrow hidden><h3>This atlas on GitHub</h3><div class="tiles"><div class="tile"><b data-gh="stars">&ndash;</b><span>stars on GitHub</span></div><div class="tile"><b data-gh="forks">&ndash;</b><span>forks</span></div><div class="tile"><b data-gh="watchers">&ndash;</b><span>watching</span></div><div class="tile"><b data-gh="pushed">&ndash;</b><span>last updated</span></div></div></div></section>
 </div></main>
 <footer><div class="wrap">
-<div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and workbooks"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
+<div class="btags" id="btags" data-repo="crazy54/awesome-agentic-atlas" role="group" aria-label="Build status"><a class="btag" data-wf="daily.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/daily.yml" title="Daily build: the site and Markdown"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>daily</b><span class="bv">&middot;</span></a><a class="btag" data-wf="weekly.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/weekly.yml" title="Weekly build: screenshots and a full refresh"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>weekly</b><span class="bv">&middot;</span></a><a class="btag" data-wf="tests.yml" href="https://github.com/crazy54/awesome-agentic-atlas/actions/workflows/tests.yml" title="The test suite"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>tests</b><span class="bv">&middot;</span></a><a class="btag" data-pages href="https://github.com/crazy54/awesome-agentic-atlas/deployments/github-pages" title="When GitHub Pages last published this site"><span class="bico" aria-hidden="true"></span><i class="bdot" aria-hidden="true"></i><b>deployed</b><span class="bv">&middot;</span></a><span class="sr" id="btagsr">Build status is fetched from GitHub when the page loads.</span></div>
   The Awesome Agentic Atlas merges 39 awesome-lists into one index; all 39 are credited in the <a href="https://github.com/crazy54/awesome-agentic-atlas#the-source-lists">repository</a>. Stars, language, licence and last-push come from the GitHub API on 2026-11-20 and drift daily. Card artwork is each project&rsquo;s own Open Graph image where it has one, and a gradient drawn from its facts where it does not.<button type="button" id="archieadmin" class="archieadmin" aria-label="Archie admin panel" aria-expanded="false" aria-controls="archiepanel">&middot;</button>
 </div></footer>
 <script>function atlasTheme() {
@@ -789,17 +791,17 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 })();
 </script>
 
-<script type="module" src="assets/archie.js?v=f82915a01e"></script>
+<script type="module" src="assets/archie.js?v=f8b3f00ccb"></script>
 <script type="module" src="assets/archie-dance.js?v=07eb812405"></script>
 <script>(() => {
   const b = document.getElementById("archieadmin");
   if (!b) return;
-  const go = () => import("./assets/archie-admin.js?v=f82915a01e")
+  const go = () => import("./assets/archie-admin.js?v=f8b3f00ccb")
     .then((m) => (b.getAttribute("aria-expanded") === "true" ? m.close() : m.open(b)))
     .catch((e) => console.warn("Archie's admin panel did not load:", e));
   b.addEventListener("click", go);
 })();</script>
-<script type="module" src="assets/atlas-site.js?v=a4837d4f4b"></script>
+<script type="module" src="assets/atlas-site.js?v=88f90e5fe1"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script>
 </body>
 </html>

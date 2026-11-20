@@ -61,65 +61,65 @@ Then re-run each of them and `24_pwa.py`, or `detail-churn` and the page probes 
 ## Themes
 
 Two themes, Light and Dark, chosen in the Settings menu (on the catalogue and the homepage) or with the
-light/dark button on the other pages, and worn on every page. The design language is **neumorphic glass**:
-frosted, translucent panels that blur a field of the mascot's colours behind them, soft surfaces raised out
-of that field by a pair of shadows (one light, one dark), pill-shaped controls, and pressed states that are
-pushed *in*. The palette is Archie's: egg-shell ceramic, graphite, lime, iris light, steel and brass.
+light/dark button on the other pages, and worn on every page. The design language is **neumorphism (soft
+UI)**: every surface is the page's own colour, and light is the only thing that makes it an object. A raised
+surface casts a dark shadow down and to the right and catches a highlight up and to the left; a pressed one
+has the same pair inside it. Nothing has a visible border and nothing is translucent.
+
+| What | Treatment | Tokens |
+|---|---|---|
+| Cards, panels, menus, dialogs, the pinned search bar | raised | `--raise` |
+| Chips, buttons, the build tags, the logo's disc | raised; lifted on hover; pressed while held | `--raise-sm`, `--raise-hi`, `--press` |
+| Search boxes, inputs, selects, code wells, tracks | pressed in | `--press` (`--press-sm` for small badges in dense rows) |
+| The active chip, tab or nav item | pressed in, with the accent as its ink | `--press`, `--bar` |
+| The one primary button | Archie's lime, raised, with its glow | `--act`, `--onact`, `--act-edge`, `--glow` |
 
 | `data-theme` | What it is | Notes |
 |---|---|---|
-| `dark` | A dark, dark grey with a faint lime glow; graphite glass; egg-shell (`#EBE5DA`) text; the lime for titles (`--title`), accents and lines | on `:root`, so it is the JavaScript-off floor |
-| `light` | White frosted glass over a field of egg-shell with iris-light and lime pools; graphite ink; a deepened lime for text | the bright lime appears only as a fill (`--act`) |
+| `dark` | A cool charcoal base (`#24272D`), near-white ink, the lime for the active state, glows, progress and key numbers | on `:root`, so it is the JavaScript-off floor |
+| `light` | A cool grey-white base (`#E3E7ED`), navy-graphite ink, the lime deepened to an olive wherever it is text | the bright lime appears only as a fill (`--act`) |
+
+The accent is rationed, the way the reference designs ration theirs: titles and body text are the neutral
+inks. The masthead behind Archie is light, not a picture: the base's own highlight and a faint lime glow
+where he stands.
 
 The reader's choice is `localStorage["theme"]`: `light` or `dark`. **System**, the default, stores
 nothing; then `prefers-color-scheme` picks light or dark, and the page follows the OS live. A small script in
 `<head>` (`sitewide.HEAD_THEME`) settles it **before first paint**, so a returning reader never sees a flash
 of the wrong theme.
 
-**Accessibility is automatic, not a menu item.** There used to be a third theme, High contrast. What it
-did is now keyed on what the reader's system says, in either theme:
+**Accessibility is automatic, not a menu item.** Soft shadows carry no contrast, so a reader whose system
+asks for more gets something else in their place, in either theme:
 
-- `prefers-contrast: more`: solid panels, no blur, no field, no soft shadows; text lifted to 7:1, lines to
-  3:1; links underlined; a 3px focus ring; a pressed control outlined as well as filled; no art behind text.
-- `prefers-reduced-transparency: reduce`, and browsers without `backdrop-filter`: solid panels, no blur.
+- `prefers-contrast: more`: no soft shadows and no field; real 1px edges on controls; text lifted to 7:1,
+  lines to 3:1; links underlined; a 3px focus ring; a pressed control outlined as well as pressed in.
+- `prefers-reduced-transparency: reduce`: no field.
 - `forced-colors: active` (Windows High Contrast): the system palette, with focus rings, pressed states and
   button edges kept as outlines.
 
-A stored `contrast` is rewritten to `dark` (the half it was) by the head script and by `atlasTheme()`.
-There used to be a second axis too, eight colour "skins" (`data-skin`, `localStorage["atlas-skin"]`). The head
-script deletes `atlas-skin` and `atlas-unlock` on a reader's first visit; their light or dark half is
-already in `theme`.
+A stored `contrast` (the old third theme) is rewritten to `dark` by the head script and by `atlasTheme()`.
+The old skin keys (`atlas-skin`, `atlas-unlock`) are deleted on a reader's first visit.
 
-**The glass and its contrast.** Text on glass is read against the glass composited over what is behind it,
-so `theme_test.py` measures every text token against the *effective* background, worst case: a static panel
-(`--panel`) over the field's darkest (light) or lightest (dark) point, and a floating one (`--panel-hi`: the
-pinned bar, menus, dialogs) over pure black or pure white, because anything can scroll under it.
+**Contrast.** Every surface is the base, so `theme_test.py` measures every text token against the base and
+against the field's worst point (in dark, the top-left highlight, which lifts the base towards the ink).
+Every pair clears WCAG AA; the strengthened modes clear AAA.
 
-**Blur is rationed.** `backdrop-filter:var(--bdf)` sits on a bounded set of large surfaces (headers, footers,
-the pinned bar, menus, dialogs, the homepage's spotlight and daily line), never on a rule that draws per row
-or per card, and `theme_test.py` holds that list. Two traps, both measured: a backdrop filter makes its box
-the containing block of every `position:fixed` descendant (a blurred `.subbar` dragged the phone filter sheet
-330px up the page), and a stacking context (which would trap the local page's suggestion list under the next
-step). Cards are translucent and raised, but not blurred.
-
-**One copy.** Every token, the pre-paint script and the paint-only shared rules (the field, focus ring, the
-controls, the lime button, the strengthened modes, forced colours, Archie's fog prank) are `THEME_CSS`,
-`HEAD_THEME` and `THEME_JS` in `scripts/sitewide.py`. The catalogue (`19_pages.py`), `pages.css`
-(`20_landing.py`) and `detail.css` (`22_detail.py`) drop them in; nothing else declares a colour token. The
-token names, values and ratios for other streams are in the team's `tokens.md`, and `theme_test.py` checks
-every pairing the stylesheets use. Three rules for new UI:
+**One copy.** Every token, the pre-paint script and the paint-only shared rules (the field, the focus ring,
+the controls, the lime button, the wells, the strengthened modes, forced colours, Archie's fog prank) are
+`THEME_CSS`, `HEAD_THEME` and `THEME_JS` in `scripts/sitewide.py`. The catalogue (`19_pages.py`), `pages.css`
+(`20_landing.py`) and `detail.css` (`22_detail.py`) drop them in; nothing else declares a colour token.
+Three rules for new UI:
 
 - Use the tokens, never a hard-coded colour, so both themes and the strengthened modes apply
-  automatically. A panel is `--panel` with a `--edge` border and `--raise` (or `--raise-sm`) shadow; a
-  control is `--band` with a `--ctl-edge` border and `--raise-sm`; a well (input, code) is `--press`; a
-  primary filled control is `--act` with `--onact` ink and a `--act-edge` inset edge; status is
+  automatically. A panel or card is `--surface` with `--raise`; a control is `--surface` with `--raise-sm`,
+  `--raise-hi` on hover and `--press` while pressed or on; a well is `--surface` with `--press`; the primary
+  action is `--act` with `--onact` ink. Borders the layout already has stay, in `transparent`. Status is
   `--good` / `--warn` with a word or a mark beside it, never colour alone.
 - **Theme rules change paint, not layout.** Colours, backgrounds, border colours and radii, outlines,
-  shadows, backdrop filters and text decoration; never a size, a padding, a border width, a weight or a
-  position. Every glass edge and neumorphic rim is a `box-shadow` or a border *colour*. `theme_test.py`
-  enforces that for the shared rules; `cards-check.mjs` measures real layout in both themes, and the theme
-  work's box-for-box diff (every element on six page families, both themes, 1440 and 375) found nothing moved.
-- Only blur what the list above allows; translucency alone looks the same over the soft field.
+  shadows and text decoration; never a size, a padding, a border width, a weight, a transform or a
+  position. `theme_test.py` enforces that for the shared rules; `cards-check.mjs` measures real layout in
+  both themes.
+- Nothing is blurred: soft UI is opaque, and `theme_test.py` holds that no rule asks for `backdrop-filter`.
 
 ## Feature flags
 

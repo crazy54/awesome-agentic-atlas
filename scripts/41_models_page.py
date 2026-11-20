@@ -178,22 +178,22 @@ CSS = """<style>
 /* The models page. Tokens only -- the thirteen every theme declares -- so every theme repaints it. */
 .mtools{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end;margin:18px 0 6px}
 .mtools label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 4px}
-.mtools input,.mtools select{font:14px var(--ui);color:var(--ink);background:var(--band);border:1px solid var(--ctl-edge);
+.mtools input,.mtools select{font:14px var(--ui);color:var(--ink);background:var(--surface);border:1px solid transparent;
   border-radius:999px;box-shadow:var(--press);padding:7px 10px;min-height:36px}
 .mtools input{min-width:min(340px,80vw)}
 .mtools input:focus-visible,.mtools select:focus-visible,.mgrp button:focus-visible,.mcard a:focus-visible,
 .mq summary:focus-visible,#mmore:focus-visible{outline:2px solid var(--link);outline-offset:2px}
 .mgrp{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
 .mgrp .gl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);align-self:center;min-width:64px}
-.mgrp button{font:13px var(--ui);color:var(--ink2);background:var(--band);border:1px solid var(--ctl-edge);border-radius:999px;
-  box-shadow:var(--raise-sm);padding:5px 11px;min-height:32px;cursor:pointer}
+.mgrp button{font:13px var(--ui);color:var(--ink2);background:var(--surface);border:1px solid transparent;
+  border-radius:999px;box-shadow:var(--raise-sm);padding:5px 11px;min-height:32px;cursor:pointer}
 .mgrp button:hover{box-shadow:var(--raise-hi)}
-.mgrp button[aria-pressed=true]{background:var(--act);color:var(--onact);border-color:var(--act-edge);box-shadow:var(--press-act)}
+.mgrp button[aria-pressed=true]{background:var(--surface);color:var(--bar);border-color:transparent;box-shadow:var(--press)}
 #mcount{color:var(--muted);font-size:13px;margin:14px 0 8px}
 .mlist{list-style:none;margin:0;padding:0;display:grid;align-items:start;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:12px}
-/* A pane of glass, translucent and raised but not blurred: there can be hundreds on the page. */
-.mcard{background:var(--panel);border:1px solid var(--edge);border-radius:20px;box-shadow:var(--raise-sm);
-  padding:14px 16px;min-width:0}
+/* A raised card of the base, never blurred: there can be hundreds on the page. */
+.mcard{background:var(--surface);border:1px solid transparent;border-radius:var(--r-card);
+  box-shadow:var(--raise);padding:14px 16px;min-width:0}
 .mhd{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
 .mcard h2{font-size:16px;margin:0;overflow-wrap:anywhere}
 .mcard h2 a{color:var(--ink)}
@@ -209,7 +209,8 @@ CSS = """<style>
 .lic-custom{color:var(--bar)}
 .lic-non-commercial{color:var(--warn)}
 .lick{color:var(--muted);font-size:12px}
-.gate{font:600 11px var(--mono);color:var(--warn);border:1px solid var(--warn);border-radius:5px;padding:1px 6px}
+.gate{font:600 11px var(--mono);color:var(--warn);border:1px solid transparent;border-radius:5px;
+  padding:1px 6px;background:var(--surface);box-shadow:var(--press-sm)}
 .tag.flag{color:var(--muted)}
 .mq{margin-top:9px}
 .mq summary{cursor:pointer;color:var(--link);font-size:13px}
@@ -217,7 +218,8 @@ CSS = """<style>
 .mqb table{font-size:12.5px;margin-top:8px}
 .mqb td,.mqb th{padding:4px 8px 4px 0;text-align:left;vertical-align:top;border-bottom:1px solid var(--grid)}
 .mqb .qs{display:flex;flex-wrap:wrap;gap:4px}
-.mqb .q{font:12px var(--mono);background:var(--band);border:1px solid var(--grid);border-radius:5px;padding:1px 6px;white-space:nowrap}
+.mqb .q{font:12px var(--mono);background:var(--surface);border:1px solid transparent;border-radius:5px;
+  padding:1px 6px;white-space:nowrap;box-shadow:var(--press-sm)}
 .mqb code.cmd{font-size:12px;white-space:normal;overflow-wrap:anywhere}
 #mmore{margin:16px 0}
 .mfam{display:flex;flex-wrap:wrap;gap:6px}

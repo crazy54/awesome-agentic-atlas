@@ -24,12 +24,13 @@ const NS = "http://www.w3.org/2000/svg";                                   // CS
 const CSS = `
 .pals-stage{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:29}
 .pals-stage canvas{position:absolute;left:0;top:0;pointer-events:none}
-.pals-say{position:absolute;max-width:220px;margin:0;padding:6px 10px;border-radius:12px;background:#fff;
-  color:#111;font:600 13px/1.3 system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25);opacity:0;
-  translate:-50% -100%;transition:opacity .2s;pointer-events:none;white-space:pre-line}
+.pals-say{position:absolute;max-width:220px;margin:0;padding:6px 10px;border-radius:12px;
+  background:var(--surface,#fff);color:var(--ink,#111);font:600 13px/1.3 var(--ui,system-ui,sans-serif);
+  box-shadow:var(--raise,0 4px 14px rgba(0,0,0,.25));opacity:0;translate:-50% -100%;
+  transition:opacity .2s;pointer-events:none;white-space:pre-line}
 .pals-say.on{opacity:1}
 .pals-say::after{content:"";position:absolute;left:50%;bottom:-6px;translate:-50% 0;border:6px solid transparent;
-  border-bottom:0;border-top-color:#fff}
+  border-bottom:0;border-top-color:var(--surface,#fff)}
 .pals-sign{position:absolute;pointer-events:none;font:800 15px/1.1 system-ui,sans-serif;letter-spacing:.02em}
 @media (prefers-reduced-motion: reduce){.pals-stage{display:none}}
 `;

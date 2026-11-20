@@ -4,7 +4,7 @@
 
 Claude Code is the harness the largest single share of this atlas is built for. Installing it is ten seconds; the next hour is the part nobody writes down. These seven cover the format skills come in, three bundles worth reading before writing your own, the two things that make long sessions cheaper, and where to look when you want more. Every project here targets Claude Code, and the build checks that too.
 
-7 picks · 1,030,013 combined stars · snapshot 2026-11-01
+7 picks · 1,073,873 combined stars · snapshot 2026-11-20
 
 [Open all 7 in the atlas](https://aaa.jeremyfhall.com/#list=anthropics/skills,obra/superpowers,multica-ai/andrej-karpathy-skills,addyosmani/agent-skills,JuliusBrussee/caveman,ccusage/ccusage,hesreallyhim/awesome-claude-code) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -24,7 +24,7 @@ Anthropic's own repository for Agent Skills: the SKILL.md format, a template and
 git clone https://github.com/anthropics/skills.git
 ```
 
-**186,216** stars · 7 of 39 lists · Python · no licence stated · pushed 2026-10-28
+**197,878** stars · 7 of 39 lists · Python · no licence stated · pushed 2026-11-16
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -44,7 +44,7 @@ Core software-engineering competencies covering most of the SDLC, well organised
 git clone https://github.com/obra/superpowers.git
 ```
 
-**310,478** stars · 8 of 39 lists · Shell · MIT · pushed 2026-10-29
+**322,468** stars · 8 of 39 lists · Shell · MIT · pushed 2026-11-03
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -64,7 +64,7 @@ A drop-in CLAUDE.md distilling four behavioural guidelines, derived from Andrej 
 git clone https://github.com/multica-ai/andrej-karpathy-skills.git
 ```
 
-**227,873** stars · 3 of 39 lists · language not detected · no licence stated · pushed 2026-04-20
+**234,623** stars · 3 of 39 lists · language not detected · no licence stated · pushed 2026-04-20
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -81,10 +81,10 @@ Production-grade engineering skills, and portable: it also targets MCP, Codex an
 > Production-grade engineering skills for AI coding agents, packaged as 24 reusable skills covering the full development lifecycle from /spec to /ship. The slash-command interface and context-aware auto-activation make it a concrete reference for turning senior-engineering judgment into agent-executable harness artifacts
 
 ```sh
-npx skills add addyosmani/agent-skills # install all 25 skills
+npx skills add addyosmani/agent-skills # install all 26 skills
 ```
 
-**112,477** stars · 4 of 39 lists · JavaScript · MIT · pushed 2026-10-31
+**119,288** stars · 4 of 39 lists · JavaScript · MIT · pushed 2026-11-18
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -101,10 +101,10 @@ Conserves tokens by shortening what the agent says back to you. It reads like a 
 > by Julius Brussee - A plugin that conserves message tokens by communicating in fragmented "caveman speak" - sort of a clever form of compression. Now accompanied by a whole caveman ecosystem including a memory system, caveman spec kit, and a caveman agent
 
 ```sh
-irm https://raw.githubusercontent.com/JuliusBrussee/caveman/v4.0.1/install.ps1 | iex
+irm https://raw.githubusercontent.com/JuliusBrussee/caveman/v4.1.0/install.ps1 | iex
 ```
 
-**116,653** stars · 2 of 39 lists · Go · Apache-2.0 · pushed 2026-11-01
+**121,674** stars · 2 of 39 lists · Go · Apache-2.0 · pushed 2026-11-20
 
 Platforms: Win Y WSL L mac N Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -124,7 +124,7 @@ One npx command reports what your Claude Code sessions have actually cost. Zero 
 git clone https://github.com/ccusage/ccusage.git
 ```
 
-**19,286** stars · 4 of 39 lists · Rust · no licence stated · pushed 2026-11-01
+**19,523** stars · 4 of 39 lists · Rust · no licence stated · pushed 2026-11-20
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -144,7 +144,7 @@ The specialist list for this harness. When the kit above stops being enough, thi
 git clone https://github.com/hesreallyhim/awesome-claude-code.git
 ```
 
-**57,030** stars · 3 of 39 lists · Python · no licence stated · pushed 2026-11-01
+**58,419** stars · 3 of 39 lists · Python · no licence stated · pushed 2026-11-20
 
 Platforms: Win N WSL N mac Y Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

@@ -103,7 +103,7 @@ Hand-written inputs that are not generated:
 ## Technology
 
 - **Python 3** for the whole pipeline. CI uses 3.12. Most stages are standard library only.
-  - `pillow` is needed by the screenshot stages (`05`, `06`, `15`), `masthead_art.py` and the OG preview workflow.
+  - `pillow` is needed by the screenshot stages (`05`, `06`, `15`), `art/brand/build.py` and the OG preview workflow.
   - `numpy` is needed by `27_semantic.py`.
   - `playwright` is installed on the weekly run for screenshot capture.
 - **The GitHub CLI (`gh`)** for every GitHub API call. The fetch stages shell out to `gh api graphql`.

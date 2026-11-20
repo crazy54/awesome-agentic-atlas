@@ -29,19 +29,21 @@ const label = cmd => NAMES[cmd] || (cmd.split(":")[1] || cmd).replace(/-/g, " ")
 const CSS = `
 #archiepanel{position:fixed;right:16px;bottom:16px;z-index:60;width:min(560px,calc(100vw - 32px));
   max-height:min(78vh,720px);overflow:auto;box-sizing:border-box;padding:14px 16px 12px;
-  background:var(--panel,var(--surface));color:var(--ink,#eef);border:1px solid var(--panel-b,var(--hair,#333));
-  border-radius:var(--radius,10px);box-shadow:0 12px 40px rgba(0,0,0,.35);font:13px/1.35 system-ui,sans-serif}
+  background:var(--surface);color:var(--ink,#eef);
+  border:1px solid var(--panel-b,var(--hair,transparent));border-radius:var(--r-card,20px);
+  box-shadow:var(--raise,0 12px 40px rgba(0,0,0,.35));font:13px/1.35 var(--ui,system-ui,sans-serif)}
 #archiepanel h2{margin:0 0 2px;font-size:14px}
 #archiepanel .why{margin:0 0 8px;color:var(--muted,#999);font-size:12px}
 #archiepanel fieldset{border:0;border-top:1px solid var(--hair,#333);margin:8px 0 0;padding:6px 0 0}
 #archiepanel legend{padding:0;color:var(--ink2,#ccd);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
 #archiepanel .row{display:flex;flex-wrap:wrap;gap:6px}
-#archiepanel button{font:inherit;min-height:32px;padding:4px 10px;border-radius:999px;cursor:pointer;
-  color:var(--ink,#eef);background:transparent;border:1px solid var(--panel-b,var(--hair,#444))}
-#archiepanel button:hover:not(:disabled){border-color:var(--ac,var(--link,#8af))}
+#archiepanel button{font:inherit;min-height:32px;padding:4px 10px;border-radius:999px;cursor:pointer;color:var(--ink,#eef);
+  background:var(--surface);border:1px solid var(--panel-b,var(--hair,transparent));
+  box-shadow:var(--raise-sm)}
+#archiepanel button:hover:not(:disabled){border-color:transparent;box-shadow:var(--raise-hi);color:var(--ac,var(--link,#8af))}
 #archiepanel button:focus-visible{outline:2px solid var(--link,var(--ac,#8af));outline-offset:2px}
 #archiepanel button:disabled{opacity:.45;cursor:not-allowed;text-decoration:line-through}
-#archiepanel button[data-cmd=quiet]{border-color:var(--accent-coral,#e77)}
+#archiepanel button[data-cmd=quiet]{border-color:transparent;color:var(--accent-coral,#e77)}
 #archiepanel .top{display:flex;justify-content:space-between;align-items:start;gap:8px}
 #archiepanel [data-close]{min-height:28px;padding:2px 9px}
 #archiepanel output{display:block;margin-top:8px;color:var(--muted,#999);font:12px/1.3 var(--mono,monospace)}

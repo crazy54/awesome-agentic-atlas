@@ -104,7 +104,6 @@ below.
 | `chrome.py` | Finds a headless Chromium: `CHROME_PATH`, `CHROMIUM_PATH`, `PLAYWRIGHT_CHROMIUM`, then Playwright caches, then `PATH` |
 | `pagemin.py` | Strips comments from generated pages |
 | `mark.py`, `osicons.py` | Shared SVG marks: the Archie globe and the five platform icons |
-| `masthead_art.py` | Draws `docs/assets/masthead-{dark,light}.webp`. Run by hand only |
 | `try_source.py` | Works out a parse strategy for a candidate new source list. Writes to `cache/candidates/` |
 | `devfixture.py` | Rebuilds the cache files `19_pages.py` needs, from the committed `docs/data.json` (see below) |
 

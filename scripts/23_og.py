@@ -235,15 +235,15 @@ FONT = "DejaVu Sans"
 # re-render the cards should be an edit to this file, and `tests/theme_test.py` holds every value to the
 # dark palette so the two cannot drift apart silently.
 PALETTE = {
-    "surface": "#1c1c1b",   # the card, and the backdrop Chromium paints under it -- see `shoot()`
-    "band":    "#2f2e2c",   # chip fill
-    "ink":     "#d4cec3",   # body text, and the chips'
-    "ink2":    "#aeaaa4",   # the count line
-    "muted":   "#aeaaa4",   # blurb, label, host line
-    "grid":    "#3f4526",   # chip border: dark's lime-tinted line
+    "surface": "#24272d",   # the card, and the backdrop Chromium paints under it -- see `shoot()`
+    "band":    "#24272d",   # chip fill: the base itself, raised by its shadows (soft UI)
+    "ink":     "#c9cdd3",   # body text, and the chips'
+    "ink2":    "#a3aab4",   # the count line
+    "muted":   "#a3aab4",   # blurb, label, host line
+    "grid":    "#33373e",   # an etched line (no longer drawn on the chips)
     "bar":     "#a4c812",   # the accent: the frame's top border, and the kicker
-    "warn":    "#ebe5da",   # the count itself
-    "head":    "#ebe5da",   # the heading
+    "warn":    "#e8eaed",   # the count itself
+    "head":    "#e8eaed",   # the heading
 }
 
 # The root card's file name, and the one string `19_pages.py` has to agree with -- it is what the root
@@ -529,9 +529,11 @@ h1{{margin:24px 0 0;font-size:76px;line-height:1.05;letter-spacing:-.02em;font-w
    The type is 21px rather than the 25px it was because at 25px three chips did not fit and the clamp
    was eating the word that identifies the project -- see `NAME_CAP` for the measurement and the
    arithmetic. Smaller type here shows *more* of the name, not less. */
-.chip{{flex:0 1 auto;min-width:0;background:{band};border:1px solid {grid};border-radius:999px;
+.chip{{flex:0 1 auto;min-width:0;background:{band};border:1px solid transparent;border-radius:999px;
   padding:10px 18px;font-size:21px;color:{ink};white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis}}
+  text-overflow:ellipsis;box-shadow:6px 6px 12px rgba(0,0,0,.55),-5px -5px 10px rgba(255,255,255,.05)}}
+/* Soft UI: the chips are the card's own colour, raised by two shadows; shadows paint outside the box, so
+   the layout measured above is unchanged. */
 .host{{margin-top:20px;font-size:22px;color:{muted}}}
 </style></head><body><div class=card>
 <div class=kick>Awesome Agentic Atlas</div>
