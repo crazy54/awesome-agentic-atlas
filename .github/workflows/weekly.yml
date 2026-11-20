@@ -292,6 +292,10 @@ jobs:
           # docs/models.json; before 20_landing, which imports its `urls()` into the sitemap. In both
           # workflows so a picks or catalogue edit ships with the next daily. See scripts/32_local.py.
           python scripts/32_local.py
+          # Lookalikes (docs/alike/). A static page -- it fetches data.json and docs/search/ in the reader's
+          # browser -- so a run only rewrites it when the stage, the page script or the shared encoder
+          # changed. Before 20_landing, which imports its `urls()` into the sitemap. See scripts/33_alike.py.
+          python scripts/33_alike.py
           # 20 and 21 must both follow 19_pages and never precede it: that stage is what stamps the
           # ledger and rewrites data.json, and both of these read data.json and nothing else. Run first,
           # the feeds would publish yesterday's arrivals and the landing pages would prerender

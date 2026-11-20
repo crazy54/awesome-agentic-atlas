@@ -863,6 +863,7 @@ def render(page: Page, pages: list[Page], data: dict, cards: set[str]) -> str:
   <nav>
     <a href="{page.rel('discover/')}">Discover</a> ·
     <a href="{page.rel(sitewide.LOCAL_PAGE['slug'] + '/')}">{esc(sitewide.LOCAL_PAGE['title'])}</a> ·
+    <a href="{page.rel(sitewide.ALIKE_PAGE['slug'] + '/')}">{esc(sitewide.ALIKE_PAGE['title'])}</a> ·
     <a href="{page.rel('collections/')}">Collections</a> ·
     <a href="https://github.com/{esc(REPO)}/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
     <a href="{page.rel('repo/')}">All projects</a> ·

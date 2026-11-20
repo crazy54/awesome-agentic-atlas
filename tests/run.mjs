@@ -169,6 +169,14 @@
 //                     and the pages are the same set in both directions, that it resolves its three columns
 //                     by name rather than by position -- a later stage appends columns -- and that its
 //                     serialisation is byte-stable, which is what lets it be committed at all.
+//   alike_test.py     Lookalikes' stage and the query encoder it shares with the catalogue: one copy of
+//                     scripts/semantic.js in both generators' output and no private tokeniser in either, the page
+//                     from its constant and byte-stable, the detail page's button, the nav, sitemap and workflows.
+//   alike-probe.mjs   Lookalikes' resolver and ranking: the page's own ALIKE, in a node VM, against the committed
+//                     data.json and docs/search/. Every URL shape, names, quality floors relative to the README-
+//                     vector control, the ecosystem split, filters, a fabricated forge answer, every detail link.
+//   alike-check.mjs   Lookalikes in a browser, with GitHub and GitLab answered through CDP's Fetch domain: links,
+//                     keyboard, did-you-mean, filters, 404, rate limit, unreachable, offline, themes, phone.
 //
 // A HARNESS THAT SKIPS MUST NOT BE ABLE TO PASS, which is why there is no branch anywhere below that quietly
 // carries on. A missing browser or a missing interpreter exits 2 before anything runs; a harness that prints
@@ -233,6 +241,8 @@ const HARNESSES = [
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
   {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, the host in docs/CNAME, and the monitoring tags", python: true, floor: 34},
   {file: "spotlight_test.py", label: "the daily spotlight and line: one rule in Python and in the page, the pool, the refusals", python: true, floor: 300},
+  {file: "alike_test.py", label: "Lookalikes: one shared encoder in both pages, the page from its constant, the button, the nav and the wiring", python: true, floor: 50},
+  {file: "alike-probe.mjs", label: "Lookalikes' resolver and ranking, the page's own code against the committed data", floor: 70},
   {file: "local_test.py", label: "the local-AI page: catalogue and picks refused when wrong, the vendored fit method inlined faithfully, the page and its wiring", python: true, floor: 85},
   {file: "models_test.py", label: "the models index: the schema frozen, every quant file and size, the Hub answers it refuses", python: true, floor: 150},
   {file: "osicons_test.py", label: "the five platform marks, and that every one of them resolves", python: true, floor: 200},
