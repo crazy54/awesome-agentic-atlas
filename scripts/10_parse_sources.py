@@ -434,7 +434,16 @@ def clean(s: str) -> str:
     # docs/data.json, and `check_markdown.py`'s "escaped pipe outside a table" failing the build now
     # that both workflows run it.
     s = s.replace("\\|", "|")
+    s = STAR_PREFIX.sub("", s, count=1)
     return re.sub(r"\s+", " ", s).strip(" \t*-–—:;.")
+
+
+# A leading star count some lists put in front of every entry: `(132.3k ⭐) - Claude Code is...` on all
+# 779 of claudecode_jq's entries, `195.5k ⭐ - Official...` on 69 elsewhere (2026-11-18). It is a number
+# frozen on the day the curator typed it, and every surface prints it beside a live star count that
+# disagrees with it, so it is not part of the sentence. Only at the very start, and only with a star or
+# the word "stars" in it, so a description that merely mentions a count keeps it.
+STAR_PREFIX = re.compile(r"^\s*\(?\s*~?[\d.,]+\s*[kKmM]?\+?\s*(?:⭐|★|stars?)\s*\)?\s*[-–—:|]?\s*")
 
 
 def repo_of(url: str) -> tuple[str, str, str] | None:
