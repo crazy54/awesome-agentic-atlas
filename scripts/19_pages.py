@@ -699,8 +699,8 @@ SETTINGS_CSS = r"""/* THE SETTINGS MENU. Absolutely positioned inside a relative
 .setwrap{position:relative;display:inline-block}
 header.setopen{z-index:30}
 .setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:280px;text-align:left;
-  background:var(--panel-hi);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
-  border:1px solid var(--edge);border-radius:18px;padding:12px;box-shadow:var(--raise)}
+  background:var(--surface);border:1px solid transparent;border-radius:var(--r-card);padding:12px;
+  box-shadow:var(--raise)}
 /* `hidden` is the state and this rule is what makes it stick: `display:inline-block` on the wrapper does
    not cascade to the child, but every UA default for [hidden] is `display:none`, and a later
    `display:` on the same element would beat it. Restating it here keeps the attribute authoritative,
@@ -721,15 +721,15 @@ header.setopen{z-index:30}
 .thb{display:flex;align-items:center;gap:7px;width:100%;min-height:36px;padding:0 7px;
   background:none;border:1px solid transparent;border-radius:999px;color:var(--ink2);font-size:13px;
   text-align:left}
-.thb:hover{border-color:var(--ctl-edge);color:var(--ink);box-shadow:var(--raise-sm)}
+.thb:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-sm)}
 /* The border, a tint and the weight, not a solid fill. A solid fill is the lime the chips use for an active
    filter, and the theme is not a filter -- it is always exactly one of three, so a reader reading this panel
    needs to see which, not to be told something is on. The tick is the same fact without colour, for a
    reader who cannot tell a lime border from a grey one; it is drawn in the padding the swatch already
    leaves, absolutely, so the row is the size it was. */
 .thb{position:relative}
-.thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600;
-  background:color-mix(in srgb,var(--act) 12%,transparent);box-shadow:var(--press)}
+.thb[aria-pressed=true]{border-color:transparent;color:var(--ink);font-weight:600;background:var(--surface);
+  box-shadow:var(--press)}
 .thb[aria-pressed=true]::after{content:"\2713";position:absolute;right:10px;top:50%;transform:translateY(-50%);
   color:var(--bar);font-weight:700}
 .thsw{display:inline-flex;flex:none;width:28px;height:14px;border-radius:999px;overflow:hidden;
@@ -757,14 +757,14 @@ SETTINGS_MENU = r"""<div class="setwrap">
         <p class="setlab" id="setthemelab">Theme</p>
         <div class="setths" role="group" aria-labelledby="setthemelab">
           <button type="button" class="thb" data-choice="system" aria-pressed="true"><span
-            class="thsw" aria-hidden="true"><i style="background:#EAE5DA"></i><i
-            style="background:#1C1C1B"></i><i style="background:#A4C812"></i></span>System</button>
+            class="thsw" aria-hidden="true"><i style="background:#E3E7ED"></i><i
+            style="background:#24272D"></i><i style="background:#A4C812"></i></span>System</button>
           <button type="button" class="thb" data-choice="light" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#EAE5DA"></i><i
-            style="background:#A4C812"></i><i style="background:#3B5C00"></i></span>Light</button>
+            class="thsw" aria-hidden="true"><i style="background:#E3E7ED"></i><i
+            style="background:#A4C812"></i><i style="background:#3A5A00"></i></span>Light</button>
           <button type="button" class="thb" data-choice="dark" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#1C1C1B"></i><i
-            style="background:#A4C812"></i><i style="background:#DCF55E"></i></span>Dark</button>
+            class="thsw" aria-hidden="true"><i style="background:#24272D"></i><i
+            style="background:#A4C812"></i><i style="background:#C9E46B"></i></span>Dark</button>
         </div>
       </div>
     </div>"""
@@ -868,11 +868,10 @@ a:hover{text-decoration:underline}
    masthead is halfway off the top the bar is pinned across it. Whatever is pinned paints over whatever is
    scrolling, which is why 10 and not 30. The shadow moves to the bar for the same reason: it belongs to
    the element that floats over the results, and that is no longer this one. */
-/* The masthead is a pane of the glass: frosted over the field, with a hairline of light for its lower edge.
-   It is already `position:relative` with a z-index, so the backdrop filter neither makes it a stacking
-   context it was not nor a containing block for anything inside it that was not already contained. */
-header{position:relative;z-index:10;background:var(--panel);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);border-bottom:1px solid var(--edge);padding:22px 20px 16px}
+/* The masthead is the base itself, transparent over the field, with no edge: soft UI separates by light,
+   not by lines. It is `position:relative` with a z-index so the Settings menu stacks over the pinned bar. */
+header{position:relative;z-index:10;background:transparent;border-bottom:1px solid transparent;
+  padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
 h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
@@ -888,10 +887,10 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 /* Shieldcn supplies the badge's SVG, typography and clock. The semantic time remains local so the link
    keeps an accessible name, works with the live Last-Modified correction, and still says something if
    the third-party image is unavailable. */
-.stamp{display:inline-block;height:22px;margin:8px 0 0;border-radius:6px;text-decoration:none;
-  vertical-align:top;box-shadow:0 0 0 1px color-mix(in srgb,var(--grid) 70%,transparent)}
+.stamp{display:inline-block;height:22px;margin:8px 0 0;border-radius:8px;text-decoration:none;
+  vertical-align:top;box-shadow:var(--raise-sm)}
 .deploy-badge{display:block;width:auto;height:22px;border:0;border-radius:6px}
-.stamp:hover,.stamp:focus-visible{box-shadow:0 0 0 2px var(--bar)}
+.stamp:hover,.stamp:focus-visible{box-shadow:var(--raise-hi),0 0 0 2px var(--bar)}
 .stamp:focus-visible{outline:none}
 /* The tighter badge fits a 320px phone with both words intact, so its accessible and visible labels stay
    the same at every width. */
@@ -914,16 +913,15 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
    instead -- see the narrow-width rule at the bottom of this stylesheet. The radius drops from a 999px
    stadium, which reads as a lozenge once there are two lines, to a rounded rectangle that stays a name tag. */
 .atlas-name{display:block;margin:-11px auto 0;position:relative;z-index:2;padding:3px 9px;
-  border:1px solid var(--ctl-edge);border-radius:12px;background:var(--plane);color:var(--ink);
-  box-shadow:var(--raise-sm);
-  font-size:10px;font-weight:700;letter-spacing:.03em;line-height:1.35;text-align:center;
-  text-wrap:balance}
+  border:1px solid transparent;border-radius:999px;background:var(--surface);color:var(--ink);
+  box-shadow:var(--raise-sm);font-size:10px;font-weight:700;letter-spacing:.03em;line-height:1.35;
+  text-align:center;text-wrap:balance}
 /* Full name here, one word at the narrow breakpoint; the swap is at the bottom of this stylesheet. Both are in
    the markup rather than one being written by script, so the pill is right in the first painted frame and
    right with JavaScript off. There is 25% of slack for the two-line arrangement at this width -- 108px of
    content against 81px for the worst face measured -- so this one is not font-dependent. */
 .atlas-name-short{display:none}
-.atlas-name:hover{border-color:var(--bar);color:var(--ink)}
+.atlas-name:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-hi)}
 .byte-quiet{display:block;margin:5px auto 0;padding:0;border:0;background:transparent;color:var(--muted);
   font-size:10px;text-decoration:underline;text-underline-offset:2px}
 .byte-quiet:hover{color:var(--ink)}
@@ -975,14 +973,15 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
    whose `hidden` attribute is set computes `display:flow-root` and takes a 20px box. Every assertion in
    cards-check that checks Archie has stopped speaking reads the ATTRIBUTE, which is still true, so all seven
    of them stay green while the bubble sits on the masthead forever. There is now one that reads the box. */
-#byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:220px;
-  padding:9px 11px;border:1px solid var(--grid);border-left:3px solid var(--bar);border-radius:9px;
-  background:var(--band);color:var(--ink2);font-size:12px;line-height:1.38;z-index:4;
-  box-shadow:var(--raise-sm);
-  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+#byte-speech{position:absolute;right:calc(100% + 12px);bottom:0;width:220px;padding:9px 11px;
+  border:1px solid transparent;border-left:3px solid transparent;border-radius:16px;
+  background:var(--surface);color:var(--ink2);font-size:12px;line-height:1.38;z-index:4;
+  box-shadow:var(--raise);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+  line-clamp:2;overflow:hidden}
 #byte-speech[hidden]{display:none}
-#byte-speech::after{content:"";position:absolute;right:-6px;bottom:12px;width:11px;height:11px;
-  background:var(--band);border-top:1px solid var(--grid);border-right:1px solid var(--grid);transform:rotate(45deg)}
+#byte-speech::after{content:"";position:absolute;right:-6px;bottom:12px;width:11px;height:11px;background:var(--band);
+  border-top:1px solid var(--grid);border-right:1px solid var(--grid);transform:rotate(45deg);
+  display:none}
 #atlas-orbit{position:absolute;inset:-18px -24px;pointer-events:none;z-index:3}
 .orbit-star{position:absolute;left:50%;top:50%;width:5px;height:5px;background:var(--bar);box-shadow:0 0 10px var(--bar);
   transform:rotate(var(--orbit-angle)) translateY(-58px) rotate(45deg);animation:atlas-orbit 1.45s ease-out both}
@@ -1002,9 +1001,8 @@ button{font:inherit;cursor:pointer}
    that text on it passes over pure black (light) or pure white (dark) -- see GLASS in scripts/sitewide.py.
    Safe to blur: it is already sticky with a z-index, and nothing inside it is position:fixed (the filter
    sheet, which is, lives in `.subbar` below for exactly that reason). */
-.bar{position:sticky;top:0;z-index:20;background:var(--panel-hi);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);border-bottom:1px solid var(--edge);padding:10px 20px;
-  box-shadow:0 14px 30px -16px rgba(0,0,0,.4)}
+.bar{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid transparent;
+  padding:10px 20px;box-shadow:0 18px 30px -18px rgba(0,0,0,.55)}
 .bar .wrap{display:flex;flex-direction:column;gap:8px}
 /* THE HALF OF THE BAR THAT DOES NOT STICK (JFH-354). The three facet rails are in `#sheet`, and they used
    to be inside `.bar` -- which meant the pinned band was 240px at 1440x900 and 403px at 768x900, most of
@@ -1025,22 +1023,21 @@ button{font:inherit;cursor:pointer}
    containing block of its fixed descendants, so a blurred `.subbar` dragged the closed sheet 330px up into
    the page (measured, box for box). The fill is the same translucent glass; it sits only on the field, where
    a blur would have nothing sharp to soften anyway. */
-.subbar{background:var(--panel);border-bottom:1px solid var(--edge);padding:0 20px 9px}
+.subbar{background:transparent;border-bottom:1px solid transparent;padding:0 20px 9px}
 .subbar .wrap{display:flex;flex-direction:column;gap:8px}
 .line{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .line>label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
   min-width:74px}
-/* The search field and the sort menu are wells: pressed into the glass, pill-shaped. */
-#q{flex:1;min-width:220px;background:var(--band);color:var(--ink);box-shadow:var(--press);
-  border:1px solid var(--ctl-edge);border-radius:999px;padding:9px 12px;font:inherit}
+/* The search field and the sort menu are wells: pressed into the surface, pill-shaped. */
+#q{flex:1;min-width:220px;background:var(--surface);color:var(--ink);box-shadow:var(--press);
+  border:1px solid transparent;border-radius:999px;padding:9px 12px;font:inherit}
 #q:focus{outline:2px solid var(--bar);outline-offset:-1px}
-select{background:var(--band);color:var(--ink);border:1px solid var(--ctl-edge);box-shadow:var(--press);
+select{background:var(--surface);color:var(--ink);border:1px solid transparent;box-shadow:var(--press);
   border-radius:999px;padding:8px 10px;font:inherit;max-width:100%}
-.chip{background:var(--band);color:var(--ink2);border:1px solid var(--grid);
-  border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap}
-.chip:hover{border-color:var(--bar);color:var(--ink)}
-.chip[aria-pressed=true]{background:var(--act);border-color:var(--act-edge);color:var(--onact);
-  font-weight:600}
+.chip{background:var(--surface);color:var(--ink2);border:1px solid transparent;border-radius:999px;
+  padding:5px 12px;font-size:13px;white-space:nowrap}
+.chip:hover{border-color:transparent;color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--surface);border-color:transparent;color:var(--bar);font-weight:650}
 __SETCSS__
 /* The new-arrivals chip wears `--warn` rather than the `--bar` every other chip uses, because it
    is the only filter that answers a question about time rather than about the data. It is also the only
@@ -1048,8 +1045,8 @@ __SETCSS__
    that selects zero rows is worse than no control. */
 .newchip{display:none;align-items:center;gap:.4em}
 .newchip.on{display:inline-flex}
-.newchip[aria-pressed=true]{background:var(--warn);border-color:var(--warn);color:var(--onbar)}
-.newchip:hover{border-color:var(--warn)}
+.newchip[aria-pressed=true]{background:var(--surface);border-color:transparent;color:var(--warn)}
+.newchip:hover{border-color:transparent}
 .ni{width:1em;height:1em;flex:none;vertical-align:-.12em}
 .ni>.a{fill:var(--warn)}
 .ni>.b{fill:var(--bar)}
@@ -1067,8 +1064,9 @@ __SETCSS__
 /* The forge a non-GitHub project lives on ("GitLab"), beside its path. A `.tag`'s neutral pill, because it
    is a plain fact about the project and none of the accents' questions -- new, rising, by meaning -- and
    only tokens, so the theme work recolours it with everything else. */
-.forge{display:inline-block;border:1px solid var(--grid);border-radius:5px;padding:0 5px;background:var(--band);
-  font-size:10.5px;font-weight:600;color:var(--ink2);white-space:nowrap;vertical-align:1px}
+.forge{display:inline-block;border:1px solid transparent;border-radius:5px;padding:0 5px;
+  background:var(--surface);font-size:10.5px;font-weight:600;color:var(--ink2);white-space:nowrap;
+  vertical-align:1px;box-shadow:var(--press-sm)}
 /* "by meaning", on a row the semantic pass added. Built like a `.tag` rather than like `.newon`, because
    it is a statement about *this search* and not a property of the project -- the pill reads as a badge the
    row is wearing today, where bare coloured text beside the title reads as a fact about the repository.
@@ -1087,8 +1085,8 @@ __SETCSS__
    would select zero of 1,294 and the sort would rank a column that is empty everywhere. */
 .risechip{display:none}
 .risechip.on{display:inline-block}
-.risechip[aria-pressed=true]{background:var(--good);border-color:var(--good);color:var(--onbar)}
-.risechip:hover{border-color:var(--good)}
+.risechip[aria-pressed=true]{background:var(--surface);border-color:transparent;color:var(--good)}
+.risechip:hover{border-color:transparent}
 /* Saved wears the `--bar` every ordinary chip wears, and that is the decision rather than an omission.
    `--warn` and `--good` above are properties *of a repo* -- it arrived recently, it is gaining stars --
    and they are held to three colours for three questions. Saved is a fact about the reader, true of nothing on the
@@ -1099,7 +1097,7 @@ __SETCSS__
    moment a reader presses Save. */
 .savechip{display:none}
 .savechip.on{display:inline-block}
-.savechip[aria-pressed=true]{background:var(--act);border-color:var(--act-edge);color:var(--onact)}
+.savechip[aria-pressed=true]{background:var(--surface);border-color:transparent;color:var(--bar)}
 /* Shown only while the saved filter is on, so "remove everything" is reachable exactly where a reader is
    looking at everything they saved, and nowhere near the rest of the time. Wears no accent: it is
    destructive and the accents on this bar all mean "selected". */
@@ -1135,11 +1133,11 @@ __SETCSS__
    asking which of the two it meant. It also needs no sprite entry and no accessible name of its own,
    because the word *is* the name. `aria-pressed` carries the state; the label says which project, since a
    screen reader arrives at this button 120 times a page. */
-.save{background:var(--band);color:var(--ink2);border:1px solid var(--grid);border-radius:999px;
-  padding:1px 9px;font-family:inherit;font-size:11px;font-weight:600;line-height:1.7;
-  white-space:nowrap;cursor:pointer;margin-left:8px;vertical-align:1px}
-.save:hover{border-color:var(--bar);color:var(--ink)}
-.save[aria-pressed=true]{background:var(--act);border-color:var(--act-edge);color:var(--onact)}
+.save{background:var(--surface);color:var(--ink2);border:1px solid transparent;border-radius:999px;
+  padding:1px 9px;font-family:inherit;font-size:11px;font-weight:600;line-height:1.7;white-space:nowrap;
+  cursor:pointer;margin-left:8px;vertical-align:1px;box-shadow:var(--raise-sm)}
+.save:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-hi)}
+.save[aria-pressed=true]{background:var(--surface);border-color:transparent;color:var(--bar);box-shadow:var(--press)}
 /* The comparison pin, beside Save. Same pill and the same pressed pair, which is a decision and not laziness:
    `--bar`/`--onbar` is one of the pairs `theme_test.py` already holds to a contrast ratio in both palettes,
    and inventing a fifth accent for this would mean either a fourth "thing about the project" -- see the
@@ -1148,11 +1146,11 @@ __SETCSS__
 
    A word and not a glyph, for the reason `.save` gives: the obvious glyph is a checkbox, this cell already
    holds a pill that toggles, and a second silent square beside it would be asking which of the two selects. */
-.pin{background:var(--band);color:var(--ink2);border:1px solid var(--grid);border-radius:999px;
-  padding:1px 9px;font-family:inherit;font-size:11px;font-weight:600;line-height:1.7;
-  white-space:nowrap;cursor:pointer;margin-left:6px;vertical-align:1px}
-.pin:hover:not(:disabled){border-color:var(--bar);color:var(--ink)}
-.pin[aria-pressed=true]{background:var(--act);border-color:var(--act-edge);color:var(--onact)}
+.pin{background:var(--surface);color:var(--ink2);border:1px solid transparent;border-radius:999px;
+  padding:1px 9px;font-family:inherit;font-size:11px;font-weight:600;line-height:1.7;white-space:nowrap;
+  cursor:pointer;margin-left:6px;vertical-align:1px;box-shadow:var(--raise-sm)}
+.pin:hover:not(:disabled){border-color:transparent;color:var(--ink);box-shadow:var(--raise-hi)}
+.pin[aria-pressed=true]{background:var(--surface);border-color:transparent;color:var(--bar);box-shadow:var(--press)}
 /* Disabled at the cap rather than hidden, which is the opposite of what the chips on the bar do and is right
    for the opposite reason. A chip that selects nothing is noise on a control strip a reader scans once. This
    is 1,290 buttons in the results, and removing them the instant the fourth pin lands would reflow every card
@@ -1215,8 +1213,7 @@ html[data-view=table] tbody tr:nth-child(even) td{background:var(--band)}
 /* Guarded, because a touch device reports a hover that then latches: tapping a row anywhere -- to
    follow its link, or just while scrolling -- left it tinted until something else was tapped. */
 @media(hover:hover){
-  html[data-view=table] tbody tr:hover td{
-    background:color-mix(in srgb,var(--bar) 10%,var(--band));box-shadow:inset 0 -2px 0 var(--bar)}
+  html[data-view=table] tbody tr:hover td{background:color-mix(in srgb,var(--bar) 7%,var(--surface));box-shadow:inset 0 -2px 0 var(--bar)}
 }
 /* NEW ARRIVALS WEAR AN OUTLINE, AND IT IS DRAWN TWICE
    ---------------------------------------------------
@@ -1278,10 +1275,11 @@ html[data-view=table][data-density=expanded] .cmdrow{max-width:56em}
    loaded one will, so nothing moves when it arrives. Remove it and every card image becomes a layout shift
    that arrives on someone else's schedule. Verified: with every image blocked, CLS was 0.5140; with them
    all loading, 0.5140 (JFH-216). */
-.shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:6px;
-  background:var(--band);border:1px solid var(--grid);display:block}
-.shot-fallback{display:grid;place-items:center;min-height:100px;padding:12px;background:var(--band);
-  border:1px solid var(--grid);border-radius:6px;color:var(--muted);font-size:12px;text-align:center}
+.shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:12px;background:var(--band);
+  border:1px solid transparent;display:block;box-shadow:var(--raise-sm)}
+.shot-fallback{display:grid;place-items:center;min-height:100px;padding:12px;background:var(--surface);
+  border:1px solid transparent;border-radius:12px;color:var(--muted);font-size:12px;text-align:center;
+  box-shadow:var(--press)}
 /* `artLoad` hides a picture that failed (or a GitLab row's, which never had one) and adds the fallback
    beside it. The `display:block` rules on `.shot img` beat the UA's `[hidden]`, so without this the
    hidden picture kept its box and the fallback stacked underneath it, doubling the cell. */
@@ -1303,21 +1301,22 @@ a.nwo:hover{color:var(--ink)}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
 .desc{color:var(--ink2);font-size:13.5px;max-width:44em;overflow-wrap:anywhere}
-.cmd{display:block;margin-top:7px;font:12px/1.5 var(--mono);
-  color:var(--ink2);background:var(--band);border:1px solid var(--ctl-edge);border-radius:10px;
-  box-shadow:var(--press);padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
+.cmd{display:block;margin-top:7px;font:12px/1.5 var(--mono);color:var(--ink2);background:var(--surface);
+  border:1px solid transparent;border-radius:var(--r-ctl);box-shadow:var(--press);padding:5px 8px;
+  max-width:44em;overflow-wrap:anywhere}
 /* The install line is the one thing on a row a reader wants to take with them, and taking it meant
    selecting monospace text that wraps mid-flag without catching the surrounding cell. `align-items:
    stretch` so the button matches whatever height the command wrapped to, and `min-width:0` on the code
    so a long one shrinks rather than pushing the button out of the row. */
 .cmdrow{display:flex;align-items:stretch;gap:6px;max-width:44em;margin-top:7px}
 .cmdrow .cmd{margin-top:0;flex:1 1 auto;min-width:0}
-.copy{flex:none;background:var(--band);color:var(--ink2);border:1px solid var(--ctl-edge);
-  border-radius:10px;box-shadow:var(--raise-sm);padding:0 10px;font-size:11.5px;letter-spacing:.03em;white-space:nowrap}
-.copy:hover{border-color:var(--bar);color:var(--ink)}
+.copy{flex:none;background:var(--surface);color:var(--ink2);border:1px solid transparent;border-radius:10px;
+  box-shadow:var(--raise-sm);padding:0 10px;font-size:11.5px;letter-spacing:.03em;white-space:nowrap}
+.copy:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-hi)}
 .copy.ok{border-color:var(--good);color:var(--good)}
-.tag{display:inline-block;background:var(--band);border:1px solid var(--ctl-edge);border-radius:999px;
-  padding:2px 7px;font-size:11.5px;color:var(--ink2);margin:0 4px 4px 0;white-space:nowrap}
+.tag{display:inline-block;background:var(--surface);border:1px solid transparent;border-radius:999px;
+  padding:2px 7px;font-size:11.5px;color:var(--ink2);margin:0 4px 4px 0;white-space:nowrap;
+  box-shadow:var(--press-sm)}
 .tag.cat{border-color:var(--bar);color:var(--ink)}
 /* This rule was dead: the class was defined here but never put on an element, so the verdict row was
    rendering as plain `.meta` the whole time. The nowrap is now on each verdict rather than on the group,
@@ -1381,14 +1380,13 @@ __MARKCSS__
 /* The approximate-match banner. Left-aligned and directly above the table it explains, because a centred
    notice reads as page furniture and gets skipped -- and this one has to be read, or the reader concludes
    the search ignored them. Amber like the other "this is not quite what you asked for" signals. */
-.approx{margin:0 0 14px;padding:10px 14px;border-left:3px solid var(--warn);background:var(--band);
-  border-radius:0 6px 6px 0;color:var(--ink2);font-size:14px}
+.approx{margin:0 0 14px;padding:10px 14px;border-left:3px solid transparent;background:var(--surface);
+  border-radius:var(--r-ctl);color:var(--ink2);font-size:14px;box-shadow:var(--raise-sm)}
 .approx b{color:var(--ink)}
 /* The command palette. Pinned near the top rather than centred, because the list grows downward and a
    centred dialog would slide the input up the screen every time the result count changed -- so the box
    you are typing into would move while you type. */
-dialog#pal{border:1px solid var(--edge);background:var(--panel-hi);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);color:var(--ink);border-radius:20px;
+dialog#pal{border:1px solid transparent;background:var(--surface);color:var(--ink);border-radius:var(--r-card);
   padding:0;width:min(620px,calc(100vw - 24px));margin:8vh auto auto;overflow:hidden;
   box-shadow:var(--raise)}
 dialog#pal::backdrop{background:rgba(0,0,0,.55)}
@@ -1410,7 +1408,7 @@ dialog#pal::backdrop{background:rgba(0,0,0,.55)}
    rather than a fixed colour because it is defined as the ink a filled accent carries -- white in both
    themes under this palette, but the indirection is the point, and the muted greys below would vanish
    against the fill either way. */
-#palist li.it[aria-selected=true]{background:var(--act);color:var(--onact)}
+#palist li.it[aria-selected=true]{background:var(--surface);color:var(--bar);box-shadow:var(--press)}
 #palist li.it .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #palist li.it .k,#palist li.it .s{flex-shrink:0;font-size:12px}
 #palist li.it .k{color:var(--muted)}
@@ -1418,12 +1416,12 @@ dialog#pal::backdrop{background:rgba(0,0,0,.55)}
 /* Inherit, not a fixed colour: on the accent fill the secondary text has to shift with `--onbar`, and
    opacity keeps it secondary without needing a second value that passes contrast on `--bar` in both themes. */
 #palist li.it[aria-selected=true] .k,#palist li.it[aria-selected=true] .s{color:inherit;opacity:.72}
-#palist li.it:hover:not([aria-selected=true]){background:var(--band)}
+#palist li.it:hover:not([aria-selected=true]){background:var(--surface);box-shadow:var(--raise-sm)}
 .palnone{padding:26px 12px;color:var(--muted);text-align:center}
 .palfoot{display:flex;gap:14px;background:var(--surface);border-top:1px solid var(--grid);
   padding:7px 14px;color:var(--muted);font-size:12px}
-kbd{background:var(--band);border:1px solid var(--ctl-edge);border-bottom-width:2px;border-radius:6px;
-  padding:1px 5px;color:var(--ink2);font:11px/1.6 var(--mono)}
+kbd{background:var(--surface);border:1px solid transparent;border-bottom-width:2px;border-radius:6px;
+  padding:1px 5px;color:var(--ink2);font:11px/1.6 var(--mono);box-shadow:var(--raise-sm)}
 /* A shortcut nobody is told about is a shortcut nobody uses, and this hint is the only affordance for it.
    Hidden until `buildChips` confirms the browser has `showModal`, like the New chip: a control that opens
    nothing is worse than no control. Hidden again on narrow screens, where there is no keyboard to press
@@ -1437,8 +1435,7 @@ kbd{background:var(--band);border:1px solid var(--ctl-edge);border-bottom-width:
    treatment for the same reasons: a real `<dialog>` opened with `showModal()`, so the focus trap, the Esc
    key, the backdrop, the inertness of the page behind it and the return of focus to the chip that opened it
    are all the browser's rather than five things to hand-roll and get wrong. */
-dialog#exp{border:1px solid var(--edge);background:var(--panel-hi);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);color:var(--ink);border-radius:20px;
+dialog#exp{border:1px solid transparent;background:var(--surface);color:var(--ink);border-radius:var(--r-card);
   padding:0;width:min(560px,calc(100vw - 24px));overflow:hidden;box-shadow:var(--raise)}
 dialog#exp::backdrop{background:rgba(0,0,0,.55)}
 #exp h2{margin:0;padding:14px 16px 3px;font-size:16px}
@@ -1448,14 +1445,14 @@ dialog#exp::backdrop{background:rgba(0,0,0,.55)}
    four states of one control, so each needs a sentence saying where it goes -- and a pill has nowhere to put
    one. Stacked, so the sentences read as a list of choices instead of wrapping into each other. */
 .expacts{display:flex;flex-direction:column;gap:8px;padding:0 16px 12px}
-.expacts button{display:flex;align-items:baseline;gap:9px;text-align:left;background:var(--band);
-  color:var(--ink);border:1px solid var(--grid);border-radius:9px;padding:9px 12px;font:inherit;
-  font-size:14px}
-.expacts button:hover{border-color:var(--bar)}
+.expacts button{display:flex;align-items:baseline;gap:9px;text-align:left;background:var(--surface);color:var(--ink);
+  border:1px solid transparent;border-radius:var(--r-ctl);padding:9px 12px;font:inherit;font-size:14px;
+  box-shadow:var(--raise-sm)}
+.expacts button:hover{border-color:transparent;box-shadow:var(--raise-hi)}
 /* Nothing to write a file from. Disabled rather than hidden, because the reader pressed Export *expecting*
    these three and a dialog that silently has one row in it reads as a rendering fault. */
 .expacts button:disabled{opacity:.45}
-.expacts button:disabled:hover{border-color:var(--grid)}
+.expacts button:disabled:hover{border-color:transparent;box-shadow:var(--raise-sm)}
 .expacts .t{font-weight:600;white-space:nowrap}
 .expacts .k{color:var(--muted);font-size:12px}
 .expurl{display:flex;gap:8px;padding:0 16px 12px}
@@ -1464,8 +1461,8 @@ dialog#exp::backdrop{background:rgba(0,0,0,.55)}
    not focused, and wherever the permission is refused -- and of the four exports this is the one whose whole
    payload a reader may have to lift by hand. Read-only rather than disabled: a disabled input cannot take
    focus, so it cannot be selected either, which is exactly the fallback this is for. */
-#expurl{flex:1;min-width:0;background:var(--surface);color:var(--ink2);border:1px solid var(--grid);
-  border-radius:7px;padding:8px 10px;font:12px/1.5 var(--mono)}
+#expurl{flex:1;min-width:0;background:var(--surface);color:var(--ink2);border:1px solid transparent;
+  border-radius:7px;padding:8px 10px;font:12px/1.5 var(--mono);box-shadow:var(--press)}
 #expurl:focus{outline:2px solid var(--bar);outline-offset:-1px}
 .expnote{margin:0;padding:0 16px 12px;color:var(--muted);font-size:12px;line-height:1.5}
 .expfoot{display:flex;justify-content:flex-end;background:var(--surface);
@@ -1489,8 +1486,7 @@ dialog#exp::backdrop{background:rgba(0,0,0,.55)}
    `touch-action:none` so a drag pans the map instead of scrolling the dialog, and `overscroll-behavior`
    on the stage so a wheel that reaches the end of the zoom range does not start scrolling the page
    behind an inert modal. */
-dialog#mapdlg{border:1px solid var(--edge);background:var(--panel-hi);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);color:var(--ink);border-radius:20px;
+dialog#mapdlg{border:1px solid transparent;background:var(--surface);color:var(--ink);border-radius:var(--r-card);
   padding:0;width:min(1180px,calc(100vw - 20px));height:min(820px,calc(100vh - 20px));overflow:hidden;
   box-shadow:var(--raise);display:flex;flex-direction:column}
 /* Darker than the other two backdrops. The whole point of what is behind this one is that it is a field of
@@ -1508,8 +1504,8 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
    readout is still hoverable, and `mapMove()` flips the box to the other side of the cursor rather than
    letting it run off the stage. */
 #maptip{position:absolute;left:0;top:0;pointer-events:none;width:max-content;max-width:300px;
-  background:var(--plane);border:1px solid var(--grid);border-radius:9px;padding:7px 10px;
-  font-size:12px;line-height:1.5;box-shadow:0 10px 26px rgba(0,0,0,.45);z-index:2}
+  background:var(--surface);border:1px solid transparent;border-radius:9px;padding:7px 10px;
+  font-size:12px;line-height:1.5;box-shadow:var(--raise);z-index:2}
 #maptip .tn{display:block;font-weight:600;font-size:13px;color:var(--ink)}
 #maptip .tk{color:var(--muted)}
 #maptip .tb{display:block;margin-top:3px;color:var(--ink2)}
@@ -1530,8 +1526,8 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
    pointer, and the projects themselves stay where they have always been readable: the table. */
 .mapkey button{display:inline-flex;align-items:center;gap:5px;background:none;border:1px solid transparent;
   border-radius:20px;padding:2px 9px 2px 5px;color:var(--ink2);font:inherit;font-size:12px}
-.mapkey button:hover{border-color:var(--grid);color:var(--ink)}
-.mapkey button[aria-pressed=true]{border-color:var(--bar);background:var(--band);color:var(--ink)}
+.mapkey button:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-sm)}
+.mapkey button[aria-pressed=true]{border-color:transparent;background:var(--surface);color:var(--bar);box-shadow:var(--press)}
 /* `--sw` is set inline per button from the same hue the canvas draws that topic with, so the key cannot
    disagree with the picture -- there is one source for the colour and it is `mapHue()`. */
 .mapkey i{flex:0 0 auto;width:9px;height:9px;border-radius:50%;background:var(--sw);
@@ -1557,8 +1553,8 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
    sheet and the author `display:flex` below would outrank it. */
 .shared{display:none}
 .shared.on{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0 0;padding:10px 14px;
-  border-left:3px solid var(--warn);background:var(--band);border-radius:0 6px 6px 0;
-  color:var(--ink2);font-size:14px}
+  border-left:3px solid transparent;background:var(--surface);border-radius:var(--r-ctl);
+  color:var(--ink2);font-size:14px;box-shadow:var(--raise-sm)}
 .shared b{color:var(--ink)}
 /* `margin-left:auto` on the pair, so the two buttons sit at the far end on a wide screen and fall under the
    sentence on a phone rather than squeezing it to one word per line. */
@@ -1594,14 +1590,14 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
 .dsrail{display:flex;gap:10px;overflow-x:auto;overscroll-behavior-x:contain;
   scroll-snap-type:x mandatory;padding:8px 2px 12px;scrollbar-width:thin}
 .dsc{flex:0 0 min(212px,62vw);scroll-snap-align:start;display:flex;flex-direction:column;gap:5px;
-  padding:9px 11px;text-decoration:none;font-size:12.5px;color:var(--ink2);
-  background:var(--panel);border:1px solid var(--edge);border-top:3px solid var(--card-accent);
-  border-radius:14px;box-shadow:var(--raise-sm)}
-.dsc:hover{border-color:var(--card-accent);text-decoration:none}
+  padding:9px 11px;text-decoration:none;font-size:12.5px;color:var(--ink2);background:var(--surface);
+  border:1px solid transparent;border-top:3px solid transparent;border-radius:var(--r-ctl);
+  box-shadow:var(--raise-sm)}
+.dsc:hover{border-color:transparent;text-decoration:none;box-shadow:var(--raise-hi)}
 /* The category pill and the New badge on one line. `.tag` carries a bottom margin for the table cells it was
    written for, and it is undone here rather than removed there: a flex row spaces its own children. */
 .dsc .t{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.dsc .t .tag{margin:0}
+.dsc .t .tag{margin:0;color:var(--card-accent);font-weight:600}
 .dsc .n{color:var(--ink);font-weight:600;font-size:13.5px;line-height:1.3}
 /* `margin-top:auto` on the last line, so the counts sit on one baseline across a row of cards whose names
    ran to one line, two, or three. */
@@ -1609,7 +1605,8 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
 /* The same `--warn` ring the cards view puts on a new row, and the same swell over the top of it -- so a
    reader who has met the pulse once on the results below reads it here without being taught it twice. A
    box-shadow rather than an outline, because `:focus-visible` owns the outline on this page. */
-.dsc.nw{border-color:var(--warn);box-shadow:0 0 0 2px var(--warn);animation:new-breathe 3s ease-in-out 5}
+.dsc.nw{border-color:transparent;box-shadow:var(--raise-sm),0 0 0 2px var(--warn);
+  animation:new-breathe 3s ease-in-out 5}
 .dsnew{background:var(--warn);color:var(--onbar);border-radius:4px;padding:0 5px;font-size:11px;
   font-weight:700;letter-spacing:.02em}
 .empty{padding:64px 0 80px;text-align:center;color:var(--muted)}
@@ -1619,9 +1616,9 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
 .empty .big{color:var(--ink);font-size:17px;font-weight:600;margin:0 0 6px}
 .empty p{margin:0 0 12px}
 .fixes{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.fix{background:var(--band);color:var(--ink);border:1px solid var(--grid);border-radius:999px;
-  padding:7px 15px;font-size:13.5px}
-.fix:hover{border-color:var(--bar)}
+.fix{background:var(--surface);color:var(--ink);border:1px solid transparent;border-radius:999px;
+  padding:7px 15px;font-size:13.5px;box-shadow:var(--raise-sm)}
+.fix:hover{border-color:transparent;box-shadow:var(--raise-hi)}
 .fix .n{color:var(--muted);font-variant-numeric:tabular-nums}
 .fix:hover .n{color:var(--ink2)}
 /* Quieter than the rescue buttons above it, deliberately. Loosening a filter fixes most empty result sets,
@@ -1631,14 +1628,13 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
    and a link that looks like body text until you touch it is not an affordance. */
 .empty .miss{color:var(--muted);font-size:13px;text-decoration:underline}
 .empty .miss:hover{color:var(--ink)}
-.more{display:block;margin:26px auto 0;background:var(--band);color:var(--ink);
-  border:1px solid var(--ctl-edge);border-radius:999px;box-shadow:var(--raise-sm);padding:11px 22px;
+.more{display:block;margin:26px auto 0;background:var(--surface);color:var(--ink);
+  border:1px solid transparent;border-radius:999px;box-shadow:var(--raise-sm);padding:11px 22px;
   font-weight:600}
-.more:hover{border-color:var(--bar);box-shadow:var(--raise-hi)}
+.more:hover{border-color:transparent;box-shadow:var(--raise-hi)}
 .more:active{box-shadow:var(--press)}
-footer{border-top:1px solid var(--edge);background:var(--panel);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);padding:22px 20px;
-  color:var(--muted);font-size:13px}
+footer{border-top:1px solid transparent;background:transparent;padding:22px 20px;color:var(--muted);
+  font-size:13px;box-shadow:inset 0 1px 0 var(--grid)}
 .blurb{color:var(--muted);font-size:13px;margin:2px 0 0}
 /* Screen readers and screens both have the address bar; only paper does not. The `@media print` block at the
    end of this stylesheet is the one place this is ever visible. */
@@ -1729,11 +1725,11 @@ footer{border-top:1px solid var(--edge);background:var(--panel);backdrop-filter:
      them. `translateY` off the bottom rather than `display:none` so it slides, and `visibility:hidden`
      beside it because a transform alone leaves the chips focusable, tabbable and in the accessibility
      tree while they are off screen. */
-  html[data-fb] #sheet{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:30;
-    background:var(--plane);border-top:1px solid var(--grid);border-radius:14px 14px 0 0;
-    box-shadow:0 -14px 44px rgba(0,0,0,.45);padding:0 14px 16px;gap:14px;
-    max-height:80vh;max-height:80dvh;overflow-y:auto;overscroll-behavior:contain;
-    transform:translateY(101%);visibility:hidden;transition:transform .18s ease,visibility .18s}
+  html[data-fb] #sheet{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:30;background:var(--surface);
+  border-top:1px solid transparent;border-radius:14px 14px 0 0;box-shadow:0 -18px 40px rgba(0,0,0,.45);
+  padding:0 14px 16px;gap:14px;max-height:80vh;max-height:80dvh;overflow-y:auto;
+  overscroll-behavior:contain;transform:translateY(101%);visibility:hidden;
+  transition:transform .18s ease,visibility .18s}
   /* `visibility` is transitioned on the way out and not on the way in, which is the whole reason the open
      state restates `transition` at all. CSS interpolates visibility as a step that reads `visible` for the
      whole duration -- except at progress exactly 0, where it is still the old value. So a transitioned
@@ -1758,9 +1754,8 @@ footer{border-top:1px solid var(--edge);background:var(--panel);backdrop-filter:
      thirteen topics. The result count is repeated here for one reason: the bar's own copy is behind the
      sheet while the sheet is open, and tapping chips with no number moving anywhere is the state in which
      a reader cannot tell whether the tap landed. */
-  html[data-fb] .shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-    position:sticky;top:0;z-index:1;background:var(--plane);
-    padding:14px 0 10px;border-bottom:1px solid var(--grid)}
+  html[data-fb] .shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:1;
+  background:var(--surface);padding:14px 0 10px;border-bottom:1px solid var(--grid)}
   html[data-fb] .shead .sh{flex:1 1 auto;font-size:15px;font-weight:600}
   html[data-fb] #scount{flex:1 1 100%;color:var(--muted);font-size:12.5px}
   html[data-fb] #scount b{color:var(--ink)}
@@ -1950,9 +1945,9 @@ html[data-view=cards] :where(#out) tbody{display:grid;gap:14px;
    cells arrive in the table's order, a card wants them in another one, and `order` -- which is the cheaper
    tool -- cannot put two of them side by side. `margin:0` is not tidiness: the block above gives every row
    a 9px bottom margin, which this view has a 14px grid gap for, and margins do not collapse in a grid. */
-html[data-view=cards] :where(#out) tr{display:grid;grid-template-columns:1fr auto;align-items:start;align-content:start;
-  gap:0 10px;margin:0;padding:0 0 12px;background:var(--panel);box-shadow:var(--raise-sm);
-  border:1px solid color-mix(in srgb,var(--card-accent) 35%,var(--edge));border-radius:20px;overflow:hidden;
+html[data-view=cards] :where(#out) tr{display:grid;grid-template-columns:1fr auto;align-items:start;align-content:start;gap:0 10px;margin:0;
+  padding:0 0 12px;background:var(--surface);box-shadow:var(--raise);border:1px solid transparent;
+  border-radius:var(--r-card);overflow:hidden;
   transition:border-color .14s ease,box-shadow .14s ease,transform .14s ease}
 html[data-view=cards] :where(#out) td{display:block;border-bottom:0;padding:0 13px;min-width:0}
 /* The screenshot is the whole argument for this view, so it comes back at the widths where the table drops
@@ -1978,10 +1973,10 @@ html[data-view=cards] :where(#out) td.lc{grid-column:1/-1;grid-row:6;margin-top:
 html[data-view=cards] :where(#out) td.lc .meta{display:flex;flex-wrap:wrap;gap:4px 12px}
 html[data-view=cards] :where(#out) td.lc .meta br{display:none}
 html[data-view=cards] .project-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-html[data-view=cards] .project-actions a{border:1px solid color-mix(in srgb,var(--card-accent) 55%,var(--grid));
-  border-radius:999px;padding:4px 9px;color:var(--ink2);font-size:12px;font-weight:600}
-html[data-view=cards] .project-actions a:first-child{background:color-mix(in srgb,var(--card-accent) 18%,var(--band));color:var(--ink)}
-html[data-view=cards] .project-actions a:hover{border-color:var(--card-accent);text-decoration:none}
+html[data-view=cards] .project-actions a{border:1px solid transparent;border-radius:999px;padding:4px 9px;color:var(--ink2);font-size:12px;
+  font-weight:600;background:var(--surface);box-shadow:var(--raise-sm)}
+html[data-view=cards] .project-actions a:first-child{background:var(--surface);color:var(--bar)}
+html[data-view=cards] .project-actions a:hover{border-color:transparent;text-decoration:none;box-shadow:var(--raise-hi)}
 /* Close the banner slot when the screenshot kill switch omits the cell. */
 html[data-view=cards][data-index-screenshots=off] :where(#out) td.rk{grid-row:1;padding-top:10px}
 html[data-view=cards][data-index-screenshots=off] :where(#out) td.st-c{grid-row:1;padding-top:10px}
@@ -2051,12 +2046,11 @@ html[data-view=cards] :where(#out) tr.nw{border-color:var(--warn);
    device -- which latches a hover it can never clear -- is not made to carry either of them. */
 @media(hover:hover){
   html[data-view=cards] :where(#out) tr:hover td{background:transparent}
-  html[data-view=cards] :where(#out) tr:hover{border-color:var(--card-accent);
-    box-shadow:0 0 0 2px var(--card-accent),0 0 20px color-mix(in srgb,var(--card-accent) 44%,transparent),0 14px 32px rgba(0,0,0,.24);
-    transform:translateY(-1px);animation:card-glow 1.5s ease-in-out infinite alternate}
+  html[data-view=cards] :where(#out) tr:hover{border-color:transparent;
+  box-shadow:var(--raise-hi),0 0 22px color-mix(in srgb,var(--card-accent) 30%,transparent);
+  transform:translateY(-1px);animation:card-glow 1.5s ease-in-out infinite alternate}
 }
-html[data-view=cards] :where(#out) tr:focus-within{border-color:var(--card-accent);
-  box-shadow:0 0 0 2px var(--card-accent),0 0 20px color-mix(in srgb,var(--card-accent) 40%,transparent)}
+html[data-view=cards] :where(#out) tr:focus-within{border-color:transparent;box-shadow:var(--raise-hi),0 0 0 2px var(--card-accent)}
 @keyframes card-glow{from{box-shadow:0 0 0 2px var(--card-accent),0 0 12px color-mix(in srgb,var(--card-accent) 30%,transparent),0 12px 28px rgba(0,0,0,.2)}to{box-shadow:0 0 0 2px var(--card-accent),0 0 28px color-mix(in srgb,var(--card-accent) 58%,transparent),0 16px 36px rgba(0,0,0,.28)}}
 /* A pulse is a way of saying "look at this one", and it can only say that about a few. When an import brings
    most of the atlas at once -- which is not hypothetical: the run that first read twenty-eight source lists
@@ -2216,7 +2210,8 @@ main a[href],main button,main select,main summary,
    needs an opaque background or the cells sliding under it show through, and it needs `min-width` or the
    longest label ("Plugs into") decides the width of the column the reader is trying to see. */
 #cmp{display:none}
-#cmp.on{display:block;margin:14px 0 0;border:1px solid var(--grid);border-radius:8px;background:var(--band)}
+#cmp.on{display:block;margin:14px 0 0;border:1px solid transparent;border-radius:var(--r-card);
+  background:var(--surface);box-shadow:var(--raise)}
 #cmp .ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 14px;
   border-bottom:1px solid var(--grid);color:var(--ink2);font-size:13px}
 #cmp .ch b{color:var(--ink)}
@@ -2230,8 +2225,8 @@ main a[href],main button,main select,main summary,
 /* `display:block` because `.meta` carries a `margin-top`, which a span ignores -- the row builder only ever
    uses that class on a <div>, and this is the first place it lands on an inline element. */
 #cmp thead th .meta{display:block;margin-top:2px;font-weight:400}
-#cmp tbody th{position:sticky;left:0;background:var(--band);color:var(--ink2);font-weight:600;
-  white-space:nowrap;min-width:104px}
+#cmp tbody th{position:sticky;left:0;background:var(--surface);color:var(--ink2);font-weight:600;white-space:nowrap;
+  min-width:104px}
 /* 148px is the floor that makes the scroller a scroller. Four columns of it plus the 104px label rail is
    696px, so on a 375px phone there is real width to swipe through rather than four columns squeezed to fit
    and nothing legible in any of them -- which is what automatic table layout does with a 375px box, since
@@ -4971,11 +4966,11 @@ function mapPalette() {
   return {
     light,
     // The fallbacks are `sitewide.PALETTE`'s values, for a browser that hands back an empty custom property.
-    back: pick("--surface", light ? "#EAE5DA" : "#1C1C1B"),
-    ink: pick("--ink", light ? "#1C1B1B" : "#EBE5DA"),
-    sub: pick("--muted", light ? "#56524C" : "#AEAAA4"),
-    grid: pick("--grid", light ? "#CEC6B7" : "#3F4526"),
-    plane: pick("--plane", light ? "#F5F2EC" : "#2A2A27"),
+    back: pick("--surface", light ? "#E3E7ED" : "#24272D"),
+    ink: pick("--ink", light ? "#1C2431" : "#E8EAED"),
+    sub: pick("--muted", light ? "#4E5868" : "#A3AAB4"),
+    grid: pick("--grid", light ? "#CDD3DC" : "#33373E"),
+    plane: pick("--plane", light ? "#E3E7ED" : "#24272D"),
     // Lit dots are lighter than the page on a dark theme and darker than it on a light one, which is the
     // only way one hue set can carry both. The dim ones are the same hue at a lightness that reads as
     // "present but not the answer" rather than as a second colour.

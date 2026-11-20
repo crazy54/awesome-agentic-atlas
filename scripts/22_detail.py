@@ -849,25 +849,21 @@ CSS = """/* Written by scripts/22_detail.py. Shared by every page under docs/rep
    Deliberately not docs/pages.css, which scripts/20_landing.py writes: two stages writing one file
    means the later run silently deletes the earlier one's rules. */
 """ + sitewide.THEME_CSS + """*{box-sizing:border-box}
-/* --ui is the page's own font stack in both themes. The field behind the glass is `body::before` in
-   `THEME_CSS` above; this only sets --surface, the colour it is translucent over. The 1.6 line height is
-   this page's own and stays -- it is prose, not a table. */
+/* --ui is the page's own font stack in both themes. The field is `body::before` in `THEME_CSS` above;
+   this sets --surface, the base every surface on the page is made of. */
 body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.6 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
 button{font:inherit;cursor:pointer}
-/* A pane of the glass. Static, with nothing positioned inside it, so the backdrop filter changes no
-   containing block (measured box for box in both themes at 1440 and 375). */
-header{background:var(--panel);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
-  border-bottom:1px solid var(--edge);padding:18px 20px 22px}
+/* The header is the base, transparent over the field: soft UI draws no bar and no rule under it. */
+header{background:transparent;border-bottom:1px solid transparent;padding:18px 20px 22px}
 /* Narrower than the 1500px the table surfaces use. This one is prose, and a 44-character-per-line
    measure is what a blurb and a licence sentence want; 1500px would set the lead paragraph 180
    characters wide, which is unreadable for the one thing on the page a reader has to read. */
 .wrap{max-width:1000px;margin:0 auto}
 main{padding:0 20px 64px}
-footer{border-top:1px solid var(--edge);background:var(--panel);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);padding:22px 20px;
-  color:var(--muted);font-size:13px}
+footer{border-top:1px solid transparent;background:transparent;padding:22px 20px;color:var(--muted);
+  font-size:13px;box-shadow:inset 0 1px 0 var(--grid)}
 h1{margin:0 0 4px;font-size:30px;letter-spacing:-.02em;overflow-wrap:anywhere}
 h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;color:var(--title)}
 .crumb{font-size:13px;color:var(--muted);margin-bottom:14px}
@@ -877,8 +873,9 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
    break opportunity in Chrome or Safari, so a 52-character nwo would otherwise widen the document. */
 .nwo{margin:0 0 12px;color:var(--muted);font-size:13px;word-break:break-all}
 /* The forge a non-GitHub project lives on, inside its `.nwo` link: 19_pages.py's pill, tokens only. */
-.forge{display:inline-block;border:1px solid var(--grid);border-radius:5px;padding:0 5px;background:var(--band);
-  font-size:11px;font-weight:600;color:var(--ink2);white-space:nowrap;vertical-align:1px}
+.forge{display:inline-block;border:1px solid transparent;border-radius:5px;padding:0 5px;
+  background:var(--surface);font-size:11px;font-weight:600;color:var(--ink2);white-space:nowrap;
+  vertical-align:1px;box-shadow:var(--press-sm)}
 .lead{margin:0 0 14px;color:var(--ink2);font-size:16px;max-width:68ch}
 .lead.none,.none{color:var(--muted);font-style:italic}
 /* Each fact its own element rather than text separated by dots, so that when the row wraps on a phone
@@ -898,10 +895,10 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
   border-radius:999px;padding:10px 18px}
 .cta:hover{text-decoration:none}
 .alt{font-size:14px}
-.chip{display:inline-block;background:var(--band);color:var(--ink2);border:1px solid var(--grid);
+.chip{display:inline-block;background:var(--surface);color:var(--ink2);border:1px solid transparent;
   border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap;margin:0 5px 5px 0}
-.chip:hover{border-color:var(--bar);color:var(--ink);text-decoration:none}
-.chip.cat{border-color:var(--bar);color:var(--ink)}
+.chip:hover{border-color:transparent;color:var(--ink);text-decoration:none}
+.chip.cat{border-color:transparent;color:var(--bar)}
 .chips{margin-top:2px}
 .util{flex-shrink:0}
 section{margin:34px 0 0;border-top:1px solid var(--grid);padding-top:22px}
@@ -909,15 +906,13 @@ section{margin:34px 0 0;border-top:1px solid var(--grid);padding-top:22px}
   clip:rect(0,0,0,0);white-space:nowrap;border:0}
 /* The reader is a document surface inside the Atlas, not a separately themed application. Its aliases
    point directly at the shared product tokens so a theme change cannot leave the Markdown behind. */
-.reader{
-  --read-bg:var(--surface);--read-panel:var(--plane);--read-raised:var(--band);--read-ink:var(--ink);
+.reader{--read-bg:var(--surface);--read-panel:var(--surface);--read-raised:var(--surface);--read-ink:var(--ink);
   --read-muted:var(--muted);--read-line:var(--grid);--read-link:var(--link);--read-accent:var(--bar);
   --read-warn:var(--warn);--read-code:var(--surface);--read-good:var(--good);--read-quote:var(--band);
   overflow:hidden;border:1px solid var(--edge);border-radius:22px;background:var(--read-panel);
   color:var(--read-ink);box-shadow:var(--raise)}
 .reader [hidden]{display:none!important}
-html[data-theme=light] .reader{
-  --read-panel:var(--band);--read-raised:var(--plane);
+html[data-theme=light] .reader{--read-panel:var(--surface);--read-raised:var(--surface);
   --read-code:color-mix(in srgb,var(--band) 82%,var(--grid));--read-quote:var(--surface)}
 .preview-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:14px}
 .preview-intro h2{margin-bottom:6px;color:var(--title);font-size:19px;text-transform:none;letter-spacing:-.01em}
@@ -937,20 +932,18 @@ html[data-theme=light] .reader{
 .file-picker{min-width:0;flex:1;position:relative}
 .file-picker:after{content:"⌄";position:absolute;right:11px;top:50%;transform:translateY(-55%);
   color:var(--read-muted);pointer-events:none;font-size:15px}
-.file-picker select{width:100%;height:35px;appearance:none;border:1px solid var(--read-line);
-  border-radius:999px;background:var(--read-raised);color:var(--read-ink);padding:0 32px 0 11px;
-  box-shadow:var(--press);
-  font:12.5px/1 var(--mono);
-  text-overflow:ellipsis;cursor:pointer}
+.file-picker select{width:100%;height:35px;appearance:none;border:1px solid transparent;border-radius:999px;
+  background:var(--surface);color:var(--read-ink);padding:0 32px 0 11px;box-shadow:var(--press);
+  font:12.5px/1 var(--mono);text-overflow:ellipsis;cursor:pointer}
 .file-picker select:focus,.viewtab:focus-visible,.open-source:focus-visible{
   outline:2px solid var(--read-link);outline-offset:2px}
 .file-picker select:disabled{cursor:wait;color:var(--read-muted)}
-.reader-tabs{display:flex;padding:3px;border-radius:999px;background:var(--read-raised);flex:0 0 auto;
+.reader-tabs{display:flex;padding:3px;border-radius:999px;background:var(--surface);flex:0 0 auto;
   box-shadow:var(--press)}
 .viewtab{border:0;border-radius:999px;padding:6px 10px;background:transparent;color:var(--read-muted);
   font-size:12px;line-height:1.2}
 .viewtab:hover{color:var(--read-ink)}
-.viewtab.on{background:var(--read-panel);color:var(--read-ink);box-shadow:var(--raise-sm)}
+.viewtab.on{background:var(--surface);color:var(--bar);box-shadow:var(--raise-sm)}
 .open-source{color:var(--read-link);font-size:12px;white-space:nowrap}
 .reader-status{min-height:240px;display:flex;align-items:center;justify-content:center;gap:11px;
   padding:34px;text-align:center;color:var(--read-muted);font-size:14px}
@@ -980,15 +973,14 @@ html[data-theme=light] .reader{
   text-underline-offset:.17em}
 .markdown-body a:hover{color:var(--read-accent)}
 .markdown-body strong{color:var(--read-ink);font-weight:750}
-.markdown-body blockquote{margin:1.2em 0;padding:.7em 1.05em;border-left:4px solid var(--read-accent);
-  border-radius:0 8px 8px 0;background:var(--read-quote);color:var(--read-muted)}
+.markdown-body blockquote{margin:1.2em 0;padding:.7em 1.05em;border-left:4px solid transparent;border-radius:12px;
+  background:var(--read-quote);color:var(--read-muted);box-shadow:var(--press-sm)}
 .markdown-body blockquote>:last-child{margin-bottom:0}
 .markdown-body code,.markdown-body kbd{font:13px/1.55 var(--mono)}
-.markdown-body :not(pre)>code{padding:.16em .38em;border:1px solid var(--read-line);border-radius:5px;
-  background:var(--read-code);color:var(--read-warn);font-size:.84em}
-.markdown-body pre{overflow:auto;margin:1.15em 0;padding:16px 18px;border:1px solid var(--read-line);
-  border-radius:9px;background:var(--read-code);color:var(--read-ink);line-height:1.55;
-  box-shadow:inset 3px 0 0 var(--read-accent)}
+.markdown-body :not(pre)>code{padding:.16em .38em;border:1px solid transparent;border-radius:5px;background:var(--read-code);
+  color:var(--read-warn);font-size:.84em;box-shadow:var(--press-sm)}
+.markdown-body pre{overflow:auto;margin:1.15em 0;padding:16px 18px;border:1px solid transparent;border-radius:var(--r-ctl);
+  background:var(--read-code);color:var(--read-ink);line-height:1.55;box-shadow:var(--press)}
 .markdown-body pre code{display:block;min-width:max-content;color:inherit;background:transparent}
 /* GitHub's renderer emits Primer-compatible `pl-*` spans for highlighted fenced blocks. The source
    owns the tokenisation; this small palette supplies the colour without importing all of Primer. */
@@ -1004,11 +996,11 @@ html[data-theme=light] .reader{
 .markdown-body th,.markdown-body td{padding:8px 11px;border:1px solid var(--read-line);text-align:left}
 .markdown-body th{background:var(--read-raised);color:var(--read-ink)}
 .markdown-body tr:nth-child(even) td{background:color-mix(in srgb,var(--read-raised) 42%,transparent)}
-.markdown-body details{margin:1em 0;padding:10px 13px;border:1px solid var(--read-line);
-  border-radius:8px;background:var(--read-bg)}
+.markdown-body details{margin:1em 0;padding:10px 13px;border:1px solid transparent;border-radius:12px;
+  background:var(--surface);box-shadow:var(--raise-sm)}
 .markdown-body summary{cursor:pointer;color:var(--read-link);font:600 14px/1.4 "Aptos","Segoe UI",sans-serif}
-.markdown-body kbd{display:inline-block;padding:1px 5px;border:1px solid var(--read-line);
-  border-bottom-width:2px;border-radius:4px;background:var(--read-raised);font-size:.75em}
+.markdown-body kbd{display:inline-block;padding:1px 5px;border:1px solid transparent;border-bottom-width:2px;
+  border-radius:4px;background:var(--surface);font-size:.75em;box-shadow:var(--raise-sm)}
 .source-code{max-height:760px;min-height:280px;overflow:auto;margin:0;padding:25px 28px 40px;
   border:0;background:var(--read-code);color:var(--read-ink);tab-size:2;white-space:pre;
   font:13px/1.65 var(--mono);
@@ -1017,22 +1009,22 @@ html[data-theme=light] .reader{
 /* The install command, and the button that takes it away. Selecting wrapped monospace text without
    catching the paragraph above it is the thing this replaces. */
 .cmdrow{display:flex;gap:10px;align-items:flex-start}
-.cmd{flex:1;min-width:0;font:13.5px/1.6 var(--mono);color:var(--ink);
-  background:var(--band);border:1px solid var(--ctl-edge);border-radius:14px;padding:10px 12px;
-  box-shadow:var(--press);overflow-wrap:anywhere;display:block}
-.copy{background:var(--band);color:var(--ink2);border:1px solid var(--ctl-edge);border-radius:999px;
-  box-shadow:var(--raise-sm);
-  padding:10px 14px;font-size:13px;white-space:nowrap}
-.copy:hover{border-color:var(--bar);color:var(--ink)}
+.cmd{flex:1;min-width:0;font:13.5px/1.6 var(--mono);color:var(--ink);background:var(--surface);
+  border:1px solid transparent;border-radius:var(--r-ctl);padding:10px 12px;box-shadow:var(--press);
+  overflow-wrap:anywhere;display:block}
+.copy{background:var(--surface);color:var(--ink2);border:1px solid transparent;border-radius:999px;
+  box-shadow:var(--raise-sm);padding:10px 14px;font-size:13px;white-space:nowrap}
+.copy:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-hi)}
 figure.shot{margin:0}
 /* A fixed 2:1 box with the image contained inside it. The src is somebody else's CDN and its
    dimensions are unknown at build time, so height cannot be declared on the img -- and without a box
    the whole page below would jump when it finally arrives. `contain` rather than `cover` because these
    are arbitrary images: cropping a social card to fill a frame cuts the repository name off it. */
-.shot img{width:100%;aspect-ratio:2/1;object-fit:contain;border-radius:10px;background:var(--band);
-  border:1px solid var(--grid);display:block}
+.shot img{width:100%;aspect-ratio:2/1;object-fit:contain;border-radius:var(--r-card);background:var(--surface);
+  border:1px solid transparent;display:block;box-shadow:var(--raise)}
 figcaption{color:var(--muted);font-size:12.5px;margin-top:8px;max-width:70ch}
-table.os{width:100%;border-collapse:collapse;font-size:14px}
+table.os{width:100%;border-collapse:separate;font-size:14px;border-spacing:0;background:var(--surface);
+  box-shadow:var(--raise);border-radius:var(--r-card);padding:6px 10px}
 table.os caption{text-align:left;color:var(--muted);font-size:12.5px;margin-bottom:10px;
   max-width:70ch}
 table.os th[scope=col]{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;
@@ -1053,13 +1045,13 @@ table.os th[scope=row] .oi{width:1.2em;height:1.2em;margin-right:.2em}
 .vwarn{color:var(--warn);white-space:nowrap}
 .voff{color:var(--off);white-space:nowrap}
 ul.lists{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
-ul.lists li{background:var(--band);border:1px solid var(--grid);border-radius:6px;padding:6px 12px;
-  font-size:13.5px}
+ul.lists li{background:var(--surface);border:1px solid transparent;border-radius:999px;padding:6px 12px;
+  font-size:13.5px;box-shadow:var(--raise-sm)}
 /* Two columns of cards on a desktop, one on a phone, without a media query: auto-fill collapses to a
    single track as soon as 320px stops fitting twice. */
 ul.kinlist{list-style:none;padding:0;margin:0;display:grid;gap:10px;
   grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
-ul.kinlist li{border:1px solid var(--edge);border-radius:18px;padding:12px 14px;background:var(--panel);
+ul.kinlist li{border:1px solid transparent;border-radius:var(--r-card);padding:12px 14px;background:var(--surface);
   box-shadow:var(--raise-sm)}
 ul.kinlist a{font-weight:600;overflow-wrap:anywhere}
 ul.kinlist .nwo{display:block;margin:2px 0 0;font-size:12px}

@@ -7,7 +7,8 @@ needs Pillow and the pipeline is stdlib. Its outputs are committed:
 
 | Output | From | Used by |
 |---|---|---|
-| `docs/assets/archie-mark.webp` (96 px) | `icon.png` | the top-left logo on every page (`scripts/mark.py`, `scripts/30_v2.py`) |
+| `docs/assets/archie-head.webp` (96 px) | `archie.png` | the top-left logo on every page (`scripts/mark.py`), seated in a raised disc by CSS |
+| `docs/assets/archie-mark.webp` (96 px) | `icon.png` | the v2 beta's rail mark (`scripts/30_v2.py`) |
 | `docs/assets/archie-bust.webp` (256 px wide) | `archie.png` | the catalogue's upper-right mascot (`scripts/19_pages.py`) |
 | `docs/favicon.svg` | `icon.png` at 64 px, embedded | every page's `<link rel="icon">` |
 | `art/brand/icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `apple-touch-icon.png`, `favicon.ico` | `icon.png` | copied into `docs/` by `scripts/24_pwa.py` on every build |
@@ -94,6 +95,21 @@ def main() -> None:
     # The logo. 96 px for a 30 px slot, so a 3x screen still gets real pixels.
     sized(t, 96).save(DOCS / "assets" / "archie-mark.webp", "WEBP", quality=90, method=6)
 
+    # The logo: his head alone, transparent, from the render. The site's soft UI seats it in a raised disc of
+    # the page's own colour, so it needs no plate of its own. Cut square around the head, above the neck.
+    render = Image.open(SRC / "archie.png").convert("RGBA")
+    head_box = render.getchannel("A").crop((0, 0, render.width, 207)).getbbox()
+    if head_box is None:
+        raise SystemExit(".github/readme/archie.png has no opaque pixels; it is not the render this expects.")
+    hl, ht, hr, hb = head_box
+    side = max(hr - hl, hb - ht) + 8
+    cx, cy = (hl + hr) // 2, (ht + hb) // 2
+    x0, y0 = cx - side // 2, cy - side // 2
+    head = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    part = render.crop((max(x0, 0), max(y0, 0), min(x0 + side, render.width), min(y0 + side, 207)))
+    head.alpha_composite(part, (max(x0, 0) - x0, max(y0, 0) - y0))
+    sized(head, 96).save(DOCS / "assets" / "archie-head.webp", "WEBP", quality=90, method=6)
+
     # The catalogue's mascot: head and shoulders, trimmed to the render's opaque box, and cut to the first
     # Archie's 512:532 so the catalogue's masthead column keeps its exact height at every width.
     bust = Image.open(SRC / "archie.png").convert("RGBA")
@@ -124,7 +140,7 @@ def main() -> None:
     sizes = [16, 32, 48]
     (HERE / "favicon.ico").write_bytes(ico([png_bytes(sized(t, s)) for s in sizes], sizes))
 
-    for p in [DOCS / "assets" / "archie-mark.webp", DOCS / "assets" / "archie-bust.webp", DOCS / "favicon.svg",
+    for p in [DOCS / "assets" / "archie-head.webp", DOCS / "assets" / "archie-mark.webp", DOCS / "assets" / "archie-bust.webp", DOCS / "favicon.svg",
               *sorted(HERE.glob("*.png")), HERE / "favicon.ico"]:
         print(f"{p.relative_to(ROOT).as_posix():40s} {p.stat().st_size / 1024:6.1f} KB")
 

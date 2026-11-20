@@ -87,7 +87,7 @@ Node process on the machine, including other sessions' tools and test runs.
 | Harness | Kind | Guards | Assertions | Floor |
 |---|---|---|---|---|
 | `app_flags_test.py` | Python | Feature-flag schema, the editor's atomic writes, every kill switch | 39 | 28 |
-| `theme_test.py` | Python | The two themes' contrast against the glass's worst effective backgrounds, the strengthened modes (AAA under `prefers-contrast: more`), the rationed blur, the one shared copy, the migrations, paint-only shared rules, the theme menu; verdict marks; the phone layout | 804 | 500 |
+| `theme_test.py` | Python | The two soft-UI themes' contrast against the base and the field's worst point, the strengthened modes (AAA under `prefers-contrast: more`), no blur anywhere, the one shared copy, the migrations, paint-only shared rules, the theme menu; verdict marks; the phone layout | 804 | 500 |
 | `signals_test.py` | Python | When a cached release or action answer must be re-queried | 210 | 170 |
 | `fetch_test.py` | Python | A batch GitHub keeps timing out on is split and retried; nothing else is | 27 | 20 |
 | `ci_tools_test.py` | Python | `tools/local_daily.py` reads the daily's stages in order and never runs IndexNow or records SHAs; every job has a time limit, only the builds share `atlas-build`, the time report matches the limit, network steps retry | 35 | 30 |

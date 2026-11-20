@@ -170,7 +170,7 @@ for name in SETS:
     # peaks, so the strongest of each, stacked, is the worst any point on the field can be.
     peak = {}
     for colour, alpha in pools(name):
-        if colour != "#FFFFFF":
+        if colour != "#FFFFFF" or name == "dark":
             peak[colour] = max(alpha, peak.get(colour, 0))
     check(f"{name}: GLASS names each pool colour WASH draws, at its peak alpha",
           sorted(sitewide.GLASS[name]["pools"]), sorted(peak.items()))
@@ -180,6 +180,8 @@ def worst_field(theme: str) -> str:
     """The field's worst point for text: every coloured pool at its peak, stacked over the base."""
     c = SETS[theme]["surface"]
     for colour, alpha in sitewide.GLASS[theme]["pools"]:
+        if colour == "#FFFFFF" and theme == "light":
+            continue  # a white highlight only lifts light's base, away from its dark ink: never the worst point
         c = over(colour, alpha, c)
     return c
 
@@ -194,8 +196,12 @@ def effective(theme: str) -> dict[str, str]:
             **{b: T[b] for b in BACKDROPS}}
 
 
-true("the field's worst point in light is darker than its base", luminance(worst_field("light")) < luminance(LIGHT["surface"]))
-true("the field's worst point in dark is lighter than its base", luminance(worst_field("dark")) > luminance(DARK["surface"]))
+# Soft UI's field is the base with one highlight from the top left, where every surface's own highlight comes
+# from. In light that only lifts the base, so its worst point is the base itself; in dark it lifts the base
+# towards the light ink, by a breath, and that lifted point is what the audit measures.
+check("the field's worst point in light is its base", worst_field("light"), LIGHT["surface"])
+true("the field's worst point in dark is lighter than its base, by a breath",
+     luminance(worst_field("dark")) > luminance(DARK["surface"]) and ratio(worst_field("dark"), DARK["surface"]) < 1.1)
 true("--plane is the static glass over the bare field, to within two steps a channel",
      all(abs(a - b) <= 2 for t in SETS for a, b in zip(_rgb(SETS[t]["plane"]),
                                                      _rgb(over(*FILLS[t]["panel"], SETS[t]["surface"])))))
@@ -228,7 +234,7 @@ AS_STROKE |= set(re.findall(r"fill\s*:\s*var\(--([a-z0-9-]+)\)", HALOS))
 # The map has to have found something, or every assertion below vacuously passes -- the failure mode this
 # whole file exists to avoid. These are the ones the stylesheets certainly use each way.
 true("the role map found text tokens", {"ink", "muted", "link", "title"} <= AS_TEXT)
-true("the role map found fill tokens", {"act", "act-hi", "warn", "good", "panel", "panel-hi"} <= AS_FILL)
+true("the role map found fill tokens", {"act", "act-hi", "warn", "surface"} <= AS_FILL)
 true("the role map found stroke tokens", {"bar", "act-edge"} <= AS_STROKE)
 true("--onbar and --onact are ink on a fill", {"onbar", "onact"} <= AS_TEXT)
 
@@ -271,7 +277,9 @@ def audit(name: str, T: dict[str, str]) -> None:
     # vanished into its own background measured 1.05.
     for b in BACKDROPS:
         atleast(f"{name}: --grid is visible on --{b}", ratio(T["grid"], T[b]), LINE)
-    atleast(f"{name}: --plane is distinguishable from --surface", ratio(T["plane"], T["surface"]), 1.03)
+    # SOFT UI: every surface is the page's own colour, told apart by light alone. A plane or a band that drifted
+    # off the base would be a second surface colour, which is the one thing this design does not have.
+    check(f"{name}: --plane and --band are the base, --surface", (T["plane"], T["band"]), (T["surface"], T["surface"]))
 
 
 for name, T in SETS.items():
@@ -300,33 +308,36 @@ for tok in ("--panel:var(--plane)", "--panel-hi:var(--plane)", "--bdf:none", "--
     true(f"reduced transparency sets {tok}", tok in RT)
 FC = raw("@media (forced-colors:active){:root,html[data-theme]{")
 true("forced colours drop the glass and the shadows", "--bdf:none" in FC and "--raise:none" in FC)
-SUP = THEME_CSS[THEME_CSS.index("@supports not ((backdrop-filter:blur(1px))"):]
-true("a browser with no backdrop filter gets the opaque panel", "--panel:var(--plane)" in SUP[:SUP.index("}}")])
+true("soft UI is opaque: no theme asks for a backdrop filter, so none needs a fallback",
+     "--bdf:none" in raw(":root{") and "--bdf:none" in raw("html[data-theme=light]{") and "@supports not" not in THEME_CSS)
+for name in SETS:
+    check(f"{name}'s panels are opaque", (FILLS[name]["panel"][1], FILLS[name]["panel-hi"][1]), (1.0, 1.0))
 # The order is load-bearing: each switch-off block restates the theme selectors at the same weight, so it
 # only wins by coming after them, and the fog prank has to come before them so a reader who asked for solid
 # panels never sees it.
 iL = THEME_CSS.index("html[data-theme=light]{")
 iF = THEME_CSS.index("html[data-fog]{")
 true("the fog prank comes after both themes and before every switch-off block",
-     iL < iF < min(THEME_CSS.index(x) for x in ("@supports not", "@media (prefers-reduced-transparency",
+     iL < iF < min(THEME_CSS.index(x) for x in ("@media (prefers-reduced-transparency",
                                                  "@media (prefers-contrast:more){:root{", "@media (forced-colors")))
-true("the fog thickens the panels and the blur", all(t in raw("html[data-fog]{") for t in ("--panel:var(--fog)", "--panel-hi:var(--fog)", "--bdf:blur(")))
+true("the fog turns every surface milky", all(t in raw("html[data-fog]{") for t in ("--panel:var(--fog)", "--panel-hi:var(--fog)", "--surface:var(--fog)")))
 
-# The brief, pinned. Archie is warm white ceramic, near-black graphite and a bright lime. Light is glass on
-# his egg-shell; dark is a dark grey with his egg-shell for the text and his lime for titles, accents and
-# lines. These catch the real regression a pass like this is for -- a palette whose every ratio still clears
-# while the colours have quietly stopped being his.
-r, g, b_ = _rgb(LIGHT["surface"])
-true("light's field is a warm glaze, not stark white", r > b_ and LIGHT["surface"] != "#FFFFFF")
-check("light's glass is white glass", FILLS["light"]["panel"][0], "#FFFFFF")
-true("light's pools are his iris light and his lime",
-     {c for c, _ in sitewide.GLASS["light"]["pools"]} == {"#DCF55E", "#A4C812"})
-true("dark's page is a dark, dark grey (neutral, near-black)",
-     luminance(DARK["surface"]) < 0.015 and max(_rgb(DARK["surface"])) - min(_rgb(DARK["surface"])) <= 2)
-check("dark's text is his egg-shell", DARK["ink"], "#EBE5DA")
-check("dark's titles and accent are his lime", (DARK["title"], DARK["bar"]), ("#A4C812", "#A4C812"))
-true("dark's lines are lime-tinted", (lambda c: c[1] > c[0] > c[2])(_rgb(DARK["grid"])))
-true("dark's field has at most a faint lime glow", all(a <= 0.1 for _, a in sitewide.GLASS["dark"]["pools"]))
+# The brief, pinned. Neumorphism: one base colour per theme, every surface made of it, two shadows (a light one
+# up and left, a dark one down and right) for raised and the same pair inset for pressed, and one accent --
+# Archie's lime -- rationed. Dark is a cool charcoal, light a cool grey-white with navy-graphite ink. These
+# catch the regression a pass like this is for: a palette whose every ratio still clears while it has quietly
+# stopped being soft UI.
+for name, T in SETS.items():
+    r, g, b_ = _rgb(T["surface"])
+    true(f"{name}'s base is cool (blue at least red), as the references are", b_ >= r)
+    G = sitewide.GLASS[name]
+    true(f"{name}: raised is a dark shadow down-right and a light one up-left",
+         all(re.search(r"^\d+px \d+px", G[k]) and re.search(r"-\d+px -\d+px", G[k]) for k in ("raise", "raise-sm", "raise-hi")))
+    true(f"{name}: pressed is the same pair, inset", G["press"].count("inset") == 2 and G["press-sm"].count("inset") == 2)
+    true(f"{name}: soft UI draws no outlines; the shadows are the edge", (G["edge"], G["ctl-edge"]) == ("transparent", "transparent"))
+    check(f"{name}'s titles are the ink, not the accent", T["title"], T["ink"])
+true("dark's base is a dark charcoal", luminance(DARK["surface"]) < 0.03)
+true("light's base is a light grey-white, not stark white", 0.7 < luminance(LIGHT["surface"]) < 0.9)
 check("the primary button is Archie's lime in light and dark", (LIGHT["act"], DARK["act"]), ("#A4C812", "#A4C812"))
 check("no two themes share a --surface", len({T["surface"] for T in SETS.values()}), 2)
 
@@ -358,7 +369,7 @@ for f in ("19_pages.py", "20_landing.py", "22_detail.py", "31_home.py", "32_loca
 ALLOWED = {"header", ".bar", ".setmenu", "footer", "dialog#pal", "dialog#exp", "dialog#mapdlg", ".hero",
            ".daily", ".dsold", ".dancemenu", ".updbar"}
 check("the backdrop filter is on the bounded set of large surfaces and nothing else", sorted(BLURRED - ALLOWED), [])
-true("...and the check found them", {"header", ".bar", ".hero"} <= BLURRED)
+check("soft UI blurs nothing: every surface is opaque, so no rule asks for the backdrop filter", sorted(BLURRED), [])
 true(".subbar is glass without the blur", ".subbar" not in BLURRED)
 for per_item in (".cx", ".mcard", ".lxtile", ".dsc", ".dcard", ".pick", "tr", ".chip", ".bychip", ".lxs"):
     true(f"{per_item} is never blurred", per_item not in BLURRED)
@@ -510,12 +521,12 @@ check("...and one rule declares it, toggled from one place, in step with the att
 # A harness that cannot fail is decoration. Perturb one value and confirm the same arithmetic rejects it.
 check("sanity: the undeepened lime would NOT pass as text on light's glaze",
       ratio("#A4C812", LIGHT["surface"]) >= 4.5, False)
-check("sanity: ...and is the 1.5:1 the comment in sitewide.py quotes",
-      round(ratio("#A4C812", LIGHT["surface"]), 1), 1.5)
+check("sanity: ...and is the 1.6:1 the comment in sitewide.py quotes",
+      round(ratio("#A4C812", LIGHT["surface"]), 1), 1.6)
 check("sanity: dark's captions would NOT pass on a dark glass as thin as light's, over white",
       ratio(DARK["muted"], over(FILLS["dark"]["panel"][0], .52, "#FFFFFF")) >= 4.5, False)
-check("sanity: light's muted ink would NOT pass on the pinned bar if it were the static glass",
-      ratio(LIGHT["muted"], over(*FILLS["light"]["panel"], "#000000")) >= 4.5, False)
+check("sanity: light's muted ink would NOT pass on dark's base",
+      ratio(LIGHT["muted"], DARK["surface"]) >= 4.5, False)
 
 # ---------------------------------------------------------------- the copies that are not CSS
 # `23_og.py` renders a social card as a standalone document with no stylesheet to inherit from, so its colours
@@ -577,8 +588,8 @@ true("the first Archie's art is gone from docs/assets/", not (ROOT / "docs" / "a
 FAVICON_SVG = (ROOT / "docs" / "favicon.svg").read_text(encoding="utf-8")
 true("favicon.svg is no longer the shades-and-globe vector", SHADES not in FAVICON_SVG)
 true("...it is Archie's tile, embedded", 'href="data:image/png;base64,' in FAVICON_SVG)
-true("mark.py points at the tile art/brand/build.py writes", 'ASSET = "assets/archie-mark.webp"' in MARK)
-true("...and that file exists", (ROOT / "docs" / "assets" / "archie-mark.webp").exists())
+true("mark.py points at the head art/brand/build.py cuts", 'ASSET = "assets/archie-head.webp"' in MARK)
+true("...and that file exists", (ROOT / "docs" / "assets" / "archie-head.webp").exists())
 true("the catalogue's mascot is the new bust", 'src="__UP__assets/archie-bust.webp"' in SRC)
 true("...and that file exists", (ROOT / "docs" / "assets" / "archie-bust.webp").exists())
 

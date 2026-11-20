@@ -2447,18 +2447,16 @@ CARD_CSS = r"""
    own halo and `--ring2` is the rarity frame, and they are separate variables so that a card which is
    both new and rare keeps both marks -- with one variable the later rule simply won and the rarer of the
    two signals disappeared on exactly the cards where it mattered most. */
-.cx{--ring:0 0 0 0 transparent;--ring2:0 0 0 0 transparent;
-  position:relative;display:block;border-radius:var(--radius);background:var(--panel);
-  border:var(--hair) solid var(--panel-b);box-shadow:var(--lift),var(--ring),var(--ring2);overflow:hidden;
-  isolation:isolate;
+.cx{--ring:0 0 0 0 transparent;--ring2:0 0 0 0 transparent;position:relative;display:block;
+  border-radius:var(--radius);background:var(--surface);border:var(--hair) solid transparent;
+  box-shadow:var(--lift),var(--ring),var(--ring2);overflow:hidden;isolation:isolate;
   transition:box-shadow .22s cubic-bezier(.22,1,.36,1),transform .22s cubic-bezier(.22,1,.36,1),
     border-color .22s ease}
 /* Guarded, and this is the same latching bug the shipped table already fixed: a touch device reports a
    hover that sticks after the tap, so an unguarded lift leaves one card raised until something else is
    tapped -- which reads as a selection the reader did not make. */
 @media(hover:hover){
-  .cx:hover{box-shadow:var(--lift-hi),var(--ring),var(--ring2);transform:translateY(-3px);
-    border-color:color-mix(in srgb,var(--ac,var(--bar)) 45%,var(--panel-b))}
+  .cx:hover{box-shadow:var(--lift-hi),var(--ring),var(--ring2);transform:translateY(-3px);border-color:transparent}
   /* Terminal's depth is a hard offset, so its hover has to *move* rather than spread -- the shadow is
      already at full strength at rest and a bigger blur is not available to it. Expressed through the
      lift token rather than a skin selector: the rule is the same, the token differs. */
@@ -2571,11 +2569,12 @@ CARD_CSS = r"""
 
 /* ---- the install command, and the one control that is not the link ---- */
 .cw{position:relative;display:flex;align-items:stretch;gap:0;margin-top:10px;border-radius:var(--radius-sm);
-  border:var(--hair) solid var(--grid);background:var(--surface);overflow:hidden}
+  border:var(--hair) solid transparent;background:var(--surface);overflow:hidden;
+  box-shadow:var(--press)}
 .cw .cmd{flex:1 1 auto;min-width:0;margin:0;border:0;border-radius:0;background:transparent}
-.cw .cp{flex:none;border:0;border-left:var(--hair) solid var(--grid);background:var(--band);
+.cw .cp{flex:none;border:0;border-left:var(--hair) solid transparent;background:var(--surface);
   color:var(--muted);font-size:10.5px;padding:0 9px;text-transform:var(--kick-case);
-  letter-spacing:var(--kick-track);font-weight:600}
+  letter-spacing:var(--kick-track);font-weight:600;box-shadow:var(--raise-sm)}
 .cw .cp:hover{color:var(--bar)}
 .cw .cp.ok{color:var(--good)}
 .cw.none{padding:6px 9px;font-size:11px;color:var(--muted);font-style:italic;background:transparent;
@@ -2877,9 +2876,9 @@ LAB_CSS = CARD_CSS + r"""
 .lead b{color:var(--ink)}
 /* The measured constraints. Set apart rather than folded into the prose, because they are the two facts
    that decide whether any of these directions is the right one. */
-.warn{margin:16px 0 34px;padding:12px 14px;border-radius:var(--radius);background:var(--panel);
-  border:var(--hair) solid var(--panel-b);border-left:3px solid var(--accent-gold);
-  box-shadow:var(--lift);font-size:12.5px;color:var(--ink2);max-width:104ch}
+.warn{margin:16px 0 34px;padding:12px 14px;border-radius:var(--radius);background:var(--surface);
+  border:var(--hair) solid transparent;border-left:3px solid transparent;box-shadow:var(--lift);
+  font-size:12.5px;color:var(--ink2);max-width:104ch}
 .warn p{margin:0 0 7px}
 .warn p:last-child{margin:0}
 .warn b{color:var(--ink)}
@@ -2923,8 +2922,8 @@ SHELF_CSS = CARD_CSS + r"""
    gets -- which is the entire mechanism: a project cannot earn this slot with stars, so the slot is the
    only screentime on the site that the long tail can actually reach. */
 .hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0;margin:0 0 30px;
-  border-radius:var(--radius);overflow:hidden;background:var(--panel);
-  border:var(--hair) solid var(--panel-b);box-shadow:var(--lift-hi);isolation:isolate}
+  border-radius:var(--radius);overflow:hidden;background:var(--surface);
+  border:var(--hair) solid transparent;box-shadow:var(--raise);isolation:isolate}
 .hero .ph{height:100%;min-height:268px}
 .hero .ph img,.hero .ph .pt{height:100%;width:100%;aspect-ratio:auto!important;object-fit:cover}
 .hero .bd{padding:20px 22px 22px;display:flex;flex-direction:column;min-width:0}
@@ -2945,10 +2944,10 @@ SHELF_CSS = CARD_CSS + r"""
    that needs no ranking at all -- a reader who knows they want a skill does not want a leaderboard. */
 .bystrip{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 30px}
 .bychip{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;
-  background:var(--panel);border:var(--hair) solid var(--panel-b);box-shadow:var(--lift);
+  background:var(--surface);border:var(--hair) solid transparent;box-shadow:var(--lift);
   font-size:12.5px;color:var(--ink2);transition:transform .16s ease,border-color .16s ease}
-.bychip:hover{color:var(--ink);border-color:var(--ac,var(--bar));transform:translateY(-2px);
-  text-decoration:none}
+.bychip:hover{color:var(--ink);border-color:transparent;transform:translateY(-2px);text-decoration:none;
+  box-shadow:var(--lift-hi)}
 .bychip i{width:8px;height:8px;border-radius:3px;background:var(--ac,var(--bar));display:block;
   box-shadow:0 0 calc(10px * var(--fx-glow)) var(--ac,var(--bar))}
 .bychip .ct{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11px;color:var(--muted)}
@@ -2959,10 +2958,10 @@ SHELF_CSS = CARD_CSS + r"""
 .shh .ct{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;color:var(--bar)}
 .shh .spring{flex:1 1 auto}
 .shh .nav{display:flex;gap:4px}
-.shh .nav button{width:28px;height:28px;border-radius:999px;background:var(--band);
-  border:var(--hair) solid var(--grid);color:var(--ink2);font-size:12px;line-height:1;
-  display:grid;place-items:center}
-.shh .nav button:hover{border-color:var(--bar);color:var(--ink)}
+.shh .nav button{width:28px;height:28px;border-radius:999px;background:var(--surface);
+  border:var(--hair) solid transparent;color:var(--ink2);font-size:12px;line-height:1;display:grid;
+  place-items:center;box-shadow:var(--raise-sm)}
+.shh .nav button:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-hi)}
 .shwhy{margin:0 0 11px;font-size:12px;color:var(--muted);max-width:110ch;line-height:1.5}
 .shwhy b{color:var(--ink2)}
 /* A row rather than a grid, and the overflow is the point: a shelf says "there is more of this" by being
@@ -2985,12 +2984,12 @@ SHELF_CSS = CARD_CSS + r"""
 /* The empty shelf. Shown rather than hidden, because "no arrivals since the baseline" is a fact about the
    pipeline that a reader of this demo needs, and a shelf that silently disappears when its set is empty
    is a shelf nobody can tell is broken. */
-.empty{border:var(--hair) dashed var(--grid);border-radius:var(--radius);padding:18px 20px;
-  color:var(--muted);font-size:12.5px;line-height:1.6;max-width:100ch}
+.empty{border:var(--hair) dashed transparent;border-radius:var(--radius);padding:18px 20px;color:var(--muted);
+  font-size:12.5px;line-height:1.6;max-width:100ch;background:var(--surface);box-shadow:var(--press)}
 .empty b{color:var(--accent-gold)}
 .empty code{font-family:var(--mono);font-size:11.5px;color:var(--bar)}
-.cover{margin:34px 0 0;padding:14px 16px;border-radius:var(--radius);background:var(--panel);
-  border:var(--hair) solid var(--panel-b);border-left:3px solid var(--bar);box-shadow:var(--lift);
+.cover{margin:34px 0 0;padding:14px 16px;border-radius:var(--radius);background:var(--surface);
+  border:var(--hair) solid transparent;border-left:3px solid transparent;box-shadow:var(--lift);
   font-size:12.5px;color:var(--ink2);line-height:1.6;max-width:110ch}
 .cover b{color:var(--ink);font-family:var(--num);font-variant-numeric:tabular-nums}
 @media(max-width:900px){

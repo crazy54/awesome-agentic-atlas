@@ -239,7 +239,7 @@ DESCRIPTION = (f"Every agentic AI project from {b19.LISTS} awesome-lists, merged
 # icon is a render. `art/brand/build.py` cuts the five files from his tile (`.github/readme/icon.png`) by
 # hand, with Pillow, and this stage copies them into `docs/` on every run (see `main()`), which keeps the
 # pipeline stdlib.
-PLANE = (0x2A, 0x2A, 0x27)
+PLANE = (0x24, 0x27, 0x2D)
 # Where the icons' sources live: beside the script that makes them, not under `docs/`.
 ICON_SRC = ROOT / "art" / "brand"
 

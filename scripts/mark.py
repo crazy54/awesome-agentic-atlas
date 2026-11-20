@@ -6,27 +6,21 @@ Five generators write a `<header>` (`19_pages.py`, `20_landing.py`, `22_detail.p
 `flags_app.py`, and since then `31_home.py`, `32_local.py`, `33_alike.py` and `41_models_page.py`). They get
 the mark and its CSS from here, so there is one drawing to change and one place to change it.
 
-THE MARK IS THE CURRENT ARCHIE, NOT THE FIRST ONE
+THE MARK IS THE CURRENT ARCHIE, IN A RAISED DISC
 
-This used to draw the first Archie's face as vector: a gold globe wearing blocky pixel shades, the same object
-the old `docs/favicon.svg` and `24_pwa.icon()` drew. The owner retired that character for the 3D Archie
-(white ceramic, graphite crest with a lime streak, lime eyes), who is the one in the homepage masthead, the
-README and the catalogue. The mark is now his icon tile, `docs/assets/archie-mark.webp`, cut by
-`art/brand/build.py` from the owner's own `.github/readme/icon.png`, so the tab, the installed icon, the
-README and the nav are one drawing again.
+The mark is his head alone, `docs/assets/archie-head.webp`, cut transparent by `art/brand/build.py` from the
+owner's render (`.github/readme/archie.png`). The site is soft UI (see THE THEMES in `sitewide.py`), and in soft
+UI an icon is not a tile with a plate of its own: it is seated on a disc of the page's own colour, extruded by
+the same two shadows as every other control. So `.mk` is that disc and the head sits in it. The tab and the
+installed icon keep his dark tile (`archie-mark.webp`'s source), which is what a launcher's own wallpaper needs.
 
-It stays an `<svg>` holding an `<image>` rather than becoming an `<img>`, so every `.mk svg` rule below -- the
-30px box, `overflow:visible`, the drop-shadow that follows the tile's alpha and the breath -- applies to it
-unchanged. The tile is a raster because he is a render: a hand-traced vector of a lit 3D head would be a
-fourth drawing of him. The cost is one 3 KB request, cached after the first page; `width`/`height` on the
-`<image>` hold its box, so nothing moves when it lands.
-
-The tile carries its own dark plate, so it reads the same on the light and the dark theme without any token.
+It stays an `<svg>` holding an `<image>` rather than becoming an `<img>`, so `width`/`height` on the `<image>`
+hold its box and nothing moves when the 4 KB file lands; it is cached after the first page.
 """
 from __future__ import annotations
 
 # The file every page's mark points at, relative to the site root.
-ASSET = "assets/archie-mark.webp"
+ASSET = "assets/archie-head.webp"
 
 
 def svg(up: str = "", cls: str = "mk") -> str:
@@ -53,35 +47,33 @@ def brand(href: str, label: str = "Atlas") -> str:
 
 # One rule set, emitted by every generator that calls `brand()`.
 #
-# `drop-shadow` rather than `box-shadow`, because it follows rendered alpha: it lights the tile's rounded
-# corners rather than the element's square border box. `overflow:visible` lets that glow spill past the
-# 30px box. The glow is lime, Archie's trim and the theme's `--bar`; it was the first Archie's gold.
+# The disc is 30px, two more than the old 28px box, and the head inside it 24px. `inline-grid` plus a baseline
+# nudge rather than `display:flex` on the `h1`, because the catalogue puts the mark inside its heading, and
+# `probe.mjs` and `theme_test.py` both measure that heading.
 #
-# The breath is a duration gate, not an opacity gate: `calc(6s * var(--fx-pulse))` with `--fx-pulse:0`
-# computes to `0s`, and a zero-duration animation never enters `document.getAnimations()`. An opacity gate
-# leaves the animation running and invisible, which is a thing a battery notices.
-# `.mk` is styled on its own rather than as `.brand .mk`, because the index's own `<h1>` *is* the brand --
-# "Awesome Agentic Atlas" is already the top-left text -- so there the mark goes inside the heading and
-# there is no `.brand` to descend from. `inline-grid` plus a baseline nudge rather than `display:flex` on
-# the `h1`, because `probe.mjs` and `theme_test.py` both measure that heading and changing its formatting
-# context to flex moves the trailing `<span>` it asserts about.
+# The breath is the lime's light around the disc, and it is a duration gate, not an opacity gate:
+# `calc(6s * var(--fx-pulse))` with `--fx-pulse:0` computes to `0s`, and a zero-duration animation never
+# enters `document.getAnimations()`. Hovering the brand lifts the disc, as every other control on the site.
 CSS = """
-.mk{display:inline-grid;place-items:center;width:28px;height:28px;flex:none;
-  vertical-align:-7px;margin-right:2px}
-.brand{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:inherit;
-  font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.mk{display:inline-grid;place-items:center;width:30px;height:30px;flex:none;border-radius:50%;
+  vertical-align:-8px;margin-right:4px;background:var(--surface);box-shadow:var(--raise-sm);position:relative;
+  transition:box-shadow .16s ease}
+.mk::after{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  animation:mkbreath calc(6s * var(--fx-pulse,1)) ease-in-out infinite}
+.brand{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:inherit;
+  font-weight:650;letter-spacing:-.01em;white-space:nowrap}
 .brand:hover span{text-decoration:underline}
+.brand:hover .mk{box-shadow:var(--raise-hi)}
+.brand:active .mk{box-shadow:var(--press)}
 /* The brand's own line, on the page families that have no breadcrumb to sit in. Named rather than
    reusing `.crumb`, which is `22_detail.py`'s class and already carries a rule there: a shared
    stylesheet that redefines a generator's own selector wins or loses on source order, which is not a
    thing to leave to chance across four files. */
 .brandbar{margin:0 0 14px}
 .brand .mk{vertical-align:baseline;margin-right:0}
-.mk svg{width:30px;height:30px;display:block;overflow:visible;
-  filter:drop-shadow(0 0 calc(5px * var(--fx-glow,1)) rgba(164,200,18,.45));
-  animation:mkbreath calc(6s * var(--fx-pulse,1)) ease-in-out infinite}
+.mk svg{width:24px;height:24px;display:block;overflow:visible}
 @keyframes mkbreath{
-  0%,100%{filter:drop-shadow(0 0 calc(3px * var(--fx-glow,1)) rgba(164,200,18,.32))}
-  50%{filter:drop-shadow(0 0 calc(9px * var(--fx-glow,1)) rgba(164,200,18,.60))}}
-@media(prefers-reduced-motion:reduce){.mk svg{animation:none}}
+  0%,100%{box-shadow:0 0 0 rgba(164,200,18,0)}
+  50%{box-shadow:0 0 calc(10px * var(--fx-glow,1)) rgba(164,200,18,.35)}}
+@media(prefers-reduced-motion:reduce){.mk::after{animation:none}}
 """

@@ -151,15 +151,13 @@ CSS = """/* Written by scripts/20_landing.py. Shared by every page under docs/to
    homepage, the collections and Discover. */
 
 """ + sitewide.THEME_CSS + """*{box-sizing:border-box}
-/* --ui is the page's own font stack in both themes. The field behind the glass is `body::before` in
-   `THEME_CSS` above; this only sets --surface, the colour it is translucent over. */
+/* --ui is the page's own font stack in both themes. The field is `body::before` in `THEME_CSS` above;
+   this sets --surface, the base every surface on the page is made of. */
 body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.5 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
-/* A pane of the glass. Static, and nothing inside it is positioned, so the backdrop filter changes no
-   containing block -- the layout diff in the theme work measured every box on these pages unmoved. */
-header{background:var(--panel);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
-  border-bottom:1px solid var(--edge);padding:22px 20px 16px}
+/* The header is the base, transparent over the field: soft UI draws no bar and no rule under it. */
+header{background:transparent;border-bottom:1px solid transparent;padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
 h1{margin:0 0 6px;font-size:26px;letter-spacing:-.02em}
 h2{margin:34px 0 8px;font-size:16px;letter-spacing:-.01em}
@@ -169,9 +167,9 @@ h2{margin:34px 0 8px;font-size:16px;letter-spacing:-.01em}
 .top nav{font-size:13px;color:var(--muted);text-align:right;line-height:1.9}
 .blurb{color:var(--muted);font-size:13px;margin:6px 0 0;max-width:70ch}
 button{font:inherit;cursor:pointer}
-.chip{display:inline-block;background:var(--band);color:var(--ink2);border:1px solid var(--grid);
+.chip{display:inline-block;background:var(--surface);color:var(--ink2);border:1px solid transparent;
   border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap;margin:0 5px 5px 0}
-.chip:hover{border-color:var(--bar);color:var(--ink);text-decoration:none}
+.chip:hover{border-color:transparent;color:var(--ink);text-decoration:none}
 /* The row count inside a navigation chip. Dimmed rather than smaller, so the chips stay one height. */
 .ct{opacity:.65}
 /* The one link on the page that has to be found, because it is the thing the page is a preview of:
@@ -182,7 +180,8 @@ button{font:inherit;cursor:pointer}
   border-radius:999px;padding:9px 16px;margin:14px 0 0}
 .cta:hover{text-decoration:none}
 main{padding:0 20px 64px}
-table{width:100%;border-collapse:collapse;margin-top:14px}
+table{width:100%;border-collapse:separate;margin-top:14px;border-spacing:0;background:var(--surface);
+  box-shadow:var(--raise);border-radius:var(--r-card);padding:6px 8px}
 th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
   padding:8px 10px;border-bottom:1px solid var(--grid);background:transparent}
 th.n,td.n{text-align:right}
@@ -190,11 +189,11 @@ th.c,td.c{text-align:center}
 td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
 /* Guarded, because a touch device reports a hover that then latches: tapping a row anywhere -- to
    follow its link, or just while scrolling -- left it tinted until something else was tapped. */
-@media(hover:hover){tr:hover td{background:var(--band)}}
+@media(hover:hover){tr:hover td{background:color-mix(in srgb,var(--bar) 6%,var(--surface))}}
 .rk{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .shot{width:200px}
-.shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:6px;
-  background:var(--band);border:1px solid var(--ctl-edge);display:block}
+.shot img{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:12px;background:var(--surface);
+  border:1px solid transparent;display:block;box-shadow:var(--raise-sm)}
 /* These two set the table's width. Auto table layout takes the widest unbreakable run in the column
    across every row on the page, and neither a slash nor a comma is a break opportunity in Chrome or
    Safari, so a repo name and a blurb naming six agents between them demand more than the content box
@@ -207,18 +206,20 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
    already adds is enough to say "this is a link" at the moment somebody asks. */
 a.nwo:hover{color:var(--ink)}
 /* The forge a non-GitHub project lives on, inside its `.nwo` link. 19_pages.py's rule, tokens only. */
-.forge{display:inline-block;border:1px solid var(--grid);border-radius:5px;padding:0 5px;background:var(--band);
-  font-size:10.5px;font-weight:600;color:var(--ink2);white-space:nowrap;vertical-align:1px}
+.forge{display:inline-block;border:1px solid transparent;border-radius:5px;padding:0 5px;
+  background:var(--surface);font-size:10.5px;font-weight:600;color:var(--ink2);white-space:nowrap;
+  vertical-align:1px;box-shadow:var(--press-sm)}
 .st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
 .desc{color:var(--ink2);font-size:13.5px;max-width:44em;overflow-wrap:anywhere}
-.cmd{display:block;margin-top:7px;font:12px/1.5 var(--mono);
-  color:var(--ink2);background:var(--band);border:1px solid var(--ctl-edge);border-radius:10px;
-  box-shadow:var(--press);padding:5px 8px;max-width:44em;overflow-wrap:anywhere}
-.tag{display:inline-block;background:var(--band);border:1px solid var(--ctl-edge);border-radius:999px;
-  padding:2px 7px;font-size:11.5px;color:var(--ink2);margin:0 4px 4px 0;white-space:nowrap}
-.tag.cat{border-color:var(--bar);color:var(--ink)}
+.cmd{display:block;margin-top:7px;font:12px/1.5 var(--mono);color:var(--ink2);background:var(--surface);
+  border:1px solid transparent;border-radius:var(--r-ctl);box-shadow:var(--press);padding:5px 8px;
+  max-width:44em;overflow-wrap:anywhere}
+.tag{display:inline-block;background:var(--surface);border:1px solid transparent;border-radius:999px;
+  padding:2px 7px;font-size:11.5px;color:var(--ink2);margin:0 4px 4px 0;white-space:nowrap;
+  box-shadow:var(--press-sm)}
+.tag.cat{border-color:transparent;color:var(--bar)}
 .os{font-size:11.5px;letter-spacing:.02em;white-space:nowrap}
 /* Prefixed because the verdict characters are the class names and one of them is "-", which is not a
    valid CSS identifier on its own -- ".-" invalidates the whole selector list it appears in, so the
@@ -269,8 +270,8 @@ a.nwo:hover{color:var(--ink)}
    one line each; `minmax(0,1fr)` rather than `1fr` because a `code.cmd` with no break opportunity in
    it will otherwise push a grid track wider than its share and take the card with it. */
 .pick{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:4px 26px;align-items:start;
-  background:var(--panel);border:1px solid var(--edge);border-radius:20px;box-shadow:var(--raise-sm);
-  padding:16px 18px;margin:0 0 12px}
+  background:var(--surface);border:1px solid transparent;border-radius:var(--r-card);
+  box-shadow:var(--raise);padding:16px 18px;margin:0 0 12px}
 .pick>*{grid-column:1;min-width:0}
 .pick .ev,.pick .os,.pick .tp{grid-column:2}
 .pick .ev{grid-row:2;margin-top:0}
@@ -280,8 +281,9 @@ a.nwo:hover{color:var(--ink)}
 .role{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
 /* Tabular, because seven of these stack in a column and a proportional "1" would step the labels
    beside them in and out. */
-.slot{display:inline-block;min-width:20px;margin-right:6px;padding:1px 0;text-align:center;
-  border-radius:5px;background:var(--band);color:var(--ink);font-variant-numeric:tabular-nums}
+.slot{display:inline-block;min-width:20px;margin-right:6px;padding:1px 0;text-align:center;border-radius:5px;
+  background:var(--surface);color:var(--ink);font-variant-numeric:tabular-nums;
+  box-shadow:var(--press-sm)}
 .why{color:var(--ink);font-size:14.5px;margin:9px 0 0;max-width:66ch}
 .pick .desc{margin:7px 0 0;font-size:13px;color:var(--muted)}
 .ev b{color:var(--ink)}
@@ -300,8 +302,8 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
    without a query for each step. */
 .colls{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:14px;
   grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
-.coll{background:var(--panel);border:1px solid var(--edge);border-radius:20px;box-shadow:var(--raise-sm);
-  padding:16px 18px}
+.coll{background:var(--surface);border:1px solid transparent;border-radius:var(--r-card);
+  box-shadow:var(--raise);padding:16px 18px}
 .coll h2{margin:2px 0 0;font-size:18px;letter-spacing:-.02em}
 .coll .intro{font-size:13.5px;margin-top:8px}
 
@@ -327,8 +329,8 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
    phone, where a fixed 320 plus the padding leaves no sliver of the next card -- and that sliver is the
    only thing on screen saying the rail scrolls. */
 .dcard{flex:0 0 min(320px,78vw);scroll-snap-align:start;display:flex;flex-direction:column;
-  background:var(--panel);border:1px solid var(--edge);border-radius:18px;padding:14px 16px 12px;
-  border-top:3px solid var(--card-accent);box-shadow:var(--raise-sm)}
+  background:var(--surface);border:1px solid transparent;border-radius:var(--r-card);
+  padding:14px 16px 12px;border-top:3px solid transparent;box-shadow:var(--raise-sm)}
 .dcard h2{margin:6px 0 0;font-size:17px;letter-spacing:-.02em}
 .dcard .nwo{margin-top:3px}
 /* Clamped for the reason the index's cards are: these blurbs are other people's table cells and run from
@@ -337,6 +339,8 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
 .dcard .desc{margin:8px 0 0;font-size:13px;color:var(--ink2);max-width:none;
   display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:6;line-clamp:6;overflow:hidden}
 .dtag{margin:0;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+/* The topic's colour lives in its pill, the one place on the card the accent is spent. */
+.dtag .tag.cat{color:var(--card-accent);font-weight:600}
 .dmeta{margin:7px 0 0;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
 .dmeta b{color:var(--ink);font-size:14px;font-weight:700}
 /* Pushed to the bottom by `margin-top:auto`, so "17 of 50" sits on one line across a row of cards whose
@@ -346,19 +350,20 @@ p code.cmd{display:inline;margin:0;padding:2px 6px}
   text-transform:uppercase;font-variant-numeric:tabular-nums}
 .dctl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:18px}
 .dpos{margin-left:6px;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
-.dnote{margin:12px 0 0;background:var(--panel);border:1px solid var(--edge);
-  border-left:3px solid var(--bar);border-radius:6px;padding:10px 13px;color:var(--ink2);font-size:13.5px}
+.dnote{margin:12px 0 0;background:var(--surface);border:1px solid transparent;
+  border-left:3px solid transparent;border-radius:var(--r-ctl);padding:10px 13px;color:var(--ink2);
+  font-size:13.5px;box-shadow:var(--raise-sm)}
 /* The card a deep link from the homepage landed on. The same `--bar` the rest of the site uses for "this
    one", and it does not fade: a reader who followed a link to a particular project should still be able to
    tell which one it was after reading two cards either side of it. */
-.dcard.dhit{border-color:var(--bar);box-shadow:0 0 0 2px var(--bar)}
+.dcard.dhit{border-color:transparent;box-shadow:var(--raise),0 0 0 2px var(--bar)}
 .dcard.dhit:focus{outline:none}
 /* New to the atlas, on a Discover card. The index's rule restated -- see the long note beside `tr.nw` in
    `19_pages.py` for why this is an outline that breathes and not a colour wash -- and capped at five swells
    for the same reason: it says "look at this one", and something that says that forever is not saying it.
    No `data-wave` equivalent, because a day here is fifty cards drawn from a rotation rather than a filtered
    set, so the case that rule exists for -- most of what is on screen being new at once -- cannot arise. */
-.dcard.nw{border-color:var(--warn);
+.dcard.nw{border-color:transparent;
   box-shadow:0 0 0 2px var(--warn),0 0 12px color-mix(in srgb,var(--warn) 30%,transparent);
   animation:new-breathe 3s ease-in-out 5}
 @keyframes new-breathe{
@@ -379,11 +384,10 @@ html[data-dmode=grid] #dprev,html[data-dmode=grid] #dnext{display:none}
 /* Guarded like every other hover on this sheet: a touch device latches a hover it can never clear, so
    tapping a card to follow its link would leave it lit until something else was tapped. */
 @media(hover:hover){
-  .dcard:hover{border-color:var(--card-accent);
-    box-shadow:0 0 0 2px var(--card-accent),0 0 18px color-mix(in srgb,var(--card-accent) 40%,transparent)}
+  .dcard:hover{border-color:transparent;
+  box-shadow:var(--raise-hi),0 0 22px color-mix(in srgb,var(--card-accent) 34%,transparent)}
 }
-.dcard:focus-within{border-color:var(--card-accent);
-  box-shadow:0 0 0 2px var(--card-accent),0 0 18px color-mix(in srgb,var(--card-accent) 36%,transparent)}
+.dcard:focus-within{border-color:transparent;box-shadow:var(--raise-hi),0 0 0 2px var(--card-accent)}
 /* The three kinds of motion this section introduces, all off for a reader who asked for none. Scoped to
    these selectors rather than written as the blanket `*{animation-duration:.01ms}` the index uses, because
    this sheet is also the 156 facet pages and the five collection pages and none of those asked for a rule.
@@ -398,9 +402,8 @@ html[data-dmode=grid] #dprev,html[data-dmode=grid] #dnext{display:none}
   .dcard.nw{animation:none}
   .drail{scroll-behavior:auto}
 }
-footer{border-top:1px solid var(--edge);background:var(--panel);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);padding:22px 20px;
-  color:var(--muted);font-size:13px}
+footer{border-top:1px solid transparent;background:transparent;padding:22px 20px;color:var(--muted);
+  font-size:13px;box-shadow:inset 0 1px 0 var(--grid)}
 footer .wrap{max-width:1500px}
 /* Two queries, because the page fails in two places: at 900px the screenshot and the two detail
    columns stop paying for their width, and below 640px four columns stop fitting in what is left. */
@@ -424,10 +427,10 @@ footer .wrap{max-width:1500px}
      that -- so each row becomes a card, and the headings, no longer above anything, go away. */
   thead{display:none}
   table,tbody,tr,td{display:block}
-  table{margin-top:12px}
-  tr{display:grid;grid-template-columns:1fr auto;gap:1px 12px;align-items:start;
-    border:1px solid var(--edge);border-radius:18px;padding:11px 13px;margin:0 0 9px;
-    background:var(--panel);box-shadow:var(--raise-sm)}
+  table{margin-top:12px;padding:0;background:none;box-shadow:none;border-radius:0}
+  tr{display:grid;grid-template-columns:1fr auto;gap:1px 12px;align-items:start;border:1px solid transparent;
+  border-radius:var(--r-card);padding:11px 13px;margin:0 0 9px;background:var(--surface);
+  box-shadow:var(--raise-sm)}
   td{border-bottom:0;padding:0}
   td.rk{grid-column:1;grid-row:1;text-align:left}
   td.st-c{grid-column:2;grid-row:1}

@@ -1040,21 +1040,21 @@
   // is moved to where the top of his head lands on screen. It never takes a pointer event, so the links
   // under it keep working.
   const CSS = `
-.archie-say{position:absolute;left:0;top:0;z-index:1;width:max-content;max-width:220px;margin:0;
-  padding:8px 12px;border:1px solid var(--grid);border-radius:14px;background:var(--band);color:var(--ink);
-  font:500 13px/1.38 var(--ui);box-shadow:0 12px 28px rgba(0,0,0,.25);pointer-events:none;
-  opacity:0;scale:.6;transform-origin:8px 100%;
-  transition:opacity .16s ease-out,scale .24s cubic-bezier(.34,1.56,.64,1)}
+.archie-say{position:absolute;left:0;top:0;z-index:1;width:max-content;max-width:220px;margin:0;padding:8px 12px;
+  border:1px solid transparent;border-radius:14px;background:var(--surface);color:var(--ink);
+  font:500 13px/1.38 var(--ui);box-shadow:var(--raise);pointer-events:none;opacity:0;scale:.6;
+  transform-origin:8px 100%;transition:opacity .16s ease-out,scale .24s cubic-bezier(.34,1.56,.64,1)}
 .archie-say.on{opacity:1;scale:1}
 .archie-say.l{transform-origin:calc(100% - 8px) 100%}
-.archie-say::after{content:"";position:absolute;left:12px;bottom:-6px;width:10px;height:10px;
-  background:inherit;border:solid var(--grid);border-width:0 1px 1px 0;transform:rotate(45deg)}
+.archie-say::after{content:"";position:absolute;left:12px;bottom:-6px;width:10px;height:10px;background:inherit;
+  border:solid var(--grid);border-width:0 1px 1px 0;transform:rotate(45deg);border-color:transparent;
+  box-shadow:3px 3px 5px -1px rgba(0,0,0,.28)}
 .archie-say.l::after{left:auto;right:12px}
 .archie-say.think{border-radius:22px;font-style:italic}
 .archie-say.think::after{left:4px;bottom:-15px;width:11px;height:11px;border-width:1px;border-radius:50%;
   transform:none}
-.archie-say.think::before{content:"";position:absolute;left:-3px;bottom:-25px;width:6px;height:6px;
-  border:1px solid var(--grid);border-radius:50%;background:inherit}
+.archie-say.think::before{content:"";position:absolute;left:-3px;bottom:-25px;width:6px;height:6px;border:1px solid transparent;
+  border-radius:50%;background:inherit;box-shadow:var(--raise-sm)}
 .archie-say.think.l::after{left:auto;right:4px}
 .archie-say.think.l::before{left:auto;right:-3px}
 .archie-poke{position:absolute;left:0;top:0;z-index:0;margin:0;padding:0;border:0;background:none;

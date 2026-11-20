@@ -280,12 +280,14 @@ CSS = """
 .lk .wrap{max-width:980px}
 .lk [hidden]{display:none!important}
 .kick{margin:0 0 4px;color:var(--muted);font:600 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase}
-.lks{margin:26px 0 0;padding:20px;border:1px solid var(--grid);border-radius:14px;background:var(--plane)}
+.lks{margin:26px 0 0;padding:20px;border:1px solid transparent;border-radius:24px;background:var(--surface);
+  box-shadow:var(--raise)}
 .lks h2{margin:0;font-size:19px}
 .lkform label{display:block;font-weight:600;margin:0 0 6px}
 .lkrow{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
 .lkrow input{flex:1 1 280px;min-width:0;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);
-  border:1px solid var(--grid);border-radius:10px;padding:11px 12px;min-height:44px}
+  border:1px solid transparent;border-radius:var(--r-ctl);padding:11px 12px;min-height:44px;
+  box-shadow:var(--press)}
 .lkrow .cta{border:0;font:inherit;font-weight:600;min-height:44px;padding:0 18px;cursor:pointer}
 .lkrow input:focus-visible,.lkrow .cta:focus-visible,.lks a:focus-visible,.lks button:focus-visible,
 .lks select:focus-visible,.lkcheck:has(input:focus-visible),.lkdesc summary:focus-visible,
@@ -295,15 +297,16 @@ CSS = """
 .lkdesc{margin:16px 0 0;border-top:1px solid var(--grid);padding-top:12px}
 .lkdesc summary{cursor:pointer;color:var(--link);font-weight:600;min-height:32px;padding:4px 0}
 .lkdesc .lkform{margin:8px 0 0}
-.lkstatus{margin:14px 0 0;padding:10px 14px;border:1px solid var(--grid);border-radius:10px;color:var(--ink2);
-  font-size:14.5px;background:var(--band)}
-.lkstatus[data-kind=error]{border-color:var(--accent-gold);color:var(--ink)}
+.lkstatus{margin:14px 0 0;padding:10px 14px;border:1px solid transparent;border-radius:10px;color:var(--ink2);
+  font-size:14.5px;background:var(--surface);box-shadow:var(--raise-sm)}
+.lkstatus[data-kind=error]{border-color:transparent;color:var(--ink);box-shadow:var(--raise-sm),inset 3px 0 0 var(--accent-gold)}
 .lkstatus code{font:13px var(--mono)}
 .lklink{background:none;border:0;padding:4px 0;color:var(--link);text-decoration:underline;font:inherit;cursor:pointer}
 .lkpick{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
-.lkopt{width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--grid);
-  border-radius:10px;padding:10px 12px;min-height:44px;cursor:pointer}
-.lkopt:hover{border-color:var(--link)}
+.lkopt{width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--surface);
+  border:1px solid transparent;border-radius:var(--r-ctl);padding:10px 12px;min-height:44px;
+  cursor:pointer;box-shadow:var(--raise-sm)}
+.lkopt:hover{border-color:transparent;box-shadow:var(--raise-hi)}
 .lkopt small{color:var(--muted)}
 .lksrc h2{font-size:22px;margin:0}
 .lksrc h2 a{color:var(--ink)}
@@ -311,28 +314,32 @@ CSS = """
 .lksrc .lknwo{margin:2px 0 0}
 .lkblurb{margin:6px 0 0;color:var(--ink2);font-size:14px;max-width:75ch;overflow-wrap:anywhere}
 .lkmeta{margin:8px 0 0;font-size:12.5px;color:var(--muted)}
-.lknot{margin:12px 0 0;padding:10px 12px;border:1px dashed var(--accent-gold);border-radius:10px;color:var(--ink2);font-size:14px}
+.lknot{margin:12px 0 0;padding:10px 12px;border:1px dashed transparent;border-radius:10px;color:var(--ink2);
+  font-size:14px;background:var(--surface);box-shadow:var(--raise-sm)}
 .lkfilters{border:0;margin:18px 0 0;padding:12px 0 0;border-top:1px solid var(--grid);min-width:0;
   display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;font-size:14px}
 .lkfilters label{font-weight:600}
-.lkfilters select{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--grid);
-  border-radius:8px;padding:6px 8px;min-height:36px;max-width:100%}
+.lkfilters select{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid transparent;
+  border-radius:10px;padding:6px 8px;min-height:36px;max-width:100%;box-shadow:var(--press)}
 .lkcheck{font-weight:400!important;display:inline-flex;gap:6px;align-items:center;min-height:36px}
 .lkh{margin:20px 0 10px!important;font-size:16px!important}
 .lklist{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.lkcard{padding:14px 16px;border:1px solid var(--grid);border-radius:12px;background:var(--surface)}
+.lkcard{padding:14px 16px;border:1px solid transparent;border-radius:var(--r-card);background:var(--surface);
+  box-shadow:var(--raise-sm)}
 .lkch{display:flex;justify-content:space-between;align-items:baseline;gap:4px 12px;flex-wrap:wrap}
 .lkch h3{margin:0;font-size:16px}
 .lkwhy{margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px;font-size:12.5px}
-.lkwhy span:not(.sr){border:1px solid var(--grid);border-radius:999px;padding:2px 9px;color:var(--ink2);background:var(--band)}
+.lkwhy span:not(.sr){border:1px solid transparent;border-radius:999px;padding:2px 9px;color:var(--ink2);
+  background:var(--surface);box-shadow:var(--press-sm)}
 .lkwhy i{font-style:normal;color:var(--ink)}
-.lkwhy .lkwhy-alt{border-color:var(--good);color:var(--ink)}
+.lkwhy .lkwhy-alt{border-color:transparent;color:var(--good)}
 .lkaround{margin:22px 0 0}
 .lkeco{margin:8px 0 0;padding-left:20px;font-size:14px}
 .lkeco li{margin:4px 0}
 .lkempty{margin:16px 0 0;color:var(--ink2)}
 .lkhow p{margin:10px 0 0;color:var(--ink2);max-width:75ch;font-size:14.5px}
-.lknojs{margin:18px 0 0;padding:10px 14px;border:1px solid var(--grid);border-radius:10px}
+.lknojs{margin:18px 0 0;padding:10px 14px;border:1px solid transparent;border-radius:10px;
+  background:var(--surface);box-shadow:var(--raise-sm)}
 html:not(.lkjs) .lks{display:none}
 @media (max-width:640px){
   .lks{padding:16px 14px;border-radius:12px}

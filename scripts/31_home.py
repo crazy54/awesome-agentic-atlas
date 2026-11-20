@@ -304,21 +304,18 @@ DOT_CSS = r"""/* The freshness dot. From BASE_CSS in scripts/30_v2.py -- the onl
 # This page's own rules, for the two bands the prototype does not have and the one thing `pages.css` does
 # not know: that a `<main>` on this page is shelves rather than a table.
 HOME_CSS = r"""/* WHAT THE PROTOTYPE DOES NOT HAVE. Everything else on this page is imported. */
-/* THE GLASS, on the two panels that sit over the masthead's art: the spotlight, whose top runs under the
-   fading code, and the line of the day under it (which already reads --bdf). Frosted, so the code behind
-   the spotlight's edge is softened rather than read through. Both are static boxes with nothing fixed
-   inside them, so a backdrop filter moves nothing. The poster cards stay translucent and unblurred: there
-   are 178 of them, and a blur per card is the cost the performance budget is for. */
-.hero{backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf)}
-/* The install wells, pressed into the glass. */
-.cw{background:var(--band);border-color:var(--ctl-edge);box-shadow:var(--press)}
+/* The spotlight and the line of the day are raised slabs of the base (see `.hero` and `.daily`). Nothing
+   on this page is blurred: soft UI is opaque. */
+.hero{}
+/* The install wells, pressed into the surface. */
+.cw{background:var(--surface);border-color:transparent;box-shadow:var(--press)}
 .cw .cp{background:transparent}
 /* The Star link, a pill in the masthead's nav. GitHub starts nothing from another site, so it opens the
    repository, where the Star button is; the count is the repository's own, filled by NUMBERS_JS. */
-header .top nav a.ghstar{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:3px 10px;
-  border-radius:999px;border:var(--hair) solid var(--panel-b);background:var(--panel);color:var(--ink);
-  text-decoration:none;font-weight:600}
-header .top nav a.ghstar:hover,header .top nav a.ghstar:focus-visible{border-color:var(--accent-gold)}
+header .top nav a.ghstar{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:3px 10px;border-radius:999px;
+  border:var(--hair) solid transparent;background:var(--surface);color:var(--ink);text-decoration:none;
+  font-weight:600;box-shadow:var(--raise-sm)}
+header .top nav a.ghstar:hover,header .top nav a.ghstar:focus-visible{border-color:transparent;box-shadow:var(--raise-hi)}
 header .top nav a.ghstar span{color:var(--accent-gold)}
 header .top nav a.ghstar b{font-family:var(--num);font-variant-numeric:tabular-nums;font-weight:600;
   padding-left:7px;margin-left:2px;border-left:var(--hair) solid var(--panel-b)}
@@ -328,8 +325,9 @@ header .top nav a.ghstar b{font-family:var(--num);font-variant-numeric:tabular-n
 .numbers h3{margin:22px 0 10px;font-size:13px;font-weight:600;color:var(--ink2);letter-spacing:.02em}
 .numbers .nsub{margin:4px 0 14px;font-size:12.5px;color:var(--ink2)}
 .numbers .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
-.numbers .tile{padding:12px 14px;border-radius:var(--radius);background:var(--panel);
-  border:var(--hair) solid var(--panel-b);box-shadow:var(--lift);display:flex;flex-direction:column;gap:2px}
+.numbers .tile{padding:12px 14px;border-radius:var(--radius);background:var(--surface);
+  border:var(--hair) solid transparent;box-shadow:var(--lift);display:flex;flex-direction:column;
+  gap:2px}
 .numbers .tile b{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:24px;color:var(--ink)}
 .numbers .tile span{font-size:12.5px;color:var(--ink)}
 .numbers .tile small{font-size:11.5px;color:var(--ink2)}
@@ -339,28 +337,23 @@ header .top nav a.ghstar b{font-family:var(--num);font-variant-numeric:tabular-n
 .numbers .langs i{display:block;height:8px;width:var(--w);border-radius:4px;background:var(--bar)}
 .numbers .langs b{font-family:var(--num);font-variant-numeric:tabular-nums;font-weight:500;color:var(--ink2);
   text-align:right}
-/* THE MASTHEAD HAS NO BAR. Everywhere else the header is a panel with a rule under it; here it is drawn on
-   a picture of this repository's own code -- its git log and lines from scripts/, made by
-   scripts/masthead_art.py -- whose alpha is opaque at the top, reaches 0 at both sides, and fades from
-   half-way down to 0 at the bottom. So there is no edge against the page anywhere but the top.
-   `.mhart` is its own element, absolutely placed at the top of the body, rather than the header's
-   background, because it runs on past the header's bottom and under the spotlight: that overlap is what
-   makes the fade seamless. Header and main are lifted over it, header above main, so the Settings menu
-   still drops over the page. `center bottom` with `cover`, so a screen too wide for the height crops the
-   opaque top, never the faded bottom. One file per mode, so each reader downloads one of the two.
-   The first layer is a scrim over the left, where the title and blurb sit: the code there is dimmed into
-   the page's own surface, so the words are read against a near-flat field and the lit code is on the
-   right, where the navigation is short. It is the page's colour, so it has no edge of its own either. */
+/* THE MASTHEAD HAS NO BAR, AND NO PICTURE. Everywhere else the header is the base with the page under it;
+   here it is drawn on light: the base's own highlight from the top left, which is where every surface's
+   highlight on the site comes from, and the lime's glow where Archie stands. Soft UI has no backdrop art --
+   depth is the art -- so the code screenshots that used to sit here are gone. `.mhart` is its own element,
+   absolutely placed at the top of the body, because the light runs on past the header's bottom and under
+   the spotlight: that overlap is what keeps it from having an edge. Header and main are lifted over it,
+   header above main, so the Settings menu still drops over the page. */
 .mhart{position:absolute;left:0;right:0;top:0;height:clamp(340px,31.67vw,560px);z-index:0;
-  pointer-events:none;--scrim:linear-gradient(90deg,color-mix(in srgb,var(--surface) 88%,transparent) 0%,
-  color-mix(in srgb,var(--surface) 70%,transparent) 38%,transparent 62%);
-  background:var(--scrim),url(assets/masthead-dark.webp) center bottom/cover no-repeat}
-html[data-theme=light] .mhart{background:var(--scrim),url(assets/masthead-light.webp) center bottom/cover no-repeat}
-/* A reader whose system asks for more contrast, or forces its own colours, gets no art behind the
-   masthead's words: `.mhart{background:none}` in THEME_CSS's strengthened rules. The box stays where it is --
-   it is absolutely positioned and was never part of the flow -- it just paints nothing. */
-@media (max-width:899px){.mhart{--scrim:linear-gradient(color-mix(in srgb,var(--surface) 72%,transparent),
-  color-mix(in srgb,var(--surface) 72%,transparent))}}
+  pointer-events:none;
+  background:radial-gradient(340px 300px at 60% 44%,rgba(164,200,18,.13),transparent 70%),
+    radial-gradient(1100px 520px at 18% 0%,rgba(255,255,255,.035),transparent 72%)}
+html[data-theme=light] .mhart{background:radial-gradient(340px 300px at 60% 44%,rgba(140,175,0,.16),transparent 70%),
+    radial-gradient(1100px 520px at 18% 0%,rgba(255,255,255,.6),transparent 72%)}
+/* A reader whose system asks for more contrast, or forces its own colours, gets no light behind the
+   masthead's words: `.mhart{background:none}` in THEME_CSS's strengthened rules. */
+@media (max-width:899px){.mhart{background:radial-gradient(900px 420px at 30% 0%,rgba(255,255,255,.03),transparent 72%)}
+  html[data-theme=light] .mhart{background:radial-gradient(900px 420px at 30% 0%,rgba(255,255,255,.55),transparent 72%)}}
 header{position:relative;z-index:2;background:transparent;border-bottom:0;
   backdrop-filter:none;-webkit-backdrop-filter:none}
 main{position:relative;z-index:1}
@@ -393,12 +386,12 @@ header .setwrap,header .dancewrap{z-index:2}
    the topic's accent, the same five in the same order the cards use. */
 .bystrip{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 30px}
 .bychip{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;
-  border:var(--hair) solid var(--ctl-edge);background:var(--band);box-shadow:var(--raise-sm);
-  color:var(--ink2);font-size:12.5px;font-weight:550;
-  text-decoration:none;transition:border-color .16s,color .16s,transform .16s,box-shadow .16s}
+  border:var(--hair) solid transparent;background:var(--surface);box-shadow:var(--raise-sm);
+  color:var(--ink2);font-size:12.5px;font-weight:550;text-decoration:none;
+  transition:border-color .16s,color .16s,transform .16s,box-shadow .16s}
 .bychip i{width:7px;height:7px;border-radius:50%;background:var(--ac);flex:none}
 .bychip .ct{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;color:var(--muted)}
-.bychip:hover{border-color:var(--ac);color:var(--ink);text-decoration:none;transform:translateY(-1px);
+.bychip:hover{border-color:transparent;color:var(--ink);text-decoration:none;transform:translateY(-1px);
   box-shadow:var(--raise-hi)}
 .bychip:active{box-shadow:var(--press)}
 .bychip:hover .ct{color:var(--ink2)}
@@ -410,9 +403,9 @@ header .setwrap,header .dancewrap{z-index:2}
    `DAYCHECK_JS`. It replaces the cards rather than sitting above them, because leaving yesterday's on
    screen under a notice is the one thing worse than not checking at all. `.swap` is the fetch in flight:
    the stale cards are hidden, and nothing is announced yet. */
-.dsold{display:none;padding:18px 20px;border-radius:var(--radius);border:var(--hair) solid var(--grid);
-  background:var(--panel);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
-  color:var(--ink2);font-size:13.5px;line-height:1.6;max-width:70ch}
+.dsold{display:none;padding:18px 20px;border-radius:var(--radius);border:var(--hair) solid transparent;
+  background:var(--surface);color:var(--ink2);font-size:13.5px;line-height:1.6;max-width:70ch;
+  box-shadow:var(--lift)}
 /* The arrows go with the rail they scroll. Leaving them up gives the reader two buttons that move a hidden
    element -- they look live, they focus, and pressing either does nothing observable. The "See all 50" link
    stays, because it is the one control that still leads somewhere on this state. */
@@ -434,9 +427,9 @@ header .setwrap,header .dancewrap{z-index:2}
    reader is asked to hit. */
 .updbar{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);
   z-index:40;display:flex;align-items:center;gap:10px;box-sizing:border-box;width:max-content;
-  max-width:calc(100vw - 24px);padding:6px 6px 6px 16px;border:1px solid var(--accent-sky);
-  border-radius:var(--radius);background:var(--panel-hi);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);color:var(--ink);font-size:14px;line-height:1.35;box-shadow:var(--raise)}
+  max-width:calc(100vw - 24px);padding:6px 6px 6px 16px;border:1px solid transparent;
+  border-radius:var(--radius);background:var(--surface);color:var(--ink);font-size:14px;
+  line-height:1.35;box-shadow:var(--raise)}
 .updbar button{min-height:44px;min-width:44px;padding:0 16px;border:1px solid var(--accent-sky);
   border-radius:var(--radius-sm);background:var(--accent-sky);color:var(--surface);font:inherit;font-weight:600;
   cursor:pointer;flex:none}
@@ -450,15 +443,15 @@ header .setwrap,header .dancewrap{z-index:2}
 .dancewrap{position:relative;display:inline-block;margin-right:6px}
 header.danceopen{z-index:30}
 .dancemenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:264px;text-align:left;
-  background:var(--panel-hi);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
-  border:1px solid var(--edge);border-radius:18px;padding:12px;box-shadow:var(--raise);text-shadow:none}
+  background:var(--surface);border:1px solid transparent;border-radius:var(--r-card);padding:12px;
+  box-shadow:var(--raise);text-shadow:none}
 .dancemenu[hidden],.dsrc[hidden],#dancebtn[hidden]{display:none}
 .dancesrcs{display:flex;flex-direction:column;gap:4px}
 .dsrc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;min-height:44px;
-  padding:7px 10px;background:none;border:1px solid var(--ctl-edge);border-radius:12px;color:var(--ink);
-  font-size:13px;text-align:left}
+  padding:7px 10px;background:var(--surface);border:1px solid transparent;border-radius:12px;
+  color:var(--ink);font-size:13px;text-align:left;box-shadow:var(--raise-sm)}
 .dsrc span{color:var(--muted);font-size:12px}
-.dsrc:hover,.dsrc.dancelast{border-color:var(--accent-sky)}
+.dsrc:hover,.dsrc.dancelast{border-color:transparent;box-shadow:var(--raise-hi);color:var(--ink)}
 .dsrc:focus-visible{outline:2px solid var(--accent-sky);outline-offset:2px}
 .dancemsg{margin:8px 0 0;color:var(--ink2);font-size:12px}
 .dancemsg:empty{margin:0}
@@ -476,8 +469,8 @@ header.danceopen{z-index:30}
    The text is --ink2 on --panel, which the theme test holds at 4.5:1 in every token set; the link keeps
    the site's own focus ring rather than restating one. */
 .daily{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:-12px 0 26px;padding:10px 16px;
-  border-radius:var(--radius);border:var(--hair) solid var(--grid);background:var(--panel);
-  backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);font-size:13.5px;line-height:1.5}
+  border-radius:var(--radius);border:var(--hair) solid transparent;background:var(--surface);
+  font-size:13.5px;line-height:1.5;box-shadow:var(--raise-sm)}
 .daily .dkick{margin:0;display:inline-flex;align-items:center;gap:7px;flex:none;color:var(--muted);
   font-size:11px;font-weight:650;letter-spacing:.08em;text-transform:uppercase}
 .daily .dkick i{width:7px;height:7px;border-radius:50%;background:var(--accent-sky)}
