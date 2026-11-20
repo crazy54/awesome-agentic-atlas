@@ -316,7 +316,7 @@ def page(doc: dict) -> str:
   possible; <code>ollama run hf.co/&lt;repo&gt;:&lt;quant&gt;</code> works for every GGUF here regardless.
 </div></footer>
 {SCRIPT}
-{sitewide.site_script(b25.rel(depth))}{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(b25.rel(depth))}</body>
+{sitewide.site_script(b25.rel(depth))}{THEME_JS}{b19.follow()}{b19.beacon()}</body>
 </html>
 """
 

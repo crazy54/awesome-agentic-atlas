@@ -123,8 +123,8 @@
 //   deeplinks_test.py the links into the catalogue since it moved to catalog/: the homepage's forwarder, run
 //                     under node against a stub location, and every generator's filtered link resolved
 //                     against the page that carries it. Also the site's host, which is read from
-//                     docs/CNAME, and the feed ids that must not follow it; and the monitoring tags on every
-//                     page, resolved the same way.
+//                     docs/CNAME, and the feed ids that must not follow it; and that the Traceway tags removed
+//                     on 2026-11-20 are gone from every generator and page, and stay gone.
 //   osicons_test.py   the five platform marks that replaced the words Windows, WSL2, macOS, Linux and
 //                     Docker. Mostly one assertion, walked over every built page: that every
 //                     `<use href="#...">` resolves to a `<symbol>` in that same document. A `<use>` with
@@ -239,7 +239,7 @@ const HARNESSES = [
   {file: "live_test.py", label: "the star/push sidecar the detail pages read", python: true, floor: 90},
   {file: "semantic_test.py", label: "the semantic index, scored from the bytes a reader downloads", python: true, floor: 30},
   {file: "collections_test.py", label: "the curated picks, and every refusal that keeps them honest", python: true, floor: 500},
-  {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, the host in docs/CNAME, and the monitoring tags", python: true, floor: 34},
+  {file: "deeplinks_test.py", label: "the homepage forwarder, every filtered link resolving into catalog/, the host in docs/CNAME, and no Traceway tags", python: true, floor: 34},
   {file: "spotlight_test.py", label: "the daily spotlight and line: one rule in Python and in the page, the pool, the refusals", python: true, floor: 300},
   {file: "alike_test.py", label: "Lookalikes: one shared encoder in both pages, the page from its constant, the button, the nav and the wiring", python: true, floor: 50},
   {file: "alike-probe.mjs", label: "Lookalikes' resolver and ranking, the page's own code against the committed data", floor: 70},

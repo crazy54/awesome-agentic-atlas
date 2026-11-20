@@ -118,7 +118,7 @@ import sitewide  # noqa: E402
 
 # The same dynamic load `19b_refresh.py` and `20_landing.py` use, and for the same reason: the module is
 # named `19_pages`, which is not an identifier, so `import` cannot reach it. Three things are wanted --
-# `beacon()` and `telemetry()`, so those tags live in one file; `b17.SITE`, so the absolute URL in every
+# `beacon()`, so the analytics tag lives in one file; `b17.SITE`, so the absolute URL in every
 # canonical is the one string the rest of the project links to; and the source registry, so the
 # display labels in `data.json` can link back to their curated lists.
 spec = importlib.util.spec_from_file_location("b19", HERE / "19_pages.py")
@@ -636,7 +636,7 @@ def render(repo: Repo, by_cat: dict[int, list[Repo]], lists: dict[str, str], dat
 </div></footer>
 <script src="{repo.up("detail.js")}"></script>
 {sitewide.site_script(repo.rel())}
-{b19.beacon()}{b19.telemetry(repo.rel())}</body>
+{b19.beacon()}</body>
 </html>
 """
 
@@ -724,7 +724,7 @@ def directory(repos: list[Repo], data: dict) -> str:
 </div></footer>
 <script src="detail.js"></script>
 {sitewide.site_script("../")}
-{b19.beacon()}{b19.telemetry("../")}</body>
+{b19.beacon()}</body>
 </html>
 """
 

@@ -839,7 +839,7 @@ def render(cat: dict, picks: dict, hf: dict) -> str:
 <script type="application/json" id="lxdata">{json_script(payload(cat, picks, hf))}</script>
 <script>
 {fit_js()}{hw_js()}</script>
-{PAGE_JS}{sitewide.site_script(rel())}{THEME_JS}{b19.follow()}{b19.beacon()}{b19.telemetry(rel())}</body>
+{PAGE_JS}{sitewide.site_script(rel())}{THEME_JS}{b19.follow()}{b19.beacon()}</body>
 </html>
 """
 

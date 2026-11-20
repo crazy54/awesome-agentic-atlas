@@ -20,11 +20,6 @@ docs/search/*.bin binary
 # what keep these two files out of every diff.
 docs/search/*.json text eol=lf
 
-# Vendored third-party builds: npm's bytes, unmodified, pinned by tests/deeplinks_test.py. Not text, so the
-# bytes on disk, in the repository and on the site are the same everywhere.
-docs/assets/traceway-1.2.1.js -text
-docs/assets/web-vitals-6.2.3.js -text
-
 # Written by scripts/24_pwa.py. Its header always opens with NUL bytes, so autodetection gets it right today;
 # pinned anyway, as every new binary format here is (handbook/contributing.md).
 docs/favicon.ico binary

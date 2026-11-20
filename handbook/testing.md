@@ -100,7 +100,7 @@ Node process on the machine, including other sessions' tools and test runs.
 | `live_test.py` | Python | `live.json`, the sidecar detail pages read | 106 | 90 |
 | `semantic_test.py` | Python | The semantic index, scored from the published bytes | 48 | 30 |
 | `collections_test.py` | Python | Curated picks and every refusal that keeps them honest | 652 | 500 |
-| `deeplinks_test.py` | Python | The homepage forwarding old `/#…` links into `catalog/`, and the host in `docs/CNAME`. Needs `node` on PATH | 66 | 34 |
+| `deeplinks_test.py` | Python | The homepage forwarding old `/#…` links into `catalog/`, the host in `docs/CNAME`, and that no generator or page loads Traceway (removed 2026-11-20). Needs `node` on PATH | 66 | 34 |
 | `spotlight_test.py` | Python | The daily spotlight rule, which is written in both Python and JS and must agree. Needs `node` on PATH | 326 | 300 |
 | `alike_test.py` | Python | Lookalikes' stage: one shared encoder in the catalogue and the page, the page from `sitewide.ALIKE_PAGE`, byte-stable output, theme tokens only, the detail button, the nav, sitemap and workflows | 57 | 50 |
 | `alike-probe.mjs` | Node | Lookalikes' resolver and ranking: the page's own `ALIKE` under node against the committed `data.json` and `docs/search/` (URL shapes, names, did-you-mean, quality cases, the ecosystem split, filters, a fabricated forge answer, every detail link resolving) | 78 | 70 |
