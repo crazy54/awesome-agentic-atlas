@@ -1317,7 +1317,7 @@ a.nwo:hover{color:var(--ink)}
 .tag{display:inline-block;background:var(--surface);border:1px solid transparent;border-radius:999px;
   padding:2px 7px;font-size:11.5px;color:var(--ink2);margin:0 4px 4px 0;white-space:nowrap;
   box-shadow:var(--press-sm)}
-.tag.cat{border-color:var(--bar);color:var(--ink)}
+.tag.cat{border-color:transparent;color:var(--bar)}
 /* This rule was dead: the class was defined here but never put on an element, so the verdict row was
    rendering as plain `.meta` the whole time. The nowrap is now on each verdict rather than on the group,
    which is what it was for -- keeping a platform's mark and its ✓ together, not forcing all five onto one
