@@ -62,6 +62,7 @@ import json
 import os
 import subprocess
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -180,6 +181,11 @@ def raw_bytes(nwo: str, sha: str, path: str) -> tuple[bytes | None, str]:
             if r.status != 200:
                 return None, f"HTTP {r.status}"
             data = r.read(MAX_BYTES + 1)
+    except urllib.error.HTTPError as exc:
+        # The status, not just the class name. "HTTPError" alone cannot tell a 404 (the path is wrong,
+        # and will stay wrong) from a 429 or a 5xx (try again later), and that is the one question a
+        # person reading a failed pull needs answered.
+        return None, f"HTTP {exc.code}"
     except Exception as exc:
         return None, f"{type(exc).__name__}"
     if not data:

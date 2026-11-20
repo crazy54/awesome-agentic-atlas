@@ -40,9 +40,9 @@ jobs:
     timeout-minutes: 350
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # Whether a red verification suite stops this run publishing. It is the same switch as daily.yml's, set
-      # the other way on purpose. The daily ships "false" because a stalled site is the worse failure for a
-      # daily refresh. A weekly is different: it re-reads every README and replaces the screenshots
+      # Whether a red verification suite stops this run publishing. It is the same switch as daily.yml's.
+      # Both are "true" since 2026-11-20. The daily first shipped "false", on the argument that a stalled
+      # site is the worse failure for a daily refresh. The weekly was "true" from the start: it re-reads every README and replaces the screenshots
       # the site shows, so a red suite here stops the deploy rather than publishing a week of changes
       # nobody has seen pass. On "true" a red suite records, commits and submits nothing, the site keeps
       # the last build, and the cache is still banked so a re-run resumes. (It also used to hold back the
@@ -642,12 +642,13 @@ jobs:
         continue-on-error: true
         run: python scripts/26_indexnow.py --changed "$RUNNER_TEMP/changed-docs.txt"
 
-      # Reachable only on "false". On "true" the decision step has already failed the run, and nothing
-      # after it ran. See daily.yml for why this is `always()`. The empty-status clause is here and not in
+      # Only on "false". On "true" the decision step has already failed the run. `always()` would still run
+      # this step and print "published" about a run that published nothing, so the `env` clause keeps it
+      # out. See daily.yml for why this is `always()`. The empty-status clause is here and not in
       # the daily: this job has no gate, so a run that died before the suite reached it has no status at
       # all, and saying "published, and red" about it would be false.
       - name: End red if the suite was red
-        if: always() && steps.verify.outputs.status != '' && steps.verify.outputs.status != '0'
+        if: always() && env.VERIFY_GATES_DEPLOY != 'true' && steps.verify.outputs.status != '' && steps.verify.outputs.status != '0'
         run: |
           echo "::error title=Published, and red::The site was published and the verification suite was not green on them (run.mjs exited ${{ steps.verify.outputs.status }}). Read the suite's own step above for which harness and which assertion."
           exit 1

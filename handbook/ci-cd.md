@@ -60,8 +60,9 @@ returns 404), so a red check does not block a merge by itself.
 4. **Fetch.** `pull_sources`, then `01`, `02 --force`, `03`, `03b`, `04`, `10`, `11`, `13`, `14`.
 5. **Build.** `17`, `check_markdown`, `19`, `25_velocity`, `19c`, `19d`, `20`, `21`, `22`, `31`, `24`, `27`.
 6. **Verify.** A check that nothing outside the expected paths was rewritten, then `node tests/run.mjs`.
-   The daily sets `VERIFY_GATES_DEPLOY: "false"`, so **a red suite still publishes**, and the run then
-   ends red to say so.
+   The daily sets `VERIFY_GATES_DEPLOY: "true"` (since 2026-11-20; it was `"false"`), so **a red suite
+   publishes nothing**. The SHAs are not recorded, nothing is committed or submitted, the site keeps the
+   last build, and the run ends red.
 7. **Publish.** `watch_sources.py --update` records the new SHAs. The job commits, pushes to `latest_branch`,
    and submits changed URLs to IndexNow (`26_indexnow.py`).
 
