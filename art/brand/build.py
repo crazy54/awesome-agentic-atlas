@@ -97,7 +97,10 @@ def main() -> None:
     # The catalogue's mascot: head and shoulders, trimmed to the render's opaque box, and cut to the first
     # Archie's 512:532 so the catalogue's masthead column keeps its exact height at every width.
     bust = Image.open(SRC / "archie.png").convert("RGBA")
-    l, t_, r, _ = bust.getchannel("A").getbbox()
+    box = bust.getchannel("A").getbbox()
+    if box is None:
+        raise SystemExit(".github/readme/archie.png has no opaque pixels; it is not the render this expects.")
+    l, t_, r, _ = box
     w = r - l
     bust = bust.crop((l, t_, r, t_ + round(w * 532 / 512)))
     bust = bust.resize((256, 266), Image.Resampling.LANCZOS)
@@ -108,10 +111,9 @@ def main() -> None:
     # `favicon.svg`; a data: image inside an SVG used as an image is allowed (no external fetch).
     b64 = base64.b64encode(png_bytes(sized(t, 64))).decode("ascii")
     (DOCS / "favicon.svg").write_text(
-        '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
-        'viewBox="0 0 64 64">\n'
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">\n'
         "  <title>Archie 'Atlas' Algorithm</title>\n"
-        f'  <image width="64" height="64" xlink:href="data:image/png;base64,{b64}"/>\n'
+        f'  <image width="64" height="64" href="data:image/png;base64,{b64}"/>\n'
         "</svg>\n", encoding="utf-8", newline="\n")
 
     # The installed-app icons, copied into `docs/` by `scripts/24_pwa.py`.
