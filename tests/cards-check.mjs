@@ -1303,11 +1303,11 @@ const surfaceIn = async (theme) => {
     .map(e => { const r = e.getBoundingClientRect(); return [r.x, r.y, r.width, r.height].map(Math.round); }))`);
   return {bg, boxes};
 };
-const dark = await surfaceIn("dark"), light = await surfaceIn("light"), contrast = await surfaceIn("contrast");
-ok("the three themes do not paint the card the same colour", new Set([dark.bg, light.bg, contrast.bg]).size === 3,
-   [dark.bg, light.bg, contrast.bg].join(" vs "));
+const dark = await surfaceIn("dark"), light = await surfaceIn("light");
+ok("the two themes do not paint the card the same colour", new Set([dark.bg, light.bg]).size === 2,
+   [dark.bg, light.bg].join(" vs "));
 ok("...and lay the first twelve cards out in exactly the same boxes", dark.boxes === light.boxes &&
-   dark.boxes === contrast.boxes && dark.boxes.length > 20, dark.boxes + " / " + light.boxes + " / " + contrast.boxes);
+   dark.boxes.length > 20, dark.boxes + " / " + light.boxes);
 
 // The clamp is what keeps a row of cards from being as tall as its wordiest member. Behavioural, and
 // deliberately not a check on the computed `display`: this Chrome implements the standard `line-clamp`,

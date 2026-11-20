@@ -246,7 +246,7 @@ DESCRIPTION = (f"Every agentic AI project from {b19.LISTS} awesome-lists, merged
 # `SURFACE` is the plate the icon is drawn on -- there, the darkest value is the right one, because the
 # mark reads against a launcher's own wallpaper rather than against the page.
 SURFACE = (0x09, 0x0A, 0x0D)
-PLANE = (0x1A, 0x1A, 0x1A)
+PLANE = (0x2A, 0x2A, 0x27)
 # The globe, the mark's gold.
 BAR = (0xD6, 0xA0, 0x34)
 # The orbit ring is the mark's light, not a second accent. It sits outside the globe with a visible

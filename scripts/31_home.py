@@ -147,7 +147,7 @@ PLAN = json.loads((OUT / "discover.json").read_text(encoding="utf-8"))
 #
 # Three kinds of token, and the kind decides where the value comes from:
 #
-#   * An alias. `--field` is the site's `--wash`; `--panel-b` is the site's `--grid`; `--accent-slate` is
+#   * An alias. `--field` is the site's `--wash`; `--panel-b` is the site's `--edge`, the glass's hairline; `--accent-slate` is
 #     `--muted`. These follow all eight sets for free and are the reason this block is short.
 #   * A geometry or a typeface. A 14px radius and a hairline do not change when the lights go out, so they
 #     are declared once on `:root` and never per theme. `--num` is the UI font rather than a second family:
@@ -176,9 +176,10 @@ BRIDGE_CSS = r"""/* THE PROTOTYPE'S TOKENS, IN THE SITE'S. See BRIDGE_CSS in scr
 :root{
   /* Aliases. These follow every one of the eight token sets without being restated. */
   --field:var(--wash);
-  --panel-b:var(--grid);
+  --panel-b:var(--edge);
   /* Geometry and type. Not contrast-bearing and not mode-dependent. */
-  --radius:14px; --radius-sm:10px; --hair:1px;
+  /* The glass's generous radii. A radius rounds a box's corners and never changes its size. */
+  --radius:20px; --radius-sm:12px; --hair:1px;
   --num:var(--ui);
   --mono:"Geist Mono",ui-monospace,"SF Mono","Cascadia Mono",Consolas,"Liberation Mono",monospace;
   --kick-case:uppercase; --kick-track:.1em;
@@ -198,18 +199,18 @@ BRIDGE_CSS = r"""/* THE PROTOTYPE'S TOKENS, IN THE SITE'S. See BRIDGE_CSS in scr
    `opacity:var(--fx-pulse)` with nothing to resolve is an invalid declaration, and an invalid opacity is 1:
    a pulse ring animating where nothing should. */
 :root{--fx-glow:0; --fx-pulse:0; --fx-scan:0}
-/* The depth shadows and the poster scrim, per mode. Dark first because dark is the default and lives at
-   `:root` everywhere else in this codebase. The scrim is what a poster's title sits on top of its artwork
-   in, so it is doing contrast work in a sense -- but against a photograph, which no ratio can be computed
-   against, which is why it is a heavy gradient in both modes rather than a light one in light. */
+/* The depth shadows are the site's neumorphic extrusion, `--raise-sm` and `--raise-hi` from THEME_CSS, so
+   the shelves are raised out of the same field as every other panel and the strengthened modes flatten them
+   with everything else. Aliases on `:root`, which is safe here because the two values they name are
+   declared on the same element. The poster scrim stays per mode: it is what a poster's title sits on top of
+   its artwork in, so it is doing contrast work in a sense -- but against a photograph, which no ratio can be
+   computed against, which is why it is a heavy gradient in both modes rather than a light one in light. */
 :root{
-  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
-  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --lift:var(--raise-sm);
+  --lift-hi:var(--raise-hi);
   --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
 }
 html[data-theme=light]{
-  --lift:0 1px 3px rgba(16,24,40,.10),0 14px 34px -12px rgba(16,24,40,.22);
-  --lift-hi:0 2px 8px rgba(16,24,40,.14),0 30px 60px -18px rgba(16,24,40,.30);
   --scrim:linear-gradient(to top,rgba(10,14,24,.88),rgba(10,14,24,.50) 38%,rgba(10,14,24,.06) 74%,transparent);
 }
 """
@@ -303,6 +304,15 @@ DOT_CSS = r"""/* The freshness dot. From BASE_CSS in scripts/30_v2.py -- the onl
 # This page's own rules, for the two bands the prototype does not have and the one thing `pages.css` does
 # not know: that a `<main>` on this page is shelves rather than a table.
 HOME_CSS = r"""/* WHAT THE PROTOTYPE DOES NOT HAVE. Everything else on this page is imported. */
+/* THE GLASS, on the two panels that sit over the masthead's art: the spotlight, whose top runs under the
+   fading code, and the line of the day under it (which already reads --bdf). Frosted, so the code behind
+   the spotlight's edge is softened rather than read through. Both are static boxes with nothing fixed
+   inside them, so a backdrop filter moves nothing. The poster cards stay translucent and unblurred: there
+   are 178 of them, and a blur per card is the cost the performance budget is for. */
+.hero{backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf)}
+/* The install wells, pressed into the glass. */
+.cw{background:var(--band);border-color:var(--ctl-edge);box-shadow:var(--press)}
+.cw .cp{background:transparent}
 /* The Star link, a pill in the masthead's nav. GitHub starts nothing from another site, so it opens the
    repository, where the Star button is; the count is the repository's own, filled by NUMBERS_JS. */
 header .top nav a.ghstar{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:3px 10px;
@@ -346,9 +356,9 @@ header .top nav a.ghstar b{font-family:var(--num);font-variant-numeric:tabular-n
   color-mix(in srgb,var(--surface) 70%,transparent) 38%,transparent 62%);
   background:var(--scrim),url(assets/masthead-dark.webp) center bottom/cover no-repeat}
 html[data-theme=light] .mhart{background:var(--scrim),url(assets/masthead-light.webp) center bottom/cover no-repeat}
-/* High contrast draws nothing behind text, so it has no art: the masthead is its own black. The box stays
-   where it is -- it is absolutely positioned and was never part of the flow -- it just paints nothing. */
-html[data-theme=contrast] .mhart{background:none}
+/* A reader whose system asks for more contrast, or forces its own colours, gets no art behind the
+   masthead's words: `.mhart{background:none}` in THEME_CSS's strengthened rules. The box stays where it is --
+   it is absolutely positioned and was never part of the flow -- it just paints nothing. */
 @media (max-width:899px){.mhart{--scrim:linear-gradient(color-mix(in srgb,var(--surface) 72%,transparent),
   color-mix(in srgb,var(--surface) 72%,transparent))}}
 header{position:relative;z-index:2;background:transparent;border-bottom:0;
@@ -371,10 +381,8 @@ header .wrap{position:relative}
 header .brandbar,header .top{position:relative;z-index:1}
 header .setwrap,header .dancewrap{z-index:2}
 @media (max-width:899px){.mhmascot{display:none}}
-/* The lit field the frosted panels frost, for the themes that declare one. Fixed rather than scrolled so
-   it does not slide out from under them, and behind everything. `none` in high contrast, which costs nothing.
-   On `body::before` rather than `body` because the shelves need a background of their own to sit on. */
-body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-events:none;z-index:0}
+/* The lit field the frosted panels frost is `body::before` in THEME_CSS, shared with every page family:
+   fixed rather than scrolled so it does not slide out from under them, and behind everything. */
 /* The scanline, for the one theme that wants to be a tube. At --fx-scan:0 this is a zero-opacity element
    with a zero-duration animation, which is nothing, so it ships to all eight sets rather than being
    conditional markup. */
@@ -385,12 +393,14 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
    the topic's accent, the same five in the same order the cards use. */
 .bystrip{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 30px}
 .bychip{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;
-  border:var(--hair) solid var(--grid);background:var(--panel);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);color:var(--ink2);font-size:12.5px;font-weight:550;
-  text-decoration:none;transition:border-color .16s,color .16s,transform .16s}
+  border:var(--hair) solid var(--ctl-edge);background:var(--band);box-shadow:var(--raise-sm);
+  color:var(--ink2);font-size:12.5px;font-weight:550;
+  text-decoration:none;transition:border-color .16s,color .16s,transform .16s,box-shadow .16s}
 .bychip i{width:7px;height:7px;border-radius:50%;background:var(--ac);flex:none}
 .bychip .ct{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;color:var(--muted)}
-.bychip:hover{border-color:var(--ac);color:var(--ink);text-decoration:none;transform:translateY(-1px)}
+.bychip:hover{border-color:var(--ac);color:var(--ink);text-decoration:none;transform:translateY(-1px);
+  box-shadow:var(--raise-hi)}
+.bychip:active{box-shadow:var(--press)}
 .bychip:hover .ct{color:var(--ink2)}
 /* The Discover band's own header line: the heading, its count, and the link to the page that shows the
    day properly, kept together on the left. */
@@ -425,8 +435,8 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
 .updbar{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);
   z-index:40;display:flex;align-items:center;gap:10px;box-sizing:border-box;width:max-content;
   max-width:calc(100vw - 24px);padding:6px 6px 6px 16px;border:1px solid var(--accent-sky);
-  border-radius:var(--radius);background:var(--panel);color:var(--ink);font-size:14px;line-height:1.35;
-  box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  border-radius:var(--radius);background:var(--panel-hi);backdrop-filter:var(--bdf);
+  -webkit-backdrop-filter:var(--bdf);color:var(--ink);font-size:14px;line-height:1.35;box-shadow:var(--raise)}
 .updbar button{min-height:44px;min-width:44px;padding:0 16px;border:1px solid var(--accent-sky);
   border-radius:var(--radius-sm);background:var(--accent-sky);color:var(--surface);font:inherit;font-weight:600;
   cursor:pointer;flex:none}
@@ -440,12 +450,12 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
 .dancewrap{position:relative;display:inline-block;margin-right:6px}
 header.danceopen{z-index:30}
 .dancemenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:264px;text-align:left;
-  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
-  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75);text-shadow:none}
+  background:var(--panel-hi);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
+  border:1px solid var(--edge);border-radius:18px;padding:12px;box-shadow:var(--raise);text-shadow:none}
 .dancemenu[hidden],.dsrc[hidden],#dancebtn[hidden]{display:none}
 .dancesrcs{display:flex;flex-direction:column;gap:4px}
 .dsrc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;min-height:44px;
-  padding:7px 10px;background:none;border:1px solid var(--grid);border-radius:8px;color:var(--ink);
+  padding:7px 10px;background:none;border:1px solid var(--ctl-edge);border-radius:12px;color:var(--ink);
   font-size:13px;text-align:left}
 .dsrc span{color:var(--muted);font-size:12px}
 .dsrc:hover,.dsrc.dancelast{border-color:var(--accent-sky)}

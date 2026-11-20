@@ -97,7 +97,7 @@ await S("Page.addScriptToEvaluateOnNewDocument", {source: `(() => {
     const b = (m.target.closest ? m.target : m.target.parentElement)?.closest?.(".archie-say");
     if (b && m.type === "childList" && b.textContent && rec.said.at(-1)?.text !== b.textContent)
       rec.said.push({t: performance.now(), text: b.textContent});
-  } }).observe(document, {subtree: true, childList: true, attributes: true, attributeFilter: ["data-theme"]});
+  } }).observe(document, {subtree: true, childList: true, attributes: true, attributeFilter: ["data-theme", "data-fog"]});
 })()`});
 const ev = async expr => {
   const r = await S("Runtime.evaluate", {expression: expr, awaitPromise: true, returnByValue: true, userGesture: true});
@@ -207,18 +207,33 @@ ok("...which stopped flickering when they chose", changes(r, "data-theme", chose
    JSON.stringify(r.attr.map(a => [a.v, Math.round(a.t - choseAt)])));
 await ev(`localStorage.removeItem("theme")`);
 
-// ---- contrast: high contrast for a moment, and the reader's own theme back
-await goto("?archie=prank:contrast");
+// ---- fog: he breathes on the glass, every pane frosts over for a moment, and he wipes it clear
+await goto("?archie=prank:fog");
 const theme0 = await ev(`document.documentElement.dataset.theme`);
-ok("contrast: finished with one of its excuses", await done("contrast"));
+ok("fog: finished with one of its excuses", await done("fog"));
 r = await rec();
-const cs = changes(r, "data-theme", setup(r, "contrast")).map(a => a.v);
-ok("...high contrast for a moment", cs[0] === "contrast", JSON.stringify(cs));
-ok("...then the reader's theme back", (await ev(`document.documentElement.dataset.theme`)) === theme0 &&
-   cs.at(-1) === theme0, JSON.stringify(cs));
+const fogs = changes(r, "data-fog", setup(r, "fog"));
+ok("...the glass fogged once, then cleared", fogs.length === 2 && fogs[0].v === "" && fogs[1].v === null,
+   JSON.stringify(fogs));
+ok("...for a moment, not a sitting", fogs.length === 2 && fogs[1].t - fogs[0].t >= 1000 && fogs[1].t - fogs[0].t < 5000,
+   JSON.stringify(fogs.map(f => Math.round(f.t))));
+ok("...without touching the reader's theme", !changes(r, "data-theme", setup(r, "fog")).length &&
+   (await ev(`document.documentElement.dataset.theme`)) === theme0);
 ok("...with nothing saved", !r.writes.includes("theme"), JSON.stringify(r.writes));
-ok("...and not remarked on as if the reader had chosen it: no 'High contrast' line",
-   saidOnly(r, "contrast", setup(r, "contrast") - 50), JSON.stringify(r.said.map(s => s.text)));
+ok("...and not remarked on as a theme change: only his own fog lines",
+   saidOnly(r, "fog", setup(r, "fog") - 50), JSON.stringify(r.said.map(s => s.text)));
+// What the fog does is paint, and the stylesheet is what does it: the panels' glass thickens while the
+// attribute is up. Asserted on the computed token, so a THEME_CSS that lost the rule fails here.
+ok("...and the fog is a real one: --panel thickens while it is up", await ev(`(() => {
+  const r = document.documentElement, before = getComputedStyle(r).getPropertyValue("--panel").trim();
+  r.dataset.fog = ""; const during = getComputedStyle(r).getPropertyValue("--panel").trim(); delete r.dataset.fog;
+  return before !== during && /rgba/.test(during);
+})()`));
+// A reader whose system asks for more contrast never has the glass fogged on them (or the lights flashed):
+// both are filtered out of the bag he draws from, the way High contrast readers were spared the old pair.
+ok("...and a reader who asked for more contrast is never fogged at random",
+   (SRC.includes(
+     'if (strict && !name) tricks = tricks.filter(n => n !== "lights" && n !== "fog");')));
 
 // ---- tilt
 await goto("?archie=prank:tilt");

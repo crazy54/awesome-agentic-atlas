@@ -4,7 +4,7 @@
 
 Claude Code is the harness the largest single share of this atlas is built for. Installing it is ten seconds; the next hour is the part nobody writes down. These seven cover the format skills come in, three bundles worth reading before writing your own, the two things that make long sessions cheaper, and where to look when you want more. Every project here targets Claude Code, and the build checks that too.
 
-7 picks · 1,006,642 combined stars · snapshot 2026-10-22
+7 picks · 1,030,013 combined stars · snapshot 2026-11-01
 
 [Open all 7 in the atlas](https://aaa.jeremyfhall.com/#list=anthropics/skills,obra/superpowers,multica-ai/andrej-karpathy-skills,addyosmani/agent-skills,JuliusBrussee/caveman,ccusage/ccusage,hesreallyhim/awesome-claude-code) — from there you can save them to your own projects or export the set as Markdown, HTML or a PDF.
 
@@ -24,7 +24,7 @@ Anthropic's own repository for Agent Skills: the SKILL.md format, a template and
 git clone https://github.com/anthropics/skills.git
 ```
 
-**182,764** stars · 7 of 39 lists · Python · no licence stated · pushed 2026-10-09
+**186,216** stars · 7 of 39 lists · Python · no licence stated · pushed 2026-10-28
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -44,11 +44,11 @@ Core software-engineering competencies covering most of the SDLC, well organised
 git clone https://github.com/obra/superpowers.git
 ```
 
-**303,157** stars · 7 of 39 lists · Shell · MIT · pushed 2026-10-21
+**310,478** stars · 8 of 39 lists · Shell · MIT · pushed 2026-10-29
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
-Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, MCP, Codex / OpenAI, Gemini / Google, GitHub Copilot, Cursor
+Topic: Agent Skills · Targets: Claude Code, Claude / Anthropic, opencode, MCP, Codex / OpenAI, Gemini / Google, GitHub Copilot, Cursor
 
 ---
 
@@ -64,7 +64,7 @@ A drop-in CLAUDE.md distilling four behavioural guidelines, derived from Andrej 
 git clone https://github.com/multica-ai/andrej-karpathy-skills.git
 ```
 
-**221,949** stars · 3 of 39 lists · language not detected · no licence stated · pushed 2026-04-20
+**227,873** stars · 3 of 39 lists · language not detected · no licence stated · pushed 2026-04-20
 
 Platforms: Win N WSL N mac N Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -84,7 +84,7 @@ Production-grade engineering skills, and portable: it also targets MCP, Codex an
 npx skills add addyosmani/agent-skills # install all 25 skills
 ```
 
-**109,328** stars · 4 of 39 lists · JavaScript · MIT · pushed 2026-10-13
+**112,477** stars · 4 of 39 lists · JavaScript · MIT · pushed 2026-10-31
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -104,7 +104,7 @@ Conserves tokens by shortening what the agent says back to you. It reads like a 
 irm https://raw.githubusercontent.com/JuliusBrussee/caveman/v4.0.1/install.ps1 | iex
 ```
 
-**114,132** stars · 2 of 39 lists · Go · Apache-2.0 · pushed 2026-10-21
+**116,653** stars · 2 of 39 lists · Go · Apache-2.0 · pushed 2026-11-01
 
 Platforms: Win Y WSL L mac N Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -124,7 +124,7 @@ One npx command reports what your Claude Code sessions have actually cost. Zero 
 git clone https://github.com/ccusage/ccusage.git
 ```
 
-**19,115** stars · 4 of 39 lists · Rust · no licence stated · pushed 2026-10-21
+**19,286** stars · 4 of 39 lists · Rust · no licence stated · pushed 2026-11-01
 
 Platforms: Win L WSL L mac L Lin L Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 
@@ -144,7 +144,7 @@ The specialist list for this harness. When the kit above stops being enough, thi
 git clone https://github.com/hesreallyhim/awesome-claude-code.git
 ```
 
-**56,197** stars · 3 of 39 lists · Python · no licence stated · pushed 2026-10-22
+**57,030** stars · 3 of 39 lists · Python · no licence stated · pushed 2026-11-01
 
 Platforms: Win N WSL N mac Y Lin N Doc N  (Y stated · L inferred · N no evidence · a n/a · - unknown)
 

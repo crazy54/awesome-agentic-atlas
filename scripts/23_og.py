@@ -235,15 +235,15 @@ FONT = "DejaVu Sans"
 # re-render the cards should be an edit to this file, and `tests/theme_test.py` holds every value to the
 # dark palette so the two cannot drift apart silently.
 PALETTE = {
-    "surface": "#121314",   # the card, and the backdrop Chromium paints under it -- see `shoot()`
-    "band":    "#252423",   # chip fill
-    "ink":     "#d9d3c8",   # body text, and the chips'
-    "ink2":    "#aba69f",   # the count line
-    "muted":   "#aba69f",   # blurb, label, host line
-    "grid":    "#3e3c39",   # chip border
+    "surface": "#1c1c1b",   # the card, and the backdrop Chromium paints under it -- see `shoot()`
+    "band":    "#2f2e2c",   # chip fill
+    "ink":     "#d4cec3",   # body text, and the chips'
+    "ink2":    "#aeaaa4",   # the count line
+    "muted":   "#aeaaa4",   # blurb, label, host line
+    "grid":    "#3f4526",   # chip border: dark's lime-tinted line
     "bar":     "#a4c812",   # the accent: the frame's top border, and the kicker
-    "warn":    "#f3efe8",   # the count itself
-    "head":    "#f3efe8",   # the heading
+    "warn":    "#ebe5da",   # the count itself
+    "head":    "#ebe5da",   # the heading
 }
 
 # The root card's file name, and the one string `19_pages.py` has to agree with -- it is what the root

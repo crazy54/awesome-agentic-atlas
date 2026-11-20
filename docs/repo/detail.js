@@ -8,15 +8,13 @@ function atlasTheme() {
   if (atlasTheme.api) return atlasTheme.api;
   var root = document.documentElement;
   var stored = function () { try { return localStorage.getItem("theme"); } catch (e) { return null; } };
-  var valid = function (t) { return t === "light" || t === "dark" || t === "contrast"; };
+  var valid = function (t) { return t === "light" || t === "dark"; };
   var system = function () {
-    try {
-      return matchMedia("(prefers-contrast: more)").matches ? "contrast"
-        : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-    } catch (e) { return "dark"; }
+    try { return matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"; } catch (e) { return "dark"; }
   };
   var apply = function () {
     var t = stored();
+    if (t === "contrast") { try { localStorage.setItem("theme", t = "dark"); } catch (e) {} }
     root.dataset.theme = valid(t) ? t : system();
     delete root.dataset.skin;
     var plane = getComputedStyle(root).getPropertyValue("--plane").trim(), tc = document.getElementById("tc");
@@ -31,10 +29,7 @@ function atlasTheme() {
     },
     follow: function (f) {
       var on = function () { if (api.choice() === "system") { apply(); if (f) f(); } };
-      try {
-        matchMedia("(prefers-color-scheme: light)").addEventListener("change", on);
-        matchMedia("(prefers-contrast: more)").addEventListener("change", on);
-      } catch (e) {}
+      try { matchMedia("(prefers-color-scheme: light)").addEventListener("change", on); } catch (e) {}
     }
   };
   apply();
@@ -46,11 +41,12 @@ var nwo = document.documentElement.dataset.nwo;
 
 /* The light/dark toggle. The resolution -- stored choice, then the OS, then dark -- and the browser-chrome
    repaint are `atlasTheme`, from `sitewide.THEME_JS`, prepended to this file; this is only the button, and
-   it is `20_landing.THEME_JS`'s button for the reasons given there, high contrast included: in high
-   contrast it reads "Light theme", as in dark, and takes the reader to light. The *read* is not here -- it
+   it is `20_landing.THEME_JS`'s button for the reasons given there: two themes, two states. The *read* is
+   not here -- it
    is inline in every page's <head>, because by the time this file has been fetched and run the wrong theme
    has already been painted. `atlasTheme` also re-applies the stored choice on load, which is what serves a
-   page whose inline head script is a release older than this shared file. */
+   page whose inline head script is a release older than this shared file -- including a stored "contrast",
+   which that older head script still honours and this rewrites to "dark" (see HEAD_THEME). */
 var toggle = document.getElementById("theme");
 if (toggle) {
   var label = function () {

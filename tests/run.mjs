@@ -10,7 +10,7 @@
 //
 // WHY THIRTY HARNESSES AND NOT ONE, which is the question anybody reading this directory will ask first:
 //
-//   theme_test.py     verifies the three themes' contrast (AAA in high contrast), their one shared copy, and
+//   theme_test.py     verifies the two themes' contrast over the glass (AAA under more contrast), their one shared copy, and
 //                     the one channel on the page that is not colour: the five platform verdict marks,
 //                     which three places in 19_pages.py describe with no generator keeping them in step.
 //                     It also holds the phone's above-the-fold budget and the comparison panel's layout,
@@ -221,7 +221,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // hung and killed (default DEFAULT_MINUTES, below the table): see the watchdog in `run()`.
 const HARNESSES = [
   {file: "app_flags_test.py", label: "the 0/1 schema, atomic editor writes, and every kill switch", python: true, floor: 28},
-  {file: "theme_test.py", label: "three themes in one copy, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
+  {file: "theme_test.py", label: "two glass themes in one copy, the theme menu, the verdict marks, the phone's fold, the compare panel", python: true, floor: 500},
   {file: "signals_test.py", label: "when a cached release/action signal needs re-querying", python: true, floor: 170},
   {file: "fetch_test.py", label: "a batch GitHub keeps timing out on is split, and nothing else is", python: true, floor: 20},
   {file: "ci_tools_test.py", label: "the local run, the canary's bot branches, and what every workflow must say", python: true, floor: 45},

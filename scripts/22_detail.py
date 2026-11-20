@@ -849,24 +849,27 @@ CSS = """/* Written by scripts/22_detail.py. Shared by every page under docs/rep
    Deliberately not docs/pages.css, which scripts/20_landing.py writes: two stages writing one file
    means the later run silently deletes the earlier one's rules. */
 """ + sitewide.THEME_CSS + """*{box-sizing:border-box}
-/* --ui and --wash are the structural tokens `THEME_CSS` declares above: the page's own font stack in every
-   theme, and the soft light behind the layout (see scripts/sitewide.py). The 1.6 line height is this page's own and stays -- it is prose, not a table. */
-body{margin:0;background:var(--surface);background-image:var(--wash);
-  background-attachment:fixed;color:var(--ink);font:15px/1.6 var(--ui)}
+/* --ui is the page's own font stack in both themes. The field behind the glass is `body::before` in
+   `THEME_CSS` above; this only sets --surface, the colour it is translucent over. The 1.6 line height is
+   this page's own and stays -- it is prose, not a table. */
+body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.6 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
 button{font:inherit;cursor:pointer}
-header{background:var(--panel);backdrop-filter:var(--bdf);border-bottom:1px solid var(--grid);
-  padding:18px 20px 22px}
+/* A pane of the glass. Static, with nothing positioned inside it, so the backdrop filter changes no
+   containing block (measured box for box in both themes at 1440 and 375). */
+header{background:var(--panel);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
+  border-bottom:1px solid var(--edge);padding:18px 20px 22px}
 /* Narrower than the 1500px the table surfaces use. This one is prose, and a 44-character-per-line
    measure is what a blurb and a licence sentence want; 1500px would set the lead paragraph 180
    characters wide, which is unreadable for the one thing on the page a reader has to read. */
 .wrap{max-width:1000px;margin:0 auto}
 main{padding:0 20px 64px}
-footer{border-top:1px solid var(--grid);background:var(--plane);padding:22px 20px;
+footer{border-top:1px solid var(--edge);background:var(--panel);backdrop-filter:var(--bdf);
+  -webkit-backdrop-filter:var(--bdf);padding:22px 20px;
   color:var(--muted);font-size:13px}
 h1{margin:0 0 4px;font-size:30px;letter-spacing:-.02em;overflow-wrap:anywhere}
-h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;color:var(--title)}
 .crumb{font-size:13px;color:var(--muted);margin-bottom:14px}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
 .top>div{min-width:0}
@@ -892,7 +895,7 @@ h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;
 /* The one link that has to be found. Filled with the lime, `--act`, which is why it needs --onact for ink;
    its edge and hover are in `THEME_CSS`, shared with every primary button on the site. */
 .cta{display:inline-block;background:var(--act);color:var(--onact);font-weight:600;
-  border-radius:8px;padding:10px 18px}
+  border-radius:999px;padding:10px 18px}
 .cta:hover{text-decoration:none}
 .alt{font-size:14px}
 .chip{display:inline-block;background:var(--band);color:var(--ink2);border:1px solid var(--grid);
@@ -910,15 +913,14 @@ section{margin:34px 0 0;border-top:1px solid var(--grid);padding-top:22px}
   --read-bg:var(--surface);--read-panel:var(--plane);--read-raised:var(--band);--read-ink:var(--ink);
   --read-muted:var(--muted);--read-line:var(--grid);--read-link:var(--link);--read-accent:var(--bar);
   --read-warn:var(--warn);--read-code:var(--surface);--read-good:var(--good);--read-quote:var(--band);
-  overflow:hidden;border:1px solid var(--read-line);border-radius:14px;background:var(--read-panel);
-  color:var(--read-ink);box-shadow:0 20px 55px rgba(0,0,0,.3),0 0 0 1px color-mix(in srgb,var(--bar) 5%,transparent)}
+  overflow:hidden;border:1px solid var(--edge);border-radius:22px;background:var(--read-panel);
+  color:var(--read-ink);box-shadow:var(--raise)}
 .reader [hidden]{display:none!important}
 html[data-theme=light] .reader{
   --read-panel:var(--band);--read-raised:var(--plane);
-  --read-code:color-mix(in srgb,var(--band) 82%,var(--grid));--read-quote:var(--surface);
-  box-shadow:0 18px 46px rgba(25,35,50,.11),0 0 0 1px color-mix(in srgb,var(--bar) 4%,transparent)}
+  --read-code:color-mix(in srgb,var(--band) 82%,var(--grid));--read-quote:var(--surface)}
 .preview-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:14px}
-.preview-intro h2{margin-bottom:6px;color:var(--ink);font-size:19px;text-transform:none;letter-spacing:-.01em}
+.preview-intro h2{margin-bottom:6px;color:var(--title);font-size:19px;text-transform:none;letter-spacing:-.01em}
 .preview-intro .lead{margin:0;font-size:14.5px}
 .eyebrow{margin:0 0 3px;color:var(--bar);font-size:11px;font-weight:700;letter-spacing:.13em;
   text-transform:uppercase}
@@ -936,17 +938,19 @@ html[data-theme=light] .reader{
 .file-picker:after{content:"⌄";position:absolute;right:11px;top:50%;transform:translateY(-55%);
   color:var(--read-muted);pointer-events:none;font-size:15px}
 .file-picker select{width:100%;height:35px;appearance:none;border:1px solid var(--read-line);
-  border-radius:7px;background:var(--read-raised);color:var(--read-ink);padding:0 32px 0 11px;
+  border-radius:999px;background:var(--read-raised);color:var(--read-ink);padding:0 32px 0 11px;
+  box-shadow:var(--press);
   font:12.5px/1 var(--mono);
   text-overflow:ellipsis;cursor:pointer}
 .file-picker select:focus,.viewtab:focus-visible,.open-source:focus-visible{
   outline:2px solid var(--read-link);outline-offset:2px}
 .file-picker select:disabled{cursor:wait;color:var(--read-muted)}
-.reader-tabs{display:flex;padding:3px;border-radius:8px;background:var(--read-raised);flex:0 0 auto}
-.viewtab{border:0;border-radius:6px;padding:6px 10px;background:transparent;color:var(--read-muted);
+.reader-tabs{display:flex;padding:3px;border-radius:999px;background:var(--read-raised);flex:0 0 auto;
+  box-shadow:var(--press)}
+.viewtab{border:0;border-radius:999px;padding:6px 10px;background:transparent;color:var(--read-muted);
   font-size:12px;line-height:1.2}
 .viewtab:hover{color:var(--read-ink)}
-.viewtab.on{background:var(--read-panel);color:var(--read-ink);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.viewtab.on{background:var(--read-panel);color:var(--read-ink);box-shadow:var(--raise-sm)}
 .open-source{color:var(--read-link);font-size:12px;white-space:nowrap}
 .reader-status{min-height:240px;display:flex;align-items:center;justify-content:center;gap:11px;
   padding:34px;text-align:center;color:var(--read-muted);font-size:14px}
@@ -1014,9 +1018,10 @@ html[data-theme=light] .reader{
    catching the paragraph above it is the thing this replaces. */
 .cmdrow{display:flex;gap:10px;align-items:flex-start}
 .cmd{flex:1;min-width:0;font:13.5px/1.6 var(--mono);color:var(--ink);
-  background:var(--band);border:1px solid var(--grid);border-radius:6px;padding:10px 12px;
-  overflow-wrap:anywhere;display:block}
-.copy{background:var(--band);color:var(--ink2);border:1px solid var(--grid);border-radius:6px;
+  background:var(--band);border:1px solid var(--ctl-edge);border-radius:14px;padding:10px 12px;
+  box-shadow:var(--press);overflow-wrap:anywhere;display:block}
+.copy{background:var(--band);color:var(--ink2);border:1px solid var(--ctl-edge);border-radius:999px;
+  box-shadow:var(--raise-sm);
   padding:10px 14px;font-size:13px;white-space:nowrap}
 .copy:hover{border-color:var(--bar);color:var(--ink)}
 figure.shot{margin:0}
@@ -1054,7 +1059,8 @@ ul.lists li{background:var(--band);border:1px solid var(--grid);border-radius:6p
    single track as soon as 320px stops fitting twice. */
 ul.kinlist{list-style:none;padding:0;margin:0;display:grid;gap:10px;
   grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
-ul.kinlist li{border:1px solid var(--grid);border-radius:10px;padding:12px 14px;background:var(--plane)}
+ul.kinlist li{border:1px solid var(--edge);border-radius:18px;padding:12px 14px;background:var(--panel);
+  box-shadow:var(--raise-sm)}
 ul.kinlist a{font-weight:600;overflow-wrap:anywhere}
 ul.kinlist .nwo{display:block;margin:2px 0 0;font-size:12px}
 ul.kinlist .desc{display:block;color:var(--ink2);font-size:13px;margin-top:6px}
@@ -1130,11 +1136,12 @@ var nwo = document.documentElement.dataset.nwo;
 
 /* The light/dark toggle. The resolution -- stored choice, then the OS, then dark -- and the browser-chrome
    repaint are `atlasTheme`, from `sitewide.THEME_JS`, prepended to this file; this is only the button, and
-   it is `20_landing.THEME_JS`'s button for the reasons given there, high contrast included: in high
-   contrast it reads "Light theme", as in dark, and takes the reader to light. The *read* is not here -- it
+   it is `20_landing.THEME_JS`'s button for the reasons given there: two themes, two states. The *read* is
+   not here -- it
    is inline in every page's <head>, because by the time this file has been fetched and run the wrong theme
    has already been painted. `atlasTheme` also re-applies the stored choice on load, which is what serves a
-   page whose inline head script is a release older than this shared file. */
+   page whose inline head script is a release older than this shared file -- including a stored "contrast",
+   which that older head script still honours and this rewrites to "dark" (see HEAD_THEME). */
 var toggle = document.getElementById("theme");
 if (toggle) {
   var label = function () {

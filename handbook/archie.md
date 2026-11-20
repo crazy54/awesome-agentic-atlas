@@ -76,7 +76,7 @@ two drift apart.
   the page the reader is on (`archie-stage.js` `where()`: a topic's world on that topic's page or a project
   in it, `discover`, `collections`, `lost` on the 404, `home` otherwise), drawn large on the stage beside
   him with a beam down to the ball. Holograms are added as light on a dark page and laid over a light one
-  (`tone()`), so they read on all three themes.
+  (`tone()`), so they read on both themes.
 - **Bits** are the gags in `Bit What happens.md`, made real. Each is a staging file and its clips in
   `art/pals/bits/`. The director plays one on its own at most every three minutes, the first no sooner than
   45 seconds in, each at most once a page view, and only where it can play: its page family, and its element
@@ -139,7 +139,7 @@ Add one to the homepage URL to skip the wait and see one behaviour at once:
 |---|---|
 | `?archie=<dance>` (e.g. `?archie=robot`) | starts on that dance |
 | `?archie=watch`, `sit`, `sleep`, `walk-off` | starts on that act |
-| `?archie=prank:lights` (or `contrast`, `tilt`, `count`, `cursor`) | plays that prank first, through the usual gates, so quiet mode still stops it |
+| `?archie=prank:lights` (or `fog`, `tilt`, `count`, `cursor`) | plays that prank first, through the usual gates, so quiet mode still stops it |
 | `?archie=friend:<id>` (e.g. `friend:posy`) | that friend visits. Normally 25% of page views get a visit |
 | `?archie=core` | starts on the Atlas Core |
 | `?archie=bit:<name>` (e.g. `bit:glass-door`) | plays that bit as soon as it can: on its page, with its element in view |
@@ -155,7 +155,7 @@ Archie keeps these keys; clear them to reset his behaviour:
 | `atlas-byte-quiet` | localStorage | `"1"` is the catalogue's Quiet mode: no chatter, pranks, friends or visits |
 | `archie-dance` | localStorage | the last music source chosen |
 | `archie-hi` | sessionStorage | he has already said hello this session |
-| `theme` | localStorage | the site's theme, which pranks borrow and always restore (neither theme prank is played on a reader in high contrast) |
+| `theme` | localStorage | the site's theme, which the lights prank borrows and always restores (neither the lights nor the fog is played at random on a reader whose system asks for more contrast, less transparency or forced colours) |
 
 `prank-check.mjs` checks that no prank leaves anything behind in storage, and `bits-check.mjs` that no bit
 does.

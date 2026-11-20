@@ -121,8 +121,7 @@ globalThis.document = {
 // here: `wire()` writes this value into <meta name=theme-color> so the browser chrome matches the header,
 // and a harness carrying its own copy of the hex would happily pass a colour the CSS no longer sets.
 const planeOf = (theme) => {
-  const rule = theme === "light" ? /html\[data-theme=light\]\{([\s\S]*?)\}/
-    : theme === "contrast" ? /html\[data-theme=contrast\]\{([\s\S]*?)\}/ : /:root\{([\s\S]*?)\}/;
+  const rule = theme === "light" ? /html\[data-theme=light\]\{([\s\S]*?)\}/ : /:root\{([\s\S]*?)\}/;
   return html.match(rule)[1].match(/--plane:\s*([^;]+);/)[1].trim();
 };
 globalThis.getComputedStyle = (elt) => ({
@@ -818,10 +817,12 @@ A.atlasTheme().set("light");
 ok("choosing light repaints the chrome", document.documentElement.dataset.theme === "light" &&
    tc.content === planeOf("light"), tc.content + " vs " + planeOf("light"));
 ok("...and is stored", localStorage.getItem("theme") === "light");
-ok("the themes do not share a --plane", new Set([planeOf("light"), planeOf("dark"), planeOf("contrast")]).size === 3);
-A.atlasTheme().set("contrast");
-ok("choosing high contrast repaints the chrome", document.documentElement.dataset.theme === "contrast" &&
-   tc.content === planeOf("contrast"), tc.content);
+ok("the themes do not share a --plane", new Set([planeOf("light"), planeOf("dark")]).size === 2);
+// High contrast is not a theme any more: a stored one, from before, is rewritten to dark, its half.
+localStorage.setItem("theme", "contrast");
+A.atlasTheme().refresh();
+ok("a stored high contrast is worn as dark, and stored as dark", document.documentElement.dataset.theme === "dark" &&
+   localStorage.getItem("theme") === "dark" && tc.content === planeOf("dark"), tc.content);
 A.atlasTheme().set("system");
 ok("choosing System stores nothing and falls back to the OS, which here asks for dark",
    localStorage.getItem("theme") === null && document.documentElement.dataset.theme === "dark" &&
@@ -2283,8 +2284,8 @@ ok("every __PLACEHOLDER__ was resolved", holes.length === 0, holes.join(", "));
 // theme_test.py reads the head script as text, which cannot tell a migration that works from one that is
 // written down and never runs. So the head script of every page family is run here, as published, against a
 // fake storage and a fake OS: a stored theme is worn, a stored nonsense value is not, the OS decides for a
-// reader who chose nothing (contrast first), and an old skin reader lands on the light or dark half they were
-// on with the two old keys gone.
+// reader who chose nothing, a stored high contrast is rewritten to dark, and an old skin reader lands on the
+// light or dark half they were on with the two old keys gone.
 const {runInNewContext} = await import("node:vm");
 const prepaint = (page) => {
   const m = readFileSync(join(ROOT, "docs", page), "utf8").match(/<script>\s*(try \{\s*var t = localStorage[\s\S]*?)<\/script>/);
@@ -2309,14 +2310,17 @@ for (const [page, label] of Object.entries(FAMILIES)) {
   const script = prepaint(page);
   ok(`${label}'s pre-paint script was found`, !!script, page);
   if (!script) continue;
-  for (const t of ["light", "dark", "contrast"]) {
+  for (const t of ["light", "dark"]) {
     const w = wears(script, {theme: t});
     ok(`${label}: a stored ${t} is worn, with its own chrome`, w.theme === t && w.chrome === planeOf(t), JSON.stringify(w));
   }
   ok(`${label}: a stored nonsense value is not`, wears(script, {theme: "prism"}).theme === "dark");
   ok(`${label}: with nothing stored, the OS's light preference is honoured`, wears(script, {}, {[LIGHTOS]: true}).theme === "light");
-  ok(`${label}: ...and its contrast preference outranks it`,
-     wears(script, {}, {[LIGHTOS]: true, [MORE]: true}).theme === "contrast");
+  ok(`${label}: ...and its contrast preference does not pick a theme: the stylesheet strengthens either`,
+     wears(script, {}, {[LIGHTOS]: true, [MORE]: true}).theme === "light");
+  const hc = wears(script, {theme: "contrast"});
+  ok(`${label}: a stored high contrast becomes dark, and is stored as dark`,
+     hc.theme === "dark" && hc.chrome === planeOf("dark") && hc.keys === "theme", JSON.stringify(hc));
   const old = wears(script, {theme: "light", "atlas-skin": "prism", "atlas-unlock": "holo"});
   ok(`${label}: an old skin reader lands on the half they were on, with the old keys gone`,
      old.theme === "light" && old.keys === "theme" && old.skin === undefined, JSON.stringify(old));

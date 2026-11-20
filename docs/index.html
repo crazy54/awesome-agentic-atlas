@@ -25,38 +25,36 @@
 <link rel="preload" href="assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" id="tc" content="#1A1A1A">
+<meta name="theme-color" id="tc" content="#2A2A27">
 <script>
 try {
   var t = localStorage.getItem("theme");
   if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
     localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
   }
-  if (t !== "light" && t !== "dark" && t !== "contrast")
-    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
-      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (t === "contrast") localStorage.setItem("theme", t = "dark");
+  if (t !== "light" && t !== "dark")
+    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
+  document.getElementById("tc").content = {light: "#F5F2EC", dark: "#2A2A27"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="pages.css">
 <style>:root{
   --field:var(--wash);
-  --panel-b:var(--grid);
-  --radius:14px; --radius-sm:10px; --hair:1px;
+  --panel-b:var(--edge);
+  --radius:20px; --radius-sm:12px; --hair:1px;
   --num:var(--ui);
   --mono:"Geist Mono",ui-monospace,"SF Mono","Cascadia Mono",Consolas,"Liberation Mono",monospace;
   --kick-case:uppercase; --kick-track:.1em;
 }
 :root{--fx-glow:0; --fx-pulse:0; --fx-scan:0}
 :root{
-  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
-  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --lift:var(--raise-sm);
+  --lift-hi:var(--raise-hi);
   --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
 }
 html[data-theme=light]{
-  --lift:0 1px 3px rgba(16,24,40,.10),0 14px 34px -12px rgba(16,24,40,.22);
-  --lift-hi:0 2px 8px rgba(16,24,40,.14),0 30px 60px -18px rgba(16,24,40,.30);
   --scrim:linear-gradient(to top,rgba(10,14,24,.88),rgba(10,14,24,.50) 38%,rgba(10,14,24,.06) 74%,transparent);
 }
 .dot{position:relative;flex:none;width:7px;height:7px;border-radius:50%;background:var(--off)}
@@ -313,29 +311,32 @@ html[data-theme=light]{
   .hero .ph{min-height:190px}
   .hero .ph img,.hero .ph .pt{aspect-ratio:16/9!important;height:auto}
 }
-html[data-theme=light] .ph{--surface:#121314;--band:#252423;--ink:#F3EFE8;--ink2:#D9D3C8;color:#F3EFE8}
+html[data-theme=light] .ph{--surface:#1C1C1B;--band:#2F2E2C;--ink:#EBE5DA;--ink2:#D4CEC3;color:#EBE5DA}
 .setwrap{position:relative;display:inline-block}
 header.setopen{z-index:30}
 .setmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:280px;text-align:left;
-  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
-  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75)}
+  background:var(--panel-hi);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
+  border:1px solid var(--edge);border-radius:18px;padding:12px;box-shadow:var(--raise)}
 .setmenu[hidden]{display:none}
 .setlab{margin:14px 0 6px;color:var(--muted);font-size:11px;text-transform:uppercase;
   letter-spacing:.07em;font-weight:600}
 .setlab:first-child{margin-top:0}
 .setths{display:grid;grid-template-columns:1fr;gap:2px;margin-top:2px}
 .thb{display:flex;align-items:center;gap:7px;width:100%;min-height:36px;padding:0 7px;
-  background:none;border:1px solid transparent;border-radius:8px;color:var(--ink2);font-size:13px;
+  background:none;border:1px solid transparent;border-radius:999px;color:var(--ink2);font-size:13px;
   text-align:left}
-.thb:hover{border-color:var(--grid);color:var(--ink)}
+.thb:hover{border-color:var(--ctl-edge);color:var(--ink);box-shadow:var(--raise-sm)}
 .thb{position:relative}
 .thb[aria-pressed=true]{border-color:var(--bar);color:var(--ink);font-weight:600;
-  background:color-mix(in srgb,var(--act) 12%,transparent)}
+  background:color-mix(in srgb,var(--act) 12%,transparent);box-shadow:var(--press)}
 .thb[aria-pressed=true]::after{content:"\2713";position:absolute;right:10px;top:50%;transform:translateY(-50%);
   color:var(--bar);font-weight:700}
 .thsw{display:inline-flex;flex:none;width:28px;height:14px;border-radius:999px;overflow:hidden;
   border:1px solid var(--grid)}
 .thsw i{flex:1}
+.hero{backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf)}
+.cw{background:var(--band);border-color:var(--ctl-edge);box-shadow:var(--press)}
+.cw .cp{background:transparent}
 header .top nav a.ghstar{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:3px 10px;
   border-radius:999px;border:var(--hair) solid var(--panel-b);background:var(--panel);color:var(--ink);
   text-decoration:none;font-weight:600}
@@ -364,7 +365,6 @@ header .top nav a.ghstar b{font-family:var(--num);font-variant-numeric:tabular-n
   color-mix(in srgb,var(--surface) 70%,transparent) 38%,transparent 62%);
   background:var(--scrim),url(assets/masthead-dark.webp) center bottom/cover no-repeat}
 html[data-theme=light] .mhart{background:var(--scrim),url(assets/masthead-light.webp) center bottom/cover no-repeat}
-html[data-theme=contrast] .mhart{background:none}
 @media (max-width:899px){.mhart{--scrim:linear-gradient(color-mix(in srgb,var(--surface) 72%,transparent),
   color-mix(in srgb,var(--surface) 72%,transparent))}}
 header{position:relative;z-index:2;background:transparent;border-bottom:0;
@@ -376,17 +376,18 @@ header .wrap{position:relative}
 header .brandbar,header .top{position:relative;z-index:1}
 header .setwrap,header .dancewrap{z-index:2}
 @media (max-width:899px){.mhmascot{display:none}}
-body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-events:none;z-index:0}
 .scan{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:calc(var(--fx-scan) * .40);
   background:repeating-linear-gradient(180deg,rgba(0,0,0,.34) 0 1px,transparent 1px 3px)}
 .bystrip{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 30px}
 .bychip{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;
-  border:var(--hair) solid var(--grid);background:var(--panel);backdrop-filter:var(--bdf);
-  -webkit-backdrop-filter:var(--bdf);color:var(--ink2);font-size:12.5px;font-weight:550;
-  text-decoration:none;transition:border-color .16s,color .16s,transform .16s}
+  border:var(--hair) solid var(--ctl-edge);background:var(--band);box-shadow:var(--raise-sm);
+  color:var(--ink2);font-size:12.5px;font-weight:550;
+  text-decoration:none;transition:border-color .16s,color .16s,transform .16s,box-shadow .16s}
 .bychip i{width:7px;height:7px;border-radius:50%;background:var(--ac);flex:none}
 .bychip .ct{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;color:var(--muted)}
-.bychip:hover{border-color:var(--ac);color:var(--ink);text-decoration:none;transform:translateY(-1px)}
+.bychip:hover{border-color:var(--ac);color:var(--ink);text-decoration:none;transform:translateY(-1px);
+  box-shadow:var(--raise-hi)}
+.bychip:active{box-shadow:var(--press)}
 .bychip:hover .ct{color:var(--ink2)}
 .dsmore{font-size:12.5px;font-weight:600;color:var(--link);white-space:nowrap;margin-left:6px}
 .dsold{display:none;padding:18px 20px;border-radius:var(--radius);border:var(--hair) solid var(--grid);
@@ -400,8 +401,8 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
 .updbar{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);
   z-index:40;display:flex;align-items:center;gap:10px;box-sizing:border-box;width:max-content;
   max-width:calc(100vw - 24px);padding:6px 6px 6px 16px;border:1px solid var(--accent-sky);
-  border-radius:var(--radius);background:var(--panel);color:var(--ink);font-size:14px;line-height:1.35;
-  box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  border-radius:var(--radius);background:var(--panel-hi);backdrop-filter:var(--bdf);
+  -webkit-backdrop-filter:var(--bdf);color:var(--ink);font-size:14px;line-height:1.35;box-shadow:var(--raise)}
 .updbar button{min-height:44px;min-width:44px;padding:0 16px;border:1px solid var(--accent-sky);
   border-radius:var(--radius-sm);background:var(--accent-sky);color:var(--surface);font:inherit;font-weight:600;
   cursor:pointer;flex:none}
@@ -411,12 +412,12 @@ body::before{content:"";position:fixed;inset:0;background:var(--field);pointer-e
 .dancewrap{position:relative;display:inline-block;margin-right:6px}
 header.danceopen{z-index:30}
 .dancemenu{position:absolute;right:0;top:calc(100% + 8px);z-index:1;width:264px;text-align:left;
-  background:var(--panel);backdrop-filter:var(--bdf);border:1px solid var(--grid);border-radius:10px;
-  padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.3),0 22px 48px -14px rgba(0,0,0,.75);text-shadow:none}
+  background:var(--panel-hi);backdrop-filter:var(--bdf);-webkit-backdrop-filter:var(--bdf);
+  border:1px solid var(--edge);border-radius:18px;padding:12px;box-shadow:var(--raise);text-shadow:none}
 .dancemenu[hidden],.dsrc[hidden],#dancebtn[hidden]{display:none}
 .dancesrcs{display:flex;flex-direction:column;gap:4px}
 .dsrc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;min-height:44px;
-  padding:7px 10px;background:none;border:1px solid var(--grid);border-radius:8px;color:var(--ink);
+  padding:7px 10px;background:none;border:1px solid var(--ctl-edge);border-radius:12px;color:var(--ink);
   font-size:13px;text-align:left}
 .dsrc span{color:var(--muted);font-size:12px}
 .dsrc:hover,.dsrc.dancelast{border-color:var(--accent-sky)}
@@ -479,17 +480,14 @@ html{scrollbar-gutter:stable}
         <p class="setlab" id="setthemelab">Theme</p>
         <div class="setths" role="group" aria-labelledby="setthemelab">
           <button type="button" class="thb" data-choice="system" aria-pressed="true"><span
-            class="thsw" aria-hidden="true"><i style="background:#F1EDE6"></i><i
-            style="background:#121314"></i><i style="background:#A4C812"></i></span>System</button>
+            class="thsw" aria-hidden="true"><i style="background:#EAE5DA"></i><i
+            style="background:#1C1C1B"></i><i style="background:#A4C812"></i></span>System</button>
           <button type="button" class="thb" data-choice="light" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#F1EDE6"></i><i
+            class="thsw" aria-hidden="true"><i style="background:#EAE5DA"></i><i
             style="background:#A4C812"></i><i style="background:#3B5C00"></i></span>Light</button>
           <button type="button" class="thb" data-choice="dark" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#121314"></i><i
-            style="background:#A4C812"></i><i style="background:#CBE46E"></i></span>Dark</button>
-          <button type="button" class="thb" data-choice="contrast" aria-pressed="false"><span
-            class="thsw" aria-hidden="true"><i style="background:#000000"></i><i
-            style="background:#DCF55E"></i><i style="background:#FFFFFF"></i></span>High contrast</button>
+            class="thsw" aria-hidden="true"><i style="background:#1C1C1B"></i><i
+            style="background:#A4C812"></i><i style="background:#DCF55E"></i></span>Dark</button>
         </div>
       </div>
     </div>
@@ -557,15 +555,13 @@ const ATLASDAY = (() => {
   if (atlasTheme.api) return atlasTheme.api;
   var root = document.documentElement;
   var stored = function () { try { return localStorage.getItem("theme"); } catch (e) { return null; } };
-  var valid = function (t) { return t === "light" || t === "dark" || t === "contrast"; };
+  var valid = function (t) { return t === "light" || t === "dark"; };
   var system = function () {
-    try {
-      return matchMedia("(prefers-contrast: more)").matches ? "contrast"
-        : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-    } catch (e) { return "dark"; }
+    try { return matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"; } catch (e) { return "dark"; }
   };
   var apply = function () {
     var t = stored();
+    if (t === "contrast") { try { localStorage.setItem("theme", t = "dark"); } catch (e) {} }
     root.dataset.theme = valid(t) ? t : system();
     delete root.dataset.skin;
     var plane = getComputedStyle(root).getPropertyValue("--plane").trim(), tc = document.getElementById("tc");
@@ -580,10 +576,7 @@ const ATLASDAY = (() => {
     },
     follow: function (f) {
       var on = function () { if (api.choice() === "system") { apply(); if (f) f(); } };
-      try {
-        matchMedia("(prefers-color-scheme: light)").addEventListener("change", on);
-        matchMedia("(prefers-contrast: more)").addEventListener("change", on);
-      } catch (e) {}
+      try { matchMedia("(prefers-color-scheme: light)").addEventListener("change", on); } catch (e) {}
     }
   };
   apply();
@@ -796,12 +789,12 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 })();
 </script>
 
-<script type="module" src="assets/archie.js?v=9557360c5c"></script>
+<script type="module" src="assets/archie.js?v=f82915a01e"></script>
 <script type="module" src="assets/archie-dance.js?v=07eb812405"></script>
 <script>(() => {
   const b = document.getElementById("archieadmin");
   if (!b) return;
-  const go = () => import("./assets/archie-admin.js?v=9557360c5c")
+  const go = () => import("./assets/archie-admin.js?v=f82915a01e")
     .then((m) => (b.getAttribute("aria-expanded") === "true" ? m.close() : m.open(b)))
     .catch((e) => console.warn("Archie's admin panel did not load:", e));
   b.addEventListener("click", go);
